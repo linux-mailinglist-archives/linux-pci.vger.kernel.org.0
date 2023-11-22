@@ -1,37 +1,37 @@
-Return-Path: <linux-pci+bounces-93-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-94-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BA8D7F3DDD
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 07:04:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA6427F3DDE
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 07:04:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 565171C20D93
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 06:04:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBD2C1C20F18
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 06:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8112156D9;
-	Wed, 22 Nov 2023 06:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4FC915ADB;
+	Wed, 22 Nov 2023 06:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRMUn3mS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeLnAMmk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92022154B3
-	for <linux-pci@vger.kernel.org>; Wed, 22 Nov 2023 06:04:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C033EC433C7;
-	Wed, 22 Nov 2023 06:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF33156FC
+	for <linux-pci@vger.kernel.org>; Wed, 22 Nov 2023 06:04:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EB1C433C9;
+	Wed, 22 Nov 2023 06:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700633063;
-	bh=FOItfK0/TleRXZ8c4i5tcrXPO+r2f9Ha8yqtGdMWaLQ=;
+	s=k20201202; t=1700633064;
+	bh=JDHVvhCp94Z+2IcU/uhcMeYkRhBQHpTa/i6l/Hz5xSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YRMUn3mS6uYKq7BSnEUEEL7kfQ9IOFskSQQd+d+wnIQj61Eozbr3Y58+u/wQSTwrm
-	 NEVzW5Wvfg+DazJcffx+kdJsvL9ZusFPyVK3UYrctU92RTwZLauWAdh48oHD33nDUF
-	 Lz0/NA7g6j2khvme9gZklaHbXB6IpzrADzn/xKBO0WXw/3JDY/waoVWiGqdg7SbY8P
-	 DQZbigPO6pVy4TnPv2NpOtdxjojACooVA9is6cZLmUXrD9Obz/K/mSkqbTfceYaM7Y
-	 tFHkipFjchnRclG1u28A5j98JomSK7cSQOPrwLXmz1/WNo03cauhakZZI5l9E9Ihx7
-	 nxVMJv5SgE3lQ==
+	b=WeLnAMmkIeBJ0GMtBq266UJnLTVmiaX4hgr1XT4Pi+SWCh8Z04eOGN8xyz+UtNEFo
+	 HSkBhkIGcIzV8qSvCEYwzoTZ98P7VmID1sWcVfMJQOCleBYaLBGWVEWsUbeeI8XyuA
+	 lqlCvnYPhXXcQMRRtHQt1uSUCbbE3MNkITKUWQ5ioRl9X8iBQcowPKcQjvc9EPdS6d
+	 B2DW+tsIeMjNT71SRFgyVLgOUQHBFp37lwL4tQtDcSMetAVjtR3IdR289bpIaQ+NU4
+	 9FIscEWTVZRYPIK3yCJLUxpP5oWYeeFdRCD7qpiEEgRQwePPh1WG7vUF6OFj5bfl5P
+	 AHdFNF1xsbrkw==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
@@ -41,9 +41,9 @@ Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
 	Serge Semin <fancer.lancer@gmail.com>,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 08/16] PCI: cadence: Use INTX instead of legacy
-Date: Wed, 22 Nov 2023 15:03:58 +0900
-Message-ID: <20231122060406.14695-9-dlemoal@kernel.org>
+Subject: [PATCH v4 09/16] PCI: dwc: Rename dw_pcie_ep_raise_legacy_irq()
+Date: Wed, 22 Nov 2023 15:03:59 +0900
+Message-ID: <20231122060406.14695-10-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231122060406.14695-1-dlemoal@kernel.org>
 References: <20231122060406.14695-1-dlemoal@kernel.org>
@@ -55,89 +55,132 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the Cadence endpoint controller driver, rename the function
-cdns_pcie_ep_send_legacy_irq() to cdns_pcie_ep_send_intx_irq() to match
-the macro PCI_IRQ_INTX name. Related comments and messages mentioning
-"legacy" are also changed to refer to "intx".
+Rename the function dw_pcie_ep_raise_legacy_irq() of the Designware
+endpoint controller driver to dw_pcie_ep_raise_intx_irq() to match the
+name of the PCI_IRQ_INTX macro.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 10 +++++-----
- drivers/pci/controller/cadence/pcie-cadence.h    | 12 ++++++------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c             | 2 +-
+ drivers/pci/controller/dwc/pci-layerscape-ep.c    | 2 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c   | 6 +++---
+ drivers/pci/controller/dwc/pcie-designware-plat.c | 2 +-
+ drivers/pci/controller/dwc/pcie-designware.h      | 4 ++--
+ drivers/pci/controller/dwc/pcie-qcom-ep.c         | 2 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 2 +-
+ 7 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 3d71d687ea64..2d0a8d78bffb 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -360,8 +360,8 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
- 	writel(0, ep->irq_cpu_addr + offset);
- }
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index a5365ab8897e..f117ec286a76 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1064,7 +1064,7 @@ static int imx6_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
  
--static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
--					u8 intx)
-+static int cdns_pcie_ep_send_intx_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
-+				      u8 intx)
- {
- 	u16 cmd;
- 
-@@ -371,7 +371,7 @@ static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 vfn,
- 
- 	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
- 	/*
--	 * The mdelay() value was taken from dra7xx_pcie_raise_legacy_irq()
-+	 * The mdelay() value was taken from dra7xx_pcie_raise_intx_irq()
- 	 */
- 	mdelay(1);
- 	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
-@@ -541,10 +541,10 @@ static int cdns_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
  	switch (type) {
  	case PCI_IRQ_INTX:
- 		if (vfn > 0) {
--			dev_err(dev, "Cannot raise legacy interrupts for VF\n");
-+			dev_err(dev, "Cannot raise INTX interrupts for VF\n");
- 			return -EINVAL;
- 		}
--		return cdns_pcie_ep_send_legacy_irq(ep, fn, vfn, 0);
-+		return cdns_pcie_ep_send_intx_irq(ep, fn, vfn, 0);
- 
+-		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
++		return dw_pcie_ep_raise_intx_irq(ep, func_no);
  	case PCI_IRQ_MSI:
- 		return cdns_pcie_ep_send_msi_irq(ep, fn, vfn, interrupt_num);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 373cb50fcd15..03b96798f858 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -347,16 +347,16 @@ struct cdns_pcie_epf {
-  * @max_regions: maximum number of regions supported by hardware
-  * @ob_region_map: bitmask of mapped outbound regions
-  * @ob_addr: base addresses in the AXI bus where the outbound regions start
-- * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
-+ * @irq_phys_addr: base address on the AXI bus where the MSI/INTX IRQ
-  *		   dedicated outbound regions is mapped.
-  * @irq_cpu_addr: base address in the CPU space where a write access triggers
-- *		  the sending of a memory write (MSI) / normal message (legacy
-+ *		  the sending of a memory write (MSI) / normal message (INTX
-  *		  IRQ) TLP through the PCIe bus.
-- * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
-+ * @irq_pci_addr: used to save the current mapping of the MSI/INTX IRQ
-  *		  dedicated outbound region.
-  * @irq_pci_fn: the latest PCI function that has updated the mapping of
-- *		the MSI/legacy IRQ dedicated outbound region.
-- * @irq_pending: bitmask of asserted legacy IRQs.
-+ *		the MSI/INTX IRQ dedicated outbound region.
-+ * @irq_pending: bitmask of asserted INTX IRQs.
-  * @lock: spin lock to disable interrupts while modifying PCIe controller
-  *        registers fields (RMW) accessible by both remote RC and EP to
-  *        minimize time between read and write
-@@ -374,7 +374,7 @@ struct cdns_pcie_ep {
- 	u64			irq_pci_addr;
- 	u8			irq_pci_fn;
- 	u8			irq_pending;
--	/* protect writing to PCI_STATUS while raising legacy interrupts */
-+	/* protect writing to PCI_STATUS while raising INTX interrupts */
- 	spinlock_t		lock;
- 	struct cdns_pcie_epf	*epf;
- 	unsigned int		quirk_detect_quiet_flag:1;
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	case PCI_IRQ_MSIX:
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index 5f78a9415286..9e7beb3ba09b 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -172,7 +172,7 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 
+ 	switch (type) {
+ 	case PCI_IRQ_INTX:
+-		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
++		return dw_pcie_ep_raise_intx_irq(ep, func_no);
+ 	case PCI_IRQ_MSI:
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	case PCI_IRQ_MSIX:
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 87759c899fab..d8850b59094b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -496,16 +496,16 @@ static const struct pci_epc_ops epc_ops = {
+ 	.get_features		= dw_pcie_ep_get_features,
+ };
+ 
+-int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no)
++int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct device *dev = pci->dev;
+ 
+-	dev_err(dev, "EP cannot trigger legacy IRQs\n");
++	dev_err(dev, "EP cannot raise INTX IRQs\n");
+ 
+ 	return -EINVAL;
+ }
+-EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_legacy_irq);
++EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
+ 
+ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
+index c83968aa0149..27047e4c402a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-plat.c
++++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
+@@ -48,7 +48,7 @@ static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 
+ 	switch (type) {
+ 	case PCI_IRQ_INTX:
+-		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
++		return dw_pcie_ep_raise_intx_irq(ep, func_no);
+ 	case PCI_IRQ_MSI:
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	case PCI_IRQ_MSIX:
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index ffb9a62f3179..d55b28f3f156 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -580,7 +580,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep);
+ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
+ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
+ void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
+-int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
++int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no);
+ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num);
+ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+@@ -613,7 +613,7 @@ static inline void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+ {
+ }
+ 
+-static inline int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no)
++static inline int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
+ {
+ 	return 0;
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+index 2e5ab5fef310..71860e59cfce 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+@@ -732,7 +732,7 @@ static int qcom_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 
+ 	switch (type) {
+ 	case PCI_IRQ_INTX:
+-		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
++		return dw_pcie_ep_raise_intx_irq(ep, func_no);
+ 	case PCI_IRQ_MSI:
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	default:
+diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+index 25354a82674d..6be20359d9fe 100644
+--- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
++++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+@@ -368,7 +368,7 @@ static int rcar_gen4_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 
+ 	switch (type) {
+ 	case PCI_IRQ_INTX:
+-		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
++		return dw_pcie_ep_raise_intx_irq(ep, func_no);
+ 	case PCI_IRQ_MSI:
+ 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+ 	default:
 -- 
 2.42.0
 
