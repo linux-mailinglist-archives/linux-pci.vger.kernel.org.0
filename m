@@ -1,89 +1,110 @@
-Return-Path: <linux-pci+bounces-72-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-73-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A5037F3A8C
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 01:02:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49ADD7F3AA1
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 01:19:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6AB4FB216F2
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 00:02:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B994DB21707
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Nov 2023 00:19:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6FB419A;
-	Wed, 22 Nov 2023 00:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F248519A;
+	Wed, 22 Nov 2023 00:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WQ0Bw66L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQhchbhE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206779F
-	for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 16:02:26 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1ce5e76912aso39637895ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 21 Nov 2023 16:02:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1700611345; x=1701216145; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tinH49dKaKori8Oo1FO1JsnBXM1Z1NchwQc3U2somhw=;
-        b=WQ0Bw66LAQzUrrBd/1LhIvWMg6fr5JvgBWTylgWXL1N3dPas+zqJq8jZ5vf27l5h9S
-         X7dhnOxxjQxuU5wgn4YhDuK7iDNXHWYVYKu2YofHrLpCXaJD5eZIg8PH6WiQq1qy5V2D
-         d7JYaTDCvd6yA7k/avIaPj8jkE+ertN6AE/xelectpMXj5G0bAzsv0ArzDE/MKpzV72Z
-         uNNWL321XcwykmlI6PAcgu1NPdvDmnWPD7STVMlO2HAYv23MRIlP5cx1W9YwVQ7d6s4A
-         ASTIOBTA/OVbTycBU2OUdcbPc32JUbsu8CknSrrUzVxClpzZg/Nq0M93+4BbgYTNtbGf
-         5o/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700611345; x=1701216145;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tinH49dKaKori8Oo1FO1JsnBXM1Z1NchwQc3U2somhw=;
-        b=IydqXoU5+nDg7MkwROx0Rf5VDThLVXTBk1ecB2ihKXLqPlR82KSYt+Y4ZDAiJIYH+Z
-         7GsKvYpovwySY6Hgdc5RMtmXbHnfRonVRioSDeBg0ZFub+fEMBNm+B8f/AfFZYM9jgBD
-         HnGu/6PdtGZPsGFTMzBM3h4CQUCH2J744KNFLnPSzIHi8HABxgMboqt0efGd5b+awJy6
-         U6x2WZH7bZ+g07J4Kd4PyqxUJ7BC2wsLPuUOkiL7Lilx2ZESu+bKOEk07CuWTZVqGuny
-         Isk9VsWKinyxi/DX5N0JAX6ibM+fYCNfM+iaXY5hxRLcxwVPSYA1A4MirfY/vLOCg+Ld
-         9u9Q==
-X-Gm-Message-State: AOJu0YzSDdPldfW5FsCViMv/5ROKGnZ1LkRr/xu7XNhCyO/JNvwTsD2L
-	jJwHTAYksgetdaj3mL705XASXG5qlUphjyYvzpE=
-X-Google-Smtp-Source: AGHT+IHPSYQ9AO/BcPpoAtJbtyVs/eyGh4sUlTPWvu6mJB0eRUU8qpavSJIQttbInCGE4o9/JU4RwQ==
-X-Received: by 2002:a17:902:e88e:b0:1c7:495c:87e0 with SMTP id w14-20020a170902e88e00b001c7495c87e0mr867326plg.37.1700611345532;
-        Tue, 21 Nov 2023 16:02:25 -0800 (PST)
-Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
-        by smtp.gmail.com with ESMTPSA id j5-20020a170902c3c500b001b896d0eb3dsm8557681plj.8.2023.11.21.16.02.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 21 Nov 2023 16:02:24 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D25188
+	for <linux-pci@vger.kernel.org>; Wed, 22 Nov 2023 00:19:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36240C433C7;
+	Wed, 22 Nov 2023 00:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700612364;
+	bh=aGgYrhljEDf4A6gUYwFO+ks8dbYuUHxfS3hIPewwNq8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=WQhchbhEu7vst8P3zBvMNuzsY9n6aYQXQ+pt8wwZ720fVYod/j+OB6FW0R1zM3OO7
+	 8OXz6HFWvhEfgKpRyZEP4SXmtYJaes9K2ko5ihuQwcFi6IFrpV9otFL60IaPks0ejz
+	 ktXZCFeP3Q45GADmDanzfBzmOTpTB+zYO2XxRuHtVKZ3wLjwPZVRbhgL0yeYyldq5V
+	 wdeHfdPiDr6IYotGH5754md55zDLKRjNjXVmBEQOQBPJd4uKIdUEhKAK4ANFslOjiD
+	 bi5dKkvzUEDu6QgxhvDnOQIHzlJQveFncLzFaRZaNBmJTN8Qpxq+k4HuhlfHKmanS3
+	 ZYbG2skS60a2w==
+Date: Tue, 21 Nov 2023 18:19:22 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Daniel Stodden <dns@arista.com>
+Cc: Dmitry Safonov <dima@arista.com>,
+	Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+	Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] switchtec: Fix stdev_release crash after suprise
+ device loss.
+Message-ID: <20231122001922.GA264028@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH v3] switchtec: Fix stdev_release crash after suprise
- device loss.
-From: Daniel Stodden <dns@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <D34BC819-ACC4-4709-8464-73EEDDC64328@arista.com>
-Date: Tue, 21 Nov 2023 16:02:12 -0800
-Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
- Logan Gunthorpe <logang@deltatee.com>,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <581038D0-C2B6-431C-BC67-5DDE9458FACA@arista.com>
-References: <20231121184008.GA249064@bhelgaas>
- <D34BC819-ACC4-4709-8464-73EEDDC64328@arista.com>
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Dmitry Safonov <dima@arista.com>
-X-Mailer: Apple Mail (2.3731.700.6)
 
-
-
-> On Nov 21, 2023, at 3:58 PM, Daniel Stodden <dns@arista.com> wrote:
+On Tue, Nov 21, 2023 at 03:58:22PM -0800, Daniel Stodden wrote:
+> > On Nov 21, 2023, at 10:40 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Nov 21, 2023 at 10:23:51AM -0800, Daniel Stodden wrote:
+> >>> On Nov 20, 2023, at 1:25 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>> On Mon, Nov 13, 2023 at 01:21:50PM -0800, Daniel Stodden wrote:
+> >>>> A pci device hot removal may occur while stdev->cdev is held open. The
+> >>>> call to stdev_release is then delivered during close or exit, at a
+> >>>> point way past switchtec_pci_remove. Otherwise the last ref would
+> >>>> vanish with the trailing put_device, just before return.
+> >>>> 
+> >>>> At that later point in time, the device layer has alreay removed
+> >>>> stdev->mrpc_mmio map. Also, the stdev->pdev reference was not a
+> >>> 
+> >>> I guess this should say the "stdev->mmio_mrpc" (not "mrpc_mmio")?
+> >> 
+> >> Eww. My fault. Could you still correct that?
+> > 
+> > Yep, I speculatively made that change already, so thanks for
+> > confirming it :)
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=switchtec&id=f9724598e29d
 > 
-> +       put_device(&stdev->pdev);
+> Thanks. And sorry for what’s next. 
+> 
+> Look what I just found in my internal review inbox.
+> 
+> Signed-off/Reviewed-by: dima@arista.com
 
-That was just a sketch. Actuall pci_dev_put.
+Happy to add that, no problem, but:
 
-Daniel
+  - "Signed-off-by" has a specific meaning about either being involved
+    in the creation of the patch or being part of the chain of
+    transmitting the patch, see
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.6#n396
+    Since I got the patch directly from you, adding a signed-off-by
+    from dima@ would mean he created part of the patch.
+
+  - I don't think it makes sense to include both Signed-off-by and
+    Reviewed-by from the same person, since the point of Reviewed-by
+    is to get review by somebody other than the author.
+
+  - dima@ should include a name as well as the email address (I assume
+    "Dmitry Safonov <dima@arista.com>")
+
+So if you want to use a Signed-off-by from Dmitry, please post a v4
+including that (ideally starting from the commit above because I
+silently fixed a couple other typos (although I missed the
+put_device() thing)).
+
+If you prefer a Dmitry's Reviewed-by, no need to post a v4.  The best
+thing would be for Dmitry to respond with the Reviewed-by on the
+mailing list.  Some people do collect reviews internally, but I prefer
+to get them directly from the reviewer.
+
+Bjorn
 
