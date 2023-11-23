@@ -1,96 +1,81 @@
-Return-Path: <linux-pci+bounces-145-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53B147F5C10
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Nov 2023 11:16:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F5097F5E12
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Nov 2023 12:43:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 84D2F1C20D1A
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Nov 2023 10:16:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B5B51C20ED4
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Nov 2023 11:43:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDA02224C2;
-	Thu, 23 Nov 2023 10:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="DDPSK0lG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B3DB23744;
+	Thu, 23 Nov 2023 11:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCE79F;
-	Thu, 23 Nov 2023 02:16:13 -0800 (PST)
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 4ED651A1F9E;
-	Thu, 23 Nov 2023 11:16:10 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
-	t=1700734570; bh=IdlZbZ9FL5iny9zKRN7ZMCUL5Jenf+2OfYnJsvJqcig=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DDPSK0lGkfZJHOQZNuLlkLCLbHz1wjzqVXLySg3Q8z8v7t5gijyPAbAiww7BW4rQr
-	 X2EHNtMdFNvELQGkgNrK29IfFgUDgjQUmz9dd+wWZuWnxYFT9HUPPY/tIjAr/4Z7Al
-	 LCbuCRwmyx01ek0FkLAGYG8vqjsa3KscngzQWmOLXmSMp5woK+anXKMYENadtfWAxO
-	 4mvc7VDKq40/5hTwubz8kifMxUhkDWkl8oEpJYxKuIkSGXypzDhcoE9I4CU5hYWWQ1
-	 4JPUyw025ZJ6Qux1IpbkqUH/wC+OyAm2Y3txJyL3Mm0XJYDyM6WznR/dLWgi1+vEqY
-	 AdxDvgM/iHMNg==
-Date: Thu, 23 Nov 2023 11:16:08 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Halil Pasic <pasic@linux.ibm.com>, Niklas Schnelle
- <schnelle@linux.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>, Marek
- Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>,
- Petr Tesarik <petr.tesarik1@huawei-partners.com>, Ross Lagerwall
- <ross.lagerwall@citrix.com>, linux-pci <linux-pci@vger.kernel.org>,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev, Matthew Rosato
- <mjrosato@linux.ibm.com>, Jianxiong Gao <jxgao@google.com>
-Subject: Re: Memory corruption with CONFIG_SWIOTLB_DYNAMIC=y
-Message-ID: <20231123111608.17727968@meshulam.tesarici.cz>
-In-Reply-To: <20231108101347.77cab795@meshulam.tesarici.cz>
-References: <104a8c8fedffd1ff8a2890983e2ec1c26bff6810.camel@linux.ibm.com>
-	<20231103171447.02759771.pasic@linux.ibm.com>
-	<20231103214831.26d29f4d@meshulam.tesarici.cz>
-	<20231107182420.0bd8c211.pasic@linux.ibm.com>
-	<20231108101347.77cab795@meshulam.tesarici.cz>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-suse-linux-gnu)
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09C0101;
+	Thu, 23 Nov 2023 03:42:50 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 50DAF80FC;
+	Thu, 23 Nov 2023 19:42:43 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 23 Nov
+ 2023 19:42:43 +0800
+Received: from [192.168.125.85] (183.27.97.46) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 23 Nov
+ 2023 19:42:42 +0800
+Message-ID: <ae35cfb2-2eb0-43c5-890b-47b76402ef1d@starfivetech.com>
+Date: Thu, 23 Nov 2023 19:42:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 19/20] PCI: starfive: Add JH7110 PCIe controller
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Daire
+ McNamara" <daire.mcnamara@microchip.com>, Emil Renner Berthing
+	<emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
+	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+References: <20231121213213.GA258296@bhelgaas>
+From: Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <20231121213213.GA258296@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
 
-Hello everybody,
 
-I don't think I have ever seen an answer to my question regarding
-alignment constraints on swiotlb bounce buffers:
 
-On Wed, 8 Nov 2023 10:13:47 +0100
-Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
+On 2023/11/22 5:32, Bjorn Helgaas wrote:
+> On Tue, Nov 21, 2023 at 08:52:21AM +0800, Minda Chen wrote:
+>> ...
+>> BTW. Could you give any comments to Refactoring patches (patch 2 -
+>> patch 16)and PLDA patch(patch 17) next week?  Thanks.
+> 
+> I think Krzysztof or Lorenzo will handle these.  I skimmed them and
+> didn't see any major problems.
+> 
+> Bjorn
 
->[...]
-> To sum it up, there are two types of alignment:
->=20
-> 1. specified by a device's min_align_mask; this says how many low
->    bits of a buffer's physical address must be preserved,
->=20
-> 2. specified by allocation size and/or the alignment parameter;
->    this says how many low bits in the first IO TLB slot's physical
->    address must be zero.
->=20
-> I hope somebody can confirm or correct this summary before I go
-> and break something. You know, it's not like cleanups in SWIOTLB
-> have never broken anything.  ;-)
-
-If no answer means that nobody knows, then based on my understanding the
-existing code (both implementation and users), I can assume that this
-is the correct interpretation.
-
-I'm giving it a few more days. If there's still no reaction, expect a
-beautiful documentation patch and a less beautiful cleanup patch in the
-next week.
-
-Petr T
+Hi Krzysztof and Lorenzo 
+  Could you review and give some comments to this series patches? Thanks.
+  On microchip side, Conor have reviewed all the Refactoring patches.
+  Hope this series patches can be accepted in kernel v6.8
 
