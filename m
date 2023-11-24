@@ -1,113 +1,92 @@
-Return-Path: <linux-pci+bounces-147-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-148-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32D0C7F64F5
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Nov 2023 18:12:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EEFB7F6A3B
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 02:45:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7BCCB20F7C
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Nov 2023 17:12:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 093E9281590
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 01:45:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8950035F11;
-	Thu, 23 Nov 2023 17:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F74646;
+	Fri, 24 Nov 2023 01:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2FE5D42
-	for <linux-pci@vger.kernel.org>; Thu, 23 Nov 2023 09:12:45 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r6DFm-0002Px-2m; Thu, 23 Nov 2023 18:12:38 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r6DFl-00B5YB-DJ; Thu, 23 Nov 2023 18:12:37 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r6DFl-006pjL-3z; Thu, 23 Nov 2023 18:12:37 +0100
-Date: Thu, 23 Nov 2023 18:12:36 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Will Deacon <will@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	kernel@pengutronix.de, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: host-generic: Convert to platform remove callback
- returning void
-Message-ID: <20231123171236.tksz4lhpj5jbwfxm@pengutronix.de>
-References: <20231020092107.2148311-1-u.kleine-koenig@pengutronix.de>
- <170051728317.217544.2195167252059868427.b4-ty@google.com>
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E31B10C7;
+	Thu, 23 Nov 2023 17:45:22 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id C27C924E245;
+	Fri, 24 Nov 2023 09:45:14 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 24 Nov
+ 2023 09:45:14 +0800
+Received: from kevin-ThinkStation-P340.starfivetech.com (113.72.144.198) by
+ EXMBX172.cuchost.com (172.16.6.92) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.42; Fri, 24 Nov 2023 09:45:13 +0800
+From: Kevin Xie <kevin.xie@starfivetech.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<mason.huo@starfivetech.com>, <leyfoon.tan@starfivetech.com>,
+	<minda.chen@starfivetech.com>
+Subject: [PATCH v1] PCI: Add PCIE_CONFIG_REQUEST_WAIT_MS waiting time value
+Date: Fri, 24 Nov 2023 09:45:08 +0800
+Message-ID: <20231124014508.43358-1-kevin.xie@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="g3hogphixdkg5kc5"
-Content-Disposition: inline
-In-Reply-To: <170051728317.217544.2195167252059868427.b4-ty@google.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-
-
---g3hogphixdkg5kc5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 20, 2023 at 03:56:18PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
->=20
-> On Fri, 20 Oct 2023 11:21:07 +0200, Uwe Kleine-K=F6nig wrote:
-> > The .remove() callback for a platform driver returns an int which makes
-> > many driver authors wrongly assume it's possible to do error handling by
-> > returning an error code.  However the value returned is (mostly) ignored
-> > and this typically results in resource leaks. To improve here there is a
-> > quest to make the remove callback return void. In the first step of this
-> > quest all drivers are converted to .remove_new() which already returns
-> > void.
-> >=20
-> > [...]
->=20
-> Applied to "enumeration" for v6.8, thanks!
->=20
-> [1/1] PCI: host-generic: Convert to platform remove callback returning vo=
-id
->       commit: d9dcdb4531fe39ce48919ef8c2c9369ee49f3ad2
+Add the PCIE_CONFIG_REQUEST_WAIT_MS marco to define the minimum waiting
+time between sending the first configuration request to the device and
+exit from a conventional reset (or after link training completes).
 
-Thanks! This branch isn't included in next. Is this on purpose?
+As described in the conventional reset rules of PCI specifications,
+there are two different use cases of the value:
 
-Best regards
-Uwe
+   - With a downstream port that supports link speeds <=3D 5.0 GT/s,
+     the waiting is following exit from a conventional reset.
 
+   - With a downstream port that supports link speeds > 5.0 GT/s,
+     the waiting is after link training completes.
+
+Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
+Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
+---
+ drivers/pci/pci.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 5ecbcf041179..4ca8766e546e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -22,6 +22,13 @@
+  */
+ #define PCIE_PME_TO_L2_TIMEOUT_US	10000
+=20
++/*
++ * PCIe r6.0, sec 6.6.1, <Conventional Reset>
++ * Requires a minimum waiting of 100ms before sending a configuration
++ * request to the device.
++ */
++#define PCIE_CONFIG_REQUEST_WAIT_MS	100
++
+ extern const unsigned char pcie_link_speed[];
+ extern bool pci_early_dump;
+=20
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.25.1
 
---g3hogphixdkg5kc5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVfiAQACgkQj4D7WH0S
-/k6z+wgApVLfxkOyQRKmyop27mydI6ZhVxsXVoZ4lRwk4j2Q5E8L3nIUv3zMBU8/
-4oDTF9rHJ7IzRkiKHEXzKMEmWS/yz2vhr8YFOpVQJdd20wbrKdyWh5FW5aevc9pZ
-AQ8v00pW+xZC+VbE1ESfJJGoW1RZnRT0GAmYs9HONntECkJWRyF90IyBpDnCoCns
-LMLqnhBdp6C1Rs4mCam4QtO7/S+HfKD4LQ4Sx+L2S5KxTXyS3omcq78TnpogkgoW
-48Jb6ztIEpMO5dL9DzNdmHTJLadJle0aXc5we2qRspKPKUoOAXQCPXHYaTYaooMW
-vTxjEnf+JDQjatax2ACvFCflvxAiCw==
-=yxnt
------END PGP SIGNATURE-----
-
---g3hogphixdkg5kc5--
 
