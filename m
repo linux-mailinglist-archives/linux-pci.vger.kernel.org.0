@@ -1,212 +1,245 @@
-Return-Path: <linux-pci+bounces-162-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8996B7F78E0
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 17:25:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F2807F7A5D
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 18:30:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4270D2813FC
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 16:25:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 385DE281337
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 17:30:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F114E2E85A;
-	Fri, 24 Nov 2023 16:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D90381BE;
+	Fri, 24 Nov 2023 17:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBxm3z/D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED0CD41;
-	Fri, 24 Nov 2023 08:25:45 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ScL0J3zRqz67cSV;
-	Sat, 25 Nov 2023 00:24:16 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 24 Nov
- 2023 16:25:43 +0000
-Date: Fri, 24 Nov 2023 16:25:42 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Lukas Wunner <lukas@wunner.de>, Alexey Kardashevskiy <aik@amd.com>,
-	<linux-coco@lists.linux.dev>, <kvm@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	<suzuki.poulose@arm.com>
-Subject: Re: TDISP enablement
-Message-ID: <20231124162542.00005d95@Huawei.com>
-In-Reply-To: <654ebd31be94a_46f0294a5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
-	<20231101072717.GB25863@wunner.de>
-	<20231101110551.00003896@Huawei.com>
-	<654ebd31be94a_46f0294a5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565D7A4;
+	Fri, 24 Nov 2023 09:30:08 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-a00a9d677fcso300018666b.0;
+        Fri, 24 Nov 2023 09:30:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700847007; x=1701451807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YbQAKxaAIC+vWd9ZdBbGyG9cgv4TDOwp1I9wI83Zcsg=;
+        b=SBxm3z/D+N5jVPpvc17GcJ+f2F1FewvgMhqZ9oiSDLlmVj44o/xcjn+PcnGTAcPtja
+         VtX9ZZLgE9hH7pd6ruh0OotsI3Pci0gqXrtiyq7Y+nWCUUpVHxfUe7zb6Gg3QM72PB64
+         Cv+UyJIouvaUt8Z2hmQkgvXZNum//ZnS5lb9H3+9qrXB+jwMr42gwo/0dGuUuRcjNYPC
+         hwJHxJqMEmL9VormYyKKWiK9x53hr8VPxFRaLD5lEx7jbFbSuDMiXaADkmqsTXFLNxY6
+         m3KmfFOhWJK7zZXl7sWov5mYXdqZovDR8VCAqVJStrizOTAWxmkQhsFuG7/mH8gzleuR
+         wnBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700847007; x=1701451807;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YbQAKxaAIC+vWd9ZdBbGyG9cgv4TDOwp1I9wI83Zcsg=;
+        b=hIByNfKJnah2Yy/t3MFuBlZHnZ92J1SQDPW5AlSkxnr83f8NVZ4NHc1kAh9PYOkZjI
+         E1TlhpynocPAsSJUFsXCCwJ1lzybOlv1ychdzgr38ovOhMu+w49EuVtFTJGC1Qx391rl
+         4vJUQNGNllD4Ew/3QTTv1FCjjCBuNzFzk9vacXXWTgbgdwJvuDNAfgak1PtQNnZByXcz
+         W7HabRWjWLTEJuER/sKj/SviW85NOBLdrj5qIBC7rfY1YgMSsJ5eOJqN5OooZHuALNqW
+         cwHoI5DSq0WZ30xw1NqwNTK9zVZrYVeDshYFajDnbuunxCt+NOeTc1srljMx/D4OEAxX
+         o3XA==
+X-Gm-Message-State: AOJu0Ywjfq852gzqvsIODIJMZgyXTFiNj9G0DzVAzooY8BxVNymA1sUm
+	WvzPi0/XLzFhgcBiruad93c=
+X-Google-Smtp-Source: AGHT+IGWbuigfvuGp6kcl40qPQWcJDj2dF5kj1SWoLeoGbjHy8lTPTP3EacK6c7YB/nZDWoV2QNmZA==
+X-Received: by 2002:a17:906:b6d3:b0:a03:a3c4:ed99 with SMTP id ec19-20020a170906b6d300b00a03a3c4ed99mr3062176ejb.41.1700847006460;
+        Fri, 24 Nov 2023 09:30:06 -0800 (PST)
+Received: from ?IPV6:2a01:c22:72cf:8300:64ee:eefa:7128:3642? (dynamic-2a01-0c22-72cf-8300-64ee-eefa-7128-3642.c22.pool.telefonica.de. [2a01:c22:72cf:8300:64ee:eefa:7128:3642])
+        by smtp.googlemail.com with ESMTPSA id v11-20020a1709067d8b00b009dddec5a96fsm2323648ejo.170.2023.11.24.09.30.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Nov 2023 09:30:05 -0800 (PST)
+Message-ID: <c85f2d02-d862-4431-a210-79c13efd163c@gmail.com>
+Date: Fri, 24 Nov 2023 18:30:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [bug report] lockdep WARN at PCI device rescan
+Content-Language: en-US
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
+ Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j>
+ <ZVNJCxh5vgj22SfQ@shikoro> <ea31480f-2887-41fe-a560-f4bb1103479e@gmail.com>
+ <ZVNiUuyHaez8rwL-@smile.fi.intel.com> <20231114155701.GA27547@wunner.de>
+ <ZVOcPOlkkBk3Xfm5@smile.fi.intel.com> <ZVO1M2289uvElgOi@smile.fi.intel.com>
+ <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 
-On Fri, 10 Nov 2023 15:30:57 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Jonathan Cameron wrote:
-> > On Wed, 1 Nov 2023 08:27:17 +0100
-> > Lukas Wunner <lukas@wunner.de> wrote:
-> > 
-> > Thanks Alexy, this is a great discussion to kick off.
-> >   
-> > > On Wed, Nov 01, 2023 at 09:56:11AM +1100, Alexey Kardashevskiy wrote:  
-> > > > - device_connect - starts CMA/SPDM session, returns measurements/certs,
-> > > > runs IDE_KM to program the keys;    
-> > > 
-> > > Does the PSP have a set of trusted root certificates?
-> > > If so, where does it get them from?
-> > > 
-> > > If not, does the PSP just blindly trust the validity of the cert chain?
-> > > Who validates the cert chain, and when?
-> > > Which slot do you use?
-> > > Do you return only the cert chain of that single slot or of all slots?
-> > > Does the PSP read out all measurements available?  This may take a while
-> > > if the measurements are large and there are a lot of them.  
-> > 
-> > I'd definitely like their to be a path for certs and measurement to be
-> > checked by the Host OS (for the non TDISP path). Whether the
-> > policy setup cares about result is different question ;)
-> >   
-> > > 
-> > >   
-> > > > - tdi_info - read measurements/certs/interface report;    
-> > > 
-> > > Does this return cached cert chains and measurements from the device
-> > > or does it retrieve them anew?  (Measurements might have changed if
-> > > MEAS_FRESH_CAP is supported.)
-> > > 
-> > >   
-> > > > If the user wants only CMA/SPDM, the Lukas'es patched will do that without
-> > > > the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
-> > > > sessions).    
-> > > 
-> > > It can co-exist if the pci_cma_claim_ownership() library call
-> > > provided by patch 12/12 is invoked upon device_connect.
-> > > 
-> > > It would seem advantageous if you could delay device_connect
-> > > until a device is actually passed through.  Then the OS can
-> > > initially authenticate and measure devices and the PSP takes
-> > > over when needed.  
-> > 
-> > Would that delay mean IDE isn't up - I think that wants to be
-> > available whether or not pass through is going on.
-> > 
-> > Given potential restrictions on IDE resources, I'd expect to see an explicit
-> > opt in from userspace on the host to start that process for a given
-> > device.  (udev rule or similar might kick it off for simple setups).
-> > 
-> > Would that work for the flows described?  
-> > 
-> > Next bit probably has holes...  Key is that a lot of the checks
-> > may fail, and it's up to host userspace policy to decide whether
-> > to proceed (other policy in the secure VM side of things obviously)
-> > 
-> > So my rough thinking is - for the two options (IDE / TDISP)
-> > 
-> > Comparing with Alexey's flow I think only real difference is that
-> > I call out explicit host userspace policy controls. I'd also like
-> > to use similar interfaces to convey state to host userspace as
-> > per Lukas' existing approaches.  Sure there will also be in
-> > kernel interfaces for driver to get data if it knows what to do
-> > with it.  I'd also like to enable the non tdisp flow to handle
-> > IDE setup 'natively' if that's possible on particular hardware.  
+On 24.11.2023 11:49, Shinichiro Kawasaki wrote:
+> On Nov 14, 2023 / 19:58, Andy Shevchenko wrote:
+>> On Tue, Nov 14, 2023 at 06:11:40PM +0200, Andy Shevchenko wrote:
+>>> On Tue, Nov 14, 2023 at 04:57:01PM +0100, Lukas Wunner wrote:
+>>>> On Tue, Nov 14, 2023 at 02:04:34PM +0200, Andy Shevchenko wrote:
+>>>>> On Tue, Nov 14, 2023 at 11:47:15AM +0100, Heiner Kallweit wrote:
+>>>>>> On 14.11.2023 11:16, Wolfram Sang wrote:
+>>>>>>> On Tue, Nov 14, 2023 at 06:54:29AM +0000, Shinichiro Kawasaki wrote:
+>>
+>> ...
+>>
+>>>>>>>> The lockdep splat indicates possible deadlock between
+>>>>>>>> pci_rescan_remove_lock and work_completion lock have deadlock
+>>>>>>>> possibility.
+>>>>>>>> In the call stack, I found that the workqueue thread for
+>>>>>>>> i801_probe() calls p2sb_bar(), which locks pci_rescan_remove_lock.
+>>>>>>
+>>>>>> i801 just uses p2sb_bar(), I don't see any issue in i801. Root cause
+>>>>>> seems to be in the PCI subsystem. Calling p2sb_bar() from a PCI driver
+>>>>>> probe callback seems to be problematic, nevertheless it's a valid API
+>>>>>> usage.
+>>>>>
+>>>>> So, currently I'm lack of (good) ideas and would like to hear other (more
+>>>>> experienced) PCI developers on how is to address this...
+>>>>
+>>>> Can you add a p2sb_bar_locked() library call which is used by the
+>>>> i801 probe path?
+>>>>
+>>>> Basically rename p2sb_bar() to __p2sb_bar() and add a third parameter
+>>>> of type boolean which signifies whether it's invoked in locked context
+>>>> or not, then call that from p2sb_bar() and p2sb_bar_locked() wrappers.
+>>>
+>>> It may work, I assume. Let me cook the patch.
+>>
+>> Hmm... But this will open a window when probing phase happens, e.g. during
+>> boot time, no? If somebody somehow calls for full rescan, we may end up in
+>> the situation when P2SB is gone before accessing it in p2sb_bar().
+>>
+>> Now I'm wondering why simple pci_dev_get() can't be sufficient in the
+>> p2sb_bar().
 > 
-> Are there any platforms that have IDE host capability that are not also
-> shipping a TSM. I know that some platform allow for either the TSM or
-> the OS to own that setup, but there are no standards there. I am not
-> opposed to the native path, but given a cross-vendor "TSM" concept is
-> needed and that a TSM is likely available on all IDE capable platforms
-> it seems reasonable for Linux to rely on TSM managed IDE for the near
-> term if not the long term as well.
+> All, thanks for the discussion. It looks rather difficult to avoid the WARN.
+> 
+> To confirm that the deadlock is for real, I tried to remove i2c-i801 device and
+> did /sys/bus/pci/rescan with two commands below:
+> 
+>   # echo 1 > /sys/bus/pci/devices/0000\:00\:1f.4/remove
+>   # echo 1 > /sys/bus/pci/rescan
+> 
+> Then I observed the second command hangs.
+> 
+> I came across another fix idea: assuming the guard by pci_rescan_remove_lock is
+> required in p2sb_bar(), how about to do trylock? If the mutex can not be locked,
+> make the p2sb_bar() call fail. This way, we can avoid the deadlock between
+> pci_rescan_remove_lock and workqueue completion.
+> 
+> I created a patch below and confirmed it avoided the lockdep WARN. The i2c-i801
+> probe was ok at system boot. When I did the two commands above, I observed the
+> i2c-i801 device probe failed due to trylock failure. But I think it's far better
+> than hang.
+> 
 
-Just for completeness, (I mentioned it in the LPC discussion):
-IDE might well be link based between a switch inside the chassis and devices
-outside the chassis in which case it is all standards defined and the host
-isn't involved.  Not TDISP related though in that case.
+I wouldn't call this a solution. A solution has to support pci drivers using
+p2sb_bar() in probe(). You can't simply make them fail.
 
 > 
-> > 
-> > 1. Host has a go at CMA/SPDM. Policy might say that a failure here is
-> >    a failure in general so reject device - or it might decide it's up to
-> >    the PSP etc.   (userspace can see if it succeeded)
-> >    I'd argue host software can launch this at any time.  It will
-> >    be a denial of service attack but so are many other things the host
-> >    can do.
-> > 2. TDISP policy decision from host (userspace policy control)
-> >    Need to know end goal.  
-> 
-> If the TSM owns the TDISP state what this policy decision rely comes
-> down to is IDE stream resource management, I otherwise struggle to
-> conceptualize "TDISP policy".
-> 
-> The policy is userspace deciding to assign an interface to a TVM, and
-> that TVM requests that the assigned interface be allowed to access
-> private memory. So it's not necessarily TDISP policy, its assigned
-> interface is allowed to transition to private operation.
-Agreed - that is probably enough. I was avoiding calling out specific
-policy method, just don't want it to all flow through in the kernel without
-a hook.  If we assume that we do stuff only when allocated to a TVM
-then that acts as the gate.
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index ed6b7f48736..3e784fb6cd9 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -3312,6 +3312,18 @@ void pci_lock_rescan_remove(void)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_lock_rescan_remove);
+>  
+> +/*
+> + * Try to acquire pci_rescan_remove_lock. Returns 1 if the mutex
+> + * has been acquired successfully, and 0 on contention. Use this
+> + * to acquire the lock in workqueue context to avoid potential deadlock
+> + * together with work_completion.
+> + */
+> +int pci_trylock_rescan_remove(void)
+> +{
+> +	return mutex_trylock(&pci_rescan_remove_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_trylock_rescan_remove);
+> +
+>  void pci_unlock_rescan_remove(void)
+>  {
+>  	mutex_unlock(&pci_rescan_remove_lock);
+> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+> index 1cf2471d54d..7a6bee8abf9 100644
+> --- a/drivers/platform/x86/p2sb.c
+> +++ b/drivers/platform/x86/p2sb.c
+> @@ -113,7 +113,10 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+>  	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+>  	 * removing via sysfs while it is temporarily exposed.
+>  	 */
+> -	pci_lock_rescan_remove();
+> +	if (!pci_trylock_rescan_remove()) {
+> +		pr_err("P2SB device accessed during PCI rescan");
+> +		return -EBUSY;
+> +	}
+>  
+>  	/* Unhide the P2SB device, if needed */
+>  	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 60ca768bc86..e6db5096217 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1439,6 +1439,7 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
+>  unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
+>  unsigned int pci_rescan_bus(struct pci_bus *bus);
+>  void pci_lock_rescan_remove(void);
+> +int pci_trylock_rescan_remove(void);
+>  void pci_unlock_rescan_remove(void);
+>  
+>  /* Vital Product Data routines */
 
-> 
-> > 3. IDE opt in from userspace.  Policy decision.
-> >   - If not TDISP 
-> >     - device_connect(IDE ONLY) - bunch of proxying in host OS.
-> >     - Cert chain and measurements presented to host, host can then check if
-> >       it is happy and expose for next policy decision.
-> >     - Hooks exposed for host to request more measurements, key refresh etc.
-> >       Idea being that the flow is host driven with PSP providing required
-> >       services.  If host can just do setup directly that's fine too.
-> >   - If TDISP (technically you can run tdisp from host, but lets assume
-> >     for now no one wants to do that? (yet)).
-> >     - device_connect(TDISP) - bunch of proxying in host OS.
-> >     - Cert chain and measurements presented to host, host can then check if
-> >       it is happy and expose for next policy decision.
-> > 
-> > 4. Flow after this depends on early or late binding (lockdown)
-> >    but could load driver at this point.  Userspace policy.
-> >    tdi-bind etc.  
-> 
-> It is valid to load the driver and operate the device in shared mode, so
-> I am not sure that acceptance should gate driver loading. It also seems
-> like something that could be managed with module policy if someone
-> wanted to prevent shared operation before acceptance.
-
-Indeed that might work.  Depends on device and whether it needs to be exposed
-in shared mode (which may well require driver code auditing etc that can be relaxed
-if it's up with TDISP and we know it's not a 'fake').
-
-> 
-> [..]
-> > > > The next steps:
-> > > > - expose blobs via configfs (like Dan did configfs-tsm);  
-> 
-> I am missing the context here, but for measurements I think those are
-> better in sysfs. configs was only to allow for multiple containers to grab
-> attestation reports, measurements are device local and containers can
-> all see the same measurements.
-
-Ah. Fair point.
-
-> 
-> > > > - s/tdisp.ko/coco.ko/;  
-> 
-> My bikeshed contribution, perhaps tsm.ko? I am still not someone who can
-> say "coco" for confidential computing with a straight face.
-
-Then definitely should be coco.ko :)
-
-Jonathan
 
