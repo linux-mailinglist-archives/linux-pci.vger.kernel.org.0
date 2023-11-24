@@ -1,60 +1,67 @@
-Return-Path: <linux-pci+bounces-163-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-164-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F2807F7A5D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 18:30:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A612B7F82FC
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 20:12:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 385DE281337
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 17:30:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A9EB286B25
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 19:12:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D90381BE;
-	Fri, 24 Nov 2023 17:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083CA364C8;
+	Fri, 24 Nov 2023 19:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBxm3z/D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ov6P92Q2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565D7A4;
-	Fri, 24 Nov 2023 09:30:08 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-a00a9d677fcso300018666b.0;
-        Fri, 24 Nov 2023 09:30:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700847007; x=1701451807; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YbQAKxaAIC+vWd9ZdBbGyG9cgv4TDOwp1I9wI83Zcsg=;
-        b=SBxm3z/D+N5jVPpvc17GcJ+f2F1FewvgMhqZ9oiSDLlmVj44o/xcjn+PcnGTAcPtja
-         VtX9ZZLgE9hH7pd6ruh0OotsI3Pci0gqXrtiyq7Y+nWCUUpVHxfUe7zb6Gg3QM72PB64
-         Cv+UyJIouvaUt8Z2hmQkgvXZNum//ZnS5lb9H3+9qrXB+jwMr42gwo/0dGuUuRcjNYPC
-         hwJHxJqMEmL9VormYyKKWiK9x53hr8VPxFRaLD5lEx7jbFbSuDMiXaADkmqsTXFLNxY6
-         m3KmfFOhWJK7zZXl7sWov5mYXdqZovDR8VCAqVJStrizOTAWxmkQhsFuG7/mH8gzleuR
-         wnBg==
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CC52126
+	for <linux-pci@vger.kernel.org>; Fri, 24 Nov 2023 11:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700852915;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ktMN6fpPE1Jf/JsJv1eWYJ7kbl3PClV8V5bIG3J558=;
+	b=Ov6P92Q2kk11mT94IB/ywLdcXC0kjWQCewRKnkK28ONQXSiuZOo9ys+gaD1GmqLO5JYU37
+	IOwBfjI7K3gf4jpquArH3iMAe0rFZ9XweZMykmEjr3Qn/IwivFkfdGfrHhqLiAQ1Fw9EAn
+	YiJWiof3xPw7O8bI7hvZDCqEExy29nk=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-91-ZrMlh9YyPBCWcAlR9AcFfQ-1; Fri, 24 Nov 2023 14:08:31 -0500
+X-MC-Unique: ZrMlh9YyPBCWcAlR9AcFfQ-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2c89230b1fdso26503471fa.2
+        for <linux-pci@vger.kernel.org>; Fri, 24 Nov 2023 11:08:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700847007; x=1701451807;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YbQAKxaAIC+vWd9ZdBbGyG9cgv4TDOwp1I9wI83Zcsg=;
-        b=hIByNfKJnah2Yy/t3MFuBlZHnZ92J1SQDPW5AlSkxnr83f8NVZ4NHc1kAh9PYOkZjI
-         E1TlhpynocPAsSJUFsXCCwJ1lzybOlv1ychdzgr38ovOhMu+w49EuVtFTJGC1Qx391rl
-         4vJUQNGNllD4Ew/3QTTv1FCjjCBuNzFzk9vacXXWTgbgdwJvuDNAfgak1PtQNnZByXcz
-         W7HabRWjWLTEJuER/sKj/SviW85NOBLdrj5qIBC7rfY1YgMSsJ5eOJqN5OooZHuALNqW
-         cwHoI5DSq0WZ30xw1NqwNTK9zVZrYVeDshYFajDnbuunxCt+NOeTc1srljMx/D4OEAxX
-         o3XA==
-X-Gm-Message-State: AOJu0Ywjfq852gzqvsIODIJMZgyXTFiNj9G0DzVAzooY8BxVNymA1sUm
-	WvzPi0/XLzFhgcBiruad93c=
-X-Google-Smtp-Source: AGHT+IGWbuigfvuGp6kcl40qPQWcJDj2dF5kj1SWoLeoGbjHy8lTPTP3EacK6c7YB/nZDWoV2QNmZA==
-X-Received: by 2002:a17:906:b6d3:b0:a03:a3c4:ed99 with SMTP id ec19-20020a170906b6d300b00a03a3c4ed99mr3062176ejb.41.1700847006460;
-        Fri, 24 Nov 2023 09:30:06 -0800 (PST)
-Received: from ?IPV6:2a01:c22:72cf:8300:64ee:eefa:7128:3642? (dynamic-2a01-0c22-72cf-8300-64ee-eefa-7128-3642.c22.pool.telefonica.de. [2a01:c22:72cf:8300:64ee:eefa:7128:3642])
-        by smtp.googlemail.com with ESMTPSA id v11-20020a1709067d8b00b009dddec5a96fsm2323648ejo.170.2023.11.24.09.30.04
+        d=1e100.net; s=20230601; t=1700852910; x=1701457710;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2ktMN6fpPE1Jf/JsJv1eWYJ7kbl3PClV8V5bIG3J558=;
+        b=oLlm2M5g2Fmjy/djz5qvp37SpP/JVek2EDPJaPGiclZkomUUzvWAwRCiTml5pW2Mtf
+         BWWPW7+HCINNMx++xbNVuFih4NKxErIYo8dUd5AklqK5W8XTyo0OT3AcVpb6OUBJunfB
+         0vIE7FfvFaHpO5YB/209YXv3BFPLvrB3b78Hn6PZ+v+u9fFDtjEIh0FUbUeg5AHO0U7n
+         gBRbZr8RMtTWtSLVS/bl5W5RDiAYHSiCWOD3U/HFW69SSySoz61pdOzIQJQwgAIhKF1G
+         RIJTXdFXCXWZSI/Ed010I3dhNxUmWrdPqaWBOnSqZPNQvNgCPolzX9SLxL0mC8tuspKy
+         XVYw==
+X-Gm-Message-State: AOJu0YzWxJZEUYgY0H7qyns1MBG55ncjjt8d6iXuNi5LcZXEuDQZy1md
+	l8ZhcPKZ+RVVvJ4VhRbKmxGYFKGbEL/asIsoMyzew1Ev7aoB6AfbbFjTBIrca5icKUwqPy8i8A9
+	oZJbuqA9o3GNdKcDR4Rtu
+X-Received: by 2002:a2e:9d5a:0:b0:2c7:3b83:c4b7 with SMTP id y26-20020a2e9d5a000000b002c73b83c4b7mr2699925ljj.14.1700852910307;
+        Fri, 24 Nov 2023 11:08:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEVm/V08FW9UONS0nS/A1S/Bwyn4V6Z7EXOCU29ZC+B53PqwGcdz73dtb8czfY1GowtO7aojA==
+X-Received: by 2002:a2e:9d5a:0:b0:2c7:3b83:c4b7 with SMTP id y26-20020a2e9d5a000000b002c73b83c4b7mr2699899ljj.14.1700852909940;
+        Fri, 24 Nov 2023 11:08:29 -0800 (PST)
+Received: from ?IPV6:2a02:810d:4b3f:de9c:abf:b8ff:feee:998b? ([2a02:810d:4b3f:de9c:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id hg25-20020a170906f35900b00a08a933baafsm1312957ejb.126.2023.11.24.11.08.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 09:30:05 -0800 (PST)
-Message-ID: <c85f2d02-d862-4431-a210-79c13efd163c@gmail.com>
-Date: Fri, 24 Nov 2023 18:30:04 +0100
+        Fri, 24 Nov 2023 11:08:29 -0800 (PST)
+Message-ID: <a6ef92ae-0747-435b-822d-d0229da4683c@redhat.com>
+Date: Fri, 24 Nov 2023 20:08:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,184 +69,135 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] lockdep WARN at PCI device rescan
+From: Danilo Krummrich <dakr@redhat.com>
+Subject: Re: [PATCH 4/4] lib/iomap.c: improve comment about pci anomaly
+To: Arnd Bergmann <arnd@kernel.org>, Philipp Stanner <pstanner@redhat.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Randy Dunlap <rdunlap@infradead.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Eric Auger <eric.auger@redhat.com>,
+ Kent Overstreet <kent.overstreet@gmail.com>,
+ Niklas Schnelle <schnelle@linux.ibm.com>, Neil Brown <neilb@suse.de>,
+ John Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+ Yury Norov <yury.norov@gmail.com>, Kees Cook <keescook@chromium.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, David Gow <davidgow@google.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ "wuqiang.matt" <wuqiang.matt@bytedance.com>, Jason Baron
+ <jbaron@akamai.com>, Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20231120215945.52027-2-pstanner@redhat.com>
+ <20231120215945.52027-6-pstanner@redhat.com>
+ <a9ab9976-c1e0-4f91-b17f-e5bbbf21def3@app.fastmail.com>
 Content-Language: en-US
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
- Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j>
- <ZVNJCxh5vgj22SfQ@shikoro> <ea31480f-2887-41fe-a560-f4bb1103479e@gmail.com>
- <ZVNiUuyHaez8rwL-@smile.fi.intel.com> <20231114155701.GA27547@wunner.de>
- <ZVOcPOlkkBk3Xfm5@smile.fi.intel.com> <ZVO1M2289uvElgOi@smile.fi.intel.com>
- <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
-Content-Type: text/plain; charset=UTF-8
+Organization: RedHat
+In-Reply-To: <a9ab9976-c1e0-4f91-b17f-e5bbbf21def3@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 24.11.2023 11:49, Shinichiro Kawasaki wrote:
-> On Nov 14, 2023 / 19:58, Andy Shevchenko wrote:
->> On Tue, Nov 14, 2023 at 06:11:40PM +0200, Andy Shevchenko wrote:
->>> On Tue, Nov 14, 2023 at 04:57:01PM +0100, Lukas Wunner wrote:
->>>> On Tue, Nov 14, 2023 at 02:04:34PM +0200, Andy Shevchenko wrote:
->>>>> On Tue, Nov 14, 2023 at 11:47:15AM +0100, Heiner Kallweit wrote:
->>>>>> On 14.11.2023 11:16, Wolfram Sang wrote:
->>>>>>> On Tue, Nov 14, 2023 at 06:54:29AM +0000, Shinichiro Kawasaki wrote:
->>
->> ...
->>
->>>>>>>> The lockdep splat indicates possible deadlock between
->>>>>>>> pci_rescan_remove_lock and work_completion lock have deadlock
->>>>>>>> possibility.
->>>>>>>> In the call stack, I found that the workqueue thread for
->>>>>>>> i801_probe() calls p2sb_bar(), which locks pci_rescan_remove_lock.
->>>>>>
->>>>>> i801 just uses p2sb_bar(), I don't see any issue in i801. Root cause
->>>>>> seems to be in the PCI subsystem. Calling p2sb_bar() from a PCI driver
->>>>>> probe callback seems to be problematic, nevertheless it's a valid API
->>>>>> usage.
->>>>>
->>>>> So, currently I'm lack of (good) ideas and would like to hear other (more
->>>>> experienced) PCI developers on how is to address this...
->>>>
->>>> Can you add a p2sb_bar_locked() library call which is used by the
->>>> i801 probe path?
->>>>
->>>> Basically rename p2sb_bar() to __p2sb_bar() and add a third parameter
->>>> of type boolean which signifies whether it's invoked in locked context
->>>> or not, then call that from p2sb_bar() and p2sb_bar_locked() wrappers.
->>>
->>> It may work, I assume. Let me cook the patch.
->>
->> Hmm... But this will open a window when probing phase happens, e.g. during
->> boot time, no? If somebody somehow calls for full rescan, we may end up in
->> the situation when P2SB is gone before accessing it in p2sb_bar().
->>
->> Now I'm wondering why simple pci_dev_get() can't be sufficient in the
->> p2sb_bar().
-> 
-> All, thanks for the discussion. It looks rather difficult to avoid the WARN.
-> 
-> To confirm that the deadlock is for real, I tried to remove i2c-i801 device and
-> did /sys/bus/pci/rescan with two commands below:
-> 
->   # echo 1 > /sys/bus/pci/devices/0000\:00\:1f.4/remove
->   # echo 1 > /sys/bus/pci/rescan
-> 
-> Then I observed the second command hangs.
-> 
-> I came across another fix idea: assuming the guard by pci_rescan_remove_lock is
-> required in p2sb_bar(), how about to do trylock? If the mutex can not be locked,
-> make the p2sb_bar() call fail. This way, we can avoid the deadlock between
-> pci_rescan_remove_lock and workqueue completion.
-> 
-> I created a patch below and confirmed it avoided the lockdep WARN. The i2c-i801
-> probe was ok at system boot. When I did the two commands above, I observed the
-> i2c-i801 device probe failed due to trylock failure. But I think it's far better
-> than hang.
-> 
+Hi Arnd,
 
-I wouldn't call this a solution. A solution has to support pci drivers using
-p2sb_bar() in probe(). You can't simply make them fail.
+On 11/21/23 11:03, Arnd Bergmann wrote:
+> On Mon, Nov 20, 2023, at 22:59, Philipp Stanner wrote:
+>> lib/iomap.c contains one of the definitions of pci_iounmap(). The
+>> current comment above this out-of-place function does not clarify WHY
+>> the function is defined here.
+>>
+>> Linus's detailed comment above pci_iounmap() in drivers/pci/iomap.c
+>> clarifies that in a far better way.
+>>
+>> Extend the existing comment with an excerpt from Linus's and hint at the
+>> other implementation in drivers/pci/iomap.c
+>>
+>> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> 
+> I think instead of explaining why the code is so complicated
+> here, I'd prefer to make it more logical and not have to
+> explain it.
+> 
+> We should be able to define a generic version like
+> 
+> void pci_iounmap(struct pci_dev *dev, void __iomem * addr)
+
+Let's shed some light on the different config options related to this.
+
+To me it looks like GENERIC_IOMAP always implies GENERIC_PCI_IOMAP.
+
+lib/iomap.c contains a definition of pci_iounmap() since it uses the
+common IO_COND() macro. This definitions wins if GENERIC_IOMAP was
+selected.
+
+lib/pci_iomap.c contains another definition of pci_iounmap() which is
+guarded by ARCH_WANTS_GENERIC_PCI_IOUNMAP to prevent multiple definitions
+in case either GENERIC_IOMAP is set or the architecture already defined
+pci_iounmap().
+
+What's the purpose of not having set ARCH_HAS_GENERIC_IOPORT_MAP producing
+an empty definition of pci_iounmap() though [1]?
+
+And more generally, is there any other (subtle) logic behind this?
+
+[1] https://elixir.bootlin.com/linux/latest/source/lib/pci_iomap.c#L167
+
+> {
+> #ifdef CONFIG_HAS_IOPORT
+>         if (iomem_is_ioport(addr)) {
+>                ioport_unmap(addr);
+>                return;
+>         }
+> #endif
+>        iounmap(addr)
+> }
+> 
+> and then define iomem_is_ioport() in lib/iomap.c for x86,
+> while defining it in asm-generic/io.h for the rest,
+> with an override in asm/io.h for those architectures
+> that need a custom inb().
+
+So, that would be similar to IO_COND(), right? What would we need inb() for
+in this context?
+
+- Danilo
 
 > 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index ed6b7f48736..3e784fb6cd9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3312,6 +3312,18 @@ void pci_lock_rescan_remove(void)
->  }
->  EXPORT_SYMBOL_GPL(pci_lock_rescan_remove);
->  
-> +/*
-> + * Try to acquire pci_rescan_remove_lock. Returns 1 if the mutex
-> + * has been acquired successfully, and 0 on contention. Use this
-> + * to acquire the lock in workqueue context to avoid potential deadlock
-> + * together with work_completion.
-> + */
-> +int pci_trylock_rescan_remove(void)
-> +{
-> +	return mutex_trylock(&pci_rescan_remove_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_trylock_rescan_remove);
-> +
->  void pci_unlock_rescan_remove(void)
->  {
->  	mutex_unlock(&pci_rescan_remove_lock);
-> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-> index 1cf2471d54d..7a6bee8abf9 100644
-> --- a/drivers/platform/x86/p2sb.c
-> +++ b/drivers/platform/x86/p2sb.c
-> @@ -113,7 +113,10 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
->  	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
->  	 * removing via sysfs while it is temporarily exposed.
->  	 */
-> -	pci_lock_rescan_remove();
-> +	if (!pci_trylock_rescan_remove()) {
-> +		pr_err("P2SB device accessed during PCI rescan");
-> +		return -EBUSY;
-> +	}
->  
->  	/* Unhide the P2SB device, if needed */
->  	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 60ca768bc86..e6db5096217 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1439,6 +1439,7 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
->  unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
->  unsigned int pci_rescan_bus(struct pci_bus *bus);
->  void pci_lock_rescan_remove(void);
-> +int pci_trylock_rescan_remove(void);
->  void pci_unlock_rescan_remove(void);
->  
->  /* Vital Product Data routines */
+> Note that with ia64 gone, GENERIC_IOMAP is not at all
+> generic any more and could just move it to x86 or name
+> it something else. This is what currently uses it:
+> 
+> arch/hexagon/Kconfig:   select GENERIC_IOMAP
+> arch/um/Kconfig:        select GENERIC_IOMAP
+> 
+> These have no port I/O at all, so it doesn't do anything.
+> 
+> arch/m68k/Kconfig:      select GENERIC_IOMAP
+> 
+> on m68knommu, the default implementation from asm-generic/io.h
+> as the same effect as GENERIC_IOMAP but is more efficient.
+> On classic m68k, GENERIC_IOMAP does not do what it is
+> meant to because I/O ports on ISA devices have port
+> numbers above PIO_OFFSET. Also they don't have PCI.
+> 
+> arch/mips/Kconfig:      select GENERIC_IOMAP
+> 
+> This looks completely bogus because it sets PIO_RESERVED
+> to 0 and always uses the mmio part of lib/iomap.c.
+> 
+> arch/powerpc/platforms/Kconfig: select GENERIC_IOMAP
+> 
+> This is only used for two platforms: cell and powernv,
+> though on Cell it no longer does anything after the
+> commit f4981a00636 ("powerpc: Remove the celleb support");
+> I think the entire io_workarounds code now be folded
+> back into spider_pci.c if we wanted to.
+> 
+> The PowerNV LPC support does seem to still rely on it.
+> This tries to do the exact same thing as lib/logic_pio.c
+> for Huawei arm64 servers. I suspect that neither of them
+> does it entirely correctly since the powerpc side appears
+> to just override any non-LPC PIO support while the arm64
+> side is missing the ioread/iowrite support.
+> 
+>       Arnd
+> 
 
 
