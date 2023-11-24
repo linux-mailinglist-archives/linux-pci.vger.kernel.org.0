@@ -1,186 +1,99 @@
-Return-Path: <linux-pci+bounces-160-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-161-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6AEF7F76E6
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 15:52:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C8127F779A
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 16:23:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7F7E1C2113C
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 14:52:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89B1A1C21145
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 15:23:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CEF2D632;
-	Fri, 24 Nov 2023 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808192E82E;
+	Fri, 24 Nov 2023 15:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bm/t7Roy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C78910CA;
-	Fri, 24 Nov 2023 06:52:48 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ScHsj59y3z6K5q0;
-	Fri, 24 Nov 2023 22:48:25 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 24 Nov
- 2023 14:52:45 +0000
-Date: Fri, 24 Nov 2023 14:52:44 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Alexey Kardashevskiy <aik@amd.com>, Lukas Wunner <lukas@wunner.de>,
-	<linux-coco@lists.linux.dev>, <kvm@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	<suzuki.poulose@arm.com>
-Subject: Re: TDISP enablement
-Message-ID: <20231124145244.00001092@Huawei.com>
-In-Reply-To: <655004226efd8_46f029452@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <e05eafd8-04b3-4953-8bca-dc321c1a60b9@amd.com>
-	<20231101072717.GB25863@wunner.de>
-	<20231101110551.00003896@Huawei.com>
-	<4cfe829f-8373-4ff4-a963-3ee74fa39efe@amd.com>
-	<20231103164404.00006e0b@Huawei.com>
-	<655004226efd8_46f029452@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B38619AD;
+	Fri, 24 Nov 2023 07:23:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700839383; x=1732375383;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QbDAaIs9aFhUZesvgAgy1E7hiS18+pXlIMzL6NMs4CM=;
+  b=Bm/t7RoyX19UyfCqtscabo3NNh2JHIuCeQiqYrcNRwEBx+wKZAVOm6Gq
+   W6I+ubiMqj30jtMsAeyFhi+/aiZM5FA6uYIT1/5apjWOOppaRyYTQtFvQ
+   XGQDfIQngWp98Mf/K2GG+Fdo5zOhksKP1ZdXQOVTwq2aOmVb0vHxtI8GY
+   Uz7FbNOdhu5Exngkgpd5pE120VyUdG+cd6XcVcSupTskTAhaPtVdxd+pY
+   hECC/ILsz21xMGVsBE5gKZbV/xl3Ycn4PfQuQEVp2LtUyrnYsk+gAGbTX
+   ++iCIUiNCgFL0pN19xzpyY9WB/XdQu94o3wzMCRwXEeHisj5Qc8fD480o
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="389590507"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="389590507"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 07:23:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="833711291"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="833711291"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 07:23:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1r6Y1B-0000000GkhX-41RK;
+	Fri, 24 Nov 2023 17:22:57 +0200
+Date: Fri, 24 Nov 2023 17:22:57 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Keith Busch <kbusch@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	Jean Delvare <jdelvare@suse.de>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [bug report] lockdep WARN at PCI device rescan
+Message-ID: <ZWC_0eG2UBMKAD3C@smile.fi.intel.com>
+References: <6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j>
+ <ZVNJCxh5vgj22SfQ@shikoro>
+ <ea31480f-2887-41fe-a560-f4bb1103479e@gmail.com>
+ <ZVNiUuyHaez8rwL-@smile.fi.intel.com>
+ <20231114155701.GA27547@wunner.de>
+ <ZVOcPOlkkBk3Xfm5@smile.fi.intel.com>
+ <ZVO1M2289uvElgOi@smile.fi.intel.com>
+ <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sat, 11 Nov 2023 14:45:54 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Jonathan Cameron wrote:
-> >    
-> > > >>> - tdi_info - read measurements/certs/interface report;    
-> > > >>
-> > > >> Does this return cached cert chains and measurements from the device
-> > > >> or does it retrieve them anew?  (Measurements might have changed if
-> > > >> MEAS_FRESH_CAP is supported.)
-> > > >>
-> > > >>    
-> > > >>> If the user wants only CMA/SPDM, the Lukas'es patched will do that without
-> > > >>> the PSP. This may co-exist with the AMD PSP (if the endpoint allows multiple
-> > > >>> sessions).    
-> > > >>
-> > > >> It can co-exist if the pci_cma_claim_ownership() library call
-> > > >> provided by patch 12/12 is invoked upon device_connect.
-> > > >>
-> > > >> It would seem advantageous if you could delay device_connect
-> > > >> until a device is actually passed through.  Then the OS can
-> > > >> initially authenticate and measure devices and the PSP takes
-> > > >> over when needed.    
-> > > > 
-> > > > Would that delay mean IDE isn't up - I think that wants to be
-> > > > available whether or not pass through is going on.
-> > > > 
-> > > > Given potential restrictions on IDE resources, I'd expect to see an explicit
-> > > > opt in from userspace on the host to start that process for a given
-> > > > device.  (udev rule or similar might kick it off for simple setups).
-> > > > 
-> > > > Would that work for the flows described?    
-> > > 
-> > > This would work but my (likely wrong) intention was also to run 
-> > > necessary setup in both host and guest at the same time before drivers 
-> > > probe devices. And while delaying it in the host is fine (well, for us 
-> > > in AMD, as we are aiming for CoCo/TDISP), in the guest this means less 
-> > > flexibility in enlightening the PCI subsystem and the guest driver: 
-> > > ideally (or at least initially) the driver is supposed to probe already 
-> > > enabled and verified device, as otherwise it has to do SWIOTLB until the 
-> > > userspace does the verification and kicks the driver to go proper direct 
-> > > DMA (or reload the driver?).  
-> > 
-> > In the case of a guest getting a VF, there probably won't be any way for
-> > the kernel to run any native attestation anyway, so policy would have to
-> > rely on the CoCo paths. Kernel stuff Lukas has would just not try to attest
-> > or claim anything about it. If a VF has a CMA capable DOE instance
-> > then that's not there for IDE stuff at all, but for the guest to get
-> > direct measurements etc without PSP or anything else getting involved
-> > in which case the guest using that directly is a reasonable thing to do.  
-> 
-> Is that a practical reality that VFs are going to implement CMA?
-Maybe?  CMA definition allows for it.
->  My
-> expectation is CMA is a PF facility and the TSM retrieves measurements
-> for TDIs through that. At least that seems to be fundamental assumption
-> of the TDISP specification. Given config-cycles are always host-mediated
-> I expect guest CMA will always be a proxy whether it is is per-VF CMA
-> interface or not.
-
-There's a different between proxying where we just pass the reads and writes
-through unmodified as PCI config accesses and where we provide a userspace
-interface to do it because we need to maintain locking etc vs any potential
-host accesses. But sure, it's emulated even in this path.
-
-
-> 
-> >   
-> > >   
-> > > > Next bit probably has holes...  Key is that a lot of the checks
-> > > > may fail, and it's up to host userspace policy to decide whether
-> > > > to proceed (other policy in the secure VM side of things obviously)
-> > > > 
-> > > > So my rough thinking is - for the two options (IDE / TDISP)
-> > > > 
-> > > > Comparing with Alexey's flow I think only real difference is that
-> > > > I call out explicit host userspace policy controls. I'd also like    
-> > > 
-> > > My imagination fails me :) What is the host supposed to do if the device 
-> > > verification fails/succeeds later, and how much later, and the device is 
-> > > a boot disk? Or is this userspace going to be limited to initramdisk? 
-> > > What is that thing which we are protecting against? Or it is for CUDA 
-> > > and such (which yeah, it can wait)?  
-> > 
-> > There are a bunch of non obvious cases indeed.  Hence make it all policy.
-> > Though if you have a flow where verification is needed for boot disk and
-> > it fails (and policy says that's not acceptable) then bad luck you
-> > probably need to squirt a cert into your ramdisk or UEFI or similar.  
-> 
-> It seems policy mechanisms should be incrementally added as clear need
-> for policy dictates, because that has ABI implications and
-> kernel-depedency-on-userpace expectations.
-
-Agreed, but I'd expect anything we implement in kernel to at least anticipate
-that we may want policy.  If there are multiple possible sources of
-verfication I'd be very surprised if we didn't need controls on whether
-we require all to pass, none to pass, one specific one to pass, or any one to pass.
-
-> 
-> > > > to use similar interfaces to convey state to host userspace as
-> > > > per Lukas' existing approaches.  Sure there will also be in
-> > > > kernel interfaces for driver to get data if it knows what to do
-> > > > with it.  I'd also like to enable the non tdisp flow to handle
-> > > > IDE setup 'natively' if that's possible on particular hardware.
-> > > > 
-> > > > 1. Host has a go at CMA/SPDM. Policy might say that a failure here is
-> > > >     a failure in general so reject device - or it might decide it's up to
-> > > >     the PSP etc.   (userspace can see if it succeeded)
-> > > >     I'd argue host software can launch this at any time.  It will
-> > > >     be a denial of service attack but so are many other things the host
-> > > >     can do.    
-> > > 
-> > > Trying to visualize it in my head - policy is a kernel cmdline or module 
-> > > parameter?  
-> > 
-> > Neither - it's bind not happening until userspace decides to kick it off.
-> > The module could provide it's own policy on top of this - so userspace
-> > could defer to that if it makes sense (so bind but rely on probe failing
-> > if policy not met).  
-> 
-> udev module policy can already gate binding, its not clear new policy
-> mechanism is needed here.
-
-Yeah, I think that works - but to be sure definitely want to see a PoC.
+On Fri, Nov 24, 2023 at 10:49:45AM +0000, Shinichiro Kawasaki wrote:
+> On Nov 14, 2023 / 19:58, Andy Shevchenko wrote:
 
 ...
 
-Jonathan
+> I created a patch below and confirmed it avoided the lockdep WARN. The
+> i2c-i801 probe was ok at system boot.
+
+Another possible solution I was thinking about is to have a local cache,
+so, make p2sb.c to be called just after PCI enumeration at boot time
+to cache the P2SB device's bar, and then cache the bar based on the device
+in question at the first call. Yet it may not remove all theoretical /
+possible scenarios with dead lock (taking into account hotpluggable
+devices), but won't fail the i801 driver in the above use case IIUC.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
