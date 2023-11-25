@@ -1,203 +1,139 @@
-Return-Path: <linux-pci+bounces-164-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-165-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A612B7F82FC
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 20:12:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A66A7F88BA
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Nov 2023 08:06:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A9EB286B25
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Nov 2023 19:12:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42B361C20A06
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Nov 2023 07:06:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083CA364C8;
-	Fri, 24 Nov 2023 19:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53BCC23D0;
+	Sat, 25 Nov 2023 07:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ov6P92Q2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PrjxofCF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CC52126
-	for <linux-pci@vger.kernel.org>; Fri, 24 Nov 2023 11:08:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700852915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2ktMN6fpPE1Jf/JsJv1eWYJ7kbl3PClV8V5bIG3J558=;
-	b=Ov6P92Q2kk11mT94IB/ywLdcXC0kjWQCewRKnkK28ONQXSiuZOo9ys+gaD1GmqLO5JYU37
-	IOwBfjI7K3gf4jpquArH3iMAe0rFZ9XweZMykmEjr3Qn/IwivFkfdGfrHhqLiAQ1Fw9EAn
-	YiJWiof3xPw7O8bI7hvZDCqEExy29nk=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-91-ZrMlh9YyPBCWcAlR9AcFfQ-1; Fri, 24 Nov 2023 14:08:31 -0500
-X-MC-Unique: ZrMlh9YyPBCWcAlR9AcFfQ-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2c89230b1fdso26503471fa.2
-        for <linux-pci@vger.kernel.org>; Fri, 24 Nov 2023 11:08:31 -0800 (PST)
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B42191A6
+	for <linux-pci@vger.kernel.org>; Fri, 24 Nov 2023 23:06:44 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2c993da0b9eso5972251fa.1
+        for <linux-pci@vger.kernel.org>; Fri, 24 Nov 2023 23:06:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700896002; x=1701500802; darn=vger.kernel.org;
+        h=delivered-to:in-reply-to:content-disposition:mime-version
+         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5RYcgJht5CpJHvQZaHH5yIH/bBoeNKDITyrwLoWPeXA=;
+        b=PrjxofCFMYtDROirgydAemrOb9e0tmZFqq6blnwLodL5WcbbWQtvtusSk4YxYXBe3p
+         pufyt1+X2Lx3arovSWJIziTZFIhP7KS+9SSz7SynhfKifP+Qj+y1g+GezMKPCTay7ZAv
+         IhSQhJV4IlRLV1lhuATB4gr1FPpPRBPErzuQTnXTkPVme/oyHsHRzkBLjyBKKCNonvqy
+         5sjFkHh0+dOkNLNMuyYzw5vZb/RpcB8MeChTpPHhxj11y0QDjtTwfD6NtWvwjh7ZI0cp
+         I3CkGSM6AP2fU7JkcKYwfAj+SBblg5zld1CEci/d273GKs3i9p4LmhINHnM1rNAypMSx
+         zeWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700852910; x=1701457710;
-        h=content-transfer-encoding:in-reply-to:organization:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2ktMN6fpPE1Jf/JsJv1eWYJ7kbl3PClV8V5bIG3J558=;
-        b=oLlm2M5g2Fmjy/djz5qvp37SpP/JVek2EDPJaPGiclZkomUUzvWAwRCiTml5pW2Mtf
-         BWWPW7+HCINNMx++xbNVuFih4NKxErIYo8dUd5AklqK5W8XTyo0OT3AcVpb6OUBJunfB
-         0vIE7FfvFaHpO5YB/209YXv3BFPLvrB3b78Hn6PZ+v+u9fFDtjEIh0FUbUeg5AHO0U7n
-         gBRbZr8RMtTWtSLVS/bl5W5RDiAYHSiCWOD3U/HFW69SSySoz61pdOzIQJQwgAIhKF1G
-         RIJTXdFXCXWZSI/Ed010I3dhNxUmWrdPqaWBOnSqZPNQvNgCPolzX9SLxL0mC8tuspKy
-         XVYw==
-X-Gm-Message-State: AOJu0YzWxJZEUYgY0H7qyns1MBG55ncjjt8d6iXuNi5LcZXEuDQZy1md
-	l8ZhcPKZ+RVVvJ4VhRbKmxGYFKGbEL/asIsoMyzew1Ev7aoB6AfbbFjTBIrca5icKUwqPy8i8A9
-	oZJbuqA9o3GNdKcDR4Rtu
-X-Received: by 2002:a2e:9d5a:0:b0:2c7:3b83:c4b7 with SMTP id y26-20020a2e9d5a000000b002c73b83c4b7mr2699925ljj.14.1700852910307;
-        Fri, 24 Nov 2023 11:08:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEVm/V08FW9UONS0nS/A1S/Bwyn4V6Z7EXOCU29ZC+B53PqwGcdz73dtb8czfY1GowtO7aojA==
-X-Received: by 2002:a2e:9d5a:0:b0:2c7:3b83:c4b7 with SMTP id y26-20020a2e9d5a000000b002c73b83c4b7mr2699899ljj.14.1700852909940;
-        Fri, 24 Nov 2023 11:08:29 -0800 (PST)
-Received: from ?IPV6:2a02:810d:4b3f:de9c:abf:b8ff:feee:998b? ([2a02:810d:4b3f:de9c:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id hg25-20020a170906f35900b00a08a933baafsm1312957ejb.126.2023.11.24.11.08.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 11:08:29 -0800 (PST)
-Message-ID: <a6ef92ae-0747-435b-822d-d0229da4683c@redhat.com>
-Date: Fri, 24 Nov 2023 20:08:27 +0100
+        d=1e100.net; s=20230601; t=1700896002; x=1701500802;
+        h=delivered-to:in-reply-to:content-disposition:mime-version
+         :message-id:subject:cc:to:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5RYcgJht5CpJHvQZaHH5yIH/bBoeNKDITyrwLoWPeXA=;
+        b=oGmi9jrDhmcABTmh9cz8dEvLm3BvL2Py/CYcEbK23Jb6bODBSm/BiiUhdi/BLXx0IE
+         Qb0q5zqJ7mED0hKF0JfNszvG5AruHzAC+9OA3BpGaktsjondMo34dR1gBEvGipdMuWXC
+         SRsom3l5ua355Z4P96kTH+wbuQnYgPmDEU2/Sk/nW8Cs9h3z9txqFstdgEfaOK3zlpYM
+         z0mi+uGiL5qwL+HIbpriUm4ChkMsaqRrD6KfnGJQYSxHYagQPM1fG2cqXGtCTKni+Mx7
+         XhUotYEUQmqOYHSUFMyBVu+tbi9EL8e0D2KsrwgRnRyeVErlRbjUhiYovVtdfW3/ksak
+         jJmA==
+X-Gm-Message-State: AOJu0YxN/ZT/UniG9CUKzM0OjzY+B6nuwrLky5tou+GubZeL/a7QvX54
+	YHDRk4+aNb5KRSwdrUSNUqTZ6g==
+X-Google-Smtp-Source: AGHT+IEl1CSFNwWMzseTi4XTfwjKF2e9sXcTUutVfBef9FdgkexlK4fipWOxI+J3R9rYKe6Idbdlug==
+X-Received: by 2002:a2e:3503:0:b0:2c6:eea4:3cfb with SMTP id z3-20020a2e3503000000b002c6eea43cfbmr3445356ljz.50.1700896002513;
+        Fri, 24 Nov 2023 23:06:42 -0800 (PST)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id k24-20020a5d5258000000b00332d04514b9sm5922765wrc.95.2023.11.24.23.06.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Nov 2023 23:06:42 -0800 (PST)
+From: Dan Carpenter <dan.carpenter@linaro.org>
+X-Google-Original-From: Dan Carpenter <dan.carpenter@oracle.com>
+Date: Sat, 25 Nov 2023 10:06:39 +0300
+To: oe-kbuild@lists.linux.dev, Shuai Xue <xueshuai@linux.alibaba.com>,
+	ilkka@os.amperecomputing.com, kaishen@linux.alibaba.com,
+	helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
+	Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+	robin.murphy@arm.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	chengyou@linux.alibaba.com, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	rdunlap@infradead.org, mark.rutland@arm.com,
+	zhuo.song@linux.alibaba.com, xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v11 4/5] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <2d52f588-f584-4c01-8f41-227815a54e41@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Danilo Krummrich <dakr@redhat.com>
-Subject: Re: [PATCH 4/4] lib/iomap.c: improve comment about pci anomaly
-To: Arnd Bergmann <arnd@kernel.org>, Philipp Stanner <pstanner@redhat.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Randy Dunlap <rdunlap@infradead.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Eric Auger <eric.auger@redhat.com>,
- Kent Overstreet <kent.overstreet@gmail.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>, Neil Brown <neilb@suse.de>,
- John Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
- Yury Norov <yury.norov@gmail.com>, Kees Cook <keescook@chromium.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, David Gow <davidgow@google.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Thomas Gleixner <tglx@linutronix.de>,
- "wuqiang.matt" <wuqiang.matt@bytedance.com>, Jason Baron
- <jbaron@akamai.com>, Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20231120215945.52027-2-pstanner@redhat.com>
- <20231120215945.52027-6-pstanner@redhat.com>
- <a9ab9976-c1e0-4f91-b17f-e5bbbf21def3@app.fastmail.com>
-Content-Language: en-US
-Organization: RedHat
-In-Reply-To: <a9ab9976-c1e0-4f91-b17f-e5bbbf21def3@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231121013400.18367-5-xueshuai@linux.alibaba.com>
+Delivered-To: unknown
 
-Hi Arnd,
+Hi Shuai,
 
-On 11/21/23 11:03, Arnd Bergmann wrote:
-> On Mon, Nov 20, 2023, at 22:59, Philipp Stanner wrote:
->> lib/iomap.c contains one of the definitions of pci_iounmap(). The
->> current comment above this out-of-place function does not clarify WHY
->> the function is defined here.
->>
->> Linus's detailed comment above pci_iounmap() in drivers/pci/iomap.c
->> clarifies that in a far better way.
->>
->> Extend the existing comment with an excerpt from Linus's and hint at the
->> other implementation in drivers/pci/iomap.c
->>
->> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> 
-> I think instead of explaining why the code is so complicated
-> here, I'd prefer to make it more logical and not have to
-> explain it.
-> 
-> We should be able to define a generic version like
-> 
-> void pci_iounmap(struct pci_dev *dev, void __iomem * addr)
+kernel test robot noticed the following build warnings:
 
-Let's shed some light on the different config options related to this.
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-To me it looks like GENERIC_IOMAP always implies GENERIC_PCI_IOMAP.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/docs-perf-Add-description-for-Synopsys-DesignWare-PCIe-PMU-driver/20231121-093713
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20231121013400.18367-5-xueshuai%40linux.alibaba.com
+patch subject: [PATCH v11 4/5] drivers/perf: add DesignWare PCIe PMU driver
+config: x86_64-randconfig-r071-20231123 (https://download.01.org/0day-ci/archive/20231124/202311241906.0ymlLjyo-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20231124/202311241906.0ymlLjyo-lkp@intel.com/reproduce)
 
-lib/iomap.c contains a definition of pci_iounmap() since it uses the
-common IO_COND() macro. This definitions wins if GENERIC_IOMAP was
-selected.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <error27@gmail.com>
+| Closes: https://lore.kernel.org/r/202311241906.0ymlLjyo-lkp@intel.com/
 
-lib/pci_iomap.c contains another definition of pci_iounmap() which is
-guarded by ARCH_WANTS_GENERIC_PCI_IOUNMAP to prevent multiple definitions
-in case either GENERIC_IOMAP is set or the architecture already defined
-pci_iounmap().
+smatch warnings:
+drivers/perf/dwc_pcie_pmu.c:352 dwc_pcie_pmu_event_update() error: uninitialized symbol 'now'.
 
-What's the purpose of not having set ARCH_HAS_GENERIC_IOPORT_MAP producing
-an empty definition of pci_iounmap() though [1]?
+vim +/now +352 drivers/perf/dwc_pcie_pmu.c
 
-And more generally, is there any other (subtle) logic behind this?
+3481798a4ec51d1 Shuai Xue 2023-11-21  338  static void dwc_pcie_pmu_event_update(struct perf_event *event)
+3481798a4ec51d1 Shuai Xue 2023-11-21  339  {
+3481798a4ec51d1 Shuai Xue 2023-11-21  340  	struct hw_perf_event *hwc = &event->hw;
+3481798a4ec51d1 Shuai Xue 2023-11-21  341  	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
+3481798a4ec51d1 Shuai Xue 2023-11-21  342  	u64 delta, prev, now;
+3481798a4ec51d1 Shuai Xue 2023-11-21  343  
+3481798a4ec51d1 Shuai Xue 2023-11-21  344  	do {
+3481798a4ec51d1 Shuai Xue 2023-11-21  345  		prev = local64_read(&hwc->prev_count);
+3481798a4ec51d1 Shuai Xue 2023-11-21  346  
+3481798a4ec51d1 Shuai Xue 2023-11-21  347  		if (type == DWC_PCIE_LANE_EVENT)
+3481798a4ec51d1 Shuai Xue 2023-11-21  348  			now = dwc_pcie_pmu_read_lane_event_counter(event);
+3481798a4ec51d1 Shuai Xue 2023-11-21  349  		else if (type == DWC_PCIE_TIME_BASE_EVENT)
+3481798a4ec51d1 Shuai Xue 2023-11-21  350  			now = dwc_pcie_pmu_read_time_based_counter(event);
 
-[1] https://elixir.bootlin.com/linux/latest/source/lib/pci_iomap.c#L167
+uninitialized on else path.
 
-> {
-> #ifdef CONFIG_HAS_IOPORT
->         if (iomem_is_ioport(addr)) {
->                ioport_unmap(addr);
->                return;
->         }
-> #endif
->        iounmap(addr)
-> }
-> 
-> and then define iomem_is_ioport() in lib/iomap.c for x86,
-> while defining it in asm-generic/io.h for the rest,
-> with an override in asm/io.h for those architectures
-> that need a custom inb().
+3481798a4ec51d1 Shuai Xue 2023-11-21  351  
+3481798a4ec51d1 Shuai Xue 2023-11-21 @352  	} while (local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
+3481798a4ec51d1 Shuai Xue 2023-11-21  353  
+3481798a4ec51d1 Shuai Xue 2023-11-21  354  	delta = (now - prev) & DWC_PCIE_MAX_PERIOD;
+3481798a4ec51d1 Shuai Xue 2023-11-21  355  	/* 32-bit counter for Lane Event Counting */
+3481798a4ec51d1 Shuai Xue 2023-11-21  356  	if (type == DWC_PCIE_LANE_EVENT)
+3481798a4ec51d1 Shuai Xue 2023-11-21  357  		delta &= DWC_PCIE_LANE_EVENT_MAX_PERIOD;
+3481798a4ec51d1 Shuai Xue 2023-11-21  358  
+3481798a4ec51d1 Shuai Xue 2023-11-21  359  	local64_add(delta, &event->count);
+3481798a4ec51d1 Shuai Xue 2023-11-21  360  }
 
-So, that would be similar to IO_COND(), right? What would we need inb() for
-in this context?
-
-- Danilo
-
-> 
-> Note that with ia64 gone, GENERIC_IOMAP is not at all
-> generic any more and could just move it to x86 or name
-> it something else. This is what currently uses it:
-> 
-> arch/hexagon/Kconfig:   select GENERIC_IOMAP
-> arch/um/Kconfig:        select GENERIC_IOMAP
-> 
-> These have no port I/O at all, so it doesn't do anything.
-> 
-> arch/m68k/Kconfig:      select GENERIC_IOMAP
-> 
-> on m68knommu, the default implementation from asm-generic/io.h
-> as the same effect as GENERIC_IOMAP but is more efficient.
-> On classic m68k, GENERIC_IOMAP does not do what it is
-> meant to because I/O ports on ISA devices have port
-> numbers above PIO_OFFSET. Also they don't have PCI.
-> 
-> arch/mips/Kconfig:      select GENERIC_IOMAP
-> 
-> This looks completely bogus because it sets PIO_RESERVED
-> to 0 and always uses the mmio part of lib/iomap.c.
-> 
-> arch/powerpc/platforms/Kconfig: select GENERIC_IOMAP
-> 
-> This is only used for two platforms: cell and powernv,
-> though on Cell it no longer does anything after the
-> commit f4981a00636 ("powerpc: Remove the celleb support");
-> I think the entire io_workarounds code now be folded
-> back into spider_pci.c if we wanted to.
-> 
-> The PowerNV LPC support does seem to still rely on it.
-> This tries to do the exact same thing as lib/logic_pio.c
-> for Huawei arm64 servers. I suspect that neither of them
-> does it entirely correctly since the powerpc side appears
-> to just override any non-LPC PIO support while the arm64
-> side is missing the ioread/iowrite support.
-> 
->       Arnd
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
