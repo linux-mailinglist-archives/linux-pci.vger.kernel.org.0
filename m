@@ -1,106 +1,97 @@
-Return-Path: <linux-pci+bounces-180-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-181-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEA627F9FF2
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 13:46:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88BBC7FA280
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 15:22:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F2A4B20FF7
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 12:46:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9D231C20C5A
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 14:22:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E1EE1DFD2;
-	Mon, 27 Nov 2023 12:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kv8XsuqF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141A1315B9;
+	Mon, 27 Nov 2023 14:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9000710CB
-	for <linux-pci@vger.kernel.org>; Mon, 27 Nov 2023 04:46:25 -0800 (PST)
-Received: by mail-qv1-xf2d.google.com with SMTP id 6a1803df08f44-67a3e0fb11aso5943886d6.2
-        for <linux-pci@vger.kernel.org>; Mon, 27 Nov 2023 04:46:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701089184; x=1701693984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F+E40YbuoBKmAjqkT6wNa06Lpu/e8RsvW8Aa+FgX6YU=;
-        b=Kv8XsuqFwPw+PendwGLsbOjgoUZwmmT3PNk1mxw2t3U3kn4cdhjOHOB3kVmNQwXRAk
-         FwLl9+lrIHbOTprVKPx7LVmilDBdEK2cryucwPqkRQGBp7Lg95NKTJlpq+/WSAv06VnZ
-         4O0SK9Ve9coWk5MEVF2+fDbj3Oqi1buONg1E7Z8jg7AJ7WB5NTSHkoRUhC4CeB+Rlnfp
-         OkNF0U8pLmkJqPOCRN0i7xURl6HMX3h6VAL8BM7k3bMwMj1Y1hO1Bn1wQNv7AjshEKdq
-         3ZciFLgMMhz9goS2FCBdIIWhw14c/Z1E9FscQE65HBNiJgEmyXlwNLNghmjQ2+63MhvB
-         VYNw==
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F46198;
+	Mon, 27 Nov 2023 06:22:03 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5cca68f6e01so42530557b3.2;
+        Mon, 27 Nov 2023 06:22:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701089184; x=1701693984;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1701094922; x=1701699722;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F+E40YbuoBKmAjqkT6wNa06Lpu/e8RsvW8Aa+FgX6YU=;
-        b=fpg2wUnyQXEPxGhOuHD3rfH0XXtgpKb64QtPcuPbkhx0naHc85oLD5wxtwMzo/vhuC
-         X59dHvC7qYHjWav5UHDb8dSBLwTG57sN2UqustEozhn1QnawPtxGrVjQL/tMyWxqpoIF
-         QKtpjzZPvmJV9cjfZWiOkunGdw2eRAyKSnrgUdftLHhN7HKIjmP0p56AUzyMeze9YweZ
-         HTWQOXnfqVZJtwa2nHjKwzz55IUoBAnIvSnT7TsPfBBmQvPOjflLaM1LdOu6PMA4CDoK
-         cpTFkDY6cMbqptB2XQPj2izJed+XK9TnVlrm6qW5oy+FurB/D5GqQOwXYk898jmoNp0E
-         MY8w==
-X-Gm-Message-State: AOJu0YxkSWEo2VVzmw0PKVerOMS5AWCzUJrLkEFB1ep3OczD+iEJ7GCF
-	/1vH08BPNg/qDiHZEO2RRaCJ
-X-Google-Smtp-Source: AGHT+IGjJ2kzkE/6gacJvEqAeEjIAyBT1VNMtpx4NnbwGuihBYTTMBLfyUdv0rtU06YkX96BCpwzXQ==
-X-Received: by 2002:a0c:edcd:0:b0:67a:49c5:8cc3 with SMTP id i13-20020a0cedcd000000b0067a49c58cc3mr1827133qvr.32.1701089184590;
-        Mon, 27 Nov 2023 04:46:24 -0800 (PST)
-Received: from localhost.localdomain ([117.213.103.241])
-        by smtp.gmail.com with ESMTPSA id er10-20020a056214190a00b0067a204b4688sm2832231qvb.18.2023.11.27.04.46.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 04:46:24 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: lpieralisi@kernel.org,
-	kw@linux.com
-Cc: kishon@kernel.org,
-	bhelgaas@google.com,
-	mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 9/9] bus: mhi: ep: Add checks for read/write callbacks while registering controllers
-Date: Mon, 27 Nov 2023 18:15:29 +0530
-Message-Id: <20231127124529.78203-10-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
-References: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
+        bh=834pVqsGyG/ThloFCq4Fg8uGigDw1US55aPZgUr69AE=;
+        b=hZgxPAobZDD2wyA6PCv3abu3HYrdfeTdF3Y+Kjwkzx1BfAUIq0SXTU3FPSQoS5+G+s
+         lPF8r9g3h07Rk9sret3Zs3/qhcPzZH8q0Swm2Ruves73yq0jxjWHiGBHmtzCXU4ySWS6
+         hbBWIJAAKAqCAj66cq5Fs329tAxx9F1DCcdqg/qiHayf2LGenx5Yd2KG/H5oa2OXoJvK
+         fWu9OdhBut4NGzU7RLwWQCNTFTzZHw1nY60O+xNn4NltRFP1rYZDjczI7+hlrL0sXv17
+         9ao6uBHyxeeOFrFbRCl0oUudlihSIhgjlXcxuW5+CLC3Mmo9v4+R1YMLgsdjrrQ+i35w
+         iNRQ==
+X-Gm-Message-State: AOJu0YwT8soz50xGXB4jQ3HTJ0zUI8D9VpIWFvPZOHao3bFXqDbX3raY
+	V5wdiTIyX+l5QfmeCwOjgy9DSnIk5Y8Fag==
+X-Google-Smtp-Source: AGHT+IHIry33GnwZYxjABz1zje1OAyuJ5yzdqY1RHUsCssQtdGrmsmjetxCAOQFmRXv717eoprhxog==
+X-Received: by 2002:a81:a507:0:b0:5cb:d645:8cdf with SMTP id u7-20020a81a507000000b005cbd6458cdfmr11688215ywg.48.1701094922153;
+        Mon, 27 Nov 2023 06:22:02 -0800 (PST)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id y66-20020a81a145000000b005b4501cb71csm3231244ywg.29.2023.11.27.06.22.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Nov 2023 06:22:01 -0800 (PST)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-daf26d84100so3819090276.3;
+        Mon, 27 Nov 2023 06:22:01 -0800 (PST)
+X-Received: by 2002:a25:6cc5:0:b0:d9a:6b1e:ef51 with SMTP id
+ h188-20020a256cc5000000b00d9a6b1eef51mr10902367ybc.2.1701094921451; Mon, 27
+ Nov 2023 06:22:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 27 Nov 2023 15:21:50 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU7cs_DCwkbD4FGy=OgxsfLe4poU0916dM1xUB62ahqqg@mail.gmail.com>
+Message-ID: <CAMuHMdU7cs_DCwkbD4FGy=OgxsfLe4poU0916dM1xUB62ahqqg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: correct white-spaces in examples
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The MHI EP controller drivers has to support both sync and async read/write
-callbacks. Hence, add a check for it.
+On Fri, Nov 24, 2023 at 10:21=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> Use only one and exactly one space around '=3D' in DTS example.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/bus/mhi/ep/main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+>  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml           | 6 +++---
 
-diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-index 3e599d9640f5..6b84aeeb247a 100644
---- a/drivers/bus/mhi/ep/main.c
-+++ b/drivers/bus/mhi/ep/main.c
-@@ -1471,6 +1471,10 @@ int mhi_ep_register_controller(struct mhi_ep_cntrl *mhi_cntrl,
- 	if (!mhi_cntrl || !mhi_cntrl->cntrl_dev || !mhi_cntrl->mmio || !mhi_cntrl->irq)
- 		return -EINVAL;
- 
-+	if (!mhi_cntrl->read_sync || !mhi_cntrl->write_sync ||
-+	    !mhi_cntrl->read_async || !mhi_cntrl->write_async)
-+		return -EINVAL;
-+
- 	ret = mhi_ep_chan_init(mhi_cntrl, config);
- 	if (ret)
- 		return ret;
--- 
-2.25.1
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
