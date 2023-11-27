@@ -1,222 +1,130 @@
-Return-Path: <linux-pci+bounces-182-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-183-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D8D77FA342
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 15:44:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 748A57FA454
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 16:23:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFED91C20D36
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 14:44:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A17B91C209A2
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 15:23:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F34961A286;
-	Mon, 27 Nov 2023 14:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3D2321A5;
+	Mon, 27 Nov 2023 15:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Iy3bQCz7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUlSKWKW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E5585;
-	Mon, 27 Nov 2023 06:44:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TOrn4pWLF35zwDaTVwJp22nvtp0WHZYbomQW/DucgDWs7u20en3KANVY8pe3m3FxFK+gCLxbPcuSe2uV593ElWgDpIboRVR4/fia6aXzpO3C8qctxYA8TAKRzO7KIk3l5EdDlAiMeyaFBGinm6L+iV0PRVJ/RK2LjTVTl07tpbLygALeTaBqIlcDThizlAIJmY9EgJjQrumJL/Fe0El/KjRYMqn5dVftJXRPgRlt/tEBqUCB02bg9mukur5tUDhkJyLJomCJ+7W9WB3LD0FxmSuOsesCfckFgaZeUFmhY0GPNMgjDeHw+qYDnXVx9OM1ZqYXozKjyaF1tHFjSryVQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9zmamiHI5OHP+cUqLH3OwxHhVonZV/uWA5uvKbt6cX4=;
- b=mu2/9Kq3Z2UINBetu/EYsTnafgrtklNdc9UrMU6wjJx9ttaWPU/GcD7f5nYxJvELVBKTALHeDWdRUaWYT4JmyO5w7tZt7gEFcRV5QojpZGFmQTb3GQ64fyWAQC1lxltHtCfpaRpHOPpWVf9VxFthy/2Zt4PLp93/qFjfkAv2v6EvDV7eA/aUdNbwg8Y6RzyS+EN+WXJWg34qM0NhnHDjC9ixqibNviBcOy1g12BlvnmgA40G/JpZdOGKcaS1nhYrjNLUMzFaAdg4XXEg2UdhygKS//T4XOrHpX58vdsVNXvoDUMO7w41gpaSNVQ7t0dLpfgKqJX9GHrGLsCKNvIS1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9zmamiHI5OHP+cUqLH3OwxHhVonZV/uWA5uvKbt6cX4=;
- b=Iy3bQCz7rcCDPB8SX30KSIIvUhUuhqYhkHBTFzWkA6qQZGyEFLuQMRtGZh2Zt/ozQwWtkpGW5uk/0rWSjuFQsNgm+ys8Fapb7a9DEP5WiRFyNjUhFV9Fp1MnYgcOYUYKe30w/l1aJn37WltbTGycT7ylgO3Hb+IiTSAWMWkkDEPrSznyntzji4NOOSudSoNs0ayEC9sshEB1IOIOOWO1eS7l3/zSJDWuKzxxlMTCbgQq+YdrIVZi7WYVUTDynC6iReDuumIs+yPU/c/Iq4i1fOWZItsDf07mryHy0223mOl7RXWISUne1JLuN7TLGLsCXwRKUTyfE3NhVK9NKBpUrA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
- by IA0PR12MB8696.namprd12.prod.outlook.com (2603:10b6:208:48f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.27; Mon, 27 Nov
- 2023 14:43:59 +0000
-Received: from BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::eda4:8c67:893f:3d13]) by BN8PR12MB2900.namprd12.prod.outlook.com
- ([fe80::eda4:8c67:893f:3d13%5]) with mapi id 15.20.7025.022; Mon, 27 Nov 2023
- 14:43:59 +0000
-Message-ID: <a73a2156-124b-47f7-b545-6751f6e87d54@nvidia.com>
-Date: Mon, 27 Nov 2023 20:13:50 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: Race b/w pciehp and FirmwareFirst DPC->EDR flow - Reg
-From: Vidya Sagar <vidyas@nvidia.com>
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Lukas Wunner <lukas@wunner.de>,
- Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- "kbusch@kernel.org" <kbusch@kernel.org>
-Cc: Vikram Sethi <vsethi@nvidia.com>, Krishna Thota <kthota@nvidia.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- sagar.tv@gmail.com
-References: <BN8PR12MB290002441CA3C24D1FA742D2B8AEA@BN8PR12MB2900.namprd12.prod.outlook.com>
- <529acc15-1932-4785-9edf-c5327db64ab1@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <529acc15-1932-4785-9edf-c5327db64ab1@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0028.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::16) To BN8PR12MB2900.namprd12.prod.outlook.com
- (2603:10b6:408:69::18)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9759B;
+	Mon, 27 Nov 2023 07:23:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701098612; x=1732634612;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0Wqod83dtCrso4isvNiZ+Vk/m33qzkX26zuYmvK9EBY=;
+  b=JUlSKWKWrPcUoounMT7SITj2dmGhFtko4PZZRCyeYNnsRAouHG7sQDZ1
+   yCNWUPQ+bN1miPOfgPoIMQehhrj/Z8uOj+AKQVvROlDA+STJ8gYg5rtcD
+   McQe026kwEmVre89rLH/4QL5zXhplamyj9zR6SQugNnE+skXL/Bpx69aW
+   QBtVV1Vt3Xa1cWygrNIfhSaMGYBednCsg5GSTj85zgcW4NF1tcNrY2mZ6
+   wVyTPtpnUj1oLYyzkeuGXkZLTEmije4rRAhuZ6vTJe+2Qa6MM5g+OJcc/
+   oVvp7vG3GDoyr7lICRHMKM60lE7fzO13ITZPw65O2NVk580FazJlovruU
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="383111037"
+X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
+   d="scan'208";a="383111037"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 07:23:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="797269356"
+X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
+   d="scan'208";a="797269356"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 27 Nov 2023 07:23:28 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r7dSI-0006MV-0Y;
+	Mon, 27 Nov 2023 15:23:26 +0000
+Date: Mon, 27 Nov 2023 23:22:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: wangdong28 <wangdong202303@163.com>, nirmal.patel@linux.intel.com,
+	jonathan.derrick@linux.dev, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+	lenb@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, wangdong202303@163.com,
+	ahuang12@lenovo.com, Dong Wang <wangdong28@lenovo.com>
+Subject: Re: [PATCH] PCI/ACPI: Add extra slot register check for non-ACPI
+ device
+Message-ID: <202311272056.KtldqGiA-lkp@intel.com>
+References: <1701065447-13963-1-git-send-email-wangdong202303@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|IA0PR12MB8696:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c643172-66da-4d73-6e4e-08dbef574a85
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	nBuU0I0Fl19oYM7cIU5tujbBGzJfeMItpI3CoN7IbViUxudPF8Kqet0hm92YOutpqb+KJqN0UpmD0iB7tmiD6yykxbgCKCI6TuxoI6Zm2FzF7ZsAO9u4lwYdbkciE8ogxZIIXF8aGgIg67XT5r+GeDbX7ulmjrwGdM+epp/rWv7cZPnq9sFPULKrHvkfX8IBh9K4I5Bc9ELQjGGiHhMaScfGwtveiUwWyfQ9q6hTugALYgXYFuTHggQEPQP1arnZ2Aa5mbYuOBCOU9j21Crc8AOrAzpA8hU79SUaqr6y939CpNj9qRiASA8YrDP0KEIEwUS8yzJwdeq2xGF72DQEWFccP2GrYPcXo02SrKcdld/PvqV+t7JXPl5lg0BVPEHU7Q6xazXwx86yeZ7QCirokfOOcPOmfBRlpVcQausTdiTq3PrmUdJh+A0PgP1i0TLXuxd9zDXD+Shy2vrsfspq7JdyLA6olyMRAiGA8JpUN7TQZ66zFoLSwjfa6Sr7PS7fx72Jk8j9FQJ8ZprBceibcKLyPGuSl8DaWdwPeq6M9qmZa3lYq8rIr9obLrDRav7D7N5aBco4HnUy59L3ek0k3GGADGk9PSX2Iif9WBxilqK4ctfRGJtUIqzFdq4jhaeceK6VMxdOm2t94W5angZ/hQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(39860400002)(366004)(396003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(6666004)(8676002)(8936002)(4326008)(31696002)(6512007)(6506007)(53546011)(66476007)(110136005)(54906003)(66556008)(66946007)(316002)(6486002)(478600001)(2906002)(38100700002)(41300700001)(36756003)(31686004)(86362001)(26005)(2616005)(83380400001)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dzNnQU5ibVhYSVNwWmlLcjFyY2pRdWl3TXY4Ly9jcytIaWNvM2xMbEJpSkJ6?=
- =?utf-8?B?ZDBBNkI5YXRjbExLUEJzZHUrcHJVZDFvVysrN2wxVFlKdmJyTnNiRERzbVMv?=
- =?utf-8?B?YnVsWldKQmJCNTY2WnNwdk11TUpKK2NtUDc4ZVFZTmVBL3JNNTF6WFhMdTkw?=
- =?utf-8?B?aDd5WVBNdjkwTFdpaW1RenNVZjVraXNtZjZZOENudVU5Z0orMVowQXFGVGZP?=
- =?utf-8?B?eGhMZC9hMGxxN3Z3MkMxa0l4N29yN2dXL3NqUWxlaVBJRWxLUUNkd2VIc0FM?=
- =?utf-8?B?TS9ocWZLTUJzRVJxd2pNOFV3c2lhOGMzaW54OGhiVk96RHQ4Q241bVBQWkpw?=
- =?utf-8?B?a3dZbStYMHEvOXJOaVN1U2cvTTg1T1ZxMGI4VmxuSjRwVkRYMnpLekRLZWUv?=
- =?utf-8?B?MUJHZitkMC9idFgxdG9WOXhmdDdhNW8rMGFtQjZNaUlYZW91UTNNL01yU0Vu?=
- =?utf-8?B?ajhzd3dycGQza20wT1J0MUd1M256V0NkUlVxQXZ2Rm9nN0RBbUsrTHRzcHVs?=
- =?utf-8?B?a1V6M1BxNWJONTEzQk01VlJEKzNRU3hiUUZEQ09xNk1mSHErNExTb2lMTmdm?=
- =?utf-8?B?VEI0RGY5MXJESUs0dnlqY2NCRDNycGMvZkF0RlI2aWhYME1zN1JxV2dpbmRy?=
- =?utf-8?B?RGtsUGhUWlBPTHJOR1dncVdSc0Y3di9KYXM2M1FLUm8zWktGbnRYZTRHOG8w?=
- =?utf-8?B?eGJrcGV3Yk5mb3puYjRMMWdJSndxd3AyY2RJLzdvenE1VEw1VzdNU0VHUXNH?=
- =?utf-8?B?SjZkN2d2aWxHSHZVbytTT25JcDdYYVFGc2tpenYvQ2NDWGxpNnduc0pIYXg5?=
- =?utf-8?B?QVFValdXOE1Zd0RpUC9GVlpEeHNYa2hjYnMyRG8xZFArK3dNY0c1NXQ0Wjc5?=
- =?utf-8?B?Mi9JUjRSOFBjYUl2MCtDeGNkbHZWbHI2Mk0rMytwR3dRU0k4bCtQM3dKK1hN?=
- =?utf-8?B?Mjh3YW1jRzRUMXBqTmtZT2tUY1VrK1U0NG9kdTJ4SStiQ3VId1ZUSjhyQmFq?=
- =?utf-8?B?SnRaWXRodVBRLzhZZ2F1OC9LV0tSR0FIUDZJbUpPM01mMGZuM0ZkT3B4VUJz?=
- =?utf-8?B?aHgzWFZHUGMrdy9VOEpDeUpRalhucS9tZUhJTk1SdGNrZ2FjVkVmOEpOV2k3?=
- =?utf-8?B?RGQ2aTdYdjd6TC9ZT1VvZTB2T25EK0ZucGd2N1J4VWlaR0EyS3FJSXZVNkd5?=
- =?utf-8?B?eDd5RWNPaFV1dUxkL01nQXFlS3g5dzZGOFltMXl2WmJkVXJrOTFsZ01JWjAw?=
- =?utf-8?B?SWZaY3pOWGsrS0V1dGtScXg1WW9yOVYzcjQzeEZ4N3hFWTVzOEkvZjlXMGVT?=
- =?utf-8?B?SDJ3eG0zOHJ0Ukd3S2hGRGh5ZjkzMmJMRXpoNXRRZnBKRVc1VDdmcnl3eWp6?=
- =?utf-8?B?YUt0NjI1UHhabkExVUE4N2g0endQeXNneU56UzZzdWhnQitvUTBHYnlscVVN?=
- =?utf-8?B?VjMzUlVzUVl5VTVvdVNReU5VRDdKbWZwcUFsZ3BORGJpM0lmSDIxTk52T0lU?=
- =?utf-8?B?M2hNcGdHVGRtSWFtRXpDdS9vK3A4NHZrN0Q1cTlkdXRldk5PaDlmSmhDV1V1?=
- =?utf-8?B?cGZFUEFCOWVPSUFxbEZaRDE1dHFXZVhwVVRZbTI5ZzZVUytKeUp3YnBOTEFP?=
- =?utf-8?B?WnJRbDFnM0g1UDMzMlBGcFZRMFQwc2ZMY2YxK2daOTZqNkJaaHdzK2sxcDk5?=
- =?utf-8?B?T1ZHVXVTS21pUDBleVR6alZrVkFZM3ZzVFRrTExVVTdiNWVKOU5oK2l2aVc3?=
- =?utf-8?B?dU82V3JJRUxUQVNES2FkdUJHZmluN1UzUGlLbzNzcUt0UGNIWDdhbk9kcnJC?=
- =?utf-8?B?VVlnVEpFZmFpQVRaczJxd2IraThFVFlYTHhDQlV5Z2sxVXY3MTVWeTBROHJy?=
- =?utf-8?B?dlJLN2dHNjFQb2d0eUNEd1V5ZFJETDlHa0RQKzQwOVVkcjJLdFJTYklxVlhx?=
- =?utf-8?B?aTR1a3RiME9hdVA5OVo4a3JQSklLdkRTQUV5MkJwdENyZVJ5ZjJ1bEZEMWtz?=
- =?utf-8?B?YUoyZi9EaXBNcCtWWDBNT2g0aDQ4YVJBNlBkWjNRTGUvWEk2OFJJK2tZRXlC?=
- =?utf-8?B?RXcyRlo5RFdWdVUyanJManBkdE51TklteDdEa08yOFRLVDNjbXcwMTJkQ1JP?=
- =?utf-8?Q?JRiC3vL9rIdpAAQwL0r+bRdHt?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c643172-66da-4d73-6e4e-08dbef574a85
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2023 14:43:59.8401
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oF8RsT/sqbv0bwc6v+jQaL8xsNTqJf0fckeJPTRp5Bc81PraQiPixS11NrFg88zqtjc4Bv38xcDDbZCjArM01g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8696
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1701065447-13963-1-git-send-email-wangdong202303@163.com>
 
-Hi Bjorn and others,
-Could you please share your thoughts on this?
+Hi wangdong28,
 
-Thanks,
-Vidya Sagar
+kernel test robot noticed the following build errors:
 
-On 11/10/2023 10:31 PM, Vidya Sagar wrote:
-> There was a typo. Corrected it.
-> 
-> s/If DPC->EDR flow checks DPC also/If DPC->EDR flow checks 'PD Change' also
-> 
-> On 11/10/2023 6:30 PM, Vidya Sagar wrote:
->> Hi folks,
->> Here are the platform details.
->> - System with a Firmware First approach for both AER and DPC
->> - CPERs are sent to the OS for the AER events
->> - DPC is notified to the OS through EDR mechanism
->> - System doesn't have support for in-band PD and supports only OOB PD 
->> where writing to a private register would set the PD state
->> - System has this design where PD state gets cleared whenever there is 
->> a link down (without even writing to the private register)
->>
->> In this system, if the root port has to experience a DPC because of 
->> any right reasons (say SW trigger of DPC for time being), I'm 
->> observing the following flow which is causing a race.
->> 1. Since DPC brings the link down, there is a DLLSC and an MSI is sent 
->> to the OS hence PCIe HP ISR is invoked.
->> 2. ISR then takes stock of the Slot_Status register to see what all 
->> events caused the MSI generation.
->> 3. It sees both DLLSC and PDC bits getting set.
->> 4. PDC is set because of the aforementioned hardware design where for 
->> every link down, PD state gets cleared and since this is considered as 
->> a change in the PD state, PDC also gets set.
->> 5. PCIe HP ISR flow transitions to the PCIe HP IST (interrupt 
->> thread/bottom half) and waits for the DPC_EDR to complete (because 
->> DLLSC is one of the events)
->> 6. Parallel to the PCIe HP ISR/IST, DPC interrupt is raised to the 
->> firmware and that would then send an EDR event to the OS. Firmware 
->> also sets the PD state to '1' before that, as the endpoint device is 
->> still available.
->> 7. Firmware programming of the private register to set the PD state 
->> raises second interrupt and PCIe HP ISR takes stock of the events and 
->> this time it is only the PDC and not DLLSC. ISR sends a wake to the 
->> IST, but since there is an IST in progress already, nothing much 
->> happens at this point.
->> 8. Once the DPC is completed and link comes back up again, DPC 
->> framework asks the endpoint drivers to handle it by calling the 
->> 'pci_error_handlers' callabacks registered by the endpoint device 
->> drivers.
->> 9. The PCIe HP IST (of the very first MSI) resumes after receiving the 
->> completion from the DPC framework saying that DPC recovery is successful.
->> 10. Since PDC (Presence Detect Change) bit is also set for the first 
->> interrupt, IST attempts to remove the devices (as part of 
->> pciehp_handle_presence_or_link_change())
->>
->> At this point, there is a race between the device driver that is 
->> trying to work with the device (through pci_error_handlers callback) 
->> and the IST that is trying to remove the device.
->> To be fair to pciehp_handle_presence_or_link_change(), after removing 
->> the devices, it checks for the link-up/PD being '1' and scans the 
->> devices again if the device is still available. But unfortunately, IST 
->> is deadlocked (with the device driver) while removing the devices 
->> itself and won't go to the next step.
->>
->> The rationale given in the form of a comment in 
->> pciehp_handle_presence_or_link_change() for removing the devices first 
->> (without checking PD/link-up) and adding them back after checking 
->> link-up/PD is that, since there is a change in PD, the new link-up 
->> need not be with the same old device rather it could be with a 
->> different device. So, it justifies in removing the existing devices 
->> and then scanning for new ones. But this is causing deadlock with the 
->> already initiated DPC recovery process.
->>
->> I see two ways to avoid the deadlock in this scenario.
->> 1. When PCIe HP IST is looking at both DLLSC and PDC, why should 
->> DPC->EDR flow look at only DLLSC and not DPC? If DPC->EDR flow checks 
->> 'PD Change' also (along with DLL) and declares that the DPC recovery 
->> can't happen (as there could be a change of device) hence returning 
->> DPC recovery failure, then, the device driver's pci_error_handlers 
->> callbacks won't be called and there won't be any deadlock.
->> 2. Check for the possibility of a common lock so that PCIe HP IST and 
->> device driver's pci_error_handlers callbacks don't race.
->>
->> Let me know your comments on this.
->>
->> Thanks,
->> Vidya Sagar
+[auto build test ERROR on rafael-pm/linux-next]
+[also build test ERROR on rafael-pm/acpi-bus rafael-pm/devprop linus/master v6.7-rc3 next-20231127]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/wangdong28/PCI-ACPI-Add-extra-slot-register-check-for-non-ACPI-device/20231127-141554
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/1701065447-13963-1-git-send-email-wangdong202303%40163.com
+patch subject: [PATCH] PCI/ACPI: Add extra slot register check for non-ACPI device
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20231127/202311272056.KtldqGiA-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231127/202311272056.KtldqGiA-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311272056.KtldqGiA-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/pci/pci-acpi.c: In function 'pci_check_extra_slot_register':
+>> drivers/pci/pci-acpi.c:896:14: error: implicit declaration of function 'is_vmd' [-Werror=implicit-function-declaration]
+     896 |         if (!is_vmd(bus) || !pdev || pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &slot_cap))
+         |              ^~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/is_vmd +896 drivers/pci/pci-acpi.c
+
+   888	
+   889	static void pci_check_extra_slot_register(struct pci_bus *bus)
+   890	{
+   891		struct pci_dev *pdev = bus->self;
+   892		char slot_name[SLOT_NAME_SIZE];
+   893		struct pci_slot *pci_slot;
+   894		u32 slot_cap, slot_nr;
+   895	
+ > 896		if (!is_vmd(bus) || !pdev || pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &slot_cap))
+   897			return;
+   898	
+   899		if (!(slot_cap & PCI_EXP_SLTCAP_HPC)) {
+   900			slot_nr = (slot_cap & PCI_EXP_SLTCAP_PSN) >> 19;
+   901			snprintf(slot_name, SLOT_NAME_SIZE, "%u", slot_nr);
+   902			pci_slot = pci_create_slot(bus, 0, slot_name, NULL);
+   903			if (IS_ERR(pci_slot))
+   904				pr_err("pci_create_slot returned %ld\n", PTR_ERR(pci_slot));
+   905		}
+   906	}
+   907	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
