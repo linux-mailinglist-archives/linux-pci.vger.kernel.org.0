@@ -1,64 +1,46 @@
-Return-Path: <linux-pci+bounces-183-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-184-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 748A57FA454
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 16:23:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59ED57FA461
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 16:26:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A17B91C209A2
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 15:23:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 135C42810B8
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Nov 2023 15:26:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3D2321A5;
-	Mon, 27 Nov 2023 15:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUlSKWKW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48F4F31A8E;
+	Mon, 27 Nov 2023 15:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9759B;
-	Mon, 27 Nov 2023 07:23:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701098612; x=1732634612;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0Wqod83dtCrso4isvNiZ+Vk/m33qzkX26zuYmvK9EBY=;
-  b=JUlSKWKWrPcUoounMT7SITj2dmGhFtko4PZZRCyeYNnsRAouHG7sQDZ1
-   yCNWUPQ+bN1miPOfgPoIMQehhrj/Z8uOj+AKQVvROlDA+STJ8gYg5rtcD
-   McQe026kwEmVre89rLH/4QL5zXhplamyj9zR6SQugNnE+skXL/Bpx69aW
-   QBtVV1Vt3Xa1cWygrNIfhSaMGYBednCsg5GSTj85zgcW4NF1tcNrY2mZ6
-   wVyTPtpnUj1oLYyzkeuGXkZLTEmije4rRAhuZ6vTJe+2Qa6MM5g+OJcc/
-   oVvp7vG3GDoyr7lICRHMKM60lE7fzO13ITZPw65O2NVk580FazJlovruU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="383111037"
-X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
-   d="scan'208";a="383111037"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2023 07:23:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10907"; a="797269356"
-X-IronPort-AV: E=Sophos;i="6.04,231,1695711600"; 
-   d="scan'208";a="797269356"
-Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 27 Nov 2023 07:23:28 -0800
-Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r7dSI-0006MV-0Y;
-	Mon, 27 Nov 2023 15:23:26 +0000
-Date: Mon, 27 Nov 2023 23:22:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: wangdong28 <wangdong202303@163.com>, nirmal.patel@linux.intel.com,
-	jonathan.derrick@linux.dev, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-	lenb@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, wangdong202303@163.com,
-	ahuang12@lenovo.com, Dong Wang <wangdong28@lenovo.com>
-Subject: Re: [PATCH] PCI/ACPI: Add extra slot register check for non-ACPI
- device
-Message-ID: <202311272056.KtldqGiA-lkp@intel.com>
-References: <1701065447-13963-1-git-send-email-wangdong202303@163.com>
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE819B
+	for <linux-pci@vger.kernel.org>; Mon, 27 Nov 2023 07:26:43 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 968B8100D940E;
+	Mon, 27 Nov 2023 16:26:41 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 6B2F5290BE; Mon, 27 Nov 2023 16:26:41 +0100 (CET)
+Date: Mon, 27 Nov 2023 16:26:41 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"kbusch@kernel.org" <kbusch@kernel.org>,
+	Vikram Sethi <vsethi@nvidia.com>, Krishna Thota <kthota@nvidia.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	sagar.tv@gmail.com
+Subject: Re: Race b/w pciehp and FirmwareFirst DPC->EDR flow - Reg
+Message-ID: <20231127152641.GA5149@wunner.de>
+References: <BN8PR12MB290002441CA3C24D1FA742D2B8AEA@BN8PR12MB2900.namprd12.prod.outlook.com>
+ <529acc15-1932-4785-9edf-c5327db64ab1@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,64 +49,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1701065447-13963-1-git-send-email-wangdong202303@163.com>
+In-Reply-To: <529acc15-1932-4785-9edf-c5327db64ab1@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi wangdong28,
+Hi Vidya,
 
-kernel test robot noticed the following build errors:
+sorry for the delay, still catching up on e-mails after Plumbers...
 
-[auto build test ERROR on rafael-pm/linux-next]
-[also build test ERROR on rafael-pm/acpi-bus rafael-pm/devprop linus/master v6.7-rc3 next-20231127]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Fri, Nov 10, 2023 at 10:31:55PM +0530, Vidya Sagar wrote:
+> > - System doesn't have support for in-band PD and supports only OOB PD
+> >   where writing to a private register would set the PD state
 
-url:    https://github.com/intel-lab-lkp/linux/commits/wangdong28/PCI-ACPI-Add-extra-slot-register-check-for-non-ACPI-device/20231127-141554
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/1701065447-13963-1-git-send-email-wangdong202303%40163.com
-patch subject: [PATCH] PCI/ACPI: Add extra slot register check for non-ACPI device
-config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20231127/202311272056.KtldqGiA-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231127/202311272056.KtldqGiA-lkp@intel.com/reproduce)
+We already have an inband_presence_disabled flag in struct controller
+which is set if the In-Band PD Disable Supported bit in the Slot
+Capabilities 2 Register is set.  The flag may also be set through the
+inband_presence_disabled_dmi_table[].
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311272056.KtldqGiA-lkp@intel.com/
+Currently the only place where the flag makes a difference is on
+slot bringup:  pciehp_check_link_status() doesn't wait for the
+Presence Detect Status bit to become set.
 
-All errors (new ones prefixed by >>):
-
-   drivers/pci/pci-acpi.c: In function 'pci_check_extra_slot_register':
->> drivers/pci/pci-acpi.c:896:14: error: implicit declaration of function 'is_vmd' [-Werror=implicit-function-declaration]
-     896 |         if (!is_vmd(bus) || !pdev || pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &slot_cap))
-         |              ^~~~~~
-   cc1: some warnings being treated as errors
+I'm wondering if we need to also disregard PDC events if In-Band PD
+is disabled.  Not sure if the behavior you're seeing is caused by a
+quirk of the hardware or is expected if In-Band PD is disabled.
+Probably the former.  A code change would generally only be acceptable
+in the latter case though I think.
 
 
-vim +/is_vmd +896 drivers/pci/pci-acpi.c
+> > 10. Since PDC (Presence Detect Change) bit is also set for the first
+> >     interrupt, IST attempts to remove the devices (as part of
+> >     pciehp_handle_presence_or_link_change())
+> > 
+> > At this point, there is a race between the device driver that is
+> > trying to work with the device (through pci_error_handlers callback)
+> > and the IST that is trying to remove the device.
+> > To be fair to pciehp_handle_presence_or_link_change(), after removing
+> > the devices, it checks for the link-up/PD being '1' and scans the
+> > devices again if the device is still available. But unfortunately,
+> > IST is deadlocked (with the device driver) while removing the devices
+> > itself and won't go to the next step.
 
-   888	
-   889	static void pci_check_extra_slot_register(struct pci_bus *bus)
-   890	{
-   891		struct pci_dev *pdev = bus->self;
-   892		char slot_name[SLOT_NAME_SIZE];
-   893		struct pci_slot *pci_slot;
-   894		u32 slot_cap, slot_nr;
-   895	
- > 896		if (!is_vmd(bus) || !pdev || pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &slot_cap))
-   897			return;
-   898	
-   899		if (!(slot_cap & PCI_EXP_SLTCAP_HPC)) {
-   900			slot_nr = (slot_cap & PCI_EXP_SLTCAP_PSN) >> 19;
-   901			snprintf(slot_name, SLOT_NAME_SIZE, "%u", slot_nr);
-   902			pci_slot = pci_create_slot(bus, 0, slot_name, NULL);
-   903			if (IS_ERR(pci_slot))
-   904				pr_err("pci_create_slot returned %ld\n", PTR_ERR(pci_slot));
-   905		}
-   906	}
-   907	
+Could you provide stacktraces of the two deadlocked tasks?
+Right now I don't quite understand why they're deadlocked.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Are you getting hung task messages in dmesg?
+They should include stacktraces.
+
+Also, which kernel version are we talking about?
+
+Thanks,
+
+Lukas
 
