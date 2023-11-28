@@ -1,106 +1,114 @@
-Return-Path: <linux-pci+bounces-227-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-228-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0237A7FBD0C
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 15:44:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE13E7FBF1A
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 17:21:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1521282EA4
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 14:44:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DC8EB20F1C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 16:21:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 051B55AB9B;
-	Tue, 28 Nov 2023 14:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B833237D27;
+	Tue, 28 Nov 2023 16:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YM44BhIk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GacHvmkL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775D88E;
-	Tue, 28 Nov 2023 06:44:51 -0800 (PST)
-Received: from notapiano (cola.collaboradmins.com [IPv6:2a01:4f8:1c1c:5717::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 8FC1F66072A7;
-	Tue, 28 Nov 2023 14:44:47 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1701182690;
-	bh=Og082W+PSa4+5mTtMkeABO/eaXozRb0GXaqspZ1T4tk=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2AB37D1A
+	for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 16:21:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE2AC433C9;
+	Tue, 28 Nov 2023 16:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701188498;
+	bh=4qDVk8o7YVAgg3SDMtAc4y2tizKHp7K06sHoX/yZeek=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YM44BhIk4AoBxZhrTRTnU7Agoo7aoXPbUC+kkVuglrVw1oxHaC3sN8xCREdcJsw06
-	 nkr38YpWD1IqnnPUZg0U1xrL42f2YkAagOaXzZbmapAdkdOOKx72TS7W6/NKBrQdGi
-	 pSdVYBGbsAOUQmzKiYu686WEzswrT9EmB4QGR734x0tqIM5IVwVMJkIlN9wWe8M1Zf
-	 QUEA1zCVt8AMmHKT4XbcFIJlEqyaQI+ygZlTOWLpatmlemGPx8hz/ZtFkBWT4zx/FP
-	 k+trbQUknlfB3LDKn9G2JLuIf7r5XxE8bJy3BSPLEmHviNzpgOMQZ1rYkKOJOV5FUA
-	 SSysqpsfwHfrA==
-Date: Tue, 28 Nov 2023 09:43:53 -0500
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: "Bird, Tim" <Tim.Bird@sony.com>
-Cc: Shuah Khan <shuah@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	"kernelci@lists.linux.dev" <kernelci@lists.linux.dev>,
-	David Gow <davidgow@google.com>,
-	Guenter Roeck <groeck@chromium.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"kernel@collabora.com" <kernel@collabora.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Doug Anderson <dianders@chromium.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 2/2] kselftest: devices: Add sample board file for
- google,spherion
-Message-ID: <ee913bc5-c752-4da7-a140-7492f429c2cb@notapiano>
-References: <20231127233558.868365-1-nfraprado@collabora.com>
- <20231127233558.868365-3-nfraprado@collabora.com>
- <BN8PR13MB27384F089C7DAAF06DF9DDECFDBCA@BN8PR13MB2738.namprd13.prod.outlook.com>
+	b=GacHvmkLAyKN7EMYL2NprvWBJwvqx/+XeX2Tggo5o/jOGaU908Oae+HoRozWlF1EF
+	 B/XLir21H/n6zaF38WisUDnWCz/mtXxG0Nu+uy2SoWAjFVLkRqcQgKoAGyWOx6i/Jz
+	 CwXVfAHnteygSGNrgLvU/9WngAhhrvs6u+06GFpi2JP47YwqitucHqPh0QNsvElKmn
+	 XDM+p/XaYZm0uprla5xRtQLYncBZmJrA9Q+4r4OCltQYlLb5J8WUt12zBeyoA8z2WZ
+	 mptkmSNik1GFOgTvzWIIGAFMI9qYS0yNCSEvesou5Yp4LEjLIq/k939NjuQRx9JL4/
+	 U44MQFXklgT2g==
+Date: Tue, 28 Nov 2023 21:51:23 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <nks@flawful.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Niklas Cassel <niklas.cassel@wdc.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq()
+ alignment support
+Message-ID: <20231128162123.GA3088@thinkpad>
+References: <20231128132231.2221614-1-nks@flawful.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <BN8PR13MB27384F089C7DAAF06DF9DDECFDBCA@BN8PR13MB2738.namprd13.prod.outlook.com>
+In-Reply-To: <20231128132231.2221614-1-nks@flawful.org>
 
-On Tue, Nov 28, 2023 at 12:10:46AM +0000, Bird, Tim wrote:
-> > -----Original Message-----
-> > From: N�colas F. R. A. Prado <nfraprado@collabora.com>
-> > Add a sample board file describing the file's format and with the list
-> > of devices expected to be probed on the google,spherion machine as an
-> > example.
-> > 
-> > Signed-off-by: N�colas F. R. A. Prado <nfraprado@collabora.com>
-> > ---
-> > 
-> > (no changes since v1)
-> > 
-> >  .../testing/selftests/devices/boards/google,spherion | 12 ++++++++++++
+On Tue, Nov 28, 2023 at 02:22:30PM +0100, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel@wdc.com>
 > 
-> Overall, while trying to maintain a comprehensive set of board definitions
-> seems hard, I think having a few as examples is useful.
+> Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
+> correct MSI-X table address") modified dw_pcie_ep_raise_msix_irq() to
+> support iATUs which require a specific alignment.
 > 
-> I'm not a big fan of naming these with a comma in the name.  Is there a reason
-> you are not using dash or underscore?
-
-I'm using the name that we get from the DT compatible, so the right file can be
-automatically selected by the test.
-
+> However, this support cannot have been properly tested.
 > 
-> Do you anticipate a convention of  <producer> <board-or-product-name> tuples for
-> the filename?
+> The whole point is for the iATU to map an address that is aligned,
+> using dw_pcie_ep_map_addr(), and then let the writel() write to
+> ep->msi_mem + aligned_offset.
+> 
+> Thus, modify the address that is mapped such that it is aligned.
+> With this change, dw_pcie_ep_raise_msix_irq() matches the logic in
+> dw_pcie_ep_raise_msi_irq().
+> 
+> Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+> Fixes: 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSI-X table address")
+> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
 
-I'd just stick to the DT compatible as it's the simplest option and should work
-just the same, assuming I understood correctly what you mean.
+Cc: stable@vger.kernel.org # 5.7
 
-Thanks,
-N�colas
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+> Changes since v1:
+> -Clarified commit message.
+> -Add a working email for Kishon to CC.
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f6207989fc6a..bc94d7f39535 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -615,6 +615,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  
+>  	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> +	msg_addr &= ~aligned_offset;
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>  				  epc->mem->window.page_size);
+>  	if (ret)
+> -- 
+> 2.43.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
