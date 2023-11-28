@@ -1,133 +1,154 @@
-Return-Path: <linux-pci+bounces-217-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-218-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D9097FB450
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 09:37:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A57E77FB479
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 09:42:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58560282370
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 08:37:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44C87B20F78
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 08:42:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E9110A32;
-	Tue, 28 Nov 2023 08:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B365F17729;
+	Tue, 28 Nov 2023 08:42:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rzXrRXwM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Apc9CIzX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495641A3
-	for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 00:36:59 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-5094cb3a036so7057917e87.2
-        for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 00:36:59 -0800 (PST)
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E03A8
+	for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 00:42:27 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-50aaaf6e58fso7821254e87.2
+        for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 00:42:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701160617; x=1701765417; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ndvlHffn+v+7jRpIhr2PQ0zOxK49/EI25GTkz7n0JYg=;
-        b=rzXrRXwMse+hL/IS8rQXfGsWgbtnROBLXA4udvTw97XvZ51PlMDzMUsgrAAagcHs1Z
-         BJOlD/DBYM7MNeRaAQH68h+nIUzioiQ1ia1NPsPSPkQEaiZETC/oOJlQOlb0Uvhf6ujO
-         zGmZf9JUGhW94ju1PuOqygpmPfc3dB9KM4b/joI17QWAEUyV534ftf+y1SKxmjFNF+Pi
-         RGKkMBWpsUW62r0tNWl+ukriDUqhkcxsn+B7fzmQY0nzyfNFR+W7x+SLRCbK6J57wRAT
-         vBbMH9YWw6PtGtW9OVszzX5i8hVfb1mN9RP9eXSkM+YRZgQbUGm0YF5vFGH6qvmVdw2S
-         /ICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701160617; x=1701765417;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1701160945; x=1701765745; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ndvlHffn+v+7jRpIhr2PQ0zOxK49/EI25GTkz7n0JYg=;
-        b=JIwKAb6vCjxAm69Sn5de8teqIUT7Iq0WH18zOMMD0Uk2uN/H6DWZy04C+KdgC5CR1z
-         o3Ubr7oC5pNiMAthOStKoLQq33ELQ699FU2Z55gD0oAgHL8FC32lYh5upeepuzbTckrf
-         A+QyX8GAk4TrU8XieCzdb0CWT0nbTi3PGd/FAgq1PRXcXF+y6N1EaUVg8A/FMTOdrHzc
-         9fZcZdSLGmb1tzexh7TZRwQ/s081OtnaIWbQ3I54fhXPMRQQmaijdZDmPFmyyZy3d4AV
-         WN2EYVE866p8GI80EDzv4vbU6L4XV7Db7NsTZAAvFeb81Va0gWe6TYNf38yY5uF5bQxB
-         B7Eg==
-X-Gm-Message-State: AOJu0YwvLkfaKoUogzFibMajRA6eOafYNykQKt0PXIOGfApS2S9CyjYB
-	LN/dKLBahD39NoT5H1vcWC7RsA==
-X-Google-Smtp-Source: AGHT+IH3naDiSAvMe65JEiUJ41gZDSqerHZJlISGg2SLDjWoDzje6LCP07SmqxC7BoqRB9JB0du7gw==
-X-Received: by 2002:a05:6512:1386:b0:507:a9b7:f071 with SMTP id fc6-20020a056512138600b00507a9b7f071mr13195200lfb.1.1701160617415;
-        Tue, 28 Nov 2023 00:36:57 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id ay12-20020a05600c1e0c00b0040588d85b3asm17390529wmb.15.2023.11.28.00.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 00:36:56 -0800 (PST)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Tue, 28 Nov 2023 09:36:50 +0100
-Subject: [PATCH RESEND] dt-bindings: PCI: qcom: document the SM8650 PCIe
- Controller
+        bh=Erf0gitB2S5rXXmcEeV/xkrurthBZdKYZBJso/PS/Ac=;
+        b=Apc9CIzXM4rfC5ZSXd1ivVWekxUkRBkorcQrIfWg9UxFpW/kkcBW693lTkSMe0p91X
+         dH+AGuEp8gSJLF8weWBEyByCMpOdvUUB36/gkLdXCoQBGOHS/mjf9YbfV3Td0OHKVNBF
+         HCqKD2BP7JxUDZLWgKdyrr1NZ/0t3dkOC+ypfHUAjXVmQR32qUbxgfWxa6LXZ8FfyPOs
+         5BxuNGFhc9VaGfA4/508bxDJBAy96WcsxAXF16v698Rn70cdDsrmcAx4kFZhQ/teflhB
+         dUln7Gu116rsaKGhKstouo33XNVghztbLvvGfDcUfUodzNCsLSIo98m50zhV0h0gVU2h
+         4KrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701160945; x=1701765745;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :references:cc:to:content-language:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Erf0gitB2S5rXXmcEeV/xkrurthBZdKYZBJso/PS/Ac=;
+        b=j1U/+4xrSLXSziJ75huxXtILww3jQnUmKjmkQjshK0uYjEwtI+mWhjrgL3+2PHvoAP
+         E70zK40A0Z7pJfAC/78kdfvTDj/cpgeUHz++sfslBc0h847fSnEDCGUHaG/XnbBjezQz
+         jnuPS5YJJGKk5WmffZPq8+Z6t4XTlilg2qZveqniq9O9pMwmbyYUUrfLC8/1zzqP6IlQ
+         bHMrfD/uBSx2wHnLQEHr+Nz2JAsuvRYa922FeyT4aoLRsfL3kghfxkz95c4W4ZYRDXDU
+         qRbP6nYmUEUs/d74Lao7+hZsNv8latjJvvwUs1qZFvBV+Qrp7anZq5B4hDBBXyj8lmWi
+         9y1A==
+X-Gm-Message-State: AOJu0YxZIa5zcQpwj+2vM3YnrqtdllUv8Ap/Eg6E4vfyLx3ZW+28BNjG
+	pNLDraXBwpWzPkkvC6gxFrkKmQ==
+X-Google-Smtp-Source: AGHT+IGpPMz6U7UlSZRGx1bf2JkG6T7mTur+DF+VvbtmPQO99UJytTF3JNBbD72JCUwE18GKibK6OA==
+X-Received: by 2002:a05:6512:2244:b0:50b:bd7a:abbc with SMTP id i4-20020a056512224400b0050bbd7aabbcmr560068lfu.66.1701160945641;
+        Tue, 28 Nov 2023 00:42:25 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:eada:f40e:7ab3:2afe? ([2a01:e0a:982:cbb0:eada:f40e:7ab3:2afe])
+        by smtp.gmail.com with ESMTPSA id q19-20020a194313000000b0050a78dac3fasm1795027lfa.12.2023.11.28.00.42.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Nov 2023 00:42:25 -0800 (PST)
+Message-ID: <9bb9b7e3-ba59-4c29-99b8-173b1e8f247a@linaro.org>
+Date: Tue, 28 Nov 2023 09:42:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231128-topic-sm8650-upstream-bindings-pcie-v1-1-9c803b439952@linaro.org>
-To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RESEND] dt-bindings: PCI: qcom: document the SM8650 PCIe
+ Controller
+Content-Language: en-US, fr
+To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
  Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1300;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=9202tyaMMRdGcdJf/JRZ0vhX+oG3wOQczHTXpC7CSu8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlZaanrPZ4eB3vQ9G+ZXaEF6naExHNnSvlxOAbGMkH
- JuEn2W+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZWWmpwAKCRB33NvayMhJ0fpFD/
- 9ajTKwAHyrK3169CtWuLrK2jizVnpbTvGTMo4pbUyk8yDZCKUGP7aDtHj6kLD1vSZR/Y49MnBeiMba
- /Hwx9wXRqLL/R7Exd+ZF0YcjZsy/hNe+CUE/AcR19pcRwQfHW4E0D0V3sn23kRalKDJOeR+SHJGH2a
- fyOptO+FdjrAvZ0Tnn004/6hdbrIflbupjpkcCLZCjIliitzz9lxLZz86+umD1FxLn2tKixtdcyjN5
- kuy4uTh+5a2hPG0VB9/Zay9kU5nEruocuf87H/llQBVdk4YxHNxV9TeCN12tlWlFIkBkqiWE3JvGYM
- dvm54f4jD0pFg+IvwRrGScHnTmbl53H1q3lgiG18q8zswlrt7Dyp3ItImxXiAwKV9JWMZDE3/4QeC2
- 71s2+NOYy4Q7Gfwj6t5P89TTsBXvj0/8/r4CQCVirQNfwx9n2HgC6uYQKCQmVRE06gwDlLQAoE5JqL
- NEyMuOaQRIvzQM4ZVtiTtv3WYETpVSCWdG421PMYv6o6PoNdN/VN69+4gO2mgYYi3GGRQqu06hlIr2
- /8j/UItWEKdZVi3GkSeCHyXSd7VdshNfNYZe8D3Sca0sGe6UU++h2KjjgrKsRnvqInZbCQMR4cYAkB
- RDBR2Jf7syf26uPh7QIxZJw6g4PHjz+04DOjNkZ1kfuKYw7bVP7mNX7wpDpg==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231128-topic-sm8650-upstream-bindings-pcie-v1-1-9c803b439952@linaro.org>
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro Developer Services
+In-Reply-To: <20231128-topic-sm8650-upstream-bindings-pcie-v1-1-9c803b439952@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Document the PCIe Controller on the SM8650 platform by using the
-SM8550 bindings as a fallback.
+Hi Lorenzo,
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
-For convenience, a regularly refreshed linux-next based git tree containing
-all the SM8650 related work is available at:
-https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upstream/integ
----
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+On 28/11/2023 09:36, Neil Armstrong wrote:
+> Document the PCIe Controller on the SM8650 platform by using the
+> SM8550 bindings as a fallback.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index eadba38171e1..af537732ded6 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -41,6 +41,10 @@ properties:
-           - qcom,pcie-sm8450-pcie0
-           - qcom,pcie-sm8450-pcie1
-           - qcom,pcie-sm8550
-+      - items:
-+          - enum:
-+              - qcom,pcie-sm8650
-+          - const: qcom,pcie-sm8550
-       - items:
-           - const: qcom,pcie-msm8998
-           - const: qcom,pcie-msm8996
+Please ignore this resend, I forgot to add reviews.
 
----
-base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
-change-id: 20231016-topic-sm8650-upstream-bindings-pcie-56e90536c258
+Thanks,
+Neil
 
-Best regards,
--- 
-Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+> For convenience, a regularly refreshed linux-next based git tree containing
+> all the SM8650 related work is available at:
+> https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upstream/integ
+> ---
+>   Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index eadba38171e1..af537732ded6 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -41,6 +41,10 @@ properties:
+>             - qcom,pcie-sm8450-pcie0
+>             - qcom,pcie-sm8450-pcie1
+>             - qcom,pcie-sm8550
+> +      - items:
+> +          - enum:
+> +              - qcom,pcie-sm8650
+> +          - const: qcom,pcie-sm8550
+>         - items:
+>             - const: qcom,pcie-msm8998
+>             - const: qcom,pcie-msm8996
+> 
+> ---
+> base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
+> change-id: 20231016-topic-sm8650-upstream-bindings-pcie-56e90536c258
+> 
+> Best regards,
 
 
