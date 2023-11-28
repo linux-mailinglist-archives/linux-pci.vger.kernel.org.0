@@ -1,244 +1,132 @@
-Return-Path: <linux-pci+bounces-224-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-225-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B587FBA0D
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 13:26:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F08C27FBB62
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 14:24:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32C97B21653
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 12:26:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B945B21903
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 13:24:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B801351C3A;
-	Tue, 28 Nov 2023 12:26:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D82C57896;
+	Tue, 28 Nov 2023 13:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eAs2Q100"
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="PhcWpGng";
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="e+F6WINF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 809721BE;
-	Tue, 28 Nov 2023 04:26:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=d34IiTMyydsAU1Z9eO
-	NPBXN/Ty8c7WVY1SNdn4hy2gk=; b=eAs2Q100ZucG/3Ry9AdXB2oYB+n/dCSEbs
-	I4msTs53N7WZ3zOZ7p15ib/nlz+D2CCRL7lWBXkHD1AnJW5xsYWiudys5kZ7N9i+
-	duExv9o+XkfZfKH+xvv2JbkEMXSBWMP6OOzV3T+M5AF6WIq4TBVrF1125sj86N1n
-	VcfdMdjzE=
-Received: from localhost.localdomain.localdomain (unknown [111.205.43.234])
-	by zwqz-smtp-mta-g0-3 (Coremail) with SMTP id _____wBnLBsu3GVlp+bDEA--.36749S2;
-	Tue, 28 Nov 2023 20:25:18 +0800 (CST)
-From: wangdong28 <wangdong202303@163.com>
-To: nirmal.patel@linux.intel.com,
-	jonathan.derrick@linux.dev,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	rafael@kernel.org,
-	mingo@redhat.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	lenb@kernel.org
-Cc: linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	wangdong202303@163.com,
-	ahuang12@lenovo.com,
-	Dong Wang <wangdong28@lenovo.com>
-Subject: [PATCH v2] PCI/ACPI: Add extra slot register check for non-ACPI device
-Date: Tue, 28 Nov 2023 20:25:16 +0800
-Message-Id: <1701174316-14149-1-git-send-email-wangdong202303@163.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID:_____wBnLBsu3GVlp+bDEA--.36749S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3XFy5KFW5Xr43Zr1DZw1UKFg_yoWxGFWxpF
-	4a93Wftr95Gr12g39Fv3yUur1rtrWv93yfGrWxG34DZ3Waga4SqFyvyFyjk3W7Jrs8Wa43
-	Za1YvrWkuF48AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR8OzxUUUUU=
-X-CM-SenderInfo: pzdqwvhrqjjiistqjqqrwthudrp/1tbiXAo2YVXl8GgY6AAAsZ
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FFEDA
+	for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 05:23:53 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-507a98517f3so7356788e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 05:23:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701177831; x=1701782631;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:dkim-signature:dkim-signature:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GBP9+ANTd+YeoKcJdvljTdpjHWIRh3Hzh1C2WywAX6M=;
+        b=uLi18yyoFRK7FVUmAziM9rfAozGSA8PSdVHoIwFRdcoIXmJgsaQ/Ia1LknyJpE81UI
+         kHn6S9z3vttp2KoeGpCJoo8s/G7LAJy2uU8DDg+b0G+nNhaXlfFjOud0lRt0x3S6W+8i
+         aEvS0ldHY9sUmgvmZE3inQPvpi7BK0Z5rTflwFQ4OiyYo7JhDuXuw0o0NPBAXGtetwmq
+         8ZlDK0kMQC1SA4+hJbHbJFZcvkZnvdIK8D8JE/0Ddxfg/8UeZzBNe6kkJj9fu/74kwSW
+         Vd36Kvxa+Lqo/ZSBRaRtQijp4fRUksU4qvNrj8SMp8Og0/Ryc4jumME+qY8hEkgcfnYY
+         yo3g==
+X-Gm-Message-State: AOJu0YxoNpxYVaFvbgNIvX4NNJEg0cadvANKxaXfsEhRUi5qBEJB0rkH
+	nHEduxCdb6L1gTSJ0rdRsV7h6kMfX7aZ42mZ
+X-Google-Smtp-Source: AGHT+IF5wv12ufUx+xWJWt8k6hNJkP+AYQNgUlmB5VfzR2E6/qUQb4gfBE4XkKcarw5CbzoHoFD0UA==
+X-Received: by 2002:a05:6512:10ca:b0:50b:b00b:e3ef with SMTP id k10-20020a05651210ca00b0050bb00be3efmr5875051lfg.62.1701177831496;
+        Tue, 28 Nov 2023 05:23:51 -0800 (PST)
+Received: from flawful.org (c-55f5e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.245.85])
+        by smtp.gmail.com with ESMTPSA id c5-20020a056512324500b0050bc194d414sm23473lfr.303.2023.11.28.05.23.51
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 05:23:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
+	t=1701177829; bh=e8b9fnxitWkWXRKnpPA0xPmyNbp8/i00cz0k+pMYsYY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PhcWpGngiVr9k/pKFETuPulU4Xw+BEF4rhpNrKsTPWyA2euoSvpr6OJ2vl1zMpn9X
+	 qvFa7JsMgf45efr55qoUXsL71BrXpncrN6JuE+iFtx4b0CvNfjvv7ONdX8oF6PB4LG
+	 MY8OVf/as2ZPTfPDnrKp8Nf+K2om4gDpaQw21haM=
+Received: by flawful.org (Postfix, from userid 112)
+	id CE4CAC7E; Tue, 28 Nov 2023 14:23:47 +0100 (CET)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
+	t=1701177803; bh=e8b9fnxitWkWXRKnpPA0xPmyNbp8/i00cz0k+pMYsYY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=e+F6WINFMfpxgoTfFvr+d3wQUfBdnMgKRkQI/0gAeDbhBVd4UnV1/Oc7l9D9b5pq9
+	 RWw+7CaBfs57yKXtnmAYqG/ugMJj6zAaj7l7sfAsFldi0BcDREFSiyprLAWhQRBdRm
+	 UYqJC4F6oIQdsFelaAASeSDXcLMrTwKD/B0YkL+Y=
+Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by flawful.org (Postfix) with ESMTPSA id 39130A7F;
+	Tue, 28 Nov 2023 14:23:20 +0100 (CET)
+From: Niklas Cassel <nks@flawful.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Niklas Cassel <niklas.cassel@wdc.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2] PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq() alignment support
+Date: Tue, 28 Nov 2023 14:22:30 +0100
+Message-ID: <20231128132231.2221614-1-nks@flawful.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Dong Wang <wangdong28@lenovo.com>
+From: Niklas Cassel <niklas.cassel@wdc.com>
 
-When enabling VMD function in UEFI setup, the physical slot of the M.2
-NVMe device connected to the VMD device cannot be detected. Here is
-the result from lspci ("Physical Slot" field is NOT shown):
+Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
+correct MSI-X table address") modified dw_pcie_ep_raise_msix_irq() to
+support iATUs which require a specific alignment.
 
- 10001:01:00.0 Non-Volatile memory controller: Intel Corporation NVMe
- Datacenter SSD [3DNAND, Beta Rock Controller] (prog-if 02 [NVM Express])
-   Subsystem: Intel Corporation NVMe Datacenter SSD [3DNAND] SE M.2 (P4511)
+However, this support cannot have been properly tested.
 
-Generally, the physical slot (/sys/bus/pci/slots) will be created via
-either ACPI walking path during kernel init or hotplug path:
+The whole point is for the iATU to map an address that is aligned,
+using dw_pcie_ep_map_addr(), and then let the writel() write to
+ep->msi_mem + aligned_offset.
 
-ACPI walking path:
-  pcibios_add_bus
-    acpi_pci_add_bus
-      acpi_pci_slot_enumerate
-        acpi_walk_namespace
-          register_slot
-            pci_create_slot
+Thus, modify the address that is mapped such that it is aligned.
+With this change, dw_pcie_ep_raise_msix_irq() matches the logic in
+dw_pcie_ep_raise_msi_irq().
 
-hotplug path:
-  __pci_hp_initialize
-    pci_create_slot
-
-[M.2 NVMe Device]
-A. VMD disabled
-When VMD is disabled, NVMe will be discovered during bus scanning and
-recognized as acpi device. In this case, the physical slot is created
-via the ACPI walking path.
-
-B. VMD enabled
-vmd_enable_domain() invokes pcibios_add_bus(). This means that it goes
-through the ACPI walking path. However, acpi_pci_add_bus() returns
-directly becase the statment "!ACPI_HANDLE(bus->bridge)" is true.
-See the following code snippet:
-
-  void acpi_pci_add_bus(struct pci_bus *bus)
-  {
-      ...
-      if (acpi_pci_disabled || !bus->bridge || !ACPI_HANDLE(bus->bridge))
-		return;
-      ...
-  }
-
-Since VMD creates its own root bus and devices of VMD are attached to
-the bus, those devices are non-ACPI devices. That's why
-"!ACPI_HANDLE(bus->bridge)" returns true.
-
-In addition, M.2 NVMe devices does not have the hotplug capability.
-Here is the quote from PCI Express M.2 Specification (Revision 5.0,
-Version 1.0):
-
-  CAUTION: M.2 Add-in Cards are not designed or intended to support
-  Hot-Swap or Hot-Plug connections. Performing Hot-Swap or Hot-Plug
-  may pose danger to the M.2 Add-in Card, to the system Platform,
-  and to the person performing this act.
-
-M.2 NVMe devices (non-ACPI devices and no hotplug capability) connected
-to the VMD device cannot meet the above-mentioned paths. The corresponding
-slot info of the M.2 NVMe controller cannot be created in
-/sys/bus/pci/slots.
-
-Fix this issue by checking the available physical slot number in
-slot capabilities register. If the physical slot number is available,
-create the slot info accordingly. The following lspci output shows the
-available slot info with applying this patch:
-
- 10001:01:00.0 Non-Volatile memory controller: Intel Corporation NVMe
- Datacenter SSD [3DNAND, Beta Rock Controller] (prog-if 02 [NVM Express])
-   Subsystem: Intel Corporation NVMe Datacenter SSD [3DNAND] SE M.2 (P4511)
-   Physical Slot: 16
-
-[U.2 NVMe device]
-A. VMD disabled
-Same as M.2 NVMe Device case "A".
-
-B. VMD enabled
-Same as M.2 NVMe Device case "B".
-
-The hotplug of the U.2 device is optional (See "PCI Express SFF-8639 Module
-Specification" for detail). The U.2 NVMe controller with hotplug capability
-connected to the VMD device can meet the hotplug path, so the slot info can
-be shown correctly via the lspci utility (without this patch):
-
- 10000:82:00.0 Non-Volatile memory controller: Intel Corporation NVMe
- Datacenter SSD [3DNAND, Beta Rock Controller] (prog-if 02 [NVM Express])
-   Subsystem: Lenovo Thinksystem U.2 P4610 NVMe SSD
-   Physical Slot: 64
-
-For U.2 NVMe controller without hotplug capability, this patch is needed
-to fix the missing slot info.
-
-Suggested-and-reviewed-by: Adrian Huang <ahuang12@lenovo.com>
-Signed-off-by: Dong Wang <wangdong28@lenovo.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+Fixes: 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSI-X table address")
+Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
 ---
-v2:
-  * Fix the build error for non-x86 arch
+Changes since v1:
+-Clarified commit message.
+-Add a working email for Kishon to CC.
 
----
- arch/x86/pci/common.c  | 21 +++++++++++++++++++++
- drivers/pci/pci-acpi.c |  9 ++++++++-
- include/linux/pci.h    |  1 +
- 3 files changed, 30 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index ddb7986..b657b07 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -731,4 +731,25 @@ struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index f6207989fc6a..bc94d7f39535 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -615,6 +615,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	}
  
- 	return dev;
- }
-+
-+#define SLOT_NAME_SIZE  5
-+
-+void pci_check_extra_slot_register(struct pci_bus *bus)
-+{
-+	struct pci_dev *pdev = bus->self;
-+	char slot_name[SLOT_NAME_SIZE];
-+	struct pci_slot *pci_slot;
-+	u32 slot_cap, slot_nr;
-+
-+	if (!is_vmd(bus) || !pdev || pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &slot_cap))
-+		return;
-+
-+	if (!(slot_cap & PCI_EXP_SLTCAP_HPC)) {
-+		slot_nr = (slot_cap & PCI_EXP_SLTCAP_PSN) >> 19;
-+		snprintf(slot_name, SLOT_NAME_SIZE, "%u", slot_nr);
-+		pci_slot = pci_create_slot(bus, 0, slot_name, NULL);
-+		if (IS_ERR(pci_slot))
-+			pr_err("pci_create_slot returned %ld\n", PTR_ERR(pci_slot));
-+	}
-+}
- #endif
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 0045750..e2f2ba8 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -884,6 +884,8 @@ acpi_status pci_acpi_add_pm_notifier(struct acpi_device *dev,
- 	return acpi_add_pm_notifier(dev, &pci_dev->dev, pci_acpi_wake_dev);
- }
- 
-+void __weak pci_check_extra_slot_register(struct pci_bus *bus) { }
-+
- /*
-  * _SxD returns the D-state with the highest power
-  * (lowest D-state number) supported in the S-state "x".
-@@ -1202,9 +1204,14 @@ void acpi_pci_add_bus(struct pci_bus *bus)
- 	union acpi_object *obj;
- 	struct pci_host_bridge *bridge;
- 
--	if (acpi_pci_disabled || !bus->bridge || !ACPI_HANDLE(bus->bridge))
-+	if (acpi_pci_disabled || !bus->bridge)
- 		return;
- 
-+	if (!ACPI_HANDLE(bus->bridge)) {
-+		pci_check_extra_slot_register(bus);
-+		return;
-+	}
-+
- 	acpi_pci_slot_enumerate(bus);
- 	acpiphp_enumerate_slots(bus);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 60ca768..b9bb447 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1394,6 +1394,7 @@ static inline int pci_rebar_bytes_to_size(u64 bytes)
- bool pci_device_is_present(struct pci_dev *pdev);
- void pci_ignore_hotplug(struct pci_dev *dev);
- struct pci_dev *pci_real_dma_dev(struct pci_dev *dev);
-+void pci_check_extra_slot_register(struct pci_bus *bus);
- int pci_status_get_and_clear_errors(struct pci_dev *pdev);
- 
- int __printf(6, 7) pci_request_irq(struct pci_dev *dev, unsigned int nr,
+ 	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
++	msg_addr &= ~aligned_offset;
+ 	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+ 				  epc->mem->window.page_size);
+ 	if (ret)
 -- 
-1.8.3.1
+2.43.0
 
 
