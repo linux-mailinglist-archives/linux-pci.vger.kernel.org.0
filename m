@@ -1,132 +1,105 @@
-Return-Path: <linux-pci+bounces-225-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-226-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F08C27FBB62
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 14:24:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C5287FBC4A
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 15:10:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B945B21903
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 13:24:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E7081C20E35
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Nov 2023 14:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D82C57896;
-	Tue, 28 Nov 2023 13:24:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BD75AB8B;
+	Tue, 28 Nov 2023 14:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="PhcWpGng";
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="e+F6WINF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4OShPFU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FFEDA
-	for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 05:23:53 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-507a98517f3so7356788e87.0
-        for <linux-pci@vger.kernel.org>; Tue, 28 Nov 2023 05:23:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701177831; x=1701782631;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:dkim-signature:dkim-signature:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GBP9+ANTd+YeoKcJdvljTdpjHWIRh3Hzh1C2WywAX6M=;
-        b=uLi18yyoFRK7FVUmAziM9rfAozGSA8PSdVHoIwFRdcoIXmJgsaQ/Ia1LknyJpE81UI
-         kHn6S9z3vttp2KoeGpCJoo8s/G7LAJy2uU8DDg+b0G+nNhaXlfFjOud0lRt0x3S6W+8i
-         aEvS0ldHY9sUmgvmZE3inQPvpi7BK0Z5rTflwFQ4OiyYo7JhDuXuw0o0NPBAXGtetwmq
-         8ZlDK0kMQC1SA4+hJbHbJFZcvkZnvdIK8D8JE/0Ddxfg/8UeZzBNe6kkJj9fu/74kwSW
-         Vd36Kvxa+Lqo/ZSBRaRtQijp4fRUksU4qvNrj8SMp8Og0/Ryc4jumME+qY8hEkgcfnYY
-         yo3g==
-X-Gm-Message-State: AOJu0YxoNpxYVaFvbgNIvX4NNJEg0cadvANKxaXfsEhRUi5qBEJB0rkH
-	nHEduxCdb6L1gTSJ0rdRsV7h6kMfX7aZ42mZ
-X-Google-Smtp-Source: AGHT+IF5wv12ufUx+xWJWt8k6hNJkP+AYQNgUlmB5VfzR2E6/qUQb4gfBE4XkKcarw5CbzoHoFD0UA==
-X-Received: by 2002:a05:6512:10ca:b0:50b:b00b:e3ef with SMTP id k10-20020a05651210ca00b0050bb00be3efmr5875051lfg.62.1701177831496;
-        Tue, 28 Nov 2023 05:23:51 -0800 (PST)
-Received: from flawful.org (c-55f5e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.245.85])
-        by smtp.gmail.com with ESMTPSA id c5-20020a056512324500b0050bc194d414sm23473lfr.303.2023.11.28.05.23.51
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 05:23:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-	t=1701177829; bh=e8b9fnxitWkWXRKnpPA0xPmyNbp8/i00cz0k+pMYsYY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PhcWpGngiVr9k/pKFETuPulU4Xw+BEF4rhpNrKsTPWyA2euoSvpr6OJ2vl1zMpn9X
-	 qvFa7JsMgf45efr55qoUXsL71BrXpncrN6JuE+iFtx4b0CvNfjvv7ONdX8oF6PB4LG
-	 MY8OVf/as2ZPTfPDnrKp8Nf+K2om4gDpaQw21haM=
-Received: by flawful.org (Postfix, from userid 112)
-	id CE4CAC7E; Tue, 28 Nov 2023 14:23:47 +0100 (CET)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-	t=1701177803; bh=e8b9fnxitWkWXRKnpPA0xPmyNbp8/i00cz0k+pMYsYY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=e+F6WINFMfpxgoTfFvr+d3wQUfBdnMgKRkQI/0gAeDbhBVd4UnV1/Oc7l9D9b5pq9
-	 RWw+7CaBfs57yKXtnmAYqG/ugMJj6zAaj7l7sfAsFldi0BcDREFSiyprLAWhQRBdRm
-	 UYqJC4F6oIQdsFelaAASeSDXcLMrTwKD/B0YkL+Y=
-Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by flawful.org (Postfix) with ESMTPSA id 39130A7F;
-	Tue, 28 Nov 2023 14:23:20 +0100 (CET)
-From: Niklas Cassel <nks@flawful.org>
-To: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5D35A0E4;
+	Tue, 28 Nov 2023 14:10:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98BD3C433C9;
+	Tue, 28 Nov 2023 14:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701180629;
+	bh=60EtB08YT7Ko8yqV3Wwijj0Q4rDlAXw7Ibne/o3zM/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X4OShPFUo67/hTM7CP0T5xlROgke47ag9YYEcSS/ddt4MiwJzPweh7w6xdi0Cvesx
+	 F/8yEKqXWrixCvb1kA2smHWsNtmgQN/ovflspS+geIMXD2+AJgKxKXTlYxvH7K6Vhn
+	 WHbqKUN3K31QmfxQ2/pKM+CXH3J95hQTGtOETNXh/ZnWapdNWYEFpZEtLvvMXvrV+F
+	 4+8ofw5pC1p64zwwB2+Axp/kGR/Oz2Q5idf3lljuruSLhgfx+NyLdo1+IwK0RAni4O
+	 hvuf9HEsXlCgWGIE3Zx9ZJIVmOxHcwv2gKqkZT/JltiXlFI1ncAeRdqMRMa1u+NTn2
+	 L+JXI1dxyLYMQ==
+Date: Tue, 28 Nov 2023 14:10:22 +0000
+From: Mark Brown <broonie@kernel.org>
+To: "Bird, Tim" <Tim.Bird@sony.com>
+Cc: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Niklas Cassel <niklas.cassel@wdc.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2] PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq() alignment support
-Date: Tue, 28 Nov 2023 14:22:30 +0100
-Message-ID: <20231128132231.2221614-1-nks@flawful.org>
-X-Mailer: git-send-email 2.43.0
+	Saravana Kannan <saravanak@google.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	"kernelci@lists.linux.dev" <kernelci@lists.linux.dev>,
+	David Gow <davidgow@google.com>,
+	Guenter Roeck <groeck@chromium.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"kernel@collabora.com" <kernel@collabora.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Doug Anderson <dianders@chromium.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 2/2] kselftest: devices: Add sample board file for
+ google,spherion
+Message-ID: <1baeddbe-83ed-476e-a748-7d2838b44c5f@sirena.org.uk>
+References: <20231127233558.868365-1-nfraprado@collabora.com>
+ <20231127233558.868365-3-nfraprado@collabora.com>
+ <BN8PR13MB27384F089C7DAAF06DF9DDECFDBCA@BN8PR13MB2738.namprd13.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VIfEQR6tichIZgMF"
+Content-Disposition: inline
+In-Reply-To: <BN8PR13MB27384F089C7DAAF06DF9DDECFDBCA@BN8PR13MB2738.namprd13.prod.outlook.com>
+X-Cookie: Must be over 21.
 
-From: Niklas Cassel <niklas.cassel@wdc.com>
 
-Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
-correct MSI-X table address") modified dw_pcie_ep_raise_msix_irq() to
-support iATUs which require a specific alignment.
+--VIfEQR6tichIZgMF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-However, this support cannot have been properly tested.
+On Tue, Nov 28, 2023 at 12:10:46AM +0000, Bird, Tim wrote:
 
-The whole point is for the iATU to map an address that is aligned,
-using dw_pcie_ep_map_addr(), and then let the writel() write to
-ep->msi_mem + aligned_offset.
+> I'm not a big fan of naming these with a comma in the name.  Is there a r=
+eason
+> you are not using dash or underscore?
 
-Thus, modify the address that is mapped such that it is aligned.
-With this change, dw_pcie_ep_raise_msix_irq() matches the logic in
-dw_pcie_ep_raise_msi_irq().
+That's a common patter with this sort of software (eg, bootrr does the
+same).  It's convenient to just be able to use the compatible straight
+=66rom DT without having to mangle it.
 
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>
-Fixes: 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSI-X table address")
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
----
-Changes since v1:
--Clarified commit message.
--Add a working email for Kishon to CC.
+--VIfEQR6tichIZgMF
+Content-Type: application/pgp-signature; name="signature.asc"
 
- drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
- 1 file changed, 1 insertion(+)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index f6207989fc6a..bc94d7f39535 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -615,6 +615,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	}
- 
- 	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
-+	msg_addr &= ~aligned_offset;
- 	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
- 				  epc->mem->window.page_size);
- 	if (ret)
--- 
-2.43.0
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVl9M0ACgkQJNaLcl1U
+h9Cktgf+Oq0BN8WyZ7CzPTibZyr6k1r2sWjG2VUqEZQKYA66zH1D965ND5J8XJB8
+cqw3KD0X/8KNc/u890NCBnr7QTxlKdczAbTEMZtYAcy/7xiA41z0ITXFc6DE8/nO
+V76cOaRGh2vCNkBROokKzewYxb+4MWHHFNUBu/7AXYZHVhtt4U1kcxNcm9HwvC/j
+S3ubDODyZk++hbyHQhxf3ENesyQuIObeKWx6qVPieVbbeCEn3SLZH1KTEOcEr4Cz
+uCkWQKMpUS4iMafKTdMigLtOE4TskFAd+eH+cFMm4Yy7bhr+5pxKmAaDleKBAORF
+/OS87yV3a5qUCNslQ03RnzaSJr1BmQ==
+=ujz7
+-----END PGP SIGNATURE-----
 
+--VIfEQR6tichIZgMF--
 
