@@ -1,137 +1,184 @@
-Return-Path: <linux-pci+bounces-243-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-244-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 802FC7FD8B8
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 14:55:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E13B7FD8F4
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 15:08:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20A5F1F20C73
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 13:55:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD8652824B8
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 14:08:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72DA821364;
-	Wed, 29 Nov 2023 13:55:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0C82225D9;
+	Wed, 29 Nov 2023 14:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WR7SWPcq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oYfUqx82"
 X-Original-To: linux-pci@vger.kernel.org
-X-Greylist: delayed 61 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Nov 2023 05:55:04 PST
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2098F;
-	Wed, 29 Nov 2023 05:55:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701266105; x=1732802105;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7125ARMLtQIJtXfuOMwEC7WJB+aSFeYK25LGSUB5H+U=;
-  b=WR7SWPcqYQ5ISzJfOme7gtcLOi3s/smGl6WbcJPz7nRqdTyAkRtmhnvm
-   t4WDrem8GcSI1hgghg7msby9WNqynpkt+Zg/XyLnYScjbLJd+mjMndoO0
-   e3D/RTXuX05HJ+E6VIvaTgUCGTFPv+PhkqR+JhCoSZ5k/iheHanqLE49X
-   zdQ0MZmKjevFWyaQOD/4HfQbthx0niLYLkH+AEaLnCCU4Me/jYjo93WBp
-   QcsDFk+ISSKuBAAth6YTrT+Li3M/0wbojR3axjaUkdIJu2QQNryVQE4OG
-   NYfHntuR0Av1zJm+1ynG7RUuo4J/Wt46Z59/SHe9X7ENTZl8E3qKMQ/2g
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="63866"
-X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="63866"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 05:54:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="886866508"
-X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="886866508"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 05:54:00 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1r8L0n-00000000SC8-1Dt4;
-	Wed, 29 Nov 2023 15:53:57 +0200
-Date: Wed, 29 Nov 2023 15:53:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Keith Busch <kbusch@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-	Jean Delvare <jdelvare@suse.de>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [bug report] lockdep WARN at PCI device rescan
-Message-ID: <ZWdCdMtLjZS2mDTQ@smile.fi.intel.com>
-References: <ea31480f-2887-41fe-a560-f4bb1103479e@gmail.com>
- <ZVNiUuyHaez8rwL-@smile.fi.intel.com>
- <20231114155701.GA27547@wunner.de>
- <ZVOcPOlkkBk3Xfm5@smile.fi.intel.com>
- <ZVO1M2289uvElgOi@smile.fi.intel.com>
- <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
- <ZWC_0eG2UBMKAD3C@smile.fi.intel.com>
- <2vzf5sj76j3p747dfbhnusu5daxzog25io4s7d5uvzvtghvo24@567tghzifylu>
- <20231129111739.GA14152@wunner.de>
- <ZWdBnMTOq9wIt9L-@smile.fi.intel.com>
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD45FCE
+	for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 06:08:09 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6c320a821c4so5897368b3a.2
+        for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 06:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701266889; x=1701871689; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xqhIKIAAkgzS+01MpQb+4NjWytY/8qrLTb5XTN87Jt0=;
+        b=oYfUqx82sqyJmGBocxTmAItIFbYmZiXDIkQj+63qbRLQaHO8xxsG69FKfJOnLIxzpN
+         emoLpZy66Td/vHgvToh76uBzkW75fEyNnxM6QxhB1/VUEIBel0DvbEuIT/rimfuS0FID
+         SG/jOuTk8LyHs8LuI7lgfdi41KqufyApUFtIUGfAQyjd46UhOddXcv5WXcfovbOTmHng
+         bs01OdAYoKa0tRr2gON5QSvn0Alp+YMMsTWqXF2N88O/6t4X4j9B2qp+Ougkh8hymO1y
+         Mfzc+sx43Cz78lt2TnN9walkh+cS/Yb76G+EbjCk/i5E2VUGcZvS8/230PvROj+s3sXF
+         4PiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701266889; x=1701871689;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xqhIKIAAkgzS+01MpQb+4NjWytY/8qrLTb5XTN87Jt0=;
+        b=iL0YYo5sJyg8FbKwXDpTrOBPjrEAgaYzG7zjXgyFkjKVISVLlH9lpmEqgystz8CsJ2
+         Fg2lwA8IQzpVt9db2mE7oLH1KMAYGSbdxLYcZklCYkhNfkx2ycGW4TdKiKist9puS3Ik
+         30M7H10QsekZFTE7xYGdzdT9LImbe5o6uRbQJepCNUlXjw+rlQ0wrdSlRXqJjEpDjr0j
+         4oEtYNyFR0WZfZs1liky9YQw98qcDpZzJua65YwfcGZs8jQ0/RM5kVtilxSSsM0hrd/X
+         I92/mXcSUwrZmBy3nHoP0DF6mi7gdN2m8eScCEGlBbylsPen5kNh6Au8tqq3h4eWiJxf
+         D16w==
+X-Gm-Message-State: AOJu0Yygv4EDvCrKDOoF2d3y5DWbmzN3zCYK79mqPMNYPD2Z/rc1itKG
+	Mz0Ip10/3uRer9+jRk16+i1FFe+XJiPpD/jpeA==
+X-Google-Smtp-Source: AGHT+IGs1uRX8liE8+y+XLOOyiNVexvvdtOzdKQYHNDaN6sIoGWkQXkDJ0+H7sbE4itsi9971IO/bw==
+X-Received: by 2002:a05:6a00:3a0b:b0:6cb:8dba:ce6c with SMTP id fj11-20020a056a003a0b00b006cb8dbace6cmr18966045pfb.18.1701266889086;
+        Wed, 29 Nov 2023 06:08:09 -0800 (PST)
+Received: from thinkpad ([117.207.26.69])
+        by smtp.gmail.com with ESMTPSA id i19-20020aa787d3000000b006cdce7c69d9sm1532304pfo.91.2023.11.29.06.08.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Nov 2023 06:08:08 -0800 (PST)
+Date: Wed, 29 Nov 2023 19:38:03 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH v7 1/2] PCI: designware-ep: Fix DBI access before core
+ init
+Message-ID: <20231129140803.GB7621@thinkpad>
+References: <20231120084014.108274-2-manivannan.sadhasivam@linaro.org>
+ <ZWYmX8Y/7Q9WMxES@x1-carbon>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZWdBnMTOq9wIt9L-@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZWYmX8Y/7Q9WMxES@x1-carbon>
 
-On Wed, Nov 29, 2023 at 03:50:21PM +0200, Andy Shevchenko wrote:
-> On Wed, Nov 29, 2023 at 12:17:39PM +0100, Lukas Wunner wrote:
-> > On Tue, Nov 28, 2023 at 07:45:06AM +0000, Shinichiro Kawasaki wrote:
-> > > On Nov 24, 2023 / 17:22, Andy Shevchenko wrote:
+Hi Niklas,
 
-...
-
-> > > > Another possible solution I was thinking about is to have a local cache,
-> > > > so, make p2sb.c to be called just after PCI enumeration at boot time
-> > > > to cache the P2SB device's bar, and then cache the bar based on the device
-> > > > in question at the first call. Yet it may not remove all theoretical /
-> > > > possible scenarios with dead lock (taking into account hotpluggable
-> > > > devices), but won't fail the i801 driver in the above use case IIUC.
-> > > 
-> > > Thanks for the idea. I created an experimental patch below (it does not guard
-> > > list nor free the list elements, so it is incomplete). I confirmed that this
-> > > patch avoids the deadlock. So your idea looks working. I still observe the
-> > > deadlock WARN, but it looks better than the hang by the deadlock.
+On Tue, Nov 28, 2023 at 05:41:52PM +0000, Niklas Cassel wrote:
+> On Mon, Nov 20, 2023 at 02:10:13PM +0530, Manivannan Sadhasivam wrote:
+> > The drivers for platforms requiring reference clock from the PCIe host for
+> > initializing their PCIe EP core, make use of the 'core_init_notifier'
+> > feature exposed by the DWC common code. On these platforms, access to the
+> > hw registers like DBI before completing the core initialization will result
+> > in a whole system hang. But the current DWC EP driver tries to access DBI
+> > registers during dw_pcie_ep_init() without waiting for core initialization
+> > and it results in system hang on platforms making use of
+> > 'core_init_notifier' such as Tegra194 and Qcom SM8450.
 > > 
-> > Your patch uses a list to store a multitude of struct resource.
-> > Is that actually necessary?  I thought there can only be a single
-> > P2SB device in the system?
+> > To workaround this issue, users of the above mentioned platforms have to
+> > maintain the dependency with the PCIe host by booting the PCIe EP after
+> > host boot. But this won't provide a good user experience, since PCIe EP is
+> > _one_ of the features of those platforms and it doesn't make sense to
+> > delay the whole platform booting due to the PCIe dependency.
 > > 
-> > > Having said that, Heiner says in another mail that "A solution has to support
-> > > pci drivers using p2sb_bar() in probe()". This idea does not fulfill it. Hmm.
+> > So to fix this issue, let's move all the DBI access during
+> > dw_pcie_ep_init() in the DWC EP driver to the dw_pcie_ep_init_complete()
+> > API that gets called only after core initialization on these platforms.
+> > This makes sure that the DBI register accesses are skipped during
+> > dw_pcie_ep_init() and accessed later once the core initialization happens.
 > > 
-> > Basically what you need to do is create two initcalls:
+> > For the rest of the platforms, DBI access happens as usual.
 > > 
-> > Add one arch_initcall to unhide the P2SB device.
-> > 
-> > The P2SB subsequently gets enumerated by the PCI core in a subsys_initcall.
-> > 
-> > Then add an fs_initcall which extracts and stashes the struct resource,
-> > hides the P2SB device and destroys the corresponding pci_dev.
-> > 
-> > Then you don't need to acquire any locks at runtime, just retrieve the
-> > stashed struct resource.
-> > 
-> > This approach will result in the P2SB device briefly being enumerated
-> > and a driver could in theory bind to it.  Andy, is this a problem?
-> > I'm not seeing any drivers in the tree which bind to 8086/c5c5.
+> > Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
 > 
-> At least one problem just out of my head. The P2SB on many system is PCI
-> function 0. Unhiding the P2SB unhides all functions on that device, and
-> we have use cases for those (that's why we have two first parameters to
-> p2sb_bar() in case we want non-default device to be looked at).
+> Hello Mani,
+> 
+> I tried this patch on top of a work in progress EP driver,
+> which, similar to pcie-qcom-ep.c has a perst gpio as input,
+> and a .core_init_notifier.
+> 
+> What I noticed is the following every time I reboot the RC, I get:
+> 
+> [  604.735115] debugfs: Directory 'a40000000.pcie_ep' with parent 'dmaengine' already present!
+> [ 1000.713582] debugfs: Directory 'a40000000.pcie_ep' with parent 'dmaengine' already present!
+> [ 1000.714355] debugfs: File 'mf' in directory '/' already present!
+> [ 1000.714890] debugfs: File 'wr_ch_cnt' in directory '/' already present!
+> [ 1000.715476] debugfs: File 'rd_ch_cnt' in directory '/' already present!
+> [ 1000.716061] debugfs: Directory 'registers' with parent '/' already present!
+> 
+> 
+> Also:
+> 
+> # ls -al /sys/class/dma/dma*/device | grep pcie
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan0/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan1/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan2/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan3/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan0/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan1/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan2/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan3/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan0/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan1/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan2/device -> ../../../a40000000.pcie_ep
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan3/device -> ../../../a40000000.pcie_ep
+> 
+> Adds another dmaX entry for each reboot.
+> 
+> 
+> I'm quite sure that you will see the same with pcie-qcom-ep.
+> 
 
-For the clarity this is true for ATOM_GOLDMONT (see p2sb_cpu_ids array).
+Yes, you are right. I'm aware of this issue but don't have a handy solution atm.
+
+> I think that either the DWC drivers using core_init (only tegra and qcom)
+> need to deinit the eDMA in their assert_perst() function, or this patch
+> needs to deinit the eDMA before initializing it.
+> 
+
+The problem with first option is that it is too late. The moment EP gets perst
+assert IRQ, refclk will be cut off by the host. So if EP tries to access any
+hardware registers (edma_core_off) it will result in hard reboot.
+
+The second option is not a complete solution, because the EPF drivers still need
+to release the DMA channels and that can only happen if the EPF drivers know
+that the host is going into power down state. Even if the DWC core makes an
+assumption that EPF drivers are releasing the channel, in reality it is not
+happening.
+
+> 
+> A problem with the current code, if you do NOT have this patch, which I assume
+> is also problem on pcie-qcom-ep, is that since assert_perst() function performs
+> a core reset, all the eDMA setting written in the dbi by the eDMA driver will be
+> cleared, so a PERST assert + deassert by the RC will wipe the eDMA settings.
+> Hopefully, this will no longer be a problem after this patch has been merged.
+> 
+
+Yes. Since all the DBI accesses were moved to the dw_pcie_ep_late_init()
+function that get's called during perst deassert with the help of
+dw_pcie_ep_init_complete(), all the settings will be reconfigured again.
+
+- Mani
+
+> 
+> Kind regards,
+> Niklas
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+மணிவண்ணன் சதாசிவம்
 
