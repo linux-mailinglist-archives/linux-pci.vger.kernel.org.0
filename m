@@ -1,134 +1,106 @@
-Return-Path: <linux-pci+bounces-258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0AB67FE41B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 00:16:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8352F7FE423
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 00:21:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67B64B20DCE
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 23:16:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29D001F20610
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 23:21:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A6CF3B1BB;
-	Wed, 29 Nov 2023 23:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB0FD40C05;
+	Wed, 29 Nov 2023 23:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsmYRCtm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkrHl0UL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7171C68E
-	for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 23:15:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6817CC433C9;
-	Wed, 29 Nov 2023 23:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D83C4CB32
+	for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 23:21:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC51FC433C7;
+	Wed, 29 Nov 2023 23:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701299757;
-	bh=eZ85cA7Ik1tM1F3uhz1PsvW2kqzGygwIuLJ/hwc0ym8=;
+	s=k20201202; t=1701300070;
+	bh=9rdUMQCjtMr+ri5NEp2KYKHprcR+lytmbQP/lABcO2o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lsmYRCtmKFcBu1rcXaomCG95v4pA6taD5qmHpyLOrgRIDlZ1SOWv5L+WIZ8hyBMum
-	 laxg0oycsMQQkuO1QeJIcjlqYNWqmEBqXg/4gz5SspvN0xpYzYOM0siFTlJG8ryyHp
-	 vljciukoKJwsG8RuHFositnwxAh75YOMaei6kmhKKGyL00wIYrEovNqm+rR2+AHcW7
-	 ORb0aQ0cGLdsnPAfKE/rnH8Yfiu7CQ7WO+/Qa3Arr5beMLLBhhoTr/hdY5+35TE1Bh
-	 QIi8nDG56bIgOx8PQbM11gjbmbRnQ1j3Jj2msYgAFjW6uGlvOcwym5mBzcfNulMSfa
-	 im9jbRW+GrMtA==
-Date: Wed, 29 Nov 2023 17:15:55 -0600
+	b=mkrHl0ULby81el9Tdi5wmgCfn8mVc0JBY/qTBKFuTKOV/yj+7U6oroEKfKUzCOved
+	 68JatSVY8amXrxWOwXp8yrL7A+igA0ZVNVPNlQnoxAdWFAzfJYZZ/yRKafewoP1fwh
+	 Y7xdcggF8W5NWZFsbkbhnxj+t4zN/BLubFTqUQoPyZRD95PTbdjRkRv0QMKNisyNua
+	 NxZDw+rSP2x2atemkcLccbIEpl7JvhS7iyNJn7QmPR7nwxpiRQStzFpyjPPIF/f0O2
+	 enVW6eVuZbJzypOGsxMn9opRGLvyLVUg2eZn6tmaEZBqZWekXrFB81eKVM2OCdeN5R
+	 KwJHqnTYXk8Hg==
+Date: Wed, 29 Nov 2023 17:21:08 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	ilkka@os.amperecomputing.com, kaishen@linux.alibaba.com,
-	yangyicong@huawei.com, will@kernel.org, Jonathan.Cameron@huawei.com,
-	baolin.wang@linux.alibaba.com, robin.murphy@arm.com,
-	chengyou@linux.alibaba.com, LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	rdunlap@infradead.org, mark.rutland@arm.com,
-	zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v11 3/5] PCI: Move pci_clear_and_set_dword() helper to
- PCI header
-Message-ID: <20231129231555.GA443895@bhelgaas>
+To: Kevin Xie <kevin.xie@starfivetech.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mason.huo@starfivetech.com,
+	leyfoon.tan@starfivetech.com, minda.chen@starfivetech.com
+Subject: Re: [PATCH v1] PCI: Add PCIE_CONFIG_REQUEST_WAIT_MS waiting time
+ value
+Message-ID: <20231129232108.GA444155@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <71fa699f-5130-401a-bf4a-3271579a8dda@linux.alibaba.com>
+In-Reply-To: <20231124014508.43358-1-kevin.xie@starfivetech.com>
 
-On Mon, Nov 27, 2023 at 09:34:05AM +0800, Shuai Xue wrote:
-> On 2023/11/22 21:14, Ilpo Järvinen wrote:
-> > On Tue, 21 Nov 2023, Shuai Xue wrote:
-> > 
-> >> The clear and set pattern is commonly used for accessing PCI config,
-> >> move the helper pci_clear_and_set_dword() from aspm.c into PCI header.
-> >> In addition, rename to pci_clear_and_set_config_dword() to retain the
-> >> "config" information and match the other accessors.
-> >>
-> >> No functional change intended.
-> >>
-> >> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> >> Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> >> ---
-> >>  drivers/pci/access.c    | 12 ++++++++
-> >>  drivers/pci/pcie/aspm.c | 65 +++++++++++++++++++----------------------
-> >>  include/linux/pci.h     |  2 ++
-> >>  3 files changed, 44 insertions(+), 35 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> >> index 6554a2e89d36..6449056b57dd 100644
-> >> --- a/drivers/pci/access.c
-> >> +++ b/drivers/pci/access.c
-> >> @@ -598,3 +598,15 @@ int pci_write_config_dword(const struct pci_dev *dev, int where,
-> >>  	return pci_bus_write_config_dword(dev->bus, dev->devfn, where, val);
-> >>  }
-> >>  EXPORT_SYMBOL(pci_write_config_dword);
-> >> +
-> >> +void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
-> >> +				    u32 clear, u32 set)
-> > 
-> > Just noting that annoyingly the ordering within the name is inconsistent 
-> > between:
-> >   pci_clear_and_set_config_dword()
-> > and
-> >   pcie_capability_clear_and_set_dword()
-> > 
-> > And if changed, it would be again annoyingly inconsistent with 
-> > pci_read/write_config_*(), oh well... And renaming pci_read/write_config_* 
-> > into the hierarchical pci_config_read/write_*() form for would touch only 
-> > ~6k lines... ;-D
+On Fri, Nov 24, 2023 at 09:45:08AM +0800, Kevin Xie wrote:
+> Add the PCIE_CONFIG_REQUEST_WAIT_MS marco to define the minimum waiting
+> time between sending the first configuration request to the device and
+> exit from a conventional reset (or after link training completes).
+
+s/marco/macro/
+
+List the first event before the second one, i.e., the delay is from
+exit from reset to the config request.
+
+> As described in the conventional reset rules of PCI specifications,
+> there are two different use cases of the value:
 > 
-> I think it is a good question, but I don't have a clear answer. I don't
-> know much about the name history.  As you mentioned, the above two
-> accessors are the foundation operation, may it comes to @Bjorn decision.
+>    - With a downstream port that supports link speeds <= 5.0 GT/s,
+>      the waiting is following exit from a conventional reset.
 > 
-> The pci_clear_and_set_config_dword() is a variant of below pci accessors:
+>    - With a downstream port that supports link speeds > 5.0 GT/s,
+>      the waiting is after link training completes.
+
+Include the spec citation here as well as in the comment below.
+
+I assume there are follow-on patches that actually use this?  Can we
+make this the first patch in a series so we know we don't have an
+unused macro lying around?
+
+> Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
+> Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
+> ---
+>  drivers/pci/pci.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
->     pci_read_config_dword()
->     pci_write_config_dword()
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 5ecbcf041179..4ca8766e546e 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -22,6 +22,13 @@
+>   */
+>  #define PCIE_PME_TO_L2_TIMEOUT_US	10000
+>  
+> +/*
+> + * PCIe r6.0, sec 6.6.1, <Conventional Reset>
+> + * Requires a minimum waiting of 100ms before sending a configuration
+> + * request to the device.
+> + */
+> +#define PCIE_CONFIG_REQUEST_WAIT_MS	100
+> +
+>  extern const unsigned char pcie_link_speed[];
+>  extern bool pci_early_dump;
+>  
+> -- 
+> 2.25.1
 > 
-> At last, they are consistent :)
-
-"pcie_capability_clear_and_set_dword" is specific to the PCIe
-Capability, doesn't work for arbitrary config space, and doesn't
-include the word "config".
-
-"pci_clear_and_set_config_dword" seems consistent with the arbitrary
-config space accessor pattern.
-
-At least "clear_and_set" is consistent across both.
-
-I'm not too bothered by the difference between "clear_and_set_dword"
-(for the PCIe capability) and "clear_and_set_config_dword" (for
-arbitrary things).
-
-Yes, "pcie_capability_clear_and_set_config_dword" would be a little
-more consistent, but seems excessively wordy (no pun intended).
-
-But maybe I'm missing your point, Ilpo.  If so, what would you
-propose?
-
-Bjorn
 
