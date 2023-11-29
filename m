@@ -1,285 +1,142 @@
-Return-Path: <linux-pci+bounces-251-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-252-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B114C7FE193
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 22:10:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76FB17FE236
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 22:44:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66B772824E0
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 21:10:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 959C81C20921
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 21:44:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BC45CD3E;
-	Wed, 29 Nov 2023 21:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62A8C6166B;
+	Wed, 29 Nov 2023 21:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rm7Fc17L"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fwm8Qc5w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2071.outbound.protection.outlook.com [40.107.243.71])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C99B10DB;
-	Wed, 29 Nov 2023 13:10:17 -0800 (PST)
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2059.outbound.protection.outlook.com [40.107.247.59])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F01910C9;
+	Wed, 29 Nov 2023 13:44:32 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HoCE8gPQ8eyNHLoL1wgaxmQPyjHHMdsKWqbXf5euzv75txWI9kK8rAOtJroSEH2KiDdEZK4EilZlvc/97rHBb2Ae1GHEJ0iTn4yI1iNPAElYUaafhBKtwVaRt4EeBaw6D0gQYekhBxlrXbaLcgZqCxse2jiSg7u5xYz4D2/DTVdaiX4pVWzSDAFBZCIb4yjJxVrryHAiS/2ty51WitWaXCMygIGF/3mxC5tOM6fzsBqfOnfO43ReOeHjtZOoEgl+X5Dv93NB569pOQ73wugrbx2EiABXIDuGzWPcpic/SzMvCVXHBk+S+GWAefph08a5OTSYzYmeamaLi8PklW9QJQ==
+ b=U2zwfe93MEcyp5v/in0baLITQx4uwJXHo5rIS2mPwFLj9sLl7KfDENUXUKjzSUaY2lkqUx7AjNNiXUztephzEEKIr95CR3fj+7qYP4BoP4TZA8v2ShwyVFN48wseTfIzthou+Dk6jiNVjaBy58xn5AJf8ua05Zd/Y8lKwnuZIu1Bo8c5WybGetDOMFTkx61az/hRD+XRVUe94tTmez/OjBqKsdzfkAcvDj3QpPv+FIcqwE4ImtmT7CEdJUfewbOxXEicdm4vV86R8sujSnRCaqbrGgH0d59teYJgp9YWIs7cky2pbPy/ig/3pwJeFlcRj8bbys+KpjC6GWb/YAU53g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ejVubRgadwqHt5IMl/SXZ/ivPrQ5Ox6qSkNXSVOtQ7o=;
- b=AztAHDKsnu1VAlrtP0p3e7uTl+tbeKsfStKI0fd3SvUgqVvhsEP07KmXIMbdRQ636dobU6XWXqac+Y2KbrJ6zbx4cot3suP3LPLGxD/S78+MM9gxe1m3T/dB7pSw9QRn65Ei8QowZ3xNbZnFvHaijxgbGJAEdrQrUfPC4lsVyoEl7pzfRoVOGB3D77Hkf4sM6ogOht5V4k+cOCyx77rTCUuzSRbXcmJWZc22V2rUngS90Xrm0SDz6csou+2lWQK0uGC2N2JsHb7ej/Wf6eh0KKklOO9TluybHPFYB7JtvOArA0oWMZI6qXA5CiqB8d6BiQH7WrGuM+AaSmJYZNaacw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=oNR5nva9cphYOl5n3WTk/K88y95S8YANkVxkCeZvI1s=;
+ b=ZcKmTNVrJ93h/ITrmuoGyqNMn7qePRoi06Q+f9DkkYkZA3Xtd/bwGp7uR87vAqAkSpSGgrFv78Ei+dSKk5yxXMNCpWdTKHavoMlHb4C2jckGyywi/9T/fuyHwpnqPHviRXV6Nddg6ruDfYjlva53zK81Q3dB7hWL6d7a9BsASUNq7cRs2RxRZl1414AQRVFjY3qT7PKQBsqGvErvV4ffWoZQpdAYG27CBLanQKjPqwQjG1IQyoQJ+/RYjXynKxH4YRPCQmLRwLRTV517lzqQx415nmLp1B39BBXeTLL6fihVt4Rlfj1+teRlYNoKJ2UfDFUX9WgIH27VxF2EZ0tk5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ejVubRgadwqHt5IMl/SXZ/ivPrQ5Ox6qSkNXSVOtQ7o=;
- b=rm7Fc17LALz50H8YucnezrZCcVkAXd9rUgUhpR3Lb6baeZrpy8VvfHbv1yara4Brs5TZn3imwmYnMf1ycySBIHegcLJcVKYV9Y+SqH0qkMw3OlDNWkdlbXl/qy8zYQIftWG37UOOs86hwQMTLhf0VF5ngX7WTxFZwXnCbqq+CWs=
-Received: from DS7PR05CA0057.namprd05.prod.outlook.com (2603:10b6:8:2f::21) by
- CY5PR12MB6203.namprd12.prod.outlook.com (2603:10b6:930:24::17) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7025.28; Wed, 29 Nov 2023 21:10:14 +0000
-Received: from DS3PEPF000099E2.namprd04.prod.outlook.com
- (2603:10b6:8:2f:cafe::a1) by DS7PR05CA0057.outlook.office365.com
- (2603:10b6:8:2f::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.22 via Frontend
- Transport; Wed, 29 Nov 2023 21:10:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099E2.mail.protection.outlook.com (10.167.17.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7046.17 via Frontend Transport; Wed, 29 Nov 2023 21:10:14 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 29 Nov
- 2023 15:10:13 -0600
-From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, Oliver O'Halloran <oohall@gmail.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH v6] PCI/DPC: Ignore Surprise Down error on hot removal
-Date: Wed, 29 Nov 2023 21:10:03 +0000
-Message-ID: <20231129211003.154341-1-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
+ bh=oNR5nva9cphYOl5n3WTk/K88y95S8YANkVxkCeZvI1s=;
+ b=Fwm8Qc5wZP+XYUk2H4pY0wJgbQ2LCf5+3U1Cvgasp7k2g2ye+SnzPIWOoYFFXfwGBEvVokdg4SJI5nOayOoPCv7UkVixFDPVmN5oI+lWh/JY/iKeGibujOwxUuNdEhV8UEQPc1HIel7CEfN7Kbv6wJ8/qgqYTYZayB7qpzMkfDA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by DBAPR04MB7416.eurprd04.prod.outlook.com (2603:10a6:10:1b3::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.11; Wed, 29 Nov
+ 2023 21:44:29 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40%6]) with mapi id 15.20.7046.015; Wed, 29 Nov 2023
+ 21:44:29 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: manivannan.sadhasivam@linaro.org
+Cc: Frank.Li@nxp.com,
+	bhelgaas@google.com,
+	imx@lists.linux.dev,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	lpieralisi@kernel.org,
+	minghuan.Lian@nxp.com,
+	mingkai.hu@nxp.com,
+	robh@kernel.org,
+	roy.zang@nxp.com
+Subject: [PATCH v4 0/4] dwc general suspend/resume functionality
+Date: Wed, 29 Nov 2023 16:44:08 -0500
+Message-Id: <20231129214412.327633-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0136.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::21) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099E2:EE_|CY5PR12MB6203:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1ddb337d-64a4-4ef3-cc17-08dbf11f94fe
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DBAPR04MB7416:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd3f2b74-9a4a-4fba-a1aa-08dbf1245d5c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	l3OXcPmsPlK/uLzV37U9FoOGu0Rv2geay0wDf+Gnkts5ubnBvGmSmHtz709T37ppHVofr4YbgBHRpuIgT0VpXLoAFfKK3CXQMJXcdqprr1jpvvFYPLnWEOozSWsEBSj/3XEvlgCHNn7o4vmagFhXKSWPUQIHa2PgEeqUujbFulgHaq0nw9ewtLmZ0WLCji4Wu/kHX0IwhVAqrWF5bFoCiMN9BtDBVCay+6/ZlHmzjXVuOwhHLroagvj3/RcUaYkiDw4vtqoPWnJj1mul/mnRaANCtZr+Tj0dWbo9eflfjmxhpefJgVi9Qx+g6aBW1xBzFo7nz546rqgU3o0mRn0ZHktyNIgRJyQd1uoYlnyWPpbyZJozHUzgzeeDYpbhlRAMx4z8quDH88Z6lShyszp307o+kw5MkL2jKN+52dF7xA6h5HooZxdY0+1+lOaoofuWMBPhX+63N/k8BatuviNU7voxscx/d7GGN4fvekI8o84IYiTAo1NsZ4HEbRGbuUYQAfKiDln97MRiheNuAf2D7pr0n4rKAK2mtVdtylzutR9EU5FTvNRDRt2UHmaFMQA8esMYYY90fIqZGbOUP4fYaNtOeBds2DMeFfOI5U+Dqum6LDW0xSAVm6Cs3mi5uro3eWK9/CAKBcRuqJ42zF5cqu9GvLKyYLXV3ODvTDrvfLzvnuBHdLUbgfG0p7Wd3TuvhjKpBZU46VkUSbKEznXvUfiwyksvbcy2R4/WFysS9Fx63NsSY0Bpvo16o1EcU8etBYcdYYoujnMdgcpXr4Y5GD9ylO/03z3/VTwSKks1Yt0Xn4yUT4PQNmztFyaOecIg
+	G9kEgLlHr5Zjp+XQhF+E8+oSalnCbeGR4CkxfhlhVRImY3gOpeVlrsFs5lueghj0RJAnlaHoPQD8UaecgHPDxvj16YJwa6QGsVr0pidFpzj3O/Q0FnBlzhVcmJwTAxnmkRAPH6Sg3Ci5Pcv/rrsceU+t1XRjWiBRZHxkoMidSomkrsKtpUnAvPmM/EcrBIt/wP7wJdXVBWPcbBHYXCJNPoVTEh/OipymPHDUNl0Rx0BBf5VJf/zYXVZOU2p/K9pWym3wNMwwej0Qz8eXODe+2fd5k2DpK9Gun9iRgtIUU8i3VO4+Ti5OkSPZnORanzPs1G8RbJWQi6VWyLtGd0F+f3Qsw5r7VHsq9mlgCIhk6aafrfTpasTLVVU4uVBv7yX4DSJPe3ToLR10H7nk+CrnQ6zasT0MxQUZeD829Mr3vxH7Fs0b7yTgO7znKEHg1pY2VSyRA/WIQGIsMlsWwcPMQwFdlCnPdnyKT//KrlYrl6R2FMKpLaBchM4i9QZsrz3yUfT44NcJYgsaHSOzcETOj0q2oke3nzAm6e0olVJPUBXpn/l451FGeygeKyibFhhkF8Ps2Z5hQy+pHk2LrAN6JLsI8W6+ESvyywi/mGyjne8oWUtcDAd1eJN3sd82klrL/bEXMsqXhxpZ1l2Gs7KCoCTe4HnIP5zUTtpsCs40Id0=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(136003)(396003)(376002)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(82310400011)(40470700004)(36840700001)(46966006)(2616005)(36756003)(41300700001)(1076003)(81166007)(47076005)(356005)(40480700001)(26005)(16526019)(86362001)(83380400001)(5660300002)(2906002)(82740400003)(426003)(336012)(202311291699003)(7696005)(40460700003)(6666004)(8936002)(36860700001)(4326008)(8676002)(478600001)(966005)(70206006)(54906003)(70586007)(110136005)(316002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2023 21:10:14.7813
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(39860400002)(376002)(136003)(396003)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(83380400001)(26005)(41300700001)(8936002)(8676002)(36756003)(478600001)(6486002)(316002)(86362001)(4326008)(6666004)(38350700005)(38100700002)(202311291699003)(1076003)(2616005)(6512007)(15650500001)(4744005)(52116002)(66476007)(6916009)(66556008)(66946007)(2906002)(5660300002)(7416002)(6506007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MdpPYLLvYzyjnZI/5Gvy+8jUySzazBIwh1dwSaF5CbEvZkOvz/pxKLJX/GpY?=
+ =?us-ascii?Q?oyWp5gGAMQhQSH/o9G7VmCLy+/RaAQjcofSO8+b9B1UQ0NP8obW5NRFewkKW?=
+ =?us-ascii?Q?uo3MSiNXavqCzawzjkk5p86d9zu9aa+w2rWMnCU4nWpA7Ie4btwQRxNCN6kG?=
+ =?us-ascii?Q?dsjtLJBYCsgAIQQ5h9S267gcbT+fIf1MMTY0kdOI3zEEc9GwMNViftkx0lJX?=
+ =?us-ascii?Q?l8pSrATVWpibZpuYICU8TPsnevb89b6Kj50AFXawoMkNf2MGItM+OrFNPJ20?=
+ =?us-ascii?Q?sFI5bpCaAxJCh5FMGpnIZaVjy/9HR35y2PqPzofzS6+y7LuAzGM5jYjnCCEa?=
+ =?us-ascii?Q?w/MOEtCtNisVh7gieUxRlsdkjqIymqGavlhkdTClMCbswYMLPJ1J1SIrO31o?=
+ =?us-ascii?Q?01TYB5iftgem33PnJxBrUjwyo+ACSX1rCY7N8DKLOwL3NLgq1geda6kLdf25?=
+ =?us-ascii?Q?ZCXnhqu9NZmMPgYSx4HnRCyjIt383s11zE/wpJtC8x5Z4jJE3r9t7bmFqyg4?=
+ =?us-ascii?Q?xXFUCcWMzkvAO4rh8Lk1BmtbzMGrDJzd8PQKiPWN4sR9YGfTeH4S8lvc0hln?=
+ =?us-ascii?Q?IjUNH5cQYtZCvzjS/FviOLUFlM/JNWrrg/RLvaW0kYboPaqTQTw9WXmtLh7T?=
+ =?us-ascii?Q?51Xzjt0zRubvZXlTqFGjDuRczVLI4q11/Qw/YnkCR8yauyK1eTrziqoWLf/c?=
+ =?us-ascii?Q?kepSZTRrVvUZ+lOEood2D6Z04l0tu+LeEji8wcMASHzQhSSKuU885l2WlQ5C?=
+ =?us-ascii?Q?OUQHGlkUK8VAJaU801dc6LIPHChUeI0onDz9p3vjoQvPz0HC1Z4+Qt+QjZe2?=
+ =?us-ascii?Q?Q7js8NkO4oMz07IED/6pNf1NV1WJr81zXPB0e2k/QfjHDCtl7g4W8f5dX/lI?=
+ =?us-ascii?Q?4f6979jwDwyeDzh8w9CX0i8YUfZFkge4rA2WNzlAiGUnzlf9l41Z/VmzRBUV?=
+ =?us-ascii?Q?lkjjRdxxNyaNeOdnpAMnM/jVin4A0vf9WXcAnpYHxVYcrT4CDMr81jD150t4?=
+ =?us-ascii?Q?9EkXfBtC3cgUdXNiLFuE2aenKprJkRU0rqNraj5V/huVFNCnsoCvL7fBkE/d?=
+ =?us-ascii?Q?wmRnxyJPSvdliUyWa10Hp3u7Rg5A8Nf1mAgBM91cKcXUeEEvW+vI7dNQkClE?=
+ =?us-ascii?Q?CQub46Ci4AWXPHcvg1QF5tDKCWzb+o3zOWCm+hmv41bERpB/7z85Rqfqqmsu?=
+ =?us-ascii?Q?8CFfqB+rnipWRvVu3fPreHXsO2EU99xZ53iYNk6RmrqXnx91fRYnMvLVvJpO?=
+ =?us-ascii?Q?W+RG/llDlKo9zkTo/AyDYog1VhSVhj56CgZY4WydlkXmLemNzGoD83YDl31X?=
+ =?us-ascii?Q?LzJ0D/4neFqfwa2GQvWkOEzLumgwd63QWq9lkDfq1UoXbnSO7KKYviXsVlsW?=
+ =?us-ascii?Q?5cyKcmniyBTrKpCd7Dhku5C0IGQfkwMP3vT6Jbwk0iz+qexd6WtTYq+1ZVRk?=
+ =?us-ascii?Q?Xv6AL7Rf3G5+X4SZiWY0UWXqy7gMnXSixV2f20Um7dOmk/UwIQrg6emsnahL?=
+ =?us-ascii?Q?or1ucNPr1Mk5DtiSM+tMR0HSUmvWWcWxuvgJrn8BcmmiwkmmDc1TRhry0Hfz?=
+ =?us-ascii?Q?c8b5a9d3EmLfK7rLmg4=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd3f2b74-9a4a-4fba-a1aa-08dbf1245d5c
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2023 21:44:29.4068
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ddb337d-64a4-4ef3-cc17-08dbf11f94fe
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099E2.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6203
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bHhgXYGF+tP9eeCB/17xRDZ7nBZ+zc/TvjZzdos5htjF+xZTFc7jM/WYHXolo2rzuG5eDx3K4ifVc1NxofdTKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7416
 
-According to PCIe r6.0 sec 6.7.6 [1], async removal with DPC may result in
-surprise down error. This error is expected and is just a side-effect of
-async remove.
+Add a API for dwc suspend/resume.
+In layerscape platform call this api.
 
-Ignore surprise down error generated as a side-effect of async remove.
-Typically, this error is benign as the pciehp handler invoked by PDC
-or/and DLLSC alongside DPC, de-enumerates and brings down the device
-appropriately. But the error messages might confuse users. Get rid of
-these irritating log messages with a 1s delay while pciehp waits for
-dpc recovery.
+Frank Li (4):
+  PCI: layerscape: Add function pointer for exit_from_l2()
+  PCI: layerscape: Add suspend/resume for ls1021a
+  PCI: layerscape: Rename pf_* as pf_lut_*
+  PCI: layerscape: Add suspend/resume for ls1043a
 
-The implementation is as follows: On an async remove a DPC is triggered
-along with a Presence Detect State change and/or DLL State Change.
-Determine it's an async remove by checking for DPC Trigger Status in DPC
-Status Register and Surprise Down Error Status in AER Uncorrected Error
-Status to be non-zero. If true, treat the DPC event as a side-effect of
-async remove, clear the error status registers and continue with hot-plug
-tear down routines. If not, follow the existing routine to handle AER and
-DPC errors.
+ drivers/pci/controller/dwc/pci-layerscape.c | 191 +++++++++++++++++---
+ 1 file changed, 170 insertions(+), 21 deletions(-)
 
-Please note that, masking Surprise Down Errors was explored as an
-alternative approach, but left due to the odd behavior that masking only
-avoids the interrupt, but still records an error per PCIe r6.0.1 Section
-6.2.3.2.2. That stale error is going to be reported the next time some
-error other than Surprise Down is handled.
-
-Dmesg before:
-
-  pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
-  pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
-  pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
-  pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
-  pcieport 0000:00:01.4:    [ 5] SDES (First)
-  nvme nvme2: frozen state error detected, reset controller
-  pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
-  pcieport 0000:00:01.4: AER: subordinate device reset failed
-  pcieport 0000:00:01.4: AER: device recovery failed
-  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
-  nvme2n1: detected capacity change from 1953525168 to 0
-  pci 0000:04:00.0: Removing from iommu group 49
-
-Dmesg after:
-
- pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
- nvme1n1: detected capacity change from 1953525168 to 0
- pci 0000:04:00.0: Removing from iommu group 37
-
-[1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
-    https://members.pcisig.com/wg/PCI-SIG/document/16609
-
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
-v2:
-	Indentation is taken care. (Bjorn)
-	Unrelevant dmesg logs are removed. (Bjorn)
-	Rephrased commit message, to be clear on native vs FW-First
-	handling. (Bjorn and Sathyanarayanan)
-	Prefix changed from pciehp_ to dpc_. (Lukas)
-	Clearing ARI and AtomicOp Requester are performed as a part of
-	(de-)enumeration in pciehp_unconfigure_device(). (Lukas)
-	Changed to clearing all optional capabilities in DEVCTL2.
-	OS-First -> native. (Sathyanarayanan)
-
-v3:
-	Added error message when root port become inactive.
-	Modified commit description to add more details.
-	Rearranged code comments and function calls with no functional
-	change.
-	Additional check for is_hotplug_bridge.
-	dpc_completed_waitqueue to wakeup pciehp handler.
-	Cleared only Fatal error detected in DEVSTA.
-
-v4:
-	Made read+write conditional on "if (pdev->dpc_rp_extensions)"
-	for DPC_RP_PIO_STATUS.
-	Wrapped to 80 chars.
-	Code comment for clearing PCI_STATUS and PCI_EXP_DEVSTA.
-	Added pcie_wait_for_link() check.
-	Removed error message for root port inactive as the message
-	already existed.
-	Check for is_hotplug_bridge before registers read.
-	Section 6.7.6 of the PCIe Base Spec 6.0 -> PCIe r6.0 sec 6.7.6.
-	Made code comment more meaningful.
-
-v5:
-	$SUBJECT correction.
-	Added "Reviewed-by" tag.
-	No code changes. Re-spin on latest base to get Bjorn's
-	attention.
-
-v6:
-	Change to write 1's to clear error. (Sathyanarayanan)
----
- drivers/pci/pcie/dpc.c | 67 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
-
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 94111e438241..e8ede4875ccc 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -303,10 +303,77 @@ void dpc_process_error(struct pci_dev *pdev)
- 	}
- }
- 
-+static void pci_clear_surpdn_errors(struct pci_dev *pdev)
-+{
-+	u32 reg32;
-+
-+	if (pdev->dpc_rp_extensions) {
-+		pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS,
-+				      &reg32);
-+		pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS,
-+				       reg32);
-+	}
-+
-+	/*
-+	 * In practice, Surprise Down errors have been observed to also set
-+	 * error bits in the Status Register as well as the Fatal Error
-+	 * Detected bit in the Device Status Register.
-+	 */
-+	pci_write_config_word(pdev, PCI_STATUS, 0xffff);
-+
-+	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
-+}
-+
-+static void dpc_handle_surprise_removal(struct pci_dev *pdev)
-+{
-+	if (!pcie_wait_for_link(pdev, false)) {
-+		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
-+		goto out;
-+	}
-+
-+	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
-+		goto out;
-+
-+	pci_aer_raw_clear_status(pdev);
-+	pci_clear_surpdn_errors(pdev);
-+
-+	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
-+			      PCI_EXP_DPC_STATUS_TRIGGER);
-+
-+out:
-+	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
-+	wake_up_all(&dpc_completed_waitqueue);
-+}
-+
-+static bool dpc_is_surprise_removal(struct pci_dev *pdev)
-+{
-+	u16 status;
-+
-+	if (!pdev->is_hotplug_bridge)
-+		return false;
-+
-+	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS,
-+			     &status);
-+
-+	if (!(status & PCI_ERR_UNC_SURPDN))
-+		return false;
-+
-+	return true;
-+}
-+
- static irqreturn_t dpc_handler(int irq, void *context)
- {
- 	struct pci_dev *pdev = context;
- 
-+	/*
-+	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
-+	 * of async removal and should be ignored by software.
-+	 */
-+	if (dpc_is_surprise_removal(pdev)) {
-+		dpc_handle_surprise_removal(pdev);
-+		return IRQ_HANDLED;
-+	}
-+
- 	dpc_process_error(pdev);
- 
- 	/* We configure DPC so it only triggers on ERR_FATAL */
 -- 
-2.17.1
+2.34.1
 
 
