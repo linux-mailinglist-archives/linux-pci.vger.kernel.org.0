@@ -1,236 +1,277 @@
-Return-Path: <linux-pci+bounces-245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02B7B7FDB6B
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 16:30:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 564677FDBF5
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 16:51:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1D75281FC5
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 15:30:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1047A282757
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Nov 2023 15:51:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D1CD34CF7;
-	Wed, 29 Nov 2023 15:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B738C3715B;
+	Wed, 29 Nov 2023 15:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sSELOhAv"
 X-Original-To: linux-pci@vger.kernel.org
-X-Greylist: delayed 437 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Nov 2023 07:30:01 PST
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B88D43;
-	Wed, 29 Nov 2023 07:30:01 -0800 (PST)
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 1C7AD40F03;
-	Wed, 29 Nov 2023 16:22:43 +0100 (CET)
-Message-ID: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
-Date: Wed, 29 Nov 2023 16:22:41 +0100
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F2783
+	for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 07:51:47 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1ce28faa92dso53437585ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 07:51:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701273107; x=1701877907; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jYTe4sDO3tSmN8zuRiGsHnnpKSxG01ZVPhEqI5BFFhw=;
+        b=sSELOhAv5S8Wh80D098ERlmWIRiDcFFs4hiWMUsL6WoYEjBklEFMtxoxjglDh3dIPO
+         OJpABY62PFW6PMYAoFalgubHCKVs50VydD79DmM6IkWKFZWdD0Dprjkne5tkXcXudYUz
+         oO9ItDHLzhoiS3vmmW26v2EJGxECracnQzRrc/DZJwF8+IB1fqKXWF62xq72N5J0Upf6
+         B5Gt92nDu2uXx+ee637tzixHFxW4QaYIy4QfSe+V9U0dpuDGOsqT9HYGXCZjQnHWHBw0
+         r9miqdZ30dDniO74necph5TewGPYFpzmFWLik5tdIVHlGTCueXalgPBCl+b8NuHvIASC
+         BAZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701273107; x=1701877907;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jYTe4sDO3tSmN8zuRiGsHnnpKSxG01ZVPhEqI5BFFhw=;
+        b=whlS9hmrqoNxa+50eIJHU1ZhJqpSC/I/u62LEGNu/bxSu66KdYOm2KYsjy9YZLV9hM
+         skyjRabfQGt5rxA9yPmDTMVrFjoiuTiyTYGqrDh9/ZnhX0t4atLMWIlBIe83Lgw/6Ztu
+         xsoi+5mvQ7N1/Ld5Oz3emrK+3p6ntAlTaaPtZQoAzeDcwqg/+yj+uk18PcDttAUlTcBJ
+         QuVwwekVM2AHCwlVUgMgcSszjfiV3ZSTcfOFOqE4ldUMEIl6xRXsZz77botQmbwVw0eS
+         hGnsBYz4SWOTW3+MXrScsexBJmfCTl7FQjNTP5xOJ+LPTB90s/W75rYJESwCut9RHJbk
+         1iFg==
+X-Gm-Message-State: AOJu0YzJIjkQtX//keRBWUc/XK/ZNxMEmznxK54Z5IFMWmiyDkQbpMur
+	mDdMntUa1f8tCbmGCkrr6bvW
+X-Google-Smtp-Source: AGHT+IFHdlz4rEhuI1QD3GSvsLIbFT+AXIt2YFW4utgWWXc4aymSpAlhFhs0ewCO9E1BQjfxDum2NA==
+X-Received: by 2002:a17:902:e552:b0:1cf:fe32:6319 with SMTP id n18-20020a170902e55200b001cffe326319mr5933972plf.53.1701273106605;
+        Wed, 29 Nov 2023 07:51:46 -0800 (PST)
+Received: from thinkpad ([59.92.100.237])
+        by smtp.gmail.com with ESMTPSA id o16-20020a170902d4d000b001cfc2ec5de3sm7272324plg.24.2023.11.29.07.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Nov 2023 07:51:46 -0800 (PST)
+Date: Wed, 29 Nov 2023 21:21:40 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Vidya Sagar <vidyas@nvidia.com>
+Subject: Re: [PATCH v7 1/2] PCI: designware-ep: Fix DBI access before core
+ init
+Message-ID: <20231129155140.GC7621@thinkpad>
+References: <20231120084014.108274-2-manivannan.sadhasivam@linaro.org>
+ <ZWYmX8Y/7Q9WMxES@x1-carbon>
+ <ZWcitTbK/wW4VY+K@x1-carbon>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Fiona Ebner <f.ebner@proxmox.com>
-Subject: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
-To: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
- Igor Mammedov <imammedo@redhat.com>
-Cc: linux-kernel@vger.kernel.org, bhelgaas@google.com, lenb@kernel.org,
- rafael@kernel.org, Thomas Lamprecht <t.lamprecht@proxmox.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZWcitTbK/wW4VY+K@x1-carbon>
 
-Hi,
-it seems that hot-plugging SCSI disks for QEMU virtual machines booting
-with UEFI and with guest kernels >= 6.5 might be broken. It's not
-consistently broken, hinting there might be a race somewhere.
-
-Reverting the following two commits seems to make it work reliably again:
-
-cc22522fd55e2 ("PCI: acpiphp: Use
-pci_assign_unassigned_bridge_resources() only for non-root bus")
-40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary"
-
-Of course, they might only expose some pre-existing issue, but this is
-my best lead. See below for some logs and details about an affected
-virtual machine. Happy to provide more information and to debug/test
-further.
-
-Best Regards,
-Fiona
-
-Host kernel: 6.5.11-4-pve which is based on the one from Ubuntu
-Guest kernel: 6.7.0-rc3 and 6.7.0-rc3 with above commits reverted
-QEMU version: v8.1.0 built from source
-EDK2 version: submodule in the QEMU v8.1 repository: edk2-stable202302
-
-QEMU command line:
-
-> ./qemu-system-x86_64 \
->   -accel 'kvm' \
->   -chardev 'socket,id=qmp,path=/var/run/qemu-server/104.qmp,server=on,wait=off' \
->   -mon 'chardev=qmp,mode=control' \
->   -chardev 'socket,id=qmp-event,path=/var/run/qmeventd.sock,reconnect=5' \
->   -mon 'chardev=qmp-event,mode=control' \
->   -pidfile /var/run/qemu-server/104.pid \
->   -drive 'if=pflash,unit=0,format=raw,readonly=on,file=./pc-bios/edk2-x86_64-code.fd' \
->   -drive 'if=pflash,unit=1,id=drive-efidisk0,format=raw,file=/dev/u2nvme/vm-104-disk-0,size=540672' \
->   -smp '4,sockets=1,cores=4,maxcpus=4' \
->   -nodefaults \
->   -vnc 'unix:/var/run/qemu-server/104.vnc,password=on' \
->   -m 4096 \
->   -device 'pci-bridge,id=pci.1,chassis_nr=1,bus=pci.0,addr=0x1e' \
->   -device 'pci-bridge,id=pci.2,chassis_nr=2,bus=pci.0,addr=0x1f' \
->   -device 'pci-bridge,id=pci.3,chassis_nr=3,bus=pci.0,addr=0x5' \
->   -device 'VGA,id=vga,bus=pci.0,addr=0x2' \
->   -device 'virtio-scsi-pci,id=virtioscsi0,bus=pci.3,addr=0x1' \
->   -drive 'file=/dev/u2nvme/vm-104-disk-1,if=none,id=drive-scsi0,format=raw' \
->   -blockdev 'raw,file.driver=file,file.filename=/home/febner/plug.raw,node-name=drive-scsi1' \
->   -device 'scsi-hd,bus=virtioscsi0.0,channel=0,scsi-id=0,lun=0,drive=drive-scsi0,id=scsi0,bootindex=100' \
->   -netdev 'type=tap,id=net0,ifname=tap104i0,script=/var/lib/qemu-server/pve-bridge,downscript=/var/lib/qemu-server/pve-bridgedown,vhost=on' \
->   -device 'virtio-net-pci,mac=BC:24:11:89:6A:E6,netdev=net0,bus=pci.0,addr=0x12,id=net0,rx_queue_size=1024,tx_queue_size=256,bootindex=102' \
->   -bios './pc-bios/edk2-x86_64-code.fd'
-
-Script to issue hotplug command via QEMU monitor protocol (QMP):
-
-> #!/bin/sh
+On Wed, Nov 29, 2023 at 11:38:34AM +0000, Niklas Cassel wrote:
+> On Tue, Nov 28, 2023 at 06:41:51PM +0100, Niklas Cassel wrote:
+> > On Mon, Nov 20, 2023 at 02:10:13PM +0530, Manivannan Sadhasivam wrote:
+> > > The drivers for platforms requiring reference clock from the PCIe host for
+> > > initializing their PCIe EP core, make use of the 'core_init_notifier'
+> > > feature exposed by the DWC common code. On these platforms, access to the
+> > > hw registers like DBI before completing the core initialization will result
+> > > in a whole system hang. But the current DWC EP driver tries to access DBI
+> > > registers during dw_pcie_ep_init() without waiting for core initialization
+> > > and it results in system hang on platforms making use of
+> > > 'core_init_notifier' such as Tegra194 and Qcom SM8450.
+> > > 
+> > > To workaround this issue, users of the above mentioned platforms have to
+> > > maintain the dependency with the PCIe host by booting the PCIe EP after
+> > > host boot. But this won't provide a good user experience, since PCIe EP is
+> > > _one_ of the features of those platforms and it doesn't make sense to
+> > > delay the whole platform booting due to the PCIe dependency.
+> > > 
+> > > So to fix this issue, let's move all the DBI access during
+> > > dw_pcie_ep_init() in the DWC EP driver to the dw_pcie_ep_init_complete()
+> > > API that gets called only after core initialization on these platforms.
+> > > This makes sure that the DBI register accesses are skipped during
+> > > dw_pcie_ep_init() and accessed later once the core initialization happens.
+> > > 
+> > > For the rest of the platforms, DBI access happens as usual.
+> > > 
+> > > Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > 
+> > Hello Mani,
+> > 
+> > I tried this patch on top of a work in progress EP driver,
+> > which, similar to pcie-qcom-ep.c has a perst gpio as input,
+> > and a .core_init_notifier.
+> > 
+> > What I noticed is the following every time I reboot the RC, I get:
+> > 
+> > [  604.735115] debugfs: Directory 'a40000000.pcie_ep' with parent 'dmaengine' already present!
+> > [ 1000.713582] debugfs: Directory 'a40000000.pcie_ep' with parent 'dmaengine' already present!
+> > [ 1000.714355] debugfs: File 'mf' in directory '/' already present!
+> > [ 1000.714890] debugfs: File 'wr_ch_cnt' in directory '/' already present!
+> > [ 1000.715476] debugfs: File 'rd_ch_cnt' in directory '/' already present!
+> > [ 1000.716061] debugfs: Directory 'registers' with parent '/' already present!
+> > 
+> > 
+> > Also:
+> > 
+> > # ls -al /sys/class/dma/dma*/device | grep pcie
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan0/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan1/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan2/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan3/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan0/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan1/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan2/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan3/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan0/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan1/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan2/device -> ../../../a40000000.pcie_ep
+> > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan3/device -> ../../../a40000000.pcie_ep
+> > 
+> > Adds another dmaX entry for each reboot.
+> > 
+> > 
+> > I'm quite sure that you will see the same with pcie-qcom-ep.
+> > 
+> > I think that either the DWC drivers using core_init (only tegra and qcom)
+> > need to deinit the eDMA in their assert_perst() function, or this patch
+> > needs to deinit the eDMA before initializing it.
+> > 
+> > 
+> > A problem with the current code, if you do NOT have this patch, which I assume
+> > is also problem on pcie-qcom-ep, is that since assert_perst() function performs
+> > a core reset, all the eDMA setting written in the dbi by the eDMA driver will be
+> > cleared, so a PERST assert + deassert by the RC will wipe the eDMA settings.
+> > Hopefully, this will no longer be a problem after this patch has been merged.
+> > 
+> > 
+> > Kind regards,
+> > Niklas
 > 
-> ID=$1
-> CMD=$2
+> I'm sorry that I'm just looking at this patch now (it's v7 already).
+> But I did notice that the DWC code is inconsistent for drivers having
+> a .core_init_notifier and drivers not having a .core_init_notifier.
 > 
-> if [ -z "$ID" ]; then
->     echo "need to specify ID";
->     exit 1;
-> fi
+> When receiving a hot reset or link-down reset, the DWC core gets reset,
+> which means that most DBI settings get reset to their reset value.
 > 
-> if [ -z "$CMD" ]; then
->     echo "need to specify command (plug or unplug)";
->     exit 1;
-> fi
+
+I believe you are talking about the hardware here and not the DWC core driver.
+
+> 
+> Both tegra and qcom-ep does have a start_link() that is basically a no-op.
+
+That's because of the fact that we cannot write to LTSSM registers before perst
+deassert.
+
+> Instead, ep_init_complete() (and LTSSM enable) is called when PERST is
+> deasserted, so settings written by ep_init_complete() will always get set
+> after PERST is asserted + deasserted.
+> 
+> However, for a driver without a .core_init_notifier, a pci-epf-test unbind
+> + bind, will currently NOT write the DBI settings written by
+> ep_init_complete() when starting the link the second time.
+> 
+> If you unbind + bind pci-epf-test (which requires stopping and starting the
+> link), I think that you should write all the DBI settings. Unbinding + binding
+> will allocate memory for all the BARs, write all the iATU settings etc.
+> It doesn't make sense that some DBI writes (those made by ep_init_complete())
+> are not redone.
+> 
+> The problem is that if you do not have a .core_init_notifier,
+> ep_init_complete() (which does DBI writes) is only called by ep_init(),
+> and never ever again.
+> 
+
+Hmm, right. I did not look close into non-core_init_notifier platforms because
+of the lack of hardware.
+
+> 
+> Considering that .start_link() is a no-op for DWC drivers with a
+> .core_init_notifier (they instead call ep_init_complete() when perst is
+> deasserted), I think the most logical thing would be for .start_link() to
+> call ep_init_complete() (for drivers without a .core_init_notifier), that way,
+> all DBI settings (and not just some) will be written on an unbind + bind.
 > 
 > 
-> if [ "$CMD" = "plug" ]; then
->     socat - /var/run/qemu-server/"$ID".qmp << END
->     {"execute": "qmp_capabilities"}
->     {"arguments":{"driver":"virtio-scsi-pci","bus":"pci.3","addr":"0x2","id":"virtioscsi1"},"execute":"device_add"}
->     {"arguments":{"bus":"virtioscsi1.0","channel":"0","driver":"scsi-hd","id":"scsi1","drive":"drive-scsi1","scsi-id":"0","lun":"1"},"execute":"device_add"}
-> END
-> elif [ "$CMD" = "unplug" ]; then
->     socat - /var/run/qemu-server/"$ID".qmp << END
->     {"execute": "qmp_capabilities"}
->     {"arguments":{"id":"scsi1"},"execute":"device_del"}
->     {"arguments":{"id":"virtioscsi1"},"execute":"device_del"}
-> END
-> fi
+> Something like this:
+> 
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -465,6 +465,16 @@ static int dw_pcie_ep_start(struct pci_epc *epc)
+>  {
+>         struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>         struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +       const struct pci_epc_features *epc_features;
+> +
+> +       if (ep->ops->get_features) {
+> +               epc_features = ep->ops->get_features(ep);
+> +               if (!epc_features->core_init_notifier) {
+> +                       ret = dw_pcie_ep_init_complete(ep);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +       }
+>  
+>         return dw_pcie_start_link(pci);
+>  }
+> @@ -729,7 +739,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>         struct device *dev = pci->dev;
+>         struct platform_device *pdev = to_platform_device(dev);
+>         struct device_node *np = dev->of_node;
+> -       const struct pci_epc_features *epc_features;
+>         struct dw_pcie_ep_func *ep_func;
+>  
+>         INIT_LIST_HEAD(&ep->func_list);
+> @@ -817,16 +826,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>         if (ret)
+>                 goto err_free_epc_mem;
+>  
+> -       if (ep->ops->get_features) {
+> -               epc_features = ep->ops->get_features(ep);
+> -               if (epc_features->core_init_notifier)
+> -                       return 0;
+> -       }
+> -
+> -       ret = dw_pcie_ep_init_complete(ep);
+> -       if (ret)
+> -               goto err_remove_edma;
+> -
+>         return 0;
+>  
+>  err_remove_edma:
+> 
+> 
+> I could send a patch, but it would be conflicting with your patch.
+> And you also need to handle deiniting + initing the eDMA in a nice way,
+> but that seems to be a problem that also needs to be addressed with the
+> patch in $subject.
+> 
+> What do you think?
+> 
 
-I've also tired and added 10 second sleep between the two device_add
-commands just to be sure, but that didn't make a difference. (Our
-management stack does query via QMP and wait for the device to show up
-and is also affected, I was just too lazy to do that for the reproducer
-here).
+Your proposed solution looks good to me. If you are OK, I can spin up a patch on
+behalf of you (with your authorship ofc) and integrate it with this series.
 
-I've attached some logs for guest using kernel 6.7.0-rc3 where hotplug
-works rarely and guest using kernel 6.7.0-rc3 with the previously
-mentioned commits reverted where hotplug works reliably:
+Let me know!
 
-6.7.0-rc3:
+- Mani
 
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
-> Nov 29 15:12:02 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
-> Nov 29 15:12:02 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
-> Nov 29 15:12:02 hotplug kernel: scsi host3: Virtio SCSI HBA
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> Nov 29 15:12:02 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
-> Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref] 
+> 
+> Kind regards,
+> Niklas
 
-Reboot
-
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
-> Nov 29 15:12:52 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
-> Nov 29 15:12:52 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
-> Nov 29 15:12:52 hotplug kernel: scsi host3: Virtio SCSI HBA
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
-> Nov 29 15:12:52 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-> Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
-
-RebootThe one time it did work. Note that the line with "QEMU HARDDISK"
-comes after all lines with "bridge window":
-
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
-> Nov 29 15:13:51 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
-> Nov 29 15:13:51 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
-> Nov 29 15:13:51 hotplug kernel: scsi host3: Virtio SCSI HBA
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
-> Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
-> Nov 29 15:13:51 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: Attached scsi generic sg1 type 0
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-> Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk
-> Nov 29 15:14:08 hotplug systemd[1]: systemd-fsckd.service: Deactivated successfully.
-
-6.7.0-rc3 with the following reverted:
-cc22522fd55e2 ("PCI: acpiphp: Use
-pci_assign_unassigned_bridge_resources() only for non-root bus")
-40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary")
-
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
-> Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
-> Nov 29 15:15:37 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
-> Nov 29 15:15:37 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
-> Nov 29 15:15:37 hotplug kernel: scsi host3: Virtio SCSI HBA
-> Nov 29 15:15:37 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: Attached scsi generic sg1 type 0
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-> Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk
-> Nov 29 15:15:38 hotplug systemd[1]: systemd-fsckd.service: Deactivated successfully.
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
