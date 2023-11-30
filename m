@@ -1,152 +1,130 @@
-Return-Path: <linux-pci+bounces-272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F067FEBEC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 10:36:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 392BD7FEC0B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 10:41:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9831C281C12
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 09:36:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41FEB1C20E58
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 09:41:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 309AE38F9F;
-	Thu, 30 Nov 2023 09:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35CF83986A;
+	Thu, 30 Nov 2023 09:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CqGCFIUz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBED8D40
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 01:36:03 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id D58F82800BC35;
-	Thu, 30 Nov 2023 10:36:01 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BF32F54AE6; Thu, 30 Nov 2023 10:36:01 +0100 (CET)
-Date: Thu, 30 Nov 2023 10:36:01 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Keith Busch <kbusch@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-	Jean Delvare <jdelvare@suse.de>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [bug report] lockdep WARN at PCI device rescan
-Message-ID: <20231130093601.GA11031@wunner.de>
-References: <20231114155701.GA27547@wunner.de>
- <ZVOcPOlkkBk3Xfm5@smile.fi.intel.com>
- <ZVO1M2289uvElgOi@smile.fi.intel.com>
- <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
- <ZWC_0eG2UBMKAD3C@smile.fi.intel.com>
- <2vzf5sj76j3p747dfbhnusu5daxzog25io4s7d5uvzvtghvo24@567tghzifylu>
- <20231129111739.GA14152@wunner.de>
- <ZWdBnMTOq9wIt9L-@smile.fi.intel.com>
- <ZWdCdMtLjZS2mDTQ@smile.fi.intel.com>
- <rsrhixediftppmm2n7rzciirdpjnymzsn76lffnd4kzovxaf42@5hddblagaytt>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078D83985D;
+	Thu, 30 Nov 2023 09:41:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE3AC433C7;
+	Thu, 30 Nov 2023 09:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701337260;
+	bh=oEoYW2AT0/jNITVsryKbKyTT6q9EeChyDt1rulwgiAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CqGCFIUzaoqzo1/kdBa76yEdfTAcAxiLWNEjheo07Rq1wWGMWhgwaFDKGAxELswxo
+	 vfh7j6FzRjncJyFRi6N1lLgQnn7jc9/GELMXYAZwP5sLep3SAPmm0Iwa6QN0NeE0dT
+	 JmH9asS7I3gZPB6FMeAQhd2w2MiCpI4X2cITdCq7R4c9mZ8NVszxVow4IonmbMTPvn
+	 zcPiTfzpjP2ApMzZTa208Cvi6qOuR3pTD+G82H4/mDsVTP/FxF8eO2BC2YtonjEQp9
+	 sLyCdlTH4WnQxctZP2Rnpqsjpy+mUw2e1fp1dwVWmJLBethEhCugXkC13VPf8cqcpO
+	 Q3iXnvAgqhEOg==
+Date: Thu, 30 Nov 2023 15:10:51 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Yang Yingliang <yangyingliang@huaweicloud.com>
+Cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, jdmason@kudzu.us,
+	dave.jiang@intel.com, allenbh@gmail.com, lpieralisi@kernel.org,
+	kw@linux.com, kishon@kernel.org, bhelgaas@google.com,
+	yangyingliang@huawei.com
+Subject: Re: [PATCH] NTB: fix possible name leak in ntb_register_device()
+Message-ID: <20231130094051.GP3043@thinkpad>
+References: <20231130021350.2733064-1-yangyingliang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <rsrhixediftppmm2n7rzciirdpjnymzsn76lffnd4kzovxaf42@5hddblagaytt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231130021350.2733064-1-yangyingliang@huaweicloud.com>
 
-On Thu, Nov 30, 2023 at 07:30:56AM +0000, Shinichiro Kawasaki wrote:
-> On Nov 29, 2023 / 15:53, Andy Shevchenko wrote:
-> > On Wed, Nov 29, 2023 at 03:50:21PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Nov 29, 2023 at 12:17:39PM +0100, Lukas Wunner wrote:
-> > > > Your patch uses a list to store a multitude of struct resource.
-> > > > Is that actually necessary?  I thought there can only be a single
-> > > > P2SB device in the system?
+On Thu, Nov 30, 2023 at 10:13:50AM +0800, Yang Yingliang wrote:
+> From: Yang Yingliang <yangyingliang@huawei.com>
 > 
-> Yes, the list might be too much. I was not sure what is the expected
-> number of P2SB resources to be cached. I found drivers/mfd/lpc_ich.c
-> calls p2sb_bar() at two places for devfn=0 and devfn=(13,2), so at
-> least two resources look required. Not sure about the future.
-> If two static resources are sufficient, the code will be simpler.
-
-About that p2sb_bar() call in lpc_ich.c for PCI_DEVFN(13, 2):
-
-It's in a switch-case statement for INTEL_SPI_BXT.  BXT means Broxton,
-which is an Atom Goldmont based architecture.
-
-If you look at p2sb_cpu_ids[], you'll notice the P2SB is located at
-PCI_DEVFN(13, 0) on Goldmont.
-
-PCI functions with function number > 0 are not enumerable unless there is
-a PCI function with function number 0.
-
-So p2sb_bar() first unhides the P2SB at PCI_DEVFN(13, 0), then the
-SPI function at PCI_DEVFN(13, 2) becomes enumerable and p2sb_bar()
-retrieves the BAR address of that function.
-
-Unfortunately this is a little byzantine.
-
-For the caching approach I guess it means you can assume there is only
-a single P2SB device in the system but you need to cache not just the
-P2SB BAR, but also the BARs of functions 1 .. 7 of the P2SB device
-if the P2SB's function number is 0.  I don't know if each of those
-upper functions only ever has a single BAR, but probably that's the case.
-
-
-> Lukas, thank you for the idea. If I understand the comment by Andy
-> correctly, P2SB should not be unhidden between arch_initcall and
-> fs_initcall. Hmm.
+> If device_register() returns error in ntb_register_device(),
+> the name allocated by dev_set_name() need be freed. As comment
+> of device_register() says, it should use put_device() to give
+> up the reference in the error path. So fix this by calling
+> put_device(), then the name can be freed in kobject_cleanup().
 > 
-> This made me think: how about to unhide and hide P2SB just during
-> fs_initcall to cache the P2SB resources? To try it, I added a function
-> below on top of the previous trial patch. The added function calls
-> p2sb_bar() for devfn=0 at fs_initcall so that the resource is cached
-> before probe of i2c-i801. This worked
-> good on my system. It avoided the deadlock as well as the lockdep WARN :)
+> Fixes: a1bd3baeb2f1 ("NTB: Add NTB hardware abstraction layer")
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/ntb/core.c                            | 8 +++++++-
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 6 +-----
+>  2 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/ntb/core.c b/drivers/ntb/core.c
+> index 27dd93deff6e..d702bee78082 100644
+> --- a/drivers/ntb/core.c
+> +++ b/drivers/ntb/core.c
+> @@ -100,6 +100,8 @@ EXPORT_SYMBOL(ntb_unregister_client);
+>  
+>  int ntb_register_device(struct ntb_dev *ntb)
+>  {
+> +	int ret;
+> +
+>  	if (!ntb)
+>  		return -EINVAL;
+>  	if (!ntb->pdev)
+> @@ -120,7 +122,11 @@ int ntb_register_device(struct ntb_dev *ntb)
+>  	ntb->ctx_ops = NULL;
+>  	spin_lock_init(&ntb->ctx_lock);
+>  
+> -	return device_register(&ntb->dev);
+> +	ret = device_register(&ntb->dev);
+> +	if (ret)
+> +		put_device(&ntb->dev);
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(ntb_register_device);
+>  
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> index 3f60128560ed..8e4ed188ad5c 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+> @@ -1278,15 +1278,11 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	ret = ntb_register_device(&ndev->ntb);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to register NTB device\n");
+> -		goto err_register_dev;
+> +		return -EINVAL;
 
-This may work if i2c-i801 is compiled as a module, but may not work
-if it's builtin:  It would try to access the cached P2SB BAR when
-it's not yet been cached.  So you'd have to return -EPROBE_DEFER
-from p2sb_bar() if it hasn't been cached yet.  And you'd have to
-make sure that all the callers can cope with that return value.
+Even though this is the existing behavior, you should return ret.
 
-Another approach would be to cache the BARs very early at boot in
-arch/x86/kernel/early-quirks.c.  That would obviate the need to
-defer probing if the BAR hasn't been cached yet.
+- Mani
 
-Looking through past discussions archived in lore, I've found an
-important issue raised by Bjorn:
+>  	}
+>  
+>  	dev_dbg(dev, "PCI Virtual NTB driver loaded\n");
+>  	return 0;
+> -
+> -err_register_dev:
+> -	put_device(&ndev->ntb.dev);
+> -	return -EINVAL;
+>  }
+>  
+>  static struct pci_device_id pci_vntb_table[] = {
+> -- 
+> 2.25.1
+> 
 
-   "Apparently this normally hidden device is consuming
-    PCI address space.  The PCI core needs to know about this.  If it
-    doesn't, the PCI core may assign this space to another device."
-    
-   https://lore.kernel.org/all/20210308185212.GA1790506@bjorn-Precision-5520/
-
-arch/x86/kernel/early-quirks.c already reserves "stolen" memory used
-by Intel GPUs with unified-memory architecture.  It adjusts the e820
-map to achieve that.  I guess the same method could be used to reserve
-the memory used by P2SB (as well as "upper" functions if P2SB has
-function number 0).
-
-An early version of p2sb_bar() (which wasn't mainlined) duplicated
-__pci_read_base().  I suggested to instead unhide and temporarily
-enumerate the device, retrieve the BAR, then destroy the pci_dev
-and hide the P2SB again:
-
-https://lore.kernel.org/all/20220505145503.GA25423@wunner.de/
-
-That resulted in a significant reduction in LoC.  But if the BAR
-caching happens in arch/x86/kernel/early-quirks.c, it may be
-necessary to duplicate at least portions of __pci_read_base() again.
-Or maybe the code can be simplified for this specific use case,
-I don't know.
-
-Thanks,
-
-Lukas
+-- 
+மணிவண்ணன் சதாசிவம்
 
