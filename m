@@ -1,141 +1,90 @@
-Return-Path: <linux-pci+bounces-301-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-302-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CB6D7FF77E
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 17:57:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4FEE7FF971
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 19:35:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C17F8281944
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 16:57:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F3E9282057
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 18:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1A7255C14;
-	Thu, 30 Nov 2023 16:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF50B48CD8;
+	Thu, 30 Nov 2023 18:35:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R2xXMZck"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvXPQNey"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0460910D0;
-	Thu, 30 Nov 2023 08:57:13 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPA id BB2681BF203;
-	Thu, 30 Nov 2023 16:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1701363432;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XjanQLiV96Fread002ZWRWE0O5XHgSgVvDb1R2qXIW8=;
-	b=R2xXMZckGm13RP0RGLzamc4Vgb6v7iI8z4vIwQ/qs0jNoSNLHzqHx3vBAFWijCIKXGoCkR
-	L6jLjdFc4H6Ypp8lt0HC2umsPm0Wtp/2Dg6BX51kdMlpF7uwLCXm1tTJceX9HXlOFdwslW
-	SSTu2wlzabNte5XhMNvUumhiEkxKoxVxq5vbS87LrpgMM/BBWUboYAfkiC2t3dZzr5VR2N
-	uhTN4z5TIGNF1F+ruh4VjIQkmBtVJiE9yt1oVGQgWo63uHXekz3R9hFZ/3zTzAVW5zCXLa
-	hltDZrB5FZRCau61Gfr4AZkomtvzn+FetxJhKnEtAO95BL7grV5qp7Qc+q6MXA==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	Rob Herring <robh@kernel.org>
-Cc: Max Zhen <max.zhen@amd.com>,
-	Sonal Santan <sonal.santan@amd.com>,
-	Stefano Stabellini <stefano.stabellini@xilinx.com>,
-	Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] PCI: of: Attach created of_node to existing device
-Date: Thu, 30 Nov 2023 17:56:59 +0100
-Message-ID: <20231130165700.685764-3-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231130165700.685764-1-herve.codina@bootlin.com>
-References: <20231130165700.685764-1-herve.codina@bootlin.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12935A0F5
+	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 18:35:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AFDC433C7;
+	Thu, 30 Nov 2023 18:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701369307;
+	bh=1KLmnXj3oH57djjg5RXbttA8qHBNJ7pmAovpuDi+A9Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FvXPQNeyANpdmDNj5C/xy3Or4/5l8FHT4OClrcmkIXl+IxeILBCmrYKMT/ITT2Vd7
+	 WBUKG7691rCWWVy0fuIUU5av1YqoToCl8SJQ09wF44UlcbPry22JAQv8DTgK/hWqr/
+	 sd6y+3qCGKh/e0NOwr7b+PFT6vrmHAwtlzPNVF5C+IzFQ59e2QLY+zhJKQbj0NS2nB
+	 yYcVu/0EiQSLL66ltpF92a4eDtClUrxhRN/vbsI5riJmgHUb82ylPOohbY/AYK/5Zp
+	 D4ENY0bTlquG7xTJpDXs8aOKLVBMmXRFitDd9X8QwbN+3HvTRx3wxA2PYbDPYaWqFN
+	 nYFsAuY8e0wHQ==
+Date: Thu, 30 Nov 2023 12:35:04 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kevin Xie <kevin.xie@starfivetech.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mason.huo@starfivetech.com,
+	leyfoon.tan@starfivetech.com, minda.chen@starfivetech.com
+Subject: Re: [PATCH v1] PCI: Add PCIE_CONFIG_REQUEST_WAIT_MS waiting time
+ value
+Message-ID: <20231130183504.GA487377@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+In-Reply-To: <f0844a59-7534-4195-b656-eb51586cbff6@starfivetech.com>
 
-The commit 407d1a51921e ("PCI: Create device tree node for bridge")
-creates of_node for PCI devices.
-During the insertion handling of these new DT nodes done by of_platform,
-new devices (struct device) are created.
-For each PCI devices a struct device is already present (created and
-handled by the PCI core).
-Having a second struct device to represent the exact same PCI device is
-not correct.
+On Thu, Nov 30, 2023 at 06:03:55PM +0800, Kevin Xie wrote:
+> On 2023/11/30 7:21, Bjorn Helgaas wrote:
+> > On Fri, Nov 24, 2023 at 09:45:08AM +0800, Kevin Xie wrote:
+> >> Add the PCIE_CONFIG_REQUEST_WAIT_MS marco to define the minimum waiting
+> >> time between sending the first configuration request to the device and
+> >> exit from a conventional reset (or after link training completes).
+> > 
+> > s/marco/macro/
+> > 
+> > List the first event before the second one, i.e., the delay is from
+> > exit from reset to the config request.
+> 
+> OK，I will use "from A to B" instead of "between A and B".
 
-On the of_node creation, tell the of_platform that there is no need to
-create a device for this node (OF_POPULATED flag), link this newly
-created of_node to the already present device and tell fwnode that the
-device attached to this of_node is ready (fwnode_dev_initialized()).
+That's not my point.
 
-With this fix, the of_node are available in the sysfs device tree:
-/sys/devices/platform/soc/d0070000.pcie/
-+ of_node -> .../devicetree/base/soc/pcie@d0070000
-+ pci0000:00
-  + 0000:00:00.0
-    + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0
-    + 0000:01:00.0
-      + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0/dev@0,0
+My point was you said "between B (config request) and A (exit from
+reset)".  "A" happens first, so it should be mentioned first.
 
-On the of_node removal, revert the operations.
+> > I assume there are follow-on patches that actually use this?  Can we
+> > make this the first patch in a series so we know we don't have an
+> > unused macro lying around?
+> 
+> Yes, we will use the marco in the next version of our PCIe controller patches.
+> Here is the link of current version patch series:
+> https://lore.kernel.org/lkml/20231115114912.71448-20-minda.chen@starfivetech.com/T/#u 
+> 
+> Do you mean that I should put this patch back to the above series as
+> one of the separate patches?
 
-Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-Cc: stable@vger.kernel.org
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/pci/of.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Yes, please.  Handling them as a group is less overhead and helps
+avoid merge issues (if they're all in a series there's no possibility
+that the user gets merged before the macro itself).
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 51e3dd0ea5ab..5afd2731e876 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -615,7 +615,8 @@ void of_pci_remove_node(struct pci_dev *pdev)
- 	np = pci_device_to_OF_node(pdev);
- 	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
- 		return;
--	pdev->dev.of_node = NULL;
-+
-+	device_remove_of_node(&pdev->dev);
- 
- 	of_changeset_revert(np->data);
- 	of_changeset_destroy(np->data);
-@@ -668,12 +669,22 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
- 	if (ret)
- 		goto out_free_node;
- 
-+	/*
-+	 * This of_node will be added to an existing device.
-+	 * Avoid any device creation and use the existing device
-+	 */
-+	of_node_set_flag(np, OF_POPULATED);
-+	np->fwnode.dev = &pdev->dev;
-+	fwnode_dev_initialized(&np->fwnode, true);
-+
- 	ret = of_changeset_apply(cset);
- 	if (ret)
- 		goto out_free_node;
- 
- 	np->data = cset;
--	pdev->dev.of_node = np;
-+
-+	/* Add the of_node to the existing device */
-+	device_add_of_node(&pdev->dev, np);
- 	kfree(name);
- 
- 	return;
--- 
-2.42.0
-
+Bjorn
 
