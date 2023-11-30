@@ -1,72 +1,87 @@
-Return-Path: <linux-pci+bounces-267-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-268-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE3907FE93C
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 07:38:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6A5D7FE9AB
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 08:26:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E994B20C9D
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 06:38:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14F5E1C20B1E
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 07:26:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95DB45CBE;
-	Thu, 30 Nov 2023 06:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4690E1E51F;
+	Thu, 30 Nov 2023 07:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sf9f0Rfd"
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="P9Oeq6jo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177D010D1
-	for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 22:38:06 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6cb55001124so1398512b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 22:38:06 -0800 (PST)
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC241B3
+	for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 23:26:21 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-285741e9a9aso677547a91.3
+        for <linux-pci@vger.kernel.org>; Wed, 29 Nov 2023 23:26:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701326285; x=1701931085; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1701329181; x=1701933981; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=wB2suDQUxj370zm29/Om6hbD3PtwMfkiVhj+43MzNf8=;
-        b=Sf9f0RfdCN0fw2s2O9zydipHOBnItt+Orqvm6CUHRVXKCLbHf806ruhGA38mxhLHPa
-         0r/mfj4QU4WY731rPdTPAAJ2UHFJUkIvmiVzQVuyCUv6qT9P1ijxXInI/lEpGevNDTwV
-         fnkqVAZloUzglSx1jU5wJ7qAa0ZaZn0icD5vcRhYcycHa5Y+HxEQvbS4f5/6KQpm9rzY
-         DF+WJdj+ndGegCyh+OQLpcAy86jFJ8AduFpiagrBrUaK+ZPaODZomeo3dj7raosqzru8
-         rXPy4dZL/9/AAtgOnwJZIc7t7QeKqU7igdi+sBzwmXpTeUqNGmCsXDeargq/Bl+frB3f
-         3jAQ==
+        bh=/vaR9Py/1wlD3zkHO4kH1K6KgzRNK2LkfyWPObJ0DwQ=;
+        b=P9Oeq6joT9emA9oNnU89wkt56f/6q+TWP3vv961Xz/j4Nk8BHfOYKhdfyyojrV4QIx
+         ZZJ8yL3YeYSJKMPzwfZuanExbb5nphk+lpaOmuu/F4fF7pr7IISvqhhuEAAgpsLvNdK8
+         wQRrBSMVDtPqglMKLGZaOeKTF5Ja67s8h9dI+GAqJ0+G4Ez//+AowBQHzZqx//XVXk+w
+         EyWB507znPQ8FiK42+zC99YX3+ODASI1RON4vSVYo0jT36p9jBNQviCbD4eF6b/at2CV
+         hH9cOdWi7h2f4v+eXG5V/vbGdmYHcqyV9y4OObw9PGiwzDPke31u7fw8Y0d2wCQQEcDM
+         SWwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701326285; x=1701931085;
+        d=1e100.net; s=20230601; t=1701329181; x=1701933981;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wB2suDQUxj370zm29/Om6hbD3PtwMfkiVhj+43MzNf8=;
-        b=eGacUu6BLmPJJxE8CKRJXiAMyuhuV55/VbMn5fQNkFdMoFu6lHexAq03JaIktTQ5qs
-         kgcH8ALJptCdIVyJNsHFom+ywGosyQtR0hU8xmoNQsHAY7skflRN0CS6re2z+RBwbq6/
-         k66wBIUTcOxrELWYm+cUPC1vZywqZd6D0DmV7XgcG88tA8rpipfZAGxgxOlGY6zjE2M0
-         HADohlqZjMfzBJRCopFJtJDeAtW+LfWr4o8oQXGFH22zObUxxksmyEUFspyvOUaXaIw7
-         0P3xxowhJxVqxAo0A0eelZnstWJP8y0j26Z9QDhflq6EeO5rFnPuUCd7q6jsokrckZzX
-         gU9Q==
-X-Gm-Message-State: AOJu0Yy8/vx+/Yb6Y8OBONmZ++YlQZjN1rfwWpBJxDbcDTpRWAJblEyj
-	WVaKnZTe3yVAHuVCrLlqIEie
-X-Google-Smtp-Source: AGHT+IG8AdwymsSRgoMv5EsLGSRYEvZGT6ADCj19D0n/BxQqrgyRva2D6A83E6PjFyw80UlGOpORdg==
-X-Received: by 2002:a05:6a20:42a1:b0:18b:826d:1e89 with SMTP id o33-20020a056a2042a100b0018b826d1e89mr25783292pzj.12.1701326285365;
-        Wed, 29 Nov 2023 22:38:05 -0800 (PST)
-Received: from thinkpad ([59.92.100.237])
-        by smtp.gmail.com with ESMTPSA id g1-20020a62e301000000b006c4d86a259csm451735pfh.28.2023.11.29.22.38.02
+        bh=/vaR9Py/1wlD3zkHO4kH1K6KgzRNK2LkfyWPObJ0DwQ=;
+        b=jh4NCATCXwPcwIuu6VRDSBrJk3+NRECg/K7x6PdOovVcGtyy2yE4gqEvag6xtlbDhn
+         aAmLtXnAPA/eObnhmiNNBQz7IZx/O0eBThOEtohfrslDiLNhX6d48ZaVqu4qQQ/+c89f
+         d8anVkghUUywQdPuTH8PD3mvBaAkajMRo35NazP/WBCWxhiyxFKBj1JjspdsmkZc0zPW
+         f+RZRq7HIBUpsHLNNSTOSj8QF24pSwZjwC+f8YmdDTGSO+dGxtXvM80+Jn8Z/3O2SGDf
+         05yrOkBhJm1KGcNzGoSkqkLy7SWkPx0l5mcH9bnuXTaY2nT4ZYQvBAAg3FyCdKGlL5Rj
+         Mytw==
+X-Gm-Message-State: AOJu0YyiqeHNGormINAR83q7TWKt7HGkkUdjKlN5sZ8xEH6iMdGINdJz
+	203lxMPfLOLo/qA90eUgITKroQ==
+X-Google-Smtp-Source: AGHT+IH2on3YHau4m4WDZtSzS0WzaeUBhPmKYsoqjQK6MFS9wCuSki2QkCdwcnsk3EBBXK/13hpGLA==
+X-Received: by 2002:a17:90b:1811:b0:285:b69c:a725 with SMTP id lw17-20020a17090b181100b00285b69ca725mr15602862pjb.12.1701329181182;
+        Wed, 29 Nov 2023 23:26:21 -0800 (PST)
+Received: from sunil-laptop ([106.51.188.200])
+        by smtp.gmail.com with ESMTPSA id ip1-20020a17090b314100b00285d330ae8bsm2503694pjb.57.2023.11.29.23.26.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 22:38:04 -0800 (PST)
-Date: Thu, 30 Nov 2023 12:08:00 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH v7 1/2] PCI: designware-ep: Fix DBI access before core
- init
-Message-ID: <20231130063800.GD3043@thinkpad>
-References: <20231120084014.108274-2-manivannan.sadhasivam@linaro.org>
- <ZWYmX8Y/7Q9WMxES@x1-carbon>
- <ZWcitTbK/wW4VY+K@x1-carbon>
- <20231129155140.GC7621@thinkpad>
- <ZWdob6tgWf6919/s@x1-carbon>
+        Wed, 29 Nov 2023 23:26:20 -0800 (PST)
+Date: Thu, 30 Nov 2023 12:56:09 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Haibo Xu <haibo1.xu@intel.com>, Marc Zyngier <maz@kernel.org>
+Subject: Re: [RFC PATCH v2 06/21] RISC-V: Kconfig: Select deferred GSI probe
+ for ACPI systems
+Message-ID: <ZWg5ETNkcXuceDFY@sunil-laptop>
+References: <ZTuzJ1nsicZYp+uh@sunil-laptop>
+ <20231106221606.GA264641@bhelgaas>
+ <ZUtailOcozI9xIou@sunil-laptop>
+ <87a5r6rn8f.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,220 +91,186 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZWdob6tgWf6919/s@x1-carbon>
+In-Reply-To: <87a5r6rn8f.fsf@all.your.base.are.belong.to.us>
+X-Spam-Level: *
 
-On Wed, Nov 29, 2023 at 04:36:04PM +0000, Niklas Cassel wrote:
-> On Wed, Nov 29, 2023 at 09:21:40PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Nov 29, 2023 at 11:38:34AM +0000, Niklas Cassel wrote:
-> > > On Tue, Nov 28, 2023 at 06:41:51PM +0100, Niklas Cassel wrote:
-> > > > On Mon, Nov 20, 2023 at 02:10:13PM +0530, Manivannan Sadhasivam wrote:
-> > > > > The drivers for platforms requiring reference clock from the PCIe host for
-> > > > > initializing their PCIe EP core, make use of the 'core_init_notifier'
-> > > > > feature exposed by the DWC common code. On these platforms, access to the
-> > > > > hw registers like DBI before completing the core initialization will result
-> > > > > in a whole system hang. But the current DWC EP driver tries to access DBI
-> > > > > registers during dw_pcie_ep_init() without waiting for core initialization
-> > > > > and it results in system hang on platforms making use of
-> > > > > 'core_init_notifier' such as Tegra194 and Qcom SM8450.
-> > > > > 
-> > > > > To workaround this issue, users of the above mentioned platforms have to
-> > > > > maintain the dependency with the PCIe host by booting the PCIe EP after
-> > > > > host boot. But this won't provide a good user experience, since PCIe EP is
-> > > > > _one_ of the features of those platforms and it doesn't make sense to
-> > > > > delay the whole platform booting due to the PCIe dependency.
-> > > > > 
-> > > > > So to fix this issue, let's move all the DBI access during
-> > > > > dw_pcie_ep_init() in the DWC EP driver to the dw_pcie_ep_init_complete()
-> > > > > API that gets called only after core initialization on these platforms.
-> > > > > This makes sure that the DBI register accesses are skipped during
-> > > > > dw_pcie_ep_init() and accessed later once the core initialization happens.
-> > > > > 
-> > > > > For the rest of the platforms, DBI access happens as usual.
-> > > > > 
-> > > > > Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > ---
-> > > > 
-> > > > Hello Mani,
-> > > > 
-> > > > I tried this patch on top of a work in progress EP driver,
-> > > > which, similar to pcie-qcom-ep.c has a perst gpio as input,
-> > > > and a .core_init_notifier.
-> > > > 
-> > > > What I noticed is the following every time I reboot the RC, I get:
-> > > > 
-> > > > [  604.735115] debugfs: Directory 'a40000000.pcie_ep' with parent 'dmaengine' already present!
-> > > > [ 1000.713582] debugfs: Directory 'a40000000.pcie_ep' with parent 'dmaengine' already present!
-> > > > [ 1000.714355] debugfs: File 'mf' in directory '/' already present!
-> > > > [ 1000.714890] debugfs: File 'wr_ch_cnt' in directory '/' already present!
-> > > > [ 1000.715476] debugfs: File 'rd_ch_cnt' in directory '/' already present!
-> > > > [ 1000.716061] debugfs: Directory 'registers' with parent '/' already present!
-> > > > 
-> > > > 
-> > > > Also:
-> > > > 
-> > > > # ls -al /sys/class/dma/dma*/device | grep pcie
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan0/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan1/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan2/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma3chan3/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan0/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan1/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan2/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:14 /sys/class/dma/dma4chan3/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan0/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan1/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan2/device -> ../../../a40000000.pcie_ep
-> > > > lrwxrwxrwx    1 root     root             0 Jan  1 00:16 /sys/class/dma/dma5chan3/device -> ../../../a40000000.pcie_ep
-> > > > 
-> > > > Adds another dmaX entry for each reboot.
-> > > > 
-> > > > 
-> > > > I'm quite sure that you will see the same with pcie-qcom-ep.
-> > > > 
-> > > > I think that either the DWC drivers using core_init (only tegra and qcom)
-> > > > need to deinit the eDMA in their assert_perst() function, or this patch
-> > > > needs to deinit the eDMA before initializing it.
-> > > > 
-> > > > 
-> > > > A problem with the current code, if you do NOT have this patch, which I assume
-> > > > is also problem on pcie-qcom-ep, is that since assert_perst() function performs
-> > > > a core reset, all the eDMA setting written in the dbi by the eDMA driver will be
-> > > > cleared, so a PERST assert + deassert by the RC will wipe the eDMA settings.
-> > > > Hopefully, this will no longer be a problem after this patch has been merged.
-> > > > 
-> > > > 
-> > > > Kind regards,
-> > > > Niklas
-> > > 
-> > > I'm sorry that I'm just looking at this patch now (it's v7 already).
-> > > But I did notice that the DWC code is inconsistent for drivers having
-> > > a .core_init_notifier and drivers not having a .core_init_notifier.
-> > > 
-> > > When receiving a hot reset or link-down reset, the DWC core gets reset,
-> > > which means that most DBI settings get reset to their reset value.
-> > > 
-> > 
-> > I believe you are talking about the hardware here and not the DWC core driver.
-> > 
-> > > 
-> > > Both tegra and qcom-ep does have a start_link() that is basically a no-op.
-> > 
-> > That's because of the fact that we cannot write to LTSSM registers before perst
-> > deassert.
-> > 
-> > > Instead, ep_init_complete() (and LTSSM enable) is called when PERST is
-> > > deasserted, so settings written by ep_init_complete() will always get set
-> > > after PERST is asserted + deasserted.
-> > > 
-> > > However, for a driver without a .core_init_notifier, a pci-epf-test unbind
-> > > + bind, will currently NOT write the DBI settings written by
-> > > ep_init_complete() when starting the link the second time.
-> > > 
-> > > If you unbind + bind pci-epf-test (which requires stopping and starting the
-> > > link), I think that you should write all the DBI settings. Unbinding + binding
-> > > will allocate memory for all the BARs, write all the iATU settings etc.
-> > > It doesn't make sense that some DBI writes (those made by ep_init_complete())
-> > > are not redone.
-> > > 
+Hi Björn!,
 
-Looking at this issue again, I think your statement may not be correct. In the
-stop_link() callback, non-core_init_notifier platforms are just disabling the
-LTSSM and enabling it again in start_link(). So all the rest of the
-configurations (DBI etc...) should not be affected during EPF bind/unbind.
+Apologies for the delay in response. Held up with something else.
 
-Can you point me to the specific controller driver that is doing otherwise?
-
-- Mani
-
-> > > The problem is that if you do not have a .core_init_notifier,
-> > > ep_init_complete() (which does DBI writes) is only called by ep_init(),
-> > > and never ever again.
-> > > 
-> > 
-> > Hmm, right. I did not look close into non-core_init_notifier platforms because
-> > of the lack of hardware.
-> > 
-> > > 
-> > > Considering that .start_link() is a no-op for DWC drivers with a
-> > > .core_init_notifier (they instead call ep_init_complete() when perst is
-> > > deasserted), I think the most logical thing would be for .start_link() to
-> > > call ep_init_complete() (for drivers without a .core_init_notifier), that way,
-> > > all DBI settings (and not just some) will be written on an unbind + bind.
-> > > 
-> > > 
-> > > Something like this:
-> > > 
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -465,6 +465,16 @@ static int dw_pcie_ep_start(struct pci_epc *epc)
-> > >  {
-> > >         struct dw_pcie_ep *ep = epc_get_drvdata(epc);
-> > >         struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +       const struct pci_epc_features *epc_features;
-> > > +
-> > > +       if (ep->ops->get_features) {
-> > > +               epc_features = ep->ops->get_features(ep);
-> > > +               if (!epc_features->core_init_notifier) {
-> > > +                       ret = dw_pcie_ep_init_complete(ep);
-> > > +                       if (ret)
-> > > +                               return ret;
-> > > +               }
-> > > +       }
-> > >  
-> > >         return dw_pcie_start_link(pci);
-> > >  }
-> > > @@ -729,7 +739,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >         struct device *dev = pci->dev;
-> > >         struct platform_device *pdev = to_platform_device(dev);
-> > >         struct device_node *np = dev->of_node;
-> > > -       const struct pci_epc_features *epc_features;
-> > >         struct dw_pcie_ep_func *ep_func;
-> > >  
-> > >         INIT_LIST_HEAD(&ep->func_list);
-> > > @@ -817,16 +826,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > >         if (ret)
-> > >                 goto err_free_epc_mem;
-> > >  
-> > > -       if (ep->ops->get_features) {
-> > > -               epc_features = ep->ops->get_features(ep);
-> > > -               if (epc_features->core_init_notifier)
-> > > -                       return 0;
-> > > -       }
-> > > -
-> > > -       ret = dw_pcie_ep_init_complete(ep);
-> > > -       if (ret)
-> > > -               goto err_remove_edma;
-> > > -
-> > >         return 0;
-> > >  
-> > >  err_remove_edma:
-> > > 
-> > > 
-> > > I could send a patch, but it would be conflicting with your patch.
-> > > And you also need to handle deiniting + initing the eDMA in a nice way,
-> > > but that seems to be a problem that also needs to be addressed with the
-> > > patch in $subject.
-> > > 
-> > > What do you think?
-> > > 
-> > 
-> > Your proposed solution looks good to me. If you are OK, I can spin up a patch on
-> > behalf of you (with your authorship ofc) and integrate it with this series.
+On Wed, Nov 22, 2023 at 01:22:56PM +0100, Björn Töpel wrote:
+> Hi Sunil!
 > 
-> Sounds good to me!
-> 
-> Since you will need to also fix the error paths (my suggestion didn't)),
-> I think that you deserve the authorship if you cook up a patch.
-> 
-> It would be nice to hear Vidya's opinion on my suggestion as well, since he
-> appears to be the one who added the .core_init_notifier in the first place.
-> 
-> 
-> Kind regards,
-> Niklas
+> I'm trying to decipher this thread, so apologies in advance for the
+> stupid questions! :-P
+>
+Appreciate your help to review the patch and suggesting solutions.
+Thank you very much!.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> Sunil V L <sunilvl@ventanamicro.com> writes:
+> 
+> > Hi Bjorn,
+> >
+> > On Mon, Nov 06, 2023 at 04:16:06PM -0600, Bjorn Helgaas wrote:
+> >> On Fri, Oct 27, 2023 at 06:25:03PM +0530, Sunil V L wrote:
+> >> > On Thu, Oct 26, 2023 at 12:04:08PM -0500, Bjorn Helgaas wrote:
+> >> > > On Thu, Oct 26, 2023 at 01:53:29AM +0530, Sunil V L wrote:
+> >> > > > On RISC-V platforms, apart from root interrupt controllers (which
+> >> > > > provide local interrupts and IPI), other interrupt controllers in the
+> >> > > > hierarchy are probed late. Enable this select this CONFIG option for
+> >> > > > RISC-V platforms so that device drivers which connect to deferred
+> >> > > > interrupt controllers can take appropriate action.
+> >> > > 
+> >> > > Quite a bit of this series seems related to the question of interrupt
+> >> > > controllers being probed "late".
+> >> > > 
+> >> > > I don't see anything specific about *how* late this might be, but from
+> >> > > the use of -EPROBE_DEFER in individual drivers (8250_pnp explicitly,
+> >> > > and acpi_register_gsi() and pnp_irq() and acpi_pci_irq_enable(), which
+> >> > > are called from driver .probe() paths) it seems like interrupt
+> >> > > controllers might be detected even after devices that use them.
+> >> > > 
+> >> > > That seems like a fairly invasive change to the driver probe flow.
+> >> > > If we really need to do that, I think it might merit a little more
+> >> > > background as justification since we haven't had to do it for any
+> >> > > other arch yet.
+> >> > 
+> >> > In RISC-V, the APLIC can be a converter from wired (GSI) to MSI interrupts.
+> >> > Hence, especially in this mode, it has to be a platform device to use
+> >> > device MSI domain. Also, according to Marc Zyngier there is no reason to
+> >> > probe interrupt controllers early apart from root controller. So, the
+> >> > device drivers which use wired interrupts need to be probed after APLIC.
+> >> > 
+> >> > The PNP devices and PCI INTx GSI links use either
+> >> > acpi_dev_resource_interrupt() (PNP) or acpi_register_gsi() directly
+> >> > (PCI). The approach taken here is to follow the example of
+> >> > acpi_irq_get() which is enhanced to return EPROBE_DEFER and several
+> >> > platform device drivers which use platform_get_irq() seem to be handling
+> >> > this already.
+> >> 
+> >> This series (patch 04/21 "ACPI: irq: Add support for deferred probe in
+> >> acpi_register_gsi()" [1]) makes acpi_register_gsi() return
+> >> -EPROBE_DEFER, which percolates up through pci_enable_device().
+> >> 
+> >> Maybe that's ok, but this affects *all* PCI drivers, and it's a new
+> >> case that did not occur before.  Many drivers emit warning or error
+> >> messages for any pci_enable_device() failure, which you probably don't
+> >> want in this case, since -EPROBE_DEFER is not really a "failure";
+> >> IIUC, it just means "probe again later."
+> >>
+> > Yeah, I think all the drivers which need to be supported on RISC-V
+> > ACPI based systems will have to support deferred probe with this scheme.
+> >
+> >> > Using ResourceSource dependency (mbigen uses) in the namespace as part of
+> >> > Extended Interrupt Descriptor will not ensure the order since PNP/INTx
+> >> > GSI devices don't work with that.
+> >> 
+> >> Are these PNP/INTx GSI devices described in ACPI?  In the namespace?
+> >> Or in a static table?
+> >> 
+> > Yes, these are standard devices in the namespace. For ex: PNP0501(16550)
+> > or PNP0C0F (PCI interrupt link devices) are in the namespace.
+> >
+> >> > Is there any other better way to create dependency between IO devices
+> >> > and the interrupt controllers when interrupt controller itself is a
+> >> > platform device? While using core_initcall() for interrupt controllers
+> >> > seem to work which forces the interrupt controller to be probed first,
+> >> > Marc is not in favor of that approach since it is fragile.
+> >> 
+> >> I guess PCI interrupts from the PCI host bridges (PNP0A03 devices)
+> >> feed into the APLIC?  And APLIC is described via MADT?  Based on this
+> >> series, it looks like this:
+> >> 
+> >>     acpi_init
+> >>   +   acpi_riscv_init
+> >>   +     riscv_acpi_aplic_platform_init
+> >>   +       acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, aplic_parse_madt, 0)
+> >>       acpi_scan_init
+> >>         acpi_pci_root_init
+> >>         acpi_pci_link_init
+> >> 	acpi_bus_scan             # add PCI host bridges, etc
+> >> 
+> >> If that's the sequence, it looks like aplic_parse_madt() should be
+> >> called before the PCI host bridges are added.
+> >> 
+> >> Or maybe this isn't how the APLICs are enumerated?
+> >> 
+> > That's partly correct. APLIC platform devices are created prior to PCI
+> > host bridges added. But the actual APLIC driver which creates the
+> > irqdomain will be probed as a regular platform driver for the APLIC
+> > device. The platform driver probe will happen using DD framework and
+> > devices don't have any dependency on APLIC which can cause device probe
+> > prior to APLIC driver probe.
+> >
+> > DT supports fw_devlink framework which makes it easier for IRQ devices
+> > to use regular platform drivers and produces-consumers are probed in the
+> > order without requiring drivers to do deferred probe. But I don't see
+> > that supported for ACPI framework.  Also, the way PNP devices get added
+> > there is an assumption that interrupt controller is already setup fully.
+> 
+> AFAIU, the -EPROBE_DEFER changes are needed for GSIs (and the way the
+> IMSIC/APLIC irqchip series is structured), right?
+> 
+Yes, It is only for GSI's.
+
+> There's a couple of separate pieces in play here:
+> 1. IMSIC-IPI (MADT init)
+> 2. IMSIC-MSI (MADT init, imsic_platform_acpi_probe() patch 14)
+> 3. APLIC-wired (platform)
+> 4. APLIC-MSI-bridge (platform)
+> 
+> APLIC-MSI-bridge is pretty much a RISC-V mbigen.
+> 
+> Some devices do not have ResourceSource parsing implemented yet. The PNP
+> devices that cannot use ResourceSource (you mention PNP0501 (16550) and
+> PNP0C0F (PCI interrupt link devices), do we really need to care about
+> them for the RISC-V platforms using ACPI? If that would change, the
+> kernel drivers can be adjusted (d44fa3d46079 ("ACPI: Add support for
+> ResourceSource/IRQ domain mapping"))?
+> 
+> I guess my question is we need to care about GSIs w/o explicit
+> ResourceSource, so that APLIC-MSI-bridge can be used.
+> 
+> GED works nicely with ResourceSource, and covers a lot of the GSI
+> use-cases, no?
+> 
+> And if we do care, then *both* 3 and 4 would need at MADT scan
+> point/init, and not be a platform device (late init).
+> 
+I am not sure it is a good idea not to support PCI link devices. Not
+allowing them removes the flexibility in _PRT. Also, is there a standard
+16550 UART apart from PNP0501? ACPI platform devices already support
+deferred probe as per the series you mentioned. IMO, PNP also should
+support it. So, I am not sure it is a good idea to prohibit all PnP
+devices on RISC-V platforms. Other OS's might be able to handle them.
+
+> From my, probably naive perspective, it's a bit weird *not* to create
+> the irq domains at MADT scan time.
+> 
+> > With this new use case in RISC-V, here are the alternatives I am aware of.
+> >
+> > 1) Use core_initcall() in the APLIC drivers which makes APLIC driver to
+> > be probed prior to PNP or PCI INTx devices. But this was ruled out in
+> > the context of DT from Marc.
+> >
+> > 2) Like the approach tried in this series, add support for deferred
+> > probe in drivers. This will be invasive change requiring many drivers to
+> > change like you pointed.
+> 
+> Again is this only for GSIs? Patch 14 moves the IMSIC-MSI init to MADT
+> for PCIe devices (which is different from DT), so it's not for PCIe
+> devices. I wonder if it's a lot of churn for something that will not be
+> used for RISC-V ACPI systems...
+> 
+> A quick look at what Arm's GICv3 does, all irq domains are created at
+> MADT init.
+> 
+The issue is primarily with APLIC-MSI. Since it needs MSI device domain,
+it has to be a platform device.
+
+I am investigating fw-devlink like Marc suggested atleast for IRQ
+dependencies. If that works, it would be the best solution.
+
+Thanks,
+Sunil
 
