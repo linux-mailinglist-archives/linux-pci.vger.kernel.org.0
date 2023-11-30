@@ -1,151 +1,152 @@
-Return-Path: <linux-pci+bounces-275-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-276-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFC027FEC8F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 11:10:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B7087FED52
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 11:52:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73C612822E7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 10:10:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE3181F20EE7
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 10:52:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A843B2B2;
-	Thu, 30 Nov 2023 10:10:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401C83984C;
+	Thu, 30 Nov 2023 10:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ijqEs8zA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AfEDkE60"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F1210D1
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 02:10:05 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-a049d19b63bso100108066b.2
-        for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 02:10:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701339004; x=1701943804; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=E1qjU5JXu1SHQD4xQGaPaJAhFMnpcUVxymDQSxAyOzQ=;
-        b=ijqEs8zAxhdFfTdawN2jKrK8GLI781pRySgTvoSLBVLTg6jZHc+9DfB1oDBBO0aDKU
-         Wm9TUbSEqBONj7+AaW84roR0XUXu93yf+YqsHlohY8gTomUC7OgVzZeTXaBaAnoSDSwn
-         vBG1FjE9Srt7g7tBJGUfeiokyeAvWGb+ZoFpBLVa4acSlbFFR0LMQOgSl1WdiRrHJivA
-         cla/4eYW3uizS/TT7R+ERbJ2rY9iCZXS1lVYvHC3tp4+rUEGygQBR64tf+LklGjirXGy
-         brhz3qjQLPqI0pRmt2FhpEIfHjoWqW+346erYLLMYbIjdo/M9MQXJXmbPoBasSUfmCeH
-         OeeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701339004; x=1701943804;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E1qjU5JXu1SHQD4xQGaPaJAhFMnpcUVxymDQSxAyOzQ=;
-        b=weNB898QHcHw3pYrLj+kaDqLrCUTejb1DOiXndOCdF5F36p3fXcSJgisyO0ZM4OcBM
-         39ETwqJzHV7hLJRyr2rDPeDXFN2ym7LnjQh6ea1nwU6/KpYvisWKG+PLFaHxV3dVvnLS
-         grPzsXEf++xlKNe6hSn/yTr4zSYSqOh2uF/HoT9Vhknn5gQwpayVCk+HtkTp+O0czJvs
-         BaoA2JCNZKaR0eeYCxt9+X9xFDgvDYQQO1AjCmajH0sM7MROWZnJZmCq7w61kgm+S0qc
-         NMQGmNnmyQC9GMxf2zeGPA3xMlRjOXQ3SKVwKQJVjzd/uFE1AYKSIrBhFOSbIizuVROh
-         /Lxw==
-X-Gm-Message-State: AOJu0YxdQRcpxtfpomZimwQF4kTeoMvJSb9pmLBPECFWx2hwoCCPtxxC
-	rscrmYLTX9/q0mRKHhYI5T/mBA==
-X-Google-Smtp-Source: AGHT+IF/jgdSK4dsxLW+CHiaLQG7uE1vQq6/j3ab/pmaLpRz4Scp96/aZfQSgXqDVz21yXWypQxVVw==
-X-Received: by 2002:a17:906:73c7:b0:a17:d319:df11 with SMTP id n7-20020a17090673c700b00a17d319df11mr2272934ejl.59.1701339004233;
-        Thu, 30 Nov 2023 02:10:04 -0800 (PST)
-Received: from [192.168.209.83] (178235187166.dynamic-4-waw-k-2-3-0.vectranet.pl. [178.235.187.166])
-        by smtp.gmail.com with ESMTPSA id r21-20020a170906281500b009fca9f39e98sm504965ejc.26.2023.11.30.02.10.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Nov 2023 02:10:03 -0800 (PST)
-Message-ID: <a9c2532a-eaa6-4019-8ce9-5a58b1b720b2@linaro.org>
-Date: Thu, 30 Nov 2023 11:09:59 +0100
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32105E6;
+	Thu, 30 Nov 2023 02:52:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701341548; x=1732877548;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2Loo84863mYt3Lh6biFrQxyHbhYSnUO9o1Ffbl3PYZc=;
+  b=AfEDkE60VoTkDwD5QeHJyfmpVCKzjpFS6S8g+FeCWGYXMvkbYDXEGZXO
+   cdChDKp/668eMINXNPkDB0DIFOGoIFsRDVSo26XTG3qWOKcsobWvHfUj9
+   JWfKWBl++lcLNAUlZel4xx+WT5qJfQJ7GEtu3wHz97laiIUmLTJ8E+vOP
+   c6HTR4MlgzzFyf1Fovcox7uCa36PhSYL6SI4Orh3foatB29cgxpKu80TI
+   Nt0ZaUby2Xd0AorHuGiKEJx0Iqlzt16GzBWbE/lsHebMCbYsluG5PPu14
+   gOv7+1uk02sGoNCxfhDlB1Gu3kyIK++fBkWsgFx7zqHZ2LPVnNm1Sl3Mp
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="392171351"
+X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
+   d="scan'208";a="392171351"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 02:52:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="745594631"
+X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
+   d="scan'208";a="745594631"
+Received: from bergler-mobl.ger.corp.intel.com ([10.249.33.30])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 02:52:23 -0800
+Date: Thu, 30 Nov 2023 12:52:20 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Shuai Xue <xueshuai@linux.alibaba.com>, ilkka@os.amperecomputing.com, 
+    kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org, 
+    Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com, 
+    robin.murphy@arm.com, chengyou@linux.alibaba.com, 
+    LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, 
+    linux-pci@vger.kernel.org, rdunlap@infradead.org, mark.rutland@arm.com, 
+    zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v11 3/5] PCI: Move pci_clear_and_set_dword() helper to
+ PCI header
+In-Reply-To: <20231129231555.GA443895@bhelgaas>
+Message-ID: <b2aeaf4-8960-8967-ce7b-663f9d77260@linux.intel.com>
+References: <20231129231555.GA443895@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
-To: Manivannan Sadhasivam <mani@kernel.org>,
- Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: agross@kernel.org, andersson@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, robh+dt@kernel.org,
- quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
- quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
- dmitry.baryshkov@linaro.org, robh@kernel.org, quic_krichai@quicinc.com,
- quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
- quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <1700577493-18538-1-git-send-email-quic_msarkar@quicinc.com>
- <1700577493-18538-2-git-send-email-quic_msarkar@quicinc.com>
- <20231130052116.GA3043@thinkpad>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20231130052116.GA3043@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-1899874312-1701341547=:1808"
 
-On 30.11.2023 06:21, Manivannan Sadhasivam wrote:
-> On Tue, Nov 21, 2023 at 08:08:11PM +0530, Mrinmay Sarkar wrote:
->> In a multiprocessor system cache snooping maintains the consistency
->> of caches. Snooping logic is disabled from HW on this platform.
->> Cache coherency doesn’t work without enabling this logic.
->>
->> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
->> platform. Assign no_snoop_override flag into struct qcom_pcie_cfg and
->> set it true in cfg_1_34_0 and enable cache snooping if this particular
->> flag is true.
->>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1899874312-1701341547=:1808
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+On Wed, 29 Nov 2023, Bjorn Helgaas wrote:
+
+> On Mon, Nov 27, 2023 at 09:34:05AM +0800, Shuai Xue wrote:
+> > On 2023/11/22 21:14, Ilpo Järvinen wrote:
+> > > On Tue, 21 Nov 2023, Shuai Xue wrote:
+> > > 
+> > >> The clear and set pattern is commonly used for accessing PCI config,
+> > >> move the helper pci_clear_and_set_dword() from aspm.c into PCI header.
+> > >> In addition, rename to pci_clear_and_set_config_dword() to retain the
+> > >> "config" information and match the other accessors.
+> > >>
+> > >> No functional change intended.
+
+> > >> +
+> > >> +void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
+> > >> +				    u32 clear, u32 set)
+> > > 
+> > > Just noting that annoyingly the ordering within the name is inconsistent 
+> > > between:
+> > >   pci_clear_and_set_config_dword()
+> > > and
+> > >   pcie_capability_clear_and_set_dword()
+> > > 
+> > > And if changed, it would be again annoyingly inconsistent with 
+> > > pci_read/write_config_*(), oh well... And renaming pci_read/write_config_* 
+> > > into the hierarchical pci_config_read/write_*() form for would touch only 
+> > > ~6k lines... ;-D
+> > 
+> > I think it is a good question, but I don't have a clear answer. I don't
+> > know much about the name history.  As you mentioned, the above two
+> > accessors are the foundation operation, may it comes to @Bjorn decision.
+> > 
+> > The pci_clear_and_set_config_dword() is a variant of below pci accessors:
+> > 
+> >     pci_read_config_dword()
+> >     pci_write_config_dword()
+> > 
+> > At last, they are consistent :)
 > 
-> I just happen to check the internal register details of other platforms and I
-> see this PCIE_PARF_NO_SNOOP_OVERIDE register with the reset value of 0x0. So
-> going by the logic of this patch, this register needs to be configured for other
-> platforms as well to enable cache coherency, but it seems like not the case as
-> we never did and all are working fine (so far no issues reported).
+> "pcie_capability_clear_and_set_dword" is specific to the PCIe
+> Capability, doesn't work for arbitrary config space, and doesn't
+> include the word "config".
+> 
+> "pci_clear_and_set_config_dword" seems consistent with the arbitrary
+> config space accessor pattern.
+> 
+> At least "clear_and_set" is consistent across both.
+> 
+> I'm not too bothered by the difference between "clear_and_set_dword"
+> (for the PCIe capability) and "clear_and_set_config_dword" (for
+> arbitrary things).
+> 
+> Yes, "pcie_capability_clear_and_set_config_dword" would be a little
+> more consistent, but seems excessively wordy (no pun intended).
+> 
+> But maybe I'm missing your point, Ilpo.  If so, what would you
+> propose?
 
-Guess we know that already [1]
+What I was hoping for a way to (eventually) have consistency in naming 
+like this (that is, the place where "config" or "capabilitity" appears 
+in the name):
 
-The question is whether this override is necessary, or the default
-internal state is OK on other platforms
+pci_config_read_dword()
+pci_config_clear_and_set_dword()
+pcie_capability_read_dword()
+pcie_capability_clear_and_set_dword()
 
-Konrad
+(+ the omitted clear/set/write & size variants)
 
-[1] https://lore.kernel.org/linux-arm-msm/cb4324aa-8035-ce6e-94ef-a31ed070225c@quicinc.com/
+But thanks to pci_read_config_dword() & friends being there since dawn of 
+time and with 6k+ instances, I guess I'm just dreaming of impossible 
+things.
+
+-- 
+ i.
+
+--8323329-1899874312-1701341547=:1808--
 
