@@ -1,69 +1,68 @@
-Return-Path: <linux-pci+bounces-304-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-305-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1AE67FFB5B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 20:30:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8223F7FFC5B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 21:18:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FE8E1F20F43
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 19:30:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D45B4B20F33
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 20:17:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A6552F66;
-	Thu, 30 Nov 2023 19:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C395E53E07;
+	Thu, 30 Nov 2023 20:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a0z329yU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V9ij63/B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2070.outbound.protection.outlook.com [40.107.93.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D86693;
-	Thu, 30 Nov 2023 11:30:44 -0800 (PST)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2048.outbound.protection.outlook.com [40.107.22.48])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB3A1712;
+	Thu, 30 Nov 2023 12:17:50 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZPhuV59PSApy921ot8fyfuc0+GfxKJI8HSygoV/7YsOmtfR8NUC6xzwWC0d1+CcEATqXyOJjaTaz4I4HdtHVZGivhI/wftDCIgmQJ/LlU94as3CUc1UdPcfqB9ZuozrT4PDCUDhqEiPRNrFYJppUaG06gqAEmzanUUJGZQeORqXc2ge8IDPn/HTBmMb3lk1VOHt120R9Twv8feex+v85EzPwzdr6Joy5oGrC/5KjsmjHKDqiGOWmuk5FP3jXdhoO4q3WhbifPP2UNf7x1QIu9dCOjQTEC1J20wzsNlHooiF8TX7OM3Qvn+l+Fx2rHEpta7zXfa1IZXyqvhpn1WLw3g==
+ b=PcyPuhDGJuQ0h2cVAmsoWJQ4OLsWRctkl/TlZS+0S2D8E79G8Ao+q5dspgvSEupDXT1mLP6gt6qtOsOP/J+UcbLxNyzVlQMMF09nSI5/q4SjSOuVokeTgsbt0fNd901/d4gWUhJ8an9V9kv0yInFEy1t5B54tRNg7+HoYdffeHcYrIZUPjCqziKO+D9SxaS0kb4/sZqYgfbDwyWlWy5iGwlpmJnGTCu4Jstsj3N27Ai05dFYcs/Yr0wdDdnru3aCMgrICCdfZjTHiqcmpClWsDsBD8dqLvwJD89YSUOTE4M2jyQBB+KukWqG13T3kqFNymbOPhu6KzexYfNZZhAykQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wg9hcDTdu2zCF/tBIHho3pNTpJOPzngZeyNuAuy+xwU=;
- b=XW68RH93UE4FaDsecTG+mQSKM/2U19raiGuPsP2S4oRht+yX5v5IJ5mfD0FwRijw6JOnMPn5+QVAO5xAfJjFy0+qDcXxVkqrr8/nytiQo5+57uWUXpE9+KYSNM5bb+Jk8Psx4SJZc3KijjJbXxqNJbiHFXJ1UOunwsxqb7ARCYEi5uLL+pckmh4fqzQrUgHYrNVHJR32xrJZdDbaFLOih9Slr/Wx02dpevddunApr989j3dTR7ZJMh4usNE+F+tkX4J2sHQaZIbQMH8ETp5CU+4a1FxxhWjLizBQECnQBjI4SKk6cAdT8V90RFHdIamU/L8l7T28TkgYWi7zH0ECkw==
+ bh=B6d2dxoOPTVQLUSqU3ggt4ZWS29MC9i2Alq0HpoNNsw=;
+ b=UTriP18QkYAPQP560AkIDijaxqU4/5shIbiLsJDihY80jCKUmo5gCxdrQY3vdaYEeD+4IDclWwEejPcsyIYnLAo26YsksEG3Sbza8xaHYVDRj1D3Qix3i7QyuWhZoZ6S+6pU3V9kcW+ENF9ueHQblbSzvLjRjbUKkqx1gdUPgalSeO0QQ0amSZZ/duPe5isYgrYjE2ceOJSkAGQxt/1YfIeNNqm8H3vCxZHpC9FevvJrQEPgVbHBfn/VC9X8fiZIfY00HV6HrH4P7L64dkRaNv7R7/ZQ6KyJO2c0M0gA03wwB7gRpoPIjWC+41dnUeB7ZuwTryzPGeIYUn+fZc7w8g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wg9hcDTdu2zCF/tBIHho3pNTpJOPzngZeyNuAuy+xwU=;
- b=a0z329yUsTG5XitZzchzYiEndxJNOSgJ82dUr215ndp0Ufy08KAvrReLoJjWEaN3KuzYVi/8QSr1tkhKMgSb5luPq5P9k/U31wXF4UdqViHz1YGDeEYtx1N5Wm72AgUcIsINwV1Ysv6Gw/qoNrVCDdIX4FVXxrBOLAiv/NVmGJ4=
+ bh=B6d2dxoOPTVQLUSqU3ggt4ZWS29MC9i2Alq0HpoNNsw=;
+ b=V9ij63/BqDb6iZqaIvQI/uzpySBigOU6ipMbk5aR1Ldjqecjc8TXEqRx4zmvSn1EqjOiJZH4ppE9F8NM3JBpEaexZO1tV3b1jqoVxdZzAJ7HRiWSo8WfkmcaisJgcrFjB1jdlF141WmaZDJJcyrjcc8N4fhm0iKgq3vFmDQb9eA=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DS7PR12MB8083.namprd12.prod.outlook.com (2603:10b6:8:e4::21) with
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AM7PR04MB6838.eurprd04.prod.outlook.com (2603:10a6:20b:10a::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Thu, 30 Nov
- 2023 19:30:39 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.7046.015; Thu, 30 Nov 2023
- 19:30:39 +0000
-Message-ID: <72e6a193-414c-4f45-9991-3c011cdb35fb@amd.com>
-Date: Thu, 30 Nov 2023 13:30:36 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] PCI: Call PCI ACPI _DSM with consistent revision
- argument
-Content-Language: en-US
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20231110185503.46117-1-mario.limonciello@amd.com>
- <20231110185503.46117-2-mario.limonciello@amd.com>
- <CAJZ5v0hAw99pfdrqgg8AxfeCHcBWeoB2J9bR1sN9a2dU=x79Ag@mail.gmail.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CAJZ5v0hAw99pfdrqgg8AxfeCHcBWeoB2J9bR1sN9a2dU=x79Ag@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.13; Thu, 30 Nov
+ 2023 20:17:47 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40%6]) with mapi id 15.20.7046.015; Thu, 30 Nov 2023
+ 20:17:47 +0000
+Date: Thu, 30 Nov 2023 15:17:39 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+	robh@kernel.org, roy.zang@nxp.com
+Subject: Re: [PATCH v4 4/4] PCI: layerscape: Add suspend/resume for ls1043a
+Message-ID: <ZWjt412xtyZWVjdL@lizhi-Precision-Tower-5810>
+References: <20231129214412.327633-1-Frank.Li@nxp.com>
+ <20231129214412.327633-5-Frank.Li@nxp.com>
+ <20231130165100.GV3043@thinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR05CA0015.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::20) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+In-Reply-To: <20231130165100.GV3043@thinkpad>
+X-ClientProxiedBy: BY5PR20CA0003.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::16) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,230 +70,215 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS7PR12MB8083:EE_
-X-MS-Office365-Filtering-Correlation-Id: 20dc9c18-58d3-4771-03e1-08dbf1dad5c3
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AM7PR04MB6838:EE_
+X-MS-Office365-Filtering-Correlation-Id: b23661c9-8a0d-4b5a-8fb4-08dbf1e16b10
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	6pF2yrqSZ1gpHj5uPM1XbjKFkITE1mkpB7XxAjrCKFdmtJc5zBq9lOb229iRzIz6OpxXJ1z18Ag74P2NRYaFLsw+Od7mD0JOkJAjNgCN3Yuq4uBmROPyIohm7kO5rtHN+amXDVszWCviPUs+0BpG/4HvnJT/hfqVwmpWM5mSMGKdvO1Sfcfb6q+jTUrmto97X/zqozOL7zB5Ga+Ox/tYoA2depzhuCvsx0HgAz4svijEsTGc2S0kML18zZd9iGjAhSf6Shxj+2Ez27Eia3yeElrSS1rmDoDTV+a4ac+2+J2i22hiM1+rJOLdWgRM9TEJc40mT9E4XiGDIXBPSjxBrWNNPcWP2Q+E5wsNQy/jrgLsDsg+eVjc+mjg60u7E+3sNwh6yXfPUXeh763sLWdZPS7CINDpWE19JYICS3B7e2FSsUoBQkpadpK2NflgPAhYe/+oMDITJQ0ZcW11PzrQgN4gZATcjTYNnNDMCVhqtZ4uJx0+HznFvNAm3An0fE0e/Q8BjtDm+RcP9fii/icU5400rxbh61CatEwVUXc6hfjr0+fC9j0XPxBnPt8SwkjTkZpz6DrmW2p2nO1uaIDpLZCNDGMQqQJ0kq7OrTgjEpGE46/giokv1yRncDiCYnwHOEXBcozolyk9CeqBTVmrCQ==
+	UpIrmstMw2HNIrIflCXkcCwQQLTbks4pEUqLE8HE9i6dwnnMoRrBgBS4E3tqFt5DR7y9BCHzIe+AP2deNqHDlvpCRDRVOk9tQhWPtr5Kf/5M0OIv7Q/AnGpPQpkpu0CN1D1DJSHLE+9llr3sURIdK9VjoJi5W9BUPqgKToxFfknzL7Jz9UksCEgyIgMEf6OcK34DhI0ZsyXo1nYE0rIhB+BEQU8bMK0bcYsRwkFvobUd2CbUO8x+BiliEvgTWBk+2JE8kvgh+sAPHtwruiKvtiQfPIqnKsynKsia9k7FF/Zj59lzW9MNTnSzIINPZ42v58sl4TPw+gRkcND5MCoPkIWtS49d5iOtbGUPl6or4L0Na13HR4qFsJMiHtGNPuD4MosIBl7q3Xa0k+c3Ca9RtoJV5GyrYwgSTnTsCY5OhXrZND3Tl+aTYpH4I7wKez3v5T93+nbrHLaenPulh8ORNm+9pvwwKA+cnPhoQ6DLkHP8AZcGGJ5++BKERvVZ9P3NSIvdVM8JLqHEEaQ4BRUoH+raQB0PqGQ4sEKwz1RoZmnG+HGMDd+FjTvDGvZB46yN/NBBj7T25Y5Nxsm1zYp2Wmswd3MqSEljua5zfkEKW2lfZPUsgUgk6eYIQURG5BdCiGfBWvIPnmBEEJr3ih/++OkqvpNJkdmBv6YRjMMsJnw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(396003)(366004)(136003)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(41300700001)(38100700002)(36756003)(31686004)(86362001)(83380400001)(5660300002)(26005)(44832011)(31696002)(2906002)(2616005)(6512007)(53546011)(6506007)(4326008)(8676002)(8936002)(6666004)(6486002)(66946007)(478600001)(966005)(66556008)(316002)(54906003)(66476007)(6916009)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(396003)(376002)(346002)(39860400002)(366004)(136003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(38350700005)(86362001)(66946007)(66476007)(6916009)(38100700002)(83380400001)(26005)(6506007)(6512007)(52116002)(9686003)(6666004)(2906002)(316002)(33716001)(66556008)(15650500001)(6486002)(8676002)(5660300002)(478600001)(4326008)(7416002)(8936002)(41300700001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N3ZLbUxoaG1KVEtzc1Rqb2lGWWt1UmNjc2ZQbzlOeU0zaXVDekdycUpNYWxo?=
- =?utf-8?B?bzh4SW5WRnJvN2M4N29LeW1aT2JvSnZqYTZkdGNqVUp1SngwQmFkRGFiKytV?=
- =?utf-8?B?UVhWWWloYWlUTHIwTzl0WFltbWtjZE1NZWF3TU9Pa0tPeEdhZ3R5T3dveHcx?=
- =?utf-8?B?eDZ2S1RsN01rS2hwWnNOYVJCdWN1RDhkQWp5TmRES1BxbTZRTWx3SkcvcmFS?=
- =?utf-8?B?UlAvWEIrOElTd0xDenF6aDg2L05mYU91YWRLd29INjkveUIzcGxDRlVsQXR6?=
- =?utf-8?B?aVZDMk5QczZURXlENUNLR0VnSHFQMm1PNUY5bnA3dmkySXhhMUw5RDVDRWRU?=
- =?utf-8?B?K05ERlBuVmo0OGo5bTRmRXo2WGJqL051YTJQVktVaENmdXBvb2lMSWRpZGdn?=
- =?utf-8?B?eW90d2NnMEZVVEFZeHBFTmo5ejY1YS9oalpEcVh4Qi84ZDJGWTBsUnF0dXpw?=
- =?utf-8?B?Rk0ySERyVlM5UUdkbkRQbjFsTis0WHRGYWZBcWZ2T1hITHVDU1h6V1NGMnd2?=
- =?utf-8?B?Wng2ZER4NXROUkt2YisyS25sOTU5V1EwMm5ZUWg5OWdqWlBDRmhWR0laZUpi?=
- =?utf-8?B?NmdaOThmVWpwQjA1L3E0ZTZzb3F4UStKbTlNMVNqNExFRm1sSHRFbHlMNDg4?=
- =?utf-8?B?R0VQVkpVbXB5QUdBMEoyQndSOU4zelNlUERXSjVhNDBndFFFK2JIU1hTdjRj?=
- =?utf-8?B?VWh5MUk1NTBQMEJpYUFzUEVVK3BLY0FEd0pGN0dERGpiL3hseFRhaUVucWxs?=
- =?utf-8?B?SEhZcUpjQ2dpYWJQRW93OWNGZHNYOVJ1eHgxZUdJOUdKV044a2FKbCtIRWwz?=
- =?utf-8?B?L3ZnSHNmUS9pWnlwVGdpWENQQWFNRFdEZ2t5QlZGeGlxMjQzNng0T0FTM0Vh?=
- =?utf-8?B?eXlRbnZ0Vi9oWVovam85TkhNdjF2d3BjSG1RZXo5SnpIWnBIUlhPc3FZeUVp?=
- =?utf-8?B?MEdIQzU3YWFxTk5KeU9nVzJSNzBzOEdMZGR6eE9RVit0cFNFaUN2Wi9oWDNj?=
- =?utf-8?B?NHdXdUNtUm52d25icWczdW8vVGoyNi8yaVZVWEdwMU9lQUZtQkpIRk9GNWF0?=
- =?utf-8?B?YTJtZk8yNHpGeU5QVnl0Ymk0NTA1T3Z6UFE2aGxJR0xFODY4bFhGME43SUcz?=
- =?utf-8?B?WldNNlJmZm9QeG4wWVRPcnNVVTUzeTBFakRvVk1ibkFWakJDTk9hK0wyTStq?=
- =?utf-8?B?M29iTWcxUHppQXRyTllaUlNFT2RkQUc1bzNMdTRnOThvOWF5a1AwdDV0Tmww?=
- =?utf-8?B?TjBlU3dBTjU1TkN3Mml5TFRFdVJzMFozVTNkSVY5RzMzdi9oS2M4YmQ4YUcw?=
- =?utf-8?B?bWp0WVRXN21ucjA0SHZKUjNoNENJaS9FdVlaTjUycGVvTVpCWm95dFZoS1E5?=
- =?utf-8?B?dmFyUGVicjNGcGVmTnhrRmo4MjJQWUEvNUc5SWNyVzNtbnA5NVAwQXpPSmpM?=
- =?utf-8?B?elZ6Z0cxdFVDUE1uRkFad0ZGeHlEUlpxdGtwUTcxT3NVMjR3WGgxWitzaVRI?=
- =?utf-8?B?aHJMaHI1QXhTamFQa1pmcVdOdlU4NkRtdnNCT3pFRTZheFFLWUxod1N2YWVa?=
- =?utf-8?B?bm9WSDhmZkJwS1B5YVRna1RGRjQ2Tmx4Z0xnZktSNzI0WmZzOVBxYS9zeGth?=
- =?utf-8?B?anN6VldXWlZSVHRSN1NQZ3l0V1Z3a2NrLzUxRk9KdGJzUFIrTEJoQ2EydWNx?=
- =?utf-8?B?dlZCS1JocFlPam8zVXpQYUprRWxXUmhrOEJxTnNsZHZKbnZQdGtGS2NId0s3?=
- =?utf-8?B?M0FXOTZRYlhFN0owT0crQlFiK1ZOcTNBdjNTTExGWFdYWHh6bnRBNzY5cUNm?=
- =?utf-8?B?WmN6RzFkSUlEWC9Vb2ptNEs4MElEcDY0cU9iOFIwMnJndmhBbDNuREZPZUdh?=
- =?utf-8?B?RlBQWGEyTGR6ZzFMNVN2UXdCTDZBL2IrdEpPSndGSU90a0hETmphaVZLblF1?=
- =?utf-8?B?NG5FTUFHVWtBQ2daZXdEV0VWc01nTFV1ZTRJa2dCV1lZNXhDemZEUlJjTHpF?=
- =?utf-8?B?b0RJSDZBdTlVWG5YbjBuWWp1WExPV3dla091aklMMHhPZEd0MG5tSHovSzM5?=
- =?utf-8?B?QXZPQ2tubDRXUlQ4SXcxc21JbjJQVnlxY0xXcnBlbnhKUUE4Z1NCTDdkN25Y?=
- =?utf-8?Q?Bt54DLnvtfBo8iEMeENy+1M7S?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20dc9c18-58d3-4771-03e1-08dbf1dad5c3
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+	=?utf-8?B?Wk92cmJTeGxqNjBZTUIvMlprUjdQQjVocTR0UEpCOU9MWjZaQkFOeFhxaDN4?=
+ =?utf-8?B?OTE0aEVTbTNBZ0FUQ1FYN21mR3Zuem1lZElZakhJMkc4dWdkSjhYYzc4T2cy?=
+ =?utf-8?B?djhheVVZZDY5NTkwMGlySE9hSHlzckc4OUU5bzBWNmhuK3c5a3F3VDg4WnNs?=
+ =?utf-8?B?dFFhYytOSnJOTERvZHE5SmdETHVTRzdMU2lKWHJ2dThFTlZURGxGamROY0Q2?=
+ =?utf-8?B?OVVlN1FHdlJLeHN1Q1ZlUy84VnlKemhGOEh1QmNrVjB4SzU1b1RiWG1zY0JI?=
+ =?utf-8?B?czNLMlZjNVRRNThpNlNBQVN4c2pqMjhBY2h5Slo3bTVnNHpUN202dmloOU8z?=
+ =?utf-8?B?dmhEaS9uZTFqRnhDdzdXVTJWQWZRdGJEUkIray9GQnZ2dytsa3c2dDhmMW42?=
+ =?utf-8?B?S2NyV05OU2lEMUZFM2dlbGZpVnBrK0dBeUJZTStscEdkb01mVkpqcWFhZ2k3?=
+ =?utf-8?B?cUNsWU1GSFY5bXphaUVrYzhscXZibTJNYzJsQW9qVFovU2tFL3lKbUp4VThR?=
+ =?utf-8?B?TzVJV1Z5Z0dOUks0eEpoRVVZb2lGem1sZTdHQUZKVkl3cHUvem92S0J1RlN4?=
+ =?utf-8?B?UDI2bVcxK29pcHNDWGk0QjlSTDgzTWhFV1JlRmluS2hGQ0diYlZZZkJVc0Ux?=
+ =?utf-8?B?RXBTSmNLYjI4TW5ReXlFUlFxT1dUNGhEZEZoQWYrWExMODdFamNnSHNOTnpG?=
+ =?utf-8?B?OFNURFZNUm9xdVA4N3RCQTNDVnNxbVVKcUNvWjh6OTgxUS9QdURtTDdaZ0hP?=
+ =?utf-8?B?WjM3ZzFrSHc2Zjc2ZE5BcnlVL2tBenM3Nzc3ZVA4SExrSDBqV29kTXJXaGYx?=
+ =?utf-8?B?dGJVaFNNcDIzZk9MK1FFODdrRnlzU1J5RCtjdnJldlhlNU8yajVlZ3JGUEZk?=
+ =?utf-8?B?bm12MldsdzJKM2wvR3R3V0pXWU45TTMrQUlyS3Y4bDk5MnBUaDhuZjdQcFln?=
+ =?utf-8?B?QUViVnl4ZTh2aVN3Zk9DWXo2emNBRTB2WWQ5SkdBSm5YaXhBVkZmUkpVMkhj?=
+ =?utf-8?B?eFV0bk9xYmJSY2tqMy82b29sVzMva1JpSiswSFA2Wjc4NjVLU2RNOE5uTE5R?=
+ =?utf-8?B?UGUra2krcldRWFRJNVZqTktyVlYyVWlNMFo0Zng0dGE0aDFVQndkMmhDQWRP?=
+ =?utf-8?B?bG5rbHo2QzkrZ1RvODQvL0FoQjZCci90NXIwZ25URjVibzVGbGRIeWkvZFdn?=
+ =?utf-8?B?UkU3SXF3bXVXVWQ1UThpdEZDL2JueHJmQ2hNT1RBZ1F4czhWUUU1N1ZXQ3Zk?=
+ =?utf-8?B?dDc3ekxWTWtuREtzRTVselI0a2JIYnhINU9IY3J5a2h0OGVGdkZET2hOVHQ3?=
+ =?utf-8?B?SzFNSTF6d3ppN0NDV2V0Z3NjZ3B0MjJhWFYvSEkvM2E4ZlRUOHlsQktENmd1?=
+ =?utf-8?B?Yk00bUFWYUR2NlNKNUYxM285UUhLem9RSWQ2OU9Hd05xSUZvbGtzdTJnd0Ja?=
+ =?utf-8?B?dTdOZmdMb01jcmpBaFBkSWxIZCt5MzNxUHNLTUVUQUZreUpHenVFdmxwSmc1?=
+ =?utf-8?B?RURUWWRCQzRsSlZjcHY5dCtFSFk0Mjk3bzZSSnVoWmdwN0NWRnJpWU8xTXBU?=
+ =?utf-8?B?UVVVaHNYOGpjR3hTWEZoOEJvVEpicjFxcUpqZlYzMyszMFFobTYwZ3Faa1hI?=
+ =?utf-8?B?Uy9mR1AvTzQ4ZUVQdm00T1JhQUFUSEJkNnVMTytGWEtTODVzemcweklYRnFw?=
+ =?utf-8?B?T0dHTjQrQmJjY21Kcm0xUWdGN0JVZExiTHdhQmpqbjBtN1AxcmFjREFybCsr?=
+ =?utf-8?B?YmJEbktwQUN1SUM3WFY3VHR6eHI0R1NWTVhLaFJFNEN3VXkySTVlaTZTdDVq?=
+ =?utf-8?B?ZlZveDVKSWNXWW1MdW96MEt0dHRvQUdyOE1lcWZ0SmxHU2d6OVIwUW11QlJU?=
+ =?utf-8?B?aTdFYjFuM2NVcko4cWErbmV5Rm1qc2FSVmIvSFNRMzRvQkVNYUlLeTFwWnZX?=
+ =?utf-8?B?WHQ3Q3pGcllUTGhhR2E0aDl4alBDSVB3R055N0JPdkRKWVI5R1lqclBDemZx?=
+ =?utf-8?B?Mk1PeGJrYTczNTdjWFVhQ3lkQUhZRUxaV1lFWjdoNTF3Z09OMGwwQWwwUS92?=
+ =?utf-8?B?ZkJtK09yUGE5bDNIU3RwTlVieHdIT0RWUHQ2Vm5qVlRhOEZnYnVRWlpoQzNX?=
+ =?utf-8?Q?JOa4=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b23661c9-8a0d-4b5a-8fb4-08dbf1e16b10
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 19:30:39.6398
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2023 20:17:47.3036
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 41/QJBDV+tUf0Angvb6Ewf42bzWFul7KJbZg2FhM8EHhY1kl5ws04L4x6sE9MneEAnrMTH8rGMIKZmKquOFq6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8083
+X-MS-Exchange-CrossTenant-UserPrincipalName: a94QdLmhZOBqXBW/9g/vIBLeicBcFf3kDqS0L29EGPIV7OXhEiU8u6lI09qFHQq3bb7zDKps/bCsckqCHVVFIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6838
 
-On 11/30/2023 07:34, Rafael J. Wysocki wrote:
-> On Fri, Nov 10, 2023 at 9:32 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
->>
->> The PCI ACPI _DSM is called across multiple places in the PCI core
->> with different arguments for the revision.
->>
->> The PCI firmware specification specifies that this is an incorrect
->> behavior.
->> "OSPM must invoke all Functions other than Function 0 with the
->>   same Revision ID value"
->>
->> Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
->>        PCI Firmware specification 3.3, section 4.6
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, Nov 30, 2023 at 10:21:00PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Nov 29, 2023 at 04:44:12PM -0500, Frank Li wrote:
+> > In the suspend path, PME_Turn_Off message is sent to the endpoint to
+> > transition the link to L2/L3_Ready state. In this SoC, there is no way to
+> > check if the controller has received the PME_To_Ack from the endpoint or
+> > not. So to be on the safer side, the driver just waits for
+> > PCIE_PME_TO_L2_TIMEOUT_US before asserting the SoC specific PMXMTTURNOFF
+> > bit to complete the PME_Turn_Off handshake. This link would then enter
+> > L2/L3 state depending on the VAUX supply.
+> > 
+> > In the resume path, the link is brought back from L2 to L0 by doing a
+> > software reset.
+> > 
 > 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Same comment on the patch description as on patch 2/4.
 > 
-
-Thanks!
-
-> and I haven't seen much activity related to this series, so I'm not
-> sure what's happening to it.
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > 
+> > Notes:
+> >     Change from v3 to v4
+> >     - Call scfg_pcie_send_turnoff_msg() shared with ls1021a
+> >     - update commit message
+> >     
+> >     Change from v2 to v3
+> >     - Remove ls_pcie_lut_readl(writel) function
+> >     
+> >     Change from v1 to v2
+> >     - Update subject 'a' to 'A'
+> > 
+> >  drivers/pci/controller/dwc/pci-layerscape.c | 63 ++++++++++++++++++++-
+> >  1 file changed, 62 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> > index 590e07bb27002..d39700b3afaaa 100644
+> > --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> > @@ -41,6 +41,15 @@
+> >  #define SCFG_PEXSFTRSTCR	0x190
+> >  #define PEXSR(idx)		BIT(idx)
+> >  
+> > +/* LS1043A PEX PME control register */
+> > +#define SCFG_PEXPMECR		0x144
+> > +#define PEXPME(idx)		BIT(31 - (idx) * 4)
+> > +
+> > +/* LS1043A PEX LUT debug register */
+> > +#define LS_PCIE_LDBG	0x7fc
+> > +#define LDBG_SR		BIT(30)
+> > +#define LDBG_WE		BIT(31)
+> > +
+> >  #define PCIE_IATU_NUM		6
+> >  
+> >  struct ls_pcie_drvdata {
+> > @@ -225,6 +234,45 @@ static int ls1021a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> >  	return scfg_pcie_exit_from_l2(pcie->scfg, SCFG_PEXSFTRSTCR, PEXSR(pcie->index));
+> >  }
+> >  
+> > +static void ls1043a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > +
+> > +	scfg_pcie_send_turnoff_msg(pcie->scfg, SCFG_PEXPMECR, PEXPME(pcie->index));
+> > +}
+> > +
+> > +static int ls1043a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> > +	u32 val;
+> > +
+> > +	/*
+> > +	 * Only way let PEX module exit L2 is do a software reset.
 > 
-> Regardless, I think that the remaining two patches are better sent
-> along with the first users of the new APIs.
-
-Bjorn,
-
-If you agree, can you please queue up the first patch?  I'll shuffle the 
-others into the back of my mind for if/when they're needed.
-
-Thanks!
+> Can you expand PEX? What is it used for?
 > 
->> ---
->>   drivers/acpi/pci_root.c  |  3 ++-
->>   drivers/pci/pci-acpi.c   |  6 ++++--
->>   drivers/pci/pci-label.c  |  4 ++--
->>   drivers/pci/pcie/edr.c   | 13 +++++++------
->>   include/linux/pci-acpi.h |  1 +
->>   5 files changed, 16 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index 58b89b8d950e..bca2270a93d4 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -1055,7 +1055,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->>           * exists and returns 0, we must preserve any PCI resource
->>           * assignments made by firmware for this host bridge.
->>           */
->> -       obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
->> +       obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
->> +                                     &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                                        DSM_PCI_PRESERVE_BOOT_CONFIG, NULL, ACPI_TYPE_INTEGER);
->>          if (obj && obj->integer.value == 0)
->>                  host_bridge->preserve_config = 1;
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index 004575091596..bea72e807817 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -28,6 +28,7 @@
->>   const guid_t pci_acpi_dsm_guid =
->>          GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
->>                    0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
->> +const int pci_acpi_dsm_rev = 5;
->>
->>   #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
->>   static int acpi_get_rc_addr(struct acpi_device *adev, struct resource *res)
->> @@ -1215,7 +1216,8 @@ void acpi_pci_add_bus(struct pci_bus *bus)
->>          if (!pci_is_root_bus(bus))
->>                  return;
->>
->> -       obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
->> +       obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
->> +                                     &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                                        DSM_PCI_POWER_ON_RESET_DELAY, NULL, ACPI_TYPE_INTEGER);
->>          if (!obj)
->>                  return;
->> @@ -1376,7 +1378,7 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->>          if (bridge->ignore_reset_delay)
->>                  pdev->d3cold_delay = 0;
->>
->> -       obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
->> +       obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                                        DSM_PCI_DEVICE_READINESS_DURATIONS, NULL,
->>                                        ACPI_TYPE_PACKAGE);
->>          if (!obj)
->> diff --git a/drivers/pci/pci-label.c b/drivers/pci/pci-label.c
->> index 0c6446519640..91bdd04029f0 100644
->> --- a/drivers/pci/pci-label.c
->> +++ b/drivers/pci/pci-label.c
->> @@ -41,7 +41,7 @@ static bool device_has_acpi_name(struct device *dev)
->>          if (!handle)
->>                  return false;
->>
->> -       return acpi_check_dsm(handle, &pci_acpi_dsm_guid, 0x2,
->> +       return acpi_check_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                                1 << DSM_PCI_DEVICE_NAME);
->>   #else
->>          return false;
->> @@ -162,7 +162,7 @@ static int dsm_get_label(struct device *dev, char *buf,
->>          if (!handle)
->>                  return -1;
->>
->> -       obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
->> +       obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                                  DSM_PCI_DEVICE_NAME, NULL);
->>          if (!obj)
->>                  return -1;
->> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
->> index 5f4914d313a1..ab6a50201124 100644
->> --- a/drivers/pci/pcie/edr.c
->> +++ b/drivers/pci/pcie/edr.c
->> @@ -35,7 +35,7 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
->>           * Behavior when calling unsupported _DSM functions is undefined,
->>           * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
->>           */
->> -       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> +       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                              1ULL << EDR_PORT_DPC_ENABLE_DSM))
->>                  return 0;
->>
->> @@ -51,8 +51,9 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
->>           * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
->>           * optional.  Return success if it's not implemented.
->>           */
->> -       obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> -                               EDR_PORT_DPC_ENABLE_DSM, &argv4);
->> +       obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
->> +                               pci_acpi_dsm_rev, EDR_PORT_DPC_ENABLE_DSM,
->> +                               &argv4);
->>          if (!obj)
->>                  return 0;
->>
->> @@ -88,12 +89,12 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
->>           * Behavior when calling unsupported _DSM functions is undefined,
->>           * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
->>           */
->> -       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> +       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->>                              1ULL << EDR_PORT_LOCATE_DSM))
->>                  return pci_dev_get(pdev);
->>
->> -       obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
->> -                               EDR_PORT_LOCATE_DSM, NULL);
->> +       obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
->> +                               pci_acpi_dsm_rev, EDR_PORT_LOCATE_DSM, NULL);
->>          if (!obj)
->>                  return pci_dev_get(pdev);
->>
->> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
->> index 078225b514d4..7966ef8f14b3 100644
->> --- a/include/linux/pci-acpi.h
->> +++ b/include/linux/pci-acpi.h
->> @@ -115,6 +115,7 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
->>   #endif
->>
->>   extern const guid_t pci_acpi_dsm_guid;
->> +extern const int pci_acpi_dsm_rev;
->>
->>   /* _DSM Definitions for PCI */
->>   #define DSM_PCI_PRESERVE_BOOT_CONFIG           0x05
->> --
->> 2.34.1
->>
->>
+> Also if the reset is only for the PEX module, please use the same comment in
+> both patches 2 and 4. Patch 2 doesn't mention PEX in the comment.
 
+After read spec again, I think PEX is pci express. So it should software
+reset controller. I don't know what exactly did in the chip. But without
+below code, PCIe can't exit L2/L3.
+
+Any harmful if dwc controller reset? Anyway these code works well with
+intel network card.
+
+Frank
+
+> 
+> - Mani
+> 
+> > +	 * LDBG_WE: allows the user to have write access to the PEXDBG[SR] for both setting and
+> > +	 *	    clearing the soft reset on the PEX module.
+> > +	 * LDBG_SR: When SR is set to 1, the PEX module enters soft reset.
+> > +	 */
+> > +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> > +	val |= LDBG_WE;
+> > +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> > +
+> > +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> > +	val |= LDBG_SR;
+> > +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> > +
+> > +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> > +	val &= ~LDBG_SR;
+> > +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> > +
+> > +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> > +	val &= ~LDBG_WE;
+> > +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+> >  	.host_init = ls_pcie_host_init,
+> >  	.pme_turn_off = ls_pcie_send_turnoff_msg,
+> > @@ -242,6 +290,19 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
+> >  	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
+> >  };
+> >  
+> > +static const struct dw_pcie_host_ops ls1043a_pcie_host_ops = {
+> > +	.host_init = ls_pcie_host_init,
+> > +	.pme_turn_off = ls1043a_pcie_send_turnoff_msg,
+> > +};
+> > +
+> > +static const struct ls_pcie_drvdata ls1043a_drvdata = {
+> > +	.pf_lut_off = 0x10000,
+> > +	.pm_support = true,
+> > +	.scfg_support = true,
+> > +	.ops = &ls1043a_pcie_host_ops,
+> > +	.exit_from_l2 = ls1043a_pcie_exit_from_l2,
+> > +};
+> > +
+> >  static const struct ls_pcie_drvdata layerscape_drvdata = {
+> >  	.pf_lut_off = 0xc0000,
+> >  	.pm_support = true,
+> > @@ -252,7 +313,7 @@ static const struct of_device_id ls_pcie_of_match[] = {
+> >  	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
+> >  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
+> >  	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
+> > -	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
+> > +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043a_drvdata },
+> >  	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
+> >  	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
+> >  	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
+> > -- 
+> > 2.34.1
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
