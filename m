@@ -1,107 +1,177 @@
-Return-Path: <linux-pci+bounces-265-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-266-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF3477FE785
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 04:05:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B4E47FE894
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 06:21:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 67F11282015
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 03:05:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 053732820BB
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 05:21:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 510C24CB2A;
-	Thu, 30 Nov 2023 03:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37FE14273;
+	Thu, 30 Nov 2023 05:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfwJ87uK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A981D5E;
-	Wed, 29 Nov 2023 19:04:53 -0800 (PST)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0VxQ.kvS_1701313489;
-Received: from 30.240.112.131(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VxQ.kvS_1701313489)
-          by smtp.aliyun-inc.com;
-          Thu, 30 Nov 2023 11:04:50 +0800
-Message-ID: <50c44afb-f1ea-4136-9d85-4916a4f3d109@linux.alibaba.com>
-Date: Thu, 30 Nov 2023 11:04:48 +0800
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F4134A8;
+	Thu, 30 Nov 2023 05:21:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F4E4C433C8;
+	Thu, 30 Nov 2023 05:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701321689;
+	bh=SO7acnA+VBGiPPDRPjeZV0L8lWsY1H783sV0wpnMOCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NfwJ87uKmQi0TjpEJJbc7uduVpBnZVRjYsbqNfzn7Ia4vqX6P5Szj69chlJbr71rt
+	 T7F/4We3/8qz7OeKwcKbcACPT9Z2KT+w82AY97DOx64vJKQnB4JR/bfNHr2hwPWVsv
+	 4p6d74/B+u39ZasqQ4QdbOgMbzaw+DueKKuXemlALO8HakEtfJ7avdNhU+0249Jwk5
+	 19Jhp8eEaXtg/U3ICZMY35kyutXWNJP0NmrOtV6SjnMmJWxOXkv8NRopv3wSZ8+4sb
+	 o/TWHtwlOfpYNUxuuU+BqQ0lcX1GHdKcsgqWsgzKoz74QLB7vi78xFjzwLfy+3ag/w
+	 3EQYo0DhUNjPw==
+Date: Thu, 30 Nov 2023 10:51:16 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: agross@kernel.org, andersson@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	konrad.dybcio@linaro.org, mani@kernel.org, robh+dt@kernel.org,
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+	dmitry.baryshkov@linaro.org, robh@kernel.org,
+	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+	quic_parass@quicinc.com, quic_schintav@quicinc.com,
+	quic_shijjose@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
+Message-ID: <20231130052116.GA3043@thinkpad>
+References: <1700577493-18538-1-git-send-email-quic_msarkar@quicinc.com>
+ <1700577493-18538-2-git-send-email-quic_msarkar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 4/5] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: kaishen@linux.alibaba.com, helgaas@kernel.org, yangyicong@huawei.com,
- will@kernel.org, Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
- robin.murphy@arm.com, chengyou@linux.alibaba.com,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, rdunlap@infradead.org, mark.rutland@arm.com,
- zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-References: <20231121013400.18367-1-xueshuai@linux.alibaba.com>
- <20231121013400.18367-5-xueshuai@linux.alibaba.com>
- <aaf365bf-ada5-a52-c35-d7dd2d598b49@os.amperecomputing.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <aaf365bf-ada5-a52-c35-d7dd2d598b49@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1700577493-18538-2-git-send-email-quic_msarkar@quicinc.com>
 
+On Tue, Nov 21, 2023 at 08:08:11PM +0530, Mrinmay Sarkar wrote:
+> In a multiprocessor system cache snooping maintains the consistency
+> of caches. Snooping logic is disabled from HW on this platform.
+> Cache coherency doesn’t work without enabling this logic.
+> 
+> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
+> platform. Assign no_snoop_override flag into struct qcom_pcie_cfg and
+> set it true in cfg_1_34_0 and enable cache snooping if this particular
+> flag is true.
+> 
 
+I just happen to check the internal register details of other platforms and I
+see this PCIE_PARF_NO_SNOOP_OVERIDE register with the reset value of 0x0. So
+going by the logic of this patch, this register needs to be configured for other
+platforms as well to enable cache coherency, but it seems like not the case as
+we never did and all are working fine (so far no issues reported).
 
-On 2023/11/30 09:43, Ilkka Koskinen wrote:
-> 
-> On Tue, 21 Nov 2023, Shuai Xue wrote:
->> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->> Core controller IP which provides statistics feature. The PMU is a PCIe
->> configuration space register block provided by each PCIe Root Port in a
->> Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
->> injection, and Statistics).
->>
->> To facilitate collection of statistics the controller provides the
->> following two features for each Root Port:
->>
->> - one 64-bit counter for Time Based Analysis (RX/TX data throughput and
->>  time spent in each low-power LTSSM state) and
->> - one 32-bit counter for Event Counting (error and non-error events for
->>  a specified lane)
->>
->> Note: There is no interrupt for counter overflow.
->>
->> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->> named based the BDF of Root Port. For example,
->>
->>    30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>
->> the PMU device name for this Root Port is dwc_rootport_3018.
->>
->> Example usage of counting PCIe RX TLP data payload (Units of bytes)::
->>
->>    $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>
->> average RX bandwidth can be calculated like this:
->>
->>    PCIe TX Bandwidth = Rx_PCIe_TLP_Data_Payload / Measure_Time_Window
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
->> Tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> 
-> Looks good to me and seems to work fine. Thus,
-> 
->   Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-> 
-> 
-> You can keep my "Tested-by: ..." in the other patches.
-> 
-> Cheers, Ilkka
+So this gives me an impression that this patch is wrong or needs modification.
+So,
 
-Thank you very much :)
+Nacked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Cheers
-Shuai
+- Mani
 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6902e97..76f03fc 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -51,6 +51,7 @@
+>  #define PARF_SID_OFFSET				0x234
+>  #define PARF_BDF_TRANSLATE_CFG			0x24c
+>  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+> +#define PCIE_PARF_NO_SNOOP_OVERIDE		0x3d4
+>  #define PARF_DEVICE_TYPE			0x1000
+>  #define PARF_BDF_TO_SID_TABLE_N			0x2000
+>  
+> @@ -117,6 +118,10 @@
+>  /* PARF_LTSSM register fields */
+>  #define LTSSM_EN				BIT(8)
+>  
+> +/* PARF_NO_SNOOP_OVERIDE register fields */
+> +#define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
+> +#define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
+> +
+>  /* PARF_DEVICE_TYPE register fields */
+>  #define DEVICE_TYPE_RC				0x4
+>  
+> @@ -229,6 +234,7 @@ struct qcom_pcie_ops {
+>  
+>  struct qcom_pcie_cfg {
+>  	const struct qcom_pcie_ops *ops;
+> +	bool no_snoop_overide;
+
+I'd suggest to name variables after their usecase and not the register. Like,
+
+bool enable_cache_snoop;
+
+>  };
+>  
+>  struct qcom_pcie {
+> @@ -961,6 +967,13 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  
+>  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+>  {
+> +	const struct qcom_pcie_cfg *pcie_cfg = pcie->cfg;
+> +
+> +	/* Enable cache snooping for SA8775P */
+
+This comment doesn't belong here. It can be added while setting the flag in cfg.
+
+> +	if (pcie_cfg->no_snoop_overide)
+> +		writel(WR_NO_SNOOP_OVERIDE_EN | RD_NO_SNOOP_OVERIDE_EN,
+> +				pcie->parf + PCIE_PARF_NO_SNOOP_OVERIDE);
+> +
+>  	qcom_pcie_clear_hpc(pcie->pci);
+>  
+>  	return 0;
+> @@ -1331,6 +1344,11 @@ static const struct qcom_pcie_cfg cfg_1_9_0 = {
+>  	.ops = &ops_1_9_0,
+>  };
+>  
+> +static const struct qcom_pcie_cfg cfg_1_34_0 = {
+> +	.ops = &ops_1_9_0,
+> +	.no_snoop_overide = true,
+> +};
+> +
+>  static const struct qcom_pcie_cfg cfg_2_1_0 = {
+>  	.ops = &ops_2_1_0,
+>  };
+> @@ -1627,7 +1645,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+>  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
+> -	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_9_0},
+> +	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_34_0},
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sc8180x", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sc8280xp", .data = &cfg_1_9_0 },
+> -- 
+> 2.7.4
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
