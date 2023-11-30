@@ -1,46 +1,51 @@
-Return-Path: <linux-pci+bounces-302-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-303-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4FEE7FF971
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 19:35:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C3B27FF987
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 19:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F3E9282057
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 18:35:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4280D281658
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 18:37:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF50B48CD8;
-	Thu, 30 Nov 2023 18:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB3D5524D1;
+	Thu, 30 Nov 2023 18:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvXPQNey"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQGSObfE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12935A0F5
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 18:35:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AFDC433C7;
-	Thu, 30 Nov 2023 18:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC53D5A0FC
+	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 18:37:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F11F4C433C7;
+	Thu, 30 Nov 2023 18:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701369307;
-	bh=1KLmnXj3oH57djjg5RXbttA8qHBNJ7pmAovpuDi+A9Y=;
+	s=k20201202; t=1701369477;
+	bh=KTVhbWtyOj5CHYptB/YZKupH8RBoVdAwyN+Tqnv2IoU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FvXPQNeyANpdmDNj5C/xy3Or4/5l8FHT4OClrcmkIXl+IxeILBCmrYKMT/ITT2Vd7
-	 WBUKG7691rCWWVy0fuIUU5av1YqoToCl8SJQ09wF44UlcbPry22JAQv8DTgK/hWqr/
-	 sd6y+3qCGKh/e0NOwr7b+PFT6vrmHAwtlzPNVF5C+IzFQ59e2QLY+zhJKQbj0NS2nB
-	 yYcVu/0EiQSLL66ltpF92a4eDtClUrxhRN/vbsI5riJmgHUb82ylPOohbY/AYK/5Zp
-	 D4ENY0bTlquG7xTJpDXs8aOKLVBMmXRFitDd9X8QwbN+3HvTRx3wxA2PYbDPYaWqFN
-	 nYFsAuY8e0wHQ==
-Date: Thu, 30 Nov 2023 12:35:04 -0600
+	b=eQGSObfEQXMLIIKR6qHyTIIAkvri7MN76Pfg66IW6uLH1LHSD5zbVupZEwxvYUxXE
+	 wDl4+SKwotJbMzkQH3H8p1iDblk8ocNDsu2RGzoYuoTVU2AP36Kr2+1YJZ+OXxr5mE
+	 UJi6QFIr70DZVNBcg46d6209zrswsp/0gl7QdKdOog9MwYDuPTU4VIzF/Nk3QxslF4
+	 iH5iO+rT67b8SU74Yzo6wUrRaE0uMjSKoRKCLGnHqrbLyy+kpPhnR0Y9caBCDxQXNU
+	 YmpOF4uSi3tplWADKJ3XC1AdZ3iy4lCiCxmts2fi7IP6Qq1PPTC5JX+Nx5BAvQVfBD
+	 MIXmEeOarJ+9A==
+Date: Thu, 30 Nov 2023 12:37:55 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kevin Xie <kevin.xie@starfivetech.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mason.huo@starfivetech.com,
-	leyfoon.tan@starfivetech.com, minda.chen@starfivetech.com
-Subject: Re: [PATCH v1] PCI: Add PCIE_CONFIG_REQUEST_WAIT_MS waiting time
- value
-Message-ID: <20231130183504.GA487377@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, ilkka@os.amperecomputing.com,
+	kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org,
+	Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+	robin.murphy@arm.com, chengyou@linux.alibaba.com,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	rdunlap@infradead.org, mark.rutland@arm.com,
+	zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v11 3/5] PCI: Move pci_clear_and_set_dword() helper to
+ PCI header
+Message-ID: <20231130183755.GA487634@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,41 +55,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f0844a59-7534-4195-b656-eb51586cbff6@starfivetech.com>
+In-Reply-To: <b2aeaf4-8960-8967-ce7b-663f9d77260@linux.intel.com>
 
-On Thu, Nov 30, 2023 at 06:03:55PM +0800, Kevin Xie wrote:
-> On 2023/11/30 7:21, Bjorn Helgaas wrote:
-> > On Fri, Nov 24, 2023 at 09:45:08AM +0800, Kevin Xie wrote:
-> >> Add the PCIE_CONFIG_REQUEST_WAIT_MS marco to define the minimum waiting
-> >> time between sending the first configuration request to the device and
-> >> exit from a conventional reset (or after link training completes).
+On Thu, Nov 30, 2023 at 12:52:20PM +0200, Ilpo Järvinen wrote:
+> On Wed, 29 Nov 2023, Bjorn Helgaas wrote:
+> > On Mon, Nov 27, 2023 at 09:34:05AM +0800, Shuai Xue wrote:
+> > > On 2023/11/22 21:14, Ilpo Järvinen wrote:
+> > > > On Tue, 21 Nov 2023, Shuai Xue wrote:
+> > > > 
+> > > >> The clear and set pattern is commonly used for accessing PCI config,
+> > > >> move the helper pci_clear_and_set_dword() from aspm.c into PCI header.
+> > > >> In addition, rename to pci_clear_and_set_config_dword() to retain the
+> > > >> "config" information and match the other accessors.
+> > > >>
+> > > >> No functional change intended.
+> 
+> > > >> +
+> > > >> +void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
+> > > >> +				    u32 clear, u32 set)
+> > > > 
+> > > > Just noting that annoyingly the ordering within the name is inconsistent 
+> > > > between:
+> > > >   pci_clear_and_set_config_dword()
+> > > > and
+> > > >   pcie_capability_clear_and_set_dword()
+> > > > 
+> > > > And if changed, it would be again annoyingly inconsistent with 
+> > > > pci_read/write_config_*(), oh well... And renaming pci_read/write_config_* 
+> > > > into the hierarchical pci_config_read/write_*() form for would touch only 
+> > > > ~6k lines... ;-D
+> > > 
+> > > I think it is a good question, but I don't have a clear answer. I don't
+> > > know much about the name history.  As you mentioned, the above two
+> > > accessors are the foundation operation, may it comes to @Bjorn decision.
+> > > 
+> > > The pci_clear_and_set_config_dword() is a variant of below pci accessors:
+> > > 
+> > >     pci_read_config_dword()
+> > >     pci_write_config_dword()
+> > > 
+> > > At last, they are consistent :)
 > > 
-> > s/marco/macro/
+> > "pcie_capability_clear_and_set_dword" is specific to the PCIe
+> > Capability, doesn't work for arbitrary config space, and doesn't
+> > include the word "config".
 > > 
-> > List the first event before the second one, i.e., the delay is from
-> > exit from reset to the config request.
+> > "pci_clear_and_set_config_dword" seems consistent with the arbitrary
+> > config space accessor pattern.
+> > 
+> > At least "clear_and_set" is consistent across both.
+> > 
+> > I'm not too bothered by the difference between "clear_and_set_dword"
+> > (for the PCIe capability) and "clear_and_set_config_dword" (for
+> > arbitrary things).
+> > 
+> > Yes, "pcie_capability_clear_and_set_config_dword" would be a little
+> > more consistent, but seems excessively wordy (no pun intended).
+> > 
+> > But maybe I'm missing your point, Ilpo.  If so, what would you
+> > propose?
 > 
-> OK，I will use "from A to B" instead of "between A and B".
-
-That's not my point.
-
-My point was you said "between B (config request) and A (exit from
-reset)".  "A" happens first, so it should be mentioned first.
-
-> > I assume there are follow-on patches that actually use this?  Can we
-> > make this the first patch in a series so we know we don't have an
-> > unused macro lying around?
+> What I was hoping for a way to (eventually) have consistency in naming 
+> like this (that is, the place where "config" or "capabilitity" appears 
+> in the name):
 > 
-> Yes, we will use the marco in the next version of our PCIe controller patches.
-> Here is the link of current version patch series:
-> https://lore.kernel.org/lkml/20231115114912.71448-20-minda.chen@starfivetech.com/T/#u 
-> 
-> Do you mean that I should put this patch back to the above series as
-> one of the separate patches?
+> pci_config_read_dword()
+> pci_config_clear_and_set_dword()
+> pcie_capability_read_dword()
+> pcie_capability_clear_and_set_dword()
 
-Yes, please.  Handling them as a group is less overhead and helps
-avoid merge issues (if they're all in a series there's no possibility
-that the user gets merged before the macro itself).
+Ah, I see, thanks.
+
+> But thanks to pci_read_config_dword() & friends being there since dawn of 
+> time and with 6k+ instances, I guess I'm just dreaming of impossible 
+> things.
+
+Yeah, I think so.
 
 Bjorn
 
