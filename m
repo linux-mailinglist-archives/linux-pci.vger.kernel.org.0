@@ -1,102 +1,99 @@
-Return-Path: <linux-pci+bounces-278-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C491E7FED8A
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 12:10:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E9967FED95
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 12:13:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 49D71B20BA1
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 11:10:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 555C41C20B53
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 11:13:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8198250F8;
-	Thu, 30 Nov 2023 11:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="C9dzChac"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183963C085;
+	Thu, 30 Nov 2023 11:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD5918E01
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 11:10:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A491AC433C8;
-	Thu, 30 Nov 2023 11:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1701342622;
-	bh=SjhlINoIwso49e7CMCFoGN/qtMdMriRoe6RxeuRtQik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C9dzChacAES531HEvRBhF4PlksKboYYXj6iZr4/Nfv68Pc1zacj1a5A7bUbDv7D09
-	 +4cM70at56yxNfqA2dIc5vLkInq04CdjMY5mcEP6pWIljlyVT0jS4vTmgj9hHHBskv
-	 IcdO0u8KfSarVg3hgSLQNZR5bQgetbIuegpAEURQ=
-Date: Thu, 30 Nov 2023 11:10:19 +0000
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	Wasim Khan <wasim.khan@nxp.com>, Wei Fang <wei.fang@nxp.com>,
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: Re: [PATCH pci] PCI: remove the PCI_VENDOR_ID_NXP alias
-Message-ID: <2023113014-preflight-roundish-d796@gregkh>
-References: <20231122154241.1371647-1-vladimir.oltean@nxp.com>
- <20231129233827.GA444332@bhelgaas>
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC1810D0;
+	Thu, 30 Nov 2023 03:13:12 -0800 (PST)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id 45F9524E052;
+	Thu, 30 Nov 2023 19:13:05 +0800 (CST)
+Received: from EXMBX172.cuchost.com (172.16.6.92) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 30 Nov
+ 2023 19:13:05 +0800
+Received: from [192.168.125.136] (113.72.145.176) by EXMBX172.cuchost.com
+ (172.16.6.92) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 30 Nov
+ 2023 19:13:04 +0800
+Message-ID: <78255041-47a3-4f52-97cd-83347c5813bd@starfivetech.com>
+Date: Thu, 30 Nov 2023 19:13:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231129233827.GA444332@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] PCI: Add PCIE_CONFIG_REQUEST_WAIT_MS waiting time
+ value
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <mason.huo@starfivetech.com>,
+	<leyfoon.tan@starfivetech.com>, <minda.chen@starfivetech.com>
+References: <20231129232219.GA444277@bhelgaas>
+From: Kevin Xie <kevin.xie@starfivetech.com>
+In-Reply-To: <20231129232219.GA444277@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX172.cuchost.com
+ (172.16.6.92)
+X-YovoleRuleAgent: yovoleflag
 
-On Wed, Nov 29, 2023 at 05:38:27PM -0600, Bjorn Helgaas wrote:
-> [+cc Greg because these mergers & spinoffs happen all the time, and
-> pci_ids.h doesn't necessarily need to keep up, so maybe there's
-> precedent for what to do here]
 
-Yes, the precedent is to leave it alone.
 
-> On Wed, Nov 22, 2023 at 05:42:41PM +0200, Vladimir Oltean wrote:
-> > What is today NXP is the result of some mergers (with Freescale) and
-> > spin-offs (from Philips).
-> > 
-> > New NXP hardware (for example NETC version 4.1 of the NXP i.MX95
-> > SoC) uses PCI_VENDOR_ID_PHILIPS. And some older hardware uses
-> > PCI_VENDOR_ID_FREESCALE.
-> > 
-> > If we have PCI_VENDOR_ID_NXP as an alias for PCI_VENDOR_ID_FREESCALE,
-> > we end up needing something like a PCI_VENDOR_ID_NXP2 alias for
-> > PCI_VENDOR_ID_PHILIPS. I think this is more confusing than just spelling
-> > out the vendor ID of the original company that claimed it.
-> > 
-> > FWIW, the pci.ids repository as of today has:
-> > 1131  Philips Semiconductors
-> > 1957  Freescale Semiconductor Inc
-> > 
-> > so this makes the kernel code consistent with that, and with what
-> > "lspci" prints.
+On 2023/11/30 7:22, Bjorn Helgaas wrote:
+> On Fri, Nov 24, 2023 at 09:45:08AM +0800, Kevin Xie wrote:
+>> Add the PCIE_CONFIG_REQUEST_WAIT_MS marco to define the minimum waiting
+>> time between sending the first configuration request to the device and
+>> exit from a conventional reset (or after link training completes).
+>> 
+>> As described in the conventional reset rules of PCI specifications,
+>> there are two different use cases of the value:
+>> 
+>>    - With a downstream port that supports link speeds <= 5.0 GT/s,
+>>      the waiting is following exit from a conventional reset.
+>> 
+>>    - With a downstream port that supports link speeds > 5.0 GT/s,
+>>      the waiting is after link training completes.
+>> 
+>> Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
+>> Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
+>> ---
+>>  drivers/pci/pci.h | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>> 
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 5ecbcf041179..4ca8766e546e 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -22,6 +22,13 @@
+>>   */
+>>  #define PCIE_PME_TO_L2_TIMEOUT_US	10000
+>>  
+>> +/*
+>> + * PCIe r6.0, sec 6.6.1, <Conventional Reset>
+>> + * Requires a minimum waiting of 100ms before sending a configuration
+>> + * request to the device.
+>> + */
+>> +#define PCIE_CONFIG_REQUEST_WAIT_MS	100
 > 
-> Hmm.  I can't find the 0x1957 Vendor ID here:
-> https://pcisig.com/membership/member-companies, which is supposed to
-> be the authoritative source AFAICS.
-> 
-> Also, that page lists 0x1131 as "NXP Semiconductors".
-> 
-> There's a contact email on that page if it needs updates.
-> 
-> I don't quite understand the goal here.  The company is now called
-> "NXP", and this patch removes PCI_VENDOR_ID_NXP (the only instance of
-> "NXP" in pci_ids.h) and uses PCI_VENDOR_ID_FREESCALE (which apparently
-> does not exist any more)?
-> 
-> Why would we remove name of the current company and use the name of a
-> company that doesn't exist any more?
+> Oh, and I think this name should include something about "reset"
+> because that's the common scenario and that's the spec section where
+> the value is mentioned.
 
-Yes, this seems very odd.  What is the reason for any of this other than
-marketing?  Kernel code doesn't do marketing :)
-
-thanks,
-
-greg k-h
+Agree, how about PCIE_RESET_CONFIG_DEVICE_WAIT_MS?
 
