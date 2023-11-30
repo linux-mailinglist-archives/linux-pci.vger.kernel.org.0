@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-295-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-296-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D69037FF67C
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 17:43:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBADD7FF6B5
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 17:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05A8B1C20FC6
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 16:43:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EA1E1F20F26
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 16:46:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F530524DE;
-	Thu, 30 Nov 2023 16:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7C347A71;
+	Thu, 30 Nov 2023 16:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HmxIyeJN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q4CuJY2c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DBBD50
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 08:43:34 -0800 (PST)
-Received: by mail-qk1-x72c.google.com with SMTP id af79cd13be357-77db736aae5so54135985a.0
-        for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 08:43:34 -0800 (PST)
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E2E1A3
+	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 08:46:24 -0800 (PST)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-67a295e40baso6561446d6.1
+        for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 08:46:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701362613; x=1701967413; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701362783; x=1701967583; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=RR929/inZVg6ya67dtiU9fWfLeIFrIte2BBVvFM3wXQ=;
-        b=HmxIyeJNVIfhI91z4I4taCKSgVTQAnVmw5/WZSg6X+OrUih1amauSkEyKTklWSn2vA
-         bRK95k8lXbk5fH6Cq8s81QRkZxuWP/81lq8aGrehCtld72wBsyYLcgq/8OnDlG1S13Up
-         FFzP0DFlgMped4sHRADVsGciyRGDzsGCRW0DdwXiXyih1m4JcLJ+ZDql8p+1LyGnx1ET
-         1LI4TQvT+1Sobs3dfKYJb9Yyzls4FUC63lSCgQpWCJU5JOuYFGDRK0KLTddcv4B4JBUd
-         qVzHakvPQNJfKGfJgT7qG3WPWY6srlppdWbeQkdaqgeWowI7/9tuHYRIISpWMS8ftTfw
-         N1HA==
+        bh=kjHz7y8FdABfzePSYWvG3C7LR0AsyMP0bJ41uTORMXU=;
+        b=q4CuJY2cIM/u1JfDIjIKi03c4r3KcjRzIjZ8Zgnkf6wPkHSciSG4iludWQAjzmB7Lc
+         ggeZaVPPNJ0Lse0yjBMqv/oMn59kUc7wcS3kZ80kS0+aclPP6lA7ivkY21KAtub87HzZ
+         wTrUhaJPx+XI1Ip0+9SWjMsiITUmMCfCAVKRmizHq6ANLyafDFl/SYUDMK7KasdHXhuw
+         wybWDc8W22CQ7PFqeaoKMDRNetF7W46uFTX8hyBjQoxtfXlb0hA2oieiknW9OVwH62mk
+         Ts2LfQZPk/IYH0fplV23MTXxRx3hTTLMRbG3NGIE+FA0KbVWyQsQs1al0jm4zPNkih8G
+         2p2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701362613; x=1701967413;
+        d=1e100.net; s=20230601; t=1701362783; x=1701967583;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RR929/inZVg6ya67dtiU9fWfLeIFrIte2BBVvFM3wXQ=;
-        b=rgHodZTNuIY2/d/AYgYQyWOluJ6BSkLxAhw8VAY87u7EDaKItCEz0duybQG78sxwh9
-         xJ26Ta+jB5WOOuhqjze5gUutpDXlZEIc9ZZL93IQr1nKa+0sS0wsck+rMzhKbrgOL8Qc
-         80qsJzlFevwFqyja18xFpApkIVh/N5FsSyaCecLKXPyjcngW9Q97Ofu4nKfraZZk7TRl
-         IwtA9iUW9sFXUAP/7gyC5LiO8ZlYDcjI7Gv1D8uWKcmdHJ3h1s1DUXl3yy3MAriUmJC9
-         0ifCew6WDicK2vQspULEYY+0Ry3Z58RN9lP9feAtSwkMJcEoE8LgiO62ro0yUroYu22x
-         2c7g==
-X-Gm-Message-State: AOJu0Yx12uDwYO9Z2whEjd6iIvjBAkGrQrTwl1UbNbVV9XLlkrmgmw8N
-	3RRdS7cAI6yqnN8z/rL2rDUo
-X-Google-Smtp-Source: AGHT+IH4fdEjtTxeNLnBTzLGisqbKQLWEsMOBV/mouxbIc6qh43GktT+t9VymOEMBtx9xmzDq1qiMw==
-X-Received: by 2002:a05:620a:269d:b0:77d:9dc9:cd05 with SMTP id c29-20020a05620a269d00b0077d9dc9cd05mr16628267qkp.11.1701362613426;
-        Thu, 30 Nov 2023 08:43:33 -0800 (PST)
+        bh=kjHz7y8FdABfzePSYWvG3C7LR0AsyMP0bJ41uTORMXU=;
+        b=W5jGwkznz3oEbaLO3ptDfACozSAfQ8w34O76djnwQZQs47yLqcCSE/1eBtCEjIHTTX
+         jCyvAeoTRoJ2ula8E02mB4tGblH5rJuQ0rauKZeXsJd5Tj+oca4Cmj+IU/BW+0eQsM8P
+         tm0gjchkQtmadtQCD4bGN6GcmGyipV2FlT2d7qwloBRZzE7lEAWE5xKm8tKP6NB+Ib1P
+         a78JcT0HHTeSeldfQ7fd+3F6ypes6eS4PM/ogXnAzP0BYosVSVjdtO4JowdIprCbvhj1
+         W4zliWmQrBD9VEaV+J49KeCOuVfAsPJktyFo3ZGfGZ4wP3maGhU72USjU/QX5ecS07GW
+         q4sg==
+X-Gm-Message-State: AOJu0YwrUKtHKTSCm6CHM44JgaRlpv2TbxEyMSdcinBmO3imGmGm5OW7
+	ADzLhbp84HgjOdlqPLzSlbEW
+X-Google-Smtp-Source: AGHT+IGr+FYWyq9x/hJmkOaCYSyPqI1d2GXxR9QhDtHyNIh5/ut2psmnppxw1XpPHzUoptuB8eT7og==
+X-Received: by 2002:a05:6214:cce:b0:67a:1580:d7c3 with SMTP id 14-20020a0562140cce00b0067a1580d7c3mr35231818qvx.58.1701362783244;
+        Thu, 30 Nov 2023 08:46:23 -0800 (PST)
 Received: from thinkpad ([117.213.102.92])
-        by smtp.gmail.com with ESMTPSA id bm27-20020a05620a199b00b0077da0832d6csm639505qkb.22.2023.11.30.08.43.28
+        by smtp.gmail.com with ESMTPSA id h29-20020a0cab1d000000b0067a2a0b44ddsm650581qvb.44.2023.11.30.08.46.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 08:43:32 -0800 (PST)
-Date: Thu, 30 Nov 2023 22:13:23 +0530
+        Thu, 30 Nov 2023 08:46:22 -0800 (PST)
+Date: Thu, 30 Nov 2023 22:16:12 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
@@ -61,10 +61,10 @@ Cc: bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
 	linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
 	robh@kernel.org, roy.zang@nxp.com
-Subject: Re: [PATCH v4 2/4] PCI: layerscape: Add suspend/resume for ls1021a
-Message-ID: <20231130164323.GT3043@thinkpad>
+Subject: Re: [PATCH v4 3/4] PCI: layerscape: Rename pf_* as pf_lut_*
+Message-ID: <20231130164612.GU3043@thinkpad>
 References: <20231129214412.327633-1-Frank.Li@nxp.com>
- <20231129214412.327633-3-Frank.Li@nxp.com>
+ <20231129214412.327633-4-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,202 +74,145 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231129214412.327633-3-Frank.Li@nxp.com>
+In-Reply-To: <20231129214412.327633-4-Frank.Li@nxp.com>
 
-On Wed, Nov 29, 2023 at 04:44:10PM -0500, Frank Li wrote:
-> ls1021a add suspend/resume support.
+On Wed, Nov 29, 2023 at 04:44:11PM -0500, Frank Li wrote:
+> 'pf' and 'lut' is just difference name in difference chips, but basic it is
+> a MMIO base address plus an offset.
 > 
-
-"Add suspend/resume support for Layerscape LS1021a"
-
-> In the suspend path, PME_Turn_Off message is sent to the endpoint to
-> transition the link to L2/L3_Ready state. In this SoC, there is no way to
-> check if the controller has received the PME_To_Ack from the endpoint or
-> not. So to be on the safer side, the driver just waits for
-> PCIE_PME_TO_L2_TIMEOUT_US before asserting the SoC specific PMXMTTURNOFF
-> bit to complete the PME_Turn_Off handshake. This link would then enter
-
-"Then the link would enter L2/L3 state depending on the VAUX supply."
-
-> L2/L3 state depending on the VAUX supply.
-> 
-> In the resume path, the link is brought back from L2 to L0 by doing a
-> software reset.
+> Rename it to avoid duplicate pf_* and lut_* in driver.
 > 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Couple of comments below. But the patch is looking good now. Thanks for the
-update.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Can you fix the name in pci-layerscape-ep.c also?
+
+- Mani
 
 > ---
 > 
 > Notes:
->     Change from v3 to v4
->     - update commit message.
->     - it is reset a glue logic part for PCI controller.
->     - use regmap_write_bits() to reduce code change.
+>     pf_lut is better than pf_* or lut* because some chip use 'pf', some chip
+>     use 'lut'.
 >     
->     Change from v2 to v3
->     - update according to mani's feedback
->     change from v1 to v2
->     - change subject 'a' to 'A'
+>     change from v1 to v4
+>     - new patch at v3
 > 
->  drivers/pci/controller/dwc/pci-layerscape.c | 83 ++++++++++++++++++++-
->  1 file changed, 82 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pci-layerscape.c | 34 ++++++++++-----------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index aea89926bcc4f..42bca2c3b5c3e 100644
+> index 42bca2c3b5c3e..590e07bb27002 100644
 > --- a/drivers/pci/controller/dwc/pci-layerscape.c
 > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -35,11 +35,19 @@
->  #define PF_MCR_PTOMR		BIT(0)
->  #define PF_MCR_EXL2S		BIT(1)
->  
-> +/* LS1021A PEXn PM Write Control Register */
-> +#define SCFG_PEXPMWRCR(idx)	(0x5c + (idx) * 0x64)
-> +#define PMXMTTURNOFF		BIT(31)
-> +#define SCFG_PEXSFTRSTCR	0x190
-> +#define PEXSR(idx)		BIT(idx)
-> +
+> @@ -44,7 +44,7 @@
 >  #define PCIE_IATU_NUM		6
 >  
 >  struct ls_pcie_drvdata {
->  	const u32 pf_off;
-> +	const struct dw_pcie_host_ops *ops;
+> -	const u32 pf_off;
+> +	const u32 pf_lut_off;
+>  	const struct dw_pcie_host_ops *ops;
 >  	int (*exit_from_l2)(struct dw_pcie_rp *pp);
-> +	bool scfg_support;
->  	bool pm_support;
->  };
->  
-> @@ -47,6 +55,8 @@ struct ls_pcie {
+>  	bool scfg_support;
+> @@ -54,13 +54,13 @@ struct ls_pcie_drvdata {
+>  struct ls_pcie {
 >  	struct dw_pcie *pci;
 >  	const struct ls_pcie_drvdata *drvdata;
->  	void __iomem *pf_base;
-> +	struct regmap *scfg;
-> +	int index;
+> -	void __iomem *pf_base;
+> +	void __iomem *pf_lut_base;
+>  	struct regmap *scfg;
+>  	int index;
 >  	bool big_endian;
 >  };
 >  
-> @@ -171,13 +181,65 @@ static int ls_pcie_host_init(struct dw_pcie_rp *pp)
->  	return 0;
+> -#define ls_pcie_pf_readl_addr(addr)	ls_pcie_pf_readl(pcie, addr)
+> +#define ls_pcie_pf_lut_readl_addr(addr)	ls_pcie_pf_lut_readl(pcie, addr)
+>  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  static bool ls_pcie_is_bridge(struct ls_pcie *pcie)
+> @@ -101,20 +101,20 @@ static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
+>  	iowrite32(PCIE_ABSERR_SETTING, pci->dbi_base + PCIE_ABSERR);
 >  }
 >  
-> +static void scfg_pcie_send_turnoff_msg(struct regmap *scfg, u32 reg, u32 mask)
-> +{
-> +	/* Send PME_Turn_Off message */
-> +	regmap_write_bits(scfg, reg, mask, mask);
-> +
-> +	/*
-> +	 * There is no specific register to check for PME_To_Ack from endpoint.
-> +	 * So on the safe side, wait for PCIE_PME_TO_L2_TIMEOUT_US.
-> +	 */
-> +	mdelay(PCIE_PME_TO_L2_TIMEOUT_US/1000);
-> +
-> +	/*
-> +	 * Layerscape hardware reference manual recommends clearing the PMXMTTURNOFF bit
-> +	 * to complete the PME_Turn_Off handshake.
-> +	 */
-> +	regmap_write_bits(scfg, reg, mask, 0);
-> +}
-> +
-> +static void ls1021a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +
-> +	scfg_pcie_send_turnoff_msg(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), PMXMTTURNOFF);
-> +}
-> +
-> +static int scfg_pcie_exit_from_l2(struct regmap *scfg, u32 reg, u32 mask)
-> +{
-> +	/* Only way exit from l2 is that do software reset */
-
-"Only way exit from L2 is by doing a software reset of the controller"
-
-I really hope that the reset is not a global controller reset i.e., not
-resetting all CSRs.
-
-> +	regmap_write_bits(scfg, reg, mask, mask);
-> +
-
-No need of a newline.
-
-> +	regmap_write_bits(scfg, reg, mask, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ls1021a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +
-> +	return scfg_pcie_exit_from_l2(pcie->scfg, SCFG_PEXSFTRSTCR, PEXSR(pcie->index));
-> +}
-> +
->  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
->  	.host_init = ls_pcie_host_init,
->  	.pme_turn_off = ls_pcie_send_turnoff_msg,
->  };
+> -static u32 ls_pcie_pf_readl(struct ls_pcie *pcie, u32 off)
+> +static u32 ls_pcie_pf_lut_readl(struct ls_pcie *pcie, u32 off)
+>  {
+>  	if (pcie->big_endian)
+> -		return ioread32be(pcie->pf_base + off);
+> +		return ioread32be(pcie->pf_lut_base + off);
 >  
-> +static const struct dw_pcie_host_ops ls1021a_pcie_host_ops = {
-> +	.host_init = ls_pcie_host_init,
-> +	.pme_turn_off = ls1021a_pcie_send_turnoff_msg,
-> +};
-> +
->  static const struct ls_pcie_drvdata ls1021a_drvdata = {
-> -	.pm_support = false,
-> +	.pm_support = true,
-> +	.scfg_support = true,
-> +	.ops = &ls1021a_pcie_host_ops,
-> +	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
+> -	return ioread32(pcie->pf_base + off);
+> +	return ioread32(pcie->pf_lut_base + off);
+>  }
+>  
+> -static void ls_pcie_pf_writel(struct ls_pcie *pcie, u32 off, u32 val)
+> +static void ls_pcie_pf_lut_writel(struct ls_pcie *pcie, u32 off, u32 val)
+>  {
+>  	if (pcie->big_endian)
+> -		iowrite32be(val, pcie->pf_base + off);
+> +		iowrite32be(val, pcie->pf_lut_base + off);
+>  	else
+> -		iowrite32(val, pcie->pf_base + off);
+> +		iowrite32(val, pcie->pf_lut_base + off);
+>  }
+>  
+>  static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> @@ -124,11 +124,11 @@ static void ls_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+>  	u32 val;
+>  	int ret;
+>  
+> -	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_PF_MCR);
+>  	val |= PF_MCR_PTOMR;
+> -	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_PF_MCR, val);
+>  
+> -	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +	ret = readx_poll_timeout(ls_pcie_pf_lut_readl_addr, LS_PCIE_PF_MCR,
+>  				 val, !(val & PF_MCR_PTOMR),
+>  				 PCIE_PME_TO_L2_TIMEOUT_US/10,
+>  				 PCIE_PME_TO_L2_TIMEOUT_US);
+> @@ -147,15 +147,15 @@ static int ls_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+>  	 * Set PF_MCR_EXL2S bit in LS_PCIE_PF_MCR register for the link
+>  	 * to exit L2 state.
+>  	 */
+> -	val = ls_pcie_pf_readl(pcie, LS_PCIE_PF_MCR);
+> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_PF_MCR);
+>  	val |= PF_MCR_EXL2S;
+> -	ls_pcie_pf_writel(pcie, LS_PCIE_PF_MCR, val);
+> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_PF_MCR, val);
+>  
+>  	/*
+>  	 * L2 exit timeout of 10ms is not defined in the specifications,
+>  	 * it was chosen based on empirical observations.
+>  	 */
+> -	ret = readx_poll_timeout(ls_pcie_pf_readl_addr, LS_PCIE_PF_MCR,
+> +	ret = readx_poll_timeout(ls_pcie_pf_lut_readl_addr, LS_PCIE_PF_MCR,
+>  				 val, !(val & PF_MCR_EXL2S),
+>  				 1000,
+>  				 10000);
+> @@ -243,7 +243,7 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
 >  };
 >  
 >  static const struct ls_pcie_drvdata layerscape_drvdata = {
-> @@ -205,6 +267,8 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	struct dw_pcie *pci;
->  	struct ls_pcie *pcie;
->  	struct resource *dbi_base;
-> +	u32 index[2];
-> +	int ret;
+> -	.pf_off = 0xc0000,
+> +	.pf_lut_off = 0xc0000,
+>  	.pm_support = true,
+>  	.exit_from_l2 = ls_pcie_exit_from_l2,
+>  };
+> @@ -293,7 +293,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
 >  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->  	if (!pcie)
-> @@ -220,6 +284,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	pci->pp.ops = &ls_pcie_host_ops;
+>  	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
 >  
->  	pcie->pci = pci;
-> +	pci->pp.ops = pcie->drvdata->ops ? pcie->drvdata->ops : &ls_pcie_host_ops;
-
-pp.ops is already assigned to &ls_pcie_host_ops above. But I think for
-consistency, you should pass ls_pcie_host_ops to the "ops" member of
-layerscape_drvdata and just use:
-
-	pci->pp.ops = pcie->drvdata->ops;
-
-It looks a lot cleaner.
-
+> -	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
+> +	pcie->pf_lut_base = pci->dbi_base + pcie->drvdata->pf_lut_off;
 >  
->  	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
->  	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> @@ -230,6 +295,22 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  
->  	pcie->pf_base = pci->dbi_base + pcie->drvdata->pf_off;
->  
-> +	if (pcie->drvdata->scfg_support) {
-> +		pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,pcie-scfg");
-> +		if (IS_ERR(pcie->scfg)) {
-> +			dev_err(dev, "No syscfg phandle specified\n");
-> +			return PTR_ERR(pcie->scfg);
-> +		}
-> +
-> +		ret = of_property_read_u32_array(dev->of_node, "fsl,pcie-scfg", index, 2);
-> +		if (ret) {
-> +			pcie->scfg = NULL;
-
-No need to set it to NULL in the case of probe failure.
-
-- Mani
+>  	if (pcie->drvdata->scfg_support) {
+>  		pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,pcie-scfg");
+> -- 
+> 2.34.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
