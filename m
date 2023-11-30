@@ -1,152 +1,125 @@
-Return-Path: <linux-pci+bounces-276-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-277-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B7087FED52
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 11:52:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B30A47FED86
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 12:09:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE3181F20EE7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 10:52:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E557D1C20DF9
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 11:09:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 401C83984C;
-	Thu, 30 Nov 2023 10:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C46B3C07D;
+	Thu, 30 Nov 2023 11:09:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AfEDkE60"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYzBZDxD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32105E6;
-	Thu, 30 Nov 2023 02:52:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701341548; x=1732877548;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2Loo84863mYt3Lh6biFrQxyHbhYSnUO9o1Ffbl3PYZc=;
-  b=AfEDkE60VoTkDwD5QeHJyfmpVCKzjpFS6S8g+FeCWGYXMvkbYDXEGZXO
-   cdChDKp/668eMINXNPkDB0DIFOGoIFsRDVSo26XTG3qWOKcsobWvHfUj9
-   JWfKWBl++lcLNAUlZel4xx+WT5qJfQJ7GEtu3wHz97laiIUmLTJ8E+vOP
-   c6HTR4MlgzzFyf1Fovcox7uCa36PhSYL6SI4Orh3foatB29cgxpKu80TI
-   Nt0ZaUby2Xd0AorHuGiKEJx0Iqlzt16GzBWbE/lsHebMCbYsluG5PPu14
-   gOv7+1uk02sGoNCxfhDlB1Gu3kyIK++fBkWsgFx7zqHZ2LPVnNm1Sl3Mp
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="392171351"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="392171351"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 02:52:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="745594631"
-X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="745594631"
-Received: from bergler-mobl.ger.corp.intel.com ([10.249.33.30])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 02:52:23 -0800
-Date: Thu, 30 Nov 2023 12:52:20 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Shuai Xue <xueshuai@linux.alibaba.com>, ilkka@os.amperecomputing.com, 
-    kaishen@linux.alibaba.com, yangyicong@huawei.com, will@kernel.org, 
-    Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com, 
-    robin.murphy@arm.com, chengyou@linux.alibaba.com, 
-    LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, 
-    linux-pci@vger.kernel.org, rdunlap@infradead.org, mark.rutland@arm.com, 
-    zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
-Subject: Re: [PATCH v11 3/5] PCI: Move pci_clear_and_set_dword() helper to
- PCI header
-In-Reply-To: <20231129231555.GA443895@bhelgaas>
-Message-ID: <b2aeaf4-8960-8967-ce7b-663f9d77260@linux.intel.com>
-References: <20231129231555.GA443895@bhelgaas>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE1C3067F;
+	Thu, 30 Nov 2023 11:09:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2070EC433C7;
+	Thu, 30 Nov 2023 11:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701342562;
+	bh=Ru4WQmcJUKrycn4IJ/0atltkGnWEKud46x+afC3D4ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OYzBZDxDRw0pSYCLScCWeeGgqgDTVIqDbXAuhJIvEfYo0ielkyz2KFHq3b9qfxKGV
+	 rV9EPS9Bifaidvw4JJetCCRXy7L3tfoUEDe7W5l4bdOzqiSt3YIOKJGd4TBORIZrMv
+	 7lbdAYMv01VGCOIk2CgfYHVjCQnw9Wz4E170T+mnh+XQF/qD8SNfovvG8Wlh7RBaGP
+	 Ee0dKV0IBoFoJ7+s7pqsBsGaxTtRqf5APKKKIvdGa2F0yPbmq6x0J9rKTD0SrZ2SlK
+	 Uel90TkuVj2/IuJt8JyX3gMtk5FbTG3A75j1M/KJpdF9omBE8DrWp1QjPrU1+JDbyC
+	 mb1DSAQS9rPDw==
+Date: Thu, 30 Nov 2023 16:39:09 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>, agross@kernel.org,
+	andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, robh+dt@kernel.org, quic_shazhuss@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org,
+	robh@kernel.org, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+	quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
+Message-ID: <20231130110909.GQ3043@thinkpad>
+References: <1700577493-18538-1-git-send-email-quic_msarkar@quicinc.com>
+ <1700577493-18538-2-git-send-email-quic_msarkar@quicinc.com>
+ <20231130052116.GA3043@thinkpad>
+ <a9c2532a-eaa6-4019-8ce9-5a58b1b720b2@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1899874312-1701341547=:1808"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1899874312-1701341547=:1808
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a9c2532a-eaa6-4019-8ce9-5a58b1b720b2@linaro.org>
 
-On Wed, 29 Nov 2023, Bjorn Helgaas wrote:
-
-> On Mon, Nov 27, 2023 at 09:34:05AM +0800, Shuai Xue wrote:
-> > On 2023/11/22 21:14, Ilpo Järvinen wrote:
-> > > On Tue, 21 Nov 2023, Shuai Xue wrote:
-> > > 
-> > >> The clear and set pattern is commonly used for accessing PCI config,
-> > >> move the helper pci_clear_and_set_dword() from aspm.c into PCI header.
-> > >> In addition, rename to pci_clear_and_set_config_dword() to retain the
-> > >> "config" information and match the other accessors.
-> > >>
-> > >> No functional change intended.
-
-> > >> +
-> > >> +void pci_clear_and_set_config_dword(const struct pci_dev *dev, int pos,
-> > >> +				    u32 clear, u32 set)
-> > > 
-> > > Just noting that annoyingly the ordering within the name is inconsistent 
-> > > between:
-> > >   pci_clear_and_set_config_dword()
-> > > and
-> > >   pcie_capability_clear_and_set_dword()
-> > > 
-> > > And if changed, it would be again annoyingly inconsistent with 
-> > > pci_read/write_config_*(), oh well... And renaming pci_read/write_config_* 
-> > > into the hierarchical pci_config_read/write_*() form for would touch only 
-> > > ~6k lines... ;-D
+On Thu, Nov 30, 2023 at 11:09:59AM +0100, Konrad Dybcio wrote:
+> On 30.11.2023 06:21, Manivannan Sadhasivam wrote:
+> > On Tue, Nov 21, 2023 at 08:08:11PM +0530, Mrinmay Sarkar wrote:
+> >> In a multiprocessor system cache snooping maintains the consistency
+> >> of caches. Snooping logic is disabled from HW on this platform.
+> >> Cache coherency doesn’t work without enabling this logic.
+> >>
+> >> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
+> >> platform. Assign no_snoop_override flag into struct qcom_pcie_cfg and
+> >> set it true in cfg_1_34_0 and enable cache snooping if this particular
+> >> flag is true.
+> >>
 > > 
-> > I think it is a good question, but I don't have a clear answer. I don't
-> > know much about the name history.  As you mentioned, the above two
-> > accessors are the foundation operation, may it comes to @Bjorn decision.
-> > 
-> > The pci_clear_and_set_config_dword() is a variant of below pci accessors:
-> > 
-> >     pci_read_config_dword()
-> >     pci_write_config_dword()
-> > 
-> > At last, they are consistent :)
+> > I just happen to check the internal register details of other platforms and I
+> > see this PCIE_PARF_NO_SNOOP_OVERIDE register with the reset value of 0x0. So
+> > going by the logic of this patch, this register needs to be configured for other
+> > platforms as well to enable cache coherency, but it seems like not the case as
+> > we never did and all are working fine (so far no issues reported).
 > 
-> "pcie_capability_clear_and_set_dword" is specific to the PCIe
-> Capability, doesn't work for arbitrary config space, and doesn't
-> include the word "config".
+> Guess we know that already [1]
 > 
-> "pci_clear_and_set_config_dword" seems consistent with the arbitrary
-> config space accessor pattern.
-> 
-> At least "clear_and_set" is consistent across both.
-> 
-> I'm not too bothered by the difference between "clear_and_set_dword"
-> (for the PCIe capability) and "clear_and_set_config_dword" (for
-> arbitrary things).
-> 
-> Yes, "pcie_capability_clear_and_set_config_dword" would be a little
-> more consistent, but seems excessively wordy (no pun intended).
-> 
-> But maybe I'm missing your point, Ilpo.  If so, what would you
-> propose?
 
-What I was hoping for a way to (eventually) have consistency in naming 
-like this (that is, the place where "config" or "capabilitity" appears 
-in the name):
+Bummer! I didn't look close into that reply :/
 
-pci_config_read_dword()
-pci_config_clear_and_set_dword()
-pcie_capability_read_dword()
-pcie_capability_clear_and_set_dword()
+> The question is whether this override is necessary, or the default
+> internal state is OK on other platforms
+> 
 
-(+ the omitted clear/set/write & size variants)
+I digged into it further...
 
-But thanks to pci_read_config_dword() & friends being there since dawn of 
-time and with 6k+ instances, I guess I'm just dreaming of impossible 
-things.
+The register description says "Enable this bit x to override no_snoop". So
+NO_SNOOP is the default behavior unless bit x is set in this register.
+
+This means if bit x is set, MRd and MWd TLPs originating from the desired PCIe
+controller (Requester) will have the NO_SNOOP bit set in the header. So the
+completer will not do any cache management for the transaction. But this also
+requires that the address referenced by the TLP is not cacheable.
+
+My guess here is that, hw designers have enabled the NO_SNOOP logic by default
+and running into coherency issues on the completer side. Maybe due to the
+addresses are cacheable always (?).
+
+And the default value of this register has no impact on the NO_SNOOP attribute
+unless specific bits are set.
+
+But I need to confirm my above observations with HW team. Until then, I will
+hold on to my Nack.
+
+- Mani
+
+> Konrad
+> 
+> [1] https://lore.kernel.org/linux-arm-msm/cb4324aa-8035-ce6e-94ef-a31ed070225c@quicinc.com/
 
 -- 
- i.
-
---8323329-1899874312-1701341547=:1808--
+மணிவண்ணன் சதாசிவம்
 
