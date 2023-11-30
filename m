@@ -1,145 +1,235 @@
-Return-Path: <linux-pci+bounces-287-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-282-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EE527FF0C4
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 14:52:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42E827FF039
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 14:34:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0BECD282026
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 13:52:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 417BA1C20BC5
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 13:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED3246553;
-	Thu, 30 Nov 2023 13:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t1yYNzad"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1632447A6D;
+	Thu, 30 Nov 2023 13:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A7A19F
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 05:52:29 -0800 (PST)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231130135226epoutp0335ab369a822c6622ba6c1e1682cf54fb~cavH11r4i2674226742epoutp03r
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 13:52:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231130135226epoutp0335ab369a822c6622ba6c1e1682cf54fb~cavH11r4i2674226742epoutp03r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701352346;
-	bh=Rb6ZYEMC2CZ1FlgIe8RrGVYfBR7ZO2OCDhKB4oyvqXw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t1yYNzadguXgU9y3JElAJc7xxwaPR1YPiniruWf+ewezNjVEm/Y1WiZuwKMYnyxCm
-	 wStMk1Yaf5TBibfLU5zTa0/7sLyZ3Wyx8ysT8B27RcAMCIcwEYy5UJxJX44akFpUth
-	 zB8dpBFg42tUEQ2G37eKaQgQX2wAu2+vy9dWCmNM=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20231130135225epcas5p30d8e4dbae3799ca0fdf09b1341c6234d~cavHLq4Jr2082920829epcas5p3N;
-	Thu, 30 Nov 2023 13:52:25 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4SgyLJ1fzNz4x9Pq; Thu, 30 Nov
-	2023 13:52:24 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	26.07.10009.89398656; Thu, 30 Nov 2023 22:52:24 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231130115113epcas5p4bcd4ffb2baac60a0be51d6a3cb15c2a6~cZFSHGlY42306823068epcas5p4M;
-	Thu, 30 Nov 2023 11:51:13 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231130115113epsmtrp15dc97bfd502f53d71aad80eac517fdab~cZFSGAqKE1720317203epsmtrp1-;
-	Thu, 30 Nov 2023 11:51:13 +0000 (GMT)
-X-AuditID: b6c32a4a-ff1ff70000002719-87-656893989b87
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	02.A1.18939.13778656; Thu, 30 Nov 2023 20:51:13 +0900 (KST)
-Received: from cheetah.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20231130115111epsmtip1e774433553d715866892e41b465dc782~cZFQJB3Yi1251512515epsmtip1Y;
-	Thu, 30 Nov 2023 11:51:11 +0000 (GMT)
-From: Shradha Todi <shradha.t@samsung.com>
-To: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
-	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com, pankaj.dubey@samsung.com
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Shradha Todi
-	<shradha.t@samsung.com>
-Subject: [PATCH v2 3/3] PCI: dwc: Create debugfs files in DWC driver
-Date: Thu, 30 Nov 2023 17:20:44 +0530
-Message-Id: <20231130115044.53512-4-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231130115044.53512-1-shradha.t@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGJsWRmVeSWpSXmKPExsWy7bCmpu6MyRmpBk/2slssacqw2HW3g91i
-	1ra5jBYrvsxkt/i/IN+ioec3q8XlXXPYLM7OO85m0fKnhcWi5Wg7i8Xdlk5Wi0VbvwCV7dnB
-	btF7uNaBz2PnrLvsHgs2lXrcem3rsWlVJ5vHnWt72DyeXJnO5LHx3Q4mj74tqxg9tuz/zOjx
-	eZNcAFdUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO
-	0PVKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnAKTAr3ixNzi0rx0vbzUEitDAwMj
-	U6DChOyMP+u72AomsVccut3I3MDYydbFyMEhIWAicb3ZtYuRi0NIYDejxLm+LjYI5xOjxOnF
-	m5jgnMbJ94EcTrCON9snsIHYQgI7GSU2rS+HKGplkrgw8RQLSIJNQEui8WsXM0hCRKCLSeLR
-	ipPsIAlmgWSJef13mEB2Cwu4SKy9awwSZhFQlejcdAZsAa+AlcSexT/ZIJbJS6zecIAZxOYU
-	sJZ4tuoKI8hMCYFeDonzu56wQxS5SPRufcsCYQtLvDq+BSouJfGyvw3KTpdYuXkGM4SdI/Ft
-	8xKob+wlDlyZwwJyD7OApsT6XfoQYVmJqafWMUGczCfR+/sJVDmvxI55MLayxJe/e6DWSkrM
-	O3aZFcL2kHiy/j005PoYJRbs3M04gVFuFsKKBYyMqxglUwuKc9NTi00LjPJSy+GRlpyfu4kR
-	nEC1vHYwPnzwQe8QIxMH4yFGCQ5mJRHe60/TU4V4UxIrq1KL8uOLSnNSiw8xmgIDcCKzlGhy
-	PjCF55XEG5pYGpiYmZmZWBqbGSqJ875unZsiJJCeWJKanZpakFoE08fEwSnVwFQXOMkg27v5
-	yepL3QfjLm5Kq1A+dvPBv6x7M1TOcRvn37nieed31va750s75a8znbvxaIfmPZ9bp3nYm2z0
-	u1inWP1N8tR8/6VEP1GwcumuiyJPHRp2cTROX/xOd9bM6089QtV3dVy6+anzjmjFD9ulKi+N
-	9bIPhvpUXWhU6zaaqHGo0kfvguU7F/0FSQITWqZyXbnsdPhQ4rOPJnv1LNc6aRbHNO6o3yX+
-	dXHqGu7c+k7vJpftXOfYog9c86svt15r/FNmvl2ywcvXE0NyH23cuMU7SfnKkycJ51wXSHyu
-	SBH/lPO8/rdRxdfp29+ktlY9K157SC35eL+J9uMTMy4lH7q1TGGzyT92yUImlSQlluKMREMt
-	5qLiRADiCo8TKQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSnK5heUaqwdoOMYslTRkWu+52sFvM
-	2jaX0WLFl5nsFv8X5Fs09Pxmtbi8aw6bxdl5x9ksWv60sFi0HG1nsbjb0slqsWjrF6CyPTvY
-	LXoP1zrweeycdZfdY8GmUo9br209Nq3qZPO4c20Pm8eTK9OZPDa+28Hk0bdlFaPHlv2fGT0+
-	b5IL4IrisklJzcksSy3St0vgyvizvoutYBJ7xaHbjcwNjJ1sXYycHBICJhJvtk8As4UEtjNK
-	LN8uBhGXlPh8cR0ThC0ssfLfc3aImmYmiXcvPEFsNgEticavXcxdjFwcIgIzmCRauu+zgCSY
-	BVIlbh+eAzSUg0NYwEVi7V1jkDCLgKpE56YzYDN5Bawk9iz+CXWDvMTqDQeYQWxOAWuJZ6uu
-	MELsspJY9OsH8wRGvgWMDKsYRVMLinPTc5MLDPWKE3OLS/PS9ZLzczcxggNbK2gH47L1f/UO
-	MTJxMB5ilOBgVhLhvf40PVWINyWxsiq1KD++qDQntfgQozQHi5I4r3JOZ4qQQHpiSWp2ampB
-	ahFMlomDU6qBqV12n9he159ys6eyTuRr5Eyp3hd6TVqkX9D7s81Wdq5LR6afmsefEHdkNbP4
-	/+jc6ef+/vxXYefzIn97cLvWtLsaJ/pmPEs8J5t7WDF6UtOxCcxJtvLXp+tLvHFg1bKVdn63
-	3f7UrGtpjjeq3iavqO43u1PzeQIvb7AJ20z7h9GvDir/33rkt2f3//OfH+3kWaJ8UF1d4u9s
-	Xf38bdJi9rO3HE+9qLmff313/SeW8xkXNLovMn3JOmCnnllu9Zdx/a7DmyyX3EjRb/mXknmy
-	/LSCvdqy1EnTPon8ujvzwPNd+UFBp+dfTxKf59ca6plclrE6ymC3C094mfLmmmlOde4FLUVc
-	6Xcy1Vctfm5uocRSnJFoqMVcVJwIABe/IhXbAgAA
-X-CMS-MailID: 20231130115113epcas5p4bcd4ffb2baac60a0be51d6a3cb15c2a6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231130115113epcas5p4bcd4ffb2baac60a0be51d6a3cb15c2a6
-References: <20231130115044.53512-1-shradha.t@samsung.com>
-	<CGME20231130115113epcas5p4bcd4ffb2baac60a0be51d6a3cb15c2a6@epcas5p4.samsung.com>
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB2D90;
+	Thu, 30 Nov 2023 05:34:30 -0800 (PST)
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3b89d4be037so158253b6e.0;
+        Thu, 30 Nov 2023 05:34:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701351270; x=1701956070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GsSkd9Z+ooFtNFrUCB0W0bjBZ4BzCMhvYDCWIVJBLa0=;
+        b=OMN0Ljvg91iW3CvtWNjas0gVXQB6QkEjxF+to9Jefve1d83o7TYJY3Bdk6URSpZeZw
+         7DWcsG+5jBquzOQ4enbR6yChDZfe93P9gzFQXub5/sBLOxe18ZkL3U2VI4Q/Pv/IqIPm
+         xDPq6cpYlXWnVh1EOGuORJCToBp/XH7wwnl1DN08GTu7b8GwlA/VBPJdFvBlLVBMaQv6
+         0XeLP4i1VR/NZdk01xyq/NhqmRS0r1pIoBRMNOFtXcnAy6lrWzhSJ/iGa9DR8eY0Pu6r
+         uqixeSmQDocxdjOw6hFMwo82JpNQRAEjpPe/HBn986/lO/7Dw6KXlNHys220rJ3eF85M
+         99+w==
+X-Gm-Message-State: AOJu0YzcsaZujsEX5N/hsbM513uNLhT42lrroF4srNEDnoKPM0iW9dn2
+	S6CXrzBxa1Be3F4+bCbx3bWBuymBF7IWLZHlF5U=
+X-Google-Smtp-Source: AGHT+IEXYJjceEHnm1gru2z0MY1Ph6o5bcJvngCnRk+nJcyzn7kvn7eBTi47P8u5YV9hbA3I7mMr0z1Vcp7lJapQKeE=
+X-Received: by 2002:a05:6808:2016:b0:3ae:5650:c6ae with SMTP id
+ q22-20020a056808201600b003ae5650c6aemr2277022oiw.0.1701351269934; Thu, 30 Nov
+ 2023 05:34:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20231110185503.46117-1-mario.limonciello@amd.com> <20231110185503.46117-2-mario.limonciello@amd.com>
+In-Reply-To: <20231110185503.46117-2-mario.limonciello@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 30 Nov 2023 14:34:19 +0100
+Message-ID: <CAJZ5v0hAw99pfdrqgg8AxfeCHcBWeoB2J9bR1sN9a2dU=x79Ag@mail.gmail.com>
+Subject: Re: [PATCH 1/3] PCI: Call PCI ACPI _DSM with consistent revision argument
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add call to initialize debugfs from DWC driver and create the RASDES
-debugfs hierarchy for each platform driver. Since it can be used for
-both DW HOST controller as well as DW EP controller, add it in the
-common setup function.
+On Fri, Nov 10, 2023 at 9:32=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> The PCI ACPI _DSM is called across multiple places in the PCI core
+> with different arguments for the revision.
+>
+> The PCI firmware specification specifies that this is an incorrect
+> behavior.
+> "OSPM must invoke all Functions other than Function 0 with the
+>  same Revision ID value"
+>
+> Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
+>       PCI Firmware specification 3.3, section 4.6
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
- drivers/pci/controller/dwc/pcie-designware.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 064b4951afd8..16c9018c2ada 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -1074,4 +1074,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		break;
- 	}
- 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+
-+	val = dwc_pcie_rasdes_debugfs_init(pci);
-+	if (val)
-+		dev_err(pci->dev, "Couldn't create debugfs files\n");
- }
--- 
-2.17.1
+and I haven't seen much activity related to this series, so I'm not
+sure what's happening to it.
 
+Regardless, I think that the remaining two patches are better sent
+along with the first users of the new APIs.
+
+> ---
+>  drivers/acpi/pci_root.c  |  3 ++-
+>  drivers/pci/pci-acpi.c   |  6 ++++--
+>  drivers/pci/pci-label.c  |  4 ++--
+>  drivers/pci/pcie/edr.c   | 13 +++++++------
+>  include/linux/pci-acpi.h |  1 +
+>  5 files changed, 16 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 58b89b8d950e..bca2270a93d4 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -1055,7 +1055,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pc=
+i_root *root,
+>          * exists and returns 0, we must preserve any PCI resource
+>          * assignments made by firmware for this host bridge.
+>          */
+> -       obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_ac=
+pi_dsm_guid, 1,
+> +       obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
+> +                                     &pci_acpi_dsm_guid, pci_acpi_dsm_re=
+v,
+>                                       DSM_PCI_PRESERVE_BOOT_CONFIG, NULL,=
+ ACPI_TYPE_INTEGER);
+>         if (obj && obj->integer.value =3D=3D 0)
+>                 host_bridge->preserve_config =3D 1;
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 004575091596..bea72e807817 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -28,6 +28,7 @@
+>  const guid_t pci_acpi_dsm_guid =3D
+>         GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
+>                   0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
+> +const int pci_acpi_dsm_rev =3D 5;
+>
+>  #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
+>  static int acpi_get_rc_addr(struct acpi_device *adev, struct resource *r=
+es)
+> @@ -1215,7 +1216,8 @@ void acpi_pci_add_bus(struct pci_bus *bus)
+>         if (!pci_is_root_bus(bus))
+>                 return;
+>
+> -       obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_ac=
+pi_dsm_guid, 3,
+> +       obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
+> +                                     &pci_acpi_dsm_guid, pci_acpi_dsm_re=
+v,
+>                                       DSM_PCI_POWER_ON_RESET_DELAY, NULL,=
+ ACPI_TYPE_INTEGER);
+>         if (!obj)
+>                 return;
+> @@ -1376,7 +1378,7 @@ static void pci_acpi_optimize_delay(struct pci_dev =
+*pdev,
+>         if (bridge->ignore_reset_delay)
+>                 pdev->d3cold_delay =3D 0;
+>
+> -       obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
+> +       obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, pci_a=
+cpi_dsm_rev,
+>                                       DSM_PCI_DEVICE_READINESS_DURATIONS,=
+ NULL,
+>                                       ACPI_TYPE_PACKAGE);
+>         if (!obj)
+> diff --git a/drivers/pci/pci-label.c b/drivers/pci/pci-label.c
+> index 0c6446519640..91bdd04029f0 100644
+> --- a/drivers/pci/pci-label.c
+> +++ b/drivers/pci/pci-label.c
+> @@ -41,7 +41,7 @@ static bool device_has_acpi_name(struct device *dev)
+>         if (!handle)
+>                 return false;
+>
+> -       return acpi_check_dsm(handle, &pci_acpi_dsm_guid, 0x2,
+> +       return acpi_check_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_re=
+v,
+>                               1 << DSM_PCI_DEVICE_NAME);
+>  #else
+>         return false;
+> @@ -162,7 +162,7 @@ static int dsm_get_label(struct device *dev, char *bu=
+f,
+>         if (!handle)
+>                 return -1;
+>
+> -       obj =3D acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
+> +       obj =3D acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_ds=
+m_rev,
+>                                 DSM_PCI_DEVICE_NAME, NULL);
+>         if (!obj)
+>                 return -1;
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 5f4914d313a1..ab6a50201124 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -35,7 +35,7 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>          * Behavior when calling unsupported _DSM functions is undefined,
+>          * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+>          */
+> -       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> +       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_ds=
+m_rev,
+>                             1ULL << EDR_PORT_DPC_ENABLE_DSM))
+>                 return 0;
+>
+> @@ -51,8 +51,9 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>          * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_D=
+SM is
+>          * optional.  Return success if it's not implemented.
+>          */
+> -       obj =3D acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> -                               EDR_PORT_DPC_ENABLE_DSM, &argv4);
+> +       obj =3D acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
+> +                               pci_acpi_dsm_rev, EDR_PORT_DPC_ENABLE_DSM=
+,
+> +                               &argv4);
+>         if (!obj)
+>                 return 0;
+>
+> @@ -88,12 +89,12 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_d=
+ev *pdev)
+>          * Behavior when calling unsupported _DSM functions is undefined,
+>          * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+>          */
+> -       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> +       if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_ds=
+m_rev,
+>                             1ULL << EDR_PORT_LOCATE_DSM))
+>                 return pci_dev_get(pdev);
+>
+> -       obj =3D acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+> -                               EDR_PORT_LOCATE_DSM, NULL);
+> +       obj =3D acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
+> +                               pci_acpi_dsm_rev, EDR_PORT_LOCATE_DSM, NU=
+LL);
+>         if (!obj)
+>                 return pci_dev_get(pdev);
+>
+> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+> index 078225b514d4..7966ef8f14b3 100644
+> --- a/include/linux/pci-acpi.h
+> +++ b/include/linux/pci-acpi.h
+> @@ -115,6 +115,7 @@ static inline void acpiphp_check_host_bridge(struct a=
+cpi_device *adev) { }
+>  #endif
+>
+>  extern const guid_t pci_acpi_dsm_guid;
+> +extern const int pci_acpi_dsm_rev;
+>
+>  /* _DSM Definitions for PCI */
+>  #define DSM_PCI_PRESERVE_BOOT_CONFIG           0x05
+> --
+> 2.34.1
+>
+>
 
