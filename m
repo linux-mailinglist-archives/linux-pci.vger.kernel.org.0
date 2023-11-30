@@ -1,63 +1,82 @@
-Return-Path: <linux-pci+bounces-270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EF9C7FEA97
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 09:30:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 672E87FEB00
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 09:40:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9ACCF1C20CB2
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 08:30:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 982F31C204F7
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 08:40:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A03CA29A0;
-	Thu, 30 Nov 2023 08:30:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76F9320DD7;
+	Thu, 30 Nov 2023 08:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXrNq/E0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XL8i+Z1x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8205130334
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 08:30:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6127C433C7;
-	Thu, 30 Nov 2023 08:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701333012;
-	bh=JXw+/07qPmynAM5uFtAvcs7p+LnNUytI/d3NNcIhWE4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=kXrNq/E0nljsJeiq60g/3yrXxC5hszSy+VvsWNsZe0Ghl1Ek2JTIq5BGghITw9/LV
-	 DwKr5pvgKENYFwrkfns6dymxA6y788J23dYtGO47Py/Nvc5+icToo6RpHgDr5hhmYq
-	 B2/7t0n3vQ+94GJzp1tviS3tGhE3av5Jw5A60ihewwLS3AxyZH5D5QpTQ9oNUIAPlT
-	 0lCXg7oLIXg2C2AoHc4Z1YXQBi88lM7kiM+5mXnccrmndo2KY7/LRv1u07yLzrOYjU
-	 xild5HE1R8UVmRTlmpvrh5j4449FOuMGbQE8yXxW/FfvjhV/68qUNec8PK4rYfMt90
-	 eZrmTkPWMx/lA==
-Message-ID: <a3ba7a7e-6b2e-482b-83e7-07d3b0f51991@kernel.org>
-Date: Thu, 30 Nov 2023 17:30:09 +0900
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739E5B2
+	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 00:40:47 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-423ec1b2982so4199941cf.2
+        for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 00:40:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701333646; x=1701938446; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=L93bb+H/bnLlsZVsia4mn0smDZsxoK+zrisz2Dquwys=;
+        b=XL8i+Z1xIAFVojLpb3HjVIYbhkieNfalFQQmei/HVf31D58QRdkN041ZONU7sCYcSG
+         BdoN1O2mmUCh5oRMuytOSMHvgU/7I2PN5fNhHtNVl9lpMAj3aTFMOp3APklTlVC9N+do
+         EARmxCURzVcDkS0io1XxLGFISklwu9TVb84biq6btrRUrFO6V0ZL5KViuAT2qG/eEcPK
+         pqogC9XB9MhWHYLE8/VH6/e9kF94WKYXiPaO0i6BgSU5WVV5CxCDsS+uwrjAWK41a6yG
+         E1IPbFwWHHJL7uyrDpVspwD7DmpkLkgkn9MUd7oNPkYbYO/3Eckn/OFgxspZ+7YpjTyW
+         H18w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701333646; x=1701938446;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L93bb+H/bnLlsZVsia4mn0smDZsxoK+zrisz2Dquwys=;
+        b=kGso3Cut2mb0+cvSmiq1T5SjBvRVss61kpBVR5dPY00S9X6fLHTPKyJwhmzGj9OKCQ
+         ZhWTn7dhu3hX26oABb0apcjvRHU9pXRqHOWqSlBus9op2dq1rsUGNatUr8tLaVIPHIC5
+         3Oq70QeE36dMUb7X5u9WAn0MmqcD7n7i4pqiTs7noHeTYkfu03vQcYpwnJCgdPBbeaGr
+         W6cryy2H4Y90+vejm7H5sTccGnf24DP20m61wupe080dQYY6g/qiix+T3I228OW6chSv
+         4Dv+7djKMshMvl0vkAetKP5//TODsyQOx44ggpvHUqmLQU73bzzInJ7kumlmrU4Rz2ug
+         WVvQ==
+X-Gm-Message-State: AOJu0Yw9czn+EImCPrxkn1grA+HEwM6+tL6lRMxxYitm0+6sfsZmbkGO
+	Y3pOUZ4KXh0aFHlcDpiyvX/9
+X-Google-Smtp-Source: AGHT+IGlDWiiP+qk80pU7sMxwyrZEQSSl9BFPUX2PbBiZ8zwau671F6dVNJkmD/+e6xMJ/NuMKpSLw==
+X-Received: by 2002:a05:622a:410c:b0:423:b92a:7fb5 with SMTP id cc12-20020a05622a410c00b00423b92a7fb5mr18522427qtb.12.1701333646551;
+        Thu, 30 Nov 2023 00:40:46 -0800 (PST)
+Received: from thinkpad ([59.92.100.237])
+        by smtp.gmail.com with ESMTPSA id o11-20020ac8554b000000b0041812703b7esm295306qtr.52.2023.11.30.00.40.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Nov 2023 00:40:46 -0800 (PST)
+Date: Thu, 30 Nov 2023 14:10:39 +0530
+From: Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v4 00/16] Cleanup IRQ type definitions
+Message-ID: <20231130084039.GN3043@thinkpad>
+References: <20231122060406.14695-1-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/16] Cleanup IRQ type definitions
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-To: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
- Serge Semin <fancer.lancer@gmail.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-References: <20231122060406.14695-1-dlemoal@kernel.org>
-Organization: Western Digital Research
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20231122060406.14695-1-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 11/22/23 15:03, Damien Le Moal wrote:
+On Wed, Nov 22, 2023 at 03:03:50PM +0900, Damien Le Moal wrote:
 > The first patch renames PCI_IRQ_LEGACY to PCI_IRQ_INTX as suggested by
 > Bjorn (hence the patch authorship is given to him). The second patch
 > removes the redundant IRQ type definitions PCI_EPC_IRQ_XXX and replace
@@ -67,12 +86,6 @@ On 11/22/23 15:03, Damien Le Moal wrote:
 > 
 > The remaining patches rename functions and correct comments etc to refer
 > to "intx" instead of "legacy".
-
-Ping ?
-
-Note that patch 6 can be dropped and we can do that sort of rename done in that
-patch on 6.8-rc1 once the series is applied.
-
 > 
 > Changes from v3:
 >  - Added tags to patch 2
@@ -107,6 +120,13 @@ patch on 6.8-rc1 once the series is applied.
 >   PCI: rockchip-host: Rename rockchip_pcie_legacy_int_handler()
 >   PCI: xilinx-nwl: Use INTX instead of legacy
 > 
+
+For the series:
+
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
 >  drivers/misc/pci_endpoint_test.c              | 30 +++----
 >  .../pci/controller/cadence/pcie-cadence-ep.c  | 19 ++--
 >  drivers/pci/controller/cadence/pcie-cadence.h | 12 +--
@@ -140,9 +160,10 @@ patch on 6.8-rc1 once the series is applied.
 >  include/uapi/linux/pcitest.h                  |  3 +-
 >  31 files changed, 206 insertions(+), 226 deletions(-)
 > 
+> -- 
+> 2.42.0
+> 
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+மணிவண்ணன் சதாசிவம்
 
