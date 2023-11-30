@@ -1,47 +1,46 @@
-Return-Path: <linux-pci+bounces-307-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-308-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C292E7FFE75
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 23:29:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AD2B7FFF3C
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 00:18:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9AF71C209FC
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 22:29:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A8922817B6
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 23:18:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67E2B61FA4;
-	Thu, 30 Nov 2023 22:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A9FB61FB4;
+	Thu, 30 Nov 2023 23:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tG37005p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CA1i3B5p"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BFC584C2;
-	Thu, 30 Nov 2023 22:29:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841CBC433C8;
-	Thu, 30 Nov 2023 22:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5235361698;
+	Thu, 30 Nov 2023 23:18:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D807C433C7;
+	Thu, 30 Nov 2023 23:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701383372;
-	bh=xXdpn8ztjDCF+QKM8kOKYVRvQMBg4yGAXaYhBN8ETGE=;
+	s=k20201202; t=1701386284;
+	bh=vz/QshvcmDteZfnIHJfojm18yXWenflELpWAMRx3cD8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tG37005p5Tq4NYOwQu+Q8qEYoXuEet32U2BQfZ/pHNUhSzod5RfM4+595l3j4TXuH
-	 /A4eLuFMk9/yLaud/GUftCNzm6L3MxNrv9f9lpMRWRcO9aOhcPzkYwtND484ywORuF
-	 Oxmq56SWHodEhEO4VCeFrJ/AIlztnkzLP8sjyhuJVKDBGUp7HsRTGZhK2kDubCPHFI
-	 AQhm1jbwhdffi2gXdMJ8VKAQ3tjLlaeDEni5HSvWv9ECTNzRbvEhNAw6R1AP4M3nrr
-	 B8wyy2sOFZltNoNpWNkwrCoE/+CHxpMxwJUe09REwjLb4/J7l+081lD5OtqZrZ9iD5
-	 lW6JD6Jt1A1kw==
-Date: Thu, 30 Nov 2023 16:29:30 -0600
+	b=CA1i3B5pcnkd71jOdL7g/gY5vxwAXmY+P5732D4WD5fnw7DadmdEPl3Ctp9WgIaxQ
+	 9OzuF7+JQURNDqMy2AjQNA+mP0lbN5nLkCXf9zgQQGRWVaOAa5Nq4RWMg9jrL/lWuW
+	 CsAcJOSttUZ3EdWetp3umPIWMWSucUCPzW6b4UfIEA2l7+iNA5VOAsIqgEhum4BaRe
+	 1blRdODO8ID/sL3Egj2BbixK6i0OUuPKH+bqx3n+gFy2/ehsxxrXepzxRPPb3R1+Na
+	 O8p81NTxzB3IySIcX/bGGet4Kb1++D0OUeSuk3HsxKrMC7M8sZilBALLQqeuxHC7ip
+	 m2wIuP9lbhZ7Q==
+Date: Thu, 30 Nov 2023 17:18:02 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] PCI: Call PCI ACPI _DSM with consistent revision
- argument
-Message-ID: <20231130222930.GA488440@bhelgaas>
+To: Fiona Ebner <f.ebner@proxmox.com>
+Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, lenb@kernel.org, rafael@kernel.org,
+	Thomas Lamprecht <t.lamprecht@proxmox.com>
+Subject: Re: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
+Message-ID: <20231130231802.GA498017@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,189 +49,206 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231110185503.46117-2-mario.limonciello@amd.com>
+In-Reply-To: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
 
-On Fri, Nov 10, 2023 at 12:55:01PM -0600, Mario Limonciello wrote:
-> The PCI ACPI _DSM is called across multiple places in the PCI core
-> with different arguments for the revision.
+On Wed, Nov 29, 2023 at 04:22:41PM +0100, Fiona Ebner wrote:
+> Hi,
+> it seems that hot-plugging SCSI disks for QEMU virtual machines booting
+> with UEFI and with guest kernels >= 6.5 might be broken. It's not
+> consistently broken, hinting there might be a race somewhere.
 > 
-> The PCI firmware specification specifies that this is an incorrect
-> behavior.
-> "OSPM must invoke all Functions other than Function 0 with the
->  same Revision ID value"
-
-This patch passes the same or a larger Revision ID than before, so
-everything should work the same because the spec requires backwards
-compatibility.  But it's conceivable that it could break on firmware
-that does the revision check incorrectly.
-
-Is this fixing a problem other than the spec compliance issue?
-
-I agree the PCI FW spec says this.  It was added in r3.3 by the ECN at
-https://members.pcisig.com/wg/Firmware/document/previewpdf/13988, but
-I don't quite understand that ECN.
-
-ACPI r6.5, sec 9.1.1, doesn't include the "must invoke all Functions
-with same Revision ID" language, and the ASL example there clearly
-treats revisions higher than those implemented by firmware as valid,
-although new Functions added by those higher revisions are obviously
-not supported.
-
-PCI FW also says OSPM should not use a fixed Revision ID, but should
-start with the highest known revision and "successively invoke
-Function 0 with decremented values of Revision ID until system
-firmware returns a value indicating support for more than Function 0"
-(added by the same ECN), and I don't think Linux does this part.
-
-So I think the fixed "pci_acpi_dsm_rev" value as in your patch works
-fine with the ACPI ASL example, but it doesn't track the "successively
-decrement" part of PCI FW.  I don't know the reason for that part of
-the ECN.
-
-Unrelated to this patch, I think it's a bug that Linux fails to invoke
-Function 0 in a few cases, e.g., DSM_PCI_PRESERVE_BOOT_CONFIG,
-DSM_PCI_POWER_ON_RESET_DELAY, and DSM_PCI_DEVICE_READINESS_DURATIONS.
-
-Per spec, OSPM must invoke Function 0 to learn which other Functions
-are supported.  It's not explicitly stated, but I think this is
-required because a supported non-zero Function may return "any data
-object", so there's no return value that would mean "this Function
-Index is not supported." 
-
-Bjorn
-
-> Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
->       PCI Firmware specification 3.3, section 4.6
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/acpi/pci_root.c  |  3 ++-
->  drivers/pci/pci-acpi.c   |  6 ++++--
->  drivers/pci/pci-label.c  |  4 ++--
->  drivers/pci/pcie/edr.c   | 13 +++++++------
->  include/linux/pci-acpi.h |  1 +
->  5 files changed, 16 insertions(+), 11 deletions(-)
+> Reverting the following two commits seems to make it work reliably again:
 > 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 58b89b8d950e..bca2270a93d4 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -1055,7 +1055,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  	 * exists and returns 0, we must preserve any PCI resource
->  	 * assignments made by firmware for this host bridge.
->  	 */
-> -	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
-> +	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
-> +				      &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  				      DSM_PCI_PRESERVE_BOOT_CONFIG, NULL, ACPI_TYPE_INTEGER);
->  	if (obj && obj->integer.value == 0)
->  		host_bridge->preserve_config = 1;
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 004575091596..bea72e807817 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -28,6 +28,7 @@
->  const guid_t pci_acpi_dsm_guid =
->  	GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
->  		  0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
-> +const int pci_acpi_dsm_rev = 5;
->
->  #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
->  static int acpi_get_rc_addr(struct acpi_device *adev, struct resource *res)
-> @@ -1215,7 +1216,8 @@ void acpi_pci_add_bus(struct pci_bus *bus)
->  	if (!pci_is_root_bus(bus))
->  		return;
->  
-> -	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
-> +	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
-> +				      &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  				      DSM_PCI_POWER_ON_RESET_DELAY, NULL, ACPI_TYPE_INTEGER);
->  	if (!obj)
->  		return;
-> @@ -1376,7 +1378,7 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->  	if (bridge->ignore_reset_delay)
->  		pdev->d3cold_delay = 0;
->  
-> -	obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
-> +	obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  				      DSM_PCI_DEVICE_READINESS_DURATIONS, NULL,
->  				      ACPI_TYPE_PACKAGE);
->  	if (!obj)
-> diff --git a/drivers/pci/pci-label.c b/drivers/pci/pci-label.c
-> index 0c6446519640..91bdd04029f0 100644
-> --- a/drivers/pci/pci-label.c
-> +++ b/drivers/pci/pci-label.c
-> @@ -41,7 +41,7 @@ static bool device_has_acpi_name(struct device *dev)
->  	if (!handle)
->  		return false;
->  
-> -	return acpi_check_dsm(handle, &pci_acpi_dsm_guid, 0x2,
-> +	return acpi_check_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  			      1 << DSM_PCI_DEVICE_NAME);
->  #else
->  	return false;
-> @@ -162,7 +162,7 @@ static int dsm_get_label(struct device *dev, char *buf,
->  	if (!handle)
->  		return -1;
->  
-> -	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
-> +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  				DSM_PCI_DEVICE_NAME, NULL);
->  	if (!obj)
->  		return -1;
-> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
-> index 5f4914d313a1..ab6a50201124 100644
-> --- a/drivers/pci/pcie/edr.c
-> +++ b/drivers/pci/pcie/edr.c
-> @@ -35,7 +35,7 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
->  	 * Behavior when calling unsupported _DSM functions is undefined,
->  	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
->  	 */
-> -	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> +	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  			    1ULL << EDR_PORT_DPC_ENABLE_DSM))
->  		return 0;
->  
-> @@ -51,8 +51,9 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
->  	 * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
->  	 * optional.  Return success if it's not implemented.
->  	 */
-> -	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> -				EDR_PORT_DPC_ENABLE_DSM, &argv4);
-> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
-> +				pci_acpi_dsm_rev, EDR_PORT_DPC_ENABLE_DSM,
-> +				&argv4);
->  	if (!obj)
->  		return 0;
->  
-> @@ -88,12 +89,12 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
->  	 * Behavior when calling unsupported _DSM functions is undefined,
->  	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
->  	 */
-> -	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> +	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
->  			    1ULL << EDR_PORT_LOCATE_DSM))
->  		return pci_dev_get(pdev);
->  
-> -	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> -				EDR_PORT_LOCATE_DSM, NULL);
-> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
-> +				pci_acpi_dsm_rev, EDR_PORT_LOCATE_DSM, NULL);
->  	if (!obj)
->  		return pci_dev_get(pdev);
->  
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 078225b514d4..7966ef8f14b3 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -115,6 +115,7 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
->  #endif
->  
->  extern const guid_t pci_acpi_dsm_guid;
-> +extern const int pci_acpi_dsm_rev;
->  
->  /* _DSM Definitions for PCI */
->  #define DSM_PCI_PRESERVE_BOOT_CONFIG		0x05
-> -- 
-> 2.34.1
+> cc22522fd55e2 ("PCI: acpiphp: Use
+> pci_assign_unassigned_bridge_resources() only for non-root bus")
+> 40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary"
+> 
+> Of course, they might only expose some pre-existing issue, but this is
+> my best lead. See below for some logs and details about an affected
+> virtual machine. Happy to provide more information and to debug/test
+> further.
+
+Shoot.  Thanks very much for the report and your debugging.  I'm
+hoping Igor will chime in with some ideas.
+
+Both of those commits appeard in v6.5 and fixed legit issues, so I
+hate to revert them, but this does appear to be a regression.
+
+#regzbot introduced: cc22522fd55e2 ^
+#regzbot introduced: 40613da52b13f ^
+
+> Host kernel: 6.5.11-4-pve which is based on the one from Ubuntu
+> Guest kernel: 6.7.0-rc3 and 6.7.0-rc3 with above commits reverted
+> QEMU version: v8.1.0 built from source
+> EDK2 version: submodule in the QEMU v8.1 repository: edk2-stable202302
+> 
+> QEMU command line:
+> 
+> > ./qemu-system-x86_64 \
+> >   -accel 'kvm' \
+> >   -chardev 'socket,id=qmp,path=/var/run/qemu-server/104.qmp,server=on,wait=off' \
+> >   -mon 'chardev=qmp,mode=control' \
+> >   -chardev 'socket,id=qmp-event,path=/var/run/qmeventd.sock,reconnect=5' \
+> >   -mon 'chardev=qmp-event,mode=control' \
+> >   -pidfile /var/run/qemu-server/104.pid \
+> >   -drive 'if=pflash,unit=0,format=raw,readonly=on,file=./pc-bios/edk2-x86_64-code.fd' \
+> >   -drive 'if=pflash,unit=1,id=drive-efidisk0,format=raw,file=/dev/u2nvme/vm-104-disk-0,size=540672' \
+> >   -smp '4,sockets=1,cores=4,maxcpus=4' \
+> >   -nodefaults \
+> >   -vnc 'unix:/var/run/qemu-server/104.vnc,password=on' \
+> >   -m 4096 \
+> >   -device 'pci-bridge,id=pci.1,chassis_nr=1,bus=pci.0,addr=0x1e' \
+> >   -device 'pci-bridge,id=pci.2,chassis_nr=2,bus=pci.0,addr=0x1f' \
+> >   -device 'pci-bridge,id=pci.3,chassis_nr=3,bus=pci.0,addr=0x5' \
+> >   -device 'VGA,id=vga,bus=pci.0,addr=0x2' \
+> >   -device 'virtio-scsi-pci,id=virtioscsi0,bus=pci.3,addr=0x1' \
+> >   -drive 'file=/dev/u2nvme/vm-104-disk-1,if=none,id=drive-scsi0,format=raw' \
+> >   -blockdev 'raw,file.driver=file,file.filename=/home/febner/plug.raw,node-name=drive-scsi1' \
+> >   -device 'scsi-hd,bus=virtioscsi0.0,channel=0,scsi-id=0,lun=0,drive=drive-scsi0,id=scsi0,bootindex=100' \
+> >   -netdev 'type=tap,id=net0,ifname=tap104i0,script=/var/lib/qemu-server/pve-bridge,downscript=/var/lib/qemu-server/pve-bridgedown,vhost=on' \
+> >   -device 'virtio-net-pci,mac=BC:24:11:89:6A:E6,netdev=net0,bus=pci.0,addr=0x12,id=net0,rx_queue_size=1024,tx_queue_size=256,bootindex=102' \
+> >   -bios './pc-bios/edk2-x86_64-code.fd'
+> 
+> Script to issue hotplug command via QEMU monitor protocol (QMP):
+> 
+> > #!/bin/sh
+> > 
+> > ID=$1
+> > CMD=$2
+> > 
+> > if [ -z "$ID" ]; then
+> >     echo "need to specify ID";
+> >     exit 1;
+> > fi
+> > 
+> > if [ -z "$CMD" ]; then
+> >     echo "need to specify command (plug or unplug)";
+> >     exit 1;
+> > fi
+> > 
+> > 
+> > if [ "$CMD" = "plug" ]; then
+> >     socat - /var/run/qemu-server/"$ID".qmp << END
+> >     {"execute": "qmp_capabilities"}
+> >     {"arguments":{"driver":"virtio-scsi-pci","bus":"pci.3","addr":"0x2","id":"virtioscsi1"},"execute":"device_add"}
+> >     {"arguments":{"bus":"virtioscsi1.0","channel":"0","driver":"scsi-hd","id":"scsi1","drive":"drive-scsi1","scsi-id":"0","lun":"1"},"execute":"device_add"}
+> > END
+> > elif [ "$CMD" = "unplug" ]; then
+> >     socat - /var/run/qemu-server/"$ID".qmp << END
+> >     {"execute": "qmp_capabilities"}
+> >     {"arguments":{"id":"scsi1"},"execute":"device_del"}
+> >     {"arguments":{"id":"virtioscsi1"},"execute":"device_del"}
+> > END
+> > fi
+> 
+> I've also tired and added 10 second sleep between the two device_add
+> commands just to be sure, but that didn't make a difference. (Our
+> management stack does query via QMP and wait for the device to show up
+> and is also affected, I was just too lazy to do that for the reproducer
+> here).
+> 
+> I've attached some logs for guest using kernel 6.7.0-rc3 where hotplug
+> works rarely and guest using kernel 6.7.0-rc3 with the previously
+> mentioned commits reverted where hotplug works reliably:
+> 
+> 6.7.0-rc3:
+> 
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:12:02 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:12:02 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:12:02 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:02 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref] 
+> 
+> Reboot
+> 
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:12:52 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:12:52 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:12:52 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:52 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> 
+> RebootThe one time it did work. Note that the line with "QEMU HARDDISK"
+> comes after all lines with "bridge window":
+> 
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:13:51 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:13:51 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: Attached scsi generic sg1 type 0
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk
+> > Nov 29 15:14:08 hotplug systemd[1]: systemd-fsckd.service: Deactivated successfully.
+> 
+> 6.7.0-rc3 with the following reverted:
+> cc22522fd55e2 ("PCI: acpiphp: Use
+> pci_assign_unassigned_bridge_resources() only for non-root bus")
+> 40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary")
+> 
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:15:37 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:15:37 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:15:37 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:15:37 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: Attached scsi generic sg1 type 0
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk
+> > Nov 29 15:15:38 hotplug systemd[1]: systemd-fsckd.service: Deactivated successfully.
 > 
 
