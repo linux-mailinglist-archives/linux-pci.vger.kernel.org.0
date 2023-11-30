@@ -1,180 +1,212 @@
-Return-Path: <linux-pci+bounces-288-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-289-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DCED7FF0FF
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 14:58:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFF137FF359
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 16:19:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9BDAAB20B68
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 13:58:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 008601C20D28
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Nov 2023 15:19:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F4147A7D;
-	Thu, 30 Nov 2023 13:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4E36524A3;
+	Thu, 30 Nov 2023 15:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xwI0C9xD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nXSmw3cG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59103CF
-	for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 05:58:02 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-5c6291767ceso372833a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 30 Nov 2023 05:58:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701352682; x=1701957482; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+7tlrCJTKDmqu912ndC8IMzjGhq0KkbQ5XUiGAU1JLY=;
-        b=xwI0C9xDafuTlFW5/Qy3T2pcftqEmCvWNSc+55HkvbnYyNgkB/U6cwUjxkxRlxLsFW
-         vVo8pnlyOeFnyeJ+zDeuodkOXZsQPpsr1mDZv1qowB6efV2cTPNpTqclR010eFA7UkUz
-         I+DaX5MVeYtHou8+DUMJOPZPZw1MUC/1SwbiiQYF+e8S0BSd2XVobW/ELzd92V1P2aWk
-         4D8l2Mk8mU8LpoOZd/+N0ltqJClgP31H96RSv0p08DhFz+2AMiPKMyLjwPR2XCssfNIX
-         cJZSKS+P68FqBTHSpAgJITU5Zpr4OZ8R6160M77wENp2p0i0615UUv2g6d0Q4TYG7zEy
-         jtlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701352682; x=1701957482;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+7tlrCJTKDmqu912ndC8IMzjGhq0KkbQ5XUiGAU1JLY=;
-        b=q8liVr/yp5b3Vksym3Gp2ytrawwBy1rf8vtqTvln0k0y3eyKiSEQLQipzeUrUeptAm
-         eDOycfdBf3wHbXO64gEJ5kF3QRweniblR62FjRwJ1r0NTwERk2p04cGCTXOD2R0NLwDq
-         9OAVs4cJ8BVTNaHI3FHzt2x6QREaEF+rqKEPXpjN9pzWNIrWYp66fmBWltnvyZUqyjs6
-         kwlUi8fRjKEoBlQgMxHrUxULwhIQso4mm3G7DKXEKcZP7dN3QRSmagDePZRRyT2vRdml
-         aZL38C1NSfUJRwdfWXEiNGToQlu0tzRklCEEurmm7jhfFnh1rVtz+SpCE5pVQIN+Vfov
-         /wLA==
-X-Gm-Message-State: AOJu0Yzucyya+tXgyfkJapkeFtsGy+ENqY0jY0/GyddeoAH5K0murEYr
-	rREiQtj0SGdOP3SWBhOFAOny
-X-Google-Smtp-Source: AGHT+IFmvRgD+nSBAXSNBctVx3fCru60TMu5sIVpLM5thAGFppFn2zg5u0m2fcA/KixZyYuJ8lomYQ==
-X-Received: by 2002:a05:6a21:3283:b0:18b:246a:d43d with SMTP id yt3-20020a056a21328300b0018b246ad43dmr28457008pzb.15.1701352681654;
-        Thu, 30 Nov 2023 05:58:01 -0800 (PST)
-Received: from thinkpad ([59.92.100.237])
-        by smtp.gmail.com with ESMTPSA id m127-20020a632685000000b005c606b44405sm1263184pgm.67.2023.11.30.05.57.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 05:58:01 -0800 (PST)
-Date: Thu, 30 Nov 2023 19:27:57 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH v7 1/2] PCI: designware-ep: Fix DBI access before core
- init
-Message-ID: <20231130135757.GS3043@thinkpad>
-References: <20231120084014.108274-2-manivannan.sadhasivam@linaro.org>
- <ZWYmX8Y/7Q9WMxES@x1-carbon>
- <ZWcitTbK/wW4VY+K@x1-carbon>
- <20231129155140.GC7621@thinkpad>
- <ZWdob6tgWf6919/s@x1-carbon>
- <20231130063800.GD3043@thinkpad>
- <ZWhwdkpSNzIdi23t@x1-carbon>
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5000610DF;
+	Thu, 30 Nov 2023 07:19:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701357587; x=1732893587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zV5Zr36aJejNVLLuT5YdsNKr+qGMCmTR8SHAzhX71NU=;
+  b=nXSmw3cG/FGGnPLG1Y2sNg5F0va2Q54bcDjrkPEnPQZteKuzDn9q+Y/K
+   sH5Hhg7Jg4f9ilw8nHTnDpf7YLCxHCwW5SeJ4x9SzVaP+IX0bq2ZbDSsd
+   TktIcUr1Q/MpDQiVnoLMGZaPJstPXcjw1EMvIsjW+3k5Ew9E0X70SeC/r
+   YtrzQa/RIIUrJPMmW1jztPtYxjoBTPfjPHOArz2zGAgfmu22eXq93g7/a
+   U3q7fMkibI8xFDV3ZvC40J8RdR/XdtJ3GYlWT5Z4T9f+zzGhSppyti8kw
+   IcLJZZzcTbRee+7wADx5lRPFb/C1UVivxotFXlSipyAD2krmcoaD7jfEl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="397229011"
+X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
+   d="scan'208";a="397229011"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 07:19:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="839819206"
+X-IronPort-AV: E=Sophos;i="6.04,239,1695711600"; 
+   d="scan'208";a="839819206"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 07:19:43 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1r8ipI-00000000jOe-3V5s;
+	Thu, 30 Nov 2023 17:19:40 +0200
+Date: Thu, 30 Nov 2023 17:19:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Keith Busch <kbusch@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	Jean Delvare <jdelvare@suse.de>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [bug report] lockdep WARN at PCI device rescan
+Message-ID: <ZWioDBqfeFk4pPAP@smile.fi.intel.com>
+References: <20231114155701.GA27547@wunner.de>
+ <ZVOcPOlkkBk3Xfm5@smile.fi.intel.com>
+ <ZVO1M2289uvElgOi@smile.fi.intel.com>
+ <eaawoi5jqrwnzq3scgltqxj47faywztn4lbpkz4haugxvgu5df@koy3qciquklu>
+ <ZWC_0eG2UBMKAD3C@smile.fi.intel.com>
+ <2vzf5sj76j3p747dfbhnusu5daxzog25io4s7d5uvzvtghvo24@567tghzifylu>
+ <20231129111739.GA14152@wunner.de>
+ <ZWdBnMTOq9wIt9L-@smile.fi.intel.com>
+ <ZWdCdMtLjZS2mDTQ@smile.fi.intel.com>
+ <rsrhixediftppmm2n7rzciirdpjnymzsn76lffnd4kzovxaf42@5hddblagaytt>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZWhwdkpSNzIdi23t@x1-carbon>
+In-Reply-To: <rsrhixediftppmm2n7rzciirdpjnymzsn76lffnd4kzovxaf42@5hddblagaytt>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Nov 30, 2023 at 11:22:30AM +0000, Niklas Cassel wrote:
-> On Thu, Nov 30, 2023 at 12:08:00PM +0530, Manivannan Sadhasivam wrote:
+On Thu, Nov 30, 2023 at 07:30:56AM +0000, Shinichiro Kawasaki wrote:
+> On Nov 29, 2023 / 15:53, Andy Shevchenko wrote:
+> > On Wed, Nov 29, 2023 at 03:50:21PM +0200, Andy Shevchenko wrote:
+> > > On Wed, Nov 29, 2023 at 12:17:39PM +0100, Lukas Wunner wrote:
+> > > > On Tue, Nov 28, 2023 at 07:45:06AM +0000, Shinichiro Kawasaki wrote:
+> > > > > On Nov 24, 2023 / 17:22, Andy Shevchenko wrote:
+
+...
+
+> > > > > > Another possible solution I was thinking about is to have a local cache,
+> > > > > > so, make p2sb.c to be called just after PCI enumeration at boot time
+> > > > > > to cache the P2SB device's bar, and then cache the bar based on the device
+> > > > > > in question at the first call. Yet it may not remove all theoretical /
+> > > > > > possible scenarios with dead lock (taking into account hotpluggable
+> > > > > > devices), but won't fail the i801 driver in the above use case IIUC.
+> > > > > 
+> > > > > Thanks for the idea. I created an experimental patch below (it does not guard
+> > > > > list nor free the list elements, so it is incomplete). I confirmed that this
+> > > > > patch avoids the deadlock. So your idea looks working. I still observe the
+> > > > > deadlock WARN, but it looks better than the hang by the deadlock.
+> > > > 
+> > > > Your patch uses a list to store a multitude of struct resource.
+> > > > Is that actually necessary?  I thought there can only be a single
+> > > > P2SB device in the system?
+> 
+> Yes, the list might be too much. I was not sure what is the expected number of
+> P2SB resources to be cached. I found drivers/mfd/lpc_ich.c calls p2sb_bar() at
+> two places for devfn=0 and devfn=(13,2), so at least two resources look
+> required. Not sure about the future. If two static resources are sufficient, the
+> code will be simpler.
+
+PCI specification defines up to 8 functions. So, basically you need to cache 8.
+But note, each function may have up to 6 or more resources, we only now rely on
+bar 0 as it's hard coded IIRC.
+
+Theoretically we might require any bar from any function, but practically we have
+at most two right now. So, to follow KISS 8 should be enough.
+
+> > > > > Having said that, Heiner says in another mail that "A solution has to support
+> > > > > pci drivers using p2sb_bar() in probe()". This idea does not fulfill it. Hmm.
+> > > > 
+> > > > Basically what you need to do is create two initcalls:
+> > > > 
+> > > > Add one arch_initcall to unhide the P2SB device.
+> > > > 
+> > > > The P2SB subsequently gets enumerated by the PCI core in a subsys_initcall.
+> > > > 
+> > > > Then add an fs_initcall which extracts and stashes the struct resource,
+> > > > hides the P2SB device and destroys the corresponding pci_dev.
+> > > > 
+> > > > Then you don't need to acquire any locks at runtime, just retrieve the
+> > > > stashed struct resource.
+> > > > 
+> > > > This approach will result in the P2SB device briefly being enumerated
+> > > > and a driver could in theory bind to it.  Andy, is this a problem?
+> > > > I'm not seeing any drivers in the tree which bind to 8086/c5c5.
+> > > 
+> > > At least one problem just out of my head. The P2SB on many system is PCI
+> > > function 0. Unhiding the P2SB unhides all functions on that device, and
+> > > we have use cases for those (that's why we have two first parameters to
+> > > p2sb_bar() in case we want non-default device to be looked at).
 > > 
-> > Looking at this issue again, I think your statement may not be correct. In the
-> > stop_link() callback, non-core_init_notifier platforms are just disabling the
-> > LTSSM and enabling it again in start_link(). So all the rest of the
-> > configurations (DBI etc...) should not be affected during EPF bind/unbind.
+> > For the clarity this is true for ATOM_GOLDMONT (see p2sb_cpu_ids array).
 > 
-> Sorry for confusing you.
+> Lukas, thank you for the idea. If I understand the comment by Andy correctly,
+> P2SB should not be unhidden between arch_initcall and fs_initcall. Hmm.
 > 
-> When toggling PERST on a driver with a core_init_notifier, you will call
-> dw_pcie_ep_init_complete() - which will initialize DBI settings, and then
-> stop/start the link by deasserting/asserting LTSSM.
-> (perst_assert()/perst_deassert() is functionally the equivalent to start_link()/
-> stop_link() on non-core_init_notifier platforms.)
+> This made me think: how about to unhide and hide P2SB just during fs_initcall
+> to cache the P2SB resources? To try it, I added a function below on top of the
+> previous trial patch. The added function calls p2sb_bar() for devfn=0 at
+> fs_initcall so that the resource is cached before probe of i2c-i801. This worked
+> good on my system. It avoided the deadlock as well as the lockdep WARN :)
 > 
-> 
-> For drivers without a core_init_notifier, they currently don't listen to PERST
-> input GPIO.
-> Stopping and starting the link will not call dw_pcie_ep_init_complete(),
-> so it will not (re-)initialize DBI settings.
-> 
-> 
-> My problem is that a bunch of hardware registers gets reset when receiving
-> a link-down reset or hot reset. It would be nice to write all DBI settings
-> when starting the link. That way the link going down for a millisecond, and
-> gettting immediately reestablished, will not be so bad. A stop + start link
-> will rewrite the settings. (Just like toggling PERST rewrites the settings.)
-> 
+> static int __init p2sb_fs_init(void)
+> {
+> 	struct pci_bus *bus;
+> 	struct resource mem;
+> 	int ret = 0;
 
-I got slightly confused by this part. So you are saying that when a user stops
-the controller through configfs, EP receives the LINK_DOWN event and that causes
-the EP specific registers (like DBI) to be reset?
+> 	bus = pci_find_bus(0, 0);
+> 	if (bus) {
 
-I thought the LINK_DOWN event can only change LTSSM and some status registers.
+This is inside p2sb_bar(), no need to repeat it.
 
+> 		ret = p2sb_bar(bus, 0, &mem);
+> 		if (ret)
+> 			pr_err("p2sb_bar failed: %d", ret);
+> 	}
+> 	return 0;
+> }
+> fs_initcall(p2sb_fs_init);
 > 
-> Currently, doing a bind + start link + stop link + unbind + bind + start link,
-> will not reinitialize all DBI writes for a driver.
-> (This is also true for a core_init_notifier driver, but there start/stop link
-> is a no-op, other than enabling the GPIO irq handler.)
+> The result of the trial is encouraging, but I'm not yet sure if this idea is
+> really feasible. I have three questions in my mind:
 > 
-> What this will do during the second bind:
-> -allocate BARs (DBI writes)
-> -set iATUs (DBI writes)
+> - The trial function above assumed the P2SB device is at the PCI bus number=0
+>   and domain=0. It is ok on my system, but is it valid always? I see this is
+>   valid at least for drivers/edac/pdn2_edac.c and
+>   drivers/watchdog/simatic-ipc-wdt.c, but not sure for drivers/mfd/lpc_ich.c
+>   and drivers/i2c/busses/i2c-i801.
 > 
-> What it will not redo is:
-> -what is done by dw_pcie_ep_init() - which is fine, because this is only
->  supposed to allocate stuff or get stuff from DT, not actually touch HW
->  registers.
-> -what is done by dw_pcie_ep_init_complete() - I think this should be done
->  since it does DBI writes. E.g. clearing PTM root Cap and fixing Resizable
->  BAR Cap, calling dw_pcie_setup() which sets max link width etc.
+> - The trial function above only caches the resource for devfn=0. This is not
+>   enough for drivers/mfd/lpc_ich.c. Another resource for devfn=(13,2) should be
+>   cached. It does not look good to hardcode these devfns and cache them always.
+>   It looks required to communicate devfn to cache from p2sb_bar() caller drivers
+>   to p2sb. How can we do it?
 > 
+> - Does this work when suspend-resume happens?
 > 
-> 
-> I guess the counter argument could be that... if you need to re-initialize
-> DBI registers, you could probably do a:
-> stop link + unbind EPF driver + unbind PCIe-EP driver + bind PCIe-EP driver
-> + bind EPF driver + start link..
-> (But I don't need all that if I use a .core_init_notifier and just toggle
-> PERST).
-> 
-> Of course, toggling PERST and starting/stopping the link via sysfs is not
-> exactly the same thing...
-> 
-> For me personally, the platform I use do not require an external refclk to
-> write DBI settings, but I would very much like the HW to be re-initialized
-> either when stopping/starting the link in sysfs, or by toggling PERST, or
-> both.
-> 
-> I think that I will just add a .core_init_notifier to my WIP driver,
-> even though I do not require an external refclk, and simply call
-> dw_pcie_ep_init_complete() when receiving a PERST deassert, because I want
-> _all_ settings (DBI writes) to be reinitialized.
-> (If we receive a PERST reset request, I think it does make sense to obey
-> and actually reset/re-write all settings.)
-> 
+> Comments on the questions will be appreciated.
 
-No, you should not add core_init_notifier if your platform receives an active
-refclk (although my heard wants to have an unified behavior across all
-platforms).
+I would give a try with a cache for full hierarchy, basically it's either 1 or
+8 resources. It would be quite weird to have devfn to be different 'in device"
+to P2SB itself.
 
-We should fix the DWC core code if you clarify my above suspicion.
+So, something like this.
 
-- Mani
+- unhide p2sb device
+- cache its bar 0 (with BDF, etc)
+- if F == 0, iterate over F == 1..7 and if there is a device, cache its
+  bar 0 as well (as in previous entry)
+- make p2sb_bar() to be just a cache lookup call (mutex protected?)
 
-> A sysfs stop/start link would still not reinitialize everything...
-> I think it would be good if the DWC EP driver actually did this too,
-> but I'm fine if you consider it out of scope of your patch series.
-> 
-> 
-> Kind regards,
-> Niklas
+Note, P2SB is inside PCI South Bridge, it's unlikely we will see it
+in external / Thunderbolt / etc devices.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With Best Regards,
+Andy Shevchenko
+
+
 
