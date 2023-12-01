@@ -1,98 +1,140 @@
-Return-Path: <linux-pci+bounces-371-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-372-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEC688016D6
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:46:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 567338016DE
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:49:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D6CFB20BF8
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:46:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BC0D1F2108A
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:49:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5488521A18;
-	Fri,  1 Dec 2023 22:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98E838DD2;
+	Fri,  1 Dec 2023 22:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kx1uGmM9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvKxojd9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D69619AF
-	for <linux-pci@vger.kernel.org>; Fri,  1 Dec 2023 22:45:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7810CC433C7;
-	Fri,  1 Dec 2023 22:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B5B619D4;
+	Fri,  1 Dec 2023 22:49:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FABC433C7;
+	Fri,  1 Dec 2023 22:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701470758;
-	bh=mCohPRAX+vrdHwTJQfgkUwLwKKdD+fr/q27He1nuF8E=;
+	s=k20201202; t=1701470970;
+	bh=7UHBRH5A/rAUW8O3WYeKaOaOXX0+pl8vP8IIGkcTjO8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Kx1uGmM9g+AIj3wuXBYWMCmQc9JPLjuznc9FaYjduL06/UxSMwuS8ZN7X/yHVTnCD
-	 WokxVBc+afmbzOK1IXvBwaMbSVcetA7WC9BhkiWjLVefqDhR0ZvnFcHEuGe35jQf+S
-	 IURMlnW9WmH++LEenQOz1HU4fVh+/NNVMDiUhUbaMuSnshQFxjVNqH8bRpJmEzSHCs
-	 4centAtD1uaulNfuu66PXGaTzLujuEVPIHiiUWoQoVYRqje9rTG2+ko6aF+23nvHhc
-	 nBTVHL8ZeulJ9judD0RjvheDiMGblkuL0zhKYgCKdTmvz7lzc5o7Auh2O/ZjzVyZsa
-	 dHxqFZTpv1WmQ==
-Date: Fri, 1 Dec 2023 16:45:56 -0600
+	b=UvKxojd96ybvz4wCT9QMbUD7BYFKOW7L32k1cM25SmfLk6GBxSewQ5EydhsMm94us
+	 rygz+JfUakNQhTBUUoZVdDPJZbLsJOmsHmZcxkfXI74F+u5hHmYqcOFdSgYh+A3x59
+	 jkiHiPltMgj7x0VouBYtCgsE2dAgWul/msywmd8AhKr2goC5+57p0FTwkJfxIclrgU
+	 YP/WqlHhVtbEvhtLIJwTT0oAaL/v1k0YU0Vty1JTCYD1U6z+HOZzPcBat3lC0hGqGe
+	 Dey12bQ/+2mx2mUkRM4vY28KyXA1OpnRC9gHm2DBWfkJHK9GUMU6ggiR549HbVmcXk
+	 bu0iD+ZH2Vf5Q==
+Date: Fri, 1 Dec 2023 16:49:28 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	Max Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>,
+	Rob Herring <robh@kernel.org>, Max Zhen <max.zhen@amd.com>,
+	Sonal Santan <sonal.santan@amd.com>,
 	Stefano Stabellini <stefano.stabellini@xilinx.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	PCI <linux-pci@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	Allan Nielsen <allan.nielsen@microchip.com>,
 	Horatiu Vultur <horatiu.vultur@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-Message-ID: <20231201224556.GA534342@bhelgaas>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: of: Attach created of_node to existing device
+Message-ID: <20231201224928.GA534494@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
+In-Reply-To: <20231130165700.685764-3-herve.codina@bootlin.com>
 
-On Fri, Dec 01, 2023 at 04:26:45PM -0600, Rob Herring wrote:
-> On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> ...
+On Thu, Nov 30, 2023 at 05:56:59PM +0100, Herve Codina wrote:
+> The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> creates of_node for PCI devices.
+> During the insertion handling of these new DT nodes done by of_platform,
+> new devices (struct device) are created.
+> For each PCI devices a struct device is already present (created and
+> handled by the PCI core).
+> Having a second struct device to represent the exact same PCI device is
+> not correct.
 
-> Also, no idea if the bridge part works because my qemu setup doesn't
-> create bridges (anyone got a magic cmdline to create them?).
+Can you rewrap this or, if you intend multiple paragraphs, add blank
+lines between them?
 
-I probably copied this from somewhere and certainly couldn't construct
-it from scratch, but it did create a hierarchy like this:
-
-  00:04.0 bridge to [bus 01-04] (Root Port)
-  01:00.0 bridge to [bus 02-04] (Switch Upstream Port)
-  02:00.0 bridge to [bus 03] (Switch Downstream Port)
-  02:01.0 bridge to [bus 04] (Switch Downstream Port)
-  03:00.0 endpoint
-  04:00.0 endpoint
-
-  IMAGE=ubuntu.img
-  KERNEL=~/linux/arch/x86/boot/bzImage
-  IMGDIR=~/virt/img/
-
-  qemu-system-x86_64 -enable-kvm -s -m 2048 $IMAGE \
-      -device pcie-root-port,id=root_port1,chassis=1,slot=1 \
-      -device x3130-upstream,id=upstream_port1,bus=root_port1 \
-      -device xio3130-downstream,id=downstream_port1,bus=upstream_port1,chassis=2,slot=1 \
-      -device xio3130-downstream,id=downstream_port2,bus=upstream_port1,chassis=2,slot=2 \
-      -drive file=${IMGDIR}/nvme.qcow2,if=none,id=nvme1,snapshot=on \
-      -device nvme,drive=nvme1,serial=nvme1,cmb_size_mb=2048,bus=downstream_port1 \
-      -drive file=${IMGDIR}/nvme2.qcow2,if=none,id=nvme2,snapshot=on \
-      -device nvme,drive=nvme2,serial=nvme1,bus=downstream_port2 \
-      -virtfs local,id=home,path=/home/,security_model=mapped,mount_tag=home \
-      -nographic \
-      -kernel $KERNEL \
-      -append "root=/dev/sda2 rootfstype=ext4 console=ttyS0,38400n8"
+> On the of_node creation, tell the of_platform that there is no need to
+> create a device for this node (OF_POPULATED flag), link this newly
+> created of_node to the already present device and tell fwnode that the
+> device attached to this of_node is ready (fwnode_dev_initialized()).
+> 
+> With this fix, the of_node are available in the sysfs device tree:
+> /sys/devices/platform/soc/d0070000.pcie/
+> + of_node -> .../devicetree/base/soc/pcie@d0070000
+> + pci0000:00
+>   + 0000:00:00.0
+>     + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0
+>     + 0000:01:00.0
+>       + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0/dev@0,0
+> 
+> On the of_node removal, revert the operations.
+> 
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/pci/of.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 51e3dd0ea5ab..5afd2731e876 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -615,7 +615,8 @@ void of_pci_remove_node(struct pci_dev *pdev)
+>  	np = pci_device_to_OF_node(pdev);
+>  	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+>  		return;
+> -	pdev->dev.of_node = NULL;
+> +
+> +	device_remove_of_node(&pdev->dev);
+>  
+>  	of_changeset_revert(np->data);
+>  	of_changeset_destroy(np->data);
+> @@ -668,12 +669,22 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>  	if (ret)
+>  		goto out_free_node;
+>  
+> +	/*
+> +	 * This of_node will be added to an existing device.
+> +	 * Avoid any device creation and use the existing device
+> +	 */
+> +	of_node_set_flag(np, OF_POPULATED);
+> +	np->fwnode.dev = &pdev->dev;
+> +	fwnode_dev_initialized(&np->fwnode, true);
+> +
+>  	ret = of_changeset_apply(cset);
+>  	if (ret)
+>  		goto out_free_node;
+>  
+>  	np->data = cset;
+> -	pdev->dev.of_node = np;
+> +
+> +	/* Add the of_node to the existing device */
+> +	device_add_of_node(&pdev->dev, np);
+>  	kfree(name);
+>  
+>  	return;
+> -- 
+> 2.42.0
+> 
 
