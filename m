@@ -1,151 +1,118 @@
-Return-Path: <linux-pci+bounces-369-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-370-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DAF880164E
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:27:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87F74801657
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:32:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE37228130E
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:27:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B875B1C20A40
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A458D619A7;
-	Fri,  1 Dec 2023 22:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12733619C7;
+	Fri,  1 Dec 2023 22:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzYWVxI0"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LOjQ9wXj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fT/Riyrg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87092619A0
-	for <linux-pci@vger.kernel.org>; Fri,  1 Dec 2023 22:26:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06812C433CA;
-	Fri,  1 Dec 2023 22:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701469619;
-	bh=sXzWevrTmFEZUP1GjYu+eWjRhWPfbGw0G7P/NwqYxcs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mzYWVxI02WJPUypFGMvBAIJHVKWjsofkMH50162ajTM4uoW48JXcJqUqqzKRZh4Od
-	 X0W3naiHw5TIbIMjzygGx9kCbP/xMb/7AovCGqL5i7fjRnlycfrrJgPQ44gmXMoAEH
-	 OzfVShXaeA1WvbNcVulxbjrfm6pZW+ry4/rN9SNSCGj0mVNRcdwXXn+AiAqm3fHKMa
-	 W2h9G4elUNMuR8XNU6drZG0b3ApuwvEU3I4tzC32fssfYvba0ujWxSg+VeDTNBXKbn
-	 Jk+pfIgVWLKG5ZIMZxFuimK2ruad9L/IYdn+e+Htypiwv8qmcmRvmrdsnb+gMYxMQ6
-	 JSCB8kBJ8yiCw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50abbb23122so3788612e87.3;
-        Fri, 01 Dec 2023 14:26:58 -0800 (PST)
-X-Gm-Message-State: AOJu0YxWq7CpgEK/5FX1rDPjqQbJ/3ErlPIdN5tw2zFsAAIv6NXH1GV4
-	g9zZXrae7MczU7/2IPlvjUBGYlu6o8CV4XQwDQ==
-X-Google-Smtp-Source: AGHT+IFYQcq9rNStRsUKCcoXAXJOUjqDHbZ1z6vR1WPUs0Nnj8At+JXXc+IVMGmu5UwZw3jKCWJMlo1mo+u2Dyp2jtY=
-X-Received: by 2002:a05:6512:203b:b0:50b:d1af:8ce6 with SMTP id
- s27-20020a056512203b00b0050bd1af8ce6mr1096529lfs.60.1701469617211; Fri, 01
- Dec 2023 14:26:57 -0800 (PST)
+Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC9712A;
+	Fri,  1 Dec 2023 14:32:07 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailnew.west.internal (Postfix) with ESMTP id 8617A2B00344;
+	Fri,  1 Dec 2023 17:32:02 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 01 Dec 2023 17:32:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1701469922; x=1701477122; bh=3t
+	kYsMWbKQfh7kgu+7rruDUDrB2QAfkIq4Km6a5Mvvo=; b=LOjQ9wXjw4VM9J3b9P
+	rwSsQ+E+CzZ6OSUJx0CMjinOlbgQZN3Rhh1SJW/C2qpjTTJcV7Y+psEN4lY2G+Ub
+	qpGbWjkTy99IlUAjtuReYp/hb2z+Hq4SFun44JxlvFte/V+pxdserNMsR95EHsTH
+	/lMg9fM6tkV9gj4XUH56gCj9ZiEV2uuI5n+KoxVjioItGbME3DZFaDYVS60hLZ7w
+	HpwO2Zydt6ay0ZpmkaMh0hVbeFgoxn3NY3qvG24Fm5Y6jPWU+FQoWJuZMrR+LHM5
+	7HHF+bSWwBqCq4VjDhf4GUyVdZe33/fxGK+L2/XF5+TEipW/Ow52/jc8fWYzPVEd
+	9IMA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1701469922; x=1701477122; bh=3tkYsMWbKQfh7
+	kgu+7rruDUDrB2QAfkIq4Km6a5Mvvo=; b=fT/RiyrgsZhWtJbhIUhKOFxdnURkA
+	Wzkzu5sR5UiNAkhrL0ERyd5vMBWhFdzekf4ELeQnJ7lYImJ8haAJD2uk7gv1A1Ge
+	13VazCKbT3mmQFPTWbLgkI02mKMsuTQJKpu9nBCbZEicb+6UuFy0nihReEOvArw2
+	1Jd9xk2bZ+4E8RvgGpxlajNbjG6fe6VugiorVf8/cfKYW5lYtPm3Lo5/OWU7DOKa
+	1D1FjPx/sAGznqapbZJH0EZEXUBzNXxV6TSzCzehMU6lpysGAsVCpwHREDdqv6IN
+	Mg98p9ms6N5A0A8s7a/YqbFnJz5o0emQn8tvN+Zxtv1usJGkKXue90m3g==
+X-ME-Sender: <xms:4V5qZZnn4bFbmDMmG45kZTZp0rFsmvSSSOIPt2eJIOyEZQjtfoXm-w>
+    <xme:4V5qZU0uRSqgIcS5CC6DWOvAn5J1QBspmFww-vKuRnX6V0zVbgSl6-gGmI36v98aC
+    hWNq0_WtzRpCA1pJnQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeiledgudeiudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:4V5qZfo8apN8dyULmN7Ku45hApYE5RA8EoOtVkiJejanSL8WhK7brg>
+    <xmx:4V5qZZn-X353ChUMAH6g0xsfOcdSpDscqreoik1stSrVE_lV81gblA>
+    <xmx:4V5qZX2h7Kwh4kM7IG_rxYoe6BKP3jxX3eK3e7pg_i2R6s6e6tUKQw>
+    <xmx:4l5qZe8syULkaIcrCbpBN_N-7JlmDhNB_wuUwCscP8Z6E2l0Ip6Qxp5bQYU>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 0EF3BB60089; Fri,  1 Dec 2023 17:32:01 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231130165700.685764-1-herve.codina@bootlin.com>
-In-Reply-To: <20231130165700.685764-1-herve.codina@bootlin.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 1 Dec 2023 16:26:45 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
-Message-ID: <CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
-	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <375165a6-e748-495e-9f74-81bb6496ac7e@app.fastmail.com>
+In-Reply-To: <90423946a0dbdcdb7cb3c93b3897683ce07c5e69.camel@redhat.com>
+References: <20231201121622.16343-1-pstanner@redhat.com>
+ <20231201121622.16343-3-pstanner@redhat.com>
+ <32552a65-b540-4baa-9180-e04a278f0ca6@app.fastmail.com>
+ <90423946a0dbdcdb7cb3c93b3897683ce07c5e69.camel@redhat.com>
+Date: Fri, 01 Dec 2023 23:31:36 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Philipp Stanner" <pstanner@redhat.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Dave Jiang" <dave.jiang@intel.com>,
+ "Uladzislau Koshchanka" <koshchanka@gmail.com>, "Neil Brown" <neilb@suse.de>,
+ "Niklas Schnelle" <schnelle@linux.ibm.com>, "John Sanpe" <sanpeqf@gmail.com>,
+ "Kent Overstreet" <kent.overstreet@gmail.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Kees Cook" <keescook@chromium.org>, "David Gow" <davidgow@google.com>,
+ "Yury Norov" <yury.norov@gmail.com>,
+ "wuqiang.matt" <wuqiang.matt@bytedance.com>,
+ "Jason Baron" <jbaron@akamai.com>,
+ "Kefeng Wang" <wangkefeng.wang@huawei.com>,
+ "Ben Dooks" <ben.dooks@codethink.co.uk>, "Danilo Krummrich" <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] lib: move pci-specific devres code to drivers/pci/
+Content-Type: text/plain
 
-On Thu, Nov 30, 2023 at 10:57=E2=80=AFAM Herve Codina <herve.codina@bootlin=
-.com> wrote:
+On Fri, Dec 1, 2023, at 20:00, Philipp Stanner wrote:
 >
-> Hi,
+> The devres functions have different compile rules than the iomap
+> functions have.
 >
-> The commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> creates of_node for PCI devices.
-> During the insertion handling of these new DT nodes done by of_platform,
-> new devices (struct device) are created.
-> For each PCI devices a struct device is already present (created and
-> handled by the PCI core).
-> Creating a new device from a DT node leads to some kind of wrong struct
-> device duplication to represent the exact same PCI device.
->
-> This patch series first introduces device_{add,remove}_of_node() in
-> order to add or remove a newly created of_node to an already existing
-> device.
-> Then it fixes the DT node creation for PCI devices to add or remove the
-> created node to the existing PCI device without any new device creation.
+> I would dislike it very much to need yet another preprocessor
+> instruction, especially if we're talking about #ifdef PCI within the
+> very PCI driver.
 
-I think the simpler solution is to get the DT node created earlier. We
-are just asking for pain if the DT node is set for the device at
-different times compared to static DT nodes.
+Ah right, I had forgotten about s390 zpci being special here,
+otherwise we wouldn't need an #ifdef here.
 
-The following fixes the lack of of_node link. The DT unittest fails
-with the change though and I don't see why.
-
-Also, no idea if the bridge part works because my qemu setup doesn't
-create bridges (anyone got a magic cmdline to create them?).
-
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 9c2137dae429..46b252bbe500 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -342,8 +342,6 @@ void pci_bus_add_device(struct pci_dev *dev)
-         */
-        pcibios_bus_add_device(dev);
-        pci_fixup_device(pci_fixup_final, dev);
--       if (pci_is_bridge(dev))
--               of_pci_make_dev_node(dev);
-        pci_create_sysfs_dev_files(dev);
-        pci_proc_attach_device(dev);
-        pci_bridge_d3_update(dev);
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 51e3dd0ea5ab..e15eaf0127fc 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
-                return 0;
-
-        node =3D of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn=
-);
-+       if (!node && pci_is_bridge(dev))
-+               of_pci_make_dev_node(dev);
-        if (!node)
-                return 0;
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ea476252280a..e50b07fe5a63 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6208,9 +6208,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,
-0x9a31, dpc_log_size);
-  * before driver probing, it might need to add a device tree node as the f=
-inal
-  * fixup.
-  */
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node=
-);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node=
-);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node=
-);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node=
-);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node=
-);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node=
-);
-
- /*
-  * Devices known to require a longer delay before first config space acces=
-s
+      Arnd
 
