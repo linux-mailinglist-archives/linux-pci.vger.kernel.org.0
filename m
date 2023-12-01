@@ -1,179 +1,164 @@
-Return-Path: <linux-pci+bounces-327-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-331-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5728800A16
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 12:50:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6ECA800A66
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 13:06:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6EC91C20A79
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 11:50:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7B4D1C20C69
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 12:06:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935641D680;
-	Fri,  1 Dec 2023 11:50:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008CA24B33;
+	Fri,  1 Dec 2023 12:06:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="e8G17xEo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jgqH76Jo"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Jw5TRQCA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E3D1704;
-	Fri,  1 Dec 2023 03:50:40 -0800 (PST)
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailout.west.internal (Postfix) with ESMTP id 9013F3200AAB;
-	Fri,  1 Dec 2023 06:50:37 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Fri, 01 Dec 2023 06:50:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1701431437; x=1701517837; bh=jXjXrL2mgt
-	AhGYKgcBP0Wx2CKz797XazsgwROZ/jzWY=; b=e8G17xEobyMa27KHIIvZPT+i3q
-	ooQo9Ob5ml8IvuHuMaiOjmdZJWtDpLoObh/z4XeAUuX4QpekUR4PdEhdzOH1lgA+
-	d7rv5c12frW4M4qC4C9Xae2n70cwYrOhWJ/ISev2px5xINy6nxJxzxqVE1kU5H0s
-	RN+FB4CmaubnOxE4NGUiY1ZgliXRhdYC8C8aVGD6jBMZ3Tmpdjr9pQsbtbKt1jsn
-	+6G9LHN1E4MPCFIo7pfqtnAQktEsue+vn3DGKaLU1r0tVZYtoNPIk3Gp/jAMD3+V
-	i9FpFAgsfkcm33Mu89tOfcf1LtoBl6rYQ2lhzr7bedzT9+wF7mO0+ss5hloA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701431437; x=1701517837; bh=jXjXrL2mgtAhG
-	YKgcBP0Wx2CKz797XazsgwROZ/jzWY=; b=jgqH76Jo0tfYlS3yw0FTrrlf+LqiO
-	wvQVWEUDB6YAP2RA+PrxAyxt7rTB4jjEzERSkAeJdeuWjDviPwB+BpTxjjKYJyOV
-	efjfNmqT4Fudi9n/dyBNE5W+7ADEUFHWxpIgG8xHhyppGjItCdwLw16m1NXshg6H
-	QEzDjoMetGdzdTtn7wYNdPIRQp85q9AZTaDRqE2Zk8xws4Hxv8NcfbYOwvywY+7g
-	OGBQ8kaytY7dOj64y1WJ5au/2D4KdkrFpPt5vHNCLjd/h4UxtQWgDlR64tMhZSPi
-	5hAlpuDL0z20lSNA7x4wiw5nBSyTD75ZziW/X9ohbw7E/EvIxc7BhjPBQ==
-X-ME-Sender: <xms:jMhpZRo6CywO-zJzOOLGSnuwZ1bepIM6WQwj8q0FErQikwbeFGX5Rw>
-    <xme:jMhpZTo16Tq_bcuQHV0zCaHhp_wm_fBoGqlXp_6SoqaykxmVuqads7JdefdLkvDYh
-    zqCy6IVXdnW2WU2los>
-X-ME-Received: <xmr:jMhpZeMd9u_EsIy0-zhH0aNB8XrHIexnUR3ctnlkryCqRbvmJp4CObVMB7HQQijGOBosMAg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeiledgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpeflihgrgihunhcujggrnhhguceojhhirgiguhhnrdihrghnghes
-    fhhlhihgohgrthdrtghomheqnecuggftrfgrthhtvghrnhepvdeuteekleeuudfgueethe
-    dtuddthfdtleffgefhieehfeeigedvtdeuveetiedunecuffhomhgrihhnpehkvghrnhgv
-    lhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:jMhpZc4XzPZHTj1NrBmhw5RfXgFRzzSv3Wl99-W5GHplQryTmZOLIw>
-    <xmx:jMhpZQ77dESwpSM0tgvTFpzrmQIUTm-MT3cU9ZdDHenOBv1FH5_kOw>
-    <xmx:jMhpZUgVLFUaJSiJQC2A0ZLrqfQ-0VFAUtUvvczTKIdvdi3T63JHpA>
-    <xmx:jchpZdtZgwR_huc0n7GixtSvYpkABpKRFaAOI08zKIEqA5CktXusuw>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 Dec 2023 06:50:35 -0500 (EST)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-To: linux-pci@vger.kernel.org
-Cc: lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenhuacai@kernel.org,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v6] pci: loongson: Workaround MIPS firmware MRRS settings
-Date: Fri,  1 Dec 2023 11:50:28 +0000
-Message-Id: <20231201115028.84351-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.34.1
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AA2171C;
+	Fri,  1 Dec 2023 04:06:36 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B17dVRO022501;
+	Fri, 1 Dec 2023 12:06:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=rVEpqfq7a4wLZc0qYwymebX7KLCz/XpeFGNGTmJrPTU=;
+ b=Jw5TRQCAbkNuKJ8ADQBLQGtj97nIm/BGR0TxC6lHL06PHL4h2cvM702FMLibNKrWBdCG
+ KE0Gdn96U3C3A0CQ7YJN3GNAkuzQyRwHAaij8lw+Ij1k1DbFw0/jf7bau/xTp+e4WA4o
+ gFXyzptCKPaq1a/KPwcWJFCKlwkBoTn1KXNcpMuBE1+aPn2/K5+cFb4xPCJXaF1URLvU
+ 7qsrkd7RgZD3r01Y8Fsq04xMJwhTdOlWgaFLr73Eh+u0nRbnEUhv4GqYgvh2nW2OCCqg
+ U9C3YSreNgL3vq6151UDSbIFu7CXXkGGw1EqmmL6GLhFdftTSNnsFHyDUNesWFhOuyxn qA== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uq2kp9jn1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Dec 2023 12:06:26 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3B1C6LHV020110;
+	Fri, 1 Dec 2023 12:06:21 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3unmf08shw-1;
+	Fri, 01 Dec 2023 12:06:21 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B1C6LOc020105;
+	Fri, 1 Dec 2023 12:06:21 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3B1C6L5B020104;
+	Fri, 01 Dec 2023 12:06:21 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+	id 11C5B3064; Fri,  1 Dec 2023 17:36:20 +0530 (+0530)
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To: agross@kernel.org, andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org,
+        robh+dt@kernel.org
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, robh@kernel.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhi@lists.linux.dev
+Subject: [PATCH v9 0/5] arm64: qcom: sa8775p: add support for EP PCIe
+Date: Fri,  1 Dec 2023 17:36:11 +0530
+Message-Id: <1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VZXBe7aYoFsbXtDXK1Qe83WOImAMIUqw
+X-Proofpoint-GUID: VZXBe7aYoFsbXtDXK1Qe83WOImAMIUqw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-01_09,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
+ bulkscore=0 clxscore=1011 spamscore=0 mlxlogscore=703 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2312010080
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This is a partial revert of commit 8b3517f88ff2 ("PCI:
-loongson: Prevent LS7A MRRS increases") for MIPS based Loongson.
+This series adds the relavent DT bindings, new compatible string,
+add support to EPF driver and add EP PCIe node in dtsi file for
+ep pcie0 controller.
 
-There are many MIPS based Loongson systems in wild that
-shipped with firmware which does not set maximum MRRS properly.
+v8 -> v9:
+- update author in "Add pci_epf_mhi_ prefix to the function" patch.
+- add ack by and reviewed by tag in commit message.
 
-Limiting MRRS to 256 for all as MIPS Loongson comes with higher
-MRRS support is considered rare.
+v7 -> v8:
+- Add new patch PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function
+  names
+- Update PCI: epf-mhi: Add support for SA8775P patch on top of the new
+  patch and update commit message.
 
-It must be done at device enablement stage because MRRS setting
-may get lost if the parent bridge lost PCI_COMMAND_MASTER, and
-we are only sure parent bridge is enabled at this point.
+v6 -> v7:
+- add reviewed by tag in commit message in all patches.
+- update commit message in patch 2 as per comment.
+- update reason for reusing PID in commit message.
 
-Cc: stable@vger.kernel.org
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217680
-Fixes: 8b3517f88ff2 ("PCI: loongson: Prevent LS7A MRRS increases")
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
-v4: Improve commit message
-v5:
-	- Improve commit message and comments.
-	- Style fix from Huacai's off-list input.
-v6: Fix a typo
----
- drivers/pci/controller/pci-loongson.c | 47 ++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 5 deletions(-)
+v5 -> v6:
+- update cover letter.
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index d45e7b8dc530..e181d99decf1 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -80,13 +80,50 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_LPC, system_bus_quirk);
- 
-+/*
-+ * Some Loongson PCIe ports have h/w limitations of maximum read
-+ * request size. They can't handle anything larger than this.
-+ * Sane firmware will set proper MRRS at boot, so we only need
-+ * no_inc_mrrs for bridges. However, some MIPS Loongson firmware
-+ * won't set MRRS properly, and we have to enforce maximum safe
-+ * MRRS, which is 256 bytes.
-+ */
-+#ifdef CONFIG_MIPS
-+static void loongson_set_min_mrrs_quirk(struct pci_dev *pdev)
-+{
-+	struct pci_bus *bus = pdev->bus;
-+	struct pci_dev *bridge;
-+	static const struct pci_device_id bridge_devids[] = {
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS2K_PCIE_PORT0) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT0) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT1) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT2) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT3) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT4) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT5) },
-+		{ PCI_VDEVICE(LOONGSON, DEV_LS7A_PCIE_PORT6) },
-+		{ 0, },
-+	};
-+
-+	/* look for the matching bridge */
-+	while (!pci_is_root_bus(bus)) {
-+		bridge = bus->self;
-+		bus = bus->parent;
-+
-+		if (pci_match_id(bridge_devids, bridge)) {
-+			if (pcie_get_readrq(pdev) > 256) {
-+				pci_info(pdev, "limiting MRRS to 256\n");
-+				pcie_set_readrq(pdev, 256);
-+			}
-+			break;
-+		}
-+	}
-+}
-+DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_set_min_mrrs_quirk);
-+#endif
-+
- static void loongson_mrrs_quirk(struct pci_dev *pdev)
- {
--	/*
--	 * Some Loongson PCIe ports have h/w limitations of maximum read
--	 * request size. They can't handle anything larger than this. So
--	 * force this limit on any devices attached under these ports.
--	 */
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
- 
- 	bridge->no_inc_mrrs = 1;
+v4 -> v5:
+- add maxItems to the respective field to constrain io space and
+  interrupt in all variants.
+
+v3 -> v4:
+- add maxItems field in dt bindings
+- update comment in patch2
+- dropped PHY driver patch as it is already applied [1]
+- update comment in EPF driver patch
+- update commect in dtsi and add iommus instead of iommu-map
+
+[1] https://lore.kernel.org/all/169804254205.383714.18423881810869732517.b4-ty@kernel.org/
+
+v2 -> v3:
+- removed if/then schemas, added minItems for reg,
+  reg-bnames, interrupt and interrupt-names instead.
+- adding qcom,sa8775p-pcie-ep compitable for sa8775p
+  as we have some specific change to add.
+- reusing sm8450's pcs_misc num table as it is same as sa8775p.
+  used appropriate namespace for pcs.
+- remove const from sa8775p_header as kernel test robot
+  throwing some warnings due to this.
+- remove fallback compatiable as we are adding compatiable for sa8775p.
+
+v1 -> v2:
+- update description for dma
+- Reusing qcom,sdx55-pcie-ep compatibe so remove compaitable
+  for sa8775p
+- sort the defines in phy header file and remove extra defines
+- add const in return type pci_epf_header and remove MHI_EPF_USE_DMA
+  flag as hdma patch is not ready
+- add fallback compatiable as qcom,sdx55-pcie-ep, add iommu property
+
+
+Manivannan Sadhasivam (1):
+  PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function names
+
+Mrinmay Sarkar (4):
+  dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
+  PCI: qcom-ep: Add support for SA8775P SOC
+  PCI: epf-mhi: Add support for SA8775P
+  arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 64 +++++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 46 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
+ drivers/pci/endpoint/functions/pci-epf-mhi.c       | 21 ++++++-
+ 4 files changed, 128 insertions(+), 4 deletions(-)
+
 -- 
-2.34.1
+2.7.4
 
 
