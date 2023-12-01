@@ -1,118 +1,98 @@
-Return-Path: <linux-pci+bounces-370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87F74801657
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:32:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEC688016D6
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:46:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B875B1C20A40
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:32:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D6CFB20BF8
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:46:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12733619C7;
-	Fri,  1 Dec 2023 22:32:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5488521A18;
+	Fri,  1 Dec 2023 22:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LOjQ9wXj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fT/Riyrg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kx1uGmM9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC9712A;
-	Fri,  1 Dec 2023 14:32:07 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.west.internal (Postfix) with ESMTP id 8617A2B00344;
-	Fri,  1 Dec 2023 17:32:02 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 01 Dec 2023 17:32:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1701469922; x=1701477122; bh=3t
-	kYsMWbKQfh7kgu+7rruDUDrB2QAfkIq4Km6a5Mvvo=; b=LOjQ9wXjw4VM9J3b9P
-	rwSsQ+E+CzZ6OSUJx0CMjinOlbgQZN3Rhh1SJW/C2qpjTTJcV7Y+psEN4lY2G+Ub
-	qpGbWjkTy99IlUAjtuReYp/hb2z+Hq4SFun44JxlvFte/V+pxdserNMsR95EHsTH
-	/lMg9fM6tkV9gj4XUH56gCj9ZiEV2uuI5n+KoxVjioItGbME3DZFaDYVS60hLZ7w
-	HpwO2Zydt6ay0ZpmkaMh0hVbeFgoxn3NY3qvG24Fm5Y6jPWU+FQoWJuZMrR+LHM5
-	7HHF+bSWwBqCq4VjDhf4GUyVdZe33/fxGK+L2/XF5+TEipW/Ow52/jc8fWYzPVEd
-	9IMA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701469922; x=1701477122; bh=3tkYsMWbKQfh7
-	kgu+7rruDUDrB2QAfkIq4Km6a5Mvvo=; b=fT/RiyrgsZhWtJbhIUhKOFxdnURkA
-	Wzkzu5sR5UiNAkhrL0ERyd5vMBWhFdzekf4ELeQnJ7lYImJ8haAJD2uk7gv1A1Ge
-	13VazCKbT3mmQFPTWbLgkI02mKMsuTQJKpu9nBCbZEicb+6UuFy0nihReEOvArw2
-	1Jd9xk2bZ+4E8RvgGpxlajNbjG6fe6VugiorVf8/cfKYW5lYtPm3Lo5/OWU7DOKa
-	1D1FjPx/sAGznqapbZJH0EZEXUBzNXxV6TSzCzehMU6lpysGAsVCpwHREDdqv6IN
-	Mg98p9ms6N5A0A8s7a/YqbFnJz5o0emQn8tvN+Zxtv1usJGkKXue90m3g==
-X-ME-Sender: <xms:4V5qZZnn4bFbmDMmG45kZTZp0rFsmvSSSOIPt2eJIOyEZQjtfoXm-w>
-    <xme:4V5qZU0uRSqgIcS5CC6DWOvAn5J1QBspmFww-vKuRnX6V0zVbgSl6-gGmI36v98aC
-    hWNq0_WtzRpCA1pJnQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeiledgudeiudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:4V5qZfo8apN8dyULmN7Ku45hApYE5RA8EoOtVkiJejanSL8WhK7brg>
-    <xmx:4V5qZZn-X353ChUMAH6g0xsfOcdSpDscqreoik1stSrVE_lV81gblA>
-    <xmx:4V5qZX2h7Kwh4kM7IG_rxYoe6BKP3jxX3eK3e7pg_i2R6s6e6tUKQw>
-    <xmx:4l5qZe8syULkaIcrCbpBN_N-7JlmDhNB_wuUwCscP8Z6E2l0Ip6Qxp5bQYU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 0EF3BB60089; Fri,  1 Dec 2023 17:32:01 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D69619AF
+	for <linux-pci@vger.kernel.org>; Fri,  1 Dec 2023 22:45:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7810CC433C7;
+	Fri,  1 Dec 2023 22:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701470758;
+	bh=mCohPRAX+vrdHwTJQfgkUwLwKKdD+fr/q27He1nuF8E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Kx1uGmM9g+AIj3wuXBYWMCmQc9JPLjuznc9FaYjduL06/UxSMwuS8ZN7X/yHVTnCD
+	 WokxVBc+afmbzOK1IXvBwaMbSVcetA7WC9BhkiWjLVefqDhR0ZvnFcHEuGe35jQf+S
+	 IURMlnW9WmH++LEenQOz1HU4fVh+/NNVMDiUhUbaMuSnshQFxjVNqH8bRpJmEzSHCs
+	 4centAtD1uaulNfuu66PXGaTzLujuEVPIHiiUWoQoVYRqje9rTG2+ko6aF+23nvHhc
+	 nBTVHL8ZeulJ9judD0RjvheDiMGblkuL0zhKYgCKdTmvz7lzc5o7Auh2O/ZjzVyZsa
+	 dHxqFZTpv1WmQ==
+Date: Fri, 1 Dec 2023 16:45:56 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+	Max Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>,
+	Stefano Stabellini <stefano.stabellini@xilinx.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	PCI <linux-pci@vger.kernel.org>,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
+Message-ID: <20231201224556.GA534342@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <375165a6-e748-495e-9f74-81bb6496ac7e@app.fastmail.com>
-In-Reply-To: <90423946a0dbdcdb7cb3c93b3897683ce07c5e69.camel@redhat.com>
-References: <20231201121622.16343-1-pstanner@redhat.com>
- <20231201121622.16343-3-pstanner@redhat.com>
- <32552a65-b540-4baa-9180-e04a278f0ca6@app.fastmail.com>
- <90423946a0dbdcdb7cb3c93b3897683ce07c5e69.camel@redhat.com>
-Date: Fri, 01 Dec 2023 23:31:36 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Philipp Stanner" <pstanner@redhat.com>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Dave Jiang" <dave.jiang@intel.com>,
- "Uladzislau Koshchanka" <koshchanka@gmail.com>, "Neil Brown" <neilb@suse.de>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>, "John Sanpe" <sanpeqf@gmail.com>,
- "Kent Overstreet" <kent.overstreet@gmail.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Kees Cook" <keescook@chromium.org>, "David Gow" <davidgow@google.com>,
- "Yury Norov" <yury.norov@gmail.com>,
- "wuqiang.matt" <wuqiang.matt@bytedance.com>,
- "Jason Baron" <jbaron@akamai.com>,
- "Kefeng Wang" <wangkefeng.wang@huawei.com>,
- "Ben Dooks" <ben.dooks@codethink.co.uk>, "Danilo Krummrich" <dakr@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] lib: move pci-specific devres code to drivers/pci/
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
 
-On Fri, Dec 1, 2023, at 20:00, Philipp Stanner wrote:
->
-> The devres functions have different compile rules than the iomap
-> functions have.
->
-> I would dislike it very much to need yet another preprocessor
-> instruction, especially if we're talking about #ifdef PCI within the
-> very PCI driver.
+On Fri, Dec 01, 2023 at 04:26:45PM -0600, Rob Herring wrote:
+> On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:
+> ...
 
-Ah right, I had forgotten about s390 zpci being special here,
-otherwise we wouldn't need an #ifdef here.
+> Also, no idea if the bridge part works because my qemu setup doesn't
+> create bridges (anyone got a magic cmdline to create them?).
 
-      Arnd
+I probably copied this from somewhere and certainly couldn't construct
+it from scratch, but it did create a hierarchy like this:
+
+  00:04.0 bridge to [bus 01-04] (Root Port)
+  01:00.0 bridge to [bus 02-04] (Switch Upstream Port)
+  02:00.0 bridge to [bus 03] (Switch Downstream Port)
+  02:01.0 bridge to [bus 04] (Switch Downstream Port)
+  03:00.0 endpoint
+  04:00.0 endpoint
+
+  IMAGE=ubuntu.img
+  KERNEL=~/linux/arch/x86/boot/bzImage
+  IMGDIR=~/virt/img/
+
+  qemu-system-x86_64 -enable-kvm -s -m 2048 $IMAGE \
+      -device pcie-root-port,id=root_port1,chassis=1,slot=1 \
+      -device x3130-upstream,id=upstream_port1,bus=root_port1 \
+      -device xio3130-downstream,id=downstream_port1,bus=upstream_port1,chassis=2,slot=1 \
+      -device xio3130-downstream,id=downstream_port2,bus=upstream_port1,chassis=2,slot=2 \
+      -drive file=${IMGDIR}/nvme.qcow2,if=none,id=nvme1,snapshot=on \
+      -device nvme,drive=nvme1,serial=nvme1,cmb_size_mb=2048,bus=downstream_port1 \
+      -drive file=${IMGDIR}/nvme2.qcow2,if=none,id=nvme2,snapshot=on \
+      -device nvme,drive=nvme2,serial=nvme1,bus=downstream_port2 \
+      -virtfs local,id=home,path=/home/,security_model=mapped,mount_tag=home \
+      -nographic \
+      -kernel $KERNEL \
+      -append "root=/dev/sda2 rootfstype=ext4 console=ttyS0,38400n8"
 
