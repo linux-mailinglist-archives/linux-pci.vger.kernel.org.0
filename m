@@ -1,140 +1,138 @@
-Return-Path: <linux-pci+bounces-372-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-373-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 567338016DE
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:49:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 316FE8016E9
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:56:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BC0D1F2108A
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:49:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E160B2812A2
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:56:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98E838DD2;
-	Fri,  1 Dec 2023 22:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427AC38DD2;
+	Fri,  1 Dec 2023 22:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvKxojd9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlTyL5Na"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B5B619D4;
-	Fri,  1 Dec 2023 22:49:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FABC433C7;
-	Fri,  1 Dec 2023 22:49:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F828619D4;
+	Fri,  1 Dec 2023 22:56:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A08C433C8;
+	Fri,  1 Dec 2023 22:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701470970;
-	bh=7UHBRH5A/rAUW8O3WYeKaOaOXX0+pl8vP8IIGkcTjO8=;
+	s=k20201202; t=1701471371;
+	bh=GVeXptVzISkp+LH6rP7ABvt7j/9kuofhAXSzf6mU7l8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UvKxojd96ybvz4wCT9QMbUD7BYFKOW7L32k1cM25SmfLk6GBxSewQ5EydhsMm94us
-	 rygz+JfUakNQhTBUUoZVdDPJZbLsJOmsHmZcxkfXI74F+u5hHmYqcOFdSgYh+A3x59
-	 jkiHiPltMgj7x0VouBYtCgsE2dAgWul/msywmd8AhKr2goC5+57p0FTwkJfxIclrgU
-	 YP/WqlHhVtbEvhtLIJwTT0oAaL/v1k0YU0Vty1JTCYD1U6z+HOZzPcBat3lC0hGqGe
-	 Dey12bQ/+2mx2mUkRM4vY28KyXA1OpnRC9gHm2DBWfkJHK9GUMU6ggiR549HbVmcXk
-	 bu0iD+ZH2Vf5Q==
-Date: Fri, 1 Dec 2023 16:49:28 -0600
+	b=ZlTyL5Navjtt+nMUpk0afajOVeVQDR77Pt7SGMWB4Q7v/stMRvKg3qER0HZe0B/tB
+	 SOc6ksiIaqIceMMqt2hyLiNeFTVS4WRQ3p6fUsddPqqsV5Bh0BeNEoKk9OKPGDaMlf
+	 Wuu/Guum7yPnLVyDB3umrP6cNa74sdsmvkBuxIXV8c9f4XyuMby/fN5k0ejxocAJ/9
+	 bGSWcZEPs0mAZucGyrGTFJxwRtOoRXK2dy8JGsNNXP5tQcE59nU3vgWcvPx+tuPqe3
+	 SCsPX4Z13RNDe+WXBEL70a7MB7WnSEc7eNxEq/3d9IAffSRPCTblWTd57tl+pLeO78
+	 uYLdLsWN9Nviw==
+Date: Fri, 1 Dec 2023 16:56:09 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	Rob Herring <robh@kernel.org>, Max Zhen <max.zhen@amd.com>,
-	Sonal Santan <sonal.santan@amd.com>,
-	Stefano Stabellini <stefano.stabellini@xilinx.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: of: Attach created of_node to existing device
-Message-ID: <20231201224928.GA534494@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linuxppc-dev@lists.ozlabs.org,
+	James Smart <james.smart@broadcom.com>,
+	Dick Kennedy <dick.kennedy@broadcom.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/6] x86: Use PCI_HEADER_TYPE_* instead of literals
+Message-ID: <20231201225609.GA534714@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231130165700.685764-3-herve.codina@bootlin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231201204447.GA527927@bhelgaas>
 
-On Thu, Nov 30, 2023 at 05:56:59PM +0100, Herve Codina wrote:
-> The commit 407d1a51921e ("PCI: Create device tree node for bridge")
-> creates of_node for PCI devices.
-> During the insertion handling of these new DT nodes done by of_platform,
-> new devices (struct device) are created.
-> For each PCI devices a struct device is already present (created and
-> handled by the PCI core).
-> Having a second struct device to represent the exact same PCI device is
-> not correct.
+[+cc scsi, powerpc folks]
 
-Can you rewrap this or, if you intend multiple paragraphs, add blank
-lines between them?
+On Fri, Dec 01, 2023 at 02:44:47PM -0600, Bjorn Helgaas wrote:
+> On Fri, Nov 24, 2023 at 11:09:13AM +0200, Ilpo Järvinen wrote:
+> > Replace 0x7f and 0x80 literals with PCI_HEADER_TYPE_* defines.
+> > 
+> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> 
+> Applied entire series on the PCI "enumeration" branch for v6.8,
+> thanks!
+> 
+> If anybody wants to take pieces separately, let me know and I'll drop
+> from PCI.
 
-> On the of_node creation, tell the of_platform that there is no need to
-> create a device for this node (OF_POPULATED flag), link this newly
-> created of_node to the already present device and tell fwnode that the
-> device attached to this of_node is ready (fwnode_dev_initialized()).
-> 
-> With this fix, the of_node are available in the sysfs device tree:
-> /sys/devices/platform/soc/d0070000.pcie/
-> + of_node -> .../devicetree/base/soc/pcie@d0070000
-> + pci0000:00
->   + 0000:00:00.0
->     + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0
->     + 0000:01:00.0
->       + of_node -> .../devicetree/base/soc/pcie@d0070000/pci@0,0/dev@0,0
-> 
-> On the of_node removal, revert the operations.
-> 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/pci/of.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 51e3dd0ea5ab..5afd2731e876 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -615,7 +615,8 @@ void of_pci_remove_node(struct pci_dev *pdev)
->  	np = pci_device_to_OF_node(pdev);
->  	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
->  		return;
-> -	pdev->dev.of_node = NULL;
-> +
-> +	device_remove_of_node(&pdev->dev);
->  
->  	of_changeset_revert(np->data);
->  	of_changeset_destroy(np->data);
-> @@ -668,12 +669,22 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->  	if (ret)
->  		goto out_free_node;
->  
-> +	/*
-> +	 * This of_node will be added to an existing device.
-> +	 * Avoid any device creation and use the existing device
-> +	 */
-> +	of_node_set_flag(np, OF_POPULATED);
-> +	np->fwnode.dev = &pdev->dev;
-> +	fwnode_dev_initialized(&np->fwnode, true);
-> +
->  	ret = of_changeset_apply(cset);
->  	if (ret)
->  		goto out_free_node;
->  
->  	np->data = cset;
-> -	pdev->dev.of_node = np;
-> +
-> +	/* Add the of_node to the existing device */
-> +	device_add_of_node(&pdev->dev, np);
->  	kfree(name);
->  
->  	return;
-> -- 
-> 2.42.0
-> 
+OK, b4 picked up the entire series but I was only cc'd on this first
+patch, so I missed the responses about EDAC, xtensa, bcma already
+being applied elsewhere.
+
+So I kept these in the PCI tree:
+
+  420ac76610d7 ("scsi: lpfc: Use PCI_HEADER_TYPE_MFD instead of literal")
+  3773343dd890 ("powerpc/fsl-pci: Use PCI_HEADER_TYPE_MASK instead of literal")
+  197e0da1f1a3 ("x86/pci: Use PCI_HEADER_TYPE_* instead of literals")
+
+and dropped the others.
+
+x86, SCSI, powerpc folks, if you want to take these instead, let me
+know and I'll drop them.
+
+> > ---
+> >  arch/x86/kernel/aperture_64.c  | 3 +--
+> >  arch/x86/kernel/early-quirks.c | 4 ++--
+> >  2 files changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
+> > index 4feaa670d578..89c0c8a3fc7e 100644
+> > --- a/arch/x86/kernel/aperture_64.c
+> > +++ b/arch/x86/kernel/aperture_64.c
+> > @@ -259,10 +259,9 @@ static u32 __init search_agp_bridge(u32 *order, int *valid_agp)
+> >  							order);
+> >  				}
+> >  
+> > -				/* No multi-function device? */
+> >  				type = read_pci_config_byte(bus, slot, func,
+> >  							       PCI_HEADER_TYPE);
+> > -				if (!(type & 0x80))
+> > +				if (!(type & PCI_HEADER_TYPE_MFD))
+> >  					break;
+> >  			}
+> >  		}
+> > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> > index a6c1867fc7aa..59f4aefc6bc1 100644
+> > --- a/arch/x86/kernel/early-quirks.c
+> > +++ b/arch/x86/kernel/early-quirks.c
+> > @@ -779,13 +779,13 @@ static int __init check_dev_quirk(int num, int slot, int func)
+> >  	type = read_pci_config_byte(num, slot, func,
+> >  				    PCI_HEADER_TYPE);
+> >  
+> > -	if ((type & 0x7f) == PCI_HEADER_TYPE_BRIDGE) {
+> > +	if ((type & PCI_HEADER_TYPE_MASK) == PCI_HEADER_TYPE_BRIDGE) {
+> >  		sec = read_pci_config_byte(num, slot, func, PCI_SECONDARY_BUS);
+> >  		if (sec > num)
+> >  			early_pci_scan_bus(sec);
+> >  	}
+> >  
+> > -	if (!(type & 0x80))
+> > +	if (!(type & PCI_HEADER_TYPE_MFD))
+> >  		return -1;
+> >  
+> >  	return 0;
+> > -- 
+> > 2.30.2
+> > 
 
