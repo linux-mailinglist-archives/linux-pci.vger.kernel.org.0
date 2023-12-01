@@ -1,167 +1,163 @@
-Return-Path: <linux-pci+bounces-363-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-364-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7958B8014E7
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:06:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6262C801597
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:40:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F161FB20F0C
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 21:06:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B1E5281CF8
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 21:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4562551C3F;
-	Fri,  1 Dec 2023 21:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D9959157;
+	Fri,  1 Dec 2023 21:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xn+i0op3"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ha+WtJNw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uaCCuLPf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289FC3B292
-	for <linux-pci@vger.kernel.org>; Fri,  1 Dec 2023 21:06:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F421C433C7;
-	Fri,  1 Dec 2023 21:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701464787;
-	bh=hZxzO+oo9QuwDIeQJ/1Ud31M5z/ZmRdiUgqIznChQlo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Xn+i0op3l1j+L7YnEAAsB+dM2yZrK1yAWF66wwf8IQEEv4DCYOPXCOQd2qD4mDqG8
-	 7dt8QNb0GEebkin0FgydC9gWkR6GtqIL005D+IQHu4D8txknY3fh/VKUsrUuIfln/u
-	 D2bqMENKNDhw5ml7Z1NFOwFUjbMXd8ESs6p3GqR47yoW4+vMSAjcatGmjKkIif1h9C
-	 JbVoMGNQXTvDkhWeiwzXmSud+4wdPBFa730KMJn15fnOb/g57skHyVdtXHmuil2kCE
-	 LUY/vC9Owi/72WW/EETbr+/VSFQTrneHZinM3LZAdBrecNeGsdiUhEZjMq/hkGDJAD
-	 OU3dg03TMiwxQ==
-Date: Fri, 1 Dec 2023 15:06:25 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] x86/PCI: Clean up open-coded return code mangling
-Message-ID: <20231201210625.GA529122@bhelgaas>
+X-Greylist: delayed 480 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 01 Dec 2023 13:40:49 PST
+Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD16310DB;
+	Fri,  1 Dec 2023 13:40:49 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailnew.west.internal (Postfix) with ESMTP id 8F0AC2B003FF;
+	Fri,  1 Dec 2023 16:32:44 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 01 Dec 2023 16:32:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to; s=fm3; t=
+	1701466364; x=1701473564; bh=EJcI3n/uJ+tyVR7t2YzAuKRIYKbllJExxoU
+	8CSyelqs=; b=Ha+WtJNw/9/yBPf+qCDeJsxi4wbEdXtVXTJwPIVr7hphlE1Cseh
+	CxUTAcflSnUBVVQl3GPxui2/JbjbcscQKbVvGpA/snPzqB3KJs/DGG9mMjrBNDpQ
+	QuuJeXKO6vOuDNzYSfoXH8Or7zdaOK1QK2LZMLCZC1yjnXqPe4UJsSvFNeQy/SGI
+	MDWgVQIJtZkcfoE95VHugnfnWawCffXYSUHbDnqoYuKG2USxIuRfekh0lZxcjfWo
+	uttyshfytiOJIFjmTxw5RJDPAjueGBPIG089jGy6W4rnP2vR2rqCEVagYkDNBQ2d
+	t2R1Yy101W8RfGoFOB/1xYs5hYJNriTPCQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:sender:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1701466364; x=1701473564; bh=EJcI3n/uJ+tyVR7t2YzAuKRIYKbllJExxoU
+	8CSyelqs=; b=uaCCuLPfAVLn5GQiRkbAngaCzzUFPmJX87puR5QOry5DRRke/CQ
+	gsaZO1F1zRsAZd36tBxh90CZnCoQWqmAtcigmOqjhuTxXqAVD2QH/tPt3rASpIqh
+	eYaDHj9vf1W2cUKkLCJhE0d6nKnJcyMYneRaj2gTr6n4eP425IV/xnS6y1NG8YHM
+	QMVAXjAFKc8wCmvWkfJdI9HH6ff8lSdgq2LbvbHyfoL5VyhzrSCoV7BymzZXzgvD
+	DK5uPrOYWUfGMepESDIS4F/zNdd38tsm02FbzUiIXZ49uydjq9qo2BNejeid6Pwc
+	AsgXFtJEfcSL2xJ9r8X1ojcEGrxpekcJdTA==
+X-ME-Sender: <xms:-1BqZfcgDWSLq9eHpXr0jgW21vTOuypcyZ9rDdQkL3bamSLfSmHrDQ>
+    <xme:-1BqZVMP30L2wHwUEB8m9h_z3k_fVo3ST1rIexLctYvLug9qJl6mmkOI9jQaJrNO2
+    LAOop80933raiou4rY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeiledgudeglecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedf
+    tehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrf
+    grthhtvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudek
+    tdfgjeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:-1BqZYhwovKRLdns9H0BhF7vgHFVWMvRv71PT2gDJISqiwd2ZRpfaQ>
+    <xmx:-1BqZQ-GhzIyXBGmfvZ_03aatO-NdZVKlLQMMmOKzQYF5-_fAHw7Wg>
+    <xmx:-1BqZbtSPRquHUqCKwPcI_t3DUrPG_fkgceN1k3wJ67g4gTmsMEgXg>
+    <xmx:_FBqZbcC0Weo24M59vBMuH6ScicJ1NrZCeQWhiCwHMYmgnu5GDQMtXZXYxc>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id EC766B60089; Fri,  1 Dec 2023 16:32:42 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231027093158.19171-1-ilpo.jarvinen@linux.intel.com>
+Message-Id: <330df2f8-3796-4f74-8856-06ae1e46ec9b@app.fastmail.com>
+In-Reply-To: <b54e5d57624dae0b045d8ff129ac2a41f72e182d.camel@redhat.com>
+References: <20231201121622.16343-1-pstanner@redhat.com>
+ <20231201121622.16343-5-pstanner@redhat.com>
+ <619ea619-29e4-42fb-9b27-1d1a32e0ee66@app.fastmail.com>
+ <b54e5d57624dae0b045d8ff129ac2a41f72e182d.camel@redhat.com>
+Date: Fri, 01 Dec 2023 22:32:22 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Philipp Stanner" <pstanner@redhat.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Dave Jiang" <dave.jiang@intel.com>,
+ "Uladzislau Koshchanka" <koshchanka@gmail.com>, "Neil Brown" <neilb@suse.de>,
+ "Niklas Schnelle" <schnelle@linux.ibm.com>, "John Sanpe" <sanpeqf@gmail.com>,
+ "Kent Overstreet" <kent.overstreet@gmail.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Kees Cook" <keescook@chromium.org>, "David Gow" <davidgow@google.com>,
+ "Yury Norov" <yury.norov@gmail.com>,
+ "wuqiang.matt" <wuqiang.matt@bytedance.com>,
+ "Jason Baron" <jbaron@akamai.com>,
+ "Kefeng Wang" <wangkefeng.wang@huawei.com>,
+ "Ben Dooks" <ben.dooks@codethink.co.uk>, "Danilo Krummrich" <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Subject: Re: [PATCH v2 4/4] lib, pci: unify generic pci_iounmap()
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 27, 2023 at 12:31:58PM +0300, Ilpo Järvinen wrote:
-> PCI BIOS gives a return code in 8 bits of eax register which is
-> extracted by open-coded masks and shifting.
-> 
-> Name the return code bits with a define and introduce
-> pcibios_get_return_code() helper to extract the return code to improve
-> code readability. In addition, replace a zero test with
-> PCIBIOS_SUCCESSFUL.
-> 
-> No function changes intended.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Fri, Dec 1, 2023, at 20:37, Philipp Stanner wrote:
+> On Fri, 2023-12-01 at 16:26 +0100, Arnd Bergmann wrote:
+>>=20
+>> static inline bool struct iomem_is_ioport(void __iomem *p)
+>> {
+>> #ifdef CONFIG_HAS_IOPORT
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 uintptr_t start =3D (uintp=
+tr_t) PCI_IOBASE;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 uintptr_t addr =3D (uintpt=
+r_t) p;
+>>=20
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (addr >=3D start && add=
+r < start + IO_SPACE_LIMIT)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 return true;
+>> #endif
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
+>> }
+>>=20
+>> > +#else /* CONFIG_GENERIC_IOMAP. Version from lib/iomap.c will be
+>> > used.=20
+>> > */
+>> > +bool iomem_is_ioport(void __iomem *addr);
+>> > +#define ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT
+>>=20
+>> I'm not sure what this macro is for, since it appears to
+>> do the opposite of what its name suggests: rather than
+>> provide the generic version of iomem_is_ioport(), it
+>> skips that and provides a custom one to go with lib/iomap.c
+>
+> Hmmm well now it's getting tricky.
+>
+> This else-branch is the one where CONFIG_GENERIC_IOMAP is actually set.
+>
+> I think we're running into the "generic not being generic now that IA64
+> has died" problem you were hinting at.
+>
+> If we build for x86 and have CONFIG_GENERIC set, only then do we want
+> iomem_is_ioport() from lib/iomap.c. So the macro serves avoiding a
+> collision between symbols. Because lib/iomap.c might be compiled even
+> if someone else already has defined iomem_is_ioport().
+> I also don't like it, but it was the least bad solution I could come up
+> with
+> Suggestions?
 
-Applied to the PCI "enumeration" branch for v6.8.  x86 folks, if you'd
-prefer to take this, let me know.
+The best I can think of is to move the lib/iomap.c version
+of iomem_is_ioport() to include/asm-generic/iomap.h with
+an #ifndef iomem_is_ioport / #define iomem_is_ioport
+check around it. This file is only included on parisc, alpha,
+sh and when CONFIG_GENERIC_IOMAP is set.
 
-> ---
-> 
-> v2:
-> - Improve changelog
-> - Add helper to avoid repeating FIELD_GET()
-> - Reuse existing ret variable in pcibios_get_irq_routing_table()
-> 
->  arch/x86/pci/pcbios.c | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
-> index 4f15280732ed..01c94ac2fb70 100644
-> --- a/arch/x86/pci/pcbios.c
-> +++ b/arch/x86/pci/pcbios.c
-> @@ -3,6 +3,8 @@
->   * BIOS32 and PCI BIOS handling.
->   */
->  
-> +#include <linux/bits.h>
-> +#include <linux/bitfield.h>
->  #include <linux/pci.h>
->  #include <linux/init.h>
->  #include <linux/slab.h>
-> @@ -29,8 +31,19 @@
->  #define PCIBIOS_HW_TYPE1_SPEC		0x10
->  #define PCIBIOS_HW_TYPE2_SPEC		0x20
->  
-> +/*
-> + * Returned in EAX:
-> + * - AH: return code
-> + */
-> +#define PCIBIOS_RETURN_CODE			GENMASK(15, 8)
-> +
->  int pcibios_enabled;
->  
-> +static u8 pcibios_get_return_code(u32 eax)
-> +{
-> +	return FIELD_GET(PCIBIOS_RETURN_CODE, eax);
-> +}
-> +
->  /* According to the BIOS specification at:
->   * http://members.datafast.net.au/dft0802/specs/bios21.pdf, we could
->   * restrict the x zone to some pages and make it ro. But this may be
-> @@ -154,7 +167,7 @@ static int __init check_pcibios(void)
->  			: "memory");
->  		local_irq_restore(flags);
->  
-> -		status = (eax >> 8) & 0xff;
-> +		status = pcibios_get_return_code(eax);
->  		hw_mech = eax & 0xff;
->  		major_ver = (ebx >> 8) & 0xff;
->  		minor_ver = ebx & 0xff;
-> @@ -227,7 +240,7 @@ static int pci_bios_read(unsigned int seg, unsigned int bus,
->  
->  	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
->  
-> -	return (int)((result & 0xff00) >> 8);
-> +	return pcibios_get_return_code(result);
->  }
->  
->  static int pci_bios_write(unsigned int seg, unsigned int bus,
-> @@ -269,7 +282,7 @@ static int pci_bios_write(unsigned int seg, unsigned int bus,
->  
->  	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
->  
-> -	return (int)((result & 0xff00) >> 8);
-> +	return pcibios_get_return_code(result);
->  }
->  
->  
-> @@ -385,8 +398,9 @@ struct irq_routing_table * pcibios_get_irq_routing_table(void)
->  		  "m" (opt)
->  		: "memory");
->  	DBG("OK  ret=%d, size=%d, map=%x\n", ret, opt.size, map);
-> -	if (ret & 0xff00)
-> -		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", (ret >> 8) & 0xff);
-> +	ret = pcibios_get_return_code(ret);
-> +	if (ret)
-> +		printk(KERN_ERR "PCI: Error %02x when fetching IRQ routing table.\n", ret);
->  	else if (opt.size) {
->  		rt = kmalloc(sizeof(struct irq_routing_table) + opt.size, GFP_KERNEL);
->  		if (rt) {
-> @@ -415,7 +429,7 @@ int pcibios_set_irq_routing(struct pci_dev *dev, int pin, int irq)
->  		  "b" ((dev->bus->number << 8) | dev->devfn),
->  		  "c" ((irq << 8) | (pin + 10)),
->  		  "S" (&pci_indirect));
-> -	return !(ret & 0xff00);
-> +	return pcibios_get_return_code(ret) == PCIBIOS_SUCCESSFUL;
->  }
->  EXPORT_SYMBOL(pcibios_set_irq_routing);
->  
-> -- 
-> 2.30.2
-> 
+The default version in asm-generic/io.h then just needs
+one more #ifdef iomem_is_ioport check around it.
+
+      Arnd
 
