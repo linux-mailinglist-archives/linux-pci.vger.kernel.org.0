@@ -1,199 +1,335 @@
-Return-Path: <linux-pci+bounces-342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 599E5800E8B
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 16:26:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0083C800EA2
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 16:32:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EB4F281AF4
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 15:26:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 233961C20965
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 15:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 382984A9BA;
-	Fri,  1 Dec 2023 15:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 967894AF6D;
+	Fri,  1 Dec 2023 15:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tSSvQ/XN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LR7YgG92"
+	dkim=pass (2048-bit key) header.d=riscv-rocks.de header.i=@riscv-rocks.de header.b="LeVZu0U5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from new3-smtp.messagingengine.com (new3-smtp.messagingengine.com [66.111.4.229])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD311A6;
-	Fri,  1 Dec 2023 07:26:49 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 2FCE2580B7E;
-	Fri,  1 Dec 2023 10:26:49 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 01 Dec 2023 10:26:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1701444409; x=1701451609; bh=kz
-	ZQHdKoAAB6+QfS9nk3zfKOvPAc1RPjvivwc2Gzfyk=; b=tSSvQ/XNZ3ynaWywM6
-	O2qOAAwm6/yH9PjS77M2/Q9aKwXZek8fBS0aSD2KECe1D8Dx/NwERvitb3hqsB6E
-	bwBjdi61UDIa7VUnAcycsP5NqfS4a39CV1wO/UzplGjXgjWrKc8zkBlZ6aQ2i07A
-	aNSwORpTAVmQDEV80XNIAbPnvteoB/F1pY4TZ/CXaY+eqK+Wu0VuG5zHbK8uXwqc
-	nZGJAUlddmzXCu3xEvO5rSiqiOeOAKKnOdtQu4wH0OJhCpouv4xXw9avkArEAgJF
-	KnBo+jRgQO9FqKszPRUTU+RZQR81aPJEBMxqkojgxyLt0zGBl8Gv9oyZKKyXIOqI
-	YQZQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701444409; x=1701451609; bh=kzZQHdKoAAB6+
-	QfS9nk3zfKOvPAc1RPjvivwc2Gzfyk=; b=LR7YgG92SvMJUcrWxR02LU+JCYKuS
-	X9GrH0wt+Ns6is1sMWzBiI4296x+7LNvpS3NRjLVl8R5XvPRVJXavrc7smV2q4H+
-	Jwhdk3u+MJrK1W+G3MYKPc7HSu/VpcxdPfKjd+EX013OdaFKsj1J7eSYjVHGhQ5t
-	i2E3WRlZ5nFK/fnUvA2dpcGBVnUTfTPhjkF51gLu4gbd4bDy0lEFrwOb2M5Yq9Gh
-	3584dzcqvpyfRfRK+g7hwq3h35NXlfGyDOY9VYMEO4jx+lfLAfxD9+4HbQ7Q+ZUM
-	ZvdR9hrAwqUqdVqiZBH5p5aaxb4ZCe+/PXJRT3WlWYaCafc6Y7eaWBf3Q==
-X-ME-Sender: <xms:N_tpZdc2iDyIULkyu78iP-8qvlVtSTEExG7xaQGeygmCEuHpSwMgtg>
-    <xme:N_tpZbOfbm_2vo0beWL8uSogQtGDNpg6i6r8GtA5IlvdGC2L_BsjnWEnWIsEA_J63
-    L6V04OzMRtikUO5gnc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeiledgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:OPtpZWgp-T_dWsVgn7yC5TiiAZYL2j-CEi2qJJq45jBWMPcY1jnWLA>
-    <xmx:OPtpZW99Dblp5rnQ9Ltr9-pcMMSPDOt_Csdui7-h-avKqpmP0lUQTg>
-    <xmx:OPtpZZvmBwqQAEMyRuzM5ZgAXDTzVgF05-zYgladKDIUbhC2lUyfCg>
-    <xmx:OftpZZeI7Btyq6g_HlGQgiGKPT8NE7ZzIsrQNdjdYfLs5A108twiew>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E5FD2B6008D; Fri,  1 Dec 2023 10:26:47 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E94E10F8
+	for <linux-pci@vger.kernel.org>; Fri,  1 Dec 2023 07:32:14 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-a1975fe7befso176317266b.2
+        for <linux-pci@vger.kernel.org>; Fri, 01 Dec 2023 07:32:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscv-rocks.de; s=google; t=1701444732; x=1702049532; darn=vger.kernel.org;
+        h=organization:user-agent:in-reply-to:content-disposition
+         :mime-version:references:mail-followup-to:reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=q3KsEv2cVoEftyN++WY2K2fr8jr0i0yk0+SwSXCnFyU=;
+        b=LeVZu0U5B9W7JvKFjt3dIl0VtsnfkonsfsU4mLiYw0liF3cWHc8mCVAnS3mZENmJLE
+         PkOSdsBFz/0UjUxm7zsYYCZeeJgTw422Nl010Bsy+ybHR672HnFJVtI87ojJf3prZj4J
+         MaX9UGfXPYiyuwLOpbRxhsOiS8w5g7DHBaTvXfQ3fgPTeIaK8bNSO9hzck8CVN3RTBCq
+         I+2fwttM5sM0gi+ZQRLPQai97rp5G3GZvB5asoL7OsaNYWGfpHWW2EDch6Y+KPVMnejf
+         LoUFHpdr/01u1n9w+o0ti/Wr85yz4Xspzp9EAP2McYTNnAeGN7HQ0/1j30x+ZO45UCxm
+         hGUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701444732; x=1702049532;
+        h=organization:user-agent:in-reply-to:content-disposition
+         :mime-version:references:mail-followup-to:reply-to:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q3KsEv2cVoEftyN++WY2K2fr8jr0i0yk0+SwSXCnFyU=;
+        b=GANh2CZ5lhw5Xg1WkI4bHcDQY2brx5czZoeJEDhtV7Q8mjL/BX8CJvOLTGU4UhgHwD
+         L9M/BwOpT3E9mEJqaUxMJ1OqLsXkq/N6uMYgXiFH7+DYfjlt0uAJoH45H+2yOhyuM7JA
+         iiuHKCG3N0gs8kcDF8LZkz7zsmEkZ5jx31n1uDCKvRGhwfHzSKSxGTawHcbAB0964rL5
+         ZLU1csrlrGqALStwbM24FlEBx7nxF7m2dz9Ottiv2DACKzRDpJzVl5375rv7+qjHq4Dg
+         MQv/jmiyx/GIsXBToxDfivRhFPmmmnCHoaPV8WVRk0+8oydT9hSmFtpBivkbPdNSCML6
+         SeYg==
+X-Gm-Message-State: AOJu0YxUTclqlERcUfd/XebwHDyvgzSYnwU/O9F1UPqfWGWzUIbOnlg5
+	aVedIRybhrGZ1qgVZZ9SMM4Dhw==
+X-Google-Smtp-Source: AGHT+IEkD8H9uGPedmNIcnnA4/Oz3WPKsm6sEWcGUC1DOB+7eeNzBcMEwwwUbPJ0qHsofNULbwqs9Q==
+X-Received: by 2002:a17:906:74ca:b0:a18:48ec:a6bf with SMTP id z10-20020a17090674ca00b00a1848eca6bfmr1004857ejl.56.1701444732258;
+        Fri, 01 Dec 2023 07:32:12 -0800 (PST)
+Received: from fedora.fritz.box (p549451cc.dip0.t-ipconnect.de. [84.148.81.204])
+        by smtp.gmail.com with ESMTPSA id h18-20020a170906111200b00a0d02cfa48bsm2002367eja.213.2023.12.01.07.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Dec 2023 07:32:11 -0800 (PST)
+Date: Fri, 1 Dec 2023 16:32:09 +0100
+From: Damian Tometzki <damian@riscv-rocks.de>
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v11 0/20] Refactoring Microchip PCIe driver and add
+ StarFive PCIe
+Message-ID: <ZWn8ebtIDrGF9P5i@fedora.fritz.box>
+Reply-To: Damian Tometzki <damian@riscv-rocks.de>
+Mail-Followup-To: Minda Chen <minda.chen@starfivetech.com>,
+	Conor Dooley <conor@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+References: <20231115114912.71448-1-minda.chen@starfivetech.com>
+ <ZWbcjKiSfvp-74CL@fedora.fritz.box>
+ <ZWchVSO6iQbCFwkp@fedora.fritz.box>
+ <1168e373-b049-4c17-9cbd-c588bf913bbb@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <619ea619-29e4-42fb-9b27-1d1a32e0ee66@app.fastmail.com>
-In-Reply-To: <20231201121622.16343-5-pstanner@redhat.com>
-References: <20231201121622.16343-1-pstanner@redhat.com>
- <20231201121622.16343-5-pstanner@redhat.com>
-Date: Fri, 01 Dec 2023 16:26:05 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Philipp Stanner" <pstanner@redhat.com>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Dave Jiang" <dave.jiang@intel.com>,
- "Uladzislau Koshchanka" <koshchanka@gmail.com>, "Neil Brown" <neilb@suse.de>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>, "John Sanpe" <sanpeqf@gmail.com>,
- "Kent Overstreet" <kent.overstreet@gmail.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Kees Cook" <keescook@chromium.org>, "David Gow" <davidgow@google.com>,
- "Yury Norov" <yury.norov@gmail.com>,
- "wuqiang.matt" <wuqiang.matt@bytedance.com>,
- "Jason Baron" <jbaron@akamai.com>,
- "Kefeng Wang" <wangkefeng.wang@huawei.com>,
- "Ben Dooks" <ben.dooks@codethink.co.uk>, "Danilo Krummrich" <dakr@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- Linux-Arch <linux-arch@vger.kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Subject: Re: [PATCH v2 4/4] lib, pci: unify generic pci_iounmap()
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1168e373-b049-4c17-9cbd-c588bf913bbb@starfivetech.com>
+User-Agent: Mutt
+X-Operating-System: Linux Fedora release 39 (Thirty Nine) (Kernel
+ 6.6.2-201.fc39.x86_64)
+Organization: Linux hacker
 
-On Fri, Dec 1, 2023, at 13:16, Philipp Stanner wrote:
-> The implementation of pci_iounmap() is currently scattered over two
-> files, drivers/pci/iounmap.c and lib/iomap.c. Additionally,
-> architectures can define their own version.
->
-> Besides one unified version being desirable in the first place, the old
-> version in drivers/pci/iounmap.c contained a bug and could leak memory
-> mappings. The bug was that #ifdef ARCH_HAS_GENERIC_IOPORT_MAP should not
-> have guarded iounmap(p); in addition to the preceding code.
->
-> To have only one version, it's necessary to create a helper function,
-> iomem_is_ioport(), that tells pci_iounmap() whether the passed address
-> points to an ioport or normal memory.
->
-> iomem_is_ioport() can be provided through three different ways:
->   1. The architecture itself provides it.
->   2. As a default version in include/asm-generic/io.h for those
->      architectures that don't use CONFIG_GENERIC_IOMAP, but also don't
->      provide their own version of iomem_is_ioport().
->   3. As a default version in lib/iomap.c for those architectures that
->      define and use CONFIG_GENERIC_IOMAP (currently, only x86 really
->      uses the functions in lib/iomap.c)
+On Fri, 01. Dec 15:15, Minda Chen wrote:
+> 
+> 
+> On 2023/11/29 19:32, Damian Tometzki wrote:
+> > On Wed, 29. Nov 07:39, Damian Tometzki wrote:
+> >> Hello Minda,
+> >> 
+> >> i tried this Patchset on Linux-6.6.3 but boot with nvme doesnt work. Linux doesnt find
+> >> /root partition /dev/nvme0n1p4. 
+> >> I dont know if it has anything to do with this patchset ?
+> >> Best regards
+> >> Damian
+> > Hi,
+> > some additional information: 
+> > Begin: Running /scripts/local-block ... done.
+> > Begin: Running /scripts/local-block ... done.
+> > [   11.097653] /soc/pcie@940000000: Failed to get clk index: 1 ret: -517
+> > [   11.104147] pcie-starfive 940000000.pcie: error -ENODEV: failed to get pcie clocks
+> > [   11.111981] /soc/pcie@9c0000000: Failed to get clk index: 1 ret: -517
+> > [   11.118451] pcie-starfive 9c0000000.pcie: error -ENODEV: failed to get pcie clocks
+> > [   11.126371] platform 17020000.pinctrl: deferred probe pending
+> > [   11.132145] platform 16010000.mmc: deferred probe pending
+> > Begin: Running /scripts/local-block ... done.
+> > Begin: Running /scripts/local-block ... done.
+> > 
+> > Damian
+> > 
+> It is get stg clk failed. Did you enable CONFIG_CLK_STARFIVE_JH7110_STG=y?
+Hi,
 
-I would count 3 as a special case of 1 here.
+it is now a little bit better now i get: 
+Begin: Mounting root file system ... Begin: Running /scripts/local-top ... done.
+Begin: Running /scripts/local-premount ... done.
+Begin: Waiting for root file system ... Begin: Running /scripts/local-block ... done.
+Begin: Running /scripts/local-block ... done.
+Begin: Running /scripts/local-block ... done.
+Begin: Running /scripts/local-block ... done.
+Begin: Running /scripts/local-block ... done.
+[   13.916056] platform 940000000.pcie: deferred probe pending
+[   13.921668] platform 9c0000000.pcie: deferred probe pending
+[   13.927259] platform 16010000.mmc: deferred probe pending
+Begin: Running /scripts/local-block ... done.
+Begin: Running /scripts/local-block ... done.
+Begin: Running /scripts/local-block ... done.
 
-> Create a unified version of pci_iounmap() in drivers/pci/iomap.c.
-> Provide the function iomem_is_ioport() in include/asm-generic/io.h and
-> lib/iomap.c.
->
-> Remove the CONFIG_GENERIC_IOMAP guard around
-> ARCH_WANTS_GENERIC_PCI_IOUNMAP so that configs that set
-> CONFIG_GENERIC_PCI_IOMAP without CONFIG_GENERIC_IOMAP still get the
-> function.
->
-> Fixes: 316e8d79a095 ("pci_iounmap'2: Electric Boogaloo: try to make 
-> sense of it all")
-> Suggested-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Damian
 
-Looks good overall. It would be nice to go further than this
-and replace all the custom pci_iounmap() variants with custom
-iomem_is_ioport() implementations, but that can be a follow-up
-along with removing the incorrect or useless 'select GENERIC_IOMAP'
-parts.
-
->  		return;
-> -	iounmap(p);
-> +	}
->  #endif
-> +	iounmap(addr);
->  }
-
-I think the bugfix should be a separate patch so we can backport
-it to stable kernels.
-
-> +#ifndef CONFIG_GENERIC_IOMAP
-> +static inline bool iomem_is_ioport(void __iomem *addr)
-> +{
-> +	unsigned long port = (unsigned long __force)addr;
-> +
-> +	// TODO: do we have to take IO_SPACE_LIMIT and PCI_IOBASE into account
-> +	// similar as in ioport_map() ?
-> +
-> +	if (port > MMIO_UPPER_LIMIT)
-> +		return false;
-> +
-> +	return true;
-> +}
-
-This has to have the exact logic that was present in the
-old pci_iounmap(). For the default version that is currently
-in lib/pci_iomap.c, this means something along the linens of
-
-static inline bool struct iomem_is_ioport(void __iomem *p)
-{
-#ifdef CONFIG_HAS_IOPORT
-        uintptr_t start = (uintptr_t) PCI_IOBASE;
-        uintptr_t addr = (uintptr_t) p;
-
-        if (addr >= start && addr < start + IO_SPACE_LIMIT)
-                return true;
-#endif
-        return false;
-}
-
-> +#else /* CONFIG_GENERIC_IOMAP. Version from lib/iomap.c will be used. 
-> */
-> +bool iomem_is_ioport(void __iomem *addr);
-> +#define ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT
-
-I'm not sure what this macro is for, since it appears to
-do the opposite of what its name suggests: rather than
-provide the generic version of iomem_is_ioport(), it
-skips that and provides a custom one to go with lib/iomap.c
-
-     Arnd
+> >> 
+> >> On Wed, 15. Nov 19:48, Minda Chen wrote:
+> >> > This patchset final purpose is add PCIe driver for StarFive JH7110 SoC.
+> >> > JH7110 using PLDA XpressRICH PCIe IP. Microchip PolarFire Using the
+> >> > same IP and have commit their codes, which are mixed with PLDA
+> >> > controller codes and Microchip platform codes.
+> >> > 
+> >> > For re-use the PLDA controller codes, I request refactoring microchip
+> >> > codes, move PLDA common codes to PLDA files.
+> >> > Desigware and Cadence is good example for refactoring codes.
+> >> > 
+> >> > ----------------------------------------------------------
+> >> > The refactoring patches total number is 16,(patch 1-16)
+> >> > which do NOT contain changing logic of codes.
+> >> > 
+> >> > These patches just contain three type basic operations.
+> >> > (rename, modify codes to support starfive platform, and moving to common file)
+> >> > If these patched are all be reviewed. They can be accepted first.
+> >> > 
+> >> > Refactoring patches can be devided to different groups
+> >> > 1. (patch 1- 3 is the prepare work of refactoring)
+> >> > patch1 is move PLDA XpressRICH PCIe host common properties dt-binding
+> >> >        docs from microchip,pcie-host.yaml
+> >> > patch2 is move PolarFire codes to PLDA directory.
+> >> > patch3 is move PLDA IP register macros to plda-pcie.h
+> >> > 
+> >> > 2. (patch4 - 6 is processing and re-use PCIe host instance)
+> >> > patch4 is add bridge_addr field to PCIe host instance.
+> >> > patch5 is rename data structure in microchip codes.
+> >> > patch6 is moving two data structures to head file
+> >> > 
+> >> > 3. (patch 7 - 9 are for re-use two PCIe setup function)
+> >> > patch7 is rename two setup functions in microchip codes, prepare to move
+> >> > to common file.
+> >> > patch8 is change the arguments of plda_pcie_setup_iomems()
+> >> > patch9 is move the two setup functions to common file pcie-plda-host.c
+> >> > 
+> >> > 4.(patch 10 - 16 are for re-use interupt processing codes)
+> >> > patch10 is rename the IRQ related functions, prepare to move to
+> >> > pcie-plda-host.c
+> >> > patch 11 - 15 is modify the interrupt event codes, preparing for support starfive
+> >> > and microchip two platforms.
+> >> > patch16 is move IRQ related functions to pcie-plda-host.c
+> >> > 
+> >> > ------------------------------------------------------------
+> >> > The remainder patches (patch 17 -20) are not refactoring patch.
+> >> > They are for adding StarFive codes and dont modify the microchip's
+> >> > codes.
+> >> > 
+> >> > patch17 is Add PLDA event interrupt codes and host init/deinit functions.
+> >> > patch18 is add StarFive JH7110 PCIe dt-binding doc.
+> >> > patch19 is add StarFive JH7110 Soc PCIe codes.
+> >> > patch20 is Starfive dts config
+> >> > 
+> >> > This patchset is base on v6.7-rc1
+> >> > 
+> >> > previous version:
+> >> > v6:https://patchwork.kernel.org/project/linux-pci/cover/20230915102243.59775-1-minda.chen@starfivetech.com/
+> >> > v7:https://patchwork.kernel.org/project/linux-pci/cover/20230927100802.46620-1-minda.chen@starfivetech.com/
+> >> > v8:https://patchwork.kernel.org/project/linux-pci/cover/20231011110514.107528-1-minda.chen@starfivetech.com/
+> >> > v9:https://patchwork.kernel.org/project/linux-pci/cover/20231020104341.63157-1-minda.chen@starfivetech.com/
+> >> > v10:https://patchwork.kernel.org/project/linux-pci/cover/20231031115430.113586-1-minda.chen@starfivetech.com/
+> >> > 
+> >> > change:
+> >> >   v11:
+> >> >      check and modify some commit messages again.
+> >> >      All the codes are the same with v10.   
+> >> > 
+> >> >   v10:
+> >> >    All the commit message set to fit in 75 columns.
+> >> >    All the codes fit in less than 80 colunms.
+> >> >    patch 14: 
+> >> > 	Commit message changes suggested by Conor.
+> >> >    patch 19:
+> >> >         Add 100 ms delay macro to pci.h
+> >> > 	generic phy pointer related codes moving to pcie-starfive.c
+> >> > 	This patch Change pcie-starfive only, bus_ops move to patch 16.
+> >> > 	Some Codes changes suggested by Bjorn.
+> >> > 
+> >> >   v9:
+> >> >    v8 patch 10 squash to v9 patch 12, v8 patch 18 squash to v9 patch 16.
+> >> >    patch 4 - 16: Add new review tags and add more accurate commit messages.
+> >> >    patch 17: move the plda_pcie_host_init/deinit from patch 19. Make
+> >> >              plda driver become to whole driver.
+> >> > 
+> >> >   v8:
+> >> >     The patch description in cover-letter has been changed.
+> >> > 
+> >> >     v7 patch 4 split to v8 patch 4 - 6.
+> >> >         (It is patches about re-use pcie host data structure, new patches just contain one
+> >> > 	function modification. It is more reguluar and easier to review).
+> >> > 
+> >> >     patch 7- 9: modify the commit messages and add reason of
+> >> > 		modifcation.
+> >> >     patch10- 16 :
+> >> >              Add review tag and add more commit messages to declear the
+> >> > 	     reason of modifying the codes.
+> >> >     patch17: plda_handle_events() using bit mask macro. The function are
+> >> > 	     easier to read.
+> >> > 
+> >> >   v7:
+> >> >     patch17: fix the build warning.
+> >> >     patch19: Some format changes (Emil's comment)
+> >> >     patch20: change the pcie node sequences by alphabetical
+> >> >              delete the "interupt-parent" in pcie node.
+> >> > 
+> >> >   v6:
+> >> >     v5 patch 4 split to patch 4 -9. New patches just contain one function modification. It is more reguluar.
+> >> > 
+> >> >     patch 9: Just move the two setup functions only
+> >> >     patch 19 : draw a graph of PLDA local register, make it easier to
+> >> >                review the codes.
+> >> >     v5 patch 7 split to patch 10- 16. Each patch just contain one
+> >> >                 function modification. It is more regular.
+> >> >     patch 10: rename IRQ related functions.
+> >> >     patch 11 - 15 : modify the events codes, total five patch.
+> >> >     patch 16: move IRQ related functions to pcie-plda-host.c
+> >> >     patch 19- 20 using "linux,pci-domain" dts setting.
+> >> > 
+> >> > Minda Chen (20):
+> >> >   dt-bindings: PCI: Add PLDA XpressRICH PCIe host common properties
+> >> >   PCI: microchip: Move pcie-microchip-host.c to plda directory
+> >> >   PCI: microchip: Move PLDA IP register macros to pcie-plda.h
+> >> >   PCI: microchip: Add bridge_addr field to struct mc_pcie
+> >> >   PCI: microchip: Rename two PCIe data structures
+> >> >   PCI: microchip: Move PCIe host data structures to plda-pcie.h
+> >> >   PCI: microchip: Rename two setup functions
+> >> >   PCI: microchip: Change the argument of plda_pcie_setup_iomems()
+> >> >   PCI: microchip: Move setup functions to pcie-plda-host.c
+> >> >   PCI: microchip: Rename interrupt related functions
+> >> >   PCI: microchip: Add num_events field to struct plda_pcie_rp
+> >> >   PCI: microchip: Add request_event_irq() callback function
+> >> >   PCI: microchip: Add INTx and MSI event num to struct plda_event
+> >> >   PCI: microchip: Add get_events() callback function
+> >> >   PCI: microchip: Add event IRQ domain ops to struct plda_event
+> >> >   PCI: microchip: Move IRQ functions to pcie-plda-host.c
+> >> >   PCI: plda: Add event interrupt codes and host init/deinit functions
+> >> >   dt-bindings: PCI: Add StarFive JH7110 PCIe controller
+> >> >   PCI: starfive: Add JH7110 PCIe controller
+> >> >   riscv: dts: starfive: add PCIe dts configuration for JH7110
+> >> > 
+> >> >  .../bindings/pci/microchip,pcie-host.yaml     |  55 +-
+> >> >  .../pci/plda,xpressrich3-axi-common.yaml      |  75 ++
+> >> >  .../bindings/pci/starfive,jh7110-pcie.yaml    | 120 ++++
+> >> >  MAINTAINERS                                   |  19 +-
+> >> >  .../jh7110-starfive-visionfive-2.dtsi         |  64 ++
+> >> >  arch/riscv/boot/dts/starfive/jh7110.dtsi      |  86 +++
+> >> >  drivers/pci/controller/Kconfig                |   9 +-
+> >> >  drivers/pci/controller/Makefile               |   2 +-
+> >> >  drivers/pci/controller/plda/Kconfig           |  29 +
+> >> >  drivers/pci/controller/plda/Makefile          |   4 +
+> >> >  .../{ => plda}/pcie-microchip-host.c          | 602 ++--------------
+> >> >  drivers/pci/controller/plda/pcie-plda-host.c  | 657 ++++++++++++++++++
+> >> >  drivers/pci/controller/plda/pcie-plda.h       | 266 +++++++
+> >> >  drivers/pci/controller/plda/pcie-starfive.c   | 460 ++++++++++++
+> >> >  drivers/pci/pci.h                             |   7 +
+> >> >  15 files changed, 1851 insertions(+), 604 deletions(-)
+> >> >  create mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml
+> >> >  create mode 100644 Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+> >> >  create mode 100644 drivers/pci/controller/plda/Kconfig
+> >> >  create mode 100644 drivers/pci/controller/plda/Makefile
+> >> >  rename drivers/pci/controller/{ => plda}/pcie-microchip-host.c (54%)
+> >> >  create mode 100644 drivers/pci/controller/plda/pcie-plda-host.c
+> >> >  create mode 100644 drivers/pci/controller/plda/pcie-plda.h
+> >> >  create mode 100644 drivers/pci/controller/plda/pcie-starfive.c
+> >> > 
+> >> > 
+> >> > base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
+> >> > -- 
+> >> > 2.17.1
+> >> > 
 
