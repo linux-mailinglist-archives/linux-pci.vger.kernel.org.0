@@ -1,147 +1,123 @@
-Return-Path: <linux-pci+bounces-376-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 361C6801B91
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Dec 2023 09:50:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81FAA801CFD
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Dec 2023 14:17:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 66EB01C20A13
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Dec 2023 08:50:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00BED1F2117F
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Dec 2023 13:17:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C317ED2FF;
-	Sat,  2 Dec 2023 08:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uPnW9bc0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04E4A1773A;
+	Sat,  2 Dec 2023 13:17:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F3AEB;
-	Sat,  2 Dec 2023 00:50:37 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3B28oJvO048633;
-	Sat, 2 Dec 2023 02:50:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1701507019;
-	bh=5eLMeR7O3XmgWYr3v/Y9HZ53t+c9lMwwKXavX+OjuwA=;
-	h=From:To:CC:Subject:Date;
-	b=uPnW9bc0vJAgRIKvDOPa9kPaxyHNisBdNDhx+Xt7hyEAl4H71vXLypp+pm3aol2TV
-	 kzGVOWxwUPF+Bx84qEFNSWr8R+FceRZkJNOc+1dasAv/tbsXuWRrIKk2TImFKRMcJq
-	 oJsNwMf45Ia4opPErFX6h131kWvLFVo9RfMKWtnE=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3B28oJE9002281
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 2 Dec 2023 02:50:19 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 2
- Dec 2023 02:50:19 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 2 Dec 2023 02:50:19 -0600
-Received: from uda0492258.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3B28oGEW067220;
-	Sat, 2 Dec 2023 02:50:16 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <srk@ti.com>, <nm@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v4] PCI: Cadence: Clear the ARI Capability Next Function Number of the last function
-Date: Sat, 2 Dec 2023 14:20:15 +0530
-Message-ID: <20231202085015.3048516-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF3C2A9;
+	Sat,  2 Dec 2023 05:17:33 -0800 (PST)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+	by fd01.gateway.ufhost.com (Postfix) with ESMTP id AFCB27F98;
+	Sat,  2 Dec 2023 21:17:25 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sat, 2 Dec
+ 2023 21:17:25 +0800
+Received: from [192.168.125.85] (113.72.145.176) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sat, 2 Dec
+ 2023 21:17:24 +0800
+Message-ID: <c4154501-5b93-4eaf-8d2d-690809d26c57@starfivetech.com>
+Date: Sat, 2 Dec 2023 21:17:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 0/20] Refactoring Microchip PCIe driver and add
+ StarFive PCIe
+Content-Language: en-US
+To: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Daire
+ McNamara" <daire.mcnamara@microchip.com>, Emil Renner Berthing
+	<emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
+	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+References: <20231115114912.71448-1-minda.chen@starfivetech.com>
+ <ZWbcjKiSfvp-74CL@fedora.fritz.box> <ZWchVSO6iQbCFwkp@fedora.fritz.box>
+ <1168e373-b049-4c17-9cbd-c588bf913bbb@starfivetech.com>
+ <ZWn8ebtIDrGF9P5i@fedora.fritz.box>
+From: Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <ZWn8ebtIDrGF9P5i@fedora.fritz.box>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS061.cuchost.com (172.16.6.21) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
 
-From: Jasko-EXT Wojciech <wojciech.jasko-EXT@continental-corporation.com>
 
-Next Function Number field in ARI Capability Register for last function
-must be zero by default as per the PCIe specification, indicating there
-is no next higher number function but that's not happening in our case,
-so this patch clears the Next Function Number field for last function used.
 
-Signed-off-by: Jasko-EXT Wojciech <wojciech.jasko-EXT@continental-corporation.com>
-Signed-off-by: Achal Verma <a-verma1@ti.com>
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
+On 2023/12/1 23:32, Damian Tometzki wrote:
+> On Fri, 01. Dec 15:15, Minda Chen wrote:
+>> 
+>> 
+>> On 2023/11/29 19:32, Damian Tometzki wrote:
+>> > On Wed, 29. Nov 07:39, Damian Tometzki wrote:
+>> >> Hello Minda,
+>> >> 
+>> >> i tried this Patchset on Linux-6.6.3 but boot with nvme doesnt work. Linux doesnt find
+>> >> /root partition /dev/nvme0n1p4. 
+>> >> I dont know if it has anything to do with this patchset ?
+>> >> Best regards
+>> >> Damian
+>> > Hi,
+>> > some additional information: 
+>> > Begin: Running /scripts/local-block ... done.
+>> > Begin: Running /scripts/local-block ... done.
+>> > [   11.097653] /soc/pcie@940000000: Failed to get clk index: 1 ret: -517
+>> > [   11.104147] pcie-starfive 940000000.pcie: error -ENODEV: failed to get pcie clocks
+>> > [   11.111981] /soc/pcie@9c0000000: Failed to get clk index: 1 ret: -517
+>> > [   11.118451] pcie-starfive 9c0000000.pcie: error -ENODEV: failed to get pcie clocks
+>> > [   11.126371] platform 17020000.pinctrl: deferred probe pending
+>> > [   11.132145] platform 16010000.mmc: deferred probe pending
+>> > Begin: Running /scripts/local-block ... done.
+>> > Begin: Running /scripts/local-block ... done.
+>> > 
+>> > Damian
+>> > 
+>> It is get stg clk failed. Did you enable CONFIG_CLK_STARFIVE_JH7110_STG=y?
+> Hi,
+> 
+> it is now a little bit better now i get: 
+> Begin: Mounting root file system ... Begin: Running /scripts/local-top ... done.
+> Begin: Running /scripts/local-premount ... done.
+> Begin: Waiting for root file system ... Begin: Running /scripts/local-block ... done.
+> Begin: Running /scripts/local-block ... done.
+> Begin: Running /scripts/local-block ... done.
+> Begin: Running /scripts/local-block ... done.
+> Begin: Running /scripts/local-block ... done.
+> [   13.916056] platform 940000000.pcie: deferred probe pending
+> [   13.921668] platform 9c0000000.pcie: deferred probe pending
+> [   13.927259] platform 16010000.mmc: deferred probe pending
+> Begin: Running /scripts/local-block ... done.
+> Begin: Running /scripts/local-block ... done.
+> Begin: Running /scripts/local-block ... done.
+> 
+> 
+Hi 
+Please check this configuation.
+CONFIG_PHY_STARFIVE_JH7110_PCIE=y
+CONFIG_PINCTRL_STARFIVE_JH7110=y
+CONFIG_PINCTRL_STARFIVE_JH7110_SYS=y
+CONFIG_PINCTRL_STARFIVE_JH7110_AON=y
 
-Hello,
-
-This patch is based on linux-next tagged next-20231201.
-
-v3:
-https://patchwork.kernel.org/project/linux-pci/patch/20230316071156.200888-1-a-verma1@ti.com/
-Changes since v3: - Rebased on next-20231201.
-- Collected Reviewed-by tag from Vignesh Raghavendra <vigneshr@ti.com>.
-
-Regards,
-Siddharth.
-
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 14 +++++++++++++-
- drivers/pci/controller/cadence/pcie-cadence.h    |  6 ++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 3142feb8ac19..2dd4d7027659 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -566,7 +566,8 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- 	struct cdns_pcie *pcie = &ep->pcie;
- 	struct device *dev = pcie->dev;
- 	int max_epfs = sizeof(epc->function_num_map) * 8;
--	int ret, value, epf;
-+	int ret, epf, last_fn;
-+	u32 reg, value;
- 
- 	/*
- 	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
-@@ -574,6 +575,17 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
- 	 */
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, epc->function_num_map);
- 
-+	/*
-+	 * Next function field in ARI_CAP_AND_CTR register for last function
-+	 * should be 0.
-+	 * Clearing Next Function Number field for the last function used.
-+	 */
-+	last_fn = find_last_bit(&epc->function_num_map, BITS_PER_LONG);
-+	reg     = CDNS_PCIE_CORE_PF_I_ARI_CAP_AND_CTRL(last_fn);
-+	value  = cdns_pcie_readl(pcie, reg);
-+	value &= ~CDNS_PCIE_ARI_CAP_NFN_MASK;
-+	cdns_pcie_writel(pcie, reg, value);
-+
- 	if (ep->quirk_disable_flr) {
- 		for (epf = 0; epf < max_epfs; epf++) {
- 			if (!(epc->function_num_map & BIT(epf)))
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 373cb50fcd15..9c16745582eb 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -130,6 +130,12 @@
- #define CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET	0xc0
- #define CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET	0x200
- 
-+/*
-+ * Endpoint PF Registers
-+ */
-+#define CDNS_PCIE_CORE_PF_I_ARI_CAP_AND_CTRL(fn)	(0x144 + (fn) * 0x1000)
-+#define CDNS_PCIE_ARI_CAP_NFN_MASK	GENMASK(15, 8)
-+
- /*
-  * Root Port Registers (PCI configuration space for the root port function)
-  */
--- 
-2.34.1
-
+BTW, Maybe you can reply e-mail to me only.
 
