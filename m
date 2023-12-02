@@ -1,138 +1,185 @@
-Return-Path: <linux-pci+bounces-373-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 316FE8016E9
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 23:56:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A6148018AB
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Dec 2023 01:07:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E160B2812A2
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Dec 2023 22:56:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB5EC1C21055
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Dec 2023 00:07:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427AC38DD2;
-	Fri,  1 Dec 2023 22:56:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B8C193;
+	Sat,  2 Dec 2023 00:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZlTyL5Na"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsliWN0r"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F828619D4;
-	Fri,  1 Dec 2023 22:56:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A08C433C8;
-	Fri,  1 Dec 2023 22:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFF67E3
+	for <linux-pci@vger.kernel.org>; Sat,  2 Dec 2023 00:07:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34F0C433C8;
+	Sat,  2 Dec 2023 00:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701471371;
-	bh=GVeXptVzISkp+LH6rP7ABvt7j/9kuofhAXSzf6mU7l8=;
+	s=k20201202; t=1701475626;
+	bh=U3ZfPKYPrqpYV93YIVm8COX6PQZ+rUbytLa7eckVlrw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZlTyL5Navjtt+nMUpk0afajOVeVQDR77Pt7SGMWB4Q7v/stMRvKg3qER0HZe0B/tB
-	 SOc6ksiIaqIceMMqt2hyLiNeFTVS4WRQ3p6fUsddPqqsV5Bh0BeNEoKk9OKPGDaMlf
-	 Wuu/Guum7yPnLVyDB3umrP6cNa74sdsmvkBuxIXV8c9f4XyuMby/fN5k0ejxocAJ/9
-	 bGSWcZEPs0mAZucGyrGTFJxwRtOoRXK2dy8JGsNNXP5tQcE59nU3vgWcvPx+tuPqe3
-	 SCsPX4Z13RNDe+WXBEL70a7MB7WnSEc7eNxEq/3d9IAffSRPCTblWTd57tl+pLeO78
-	 uYLdLsWN9Nviw==
-Date: Fri, 1 Dec 2023 16:56:09 -0600
+	b=hsliWN0rNuZ/y68RhnrzRVhxG2S6mRyLA5xAkZcYpX9gPx0yf1tsI7aR5vcbnkcyv
+	 sdpVzxmwm00FDVhobsoVUmVf2ErY+4eB8WWBg3I/IfIxLwgM7KAv598IBbstJuge/z
+	 Rqv+FX3cxcpqSVPwj5kSUL57L7s36N9gGdRlkADIAkADAPMRz9MnZgrHVjNLlD2cee
+	 oACj0MWA0hDMl/9cQAipXuK/EuMdDhjGAsv66rO3k6hgZXVO6NRogGbkk36eleKrZH
+	 nkHmAC51iUA4ygm3BsCHgNj7+mKhBxy67QVbK/ffwNvdm8IZ56cPW1eQw5n7TYYGNA
+	 p/31yi7d/qb1g==
+Date: Fri, 1 Dec 2023 18:07:04 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linuxppc-dev@lists.ozlabs.org,
-	James Smart <james.smart@broadcom.com>,
-	Dick Kennedy <dick.kennedy@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/6] x86: Use PCI_HEADER_TYPE_* instead of literals
-Message-ID: <20231201225609.GA534714@bhelgaas>
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
+ rootports
+Message-ID: <20231202000704.GA529403@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231201204447.GA527927@bhelgaas>
+In-Reply-To: <20231127211729.42668-1-nirmal.patel@linux.intel.com>
 
-[+cc scsi, powerpc folks]
+On Mon, Nov 27, 2023 at 04:17:29PM -0500, Nirmal Patel wrote:
+> Currently VMD copies root bridge setting to enable Hotplug on its
+> rootports. This mechanism works fine for Host OS and no issue has
+> been observed. However in case of VM, all the HyperVisors don't
+> pass the Hotplug setting to the guest BIOS which results in
+> assigning default values and disabling Hotplug capability in the
+> guest which have been observed by many OEMs.
 
-On Fri, Dec 01, 2023 at 02:44:47PM -0600, Bjorn Helgaas wrote:
-> On Fri, Nov 24, 2023 at 11:09:13AM +0200, Ilpo Järvinen wrote:
-> > Replace 0x7f and 0x80 literals with PCI_HEADER_TYPE_* defines.
-> > 
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Can we make this a little more specific?  I'm lacking a lot of
+virtualization background here, so I'm going to ask a bunch of stupid
+questions here:
+
+"VMD copies root bridge setting" refers to _OSC and the copying done
+in vmd_copy_host_bridge_flags()?  Obviously this must be in the Host
+OS.
+
+"This mechanism works fine for Host OS and no issue has been
+observed."  I guess this means that if the platform grants hotplug
+control to the Host OS via _OSC, pciehp in the Host OS works fine to
+manage hotplug on Root Ports below the VMD?
+
+If the platform does *not* grant hotplug control to the Host OS, I
+guess it means the Host OS pciehp can *not* manage hotplug below VMD?
+Is that also what you expect?
+
+"However in case of VM, all the HyperVisors don't pass the Hotplug
+setting to the guest BIOS"  What is the mechanism by which they would
+pass the hotplug setting?  I guess the guest probably doesn't see the
+VMD endpoint itself, right?  The guest sees either virtualized or
+passed-through VMD Root Ports?
+
+I assume the guest OS sees a constructed ACPI system (different from
+the ACPI environment the host sees), so it sees a PNP0A03 host bridge
+with _OSC?  And presumably VMD Root Ports below that host bridge?
+
+So are you saying the _OSC seen by the guest doesn't grant hotplug
+control to the guest OS?  And it doesn't do that because the guest
+BIOS hasn't implemented _OSC?  Or maybe the guest BIOS relies on the
+Slot Capabilities registers of VMD Root Ports to decide whether _OSC
+should grant hotplug control?  And those Slot Capabilities don't
+advertise hotplug support?
+
+"... which results in assigning default values and disabling Hotplug
+capability in the guest."  What default values are these?  Is this
+talking about the default host_bridge->native_pcie_hotplug value set
+in acpi_pci_root_create(), where the OS assumes hotplug is owned by
+the platform unless _OSC grants control to the OS?
+
+> VMD Hotplug can be enabled or disabled based on the VMD rootports'
+> Hotplug configuration in BIOS. is_hotplug_bridge is set on each
+> VMD rootport based on Hotplug capable bit in SltCap in probe.c.
+> Check is_hotplug_bridge and enable or disable native_pcie_hotplug
+> based on that value.
 > 
-> Applied entire series on the PCI "enumeration" branch for v6.8,
-> thanks!
+> This patch will make sure that Hotplug is enabled properly in Host
+> as well as in VM while honoring _OSC settings as well as VMD hotplug
+> setting.
+
+"Hotplug is enabled properly in Host as well as in VM" sounds like
+we're talking about both the host OS and the guest OS.
+
+In the host OS, this overrides whatever was negotiated via _OSC, I
+guess on the principle that _OSC doesn't apply because the host BIOS
+doesn't know about the Root Ports below the VMD.  (I'm not sure it's
+100% resolved that _OSC doesn't apply to them, so we should mention
+that assumption here.)
+
+In the guest OS, this still overrides whatever was negotiated via
+_OSC, but presumably the guest BIOS *does* know about the Root Ports,
+so I don't think the same principle about overriding _OSC applies
+there.
+
+I think it's still a problem that we handle
+host_bridge->native_pcie_hotplug differently than all the other
+features negotiated via _OSC.  We should at least explain this
+somehow.
+
+I suspect part of the reason for doing it differently is to avoid the
+interrupt storm that we avoid via 04b12ef163d1 ("PCI: vmd: Honor ACPI
+_OSC on PCIe features").  If so, I think 04b12ef163d1 should be
+mentioned here because it's an important piece of the picture.
+
+> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+> v1->v2: Updating commit message.
+> ---
+>  drivers/pci/controller/vmd.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
-> If anybody wants to take pieces separately, let me know and I'll drop
-> from PCI.
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 769eedeb8802..e39eaef5549a 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -720,6 +720,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	resource_size_t membar2_offset = 0x2000;
+>  	struct pci_bus *child;
+>  	struct pci_dev *dev;
+> +	struct pci_host_bridge *vmd_bridge;
+>  	int ret;
+>  
+>  	/*
+> @@ -886,8 +887,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	 * and will fail pcie_bus_configure_settings() early. It can instead be
+>  	 * run on each of the real root ports.
+>  	 */
+> -	list_for_each_entry(child, &vmd->bus->children, node)
+> +	vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
+> +	list_for_each_entry(child, &vmd->bus->children, node) {
+>  		pcie_bus_configure_settings(child);
+> +		/*
+> +		 * When Hotplug is enabled on vmd root-port, enable it on vmd
+> +		 * bridge.
+> +		 */
+> +		if (child->self->is_hotplug_bridge)
+> +			vmd_bridge->native_pcie_hotplug = 1;
 
-OK, b4 picked up the entire series but I was only cc'd on this first
-patch, so I missed the responses about EDAC, xtensa, bcma already
-being applied elsewhere.
+"is_hotplug_bridge" basically means PCI_EXP_SLTCAP_HPC is set, which
+means "the hardware of this slot is hot-plug *capable*."
 
-So I kept these in the PCI tree:
+Whether hotplug is *enabled* is a separate policy decision about
+whether the OS is allowed to operate the hotplug functionality, so I
+think saying "When Hotplug is enabled" in the comment is a little bit
+misleading.
 
-  420ac76610d7 ("scsi: lpfc: Use PCI_HEADER_TYPE_MFD instead of literal")
-  3773343dd890 ("powerpc/fsl-pci: Use PCI_HEADER_TYPE_MASK instead of literal")
-  197e0da1f1a3 ("x86/pci: Use PCI_HEADER_TYPE_* instead of literals")
+Bjorn
 
-and dropped the others.
-
-x86, SCSI, powerpc folks, if you want to take these instead, let me
-know and I'll drop them.
-
-> > ---
-> >  arch/x86/kernel/aperture_64.c  | 3 +--
-> >  arch/x86/kernel/early-quirks.c | 4 ++--
-> >  2 files changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/aperture_64.c b/arch/x86/kernel/aperture_64.c
-> > index 4feaa670d578..89c0c8a3fc7e 100644
-> > --- a/arch/x86/kernel/aperture_64.c
-> > +++ b/arch/x86/kernel/aperture_64.c
-> > @@ -259,10 +259,9 @@ static u32 __init search_agp_bridge(u32 *order, int *valid_agp)
-> >  							order);
-> >  				}
-> >  
-> > -				/* No multi-function device? */
-> >  				type = read_pci_config_byte(bus, slot, func,
-> >  							       PCI_HEADER_TYPE);
-> > -				if (!(type & 0x80))
-> > +				if (!(type & PCI_HEADER_TYPE_MFD))
-> >  					break;
-> >  			}
-> >  		}
-> > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> > index a6c1867fc7aa..59f4aefc6bc1 100644
-> > --- a/arch/x86/kernel/early-quirks.c
-> > +++ b/arch/x86/kernel/early-quirks.c
-> > @@ -779,13 +779,13 @@ static int __init check_dev_quirk(int num, int slot, int func)
-> >  	type = read_pci_config_byte(num, slot, func,
-> >  				    PCI_HEADER_TYPE);
-> >  
-> > -	if ((type & 0x7f) == PCI_HEADER_TYPE_BRIDGE) {
-> > +	if ((type & PCI_HEADER_TYPE_MASK) == PCI_HEADER_TYPE_BRIDGE) {
-> >  		sec = read_pci_config_byte(num, slot, func, PCI_SECONDARY_BUS);
-> >  		if (sec > num)
-> >  			early_pci_scan_bus(sec);
-> >  	}
-> >  
-> > -	if (!(type & 0x80))
-> > +	if (!(type & PCI_HEADER_TYPE_MFD))
-> >  		return -1;
-> >  
-> >  	return 0;
-> > -- 
-> > 2.30.2
-> > 
+> +	}
+>  
+>  	pci_bus_add_devices(vmd->bus);
+>  
+> -- 
+> 2.31.1
+> 
 
