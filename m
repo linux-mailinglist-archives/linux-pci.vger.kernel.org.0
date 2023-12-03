@@ -1,64 +1,65 @@
-Return-Path: <linux-pci+bounces-381-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-382-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A16D80250C
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Dec 2023 16:15:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB0B80250E
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Dec 2023 16:17:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AF7D1F20F04
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Dec 2023 15:15:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0746B280A9D
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Dec 2023 15:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD62BA40;
-	Sun,  3 Dec 2023 15:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26CEF9473;
+	Sun,  3 Dec 2023 15:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RFwfYZrz"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="axzSWLxT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2070.outbound.protection.outlook.com [40.107.7.70])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E10C2;
-	Sun,  3 Dec 2023 07:15:11 -0800 (PST)
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2078.outbound.protection.outlook.com [40.107.104.78])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B246FEA;
+	Sun,  3 Dec 2023 07:16:59 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jejWIvalseW87T79Xdyn8CfCfQV5t0DdyNYSDxw4yeFWhKtX+X8yMy3/OjJ4gSKocS4yOwrYrsAUeNZZUOr7z7KWhXOv2W/uJaj7OQsEgYg0rneQzh9uQtRJNiUAlEIF8nbkbXnraB4IjjyN6WlE6hjyzUM2p/FDex635cw0rxQdAVz3L117zIjavs3kgBph/6ZyBxfaSNmxDZLxZO/snXWgaU/1PTz/ik+7TxdEaYH3BzizE8cKhPD7cw6LE4W8uaqfrBMlqlUMzPDEVohlkMgLJsaj2yiT09ziv1bqB/WTiYnl8Bl/6UYOWc3fBRFWfrE3IsLW6FWAJ1GBN3EZZg==
+ b=bqOZj5zLU5RZQ3QTEmk6fE8fggt13nETjJXNio7J1o6gw9lt2Owm3nscmderD7dIUkFaTx/nr9ozhTbXRsS6HDlrRxgnVsfO0HG8Vh2fj3i85jT3QjU6nsB1ZqaluoFrlwyxC7xjuK5l/809olCzZtcl+35xtq5DUKQA1s1KcC5TzTKBQQVn9K0rL7Y5y6S739x/zx+SqbLQ6CLZ0jZ2nTPt0Nt+Hc+C3za09eJdHeRCEQdqoeazVHRMQ+TlkToK0g7sd3dy4wnTX9x+MoqXnDbToq3OEbbgmuHL0UeEpKFyVDVqDAH/7+9bcY1oMjZwEZzXHSaVZo8+0zSLc6YPUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E1KCHI5LSky5YF8CsEt52+OIW3Ex+33j3yCE8gtY1DQ=;
- b=ee0PzXYdqD7zwvf/5gBh6j0Gm+KzWKUNytEw/WI4WFmnu1LYpt7bPY3YELFIdEVkqAoxP+91/kco4hSAWol4XMZ6ZPBl0P1p8fEJ6fMxkUdUy/Tv5pfI0b2Flp3PVOKEzqiNRtgLF3ZaA2iZsaw761YITL7brNa2aAP8t36NpBWFM2T6Ks17D/gnA8WLEW1cwZa3v6a7/b3VO84y5F+mftKgSUnhKfjxA1+rWz+ebKrQGO95q/U9L2HYuqpGLG5eFmdLl1ZknyBtMwxrPwxdIvYdsZuVGUzyGF74DjNqOu19LlKTv70zur2WCF2CfgAF3KWJniyKpwzuR+LltB0dQw==
+ bh=vwjJI+nBAlhWrRXnrktFziLODTDmTGU2XceMZNWR0X0=;
+ b=MXMu790S5SxVclcjqY5cuOA87dr+y/b7GffeNHIx6M/K1hs8r+axh5AGCcQt5PjiK9CpAwHcofxdWR3R35TghpwW73gx0uDvYoymVDd8t1BXBgcsYSApcOiJ/hpmsMfV10SXSsAmw+qX0HMx6D8KD3BJ1N0zPgz5rnjS8rRUh3RqmNvgWwfiD1ggD/Y+C5kOI6uypMDVTEeMYlami7frqd4q7q1pv4gmKLzYMUh4q0cHG/nqvnhM979pg66MgJi6BqtcHwvNHeigqmLIudHBtdOb3IUqw7p98rgFZLQEU7HfIvrAQt4ji9yv119tobM8YNJkdhxeYShy5qRjYt3LxA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E1KCHI5LSky5YF8CsEt52+OIW3Ex+33j3yCE8gtY1DQ=;
- b=RFwfYZrzelPYwV6B/3ejbIgL0WWXUtgF93yNG3EOwSLoKEM0HE5fScL8WAE0rlzkMlrfJRzOM8nEAwbAgjdduShLxo1KgQ2TJJXbqLQMvSA3ppSQkwmxtsEFKDtS4NtHRZjwurLQVlUOoI0GIk+sDUmjnY27U81lHinj7kF/Q+I=
+ bh=vwjJI+nBAlhWrRXnrktFziLODTDmTGU2XceMZNWR0X0=;
+ b=axzSWLxTUd8MZkMk54Ppaop722ph3FE1SCXImPNOtVQpXo0VpxqrzK5QkjjEsGfWt15UcXsAmnWvNLjnBtKOjQ9CXcXXLatd1QK2vzo94ILW66m+gdDosH2eV5jpnpN+nTe+o0iLJsZeqqcM1Do8qIvK2BopKbPCmuWwHs4Anr0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
  by VI1PR04MB9740.eurprd04.prod.outlook.com (2603:10a6:800:1d3::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.22; Sun, 3 Dec
- 2023 15:15:08 +0000
+ 2023 15:16:57 +0000
 Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
  ([fe80::dd33:f07:7cfd:afa4]) by AM0PR04MB6452.eurprd04.prod.outlook.com
  ([fe80::dd33:f07:7cfd:afa4%7]) with mapi id 15.20.7068.012; Sun, 3 Dec 2023
- 15:15:07 +0000
-Date: Sun, 3 Dec 2023 17:15:03 +0200
+ 15:16:57 +0000
+Date: Sun, 3 Dec 2023 17:16:54 +0200
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org, Wasim Khan <wasim.khan@nxp.com>,
-	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	Wasim Khan <wasim.khan@nxp.com>, Wei Fang <wei.fang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>
 Subject: Re: [PATCH pci] PCI: remove the PCI_VENDOR_ID_NXP alias
-Message-ID: <20231203151503.vgyy7kidk7xhlles@skbuf>
+Message-ID: <20231203151654.nh4ta7vtzwpwg4ss@skbuf>
 References: <20231122154241.1371647-1-vladimir.oltean@nxp.com>
  <20231129233827.GA444332@bhelgaas>
+ <2023113014-preflight-roundish-d796@gregkh>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231129233827.GA444332@bhelgaas>
-X-ClientProxiedBy: FR4P281CA0059.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:cc::7) To AM0PR04MB6452.eurprd04.prod.outlook.com
+In-Reply-To: <2023113014-preflight-roundish-d796@gregkh>
+X-ClientProxiedBy: FR0P281CA0005.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::10) To AM0PR04MB6452.eurprd04.prod.outlook.com
  (2603:10a6:208:16d::21)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -68,83 +69,63 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|VI1PR04MB9740:EE_
-X-MS-Office365-Filtering-Correlation-Id: ed4bbf1c-f387-4716-b28a-08dbf412a237
+X-MS-Office365-Filtering-Correlation-Id: 7c507262-cbd2-4522-140b-08dbf412e3ac
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	k1px7kwtkG3VNsYYajbDBJkpZULzyOODNYYPVQ3PghyjptBsc/uG3yv8b08PBhD42cduErRTsFeF0JPBy7eV4RouMPMkmEE7WFBspNlaz3qZqbvwZjoRZI9YYUMheTg/NDonzpk9nI5EzUxZWynWU02aArk16+eVAjuc5aKECst/xMZqdcVKIjUBVlw0S/rnEgO2yY9qIgvxJs1NhcAWyU8JWiYra8xUFqeHMLeTkIlJA87Y8XqMsL7JLCfdpwKanZ0p1xYz9OjCJA/zrgY56+ewjPbICseC9gViW+GkGesAfBuBi3GCy5T+JId25ssvAFfEL0Axo73KOQhYkpwYedLC7Gtv3oAsNMYZXclfLPTNPJrs2YMt4ohK8AS5ggvVoH9xjzqcBVskFRfcF/jRZZxtP6tXYkoDLVBUZMtNY6o0pfElo90epvbLjz+13NpN/8Hibs9F7FqZRT2woHCVgaO9g0ee0Zsug4hS8FVThGbhfb5q7RUxsuZ6F58gCtKd8WJQpEmVe+4M8WvUgnlhivXzn2HPfh5C7515eMmWzCY=
+	PdP3eRTfLemsheKudVQypNrV8dK9oVX50XHjleXcmIa703bjdN9RSxw/ZpUy0zv3BR/X7TNwPn34IpCPir8DvpQ4nwdI/2elRHUZAJZdZeLYM3isYKq5jzHKlFsxJigLZQXnfOfCBTF38vpI0IYq2K/YG6WKH4VN0RbNiHUDMn6ihspQuIfcRGfjJGdyclp7lYrgxGeMy/aE9PwfeBwbM89nbq9vXIeYP3A9RFa2bSyI4vn1FVF4akkB0sF5UQsg2uj7HwesppiohMQ0HCu9G4pQuyvSVDvwfvOIg5usRaaDbezAQqYe+8zjYangtOHKjbnn7LPmwTbwE6m4SaeRAWtaI7vSjlQ+FihJi8AGxEggCmKCcHTPz//ALp6FDwszF5EaqtZe6JtzuzJ6AflnqbWfdT0Tky6i177ZT0ZZs04GoMfGcCHoa4xzl/1qUBmk+wdEKVK1rgaMSo3TTKVqmZaEs6Sc62ZOsDGmBPJlTKu7rEIl6gLNCXAC9Fe8jPSMjZsvqylWQDwUXTho6riMei2lyD5isHrbutYNa1+LbWW+u/4qs65atZ1H4FQkh0Sv
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(346002)(39850400004)(376002)(396003)(366004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(83380400001)(1076003)(86362001)(44832011)(8936002)(4326008)(9686003)(6506007)(6512007)(8676002)(38100700002)(26005)(6486002)(478600001)(966005)(6666004)(316002)(6916009)(66946007)(54906003)(66476007)(66556008)(41300700001)(5660300002)(2906002)(33716001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(346002)(39850400004)(376002)(396003)(366004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(1076003)(86362001)(44832011)(8936002)(4326008)(9686003)(6506007)(6512007)(8676002)(38100700002)(26005)(6486002)(478600001)(6666004)(316002)(6916009)(66946007)(54906003)(66476007)(66556008)(4744005)(41300700001)(5660300002)(2906002)(33716001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yw1QiRbsfUTeQd8QThBnBIMDLPC7bgMJCKp1Fco+FbzCZYn/XNcedoQSM9nZ?=
- =?us-ascii?Q?EQnl5H6fAPPh8lyIRpuI++5vlGIerEtw3hu0jIlmu4/daOkyndMZnsnNrJiH?=
- =?us-ascii?Q?rozOt/agSBaNuDGoDwA44Ypq4pHqmPG93H7lxk5nuE6HwIS1EhrNNBSscA+6?=
- =?us-ascii?Q?qsykGq+/RKToXWFXoBh5Jw26ycPrCN4t8hke0RMOct++bJ8/yKsrNsHHPVW7?=
- =?us-ascii?Q?GviENf24DusO5QX/Hw8umxPVikFlwiqo0Fo4QEJf8twdgQmDGbs97tM2Wa2T?=
- =?us-ascii?Q?saI4CC/tRxKK6dhFC5Hibj03nKkZdwLnnxoE+8lU/L5qZoe5syHd9y93uO1f?=
- =?us-ascii?Q?tH5d174VmP8N7XNKRlGtRzaWq5qyY4RP82TQdETgk8wjlhkkpUzRd48z6HpL?=
- =?us-ascii?Q?M+4fugUbhDEIV1UNBsE4lXwqt//e/UC+Ykf/L/5FAgk5YIaypJ8rb60e28UC?=
- =?us-ascii?Q?Uk2CulG5HAOa7pAzsj2darcHH4V2WyWrR8tZIIsfLCEtSDU5xe9rtOUNeOFM?=
- =?us-ascii?Q?mCjgd4ZwnqHVW1IE9Fmwl9YZIwKBt0r2o/q0ttlP8DLnHvdMT9WTAPk18TD3?=
- =?us-ascii?Q?rJvO/SnzvDijHNLDX3+Zs0QGgfzEoCgca3FlqayGV1sZYuAhmWNJF+td4B86?=
- =?us-ascii?Q?oPC12hk9wCWXB9q0+W1F3imxbcAvexTCjemSOoyBadi69U4lLkED1++GLPYj?=
- =?us-ascii?Q?jRLX2kjl/Z+ZQWluJ46pzpr1bwJZfMKSv8RrWgmUksYCVuK6HEIsExogBPJf?=
- =?us-ascii?Q?1pQM+Ex+Qrh8LmAMLb2aXaNH4ngl6E7HWl2T62dBH8o4k1ahI+nXUB81r/8H?=
- =?us-ascii?Q?M23TpFVunwLZ0VutOU5N5nue7D722DnPaFmS1+RH4RfyxRiOHwcQlhyduyMq?=
- =?us-ascii?Q?miqciMEK1qUSfY0xSXVmj7wWTPKA83xMCyc5PqaQLX0EO2qfhzVuq5CX/AOl?=
- =?us-ascii?Q?rktjkLw61YDioAlNzooecgKbTz764s+XPiLLhJi7yeXnkAr7tCEXuNZ1tUzr?=
- =?us-ascii?Q?RvJ3Z9jg7yJk1ULI7WTJzNWQl5UMPR64yPOU8nvSJm9Y+pZGEJLNBCJRW3Xz?=
- =?us-ascii?Q?aZMlVk8l9PxYlMcSwGJOWaVtKsPNUCqzEw0QavUYI0UIQumvVBgyFkYWU/a8?=
- =?us-ascii?Q?brBV0ktwbfGfbkNzA9rDfb4/zeIODKbtX6PaRXTqi1P2LjjPVzObwTKKV96H?=
- =?us-ascii?Q?audsWcVH59ZKJ5klEEmZPS6BhPiMM4zUVAf7ZlrSJ6KtKsmlc1OjwmF6zLU2?=
- =?us-ascii?Q?UcxH6czgkRzXUDSV48d+/yU6cNWwpdeLwk3ycSl7/KJM/veqMsQ3bE2SPxRR?=
- =?us-ascii?Q?gPZ17SFeKN52ctowRrW070r6yFdUMM9siFq8Oti/61OHWMIAmppQSeiJDWCX?=
- =?us-ascii?Q?/n2uJXP6hX2NwOYxCawgVcYGEUyehYkNk7g/9LmxqoXHJruLR8gvrMkdsw7g?=
- =?us-ascii?Q?upMJoijg6jy3fExEjd4smzbapRGwCLHAeGDHzThW7jVdZ7OKKKf2pdSRB0ah?=
- =?us-ascii?Q?1VXeigWxKcFCSTE+rYyLIlPAaVjoT6Lq1cROTsoosbEJ2esND1C0LOwq6dHJ?=
- =?us-ascii?Q?4qVq7tD7zxao3RgL1FZsiLmLetacE55ESBI7tYmtczYKeqexmazjBIrQNa6/?=
- =?us-ascii?Q?LQ=3D=3D?=
+	=?us-ascii?Q?MsSOhFSf6ReH1UQ7lf91TB7Qz+CYXs9n6A32/aHji9D+lvbhcEVQPVTr2raG?=
+ =?us-ascii?Q?sBV6H+O27Y6/gw447r0927w92RcNs02r4WvqRbaSyaVbg+SXnXvUxNO6T3Oc?=
+ =?us-ascii?Q?+4R3KQrJsq/b3lb8Onei9ihKe+wwKh7uQFeCBNqDQ4yXvp9hvesOIJdjhqxI?=
+ =?us-ascii?Q?T9lzxmSBiawiwoJnlGIDPSzOe67fkcCZdbfPDIpxRvFtE63UmygJMtIJm7dk?=
+ =?us-ascii?Q?k+kVnEnr0gYf9SP/kTHfKecx0j7MEIhh3hXKzJP+rPcARylELtC+h9Fs7jg8?=
+ =?us-ascii?Q?GQug94h6wXoeL7gjxc7L6gOBZ42Asr7SGelcg9jg1F/271BootlE4YJOtUzC?=
+ =?us-ascii?Q?c20nuPPtKOPPvxxH4ZP9Wmmnw8MebZ6qZ6hxW1vOeqETOJxVt8sGW/Khq0Co?=
+ =?us-ascii?Q?QyKQjFeQ2G1YmpZcFkqMNA2cKCXZWZRNCvD4dHNKxOpXqXHrHRzcB5foAJq1?=
+ =?us-ascii?Q?ekt5mNbequU7BQpNMvl0A0V+URzqmgJx+AAXkGazpDMYZAmHbkMIlsg36f+N?=
+ =?us-ascii?Q?9fN3wqiYM6yxn66K1+1uenih89mS9Fzvikf0XKNm2gdmj4APEF160V+V4bKO?=
+ =?us-ascii?Q?Lc+l2m8sefbI/JvC+D04yUTTAn3cAK2pZH0Iw35dsvMHovflFOKa11X4YI0T?=
+ =?us-ascii?Q?BN6fyc7E9BEkMSmXpKZm2o/C+Bqo0dOw6pHvMoH0GTetUzn6vfuaL4o63fXf?=
+ =?us-ascii?Q?B4MO7pfqct0iLbpbwx/aYbQrY0JHNDEZiX1sHOQkYZG3thyck/n5/7l3f7jZ?=
+ =?us-ascii?Q?G7HOG7DJtbSr9E2pY5Rlnfbn+7rvMqdSqMfUQ+qcIDyFCDAtRep3inUt9pRn?=
+ =?us-ascii?Q?fdhcR+lx6mqi50aIRiBpeeiGiLs/MmI7fvqB5P9fDrg3/kWJfrbBbu6QiQmj?=
+ =?us-ascii?Q?atnUOBFKdtQjKSpPOf9LHkwIo+vZybWJNs8efqcyOV0IG5CpioCSQSCHzr82?=
+ =?us-ascii?Q?2zp/y/zhGhUZ6tHZplztE8ltD7mFiYyJoHfbAm7Dy1g7DjHbziCRCvrIfydS?=
+ =?us-ascii?Q?35ychACr3P+vF7EYU0nXqyrem9N2RJmU3l7gf1xQOrrRKqPR/j9eMxQZ8Npb?=
+ =?us-ascii?Q?4wozSk/TyZ75rgr3KHSMU2jE/IKvtzpgwJyVBRY0RliVoQ19ysgHFxbuvh6u?=
+ =?us-ascii?Q?DiWYc2gsz6/1iG8IUv9uoaIEr8NQjRK3QRVKpiYOuWcfvJ5dORC+3u40KT8d?=
+ =?us-ascii?Q?NLI46klCBcJjlPMmZjjtCl3kplg5/TMbMHjPcZKj7YDJzyazkK9dhoj/xZz6?=
+ =?us-ascii?Q?8O5km6bMN5vZ+BcsTBCnH3Vov/Bt3a3Xoyk6KQXIQwlJmooEVUdMuWjlbDPu?=
+ =?us-ascii?Q?CZoQj2f+uIhdoAEkfj05HogwrS34bJjSPFrbykk9UziHA77eunQl/smW4l4V?=
+ =?us-ascii?Q?lh/jdOed1rPw2c4DJViKGBha3URML0xVujnaZmnzrR1sLBhUeQkdMieEBsqp?=
+ =?us-ascii?Q?V3QKwuI/9b/CC0IY62prAKp6USn32mFTmJeYln/0iKrHB6U3b4si9cYjtrxA?=
+ =?us-ascii?Q?yBB4p3ZuKP7ayFegnzsx9UDm+R7ctO5YkxobWmFxwla5mnhCkjcwaoNcMVXN?=
+ =?us-ascii?Q?eO+weocPxFkPHxmnhQeAjirXpbI90oktJNb+kvp7Gr2uieEZoKTwkyOXOSvx?=
+ =?us-ascii?Q?Sg=3D=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed4bbf1c-f387-4716-b28a-08dbf412a237
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c507262-cbd2-4522-140b-08dbf412e3ac
 X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2023 15:15:07.3060
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2023 15:16:57.0573
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fXCJM+EwA/v6HM33DP5Q7xJr+cvXDF/6eCBJPplSiYpxyNC/lS2RGVcm5WmMFlY/VmzJtsy5YC1ZKXJraGsSwg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: bPlowDD7SGanlRj7ZsM0r7ze/SuHVckW1Vvm5fqAlPHAVBBRr+RGSy7RnW+7V2yg+Fpjhe+knwfXdgporHhAcw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9740
 
-On Wed, Nov 29, 2023 at 05:38:27PM -0600, Bjorn Helgaas wrote:
-> Hmm.  I can't find the 0x1957 Vendor ID here:
-> https://pcisig.com/membership/member-companies which is supposed to
-> be the authoritative source AFAICS.
+On Thu, Nov 30, 2023 at 11:10:19AM +0000, Greg Kroah-Hartman wrote:
+> > Why would we remove name of the current company and use the name of a
+> > company that doesn't exist any more?
 > 
-> Also, that page lists 0x1131 as "NXP Semiconductors".
-> 
-> There's a contact email on that page if it needs updates.
+> Yes, this seems very odd.  What is the reason for any of this other than
+> marketing?  Kernel code doesn't do marketing :)
 
-Sorry, I've no clue what's with that list of PCI SIG member companies.
-Of course a company which no longer has a legal status cannot be a
-member of the PCI SIG.
-
-FWIW, the lspci tool uses this database: https://pci-ids.ucw.cz/
-
-> I don't quite understand the goal here.  The company is now called
-> "NXP", and this patch removes PCI_VENDOR_ID_NXP (the only instance of
-> "NXP" in pci_ids.h) and uses PCI_VENDOR_ID_FREESCALE (which apparently
-> does not exist any more)?
-> 
-> Why would we remove name of the current company and use the name of a
-> company that doesn't exist any more?
-
-Because that company doesn't produce new equipment with the old vendor id.
-
-Aliasing the old vendor id to the current company name is polluting the
-Linux definitions.
-
-The goal, quite simply, is to call the Freescale PCI ID "Freescale".
+I'm not sure who is doing the marketing; not me, that's for sure.
+The patch that I'm proposing undoes these strange aliases.
 
