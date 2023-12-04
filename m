@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-436-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-437-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24332803E28
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 20:14:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEEA48040F9
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 22:28:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54DCF1C20B23
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 19:14:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70373281280
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 21:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86DF531594;
-	Mon,  4 Dec 2023 19:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E45937170;
+	Mon,  4 Dec 2023 21:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cgoZfdq9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/J7lopG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD0B2F864;
-	Mon,  4 Dec 2023 19:14:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8608FC433C9;
-	Mon,  4 Dec 2023 19:14:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC2A364CC;
+	Mon,  4 Dec 2023 21:28:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05F5AC433C8;
+	Mon,  4 Dec 2023 21:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701717269;
-	bh=kfWReJzoKyST0mYqrsmPO5P8wLRuTmZubW3mAnPQP1g=;
+	s=k20201202; t=1701725289;
+	bh=GrS6re0Pnw+uBm1V2qdt1ie4VrYb1sT11XMmUaB1pJo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cgoZfdq9gW9Pr9xKC3b01h9h3v8ELo9+WYL+fDpUCEbba0Kz1rfxZrAVrfOiZ5ruo
-	 YYDDg+vGo/pozOJAZgQK+y7PQcUAxfjLp6o0Ooy6UQWcHYTSXGnDvlAmy/gGlqd5KB
-	 b240NbfpFBWcCsgduQYsKm1O4Dtc0KWopgQSlnpsbNvjKfcpCNbqOnvKX17fn73iuM
-	 GyuyUC9MRhbkFtHIt5uMPCk+mnhGG8PoLRI0F+Z2WcSpw3wtlgyziIknClpvQkUn21
-	 KheiX6gnBS2zjZ/rNqJwvtF8Mfp/WUhOkqSZIAqDOi1apTQrjxAyT85f3u8xQOv3Zu
-	 yD8PBrrw69Wqg==
-Date: Mon, 4 Dec 2023 13:14:27 -0600
+	b=H/J7lopGl2zOh80yIab32Hw2C21PBA9XV4prHzPUMF1TwgbcoRR2/AMyokVQ/WhhK
+	 +Sz1zOkMRXEtMdG3piW0ZaK77Iew3pWvoZAuQn7G/0yxh9I1t/Y7VqLWSeQEgcN8mQ
+	 TaHqdg5/yqMAVWNdBGgK9jX98z2cmqTVCR/qUEM6PYLhPC67HaLL2I4OAk3mSajXIi
+	 7ymuNm1HL5nquwdwPfvJHdckLcZZlJ6VYgompaD+aM/PU79N2QdRRIDSPxZc4um7s9
+	 K/GvYgYEAOfjFuk/ndFVC8h7ULdXR7jrH8RNexCSfMHtQNm2XJGa3HYlHneNsTtvaH
+	 2Le+5VdZDX1Ig==
+Date: Mon, 4 Dec 2023 15:28:07 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: Conor Dooley <conor@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-	Alexey Klimov <klimov.linux@gmail.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v2 14/35] PCI: hv: switch hv_get_dom_num() to use atomic
- find_bit()
-Message-ID: <20231204191427.GA623236@bhelgaas>
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v11 0/20] Refactoring Microchip PCIe driver and add
+ StarFive PCIe
+Message-ID: <20231204212807.GA629695@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,61 +63,21 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231203193307.542794-13-yury.norov@gmail.com>
+In-Reply-To: <c4154501-5b93-4eaf-8d2d-690809d26c57@starfivetech.com>
 
-On Sun, Dec 03, 2023 at 11:32:46AM -0800, Yury Norov wrote:
-> The function traverses bitmap with for_each_clear_bit() just to allocate
-> a bit atomically. We can do it better with a dedicated find_and_set_bit().
-
-No objection from me, but please tweak the subject line to match
-previous hv history, i.e., capitalize the first word after the prefix:
-
-  PCI: hv: Use atomic find_and_set_bit()
-
-I think there's value in using similar phrasing across the whole
-series.  Some subjects say "optimize xyz()", some say "rework xyz()",
-some "rework xyz()", etc.  I think it's more informative to include
-the "atomic" and "find_bit()" ideas in the subject than the specific
-functions that *use* it.
-
-I also like how some of the other commit logs clearly say what the
-patch does, e.g., "Simplify by using dedicated find_and_set_bit()", as
-opposed to just "We can do it better ..." which technically doesn't
-say what the patch does.
-
-Very nice simplification in all these users, thanks for doing it!
-
-I assume you'll merge these all together since they depend on [01/35],
-so:
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+On Sat, Dec 02, 2023 at 09:17:24PM +0800, Minda Chen wrote:
+> ...
+> Please check this configuation.
+> CONFIG_PHY_STARFIVE_JH7110_PCIE=y
+> CONFIG_PINCTRL_STARFIVE_JH7110=y
+> CONFIG_PINCTRL_STARFIVE_JH7110_SYS=y
+> CONFIG_PINCTRL_STARFIVE_JH7110_AON=y
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 30c7dfeccb16..033b1fb7f4eb 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -3605,12 +3605,9 @@ static u16 hv_get_dom_num(u16 dom)
->  	if (test_and_set_bit(dom, hvpci_dom_map) == 0)
->  		return dom;
->  
-> -	for_each_clear_bit(i, hvpci_dom_map, HVPCI_DOM_MAP_SIZE) {
-> -		if (test_and_set_bit(i, hvpci_dom_map) == 0)
-> -			return i;
-> -	}
-> +	i = find_and_set_bit(hvpci_dom_map, HVPCI_DOM_MAP_SIZE);
->  
-> -	return HVPCI_DOM_INVALID;
-> +	return i < HVPCI_DOM_MAP_SIZE ? i : HVPCI_DOM_INVALID;
->  }
->  
->  /**
-> -- 
-> 2.40.1
-> 
+> BTW, Maybe you can reply e-mail to me only.
+
+There's usually no benefit to replying off-list.  The list archives
+are very valuable for future maintenance because they help us
+understand the reason things were done a certain way.
+
+Bjorn
 
