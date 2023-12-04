@@ -1,317 +1,139 @@
-Return-Path: <linux-pci+bounces-425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 397E1803611
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 15:10:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B61218036A7
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 15:29:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B59D6281054
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 14:10:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6CFD1C20AE1
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Dec 2023 14:29:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D05A028389;
-	Mon,  4 Dec 2023 14:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730E228DC5;
+	Mon,  4 Dec 2023 14:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2IL2ENZ"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Lj4ikQMV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JQufUQL0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A34AB
-	for <linux-pci@vger.kernel.org>; Mon,  4 Dec 2023 06:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701699014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sAk5ft1JJ/w/1XXKa1ncobxnCZpF8QFfcV5KnWCuC9c=;
-	b=A2IL2ENZ2zlqYJbkjSdNQ3SnKXJ6e6sQx3CZRDTGjMKKdBBd+z0wOMBIQneUa0ls23LTBw
-	q6ggw7jZztVVWciK8+lPXLWyGe6bZM+OfVB9tvcc32ny+FQvo0LcR9YBREp/RBbbL41Vgx
-	9ggB9rYqxPlXTu91/JeSzL/WU3m2m4k=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-uR4pW6kPP4aIAWBN-AQAtw-1; Mon, 04 Dec 2023 09:10:12 -0500
-X-MC-Unique: uR4pW6kPP4aIAWBN-AQAtw-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a00dd93a5f9so357051466b.1
-        for <linux-pci@vger.kernel.org>; Mon, 04 Dec 2023 06:10:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701699011; x=1702303811;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sAk5ft1JJ/w/1XXKa1ncobxnCZpF8QFfcV5KnWCuC9c=;
-        b=aaBIoDJYbzxOWlcND/HLwjS4wlWT2AudA/myiO1lMS6xZ8jYOOSIqYa22ssjS3rGmd
-         WGBooWo4XwCGC5oFQRdJUtHDMSOf/TyC+lkAAdrxKUE/mSDS21XoMChGjcsmfLT6RBDB
-         BkNMlaH0aKoFvk9bJ8+K2wDGYmKF1SKDGWVDdB0r81ECH7z21e9CNPhSSid+kWr80k82
-         OkVuaJIToiGQsoTL3UnbLRwdbJZKWOEUacD8+WqBLF7aQrB4RPrJ/LNVjB3c9I17EAwo
-         iP6bGOogf9+yMpOqZvv2ii/GNT5og0O/LM4KthkgAp4nGLW2sRfEuo0dVGkSFJFFn4tc
-         U2hQ==
-X-Gm-Message-State: AOJu0Yw5OckTx8AR5KzJsY+Eza493n6SeJ0k4FNYnW8HdcZk+Psd/AJ/
-	N+P41wpK/F0+/oihJKcV6p62eYs6qyDY6rVczD2XaaVYLr2JU2HtFEGDkG8tsMdZy0HfBLHq0v9
-	1+TgxjygMiaRGcSWi+oL9
-X-Received: by 2002:a17:906:8a42:b0:a19:a1ba:bae5 with SMTP id gx2-20020a1709068a4200b00a19a1babae5mr1540360ejc.139.1701699011000;
-        Mon, 04 Dec 2023 06:10:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEAIe9I+YICP2AFMqhZIsxCBMb1ktF5roM76t28tXbR4yVzB3bGdBWWH2YKGVbXO9CxV96/Jg==
-X-Received: by 2002:a17:906:8a42:b0:a19:a1ba:bae5 with SMTP id gx2-20020a1709068a4200b00a19a1babae5mr1540349ejc.139.1701699010604;
-        Mon, 04 Dec 2023 06:10:10 -0800 (PST)
-Received: from [10.40.98.142] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id r19-20020a1709067fd300b009fd50aa6984sm5285299ejs.83.2023.12.04.06.10.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 06:10:10 -0800 (PST)
-Message-ID: <16b251b9-2dbb-419d-bde6-7d5972120587@redhat.com>
-Date: Mon, 4 Dec 2023 15:10:09 +0100
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA34186;
+	Mon,  4 Dec 2023 06:29:31 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailnew.nyi.internal (Postfix) with ESMTP id C86B9580948;
+	Mon,  4 Dec 2023 09:29:30 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 04 Dec 2023 09:29:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1701700170; x=1701707370; bh=82
+	6yxGHLvKOrBxd7Hd1e9g5EjsLv6zmYuM80wh46KKE=; b=Lj4ikQMVRMBDHagNlC
+	YQgSteBDqhRnfrm9Ku5aNywOXhuxNsGpUO4m/FGo3vtgsjEa32I6R17NJRI86sZ5
+	TAjD8dPSR3MgK7OFOvOIbii1I8ReyreBT/6qlji0tM780e3jtGv0H/LihldZ4ZSQ
+	0sb7ZTAfPUJc3WI+E7J59sT4w4rARxKE65A+4F9zD0vVJZRw28uy/ZfyPY/gh8fC
+	rnWbAKLcbjoNismGWm+8p5asoD7lOJka+6GDKrDiS01EbTEc3QDkI+OB2xEv9RQl
+	rjIvpFX6MM+IlE5EfDr47OQvpOyk0aZ39O4PuUlfAQoAve7fxD6OOVLhxI2uk/za
+	ATaA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1701700170; x=1701707370; bh=826yxGHLvKOrB
+	xd7Hd1e9g5EjsLv6zmYuM80wh46KKE=; b=JQufUQL0mUFBQJBOptInpLuw3oJFa
+	33wfnoqHFWL41QNU8kPtG7B9OPz5rgEqTlRC2MxQJqu4xEH5HHjfM64DFzhS/Z0V
+	hpY0znEyMQPMg+WWP+B6MreZ5A5V9G2RH2P1uj4MKwpfk2k9jocjCXTVbBhdS1ow
+	Ue4x6f3ilk0N0JZP+JEHSmZM0WM3njLSSjgpr8aO8VgMuqj/ecnIarz08VsR087t
+	cm4uGSri2sMmasOw7Gcd5G1pvW60nZMOkb4Im33h7ApY8yCKM8uRrVYNgs4eFm/w
+	bglpTSdi1eTY2wwfuaWGSz7UzkuTb9b+bVwh/Dt3izR1rJcBXDf9q098Q==
+X-ME-Sender: <xms:SeJtZWg6svZDBbVud1Ua0JwM4qA_gnIEnzRtd4C1twiFyVg3-s4Fkg>
+    <xme:SeJtZXBqMnrNcqUtOx8TBmCSlsG5n_qE2xjDtE_QZmJdtUddB3q3D5dREAiiCCiF-
+    2HPnXqvlIUZNaMOWJc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudejiedgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:SeJtZeFJuIk9O1oUscNi2M8kr2BynAlOMK3WmaI_D2X3eLcd7bHGrg>
+    <xmx:SeJtZfQGJ7ToaiFdj7uOnVLZje6IuNYP3CEWOXXiwsUa55gbgNWUBA>
+    <xmx:SeJtZTzyEALPBz_I5AwxT21KGFBDYvbDsTSAGJW5_xcBrX1hG3Awug>
+    <xmx:SuJtZWhSLXKyVW4AWBKN1mYB561Sxzjgxx52cE5IuCk5Pyog1TFfVw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 47AEAB60089; Mon,  4 Dec 2023 09:29:29 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] platform/x86: p2sb: Allow p2sb_bar() calls during PCI
- device probe
-Content-Language: en-US
-To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- Andy Shevchenko <andy@kernel.org>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
- linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20231201104759.949340-1-shinichiro.kawasaki@wdc.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231201104759.949340-1-shinichiro.kawasaki@wdc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-Id: <6d6918ac-a310-45d2-b5fe-c70595918b80@app.fastmail.com>
+In-Reply-To: <e5d53e44709f7da1ba4b8f8a4687efcffdd6addb.camel@redhat.com>
+References: <20231204123834.29247-1-pstanner@redhat.com>
+ <20231204123834.29247-6-pstanner@redhat.com>
+ <2648aef32cd5a2272cd3ce8cd7ed5b29b2d21cad.camel@redhat.com>
+ <05173886-444c-4bae-b1a5-d2b068e9c4a5@app.fastmail.com>
+ <e5d53e44709f7da1ba4b8f8a4687efcffdd6addb.camel@redhat.com>
+Date: Mon, 04 Dec 2023 15:29:07 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Philipp Stanner" <pstanner@redhat.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>, "Hanjun Guo" <guohanjun@huawei.com>,
+ "Neil Brown" <neilb@suse.de>, "Kent Overstreet" <kent.overstreet@gmail.com>,
+ "Jakub Kicinski" <kuba@kernel.org>,
+ "Niklas Schnelle" <schnelle@linux.ibm.com>,
+ "Uladzislau Koshchanka" <koshchanka@gmail.com>,
+ "John Sanpe" <sanpeqf@gmail.com>, "Dave Jiang" <dave.jiang@intel.com>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Kees Cook" <keescook@chromium.org>, "David Gow" <davidgow@google.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "wuqiang.matt" <wuqiang.matt@bytedance.com>,
+ "Yury Norov" <yury.norov@gmail.com>, "Jason Baron" <jbaron@akamai.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Ben Dooks" <ben.dooks@codethink.co.uk>, "Danilo Krummrich" <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, stable@vger.kernel.org,
+ "Arnd Bergmann" <arnd@kernel.org>
+Subject: Re: [PATCH v3 5/5] lib, pci: unify generic pci_iounmap()
+Content-Type: text/plain
 
-Hi,
+On Mon, Dec 4, 2023, at 15:09, Philipp Stanner wrote:
+> On Mon, 2023-12-04 at 14:50 +0100, Arnd Bergmann wrote:
+>> On Mon, Dec 4, 2023, at 14:39, Philipp Stanner wrote:
+>> > On Mon, 2023-12-04 at 13:38 +0100, Philipp Stanner wrote:
+>
+> Ok, makes sense.
+>
+> But should we then adjust iomem_is_ioport() in asm-generic/io.h, as
+> well, so that it matches IO_COND()'s behavior?
+>
+> It currently does this:
+>
+> 	uintptr_t start = (uintptr_t)PCI_IOBASE;
+> 	uintptr_t addr = (uintptr_t)addr_raw;
+>
+> 	if (addr >= start && addr < start + IO_SPACE_LIMIT)
+> 		return true;
+>
+> and if the architecture does not set PCI_IOBASE, then it's set per
+> default to 0, as well.
+>
+> So we have two inconsistent definitons
 
-On 12/1/23 11:47, Shin'ichiro Kawasaki wrote:
-> p2sb_bar() unhides P2SB device to get resources from the device. It
-> guards the operation by locking pci_rescan_remove_lock so that parallel
-> rescans do not find the P2SB device. However, this lock causes deadlock
-> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
-> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
-> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
-> Hence the deadlock.
-> 
-> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
-> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
-> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
-> refer the cache and return to the caller.
-> 
-> Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-> ---
-> This patch reflects discussions held at the Link tag. I confirmed this patch
-> fixes the problem using a system with i2c_i801 device, building i2c_i801
-> module as both built-in and loadable. Reviews will be appreicated.
+No, I would also keep the logic here, since it makes more sense
+and the inconsistency is only for the corner case that doesn't
+hit in practice.
 
-Andy, you know this code best, can you review this patch please?
+The PCI_IOBASE==0 case should never happen here, as that doesn't
+work with the generic inb(). I think the only target left that
+has I/O ports but doesn't set PCI_IOBASE at all is sparc, but
+that is special in a number of ways. 
 
-Regards,
-
-Hans
-
-
-
-> 
->  drivers/platform/x86/p2sb.c | 125 +++++++++++++++++++++++++-----------
->  1 file changed, 87 insertions(+), 38 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-> index 1cf2471d54dd..97e9b44f5f1a 100644
-> --- a/drivers/platform/x86/p2sb.c
-> +++ b/drivers/platform/x86/p2sb.c
-> @@ -26,6 +26,16 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
->  	{}
->  };
->  
-> +/* Cache BAR0 of P2SB device from function 0 ot 7 */
-> +#define NR_P2SB_RES_CACHE 8
-> +
-> +struct p2sb_res_cache {
-> +	u32 bus_dev_id;
-> +	struct resource res;
-> +};
-> +
-> +static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
-> +
->  static int p2sb_get_devfn(unsigned int *devfn)
->  {
->  	unsigned int fn = P2SB_DEVFN_DEFAULT;
-> @@ -39,8 +49,13 @@ static int p2sb_get_devfn(unsigned int *devfn)
->  	return 0;
->  }
->  
-> +static bool p2sb_invalid_resource(struct resource *res)
-> +{
-> +	return res->flags == 0;
-> +}
-> +
->  /* Copy resource from the first BAR of the device in question */
-> -static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
-> +static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
->  {
->  	struct resource *bar0 = &pdev->resource[0];
->  
-> @@ -56,48 +71,29 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
->  	mem->end = bar0->end;
->  	mem->flags = bar0->flags;
->  	mem->desc = bar0->desc;
-> -
-> -	return 0;
->  }
->  
-> -static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-> +static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
->  {
->  	struct pci_dev *pdev;
->  	int ret;
-> +	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
->  
->  	pdev = pci_scan_single_device(bus, devfn);
-> -	if (!pdev)
-> +	if (!pdev || p2sb_invalid_resource(&pdev->resource[0]))
->  		return -ENODEV;
->  
-> -	ret = p2sb_read_bar0(pdev, mem);
-> +	p2sb_read_bar0(pdev, &cache->res);
-> +	cache->bus_dev_id = bus->dev.id;
->  
->  	pci_stop_and_remove_bus_device(pdev);
->  	return ret;
->  }
->  
-> -/**
-> - * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
-> - * @bus: PCI bus to communicate with
-> - * @devfn: PCI slot and function to communicate with
-> - * @mem: memory resource to be filled in
-> - *
-> - * The BIOS prevents the P2SB device from being enumerated by the PCI
-> - * subsystem, so we need to unhide and hide it back to lookup the BAR.
-> - *
-> - * if @bus is NULL, the bus 0 in domain 0 will be used.
-> - * If @devfn is 0, it will be replaced by devfn of the P2SB device.
-> - *
-> - * Caller must provide a valid pointer to @mem.
-> - *
-> - * Locking is handled by pci_rescan_remove_lock mutex.
-> - *
-> - * Return:
-> - * 0 on success or appropriate errno value on error.
-> - */
-> -int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-> +static int p2sb_cache_resources(void)
->  {
-> -	struct pci_dev *pdev_p2sb;
-> -	unsigned int devfn_p2sb;
-> +	struct pci_bus *bus;
-> +	unsigned int devfn_p2sb, slot_p2sb, fn;
->  	u32 value = P2SBC_HIDE;
->  	int ret;
->  
-> @@ -106,8 +102,8 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
->  	if (ret)
->  		return ret;
->  
-> -	/* if @bus is NULL, use bus 0 in domain 0 */
-> -	bus = bus ?: pci_find_bus(0, 0);
-> +	/* Assume P2SB is on the bus 0 in domain 0 */
-> +	bus = pci_find_bus(0, 0);
->  
->  	/*
->  	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
-> @@ -115,18 +111,31 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
->  	 */
->  	pci_lock_rescan_remove();
->  
-> -	/* Unhide the P2SB device, if needed */
-> +	/*
-> +	 * The BIOS prevents the P2SB device from being enumerated by the PCI
-> +	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
-> +	 * Unhide the P2SB device here, if needed.
-> +	 */
->  	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
->  	if (value & P2SBC_HIDE)
->  		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
->  
-> -	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
-> -	if (devfn)
-> -		ret = p2sb_scan_and_read(bus, devfn, mem);
-> -	else
-> -		ret = p2sb_read_bar0(pdev_p2sb, mem);
-> -	pci_stop_and_remove_bus_device(pdev_p2sb);
-> +	/* Scan the P2SB device and cache its BAR0 */
-> +	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
-> +	if (ret)
-> +		goto out;
->  
-> +	/*
-> +	 * When function number of the P2SB device is zero, scan other function
-> +	 * numbers. If devices are available, cache their BAR0.
-> +	 */
-> +	if (!PCI_FUNC(devfn_p2sb)) {
-> +		slot_p2sb = PCI_SLOT(devfn_p2sb);
-> +		for (fn = 1; fn < 8; fn++)
-> +			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
-> +	}
-> +
-> +out:
->  	/* Hide the P2SB device, if it was hidden */
->  	if (value & P2SBC_HIDE)
->  		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, P2SBC_HIDE);
-> @@ -136,9 +145,49 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
->  	if (ret)
->  		return ret;
->  
-> -	if (mem->flags == 0)
-> +	return 0;
-> +}
-> +
-> +/**
-> + * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
-> + * @bus: PCI bus to communicate with
-> + * @devfn: PCI slot and function to communicate with
-> + * @mem: memory resource to be filled in
-> + *
-> + * if @bus is NULL, the bus 0 in domain 0 will be used.
-> + * If @devfn is 0, it will be replaced by devfn of the P2SB device.
-> + *
-> + * Caller must provide a valid pointer to @mem.
-> + *
-> + * Return:
-> + * 0 on success or appropriate errno value on error.
-> + */
-> +int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-> +{
-> +	int ret;
-> +	struct p2sb_res_cache *cache;
-> +
-> +	bus = bus ? bus : pci_find_bus(0, 0);
-> +
-> +	if (!devfn) {
-> +		ret = p2sb_get_devfn(&devfn);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	cache = &p2sb_resources[PCI_FUNC(devfn)];
-> +	if (p2sb_invalid_resource(&cache->res) ||
-> +	    cache->bus_dev_id != bus->dev.id)
->  		return -ENODEV;
->  
-> +	memcpy(mem, &cache->res, sizeof(*mem));
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(p2sb_bar);
-> +
-> +static int __init p2sb_fs_init(void)
-> +{
-> +	p2sb_cache_resources();
-> +	return 0;
-> +}
-> +fs_initcall(p2sb_fs_init);
-
+     Arnd
 
