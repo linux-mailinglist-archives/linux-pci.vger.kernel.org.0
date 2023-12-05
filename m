@@ -1,135 +1,211 @@
-Return-Path: <linux-pci+bounces-492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-493-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94F01805625
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 14:36:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF29B805630
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 14:37:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3DFE61F2154A
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 13:36:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EE5651C20F7B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 13:37:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 539E25D90E;
-	Tue,  5 Dec 2023 13:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232D05D910;
+	Tue,  5 Dec 2023 13:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qJEun988";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kzomfXtM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27DE0A8;
-	Tue,  5 Dec 2023 05:36:35 -0800 (PST)
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6d9ac148ca3so905528a34.0;
-        Tue, 05 Dec 2023 05:36:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701783394; x=1702388194;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ATJhxmNw/sqJ3amYElSUOa0ZiBdGk96C405IzrIF1IA=;
-        b=gTTY+OMAJcVP5viX+mEpCvleqctyd//MYzRAIep7B1aZdykwbm8g8N4602soShQiL2
-         NvePkFSFfhVxwaadqnC2H5oYHaf9CcyoJNcaCyuyJ8Vruapus2yDA1+nKIk5Vt+X4T9X
-         Wxwyb/Ue7sax3gqyOxkuYcKr64KZJb7mx8Cpj7DjcH8Pwfkk3SuxjtsVbkd/EW2RkdSa
-         +y9GDlw0hT/h74MGdaFJHw1dNl2H+N9ZXL8FnyOECLoNOoGvtPLHZhxdyBxHD7yqmLJ9
-         G0JBBR1xUZZ/td3kOsk2+A/CdJESg31fNYvFjOPOMPMpYPyHBahoUdgMOQl5qYg3jt72
-         a32A==
-X-Gm-Message-State: AOJu0YwAnPBJLeC9zrwtnd8qLtmQG5sp6m/l4bPSbJ27uAJZZjiKim+c
-	XTU2QyV+m0uwbKr7LX9+lQ==
-X-Google-Smtp-Source: AGHT+IHpax4H+EuTffsdMbFAaxu0ifdWtpe/c2kmwKYnFq10+iJjBG535HfA/1jEH708VOJPGAni2g==
-X-Received: by 2002:a05:6871:149:b0:1fb:75a:7799 with SMTP id z9-20020a056871014900b001fb075a7799mr5314173oab.74.1701783393692;
-        Tue, 05 Dec 2023 05:36:33 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id qa18-20020a056871e71200b001fb30b8bb40sm1648439oac.41.2023.12.05.05.36.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 05:36:33 -0800 (PST)
-Received: (nullmailer pid 2871587 invoked by uid 1000);
-	Tue, 05 Dec 2023 13:36:30 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF4141AB;
+	Tue,  5 Dec 2023 05:37:15 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 3B5CC5C0073;
+	Tue,  5 Dec 2023 08:37:15 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 05 Dec 2023 08:37:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1701783435; x=1701869835; bh=MS
+	o40/DzILPmk4fVztq26tP1UcAt4IZ5edthROYfIeQ=; b=qJEun988LPpJTneK4B
+	iOm8MG4rNWEJ2M9ylmnOyL8l6IwefIw3g+/fCxBQAzyJ7hYdhL0/vWbPNpuzsUFh
+	3rJnLmNXViDWxshFEt8CsL6vb4PkVF+BORWHrbr3H58yGuLoV7d7VhDamFjpQhcT
+	U/u+M5I1drvoNI3dxxKiGfFRUhtB2Ve3C1g31EZOupjooD8zk4+Mo+IjzVNeit2A
+	xrIqpr9SYwC2iP4Gd4vV3r7M8WNNp6iK/T8nTedZd/kkRg34bxzcsBoYntKliqtf
+	rWt81QWBmEKAovmrUW9mB6GfVJnBfIPPZu0EVRiRyoy+3Hv5hrUNpSjlpotMCzoZ
+	Tfwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1701783435; x=1701869835; bh=MSo40/DzILPmk
+	4fVztq26tP1UcAt4IZ5edthROYfIeQ=; b=kzomfXtMU0QNVW1G9ASuu30rLAGos
+	brOM5jegxaM9w5e0E+Mx0NaBvK7yKRLW7QEFi70l9E13SQcdbmlVehN4FL8GG+v3
+	7RsF2zI2Nyv6dHAMGGHfT47Lx9dGZC/A9N679EkNRrcIR+iFfssYQHIRL1Npjkbk
+	eBYMVft4X3MdNIlB9Zj8bhY3LknHONoh7BVL83Nvp2HHAnfut73c+YWszU2OV3K/
+	6zMPitTGR7BZjpWbzVUNxULgkm1Gk00Wy3GqEXLYAsGzKmGbotT7+uN4YvG5UW9z
+	iuXVOurc69aA6dcmz84gY6uMYS+XnL6znE2Xy2uInouwlGoH3ug5OPSsw==
+X-ME-Sender: <xms:iidvZSzxzQt9c1fSV60YcizLeTJiBllKOkZaAoH87W9KXaB9-0jiKg>
+    <xme:iidvZeRT49Fh7djkd5qgQf2NCRjlrWgdztUMf8L5b0qdI-EFZGp5EXBPiTBQ73rXl
+    eg3yUbr-dA7ideEfis>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudejkedgheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:iidvZUXouaBsV59xnbNVHKF_uXZMwp2q_wCdiiHs5wsWMnd_ACMcKw>
+    <xmx:iidvZYhPVbBEyaGydQt8CbxNo52xULx8foRb9eVwP_9xGKxILkcQRA>
+    <xmx:iidvZUDRajflv2u1GEbjLptgtHm7CwStnkYNNuqBvb20vTp0-pEA4g>
+    <xmx:iydvZdKP1SM2yKZ3zCKMv0fokHE2VVWKyjYuf1Spzjczx5f7DTcEfA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 2D405B60089; Tue,  5 Dec 2023 08:37:13 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Michael Turquette <mturquette@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Baoquan He <bhe@redhat.com>, linux-renesas-soc@vger.kernel.org, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Arnd Bergmann <arnd@arndb.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, 
-	Jacky Huang <ychuang3@nuvoton.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-sh@vger.kernel.org, 
-	Max Filippov <jcmvbkbc@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Magnus Damm <magnus.damm@gmail.com>, Tom Rix <trix@redhat.com>, 
-	Maxime Ripard <mripard@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	David Airlie <airlied@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org, 
-	David Rientjes <rientjes@google.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Helge Deller <deller@gmx.de>, Javier Martinez Canillas <javierm@redhat.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, linux-clk@vger.kernel.org, 
-	Rich Felker <dalias@libc.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Lee Jones <lee@kernel.org>, Sam Ravnborg <sam@ravnborg.org>, Daniel Vetter <daniel@ffwll.ch>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vlastimil Babka <vbabka@suse.cz>, Palmer Dabbelt <palmer@rivosinc.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	Guenter Roeck <linux@roeck-us.net>, Bin Meng <bmeng@tinylab.org>, 
-	Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org
-In-Reply-To: <f671beae8a8ebfd361f4c903bccce713135a169f.1701768028.git.ysato@users.sourceforge.jp>
+Message-Id: <2a5ce0d0-ad0a-49d7-84a6-055c4b729eec@app.fastmail.com>
+In-Reply-To: 
+ <f671beae8a8ebfd361f4c903bccce713135a169f.1701768028.git.ysato@users.sourceforge.jp>
 References: <cover.1701768028.git.ysato@users.sourceforge.jp>
  <f671beae8a8ebfd361f4c903bccce713135a169f.1701768028.git.ysato@users.sourceforge.jp>
-Message-Id: <170178306217.2865593.13906216780533956456.robh@kernel.org>
-Subject: Re: [DO NOT MERGE v5 22/37] dt-bindings: display: smi,sm501: SMI
- SM501 binding json-schema
-Date: Tue, 05 Dec 2023 07:36:30 -0600
+Date: Tue, 05 Dec 2023 14:36:53 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Yoshinori Sato" <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org
+Cc: "Damien Le Moal" <dlemoal@kernel.org>,
+ "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
+ "Daniel Vetter" <daniel@ffwll.ch>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ "Magnus Damm" <magnus.damm@gmail.com>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Lee Jones" <lee@kernel.org>, "Helge Deller" <deller@gmx.de>,
+ =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>,
+ "Chris Morgan" <macromorgan@hotmail.com>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Randy Dunlap" <rdunlap@infradead.org>,
+ "Hyeonggon Yoo" <42.hyeyoo@gmail.com>,
+ "David Rientjes" <rientjes@google.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, "Baoquan He" <bhe@redhat.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Guenter Roeck" <linux@roeck-us.net>,
+ "Stephen Rothwell" <sfr@canb.auug.org.au>, guoren <guoren@kernel.org>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Azeem Shaikh" <azeemshaikh38@gmail.com>,
+ "Palmer Dabbelt" <palmer@rivosinc.com>, "Bin Meng" <bmeng@tinylab.org>,
+ "Max Filippov" <jcmvbkbc@gmail.com>, "Tom Rix" <trix@redhat.com>,
+ "Herve Codina" <herve.codina@bootlin.com>,
+ "Jacky Huang" <ychuang3@nuvoton.com>,
+ "Lukas Bulwahn" <lukas.bulwahn@gmail.com>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Biju Das" <biju.das.jz@bp.renesas.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "Sam Ravnborg" <sam@ravnborg.org>,
+ "Michael Karcher" <kernel@mkarcher.dialup.fu-berlin.de>,
+ "Sergey Shtylyov" <s.shtylyov@omp.ru>,
+ "Laurent Pinchart" <laurent.pinchart+renesas@ideasonboard.com>,
+ linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+ linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+Subject: Re: [DO NOT MERGE v5 22/37] dt-bindings: display: smi,sm501: SMI SM501 binding
+ json-schema
+Content-Type: text/plain
 
-
-On Tue, 05 Dec 2023 18:45:41 +0900, Yoshinori Sato wrote:
+On Tue, Dec 5, 2023, at 10:45, Yoshinori Sato wrote:
 > Define SM501 functions and modes.
-> 
+>
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 > ---
 >  .../bindings/display/smi,sm501.yaml           | 134 ++++++++++++++++++
 >  include/dt-bindings/display/sm501.h           |  25 ++++
->  2 files changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/smi,sm501.yaml
->  create mode 100644 include/dt-bindings/display/sm501.h
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+It looks like we already have a binding at
+Documentation/devicetree/bindings/display/sm501fb.txt
 
-yamllint warnings/errors:
+> +  little-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: available on big endian systems, to set different 
+> foreign endian.
+> +  big-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: available on little endian systems, to set different 
+> foreign endian.
+> +
+> +  swap-fb-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: swap framebuffer byteorder.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/smi,sm501.yaml: interrupt-name: missing type definition
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/smi,sm501.yaml: edid: missing type definition
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/smi,sm501.yaml: crt: missing type definition
+Why do you need both the "swap" and the specific little/big
+properties?
 
-doc reference errors (make refcheckdocs):
+> +  crt:
+> +    description: CRT output control
+> +
+> +  panel:
+> +    description: Panel output control
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/f671beae8a8ebfd361f4c903bccce713135a169f.1701768028.git.ysato@users.sourceforge.jp
+What type are these?
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+> +  smi,misc-timing:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Miscellaneous Timing reg value.
+> +
+> +  smi,misc-control:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Miscellaneous Control reg value.
+> +
+> +  smi,gpio-low:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: GPIO0 to 31 Control reg value.
+> +
+> +  smi,gpio-high:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: GPIO32 to 63 Control reg value.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Register values should generally not go into DT
 
-pip3 install dtschema --upgrade
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> +
+> +  smi,gpio-i2c:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 5
+> +    description: |
+> +      GPIO I2C bus number
+> +      1st field - I2C bus number
+> +      2nd Field - GPIO SDA
+> +      3rd Field - GPIO SCL
+> +      4th Field - Timeout
+> +      5th Field - udelay
 
+Instead of a bus number and other fields, I think
+this should reference an i2c device.
+
+      Arnd
 
