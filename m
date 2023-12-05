@@ -1,104 +1,136 @@
-Return-Path: <linux-pci+bounces-483-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-484-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A988F804FA3
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 11:00:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D76C7804FA9
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 11:00:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C9BE7B20BE8
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:00:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 613EA2817E9
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:00:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3D34B5DB;
-	Tue,  5 Dec 2023 10:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A3584B5DF;
+	Tue,  5 Dec 2023 10:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rvek0BZP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDRJRetf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C788FA0
-	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 01:59:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701770399; x=1733306399;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+jPQaiS0CLFcu1huBYFsPOpZc/7ncj6I1Rcc/Iu6fms=;
-  b=Rvek0BZPnkTfEIMSopBLNfVYh3kNKPZ5GOl3OikTw5vvLq9yi6tOKwaT
-   mihPs4IDmjMU4dvQBB7NFsQ2+xGGaZ+LMDTeAyCMubFF76emltthdSOzm
-   F6FHwiK2zj0hKHImk7S16ab5g1wdh4/LeYwl8PrrAVw7mosvrXowpASDX
-   6bPBRJ1xc4IcLkvMBCj9rzY8eNrX6vXd4V4WKD8IZpPyeICDzhxtWzvyv
-   9T/1tIcAJmd2nUvRnM/F+6x5gygcfD/gqPBMcXh9G0tV0OyNngZaQs2Xm
-   1pamw+RgnmiNAwtVaViBkDLPxuJQVjK/0v0fltf6GtP/TfaXZ5gNEVdOL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="396667839"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="396667839"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 01:59:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="774582000"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="774582000"
-Received: from nlawless-mobl.ger.corp.intel.com ([10.252.61.141])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 01:59:55 -0800
-Date: Tue, 5 Dec 2023 11:59:53 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Yang Yingliang <yangyingliang@huaweicloud.com>
-cc: ntb@lists.linux.dev, linux-pci@vger.kernel.org, jdmason@kudzu.us, 
-    dave.jiang@intel.com, allenbh@gmail.com, lpieralisi@kernel.org, 
-    kw@linux.com, mani@kernel.org, kishon@kernel.org, bhelgaas@google.com, 
-    yangyingliang@huawei.com
-Subject: Re: [PATCH 2/2] NTB: EPF: return error code in the error path in
- pci_vntb_probe()
-In-Reply-To: <20231201033057.1399131-2-yangyingliang@huaweicloud.com>
-Message-ID: <8eb01521-5eca-762c-c944-c7604564c54c@linux.intel.com>
-References: <20231201033057.1399131-1-yangyingliang@huaweicloud.com> <20231201033057.1399131-2-yangyingliang@huaweicloud.com>
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636E5C3
+	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 02:00:08 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5d7692542beso28751957b3.3
+        for <linux-pci@vger.kernel.org>; Tue, 05 Dec 2023 02:00:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701770407; x=1702375207; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i93Z/CqJ+EBecddDOnAmVzRbIcIUtO0ehOz5S54CfrQ=;
+        b=YDRJRetfQA80jrjZYAlfT90vA6kpOsfF70/ktTGJ25Lk4nxospYByarCuZVETKVEX+
+         T04DRfvWpjz7YsT/JikHiUPmjRMxckzN8B9eEohxgMhuq7QUvCZndWlRA1q+zTiXqVk8
+         raIS3RFBgbsMdp/iYKWaZ6ehoAazJ2aYoUu+BtQviPhvZxEdC8ELMogHqNsWrplpuegX
+         K/cI+VioTMwDX2wVOK7t+zmNadxVEtG6WgHcaC2menF1zD2agwrSdmG6LpvYGQH7xrhb
+         l6V0g+FLpDsl8+R0qUAVUTFj57n7Ilf6hVnNXQfX7hiOzM/b6Ti9kN1yK9VZvctCVCrZ
+         KiUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701770407; x=1702375207;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i93Z/CqJ+EBecddDOnAmVzRbIcIUtO0ehOz5S54CfrQ=;
+        b=ifOcpY0EJJQ+ePJKFKoexw23RY33BWyFqGVQJzlMPk/AqVCnDJXuPBTUuPDwSuSpOI
+         NdR4tU3kR29t1ewca4wDTp2bHLAjQTiGuug6EdIq+oKWHhQAWiDs67dHHOKZ3GulhQmM
+         KVgzbihTVEmHrtwRIihZZ1ibavpIGdUO3XrI6OqD5oziuTfNZJTRrZhPmtoREtt30Az2
+         J/Qn+glomPB1858utuaUOnJ0/opTiWvkUdrYWH0ZPE6/53RZ6gDhjQP4zypWSxv/42A/
+         eFkVYCC2FXupFYnHhhr9txoXGPmX+0MblmB0vfaM4N3166XL7+FG96cH5uwS7qsJsEXq
+         sCbQ==
+X-Gm-Message-State: AOJu0Yx6sv+NweFzr6b/xTOpR8GJN2B1ybW8zqhalTKXqQEIc/10GDt8
+	u0a4iruBaTLJ2Q/irWHNirXHEM3SGXWKfm0oE2brLQ==
+X-Google-Smtp-Source: AGHT+IH5eTb2gwdS22rkWHvbJD/nbpWagDnymfw80erU7E8T3kEYsszdXZXrJ4vDy/yEfDwBBs/YnsUIOf3GGpmbFhk=
+X-Received: by 2002:a0d:ccd6:0:b0:5d7:1940:53d6 with SMTP id
+ o205-20020a0dccd6000000b005d7194053d6mr4529462ywd.78.1701770407103; Tue, 05
+ Dec 2023 02:00:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1611894948-1701770398=:1829"
+References: <cover.1701768028.git.ysato@users.sourceforge.jp> <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
+In-Reply-To: <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 5 Dec 2023 10:59:54 +0100
+Message-ID: <CACRpkdbFNyEn_ub3moh9f6zbBKzTBt-CPRykUfexd5fXjpKE3Q@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v5 17/37] dt-bindings: interrupt-controller:
+ renesas,sh7751-intc: Add json-schema
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Guo Ren <guoren@kernel.org>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Tom Rix <trix@redhat.com>, 
+	Herve Codina <herve.codina@bootlin.com>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Yoshinori,
 
---8323329-1611894948-1701770398=:1829
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+thanks for your patch!
 
-On Fri, 1 Dec 2023, Yang Yingliang wrote:
+On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
 
-> From: Yang Yingliang <yangyingliang@huawei.com>
-> 
-> If dma_set_mask_and_coherent() fails, return the error code instead
-> of -EINVAL.
-> 
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 2b7bc5a731dd..c6f07722cbac 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -1272,7 +1272,7 @@ static int pci_vntb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->  	if (ret) {
->  		dev_err(dev, "Cannot set DMA mask\n");
-> -		return -EINVAL;
-> +		return ret;
->  	}
->  
->  	ret = ntb_register_device(&ndev->ntb);
+> +  renesas,icr-irlm:
+> +    type: boolean
+> +    description: If true ICR.IRLM=3D1
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+That's a bit hard to understand. I suppose it's something that need to some=
+times
+be changed for a system so would be good to document it properly.
 
--- 
- i.
+> +  renesas,ipr-map:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      IRQ to IPR mapping definition.
+> +      1st - INTEVT
+> +      2nd - Register
+> +      3rd - bit index
 
---8323329-1611894948-1701770398=:1829--
+Isn't this table always the same for a certain SoC, e.g. compatible
+"renesas,sh7751-intc"?
+
+Then don't keep it in the device tree, just look it up per-soc from a
+table in the driver.
+
+Other than that it looks good to me.
+
+Yours,
+Linus Walleij
 
