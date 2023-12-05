@@ -1,62 +1,63 @@
-Return-Path: <linux-pci+bounces-498-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-499-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7ED3805805
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:58:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D385A80581D
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:02:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61D221F21754
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 14:58:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C56051C21145
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:02:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C4267E73;
-	Tue,  5 Dec 2023 14:57:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 211E567E84;
+	Tue,  5 Dec 2023 15:02:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F221129;
-	Tue,  5 Dec 2023 06:57:52 -0800 (PST)
-Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-db3a09e96daso4253926276.3;
-        Tue, 05 Dec 2023 06:57:52 -0800 (PST)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EB9C9;
+	Tue,  5 Dec 2023 07:02:15 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5cbcfdeaff3so67388777b3.0;
+        Tue, 05 Dec 2023 07:02:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701788271; x=1702393071;
+        d=1e100.net; s=20230601; t=1701788535; x=1702393335;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2OSy1fkE1VPCMMZW3HW28WvB6VxFaRMTrE1La3jBwPw=;
-        b=H5EsiOalP3wPRYTrmCyX7LM5E6IlxQEl5ZpKo7uk0EnaN1FCXHYBwLP3t2tNe0aS9m
-         DaFQp/om0wB97vG4+Xt00c7JfkCCaP+dqgDlRt+/dQB1vPMWiuLzk8mJ6Rlk++syoBa5
-         xRJQuroejthMcN/RBYGCb3Rim9K9+jMZduxdrUybACWV5rsD3+pmKWjegcuXH0fXA2Wu
-         z8P1RGlOy+dgtlPt99vhS/a0wy8428UNF507D153SjNB3tay1PR48FbVqdD1nJFYdyZc
-         N5Zz7yGtK5SJex4ZppZ8tGOywv6ZTdWwXZeGqA68T2bwjmRpeFRbaSLbmeYVnh7yoSzx
-         WJGg==
-X-Gm-Message-State: AOJu0Yy0nOCHbpCu0qhu7ax/zxs3oBJkkUccKlMzNulBeGMwEXK3ZjXQ
-	0Ig6I/17nVYPnvMOq8iO5+wMFX/w00RVCyGx
-X-Google-Smtp-Source: AGHT+IFLodowK5y27eVR6eQAnJr24kgV1N0rDxhSnfD+dOfoslVZNjUyIGOONG4pfS50TELYBsRXoA==
-X-Received: by 2002:a25:8543:0:b0:db8:357:f032 with SMTP id f3-20020a258543000000b00db80357f032mr3405933ybn.89.1701788271716;
-        Tue, 05 Dec 2023 06:57:51 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id p82-20020a254255000000b00db3fdaaa4fasm3155660yba.1.2023.12.05.06.57.51
+        bh=01RE6ADoqVebgl/Ay4VLc+Nsg6c5Olp3h2V1YYqK/9g=;
+        b=FCaxArgg67/TTMzd5ofAiy6xwfTILhTvQSmgPhrgsXEBOXtrQlWe1bDczFenqbKxS7
+         HRB3YxOQmng9se/nVma5/+h4/jVxmjQrqmbUpDG7Po7mWNQ55TcMfMk3pIor8tycAn20
+         RXzqoXiNLa+JJmiUEg0fg7fui9wZbchLLqQKq3gAUC5s+7sQYtX3a+NW1VhgJiTDNJES
+         L9dSQQmn6FTQiKvVvCyFTYeCNt0bDOOkzZp8UMbK3i0Zntu03bi42irdwPhgMj4Yr17u
+         m3GcxyzZv7/+I1geUBXL3/dl+H992NoSgchOCGG3eN3p+T9aOW61AcvXSTJAIvj9zhlz
+         dBYg==
+X-Gm-Message-State: AOJu0YzHw2XLrowDgOcznX1onQDXjUdds/u+zs7TvxvxYq1Vb+XrLuZp
+	o8xa+W49TjmtHXQtR3zxGJ/Ic351XAxNjQ==
+X-Google-Smtp-Source: AGHT+IEVXjBwfzAXy55fVVV7kVkEgQ08l2O2IcUVdHLuT1nhfP3rzVZ8ElIMnkQ98R6VhcDB0jQ91Q==
+X-Received: by 2002:a05:690c:281:b0:583:c917:7ff0 with SMTP id bf1-20020a05690c028100b00583c9177ff0mr4651337ywb.51.1701788535091;
+        Tue, 05 Dec 2023 07:02:15 -0800 (PST)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id i190-20020a816dc7000000b005d76f9e256esm2581439ywc.29.2023.12.05.07.02.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 06:57:51 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5d279bcce64so64342657b3.3;
-        Tue, 05 Dec 2023 06:57:51 -0800 (PST)
-X-Received: by 2002:a05:690c:c9d:b0:5d7:1941:2c27 with SMTP id
- cm29-20020a05690c0c9d00b005d719412c27mr4909480ywb.84.1701788271024; Tue, 05
- Dec 2023 06:57:51 -0800 (PST)
+        Tue, 05 Dec 2023 07:02:12 -0800 (PST)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5d7a47d06eeso33067067b3.1;
+        Tue, 05 Dec 2023 07:02:11 -0800 (PST)
+X-Received: by 2002:a05:690c:4443:b0:5d8:204e:acdf with SMTP id
+ gq3-20020a05690c444300b005d8204eacdfmr3526411ywb.101.1701788531025; Tue, 05
+ Dec 2023 07:02:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701768028.git.ysato@users.sourceforge.jp> <9f1485220fbfaba9b30bf2d9352640f988f35b04.1701768028.git.ysato@users.sourceforge.jp>
-In-Reply-To: <9f1485220fbfaba9b30bf2d9352640f988f35b04.1701768028.git.ysato@users.sourceforge.jp>
+References: <cover.1701768028.git.ysato@users.sourceforge.jp> <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
+In-Reply-To: <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Dec 2023 15:57:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWsBOs0Y7CkzhxkMYWWzyBpp1MesiCHc728FoTMNQs+qA@mail.gmail.com>
-Message-ID: <CAMuHMdWsBOs0Y7CkzhxkMYWWzyBpp1MesiCHc728FoTMNQs+qA@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v5 21/37] dt-bindings: serial: renesas,scif: Add scif-sh7751.
+Date: Tue, 5 Dec 2023 16:01:59 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWXyn5+e8CxihmtFo_6chKkpZ_QyzEzAm_As1xQoDKnpA@mail.gmail.com>
+Message-ID: <CAMuHMdWXyn5+e8CxihmtFo_6chKkpZ_QyzEzAm_As1xQoDKnpA@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v5 17/37] dt-bindings: interrupt-controller:
+ renesas,sh7751-intc: Add json-schema
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
 	Rob Herring <robh+dt@kernel.org>, 
@@ -98,31 +99,32 @@ Hi Sato-san,
 
 On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
 <ysato@users.sourceforge.jp> wrote:
-> Add Renesas SH7751 SCIF.
+> Renesas SH7751 INTC json-schema.
 >
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
 Thanks for your patch!
 
-> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> @@ -17,6 +17,7 @@ properties:
->      oneOf:
->        - items:
->            - enum:
-> +              - renesas,scif-sh7751       # SH7751
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh77=
+51-intc.yaml
 
-Please preserve alphabetical sort order.
-The actual compatible value LGTM.
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/sh_intc.h>
 
->                - renesas,scif-r7s72100     # RZ/A1H
->            - const: renesas,scif           # generic SCIF compatible UART
+make dt_binding_check:
+
+fatal error: dt-bindings/interrupt-controller/sh_intc.h: No such file
+or directory
+
+sh7751-intc.h
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---=20
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
 .org
 
