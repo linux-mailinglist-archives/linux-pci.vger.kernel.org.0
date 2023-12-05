@@ -1,218 +1,113 @@
-Return-Path: <linux-pci+bounces-495-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5375805723
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:22:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF09180571B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:21:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D76C21C20FE7
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 14:22:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 540FF1F215B5
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 14:21:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81E6C65EC6;
-	Tue,  5 Dec 2023 14:22:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E6DE61FC2;
+	Tue,  5 Dec 2023 14:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/1sMhDu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9081AB;
-	Tue,  5 Dec 2023 06:21:56 -0800 (PST)
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-35d6c5f9579so7259825ab.0;
-        Tue, 05 Dec 2023 06:21:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701786115; x=1702390915;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wjEDTZbGLWl0kPzOEjqjXQ57XT0xydUQvJCUY6FowqA=;
-        b=sVt1M6Tprvh5CcP1CA6V7cgPHTd5SEzTyA8LkIczss03OChTZp0Ij4BBuXXQR6kvBN
-         ZHDbZ7h1Hy6tUFw9+NUa+rJt0NcqdRrmf31+NVZuUVI+q8xtR4VhtV/QOtgMyiICCk4i
-         onNQoosikS5VrHQQ5iGTzTU10XqHrKtApOa33S9BlMPgpw9zOpnaEMtSuwIXLcYKrmcw
-         WCg4nsRfkozywtj4gdwgtiy8CeTcReGEub9mrpNarnpRy9oZ3F1OrFi99FKPqYrkBCBY
-         fFZbMOebDko6KkqWoy24aVdNw13u/sFHlAOFCniXgxr75yvkwpFTjVoXXZd+j/tQC1sZ
-         D71A==
-X-Gm-Message-State: AOJu0YzL0nAXJ0lRS2bnc7aqEQiCX8FwA39WO+lC+gKtqVoNo4aS18pR
-	bWVeY9ZCnKVB+xr1hLxWMl9PzkCzPRmhdw==
-X-Google-Smtp-Source: AGHT+IHiJ8ijq3rDLHlUKDIUoapWhxOdwFwIlkcpCJkHcU69YH7LK0vxP4cObCv99jQmSEB1+zHIIA==
-X-Received: by 2002:a92:d292:0:b0:35d:482d:d5b3 with SMTP id p18-20020a92d292000000b0035d482dd5b3mr5821385ilp.10.1701786115219;
-        Tue, 05 Dec 2023 06:21:55 -0800 (PST)
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
-        by smtp.gmail.com with ESMTPSA id l2-20020a056e0205c200b0035b0ad262e2sm615130ils.47.2023.12.05.06.21.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 06:21:55 -0800 (PST)
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-35d699ec3caso8281205ab.3;
-        Tue, 05 Dec 2023 06:21:55 -0800 (PST)
-X-Received: by 2002:a81:ee0b:0:b0:5d7:1941:a9a with SMTP id
- l11-20020a81ee0b000000b005d719410a9amr4666145ywm.53.1701785702584; Tue, 05
- Dec 2023 06:15:02 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318055FF19;
+	Tue,  5 Dec 2023 14:21:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F2FC433C7;
+	Tue,  5 Dec 2023 14:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701786095;
+	bh=i1tccxd+eeEBFdaia4vgRnGqbSydm2KGkprxYV81Cww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P/1sMhDuwCzF2R1U8l9QkQcrlKg/XwJGUkDdhtEecCh2K0ZEq1AGgUDPqcLH8Mm+I
+	 4N4abTyCacNS/I/MevxRwM60PzEmr5Fu0U4OjRQ3FbMmEZb8PgTxNbVGwkDpfi1UQe
+	 WZ2CNHLdnF3CFF2WHBOhw9YtUPfMv9sNc+4z929tLNkVG9S6frWbW+AWOmKh4POWxm
+	 +8SZWYu3iRrD9G20XP0ylM+fhj74Feswty6fH1uh4y0UV2GTX5MrpM+EZdpmRISCFh
+	 FD0+0QBZa39GQUwrgCXxD+lzFLdTsU2pKgc0I1eZPKKJRkOhVV4BpoY55w5M47CUdd
+	 kGuBk/9ejUerA==
+Date: Tue, 5 Dec 2023 14:21:28 +0000
+From: Will Deacon <will@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: oe-kbuild@lists.linux.dev, Shuai Xue <xueshuai@linux.alibaba.com>,
+	ilkka@os.amperecomputing.com, kaishen@linux.alibaba.com,
+	helgaas@kernel.org, yangyicong@huawei.com,
+	Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+	robin.murphy@arm.com, lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	chengyou@linux.alibaba.com, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	rdunlap@infradead.org, mark.rutland@arm.com,
+	zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v11 4/5] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <20231205142128.GA18450@willie-the-truck>
+References: <20231121013400.18367-5-xueshuai@linux.alibaba.com>
+ <2d52f588-f584-4c01-8f41-227815a54e41@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701768028.git.ysato@users.sourceforge.jp> <ca3122511b201a0da0a3f930c0f894bf11954423.1701768028.git.ysato@users.sourceforge.jp>
-In-Reply-To: <ca3122511b201a0da0a3f930c0f894bf11954423.1701768028.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Dec 2023 15:14:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUY1aduN=6kaHFyfT=U3J3K3NPZDK2mCct8vS9XaMfaiA@mail.gmail.com>
-Message-ID: <CAMuHMdUY1aduN=6kaHFyfT=U3J3K3NPZDK2mCct8vS9XaMfaiA@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v5 12/37] dt-bindings: pci: pci-sh7751: Add SH7751 PCI
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	David Rientjes <rientjes@google.com>, Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Guo Ren <guoren@kernel.org>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Tom Rix <trix@redhat.com>, 
-	Herve Codina <herve.codina@bootlin.com>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d52f588-f584-4c01-8f41-227815a54e41@suswa.mountain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Sato-san,
+On Sat, Nov 25, 2023 at 10:06:39AM +0300, Dan Carpenter wrote:
+> Hi Shuai,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/docs-perf-Add-description-for-Synopsys-DesignWare-PCIe-PMU-driver/20231121-093713
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+> patch link:    https://lore.kernel.org/r/20231121013400.18367-5-xueshuai%40linux.alibaba.com
+> patch subject: [PATCH v11 4/5] drivers/perf: add DesignWare PCIe PMU driver
+> config: x86_64-randconfig-r071-20231123 (https://download.01.org/0day-ci/archive/20231124/202311241906.0ymlLjyo-lkp@intel.com/config)
+> compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> reproduce: (https://download.01.org/0day-ci/archive/20231124/202311241906.0ymlLjyo-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <error27@gmail.com>
+> | Closes: https://lore.kernel.org/r/202311241906.0ymlLjyo-lkp@intel.com/
+> 
+> smatch warnings:
+> drivers/perf/dwc_pcie_pmu.c:352 dwc_pcie_pmu_event_update() error: uninitialized symbol 'now'.
+> 
+> vim +/now +352 drivers/perf/dwc_pcie_pmu.c
+> 
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  338  static void dwc_pcie_pmu_event_update(struct perf_event *event)
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  339  {
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  340  	struct hw_perf_event *hwc = &event->hw;
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  341  	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  342  	u64 delta, prev, now;
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  343  
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  344  	do {
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  345  		prev = local64_read(&hwc->prev_count);
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  346  
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  347  		if (type == DWC_PCIE_LANE_EVENT)
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  348  			now = dwc_pcie_pmu_read_lane_event_counter(event);
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  349  		else if (type == DWC_PCIE_TIME_BASE_EVENT)
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  350  			now = dwc_pcie_pmu_read_time_based_counter(event);
+> 
+> uninitialized on else path.
+> 
+> 3481798a4ec51d1 Shuai Xue 2023-11-21  351  
+> 3481798a4ec51d1 Shuai Xue 2023-11-21 @352  	} while (local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
 
-On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Renesas SH7751 PCI Controller json-schema.
->
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Shuai, any chance you can address this please? I think the event validation
+logic means that the type is only ever one of the cases you handle, so
+you probably just want to either initialise 'now' to 0 or WARN and return
+early if the type is unknown.
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml
-> @@ -0,0 +1,128 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/renesas,sh7751-pci.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas SH7751 PCI Host controller
-> +
-> +maintainers:
-> +  - Yoshinori Sato <ysato@users.sourceforge.jp>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,sh7751-pci
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 2
-
-Please add "reg-names", as there is more than one entry.
-If that is not sufficient to document what each entry means, please add
-"description"s, too.
-
-> +  renesas,memory:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      PCI BMDMA src/dst memory area.
-
-Isn't that the purpose of the "dma-ranges" property?
-
-> +
-> +  renesas,bcr1:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCIBCR1 value. This value makes add the value of BSC's=
- BCR1.
-
-What does this mean?
-
-> +
-> +  renesas,mcrmask:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCIMCR value. This value makes clear bit in the value =
-of BSC's MCR.
-
-What does this mean?
-
-> +
-> +  renesas,intm:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCIINTM value.
-> +
-> +  renesas,aintm:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCIIANTM value.
-> +
-> +  renesas,lsr:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCILSR0 and PCILSR1 values.
-> +      First word is PCILSR0, Second word is PCILSR1.
-> +
-> +  renesas,lar:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCILSA0 and PCILAR1 values.
-> +      First word is PCILAR0, Second word is PCILAR1.
-> +
-> +  renesas,dmabt:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCIDMABT value.
-> +
-> +  renesas,pintm:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      SH7751 PCIC PCIPINTM value.
-> +
-> +  renesas,config:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      SH7751 PCIC PCICONFIG values array. Register Number and value pair=
- list.
-
-Several of these properties look like pure hardware programming.
-Can these values be derived from other (standard) DT properties?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Will
 
