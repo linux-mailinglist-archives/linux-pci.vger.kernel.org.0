@@ -1,71 +1,66 @@
-Return-Path: <linux-pci+bounces-528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04EEC805F08
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 21:04:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB954805F2B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 21:13:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEC12281F6D
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 20:04:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33CFAB20F7B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 20:13:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B725D692A1;
-	Tue,  5 Dec 2023 20:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F01866DCEB;
+	Tue,  5 Dec 2023 20:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f0nnzSHB"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UXRsQGTp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2055.outbound.protection.outlook.com [40.107.243.55])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D161AA;
-	Tue,  5 Dec 2023 12:04:25 -0800 (PST)
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4389D3;
+	Tue,  5 Dec 2023 12:12:59 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K9XQ7rXhzdkQtqAgyK+Yu1q9l2vcQG3GvXH+A95mcT0hkn0Y7I32igEce03lVwf1X+OzgfUCU/n6to29w8Wqe0/F9FW5HMmk7HTxVzwOx0pOCptHbvKyKKa/JH4NeAkmak4j45qKtihPvIRlS1qAYV5cSVsHSFW0nEzFvPx1LOwI/Kkifk6A/WcTpg76Vo7CuW6lbvgu9dFzFSd/dSwMmIDoU8iwby+CgCdkcaEjSVRcxRojoHjhJEpYUGJqCZKUZro4QGb0vTlBhSt705QTiEwiFtm5itjxVjyjhrr2B83h6Nf3IowdOo7w0pHMxFgl57IXywCKpl141NNxRcqDig==
+ b=GTuZiyJLQZj5TSchqRt8KkkqTgEm9ErAGcNzru7kA72M2qbHDl3Gw3/fibRbravgA49bgxL8+BWcsDCEyLHAYq2CwAk6AXt0QNcrbI8m3ITNeV8Fx6TEJrIS3X79/NhgVWoan68JJW5tJSeB1Naik9dQ3JM8mUHq4E2Vybvrgi35Q2ajxmAacyprniWfmuYz9mIp6RjiwSUIqvSdAxTKPkb8A9dx1SYLODcAFyyB+rgTn2kTXAksQ/qAD266n4kuUW7EYFU8RC5Zz9gGyeHI0HhFBAxzqZIUiHozs+8I92Aa3dDEi0bjm+/wwQmbi5ZnuIyDkiOpLmf1352aI7fiQQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TSBroqZ068ss9xs6oXcGFIrf/F2O4WT4a+dd7sax7go=;
- b=g7wWk5jwzHmGGa8F7o8O6dvRfKaQWFFZdS/DL0l9HXelT9Yusj9UjisyrhoE7AejQMW7GyTk3VgywGOBWbZIN7hDPrQOBfvTjoWna3KU/ZQ0CRuCKoqmFv8t1bV7yA5A+34m5ZQXQkjaRX3ZljCThzVWx5gh0BezCbSfrhlgqQzg3CRdXePvb1eA3gAX/NMWiPv3lSJ2Ae3q+xCR0J5s06oMixC2Z++4jGrPePPybXxAi0XGk1R+IteKBFc59bbgNY9vD6lR4DB2ZarjOsux12JEf0Re1fYyZaY8aymw65fsc+6hPYTP2RbmJ0PWkHWBcQ7Wj4zCLz/IT12o3HH10Q==
+ bh=+XS/SHKF6NynZSBh6ki/T1d+tFXGgd3eRM6LF728VOw=;
+ b=EzRHyyLWDQiVcJMsShNnRwDLw2SzznPuCBTh265FpYVCbBRVEoZAcHLrKt8kqIg6bwdqOr8eNfC/fJJjboa6GSZetDulCWWb9gUMVL5xljTmw8lrhFO737xWfQVMmthEjgDHLhc/7kE+EWw7RjiKU6HBApCuS3AXtmTIzowNr8Bm1zJDVlgY03qK3mfbZ60e1bp+0WBc/XYtoTiG3x1mycZEZNNtU7ks+xTua02lKXRAiFI3tGnm/LBRjA+5Nv2UqPq67qtOH/c65bU6oQjFZKOvWPqoQ3sEuLLq2TxQczE0RODjAcvxSD7CD8Hir934nBf6XhH/Hh0le/ycIaSrPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TSBroqZ068ss9xs6oXcGFIrf/F2O4WT4a+dd7sax7go=;
- b=f0nnzSHB+ceLdcRRMEZxhEoJDMLdJyPDYacbfi7N/NRX35ENCaxUtG3IdGEEELC/ajQH2H3c/qmJCkXW+IiLMTL6o53OMv3HeioIIv1UIXYCTHlT0Hfa4N8TOUPU+3k7vtu3ZrWlPhhhYMc1gaps4gJX8+PimWDlZKxBodfQu30=
+ bh=+XS/SHKF6NynZSBh6ki/T1d+tFXGgd3eRM6LF728VOw=;
+ b=UXRsQGTpL61+g3daAyowX/pVCaYgeShMGGllxnT4YnUxcpAts/O7fPh3Ltbl3N0Ifu5/cDDFSsXeTBV2j5UHna1TPieMyBAeKXbXrngBRUqR/TdwxCd/rDFDOz58IUrnerlwuKyhmeJzY+B4MAwUuGi2WTA+khLlFk0+A+/J5i0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB7716.namprd12.prod.outlook.com (2603:10b6:610:145::11) with
+ by DM6PR12MB4060.namprd12.prod.outlook.com (2603:10b6:5:216::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Tue, 5 Dec
- 2023 20:04:21 +0000
+ 2023 20:12:56 +0000
 Received: from MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::83d7:9c4f:4d9b:1f2a]) by MN0PR12MB6101.namprd12.prod.outlook.com
  ([fe80::83d7:9c4f:4d9b:1f2a%5]) with mapi id 15.20.7046.034; Tue, 5 Dec 2023
- 20:04:21 +0000
-Message-ID: <bbf24b56-cc54-4993-b048-eca5b9fd30ca@amd.com>
-Date: Tue, 5 Dec 2023 14:04:19 -0600
+ 20:12:56 +0000
+Message-ID: <73628abc-dbb8-4dac-b83d-a78462b327b8@amd.com>
+Date: Tue, 5 Dec 2023 14:12:54 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from dcadfd7f7c74ef9ee415e072a19bdf6c085159eb
+Subject: Re: [PATCH 1/3] PCI: Call PCI ACPI _DSM with consistent revision
+ argument
 Content-Language: en-US
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>, a.mark.broadworth@gmail.com,
- matthias.schrumpf@freenet.de, LKML <linux-kernel@vger.kernel.org>,
- aros@gmx.com, bagasdotme@gmail.com,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ "Rafael J . Wysocki" <rjw@rjwysocki.net>,
  "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>
-References: <f878b188-3fe4-420c-9bcb-b431ac6088dd@amd.com>
- <20231107121756.GA168964@workstation.local>
- <318cc8da-f8d2-4307-866e-8c302dacf094@amd.com>
- <20231108051638.GA194133@workstation.local>
- <20231128052429.GA25379@workstation.local>
- <80dbe1de-c71c-4556-817d-3f06e67f38ba@amd.com>
- <20231203122935.GA5986@workstation.local>
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231130222930.GA488440@bhelgaas>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20231203122935.GA5986@workstation.local>
+In-Reply-To: <20231130222930.GA488440@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR07CA0089.namprd07.prod.outlook.com
- (2603:10b6:5:337::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA9PR13CA0148.namprd13.prod.outlook.com
+ (2603:10b6:806:27::33) To MN0PR12MB6101.namprd12.prod.outlook.com
  (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,192 +69,261 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB7716:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfffad34-d612-47a5-0625-08dbf5cd5f23
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM6PR12MB4060:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea60c7b4-157e-4376-e85a-08dbf5ce9207
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	HoF/dxcEhXrI3taYROMZvuU74mBUc1H106n8qgFcRc2u72bgeApmVcnn72X4OzOr/fYVnDK1Hp90k9gsIXtzbicnjSX8mfNlK361GPk4Iyg+/RbfifAwRmv/bz0oTG1xnoklhO7OvJPg1tbHG1B/jKmiLdlJJnTnwXJG1iY6/xGc7SnazEGcVEtAvCVmSvRJOxqLWRUmDAbBo3sGNjLQ1cl3shhFtrLasijFItM9j+70ZBvK997Liz1XA4xP2/LKBClcPqVnrSuQ4/+qtlOveIYUMC6O8mmSPegDpjLveHedoOwttUaw1RYUvk2cFWvMZJD9CPNy8Kn1x9/2lWax1p0UPzD6/W0r/0U786pU3OWBLM9mYLGxiB6YzHGsImtwnl8PzNqyT+VKTyVDaE60JEo7IIFr8srzcujdEsHTc4+M3aT3pYovJRRjiK46/7dEDO1Ycvk5FWBj11rsV3eeWcXgyngBB6M4w0cJj+LkoaO3coFJTfJe5vLFIZaKjWpj0lC29bOD3tF+b9tnfRY1++FaDftMulSyDyjvv0BmkgYntUkhXoN5hhGAHqEiZw50wgxqPR+1Bg+z9oh4cPmTmZxddJ8clZ/Vyvz6ix9frAw9WqwIa6sjWYnjjXSlJKBZe3Ep9sMhrww31IhX3nYAKIbEOez55CpPYHFFXL/DbQuo7Xk1UygUY9ViyBQcHJIiaa+/zEInOnTQI92wb5lVdg==
+	wqBrqfOctfeP5em1vxwY77eVBkxBSW3Z4hP3IQnaKak3YIGK4g6xf1CeqwbwFCnTrWJtpKoEUi3xuXKblScZ08Ev8KmxhwTriHzCdKJa0wbR/PDFIr7uu8bmQcxdWudKL8cYuYVaVPrfJXeMcIfTSSSn2EBmY48BMzqtNBW+rfSoA3yccumqhdZlR+6CzDOvitj4gxNq8M/nvbLatmCehCw0mKTCEYQVwEMi1g2N7E9tLQ8FaHgmy/pTT+chdTIJbSfWcPfz8gqR1CwJrnHmY1BbyOsmvVvOemxuV1NardQWEfQjxhloQfetm1z88vGQsJtVOANMfYeHh3tLoBCquVbg6P8MKM9kDWNIYm4+bM/0C11Dw47kyLdxDB5FRspe8Ndt/585NHMAWjRB/JfTA9M24a8Xj2P6o6KvFZfwdx6OqaZEggqURWnj48nQtMmNDvMans5iFkrv51naJmK0HCo9oCACUcADQXzy7luuvB7aMBlKldqWt2+FV/7uOYKPipfjgExG3eONCyMNZEwBLSVImkGfWeaAmKTkjyF+Qy6/UFjT0XrQioD6w5VB8LO3Y86zfxrUqUcQrppG7jZk+p3WAE3lXYPOb0EgAC1Br69+fG3me2Zb2S6gP9Ux0KWrNTPt4OkMSFfq4yVRwD9XDA==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(346002)(376002)(366004)(136003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(7116003)(53546011)(2616005)(6512007)(41300700001)(36756003)(86362001)(44832011)(83380400001)(26005)(31696002)(966005)(6486002)(316002)(110136005)(66556008)(66476007)(66946007)(8676002)(8936002)(6506007)(478600001)(38100700002)(31686004)(2906002)(5660300002)(43740500002)(45980500001)(505234007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(346002)(136003)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(6486002)(83380400001)(478600001)(6512007)(2616005)(6506007)(53546011)(26005)(966005)(316002)(66476007)(54906003)(6916009)(66556008)(66946007)(86362001)(8936002)(36756003)(4326008)(41300700001)(8676002)(31696002)(2906002)(44832011)(5660300002)(38100700002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z0lsYmpnenViU0s3MkdFcEN3a2t5Q29jcFA5UWJFUnUxNTZHazBLTUp4Umh6?=
- =?utf-8?B?MWVBYmdUZXN0eWYwZnNrQWQ2ejF0bEFPOVRGMm1BdWxDM24vdTJ3SG5aYmE5?=
- =?utf-8?B?bXp5WjhaNlJBL2txeGNDRlNIdHBYODJESGZYWnY4UUNSYmpNN1kweWc1c29q?=
- =?utf-8?B?SFVPa3BDWkd4aXh2Yy9VSVNxWjBldjYwUVhJdVVQU0gwTmxqald6VDc0ZHB3?=
- =?utf-8?B?cW1ZL0Uxc1JKZGlzcllYWFNrZC9KMjc4R1ZkVGVlbWRVc3BDYU5WUFZPK1J2?=
- =?utf-8?B?UndwOGF3aFlHOVoyR2F5Yi9wem9pVUhLc0syanJjTkp1S2J3ekgyY1BNWEwz?=
- =?utf-8?B?bElWK2xxZ2w5b3BMeXE5Vmovcm5HZUJXN0MwdHpFNFZOMzROM2ZQM1RvRGEz?=
- =?utf-8?B?eUdXUlowYWI0K2FCeFgvZi9WbEFoYTYrTG5GMHBtSldvWHdOcHV2SVZQREUy?=
- =?utf-8?B?Sk1WVTc1ZmUzWFM3UXYyRFBVUHF6bVIxOTlJcjM5THVsM2JTNUdjaGVSbW9w?=
- =?utf-8?B?cVlFMTZCU1pWZmZ2OXVpc25SWGQwb3BYb0VmZ051eGU3S1lQYk1za1l3dkVp?=
- =?utf-8?B?a0dHT0l2NGlIaXNybkN2MUJtWkJlTTdzWVBNVyt2YzJsK2FwUTR2ZHA4ejVB?=
- =?utf-8?B?akhHcDJlT013SzBMUEFLM0pWcTRvWldqcDJNZ1FpT1ZGem5VUGRHSGYrekZE?=
- =?utf-8?B?RlUwdloxZ2JuQ1RhYmVrZUJDdkVwTXI4UnZ4U0tmVnNNeGthOUlLYks3OTBv?=
- =?utf-8?B?ci9XemRmK01EMTVRYmpEcEFpWDAxRTFKajM2NzMxL3FGbUMzVW1tUGxzam9U?=
- =?utf-8?B?Vy8zbzM2ekZZd3g0Vk9KbHlHR3JSZzk0Vjh1UHlCS3c1c21xV290MERTQ2xP?=
- =?utf-8?B?ZXAzNVRIL3hJbko3MFBWdDVpbVR3eFZITHlPTUtlazVJMEplOHE0YXd6ck93?=
- =?utf-8?B?dEFsRnFMMDMyMEVnWXViZGExK3IyTVNxWGd0OUF5ZzVxUXZha2xkOW9DRkU0?=
- =?utf-8?B?enQzOWV1QWhpbUFnalZ0NTBHMS9OYkpWcFFmbi81SE5vMjZqcTdteFlkNFVz?=
- =?utf-8?B?bkVWNnpodGZNdjhLNk1KZEJyaXRNS2crZ1dodzg4K3NqMFVidEU4Yy9VOWFR?=
- =?utf-8?B?WlhpQVN1cjZhV0h6U29UdkVGKzR0VTFIcUdJejFLM1pmZEtxVW5RLzBraDdG?=
- =?utf-8?B?ZEIyVmFyN25ySWJuV05GZ3ZjRFZWQjhPaE1raklhbFNHZm9odGIyaFJJRHhQ?=
- =?utf-8?B?N0ZWYnA5cHZjS25IUXJad1kwbXVGc0RBTHgzSHdDWWZTRHFEb3J3SDFIRUJD?=
- =?utf-8?B?b09CWHFNLytHdW9zR0JMeGlEUVF0bklPeUFXbERJZXovTHhuc01VY3pWV3hI?=
- =?utf-8?B?SUlKZ0Q3Y0VhSnJXSmtXa0tJUjl6emFWbzNxWWdyYUlUT1c1MUtmV0xoa1pM?=
- =?utf-8?B?SitWT0JlbE5ONElJd0lPLzlMcVcwMm5vb3ZCaDIwR1pwQ0tBOGZja2NSVHVO?=
- =?utf-8?B?cmNhRU9tRGQ4N3oxb0ltdmxySDFlbEwyd0NJOHh3OVhLTXc4dytLazdDWkJJ?=
- =?utf-8?B?KzU1UUoxdmpNNzJYSGl2bXBkcW5CeTB3WDZDY2x5RzNLZ0VYUVBKeExCTDdt?=
- =?utf-8?B?bVZmWXpack9xMGF4azFReTh3QzFncUNNQmhCMGJWS254Q0wxd0V0OE1wWVBP?=
- =?utf-8?B?VDg5VDFtV2JhSVdaZWZSTXNseERaRzRPU1V4Yy91TXZmbUo0VWptcEZsM0xz?=
- =?utf-8?B?N0tmaFNrVGRUVkNnc2F2SzhXTVlpVWxvWkppZjUybWthaHpFYU1xWTZQZTl4?=
- =?utf-8?B?czNWKzNSM1pTd1dLZ2FLZlhTMjM4TnZnNUdGSThsblZlR1lrRDdPVUJETHRU?=
- =?utf-8?B?am5sbU9iWGY4LzByc0dsTlVwMWI1T2VYeVRTZ3ZEdDFqajVVVDgzQTd6Snp5?=
- =?utf-8?B?K0t2dWhFNFhabEZxZ0VUSzFtS3YrZHdnelZUWmJ6eGVMTzk1L3JjbDlhL1hq?=
- =?utf-8?B?YVhmSnM1WkJCaDRNMU0vWjZidGNHU3JtZDRwclRZRjRVMHNCTTh3ODR4aDd0?=
- =?utf-8?B?TTBsM3RUdEJ2bGVWU2FxajhhL2ZrOVNXUFJHa1B0TzZzazZnNnh0ZFdQNVlD?=
- =?utf-8?Q?k9GyJYw0VXsACAzHJtP21YGKy?=
+	=?utf-8?B?UG03TzE5QmVMY1lzYjhFRmprRExZSkNVRjZJNDJUQlpwSHZSc0V1MWtTckFk?=
+ =?utf-8?B?RzZHQ0gzME9HNTFjV0hqYm9RMVh0YkpQdnNYRlgyUVU3d1FwcUxHTENGK3ZX?=
+ =?utf-8?B?RjlzZ2pjSzVWdUl6WHBIbkxEM0pqT2NlWTQzc1M5Yi9sS0UvT1psNG4xY2hh?=
+ =?utf-8?B?SUFYcFk4eTlqTTJicGhScDdoUk9idU01ZmpzRE5NdmRaaXZ1ZDVkR3BBVkJR?=
+ =?utf-8?B?dnQ4Y091L0lITDVIdkhSODdINFlyT0UxNm0yOVNXMkZhYURYYzJjVjkxZmYz?=
+ =?utf-8?B?THpVNnlhMGhoQms0ZEY3RkthOENmd0JtSlZDSi9TWEphMHQyRE1vZ2ZZRDls?=
+ =?utf-8?B?QVhtZ0xnZ2UycWZkdE04YUcrZW5meDFSK0FHVm9qL09VckM4SVQzUHJYakZt?=
+ =?utf-8?B?U05ST0p2Z2JxNHEwYng2QnhaeVJtQ2FRdGhJN1NSL1FDNC90VWpmV2tlUmdo?=
+ =?utf-8?B?M3pnbGUwR2Q0N1NjdTVvMllKOEUrTXhwR0ZkaGxyNFFWTjk4T3RETnphK2h3?=
+ =?utf-8?B?bE9PdXlGenJ0NlRrV1VpVUxOWHRMcGhCMWRJVkRJT3h5THpoV1dLSU9oTDht?=
+ =?utf-8?B?dUlObGF3aFRucFY2ZjZGTjNucm5zc21QNUZGeTk2SEk2bDRZZUFwVStCd1Rj?=
+ =?utf-8?B?SE9VTTBmUHd1YmF6MzF6N0swRjNjdzVxWk9ZZENQcDFXdVFIdlpCcDlvNmdO?=
+ =?utf-8?B?cVJzeFJuSmxtRFNLM0JFVno4TUs4bU11VFZOSXo4VVltVUpRMXNKNHJYTlU4?=
+ =?utf-8?B?eXpYcEExNWVwZE44QmRFdHJiZlB3WitnU3hHdFZVZzdlaFc0eTlJNGNyMmZM?=
+ =?utf-8?B?NnYrd0ZHSHo1Q3oyL1NldUlrcEtZa3dIck4wTFkrVzF3R0xLWTF3bnI5OGFq?=
+ =?utf-8?B?ampiUTB5RW1VRU9GNStHVHk5aU4zcDRjdms4UUJaWmMrbDBOR3k0WituaitU?=
+ =?utf-8?B?ZjlST2lXVTJCWTdZNEU0dG85UnJMWkl0Ulh3akdJamxySi81ZmhIYUhGcCs2?=
+ =?utf-8?B?NEhlVXJkQW93eDUvWUtEZmZiL3A5Z2daOHkxczQ0cTFaYnlFZFlubGEzdk1x?=
+ =?utf-8?B?TVg2K0F2WjJzbld5eU85UWUvQlVtY1dFYUtwN0dxT2VyL0w3Uzd2WWFhMGk0?=
+ =?utf-8?B?cG55RHhmMVI1cFlhTnUva0lGNXJQWExpaTdHUXl5c0J4bFd0ZzJaRnVSOGEw?=
+ =?utf-8?B?RGVxS0lmZVlmMkg0enJmcXo4a1hlSnhtSWhFNW9nVEYyamxJL3dlNW10RGhT?=
+ =?utf-8?B?c3NQTHVKd3dwTVFCNFpXb0ZTTGdBa3MzYXVYOEdZVlB4T3d4dFAzK2pUaWNi?=
+ =?utf-8?B?MmM0YkJ2QnNBdmwyN0hJY3RvY2w5M0VRNU83ZXFmTU9tcWpud3hmY29ybXpP?=
+ =?utf-8?B?QWQ3MUduQkxKWFNQSVJWcjh3dWpqcDNGN2IvYi9CRUlHZGJPMVFENXlGcTFs?=
+ =?utf-8?B?T0hDUVBpbXY3S01Td3hUQkZhRHZyMm9GVnkzRWpua1ZXWFJLRWdMVHVLVklR?=
+ =?utf-8?B?Q2lNTGxUZDhXVGNPVHFWY0MwSVBpZS9HVGljYm1WOS9CLzFFQVdvRkVRaUYx?=
+ =?utf-8?B?Rzh4MzVCVzBDZ0VqSW1OR3dyNlQ1RW1uVW9zTEJ6dlpxdGhZbVVOZDFmeko2?=
+ =?utf-8?B?UHdjbmVTUHlaVjFVc05HVFFnTVhTTTZuaHlnNk1oRGg3dS9PZ3p4N2Z6KzdU?=
+ =?utf-8?B?RG9FcDUwUmVRWUFhWmJsSTNlSjh2ajE0M08vTEFQNWFRaWRBTTV3VWR2TFRn?=
+ =?utf-8?B?OWZiamZhMGNpSUw2bWpwTUFYOTdBcE4yNW4yNmJNMlJMd2RqSmpZVlNXYXZ6?=
+ =?utf-8?B?ZnMrb0lLSk4yemJ4c21Vd2xPMjJTbWRCcHNxcUZLdWxPeGxlK1NTclBvTXIw?=
+ =?utf-8?B?djV0bjNpSWJORTN3dUF0Zzk3L1c2Ri9SL2o3ZkNNL1B6b1ZyTnFjMXo1bUJU?=
+ =?utf-8?B?MFBWdTlzbFZ4NFhrYnVxdWpXWUNqUVZxQmhzOEsxTHlTSzFiS245cGxrYTRH?=
+ =?utf-8?B?TG93dk0wQjhIeGtmM2h4V0ZxRlhDT0tUWThaN3YzS1V5dG1xRTRRc3loU2Nr?=
+ =?utf-8?B?a3UyM0JIM0pPdUkyN2RwdXBGaE84NkNTd3d4UWozdUZnV2dRVk1aZjlnTnc4?=
+ =?utf-8?Q?G0usexJHIohwL0d39Ff3vT8lF?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfffad34-d612-47a5-0625-08dbf5cd5f23
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea60c7b4-157e-4376-e85a-08dbf5ce9207
 X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2023 20:04:21.8118
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2023 20:12:56.7123
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nPQqgp7A6TaKMKWb3VszKWAOP3v5OMqc+s2A7fXrS+VGlVkNhDs1yuEfDGUdAX6bq5dB4lndtoerccWnnI///w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7716
+X-MS-Exchange-CrossTenant-UserPrincipalName: RHdeAb1lRWT8gyorP8fFhnp3yeje6/9WJ/5x8rRXk2n872Tf+QYwg5dJQbv1M3xM4Eko3FbxEI30npM2eq5oDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4060
 
-On 12/3/2023 06:29, Takashi Sakamoto wrote:
-> Hi Mario,
-> 
-> Thanks for the advices.
-> 
-> I note that In my experiments I use Ubuntu 23.04 amd64 (v6.2 kernel) with
-> backported FireWire stack[1]. Except for the stack, the kernel and software
-> packages can be retrieved from repositories of Ubuntu project.
-> 
-> On Tue, Nov 28, 2023 at 12:09:41AM -0600, Mario Limonciello wrote:
->> On 11/27/2023 23:24, Takashi Sakamoto wrote:
->>> Hi Mario
->>>
->>> Following up on our last conversation, I purchase some hardware to
->>> attempt to retrieve outputs from serial port. Finally, I bought another
->>> mother board in used market which provides serial port from Super I/O
->>> chip (ASUS TUF Gaming X570-Plus). However, I have retrieved no helpful
->>> outputs yet when encountering the system reboot.
+On 11/30/2023 16:29, Bjorn Helgaas wrote:
+> On Fri, Nov 10, 2023 at 12:55:01PM -0600, Mario Limonciello wrote:
+>> The PCI ACPI _DSM is called across multiple places in the PCI core
+>> with different arguments for the revision.
 >>
->> Did you up the loglevel to 8 to make sure you'll get all kernel output on
->> the serial port, not just errors?
+>> The PCI firmware specification specifies that this is an incorrect
+>> behavior.
+>> "OSPM must invoke all Functions other than Function 0 with the
+>>   same Revision ID value"
 > 
-> Even if giving either 'debug' cmdline option or incrementing console
-> loglevel via syctl, I receive no useful output from console when loading
-> the module at or after booting up.
+> This patch passes the same or a larger Revision ID than before, so
+> everything should work the same because the spec requires backwards
+> compatibility.  But it's conceivable that it could break on firmware
+> that does the revision check incorrectly.
 > 
-> ```
-> $ sysctl kernel.printk
-> kernel.printk = 7	7	1	7
-> ```
+> Is this fixing a problem other than the spec compliance issue?
+
+It was just a spec compliance issue I noticed when implementing the 
+other two patches.
+
 > 
-> I tried at several difference cases; enabling/disabling IOMMU,
-> enabling/disabling SVM in motherboard level. But nothing effective.
+> I agree the PCI FW spec says this.  It was added in r3.3 by the ECN at
+> https://members.pcisig.com/wg/Firmware/document/previewpdf/13988, but
+> I don't quite understand that ECN.
 > 
->>> As you mentioned, I check whether PCIe AER is enabled or not in the
->>> running kernel (Ubuntu 23.04 linux-image-6.2.0-37-generic). It is
->>> certainly enabled, however I can see nothing in the output as I noted.
->>>
->>> I experienced extra troubles relevant to AMD Ryzen machine and the issued
->>> PCIe device:
->>>
->>> * ASRock X570 Phantom Gaming 4 with AMD Ryzen 5 3600X does not detect
->>>     the card. We can see no corresponding entry in lspci.
->>> * After associating the card to vfio-pci, lspci command can reboot the
->>>     system even if firewire-ohci driver is not loaded. I can regenerate it
->>>     in both Gigabyte AX370-Gaming 5/ASUS TUF Gaming X570-plus with AMD
->>>     Ryzen 2400G.
+> ACPI r6.5, sec 9.1.1, doesn't include the "must invoke all Functions
+> with same Revision ID" language, and the ASL example there clearly
+> treats revisions higher than those implemented by firmware as valid,
+> although new Functions added by those higher revisions are obviously
+> not supported.
+> 
+> PCI FW also says OSPM should not use a fixed Revision ID, but should
+> start with the highest known revision and "successively invoke
+> Function 0 with decremented values of Revision ID until system
+> firmware returns a value indicating support for more than Function 0"
+> (added by the same ECN), and I don't think Linux does this part.
+> 
+> So I think the fixed "pci_acpi_dsm_rev" value as in your patch works
+> fine with the ACPI ASL example, but it doesn't track the "successively
+> decrement" part of PCI FW.  I don't know the reason for that part of
+> the ECN.
+> 
+
+Do you think it's better to respin to take this into account and be more 
+stringent or "do nothing"?
+
+> Unrelated to this patch, I think it's a bug that Linux fails to invoke
+> Function 0 in a few cases, e.g., DSM_PCI_PRESERVE_BOOT_CONFIG,
+> DSM_PCI_POWER_ON_RESET_DELAY, and DSM_PCI_DEVICE_READINESS_DURATIONS.
+> 
+> Per spec, OSPM must invoke Function 0 to learn which other Functions
+> are supported.  It's not explicitly stated, but I think this is
+> required because a supported non-zero Function may return "any data
+> object", so there's no return value that would mean "this Function
+> Index is not supported."
+> 
+
+> Bjorn
+
+What are your thoughts on the other two patches in the series?
+Should they wait for a consumer or prepare the API to match the spec.
+
+> 
+>> Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
+>>        PCI Firmware specification 3.3, section 4.6
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/acpi/pci_root.c  |  3 ++-
+>>   drivers/pci/pci-acpi.c   |  6 ++++--
+>>   drivers/pci/pci-label.c  |  4 ++--
+>>   drivers/pci/pcie/edr.c   | 13 +++++++------
+>>   include/linux/pci-acpi.h |  1 +
+>>   5 files changed, 16 insertions(+), 11 deletions(-)
 >>
->> Rather than lspci, is it specifically config space access from sysfs? Does
->> the output from the serial port change with IOMMU enabled vs disabled?
-> 
-> In lspci case, I can work with debugger and figure out that 'pread(2)' to
-> file descriptor for 'config' node in sysfs causes the unexpected system
-> reboot. Additionally I can regenerate it by hexdump(1) to the node:
-
-OK - is this by chance related to access to PCI extended config space 
-failing for this device then?  If you read just the first 256 bytes it's 
-ok, but beyond that it fails?
-
-If so, can you please try to reproduce using this series from Bjorn applied:
-https://lore.kernel.org/r/20231121183643.249006-1-helgaas@kernel.org
-
-And then add this to kernel command line:
-efi=debug "dyndbg=file arch/x86/pci/* +p"
-
-Capture the dmesg and share it.
-
-> 
-> ```
-> $ lspci
-> ...
-> 04:00.0 PCI bridge: ASMedia Technology Inc. ASM1083/1085 PCIe to PCI Bridge [1b21:1080] (rev 03)
-> 05:00.0 FireWire (IEEE 1394): VIA Technologies, Inc. VT6306/7/8 [Fire II(M)] IEEE 1394 OHCI Controller [1106:3044] (rev 80)
-> ...
-> $ hexdump -C /sys/bus/pci/devices/0000\:05\:00.0/config
-> 00000000  06 11 44 30 80 00 10 02  80 10 00 0c 10 20 00 00  |..D0......... ..|
-> 00000010  00 00 90 fc 01 d0 00 00  00 00 00 00 00 00 00 00  |................|
-> 00000020  00 00 00 00 00 00 00 00  00 00 00 00 06 11 44 30  |..............D0|
-> 00000030  00 00 00 00 50 00 00 00  00 00 00 00 ff 01 00 20  |....P.......... |
-> 00000040
-> 
-> $ lsmod | grep firewire
-> (no output)
-> 
-> $ sudo -i
-> # modprobe vfio-pci
-> # echo 1106 3044 > /sys/bus/pci/drivers/vfio-pci/new_id
-> # exit
-> 
-> $ hexdump -C /sys/bus/pci/devices/0000\:05\:00.0/config
-> (reboot)
-> ```
-
-Can you access config space for other PCIe devices successfully on this 
-system?
-Specifically extended config space?
-
-> 
-> I can suppress it when disabling IOMMU in motherboard. In this point, the
-> issue of lspci is a bit different from the issue of driver issue.
-> 
->>> I'm plreased to see if you have extra ideas to get helpful output from
->>> the system. But I guess that I should start finding some workaround to
->>> avoid the issued access to register instead of investigating the reboot
->>> mechanism, sigh...
->>>
->>> Anyway, thanks for your help. >
+>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+>> index 58b89b8d950e..bca2270a93d4 100644
+>> --- a/drivers/acpi/pci_root.c
+>> +++ b/drivers/acpi/pci_root.c
+>> @@ -1055,7 +1055,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>>   	 * exists and returns 0, we must preserve any PCI resource
+>>   	 * assignments made by firmware for this host bridge.
+>>   	 */
+>> -	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 1,
+>> +	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
+>> +				      &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   				      DSM_PCI_PRESERVE_BOOT_CONFIG, NULL, ACPI_TYPE_INTEGER);
+>>   	if (obj && obj->integer.value == 0)
+>>   		host_bridge->preserve_config = 1;
+>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+>> index 004575091596..bea72e807817 100644
+>> --- a/drivers/pci/pci-acpi.c
+>> +++ b/drivers/pci/pci-acpi.c
+>> @@ -28,6 +28,7 @@
+>>   const guid_t pci_acpi_dsm_guid =
+>>   	GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
+>>   		  0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
+>> +const int pci_acpi_dsm_rev = 5;
 >>
->> Can you check FCH::PM::S5_RESET_STATUS on next boot after failure has
->> occurred?  It is available at MMIO FED80300 or through indirect IO access at
->> 0xC0.
+>>   #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
+>>   static int acpi_get_rc_addr(struct acpi_device *adev, struct resource *res)
+>> @@ -1215,7 +1216,8 @@ void acpi_pci_add_bus(struct pci_bus *bus)
+>>   	if (!pci_is_root_bus(bus))
+>>   		return;
+>>   
+>> -	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid, 3,
+>> +	obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge),
+>> +				      &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   				      DSM_PCI_POWER_ON_RESET_DELAY, NULL, ACPI_TYPE_INTEGER);
+>>   	if (!obj)
+>>   		return;
+>> @@ -1376,7 +1378,7 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+>>   	if (bridge->ignore_reset_delay)
+>>   		pdev->d3cold_delay = 0;
+>>   
+>> -	obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
+>> +	obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   				      DSM_PCI_DEVICE_READINESS_DURATIONS, NULL,
+>>   				      ACPI_TYPE_PACKAGE);
+>>   	if (!obj)
+>> diff --git a/drivers/pci/pci-label.c b/drivers/pci/pci-label.c
+>> index 0c6446519640..91bdd04029f0 100644
+>> --- a/drivers/pci/pci-label.c
+>> +++ b/drivers/pci/pci-label.c
+>> @@ -41,7 +41,7 @@ static bool device_has_acpi_name(struct device *dev)
+>>   	if (!handle)
+>>   		return false;
+>>   
+>> -	return acpi_check_dsm(handle, &pci_acpi_dsm_guid, 0x2,
+>> +	return acpi_check_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   			      1 << DSM_PCI_DEVICE_NAME);
+>>   #else
+>>   	return false;
+>> @@ -162,7 +162,7 @@ static int dsm_get_label(struct device *dev, char *buf,
+>>   	if (!handle)
+>>   		return -1;
+>>   
+>> -	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, 0x2,
+>> +	obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   				DSM_PCI_DEVICE_NAME, NULL);
+>>   	if (!obj)
+>>   		return -1;
+>> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+>> index 5f4914d313a1..ab6a50201124 100644
+>> --- a/drivers/pci/pcie/edr.c
+>> +++ b/drivers/pci/pcie/edr.c
+>> @@ -35,7 +35,7 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>>   	 * Behavior when calling unsupported _DSM functions is undefined,
+>>   	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+>>   	 */
+>> -	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+>> +	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   			    1ULL << EDR_PORT_DPC_ENABLE_DSM))
+>>   		return 0;
+>>   
+>> @@ -51,8 +51,9 @@ static int acpi_enable_dpc(struct pci_dev *pdev)
+>>   	 * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
+>>   	 * optional.  Return success if it's not implemented.
+>>   	 */
+>> -	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+>> -				EDR_PORT_DPC_ENABLE_DSM, &argv4);
+>> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
+>> +				pci_acpi_dsm_rev, EDR_PORT_DPC_ENABLE_DSM,
+>> +				&argv4);
+>>   	if (!obj)
+>>   		return 0;
+>>   
+>> @@ -88,12 +89,12 @@ static struct pci_dev *acpi_dpc_port_get(struct pci_dev *pdev)
+>>   	 * Behavior when calling unsupported _DSM functions is undefined,
+>>   	 * so check whether EDR_PORT_DPC_ENABLE_DSM is supported.
+>>   	 */
+>> -	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+>> +	if (!acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, pci_acpi_dsm_rev,
+>>   			    1ULL << EDR_PORT_LOCATE_DSM))
+>>   		return pci_dev_get(pdev);
+>>   
+>> -	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
+>> -				EDR_PORT_LOCATE_DSM, NULL);
+>> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid,
+>> +				pci_acpi_dsm_rev, EDR_PORT_LOCATE_DSM, NULL);
+>>   	if (!obj)
+>>   		return pci_dev_get(pdev);
+>>   
+>> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+>> index 078225b514d4..7966ef8f14b3 100644
+>> --- a/include/linux/pci-acpi.h
+>> +++ b/include/linux/pci-acpi.h
+>> @@ -115,6 +115,7 @@ static inline void acpiphp_check_host_bridge(struct acpi_device *adev) { }
+>>   #endif
+>>   
+>>   extern const guid_t pci_acpi_dsm_guid;
+>> +extern const int pci_acpi_dsm_rev;
+>>   
+>>   /* _DSM Definitions for PCI */
+>>   #define DSM_PCI_PRESERVE_BOOT_CONFIG		0x05
+>> -- 
+>> 2.34.1
 >>
->> If MMIO doesn't work, double check FCH::PM_ISACONTROL bit 1 (described on
->> page 296) to confirm if your system enables it.
->>
->> The meanings of the different bits can be found in a recent PPR:
->> https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/55901_B1_pub_053.zip
->>
->> Indirect IO is described on PDF page 294.
->>
->> This will at least give us a hint what's going on in this case.
-> 
-> I'll try the above in this week. Thanks.
-> 
-> 
-> [1] https://github.com/takaswie/linux-firewire-dkms/
-> 
-> Takashi Sakamoto
 
 
