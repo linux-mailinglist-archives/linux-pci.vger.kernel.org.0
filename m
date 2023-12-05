@@ -1,142 +1,157 @@
-Return-Path: <linux-pci+bounces-486-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-487-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C3E18050F6
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 11:45:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AB3780555B
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 14:02:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E1711C20E8D
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:45:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A977B1F214CA
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 13:02:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1961B3FB3D;
-	Tue,  5 Dec 2023 10:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5827D5C8E8;
+	Tue,  5 Dec 2023 13:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/Pzv3q3"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="cvgOgYA7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yacRC4BU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687D1FA;
-	Tue,  5 Dec 2023 02:45:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701773112; x=1733309112;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SOLccH3Xzc++EaBQ0v6eolcJHqG0ji0sa1DvQVydOv4=;
-  b=B/Pzv3q33kt8RpyZTy/nN4u42ZFajAZmXfsTKeD8tjpYhp42/TC16GYj
-   ojRlnTUVc9MaTnwB5XaNZdyJ+S+4fXb9RIkXpNhebVWMY4TCCSVmOs4cM
-   lmc8UhjjpDBe6/1nBV8/M/p+8wbozHlFSnQ968ASyoPMjFZWJVZly3MCC
-   j2BlG9RBsmSRn1vBh/CZa59BePhRPgvWrqDd1vwO9DHsh8Gatu8scdG0V
-   e3aC/gFjpJwoiHvAz4T9jn8yJMlYpSa9ZrVT9gpqzrg2afvNzBSegEG2w
-   oDHjqn8i1CkdgEz4SR/l+x2gUKGeYQwgY7YRvSYM1HaqUapCYOLUDtg5m
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="393609836"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="393609836"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 02:45:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="914758875"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="914758875"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 05 Dec 2023 02:45:05 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rASus-0008na-2J;
-	Tue, 05 Dec 2023 10:45:03 +0000
-Date: Tue, 5 Dec 2023 18:44:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Philipp Stanner <pstanner@redhat.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Hanjun Guo <guohanjun@huawei.com>, NeilBrown <neilb@suse.de>,
-	Kent Overstreet <kmo@daterainc.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	John Sanpe <sanpeqf@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Kees Cook <keescook@chromium.org>, David Gow <davidgow@google.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] lib, pci: unify generic pci_iounmap()
-Message-ID: <202312051813.09WbvusW-lkp@intel.com>
-References: <20231204123834.29247-6-pstanner@redhat.com>
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677D385;
+	Tue,  5 Dec 2023 05:01:56 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 2E2795C02C6;
+	Tue,  5 Dec 2023 08:01:53 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 05 Dec 2023 08:01:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1701781313; x=1701867713; bh=Vz
+	5fHcnpm58kiwXE8hZp/Ye9ElTOS3WdqAMkMGNeaRk=; b=cvgOgYA7MGSeQTnroK
+	55TwaexI6T0Ar7/K3PpDbIQ/J0PV5KguP1FtgugKmTAtVlWgSKaeDt70Qbpm6NA2
+	fjtBpR9W4wctFEprPmxR0FZxklq02d1JmOTx58/pVUsu+haKEvj1rkrhLWZ8Lhse
+	as4s2nBA47xUgpqBf/Lw+bZ4Mh0Gs5QMo+yq7uoF3GkXPuhTTKKW+QqQED268YnK
+	kF4sLhZ0HzT+UiaqkpDkgi0Ko21Sm5UzxkxHz1IsAoYoCk8/Mf3MtZNerezo5kbM
+	u1e6g1fDnlJSsccZwhH3xpohgzt0KVwiT8jUdF58GIvmOpp0X7geJSAhUTfPKxyB
+	TQPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1701781313; x=1701867713; bh=Vz5fHcnpm58ki
+	wXE8hZp/Ye9ElTOS3WdqAMkMGNeaRk=; b=yacRC4BUn+jelBSr1r50xeLrSUMCB
+	P6gWdxS8PNmXvS2lwcnI9DrOi1wvxBhoMf/rcRbUuFB9uSFgQlC8vNL90sum4vES
+	5q1gG8eL1N3/1BmRTf4XZb/EQmj5fWHyvMdVvY/ZiHzXWIcpC2xpump8q1MVBWNv
+	gRarAcCi277E4wzsJ91n7IkgGZgzHpjqG6XkHKiQC5zMujdFUyrNlzsRKqnr1vkP
+	S3Y5IDoMX/vCYkl1ca9CMMKzPLtTt6E5P6Cxhe1WfvVhQcyzYfESDXxG/suwT7WS
+	WQrFbEVBupeGfe/ARqv0OnG9byGFqiTYywlG1j0UNEzxpD48p52h5rCsw==
+X-ME-Sender: <xms:Px9vZe8BGJJcjAaWpIBNmHZHQUAg5lk32PhyHWI1PPVAghG_Bel7Vg>
+    <xme:Px9vZeuoPxhZ3ok-vivHK_BSKpjPpWEB3H3KnipZsv-A-LA4xvbJHzK71WgZbELkv
+    LfrV8sKhSIKdBdSyU4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudejkedggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:Px9vZUBm4v5Q7KA2WQXF-XiajbjsnXVqTq21-2-MlaAkifDTqyf91w>
+    <xmx:Px9vZWd1JvaRpUqFk01U31zGT8hK5cwc_w-5CO1Xs2BI5_uYCZXc4w>
+    <xmx:Px9vZTNLEiUB2a9YJPLTUaVVi1yA8GFJ9bz4xkqAkoe-d2tMhCPxaw>
+    <xmx:QR9vZQla8R70Vm7nNVfKk--auJl8wCkKe6hUzvCK5V4k3_Sw8810jQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 7D516B60089; Tue,  5 Dec 2023 08:01:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231204123834.29247-6-pstanner@redhat.com>
+Message-Id: <d76fc75e-15c8-4177-a150-6f906233b82e@app.fastmail.com>
+In-Reply-To: 
+ <d6c242c0ab6e25e775284ec1d4b29a1ddd888af0.1701768028.git.ysato@users.sourceforge.jp>
+References: <cover.1701768028.git.ysato@users.sourceforge.jp>
+ <d6c242c0ab6e25e775284ec1d4b29a1ddd888af0.1701768028.git.ysato@users.sourceforge.jp>
+Date: Tue, 05 Dec 2023 14:01:31 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Yoshinori Sato" <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org
+Cc: "Damien Le Moal" <dlemoal@kernel.org>,
+ "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Dave Airlie" <airlied@gmail.com>,
+ "Daniel Vetter" <daniel@ffwll.ch>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Thomas Gleixner" <tglx@linutronix.de>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ "Magnus Damm" <magnus.damm@gmail.com>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Lee Jones" <lee@kernel.org>, "Helge Deller" <deller@gmx.de>,
+ =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>,
+ "Chris Morgan" <macromorgan@hotmail.com>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Randy Dunlap" <rdunlap@infradead.org>,
+ "Hyeonggon Yoo" <42.hyeyoo@gmail.com>,
+ "David Rientjes" <rientjes@google.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, "Baoquan He" <bhe@redhat.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Guenter Roeck" <linux@roeck-us.net>,
+ "Stephen Rothwell" <sfr@canb.auug.org.au>, guoren <guoren@kernel.org>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Azeem Shaikh" <azeemshaikh38@gmail.com>,
+ "Palmer Dabbelt" <palmer@rivosinc.com>, "Bin Meng" <bmeng@tinylab.org>,
+ "Max Filippov" <jcmvbkbc@gmail.com>, "Tom Rix" <trix@redhat.com>,
+ "Herve Codina" <herve.codina@bootlin.com>,
+ "Jacky Huang" <ychuang3@nuvoton.com>,
+ "Lukas Bulwahn" <lukas.bulwahn@gmail.com>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Biju Das" <biju.das.jz@bp.renesas.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "Sam Ravnborg" <sam@ravnborg.org>,
+ "Michael Karcher" <kernel@mkarcher.dialup.fu-berlin.de>,
+ "Sergey Shtylyov" <s.shtylyov@omp.ru>,
+ "Laurent Pinchart" <laurent.pinchart+renesas@ideasonboard.com>,
+ linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+ linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-fbdev@vger.kernel.org
+Subject: Re: [DO NOT MERGE v5 35/37] sh: RTS7751R2D Plus OF defconfig
+Content-Type: text/plain
 
-Hi Philipp,
+On Tue, Dec 5, 2023, at 10:45, Yoshinori Sato wrote:
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> ---
+>  arch/sh/configs/rts7751r2dplus-of_defconfig | 93 +++++++++++++++++++++
 
-kernel test robot noticed the following build errors:
+This is very similar to the landisk config, so it may be
+easier to just have one of them that works for both, as well
+as future ones.
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus arnd-asm-generic/master kees/for-next/pstore kees/for-next/kspp linus/master v6.7-rc4 next-20231205]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +CONFIG_LOG_BUF_SHIFT=14
+> +CONFIG_NAMESPACES=y
+> +CONFIG_EXPERT=y
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/lib-pci_iomap-c-fix-cleanup-bugs-in-pci_iounmap/20231204-204128
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20231204123834.29247-6-pstanner%40redhat.com
-patch subject: [PATCH v3 5/5] lib, pci: unify generic pci_iounmap()
-config: openrisc-virt_defconfig (https://download.01.org/0day-ci/archive/20231205/202312051813.09WbvusW-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312051813.09WbvusW-lkp@intel.com/reproduce)
+You should not normally need to enable CONFIG_EXPERT in a
+defconfig. Is there any particular reason for this?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312051813.09WbvusW-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/iomap.c: In function 'pci_iounmap':
->> drivers/pci/iomap.c:155:17: error: implicit declaration of function 'ioport_unmap'; did you mean 'devm_ioport_unmap'? [-Werror=implicit-function-declaration]
-     155 |                 ioport_unmap(addr);
-         |                 ^~~~~~~~~~~~
-         |                 devm_ioport_unmap
-   cc1: some warnings being treated as errors
-
-
-vim +155 drivers/pci/iomap.c
-
-   144	
-   145	/**
-   146	 * pci_iounmap - Unmapp a mapping
-   147	 * @dev: PCI device the mapping belongs to
-   148	 * @addr: start address of the mapping
-   149	 *
-   150	 * Unmapp a PIO or MMIO mapping.
-   151	 */
-   152	void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-   153	{
-   154		if (iomem_is_ioport(addr)) {
- > 155			ioport_unmap(addr);
-   156			return;
-   157		}
-   158	
-   159		iounmap(addr);
-   160	}
-   161	EXPORT_SYMBOL(pci_iounmap);
-   162	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+    Arnd
 
