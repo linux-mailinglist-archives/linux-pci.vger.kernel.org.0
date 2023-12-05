@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-501-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FFE78058CE
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:34:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 606F28058B4
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:29:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA2751F2178F
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:34:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A6CE1F2174F
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31D235F1DB;
-	Tue,  5 Dec 2023 15:34:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A22A5F1CD;
+	Tue,  5 Dec 2023 15:29:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F6183;
-	Tue,  5 Dec 2023 07:34:08 -0800 (PST)
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-58cf894544cso3805165eaf.3;
-        Tue, 05 Dec 2023 07:34:08 -0800 (PST)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F77122;
+	Tue,  5 Dec 2023 07:29:32 -0800 (PST)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5d6b9143782so41120787b3.0;
+        Tue, 05 Dec 2023 07:29:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701790447; x=1702395247;
+        d=1e100.net; s=20230601; t=1701790171; x=1702394971;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jmso+Pyj6M965irEbY4qayX9k2jAUb4uqdD1fkCcZ8k=;
-        b=M/RKZM5r/HuKXnlC1AwALHy5A+1lNsS+ak67KBIDWzWW+e7oHEV4wYIjG0ktIvAWy4
-         o9Ms/FFY8HQaR9r7wE1/rpI9mJrYtszZgS5jYBdYf4n83Xcfd2BZWcJKTnyJ2U83rg01
-         9ea2Z3gl5ClaEU3zl0EHZtuVZfEe/Vg6sE9ggU2KHkH+BjlmEUDiKxFlZQ6oZK3leDFz
-         GoEbykehqL9BhilkUCuvfeKW29oBuJhF1dQye6mHjCNX7nHOGCnWi7fWbAWrdR/fXa03
-         hUMHXiBpFrl1oE1WoZOz3uGdIVrUmju9avN50gbykN8houelAidusLZqtEh7UFXY9oWA
-         EQOQ==
-X-Gm-Message-State: AOJu0YxnUAk7x2svdmMZiOnEuWFZ68xEB0XD86vs/y323StpSZmB2OFx
-	3JPG85CBZO9yOSHGA3VfT+eyowbThClxrA==
-X-Google-Smtp-Source: AGHT+IHN27ceI6iE1qZK+w6GzBy7WUpyNrFEpcC/23a2CRIYnX4f35zGNmGu2LTRothRE/zTzLr3Qg==
-X-Received: by 2002:a05:6820:2221:b0:58d:9942:b49 with SMTP id cj33-20020a056820222100b0058d99420b49mr6327142oob.9.1701790447130;
-        Tue, 05 Dec 2023 07:34:07 -0800 (PST)
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
-        by smtp.gmail.com with ESMTPSA id 187-20020a4a14c4000000b0058a2872d1d6sm2412397ood.42.2023.12.05.07.34.06
+        bh=nKR4eGh9Q8YilRGEEfPHT07Wa+ghJ3PZE9UUZkDUQSU=;
+        b=keJkStga+jZ8Uo/hghHETxFv1rnAbPnVJYh/f97si3DN+oSv/dV5LVrp6cW17uTp7P
+         XPSy9sDSuIVslUS+xMwXHGcaiBaGmXoLz9UflI74kZXyJOlMsXaiedV6N+IWsl/IOXIm
+         leoO8YygGc9bEKFa6VUmyQ6Br9k2EJE0TsXeR6QpbdUjziDl5rqYZJghRWHnFJXrabaO
+         QcIJ9rEeNAHwS1q/JKGGjLGpfDJFly9tT4g2ReLdG4L/K+l/g2t2Plb128lIXEnZGy/3
+         mnGePHA7VIZm7epis3AyVuXTpcGz0h8b8soSE27LjzJk/CGn8cqRFPxEALijTQ2cb3TL
+         sPOQ==
+X-Gm-Message-State: AOJu0Yxy2TE4HDGwaUgRPYOE5T+cEDH7t3qIyOAiAN8iNeJ8BfpTn4RL
+	bLAeG07zUYFwFYUvd+nesfAxAjcw01KY4g==
+X-Google-Smtp-Source: AGHT+IGniOkt2In+ND9FjMFdQCNAS6I92uhwMneiOiO5M4fByOWCFxG9E/IRcrI00OxBWY6PTr24Kg==
+X-Received: by 2002:a81:4c0c:0:b0:5d3:5887:edb9 with SMTP id z12-20020a814c0c000000b005d35887edb9mr4411016ywa.44.1701790171070;
+        Tue, 05 Dec 2023 07:29:31 -0800 (PST)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id u64-20020a814743000000b00582b239674esm4218954ywa.129.2023.12.05.07.29.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 07:34:06 -0800 (PST)
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3b8b556aadbso2132370b6e.3;
-        Tue, 05 Dec 2023 07:34:06 -0800 (PST)
-X-Received: by 2002:a0d:df11:0:b0:5d5:c6c1:3522 with SMTP id
- i17-20020a0ddf11000000b005d5c6c13522mr2801851ywe.26.1701790046878; Tue, 05
- Dec 2023 07:27:26 -0800 (PST)
+        Tue, 05 Dec 2023 07:29:30 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d9beb865a40so4101478276.1;
+        Tue, 05 Dec 2023 07:29:30 -0800 (PST)
+X-Received: by 2002:a25:870f:0:b0:db7:d3e0:46d1 with SMTP id
+ a15-20020a25870f000000b00db7d3e046d1mr4072755ybl.32.1701790170465; Tue, 05
+ Dec 2023 07:29:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701768028.git.ysato@users.sourceforge.jp> <e147fd6dd7aba44a6f408c3a42076b207be862fb.1701768028.git.ysato@users.sourceforge.jp>
-In-Reply-To: <e147fd6dd7aba44a6f408c3a42076b207be862fb.1701768028.git.ysato@users.sourceforge.jp>
+References: <cover.1701768028.git.ysato@users.sourceforge.jp> <91a4cac133cb7244903e872b9e63fbbd57fbd68c.1701768028.git.ysato@users.sourceforge.jp>
+In-Reply-To: <91a4cac133cb7244903e872b9e63fbbd57fbd68c.1701768028.git.ysato@users.sourceforge.jp>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Dec 2023 16:27:15 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWZo5EwZZmgDC-nEwwKz5oLvjpz9iY022kv5KwbV7b_gA@mail.gmail.com>
-Message-ID: <CAMuHMdWZo5EwZZmgDC-nEwwKz5oLvjpz9iY022kv5KwbV7b_gA@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v5 20/37] serial: sh-sci: fix SH4 OF support.
+Date: Tue, 5 Dec 2023 16:29:19 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUNQ_u0O1ANv6zdao5SOp9H=WLuULnYuvAt2tgAfsp_GQ@mail.gmail.com>
+Message-ID: <CAMuHMdUNQ_u0O1ANv6zdao5SOp9H=WLuULnYuvAt2tgAfsp_GQ@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v5 09/37] dt-bindings: timer: renesas,tmu: add renesas,tmu-sh7750
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
 	Rob Herring <robh+dt@kernel.org>, 
@@ -96,30 +96,29 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Sato-san,
 
-Thanks for your patch!
-
 On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
 <ysato@users.sourceforge.jp> wrote:
-> - fix earlycon name.
-> - fix earlyprintk hung (NULL pointer reference).
-
-- fix SERIAL_SH_SCI_EARLYCON enablement
-
+> Add SH7750 TMU entry.
+>
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks for your patch!
 
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -658,7 +658,7 @@ config SERIAL_SH_SCI_EARLYCON
->         depends on SERIAL_SH_SCI=3Dy
->         select SERIAL_CORE_CONSOLE
->         select SERIAL_EARLYCON
-> -       default ARCH_RENESAS
-> +       default ARCH_RENESAS || SUPERH
->
->  config SERIAL_SH_SCI_DMA
->         bool "DMA support" if EXPERT
+> --- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+> +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+> @@ -21,6 +21,7 @@ properties:
+>    compatible:
+>      items:
+>        - enum:
+> +          - renesas,tmu-sh7750   # SH7750
+
+Please preserve alphabetical sort order.
+
+>            - renesas,tmu-r8a7740  # R-Mobile A1
+>            - renesas,tmu-r8a774a1 # RZ/G2M
+>            - renesas,tmu-r8a774b1 # RZ/G2N
+
+The rest LGTM.
 
 Gr{oetje,eeting}s,
 
