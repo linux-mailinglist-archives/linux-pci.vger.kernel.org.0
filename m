@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A43805ADD
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 18:11:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7494805ADE
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 18:11:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E1F41F21AAF
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 17:11:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 723A11F21514
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 17:11:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0705369295;
-	Tue,  5 Dec 2023 17:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D81692A2;
+	Tue,  5 Dec 2023 17:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oz7aiQkW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AiWzord3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0E769288
-	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 17:11:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C0D1C433C9;
-	Tue,  5 Dec 2023 17:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8EA69288
+	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 17:11:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DA0C433C7;
+	Tue,  5 Dec 2023 17:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701796286;
-	bh=SHRKGwDoVF1G5pI2uXdiU2j2HD1GhNV1bFDWy1EgiQk=;
+	s=k20201202; t=1701796288;
+	bh=HTRqZd2oPNNCESbeb303NgbHA77C4zlrwiA3tsQYhYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Oz7aiQkW8Riza4Ilemm9GNYNXNd8o78kRd0umW+FYYavHtzRjmbSvhY+XnsuAKS1R
-	 ETZ16KI3ktKyiPVGQCwWVQBMIPBb2ORwdv6fczHVgAS7FW+cz762RTMkuog4P9izWu
-	 VtyKND0Rh/0Xi7QGg9VKSIMYbkpjcOHEBleijIaF+MzndkG9HRYO6GFmamuOTxp/f1
-	 SPCRqil0ia6q41yeHBm3eq493FY9BE6I2kNLIKBaJmvG3eyvBx9AuZREcYEFFOj3CI
-	 zqPVpyKAmXs2ddX26uJIDty1pUDfVpIUbGdIt8AbqXaoZLohjHGt9ZhNS8DOSAyUS1
-	 z4RjwMjEX6+lA==
+	b=AiWzord3m/BV+v7+SAdv3NamPdu+rDjCuz1XRZXd7KIoVvGSOYeU9wTJ6fiu298Nj
+	 czSQ5aBxiv8IaKez6tZfaqvbZCmdT4xYpSp27TNZzFx+EYzpOC/j3L+x7H8F7tuq+q
+	 UD/mfTcLXS4FaxFhulE3QENyflHdlJYPCkcKL5y79w/nkoZk0/c05uP1/j04BR+kv5
+	 drzm7uOtrUOaY/0rgAKMqpbgioIpDjnH1zyXsG+4K6S1f5Ds/3ATyKVpRVT2luiyNU
+	 GjDnHFIQ6QUSW04OkQ1RRRwWhPpFZEgghXQrzfTlugwYHz6Ue+7+xbdglzlm6rebgL
+	 9KeK8hgf0WVtA==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: Puranjay Mohan <puranjay12@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/7] PCI: Log device type during enumeration
-Date: Tue,  5 Dec 2023 11:11:13 -0600
-Message-Id: <20231205171119.680358-2-helgaas@kernel.org>
+Subject: [PATCH 2/7] PCI: Update BAR # and window messages
+Date: Tue,  5 Dec 2023 11:11:14 -0600
+Message-Id: <20231205171119.680358-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231205171119.680358-1-helgaas@kernel.org>
 References: <20231205171119.680358-1-helgaas@kernel.org>
@@ -51,81 +51,110 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Puranjay Mohan <puranjay12@gmail.com>
 
-Log the device type when enumeration a device.  Sample output changes:
+The PCI log messages print the register offsets at some places and BAR
+numbers at other places. There is no uniformity in this logging mechanism.
+It would be better to print names than register offsets.
 
-  - pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
-  + pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
+Add a helper function that aids in printing more meaningful information
+about the BAR numbers like "VF BAR", "ROM", "bridge window", etc.  This
+function can be called while printing PCI log messages.
 
-  - pci 0000:00:1c.0: [8086:a110] type 01 class 0x060400
-  + pci 0000:00:1c.0: [8086:a110] type 01 class 0x060400 PCIe Root Port
-
+[bhelgaas: fold in Lukas' static array suggestion from
+https://lore.kernel.org/all/20211106115831.GA7452@wunner.de/]
+Link: https://lore.kernel.org/r/20211106112606.192563-2-puranjay12@gmail.com
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/probe.c | 42 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+ drivers/pci/pci.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h |  2 ++
+ 2 files changed, 62 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index ed6b7f48736a..1dbc06f0305c 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1817,6 +1817,43 @@ static void early_dump_pci_device(struct pci_dev *pdev)
- 		       value, 256, false);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 55bc3576a985..af36a0bf3e42 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -850,6 +850,66 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
  }
+ EXPORT_SYMBOL(pci_find_resource);
  
-+static const char *pci_type_str(struct pci_dev *dev)
++/**
++ * pci_resource_name - Return the name of the PCI resource
++ * @dev: PCI device to query
++ * @i: index of the resource
++ *
++ * Return the standard PCI resource (BAR) name according to their index.
++ */
++const char *pci_resource_name(struct pci_dev *dev, unsigned int i)
 +{
-+	static const char *str[] = {
-+		"PCIe Endpoint",
-+		"PCIe Legacy Endpoint",
-+		"PCIe unknown",
-+		"PCIe unknown",
-+		"PCIe Root Port",
-+		"PCIe Upstream Switch Port",
-+		"PCIe Downstream Switch Port",
-+		"PCIe to PCI/PCI-X bridge",
-+		"PCI/PCI-X to PCIe bridge",
-+		"PCIe Root Complex Integrated Endpoint",
-+		"PCIe Root Complex Event Collector",
++	static const char *bar_name[] = {
++		"BAR 0",
++		"BAR 1",
++		"BAR 2",
++		"BAR 3",
++		"BAR 4",
++		"BAR 5",
++		"ROM",
++#ifdef CONFIG_PCI_IOV
++		"VF BAR 0",
++		"VF BAR 1",
++		"VF BAR 2",
++		"VF BAR 3",
++		"VF BAR 4",
++		"VF BAR 5",
++#endif
++		"bridge window",	/* "io" included in %pR */
++		"bridge window",	/* "mem" included in %pR */
++		"bridge window",	/* "mem pref" included in %pR */
 +	};
-+	int type;
++	static const char *cardbus_name[] = {
++		"BAR 1",
++		"unknown",
++		"unknown",
++		"unknown",
++		"unknown",
++		"unknown",
++#ifdef CONFIG_PCI_IOV
++		"unknown",
++		"unknown",
++		"unknown",
++		"unknown",
++		"unknown",
++		"unknown",
++#endif
++		"CardBus bridge window 0",	/* I/O */
++		"CardBus bridge window 1",	/* I/O */
++		"CardBus bridge window 0",	/* mem */
++		"CardBus bridge window 1",	/* mem */
++	};
 +
-+	if (pci_is_pcie(dev)) {
-+		type = pci_pcie_type(dev);
-+		if (type < ARRAY_SIZE(str))
-+			return str[type];
++	if (dev->hdr_type == PCI_HEADER_TYPE_CARDBUS &&
++	    i < ARRAY_SIZE(cardbus_name))
++		return cardbus_name[i];
 +
-+		return "PCIe unknown";
-+	}
++	if (i < ARRAY_SIZE(bar_name))
++		return bar_name[i];
 +
-+	switch (dev->hdr_type) {
-+	case PCI_HEADER_TYPE_NORMAL:
-+		return "conventional PCI endpoint";
-+	case PCI_HEADER_TYPE_BRIDGE:
-+		return "conventional PCI bridge";
-+	case PCI_HEADER_TYPE_CARDBUS:
-+		return "CardBus bridge";
-+	default:
-+		return "conventional PCI";
-+	}
++	return "unknown";
 +}
 +
  /**
-  * pci_setup_device - Fill in class and map information of a device
-  * @dev: the device structure to fill
-@@ -1887,8 +1924,9 @@ int pci_setup_device(struct pci_dev *dev)
+  * pci_wait_for_pending - wait for @mask bit(s) to clear in status word @pos
+  * @dev: the PCI device to operate on
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 5ecbcf041179..fb9c94a1c0b5 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -255,6 +255,8 @@ void __pci_bus_assign_resources(const struct pci_bus *bus,
+ 				struct list_head *fail_head);
+ bool pci_bus_clip_resource(struct pci_dev *dev, int idx);
  
- 	pci_set_removable(dev);
- 
--	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
--		 dev->vendor, dev->device, dev->hdr_type, dev->class);
-+	pci_info(dev, "[%04x:%04x] type %02x class %#08x %s\n",
-+		 dev->vendor, dev->device, dev->hdr_type, dev->class,
-+		 pci_type_str(dev));
- 
- 	/* Device class may be changed after fixup */
- 	class = dev->class >> 8;
++const char *pci_resource_name(struct pci_dev *dev, unsigned int i);
++
+ void pci_reassigndev_resource_alignment(struct pci_dev *dev);
+ void pci_disable_bridge_window(struct pci_dev *dev);
+ struct pci_bus *pci_bus_get(struct pci_bus *bus);
 -- 
 2.34.1
 
