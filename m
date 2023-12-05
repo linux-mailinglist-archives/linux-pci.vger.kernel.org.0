@@ -1,328 +1,167 @@
-Return-Path: <linux-pci+bounces-508-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-509-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0DF38058F8
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:40:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07CCC805911
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:49:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75519B20D58
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:40:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF92C281E15
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31ED45F1E4;
-	Tue,  5 Dec 2023 15:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71EF05C900;
+	Tue,  5 Dec 2023 15:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VeBBU2YA"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dM5DBmVH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963F8A9
-	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 07:40:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701790800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
-	b=VeBBU2YA9vXlNNqogtxULw9SbgObQL+FLnqhwEu4CfdK8wnYZXqRq2gVS7xIDR56syaN6F
-	92OKDHNlModuAlRgUNv5bt3AXaHhdhLVHGAK4PPF4mxNjSPcrSUFgT0m2p/oAIZvOdwykS
-	dJT0bPNT++iEpkvgbHJ7AtLw/Ei1GZE=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-339-7GCs-ke3P2KpxZXiqd0THw-1; Tue, 05 Dec 2023 10:38:07 -0500
-X-MC-Unique: 7GCs-ke3P2KpxZXiqd0THw-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50c0e82188bso81494e87.0
-        for <linux-pci@vger.kernel.org>; Tue, 05 Dec 2023 07:38:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701790685; x=1702395485;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
-        b=Id4lSpSGpo3htOSuzVA8pHrTu8XfGBh2VhqcNuOtzuWP/LMt7ip6P9ItTk+zyzHWcN
-         kWRiIolaukHl+tpRY4xFy0cgOgfbVXAXZ0Gk8F9ocaX5UlcCd87/hspCDkkXdh1RjX2G
-         05h2zXyO07zW8sWfZjBkvHfYK7hUgD7K8qwSzDYj2sfp7yFHsh6XpUeZdwbs+8soRm3G
-         3yaJTLICpJH6jO4ChZuyvtrAOZxO5BQN5iyva8joW96KNrv35wNyHVYNhQ9TDUikmT8d
-         YmTDcRRlrgAgI5MeYfHOrvETu0+lTc79uiSia3EPpzIIYSfgAMAXSMWTz9IlQOChP8lJ
-         bOvg==
-X-Gm-Message-State: AOJu0YyH112LmxJuYJQNKiTn2tg9Y59b9ROrM4xkEymoNBNqGoFUtqrQ
-	xAt6TPsffaiyV0o7V47zmKR/UWl39I7V94Uv93+Zszd4Me1tEC5xjH+H6G92MtLR9UCeWr/sH7Q
-	uUDtR0afgp9MWvBN10mvZ
-X-Received: by 2002:a05:6512:3ca4:b0:50b:fd29:7ed8 with SMTP id h36-20020a0565123ca400b0050bfd297ed8mr3862448lfv.3.1701790685301;
-        Tue, 05 Dec 2023 07:38:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGr+KaNPAgoT0SZAJFiDxNFtRx0nasxXdzFRVvIz/4kkZr/bUzYlPYolm2P7sHnNK/2XAOWUQ==
-X-Received: by 2002:a05:6512:3ca4:b0:50b:fd29:7ed8 with SMTP id h36-20020a0565123ca400b0050bfd297ed8mr3862402lfv.3.1701790684999;
-        Tue, 05 Dec 2023 07:38:04 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb ([2a01:599:912:71c8:c243:7b37:30b:a236])
-        by smtp.gmail.com with ESMTPSA id r15-20020a056402018f00b0054c21d1fda7sm1244578edv.1.2023.12.05.07.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 07:38:04 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	dakr@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	stable@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>
-Subject: [PATCH v4 5/5] lib, pci: unify generic pci_iounmap()
-Date: Tue,  5 Dec 2023 16:36:30 +0100
-Message-ID: <20231205153629.26020-7-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231205153629.26020-2-pstanner@redhat.com>
-References: <20231205153629.26020-2-pstanner@redhat.com>
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0A0BA;
+	Tue,  5 Dec 2023 07:49:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iJF5XWnKPS9qusgEry5dttgFRiOC4Nb52wf1GtLz/t9ompvZ5x//rnDzMatYX0KHpEalqQgzxLU/EC+cxadTB/yfed4j0VY7n/E3bbkFskQV8kKBh6vi6y2bCdKqoFcXZNBvIeSy2MCORSQdpq/DBcIvJzmlMzKQ4vD/g9dTG3zqTGUZLJUVcxrDT0nulfGFDKo6Ez5NmCszeWpGZyf6y2azBUa/3UICbT0+mlWEyUyWbxEBVQbvpCcqcFpcbuuM8HnU0x6LFMqNn5oASf51g6hi5yfNS59asqQazWmm6s+wt2h0D3QNIz+lexF69+u/7jmRHpV5BEH4KE7pkqvy9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eLuQYjjCa83wy5FxCm9aqnG3UyNRRCE2OjcDryFxIyQ=;
+ b=iaRLIqzBjm13w/T+svuj1rzt9Dx5oSBdlMU+31qWZ2DS1j9UQIqm0uAI5r2gX39C3Ej/z2uHTJIFCZVKUfEyJrf74kYzLpGTIc1Pci7iauEeUThkezcq30LEjLNiewA4OZ21Sy+sCtWr8YIEk46IuHe07mUfulDnjAINvA/TaTUTxw3dAzsfUbJ3WR20xadukdX5Af1WK5RjGDQbaaHvhLa8mxLBgf+plPV3LGgfKSxdpNAp7jAP5lHrE/x/S5BpiuhphmlyYVEI53CHUcvydiyZ+ia9UpZMSH4bm+cW2u5FrwnDlaeAeYiKW8Eb3Fpmju9vgJveieUy2j5tfWE7/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eLuQYjjCa83wy5FxCm9aqnG3UyNRRCE2OjcDryFxIyQ=;
+ b=dM5DBmVHsFSazC45RlTJg4xhzv6VqLpz/Vtf3IDnwbZ4nXakkZMDVdndegbS83sXFR8LCCR0vAxjH5aoOMl0K0EcgjGv9bDb4xre8BeIxXLDK0Ucid7Z569qbudP5i+WV5gATj2uMSkL4qU8s/zOkrHHvq2J9wSWmZvf9gHjtJg=
+Received: from BL1PR13CA0318.namprd13.prod.outlook.com (2603:10b6:208:2c1::23)
+ by MW4PR12MB7359.namprd12.prod.outlook.com (2603:10b6:303:222::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.29; Tue, 5 Dec
+ 2023 15:48:57 +0000
+Received: from BL6PEPF0001AB72.namprd02.prod.outlook.com
+ (2603:10b6:208:2c1:cafe::31) by BL1PR13CA0318.outlook.office365.com
+ (2603:10b6:208:2c1::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.24 via Frontend
+ Transport; Tue, 5 Dec 2023 15:48:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB72.mail.protection.outlook.com (10.167.242.165) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7068.24 via Frontend Transport; Tue, 5 Dec 2023 15:48:57 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 5 Dec
+ 2023 09:48:56 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki"
+	<rjw@rjwysocki.net>
+CC: <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH] x86/pci: Stop requiring MMCONFIG to be declared in E820, ACPI or EFI for newer systems
+Date: Tue, 5 Dec 2023 09:48:45 -0600
+Message-ID: <20231205154845.44463-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB72:EE_|MW4PR12MB7359:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6786bc5a-dc38-4388-2e1c-08dbf5a9b141
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	T6VRhPSJE0AI/K6ZEXouq7+aebw9KJiwxsYNBM+zHxW6Ypnw0Kf5FnJ5ZCNN+S37TG7+kt1w1MjNX3GVC0n0bNPPXgwGy38eu0wepyjCPxvpWmhl7DJnM+ixtKj4J7lo3XbJ805XSd6c1sdFfJEIyZMFTWk8iCDx/7ymXlR3nFwqSrAT4ZIp+2pzYr4WJYi9kPuziUPMI678nQ4C4OXyaAujZDLJTnhqvILrEkUGeIzDLDGDejSad5BjwfvrlsM38xJMzAg1/6lTqUL4e74+nWfR+hIh4T9u6DBxsRyrTRzp48fS++556scNBXUnEkrwQN6XSfMIaivAkJ9vXWhk6yG2BnjVT7DuKzxlDDId249LwOjlW/rRKBdLwbSfdngdaMcomAoODpNfhvDL3s8VhmP7JTGZfmhQ0hYrrgiYSeeSeC8SbqzXdKgwm1+ZO9O/wnSK3unzmD0xa6kuNtHHfY4llBi/g4HWAK+OfogksHcL5Qs5LkrLnPnVSNVG6x7ImA48EZg50i61qtrKdEINBDg513RPNf0ARVfvz6pZflQ72D9QWi+TnzAE7qN2LpgaFrWwyWPWuxBUSG2oNFmjiXV7uWfwXbUTjZtesfRTqgDa8NBWJUMok4HPQ3E46MXIWHH71NNDXLFAEsEY+e1OW7ol1qcKh8znSsEWAhOFoZykpYYghomr8arhqM5CO8YMKgAdrZWSizV51VfXx58Mo4HmsRmDPxfNm8JRt/PCKGkeCElvl6MT1ovzF7K5XqYgJfNNpExj7HYg+T1KYtlB9GsbK+riWPRfn4r98obocKq12u28EZMwk4eBHswEpqMk
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(376002)(346002)(136003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(82310400011)(40470700004)(46966006)(36840700001)(8676002)(6666004)(8936002)(4326008)(7696005)(110136005)(316002)(54906003)(40460700003)(966005)(40480700001)(478600001)(81166007)(356005)(47076005)(2616005)(41300700001)(36756003)(1076003)(86362001)(2906002)(44832011)(36860700001)(70586007)(336012)(26005)(82740400003)(83380400001)(426003)(16526019)(70206006)(5660300002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2023 15:48:57.4861
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6786bc5a-dc38-4388-2e1c-08dbf5a9b141
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB72.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7359
 
-The implementation of pci_iounmap() is currently scattered over two
-files, drivers/pci/iomap.c and lib/iomap.c. Additionally,
-architectures can define their own version.
+commit 7752d5cfe3d1 ("x86: validate against acpi motherboard resources")
+introduced checks for ensuring that MCFG table also has memory region
+reservations to ensure no conflicts were introduced from a buggy BIOS.
 
-To have only one version, it's necessary to create a helper function,
-iomem_is_ioport(), that tells pci_iounmap() whether the passed address
-points to an ioport or normal memory.
+This has proceeded over time to add other types of reservation checks
+for ACPI PNP resources and EFI MMIO memory type.  The PCI firmware spec
+however says that these checks are only required when the operating system
+doesn't comprehend the firmware region:
 
-iomem_is_ioport() can be provided through two different ways:
-  1. The architecture itself provides it. As of today, the version
-     coming from lib/iomap.c de facto is the x86-specific version and
-     comes into play when CONFIG_GENERIC_IOMAP is selected. This rather
-     confusing naming is an artifact left by the removal of IA64.
-  2. As a default version in include/asm-generic/io.h for those
-     architectures that don't use CONFIG_GENERIC_IOMAP, but also don't
-     provide their own version of iomem_is_ioport().
+```
+If the operating system does not natively comprehend reserving the MMCFG
+region, the MMCFG region must be reserved by firmware. The address range
+reported in the MCFG table or by _CBA method (see Section 4.1.3) must be
+reserved by declaring a motherboard resource. For most systems, the
+motherboard resource would appear at the root of the ACPI namespace
+(under \_SB) in a node with a _HID of EISAID (PNP0C02), and the resources
+in this case should not be claimed in the root PCI bus’s _CRS. The
+resources can optionally be returned in Int15 E820h or EFIGetMemoryMap
+as reserved memory but must always be reported through ACPI as a
+motherboard resource.
+```
 
-Once all architectures that support ports provide iomem_is_ioport(), the
-arch-specific definitions for pci_iounmap() can be removed and the archs
-can use the generic implementation, instead.
+Running this check causes problems with accessing extended PCI
+configuration space on OEM laptops that don't specify the region in PNP
+resources or in the EFI memory map. That later manifests as problems with
+dGPU and accessing resizable BAR. Similar problems don't exist in Windows
+11 with exact same laptop/firmware stack, and in discussion with AMD's BIOS
+team Windows doesn't have similar checks.
 
-Create a unified version of pci_iounmap() in drivers/pci/iomap.c.
-Provide the function iomem_is_ioport() in include/asm-generic/io.h
-(generic) and lib/iomap.c ("pseudo-generic" for x86).
+As this series of checks was first introduced as a mitigation for buggy
+BIOS before EFI was introduced add a BIOS date range to only enforce the
+checks on hardware that predates the release of Windows 11.
 
-Remove the CONFIG_GENERIC_IOMAP guard around
-ARCH_WANTS_GENERIC_PCI_IOUNMAP so that configs that set
-CONFIG_GENERIC_PCI_IOMAP without CONFIG_GENERIC_IOMAP still get the
-function.
-
-Add TODOs for follow-up work on the "generic is not generic but
-x86-specific"-Problem.
-
-Suggested-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
+      PCI Firmware Specification 3.3
+      Section 4.1.2 MCFG Table Description Note 2
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/pci/iomap.c         | 46 +++++++++++++------------------------
- include/asm-generic/io.h    | 27 ++++++++++++++++++++--
- include/asm-generic/iomap.h | 21 +++++++++++++++++
- lib/iomap.c                 | 28 ++++++++++++++++------
- 4 files changed, 83 insertions(+), 39 deletions(-)
+ arch/x86/pci/mmconfig-shared.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index 91285fcff1ba..b7faf22ec8f5 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -135,44 +135,30 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- EXPORT_SYMBOL_GPL(pci_iomap_wc);
+diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
+index 4b3efaa82ab7..e4594b181ebf 100644
+--- a/arch/x86/pci/mmconfig-shared.c
++++ b/arch/x86/pci/mmconfig-shared.c
+@@ -570,9 +570,13 @@ static void __init pci_mmcfg_reject_broken(int early)
  
- /*
-- * pci_iounmap() somewhat illogically comes from lib/iomap.c for the
-- * CONFIG_GENERIC_IOMAP case, because that's the code that knows about
-- * the different IOMAP ranges.
-+ * This check is still necessary due to legacy reasons.
-  *
-- * But if the architecture does not use the generic iomap code, and if
-- * it has _not_ defined it's own private pci_iounmap function, we define
-- * it here.
-- *
-- * NOTE! This default implementation assumes that if the architecture
-- * support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
-- * be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
-- * and does not need unmapping with 'ioport_unmap()'.
-- *
-- * If you have different rules for your architecture, you need to
-- * implement your own pci_iounmap() that knows the rules for where
-- * and how IO vs MEM get mapped.
-- *
-- * This code is odd, and the ARCH_HAS/ARCH_WANTS #define logic comes
-- * from legacy <asm-generic/io.h> header file behavior. In particular,
-- * it would seem to make sense to do the iounmap(p) for the non-IO-space
-- * case here regardless, but that's not what the old header file code
-- * did. Probably incorrectly, but this is meant to be bug-for-bug
-- * compatible.
-+ * TODO: Have all architectures that provide their own pci_iounmap() provide
-+ * iomem_is_ioport() instead. Remove this #if afterwards.
-  */
- #if defined(ARCH_WANTS_GENERIC_PCI_IOUNMAP)
- 
--void pci_iounmap(struct pci_dev *dev, void __iomem *p)
-+/**
-+ * pci_iounmap - Unmapp a mapping
-+ * @dev: PCI device the mapping belongs to
-+ * @addr: start address of the mapping
-+ *
-+ * Unmapp a PIO or MMIO mapping.
-+ */
-+void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
- {
--#ifdef ARCH_HAS_GENERIC_IOPORT_MAP
--	uintptr_t start = (uintptr_t) PCI_IOBASE;
--	uintptr_t addr = (uintptr_t) p;
--
--	if (addr >= start && addr < start + IO_SPACE_LIMIT) {
--		ioport_unmap(p);
-+#ifdef CONFIG_HAS_IOPORT_MAP
-+	if (iomem_is_ioport(addr)) {
-+		ioport_unmap(addr);
- 		return;
+ 	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
+ 		if (pci_mmcfg_check_reserved(NULL, cfg, early) == 0) {
+-			pr_info(PREFIX "not using MMCONFIG\n");
+-			free_all_mmcfg();
+-			return;
++			if (dmi_get_bios_year() >= 2021) {
++				pr_info(PREFIX "MMCONFIG wasn't reserved by ACPI or EFI\n");
++			} else {
++				pr_info(PREFIX "not using MMCONFIG\n");
++				free_all_mmcfg();
++				return;
++			}
+ 		}
  	}
- #endif
--	iounmap(p);
-+
-+	iounmap(addr);
  }
- EXPORT_SYMBOL(pci_iounmap);
- 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index bac63e874c7b..58c7bf4080da 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -1129,11 +1129,34 @@ extern void ioport_unmap(void __iomem *p);
- #endif /* CONFIG_GENERIC_IOMAP */
- #endif /* CONFIG_HAS_IOPORT_MAP */
- 
--#ifndef CONFIG_GENERIC_IOMAP
-+/*
-+ * TODO:
-+ * remove this once all architectures replaced their pci_iounmap() with
-+ * a custom implementation of iomem_is_ioport().
-+ */
- #ifndef pci_iounmap
-+#define pci_iounmap pci_iounmap
- #define ARCH_WANTS_GENERIC_PCI_IOUNMAP
-+#endif /* pci_iounmap */
-+
-+/*
-+ * This function is a helper only needed for the generic pci_iounmap().
-+ * It's provided here if the architecture does not provide its own version.
-+ */
-+#ifndef iomem_is_ioport
-+#define iomem_is_ioport iomem_is_ioport
-+static inline bool iomem_is_ioport(void __iomem *addr_raw)
-+{
-+#ifdef CONFIG_HAS_IOPORT
-+	uintptr_t start = (uintptr_t)PCI_IOBASE;
-+	uintptr_t addr = (uintptr_t)addr_raw;
-+
-+	if (addr >= start && addr < start + IO_SPACE_LIMIT)
-+		return true;
- #endif
--#endif
-+	return false;
-+}
-+#endif /* iomem_is_ioport */
- 
- #ifndef xlate_dev_mem_ptr
- #define xlate_dev_mem_ptr xlate_dev_mem_ptr
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 196087a8126e..2cdc6988a102 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -110,6 +110,27 @@ static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
- }
- #endif
- 
-+/*
-+ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
-+ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
-+ * version from asm-generic/io.h is NOT used and instead the second "generic"
-+ * version from lib/iomap.c is used.
-+ *
-+ * There are currently two generic versions because of a difficult cleanup
-+ * process. Namely, the version in lib/iomap.c once was really generic when IA64
-+ * still existed. Today, it's only really used by x86.
-+ *
-+ * TODO: Move the version from lib/iomap.c to x86 specific code. Then, remove
-+ * this ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT-mechanism.
-+ */
-+#ifdef CONFIG_GENERIC_IOMAP
-+#ifndef iomem_is_ioport
-+#define iomem_is_ioport iomem_is_ioport
-+bool iomem_is_ioport(void __iomem *addr);
-+#define ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT
-+#endif /* iomem_is_ioport */
-+#endif /* CONFIG_GENERIC_IOMAP */
-+
- #include <asm-generic/pci_iomap.h>
- 
- #endif
-diff --git a/lib/iomap.c b/lib/iomap.c
-index 4f8b31baa575..eb9a879ebf42 100644
---- a/lib/iomap.c
-+++ b/lib/iomap.c
-@@ -418,12 +418,26 @@ EXPORT_SYMBOL(ioport_map);
- EXPORT_SYMBOL(ioport_unmap);
- #endif /* CONFIG_HAS_IOPORT_MAP */
- 
--#ifdef CONFIG_PCI
--/* Hide the details if this is a MMIO or PIO address space and just do what
-- * you expect in the correct way. */
--void pci_iounmap(struct pci_dev *dev, void __iomem * addr)
-+/*
-+ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
-+ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
-+ * version from asm-generic/io.h is NOT used and instead the second "generic"
-+ * version from this file here is used.
-+ *
-+ * There are currently two generic versions because of a difficult cleanup
-+ * process. Namely, the version in lib/iomap.c once was really generic when IA64
-+ * still existed. Today, it's only really used by x86.
-+ *
-+ * TODO: Move this function to x86-specific code.
-+ */
-+#if defined(ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT)
-+bool iomem_is_ioport(void __iomem *addr)
- {
--	IO_COND(addr, /* nothing */, iounmap(addr));
-+	unsigned long port = (unsigned long __force)addr;
-+
-+	if (port > PIO_OFFSET && port < PIO_RESERVED)
-+		return true;
-+
-+	return false;
- }
--EXPORT_SYMBOL(pci_iounmap);
--#endif /* CONFIG_PCI */
-+#endif /* ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT */
 -- 
-2.43.0
+2.34.1
 
 
