@@ -1,24 +1,24 @@
-Return-Path: <linux-pci+bounces-462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-469-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C7FF804F1A
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:56:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35260804F3C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:56:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81CEC1F21372
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 09:56:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 606C81C20D94
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 09:56:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2105456462;
-	Tue,  5 Dec 2023 09:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD6059B6B;
+	Tue,  5 Dec 2023 09:55:45 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 97CC2D3;
-	Tue,  5 Dec 2023 01:55:34 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 65443184;
+	Tue,  5 Dec 2023 01:55:36 -0800 (PST)
 Received: from SIOS1075.ysato.name (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 605131C069C;
-	Tue,  5 Dec 2023 18:46:54 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 591EB1C075D;
+	Tue,  5 Dec 2023 18:46:56 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -85,9 +85,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v5 26/37] dt-bindings: vendor-prefixes:  Add smi
-Date: Tue,  5 Dec 2023 18:45:45 +0900
-Message-Id: <2dc1fcd6596f78de4197aea04a26252f5f365595.1701768028.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v5 27/37] dt-bindings: ata: ata-generic: Add new targets
+Date: Tue,  5 Dec 2023 18:45:46 +0900
+Message-Id: <d3453bd719eced17afe20fee5392bffcbe156cea.1701768028.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1701768028.git.ysato@users.sourceforge.jp>
 References: <cover.1701768028.git.ysato@users.sourceforge.jp>
@@ -99,27 +99,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add Silicon Mortion Technology Corporation
-https://www.siliconmotion.com/
+Added new ata-generic target.
+- iodata,usl-5p-ata
+- renesas,rts7751r2d-ata
+
+Each boards have simple IDE Interface. Use ATA generic driver.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ Documentation/devicetree/bindings/ata/ata-generic.yaml | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 94ed63d9f7de..a338bdd743ab 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1283,6 +1283,8 @@ patternProperties:
-     description: Skyworks Solutions, Inc.
-   "^smartlabs,.*":
-     description: SmartLabs LLC
-+  "^smi,.*":
-+    description: Silicon Motion Technology Corporation
-   "^smsc,.*":
-     description: Standard Microsystems Corporation
-   "^snps,.*":
+diff --git a/Documentation/devicetree/bindings/ata/ata-generic.yaml b/Documentation/devicetree/bindings/ata/ata-generic.yaml
+index 0697927f3d7e..1025b3b351d0 100644
+--- a/Documentation/devicetree/bindings/ata/ata-generic.yaml
++++ b/Documentation/devicetree/bindings/ata/ata-generic.yaml
+@@ -18,6 +18,8 @@ properties:
+       - enum:
+           - arm,vexpress-cf
+           - fsl,mpc8349emitx-pata
++          - iodata,usl-5p-ata
++          - renesas,rts7751r2d-ata
+       - const: ata-generic
+ 
+   reg:
 -- 
 2.39.2
 
