@@ -1,63 +1,62 @@
-Return-Path: <linux-pci+bounces-499-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D385A80581D
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:02:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F04E4805834
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C56051C21145
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:02:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F7A31C21163
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:08:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 211E567E84;
-	Tue,  5 Dec 2023 15:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF1C67E89;
+	Tue,  5 Dec 2023 15:08:10 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EB9C9;
-	Tue,  5 Dec 2023 07:02:15 -0800 (PST)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5cbcfdeaff3so67388777b3.0;
-        Tue, 05 Dec 2023 07:02:15 -0800 (PST)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BC4B2;
+	Tue,  5 Dec 2023 07:08:07 -0800 (PST)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-daf7ed42ea6so4004130276.0;
+        Tue, 05 Dec 2023 07:08:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701788535; x=1702393335;
+        d=1e100.net; s=20230601; t=1701788886; x=1702393686;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=01RE6ADoqVebgl/Ay4VLc+Nsg6c5Olp3h2V1YYqK/9g=;
-        b=FCaxArgg67/TTMzd5ofAiy6xwfTILhTvQSmgPhrgsXEBOXtrQlWe1bDczFenqbKxS7
-         HRB3YxOQmng9se/nVma5/+h4/jVxmjQrqmbUpDG7Po7mWNQ55TcMfMk3pIor8tycAn20
-         RXzqoXiNLa+JJmiUEg0fg7fui9wZbchLLqQKq3gAUC5s+7sQYtX3a+NW1VhgJiTDNJES
-         L9dSQQmn6FTQiKvVvCyFTYeCNt0bDOOkzZp8UMbK3i0Zntu03bi42irdwPhgMj4Yr17u
-         m3GcxyzZv7/+I1geUBXL3/dl+H992NoSgchOCGG3eN3p+T9aOW61AcvXSTJAIvj9zhlz
-         dBYg==
-X-Gm-Message-State: AOJu0YzHw2XLrowDgOcznX1onQDXjUdds/u+zs7TvxvxYq1Vb+XrLuZp
-	o8xa+W49TjmtHXQtR3zxGJ/Ic351XAxNjQ==
-X-Google-Smtp-Source: AGHT+IEVXjBwfzAXy55fVVV7kVkEgQ08l2O2IcUVdHLuT1nhfP3rzVZ8ElIMnkQ98R6VhcDB0jQ91Q==
-X-Received: by 2002:a05:690c:281:b0:583:c917:7ff0 with SMTP id bf1-20020a05690c028100b00583c9177ff0mr4651337ywb.51.1701788535091;
-        Tue, 05 Dec 2023 07:02:15 -0800 (PST)
+        bh=MBiG9HxZoSdr8SoEZSK/a3wB0uDxAZ7A8FUVFW1eSbA=;
+        b=jmaSdfBLnfanc+fvhAc727DyclHbcR+HhYT0BXD3ovjghZiqqHi3UAHZhHnH3CQ+XV
+         CQ0MVThhZbCmV0H30kOUqmFElOVBeyOfzr900OpWkh9z5vtEO5W9/Z1Md7t9uOe2qoQv
+         y6g5j1uFgvUS2xC/7vvv15Fzz0BDL2xR4ScA+6gP7neBlBFbvJtqdfGJH8kFFhnBd8KI
+         khOmSCEH4MjBB3lSRmWQBrmQicdjcIpsdBZKOCxObLQ1CkEU7pqPgz/0JY6FR/H3ieN0
+         DnPuciBZjfSBf6+YZVQh0AzZ+mRHwj2HspJlgQ9YlExcBqtxso75/x4KwwbKTKsrosFf
+         7oXQ==
+X-Gm-Message-State: AOJu0Yx1d8HIuHkFyHDNlsL8Lc/+QXCYFsb7i3jh0cdVan5GiSZaS/X5
+	W+cr2pqL4oDreiUfrS9FWfetganM8vH6aA==
+X-Google-Smtp-Source: AGHT+IEpci/bJCZF6vWZg8QX/uhC7FNTI3x/3y2x+SHPMWiqo9h3XjYpfU8cdqKo+4eY90A/TKbIow==
+X-Received: by 2002:a5b:4c1:0:b0:db7:dacf:61f0 with SMTP id u1-20020a5b04c1000000b00db7dacf61f0mr4341088ybp.66.1701788886420;
+        Tue, 05 Dec 2023 07:08:06 -0800 (PST)
 Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id i190-20020a816dc7000000b005d76f9e256esm2581439ywc.29.2023.12.05.07.02.11
+        by smtp.gmail.com with ESMTPSA id 64-20020a250d43000000b00da041da21e7sm3123981ybn.65.2023.12.05.07.08.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 07:02:12 -0800 (PST)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5d7a47d06eeso33067067b3.1;
-        Tue, 05 Dec 2023 07:02:11 -0800 (PST)
-X-Received: by 2002:a05:690c:4443:b0:5d8:204e:acdf with SMTP id
- gq3-20020a05690c444300b005d8204eacdfmr3526411ywb.101.1701788531025; Tue, 05
- Dec 2023 07:02:11 -0800 (PST)
+        Tue, 05 Dec 2023 07:08:04 -0800 (PST)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5d4f71f7e9fso45021387b3.0;
+        Tue, 05 Dec 2023 07:08:04 -0800 (PST)
+X-Received: by 2002:a05:690c:b9a:b0:5d3:ec19:d067 with SMTP id
+ ck26-20020a05690c0b9a00b005d3ec19d067mr3373868ywb.35.1701788884398; Tue, 05
+ Dec 2023 07:08:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701768028.git.ysato@users.sourceforge.jp> <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
-In-Reply-To: <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
+References: <cover.1701768028.git.ysato@users.sourceforge.jp> <c796ca5adc21c55f92968070e7f13201fe5b3f4a.1701768028.git.ysato@users.sourceforge.jp>
+In-Reply-To: <c796ca5adc21c55f92968070e7f13201fe5b3f4a.1701768028.git.ysato@users.sourceforge.jp>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Dec 2023 16:01:59 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWXyn5+e8CxihmtFo_6chKkpZ_QyzEzAm_As1xQoDKnpA@mail.gmail.com>
-Message-ID: <CAMuHMdWXyn5+e8CxihmtFo_6chKkpZ_QyzEzAm_As1xQoDKnpA@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v5 17/37] dt-bindings: interrupt-controller:
- renesas,sh7751-intc: Add json-schema
+Date: Tue, 5 Dec 2023 16:07:53 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWZadFO6TF_X_H2aRdGvePLhREvwWfEP==Mm-Ah5BkC3Q@mail.gmail.com>
+Message-ID: <CAMuHMdWZadFO6TF_X_H2aRdGvePLhREvwWfEP==Mm-Ah5BkC3Q@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v5 24/37] dt-binding: sh: cpus: Add SH CPUs json-schema
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
 	Rob Herring <robh+dt@kernel.org>, 
@@ -99,26 +98,111 @@ Hi Sato-san,
 
 On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
 <ysato@users.sourceforge.jp> wrote:
-> Renesas SH7751 INTC json-schema.
+> Renesas SH series and compatible ISA CPUs.
 >
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
 Thanks for your patch!
 
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,sh77=
-51-intc.yaml
+> +++ b/Documentation/devicetree/bindings/sh/cpus.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sh/cpus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas SuperH CPUs
+> +
+> +maintainers:
+> +  - Yoshinori Sato <ysato@users.sourceforge.jp>
+> +
+> +description: |+
+> +  The device tree allows to describe the layout of CPUs in a system thro=
+ugh
+> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu"=
+)
+> +  defining properties for every cpu.
+> +
+> +  Bindings for CPU nodes follow the Devicetree Specification, available =
+from:
+> +
+> +  https://www.devicetree.org/specifications/
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - renesas,sh2a
+> +          - renesas,sh3
+> +          - renesas,sh4
+> +          - renesas,sh4a
+> +          - jcore,j2
+> +      - const: renesas,sh2
 
+Plain "renesas,sh2" should be accepted, too.
+
+> +
+> +  clock-frequency:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      CPU core clock freqency.
+
+frequency
+
+Although clocks below is more flexible.
+
+> +
+> +  clocks: true
+
+maxItems: 1
+
+> +
+> +  clock-names: true
+> +
+> +  reg:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    const: 0
+
+Some SH systems are SMP, so non-zero values should be accepted.
+
+> +
+> +  device_type: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - device_type
+> +
+> +additionalProperties: true
+> +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/interrupt-controller/sh_intc.h>
+> +    #include <dt-bindings/clock/sh7750.h>
 
-make dt_binding_check:
+fatal error: dt-bindings/clock/sh7750.h: No such file or directory
 
-fatal error: dt-bindings/interrupt-controller/sh_intc.h: No such file
-or directory
+sh7750-cpg.h
 
-sh7751-intc.h
+
+> +    cpus {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        cpu: cpu@0 {
+> +            compatible =3D "renesas,sh4", "renesas,sh2";
+> +            device_type =3D "cpu";
+> +            reg =3D <0>;
+> +            clocks =3D <&cpg SH7750_CPG_ICK>;
+> +            clock-names =3D "ick";
+> +            icache-size =3D <16384>;
+> +            icache-line-size =3D <32>;
+> +            dcache-size =3D <32768>;
+> +            dcache-line-size =3D <32>;
+> +        };
+> +    };
+> +...
 
 Gr{oetje,eeting}s,
 
