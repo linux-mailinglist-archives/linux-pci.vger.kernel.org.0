@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-500-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F04E4805834
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:08:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FFE78058CE
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 16:34:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F7A31C21163
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:08:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA2751F2178F
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 15:34:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF1C67E89;
-	Tue,  5 Dec 2023 15:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31D235F1DB;
+	Tue,  5 Dec 2023 15:34:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BC4B2;
-	Tue,  5 Dec 2023 07:08:07 -0800 (PST)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-daf7ed42ea6so4004130276.0;
-        Tue, 05 Dec 2023 07:08:07 -0800 (PST)
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F6183;
+	Tue,  5 Dec 2023 07:34:08 -0800 (PST)
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-58cf894544cso3805165eaf.3;
+        Tue, 05 Dec 2023 07:34:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701788886; x=1702393686;
+        d=1e100.net; s=20230601; t=1701790447; x=1702395247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MBiG9HxZoSdr8SoEZSK/a3wB0uDxAZ7A8FUVFW1eSbA=;
-        b=jmaSdfBLnfanc+fvhAc727DyclHbcR+HhYT0BXD3ovjghZiqqHi3UAHZhHnH3CQ+XV
-         CQ0MVThhZbCmV0H30kOUqmFElOVBeyOfzr900OpWkh9z5vtEO5W9/Z1Md7t9uOe2qoQv
-         y6g5j1uFgvUS2xC/7vvv15Fzz0BDL2xR4ScA+6gP7neBlBFbvJtqdfGJH8kFFhnBd8KI
-         khOmSCEH4MjBB3lSRmWQBrmQicdjcIpsdBZKOCxObLQ1CkEU7pqPgz/0JY6FR/H3ieN0
-         DnPuciBZjfSBf6+YZVQh0AzZ+mRHwj2HspJlgQ9YlExcBqtxso75/x4KwwbKTKsrosFf
-         7oXQ==
-X-Gm-Message-State: AOJu0Yx1d8HIuHkFyHDNlsL8Lc/+QXCYFsb7i3jh0cdVan5GiSZaS/X5
-	W+cr2pqL4oDreiUfrS9FWfetganM8vH6aA==
-X-Google-Smtp-Source: AGHT+IEpci/bJCZF6vWZg8QX/uhC7FNTI3x/3y2x+SHPMWiqo9h3XjYpfU8cdqKo+4eY90A/TKbIow==
-X-Received: by 2002:a5b:4c1:0:b0:db7:dacf:61f0 with SMTP id u1-20020a5b04c1000000b00db7dacf61f0mr4341088ybp.66.1701788886420;
-        Tue, 05 Dec 2023 07:08:06 -0800 (PST)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id 64-20020a250d43000000b00da041da21e7sm3123981ybn.65.2023.12.05.07.08.04
+        bh=jmso+Pyj6M965irEbY4qayX9k2jAUb4uqdD1fkCcZ8k=;
+        b=M/RKZM5r/HuKXnlC1AwALHy5A+1lNsS+ak67KBIDWzWW+e7oHEV4wYIjG0ktIvAWy4
+         o9Ms/FFY8HQaR9r7wE1/rpI9mJrYtszZgS5jYBdYf4n83Xcfd2BZWcJKTnyJ2U83rg01
+         9ea2Z3gl5ClaEU3zl0EHZtuVZfEe/Vg6sE9ggU2KHkH+BjlmEUDiKxFlZQ6oZK3leDFz
+         GoEbykehqL9BhilkUCuvfeKW29oBuJhF1dQye6mHjCNX7nHOGCnWi7fWbAWrdR/fXa03
+         hUMHXiBpFrl1oE1WoZOz3uGdIVrUmju9avN50gbykN8houelAidusLZqtEh7UFXY9oWA
+         EQOQ==
+X-Gm-Message-State: AOJu0YxnUAk7x2svdmMZiOnEuWFZ68xEB0XD86vs/y323StpSZmB2OFx
+	3JPG85CBZO9yOSHGA3VfT+eyowbThClxrA==
+X-Google-Smtp-Source: AGHT+IHN27ceI6iE1qZK+w6GzBy7WUpyNrFEpcC/23a2CRIYnX4f35zGNmGu2LTRothRE/zTzLr3Qg==
+X-Received: by 2002:a05:6820:2221:b0:58d:9942:b49 with SMTP id cj33-20020a056820222100b0058d99420b49mr6327142oob.9.1701790447130;
+        Tue, 05 Dec 2023 07:34:07 -0800 (PST)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id 187-20020a4a14c4000000b0058a2872d1d6sm2412397ood.42.2023.12.05.07.34.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 07:08:04 -0800 (PST)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5d4f71f7e9fso45021387b3.0;
-        Tue, 05 Dec 2023 07:08:04 -0800 (PST)
-X-Received: by 2002:a05:690c:b9a:b0:5d3:ec19:d067 with SMTP id
- ck26-20020a05690c0b9a00b005d3ec19d067mr3373868ywb.35.1701788884398; Tue, 05
- Dec 2023 07:08:04 -0800 (PST)
+        Tue, 05 Dec 2023 07:34:06 -0800 (PST)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3b8b556aadbso2132370b6e.3;
+        Tue, 05 Dec 2023 07:34:06 -0800 (PST)
+X-Received: by 2002:a0d:df11:0:b0:5d5:c6c1:3522 with SMTP id
+ i17-20020a0ddf11000000b005d5c6c13522mr2801851ywe.26.1701790046878; Tue, 05
+ Dec 2023 07:27:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701768028.git.ysato@users.sourceforge.jp> <c796ca5adc21c55f92968070e7f13201fe5b3f4a.1701768028.git.ysato@users.sourceforge.jp>
-In-Reply-To: <c796ca5adc21c55f92968070e7f13201fe5b3f4a.1701768028.git.ysato@users.sourceforge.jp>
+References: <cover.1701768028.git.ysato@users.sourceforge.jp> <e147fd6dd7aba44a6f408c3a42076b207be862fb.1701768028.git.ysato@users.sourceforge.jp>
+In-Reply-To: <e147fd6dd7aba44a6f408c3a42076b207be862fb.1701768028.git.ysato@users.sourceforge.jp>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Dec 2023 16:07:53 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWZadFO6TF_X_H2aRdGvePLhREvwWfEP==Mm-Ah5BkC3Q@mail.gmail.com>
-Message-ID: <CAMuHMdWZadFO6TF_X_H2aRdGvePLhREvwWfEP==Mm-Ah5BkC3Q@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v5 24/37] dt-binding: sh: cpus: Add SH CPUs json-schema
+Date: Tue, 5 Dec 2023 16:27:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWZo5EwZZmgDC-nEwwKz5oLvjpz9iY022kv5KwbV7b_gA@mail.gmail.com>
+Message-ID: <CAMuHMdWZo5EwZZmgDC-nEwwKz5oLvjpz9iY022kv5KwbV7b_gA@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v5 20/37] serial: sh-sci: fix SH4 OF support.
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
 	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
 	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
 	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
@@ -96,119 +96,36 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Sato-san,
 
-On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Renesas SH series and compatible ISA CPUs.
->
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-
 Thanks for your patch!
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sh/cpus.yaml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sh/cpus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas SuperH CPUs
-> +
-> +maintainers:
-> +  - Yoshinori Sato <ysato@users.sourceforge.jp>
-> +
-> +description: |+
-> +  The device tree allows to describe the layout of CPUs in a system thro=
-ugh
-> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu"=
-)
-> +  defining properties for every cpu.
-> +
-> +  Bindings for CPU nodes follow the Devicetree Specification, available =
-from:
-> +
-> +  https://www.devicetree.org/specifications/
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,sh2a
-> +          - renesas,sh3
-> +          - renesas,sh4
-> +          - renesas,sh4a
-> +          - jcore,j2
-> +      - const: renesas,sh2
+On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> - fix earlycon name.
+> - fix earlyprintk hung (NULL pointer reference).
 
-Plain "renesas,sh2" should be accepted, too.
+- fix SERIAL_SH_SCI_EARLYCON enablement
 
-> +
-> +  clock-frequency:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      CPU core clock freqency.
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-frequency
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Although clocks below is more flexible.
-
-> +
-> +  clocks: true
-
-maxItems: 1
-
-> +
-> +  clock-names: true
-> +
-> +  reg:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    const: 0
-
-Some SH systems are SMP, so non-zero values should be accepted.
-
-> +
-> +  device_type: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - device_type
-> +
-> +additionalProperties: true
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sh7750.h>
-
-fatal error: dt-bindings/clock/sh7750.h: No such file or directory
-
-sh7750-cpg.h
-
-
-> +    cpus {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        cpu: cpu@0 {
-> +            compatible =3D "renesas,sh4", "renesas,sh2";
-> +            device_type =3D "cpu";
-> +            reg =3D <0>;
-> +            clocks =3D <&cpg SH7750_CPG_ICK>;
-> +            clock-names =3D "ick";
-> +            icache-size =3D <16384>;
-> +            icache-line-size =3D <32>;
-> +            dcache-size =3D <32768>;
-> +            dcache-line-size =3D <32>;
-> +        };
-> +    };
-> +...
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -658,7 +658,7 @@ config SERIAL_SH_SCI_EARLYCON
+>         depends on SERIAL_SH_SCI=3Dy
+>         select SERIAL_CORE_CONSOLE
+>         select SERIAL_EARLYCON
+> -       default ARCH_RENESAS
+> +       default ARCH_RENESAS || SUPERH
+>
+>  config SERIAL_SH_SCI_DMA
+>         bool "DMA support" if EXPERT
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---
+--=20
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
 .org
 
