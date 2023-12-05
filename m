@@ -1,136 +1,166 @@
-Return-Path: <linux-pci+bounces-484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D76C7804FA9
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 11:00:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F757805001
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 11:14:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 613EA2817E9
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:00:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F8B71C20975
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Dec 2023 10:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A3584B5DF;
-	Tue,  5 Dec 2023 10:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDRJRetf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE0E405DE;
+	Tue,  5 Dec 2023 10:14:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636E5C3
-	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 02:00:08 -0800 (PST)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5d7692542beso28751957b3.3
-        for <linux-pci@vger.kernel.org>; Tue, 05 Dec 2023 02:00:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701770407; x=1702375207; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i93Z/CqJ+EBecddDOnAmVzRbIcIUtO0ehOz5S54CfrQ=;
-        b=YDRJRetfQA80jrjZYAlfT90vA6kpOsfF70/ktTGJ25Lk4nxospYByarCuZVETKVEX+
-         T04DRfvWpjz7YsT/JikHiUPmjRMxckzN8B9eEohxgMhuq7QUvCZndWlRA1q+zTiXqVk8
-         raIS3RFBgbsMdp/iYKWaZ6ehoAazJ2aYoUu+BtQviPhvZxEdC8ELMogHqNsWrplpuegX
-         K/cI+VioTMwDX2wVOK7t+zmNadxVEtG6WgHcaC2menF1zD2agwrSdmG6LpvYGQH7xrhb
-         l6V0g+FLpDsl8+R0qUAVUTFj57n7Ilf6hVnNXQfX7hiOzM/b6Ti9kN1yK9VZvctCVCrZ
-         KiUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701770407; x=1702375207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i93Z/CqJ+EBecddDOnAmVzRbIcIUtO0ehOz5S54CfrQ=;
-        b=ifOcpY0EJJQ+ePJKFKoexw23RY33BWyFqGVQJzlMPk/AqVCnDJXuPBTUuPDwSuSpOI
-         NdR4tU3kR29t1ewca4wDTp2bHLAjQTiGuug6EdIq+oKWHhQAWiDs67dHHOKZ3GulhQmM
-         KVgzbihTVEmHrtwRIihZZ1ibavpIGdUO3XrI6OqD5oziuTfNZJTRrZhPmtoREtt30Az2
-         J/Qn+glomPB1858utuaUOnJ0/opTiWvkUdrYWH0ZPE6/53RZ6gDhjQP4zypWSxv/42A/
-         eFkVYCC2FXupFYnHhhr9txoXGPmX+0MblmB0vfaM4N3166XL7+FG96cH5uwS7qsJsEXq
-         sCbQ==
-X-Gm-Message-State: AOJu0Yx6sv+NweFzr6b/xTOpR8GJN2B1ybW8zqhalTKXqQEIc/10GDt8
-	u0a4iruBaTLJ2Q/irWHNirXHEM3SGXWKfm0oE2brLQ==
-X-Google-Smtp-Source: AGHT+IH5eTb2gwdS22rkWHvbJD/nbpWagDnymfw80erU7E8T3kEYsszdXZXrJ4vDy/yEfDwBBs/YnsUIOf3GGpmbFhk=
-X-Received: by 2002:a0d:ccd6:0:b0:5d7:1940:53d6 with SMTP id
- o205-20020a0dccd6000000b005d7194053d6mr4529462ywd.78.1701770407103; Tue, 05
- Dec 2023 02:00:07 -0800 (PST)
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14E9E1BC6
+	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 02:14:42 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rASOC-0008F0-3E; Tue, 05 Dec 2023 11:10:52 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rASO5-00Diid-K1; Tue, 05 Dec 2023 11:10:45 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rASO5-00Ee1U-8q; Tue, 05 Dec 2023 11:10:45 +0100
+Date: Tue, 5 Dec 2023 11:10:45 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	David Rientjes <rientjes@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Guo Ren <guoren@kernel.org>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>,
+	Max Filippov <jcmvbkbc@gmail.com>, Tom Rix <trix@redhat.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [DO NOT MERGE v5 14/37] clk: Compatible with narrow registers
+Message-ID: <20231205101045.tl43oexzbtelcazr@pengutronix.de>
+References: <cover.1701768028.git.ysato@users.sourceforge.jp>
+ <e27ae1458bd2caabef5423e4ed79fe49813e13b1.1701768028.git.ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1701768028.git.ysato@users.sourceforge.jp> <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
-In-Reply-To: <1fafcf1c70ee4e38847bac1379bcb4555a237505.1701768028.git.ysato@users.sourceforge.jp>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 5 Dec 2023 10:59:54 +0100
-Message-ID: <CACRpkdbFNyEn_ub3moh9f6zbBKzTBt-CPRykUfexd5fXjpKE3Q@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v5 17/37] dt-bindings: interrupt-controller:
- renesas,sh7751-intc: Add json-schema
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Guo Ren <guoren@kernel.org>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Tom Rix <trix@redhat.com>, 
-	Herve Codina <herve.codina@bootlin.com>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="apda54f5ixgehnv6"
+Content-Disposition: inline
+In-Reply-To: <e27ae1458bd2caabef5423e4ed79fe49813e13b1.1701768028.git.ysato@users.sourceforge.jp>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+
+
+--apda54f5ixgehnv6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Yoshinori,
+Hello,
 
-thanks for your patch!
+On Tue, Dec 05, 2023 at 06:45:33PM +0900, Yoshinori Sato wrote:
+> @@ -675,13 +681,17 @@ struct clk_div_table {
+>   * CLK_DIVIDER_BIG_ENDIAN - By default little endian register accesses a=
+re used
+>   *	for the divider register.  Setting this flag makes the register acces=
+ses
+>   *	big endian.
+> + * CLK_DIVIDER_REG_8BIT - by default 32bit register accesses are used for
+> + *	the gate register.  Setting this flag makes the register accesses 8bi=
+t.
+> + * CLK_DIVIDER_REG_16BIT - by default 32bit register accesses are used f=
+or
+> + *	the gate register.  Setting this flag makes the register accesses 16b=
+it.
+>   */
+>  struct clk_divider {
+>  	struct clk_hw	hw;
+>  	void __iomem	*reg;
+>  	u8		shift;
+>  	u8		width;
+> -	u8		flags;
+> +	u32		flags;
+>  	const struct clk_div_table	*table;
+>  	spinlock_t	*lock;
+>  };
 
-On Tue, Dec 5, 2023 at 10:46=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
+I wonder why .flags was made bigger here. The two new flag values would
+still fit into the u8, right?
 
-> +  renesas,icr-irlm:
-> +    type: boolean
-> +    description: If true ICR.IRLM=3D1
+Best regards
+Uwe
 
-That's a bit hard to understand. I suppose it's something that need to some=
-times
-be changed for a system so would be good to document it properly.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> +  renesas,ipr-map:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: |
-> +      IRQ to IPR mapping definition.
-> +      1st - INTEVT
-> +      2nd - Register
-> +      3rd - bit index
+--apda54f5ixgehnv6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Isn't this table always the same for a certain SoC, e.g. compatible
-"renesas,sh7751-intc"?
+-----BEGIN PGP SIGNATURE-----
 
-Then don't keep it in the device tree, just look it up per-soc from a
-table in the driver.
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVu9yQACgkQj4D7WH0S
+/k5q9gf/eD5pj/8ERjn9GwHl1uStF4vOGLa/uZ8iRNZpMi1Kvits+6Yri1aT0IG9
+cVW6KuG3Gmw0GpkFkppfZNMPa9C1NzLJhD5aFtSoSfIkAVA8JNVweDRBV9xaiLxc
+eI1t6ze8m74Pxtm/kTa3kPnm+x6Oe1SRZwF+0D5yEMKwGz4GEhFkGNHK3TI+nYm9
+3gfZcJAeydHL0ORJU8XS4Plj7jQ3WE9a+zxy4Odn3V+KS/2Ck2Kqp6kzJSH5CAVn
+YxeDRNGxrm3AY8y4d2jI/vBTB+4VwJofVczJ1y5ksyistGiyWT59kYjhDLxo87th
+4lS0y2d0FfwkAxslCSxm22vlDDZ+Sw==
+=TMZa
+-----END PGP SIGNATURE-----
 
-Other than that it looks good to me.
-
-Yours,
-Linus Walleij
+--apda54f5ixgehnv6--
 
