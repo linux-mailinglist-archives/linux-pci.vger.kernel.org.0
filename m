@@ -1,194 +1,177 @@
-Return-Path: <linux-pci+bounces-572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-573-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB9D1807056
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 13:55:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B8458072E7
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 15:46:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD3181C20ACB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 12:55:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF02BB20A13
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 14:46:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C3F63716C;
-	Wed,  6 Dec 2023 12:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B7D31A6E;
+	Wed,  6 Dec 2023 14:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="k5hz+99R";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qcsCDE6K"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hhG8CZtO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4717D3;
-	Wed,  6 Dec 2023 04:54:38 -0800 (PST)
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3FEB41FD0E;
-	Wed,  6 Dec 2023 12:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1701867277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vgAv+rqLbU6w0LVClulr1cB9z6lInpwbja3q5sciudk=;
-	b=k5hz+99RYKwZsroqjLBxkB/U3C5hKqBgas0nloQbvkUq3oSf38JP79Bgi5oXNYxtGotrFc
-	A8g1vcs+lZjQCSL5ETYEY2e2V3KiWDbekLlr1f8eyZLus1QKpcCpDj1FknH4RFL9xZWjH8
-	eZ/1Wb41ky8XwGTT8Q+NgQl0SurWYyI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1701867277;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vgAv+rqLbU6w0LVClulr1cB9z6lInpwbja3q5sciudk=;
-	b=qcsCDE6KXwKVocclIX+Mj5qpbPQv11BgmfV/NvxP84Kx+mUcswyGkXGCGNOlLn7JYX1c/X
-	B8IOFuD33BSoyEDw==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id B8ED713B3C;
-	Wed,  6 Dec 2023 12:54:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id uPn0KwxvcGV6dAAAn2gu4w
-	(envelope-from <tzimmermann@suse.de>); Wed, 06 Dec 2023 12:54:36 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ardb@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	bhelgaas@google.com,
-	arnd@arndb.de,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	javierm@redhat.com
-Cc: linux-arch@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH 3/3] arch/x86: Do not include <asm/bootparam.h> in several header files
-Date: Wed,  6 Dec 2023 13:38:39 +0100
-Message-ID: <20231206125433.18420-4-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231206125433.18420-1-tzimmermann@suse.de>
-References: <20231206125433.18420-1-tzimmermann@suse.de>
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 261C219AE;
+	Wed,  6 Dec 2023 06:45:32 -0800 (PST)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B6CNYur000496;
+	Wed, 6 Dec 2023 14:45:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=O8G/wda6BFaQVkzBoWMdtyiVqTBihnOqQRD4FjYIZlM=;
+ b=hhG8CZtOB8WY/Dxi4ljzjRehEvwisB0TePasr5DUtm71M7EtD0Tqu7BW73iPRdOuDN7B
+ Mggsodg7CRc0GXBw2BY9O+qZmwFwlab2qJvcKm5D82iblO/jWnuxTwcZ99RcfEVfdTYM
+ K/ZmsioYaEKitAcVd1HuQZtJr9+9LF3QbrsehEyHQ5nilD58278/ouKQ0ESFhlyEfM1/
+ Q7dh9RzwJuRFVStuBFT10fO1XdpjXZtH40UKV9+eujfXUzr1CksNN35eOTDAKz8C69yt
+ SyKipdRTKY1OEk4SuAM6YVziPaT3fuRmrz7utVOfGlyUOVCzGLakH2aUQY9FpL+Ifq2f Sg== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3utrwq0c9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Dec 2023 14:45:08 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B6Ej7jH008378
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 6 Dec 2023 14:45:07 GMT
+Received: from [10.216.30.166] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 6 Dec
+ 2023 06:44:59 -0800
+Message-ID: <feee5e5b-565e-8575-2bbe-61b35fa8f1dd@quicinc.com>
+Date: Wed, 6 Dec 2023 20:14:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [RFC,v14 0/5] Add DT based PCIe wake support in PCI core driver
+Content-Language: en-US
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>, <petlozup@nvidia.com>,
+        <rafael.j.wysocki@intel.com>, <lpieralisi@kernel.org>,
+        <robh@kernel.org>, <jeffy.chen@rock-chips.com>
+CC: <krzysztof.kozlowski+dt@linaro.org>, <jonathanh@nvidia.com>,
+        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
+        <gregkh@linuxfoundation.org>, <steven.price@arm.com>, <kw@linux.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <vidyas@nvidia.com>
+References: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: 3.40
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [3.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLthqzz6q5hnubohss7ffybi86)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[22];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,linux.ibm.com,gmail.com,paul-moore.com,namei.org,hallyn.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: OHSJrnn0ox_p4kpjO5kiG8M_WkqfhsSJ
+X-Proofpoint-GUID: OHSJrnn0ox_p4kpjO5kiG8M_WkqfhsSJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-06_12,2023-12-06_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ adultscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=870 malwarescore=0
+ suspectscore=0 mlxscore=0 priorityscore=1501 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312060118
 
-Remove the include statement for <asm/bootparam.h> from several header
-files that don't require it. Limits the exposure of the boot parameters
-within the Linux kernel code.
+Hi Manikanta,
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- arch/x86/include/asm/kexec.h       | 1 -
- arch/x86/include/asm/mem_encrypt.h | 2 +-
- arch/x86/include/asm/sev.h         | 3 ++-
- arch/x86/include/asm/x86_init.h    | 2 --
- 4 files changed, 3 insertions(+), 5 deletions(-)
+I don't see any update on this series after comments.
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index c9f6a6c5de3c..91ca9a9ee3a2 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -25,7 +25,6 @@
- 
- #include <asm/page.h>
- #include <asm/ptrace.h>
--#include <asm/bootparam.h>
- 
- struct kimage;
- 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 359ada486fa9..c1a8a3408c18 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -15,7 +15,7 @@
- #include <linux/init.h>
- #include <linux/cc_platform.h>
- 
--#include <asm/bootparam.h>
-+struct boot_params;
- 
- #ifdef CONFIG_X86_MEM_ENCRYPT
- void __init mem_encrypt_init(void);
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 5b4a1ce3d368..8dad8b1613bf 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -13,7 +13,6 @@
- 
- #include <asm/insn.h>
- #include <asm/sev-common.h>
--#include <asm/bootparam.h>
- #include <asm/coco.h>
- 
- #define GHCB_PROTOCOL_MIN	1ULL
-@@ -22,6 +21,8 @@
- 
- #define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
- 
-+struct boot_params;
-+
- enum es_result {
- 	ES_OK,			/* All good */
- 	ES_UNSUPPORTED,		/* Requested operation not supported */
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index c878616a18b8..f062715578a0 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -2,8 +2,6 @@
- #ifndef _ASM_X86_PLATFORM_H
- #define _ASM_X86_PLATFORM_H
- 
--#include <asm/bootparam.h>
--
- struct ghcb;
- struct mpc_bus;
- struct mpc_cpu;
--- 
-2.43.0
+Is there  any plans to take up this series.
 
+Thanks & Regards,
+
+Krishna Chaitanya.
+
+On 2/8/2023 4:46 PM, Manikanta Maddireddy wrote:
+> Below series [1] attempted to support DT based PCIe wake feature in generic
+> PCI core driver. This series was left at v13 and final comments are not
+> addressed. I am continuing this series from v14 by addressing all comments
+> in v13. I dropped rockchip device tree patch because I don't have hardware
+> to verify it. Instead, I verified these patches on NVIDIA Jetson AGX Orin
+> Developer Kit and included its device tree changes in this series.
+>
+> [1] https://lore.kernel.org/all/20171226023646.17722-1-jeffy.chen@rock-chips.com/
+>
+> Changes in v14:
+> Updated commit message for DT bindings patch to reflect that DT properties
+> are tied to PCI-PCI Bridge.
+> Addressed review comments on PCI interrupt parsing patch.
+> Dropped rockchip device tree patch.
+> Added Jetson AGX OrinDeveloper Kit device tree and Tegra PMC patches.
+>
+> Changes in v13:
+> Fix compiler error reported by kbuild test robot <fengguang.wu@intel.com>
+>
+> Changes in v12:
+> Only add irq definitions for PCI devices and rewrite the commit message.
+> Enable the wake irq in noirq stage to avoid possible irq storm.
+>
+> Changes in v11:
+> Address Brian's comments.
+> Only support 1-per-device PCIe WAKE# pin as suggested.
+> Move to pcie port as Brian suggested.
+>
+> Changes in v10:
+> Use device_set_wakeup_capable() instead of device_set_wakeup_enable(),
+> since dedicated wakeirq will be lost in device_set_wakeup_enable(false).
+>
+> Changes in v9:
+> Add section for PCI devices and rewrite the commit message.
+> Fix check error in .cleanup().
+> Move dedicated wakeirq setup to setup() callback and use
+> device_set_wakeup_enable() to enable/disable.
+> Rewrite the commit message.
+>
+> Changes in v8:
+> Add optional "pci", and rewrite commit message.
+> Add pci-of.c and use platform_pm_ops to handle the PCIe WAKE# signal.
+> Rewrite the commit message.
+>
+> Changes in v7:
+> Move PCIE_WAKE handling into pci core.
+>
+> Changes in v6:
+> Fix device_init_wake error handling, and add some comments.
+>
+> Changes in v5:
+> Move to pci.txt
+> Rebase.
+> Use "wakeup" instead of "wake"
+>
+> Changes in v3:
+> Fix error handling.
+>
+> Changes in v2:
+> Use dev_pm_set_dedicated_wake_irq.
+>
+> Jeffy Chen (3):
+>    dt-bindings: PCI: Add definition of PCIe WAKE# irq and PCI irq
+>    of/irq: Adjust of_pci_irq parsing for multiple interrupts
+>    PCI / PM: Add support for the PCIe WAKE# signal for OF
+>
+> Manikanta Maddireddy (2):
+>    arm64: tegra: Add PCIe port node with PCIe WAKE# for C1 controller
+>    soc/tegra: pmc: Add Tegra234 PCIe wake event
+>
+>   Documentation/devicetree/bindings/pci/pci.txt |  8 +++
+>   .../nvidia/tegra234-p3737-0000+p3701-0000.dts | 11 ++++
+>   drivers/pci/of.c                              | 63 ++++++++++++++++++-
+>   drivers/pci/pci-driver.c                      | 10 +++
+>   drivers/pci/pci.c                             |  7 +++
+>   drivers/pci/pci.h                             |  8 +++
+>   drivers/soc/tegra/pmc.c                       |  1 +
+>   7 files changed, 105 insertions(+), 3 deletions(-)
+>
 
