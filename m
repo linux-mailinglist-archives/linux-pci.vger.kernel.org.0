@@ -1,150 +1,134 @@
-Return-Path: <linux-pci+bounces-590-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-591-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05D88075CF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 17:52:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304868075EB
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 18:00:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F9E2B20D5F
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 16:52:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FCD81C2088D
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 17:00:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB3FB48CE8;
-	Wed,  6 Dec 2023 16:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F122B49F69;
+	Wed,  6 Dec 2023 16:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJOLyo52"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E795AB2
-	for <linux-pci@vger.kernel.org>; Wed,  6 Dec 2023 08:52:42 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rAv8K-00013G-NQ; Wed, 06 Dec 2023 17:52:24 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rAv8J-00E0DN-VC; Wed, 06 Dec 2023 17:52:23 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rAv8J-000J6C-2s;
-	Wed, 06 Dec 2023 17:52:23 +0100
-Message-ID: <e314466b31dd8e88212ae5d7ac2fecf26b851829.camel@pengutronix.de>
-Subject: Re: [PATCH 3/9] PCI: imx6: Simplify reset handling by using by
- using *_FLAG_HAS_*_RESET
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Frank Li <Frank.Li@nxp.com>, imx@lists.linux.dev, Richard Zhu
- <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Lorenzo
- Pieralisi <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,  Rob Herring <robh@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
- <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "open list:PCI
- DRIVER FOR IMX6" <linux-pci@vger.kernel.org>,  "moderated list:PCI DRIVER
- FOR IMX6" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE
- AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>
-Date: Wed, 06 Dec 2023 17:52:23 +0100
-In-Reply-To: <20231206155903.566194-4-Frank.Li@nxp.com>
-References: <20231206155903.566194-1-Frank.Li@nxp.com>
-	 <20231206155903.566194-4-Frank.Li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2D249F62;
+	Wed,  6 Dec 2023 16:59:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62A39C433C8;
+	Wed,  6 Dec 2023 16:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701881995;
+	bh=xdGLbLZlKz6hqDzxxH4MqX0sG3ItG6KAFGtCvH4gnsg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MJOLyo52HSa1ezkiZilGDaJk8L3Ol+4TVWOFf2jN/7JZLdwsFDlmL2DvKVIonkRdi
+	 3fh5GT7VbTejQ/xnXDT4CHQXfs6JwDdajAVQGRpWv+BrPWR7T16yt2bI4sh8QmVU/U
+	 NEO/F5c0EVGAgGrAcr3sMeLNty1noQR5qil2W0V/kYk4ci4M97mv8ecRo/e3l1V5zV
+	 qQ3TqEMfeJaGNX2XEBnCPKj/J36uThgLrbIM6SOC3ilUXEAdNQ0LdOvybK/ykg4Dw2
+	 rC8p+XzXdMWcPRwjqqjvFnFbWkbQLhfKpf7lnFWNAdDNZK7wI9Ib3eWTm5C1dlEzeU
+	 1tWiAKmXvvduw==
+Date: Wed, 6 Dec 2023 10:59:53 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: imx@lists.linux.dev, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	"open list:PCI DRIVER FOR IMX6" <linux-pci@vger.kernel.org>,
+	"moderated list:PCI DRIVER FOR IMX6" <linux-arm-kernel@lists.infradead.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/9] PCI: imx6: Using "linux,pci-domain" as slot ID
+Message-ID: <20231206165953.GA717921@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXCmSOwTWR6AVpGB@lizhi-Precision-Tower-5810>
 
-Hi Frank,
+On Wed, Dec 06, 2023 at 11:50:16AM -0500, Frank Li wrote:
+> On Wed, Dec 06, 2023 at 10:36:56AM -0600, Bjorn Helgaas wrote:
+> > In subject, maybe you mean "Use 'linux,pci-domain' as slot ID"?
+> > "Using" is the wrong verb form here.
+> > 
+> > On Wed, Dec 06, 2023 at 10:58:58AM -0500, Frank Li wrote:
+> > > Avoid use get slot id by compared with register physical address. If there
+> > > are more than 2 slots, compared logic will become complex.
+> > 
+> > But this doesn't say anything about "linux,pci-domain", and I don't
+> > see anything about a register physical address in the patch.
+> > 
+> > Maybe this commit log was meant for a different patch?  I'm confused.
+> > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pci-imx6.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > > index 62d77fabd82a..239ef439ba70 100644
+> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > > @@ -33,6 +33,7 @@
+> > >  #include <linux/pm_domain.h>
+> > >  #include <linux/pm_runtime.h>
+> > >  
+> > > +#include "../../pci.h"
+> > >  #include "pcie-designware.h"
+> > >  
+> > >  #define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
+> > > @@ -1333,6 +1334,11 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+> > >  					     "Failed to get PCIEPHY reset control\n");
+> > >  	}
+> > >  
+> > > +	/* Using linux,pci-domain as PCI slot id */
+> > > +	imx6_pcie->controller_id = of_get_pci_domain_nr(node);
+> > > +	if (imx6_pcie->controller_id)
+> > > +		imx6_pcie->controller_id = 0;
+> > 
+> > I don't understand what this is doing.  It looks the same as just:
+> 
+> Good capture. It should be 
+> if (imx6_pcie->controller_id < 0)
+> 	imx6_pcie->controller_id = 0;
+> 
+> for only one PCI controller case. I just tested first one slot before send
+> patch, so not met problem.
+> 
+> Previously, we use below logic
+> 	if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+> 		imx6_pcie->controller_id = 1;
+> 
+> It is not good to depend on register's base address. If there are 3
+> controllers, check logic will becomoe ugly.
 
-On Mi, 2023-12-06 at 10:58 -0500, Frank Li wrote:
-> Refactors the reset handling logic in the imx6 PCI driver by adding
-> IMX6_PCIE_FLAG_HAS_*_RESET bitmask define for drvdata::flags.
->=20
-> The drvdata::flags and a bitmask ensures a cleaner and more scalable
-> switch-case structure for handling reset.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 115 +++++++++++---------------
->  1 file changed, 47 insertions(+), 68 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controll=
-er/dwc/pci-imx6.c
-> index bcf52aa86462..62d77fabd82a 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-[...]
-> @@ -696,18 +698,13 @@ static void imx6_pcie_clk_disable(struct imx6_pcie =
-*imx6_pcie)
-> =20
->  static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
-> -	switch (imx6_pcie->drvdata->variant) {
-> -	case IMX7D:
-> -	case IMX8MQ:
-> -	case IMX8MQ_EP:
-> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_PHY_RESET))
+Makes sense.  If the previous code depended on the base address, this
+patch would make more sense if it contained both the addition of the
+of_get_pci_domain_nr() call and the removal of the base address code.
 
-This check is not strictly necessary. If the flag is not set,
-imx6_pcie->pciephy_reset is guaranteed to be NULL, and then
-reset_control_assert() is a no-op. Same for the other (de)assert
-calls below.
-
-[...]
-
-> @@ -1335,36 +1319,24 @@ static int imx6_pcie_probe(struct platform_device=
- *pdev)
->  					     "failed to get pcie phy\n");
->  	}
-> =20
-> -	switch (imx6_pcie->drvdata->variant) {
-> -	case IMX7D:
-> -		if (dbi_base->start =3D=3D IMX8MQ_PCIE2_BASE_ADDR)
-> -			imx6_pcie->controller_id =3D 1;
-> -
-> -		imx6_pcie->pciephy_reset =3D devm_reset_control_get_exclusive(dev,
-> -									    "pciephy");
-> -		if (IS_ERR(imx6_pcie->pciephy_reset)) {
-> -			dev_err(dev, "Failed to get PCIEPHY reset control\n");
-> -			return PTR_ERR(imx6_pcie->pciephy_reset);
-> -		}
-> -
-> -		imx6_pcie->apps_reset =3D devm_reset_control_get_exclusive(dev,
-> -									 "apps");
-> -		if (IS_ERR(imx6_pcie->apps_reset)) {
-> -			dev_err(dev, "Failed to get PCIE APPS reset control\n");
-> -			return PTR_ERR(imx6_pcie->apps_reset);
-> -		}
-> -		break;
-> -	case IMX8MM:
-> -	case IMX8MM_EP:
-> -	case IMX8MP:
-> -	case IMX8MP_EP:
-> -		imx6_pcie->apps_reset =3D devm_reset_control_get_exclusive(dev,
-> -									 "apps");
-> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_APP_RESET)) {
-> +		imx6_pcie->apps_reset =3D devm_reset_control_get_exclusive(dev, "apps"=
-);
-[...]
-
-I wonder whether we should just defer the check whether apps/pciephy
-resets should be used to the device tree validation, and make this an
-unconditional call to get an optional reset control:
-
-	imx6_pcie->apps_reset =3D devm_reset_control_get_optional_exclusive(dev, "=
-apps");
-
-regards
-Philipp
+> > Maybe this is a typo?  As written, it doesn't look like there's any
+> > point in calling of_get_pci_domain_nr().
+> > 
+> > >  	switch (imx6_pcie->drvdata->variant) {
+> > >  	case IMX7D:
+> > >  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+> > > -- 
+> > > 2.34.1
+> > > 
 
