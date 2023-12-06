@@ -1,96 +1,235 @@
-Return-Path: <linux-pci+bounces-586-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-587-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FF2F8074F9
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 17:30:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAB74807520
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 17:35:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2481D1F21267
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 16:30:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9EB7128105B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 16:35:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577AA3EA6D;
-	Wed,  6 Dec 2023 16:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Okyf9gZw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB4C39FF5;
+	Wed,  6 Dec 2023 16:35:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3927C46547
-	for <linux-pci@vger.kernel.org>; Wed,  6 Dec 2023 16:30:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8949FC433C8;
-	Wed,  6 Dec 2023 16:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701880228;
-	bh=54nqvAC06q7MZop7IUNr1tWlx3uaNvOvbO3JbUJUtMM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Okyf9gZwGyOJHJIZHahbqv2GEc/XS6v9NzPgJ7+FGYnf4Rv40P42iiKoPA40Imgoj
-	 sW1qyfqiPeJpQbLUx4nX4KPK5UkKZefKrN68bOYoHTfu/w20FC/yONuGYdZ+AkVD9i
-	 YD8aKwE268WZwFy7RnNKMXw8th9gfvAOcyzrgFY/MMJKoFCaC9LqksUSx13xeE/3Bf
-	 tyGhFcwh/VYVODiXyFUkz5lyH7TUROPjtbkXFtIlCZyHgrxvti8i1oetE4FOIo+qX+
-	 sGuqgSxmLL9/0dQgoEHVRkxvFuG5VCZe69RT7Dy4G6DJE4czyY0kbnYQq1pkgjU7dQ
-	 tIyaN8ZS3/i+Q==
-Date: Wed, 6 Dec 2023 10:30:26 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>, linux-pci@vger.kernel.org,
-	orden.e.smith@intel.com, samruddh.dhope@intel.com,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Grant Grundler <grundler@chromium.org>,
-	Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
-	Rajat Jain <rajatja@chromium.org>
-Subject: Re: [PATCH] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20231206163026.GA716688@bhelgaas>
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67FDD5F;
+	Wed,  6 Dec 2023 08:35:51 -0800 (PST)
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-58dd5193db4so592109eaf.1;
+        Wed, 06 Dec 2023 08:35:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701880551; x=1702485351;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RnltdkPvqiE0SLkWecJ3YZb5+WkHMQll5p7sUNdf2Nw=;
+        b=KLFYnSj5A2GEi0815JIOu16WVwyCM4TwKUg0CkAKkBuXmMHSPAqf8hCSY4HsJKE5Uz
+         duZTaMnz7yUc2dDboSo49kjntBpifWo/DRCe+J3yUqZIAovkgc5PkBeAZ4sjKUT8WHZE
+         il090OiPf5XdhulAOkV1WPHkpJxBc1ClNKN/FE5kxb5iXaQmUromJV+IbDcn78k1R+pl
+         qqu2FHGwjP9a5ROly3LUeQL/itbzqQRxZ0lxj7w8hRS3KdGvg3z1j4Np3BL/t+8Q9ild
+         QXgLUO9T3k2dBGDaOKiFZyANrdjCh5BlckfBYt0fUeqzCbpnkgH6F6vWEmxq+OjppM85
+         kQtQ==
+X-Gm-Message-State: AOJu0Ywxmj6d/jMCFQPbYBulspPhWDYpMBoIz6cHU6FlxVD9hALLYcxa
+	X7HYUJQRu4O9BnMjqIS3sUNccFnykVB2wlFYHEo=
+X-Google-Smtp-Source: AGHT+IFpMFlVK/t1b9fMj+2PJaVuQaOhHx6XBFAUEimHYj1Jk1xeQUg3ZGuroBcDfz+Jv7tTpUepQpBmwwfHs/85uO4=
+X-Received: by 2002:a05:6870:b4a0:b0:1fb:5e42:5096 with SMTP id
+ y32-20020a056870b4a000b001fb5e425096mr1917272oap.5.1701880551180; Wed, 06 Dec
+ 2023 08:35:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAd53p5+x44XLLXYDKceZrgO0z-bCbFPqwR1Qw6Esjv+dUjh2w@mail.gmail.com>
+References: <20231115091612.580685-1-LeoLiu-oc@zhaoxin.com> <20231115091612.580685-2-LeoLiu-oc@zhaoxin.com>
+In-Reply-To: <20231115091612.580685-2-LeoLiu-oc@zhaoxin.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 6 Dec 2023 17:35:38 +0100
+Message-ID: <CAJZ5v0ig2+uv4kF0SjAByvcmBF9auhY_1OVrJvjKTVJK23=cSg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
+To: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
+Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, 
+	tony.luck@intel.com, bp@alien8.de, bhelgaas@google.com, 
+	robert.moore@intel.com, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, 
+	ErosZhang@zhaoxin.com, LeoLiu@zhaoxin.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[+cc Grant, Rajat, Rajat]
+On Wed, Nov 15, 2023 at 10:16=E2=80=AFAM LeoLiu-oc <LeoLiu-oc@zhaoxin.com> =
+wrote:
+>
+> From: leoliu-oc <leoliu-oc@zhaoxin.com>
+>
+> The purpose of the function apei_hest_parse_aer() is used to parse and
+> extract register value from HEST PCIe AER structures.
+>
+> Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
+> ---
+>  drivers/acpi/apei/hest.c | 77 ++++++++++++++++++++++++++++++++++++++--
+>  include/acpi/actbl1.h    |  7 ++++
+>  include/acpi/apei.h      |  8 +++++
+>  3 files changed, 90 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
+> index 6aef1ee5e1bd..7fb797fdc1b1 100644
+> --- a/drivers/acpi/apei/hest.c
+> +++ b/drivers/acpi/apei/hest.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/kdebug.h>
+>  #include <linux/highmem.h>
+>  #include <linux/io.h>
+> +#include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <acpi/apei.h>
+>  #include <acpi/ghes.h>
+> @@ -86,9 +87,81 @@ static int hest_esrc_len(struct acpi_hest_header *hest=
+_hdr)
+>         return len;
+>  };
+>
+> -typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void =
+*data);
+> +#ifdef CONFIG_ACPI_APEI
+> +static bool hest_match_pci_devfn(struct acpi_hest_aer_common *p,
+> +                               struct pci_dev *dev)
+> +{
+> +       return ACPI_HEST_SEGMENT(p->bus) =3D=3D pci_domain_nr(dev->bus) &=
+&
+> +               ACPI_HEST_BUS(p->bus) =3D=3D dev->bus->number &&
+> +               p->device =3D=3D PCI_SLOT(dev->devfn) &&
+> +               p->function =3D=3D PCI_FUNC(dev->devfn);
+> +}
+> +
+> +static bool hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr,
+> +                               struct pci_dev *dev)
+> +{
+> +       u16 hest_type =3D hest_hdr->type;
+> +       u8 pcie_type =3D pci_pcie_type(dev);
+> +       struct acpi_hest_aer_common *common;
+> +
+> +       common =3D (struct acpi_hest_aer_common *)(hest_hdr + 1);
+> +
+> +       switch (hest_type) {
+> +       case ACPI_HEST_TYPE_AER_ROOT_PORT:
+> +               if (pcie_type !=3D PCI_EXP_TYPE_ROOT_PORT)
+> +                       return false;
+> +       break;
+> +       case ACPI_HEST_TYPE_AER_ENDPOINT:
+> +               if (pcie_type !=3D PCI_EXP_TYPE_ENDPOINT)
+> +                       return false;
+> +       break;
+> +       case ACPI_HEST_TYPE_AER_BRIDGE:
+> +               if (pcie_type !=3D PCI_EXP_TYPE_PCI_BRIDGE &&
+> +                   pcie_type !=3D PCI_EXP_TYPE_PCIE_BRIDGE)
+> +                       return false;
+> +       break;
+> +       default:
+> +               return false;
+> +       break;
+> +       }
+> +
+> +       if (common->flags & ACPI_HEST_GLOBAL)
+> +               return true;
+> +
+> +       if (hest_match_pci_devfn(common, dev))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data)
+> +{
+> +       struct hest_parse_aer_info *info =3D data;
+> +
+> +       if (!hest_source_is_pcie_aer(hest_hdr, info->pci_dev))
+> +               return 0;
+> +
+> +       switch (hest_hdr->type) {
+> +       case ACPI_HEST_TYPE_AER_ROOT_PORT:
+> +               info->hest_aer_root_port =3D (struct acpi_hest_aer_root *=
+)hest_hdr;
+> +               return 1;
+> +       break;
+> +       case ACPI_HEST_TYPE_AER_ENDPOINT:
+> +               info->hest_aer_endpoint =3D (struct acpi_hest_aer *)hest_=
+hdr;
+> +               return 1;
+> +       break;
+> +       case ACPI_HEST_TYPE_AER_BRIDGE:
+> +               info->hest_aer_bridge =3D (struct acpi_hest_aer_bridge *)=
+hest_hdr;
+> +               return 1;
+> +       break;
+> +       default:
+> +               return 0;
+> +       break;
+> +       }
+> +}
+> +#endif
+>
+> -static int apei_hest_parse(apei_hest_func_t func, void *data)
+> +int apei_hest_parse(apei_hest_func_t func, void *data)
+>  {
+>         struct acpi_hest_header *hest_hdr;
+>         int i, rc, len;
+> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+> index a33375e055ad..90c27dc5325f 100644
+> --- a/include/acpi/actbl1.h
+> +++ b/include/acpi/actbl1.h
 
-On Wed, Dec 06, 2023 at 10:18:56AM +0800, Kai-Heng Feng wrote:
-> On Wed, Nov 15, 2023 at 5:00 AM Nirmal Patel <nirmal.patel@linux.intel.com> wrote:
-> > On Wed, 2023-11-08 at 16:49 +0200, Kai-Heng Feng wrote:
-> > > On Wed, Nov 8, 2023 at 12:30 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> ...
+This is an ACPICA header and it cannot be modified just like this.
 
-> > > > I assume you mean to revert 04b12ef163d1 ("PCI: vmd: Honor
-> > > > ACPI _OSC on PCIe features").  That appeared in v5.17, and it
-> > > > fixed (or at least prevented) an AER message flood.  We can't
-> > > > simply revert 04b12ef163d1 unless we first prevent that AER
-> > > > message flood in another way.
-> > >
-> > > The error is "correctable".  Does masking all correctable AER
-> > > error by default make any sense? And add a sysfs knob to make it
-> > > optional.
-> >
-> > I assume sysfs knob requires driver reload. right? Can you send a
-> > patch?
-> 
-> What I mean is to mask Correctable Errors by default on *all*
-> rootports, and create a new sysfs knob to let user decide if
-> Correctable Errors should be unmasked.
+The way to do that is to submit a pull request with the desired change
+to the upstream ACPICA project on GitHub and add a Link tag pointing
+to the upstream PR to the corresponding Linux patch.  Then, the Linux
+patch can only be applied after the corresponding upstream PR has been
+merged.
 
-I don't think we should mask Correctable Errors by default.  Even
-though they've been corrected by hardware and no software action is
-required, I think these errors are valuable signals about Link
-integrity.
+Thanks!
 
-I think rate-limiting and/or reporting on the *frequency* of
-Correctable Errors would make a lot of sense.  We had some work toward
-this recently, but it hasn't quite gotten finished yet.
-
-The most recent work I'm aware of is this:
-https://lore.kernel.org/r/20230606035442.2886343-1-grundler@chromium.org
-
-Bjorn
+> @@ -1629,6 +1629,13 @@ struct acpi_hest_generic_status {
+>         u32 error_severity;
+>  };
+>
+> +struct hest_parse_aer_info {
+> +       struct pci_dev *pci_dev;
+> +       struct acpi_hest_aer *hest_aer_endpoint;
+> +       struct acpi_hest_aer_root *hest_aer_root_port;
+> +       struct acpi_hest_aer_bridge *hest_aer_bridge;
+> +};
+> +
+>  /* Values for block_status flags above */
+>
+>  #define ACPI_HEST_UNCORRECTABLE             (1)
+> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+> index dc60f7db5524..d12e6b6c4546 100644
+> --- a/include/acpi/apei.h
+> +++ b/include/acpi/apei.h
+> @@ -33,10 +33,18 @@ void __init acpi_ghes_init(void);
+>  static inline void acpi_ghes_init(void) { }
+>  #endif
+>
+> +typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void =
+*data);
+> +int apei_hest_parse(apei_hest_func_t func, void *data);
+> +
+>  #ifdef CONFIG_ACPI_APEI
+>  void __init acpi_hest_init(void);
+> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data);
+>  #else
+>  static inline void acpi_hest_init(void) { }
+> +static inline int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr,=
+ void *data)
+> +{
+> +       return 0;
+> +}
+>  #endif
+>
+>  int erst_write(const struct cper_record_header *record);
+> --
+> 2.34.1
+>
 
