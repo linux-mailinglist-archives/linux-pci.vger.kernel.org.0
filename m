@@ -1,205 +1,248 @@
-Return-Path: <linux-pci+bounces-537-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-538-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84CD0806480
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 03:02:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB04F8064E4
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 03:19:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37FF2282279
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 02:02:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 00C1F1C2110C
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Dec 2023 02:19:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A384E1856;
-	Wed,  6 Dec 2023 02:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51D353B8;
+	Wed,  6 Dec 2023 02:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nSyd/N0Y";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="pIXjG4tP"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Fk6GVZNu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB36181;
-	Tue,  5 Dec 2023 18:02:28 -0800 (PST)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B61xA4h029542;
-	Wed, 6 Dec 2023 02:01:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-11-20;
- bh=lke4uZRb/q22qW4sYF4uVDKvHCjTPpNA9lTOQnW41Y0=;
- b=nSyd/N0Y/PpTL3wk5xbpz65CXZD8Iqix2Kl2gU9KN+q3AFRrZqV93tXZ1H0b1xBj0NOs
- E26deA6t02vdsuV69QnLfSyEJV5USTeTvdempcDZmordCXgBwUjcgVdUBn1Mc3+Sb2sc
- IJfG6IOC8FPqAl67RMnEVx32uhrZ9+DDV033IN+LELVgoiDYSXWWQKEOV24Jay73aXCz
- jl3i2ly2IlxiD2Ci+ODxbHz9J4KN8lngcKhxabvYEivALgRsx36eZj6aX7C5/CZkkYTo
- UK1v1SnKQ4vDB/jsSMNhViV+1ubl7P9pg3hM1zJDZjXzczD0Q3eeomG/h49YVOAgUN28 4g== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3utdda04xw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 06 Dec 2023 02:01:37 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B600kpn039912;
-	Wed, 6 Dec 2023 02:01:37 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2040.outbound.protection.outlook.com [104.47.57.40])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3utan545ve-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 06 Dec 2023 02:01:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JS2ERP1MtLT7ogqdSul2BMn/xltKqYQfuKV1AAaSknAMPPX2puYecnS1Gu/kzwOFYR7xkR/gpneyHkBoxghs8b2w98+xlsBoufG9OPTbAf6LBaJ/l/kc07NTuRBInMPNVYL3YYIaXmRoFW/nvcjW57+NDCJZQ+Z+WwUfvvvmeUZKVjG7THXVPZ9yckszzvN70+dvsKoQ+T00sZixLwTozM6i4cFnDHm6GaHq4QhYzqBLEaIgmbPEO6DQXIueQoNDTLykHtg0swYxv7yeS7jVTD2RpJm8HmKXAV+GZRO5maj1tJL3HDai7qlMfZf3B7KHqw2PsPtHLTvqUzZs/Pd44w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lke4uZRb/q22qW4sYF4uVDKvHCjTPpNA9lTOQnW41Y0=;
- b=lIea36HempST+knFAn/wq8DiFSfjYqyVQZSZZpjQjyQRlvutS/rxt2eHAFF5ezwqlH2NkB22ViBxG3jOIsNOThE8ssQhhkveIvT3qKTfIEPIXqUkaqvNaraD1s2cWfhtR1HhAmiG1f+7+FaKglBk9ZlCvE+JbhWPvQv+jynm+zhmnpeG41SnOUSWNOCD3x5Opbrzi335Xc0eKoQ8Ltho+Hzr0CGO2X4jkMMOzHEHBNveGHBaAJy7RnGcpPlwgrnc4s4ceG/Jk7sG7oBSQdkxAgGcRbl3ndqih5vPYv1+UxoPE1PobBHV8MN4mwqdmVCyzavPmL6yaXZlOIuI8OKTSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lke4uZRb/q22qW4sYF4uVDKvHCjTPpNA9lTOQnW41Y0=;
- b=pIXjG4tPwqpwRpdgCB8iKrhO++jT4Pa+8UsW5lcOFhRH80YnvnxHDvv6+FIHC30DzOJ7HYkNDWkhdCdMb7wfMk6tGb4iWhb+FNBcL97pkEB+3H7cZQcijRU3aeFY5gy7q8e0Nc+pAZWZiE2vR++hwK9Q0cbDvUwnOA5zpwW22ws=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by DS0PR10MB7204.namprd10.prod.outlook.com (2603:10b6:8:f3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.25; Wed, 6 Dec
- 2023 02:01:34 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::2b0c:62b3:f9a9:5972]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::2b0c:62b3:f9a9:5972%3]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
- 02:01:34 +0000
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Thomas
- Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov
- <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas
- <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy
- <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org, James
- Smart <james.smart@broadcom.com>,
-        Dick Kennedy
- <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/6] x86: Use PCI_HEADER_TYPE_* instead of literals
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1jzpsnl9q.fsf@ca-mkp.ca.oracle.com>
-References: <20231201225609.GA534714@bhelgaas>
-Date: Tue, 05 Dec 2023 21:01:32 -0500
-In-Reply-To: <20231201225609.GA534714@bhelgaas> (Bjorn Helgaas's message of
-	"Fri, 1 Dec 2023 16:56:09 -0600")
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR04CA0008.namprd04.prod.outlook.com
- (2603:10b6:a03:217::13) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81A218D
+	for <linux-pci@vger.kernel.org>; Tue,  5 Dec 2023 18:19:10 -0800 (PST)
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 393F93F65A
+	for <linux-pci@vger.kernel.org>; Wed,  6 Dec 2023 02:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1701829149;
+	bh=+zuYEp3yff8WWzahjssd0iIp8sW0Emgd+VXlxZsGd9g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=Fk6GVZNu8ZCCm/s1ZmB1jPbCB+TxaINqOa+jCcZDrAdGnXgubVJh5CZR35wkVbFrU
+	 8/XXxmXguu0oNBkmmdX/r726Xj8iaK/tXadwFFU2NOVPS6YXHi35kS19xCMT6bccWd
+	 Bwum8Nb0v2zkaRCSZqcbFGlYqN/wd4+BQulrcqbrJADLuWg9fRtcPsbPt5lzYwDVk1
+	 8jFgXlCXD6V04br6M6bhzHpZOtsSc8hN2w0udffkty0P3Z4F0y2iAFc+m3e5jbLx3i
+	 CQKKXRRsUKS7d+XVMxBuee6BcEu1BugMsEupdweZvnMpX13wCN06JMBYaE2w9isLYd
+	 Mk4ROyMT/bDZg==
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5c6245bc7caso2866257a12.3
+        for <linux-pci@vger.kernel.org>; Tue, 05 Dec 2023 18:19:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701829148; x=1702433948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+zuYEp3yff8WWzahjssd0iIp8sW0Emgd+VXlxZsGd9g=;
+        b=SBSS8JzykJ7OH0Dkfn5mB2nSxUhL747SUdUucJ3rw99zOZrttUt1aFbZkPsAzlBdGX
+         S5c2W7RzWDxTWxh7Ht08d9mtST4WSYkdgTlwGq+ApjubMO95UPdVIgRCSNr8uR5cmPnt
+         HA7XAjEVRhHjyVe/mN08EGpV/zqin2BHgzh5c8fH6DCfXTN7Ok4gbi7WY18OlsKOxmxi
+         R6AmFCeE9nFx9ZF0BfBwGr8PGK34FFi58B95sAsearpHJb1GCB4zV+jM1AmfUop9mw2S
+         71lxBcRoEh5Lw3KFe0e8aVYbJ3cLf/0/cNrzTrctLgnfEtR/CPLFcn6DjFr68GQ9U4Vj
+         mmIw==
+X-Gm-Message-State: AOJu0YzasEFfaZV7J24C7GXkC8ujefK3RWK7SuGkVC62nbtxPrJi5YQi
+	I3U/HogfXXCEYFPojtEG8jnWxNKv40cdcOLVxLOEaIrkHsucSrALf5Gnuj024mAiLrNFwwL5um4
+	MqGFHchQpXIbmEjHCRMdJUAEDjYs90/Fu0oOcDwXyTKSQt1M2IbxbdQ==
+X-Received: by 2002:a05:6a20:670a:b0:18f:1a27:11dd with SMTP id q10-20020a056a20670a00b0018f1a2711ddmr101564pzh.92.1701829147844;
+        Tue, 05 Dec 2023 18:19:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH7F7ftL4ijkAw3Pon4mlBhWf9qrJLbHLsv7vjCQAEDv9gChPxs2wd+UC8bxCmX4ecpXdEN7S2cRy7gKFYshrs=
+X-Received: by 2002:a05:6a20:670a:b0:18f:1a27:11dd with SMTP id
+ q10-20020a056a20670a00b0018f1a2711ddmr101558pzh.92.1701829147549; Tue, 05 Dec
+ 2023 18:19:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|DS0PR10MB7204:EE_
-X-MS-Office365-Filtering-Correlation-Id: b37eb6ce-13ea-4ad7-a0ff-08dbf5ff462a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	5o+vE8eHIIjm0E352WxI3Mt7CFkWbBMbPnveF/VqhKw/kIz9nN+jlez6gckTTinKjCsQMeXCgO2rzKGF+LJKAjw6tTLIL6eki59YQv5i95Brvk0nppNgAlSq5HWZv83PnfzY8GPQ+GgpcY5JPkvG9yLezPbeuPSx8HuGZpqtcyVFrqfi6NymUozY2b23GUxuKDGkE35C7ALo8JCnwKVFXWyM4TR48A9uR9VPRMcaYaFM1QfjEea3uk+BWssmZN97XV5TEKG2ttLnOLmo9YMbRQvjwCtTsjSxeQ12JmCbV/woGlTyEwPS4tb0pnyB9TTrVy9DB+Tk99KlajK2XT4NfszfFObhTNn2bzdNLqqVaKp4hgtltsc+G2b1uZUXbcdkWKUdgXMBbvhdrOik2d0OkHgb+AEseei5o3Y8naia84gR1SjJGpewsbokZeDdtpaKep6rYkV+Uhj3+Iketkmc9ukYqkI0fBsFC0jEL58pmQ8+9bePdOeLsSEPvE+kojgad5KV5tAd0omlacfe/IVDRXoiovPLpmDgK2/KUX1TexiE//FeJDIkXNWU+yhu2+1Y
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(346002)(136003)(39860400002)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(7416002)(5660300002)(2906002)(41300700001)(38100700002)(86362001)(66946007)(558084003)(26005)(6506007)(6512007)(36916002)(6486002)(478600001)(4326008)(8936002)(8676002)(6916009)(54906003)(316002)(66476007)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?HEymCL5lzjblxy+KiMcw8sk4q3QEsT6hLv1uc++qYsSmeqGsL4eNhifJqKB/?=
- =?us-ascii?Q?BJ+THAgDSa9miecxcH2iiFgWso+XID5zJxClcKhcdmldeKZubqet2I1PM2L5?=
- =?us-ascii?Q?ts/eCJosmeHsTRnoUIYYsunaVG4xZypDz2KaYMJrCn/PUKqmWvQ+y1ZSYAns?=
- =?us-ascii?Q?cXviAXyN7HiF/MDT6LDh7VLNyCXJF7UNbYv0lsIZrPuvstni9AXwmjJ6EOaG?=
- =?us-ascii?Q?KEBpjeI4MAo4s0I/0HOXQ5fOG2qJSgIi5JSS42Ot0+IoeXWyV8vK/KxIPsrH?=
- =?us-ascii?Q?1cqiwhkqtoKrasovWEefl1G7HjIXwwiKSRj42MLmECslR3YIhd6YP6MCYC9f?=
- =?us-ascii?Q?MlMq461HIsAOAXI+4XJ7ia4qLMzUY6xoNqEf7CB/xc/k51OsfsYfso3SNDjC?=
- =?us-ascii?Q?RDOrUMIq4/KZl6vaB2zTzkgXkHNNqrTPr5J/Bu0XaCWyST1vTeQjz9F6x1IQ?=
- =?us-ascii?Q?ogwhp6EDx6KePAZj9FJVdcmG5m3E/RyZEwXKYR5+J1P4xN0VIRgMT9L85eoM?=
- =?us-ascii?Q?RV3YEVCUCkELLE2WG701mlUqfY9PnhN9ydx6i7fFqtWae4sC9iwDT9XB0JTU?=
- =?us-ascii?Q?7vziaat5cz07j1h/HftdQvmxFbQOK7HwXMf2CjDg7tazyec5x6ejAHut07pj?=
- =?us-ascii?Q?KwY5vT0Jn6dggMTaikqDKhXxOdY1T0dbR0zI72W0hxQF7vyTMrMFylNMPOge?=
- =?us-ascii?Q?MIyBqZQlqgAUX+2RDe3Xz3qDIwdRQTFRJUs5rmJxJRV88ew1uzTOTBsVgQWU?=
- =?us-ascii?Q?vcpTgrdhFXs9Div5oa9HGYJk6wfxLezJJqFT0AmuEdj3tapnE5/TSFt5DjLz?=
- =?us-ascii?Q?aKNK1wat9HVk6NMRXIPbu3loSVySX9JJecPi3hxcc/nCi6hh0hmjTDZvV7GW?=
- =?us-ascii?Q?YW9C24eNkKiKCyYOVEZxWkiovnSFUbTg5+TF0IYFnfhn1ZJ9yVHqFzn2/1+T?=
- =?us-ascii?Q?DZWEXuXd23wA5PwkLE1e/NAfi8mb65Xw92zN8+eYdDuRdZjjsSORCnqBHONb?=
- =?us-ascii?Q?77FEwHLtQC3GawzbyNzb6zwwHJ5NlSLhtTpQFQqk4f3qvMnmWSw98ljHGQbb?=
- =?us-ascii?Q?dhTfZ4Y8IWbGuneFtBeqz2ReNf4TvRKVbpMZ4ocHB2qu7zscD+bglSEyrLsQ?=
- =?us-ascii?Q?NFav52v7WCpeie3sypGrem2By9s2a6cCOm9wipetxDen7NmpfSqh/OcSkD5D?=
- =?us-ascii?Q?Lb+jJ9sOCv4VjwBS3GvhjDItbR85iVUILk2oXbv+zrsN6uG3WeFtBD3hCNHU?=
- =?us-ascii?Q?GgIqOow+MWHt8Me5XGVzkwGWujrJVseczL1f6ICfK0jFq2OPPl4FocyuOKs0?=
- =?us-ascii?Q?kmI91emzAtoKLlJ+WWTT236Gc6UMBPuOt3sdff/lJ0mpmtEWOMiJBUYqdQ5V?=
- =?us-ascii?Q?/lLidqZM7oPr2fFDqu4Lup05Hi/xhGaggTv/O4mR6suqCbt4VuDDWKOkXP3D?=
- =?us-ascii?Q?9IgriADXoJXnJROitm6TktU4EW9JJlJmhn7wF+YrsNeetf0+EqRA+fPYi0Kl?=
- =?us-ascii?Q?X9/jaUX2QarImEU5R0OHHkmJn5rD4CFg+n1maSKKFidJmq2EkVnesDoblA5E?=
- =?us-ascii?Q?H5cEWvfq5HSszyy3tzydstsHyQMahPahrCsrU3IfAUyK5ppcfePArIl7fehZ?=
- =?us-ascii?Q?rQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?us-ascii?Q?LH/UkvximtkneCysU924YzY7rqhgz/w473Fsdab+/VZopmiAeQLE+/iH6ux4?=
- =?us-ascii?Q?mLZsdQfCJIasa3SnJqkSf3tgPMho9CZn7euFLA+bMGkYUbaWhqpYF+3JWP3L?=
- =?us-ascii?Q?lZLoiphNrizBFxkgJ+907l1x78mU6tWoVDNy9oBqNjphEgbGBlHTkVlgoSUn?=
- =?us-ascii?Q?0lDPf7H1v9p4avbLQD2uexGsCIdSs91/0HyMG37dZd8tz2Dk6i9TaQKoemrX?=
- =?us-ascii?Q?Ct6B/xh2OSz7eA02t6BqAjBclOLJR95LTB2ra4MxL/FZ5ibUdGTDWShwuF/S?=
- =?us-ascii?Q?ssV0bb2j82iNz8qFqG7Uz39QCmex6puuET5i2IGza4Vf8yI+kFfJk4naDm7j?=
- =?us-ascii?Q?qA78c+wuf0O8xXmdDAIA77cPRp0aVfr6St77JKa9aDLO6WbrBAmI6+1H5ylf?=
- =?us-ascii?Q?PcVpZrqh9fp4v3lxm/9a/nkJxHZkZbOuR8FgTeYW6CHirrwM4igft56ykKPz?=
- =?us-ascii?Q?gHHzPxTuMT+KwcxLe97cnb50zAGlq6k+qodWq4vCSFfPtSMsbKA9ia9gcdRl?=
- =?us-ascii?Q?TGr06c5OhkOrafZ+BkeHECswfcLCKFgjBl0MhBE7qZS3ftzTFBtpCyVqgwTL?=
- =?us-ascii?Q?PJL42JX4rEaMjlaUYpUISfGYkvOF/OENqzCM3AVg2dYBZ5AHi+yvSWMh+6rY?=
- =?us-ascii?Q?ldYPXeQ/f5kYlZjj9crz4bHEMLe00JL6q1ilsCWXPnl7m9BvrtPAlD0cwMGs?=
- =?us-ascii?Q?lM3PAeI8zoHJ6NxpVc/b8YgbG1OQbOtQY1IMI85jAzIedlVGDu9qsWJrXcLZ?=
- =?us-ascii?Q?jqX7q+NWM0z4jJkjZjoWg8+D4X8sbZk4ZCt+gkq4UFZp4ao92AbENS8YNRc1?=
- =?us-ascii?Q?mTtonxgxtaoPtNzdT/lKCunzUPFcrtV7v7n7oJNq+M6mGniJe+9eXMUimG+1?=
- =?us-ascii?Q?iPdMjUUXq1PZMGv7c3sf5tECl3EvVUrPrjtFc+NmEHWrN+8VjL/rZe8Elzwm?=
- =?us-ascii?Q?hcUoQ+sQ6+RdLF4lplmFsW1o0HUvVW8sn41PIsd9dxZHWh/yIewssydLyPps?=
- =?us-ascii?Q?/ffdZxgMx79ttp3M+TrDMoPF5mAPacXSl3ZsigWhs8DMSUAYJhAyxRTMkUma?=
- =?us-ascii?Q?SzPby5kUHt0LT5jM2d1mPV3E9JmPQKe9iToLcG2q2lRmjRY5tKgZwMGkQT+T?=
- =?us-ascii?Q?ssh/iZ2Aali60CkOGGLGwbdDOLI4N/T/D/Aow0GWEdiQYDBU3G5i+xOWeS9v?=
- =?us-ascii?Q?uzR+HT3DSsbPG0XI?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b37eb6ce-13ea-4ad7-a0ff-08dbf5ff462a
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 02:01:34.6770
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: az/buwu+qH3bmSZN5XudQzEqr2MQXJ5ndwOAg5G4FQ4QHxXySiQhuaq4bxplNVNzHF3/z3RbTJYZFEBbhpGjJKwE/J0xqBMprEBguM2zTMc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7204
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-06_01,2023-12-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
- bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=950
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312060015
-X-Proofpoint-GUID: QbedeKwSn7aucwIsw24JWcer28UadLDA
-X-Proofpoint-ORIG-GUID: QbedeKwSn7aucwIsw24JWcer28UadLDA
+References: <a623e811037972c7cdf1fe05fcb7ace2b445a323.camel@linux.intel.com>
+ <20231107223037.GA303668@bhelgaas> <CAAd53p5CqviDy-Y3FxO2sP2-q+LjHzDOe6x6upuw+V5Jh3k0uQ@mail.gmail.com>
+ <cf8ce69c8cc0a23609f747464ee3c03147088c57.camel@linux.intel.com>
+In-Reply-To: <cf8ce69c8cc0a23609f747464ee3c03147088c57.camel@linux.intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Wed, 6 Dec 2023 10:18:56 +0800
+Message-ID: <CAAd53p5+x44XLLXYDKceZrgO0z-bCbFPqwR1Qw6Esjv+dUjh2w@mail.gmail.com>
+Subject: Re: [PATCH] PCI: vmd: Enable Hotplug based on BIOS setting on VMD rootports
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, orden.e.smith@intel.com, 
+	samruddh.dhope@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Nirmal,
 
-Bjorn,
-
-> So I kept these in the PCI tree:
+On Wed, Nov 15, 2023 at 5:00=E2=80=AFAM Nirmal Patel
+<nirmal.patel@linux.intel.com> wrote:
 >
->   420ac76610d7 ("scsi: lpfc: Use PCI_HEADER_TYPE_MFD instead of literal")
+> On Wed, 2023-11-08 at 16:49 +0200, Kai-Heng Feng wrote:
+> > On Wed, Nov 8, 2023 at 12:30=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg>
+> > wrote:
+> > > [+cc Rafael, just FYI re 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC
+> > > on PCIe features")]
+> > >
+> > > On Tue, Nov 07, 2023 at 02:50:57PM -0700, Nirmal Patel wrote:
+> > > > On Thu, 2023-11-02 at 16:49 -0700, Nirmal Patel wrote:
+> > > > > On Thu, 2023-11-02 at 15:41 -0500, Bjorn Helgaas wrote:
+> > > > > > On Thu, Nov 02, 2023 at 01:07:03PM -0700, Nirmal Patel wrote:
+> > > > > > > On Wed, 2023-11-01 at 17:20 -0500, Bjorn Helgaas wrote:
+> > > > > > > > On Tue, Oct 31, 2023 at 12:59:34PM -0700, Nirmal Patel
+> > > > > > > > wrote:
+> > > > > > > > > On Tue, 2023-10-31 at 10:31 -0500, Bjorn Helgaas wrote:
+> > > > > > > > > > On Mon, Oct 30, 2023 at 04:16:54PM -0400, Nirmal
+> > > > > > > > > > Patel
+> > > > > > > > > > wrote:
+> > > > > > > > > > > VMD Hotplug should be enabled or disabled based on
+> > > > > > > > > > > VMD
+> > > > > > > > > > > rootports' Hotplug configuration in BIOS.
+> > > > > > > > > > > is_hotplug_bridge
+> > > > > > > > > > > is set on each VMD rootport based on Hotplug
+> > > > > > > > > > > capable bit
+> > > > > > > > > > > in
+> > > > > > > > > > > SltCap in probe.c.  Check is_hotplug_bridge and
+> > > > > > > > > > > enable or
+> > > > > > > > > > > disable native_pcie_hotplug based on that value.
+> > > > > > > > > > >
+> > > > > > > > > > > Currently VMD driver copies ACPI settings or
+> > > > > > > > > > > platform
+> > > > > > > > > > > configurations for Hotplug, AER, DPC, PM, etc and
+> > > > > > > > > > > enables
+> > > > > > > > > > > or
+> > > > > > > > > > > disables these features on VMD bridge which is not
+> > > > > > > > > > > correct
+> > > > > > > > > > > in case of Hotplug.
+> > > > > > > > > >
+> > > > > > > > > > This needs some background about why it's correct to
+> > > > > > > > > > copy
+> > > > > > > > > > the
+> > > > > > > > > > ACPI settings in the case of AER, DPC, PM, etc, but
+> > > > > > > > > > incorrect
+> > > > > > > > > > for hotplug.
+> > > > > > > > > >
+> > > > > > > > > > > Also during the Guest boot up, ACPI settings along
+> > > > > > > > > > > with
+> > > > > > > > > > > VMD
+> > > > > > > > > > > UEFI driver are not present in Guest BIOS which
+> > > > > > > > > > > results
+> > > > > > > > > > > in
+> > > > > > > > > > > assigning default values to Hotplug, AER, DPC, etc.
+> > > > > > > > > > > As a
+> > > > > > > > > > > result Hotplug is disabled on VMD in the Guest OS.
+> > > > > > > > > > >
+> > > > > > > > > > > This patch will make sure that Hotplug is enabled
+> > > > > > > > > > > properly
+> > > > > > > > > > > in Host as well as in VM.
+> > > > > > > > > >
+> > > > > > > > > > Did we come to some consensus about how or whether
+> > > > > > > > > > _OSC for
+> > > > > > > > > > the host bridge above the VMD device should apply to
+> > > > > > > > > > devices
+> > > > > > > > > > in the separate domain below the VMD?
+> > > > > > > > >
+> > > > > > > > > We are not able to come to any consensus. Someone
+> > > > > > > > > suggested
+> > > > > > > > > to
+> > > > > > > > > copy either all _OSC flags or none. But logic behind
+> > > > > > > > > that
+> > > > > > > > > assumption is that the VMD is a bridge device which is
+> > > > > > > > > not
+> > > > > > > > > completely true. VMD is an endpoint device and it owns
+> > > > > > > > > its
+> > > > > > > > > domain.
+> > > > > > > >
+> > > > > > > > Do you want to facilitate a discussion in the PCI
+> > > > > > > > firmware SIG
+> > > > > > > > about this?  It seems like we may want a little text in
+> > > > > > > > the
+> > > > > > > > spec
+> > > > > > > > about how to handle this situation so platforms and OSes
+> > > > > > > > have
+> > > > > > > > the
+> > > > > > > > same expectations.
+> > > > > > >
+> > > > > > > The patch 04b12ef163d1 broke intel VMD's hotplug
+> > > > > > > capabilities and
+> > > > > > > author did not test in VM environment impact.
+> > > > > > > We can resolve the issue easily by
+> > > > > > >
+> > > > > > > #1 Revert the patch which means restoring VMD's original
+> > > > > > > functionality
+> > > > > > > and author provide better fix.
+> > > > > > >
+> > > > > > > or
+> > > > > > >
+> > > > > > > #2 Allow the current change to re-enable VMD hotplug inside
+> > > > > > > VMD
+> > > > > > > driver.
+> > > > > > >
+> > > > > > > There is a significant impact for our customers hotplug use
+> > > > > > > cases
+> > > > > > > which
+> > > > > > > forces us to apply the fix in out-of-box drivers for
+> > > > > > > different
+> > > > > > > OSs.
+> > > > > >
+> > > > > > I agree 100% that there's a serious problem here and we need
+> > > > > > to fix
+> > > > > > it, there's no argument there.
+> > > > > >
+> > > > > > I guess you're saying it's obvious that an _OSC above VMD
+> > > > > > does not
+> > > > > > apply to devices below VMD, and therefore, no PCI Firmware
+> > > > > > SIG
+> > > > > > discussion or spec clarification is needed?
+> > > > >
+> > > > > Yes. By design VMD is an endpoint device to OS and its domain
+> > > > > is
+> > > > > privately owned by VMD only. I believe we should revert back to
+> > > > > original design and not impose _OSC settings on VMD domain
+> > > > > which is
+> > > > > also a maintainable solution.
+> > > >
+> > > > I will send out revert patch. The _OSC settings shouldn't apply
+> > > > to private VMD domain.
+> > >
+> > > I assume you mean to revert 04b12ef163d1 ("PCI: vmd: Honor ACPI
+> > > _OSC
+> > > on PCIe features").  That appeared in v5.17, and it fixed (or at
+> > > least
+> > > prevented) an AER message flood.  We can't simply revert
+> > > 04b12ef163d1
+> > > unless we first prevent that AER message flood in another way.
+> >
+> > The error is "correctable".
+> > Does masking all correctable AER error by default make any sense? And
+> > add a sysfs knob to make it optional.
+> I assume sysfs knob requires driver reload. right? Can you send a
+> patch?
 
-I merged this without seeing your note but I haven't pushed yet so I'll
-just drop the commit.
+What I mean is to mask Correctable Errors by default on *all*
+rootports, and create a new sysfs knob to let user decide if
+Correctable Errors should be unmasked.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+I can send a patch, but of course I'd like to hear what Bjorn thinks
+about this approach.
+
+Kai-Heng
+
+>
+> nirmal
+> >
+> > Kai-Heng
+> >
+> > > Bjorn
+> > >
+> > > > Even the patch 04b12ef163d1 needs more changes to make sure _OSC
+> > > > settings are passed on from Host BIOS to Guest BIOS which means
+> > > > involvement of ESXi, Windows HyperV, KVM.
+>
 
