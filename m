@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-629-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-630-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2693180917D
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 20:35:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97815809180
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 20:35:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A6DA1C2093C
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 19:35:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1498B20BE0
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 19:35:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FA44F88E;
-	Thu,  7 Dec 2023 19:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464CB4F88D;
+	Thu,  7 Dec 2023 19:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sb2tVrUT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kFEptx5g"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2057.outbound.protection.outlook.com [40.107.104.57])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5841708;
-	Thu,  7 Dec 2023 11:35:18 -0800 (PST)
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2073.outbound.protection.outlook.com [40.107.104.73])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3211710E3;
+	Thu,  7 Dec 2023 11:35:24 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QRQ0brQVFuS/GcEa+SVzDj5az/NQehAwqVtQZUjH9g1oKfCZbNeAfIiGcOQP9aIdk0dPb3mDq5ShEanEhG1pVaowsA+HiCPslCW/gKnC/WZ5b8z7fQmqRhMjha1hmKwm0XXt2rXKJlyePSmF67NeeNE1nLyH8jJmENymazVDpP0dAlr1txojhYbUJrRz0qH8VReCChtX7ZIsQS6kw/efTWorEUxI5GTHPRB/cC4yeAK0SyBlIL1dt95Dp3MGqWnmbvHW+WP8iOA7ZDTaWKQGjhk4LP5pV4R44fnPsK52h2PF6/Jr8OCjBr17MoLmk3pZfuopr9pT5nhfTC5+BE1cow==
+ b=W5aMTzic88ux6gzj21Ac3bxKGPr4q+ZlMZLa80MudEcwTkGhQJ8ExnoLCB+f5g1RarlIcm6YEP1lW381p2MGp2+xl+749WHsBmhhfLuibnPk3jh4okugZRziP+Rm+97q+0e4ogGvqTCygr7v6Lmhovw2pkN6Qx9nJMJkNudwL7anIp3jP5WAS+mmtvQgEGxlHSLx7/ns+8jctsXSXkAvO0L7/A7+hS7/gWRF85qGg8byXlUPkAVuEVJmECJeExqmmu5/9Df7lVc8wfAmImtbV9bqLG/mGqT7MWGEBxsGzTKGlUoiRwg0xIMF04BkOSncscpl0bTRrOnN2oNrZcJkkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XARXGLgZ6aVhHDWK19/XaNahMdf+FyADYmEydfD1Mgs=;
- b=UO1MSWzfL3szbOo1N6mFgtF3H/kfDa8LJi24bS1Ej/9iPb3pX59SyH/h76hNXw8dTHpeU1aerl5xyGkzBFDvIKIcHxPo40I6rVp+0Ik1SW9x0CSnb3PUVgMZE6iiduPLy9arRfVHKBhMRQfEyFcvQex09GOfVQLZ+9mR6RYgVtWlq7fMgzWmhghZ+fXYLp1QJGRlb0NOuSdK6A/RHTwUjDYkXRkHXsfh3R7QURJPbPGfVVTVDGVkOn4UEZJNar4muxXTSAo0QsNS4h3QQZ2RK6DB+9o2EqVQYs53sLXFv60Av/LeVRUWdlGfqObTpLgXh/sYzZi6+/iT1ybEoF/2vQ==
+ bh=FH/6zAS11kQqbmCKblM3aWi63sdAWsoeLepIjHxsGqA=;
+ b=cNFGZtkjeAPJk+BQk1tjJUR+p+xkM3GsPgHG3+bKqdHe2VAl0EJPs3IP7dSLDqQd/auyYyAGExC5a3pFU7mLrb/QUFe8vjD6wijGEHDlJdygN6TH4zs0kEwm2cCzNOyPzxpC0bNh4cXMY/46hbP1cn1vz6ADHZ6QRID0ldKjSsLkxqaG9S/q7n0r9Zq6wZnajctVM+dfqEvv6myPS5QaMR5mnOuNizuZmKINOLupGN3NVefTKt+PlSEXoRcqnq1THtu3Yb8KnbFexyJue2GE/5CshZNvzVSEffQJCLWbPUYSWrFljH0ZNqv/80BrgcPLw2hIQt2p4Ydx66LE3/y68A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XARXGLgZ6aVhHDWK19/XaNahMdf+FyADYmEydfD1Mgs=;
- b=sb2tVrUThMvBbX/xRuhhpFqJSXOc9grC0wo0D5v/A7tvOKCcl7+qwkA7PkToEIxFxgthxfZ3SS0nw4GZfDQTuyTuRrma+q8ikr+LxJpDhbYmExAyBJB+OSW/xvxr68h7AMWYM6mWjF80jfjCaGB42O/qCE0WHI9b71TdEOXB+6U=
+ bh=FH/6zAS11kQqbmCKblM3aWi63sdAWsoeLepIjHxsGqA=;
+ b=kFEptx5gUu/GTCyAJxusZlVICc/Az9PcvFPWEl86stl2ctUK0UHxUcEtTqqCSejgup45tkq6atm43Nb8Oui5nMpcZC9n6321R1CJdZBpz0/Y6cbC3ABzZU2xsdI8+qbe6QXovZlYiQnK90S/gRYt/nTojeOiFzGTg4faZooRcXc=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
  by DU0PR04MB9635.eurprd04.prod.outlook.com (2603:10a6:10:31f::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.27; Thu, 7 Dec
- 2023 19:35:16 +0000
+ 2023 19:35:21 +0000
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::95f5:5118:258f:ee40%6]) with mapi id 15.20.7068.026; Thu, 7 Dec 2023
- 19:35:16 +0000
+ 19:35:21 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: helgaas@kernel.org,
 	manivannan.sadhasivam@linaro.org
@@ -65,9 +65,9 @@ Cc: Frank.li@nxp.com,
 	robh@kernel.org,
 	s.hauer@pengutronix.de,
 	shawnguo@kernel.org
-Subject: [PATCH v2 5/9] PCI: imx6: Simplify ltssm_enable() by using ltssm_off and ltssm_mask
-Date: Thu,  7 Dec 2023 14:34:26 -0500
-Message-Id: <20231207193430.431994-6-Frank.Li@nxp.com>
+Subject: [PATCH v2 6/9] PCI: imx6: Simplify configure_type() by using mode_off and mode_mask
+Date: Thu,  7 Dec 2023 14:34:27 -0500
+Message-Id: <20231207193430.431994-7-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231207193430.431994-1-Frank.Li@nxp.com>
 References: <20231207193430.431994-1-Frank.Li@nxp.com>
@@ -84,148 +84,231 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DU0PR04MB9635:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4f8da61-a6d9-40b2-2593-08dbf75ba3c8
+X-MS-Office365-Filtering-Correlation-Id: 3c17876a-7e4d-48f9-c5c6-08dbf75ba6d3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	JbnhgXCI9EvM13AK3kWeSHckIJn4bme8SY+jim1UXz7QcMhZnKtzujSyD1B1ItToDv8Wxtv561CT8UO3FLQM2bEVLxv9yEkY2ZQYertqZPUT9EqUXlWVYjGsBYD5SsUdKDE5U3HZriOeZe0S6t8U870xniuZgmt2oP0jw8R2Gm3+T9mpkFvzFrBeolQF5l9rHzNZLwx4bEP9momHRNaEmQTXa3l9cQG7BNMCe2/7PPFIiKVzbeG8gN2wc5kRQsX+m1rcCGGogoH+hJOWLxhxk3PzL+9+eFKbwQH75uYbOgaxOLLiH0H+/Zj4/Wsf9Xr2L2RS3PrVqODTRv0BQ4A70iRM5AZxhV4mlmQ8+p+oj8eJ7bKLnKI0U9JcGJaqvheBksWvv8wswhM7twrEdrcArl29SElkAHj+Uw6pd+aX3W+EnprzflVPYaQYV+IWBaFBuhc9KGD1YZjlxm/9PVvJRzdMF0bj2FA8GE1p66uQCr3SQakQlHsLrPqPG5aUyZTJY6qrae10SMW1OSTb0Fp+auGPIHBOZkRiO9T9cVnUmsv46gqvciEFyARttM04Bqx4GTEZsTO2WfEx96aR74J++zfeFcJdWsKslHcDXfd4AtMZilCxqvzJMky/B4tAGbNx
+	M2Lu/00cSJqZ+Ec3aOvWhYldQHSm8ALaJmqX6vMuZLVcPwUCRJ9LRtTLdYP5JR3vpPQPZ3mM0vygdUAIpigxXJOaNiEdeOxUI1XXAUNQBgqXFYe64X2Eciqo0hwkz7jeVKjeCADKWUDnmv+kzWxds5h4H5pzWQjcg60z9nrNhxHoe9Ixs+2c3gYWnWqI6fFFaJ8dIf1a1tMBT4cZqIKgQC3ntj+txXEdLCGncMVlz9rCnrdl8ScTIpyl30bjkMqEGGiBlDzHbMC6pG0DR9I+j8iDHb0kF3WWw7nRZ9n8g25jB54KOC/FPwjm+G3OmVlYjgoeqKh6YFKIQHOeMd+5Y2DeN7Cx8vh9oJXnd4a1YMq6jwS53WeUP5OJIICNOSZy6VM5iID1+nBw0GM3pa7qAyky96EKRW62KqwTz/SqyvyeaUCGUg4bpR86pVoW8qJFm3gHKEQLFBsJwP//5sRZDRddrA2MIbvivZH9WokUWoyL6rANGjIhQ1f7n0DHoUXv2+b2hN8Ro5jvC3kGec34FVVj3YRE12jQhcM5FQViO/pD+/z+DYVtF4Z8wElhKeZKP/mIe8ztpbclTHMMxOh64fMRU6qRpXbwWCUGB2QZPNt2sHRaSz/orLzvEjbwJP0X
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(136003)(39860400002)(366004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(52116002)(6512007)(38100700002)(66556008)(66476007)(66946007)(316002)(6666004)(6486002)(1076003)(2616005)(26005)(6506007)(83380400001)(478600001)(8936002)(8676002)(4326008)(2906002)(7416002)(5660300002)(86362001)(41300700001)(36756003)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(136003)(39860400002)(366004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(52116002)(6512007)(38100700002)(66556008)(66476007)(66946007)(316002)(6486002)(1076003)(2616005)(26005)(6506007)(83380400001)(478600001)(8936002)(8676002)(4326008)(2906002)(7416002)(5660300002)(86362001)(41300700001)(36756003)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JwyJNOGGzvB/LzzxM3Ro9Gc8jk+p8mA6XEdJDo89ZxznOyUSfqMD13xx7X+J?=
- =?us-ascii?Q?0pXoPYacLhhAHqXlzy3wpa9czPyFjHDShxcrUC1vApyySLz10t8bnBretNrw?=
- =?us-ascii?Q?8izmUc8jJ/MHLEaGRj6VwErOAeyf/VWKbM/SzNASHH/F7kb+t81ooPdcbLIK?=
- =?us-ascii?Q?UdgLElrtzLylg437AyXikoFvroof4s2U7lKFor0YPFUWQCcv8dx/9UAWoJiW?=
- =?us-ascii?Q?42TZ0kX1GimE4B5wh+n1f93lz8Be3Bb5jZUY1QOO6sMgOxLY6DN3Rq6qLF0w?=
- =?us-ascii?Q?vV5CiDZ5fvxE1QmWtOS9u2Li//+/ODJkO2TFr3QRso+5sVvc6DFF3ZEEUtYr?=
- =?us-ascii?Q?3ZcBoCCwhC08DwHnAmxIjt7nMjuKQ1bEJ8lTA5p8tSoKr3arj6r+KJhbFjL6?=
- =?us-ascii?Q?X5QcLVrafcrWUsy83syJhQG0zkpzsSyHMZ0qJevGr9Xb0YPfDDXfUx5aCyEn?=
- =?us-ascii?Q?YaBNwrFdz0wYNbtE2mLzsOOXliuYB8SGZvq2qYZISZxcMagADN91kNG5F9fN?=
- =?us-ascii?Q?OOyYHTagCfW2ntbMf5/TweKFYYwoqgvIwdGnZQ1jJsqr3DH3vW1AU/Om/M6v?=
- =?us-ascii?Q?VeiO/3tzUalL8VHhQmZJIyHuFi0C7h7lvndn7YXWQ9etmsy0/AmLMGZLjpK7?=
- =?us-ascii?Q?ywAzffzknaVfPKypQeBsfO6is2BPYZdX1AXZdwa6UzszFvJjwJJ47nFqZQPb?=
- =?us-ascii?Q?jqZYdPGwxlRN2Mur/yit6n6jhO8/CDNofDZ/tYIRwjIK0b8gJBC0zgRgpBaD?=
- =?us-ascii?Q?e3j3kt4ObvBVik3PWAQSIHMu5c1bNRCE+/5bYj1M458Psx9vix29QfpQZIuc?=
- =?us-ascii?Q?abexhi2iwoXz7NxuNmBJDc3xW1GjZpYd41fswX5SnebLbGNxjc9E4vxj47Oh?=
- =?us-ascii?Q?nV6z0k4aRAbvl8tBi8ScUXsUPiKjv96MpbRQmFVeBg9MrHcHwtSnOeHywg9B?=
- =?us-ascii?Q?q3SoGnevBDfEs1crckCK6bnV+ycFsqYqKJt6Vd/GE/tZ65x1Du/k9jHqJYF6?=
- =?us-ascii?Q?j26rfGql0u7oVTxEdIVcUhYVH6dEA+mYSWE845599hKeugRhLVicKBs670Nd?=
- =?us-ascii?Q?2VsvCaM/+Nr5AiMER5ux8+4EpKkDZLXJsom0MKv0882PeGexwAfjSbBw5IvO?=
- =?us-ascii?Q?YmXkX7gGV0PWg7jT0IVVVhBDXoR0hELkZ/O4GqYyznr81LxQwBhc2ThD3nV8?=
- =?us-ascii?Q?AHic/zg66f0y0XJaxVV3aTOXGt22wavMT0GRrI4OoU1WWVWlJ86eYqJ+VS5N?=
- =?us-ascii?Q?Jk7IOrcC8SObENCsQO4WLsgY4kFOWjcrqsSdOPA/4G+tXsGvk1wg2V4sTfA0?=
- =?us-ascii?Q?1CUTRIspaNWMgIZHTmbG+cZGp24jeLfaMmwMfm37r8sczejTsbZXFVKhQFyy?=
- =?us-ascii?Q?ohCZ7us0CdQANqTrLjTLj/DHnUz85SN/8d/7zz5PKpvpDdi4rfHpFrtCtw07?=
- =?us-ascii?Q?6ZwghrvGeb61wGLGav+kJBTb65k1SoCy/3lF7okcvzpCaK+hXM1HuOTwazDh?=
- =?us-ascii?Q?s6XRNBvmzK/AxMQB6pcOPPA00c5mErJJvMBeHoiPx3HWVQ3bzxHlaksHcd/1?=
- =?us-ascii?Q?LH/zCnzZiWeg1jqQ+Bw=3D?=
+	=?us-ascii?Q?9NqNHcYKalIinhXkbXwKtDT54J8E021QQr6KOQ2Gcn1rB/DXPEXlxQ0p2URH?=
+ =?us-ascii?Q?qvFLjwH9ZIX7rgHyAKqIHsFkoW6FYE/fofxl5/b4Qd6tTkxTC+Bmp6TummVg?=
+ =?us-ascii?Q?Iy2Zn9bl/iBf6qlZpsyjwz8qQrHmpPV0iAOjYJeJ6DyQ7FY9S8e1U0kFLH2k?=
+ =?us-ascii?Q?tyQbu5GWf0jpM0PSGmViYSA+ItrpmoSg2yHyznS0NnXSHv5LoGDQxM9H+oyb?=
+ =?us-ascii?Q?FjlXSH9OpQQW/vipS4RuQ4mN5jvo3eNM4/aVFzAIzxlzz20w+jGM7SR6Kw7C?=
+ =?us-ascii?Q?KAMK5vSxFFKyPwutsbRQikYXKUVpb+HyoPoML8rotHlXUzgKmkny6/ZAFxsH?=
+ =?us-ascii?Q?3qOFjpg5dvM7tZbiBrbxQGC3qD+kgbXCZoiBCF1V7r0FFfyvJIG4RyMRD6K0?=
+ =?us-ascii?Q?84eXYrhhj13L+68yphFKRks+n7z7CWGqkdce9IggwsVomCdVOTk4A7qrE9Z6?=
+ =?us-ascii?Q?GwpE+N8W7FuP3hGVrsQER3gnaNAnDcGuoz1fnLqpv13HU7/+xHiDlob5pxmd?=
+ =?us-ascii?Q?QjomtiOjgA91PgdpxPuZGgcxwJoTELHF2yc7ksR6C3mU3LFmA4xTbeZi+Wzs?=
+ =?us-ascii?Q?wpeElBuAKUFtij9ideGnmHhFFE0Zu7+/FmKI8Jiily27oPS52hy2gIxjRwzA?=
+ =?us-ascii?Q?ZDvurIb8ynXf2JhLmivn8vXSQyn1SJWD1poUBhGKI75B0hC+E3hcNc3TlUzj?=
+ =?us-ascii?Q?ixfmCJFus0TJ35onj9KSnF/MrNM6oGqS0zXSx4MDxkwd8448+hw31h8xuuOa?=
+ =?us-ascii?Q?J11OIQpMWDjEmsnPjQc+oW9XTAi3jPeotnKehbDe6qtiIzYw0lNpNa47nffn?=
+ =?us-ascii?Q?cF5iaT/bfZVpk/AsuuHAImqEjkQPLDOab+75XydqtB0G+q9bHw/wjYQryUi5?=
+ =?us-ascii?Q?caIIyyreS+GwX0+LMpzziobtFNUFVU/o9bz8UVbBN42dukyGblOkEM/q07u8?=
+ =?us-ascii?Q?FUb2nuR3Zn14I9Ms0b7PXzUunhG0TlKE7JeCQ7HYKk/PYl4jiEYhVAexuecY?=
+ =?us-ascii?Q?KFLnZEoGhoruyyqDJ1fmcKQPPSmHPNEw70UBOPZaloOwqxBe4KdpQah4PWdM?=
+ =?us-ascii?Q?FJvXv6MKKykfhFF3mYcdYjmhhXuWWerWB39Y7AjeGAI2AZNKGuFf9O6Ln2gk?=
+ =?us-ascii?Q?bR7EKotUhAeKXFhvWp6Lax+t9Px16sYjZD1BkqCv+C8JF798yTNMWCM7UhM2?=
+ =?us-ascii?Q?K2hAucgEwwXrZ0IEFHk7agr3h3m5ZNMG5rX1CKPgfdbfSZgiM776Y/Pbeibo?=
+ =?us-ascii?Q?srULU28QMn9Wy7LWL/4nEIKvL7P+PyPIHrFJ/qqv1KZ88TypSbPRB9KypLiU?=
+ =?us-ascii?Q?1R8seMh2/moIW0UXrUrQElJuFuiS0VAdk0G658UQrpXaMGqvtD6+3L4lfWZX?=
+ =?us-ascii?Q?iobDGUYuSstlHC8lXisMbd+VoN47mAAgJUQGXbHb1xAD0O9tu9t4OYHDYfra?=
+ =?us-ascii?Q?8clRgKDIbDbcXiucllL84IRwRtukZuQmeaN9Zic4F9xa3orCvG2gKLJ1uPGp?=
+ =?us-ascii?Q?n2qz1XakykcUkUUbUx9Wh3ruwzbAHfTZWa5lkPsa4OIZfZS62HzqOh982NMB?=
+ =?us-ascii?Q?q6ekCqfKJMwpB0fnk4w=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4f8da61-a6d9-40b2-2593-08dbf75ba3c8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c17876a-7e4d-48f9-c5c6-08dbf75ba6d3
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2023 19:35:16.6602
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2023 19:35:21.7608
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iyA1qa29jbC1+0rVj3bjt7qb6I18iy61gnQx1vvVWUFJ/hP3AKEJYurgvMfcDifP0VPqYx8wyf/YduPsiyNEFQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: UM4+HVgzmFuCL3f5MMuLRVOgt+K3bxCArCXdSJ0AOtEaDiMBhAwBQgJAtqeVCzwPBaqHv6ot95uUhcdYWdZNSw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9635
 
-Add drvdata::ltssm_off and drvdata::ltssm_mask to simple
-imx6_pcie_ltssm_enable(disable)() logic.
+Add drvdata::mode_off and drvdata::mode_mask to simple
+imx6_pcie_configure_type() logic.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 37 ++++++++++++---------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+
+Notes:
+    Change from v1 to v2
+    - use ffs() to fixe build error.
+    
+    powerpc-linux-ld: drivers/pci/controller/dwc/pci-imx6.o: in function `imx6_pcie_host_init':
+    >> pci-imx6.c:(.text.imx6_pcie_host_init+0x120): undefined reference to `__ffsdi2'
+
+ drivers/pci/controller/dwc/pci-imx6.c | 60 ++++++++++++++++++---------
+ 1 file changed, 40 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 548034151ee1a..5bfb780e441fd 100644
+index 5bfb780e441fd..1fac6129eeb5f 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -75,6 +75,8 @@ struct imx6_pcie_drvdata {
- 	u32 flags;
- 	int dbi_length;
+@@ -69,6 +69,7 @@ enum imx6_pcie_variants {
+ 
+ #define imx6_check_flag(pci, val)	(pci->drvdata->flags & val)
+ 
++#define IMX6_PCIE_MAX_INSTANCES			2
+ struct imx6_pcie_drvdata {
+ 	enum imx6_pcie_variants variant;
+ 	enum dw_pcie_device_mode mode;
+@@ -77,6 +78,8 @@ struct imx6_pcie_drvdata {
  	const char *gpr;
-+	const u32 ltssm_off;
-+	const u32 ltssm_mask;
+ 	const u32 ltssm_off;
+ 	const u32 ltssm_mask;
++	const u32 mode_off[IMX6_PCIE_MAX_INSTANCES];
++	const u32 mode_mask[IMX6_PCIE_MAX_INSTANCES];
  };
  
  struct imx6_pcie {
-@@ -811,18 +813,11 @@ static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
- static void imx6_pcie_ltssm_enable(struct device *dev)
+@@ -177,32 +180,25 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+ 
+ static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
  {
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
+-	unsigned int mask, val, mode;
 +	const struct imx6_pcie_drvdata *drvdata = imx6_pcie->drvdata;
++	unsigned int mask, val, mode, id;
+ 
+-	if (imx6_pcie->drvdata->mode == DW_PCIE_EP_TYPE)
++	if (drvdata->mode == DW_PCIE_EP_TYPE)
+ 		mode = PCI_EXP_TYPE_ENDPOINT;
+ 	else
+ 		mode = PCI_EXP_TYPE_ROOT_PORT;
  
 -	switch (imx6_pcie->drvdata->variant) {
--	case IMX6Q:
--	case IMX6SX:
--	case IMX6QP:
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
--				   IMX6Q_GPR12_PCIE_CTL_2,
--				   IMX6Q_GPR12_PCIE_CTL_2);
+-	case IMX8MQ:
+-	case IMX8MQ_EP:
+-		if (imx6_pcie->controller_id == 1) {
+-			mask = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE;
+-			val  = FIELD_PREP(IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+-					  mode);
+-		} else {
+-			mask = IMX6Q_GPR12_DEVICE_TYPE;
+-			val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, mode);
+-		}
 -		break;
 -	default:
+-		mask = IMX6Q_GPR12_DEVICE_TYPE;
+-		val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, mode);
 -		break;
 -	}
-+	if (drvdata->ltssm_mask)
-+		regmap_update_bits(imx6_pcie->iomuxc_gpr, drvdata->ltssm_off, drvdata->ltssm_mask,
-+				   drvdata->ltssm_mask);
++	id = imx6_pcie->controller_id;
++
++	/* If mode_mask[id] is zero, means each controller have its individual gpr */
++	if (!drvdata->mode_mask[id])
++		id = 0;
++
++	mask = drvdata->mode_mask[id];
++	/* FIELD_PREP mask have been constant */
++	val = mode << (ffs(mask) - 1);
  
- 	reset_control_deassert(imx6_pcie->apps_reset);
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
++	regmap_update_bits(imx6_pcie->iomuxc_gpr, drvdata->mode_off[id], mask, val);
  }
-@@ -830,17 +825,11 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
- static void imx6_pcie_ltssm_disable(struct device *dev)
- {
- 	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev);
-+	const struct imx6_pcie_drvdata *drvdata = imx6_pcie->drvdata;
  
--	switch (imx6_pcie->drvdata->variant) {
--	case IMX6Q:
--	case IMX6SX:
--	case IMX6QP:
--		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
--				   IMX6Q_GPR12_PCIE_CTL_2, 0);
--		break;
--	default:
--		break;
--	}
-+	if (drvdata->ltssm_mask)
-+		regmap_update_bits(imx6_pcie->iomuxc_gpr, drvdata->ltssm_off,
-+				   drvdata->ltssm_mask, 0);
- 
- 	reset_control_assert(imx6_pcie->apps_reset);
- }
-@@ -1446,6 +1435,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
- 		.dbi_length = 0x200,
+ static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
+@@ -1437,6 +1433,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
  		.gpr = "fsl,imx6q-iomuxc-gpr",
-+		.ltssm_off = IOMUXC_GPR12,
-+		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
+ 		.ltssm_off = IOMUXC_GPR12,
+ 		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
  	},
  	[IMX6SX] = {
  		.variant = IMX6SX,
-@@ -1454,6 +1445,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND |
- 			 IMX6_PCIE_FLAG_HAS_CLK_INBOUND_AXI,
+@@ -1447,6 +1445,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
  		.gpr = "fsl,imx6q-iomuxc-gpr",
-+		.ltssm_off = IOMUXC_GPR12,
-+		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
+ 		.ltssm_off = IOMUXC_GPR12,
+ 		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
  	},
  	[IMX6QP] = {
  		.variant = IMX6QP,
-@@ -1462,6 +1455,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
- 		.dbi_length = 0x200,
+@@ -1457,6 +1457,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
  		.gpr = "fsl,imx6q-iomuxc-gpr",
-+		.ltssm_off = IOMUXC_GPR12,
-+		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
+ 		.ltssm_off = IOMUXC_GPR12,
+ 		.ltssm_mask = IMX6Q_GPR12_PCIE_CTL_2,
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
  	},
  	[IMX7D] = {
  		.variant = IMX7D,
+@@ -1464,6 +1466,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 			 IMX6_PCIE_FLAG_HAS_APP_RESET |
+ 			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
+ 		.gpr = "fsl,imx7d-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+ 	},
+ 	[IMX8MQ] = {
+ 		.variant = IMX8MQ,
+@@ -1471,6 +1475,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 			 IMX6_PCIE_FLAG_HAS_APP_RESET |
+ 			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
+ 		.gpr = "fsl,imx8mq-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
++		.mode_off[1] = IOMUXC_GPR12,
++		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+ 	},
+ 	[IMX8MM] = {
+ 		.variant = IMX8MM,
+@@ -1479,6 +1487,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 			 IMX6_PCIE_FLAG_HAS_PHY |
+ 			 IMX6_PCIE_FLAG_HAS_APP_RESET,
+ 		.gpr = "fsl,imx8mm-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+ 	},
+ 	[IMX8MP] = {
+ 		.variant = IMX8MP,
+@@ -1487,6 +1497,8 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 			 IMX6_PCIE_FLAG_HAS_PHY |
+ 			 IMX6_PCIE_FLAG_HAS_APP_RESET,
+ 		.gpr = "fsl,imx8mp-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+ 	},
+ 	[IMX8MQ_EP] = {
+ 		.variant = IMX8MQ_EP,
+@@ -1495,6 +1507,10 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 			 IMX6_PCIE_FLAG_HAS_PHY_RESET,
+ 		.mode = DW_PCIE_EP_TYPE,
+ 		.gpr = "fsl,imx8mq-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
++		.mode_off[1] = IOMUXC_GPR12,
++		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+ 	},
+ 	[IMX8MM_EP] = {
+ 		.variant = IMX8MM_EP,
+@@ -1502,12 +1518,16 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 			 IMX6_PCIE_FLAG_HAS_PHY,
+ 		.mode = DW_PCIE_EP_TYPE,
+ 		.gpr = "fsl,imx8mm-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+ 	},
+ 	[IMX8MP_EP] = {
+ 		.variant = IMX8MP_EP,
+ 		.flags = IMX6_PCIE_FLAG_HAS_CLK_AUX,
+ 		.mode = DW_PCIE_EP_TYPE,
+ 		.gpr = "fsl,imx8mp-iomuxc-gpr",
++		.mode_off[0] = IOMUXC_GPR12,
++		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+ 	},
+ };
+ 
 -- 
 2.34.1
 
