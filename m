@@ -1,62 +1,59 @@
-Return-Path: <linux-pci+bounces-614-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-615-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A836808976
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 14:48:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 969E980897A
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 14:49:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 68D37B21546
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 13:48:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F78E2829FB
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 13:49:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61DB40BFF;
-	Thu,  7 Dec 2023 13:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAEB40C09;
+	Thu,  7 Dec 2023 13:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dk7nQZsC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alQZylu3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D36D5E;
-	Thu,  7 Dec 2023 05:48:33 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B63D5E;
+	Thu,  7 Dec 2023 05:49:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701956914; x=1733492914;
+  t=1701956967; x=1733492967;
   h=message-id:subject:from:to:cc:date:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=Q+K+mOkZgJ2vnwUP2+YChC8y5M7yerg4z6n5wLVleeU=;
-  b=Dk7nQZsCKeI/UNCRu0g536KXAioaIGZHmmptUX/5q/kNJ5KnVCiBkK45
-   2/Nw6vbcvJ57/0io/k9EemZEzUBgStLM4cLJ94MOlLUsZNwNYRYmB4u31
-   ufgsnCjbr6L2NAbMw9QMHOm6ayuOLmo9JNyS/dPF0fLBGgOM1exiVbWIv
-   HwwuDNgFlhPlFa0GNEhnFBYgzXswW/ha0YVFqA7nOP4Fi7qaGS/VTiPfg
-   923OljEhyy6zhOLGz7z1NfyPVIXUU+5WqaYMqmi0tfNWM5knQtcJQ0qZp
-   y4uQ1rnW1+g6wu0lojQ9FH6EnTzmaXAe3J9ZPzumSzeeRva79nR7H2eRW
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="7540873"
+  bh=imR+7Va4hKymRovZBLHbPvJA/DcqrguwTFTFepAUI4c=;
+  b=alQZylu39oipWsTUI2G9+xRjY6rN3F70sJIAl/rYunl1GOwIoXpeeLQT
+   IBAILTeaJlAngphIAISQq883tt/UTYYWrNMXMbrKWhaCbTeVD9aMVsGPZ
+   XFOtegjck5mEhcCblV4+lvLW3aDzP/e6H96k8+orVkB35gIvS2lY72EfB
+   MZMebMiEpUZBsGFvnAH9X+u9uLUVDLX3e3Dt6W0F/GhqQTEoyLdeV6qDn
+   ey4lgTcNKmvb7L8oh/XKnQ99b3418GMGY5rtYGFCaR4T83RsJIzJbP54Y
+   2T+wqokuqGUnRhgRNXEIZw7JETKGn8HdHe4VIHKP/BeovDq1ixR69g2a9
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1338852"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="7540873"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:48:33 -0800
+   d="scan'208";a="1338852"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:49:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="895152612"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="895152612"
+   d="scan'208";a="17418890"
 Received: from yzhan76-mobl1.amr.corp.intel.com (HELO [10.212.19.153]) ([10.212.19.153])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:48:31 -0800
-Message-ID: <925fd50bd609f99f0eabf93d1163106f6118f139.camel@linux.intel.com>
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:49:26 -0800
+Message-ID: <6776742e5aba8f9f10c661a7876eb252f4ac7745.camel@linux.intel.com>
 Subject: Re: [PATCH v2] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
 From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: jikos@kernel.org, benjamin.tissoires@redhat.com,
- linux-pm@vger.kernel.org,  linux-pci@vger.kernel.org, Jian Hui Lee
- <jianhui.lee@canonical.com>, Even Xu <even.xu@intel.com>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 Dec 2023 08:48:30 -0500
-In-Reply-To: <CAAd53p7do2rrB=qbpWKbNCWB_qfZ2YZPtB_55VcfGjDYXgLfzA@mail.gmail.com>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org, 
+	benjamin.tissoires@redhat.com
+Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, Jian Hui Lee
+	 <jianhui.lee@canonical.com>, Even Xu <even.xu@intel.com>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 07 Dec 2023 08:49:24 -0500
+In-Reply-To: <20231108121940.288005-1-kai.heng.feng@canonical.com>
 References: <20231108121940.288005-1-kai.heng.feng@canonical.com>
-	 <cc6c162407c69c53ec256bf887a0384361dd0516.camel@linux.intel.com>
-	 <CAAd53p7do2rrB=qbpWKbNCWB_qfZ2YZPtB_55VcfGjDYXgLfzA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -65,131 +62,91 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2023-12-07 at 10:44 +0800, Kai-Heng Feng wrote:
-> On Tue, Dec 5, 2023 at 1:50=E2=80=AFAM srinivas pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> >=20
-> > Hi Kai,
-> >=20
-> > Sorry for he delay in getting back on this. I have a question
-> > below:
-> >=20
-> > On Wed, 2023-11-08 at 14:19 +0200, Kai-Heng Feng wrote:
-> > > Since PCI core and ACPI core already handles PCI PME wake and GPE
-> > > wake
-> > > when the device has wakeup capability, use device_init_wakeup()
-> > > to
-> > > let
-> > > them do the wakeup setting work.
-> > >=20
-> > > Also add a shutdown callback which uses pci_prepare_to_sleep() to
-> > > let
-> > > PCI and ACPI set OOB wakeup for S5.
-> > >=20
-> > > Cc: Jian Hui Lee <jianhui.lee@canonical.com>
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > > v2:
-> > > =C2=A0Rebase on ("HID: intel-ish-hid: ipc: Disable and reenable ACPI
-> > > GPE
-> > > bit")
-> > >=20
-> > > =C2=A0drivers/hid/intel-ish-hid/ipc/pci-ish.c | 67 ++++++------------=
--
-> > > ----
-> > > --
-> > >=20
-...
-...
-
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 device_init_wakeup(dev, true);
-> >=20
-> > For apple to apple comparison, which path will call
-> > https://elixir.bootlin.com/linux/latest/C/ident/__pci_enable_wake
-> > which will call pci_pme_active()?
->=20
-> Here's the flow:
-> device_shutdown()
-> =C2=A0 pci_device_shutdown()
-> =C2=A0=C2=A0=C2=A0 ish_shutdown()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_prepare_to_sleep()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __pci_enable_wake()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_pme_active()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __pci_=
-pme_active()
-
-Thanks. I will send my ACK to the original patch.
-
-Thanks,
-Srinivas
-
->=20
-> Kai-Heng
->=20
-> >=20
-> > Thanks,
-> > Srinivas
-> >=20
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D ish_init(ishtp);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
-> > > @@ -256,6 +212,19 @@ static void ish_remove(struct pci_dev *pdev)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ish_device_disable(ishtp_d=
-ev);
-> > > =C2=A0}
-> > >=20
-> > > +
-> > > +/**
-> > > + * ish_shutdown() - PCI driver shutdown callback
-> > > + * @pdev:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci device
-> > > + *
-> > > + * This function sets up wakeup for S5
-> > > + */
-> > > +static void ish_shutdown(struct pci_dev *pdev)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (pdev->device =3D=3D EHL_Ax_=
-DEVICE_ID)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 pci_prepare_to_sleep(pdev);
-> > > +}
-> > > +
-> > > =C2=A0static struct device __maybe_unused *ish_resume_device;
-> > >=20
-> > > =C2=A0/* 50ms to get resume response */
-> > > @@ -378,13 +347,6 @@ static int __maybe_unused ish_resume(struct
-> > > device *device)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_dev *pdev =3D t=
-o_pci_dev(device);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ishtp_device *dev =
-=3D pci_get_drvdata(pdev);
-> > >=20
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* add this to finish power flo=
-w for EHL */
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dev->pdev->device =3D=3D EH=
-L_Ax_DEVICE_ID) {
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 pci_set_power_state(pdev, PCI_D0);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 enable_pme_wake(pdev);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 dev_dbg(dev->devc, "set power state to D0 for
-> > > ehl\n");
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > -
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ish_resume_device =3D devi=
-ce;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev->resume_flag =3D 1;
-> > >=20
-> > > @@ -400,6 +362,7 @@ static struct pci_driver ish_driver =3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .id_table =3D ish_pci_tbl,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .probe =3D ish_probe,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .remove =3D ish_remove,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .shutdown =3D ish_shutdown,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .driver.pm =3D &ish_pm_ops=
-,
-> > > =C2=A0};
-> > >=20
-> >=20
+T24gV2VkLCAyMDIzLTExLTA4IGF0IDE0OjE5ICswMjAwLCBLYWktSGVuZyBGZW5nIHdyb3RlOgo+
+IFNpbmNlIFBDSSBjb3JlIGFuZCBBQ1BJIGNvcmUgYWxyZWFkeSBoYW5kbGVzIFBDSSBQTUUgd2Fr
+ZSBhbmQgR1BFCj4gd2FrZQo+IHdoZW4gdGhlIGRldmljZSBoYXMgd2FrZXVwIGNhcGFiaWxpdHks
+IHVzZSBkZXZpY2VfaW5pdF93YWtldXAoKSB0bwo+IGxldAo+IHRoZW0gZG8gdGhlIHdha2V1cCBz
+ZXR0aW5nIHdvcmsuCj4gCj4gQWxzbyBhZGQgYSBzaHV0ZG93biBjYWxsYmFjayB3aGljaCB1c2Vz
+IHBjaV9wcmVwYXJlX3RvX3NsZWVwKCkgdG8gbGV0Cj4gUENJIGFuZCBBQ1BJIHNldCBPT0Igd2Fr
+ZXVwIGZvciBTNS4KPiAKPiBDYzogSmlhbiBIdWkgTGVlIDxqaWFuaHVpLmxlZUBjYW5vbmljYWwu
+Y29tPgo+IFNpZ25lZC1vZmYtYnk6IEthaS1IZW5nIEZlbmcgPGthaS5oZW5nLmZlbmdAY2Fub25p
+Y2FsLmNvbT4KQWNrZWQtYnk6IFNyaW5pdmFzIFBhbmRydXZhZGEgPHNyaW5pdmFzLnBhbmRydXZh
+ZGFAbGludXguaW50ZWwuY29tPgoKPiAtLS0KPiB2MjoKPiDCoFJlYmFzZSBvbiAoIkhJRDogaW50
+ZWwtaXNoLWhpZDogaXBjOiBEaXNhYmxlIGFuZCByZWVuYWJsZSBBQ1BJIEdQRQo+IGJpdCIpCj4g
+Cj4gwqBkcml2ZXJzL2hpZC9pbnRlbC1pc2gtaGlkL2lwYy9wY2ktaXNoLmMgfCA2NyArKysrKyst
+LS0tLS0tLS0tLS0tLS0tLQo+IC0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygr
+KSwgNTIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaGlkL2ludGVsLWlz
+aC1oaWQvaXBjL3BjaS1pc2guYwo+IGIvZHJpdmVycy9oaWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNp
+LWlzaC5jCj4gaW5kZXggNzEwZmRhNWYxOWUxLi42NWU3ZWViMmZhNjQgMTAwNjQ0Cj4gLS0tIGEv
+ZHJpdmVycy9oaWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNpLWlzaC5jCj4gKysrIGIvZHJpdmVycy9o
+aWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNpLWlzaC5jCj4gQEAgLTExOSw1MCArMTE5LDYgQEAgc3Rh
+dGljIGlubGluZSBib29sIGlzaF9zaG91bGRfbGVhdmVfZDBpMyhzdHJ1Y3QKPiBwY2lfZGV2ICpw
+ZGV2KQo+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gIXBtX3Jlc3VtZV92aWFfZmlybXdhcmUoKSB8
+fCBwZGV2LT5kZXZpY2UgPT0KPiBDSFZfREVWSUNFX0lEOwo+IMKgfQo+IMKgCj4gLXN0YXRpYyBp
+bnQgZW5hYmxlX2dwZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gLXsKPiAtI2lmZGVmIENPTkZJR19B
+Q1BJCj4gLcKgwqDCoMKgwqDCoMKgYWNwaV9zdGF0dXMgYWNwaV9zdHM7Cj4gLcKgwqDCoMKgwqDC
+oMKgc3RydWN0IGFjcGlfZGV2aWNlICphZGV2Owo+IC3CoMKgwqDCoMKgwqDCoHN0cnVjdCBhY3Bp
+X2RldmljZV93YWtldXAgKndha2V1cDsKPiAtCj4gLcKgwqDCoMKgwqDCoMKgYWRldiA9IEFDUElf
+Q09NUEFOSU9OKGRldik7Cj4gLcKgwqDCoMKgwqDCoMKgaWYgKCFhZGV2KSB7Cj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldl9lcnIoZGV2LCAiZ2V0IGFjcGkgaGFuZGxlIGZhaWxl
+ZFxuIik7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5PREVWOwo+
+IC3CoMKgwqDCoMKgwqDCoH0KPiAtwqDCoMKgwqDCoMKgwqB3YWtldXAgPSAmYWRldi0+d2FrZXVw
+Owo+IC0KPiAtwqDCoMKgwqDCoMKgwqAvKgo+IC3CoMKgwqDCoMKgwqDCoCAqIENhbGwgYWNwaV9k
+aXNhYmxlX2dwZSgpLCBzbyB0aGF0IHJlZmVyZW5jZSBjb3VudAo+IC3CoMKgwqDCoMKgwqDCoCAq
+IGdwZV9ldmVudF9pbmZvLT5ydW50aW1lX2NvdW50IGRvZXNuJ3Qgb3ZlcmZsb3cuCj4gLcKgwqDC
+oMKgwqDCoMKgICogV2hlbiBncGVfZXZlbnRfaW5mby0+cnVudGltZV9jb3VudCA9IDAsIHRoZSBj
+YWxsCj4gLcKgwqDCoMKgwqDCoMKgICogdG8gYWNwaV9kaXNhYmxlX2dwZSgpIHNpbXBseSByZXR1
+cm4uCj4gLcKgwqDCoMKgwqDCoMKgICovCj4gLcKgwqDCoMKgwqDCoMKgYWNwaV9kaXNhYmxlX2dw
+ZSh3YWtldXAtPmdwZV9kZXZpY2UsIHdha2V1cC0+Z3BlX251bWJlcik7Cj4gLQo+IC3CoMKgwqDC
+oMKgwqDCoGFjcGlfc3RzID0gYWNwaV9lbmFibGVfZ3BlKHdha2V1cC0+Z3BlX2RldmljZSwgd2Fr
+ZXVwLQo+ID5ncGVfbnVtYmVyKTsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoQUNQSV9GQUlMVVJFKGFj
+cGlfc3RzKSkgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZXJyKGRldiwg
+ImVuYWJsZSBvc2VfZ3BlIGZhaWxlZFxuIik7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHJldHVybiAtRUlPOwo+IC3CoMKgwqDCoMKgwqDCoH0KPiAtCj4gLcKgwqDCoMKgwqDCoMKg
+cmV0dXJuIDA7Cj4gLSNlbHNlCj4gLcKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gLSNl
+bmRpZgo+IC19Cj4gLQo+IC1zdGF0aWMgdm9pZCBlbmFibGVfcG1lX3dha2Uoc3RydWN0IHBjaV9k
+ZXYgKnBkZXYpCj4gLXsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoKHBjaV9wbWVfY2FwYWJsZShwZGV2
+LCBQQ0lfRDApIHx8Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGNpX3BtZV9jYXBhYmxlKHBk
+ZXYsIFBDSV9EM2hvdCkgfHwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwY2lfcG1lX2NhcGFi
+bGUocGRldiwgUENJX0QzY29sZCkpICYmICFlbmFibGVfZ3BlKCZwZGV2LQo+ID5kZXYpKSB7Cj4g
+LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBjaV9wbWVfYWN0aXZlKHBkZXYsIHRydWUp
+Owo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZGJnKCZwZGV2LT5kZXYsICJp
+c2ggaXBjIGRyaXZlciBwbWUgd2FrZQo+IGVuYWJsZWRcbiIpOwo+IC3CoMKgwqDCoMKgwqDCoH0K
+PiAtfQo+IC0KPiDCoC8qKgo+IMKgICogaXNoX3Byb2JlKCkgLSBQQ0kgZHJpdmVyIHByb2JlIGNh
+bGxiYWNrCj4gwqAgKiBAcGRldjrCoMKgwqDCoMKgwqBwY2kgZGV2aWNlCj4gQEAgLTIzMyw3ICsx
+ODksNyBAQCBzdGF0aWMgaW50IGlzaF9wcm9iZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwgY29uc3QK
+PiBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqZW50KQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoC8qIEVu
+YWJsZSBQTUUgZm9yIEVITCAqLwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocGRldi0+ZGV2aWNlID09
+IEVITF9BeF9ERVZJQ0VfSUQpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVuYWJs
+ZV9wbWVfd2FrZShwZGV2KTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2aWNl
+X2luaXRfd2FrZXVwKGRldiwgdHJ1ZSk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gaXNo
+X2luaXQoaXNodHApOwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0KQo+IEBAIC0yNTYsNiArMjEy
+LDE5IEBAIHN0YXRpYyB2b2lkIGlzaF9yZW1vdmUoc3RydWN0IHBjaV9kZXYgKnBkZXYpCj4gwqDC
+oMKgwqDCoMKgwqDCoGlzaF9kZXZpY2VfZGlzYWJsZShpc2h0cF9kZXYpOwo+IMKgfQo+IMKgCj4g
+Kwo+ICsvKioKPiArICogaXNoX3NodXRkb3duKCkgLSBQQ0kgZHJpdmVyIHNodXRkb3duIGNhbGxi
+YWNrCj4gKyAqIEBwZGV2OsKgwqDCoMKgwqDCoHBjaSBkZXZpY2UKPiArICoKPiArICogVGhpcyBm
+dW5jdGlvbiBzZXRzIHVwIHdha2V1cCBmb3IgUzUKPiArICovCj4gK3N0YXRpYyB2b2lkIGlzaF9z
+aHV0ZG93bihzdHJ1Y3QgcGNpX2RldiAqcGRldikKPiArewo+ICvCoMKgwqDCoMKgwqDCoGlmIChw
+ZGV2LT5kZXZpY2UgPT0gRUhMX0F4X0RFVklDRV9JRCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgcGNpX3ByZXBhcmVfdG9fc2xlZXAocGRldik7Cj4gK30KPiArCj4gwqBzdGF0aWMg
+c3RydWN0IGRldmljZSBfX21heWJlX3VudXNlZCAqaXNoX3Jlc3VtZV9kZXZpY2U7Cj4gwqAKPiDC
+oC8qIDUwbXMgdG8gZ2V0IHJlc3VtZSByZXNwb25zZSAqLwo+IEBAIC0zNzgsMTMgKzM0Nyw2IEBA
+IHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaXNoX3Jlc3VtZShzdHJ1Y3QKPiBkZXZpY2UgKmRl
+dmljZSkKPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2
+KGRldmljZSk7Cj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBpc2h0cF9kZXZpY2UgKmRldiA9IHBj
+aV9nZXRfZHJ2ZGF0YShwZGV2KTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoC8qIGFkZCB0aGlzIHRv
+IGZpbmlzaCBwb3dlciBmbG93IGZvciBFSEwgKi8KPiAtwqDCoMKgwqDCoMKgwqBpZiAoZGV2LT5w
+ZGV2LT5kZXZpY2UgPT0gRUhMX0F4X0RFVklDRV9JRCkgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBwY2lfc2V0X3Bvd2VyX3N0YXRlKHBkZXYsIFBDSV9EMCk7Cj4gLcKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVuYWJsZV9wbWVfd2FrZShwZGV2KTsKPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X2RiZyhkZXYtPmRldmMsICJzZXQgcG93ZXIgc3RhdGUg
+dG8gRDAgZm9yCj4gZWhsXG4iKTsKPiAtwqDCoMKgwqDCoMKgwqB9Cj4gLQo+IMKgwqDCoMKgwqDC
+oMKgwqBpc2hfcmVzdW1lX2RldmljZSA9IGRldmljZTsKPiDCoMKgwqDCoMKgwqDCoMKgZGV2LT5y
+ZXN1bWVfZmxhZyA9IDE7Cj4gwqAKPiBAQCAtNDAwLDYgKzM2Miw3IEBAIHN0YXRpYyBzdHJ1Y3Qg
+cGNpX2RyaXZlciBpc2hfZHJpdmVyID0gewo+IMKgwqDCoMKgwqDCoMKgwqAuaWRfdGFibGUgPSBp
+c2hfcGNpX3RibCwKPiDCoMKgwqDCoMKgwqDCoMKgLnByb2JlID0gaXNoX3Byb2JlLAo+IMKgwqDC
+oMKgwqDCoMKgwqAucmVtb3ZlID0gaXNoX3JlbW92ZSwKPiArwqDCoMKgwqDCoMKgwqAuc2h1dGRv
+d24gPSBpc2hfc2h1dGRvd24sCj4gwqDCoMKgwqDCoMKgwqDCoC5kcml2ZXIucG0gPSAmaXNoX3Bt
+X29wcywKPiDCoH07Cj4gwqAKCg==
 
 
