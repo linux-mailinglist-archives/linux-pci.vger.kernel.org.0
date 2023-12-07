@@ -1,164 +1,193 @@
-Return-Path: <linux-pci+bounces-617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 717DA808B24
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 15:55:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F481808BF8
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 16:35:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE89E1F21578
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 14:55:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE87E1C20A5D
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 15:35:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ED1E44370;
-	Thu,  7 Dec 2023 14:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3860744C85;
+	Thu,  7 Dec 2023 15:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cP8F50TJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz/wOiEC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AEA819A
-	for <linux-pci@vger.kernel.org>; Thu,  7 Dec 2023 06:55:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701960947;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tz6X+bifKo7AdaGetM0WimZ3DgQEAXtIAzsWo7qdtOo=;
-	b=cP8F50TJrcWNT4Yt49TEXroAwvYOeC5avlf6Ysv/iCnfpMNufj+zciNSHiEnSmyA5ZjmiR
-	dDk22abrzF8J1kOB6/5tO/EL+/eRPdZqvqZKos7H3DsMzyFAyW/t7maYqjRo/c+7Z8rpcU
-	MQdUI9sW6tbuDMptR8MOcZsGHER/zWE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-48-7pJp32dqM-6rlT-qAj9Rbg-1; Thu, 07 Dec 2023 09:55:46 -0500
-X-MC-Unique: 7pJp32dqM-6rlT-qAj9Rbg-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40c193fca81so9292105e9.3
-        for <linux-pci@vger.kernel.org>; Thu, 07 Dec 2023 06:55:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701960944; x=1702565744;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tz6X+bifKo7AdaGetM0WimZ3DgQEAXtIAzsWo7qdtOo=;
-        b=PA/BIgO5+h2S2jlrMf0Aw3+t1slsTU4OfC4qaAc/BV6MJUSDInAI/L3lZVoMnpCAbh
-         mac3iaWePOFrRog8VSXfnBq3wGhc2Ve8YBHSyCfGKW5ZlAKEKqLxbMfR08OQAwO0byVW
-         2WeVIrpsuuV06RAiEUZr8jeAfwut9M/Wo+GK9SZQvt9qWaJ98n0upWvIN1T591Qk/xtK
-         6Z31hmUbEXqDFpJ6KkSs+l0/4Cv7EAPqM9+US+znMKBr+2TfT4CnuxWGAFrP/iXaVrY1
-         /pav/j5lSkkbgEDlvLR8rrpkvieMTNQwAoFA0kgEfF2UAKs/XvXG364tu44Gusd3OMYl
-         RD9g==
-X-Gm-Message-State: AOJu0YyaJELDzrQPNnPzF6pzFOgCCl2/+rTZV6sCBkUlwLToy+/9p4kK
-	itOTgvyNEnuQBePX3USJVRCeUxI9ZeaIzUdQu/KaBuOfiJNlzfY+vV+Oz0Vf43fwtxR1wB/Bly+
-	j9nS3c3rIPCr7pdzJsEx2b28z2/mT
-X-Received: by 2002:a05:600c:198b:b0:40b:5e21:dd34 with SMTP id t11-20020a05600c198b00b0040b5e21dd34mr2068543wmq.98.1701960943985;
-        Thu, 07 Dec 2023 06:55:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEqPu0jtkLU9hMN3uH/bMY5VhR71AQ+5SLWqCAxzRD+0Q/xUOdmx8munOvaO4iPnv+olLoNZQ==
-X-Received: by 2002:a05:600c:198b:b0:40b:5e21:dd34 with SMTP id t11-20020a05600c198b00b0040b5e21dd34mr2068529wmq.98.1701960943567;
-        Thu, 07 Dec 2023 06:55:43 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 3-20020a170906208300b00a1e04f24df1sm918499ejq.223.2023.12.07.06.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Dec 2023 06:55:43 -0800 (PST)
-Date: Thu, 7 Dec 2023 15:55:41 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Fiona Ebner <f.ebner@proxmox.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, lenb@kernel.org, rafael@kernel.org, Thomas Lamprecht
- <t.lamprecht@proxmox.com>
-Subject: Re: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
-Message-ID: <20231207155541.735e0055@imammedo.users.ipa.redhat.com>
-In-Reply-To: <4dbc72ba-8edb-4ff5-b95d-b601189e4415@proxmox.com>
-References: <20231130231802.GA498017@bhelgaas>
-	<4dbc72ba-8edb-4ff5-b95d-b601189e4415@proxmox.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094A54594E;
+	Thu,  7 Dec 2023 15:35:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8582DC433AD;
+	Thu,  7 Dec 2023 15:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701963316;
+	bh=GX1JJEdl3nBIPUgvKvrvyG3QPg50ra5uqsG8fD9kqBk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mz/wOiECHCVR1Lz74BNfGrVpl75pi4T1SmdNhY7T5tllzwvHekJAKY+DnlhOdAJ3H
+	 Y5ET2/EfKwazOw1UTaJeeVu74l04i5jYhNIEy1L2Z2z6ZHuM0TDun+Tdj+cig5PmlS
+	 yDK+FLExVUpT0R5XuaZ9WbDFDV/WKCUuMsBVjWNUSxth1pqW62e88T58K444wwlrZn
+	 Z6sEM2E99OWA1wwwE7tbnvv935G2s6uoEpKMjI7mHkiHNAdAE1YTcgQZ1GS3U88oiP
+	 gTd7Zjm9pdWTskE52YIYsPXPKUoaVgu+iSzbE6ZSSy0H8O7+/l6TKFn0yOnU+gv8Xe
+	 da57Lx0/Ymf8g==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2c9eca5bbaeso11055361fa.3;
+        Thu, 07 Dec 2023 07:35:16 -0800 (PST)
+X-Gm-Message-State: AOJu0Ywc97LuL7Z11n9vC6iKMixZRw+byohIi3XdAxR0zef+lA4tk76P
+	PfFfTyDPDarXw14Lfi9RdNBr1V8rGuOiphPCrew=
+X-Google-Smtp-Source: AGHT+IF/q/lLjgFbSPGy960Lqp10I7G5W6vbxblvpjxeewdLqSpG5SEUTfucABSTKcFVGKtdRrUOTAdXb/YyFHWnbEc=
+X-Received: by 2002:a2e:7c15:0:b0:2c9:f2a5:7145 with SMTP id
+ x21-20020a2e7c15000000b002c9f2a57145mr888908ljc.142.1701963314593; Thu, 07
+ Dec 2023 07:35:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20231206125433.18420-1-tzimmermann@suse.de> <20231206125433.18420-2-tzimmermann@suse.de>
+In-Reply-To: <20231206125433.18420-2-tzimmermann@suse.de>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 7 Dec 2023 16:35:03 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEOXh10v7dz-Y4hVM0y1VxR3YFxSxuE9a3wE0LbMsy2UA@mail.gmail.com>
+Message-ID: <CAMj1kXEOXh10v7dz-Y4hVM0y1VxR3YFxSxuE9a3wE0LbMsy2UA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arch/x86: Move struct pci_setup_rom into pci_setup.h
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	bhelgaas@google.com, arnd@arndb.de, zohar@linux.ibm.com, 
+	dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org, 
+	serge@hallyn.com, javierm@redhat.com, linux-arch@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-integrity@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 1 Dec 2023 10:24:41 +0100
-Fiona Ebner <f.ebner@proxmox.com> wrote:
+Hello Thomas,
 
-> Am 01.12.23 um 00:18 schrieb Bjorn Helgaas:
-> > On Wed, Nov 29, 2023 at 04:22:41PM +0100, Fiona Ebner wrote:  
-> >> Hi,
-> >> it seems that hot-plugging SCSI disks for QEMU virtual machines booting
-> >> with UEFI and with guest kernels >= 6.5 might be broken. It's not
-> >> consistently broken, hinting there might be a race somewhere.
-> >>
-> >> Reverting the following two commits seems to make it work reliably again:
-> >>
-> >> cc22522fd55e2 ("PCI: acpiphp: Use
-> >> pci_assign_unassigned_bridge_resources() only for non-root bus")
-> >> 40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary"
-> >>
-> >> Of course, they might only expose some pre-existing issue, but this is
-> >> my best lead. See below for some logs and details about an affected
-> >> virtual machine. Happy to provide more information and to debug/test
-> >> further.  
-> > 
-> > Shoot.  Thanks very much for the report and your debugging.  I'm
-> > hoping Igor will chime in with some ideas.
-> > 
-> > Both of those commits appeard in v6.5 and fixed legit issues, so I
-> > hate to revert them, but this does appear to be a regression.
-> > 
-> > #regzbot introduced: cc22522fd55e2 ^
-> > #regzbot introduced: 40613da52b13f ^
-> >   
-> >> Host kernel: 6.5.11-4-pve which is based on the one from Ubuntu
-> >> Guest kernel: 6.7.0-rc3 and 6.7.0-rc3 with above commits reverted
-> >> QEMU version: v8.1.0 built from source
-> >> EDK2 version: submodule in the QEMU v8.1 repository: edk2-stable202302
-> >>  
-> 
-> I should mention that I haven't run into the issue when booting the VM
-> with SeaBIOS yet.
-> 
-> Log for 6.7.0-rc3 + SeaBIOS (bundled with QEMU 8.1):
-> 
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xfd404000-0xfd407fff 64bit pref]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xfe801000-0xfe801fff]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xfe800000-0xfe9fffff]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xfd400000-0xfd5fffff 64bit pref]
-> > Dec 01 10:08:08 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
-> > Dec 01 10:08:08 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
-> > Dec 01 10:08:08 hotplug kernel: scsi host3: Virtio SCSI HBA
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xfe800000-0xfe9fffff]
-> > Dec 01 10:08:08 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-> > Dec 01 10:08:08 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xfd400000-0xfd5fffff 64bit pref]
-> > Dec 01 10:08:08 hotplug kernel: scsi 3:0:0:1: Attached scsi generic sg1 type 0
-> > Dec 01 10:08:08 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
-> > Dec 01 10:08:08 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
-> > Dec 01 10:08:08 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
-> > Dec 01 10:08:08 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
-> > Dec 01 10:08:08 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-> > Dec 01 10:08:08 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk  
-> 
-> Interestingly, the line with "QEMU HARDDISK" does not come after all
-> lines with "bridge window" like was the case for the one time it did
-> work with UEFI. So maybe that was just a red herring.
+On Wed, 6 Dec 2023 at 13:54, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+> The type definition of struct pci_setup_rom in <asm/pci.h> requires
+> struct setup_data from <asm/bootparam.h>. Many drivers include
+> <linux/pci.h>, but do not use boot parameters. Changes to bootparam.h
+> or its included header files could easily trigger a large, unnecessary
+> rebuild of the kernel.
+>
+> Moving struct pci_setup_rom into its own header file avoid including
+> <asm/bootparam.h> in <asm/pci.h>. Update the only two users of the
+> struct in the x86 PCI code and in the EFI code. Also remove the include
+> statement for x86_init.h, which is unnecessary but pulls in bootparams.h.
+>
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  arch/x86/include/asm/pci.h              | 13 -------------
+>  arch/x86/include/asm/pci_setup.h        | 19 +++++++++++++++++++
+>  arch/x86/pci/common.c                   |  1 +
+>  drivers/firmware/efi/libstub/x86-stub.c |  1 +
+>  4 files changed, 21 insertions(+), 13 deletions(-)
+>  create mode 100644 arch/x86/include/asm/pci_setup.h
+>
 
-I've just seen this,
-let me try to reproduce and see what can be done with it.
+Thanks for cleaning this up.
 
-> 
-> Best Regards,
-> Fiona
-> 
+Would it be more appropriate to move all setup_data related
+definitions into a separate header entirely?
 
+- the SETUP_ defines
+- struct setup_data
+- struct pci_setup_rom
+- struct   jailhouse_setup_data
+etc etc
+
+struct setup_header has a setup_data field which is the root of the
+setup_data linked list, but it is typed as __u64 so it doesn't
+actually need to know the real type of the associated structs.
+
+That way, you can avoid creating a special asm/pci_setup.h that only
+covers this one particular definition.
+
+
+
+> diff --git a/arch/x86/include/asm/pci.h b/arch/x86/include/asm/pci.h
+> index b40c462b4af3..b3ab80a03365 100644
+> --- a/arch/x86/include/asm/pci.h
+> +++ b/arch/x86/include/asm/pci.h
+> @@ -10,7 +10,6 @@
+>  #include <linux/numa.h>
+>  #include <asm/io.h>
+>  #include <asm/memtype.h>
+> -#include <asm/x86_init.h>
+>
+>  struct pci_sysdata {
+>         int             domain;         /* PCI domain */
+> @@ -124,16 +123,4 @@ cpumask_of_pcibus(const struct pci_bus *bus)
+>  }
+>  #endif
+>
+> -struct pci_setup_rom {
+> -       struct setup_data data;
+> -       uint16_t vendor;
+> -       uint16_t devid;
+> -       uint64_t pcilen;
+> -       unsigned long segment;
+> -       unsigned long bus;
+> -       unsigned long device;
+> -       unsigned long function;
+> -       uint8_t romdata[];
+> -};
+> -
+>  #endif /* _ASM_X86_PCI_H */
+> diff --git a/arch/x86/include/asm/pci_setup.h b/arch/x86/include/asm/pci_setup.h
+> new file mode 100644
+> index 000000000000..b4b246ef6f2b
+> --- /dev/null
+> +++ b/arch/x86/include/asm/pci_setup.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_PCI_SETUP_H
+> +#define _ASM_X86_PCI_SETUP_H
+> +
+> +#include <asm/bootparam.h>
+> +
+> +struct pci_setup_rom {
+> +       struct setup_data data;
+> +       uint16_t vendor;
+> +       uint16_t devid;
+> +       uint64_t pcilen;
+> +       unsigned long segment;
+> +       unsigned long bus;
+> +       unsigned long device;
+> +       unsigned long function;
+> +       uint8_t romdata[];
+> +};
+> +
+> +#endif /* _ASM_X86_PCI_SETUP_H */
+> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> index ddb798603201..c6cbb9182160 100644
+> --- a/arch/x86/pci/common.c
+> +++ b/arch/x86/pci/common.c
+> @@ -17,6 +17,7 @@
+>  #include <asm/segment.h>
+>  #include <asm/io.h>
+>  #include <asm/smp.h>
+> +#include <asm/pci_setup.h>
+>  #include <asm/pci_x86.h>
+>  #include <asm/setup.h>
+>  #include <asm/irqdomain.h>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 1bfdae34df39..0c878ebe5257 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -17,6 +17,7 @@
+>  #include <asm/boot.h>
+>  #include <asm/kaslr.h>
+>  #include <asm/sev.h>
+> +#include <asm/pci_setup.h>
+>
+>  #include "efistub.h"
+>  #include "x86-stub.h"
+> --
+> 2.43.0
+>
 
