@@ -1,135 +1,192 @@
-Return-Path: <linux-pci+bounces-638-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-639-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA524809683
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 00:22:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0CDE809694
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 00:28:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B222B20B0A
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 23:22:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3C121C20AD4
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 23:28:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DABCC4F8B2;
-	Thu,  7 Dec 2023 23:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3763756758;
+	Thu,  7 Dec 2023 23:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkRlxFBw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVlqw5Yb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A971712
-	for <linux-pci@vger.kernel.org>; Thu,  7 Dec 2023 15:21:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701991312;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g2A4NN2g2IRl3a/HPVTv7XHKFlgL0Mi4dJpLGEepk7M=;
-	b=OkRlxFBwnznAOkEQn71swKViQyRitYxFwtnHxP9/f+eLfn6X8nF1gGyzYHG/ySVdwJp1hp
-	boyDMOgXq0RVHvzrNIJtc9M50ZMMaXPjE8eRuXG76atr/Cbbzp6uGzYiOz1g3pBegcJbpe
-	yEHTJOr8epZdAzpyaXu3UFslVz3P1ak=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-Hof_fiCmPtGUXCZPYMRQQA-1; Thu, 07 Dec 2023 18:21:50 -0500
-X-MC-Unique: Hof_fiCmPtGUXCZPYMRQQA-1
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-35d530fe1b5so17665015ab.3
-        for <linux-pci@vger.kernel.org>; Thu, 07 Dec 2023 15:21:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701991310; x=1702596110;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2A4NN2g2IRl3a/HPVTv7XHKFlgL0Mi4dJpLGEepk7M=;
-        b=WET2XUrJZ1mLP0nzgQCZP8MIbR9AeSWSe7brYoSsMR90FhdzhHJ6RXNQ1aKxBJICQx
-         yEVzA4odxNZCarjwKagHqacLo5Wwgj7NwTbb+8MN//x95E3xks/Mo2G0fuicuPrJseVS
-         pvSevxxuFBSvpaBkqquxt2DeIboQdjXLwORu9ivrsQ4siYnPQn+vmliCG438SpNsc4gl
-         JK7RGaRPP18OXkcfFeahjgYP5P14YVhma4T8hVIZrn55oagpC05hpEVSaa0ealILZZaZ
-         TviyL3mJlGXqhBaPI3stXKuUcFlJOW95zYQiR9aL1sAU0K3KtHz+aqOF8/oP4Ww+PfpP
-         iwHQ==
-X-Gm-Message-State: AOJu0Yy0hPaoWI85hEyPQkUFC1ykfYSIa/SrrC+gHbxLqlMtKjuP3Xf0
-	qsIBYXf0YMsp5YNhlUVwoP8CgTEb2CeCfj/JqotoqHejfH42qq0qmREgxb6ut1Mjec/H41JMyVY
-	llZfQ4gVhzeBhiRjXjruP
-X-Received: by 2002:a92:c5af:0:b0:35d:5995:903b with SMTP id r15-20020a92c5af000000b0035d5995903bmr3034524ilt.46.1701991310150;
-        Thu, 07 Dec 2023 15:21:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGwPnwPxJCnGBO8ZWNiwb9MZD6i4z5OEZaWA1m90wazcjxwSbhZecNVdbLVPASZUOCL8SkQdw==
-X-Received: by 2002:a92:c5af:0:b0:35d:5995:903b with SMTP id r15-20020a92c5af000000b0035d5995903bmr3034520ilt.46.1701991309890;
-        Thu, 07 Dec 2023 15:21:49 -0800 (PST)
-Received: from redhat.com ([38.15.60.12])
-        by smtp.gmail.com with ESMTPSA id a62-20020a029444000000b0046674d6318fsm178879jai.17.2023.12.07.15.21.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Dec 2023 15:21:49 -0800 (PST)
-Date: Thu, 7 Dec 2023 16:21:48 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Jim Harris <jim.harris@samsung.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "ben@nvidia.com" <ben@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>
-Subject: Re: Locking between vfio hot-remove and pci sysfs sriov_numvfs
-Message-ID: <20231207162148.2631fa58.alex.williamson@redhat.com>
-In-Reply-To: <ZXJI5+f8bUelVXqu@ubuntu>
-References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
-	<ZXJI5+f8bUelVXqu@ubuntu>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E7481CD;
+	Thu,  7 Dec 2023 23:28:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608F4C433C9;
+	Thu,  7 Dec 2023 23:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701991697;
+	bh=DZ+5Z8KaZ9xQLPpIje7ERtXQp2O2ETE56yV3vkU7St8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mVlqw5Ybfu7kl5yYBdmXIo5fIIgEECYrKwsojA8PjBvs0qxwQCN4wJ+BVK930q2H0
+	 9ewYe4APFkPRtfqxalCfRFR16Cu5RS6K/WdY6p3kEftGvfViN45CHv38g/KU+UcRyL
+	 j2vhZlkGGTE/G+f9WROEfDVQJdFhDetiqoAPtloxa0SXcovMYhbk1AaaclDXv+RYpr
+	 bV1SQChJXtkrbpIhwxZXBCVDIAkrPL3mOSjsFaNyGXmylU01HVONKfFHO6sV7DwMcA
+	 +3QkvlHCtByeRiVnsJG/iv/VeIOiTAjeJZm8rj8m/72+WA1BahiXr0UHlld4pC932W
+	 yw+fC6PAqkU4A==
+Date: Thu, 7 Dec 2023 17:28:15 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Fiona Ebner <f.ebner@proxmox.com>
+Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, lenb@kernel.org, rafael@kernel.org,
+	Thomas Lamprecht <t.lamprecht@proxmox.com>
+Subject: Re: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
+Message-ID: <20231207232815.GA771837@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
 
-On Thu, 7 Dec 2023 22:38:23 +0000
-Jim Harris <jim.harris@samsung.com> wrote:
+On Wed, Nov 29, 2023 at 04:22:41PM +0100, Fiona Ebner wrote:
+> Hi,
+> it seems that hot-plugging SCSI disks for QEMU virtual machines booting
+> with UEFI and with guest kernels >= 6.5 might be broken. It's not
+> consistently broken, hinting there might be a race somewhere.
+> 
+> Reverting the following two commits seems to make it work reliably again:
+> 
+> cc22522fd55e2 ("PCI: acpiphp: Use
+> pci_assign_unassigned_bridge_resources() only for non-root bus")
+> 40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary"
+> 
+> Of course, they might only expose some pre-existing issue, but this is
+> my best lead. See below for some logs and details about an affected
+> virtual machine. Happy to provide more information and to debug/test
+> further.
+> ...
 
-> I am seeing a deadlock using SPDK with hotplug detection using vfio-pci
-> and an SR-IOV enabled NVMe SSD. It is not clear if this deadlock is intended
-> or if it's a kernel bug.
+> I've attached some logs for guest using kernel 6.7.0-rc3 where hotplug
+> works rarely and guest using kernel 6.7.0-rc3 with the previously
+> mentioned commits reverted where hotplug works reliably:
 > 
-> Note: SPDK uses DPDK's PCI device enumeration framework, so I'll reference
-> both SPDK and DPDK in this description.
+> 6.7.0-rc3:
 > 
-> DPDK registers an eventfd with vfio for hotplug notifications. If the associated
-> device is removed (i.e. write 1 to its pci sysfs remove entry), vfio
-> writes to the eventfd, requesting DPDK to release the device. It does this
-> while holding the device_lock(), and then waits for completion.
-> 
-> DPDK gets the notification, and passes it up to SPDK. SPDK does not release
-> the device immediately. It has some asynchronous operations that need to be
-> performed first, so it will release the device a bit later.
-> 
-> But before the device is released, SPDK also triggers DPDK to do a sysfs scan
-> looking for newly inserted devices. Note that the removed device is not
-> completely removed yet from kernel PCI perspective - all of its sysfs entries
-> are still available, including sriov_numvfs.
-> 
-> DPDK explicitly reads sriov_numvfs to see if the device is SR-IOV capable.
-> SPDK itself doesn't actually use this value, but it is part of the scan
-> triggered by SPDK and directly leads to the deadlock. sriov_numvfs_show()
-> deadlocks because it tries to hold device_lock() while reading the pci
-> device's pdev->sriov->num_VFs.
-> 
-> We're able to workaround this in SPDK by deferring the sysfs scan if
-> a device removal is in process. And maybe that is what we are supposed to
-> be doing, to avoid this deadlock?
-> 
-> Reference to SPDK issue, for some more details (plus simple repro stpes for
-> anyone already familiar with SPDK): https://github.com/spdk/spdk/issues/3205
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:12:02 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:12:02 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:12:02 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:02 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:02 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref] 
 
-device_lock() has been a recurring problem.  We don't have a lot of
-leeway in how we support the driver remove callback, the device needs
-to be released.  We can't return -EBUSY and I don't think we can drop
-the mutex while we're waiting on userspace.
+What's the actual symptom that this is broken?  All these log
+fragments show the exact same assignments for BARs 0, 1, 4 and for the
+bridge windows.
 
-I've done some fix-ups in the past to use device_trylock() to avoid
-deadlocks, which might be an option here, ex. reading sriov_numvfs
-could return -EBUSY in this scenario.  We keep running into these
-scenarios though and we might just need to pick a point at which we
-kill the user process holding the device.
+I assume 0000:01:02.0 is the hot-added SCSI HBA, and 00:05.0 is a
+bridge leading to it?
 
-I'm open to suggestions.  Thanks,
+Can you put the complete dmesg logs somewhere?  There's a lot of
+context missing here.
 
-Alex
+Do you have to revert both cc22522fd55e2 and 40613da52b13f to make it
+work reliably?  If we have to revert something, reverting one would be
+better than reverting both.
 
+Bjorn
+
+> Reboot
+> 
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:12:52 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:12:52 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:12:52 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:12:52 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:12:52 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> 
+> RebootThe one time it did work. Note that the line with "QEMU HARDDISK"
+> comes after all lines with "bridge window":
+> 
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:13:51 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:13:51 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0: PCI bridge to [bus 01]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [io  0xe000-0xefff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc1400000-0xc15fffff]
+> > Nov 29 15:13:51 hotplug kernel: pci 0000:00:05.0:   bridge window [mem 0xc000000000-0xc01fffffff 64bit pref]
+> > Nov 29 15:13:51 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: Attached scsi generic sg1 type 0
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+> > Nov 29 15:13:51 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk
+> > Nov 29 15:14:08 hotplug systemd[1]: systemd-fsckd.service: Deactivated successfully.
+> 
+> 6.7.0-rc3 with the following reverted:
+> cc22522fd55e2 ("PCI: acpiphp: Use
+> pci_assign_unassigned_bridge_resources() only for non-root bus")
+> 40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary")
+> 
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: [1af4:1004] type 00 class 0x010000
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x10: [io  0x0000-0x003f]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 4: assigned [mem 0xc000004000-0xc000007fff 64bit pref]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 1: assigned [mem 0xc1401000-0xc1401fff]
+> > Nov 29 15:15:37 hotplug kernel: pci 0000:01:02.0: BAR 0: assigned [io  0xe040-0xe07f]
+> > Nov 29 15:15:37 hotplug kernel: virtio-pci 0000:01:02.0: enabling device (0000 -> 0003)
+> > Nov 29 15:15:37 hotplug kernel: ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> > Nov 29 15:15:37 hotplug kernel: scsi host3: Virtio SCSI HBA
+> > Nov 29 15:15:37 hotplug kernel: scsi 3:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: Attached scsi generic sg1 type 0
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: Power-on or device reset occurred
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] 2048 512-byte logical blocks: (1.05 MB/1.00 MiB)
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Write Protect is off
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Mode Sense: 63 00 00 08
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+> > Nov 29 15:15:37 hotplug kernel: sd 3:0:0:1: [sdb] Attached SCSI disk
+> > Nov 29 15:15:38 hotplug systemd[1]: systemd-fsckd.service: Deactivated successfully.
+> 
 
