@@ -1,152 +1,249 @@
-Return-Path: <linux-pci+bounces-636-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-637-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4672F80957C
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 23:38:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 830208095C0
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 23:52:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F0041C20B76
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 22:38:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC7E5B20DA0
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 22:52:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4CF56B7B;
-	Thu,  7 Dec 2023 22:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741F8840F9;
+	Thu,  7 Dec 2023 22:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="G2lEU+q+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnOmXd6J"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29467133;
-	Thu,  7 Dec 2023 14:38:29 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231207223824usoutp018529c2370b10bcc6e0ff00dace0cbde8~erbWqvGet2412324123usoutp014;
-	Thu,  7 Dec 2023 22:38:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231207223824usoutp018529c2370b10bcc6e0ff00dace0cbde8~erbWqvGet2412324123usoutp014
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701988705;
-	bh=oEmnfVAsY1dOI/pQf9I4bPt/Tnpohu9BwqrBo9tC190=;
-	h=From:To:Subject:Date:References:From;
-	b=G2lEU+q+FU1fKGQ1iGkPLya5diQsCAQDdmPsGFBAHcqF3bdQPeNV0dwilkIR8J/hw
-	 HOXZbYpTOLgYCmvMDZgUvpiKa7aAemh1C6hC5NEHYF8FV1Ed1Xok8XAg87Fjsi1z8R
-	 zM1tVsmIN2OLNX65Tcvby5qDgRFwrR2fr75rRNlg=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-	[203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231207223824uscas1p1aa3d463237f8ba1b6a899f373e8e63c7~erbWeNsjQ2550225502uscas1p14;
-	Thu,  7 Dec 2023 22:38:24 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges3new.samsung.com (USCPEMTA) with SMTP id 5A.8B.09550.06942756; Thu, 
-	7 Dec 2023 17:38:24 -0500 (EST)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9~erbWFyKxW0755007550uscas1p26;
-	Thu,  7 Dec 2023 22:38:24 +0000 (GMT)
-X-AuditID: cbfec370-933ff7000000254e-53-65724960964e
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id B1.30.09511.06942756; Thu, 
-	7 Dec 2023 17:38:24 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Thu, 7 Dec 2023 14:38:23 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Thu,
-	7 Dec 2023 14:38:23 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "ben@nvidia.com"
-	<ben@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>
-Subject: Locking between vfio hot-remove and pci sysfs sriov_numvfs
-Thread-Topic: Locking between vfio hot-remove and pci sysfs sriov_numvfs
-Thread-Index: AQHaKV4WwNJvmQMe7UuNHg2ttxy7ZQ==
-Date: Thu, 7 Dec 2023 22:38:23 +0000
-Message-ID: <ZXJI5+f8bUelVXqu@ubuntu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7EC6AB01C89AA14CBAE9C5A80CB308F0@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586BD5732B
+	for <linux-pci@vger.kernel.org>; Thu,  7 Dec 2023 22:52:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4100C433C8;
+	Thu,  7 Dec 2023 22:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701989530;
+	bh=HGADqaQgJ+Ygr3T4IO/0dGsxAN2q2tX+T8CN+umeUWA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NnOmXd6J55uZV5c/Q8lnyXY+WrZAYHCXvvLCSD+sb+IJe/FyfuWaSQDmufnULAsj6
+	 uSvIfYlALZYlwCM1kPyEqu5Uhzsmmbbqz72UVCXOlcvJzNAm/uL5p9D5k+zrFUuCOd
+	 rb0UrsAY34/ZjP2vcOgpuSjO1MRBnfOhafqvwFJ14eku0I/Y9OikWfJ4E8DrOz0VOy
+	 t89C3KQvK2mSNYedx2kGc/bcvRKrH58r/LVHJlLcDDnW04c0j8Cg/PmsVdijlWPRdy
+	 2gAtdSkokCW/87z/lKlwFsw7TcNWbYOpv7r91uVpOIpv3yp1Mga84VN/BuTRHzk3KX
+	 Ld0V0ouH62qnA==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50be10acaf9so1323969e87.1;
+        Thu, 07 Dec 2023 14:52:10 -0800 (PST)
+X-Gm-Message-State: AOJu0YwkHmgcheK8oe/pXEnn4UA5N1+Ih3wA3bSJTD+FjNO7qbLbB1Bt
+	0XZfvbQfJMlbxKTqO/ZFzQh6boJCPBn+W5WF/w==
+X-Google-Smtp-Source: AGHT+IGtv5yRJd+8qa8B+2DYoZIs3gnXSm5VdhX0PVbXigUGSFcxjSpk5PW7GY618HkpowugjuqIZuaaWItXoxh9+e4=
+X-Received: by 2002:a19:8c5d:0:b0:50b:e73c:b574 with SMTP id
+ i29-20020a198c5d000000b0050be73cb574mr3136537lfj.32.1701989528934; Thu, 07
+ Dec 2023 14:52:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRmVeSWpSXmKPExsWy7djX87oJnkWpBo9/aVh8+9/DZtG8dSaj
-	xZKmDIsr//YwWsyZWmhxdt5xNgc2jwWbSj16m9+xebzfd5XN4/MmuQCWKC6blNSczLLUIn27
-	BK6M27NuMRe84a049L6PtYFxAXcXIyeHhICJxK2/7xm7GLk4hARWMkrcujUdymllknjzdBtT
-	FyMHWNXPxlSI+BpGiVdv5rNDOB8ZJfa8fsAE4SxllNj+7xcjyFw2AU2JX1fWgCVEBOYxSTTc
-	284MkhAWcJaY9W4vC4gtIuAhsfNXIxuErSfRc2k5E4jNIqAi8er2SrA4r4CqRMP9HlYQm1FA
-	TOL7qTVgNcwC4hK3nsxngnhCUGLR7D3MELaYxL9dD9kgbEWJ+99fskPU60gs2P2JDcK2k3iy
-	8i8LhK0tsWzha2aIXYISJ2c+YYHolZQ4uOIGC8gDEgILOSS2/H0MtcxF4v/0XihbWmL6mstQ
-	DdkSK9d3QMOrQKLhSBBE2Fpi4Z/1UDfzSfz99YgRooRXoqNNaAKj0iwk38xCcuksJJfOQnLp
-	LCSXLmBkXcUoXlpcnJueWmycl1quV5yYW1yal66XnJ+7iRGYhE7/O1ywg/HWrY96hxiZOBgP
-	MUpwMCuJ8Oacz08V4k1JrKxKLcqPLyrNSS0+xCjNwaIkzmtoezJZSCA9sSQ1OzW1ILUIJsvE
-	wSnVwDQ7Zurx+UuX6PjZ3j7fOscsct3qfZy/vnH0R1de/5Bs9kpj2jfLxa8/rXpwk9V42hK1
-	if7/lsxK19MJ1NiXod60RnhZotPLt2FltwK+XitYevrM+rs676frVSUamgt+22jAdpnX96/B
-	ru1/vWyWy5wJt/Rz8stfVNr746ulSrNEAculGEceQyEV9U9FSVM494nmZC9d++623CF5hpKV
-	kR27whs4rU3v/dx4UEk/2X4RA/vKTWuDd58/2uCz+5x+yI3rX5SFmlQb3M/eXRiR/VezRktg
-	3j71e2v+yElPXXTkjfYbuZ0T57f+1D1w6m3n9j0sYlPntKVyykctkVto/45hxvHisgCFNU/T
-	Vl3gb7uqxFKckWioxVxUnAgAhYlJ+LEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWS2cDsrJvgWZRq8PkWr8W3/z1sFs1bZzJa
-	LGnKsLjybw+jxZyphRZn5x1nc2DzWLCp1KO3+R2bx/t9V9k8Pm+SC2CJ4rJJSc3JLEst0rdL
-	4Mq4PesWc8Eb3opD7/tYGxgXcHcxcnBICJhI/GxM7WLk5BASWMUo0TvVqIuRC8j+yChxY+s0
-	FojEUkaJjmfuIDabgKbErytrmECKRATmMEmc3nyEFSQhLOAsMevdXrAGEQEPiZ2/GtkgbD2J
-	nkvLmUBsFgEViVe3V4LFeQVUJRru94D1MgqISXw/tQashllAXOLWk/lgtoSAgMSSPeeZIWxR
-	iZeP/7FC2IoS97+/ZIeo15FYsPsTG4RtJ/Fk5V8WCFtbYtnC18wQuwQlTs58wgLRKylxcMUN
-	lgmMorOQrJuFZNQsJKNmIRk1C8moBYysqxjFS4uLc9Mrio3zUsv1ihNzi0vz0vWS83M3MQLj
-	7vS/wzE7GO/d+qh3iJGJg/EQowQHs5IIb875/FQh3pTEyqrUovz4otKc1OJDjNIcLErivHcf
-	aKQKCaQnlqRmp6YWpBbBZJk4OKUamLimv12w5tMEMY1NZ9gPRNfL7RG/MvEJz1SmiIp3yeJ5
-	2ueYq5/lRPIYzPsRyOmZGblj/dy3Mf3/D14TNhNPVvL1M7QUtpvwmtvg+r0jT5fICJvmc9l9
-	lX57bn9CyC35z7sOK7I5T7u4eOHh8qkywttc4yfq/n0jmsmxNvxqbUG3Sdaddd9F1694E7ig
-	+MmPZKUlxyMmvC75IGm068+szMaSj73v1rtz52S9eqjMnqEwt0tL16+6d3195jpO8QftbhIP
-	LvD4T1PXTLwudzZl8tcFv1bcrj0wv1Zk/UuttAPn17SrvgqokPT5tT85+91dqWOrLj3Q8FZ+
-	bypqxjS5iW3BO79fJ2r+iR35o8BvWKDEUpyRaKjFXFScCABYBrVsKgMAAA==
-X-CMS-MailID: 20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9
-References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
+References: <20231130165700.685764-1-herve.codina@bootlin.com>
+ <CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
+ <20231204134335.3ded3d46@bootlin.com> <CAL_JsqLtCS3otZ1sfiPEWwrWB4dyNpu4e0xANWJriCEUYr+4Og@mail.gmail.com>
+ <20231204163014.4da383f2@bootlin.com> <CAL_JsqJJ64513pyQggU71agTzawNWPpm6ZpWMB6e0zu-tWL8yw@mail.gmail.com>
+ <20231205090452.7c601eb5@bootlin.com>
+In-Reply-To: <20231205090452.7c601eb5@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 7 Dec 2023 16:51:56 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
+Message-ID: <CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
+	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I am seeing a deadlock using SPDK with hotplug detection using vfio-pci
-and an SR-IOV enabled NVMe SSD. It is not clear if this deadlock is intende=
+On Tue, Dec 5, 2023 at 2:05=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
+>
+> On Mon, 4 Dec 2023 17:03:21 -0600
+> Rob Herring <robh@kernel.org> wrote:
+>
+> > On Mon, Dec 4, 2023 at 9:30=E2=80=AFAM Herve Codina <herve.codina@bootl=
+in.com> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > On Mon, 4 Dec 2023 07:59:09 -0600
+> > > Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > [...]
+> > >
+> > > > > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > > > > > index 9c2137dae429..46b252bbe500 100644
+> > > > > > --- a/drivers/pci/bus.c
+> > > > > > +++ b/drivers/pci/bus.c
+> > > > > > @@ -342,8 +342,6 @@ void pci_bus_add_device(struct pci_dev *dev=
+)
+> > > > > >          */
+> > > > > >         pcibios_bus_add_device(dev);
+> > > > > >         pci_fixup_device(pci_fixup_final, dev);
+> > > > > > -       if (pci_is_bridge(dev))
+> > > > > > -               of_pci_make_dev_node(dev);
+> > > > > >         pci_create_sysfs_dev_files(dev);
+> > > > > >         pci_proc_attach_device(dev);
+> > > > > >         pci_bridge_d3_update(dev);
+> > > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > > > > index 51e3dd0ea5ab..e15eaf0127fc 100644
+> > > > > > --- a/drivers/pci/of.c
+> > > > > > +++ b/drivers/pci/of.c
+> > > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
+> > > > > >                 return 0;
+> > > > > >
+> > > > > >         node =3D of_pci_find_child_device(dev->bus->dev.of_node=
+, dev->devfn);
+> > > > > > +       if (!node && pci_is_bridge(dev))
+> > > > > > +               of_pci_make_dev_node(dev);
+> > > > > >         if (!node)
+> > > > > >                 return 0;
+> > > > >
+> > > > > Maybe it is too early.
+> > > > > of_pci_make_dev_node() creates a node and fills some properties b=
+ased on
+> > > > > some already set values available in the PCI device such as its s=
+truct resource
+> > > > > values.
+> > > > > We need to have some values set by the PCI infra in order to crea=
+te our DT node
+> > > > > with correct values.
+> > > >
+> > > > Indeed, that's probably the issue I'm having. In that case,
+> > > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still befor=
+e
+> > > > device_add().
+> > > >
+> > > > I think modifying sysfs after device_add() is going to race with
+> > > > userspace. Userspace is notified of a new device, and then the of_n=
+ode
+> > > > link may or may not be there when it reads sysfs. Also, not sure if
+> > > > we'll need DT modaliases with PCI devices, but they won't work if t=
+he
+> > > > DT node is not set before device_add().
+> > >
+> > > Ok, we can try using DECLARE_PCI_FIXUP_HEADER.
+> > > On your side, is moving from DECLARE_PCI_FIXUP_EARLY to DECLARE_PCI_F=
+IXUP_HEADER
+> > > fix your QEMU unittest ?
+> >
+> > No...
+
+I think the problem is we aren't setting the fwnode, just the of_node
+ptr, but I haven't had a chance to verify that.
+
+> > And testing the bridge part crashes. That's because there's a
+> > dependency on the bridge->subordinate to write out bus-range and
+> > interrupt-map. I think the fix there is we should just not write those
+> > properties. The bus range isn't needed because the kernel does its own
+> > assignments. For interrupt-map, it is only needed if "interrupts" is
+> > present in the child devices. If not present, then the standard PCI
+> > swizzling is used. Alternatively, I think the interrupt mapping could
+> > be simplified to just implement the standard swizzling at each level
+> > which isn't dependent on any of the devices on the bus. I gave that a
+> > go where each interrupt-map just points to the parent bridge, but ran
+> > into an issue that the bridge nodes don't have a phandle. That should
+> > be fixable, but I'd rather go with the first option. I suppose that
+> > depends on how the interrupts downstream of the PCI device need to get
+> > resolved. It could be that the PCI device serves as the interrupt
+> > controller and can resolve the parent interrupt on its own (which may
+> > be needed for ACPI host anyways).
+>
+> About interrupt, I am a bit stuck on my side.
+> My dtso (applied at PCI device level) contains the following:
+>         fragment@0 {
+>                 target-path=3D"";
+>                 __overlay__ {
+>                         pci-ep-bus@0 {
+>                                 compatible =3D "simple-bus";
+>                                 #address-cells =3D <1>;
+>                                 #size-cells =3D <1>;
+>
+>                                 /*
+>                                  * map @0xe2000000 (32MB) to BAR0 (CPU)
+>                                  * map @0xe0000000 (16MB) to BAR1 (AMBA)
+>                                  */
+>                                 ranges =3D <0xe2000000 0x00 0x00 0x00 0x2=
+000000
+>                                           0xe0000000 0x01 0x00 0x00 0x100=
+0000>;
+>
+>                                 itc: itc {
+>                                         compatible =3D "microchip,lan966x=
+-itc";
+>                                         #interrupt-cells =3D <1>;
+>                                         interrupt-controller;
+>                                         reg =3D <0xe00c0120 0x190>;
+>                                 };
+>
+>                                 ...
+>                          };
+>                 };
+>         };
+>
+> I have a 'simple-bus' with a 'ranges' property to translate the BAR addre=
+sses
+> then several devices. Among them a interrupt controller (itc). Its parent
+> interrupt is the one used by the PCI device (INTA).
+> I cannot describe this parent interrupt in the dtso because to that I nee=
+d the
+> parent interrupt phandle which will be know only at runtime.
+
+But you don't. The logic to find the interrupt parent is walk up the
+parent nodes until you find 'interrupt-parent' or
+'#interrupt-controller' (and interrupt-map always has
+#interrupt-controller). So your overlay just needs 'interrupts =3D <1>'
+for INTA and it should all just work.
+
+That of course implies that we need interrupt properties in all the
+bridges which I was hoping to avoid. In the ACPI case, for DT
+interrupt parsing to work, we're going to need to end up in an
+'interrupt-controller' node somewhere. I think the options are either
+we walk interrupt-map properties up to the host bridge which then
+points to something or the PCI device is the interrupt controller. I
+think the PCI device is the right place. How the downstream interrupts
+are routed to PCI interrupts are defined by the device. That would
+work the same way for both DT and ACPI. If you are concerned about
+implementing in each driver needing this, some library functions can
+mitigate that.
+
+I'm trying to play around with the IRQ domains and get this to work,
+but not having any luck yet.
+
+> Of course, I can modified the overlay applied to tweak the 'interrupt' an=
 d
-or if it's a kernel bug.
+> 'interrupt-parent' in the itc node from my PCI device driver at runtime b=
+ut I
+> would like to avoid this kind of tweak in the PCI device driver.
+> This kind of tweak is overlay dependent and needs to be done by each PCI
+> device driver that need to work with interrupts.
+>
+> For BAR addresses translation, we use the 'ranges' property at the PCI de=
+vice
+> node to translate 0 0 0 to BAR0, 1 0 0 to BAR1, ...
+> What do you think about a new 'irq-ranges' property to translate the irq =
+number
+> and get the irq parent controller base.
+>
+> irq-ranges =3D <child_irq_spec parent_irq_spec length>;
 
-Note: SPDK uses DPDK's PCI device enumeration framework, so I'll reference
-both SPDK and DPDK in this description.
+Seems fragile as you have to know something about the parent (the # of
+cells), but you don't have the phandle. If you needed multiple
+entries, you couldn't parse this.
 
-DPDK registers an eventfd with vfio for hotplug notifications. If the assoc=
-iated
-device is removed (i.e. write 1 to its pci sysfs remove entry), vfio
-writes to the eventfd, requesting DPDK to release the device. It does this
-while holding the device_lock(), and then waits for completion.
-
-DPDK gets the notification, and passes it up to SPDK. SPDK does not release
-the device immediately. It has some asynchronous operations that need to be
-performed first, so it will release the device a bit later.
-
-But before the device is released, SPDK also triggers DPDK to do a sysfs sc=
-an
-looking for newly inserted devices. Note that the removed device is not
-completely removed yet from kernel PCI perspective - all of its sysfs entri=
-es
-are still available, including sriov_numvfs.
-
-DPDK explicitly reads sriov_numvfs to see if the device is SR-IOV capable.
-SPDK itself doesn't actually use this value, but it is part of the scan
-triggered by SPDK and directly leads to the deadlock. sriov_numvfs_show()
-deadlocks because it tries to hold device_lock() while reading the pci
-device's pdev->sriov->num_VFs.
-
-We're able to workaround this in SPDK by deferring the sysfs scan if
-a device removal is in process. And maybe that is what we are supposed to
-be doing, to avoid this deadlock?
-
-Reference to SPDK issue, for some more details (plus simple repro stpes for
-anyone already familiar with SPDK): https://github.com/spdk/spdk/issues/320=
-5=
+Rob
 
