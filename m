@@ -1,152 +1,98 @@
-Return-Path: <linux-pci+bounces-615-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-616-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 969E980897A
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 14:49:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D743808987
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 14:53:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F78E2829FB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 13:49:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EC691C20B14
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 13:53:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAEB40C09;
-	Thu,  7 Dec 2023 13:49:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB16040C09;
+	Thu,  7 Dec 2023 13:53:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="alQZylu3"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fEQmh4R4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B63D5E;
-	Thu,  7 Dec 2023 05:49:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701956967; x=1733492967;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=imR+7Va4hKymRovZBLHbPvJA/DcqrguwTFTFepAUI4c=;
-  b=alQZylu39oipWsTUI2G9+xRjY6rN3F70sJIAl/rYunl1GOwIoXpeeLQT
-   IBAILTeaJlAngphIAISQq883tt/UTYYWrNMXMbrKWhaCbTeVD9aMVsGPZ
-   XFOtegjck5mEhcCblV4+lvLW3aDzP/e6H96k8+orVkB35gIvS2lY72EfB
-   MZMebMiEpUZBsGFvnAH9X+u9uLUVDLX3e3Dt6W0F/GhqQTEoyLdeV6qDn
-   ey4lgTcNKmvb7L8oh/XKnQ99b3418GMGY5rtYGFCaR4T83RsJIzJbP54Y
-   2T+wqokuqGUnRhgRNXEIZw7JETKGn8HdHe4VIHKP/BeovDq1ixR69g2a9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="1338852"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="1338852"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:49:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="17418890"
-Received: from yzhan76-mobl1.amr.corp.intel.com (HELO [10.212.19.153]) ([10.212.19.153])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:49:26 -0800
-Message-ID: <6776742e5aba8f9f10c661a7876eb252f4ac7745.camel@linux.intel.com>
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D4C010CA
+	for <linux-pci@vger.kernel.org>; Thu,  7 Dec 2023 05:53:44 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-332f90a375eso962665f8f.3
+        for <linux-pci@vger.kernel.org>; Thu, 07 Dec 2023 05:53:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1701957222; x=1702562022; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:in-reply-to:subject
+         :cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VCfngSAlIwqEXssY2pmSdDNSAL/XaZG/lzXesXtgYIo=;
+        b=fEQmh4R4RmIcaXkrvGb81zl9JmU+y4xrzTgeCBuXAIkdHKWin9WLJB/n/viKDwg3dP
+         bIUXx3ckTE2mJsUklM5rh+7o0JQ59CezeOXIRXAIkfZ7P7+UmPUcTFVRqdHGUS4W8L8z
+         2ISyf15P8mOFav6Ua5AFQBUXsSyWs8iYH53kPOyjPYZPVMYL9OXZt/iAPxxHM9o/zgQ7
+         l7YqiJ/0s9tVIJTMlTWW361NuOYBYCBVfP13wFODVPw+nQH3njnplGvuAXDp9Z4aw2pc
+         CQUM8LgzQe996Rb0F6R2/M4lNRlaxT2lgznJiiCmSEIR8JCAQdtlKWHZg6BnwuhUH1M7
+         M0Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701957222; x=1702562022;
+        h=mime-version:user-agent:references:message-id:in-reply-to:subject
+         :cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VCfngSAlIwqEXssY2pmSdDNSAL/XaZG/lzXesXtgYIo=;
+        b=pQ+ejdCU4kC0RkcyuTA29JUbQS6bOV8xlsQ+SBw5fdgQy4HbQC0XWdX/r0EZbfi07e
+         hQmd9n0gbJu3n4N5GXtjl2+JxhCSxtjcZhB1ArPTpM0NhwUyb3dK+3YeiljDBOVp7Mc2
+         p4dihp++CEmbZNoZhqCukzvAwy7MpKE+qocZav0WbMNMtaIF2kTd01El33BERsEI5knd
+         sKN8J88ZeOHc0cAs7QmbB9ywx/sVzgVpzn8YSFbwevnwAh/D4q0dISE9V3iXWCD+tZmN
+         ivp1uKT15EWyloHHCqrVFxeYvgsvw9BRY95yTghQa8DL4eKyHwjwGUtq3j2aeh+P8AuW
+         bJTw==
+X-Gm-Message-State: AOJu0YyyZ3Ln36RUl6CjdiXPom2DtthClq7S/xC+6mEnXuwL7/n8RPyS
+	a1p3UqTUuRfPLQqL7v694By63A==
+X-Google-Smtp-Source: AGHT+IHfIhZ9GGAZ8MfZ3L3Ia3csFxydF02wtcAFIuRc7oZemDBZE6mMuWwcwbCzPvAhz1n0wfu+/A==
+X-Received: by 2002:adf:f50d:0:b0:333:6435:a0e9 with SMTP id q13-20020adff50d000000b003336435a0e9mr1633119wro.79.1701957222529;
+        Thu, 07 Dec 2023 05:53:42 -0800 (PST)
+Received: from localhost ([193.86.92.180])
+        by smtp.gmail.com with ESMTPSA id w8-20020adfcd08000000b003334675634bsm1509505wrm.29.2023.12.07.05.53.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Dec 2023 05:53:42 -0800 (PST)
+From: Jiri Kosina <jkosina@suse.com>
+X-Google-Original-From: Jiri Kosina <jikos@kernel.org>
+Date: Thu, 7 Dec 2023 14:53:43 +0100 (CET)
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, benjamin.tissoires@redhat.com, 
+    linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, 
+    Jian Hui Lee <jianhui.lee@canonical.com>, Even Xu <even.xu@intel.com>, 
+    linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] HID: intel-ish-hid: ipc: Rework EHL OOB wakeup
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>, jikos@kernel.org, 
-	benjamin.tissoires@redhat.com
-Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, Jian Hui Lee
-	 <jianhui.lee@canonical.com>, Even Xu <even.xu@intel.com>, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 07 Dec 2023 08:49:24 -0500
-In-Reply-To: <20231108121940.288005-1-kai.heng.feng@canonical.com>
-References: <20231108121940.288005-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+In-Reply-To: <6776742e5aba8f9f10c661a7876eb252f4ac7745.camel@linux.intel.com>
+Message-ID: <nycvar.YFH.7.76.2312071453340.29220@cbobk.fhfr.pm>
+References: <20231108121940.288005-1-kai.heng.feng@canonical.com> <6776742e5aba8f9f10c661a7876eb252f4ac7745.camel@linux.intel.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-T24gV2VkLCAyMDIzLTExLTA4IGF0IDE0OjE5ICswMjAwLCBLYWktSGVuZyBGZW5nIHdyb3RlOgo+
-IFNpbmNlIFBDSSBjb3JlIGFuZCBBQ1BJIGNvcmUgYWxyZWFkeSBoYW5kbGVzIFBDSSBQTUUgd2Fr
-ZSBhbmQgR1BFCj4gd2FrZQo+IHdoZW4gdGhlIGRldmljZSBoYXMgd2FrZXVwIGNhcGFiaWxpdHks
-IHVzZSBkZXZpY2VfaW5pdF93YWtldXAoKSB0bwo+IGxldAo+IHRoZW0gZG8gdGhlIHdha2V1cCBz
-ZXR0aW5nIHdvcmsuCj4gCj4gQWxzbyBhZGQgYSBzaHV0ZG93biBjYWxsYmFjayB3aGljaCB1c2Vz
-IHBjaV9wcmVwYXJlX3RvX3NsZWVwKCkgdG8gbGV0Cj4gUENJIGFuZCBBQ1BJIHNldCBPT0Igd2Fr
-ZXVwIGZvciBTNS4KPiAKPiBDYzogSmlhbiBIdWkgTGVlIDxqaWFuaHVpLmxlZUBjYW5vbmljYWwu
-Y29tPgo+IFNpZ25lZC1vZmYtYnk6IEthaS1IZW5nIEZlbmcgPGthaS5oZW5nLmZlbmdAY2Fub25p
-Y2FsLmNvbT4KQWNrZWQtYnk6IFNyaW5pdmFzIFBhbmRydXZhZGEgPHNyaW5pdmFzLnBhbmRydXZh
-ZGFAbGludXguaW50ZWwuY29tPgoKPiAtLS0KPiB2MjoKPiDCoFJlYmFzZSBvbiAoIkhJRDogaW50
-ZWwtaXNoLWhpZDogaXBjOiBEaXNhYmxlIGFuZCByZWVuYWJsZSBBQ1BJIEdQRQo+IGJpdCIpCj4g
-Cj4gwqBkcml2ZXJzL2hpZC9pbnRlbC1pc2gtaGlkL2lwYy9wY2ktaXNoLmMgfCA2NyArKysrKyst
-LS0tLS0tLS0tLS0tLS0tLQo+IC0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygr
-KSwgNTIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaGlkL2ludGVsLWlz
-aC1oaWQvaXBjL3BjaS1pc2guYwo+IGIvZHJpdmVycy9oaWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNp
-LWlzaC5jCj4gaW5kZXggNzEwZmRhNWYxOWUxLi42NWU3ZWViMmZhNjQgMTAwNjQ0Cj4gLS0tIGEv
-ZHJpdmVycy9oaWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNpLWlzaC5jCj4gKysrIGIvZHJpdmVycy9o
-aWQvaW50ZWwtaXNoLWhpZC9pcGMvcGNpLWlzaC5jCj4gQEAgLTExOSw1MCArMTE5LDYgQEAgc3Rh
-dGljIGlubGluZSBib29sIGlzaF9zaG91bGRfbGVhdmVfZDBpMyhzdHJ1Y3QKPiBwY2lfZGV2ICpw
-ZGV2KQo+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gIXBtX3Jlc3VtZV92aWFfZmlybXdhcmUoKSB8
-fCBwZGV2LT5kZXZpY2UgPT0KPiBDSFZfREVWSUNFX0lEOwo+IMKgfQo+IMKgCj4gLXN0YXRpYyBp
-bnQgZW5hYmxlX2dwZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gLXsKPiAtI2lmZGVmIENPTkZJR19B
-Q1BJCj4gLcKgwqDCoMKgwqDCoMKgYWNwaV9zdGF0dXMgYWNwaV9zdHM7Cj4gLcKgwqDCoMKgwqDC
-oMKgc3RydWN0IGFjcGlfZGV2aWNlICphZGV2Owo+IC3CoMKgwqDCoMKgwqDCoHN0cnVjdCBhY3Bp
-X2RldmljZV93YWtldXAgKndha2V1cDsKPiAtCj4gLcKgwqDCoMKgwqDCoMKgYWRldiA9IEFDUElf
-Q09NUEFOSU9OKGRldik7Cj4gLcKgwqDCoMKgwqDCoMKgaWYgKCFhZGV2KSB7Cj4gLcKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldl9lcnIoZGV2LCAiZ2V0IGFjcGkgaGFuZGxlIGZhaWxl
-ZFxuIik7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRU5PREVWOwo+
-IC3CoMKgwqDCoMKgwqDCoH0KPiAtwqDCoMKgwqDCoMKgwqB3YWtldXAgPSAmYWRldi0+d2FrZXVw
-Owo+IC0KPiAtwqDCoMKgwqDCoMKgwqAvKgo+IC3CoMKgwqDCoMKgwqDCoCAqIENhbGwgYWNwaV9k
-aXNhYmxlX2dwZSgpLCBzbyB0aGF0IHJlZmVyZW5jZSBjb3VudAo+IC3CoMKgwqDCoMKgwqDCoCAq
-IGdwZV9ldmVudF9pbmZvLT5ydW50aW1lX2NvdW50IGRvZXNuJ3Qgb3ZlcmZsb3cuCj4gLcKgwqDC
-oMKgwqDCoMKgICogV2hlbiBncGVfZXZlbnRfaW5mby0+cnVudGltZV9jb3VudCA9IDAsIHRoZSBj
-YWxsCj4gLcKgwqDCoMKgwqDCoMKgICogdG8gYWNwaV9kaXNhYmxlX2dwZSgpIHNpbXBseSByZXR1
-cm4uCj4gLcKgwqDCoMKgwqDCoMKgICovCj4gLcKgwqDCoMKgwqDCoMKgYWNwaV9kaXNhYmxlX2dw
-ZSh3YWtldXAtPmdwZV9kZXZpY2UsIHdha2V1cC0+Z3BlX251bWJlcik7Cj4gLQo+IC3CoMKgwqDC
-oMKgwqDCoGFjcGlfc3RzID0gYWNwaV9lbmFibGVfZ3BlKHdha2V1cC0+Z3BlX2RldmljZSwgd2Fr
-ZXVwLQo+ID5ncGVfbnVtYmVyKTsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoQUNQSV9GQUlMVVJFKGFj
-cGlfc3RzKSkgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZXJyKGRldiwg
-ImVuYWJsZSBvc2VfZ3BlIGZhaWxlZFxuIik7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoHJldHVybiAtRUlPOwo+IC3CoMKgwqDCoMKgwqDCoH0KPiAtCj4gLcKgwqDCoMKgwqDCoMKg
-cmV0dXJuIDA7Cj4gLSNlbHNlCj4gLcKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FTk9ERVY7Cj4gLSNl
-bmRpZgo+IC19Cj4gLQo+IC1zdGF0aWMgdm9pZCBlbmFibGVfcG1lX3dha2Uoc3RydWN0IHBjaV9k
-ZXYgKnBkZXYpCj4gLXsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoKHBjaV9wbWVfY2FwYWJsZShwZGV2
-LCBQQ0lfRDApIHx8Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGNpX3BtZV9jYXBhYmxlKHBk
-ZXYsIFBDSV9EM2hvdCkgfHwKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwY2lfcG1lX2NhcGFi
-bGUocGRldiwgUENJX0QzY29sZCkpICYmICFlbmFibGVfZ3BlKCZwZGV2LQo+ID5kZXYpKSB7Cj4g
-LcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBjaV9wbWVfYWN0aXZlKHBkZXYsIHRydWUp
-Owo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZGJnKCZwZGV2LT5kZXYsICJp
-c2ggaXBjIGRyaXZlciBwbWUgd2FrZQo+IGVuYWJsZWRcbiIpOwo+IC3CoMKgwqDCoMKgwqDCoH0K
-PiAtfQo+IC0KPiDCoC8qKgo+IMKgICogaXNoX3Byb2JlKCkgLSBQQ0kgZHJpdmVyIHByb2JlIGNh
-bGxiYWNrCj4gwqAgKiBAcGRldjrCoMKgwqDCoMKgwqBwY2kgZGV2aWNlCj4gQEAgLTIzMyw3ICsx
-ODksNyBAQCBzdGF0aWMgaW50IGlzaF9wcm9iZShzdHJ1Y3QgcGNpX2RldiAqcGRldiwgY29uc3QK
-PiBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqZW50KQo+IMKgCj4gwqDCoMKgwqDCoMKgwqDCoC8qIEVu
-YWJsZSBQTUUgZm9yIEVITCAqLwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocGRldi0+ZGV2aWNlID09
-IEVITF9BeF9ERVZJQ0VfSUQpCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVuYWJs
-ZV9wbWVfd2FrZShwZGV2KTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2aWNl
-X2luaXRfd2FrZXVwKGRldiwgdHJ1ZSk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gaXNo
-X2luaXQoaXNodHApOwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0KQo+IEBAIC0yNTYsNiArMjEy
-LDE5IEBAIHN0YXRpYyB2b2lkIGlzaF9yZW1vdmUoc3RydWN0IHBjaV9kZXYgKnBkZXYpCj4gwqDC
-oMKgwqDCoMKgwqDCoGlzaF9kZXZpY2VfZGlzYWJsZShpc2h0cF9kZXYpOwo+IMKgfQo+IMKgCj4g
-Kwo+ICsvKioKPiArICogaXNoX3NodXRkb3duKCkgLSBQQ0kgZHJpdmVyIHNodXRkb3duIGNhbGxi
-YWNrCj4gKyAqIEBwZGV2OsKgwqDCoMKgwqDCoHBjaSBkZXZpY2UKPiArICoKPiArICogVGhpcyBm
-dW5jdGlvbiBzZXRzIHVwIHdha2V1cCBmb3IgUzUKPiArICovCj4gK3N0YXRpYyB2b2lkIGlzaF9z
-aHV0ZG93bihzdHJ1Y3QgcGNpX2RldiAqcGRldikKPiArewo+ICvCoMKgwqDCoMKgwqDCoGlmIChw
-ZGV2LT5kZXZpY2UgPT0gRUhMX0F4X0RFVklDRV9JRCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcGNpX3ByZXBhcmVfdG9fc2xlZXAocGRldik7Cj4gK30KPiArCj4gwqBzdGF0aWMg
-c3RydWN0IGRldmljZSBfX21heWJlX3VudXNlZCAqaXNoX3Jlc3VtZV9kZXZpY2U7Cj4gwqAKPiDC
-oC8qIDUwbXMgdG8gZ2V0IHJlc3VtZSByZXNwb25zZSAqLwo+IEBAIC0zNzgsMTMgKzM0Nyw2IEBA
-IHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaXNoX3Jlc3VtZShzdHJ1Y3QKPiBkZXZpY2UgKmRl
-dmljZSkKPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IHBjaV9kZXYgKnBkZXYgPSB0b19wY2lfZGV2
-KGRldmljZSk7Cj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBpc2h0cF9kZXZpY2UgKmRldiA9IHBj
-aV9nZXRfZHJ2ZGF0YShwZGV2KTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoC8qIGFkZCB0aGlzIHRv
-IGZpbmlzaCBwb3dlciBmbG93IGZvciBFSEwgKi8KPiAtwqDCoMKgwqDCoMKgwqBpZiAoZGV2LT5w
-ZGV2LT5kZXZpY2UgPT0gRUhMX0F4X0RFVklDRV9JRCkgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBwY2lfc2V0X3Bvd2VyX3N0YXRlKHBkZXYsIFBDSV9EMCk7Cj4gLcKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVuYWJsZV9wbWVfd2FrZShwZGV2KTsKPiAtwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X2RiZyhkZXYtPmRldmMsICJzZXQgcG93ZXIgc3RhdGUg
-dG8gRDAgZm9yCj4gZWhsXG4iKTsKPiAtwqDCoMKgwqDCoMKgwqB9Cj4gLQo+IMKgwqDCoMKgwqDC
-oMKgwqBpc2hfcmVzdW1lX2RldmljZSA9IGRldmljZTsKPiDCoMKgwqDCoMKgwqDCoMKgZGV2LT5y
-ZXN1bWVfZmxhZyA9IDE7Cj4gwqAKPiBAQCAtNDAwLDYgKzM2Miw3IEBAIHN0YXRpYyBzdHJ1Y3Qg
-cGNpX2RyaXZlciBpc2hfZHJpdmVyID0gewo+IMKgwqDCoMKgwqDCoMKgwqAuaWRfdGFibGUgPSBp
-c2hfcGNpX3RibCwKPiDCoMKgwqDCoMKgwqDCoMKgLnByb2JlID0gaXNoX3Byb2JlLAo+IMKgwqDC
-oMKgwqDCoMKgwqAucmVtb3ZlID0gaXNoX3JlbW92ZSwKPiArwqDCoMKgwqDCoMKgwqAuc2h1dGRv
-d24gPSBpc2hfc2h1dGRvd24sCj4gwqDCoMKgwqDCoMKgwqDCoC5kcml2ZXIucG0gPSAmaXNoX3Bt
-X29wcywKPiDCoH07Cj4gwqAKCg==
+On Thu, 7 Dec 2023, srinivas pandruvada wrote:
+
+> On Wed, 2023-11-08 at 14:19 +0200, Kai-Heng Feng wrote:
+> > Since PCI core and ACPI core already handles PCI PME wake and GPE
+> > wake
+> > when the device has wakeup capability, use device_init_wakeup() to
+> > let
+> > them do the wakeup setting work.
+> > 
+> > Also add a shutdown callback which uses pci_prepare_to_sleep() to let
+> > PCI and ACPI set OOB wakeup for S5.
+> > 
+> > Cc: Jian Hui Lee <jianhui.lee@canonical.com>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+
+Thanks, applied.
+
+-- 
+Jiri Kosina
+SUSE Labs
 
 
