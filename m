@@ -1,249 +1,135 @@
-Return-Path: <linux-pci+bounces-637-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-638-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 830208095C0
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 23:52:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA524809683
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 00:22:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC7E5B20DA0
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 22:52:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B222B20B0A
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 23:22:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 741F8840F9;
-	Thu,  7 Dec 2023 22:52:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DABCC4F8B2;
+	Thu,  7 Dec 2023 23:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnOmXd6J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkRlxFBw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586BD5732B
-	for <linux-pci@vger.kernel.org>; Thu,  7 Dec 2023 22:52:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4100C433C8;
-	Thu,  7 Dec 2023 22:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701989530;
-	bh=HGADqaQgJ+Ygr3T4IO/0dGsxAN2q2tX+T8CN+umeUWA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NnOmXd6J55uZV5c/Q8lnyXY+WrZAYHCXvvLCSD+sb+IJe/FyfuWaSQDmufnULAsj6
-	 uSvIfYlALZYlwCM1kPyEqu5Uhzsmmbbqz72UVCXOlcvJzNAm/uL5p9D5k+zrFUuCOd
-	 rb0UrsAY34/ZjP2vcOgpuSjO1MRBnfOhafqvwFJ14eku0I/Y9OikWfJ4E8DrOz0VOy
-	 t89C3KQvK2mSNYedx2kGc/bcvRKrH58r/LVHJlLcDDnW04c0j8Cg/PmsVdijlWPRdy
-	 2gAtdSkokCW/87z/lKlwFsw7TcNWbYOpv7r91uVpOIpv3yp1Mga84VN/BuTRHzk3KX
-	 Ld0V0ouH62qnA==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50be10acaf9so1323969e87.1;
-        Thu, 07 Dec 2023 14:52:10 -0800 (PST)
-X-Gm-Message-State: AOJu0YwkHmgcheK8oe/pXEnn4UA5N1+Ih3wA3bSJTD+FjNO7qbLbB1Bt
-	0XZfvbQfJMlbxKTqO/ZFzQh6boJCPBn+W5WF/w==
-X-Google-Smtp-Source: AGHT+IGtv5yRJd+8qa8B+2DYoZIs3gnXSm5VdhX0PVbXigUGSFcxjSpk5PW7GY618HkpowugjuqIZuaaWItXoxh9+e4=
-X-Received: by 2002:a19:8c5d:0:b0:50b:e73c:b574 with SMTP id
- i29-20020a198c5d000000b0050be73cb574mr3136537lfj.32.1701989528934; Thu, 07
- Dec 2023 14:52:08 -0800 (PST)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A971712
+	for <linux-pci@vger.kernel.org>; Thu,  7 Dec 2023 15:21:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701991312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g2A4NN2g2IRl3a/HPVTv7XHKFlgL0Mi4dJpLGEepk7M=;
+	b=OkRlxFBwnznAOkEQn71swKViQyRitYxFwtnHxP9/f+eLfn6X8nF1gGyzYHG/ySVdwJp1hp
+	boyDMOgXq0RVHvzrNIJtc9M50ZMMaXPjE8eRuXG76atr/Cbbzp6uGzYiOz1g3pBegcJbpe
+	yEHTJOr8epZdAzpyaXu3UFslVz3P1ak=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-592-Hof_fiCmPtGUXCZPYMRQQA-1; Thu, 07 Dec 2023 18:21:50 -0500
+X-MC-Unique: Hof_fiCmPtGUXCZPYMRQQA-1
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-35d530fe1b5so17665015ab.3
+        for <linux-pci@vger.kernel.org>; Thu, 07 Dec 2023 15:21:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701991310; x=1702596110;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g2A4NN2g2IRl3a/HPVTv7XHKFlgL0Mi4dJpLGEepk7M=;
+        b=WET2XUrJZ1mLP0nzgQCZP8MIbR9AeSWSe7brYoSsMR90FhdzhHJ6RXNQ1aKxBJICQx
+         yEVzA4odxNZCarjwKagHqacLo5Wwgj7NwTbb+8MN//x95E3xks/Mo2G0fuicuPrJseVS
+         pvSevxxuFBSvpaBkqquxt2DeIboQdjXLwORu9ivrsQ4siYnPQn+vmliCG438SpNsc4gl
+         JK7RGaRPP18OXkcfFeahjgYP5P14YVhma4T8hVIZrn55oagpC05hpEVSaa0ealILZZaZ
+         TviyL3mJlGXqhBaPI3stXKuUcFlJOW95zYQiR9aL1sAU0K3KtHz+aqOF8/oP4Ww+PfpP
+         iwHQ==
+X-Gm-Message-State: AOJu0Yy0hPaoWI85hEyPQkUFC1ykfYSIa/SrrC+gHbxLqlMtKjuP3Xf0
+	qsIBYXf0YMsp5YNhlUVwoP8CgTEb2CeCfj/JqotoqHejfH42qq0qmREgxb6ut1Mjec/H41JMyVY
+	llZfQ4gVhzeBhiRjXjruP
+X-Received: by 2002:a92:c5af:0:b0:35d:5995:903b with SMTP id r15-20020a92c5af000000b0035d5995903bmr3034524ilt.46.1701991310150;
+        Thu, 07 Dec 2023 15:21:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGwPnwPxJCnGBO8ZWNiwb9MZD6i4z5OEZaWA1m90wazcjxwSbhZecNVdbLVPASZUOCL8SkQdw==
+X-Received: by 2002:a92:c5af:0:b0:35d:5995:903b with SMTP id r15-20020a92c5af000000b0035d5995903bmr3034520ilt.46.1701991309890;
+        Thu, 07 Dec 2023 15:21:49 -0800 (PST)
+Received: from redhat.com ([38.15.60.12])
+        by smtp.gmail.com with ESMTPSA id a62-20020a029444000000b0046674d6318fsm178879jai.17.2023.12.07.15.21.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Dec 2023 15:21:49 -0800 (PST)
+Date: Thu, 7 Dec 2023 16:21:48 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jim Harris <jim.harris@samsung.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "ben@nvidia.com" <ben@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>
+Subject: Re: Locking between vfio hot-remove and pci sysfs sriov_numvfs
+Message-ID: <20231207162148.2631fa58.alex.williamson@redhat.com>
+In-Reply-To: <ZXJI5+f8bUelVXqu@ubuntu>
+References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
+	<ZXJI5+f8bUelVXqu@ubuntu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231130165700.685764-1-herve.codina@bootlin.com>
- <CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
- <20231204134335.3ded3d46@bootlin.com> <CAL_JsqLtCS3otZ1sfiPEWwrWB4dyNpu4e0xANWJriCEUYr+4Og@mail.gmail.com>
- <20231204163014.4da383f2@bootlin.com> <CAL_JsqJJ64513pyQggU71agTzawNWPpm6ZpWMB6e0zu-tWL8yw@mail.gmail.com>
- <20231205090452.7c601eb5@bootlin.com>
-In-Reply-To: <20231205090452.7c601eb5@bootlin.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 7 Dec 2023 16:51:56 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
-Message-ID: <CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, 
-	Sonal Santan <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 5, 2023 at 2:05=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
-om> wrote:
->
-> On Mon, 4 Dec 2023 17:03:21 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
-> > On Mon, Dec 4, 2023 at 9:30=E2=80=AFAM Herve Codina <herve.codina@bootl=
-in.com> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > On Mon, 4 Dec 2023 07:59:09 -0600
-> > > Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > [...]
-> > >
-> > > > > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > > > > > index 9c2137dae429..46b252bbe500 100644
-> > > > > > --- a/drivers/pci/bus.c
-> > > > > > +++ b/drivers/pci/bus.c
-> > > > > > @@ -342,8 +342,6 @@ void pci_bus_add_device(struct pci_dev *dev=
-)
-> > > > > >          */
-> > > > > >         pcibios_bus_add_device(dev);
-> > > > > >         pci_fixup_device(pci_fixup_final, dev);
-> > > > > > -       if (pci_is_bridge(dev))
-> > > > > > -               of_pci_make_dev_node(dev);
-> > > > > >         pci_create_sysfs_dev_files(dev);
-> > > > > >         pci_proc_attach_device(dev);
-> > > > > >         pci_bridge_d3_update(dev);
-> > > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > > > > index 51e3dd0ea5ab..e15eaf0127fc 100644
-> > > > > > --- a/drivers/pci/of.c
-> > > > > > +++ b/drivers/pci/of.c
-> > > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
-> > > > > >                 return 0;
-> > > > > >
-> > > > > >         node =3D of_pci_find_child_device(dev->bus->dev.of_node=
-, dev->devfn);
-> > > > > > +       if (!node && pci_is_bridge(dev))
-> > > > > > +               of_pci_make_dev_node(dev);
-> > > > > >         if (!node)
-> > > > > >                 return 0;
-> > > > >
-> > > > > Maybe it is too early.
-> > > > > of_pci_make_dev_node() creates a node and fills some properties b=
-ased on
-> > > > > some already set values available in the PCI device such as its s=
-truct resource
-> > > > > values.
-> > > > > We need to have some values set by the PCI infra in order to crea=
-te our DT node
-> > > > > with correct values.
-> > > >
-> > > > Indeed, that's probably the issue I'm having. In that case,
-> > > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still befor=
-e
-> > > > device_add().
-> > > >
-> > > > I think modifying sysfs after device_add() is going to race with
-> > > > userspace. Userspace is notified of a new device, and then the of_n=
-ode
-> > > > link may or may not be there when it reads sysfs. Also, not sure if
-> > > > we'll need DT modaliases with PCI devices, but they won't work if t=
-he
-> > > > DT node is not set before device_add().
-> > >
-> > > Ok, we can try using DECLARE_PCI_FIXUP_HEADER.
-> > > On your side, is moving from DECLARE_PCI_FIXUP_EARLY to DECLARE_PCI_F=
-IXUP_HEADER
-> > > fix your QEMU unittest ?
-> >
-> > No...
+On Thu, 7 Dec 2023 22:38:23 +0000
+Jim Harris <jim.harris@samsung.com> wrote:
 
-I think the problem is we aren't setting the fwnode, just the of_node
-ptr, but I haven't had a chance to verify that.
+> I am seeing a deadlock using SPDK with hotplug detection using vfio-pci
+> and an SR-IOV enabled NVMe SSD. It is not clear if this deadlock is intended
+> or if it's a kernel bug.
+> 
+> Note: SPDK uses DPDK's PCI device enumeration framework, so I'll reference
+> both SPDK and DPDK in this description.
+> 
+> DPDK registers an eventfd with vfio for hotplug notifications. If the associated
+> device is removed (i.e. write 1 to its pci sysfs remove entry), vfio
+> writes to the eventfd, requesting DPDK to release the device. It does this
+> while holding the device_lock(), and then waits for completion.
+> 
+> DPDK gets the notification, and passes it up to SPDK. SPDK does not release
+> the device immediately. It has some asynchronous operations that need to be
+> performed first, so it will release the device a bit later.
+> 
+> But before the device is released, SPDK also triggers DPDK to do a sysfs scan
+> looking for newly inserted devices. Note that the removed device is not
+> completely removed yet from kernel PCI perspective - all of its sysfs entries
+> are still available, including sriov_numvfs.
+> 
+> DPDK explicitly reads sriov_numvfs to see if the device is SR-IOV capable.
+> SPDK itself doesn't actually use this value, but it is part of the scan
+> triggered by SPDK and directly leads to the deadlock. sriov_numvfs_show()
+> deadlocks because it tries to hold device_lock() while reading the pci
+> device's pdev->sriov->num_VFs.
+> 
+> We're able to workaround this in SPDK by deferring the sysfs scan if
+> a device removal is in process. And maybe that is what we are supposed to
+> be doing, to avoid this deadlock?
+> 
+> Reference to SPDK issue, for some more details (plus simple repro stpes for
+> anyone already familiar with SPDK): https://github.com/spdk/spdk/issues/3205
 
-> > And testing the bridge part crashes. That's because there's a
-> > dependency on the bridge->subordinate to write out bus-range and
-> > interrupt-map. I think the fix there is we should just not write those
-> > properties. The bus range isn't needed because the kernel does its own
-> > assignments. For interrupt-map, it is only needed if "interrupts" is
-> > present in the child devices. If not present, then the standard PCI
-> > swizzling is used. Alternatively, I think the interrupt mapping could
-> > be simplified to just implement the standard swizzling at each level
-> > which isn't dependent on any of the devices on the bus. I gave that a
-> > go where each interrupt-map just points to the parent bridge, but ran
-> > into an issue that the bridge nodes don't have a phandle. That should
-> > be fixable, but I'd rather go with the first option. I suppose that
-> > depends on how the interrupts downstream of the PCI device need to get
-> > resolved. It could be that the PCI device serves as the interrupt
-> > controller and can resolve the parent interrupt on its own (which may
-> > be needed for ACPI host anyways).
->
-> About interrupt, I am a bit stuck on my side.
-> My dtso (applied at PCI device level) contains the following:
->         fragment@0 {
->                 target-path=3D"";
->                 __overlay__ {
->                         pci-ep-bus@0 {
->                                 compatible =3D "simple-bus";
->                                 #address-cells =3D <1>;
->                                 #size-cells =3D <1>;
->
->                                 /*
->                                  * map @0xe2000000 (32MB) to BAR0 (CPU)
->                                  * map @0xe0000000 (16MB) to BAR1 (AMBA)
->                                  */
->                                 ranges =3D <0xe2000000 0x00 0x00 0x00 0x2=
-000000
->                                           0xe0000000 0x01 0x00 0x00 0x100=
-0000>;
->
->                                 itc: itc {
->                                         compatible =3D "microchip,lan966x=
--itc";
->                                         #interrupt-cells =3D <1>;
->                                         interrupt-controller;
->                                         reg =3D <0xe00c0120 0x190>;
->                                 };
->
->                                 ...
->                          };
->                 };
->         };
->
-> I have a 'simple-bus' with a 'ranges' property to translate the BAR addre=
-sses
-> then several devices. Among them a interrupt controller (itc). Its parent
-> interrupt is the one used by the PCI device (INTA).
-> I cannot describe this parent interrupt in the dtso because to that I nee=
-d the
-> parent interrupt phandle which will be know only at runtime.
+device_lock() has been a recurring problem.  We don't have a lot of
+leeway in how we support the driver remove callback, the device needs
+to be released.  We can't return -EBUSY and I don't think we can drop
+the mutex while we're waiting on userspace.
 
-But you don't. The logic to find the interrupt parent is walk up the
-parent nodes until you find 'interrupt-parent' or
-'#interrupt-controller' (and interrupt-map always has
-#interrupt-controller). So your overlay just needs 'interrupts =3D <1>'
-for INTA and it should all just work.
+I've done some fix-ups in the past to use device_trylock() to avoid
+deadlocks, which might be an option here, ex. reading sriov_numvfs
+could return -EBUSY in this scenario.  We keep running into these
+scenarios though and we might just need to pick a point at which we
+kill the user process holding the device.
 
-That of course implies that we need interrupt properties in all the
-bridges which I was hoping to avoid. In the ACPI case, for DT
-interrupt parsing to work, we're going to need to end up in an
-'interrupt-controller' node somewhere. I think the options are either
-we walk interrupt-map properties up to the host bridge which then
-points to something or the PCI device is the interrupt controller. I
-think the PCI device is the right place. How the downstream interrupts
-are routed to PCI interrupts are defined by the device. That would
-work the same way for both DT and ACPI. If you are concerned about
-implementing in each driver needing this, some library functions can
-mitigate that.
+I'm open to suggestions.  Thanks,
 
-I'm trying to play around with the IRQ domains and get this to work,
-but not having any luck yet.
+Alex
 
-> Of course, I can modified the overlay applied to tweak the 'interrupt' an=
-d
-> 'interrupt-parent' in the itc node from my PCI device driver at runtime b=
-ut I
-> would like to avoid this kind of tweak in the PCI device driver.
-> This kind of tweak is overlay dependent and needs to be done by each PCI
-> device driver that need to work with interrupts.
->
-> For BAR addresses translation, we use the 'ranges' property at the PCI de=
-vice
-> node to translate 0 0 0 to BAR0, 1 0 0 to BAR1, ...
-> What do you think about a new 'irq-ranges' property to translate the irq =
-number
-> and get the irq parent controller base.
->
-> irq-ranges =3D <child_irq_spec parent_irq_spec length>;
-
-Seems fragile as you have to know something about the parent (the # of
-cells), but you don't have the phandle. If you needed multiple
-entries, you couldn't parse this.
-
-Rob
 
