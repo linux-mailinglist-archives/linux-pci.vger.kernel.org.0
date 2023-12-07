@@ -1,240 +1,222 @@
-Return-Path: <linux-pci+bounces-607-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-608-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDAB1808395
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 09:54:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 54E7D8083E0
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 10:11:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 740911F2251C
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 08:54:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08F371F2278D
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Dec 2023 09:11:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44201E48C;
-	Thu,  7 Dec 2023 08:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16B3432C63;
+	Thu,  7 Dec 2023 09:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fnLyhPMX"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="tg8NdadU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eNkRt1wW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2067.outbound.protection.outlook.com [40.107.244.67])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B877919A;
-	Thu,  7 Dec 2023 00:54:02 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rf/giGn2s+UJ3GMlQHj6Zy11pPeOiumwjj0OKMLaRKaE22lxIsGJ2DQgGob36gjrXrqIXFOJI+4DM3tnteMboXUvnpl2O2b29OqVLugCrvPvQuh+mEeZDpiJHNCobm8WhxM/8/bbH+srGbt24AUWdwe8nB+6CSgv4XrKIDxFj0Kkuin79/9Mpd9VJ6TpTA11MFmazuxho9/0eBxgPu1LxrykxmPIT98JVQPznXaBR3ONGKFqpzwoy4N2K9Mw6cbHR+m8MbE52VCjDOaNmkHK7QfDfkqty5BjK6hPfWnhAISs7H3OFEE5w6lLx6VA66n2iMf4xRlylQj1XwpUIUgzfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fBnslKr4yNfFWfUez7V2Hfhm2rt61a1WmyK4DD1Qx6w=;
- b=WgdCrjgh2LDKKETTQgp6i1NUxx9tyafZA7CNSo2//P9IiFxmqle6MXT8RelpM1uv57XJCAsoTX3l+IC0pVZWl6KCfeyouXXEbZhTXT/38TMYSxlfpQGlQlYmyIYi8V4uH3kzm8++ho+C5XlSDPJ1aBixhe8WqQCSc6UGrGED2LoSUzegD7qBAG7uVGouluekVq/11krWKqwUOAKMTGF3oy8LrLmVQeAHi9SQqdSWN21QduFD8z9u7asWDsAqAbFCpnjgy3AL6swfANdi/cFCVNFEbDwEqZWdj7ITDXr2RXwag343Ldr2D17Yw1zKCZ8OXYd4VEWHsnb6wsQO5PdapQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fBnslKr4yNfFWfUez7V2Hfhm2rt61a1WmyK4DD1Qx6w=;
- b=fnLyhPMXdlwDzeMc1ALhORYsRT9pex3vd6vCGmj16VQilyKdjBEljJ9ux/rC0OohJRh6ZWR2finuknQUtBYozbbNpXoodM8MEdgZ80kbbq6N8Doi58znLeuKO7X/edpi4YQlEXt3ZuZ+TLoot+tBPRLurUekrsOjA3PIAaMN1U3B/fp35K6ghotbX3A4QoL7EbQOpAKn/NrsI2brDGWh/RP8J3pygHe/3xMMfJJXLE/bZCRexSv/QJUKw9fJ1wc2oEVRHo+p2jfkaQR+oI5gsQjPBriSl+cdWYzVC2M5nEXewQk408g6g+E3Dhn92v94jT5QYdOq0L8imiy1Qj111g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3356.namprd12.prod.outlook.com (2603:10b6:5:38::11) by
- SJ2PR12MB8649.namprd12.prod.outlook.com (2603:10b6:a03:53c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Thu, 7 Dec
- 2023 08:53:59 +0000
-Received: from DM6PR12MB3356.namprd12.prod.outlook.com
- ([fe80::1a50:8e27:5f8f:7c4d]) by DM6PR12MB3356.namprd12.prod.outlook.com
- ([fe80::1a50:8e27:5f8f:7c4d%5]) with mapi id 15.20.7068.025; Thu, 7 Dec 2023
- 08:53:59 +0000
-Message-ID: <6e282e1b-39d2-4a08-bdd4-a9d02b2b7f74@nvidia.com>
-Date: Thu, 7 Dec 2023 14:23:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC,v14 4/5] arm64: tegra: Add PCIe port node with PCIe WAKE#
- for C1 controller
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, thierry.reding@gmail.com, petlozup@nvidia.com,
- rafael.j.wysocki@intel.com, lpieralisi@kernel.org, robh@kernel.org,
- jeffy.chen@rock-chips.com, krzysztof.kozlowski+dt@linaro.org,
- jonathanh@nvidia.com, dmitry.osipenko@collabora.com,
- viresh.kumar@linaro.org, gregkh@linuxfoundation.org, steven.price@arm.com,
- kw@linux.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-pm@vger.kernel.org, vidyas@nvidia.com
-References: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
- <20230208111645.3863534-5-mmaddireddy@nvidia.com>
- <20231206153627.GJ12802@thinkpad>
- <c86e8f75-f74a-491e-9ac0-2431a6ec4b80@nvidia.com>
- <20231207075952.GG2932@thinkpad>
-Content-Language: en-US
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-X-Nvconfidentiality: public
-In-Reply-To: <20231207075952.GG2932@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA1PR01CA0180.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::18) To DM6PR12MB3356.namprd12.prod.outlook.com
- (2603:10b6:5:38::11)
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC901987;
+	Thu,  7 Dec 2023 01:10:26 -0800 (PST)
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5B8831F897;
+	Thu,  7 Dec 2023 09:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1701940224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jXiKfid97FD5zi8RqmP75wazePMuM2Vj4JZ4H26JF/w=;
+	b=tg8NdadUlk4VfBBiX/KnTc8KWn4/+I2eqU3OCsMmSGO5fGxGo+xFF7FC1+cL85+pnkxgh6
+	+2Q+t+yvWpRrlmhVvY0iaqUjhOk6aDapKv8aWDgxXaeYBRQUq2bq9mHOv8yIv2mkt3uJBW
+	DjcnaOKBqBG38BR6qn1JnsOv3SGRVLU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1701940224;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jXiKfid97FD5zi8RqmP75wazePMuM2Vj4JZ4H26JF/w=;
+	b=eNkRt1wWHc2B/3UiJ7gBmgVmSJJtzZTtEviOYNX31SorNi0ot/Q0TzM7nhemVkTB8kzvHE
+	aOrpBsXvOqOVy6BQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 34B3813907;
+	Thu,  7 Dec 2023 09:10:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id w3HWDACMcWWqPwAAn2gu4w
+	(envelope-from <jack@suse.cz>); Thu, 07 Dec 2023 09:10:24 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7AF80A07C7; Thu,  7 Dec 2023 10:10:23 +0100 (CET)
+Date: Thu, 7 Dec 2023 10:10:23 +0100
+From: Jan Kara <jack@suse.cz>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Akinobu Mita <akinobu.mita@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Chaitanya Kulkarni <kch@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Disseldorp <ddiss@suse.de>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+	Jiri Pirko <jiri@resnulli.us>, Jiri Slaby <jirislaby@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>, Karsten Graul <kgraul@linux.ibm.com>,
+	Karsten Keil <isdn@linux-pingi.de>,
+	Kees Cook <keescook@chromium.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Martin Habets <habetsm.xilinx@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Oliver Neukum <oneukum@suse.com>, Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ping-Ke Shih <pkshih@realtek.com>, Rich Felker <dalias@libc.org>,
+	Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Stanislaw Gruszka <stf_xl@wp.pl>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	GR-QLogic-Storage-Upstream@marvell.com, alsa-devel@alsa-project.org,
+	ath10k@lists.infradead.org, dmaengine@vger.kernel.org,
+	iommu@lists.linux.dev, kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-net-drivers@amd.com, linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-sh@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mpi3mr-linuxdrv.pdl@broadcom.com,
+	netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+	Alexey Klimov <klimov.linux@gmail.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH v2 00/35] bitops: add atomic find_bit() operations
+Message-ID: <20231207091023.kioii5mgmnphrvl4@quack3>
+References: <20231203192422.539300-1-yury.norov@gmail.com>
+ <20231204185101.ddmkvsr2xxsmoh2u@quack3>
+ <ZXAFM2VZugdhM3oE@yury-ThinkPad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3356:EE_|SJ2PR12MB8649:EE_
-X-MS-Office365-Filtering-Correlation-Id: c18e7d28-c0a7-4709-9b55-08dbf7020d7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	uFc066SYW4OedTJuTeidad6wvRF2shd7cAuFmT5SXsFM71+NrbTmLDxDsV71/b8QhgMbV2BN44GfIindhojLX549gWFA9gqXkVva9qKn15pyb7tAcYoXQbk1QYSkrY2H9C1oN3wVoeoP5x1eLiLFoMRQGSxtvIyxTa6RfYKsnBOEfl4Ib2RwVKGPxIJLrFA55Zd408bO6yeX/URWSClrcbgg/nJYb6irk4QLupVQ88ngz/rkCTn6y4qZG1wQL59kbMeacF6mNvfWVw7CVWNtLSCh3U1owRizPo33VhQvWui5LAqhbnYcW/cQeFxnyTkGY7g21+2poGeB315veOBtT0slygkZbe0+iCfRfLDYCAWC2VJysJAVCIdzF4TFxo+vnp1soZn8ca7VyI/H6XIiatKcxW6oSW8qWNzgOcbf/MBm2fmK+wMFG1Bz7mzwj7TgFE9XXUCmXzZBWqd7SpTv0nkUPXoSce5gqcc8WBDmJCKpgQRq8SygYa71gXUPJnE1fUavV3nY7ZCIR+kMdLQvSkUJ3BUEeDhYniI3FvVeDlqR9ZT1uRA7I1TTuITfJmmvnN5VjJTpsRx62TGQNGWfkbH05D6RLgFGSnw0ab27TRz4WG335LL+OY4Rq6AeDSXSIOaVHYEmMbULeiMqnGGh/0S1+8GSLfjypfGLMgAWgVK4M1HN9/ozbzf4IBwDrfL1evMJjBdDCoEc7KtUEtyhxCFtUDTg0TuOwyFGMWPh4+4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(366004)(39860400002)(136003)(230273577357003)(230922051799003)(230173577357003)(451199024)(64100799003)(1800799012)(186009)(6486002)(966005)(478600001)(5660300002)(53546011)(6666004)(66946007)(66476007)(316002)(6916009)(66556008)(8936002)(8676002)(4326008)(6506007)(86362001)(31696002)(38100700002)(36756003)(41300700001)(31686004)(2616005)(7416002)(107886003)(2906002)(26005)(6512007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TTA3T1NQU01CTXRIaVF0TmhsLzlDaXRZRDBsS1ZFTTNGQ2dXeVpiOVJsa3U1?=
- =?utf-8?B?WGlTNGw2YWNLU2FtM3llU3RjSVh6SnE2M3RjaGNDQ2QvYUhGTXRhakQ2by9p?=
- =?utf-8?B?MUNNaDVhbHJYQ1VWVjNOWklZS3U0b2RsSzFteExJTzNUWERkZEdXeksxV0d6?=
- =?utf-8?B?Q0tMeVdZVTVDMzRuQWNWZ2Z5aW5OcVF1MmVzdk5QRm1DOXZGTHZneXBkb1Ay?=
- =?utf-8?B?aFpVNUliZjFrUm5lVFpGOTdPL3ArNFVCV2VLVFZZZWhQOTlja2VQZkNzZW9D?=
- =?utf-8?B?YkhhTTZwK05jb2YxRzJ3NG03aWtJbnJIalcvYVQxbHIvS3hOeTM1ZXlNckxJ?=
- =?utf-8?B?U2xyK3l5ZS9CL0I2dUNJOVRJb2N3UmJuNGtwQ2QvK1cxcXB4aEIxckNvM0l0?=
- =?utf-8?B?Ny83Y2tkRW9jN3dPTU1sVUJhblVjcFFod1cwTnNvN3lnS1R3ZXZUVklwekY5?=
- =?utf-8?B?MHNVN2pteGZoRWZtS3BVNGhsenYrcTdTVk1HUWd6OEpoWVAzN0ZNUEFpdGw1?=
- =?utf-8?B?elAxUS9DUjJNaDdoVVhMWmpzaXZvVExsbWpReDc4dkVEbEs5UE5mbW9rS3dQ?=
- =?utf-8?B?Y1VNNFlNUE0vb016T0pFcFJ0dWM2RWdpQ25ZYkwyRWRzcVdFVm9YcDRQUmRY?=
- =?utf-8?B?VmFweVZjaUx1M1BIV3dka0VvMFNUbGJ4V2FpclNpS0JlYlBPOE5wMzZIU3Js?=
- =?utf-8?B?WTFEMjQvcWlJRlVmWURlSHJIbGVhdEJtby9UMjU2cTRXdWo4Q3hDVkx6NWVL?=
- =?utf-8?B?ZW9YL1N4cFZoTTFXOXZPTUFNVHBNVTFYRmlDSWorck54ejV6eHhuNnZDbEMr?=
- =?utf-8?B?YlJkZ1V6MTNqQm5sRUt1dWdKNXNjOXpnenp0Zm5HY3VmOVVPY29jR3BFU2F2?=
- =?utf-8?B?bjJCUWpxSHVpYnJIN1ZNck5zNlI2eTBNL3RJTk15a3pzb09VNHF4WEk3Z2VY?=
- =?utf-8?B?WkxKbTJCUTZVckkxelMvc01QTnBhOFZxZ2tGeUpDSFZCUnIvNXI3RGtRMi9u?=
- =?utf-8?B?M3htb2VFRG9XaldhU0ZXa0NZZHJCZ0JoakEvMU1aMGpBVUI2OVlkVDU5SitB?=
- =?utf-8?B?Ump6dXNOLzlkRUJLNWIrZGJSNHR2ZzhHTWwwZWd3L2ZoN2dMREVJU2I5SkJ5?=
- =?utf-8?B?ZzlHbmg3NzByNGc5T1ZaRnIxamlmTXkrODhmWUZ0VkJSYUJMMGdSdmhBL0hM?=
- =?utf-8?B?dmFsYnVaY1JIRFRjcUVlR2IvK09KQ1QzcmtRd1liTlZFa0xBZmdEenVRY0FW?=
- =?utf-8?B?cGJJellGeGJIOXdNanRIQ3h1ZFdyR2ZWbTJrTEV3TjFYdGk5WGVBVjNkUU5t?=
- =?utf-8?B?Q0REdHoxYllwRWpkanpJQW9iWW1zclNjL0ptM25Na1NuOC9UYUQwR3BiMjBB?=
- =?utf-8?B?Q3U5YTlTNTdSeGNMWUgwSWJvZHZBWE5nUmtPenEvQTZvTG5BUm9kYXF2Ukxv?=
- =?utf-8?B?aGJ2M2ZxdVlBQ1MxRUwwd0JOdGk1SnN2ajh5Vi9UdjRtVS83VWsxMXNNbmJW?=
- =?utf-8?B?UzZrRjBJVm45TFE4M2dOMCtFemlTOVBHZmpsVS9GMk8zdjFoZjR0eG12Q01K?=
- =?utf-8?B?bllYZ3hzVVBZb3RBVFZTS012SDI5ejlkSzE1QmNKOXcvSTcrbm9STlhNVGVO?=
- =?utf-8?B?SHpvRU1Vd24wcjRtTmJQMnlSbkphYWoxYjg4YjRmQ0JtWDRFNDNuYnFNSmg5?=
- =?utf-8?B?WmxTbzQrcy8wa0g1OFF3S3Q3MlFTR2YyQ0x2emhTWkhVS1ROeW4rTFFEVlpz?=
- =?utf-8?B?L1BVZmpMQkd5Zi9lbDlLbUd5Mnl1Y1FsNXZoQzJtRk54OUpieTJ1TEpMODMr?=
- =?utf-8?B?ZXBtZGgrOGd1MnpRZmF5cDlZaEtvZGpMdDVrTDdTMGpiWFNoVWRLRUNudklk?=
- =?utf-8?B?dVlKUUMxZkMzcFo4MjBJZHFCVENLc2UySEtOYkdhWS9ZRkFXWDVyMXhlTW9n?=
- =?utf-8?B?cVdSK1JPSXd5ejVLUDYyNmtxL1lCb0V3MGpRUlBrQTA4cmZqY1pBMzlyNlQy?=
- =?utf-8?B?K3FxWkxxSFpGbkN0VGpPZGJuZkJzeEl6cVB6WHB0ODhWSEJiTUU1KzVsdU8w?=
- =?utf-8?B?ZEdjaWpNNzc0VnhvSlF5OTRQa3ZxY1lSbERmS3FKbUNEbXBHNlZIRFRtY2d0?=
- =?utf-8?B?UjJabFR2dzhBaWZwdS9WY2VCaXp3SVpHcHhDamN0Y2FHWG02OUtiV2c0MUtQ?=
- =?utf-8?B?Ymc9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c18e7d28-c0a7-4709-9b55-08dbf7020d7a
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3356.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2023 08:53:59.4940
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /m/wAy0N+cOo+S/HNyw4PB3o7wgycu949FgU4hRHx9Q/fsCXuTTuxWXI/frFASmyHmKjrU0Vh8KqYum4RL3xLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8649
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXAFM2VZugdhM3oE@yury-ThinkPad>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Score: 2.70
+X-Spamd-Result: default: False [2.70 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_GT_50(0.00)[100];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FORGED_RECIPIENTS(2.00)[m:yury.norov@gmail.com,m:davem@davemloft.net,m:jejb@linux.ibm.com,m:haris.iqbal@ionos.com,m:akinobu.mita@gmail.com,m:akpm@linux-foundation.org,m:andersson@kernel.org,m:bp@alien8.de,m:brauner@kernel.org,m:dave.hansen@linux.intel.com,m:ecree.xilinx@gmail.com,m:edumazet@google.com,m:fenghua.yu@intel.com,m:geert@linux-m68k.org,m:gregory.greenman@intel.com,m:hughd@google.com,m:kuba@kernel.org,m:axboe@kernel.dk,m:jirislaby@kernel.org,m:kvalo@kernel.org,m:kgraul@linux.ibm.com,m:isdn@linux-pingi.de,m:keescook@chromium.org,m:leon@kernel.org,m:mark.rutland@arm.com,m:habetsm.xilinx@gmail.com,m:mchehab@kernel.org,m:mpe@ellerman.id.au,m:npiggin@gmail.com,m:peterz@infradead.org,m:dalias@libc.org,m:robh@kernel.org,m:robin.murphy@arm.com,m:seanjc@google.com,m:xueshuai@linux.alibaba.com,m:rostedt@goodmis.org,m:tsbogend@alpha.franken.de,m:tglx@linutronix.de,m:wenjia@linux.ibm.com,m:will@kernel.org,m:alsa-devel@alsa-project.org,m:linux-net-drivers@amd.com,m:mpi3mr-linuxdrv.pdl
+ @broadcom.com,m:x86@kernel.org,m:mirsad.todorovac@alu.unizg.hr,m:willy@infradead.org,m:andriy.shevchenko@linux.intel.com,m:maxim.kuvyrkov@linaro.org,m:klimov.linux@gmail.com,m:bvanassche@acm.org,s:s.shtylyov@omp.ru];
+	 BAYES_HAM(-0.00)[40.06%];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[wp.pl,xs4all.nl];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_SOME(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[suse.cz,vger.kernel.org,davemloft.net,zytor.com,linux.ibm.com,microsoft.com,ionos.com,gmail.com,linux-foundation.org,kernel.org,alien8.de,nvidia.com,opensource.wdc.com,linux.intel.com,suse.de,google.com,intel.com,linux-m68k.org,linuxfoundation.org,xs4all.nl,redhat.com,perex.cz,ziepe.ca,kernel.dk,resnulli.us,linux-pingi.de,chromium.org,arm.com,ellerman.id.au,monstr.eu,suse.com,infradead.org,realtek.com,libc.org,linux.alibaba.com,wp.pl,goodmis.org,alpha.franken.de,linutronix.de,users.sourceforge.jp,marvell.com,alsa-project.org,lists.infradead.org,lists.linux.dev,lists.linux-m68k.org,amd.com,lists.ozlabs.org,broadcom.com,alu.unizg.hr,rasmusvillemoes.dk,linaro.org,acm.org,omp.ru];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
 
+On Tue 05-12-23 21:22:59, Yury Norov wrote:
+> On Mon, Dec 04, 2023 at 07:51:01PM +0100, Jan Kara wrote:
+> > > This series is a result of discussion [1]. All find_bit() functions imply
+> > > exclusive access to the bitmaps. However, KCSAN reports quite a number
+> > > of warnings related to find_bit() API. Some of them are not pointing
+> > > to real bugs because in many situations people intentionally allow
+> > > concurrent bitmap operations.
+> > > 
+> > > If so, find_bit() can be annotated such that KCSAN will ignore it:
+> > > 
+> > >         bit = data_race(find_first_bit(bitmap, nbits));
+> > 
+> > No, this is not a correct thing to do. If concurrent bitmap changes can
+> > happen, find_first_bit() as it is currently implemented isn't ever a safe
+> > choice because it can call __ffs(0) which is dangerous as you properly note
+> > above. I proposed adding READ_ONCE() into find_first_bit() / find_next_bit()
+> > implementation to fix this issue but you disliked that. So other option we
+> > have is adding find_first_bit() and find_next_bit() variants that take
+> > volatile 'addr' and we have to use these in code like xas_find_chunk()
+> > which cannot be converted to your new helpers.
+> 
+> Here is some examples when concurrent operations with plain find_bit()
+> are acceptable:
+> 
+>  - two threads running find_*_bit(): safe wrt ffs(0) and returns correct
+>    value, because underlying bitmap is unchanged;
+>  - find_next_bit() in parallel with set or clear_bit(), when modifying
+>    a bit prior to the start bit to search: safe and correct;
+>  - find_first_bit() in parallel with set_bit(): safe, but may return wrong
+>    bit number;
+>  - find_first_zero_bit() in parallel with clear_bit(): same as above.
+> 
+> In last 2 cases find_bit() may not return a correct bit number, but
+> it may be OK if caller requires any (not exactly first) set or clear
+> bit, correspondingly.
+> 
+> In such cases, KCSAN may be safely silenced.
 
-On 07-12-2023 13:29, Manivannan Sadhasivam wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Thu, Dec 07, 2023 at 12:54:04PM +0530, Manikanta Maddireddy wrote:
->> On 06-12-2023 21:06, Manivannan Sadhasivam wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Wed, Feb 08, 2023 at 04:46:44PM +0530, Manikanta Maddireddy wrote:
->>>> Add PCIe port node under the PCIe controller-1 device tree node to support
->>>> PCIe WAKE# interrupt for WiFi.
->>>>
->>>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->>>> ---
->>>>
->>>> Changes in v14:
->>>> New patch in the series to support PCIe WAKE# in NVIDIA Jetson AGX Orin.
->>>>
->>>>    .../dts/nvidia/tegra234-p3737-0000+p3701-0000.dts     | 11 +++++++++++
->>>>    1 file changed, 11 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
->>>> index 8a9747855d6b..9c89be263141 100644
->>>> --- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
->>>> +++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
->>>> @@ -2147,6 +2147,17 @@ pcie@14100000 {
->>>>
->>>>                         phys = <&p2u_hsio_3>;
->>>>                         phy-names = "p2u-0";
->>>> +
->>>> +                     pci@0,0 {
->>>> +                             reg = <0x0000 0 0 0 0>;
->>>> +                             #address-cells = <3>;
->>>> +                             #size-cells = <2>;
->>>> +                             ranges;
->>>> +
->>>> +                             interrupt-parent = <&gpio>;
->>>> +                             interrupts = <TEGRA234_MAIN_GPIO(L, 2) IRQ_TYPE_LEVEL_LOW>;
->>>> +                             interrupt-names = "wakeup";
->>> WAKE# should be part of the PCIe controller, not device. And the interrupt name
->>> should be "wake".
->>>
->>> - Mani
->> Hi,
->>
->> Please refer to the discussion in below link, WAKE# is per PCI bridge.
->> https://patchwork.ozlabs.org/project/linux-pci/patch/20171226020806.32710-2-jeffy.chen@rock-chips.com/
->>
-> PCIe Host controller (RC) usually represents host bridge + PCI-PCI bridge. We do
-> not represent the PCI-PCI bridge in devicetree for any platforms, but only RC as
-> a whole.
->
-> Moreover, PERST# is already defined in RC node. So it becomes confusing if
-> WAKE# is defined in a child node representing bridge.
->
-> So please move WAKE# to RC node.
->
-> - Mani
+True - but these are special cases. In particular the case in xas_find_chunk()
+is not any of these special cases. It is using find_next_bit() which is can
+be racing with clear_bit(). So what are your plans for such usecase?
 
-Hi,
-
-We can define PCI-PCI bridge in device tree, refer to below device tree 
-which has 3 ports under a controller,
-with PERST#(reset-gpios) defined per port.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/apple/t8103.dtsi#n749
-
-Also, of_pci_setup_wake_irq() in below patch is parsing "wakeup" from 
-PCI bridge, not from the host bridge.
-https://patchwork.ozlabs.org/project/linux-pci/patch/20230208111645.3863534-4-mmaddireddy@nvidia.com/
-
-If a controller has only one port it has to define a PCI bridge under 
-controller device tree node and
-add wakeup interrupt property, refer to below patch from original author.
-
-https://www.spinics.net/lists/linux-pci/msg135569.html
-
-Thanks,
-Manikanta
->
->> I carried wakeup name defined in previous version, but wake seems to be
->> sufficient.
->>
->> Thanks,
->> Manikanta
->>>> +                     };
->>>>                 };
->>>>
->>>>                 pcie@14160000 {
->>>> --
->>>> 2.25.1
->>>>
->>> --
->>> மணிவண்ணன் சதாசிவம்
-> --
-> மணிவண்ணன் சதாசிவம்
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
