@@ -1,136 +1,115 @@
-Return-Path: <linux-pci+bounces-701-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-702-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34FFC80AAE8
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 18:39:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D93380AAEC
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 18:39:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CF89B20AB9
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 17:39:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC04C2814B9
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 17:39:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01BB13B2BD;
-	Fri,  8 Dec 2023 17:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90F653B296;
+	Fri,  8 Dec 2023 17:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z5AcnlsG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTwcJWCd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A0810E3;
-	Fri,  8 Dec 2023 09:39:00 -0800 (PST)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231208173852usoutp02644f7acf23eddbc470befdef92abf0cb~e6-GoGE243046630466usoutp02t;
-	Fri,  8 Dec 2023 17:38:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231208173852usoutp02644f7acf23eddbc470befdef92abf0cb~e6-GoGE243046630466usoutp02t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1702057132;
-	bh=eEIbb5/LbC2v8ZbcKnaYgSk0Bzenatz7nIxUzyOWeFk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=Z5AcnlsG1JjDRock5tdCbe9trJUxrR54K4lh5eg8mYf7s1H8QScZCz7ksbrYZljaf
-	 01YRgHxrNw0oWW80SIyT5ZkHRkPtnm/KZE1oKAPooKj1q604jONVmVG8ofJgiQIgGt
-	 s10OcirzLXeWXc+uWUs5wWIQUzTXYiIIDkva0rJI=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-	[203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231208173852uscas1p194354bbe16bbb99fd301237a5a892011~e6-Gb-cNK1114411144uscas1p1U;
-	Fri,  8 Dec 2023 17:38:52 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-	ussmges2new.samsung.com (USCPEMTA) with SMTP id 89.75.09760.BA453756; Fri, 
-	8 Dec 2023 12:38:52 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-	[203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20231208173851uscas1p2a165e9fee23125b55ca6ed4de29b3bc1~e6-GOClas2597125971uscas1p2I;
-	Fri,  8 Dec 2023 17:38:51 +0000 (GMT)
-X-AuditID: cbfec36f-7f9ff70000002620-63-657354ab497e
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id BB.C8.09930.BA453756; Fri, 
-	8 Dec 2023 12:38:51 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Fri, 8 Dec 2023 09:38:51 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
-	8 Dec 2023 09:38:51 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Alex Williamson <alex.williamson@redhat.com>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"ben@nvidia.com" <ben@nvidia.com>
-Subject: Re: Locking between vfio hot-remove and pci sysfs sriov_numvfs
-Thread-Topic: Locking between vfio hot-remove and pci sysfs sriov_numvfs
-Thread-Index: AQHaKV4WwNJvmQMe7UuNHg2ttxy7ZbCe+60AgAAHXQCAASslAA==
-Date: Fri, 8 Dec 2023 17:38:51 +0000
-Message-ID: <ZXNUqoLgKLZLDluH@bgt-140510-bm01.eng.stellus.in>
-In-Reply-To: <20231207234810.GN2692119@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <38AA423198B2BC4A9757BC3DBFED8588@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAAE3B28F;
+	Fri,  8 Dec 2023 17:39:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A46BEC433C8;
+	Fri,  8 Dec 2023 17:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702057173;
+	bh=Z1QJunFWmvP8Ozi9c83wdN1Wu0Ksv55A8wwkLTDgsxE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KTwcJWCdXdJkedS9sruBSnLdKvns4uoenFlFRNHT1IyXZ5UgV0/e24pFD2gurpl7V
+	 qptyZ0rYWcTH+qGwzVFCUzyZrCXNDoeQO9L4TOFWt05no7tFPjjSTSfXiCdydoXe24
+	 vmRgbwSZe2pyyoyB+rxHAvHib8HH5b8jGy3hBgimblIcWnpmqjkoX2l9QzMWG6wX6I
+	 Ix2iyoOlfS1LdZYMo/xrjVVVW7ylOcB7O5l7pG9SGl7SISnbNIt0CePsjL4c06Fujt
+	 HXWxLIkH3Lqu9AoIT/zO/mkFvLT7RcHLPFrtnjPxnHXvX1M32Cjr8fudI0KI5Fs7WF
+	 lfGmJcBeC4eCg==
+Date: Fri, 8 Dec 2023 11:39:32 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Michael Bottini <michael.a.bottini@linux.intel.com>,
+	"David E . Box" <david.e.box@linux.intel.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v2 1/6] PCI/ASPM: Add locked helper for enabling link
+ state
+Message-ID: <20231208173932.GA798089@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUYRjG/WZmx3HJmt01fVMMko0waz0qmvKgC9sgMEMKyqjFnVTcXW1H
-	uyizTDKP8spysz3UMk00NrQ0UdcstewiRTs1XCo7jNIuK0t3FPa/5/3e5/meHx8fhYv1Ancq
-	VpPIajUKlRcpJOrufHuwuCqCY/2GMjHm+78skkmtLUJM2bEYpnu8ETHFZ/Yw9/Xt5CpSbjQn
-	ybNTh0n556YeUj5inruJ2CYMUrKq2L2s1jdklzDmyR8m4ZLj/uKC344p6LsgAzlRQC+FZt1t
-	IgMJKTFdgeCfpYWYXIjpNAyy/wqnTSOPq0jeVIWgK+uvIz98QdDa8wbxw0UEA6dz8ckISXvD
-	WHcVNqldaCl0dHTZEjj9EYH106itQ0Kvh9T8DsSb5FA/dpTk9Rro/1Zm8xAT4aO1BTZYZzoY
-	ruaN2/xOdACYcrttZYh2hR93+TKcdoNnVgPGc4ug5HwjzmtXGG94TfJ6HvT/GHLk/YvAePMr
-	yesQ0P3k/TjtA5dMH3C+VwSdRVaCz84By+U+24MB3UJBe/bg1KXrYPRkJ+K1B/T0npkqjoOK
-	mvQJIGpCJ0BK22b+OBBMf2qwHCTV2WHr7JB0dkg6OySdHZIRCSqRWxLHqaNZLkDD7pNxCjWX
-	pImWRcWrzWjiC90bvxV/A/U++yJrRRiFWhFQuJeLs+phPCt2VioOHGS18Tu1SSqWa0UeFOHl
-	5uwf3BklpqMViWwcyyaw2uktRjm5p2ANsuXlLSvf+TUFXVgcEph2xOJryaluaJr9ZrXprKHz
-	8Kzjylcrnge/FOnZxs/lySH691vUW82kz8WtAdK8F8tzPMtOP5R651TXaAtn7GZMhl5JXNv2
-	hkdxG/OuiJY5tAtiXZQofEXJqTrriVtltRVBEossvLyPK12S/EvmaQ5s3OFjCQ2dXymCmYIx
-	tfQQdcfApM3T1FeX6MLWDo+UglEy8gKP2KdC6dfwNuvbzK6nkayTr9+A/85sziOy2crdoI87
-	PK50907feK53QzI2eH301cqObuMy5QKXt0Un9uczH/SJR4akheod+VtMPcWEwZ3Qe8ee94lp
-	ihoUS+rCvAguRuG/ENdyiv850XugsQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsWS2cDspLs6pDjV4N95A4tv/3vYLJq3zmS0
-	WNKUYXHl3x5GizlTCy3OzjvO5sDmsWBTqUdv8zs2j/f7rrJ5fN4kF8ASxWWTkpqTWZZapG+X
-	wJVx+Y9FwTL2ijlTfrM3MH5j7WLk5JAQMJH4fHENWxcjF4eQwCpGiSnH9jJDOB8ZJfo27GaH
-	cJYySmx/tocRpIVNQFPi15U1TCC2iICKxIkTZ8CKmAXeMEo8efuFBSQhLOAu0Tz5BCNEkYfE
-	zl+NbBC2k8T9r0vAaliAmhu3TgG7g1fAVmLDpH+MENtuMEo8nPKVGSTBKWAksXDiFTCbUUBM
-	4vspiM3MAuISt57MZ4J4QkBiyZ7zzBC2qMTLx/+gnlOUuP/9JTtEvY7Egt2f2CBsO4lZP/Yw
-	Q9jaEssWvmaGOEJQ4uTMJywQvZISB1fcYJnAKDELybpZSEbNQjJqFpJRs5CMWsDIuopRvLS4
-	ODe9otgwL7Vcrzgxt7g0L10vOT93EyMwik//Oxy5g/HorY96hxiZOBgPMUpwMCuJ8Oacz08V
-	4k1JrKxKLcqPLyrNSS0+xCjNwaIkznv3gUaqkEB6YklqdmpqQWoRTJaJg1OqgYm7/3JoQIJy
-	VPv6w/NOc1k2Z6f8l1DYcnCjRXX6gcdif8tW5bOpOe2pLZBwvNm/2dy/O8u8yrd5Z/tt63UR
-	rQubXeYu6GLpYCk6tnrPZbE0hTMTPSoj00Rrl/A+myM0tTX1//x9T1/eDU/SsXqxVYmxTXvJ
-	mgvPFBgEbKT5JWO+2xp8e651RuO+1crHh3j3/GtpUXnzmvNDle4VvYZOHf0edq+CHUsXnGoq
-	rQi7oPbmI3ty+WWmfVEbL6k1HehIUzP3un9zo3S5ZfvKexqivsyM/cpTZuU28EtPbJ3fW7N4
-	qXbkPP233nHGDQ32SU9F3v5YUajqdtldaP7mxU93GSl+rov+HsDV689TcKdbiaU4I9FQi7mo
-	OBEA5GDjTFEDAAA=
-X-CMS-MailID: 20231208173851uscas1p2a165e9fee23125b55ca6ed4de29b3bc1
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9
-References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
-	<ZXJI5+f8bUelVXqu@ubuntu>
-	<20231207162148.2631fa58.alex.williamson@redhat.com>
-	<20231207234810.GN2692119@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXLNONZRafTkOk9U@hovoldconsulting.com>
 
-On Thu, Dec 07, 2023 at 07:48:10PM -0400, Jason Gunthorpe wrote:
->=20
-> The mechanism of waiting in remove for userspace is inherently flawed,
-> it can never work fully correctly. :( I've hit this many times.
->=20
-> Upon remove VFIO should immediately remove itself and leave behind a
-> non-functional file descriptor. Userspace should catch up eventually
-> and see it is toast.
+On Fri, Dec 08, 2023 at 09:00:56AM +0100, Johan Hovold wrote:
+> On Thu, Dec 07, 2023 at 02:47:16PM -0600, Bjorn Helgaas wrote:
+> > On Tue, Nov 28, 2023 at 09:15:07AM +0100, Johan Hovold wrote:
+> > > Add a helper for enabling link states that can be used in contexts where
+> > > a pci_bus_sem read lock is already held (e.g. from pci_walk_bus()).
+> > > 
+> > > This helper will be used to fix a couple of potential deadlocks where
+> > > the current helper is called with the lock already held, hence the CC
+> > > stable tag.
+> 
+> > As far as I can see, we end up with pci_enable_link_state() defined
+> > but never called and pci_enable_link_state_locked() being called only
+> > by pcie-qcom.c and vmd.c.
+> 
+> Correct, I mentioned this in the cover letter.
 
-One nice aspect of the current design is that vfio will leave the BARs
-mapped until userspace releases the vfio handle. It avoids some rather
-nasty hacks for handling SIGBUS errors in the fast path (i.e. writing
-NVMe doorbells) where we cannot try to check for device removal on
-every MMIO write. Would your proposal immediately yank the BARs, without
-waiting for userspace to respond? This is mostly for my curiosity - SPDK
-already has these hacks implemented, so I don't think it would be
-affected by this kind of change in behavior.=
+Ah, right.  I really don't like these exported locked/unlocked
+interfaces because pci_bus_sem is internal to the PCI core, and the
+caller shouldn't need to know or be able to specify whether it is held
+or not.  They exist for now, but I think we should try to get rid of
+them.
+
+> > Can we just rename pci_enable_link_state() to
+> > pci_enable_link_state_locked() and assert that pci_bus_sem is held, so
+> > we don't end up with a function that's never used?
+> 
+> That would work too. I went with adding a new helper to facilitate
+> stable backports and to mirror pci_disable_link_state(). The variants
+> are simple wrappers around the implementation so there's no real cost to
+> having the unused one.
+
+Makes good sense.  There's no real machine cost to the unused one; I'm
+more concerned about the human cost here.
+
+> But it seems like you think there will never be a need to call this
+> helper outside of pci_walk_bus() and if so we can drop the unlocked
+> variant right away.
+> 
+> Would you prefer basically squashing the first three patches and mark
+> the result for stable even though that patch will fail to apply to older
+> kernels as the Qualcomm bits went into -rc1?
+> 
+> Or should I send a follow-on patch removing the unused helper after
+> merging this series?
+
+I think you did the right thing.
+
+Bjorn
 
