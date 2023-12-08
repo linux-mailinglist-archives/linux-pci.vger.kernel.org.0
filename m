@@ -1,163 +1,139 @@
-Return-Path: <linux-pci+bounces-707-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-708-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E483D80AB89
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 19:02:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5367880ABB0
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 19:12:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21A071C20ACB
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 18:02:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4289A1C20AE3
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 18:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CA6020310;
-	Fri,  8 Dec 2023 18:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E5B31F61F;
+	Fri,  8 Dec 2023 18:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="N683CX5t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eei2E4b+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 807CB10EB;
-	Fri,  8 Dec 2023 10:02:01 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ae6yRQSEr/3LSOvgFFu/1tqgGL9OzL9cehVHi44qEvlP9Jl+hlCupnBV+LU6mBwWpjj6fYvSK/OnFdb8nQUoNNHDDR8/CdsZaCyAkH7cb/0EQD/IyYbHOqi5oM8m10A7mOvUB90Iz9wwbli5XR9Z1cWEkM+dEpOJALijCbleOlRKHCTLUXTCnaXExOCiVWddTtI/5aMf2rOCDmonsUA52t5gRCEVitqOKcUvqJUTwT+NioKi3ZTsi47l/DyH5gKTr6cX6EDLosAn1AnjHaSSqc6AHksfj2ZOg/8qx18t4I4r6jHrufMcM3+QRZRzHXbQ3wFSPc+bEYqMI+lDuCJTrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jAclD6xjTtRh5V9kUqs+VW64cGIEs2gGRgOeEJKwgcs=;
- b=KVFSKtdIHzjTskYcdGgE8GfeVzBBCPPfRYwjjLxapHQ++Vj/TgWny8mptRDxBB3amXgEA+XWt306c7LfZTDMunANQZtyuVAwUeTGN/vwZgJYg85g80w3e7RJWm8YTkGN663VN0Y9devuTcq7cuZ64wA5PAikjljJjsrQveR3Q/AJzsf+rlLXcWj5hUwyCEjcM2s7sZGWx/IZHvox8WSxx1J6/HAhdushncMtsgFLuADBn/lKSWoY3evymKAlesuO35xPhi0kSZUl2V7WOlMd98ofNRU5ryH4ulB9IeZ2dZNziX6u77x24nXQUb3Nhw+PIkosuz92OiXI3J1wBpLSPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jAclD6xjTtRh5V9kUqs+VW64cGIEs2gGRgOeEJKwgcs=;
- b=N683CX5tRkEaeCARe/2aSXFs3BvSVsMwUU7Tn+0Cxw8wRU+HKrkkN1dBOjgBe7XPKx5GIpznKNfG51IiQXLaUa3yZq8JzicOMoIZ1vJG1CboWnjvA47IdD4ogzD9crF6jawT3Al9aFFBARnyYlQAhQ3h3P9InMRT/75Bm0pi4iYhjrzv7H+/w6HZM5gSfkDe908iR2bMLKhtWa8vsPGbJ0QrDARVvCh1TVl+bM/AvlrvUc+xXC5+LxiDi0Oh/SZWrvZUNK/pmZwF3v+Gd8L/dD+eHoq+6HWmKT9njXONqQYD2DD83ug8r08xltFQMUoUCmfk131An2uwypwX/kDOyw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by DM4PR12MB5184.namprd12.prod.outlook.com (2603:10b6:5:397::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.28; Fri, 8 Dec
- 2023 18:01:58 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7046.038; Fri, 8 Dec 2023
- 18:01:58 +0000
-Date: Fri, 8 Dec 2023 14:01:57 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Jim Harris <jim.harris@samsung.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"ben@nvidia.com" <ben@nvidia.com>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C90AA3
+	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 10:12:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702059139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nRPGGJT3L2nskXf0DpDITrIYnHsXPHPWACprYkXS8AI=;
+	b=Eei2E4b+sRqXQCTkX6HfyNupy8fHdIwgHBfyY6JAfwlJQ5XiA8deqdYDKkdkYq1sBSXNF2
+	R/tetP9wIBcIny1t/8wg/lTCD7zrzyvvInfMeNc1UrDHjxOG0kzcGN+upe7dyHGiWBR5kw
+	kPLba8zU7qsw6+JAqYA6wq1AueaO3aQ=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-21-8DVBTQcPMqq1vejng45oDQ-1; Fri, 08 Dec 2023 13:12:17 -0500
+X-MC-Unique: 8DVBTQcPMqq1vejng45oDQ-1
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35d62f23044so22885755ab.1
+        for <linux-pci@vger.kernel.org>; Fri, 08 Dec 2023 10:12:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702059137; x=1702663937;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nRPGGJT3L2nskXf0DpDITrIYnHsXPHPWACprYkXS8AI=;
+        b=BbTMF/Ib9wgdxOQTMm6/UJJ4jaoHt7z+++y/WTp5+hJprpy33L9OZXGx4pKAIEtuKw
+         aRLuFPY4FGBMOSaryYFJG5wlwJ3VEH9uGkMj/ckNnTOkK9SvFEGbzcIWb5BFTejLYdMK
+         3ntpOYwpSmyw6Nhdb3iBcmK/VMren6YevjPHMbfm4zc+9/AvDIpP+zkfNBx+a2ontwuZ
+         PfAqk2faXOx3kJ/6/E0EcobmtivzAy/lWm2kwb0wF5hJMOPUThCYNx4PnoECAAxndQYl
+         xhT/NeNTVi26DDzcOVuip2RbEzYfVsi0v+eiwOUJCZLnR1bgcWsxbuCJTOAQ5SV5umzO
+         LyKg==
+X-Gm-Message-State: AOJu0YwAL7ckmI9oozwv0QbJ1X5F7H3kcrkzHZ+Gsa/pOwvvwFHqBwmw
+	yhq4e5KLMvheXFXf1gYDWFJuehn2/gC8CVI+GFL8Oxi73HWwYS0QWa9MqEYVoPSdjXW6DykX6sZ
+	2vnh0MwIZpRawMtaFTOCF
+X-Received: by 2002:a05:6e02:16c8:b0:35d:5220:8eb5 with SMTP id 8-20020a056e0216c800b0035d52208eb5mr870094ilx.11.1702059137042;
+        Fri, 08 Dec 2023 10:12:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGNT/qwx2NwZS2n7PFtjpCL8A3JWB2z9aBM2WpuL1CUpLEt3y15nJUti/RVXGeFmO4HMmKFhA==
+X-Received: by 2002:a05:6e02:16c8:b0:35d:5220:8eb5 with SMTP id 8-20020a056e0216c800b0035d52208eb5mr870082ilx.11.1702059136810;
+        Fri, 08 Dec 2023 10:12:16 -0800 (PST)
+Received: from redhat.com ([38.15.60.12])
+        by smtp.gmail.com with ESMTPSA id cn6-20020a056e02388600b003594b40e4e2sm679952ilb.0.2023.12.08.10.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 10:12:16 -0800 (PST)
+Date: Fri, 8 Dec 2023 11:12:15 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Jim Harris <jim.harris@samsung.com>, "bhelgaas@google.com"
+ <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+ <linux-pci@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "ben@nvidia.com" <ben@nvidia.com>
 Subject: Re: Locking between vfio hot-remove and pci sysfs sriov_numvfs
-Message-ID: <20231208180157.GR2692119@nvidia.com>
+Message-ID: <20231208111215.5a47090e.alex.williamson@redhat.com>
+In-Reply-To: <20231208180157.GR2692119@nvidia.com>
 References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
- <ZXJI5+f8bUelVXqu@ubuntu>
- <20231207162148.2631fa58.alex.williamson@redhat.com>
- <20231207234810.GN2692119@nvidia.com>
- <ZXNUqoLgKLZLDluH@bgt-140510-bm01.eng.stellus.in>
- <20231208174109.GQ2692119@nvidia.com>
- <ZXNZdXgw0xwGtn4g@bgt-140510-bm01.eng.stellus.in>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXNZdXgw0xwGtn4g@bgt-140510-bm01.eng.stellus.in>
-X-ClientProxiedBy: MN2PR15CA0065.namprd15.prod.outlook.com
- (2603:10b6:208:237::34) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+	<ZXJI5+f8bUelVXqu@ubuntu>
+	<20231207162148.2631fa58.alex.williamson@redhat.com>
+	<20231207234810.GN2692119@nvidia.com>
+	<ZXNUqoLgKLZLDluH@bgt-140510-bm01.eng.stellus.in>
+	<20231208174109.GQ2692119@nvidia.com>
+	<ZXNZdXgw0xwGtn4g@bgt-140510-bm01.eng.stellus.in>
+	<20231208180157.GR2692119@nvidia.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DM4PR12MB5184:EE_
-X-MS-Office365-Filtering-Correlation-Id: 177c4c85-5c35-4eeb-1c54-08dbf817c54d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	d58ndK/unpGZrTbvHbO26u2TmmhlbfixZvNEeQ6uZYqSqszH98CvKsALs/WVnFgmeGskWtUuW6cZ4a6ZRl7dCVrQph+C/4qJNKfic7OHRuK9oOGNU6py8QOdARGVeFL2ZOsWtLxvXwiAg1WqzUM1oPukWF8bOL39m0jtw5KEQF+viMtiEaMrq26RBmr8DaXkl28SG30/fR7xquAN2WnV9AXI+QjTsSg14PHhWN1MkC6pcuAquQUkIB7SBbHnzj4ga4F0MiE90aw+H2U++QnHSvmZXX9+CWrAvZSpHC0HG9JfVLG8oT2CMO5PJMGJz6XKSA4jYFzmk4FzYRTH2pjSUqnioz5tphvuqq8tdlbn6SvJCrBbg7sWM3zBbt0xgaFtY7xX/2TDBEkFjsVd6uRnERLJPoYpjSkODSArUzsX5M8leIKu7HX5ZEP17sjdoDtgHz9ORVbT2ajvG31bkpLt21RvrHfxbywUbDA0551JbE5TGb7ab7JNPzMz/lhvVUwA4tWKmYiuMnHEbiXP0A7LG1iLAgiUN+6ymAHFLKMYtpcRVLjdGN0ZT5I8EBfc1Vpr
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(136003)(39860400002)(366004)(346002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(6506007)(26005)(6512007)(2616005)(107886003)(1076003)(83380400001)(41300700001)(4326008)(8676002)(8936002)(2906002)(5660300002)(478600001)(6916009)(66476007)(66946007)(66556008)(316002)(54906003)(6486002)(38100700002)(33656002)(86362001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5GfI44ASdVTDbtZsmRAcIC/EncZ8K+SkPy5SJpyPAyGXiQYjv8Joy0HUBw/u?=
- =?us-ascii?Q?L1/8Ff7vJ1tEk7ggO4DG/yeL6sQAs3aLcNrPMqI0bielDRVAU9DeooD5m6qp?=
- =?us-ascii?Q?fi+fLNtmS1kWpPhNKp3xvB+sCQl777BiKREsYNzXLX5FcrixD4ms0EMgmOe2?=
- =?us-ascii?Q?QKqMvtbuR/uMFN16c0qApCIrrcAzUHk2NXXo0gHSqlAORoQRV69mGWRmp5Zx?=
- =?us-ascii?Q?+Tevr62z0LbOwgOyULlTJ82EPUnSRYBNKa0Mq02vzw9LkSGcSbb98d9NqbZS?=
- =?us-ascii?Q?YaxS38d+fNDbU9gPmkEXPzEdXvHg4QaWC58HhG4O2fqN9hCZeSAcSkNuvXsF?=
- =?us-ascii?Q?EuMY0CUMaSBmKRt7snvG/Ebs9eR5nzwwRIplwcbkWPLFlthfrCfZ0yEKisYG?=
- =?us-ascii?Q?dkTBlBkg9Khp4hF4Croc7fB1+yizmY4MXCKq/QBaEonMfdJ1HWdD/O2DaJ0L?=
- =?us-ascii?Q?UYadOZoSRVh0MKV9ZsHSRk04Vh4MRotJBLqaQ9iYOnA9oBkO1+wFBl5yw/9F?=
- =?us-ascii?Q?iIPxM+pC7QZaT1P8aDh6/7xgOOtezYFfxFCcMIj/Bxk6M2q4Ndtg41vIZ4Wr?=
- =?us-ascii?Q?ZdoTt26tH2s8gFnZKAJKxKt0y4jLm2QsXP9QBq0AAKcCf2cmqTuF75aqeXEC?=
- =?us-ascii?Q?4MZfjdEBXFSRRL+IRP/AWhK+8bWrY2xu8zZjPZWTgJzD/pDxxBDvlPnoe8ql?=
- =?us-ascii?Q?exVZUqtFiBuUmBWIbpeN2Jw9414sqZBzY1eygoiUPUoAUpHKjmHN+79RfsFP?=
- =?us-ascii?Q?xhuSKIVFpo6jb0v1B2QFUnE4aWqWs9fOKkBEvtwuNF84ZIAoPrmenqQFFbsv?=
- =?us-ascii?Q?O/580KzAiz+3rMRcOmzntoSroU/SFXNH89hzTzV2BUMdiy3FJDhfmbIRZQxg?=
- =?us-ascii?Q?TQ041sYBVjsvKBGCXpmOAboA9uQGIQculiW6SaWaVfz1Ka9wf99sxJQMQ4hd?=
- =?us-ascii?Q?hJUPAgYDxhmVRvqWOoEWcpO9qygegCuS9uVYYnveD3s+UvdLlah4y0r9fqmA?=
- =?us-ascii?Q?P0q5CO33VQP7LRcDFg7d9fAfpUMNAMbWB9dynVSyHqNjMdejx2/jgp3qoSY+?=
- =?us-ascii?Q?QC73fi9OC14Jw/jYouUKEjiX/W9wLjbu4SNboSQRBs8Vb+a0Xd712UhyBQHD?=
- =?us-ascii?Q?ZIMuuaa61ALabp+UfJWqCgvDqVsywkF11r5FWrJV+S4JHXSwvQBUSbdeF6S5?=
- =?us-ascii?Q?TS+PmzFHRg/2DDW8ndexqxtfEpQau3oSHANecnW+5dlpv9n9hE10mXOGoFkh?=
- =?us-ascii?Q?jiJFwj0IQxoP08HMqwFj0dekMS4XnbbM8L2haJbYN8q+3PyeGDiMqZB53xzk?=
- =?us-ascii?Q?x2dFHVAoj/GFTpIuOvkUlAcn8o0lKOoy8XeNxRnUyr1EH3lfngjPE5GYhPul?=
- =?us-ascii?Q?rVJVBkhkRSuOy7sK5CEnJCRYy3MLj7Arj5VgHtgeMQp3UpEH58gnSThg36+m?=
- =?us-ascii?Q?Btw/tiasvCqXsU31PuNFp18OGf3UIIm6SN5D+FfvbJMp0ZwmRJ45ZrCAe1js?=
- =?us-ascii?Q?fte+nmLnHVHqIt+tRZPEAcepbwbkb/DJxJNMvSw0qMm00EyuLpp0loH/9VB0?=
- =?us-ascii?Q?o3gSqViOncO5osBq62EMvIpxfkZvM5ApVpIMIXO9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 177c4c85-5c35-4eeb-1c54-08dbf817c54d
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 18:01:58.2872
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n2Lq43o9U1C+f3NdwDImiUN8ZmoeqFRN6gCgSpzmCZ/PeRKWADVX9XOGVb6VfroE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5184
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 08, 2023 at 05:59:17PM +0000, Jim Harris wrote:
-> On Fri, Dec 08, 2023 at 01:41:09PM -0400, Jason Gunthorpe wrote:
-> > On Fri, Dec 08, 2023 at 05:38:51PM +0000, Jim Harris wrote:
-> > > On Thu, Dec 07, 2023 at 07:48:10PM -0400, Jason Gunthorpe wrote:
+On Fri, 8 Dec 2023 14:01:57 -0400
+Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> On Fri, Dec 08, 2023 at 05:59:17PM +0000, Jim Harris wrote:
+> > On Fri, Dec 08, 2023 at 01:41:09PM -0400, Jason Gunthorpe wrote:  
+> > > On Fri, Dec 08, 2023 at 05:38:51PM +0000, Jim Harris wrote:  
+> > > > On Thu, Dec 07, 2023 at 07:48:10PM -0400, Jason Gunthorpe wrote:  
+> > > > > 
+> > > > > The mechanism of waiting in remove for userspace is inherently flawed,
+> > > > > it can never work fully correctly. :( I've hit this many times.
+> > > > > 
+> > > > > Upon remove VFIO should immediately remove itself and leave behind a
+> > > > > non-functional file descriptor. Userspace should catch up eventually
+> > > > > and see it is toast.  
 > > > > 
-> > > > The mechanism of waiting in remove for userspace is inherently flawed,
-> > > > it can never work fully correctly. :( I've hit this many times.
-> > > > 
-> > > > Upon remove VFIO should immediately remove itself and leave behind a
-> > > > non-functional file descriptor. Userspace should catch up eventually
-> > > > and see it is toast.
+> > > > One nice aspect of the current design is that vfio will leave the BARs
+> > > > mapped until userspace releases the vfio handle. It avoids some rather
+> > > > nasty hacks for handling SIGBUS errors in the fast path (i.e. writing
+> > > > NVMe doorbells) where we cannot try to check for device removal on
+> > > > every MMIO write. Would your proposal immediately yank the BARs, without
+> > > > waiting for userspace to respond? This is mostly for my curiosity - SPDK
+> > > > already has these hacks implemented, so I don't think it would be
+> > > > affected by this kind of change in behavior.  
 > > > 
-> > > One nice aspect of the current design is that vfio will leave the BARs
-> > > mapped until userspace releases the vfio handle. It avoids some rather
-> > > nasty hacks for handling SIGBUS errors in the fast path (i.e. writing
-> > > NVMe doorbells) where we cannot try to check for device removal on
-> > > every MMIO write. Would your proposal immediately yank the BARs, without
-> > > waiting for userspace to respond? This is mostly for my curiosity - SPDK
-> > > already has these hacks implemented, so I don't think it would be
-> > > affected by this kind of change in behavior.
+> > > What we did in RDMA was map a dummy page to the BARs so the sigbus was
+> > > avoided. But in that case RDMA knows the BAR memory is used only for
+> > > doorbell write so this is a reasonable thing to do.  
 > > 
-> > What we did in RDMA was map a dummy page to the BARs so the sigbus was
-> > avoided. But in that case RDMA knows the BAR memory is used only for
-> > doorbell write so this is a reasonable thing to do.
+> > Yeah, this is exactly what SPDK (and DPDK) does today.  
 > 
-> Yeah, this is exactly what SPDK (and DPDK) does today.
+> To be clear, I mean we did it in the kernel.
+> 
+> When the device driver is removed we zap all the VMAs and install a
+> fault handler that installs the dummy page instead of SIGBUS
+> 
+> The application doesn't do anything, and this is how SPDK already will
+> be supporting device hot unplug of the RDMA drivers.
 
-To be clear, I mean we did it in the kernel.
+But I think you can only do that in the kernel because you understand
+the device uses those pages for doorbells and it's not a general
+purpose solution, right?
 
-When the device driver is removed we zap all the VMAs and install a
-fault handler that installs the dummy page instead of SIGBUS
+Perhaps a variant driver could do something similar for NVMe devices
+doorbell pages, but a device agnostic driver like vfio-pci would need
+to SIGBUS on access or else we risk significant data integrity issues.
+Thanks,
 
-The application doesn't do anything, and this is how SPDK already will
-be supporting device hot unplug of the RDMA drivers.
+Alex
 
-Jason
 
