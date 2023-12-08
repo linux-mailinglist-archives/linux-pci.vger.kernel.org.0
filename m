@@ -1,51 +1,53 @@
-Return-Path: <linux-pci+bounces-656-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-660-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2897B809F3D
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 10:26:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17F81809F40
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 10:27:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5122281849
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 09:26:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48AC21C209A3
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 09:27:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D8C3125A3;
-	Fri,  8 Dec 2023 09:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A967912B83;
+	Fri,  8 Dec 2023 09:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="g1Ia679n";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="fw/nJ5nK"
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="JkCFBezT";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="igyHg2+O"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517FB1724
-	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 01:26:45 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 170C6C0002
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2357B1727
+	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 01:26:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com DB965C0002
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1702027126; bh=LffEoy7BEXtir+bHG7zJLq4DE9Brdo6hglCGBOxdd2Y=;
+	t=1702027136; bh=SBhBMSD/b041jxXSGOAXTq5IBUgFoQ2AEafdsjO0oPw=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=g1Ia679n2fdVYMpGRRf6jtxZ+7nhAi05WkZUGSEd4UKcT+ZcPcdU+TFINAI+tuITg
-	 +0I3KQmFvwGTHL4AOeLX/zjYJFw7ys+ypD7zmBIVTN77iGrMZ0ujFC5a2jM7r7ObXW
-	 Q6zEGUNldETjEcBj/uLgM7viNR6aViqxryTYmU1nVrSuvuF3t8Dsf2mc45vSwtFO5p
-	 k8wO1JX8BCeeollweFqGYa2DAiwjCAxu3KAGKNtozPL9pCIJUm+Wcyrg3PkJmuwJCV
-	 /wzI/7njksEhbA5QYfgzE9ekRQqrO7phGhlmHBGX0bkinFqCbD96bvHvA/5L0CXZe+
-	 JoTvIGVKC5zcQ==
+	b=JkCFBezTgRdLThyZe7xK47AcHiG4/CtQZe7/B7zg3q5w3mcAy0fIVEP/5PRdmNn3U
+	 L9WVp4RBS2Hwi/8uvMfBz4f5qnUC3oiX8fDq8ZmlEFlmpYu0Vq1FdZYupUArh2uows
+	 10FInF3Jk8NL5qAGH/OlR+mnRMPg1fWWmGT4WclJWUQgRouMqYAy8KiwvVlR8dybV2
+	 MddgCzklENLEn0VcW08XZ/WcTEos9d6kWWyD+KpB4Kumhmho9Y4QP8OdnyNWjWhz1f
+	 +OcW/+asLUkfHigfC3XhmZOoVCbmSODSla6QC1Ky+4ANYG7ZdivdtPzn4FOUgaqoE+
+	 lIE+wXf6oF0XA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1702027126; bh=LffEoy7BEXtir+bHG7zJLq4DE9Brdo6hglCGBOxdd2Y=;
+	t=1702027136; bh=SBhBMSD/b041jxXSGOAXTq5IBUgFoQ2AEafdsjO0oPw=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=fw/nJ5nKLAznNu3diBoHUwwzp3s/h4itNfbzaXYcgvACmp/6HIUUCFVzIJ0tX2CvZ
-	 A24xQqrvM9LDRGPA4eN7dQbyLG34W54pa08ZAS6kOfgghxz0MbwvbqtQwpMOwFJ2v9
-	 TF6e30Af86Oj4Vg5vHOv2xu0QPvwIp7VsnfnPwDM8yObGjWVZnW8Zf/zX1647c3o7K
-	 Mx04UNQegoYQMxyC8qMIiuTzs7dfPUJE8Kw5h5AVDlJMEk0jt+QJOElY6diZ6AfSuC
-	 4lE5GJH/As97vvuLCyDEuwC7Pisi+um9DeTKxb4kZll7bNIj6aUO4ZL6Vh9ExMEE4i
-	 n69pbuTXazpcw==
+	b=igyHg2+O2trEXaqSPG6zqKhTKx706pDasCKpxQq8bNsGh7+QRU/m0/Bi/6W4RNYb0
+	 5LcXIkT0/XNyuPVYpVCw4f3IPGxam9e7+tbCRWVQtTCtcuOZhdelBISVpVZrd4jkYu
+	 JUgqHk6tEvljcRHG1hCHEXmefikQW4XzPul4JSv1S2bPtWD0reO3IIypbbjXMophaf
+	 /jVYoz2C5+pQ6/nIBwJoLojavHlXLcgrBsIyMAju4kiWnFvIBJccGONSMfCGiIdd3p
+	 w9aWGLMFniiE06R3ybttbENv0iPUPPq/LbclTHcb0/uudpGWF81uwCJYf88uupXUQd
+	 AzOepwpPKC8cw==
 From: Nikita Proshkin <n.proshkin@yadro.com>
 To: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>
 CC: <linux@yadro.com>, Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
 	Nikita Proshkin <n.proshkin@yadro.com>
-Subject: [PATCH 00/15] pciutils: Add utility for Lane Margining
-Date: Fri, 8 Dec 2023 12:17:19 +0300
-Message-ID: <20231208091734.12225-1-n.proshkin@yadro.com>
+Subject: [PATCH 01/15] pciutils-lspci: Fix unsynchronized caches in lspci struct device and pci struct pci_dev
+Date: Fri, 8 Dec 2023 12:17:20 +0300
+Message-ID: <20231208091734.12225-2-n.proshkin@yadro.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231208091734.12225-1-n.proshkin@yadro.com>
+References: <20231208091734.12225-1-n.proshkin@yadro.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,89 +59,73 @@ Content-Type: text/plain
 X-ClientProxiedBy: T-EXCH-10.corp.yadro.com (172.17.11.60) To
  S-Exch-02.corp.yadro.com (10.78.5.239)
 
-PCIe Gen 4 spec introduced new extended capability mandatory for all
-ports - Lane Margining at the Receiver. This new feature allows to get an
-approximation of the Link eye margin diagram by four points. This
-information shows how resistant the Link is to external influences and can
-be useful for link debugging and presets tuning.
-Previously, this information was only available using a hardware debugger.
+lspci initializes both caches for the device to the same memory block in
+its scan_device function. Latter calls to config_fetch function will
+realloc cache in struct device, but not in struct pci_dev leading to
+the invalid pointer in the latter. pci_dev cache is used by pci_read_*
+functions, what will lead to a possible use-after-free situations.
 
-Patch series consists of two parts:
+Example:
 
-* Patch for lspci to add Margining registers reading. There is not much
-  information available without issuing any margining commands, but this
-  info is useful anyway;
-* New pcilmr utility.
+With patch:
 
-Margining capability assumes the exchange of commands with the device, so
-its support was implemented as a separate utility pcilmr.
-The pcilmr allows you to test Links and supports all the features provided
-by the Margining capability. The utility is written using a pcilib, it is
-divided into a library part and a main function with arguments parsing in
-the pciutils root dir.
-Man page is provided as well.
+diff --git a/ls-caps.c b/ls-caps.c
+index a481b16..b454843 100644
+--- a/ls-caps.c
++++ b/ls-caps.c
+@@ -1802,6 +1802,7 @@ show_caps(struct device *d, int where)
+ 	      break;
+ 	    case PCI_CAP_ID_EXP:
+ 	      type = cap_express(d, where, cap);
++        struct pci_cap* test = pci_find_cap(d->dev, PCI_CAP_ID_EXP, PCI_CAP_NORMAL);
+ 	      can_have_ext_caps = 1;
+ 	      break;
+ 	    case PCI_CAP_ID_MSIX:
 
-Utility compilation and man page preparation are integrated into the
-pciutils Makefile, so run make is enough to start testing the utility
-(Gen 4/5 device is required though).
-Utility was written with Linux in mind and was tested only on this OS.
+valgrind run:
+valgrind ./lspci -vvvs 7:0.0
 
-Example utility results on different systems you can see in gist:
-https://gist.github.com/bombanya/f2b15263712757ffba1a11eea011c419
+...
+==22835== Invalid read of size 2
+==22835==    at 0x11A90A: pci_read_word (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x11EBEC: pci_scan_caps (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x11AC00: pci_fill_info_v38 (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x11ED73: pci_find_cap (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x1126FA: show_caps (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10E860: show_device (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10BFA3: main (in /home/merlin/git/pciutils/lspci)
+==22835==  Address 0x5249276 is 6 bytes inside a block of size 64 free'd
+==22835==    at 0x4E0A13B: realloc (vg_replace_malloc.c:1649)
+==22835==    by 0x119BCC: xrealloc (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10CD2C: config_fetch (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x110DAA: show_caps (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10E860: show_device (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10BFA3: main (in /home/merlin/git/pciutils/lspci)
+==22835==  Block was alloc'd at
+==22835==    at 0x4E050B5: malloc (vg_replace_malloc.c:431)
+==22835==    by 0x119B9C: xmalloc (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10CE80: scan_device (in /home/merlin/git/pciutils/lspci)
+==22835==    by 0x10BF0F: main (in /home/merlin/git/pciutils/lspci)
+...
 
-Patch series is also posted as PR on pciutils github:
-https://github.com/pciutils/pciutils/pull/162
+Reviewed-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+Signed-off-by: Nikita Proshkin <n.proshkin@yadro.com>
+---
+ lspci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Nikita Proshkin (15):
-  pciutils-lspci: Fix unsynchronized caches in lspci struct device and
-    pci struct pci_dev
-  pciutils: Add constants for Lane Margining at the Receiver Extended
-    Capability
-  pciutils-lspci: Add Lane Margining support to the lspci
-  pciutils-pcilmr: Add functions for device checking and preparations
-    before main margining processes
-  pciutils-pcilmr: Add margining process functions
-  pciutils-pcilmr: Add logging functions for margining
-  pciutils-pcilmr: Add all-in-one device margining parameters reading
-    function
-  pciutils-pcilmr: Add function for default margining results log
-  pciutils-pcilmr: Add utility main function
-  pciutils-pcilmr: Add support for unique hardware quirks
-  pciutils-pcilmr: Add the ability to pass multiple links to the utility
-  pciutils-pcilmr: Add --scan mode to search for all LMR-capable Links
-  pciutils-pcilmr: Add option to save margining results in csv form
-  pciutils-pcilmr: Add handling of situations when device reports its
-    MaxOffset values equal to 0
-  pciutils-pcilmr: Add pcilmr man page
-
- Makefile                 |  11 +-
- lib/header.h             |   7 +
- lmr_lib/Makefile         |  10 +
- lmr_lib/margin.c         | 528 ++++++++++++++++++++++++++++++++++++++
- lmr_lib/margin.h         | 206 +++++++++++++++
- lmr_lib/margin_hw.c      | 163 ++++++++++++
- lmr_lib/margin_hw.h      |  46 ++++
- lmr_lib/margin_log.c     | 141 +++++++++++
- lmr_lib/margin_log.h     |  23 ++
- lmr_lib/margin_results.c | 255 +++++++++++++++++++
- lmr_lib/margin_results.h |  15 ++
- ls-ecaps.c               |  22 +-
- lspci.c                  |   1 +
- pcilmr.c                 | 532 +++++++++++++++++++++++++++++++++++++++
- pcilmr.man               | 179 +++++++++++++
- 15 files changed, 2136 insertions(+), 3 deletions(-)
- create mode 100644 lmr_lib/Makefile
- create mode 100644 lmr_lib/margin.c
- create mode 100644 lmr_lib/margin.h
- create mode 100644 lmr_lib/margin_hw.c
- create mode 100644 lmr_lib/margin_hw.h
- create mode 100644 lmr_lib/margin_log.c
- create mode 100644 lmr_lib/margin_log.h
- create mode 100644 lmr_lib/margin_results.c
- create mode 100644 lmr_lib/margin_results.h
- create mode 100644 pcilmr.c
- create mode 100644 pcilmr.man
-
+diff --git a/lspci.c b/lspci.c
+index 9452cd3..071cc11 100644
+--- a/lspci.c
++++ b/lspci.c
+@@ -107,6 +107,7 @@ config_fetch(struct device *d, unsigned int pos, unsigned int len)
+       d->config = xrealloc(d->config, d->config_bufsize);
+       d->present = xrealloc(d->present, d->config_bufsize);
+       memset(d->present + orig_size, 0, d->config_bufsize - orig_size);
++      pci_setup_cache(d->dev, d->config, d->dev->cache_len);
+     }
+   result = pci_read_block(d->dev, pos, d->config + pos, len);
+   if (result)
 -- 
 2.34.1
 
