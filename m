@@ -1,112 +1,142 @@
-Return-Path: <linux-pci+bounces-712-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F13F80AD60
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 20:54:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 342F480AD91
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 21:09:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1987B2818A9
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 19:54:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D26181F21226
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 20:09:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB92F50262;
-	Fri,  8 Dec 2023 19:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1560657318;
+	Fri,  8 Dec 2023 20:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAc7dxAv"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XbfnUl2W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C108B481D4
-	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 19:54:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D22F6C433C7;
-	Fri,  8 Dec 2023 19:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702065241;
-	bh=W7BRZluTdR9O9RPqOJrs5LIq7KXHrEpCq4+CAsseqCU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mAc7dxAvYRSBUqZcvd7zQccXSyahXMQGK+AVUTLgsqTil1PAfbnetTTZcFCupf84E
-	 Jr3eLLx+/wmfmTQTebgCiBkcV7FnAhTzdLk7LDCBuJwbhNAmIKWRbX9BdCOR0Xf1pz
-	 bEhgUreHrPTAEiujHMzMHFhFb93QoJ8IgqBdEmmwThLQn19y1E9vkJIxw4Tt7d7XGr
-	 qi64Mibw+YUw+C1PXm0Yt0I7Zh48Jtyh1J+yxviDHo4e7zKudg/Dus6Q18o2pEppPs
-	 1oWEwHhZ1ABuvBL64JaZqbFcLBqLPY0MU5zTqU92ozYnmtcFoY3bUHkchzlI7teowE
-	 qgLA6zgqAjyCQ==
-Date: Fri, 8 Dec 2023 13:53:59 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>, Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-	Philipp Rosenberger <p.rosenberger@kunbus.com>,
-	Cyril Brulebois <kibi@debian.org>
-Subject: Re: [PATCH] PCI: brcmstb: Avoid downstream access during link
- training
-Message-ID: <20231208195359.GA808176@bhelgaas>
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4D8F1;
+	Fri,  8 Dec 2023 12:09:43 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20231208200935usoutp013eade6b562d56a6dec224e2953fc5c3b~e9CtAUsTA0188501885usoutp01e;
+	Fri,  8 Dec 2023 20:09:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20231208200935usoutp013eade6b562d56a6dec224e2953fc5c3b~e9CtAUsTA0188501885usoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702066175;
+	bh=Iv7XyhyxUSiHcnN6SjqD7mdRbAbHc4NXoqsP3KfXXLw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=XbfnUl2WmEPn7/JEIBVfd5l0rcVEb9sCTyBJTcIeViOfbpkrXLhEberX40srqu3zX
+	 0VfmI8oxUJNc7j6TjSLs3Sffp1i5FYGNEv34ZrwRF1qYemlY+SraOy248j7WADkXjm
+	 UYYrBJZH8TbMPCHkltqUKIFmxvwO+FO/FtDenG/Q=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+	[203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231208200935uscas1p26edc81734e83823ca1e9631c10c58542~e9Cs6jOxO0752507525uscas1p2b;
+	Fri,  8 Dec 2023 20:09:35 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+	ussmges3new.samsung.com (USCPEMTA) with SMTP id 87.0B.09550.FF773756; Fri, 
+	8 Dec 2023 15:09:35 -0500 (EST)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+	[203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231208200935uscas1p27bf9af3e1af779eeb569440fbafe1d99~e9CspZ3sm2540125401uscas1p2a;
+	Fri,  8 Dec 2023 20:09:35 +0000 (GMT)
+X-AuditID: cbfec370-933ff7000000254e-8c-657377ff2d18
+Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
+	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 4F.88.09813.FF773756; Fri, 
+	8 Dec 2023 15:09:35 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.1.2375.24; Fri, 8 Dec 2023 12:09:34 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
+	8 Dec 2023 12:09:34 -0800
+From: Jim Harris <jim.harris@samsung.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Leon Romanovsky <leonro@nvidia.com>, Alex Williamson
+	<alex.williamson@redhat.com>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "ben@nvidia.com"
+	<ben@nvidia.com>, "pierre.cregut@orange.com" <pierre.cregut@orange.com>
+Subject: Re: Locking between vfio hot-remove and pci sysfs sriov_numvfs
+Thread-Topic: Locking between vfio hot-remove and pci sysfs sriov_numvfs
+Thread-Index: AQHaKV4WwNJvmQMe7UuNHg2ttxy7ZbCe+60AgAAHXQCAASJQAIAAKz2AgAAHr4A=
+Date: Fri, 8 Dec 2023 20:09:34 +0000
+Message-ID: <ZXN3+dHzM1N5b7r+@ubuntu>
+In-Reply-To: <20231208194159.GS2692119@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DF5832D762627B42B9DF6D4214B266B3@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <385baf9dbfb6b65112803998dfc0cd6f84a5e6ba.1691296765.git.lukas@wunner.de>
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djXc7r/y4tTDR5fUbH49r+HzaJ560xG
+	iyVNGRZX/u1htJgztdBi04YnLBZn5x1ns1j/9T2bA4fHgk2lHr3N79g8Wp6dZPN4v+8qm8fn
+	TXIBrFFcNimpOZllqUX6dglcGfenPWQrOMRe8XT+D8YGxna2LkZODgkBE4kZR3YydzFycQgJ
+	rGSU2DlrMSuE08okcXTZJqAqDrCqo5MiIOJrGCV+r9/GBOF8ZJR41bIfbJSQwFJGiUmrRUFs
+	NgFNiV9X1jCB2CICKhInTpxhB2lgFjjFJLH+ajMjSEJYwF2iefIJRogiD4mdvxrZIGw/iZMb
+	/4A1swA1nzk3nxnE5hVQlZh+4hxYnFPASOLv89msIDajgJjE91MQy5gFxCVuPZnPBPGboMSi
+	2XuYIWwxiX+7HkL9rChx//tLdoh6HYkFuz+xQdh2Ej9e/GSGsLUlli18DbVXUOLkzCcsEL2S
+	EgdX3ICy73BIPNrsBQkhF4nH7aIQYWmJv3eXQZ2QLbFyfQcTREmBRMORIIiwtcTCP+uZJjCq
+	zEJy9CwkB81CctAsJAfNQnLQAkbWVYzipcXFuempxcZ5qeV6xYm5xaV56XrJ+bmbGIHp6fS/
+	wwU7GG/d+qh3iJGJg/EQowQHs5IIb875/FQh3pTEyqrUovz4otKc1OJDjNIcLErivIa2J5OF
+	BNITS1KzU1MLUotgskwcnFINTMmX9V8bqRybri97I8lXbznzjGZrxZdRn95s81pxqrOks/6m
+	ZOAL74OnLi3/8eeSc+VbMV1hrxUqDLp+j4tyoj5P5Tlgpa/X9WFTgcX//Nl3Y3WqapeHhIU7
+	c1l9+RtcmjrrslJcqe+N//cfPD7G/r1i8UfxxBWXeS/Xl1cbNu2a3la3/uPFF00zp53f0L66
+	zTkhMPyI8ROtK/+cNRNPNTSVHp4Sk/H7+0v7j9Ut9neCTt6TqOfNEcj6oDDVcpbtvm0eKlnK
+	zYdf3Vh/UKSbe117152si4Wr1+/+5/rFmvmZpSrXz9POtmd9GaUm5ygvrQ8S+y3G0iYVvI1x
+	6x43x53l4i8nWl2sjGUSYVi7UomlOCPRUIu5qDgRAOEYmhO+AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWS2cDsrPu/vDjV4PVMQYtv/3vYLJq3zmS0
+	WNKUYXHl3x5GizlTCy02bXjCYnF23nE2i/Vf37M5cHgs2FTq0dv8js2j5dlJNo/3+66yeXze
+	JBfAGsVlk5Kak1mWWqRvl8CVcX/aQ7aCQ+wVT+f/YGxgbGfrYuTgkBAwkTg6KaKLkZNDSGAV
+	o0TfBccuRi4g+yOjxIkfC5khnKWMEj+mTGMHqWIT0JT4dWUNE4gtIqAiceLEGXaQImaBU0wS
+	6682M4IkhAXcJZonn2CEKPKQ2PmrkQ3C9pM4ufEPWDMLUPOZc/OZQWxeAVWJ6SfOMUGcsYVJ
+	Yt2WaBCbU8BI4u/z2awgNqOAmMT3UxCLmQXEJW49mQ9mSwgISCzZc54ZwhaVePn4HyuErShx
+	//tLdoh6HYkFuz+xQdh2Ej9e/GSGsLUlli18DXWDoMTJmU9YIHolJQ6uuMEygVFiFpJ1s5CM
+	moVk1Cwko2YhGbWAkXUVo3hpcXFuekWxUV5quV5xYm5xaV66XnJ+7iZGYHyf/nc4egfj7Vsf
+	9Q4xMnEwHmKU4GBWEuHNOZ+fKsSbklhZlVqUH19UmpNafIhRmoNFSZz37gONVCGB9MSS1OzU
+	1ILUIpgsEwenVAOT1oki6W3B7OqBf38e8m6e1HWieGtf3aKLrx/N6Vfsnny/KOe+mMoZV6nf
+	lWX7bX8ahc/nEDT8GLvux7MMPzaH7OyfgbVZE78z/otgWXdm66Xr7qG3BW6XuzgbJSg8zHWd
+	ni9xz+20wE73assDJ3ZNalx2UvLnR5NTN55PCtT0cvmR+O3weRXV6qBSHa3DKdnycz85ucaz
+	d7hafzHJOmkwLyvio2NG7JRnL98tbdy16dBplt0aR2vL8ut2+hb5aYtPYbhx9PSmB2yTzum4
+	bd/ietmYqUVOqf16YwWD3dXyN3vPP0/gurwidumnxUrMb5u3MZ68++ykgNmvsDlFQsZrFvpt
+	CGM4uG23UL+v/OVOJZbijERDLeai4kQA2gLgtV4DAAA=
+X-CMS-MailID: 20231208200935uscas1p27bf9af3e1af779eeb569440fbafe1d99
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9
+References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
+	<ZXJI5+f8bUelVXqu@ubuntu>
+	<20231207162148.2631fa58.alex.williamson@redhat.com>
+	<20231207234810.GN2692119@nvidia.com>
+	<ZXNNQkXzluoyeguu@bgt-140510-bm01.eng.stellus.in>
+	<20231208194159.GS2692119@nvidia.com>
 
-On Sun, Aug 06, 2023 at 06:44:50AM +0200, Lukas Wunner wrote:
-> The Broadcom Set Top Box PCIe controller signals an Asynchronous SError
-> Interrupt and thus causes a kernel panic when non-posted transactions
-> time out.  This differs from most other PCIe controllers which return a
-> fabricated "all ones" response instead.
-> 
-> To avoid gratuitous kernel panics, the driver reads the link status from
-> a proprietary PCIE_MISC_PCIE_STATUS register and skips downstream
-> accesses if the link is down.
-> 
-> However the bits in the proprietary register may purport that the link
-> is up even though link training is still in progress (as indicated by
-> the Link Training bit in the Link Status register).
-> 
-> This has been observed with various PCIe switches attached to a BCM2711
-> (Raspberry Pi CM4):  The issue is most pronounced with the Pericom
-> PI7C9X2G404SV, but has also occasionally been witnessed with the Pericom
-> PI7C9X2G404SL and ASMedia ASM1184e.
-> 
-> Check the Link Training bit in addition to the PCIE_MISC_PCIE_STATUS
-> register before performing downstream accesses.
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: <stable@vger.kernel.org>
+On Fri, Dec 08, 2023 at 03:41:59PM -0400, Jason Gunthorpe wrote:
+> On Fri, Dec 08, 2023 at 05:07:22PM +0000, Jim Harris wrote:
+> >=20
+> > Maybe for now we just whack this specific mole with a separate mutex
+> > for synchronizing access to sriov->num_VFs in the sysfs paths?
+> > Something like this (tested on my system):
+>=20
+> TBH, I don't have the time right now to unpack this locking
+> mystery. Maybe Leon remembers?
+>=20
+> device_lock() gets everywhere and does a lot of different stuff, so I
+> would be surprised if it was so easy..
 
-Since there was a fair bit of discussion and no obvious conclusion,
-I'm dropping this for now.  Please repost if appropriate and maybe we
-can get some testing/reviews/acks.
+The store() side still keeps the device_lock(), it just also acquires this
+new sriov lock. So store() side should observe zero differences. The only
+difference is now the show() side can acquire just the more-granular lock,
+since it is only trying to synchronize on sriov->num_VFs with the store()
+side. But maybe I'm missing something subtle here...
 
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index f593a422bd63..b4abfced8e9b 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -679,8 +679,10 @@ static bool brcm_pcie_link_up(struct brcm_pcie *pcie)
->  	u32 val = readl(pcie->base + PCIE_MISC_PCIE_STATUS);
->  	u32 dla = FIELD_GET(PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_MASK, val);
->  	u32 plu = FIELD_GET(PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_MASK, val);
-> +	u16 lnksta = readw(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKSTA);
-> +	u16 lt = FIELD_GET(PCI_EXP_LNKSTA_LT, lnksta);
->  
-> -	return dla && plu;
-> +	return dla && plu && !lt;
->  }
->  
->  static void __iomem *brcm_pcie_map_bus(struct pci_bus *bus,
-> -- 
-> 2.39.2
-> 
+Adding Pierre who authored the 35ff867b7 commit.=
 
