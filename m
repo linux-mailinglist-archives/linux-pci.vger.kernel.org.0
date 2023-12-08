@@ -1,264 +1,152 @@
-Return-Path: <linux-pci+bounces-648-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-649-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2442809E94
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 09:48:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5D40809EF3
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 10:14:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CDE2281306
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 08:48:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 138D61C209FC
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 09:14:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7AD10975;
-	Fri,  8 Dec 2023 08:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3926211731;
+	Fri,  8 Dec 2023 09:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OtKH0ven"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YGLaoYCW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAF9172C;
-	Fri,  8 Dec 2023 00:48:45 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C12FC0002;
-	Fri,  8 Dec 2023 08:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1702025322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BI/a9kd3lyurB+jcttNXOa/XaS8zgyXI4PkPmj1fYQc=;
-	b=OtKH0venALl7A2QhgJRFyZltpGLlG6YDjqcRcLP4+ioDu0kWHpTJr7n3+Wa5f/AVb52L7v
-	sQ7xGzfKdbCtD08vVBb51WHnzOL3YHE5LkOkDckyEQ0+BAvqF3DTjaKc1lBvl+zfLKH/DQ
-	OcfO7uJKt7/KrgNwd3r0ixqzVUurngPx1s2jzs6NkdLdw1oBqerOmYZXzmL+xaZgp5fCbN
-	bWmUIPLxW8MTcTgGkR20ktTBrCtFZmKap1/tA4jJ55F+BiAB686jtCitOt3Gflw8Lt9u++
-	UNBmL9m61OycftBOiWT2nG9x+ph228aFBSQ58iwT084dfGCt8Iihheplhhdsxw==
-Date: Fri, 8 Dec 2023 09:48:40 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou
- <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, Sonal Santan
- <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI
- <linux-pci@vger.kernel.org>, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-Message-ID: <20231208094840.01d74fec@bootlin.com>
-In-Reply-To: <CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
-References: <20231130165700.685764-1-herve.codina@bootlin.com>
-	<CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
-	<20231204134335.3ded3d46@bootlin.com>
-	<CAL_JsqLtCS3otZ1sfiPEWwrWB4dyNpu4e0xANWJriCEUYr+4Og@mail.gmail.com>
-	<20231204163014.4da383f2@bootlin.com>
-	<CAL_JsqJJ64513pyQggU71agTzawNWPpm6ZpWMB6e0zu-tWL8yw@mail.gmail.com>
-	<20231205090452.7c601eb5@bootlin.com>
-	<CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2081.outbound.protection.outlook.com [40.107.247.81])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E1E1703;
+	Fri,  8 Dec 2023 01:14:14 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PlJ7IX+XTS9TQLwHfCOmmcxW/01b8D8RRHMU0mzt6RdV+WRj20MIZ4x8cZL/a/yOQwywhVfdqfROBJd3ywNxi5vDboaGRf4Cr7gw7lJpoDEQDmLDAs5nKvSKsX1QAuewGWfozEa48uttGFb5GFGQtEWJkZ6gI/hDXjABwh1jeXSXDnO7cg7nZBwWrdmrto1l3kOSrb5q5jMhHrlxcrRDGMsdj9wjUnBucOfoqs6E6qxDvjk4neN/eylzueZuYwzOmxt04gW47HzVzMdhZ6PyJVqZUR+os6yPEqlme3yyusfrhNiUNgy8MKDtPwmW2okiPZi0i2xAqVRMW7HqryPTEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+kC1w1bXoFTBQGGU4j5WpDm8ytNSiedyJ89xDQ9f0gU=;
+ b=OxMF6/Wyem/6x/STGYFwsmjL2Zhz+tZu3g92mJjzW2ylqNZp6rSrMtWZAM01mXasgnXYVkLO3ZlGzQnxw8DgOuVtyKzn7xVK/ewP4yK+JA4FISZmf1m/8Kj4OoKfBtbP99Yj1kgRDZDRFijpzhYd57JLmXj3JHmaEyF3eNKhFqV5ku5KllD8KHsDRAmclZppeKw88ViX9kUavACCenFFWo7yguGTDS2zUDMo2yeD+U96p23yekEuX6n2EE5HfNnHaEMBvwaUYg43ghf/QDmBRIuBB/VSXwfcNl+OPW0iExMW1cRvEf+BwJ9CY0tT0oceiSKIZAskyoTyZQWTkz2xYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+kC1w1bXoFTBQGGU4j5WpDm8ytNSiedyJ89xDQ9f0gU=;
+ b=YGLaoYCWOsvseLPfAGnIpdh+M68IYMmLFJCGU2HDYPoZUjfRTi6+OyPqqgdrudUj0rBGHJJf0JUKx8/I+T8j0j7gIi4g9px0U97yWuV05tLIsPudRQxSR1MyuB5h+XwXCeDTb8xFQQ0CpO3/ohKngbJmU5xmAe3ZIYFf6WjGPDU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8404.eurprd04.prod.outlook.com (2603:10a6:20b:3f8::7)
+ by AM8PR04MB7284.eurprd04.prod.outlook.com (2603:10a6:20b:1dc::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.28; Fri, 8 Dec
+ 2023 09:14:11 +0000
+Received: from AS8PR04MB8404.eurprd04.prod.outlook.com
+ ([fe80::3627:208e:4d62:1e2a]) by AS8PR04MB8404.eurprd04.prod.outlook.com
+ ([fe80::3627:208e:4d62:1e2a%6]) with mapi id 15.20.7068.028; Fri, 8 Dec 2023
+ 09:14:11 +0000
+From: Sherry Sun <sherry.sun@nxp.com>
+To: hongxing.zhu@nxp.com,
+	l.stach@pengutronix.de,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-imx@nxp.com,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] PCI: imx6: Add pci host wakeup support
+Date: Fri,  8 Dec 2023 17:13:51 +0800
+Message-Id: <20231208091355.1417292-1-sherry.sun@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR06CA0006.apcprd06.prod.outlook.com
+ (2603:1096:4:186::19) To AS8PR04MB8404.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f8::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8404:EE_|AM8PR04MB7284:EE_
+X-MS-Office365-Filtering-Correlation-Id: b65f4cc2-151d-40a7-1488-08dbf7ce0a76
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ZrXe8j2kBqzXrDliF+KkSy+aN8+GW7qBWkYK50FpDMliEng+VeOiOqffXoJMtBqFxqWdv0wDufRPIxNCgp9YntiG42H19EwHjEIspmo0njutYaKyeqqTE28QrOFDKA4vO/hzXyRiCV3Du+Y40KlGEMC5d7wu4pX3aJREvSGEQ4VdBIPAdfwYdbjCj/z91AhfdLfs+rIRMQG/R8oybXHbDjHfjoxuaWAlOc6YRL+sfqUbweNR5eybcIJJQxdiumTnjvYf7d/XZ2kBYB5zePLWIiErGUSyQpO7LsYyIUyFWfVesa6LUCoRJz9xdLidEncdIyouUlgLirGFzyM7q2SSwMP3E+3skpGybOcOHyfnfK/KeMXjGG7ijTELMliqd2z0EAqJP7kbWt/5+PkQGR7ZMckkKRkLb628AEilyNz+KtzhM6xmSir7xM2WYCNvZ1frizf+Jp9jIecWUFvF0e9zGE5qUKJEH8azxml53BZ0G6vo/WMICBKBZ2JyH39muUjrrL5sleQiuuN+oQQa47OOP0Kmahpd6ztqCpK4NE317j4FaLPyQA/UGUqPKYckJy/2EitPc/DFTaorkhKLUe8MvmtMjflEiRDMumxXzO/0bMPEzTs5WKTnEtq8hiyY+DepIHxv+251ur0JJ0mgAfCKhQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8404.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(396003)(136003)(366004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8936002)(1076003)(26005)(2616005)(52116002)(6506007)(6512007)(5660300002)(6666004)(4326008)(44832011)(41300700001)(2906002)(7416002)(4744005)(6486002)(478600001)(316002)(66946007)(66476007)(66556008)(8676002)(86362001)(36756003)(38100700002)(38350700005)(921008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?GnJpyv1C38bbYEaiLEqdQSlEENAEJCBxDrVLaSmHhNuHSNoaNCH1s2xlsxyo?=
+ =?us-ascii?Q?9oUJn/u5O1B02RacfdqR0sxxkU0ucVxITOff5b+2X55xjsRLwBaGqlDGz8sq?=
+ =?us-ascii?Q?Cv3rOu3P9ZiIeMIlgO8+yQ/KwhufmikGtBKL6K/wZ6gf6iYpro6TzhRqivOL?=
+ =?us-ascii?Q?hlCISVPvHH/5S2XWkDXhJdNwhmoA5V/0qMTchqRVPICU8riIJ611SuYal5Vy?=
+ =?us-ascii?Q?tT/DB1NYYVlTJITUJSDWQ2ZiZdOALqkHeK70DtQNOiNFRN6oXGksocs3DPpZ?=
+ =?us-ascii?Q?R1YOkCOKChv7/4NnW2vyzb+Z6ufmJQdmR8m9LMTT+gw/KUkhI6liyO3ZsYyj?=
+ =?us-ascii?Q?ItagF2uxKztytGm+O28ZbJGdPz9/KUGPvCzc6DOkJngbeQYrJyr74gVaA5fS?=
+ =?us-ascii?Q?2PLWhyHfaIYzsnBaBpjdGh4mPmE0GAywCJIAqmGabnM1+vTGK4ig9p2rJzER?=
+ =?us-ascii?Q?8olxhIJ8FXTXuKAfjDCnL58+cNs809LIieVi9n6t5JbdUMne/fCXGREUQeTP?=
+ =?us-ascii?Q?H+DzQAE+kS3ytfdKAIkpW1swmYJMlJyk0+HGt/OD5zuo8/PLEMIo0NQ0S4Wi?=
+ =?us-ascii?Q?ID6i43ysmhPEzuAbEysPpWUC6kwWJ+hSMsn84IYxluM3YTZKeucYHqe8hji3?=
+ =?us-ascii?Q?fnOnp+N1mQuq1L/58KSzzoAdBpCjQeiubOO4Vy2rWm2DF6+dGKjWsW0swxth?=
+ =?us-ascii?Q?uobRt/CV0YLdN+fA/WfzhvhCH3JgXWtwHYUt+3720YbQ62RXNH4NTuSC7/d8?=
+ =?us-ascii?Q?EgB0Xgko15MSwdQpcu8EnSEeXxHYCVOu3F7K+VYrbE0WtflhaLH+zSOb4Qf5?=
+ =?us-ascii?Q?bcDwvyZVnHWlvxKaICbx+hD934ogdw6D9CIrGIIXp6gS6ixH3Mf+m3rM9Ybc?=
+ =?us-ascii?Q?/MK4tZaSx6pyL6habTuRdzq0em0dKhYhx/kQe4a79d5gZEF5y/90YcyM5pKA?=
+ =?us-ascii?Q?hwPTadh2uiBvWmPpXC7ERCw4NBU9Ji46zDcvb5Jx3GvFSaWFNSjPNxETjasS?=
+ =?us-ascii?Q?HKtbcPAx+CdDWPfxfd01W9fVDZjZK34lzWgdrXf7bdlwZqbJ+5QwksVKXNU8?=
+ =?us-ascii?Q?Z5cKL+/tTqRlqMoBPfmVmzg6A7qfEArHBG9TIvqyNzsWdw4nHDAUX7w1NGMc?=
+ =?us-ascii?Q?4xX8MaGhCin9VPOI2/hL7aapR9RBB6u1dxV/rG8giPlp/m9+b62ZcQRwd+OT?=
+ =?us-ascii?Q?wWzu0PKHa1LusEIPEPT1XOUckVQT27/YNMTi3ob9nRKhzTJxOTLCwZfsWOsi?=
+ =?us-ascii?Q?6B9EPb7QUAGhIRC/vBv+Nsu0dcR7NZJiFYO/sAqFVB2Tf8LfRikBhxWrEGuW?=
+ =?us-ascii?Q?M9hkCJkae6YwgCVCl/3cBxMuEtwebvlHSjvujiH09uEyd608i+cEAwj2fxy5?=
+ =?us-ascii?Q?es1doFlwL9Tk/ZVmoM+JeO7KBsjQKlQUVDv/gmr/8dosbSSO11xPtrwfBsZ7?=
+ =?us-ascii?Q?4SxRdgWIrhoNApSWkJwrDaKTfLScRzZdgdKmZsFCxC/QxYWKWzXOsIoBov+D?=
+ =?us-ascii?Q?6wJnOkXCUPF+WMJglh3f6+kGatfhmEHASGfSc1VTQa/u1CC5eM5rZ2wqGavw?=
+ =?us-ascii?Q?VEV4o22D/6ZlZoDwuduCYtrbslp3310Ni44a+E51?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b65f4cc2-151d-40a7-1488-08dbf7ce0a76
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8404.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 09:14:11.7758
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WbXpigSOQiwUpSvARZV3Bfg6weBLAZZ6RYzOMChG0TSPzKth7eS+fKe9xxgLA69qXRKpZkjyY90U+4LDTc+hHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7284
 
-Hi Rob,
+Add pci host wakeup feature for imx platforms. The host wake pin is a
+standard feature in the PCIe bus specification, so we can add this
+property under PCI dts node to support the host gpio wakeup feature.
 
-On Thu, 7 Dec 2023 16:51:56 -0600
-Rob Herring <robh@kernel.org> wrote:
+Example of configuring the corresponding dts property under the PCI node:
+    host-wake-gpio = <&gpio5 21 GPIO_ACTIVE_LOW>;
 
-> On Tue, Dec 5, 2023 at 2:05 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > On Mon, 4 Dec 2023 17:03:21 -0600
-> > Rob Herring <robh@kernel.org> wrote:
-> >  
-> > > On Mon, Dec 4, 2023 at 9:30 AM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > >
-> > > > Hi Rob,
-> > > >
-> > > > On Mon, 4 Dec 2023 07:59:09 -0600
-> > > > Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > [...]
-> > > >  
-> > > > > > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > > > > > > index 9c2137dae429..46b252bbe500 100644
-> > > > > > > --- a/drivers/pci/bus.c
-> > > > > > > +++ b/drivers/pci/bus.c
-> > > > > > > @@ -342,8 +342,6 @@ void pci_bus_add_device(struct pci_dev *dev)
-> > > > > > >          */
-> > > > > > >         pcibios_bus_add_device(dev);
-> > > > > > >         pci_fixup_device(pci_fixup_final, dev);
-> > > > > > > -       if (pci_is_bridge(dev))
-> > > > > > > -               of_pci_make_dev_node(dev);
-> > > > > > >         pci_create_sysfs_dev_files(dev);
-> > > > > > >         pci_proc_attach_device(dev);
-> > > > > > >         pci_bridge_d3_update(dev);
-> > > > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > > > > > index 51e3dd0ea5ab..e15eaf0127fc 100644
-> > > > > > > --- a/drivers/pci/of.c
-> > > > > > > +++ b/drivers/pci/of.c
-> > > > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
-> > > > > > >                 return 0;
-> > > > > > >
-> > > > > > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
-> > > > > > > +       if (!node && pci_is_bridge(dev))
-> > > > > > > +               of_pci_make_dev_node(dev);
-> > > > > > >         if (!node)
-> > > > > > >                 return 0;  
-> > > > > >
-> > > > > > Maybe it is too early.
-> > > > > > of_pci_make_dev_node() creates a node and fills some properties based on
-> > > > > > some already set values available in the PCI device such as its struct resource
-> > > > > > values.
-> > > > > > We need to have some values set by the PCI infra in order to create our DT node
-> > > > > > with correct values.  
-> > > > >
-> > > > > Indeed, that's probably the issue I'm having. In that case,
-> > > > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
-> > > > > device_add().
-> > > > >
-> > > > > I think modifying sysfs after device_add() is going to race with
-> > > > > userspace. Userspace is notified of a new device, and then the of_node
-> > > > > link may or may not be there when it reads sysfs. Also, not sure if
-> > > > > we'll need DT modaliases with PCI devices, but they won't work if the
-> > > > > DT node is not set before device_add().  
-> > > >
-> > > > Ok, we can try using DECLARE_PCI_FIXUP_HEADER.
-> > > > On your side, is moving from DECLARE_PCI_FIXUP_EARLY to DECLARE_PCI_FIXUP_HEADER
-> > > > fix your QEMU unittest ?  
-> > >
-> > > No...  
-> 
-> I think the problem is we aren't setting the fwnode, just the of_node
-> ptr, but I haven't had a chance to verify that.
-> 
-> > > And testing the bridge part crashes. That's because there's a
-> > > dependency on the bridge->subordinate to write out bus-range and
-> > > interrupt-map. I think the fix there is we should just not write those
-> > > properties. The bus range isn't needed because the kernel does its own
-> > > assignments. For interrupt-map, it is only needed if "interrupts" is
-> > > present in the child devices. If not present, then the standard PCI
-> > > swizzling is used. Alternatively, I think the interrupt mapping could
-> > > be simplified to just implement the standard swizzling at each level
-> > > which isn't dependent on any of the devices on the bus. I gave that a
-> > > go where each interrupt-map just points to the parent bridge, but ran
-> > > into an issue that the bridge nodes don't have a phandle. That should
-> > > be fixable, but I'd rather go with the first option. I suppose that
-> > > depends on how the interrupts downstream of the PCI device need to get
-> > > resolved. It could be that the PCI device serves as the interrupt
-> > > controller and can resolve the parent interrupt on its own (which may
-> > > be needed for ACPI host anyways).  
-> >
-> > About interrupt, I am a bit stuck on my side.
-> > My dtso (applied at PCI device level) contains the following:
-> >         fragment@0 {
-> >                 target-path="";
-> >                 __overlay__ {
-> >                         pci-ep-bus@0 {
-> >                                 compatible = "simple-bus";
-> >                                 #address-cells = <1>;
-> >                                 #size-cells = <1>;
-> >
-> >                                 /*
-> >                                  * map @0xe2000000 (32MB) to BAR0 (CPU)
-> >                                  * map @0xe0000000 (16MB) to BAR1 (AMBA)
-> >                                  */
-> >                                 ranges = <0xe2000000 0x00 0x00 0x00 0x2000000
-> >                                           0xe0000000 0x01 0x00 0x00 0x1000000>;
-> >
-> >                                 itc: itc {
-> >                                         compatible = "microchip,lan966x-itc";
-> >                                         #interrupt-cells = <1>;
-> >                                         interrupt-controller;
-> >                                         reg = <0xe00c0120 0x190>;
-> >                                 };
-> >
-> >                                 ...
-> >                          };
-> >                 };
-> >         };
-> >
-> > I have a 'simple-bus' with a 'ranges' property to translate the BAR addresses
-> > then several devices. Among them a interrupt controller (itc). Its parent
-> > interrupt is the one used by the PCI device (INTA).
-> > I cannot describe this parent interrupt in the dtso because to that I need the
-> > parent interrupt phandle which will be know only at runtime.  
-> 
-> But you don't. The logic to find the interrupt parent is walk up the
-> parent nodes until you find 'interrupt-parent' or
-> '#interrupt-controller' (and interrupt-map always has
-> #interrupt-controller). So your overlay just needs 'interrupts = <1>'
-> for INTA and it should all just work.
+Sherry Sun (4):
+  PCI: imx6: Add pci host wakeup support on imx platforms.
+  dt-bindings: imx6q-pcie: Add host-wake-gpio property
+  arm64: dts: imx8mp-evk: add host-wake-gpio property for pci bus
+  arm64: dts: imx8mq-evk: add host-wake-gpio property for pci bus
 
-Yes, I tried some stuffs in that way...
-> 
-> That of course implies that we need interrupt properties in all the
-> bridges which I was hoping to avoid. In the ACPI case, for DT
-> interrupt parsing to work, we're going to need to end up in an
-> 'interrupt-controller' node somewhere. I think the options are either
+ .../bindings/pci/fsl,imx6q-pcie.yaml          |  4 ++
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts  |  2 +
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  2 +
+ drivers/pci/controller/dwc/pci-imx6.c         | 69 +++++++++++++++++++
+ 4 files changed, 77 insertions(+)
 
-... and I went up to that point.
-Further more with that way, we need to update the addr value retrieved
-from the device requesting the interrupt.
-  https://elixir.bootlin.com/linux/latest/source/drivers/of/irq.c#L343
-Indeed, with the current 'interrupt-map' at bridges level, a addr value
-update is needed at the PCI device level if the interrupt is requested
-from some PCI device children.
-This is were my (not so good) interrupt-ranges property could play a
-role.
+-- 
+2.34.1
 
-> we walk interrupt-map properties up to the host bridge which then
-> points to something or the PCI device is the interrupt controller. I
-> think the PCI device is the right place. How the downstream interrupts
-
-Agree, the PCI device seems to be the best candidate.
-
-> are routed to PCI interrupts are defined by the device. That would
-> work the same way for both DT and ACPI. If you are concerned about
-> implementing in each driver needing this, some library functions can
-> mitigate that.
-> 
-> I'm trying to play around with the IRQ domains and get this to work,
-> but not having any luck yet.
-
-May I help you on some points?
-
-Got a system with a real hardware (Lan966x) and a setup using an ARM platform (full
-DT) and an other one using an x86 platform (ACPI).
-Also, I have some piece of code to create the PCI host bridge node.
-Of course, this need to be first working on a full DT system but I can do some test
-to be sure that can be still ok on a ACPI system.
-
-> 
-> > Of course, I can modified the overlay applied to tweak the 'interrupt' and
-> > 'interrupt-parent' in the itc node from my PCI device driver at runtime but I
-> > would like to avoid this kind of tweak in the PCI device driver.
-> > This kind of tweak is overlay dependent and needs to be done by each PCI
-> > device driver that need to work with interrupts.
-> >
-> > For BAR addresses translation, we use the 'ranges' property at the PCI device
-> > node to translate 0 0 0 to BAR0, 1 0 0 to BAR1, ...
-> > What do you think about a new 'irq-ranges' property to translate the irq number
-> > and get the irq parent controller base.
-> >
-> > irq-ranges = <child_irq_spec parent_irq_spec length>;  
-> 
-> Seems fragile as you have to know something about the parent (the # of
-> cells), but you don't have the phandle. If you needed multiple
-> entries, you couldn't parse this.
-> 
-
-Right.
-With the PCI device seen as an interrupt controller, there is no more need of
-this interrup-ranges property.
-
-Best regards,
-Hervé
 
