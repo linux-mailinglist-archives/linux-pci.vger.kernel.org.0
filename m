@@ -1,140 +1,135 @@
-Return-Path: <linux-pci+bounces-721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7B780AFB5
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 23:36:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA01880AFD1
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 23:44:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A11F281C11
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 22:36:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79B94B20B45
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 22:44:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88865381A0;
-	Fri,  8 Dec 2023 22:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1090353804;
+	Fri,  8 Dec 2023 22:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="EPLaGxFe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acpxM4Vq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6A0171F
-	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 14:36:47 -0800 (PST)
-Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-3580b94ac2eso12313085ab.0
-        for <linux-pci@vger.kernel.org>; Fri, 08 Dec 2023 14:36:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1702075006; x=1702679806; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XTAS+mJNgWsHeBDmGbDkXiFo61BW6ChMnjWwUEpmr04=;
-        b=EPLaGxFe0QTCHbCkH1Ekjm5JeEhDtRWz5wSBL1LnbI8ZWocqtvPbP4Titm6OwKI627
-         q/KT9QFXRW7zHljvZicEQDn1L2NhsTQBBU/lSo0Q2GINZi0MEiEh/SMeg2eG9onGkWEW
-         sUOq1cNXJfdV2zvSzxSmGc1IVWHek2DusO9uELeYvBJsF2cv4ZpTlrIg06C5tfa25B3T
-         BgI9t7cjSk0+bIFNEzeMPsXLUYtq6SPRlec23H9kwvfnwrZgIwc0s69yma9eJ2i8Zyj+
-         cGqbIwnw1pQ1EqshVTLkUSBMyoVQeNrb1wUjVR2NoT3Ac+L75ty2Xl7J9bovzNw/tgeS
-         blTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702075006; x=1702679806;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XTAS+mJNgWsHeBDmGbDkXiFo61BW6ChMnjWwUEpmr04=;
-        b=fC7XOPNZq+adpMtTLyrUjsr62ywB/1iXjAVGrwV7BqSq42Z9oxIYAumZTJAzAEB87u
-         DBhZNNuXlK729vR8rsMpsS2d9Hyims0UdRESn3YdM5MmIp5t7uYbF/f+oqfMfsC8kDuo
-         YhYZF9ESqjI2scQ72k7W6v1+CZ7kdWBEy1T8dR1DM/0lpkmFMB/qhEWL0pLmVOkd1gl3
-         4VWT3GOXAn7zxnRh2jyiCxFGHQ9E3zeQeYBwKodlQUePTyvAX+HLgvBA10rqQjSuh0Ft
-         oeWAZ4K7OquBi4u5UEdn1aNnT5k805RERcLir9CPXOTyU0ugMnYaxTbwRkRT6RV0X/eC
-         Je9g==
-X-Gm-Message-State: AOJu0YwZWR+p3IF7/9/uzqQgXRnYHIERf45J6TZufVkjr5jj+nlQCzJ7
-	wca2u/+lz7ty+1pxifVC0XH3tA==
-X-Google-Smtp-Source: AGHT+IE0a9GGo0RusRyukny5pEcJKbdHLCl5qQKAqMExsa/8JQBn7RfxzYUXAdbnM9s4AVydTwRqNA==
-X-Received: by 2002:a05:6e02:1a21:b0:35d:6aa4:d5bd with SMTP id g1-20020a056e021a2100b0035d6aa4d5bdmr966364ile.34.1702075006479;
-        Fri, 08 Dec 2023 14:36:46 -0800 (PST)
-Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
-        by smtp.gmail.com with ESMTPSA id b6-20020a170902ed0600b001d060bb0582sm2225149pld.165.2023.12.08.14.36.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 08 Dec 2023 14:36:45 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F17381A0
+	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 22:44:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33813C433C7;
+	Fri,  8 Dec 2023 22:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702075442;
+	bh=S6MyOU6T0Fer6VF+sjCTieDw8pAVyxQETthgnHZR/y4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=acpxM4VqA3yB4RghOq90yVySHiLBvUT6Jf3N11NcC+jCDKrMAv2JE6gU9sW/AH20Z
+	 gI0KgQFJ94A/wMG5wdA6yi8ObIbeIZSDUDPqoBaH+zqOgLC3e+4OL9nyz9DJsYrHiE
+	 IEDazM6kWy2ytbTgQIutBE4g2GZBFCO42OrQnxn71yrrmXjeGdGUKCsPzAptePV+ap
+	 JH0CTPWgmdAmOyUiu+5E95XxGb2DtblcvnOWyZwFuXXdq3GUMXHs94+BcWNyWwfyzw
+	 nseDz3zHi16Q+2GNOACRpbc5m8IowuyYTJvlElOd0fIiV+4IF+/Wp4Rtz9wtTjtxno
+	 2djQvYJcMB4+w==
+Date: Fri, 8 Dec 2023 16:44:00 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Sanath S <Sanath.S@amd.com>, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sanjay R Mehta <sanju.mehta@amd.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH] PCI: Allocate maximum available buses to help extending
+ the daisy chain
+Message-ID: <20231208224400.GA835068@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH v4 1/1] PCI: switchtec: Fix stdev_release() crash after
- surprise hot remove
-From: Daniel Stodden <dns@arista.com>
-In-Reply-To: <89bb5f95-61b0-4e93-a542-49d6c1276f97@wanadoo.fr>
-Date: Fri, 8 Dec 2023 14:36:32 -0800
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- dima@arista.com,
- Bjorn Helgaas <helgaas@kernel.org>,
- kurt.schwemmer@microsemi.com,
- linux-pci@vger.kernel.org,
- logang@deltatee.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2C3DA10C-7AA2-4073-ABB0-320D4D280B7C@arista.com>
-References: <20231122042316.91208-2-dns@arista.com>
- <89bb5f95-61b0-4e93-a542-49d6c1276f97@wanadoo.fr>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3731.700.6)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e0431bc-6747-4367-bbbd-95c75395329f@amd.com>
 
-
-
-> On Dec 7, 2023, at 1:08 PM, Christophe JAILLET =
-<christophe.jaillet@wanadoo.fr> wrote:
->=20
->> A PCI device hot removal may occur while stdev->cdev is held open. =
-The call
->> to stdev_release() then happens during close or exit, at a point way =
-past
->> switchtec_pci_remove(). Otherwise the last ref would vanish with the
->> trailing put_device(), just before return.
->> At that later point in time, the devm cleanup has already removed the
->> stdev->mmio_mrpc mapping. Also, the stdev->pdev reference was not a =
-counted
->> one. Therefore, in DMA mode, the iowrite32() in stdev_release() will =
-cause
->> a fatal page fault, and the subsequent dma_free_coherent(), if =
-reached,
->> would pass a stale &stdev->pdev->dev pointer.
->> Fix by moving MRPC DMA shutdown into switchtec_pci_remove(), after
->> stdev_kill(). Counting the stdev->pdev ref is now optional, but may =
-prevent
->> future accidents.
->> Reproducible via the script at
->> https://lore.kernel.org/r/20231113212150.96410-1-dns@arista.com
->> Link: https://lore.kernel.org/r/20231113212150.96410-2-dns@arista.com
->> Signed-off-by: Daniel Stodden <dns@arista.com>
->> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->> Reviewed-by: Dmitry Safonov <dima@arista.com>
-> ---
->=20
+On Fri, Dec 08, 2023 at 04:29:42PM -0600, Mario Limonciello wrote:
+> On 12/8/2023 16:24, Bjorn Helgaas wrote:
+> > On Wed, Aug 16, 2023 at 10:49:23AM +0530, Sanath S wrote:
+> > > In the case of Thunderbolt, it contains a PCIe switch and one or
+> > > more hotplug-capable PCIe downstream ports where the daisy chain
+> > > can be extended.
+> > > 
+> > > Currently when a Thunderbolt Dock is plugged in during S5/Reboot,
+> > > System BIOS allocates a very minimal number of buses for bridges and
+> > > hot-plug capable PCIe downstream ports to enumerate the dock during
+> > > boot. Because of this, we run out of bus space pretty quickly when
+> > > more PCIe devices are attached to hotplug downstream ports in order
+> > > to extend the chain.
+> > > 
+> > > Before:
+> > >             +-04.0
+> > >             +-04.1-[63-c1]----00.0-[64-69]--+-00.0-[65]--
+> > >             |                               +-01.0-[66]--
+> > >             |                               +-02.0-[67]--
+> > >             |                               +-03.0-[68]--
+> > >             |                               \-04.0-[69]--
+> > >             +-08.0
+> > 
+> > Looks like a clear issue here because there's no other use for
+> > buses 70-c1.  But what would happen if there were more hotplug-capable
+> > downstream ports, e.g., assume one at 08.1 leading to [bus c2-c7]?
+> > 
+> > The 04.1 bridge has a lot of space, but 08.1 has very little.  With
+> > this patch, would we distribute it more evenly across 04.1 and 08.1?
+> > If not, I think we'll just have the same problem when somebody plugs
+> > in a similar hierarchy at 08.1.
+> > 
+> > > In case of a thunderbolt capable bridge, reconfigure the buses allocated
+> > > by BIOS to the maximum available buses. So that the hot-plug bridges gets
+> > > maximum buses and chain can be extended to accommodate more PCIe devices.
+> > > This fix is necessary for all the PCIe downstream ports where the daisy
+> > > chain can be extended.
+> > > 
+> > > After:
+> > >             +-04.0
+> > >             +-04.1-[63-c1]----00.0-[64-c1]--+-00.0-[65]--
+> > >             |                               +-01.0-[66-84]--
+> > >             |                               +-02.0-[85-a3]--
+> > >             |                               +-03.0-[a4-c0]--
+> > >             |                               \-04.0-[c1]--
+> > >             +-08.0
+> > 
+> > This doesn't look like anything specific to Thunderbolt; it's just
+> > that we don't do a good job of reassigning bus numbers in general,
+> > right?  We shouldn't just punt and say "BIOS should have done
+> > something" because not all machines *have* BIOS, and the OS can
+> > reconfigure bus numbers as needed.  The patch certainly isn't
+> > Thunderbolt-specific.
+> 
+> From the discussions Sanath and I have been in related to this issue
+> the BIOS is pretty static with it's initialization under the
+> presumption that the OS will rebalance things if necessary.
 > ...
->=20
->> @@ -1703,6 +1709,9 @@ static void switchtec_pci_remove(struct pci_dev =
-*pdev)  >   ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
->> dev_info(&stdev->dev, "unregistered.\n");
->> stdev_kill(stdev);
->> + switchtec_exit_pci(stdev);  > + pci_dev_put(stdev->pdev); > + =
-stdev->pdev =3D NULL; >   put_device(&stdev->dev);
->> }
-> Hi,
->=20
-> does a similarswitchtec_exit_pci() should be called in the error =
-handling path of switchtec_pci_probe() if an error occurs after =
-switchtec_init_pci()?
->=20
 
-Yep, that is correct.
+> For this particular issue it's being approached a different way.
+> 
+> Windows never rebalances things but doesn't suffer from this issue.
+> That's because Windows actually does a "Downstream port reset" when
+> it encounters a USB4 router.
+> 
+> Sanath posted a quirk that aligned this behavior when encountering
+> an AMD USB4 router, but as part of the discussion I suggested that
+> we do it for everyone.
+> 
+> https://lore.kernel.org/linux-usb/20231123065739.GC1074920@black.fi.intel.com/
+> 
+> So Sanath has a new patch that does this that is under testing right
+> now and will be posted soon.
 
-Looks like this is actually another regression resulting from evacuating =
-stdev_release.
-Previous code could rely on the trailing put_device(), past err_put. No =
-more.
+Hmm, ok.  I don't know what a "downstream port reset" does or how it
+resolves the bus number allocation issue, but I'm happy if you have a
+fix that doesn't need PCI core changes.
 
-Cheers,
-Daniel
-
+Bjorn
 
