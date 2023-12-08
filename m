@@ -1,80 +1,93 @@
-Return-Path: <linux-pci+bounces-692-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-693-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCD7880A9DA
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 17:54:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6769C80A9E4
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 17:59:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 670E51F2101C
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 16:54:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20C422815FF
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 16:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7ED37151;
-	Fri,  8 Dec 2023 16:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D81137151;
+	Fri,  8 Dec 2023 16:59:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKbjRSiL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QM1NsINW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805B91F94D
-	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 16:54:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9764C433C7;
-	Fri,  8 Dec 2023 16:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C9C32C7A
+	for <linux-pci@vger.kernel.org>; Fri,  8 Dec 2023 16:59:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB13C433C7;
+	Fri,  8 Dec 2023 16:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702054450;
-	bh=rP/BoOBw5Wi94QQViNnTX6vvAn+7yt+JtMx5Ri2ncHg=;
+	s=k20201202; t=1702054741;
+	bh=eiIkYohQvLRZ7T9nKH8cVSI0MoBXH5iTtMsNaJC4QI4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gKbjRSiLzKZGNfUhMQYIhifZWczNaZ9Eq9Y/tEFab9uHQVOGKz6HA/NHsmKfb4+F0
-	 ziNTw7QEuFW3K1TVs+9ymfmioHfwlGaVZyDlztuDUlQkwOIqD8xt9R6GK+EOu/hedI
-	 ClP8X+Mn4Hd8nHmb2plwGYUzPBX1w3eEUBWE5PoZ2Ct4LJT1mvPAZzxmR6omMexi+E
-	 j4gojDtzEboOoouSbEhJR7yc53+v7J3Sw08YnRlXOQBURkjDHHNDs/VBLZP4dhEb1U
-	 lKlhHNJT1rGCTRI3HPGWVnHEu/ov/1ssZpmNGReWp8NGD9cHvl7T5aPoKtxFpPxbd9
-	 kRujdfw9HwrBA==
-Date: Fri, 8 Dec 2023 10:54:08 -0600
+	b=QM1NsINWpZdMdNybhh1yZtOAE/xP1PzlgpHDm4i/CSRH2tmo8EbDH66HO1ihlgMFS
+	 SNxNGD7K+oMa2VpaqFvYySILkuvql3gogkpequKU0iggrp6qjrogBQjFrNpUpL5DUD
+	 zmYsIm6fC8ChcMtdkwbs6KvLQpqo9cjWTjnZWLAq+DCB2320QvRwCMNpB2uYMvJTW6
+	 lVbyTiPb+hXHwaUZiF3uXpk7UDiUg4sdA9mOi9AsFovgmTT6CqLzKAaO0VnQOXYWeO
+	 CObmUsM8212XRHuvlqvoFNB0UEomozs0WS2y+iubXo7upbd0+5G3nLC6KK+uILWBSW
+	 HtzknWvt1GOxQ==
+Date: Fri, 8 Dec 2023 10:59:00 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH 0/3] PCI/AER: Clean up logging
-Message-ID: <20231208165408.GA796794@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Martin Mares <mj@ucw.cz>, linux-pci@vger.kernel.org,
+	Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: Re: [PATCH v2 1/1] lspci: Add PCIe 6.0 data rate (64 GT/s) also to
+ LnkCap2
+Message-ID: <20231208165900.GA797060@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231206224231.732765-1-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231208101307.2566-1-ilpo.jarvinen@linux.intel.com>
 
-[+cc Jonathan]
+[+cc Gustavo (author of 5bdf63b6b1bc), just FYI in case you're
+interested in picking up this change for your use]
 
-On Wed, Dec 06, 2023 at 04:42:28PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Dec 08, 2023 at 12:13:07PM +0200, Ilpo Järvinen wrote:
+> While commit 5bdf63b6b1bc ("lspci: Add PCIe 6.0 data rate (64 GT/s)
+> support") added 64 GT/s support to some registers, LnkCap2 Supported
+> Link Speeds Vector was not included.
 > 
-> Clean up some minor AER logging issues:
+> Add PCIe 6.0 data rate bit check also into
+> cap_express_link2_speed_cap().
 > 
->   - Log as "Correctable errors", not "Corrected errors"
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> ---
 > 
->   - Decode the Requester ID when we couldn't find detail error info
+> v2:
+> - Corrected the commit hash in the changelog
 > 
-> Bjorn Helgaas (3):
->   PCI/AER: Use 'Correctable' and 'Uncorrectable' spec terms for errors
->   PCI/AER: Decode Requester ID when no error info found
->   PCI/AER: Use explicit register sizes for struct members
+>  ls-caps.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
->  drivers/pci/pcie/aer.c | 19 ++++++++++++-------
->  include/linux/aer.h    |  8 ++++----
->  2 files changed, 16 insertions(+), 11 deletions(-)
-
-Applied to pci/aer for v6.8.  Thanks, Jonathan, for your time in
-taking a look.
+> diff --git a/ls-caps.c b/ls-caps.c
+> index fce9502bd29a..2c99812c4ed2 100644
+> --- a/ls-caps.c
+> +++ b/ls-caps.c
+> @@ -1191,8 +1191,10 @@ static const char *cap_express_link2_speed_cap(int vector)
+>     * permitted to skip support for any data rates between 2.5GT/s and the
+>     * highest supported rate.
+>     */
+> -  if (vector & 0x60)
+> +  if (vector & 0x40)
+>      return "RsvdP";
+> +  if (vector & 0x20)
+> +    return "2.5-64GT/s";
+>    if (vector & 0x10)
+>      return "2.5-32GT/s";
+>    if (vector & 0x08)
+> -- 
+> 2.30.2
+> 
 
