@@ -1,84 +1,113 @@
-Return-Path: <linux-pci+bounces-644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0F0D8099F6
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 03:57:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBCD4809DCB
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 09:00:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F8F4B20EC1
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 02:57:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A4DB281579
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 08:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11B9E23D2;
-	Fri,  8 Dec 2023 02:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C98310946;
+	Fri,  8 Dec 2023 08:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZ6Ap3sl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037A811D;
-	Thu,  7 Dec 2023 18:57:11 -0800 (PST)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Vy1bwyE_1702004228;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vy1bwyE_1702004228)
-          by smtp.aliyun-inc.com;
-          Fri, 08 Dec 2023 10:57:09 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: ilkka@os.amperecomputing.com,
-	kaishen@linux.alibaba.com,
-	helgaas@kernel.org,
-	yangyicong@huawei.com,
-	will@kernel.org,
-	Jonathan.Cameron@huawei.com,
-	baolin.wang@linux.alibaba.com,
-	robin.murphy@arm.com
-Cc: chengyou@linux.alibaba.com,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	rdunlap@infradead.org,
-	mark.rutland@arm.com,
-	zhuo.song@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com
-Subject: [PATCH v12 5/5] MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
-Date: Fri,  8 Dec 2023 10:56:52 +0800
-Message-Id: <20231208025652.87192-6-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231208025652.87192-1-xueshuai@linux.alibaba.com>
-References: <20231208025652.87192-1-xueshuai@linux.alibaba.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C025107B5;
+	Fri,  8 Dec 2023 08:00:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED718C433C8;
+	Fri,  8 Dec 2023 08:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702022408;
+	bh=KHV0ZGPq3MX7s2HDIPDrsThZSX5szDZVhE9ErAHo8tU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZ6Ap3slRyF3YOWOEdPCjpEcYV/WFG+MzvEYoskaV3JjcRPj/DXi4sJwrnDEfiROs
+	 /B8tYAoITAczfm+WZgkiHC3TQv1T9L/5HMBNuqayfsAA65hq5A1Dn0kko1JFRM4BOE
+	 arOc5GuDHJhI92B9guVaicWT2ktdtjJc+pRoPl1R65B60jIRjh69cN+g0NXzzCKtNP
+	 14DNELaKEs7cPaz2sOKer4ZCljM2Y6YAx7OLE7oZ1W++x9HEWedtLL9XtOlAFK/35X
+	 3J7QLVD28YI/w8ekJTrka6m1DE5vAYoQjE9QDLyR1S3uxsIIpbB4jioEdDzMgJ5jdN
+	 JKT96xnf21b9g==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rBVn6-0001Vo-1K;
+	Fri, 08 Dec 2023 09:00:57 +0100
+Date: Fri, 8 Dec 2023 09:00:56 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Michael Bottini <michael.a.bottini@linux.intel.com>,
+	"David E . Box" <david.e.box@linux.intel.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v2 1/6] PCI/ASPM: Add locked helper for enabling link
+ state
+Message-ID: <ZXLNONZRafTkOk9U@hovoldconsulting.com>
+References: <20231128081512.19387-2-johan+linaro@kernel.org>
+ <20231207204716.GA764883@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231207204716.GA764883@bhelgaas>
 
-Add maintainers for Synopsys DesignWare PCIe PMU driver and driver
-document.
+On Thu, Dec 07, 2023 at 02:47:16PM -0600, Bjorn Helgaas wrote:
+> [+cc Kai-Heng]
+> 
+> On Tue, Nov 28, 2023 at 09:15:07AM +0100, Johan Hovold wrote:
+> > Add a helper for enabling link states that can be used in contexts where
+> > a pci_bus_sem read lock is already held (e.g. from pci_walk_bus()).
+> > 
+> > This helper will be used to fix a couple of potential deadlocks where
+> > the current helper is called with the lock already held, hence the CC
+> > stable tag.
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+> As far as I can see, we end up with pci_enable_link_state() defined
+> but never called and pci_enable_link_state_locked() being called only
+> by pcie-qcom.c and vmd.c.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c4cce45a09d..71f363f836ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20866,6 +20866,13 @@ L:	linux-mmc@vger.kernel.org
- S:	Maintained
- F:	drivers/mmc/host/dw_mmc*
- 
-+SYNOPSYS DESIGNWARE PCIE PMU DRIVER
-+M:	Shuai Xue <xueshuai@linux.alibaba.com>
-+M:	Jing Zhang <renyu.zj@linux.alibaba.com>
-+S:	Supported
-+F:	Documentation/admin-guide/perf/dwc_pcie_pmu.rst
-+F:	drivers/perf/dwc_pcie_pmu.c
-+
- SYNOPSYS HSDK RESET CONTROLLER DRIVER
- M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
- S:	Supported
--- 
-2.39.3
+Correct, I mentioned this in the cover letter.
 
+> Can we just rename pci_enable_link_state() to
+> pci_enable_link_state_locked() and assert that pci_bus_sem is held, so
+> we don't end up with a function that's never used?
+
+That would work too. I went with adding a new helper to facilitate
+stable backports and to mirror pci_disable_link_state(). The variants
+are simple wrappers around the implementation so there's no real cost to
+having the unused one.
+
+But it seems like you think there will never be a need to call this
+helper outside of pci_walk_bus() and if so we can drop the unlocked
+variant right away.
+
+Would you prefer basically squashing the first three patches and mark
+the result for stable even though that patch will fail to apply to older
+kernels as the Qualcomm bits went into -rc1?
+
+Or should I send a follow-on patch removing the unused helper after
+merging this series?
+
+The end-result will be identical.
+
+Johan
 
