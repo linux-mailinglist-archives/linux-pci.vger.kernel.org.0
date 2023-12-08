@@ -1,129 +1,160 @@
-Return-Path: <linux-pci+bounces-709-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-710-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FF7D80AC1A
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 19:34:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 449F980AD41
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 20:42:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB219B20AFC
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 18:34:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD60E281BF7
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Dec 2023 19:42:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FE363986F;
-	Fri,  8 Dec 2023 18:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE5841C78;
+	Fri,  8 Dec 2023 19:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="luSeH7df"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cQrtp/y3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D81A3;
-	Fri,  8 Dec 2023 10:34:22 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-db539ab8e02so2729376276.0;
-        Fri, 08 Dec 2023 10:34:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702060461; x=1702665261; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ejXhmdckIcdGK+pLdIJWhvkjFAhDWBpYsBAzxp0p6Sk=;
-        b=luSeH7dfYpc+aRNooJ4mZKwo+hBFMPZnrwEXVyyWBZ6JU3xkDwYct7YIOgy5TqYseF
-         vU+iAFSRSlJe0lZa+aiX+mgTkSc1N5aRAatG+8LX0PoeSmIOEqHNUG3GrghB/S2Mwy5y
-         mX5AsF2TvmCLwqnPTrfgQ6OK7XDLNCw29gp52ChONPbJEYxYj00aEDB+SE5RidQJRcj3
-         IwGYtbjLL6YD6oOCUOJwd4D9oxihiBssjLXtwN19asJsSB49WcztZgLx1Qrd+Jo33miz
-         x6qhlrrP5xLyPgXYcqCaD0mryKDnJb93C49f/TsZluLCbpBqEwczC6vidoRQEujXT7B/
-         cGfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702060461; x=1702665261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ejXhmdckIcdGK+pLdIJWhvkjFAhDWBpYsBAzxp0p6Sk=;
-        b=QPP4C8QEJ2U7uOreGmB39YNDxE7xv0uVskPrGM2flm117ifqK8cTxLi76TygKz5sv3
-         krAwNXhS7eIcuewxpQw2o+JzHlQFbrM/q8ROV46/Y1kCFajzr/DIjj6favNmB0ivXpja
-         Dvy+a8bdnQsFSAaMk/qc8alBPCu/MJuGyNfcg9EJecp+gg4mCStGT8/+qwGb5ERd3ndr
-         H1TMCaCpzBQwlDJLSlOLykGQIyAPF0XTpcpi7/1TDwnh/PdQhBp6B0zHE+OaLdU9pT5H
-         +QPRAQG4M5ishSEbnFhDGmrd7+bMlKpgcBnBhqJ3mJKGhWObcaUXz6Qi7nTsmoOj9bTw
-         4qEA==
-X-Gm-Message-State: AOJu0Yy4DKFXrT4aQM2CNnzZZj6O09oU0e8E+E1Fne+uoFvnn+cakXHl
-	ubIMMcOrAD9qQKTDh6xdk2E=
-X-Google-Smtp-Source: AGHT+IEo4kabG9Kr8bM11ACqdXlyVWy2Ht8cWzY6VZk7DZnzbZ273qR/eHeRAbXyGbTiJm9T0P8ioQ==
-X-Received: by 2002:a25:c3:0:b0:db7:dacf:ed98 with SMTP id 186-20020a2500c3000000b00db7dacfed98mr361626yba.121.1702060461588;
-        Fri, 08 Dec 2023 10:34:21 -0800 (PST)
-Received: from localhost ([2601:344:8301:57f0:cd3e:7dc3:93ad:7de2])
-        by smtp.gmail.com with ESMTPSA id i20-20020a25bc14000000b00d995a8b956csm767232ybh.51.2023.12.08.10.34.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 10:34:21 -0800 (PST)
-Date: Fri, 8 Dec 2023 10:34:20 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	Jan Kara <jack@suse.cz>,
-	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-	Alexey Klimov <klimov.linux@gmail.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH v2 14/35] PCI: hv: switch hv_get_dom_num() to use atomic
- find_bit()
-Message-ID: <ZXNhrHWLu6LydQvp@yury-ThinkPad>
-References: <20231203193307.542794-13-yury.norov@gmail.com>
- <20231204191427.GA623236@bhelgaas>
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2080.outbound.protection.outlook.com [40.107.212.80])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8B81729;
+	Fri,  8 Dec 2023 11:42:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DG6TYouqkF8RjCj2lHrOCXuO1YLTx+k04PjUIQsHROfiuK4w0A47uXk1sJXVSU+Ua61/sXa8TlWGCbQl6UgxmCWfP56QztBXlK4mToICbKTFJCZWTiIjG23spLKpxzv/4onM2+ExmAlrz1UlwUZpw7kbznaWESfdFlzWcKfJ8krKUPiCi9CSNwAR5v9PYjNXS7O9P5vqJ3e+JfF9l+nE8F3NqzMtUIcFqkMf+3rCziZGvg68IPGhjqexwfNwgsdo5KHrqk/KgqdqMKwunouKEUVNHvD3zWD5+8Djyd353axngkpXM0Namhv6TTeZx1oX4f7pFOBSZgR9+XfFbSDE/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=45Q2NpeZKs88coQLJQCvZdgudi/rzG/+8MoK1JDRStw=;
+ b=DhyzJFbv+oAGcybHfmrD2s3raXCxOs+JHMamOOVMFFbaMvXy9TyRZpfPEsgJ3iOsT3sHTe7yHLFLswWFOVjbk3kbCJjTpQEicXabtdVA++dL6H06xfGw1udSjvRQKV/XLMbXOinbp9Vq4290GwnMVnn++yMmA5hQcKel3Kv1+kiScdhrfiNUN0RrIB4ZZLuhn2+TW1tXaZMmET4MiC+vXjQq8j/F8gQ4PfaehRhj04E1cxTutBZyokhUO6KUOY7SXq7b/1er5ISYpag+fD2SuHzqTAkwGfIV46c6G9aL9uMrcIuqpsGqtGNyB6OQKm3d5Nj6hDmYdnAIYT1n5uJUig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=45Q2NpeZKs88coQLJQCvZdgudi/rzG/+8MoK1JDRStw=;
+ b=cQrtp/y3AjBu1a7qWAk9iWtK/K+B3YpB3AZUCJyJ8rWp/53JvgQKt6/ef1FZLWtXABdmIy3vuSQBLeMD3huV8qebqC4RJkynPpDl/KQowpWr6/Y+Yo3/Mi27QhMztMKRyvxnmJLD5yL92brySWdq5zxJwdg989y6WhT0A6xvJY+rGnN5BSuEwCgbbd/XuxewtCxLyumfKJYgKNIanIwpCCB+ctciztYKXGwskzd305iYdZgLfc2fzq4hDHUPPJfTHOfo0eeP6Lg+/2SE3tl76gdfljXqM8aXFdm8nsyzWOK+wGh+52IHnsXj8dDDgxWinRHAeR0X27XhpGlVmwTxQQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by SN7PR12MB7909.namprd12.prod.outlook.com (2603:10b6:806:340::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.28; Fri, 8 Dec
+ 2023 19:42:00 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7046.038; Fri, 8 Dec 2023
+ 19:42:00 +0000
+Date: Fri, 8 Dec 2023 15:41:59 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Jim Harris <jim.harris@samsung.com>,
+	Leon Romanovsky <leonro@nvidia.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"ben@nvidia.com" <ben@nvidia.com>
+Subject: Re: Locking between vfio hot-remove and pci sysfs sriov_numvfs
+Message-ID: <20231208194159.GS2692119@nvidia.com>
+References: <CGME20231207223824uscas1p27dd91f0af56cda282cd28046cc981fe9@uscas1p2.samsung.com>
+ <ZXJI5+f8bUelVXqu@ubuntu>
+ <20231207162148.2631fa58.alex.williamson@redhat.com>
+ <20231207234810.GN2692119@nvidia.com>
+ <ZXNNQkXzluoyeguu@bgt-140510-bm01.eng.stellus.in>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXNNQkXzluoyeguu@bgt-140510-bm01.eng.stellus.in>
+X-ClientProxiedBy: MN2PR19CA0071.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::48) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231204191427.GA623236@bhelgaas>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SN7PR12MB7909:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a5f361a-9da5-470a-a9c8-08dbf825befd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ruoQWcRxdhEE/YDfrNDARGNblVUgxqfnFceZg2iuRU8O2JfSOz05sVPkYW5vNeNFkcn6Nm9MbVXdq1hROgjnCiP0uNDcYd82bFt5W/kCdpiFl7A96TXf/t+2lGxe553uTDj8lLk4ZsxBwVZRcAcWpBLnzvirHqtaDP9MaLUJeuMyQsbXpvQgjXO/c1UyRmJCg1j9uMFrNUgDuTAk2dUEaIIr+9J/kbuu9ocM1PNAIUGGieeBbRikeO4UulIILESeDomG9dJ/Fi0J6G3ZSeO/VU3nlvho3cKFIJzsj+/qzwnpOZT58MeTpnXB0W/5T2mBf278AyUzgbOMCOL2xuhwGkSnM3pahmIXAlpKlX0+KaUnZIfI0lcCoei41EdiVgFuKqc4NJfNlTIgrh87YkxdKbs5hfotAEnBbe80j1Qnu03nDaCuS56IqNR5UZQsaPQTF5OSlCVJLmMNqGo6UkeFagsTGUVB3SMGnAUIL5LSwLqR6eNIs4gE1t52FU7f+DOLH6fYRvoCllBIAdRLdYpPxO24gJGAo1+zuF0PQRRlreBiMTUoWM55hhD+ldub4Sql
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39860400002)(376002)(346002)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(8676002)(26005)(6486002)(478600001)(8936002)(4326008)(38100700002)(1076003)(86362001)(36756003)(6512007)(107886003)(2616005)(5660300002)(41300700001)(6506007)(33656002)(6636002)(316002)(66476007)(66946007)(110136005)(54906003)(66556008)(2906002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?w/nvP4sfmlfJNVRMwHTzNq9t1OW+cTp5Yqi6wlJDYKcdWKsmfp4nmqqxD7+r?=
+ =?us-ascii?Q?NR1v8Vpm/Jk4ycr/8xEMD008Gpoe5vjkOUtdBl7/3kd1lVqCJv5sX3BGDy6i?=
+ =?us-ascii?Q?FpG/qyf1dL0VmjOidaDiBFDaKPoGg61o5izXrDZsq5U9w/8imojuUsvXP79z?=
+ =?us-ascii?Q?rO6cVIBiNIIKgLlW8+i1LNVmYDZ7CPMOaBlGflIa0qVmldRIF24BGevxpDqZ?=
+ =?us-ascii?Q?CyWe45JifSv7A8he4EmW1bcC3u/O2UAQLRgKn1Dv4Qc1Qsu2LGEJYrqnR1TQ?=
+ =?us-ascii?Q?qYI8ToC++w5BYlMykrr8gX2SSOW0WuTZ7O5ZdsRGHIqi2S49WC5JfBxhG1QJ?=
+ =?us-ascii?Q?u8KvZ89dJAR810fuqSV9mpnT2HGckmaJrEtu3V/SDc97mGyAQPyMtQRkmAvI?=
+ =?us-ascii?Q?vjMAMtyGCYHAk2mhWhIO/VG7ewxUjbHpKTYe+x+p0ytYYSPGDZTQBapHsaSt?=
+ =?us-ascii?Q?F+yU9pW7CZysjaHjuO8GJTnVITbzqGaaIyAeKDbLt/6xdW+wgQEn3gRgbysO?=
+ =?us-ascii?Q?Wifb03XjYf7eTk0/GuXdoO42RFz63aVhNaJpq6rrtK6Wb88mZjOBl4+nh4pf?=
+ =?us-ascii?Q?JmBvtOKgmR/8hQLA7cZ4lreeeSW+61xN7ZFU4/od5uC7UlyxvTbpBCe1eHbA?=
+ =?us-ascii?Q?3U1dXnfJGWV44YbzN6+eMQc6yMFDV7zsEbGBxFu3/IqLc6AtCtS3A1HOGHZM?=
+ =?us-ascii?Q?BC5xOdR9+pwZhKtfJRNdXfFZRgGcuNIoxe2gC740N1ffWw7yWW0taqVEtbMG?=
+ =?us-ascii?Q?MDtu/bKDGUCsZ4j3SUmyR/vYkkIC/txzvLe16ttvuyojsS909RZSp6s/XQM3?=
+ =?us-ascii?Q?ypVOU1qQy6ovhhPBUlMWqJ+f6BZtdfpdJ0HviE4Z1mg+jQTtiZghFIIp54eu?=
+ =?us-ascii?Q?JRUOShBhhACo+ff2qHLahMS3kEdUeaSDQNnNI+yt3slkXrT3pBssEI/hAHnA?=
+ =?us-ascii?Q?glphB1M0Lmod2dQ5qhGxBNFKAzG1ohLfCdPFpo1k2nMtvFbxu9QZI7MSuwoO?=
+ =?us-ascii?Q?RbF7naoykFJeR9mfqb2i+QkS44BjKcLXDnmR4HHiUxuZHfVNllLdVE8tb+kz?=
+ =?us-ascii?Q?8/bvJ8EZsd/G7ho5p5wA/s+nlWDJmxhMxNsDWeNMULqD73GSMeH3zXJLfuwE?=
+ =?us-ascii?Q?8sgBY2q+5oIOZuLn+2hEWpxNCeuT3BVsi+PNneVUQvKQcZ7WaWtcKaljJc4O?=
+ =?us-ascii?Q?d8NqKaBZdS8lsEyWn466N/wlaT1hAwqpyMSbyhW4/qdVRHJMu+/8N/+d2cdp?=
+ =?us-ascii?Q?96uijn8EALF5cpYJN1wDRqzJoKBkjOwNY/NQDPgJje+OYBLkn3/2tNGmaaUm?=
+ =?us-ascii?Q?OrCVNT6uAyvwm6v43hFE7w2JbnWGgZqUM9BH46yyWzhXaqu+5E156867wQTr?=
+ =?us-ascii?Q?X6SRQyoh2VXBGEiNdxVFusj8iTuBEErknY/7p5Lj5pl22Xmm/fXbXfOI0BUS?=
+ =?us-ascii?Q?03D/Bu6HShqYs/2F/1LtXCCgsIYdZ3I2fx9qTXUXGSkyq5tzJyar6ppYRlfl?=
+ =?us-ascii?Q?PnUwRzsUxkSmTzYacggkzEsi6YD8h9HulzsE4rW/LFxTWRexLnCBl4hw8BIb?=
+ =?us-ascii?Q?0gP9FqdeWk5P5erYiC1eHwGRXLrWCYUxB3Iyb4vk?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5f361a-9da5-470a-a9c8-08dbf825befd
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2023 19:42:00.6374
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LD5+asjf68oUQDfUQkZAeOYNjJuMsJlx3k4KOY7b7JN/OxuXkpBWtAgEpXSmIZqz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7909
 
-On Mon, Dec 04, 2023 at 01:14:27PM -0600, Bjorn Helgaas wrote:
-> On Sun, Dec 03, 2023 at 11:32:46AM -0800, Yury Norov wrote:
-> > The function traverses bitmap with for_each_clear_bit() just to allocate
-> > a bit atomically. We can do it better with a dedicated find_and_set_bit().
+On Fri, Dec 08, 2023 at 05:07:22PM +0000, Jim Harris wrote:
+> On Thu, Dec 07, 2023 at 07:48:10PM -0400, Jason Gunthorpe wrote:
+> > On Thu, Dec 07, 2023 at 04:21:48PM -0700, Alex Williamson wrote:
+> > > On Thu, 7 Dec 2023 22:38:23 +0000
+> > > Jim Harris <jim.harris@samsung.com> wrote:
+> > > 
+> > > device_lock() has been a recurring problem.  We don't have a lot of
+> > > leeway in how we support the driver remove callback, the device needs
+> > > to be released.  We can't return -EBUSY and I don't think we can drop
+> > > the mutex while we're waiting on userspace.
+> > 
+> > The mechanism of waiting in remove for userspace is inherently flawed,
+> > it can never work fully correctly. :( I've hit this many times.
+> > 
+> > Upon remove VFIO should immediately remove itself and leave behind a
+> > non-functional file descriptor. Userspace should catch up eventually
+> > and see it is toast.
+> > 
+> > The kernel locking model just cannot support userspace delaying this
+> > process.
+> > 
+> > Jason
 > 
-> No objection from me, but please tweak the subject line to match
-> previous hv history, i.e., capitalize the first word after the prefix:
-> 
->   PCI: hv: Use atomic find_and_set_bit()
-> 
-> I think there's value in using similar phrasing across the whole
-> series.  Some subjects say "optimize xyz()", some say "rework xyz()",
-> some "rework xyz()", etc.  I think it's more informative to include
-> the "atomic" and "find_bit()" ideas in the subject than the specific
-> functions that *use* it.
-> 
-> I also like how some of the other commit logs clearly say what the
-> patch does, e.g., "Simplify by using dedicated find_and_set_bit()", as
-> opposed to just "We can do it better ..." which technically doesn't
-> say what the patch does.
-> 
-> Very nice simplification in all these users, thanks for doing it!
-> 
-> I assume you'll merge these all together since they depend on [01/35],
-> so:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Maybe for now we just whack this specific mole with a separate mutex
+> for synchronizing access to sriov->num_VFs in the sysfs paths?
+> Something like this (tested on my system):
 
-Thank you Bjorn!
+TBH, I don't have the time right now to unpack this locking
+mystery. Maybe Leon remembers?
 
-Now as many people asked to move their subsystems patch together with
-#1, I think, if no objections, it's simpler to pull all the series in
-bitmap-for-next.
+device_lock() gets everywhere and does a lot of different stuff, so I
+would be surprised if it was so easy..
 
-I'm going to align commit messages wording, as you suggested, address
-some other comments, and will send v3 this weekend.
-
-Thanks,
-Yury
+Jason
 
