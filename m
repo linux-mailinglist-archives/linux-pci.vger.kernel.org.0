@@ -1,57 +1,57 @@
-Return-Path: <linux-pci+bounces-726-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-727-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85D2480B5DA
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 19:19:12 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ED2780B609
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 20:24:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DA1A281116
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 18:19:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF3711C2083E
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 19:24:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83FE6199A5;
-	Sat,  9 Dec 2023 18:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F9A19BCF;
+	Sat,  9 Dec 2023 19:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxmEYfIs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CdRMk4hH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D420DF
-	for <linux-pci@vger.kernel.org>; Sat,  9 Dec 2023 10:19:05 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A121BAC
+	for <linux-pci@vger.kernel.org>; Sat,  9 Dec 2023 11:24:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702145946; x=1733681946;
+  t=1702149849; x=1733685849;
   h=date:from:to:cc:subject:message-id;
-  bh=/mrTTexru1uwYp3lH6TBKwktNRZFmtjwUakhjGXIQeo=;
-  b=lxmEYfIsAGDo5WQZY6v3ul9i9i51Ywtmt+RZgO7AwGyvijNI3bRPd/Fp
-   273LICbTO/K4T3D8XpzWs63VXcRcvbwd4ar8jkPJoqbyskdykNZSe3yEZ
-   a98WA/kMkfMXR/NjFzRwtEgMztg1AE3qiLHxxKc9a9ZnHbbMdEqnfkLz+
-   tdW0wkegmh/VXAEiquVqD0nwaLkhOT6+FCWOb/DwTMfG9GpKWahMWYHVK
-   CtOq2XVhjOFU4oOnL/L661vUmMAkeiyOc5eg+s1aAS6AzhOqjSRtYJwoc
-   RsBBAPm9L2bxsOnVD4/VYqW4nFb+1PhMG3dvM2zFW0GAR7Tfc6HA7Fgn7
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10919"; a="1365332"
+  bh=27iDtkN0XU4pYxPHC+MQZohLFbBTWGGy284Z/9xau6Q=;
+  b=CdRMk4hHpiWJR/r9dzCRpPzff/JqxkuWSVb9IotGeZ8XMfeu23pSi5Gd
+   q+VcadiPW326Jwaf286SXdUvQL6tbMpFs3MYsZfTw79AnnLObx0IvYDq0
+   MTKYxfTgNAzrR2wuQc+5MonAHEDLA343hHGAWrl+dphLpZNtt9YvgtzbE
+   exEF2nwbdbpohhRM4vkvaQh6WRq3cXVhpRtykxkFaqVAlWOWH+0KWULl+
+   c6JUMP+DftZuIl3jm4jW1honjW3jtLMg4JEnqAb55LehCtvexP2czsVgG
+   fdkMTpjphPzT6DUCOzm8ey5VWPRDg4oxqGDvZkJcPwSNZeN7L4fTPKTRM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10919"; a="7847560"
 X-IronPort-AV: E=Sophos;i="6.04,264,1695711600"; 
-   d="scan'208";a="1365332"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2023 10:19:05 -0800
+   d="scan'208";a="7847560"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2023 11:24:09 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10919"; a="1103918203"
+X-IronPort-AV: E=McAfee;i="6600,9927,10919"; a="722210142"
 X-IronPort-AV: E=Sophos;i="6.04,264,1695711600"; 
-   d="scan'208";a="1103918203"
+   d="scan'208";a="722210142"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Dec 2023 10:19:03 -0800
+  by orsmga003.jf.intel.com with ESMTP; 09 Dec 2023 11:24:08 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rC1un-000Fk6-26;
-	Sat, 09 Dec 2023 18:19:01 +0000
-Date: Sun, 10 Dec 2023 02:18:26 +0800
+	id 1rC2vm-000Fpg-01;
+	Sat, 09 Dec 2023 19:24:06 +0000
+Date: Sun, 10 Dec 2023 03:24:03 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:aer] BUILD SUCCESS
- 8f752bd737d98548c7674e764b643c52b81d9d39
-Message-ID: <202312100224.YMig8A15-lkp@intel.com>
+Subject: [pci:for-linus] BUILD SUCCESS
+ 54718789142e3fb008c87d632bd6b4485416b0ea
+Message-ID: <202312100301.yhKPSCjt-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -59,12 +59,12 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aer
-branch HEAD: 8f752bd737d98548c7674e764b643c52b81d9d39  PCI/AER: Use explicit register sizes for struct members
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: 54718789142e3fb008c87d632bd6b4485416b0ea  PCI/ASPM: Add pci_disable_link_state_locked() lockdep assert
 
-elapsed time: 1466m
+elapsed time: 1460m
 
-configs tested: 157
+configs tested: 150
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -81,7 +81,6 @@ arc                   randconfig-001-20231209   gcc
 arc                   randconfig-002-20231209   gcc  
 arm                               allnoconfig   gcc  
 arm                                 defconfig   clang
-arm                        keystone_defconfig   gcc  
 arm                   randconfig-001-20231209   gcc  
 arm                   randconfig-002-20231209   gcc  
 arm                   randconfig-003-20231209   gcc  
@@ -124,7 +123,6 @@ m68k                              allnoconfig   gcc
 m68k                             allyesconfig   gcc  
 m68k                                defconfig   gcc  
 m68k                       m5208evb_defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
 microblaze                       allmodconfig   gcc  
 microblaze                        allnoconfig   gcc  
 microblaze                       allyesconfig   gcc  
@@ -132,7 +130,6 @@ microblaze                          defconfig   gcc
 mips                             allmodconfig   gcc  
 mips                              allnoconfig   clang
 mips                             allyesconfig   gcc  
-mips                     decstation_defconfig   gcc  
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -153,8 +150,6 @@ parisc64                            defconfig   gcc
 powerpc                          allmodconfig   clang
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   clang
-powerpc                      chrp32_defconfig   gcc  
-powerpc                      pcm030_defconfig   gcc  
 powerpc               randconfig-001-20231209   gcc  
 powerpc               randconfig-002-20231209   gcc  
 powerpc               randconfig-003-20231209   gcc  
@@ -165,7 +160,6 @@ riscv                            allmodconfig   gcc
 riscv                             allnoconfig   clang
 riscv                            allyesconfig   gcc  
 riscv                               defconfig   gcc  
-riscv                    nommu_k210_defconfig   gcc  
 riscv                 randconfig-001-20231209   gcc  
 riscv                 randconfig-002-20231209   gcc  
 riscv                          rv32_defconfig   clang
@@ -177,7 +171,6 @@ sh                               allmodconfig   gcc
 sh                                allnoconfig   gcc  
 sh                               allyesconfig   gcc  
 sh                                  defconfig   gcc  
-sh                        edosk7760_defconfig   gcc  
 sh                            migor_defconfig   gcc  
 sh                    randconfig-001-20231209   gcc  
 sh                    randconfig-002-20231209   gcc  
