@@ -1,151 +1,148 @@
-Return-Path: <linux-pci+bounces-724-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-725-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C84080B1EE
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 04:46:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F12F380B5AA
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 18:39:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B9201F21172
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 03:46:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B03C1F21090
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Dec 2023 17:39:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 088821112;
-	Sat,  9 Dec 2023 03:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3855D1804D;
+	Sat,  9 Dec 2023 17:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N1XGDzHm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g655wrH+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 08FB210E6;
-	Fri,  8 Dec 2023 19:46:25 -0800 (PST)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5802320B74C0;
-	Fri,  8 Dec 2023 19:46:24 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5802320B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1702093584;
-	bh=CndfACro1vB4lqJpl3P/DHaR4O77a0Wj2l2e2pQn8hE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=N1XGDzHmrjNwtgrvUfVz9ax9DqVgQnm1uI9kAMBPBmgegGR4k4LxktFm8eWq7h1dH
-	 wlX3aPIPKtFSYJcAGIfumerdUIFjbsppHq393Be3g3o5hfpSEAnqURpEaE7Hy+VmfP
-	 CmJqmLSbqhoRxZW0Szc/uBc/Hq1Ho6fC8A9N0NOY=
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
-To: bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: alexander.stein@ew.tq-group.com,
-	ssengar@linux.microsoft.com,
-	decui@microsoft.com
-Subject: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
-Date: Fri,  8 Dec 2023 19:46:16 -0800
-Message-Id: <1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B869410DF
+	for <linux-pci@vger.kernel.org>; Sat,  9 Dec 2023 09:38:54 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-54dca2a3f16so5588683a12.0
+        for <linux-pci@vger.kernel.org>; Sat, 09 Dec 2023 09:38:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702143533; x=1702748333; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iTT1z7XWnAP69cMAv9qMbpCUai86iQPk4s0xjb4WIZo=;
+        b=g655wrH+in7/TfapzXN/umh45qHI2I/qiBzrSnbF4K52CjezaYwBJzYOJfYepnIrU0
+         cQm5rFv+/Lcu+Mi7UwXRpnYFfis+yC7iZt2TgQ5aH3JKZ/F8c4liEVfWs6kW8kelTCQl
+         aPLrY/RzLvuqd4ai6G920GVLxGh4nUZoNOffvuq1Knwfo+wQsCW9DVPbJZ91W1d7MADg
+         XAutUFvvzFnM1owsQJu1HpoWROYF4EJYXNZVmjoDlDfwc1710oHEgrjs3Ob5vIGyrvgl
+         4JuUms5p9fmNUgfqaENDk4eolsjBarDLa2ySixht5rwjBTDDhrJ/7N6LQmS+5nqKRSku
+         3Xhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702143533; x=1702748333;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iTT1z7XWnAP69cMAv9qMbpCUai86iQPk4s0xjb4WIZo=;
+        b=pjI+vb9Xl6PJ6KhVf8HNec8oWoT8seI2O/i9g+55W39dQeFchxaHK+HMLJajdbsXjm
+         DbKwHsvBYqE6LpZPu/aNENvhJb37onDkqBkL+h381rHE3LEmWflFBXjccJZAiMmZuh06
+         dJNKTKGLaULkLq2oAd28xE4DFRJubLOU06SHWvPk3UkssniUZwE0+6O+3fgje1MhOVJr
+         9afZGHS0O8O2tqPR6hGKvEr9ZQnCnlFR94kMKvD0+mU8GZW8nVoCasfWzfQ5Fj8r4pZd
+         gTv0Kj+7Mgoz8vH4WwMxoDfBlqA3rDd2NBcGKnNBRYnJkJn/lN3zvPyeCFazn65bNvz7
+         0M8w==
+X-Gm-Message-State: AOJu0YxI8iqIgSo+v5ENv9mFtcoZoRiLyz1bBy4EUSvy2X9nO7oEKSV4
+	LYh47RX+5gHoSeBXiVBkQLdsuw==
+X-Google-Smtp-Source: AGHT+IGAnjEj9Dy+zmGgpXvF65bibs8XFiahHcFvpuNOA/OqMHTYK6n/DGMy2dvUJNCaNmpVfdgkNw==
+X-Received: by 2002:a17:907:7e8b:b0:a1d:58c0:ed7a with SMTP id qb11-20020a1709077e8b00b00a1d58c0ed7amr2292658ejc.38.1702143533142;
+        Sat, 09 Dec 2023 09:38:53 -0800 (PST)
+Received: from [192.168.36.128] (178235179179.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.179])
+        by smtp.gmail.com with ESMTPSA id ig8-20020a1709072e0800b00a1c6e3e454fsm2421151ejc.166.2023.12.09.09.38.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 09 Dec 2023 09:38:52 -0800 (PST)
+Message-ID: <7f890553-5278-4bc3-9f72-a5a60d9596ea@linaro.org>
+Date: Sat, 9 Dec 2023 18:38:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] dt-bindings: PCI: qcom: correct clocks for SC8180x
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231208105155.36097-1-krzysztof.kozlowski@linaro.org>
+ <20231208105155.36097-2-krzysztof.kozlowski@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20231208105155.36097-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Currently there is a race in calling pci_create_resource_files function
-from two different therads, first therad is triggered by pci_sysfs_init
-from the late initcall where as the second thread is initiated by
-pci_bus_add_devices from the respective PCI drivers probe.
+On 8.12.2023 11:51, Krzysztof Kozlowski wrote:
+> PCI node in Qualcomm SC8180x DTS has 8 clocks:
+> 
+>   sc8180x-primus.dtb: pci@1c00000: 'oneOf' conditional failed, one must be fixed:
+>     ['pipe', 'aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref', 'tbu'] is too short
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+[...]
 
-The synchronization between these threads relies on the sysfs_initialized
-flag. However, in pci_sysfs_init, sysfs_initialized is set right before
-calling pci_create_resource_files which is wrong as it can create race
-condition with pci_bus_add_devices threads. Fix this by setting
-sysfs_initialized flag at the end of pci_sysfs_init and direecly call the
-pci_create_resource_files function from it.
+> +          items:
+> +            - const: pipe # PIPE clock
+> +            - const: aux # Auxiliary clock
+> +            - const: cfg # Configuration clock
+> +            - const: bus_master # Master AXI clock
+> +            - const: bus_slave # Slave AXI clock
+> +            - const: slave_q2a # Slave Q2A clock
+> +            - const: ref # REFERENCE clock
+> +            - const: tbu # PCIe TBU clock
+Are we sure this one is actually necessary? Or is it just for the
+SMMU debug peripheral? [1] Would be nice to test if it works
+normally (unused clk shutdown / forced shutdown of this one might
+be necessary in case it's on from XBL) and during a PCIe-related
+SMMU fault.
 
-There can be an additional case where driver probe is so delayed that
-pci_bus_add_devices is called after the sysfs is created by pci_sysfs_init.
-In such cases, attempting to access already existing sysfs resources is
-unnecessary. Fix this by adding a check for sysfs attributes and return
-if they are already allocated.
+Konrad
 
-In both cases, the consequence will be the removal of sysfs resources that
-were appropriately allocated by pci_sysfs_init following the warning below.
-
-[    3.376688] sysfs: cannot create duplicate filename '/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/device:07/VMBUS:01/47505500-0001-0000-3130-444531454238/pci0001:00/0001:00:00.0/resource0'
-[    3.385103] CPU: 3 PID: 9 Comm: kworker/u8:0 Not tainted 5.15.0-1046-azure #53~20.04.1-Ubuntu
-[    3.389585] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
-[    3.394663] Workqueue: events_unbound async_run_entry_fn
-[    3.397687] Call Trace:
-[    3.399312]  <TASK>
-[    3.400780]  dump_stack_lvl+0x38/0x4d
-[    3.402998]  dump_stack+0x10/0x16
-[    3.406050]  sysfs_warn_dup.cold+0x17/0x2b
-[    3.408476]  sysfs_add_file_mode_ns+0x17b/0x190
-[    3.411072]  sysfs_create_bin_file+0x64/0x90
-[    3.413514]  pci_create_attr+0xc7/0x260
-[    3.415827]  pci_create_resource_files+0x6f/0x150
-[    3.418455]  pci_create_sysfs_dev_files+0x18/0x30
-[    3.421136]  pci_bus_add_device+0x30/0x70
-[    3.423512]  pci_bus_add_devices+0x31/0x70
-[    3.425958]  hv_pci_probe+0x4ce/0x640
-[    3.428106]  vmbus_probe+0x67/0x90
-[    3.430121]  really_probe.part.0+0xcb/0x380
-[    3.432516]  really_probe+0x40/0x80
-[    3.434581]  __driver_probe_device+0xe8/0x140
-[    3.437119]  driver_probe_device+0x23/0xb0
-[    3.439504]  __driver_attach_async_helper+0x31/0x90
-[    3.442296]  async_run_entry_fn+0x33/0x120
-[    3.444666]  process_one_work+0x225/0x3d0
-[    3.447043]  worker_thread+0x4d/0x3e0
-[    3.449233]  ? process_one_work+0x3d0/0x3d0
-[    3.451632]  kthread+0x12a/0x150
-[    3.453583]  ? set_kthread_struct+0x50/0x50
-[    3.456103]  ret_from_fork+0x22/0x30
-
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-There has been earlier attempts to fix this problem, below are the patches
-for reference of these attempts.
-1. https://lore.kernel.org/linux-pci/20230316103036.1837869-1-alexander.stein@ew.tq-group.com/T/#u
-2. https://lwn.net/ml/linux-kernel/20230316091540.494366-1-alexander.stein@ew.tq-group.com/
-
-Bug details: https://bugzilla.kernel.org/show_bug.cgi?id=215515
-
- drivers/pci/pci-sysfs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index f2909ae93f2f..a31f6f2cf309 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1230,6 +1230,10 @@ static int pci_create_resource_files(struct pci_dev *pdev)
- 		if (!pci_resource_len(pdev, i))
- 			continue;
- 
-+		/* Check if resource already allocated and proceed no further */
-+		if (pdev->res_attr[i] || pdev->res_attr_wc[i])
-+			return 0;
-+
- 		retval = pci_create_attr(pdev, i, 0);
- 		/* for prefetchable resources, create a WC mappable file */
- 		if (!retval && arch_can_pci_mmap_wc() &&
-@@ -1411,9 +1415,8 @@ static int __init pci_sysfs_init(void)
- 	struct pci_bus *pbus = NULL;
- 	int retval;
- 
--	sysfs_initialized = 1;
- 	for_each_pci_dev(pdev) {
--		retval = pci_create_sysfs_dev_files(pdev);
-+		retval = pci_create_resource_files(pdev);
- 		if (retval) {
- 			pci_dev_put(pdev);
- 			return retval;
-@@ -1423,6 +1426,8 @@ static int __init pci_sysfs_init(void)
- 	while ((pbus = pci_find_next_bus(pbus)))
- 		pci_create_legacy_files(pbus);
- 
-+	sysfs_initialized = 1;
-+
- 	return 0;
- }
- late_initcall(pci_sysfs_init);
--- 
-2.25.1
-
+[1] https://lore.kernel.org/linux-arm-msm/20231118042730.2799-1-quic_c_gdjako@quicinc.com/
 
