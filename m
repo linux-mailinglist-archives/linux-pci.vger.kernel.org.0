@@ -1,267 +1,388 @@
-Return-Path: <linux-pci+bounces-775-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-776-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE5280DDDD
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 23:07:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8D9580DF10
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 00:00:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 021651C21466
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 22:07:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E6B0B2138D
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 23:00:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC6FF54FB4;
-	Mon, 11 Dec 2023 22:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7988E55C3E;
+	Mon, 11 Dec 2023 23:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M4bZhIrE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="niMaIJfA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2046.outbound.protection.outlook.com [40.107.105.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A71A1;
-	Mon, 11 Dec 2023 14:06:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZwTuwXBOLzgEOhMVu5kMzpi8buAhexHuylTpgyUZDlfRo03xNFMvUhK/YJjDpOtBKn5P9YY1DxTJe8hjTJUSIzayNhJheXqUAP7vX4U3dwjIPHzbcoF7jVTO9zMmz4v0M+mT3F/FOJlKvumPiYM24POFtAumQNsXUThLEVaxz1PZPx01W43x500b949Cqh4usJTlqW7M93LBYzLtPlryrKHyavnYcrbNpBZXUjtbw8N5LfIc0daceLICpWIxGCW1/jSpG/ZhKjfSjuVx+ULIuDOXupOZF5HFRTTe5fh1VYEHdTnRYp9ERd2DwHW69k4rZSrQs6u0b6iQ+usptGZ3gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wjs40/uZk9IiiJF2cbAEQhEIX+HPt7jr4ZHqwjyGQe8=;
- b=DaV9NN3UQXbh8G/MB+pMiN3LFaf3m0Eq2kLBpu/gL7P7JE/ysyM10MlLwWiA3kzOiijcPSt+uI9ifFeZOjpWDDZFAm6IyA5/hq1hJvMLTVblJFp9YDZlhW9//FyHk1K4bKzn67SrUpA73swhfhnBkyT6UddKG8Fs7Os0XVCrDZ0FJ7LkcG5kVtrlcDBovIwlezNUSMQhlCf1tmLlwIVLWT7ldRiLwG7sNLRLtK0fbjhPmy3TUO7e+CZlWoK5SQgVtWoYEsDc8lwSbXqykOJfdp0k2G5nMKynw/YWgAZYTxJfX9jDEaZG8HQK7/cP+zHT2E+1dVL1VnpDXwKXiSKI+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wjs40/uZk9IiiJF2cbAEQhEIX+HPt7jr4ZHqwjyGQe8=;
- b=M4bZhIrEBO6HyiMMZG9gwjDerNOUtd7ZcTi2KTB5jAa05tzBEddgwebDhFJP2luDF04haAlMlkPSjjLdtQIjcvFmE5vgze4Rjc+rO1jcFn96CGq+/VOwN9q8AlFrU+0kYyU+GREGXeQMGRxbqf6yvhZW6SvPHWluslnNWVRf71c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4845.eurprd04.prod.outlook.com (2603:10a6:803:51::30)
- by PAWPR04MB9717.eurprd04.prod.outlook.com (2603:10a6:102:380::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.29; Mon, 11 Dec
- 2023 22:06:51 +0000
-Received: from VI1PR04MB4845.eurprd04.prod.outlook.com
- ([fe80::dfaa:e869:45eb:76e5]) by VI1PR04MB4845.eurprd04.prod.outlook.com
- ([fe80::dfaa:e869:45eb:76e5%6]) with mapi id 15.20.7068.031; Mon, 11 Dec 2023
- 22:06:51 +0000
-Date: Mon, 11 Dec 2023 17:06:42 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: manivannan.sadhasivam@linaro.org
-Cc: bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-	robh@kernel.org, roy.zang@nxp.com
-Subject: Re: [PATCH v6 4/4] PCI: layerscape: Add suspend/resume for ls1043a
-Message-ID: <ZXeH8nF4KoC0gKg2@lizhi-Precision-Tower-5810>
-References: <20231204160829.2498703-1-Frank.Li@nxp.com>
- <20231204160829.2498703-5-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231204160829.2498703-5-Frank.Li@nxp.com>
-X-ClientProxiedBy: SN7PR04CA0188.namprd04.prod.outlook.com
- (2603:10b6:806:126::13) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6AC310B
+	for <linux-pci@vger.kernel.org>; Mon, 11 Dec 2023 14:59:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702335597; x=1733871597;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=gMEqdlgF9zpkhwg8cyPZcEdVLeZsaqJfsiX4XXUoBUw=;
+  b=niMaIJfABtUPciDOTLyHigEVPyCGhLpRnjB/3q5b+iwaxxduf24oGQXK
+   ZAoBvWcZ8mtl4odjaAe3odWJajsIYYaMpfAempZFgL44vt/Pr+Imx5gjT
+   ybSNVLKos/0z+XMUp2JDjbiN/eGnS2c4xtcPTcLcYbmNB83RsUhBotRcU
+   YBPrjCpAgaVIuqjfNxuZj9WzmkIIjaFigheHwcjmsSw+nk87CO9iqDbd0
+   Fl5ybgEXm//xu1nLhWKBskmGWmmFkk2zKS95bcCyiiixk8Gs362CerlxS
+   nkcgcZcBfbkyF19OrEwPPO802ZBvacXwv0K0ZfL6+kpQ5MNfue1RmoM+Q
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="379721046"
+X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
+   d="scan'208";a="379721046"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 14:59:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="1104657545"
+X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
+   d="scan'208";a="1104657545"
+Received: from patelni-ubuntu-dev.ch.intel.com ([10.2.132.59])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 14:58:49 -0800
+Message-ID: <173617bee344b58a47edfa35744e8dd4026db434.camel@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on
+ VMD rootports
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Date: Mon, 11 Dec 2023 16:05:25 -0700
+In-Reply-To: <20231206002718.GA692432@bhelgaas>
+References: <20231206002718.GA692432@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4845:EE_|PAWPR04MB9717:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56ff6995-e5a7-4c00-123e-08dbfa9579ac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	apliFr3Bho9l7AJeF2eoMWR8enCCLhvdBwZDl2uHmHGXJ7Jw3V21CSrTIPWI8q2A6pQ7nar8RG3Gpn+Pkh0tKWT+wD5N3jr4byGkaq1lOLwK4zRiziNJ4GJTCgS4ZhYmEJyHqr4oZNSsOG8vBCXRXDSUXZIMgdcn5au52A8DaHUTj7y0MDrDjJf4zxV+wUHnvCAHiPKNhYmIuND89Ylyjhuh+A+OpRncYQEHWy1hCvgTlZcTDEH8SKep8WIP/Jc6oYTFx3OSGoFv6YswkYbcUAiExoytIybjx+4aBHT4DEep7nxZVGu8d1BYbmbCsxYJq1mh3i0nxnD0Jg19yEnszu4KozYul7gHi7W/67tJW5Yrnci4tOR5WxulPYAEINuZIg1Fau5V9xhugbjvIf+rGpa5PpXB48wkXBmnqzJgeghOrK/0C9jTJV6RafAaRbna0s/0e01PwVCmrT+wQFpFSANwXQFOlwn+QuMQy07a9BLDywXaPv0tAwiaoOhqQ+M8bvodaN+PTIPyrhudkghcl7KOgHVWLuJdZhsJv/GjQiu+uQoFF9Q6gfCaoG4Nv+pp0IybBTBpKaJfyXyyVYD+CXNizZOVig0/i8eXN7QxkHqg8GicmOHn9rqccaQsi1XP
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4845.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(39860400002)(136003)(396003)(346002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(478600001)(6512007)(9686003)(6506007)(52116002)(6666004)(26005)(38350700005)(38100700002)(86362001)(5660300002)(66556008)(66946007)(7416002)(41300700001)(33716001)(2906002)(15650500001)(6486002)(83380400001)(66476007)(8936002)(8676002)(316002)(4326008)(6916009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UDdRK7biXrSL+95jl/Vidi167MCo0Y3bsVlwvsaovoXcFekPLL7dSWGUKqyd?=
- =?us-ascii?Q?3+ktaG3fezEL8DmLMABwzrj6H7I8CUHJHcvc2HSw0HGro+P9pn11uwcu8BGr?=
- =?us-ascii?Q?eLNr0pvzuHWg6SNafJxJWyjarbLnfIyexFoETLM15Aafw71o0MB3UBhO4nrk?=
- =?us-ascii?Q?VlVRDn1hvI0ezfaLc0P3e3EcqAXI+fKV4+0pCuvEhLmorokWG/Uakw+poIKV?=
- =?us-ascii?Q?XvjxYxzG9uznvxrRI3ednDEcYiFYD99Dtr6k7MDy/AOxBUIgM57rmmv+CdEq?=
- =?us-ascii?Q?+uCU1Gz8fIJjmGemYuXLuqL4hP5mFFlC9is7+wXmO7UJs1Ab36sP3dXHuf1X?=
- =?us-ascii?Q?tctelaOxSRpm0ZnbQN2DUVvwmwef0IvWwlxhwED/QHx/TtGGlwslPe/qGDl8?=
- =?us-ascii?Q?Pkg+oCfy3lLurfCRcLidkH4LXWmn22gr18leY5V6kt3M93cUsj7OfN+rIPtk?=
- =?us-ascii?Q?wA0EMHjXDCfg0UYwk+amLTxuAXZjz83QlC/diRaITmSO5KH8kXvF3faJeXZj?=
- =?us-ascii?Q?3GIGWUVjOOny1gPmxbI0TiOrlG8ln7VEBZxRa8a0XgQhB8R1Mrd65KjhOWtV?=
- =?us-ascii?Q?xbyDSlyGILNpSWEZ2qNNGrWeepD3zL22ZJlvvog99MyXhXlmlLoOvam8gbuQ?=
- =?us-ascii?Q?+5dJOvEToR+6mvMpVfFF/4RSxW3eFsV3ZDMiCSoiRZ2MleHvaNzm7YhNppmH?=
- =?us-ascii?Q?BfBrdkt24f3teScj3/v423MXAJxnIWNXXm5k8gjjCcQ305iJS4l2DErlWTF6?=
- =?us-ascii?Q?9UtMiCTDRHkHle70QG+wUs97h96LgMJkmk83DtRFxvDUlb0JtTDai/YaiXgV?=
- =?us-ascii?Q?379D2kBhp4q89vTCTrs4aOERdDOVDI+q4DIWEKjP+hwK0esoWwimvhpS0AvH?=
- =?us-ascii?Q?zH1l2XcxZLX67CSwlSgsrVC6AkAwlNHamypMMY4SR9lyV42N927CCxjsg2cy?=
- =?us-ascii?Q?KclDGt3l9QF8h+7CXczI0nRUMR786pnVkBBnhaNL/+Z2n0E01d36WRuQ9hDq?=
- =?us-ascii?Q?RRi/faZkPKbmD7PyUvB4YjE01OD+lM2vvG1Wv42UiLygf8GuIMXNlqOvIpQ9?=
- =?us-ascii?Q?30OZ0PMaTRLTL1EeMdlgCKLZGsupigi7n5Rzt/cFSVozQkgbWgcf2Pd2d6y2?=
- =?us-ascii?Q?PqZ7n3hASiPDAMRHeuKbvh+bA9q0gU9H3v/SCB3j0iiBOaCD9KR5hWBdofoj?=
- =?us-ascii?Q?VV5CYW/2R9pWupZg3utFuJfnsW7R+3llc9kEMNo1Ga1pPu8pTkjdZOMQS7x3?=
- =?us-ascii?Q?68JbrIBN5OUiYsvYrpxeQ+ikktJjwHi2LB1/E7flI1azkGSFwDAQUbbTukAE?=
- =?us-ascii?Q?u8PZRr3JzJC7w1MJizM3kvAdMTtX+OufGyH3XUBdt3lh+iTRqE3ixEFZqVwY?=
- =?us-ascii?Q?/z/NyaskWu9wp4pYpDor118twvQCxa0HI9k1vb7LDW5SZGIWgX/RzalzYXnc?=
- =?us-ascii?Q?lzDho2/IPy0kydLvSMV19bIPNSdBDvUhDiV6EHpzXhj+5fSugKohXeGnydtJ?=
- =?us-ascii?Q?RRmF2jFGwlnmvIgEF6+5ajq7ykO3JB9GtpOXniB8ItOCkNDf2vK9cP80mCV4?=
- =?us-ascii?Q?+fdylVd4jBmD1GDTZM8=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56ff6995-e5a7-4c00-123e-08dbfa9579ac
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 22:06:51.1176
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tppendVPIzLSVhUnZ4SXyJSK835MNuzMwiUKI2br810+rgufN1N+7X0ZotpfzUUAbF02RT4QnXCy3mnEKeP40A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9717
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 04, 2023 at 11:08:29AM -0500, Frank Li wrote:
-> Add suspend/resume support for Layerscape LS1043a.
+On Tue, 2023-12-05 at 18:27 -0600, Bjorn Helgaas wrote:
+> On Tue, Dec 05, 2023 at 03:20:27PM -0700, Nirmal Patel wrote:
+> > On Fri, 2023-12-01 at 18:07 -0600, Bjorn Helgaas wrote:
+> > > On Mon, Nov 27, 2023 at 04:17:29PM -0500, Nirmal Patel wrote:
+> > > > Currently VMD copies root bridge setting to enable Hotplug on
+> > > > its
+> > > > rootports. This mechanism works fine for Host OS and no issue
+> > > > has
+> > > > been observed. However in case of VM, all the HyperVisors don't
+> > > > pass the Hotplug setting to the guest BIOS which results in
+> > > > assigning default values and disabling Hotplug capability in
+> > > > the
+> > > > guest which have been observed by many OEMs.
+> > > 
+> > > Can we make this a little more specific?  I'm lacking a lot of
+> > > virtualization background here, so I'm going to ask a bunch of
+> > > stupid
+> > > questions here:
+> > > 
+> > > "VMD copies root bridge setting" refers to _OSC and the copying
+> > > done
+> > > in vmd_copy_host_bridge_flags()?  Obviously this must be in the
+> > > Host
+> > > OS.
+> > 
+> > Yes. we are talking about vmd_copy_host_bridge_flags. It gets
+> > called in
+> > both Host and Guest. But it assigns different values. In Host, it
+> > assigns correct values, while in guest it assigns power-on default
+> > value 0 which in simple term disable everything including hotplug.
 > 
-> In the suspend path, PME_Turn_Off message is sent to the endpoint to
-> transition the link to L2/L3_Ready state. In this SoC, there is no way to
-> check if the controller has received the PME_To_Ack from the endpoint or
-> not. So to be on the safer side, the driver just waits for
-> PCIE_PME_TO_L2_TIMEOUT_US before asserting the SoC specific PMXMTTURNOFF
-> bit to complete the PME_Turn_Off handshake. Then the link would enter L2/L3
-> state depending on the VAUX supply.
+> If vmd_copy_host_bridge_flags() is called both in the Host and the
+> Guest, I guess that means both the VMD endpoint and the VMD Root
+> Ports
+> below it are passed through to the Guest?  I expected only the VMD
+> Root Ports would be passed through, but maybe that's my
+> misunderstanding.
 > 
-> In the resume path, the link is brought back from L2 to L0 by doing a
-> software reset.
+> The VMD endpoint is under host bridge A, and the VMD creates a new
+> PCI
+> domain under a new host bridge B.  vmd_copy_host_bridge_flags()
+> copies
+> all the feature ownership flags from A to B.
 > 
-> Acked-by: Roy Zang <Roy.Zang@nxp.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> On ACPI systems (like both Host and Guest) all these flags are
+> initially cleared for host bridge A in acpi_pci_root_create() because
+> these features are owned by the platform until _OSC grants ownership
+> to the OS.  They are initially *set* for host bridge B in
+> pci_init_host_bridge() because it's created by the vmd driver instead
+> of being enumerated via ACPI.
+> 
+> If the Host _OSC grants ownership to the OS, A's native_pcie_hotplug
+> will be set, and vmd_copy_host_bridge_flags() leaves it set for B as
+> well.  If the Host _OSC does *not* grant hotplug ownership to the OS,
+> native_pcie_hotplug will be cleared for both A and B.
+> 
+> Apparently the Guest doesn't supply _OSC (seems like a spec
+> violation;
+> could tell from the dmesg), so A's native_pcie_hotplug remains
+> cleared, which means vmd_copy_host_bridge_flags() will also clear it
+> for B.
+> 
+> [The lack of a Guest BIOS _OSC would also mean that if you passed
+> through a normal non-VMD PCIe Switch Downstream Port to the Guest,
+> the
+> Guest OS would never be able to manage hotplug below that
+> Port.  Maybe
+> nobody passes through Switch Ports.]
+> 
+> > > "This mechanism works fine for Host OS and no issue has been
+> > > observed."  I guess this means that if the platform grants
+> > > hotplug
+> > > control to the Host OS via _OSC, pciehp in the Host OS works fine
+> > > to
+> > > manage hotplug on Root Ports below the VMD?
+> > 
+> > Yes. When platform hotplug setting is enabled, then _OSC assigns
+> > correct value to vmd root ports via vmd_copy_host_bridge_flags.
+> > 
+> > > If the platform does *not* grant hotplug control to the Host OS,
+> > > I
+> > > guess it means the Host OS pciehp can *not* manage hotplug below
+> > > VMD?
+> > > Is that also what you expect?
+> > > 
+> > > "However in case of VM, all the HyperVisors don't pass the
+> > > Hotplug
+> > > setting to the guest BIOS"  What is the mechanism by which they
+> > > would
+> > > pass the hotplug setting?  I guess the guest probably doesn't see
+> > > the
+> > > VMD endpoint itself, right?  The guest sees either virtualized or
+> > > passed-through VMD Root Ports?
+> > 
+> > In guest, vmd is passthrough including pci topology behind vmd. The
+> > way
+> > we verify Hotplug capability is to read Slot Capabilities
+> > registers'
+> > hotplug enabled bit set on vmd root ports in Guest.
+> 
+> I guess maybe this refers to set_pcie_hotplug_bridge(), which checks
+> PCI_EXP_SLTCAP_HPC?  If it's not set, pciehp won't bind to the
+> device.
+> This behavior is the same in Host and Guest.
+> 
+> > The values copied in vmd_copy_host_bridge_flags are different in
+> > Host
+> > than in Guest. I do not know what component is responsible for this
+> > in
+> > every HyperVisor. But I tested this in ESXi, HyperV, KVM and they
+> > all
+> > had the same behavior where the _OSC flags are set to power-on
+> > default
+> > values of 0 by vmd_copy_host_bridge_flags in Guest OS which is
+> > disabling hotplug.
+> > 
+> > > I assume the guest OS sees a constructed ACPI system (different
+> > > from
+> > > the ACPI environment the host sees), so it sees a PNP0A03 host
+> > > bridge
+> > > with _OSC?  And presumably VMD Root Ports below that host bridge?
+> > > 
+> > > So are you saying the _OSC seen by the guest doesn't grant
+> > > hotplug
+> > > control to the guest OS?  And it doesn't do that because the
+> > > guest
+> > > BIOS hasn't implemented _OSC?  Or maybe the guest BIOS relies on
+> > > the
+> > > Slot Capabilities registers of VMD Root Ports to decide whether
+> > > _OSC
+> > > should grant hotplug control?  And those Slot Capabilities don't
+> > > advertise hotplug support?
+> > 
+> > Currently Hotplug is controlled by _OSC in both host and Guest. In
+> > case
+> > of guest, it seems guest BIOS hasn't implemented _OSC since all the
+> > flags are set to 0 which is not the case in host.
+> 
+> I think you want pciehp to work on the VMD Root Ports in the Guest,
+> no matter what, on the assumption that any _OSC that applies to host
+> bridge A does not apply to the host bridge created by the vmd driver.
+> 
+> If so, we should just revert 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC
+> on PCIe features").  Since host bridge B was not enumerated via ACPI,
+> the OS owns all those features under B by default, so reverting
+> 04b12ef163d1 would leave that state.
+> 
+> Obviously we'd have to first figure out another solution for the AER
+> message flood that 04b12ef163d1 resolved.
+Hi Bjorn,
 
-@Lorenzo:
+If we revert 04b12ef163d1, then VMD driver will still enable AER
+blindly which is a bug. So we need to find a way to make VMD driver
+aware of AER platform setting and use that information to enable or
+disable AER for its child devices.
 
-   Could you please pick up these patches? Mani already reviewed and only
-impact layerscape platform.
+There is a setting in BIOS that allows us to enable OS native AER
+support on the platform. This setting is located in EDK Menu ->
+Platform configuration -> system event log -> IIO error enabling -> OS
+native AER support.
 
-Frank
+This setting is assigned to VMD bridge by vmd_copy_host_bridge_flags in
+patch 04b12ef163d1. Without the patch 04b12ef163d1, VMD driver will
+enable AER even if platform has disabled OS native AER support as
+mentioned earlier. This will result in an AER flood mentioned in 04b12e
+f163d1 since there is no AER handlers. 
 
-> ---
+I believe the rate limit will not alone fix the issue rather will act
+as a work around. If VMD is aware of OS native AER support setting,
+then we will not see AER flooding issue.
+
+Do you have any suggestion on how to make VMD driver aware of AER
+setting and keep it in sync with platform setting.
+
+Thanks
+nirmal
 > 
-> Notes:
->     Chagne from v5 to v6
->     - none
->     Change from v4 to v5
->     - update commit message
->     - use comments
->     /* Reset the PEX wrapper to bring the link out of L2 */
->     
->     Change from v3 to v4
->     - Call scfg_pcie_send_turnoff_msg() shared with ls1021a
->     - update commit message
->     
->     Change from v2 to v3
->     - Remove ls_pcie_lut_readl(writel) function
->     
->     Change from v1 to v2
->     - Update subject 'a' to 'A'
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c | 63 ++++++++++++++++++++-
->  1 file changed, 62 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index f3dfb70066fb7..7cdada200de7e 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -41,6 +41,15 @@
->  #define SCFG_PEXSFTRSTCR	0x190
->  #define PEXSR(idx)		BIT(idx)
->  
-> +/* LS1043A PEX PME control register */
-> +#define SCFG_PEXPMECR		0x144
-> +#define PEXPME(idx)		BIT(31 - (idx) * 4)
-> +
-> +/* LS1043A PEX LUT debug register */
-> +#define LS_PCIE_LDBG	0x7fc
-> +#define LDBG_SR		BIT(30)
-> +#define LDBG_WE		BIT(31)
-> +
->  #define PCIE_IATU_NUM		6
->  
->  struct ls_pcie_drvdata {
-> @@ -224,6 +233,45 @@ static int ls1021a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
->  	return scfg_pcie_exit_from_l2(pcie->scfg, SCFG_PEXSFTRSTCR, PEXSR(pcie->index));
->  }
->  
-> +static void ls1043a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +
-> +	scfg_pcie_send_turnoff_msg(pcie->scfg, SCFG_PEXPMECR, PEXPME(pcie->index));
-> +}
-> +
-> +static int ls1043a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	u32 val;
-> +
-> +	/*
-> +	 * Reset the PEX wrapper to bring the link out of L2.
-> +	 * LDBG_WE: allows the user to have write access to the PEXDBG[SR] for both setting and
-> +	 *	    clearing the soft reset on the PEX module.
-> +	 * LDBG_SR: When SR is set to 1, the PEX module enters soft reset.
-> +	 */
-> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val |= LDBG_WE;
-> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val |= LDBG_SR;
-> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val &= ~LDBG_SR;
-> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
-> +	val &= ~LDBG_WE;
-> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
->  	.host_init = ls_pcie_host_init,
->  	.pme_turn_off = ls_pcie_send_turnoff_msg,
-> @@ -241,6 +289,19 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
->  	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
->  };
->  
-> +static const struct dw_pcie_host_ops ls1043a_pcie_host_ops = {
-> +	.host_init = ls_pcie_host_init,
-> +	.pme_turn_off = ls1043a_pcie_send_turnoff_msg,
-> +};
-> +
-> +static const struct ls_pcie_drvdata ls1043a_drvdata = {
-> +	.pf_lut_off = 0x10000,
-> +	.pm_support = true,
-> +	.scfg_support = true,
-> +	.ops = &ls1043a_pcie_host_ops,
-> +	.exit_from_l2 = ls1043a_pcie_exit_from_l2,
-> +};
-> +
->  static const struct ls_pcie_drvdata layerscape_drvdata = {
->  	.pf_lut_off = 0xc0000,
->  	.pm_support = true,
-> @@ -252,7 +313,7 @@ static const struct of_device_id ls_pcie_of_match[] = {
->  	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
->  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
->  	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
-> -	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
-> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043a_drvdata },
->  	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
->  	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
->  	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
-> -- 
-> 2.34.1
-> 
+> > VMD is passthrough in Guest so the slot capabilities registers are
+> > still same as what Host driver would see. That is how we can still
+> > control hotplug on vmd on both Guest and Host.
+> > > "... which results in assigning default values and disabling
+> > > Hotplug
+> > > capability in the guest."  What default values are these?
+> > 
+> > 0. Everything is disabled in guest. So basically _OSC is writing
+> > wrong
+> > values in guest.
+> > 
+> > > Is this talking about the default host_bridge-
+> > > >native_pcie_hotplug
+> > > value set in acpi_pci_root_create(), where the OS assumes hotplug
+> > > is owned by the platform unless _OSC grants control to the OS?
+> > 
+> > vmd driver calls pci_create_root_bus which eventually ends up
+> > calling pci_init_host_bridge where native_pcie_hotplug is set to 1.
+> > Now vmd_copy_host_bridge_flags overwrites the native_pcie_hotplug
+> > to
+> > _OSC setting of 0 in guest.
+> > 
+> > > > VMD Hotplug can be enabled or disabled based on the VMD
+> > > > rootports' Hotplug configuration in BIOS. is_hotplug_bridge is
+> > > > set on each VMD rootport based on Hotplug capable bit in SltCap
+> > > > in probe.c.  Check is_hotplug_bridge and enable or disable
+> > > > native_pcie_hotplug based on that value.
+> > > > 
+> > > > This patch will make sure that Hotplug is enabled properly in
+> > > > Host as well as in VM while honoring _OSC settings as well as
+> > > > VMD hotplug setting.
+> > > 
+> > > "Hotplug is enabled properly in Host as well as in VM" sounds
+> > > like
+> > > we're talking about both the host OS and the guest OS.
+> > 
+> > Yes. VM means guest.
+> > > In the host OS, this overrides whatever was negotiated via _OSC,
+> > > I
+> > > guess on the principle that _OSC doesn't apply because the host
+> > > BIOS
+> > > doesn't know about the Root Ports below the VMD.  (I'm not sure
+> > > it's
+> > > 100% resolved that _OSC doesn't apply to them, so we should
+> > > mention
+> > > that assumption here.)
+> > 
+> > _OSC still controls every flag including Hotplug. I have observed
+> > that slot capabilities register has hotplug enabled only when
+> > platform has enabled the hotplug. So technically not overriding it
+> > in the host.
+> > 
+> > It overrides in guest because _OSC is passing wrong/different
+> > information than the _OSC information in Host.  Also like I
+> > mentioned, slot capabilities registers are not changed in Guest
+> > because vmd is passthrough.
+> > > In the guest OS, this still overrides whatever was negotiated via
+> > > _OSC, but presumably the guest BIOS *does* know about the Root
+> > > Ports, so I don't think the same principle about overriding _OSC
+> > > applies there.
+> > > 
+> > > I think it's still a problem that we handle
+> > > host_bridge->native_pcie_hotplug differently than all the other
+> > > features negotiated via _OSC.  We should at least explain this
+> > > somehow.
+> > 
+> > Right now this is the only way to know in Guest OS if platform has
+> > enabled Hotplug or not. We have many customers complaining about
+> > Hotplug being broken in Guest. So just trying to honor _OSC but
+> > also
+> > fixing its limitation in Guest.
+> > > I suspect part of the reason for doing it differently is to avoid
+> > > the interrupt storm that we avoid via 04b12ef163d1 ("PCI: vmd:
+> > > Honor ACPI _OSC on PCIe features").  If so, I think 04b12ef163d1
+> > > should be mentioned here because it's an important piece of the
+> > > picture.
+> > 
+> > I can add a note about this patch as well. Let me know if you want
+> > me to add something specific.
+> > 
+> > Thank you for taking the time. This is a very critical issue for us
+> > and we have many customers complaining about it, I would appreciate
+> > to get it resolved as soon as possible.
+> > > > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > > > ---
+> > > > v1->v2: Updating commit message.
+> > > > ---
+> > > >  drivers/pci/controller/vmd.c | 11 ++++++++++-
+> > > >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/vmd.c
+> > > > b/drivers/pci/controller/vmd.c
+> > > > index 769eedeb8802..e39eaef5549a 100644
+> > > > --- a/drivers/pci/controller/vmd.c
+> > > > +++ b/drivers/pci/controller/vmd.c
+> > > > @@ -720,6 +720,7 @@ static int vmd_enable_domain(struct vmd_dev
+> > > > *vmd, unsigned long features)
+> > > >  	resource_size_t membar2_offset = 0x2000;
+> > > >  	struct pci_bus *child;
+> > > >  	struct pci_dev *dev;
+> > > > +	struct pci_host_bridge *vmd_bridge;
+> > > >  	int ret;
+> > > >  
+> > > >  	/*
+> > > > @@ -886,8 +887,16 @@ static int vmd_enable_domain(struct
+> > > > vmd_dev
+> > > > *vmd, unsigned long features)
+> > > >  	 * and will fail pcie_bus_configure_settings() early.
+> > > > It can
+> > > > instead be
+> > > >  	 * run on each of the real root ports.
+> > > >  	 */
+> > > > -	list_for_each_entry(child, &vmd->bus->children, node)
+> > > > +	vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
+> > > > +	list_for_each_entry(child, &vmd->bus->children, node) {
+> > > >  		pcie_bus_configure_settings(child);
+> > > > +		/*
+> > > > +		 * When Hotplug is enabled on vmd root-port,
+> > > > enable it
+> > > > on vmd
+> > > > +		 * bridge.
+> > > > +		 */
+> > > > +		if (child->self->is_hotplug_bridge)
+> > > > +			vmd_bridge->native_pcie_hotplug = 1;
+> > > 
+> > > "is_hotplug_bridge" basically means PCI_EXP_SLTCAP_HPC is set,
+> > > which
+> > > means "the hardware of this slot is hot-plug *capable*."
+> > > 
+> > > Whether hotplug is *enabled* is a separate policy decision about
+> > > whether the OS is allowed to operate the hotplug functionality,
+> > > so I
+> > > think saying "When Hotplug is enabled" in the comment is a little
+> > > bit
+> > > misleading.
+> > 
+> > I will rewrite the comment.
+> > > Bjorn
+> > > 
+> > > > +	}
+> > > >  
+> > > >  	pci_bus_add_devices(vmd->bus);
+> > > >  
+> > > > -- 
+> > > > 2.31.1
+> > > > 
+
 
