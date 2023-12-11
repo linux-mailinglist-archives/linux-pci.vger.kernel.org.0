@@ -1,81 +1,66 @@
-Return-Path: <linux-pci+bounces-771-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26E8080DDC5
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 23:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EAE5280DDDD
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 23:07:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4AF801C214D6
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 22:01:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 021651C21466
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 22:07:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5F95576D;
-	Mon, 11 Dec 2023 22:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC6FF54FB4;
+	Mon, 11 Dec 2023 22:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Uyx+Pydm"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M4bZhIrE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2064.outbound.protection.outlook.com [40.107.241.64])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E187FAF;
-	Mon, 11 Dec 2023 14:00:33 -0800 (PST)
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2046.outbound.protection.outlook.com [40.107.105.46])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A71A1;
+	Mon, 11 Dec 2023 14:06:54 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XL7iaDeH1wh6bHmdHVnXBkUjzywulcFHPt/eob+glaVirvagRzV6Kz95kYu/ama0ykfL41fNadoY1Qgqx1KBrRHtUwyuZtACCfsFwDsyJeXPLzilP9ROj365j+WROi3XdBsNFM6rZ/zH2E59Mktzjia7jgaSrP2+7Z3UKwogstaqk2GVk6Ski9To/hqD6MbchiuUmQb0hnoDtaaBLRVicyXv8X75EfHNgeSEXY+hH4WW6+Di57T2fdnIiqmBgV/MDR08FDOQX7fnErCNojsNko+TF/peFnueDa9lGGPGYOEBNmx5juNoIHNnCmviaql5ZvrWm1tPQg6R9zVVg1LB0Q==
+ b=ZwTuwXBOLzgEOhMVu5kMzpi8buAhexHuylTpgyUZDlfRo03xNFMvUhK/YJjDpOtBKn5P9YY1DxTJe8hjTJUSIzayNhJheXqUAP7vX4U3dwjIPHzbcoF7jVTO9zMmz4v0M+mT3F/FOJlKvumPiYM24POFtAumQNsXUThLEVaxz1PZPx01W43x500b949Cqh4usJTlqW7M93LBYzLtPlryrKHyavnYcrbNpBZXUjtbw8N5LfIc0daceLICpWIxGCW1/jSpG/ZhKjfSjuVx+ULIuDOXupOZF5HFRTTe5fh1VYEHdTnRYp9ERd2DwHW69k4rZSrQs6u0b6iQ+usptGZ3gQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VDsMDJjPLgKGyfutpDbYr5Dtxeplfku8pilICDnyv5c=;
- b=ivLjLa48IDgfNXXkzBnAtIB474bgHjauEAQEHjj3xe9Ugzy4MGkAZNK8wQj8YGBj9YKLr5YZ5oVdFfepL8wF35ychvoOwuFROvmke9OV2H7QIKfhcPE+oLIW/NoAUjpM5PbTF+nKMku39P6UDCKh6SVzLC9NIH3bSFfUwj1obapYO5q6vLlslG9+aNPoXaU+51zYJbVFcWkmuM1q6bg3f2s+NUxV+CeA58TinmMfh/Yu4545GOIb2GHsRR6jjwRS1sut4r2pmGY5lwaLKa8RC6l6s87cQ5mAowkPK5Gu70OTTYd+JyqK4HTDJQy5EZBH3O2v3NF2IORbehslDqkx0w==
+ bh=wjs40/uZk9IiiJF2cbAEQhEIX+HPt7jr4ZHqwjyGQe8=;
+ b=DaV9NN3UQXbh8G/MB+pMiN3LFaf3m0Eq2kLBpu/gL7P7JE/ysyM10MlLwWiA3kzOiijcPSt+uI9ifFeZOjpWDDZFAm6IyA5/hq1hJvMLTVblJFp9YDZlhW9//FyHk1K4bKzn67SrUpA73swhfhnBkyT6UddKG8Fs7Os0XVCrDZ0FJ7LkcG5kVtrlcDBovIwlezNUSMQhlCf1tmLlwIVLWT7ldRiLwG7sNLRLtK0fbjhPmy3TUO7e+CZlWoK5SQgVtWoYEsDc8lwSbXqykOJfdp0k2G5nMKynw/YWgAZYTxJfX9jDEaZG8HQK7/cP+zHT2E+1dVL1VnpDXwKXiSKI+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VDsMDJjPLgKGyfutpDbYr5Dtxeplfku8pilICDnyv5c=;
- b=Uyx+PydmLk3omO6PZ3PQ5Y1jgxxvV8TM18u2dcUNhA1/sFngNJFtIeK+VZFleoFHnIRnFyqxkWBeEP9sItLHQ9zCsULtQdtl/9AgbIUDDQKgRkKxQKO3EHPKkBd9ufS+wMjeZjiaC6kf9FZ+gBNY1LjzZyEwGl0sAom7ub1BBRI=
+ bh=wjs40/uZk9IiiJF2cbAEQhEIX+HPt7jr4ZHqwjyGQe8=;
+ b=M4bZhIrEBO6HyiMMZG9gwjDerNOUtd7ZcTi2KTB5jAa05tzBEddgwebDhFJP2luDF04haAlMlkPSjjLdtQIjcvFmE5vgze4Rjc+rO1jcFn96CGq+/VOwN9q8AlFrU+0kYyU+GREGXeQMGRxbqf6yvhZW6SvPHWluslnNWVRf71c=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from VI1PR04MB4845.eurprd04.prod.outlook.com (2603:10a6:803:51::30)
  by PAWPR04MB9717.eurprd04.prod.outlook.com (2603:10a6:102:380::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.29; Mon, 11 Dec
- 2023 22:00:30 +0000
+ 2023 22:06:51 +0000
 Received: from VI1PR04MB4845.eurprd04.prod.outlook.com
  ([fe80::dfaa:e869:45eb:76e5]) by VI1PR04MB4845.eurprd04.prod.outlook.com
  ([fe80::dfaa:e869:45eb:76e5%6]) with mapi id 15.20.7068.031; Mon, 11 Dec 2023
- 22:00:30 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: frank.li@nxp.com
-Cc: bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	festevam@gmail.com,
-	helgaas@kernel.org,
-	hongxing.zhu@nxp.com,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org,
-	kw@linux.com,
-	l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	s.hauer@pengutronix.de,
-	shawnguo@kernel.org
-Subject: [PATCH v3 13/13] PCI: imx6: Add iMX95 Endpoint (EP) function support
-Date: Mon, 11 Dec 2023 16:58:42 -0500
-Message-Id: <20231211215842.134823-14-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231211215842.134823-1-Frank.Li@nxp.com>
-References: <20231211215842.134823-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0009.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::14) To VI1PR04MB4845.eurprd04.prod.outlook.com
- (2603:10a6:803:51::30)
+ 22:06:51 +0000
+Date: Mon, 11 Dec 2023 17:06:42 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: manivannan.sadhasivam@linaro.org
+Cc: bhelgaas@google.com, imx@lists.linux.dev, kw@linux.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	lpieralisi@kernel.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+	robh@kernel.org, roy.zang@nxp.com
+Subject: Re: [PATCH v6 4/4] PCI: layerscape: Add suspend/resume for ls1043a
+Message-ID: <ZXeH8nF4KoC0gKg2@lizhi-Precision-Tower-5810>
+References: <20231204160829.2498703-1-Frank.Li@nxp.com>
+ <20231204160829.2498703-5-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231204160829.2498703-5-Frank.Li@nxp.com>
+X-ClientProxiedBy: SN7PR04CA0188.namprd04.prod.outlook.com
+ (2603:10b6:806:126::13) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,174 +69,199 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VI1PR04MB4845:EE_|PAWPR04MB9717:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f3dea97-6807-4ed4-5e18-08dbfa94972c
+X-MS-Office365-Filtering-Correlation-Id: 56ff6995-e5a7-4c00-123e-08dbfa9579ac
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	dp+P0XzFMITKLIJ7Wf/KsBJH9cC0JHUMZkBf/RkIdQ56zyYlyPpTnyvg3UEYq2JyuPwGqio307DArGQOOz8lxMI58cxtdlgyHSGiziTAXjtPaW1Qqys4xNb8Gy1IXUICvBo7fB6YuORHpXnb7YeWDASwd+gC6k1DnM+dVBubCCp7LL/pcDQsZGhbCkDINJopXbKu8iQ6BdSmV0HMe6zvmR+OlGG3vzKUY2zSJMnNO04gr/Lg9rHMhvBDIG64zNOqA/Ea8vMsBhAK4QaVxsdFr8+qWW98eX+s30rX4nD9Kxv5U+YCt6OPpKkADUKJmroa0rPvIdU66jpYimFrD/ZyH4q7sM0/kqD/DS6k6i/eEzoMRFSJzvr1ljUQmPU4YUkaYQSqLxhLCB2S5QP9k0CrIFglBMykiDkk/FHjLQ5dLTuU7nu46xFCrbahiP0qHm67sk3bZWiPukmHbK51l7w42G72U/J3l68V8sdf098UAo/EJWB56xhSD/5KjDVmRsmS7ACaMKz9QnDwsiXkzYl68Z0+NRRmXJejsdDR1bQqDlLdG0796qlE4QjISTgAPF99QGWNtqh8fwyM0R2eAWYvuh6BgzDQGSI+On4V+06ifcb32GauViccMffxAEgWx58D
+	apliFr3Bho9l7AJeF2eoMWR8enCCLhvdBwZDl2uHmHGXJ7Jw3V21CSrTIPWI8q2A6pQ7nar8RG3Gpn+Pkh0tKWT+wD5N3jr4byGkaq1lOLwK4zRiziNJ4GJTCgS4ZhYmEJyHqr4oZNSsOG8vBCXRXDSUXZIMgdcn5au52A8DaHUTj7y0MDrDjJf4zxV+wUHnvCAHiPKNhYmIuND89Ylyjhuh+A+OpRncYQEHWy1hCvgTlZcTDEH8SKep8WIP/Jc6oYTFx3OSGoFv6YswkYbcUAiExoytIybjx+4aBHT4DEep7nxZVGu8d1BYbmbCsxYJq1mh3i0nxnD0Jg19yEnszu4KozYul7gHi7W/67tJW5Yrnci4tOR5WxulPYAEINuZIg1Fau5V9xhugbjvIf+rGpa5PpXB48wkXBmnqzJgeghOrK/0C9jTJV6RafAaRbna0s/0e01PwVCmrT+wQFpFSANwXQFOlwn+QuMQy07a9BLDywXaPv0tAwiaoOhqQ+M8bvodaN+PTIPyrhudkghcl7KOgHVWLuJdZhsJv/GjQiu+uQoFF9Q6gfCaoG4Nv+pp0IybBTBpKaJfyXyyVYD+CXNizZOVig0/i8eXN7QxkHqg8GicmOHn9rqccaQsi1XP
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4845.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(136003)(396003)(346002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(478600001)(6512007)(1076003)(2616005)(6506007)(52116002)(6666004)(26005)(38350700005)(38100700002)(86362001)(36756003)(5660300002)(66556008)(66946007)(7416002)(41300700001)(2906002)(6486002)(66476007)(8936002)(8676002)(316002)(4326008)(34206002)(37006003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4845.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(39860400002)(136003)(396003)(346002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(478600001)(6512007)(9686003)(6506007)(52116002)(6666004)(26005)(38350700005)(38100700002)(86362001)(5660300002)(66556008)(66946007)(7416002)(41300700001)(33716001)(2906002)(15650500001)(6486002)(83380400001)(66476007)(8936002)(8676002)(316002)(4326008)(6916009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?syv46mRJQ3XpRPPB5UZ1EOtzmxa2pWkcz6EWveqDWQ/Zubne2ODMxjPIqtmr?=
- =?us-ascii?Q?uKeAvaALR4n04GFWKcKIrm0/NJcoe42p8mdsHPQ7RnMX2Sm1rdpuxMNr2Pto?=
- =?us-ascii?Q?R26Hto4FLxLjLou3sj6WzLUkcR/biDJeNZ5a4lP5N5hWKukn9RhhFhDKag2g?=
- =?us-ascii?Q?liOotzJxwVjBHonpVCGSYyYDtXwQDXf8dOdjx8O3EmnUQSpzPT98oI4ft2Is?=
- =?us-ascii?Q?ZQ7ouCL+nhDkLUkDijR3oMX6Q74Ag54IwQ0T6qQ9f9mSJzeEGA8q/ZcxKMnc?=
- =?us-ascii?Q?m8cia8jaiTKK9lqnHlxWyIrhmRzJ5pxo1nlsUVWaOlBwoTshzWZ1S39Fyw3m?=
- =?us-ascii?Q?k2MPlATe9OulycfPI4XwTcHhUNDaqRziqp3iqUAJPRD/1iQtCr1ayjYevaVL?=
- =?us-ascii?Q?7ips1Uqr5WHkaK8fQDoILe0A0aqildnknOew19C6HTEH4tyBU6h505t3D1dQ?=
- =?us-ascii?Q?Z7+Di2O3/96PJevJBSuzpHLRk/yGuE+oU2YpYaUkrFgsCO8bnd78pr+aX7SV?=
- =?us-ascii?Q?6Ubt0xQBLbPDfReqYeYTpPt9No3bcbpYSOMrxcn6k8TRYGXCaVpR6qITkfid?=
- =?us-ascii?Q?N2RtSfTL/ozYYP3SL1n25h6orzcmK+Z6jPjSkI+9dcob7VdmztWgdTLXnDvM?=
- =?us-ascii?Q?njh7Cotmoocn9llj0TDU247Tccnf5YGpAmSfO1TpuowRtEHXT3ivkQyjTTee?=
- =?us-ascii?Q?yv1NQdxZ6OhrbWzyJiXrOO3tuwb1yyfD6L8wq7jgIyj2qR6hW7qvBBlJn7Oo?=
- =?us-ascii?Q?09FqVkmTRLQqWOf6IDMadK5yE4pvm+zlwL+li0TZirQ7FUG8oxUjKGPDTZX1?=
- =?us-ascii?Q?wry6BDM4GGu5KrzstbKoeVPHOKWhoUwplfFTLFudJ4VQI0gCq5QrPapPtWPm?=
- =?us-ascii?Q?5l7dnMcIXecADdn9kKs8JliPDh9ylUCsS5AForv4wa+xwbdae1Iv1ElpLFKd?=
- =?us-ascii?Q?vsVUq0gq2Q0887vKe3f0OHwwL0nGgSPHTUNwbkQqCH4QyVYJRTPlc7y2IyH0?=
- =?us-ascii?Q?lvartHSFIKtXAjQgLVTxFbBU6lVNPsebIKDyKrXwBYJJ+HlhZCC8W9+0B8hx?=
- =?us-ascii?Q?pO2N00YtF61mjm8ciyLVRzlVN4x+cZW21e27xkbMkCVoNLP8Po7I0E5XjhY+?=
- =?us-ascii?Q?Y+EdWWUswrYTQqWxhv2WNzgoOJYbO5/aclf1hIGv5wwTiCjrsgqbx3R64iol?=
- =?us-ascii?Q?HGIrzYaEURUkXb+Cmp0P4uMHh9oEm9s+P+QCqP6BoZjgbSGg82I33ePgnOkx?=
- =?us-ascii?Q?HSd0iMA3uUqJHPOOqQLpz1uLjyzXyY1GWKYGv9LUsk3/WrsmKfKbT8yj2aDZ?=
- =?us-ascii?Q?+CNnpVYeWAbjM3ydRDlFZm2P/l0fMoHUldU/ue8rNQktT8XKlVnlf2IaWO6L?=
- =?us-ascii?Q?JzJ2Wz4QzHtHgFSK12Pu2MDUKsF/a7FH+7A+s7O0q0FNNFKVhYCKbhMVkAdq?=
- =?us-ascii?Q?HdXgiHG66bZMyX3wAyutNBLaH5gwKuyw0VZWirJ5fT9ZCyM4IlVxsq0DdSKy?=
- =?us-ascii?Q?E7dwfPO6cN5q6HsXEEpwOzVw5lBHTadZJknVWDdYcnvV+Hxxn5AntxoyIMjy?=
- =?us-ascii?Q?KhiNN9dR9dBrRkSY28xekuwk+asIbjbDntgbglqL?=
+	=?us-ascii?Q?UDdRK7biXrSL+95jl/Vidi167MCo0Y3bsVlwvsaovoXcFekPLL7dSWGUKqyd?=
+ =?us-ascii?Q?3+ktaG3fezEL8DmLMABwzrj6H7I8CUHJHcvc2HSw0HGro+P9pn11uwcu8BGr?=
+ =?us-ascii?Q?eLNr0pvzuHWg6SNafJxJWyjarbLnfIyexFoETLM15Aafw71o0MB3UBhO4nrk?=
+ =?us-ascii?Q?VlVRDn1hvI0ezfaLc0P3e3EcqAXI+fKV4+0pCuvEhLmorokWG/Uakw+poIKV?=
+ =?us-ascii?Q?XvjxYxzG9uznvxrRI3ednDEcYiFYD99Dtr6k7MDy/AOxBUIgM57rmmv+CdEq?=
+ =?us-ascii?Q?+uCU1Gz8fIJjmGemYuXLuqL4hP5mFFlC9is7+wXmO7UJs1Ab36sP3dXHuf1X?=
+ =?us-ascii?Q?tctelaOxSRpm0ZnbQN2DUVvwmwef0IvWwlxhwED/QHx/TtGGlwslPe/qGDl8?=
+ =?us-ascii?Q?Pkg+oCfy3lLurfCRcLidkH4LXWmn22gr18leY5V6kt3M93cUsj7OfN+rIPtk?=
+ =?us-ascii?Q?wA0EMHjXDCfg0UYwk+amLTxuAXZjz83QlC/diRaITmSO5KH8kXvF3faJeXZj?=
+ =?us-ascii?Q?3GIGWUVjOOny1gPmxbI0TiOrlG8ln7VEBZxRa8a0XgQhB8R1Mrd65KjhOWtV?=
+ =?us-ascii?Q?xbyDSlyGILNpSWEZ2qNNGrWeepD3zL22ZJlvvog99MyXhXlmlLoOvam8gbuQ?=
+ =?us-ascii?Q?+5dJOvEToR+6mvMpVfFF/4RSxW3eFsV3ZDMiCSoiRZ2MleHvaNzm7YhNppmH?=
+ =?us-ascii?Q?BfBrdkt24f3teScj3/v423MXAJxnIWNXXm5k8gjjCcQ305iJS4l2DErlWTF6?=
+ =?us-ascii?Q?9UtMiCTDRHkHle70QG+wUs97h96LgMJkmk83DtRFxvDUlb0JtTDai/YaiXgV?=
+ =?us-ascii?Q?379D2kBhp4q89vTCTrs4aOERdDOVDI+q4DIWEKjP+hwK0esoWwimvhpS0AvH?=
+ =?us-ascii?Q?zH1l2XcxZLX67CSwlSgsrVC6AkAwlNHamypMMY4SR9lyV42N927CCxjsg2cy?=
+ =?us-ascii?Q?KclDGt3l9QF8h+7CXczI0nRUMR786pnVkBBnhaNL/+Z2n0E01d36WRuQ9hDq?=
+ =?us-ascii?Q?RRi/faZkPKbmD7PyUvB4YjE01OD+lM2vvG1Wv42UiLygf8GuIMXNlqOvIpQ9?=
+ =?us-ascii?Q?30OZ0PMaTRLTL1EeMdlgCKLZGsupigi7n5Rzt/cFSVozQkgbWgcf2Pd2d6y2?=
+ =?us-ascii?Q?PqZ7n3hASiPDAMRHeuKbvh+bA9q0gU9H3v/SCB3j0iiBOaCD9KR5hWBdofoj?=
+ =?us-ascii?Q?VV5CYW/2R9pWupZg3utFuJfnsW7R+3llc9kEMNo1Ga1pPu8pTkjdZOMQS7x3?=
+ =?us-ascii?Q?68JbrIBN5OUiYsvYrpxeQ+ikktJjwHi2LB1/E7flI1azkGSFwDAQUbbTukAE?=
+ =?us-ascii?Q?u8PZRr3JzJC7w1MJizM3kvAdMTtX+OufGyH3XUBdt3lh+iTRqE3ixEFZqVwY?=
+ =?us-ascii?Q?/z/NyaskWu9wp4pYpDor118twvQCxa0HI9k1vb7LDW5SZGIWgX/RzalzYXnc?=
+ =?us-ascii?Q?lzDho2/IPy0kydLvSMV19bIPNSdBDvUhDiV6EHpzXhj+5fSugKohXeGnydtJ?=
+ =?us-ascii?Q?RRmF2jFGwlnmvIgEF6+5ajq7ykO3JB9GtpOXniB8ItOCkNDf2vK9cP80mCV4?=
+ =?us-ascii?Q?+fdylVd4jBmD1GDTZM8=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f3dea97-6807-4ed4-5e18-08dbfa94972c
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4845.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56ff6995-e5a7-4c00-123e-08dbfa9579ac
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 22:00:30.3430
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 22:06:51.1176
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GrTVNfV54qIgVmQxTDg1xJayqvSp3dKE8ij1TA1sdFXF/BM+fZqh+em7Hp4mqxchKGdrkX6otuoYpc15VnvD8w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: tppendVPIzLSVhUnZ4SXyJSK835MNuzMwiUKI2br810+rgufN1N+7X0ZotpfzUUAbF02RT4QnXCy3mnEKeP40A==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9717
 
-Add iMX95 EP function support and add 64bit address support. Internal bus
-bridge for PCI support 64bit dma address in iMX95. So set call
-dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)).
+On Mon, Dec 04, 2023 at 11:08:29AM -0500, Frank Li wrote:
+> Add suspend/resume support for Layerscape LS1043a.
+> 
+> In the suspend path, PME_Turn_Off message is sent to the endpoint to
+> transition the link to L2/L3_Ready state. In this SoC, there is no way to
+> check if the controller has received the PME_To_Ack from the endpoint or
+> not. So to be on the safer side, the driver just waits for
+> PCIE_PME_TO_L2_TIMEOUT_US before asserting the SoC specific PMXMTTURNOFF
+> bit to complete the PME_Turn_Off handshake. Then the link would enter L2/L3
+> state depending on the VAUX supply.
+> 
+> In the resume path, the link is brought back from L2 to L0 by doing a
+> software reset.
+> 
+> Acked-by: Roy Zang <Roy.Zang@nxp.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+@Lorenzo:
 
-Notes:
-    Change from v1 to v3
-    - new patches at v3
+   Could you please pick up these patches? Mani already reviewed and only
+impact layerscape platform.
 
- drivers/pci/controller/dwc/pci-imx6.c | 44 +++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Frank
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 8fe66d3e947a6..31df682432e24 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -76,6 +76,7 @@ enum imx6_pcie_variants {
- 	IMX8MQ_EP,
- 	IMX8MM_EP,
- 	IMX8MP_EP,
-+	IMX95_EP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -87,6 +88,7 @@ enum imx6_pcie_variants {
- #define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(6)
- #define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(7)
- #define IMX6_PCIE_FLAG_HAS_SERDES		BIT(8)
-+#define IMX6_PCIE_FLAG_SUPPORT_64BIT		BIT(9)
- 
- #define imx6_check_flag(pci, val)	(pci->drvdata->flags & val)
- 
-@@ -630,6 +632,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX7D:
- 	case IMX95:
-+	case IMX95_EP:
- 		break;
- 	case IMX8MM:
- 	case IMX8MM_EP:
-@@ -1099,6 +1102,23 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
- 	.align = SZ_64K,
- };
- 
-+/*
-+ * BAR#	| Default BAR enable	| Default BAR Type	| Default BAR Size	| BAR Sizing Scheme
-+ * ================================================================================================
-+ * BAR0	| Enable		| 64-bit		| 1 MB			| Programmable Size
-+ * BAR1	| Disable		| 32-bit		| 64 KB			| Fixed Size
-+ *	| (BAR0 is 64-bit)	| if BAR0 is 32-bit	|			| As Bar0 is 64bit
-+ * BAR2	| Enable		| 32-bit		| 1 MB			| Programmable Size
-+ * BAR3	| Enable		| 32-bit		| 64 KB			| Programmable Size
-+ * BAR4	| Enable		| 32-bit		| 1M			| Programmable Size
-+ * BAR5	| Enable		| 32-bit		| 64 KB			| Programmable Size
-+ */
-+static const struct pci_epc_features imx95_pcie_epc_features = {
-+	.msi_capable = false,
-+	.bar_fixed_size[1] = SZ_64K,
-+	.align = SZ_64K,
-+};
-+
- static const struct pci_epc_features*
- imx6_pcie_ep_get_features(struct dw_pcie_ep *ep)
- {
-@@ -1141,6 +1161,14 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
- 
- 	pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
- 
-+	/*
-+	 * db2 information should fetch from dtb file. dw_pcie_ep_init() can get dbi_base2 from
-+	 * "dbi2" if pci->dbi_base2 is NULL. All code related pcie_dbi2_offset should be removed
-+	 * after all dts added "dbi2" reg.
-+	 */
-+	if (imx6_pcie->drvdata->variant == IMX95_EP)
-+		pci->dbi_base2 = NULL;
-+
- 	ret = dw_pcie_ep_init(ep);
- 	if (ret) {
- 		dev_err(dev, "failed to initialize endpoint\n");
-@@ -1417,6 +1445,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 					     "unable to find iomuxc registers\n");
- 	}
- 
-+	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_SUPPORT_64BIT))
-+		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+
- 	/* Grab PCIe PHY Tx Settings */
- 	if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
- 				 &imx6_pcie->tx_deemph_gen1))
-@@ -1614,6 +1645,18 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
- 		.epc_features = &imx8m_pcie_epc_features,
- 	},
-+	[IMX95_EP] = {
-+		.variant = IMX95_EP,
-+		.flags = IMX6_PCIE_FLAG_HAS_CLK_AUX | IMX6_PCIE_FLAG_HAS_SERDES |
-+			 IMX6_PCIE_FLAG_SUPPORT_64BIT,
-+		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
-+		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
-+		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
-+		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
-+		.init_phy = imx95_pcie_init_phy,
-+		.epc_features = &imx95_pcie_epc_features,
-+		.mode = DW_PCIE_EP_TYPE,
-+	},
- };
- 
- static const struct of_device_id imx6_pcie_of_match[] = {
-@@ -1628,6 +1671,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
- 	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
- 	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
-+	{ .compatible = "fsl,imx95-pcie-ep", .data = &drvdata[IMX95_EP], },
- 	{},
- };
- 
--- 
-2.34.1
-
+> ---
+> 
+> Notes:
+>     Chagne from v5 to v6
+>     - none
+>     Change from v4 to v5
+>     - update commit message
+>     - use comments
+>     /* Reset the PEX wrapper to bring the link out of L2 */
+>     
+>     Change from v3 to v4
+>     - Call scfg_pcie_send_turnoff_msg() shared with ls1021a
+>     - update commit message
+>     
+>     Change from v2 to v3
+>     - Remove ls_pcie_lut_readl(writel) function
+>     
+>     Change from v1 to v2
+>     - Update subject 'a' to 'A'
+> 
+>  drivers/pci/controller/dwc/pci-layerscape.c | 63 ++++++++++++++++++++-
+>  1 file changed, 62 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index f3dfb70066fb7..7cdada200de7e 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -41,6 +41,15 @@
+>  #define SCFG_PEXSFTRSTCR	0x190
+>  #define PEXSR(idx)		BIT(idx)
+>  
+> +/* LS1043A PEX PME control register */
+> +#define SCFG_PEXPMECR		0x144
+> +#define PEXPME(idx)		BIT(31 - (idx) * 4)
+> +
+> +/* LS1043A PEX LUT debug register */
+> +#define LS_PCIE_LDBG	0x7fc
+> +#define LDBG_SR		BIT(30)
+> +#define LDBG_WE		BIT(31)
+> +
+>  #define PCIE_IATU_NUM		6
+>  
+>  struct ls_pcie_drvdata {
+> @@ -224,6 +233,45 @@ static int ls1021a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+>  	return scfg_pcie_exit_from_l2(pcie->scfg, SCFG_PEXSFTRSTCR, PEXSR(pcie->index));
+>  }
+>  
+> +static void ls1043a_pcie_send_turnoff_msg(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +
+> +	scfg_pcie_send_turnoff_msg(pcie->scfg, SCFG_PEXPMECR, PEXPME(pcie->index));
+> +}
+> +
+> +static int ls1043a_pcie_exit_from_l2(struct dw_pcie_rp *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct ls_pcie *pcie = to_ls_pcie(pci);
+> +	u32 val;
+> +
+> +	/*
+> +	 * Reset the PEX wrapper to bring the link out of L2.
+> +	 * LDBG_WE: allows the user to have write access to the PEXDBG[SR] for both setting and
+> +	 *	    clearing the soft reset on the PEX module.
+> +	 * LDBG_SR: When SR is set to 1, the PEX module enters soft reset.
+> +	 */
+> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val |= LDBG_WE;
+> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val |= LDBG_SR;
+> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val &= ~LDBG_SR;
+> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	val = ls_pcie_pf_lut_readl(pcie, LS_PCIE_LDBG);
+> +	val &= ~LDBG_WE;
+> +	ls_pcie_pf_lut_writel(pcie, LS_PCIE_LDBG, val);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+>  	.host_init = ls_pcie_host_init,
+>  	.pme_turn_off = ls_pcie_send_turnoff_msg,
+> @@ -241,6 +289,19 @@ static const struct ls_pcie_drvdata ls1021a_drvdata = {
+>  	.exit_from_l2 = ls1021a_pcie_exit_from_l2,
+>  };
+>  
+> +static const struct dw_pcie_host_ops ls1043a_pcie_host_ops = {
+> +	.host_init = ls_pcie_host_init,
+> +	.pme_turn_off = ls1043a_pcie_send_turnoff_msg,
+> +};
+> +
+> +static const struct ls_pcie_drvdata ls1043a_drvdata = {
+> +	.pf_lut_off = 0x10000,
+> +	.pm_support = true,
+> +	.scfg_support = true,
+> +	.ops = &ls1043a_pcie_host_ops,
+> +	.exit_from_l2 = ls1043a_pcie_exit_from_l2,
+> +};
+> +
+>  static const struct ls_pcie_drvdata layerscape_drvdata = {
+>  	.pf_lut_off = 0xc0000,
+>  	.pm_support = true,
+> @@ -252,7 +313,7 @@ static const struct of_device_id ls_pcie_of_match[] = {
+>  	{ .compatible = "fsl,ls1012a-pcie", .data = &layerscape_drvdata },
+>  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021a_drvdata },
+>  	{ .compatible = "fsl,ls1028a-pcie", .data = &layerscape_drvdata },
+> -	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1021a_drvdata },
+> +	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043a_drvdata },
+>  	{ .compatible = "fsl,ls1046a-pcie", .data = &layerscape_drvdata },
+>  	{ .compatible = "fsl,ls2080a-pcie", .data = &layerscape_drvdata },
+>  	{ .compatible = "fsl,ls2085a-pcie", .data = &layerscape_drvdata },
+> -- 
+> 2.34.1
+> 
 
