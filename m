@@ -1,227 +1,125 @@
-Return-Path: <linux-pci+bounces-740-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2A6880C3AC
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 09:53:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E0F080C3B9
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 09:57:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2893CB208B2
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 08:53:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C766F1F20FD3
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Dec 2023 08:57:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05DDC1CA9A;
-	Mon, 11 Dec 2023 08:53:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E88210E3;
+	Mon, 11 Dec 2023 08:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PzMBg6dc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bxa2TRUw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF6FD2;
-	Mon, 11 Dec 2023 00:53:18 -0800 (PST)
-X-UUID: b62cd27e980211eeba30773df0976c77-20231211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=w4455XGsMArNWjLmEQ0U4U439b6LEEfP+V6Q0xda3RE=;
-	b=PzMBg6dcZZ/fK0DUbHucQsaJxBilRuIde1WA7s/0rCH3UWAae/sYPJQ50lgt/ODNGCeN+dfRrF5jEvjrc6t/pGftsN/Wr5uELX2bVhZz/wDxSJEN0MmwHZluRLSreBU38FDLSGM6nimGDr76MLKcjmIYm+cFUa9CU8tFRiqbD1E=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:78f004b4-9474-462f-8f89-5712c51aca6d,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:5d391d7,CLOUDID:d82887fd-4a48-46e2-b946-12f04f20af8c,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
-	NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
-X-UUID: b62cd27e980211eeba30773df0976c77-20231211
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <jianjun.wang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1715524657; Mon, 11 Dec 2023 16:53:10 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 11 Dec 2023 16:53:09 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Mon, 11 Dec 2023 16:53:08 +0800
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Marc Zyngier <maz@kernel.org>
-CC: Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
-	<jianjun.wang@mediatek.com>, <linux-pci@vger.kernel.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <jieyy.yang@mediatek.com>,
-	<chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
-	<jian.yang@mediatek.com>, <jianguo.zhang@mediatek.com>
-Subject: [PATCH v2 3/3] PCI: mediatek-gen3: Allocate MSI address with dmam_alloc_coherent()
-Date: Mon, 11 Dec 2023 16:52:56 +0800
-Message-ID: <20231211085256.31292-4-jianjun.wang@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231211085256.31292-1-jianjun.wang@mediatek.com>
-References: <20231211085256.31292-1-jianjun.wang@mediatek.com>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAB4A0
+	for <linux-pci@vger.kernel.org>; Mon, 11 Dec 2023 00:57:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702285029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5LTIUKaVC1eazTIk2UXuAlOz9lK8/aeDlO+nHP2T/TQ=;
+	b=Bxa2TRUwzO/8ykj+l7UzT5gfHArptGEoki7pe/nsR1iY+tzD2BQCAbwgz6wPHZwQ2IVCWt
+	YOvd5a5GWEsbJzfXOzca690iS1Keel7/pblNjA111J6oLGfNW68AAYk82E3FOThKvszImr
+	b0c4ZQ1jkvXC0Vcw5xQCGSIijOhPs48=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-480-QK32VUljPCaBhoVnNkgLPg-1; Mon, 11 Dec 2023 03:57:03 -0500
+X-MC-Unique: QK32VUljPCaBhoVnNkgLPg-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-33343bb5dc2so3573706f8f.0
+        for <linux-pci@vger.kernel.org>; Mon, 11 Dec 2023 00:57:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702285022; x=1702889822;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5LTIUKaVC1eazTIk2UXuAlOz9lK8/aeDlO+nHP2T/TQ=;
+        b=wptKtyiBkKZvST+xibRiGeyUNUKbj9tVIAeO+lxHiv+uadUzXkR+L+PZKp91ROGwT7
+         sKSCzHQ3vrCKaGxQ+towhQWsHwccxuRfh/HbE0Y+1VXQuarTzKCRj74MWwyqIJi5u1q5
+         +dqOPG0hnwTZVOmrn6/vUOUQplKoLbCAm6v3VriJ5nT5YHw7NWQP4dhcHA5V8HOZ6+cM
+         R58d+DWlKdQV9hEkDtrtKVkK+2u/61EaO5Flci16bBgOaXzCbLIqWUwHJKyjC5vj6+4z
+         wFmZmXax91nyegLULAMoB8uncWb0E+g057o3xcNdXqnqGyCpTAIlt5J4Tq+GaXNm1xDN
+         rtJQ==
+X-Gm-Message-State: AOJu0YxfRBVsKy6Ta6vf0q3tAa34Pkj7a5dxqv3OzsGj8dDMSXhaKjQG
+	+VBAulbrhX+I0Jk7FAqN1fe6Hgf+rpxlgsKUvzODdet0PQUjDsLWvZQxAYjO0WAPbF/gsT+3Pmq
+	L2H4LiXtAaf3Kiyg4aDyAsMmZlSlrguI=
+X-Received: by 2002:a5d:4e04:0:b0:333:5448:a524 with SMTP id p4-20020a5d4e04000000b003335448a524mr1817803wrt.70.1702285022061;
+        Mon, 11 Dec 2023 00:57:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFsh9Yv6nd25XsjfPOninxctIiTaXU4lHFkIdNF81q3d42Ndazl+E7oJqr0sqZiOlOLBOy/Qw==
+X-Received: by 2002:a5d:4e04:0:b0:333:5448:a524 with SMTP id p4-20020a5d4e04000000b003335448a524mr1817786wrt.70.1702285021772;
+        Mon, 11 Dec 2023 00:57:01 -0800 (PST)
+Received: from localhost ([2a01:e0a:b25:f902::ff])
+        by smtp.gmail.com with ESMTPSA id k15-20020adfb34f000000b003334a1e92dasm8142312wrd.70.2023.12.11.00.57.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Dec 2023 00:57:01 -0800 (PST)
+Date: Mon, 11 Dec 2023 09:57:01 +0100
+From: Maxime Ripard <mripard@redhat.com>
+To: lpieralisi@kernel.org, robh@kernel.org, kw@linux.com, 
+	bhelgaas@google.com
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, vigneshr@ti.com, tjoseph@cadence.com, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, r-gunasekaran@ti.com, danishanwar@ti.com, srk@ti.com, nm@ti.com
+Subject: Re: [PATCH v13 0/5] PCI: add 4x lane support for pci-j721e
+ controllers
+Message-ID: <isttx4vp7warwowlz46oo7y2zex7xuizfvovfse3yb4ww72e6u@nuev2jbkhnhw>
+References: <20231128054402.2155183-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hiyobel5xvyda7mp"
+Content-Disposition: inline
+In-Reply-To: <20231128054402.2155183-1-s-vadapalli@ti.com>
 
-Use dmam_alloc_coherent() to allocate the MSI address, instead of using
-static physical address.
 
-Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek-gen3.c | 72 ++++++++++++---------
- 1 file changed, 41 insertions(+), 31 deletions(-)
+--hiyobel5xvyda7mp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index c6a6876d233a..7cfd7ef9ad95 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -120,7 +120,6 @@ struct mtk_msi_set {
-  * struct mtk_gen3_pcie - PCIe port information
-  * @dev: pointer to PCIe device
-  * @base: IO mapped register base
-- * @reg_base: physical register base
-  * @mac_reset: MAC reset control
-  * @phy_reset: PHY reset control
-  * @phy: PHY controller block
-@@ -139,7 +138,6 @@ struct mtk_msi_set {
- struct mtk_gen3_pcie {
- 	struct device *dev;
- 	void __iomem *base;
--	phys_addr_t reg_base;
- 	struct reset_control *mac_reset;
- 	struct reset_control *phy_reset;
- 	struct phy *phy;
-@@ -309,24 +307,8 @@ static int mtk_pcie_set_trans_table(struct mtk_gen3_pcie *pcie,
- 
- static void mtk_pcie_enable_msi(struct mtk_gen3_pcie *pcie)
- {
--	int i;
- 	u32 val;
- 
--	for (i = 0; i < PCIE_MSI_SET_NUM; i++) {
--		struct mtk_msi_set *msi_set = &pcie->msi_sets[i];
--
--		msi_set->base = pcie->base + PCIE_MSI_SET_BASE_REG +
--				i * PCIE_MSI_SET_OFFSET;
--		msi_set->msg_addr = pcie->reg_base + PCIE_MSI_SET_BASE_REG +
--				    i * PCIE_MSI_SET_OFFSET;
--
--		/* Configure the MSI capture address */
--		writel_relaxed(lower_32_bits(msi_set->msg_addr), msi_set->base);
--		writel_relaxed(upper_32_bits(msi_set->msg_addr),
--			       pcie->base + PCIE_MSI_SET_ADDR_HI_BASE +
--			       i * PCIE_MSI_SET_ADDR_HI_OFFSET);
--	}
--
- 	val = readl_relaxed(pcie->base + PCIE_MSI_SET_ENABLE_REG);
- 	val |= PCIE_MSI_SET_ENABLE;
- 	writel_relaxed(val, pcie->base + PCIE_MSI_SET_ENABLE_REG);
-@@ -653,6 +635,29 @@ static int mtk_pcie_init_msi(struct mtk_gen3_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
- 	struct device_node *node = dev->of_node;
-+	struct mtk_msi_set *msi_set;
-+	void *msg_vaddr[PCIE_MSI_SET_NUM];
-+	int i, j, ret = -ENODEV;
-+
-+	for (i = 0; i < PCIE_MSI_SET_NUM; i++) {
-+		msi_set = &pcie->msi_sets[i];
-+
-+		msi_set->base = pcie->base + PCIE_MSI_SET_BASE_REG +
-+				i * PCIE_MSI_SET_OFFSET;
-+
-+		msg_vaddr[i] = dmam_alloc_coherent(dev, sizeof(dma_addr_t),
-+							 &msi_set->msg_addr, GFP_KERNEL);
-+		if (!msg_vaddr[i]) {
-+			dev_err(dev, "failed to alloc and map MSI address for set %d\n", i);
-+			ret = -ENOMEM;
-+			goto err_alloc_addr;
-+		}
-+
-+		/* Configure the MSI capture address */
-+		writel_relaxed(lower_32_bits(msi_set->msg_addr), msi_set->base);
-+		writel_relaxed(upper_32_bits(msi_set->msg_addr), pcie->base +
-+			       PCIE_MSI_SET_ADDR_HI_BASE + i * PCIE_MSI_SET_ADDR_HI_OFFSET);
-+	}
- 
- 	mutex_init(&pcie->lock);
- 
-@@ -660,18 +665,24 @@ static int mtk_pcie_init_msi(struct mtk_gen3_pcie *pcie)
- 				  &mtk_msi_bottom_domain_ops, pcie);
- 	if (!pcie->msi_bottom_domain) {
- 		dev_err(dev, "failed to create MSI bottom domain\n");
--		return -ENODEV;
-+		goto err_alloc_addr;
- 	}
- 
- 	pcie->msi_domain = pci_msi_create_irq_domain(dev->fwnode, &mtk_msi_domain_info,
- 						     pcie->msi_bottom_domain);
--	if (!pcie->msi_domain) {
--		dev_err(dev, "failed to create MSI domain\n");
--		irq_domain_remove(pcie->msi_bottom_domain);
--		return -ENODEV;
-+	if (pcie->msi_domain)
-+		return 0;
-+
-+	dev_err(dev, "failed to create MSI domain\n");
-+	irq_domain_remove(pcie->msi_bottom_domain);
-+
-+err_alloc_addr:
-+	for (j = 0; j < i; j++) {
-+		msi_set = &pcie->msi_sets[j];
-+		dmam_free_coherent(dev, sizeof(dma_addr_t), msg_vaddr[j], msi_set->msg_addr);
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static int mtk_pcie_init_intx(struct mtk_gen3_pcie *pcie)
-@@ -789,20 +800,14 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
- 	struct platform_device *pdev = to_platform_device(dev);
--	struct resource *regs;
- 	int ret;
- 
--	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcie-mac");
--	if (!regs)
--		return -EINVAL;
--	pcie->base = devm_ioremap_resource(dev, regs);
-+	pcie->base = devm_platform_ioremap_resource_byname(pdev, "pcie-mac");
- 	if (IS_ERR(pcie->base)) {
- 		dev_err(dev, "failed to map register base\n");
- 		return PTR_ERR(pcie->base);
- 	}
- 
--	pcie->reg_base = regs->start;
--
- 	pcie->phy_reset = devm_reset_control_get_optional_exclusive(dev, "phy");
- 	if (IS_ERR(pcie->phy_reset)) {
- 		ret = PTR_ERR(pcie->phy_reset);
-@@ -1013,6 +1018,11 @@ static void mtk_pcie_irq_restore(struct mtk_gen3_pcie *pcie)
- 	for (i = 0; i < PCIE_MSI_SET_NUM; i++) {
- 		struct mtk_msi_set *msi_set = &pcie->msi_sets[i];
- 
-+		/* Configure the MSI capture address */
-+		writel_relaxed(lower_32_bits(msi_set->msg_addr), msi_set->base);
-+		writel_relaxed(upper_32_bits(msi_set->msg_addr), pcie->base +
-+			       PCIE_MSI_SET_ADDR_HI_BASE + i * PCIE_MSI_SET_ADDR_HI_OFFSET);
-+
- 		writel_relaxed(msi_set->saved_irq_state,
- 			       msi_set->base + PCIE_MSI_SET_ENABLE_OFFSET);
- 	}
--- 
-2.18.0
+Hi Bjorn, Krzysztof, Lorenzo, Rob,
+
+On Tue, Nov 28, 2023 at 11:13:57AM +0530, Siddharth Vadapalli wrote:
+> This series adds support to the pci-j721e PCIe controller for up to 4x La=
+ne
+> configuration supported by TI's J784S4 SoC. Bindings are also added for
+> the num-lanes property which shall be used by the driver. The compatible
+> for J784S4 SoC is added.
+>=20
+> This series is based on linux-next tagged next-20231128.
+
+These patches have been floating around for a long time (v12 was almost
+identical and was submitted back in April, without any review back then
+already [1]), and it looks like reviewers are happy with it.
+
+Could you merge them to get them in 6.8?
+
+Thanks!
+Maxime
+
+1: https://lore.kernel.org/lkml/20230401112633.2406604-1-a-verma1@ti.com/
+
+--hiyobel5xvyda7mp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZXbO0AAKCRDj7w1vZxhR
+xSCJAQCMVu4ns7BPOUOOt9ZXTqgjvASN082LC9xcB5COxIfLsQEArbDg/9j4+RST
+/VDJ4u2ctcM4T8k/v3JMo23lk/ShmAA=
+=8qsX
+-----END PGP SIGNATURE-----
+
+--hiyobel5xvyda7mp--
 
 
