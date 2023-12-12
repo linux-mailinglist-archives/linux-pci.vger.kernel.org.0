@@ -1,42 +1,61 @@
-Return-Path: <linux-pci+bounces-796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87CDD80E990
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 11:59:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05E4880EA3E
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 12:20:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 434852815A6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 10:59:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0FA51F217A1
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 11:20:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 316B25CD11;
-	Tue, 12 Dec 2023 10:59:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14B185CD3C;
+	Tue, 12 Dec 2023 11:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4w1RbhZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA9BF3
-	for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 02:59:36 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id DA99C3000119C;
-	Tue, 12 Dec 2023 11:59:34 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id CB9904A5FD; Tue, 12 Dec 2023 11:59:34 +0100 (CET)
-Date: Tue, 12 Dec 2023 11:59:34 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ashutosh Sharma <ashutosh.dandora4@gmail.com>
-Cc: linux-pci@vger.kernel.org, alex.williamson@redhat.com,
-	helgaas@kernel.org, dwmw2@infradead.org, yi.l.liu@intel.com,
-	majosaheb@gmail.com, cohuck@redhat.com, zhenzhong.duan@gmail.com,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: PCI device hot insert is not detected
-Message-ID: <20231212105934.GA15015@wunner.de>
-References: <CADOvten7jG7KjW6W1MRd7i8_E18L0xCCaCzmZOY_vvgJhdfOSw@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FEE5CD1C;
+	Tue, 12 Dec 2023 11:19:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E49EC433C8;
+	Tue, 12 Dec 2023 11:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702379998;
+	bh=wMeP7zt1EIlnBjj2On4ldk4xqwfR7vzMZdJCgjDqPhQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l4w1RbhZTJq1hPS1YbIpyoowbGlBrDcwQ/sNjMl99Uxkk2T1ciKbIGZDXm5lfQDcY
+	 d9eT9oRncCc6Qx3KsFFwRoXuGYEwu1zZ2SNbOO70yMrbF7PisXpU1YS1SDm8Z6942o
+	 icImNol6zdFl4LarMzYEvT5sQqo+68jt9AXFPEEOS9RvrSVyNsgBvBkSEij67H/FAy
+	 nQdhVFJNofSX1edqYm7O0F1/4DN/bb+JepidRYnwkmRoaYbnoBRbbldXynk/nzx29j
+	 C09JDqHU7P96+oO4rzc3jTx9og1bWYZN9TxwGQHKj/asfWdTrLsEnFAMwGiwy2ALsb
+	 Eblv5dKN+wTRA==
+Date: Tue, 12 Dec 2023 12:19:50 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+Subject: Re: [PATCH v12 15/21] PCI: microchip: Add event IRQ domain ops to
+ struct plda_event
+Message-ID: <ZXhB1kKpElgKx8vm@lpieralisi>
+References: <20231206105839.25805-1-minda.chen@starfivetech.com>
+ <20231206105839.25805-16-minda.chen@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -45,66 +64,73 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADOvten7jG7KjW6W1MRd7i8_E18L0xCCaCzmZOY_vvgJhdfOSw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20231206105839.25805-16-minda.chen@starfivetech.com>
 
-On Tue, Dec 12, 2023 at 04:04:41PM +0530, Ashutosh Sharma wrote:
-> Removed one NVMe drive (pci address 0000:83:00.0), it got unbound
-> successfully from "vfio-pci" driver but saw below error in the syslog.
+On Wed, Dec 06, 2023 at 06:58:33PM +0800, Minda Chen wrote:
+> For lack of an MSI controller, The new added PCIe interrupts have to be
+> added to global interrupt event field. PolarFire event domain ops can not
+> be re-used.
+
+I don't understand what this means, please explain and I will
+add it to the commit log.
+
+> PLDA event domain ops instances will be implemented in later patch.
+
+Future patches don't exist, each commit log is a logical change
+that must make sense on its own, I will remove this sentence.
+
+Lorenzo
+
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  drivers/pci/controller/plda/pcie-microchip-host.c | 6 ++++--
+>  drivers/pci/controller/plda/pcie-plda.h           | 1 +
+>  2 files changed, 5 insertions(+), 2 deletions(-)
 > 
-> can't change power state from D0 to D3hot (config space inaccessible)
-
-This is normal, the drive's config space is inaccessible after removal.
-
-
-> Then after 2:30 min approx, re-inserted the same drive to the same PCI
-> slot. But the drive was not detected.
+> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+> index f5e7da242aec..e6dcc572b65b 100644
+> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+> @@ -821,13 +821,15 @@ static const struct plda_event_ops mc_event_ops = {
+>  };
+>  
+>  static const struct plda_event mc_event = {
+> +	.domain_ops        = &mc_event_domain_ops,
+>  	.event_ops         = &mc_event_ops,
+>  	.request_event_irq = mc_request_event_irq,
+>  	.intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
+>  	.msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
+>  };
+>  
+> -static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+> +static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port,
+> +				      const struct irq_domain_ops *ops)
+>  {
+>  	struct device *dev = port->dev;
+>  	struct device_node *node = dev->of_node;
+> @@ -941,7 +943,7 @@ static int plda_init_interrupts(struct platform_device *pdev,
+>  		return -EINVAL;
+>  	}
+>  
+> -	ret = plda_pcie_init_irq_domains(port);
+> +	ret = plda_pcie_init_irq_domains(port, event->domain_ops);
+>  	if (ret) {
+>  		dev_err(dev, "failed creating IRQ domains\n");
+>  		return ret;
+> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
+> index df1729095952..820ea16855b5 100644
+> --- a/drivers/pci/controller/plda/pcie-plda.h
+> +++ b/drivers/pci/controller/plda/pcie-plda.h
+> @@ -129,6 +129,7 @@ struct plda_pcie_rp {
+>  };
+>  
+>  struct plda_event {
+> +	const struct irq_domain_ops *domain_ops;
+>  	const struct plda_event_ops *event_ops;
+>  	int (*request_event_irq)(struct plda_pcie_rp *pcie,
+>  				 int event_irq, int event);
+> -- 
+> 2.17.1
 > 
-> Dec 11 23:54:39 node-4 kernel: [183672.630191] pcieport 0000:80:03.2:
-> pciehp: Slot(14): Attention button pressed
-> Dec 11 23:54:39 node-4 kernel: [183672.630195] pcieport 0000:80:03.2:
-> pciehp: Slot(14) Powering on due to button press
-> Dec 11 23:54:44 node-4 kernel: [183677.671931] pcieport 0000:80:03.2:
-> pciehp: Slot(14): Card present
-> Dec 11 23:54:46 node-4 kernel: [183679.783922] pcieport 0000:80:03.2:
-> pciehp: Slot(14): No link
-
-The link doesn't come up, so the kernel gives up on the slot.
-
-I don't know what the reason is, could be a hardware issue or
-protocol incompatibility.  This doesn't look like a kernel issue.
-
-
->  |           +-03.0  Advanced Micro Devices, Inc. [AMD]
-> Starship/Matisse PCIe Dummy Host Bridge
->  |           +-03.1-[82]----00.0  Samsung Electronics Co Ltd NVMe SSD
-> Controller PM9A1/PM9A3/980PRO
->  |           +-03.2-[83]--
-
-Adding Mario, Smita, Yazen from AMD to cc, maybe they have an idea
-what the issue is or how to get diagnostics on this Epyc platform.
-
-Start of thread:
-https://lore.kernel.org/linux-pci/CADOvten7jG7KjW6W1MRd7i8_E18L0xCCaCzmZOY_vvgJhdfOSw@mail.gmail.com/
-
-
-> admin@node-4:/sys/bus/pci/slots/14$ sudo echo 1 > power
-> echo: write error: Operation not permitted
-
-This doesn't work, try "echo 1 | sudo tee power" instead.
-
-
-> lspci output of the pci port:
-> 80:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD]
-> Starship/Matisse GPP Bridge (prog-if 00 [Normal decode])
-[...]
->                 LnkSta: Speed 16GT/s (ok), Width x4 (ok)
->                         TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt-
-
-This is from a "Link up" situation (DLActive+), it would be more
-interesting to get lspci output of the port in a "No link" situation.
-
-Thanks,
-
-Lukas
 
