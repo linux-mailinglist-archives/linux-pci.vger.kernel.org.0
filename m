@@ -1,172 +1,160 @@
-Return-Path: <linux-pci+bounces-814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C087B80F73F
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 20:53:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E097180F761
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 21:03:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B528281FB6
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 19:53:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 955771F2159C
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 20:03:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A95A6359C;
-	Tue, 12 Dec 2023 19:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77A8F52761;
+	Tue, 12 Dec 2023 20:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LzvS8TuL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8200DA1;
-	Tue, 12 Dec 2023 11:53:24 -0800 (PST)
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5907b9c3fd6so531896eaf.0;
-        Tue, 12 Dec 2023 11:53:24 -0800 (PST)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AECEA6
+	for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 12:03:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702411382;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nLTa2dYRrf09pJMNBsngii2VsJyLNKDZosllwS5YIfQ=;
+	b=LzvS8TuLRxUNpoX79j0z4hqn2bRJUhI/a1kyJkaOR8ADRvxOoV6iygk0Kc9hd6y5kPTQP+
+	+oYM3GJe8vx1L+6HJa7Epu46Me3RYtAadGSHHnsFaxls1z4ulswCLywd77AgwFaYxkxeRh
+	RSiENNEsinwZUswhwk+T/UEqxMQdEBo=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-148-u9wrAA1NPAygQ1Uxqbfing-1; Tue, 12 Dec 2023 15:03:01 -0500
+X-MC-Unique: u9wrAA1NPAygQ1Uxqbfing-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-54cd2281cd2so8068934a12.1
+        for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 12:03:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702410804; x=1703015604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1702411380; x=1703016180;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=75CeVcCRwUty+KpM8QpE5QSGDTdGQa8ndaCOmWHQyH0=;
-        b=Kdk3djBHHqwbB29ljV07wj0Z3g3waSDBT9f/DXPKybLtmNI6tnMT/4PHazzwMzNszm
-         KL1Fuqu0s6p9i4oCytZxjYWu/k7+AdASPMxobEUm+DuLjmBIIpPwt3+0v+GKX1Q6q9A9
-         Wbkon2ZX1+VE0SRdPCnVppeyoepVGdCL0wqfhhheI9ydFsHEez4/7sRPZIdxha81qvRl
-         pF8WuijwGibS/Z59NYUQiImRn9iWaRrh7AnhJmFbY+eyERrQZEMd+hBNQhL3dH5Jhw/2
-         +DnKrclaMT9FLgvici/CEX/ZS3OcEj65zhHicZ3WbeeszKI9oGRf0Rrk7o4GjpLdAmRZ
-         cmhA==
-X-Gm-Message-State: AOJu0Yyxk2nzB0IVEFQnABo7ux/3ju8WpplQAPf/UWiM0weMjBou6X09
-	1lbzPoFhXm+NmpM9gRrl1WwWkct7oCC+wGwvGdU=
-X-Google-Smtp-Source: AGHT+IEQ7HQc7LHf4b0yqJ5xEdkrUXhbc2igJHPd8dbYUbUlIWpcTc9bu+wd/O5lkVv+pDyNVlRwro0x0Ux6j2fvVME=
-X-Received: by 2002:a4a:d130:0:b0:590:5de3:cca6 with SMTP id
- n16-20020a4ad130000000b005905de3cca6mr10413258oor.0.1702410803778; Tue, 12
- Dec 2023 11:53:23 -0800 (PST)
+        bh=nLTa2dYRrf09pJMNBsngii2VsJyLNKDZosllwS5YIfQ=;
+        b=Qo10nJ41CQJkmtbIL/hngco2C5uZQH0Y/D5r25e2383ZMxxSbp9ul+G8okgGZMh6vQ
+         gL3STWcHkYh9Edqr6QtbEmBY4nn+wtw5u520NuFTg9jhXyLYSuZS1MkJN1VBSCTcNUOZ
+         vMTbZG+icIYZjod9YLA9SfzdxI5STW9aOUme9vD+YgOv7hAPIo0U3N+yajeZH1itXN8k
+         0uUgEhvXtvgdflz5ERv9t4Lc7UC4PQs0djdF2jChGsdXPeEoURybWO51bvNOnNzpnkb8
+         XB6fhsM2spyFqCIX0NycWfgTLTgoLe1rPna6WA8ViwlM6zC8/JMvDX10km5ACnOZLBEh
+         RW1g==
+X-Gm-Message-State: AOJu0Yz9PpxGRt45GsG9g/kXAZrvyFH3eg+afFpmQ9PRA3xQ7ryf9CeH
+	hNDHZYC5vEPTUQ3i1XXVXHV6RWbikid+rPUD3KSU35IYDmb9YxFG067LbuHq4BsGOZC6oJ9TUo6
+	/mndQTHK+TF8oK1D7Bt5l
+X-Received: by 2002:a17:906:9588:b0:a1c:c2f9:980d with SMTP id r8-20020a170906958800b00a1cc2f9980dmr6331024ejx.27.1702411380006;
+        Tue, 12 Dec 2023 12:03:00 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHRYpIZTRZBTE4WcrlyktfS653hxvSiRGlBv7+Y1axU2HeESlSi0L3nguCi3mJ4p5t6evrUkA==
+X-Received: by 2002:a17:906:9588:b0:a1c:c2f9:980d with SMTP id r8-20020a170906958800b00a1cc2f9980dmr6331007ejx.27.1702411379730;
+        Tue, 12 Dec 2023 12:02:59 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com ([185.140.112.229])
+        by smtp.gmail.com with ESMTPSA id tl18-20020a170907c31200b00a1da2c9b06asm6698148ejc.42.2023.12.12.12.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 12:02:58 -0800 (PST)
+Date: Tue, 12 Dec 2023 21:02:57 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Fiona Ebner <f.ebner@proxmox.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bhelgaas@google.com, lenb@kernel.org, rafael@kernel.org, Thomas Lamprecht
+ <t.lamprecht@proxmox.com>, mst@redhat.com, Dongli Zhang
+ <dongli.zhang@oracle.com>
+Subject: Re: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
+Message-ID: <20231212210257.5ddbff0d@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20231212162529.09c27fdf@imammedo.users.ipa.redhat.com>
+References: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
+	<20231207232815.GA771837@bhelgaas>
+	<20231208164723.12828a96@imammedo.users.ipa.redhat.com>
+	<20231211084604.25e209af@imammedo.users.ipa.redhat.com>
+	<c6233df5-01d8-498f-8235-ce4b102a2e91@proxmox.com>
+	<20231212122608.1b4f75ce@imammedo.users.ipa.redhat.com>
+	<62363899-d7aa-4f1c-abfa-1f87f0b6b43f@proxmox.com>
+	<20231212162529.09c27fdf@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231203041046.38655-1-mario.limonciello@amd.com>
- <20231203041046.38655-3-mario.limonciello@amd.com> <CAJZ5v0g_HWFnt0a5fDnb73Q14C84O+RPYVF104TDK7T_Ox3_EA@mail.gmail.com>
- <d61a0a3d-2adc-402f-be4c-2f99a65f5b04@amd.com>
-In-Reply-To: <d61a0a3d-2adc-402f-be4c-2f99a65f5b04@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 12 Dec 2023 20:53:12 +0100
-Message-ID: <CAJZ5v0gDp6XqoL+VHc1GjuA_iG9jS+z+LRFMR9L6tyyvd2bjNA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] PCI: Refresh root ports in pci_bridge_d3_update()
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>, Hans de Goede <hdegoede@redhat.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
-	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Lukas Wunner <lukas@wunner.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 12, 2023 at 8:41=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 12/12/2023 13:25, Rafael J. Wysocki wrote:
-> > On Mon, Dec 4, 2023 at 7:07=E2=80=AFAM Mario Limonciello
-> > <mario.limonciello@amd.com> wrote:
-> >>
-> >> If pci_d3cold_enable() or pci_d3cold_disable() is called on a root
-> >> port it is ignored because there is no upstream bridge.
-> >
-> > The kerneldoc comment of pci_bridge_d3_update() explains what that
-> > function is for which also covers why it does not take effect when
-> > called on root ports.
->
-> I'm sorry but can you clarify the intent of your comment?
->
-> Are you suggesting we should introduce a different function/logic for
-> root ports, kernel doc should be updated, or root ports should be
-> special cased in that function?
+On Tue, 12 Dec 2023 16:25:29 +0100
+Igor Mammedov <imammedo@redhat.com> wrote:
 
-They are special-cased in that function already, because it updates an
-upstream port for a change in a downstream device.
+> On Tue, 12 Dec 2023 13:50:20 +0100
+> Fiona Ebner <f.ebner@proxmox.com> wrote:
+> 
+> > Am 12.12.23 um 12:26 schrieb Igor Mammedov:  
+> > > 
+> > > it's not necessary, but it would help to find out what's going wrong faster.
+> > > Otherwise we would need to fallback to debugging over email.
+> > > Are you willing to help with testing/providing debug logs to track down
+> > > the cause?.
+> > >     
+> > 
+> > I submitted the dmesg logs in bugzilla:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=218255
+> >   
+> > > Though debug over email would be slow, so our best option is to revert
+> > > offending patches until the cause if found/fixed.
+> > >     
+> > >>>>> Do you have to revert both cc22522fd55e2 and 40613da52b13f to make it
+> > >>>>> work reliably?  If we have to revert something, reverting one would be
+> > >>>>> better than reverting both.        
+> > >>>>      
+> > >>
+> > >> Just reverting cc22522fd55e2 is not enough (and cc22522fd55e2 fixes
+> > >> 40613da52b13f so I can't revert just 40613da52b13f).    
+> > > 
+> > > With UEFI setup, it still works for me fine with current master.
+> > > 
+> > > Kernel 6.7.0-rc5-00014-g26aff849438c on an x86_64 (ttyS0)
+> > >     
+> > 
+> > I also built from current master (still 26aff849438c) to verify and it's
+> > still broken for me.
+> >   
+> > > 
+> > > it still doesn't work with Fedora's 6.7.0-0.rc2.20231125git0f5cc96c367f.26.fc40.x86_64 kernel.
+> > > However it's necessary to have -smp 4 for it to break,
+> > > with -smp 1 it works fine as well.
+> > >     
+> > 
+> > For me it's (always with build from current master):
+> > 
+> > -smp 1 -> it worked 5 times out of 5
+> > -smp 2 -> it worked 3 times out of 5
+> > -smp 4 -> it worked 0 times out of 5
+> > -smp 8 -> it worked 0 times out of 5  
+> 
+> 
+> I managed to reproduce it with upstream using fedora 40 config as is
+> (without converting it to mod2yesconfig).
+> So give me a couple of days to debug it before reverting.
 
-There are only 2 places really affected by no_d3cold:
-pci_dev_check_d3cold() and the ACPI power state selection for PCI
-devices. where the former is used for checking whether or not it is
-valid to put an upstream bridge into D3hot/cold (which depends on
-whether or not the downstream devices below it are allowed to use
-D3cold).
+Actually here is another report + analysis explaining where the race is happening:
+https://www.spinics.net/lists/kernel/msg5033061.html
 
-The only place where no_d3cold affects root ports is the ACPI power
-state selection, because the only way to program a root port into
-D3cold is via ACPI.
+That's the reason why my minimal config worked
+(based on defconfig where CONFIG_SCSI_SCAN_ASYNC in not enabled by default for x86)
 
-> >
-> >> If called on a root port, use `no_d3cold` variable to decide policy
-> >
-> > It is unclear that this is about pci_bridge_d3_possible() which
-> > applies to both D3hot and D3cold, not just D3cold AFAICS.  I don't
-> > think that no_d3cold should affect the D3hot behavior.
->
-> IMO the semantics are confusing depending upon what device you called
-> pci_d3cold_disable()/pci_d3cold_enable() with as an argument.
->
-> Both devices and root ports are used by existing driver in the kernel.
->
-> If you called pci_d3cold_disable() with a device, that actually prevents
-> the /bridge above it/ from going to D3hot as well (bridge_d3 is set to
-> the result)
+While distros (at least some) do enable it.
 
-Right, because (as per the PCI PM spec) putting an upstream bridge
-into D3hot/cold effectively removes power from the bus segment below
-it, so the devices on that bus segment go into D3cold.  If they are
-not allowed to go into D3cold, the bridge needs to stay in a shallower
-power state either.
+> 
+> > 
+> > Best Regards,
+> > Fiona
+> >   
+> 
 
-> >
-> >> and also immediately refresh whether D3 is possible.
-> >
-> > Which isn't correct AFAICS.
->
-> Why?
-
-Because it makes no_d3cold affect the ability of the given root port
-to be programmed into D3hot via PMCSR.
-
-> >
-> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> ---
-> >>   drivers/pci/pci.c | 9 ++++++++-
-> >>   1 file changed, 8 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >> index 72505794cc72..3d4aaecda457 100644
-> >> --- a/drivers/pci/pci.c
-> >> +++ b/drivers/pci/pci.c
-> >> @@ -3023,6 +3023,9 @@ bool pci_bridge_d3_possible(struct pci_dev *brid=
-ge)
-> >>                  if (pci_bridge_d3_disable)
-> >>                          return false;
-> >>
-> >> +               if (bridge->no_d3cold)
-> >> +                       return false;
-> >> +
-> >>                  /*
-> >>                   * Hotplug ports handled by firmware in System Manage=
-ment Mode
-> >>                   * may not be put into D3 by the OS (Thunderbolt on n=
-on-Macs).
-> >> @@ -3098,7 +3101,11 @@ void pci_bridge_d3_update(struct pci_dev *dev)
-> >>          bool d3cold_ok =3D true;
-> >>
-> >>          bridge =3D pci_upstream_bridge(dev);
-> >> -       if (!bridge || !pci_bridge_d3_possible(bridge))
-> >> +       if (!bridge) {
-> >> +               dev->bridge_d3 =3D pci_bridge_d3_possible(dev);
-> >> +               return;
-> >> +       }
-> >> +       if (!pci_bridge_d3_possible(bridge))
-> >>                  return;
-> >>
-> >>          /*
-> >> --
-> >> 2.34.1
-> >>
-> >>
->
 
