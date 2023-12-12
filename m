@@ -1,355 +1,397 @@
-Return-Path: <linux-pci+bounces-778-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-779-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A660F80DFEE
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 01:15:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB54380E16F
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 03:28:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6748CB2131A
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 00:15:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6166228270A
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 02:28:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 926B818D;
-	Tue, 12 Dec 2023 00:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400A22589;
+	Tue, 12 Dec 2023 02:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FHvx7G4f";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wXHdM7Ew"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8PUrzs1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF09E1A1;
-	Mon, 11 Dec 2023 16:14:42 -0800 (PST)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BBM4DiA027060;
-	Tue, 12 Dec 2023 00:14:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- to : cc : from : subject : content-type : content-transfer-encoding :
- mime-version; s=corp-2023-11-20;
- bh=g2DaSet4I+humXV1l9xnx6QIs8Hk/F7dGk8S/ZOcTpk=;
- b=FHvx7G4fci7gI17ofAobLWqRGif0o4tcaYPqvT/72WqBKn7pPSeu37U3cVUPADoLXaFJ
- dmg+FhpCZlAfh0La9cdwq6CySyD162XWZC3b/9LnW44KpaprkXdLMi2O+jgN0uPW0qXS
- /hXORapLWzWnPeKHDxhPxDvE7hiW+S6m86kR2ruDa9Z0YiAPsYEkFK4ubh5tnNhXc0z0
- sptHBiGRjXlKgioXmMwYfh3B0vC+AD2wl42Hkya9pZZfH2IUeyOCLm8YrrbNDqb1qaQt
- fQCHyNNYshHijddieN+ccCOUhFfDMFwbHFOWFhzh0CZiPpmA2szb+H7uvk6XnKlYNwAw Og== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3uvf5c4c6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Dec 2023 00:14:35 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BC04ovi009808;
-	Tue, 12 Dec 2023 00:14:33 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uvep5s39m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Dec 2023 00:14:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MPCRegZqsSYtw/o3Vj7EKCytQpL6p3MQRsyCoh3qvJzEcdna7ZnfSRb/Y1XGCAFWN0b25qY1YH7LFzjZxkdU0DLBYUXnYrbz5X/fcRXlAzMniov/4mp3KKbGb/Yur79Srjk/lAkIiU6fy76+7gzADK6n7TL+joRrhqhUUzvE3MXtMygK86dE2k8RNmV3yQmzXYoEDy7d45jZ93fxNthgmFi6pYmvshjVNUTmw+if1Y0jmi6zut0dUzopQnfAOKOZ90AYu1Sl0z+aI56wn+kouXrQKT3OF1XHGrwVzmxdcboXGxo1bqSjBUmMhLGOzaHVlw7vLiBVMs0WZpsZmswiXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g2DaSet4I+humXV1l9xnx6QIs8Hk/F7dGk8S/ZOcTpk=;
- b=LWOYS0pCTwQ3wzjzVA6JeOh7vt4ow6R005lcF33IbNrWjChPMl1RqZ53AbRUqaq2gx8FlKEAY1z9ncJT9JSnVRVXqFfy+mJwyAQ8htq+BcsH1Th19G+Gvzof0QiwjpjNaFOKO/EL3c4h3Bh6/GvIh7sZcGU3/XzTPve5Gdsp1ShIZl2wDtHjm4GtIzhGcJ7j8Yq16vg1JAiSE3odIQdqOyCTpSLOvTZ414Ea26PIyoEuNCZX0AOdbjdRk01D9iCwoNJIU+2P+pddRfoiR9y2QrR1Nf1ISH7Pp4MJgNMJxn0wFa77ZUJhZv5FjO6Np76Oy4ka4qFaignGFUPTrKHOWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B958B8;
+	Mon, 11 Dec 2023 18:27:54 -0800 (PST)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5d2d0661a8dso51961347b3.2;
+        Mon, 11 Dec 2023 18:27:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g2DaSet4I+humXV1l9xnx6QIs8Hk/F7dGk8S/ZOcTpk=;
- b=wXHdM7EwmZFRR0Bx08kU/ykuNLVZ4GQu7YTeTZPcoMslfrZnensPLHw1NBv260bHP6k0hgkXMfpOTas5uqEL8ARSrODwPl8/YdINNGJ/4bH0Y+r5v3WjFA9gPJJTBhE1M//IzFbHCpPY6hWfdxL0MZLXMnZEaSk87KxXXfUI63Q=
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
- by BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Tue, 12 Dec
- 2023 00:14:31 +0000
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::dec8:8ef8:62b0:7777]) by BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::dec8:8ef8:62b0:7777%4]) with mapi id 15.20.7068.031; Tue, 12 Dec 2023
- 00:14:31 +0000
-Message-ID: <3c4a446a-b167-11b8-f36f-d3c1b49b42e9@oracle.com>
-Date: Mon, 11 Dec 2023 16:14:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To: linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: imammedo@redhat.com, mst@redhat.com, rafael@kernel.org, lenb@kernel.org,
-        bhelgaas@google.com, helgaas@kernel.org,
-        mika.westerberg@linux.intel.com, boris.ostrovsky@oracle.com,
-        joe.jin@oracle.com, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From: Dongli Zhang <dongli.zhang@oracle.com>
-Subject: [Regression report] commit 40613da52b13 ("PCI: acpiphp: Reassign
- resources on bridge if necessary")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0086.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:138::19) To BYAPR10MB2663.namprd10.prod.outlook.com
- (2603:10b6:a02:a9::20)
+        d=gmail.com; s=20230601; t=1702348072; x=1702952872; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2rIXSzzj4Vn0OnxWzlgjGuiOUWfNx+9Oitq+JebsnVk=;
+        b=L8PUrzs1+qvtJTEy+7AGBZh1fWhl/E005JrdDhV3OiA5Ld3/JIjRDEygACFZqcwt2b
+         lu6DgfJ4W2IwASoaAz3iXbSaKTyFTeb6JRxx/kgZqoIj8eM2lV6OU3TkfACGDXVXIm7h
+         kB9aB0zJCrLAikCJjil2QmvKARkfe3iu04T9eChV3im6oep7YYGNtaKeyJsT6zWbHvnI
+         XsHkzl/No4fhuoA1756SOF3WzmfIsXLgsbphIF/8++iH2IZkAPkqLFuQVZTp3LwhU03P
+         3kPxlwaA6fdkxQ1BUfA2/RAgoi8aUU28QxQBc07LdhJdYCl/DYPHChFWXe4H5Mkx0ekk
+         3U8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702348072; x=1702952872;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2rIXSzzj4Vn0OnxWzlgjGuiOUWfNx+9Oitq+JebsnVk=;
+        b=okwHH4732d6Jd8ap/mlnoxgsH6pX3GM9cGmKTuetPBq8354a7xy4myY1B7Wva1OoOE
+         05/bqCeesp3sYNjrVwN3Zc37ThB7Yg5DFc3DZviREyP44ftLL/XYIO48HSVKi1nlQCHq
+         99mbm3U1dogZnKogzinuK4ZwN9/hWLsa3Hn8kgixopmZxAlukVRqrUCJmwSRumkkAO7K
+         iLOjIHwcMqdUDHlE2uJzt8ze5unuxjrx0IDLY0VKkp155kzebJJnE0eX/rinI8wER7Sx
+         JITTPPyI+jplqtUi/f92VhPp0cEqE/SPJ5/Iw5ZRew04Yf2qGGnscemICDDsFOVOGvah
+         WTWA==
+X-Gm-Message-State: AOJu0YwU8hTirw4gpUvRxlk8B7o7j/8Mc964WO4Y/ky/BtPe0Z79tSen
+	glopQHVGkCInCwDPKTXgEUG4lrP5u6yhBA==
+X-Google-Smtp-Source: AGHT+IGNrxiOB0CU5Pwp1l0+iyVygpKHBLCSMm3YHsDrVXT56LslkKopHRNY35LGYnIHsoxEKrxNng==
+X-Received: by 2002:a0d:f6c7:0:b0:5d7:1940:b37e with SMTP id g190-20020a0df6c7000000b005d71940b37emr4381333ywf.74.1702348071823;
+        Mon, 11 Dec 2023 18:27:51 -0800 (PST)
+Received: from localhost ([2601:344:8301:57f0:38aa:1c88:df05:9b73])
+        by smtp.gmail.com with ESMTPSA id y188-20020a0dd6c5000000b005d6da42e443sm3448474ywd.59.2023.12.11.18.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Dec 2023 18:27:51 -0800 (PST)
+From: Yury Norov <yury.norov@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	"Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+	Akinobu Mita <akinobu.mita@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Disseldorp <ddiss@suse.de>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gregory Greenman <gregory.greenman@intel.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hugh Dickins <hughd@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Karsten Graul <kgraul@linux.ibm.com>,
+	Karsten Keil <isdn@linux-pingi.de>,
+	Kees Cook <keescook@chromium.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Martin Habets <habetsm.xilinx@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Oliver Neukum <oneukum@suse.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Rich Felker <dalias@libc.org>,
+	Rob Herring <robh@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Stanislaw Gruszka <stf_xl@wp.pl>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	alsa-devel@alsa-project.org,
+	ath10k@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	iommu@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-bluetooth@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-media@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-net-drivers@amd.com,
+	linux-pci@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	mpi3mr-linuxdrv.pdl@broadcom.com,
+	netdev@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Cc: Yury Norov <yury.norov@gmail.com>,
+	Jan Kara <jack@suse.cz>,
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+	Alexey Klimov <klimov.linux@gmail.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: [PATCH v3 00/35] bitops: add atomic find_bit() operations
+Date: Mon, 11 Dec 2023 18:27:14 -0800
+Message-Id: <20231212022749.625238-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB2663:EE_|BY5PR10MB4306:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88998ed9-125e-4526-1689-08dbfaa75017
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	k7HJfGDJ7KwIdUdL2mJ4fICUsp/h6YETHaF7iwSRHi4XyKn5/MsVIanJDMu4Qyy6c94XyuhqlHp+Hndg9Ul+8ygMGZNpBlBF5r692fSXVuGBSL2EoNhzyvZOy/SoEpdFHf5ZXsYLaUqSyVavTvB24BN1pi20n0f+eM9eoM8dY+pKqKjrai1gKsHUjHe6JZ22/DE1wKBxj2rGZ4hnTWfDean6gUbh5xaO5IUeqHDOMVqjJp8slOrfss6nybjLWHjNyJBuV+RAxm0DxA11EFxlE/keOqQTUC6RfiktGuVH+KavdWw3jpN1S4pYcmONOYIwf8AhrzZuHlRb7hq60NW2NLNrfleSZcGdCfvw1OFV3JDtSUnlPcAQnR0wAmCkwKyDPTUfzq5f8GPLT50M9AyQExgc5eea4gGZJa1LgrLvexOM0QeXuMaUm5garqYf5UyAyEyiikf93AI27/5eRYma2nZ+rdNl2RajV2LtfonY6Yzq4nwjsaOpR5TRSPJ9Tj77fOTy1XQ8RwpfWloX1yWtye6wnslt64IOeFmSoE5Phi9PsN3en270846BPCKQmD2003Kh8aQKWEs3wGBpV+/Pigd5EWgNomP6rPsoU1BS+DmJcIA2hXB+VfOf6Rj2fDRncF+A3qLRXnTCOoVaRo6nnQoAAKE1WGBrF5zYxQKpNr9xBXIEKjmCfAT2RZrGPtM9
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(136003)(366004)(376002)(39860400002)(230922051799003)(1800799012)(64100799003)(186009)(451199024)(31686004)(26005)(2616005)(66556008)(36756003)(38100700002)(31696002)(86362001)(7416002)(44832011)(5660300002)(6512007)(6666004)(83380400001)(8936002)(8676002)(66946007)(6486002)(966005)(66476007)(316002)(2906002)(4326008)(478600001)(41300700001)(6506007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?QVY1dlJiUmxhRXNydU95SlNlT1NLOHlIN0oyRzVVeVJiNk5VczAyMVZvd2FU?=
- =?utf-8?B?K0UwMFdGRzFxRUpidi9iN0t5dHdUcVZIeTlpd2VBRTBlTFk3ZW4xVmlHTUVz?=
- =?utf-8?B?OUV1a3ZZUmNPZkU5VkZxamFQdy8rVWwwemFwKzJZUGxSRmFiTjkwclI5THg1?=
- =?utf-8?B?cTZoQklZRUs1MDViT0JnMWJEN1RGSjRQL2xiN0pVWU9IUEJYdFRpbWFBZVlM?=
- =?utf-8?B?djF6YnVvaG1TM3ZXc0cwbDlWa1dNcFlqaGU4TnZrUENMaWR2eWtLT3lwVS9F?=
- =?utf-8?B?bzlMOE1idEFMWFFTa09RTTJGTlUrSGIwQ3JNRzN0VlNLcm5CdGdHWlc2RWJm?=
- =?utf-8?B?d01iLzEyS2gvTStLQzJvZ3p3bmczazBBbVJOaUtlbTQ3bGVkbG5mUWYxaTFw?=
- =?utf-8?B?Z3BMOTdLcjFzYWdrS3hKenpxVDVsbjNpMzRuRVF4eHN2Y2hmNXUyTXBPdkZ5?=
- =?utf-8?B?T1ZMaDFIOFZ5RjRZODhQaVNZS0JLYndtT2FvQXExOE5JZnJ5VnBIRytORzQz?=
- =?utf-8?B?amJ2N00zRk9sd1hQbG9wU1pmQUlHbUNzb0FPY3cvR3FvY1pyRFQwQnMyaVEz?=
- =?utf-8?B?c0ltNEtjd0ppb2owTmY1WlZBNi9VYm5xZzF5SmsxWHU0NGo4OUdpOWhXdHBC?=
- =?utf-8?B?NnZoYmw4ZVJHckg3cDZGTzJ4TitNS3N4c3hFZDZWbDkvdEpPZWUrVXV3Tk5r?=
- =?utf-8?B?OWZlZlpHc2FCVXl3dVE4a3BRallSUnZjV1lDZXYrOUpNT0tEUmxvc0Vzc1VX?=
- =?utf-8?B?S2crMEVySVZjSE9DYzBwemNCRURnbERmTzdKckpsVkR2SjU0U3hoMENIZFdk?=
- =?utf-8?B?a2xlU01SdEs5K0duTE9YSlpPZzU0cWsvZkxUSm9mcjMrNTRXa1JFNzR5T01U?=
- =?utf-8?B?L04vL3F2N3dSRUUyZ0FiN051TFpFZVV0amphU0NLZHhieHNqckVtT0J6aDJl?=
- =?utf-8?B?M2pHWnJXb3NwTFBWSVRtbEJaWjByUE5kRVBlZTlBNmhvTFU3OXYvVmRxdERH?=
- =?utf-8?B?WmVnc2NTbGFlRnBCTUZDK0U1RmZPdjdEOHYrb295V0FnSnczV0NLaDZVeTBD?=
- =?utf-8?B?NUdDTSttdXJBbGJqaDhTTmRHUm9GRjkvT3U0SU9mZTJQL3JpSXBUeUpkVlkx?=
- =?utf-8?B?WnFMR2lJZVp5eE5lYkh3OUdnZ24zWXFTRzR6OHQ2L09SZEZNQTJKaWpwTG9s?=
- =?utf-8?B?QjIya01WalIvQ1c1T2dpazVpVVN6Qk5IYTZ5ZjN2bFdlSGdrZHFQUDhoaldK?=
- =?utf-8?B?SWxjbnhPZU1Vb01qV08vckV4akorWG1uNTJ3N3VtSEpBOHZmL0Q3LzZSaWs0?=
- =?utf-8?B?ejlXZjBIRWNnY3E5UGdRSW0zMXlWTnZLWTBRUnVkdTJsTUJHMFQzT2dWb3RJ?=
- =?utf-8?B?WHRpbytndzN6S1BGcG9OT2EreHpvd2VIc0Z0YXpQdGNENmhqTVhJU0pTTnNL?=
- =?utf-8?B?cjFkV3NqZS93aXZDMncvZmdjVFlYRjloU1V6aUt5OTRoOUlSWmgzdGhHNGxM?=
- =?utf-8?B?KzF6MGp6OTJpTG9JUlhqRTUvNnZhWDNsUk82R3BpUU1ELzBCTFYybmNGYnlK?=
- =?utf-8?B?U3BDNjg2RVpKWm8rWTdBNFZRd0tkWi9SNERmZ1NuSFQxUkRvQ0R3VUlaeWpk?=
- =?utf-8?B?NVR5MkorZ3ZIVEh5c2dYeW94Q20zK016QW1VNVc2TmQ5VUJZbjc2bnVvVlRZ?=
- =?utf-8?B?YllhWXR4RzlKaVNxbFVRMzJjTXJTY0hRVCs3SjVQWUpHdHdYZEFhb3FicVps?=
- =?utf-8?B?OHFoRW9MT2VOM0hmZFdqSlNhLzk1T2I1bFRpdjZCSVdYM0JaOGJ6TnUzNWhJ?=
- =?utf-8?B?bk9na3g0enVZUlZ6TnMydU5FZWtuMVczMmtDWlQ4KzZCdFlSbWlJNVovUjRL?=
- =?utf-8?B?b0N5T0hKckNpcmxCWEZERHlzNG5ZNkQ3OWtjb1phZ1NaL2hrYnpTbWI2T0lk?=
- =?utf-8?B?TTI3eGhoU2h1QXFOQkxTMFlFZTJEWU0yQXlBZVRxcjAvalR1QkY5a3J1RTdw?=
- =?utf-8?B?ZlQ4dG5mWms2YVZMQ3YyRSs0ZURnZGZ2SW0wVEExejJBU1BCVi9xTjRIOTQ3?=
- =?utf-8?B?emN1cjdHdWpPaE50V1FIU1pHbUNIOWJ5Qmd3WjEvdGJKcnV5RUxxVE1nY05n?=
- =?utf-8?Q?JdAuFgSiXFffe1rBUTp8gan0y?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	v9AZdrB6adtuBPcz7sAQmA9dThALS8nqnrfnFeg1tPOq51EMFaY8aoqSKr9sxeRVBWOlejS8FNgBfX135VatOo6jaoEvI0SgZWdNtBlRy+wi/nYqZLaBoG5A6nQggdQjS+6v9XSTUfc3I7l/xvOA++XjEDfZN9VNQcOrAM3+det8/XoJaO6lPLugsULHzAvI14nIsEJtwOg2fIrucB5YdcJGADhysZmJHFY/Ojpnb+XvZh82eG9dj4kLK1auAfMHNVUwNJULMOBAbZPf1x5aFp8XkwWQsui66guptvIae7C9yZv+6QAk63A2XzFxxLxmm90dW9s0Z5/BKuPAGvgspughPscD0Ht8IdqfHZtVN+uBYpxQUNUCsa9gkhSItOTT7kv5sl+h9bZBbai32deQJ4Ar5wq1BeC9yo1/HDRh3RVm/6mPWez+qyP5ROCmzZLpKy7vHhXOtK1wBuXkLOZiKZIff1XDKrSS5QbHb3fXyeHlVdxzXCUMLPJubAg7Gg+Sx9z4v6E6hBIwgOK2DjSwE0TkbP0dnKOsqqJXnRQJb65J28eQGXKN85xthvcLRli0sDkMUGo8MA5NlkUhN/jPxPkoLWVla5qB2GdFIKyAQMV0vuMuD83tS9DG6va+X/cj5eqnc0dAA3ohEHDOn/biHjmwFaWuT7x3TDEqfNZpxJGv8EGYE8YGAiAFmzD+77mCqVhaWAZYIi+0uwy3J5Wnyo3ID3VF6r1iM1/PbWCKWtzTZA6tFds/E4H9WdEhmnUeS3PdkBrxvJafRFvrr7hu+Awq/5C8LqiG+VcFVu5FIvQnhMlvpcbQKf7HCujkREy4wqt2MaSIm+adpVmRq9OAzXNijM+FgL3DqA42abQnzeu7O45Ci8J+UrNtPArMXwzhxtrSbPNsPcySY518qdA78Q==
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88998ed9-125e-4526-1689-08dbfaa75017
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 00:14:31.5738
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X73aOZkYIwrm4xv/saZ5gl/Z+KH4L3YrpwcEyVp201R46z3TC2ycuF4Pq+EVAqb78qU/zy+ZfNzuubQUjm2/Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4306
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-11_11,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312120000
-X-Proofpoint-ORIG-GUID: pG9cy-ubERAAB0IqjN43UB58Y7RnA561
-X-Proofpoint-GUID: pG9cy-ubERAAB0IqjN43UB58Y7RnA561
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Add helpers around test_and_{set,clear}_bit() that allow to search for
+clear or set bits and flip them atomically.
 
-This is to report a regression caused by commit 40613da52b13 ("PCI: acpiphp:
-Reassign resources on bridge if necessary").
+The target patterns may look like this:
 
-PCI: acpiphp: Reassign resources on bridge if necessary
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=40613da52b13fb21c5566f10b287e0ca8c12c4e9
+	for (idx = 0; idx < nbits; idx++)
+		if (test_and_clear_bit(idx, bitmap))
+			do_something(idx);
 
+Or like this:
 
-That patch may reconfigure the mmio resource of the bridge so that to write to
-mmio during PCI hotplug may lose effect.
+	do {
+		bit = find_first_bit(bitmap, nbits);
+		if (bit >= nbits)
+			return nbits;
+	} while (!test_and_clear_bit(bit, bitmap));
+	return bit;
 
-Here is how to reproduce the issue.
+In both cases, the opencoded loop may be converted to a single function
+or iterator call. Correspondingly:
 
-1. Create QEMU (v8.1.0) VM with the below.
+	for_each_test_and_clear_bit(idx, bitmap, nbits)
+		do_something(idx);
 
-qemu-system-x86_64 -machine pc,accel=kvm \
--smp 8 -m 8G -cpu host -hda uefi-os.qcow2 \
--drive if=pflash,format=raw,unit=0,file=OVMF_CODE.fd,readonly \
--drive if=pflash,format=raw,unit=1,file=OVMF_VARS.fd \
--kernel mainline-linux/arch/x86_64/boot/bzImage \
--append "root=/dev/sda2 init=/sbin/init text console=ttyS0 loglevel=7" \
--serial none -display none -vnc :9 -monitor stdio \
--net nic -net user,hostfwd=tcp::5027-:22 \
--device pci-bridge,id=bridge1,bus=pci.0,chassis_nr=2
+Or:
+	return find_and_clear_bit(bitmap, nbits);
 
-We should have CONFIG_SCSI_SCAN_ASYNC=y so that scsi probing happens in another
-thread.
+Obviously, the less routine code people have to write themself, the
+less probability to make a mistake.
 
-2. Hot-add two vhost-scsi PCI devices consecutively.
+Those are not only handy helpers but also resolve a non-trivial
+issue of using non-atomic find_bit() together with atomic
+test_and_{set,clear)_bit().
 
-(qemu) device_add vhost-scsi-pci,wwpn=naa.5001405324af0985,id=vhost01,bus=bridge1,addr=8
-(qemu) device_add vhost-scsi-pci,wwpn=naa.5001405324af0986,id=vhost02,bus=bridge1,addr=0
+The trick is that find_bit() implies that the bitmap is a regular
+non-volatile piece of memory, and compiler is allowed to use such
+optimization techniques like re-fetching memory instead of caching it.
 
-3. The 1st hot-add succeeds.
+For example, find_first_bit() is implemented like this:
 
-[   44.365111] ACPI: \_SB_.PCI0.S20_.S40_: Device check in hotplug_event()
-[   44.365261] pci 0000:01:08.0: [1af4:1004] type 00 class 0x010000
-[   44.365377] pci 0000:01:08.0: reg 0x10: [io  0x0000-0x003f]
-[   44.365425] pci 0000:01:08.0: reg 0x14: [mem 0x00000000-0x00000fff]
-[   44.365589] pci 0000:01:08.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-[   44.366479] pci 0000:01:08.0: EDR: Notify handler installed
-[   44.367255] pci 0000:01:08.0: vgaarb: pci_notify
-[   44.367490] pci 0000:00:04.0: BAR 15: assigned [mem 0x800100000-0x8001fffff 64bit pref]
-[   44.367497] pci 0000:01:08.0: BAR 4: assigned [mem 0x800100000-0x800103fff 64bit pref]
-[   44.367579] pci 0000:01:08.0: BAR 1: assigned [mem 0xc1000000-0xc1000fff]
-[   44.367605] pci 0000:01:08.0: BAR 0: assigned [io  0xc000-0xc03f]
-[   44.367638] pci 0000:00:04.0: PCI bridge to [bus 01]
-[   44.367653] pci 0000:00:04.0:   bridge window [io  0xc000-0xcfff]
-[   44.369258] pci 0000:00:04.0:   bridge window [mem 0xc1000000-0xc11fffff]
-[   44.370134] pci 0000:00:04.0:   bridge window [mem 0x800100000-0x8001fffff 64bit pref]
-[   44.372147] virtio-pci 0000:01:08.0: vgaarb: pci_notify
-[   44.372155] virtio-pci 0000:01:08.0: runtime IRQ mapping not provided by arch
-[   44.409717] ACPI: \_SB_.LNKD: Enabled at IRQ 10
-[   44.409781] virtio-pci 0000:01:08.0: enabling device (0000 -> 0003)
-[   44.448742] virtio-pci 0000:01:08.0: enabling bus mastering
-[   44.452982] scsi host2: Virtio SCSI HBA
-[   44.470553] virtio-pci 0000:01:08.0: vgaarb: pci_notify
-[   44.471124] scsi 2:0:1:0: Direct-Access     LIO-ORG  lun1             4.0  PQ: 0 ANSI: 5
-[   44.490102] sd 2:0:1:0: Attached scsi generic sg2 type 0
-[   44.490240] sd 2:0:1:0: [sdb] 262144 512-byte logical blocks: (134 MB/128 MiB)
-[   44.490275] sd 2:0:1:0: [sdb] Write Protect is off
-[   44.490279] sd 2:0:1:0: [sdb] Mode Sense: 43 00 10 08
-[   44.490333] sd 2:0:1:0: [sdb] Write cache: enabled, read cache: enabled, supports DPO and FUA
-[   44.501807] sd 2:0:1:0: [sdb] Preferred minimum I/O size 512 bytes
-[   44.501812] sd 2:0:1:0: [sdb] Optimal transfer size 8388608 bytes
-[   44.504009] sd 2:0:1:0: [sdb] Attached SCSI disk
+      for (idx = 0; idx * BITS_PER_LONG < sz; idx++) {
+              val = addr[idx];
+              if (val) {
+                      sz = min(idx * BITS_PER_LONG + __ffs(val), sz);
+                      break;
+              }
+      }
 
-4. The 2nd hot-add fails. We do not see scsi probing finished.
+On register-memory architectures, like x86, compiler may decide to
+access memory twice - first time to compare against 0, and second time
+to fetch its value to pass it to __ffs().
 
-[   52.285341] ACPI: \_SB_.PCI0.S20_.S00_: Device check in hotplug_event()
-[   52.285488] pci 0000:01:00.0: [1af4:1004] type 00 class 0x010000
-[   52.285620] pci 0000:01:00.0: reg 0x10: [io  0x0000-0x003f]
-[   52.285668] pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x00000fff]
-[   52.285833] pci 0000:01:00.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
-[   52.286687] pci 0000:01:00.0: EDR: Notify handler installed
-[   52.287484] pci 0000:01:00.0: vgaarb: pci_notify
-[   52.287568] pci 0000:01:00.0: BAR 4: assigned [mem 0x800104000-0x800107fff 64bit pref]
-[   52.287650] pci 0000:01:00.0: BAR 1: assigned [mem 0xc1001000-0xc1001fff]
-[   52.287676] pci 0000:01:00.0: BAR 0: assigned [io  0xc040-0xc07f]
-[   52.287701] pci 0000:00:04.0: PCI bridge to [bus 01]
-[   52.287715] pci 0000:00:04.0:   bridge window [io  0xc000-0xcfff]
-[   52.289611] pci 0000:00:04.0:   bridge window [mem 0xc1000000-0xc11fffff]
-[   52.291062] pci 0000:00:04.0:   bridge window [mem 0x800100000-0x8001fffff 64bit pref]
-[   52.294057] virtio-pci 0000:01:00.0: vgaarb: pci_notify
-[   52.294065] virtio-pci 0000:01:00.0: runtime IRQ mapping not provided by arch
-[   52.294083] virtio-pci 0000:01:00.0: enabling device (0000 -> 0003)
-[   52.335305] virtio-pci 0000:01:00.0: enabling bus mastering
-[   52.339810] scsi host3: Virtio SCSI HBA
-[   52.358165] virtio-pci 0000:01:00.0: vgaarb: pci_notify
-[   52.358380] pci 0000:00:04.0: PCI bridge to [bus 01]
-[   52.358398] pci 0000:00:04.0:   bridge window [io  0xc000-0xcfff]
-[   52.358518] scsi 3:0:1:0: Direct-Access     LIO-ORG  lun2             4.0  PQ: 0 ANSI: 5
-[   52.360287] pci 0000:00:04.0:   bridge window [mem 0xc1000000-0xc11fffff]
-[   52.362313] pci 0000:00:04.0:   bridge window [mem 0x800100000-0x8001fffff 64bit pref]
+When running find_first_bit() on volatile memory, the memory may get
+changed in-between, and for instance, it may lead to passing 0 to
+__ffs(), which is undefined. This is a potentially dangerous call.
 
-It is because of the following. To reconfigure the mmio resource of bridge and
-to probe scsi happens at the same time, in different threads.
+find_and_clear_bit() as a wrapper around test_and_clear_bit()
+naturally treats underlying bitmap as a volatile memory and prevents
+compiler from such optimizations.
 
-[   52.358398] pci 0000:00:04.0:   bridge window [io  0xc000-0xcfff]
-[   52.358518] scsi 3:0:1:0: Direct-Access     LIO-ORG  lun2             4.0  PQ: 0 ANSI: 5
-[   52.360287] pci 0000:00:04.0:   bridge window [mem 0xc1000000-0xc11fffff]
-[   52.362313] pci 0000:00:04.0:   bridge window [mem 0x800100000-0x8001fffff 64bit pref]
+Now that KCSAN is catching exactly this type of situations and warns on
+undercover memory modifications. We can use it to reveal improper usage
+of find_bit(), and convert it to atomic find_and_*_bit() as appropriate.
 
-The race starts since line 638.
+In some cases concurrent operations with plain find_bit() are acceptable.
+For example:
 
-627 static void pci_setup_bridge_mmio_pref(struct pci_dev *bridge)
-628 {
-629         struct resource *res;
-630         struct pci_bus_region region;
-631         u32 l, bu, lu;
-632
-633         /*
-634          * Clear out the upper 32 bits of PREF limit.  If
-635          * PCI_PREF_BASE_UPPER32 was non-zero, this temporarily disables
-636          * PREF range, which is ok.
-637          */
-638         pci_write_config_dword(bridge, PCI_PREF_LIMIT_UPPER32, 0);
-639
-640         /* Set up PREF base/limit */
-641         bu = lu = 0;
-642         res = &bridge->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-643         pcibios_resource_to_bus(bridge->bus, &region, res);
-644         if (res->flags & IORESOURCE_PREFETCH) {
-645                 l = (region.start >> 16) & 0xfff0;
-646                 l |= region.end & 0xfff00000;
-647                 if (res->flags & IORESOURCE_MEM_64) {
-648                         bu = upper_32_bits(region.start);
-649                         lu = upper_32_bits(region.end);
-650                 }
-651                 pci_info(bridge, "  bridge window %pR\n", res);
-652         } else {
-653                 l = 0x0000fff0;
-654         }
-655         pci_write_config_dword(bridge, PCI_PREF_MEMORY_BASE, l);
-656
-657         /* Set the upper 32 bits of PREF base & limit */
-658         pci_write_config_dword(bridge, PCI_PREF_BASE_UPPER32, bu);
-659         pci_write_config_dword(bridge, PCI_PREF_LIMIT_UPPER32, lu);
-660 }
+ - two threads running find_*_bit(): safe wrt ffs(0) and returns correct
+   value, because underlying bitmap is unchanged;
+ - find_next_bit() in parallel with set or clear_bit(), when modifying
+   a bit prior to the start bit to search: safe and correct;
+ - find_first_bit() in parallel with set_bit(): safe, but may return wrong
+   bit number;
+ - find_first_zero_bit() in parallel with clear_bit(): same as above.
 
+In last 2 cases find_bit() may not return a correct bit number, but
+it may be OK if caller requires any (not exactly the first) set or clear
+bit, correspondingly.
 
-To probe the vhost-scsi and to reconfigure bridge window happen in different
-threads. There is a race between them so that to write to mmio may not work. It
-is called ioeventfd from KVM/QEMU's perspective.
+In such cases, KCSAN may be safely silenced with data_race(). But in most
+cases where KCSAN detects concurrency people should carefully review their
+code and likely protect critical sections or switch to atomic
+find_and_bit(), as appropriate.
 
-[0] pci_setup_bridge_mmio_pref
-[0] pci_setup_bridge
-[0] pci_assign_unassigned_bridge_resources
-[0] enable_slot
-[0] acpiphp_check_bridge
-[0] acpiphp_hotplug_notify
-[0] acpi_device_hotplug
-[0] acpi_hotplug_work_fn
-[0] process_one_work
-[0] worker_thread
-[0] kthread
-[0] ret_from_fork
-[0] ret_from_fork_asm
+The 1st patch of the series adds the following atomic primitives:
 
-[0] blk_execute_rq
-[0] scsi_execute_cmd
-[0] scsi_probe_lun
-[0] scsi_probe_and_add_lun
-[0] __scsi_scan_target
-[0] scsi_scan_channel
-[0] scsi_scan_host_selected
-[0] do_scsi_scan_host
-[0] do_scan_async
-[0] async_run_entry_fn
-[0] process_one_work
-[0] worker_thread
-[0] kthread
-[0] ret_from_fork
+	find_and_set_bit(addr, nbits);
+	find_and_set_next_bit(addr, nbits, start);
+	...
 
+Here find_and_{set,clear} part refers to the corresponding
+test_and_{set,clear}_bit function. Suffixes like _wrap or _lock
+derive their semantics from corresponding find() or test() functions.
 
-Indeed, I am curious if this impacts other PCI devices on this PCI bridge,
-doing mmio (e.g., to kick the doorbell register during that time).
+For brevity, the naming omits the fact that we search for zero bit in
+find_and_set, and correspondingly search for set bit in find_and_clear
+functions.
 
-There used to be similar issue. According to prior commits, we may need to
-touch the bridge window for only once.
+The patch also adds iterators with atomic semantics, like
+for_each_test_and_set_bit(). Here, the naming rule is to simply prefix
+corresponding atomic operation with 'for_each'.
 
-PCI: Probe bridge window attributes once at enumeration-time
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=51c48b310183ab6ba5419edfc6a8de889cc04521
+In [1] Jan reported 2% slowdown in a single-thread search test when
+switching find_bit() function to treat bitmaps as volatile arrays. On
+the other hand, kernel robot in the same thread reported +3.7% to the
+performance of will-it-scale.per_thread_ops test.
 
+Assuming that our compilers are sane and generate better code against
+properly annotated data, the above discrepancy doesn't look weird. When
+running on non-volatile bitmaps, plain find_bit() outperforms atomic
+find_and_bit(), and vice-versa.
 
-Thank you very much!
+So, all users of find_bit() API, where heavy concurrency is expected,
+are encouraged to switch to atomic find_and_bit() as appropriate.
 
-Dongli Zhang
+The 1st patch of this series adds atomic find_and_bit() API, 2nd adds
+a basic test for new API, and all the following patches spread it over
+the kernel.
+
+They can be applied separately from each other on per-subsystems basis,
+or I can pull them in bitmap tree, as appropriate.
+
+[1] https://lore.kernel.org/lkml/634f5fdf-e236-42cf-be8d-48a581c21660@alu.unizg.hr/T/#m3e7341eb3571753f3acf8fe166f3fb5b2c12e615
+
+---
+v1: https://lore.kernel.org/netdev/20231118155105.25678-29-yury.norov@gmail.com/T/
+v2: https://lore.kernel.org/all/20231204185101.ddmkvsr2xxsmoh2u@quack3/T/
+v3:
+ - collect more reviews;
+ - align wording in commit messages @ Bjorn Helgaas;
+ - add examples where non-atomic find_bit() may safely race @ Jan Kara;
+ - patch  #3: use if-else instead of ternary operator @ Jens Axboe;
+ - patch #13: align coding style @ Vitaly Kuznetsov, Sean Christopherson;
+
+Yury Norov (35):
+  lib/find: add atomic find_bit() primitives
+  lib/find: add test for atomic find_bit() ops
+  lib/sbitmap; optimize __sbitmap_get_word() by using find_and_set_bit()
+  watch_queue: optimize post_one_notification() by using
+    find_and_clear_bit()
+  sched: add cpumask_find_and_set() and use it in __mm_cid_get()
+  mips: sgi-ip30: optimize heart_alloc_int() by using find_and_set_bit()
+  sparc: optimize alloc_msi() by using find_and_set_bit()
+  perf/arm: use atomic find_bit() API
+  drivers/perf: optimize ali_drw_get_counter_idx() by using
+    find_and_set_bit()
+  dmaengine: idxd: optimize perfmon_assign_event()
+  ath10k: optimize ath10k_snoc_napi_poll() with an atomic iterator
+  wifi: rtw88: optimize the driver by using atomic iterator
+  KVM: x86: hyper-v: optimize and cleanup kvm_hv_process_stimers()
+  PCI: hv: Optimize hv_get_dom_num() by using find_and_set_bit()
+  scsi: core: optimize scsi_evt_emit() by using an atomic iterator
+  scsi: mpi3mr: optimize the driver by using find_and_set_bit()
+  scsi: qedi: optimize qedi_get_task_idx() by using find_and_set_bit()
+  powerpc: optimize arch code by using atomic find_bit() API
+  iommu: optimize subsystem by using atomic find_bit() API
+  media: radio-shark: optimize driver by using atomic find_bit() API
+  sfc: optimize driver by using atomic find_bit() API
+  tty: nozomi: optimize interrupt_handler()
+  usb: cdc-acm: optimize acm_softint()
+  block: null_blk: replace get_tag() with a generic
+    find_and_set_bit_lock()
+  RDMA/rtrs: optimize __rtrs_get_permit() by using
+    find_and_set_bit_lock()
+  mISDN: optimize get_free_devid()
+  media: em28xx: cx231xx: optimize drivers by using find_and_set_bit()
+  ethernet: rocker: optimize ofdpa_port_internal_vlan_id_get()
+  serial: sc12is7xx: optimize sc16is7xx_alloc_line()
+  bluetooth: optimize cmtp_alloc_block_id()
+  net: smc: optimize smc_wr_tx_get_free_slot_index()
+  ALSA: use atomic find_bit() functions where applicable
+  m68k: optimize get_mmu_context()
+  microblaze: optimize get_mmu_context()
+  sh: mach-x3proto: optimize ilsel_enable()
+
+ arch/m68k/include/asm/mmu_context.h          |  11 +-
+ arch/microblaze/include/asm/mmu_context_mm.h |  11 +-
+ arch/mips/sgi-ip30/ip30-irq.c                |  12 +-
+ arch/powerpc/mm/book3s32/mmu_context.c       |  10 +-
+ arch/powerpc/platforms/pasemi/dma_lib.c      |  45 +--
+ arch/powerpc/platforms/powernv/pci-sriov.c   |  12 +-
+ arch/sh/boards/mach-x3proto/ilsel.c          |   4 +-
+ arch/sparc/kernel/pci_msi.c                  |   9 +-
+ arch/x86/kvm/hyperv.c                        |  40 +--
+ drivers/block/null_blk/main.c                |  41 +--
+ drivers/dma/idxd/perfmon.c                   |   8 +-
+ drivers/infiniband/ulp/rtrs/rtrs-clt.c       |  15 +-
+ drivers/iommu/arm/arm-smmu/arm-smmu.h        |  10 +-
+ drivers/iommu/msm_iommu.c                    |  18 +-
+ drivers/isdn/mISDN/core.c                    |   9 +-
+ drivers/media/radio/radio-shark.c            |   5 +-
+ drivers/media/radio/radio-shark2.c           |   5 +-
+ drivers/media/usb/cx231xx/cx231xx-cards.c    |  16 +-
+ drivers/media/usb/em28xx/em28xx-cards.c      |  37 +--
+ drivers/net/ethernet/rocker/rocker_ofdpa.c   |  11 +-
+ drivers/net/ethernet/sfc/rx_common.c         |   4 +-
+ drivers/net/ethernet/sfc/siena/rx_common.c   |   4 +-
+ drivers/net/ethernet/sfc/siena/siena_sriov.c |  14 +-
+ drivers/net/wireless/ath/ath10k/snoc.c       |   9 +-
+ drivers/net/wireless/realtek/rtw88/pci.c     |   5 +-
+ drivers/net/wireless/realtek/rtw89/pci.c     |   5 +-
+ drivers/pci/controller/pci-hyperv.c          |   7 +-
+ drivers/perf/alibaba_uncore_drw_pmu.c        |  10 +-
+ drivers/perf/arm-cci.c                       |  24 +-
+ drivers/perf/arm-ccn.c                       |  10 +-
+ drivers/perf/arm_dmc620_pmu.c                |   9 +-
+ drivers/perf/arm_pmuv3.c                     |   8 +-
+ drivers/scsi/mpi3mr/mpi3mr_os.c              |  21 +-
+ drivers/scsi/qedi/qedi_main.c                |   9 +-
+ drivers/scsi/scsi_lib.c                      |   7 +-
+ drivers/tty/nozomi.c                         |   5 +-
+ drivers/tty/serial/sc16is7xx.c               |   8 +-
+ drivers/usb/class/cdc-acm.c                  |   5 +-
+ include/linux/cpumask.h                      |  12 +
+ include/linux/find.h                         | 293 +++++++++++++++++++
+ kernel/sched/sched.h                         |  14 +-
+ kernel/watch_queue.c                         |   6 +-
+ lib/find_bit.c                               |  85 ++++++
+ lib/sbitmap.c                                |  46 +--
+ lib/test_bitmap.c                            |  61 ++++
+ net/bluetooth/cmtp/core.c                    |  10 +-
+ net/smc/smc_wr.c                             |  10 +-
+ sound/pci/hda/hda_codec.c                    |   7 +-
+ sound/usb/caiaq/audio.c                      |  13 +-
+ 49 files changed, 631 insertions(+), 419 deletions(-)
+
+-- 
+2.40.1
+
 
