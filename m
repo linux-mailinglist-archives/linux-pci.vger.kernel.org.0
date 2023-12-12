@@ -1,189 +1,145 @@
-Return-Path: <linux-pci+bounces-803-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-804-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A6F180EF82
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 16:01:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14BDC80F057
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 16:26:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C547FB20D66
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 15:01:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4739280285
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 15:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6139745E5;
-	Tue, 12 Dec 2023 15:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79C9E75434;
+	Tue, 12 Dec 2023 15:25:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P9M+yYTk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4rVfJBW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D382D3;
-	Tue, 12 Dec 2023 07:00:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eRe4Wzd8odD7fb0xUk2e4EWlCZ7RE8tgycEcWeX4Zx0ec4VRMFJjuC3GgtHHBB6JunurBnzm+RTlP7RuPaoiYl2r2HRWoi24W/xnGC04w4H2L6ztYAJtUUJ7t/8GltatMznzCh5AJyvbgofAJPDZ4t/v4UkDN8/hD+58rK177neqOD3iGQkQJNTabnBaLINd4Vh3FKBxvkkwP04C8GSdgliLyAUtoKtuqtfn+vYPyU5o0YrnNa3mcVxH0SzZu+bCXHEr7uOT843mQU+6fpnm/E/CnC3VkAHDLRMykHybE1a6f6z4S2AxRpzrbLRLEnnDC5+Ys/dIoN7ZCF41ai42TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oSQWM4PbzO8YJUdRvXOLVowWREJ9xntmXkqznjus2eo=;
- b=XxWscK7Vk1Ctc4NOQcx5kVUfGCfIERHhCBIsCdEBYR3lsY1lO3edIp0yigjzHux4V5o9UynfUJS1GVYc4xNVxi3oERNvVBPKdiUthF1BkgKBIhUPgLqWDNmW8BHPrHE0ayoSKRLMHUDo7dFwpLjUPycpxdll6j5ExpI31+M/tNxLn81ZwUb52Rbdhk432CHYiMpskU4Z194GoLDylVLHCBoCYlY/i+ATwZqZTYfiJ+EwlGtPeIrHXs+hvQq9h7Hus2Bmd4ZfNiiJE+kqK7cGZ76O952CEloBi02u8jDkplBWyQJkrmwZqwaPmw5ZsTPu+TFC+LcUWMATqWlZ8JRLMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oSQWM4PbzO8YJUdRvXOLVowWREJ9xntmXkqznjus2eo=;
- b=P9M+yYTk0eBfv2fcXz5Gr9hBAoAOOcaxP/EvzyIisEEwTxK1SL1KFqGs2HchkVF1Ua9lI/BjjIZx5F1DDBRMhrQ+5p/ud1rCxGEbHXk/yyNJqKx7W1AIzu4z81hKkWAoilDF7SBaTMW7Vy4912JeJjFdFMqdgCDBWqJbktbGr1s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- SJ0PR12MB5440.namprd12.prod.outlook.com (2603:10b6:a03:3ac::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26; Tue, 12 Dec
- 2023 15:00:51 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::eb9d:982c:4c9d:8522]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::eb9d:982c:4c9d:8522%4]) with mapi id 15.20.7091.022; Tue, 12 Dec 2023
- 15:00:51 +0000
-Message-ID: <448c843e-b212-4b21-9c9a-1651a456f4bb@amd.com>
-Date: Tue, 12 Dec 2023 09:00:51 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] PCI/AER: Decode Requester ID when no error info found
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Robert Richter <rrichter@amd.com>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20231206224231.732765-1-helgaas@kernel.org>
- <20231206224231.732765-3-helgaas@kernel.org>
-From: Terry Bowman <Terry.Bowman@amd.com>
-In-Reply-To: <20231206224231.732765-3-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DS7PR06CA0037.namprd06.prod.outlook.com
- (2603:10b6:8:54::12) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE21120
+	for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 07:25:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702394735;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wIpQw8k3Ji1hQ+Q/rMJi3mOp+fmPt/8e4XsCNKHyBDU=;
+	b=e4rVfJBW6SUYlK502zdXA7lDa5hPdvD86lvhUU2+qOD12w36ynGUYJ2JNiUBiaMGwsb0hQ
+	/pk1234NHu6Edl+qsHsfVCj3Er6riLXTQV+XicUIhjnxjMkaJXbD4noGHbeuqK9wScY/YE
+	kFflxEEYcwaq/E5VWpQv8N+hxxszijY=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-189-Mt6iMyo7P0Sl8sbnHROviw-1; Tue, 12 Dec 2023 10:25:33 -0500
+X-MC-Unique: Mt6iMyo7P0Sl8sbnHROviw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a1f9ab28654so100897466b.0
+        for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 07:25:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702394732; x=1702999532;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wIpQw8k3Ji1hQ+Q/rMJi3mOp+fmPt/8e4XsCNKHyBDU=;
+        b=LezbBeSnl3kHYg36tEhcZ0nV3NmpONWMvjdoLy8v+Aq6+Pw15YzvuAkQEAi41t1Izv
+         ukHyXu6f1E5IOEbZlqSOUCuqjyVWh07zssLkr1sTYiYEMlbvM9i72k5WEG3OXFozzHjq
+         8UWb6+Y6VQlaAqPOuj4Ts/Nx7fSJnetfjQVwUaooQzmiAda8r4ZTCz7rvT3b90vrT6vY
+         kePV7GKVlnmuuNbLWuqw9jwpW6LkgYrOVk0KkTQVCG0vFbA8NiINqjRx5vDh5IG1JSyE
+         u4qOMV5wn4s6NOQvMO5Y6fPfLoIErTsjOvIeNLs9XealfrpmfVf0/t2M/f4MAK3fvwLr
+         aN1A==
+X-Gm-Message-State: AOJu0Yxlgstl9nDE3hEy5xsbzkH4l9VYQ+oqbJIBxrbXlUMLtoxFuV9J
+	tBzgqWNv6NXh12/0MjAIL/qQC0bY5UFoGrmqQag+HYmy/QE8tX59NUXS88gSV40Ep6frAj84we4
+	KN9YPM3fdmFO44LIQQF8w
+X-Received: by 2002:a17:906:10c7:b0:a1c:e980:3c3 with SMTP id v7-20020a17090610c700b00a1ce98003c3mr2652512ejv.28.1702394732295;
+        Tue, 12 Dec 2023 07:25:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGASJRN+3155/H3UvqxOv26N1RhSjlb8LnjPrXAVZ+i+Dsz6c4kdn853kkeIlOvLJ4UnqcHDA==
+X-Received: by 2002:a17:906:10c7:b0:a1c:e980:3c3 with SMTP id v7-20020a17090610c700b00a1ce98003c3mr2652496ejv.28.1702394731966;
+        Tue, 12 Dec 2023 07:25:31 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id vh9-20020a170907d38900b00a1d18c142eesm6445227ejc.59.2023.12.12.07.25.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 07:25:31 -0800 (PST)
+Date: Tue, 12 Dec 2023 16:25:29 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Fiona Ebner <f.ebner@proxmox.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bhelgaas@google.com, lenb@kernel.org, rafael@kernel.org, Thomas Lamprecht
+ <t.lamprecht@proxmox.com>, mst@redhat.com
+Subject: Re: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
+Message-ID: <20231212162529.09c27fdf@imammedo.users.ipa.redhat.com>
+In-Reply-To: <62363899-d7aa-4f1c-abfa-1f87f0b6b43f@proxmox.com>
+References: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
+	<20231207232815.GA771837@bhelgaas>
+	<20231208164723.12828a96@imammedo.users.ipa.redhat.com>
+	<20231211084604.25e209af@imammedo.users.ipa.redhat.com>
+	<c6233df5-01d8-498f-8235-ce4b102a2e91@proxmox.com>
+	<20231212122608.1b4f75ce@imammedo.users.ipa.redhat.com>
+	<62363899-d7aa-4f1c-abfa-1f87f0b6b43f@proxmox.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ0PR12MB5440:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d39cdef-5fd8-4b2d-07bb-08dbfb232200
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HMGnCjHSscWTosmaVOVD6H+3pmC+qP48GIQYovYAqRfenhS+SBXcuqZPtB/HMkxHr7b1DJsJEKkd0OI2R+yZuQm9KohwI0m90t9oFWzTBeixr7uQ3c7RAeHYweuRh8atVx06DG2K4ESz3A+mbClygH+P+txF+2SCuf7v1aD6uNLgPzWe+FkMF1S9jy0i2Nx3qr5NywFzUVjiCj5q1vnebdJ86049VmxTH5I3mmolWcHgvX1GPP3r4pNP1p1rdP3Ver+hFwP73gyrhDTPxUwiqjQqYmQYa36VDhhqweXzks07D4FYx9SPQCSvFe5GrsY/D88ehOugzLH5I53gEibVYZ2h/JLG9RtuKMNramzyF/GXCeFXIAfymPsfDASPKfAKOTgSHqvV2X+lqiR/KU2fdqlpnKK5EYdK2CWUDs2vd/0Z2sgUaSRWObc3C2qrXeW8C0UoovMTcY6R8RMaAiPgQOUaqH+SObqfrkQQ7elmznN9jMSoWIPG4kjR0sE7Wso8bJhQaQU4WFWddaOFiJFXrKuhmIpFvIqlwbNL3QnqvO+EUm5R7grD74N6LQVQ8bexVF+I7sEAuZsetYoZ66o30jo/YJAiuK8r5vz0HuoeszXDNpmVaNSmgzrhO/gBkitapKSG87y6mEDJNFwOEeOL2g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(346002)(396003)(376002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(31686004)(66946007)(66476007)(66556008)(54906003)(31696002)(36756003)(86362001)(83380400001)(26005)(2616005)(6512007)(6506007)(53546011)(6486002)(2906002)(316002)(38100700002)(478600001)(4326008)(5660300002)(8936002)(8676002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z1FiMlB1YUlzWndqWFdXUDM4ZzdnSVgreThzaTFuRitMbWo4bjBRNURuWTRY?=
- =?utf-8?B?SDVNODdscVNWUm9jK1ZRTFArcmdvV29sNzJFNkF4TnJLVENlaUhycUlsQ0xY?=
- =?utf-8?B?anYvRHE1c0IrdlZhZXg5YytqanVKNEk3RldENk04QUtneWZvTU1Ra1NxQUF2?=
- =?utf-8?B?ZmZuTlFqK2VMRlVhRnV0clZLNVBFOVg2eWEyREE2R2FNZDVHdGRmcVAwNnlL?=
- =?utf-8?B?ejRXYi9UNTlDaVF5WGtYZVB0ZUtqZUcyL21FVGR4ZUxFVnNvczR4K0FiN1pS?=
- =?utf-8?B?cGJURlViR1ZRSkI4UmNMaDAwUFFWUVBYdlR3REZnTFUyUTV4RTRVRy8vOFR1?=
- =?utf-8?B?aXYwMExRbWxTSHUzUWt0cGZuWFl5dlRpSzZMMUE0WUJpbHFrWkxoZFdNMVZr?=
- =?utf-8?B?bzVIc0x6emdhNkRBVnY3YVpaYjliL0tpMUR1MSs3RGQxbVBMOTVXZ1BjMjVK?=
- =?utf-8?B?QSs3Nzh0QVM1Z2szbGJmcE9vbWFFTzRUSmpaQ1JQaHNNd1p1cW1FRDBSQStp?=
- =?utf-8?B?K3R5MFpJOFlveEpUYnFHMnZ6dnZJTEYrQ2JIT2k0VTVrZGZnd21HdkNCVGRC?=
- =?utf-8?B?TTNsNWs4WldhWUtSVitVZnIrOXRsZ3VlS1BSTjB3S0wyNWpxbFpJN2p0eFJ6?=
- =?utf-8?B?dUxORW5DYThtNE5GdUtLdDhaa1k4QVJrUnlucEFYS3RNNHVXOVJFUUFzbnU1?=
- =?utf-8?B?MDc0YWwwekErQ0hxcFVZV0c0Z0R1bjFsOTVzT0RtMExCU0lIYUc0b0ZSK09U?=
- =?utf-8?B?blZNbmdVcktROW5IWk9jem8wT3ZrMVRVQWV2T0lENkhiQmg2bVI5QmRiVFZY?=
- =?utf-8?B?YjRIY0FzVmxGSEJKejF2UENuc3JrODI3L1JNZ2Q2NlI2QURsUnF3ejF0SCs1?=
- =?utf-8?B?SS9ZVHZzem1NN3NqeGx5YWlSWmRnaENxMkFWeEdGLzJjQUUyT3BhUEVDQnR1?=
- =?utf-8?B?alVJTUNkRU1EK2c4K2llcnM5YmQ1T251Q2lHYUtiZ1Ftc3JPeTBHdEh2UzdM?=
- =?utf-8?B?bVJubFZBSWc3MnZZQjBYclZKUC8vUEFtQ0JaVU9WNHpkL1Z2RWF5amN0T0Q3?=
- =?utf-8?B?ZzRuVlJSaFRxNHJSLzJ0bUl4Yy9WSDRRb0hhVHhSRW5TMEYvVVpqR0NjdjdB?=
- =?utf-8?B?MlBaZXpKWlVmT3JxR2JiZDlGSnE3Z1FISUlHYW1scUNhVWFWNmN3L1oyd3Br?=
- =?utf-8?B?bEJ6eXJtOXlUVFFxbW8zZzhkUGVCTEFjZWkzVzhONEhPWG05dFVRNnEzMWFG?=
- =?utf-8?B?MnNYWVNaSDVmSWRiNFpDb1VIZmNmaUhVRFA0dHJRQ252ejk5QkR4QUdKSUlE?=
- =?utf-8?B?YmMxbmZMR1h3SUFiZm5aMFRvbGt6RVJKRW1hWFM3R1FsRFdPSTc3NjRMZFNx?=
- =?utf-8?B?Y1BHRlJGOTc0WXNJZmdSMU9TdmpvRmR1VmN2MFlPSmhzOUpqNnRVNXVqd3A3?=
- =?utf-8?B?dkUzdW9vcVMrR0QwTnZDdGpFL1JPNktOK0NzZUVNVzlQOHZhSmtGLzRJeXNL?=
- =?utf-8?B?eU92UVNNbFd3L2VkaDN4bHNNaFZpUjJBVy9DZFpQaTR4dTdBUWRjaWkrUmo5?=
- =?utf-8?B?eG5vRTQ1bkkxRHhyYXJoZUdkV2x4eEJNa1BLZS8xQ0hXZHlxZU83UjJBVTNz?=
- =?utf-8?B?Wm9xZlhVRHlHYXJ4QUd4cS9XNGpPeG5xZTJQMlFvZkpqRW4rMTV1ZGxvUDFr?=
- =?utf-8?B?bEd1OEUvRzk1ak12b1ROTFpka0h0dWFhR0Irak9aNWVRM0Y2Zk9jR1lNMFQ2?=
- =?utf-8?B?RGpCTTMzVi8wZjlOQWc2cUN6Qkt1bFVXZ0trZDNTNnA5dzNLSTNsUjFMV1hF?=
- =?utf-8?B?UkpTbktGQ09WZHpUcE1GbVNBU3lPbFlqVWxVSUYwS3ZkVjZGTlFlaHFPek1W?=
- =?utf-8?B?TCs2aERKOHpybmNkZXdOTEFiWXIvb01RQUwwVnlYT1FFUWRwSnNMb0lWaGps?=
- =?utf-8?B?eS9BbTNRWmZuR0liWWpSd0pxRExTdVFjVWh0eGxnK0V2dzZXZ1l2TFBkY3FM?=
- =?utf-8?B?RXRRTVZ6VU54eEEvVC8rWmtGZnRWejg4RC9kV1ZxdzV2OFMxbGl5OVZwdnBY?=
- =?utf-8?B?UDByV0xSREgxUVpuUUNWaUtPUGN5UEtiaUZ4RVo0ZXFqNlFHWXRFZW13MDFj?=
- =?utf-8?Q?TjmVznRfk0eyWmezmrSjTQISD?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d39cdef-5fd8-4b2d-07bb-08dbfb232200
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 15:00:51.7648
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ayrfQCMep1zMuvz0A3NI3Fbadf8wWiZ2yMWiRIur5B1gD0Obu1fpxgFsHOzfMuBkont881OZzMOiBHwjuOtFBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5440
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-LGTM
+On Tue, 12 Dec 2023 13:50:20 +0100
+Fiona Ebner <f.ebner@proxmox.com> wrote:
 
-On 12/6/23 16:42, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> Am 12.12.23 um 12:26 schrieb Igor Mammedov:
+> > 
+> > it's not necessary, but it would help to find out what's going wrong faster.
+> > Otherwise we would need to fallback to debugging over email.
+> > Are you willing to help with testing/providing debug logs to track down
+> > the cause?.
+> >   
 > 
-> When a device with AER detects an error, it logs error information in its
-> own AER Error Status registers.  It may send an Error Message to the Root
-> Port (RCEC in the case of an RCiEP), which logs the fact that an Error
-> Message was received (Root Error Status) and the Requester ID of the
-> message source (Error Source Identification).
+> I submitted the dmesg logs in bugzilla:
+> https://bugzilla.kernel.org/show_bug.cgi?id=218255
 > 
-> aer_print_port_info() prints the Requester ID from the Root Port Error
-> Source in the usual Linux "bb:dd.f" format, but when find_source_device()
-> finds no error details in the hierarchy below the Root Port, it printed the
-> raw Requester ID without decoding it.
+> > Though debug over email would be slow, so our best option is to revert
+> > offending patches until the cause if found/fixed.
+> >   
+> >>>>> Do you have to revert both cc22522fd55e2 and 40613da52b13f to make it
+> >>>>> work reliably?  If we have to revert something, reverting one would be
+> >>>>> better than reverting both.      
+> >>>>    
+> >>
+> >> Just reverting cc22522fd55e2 is not enough (and cc22522fd55e2 fixes
+> >> 40613da52b13f so I can't revert just 40613da52b13f).  
+> > 
+> > With UEFI setup, it still works for me fine with current master.
+> > 
+> > Kernel 6.7.0-rc5-00014-g26aff849438c on an x86_64 (ttyS0)
+> >   
 > 
-> Decode the Requester ID in the usual Linux format so it matches other
-> messages.
+> I also built from current master (still 26aff849438c) to verify and it's
+> still broken for me.
 > 
-> Sample message changes:
+> > 
+> > it still doesn't work with Fedora's 6.7.0-0.rc2.20231125git0f5cc96c367f.26.fc40.x86_64 kernel.
+> > However it's necessary to have -smp 4 for it to break,
+> > with -smp 1 it works fine as well.
+> >   
 > 
->   - pcieport 0000:00:1c.5: AER: Correctable error received: 0000:00:1c.5
->   - pcieport 0000:00:1c.5: AER: can't find device of ID00e5
->   + pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
->   + pcieport 0000:00:1c.5: AER: found no error details for 0000:00:1c.5
+> For me it's (always with build from current master):
 > 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pcie/aer.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+> -smp 1 -> it worked 5 times out of 5
+> -smp 2 -> it worked 3 times out of 5
+> -smp 4 -> it worked 0 times out of 5
+> -smp 8 -> it worked 0 times out of 5
+
+
+I managed to reproduce it with upstream using fedora 40 config as is
+(without converting it to mod2yesconfig).
+So give me a couple of days to debug it before reverting.
+
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 20db80018b5d..2ff6bac9979f 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -740,7 +740,7 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
->  	u8 bus = info->id >> 8;
->  	u8 devfn = info->id & 0xff;
->  
-> -	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
-> +	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
->  		 info->multi_error_valid ? "Multiple " : "",
->  		 aer_error_severity_string[info->severity],
->  		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> @@ -929,7 +929,12 @@ static bool find_source_device(struct pci_dev *parent,
->  		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
->  
->  	if (!e_info->error_dev_num) {
-> -		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-> +		u8 bus = e_info->id >> 8;
-> +		u8 devfn = e_info->id & 0xff;
-> +
-> +		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
-> +			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
-> +			 PCI_FUNC(devfn));
->  		return false;
->  	}
->  	return true;
+> Best Regards,
+> Fiona
+> 
+
 
