@@ -1,182 +1,120 @@
-Return-Path: <linux-pci+bounces-810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56A2E80F605
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 20:07:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D135480F69D
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 20:25:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E80A41F2155E
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 19:07:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29C2EB20AE3
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 19:25:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECB08004C;
-	Tue, 12 Dec 2023 19:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RDGGSWd4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D3B181E4A;
+	Tue, 12 Dec 2023 19:25:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F832CF
-	for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 11:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702408058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FED27YmNOd7V+oZeJKNoXbNO7gH5+lQwLLcQbiy2vMU=;
-	b=RDGGSWd4KlRXJxjfPcZ9skvvP+Ntafybfr8t9Ke+8vVKpp9ZPBdXBmb59GntW8Cw+xTn5b
-	10DYB7Rl8YG0sjnAVtZTp5esI4cbg+Um3fgUrLz622Pn58JpR/9AJYsJ8Xl+slYgj7Bjpi
-	y0ELk3oFLv8L8Sa0QkxWgAIHMvyEHcg=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-318-H0pulbGbME-IgYS9W8SQ9Q-1; Tue, 12 Dec 2023 14:07:36 -0500
-X-MC-Unique: H0pulbGbME-IgYS9W8SQ9Q-1
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-35d65c9dea3so63380195ab.3
-        for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 11:07:36 -0800 (PST)
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C6394;
+	Tue, 12 Dec 2023 11:25:28 -0800 (PST)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6da06c505ccso770537a34.1;
+        Tue, 12 Dec 2023 11:25:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702408055; x=1703012855;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1702409128; x=1703013928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FED27YmNOd7V+oZeJKNoXbNO7gH5+lQwLLcQbiy2vMU=;
-        b=e1+uQ2RPPX5a+cTPLt6PkWsus/oJIcn5DPUWNOLdsereUSWywNqEZ6C/XKO95E6LmN
-         I4HYV+64q2jt7sjSasJAKNYGSWVkMAn2jYn34PSO8nHK3cqFy1rmjIeDF10AAilNxmAk
-         0vQfth2KtsfUcTYkwsNE3jhNr8FaRuD3PxVqsecodv9b0mbonRY8f90HAiY1sIS/DB5G
-         SGqCXxX15Wiytdoh32Zq8FwqTHaEjD3N2xS/lq/s1yBsQd2GEOEmvcdDT8F0NpnITM7P
-         b6+WA9mytJ9b/8lpAUPajiAbNxTORXOR9wIq7Fr9rYDMogEZY6zN2iSj5uW/+Bc8B9PA
-         LZNQ==
-X-Gm-Message-State: AOJu0YxcOBYAv2UsDUOJCK2E62p63c8uRUudSzcHrTrguq2Xq9ZHjPtL
-	i7aUVSMS6/vLk9m7IDTR/GZnOdu/KbMbcLn4NeTYLVZ/H6lntad/YfTjMFOdXhTLn59Ri+oD6zY
-	Cdj/zJsofVO/8gLzFLsDRTzs5Jumt
-X-Received: by 2002:a05:6e02:1bcb:b0:35d:61b4:e628 with SMTP id x11-20020a056e021bcb00b0035d61b4e628mr9640240ilv.60.1702408055388;
-        Tue, 12 Dec 2023 11:07:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGda909qB0r9Ew8IPtUFSHBRPzOG9BaOeogeMBjylm8Sdw+95yUodB4i8i8Qg3TXpPRPQvoyw==
-X-Received: by 2002:a05:6e02:1bcb:b0:35d:61b4:e628 with SMTP id x11-20020a056e021bcb00b0035d61b4e628mr9640223ilv.60.1702408055130;
-        Tue, 12 Dec 2023 11:07:35 -0800 (PST)
-Received: from redhat.com ([38.15.60.12])
-        by smtp.gmail.com with ESMTPSA id m18-20020a056638271200b00466593d380fsm2500141jav.53.2023.12.12.11.07.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 11:07:34 -0800 (PST)
-Date: Tue, 12 Dec 2023 12:07:33 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Ashutosh Sharma <ashutosh.dandora4@gmail.com>, Lukas Wunner
- <lukas@wunner.de>, linux-pci@vger.kernel.org, helgaas@kernel.org,
- dwmw2@infradead.org, yi.l.liu@intel.com, majosaheb@gmail.com,
- cohuck@redhat.com, zhenzhong.duan@gmail.com, Smita Koralahalli
- <Smita.KoralahalliChannabasappa@amd.com>, Yazen Ghannam
- <yazen.ghannam@amd.com>
-Subject: Re: PCI device hot insert is not detected
-Message-ID: <20231212120733.7b62f92c.alex.williamson@redhat.com>
-In-Reply-To: <5d880d78-ee3b-4c3d-a0bb-4e278c3d7b29@amd.com>
-References: <CADOvten7jG7KjW6W1MRd7i8_E18L0xCCaCzmZOY_vvgJhdfOSw@mail.gmail.com>
-	<20231212105934.GA15015@wunner.de>
-	<CADOvte=k6JJbj=CqjLQqYu1Hp+Cu891KNkn-BDkOKPTdfdVQvw@mail.gmail.com>
-	<5d880d78-ee3b-4c3d-a0bb-4e278c3d7b29@amd.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        bh=yoyxJ6X4P/iKcYssHVUQvgFoC/dIcRS9b6OahyFAXwA=;
+        b=hvf7u+Lrfh7HvRPupt0uLrNXdXFHtulwV4aymEkr8/bb+EV/D/So8MtgQjc2i9qSPF
+         ZZxpz7VS1kgtBO5ZHcVYUDFiTz4Uk19MSshqjkZW4Q2mXiIY7NX5CWpPbp3j5qzBgLhU
+         cUiOqNHgoIcFVcUcstSqIUc3wMtUNJyl2IGctDghTQld14GX35ZKJr9tY5b6z+5vF4HV
+         QTxWwoxF0N2IsGaaxFA25AF/+S1yaU2qP9UQRK7po1zjA99IJul5+tvdeesh/InRibxQ
+         aKAI6UBSauR9tuI1BOY4agA/cI9tsHmDL3AvmGcQjYTjl9jtwZdv0fT4E/d9yxYPKBe0
+         PVYg==
+X-Gm-Message-State: AOJu0YyBrwfMU5LEYMgTGIstr+gN8ZUNsEgCpC1O+/StN1G+syAEj3tO
+	7cwdLeGYy3uaRai7jdjC13T4BCXKQeOe0rCv/oc=
+X-Google-Smtp-Source: AGHT+IG+R/2dDVOAo8hNe4uTtuQoUVfj41bgYhEqgafqLkVHeNbFeZgwQy5dNh9liMdoGBMx4RX7bzlFAi1Xh1e9A3Q=
+X-Received: by 2002:a4a:c487:0:b0:58d:ddcb:db1a with SMTP id
+ f7-20020a4ac487000000b0058dddcbdb1amr11243353ooq.1.1702409127732; Tue, 12 Dec
+ 2023 11:25:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20231203041046.38655-1-mario.limonciello@amd.com> <20231203041046.38655-3-mario.limonciello@amd.com>
+In-Reply-To: <20231203041046.38655-3-mario.limonciello@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 12 Dec 2023 20:25:16 +0100
+Message-ID: <CAJZ5v0g_HWFnt0a5fDnb73Q14C84O+RPYVF104TDK7T_Ox3_EA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] PCI: Refresh root ports in pci_bridge_d3_update()
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
+	Hans de Goede <hdegoede@redhat.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>, 
+	"open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Lukas Wunner <lukas@wunner.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 12 Dec 2023 12:29:13 -0600
-Mario Limonciello <mario.limonciello@amd.com> wrote:
+On Mon, Dec 4, 2023 at 7:07=E2=80=AFAM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> If pci_d3cold_enable() or pci_d3cold_disable() is called on a root
+> port it is ignored because there is no upstream bridge.
 
-> On 12/12/2023 05:32, Ashutosh Sharma wrote:
-> >> This doesn't work, try "echo 1 | sudo tee power" instead.  
-> > 
-> > This was not a permission issue, I already gave it read/write permission.
-> > 
-> > admin@node-4:/sys/bus/pci/slots/14$ sudo echo 1 > power
-> > -bash: power: Permission denied
-> > admin@node-4:/sys/bus/pci/slots/14$ sudo chmod 0666 power
-> > admin@node-4:/sys/bus/pci/slots/14$ sudo echo 1 > power
-> > echo: write error: Operation not permitted
-> > admin@node-4:/sys/bus/pci/slots/14$
-> >   
-> >> This is from a "Link up" situation (DLActive+), it would be more
-> >> interesting to get lspci output of the port in a "No link" situation.  
-> > 
-> > Unfortunately, I did not collect that output before system reboot.
-> > 
-> > On Tue, 12 Dec 2023 at 16:29, Lukas Wunner <lukas@wunner.de> wrote:  
-> >>
-> >> On Tue, Dec 12, 2023 at 04:04:41PM +0530, Ashutosh Sharma wrote:  
-> >>> Removed one NVMe drive (pci address 0000:83:00.0), it got unbound
-> >>> successfully from "vfio-pci" driver but saw below error in the syslog.
-> >>>
-> >>> can't change power state from D0 to D3hot (config space inaccessible)  
-> >>
-> >> This is normal, the drive's config space is inaccessible after removal.
-> >>  
-> 
-> Was the removal a "surprise" removal?  Or you mean it was by using 
-> 'remove' sysfs file?
-> 
-> IIRC surprise removal will need platform firmware support to handle it 
-> properly.
+The kerneldoc comment of pci_bridge_d3_update() explains what that
+function is for which also covers why it does not take effect when
+called on root ports.
 
-The vfio-pci driver also makes zero claims about supporting surprise
-removal, you'll likely end up in an inconsistent state.  Thanks,
+> If called on a root port, use `no_d3cold` variable to decide policy
 
-Alex
+It is unclear that this is about pci_bridge_d3_possible() which
+applies to both D3hot and D3cold, not just D3cold AFAICS.  I don't
+think that no_d3cold should affect the D3hot behavior.
 
-> >>> Then after 2:30 min approx, re-inserted the same drive to the same PCI
-> >>> slot. But the drive was not detected.
-> >>>
-> >>> Dec 11 23:54:39 node-4 kernel: [183672.630191] pcieport 0000:80:03.2:
-> >>> pciehp: Slot(14): Attention button pressed
-> >>> Dec 11 23:54:39 node-4 kernel: [183672.630195] pcieport 0000:80:03.2:
-> >>> pciehp: Slot(14) Powering on due to button press
-> >>> Dec 11 23:54:44 node-4 kernel: [183677.671931] pcieport 0000:80:03.2:
-> >>> pciehp: Slot(14): Card present
-> >>> Dec 11 23:54:46 node-4 kernel: [183679.783922] pcieport 0000:80:03.2:
-> >>> pciehp: Slot(14): No link  
-> >>
-> >> The link doesn't come up, so the kernel gives up on the slot.
-> >>
-> >> I don't know what the reason is, could be a hardware issue or
-> >> protocol incompatibility.  This doesn't look like a kernel issue.
-> >>
-> >>  
-> >>>   |           +-03.0  Advanced Micro Devices, Inc. [AMD]
-> >>> Starship/Matisse PCIe Dummy Host Bridge
-> >>>   |           +-03.1-[82]----00.0  Samsung Electronics Co Ltd NVMe SSD
-> >>> Controller PM9A1/PM9A3/980PRO
-> >>>   |           +-03.2-[83]--  
-> >>
-> >> Adding Mario, Smita, Yazen from AMD to cc, maybe they have an idea
-> >> what the issue is or how to get diagnostics on this Epyc platform.
-> >>
-> >> Start of thread:
-> >> https://lore.kernel.org/linux-pci/CADOvten7jG7KjW6W1MRd7i8_E18L0xCCaCzmZOY_vvgJhdfOSw@mail.gmail.com/
-> >>
-> >>  
-> >>> admin@node-4:/sys/bus/pci/slots/14$ sudo echo 1 > power
-> >>> echo: write error: Operation not permitted  
-> >>
-> >> This doesn't work, try "echo 1 | sudo tee power" instead.
-> >>
-> >>  
-> >>> lspci output of the pci port:
-> >>> 80:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD]
-> >>> Starship/Matisse GPP Bridge (prog-if 00 [Normal decode])  
-> >> [...]  
-> >>>                  LnkSta: Speed 16GT/s (ok), Width x4 (ok)
-> >>>                          TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt-  
-> >>
-> >> This is from a "Link up" situation (DLActive+), it would be more
-> >> interesting to get lspci output of the port in a "No link" situation.
-> >>
-> >> Thanks,
-> >>
-> >> Lukas  
-> 
+> and also immediately refresh whether D3 is possible.
 
+Which isn't correct AFAICS.
+
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 72505794cc72..3d4aaecda457 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3023,6 +3023,9 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>                 if (pci_bridge_d3_disable)
+>                         return false;
+>
+> +               if (bridge->no_d3cold)
+> +                       return false;
+> +
+>                 /*
+>                  * Hotplug ports handled by firmware in System Management=
+ Mode
+>                  * may not be put into D3 by the OS (Thunderbolt on non-M=
+acs).
+> @@ -3098,7 +3101,11 @@ void pci_bridge_d3_update(struct pci_dev *dev)
+>         bool d3cold_ok =3D true;
+>
+>         bridge =3D pci_upstream_bridge(dev);
+> -       if (!bridge || !pci_bridge_d3_possible(bridge))
+> +       if (!bridge) {
+> +               dev->bridge_d3 =3D pci_bridge_d3_possible(dev);
+> +               return;
+> +       }
+> +       if (!pci_bridge_d3_possible(bridge))
+>                 return;
+>
+>         /*
+> --
+> 2.34.1
+>
+>
 
