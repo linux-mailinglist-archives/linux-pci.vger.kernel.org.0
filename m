@@ -1,107 +1,105 @@
-Return-Path: <linux-pci+bounces-896-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-897-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCC8E811CC1
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 19:38:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D43E811CD3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 19:40:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80A071F21990
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 18:38:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA0321C2123E
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 18:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC42C31750;
-	Wed, 13 Dec 2023 18:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4504759B4B;
+	Wed, 13 Dec 2023 18:39:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B12EB;
-	Wed, 13 Dec 2023 10:38:26 -0800 (PST)
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3b8652c0bd2so597302b6e.1;
-        Wed, 13 Dec 2023 10:38:26 -0800 (PST)
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B02114;
+	Wed, 13 Dec 2023 10:39:54 -0800 (PST)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-203223f3299so44920fac.0;
+        Wed, 13 Dec 2023 10:39:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702492705; x=1703097505;
+        d=1e100.net; s=20230601; t=1702492794; x=1703097594;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u0e9RjRusvtUVL36p2n3yW7GJ2o7hpTev/itTbWI7rc=;
-        b=I+144M8ftMJAreRe6xPQdj8vySNi6X+sVzPXn/7rfWVT3Uqaqqc3p/so2G6F1PcJGL
-         coXDHRWDq8Q9j6jdkpe3mk7MyrKhVPWB5CQTOVDxetL+1z7VvRffHUbMupj6iB5OTjZe
-         PoCFKBHEauATKOLo2+EW4ads35M65l87tOEZ49UREEoo8YnGSCAAlFiMYw26X1gy1FF4
-         xMc1wNyy3v5gsoiPXHj3+CGAGuhAT+FUL0b9QdW3TF1OQCdcSTgFUcS8Fk2PetN7XSrj
-         nN3khOc8/ZMD5hfS8faPi+wLLNzLNL7kMSsydRIU3XmXxjsnHvi7XGaKlaQFb0zKV77I
-         RrfA==
-X-Gm-Message-State: AOJu0YwZ8PXGmkN0TVH316Dsc3+yQW8E9sckAgx8xPhDi6l0ymNiQy4C
-	T74oy57enJe6CXqyLxBEgsVHwyYez26ltbEnNkqy/eFS
-X-Google-Smtp-Source: AGHT+IHZKVn3E0ZO3joLhJTb7yWJ8MSomiP1GSk6a/ctZVcvYzFC2WbOfEHp3TQd+tiK5vgLIEir+LilwP7Rt6ratOc=
-X-Received: by 2002:a05:6870:1484:b0:1fa:f0ee:ba9c with SMTP id
- k4-20020a056870148400b001faf0eeba9cmr16236627oab.2.1702492705309; Wed, 13 Dec
- 2023 10:38:25 -0800 (PST)
+        bh=m+/AL0R3+aA7WOxQr9yHHYdULaoe12ig01cSaDeUGDc=;
+        b=IUvOWKBLzc9adzCGq3yvDaD17koxl9bHLd0GAIZemaL36hqeFZrmtWof0Y9nEWKp5B
+         iUv8rA4VbOxMyZIDjfJgw/wbNjFjtxXzl+Uh5cNQad7Ya5ow3l5PJ9N0Q0D2HpbQ6O63
+         oSKfhdtoRE0ozGJRHW34ZZiMbE0u06ekc6Wsw6LBCKZ06Y0Q57bQEm2DHtbntOEYBCpm
+         lPfliH4Kuz7Grw6L9ORe5COF0QuQ7cP04QGArRiVs2uaNzKUFmcMMdFDKV1tRPbaIExS
+         Bu0c9w2TvJg7c+baUlAtvU0M01F5GeepUAqMKt6SmcW+IuyPwTTPoPCNPdtrciThd4Gq
+         Gkng==
+X-Gm-Message-State: AOJu0YwOZqu2TV+E2ytOYDKNpM0jLzhvCJ1H8iLOmfLty68OcoGVwVt1
+	tmJX6iAOrSggMkK/h1ToicGEkwBkX4W5F+qjPUXuAMhr
+X-Google-Smtp-Source: AGHT+IFNZW9AKxuCJch1eTxTfiEHdcy4y6jtGxcFPvT8BDR51E7N/mJ5WPOgEv9SIzxNGcWZxMIHFU4b7HF+Wvjfdyw=
+X-Received: by 2002:a05:6871:7589:b0:1fa:db26:78a6 with SMTP id
+ nz9-20020a056871758900b001fadb2678a6mr16005887oac.1.1702492793859; Wed, 13
+ Dec 2023 10:39:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231213182656.6165-1-mario.limonciello@amd.com> <20231213182656.6165-3-mario.limonciello@amd.com>
-In-Reply-To: <20231213182656.6165-3-mario.limonciello@amd.com>
+References: <20231213182656.6165-1-mario.limonciello@amd.com>
+ <20231213182656.6165-2-mario.limonciello@amd.com> <CAJZ5v0g0j2fpaHUdvxAkfo-3bRp=GRrKOgespUnz_BqX6timOw@mail.gmail.com>
+ <d03fd5a4-4f22-45e3-94b1-7ba735ea196f@amd.com>
+In-Reply-To: <d03fd5a4-4f22-45e3-94b1-7ba735ea196f@amd.com>
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 13 Dec 2023 19:38:14 +0100
-Message-ID: <CAJZ5v0gDjwEpx-WNSY0=qchoSGxizsD3XM7Bgq=i0xufBm=Cag@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI/portdrv: Place PCIe port hierarchy into D3cold at shutdown
+Date: Wed, 13 Dec 2023 19:39:43 +0100
+Message-ID: <CAJZ5v0jMNiYVb6Zv2BHTQs64sHxbn42kyJFyXHn2QwAMV+02ww@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: Avoid runtime resuming devices if system is
+ shutting down
 To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mpearson-lenovo@squebb.ca
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mpearson-lenovo@squebb.ca
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 13, 2023 at 7:27=E2=80=AFPM Mario Limonciello
+On Wed, Dec 13, 2023 at 7:33=E2=80=AFPM Mario Limonciello
 <mario.limonciello@amd.com> wrote:
 >
-> When a system is being powered off it's important that PCIe ports
-> have been put into D3cold as there is no other software to turn
-> off the devices at S5.
+> On 12/13/2023 12:31, Rafael J. Wysocki wrote:
+> > On Wed, Dec 13, 2023 at 7:27=E2=80=AFPM Mario Limonciello
+> > <mario.limonciello@amd.com> wrote:
+> >>
+> >> When the system is going to S5 resuming devices is unnecessary at
+> >> best and may cause problems for power consumption at S5 at worst.
+> >>
+> >> Check the target `system_state` in the pci driver shutdown() callback
+> >> and skip the runtime resume step if the system is being powered off.
+> >>
+> >> Cc: mpearson-lenovo@squebb.ca
+> >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >> ---
+> >>   drivers/pci/pci-driver.c | 4 +++-
+> >>   1 file changed, 3 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> >> index 51ec9e7e784f..5a6f7a786952 100644
+> >> --- a/drivers/pci/pci-driver.c
+> >> +++ b/drivers/pci/pci-driver.c
+> >> @@ -507,7 +507,9 @@ static void pci_device_shutdown(struct device *dev=
+)
+> >>          struct pci_dev *pci_dev =3D to_pci_dev(dev);
+> >>          struct pci_driver *drv =3D pci_dev->driver;
+> >>
+> >> -       pm_runtime_resume(dev);
+> >> +       /* If system will go to S5, don't wake up PCI devices for shut=
+down */
+> >> +       if (system_state !=3D SYSTEM_POWER_OFF)
+> >> +               pm_runtime_resume(dev);
+> >
+> > What's the guarantee that the driver's shutdown callback will not
+> > access MMIO regions of a runtime-suspended device?
 >
-> If PCIe ports are left in D0 then any GPIOs toggled by the ACPI
-> power resources may be left enabled and devices may consume excess
-> power.
-
-Isn't that a platform firmware issue?
-
-It is the responsibility of the platform firmware to properly put the
-platform into S5, including power removal from devices that are not
-armed for power-on.
-
-> Cc: mpearson-lenovo@squebb.ca
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/pcie/portdrv.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> This is something that may need to be audited.
 >
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 14a4b89a3b83..08238680c481 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -734,9 +734,14 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->  static void pcie_portdrv_shutdown(struct pci_dev *dev)
->  {
->         if (pci_bridge_d3_possible(dev)) {
-> -               pm_runtime_forbid(&dev->dev);
-> -               pm_runtime_get_noresume(&dev->dev);
-> -               pm_runtime_dont_use_autosuspend(&dev->dev);
-> +               /* whole hierarchy goes into a low power state for S5 */
-> +               if (system_state =3D=3D SYSTEM_POWER_OFF) {
-> +                       pci_set_power_state(dev, PCI_D3cold);
-> +               } else {
-> +                       pm_runtime_forbid(&dev->dev);
-> +                       pm_runtime_get_noresume(&dev->dev);
-> +                       pm_runtime_dont_use_autosuspend(&dev->dev);
-> +               }
->         }
+> I have an expectation that drivers will runtime resume a device before
+> they try to access it.
 
-Wouldn't it be better to remove power from the port after running the
-code below?
-
->         pcie_port_device_remove(dev);
-> --
+But they don't need to do it, because the core does it right now,
+which is my point.
 
