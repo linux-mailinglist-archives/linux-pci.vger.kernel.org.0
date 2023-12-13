@@ -1,104 +1,100 @@
-Return-Path: <linux-pci+bounces-867-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-868-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18A41810EFA
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 11:53:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5421B810F33
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 12:01:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BADB1C208C8
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 10:53:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85F821C208C8
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 11:01:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C536022EE4;
-	Wed, 13 Dec 2023 10:53:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB68622F0F;
+	Wed, 13 Dec 2023 11:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="XF10T0WQ";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="TJ3WGAhV"
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="Kqien4/w";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="y9f7Qfs8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B910093
-	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 02:52:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 0BB30C0004
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BBCEDB
+	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 03:01:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 078E7C0008
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1702464778; bh=0ANX21fvWXKVlojafEh9VSyHH1AYJA3xOreFehil6Q4=;
+	t=1702465267; bh=6m9NSKssRLldmWlhixuV2oOzYiZ/x4bVdnHRpPmniAk=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=XF10T0WQVXiltqsQAYwP2a1Wbc8kFxlXr6xynDwEglzbkO6gP43JkCDOFdoEak5ck
-	 qZ45z9mKQUBthcq62YNOrXMhOUNcq4qCLYHdtCjyvSKG2WjFbMRotn2upD+ZUXUvjY
-	 WT5YAJiv8M+bh0iOsSlA6Gp9KoECNfemLnJTvTsGymcbbgbnnl2lD3cTo7WXnWNQjS
-	 Mi5PZM5IpMzWOxEhqHvXDygRSQGyEAnL2AFu2+HV1q0261gJ/Rq4QBhyY+8/y+UEih
-	 Mt7ED6qXg2OjiRQnw6kbM2I2nWSs6MLOlrXP4yLYkwWlS1LIhmvuw+SFRBN0qJog0V
-	 5PPXtHnBIIOGg==
+	b=Kqien4/wm5k10ccVsDpY2hvkjjj2HNVg+lLYanQ9UApQ7CRd9lFkrLlCRrIhgCabt
+	 8SVbvq5aiv0W2mrjJCwHBQaP4B4g6XUa75mElpjqBvmze82nBefO9VlgZHt+282gLq
+	 cwyFuljUIcbgjVTNqtpZcvhMXLDY9GVi/Em+M1dNBEoOVXB1jUPXIvoeFcd4HW/jX6
+	 7xpJW2d0quCgk3xHsZ7Cdb5OXgBNf4iLRsZ8Tgfg0fWibzWcpys8EWJvSDkCARknUF
+	 NI04lfmIoThhO/RnzMjOiEZYH/pZIHDdlFeKIYouX5MsrYRgJtDbwWkxtJb8f/RLmk
+	 Y5BNfwLOQcrhA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1702464778; bh=0ANX21fvWXKVlojafEh9VSyHH1AYJA3xOreFehil6Q4=;
+	t=1702465267; bh=6m9NSKssRLldmWlhixuV2oOzYiZ/x4bVdnHRpPmniAk=;
 	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=TJ3WGAhVaz3Y9/CGCgOiioTgAZvNw5gT3ZWqgjypjOkh0EgKcBhXlfoKfPQ12bLbW
-	 n21IYkwaJK730s9J+czpDcw/DUIM2Q5KGh5I1Y6HybEyOcc6mtpdT00PCY1L5OZjtz
-	 Bx8bj0UYX4M4Y7z8DrQOgZcBj4qZm6dJ0ZFq+kKwU8BOnWAtVlbwz3eBS6KipLW28M
-	 fiYtZoELV3hY+KZ6ug+pl0R4cEfrdhu/AaaAhZG2+NObpfnZTIrT+kvc7Zu1CSbvUR
-	 GuwLtNua4nIeNTxTuPaT88qZ7F4oDu0+8MX7N5qJhRd5KEjwEJZnhrB840XaMm9tor
-	 7OAfLf8IE+Jpg==
-Date: Wed, 13 Dec 2023 13:52:56 +0300
+	b=y9f7Qfs84di7TzxK57mrzLMh2aMWgxVqoepvRIYPATtQP33P5nxADCpF/wqM1oYqu
+	 6ac8WrdYi2OROMlnF4/wF1LGvCtOXWm9Vm7COUgw66GtIO8EYB4vFfqchz/ipnSsxW
+	 2zfYu1Lu8JT2fXPZQfFhLl/UGbeUau9QrpICSOdcI8erUKZSxCpw/liRYNAsSDXgIY
+	 LRzAlsXop4MJdX82fbipEVbf9VsK//NpvziuP6udYUs6KUSl/eIcvItLfaeoFbG16T
+	 L097aGPBJwOCgR2Ns8iBkxMCmpmd3tIV6VpZx6N3iZpc7Yvyy3zYxK4rl7NA7x4dj8
+	 mzi+C3mk/gcsQ==
+Date: Wed, 13 Dec 2023 14:01:04 +0300
 From: Nikita Proshkin <n.proshkin@yadro.com>
-To: Martin =?UTF-8?B?TWFyZcWh?= <mj@ucw.cz>
-CC: <linux-pci@vger.kernel.org>, <linux@yadro.com>, Sergei Miroshnichenko
-	<s.miroshnichenko@yadro.com>, Nikita Proshkin <n.proshkin@yadro.com>
-Subject: Re: [PATCH 13/15] pciutils-pcilmr: Add option to save margining
- results in csv form
-Message-ID: <20231213135256.145556b6.n.proshkin@yadro.com>
-In-Reply-To: <mj+md-20231208.174204.32403.nikam@ucw.cz>
-References: <20231208091734.12225-1-n.proshkin@yadro.com>
-	<20231208091734.12225-14-n.proshkin@yadro.com>
-	<mj+md-20231208.174204.32403.nikam@ucw.cz>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>, <linux@yadro.com>,
+	Sergei Miroshnichenko <s.miroshnichenko@yadro.com>, Nikita Proshkin
+	<n.proshkin@yadro.com>
+Subject: Re: [PATCH 15/15] pciutils-pcilmr: Add pcilmr man page
+Message-ID: <20231213140104.075c89bd.n.proshkin@yadro.com>
+In-Reply-To: <20231208172404.GA797244@bhelgaas>
+References: <20231208091734.12225-16-n.proshkin@yadro.com>
+	<20231208172404.GA797244@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: T-EXCH-06.corp.yadro.com (172.17.10.110) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: T-EXCH-10.corp.yadro.com (172.17.11.60) To
  T-EXCH-08.corp.yadro.com (172.17.11.58)
 
-On Fri, 8 Dec 2023 18:44:23 +0100
-Martin Mare=C5=A1 <mj@ucw.cz> wrote:
+Hello Bjorn,
+Thanks for the review!
 
-> > +    if (!csv)
-> > +    {
-> > +      printf("Error while saving %s\n", path);
-> > +      free(path);
-> > +      return;
-> > +    }
->=20
-> We have die(...) for that.
+On Fri, 8 Dec 2023 11:24:04 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-I think that die() from common.c is not suitable here, as the utility at th=
-at
-moment in the code still can and must free up resources malloc'ed in the ma=
-in
-function.=20
+> I'm not a hardware person, but this looks like interesting work!
+> 
+> On Fri, Dec 08, 2023 at 12:17:34PM +0300, Nikita Proshkin wrote:
+> > +Turn off PCIE Leaky Bucket Feature, Re-Equalization and Link Degradation;
+> 
+> s/PCIE/PCIe/ to match other uses here.
+> 
+> > +The current Link data rate must be 16.0 GT/s or higher (right now
+> > +utility supports Gen 4 and 5 Links);
+> 
+> So far, each major PCIe spec revision has added a single new data
+> rate, but that may not always be true, and the spec always uses
+> terminology like "16.0 GT/s or higher" instead of terms like "Gen 4".
+> 
+> So "supports 16.0 GT/s and 32.0 GT/s Links" might be clearer.
+> 
+> > +The Gen 5 Specification sets allowed range for Timing Margin from 20%\~UI to 50%\~UI and
+> 
+> Usage in the spec itself would be more like "PCIe Base Spec Revision 5.0"
+> since it doesn't use "Gen 5".
+> 
+> > +According to spec it's possible for Receiver to margin up to MaxLanes + 1
+> > +lanes simultaneously, but usually this works bad, so this option is for
+> 
+> s/works bad/works poorly/
+> 
+> > +experiments mostly.
 
-> > +  char timestamp[64];
-> > +  time_t tim =3D time(NULL);
-> > +  strftime(timestamp, 64, "%FT%H.%M.%S", gmtime(&tim));
->=20
-> Please use sizeof(timestamp) to make the code more robust.
->=20
-> > +  char *path =3D (char *)malloc((strlen(dir) + 128) * sizeof(*path));
->=20
-> Please use xmalloc().
->=20
-> > +    sprintf(path, "%s/lmr_%0*x.%02x.%02x.%x_Rx%X_%s.csv", dir,
->=20
-> Please avoid plain sprintf() everywhere and use snprintf() instead.
->=20
-> > +    for (uint8_t j =3D 0; j < recv->lanes_n; j++)
->=20
-> It's better to use plain integer types ("int" or "unsigned int") for
-> loop control variables.
-
-Everything else will be fixed.=20
+Got it, I will style check the Man page again.
 
 Best regards,
 Nikita Proshkin
