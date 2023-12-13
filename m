@@ -1,236 +1,225 @@
-Return-Path: <linux-pci+bounces-827-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-828-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B0B780FB95
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 00:51:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 288CA81067E
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 01:33:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4778C2822E2
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Dec 2023 23:51:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8537D282338
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 00:33:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EED257D8B0;
-	Tue, 12 Dec 2023 23:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE69375;
+	Wed, 13 Dec 2023 00:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SPXQlo6g"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="aFng+CfZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D02BC
-	for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 15:51:19 -0800 (PST)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-35f56f06142so12156915ab.1
-        for <linux-pci@vger.kernel.org>; Tue, 12 Dec 2023 15:51:19 -0800 (PST)
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2122.outbound.protection.outlook.com [40.107.244.122])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CAD392;
+	Tue, 12 Dec 2023 16:33:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=maS1mDJF5rgFihSk6pFjFRV0x6iqEaWE66KQq7FcCjFsfzCjBzZ71JKY18suKgrXgxJryLOM7jzhs7X88K1CUKj8IMyUSXGDd5uiUa3HGoLfxbTjwsT9dx6j+n56KlPOehzFrztAK3y9ZQLDunLI/WbyH8ITWPaZDB3+IU0zQxJngPHM/xumti3XlzYey0FGh/eeHN9iJZM6tl2mZAovsw/K+rEMIaoCgMrPZnVSk5nzl+yK03Pu6VAWkfcGkH5thGMOTMMq6lx6GccP/dgierILFOv4nEWhEK8e2LQ9meP9cYpzibvgM14o3aWrvv0W+odoWd0DnXImga0DtIDtWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LdN9LXS/iNHY43+T1i0wM1BCMGidQ+Q1M6HpqQjXJ6U=;
+ b=PkIJ2ar06VeMyQiD/Ix5UA//lGClSJReiKnGZMM1JZ058dFf6AUdfA/dByyEUaICXHWfeLxfLXhrBm2cqrA4GR288KLyr1U64AkeIzB5fAq7CcXl0B/ZnbZ1OjtqCaeRmKpONo19HZ+Pi3LuaNa/biEBeB9vWNTX31zSSAEyKvLNsrZ/nC5sDEa1vSz43uCDfKM7zhpN8Q0sD5qozfGVhfxT0Qv98wsN6nDQhbbsNir3sL4tpxOf2YcjB6R8ZurQDUPtsujcV2edP7SopjRyJ0BuK4cNJSfPFzN7BFXW99BLC2GjNCi1WFnMZLpHQbQ3kWh6H4sIdLyw1xdHldbBcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1702425079; x=1703029879; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4cTqloByZj8Fw7Ckc836eUQv2Q7XZusfiQLTe5Ky8W4=;
-        b=SPXQlo6g/tMUfNoNyaWMPvb0RMsyTcwWJQGlSkDNHB6m/um/T+380tqp1KPTtXH9SB
-         IlLuwCvSLZfZZPE2255rY0dYX+DxX6xA/9L1FFN+PvfRagMGsT2kgPC8iz7iX4xjF4Vs
-         Lp7N2+ZmUWGpcO9LOKJG3GXQ+G78we9R59xmg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702425079; x=1703029879;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4cTqloByZj8Fw7Ckc836eUQv2Q7XZusfiQLTe5Ky8W4=;
-        b=fOu8RnbVKQqJLM20d64BGDqPdWuaag/+z6DO0yJjnvnehmSIFCEhzu2oIR9sTfzH7e
-         gk0SkQ7rPWD7pZC7JYn0gJLjEoqLebyTp9HsXx+O57HSOlqbgw2zQPuctbeI99bp0lWb
-         8qr2Nr09ZcSQubZeOVg/4+aE6kOycbp7cHUEVBlfbkZ+m9++G0yV8ixlZ9ZTB1dIXZxT
-         CmEJZYT/tiOYMY6ps+puyjZjj7fobrs4sinbxD6Rle33/KwlZEqpSyls79N5HWkH5Y7P
-         qJ9EqCqbtAyKlCEcHpmXKgw+TpNJybvo14aU6fei/PeHSsVCHp3SBtKe1hNcx7c3HqxD
-         uMEA==
-X-Gm-Message-State: AOJu0Yz9VwgguR7fI5/PwblxUfrDD1QBEPub3pFZuKmlt5Yx7xTnnWqq
-	+RTIC1p0K4TApYrVvdHilugb1Q==
-X-Google-Smtp-Source: AGHT+IEEpOfJrlOA0yT89BpQEBqPDCdVl3QWrMtOAN+A8VI5shgyGmFhP3xG0b2rF/SBZdzlM7lZEA==
-X-Received: by 2002:a05:6e02:b4f:b0:35d:5995:798c with SMTP id f15-20020a056e020b4f00b0035d5995798cmr10716702ilu.38.1702425079067;
-        Tue, 12 Dec 2023 15:51:19 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x4-20020a170902ec8400b001d04d730687sm9133636plg.103.2023.12.12.15.51.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 15:51:18 -0800 (PST)
-Message-ID: <ae49227b-5026-43a4-8e19-aeeb63865a6a@broadcom.com>
-Date: Tue, 12 Dec 2023 15:51:12 -0800
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LdN9LXS/iNHY43+T1i0wM1BCMGidQ+Q1M6HpqQjXJ6U=;
+ b=aFng+CfZpuJ52xYSlVtzLqZYiwQPq7yIfFfgwKd9NskGyMJ3ZTx1+4bypa6e0/uvjbjp9U08JDT38RyHc2nMYtAqKOn2G7kDUYa3vVcwpTzlnuV/ci+ADl8TSKRShirixN9CNcXFMQ3TsikiKdjidbErn2kUGlAOrCOUa8i2KH4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
+ SJ0PR01MB7446.prod.exchangelabs.com (2603:10b6:a03:3d8::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7068.33; Wed, 13 Dec 2023 00:33:12 +0000
+Received: from DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::49fa:8dc0:6fd1:72e6]) by DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::49fa:8dc0:6fd1:72e6%4]) with mapi id 15.20.7068.033; Wed, 13 Dec 2023
+ 00:33:11 +0000
+Date: Tue, 12 Dec 2023 16:32:56 -0800 (PST)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+cc: ilkka@os.amperecomputing.com, kaishen@linux.alibaba.com, 
+    helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org, 
+    Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com, 
+    robin.murphy@arm.com, chengyou@linux.alibaba.com, 
+    linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    linux-pci@vger.kernel.org, rdunlap@infradead.org, mark.rutland@arm.com, 
+    zhuo.song@linux.alibaba.com, renyu.zj@linux.alibaba.com
+Subject: Re: [PATCH v12 4/5] drivers/perf: add DesignWare PCIe PMU driver
+In-Reply-To: <20231208025652.87192-5-xueshuai@linux.alibaba.com>
+Message-ID: <2bbd5a57-b2ce-6e52-ebf-5935335c148@os.amperecomputing.com>
+References: <20231208025652.87192-1-xueshuai@linux.alibaba.com> <20231208025652.87192-5-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: CH0P221CA0014.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11c::12) To DM5PR0102MB3590.prod.exchangelabs.com
+ (2603:10b6:4:a4::25)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/2] PCI: brcmstb: Configure appropriate HW CLKREQ#
- mode
-To: Cyril Brulebois <kibi@debian.org>,
- Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Phil Elwell <phil@raspberrypi.com>, bcm-kernel-feedback-list@broadcom.com,
- Conor Dooley <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>
-References: <20231113185607.1756-1-james.quinlan@broadcom.com>
- <20231126201946.ffm3bhg5du2xgztv@mraw.org>
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- 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
-In-Reply-To: <20231126201946.ffm3bhg5du2xgztv@mraw.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000001d6ef7060c58ba9c"
-
---0000000000001d6ef7060c58ba9c
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 11/26/23 12:19, Cyril Brulebois wrote:
-> Hi Jim,
-> 
-> Jim Quinlan <james.quinlan@broadcom.com> (2023-11-13):
->> V8 -- Un-advertise L1SS capability when in "no-l1ss" mode (Bjorn)
->>     -- Squashed last two commits of v7 (Bjorn)
->>     -- Fix DT binding description text wrapping (Bjorn)
->>     -- Fix incorrect Spec reference (Bjorn)
->>           s/PCIe Spec/PCIe Express Mini CEM 2.1 specification/
->>     -- Text substitutions (Bjorn)
->>           s/WRT/With respect to/
->>           s/Tclron/T_CLRon/
->>
->> v7 -- Manivannan Sadhasivam suggested (a) making the property look like a
->>        network phy-mode and (b) keeping the code simple (not counting clkreq
->>        signal appearances, un-advertising capabilites, etc).  This is
->>        what I have done.  The property is now "brcm,clkreq-mode" and
->>        the values may be one of "safe", "default", and "no-l1ss".  The
->>        default setting is to employ the most capable power savings mode.
-> 
-> Still:
-> 
-> Tested-by: Cyril Brulebois <cyril@debamax.com>
-
-Thanks Cyril! Bjorn, Lorenzo, any chance this can be applied soon? Thanks!
--- 
-Florian
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|SJ0PR01MB7446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4902cb90-d794-4640-aecd-08dbfb7315b1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	84t8rbqCih4hYMUpJiA6PIiFmv7YEWYtI5yv/s2am6zsgO2Dzc8Hnc9vZMQl4maATv8EEI5wnLfRQ1eSDCtRYb/+fJ87fuamaywBK7VmWMYlQQs/M3Z8U7CSDFZTRyki+mvNmxT3ZY1wo2KESHDPVv2VfBDdWonlYFz+iTFm8g7vcgxNfKcphmFYfb43xk7+RGBHHC3Bt8rcWOsHzQoHoEm1TFm98ftD3AzTwNdpgzcZLVNoAWirokZd3j9rohODCZaOunDBDwX9wyl4NZ0uORGC0k73IHb7iFl4PByg6iVoziKieGunYm0Pmm43c5qPR04nHXVr7QpUk2wOegtxw94r4UY1Zjouw5N3XhcveJD2943L2UwBcup9zL+FH4hEp3aWE2ADVk13FVxzY4DGNT6yY2T349tlK6RPnFJWsrPZF7oP1Qj6DaZA2be05+qgmt7+2uOAywdGHbd6yzSLt6s8RabVZ/qGUAShgssF5PmBOKRci39G9MMqu0rdBROXF5YaM0rOQY+OY5Xx8iDlAeIFkhE5m15wWGdT8ywj8fM6d1T6YUkv6//aMBt9V0nOEzIA2B8+N3OIEU9wt9oK2VokYx8bMg2FWKcy4UeTKkQ=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(396003)(39850400004)(366004)(346002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(41300700001)(38100700002)(316002)(8936002)(66556008)(6916009)(66946007)(478600001)(7416002)(66476007)(86362001)(26005)(6486002)(6506007)(5660300002)(8676002)(6512007)(2616005)(52116002)(6666004)(2906002)(83380400001)(4326008)(38350700005)(19627235002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?gUg6JZVXBC+YE2BG+lG9+QTQAoUzB3cfct0G1fsVvCwt1sc0+I+Y1datH/pz?=
+ =?us-ascii?Q?4MQnTib5HpqI8rW7VuH1st5Fq1uyzNOuZj7YGQ1Lna1+PeWDinCRhLEDECIZ?=
+ =?us-ascii?Q?mYtGjXHqWO6LK98V9Zi8cNfvyQ3zBwd3GqvfmS7t/kJ0Y69mBCZ9geCodZfG?=
+ =?us-ascii?Q?qyMp+3jNJddDMeUr/xaaXL6I5xhvlwI+uVMIovl4iKdAAu2pHG4hu1kXSbSW?=
+ =?us-ascii?Q?McL4jbMTfRqnzCgBwm8wThlSehk4b57Zqi7Ao6F2oHv8NR5qV3etmozJBZnZ?=
+ =?us-ascii?Q?GUjcht0J2a1IKqTuAMExdHbKq2GpQEVJjf2nAyChFxKbuHiL5ug5DPKdz3cR?=
+ =?us-ascii?Q?oQJ3QcRkBiUTrxRVIR8P6JsZgkSKxVfcI9lp4IkjxK6gfA0KGr9OMbnGbO+0?=
+ =?us-ascii?Q?VvmoeBrcMmZfVDd+lNMFmL9vHR16xaqQR8tIUk/IChcIRUtH2aEgtLKMwa+v?=
+ =?us-ascii?Q?5pMiCVASynbmGgeltWnoi9QBrqGR2uZWkmPVz2ttW7XprEKhLcH33OJ89Zt1?=
+ =?us-ascii?Q?Cc2A1fGu7DJwZ9U93boME0+lcTP1Wg3bQ8/NsvXCprnm+Q5PoRZvyyKm3oDs?=
+ =?us-ascii?Q?u7mxEmPGnIexmQYY2V4GfJOcrIUjeQV9nWFT7Ptm82wFtynGV4mUaW5zsXUX?=
+ =?us-ascii?Q?N+Uh7U2Kr7xMRi2qwdabAwnryqjlizt1FYlHss5QjGMpa03CLd5iUBTIe4LI?=
+ =?us-ascii?Q?zCkTAZxTkqaCULVNwvBdd+0t2JwonZYaiOColPQ2StZNVbn/kVoxOaT9uF1L?=
+ =?us-ascii?Q?yy14cqM6Artfruc2ILQ3/DS6PUvYHYlyFY5la6n8uP/O0qr9qjj8yQn3krq6?=
+ =?us-ascii?Q?SyZKkRlBlq0uHy9ijgKxtJ2RDZntO4Rv8Yxh9s3XJ/E2jH/Im2/5WhVmf7RN?=
+ =?us-ascii?Q?tlbowA1n4RpUnrkIJASdFBmUaHXa+clKpJ362ja6rGV8awIXgKKqRhAac77k?=
+ =?us-ascii?Q?O6iq3kPIQun006Zd/JMbikK10gqV4I8p2wt844uFiuKD3lg39pFgIoHHtTPm?=
+ =?us-ascii?Q?ucGOGOgPltbvue8IZW7N3dsKlIiPF+/2JQK5NlJJrJb4LN0RObOZggyhMu5D?=
+ =?us-ascii?Q?Rp1usUhuIKSMkZ0vOkZDKCx/oUG0IdzPx/OzvKldG58ojzeWsNd63rJiG9LL?=
+ =?us-ascii?Q?kyYuE8dI9H7gLMAuufI1bJv++Q0uI3HZDdfCldp7q3JBGMq3aUSdQE2PKWNl?=
+ =?us-ascii?Q?1WV94e2zSUli38oxIhz94O4R3DD5ZuQwTINHlcQJo6ybZ7HcKSgpxX6AsZtU?=
+ =?us-ascii?Q?TjHxCzSf7rw/fkxJ8jmtjHbkDxQjBIXonmoszHi5vphuikMSB2PJUXrWxgiX?=
+ =?us-ascii?Q?BIIdHj59xJDrwt20A9WkA6O1vpvRnSV23En66hmyXqWUH7Xp1CQ9h7V+Cf1r?=
+ =?us-ascii?Q?lqN6lCUlZAOENjBtom/D0R08XyoUNg4WYKL/53fQMApkLTNPL2KHbUgvQ88Z?=
+ =?us-ascii?Q?q2P99im3UtHdqNYCH+9zwB7rt9yR4oyjxj8XPT1yoFoe8WDRzCWrNIEqnbBU?=
+ =?us-ascii?Q?5gk8gv6SHfb1QG1fAuGe7rpH6ovZLqHB+1n37Vj8kqkn7Bze1u+m3IGa852a?=
+ =?us-ascii?Q?Lgw6lN5zc36srKlP3tZG5EsWV7QYhbvV5XmlJm+EY4MtTK3eOjyAttC5wR2x?=
+ =?us-ascii?Q?E+JLs3HN2woq/64Caa5avgM=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4902cb90-d794-4640-aecd-08dbfb7315b1
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2023 00:33:11.3437
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: G1PQNn5e3BdRCPDp3zmYFc4sR9EuxFtf/DtIHbsWBr5JJvYCCZVLtpIPH8kdD9soifUZZ29elYVLy+emVpXnU814lO67tUs8JhqWDovQBH2RWI8Jpu9hYil6uF/a+KVM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB7446
 
 
---0000000000001d6ef7060c58ba9c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+On Fri, 8 Dec 2023, Shuai Xue wrote:
+> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
+> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
+> Core controller IP which provides statistics feature. The PMU is a PCIe
+> configuration space register block provided by each PCIe Root Port in a
+> Vendor-Specific Extended Capability named RAS D.E.S (Debug, Error
+> injection, and Statistics).
+>
+> To facilitate collection of statistics the controller provides the
+> following two features for each Root Port:
+>
+> - one 64-bit counter for Time Based Analysis (RX/TX data throughput and
+>  time spent in each low-power LTSSM state) and
+> - one 32-bit counter for Event Counting (error and non-error events for
+>  a specified lane)
+>
+> Note: There is no interrupt for counter overflow.
+>
+> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
+> named based the BDF of Root Port. For example,
+>
+>    30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
+>
+> the PMU device name for this Root Port is dwc_rootport_3018.
+>
+> Example usage of counting PCIe RX TLP data payload (Units of bytes)::
+>
+>    $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
+>
+> average RX bandwidth can be calculated like this:
+>
+>    PCIe TX Bandwidth = Rx_PCIe_TLP_Data_Payload / Measure_Time_Window
+>
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+> Reviewed-and-tested-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> ---
+> drivers/perf/Kconfig        |   7 +
+> drivers/perf/Makefile       |   1 +
+> drivers/perf/dwc_pcie_pmu.c | 792 ++++++++++++++++++++++++++++++++++++
+> 3 files changed, 800 insertions(+)
+> create mode 100644 drivers/perf/dwc_pcie_pmu.c
+>
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> new file mode 100644
+> index 000000000000..6ee66c4b44bf
+> --- /dev/null
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -0,0 +1,792 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Synopsys DesignWare PCIe PMU driver
+> + *
+> + * Copyright (C) 2021-2023 Alibaba Inc.
+> + */
+> +
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIJv/7EXWhlcEL/JP
-LdpPHBLp+PFsXfB7tSZHQXzXvZiKMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMTIxMjIzNTExOVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBx08Zl7fGNJ16EKaRVeVYp7cyojcjNVozl
-ljSyZSSnOJgJnuZBhrDz72AqF1BMELS1sHwFRTxfwqQumsR6S9Y0YUQyFdDQ6oPRyfCReqgzB9T2
-gwCIOA6mJcyy4nRILDmKSqWQDmsWvIRgpmSw5SiXM/cwTuTnyrwh5cD1Zb1SXj49T9/6HcpBHS0V
-Y/Opq0oRdgSSt2rSKxQ/jMDFMSO/o49TUUteutkEctCBzicY4gv1Y1cF1y9Xhimyz+aCjUGjNOGK
-a1CKbb+Fa41YyDqL2Rfuilglr4yFF8YEShKAu+dCQikIJOkDcxCCUHXz4n+JkPRla6dUD6cOpj7F
-FqhI
---0000000000001d6ef7060c58ba9c--
+...
+
+> +static int dwc_pcie_pmu_event_init(struct perf_event *event)
+> +{
+> +	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
+> +	enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
+> +	struct perf_event *sibling;
+> +	u32 lane;
+> +
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	/* We don't support sampling */
+> +	if (is_sampling_event(event))
+> +		return -EINVAL;
+> +
+> +	/* We cannot support task bound events */
+> +	if (event->cpu < 0 || event->attach_state & PERF_ATTACH_TASK)
+> +		return -EINVAL;
+> +
+> +	if (event->group_leader != event &&
+> +	    !is_software_event(event->group_leader))
+> +		return -EINVAL;
+> +
+> +	for_each_sibling_event(sibling, event->group_leader) {
+> +		if (sibling->pmu != event->pmu && !is_software_event(sibling))
+> +			return -EINVAL;
+> +	}
+> +
+> +	if (type < 0 || type >= DWC_PCIE_EVENT_TYPE_MAX)
+> +		return -EINVAL;
+> +
+> +	if (type == DWC_PCIE_LANE_EVENT) {
+> +		lane = DWC_PCIE_EVENT_LANE(event);
+> +		if (lane < 0 || lane >= pcie_pmu->nr_lanes)
+
+Just a minor thing that doesn't really matter: 'lane' is unsigned and, 
+therefore, cannot be negative.
+
+Otherwise, everything looks good and seems to work fine still.
+
+Cheers, Ilkka
 
