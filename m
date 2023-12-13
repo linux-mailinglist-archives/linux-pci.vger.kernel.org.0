@@ -1,97 +1,126 @@
-Return-Path: <linux-pci+bounces-914-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-915-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2A63811FCA
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 21:18:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB8A5812029
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 21:45:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7054AB20E2B
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 20:18:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 748911F21883
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 20:45:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7807E548;
-	Wed, 13 Dec 2023 20:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36BF7E569;
+	Wed, 13 Dec 2023 20:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jszcL0OB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jU0biiVw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F71068296
-	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 20:18:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6EDAC433C7;
-	Wed, 13 Dec 2023 20:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA65A5C084;
+	Wed, 13 Dec 2023 20:45:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0203C433C8;
+	Wed, 13 Dec 2023 20:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702498684;
-	bh=zQ1S4ZsayCVxOre3Fmlm8DSd8N9bzd0hQxmkwtpZdN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jszcL0OBRHI2K36WF830PXaNCQhAa4NqZcfBqK6APFrSHxSmP3STXfehzPB3QMYIp
-	 KhEkqChWaNgy/dNxP+klZP1Sm8HsVwStt6t2Pd0ouiCFFErNscOTXF9LCI+/fYnDox
-	 BeA9M2X/v6HrVSEKWEepKOR7Q6XHdL5O2NLw/Zg8AgYauvKaphnC5eu2yE8VdlzBh0
-	 B5Xir41zHvHmTTZwZnSC8+wg5T6dUULnvJjleTd0Dpae2d37s96R2qv9mfonQHUQB7
-	 pgJ9Ia5WBxBu6HmsJNNconO7j2GLXqnEJ7fiTRA+82sXgBp0SAqY91UAzvE9Hj17jL
-	 O4PB2IXBEjGKg==
-Date: Wed, 13 Dec 2023 12:18:02 -0800
-From: Keith Busch <kbusch@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: vfio memlock question
-Message-ID: <ZXoRegCK_r5g9NAN@kbusch-mbp>
-References: <ZXkDn-beoRjcRnjq@kbusch-mbp.dhcp.thefacebook.com>
- <20231213102313.1f3955e1.alex.williamson@redhat.com>
+	s=k20201202; t=1702500314;
+	bh=CctU/GXFsJ6lkzjLDWKmTw9Q8WHFXHMPsA3fF1u3ins=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jU0biiVwBqqCmMPRcXhKvCDlf5/4gMNy06byWaEFkVgA+mOoYcSVBKhWycLe60QTE
+	 dPvQSQLQjGzSLvS8QGPNwrQeuVTpyPReHAkMKGJHFmX3rdhvv+dELhJDUMEAfJ+HLk
+	 GfQEns7Arnq4/Oi6o4IGLO3QDuXI/fTGO4yFdypXzodmQkGQ9fsdMFqWZxhmnRbq4G
+	 kqD/6D/kkoyBkuYABDuS1FFHFSZVuQ9ijv9eyXeC9LaJF++Bh6LghOcFJNzH783MG3
+	 TAmWPGpxmnmCqlnxz7pJfrPrJYSqJ1EnfQw2WlUR5D2ABvELju644Ai3BM7nvbUoc+
+	 NiS6BH/jeSW0g==
+Date: Wed, 13 Dec 2023 14:45:12 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 1/6] PCI/ASPM: Add locked helper for enabling link
+ state
+Message-ID: <20231213204512.GA1056289@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231213102313.1f3955e1.alex.williamson@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <970144d9b5c3d36dbd0d50f01c1c4355cd42de89.camel@linux.intel.com>
 
-On Wed, Dec 13, 2023 at 10:23:13AM -0700, Alex Williamson wrote:
-> On Tue, 12 Dec 2023 17:06:39 -0800
-> Keith Busch <kbusch@kernel.org> wrote:
+On Wed, Dec 13, 2023 at 11:48:41AM -0800, David E. Box wrote:
+> On Tue, 2023-12-12 at 15:27 -0600, Bjorn Helgaas wrote:
+> > On Tue, Dec 12, 2023 at 11:48:27AM +0800, Kai-Heng Feng wrote:
+> > > On Fri, Dec 8, 2023 at 4:47 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > ...
+> > 
+> > > > I hope we can obsolete this whole idea someday.  Using pci_walk_bus()
+> > > > in qcom and vmd to enable ASPM is an ugly hack to work around this
+> > > > weird idea that "the OS isn't allowed to enable more ASPM states than
+> > > > the BIOS did because the BIOS might have left ASPM disabled because it
+> > > > knows about hardware issues."  More history at
+> > > > https://lore.kernel.org/linux-pci/20230615070421.1704133-1-kai.heng.feng@canonical.com/T/#u
+> > > > 
+> > > > I think we need to get to a point where Linux enables all supported
+> > > > ASPM features by default.  If we really think x86 BIOS assumes an
+> > > > implicit contract that the OS will never enable ASPM more
+> > > > aggressively, we might need some kind of arch quirk for that.
+> > > 
+> > > The reality is that PC ODM toggles ASPM to workaround hardware
+> > > defects, assuming that OS will honor what's set by the BIOS.
+> > > If ASPM gets enabled for all devices, many devices will break.
+> > 
+> > That's why I mentioned some kind of arch quirk.  Maybe we're forced to
+> > do that for x86, for instance.  But even that is a stop-gap.
+> > 
+> > The idea that the BIOS ASPM config is some kind of handoff protocol is
+> > really unsupportable.
 > 
-> > I was examining an issue where a user process utilizing vfio is hitting
-> > the RLIMIT_MEMLOCK limit during a ioctl(VFIO_IOMMU_MAP_DMA) call. The
-> > amount of memory, though, should have been well below the memlock limit.
-> > 
-> > The test maps the same address range to multiple devices. Each time the
-> > same address range is mapped to another device, the lock count is
-> > increasing, creating a multiplier on the memory lock accounting, which
-> > was unexpected to me.
-> > 
-> > Another strange thing, the /proc/PID/status shows VmLck is indeed
-> > increasing toward the limit, but /proc/PID/smaps shows that nothing has
-> > been locked.
-> > 
-> > The mlock() syscall doesn't doubly account for previously locked ranges
-> > when asked to lock them again, so I was initially expecting the same
-> > behavior with vfio since they subscribe to the same limit.
-> > 
-> > So a few initial questions:
-> > 
-> > Is there a reason vfio is doubly accounting for the locked pages for
-> > each device they're mapped to?
-> > 
-> > Is the discrepency on how much memory is locked depending on which
-> > source I consult expected?
-> 
-> Locked page accounting is at the vfio container level and those
-> containers are unaware of other containers owned by the same process,
-> so unfortunately this is expected.  IOMMUFD resolves this by having
-> multiple IO address spaces within the same iommufd context.
+> To be clear, you are not talking about a situation where
+> ACPI_FADT_NO_ASPM or _OSC PCIe disallow OS ASPM control, right?
+> Everyone agrees that this should be honored? The question is what to
+> do by default when the OS is not restricted by these mechanisms?
 
-Thanks for the reply! Sounds like I need to better familiarize myself
-with iommufd. :)
- 
-> I don't know the reason smaps is not showing what you expect or if it
-> should.  Thanks,
+Exactly.  The OS should respect ACPI_FADT_NO_ASPM and _OSC.
 
-It was just unexpected, but not hugely concerning right now. Not sure if
-anyone cares, but I think a process could exceed the ulimit by locking
-different ranges through vfio and mlock since their accounting is done
-differently.
+I think there are a couple exceptions where we want to disable ASPM
+even if the platform said the OS shouldn't touch ASPM at all, but
+that's a special case.
+
+> Reading the mentioned thread, I too think that using the BIOS config
+> as the default would be the safest option, but only to avoid
+> breaking systems, not because of an implied contract between the
+> BIOS and OS. However, enabling all capable ASPM features is the
+> ideal option. If the OS isn't limited by ACPI_FADT_NO_ASPM or _OSC
+> PCIe, then ASPM enabling is fully under its control.  If this
+> doesn't work for some devices then they are broken and need a quirk.
+
+Agreed.  It may not be practical to identify such devices, so we may
+need a broader arch-based and/or date-based quirk.
+
+I'd be shocked if Windows treated the BIOS config as a "do not exceed
+this" situation, so my secret hope is that some of these "broken"
+devices are really caused by defects in the Linux ASPM support or the
+driver, and that we can fix them if we find out about them.
+
+But I have no details about any of these alleged broken devices, so
+it's hard to make progress on them.  Maybe we should log a debug note
+if the device advertises ASPM support that BIOS didn't enable.
+
+Bjorn
 
