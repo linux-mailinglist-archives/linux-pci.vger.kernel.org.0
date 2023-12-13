@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CFCC811D4A
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 19:48:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E3F2811D50
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 19:49:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C94A91F21998
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 18:48:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32A651C2128A
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 18:49:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986105EE9E;
-	Wed, 13 Dec 2023 18:48:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 599CB5EE96;
+	Wed, 13 Dec 2023 18:49:38 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434FBE4;
-	Wed, 13 Dec 2023 10:48:32 -0800 (PST)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d35dc7e1bbso5244025ad.1;
-        Wed, 13 Dec 2023 10:48:32 -0800 (PST)
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F13D0;
+	Wed, 13 Dec 2023 10:49:36 -0800 (PST)
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ce72730548so6500761b3a.1;
+        Wed, 13 Dec 2023 10:49:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702493311; x=1703098111;
+        d=1e100.net; s=20230601; t=1702493375; x=1703098175;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mgP80Yyu6IvFK797HjxiOfl5XynuTDj7ZNa6KXUx8cI=;
-        b=ktdZTHfwEv+bA0TgZ7zJGQ8ma2s5oIYtrDSMYzYfwLPl7Sv6M+Vy/b695rFLtpSf+v
-         H/co8NvXeq+MTPJnZD6BPRP35qrqpyxE/fnVqfTylTnPVuMm4gJzxHSSI3+loyGyCkcX
-         R9BWPvOeQHkwwcOzkUuZ9Juu5WzUyMZClKwp2FhaIK1YQdwS5PYDQeN6uCsdtG3H3Vie
-         gzGkN8wcqnCfkyCo1WxOlkwEtcrUaCYzecN0RUDk8h55uNzmyMLHqt1fhfBREWkBYc+Z
-         tpICZoPzhkbkGG8RHq40kTgUOiqPGRB8S4HlDmUxJg4wP4/XoCezZpLtNR5Gbiq+S+h9
-         VMhA==
-X-Gm-Message-State: AOJu0Yz/s7kDI93cS9qBp3yWZF3cs6i9n4VOKKVYamQl/3ICoxYocCK8
-	meKvKazUd68H0N99whfW/z0=
-X-Google-Smtp-Source: AGHT+IEzlIEd9Q6eLCCZLjW8OK193jqfOJ0Gqr0iKW0nJNMRppuRTXGR720gnDCd+2nqnislHC1Peg==
-X-Received: by 2002:a17:902:ec8a:b0:1d0:d18c:bc5a with SMTP id x10-20020a170902ec8a00b001d0d18cbc5amr10203494plg.121.1702493311471;
-        Wed, 13 Dec 2023 10:48:31 -0800 (PST)
+        bh=QYvsi1BeF9vZr5nFKSjT9VCibEudQ5MsSdiBfCjNBkM=;
+        b=AZVviE69W6AAA66gdQ9Fnq+6GinI1VM9AW1s10B47JDHiMNu4KxPJcxW4zLYOdkB/c
+         BDIOf97FNX+XWDryud4mf9f+8O41f6va3hHoVK77/71Qf8Cudm22R1gKWlVzwzqPI1Cy
+         R7L4Q90c2ZK4jqgwtSNti4638X7uzN9LniWpbzPyjn6Ft1xLfAOdWmQGUTIDpnnhxNL2
+         CkE1JBIIBtkghtZpUFzC+MhPIM2FLqUZWLlJmrHT+OImrTsEQmdJWqu+6c6OkHlnlvrw
+         YR0+9N9GZCnOLgn8DjpSD4jrQh6kKuaYRyzAOY8zdbbNZhFEekopXZlK6e+sGT/UQ84y
+         YgHQ==
+X-Gm-Message-State: AOJu0YyoOshyRuZ1kakWXLOsfCIif5HJko+jumbEXKK3hgGA1rfLKKfS
+	F13vfJkA6D3col8/H5Fvcro=
+X-Google-Smtp-Source: AGHT+IHbTzuBKGDSYgmQol7b/mqaHA3bV6bgpiSsqgzYkZOWUq77+BmvHTJKWeODi3tFFMrCo/GAJQ==
+X-Received: by 2002:a05:6a00:2d9d:b0:6cd:d639:b353 with SMTP id fb29-20020a056a002d9d00b006cdd639b353mr10248064pfb.18.1702493375559;
+        Wed, 13 Dec 2023 10:49:35 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id t14-20020a1709027fce00b001cf8c062610sm11107415plb.127.2023.12.13.10.48.30
+        by smtp.gmail.com with ESMTPSA id o73-20020a62cd4c000000b006c875abecbcsm10687034pfg.121.2023.12.13.10.49.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 10:48:30 -0800 (PST)
-Date: Thu, 14 Dec 2023 03:48:29 +0900
+        Wed, 13 Dec 2023 10:49:34 -0800 (PST)
+Date: Thu, 14 Dec 2023 03:49:33 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: lpieralisi@kernel.org, kishon@kernel.org, bhelgaas@google.com,
 	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] PCI: epf-mhi: Enable MHI async read/write support
-Message-ID: <20231213184829.GA924726@rocinante>
+Subject: Re: [PATCH 4/9] PCI: epf-mhi: Simulate async read/write using iATU
+Message-ID: <20231213184933.GB924726@rocinante>
 References: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
- <20231127124529.78203-7-manivannan.sadhasivam@linaro.org>
+ <20231127124529.78203-5-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,42 +58,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231127124529.78203-7-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20231127124529.78203-5-manivannan.sadhasivam@linaro.org>
 
 Hello,
 
-Manivannan, you will be taking this through the MHI tree, correct?
-
-> Now that both eDMA and iATU are prepared to support async transfer, let's
-> enable MHI async read/write by supplying the relevant callbacks.
-> 
-> In the absence of eDMA, iATU will be used for both sync and async
-> operations.
+> Even though iATU only supports synchronous read/write, the MHI stack may
+> call async read/write callbacks without knowing the limitations of the
+> controller driver. So in order to maintain compatibility, let's simulate
+> async read/write operation with iATU by invoking the completion callback
+> after memcpy.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-mhi.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index 3d09a37e5f7c..d3d6a1054036 100644
+> index 34e7191f9508..7214f4da733b 100644
 > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
 > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -766,12 +766,13 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
->  	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
->  	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
->  	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
-> +	mhi_cntrl->read_sync = mhi_cntrl->read_async = pci_epf_mhi_iatu_read;
-> +	mhi_cntrl->write_sync = mhi_cntrl->write_async = pci_epf_mhi_iatu_write;
->  	if (info->flags & MHI_EPF_USE_DMA) {
->  		mhi_cntrl->read_sync = pci_epf_mhi_edma_read;
->  		mhi_cntrl->write_sync = pci_epf_mhi_edma_write;
-> -	} else {
-> -		mhi_cntrl->read_sync = pci_epf_mhi_iatu_read;
-> -		mhi_cntrl->write_sync = pci_epf_mhi_iatu_write;
-> +		mhi_cntrl->read_async = pci_epf_mhi_edma_read_async;
-> +		mhi_cntrl->write_async = pci_epf_mhi_edma_write_async;
->  	}
+> @@ -234,6 +234,9 @@ static int pci_epf_mhi_iatu_read(struct mhi_ep_cntrl *mhi_cntrl,
+>  
+>  	mutex_unlock(&epf_mhi->lock);
+>  
+> +	if (buf_info->cb)
+> +		buf_info->cb(buf_info);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -262,6 +265,9 @@ static int pci_epf_mhi_iatu_write(struct mhi_ep_cntrl *mhi_cntrl,
+>  
+>  	mutex_unlock(&epf_mhi->lock);
+>  
+> +	if (buf_info->cb)
+> +		buf_info->cb(buf_info);
+> +
+>  	return 0;
+>  }
 
 Looks good!
 
