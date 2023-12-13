@@ -1,57 +1,46 @@
-Return-Path: <linux-pci+bounces-908-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-909-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B4C7811ED7
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 20:27:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 27513811EEE
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 20:31:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A0C9DB21105
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 19:27:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 38F54B210FC
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 19:31:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E01168269;
-	Wed, 13 Dec 2023 19:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFD968290;
+	Wed, 13 Dec 2023 19:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t50l+WwE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501CBB0;
-	Wed, 13 Dec 2023 11:27:02 -0800 (PST)
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-28abca51775so1467053a91.1;
-        Wed, 13 Dec 2023 11:27:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702495622; x=1703100422;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QWVW0olGcSxCBdJ2tMtPIREhrLezlbroagvUoCyknJo=;
-        b=oWrCZS60H+zZMK6XgMok6XWpCcARVCjMpj7VrGqtyGQ8J5x1PyJMUM4JPEaXm6UETc
-         waax4AC5FZ8t1DMjkrSsPe3H/RnWn3r/SFeddBL/9kToSjTewEEPmDBZq+k4MMKbOtBO
-         pKweCSgmFtv7gsdsokLuNCRRfGjn/xKS69QJ1zIP7DizDQhTIJdB1rFgXZMQHDr7vnhk
-         JGV74Td3YItqDG43HwH2Q4uHcJC7Q5P/1lf2MxDT7RMAa1pnjb9G5Sp1BfVhO+rLCK8C
-         tlQEdGvV1RSxAbzmTlCxKrCqNNQNKEe+iNGGU9MGt6/pWdy5sqleEhamiucv2LY++p2A
-         yD5A==
-X-Gm-Message-State: AOJu0YwLP88USvVLfaheXYj3nPGvyJK0h0Jf4Tj+vC5uDZTtMJlPaay+
-	ubn0J/edIV6EVsMxg3ETE5w=
-X-Google-Smtp-Source: AGHT+IGBz9BJO+fNFXblCB6zsBxw0/nmGzPc1Td742lMyz/VKcdOyC4cGNWerXKPUrqX9Z3/E/jB2A==
-X-Received: by 2002:a17:90a:fe8f:b0:28a:e30d:3043 with SMTP id co15-20020a17090afe8f00b0028ae30d3043mr640572pjb.56.1702495621720;
-        Wed, 13 Dec 2023 11:27:01 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id d1-20020a17090a114100b0028b005dadb3sm275238pje.26.2023.12.13.11.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 11:27:00 -0800 (PST)
-Date: Thu, 14 Dec 2023 04:26:59 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: vmd: Remove usage of the deprecated ida_simple_xx()
- API
-Message-ID: <20231213192659.GA1123825@rocinante>
-References: <270f25cdc154f3b0309e57b2f6421776752e2170.1702230593.git.christophe.jaillet@wanadoo.fr>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E796828D;
+	Wed, 13 Dec 2023 19:31:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51784C433C8;
+	Wed, 13 Dec 2023 19:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702495865;
+	bh=ck/wlW7lhdixRCwMQVnEmgl26YYLiC5AomhVJrGXoWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=t50l+WwEfAt/LGh4Ix2wvMwsh/CHAo3nLKe60yRg+3qJWYBp/9vKdQ4ZZ9Bo+afXz
+	 0qsXAlRxqeVqvkrSOIdrn3AKeQaXAr/jdXZ+X9LMPyIosDKqE2gxI/XuBXGz7ewjl0
+	 nUaCBMhUlqExx00VdlFSxo3dA7fs28UMzU6ATnLQc2uV6He+KOYu6IJvSl/30LFuOy
+	 Krpox1tNxidH4FckA5pHM3Lg/OhhZXAt+hMHO713K1ygfLo1H0hT6tMDUMmFjkOQgn
+	 W3uvJwvSUKgBXgjILpjz+uE8xxVnfJxBXsD4SXjxdfwQ3YxMHBRn56FIb0ucV/1gT8
+	 2cjSXGEudvYZg==
+Date: Wed, 13 Dec 2023 13:31:03 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
+	bhelgaas@google.com, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] bus: mhi: ep: Add async read/write support
+Message-ID: <20231213193103.GA1054774@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,19 +49,52 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <270f25cdc154f3b0309e57b2f6421776752e2170.1702230593.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
 
-Hello,
-
-> ida_alloc() and ida_free() should be preferred to the deprecated
-> ida_simple_get() and ida_simple_remove().
+On Mon, Nov 27, 2023 at 06:15:20PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
 > 
-> This is less verbose.
+> This series add async read/write support for the MHI endpoint stack by
+> modifying the MHI ep stack and the MHI EPF (controller) driver.
+> 
+> Currently, only sync read/write operations are supported by the stack,
+> this resulting in poor data throughput as the transfer is halted until
+> receiving the DMA completion. So this series adds async support such
+> that the MHI transfers can continue without waiting for the transfer
+> completion. And once the completion happens, host is notified by sending
+> the transfer completion event.
+> 
+> This series brings iperf throughput of ~4Gbps on SM8450 based dev platform,
+> where previously 1.6Gbps was achieved with sync operation.
+> 
+> - Mani
+> 
+> Manivannan Sadhasivam (9):
+>   bus: mhi: ep: Pass mhi_ep_buf_info struct to read/write APIs
+>   bus: mhi: ep: Rename read_from_host() and write_to_host() APIs
+>   bus: mhi: ep: Introduce async read/write callbacks
+>   PCI: epf-mhi: Simulate async read/write using iATU
+>   PCI: epf-mhi: Add support for DMA async read/write operation
+>   PCI: epf-mhi: Enable MHI async read/write support
+>   bus: mhi: ep: Add support for async DMA write operation
+>   bus: mhi: ep: Add support for async DMA read operation
+>   bus: mhi: ep: Add checks for read/write callbacks while registering
+>     controllers
+> 
+>  drivers/bus/mhi/ep/internal.h                |   1 +
+>  drivers/bus/mhi/ep/main.c                    | 256 +++++++++------
+>  drivers/bus/mhi/ep/ring.c                    |  41 +--
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 314 ++++++++++++++++---
+>  include/linux/mhi_ep.h                       |  33 +-
+>  5 files changed, 485 insertions(+), 160 deletions(-)
 
-Applied to controller/vmd, thank you!
+Mani, do you want to merge this via your MHI tree?  If so, you can
+include Krzysztof's Reviewed-by tags and my:
 
-[1/1] PCI: vmd: Remove usage of the deprecated ida_simple_xx() API
-      https://git.kernel.org/pci/pci/c/991801bc4722
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-	Krzysztof
+If you think it'd be better via the PCI tree, let me know and we can
+do that, too.
+
+Bjorn
 
