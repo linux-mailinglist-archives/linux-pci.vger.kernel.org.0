@@ -1,99 +1,107 @@
-Return-Path: <linux-pci+bounces-1011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79D97813AD0
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 20:34:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40373813AD5
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 20:35:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A0BE1C20F07
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 19:33:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7277C1C20D02
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 19:35:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA08A6979C;
-	Thu, 14 Dec 2023 19:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YKCT6jAL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527A669794;
+	Thu, 14 Dec 2023 19:35:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49D369791
-	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 19:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=vJr/
-	AQFE1XFRSIFd6GXXrHnQGhGkGt3dKuW9tKsM4n0=; b=YKCT6jALhYwerAmIP8og
-	WvlNjpLQ/du0sxJvWarBIVAgSnDV2WcLnWlcmXD8VnqLyy8xjECjUWSy+N8spC0J
-	s7U5mhqzl+IYHPIlL1OpGH2BDymKomzFllX3U/vYp4wReJ9LN48b7yK4Z2hEUlkT
-	Mo+aABJ1ha9ufY5Cp37BDH50UpuNGFunPkA6Tc2uTL36NyS9aer1uxV4ODjxu8FP
-	UJaqcON8fbubzXzS36zVzDvVk8N154kXrVMSo2EeXqakRQiEU3VINb7PXzvZdj1r
-	PzISFrJhx8N+N0dTG7RInkn3zf/Zs9il/c9XQWF5n71isuu7lKS7wBmjtZYoCwu/
-	WQ==
-Received: (qmail 1023542 invoked from network); 14 Dec 2023 20:27:06 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Dec 2023 20:27:06 +0100
-X-UD-Smtp-Session: l3s3148p1@iI7dRH0MMtUujnuR
-Date: Thu, 14 Dec 2023 20:27:05 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v5 RESEND 0/2] PCI: rcar: support regulators for PCIe
-Message-ID: <ZXtXCYx2YR1of/qr@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-References: <20231105092908.3792-1-wsa+renesas@sang-engineering.com>
- <ZXske3k8CkMcGjr5@shikoro>
- <20231214191900.GB2079458@rocinante>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1B768B98;
+	Thu, 14 Dec 2023 19:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-58df5988172so5525759eaf.0;
+        Thu, 14 Dec 2023 11:35:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702582523; x=1703187323;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iiR1aavtw7vArPnIPdT1sVPg3JZoC8VIGjwfufazkGQ=;
+        b=e95qb7PtP8Q58av97i3tG2kLALEme2kdQeDRy0mSNHJ1LwjgNIiwHRJFH8GPfSvx18
+         1r8qeOxZuu5NGEZ2t7APsuy6YvH6B+nmQIZhbZ9XPt9sJKV3fUdtjh2FYepWCFtwqZgz
+         MOrsSbx3a5xda1Iv2X2H87YMtXRXawDHmFj84isZM7becCezye9Sz7M3buQZMb4dVVbG
+         WM2NqzMHuz496WIurC1WKPdGeBYPcVMq7CzVf7aY+7c/ECzmow5jKTnSoPUzRfYkGDj1
+         uq5YUMmg0jfXT7OtVRCTmkkBYP5spS3CTLrX0O4i6l7di//9xWQPwCyVVxQi0WvDXJJD
+         WG0g==
+X-Gm-Message-State: AOJu0YzTpUTw+MOnCgs8Pvmw49sRymlY0zNRga3iC8DwOFS2j8H7WT62
+	vScdp8NqDCnwakaSDh0O6TfCHxjm6uisYkA1
+X-Google-Smtp-Source: AGHT+IH7vqScE0kZe88g0sxyvnMj8xa9jTh9cSHu9m3GZT/ciag+w7PInjd+itvmhYZiWmWyBphbZg==
+X-Received: by 2002:a05:6358:5e11:b0:16e:508e:1706 with SMTP id q17-20020a0563585e1100b0016e508e1706mr15025215rwn.25.1702582522873;
+        Thu, 14 Dec 2023 11:35:22 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id y2-20020a655282000000b00588e8421fa8sm10434729pgp.84.2023.12.14.11.35.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 11:35:22 -0800 (PST)
+Date: Fri, 15 Dec 2023 04:35:21 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kishon@kernel.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: epf-mhi: Fix the DMA data direction of
+ dma_unmap_single()
+Message-ID: <20231214193521.GA2147106@rocinante>
+References: <20231214063328.40657-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="C8Ty/fbhp+nEXecq"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231214191900.GB2079458@rocinante>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231214063328.40657-1-manivannan.sadhasivam@linaro.org>
 
+Hello,
 
---C8Ty/fbhp+nEXecq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> In the error path of pci_epf_mhi_edma_write() function, the DMA data
+> direction passed (DMA_FROM_DEVICE) doesn't match the actual direction used
+> for the data transfer. Fix it by passing the correct one (DMA_TO_DEVICE).
 
+Nice catch!
 
-> Applied, so it should make it to 6.8.  Apologies for the delay.
+> Fixes: 7b99aaaddabb ("PCI: epf-mhi: Add eDMA support")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> 
+> Bjorn, Krzysztof, I'd like to apply this patch to MHI tree on top of eDMA
+> async patches due to dependency:
+> https://lore.kernel.org/linux-pci/20231127124529.78203-1-manivannan.sadhasivam@linaro.org/
 
-Awesome, thank you!
+Sounds good to me!  We still have a little time, so let me know if you
+change your mind about who should take this patch and the other series. :)
 
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index 472bc489b754..d3d6a1054036 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -424,7 +424,7 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl,
+>  	}
+>  
+>  err_unmap:
+> -	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_FROM_DEVICE);
+> +	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+>  err_unlock:
+>  	mutex_unlock(&epf_mhi->lock);
 
---C8Ty/fbhp+nEXecq
-Content-Type: application/pgp-signature; name="signature.asc"
+Looks good!
 
------BEGIN PGP SIGNATURE-----
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmV7VwUACgkQFA3kzBSg
-Kbav2Q//axmhe1kLHs/Li35jBoHdo2LNR2a2RGkR0AzFNJ95MgzJLCAHlmXq+lOU
-Odi268gmDwriEa9ISl3a47TxgrndBrxGiMUXgKityzQh+0EAE15erWozUrdCxyel
-whdEb0WSlaq0B4lETpbP6jKB4GGi5OZC9VfdFGq9Rl0MIJqYOLn40ZTzO+5+oI4z
-ZaZDeTY1+8QRHquRJ97bm8+oAcuMbkf1O6yc6LahUiPTx2lTbxTbdotLFnp8z5go
-rjJJ3ctZ9jse4Eqc1iXJORufrRanTtA9RWOyD1pq1difuSaSYTZG6dsPDJOsusma
-i0OQ1UjPZSC+dx9MXLfJ5vmgJ89cNfrCp/lt2n2GmJ+LmS0G2wNx1QGJVcYCq2Mu
-HNKOqvXLKJS8WnmfRJZeV+hH4ih3fILCzRBLF/+TQIto6bgOv2e63CfKRfvwv5Gn
-nOxBPZIAkNdkBQ3birtagIy+6U4sunH6jQxzMlijcTfqks6WWzY7D294Bi3k0FxH
-u/vZBvcNcCFg6mxay/tXP0Odpm08AJdMOL2iTRDyMFcYPRWVwS7fr4Tq40TAbWMF
-VeBoOjl5l1U47mH6yqR4/lNqZS4LxhA8Oo/jct6e+vHgKpaTl7hEVj0nNANWJdRu
-Fi9Ydikto8WBAXc/ubLUXWjDwbtO1qTiLA7xpkmAl4A5/g9JP/s=
-=DwEQ
------END PGP SIGNATURE-----
-
---C8Ty/fbhp+nEXecq--
+	Krzysztof
 
