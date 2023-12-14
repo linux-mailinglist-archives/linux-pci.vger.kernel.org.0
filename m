@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-1014-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1013-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF76E813B28
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 20:59:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9DAB813B27
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 20:59:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AC281C2104E
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 19:59:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 709F2283615
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 19:59:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341BB6A010;
-	Thu, 14 Dec 2023 19:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE116A00C;
+	Thu, 14 Dec 2023 19:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RW1/WymQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NgJjKPEx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0F16A006
-	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 19:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6FF6A324
+	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 19:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702583962; x=1734119962;
+  t=1702583953; x=1734119953;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=6TH5AyV4FFqDBlyubrwnm72zl8eMEmxRJ0wF0MbD6hA=;
-  b=RW1/WymQGtrjDtGPwnpBhp64Hm4nKiMVQWSf9fTAjKKELo+K6UfN1N5q
-   eItp3U6oybHOovWf+41qy2ABFvl9o3qVaEcpgNJiZidxiBWJTgLjMtJMB
-   UWK8mOe186NPIk04ACcdz15DNa1P2Mjjfv+mGwocluDWDKkctCnsIdomv
-   ChyDmW4dc0DFO3dPbXo4B4k6RBG+EtLXiN9FPqM2bk2z9iYTdtFJuhSFC
-   4rBH9rLSlBur8jznN9UEnoZqLMSPFzAe7IasWOK46Rld1OOE1vx3luxsR
-   tVHYx1Wa27iDyNct9saBRZNYLTchAVzGNWh81F/o9nLCKjM195/NbFDIU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="394922127"
+  bh=B0BVahyGcvd/36SP2hd4wEQwLkObElQeBgAKo9DtLrE=;
+  b=NgJjKPExg8c07Njz0PtFNPRHNWQNdmOvbSEi4Xg1zxcyPfLUB2MY1l5U
+   e2G4Dk3yWtAtb4YBDQVF0/lQjjrDptgER8xMucea7sfJwM9w75CgjA4Xu
+   XLyXQ5mME+obIMFf881sIFbKCNGb/lIayc88TgOvRPC0mk9su9ooE85F2
+   t7n1yFmXsP2PpvZT2u1YVlO+r9zkuyjp4Orgh323upa2MRfkZ5eEeKzkW
+   hFe3ZNCyo5Uacw4Yy4vE93ayblzjK3cr5FtguinIU9JwYEH+6vrgxsZ5K
+   V731sdV8spw9gQI23y/IvSuQtW9hLbj0F7DyQcHP7nXydMoNKh2jij1Be
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="394922125"
 X-IronPort-AV: E=Sophos;i="6.04,276,1695711600"; 
-   d="scan'208";a="394922127"
+   d="scan'208";a="394922125"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 11:59:12 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="767721173"
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="767721172"
 X-IronPort-AV: E=Sophos;i="6.04,276,1695711600"; 
-   d="scan'208";a="767721173"
+   d="scan'208";a="767721172"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
   by orsmga007.jf.intel.com with ESMTP; 14 Dec 2023 11:59:10 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rDrrQ-000MXL-1I;
+	id 1rDrrQ-000MXP-1T;
 	Thu, 14 Dec 2023 19:59:08 +0000
-Date: Fri, 15 Dec 2023 03:58:15 +0800
+Date: Fri, 15 Dec 2023 03:58:36 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/cadence] BUILD SUCCESS
- 9ca59b45ecf3b1ab24e21294aa598837761dd1e8
-Message-ID: <202312150312.3t9ltGDA-lkp@intel.com>
+Subject: [pci:controller/vmd] BUILD SUCCESS
+ 991801bc4722e287035e907a0202954a2ffb2798
+Message-ID: <202312150333.vcSTq1Lh-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -65,8 +65,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/cadence
-branch HEAD: 9ca59b45ecf3b1ab24e21294aa598837761dd1e8  PCI: j721e: Add j784s4 PCIe configuration
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/vmd
+branch HEAD: 991801bc4722e287035e907a0202954a2ffb2798  PCI: vmd: Remove usage of the deprecated ida_simple_xx() API
 
 elapsed time: 1472m
 
