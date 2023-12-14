@@ -1,134 +1,119 @@
-Return-Path: <linux-pci+bounces-934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F24E18126E3
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 06:21:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A23AD8127F7
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 07:29:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A309E1F21A59
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 05:21:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D21F1F21AC5
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 06:29:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9CEA53A6;
-	Thu, 14 Dec 2023 05:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21FF7D265;
+	Thu, 14 Dec 2023 06:29:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UAspA/Is"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aV03J+iM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A669AD
-	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 21:21:42 -0800 (PST)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6d9e756cf32so5206104a34.2
-        for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 21:21:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702531301; x=1703136101; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+EpxA/oQdOsjZ3ZViQvYoAgBSxxBD7k1MJl0VMHDlZw=;
-        b=UAspA/IsK57VOg0BoQsC8pQj/alUB8bxVhcPY94S9xw0qBtoS6fSqtfuOfoj24I4YM
-         hftxh+s0oa4pjgxi2/tYMVnmQssr0FvmF9pkEb5aMNcpxpkCQVRhM4kLLX1kadDLkvkl
-         LIRt4qXHKFKwnFOhHlx1dMBVX+f11KLvwadj7Rmcs+DO05MWggQ97+Nn6Vn+cfPsU46N
-         FXlahyJe/0A3xV8O4B2350ah4759Nog1Q9WCrgFx5R+V3paXNzrxM1zlL8ZdmttRNqA2
-         lOId9/NGlvX8salpEXBEpoyqoGu3rVUwa6C14SkjvcKF/qQ/7QTCg7pqW+JNBhA82ztb
-         clyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702531301; x=1703136101;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+EpxA/oQdOsjZ3ZViQvYoAgBSxxBD7k1MJl0VMHDlZw=;
-        b=WkE0dQ98G6joCnEBDF5TbXQrUhVbzO8lsNuTCFOPjaxWMSyp/LYZO5uSG0xYk5XZiD
-         h73y/RJUe3WkaO6JQBr7Qes6iQW1c8UAunszms5UYf9AmjpA8ylVB+C11IdI4jYmwVEj
-         jxe0QLdnKLyKjKVL56Oerjc5ZEpfD8NPFeHroiK3tFVh8iy4/pYaB9ukwwI9unFt6f0f
-         doJnAk4lALOAr4t+gJmURbPC1XizW7rdvA1EGv2ACuyeI44F2uFtC72V5ANI4+TjXKLq
-         4QX93sm3k3/p2lMMqVudgwo8u1grDXfEneHp45FxB/KRX7ktD1GNYXhBVdQcCz4ZmDzu
-         xAIQ==
-X-Gm-Message-State: AOJu0YxjkCn75yzEhJCcJlscGa6q0VGzYl2ZS5ItlEnsKkhuGXerGBZV
-	WWa8og3fsQ1aKIt6tUDXBJoj
-X-Google-Smtp-Source: AGHT+IHVTBKVkd8pye6vCTczHqoOYH7dPwaMxiXCor8WD546zVln59FMabz/8e68g683gZ5DkOPHoA==
-X-Received: by 2002:a05:6830:10cb:b0:6d9:e37f:5c54 with SMTP id z11-20020a05683010cb00b006d9e37f5c54mr9479978oto.9.1702531301439;
-        Wed, 13 Dec 2023 21:21:41 -0800 (PST)
-Received: from thinkpad ([117.213.102.12])
-        by smtp.gmail.com with ESMTPSA id gu4-20020a056a004e4400b006ce4e3e2524sm10907827pfb.135.2023.12.13.21.21.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 21:21:41 -0800 (PST)
-Date: Thu, 14 Dec 2023 10:51:33 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
-	bhelgaas@google.com, mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] bus: mhi: ep: Add async read/write support
-Message-ID: <20231214052133.GF2938@thinkpad>
-References: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
- <20231213193103.GA1054774@bhelgaas>
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68985A6;
+	Wed, 13 Dec 2023 22:29:20 -0800 (PST)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BE3Rr5P026065;
+	Thu, 14 Dec 2023 06:29:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=ODCJhiY
+	BeWEU03LHMRasSH8E7YzOuqTWK5pYz/IOpl4=; b=aV03J+iML9O2FRcdASCnAOc
+	upOAvs05PL7uyoSHooUXoaiglVD7ehYw1oVPFX6q7O9FQiIDJDfd6DuEmMY0gvNu
+	nTNVUOZGAL2YC7o7WYYkOcooYO1RRqX9LQdY9j2WzNxPu6DdTrPJyYq5QKuDPffl
+	ndK2MnXzBkvMtwf51ccr7vdt/u3ILD2zXU0HGSaNujK2sDsqx2lYTwm2ic2ZR+Y4
+	pWnVGzKQnZXjUrvWfLOGqMvU01mYRTEHd6X5XGyVWFBni4C66gTdvvjJM+385txG
+	d9wvJDKw1jLRLnr7hmqlh/MWBqFgJi/nTIOOUDsdUEypLcxarRs2Xl52TZxq8Vg=
+	=
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uyqd50k36-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 06:29:09 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BE6T8p0006439
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 06:29:08 GMT
+Received: from hu-ipkumar-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 13 Dec 2023 22:29:01 -0800
+From: Praveenkumar I <quic_ipkumar@quicinc.com>
+To: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <vkoul@kernel.org>, <kishon@kernel.org>, <mani@kernel.org>,
+        <quic_nsekar@quicinc.com>, <quic_srichara@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-phy@lists.infradead.org>
+CC: <quic_varada@quicinc.com>, <quic_devipriy@quicinc.com>,
+        <quic_kathirav@quicinc.com>, <quic_anusha@quicinc.com>
+Subject: [PATCH 00/10] Add PCIe support for Qualcomm IPQ5332
+Date: Thu, 14 Dec 2023 11:58:37 +0530
+Message-ID: <20231214062847.2215542-1-quic_ipkumar@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231213193103.GA1054774@bhelgaas>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: v719Z6pncc-Lc86gqsgsO87urvOt3rkD
+X-Proofpoint-ORIG-GUID: v719Z6pncc-Lc86gqsgsO87urvOt3rkD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ adultscore=0 clxscore=1011 suspectscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=754 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312140039
 
-On Wed, Dec 13, 2023 at 01:31:03PM -0600, Bjorn Helgaas wrote:
-> On Mon, Nov 27, 2023 at 06:15:20PM +0530, Manivannan Sadhasivam wrote:
-> > Hi,
-> > 
-> > This series add async read/write support for the MHI endpoint stack by
-> > modifying the MHI ep stack and the MHI EPF (controller) driver.
-> > 
-> > Currently, only sync read/write operations are supported by the stack,
-> > this resulting in poor data throughput as the transfer is halted until
-> > receiving the DMA completion. So this series adds async support such
-> > that the MHI transfers can continue without waiting for the transfer
-> > completion. And once the completion happens, host is notified by sending
-> > the transfer completion event.
-> > 
-> > This series brings iperf throughput of ~4Gbps on SM8450 based dev platform,
-> > where previously 1.6Gbps was achieved with sync operation.
-> > 
-> > - Mani
-> > 
-> > Manivannan Sadhasivam (9):
-> >   bus: mhi: ep: Pass mhi_ep_buf_info struct to read/write APIs
-> >   bus: mhi: ep: Rename read_from_host() and write_to_host() APIs
-> >   bus: mhi: ep: Introduce async read/write callbacks
-> >   PCI: epf-mhi: Simulate async read/write using iATU
-> >   PCI: epf-mhi: Add support for DMA async read/write operation
-> >   PCI: epf-mhi: Enable MHI async read/write support
-> >   bus: mhi: ep: Add support for async DMA write operation
-> >   bus: mhi: ep: Add support for async DMA read operation
-> >   bus: mhi: ep: Add checks for read/write callbacks while registering
-> >     controllers
-> > 
-> >  drivers/bus/mhi/ep/internal.h                |   1 +
-> >  drivers/bus/mhi/ep/main.c                    | 256 +++++++++------
-> >  drivers/bus/mhi/ep/ring.c                    |  41 +--
-> >  drivers/pci/endpoint/functions/pci-epf-mhi.c | 314 ++++++++++++++++---
-> >  include/linux/mhi_ep.h                       |  33 +-
-> >  5 files changed, 485 insertions(+), 160 deletions(-)
-> 
-> Mani, do you want to merge this via your MHI tree?  If so, you can
-> include Krzysztof's Reviewed-by tags and my:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> If you think it'd be better via the PCI tree, let me know and we can
-> do that, too.
-> 
+Patch series adds support for enabling the PCIe controller and
+UNIPHY found on Qualcomm IPQ5332 platform. PCIe0 is Gen3 X1 and
+PCIe1 is Gen3 X2 are added.
 
-Thanks Bjorn! Yes, to avoid possible conflicts with other MHI patches, I need to
-take this series via MHI tree.
+UNIPHY changes depends on
+https://lore.kernel.org/all/20231003120846.28626-1-quic_nsekar@quicinc.com/
+PCIe driver change depends on
+https://lore.kernel.org/all/20230519090219.15925-1-quic_devipriy@quicinc.com/
 
-- Mani
+Praveenkumar I (10):
+  dt-bindings: clock: Add separate clocks for PCIe and USB for Combo PHY
+  clk: qcom: ipq5332: Add separate clocks for PCIe and USB for Combo PHY
+  arm64: dts: qcom: ipq5332: Add separate entry for USB pipe clock
+  phy: qcom: Add support for Pipe clock rate from device data
+  dt-bindings: phy: qcom,uniphy-pcie: Add ipq5332 bindings
+  phy: qcom: ipq5332: Add support for g3x1 and g3x2 PCIe PHYs
+  dt-bindings: PCI: qcom: Add IPQ5332 SoC
+  pci: qcom: Add support for IPQ5332
+  arm64: dts: qcom: ipq5332: Add PCIe related nodes
+  arm64: dts: qcom: ipq5332: Enable PCIe phys and controllers
 
-> Bjorn
+ .../bindings/clock/qcom,ipq5332-gcc.yaml      |   6 +-
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  36 ++++
+ .../bindings/phy/qcom,uniphy-pcie-28lp.yaml   |  65 +++++-
+ arch/arm64/boot/dts/qcom/ipq5332-rdp441.dts   |  74 +++++++
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi         | 188 +++++++++++++++++-
+ drivers/clk/qcom/gcc-ipq5332.c                |   7 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
+ .../phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c  |  49 ++++-
+ 8 files changed, 412 insertions(+), 14 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.34.1
+
 
