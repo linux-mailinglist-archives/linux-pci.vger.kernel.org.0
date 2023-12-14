@@ -1,54 +1,52 @@
-Return-Path: <linux-pci+bounces-989-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-990-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82E55812CDF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 11:26:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0EDB812D4B
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 11:47:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D351DB2101A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 10:26:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 517B31F2171A
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 10:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4701F3BB22;
-	Thu, 14 Dec 2023 10:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D2B2577E;
+	Thu, 14 Dec 2023 10:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pv2tPsSo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsL4pq9D"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2457E35EE8;
-	Thu, 14 Dec 2023 10:26:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6E97C433C7;
-	Thu, 14 Dec 2023 10:26:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0483610B;
+	Thu, 14 Dec 2023 10:47:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A651EC433C7;
+	Thu, 14 Dec 2023 10:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702549579;
-	bh=Ca529sV92qk/IQqi7DJDlHxw7r9RJpdb/BthpFrWtt4=;
+	s=k20201202; t=1702550853;
+	bh=G10Hq0xP/zK5MeKYT++ROANkyAPjg2roDsTG8VsGAWE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pv2tPsSoc8IgdEWrLxFmboZzYmZ2QHOIv8b4tLpsnOG9EqSL9RDt65Ea9pPO4PIvI
-	 UjYKtJz3Wl/JXQWXjmTdRv99mjEPGE5kVwKUZXgLrNwJhWN4gQNkBAqqb7tPz+7bwt
-	 YGNcMRIkI/PgC+x8+KCpRiifAV9iHqLctBR7gqmsrcGf2aRuCihAI2BWdMM0oAsQ15
-	 S+lLz+didj5ZkuUbijLQWVOleQAQe5FqQFnwHOyWfsG5BVzH+A6CBQx21Ltv8rP353
-	 V+NIdRzvMx3KGCxZSxEd5iAS/yKHSQuYV0oBM+IodXVmr7GOmwtTJH9zDubh4pNT8d
-	 cmuTk4RMOosyg==
-Date: Thu, 14 Dec 2023 15:56:05 +0530
+	b=ZsL4pq9DfAK53U5u0VlSzDgEKFAmJsuM15de8Y+gdaEo1drG48/N2Ek0Zzl4ZxG0A
+	 Mf2E4KD480cgTl4B9MOAWbJKEohV3EbhLdAKM25MDZcw3i1SQHhAasg2vrjFGI4o9Y
+	 MGujhdkdIez3+Se9qwSryB5t4n/3SXxcYgKMefiQuhnYVrQAjQZGmaZL7yLdMWSmYz
+	 LhCdUxebjvd2ZqL8ockuBP7H0x8BVZ3tfkNkB08ehd//TNON17XKFuAiJ4O4K5gc0l
+	 UEHodsCAHbC6bij499aX7hb6dCDoQBlqHjwzQ56TUPmSH8DEfhanRGI2TM7bRJ4BKV
+	 QKq14cK2XLs+Q==
+Date: Thu, 14 Dec 2023 16:17:19 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] PCI: controllers: tidy code up
-Message-ID: <20231214102605.GK2938@thinkpad>
-References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com>
- <TYBPR01MB5341F846948DB6CFECA62187D88CA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
- <rrgcf2jagjkiczb5tt56qm2jwvfyaor2mzjdqxrodrhzrn5j65@m7orqtcay3gg>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
+	bhelgaas@google.com, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] PCI: epf-mhi: Enable MHI async read/write support
+Message-ID: <20231214104719.GM2938@thinkpad>
+References: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
+ <20231127124529.78203-7-manivannan.sadhasivam@linaro.org>
+ <feb4ed1b-ed74-aebe-0ab8-dec123fe0a31@quicinc.com>
+ <20231214100936.GI2938@thinkpad>
+ <8929dcd0-af98-5b18-2d90-aad7b5928578@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,106 +56,72 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <rrgcf2jagjkiczb5tt56qm2jwvfyaor2mzjdqxrodrhzrn5j65@m7orqtcay3gg>
+In-Reply-To: <8929dcd0-af98-5b18-2d90-aad7b5928578@quicinc.com>
 
-On Thu, Dec 14, 2023 at 12:40:13PM +0300, Serge Semin wrote:
-> Hi Yoshihiro
+On Thu, Dec 14, 2023 at 03:44:21PM +0530, Krishna Chaitanya Chundru wrote:
 > 
-> On Thu, Dec 14, 2023 at 02:35:56AM +0000, Yoshihiro Shimoda wrote:
-> > Hello PCIe maintainers,
+> On 12/14/2023 3:39 PM, Manivannan Sadhasivam wrote:
+> > On Thu, Dec 14, 2023 at 03:10:01PM +0530, Krishna Chaitanya Chundru wrote:
+> > > On 11/27/2023 6:15 PM, Manivannan Sadhasivam wrote:
+> > > > Now that both eDMA and iATU are prepared to support async transfer, let's
+> > > > enable MHI async read/write by supplying the relevant callbacks.
+> > > > 
+> > > > In the absence of eDMA, iATU will be used for both sync and async
+> > > > operations.
+> > > > 
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > ---
+> > > >    drivers/pci/endpoint/functions/pci-epf-mhi.c | 7 ++++---
+> > > >    1 file changed, 4 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > > > index 3d09a37e5f7c..d3d6a1054036 100644
+> > > > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > > > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > > > @@ -766,12 +766,13 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+> > > >    	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
+> > > >    	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
+> > > >    	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
+> > > > +	mhi_cntrl->read_sync = mhi_cntrl->read_async = pci_epf_mhi_iatu_read;
+> > > > +	mhi_cntrl->write_sync = mhi_cntrl->write_async = pci_epf_mhi_iatu_write;
+> > > >    	if (info->flags & MHI_EPF_USE_DMA) {
+> > > >    		mhi_cntrl->read_sync = pci_epf_mhi_edma_read;
+> > > >    		mhi_cntrl->write_sync = pci_epf_mhi_edma_write;
+> > > > -	} else {
+> > > > -		mhi_cntrl->read_sync = pci_epf_mhi_iatu_read;
+> > > > -		mhi_cntrl->write_sync = pci_epf_mhi_iatu_write;
+> > > > +		mhi_cntrl->read_async = pci_epf_mhi_edma_read_async;
+> > > > +		mhi_cntrl->write_async = pci_epf_mhi_edma_write_async;
+> > > I think the read_async & write async should be updated inside the if
+> > > condition where MHI_EPF_USE_DMA flag is set.
+> > > 
+> > That's what being done here. Am I missing anything?
 > > 
-> > > From: Yoshihiro Shimoda, Sent: Tuesday, November 14, 2023 2:55 PM
-> > > 
-> > > This patch series tidies the code of PCIe dwc controllers and some
-> > > controllers up.
-> > > 
-> > > Changes from v1:
-> > > https://lore.kernel.org/linux-pci/20231113013300.2132152-1-yoshihiro.shimoda.uh@renesas.com/
-> > >  - Based on the latest pci.git / next branch.
-> > >  - Add a new patch to drop host prefix of members from dw_pcie_host_ops
-> > >    in the patch 1/6.
-> > >  - Add Reviewed-by tag in the patch 3/6.
-> > >  - Drop unneeded local variable in the patch 4/6.
-> > >  - Add new patches to resolve issues of clang warnings in the patch [56]/6.
-> > > 
-> > > Justin Stitt (1):
-> > >   PCI: iproc: fix -Wvoid-pointer-to-enum-cast warning
-> > > 
-> > > Yoshihiro Shimoda (5):
-> > >   PCI: dwc: Drop host prefix from struct dw_pcie_host_ops
-> > >   PCI: dwc: Rename to .init in struct dw_pcie_ep_ops
-> > >   PCI: dwc: Rename to .get_dbi_offset in struct dw_pcie_ep_ops
-> > >   PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2] helpers
-> > >   PCI: rcar-gen4: fix -Wvoid-pointer-to-enum-cast warning
-> > 
-> > According to the patchwork [1], all patches have Reviewed-by tags.
-> > So, I think the patches are acceptable for upstream, but what do you think?
-> > I confirmed that the patches can be applied into the latest pci.git / next branch.
+> > - Mani
 > 
-> What actually matters is to get all Manivannan or Jingoo or Gustavo
-> acks (the later two maintainers are unlikely to respond though) or any
-> higher maintainers approval. AFAICS this patch still hasn't got any
-> maintainers ack:
-> https://patchwork.kernel.org/project/linux-pci/patch/20231114055456.2231990-5-yoshihiro.shimoda.uh@renesas.com/
-> https://lore.kernel.org/linux-pci/20231114055456.2231990-5-yoshihiro.shimoda.uh@renesas.com/
-> I guess it's connected with a request to move the helpers to the
-> header file.
+> It should be like this as edma sync & aysnc read write should be update only
+> if DMA is supported, in the patch I see async function pointers are being
+> updated with the edma function pointers for IATU operations.
 > 
+>                 if (info->flags & MHI_EPF_USE_DMA) {
+> 
+>   		mhi_cntrl->read_sync = pci_epf_mhi_edma_read;
+>   		mhi_cntrl->write_sync = pci_epf_mhi_edma_write;
+> 		mhi_cntrl->read_async = pci_epf_mhi_edma_read_async;
+> 		mhi_cntrl->write_async = pci_epf_mhi_edma_write_async;
+> 	}
 
-Yes. I recommended moving the helpers to header file to keep the consistency and
-there was no reply from Yoshihiro.
-
-Yoshihiro, should you have any objections, please counter in the patch thread
-4/6. Otherwise, please implement the proposed change.
+Are you reading the patch correctly? Please take a look at this commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git/tree/drivers/pci/endpoint/functions/pci-epf-mhi.c?h=mhi-next&id=d1c6f4ba4746ed41fde8269cb5fea88bddb60504#n771
 
 - Mani
 
-> -Serge(y)
+> - Krishna Chaitanya.
 > 
-> > 
-> > [1]
-> > https://patchwork.kernel.org/project/linux-pci/list/?series=800901
-> > 
-> > Best regards,
-> > Yoshihiro Shimoda
-> > 
-> > >  drivers/pci/controller/dwc/pci-dra7xx.c       |   4 +-
-> > >  drivers/pci/controller/dwc/pci-exynos.c       |   2 +-
-> > >  drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
-> > >  drivers/pci/controller/dwc/pci-keystone.c     |   8 +-
-> > >  .../pci/controller/dwc/pci-layerscape-ep.c    |   7 +-
-> > >  drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
-> > >  drivers/pci/controller/dwc/pci-meson.c        |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-al.c          |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-armada8k.c    |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
-> > >  drivers/pci/controller/dwc/pcie-bt1.c         |   4 +-
-> > >  .../pci/controller/dwc/pcie-designware-ep.c   | 249 ++++++++++--------
-> > >  .../pci/controller/dwc/pcie-designware-host.c |  30 +--
-> > >  .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-designware.h  |  12 +-
-> > >  drivers/pci/controller/dwc/pcie-dw-rockchip.c |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-histb.c       |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-intel-gw.c    |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-qcom-ep.c     |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-qcom.c        |   6 +-
-> > >  drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  12 +-
-> > >  drivers/pci/controller/dwc/pcie-spear13xx.c   |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-uniphier-ep.c |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-uniphier.c    |   2 +-
-> > >  drivers/pci/controller/dwc/pcie-visconti.c    |   2 +-
-> > >  drivers/pci/controller/pcie-iproc-platform.c  |   2 +-
-> > >  30 files changed, 203 insertions(+), 177 deletions(-)
+> > > - Krishna Chaitanya.
 > > > 
-> > > --
-> > > 2.34.1
-> > 
-> > 
-> 
+> > > >    	}
+> > > >    	/* Register the MHI EP controller */
 
 -- 
 மணிவண்ணன் சதாசிவம்
