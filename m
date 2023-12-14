@@ -1,128 +1,127 @@
-Return-Path: <linux-pci+bounces-985-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-986-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D0FF812C80
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 11:07:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16FDF812C88
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 11:09:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19212B20F13
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 10:07:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 938C1B212C9
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 10:09:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64E5B2AD04;
-	Thu, 14 Dec 2023 10:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7FF2AD04;
+	Thu, 14 Dec 2023 10:09:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HReMX5YU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JMKhkrud"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E781DBD;
-	Thu, 14 Dec 2023 02:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702548459; x=1734084459;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7nYqpc7DtxTseeDVLSGfvUOGoJe3vkZw3P+N4mPsjNU=;
-  b=HReMX5YUR6ibBflkte62aVVnn42pMbS6Eo1iLHNn3WeeS51eGd1fwp4g
-   zGf1zcOqKnBSRpG7Lvji1CW8dnBzwfw+L8FxMSFC1xSbefdPpYIIqjnXk
-   FMRgs/Ocw1kFkwU8C1rdNMbsNrMi12IBAeBn/Vp79pN7kb7HotOS0cY99
-   8m0g5YJjWaLAVStOFIlCuCc8sQAgrrcVoaObh6rg2B+mBXrwcqWmO4jy7
-   MhQ2+1eGpFVoVRjPKnpTZu8F0RaN2TIdzuqP0FWxyd8mICrsBnUeogMJf
-   AKCBpWFsIhfY+JmiVQreKA9DN3tr/mVC6eEf4gLc863qsil+oym40Lg5i
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="461563519"
-X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
-   d="scan'208";a="461563519"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 02:07:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1105644568"
-X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
-   d="scan'208";a="1105644568"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Dec 2023 02:07:33 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rDict-000Lsp-0w;
-	Thu, 14 Dec 2023 10:07:31 +0000
-Date: Thu, 14 Dec 2023 18:06:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sherry Sun <sherry.sun@nxp.com>, hongxing.zhu@nxp.com,
-	l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, linux-imx@nxp.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/4] PCI: imx6: Add pci host wakeup support on imx
- platforms.
-Message-ID: <202312141726.nPrR7WDt-lkp@intel.com>
-References: <20231213092850.1706042-2-sherry.sun@nxp.com>
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79B4E0
+	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 02:09:43 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6ceba6c4b8dso6768613b3a.1
+        for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 02:09:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702548583; x=1703153383; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WWNR+uChpD2XCXHiRI7apkxqBy405ej3EqIXUwuAYoY=;
+        b=JMKhkrudGBgnElxQGlQTxUO2CM6RMZzBPWNxIl3d1beMbjshgWsQMUMMciYIQc6uOx
+         LvpUqdMW/CLRrG0uRxKT8PCAz4SkiN44dN6gLO3EXEpUjsOblZULrMEzmPc0c+vh++iU
+         dWQPKJD/oKfWh2r8wSC/DICoVyoZmjfvIDOzSpdVGrKzclcGaxOxh+KwhJo3pNtqjKIs
+         Fw0rH6JGw7qJ/gUMcQW9fd3tAxPcrkWqDxv9oFK+3+wSGP210smgcBdnXc4JZoXwWajV
+         2ccAr9OyCyCc+xP5OnpE0Pqgr4l9vwAYkHP13eg6C3wR8Ro3GN0GWnZ4NDMfW66dljV7
+         fLXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702548583; x=1703153383;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WWNR+uChpD2XCXHiRI7apkxqBy405ej3EqIXUwuAYoY=;
+        b=gcO2W4zTQrSKEqvaoYW8sIQIYrllg5L5pTEHp0pdk+4jsFFk2118EB6Ip+R1526xQ/
+         NPj5Q1y1NtIgUyMlELy1lO/fcxQMFXFXPliqDJBwtIBIAY72QGIhpKMMncyRKfeRxJVL
+         sjVfNRmnFE9UBzqEjrVq4Yc3ag0oPETnlQQ/ZY6O+TkdsAOvRIKA0TGm9tKEjcAAfFNz
+         ogOt1qnsyaxUVWg+qHr9SNyg9zH32NRZzIgbE3u1SIBmR5tv0H3nJrBA/jq6Cz1MKTxz
+         pxB8/RR9A3wJjW/ggx1qRCG/LuPvb6JLb2MXQewVCzA0MI22UV7Hcbti/p+/KOl1x/Q9
+         GGBw==
+X-Gm-Message-State: AOJu0YyuiAatsAOrkH79DdbUqDf2PGLbrdM2hZPf0sXflwA6pUgPhaF/
+	FeykfHbX7vBwmVmQUeKwhEl4
+X-Google-Smtp-Source: AGHT+IFoBTL8upshvJpDsA2gdrqL9OnkLrHFDhbqOefDhz6lfrJvqtCI/Af60s/auvjujU8gBjKneQ==
+X-Received: by 2002:a05:6a00:2195:b0:6ce:6518:702f with SMTP id h21-20020a056a00219500b006ce6518702fmr11386629pfi.28.1702548583327;
+        Thu, 14 Dec 2023 02:09:43 -0800 (PST)
+Received: from thinkpad ([117.216.120.87])
+        by smtp.gmail.com with ESMTPSA id ca40-20020a056a0206a800b005897bfc2ed3sm9703702pgb.93.2023.12.14.02.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 02:09:42 -0800 (PST)
+Date: Thu, 14 Dec 2023 15:39:36 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
+	bhelgaas@google.com, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] PCI: epf-mhi: Enable MHI async read/write support
+Message-ID: <20231214100936.GI2938@thinkpad>
+References: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
+ <20231127124529.78203-7-manivannan.sadhasivam@linaro.org>
+ <feb4ed1b-ed74-aebe-0ab8-dec123fe0a31@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231213092850.1706042-2-sherry.sun@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <feb4ed1b-ed74-aebe-0ab8-dec123fe0a31@quicinc.com>
 
-Hi Sherry,
+On Thu, Dec 14, 2023 at 03:10:01PM +0530, Krishna Chaitanya Chundru wrote:
+> 
+> On 11/27/2023 6:15 PM, Manivannan Sadhasivam wrote:
+> > Now that both eDMA and iATU are prepared to support async transfer, let's
+> > enable MHI async read/write by supplying the relevant callbacks.
+> > 
+> > In the absence of eDMA, iATU will be used for both sync and async
+> > operations.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >   drivers/pci/endpoint/functions/pci-epf-mhi.c | 7 ++++---
+> >   1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > index 3d09a37e5f7c..d3d6a1054036 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > @@ -766,12 +766,13 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+> >   	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
+> >   	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
+> >   	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
+> > +	mhi_cntrl->read_sync = mhi_cntrl->read_async = pci_epf_mhi_iatu_read;
+> > +	mhi_cntrl->write_sync = mhi_cntrl->write_async = pci_epf_mhi_iatu_write;
+> >   	if (info->flags & MHI_EPF_USE_DMA) {
+> >   		mhi_cntrl->read_sync = pci_epf_mhi_edma_read;
+> >   		mhi_cntrl->write_sync = pci_epf_mhi_edma_write;
+> > -	} else {
+> > -		mhi_cntrl->read_sync = pci_epf_mhi_iatu_read;
+> > -		mhi_cntrl->write_sync = pci_epf_mhi_iatu_write;
+> > +		mhi_cntrl->read_async = pci_epf_mhi_edma_read_async;
+> > +		mhi_cntrl->write_async = pci_epf_mhi_edma_write_async;
+> 
+> I think the read_async & write async should be updated inside the if
+> condition where MHI_EPF_USE_DMA flag is set.
+> 
 
-kernel test robot noticed the following build warnings:
+That's what being done here. Am I missing anything?
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus shawnguo/for-next robh/for-next linus/master v6.7-rc5 next-20231214]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- Mani
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sherry-Sun/PCI-imx6-Add-pci-host-wakeup-support-on-imx-platforms/20231213-173031
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20231213092850.1706042-2-sherry.sun%40nxp.com
-patch subject: [PATCH V2 1/4] PCI: imx6: Add pci host wakeup support on imx platforms.
-config: arm-randconfig-004-20231213 (https://download.01.org/0day-ci/archive/20231214/202312141726.nPrR7WDt-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231214/202312141726.nPrR7WDt-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312141726.nPrR7WDt-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/controller/dwc/pci-imx6.c:1267:13: warning: no previous prototype for function 'host_wake_irq_handler' [-Wmissing-prototypes]
-    1267 | irqreturn_t host_wake_irq_handler(int irq, void *priv)
-         |             ^
-   drivers/pci/controller/dwc/pci-imx6.c:1267:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-    1267 | irqreturn_t host_wake_irq_handler(int irq, void *priv)
-         | ^
-         | static 
-   1 warning generated.
-
-
-vim +/host_wake_irq_handler +1267 drivers/pci/controller/dwc/pci-imx6.c
-
-  1266	
-> 1267	irqreturn_t host_wake_irq_handler(int irq, void *priv)
-  1268	{
-  1269		struct imx6_pcie *imx6_pcie = priv;
-  1270		struct device *dev = imx6_pcie->pci->dev;
-  1271	
-  1272		/* Notify PM core we are wakeup source */
-  1273		pm_wakeup_event(dev, 0);
-  1274		pm_system_wakeup();
-  1275	
-  1276		return IRQ_HANDLED;
-  1277	}
-  1278	
+> - Krishna Chaitanya.
+> 
+> >   	}
+> >   	/* Register the MHI EP controller */
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
