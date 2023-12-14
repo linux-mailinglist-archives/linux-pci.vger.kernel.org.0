@@ -1,71 +1,69 @@
-Return-Path: <linux-pci+bounces-932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 418698126D1
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 06:13:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A16D08126DD
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 06:19:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E13731F219EB
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 05:13:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56C1D1F21AC5
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 05:19:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 276476110;
-	Thu, 14 Dec 2023 05:13:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACBE613D;
+	Thu, 14 Dec 2023 05:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nKrYKE8U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="isAl+ThA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955C2F5
-	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 21:13:39 -0800 (PST)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-203061bbf3aso1774169fac.3
-        for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 21:13:39 -0800 (PST)
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599BC116
+	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 21:19:28 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-3ba2e4ff6e1so500622b6e.3
+        for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 21:19:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702530819; x=1703135619; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702531167; x=1703135967; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=tGvsJDQAMzLezaJvKe+SydOVs1hJQDGaynKlMwoskT4=;
-        b=nKrYKE8Uf3UL7w0vaBWQi2gBRLEIiBZfJH50f9E2d5qKLJtbbyBWNCsvC7qT6W3sYC
-         eg4yaoNsac3k94gxt8H68ThiL6xthPpgbr+nh//+oT2HH2H+spOBXkmISH07n0cA9p7/
-         /1ziGdf/L0PhBDcbxGVoYpbMwEbqei+sw/J5ture6HUUTcm0X4LeFRSP+E2eOuQ50y2x
-         tnn0Q5GjEoER16bjBZnjF4d3tJEjXKOXWXyaBtrg9ogrF75kpYAfYXZA+/cC75BsyfC6
-         MFEGGSUHwwsmUpwVK3HZ9V+BjwNle9f19nykV42O5F+FGwL8Fqvfx2P05CXl3I9eA2rx
-         OXXw==
+        bh=ebgC6Es1TWLTrA7P861m7mbGtvNZNIYlwsAipKfKxek=;
+        b=isAl+ThAtprMNGNTOz2hovcbI39ECXCm7OFgUmiSqR43kkR0Q7NY8JmymvKK+zDpRQ
+         kFMGP0FwhszabqZJtZ9VRl/Izjnl3yuWJqvrs40P6VXPoFPtAy7V22sW/wB13eqIE6/B
+         6+KkGHkZdsvsNjDWuFEmkc72rXOiq3uW7K4O0mc60wZlpo8AJqQ2ewmPtoGDJBIJK4B4
+         rD+1PJzq5zGsB8xpiT6rx0JjHqnuiBKY7gF6gGdsFZpq5p3tQ2XDhT+9Ex4hg7Q4LWcs
+         4S5wqa4+MpZSkU+sx91h3LL7VsHtIcA388q735okyZEnuXljsZYvPn0HPHFwE1liPY2k
+         9a/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702530819; x=1703135619;
+        d=1e100.net; s=20230601; t=1702531167; x=1703135967;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tGvsJDQAMzLezaJvKe+SydOVs1hJQDGaynKlMwoskT4=;
-        b=hpmKGidVYrD0WwkQliWIpMgt/uW9GfTqF7HM+TDAuMafeiJhTM8LsG71EUIdV+hX6f
-         ii0I4M6VhcBY9DiofWn4fQZQbAIBdx1RCfb8Gi4LznJeibg21k/QLpYYp3i6eSn6ALLp
-         EP00pxXkBaAnqRVcRKLAVl1CZyaKr3hs2vfObyM8paNCPKDqi/aOYYc4bsLSXXT7r7fB
-         eUawty3rhnz3uaDa3704J66LRIOIRBPfkw+ZWAKT1kwlmZakP5mmiDEtm+/fhO87jo+z
-         8aEcYJN5ymM2PDfPGLSj19NTdikFE56CcVdBywx7bKy+x2N48N95NMlDgXWJcPJMhiFW
-         irjQ==
-X-Gm-Message-State: AOJu0YzhC5g6Hd7SoxjMsW/n5HtNzvg++KYhwZRyDua8e+agA2pyHDMv
-	/9oQGRfmrULbhmMrsZicpo9t
-X-Google-Smtp-Source: AGHT+IF7Jn4S+prGJxVJcS2oGK9Fh6M9OUtE75CGnfrjrN6KWZmfHgWTJpIwPzVP3dRI2hzJ3wX4Jw==
-X-Received: by 2002:a05:6870:4987:b0:1fb:75a:778f with SMTP id ho7-20020a056870498700b001fb075a778fmr10833283oab.64.1702530818876;
-        Wed, 13 Dec 2023 21:13:38 -0800 (PST)
+        bh=ebgC6Es1TWLTrA7P861m7mbGtvNZNIYlwsAipKfKxek=;
+        b=HaF2hPR0eILp8l+tDIxr//cwe3M0M0DG9sTjYuhxfWH+o90TuykUqfla7CGL6ztayK
+         NqQN48CvYEa0xS4sdlTos5DUJBr2DBWY2k35hhFG71ofxY5TtLzZTHQYJKDV7Vdui0u9
+         6BMlcLQdF4YV/Al+Y9LP5vPodD51gEvX870zsMN5mdWigqLiAVAsHd1jnvDyYwWtSo4F
+         mPAAJpskTBBp1ho71U0ObEXrvZmHGmfetGFNci4ZhvVPnn1PwFson2IOyncwdlW7OFgi
+         qtpt+Mghbtx9v0UbqIAjCXuDW8NyWxYiXzH30ZKRlN8WEXx3fIYH56/vbMsqsmR4TLDM
+         9AYQ==
+X-Gm-Message-State: AOJu0YxzMAFCVbCgTXrKBsH9QX6sCqkY8yKojH58WVdlb5CzMe14URCa
+	1VRkZFLy98zIl4szI/yoMgYK
+X-Google-Smtp-Source: AGHT+IGW3pZ0FDvERci6/aHUcc+KUUP8SedVgnuilbHTJ7cbeMfPq5P/+/TASqLl0smV5t/gXrvQNA==
+X-Received: by 2002:a05:6808:1686:b0:3b2:c242:aaee with SMTP id bb6-20020a056808168600b003b2c242aaeemr11190614oib.42.1702531167246;
+        Wed, 13 Dec 2023 21:19:27 -0800 (PST)
 Received: from thinkpad ([117.213.102.12])
-        by smtp.gmail.com with ESMTPSA id n2-20020a170902d2c200b001bf044dc1a6sm11413219plc.39.2023.12.13.21.13.32
+        by smtp.gmail.com with ESMTPSA id sm5-20020a17090b2e4500b002867f87d103sm12049902pjb.50.2023.12.13.21.19.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 21:13:38 -0800 (PST)
-Date: Thu, 14 Dec 2023 10:43:28 +0530
+        Wed, 13 Dec 2023 21:19:26 -0800 (PST)
+Date: Thu, 14 Dec 2023 10:49:19 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Sherry Sun <sherry.sun@nxp.com>
-Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 0/4] PCI: imx6: Add pci host wakeup support
-Message-ID: <20231214051328.GD2938@thinkpad>
-References: <20231213092850.1706042-1-sherry.sun@nxp.com>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: lpieralisi@kernel.org, kishon@kernel.org, bhelgaas@google.com,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] PCI: epf-mhi: Enable MHI async read/write support
+Message-ID: <20231214051919.GE2938@thinkpad>
+References: <20231127124529.78203-1-manivannan.sadhasivam@linaro.org>
+ <20231127124529.78203-7-manivannan.sadhasivam@linaro.org>
+ <20231213184829.GA924726@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,54 +73,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231213092850.1706042-1-sherry.sun@nxp.com>
+In-Reply-To: <20231213184829.GA924726@rocinante>
 
-On Wed, Dec 13, 2023 at 05:28:46PM +0800, Sherry Sun wrote:
-> Add pci host wakeup feature for imx platforms. The host wake pin is a
-> standard feature in the PCIe bus specification, so we can add this
-> property under PCI dts node to support the host gpio wakeup feature.
+On Thu, Dec 14, 2023 at 03:48:29AM +0900, Krzysztof Wilczyński wrote:
+> Hello,
 > 
-> Example of configuring the corresponding dts property under the PCI node:
->     wake-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
+> Manivannan, you will be taking this through the MHI tree, correct?
 > 
 
-As you mentioned, WAKE# is a standard sideband signal defined in the PCI spec.
-So the support for handling it has to be in the PCI core layer, not in the
-host controller drivers.
+Yes, to avoid conflict with other MHI patches, I'm taking this series through
+MHI tree.
 
-There is already a series floating to add support for WAKE# in PCI core. Please
-take a look:
+> > Now that both eDMA and iATU are prepared to support async transfer, let's
+> > enable MHI async read/write by supplying the relevant callbacks.
+> > 
+> > In the absence of eDMA, iATU will be used for both sync and async
+> > operations.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/endpoint/functions/pci-epf-mhi.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > index 3d09a37e5f7c..d3d6a1054036 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > @@ -766,12 +766,13 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+> >  	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
+> >  	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
+> >  	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
+> > +	mhi_cntrl->read_sync = mhi_cntrl->read_async = pci_epf_mhi_iatu_read;
+> > +	mhi_cntrl->write_sync = mhi_cntrl->write_async = pci_epf_mhi_iatu_write;
+> >  	if (info->flags & MHI_EPF_USE_DMA) {
+> >  		mhi_cntrl->read_sync = pci_epf_mhi_edma_read;
+> >  		mhi_cntrl->write_sync = pci_epf_mhi_edma_write;
+> > -	} else {
+> > -		mhi_cntrl->read_sync = pci_epf_mhi_iatu_read;
+> > -		mhi_cntrl->write_sync = pci_epf_mhi_iatu_write;
+> > +		mhi_cntrl->read_async = pci_epf_mhi_edma_read_async;
+> > +		mhi_cntrl->write_async = pci_epf_mhi_edma_write_async;
+> >  	}
+> 
+> Looks good!
+> 
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> 
 
-https://lore.kernel.org/linux-pci/20230208111645.3863534-1-mmaddireddy@nvidia.com/
+Thanks!
 
 - Mani
 
-> ---
-> changes in V2:
-> 1. Rename host-wake-gpio property to wake-gpios.
-> 2. Improve the wake-gpios property description in the dt-binding doc to avoid
-> confusion.
-> 3. Remove unnecessary debugging info in host_wake_irq_handler().
-> 4. Remove unnecessary imx6_pcie->host_wake_irq = -1 resetting in error paths.
-> 5. Use dev_err_probe() to simplify error path code.
-> ---
-> 
-> Sherry Sun (4):
->   PCI: imx6: Add pci host wakeup support on imx platforms.
->   dt-bindings: imx6q-pcie: Add wake-gpios property
->   arm64: dts: imx8mp-evk: add wake-gpios property for pci bus
->   arm64: dts: imx8mq-evk: add wake-gpios property for pci bus
-> 
->  .../bindings/pci/fsl,imx6q-pcie.yaml          |  6 ++
->  arch/arm64/boot/dts/freescale/imx8mp-evk.dts  |  2 +
->  arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  2 +
->  drivers/pci/controller/dwc/pci-imx6.c         | 60 +++++++++++++++++++
->  4 files changed, 70 insertions(+)
-> 
-> -- 
-> 2.34.1
-> 
-> 
+> 	Krzysztof
 
 -- 
 மணிவண்ணன் சதாசிவம்
