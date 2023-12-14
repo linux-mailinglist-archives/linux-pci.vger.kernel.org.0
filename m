@@ -1,33 +1,56 @@
-Return-Path: <linux-pci+bounces-922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A53B8124B7
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 02:50:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8945C8124A0
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 02:33:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 961A61C20AEF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 01:50:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 198AC282676
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 01:33:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0608965B;
-	Thu, 14 Dec 2023 01:50:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCFF63D;
+	Thu, 14 Dec 2023 01:33:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-X-Greylist: delayed 1266 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Dec 2023 17:49:53 PST
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 988DAE0;
-	Wed, 13 Dec 2023 17:49:53 -0800 (PST)
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.17.2/8.17.2) with ESMTPS id 3BE1SKEW030932
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Thu, 14 Dec 2023 11:58:22 +1030
-Date: Thu, 14 Dec 2023 11:58:20 +1030
-From: Jonathan Woithe <jwoithe@just42.net>
-To: bhelgaas@google.com, imammedo@redhat.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Regression] Commit 40613da52b13 ("PCI: acpiphp: Reassign resources
- on bridge if necessary")
-Message-ID: <ZXpaNCLiDM+Kv38H@marvin.atrad.com.au>
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3C0F4;
+	Wed, 13 Dec 2023 17:33:20 -0800 (PST)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ceb93fb381so116676b3a.0;
+        Wed, 13 Dec 2023 17:33:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702517599; x=1703122399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DTDqfs/xpXbeTqhhiS0RXQWRiBAFOfATWckEZsTas7k=;
+        b=mLmFZrSp8bGK4osXFo3/XVFm/PtQgpqG66bgtEfVEmDa9Tw+0zjm80U+Dv4r6JVHBV
+         BxSGDAUs+naRRFN0Fi6JP7LMyVl29VvLonJkeeglo+alBp8/EOxv9z6NgPj7WPIMGsE6
+         QOlOgC2I8G/mW27GoQpN9KB8bbkGmWoATOhBCMHptpS4cSN+nbM8UCgZPSoaVXEzBJx6
+         rN4fw2FctJHHEgSF9vSTtSlMhRJ+NBhN9s5ACX+hK8gql7LTmGVR6e1W5SUmEooQtR2Z
+         cMH9P4HCH0ekQ8kJ5DUyvLNGvyP6+fil5/SthIgyBOcdu+XKnMNqri2nuCxkJB0MIx6a
+         QYOA==
+X-Gm-Message-State: AOJu0YybmiKOSjMcVZR4KWmD38qHZe8FJGam1hf73prxiZwOz8B+tEAr
+	9FErFkRregbMkOOUnR6i49Y=
+X-Google-Smtp-Source: AGHT+IGAIN9gY4DiS0U84Eu9n8KQJC8+FtTi/0mWx/rE/bLHHnUHj+tFBkH+GnNJV6exxFjVLVUDEg==
+X-Received: by 2002:a05:6a00:310d:b0:6ce:f62c:dc66 with SMTP id bi13-20020a056a00310d00b006cef62cdc66mr7341604pfb.30.1702517599451;
+        Wed, 13 Dec 2023 17:33:19 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id g12-20020a056a0023cc00b006cde2889213sm11002760pfc.14.2023.12.13.17.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Dec 2023 17:33:18 -0800 (PST)
+Date: Thu, 14 Dec 2023 10:33:16 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci: rcar-gen4: Replace of_device.h with explicit of.h
+ include
+Message-ID: <20231214013316.GA1462914@rocinante>
+References: <20231207165251.2855783-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -36,150 +59,23 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+In-Reply-To: <20231207165251.2855783-1-robh@kernel.org>
 
-Hi
+Hello,
 
-Following an update from 5.15.72 to 5.15.139 on one of my machines, the
-console froze part way through the boot process.  The machine still managed
-to boot: it could be reached via the network and a keyboard-initiated
-shutdown would do the right thing.  The problem was that the screen remained
-static the whole time: the X login did not appear.  Only a reboot would
-restore the display's functionality.
+> The DT of_device.h and of_platform.h date back to the separate
+> of_platform_bus_type before it was merged into the regular platform bus.
+> As part of that merge prepping Arm DT support 13 years ago, they
+> "temporarily" include each other. They also include platform_device.h
+> and of.h. As a result, there's a pretty much random mix of those include
+> files used throughout the tree. In order to detangle these headers and
+> replace the implicit includes with struct declarations, users need to
+> explicitly include the correct includes.
 
-Comparing boot logs between these two kernels showed that 5.15.139 reported
-the following messages not seen with 5.15.72:
+Applied to controller/rcar, thank you!
 
-    thunderbolt 0000:04:00.0: interrupt for TX ring 0 is already enabled
-    WARNING: CPU: 0 PID: 713 at drivers/thunderbolt/nhi.c:139 ring_interrupt_active+0x218/0x270 [thunderbolt]
+[1/1] PCI: rcar-gen4: Replace of_device.h with explicit of.h include
+      https://git.kernel.org/pci/pci/c/263714f5fcf8
 
-    thunderbolt 0000:04:00.0: interrupt for RX ring 0 is already enabled
-    WARNING: CPU: 0 PID: 713 at drivers/thunderbolt/nhi.c:139 ring_interrupt_active+0x218/0x270 [thunderbolt]
-
-    radeon 0000:4b:00.0: Fatal error during GPU init
-    radeon: probe of 0000:4b:00.0 failed with error -12
-
-The fatal error during GPU initialisation would be the reason behind the
-frozen screen.  I don't know if the thunderbolt warnings are significant.
-
-A git bisect resulted in the following report:
-
-    d9ce077f8b1f731407e6b612b03bba464fd18d9b is the first bad commit
-    commit d9ce077f8b1f731407e6b612b03bba464fd18d9b
-    Author: Igor Mammedov <imammedo@redhat.com>
-    Date:   Mon Apr 24 21:15:57 2023 +0200
-
-        PCI: acpiphp: Reassign resources on bridge if necessary
-    
-        [ Upstream commit 40613da52b13fb21c5566f10b287e0ca8c12c4e9 ]
-
-It's taken me a while to work through the bisect process due to limited
-access to the machine concerned.  I see that in the last few days there have
-been other reports associated with this commit.  The symptoms on my machine
-are different to the other reporters.  In particular, I note that I'm
-running the Linux kernel on bare metal.
-
-For what it's worth, I also experienced the same problem when I tested 6.6.4
-last week (the most recent kernel at the time of testing).
-
-The output of lspci is given at the end of this post[1].  The CPU is an
-"Intel(R) Core(TM) i7-5930K CPU @ 3.50GHz" which is not overclocked.  Please
-let me know if you'd like more information about the affected machine.  I
-can also perform additional tests if required, although for various reasons
-these can only be done on Thursdays at present.
-
-The kernel configuration file can easily be supplied if that would be
-useful.
-
-Regards
-  jonathan
-
-[1] lspci output
-
-00:00.0 Host bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2 (rev 02)
-00:01.0 PCI bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCI Express Root Port 1 (rev 02)
-00:01.1 PCI bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCI Express Root Port 1 (rev 02)
-00:03.0 PCI bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCI Express Root Port 3 (rev 02)
-00:05.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Address Map, VTd_Misc, System Management (rev 02)
-00:05.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Hot Plug (rev 02)
-00:05.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 RAS, Control Status and Global Errors (rev 02)
-00:11.0 Unassigned class [ff00]: Intel Corporation C610/X99 series chipset SPSR (rev 05)
-00:14.0 USB controller: Intel Corporation C610/X99 series chipset USB xHCI Host Controller (rev 05)
-00:16.0 Communication controller: Intel Corporation C610/X99 series chipset MEI Controller #1 (rev 05)
-00:19.0 Ethernet controller: Intel Corporation Ethernet Connection (2) I218-V (rev 05)
-00:1a.0 USB controller: Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #2 (rev 05)
-00:1b.0 Audio device: Intel Corporation C610/X99 series chipset HD Audio Controller (rev 05)
-00:1c.0 PCI bridge: Intel Corporation C610/X99 series chipset PCI Express Root Port #1 (rev d5)
-00:1c.3 PCI bridge: Intel Corporation C610/X99 series chipset PCI Express Root Port #4 (rev d5)
-00:1d.0 USB controller: Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #1 (rev 05)
-00:1f.0 ISA bridge: Intel Corporation C610/X99 series chipset LPC Controller (rev 05)
-00:1f.2 SATA controller: Intel Corporation C610/X99 series chipset 6-Port SATA Controller [AHCI mode] (rev 05)
-00:1f.3 SMBus: Intel Corporation C610/X99 series chipset SMBus Controller (rev 05)
-02:00.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-03:00.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-03:01.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-03:02.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-03:04.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-04:00.0 System peripheral: Intel Corporation DSL6540 Thunderbolt 3 NHI [Alpine Ridge 4C 2015]
-49:00.0 USB controller: Intel Corporation DSL6540 USB 3.1 Controller [Alpine Ridge]
-4b:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Cedar [Radeon HD 5000/6000/7350/8350 Series]
-4b:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Cedar HDMI Audio [Radeon HD 5400/6300/7300 Series]
-4d:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 06)
-ff:0b.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring (rev 02)
-ff:0b.1 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring (rev 02)
-ff:0b.2 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring (rev 02)
-ff:0c.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-ff:0c.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-ff:0c.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-ff:0c.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-ff:0c.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-ff:0c.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-ff:0f.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent (rev 02)
-ff:0f.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent (rev 02)
-ff:0f.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers (rev 02)
-ff:0f.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers (rev 02)
-ff:0f.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers (rev 02)
-ff:10.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface (rev 02)
-ff:10.1 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface (rev 02)
-ff:10.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers (rev 02)
-ff:10.6 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers (rev 02)
-ff:10.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers (rev 02)
-ff:12.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0 (rev 02)
-ff:12.1 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0 (rev 02)
-ff:13.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal & RAS Registers (rev 02)
-ff:13.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal & RAS Registers (rev 02)
-ff:13.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-ff:13.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-ff:13.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-ff:13.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-ff:13.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 0/1 Broadcast (rev 02)
-ff:13.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast (rev 02)
-ff:14.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 Thermal Control (rev 02)
-ff:14.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 Thermal Control (rev 02)
-ff:14.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 ERROR Registers (rev 02)
-ff:14.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 ERROR Registers (rev 02)
-ff:14.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-ff:14.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-ff:14.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-ff:14.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-ff:15.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 Thermal Control (rev 02)
-ff:15.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 Thermal Control (rev 02)
-ff:15.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 ERROR Registers (rev 02)
-ff:15.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 ERROR Registers (rev 02)
-ff:16.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Target Address, Thermal & RAS Registers (rev 02)
-ff:16.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 2/3 Broadcast (rev 02)
-ff:16.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast (rev 02)
-ff:17.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Channel 0 Thermal Control (rev 02)
-ff:17.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-ff:17.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-ff:17.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-ff:17.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-ff:1e.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-ff:1e.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-ff:1e.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-ff:1e.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-ff:1e.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-ff:1f.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU (rev 02)
-ff:1f.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU (rev 02)
+	Krzysztof
 
