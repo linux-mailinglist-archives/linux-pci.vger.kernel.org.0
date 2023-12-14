@@ -1,156 +1,99 @@
-Return-Path: <linux-pci+bounces-1010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1890813AAA
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 20:23:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79D97813AD0
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 20:34:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DD322824AD
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 19:23:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A0BE1C20F07
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 19:33:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A03692BE;
-	Thu, 14 Dec 2023 19:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA08A6979C;
+	Thu, 14 Dec 2023 19:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwxPxTNW"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YKCT6jAL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7796C692B9
-	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 19:23:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4001C433C7;
-	Thu, 14 Dec 2023 19:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702581807;
-	bh=+0UfPob4hYaGACQyIJrqY5Yy2HgpLGGz6ylBgO8R5Ws=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IwxPxTNWAw9iO+4TuBGenMF0jzXlntgLsCMdYuipDdhkhderZP/otcuNwEELtyo+C
-	 EqGbbKIiPtrAk+liM5c3NtJjtK0FsCMeF2Cyp/k8z+7J7fdRAHKBTAzOQyqopABsJw
-	 G1H4POB4Ay7zS83VjiKjm9s+k4nmSbjQAha7ZZJNWrBkGoBR+STUrBuFGGWzHQ/8XO
-	 QrQiCaWFQZQ5bjgZkH+CxK5K20ICEkyvMxALa4XmpTs5Cbf+Gp5mH+T7jSLsJiES6+
-	 BlkSA2wIY5uz3QfInjqHaoLKRuPUxw2EbhjYDPoUx+hhAExnneSnzrLw33RLTeylOe
-	 8X2DMiKZMBBQg==
-Date: Thu, 14 Dec 2023 13:23:25 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, samruddh.dhope@intel.com
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20231214192325.GA1095340@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49D369791
+	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 19:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=vJr/
+	AQFE1XFRSIFd6GXXrHnQGhGkGt3dKuW9tKsM4n0=; b=YKCT6jALhYwerAmIP8og
+	WvlNjpLQ/du0sxJvWarBIVAgSnDV2WcLnWlcmXD8VnqLyy8xjECjUWSy+N8spC0J
+	s7U5mhqzl+IYHPIlL1OpGH2BDymKomzFllX3U/vYp4wReJ9LN48b7yK4Z2hEUlkT
+	Mo+aABJ1ha9ufY5Cp37BDH50UpuNGFunPkA6Tc2uTL36NyS9aer1uxV4ODjxu8FP
+	UJaqcON8fbubzXzS36zVzDvVk8N154kXrVMSo2EeXqakRQiEU3VINb7PXzvZdj1r
+	PzISFrJhx8N+N0dTG7RInkn3zf/Zs9il/c9XQWF5n71isuu7lKS7wBmjtZYoCwu/
+	WQ==
+Received: (qmail 1023542 invoked from network); 14 Dec 2023 20:27:06 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 14 Dec 2023 20:27:06 +0100
+X-UD-Smtp-Session: l3s3148p1@iI7dRH0MMtUujnuR
+Date: Thu, 14 Dec 2023 20:27:05 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v5 RESEND 0/2] PCI: rcar: support regulators for PCIe
+Message-ID: <ZXtXCYx2YR1of/qr@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+References: <20231105092908.3792-1-wsa+renesas@sang-engineering.com>
+ <ZXske3k8CkMcGjr5@shikoro>
+ <20231214191900.GB2079458@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="C8Ty/fbhp+nEXecq"
+Content-Disposition: inline
+In-Reply-To: <20231214191900.GB2079458@rocinante>
+
+
+--C8Ty/fbhp+nEXecq
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <de1727eab115466d1573104a1543fb3637f6156f.camel@linux.intel.com>
 
-On Wed, Dec 13, 2023 at 06:07:02PM -0700, Nirmal Patel wrote:
-> On Tue, 2023-12-12 at 15:13 -0600, Bjorn Helgaas wrote:
-> > On Mon, Dec 11, 2023 at 04:05:25PM -0700, Nirmal Patel wrote:
-> > > On Tue, 2023-12-05 at 18:27 -0600, Bjorn Helgaas wrote:
-> > > > On Tue, Dec 05, 2023 at 03:20:27PM -0700, Nirmal Patel wrote:
-> > > > ...
-> > > > > Currently Hotplug is controlled by _OSC in both host and Guest.
-> > > > > In case of guest, it seems guest BIOS hasn't implemented _OSC
-> > > > > since all the flags are set to 0 which is not the case in host.
-> > > > 
-> > > > I think you want pciehp to work on the VMD Root Ports in the
-> > > > Guest, no matter what, on the assumption that any _OSC that
-> > > > applies to host bridge A does not apply to the host bridge
-> > > > created
-> > > > by the vmd driver.
-> > > > 
-> > > > If so, we should just revert 04b12ef163d1 ("PCI: vmd: Honor ACPI
-> > > > _OSC on PCIe features").  Since host bridge B was not enumerated
-> > > > via ACPI, the OS owns all those features under B by default, so
-> > > > reverting 04b12ef163d1 would leave that state.
-> > > > 
-> > > > Obviously we'd have to first figure out another solution for the
-> > > > AER message flood that 04b12ef163d1 resolved.
-> > > 
-> > > If we revert 04b12ef163d1, then VMD driver will still enable AER
-> > > blindly which is a bug. So we need to find a way to make VMD driver
-> > > aware of AER platform setting and use that information to enable or
-> > > disable AER for its child devices.
-> > > 
-> > > There is a setting in BIOS that allows us to enable OS native AER
-> > > support on the platform. This setting is located in EDK Menu ->
-> > > Platform configuration -> system event log -> IIO error enabling ->
-> > > OS native AER support.
-> > > 
-> > > This setting is assigned to VMD bridge by
-> > > vmd_copy_host_bridge_flags in patch 04b12ef163d1. Without the
-> > > patch 04b12ef163d1, VMD driver will enable AER even if platform
-> > > has disabled OS native AER support as mentioned earlier. This
-> > > will result in an AER flood mentioned in 04b12ef163d1 since
-> > > there is no AER handlers. 
 
-I missed this before.  What does "there are no AER handlers" mean?  Do
-you mean there are no *firmware* AER handlers?  
+> Applied, so it should make it to 6.8.  Apologies for the delay.
 
-The dmesg log at https://bugzilla.kernel.org/attachment.cgi?id=299571
-(from https://bugzilla.kernel.org/show_bug.cgi?id=215027, the bug
-fixed by 04b12ef163d1), shows this:
+Awesome, thank you!
 
-  acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-  acpi PNP0A08:00: _OSC: platform does not support [AER]
-  acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR]
 
-so the firmware did not grant AER control to the OS (I think "platform
-does not support" is a confusing description).
+--C8Ty/fbhp+nEXecq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Prior to 04b12ef163d1, Linux applied _OSC above the VMD bridge but not
-below it, so Linux had native control below VMD and it did handle AER
-interrupts from the 10000:e0:06.0 Root Port below VMD:
+-----BEGIN PGP SIGNATURE-----
 
-  vmd 0000:00:0e.0: PCI host bridge to bus 10000:e0
-  pcieport 10000:e0:06.0: AER: Corrected error received: 10000:e1:00.0
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmV7VwUACgkQFA3kzBSg
+Kbav2Q//axmhe1kLHs/Li35jBoHdo2LNR2a2RGkR0AzFNJ95MgzJLCAHlmXq+lOU
+Odi268gmDwriEa9ISl3a47TxgrndBrxGiMUXgKityzQh+0EAE15erWozUrdCxyel
+whdEb0WSlaq0B4lETpbP6jKB4GGi5OZC9VfdFGq9Rl0MIJqYOLn40ZTzO+5+oI4z
+ZaZDeTY1+8QRHquRJ97bm8+oAcuMbkf1O6yc6LahUiPTx2lTbxTbdotLFnp8z5go
+rjJJ3ctZ9jse4Eqc1iXJORufrRanTtA9RWOyD1pq1difuSaSYTZG6dsPDJOsusma
+i0OQ1UjPZSC+dx9MXLfJ5vmgJ89cNfrCp/lt2n2GmJ+LmS0G2wNx1QGJVcYCq2Mu
+HNKOqvXLKJS8WnmfRJZeV+hH4ih3fILCzRBLF/+TQIto6bgOv2e63CfKRfvwv5Gn
+nOxBPZIAkNdkBQ3birtagIy+6U4sunH6jQxzMlijcTfqks6WWzY7D294Bi3k0FxH
+u/vZBvcNcCFg6mxay/tXP0Odpm08AJdMOL2iTRDyMFcYPRWVwS7fr4Tq40TAbWMF
+VeBoOjl5l1U47mH6yqR4/lNqZS4LxhA8Oo/jct6e+vHgKpaTl7hEVj0nNANWJdRu
+Fi9Ydikto8WBAXc/ubLUXWjDwbtO1qTiLA7xpkmAl4A5/g9JP/s=
+=DwEQ
+-----END PGP SIGNATURE-----
 
-After 04b12ef163d1, Linux applied _OSC below the VMD bridge as well,
-so it did not enable or handle any AER interrupts.  I suspect the
-platform didn't handle AER interrupts below VMD either, so those
-errors were probably just ignored.
-
-> > > If VMD is aware of OS native AER support setting, then we will not
-> > > see AER flooding issue.
-> > > 
-> > > Do you have any suggestion on how to make VMD driver aware of AER
-> > > setting and keep it in sync with platform setting.
-> > 
-> > Well, this is the whole problem.  IIUC, you're saying we should use
-> > _OSC to negotiate for AER control below the VMD bridge, but ignore
-> > _OSC for hotplug control.
->
-> Because VMD has its own hotplug BIOS setting which allows vmd to
-> enable or disable hotplug on its domain. However we don't have VMD
-> specific AER, DPC, LTR settings. 
-
-I don't quite follow.  The OS knows nothing about whether BIOS
-settings exist, so they can't be used to determine where _OSC applies.
-
-> Is it okay if we include an additional check for hotplug? i.e.
-> Hotplug capable bit in SltCap register which reflects VMD BIOS
-> hotplug setting.
-
-I don't know what check you have in mind, but the OS can definitely
-use SltCap to decide what features to enable.
-
-You suggest above that you want vmd to be aware of AER ownership per
-_OSC, but it sounds more like you just want AER disabled below VMD
-regardless.  Or do you have platforms that can actually handle AER
-interrupts from Root Ports below VMD?
-
-> Another way is to overwrite _OSC setting for hotplug only in Guest
-> OS.  If we make VMD driver aware of Host or Guest environment, only
-> in case of Guest we overwrite _OSC hotplug using SltCap register and
-> we don't revert the 04b12ef163d1.
-
-Making vmd aware of being in host or guest sounds kind of ugly to me.
-
-Bjorn
+--C8Ty/fbhp+nEXecq--
 
