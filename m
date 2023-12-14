@@ -1,70 +1,66 @@
-Return-Path: <linux-pci+bounces-980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-982-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7994E812BD5
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 10:40:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88CA3812C46
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 10:56:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D7CF1C20F67
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 09:40:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC2881C210D0
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 09:56:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF5BD2F862;
-	Thu, 14 Dec 2023 09:40:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5775A364C6;
+	Thu, 14 Dec 2023 09:56:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqtjooZM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwuYLstO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11AF3B7;
-	Thu, 14 Dec 2023 01:40:19 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c9f9db9567so90476471fa.3;
-        Thu, 14 Dec 2023 01:40:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702546817; x=1703151617; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jGhBdQ6R14LrX8jG2wfHRD5uLBGEkB0t8hNQS+qxIZM=;
-        b=GqtjooZMIticSqLqBuSMSQb6cktpe6/fRSMMeqRol94DiIVzwCivlvqlWnyw3loWbe
-         D68I6Hvb6XXHrEXHDmoT6LUV5k9I0hOvCohTXnM4ugNVvuhcfIA1qxQZpfBj5sZQiv1K
-         YvH78NpiJuHTaL2VC/wOXNeAa48Q+iuiQXt/1LC8PvKCD4CwwXZs4e/O9ZNClDydcTu7
-         2QEFIN3bASX64s2CcT9nkDffbqkoUSsjgP4jiFLUHbHlLpiVjYoZcz0rQAVfeIPaKDDt
-         ZwswKoJp+0Nf5r1B9eX/wZxzFl9f5hj0DD8LCJvGIpRnhH7l2k+dafVa8L+8ZEBPLvNP
-         KDug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702546817; x=1703151617;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jGhBdQ6R14LrX8jG2wfHRD5uLBGEkB0t8hNQS+qxIZM=;
-        b=hc1mIGi0XjqZ4gnXg9vJQhREYgfIUAGj0rSfcpHsSmQNBy//Pc+GagrWuFr2foPJ9W
-         vtbjf3AwJz6uePawQkan+ch5EfpG6Izrq5YUzuDHu2/ONa2NyhOlYn0gCgB6oGz7X7n6
-         pgAWvDrOYslep4xviTv93l5z4cZMDoG7TAnIaM+fSm9WR8LLAYsgUdiDSkRj1cYwEEGS
-         ige8xXMcxSt00M6ggQF3b7VwrVdHe7NAMF0InlVmnpqlBAWAnkkObuj4/1Ji7OQj4esZ
-         sf0n47QRtHJWPy7VWC4NP3fT992QpT1My/xIaBnG46WfOoSLv/2m7mixYvv+qvUKqpRv
-         D5QQ==
-X-Gm-Message-State: AOJu0Yy5GBh0PuZmlJzmrBvKsbC1R1oh9iG49oRan71XiXgPuR4i4MtY
-	0kJjgalB7AaTZOjt/hracxw=
-X-Google-Smtp-Source: AGHT+IFnuSUDaGmtBw+49+w1yxTH4aRe1mIcT+VpM3unPg8n8wj5ymVgmCsLA6bFLjjM+Qej9qksGw==
-X-Received: by 2002:a05:6512:3f06:b0:50e:338:5e with SMTP id y6-20020a0565123f0600b0050e0338005emr3331274lfa.49.1702546816949;
-        Thu, 14 Dec 2023 01:40:16 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id a14-20020a056512020e00b0050c0bbbe3d0sm1818655lfo.137.2023.12.14.01.40.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 01:40:16 -0800 (PST)
-Date: Thu, 14 Dec 2023 12:40:13 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, 
-	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "mani@kernel.org" <mani@kernel.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] PCI: controllers: tidy code up
-Message-ID: <rrgcf2jagjkiczb5tt56qm2jwvfyaor2mzjdqxrodrhzrn5j65@m7orqtcay3gg>
-References: <20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com>
- <TYBPR01MB5341F846948DB6CFECA62187D88CA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2315ABD;
+	Thu, 14 Dec 2023 01:56:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702547799; x=1734083799;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xl+adE3EBbL+epRoD376FkUCc+tO7nfywRkSDIRzlSo=;
+  b=bwuYLstOoU2kF1DTpplmcHjZsdHN7TykP1AxZ9ULAAgT9VLizDtzfFCo
+   y+lqda6Tx4gm2He7qWCOmrcHh6oFjQ8N5K+sWxKKACd8ig/gjbPWiEz3D
+   kUCQQRR7ZSVY1hLKWBYTk3ST7l0CG57vFrdfqIKh/jlEM8VtEmnHf2Oj/
+   5G279Leoow8Y2SJ9EZA5f3HRg9SdAOwuzSR2IO1exLh6XqfQ0ztb6dQGg
+   /c/R5Yhm4B0CDOrJlWOFUmkmVWaMaSJewYoCovARP475IcjLWq2Cm0/oS
+   I/WDKCJCYFF522eIzguwPtrIJhA6no6ZSlUs4CGehh+htgb6cT6S3nH6K
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="459419570"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="459419570"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 01:56:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1021452267"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="1021452267"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Dec 2023 01:56:33 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rDiSE-000LsN-2s;
+	Thu, 14 Dec 2023 09:56:30 +0000
+Date: Thu, 14 Dec 2023 17:56:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sherry Sun <sherry.sun@nxp.com>, hongxing.zhu@nxp.com,
+	l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, bhelgaas@google.com,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-imx@nxp.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/4] PCI: imx6: Add pci host wakeup support on imx
+ platforms.
+Message-ID: <202312141719.j5GCLQry-lkp@intel.com>
+References: <20231213092850.1706042-2-sherry.sun@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,93 +69,53 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TYBPR01MB5341F846948DB6CFECA62187D88CA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+In-Reply-To: <20231213092850.1706042-2-sherry.sun@nxp.com>
 
-Hi Yoshihiro
+Hi Sherry,
 
-On Thu, Dec 14, 2023 at 02:35:56AM +0000, Yoshihiro Shimoda wrote:
-> Hello PCIe maintainers,
-> 
-> > From: Yoshihiro Shimoda, Sent: Tuesday, November 14, 2023 2:55 PM
-> > 
-> > This patch series tidies the code of PCIe dwc controllers and some
-> > controllers up.
-> > 
-> > Changes from v1:
-> > https://lore.kernel.org/linux-pci/20231113013300.2132152-1-yoshihiro.shimoda.uh@renesas.com/
-> >  - Based on the latest pci.git / next branch.
-> >  - Add a new patch to drop host prefix of members from dw_pcie_host_ops
-> >    in the patch 1/6.
-> >  - Add Reviewed-by tag in the patch 3/6.
-> >  - Drop unneeded local variable in the patch 4/6.
-> >  - Add new patches to resolve issues of clang warnings in the patch [56]/6.
-> > 
-> > Justin Stitt (1):
-> >   PCI: iproc: fix -Wvoid-pointer-to-enum-cast warning
-> > 
-> > Yoshihiro Shimoda (5):
-> >   PCI: dwc: Drop host prefix from struct dw_pcie_host_ops
-> >   PCI: dwc: Rename to .init in struct dw_pcie_ep_ops
-> >   PCI: dwc: Rename to .get_dbi_offset in struct dw_pcie_ep_ops
-> >   PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2] helpers
-> >   PCI: rcar-gen4: fix -Wvoid-pointer-to-enum-cast warning
-> 
-> According to the patchwork [1], all patches have Reviewed-by tags.
-> So, I think the patches are acceptable for upstream, but what do you think?
-> I confirmed that the patches can be applied into the latest pci.git / next branch.
+kernel test robot noticed the following build warnings:
 
-What actually matters is to get all Manivannan or Jingoo or Gustavo
-acks (the later two maintainers are unlikely to respond though) or any
-higher maintainers approval. AFAICS this patch still hasn't got any
-maintainers ack:
-https://patchwork.kernel.org/project/linux-pci/patch/20231114055456.2231990-5-yoshihiro.shimoda.uh@renesas.com/
-https://lore.kernel.org/linux-pci/20231114055456.2231990-5-yoshihiro.shimoda.uh@renesas.com/
-I guess it's connected with a request to move the helpers to the
-header file.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus shawnguo/for-next robh/for-next linus/master v6.7-rc5 next-20231214]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
--Serge(y)
+url:    https://github.com/intel-lab-lkp/linux/commits/Sherry-Sun/PCI-imx6-Add-pci-host-wakeup-support-on-imx-platforms/20231213-173031
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20231213092850.1706042-2-sherry.sun%40nxp.com
+patch subject: [PATCH V2 1/4] PCI: imx6: Add pci host wakeup support on imx platforms.
+config: alpha-randconfig-r112-20231214 (https://download.01.org/0day-ci/archive/20231214/202312141719.j5GCLQry-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20231214/202312141719.j5GCLQry-lkp@intel.com/reproduce)
 
-> 
-> [1]
-> https://patchwork.kernel.org/project/linux-pci/list/?series=800901
-> 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> >  drivers/pci/controller/dwc/pci-dra7xx.c       |   4 +-
-> >  drivers/pci/controller/dwc/pci-exynos.c       |   2 +-
-> >  drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
-> >  drivers/pci/controller/dwc/pci-keystone.c     |   8 +-
-> >  .../pci/controller/dwc/pci-layerscape-ep.c    |   7 +-
-> >  drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
-> >  drivers/pci/controller/dwc/pci-meson.c        |   2 +-
-> >  drivers/pci/controller/dwc/pcie-al.c          |   2 +-
-> >  drivers/pci/controller/dwc/pcie-armada8k.c    |   2 +-
-> >  drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
-> >  drivers/pci/controller/dwc/pcie-bt1.c         |   4 +-
-> >  .../pci/controller/dwc/pcie-designware-ep.c   | 249 ++++++++++--------
-> >  .../pci/controller/dwc/pcie-designware-host.c |  30 +--
-> >  .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
-> >  drivers/pci/controller/dwc/pcie-designware.h  |  12 +-
-> >  drivers/pci/controller/dwc/pcie-dw-rockchip.c |   2 +-
-> >  drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
-> >  drivers/pci/controller/dwc/pcie-histb.c       |   2 +-
-> >  drivers/pci/controller/dwc/pcie-intel-gw.c    |   2 +-
-> >  drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
-> >  drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
-> >  drivers/pci/controller/dwc/pcie-qcom-ep.c     |   2 +-
-> >  drivers/pci/controller/dwc/pcie-qcom.c        |   6 +-
-> >  drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  12 +-
-> >  drivers/pci/controller/dwc/pcie-spear13xx.c   |   2 +-
-> >  drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
-> >  drivers/pci/controller/dwc/pcie-uniphier-ep.c |   2 +-
-> >  drivers/pci/controller/dwc/pcie-uniphier.c    |   2 +-
-> >  drivers/pci/controller/dwc/pcie-visconti.c    |   2 +-
-> >  drivers/pci/controller/pcie-iproc-platform.c  |   2 +-
-> >  30 files changed, 203 insertions(+), 177 deletions(-)
-> > 
-> > --
-> > 2.34.1
-> 
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312141719.j5GCLQry-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pci/controller/dwc/pci-imx6.c:1267:13: sparse: sparse: symbol 'host_wake_irq_handler' was not declared. Should it be static?
+   drivers/pci/controller/dwc/pci-imx6.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/umh.h, include/linux/kmod.h, ...):
+   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
+
+vim +/host_wake_irq_handler +1267 drivers/pci/controller/dwc/pci-imx6.c
+
+  1266	
+> 1267	irqreturn_t host_wake_irq_handler(int irq, void *priv)
+  1268	{
+  1269		struct imx6_pcie *imx6_pcie = priv;
+  1270		struct device *dev = imx6_pcie->pci->dev;
+  1271	
+  1272		/* Notify PM core we are wakeup source */
+  1273		pm_wakeup_event(dev, 0);
+  1274		pm_system_wakeup();
+  1275	
+  1276		return IRQ_HANDLED;
+  1277	}
+  1278	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
