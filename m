@@ -1,251 +1,157 @@
-Return-Path: <linux-pci+bounces-976-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-977-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78EC6812955
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 08:30:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7911F812AA0
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 09:47:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6F5E1C20B2D
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 07:30:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E1FCC2826B4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 08:47:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BFA912E5E;
-	Thu, 14 Dec 2023 07:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC4622F1C;
+	Thu, 14 Dec 2023 08:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RwJFtWCL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418F2D67;
-	Wed, 13 Dec 2023 23:29:57 -0800 (PST)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id BAA6E24E203;
-	Thu, 14 Dec 2023 15:29:56 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 14 Dec
- 2023 15:29:56 +0800
-Received: from ubuntu.localdomain (113.72.145.168) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 14 Dec
- 2023 15:29:52 +0800
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>, =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Daire
- McNamara" <daire.mcnamara@microchip.com>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Mason Huo
-	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>, Minda Chen
-	<minda.chen@starfivetech.com>
-Subject: [PATCH v13 21/21] riscv: dts: starfive: add PCIe dts configuration for JH7110
-Date: Thu, 14 Dec 2023 15:28:39 +0800
-Message-ID: <20231214072839.2367-22-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231214072839.2367-1-minda.chen@starfivetech.com>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A4D10B
+	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 00:46:55 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-336445a2749so617820f8f.0
+        for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 00:46:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1702543614; x=1703148414; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VRbI5kjcIRPl4oUV94OH4S0caT5wjSRkLPGI8s4DA/k=;
+        b=RwJFtWCLy6gKQ1XreFMJ1I3Ovx1KH6yNtx1r1pjcsEMbwfqbNJexuq4vW1ozGRym7H
+         umAIlnkQgdA2st58ieNO/4Wznc3+zJZXYgHk3tDOcV43qrU27LOybN5gCzIs1Sfl0J9L
+         btHXh70U2LPzrJ2R88fK3ZwbxR+wQ6rBuXuI4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702543614; x=1703148414;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VRbI5kjcIRPl4oUV94OH4S0caT5wjSRkLPGI8s4DA/k=;
+        b=P2FANbITyoNXAQ5wh5vZxHq46e9a9IZpy7lI6qgoL1hiWUyoBwkmWBfUcXW0XukXBN
+         3ZvBKn+aKJH71pGLa/ulG+5ABs1hz76S895u9gzXkH9NIkYnAXWuGMAijRSDFn3aL7W+
+         5CVk/4rTLVyI+n4xHwuNBuS+d08ME0Ude0AYrRDOfeV+KZ9jtlHAUONH05a8/xtr+NyI
+         uZZjWup67GgNXSsLyEhshspOy5nbDBH0VFyAReS/ofzAx8Tfn0uhepnXVgtURaCtXdYV
+         CAU5BkzrofNCA3IhzF+A60JrizRBLmxD3yV9paWwjUpe3IXoWCEGO+yli8R7xSFok68j
+         GQxA==
+X-Gm-Message-State: AOJu0YwtCexvnpx46BcwC5ZVEtqfn/GED31TVKJXn+yaLzTXH9VXOiko
+	PaypLvvMN6PXKgg3Z9gAqVwyYLCNmTtvoOIQlcM=
+X-Google-Smtp-Source: AGHT+IFs1KY+zsQXwuAqC03LiFJwO3hRSTw+6+YdEzAfW15eHnWqW0A0/g+qvKOg7kFPUNaNrf5hAQ==
+X-Received: by 2002:a5d:6aca:0:b0:336:9ec:d613 with SMTP id u10-20020a5d6aca000000b0033609ecd613mr6133406wrw.90.1702543613756;
+        Thu, 14 Dec 2023 00:46:53 -0800 (PST)
+Received: from localhost ([213.195.127.70])
+        by smtp.gmail.com with ESMTPSA id h12-20020a5d504c000000b003333521a1cesm3283381wrt.57.2023.12.14.00.46.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 00:46:53 -0800 (PST)
+Date: Thu, 14 Dec 2023 09:46:52 +0100
+From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To: "Chen, Jiqian" <Jiqian.Chen@amd.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>,
+	"Koenig, Christian" <Christian.Koenig@amd.com>,
+	"Huang, Ray" <Ray.Huang@amd.com>
+Subject: Re: [RFC KERNEL PATCH v3 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Message-ID: <ZXrA_OocbBkFAkM-@macbook>
+References: <20231210161519.1550860-1-Jiqian.Chen@amd.com>
+ <20231210161519.1550860-4-Jiqian.Chen@amd.com>
+ <ZXdNf0HWs4nAVPeF@macbook>
+ <BL1PR12MB584910C2E370BBCC8A312733E78EA@BL1PR12MB5849.namprd12.prod.outlook.com>
+ <ZXglU0EtBrRNiWVp@macbook>
+ <BL1PR12MB584973D751EB57C3DE766AEEE78DA@BL1PR12MB5849.namprd12.prod.outlook.com>
+ <ZXmfmbb4S8Iuy7si@macbook>
+ <BL1PR12MB584911B4DFF4D9ED65CF92F0E78CA@BL1PR12MB5849.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BL1PR12MB584911B4DFF4D9ED65CF92F0E78CA@BL1PR12MB5849.namprd12.prod.outlook.com>
 
-Add PCIe dts configuraion for JH7110 SoC platform.
+On Thu, Dec 14, 2023 at 07:08:32AM +0000, Chen, Jiqian wrote:
+> On 2023/12/13 20:12, Roger Pau Monné wrote:
+> > On Wed, Dec 13, 2023 at 03:31:21AM +0000, Chen, Jiqian wrote:
+> >> On 2023/12/12 17:18, Roger Pau Monné wrote:
+> >>> On Tue, Dec 12, 2023 at 06:34:27AM +0000, Chen, Jiqian wrote:
+> >>>>
+> >>>> On 2023/12/12 01:57, Roger Pau Monné wrote:
+> >>>>> On Mon, Dec 11, 2023 at 12:15:19AM +0800, Jiqian Chen wrote:
+> >>>>>> There is a need for some scenarios to use gsi sysfs.
+> >>>>>> For example, when xen passthrough a device to dumU, it will
+> >>>>>> use gsi to map pirq, but currently userspace can't get gsi
+> >>>>>> number.
+> >>>>>> So, add gsi sysfs for that and for other potential scenarios.
+> >>>>>>
+> >>>>>> Co-developed-by: Huang Rui <ray.huang@amd.com>
+> >>>>>> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
+> >>>>>> ---
+> >>>>>>  drivers/acpi/pci_irq.c  |  1 +
+> >>>>>>  drivers/pci/pci-sysfs.c | 11 +++++++++++
+> >>>>>>  include/linux/pci.h     |  2 ++
+> >>>>>>  3 files changed, 14 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> >>>>>> index 630fe0a34bc6..739a58755df2 100644
+> >>>>>> --- a/drivers/acpi/pci_irq.c
+> >>>>>> +++ b/drivers/acpi/pci_irq.c
+> >>>>>> @@ -449,6 +449,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+> >>>>>>  		kfree(entry);
+> >>>>>>  		return 0;
+> >>>>>>  	}
+> >>>>>> +	dev->gsi = gsi;
+> >>>>>
+> >>>>> It would be better if the gsi if fetched without requiring calling
+> >>>>> acpi_pci_irq_enable(), as the gsi doesn't require the interrupt to be
+> >>>>> enabled.  The gsi is known at boot time and won't change for the
+> >>>>> lifetime of the device.
+> >>>> Do you have any suggest places to do this?
+> >>>
+> >>> I'm not an expert on this, but drivers/pci/pci-sysfs.c would seem like
+> >>> a better place, together with the rest of the resources.
+> >> I'm not familiar with this too. But it seems pci-sysfs.c only creates sysfs node and supports the read/write method without initializing the values.
+> >> If want to initialize the value of gsi here. An approach to initialize it is to call acpi_pci_irq_lookup to get gsi number when the first time it is read?
+> > 
+> > Hm, maybe, I don't really have much experience with sysfs, so don't
+> > know how nodes are usually initialized.
+> Maybe the maintainers of sysfs can give some suggest places to initialize the value of gsi.
+> 
+> > 
+> >>>
+> >>> Maybe my understanding is incorrect, but given the suggested placement
+> >>> in acpi_pci_irq_enable() I think the device would need to bind the
+> >>> interrupt in order for the gsi node to appear on sysfs?
+> >> No, gsi sysfs has existed there, in acpi_pci_irq_enable is to initialize the value of gsi.
+> >>
+> >>>
+> >>> Would the current approach work if the device is assigned to pciback
+> >>> on the kernel command line, and thus never owned by any driver in
+> >>> dom0?
+> >> If assigned to pciback, I think pciback will enable the device, and then acpi_pci_irq_enable will be called, and then the gsi will be initialized. So, current can work.
+> > 
+> > This needs checking to be sure, I'm certainly not that familiar.  You
+> > would need to at least test that it works properly when the device is
+> > hidden using xen-pciback.hide=(SBDF) in the Linux kernel command line.
+> Sure, I have validated it on my side. Both the "Static assignment for built-in xen-pciback(xen-pciback.hide=(SBDF))" and the "Dynamic assignment with xl(sudo modprobe xen-pciback & sudo xl pci-assignable-add SBDF)" can work fine with current implementation.
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
----
- .../jh7110-starfive-visionfive-2.dtsi         | 64 ++++++++++++++
- arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
- 2 files changed, 150 insertions(+)
+Oh, OK, if that's the case I don't have much objection in doing the
+initialization in acpi_pci_irq_enable(), that's an internal Linux
+detail.  I mostly care about the GSI being exposed in sysfs in a
+non-Xen specific way.
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-index b89e9791efa7..2f8056d6f817 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-@@ -287,6 +287,22 @@
- 	status = "okay";
- };
- 
-+&pcie0 {
-+	perst-gpios = <&sysgpio 26 GPIO_ACTIVE_LOW>;
-+	phys = <&pciephy0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_pins>;
-+	status = "okay";
-+};
-+
-+&pcie1 {
-+	perst-gpios = <&sysgpio 28 GPIO_ACTIVE_LOW>;
-+	phys = <&pciephy1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_pins>;
-+	status = "okay";
-+};
-+
- &qspi {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-@@ -513,6 +529,54 @@
- 		};
- 	};
- 
-+	pcie0_pins: pcie0-0 {
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(27, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+
-+		wake-pins {
-+			pinmux = <GPIOMUX(32, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
-+	pcie1_pins: pcie1-0 {
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(29, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+
-+		wake-pins {
-+			pinmux = <GPIOMUX(21, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	spi0_pins: spi0-0 {
- 		mosi-pins {
- 			pinmux = <GPIOMUX(52, GPOUT_SYS_SPI0_TXD,
-diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-index 45213cdf50dc..dfa2f94ed5b2 100644
---- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-@@ -1138,5 +1138,91 @@
- 			#reset-cells = <1>;
- 			power-domains = <&pwrc JH7110_PD_VOUT>;
- 		};
-+
-+		pcie0: pcie@940000000 {
-+			compatible = "starfive,jh7110-pcie";
-+			reg = <0x9 0x40000000 0x0 0x1000000>,
-+			      <0x0 0x2b000000 0x0 0x100000>;
-+			reg-names = "cfg", "apb";
-+			linux,pci-domain = <0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
-+				 <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
-+			interrupts = <56>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
-+			msi-controller;
-+			device_type = "pci";
-+			starfive,stg-syscon = <&stg_syscon>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_TL>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_AXI_MST0>,
-+				 <&stgcrg JH7110_STGCLK_PCIE0_APB>;
-+			clock-names = "noc", "tl", "axi_mst0", "apb";
-+			resets = <&stgcrg JH7110_STGRST_PCIE0_AXI_MST0>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV0>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_BRG>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_CORE>,
-+				 <&stgcrg JH7110_STGRST_PCIE0_APB>;
-+			reset-names = "mst0", "slv0", "slv", "brg",
-+				      "core", "apb";
-+			status = "disabled";
-+
-+			pcie_intc0: interrupt-controller {
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+			};
-+		};
-+
-+		pcie1: pcie@9c0000000 {
-+			compatible = "starfive,jh7110-pcie";
-+			reg = <0x9 0xc0000000 0x0 0x1000000>,
-+			      <0x0 0x2c000000 0x0 0x100000>;
-+			reg-names = "cfg", "apb";
-+			linux,pci-domain = <1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges = <0x82000000  0x0 0x38000000  0x0 0x38000000 0x0 0x08000000>,
-+				 <0xc3000000  0x9 0x80000000  0x9 0x80000000 0x0 0x40000000>;
-+			interrupts = <57>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc1 0x1>,
-+					<0x0 0x0 0x0 0x2 &pcie_intc1 0x2>,
-+					<0x0 0x0 0x0 0x3 &pcie_intc1 0x3>,
-+					<0x0 0x0 0x0 0x4 &pcie_intc1 0x4>;
-+			msi-controller;
-+			device_type = "pci";
-+			starfive,stg-syscon = <&stg_syscon>;
-+			bus-range = <0x0 0xff>;
-+			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_TL>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_AXI_MST0>,
-+				 <&stgcrg JH7110_STGCLK_PCIE1_APB>;
-+			clock-names = "noc", "tl", "axi_mst0", "apb";
-+			resets = <&stgcrg JH7110_STGRST_PCIE1_AXI_MST0>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV0>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_BRG>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_CORE>,
-+				 <&stgcrg JH7110_STGRST_PCIE1_APB>;
-+			reset-names = "mst0", "slv0", "slv", "brg",
-+				      "core", "apb";
-+			status = "disabled";
-+
-+			pcie_intc1: interrupt-controller {
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+				interrupt-controller;
-+			};
-+		};
- 	};
- };
--- 
-2.17.1
-
+Thanks, Roger.
 
