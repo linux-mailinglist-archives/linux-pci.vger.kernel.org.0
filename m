@@ -1,161 +1,274 @@
-Return-Path: <linux-pci+bounces-997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44840813329
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 15:31:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4EB881347E
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 16:19:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01C17281573
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 14:31:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E83BE1C20866
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 15:19:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B98859E51;
-	Thu, 14 Dec 2023 14:31:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D95D5C903;
+	Thu, 14 Dec 2023 15:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OkoMNqoi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mQRmh38o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0C485;
-	Thu, 14 Dec 2023 06:31:26 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 35E1CE0013;
-	Thu, 14 Dec 2023 14:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1702564285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fIKB/u0MwMXc68VORzrHfiOCkFzYFHAP6fqFR+4r6Ug=;
-	b=OkoMNqoi80SZDHZtuNk44+7+YekGVFzt+vnyeT0QLxrHrOoQ5foP4cFqa6MjMy/tnW5AaJ
-	D8DLL1Z5ybHoa8zMQh0oTzAmNwohE/UuKnZ1Jq4fpcAaSwFxkeVedjwvoS2TLDMnHUYm05
-	Lmc075id4Ybj4Uqe18OWz4efvF1Zb5EgnrgsMUkhaw7aLwIVKwI0KhfgDsFWmj5qO/ZDVn
-	cpPQEPi17JAuMnRzLQLpfyOOyp+z+sQSRttuzR7RiAEZa5vnMMSsRI0Dtw8gaJ9GhSCoAq
-	geJcwz7vaIT7yAbX5UuKyfH7Q1J4gy7JpcLt5Z8pYMidWfXoHSci+idho1zxAw==
-Date: Thu, 14 Dec 2023 15:31:22 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou
- <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, Sonal Santan
- <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI
- <linux-pci@vger.kernel.org>, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-Message-ID: <20231214153122.07e99a5a@bootlin.com>
-In-Reply-To: <20231208094840.01d74fec@bootlin.com>
-References: <20231130165700.685764-1-herve.codina@bootlin.com>
-	<CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
-	<20231204134335.3ded3d46@bootlin.com>
-	<CAL_JsqLtCS3otZ1sfiPEWwrWB4dyNpu4e0xANWJriCEUYr+4Og@mail.gmail.com>
-	<20231204163014.4da383f2@bootlin.com>
-	<CAL_JsqJJ64513pyQggU71agTzawNWPpm6ZpWMB6e0zu-tWL8yw@mail.gmail.com>
-	<20231205090452.7c601eb5@bootlin.com>
-	<CAL_Jsq+je7+9ATR=B6jXHjEJHjn24vQFs4Tvi9=vhDeK9n42Aw@mail.gmail.com>
-	<20231208094840.01d74fec@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2042.outbound.protection.outlook.com [40.107.249.42])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A3C6121
+	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 07:19:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jcf2uQB+p331wyNOTBkAqs8FCmj0wvoHKJePRr0lFFK0QmRCUTSKtepza7wpixoJv246/IJ6b2mYA82fy5jeDAtmCmSoGG9XUu9QSmXXRzPHIGQJo+OmyY8wda7GVtfLNf3q3YQJMQ3+HjyaFGJ8rE2GuLbSsdwvBPgw7iyWqPyj5UP8Y3WSSQHr5yY+sngn9oTbMT4coHWysDGsnfEGKCZYD2SBExjlYmUy4P6bFxadZJMqN6fBbl4nwwinTuAVXYZ0e9nVSUI8TtkjhposbCPsAgChEdWCy9ta7M+VjyAVOL8Zaj6iVeHHuVjGILnH7MEdZ533TA/GT4NBylGkPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rmc04Y176vNcqSbq2hvQkFGDh7HbzpNUjduVUqmzldw=;
+ b=BaHTAPKOWjgsYrJc9VzfPaen0SvmwzcAcAH2raGrANOBK4aThZrJ/EZok5tgerEcsztD/4ZWBTDoOsSuigI5rNOyqhlLjGJCr906MjbWYGt/VGYKzvjtc5BcVxvj5I05wW+jcbg5KfCVFUSmivm/wiO0cBcoMZVhPnggBSa+7ne9RsaZVVYjnCpPv5I2c6jU3jL/dW2fA+fL2Z6Cuv9eRJlZCDgyGKHs+ztq20Wzd8zTz/JyZuGDTMG/0uI+Yr20cu2f5qYtXivWfgLaQWeb4b2v620a3QKzpnucu8/b8oUEW16S1NdejRBx4JNfJj/oi0SL2YjGR9dFAL6EBbujLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rmc04Y176vNcqSbq2hvQkFGDh7HbzpNUjduVUqmzldw=;
+ b=mQRmh38olbxIWTJblrSklDE3NCiIPDRNz54i8icUqq9Y7nqda7zrE3YZrGbzylyl6It9poO8bQEHmlOuHpdhfc47Te+szjzo3sfP6UcI+MWuwAtp4MdkE8xPMEydUYXQKV0X+QhvwzhcXLyR32x06YmzaTlwUzO78a1vSfW2Ibo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by DBAPR04MB7400.eurprd04.prod.outlook.com (2603:10a6:10:1b3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.28; Thu, 14 Dec
+ 2023 15:19:12 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::95f5:5118:258f:ee40%7]) with mapi id 15.20.7091.028; Thu, 14 Dec 2023
+ 15:19:12 +0000
+Date: Thu, 14 Dec 2023 10:19:03 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	"helgaas@kernel.org" <helgaas@kernel.org>,
+	"kishon@ti.com" <kishon@ti.com>,
+	"lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+	"kw@linux.com" <kw@linux.com>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+	"lznuaa@gmail.com" <lznuaa@gmail.com>,
+	"hongxing.zhu@nxp.com" <hongxing.zhu@nxp.com>,
+	"jdmason@kudzu.us" <jdmason@kudzu.us>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"allenbh@gmail.com" <allenbh@gmail.com>,
+	"linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] PCI: designware-ep: Allow pci_epc_set_bar()
+ update inbound map address
+Message-ID: <ZXsc57whj/3e/+zq@lizhi-Precision-Tower-5810>
+References: <20220222162355.32369-1-Frank.Li@nxp.com>
+ <20220222162355.32369-2-Frank.Li@nxp.com>
+ <ZXsRp+Lzg3x/nhk3@x1-carbon>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXsRp+Lzg3x/nhk3@x1-carbon>
+X-ClientProxiedBy: SN6PR08CA0035.namprd08.prod.outlook.com
+ (2603:10b6:805:66::48) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DBAPR04MB7400:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d32322d-8cd3-4113-94ed-08dbfcb806a4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	DPeuC7ovhrG/+N96AYwJmKkby2GIkBHwcBFOuMEksLWqBgyRurUiF8+CvYCwcTk+7E8hFedFCX+QEsT5sufZpBQXW7WE0FJgcDigZY4xpAf23wykwRBC510G2sfPbdR38vzauur6ldDwV0hJhg9cJVXXGeJCBOFJugDmHSDzUo1+r9MqgLr1R440aAPz9HCjVF0N2YgXnOAIx5RMiwFwEVrQLyoVaNgvmQv/S2oYZufuPz1ULM1ig2wqRPIsprLt4HXWSjOjOei3bAdj0+lcc4w2kUoOolJHi9zA706bVoAuv+rdHs8LNIy5GtYwZNCBaZPjSHh6PdFDJOQdzyYZ7KG91P6fdDDdLSxkrqHGmTkmzSzEL9vJEw+DHuPjX/3tBUdjkkDK1xrYppyVLDhB7uTiR2xXhJyQTKqj74MJBzWEbuyV8W0zA32A9oqyz/Wq45RMkLS29FkwBoivDs3xIHCRcUYwQEjKC253QVSCwdJzIAyxR8VpEqw+ONn4t8qmS/ZlAHGyNN/kCbW/DXtnbPpdezI1pk5Llwjiac23mkZIOIHHZ88rPQVclpo+srersEdvCIjvwMRmFGsScxgj2byRhOIzAuXXocnpaQ+EJBYO05KP8i3myu6XqbKH2d6m
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(376002)(39860400002)(366004)(396003)(346002)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(33716001)(86362001)(38100700002)(316002)(6916009)(66946007)(66556008)(66476007)(26005)(83380400001)(54906003)(15650500001)(5660300002)(4326008)(8676002)(8936002)(6666004)(6512007)(6506007)(9686003)(52116002)(478600001)(6486002)(41300700001)(7416002)(2906002)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4U4InPZDCLjBlifYFOA19P+oT0d4D+x4z3xtktbhRaP88emHWy+acZ5+EHHU?=
+ =?us-ascii?Q?u8HJUoiUy9z3CW6IoLPXdgqNQadX4CfqP65gY49jsbufRLETEb+pCciYuDRZ?=
+ =?us-ascii?Q?xjvHmjVpvKMyGXkvYoczLSCV23ac851srpXyZS8Bu65mDIr33vUXeQhQs9pT?=
+ =?us-ascii?Q?dPTOHXXBELidFsK9h67Jze8aOONV6ylgVIQOV4jHK5ym1ji4kpSbGmFSEzAx?=
+ =?us-ascii?Q?bu2q0g6rk0G17bN/dx7hz/3+9zoW1d1AGPWnkQuuqLG/xerVqgWxGzShj/UV?=
+ =?us-ascii?Q?QXPAtKasF9Gt8gbMwY8+9PvzXSoMUu/LuVTqYR++/MgZUz3ktd7nPsgKbsGd?=
+ =?us-ascii?Q?Umnn8c9V9peNkVxR6dpYzOsiNX6gegJYHq8Lj0q81n7poc5qdQeLAF5Lm7z7?=
+ =?us-ascii?Q?wrEF7Bp0EqXi1q4hmbSKIesLBouPLqwXTqSSMo9TOZjXd6Kqp8CJYe18oOpN?=
+ =?us-ascii?Q?oOhIj9X8lAu8C8tSRX9gtE3rGr4F2MZ2+FjzpOT8Be5E5DMf0anyYKj0JmeN?=
+ =?us-ascii?Q?mlDbizzvm5VCzRTffzIzp1CdVZr9lxX7dbj5OLNTLDN3XgfiPPssphDyqNpd?=
+ =?us-ascii?Q?vtiVmjsBsQl2M+Y0f8uw0Q0cuEc/RixRezKHoNdanO2Mi4/dWug81899rIwP?=
+ =?us-ascii?Q?/9pRvPPicBrGmCoPPJzENd2aBWRdMJV4HN7iLof/EOBlerur0YObdwUOb7fp?=
+ =?us-ascii?Q?8yYTTk2nNe4ZvGklYU+H5QQOzf8FlZZH3bXfXQ1Gnx60I/mH77uM9D6qLjKz?=
+ =?us-ascii?Q?VKAg4WlPb/oC9K1ygVevNh6vdgLRY7jHvSBpUoxdij6yGXxy31VzdA5IxnO9?=
+ =?us-ascii?Q?e3w4tdLmiQjC8FDK6aZVmUGHa798jE2HP8yLNDOJQQ0ADzneoWQ8SLo6tmEa?=
+ =?us-ascii?Q?amX26RVslPz9gT61XP2xr/TBRcezRHfSyVvmq+4BTl0dW3V2INnqXCPcy/tH?=
+ =?us-ascii?Q?qBhlIHvhUMiOuB7Oap3UBl6FzJrp5AVESji+deM2FQUoC8TE4oVwNuRXnVGO?=
+ =?us-ascii?Q?CbJvZqPSax2o8jsELfZ+nq1xJCgFtkGcY4vuxNlCt3/Lv40KZUbC9GXkHBsN?=
+ =?us-ascii?Q?HNYBeqlw7GTc+qCf0vdd7dMOBtGCbyHMKNl1NtU7SerEjnteCbTSGFLxBhPv?=
+ =?us-ascii?Q?RwMgzleOMkL2KuBjGTlO+UyK/cBNBJcAHV7nT387DIBVYaNMnaFo5+KRbyPD?=
+ =?us-ascii?Q?s1RAudq5zVt9rbQuh0PxZADT2RXBc+/4yEcq9/qFv21OeesKc/J+pXzhj2Qt?=
+ =?us-ascii?Q?Q5izz9Hfw1aQHC4OdzlVhoFEsdIE7o6z17fbo56GUpv76HKLE010ZNLR+F4B?=
+ =?us-ascii?Q?HDSuCoJpVZiI5mPRyoBy6QoIYElrgPPN0zA4lTDHwpw556YAG7LyeA5G+1t2?=
+ =?us-ascii?Q?psNjqwaq69RRFI63+xCUQ/aKOPKQDZDIYZLJJvox+gTocUerhUtmRtJXqwMO?=
+ =?us-ascii?Q?0JuW1u7UBHwAadlPsAhrYEWYBxNhb3bCs2Yy6seaHyYjOQb8cPq940Qp4Y5I?=
+ =?us-ascii?Q?1h/cUcT/O/eGe3wRfOSbJFhrRLIioeY21f3ZXMeATicbCT76kcxY4fEOpQOX?=
+ =?us-ascii?Q?/aI2zp65bQDflFZbhFmNxx+V9NCsQ5xml40xDkyx?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d32322d-8cd3-4113-94ed-08dbfcb806a4
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2023 15:19:12.0715
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: w9n/48+dsTM71rlrAGRG7cS+OraDZiWbolr8W+EY6g2pV05mlNH3fZY3adYbx1uaPe62U5uIvvMApHwN8KBJ/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7400
 
-Hi Rob,
-
-On Fri, 8 Dec 2023 09:48:40 +0100
-Herve Codina <herve.codina@bootlin.com> wrote:
-
+On Thu, Dec 14, 2023 at 02:31:04PM +0000, Niklas Cassel wrote:
+> Hello Frank,
+> 
+> On Tue, Feb 22, 2022 at 10:23:52AM -0600, Frank Li wrote:
+> > ntb_mw_set_trans() will set memory map window after endpoint function
+> > driver bind. The inbound map address need be updated dynamically when
+> > using NTB by PCIe Root Port and PCIe Endpoint connection.
 > > 
-> > But you don't. The logic to find the interrupt parent is walk up the
-> > parent nodes until you find 'interrupt-parent' or
-> > '#interrupt-controller' (and interrupt-map always has
-> > #interrupt-controller). So your overlay just needs 'interrupts = <1>'
-> > for INTA and it should all just work.  
-> 
-> Yes, I tried some stuffs in that way...
+> > Checking if iatu already assigned to the BAR, if yes, using assigned iatu
+> > number to update inbound address map and skip set BAR's register.
 > > 
-> > That of course implies that we need interrupt properties in all the
-> > bridges which I was hoping to avoid. In the ACPI case, for DT
-> > interrupt parsing to work, we're going to need to end up in an
-> > 'interrupt-controller' node somewhere. I think the options are either  
-> 
-> ... and I went up to that point.
-> Further more with that way, we need to update the addr value retrieved
-> from the device requesting the interrupt.
->   https://elixir.bootlin.com/linux/latest/source/drivers/of/irq.c#L343
-> Indeed, with the current 'interrupt-map' at bridges level, a addr value
-> update is needed at the PCI device level if the interrupt is requested
-> from some PCI device children.
-> This is were my (not so good) interrupt-ranges property could play a
-> role.
-> 
-> > we walk interrupt-map properties up to the host bridge which then
-> > points to something or the PCI device is the interrupt controller. I
-> > think the PCI device is the right place. How the downstream interrupts  
-> 
-> Agree, the PCI device seems to be the best candidate.
-> 
-> > are routed to PCI interrupts are defined by the device. That would
-> > work the same way for both DT and ACPI. If you are concerned about
-> > implementing in each driver needing this, some library functions can
-> > mitigate that.
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
 > > 
-> > I'm trying to play around with the IRQ domains and get this to work,
-> > but not having any luck yet.  
+> > Change from V1:
+> >  - improve commit message
+> > 
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 998b698f40858..cad5d9ea7cc6c 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -161,7 +161,11 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+> >  	u32 free_win;
+> >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> >  
+> > -	free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+> 
+> find_first_zero_bit() can return 0, representing bit 0,
+> which is a perfectly valid return value.
+> 
+> > +	if (!ep->bar_to_atu[bar])
+> 
+> so this check is not correct.
 > 
 
-Got some piece of code creating an interrupt controller at PCI device level.
-To have it working, '#interrupt-cell = <1>' and 'interrupt-controller'
-properties need to be set in the PCI device DT node.
+Please sent out your fixed patch. If want to me fix it, please tell me
+reproduce steps.
 
-I can set them when the PCI device DT node is created (add them in
-of_pci_add_properties()) but as this interrupt controller is specific to the
-PCI device driver (it needs to be created after the pci_enable_device() call
-and will probably be device specific with MSI), it would make sense to have
-these properties set by the PCI device driver itself or in the overlay it
-applies.
+Frank
 
-But these properties creation done by the device driver itself (or the
-overlay) lead to memory leaks.
-Indeed, we cannot add properties to an existing node without memory
-leaks. When a property is removed, the property is not freed but moved
-to the node->deadprops list (of_remove_property()).
-The properties present in the list will be free once the node itself is
-removed.
-In our use-case, the node (PCI device node) is not removed when the driver
-is removed and probe again (rmmod/insmod).
-
-Do you have any opinion about the '#interrupt-cell' and
-'interrupt-controller' properties creation:
-
-- Created by of_pci_add_properties():
-  No mem leak but done outside the specific device driver itself and done for
-  all PCI devices.
-  Maybe the driver will not create the interrupt controller, maybe it will
-  prefer an other value for '#interrupt-cell', maybe it will handle MSI and
-  will need to set other properties, ... All of these are device specific.
-
-- Created by the device driver itself (or the overlay it applies):
-  The mem leak is present. Any idea about a way to fix that or at least having
-  a fix for some properties ?
-  I was thinking about avoiding to export properties (of_find_property()) and
-  so avoid references properties or introducing refcount on properties but
-  these modifications touch a lot of drivers and subsystems and are subject
-  to errors.
-  That's said, checking a property presence based on its name can be done without
-  exporting the property, as well as getting a single value. Iterating over array
-  values need some more complicated code.
-
-
-Best regards,
-Hervé
+> 
+> For platforms that has a core_init_notifier, e.g. qcom and tegra,
+> what will happen is that, on first boot:
+> 
+> BAR0: iATU0
+> BAR1: iATU1
+> BAR2: iATU2
+> BAR3: iATU3
+> BAR4: iATU4
+> BAR5: iATU5
+> 
+> Rebooting the RC, will cause a perst assertion + deassertion,
+> after which:
+> 
+> BAR0: iATU6
+> BAR1: iATU1
+> BAR2: iATU2
+> BAR3: iATU3
+> BAR4: iATU4
+> BAR5: iATU5
+> 
+> This is obviously a bug, because you cannot use:
+> 
+> if (!ep->bar_to_atu[bar])
+> 
+> when 0 is a valid return value.
+> 
+> My proposed fix is:
+> 
+> 
+> @@ -172,16 +176,26 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+>  {
+>         int ret;
+>         u32 free_win;
+> +       u32 saved_atu;
+>         struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  
+> -       if (!ep->bar_to_atu[bar])
+> +       saved_atu = ep->bar_to_atu[bar];
+> +       if (!saved_atu) {
+>                 free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+> -       else
+> -               free_win = ep->bar_to_atu[bar];
+> -
+> -       if (free_win >= pci->num_ib_windows) {
+> -               dev_err(pci->dev, "No free inbound window\n");
+> -               return -EINVAL;
+> +               //pr_err("%s BAR: %d, found no ATU, using first free, index: %d\n", __func__, bar, free_win);
+> +               if (free_win >= pci->num_ib_windows) {
+> +                       dev_err(pci->dev, "No free inbound window\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               /*
+> +                * In order for bar_to_atu[bar] == 0 to equal no iATU, offset
+> +                * the saved value with 1.
+> +                */
+> +               saved_atu = free_win + 1;
+> +       } else {
+> +               free_win = saved_atu - 1;
+> +               //pr_err("%s BAR: %d, already has ATU, index: %d\n", __func__, bar, free_win);
+>         }
+>  
+>         ret = dw_pcie_prog_ep_inbound_atu(pci, func_no, free_win, type,
+> @@ -191,7 +205,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+>                 return ret;
+>         }
+>  
+> -       ep->bar_to_atu[bar] = free_win;
+> +       ep->bar_to_atu[bar] = saved_atu;
+>         set_bit(free_win, ep->ib_window_map);
+>  
+>         return 0;
+> 
+> 
+> >  static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> > @@ -244,6 +249,9 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	if (ep->epf_bar[bar])
+> > +		return 0;
+> > +
+> 
+> However, here you ignore writing the settings if (ep->epf_bar[bar]),
+> again, this will not work for a platform with a core_init_notifier,
+> as they perform a full core reset using reset_control_assert(),
+> when perst is asserted + deasserted, so AFAICT, these settings will
+> get cleared for those platforms, so they will need to be re-written.
+> 
+> 
+> >  	dw_pcie_dbi_ro_wr_en(pci);
+> >  
+> >  	dw_pcie_writel_dbi2(pci, reg, lower_32_bits(size - 1));
+> 
+> 
+> Kind regards,
+> Niklas
 
