@@ -1,250 +1,292 @@
-Return-Path: <linux-pci+bounces-929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA490812592
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 03:57:37 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15567812610
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 04:47:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 39459283492
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 02:57:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB50EB21084
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 03:47:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F060A52;
-	Thu, 14 Dec 2023 02:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79CE017F1;
+	Thu, 14 Dec 2023 03:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="FN0DgIcc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1F4D0
-	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 18:57:28 -0800 (PST)
-X-ASG-Debug-ID: 1702522644-1eb14e538d33460001-0c9NHn
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id SFcKvVzqjKyNY6SE (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 14 Dec 2023 10:57:24 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX1.zhaoxin.com
- (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 14 Dec
- 2023 10:57:24 +0800
-Received: from [192.168.1.204] (125.76.214.122) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 14 Dec
- 2023 10:57:22 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Message-ID: <1ba8036b-c010-4d02-9557-5b6333e4eff1@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 192.168.1.204
-Date: Thu, 14 Dec 2023 10:57:21 +0800
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3095ED5
+	for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 19:46:53 -0800 (PST)
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 5395B3F2A2
+	for <linux-pci@vger.kernel.org>; Thu, 14 Dec 2023 03:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1702525610;
+	bh=mAj5KY1nspINqw/SCbRzykUa333yY3abgaSC16X+Xik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=FN0DgIccb0df/rRJNGoYM8u2+nNUaXPsZEHZVsZ02DgM9TZx9V85vWRbQXUfThC+C
+	 cW1LYYK3dnYHIuQhGtbuS1e1LxfOSYF4iilZ/t8jTiGM/yeZ3Rx57Ea/4rKFBwTYum
+	 md8BeWkcT/JaT1t/u9CwTxAqpfw3ewCZeTZWmUi5Ixc/twfdAx6iXdtESaBltPc99U
+	 w7W/HLw24/YVIHVZczkrHqLL8GnpEk3lyeJ0i/tKZ4EqemuWdQcCTwozYvrgC/4K+r
+	 Wsz2Za5BKgBEbVeVaX0dgdPJXs/JOJy4WrxDqwfs6KMExOXX8OqqjXcx151d4Hy0Gq
+	 mKjpCMOLcn/SQ==
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-286a4fc4e9eso9258764a91.2
+        for <linux-pci@vger.kernel.org>; Wed, 13 Dec 2023 19:46:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702525609; x=1703130409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mAj5KY1nspINqw/SCbRzykUa333yY3abgaSC16X+Xik=;
+        b=S5SKHBT9XiXgN5kKAalgKLA6HpF3/YtT9yuludNHO6I2vVPOXsEgW28cZPcB7+QaE8
+         k0/ZZKGzXyZy5Lut3pMFqTyITMYXXdAc82cTyCiBc7PzwBGKNzPyZ4MuYd9CphkXNIFd
+         OZdcK8WDkQ3gLCOjLgoKESmo9IHVNNlvYUzNicU96djs0Qp/8KqBD8N+brt1VEUHdRv4
+         IRheAck9F1j8K2jA88wYE7awwZ+63SZvx50cYYtCTPUjndRXuIutPHvoDSvfRpwLJoa2
+         uDLz4qYFBUE7o3vzl1sAlm+nzcSnfF4bq8RTsa2N+uCWy8TsgELCO+F8fB340D8TYQxT
+         WF0A==
+X-Gm-Message-State: AOJu0YxrsUtUj/ReZXOHFLcqu4JMzRNdiRmQociSSsMae78fD30RHjXR
+	k3lY09cd+HURN2A83D01QtnM7CoqewMjyUemBzlodYjyUzXqXgV+Q7gfT81IG8AYG3AMm3mOwp9
+	N91jNTKMGW1EvvsbWxV/eBclIHizN/JUpLDIRX8UiAODms2z65hGguQ==
+X-Received: by 2002:a05:6a20:9481:b0:18b:4a28:6e15 with SMTP id hs1-20020a056a20948100b0018b4a286e15mr9199560pzb.34.1702525608893;
+        Wed, 13 Dec 2023 19:46:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE+jMwj//+47Gy0XOAIsVnk/FONKC8nacpKm8Mvphdg0ANxd9HVQ//KT49KW30Ybqi3HynexSqMVLvzm890jYw=
+X-Received: by 2002:a05:6a20:9481:b0:18b:4a28:6e15 with SMTP id
+ hs1-20020a056a20948100b0018b4a286e15mr9199548pzb.34.1702525608527; Wed, 13
+ Dec 2023 19:46:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
+References: <20231213182656.6165-1-mario.limonciello@amd.com>
+ <20231213182656.6165-3-mario.limonciello@amd.com> <CAJZ5v0gDjwEpx-WNSY0=qchoSGxizsD3XM7Bgq=i0xufBm=Cag@mail.gmail.com>
+ <766d621c-695d-4ae7-87cf-690cb8d066df@amd.com> <CAJZ5v0i95EeS40pzkBH=jgB1wbMP6SNO_s=pNZ8FPOtcMywgAA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i95EeS40pzkBH=jgB1wbMP6SNO_s=pNZ8FPOtcMywgAA@mail.gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Thu, 14 Dec 2023 11:46:37 +0800
+Message-ID: <CAAd53p6XynUJimepnXDzcVa4Dps4-F0BNEXxGZh_O38LvSdkkg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI/portdrv: Place PCIe port hierarchy into D3cold at shutdown
 To: "Rafael J. Wysocki" <rafael@kernel.org>
-X-ASG-Orig-Subj: Re: [PATCH 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
-CC: <lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
-	<bp@alien8.de>, <bhelgaas@google.com>, <robert.moore@intel.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>,
-	<CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
-	<LeoLiu@zhaoxin.com>
-References: <20231115091612.580685-1-LeoLiu-oc@zhaoxin.com>
- <20231115091612.580685-2-LeoLiu-oc@zhaoxin.com>
- <CAJZ5v0ig2+uv4kF0SjAByvcmBF9auhY_1OVrJvjKTVJK23=cSg@mail.gmail.com>
-From: LeoLiu-oc <leoliu-oc@zhaoxin.com>
-In-Reply-To: <CAJZ5v0ig2+uv4kF0SjAByvcmBF9auhY_1OVrJvjKTVJK23=cSg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
-X-Barracuda-Start-Time: 1702522644
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 6229
-X-Barracuda-BRTS-Status: 0
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.118058
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mpearson-lenovo@squebb.ca
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Mario and Rafael,
 
+On Thu, Dec 14, 2023 at 2:46=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Wed, Dec 13, 2023 at 7:42=E2=80=AFPM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+> >
+> > On 12/13/2023 12:38, Rafael J. Wysocki wrote:
+> > > On Wed, Dec 13, 2023 at 7:27=E2=80=AFPM Mario Limonciello
+> > > <mario.limonciello@amd.com> wrote:
+> > >>
+> > >> When a system is being powered off it's important that PCIe ports
+> > >> have been put into D3cold as there is no other software to turn
+> > >> off the devices at S5.
+> > >>
+> > >> If PCIe ports are left in D0 then any GPIOs toggled by the ACPI
+> > >> power resources may be left enabled and devices may consume excess
+> > >> power.
+> > >
+> > > Isn't that a platform firmware issue?
+> > >
+> > > It is the responsibility of the platform firmware to properly put the
+> > > platform into S5, including power removal from devices that are not
+> > > armed for power-on.
+> >
+> > The specific issues that triggered this series were tied to the PCIe
+> > ports for dGPUs.  There is a GPIO that is toggled by _ON or _OFF.
+> >
+> > Windows calls _OFF as part of S5..
+>
+> I see.
+>
+> > >
+> > >> Cc: mpearson-lenovo@squebb.ca
+> > >> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > >> ---
+> > >>   drivers/pci/pcie/portdrv.c | 11 ++++++++---
+> > >>   1 file changed, 8 insertions(+), 3 deletions(-)
+> > >>
+> > >> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> > >> index 14a4b89a3b83..08238680c481 100644
+> > >> --- a/drivers/pci/pcie/portdrv.c
+> > >> +++ b/drivers/pci/pcie/portdrv.c
+> > >> @@ -734,9 +734,14 @@ static void pcie_portdrv_remove(struct pci_dev =
+*dev)
+> > >>   static void pcie_portdrv_shutdown(struct pci_dev *dev)
+> > >>   {
+> > >>          if (pci_bridge_d3_possible(dev)) {
+> > >> -               pm_runtime_forbid(&dev->dev);
+> > >> -               pm_runtime_get_noresume(&dev->dev);
+> > >> -               pm_runtime_dont_use_autosuspend(&dev->dev);
+> > >> +               /* whole hierarchy goes into a low power state for S=
+5 */
+> > >> +               if (system_state =3D=3D SYSTEM_POWER_OFF) {
+> > >> +                       pci_set_power_state(dev, PCI_D3cold);
+> > >> +               } else {
+> > >> +                       pm_runtime_forbid(&dev->dev);
+> > >> +                       pm_runtime_get_noresume(&dev->dev);
+> > >> +                       pm_runtime_dont_use_autosuspend(&dev->dev);
+> > >> +               }
+> > >>          }
+> > >
+> > > Wouldn't it be better to remove power from the port after running the
+> > > code below?
+> > >
+> >
+> > Yes; I think you're right.  I'll do some more testing with this.
+> >
+> > >>          pcie_port_device_remove(dev);
+> > >> --
+>
+> IIRC, to do this all properly, you'd need to rework the shutdown path
+> to look like the hibernation power-off one.  Or even use the latter
+> for shutdown?
+>
+> There was no reason to do that till now, so it has not been done, but
+> it looks like you have one.
+>
 
-在 2023/12/7 0:35, Rafael J. Wysocki 写道:
-> On Wed, Nov 15, 2023 at 10:16 AM LeoLiu-oc <LeoLiu-oc@zhaoxin.com> wrote:
->>
->> From: leoliu-oc <leoliu-oc@zhaoxin.com>
->>
->> The purpose of the function apei_hest_parse_aer() is used to parse and
->> extract register value from HEST PCIe AER structures.
->>
->> Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
->> ---
->>   drivers/acpi/apei/hest.c | 77 ++++++++++++++++++++++++++++++++++++++--
->>   include/acpi/actbl1.h    |  7 ++++
->>   include/acpi/apei.h      |  8 +++++
->>   3 files changed, 90 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
->> index 6aef1ee5e1bd..7fb797fdc1b1 100644
->> --- a/drivers/acpi/apei/hest.c
->> +++ b/drivers/acpi/apei/hest.c
->> @@ -22,6 +22,7 @@
->>   #include <linux/kdebug.h>
->>   #include <linux/highmem.h>
->>   #include <linux/io.h>
->> +#include <linux/pci.h>
->>   #include <linux/platform_device.h>
->>   #include <acpi/apei.h>
->>   #include <acpi/ghes.h>
->> @@ -86,9 +87,81 @@ static int hest_esrc_len(struct acpi_hest_header *hest_hdr)
->>          return len;
->>   };
->>
->> -typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
->> +#ifdef CONFIG_ACPI_APEI
->> +static bool hest_match_pci_devfn(struct acpi_hest_aer_common *p,
->> +                               struct pci_dev *dev)
->> +{
->> +       return ACPI_HEST_SEGMENT(p->bus) == pci_domain_nr(dev->bus) &&
->> +               ACPI_HEST_BUS(p->bus) == dev->bus->number &&
->> +               p->device == PCI_SLOT(dev->devfn) &&
->> +               p->function == PCI_FUNC(dev->devfn);
->> +}
->> +
->> +static bool hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr,
->> +                               struct pci_dev *dev)
->> +{
->> +       u16 hest_type = hest_hdr->type;
->> +       u8 pcie_type = pci_pcie_type(dev);
->> +       struct acpi_hest_aer_common *common;
->> +
->> +       common = (struct acpi_hest_aer_common *)(hest_hdr + 1);
->> +
->> +       switch (hest_type) {
->> +       case ACPI_HEST_TYPE_AER_ROOT_PORT:
->> +               if (pcie_type != PCI_EXP_TYPE_ROOT_PORT)
->> +                       return false;
->> +       break;
->> +       case ACPI_HEST_TYPE_AER_ENDPOINT:
->> +               if (pcie_type != PCI_EXP_TYPE_ENDPOINT)
->> +                       return false;
->> +       break;
->> +       case ACPI_HEST_TYPE_AER_BRIDGE:
->> +               if (pcie_type != PCI_EXP_TYPE_PCI_BRIDGE &&
->> +                   pcie_type != PCI_EXP_TYPE_PCIE_BRIDGE)
->> +                       return false;
->> +       break;
->> +       default:
->> +               return false;
->> +       break;
->> +       }
->> +
->> +       if (common->flags & ACPI_HEST_GLOBAL)
->> +               return true;
->> +
->> +       if (hest_match_pci_devfn(common, dev))
->> +               return true;
->> +
->> +       return false;
->> +}
->> +
->> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data)
->> +{
->> +       struct hest_parse_aer_info *info = data;
->> +
->> +       if (!hest_source_is_pcie_aer(hest_hdr, info->pci_dev))
->> +               return 0;
->> +
->> +       switch (hest_hdr->type) {
->> +       case ACPI_HEST_TYPE_AER_ROOT_PORT:
->> +               info->hest_aer_root_port = (struct acpi_hest_aer_root *)hest_hdr;
->> +               return 1;
->> +       break;
->> +       case ACPI_HEST_TYPE_AER_ENDPOINT:
->> +               info->hest_aer_endpoint = (struct acpi_hest_aer *)hest_hdr;
->> +               return 1;
->> +       break;
->> +       case ACPI_HEST_TYPE_AER_BRIDGE:
->> +               info->hest_aer_bridge = (struct acpi_hest_aer_bridge *)hest_hdr;
->> +               return 1;
->> +       break;
->> +       default:
->> +               return 0;
->> +       break;
->> +       }
->> +}
->> +#endif
->>
->> -static int apei_hest_parse(apei_hest_func_t func, void *data)
->> +int apei_hest_parse(apei_hest_func_t func, void *data)
->>   {
->>          struct acpi_hest_header *hest_hdr;
->>          int i, rc, len;
->> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
->> index a33375e055ad..90c27dc5325f 100644
->> --- a/include/acpi/actbl1.h
->> +++ b/include/acpi/actbl1.h
-> 
-> This is an ACPICA header and it cannot be modified just like this.
-> 
-> The way to do that is to submit a pull request with the desired change
-> to the upstream ACPICA project on GitHub and add a Link tag pointing
-> to the upstream PR to the corresponding Linux patch.  Then, the Linux
-> patch can only be applied after the corresponding upstream PR has been
-> merged.
-> 
-> Thanks!
-> 
-the data structure "hest_parse_aer_info" is added to file actbl1.h, it 
-is not necessary to put this data structure in file actbl1.h. In the 
-next version, I will move this data structure to another file.
+I am working on exactly same thing but with a different approach.
+Because this is needed for more than just PCI devices.
+I haven't written a proper commit message yet, but the implementation
+is quite simple:
 
-Yours sincerely,
-Leoliu-oc
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index f007116a8427..b90c6cf6faf4 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -967,15 +967,17 @@ EXPORT_SYMBOL_GPL(acpi_pm_set_device_wakeup);
+  * @adev: ACPI device node corresponding to @dev.
+  * @system_state: System state to choose the device state for.
+  */
+-static int acpi_dev_pm_low_power(struct device *dev, struct acpi_device *a=
+dev,
+-                 u32 system_state)
++static int acpi_dev_pm_low_power(struct acpi_device *adev, void* data)
+ {
+     int ret, state;
++    u32 *system_state =3D data;
 
->> @@ -1629,6 +1629,13 @@ struct acpi_hest_generic_status {
->>          u32 error_severity;
->>   };
->>
->> +struct hest_parse_aer_info {
->> +       struct pci_dev *pci_dev;
->> +       struct acpi_hest_aer *hest_aer_endpoint;
->> +       struct acpi_hest_aer_root *hest_aer_root_port;
->> +       struct acpi_hest_aer_bridge *hest_aer_bridge;
->> +};
->> +
->>   /* Values for block_status flags above */
->>
->>   #define ACPI_HEST_UNCORRECTABLE             (1)
->> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
->> index dc60f7db5524..d12e6b6c4546 100644
->> --- a/include/acpi/apei.h
->> +++ b/include/acpi/apei.h
->> @@ -33,10 +33,18 @@ void __init acpi_ghes_init(void);
->>   static inline void acpi_ghes_init(void) { }
->>   #endif
->>
->> +typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
->> +int apei_hest_parse(apei_hest_func_t func, void *data);
->> +
->>   #ifdef CONFIG_ACPI_APEI
->>   void __init acpi_hest_init(void);
->> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data);
->>   #else
->>   static inline void acpi_hest_init(void) { }
->> +static inline int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data)
->> +{
->> +       return 0;
->> +}
->>   #endif
->>
->>   int erst_write(const struct cper_record_header *record);
->> --
->> 2.34.1
->>
+     if (!acpi_device_power_manageable(adev))
+         return 0;
+
+-    ret =3D acpi_dev_pm_get_state(dev, adev, system_state, NULL, &state);
++    acpi_dev_for_each_child(adev, acpi_dev_pm_low_power, data);
++
++    ret =3D acpi_dev_pm_get_state(&adev->dev, adev, *system_state, NULL, &=
+state);
+     return ret ? ret : acpi_device_set_power(adev, state);
+ }
+
+@@ -1016,7 +1018,7 @@ int acpi_dev_suspend(struct device *dev, bool wakeup)
+         wakeup =3D false;
+     }
+
+-    error =3D acpi_dev_pm_low_power(dev, adev, target_state);
++    error =3D acpi_dev_pm_low_power(adev, &target_state);
+     if (error && wakeup)
+         acpi_device_wakeup_disable(adev);
+
+@@ -1386,6 +1388,7 @@ static struct dev_pm_domain acpi_general_pm_domain =
+=3D {
+ static void acpi_dev_pm_detach(struct device *dev, bool power_off)
+ {
+     struct acpi_device *adev =3D ACPI_COMPANION(dev);
++    u32 state =3D ACPI_STATE_S0;
+
+     if (adev && dev->pm_domain =3D=3D &acpi_general_pm_domain) {
+         dev_pm_domain_set(dev, NULL);
+@@ -1400,7 +1403,7 @@ static void acpi_dev_pm_detach(struct device
+*dev, bool power_off)
+             dev_pm_qos_hide_latency_limit(dev);
+             dev_pm_qos_hide_flags(dev);
+             acpi_device_wakeup_disable(adev);
+-            acpi_dev_pm_low_power(dev, adev, ACPI_STATE_S0);
++            acpi_dev_pm_low_power(adev, &state);
+         }
+     }
+ }
+@@ -1514,4 +1517,16 @@ bool acpi_dev_state_d0(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(acpi_dev_state_d0);
+
++void acpi_dev_shutdown(struct device *dev)
++{
++    struct acpi_device *adev =3D ACPI_COMPANION(dev);
++    u32 state =3D ACPI_STATE_S5;
++
++    if (!adev)
++        return;
++
++    acpi_device_wakeup_disable(adev);
++    acpi_dev_pm_low_power(adev, &state);
++}
++EXPORT_SYMBOL_GPL(acpi_dev_shutdown);
+ #endif /* CONFIG_PM */
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 6ceaf50f5a67..7e7c99eade63 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -45,6 +45,15 @@ static void __fw_devlink_link_to_consumers(struct
+device *dev);
+ static bool fw_devlink_drv_reg_done;
+ static bool fw_devlink_best_effort;
+
++#ifdef CONFIG_ACPI
++static inline void fw_dev_shutdown(struct device *dev)
++{
++    acpi_dev_shutdown(dev);
++}
++#else
++static inline void fw_dev_shutdown(struct device *dev) {  }
++#endif
++
+ /**
+  * __fwnode_link_add - Create a link between two fwnode_handles.
+  * @con: Consumer end of the link.
+@@ -4780,6 +4789,8 @@ void device_shutdown(void)
+             dev->driver->shutdown(dev);
+         }
+
++        fw_dev_shutdown(dev);
++
+         device_unlock(dev);
+         if (parent)
+             device_unlock(parent);
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 641dc4843987..374f9eb75c22 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1130,6 +1130,7 @@ int acpi_subsys_runtime_resume(struct device *dev);
+ int acpi_dev_pm_attach(struct device *dev, bool power_on);
+ bool acpi_storage_d3(struct device *dev);
+ bool acpi_dev_state_d0(struct device *dev);
++void acpi_dev_shutdown(struct device *dev);
+ #else
+ static inline int acpi_subsys_runtime_suspend(struct device *dev) { return=
+ 0; }
+ static inline int acpi_subsys_runtime_resume(struct device *dev) { return =
+0; }
+@@ -1145,6 +1146,7 @@ static inline bool acpi_dev_state_d0(struct device *d=
+ev)
+ {
+     return true;
+ }
++static inline void acpi_dev_shutdown(struct device *dev) { }
+ #endif
+
+ #if defined(CONFIG_ACPI) && defined(CONFIG_PM_SLEEP)
 
