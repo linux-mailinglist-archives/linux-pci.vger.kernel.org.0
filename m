@@ -1,168 +1,207 @@
-Return-Path: <linux-pci+bounces-917-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-918-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6ABD581236F
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 00:42:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EAA3812423
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 01:55:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7265D1C211D1
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Dec 2023 23:42:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E17E91F218C8
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Dec 2023 00:55:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E094879E3A;
-	Wed, 13 Dec 2023 23:42:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B51F634;
+	Thu, 14 Dec 2023 00:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDh8fRtH"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kCQQlEfu";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="aYVAprSk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3AD10DE;
-	Wed, 13 Dec 2023 15:42:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702510920; x=1734046920;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=658FEJlu8iPbmeFy2fG1Ncs6XwLiyF4+NhBOJaUrxWI=;
-  b=eDh8fRtHEn4fbwgOb4ATn8MB0MkwaekdMWOSRwWyXOu1fmdDXXPe9BBq
-   TBtdgHFYfejAFVWHneEweGJkTouWWa6ze9ERWdU3BE845QhWs97qGD0XV
-   SamLc0guLmzk3w3YXwn1swZVod7w55ZXDk//Ko6qmNQseKSjQ9vSQ5Oqa
-   yReLeFcmvf7yAz15maEHASelaWlpAQSe0KrImQ7COwocE4fc1Mh1QWhEy
-   4JdARxlxyaMUqhNO7/N/xpoe+jDjm8R+NLkCWnFqYaDGnRvBmWkndOVah
-   IIscIjw59Ppl7feQ1XP8nHBX4XCJrYr6wuvMFpV92RGTgsFey69EC8FnW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="8402768"
-X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
-   d="scan'208";a="8402768"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 15:39:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1021305090"
-X-IronPort-AV: E=Sophos;i="6.04,274,1695711600"; 
-   d="scan'208";a="1021305090"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 15:39:25 -0800
-Received: from acharris-mobl.amr.corp.intel.com (unknown [10.255.228.183])
-	by linux.intel.com (Postfix) with ESMTP id C5161580DAA;
-	Wed, 13 Dec 2023 15:39:24 -0800 (PST)
-Message-ID: <eb42db34f456c3a157cc574893fd73d877b85b75.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/6] PCI/ASPM: Add locked helper for enabling link
- state
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Johan Hovold
- <johan+linaro@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>,
- Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>,
- Nirmal Patel <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, linux-arm-msm@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,  Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>
-Date: Wed, 13 Dec 2023 15:39:24 -0800
-In-Reply-To: <20231213204512.GA1056289@bhelgaas>
-References: <20231213204512.GA1056289@bhelgaas>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509B9D0;
+	Wed, 13 Dec 2023 16:55:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1702515340; x=1734051340;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=OZPQDjcnLwPjg9q3jywsG79RT4NLEUlRUc6HGcloQlE=;
+  b=kCQQlEfuPaB2iOOjCNmAZBNziDd4WVuya8txqfGGmQxleBBN1xZ2rP2n
+   iSD3bDe1VPgtlexZfKLeXcNty9XS3Kof25Ko3BuXeaPn83gahCCqZvI4I
+   LblYcJuBhM5S7YrOtTlh8sDm8uVchUmdS63GIEil4IPiNDwXvcvY5zUUU
+   s0XD/efKPK8U9eZ/ON8My6nf/REDaEjyffQ/FENKEvTexqNHqqxj02+LU
+   O37f0M4vspaITD5HN6RWTTOSZd/PNaTJIItyTgfjMWywc+XLeMr4QOfJ7
+   RdrHpU9EHawm5jz1O4Xh8zV2/+zmGXy2JqjXdZJe5J+xumnWLHN3ajliP
+   w==;
+X-CSE-ConnectionGUID: Dd+GGmYBTAeENDxfnetQEQ==
+X-CSE-MsgGUID: ndxe48dTQAet4acjV+9Www==
+X-IronPort-AV: E=Sophos;i="6.04,274,1695657600"; 
+   d="scan'208";a="4843084"
+Received: from mail-dm6nam12lp2169.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.169])
+  by ob1.hgst.iphmx.com with ESMTP; 14 Dec 2023 08:55:38 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=khfJ+abC9DItA+WanZHT7uPSzgMfBhhWvPN4+RvkR6as54i1w+29YWty6WNlzjg8xMMNZy62BXSO8nSsGACYOemEpLrBfikFPFS6BqfzY4knQ1MnlxU/9jEf4VLcevRdWQYwJSSmjX+3U7qG7wowANnf1nkeAewsCK7wnkJsCDK7/f0HPbKjA9ST+vlimTl3BMMCAkzCJZBjQc+1kn0EO2/rDeb5QO1ZDUp4MrOTZX5w1/m26+TTgsMHhYZammIG5dGF/zYY4aqYt9sicotnPkQYuc6bXm+horV7WAmXHimTIyL2VNXgho6rF2Jq9/TkwsBttJEU+eeLFCvZVyzlYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e/WUyT3z+l626FC27grJUYZOC8kSU7T5bt4Hr51tNR0=;
+ b=JaX2JIJZeSXzMZ5Qc+tY1CyirAXDgYAooHbl0zjjNmR9E1vLZ32a31qnyT2VQ4pguWxIaFeLtMWoE8QBA4Ro4CYWcZgBt2duS5SnDd1FJMNG+PawaE/LzMiwZnrPZ1Nasz+SUjH+/dArZ8NLSXlU/QqYcKB7rleMVz0iM7OxO8r0NfXZJ6AyWK5xANbeOUkBU9L4KNEyALVo10KJAIFk8mkE5O3P2Pe8B1fx5ofEzdP1ZphLkexlC7P3B5gh1JgFG00oAt1g92DtA1osjWNtVcTOQjJg4U8ulUqXgqWYIsSfh2S3O3+fzcHDWzbUamp4hBIGwjqH6aC8X4dMoXqbSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e/WUyT3z+l626FC27grJUYZOC8kSU7T5bt4Hr51tNR0=;
+ b=aYVAprSk+HGrB/ZSAN8YTp6Qo8IbeW8hAXAOm8uqpMo5vjVSBsl73k4wD50cYACpD22Z6R68RBio003Ph+3Y3DdCaoKdLe6LR+OLI+qkUhfRFrVGG4xSW2sJ6GwlQEevRJRAle1Y1cK4ooYXuLQOZSIvvWQMcoJkBZtyqImp9sA=
+Received: from BN0PR04MB8048.namprd04.prod.outlook.com (2603:10b6:408:15f::17)
+ by SJ0PR04MB7312.namprd04.prod.outlook.com (2603:10b6:a03:297::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26; Thu, 14 Dec
+ 2023 00:55:36 +0000
+Received: from BN0PR04MB8048.namprd04.prod.outlook.com
+ ([fe80::58b4:c149:69dc:1d2d]) by BN0PR04MB8048.namprd04.prod.outlook.com
+ ([fe80::58b4:c149:69dc:1d2d%4]) with mapi id 15.20.7091.028; Thu, 14 Dec 2023
+ 00:55:36 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+	=?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Lukas
+ Wunner <lukas@wunner.de>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Thread-Topic: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Thread-Index: AQHaLPEKUL5t3x0B/EabxX5jU4Z+UrCnQRYAgAC1coA=
+Date: Thu, 14 Dec 2023 00:55:36 +0000
+Message-ID: <eo7bnkdph6fwb74zn57r33a6unodkpagpk3dk5euz5cdc2mve4@557h3e3v5og7>
+References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+ <ZXm6QrRkyzGRg8SB@smile.fi.intel.com>
+In-Reply-To: <ZXm6QrRkyzGRg8SB@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR04MB8048:EE_|SJ0PR04MB7312:EE_
+x-ms-office365-filtering-correlation-id: fa897feb-a2b3-428a-efae-08dbfc3f6227
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ rLSSi0bzNhIDerN0WEaBekZN+7wTqVvmyqEnkdqvakQ17tIM8/H5lXQA9R69SdMa/JYhc96EorC8N8dRlE/crpAQ6vX2NZQQvLXvmGOkscagx+SZ7HN8e5nYsSC/RSpLdN6fK8yQHu42hnFuvNbdagIY3Jr3kvBXK9u2HUqJOrcrzHpdP1opbM4LJ6BPlFliQhwVlvZFsPoPIS2FhNRs7gqMfKvW3xhnOFCM0s65D0o/5RUjzUi3WjZos4x0rZcLPDg4MPuTS4mwybHFuQIWHC+0Hc6hNl326SUPu+gcgNxb7q7rmx+nQcuAAjFYTTkFE8uxmeT3sD4ZLqkpQ/C2Xkxl3B86XqWgUTBXsKhVqASV6+scXfB6RO1ZxT4egelq0HE/wPOq74NX+xWa/bTtzPKJAPEc8HUzg72DGCgvqjuSj38qC3A2h+jlqYg5DtkPsD2f7fLaTyDEhA4eI72FZLqF/TEmo6b+LLH+e4WhkQvzvsXF5mV2us453vS4sMc/fs2+MiZxcXQIaL6yuRBU34KXDrZgRrkFdI8Wl2mqxcpmhHeZ4ZmBVJc0CbP3n4Rc5k0LLynXfLP1n39E5/FESNdvS2QbIMvvvaiciMdYWZk=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR04MB8048.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(346002)(366004)(136003)(396003)(39860400002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(6486002)(83380400001)(71200400001)(38100700002)(26005)(33716001)(122000001)(44832011)(8936002)(316002)(6916009)(5660300002)(54906003)(64756008)(8676002)(2906002)(4326008)(478600001)(66446008)(66476007)(41300700001)(66946007)(6512007)(9686003)(6506007)(76116006)(966005)(91956017)(66556008)(82960400001)(38070700009)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?andYVjtev15MlMhPRSpgYUy3ZmDJzkqErXrQzMzwU5FU6AmvrtEDnpJUlp?=
+ =?iso-8859-1?Q?Y2h3d5S7cC7ZIc7+ZCz7PG1jmU97GQ2d+chrYEgaP9RbZuSFMrUDtoa8kC?=
+ =?iso-8859-1?Q?8i0X63jGPd8SvdUQGaXu7UroWHTA1deQIg/d6aMMdUxqTbgwKf8SA0AsYW?=
+ =?iso-8859-1?Q?ID4Kw++/naZyFTdMny75YvrKvR/XoMey5BKX/s8CDUtacEuBOSPzKTdQWm?=
+ =?iso-8859-1?Q?kl0dy6DzDYo3jMqdx7OOg7wBBbOR5y2lAMv5qfqu4nE94hdhnj2S1LVSWs?=
+ =?iso-8859-1?Q?Fz0HOFwxidAZhMDm0XZKWEzQCJEx0i8BGmKl4UFKTTKqJ67BRL3TUNyfHm?=
+ =?iso-8859-1?Q?N3bK+9X4IUBv0wrIPXE49/IVSUbHDR5+BD7JwtDu/3zjLd5buAFG/l2xhy?=
+ =?iso-8859-1?Q?OVCykhpp/QxGaELIGs4iaXXL6qAdk0ap3G4R+MDnWoai4OiRrhlJW1q3qM?=
+ =?iso-8859-1?Q?+SJpQk0MBr7/fgWEzTJfoRqEtl3tv0gmJBfDa88iU8ywJA4kDM+mdCeV28?=
+ =?iso-8859-1?Q?xMOdWPnSeAyOQae6LR2DU9wbvRCVUuDysWPu7NPR1i6NgFuwrMh+M7S+yh?=
+ =?iso-8859-1?Q?wE1HbgyiwoKUQjsx8cVQWbsDi1NC8tJX2egQPzJTU3RP3AEYYytnyoeBaC?=
+ =?iso-8859-1?Q?ck5JdufF8RhQlkXpuJT8s/9eJqdsNIK6jQjlmULEklv8/PRHGeRBqDE+7I?=
+ =?iso-8859-1?Q?E5tt0rBpwZyd4WtOVv59NXyvZcSHn5rODak+nsNB9/5BwXyMVtVfTEye/2?=
+ =?iso-8859-1?Q?Cjhx8l2one0h2tECMor2XrVdBy8DuDfg1qMbrRHG72oE8cRZfXtX5L3M+a?=
+ =?iso-8859-1?Q?iMZWdE6XyAQu7+YLBvBue72r8Nvf16r8kzfGsmN61rsp6mQhLKXtUajG0d?=
+ =?iso-8859-1?Q?2dNIFXhoe+3GvoaQlB0j1EOd/xrvOiGmXVhEqQOtG8RQOwgfnb72v6yVxS?=
+ =?iso-8859-1?Q?fgVLyteYTW9vg0Qp5sb1YmwIu4/JKHqIISTfx1IZbAbTeNiSEF4rRioLu2?=
+ =?iso-8859-1?Q?fqSzwbEHvhSgbjIcwp/n9Ik/KWgI4kcOK8IoZB8NFltMJbM4202hIlRbHT?=
+ =?iso-8859-1?Q?OW9KPQaLCmTsn81QC+iNh0mwsV5DTT5wfYj0GjfrFFkir7zCpDSLe0itEP?=
+ =?iso-8859-1?Q?1NK9HBFufp/20S5WHOJ/AcR9PAoTcz2VFtOaLBCmPyLuCcp6G93pa91z64?=
+ =?iso-8859-1?Q?oVKVvhyRY31uoZLRS6xd3p5GPxGryWQqrOa/2dqCxAJcdovD4/P78VC7J0?=
+ =?iso-8859-1?Q?MmHwnoec7RwHqiiqVr1xcMaULphW2UpfCgGla6gkaUolC3N1DUXWGGX38p?=
+ =?iso-8859-1?Q?KGyW5kjMpqPq0NCvzSpLPAn/r1VBh61yohLfEqGAWXVIQGUcg9tlWvpebE?=
+ =?iso-8859-1?Q?bL6mTzHbh/0oklvW30Be97XNoM3NZtTkc6LWpcj52e55c+XvrF6R7oZNLt?=
+ =?iso-8859-1?Q?3DJZG/YeaH8MeBhRCJCIj7CmRzKAGiFeOe0/3aFrc6I0TBNSV/Enot+8Gl?=
+ =?iso-8859-1?Q?zkxwah0bsECg0S7ysMfSQrYHC5OG/eZfSKuCx3qD92Qv8XD4mgQvVuQLJh?=
+ =?iso-8859-1?Q?IK3UMMrp0GWaCHOOOw2YFRvxNqjD6KPZvKFCBtKH/E0wZwU2WM3hIbZC9B?=
+ =?iso-8859-1?Q?aAWG+wipReQcnxFYCPTbuq5YBcII45MWuIBaFVsn/mV6d+gK9gevVypULa?=
+ =?iso-8859-1?Q?mwE9T+DIxBkQM3cjjk4=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <AD870230A012C949AF4BFB22CF8A850E@namprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	2RYWOK1nnrgqK2LLtwAIgl7NxK5Ca3kspLvGOLOzD9vOJ5AWM74o/+ggwyyYGcFVTKyFLmQkQVdZLUzhRMBgZuaLqot0x2mqtx00MMuIjNj8W7mfwW5Ke84X9/Mh0N5rv0qBeM7hjENudSZzvS5qsHYGSTrv/t1K6zBo2U4bO7sLTzl2mJIlIRObsoA28MpCBnYf4buhsPII2LFpMKv69EA/iAwBDIzjQ4iHWJM4+rJpLPgL9zvd32mqGE0eOLr6hYZcJEbsxgJIGW7GwQsirMEm2wuFmlfT+ha8I3vj8XKjuodVszHhKtTFQj0Nk5ps4Lt9I8PTjpW2dz8rSkt6h2fpnJpo4nm2PMoy1yy8q03cmMpV00m/7CH+60/rzACpQlYp7WoYmR4yIW4UtgAkbXziJPeucMabAWKpyB3VcYZ2UIZEVCq2nDAjkdB8966VPyxF0BgGs2NzbH27+joW+Jo3HgDfZJG4fWrbYCi139qfkW+zjngmHDLE+LQczDmhDwGQpql0aHXxQ1ea5dv6RNguqQWRH9ktpqaw/qwUy3GZC4/+NbGHfsGwmJm1edVunJy+P+h61eNf9oBjC8vXEQpe+/blM3SnZqTPclAA1aiPCILwMdPtvVUy8tkLt1bv
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR04MB8048.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa897feb-a2b3-428a-efae-08dbfc3f6227
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Dec 2023 00:55:36.2708
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hiSJAWKbBZDnOZl22jONW/BExae3l+NhRsqSULcauYZhj+b/8UO2M51rUt35gJp13FV1oJaFK2bcFKsuTSO6G93LGtuoJjAgGh6wp8OZ47c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR04MB7312
 
-On Wed, 2023-12-13 at 14:45 -0600, Bjorn Helgaas wrote:
-> On Wed, Dec 13, 2023 at 11:48:41AM -0800, David E. Box wrote:
-> > On Tue, 2023-12-12 at 15:27 -0600, Bjorn Helgaas wrote:
-> > > On Tue, Dec 12, 2023 at 11:48:27AM +0800, Kai-Heng Feng wrote:
-> > > > On Fri, Dec 8, 2023 at 4:47=E2=80=AFAM Bjorn Helgaas <helgaas@kerne=
-l.org> wrote:
-> > > > ...
-> > >=20
-> > > > > I hope we can obsolete this whole idea someday.=C2=A0 Using pci_w=
-alk_bus()
-> > > > > in qcom and vmd to enable ASPM is an ugly hack to work around thi=
-s
-> > > > > weird idea that "the OS isn't allowed to enable more ASPM states =
-than
-> > > > > the BIOS did because the BIOS might have left ASPM disabled becau=
-se it
-> > > > > knows about hardware issues."=C2=A0 More history at
-> > > > > https://lore.kernel.org/linux-pci/20230615070421.1704133-1-kai.he=
-ng.feng@canonical.com/T/#u
-> > > > >=20
-> > > > > I think we need to get to a point where Linux enables all support=
-ed
-> > > > > ASPM features by default.=C2=A0 If we really think x86 BIOS assum=
-es an
-> > > > > implicit contract that the OS will never enable ASPM more
-> > > > > aggressively, we might need some kind of arch quirk for that.
-> > > >=20
-> > > > The reality is that PC ODM toggles ASPM to workaround hardware
-> > > > defects, assuming that OS will honor what's set by the BIOS.
-> > > > If ASPM gets enabled for all devices, many devices will break.
-> > >=20
-> > > That's why I mentioned some kind of arch quirk.=C2=A0 Maybe we're for=
-ced to
-> > > do that for x86, for instance.=C2=A0 But even that is a stop-gap.
-> > >=20
-> > > The idea that the BIOS ASPM config is some kind of handoff protocol i=
-s
-> > > really unsupportable.
+On Dec 13, 2023 / 16:05, Andy Shevchenko wrote:
+> On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
+> > p2sb_bar() unhides P2SB device to get resources from the device. It
+> > guards the operation by locking pci_rescan_remove_lock so that parallel
+> > rescans do not find the P2SB device. However, this lock causes deadlock
+> > when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> > locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> > call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> > Hence the deadlock.
 > >=20
-> > To be clear, you are not talking about a situation where
-> > ACPI_FADT_NO_ASPM or _OSC PCIe disallow OS ASPM control, right?
-> > Everyone agrees that this should be honored? The question is what to
-> > do by default when the OS is not restricted by these mechanisms?
+> > To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar()=
+.
+> > Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> > for fs_initcall which gets and caches the P2SB resources. At p2sb_bar()=
+,
+> > refer the cache and return to the caller.
 >=20
-> Exactly.=C2=A0 The OS should respect ACPI_FADT_NO_ASPM and _OSC.
+> ...
 >=20
-> I think there are a couple exceptions where we want to disable ASPM
-> even if the platform said the OS shouldn't touch ASPM at all, but
-> that's a special case.
+> > +/* Cache BAR0 of P2SB device from function 0 ot 7 */
+> > +#define NR_P2SB_RES_CACHE 8
 >=20
-> > Reading the mentioned thread, I too think that using the BIOS config
-> > as the default would be the safest option, but only to avoid
-> > breaking systems, not because of an implied contract between the
-> > BIOS and OS. However, enabling all capable ASPM features is the
-> > ideal option. If the OS isn't limited by ACPI_FADT_NO_ASPM or _OSC
-> > PCIe, then ASPM enabling is fully under its control.=C2=A0 If this
-> > doesn't work for some devices then they are broken and need a quirk.
+> Here... (at least some better comment with TODO needs to be added,
+> and next patches can address that).
 >=20
-> Agreed.=C2=A0 It may not be practical to identify such devices, so we may
-> need a broader arch-based and/or date-based quirk.
+> >  	struct resource *bar0 =3D &pdev->resource[0];
 >=20
-> I'd be shocked if Windows treated the BIOS config as a "do not exceed
-> this" situation, so my secret hope is that some of these "broken"
-> devices are really caused by defects in the Linux ASPM support or the
-> driver, and that we can fix them if we find out about them.
+> ...and here... (okay, not exactly here, but with the same idea,
+> to use pci_resource_n() macro)
 >=20
-> But I have no details about any of these alleged broken devices, so
-> it's hard to make progress on them.=C2=A0=C2=A0
+> > +	if (!PCI_FUNC(devfn_p2sb)) {
+> > +		slot_p2sb =3D PCI_SLOT(devfn_p2sb);
+> > +		for (fn =3D 1; fn < 8; fn++)
+>=20
+> ...and here...
+>=20
+> > +			p2sb_scan_and_cache(bus, PCI_DEVFN(slot_p2sb, fn));
+> > +	}
+>=20
+> ...and so on I gave comments. Any reason why they left unaddressed?
 
-I don't have a sense of the scope either. But I could see BIOS not enabling
-features that would provide no added power savings benefit. We use ASPM to
-manage package power. There are Intel devices that certainly don't require =
-L1SS
-for the SoC to achieve the deepest power savings. L1 alone is fine for them=
-. I
-don't know what the test coveragae is for unenabled features. I've sent the=
-se
-questions to our BIOS folks.
+Andy, thanks for the response, but I'm not sure about the comments you gave=
+.
+I guess you responded to the RFC v1 patch but it somehow did not reach to m=
+e,
+probably. According to the lore archive, only Hans responded to the RFC v1 =
+[1].
+If this guess is correct, could you resend your comments on the RFC v1?
 
-> Maybe we should log a debug note
-> if the device advertises ASPM support that BIOS didn't enable.
-
-Good idea.
-
-David
-
->=20
-> Bjorn
-
+[1] https://lore.kernel.org/platform-driver-x86/20231201104759.949340-1-shi=
+nichiro.kawasaki@wdc.com/=
 
