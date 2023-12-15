@@ -1,54 +1,54 @@
-Return-Path: <linux-pci+bounces-1041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1042-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91C4481416F
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 06:44:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4120B814173
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 06:45:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B07F01C224AD
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 05:44:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 651721C2236C
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 05:45:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0575D6AAB;
-	Fri, 15 Dec 2023 05:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6782C63D0;
+	Fri, 15 Dec 2023 05:45:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BbIWE6PJ"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="doaWFc66"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712251C31;
-	Fri, 15 Dec 2023 05:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF10C6AA6;
+	Fri, 15 Dec 2023 05:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BF3Ps0Y008016;
-	Fri, 15 Dec 2023 05:44:18 GMT
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BF4rG17012803;
+	Fri, 15 Dec 2023 05:45:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=lNyS6XOOhGk9188CugqQXE0AbjhCg2iwozC+KlPC2+w=; b=Bb
-	IWE6PJ4v0UF1VzhXGTxDPmN+dqZgwR1Itiixv0Nidsubvgk3wJanouPAxQwXW2ch
-	nBqE+nvAj5RGsN0GbohXAHNdTrxJ1J8CjWQH80l2Gl2VqALLXmp9sDD/Z3mHKhvn
-	PjImWLYwZjSSV7wXBxeUwtsm/gw7Ymg1TijOHhhs1mbckxtI8Y1Xbi27GTCxM/Cd
-	LkrLLhiHJgXgB89q494P2CngIuDXEMwQtuq64IQHLDjBc9tdFJYNe/3y3GEHV34q
-	LUc3hz0i1OhrzEfCNPbDtlLDkAIgSExGJtCsAgASqC0BbRObbwgzIl+jPbV9Henl
-	/R0NwoNNuBGrnEashkWg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v0741j227-1
+	qcppdkim1; bh=OIvgiwV5IcUa6vyzIxMJliZLEIyS2TSOj3fE8+EY3XE=; b=do
+	aWFc66C+Cka3jzquchaIjPGX5S6kGgRGigusUZ+FTk7ZqnDey2I4/aU0oPn+rsws
+	iGndWwCRfgHcovc+lUPyJD6Z+yGWCUOAEGQE4ALkeOlu5Rc6tAsTnqBfDYFT0N5a
+	yEKv0zmU3HzxbHfdn71YbLlH6nBSmDJLQBU1Nsnak3nerfoylqy17Smq0pM3HrcV
+	oV/ruW9zqCaZ2bbYnj2EBsJUjzdAo41vkfMuWz/d70xMSCPFp9A9pjiDZ1hXiGNR
+	RF+HQVcOd3ey2QY8uYvf2LozDXU31XMedVL/EC8+h6iHFq3h3D0/jLGFbnl6320N
+	Hgfw/apPJGrbFvipNirg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v0a37h0nv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 05:44:18 +0000 (GMT)
+	Fri, 15 Dec 2023 05:45:24 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BF5iHFe009359
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BF5jNRg013681
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Dec 2023 05:44:17 GMT
+	Fri, 15 Dec 2023 05:45:23 GMT
 Received: from [10.201.3.91] (10.80.80.8) by nasanex01b.na.qualcomm.com
  (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 14 Dec
- 2023 21:44:09 -0800
-Message-ID: <6a3895ad-7da3-49c0-a7a0-7dd1031e0544@quicinc.com>
-Date: Fri, 15 Dec 2023 11:14:07 +0530
+ 2023 21:45:16 -0800
+Message-ID: <aeaf0b2a-7fdf-4e23-97bc-7bfc3fd05f41@quicinc.com>
+Date: Fri, 15 Dec 2023 11:15:16 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,8 +56,9 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] clk: qcom: ipq5332: Add separate clocks for PCIe
- and USB for Combo PHY
+Subject: Re: [PATCH 06/10] phy: qcom: ipq5332: Add support for g3x1 and g3x2
+ PCIe PHYs
+Content-Language: en-US
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 CC: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
@@ -71,92 +72,132 @@ CC: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <quic_varada@quicinc.com>, <quic_devipriy@quicinc.com>,
         <quic_kathirav@quicinc.com>, <quic_anusha@quicinc.com>
 References: <20231214062847.2215542-1-quic_ipkumar@quicinc.com>
- <20231214062847.2215542-3-quic_ipkumar@quicinc.com>
- <CAA8EJpr61JuznqfdMG96mjrqquf2Qbfe=potB5vzk43XexWj2w@mail.gmail.com>
-Content-Language: en-US
+ <20231214062847.2215542-7-quic_ipkumar@quicinc.com>
+ <CAA8EJppSXeV9LSv8VAwYSP9nDzq+uHTvbiEzD4PebEHoOJySNg@mail.gmail.com>
 From: Praveenkumar I <quic_ipkumar@quicinc.com>
-In-Reply-To: <CAA8EJpr61JuznqfdMG96mjrqquf2Qbfe=potB5vzk43XexWj2w@mail.gmail.com>
+In-Reply-To: <CAA8EJppSXeV9LSv8VAwYSP9nDzq+uHTvbiEzD4PebEHoOJySNg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: p7j-yoodYOO4QQRr6l0cSrWkm_bl4Uet
-X-Proofpoint-GUID: p7j-yoodYOO4QQRr6l0cSrWkm_bl4Uet
+X-Proofpoint-GUID: vkojKA8BInIcdHfbqwabzdky8Fhz3Wux
+X-Proofpoint-ORIG-GUID: vkojKA8BInIcdHfbqwabzdky8Fhz3Wux
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- spamscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- suspectscore=0 adultscore=0 mlxlogscore=931 classifier=spam adjust=0
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ phishscore=0 impostorscore=0 lowpriorityscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.19.0-2311290000
  definitions=main-2312150033
 
 
 
-On 12/14/2023 12:39 PM, Dmitry Baryshkov wrote:
-> On Thu, 14 Dec 2023 at 08:29, Praveenkumar I <quic_ipkumar@quicinc.com> wrote:
->> Qualcomm IPQ5332 has a combo PHY for PCIe and USB. Either one of the
->> interface (PCIe/USB) can use this combo PHY and the PHY drivers are
->> different for PCIe and USB. Hence separate the PCIe and USB pipe clock
->> source from DT, and individual driver node can be used as a clock source
->> separately in the gcc. Add separate enum for PCIe and USB pipe clock and
->> change the parent in corresponding structures.
+On 12/14/2023 12:42 PM, Dmitry Baryshkov wrote:
+> On Thu, 14 Dec 2023 at 08:30, Praveenkumar I <quic_ipkumar@quicinc.com> wrote:
+>> Add support for single-lane and dual-lane PCIe UNIPHY found on
+>> Qualcomm IPQ5332 platform. This UNIPHY is similar to the one
+>> present in Qualcomm IPQ5018.
 >>
 >> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
-> Please use your full name for the git authorship and or the S-o-B
-> tags. This applies to the whole series.
-My full name is "Praveenkumar I". In my region, we used to have only the 
-initial letter of surname.
-
---
-Thanks,
-Praveenkumar
-> Other than that:
->
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->
 >> ---
->>   drivers/clk/qcom/gcc-ipq5332.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
+>> This patch depends on the below series which adds PCIe support in
+>> Qualcomm IPQ5018
+>> https://lore.kernel.org/all/20231003120846.28626-1-quic_nsekar@quicinc.com/
 >>
->> diff --git a/drivers/clk/qcom/gcc-ipq5332.c b/drivers/clk/qcom/gcc-ipq5332.c
->> index f98591148a97..aa0f616c3b1b 100644
->> --- a/drivers/clk/qcom/gcc-ipq5332.c
->> +++ b/drivers/clk/qcom/gcc-ipq5332.c
->> @@ -25,7 +25,8 @@ enum {
->>          DT_SLEEP_CLK,
->>          DT_PCIE_2LANE_PHY_PIPE_CLK,
->>          DT_PCIE_2LANE_PHY_PIPE_CLK_X1,
->> -       DT_USB_PCIE_WRAPPER_PIPE_CLK,
->> +       DT_PCIE_WRAPPER_PIPE_CLK,
->> +       DT_USB_WRAPPER_PIPE_CLK,
+>>   .../phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c  | 44 +++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
+>> index 9f9a03faf6fa..aa71b85eb50e 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
+>> @@ -34,6 +34,10 @@
+>>   #define SSCG_CTRL_REG_6                0xb0
+>>   #define PCS_INTERNAL_CONTROL_2 0x2d8
+>>
+>> +#define PHY_CFG_PLLCFG                         0x220
+>> +#define PHY_CFG_EIOS_DTCT_REG                  0x3e4
+>> +#define PHY_CFG_GEN3_ALIGN_HOLDOFF_TIME                0x3e8
+>> +
+>>   #define PHY_MODE_FIXED         0x1
+>>
+>>   enum qcom_uniphy_pcie_type {
+>> @@ -112,6 +116,21 @@ static const struct uniphy_regs ipq5018_regs[] = {
+>>          },
 >>   };
 >>
->>   enum {
->> @@ -728,7 +729,7 @@ static struct clk_regmap_phy_mux gcc_pcie3x1_0_pipe_clk_src = {
->>                  .hw.init = &(struct clk_init_data) {
->>                          .name = "gcc_pcie3x1_0_pipe_clk_src",
->>                          .parent_data = &(const struct clk_parent_data) {
->> -                               .index = DT_USB_PCIE_WRAPPER_PIPE_CLK,
->> +                               .index = DT_PCIE_WRAPPER_PIPE_CLK,
->>                          },
->>                          .num_parents = 1,
->>                          .ops = &clk_regmap_phy_mux_ops,
->> @@ -1072,7 +1073,7 @@ static struct clk_regmap_phy_mux gcc_usb0_pipe_clk_src = {
->>                  .hw.init = &(struct clk_init_data) {
->>                          .name = "gcc_usb0_pipe_clk_src",
->>                          .parent_data = &(const struct clk_parent_data) {
->> -                               .index = DT_USB_PCIE_WRAPPER_PIPE_CLK,
->> +                               .index = DT_USB_WRAPPER_PIPE_CLK,
->>                          },
->>                          .num_parents = 1,
->>                          .ops = &clk_regmap_phy_mux_ops,
+>> +static const struct uniphy_regs ipq5332_regs[] = {
+>> +       {
+>> +               .offset = PHY_CFG_PLLCFG,
+>> +               .val = 0x30,
+>> +       },
+>> +       {
+>> +               .offset = PHY_CFG_EIOS_DTCT_REG,
+>> +               .val = 0x53ef,
+>> +       },
+>> +       {
+>> +               .offset = PHY_CFG_GEN3_ALIGN_HOLDOFF_TIME,
+>> +               .val = 0xCf,
+>> +       },
+>> +};
+>> +
+>>   static const struct uniphy_pcie_data ipq5018_2x2_data = {
+>>          .lanes          = 2,
+>>          .lane_offset    = 0x800,
+>> @@ -121,6 +140,23 @@ static const struct uniphy_pcie_data ipq5018_2x2_data = {
+>>          .pipe_clk_rate  = 125000000,
+>>   };
+>>
+>> +static const struct uniphy_pcie_data ipq5332_x2_data = {
+>> +       .lanes          = 2,
+>> +       .lane_offset    = 0x800,
+>> +       .phy_type       = PHY_TYPE_PCIE_GEN3,
+>> +       .init_seq       = ipq5332_regs,
+>> +       .init_seq_num   = ARRAY_SIZE(ipq5332_regs),
+>> +       .pipe_clk_rate  = 250000000,
+>> +};
+>> +
+>> +static const struct uniphy_pcie_data ipq5332_x1_data = {
+>> +       .lanes          = 1,
+>> +       .phy_type       = PHY_TYPE_PCIE_GEN3,
+>> +       .init_seq       = ipq5332_regs,
+>> +       .init_seq_num   = ARRAY_SIZE(ipq5332_regs),
+>> +       .pipe_clk_rate  = 250000000,
+>> +};
+> Please keep structs sorted out.
+sure, will address in next patch set.
+>
+>> +
+>>   static void qcom_uniphy_pcie_init(struct qcom_uniphy_pcie *phy)
+>>   {
+>>          const struct uniphy_pcie_data *data = phy->data;
+>> @@ -270,6 +306,14 @@ static const struct of_device_id qcom_uniphy_pcie_id_table[] = {
+>>                  .compatible = "qcom,ipq5018-uniphy-pcie-gen2x2",
+>>                  .data = &ipq5018_2x2_data,
+>>          },
+>> +       {
+>> +               .compatible = "qcom,ipq5332-uniphy-pcie-gen3x2",
+>> +               .data = &ipq5332_x2_data,
+>> +       },
+>> +       {
+>> +               .compatible = "qcom,ipq5332-uniphy-pcie-gen3x1",
+>> +               .data = &ipq5332_x1_data,
+> The entries here should be sorted out.
+will take care.
+>
+>> +       },
+>>          { /* Sentinel */ },
+>>   };
+>>   MODULE_DEVICE_TABLE(of, qcom_uniphy_pcie_id_table);
 >> --
 >> 2.34.1
 >>
 >>
 >
-
+--
+Thanks,
+Praveenkumar
 
