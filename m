@@ -1,220 +1,172 @@
-Return-Path: <linux-pci+bounces-1079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1078-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07348815363
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 23:18:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A8FA815354
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 23:12:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64DFF1F25500
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 22:18:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E64F1C242E1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 22:12:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C9B13B133;
-	Fri, 15 Dec 2023 22:18:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C07013B128;
+	Fri, 15 Dec 2023 22:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IgggiDUE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UxXsFG7X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9E118EA1;
-	Fri, 15 Dec 2023 22:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lFb0o2RWX5sq/uQmq9tI0K9ZfUU/hz5rhwowED3BO1x3iv52Vxz37YwYXVGvB+Gcfz7ThwFXI9YHBAaQWFS6gxW6kY1ydvjK34flgMx+RIiPtLtDV2+aNmIt737EDMAtU/UyENsMB9K8wCcKpF+g2wFq+4zNwnsNRdyIYqC1D3j5gEZNdEIY8LW0ILmIGt4Ygu26FjNPfYqVlorQTSoAAAesd3v6h8ip3/0HLGN4JZ5KXgA4/Z0pN92CnAGdJw3NK09Suv9UuQuhs3zT9BHNvyya0zWfq59KX2bqtjuf3jjjItUn+wuumBdXNORR+2XpoQKRHtnuYHwYs0KUNcuztg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F8yQiURzbi+JuTiylQT8sVzM/UD+jOTKzIg7VMaTVto=;
- b=U6WXLtrqP1snoH9vcjC89kO9usB1JQqZcamoltf/m7fixDTL3Ix/QJzSEt1UCZNa34NfR1BaRZO/Zj8xU4eqvq7ua8egwuItXIokFB9CtIf7DhhGayYUl7+r2Vi/fkWtIcTVWEDWGmu4h9kSx/hZcMgYBQ5+h2VghUMuv+AHcMajmgD7VEHK/lAry5wJZLSsMCUSu3aqgRepXWZ68VV5rA3bzHinE6IiF+jSzBT5LsQB2TcCRtWymyfofo7UmP6B2Stt5uusnioCwc8z5xEn0qKJjoIYxi2KJmLRg9xYhFLBaT8EWAzQp/3WwaqIuH0mj9Ffj9urQmYkp75q/3SLpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F8yQiURzbi+JuTiylQT8sVzM/UD+jOTKzIg7VMaTVto=;
- b=IgggiDUEVdvRBzbJv6jY1ukH56/8FjrchIpNiLxD2goHEXnSEvB5mXswTtvrcCoCCdrd2LzZNyx9ullQcOvdz5yJGm9vUfIPBYs7cT5Wih6Ba9Llfcq6Ug5QP9Zy/s+XKjz3wANOY+z1evD+qU+8nJVv4XQX3p4ZNaPMlNtdpaQ=
-Received: from MW4PR03CA0279.namprd03.prod.outlook.com (2603:10b6:303:b5::14)
- by MW4PR12MB7215.namprd12.prod.outlook.com (2603:10b6:303:228::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.33; Fri, 15 Dec
- 2023 22:18:06 +0000
-Received: from CO1PEPF000042A9.namprd03.prod.outlook.com
- (2603:10b6:303:b5:cafe::43) by MW4PR03CA0279.outlook.office365.com
- (2603:10b6:303:b5::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.32 via Frontend
- Transport; Fri, 15 Dec 2023 22:18:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000042A9.mail.protection.outlook.com (10.167.243.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7113.14 via Frontend Transport; Fri, 15 Dec 2023 22:18:05 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 15 Dec
- 2023 16:17:52 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, "Rafael J . Wysocki"
-	<rjw@rjwysocki.net>
-CC: <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2] x86/pci: Stop requiring ECAM to be declared in E820, ACPI or EFI
-Date: Fri, 15 Dec 2023 16:03:43 -0600
-Message-ID: <20231215220343.22523-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B75413B12C;
+	Fri, 15 Dec 2023 22:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+	by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20231215221119usoutp023fb644809b43e26f021783371c1e4803~hIN_xEqLE1802018020usoutp02W;
+	Fri, 15 Dec 2023 22:11:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20231215221119usoutp023fb644809b43e26f021783371c1e4803~hIN_xEqLE1802018020usoutp02W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702678279;
+	bh=KvZvvlGPICQFkYjf7KEZNtzlEaLHKZVdgQyZ9zCYw/s=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=UxXsFG7XrYslZwcgwEMc42vJEg06zJNqeahqEe6wcRL8LbBspCpZekgpzjFYDzn/h
+	 v/X59DYaWBeHzllxFXT+DV9WMBEwKhaZVx8pscNZ8cYTOo+8oByuxTN4KqWasZXA+g
+	 Dng+64vnYC8qbVKC/X+f/ExM4KSULVNGyRG5RrWg=
+Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
+	[203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231215221119uscas1p22efb0ad26c168906661c06a07cc275fe~hIN_qWGPZ0138301383uscas1p2N;
+	Fri, 15 Dec 2023 22:11:19 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+	ussmges1new.samsung.com (USCPEMTA) with SMTP id 9B.F4.09678.70FCC756; Fri,
+	15 Dec 2023 17:11:19 -0500 (EST)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+	[203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20231215221118uscas1p1b407f67deb53a75ae03d67247653b30b~hIN_Z2okP2295022950uscas1p1Y;
+	Fri, 15 Dec 2023 22:11:18 +0000 (GMT)
+X-AuditID: cbfec36d-85fff700000025ce-54-657ccf07df13
+Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
+	ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id BD.4D.09813.60FCC756; Fri,
+	15 Dec 2023 17:11:18 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+	15.1.2375.24; Fri, 15 Dec 2023 14:11:18 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
+	15 Dec 2023 14:11:18 -0800
+From: Jim Harris <jim.harris@samsung.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Leon Romanovsky <leonro@nvidia.com>, "Jason
+ Gunthorpe" <jgg@nvidia.com>, Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] pci/iov: fix kobject_uevent() ordering in
+ sriov_enable()
+Thread-Topic: [PATCH] pci/iov: fix kobject_uevent() ordering in
+	sriov_enable()
+Thread-Index: AQHaLfZbfzSE7OYN20WpA0TR5aL0dLCoHtUAgANSmoA=
+Date: Fri, 15 Dec 2023 22:11:17 +0000
+Message-ID: <ZXzPBTZ2rK/CPy5o@ubuntu>
+In-Reply-To: <20231213192652.GA1054534@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A9BE0741C2887B4194448243347D1463@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042A9:EE_|MW4PR12MB7215:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ca13cbe-4fcf-4a24-48ad-08dbfdbbb631
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2ZW2w8jTSle3yfckqkqBiSR/8N6dexdLn0niCSZBH8QcmH6oywZdlQKfc8isb+kUkrGm0BPu9MQWgOpF94CyU+UYMrptg+7MX3bV76bX+/vryFYX9w3c/GYpoKTnv002GFUoobfrWZUS9aPQwjpia1gcGMhObocJMjY5jfB8WnqCxmDoB3sgsq2i44EwoE+EMQzWzyl51kEbo3cBPTPGTg8qGPSD2f5IXUbRWPZ5g3VVYQYRY3rwcrkLQOcoit5Yzj8EirykexMmGxd31nTtk55gsTpEg2HnGk/89eXJrCZKcZrEJ9X7QTR0aSkRyoi+1302NLtjA09Gcggis21ixGEX0fUleZMXE5WSXZDLb17jh4NBN+twfscQxhgFPnNdYnFOHdamF0/8Yi+TMTAoOGQ6g9nUGKgCNbA+tLEsbnUDAz0Vlz+dD1dRNgl8i6n/q+J2nCtHRZatDJliXl8C+tTKnkaMtXLgPXfLdJfVOC7GskhsikDFO1kyQRFBrpLGt+I6KfThpF11ZFd4Zcp05abw6ujlnUCo3FqZAKoh6ru4QJtfDsofR/f44MRy3QH7aThJT7S/1Of2QIHOAnPOvgOVNYgK+xkyxwwHV/ceToOs85wWN9vJhNlUXm6m4BN9j3vgY4tw7Phvlupls250H/nXKuqYoZGYO34gAsYLbzpLC9z4kSzqnp1a/AjLyzcaIfUHgnsxaTMxhp1GS3WqlZGLZYVUkphoMiEjFyB6MO+Aq2HXGT+OBfQovMN5NFSceYOv/irgMfWDJU0dV7NvOA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(39860400002)(396003)(346002)(376002)(230922051799003)(186009)(451199024)(82310400011)(1800799012)(64100799003)(40470700004)(36840700001)(46966006)(83380400001)(966005)(478600001)(82740400003)(6666004)(7696005)(1076003)(40480700001)(2616005)(426003)(336012)(16526019)(26005)(110136005)(54906003)(316002)(70206006)(70586007)(356005)(81166007)(36860700001)(47076005)(86362001)(8676002)(4326008)(44832011)(40460700003)(8936002)(5660300002)(2906002)(36756003)(41300700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2023 22:18:05.8889
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ca13cbe-4fcf-4a24-48ad-08dbfdbbb631
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042A9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7215
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djX87rs52tSDT4fZLb49r+HzWJJU4bF
+	qzNr2Syu/NvDaLFpwxMWi8u75rBZnJ13nM2B3WPBplKPTas62Tx6m9+xebzfd5XN4/MmuQDW
+	KC6blNSczLLUIn27BK6MFSvPsRec5a3oazzE2sD4kquLkZNDQsBEouPEftYuRi4OIYGVjBK7
+	FpxihnBamSTa1t5ihKm6uOYuI0RiDaPEtb2X2CCcT4wSP1evYIFwljFKnP5+kBmkhU1AU+LX
+	lTVMXYwcHCICahJd7aEgNcwCc5gk5j87wA5SIyzgLzFxxikWiJoAiecv60HCIgJWEmeedLCC
+	2CwCqhLLbk8Bu4IXyN4/eSELiM0pYCAx4/FtJhCbUUBM4vupNWA2s4C4xK0n85kgrhaUWDR7
+	DzOELSbxb9dDNghbUeL+95fsEPU6Egt2f2IDOYFZwE7i3BwBiLC2xLKFr5kh1gpKnJz5hAWi
+	VVLi4IobYO9KCNzhkHi7ZBs7RMJFYuPHA1BF0hJ/7y6DuiFbYuX6DnAwSAgUSDQcCYIIW0ss
+	/LOeaQKjyiwkV89CctEshItmIbloFpKLFjCyrmIULy0uzk1PLTbMSy3XK07MLS7NS9dLzs/d
+	xAhMS6f/Hc7dwbjj1ke9Q4xMHIyHGCU4mJVEeBesrU4V4k1JrKxKLcqPLyrNSS0+xCjNwaIk
+	zmtoezJZSCA9sSQ1OzW1ILUIJsvEwSnVwOQw640y0967K8w2x29SO8rHce8eF3NoyTSjX0nP
+	xM5V8lyeWXG7Z/te5WTVLYmvpzNZfXgmaf97r9q8dU/EBNiV9MsmO38U7rw4TZ3r+6wdmiKB
+	3eo6K91VliQ9e7dJrcK9J3BLTFl0wSlR9nNKLgWf7LfVFXy5GurQtm3KwtY7CSVX7Bp5Z56f
+	cu3T1gIh/+PVhu+LMsu3LVUVn+2VXaRluiJlh4eY9KPZX5psd/2JCWN6ctxxS8s23iKOefO3
+	BVzqW8avdshVbg3HPcmzkwoaHYNLvLi19AUXqBjaijBfuXXiy76Fu8U11nzzjv26b8r0uPXe
+	ftf1RWbO/7aHd++H6lXPvil7cffmdX3V81NiKc5INNRiLipOBAA4IEp/ugMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsWS2cDsrMt2vibV4PZSPYtv/3vYLJY0ZVi8
+	OrOWzeLKvz2MFps2PGGxuLxrDpvF2XnH2RzYPRZsKvXYtKqTzaO3+R2bx/t9V9k8Pm+SC2CN
+	4rJJSc3JLEst0rdL4MpYsfIce8FZ3oq+xkOsDYwvuboYOTkkBEwkLq65y9jFyMUhJLCKUeL+
+	yQNsIAkhgU+MEh/uFkEkljFKHPj0jxkkwSagKfHryhqmLkYODhEBNYmu9lCQGmaBOUwS858d
+	YAepERbwlfi2/QzYIBEBP4nTd65A2VYSZ550sILYLAKqEstuT2EEsXmB7P2TF7JALGtklGi8
+	+AJsEKeAgcSMx7eZQGxGATGJ76fWgNnMAuISt57MZ4J4QUBiyZ7zzBC2qMTLx/9YIWxFifvf
+	X7JD1OtILNj9iQ3kaGYBO4lzcwQgwtoSyxa+Zoa4QVDi5MwnLBCtkhIHV9xgmcAoMQvJtllI
+	Js1CmDQLyaRZSCYtYGRdxSheWlycm15RbJSXWq5XnJhbXJqXrpecn7uJERjVp/8djt7BePvW
+	R71DjEwcjIcYJTiYlUR4F6ytThXiTUmsrEotyo8vKs1JLT7EKM3BoiTOe/eBRqqQQHpiSWp2
+	ampBahFMlomDU6qBqXmK80zLul/VD7mz7e+aeFZHfhDfblIkKHRm4/lV33gbjrSfcu2cY/nm
+	3tRyxYU/Ozdqd1VoV7m0/bkWs/xqyIUkrcoi8cbYKXfzMr/tMFueEn13ssd97cPyTjwHk4vL
+	tm84PMlC78+qsItTuha9+l76M2j1N8tVEaY577zY/U/xSTJv7c3g8TWZkrPWYcKRbR3T7oq8
+	CzuivEcs6KvsI4uLK3u2KuVdk2Zap73LiiHXNa9cdcfk1b+PWG3yr3mz5+6cN1yy9e6OW02u
+	ZSoJStVefBu2fIlU5qNVsTc4kidt/VDX+KzTy+y/VEA0J7/AB02blaoB9p3B7YH/vl5Zlv2D
+	3+bB1GS27euPZQs/UmIpzkg01GIuKk4EAPZ0q/VZAwAA
+X-CMS-MailID: 20231215221118uscas1p1b407f67deb53a75ae03d67247653b30b
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20231215221118uscas1p1b407f67deb53a75ae03d67247653b30b
+References: <170249390826.436889.13896090394795622449.stgit@bgt-140510-bm01.eng.stellus.in>
+	<20231213192652.GA1054534@bhelgaas>
+	<CGME20231215221118uscas1p1b407f67deb53a75ae03d67247653b30b@uscas1p1.samsung.com>
 
-commit 7752d5cfe3d1 ("x86: validate against acpi motherboard resources")
-introduced checks for ensuring that MCFG table also has memory region
-reservations to ensure no conflicts were introduced from a buggy BIOS.
+On Wed, Dec 13, 2023 at 01:26:52PM -0600, Bjorn Helgaas wrote:
+> On Wed, Dec 13, 2023 at 06:58:28PM +0000, Jim Harris wrote:
+> > Wait to call kobject_uevent() until all of the associated changes are d=
+one,
+> > including updating the num_VFs value.
+>=20
+> This seems right to me.  Can we add a little rationale to the commit
+> log?  E.g., something about how num_VFs is visible to userspace via
+> sysfs and we don't want a race between (a) userspace reading num_VFs
+> because of KOBJ_CHANGE and (b) the kernel updating num_VFs?  (If
+> that's the actual reason.)
+>=20
+> If there's a problem report about this, include that reference as
+> well.
 
-This has proceeded over time to add other types of reservation checks
-for ACPI PNP resources and EFI MMIO memory type.  The PCI firmware spec
-does say that these checks are only required when the operating system
-doesn't comprehend the firmware region:
+There's a second patch that I haven't pushed yet that has more of the
+rationale that led to this suggestion from Leon - see thread
+"Locking between vfio hot-remove..." I'll push the two patches as a series.
 
-```
-If the operating system does not natively comprehend reserving the MMCFG
-region, the MMCFG region must be reserved by firmware. The address range
-reported in the MCFG table or by _CBA method (see Section 4.1.3) must be
-reserved by declaring a motherboard resource. For most systems, the
-motherboard resource would appear at the root of the ACPI namespace
-(under \_SB) in a node with a _HID of EISAID (PNP0C02), and the resources
-in this case should not be claimed in the root PCI bus’s _CRS. The
-resources can optionally be returned in Int15 E820h or EFIGetMemoryMap
-as reserved memory but must always be reported through ACPI as a
-motherboard resource.
-```
+The second patch will effectively revert 35ff867b7, since Leon felt the
+reasoning behind that patch was incorrect. I'll tie all of that into the
+cover letter.
 
-Running this check causes problems with accessing extended PCI
-configuration space on OEM laptops that don't specify the region in PNP
-resources or in the EFI memory map. That later manifests as problems with
-dGPU and accessing resizable BAR. Similar problems don't exist in Windows
-11 with exact same laptop/firmware stack.
+-Jim
 
-Due to the stability of the Windows ecosystem that x86 machines participate
-it is unlikely that using the region specified in the MCFG table as
-a reservation will cause a problem. The possible worst circumstance could
-be that a buggy BIOS causes a larger hole in the memory map that is
-unusable for devices than intended.
-
-Change the default behavior to keep the region specified in MCFG even if
-it's not specified in another source. This is expected to improve
-machines that otherwise couldn't access PCI extended configuration space.
-
-In case this change causes problems, add a kernel command line parameter
-that can restore the previous behavior.
-
-Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
-      PCI Firmware Specification 3.3
-      Section 4.1.2 MCFG Table Description Note 2
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v1->v2:
- * Rebase on pci/next
- * Add an escape hatch
- * Reword commit message
----
- .../admin-guide/kernel-parameters.txt         |  6 ++++++
- arch/x86/pci/mmconfig-shared.c                | 19 +++++++++++++++----
- 2 files changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 65731b060e3f..eacd0c0521c2 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1473,6 +1473,12 @@
- 			(in particular on some ATI chipsets).
- 			The kernel tries to set a reasonable default.
- 
-+	enforce_ecam_resv [X86]
-+			Enforce requiring an ECAM reservation specified in
-+			BIOS for PCI devices.
-+			This parameter is only valid if CONFIG_PCI_MMCONFIG
-+			is enabled.
-+
- 	enforcing=	[SELINUX] Set initial enforcing status.
- 			Format: {"0" | "1"}
- 			See security/selinux/Kconfig help text.
-diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-index 0cc9520666ef..aee117c6bbf9 100644
---- a/arch/x86/pci/mmconfig-shared.c
-+++ b/arch/x86/pci/mmconfig-shared.c
-@@ -34,6 +34,15 @@ static DEFINE_MUTEX(pci_mmcfg_lock);
- 
- LIST_HEAD(pci_mmcfg_list);
- 
-+static bool enforce_ecam_resv __read_mostly;
-+static int __init parse_ecam_options(char *str)
-+{
-+	enforce_ecam_resv = true;
-+
-+	return 1;
-+}
-+__setup("enforce_ecam_resv", parse_ecam_options);
-+
- static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
- {
- 	if (cfg->res.parent)
-@@ -569,10 +578,12 @@ static void __init pci_mmcfg_reject_broken(int early)
- 
- 	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
- 		if (!pci_mmcfg_reserved(NULL, cfg, early)) {
--			pr_info("not using ECAM (%pR not reserved)\n",
--				&cfg->res);
--			free_all_mmcfg();
--			return;
-+			pr_info("ECAM %pR not reserved, %s\n", &cfg->res,
-+				enforce_ecam_resv ? "ignoring" : "using anyway");
-+			if (enforce_ecam_resv) {
-+				free_all_mmcfg();
-+				return;
-+			}
- 		}
- 	}
- }
-
-base-commit: 67e04d921cb6902e8c2abdbf748279d43f25213e
--- 
-2.34.1
-
+>=20
+> > Suggested by: Leon Romanovsky <leonro@nvidia.com>
+> > Signed-off-by: Jim Harris <jim.harris@samsung.com>
+> > ---
+> >  drivers/pci/iov.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 25dbe85c4217..3b768e20c7ab 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -683,8 +683,8 @@ static int sriov_enable(struct pci_dev *dev, int nr=
+_virtfn)
+> >  	if (rc)
+> >  		goto err_pcibios;
+> > =20
+> > -	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+> >  	iov->num_VFs =3D nr_virtfn;
+> > +	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
+> > =20
+> >  	return 0;
+> > =20
+> > =
 
