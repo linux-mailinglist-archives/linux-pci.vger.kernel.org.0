@@ -1,122 +1,115 @@
-Return-Path: <linux-pci+bounces-1033-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1034-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2467F813F74
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 02:51:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63816813FD3
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 03:35:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B063F1F2296D
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 01:51:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FAF2282E94
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 02:35:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD180650;
-	Fri, 15 Dec 2023 01:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MDmlLjKQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708DA805;
+	Fri, 15 Dec 2023 02:35:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EBC1FD6;
-	Fri, 15 Dec 2023 01:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702605077; x=1734141077;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=B8ZnBuUqYeF5LUId9bwYmxo/DbwCwkj6wYLDz93eA1o=;
-  b=MDmlLjKQ0meym/7/2vDxz0Bbr0+7jdfJuW1emL6uyu1BlNnGa4px4Z5R
-   ADSJQ3/efJWc9DUUZxzesmDYSlYl+E4elnL/XbNlgXmi3Y9K+WJ26xdSI
-   vfFTcY4jLCE76ELKfumsi1UIJGXdM8FNkz+uFMmg/OZRKOIbi0d4Eeu26
-   enGbHnQzE6nPP3/00xOcc3LSnIZQLPpH0Tp6C4B2ztFfY6fwnUC3thT5n
-   8aWvsfQyhM28l6srD654jfAXsSmV6JEd97lDDGwPTFsgXVhL1BobSvblD
-   CMnmxXUY2p1Wz++z4yh/fgHlxh0w0SXwXVxSyQNtIjv+PUKAdcxOG0c5M
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="394088293"
-X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
-   d="scan'208";a="394088293"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 17:51:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="844948298"
-X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
-   d="scan'208";a="844948298"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.255.30.96]) ([10.255.30.96])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 17:51:13 -0800
-Message-ID: <a121f7ee-6993-4784-a199-e747643d441a@linux.intel.com>
-Date: Fri, 15 Dec 2023 09:51:10 +0800
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125AD18F;
+	Fri, 15 Dec 2023 02:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-IronPort-AV: E=Sophos;i="6.04,277,1695654000"; 
+   d="scan'208";a="186553897"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 15 Dec 2023 11:30:03 +0900
+Received: from localhost.localdomain (unknown [10.166.13.99])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id BFF5A40121A3;
+	Fri, 15 Dec 2023 11:30:03 +0900 (JST)
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com,
+	mani@kernel.org
+Cc: linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 0/6] PCI: controllers: tidy code up
+Date: Fri, 15 Dec 2023 11:29:49 +0900
+Message-Id: <20231215022955.3574063-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iommu/vt-d: don's issue devTLB flush request when
- device is disconnected
-To: Baolu Lu <baolu.lu@linux.intel.com>, bhelgaas@google.com,
- dwmw2@infradead.org, will@kernel.org, robin.murphy@arm.com
-Cc: linux-pci@vger.kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, Haorong Ye <yehaorong@bytedance.com>
-References: <20231213034637.2603013-1-haifeng.zhao@linux.intel.com>
- <20231213034637.2603013-3-haifeng.zhao@linux.intel.com>
- <96051115-c928-4f3c-bd65-4f3f8e83ca9c@linux.intel.com>
- <e6fddbb0-fa8f-43d4-8a5e-d177e9465912@linux.intel.com>
- <8c8a1e49-5447-4d61-b3ba-782873cc0f4a@linux.intel.com>
- <2f49219e-601d-4ddc-a7b7-6ea8968a2f80@linux.intel.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <2f49219e-601d-4ddc-a7b7-6ea8968a2f80@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+This patch series tidies the code of PCIe dwc controllers and some
+controllers up.
 
-On 12/15/2023 9:34 AM, Baolu Lu wrote:
-> On 2023/12/15 9:03, Ethan Zhao wrote:
->>
->> 2. supprise_removal
->>
->>   Users remove the devece directly or bring the device link down/turn 
->> off
->>
->>   device power first by setting pci config space, link-down/not-present/
->>
->>   power-off are all handled by pciehp the same way 
->> "supprise_removal", in
->>
->>   such case, pciehp_ist() will flag the device as "disconnected" 
->> first, then
->>
->>   unconfig the devcie, unload driver, iommu release device(issing 
->> devTLB flush)
->>
->>   delete device. so we checking the device state could work such cases.
->
-> If so, then it is fine for the iommu driver. As Robin said, if the
-> device needs more cleanup, the iommu core should register a right
-> callback to the driver core and handle it before the device goes away.
->
-> Disabling PCI features seems to be a reasonable device cleanup. This
-> gives us another reason to move ATS enabling/disabling out from the
+Changes from v2:
+https://lore.kernel.org/linux-pci/20231114055456.2231990-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on the latest pci.git / next branch.
+ - Add Suggestion-by and Reviewed-by tags.
+ - Move read/write accessors to the header file in the patch 4/6.
+ - Revise the commit description in the patch 5/6.
 
-For supprise_removal, device was already removed, powered-off, iommu
+Changes from v1:
+https://lore.kernel.org/linux-pci/20231113013300.2132152-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on the latest pci.git / next branch.
+ - Add a new patch to drop host prefix of members from dw_pcie_host_ops
+   in the patch 1/6.
+ - Add Reviewed-by tag in the patch 3/6.
+ - Drop unneeded local variable in the patch 4/6.
+ - Add new patches to resolve issues of clang warnings in the patch [56]/6.
 
-device-release got notification  or cleanup callback is  invoked to disable
+Justin Stitt (1):
+  PCI: iproc: fix -Wvoid-pointer-to-enum-cast warning
 
-ATS to not-present device etc ,
+Yoshihiro Shimoda (5):
+  PCI: dwc: Drop host prefix from struct dw_pcie_host_ops
+  PCI: dwc: Rename to .init in struct dw_pcie_ep_ops
+  PCI: dwc: Rename to .get_dbi_offset in struct dw_pcie_ep_ops
+  PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2] helpers
+  PCI: rcar-gen4: fix -Wvoid-pointer-to-enum-cast warning
 
-I didn't get the meaning to do so, perhaps I misunderstand ?
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   4 +-
+ drivers/pci/controller/dwc/pci-exynos.c       |   2 +-
+ drivers/pci/controller/dwc/pci-imx6.c         |   6 +-
+ drivers/pci/controller/dwc/pci-keystone.c     |   8 +-
+ .../pci/controller/dwc/pci-layerscape-ep.c    |   7 +-
+ drivers/pci/controller/dwc/pci-layerscape.c   |   2 +-
+ drivers/pci/controller/dwc/pci-meson.c        |   2 +-
+ drivers/pci/controller/dwc/pcie-al.c          |   2 +-
+ drivers/pci/controller/dwc/pcie-armada8k.c    |   2 +-
+ drivers/pci/controller/dwc/pcie-artpec6.c     |   4 +-
+ drivers/pci/controller/dwc/pcie-bt1.c         |   4 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   | 188 ++++++------------
+ .../pci/controller/dwc/pcie-designware-host.c |  30 +--
+ .../pci/controller/dwc/pcie-designware-plat.c |   2 +-
+ drivers/pci/controller/dwc/pcie-designware.h  | 105 +++++++++-
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c |   2 +-
+ drivers/pci/controller/dwc/pcie-fu740.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-histb.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c    |   2 +-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
+ drivers/pci/controller/dwc/pcie-kirin.c       |   2 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   2 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        |   6 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  12 +-
+ drivers/pci/controller/dwc/pcie-spear13xx.c   |   2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c |   2 +-
+ drivers/pci/controller/dwc/pcie-uniphier.c    |   2 +-
+ drivers/pci/controller/dwc/pcie-visconti.c    |   2 +-
+ drivers/pci/controller/pcie-iproc-platform.c  |   2 +-
+ 30 files changed, 220 insertions(+), 192 deletions(-)
 
-Thanks,
+-- 
+2.34.1
 
-Ethan
-
-> iommu subsystem. Once this is done, the device driver will enable ATS
-> during its probe and disable it during its release. There will be no
-> such workaround in the iommu driver anymore.
->
-> Best regards,
-> baolu
 
