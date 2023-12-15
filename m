@@ -1,169 +1,179 @@
-Return-Path: <linux-pci+bounces-1067-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1068-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 086F0814970
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 14:37:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA8E58149A8
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 14:52:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4EC62869C1
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 13:37:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6237228204A
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 13:52:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC5E52DB85;
-	Fri, 15 Dec 2023 13:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57092DB8F;
+	Fri, 15 Dec 2023 13:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K923AG4h"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AhQMg725"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2348C2F87A
-	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 13:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702647404;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE0E30321;
+	Fri, 15 Dec 2023 13:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3536CC0002;
+	Fri, 15 Dec 2023 13:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1702648330;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PeGoU3o+S7+CrRMsRKZCUSMgsVnOClZrkqDfWJvQpQE=;
-	b=K923AG4hHAiwIs3pBFTDm/ggH66pz0nZ5H8TDdVVRhrs+1orKjZgh+vSk3ONeqBySrVOU2
-	z16h501A0hH3qu5oTK4Q4/m5ULkKQxCPBp6zxhWQwRrh1dekpZiJQDIRgSPStuqQ+MxOzT
-	Cad14185R3WQ5eaRF4W1wLH8i0vMcZM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-13-ZMcAKaNWPEuDo52AftDjig-1; Fri, 15 Dec 2023 08:36:41 -0500
-X-MC-Unique: ZMcAKaNWPEuDo52AftDjig-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40c3cea4c19so5379015e9.1
-        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 05:36:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702647400; x=1703252200;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PeGoU3o+S7+CrRMsRKZCUSMgsVnOClZrkqDfWJvQpQE=;
-        b=a1KmgIrOPdFE4tMDIzC92L8PHnrL72yPsNoEOxLljbs2YCuuHu0o2w6r7rvQZxTOI9
-         xaKdxM93QWYGowyQ2/T71fv+BJZEv3cM8QkHyXmgd60VtjaC+uwHXz8twvFPGG6o3ZFz
-         dQSSteiR5a+oIF5t6+5dGQkWxMCqbnpj/9H4xyh7P5jr0/izXNjNa+6Jbm6zD4UdR9iB
-         W7J9azfNOfWphs5CvQbqYXVb+XW5llhx0U3jxecgFcYPenOAb1dicrfb8uCGgJoQwiNX
-         VbyWROF2Bc7YNRe+mHJ/iQ8qnsuL5KoriA8/Ulj+txB1ggvKE4Nl47j0lFFFP+mV9xfO
-         GfZA==
-X-Gm-Message-State: AOJu0YzhH+7b/M9/xtw7RD+gYJexp8sJCjYNWkL9ZM6f48t4hd35cfNk
-	eVV05OzvGSt1AJNmmpvOloq0eHr+Vjo+pDN49OLhobG5DitokE1TKXaTmvYpCQSq/9oZBxngesk
-	26QsxBzzEOHFPaaiWn8sw
-X-Received: by 2002:a05:600c:30d2:b0:40c:4378:f111 with SMTP id h18-20020a05600c30d200b0040c4378f111mr4670766wmn.80.1702647400352;
-        Fri, 15 Dec 2023 05:36:40 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHNqnCnqPED8jOPTrsrHmCaOogZEFFYNAlGMfhhBxoxOjIysGAkQmntROKUnv2U3WFzoyYr1A==
-X-Received: by 2002:a05:600c:30d2:b0:40c:4378:f111 with SMTP id h18-20020a05600c30d200b0040c4378f111mr4670759wmn.80.1702647399910;
-        Fri, 15 Dec 2023 05:36:39 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id kt17-20020a1709079d1100b00a015eac52dcsm10720815ejc.108.2023.12.15.05.36.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 05:36:39 -0800 (PST)
-Date: Fri, 15 Dec 2023 14:36:38 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [Regression] Commit 40613da52b13 ("PCI: acpiphp: Reassign
- resources on bridge if necessary")
-Message-ID: <20231215143638.032028eb@imammedo.users.ipa.redhat.com>
-In-Reply-To: <ZXw4Ly/csFgl76Lj@marvin.atrad.com.au>
-References: <ZXpaNCLiDM+Kv38H@marvin.atrad.com.au>
-	<20231214143205.4ba0e11a@imammedo.users.ipa.redhat.com>
-	<ZXt+BxvmG6ru63qJ@marvin.atrad.com.au>
-	<ZXw4Ly/csFgl76Lj@marvin.atrad.com.au>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	bh=67tH9Lo75qwYdI0cY5235H5ZCDe4KzYpnxFS6WHpsZU=;
+	b=AhQMg725HDtwge0C7ZYbVFamrWIvnnqMmX5bOvdVGgduFneloWsGRK1qTb482V1QEmwiIY
+	N3LvDMKW1IoEsIAoA8zdYBNPFUee4OH32mov7xifnXCJzuDuYDlgw+w//JdQ44chBc8ZyL
+	kYlGPI9g8wFfi5OQ5x9S8Z3Sslnqievz7esEZsytFuoa4Ud6tQyXce8FnjuxAgixBuXAh1
+	Vy3MbELUnRB0UBnpSG82Z5lN7Ed7tjqdJL7uRkftBj/YmpUs2hIz5M6n2C54ZrkfwUVxLm
+	GWLR3vVlmJtDN4KiXP4CibygA9z81a4y9EQbjqVYgecH6orHbfnPp6ui48SIxw==
+Date: Fri, 15 Dec 2023 14:52:07 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou
+ <lizhi.hou@amd.com>, Max Zhen <max.zhen@amd.com>, Sonal Santan
+ <sonal.santan@amd.com>, Stefano Stabellini <stefano.stabellini@xilinx.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, PCI
+ <linux-pci@vger.kernel.org>, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
+Message-ID: <20231215145207.0cf098e5@bootlin.com>
+In-Reply-To: <CAL_JsqLtCS3otZ1sfiPEWwrWB4dyNpu4e0xANWJriCEUYr+4Og@mail.gmail.com>
+References: <20231130165700.685764-1-herve.codina@bootlin.com>
+	<CAL_JsqJvt6FpXK+FgAwE8xN3G5Z23Ktq=SEY-K7VA7nM5XgZRg@mail.gmail.com>
+	<20231204134335.3ded3d46@bootlin.com>
+	<CAL_JsqLtCS3otZ1sfiPEWwrWB4dyNpu4e0xANWJriCEUYr+4Og@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Fri, 15 Dec 2023 21:57:43 +1030
-Jonathan Woithe <jwoithe@just42.net> wrote:
+Hi Rob,
 
-> On Fri, Dec 15, 2023 at 08:43:29AM +1030, Jonathan Woithe wrote:
-> > On Thu, Dec 14, 2023 at 02:32:05PM +0100, Igor Mammedov wrote:  
-> > > On Thu, 14 Dec 2023 11:58:20 +1030 Jonathan Woithe wrote:  
-> > > > 
-> > > > Following an update from 5.15.72 to 5.15.139 on one of my machines, the  
-> > > 
-> > > looks like you are running downstream kernel, can you file bug report
-> > > with distro that you use (with a link posed here as well).  
-> > 
-> > I am running Slackware64 15.0.  The kernels supplied by that distribution
-> > are unmodified kernel.org kernels.
-> >   
-> > > For now offending patches are being reverted, so downstream bug will help
-> > > with tracking it and reverting it there.   
-> > 
-> > The patches will be reverted in Slackware as a matter of course when a
-> > kernel.org "-stable" kernel with the fix is adopted.  Slackware does not
-> > apply any patches to kernel.org kernels.  Nevertheless, I will raise a post
-> > in the forum, hopefully later today.  
-> 
-> This has now been done:
-> 
->   https://www.linuxquestions.org/questions/slackware-14/heads-up-pci-regression-introduced-in-or-around-5-15-129-commit-40613da52b13-4175731828/#post6470559
-> 
-> > > > The output of lspci is given at the end of this post[1].  The CPU is an
-> > > > "Intel(R) Core(TM) i7-5930K CPU @ 3.50GHz" which is not overclocked.  Please
-> > > > let me know if you'd like more information about the affected machine.  I
-> > > > can also perform additional tests if required, although for various reasons
-> > > > these can only be done on Thursdays at present.
-> > > > 
-> > > > The kernel configuration file can easily be supplied if that would be
-> > > > useful.  
-> > > 
-> > > full dmesg log and used config might help down the road (preferably with current
-> > > upstream kernel), as I will be looking into fixing related issues.
-> > > 
-> > > Perhaps a better way for taking this issue and collecting logs, will be
-> > > opening a separate bug at https://bugzilla.kernel.org (pls CC me as well)  
-> > 
-> > Sure, will do.  I'll be able to get the dmesg log from my earlier tests and
-> > config easily enough.  Testing with another kernel will have to wait until
-> > next Thursday as that is when I'll next have physical access to the machine.  
-> 
-> A bug has been opened at bugzilla.kernel.org as requested.  The logs, kernel
-> configuration and the "lspci -tv" output (requested in a subsequent email)
-> have been added.  The logs and kernel configuration are from the kernel.org
-> 5.15.139 kernel.  You have been added to the bug's CC.  The bug number is
-> 218268:
-> 
->   https://bugzilla.kernel.org/show_bug.cgi?id=218268
-> 
-> As mentioned, testing another kernel can only happen next Thursday.  If
-> you would like other tests done let me know and I'll do them at the same
-> time.  I have remote access to the machine, so it's possible to retrieve
-> information from it at any time.
+On Mon, 4 Dec 2023 07:59:09 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-lets wait till you can get logs with dyndbg='...' (I've asked for earlier)
-and one more test with "pci=realloc" on kernel CLI to see if that helps.
-
-> Let me know if there's anything else I can do to assist.
-
-It looks like  pci_assign_unassigned_bridge_resources() messed up BIOS configured
-resources. And then didn't manage to reconfigure bridges correctly, which led to
-unassigned BARs => thunderbolt/VGA issues.
-
-Something in ACPI tables must be triggering acpiphp hotplug path during boot.
-Can you dump DSDT + SSDT tables and attach them to BZ.
-PS:
-to dump tables you can use command from acpica-tools (not sure how it's called in Slackware) 
- acpidump -b
-which will dump all tables in binary format (so attach those or 'iasl -d' de-compiled ones)
-
+> On Mon, Dec 4, 2023 at 6:43 AM Herve Codina <herve.codina@bootlin.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Fri, 1 Dec 2023 16:26:45 -0600
+> > Rob Herring <robh@kernel.org> wrote:
+> >  
+> > > On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:  
+> > > >
+> > > > Hi,
+> > > >
+> > > > The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> > > > creates of_node for PCI devices.
+> > > > During the insertion handling of these new DT nodes done by of_platform,
+> > > > new devices (struct device) are created.
+> > > > For each PCI devices a struct device is already present (created and
+> > > > handled by the PCI core).
+> > > > Creating a new device from a DT node leads to some kind of wrong struct
+> > > > device duplication to represent the exact same PCI device.
+> > > >
+> > > > This patch series first introduces device_{add,remove}_of_node() in
+> > > > order to add or remove a newly created of_node to an already existing
+> > > > device.
+> > > > Then it fixes the DT node creation for PCI devices to add or remove the
+> > > > created node to the existing PCI device without any new device creation.  
+> > >
+> > > I think the simpler solution is to get the DT node created earlier. We
+> > > are just asking for pain if the DT node is set for the device at
+> > > different times compared to static DT nodes.
+> > >
+> > > The following fixes the lack of of_node link. The DT unittest fails
+> > > with the change though and I don't see why.
+> > >
+> > > Also, no idea if the bridge part works because my qemu setup doesn't
+> > > create bridges (anyone got a magic cmdline to create them?).
+> > >
+> > > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > > index 9c2137dae429..46b252bbe500 100644
+> > > --- a/drivers/pci/bus.c
+> > > +++ b/drivers/pci/bus.c
+> > > @@ -342,8 +342,6 @@ void pci_bus_add_device(struct pci_dev *dev)
+> > >          */
+> > >         pcibios_bus_add_device(dev);
+> > >         pci_fixup_device(pci_fixup_final, dev);
+> > > -       if (pci_is_bridge(dev))
+> > > -               of_pci_make_dev_node(dev);
+> > >         pci_create_sysfs_dev_files(dev);
+> > >         pci_proc_attach_device(dev);
+> > >         pci_bridge_d3_update(dev);
+> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > index 51e3dd0ea5ab..e15eaf0127fc 100644
+> > > --- a/drivers/pci/of.c
+> > > +++ b/drivers/pci/of.c
+> > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
+> > >                 return 0;
+> > >
+> > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
+> > > +       if (!node && pci_is_bridge(dev))
+> > > +               of_pci_make_dev_node(dev);
+> > >         if (!node)
+> > >                 return 0;  
+> >
+> > Maybe it is too early.
+> > of_pci_make_dev_node() creates a node and fills some properties based on
+> > some already set values available in the PCI device such as its struct resource
+> > values.
+> > We need to have some values set by the PCI infra in order to create our DT node
+> > with correct values.  
 > 
-> Regards
->   jonathan
+> Indeed, that's probably the issue I'm having. In that case,
+> DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
+> device_add().
 > 
+> I think modifying sysfs after device_add() is going to race with
+> userspace. Userspace is notified of a new device, and then the of_node
+> link may or may not be there when it reads sysfs. Also, not sure if
+> we'll need DT modaliases with PCI devices, but they won't work if the
+> DT node is not set before device_add().
+> 
+> Rob
 
+DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node creation
+just before the device_add() call.
+Indeed, in order to fill the DT properties, resources need to be assigned
+(needed for the 'ranges' property used for addresses translation).
+The resources assignment is done after the call to device_add().
+
+Some PCI sysfs files are already created after adding the device by the
+pci_create_sysfs_dev_files() call:
+  https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
+
+Is it really an issue to add the of_node link to sysfs on an already present
+device ?
+
+Maybe we can add the of_node link before the device_add() call and add the
+'ranges' property in the DT node later, once resources are assigned.
+In that case, the race condition is not fixed but moved from the PCI device
+to the DT node the device is pointing to.
+With DT overlays and of_changeset_*(), modifying nodes is a normal behavior.
+Is that acceptable for the 'ranges' property in this use-case ?
+
+Best regards,
+Hervé
 
