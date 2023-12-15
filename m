@@ -1,279 +1,574 @@
-Return-Path: <linux-pci+bounces-1055-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65C3481446C
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 10:29:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A05D68144DE
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 10:51:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58DFB1C210A2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 09:29:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 554A8283A13
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 09:51:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4162517986;
-	Fri, 15 Dec 2023 09:29:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73285182CA;
+	Fri, 15 Dec 2023 09:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Om2XEVnU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZDbZd90"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4262416418
-	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 09:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702632566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xlzH05gePiJDbwDlpysWL7+Cb3sV3fowzqJkjYEHj9E=;
-	b=Om2XEVnUpVF95N1oVV2GhCZgDmNf9fIiC88lzbyfp+bcJxiv3fXN6rL5VBQ2rBo+parkS/
-	PVp6rt97NEP7muCut7q/W/t3TwDyIQD89ns8OkmT8gSlW7IqkjsWIfuGGFybqHHcTkLtSf
-	KAu77asrj7Yc9Ns8QG1gD+jvpQXhwSU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-399-umZMMbdrNZenyqPMkI2opw-1; Fri, 15 Dec 2023 04:29:24 -0500
-X-MC-Unique: umZMMbdrNZenyqPMkI2opw-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a1f99db3dd0so29186066b.0
-        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 01:29:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C0E18C01;
+	Fri, 15 Dec 2023 09:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2c9f62fca3bso5335031fa.0;
+        Fri, 15 Dec 2023 01:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702633892; x=1703238692; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7n5lxb1KLjuy4R7txxN/TCzM2s1tE7EV1DRD/HtNhbI=;
+        b=GZDbZd90qtwksjMGdVhqyFwcaJZxrjtpXJOJtst+RqjlbbI4m0G6dhOwGwM88L183j
+         o9FE2xaFqOxyv7TiUIE8pg2bt00HtbhKZ8c1YNmV55AgszGPa+2+2aLkLoWuKecoqkGB
+         PyJ69nJfeoA5+56QtoLxrV6INYYuQX74O5aC0pN83HZjy2RSSBTRGpDNgmOVy2wkN8lZ
+         F8MkR7MyCapX8WKT+m2ezhr4Iqg3HM1Sn0/yx0EAO8ewt5cM3PzdMpBtbTxUVJurN9BH
+         dKpZq4iv9cw72qviS0kDCVXDzLbljG6hkKzZFsFBnNc62NQnM7gaB0UiX/HwOihRZSDY
+         ezeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702632563; x=1703237363;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xlzH05gePiJDbwDlpysWL7+Cb3sV3fowzqJkjYEHj9E=;
-        b=IzIj5IhXA6PN+pQUBKXgQz25z5cInIrl9mjr274v3R9jJVFyxwZcYFegJlbrTvNsoi
-         CQgwRvgwdl5086SeopFo2NRnjM2T+mSM+PuT8272FPdjAvPoDCjd/fbe9euUtL+cv8J3
-         xX/npc/XUForLliPjOAmzkx6y+GLJ6BdYBhUgYFDIdo9GbnIEvGQ50JmjzweOxX/EMZk
-         Rx9U8g9drbgo5aTxtzerypXiqWBLEfCmy6ahvfVbPM+Pqne19YcAPYJObY0JK1V2tlxW
-         O2eSPw06+yG07dbEq47MCgKh9eXVrXGIliDq11FwLOvd8T0qGz8Vblp/qML24SeZROqX
-         1Mdg==
-X-Gm-Message-State: AOJu0YzDC4NE54GyVuivMnPJi3vklbVsbPAEk3yolhX+Dgg76cQXQYdq
-	ru+RaL1S0wX5jBP880HVe1p6EkKfTjIsqtyWsvOVIf94S9bGDca7hQ5pVOYNuqznyX2yZsYFetq
-	hoCIuh4px85aGY9i/kI7H
-X-Received: by 2002:a17:906:6c81:b0:a19:a19a:eaa7 with SMTP id s1-20020a1709066c8100b00a19a19aeaa7mr5327691ejr.96.1702632562864;
-        Fri, 15 Dec 2023 01:29:22 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFuUTG6manj1CqrmhK8aaase4KkhFf5qY+v+gbegmurj0X846CD8zybpKetqHCeOybOHfnFtQ==
-X-Received: by 2002:a17:906:6c81:b0:a19:a19a:eaa7 with SMTP id s1-20020a1709066c8100b00a19a19aeaa7mr5327686ejr.96.1702632562520;
-        Fri, 15 Dec 2023 01:29:22 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id mn6-20020a1709077b0600b00a1dbda310f4sm10530551ejc.158.2023.12.15.01.29.21
+        d=1e100.net; s=20230601; t=1702633892; x=1703238692;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7n5lxb1KLjuy4R7txxN/TCzM2s1tE7EV1DRD/HtNhbI=;
+        b=EHr8bE3zeTpkawDnCem1baQLDL5HX/TxVtFmW7ZNY8Ygahwpsi5Bz6Vm+CbM0x8+uf
+         3BoKYIQmWIrKqHvKCBCpSF04R5gKiJpqJ0FZ9x6YfRPrRbF7X4+HGxE+A4y4NQTt+uTG
+         WlkfsZjrN+AeubwEt9nfMxz0Gh7PWDnv+WuaFQsvwUO9/CUdyCuB8WNsNyt+xueCF0wL
+         RycVj8trbCrfhS3nQMVrU/GRoqab+8oAy16TTLBvVYcsrXvo9Hnf47auohTwrRsMEKUY
+         yCNcNrIdU3H4NNsOrmICz4U4skLTYYGS5kb/SMgHl69zzN1GhPJ0Fn6G042IJyRayv4i
+         xNHA==
+X-Gm-Message-State: AOJu0Ywc9eg60x2bsx7rsAHvH+oCJH+5T0jLh0p0i2WHxXZVqhXDkQLm
+	rC5HQlM5d2eAyGZwIbRnFsw=
+X-Google-Smtp-Source: AGHT+IEoPaFUdhAVssSe7dNZsEpBKIkfuMLWAwZqh/6D2ahqglanv1aDTU+NfnY1fYrqeKT6by8Knw==
+X-Received: by 2002:a2e:3004:0:b0:2cc:45df:71ea with SMTP id w4-20020a2e3004000000b002cc45df71eamr1136739ljw.11.1702633891790;
+        Fri, 15 Dec 2023 01:51:31 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id z6-20020a2e7e06000000b002ca25f11f56sm2267013ljc.103.2023.12.15.01.51.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 01:29:22 -0800 (PST)
-Date: Fri, 15 Dec 2023 10:29:21 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [Regression] Commit 40613da52b13 ("PCI: acpiphp: Reassign
- resources on bridge if necessary")
-Message-ID: <20231215102921.587a9857@imammedo.users.ipa.redhat.com>
-In-Reply-To: <ZXt+BxvmG6ru63qJ@marvin.atrad.com.au>
-References: <ZXpaNCLiDM+Kv38H@marvin.atrad.com.au>
-	<20231214143205.4ba0e11a@imammedo.users.ipa.redhat.com>
-	<ZXt+BxvmG6ru63qJ@marvin.atrad.com.au>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        Fri, 15 Dec 2023 01:51:31 -0800 (PST)
+Date: Fri, 15 Dec 2023 12:51:28 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, 
+	mani@kernel.org, linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2]
+ helpers
+Message-ID: <lgwp4u2pzfkax6qdozen74cl6bddyaloz57wiso62swafslz2n@7di6ura7omzo>
+References: <20231215022955.3574063-1-yoshihiro.shimoda.uh@renesas.com>
+ <20231215022955.3574063-5-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231215022955.3574063-5-yoshihiro.shimoda.uh@renesas.com>
 
-On Fri, 15 Dec 2023 08:43:27 +1030
-Jonathan Woithe <jwoithe@just42.net> wrote:
+Hi Yoshihiro
 
-> On Thu, Dec 14, 2023 at 02:32:05PM +0100, Igor Mammedov wrote:
-> > On Thu, 14 Dec 2023 11:58:20 +1030 Jonathan Woithe wrote:  
-> > > 
-> > > Following an update from 5.15.72 to 5.15.139 on one of my machines, the  
-> > 
-> > looks like you are running downstream kernel, can you file bug report
-> > with distro that you use (with a link posed here as well).  
+On Fri, Dec 15, 2023 at 11:29:53AM +0900, Yoshihiro Shimoda wrote:
+> The current code calculated some dbi[2] registers' offset by calling
+> dw_pcie_ep_get_dbi[2]_offset() in each function. To improve code
+> readability, add dw_pcie_ep_{read,write}_dbi[2} and some data-width
+> related helpers.
 > 
-> I am running Slackware64 15.0.  The kernels supplied by that distribution
-> are unmodified kernel.org kernels.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   | 184 ++++++------------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  93 +++++++++
+>  2 files changed, 153 insertions(+), 124 deletions(-)
 > 
-> > For now offending patches are being reverted, so downstream bug will help
-> > with tracking it and reverting it there.   
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1100671db887..3ab03c0c14c0 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -43,46 +43,19 @@ dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
+>  	return NULL;
+>  }
+>  
+> -static unsigned int dw_pcie_ep_get_dbi_offset(struct dw_pcie_ep *ep, u8 func_no)
+> -{
+> -	unsigned int dbi_offset = 0;
+> -
+> -	if (ep->ops->get_dbi_offset)
+> -		dbi_offset = ep->ops->get_dbi_offset(ep, func_no);
+> -
+> -	return dbi_offset;
+> -}
+> -
+> -static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no)
+> -{
+> -	unsigned int dbi2_offset = 0;
+> -
+> -	if (ep->ops->get_dbi2_offset)
+> -		dbi2_offset = ep->ops->get_dbi2_offset(ep, func_no);
+> -	else if (ep->ops->get_dbi_offset)     /* for backward compatibility */
+> -		dbi2_offset = ep->ops->get_dbi_offset(ep, func_no);
+> -
+> -	return dbi2_offset;
+> -}
+> -
+>  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+>  				   enum pci_barno bar, int flags)
+>  {
+> -	unsigned int dbi_offset, dbi2_offset;
+>  	struct dw_pcie_ep *ep = &pci->ep;
+> -	u32 reg, reg_dbi2;
+> -
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> +	u32 reg;
+>  
+> -	reg = dbi_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> -	reg_dbi2 = dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+> -	dw_pcie_writel_dbi(pci, reg, 0x0);
+> +	dw_pcie_ep_writel_dbi2(ep, func_no, reg, 0x0);
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, 0x0);
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, 0x0);
+> -		dw_pcie_writel_dbi(pci, reg + 4, 0x0);
+> +		dw_pcie_ep_writel_dbi2(ep, func_no, reg + 4, 0x0);
+> +		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0x0);
+>  	}
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  }
+> @@ -99,19 +72,15 @@ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+>  EXPORT_SYMBOL_GPL(dw_pcie_ep_reset_bar);
+>  
+>  static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+> -		u8 cap_ptr, u8 cap)
+> +				     u8 cap_ptr, u8 cap)
+>  {
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset = 0;
+>  	u8 cap_id, next_cap_ptr;
+>  	u16 reg;
+>  
+>  	if (!cap_ptr)
+>  		return 0;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = dw_pcie_readw_dbi(pci, dbi_offset + cap_ptr);
+> +	reg = dw_pcie_ep_readw_dbi(ep, func_no, cap_ptr);
+>  	cap_id = (reg & 0x00ff);
+>  
+>  	if (cap_id > PCI_CAP_ID_MAX)
+> @@ -126,14 +95,10 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+>  
+>  static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
+>  {
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset = 0;
+>  	u8 next_cap_ptr;
+>  	u16 reg;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = dw_pcie_readw_dbi(pci, dbi_offset + PCI_CAPABILITY_LIST);
+> +	reg = dw_pcie_ep_readw_dbi(ep, func_no, PCI_CAPABILITY_LIST);
+>  	next_cap_ptr = (reg & 0x00ff);
+>  
+>  	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
+> @@ -144,24 +109,21 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset = 0;
+> -
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_VENDOR_ID, hdr->vendorid);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_DEVICE_ID, hdr->deviceid);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_REVISION_ID, hdr->revid);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CLASS_PROG, hdr->progif_code);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_CLASS_DEVICE,
+> -			   hdr->subclass_code | hdr->baseclass_code << 8);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CACHE_LINE_SIZE,
+> -			   hdr->cache_line_size);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_VENDOR_ID,
+> -			   hdr->subsys_vendor_id);
+> -	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> -	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_INTERRUPT_PIN,
+> -			   hdr->interrupt_pin);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_VENDOR_ID, hdr->vendorid);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_DEVICE_ID, hdr->deviceid);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_REVISION_ID, hdr->revid);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_CLASS_PROG, hdr->progif_code);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_CLASS_DEVICE,
+> +			      hdr->subclass_code | hdr->baseclass_code << 8);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_CACHE_LINE_SIZE,
+> +			      hdr->cache_line_size);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_SUBSYSTEM_VENDOR_ID,
+> +			      hdr->subsys_vendor_id);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+> +	dw_pcie_ep_writeb_dbi(ep, func_no, PCI_INTERRUPT_PIN,
+> +			      hdr->interrupt_pin);
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	return 0;
+> @@ -243,18 +205,13 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	unsigned int dbi_offset, dbi2_offset;
+>  	enum pci_barno bar = epf_bar->barno;
+>  	size_t size = epf_bar->size;
+>  	int flags = epf_bar->flags;
+> -	u32 reg, reg_dbi2;
+>  	int ret, type;
+> +	u32 reg;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> -
+> -	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi_offset;
+> -	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
+> +	reg = PCI_BASE_ADDRESS_0 + (4 * bar);
+>  
+>  	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+>  		type = PCIE_ATU_TYPE_MEM;
+> @@ -270,12 +227,12 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> -	dw_pcie_writel_dbi2(pci, reg_dbi2, lower_32_bits(size - 1));
+> -	dw_pcie_writel_dbi(pci, reg, flags);
+> +	dw_pcie_ep_writel_dbi2(ep, func_no, reg, lower_32_bits(size - 1));
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, flags);
+>  
+>  	if (flags & PCI_BASE_ADDRESS_MEM_TYPE_64) {
+> -		dw_pcie_writel_dbi2(pci, reg_dbi2 + 4, upper_32_bits(size - 1));
+> -		dw_pcie_writel_dbi(pci, reg + 4, 0);
+> +		dw_pcie_ep_writel_dbi2(ep, func_no, reg + 4, upper_32_bits(size - 1));
+> +		dw_pcie_ep_writel_dbi(ep, func_no, reg + 4, 0);
+>  	}
+>  
+>  	ep->epf_bar[bar] = epf_bar;
+> @@ -335,19 +292,15 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	if (!(val & PCI_MSI_FLAGS_ENABLE))
+>  		return -EINVAL;
+>  
+> @@ -361,22 +314,19 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	val &= ~PCI_MSI_FLAGS_QMASK;
+>  	val |= FIELD_PREP(PCI_MSI_FLAGS_QMASK, interrupts);
+>  	dw_pcie_dbi_ro_wr_en(pci);
+> -	dw_pcie_writew_dbi(pci, reg, val);
+> +	dw_pcie_ep_writew_dbi(ep, func_no, reg, val);
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	return 0;
+> @@ -385,19 +335,15 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msix_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msix_cap + PCI_MSIX_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+>  		return -EINVAL;
+>  
+> @@ -411,9 +357,8 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  {
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	u32 val, reg;
+> -	unsigned int dbi_offset = 0;
+>  	struct dw_pcie_ep_func *ep_func;
+> +	u32 val, reg;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msix_cap)
+> @@ -421,21 +366,19 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  
+>  	dw_pcie_dbi_ro_wr_en(pci);
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+> -	val = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msix_cap + PCI_MSIX_FLAGS;
+> +	val = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	val &= ~PCI_MSIX_FLAGS_QSIZE;
+>  	val |= interrupts;
+>  	dw_pcie_writew_dbi(pci, reg, val);
+>  
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+> +	reg = ep_func->msix_cap + PCI_MSIX_TABLE;
+>  	val = offset | bir;
+> -	dw_pcie_writel_dbi(pci, reg, val);
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+>  
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_PBA;
+> +	reg = ep_func->msix_cap + PCI_MSIX_PBA;
+>  	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+> -	dw_pcie_writel_dbi(pci, reg, val);
+> +	dw_pcie_ep_writel_dbi(ep, func_no, reg, val);
+>  
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+> @@ -510,38 +453,34 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_legacy_irq);
+>  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			     u8 interrupt_num)
+>  {
+> -	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	u32 msg_addr_lower, msg_addr_upper, reg;
+>  	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+>  	unsigned int aligned_offset;
+> -	unsigned int dbi_offset = 0;
+>  	u16 msg_ctrl, msg_data;
+> -	u32 msg_addr_lower, msg_addr_upper, reg;
+> -	u64 msg_addr;
+>  	bool has_upper;
+> +	u64 msg_addr;
+>  	int ret;
+>  
+>  	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+>  	if (!ep_func || !ep_func->msi_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+>  	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+> -	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_FLAGS;
+> +	msg_ctrl = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+> -	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_LO;
+> -	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
+> +	reg = ep_func->msi_cap + PCI_MSI_ADDRESS_LO;
+> +	msg_addr_lower = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+>  	if (has_upper) {
+> -		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_HI;
+> -		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
+> -		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_64;
+> -		msg_data = dw_pcie_readw_dbi(pci, reg);
+> +		reg = ep_func->msi_cap + PCI_MSI_ADDRESS_HI;
+> +		msg_addr_upper = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+> +		reg = ep_func->msi_cap + PCI_MSI_DATA_64;
+> +		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	} else {
+>  		msg_addr_upper = 0;
+> -		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_32;
+> -		msg_data = dw_pcie_readw_dbi(pci, reg);
+> +		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
+> +		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	}
+>  	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+>  	msg_addr = ((u64)msg_addr_upper) << 32 |
+> @@ -582,10 +521,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  			      u16 interrupt_num)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> -	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epf_msix_tbl *msix_tbl;
+> +	struct dw_pcie_ep_func *ep_func;
+>  	struct pci_epc *epc = ep->epc;
+> -	unsigned int dbi_offset = 0;
+>  	u32 reg, msg_data, vec_ctrl;
+>  	unsigned int aligned_offset;
+>  	u32 tbl_offset;
+> @@ -597,10 +535,8 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	if (!ep_func || !ep_func->msix_cap)
+>  		return -EINVAL;
+>  
+> -	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> -
+> -	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+> -	tbl_offset = dw_pcie_readl_dbi(pci, reg);
+> +	reg = ep_func->msix_cap + PCI_MSIX_TABLE;
+> +	tbl_offset = dw_pcie_ep_readl_dbi(ep, func_no, reg);
+>  	bir = FIELD_GET(PCI_MSIX_TABLE_BIR, tbl_offset);
+>  	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 5e36da166ffe..b92e69041fe8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -534,6 +534,99 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
+>  	return (enum dw_pcie_ltssm)FIELD_GET(PORT_LOGIC_LTSSM_STATE_MASK, val);
+>  }
+>  
+
+> +static inline unsigned int dw_pcie_ep_get_dbi_offset(struct dw_pcie_ep *ep,
+> +						     u8 func_no)
+> +{
+> +	unsigned int dbi_offset = 0;
+> +
+> +	if (ep->ops->get_dbi_offset)
+> +		dbi_offset = ep->ops->get_dbi_offset(ep, func_no);
+> +
+> +	return dbi_offset;
+> +}
+> +
+> +static inline unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep,
+> +						      u8 func_no)
+> +{
+> +	unsigned int dbi2_offset = 0;
+> +
+> +	if (ep->ops->get_dbi2_offset)
+> +		dbi2_offset = ep->ops->get_dbi2_offset(ep, func_no);
+> +	else if (ep->ops->get_dbi_offset)     /* for backward compatibility */
+> +		dbi2_offset = ep->ops->get_dbi_offset(ep, func_no);
+> +
+> +	return dbi2_offset;
+> +}
+> +
+> +static inline u32 dw_pcie_ep_read_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				      u32 reg, size_t size)
+> +{
+> +	unsigned int offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	return dw_pcie_read_dbi(pci, offset + reg, size);
+> +}
+> +
+> +static inline void dw_pcie_ep_write_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					u32 reg, size_t size, u32 val)
+> +{
+> +	unsigned int offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	dw_pcie_write_dbi(pci, offset + reg, size, val);
+> +}
+> +
+> +static inline void dw_pcie_ep_write_dbi2(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, size_t size, u32 val)
+> +{
+> +	unsigned int offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	dw_pcie_write_dbi2(pci, offset + reg, size, val);
+> +}
+> +
+> +static inline void dw_pcie_ep_writel_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, u32 val)
+> +{
+> +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x4, val);
+> +}
+> +
+> +static inline u32 dw_pcie_ep_readl_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				       u32 reg)
+> +{
+> +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x4);
+> +}
+> +
+> +static inline void dw_pcie_ep_writew_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, u16 val)
+> +{
+> +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x2, val);
+> +}
+> +
+> +static inline u16 dw_pcie_ep_readw_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				       u32 reg)
+> +{
+> +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x2);
+> +}
+> +
+> +static inline void dw_pcie_ep_writeb_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +					 u32 reg, u8 val)
+> +{
+> +	dw_pcie_ep_write_dbi(ep, func_no, reg, 0x1, val);
+> +}
+> +
+> +static inline u8 dw_pcie_ep_readb_dbi(struct dw_pcie_ep *ep, u8 func_no,
+> +				      u32 reg)
+> +{
+> +	return dw_pcie_ep_read_dbi(ep, func_no, reg, 0x1);
+> +}
+> +
+> +static inline void dw_pcie_ep_writel_dbi2(struct dw_pcie_ep *ep, u8 func_no,
+> +					  u32 reg, u32 val)
+> +{
+> +	dw_pcie_ep_write_dbi2(ep, func_no, reg, 0x4, val);
+> +}
+> +
+
+A tiny nitpick. Since these are CSRs accessors it would be better for
+readability to have them grouped with the rest of the IO-accessors
+dw_pcie_writel_dbi()..dw_pcie_writel_dbi2(). Particularly have them
+defined below the already available ones. So first normal
+DBI-accessors would be placed and the EP-specific DBI-accessors
+afterwords. Not sure whether it's that much required. So it's up to
+Mani to decide. Perhaps the subsystem maintainers could fix it on
+merge in? Bjorn, Krzysztof, Lorenzo?
+
+-Serge(y)
+
+>  #ifdef CONFIG_PCIE_DW_HOST
+>  irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
+>  int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
+> -- 
+> 2.34.1
 > 
-> The patches will be reverted in Slackware as a matter of course when a
-> kernel.org "-stable" kernel with the fix is adopted.  Slackware does not
-> apply any patches to kernel.org kernels.  Nevertheless, I will raise a post
-> in the forum, hopefully later today.
-> 
-> > > console froze part way through the boot process.  The machine still managed
-> > > to boot: it could be reached via the network and a keyboard-initiated
-> > > shutdown would do the right thing.  The problem was that the screen remained
-> > > static the whole time: the X login did not appear.  Only a reboot would
-> > > restore the display's functionality.
-> > > 
-> > > Comparing boot logs between these two kernels showed that 5.15.139 reported
-> > > the following messages not seen with 5.15.72:
-> > > 
-> > >     thunderbolt 0000:04:00.0: interrupt for TX ring 0 is already enabled
-> > >     WARNING: CPU: 0 PID: 713 at drivers/thunderbolt/nhi.c:139 ring_interrupt_active+0x218/0x270 [thunderbolt]
-> > > 
-> > >     thunderbolt 0000:04:00.0: interrupt for RX ring 0 is already enabled
-> > >     WARNING: CPU: 0 PID: 713 at drivers/thunderbolt/nhi.c:139 ring_interrupt_active+0x218/0x270 [thunderbolt]
-> > > 
-> > >     radeon 0000:4b:00.0: Fatal error during GPU init
-> > >     radeon: probe of 0000:4b:00.0 failed with error -12
-> > > 
-> > > The fatal error during GPU initialisation would be the reason behind the
-> > > frozen screen.  I don't know if the thunderbolt warnings are significant.
-> > > 
-> > > A git bisect resulted in the following report:
-> > > 
-> > >     d9ce077f8b1f731407e6b612b03bba464fd18d9b is the first bad commit
-> > >     commit d9ce077f8b1f731407e6b612b03bba464fd18d9b
-> > >     Author: Igor Mammedov <imammedo@redhat.com>
-> > >     Date:   Mon Apr 24 21:15:57 2023 +0200
-> > > 
-> > >         PCI: acpiphp: Reassign resources on bridge if necessary
-> > >     
-> > >         [ Upstream commit 40613da52b13fb21c5566f10b287e0ca8c12c4e9 ]
-> > > 
-> > > It's taken me a while to work through the bisect process due to limited
-> > > access to the machine concerned.  I see that in the last few days there have
-> > > been other reports associated with this commit.  The symptoms on my machine
-> > > are different to the other reporters.  In particular, I note that I'm
-> > > running the Linux kernel on bare metal.
-> > > 
-> > > For what it's worth, I also experienced the same problem when I tested 6.6.4
-> > > last week (the most recent kernel at the time of testing).
-> > > 
-> > > The output of lspci is given at the end of this post[1].  The CPU is an
-> > > "Intel(R) Core(TM) i7-5930K CPU @ 3.50GHz" which is not overclocked.  Please
-> > > let me know if you'd like more information about the affected machine.  I
-> > > can also perform additional tests if required, although for various reasons
-> > > these can only be done on Thursdays at present.
-
-can you provide 'lspci -tv' output as well and machine model for the record?
-
-> > > The kernel configuration file can easily be supplied if that would be
-> > > useful.  
-> > 
-> > full dmesg log and used config might help down the road (preferably with current
-> > upstream kernel), as I will be looking into fixing related issues.
-> > 
-> > Perhaps a better way for taking this issue and collecting logs, will be
-> > opening a separate bug at https://bugzilla.kernel.org (pls CC me as well)  
-> 
-> Sure, will do.  I'll be able to get the dmesg log from my earlier tests and
-> config easily enough.  Testing with another kernel will have to wait until
-> next Thursday as that is when I'll next have physical access to the machine.
-> 
-> Which upstream kernel would you like me to test with: the latest "-stable",
-> or the most recent release?
-
-current master branch that still has offending patches would do
-(or any recent one with specifying commit id)
-
-Also add:
-
-dyndbg="file drivers/pci/access.c +p; file drivers/pci/hotplug/acpiphp_glue.c +p; file drivers/pci/bus.c +p; file drivers/pci/pci.c +p; file drivers/pci/setup-bus.c +p" ignore_loglevel
-
-to kernel command line to get more data from PCI/acpiphp enumeration process
- 
-> Regards
->   jonathan
-> 
-> > > [1] lspci output
-
-
-
-> > > 
-> > > 00:00.0 Host bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2 (rev 02)
-> > > 00:01.0 PCI bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCI Express Root Port 1 (rev 02)
-> > > 00:01.1 PCI bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCI Express Root Port 1 (rev 02)
-> > > 00:03.0 PCI bridge: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCI Express Root Port 3 (rev 02)
-> > > 00:05.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Address Map, VTd_Misc, System Management (rev 02)
-> > > 00:05.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Hot Plug (rev 02)
-> > > 00:05.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 RAS, Control Status and Global Errors (rev 02)
-> > > 00:11.0 Unassigned class [ff00]: Intel Corporation C610/X99 series chipset SPSR (rev 05)
-> > > 00:14.0 USB controller: Intel Corporation C610/X99 series chipset USB xHCI Host Controller (rev 05)
-> > > 00:16.0 Communication controller: Intel Corporation C610/X99 series chipset MEI Controller #1 (rev 05)
-> > > 00:19.0 Ethernet controller: Intel Corporation Ethernet Connection (2) I218-V (rev 05)
-> > > 00:1a.0 USB controller: Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #2 (rev 05)
-> > > 00:1b.0 Audio device: Intel Corporation C610/X99 series chipset HD Audio Controller (rev 05)
-> > > 00:1c.0 PCI bridge: Intel Corporation C610/X99 series chipset PCI Express Root Port #1 (rev d5)
-> > > 00:1c.3 PCI bridge: Intel Corporation C610/X99 series chipset PCI Express Root Port #4 (rev d5)
-> > > 00:1d.0 USB controller: Intel Corporation C610/X99 series chipset USB Enhanced Host Controller #1 (rev 05)
-> > > 00:1f.0 ISA bridge: Intel Corporation C610/X99 series chipset LPC Controller (rev 05)
-> > > 00:1f.2 SATA controller: Intel Corporation C610/X99 series chipset 6-Port SATA Controller [AHCI mode] (rev 05)
-> > > 00:1f.3 SMBus: Intel Corporation C610/X99 series chipset SMBus Controller (rev 05)
-> > > 02:00.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-> > > 03:00.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-> > > 03:01.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-> > > 03:02.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-> > > 03:04.0 PCI bridge: Intel Corporation DSL6540 Thunderbolt 3 Bridge [Alpine Ridge 4C 2015]
-> > > 04:00.0 System peripheral: Intel Corporation DSL6540 Thunderbolt 3 NHI [Alpine Ridge 4C 2015]
-> > > 49:00.0 USB controller: Intel Corporation DSL6540 USB 3.1 Controller [Alpine Ridge]
-> > > 4b:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Cedar [Radeon HD 5000/6000/7350/8350 Series]
-> > > 4b:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Cedar HDMI Audio [Radeon HD 5400/6300/7300 Series]
-> > > 4d:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 06)
-> > > ff:0b.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring (rev 02)
-> > > ff:0b.1 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring (rev 02)
-> > > ff:0b.2 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring (rev 02)
-> > > ff:0c.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-> > > ff:0c.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-> > > ff:0c.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-> > > ff:0c.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-> > > ff:0c.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-> > > ff:0c.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Unicast Registers (rev 02)
-> > > ff:0f.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent (rev 02)
-> > > ff:0f.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Buffered Ring Agent (rev 02)
-> > > ff:0f.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers (rev 02)
-> > > ff:0f.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers (rev 02)
-> > > ff:0f.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers (rev 02)
-> > > ff:10.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface (rev 02)
-> > > ff:10.1 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 PCIe Ring Interface (rev 02)
-> > > ff:10.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers (rev 02)
-> > > ff:10.6 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers (rev 02)
-> > > ff:10.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers (rev 02)
-> > > ff:12.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0 (rev 02)
-> > > ff:12.1 Performance counters: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Home Agent 0 (rev 02)
-> > > ff:13.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal & RAS Registers (rev 02)
-> > > ff:13.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address, Thermal & RAS Registers (rev 02)
-> > > ff:13.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-> > > ff:13.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-> > > ff:13.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-> > > ff:13.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target Address Decoder (rev 02)
-> > > ff:13.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 0/1 Broadcast (rev 02)
-> > > ff:13.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast (rev 02)
-> > > ff:14.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 Thermal Control (rev 02)
-> > > ff:14.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 Thermal Control (rev 02)
-> > > ff:14.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 ERROR Registers (rev 02)
-> > > ff:14.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 ERROR Registers (rev 02)
-> > > ff:14.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-> > > ff:14.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-> > > ff:14.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-> > > ff:14.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 (rev 02)
-> > > ff:15.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 Thermal Control (rev 02)
-> > > ff:15.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 Thermal Control (rev 02)
-> > > ff:15.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 ERROR Registers (rev 02)
-> > > ff:15.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 ERROR Registers (rev 02)
-> > > ff:16.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Target Address, Thermal & RAS Registers (rev 02)
-> > > ff:16.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Channel 2/3 Broadcast (rev 02)
-> > > ff:16.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast (rev 02)
-> > > ff:17.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Channel 0 Thermal Control (rev 02)
-> > > ff:17.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-> > > ff:17.5 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-> > > ff:17.6 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-> > > ff:17.7 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 (rev 02)
-> > > ff:1e.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-> > > ff:1e.1 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-> > > ff:1e.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-> > > ff:1e.3 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-> > > ff:1e.4 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 Power Control Unit (rev 02)
-> > > ff:1f.0 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU (rev 02)
-> > > ff:1f.2 System peripheral: Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 VCU (rev 02)  
-> 
-
 
