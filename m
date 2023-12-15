@@ -1,397 +1,169 @@
-Return-Path: <linux-pci+bounces-1066-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1067-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 533C8814809
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 13:27:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 086F0814970
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 14:37:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD8D91F23A29
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 12:27:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4EC62869C1
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 13:37:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 751E82DB78;
-	Fri, 15 Dec 2023 12:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC5E52DB85;
+	Fri, 15 Dec 2023 13:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PwbUOjoy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/utvE8Cm";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PwbUOjoy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/utvE8Cm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K923AG4h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CC62C6B1;
-	Fri, 15 Dec 2023 12:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 911971F829;
-	Fri, 15 Dec 2023 12:26:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1702643178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2348C2F87A
+	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 13:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702647404;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ionOnhVqbRQv5yJFH2KkaG5cDoE/rfCo3Lap5LRFeCQ=;
-	b=PwbUOjoydVNdPC49q1JsmoxCgf8nZ3vdiYzrlNb1/ZCY6ASMRxEYHPK73nGjjtsUMEdhuq
-	EnZlyjneCh23omNHtUB+un1qccKZquKI5jeCSLG7ZEIACknW8eJ7MXgYypYc21ciYyagVD
-	YQmpO5kbUSDkyqnCn8NE4bsnVrKtG2E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1702643178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ionOnhVqbRQv5yJFH2KkaG5cDoE/rfCo3Lap5LRFeCQ=;
-	b=/utvE8CmGuI3thDXTy3J8aIeKraIgUqof+nluhrMGQT0jveIhLhr0yaGOjP2ta1iNv96DV
-	CIHfPlsAAX+uYfDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1702643178; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ionOnhVqbRQv5yJFH2KkaG5cDoE/rfCo3Lap5LRFeCQ=;
-	b=PwbUOjoydVNdPC49q1JsmoxCgf8nZ3vdiYzrlNb1/ZCY6ASMRxEYHPK73nGjjtsUMEdhuq
-	EnZlyjneCh23omNHtUB+un1qccKZquKI5jeCSLG7ZEIACknW8eJ7MXgYypYc21ciYyagVD
-	YQmpO5kbUSDkyqnCn8NE4bsnVrKtG2E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1702643178;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ionOnhVqbRQv5yJFH2KkaG5cDoE/rfCo3Lap5LRFeCQ=;
-	b=/utvE8CmGuI3thDXTy3J8aIeKraIgUqof+nluhrMGQT0jveIhLhr0yaGOjP2ta1iNv96DV
-	CIHfPlsAAX+uYfDg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0860713BA0;
-	Fri, 15 Dec 2023 12:26:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id mJTrAOpFfGVIRwAAn2gu4w
-	(envelope-from <tzimmermann@suse.de>); Fri, 15 Dec 2023 12:26:18 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ardb@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	bhelgaas@google.com,
-	arnd@arndb.de,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	javierm@redhat.com
-Cc: linux-arch@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 3/3] arch/x86: Do not include <asm/bootparam.h> in several header files
-Date: Fri, 15 Dec 2023 13:18:14 +0100
-Message-ID: <20231215122614.5481-4-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231215122614.5481-1-tzimmermann@suse.de>
-References: <20231215122614.5481-1-tzimmermann@suse.de>
+	bh=PeGoU3o+S7+CrRMsRKZCUSMgsVnOClZrkqDfWJvQpQE=;
+	b=K923AG4hHAiwIs3pBFTDm/ggH66pz0nZ5H8TDdVVRhrs+1orKjZgh+vSk3ONeqBySrVOU2
+	z16h501A0hH3qu5oTK4Q4/m5ULkKQxCPBp6zxhWQwRrh1dekpZiJQDIRgSPStuqQ+MxOzT
+	Cad14185R3WQ5eaRF4W1wLH8i0vMcZM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-13-ZMcAKaNWPEuDo52AftDjig-1; Fri, 15 Dec 2023 08:36:41 -0500
+X-MC-Unique: ZMcAKaNWPEuDo52AftDjig-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40c3cea4c19so5379015e9.1
+        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 05:36:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702647400; x=1703252200;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PeGoU3o+S7+CrRMsRKZCUSMgsVnOClZrkqDfWJvQpQE=;
+        b=a1KmgIrOPdFE4tMDIzC92L8PHnrL72yPsNoEOxLljbs2YCuuHu0o2w6r7rvQZxTOI9
+         xaKdxM93QWYGowyQ2/T71fv+BJZEv3cM8QkHyXmgd60VtjaC+uwHXz8twvFPGG6o3ZFz
+         dQSSteiR5a+oIF5t6+5dGQkWxMCqbnpj/9H4xyh7P5jr0/izXNjNa+6Jbm6zD4UdR9iB
+         W7J9azfNOfWphs5CvQbqYXVb+XW5llhx0U3jxecgFcYPenOAb1dicrfb8uCGgJoQwiNX
+         VbyWROF2Bc7YNRe+mHJ/iQ8qnsuL5KoriA8/Ulj+txB1ggvKE4Nl47j0lFFFP+mV9xfO
+         GfZA==
+X-Gm-Message-State: AOJu0YzhH+7b/M9/xtw7RD+gYJexp8sJCjYNWkL9ZM6f48t4hd35cfNk
+	eVV05OzvGSt1AJNmmpvOloq0eHr+Vjo+pDN49OLhobG5DitokE1TKXaTmvYpCQSq/9oZBxngesk
+	26QsxBzzEOHFPaaiWn8sw
+X-Received: by 2002:a05:600c:30d2:b0:40c:4378:f111 with SMTP id h18-20020a05600c30d200b0040c4378f111mr4670766wmn.80.1702647400352;
+        Fri, 15 Dec 2023 05:36:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHNqnCnqPED8jOPTrsrHmCaOogZEFFYNAlGMfhhBxoxOjIysGAkQmntROKUnv2U3WFzoyYr1A==
+X-Received: by 2002:a05:600c:30d2:b0:40c:4378:f111 with SMTP id h18-20020a05600c30d200b0040c4378f111mr4670759wmn.80.1702647399910;
+        Fri, 15 Dec 2023 05:36:39 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id kt17-20020a1709079d1100b00a015eac52dcsm10720815ejc.108.2023.12.15.05.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Dec 2023 05:36:39 -0800 (PST)
+Date: Fri, 15 Dec 2023 14:36:38 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [Regression] Commit 40613da52b13 ("PCI: acpiphp: Reassign
+ resources on bridge if necessary")
+Message-ID: <20231215143638.032028eb@imammedo.users.ipa.redhat.com>
+In-Reply-To: <ZXw4Ly/csFgl76Lj@marvin.atrad.com.au>
+References: <ZXpaNCLiDM+Kv38H@marvin.atrad.com.au>
+	<20231214143205.4ba0e11a@imammedo.users.ipa.redhat.com>
+	<ZXt+BxvmG6ru63qJ@marvin.atrad.com.au>
+	<ZXw4Ly/csFgl76Lj@marvin.atrad.com.au>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: 3.40
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [3.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[99.99%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLthqzz6q5hnubohss7ffybi86)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[22];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,linux.ibm.com,gmail.com,paul-moore.com,namei.org,hallyn.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Level: ***
-X-Spam-Score: 3.40
-Authentication-Results: smtp-out2.suse.de;
-	none
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Remove the include statement for <asm/bootparam.h> from several header
-files that don't require it. Limits the exposure of the boot parameters
-within the Linux kernel code. Update several source files that require
-code from bootparam.h.
+On Fri, 15 Dec 2023 21:57:43 +1030
+Jonathan Woithe <jwoithe@just42.net> wrote:
 
-v2:
-	* clean up misc.h and e820/types.h
-	* include bootparam.h in several source files
+> On Fri, Dec 15, 2023 at 08:43:29AM +1030, Jonathan Woithe wrote:
+> > On Thu, Dec 14, 2023 at 02:32:05PM +0100, Igor Mammedov wrote:  
+> > > On Thu, 14 Dec 2023 11:58:20 +1030 Jonathan Woithe wrote:  
+> > > > 
+> > > > Following an update from 5.15.72 to 5.15.139 on one of my machines, the  
+> > > 
+> > > looks like you are running downstream kernel, can you file bug report
+> > > with distro that you use (with a link posed here as well).  
+> > 
+> > I am running Slackware64 15.0.  The kernels supplied by that distribution
+> > are unmodified kernel.org kernels.
+> >   
+> > > For now offending patches are being reverted, so downstream bug will help
+> > > with tracking it and reverting it there.   
+> > 
+> > The patches will be reverted in Slackware as a matter of course when a
+> > kernel.org "-stable" kernel with the fix is adopted.  Slackware does not
+> > apply any patches to kernel.org kernels.  Nevertheless, I will raise a post
+> > in the forum, hopefully later today.  
+> 
+> This has now been done:
+> 
+>   https://www.linuxquestions.org/questions/slackware-14/heads-up-pci-regression-introduced-in-or-around-5-15-129-commit-40613da52b13-4175731828/#post6470559
+> 
+> > > > The output of lspci is given at the end of this post[1].  The CPU is an
+> > > > "Intel(R) Core(TM) i7-5930K CPU @ 3.50GHz" which is not overclocked.  Please
+> > > > let me know if you'd like more information about the affected machine.  I
+> > > > can also perform additional tests if required, although for various reasons
+> > > > these can only be done on Thursdays at present.
+> > > > 
+> > > > The kernel configuration file can easily be supplied if that would be
+> > > > useful.  
+> > > 
+> > > full dmesg log and used config might help down the road (preferably with current
+> > > upstream kernel), as I will be looking into fixing related issues.
+> > > 
+> > > Perhaps a better way for taking this issue and collecting logs, will be
+> > > opening a separate bug at https://bugzilla.kernel.org (pls CC me as well)  
+> > 
+> > Sure, will do.  I'll be able to get the dmesg log from my earlier tests and
+> > config easily enough.  Testing with another kernel will have to wait until
+> > next Thursday as that is when I'll next have physical access to the machine.  
+> 
+> A bug has been opened at bugzilla.kernel.org as requested.  The logs, kernel
+> configuration and the "lspci -tv" output (requested in a subsequent email)
+> have been added.  The logs and kernel configuration are from the kernel.org
+> 5.15.139 kernel.  You have been added to the bug's CC.  The bug number is
+> 218268:
+> 
+>   https://bugzilla.kernel.org/show_bug.cgi?id=218268
+> 
+> As mentioned, testing another kernel can only happen next Thursday.  If
+> you would like other tests done let me know and I'll do them at the same
+> time.  I have remote access to the machine, so it's possible to retrieve
+> information from it at any time.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/boot/compressed/acpi.c       | 2 ++
- arch/x86/boot/compressed/cmdline.c    | 2 ++
- arch/x86/boot/compressed/efi.c        | 2 ++
- arch/x86/boot/compressed/misc.h       | 3 ++-
- arch/x86/boot/compressed/pgtable_64.c | 1 +
- arch/x86/boot/compressed/sev.c        | 1 +
- arch/x86/include/asm/e820/types.h     | 2 +-
- arch/x86/include/asm/kexec.h          | 1 -
- arch/x86/include/asm/mem_encrypt.h    | 2 +-
- arch/x86/include/asm/sev.h            | 3 ++-
- arch/x86/include/asm/x86_init.h       | 2 --
- arch/x86/kernel/crash.c               | 1 +
- arch/x86/kernel/sev-shared.c          | 2 ++
- arch/x86/platform/pvh/enlighten.c     | 1 +
- arch/x86/xen/enlighten_pvh.c          | 1 +
- arch/x86/xen/vga.c                    | 1 -
- 16 files changed, 19 insertions(+), 8 deletions(-)
+lets wait till you can get logs with dyndbg='...' (I've asked for earlier)
+and one more test with "pci=realloc" on kernel CLI to see if that helps.
 
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 55c98fdd67d2..4db998a8d8f0 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -5,6 +5,8 @@
- #include "../string.h"
- #include "efi.h"
- 
-+#include <asm/bootparam.h>
-+
- #include <linux/numa.h>
- 
- /*
-diff --git a/arch/x86/boot/compressed/cmdline.c b/arch/x86/boot/compressed/cmdline.c
-index c1bb180973ea..e162d7f59cc5 100644
---- a/arch/x86/boot/compressed/cmdline.c
-+++ b/arch/x86/boot/compressed/cmdline.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "misc.h"
- 
-+#include <asm/bootparam.h>
-+
- static unsigned long fs;
- static inline void set_fs(unsigned long seg)
- {
-diff --git a/arch/x86/boot/compressed/efi.c b/arch/x86/boot/compressed/efi.c
-index 6edd034b0b30..f2e50f9758e6 100644
---- a/arch/x86/boot/compressed/efi.c
-+++ b/arch/x86/boot/compressed/efi.c
-@@ -7,6 +7,8 @@
- 
- #include "misc.h"
- 
-+#include <asm/bootparam.h>
-+
- /**
-  * efi_get_type - Given a pointer to boot_params, determine the type of EFI environment.
-  *
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index c0d502bd8716..01c89c410efd 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -33,7 +33,6 @@
- #include <linux/elf.h>
- #include <asm/page.h>
- #include <asm/boot.h>
--#include <asm/bootparam.h>
- #include <asm/desc_defs.h>
- 
- #include "tdx.h"
-@@ -53,6 +52,8 @@
- #define memptr unsigned
- #endif
- 
-+struct boot_param;
-+
- /* boot/compressed/vmlinux start and end markers */
- extern char _head[], _end[];
- 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index 51f957b24ba7..c882e1f67af0 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "misc.h"
-+#include <asm/bootparam.h>
- #include <asm/e820/types.h>
- #include <asm/processor.h>
- #include "pgtable.h"
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 454acd7a2daf..13beae767e48 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -12,6 +12,7 @@
-  */
- #include "misc.h"
- 
-+#include <asm/bootparam.h>
- #include <asm/pgtable_types.h>
- #include <asm/sev.h>
- #include <asm/trapnr.h>
-diff --git a/arch/x86/include/asm/e820/types.h b/arch/x86/include/asm/e820/types.h
-index 314f75d886d0..47695db18246 100644
---- a/arch/x86/include/asm/e820/types.h
-+++ b/arch/x86/include/asm/e820/types.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_E820_TYPES_H
- #define _ASM_E820_TYPES_H
- 
--#include <uapi/asm/bootparam.h>
-+#include <asm/setup_data.h>
- 
- /*
-  * These are the E820 types known to the kernel:
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index c9f6a6c5de3c..91ca9a9ee3a2 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -25,7 +25,6 @@
- 
- #include <asm/page.h>
- #include <asm/ptrace.h>
--#include <asm/bootparam.h>
- 
- struct kimage;
- 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 359ada486fa9..c1a8a3408c18 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -15,7 +15,7 @@
- #include <linux/init.h>
- #include <linux/cc_platform.h>
- 
--#include <asm/bootparam.h>
-+struct boot_params;
- 
- #ifdef CONFIG_X86_MEM_ENCRYPT
- void __init mem_encrypt_init(void);
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 5b4a1ce3d368..8dad8b1613bf 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -13,7 +13,6 @@
- 
- #include <asm/insn.h>
- #include <asm/sev-common.h>
--#include <asm/bootparam.h>
- #include <asm/coco.h>
- 
- #define GHCB_PROTOCOL_MIN	1ULL
-@@ -22,6 +21,8 @@
- 
- #define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
- 
-+struct boot_params;
-+
- enum es_result {
- 	ES_OK,			/* All good */
- 	ES_UNSUPPORTED,		/* Requested operation not supported */
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index c878616a18b8..f062715578a0 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -2,8 +2,6 @@
- #ifndef _ASM_X86_PLATFORM_H
- #define _ASM_X86_PLATFORM_H
- 
--#include <asm/bootparam.h>
--
- struct ghcb;
- struct mpc_bus;
- struct mpc_cpu;
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c92d88680dbf..564cff7ed33a 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -26,6 +26,7 @@
- #include <linux/vmalloc.h>
- #include <linux/memblock.h>
- 
-+#include <asm/bootparam.h>
- #include <asm/processor.h>
- #include <asm/hardirq.h>
- #include <asm/nmi.h>
-diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-index ccb0915e84e1..4962ec42dc68 100644
---- a/arch/x86/kernel/sev-shared.c
-+++ b/arch/x86/kernel/sev-shared.c
-@@ -9,6 +9,8 @@
-  * and is included directly into both code-bases.
-  */
- 
-+#include <asm/setup_data.h>
-+
- #ifndef __BOOT_COMPRESSED
- #define error(v)	pr_err(v)
- #define has_cpuflag(f)	boot_cpu_has(f)
-diff --git a/arch/x86/platform/pvh/enlighten.c b/arch/x86/platform/pvh/enlighten.c
-index 00a92cb2c814..944e0290f2c0 100644
---- a/arch/x86/platform/pvh/enlighten.c
-+++ b/arch/x86/platform/pvh/enlighten.c
-@@ -3,6 +3,7 @@
- 
- #include <xen/hvc-console.h>
- 
-+#include <asm/bootparam.h>
- #include <asm/io_apic.h>
- #include <asm/hypervisor.h>
- #include <asm/e820/api.h>
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index ada3868c02c2..9e9db601bd52 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -4,6 +4,7 @@
- 
- #include <xen/hvc-console.h>
- 
-+#include <asm/bootparam.h>
- #include <asm/io_apic.h>
- #include <asm/hypervisor.h>
- #include <asm/e820/api.h>
-diff --git a/arch/x86/xen/vga.c b/arch/x86/xen/vga.c
-index d97adab8420f..f7547807b0bd 100644
---- a/arch/x86/xen/vga.c
-+++ b/arch/x86/xen/vga.c
-@@ -2,7 +2,6 @@
- #include <linux/screen_info.h>
- #include <linux/init.h>
- 
--#include <asm/bootparam.h>
- #include <asm/setup.h>
- 
- #include <xen/interface/xen.h>
--- 
-2.43.0
+> Let me know if there's anything else I can do to assist.
+
+It looks like  pci_assign_unassigned_bridge_resources() messed up BIOS configured
+resources. And then didn't manage to reconfigure bridges correctly, which led to
+unassigned BARs => thunderbolt/VGA issues.
+
+Something in ACPI tables must be triggering acpiphp hotplug path during boot.
+Can you dump DSDT + SSDT tables and attach them to BZ.
+PS:
+to dump tables you can use command from acpica-tools (not sure how it's called in Slackware) 
+ acpidump -b
+which will dump all tables in binary format (so attach those or 'iasl -d' de-compiled ones)
+
+> 
+> Regards
+>   jonathan
+> 
 
 
