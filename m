@@ -1,64 +1,64 @@
-Return-Path: <linux-pci+bounces-1050-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1051-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9108B81439A
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 09:28:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 574228143A8
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 09:31:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15B7A1F25CB0
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 08:28:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC20E1F21C68
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 08:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA4C12E4F;
-	Fri, 15 Dec 2023 08:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3FDE12E65;
+	Fri, 15 Dec 2023 08:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QXAZu0xS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cXhuCC7m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEC6171BB
-	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 08:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272E94431
+	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 08:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a1f37fd4b53so45701066b.1
-        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 00:28:29 -0800 (PST)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-9fa45e75ed9so42983966b.1
+        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 00:31:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702628908; x=1703233708; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702629068; x=1703233868; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FVAI74y3AeVAT/7kzguSGN788sS9SdF+TlBv/tBMWbU=;
-        b=QXAZu0xSonYnmqV91tLyk2rer9uGU7Pl6onkTLgYBmrJFcPixBRyDadDWbvYFdMAKW
-         FNNlYnitlFeJL9XpImxbIqvqhtoes2sk9bQJtAvBCRh9JJOoI8u1xZGMRXUk3N/NYWIH
-         s2VpZcA9FgO0HFCY3fkxfMOiclcV9xY/LTLNkD/6LNushAVRH/XJi0oG1kb1ZHcE6rMa
-         taKjXcFCSdvjLAqhQojyeGy4ucVLQ9LErw4/slzYDeyYFFRA0nz4BJUPEv/WApjY+X2D
-         OUwq2Dll5gZnu+q5dVYwzNft6I1HmESj96RVAUiIk6969lTKTE7clOLJPOe/IXBvhi3I
-         cUUg==
+        bh=S/VHrDXjE8ArwAdQn1IvokNpm8/NuKC38VUGI1HTeeM=;
+        b=cXhuCC7mgcBtEQS98n/+ueLLISANGxryEkq2qFYaTvj82k92tSaEpQ3R5kCCpOcekc
+         p+9csETM+0JqiOCey9XNrSTm5StnMEU8jvBKzgNPquFnyO4bh0dc3eCoWu49kXrcmsbC
+         jxirwOJaZ/Bs1RKjhSyHaB7NTgMQcYOeejF4waBO9ooMrGfSSFJdQF6bYbvuJfzNKFQ1
+         w8uRqHeHD98aT3S2KSqX8SSz3r+Z0kKGj+MQVW8MmCZD8DnjZ8cIBec1Maa04Kz4rm8m
+         hLzFmqqGOr1veC7PKNaYw1Qb1CNfLQ1+C0Mn93E5YzZ05FbTc2LGJF/cCX5KAR897UKD
+         sd9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702628908; x=1703233708;
+        d=1e100.net; s=20230601; t=1702629068; x=1703233868;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FVAI74y3AeVAT/7kzguSGN788sS9SdF+TlBv/tBMWbU=;
-        b=Wp8SzlkzuggetQMM+fphnpuGWHq9jxlEIXae1CNYC1BuyUgN1TBJ0kwABzLLtOM/k+
-         m1+52IBMfwKJDXv6yWF1rtcOn0JFhbddYa1gOM8oIdr1v9mPiBIPJNi9/6hxLZPnC/aH
-         VYeYDU6UCGOAFR0ZxQv5airkKXBJ4TjgNTcvx0lQukHbOlm17pSo+ABnm3NXjdqomFby
-         qX74Oc7a3aekIczPrwUNHUjh82NITLDdSMa2s1WSrKi5UislctIAMF3aFFi3xc0UoDPy
-         gHjWEDFKIkOufTfQtHKnIk65I2MlwmoJuv38h0tbfSjzXaJwmzXokhvBTojHvSUO3YBn
-         huvg==
-X-Gm-Message-State: AOJu0YzTqsaIDZtDFlbViyXyEvCIedRHcG1Wdbzny2IwbxNyBLBzG980
-	EHRJ8pGsrRXdOoQmEp0jW40HpA==
-X-Google-Smtp-Source: AGHT+IGHOYgJwQwPk7g2rSdYbdFSmnSiXp5a02gfinwGK9oB/egAQDiTk8sP4DQvR+Q2pgc6sFYJcw==
-X-Received: by 2002:a17:907:d25:b0:a1f:6b64:6a52 with SMTP id gn37-20020a1709070d2500b00a1f6b646a52mr7143130ejc.43.1702628907839;
-        Fri, 15 Dec 2023 00:28:27 -0800 (PST)
+        bh=S/VHrDXjE8ArwAdQn1IvokNpm8/NuKC38VUGI1HTeeM=;
+        b=R6NTUBeK7trCoo482iTf6/qbUd5biPzhTTIh1lpGaql/LJxHy3yy7ZMstg29K1zP9r
+         tURJKaEAQz9ZI782nQ2eOpGPms7uOWsqGxXD+p7tXJZWOl4io0sXkOyV6K5sf9XL3fLd
+         4fUFJ0xA8s7L8/x7c/jLEmq+ETyYOd5FaGzJMqqPrsuXrWaz0PxsUSckM00DUdQinycs
+         6ZJ/BceiW1gW2Zd8uebc/s5zeB51iBaUkj6WAr7ZAk+SI4rcMWQw600czvVt+6Jphjk1
+         svPgsPcnnmtvqj5/gBKRtKaOYjgVsqyMRXQVXz5Xfl+L5jvE3VOASQ6xTAjDd3VE4OAB
+         rhqg==
+X-Gm-Message-State: AOJu0Yw57pKDRpi0/a8fa8UiTlr/xk0PECz9uefP0LSBiTlvXgozdeoY
+	0zVFfXbYhb2wBVTiihpW1eIiBg==
+X-Google-Smtp-Source: AGHT+IFxogtkGNkNyekbXZYz+76lK+ayuc9eput/RFVQ4EizYhc44pFmoxfBr9gfbbOjeTExBzlt7w==
+X-Received: by 2002:a17:906:1084:b0:a22:faec:7d2e with SMTP id u4-20020a170906108400b00a22faec7d2emr1844688eju.113.1702629068426;
+        Fri, 15 Dec 2023 00:31:08 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id vw12-20020a170907a70c00b00a1c904675cfsm10410578ejc.29.2023.12.15.00.28.24
+        by smtp.gmail.com with ESMTPSA id bn2-20020a170906c0c200b00a23152a543dsm997827ejb.202.2023.12.15.00.31.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Dec 2023 00:28:27 -0800 (PST)
-Message-ID: <faf0e9a7-8436-47a1-bdf0-3edc26580a05@linaro.org>
-Date: Fri, 15 Dec 2023 09:28:23 +0100
+        Fri, 15 Dec 2023 00:31:08 -0800 (PST)
+Message-ID: <c685ca4e-3992-4deb-adfb-da3bbcb59685@linaro.org>
+Date: Fri, 15 Dec 2023 09:31:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,8 +66,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/10] dt-bindings: clock: Add separate clocks for PCIe
- and USB for Combo PHY
+Subject: Re: [PATCH 05/10] dt-bindings: phy: qcom,uniphy-pcie: Add ipq5332
+ bindings
 Content-Language: en-US
 To: Praveenkumar I <quic_ipkumar@quicinc.com>, agross@kernel.org,
  andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com,
@@ -81,7 +81,7 @@ To: Praveenkumar I <quic_ipkumar@quicinc.com>, agross@kernel.org,
 Cc: quic_varada@quicinc.com, quic_devipriy@quicinc.com,
  quic_kathirav@quicinc.com, quic_anusha@quicinc.com
 References: <20231214062847.2215542-1-quic_ipkumar@quicinc.com>
- <20231214062847.2215542-2-quic_ipkumar@quicinc.com>
+ <20231214062847.2215542-6-quic_ipkumar@quicinc.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -127,19 +127,129 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231214062847.2215542-2-quic_ipkumar@quicinc.com>
+In-Reply-To: <20231214062847.2215542-6-quic_ipkumar@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 14/12/2023 07:28, Praveenkumar I wrote:
-> Qualcomm IPQ5332 has a combo PHY for PCIe and USB. Either one of the
-> interface (PCIe/USB) can use this combo PHY and the PHY drivers are
-> different for PCIe and USB. Hence separate the PCIe and USB pipe clock
-> source from DT, and individual driver node can be used as a clock source
-> separately in the gcc. Change the dt-bindings accordingly.
+> Qualcomm IPQ5332 has single-lane and dual-lane PCIe UNIPHY
+> with Gen 3 support. This UNIPHY is similar to the one found
+> on Qualcomm IPQ5018. Hence add the bindings in qcom,uniphy-pcie.
+> 
+> Clocks and resets are different for IPQ5332. Update the
+> bindings to support both IPQ5018 and IPQ5332.
+> 
+> Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+> ---
+> This patch depends on the below series which adds PCIe support in
+> Qualcomm IPQ5018
+> https://lore.kernel.org/all/20231003120846.28626-1-quic_nsekar@quicinc.com/
+> 
+>  .../bindings/phy/qcom,uniphy-pcie-28lp.yaml   | 65 +++++++++++++++++--
+>  1 file changed, 58 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,uniphy-pcie-28lp.yaml b/Documentation/devicetree/bindings/phy/qcom,uniphy-pcie-28lp.yaml
+> index 6b2574f9532e..205eaec2291e 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,uniphy-pcie-28lp.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,uniphy-pcie-28lp.yaml
+> @@ -20,19 +20,20 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 4
+>  
+>    clock-names:
+> -    items:
+> -      - const: pipe_clk
+> +    minItems: 1
+> +    maxItems: 4
+>  
+>    resets:
+> -    maxItems: 2
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    reset-names:
+> -    items:
+> -      - const: phy
+> -      - const: phy_phy
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    "#phy-cells":
+>      const: 0
+> @@ -54,6 +55,56 @@ required:
+>    - "#clock-cells"
+>    - clock-output-names
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,ipq5018-uniphy-pcie-gen2x1
+> +              - qcom,ipq5018-uniphy-pcie-gen2x2
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 1
 
-Adding required clock breaks the ABI and there is no explanation nor
-note about it in commit msg
+Drop
+
+> +          maxItems: 1
+> +        clock-names:
+> +          items:
+> +            - const: pipe_clk
+> +        resets:
+> +          minItems: 2
+
+Drop
+
+> +          maxItems: 2
+> +        reset-name:
+
+Typo
+
+> +          items:
+> +            - const: phy
+> +            - const: phy_phy
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,ipq5332-uniphy-pcie-gen3x1
+> +              - qcom,ipq5332-uniphy-pcie-gen3x2
+
+There are no such compatibles.
+
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 4
+> +          maxItems: 4
+> +        clock-names:
+> +          items:
+> +            - const: pipe
+> +            - const: lane_m
+> +            - const: lane_s
+> +            - const: phy_ahb
+> +        resets:
+> +          minItems: 2
+> +          maxItems: 2
+
+So where are three items?
+
+
+> +        reset-name:
+
+Typo
+
+This patch is so confusing, it looks like it does not make any sense.
 
 Best regards,
 Krzysztof
