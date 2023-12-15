@@ -1,74 +1,73 @@
-Return-Path: <linux-pci+bounces-1048-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1049-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D28EC8142E5
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 08:48:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 847C6814308
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 08:58:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E4021F21B5A
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 07:48:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40F1928220B
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 07:58:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7175910787;
-	Fri, 15 Dec 2023 07:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A8A107B8;
+	Fri, 15 Dec 2023 07:58:13 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380CB10952;
-	Fri, 15 Dec 2023 07:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rE2pW-0007pk-C4; Fri, 15 Dec 2023 08:41:54 +0100
-Message-ID: <9bcfa8a1-3da3-461a-8873-bf3963f5ffbf@leemhuis.info>
-Date: Fri, 15 Dec 2023 08:41:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1D516418;
+	Fri, 15 Dec 2023 07:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 41C1E1002A0A9;
+	Fri, 15 Dec 2023 08:52:11 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id EF6571CD09; Fri, 15 Dec 2023 08:52:10 +0100 (CET)
+Date: Fri, 15 Dec 2023 08:52:10 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+	platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH RFC v2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Message-ID: <20231215075210.GA15884@wunner.de>
+References: <20231212114746.183639-1-shinichiro.kawasaki@wdc.com>
+ <ZXsvkWeJvdkvrf5e@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: SCSI hotplug issues with UEFI VM with guest kernel >= 6.5
-Content-Language: en-US, de-DE
-To: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org
-References: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
-From: "Linux regression tracking #update (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <9eb669c0-d8f2-431d-a700-6da13053ae54@proxmox.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1702626122;af73442c;
-X-HE-SMSGID: 1rE2pW-0007pk-C4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXsvkWeJvdkvrf5e@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 29.11.23 16:22, Fiona Ebner wrote:
-> it seems that hot-plugging SCSI disks for QEMU virtual machines booting
-> with UEFI and with guest kernels >= 6.5 might be broken. It's not
-> consistently broken, hinting there might be a race somewhere.
+On Thu, Dec 14, 2023 at 06:38:41PM +0200, Andy Shevchenko wrote:
+> On Tue, Dec 12, 2023 at 08:47:46PM +0900, Shin'ichiro Kawasaki wrote:
+> > +/* Cache BAR0 of P2SB device from function 0 ot 7 */
+> > +#define NR_P2SB_RES_CACHE 8
 > 
-> Reverting the following two commits seems to make it work reliably again:
-> 
-> cc22522fd55e2 ("PCI: acpiphp: Use
-> pci_assign_unassigned_bridge_resources() only for non-root bus")
-> 40613da52b13f ("PCI: acpiphp: Reassign resources on bridge if necessary"
+> This is fifth or so definition for the same, isn't it a good time to create
+> a treewide definition in pci.h?
 
-#regzbot fix: Revert "PCI: acpiphp: Reassign resources on bridge if
-necessary"
-#regzbot ignore-activity
+This isn't something defined in the PCI spec but rather an x86-specific
+constant, so should preferrably live somewhere in arch/x86/include/asm/.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If you have a "maximum number of PCI functions per device" constant in mind
+then include/uapi/linux/pci.h might be a good fit.
 
+Thanks,
+
+Lukas
 
