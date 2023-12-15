@@ -1,62 +1,54 @@
-Return-Path: <linux-pci+bounces-1075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0290C815199
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 22:07:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 919128151AA
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 22:11:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F1C22B213DD
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 21:07:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DBD0286838
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 21:11:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CAD91945E;
-	Fri, 15 Dec 2023 21:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 212BF47F5E;
+	Fri, 15 Dec 2023 21:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N0xgVtah"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQsJlxhp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C4547F41
-	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 21:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702674446; x=1734210446;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wgibEbkvBvDKjWtw7TXfSO/1420D9XHJw4/CteI29dk=;
-  b=N0xgVtahP99PlVH9e5BiZfVwamNonP5NPtxi2bi4m3pZNQQcDpobUQ4a
-   t62QASi+IBV8u8igjuNjopdUwvsHmQkAM6eP9RShDxjPQ9fXPi1uXDS+Z
-   oKdId8qISx22b+elIQ1Hp8NE9O9W9quH0ikNOw98AydsJSaUgnGYCof4P
-   /Ith7T5hodQx5UjWV5bUoXNhA/UAv+4c33omLMK8UM2Ex1V3Qb/iSh4fr
-   fN0s58xsR30WzcCPx0xGAtRtW1sSQAcBMWtoWO65ozz3myhutr+2y8Vwm
-   ZJb7VjoVRu3DHFxBAXNKe8tSFZRrIFn8UZKvw/ofnZ/eGiTbdXDEUtkAy
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="2151192"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="2151192"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 13:07:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="948093800"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="948093800"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 15 Dec 2023 13:07:23 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rEFOz-0000ky-1L;
-	Fri, 15 Dec 2023 21:07:21 +0000
-Date: Sat, 16 Dec 2023 05:06:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/rcar] BUILD SUCCESS
- 6797e4da2dd1e2c8dc8cec73447c77abe2a7655b
-Message-ID: <202312160532.ZFCvHcnM-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEAE495E7;
+	Fri, 15 Dec 2023 21:11:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB1B5C433C7;
+	Fri, 15 Dec 2023 21:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702674678;
+	bh=Pz52bZEiMprhIzxQzx7OqDCYrqRjBlVKFlQrM+jTYv0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZQsJlxhp+zwITeFPYwXsDVQhF9yaGKhCx2bfckBmAnXzcR/34DYJjznCqQaKWjpfL
+	 lnO+LjEGlbBdJF8bJ9DtT8wGgKyhAQVBf4sO2NCgjCSQe6Esd7rvfB56BZiptAG8YJ
+	 InQVUUJSGuXfxgeFnGpPAkyLysxTBRrZaO2mKicZNUYnNXPgiK5ehQQEmFnVdZclBv
+	 IYTMXezynPTiSmFPLoenuHvDVQaZhnAjpTHqeKVQzJ/5TXreOot4ihufrw6w8SCVVM
+	 I/1Z3qZpVnPJwcukaFAq0rXeAUjn2kZhMriVOWEbV4rFIu6OWS57DAAgiWrevCXCwn
+	 i81bCurFrZTFw==
+Date: Fri, 15 Dec 2023 15:11:15 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Igor Mammedov <imammedo@redhat.com>,
+	Fiona Ebner <f.ebner@proxmox.com>,
+	Dongli Zhang <dongli.zhang@oracle.com>,
+	Jonathan Woithe <jwoithe@just42.net>
+Subject: [GIT PULL] PCI fixes for v6.7
+Message-ID: <20231215211115.GA1141361@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,132 +56,53 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/rcar
-branch HEAD: 6797e4da2dd1e2c8dc8cec73447c77abe2a7655b  PCI: rcar-host: Add support for optional regulators
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
-elapsed time: 1502m
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 
-configs tested: 111
-configs skipped: 2
+are available in the Git repository at:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.7-fixes-1
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231216   gcc  
-arc                   randconfig-002-20231216   gcc  
-arc                           tb10x_defconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20231216   gcc  
-arm                   randconfig-002-20231216   gcc  
-arm                   randconfig-003-20231216   gcc  
-arm                   randconfig-004-20231216   gcc  
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231216   gcc  
-arm64                 randconfig-002-20231216   gcc  
-arm64                 randconfig-003-20231216   gcc  
-arm64                 randconfig-004-20231216   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231216   gcc  
-csky                  randconfig-002-20231216   gcc  
-hexagon                           allnoconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20231215   clang
-i386         buildonly-randconfig-002-20231215   clang
-i386         buildonly-randconfig-003-20231215   clang
-i386         buildonly-randconfig-004-20231215   clang
-i386         buildonly-randconfig-005-20231215   clang
-i386         buildonly-randconfig-006-20231215   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231215   clang
-i386                  randconfig-002-20231215   clang
-i386                  randconfig-003-20231215   clang
-i386                  randconfig-004-20231215   clang
-i386                  randconfig-005-20231215   clang
-i386                  randconfig-006-20231215   clang
-i386                  randconfig-011-20231215   gcc  
-i386                  randconfig-012-20231215   gcc  
-i386                  randconfig-013-20231215   gcc  
-i386                  randconfig-014-20231215   gcc  
-i386                  randconfig-015-20231215   gcc  
-i386                  randconfig-016-20231215   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231216   gcc  
-x86_64       buildonly-randconfig-002-20231216   gcc  
-x86_64       buildonly-randconfig-003-20231216   gcc  
-x86_64       buildonly-randconfig-004-20231216   gcc  
-x86_64       buildonly-randconfig-005-20231216   gcc  
-x86_64       buildonly-randconfig-006-20231216   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231216   clang
-x86_64                randconfig-002-20231216   clang
-x86_64                randconfig-003-20231216   clang
-x86_64                randconfig-004-20231216   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
+for you to fetch changes up to 5df12742b7e3aae2594a30a9d14d5d6e9e7699f4:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Revert "PCI: acpiphp: Reassign resources on bridge if necessary" (2023-12-15 14:55:10 -0600)
+
+----------------------------------------------------------------
+- Limit Max_Read_Request_Size (MRRS) on some MIPS Loongson systems because
+  they don't all support MRRS > 256, and firmware doesn't always initialize
+  it correctly, which meant some PCIe devices didn't work (Jiaxun Yang)
+
+- Add and use pci_enable_link_state_locked() to prevent potential deadlocks
+  in vmd and qcom drivers (Johan Hovold)
+
+- Revert recent (v6.5) acpiphp resource assignment changes that fixed
+  issues with hot-adding devices on a root bus or with large BARs, but
+  introduced new issues with GPU initialization and hot-adding SCSI disks
+  in QEMU VMs and (Bjorn Helgaas)
+
+----------------------------------------------------------------
+Bjorn Helgaas (1):
+      Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
+
+Jiaxun Yang (1):
+      PCI: loongson: Limit MRRS to 256
+
+Johan Hovold (6):
+      PCI/ASPM: Add pci_enable_link_state_locked()
+      PCI: vmd: Fix potential deadlock when enabling ASPM
+      PCI: qcom: Fix potential deadlock when enabling ASPM
+      PCI: qcom: Clean up ASPM comment
+      PCI/ASPM: Clean up __pci_disable_link_state() 'sem' parameter
+      PCI/ASPM: Add pci_disable_link_state_locked() lockdep assert
+
+ drivers/pci/controller/dwc/pcie-qcom.c |  7 ++--
+ drivers/pci/controller/pci-loongson.c  | 46 +++++++++++++++++++++---
+ drivers/pci/controller/vmd.c           |  2 +-
+ drivers/pci/hotplug/acpiphp_glue.c     |  9 ++---
+ drivers/pci/pcie/aspm.c                | 65 ++++++++++++++++++++++++----------
+ include/linux/pci.h                    |  3 ++
+ 6 files changed, 100 insertions(+), 32 deletions(-)
 
