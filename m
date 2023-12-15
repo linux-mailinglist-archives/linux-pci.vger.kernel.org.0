@@ -1,142 +1,134 @@
-Return-Path: <linux-pci+bounces-1059-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1058-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87138814625
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 12:01:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A827A814620
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 12:00:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2807DB236F3
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 11:01:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 490281F23615
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 11:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2171C28F;
-	Fri, 15 Dec 2023 11:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A0D200A8;
+	Fri, 15 Dec 2023 11:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="Viy03zJ2";
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="DmdhF3Ij"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mK6ktxDL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9067288DF
-	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 11:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flawful.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cc3facf0c0so4738791fa.0
-        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 03:00:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46148250E0
+	for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 11:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ceb93fb381so354036b3a.0
+        for <linux-pci@vger.kernel.org>; Fri, 15 Dec 2023 03:00:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702638019; x=1703242819; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hqlj4/QUlWtIrDLHx0gmo3NTEhgLbAEJdvoypSzSkV4=;
+        b=mK6ktxDLfe53g0+1vONjJdzkAeZF2dxGCCD2kb952Ch2r4ZfpkTxFuuJFm7RZYQkxn
+         8kg+jupAMF17wpqepTCZJEg5UEJhOIpWid8VDRvvN3hhxAxoFH1Scvu0Gqf7HfFDeHrX
+         mYmDVOTvNcA+RMhT6CUaq/9Fzl8aGETdvJ2Y3Zi6+xuNPmWO45+MTBIHy2a/6vAvjYNf
+         v0Ta2ENmGuoqV21S3cet5inx/SUabj/BUBEUO8FmhS1HNELqlPbadNOAZnZhgcpYDN/z
+         I1K+1CJ45DGhE7MrTStZ2tV1nZpt57XdLW3h+lta4RgBBtgPF45livt9v8NFHhuQWB9J
+         i3Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702638037; x=1703242837;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:dkim-signature:dkim-signature:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lq6j0mU5Mll9Pawu/xX7IuMY9JzP34OhaczRh9tSeeE=;
-        b=HPijH+WTTR9LICg2dlD9dd5va0y0WhnQszdbIfRpv8xb/xRejBKl1Nu9P0bw3j3TTt
-         eD0YWA9hrXyOVsC7vLqJpkTr3PUX8vEvbVLw62JMuoNAkLmki0w9QdnhtWg4dVVhdAoQ
-         NTg8s0hKYwTxD1dtUeRYzN/8L3fcfFPgYoansE40Kbf+t7d3KfnopKUrd1SSiIT0kROb
-         zyN/KdUFPMv9xpQfDIIPs3hp1XT8GJnAgLCg+2PTx4FoUskEjTdni13sB27NmSfUX4jF
-         wUqCig3t2Er9r+QgYNvUrWMej0XOX3PUiBNNnBE7SDv34apHwvIbEmTDJffUagnoxiCb
-         WKJg==
-X-Gm-Message-State: AOJu0YxQiJi0OEqEyo5Rl7HjMutpELU+St2dURHsjJR7HLVwjRW1Hf7e
-	1fbDXw9IGLnGIAjFVzp8gXzSVBKjYDpTLA==
-X-Google-Smtp-Source: AGHT+IGYP8jd/9BZHwFUf3uBW0yT65DMb7sWp/K9ut2pWkm1SrzMw3swFrYjV+NUsYS9CER4qoMUhg==
-X-Received: by 2002:a05:651c:1a10:b0:2c9:e9e4:54bf with SMTP id by16-20020a05651c1a1000b002c9e9e454bfmr8460827ljb.6.1702638036778;
-        Fri, 15 Dec 2023 03:00:36 -0800 (PST)
-Received: from flawful.org (c-55f5e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.245.85])
-        by smtp.gmail.com with ESMTPSA id r6-20020a2e9946000000b002c9f71e61f3sm2413297ljj.6.2023.12.15.03.00.36
-        for <linux-pci@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1702638019; x=1703242819;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hqlj4/QUlWtIrDLHx0gmo3NTEhgLbAEJdvoypSzSkV4=;
+        b=fGN79h39xWL7OYmvga2hemQy2JpH1ITkj6jcmrDO3KRcUpO6gWUgL5Y5RB2qz8mwTT
+         XLeMC0mgf0Ma/oZHIlT67Ujk7anwzjUW+DoBlyrzvK74a7e51A1TC+LKERRWOjHXcsmw
+         ofsORVnhY/3jxt4Bzpa3OwTdMk9LWvk/pr/0o5cdTpa8pEfUVDobDFkNeG47mSW1fq3y
+         MPUGz/+gP/KOsUdN5pb6PdACGPiEjlw6BZJwKmh1+JbwpVotGOzpGn7UXGzb04hPCezQ
+         9ZisqOTX8v/hAnZtXpa43GGKXjPjdv+99uA6BJKVOsFvmNBhF5TEQC73+Pg0geQdhyyq
+         F0OA==
+X-Gm-Message-State: AOJu0YynMJpskykgehpAwMoaTlnjY9yxFrDn+CmB6V/kxQnpm0U60JdX
+	UmgP41sKwhAXHPKwJdIHmoPp
+X-Google-Smtp-Source: AGHT+IFBP0BhD4lTrTKdOfab7a3x09nSVDozE87qcYpsEL0j06A1OVhRm9jH+v/Q2SbpZhn9G0wpGw==
+X-Received: by 2002:a05:6a00:2301:b0:6c3:4bf2:7486 with SMTP id h1-20020a056a00230100b006c34bf27486mr15018314pfh.7.1702638019633;
+        Fri, 15 Dec 2023 03:00:19 -0800 (PST)
+Received: from thinkpad ([117.207.30.136])
+        by smtp.gmail.com with ESMTPSA id c12-20020aa7880c000000b006ce7ff254b9sm13249835pfo.68.2023.12.15.03.00.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 03:00:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-	t=1702638035; bh=6XnQr7IR4mSYvHDqnRSpGCYXwO21MgtFIwPtN9/Ek6g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Viy03zJ28HZL3+AjtMxwzNdHVQTosg8vwyQSZr73f4/bX7kvVG+cGdxmbJ2AIijWo
-	 qFoCCg8AN4kgCuiR8+NpZbHn+2tbVG6oDMBwpg2mZUycOAk4MkDcx/M3tPS8VPCBas
-	 6Kn6LRo9f2aw0/PPkvE8AApWozhj74Rd8eSy+yLc=
-Received: by flawful.org (Postfix, from userid 112)
-	id A8A32267; Fri, 15 Dec 2023 12:00:35 +0100 (CET)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-	t=1702638015; bh=6XnQr7IR4mSYvHDqnRSpGCYXwO21MgtFIwPtN9/Ek6g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DmdhF3Ij/86U/cHpdj9MLqHAcON6J/tO7NWRB7EIFQLOgsz8Xi83EtMu07dMQ9z+s
-	 94I8YXAjUWazp1v7pDyFqSXkhwOG6LU3j8XcKs9O7oSXzl+/8R38kD2icjtxpwxnII
-	 hM67ohCIBveltk/cIAIIPm/ghwa5LfOqtwePF580=
-Received: from x1-carbon.lan (OpenWrt.lan [192.168.1.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by flawful.org (Postfix) with ESMTPSA id 0A2BF60B;
-	Fri, 15 Dec 2023 12:00:08 +0100 (CET)
-From: Niklas Cassel <nks@flawful.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Niklas Cassel <niklas.cassel@wdc.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH] misc: pci_endpoint_test: Use a unique test pattern for each BAR
-Date: Fri, 15 Dec 2023 11:59:51 +0100
-Message-ID: <20231215105952.1531683-1-nks@flawful.org>
-X-Mailer: git-send-email 2.43.0
+        Fri, 15 Dec 2023 03:00:19 -0800 (PST)
+Date: Fri, 15 Dec 2023 16:30:12 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kishon@kernel.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: epf-mhi: Fix the DMA data direction of
+ dma_unmap_single()
+Message-ID: <20231215110012.GA13113@thinkpad>
+References: <20231214063328.40657-1-manivannan.sadhasivam@linaro.org>
+ <20231214193521.GA2147106@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231214193521.GA2147106@rocinante>
 
-From: Niklas Cassel <niklas.cassel@wdc.com>
+On Fri, Dec 15, 2023 at 04:35:21AM +0900, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+> > In the error path of pci_epf_mhi_edma_write() function, the DMA data
+> > direction passed (DMA_FROM_DEVICE) doesn't match the actual direction used
+> > for the data transfer. Fix it by passing the correct one (DMA_TO_DEVICE).
+> 
+> Nice catch!
+> 
+> > Fixes: 7b99aaaddabb ("PCI: epf-mhi: Add eDMA support")
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> > 
+> > Bjorn, Krzysztof, I'd like to apply this patch to MHI tree on top of eDMA
+> > async patches due to dependency:
+> > https://lore.kernel.org/linux-pci/20231127124529.78203-1-manivannan.sadhasivam@linaro.org/
+> 
+> Sounds good to me!  We still have a little time, so let me know if you
+> change your mind about who should take this patch and the other series. :)
+> 
 
-Use a unique test pattern for each BAR in. This makes it easier to
-detect/debug address translation issues, since a developer can dump
-the backing memory on the EP side, using e.g. devmem, to verify that
-the address translation for each BAR is actually correct.
+No change in plan :)
 
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
----
- drivers/misc/pci_endpoint_test.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+> >  drivers/pci/endpoint/functions/pci-epf-mhi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > index 472bc489b754..d3d6a1054036 100644
+> > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > @@ -424,7 +424,7 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl,
+> >  	}
+> >  
+> >  err_unmap:
+> > -	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_FROM_DEVICE);
+> > +	dma_unmap_single(dma_dev, src_addr, buf_info->size, DMA_TO_DEVICE);
+> >  err_unlock:
+> >  	mutex_unlock(&epf_mhi->lock);
+> 
+> Looks good!
+> 
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> 
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index a765a05f0c64..7ac1922475af 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -263,6 +263,15 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
- 	return false;
- }
- 
-+static const u32 bar_test_pattern[] = {
-+	0xA0A0A0A0,
-+	0xA1A1A1A1,
-+	0xA2A2A2A2,
-+	0xA3A3A3A3,
-+	0xA4A4A4A4,
-+	0xA5A5A5A5,
-+};
-+
- static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 				  enum pci_barno barno)
- {
-@@ -280,11 +289,12 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
- 		size = 0x4;
- 
- 	for (j = 0; j < size; j += 4)
--		pci_endpoint_test_bar_writel(test, barno, j, 0xA0A0A0A0);
-+		pci_endpoint_test_bar_writel(test, barno, j,
-+					     bar_test_pattern[barno]);
- 
- 	for (j = 0; j < size; j += 4) {
- 		val = pci_endpoint_test_bar_readl(test, barno, j);
--		if (val != 0xA0A0A0A0)
-+		if (val != bar_test_pattern[barno])
- 			return false;
- 	}
- 
+Thanks! Applied to mhi-next.
+
+- Mani
+
+> 	Krzysztof
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
 
