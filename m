@@ -1,62 +1,65 @@
-Return-Path: <linux-pci+bounces-1084-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1085-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AC4F8154DA
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 01:10:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBE538154E0
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 01:15:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A23E1C240EB
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 00:10:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 22C1BB226FD
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 00:15:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84606367;
-	Sat, 16 Dec 2023 00:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7B39365;
+	Sat, 16 Dec 2023 00:14:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4055B364;
-	Sat, 16 Dec 2023 00:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899E5EA0;
+	Sat, 16 Dec 2023 00:14:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6cea5548eb2so1176230b3a.0;
-        Fri, 15 Dec 2023 16:10:24 -0800 (PST)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cd68a0de49so790650a12.2;
+        Fri, 15 Dec 2023 16:14:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702685423; x=1703290223;
+        d=1e100.net; s=20230601; t=1702685698; x=1703290498;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Spo3/hZ8bxeF7fEaxgEqhtcJSHCMuSQdfr9Oa59N2+g=;
-        b=VWztCs0S28TFq3v2j81ALjPSQNRhnkN0CX5tScJsDOdmWRjoqKuC7RFdLYCsgF/5uN
-         yJUSo/lVOeGBfyP75Aw9948mHVwO5Fazs/f51tDKHHnqUj+r4NZLW9+A53tGe57cejfM
-         T4nfDXQvhCh6fP+1T2UAqXD8OU8WCMXtIY+bG2RjzbMeUArbxpCs7TP5hi8CZxurLHVl
-         A0u9y1zu004XDLlUYDlN/mnlJNZgVt6/4Tp8qIu7w+TPpHC5i+xPxyouYB8h621ZJNlo
-         ZfF6eGx5e5csycYK3+RttFs7iwpMGc5Y/EElRAirEgsZOm3OdornmvAvmA46Via45PSa
-         q3EQ==
-X-Gm-Message-State: AOJu0YwAzSuTg/6Kk79UTcqcJPCgNkqjAZNctnKgZjvpoZFvYHoyvvQZ
-	Uj0hs3vZCc4DXg1Z3PWnYx8qg9SqO46i5LPU
-X-Google-Smtp-Source: AGHT+IE98CQysK2x+uTIv983lVLMgiO6PyltLPUOTrydctMMoJ3tXdlhdw3rQ75gjZBsCZj6K2+4YA==
-X-Received: by 2002:a05:6a20:5525:b0:18f:cf73:3573 with SMTP id ko37-20020a056a20552500b0018fcf733573mr11872782pzb.121.1702685423442;
-        Fri, 15 Dec 2023 16:10:23 -0800 (PST)
+        bh=C/Tse2JpQM53tgTMU+ujwUWwujQBnwenRSj1K9g6jDs=;
+        b=I3KR8xqd1n06Q8Tz6AYUqYxtcVMPlOwE/37oAaf6MXipmkMxt9YnWeml/kqbQUuFP6
+         6SzeyI7ianGKvDFahhD9y1L1/26t2EddEaQP2dPt3nWKRMKjbWz37pnuC8wQjRlJzkK7
+         6Nm7S2ZyCRWfAS28V4hOHvYkks154x3SiXAO2RPcXmjiopLaiHgPADT/xLpASasSown+
+         vQW1h5gvTVRnzFP7Po4EuoRN6rDCkhZXt0ieN6dC4ZWun0Uqw3bfU8S0MJo48ldc7dKj
+         noR3F8sGL3buHWiCHzLBJH0izlMqzVzW6zsfnzZImpAtKAc0rRVMWLXe80IH4UOdDDZu
+         2lFg==
+X-Gm-Message-State: AOJu0YwHag+Tuepq+XNGhIlMqapc+vsQd85MGhHpuqIVpvtkILDKD1zL
+	P6jvsrVHF5nLDweM2Wt6xRc=
+X-Google-Smtp-Source: AGHT+IElMnr7jeyV3KLfYtgH5nloy+nAE6pdj4lom6ZvIr/4jAl9554ZbQbph1yr8YphvCHbnfZ4wg==
+X-Received: by 2002:a05:6a20:8e01:b0:190:2d3d:b08d with SMTP id y1-20020a056a208e0100b001902d3db08dmr17005165pzj.69.1702685697880;
+        Fri, 15 Dec 2023 16:14:57 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id e8-20020a056a001a8800b006cdda8519aasm14007334pfv.169.2023.12.15.16.10.22
+        by smtp.gmail.com with ESMTPSA id 29-20020a17090a1a5d00b00280070a2613sm1262509pjl.51.2023.12.15.16.14.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 16:10:22 -0800 (PST)
-Date: Sat, 16 Dec 2023 09:10:21 +0900
+        Fri, 15 Dec 2023 16:14:57 -0800 (PST)
+Date: Sat, 16 Dec 2023 09:14:55 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	quentin.schulz@theobroma-systems.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: Re: [PATCH] dt-bindings: PCI: dwc: rockchip: document optional pcie
- reference clock input
-Message-ID: <20231216001021.GD1570493@rocinante>
-References: <20231206145041.667900-1-heiko@sntech.de>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: PCI: qcom: document the SM8650 PCIe
+ Controller
+Message-ID: <20231216001455.GE1570493@rocinante>
+References: <20231128-topic-sm8650-upstream-bindings-pcie-v2-1-b72e2d13bcf1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,19 +68,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231206145041.667900-1-heiko@sntech.de>
+In-Reply-To: <20231128-topic-sm8650-upstream-bindings-pcie-v2-1-b72e2d13bcf1@linaro.org>
 
 Hello,
 
-> On some boards the 100MHz PCIe reference clock to both controller and
-> devices is controllable. Add that clock to the list of clocks.
-> 
-> The clock is optional, so the minItems stays the same.
+> Document the PCIe Controller on the SM8650 platform by using the
+> SM8550 bindings as a fallback.
 
 Applied to dt-bindings, thank you!
 
-[1/1] dt-bindings: PCI: dwc: rockchip: Document optional PCIe reference clock input
-      https://git.kernel.org/pci/pci/c/639f666cf84e
+[1/1] dt-bindings: PCI: qcom: Document the SM8650 PCIe Controller
+      https://git.kernel.org/pci/pci/c/41f757713ac3
 
 	Krzysztof
 
