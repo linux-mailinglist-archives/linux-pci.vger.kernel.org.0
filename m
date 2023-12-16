@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-1081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D77B8154AD
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 00:55:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4579E8154C5
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 01:02:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 776AA1C240F2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Dec 2023 23:55:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77F921C243E8
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Dec 2023 00:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E9DF18EC8;
-	Fri, 15 Dec 2023 23:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFE69A40;
+	Sat, 16 Dec 2023 00:02:29 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C7445BF1;
-	Fri, 15 Dec 2023 23:55:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809304406;
+	Sat, 16 Dec 2023 00:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5c6b9583dcbso1040757a12.2;
-        Fri, 15 Dec 2023 15:55:40 -0800 (PST)
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-35f3e4ce411so7536055ab.0;
+        Fri, 15 Dec 2023 16:02:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702684540; x=1703289340;
+        d=1e100.net; s=20230601; t=1702684947; x=1703289747;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f5a73P8Z2lUUO9uonNb1xntoA8P+1UF6W+MLVA6xuoQ=;
-        b=G3DLZtDXgT2r2wUrYhoJhDtKwN7b6HHHPFqKyw5NY3r9/1Qvp8W5AgCHts4j+L7Bh6
-         d1L3gaQYylHamJv63neTHXsPfxC2/oKz+UaeHNtM2mOWaqY948bPIsCo5NEy27t/Ul2Q
-         p5vRak4jqyuLwmvnkYW1xMptOnhG4rR3IkRtYzyGVDNFuNvf1xT02u4GwtrHEbkCgb7l
-         usnLYc/dMjSNIdGIjf5tWatKdQLQ9dEFAU4uDjZNlY061QRkusAjaVimDTynw2qijEkz
-         6BZBe8nFSOHjfUCG3f+eBSTJWbya2z/YUrAba1aXub7B4hg26SpqFMAz9IscndWSQSw5
-         8z0w==
-X-Gm-Message-State: AOJu0YzkzbzmHg5h2ilfOAHx6dCg8BWAMEmVs/477FtK57igtQ5F+UhL
-	amQbFL/Fa3k5y8TIFeQnnYk=
-X-Google-Smtp-Source: AGHT+IEy7wgEW48bdoKoHAehQFxnzd1CZkeTDN+7v1Lu6/U1kj4wf7olTFqJLNKy8Y8AK3FUdsaT8A==
-X-Received: by 2002:a05:6a20:7d8e:b0:18f:c81c:4484 with SMTP id v14-20020a056a207d8e00b0018fc81c4484mr15647305pzj.29.1702684540426;
-        Fri, 15 Dec 2023 15:55:40 -0800 (PST)
+        bh=p9i62YdT9dE6duOtlQtMrokuNps6ULf38KYvoR5jIR4=;
+        b=Ml6xex67Cq0WrqKu9wvmufnMfKqj8mB6Nz9mYYMWUe3juPIXeJ6qIz5q+XWVDQdScw
+         ZoHA6lr+ifl9J1noEeSY0YhWQJOtGn6sY25fdu/NbKO9JEmPUNFh9jGsbQ6sVh7/m3hc
+         2C3/P2ZT7TSezkTI5fzIj9xBAn8uLOF5v3QQYuPiOa97dWW3y/mvKzu43Rv42xeBdy2n
+         xuwpZOe3oQJE9ek5aejWWQI/ZHs+/HzW4LB97tbAsRqA7qGIqcmQMg4jSZDurfsl16YY
+         hQWnbanM8Ae+GYx/JexPknw3v5ygWkcxiQmRpFlW0Q6jMzSM+Tj7uHKlan2u8mZQ5HnR
+         VQ6w==
+X-Gm-Message-State: AOJu0Yw1FhU73rRJ3Zlg3EBngVMy38YA7vM4nyZ9YZThW2v0Yv2/pNQh
+	JB18M/e9Clxt8a+AzuWsMIo=
+X-Google-Smtp-Source: AGHT+IEAvclkEwNnk6yOtGocBSwjHeKqsSnI6arQHEKm+zMUxj6bFymJXjMZfTum84wGDMPpXvSsrg==
+X-Received: by 2002:a05:6e02:12c3:b0:35f:84b8:c1af with SMTP id i3-20020a056e0212c300b0035f84b8c1afmr3975644ilm.31.1702684947507;
+        Fri, 15 Dec 2023 16:02:27 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id pa8-20020a17090b264800b0027df6ff00eesm15708471pjb.19.2023.12.15.15.55.39
+        by smtp.gmail.com with ESMTPSA id b8-20020a170903228800b001d052d1aaf2sm14658389plh.101.2023.12.15.16.02.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 15:55:39 -0800 (PST)
-Date: Sat, 16 Dec 2023 08:55:38 +0900
+        Fri, 15 Dec 2023 16:02:27 -0800 (PST)
+Date: Sat, 16 Dec 2023 09:02:25 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
@@ -54,14 +54,12 @@ Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Manivannan Sadhasivam <mani@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: PCI: qcom: adjust iommu-map for
- different SoC
-Message-ID: <20231215235538.GA1570493@rocinante>
-References: <20231208105155.36097-1-krzysztof.kozlowski@linaro.org>
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: qcom: Correct reset-names property
+Message-ID: <20231216000225.GB1570493@rocinante>
+References: <20231111142006.51883-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,20 +68,16 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231208105155.36097-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231111142006.51883-1-krzysztof.kozlowski@linaro.org>
 
 Hello,
 
+> There is no "resets-names" property, but "reset-names".
+
 Applied to dt-bindings, thank you!
 
-[01/04] dt-bindings: PCI: qcom: Adjust iommu-map for different SoC
-        https://git.kernel.org/pci/pci/c/4791c44c0a98
-[02/04] dt-bindings: PCI: qcom: Correct clocks for SC8180x
-        https://git.kernel.org/pci/pci/c/f2ab5a2455d9
-[03/04] dt-bindings: PCI: qcom: Correct clocks for SM8150
-        https://git.kernel.org/pci/pci/c/a711253d5f70
-
-The above will go through the PCI tree.
+[1/1] dt-bindings: PCI: qcom: Correct reset-names property
+      https://git.kernel.org/pci/pci/c/3b74713a0321
 
 	Krzysztof
 
