@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-1096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12697815D2A
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Dec 2023 03:15:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD0E815D2C
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Dec 2023 03:17:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 52DF2B22F3C
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Dec 2023 02:15:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A78B1C2145E
+	for <lists+linux-pci@lfdr.de>; Sun, 17 Dec 2023 02:17:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FF29A40;
-	Sun, 17 Dec 2023 02:15:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C07BA3D;
+	Sun, 17 Dec 2023 02:17:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3+cl7Ji"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IN1o9LFO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DCFA32
-	for <linux-pci@vger.kernel.org>; Sun, 17 Dec 2023 02:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F43A32
+	for <linux-pci@vger.kernel.org>; Sun, 17 Dec 2023 02:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702779333; x=1734315333;
+  t=1702779463; x=1734315463;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=u9j+VWKLIha2IaSLGe4sCp/KUVw3s08uoExY2ZUzfAY=;
-  b=Q3+cl7JiaeXMYyZ/xjPLA/n7l4n1paDMDXPVvDUdQUZuf1zk9pYi5axn
-   PZ4SImpSUeMuqxjyKMrsrQ7xkxGQBLGD99DR4/shEJBsSFwA5zfYEucl+
-   BiamAFjoI1K6eO8S0a+6NbRLwm+9seoxoJSCERJ8iTJkurorg3mvwUX30
-   bBJwnMi9r4l4Vwig4e3S+/MKxLBQ1r1OUHW6tdho2z+4bWBFzlQUpUtV7
-   DhklSHXjiU5kKD+IsFAiN6U1vE6aTKh2IIXIG2dmC6MWWXZJhqBWvgudU
-   kNzVl1DEdod3X7LSUgXX9nUwOEXgFizZy8uHpnCMrQlYtkBvavEGwLugJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10926"; a="394271519"
+  bh=2IUmlt0JjUWNMVYZrf1aaVFf8+H57d8ac76N9RcyWK8=;
+  b=IN1o9LFO2T5Ff7BB/rG2zfox0T5SNhUF9ADzTzGJqTrI9l2+RvgHhObL
+   ubCvxEYVJPY+JltWT+o6OUX8+jHm4f4Kjriy8yLZAg+HjeKIcg/Qe8fHp
+   rLQyfMlD1Gt8frvijrezqrON0DP7a7B5dttbLb8So5JABJrk5gsB9DnoG
+   aywMs5/KS9RSPVxgQMkeQ/tSDwbMccqBqkMFkR0qK2v/HH0RFi9jcBzcY
+   etkoVEES/HRU1Xt4Um3BzC3NjZUYz8cLaaOglmX3++EIdM4Y7dtULiCcP
+   G31KovCb4IRadeHAV48CA3O1VG8DuOnEP75cpRqRcbV6/X0dwp1NvqZ92
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10926"; a="399229768"
 X-IronPort-AV: E=Sophos;i="6.04,282,1695711600"; 
-   d="scan'208";a="394271519"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2023 18:15:33 -0800
+   d="scan'208";a="399229768"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2023 18:17:42 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10926"; a="804129388"
+X-IronPort-AV: E=McAfee;i="6600,9927,10926"; a="841088976"
 X-IronPort-AV: E=Sophos;i="6.04,282,1695711600"; 
-   d="scan'208";a="804129388"
+   d="scan'208";a="841088976"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 16 Dec 2023 18:15:31 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 16 Dec 2023 18:17:41 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rEggh-0002VK-1A;
-	Sun, 17 Dec 2023 02:15:27 +0000
-Date: Sun, 17 Dec 2023 10:14:34 +0800
+	id 1rEgin-0002Vg-2i;
+	Sun, 17 Dec 2023 02:17:38 +0000
+Date: Sun, 17 Dec 2023 10:16:53 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 41f757713ac38ae2f63bc02d5653aac254c5bdbf
-Message-ID: <202312171031.SGQJY4xl-lkp@intel.com>
+Subject: [pci:controller/dwc] BUILD SUCCESS
+ edd6ae1022a659b47586b64fa93c615ee14efd94
+Message-ID: <202312171051.I0ap5HOp-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -65,10 +65,10 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 41f757713ac38ae2f63bc02d5653aac254c5bdbf  dt-bindings: PCI: qcom: Document the SM8650 PCIe Controller
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+branch HEAD: edd6ae1022a659b47586b64fa93c615ee14efd94  PCI: dwc: Convert SOC_SIFIVE to ARCH_SIFIVE
 
-elapsed time: 1474m
+elapsed time: 1477m
 
 configs tested: 193
 configs skipped: 1
