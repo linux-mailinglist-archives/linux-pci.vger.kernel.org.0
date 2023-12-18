@@ -1,64 +1,58 @@
-Return-Path: <linux-pci+bounces-1132-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1133-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85B788163FE
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 02:17:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EE3E81644C
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 03:23:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 146C9B21266
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 01:17:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DA942B21966
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 02:23:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0021FA3;
-	Mon, 18 Dec 2023 01:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFFC23BE;
+	Mon, 18 Dec 2023 02:23:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E154440E
-	for <linux-pci@vger.kernel.org>; Mon, 18 Dec 2023 01:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6DA23A7;
+	Mon, 18 Dec 2023 02:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-35da160de2bso16177185ab.1
-        for <linux-pci@vger.kernel.org>; Sun, 17 Dec 2023 17:17:18 -0800 (PST)
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6da579e6858so1791157a34.3;
+        Sun, 17 Dec 2023 18:23:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702862237; x=1703467037;
+        d=1e100.net; s=20230601; t=1702866201; x=1703471001;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eDKZUx5HtNyZoTQVTDUN0xYo5LjMA876jFL0bA6k76c=;
-        b=wthe1ueinJMq6iIDvU+8Y5KaNogRyNiIRgUhg/Cuhp2GrucIJiSzVahVGrkKIPA/Jc
-         bRbUheMWHdftGkygFhF0ynFranxFDbBFMpWNAsvAI6jFTG0sY2O/QbiCoj5NHUsL2P8Q
-         C8Vb3OFsjsA1w32nMivOB9b/tmJkXy35DUHwHshTgAX+OwkxZHE3umLB8VLLJuciYnLI
-         GZGCPStOPgtFW3HK9GMbnYbIWrmqmVMgaO2PcNb3ZFRydMt/TjgZwA/GDU2spxu45Y/s
-         Cid8TNXtVQyVDYNjKELhGqun0vjCXIMIkoUp4o24hhFgj8WYV5rRrqbVezaDZqpXspKa
-         iAjg==
-X-Gm-Message-State: AOJu0Yw0s9CxDrnWYa39FMUBy7RGHBrliYyYzncW/gG06RGy7VmhufC4
-	AjYi9Esy4QKUfjfsCqToPnY=
-X-Google-Smtp-Source: AGHT+IHOnm2Y3FaoZ4W11I0e8vUwHa1CFBCFJQ4zcmymxGQkJqdRTbe5W/Aw5rM60EyywYKsqQWWdA==
-X-Received: by 2002:a05:6e02:2188:b0:35d:59a2:1275 with SMTP id j8-20020a056e02218800b0035d59a21275mr24704445ila.33.1702862237559;
-        Sun, 17 Dec 2023 17:17:17 -0800 (PST)
+        bh=UUh8R+nscKiO1LQ6m0AM82k3aN4ql71rUMxjIgccdr8=;
+        b=LMzNVJRhAZEWIY4Whv84jVGADHgMaE0EY/ljHWFBbR3Y5Etf/GzY2MvhhX47Dg/aFH
+         HTJgOymDvNeeiH62Z2UWFloiNa+i6tdfktLVMH7Y400DenfJS63O6lW7G43brqlk3RVv
+         LR1N/fk9qe1mk2PcJbk7p/V80o5rjpDNMNuhC+6DduLx/vmC8PKeCVOifAsndM71Pm2B
+         iKH4kXpHT9N+dWfg1oTXZvF/orirK1aqVrzuoiNsw18WUVte7T5Y0K1KLRwIahN0rpzl
+         z+DQhegU7oBuiF+mCHiBG0vA3brKWLErHCRfoWFywb8MQttuhi6A0CLx9hoO2J9A1Mpm
+         94rg==
+X-Gm-Message-State: AOJu0Yy6FEspAFnpBaAYJnnbbvzqEXz4maIz5g/iv4dpuxGKx/+5EFbk
+	YOs5qkCBHfM93fkfDiR1uYo=
+X-Google-Smtp-Source: AGHT+IG7l7NST7Kn9f3sLGp2h7mChkuDh/xWs1QvXERaxEiq+3xoxgLsb1E4JkSVVfl6qQmllcIHwg==
+X-Received: by 2002:a05:6358:2608:b0:172:cf9c:882a with SMTP id l8-20020a056358260800b00172cf9c882amr1348802rwc.32.1702866201513;
+        Sun, 17 Dec 2023 18:23:21 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id iz5-20020a170902ef8500b001d3a16d98d3sm2514095plb.253.2023.12.17.17.17.16
+        by smtp.gmail.com with ESMTPSA id ms16-20020a17090b235000b0028b06464b62sm1959293pjb.15.2023.12.17.18.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Dec 2023 17:17:16 -0800 (PST)
-Date: Mon, 18 Dec 2023 10:17:15 +0900
+        Sun, 17 Dec 2023 18:23:20 -0800 (PST)
+Date: Mon, 18 Dec 2023 11:23:19 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Niklas Cassel <nks@flawful.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2] PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq()
- alignment support
-Message-ID: <20231218011715.GB88933@rocinante>
-References: <20231128132231.2221614-1-nks@flawful.org>
- <ZXrR6n7MQIpAaVPx@x1-carbon>
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	michal.simek@amd.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH -next] PCI: xilinx-xdma: Remove redundant dev_err()
+Message-ID: <20231218022319.GC88933@rocinante>
+References: <20231030061242.51475-1-yang.lee@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,28 +61,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXrR6n7MQIpAaVPx@x1-carbon>
+In-Reply-To: <20231030061242.51475-1-yang.lee@linux.alibaba.com>
 
 Hello,
 
-> > Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
-> > correct MSI-X table address") modified dw_pcie_ep_raise_msix_irq() to
-> > support iATUs which require a specific alignment.
-> > 
-> > However, this support cannot have been properly tested.
-> > 
-> > The whole point is for the iATU to map an address that is aligned,
-> > using dw_pcie_ep_map_addr(), and then let the writel() write to
-> > ep->msi_mem + aligned_offset.
-> > 
-> > Thus, modify the address that is mapped such that it is aligned.
-> > With this change, dw_pcie_ep_raise_msix_irq() matches the logic in
-> > dw_pcie_ep_raise_msi_irq().
-[...]
+> There is no need to call the dev_err() function directly to print a
+> custom message when handling an error from either the platform_get_irq()
+> or platform_get_irq_byname() functions as both are going to display an
+> appropriate error message in case of a failure.
 > 
-> Gentle ping...
+> ./drivers/pci/controller/pcie-xilinx-dma-pl.c:688:2-9: line 688 is redundant because platform_get_irq() already prints an error
+> ./drivers/pci/controller/pcie-xilinx-dma-pl.c:702:2-9: line 702 is redundant because platform_get_irq() already prints an error
 
-Applied, so it should make it to 6.8.  Apologies for the delay.
+Applied to controller/xilinx, thank you!
+
+[1/1] PCI: xilinx-xdma: Remove redundant dev_err()
+      https://git.kernel.org/pci/pci/c/b642e081f46c
 
 	Krzysztof
 
