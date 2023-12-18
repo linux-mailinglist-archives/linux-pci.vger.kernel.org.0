@@ -1,118 +1,75 @@
-Return-Path: <linux-pci+bounces-1145-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E301817740
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 17:19:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56B638178CB
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 18:33:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A46141C25D5B
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 16:19:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA5251F2263F
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 17:33:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4D4A3D557;
-	Mon, 18 Dec 2023 16:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhynny4/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4FA55BFA2;
+	Mon, 18 Dec 2023 17:33:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8A63A1D0
-	for <linux-pci@vger.kernel.org>; Mon, 18 Dec 2023 16:19:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14FC6C433C8;
-	Mon, 18 Dec 2023 16:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702916349;
-	bh=1lukh6nFegyz6tJwQ7rJeaLa1Xr4lxmPSN3YOm58QTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lhynny4/6923weraKUopn8VyreDl8ZfIWt/OyQWBlOUuJ2tjh7hF/wbZGTAx0/7DR
-	 eeCStXSHjNaMBZnZUK+nhJrAvKYXGFm5fSeybpYtKQjGMGWZbJc6ZkO2FUW901MqBm
-	 IjRbzcke/qZZ7bttpeDP6Vz3r+zXgdT1NwwXQrcwzeTuVjiiANQRRJoHfdrlPYLCDt
-	 uydslAHxV4IaZTH9Dr2igf3+THOMOxqA6u8wpl2tG830S4stAWet7ouYG9yPRob7TZ
-	 3084BaFOdGKu+77iXFYPzBneZgehmbgCbHLhdl81XmlaykPAbP6e7Lu00Q9NHDHxWZ
-	 oNz+ppbmpXX4g==
-Date: Mon, 18 Dec 2023 21:48:55 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <nks@flawful.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Niklas Cassel <niklas.cassel@wdc.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] misc: pci_endpoint_test: Use a unique test pattern for
- each BAR
-Message-ID: <20231218161855.GD50521@thinkpad>
-References: <20231215105952.1531683-1-nks@flawful.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5C55A879;
+	Mon, 18 Dec 2023 17:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.40] (g40.guest.molgen.mpg.de [141.14.220.40])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 5CF6561E5FE03;
+	Mon, 18 Dec 2023 18:33:03 +0100 (CET)
+Message-ID: <48d2cc9a-4a33-42fc-9c04-691c9d0c7806@molgen.mpg.de>
+Date: Mon, 18 Dec 2023 18:33:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: ACPI Error: AE_ERROR, Returned by Handler for [PCI_Config]
+ (20230628/evregion-300), method \_SB.PCI0._INI
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231215105952.1531683-1-nks@flawful.org>
 
-On Fri, Dec 15, 2023 at 11:59:51AM +0100, Niklas Cassel wrote:
-> From: Niklas Cassel <niklas.cassel@wdc.com>
-> 
-> Use a unique test pattern for each BAR in. This makes it easier to
-> detect/debug address translation issues, since a developer can dump
-> the backing memory on the EP side, using e.g. devmem, to verify that
-> the address translation for each BAR is actually correct.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+Dear Linux folks,
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-- Mani
+On a Dell XPS 15 7590/0VYV0G, BIOS 1.24.0 09/11/2023, with an Intel and 
+Nvidia graphics device, Debian’s Linux kernel 6.6.4 (and before) logs 
+the error below:
 
-> ---
->  drivers/misc/pci_endpoint_test.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index a765a05f0c64..7ac1922475af 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -263,6 +263,15 @@ static bool pci_endpoint_test_request_irq(struct pci_endpoint_test *test)
->  	return false;
->  }
->  
-> +static const u32 bar_test_pattern[] = {
-> +	0xA0A0A0A0,
-> +	0xA1A1A1A1,
-> +	0xA2A2A2A2,
-> +	0xA3A3A3A3,
-> +	0xA4A4A4A4,
-> +	0xA5A5A5A5,
-> +};
-> +
->  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->  				  enum pci_barno barno)
->  {
-> @@ -280,11 +289,12 @@ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
->  		size = 0x4;
->  
->  	for (j = 0; j < size; j += 4)
-> -		pci_endpoint_test_bar_writel(test, barno, j, 0xA0A0A0A0);
-> +		pci_endpoint_test_bar_writel(test, barno, j,
-> +					     bar_test_pattern[barno]);
->  
->  	for (j = 0; j < size; j += 4) {
->  		val = pci_endpoint_test_bar_readl(test, barno, j);
-> -		if (val != 0xA0A0A0A0)
-> +		if (val != bar_test_pattern[barno])
->  			return false;
->  	}
->  
-> -- 
-> 2.43.0
-> 
+     [    0.228085] ACPI Error: AE_ERROR, Returned by Handler for 
+[PCI_Config] (20230628/evregion-300)
+     [    0.228095] ACPI Error: Aborting method \_SB.PCI0._INI due to 
+previous error (AE_ERROR) (20230628/psparse-529)
 
--- 
-மணிவண்ணன் சதாசிவம்
+As this is error level, could you please help me try ing to address it?
+
+I created an issue in the Linux kernel Bugzilla, and attached the output 
+of `dmesg` there. Hardware information about the device can be found in 
+the Linux Hardware database [2].
+
+
+Kind regards,
+
+Paul
+
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218287
+[2]: https://linux-hardware.org/?probe=97ca767d40
 
