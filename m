@@ -1,219 +1,339 @@
-Return-Path: <linux-pci+bounces-1138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D64A781656F
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 04:42:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7941B816591
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 05:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CD2B1F2190F
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 03:42:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F384A1F224BE
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Dec 2023 04:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048865225;
-	Mon, 18 Dec 2023 03:42:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82E355392;
+	Mon, 18 Dec 2023 04:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="HhnRaBKP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Iyk4jSGs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4E7442C
-	for <linux-pci@vger.kernel.org>; Mon, 18 Dec 2023 03:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 540E53F2B4
-	for <linux-pci@vger.kernel.org>; Mon, 18 Dec 2023 03:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1702870908;
-	bh=KKS6meN//ZgCj3y7u8vW7HbHEKKQ4gFu/bLYJNM4M9M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=HhnRaBKPimYJ14GYJ6XY2d9iWdcy8V+XQrAsjDFiZCm18km0xYRAjmGiR8sLa7TYZ
-	 BCOweAIJSDxxjnQzRYdkgzHFFXjQg9TTf/giv7T3oVlnUhXdUAVoarl44kuh/bU24f
-	 11nw2jhJAWTLQcv5/LHxgnWR+J8wpVJ27yJDGfcq9BXQ/dNZ3ZSsjzqrjV+qMmM9YW
-	 u4BeOICL9C0rCUFT5FQgJKbEQnbd3BeHrlG1EG5ODfiXoEBCX2P6AeWRVCkrZcgKgQ
-	 0cu6Hn0aNASayzoMg+Pq6FGBpjZT+bcsQ+ywiuYkEkayUQNsQy50NAU+X4SfD5E/ys
-	 7nPRA6eBccFEA==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-28b62ae0737so794097a91.0
-        for <linux-pci@vger.kernel.org>; Sun, 17 Dec 2023 19:41:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702870905; x=1703475705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KKS6meN//ZgCj3y7u8vW7HbHEKKQ4gFu/bLYJNM4M9M=;
-        b=P6map+s+mUM3w1adECSWmbp7b6hZ3UHmE7cpEQYNhE5qe//T9ZE7y06Mhpf/HKbgrK
-         ye4idy+WtlYQ8RB9Wg5EbPA0H8MhliwzOI6m11IS0AOVL7RlineRPhqv9JE49iE1+FYg
-         bQJhgtvTL4Rd3m5ScGf2qbgUvslTEtDUMNGlRGiGrHGptwxyexH1hb2Hl6J1v//XUBTK
-         A2EejRsO1KOCK1AFjI9HCaC3mOfNDyLYdEESv+eQdPtppYOnlsYNfRkUPWb6GYN+QqGS
-         lvJwZB9Z90kxwmQd+UzlHc5siHVk2gAk14VwAoyh5UcTI5RcGDPFnVdtJWEJCVFQa8Tn
-         RJFA==
-X-Gm-Message-State: AOJu0YytFGCUuj/2tr5jdKEDELGVica7LJsXJHTT/Uq3oecXQP8Q2VLW
-	5M34JsIZkl4T1BFFD2bQLbiu6D3Ct3Zig5cmDrHVX/+NRuvu4oYiPRPQKIVUEE2do0xY8hu07mm
-	JbIa/lfjxU4F9pQmcZ8NDo0D2HEw5Mg6ifjOitfUh6Hf6X0HSns473Q==
-X-Received: by 2002:a17:90a:590e:b0:285:8cb6:6153 with SMTP id k14-20020a17090a590e00b002858cb66153mr19578307pji.17.1702870905208;
-        Sun, 17 Dec 2023 19:41:45 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGKO+I/YNOACKTPCW4l4TIRyKWuz9qqKpOMciHBbcvu0V5jYlJR1UvSzaGEbecrHxy4CJrBPGPg3ATi2RtmFxA=
-X-Received: by 2002:a17:90a:590e:b0:285:8cb6:6153 with SMTP id
- k14-20020a17090a590e00b002858cb66153mr19578289pji.17.1702870904840; Sun, 17
- Dec 2023 19:41:44 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A1F538D
+	for <linux-pci@vger.kernel.org>; Mon, 18 Dec 2023 04:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702872532; x=1734408532;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=F0UD3Z1uuALukMHK6q93vHEa5Zr20GXnOXE3OxISYZ8=;
+  b=Iyk4jSGsYQG1o36cQFx4Xe0Hp0pOSPjRSk7gU/QyrUULeeUiy5sxEUQ+
+   LKPn5aV3z9iXhoc2oeL/R81IdAAo/f78K/At0t/Y4Pr1Fui7AfnX5Adtk
+   CYTPRSAGMtsYdOJ4SG18MWHaJVzsKNXXPj5migMV0TSdPhaENUlArzWxv
+   DSMOIB01jGBwS5GHgABqp5SiKO61ziCiteQo79bOQA+1vDX5fOB16EW21
+   4sxDAobXJle2XbDy0yVTR/4Xph3DK/mgeaBa5bMdGjsjAkQUcf+4U8ktQ
+   0B7WoY6ZLC2KhA5kgNFWAw8/U5uXKvMu47ggi1+411UWBoTWdr3YD1i11
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="2660929"
+X-IronPort-AV: E=Sophos;i="6.04,284,1695711600"; 
+   d="scan'208";a="2660929"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2023 20:08:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="919130675"
+X-IronPort-AV: E=Sophos;i="6.04,284,1695711600"; 
+   d="scan'208";a="919130675"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2023 20:08:50 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rF4vw-0003kD-0n;
+	Mon, 18 Dec 2023 04:08:48 +0000
+Date: Mon, 18 Dec 2023 12:07:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/kirin] BUILD SUCCESS
+ 9f5077ef8f8157270f51f4ebd782c985d56d33c6
+Message-ID: <202312181255.ovt6j6C7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231213182656.6165-1-mario.limonciello@amd.com>
- <20231213182656.6165-3-mario.limonciello@amd.com> <CAJZ5v0gDjwEpx-WNSY0=qchoSGxizsD3XM7Bgq=i0xufBm=Cag@mail.gmail.com>
- <766d621c-695d-4ae7-87cf-690cb8d066df@amd.com> <CAJZ5v0i95EeS40pzkBH=jgB1wbMP6SNO_s=pNZ8FPOtcMywgAA@mail.gmail.com>
- <CAAd53p6XynUJimepnXDzcVa4Dps4-F0BNEXxGZh_O38LvSdkkg@mail.gmail.com>
- <CAJZ5v0ijf9-faD-bDaGi9U0JR4iQ68DECyPM8c-AeECOfhQ=Bg@mail.gmail.com> <3ed302e4-4287-49be-838b-932ecbdc8d12@amd.com>
-In-Reply-To: <3ed302e4-4287-49be-838b-932ecbdc8d12@amd.com>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 18 Dec 2023 11:41:32 +0800
-Message-ID: <CAAd53p6gHy6geX9PZHOmkuN_cxzAv1RiqoGfg0-kyo5wJEHomA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI/portdrv: Place PCIe port hierarchy into D3cold at shutdown
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mpearson-lenovo@squebb.ca
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 
-On Fri, Dec 15, 2023 at 12:44=E2=80=AFAM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 12/14/2023 03:00, Rafael J. Wysocki wrote:
-> > On Thu, Dec 14, 2023 at 4:46=E2=80=AFAM Kai-Heng Feng
-> > <kai.heng.feng@canonical.com> wrote:
-> >>
-> >> Hi Mario and Rafael,
-> >>
-> >> On Thu, Dec 14, 2023 at 2:46=E2=80=AFAM Rafael J. Wysocki <rafael@kern=
-el.org> wrote:
-> >>>
-> >>> On Wed, Dec 13, 2023 at 7:42=E2=80=AFPM Mario Limonciello
-> >>> <mario.limonciello@amd.com> wrote:
-> >>>>
-> >>>> On 12/13/2023 12:38, Rafael J. Wysocki wrote:
-> >>>>> On Wed, Dec 13, 2023 at 7:27=E2=80=AFPM Mario Limonciello
-> >>>>> <mario.limonciello@amd.com> wrote:
-> >>>>>>
-> >>>>>> When a system is being powered off it's important that PCIe ports
-> >>>>>> have been put into D3cold as there is no other software to turn
-> >>>>>> off the devices at S5.
-> >>>>>>
-> >>>>>> If PCIe ports are left in D0 then any GPIOs toggled by the ACPI
-> >>>>>> power resources may be left enabled and devices may consume excess
-> >>>>>> power.
-> >>>>>
-> >>>>> Isn't that a platform firmware issue?
-> >>>>>
-> >>>>> It is the responsibility of the platform firmware to properly put t=
-he
-> >>>>> platform into S5, including power removal from devices that are not
-> >>>>> armed for power-on.
-> >>>>
-> >>>> The specific issues that triggered this series were tied to the PCIe
-> >>>> ports for dGPUs.  There is a GPIO that is toggled by _ON or _OFF.
-> >>>>
-> >>>> Windows calls _OFF as part of S5..
-> >>>
-> >>> I see.
-> >>>
-> >>>>>
-> >>>>>> Cc: mpearson-lenovo@squebb.ca
-> >>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> >>>>>> ---
-> >>>>>>    drivers/pci/pcie/portdrv.c | 11 ++++++++---
-> >>>>>>    1 file changed, 8 insertions(+), 3 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv=
-.c
-> >>>>>> index 14a4b89a3b83..08238680c481 100644
-> >>>>>> --- a/drivers/pci/pcie/portdrv.c
-> >>>>>> +++ b/drivers/pci/pcie/portdrv.c
-> >>>>>> @@ -734,9 +734,14 @@ static void pcie_portdrv_remove(struct pci_de=
-v *dev)
-> >>>>>>    static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> >>>>>>    {
-> >>>>>>           if (pci_bridge_d3_possible(dev)) {
-> >>>>>> -               pm_runtime_forbid(&dev->dev);
-> >>>>>> -               pm_runtime_get_noresume(&dev->dev);
-> >>>>>> -               pm_runtime_dont_use_autosuspend(&dev->dev);
-> >>>>>> +               /* whole hierarchy goes into a low power state for=
- S5 */
-> >>>>>> +               if (system_state =3D=3D SYSTEM_POWER_OFF) {
-> >>>>>> +                       pci_set_power_state(dev, PCI_D3cold);
-> >>>>>> +               } else {
-> >>>>>> +                       pm_runtime_forbid(&dev->dev);
-> >>>>>> +                       pm_runtime_get_noresume(&dev->dev);
-> >>>>>> +                       pm_runtime_dont_use_autosuspend(&dev->dev)=
-;
-> >>>>>> +               }
-> >>>>>>           }
-> >>>>>
-> >>>>> Wouldn't it be better to remove power from the port after running t=
-he
-> >>>>> code below?
-> >>>>>
-> >>>>
-> >>>> Yes; I think you're right.  I'll do some more testing with this.
-> >>>>
-> >>>>>>           pcie_port_device_remove(dev);
-> >>>>>> --
-> >>>
-> >>> IIRC, to do this all properly, you'd need to rework the shutdown path
-> >>> to look like the hibernation power-off one.  Or even use the latter
-> >>> for shutdown?
-> >>>
-> >>> There was no reason to do that till now, so it has not been done, but
-> >>> it looks like you have one.
-> >>>
-> >>
-> >> I am working on exactly same thing but with a different approach.
-> >> Because this is needed for more than just PCI devices.
-> >> I haven't written a proper commit message yet, but the implementation
-> >> is quite simple:
-> >
-> > As I said, doing this properly requires something like the hibernation
-> > power-off transition to be carried out for S5.
-> >
-> > I think that the existing hibernation power-off code can be used as-is
-> > for this purpose even.
-> >
->
-> I feel Rafael is right here that unifying the hibernation and shutdown
-> paths is the right direction.  Our team just double checked the
-> "unpatched" Linux S4 measurements on a system that otherwise had
-> problems with S5 and they show the same decreases in power my patch
-> series showed.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/kirin
+branch HEAD: 9f5077ef8f8157270f51f4ebd782c985d56d33c6  PCI: kirin: Use devm_kasprintf() to dynamically allocate clock names
 
-I agree this is the right approach because Windows is using S4 for its
-"Fast Startup" feature.
+elapsed time: 1464m
 
-Is there any historical reason that .power_off and .shutdown are separated?
-And, should we take a step further and also unify the .remove
-callback? I recall there was a discussion on consolidating .shutdown
-and .remove but somehow it didn't take off.
+configs tested: 255
+configs skipped: 6
 
->
-> KH,
->
-> I'm going to be OOO for a while with the holidays around the corner and
-> some personal time.  If you end up working on some patches to unify the
-> S4/S5 codepaths CC me on them and I'll look when I'm back from my leave.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Sure thing. This can take a while.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              alldefconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
+arc                   randconfig-001-20231217   gcc  
+arc                   randconfig-001-20231218   gcc  
+arc                   randconfig-002-20231217   gcc  
+arc                   randconfig-002-20231218   gcc  
+arc                        vdk_hs38_defconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                                 defconfig   clang
+arm                           h3600_defconfig   gcc  
+arm                             pxa_defconfig   gcc  
+arm                   randconfig-001-20231217   clang
+arm                   randconfig-001-20231218   gcc  
+arm                   randconfig-002-20231217   clang
+arm                   randconfig-002-20231218   gcc  
+arm                   randconfig-003-20231217   clang
+arm                   randconfig-003-20231218   gcc  
+arm                   randconfig-004-20231217   clang
+arm                   randconfig-004-20231218   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20231217   clang
+arm64                 randconfig-001-20231218   gcc  
+arm64                 randconfig-002-20231217   clang
+arm64                 randconfig-002-20231218   gcc  
+arm64                 randconfig-003-20231218   gcc  
+arm64                 randconfig-004-20231217   clang
+arm64                 randconfig-004-20231218   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20231217   gcc  
+csky                  randconfig-001-20231218   gcc  
+csky                  randconfig-002-20231217   gcc  
+csky                  randconfig-002-20231218   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20231217   clang
+hexagon               randconfig-002-20231217   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20231217   clang
+i386         buildonly-randconfig-002-20231217   clang
+i386         buildonly-randconfig-003-20231217   clang
+i386         buildonly-randconfig-004-20231217   clang
+i386         buildonly-randconfig-005-20231217   clang
+i386         buildonly-randconfig-006-20231217   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231217   clang
+i386                  randconfig-002-20231217   clang
+i386                  randconfig-003-20231217   clang
+i386                  randconfig-004-20231217   clang
+i386                  randconfig-005-20231217   clang
+i386                  randconfig-006-20231217   clang
+i386                  randconfig-011-20231217   gcc  
+i386                  randconfig-011-20231218   clang
+i386                  randconfig-012-20231217   gcc  
+i386                  randconfig-012-20231218   clang
+i386                  randconfig-013-20231217   gcc  
+i386                  randconfig-013-20231218   clang
+i386                  randconfig-014-20231217   gcc  
+i386                  randconfig-014-20231218   clang
+i386                  randconfig-015-20231217   gcc  
+i386                  randconfig-015-20231218   clang
+i386                  randconfig-016-20231217   gcc  
+i386                  randconfig-016-20231218   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231217   gcc  
+loongarch             randconfig-001-20231218   gcc  
+loongarch             randconfig-002-20231217   gcc  
+loongarch             randconfig-002-20231218   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          amiga_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+m68k                        m5407c3_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+m68k                          sun3x_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                         db1xxx_defconfig   gcc  
+mips                     decstation_defconfig   gcc  
+mips                           ip32_defconfig   gcc  
+mips                      loongson3_defconfig   gcc  
+nios2                         3c120_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20231217   gcc  
+nios2                 randconfig-001-20231218   gcc  
+nios2                 randconfig-002-20231217   gcc  
+nios2                 randconfig-002-20231218   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20231217   gcc  
+parisc                randconfig-001-20231218   gcc  
+parisc                randconfig-002-20231217   gcc  
+parisc                randconfig-002-20231218   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                 canyonlands_defconfig   gcc  
+powerpc                        cell_defconfig   gcc  
+powerpc                      cm5200_defconfig   gcc  
+powerpc                    ge_imp3a_defconfig   gcc  
+powerpc                    klondike_defconfig   gcc  
+powerpc                      makalu_defconfig   gcc  
+powerpc                 mpc834x_itx_defconfig   gcc  
+powerpc                      ppc40x_defconfig   gcc  
+powerpc                      ppc6xx_defconfig   gcc  
+powerpc               randconfig-001-20231217   clang
+powerpc               randconfig-001-20231218   gcc  
+powerpc               randconfig-002-20231217   clang
+powerpc               randconfig-002-20231218   gcc  
+powerpc               randconfig-003-20231217   clang
+powerpc               randconfig-003-20231218   gcc  
+powerpc                 xes_mpc85xx_defconfig   gcc  
+powerpc64             randconfig-001-20231217   clang
+powerpc64             randconfig-001-20231218   gcc  
+powerpc64             randconfig-002-20231217   clang
+powerpc64             randconfig-002-20231218   gcc  
+powerpc64             randconfig-003-20231217   clang
+powerpc64             randconfig-003-20231218   gcc  
+riscv                             allnoconfig   clang
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                 randconfig-001-20231217   clang
+riscv                 randconfig-001-20231218   gcc  
+riscv                 randconfig-002-20231217   clang
+riscv                 randconfig-002-20231218   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231217   gcc  
+s390                  randconfig-002-20231217   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         ap325rxa_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                     magicpanelr2_defconfig   gcc  
+sh                    randconfig-001-20231217   gcc  
+sh                    randconfig-001-20231218   gcc  
+sh                    randconfig-002-20231217   gcc  
+sh                    randconfig-002-20231218   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                           se7343_defconfig   gcc  
+sh                           se7712_defconfig   gcc  
+sh                           se7721_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sh                   secureedge5410_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sh                        sh7785lcr_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                 randconfig-001-20231218   gcc  
+sparc                 randconfig-002-20231218   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20231217   gcc  
+sparc64               randconfig-001-20231218   gcc  
+sparc64               randconfig-002-20231217   gcc  
+sparc64               randconfig-002-20231218   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20231217   clang
+um                    randconfig-001-20231218   gcc  
+um                    randconfig-002-20231217   clang
+um                    randconfig-002-20231218   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           alldefconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20231217   clang
+x86_64       buildonly-randconfig-001-20231218   gcc  
+x86_64       buildonly-randconfig-002-20231217   clang
+x86_64       buildonly-randconfig-002-20231218   gcc  
+x86_64       buildonly-randconfig-003-20231217   clang
+x86_64       buildonly-randconfig-003-20231218   gcc  
+x86_64       buildonly-randconfig-004-20231217   clang
+x86_64       buildonly-randconfig-004-20231218   gcc  
+x86_64       buildonly-randconfig-005-20231217   clang
+x86_64       buildonly-randconfig-005-20231218   gcc  
+x86_64       buildonly-randconfig-006-20231217   clang
+x86_64       buildonly-randconfig-006-20231218   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-011-20231217   clang
+x86_64                randconfig-011-20231218   gcc  
+x86_64                randconfig-012-20231217   clang
+x86_64                randconfig-012-20231218   gcc  
+x86_64                randconfig-013-20231217   clang
+x86_64                randconfig-013-20231218   gcc  
+x86_64                randconfig-014-20231217   clang
+x86_64                randconfig-014-20231218   gcc  
+x86_64                randconfig-015-20231217   clang
+x86_64                randconfig-015-20231218   gcc  
+x86_64                randconfig-016-20231217   clang
+x86_64                randconfig-016-20231218   gcc  
+x86_64                randconfig-071-20231217   clang
+x86_64                randconfig-071-20231218   gcc  
+x86_64                randconfig-072-20231217   clang
+x86_64                randconfig-072-20231218   gcc  
+x86_64                randconfig-073-20231217   clang
+x86_64                randconfig-073-20231218   gcc  
+x86_64                randconfig-074-20231217   clang
+x86_64                randconfig-074-20231218   gcc  
+x86_64                randconfig-075-20231217   clang
+x86_64                randconfig-075-20231218   gcc  
+x86_64                randconfig-076-20231217   clang
+x86_64                randconfig-076-20231218   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa                randconfig-001-20231217   gcc  
+xtensa                randconfig-001-20231218   gcc  
+xtensa                randconfig-002-20231217   gcc  
+xtensa                randconfig-002-20231218   gcc  
 
-Kai-Heng
-
->
-> Thanks,
->
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
