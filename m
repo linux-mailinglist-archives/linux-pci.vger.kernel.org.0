@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-1187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 320A1818EB8
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 18:51:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A741818EBD
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 18:52:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56FE01C23FE8
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 17:51:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 181D8286A90
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 17:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8472337D3F;
-	Tue, 19 Dec 2023 17:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EF39381B2;
+	Tue, 19 Dec 2023 17:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="WsgdaWQA"
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="OwdMO+Dy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3F140BF5
-	for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 17:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B917E41206
+	for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 17:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6d940d14d69so343899b3a.1
-        for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 09:47:00 -0800 (PST)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d3aa0321b5so25338955ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 09:47:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1703008019; x=1703612819; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1703008025; x=1703612825; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rMG56uSWd/ufo/nc8FBDk9fzkMf+1BzSryO0Av4W69w=;
-        b=WsgdaWQAUfzZZJcTIlfK1SZGlqDw3AjZkU2fQx/GMWXGj7NfWyp/x5DLjA86c3P/wE
-         mOsAc597URWmWVAK8mXf+mbcJYCKKCEnaTeUCWbipxcDyHPpkLJsyQ2JHb847+2rvpmi
-         r3LZZDvES8rvq4nzd+Af7ypJ+eBDL68yFM80EMnB5uQCCIgI7YiBdgzUGlYndHvhpTPb
-         k4d8o1IRVZ9QjrgOP8CL5jyMinjpf7mKfgpJk6iW8IPw9Cf5U8HFurn3bz2ledXMtBh0
-         aPgXgVqIlnNgMIpKfdiHwjFCDM+lKiZ2pvhUYcUCn0tFmUAOLWXlL8TjDukDd33ay1yd
-         zPnA==
+        bh=XaVzwwT2ecLOtMDBM5TdFJiJ9XdFZ6MUpboDwIj/4ug=;
+        b=OwdMO+DyVotX9tmk1xRIsraAElYFlr5ThzaBzSh7oPVDYa8hsVFFb6066ici19XRHg
+         Y6WBeMXC2BPYDoydWlpIfBi4CgE/GG5YE9CDZHsxTlXlACfJQ8IEDxBwvrcc6hDl+gpP
+         +eNPO7GMP+ddTzRoRXZqfLmhnFBJN6IOVi+mCM4crUVLjXyCkuEi38cW/8eHyEfZaVe5
+         wCsfexqpWND6NugDDnaHgMaw5FZnfswZAnCRygZ64HnkwiNNvktxEmB5D59MlXtx4g4M
+         XI1VbKpv1GGbtTG1FwOusSamDObMBU90lQ4FW/j218mKBgCFCfWDlO0yYAiUworYFrBj
+         xmXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703008019; x=1703612819;
+        d=1e100.net; s=20230601; t=1703008025; x=1703612825;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rMG56uSWd/ufo/nc8FBDk9fzkMf+1BzSryO0Av4W69w=;
-        b=a3B4ZRJrHaPEe/jVjgJYntrTYEj4VN9aCZGGhh8ZqsVdWNLf0CD6TLSUzRw1Xcl3lz
-         tK7/Lzjwp2jYLoZ0pRjHE5/6no9sUmO1LFmEb2lDL7UUGacmAmolDoPH934Rkl0YOzOh
-         FWrbgH8CYvDKXkZ4c/lOklmHjUMVMb27psDWtZjKCJ81RMa2JJHnwkr4ywnTNQU8xzIM
-         vh+TD9xX1bNsCSMBA1/IU5ASiyE9ORnXjPkNEMDyzVDve/lsnRhT3g+ltz0P664JhdDT
-         d/ig5HBgEklReVYCIQQr47m1nTiRUSowsIw/ZPR4PobHadDdLGd+YpjKSFTCOZsTIf5t
-         5x7Q==
-X-Gm-Message-State: AOJu0YxFoO/DKEiNfmW6ZMy8dKpYNfmwAezwTALj3YtGlAd/8YgiL+Hc
-	84Hn8zGBmYt/JwsBiHVMMarHkA==
-X-Google-Smtp-Source: AGHT+IHXM72nArT21GjLZtiiN3K06SzkiamqR5ZRviUGxMyVpE460cqqru+VtpRXXtaDP8/IywYfuQ==
-X-Received: by 2002:a17:902:eb8a:b0:1d3:da07:5731 with SMTP id q10-20020a170902eb8a00b001d3da075731mr1397869plg.22.1703008019566;
-        Tue, 19 Dec 2023 09:46:59 -0800 (PST)
+        bh=XaVzwwT2ecLOtMDBM5TdFJiJ9XdFZ6MUpboDwIj/4ug=;
+        b=sANIAVRDjjtBzZlwR+FdkoiSKf0nAOzWc6s9LLutsTqEjkmGHiMeQN7PsY1G2K4f7F
+         65mb5aEQLB1I4L8eI7zahiCF1N00Wy1bNoxYgEq9cXwmtZPFC8xz9f4pOk0VeCIwH9xR
+         14PCRD2bnJg8lvto2X+bs8XlP/zHLHHbQ+BgExMlKH0ndcGMj9X1y5cP45uHP2H/0WGu
+         zQAKQo5TQuyv5lYfePY7YlJW9DlcbU+p/8SoKoyHIF5RAn4IQkzvyuZ/j8IWEZWcbsVu
+         I4YUbDEEAm7MMrpzSgXzumnLHq9FMfvNnYyqBUHdUydzan4YiayCr6GGC0WlDErMurwT
+         sbKg==
+X-Gm-Message-State: AOJu0YwPJlxtkO1hJtGUt3BNBhl2Y8eMScSIxzsujNlAr8rcV+CKyT1g
+	IIZLX2t3Hsb1MFKSBip67r4jXw==
+X-Google-Smtp-Source: AGHT+IG5x81QIwdA146e8SSr+Pdh859h/oT2VMGTgxkFKS+ftvwwQnsNNroKYOvMgeiD+AUyeRhwsQ==
+X-Received: by 2002:a17:903:2347:b0:1d3:c730:f0a2 with SMTP id c7-20020a170903234700b001d3c730f0a2mr3728002plh.118.1703008025154;
+        Tue, 19 Dec 2023 09:47:05 -0800 (PST)
 Received: from sunil-pc.Dlink ([106.51.188.200])
-        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b001d3320f6143sm14453015plh.269.2023.12.19.09.46.54
+        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b001d3320f6143sm14453015plh.269.2023.12.19.09.46.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 09:46:59 -0800 (PST)
+        Tue, 19 Dec 2023 09:47:04 -0800 (PST)
 From: Sunil V L <sunilvl@ventanamicro.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
@@ -79,9 +79,9 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
 	Marc Zyngier <maz@kernel.org>,
 	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v3 15/17] ACPI: RISC-V: Create APLIC platform device
-Date: Tue, 19 Dec 2023 23:15:24 +0530
-Message-Id: <20231219174526.2235150-16-sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v3 16/17] ACPI: RISC-V: Create PLIC platform device
+Date: Tue, 19 Dec 2023 23:15:25 +0530
+Message-Id: <20231219174526.2235150-17-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
 References: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
@@ -93,175 +93,61 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since APLIC needs to be a platform device, probe the MADT and create
-platform devices for each APLIC in the system.
+Since PLIC needs to be a platform device, probe the MADT and create
+platform devices for each PLIC in the system.
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- drivers/acpi/riscv/init.c |   2 +
- drivers/acpi/riscv/init.h |   5 ++
- drivers/acpi/riscv/irq.c  | 118 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 125 insertions(+)
- create mode 100644 drivers/acpi/riscv/init.h
+ drivers/acpi/riscv/init.c |  1 +
+ drivers/acpi/riscv/init.h |  1 +
+ drivers/acpi/riscv/irq.c  | 19 +++++++++++++++++++
+ 3 files changed, 21 insertions(+)
 
 diff --git a/drivers/acpi/riscv/init.c b/drivers/acpi/riscv/init.c
-index b5807bbdb171..e7eff7ab1474 100644
+index e7eff7ab1474..c6fd4097e8ae 100644
 --- a/drivers/acpi/riscv/init.c
 +++ b/drivers/acpi/riscv/init.c
-@@ -6,7 +6,9 @@
-  */
- 
- #include <linux/acpi.h>
-+#include "init.h"
- 
+@@ -11,4 +11,5 @@
  void __init acpi_riscv_init(void)
  {
-+	riscv_acpi_aplic_platform_init();
+ 	riscv_acpi_aplic_platform_init();
++	riscv_acpi_plic_platform_init();
  }
 diff --git a/drivers/acpi/riscv/init.h b/drivers/acpi/riscv/init.h
-new file mode 100644
-index 000000000000..17bcf0baaadb
---- /dev/null
+index 17bcf0baaadb..b4b305d83b3a 100644
+--- a/drivers/acpi/riscv/init.h
 +++ b/drivers/acpi/riscv/init.h
-@@ -0,0 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#include <linux/init.h>
-+
-+void __init riscv_acpi_imsic_platform_init(void);
-+void __init riscv_acpi_aplic_platform_init(void);
+@@ -3,3 +3,4 @@
+ 
+ void __init riscv_acpi_imsic_platform_init(void);
+ void __init riscv_acpi_aplic_platform_init(void);
++void __init riscv_acpi_plic_platform_init(void);
 diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
-index 36e0525b3235..d08a851ab6dc 100644
+index d08a851ab6dc..f14ea43b0178 100644
 --- a/drivers/acpi/riscv/irq.c
 +++ b/drivers/acpi/riscv/irq.c
-@@ -6,7 +6,36 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/platform_device.h>
- #include <linux/sort.h>
-+#include "init.h"
-+
-+static LIST_HEAD(ext_intc_list);
-+
-+struct ext_intc_fwnode_list {
-+	struct fwnode_handle *fwnode;
-+	u32 gsi_base;
-+	u32 nr_irqs;
-+	struct list_head list;
-+};
-+
-+struct fwnode_handle *ext_entc_get_gsi_domain_id(u32 gsi)
-+{
-+	struct ext_intc_fwnode_list *ext_intc_element;
-+	struct list_head *i, *tmp;
-+
-+	/* Find the External Interrupt controller that manages this GSI. */
-+	list_for_each_safe(i, tmp, &ext_intc_list) {
-+		ext_intc_element = list_entry(i, struct ext_intc_fwnode_list, list);
-+		if (gsi >= ext_intc_element->gsi_base &&
-+		    gsi < (ext_intc_element->gsi_base + ext_intc_element->nr_irqs))
-+			return ext_intc_element->fwnode;
-+	}
-+
-+	return NULL;
-+}
- 
- static int irqchip_cmp_func(const void *in0, const void *in1)
+@@ -148,3 +148,22 @@ void __init riscv_acpi_aplic_platform_init(void)
  {
-@@ -30,3 +59,92 @@ void arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr)
- 		return;
- 	sort(ape, nr, sizeof(*ape), irqchip_cmp_func, NULL);
+ 	acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, aplic_parse_madt, 0);
  }
 +
-+static int __init irqchip_add_platform_device(char *irqchip_name, u32 irqchip_id,
-+					      resource_size_t iomem_res_start,
-+					      resource_size_t iomem_res_size,
-+					      u32 gsi_base,
-+					      u32 nr_irqs,
-+					      union acpi_subtable_headers *header)
++static int __init plic_parse_madt(union acpi_subtable_headers *header,
++				  const unsigned long end)
 +{
-+	struct ext_intc_fwnode_list *ext_intc_element;
-+	struct platform_device *pdev;
-+	struct fwnode_handle *fn;
-+	struct resource *res;
-+	int ret;
++	struct acpi_madt_plic *plic = (struct acpi_madt_plic *)header;
 +
-+	fn = irq_domain_alloc_named_id_fwnode(irqchip_name, irqchip_id);
-+	if (!fn)
-+		return -ENOMEM;
-+
-+	pdev = platform_device_alloc(irqchip_name, irqchip_id);
-+	if (!pdev) {
-+		irq_domain_free_fwnode(fn);
-+		return -ENOMEM;
-+	}
-+
-+	res = kcalloc(1, sizeof(*res), GFP_KERNEL);
-+	if (!res) {
-+		irq_domain_free_fwnode(fn);
-+		platform_device_put(pdev);
-+		return -ENOMEM;
-+	}
-+
-+	ext_intc_element = kcalloc(1, sizeof(*ext_intc_element), GFP_KERNEL);
-+	if (!ext_intc_element)
-+		return -ENOMEM;
-+
-+	ext_intc_element->fwnode = fn;
-+	ext_intc_element->gsi_base = gsi_base;
-+	ext_intc_element->nr_irqs = nr_irqs;
-+	list_add_tail(&ext_intc_element->list, &ext_intc_list);
-+
-+	res->start = iomem_res_start;
-+	res->end = res->start + iomem_res_size - 1;
-+	res->flags = IORESOURCE_MEM;
-+	ret = platform_device_add_resources(pdev, res, 1);
-+	/*
-+	 * Resources are duplicated in platform_device_add_resources,
-+	 * free their allocated memory
-+	 */
-+	kfree(res);
-+
-+	/*
-+	 * Add copy of aplic pointer so that platform driver get aplic details.
-+	 */
-+	ret = platform_device_add_data(pdev, &header, sizeof(header));
-+	if (ret) {
-+		irq_domain_free_fwnode(fn);
-+		platform_device_put(pdev);
-+		return ret;
-+	}
-+
-+	pdev->dev.fwnode = fn;
-+	ret = platform_device_add(pdev);
-+	if (ret) {
-+		irq_domain_free_fwnode(fn);
-+		platform_device_put(pdev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init aplic_parse_madt(union acpi_subtable_headers *header,
-+				   const unsigned long end)
-+{
-+	struct acpi_madt_aplic *aplic = (struct acpi_madt_aplic *)header;
-+
-+	return irqchip_add_platform_device("riscv-aplic",
-+					   aplic->id,
-+					   aplic->base_addr,
-+					   aplic->size,
-+					   aplic->gsi_base,
-+					   aplic->num_sources,
++	return irqchip_add_platform_device("riscv-plic",
++					   plic->id,
++					   plic->base_addr,
++					   plic->size,
++					   plic->gsi_base,
++					   plic->num_irqs,
 +					   header);
 +}
 +
-+void __init riscv_acpi_aplic_platform_init(void)
++void __init riscv_acpi_plic_platform_init(void)
 +{
-+	acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, aplic_parse_madt, 0);
++	acpi_table_parse_madt(ACPI_MADT_TYPE_PLIC, plic_parse_madt, 0);
 +}
 -- 
 2.39.2
