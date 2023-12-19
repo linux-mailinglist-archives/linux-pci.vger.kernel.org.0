@@ -1,227 +1,227 @@
-Return-Path: <linux-pci+bounces-1171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1172-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0570818A3A
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 15:40:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5ED4E818E77
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 18:45:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A0D928CD8C
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 14:40:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 833271C248A2
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 17:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D1A1BDCD;
-	Tue, 19 Dec 2023 14:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12846374CF;
+	Tue, 19 Dec 2023 17:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BmWfoBj2";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="JPiZAxiX"
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="G7zB6JWl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283B51CAB0;
-	Tue, 19 Dec 2023 14:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1702996779; x=1734532779;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=DYkcDSlbCuxdJBZ5vHL/CA1Rqo7BhrCGvTmen7I4FeA=;
-  b=BmWfoBj2KMb4nXEik7+wibnEbjZYTLqNxcFvI04J8kNWAX/4SUh0MmQA
-   FaFJZGyOGLnwukHurz7IlLCa9JDlJRo4Tm74FKeqEysH57nUxCImA0ksK
-   xCvrofdfZoAsUPdRd6NVFk1wjV1YYsTZILEirMNkrq/IUVssnvDTBsKfw
-   tXIuSHYMylH5+ycXGGAKL9kGECNGMcj8U5TkTFo7qT6MWNbT/jWu0+aBj
-   xDtS5cJ7qHTEIEjL1hFTZUC1yd7sWBoSowg1Db+mF4chhUfvv4OizDzr5
-   tRxBJG42H8fwpHjGX0AdlnrNGUabPFyZDuQLnIBOModlWz+e70JjpKlVo
-   w==;
-X-CSE-ConnectionGUID: /bpEv/9pTYWbuQqxt6jSqg==
-X-CSE-MsgGUID: H1YUJLVCTri2MZ1XjaLbQQ==
-X-IronPort-AV: E=Sophos;i="6.04,288,1695657600"; 
-   d="scan'208";a="5300551"
-Received: from mail-dm6nam11lp2169.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.169])
-  by ob1.hgst.iphmx.com with ESMTP; 19 Dec 2023 22:39:36 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZfzZHieSyTKWb4Kc+4W7sgcfkRNMSvj0gYmcsRHVy9mKgKfeux7m/UBBc5CHHn4IMX1zc8MU4pZ4rZV0VIPsvWBNXu3ShxbYHZVYi7CyAgPHjo49YUBVkECTcpJS9jOjZLZn7TAy8zCIiBObANMIvo0mj70o+eWZCva0MPHOuXoQcQzbH5aG6i2+xCkS6sTWq0i5xsrNWyjuYEGmqujI4ZE0tWXtF6iaKYOQdhhKVKCEoiu8P/DbYOrGVVXORKlH7vQK5XQMJHgRwSSSpnmh8x4f7cbzZc6sLGHjELLTrjlPjmrjrtLf2nw6VlXYqtwRsJGhK9vYsaoVTNox8gateA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SW1gcShZ7RP0yfJyVRk5vdUV1Zf4zA/gdPrn7q51U9M=;
- b=mO7gLQPeCXWyT6FCR2H1zolcCt1G2M4Qn9y9DCCvc0zbjeGmTL/WXc9H8DAUj7tpyq0YD4gr4BwKDW22/oBUYs0p//3nsHoY1Cnc6RklX091L4u4vdflzGTMsgaTuYrhHqrkbbb3UrXJuW6LALdoPyU0K78xOuwd+6jm+/zWvsLKnrEIax+rKiQCatn26ZBFJ5f069JqzitrY2ouuv8mB90AA4L7IUfEYqnmd5IKBvhswz2/AyiJ0+kghZ9hY3rfogFyRDINrHpooWUs1zUwzQlHmGr3TmswcHrrEs9RbwOWGibPOyaaynYrKs0lsV9hG32FQscI1/Q47xVk8ufSMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5713174A
+	for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 17:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6d47bb467a9so2136286b3a.1
+        for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 09:45:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SW1gcShZ7RP0yfJyVRk5vdUV1Zf4zA/gdPrn7q51U9M=;
- b=JPiZAxiXkT+yQdT/SAAhYqcoxHG0cDEp3WBBg128uAonWUWDHwXWNsSP41mPTnpF7usfEfO0hZqXqd//3eBAF7vFmO2iypHn72pdPxOLAc2yt02yqL6RwRTdvXHQjPuauF+UEGSogpUaZsMEZmVujG4zoIAdudMvZk9CLFcd3M4=
-Received: from MN2PR04MB6272.namprd04.prod.outlook.com (2603:10b6:208:e0::27)
- by MN2PR04MB6301.namprd04.prod.outlook.com (2603:10b6:208:1a7::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Tue, 19 Dec
- 2023 14:38:35 +0000
-Received: from MN2PR04MB6272.namprd04.prod.outlook.com
- ([fe80::ffca:609a:2e2:8fa0]) by MN2PR04MB6272.namprd04.prod.outlook.com
- ([fe80::ffca:609a:2e2:8fa0%4]) with mapi id 15.20.7091.034; Tue, 19 Dec 2023
- 14:38:35 +0000
-From: Niklas Cassel <Niklas.Cassel@wdc.com>
-To: Frank Li <Frank.li@nxp.com>
-CC: "imx@lists.linux.dev" <imx@lists.linux.dev>, Jingoo Han
-	<jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Jon Mason <jdmason@kudzu.us>, "open list:PCI DRIVER
- FOR SYNOPSYS DESIGNWARE" <linux-pci@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Thread-Topic: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Thread-Index: AQHaMja1NResTHTkFE6//FhBs62b57CwYdiAgABGuYCAAAUWgA==
-Date: Tue, 19 Dec 2023 14:38:34 +0000
-Message-ID: <ZYGq6RdCfdhXFF/9@x1-carbon>
-References: <20231219044844.1195294-1-Frank.Li@nxp.com>
- <ZYFrUWM7JXdv7rtb@x1-carbon> <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
-In-Reply-To: <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR04MB6272:EE_|MN2PR04MB6301:EE_
-x-ms-office365-filtering-correlation-id: fce85d47-d1e2-4ec4-dae1-08dc00a02e35
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- HI5OElo7cOPP/kqa5FIKEXXvC9+oV0xlrvNsKY/PkEBBhtppDbRlYD+T+9LpeckhQGrmGWc/7Ss1fu9YjgH/jieqZ5SzVpsGUp5qT41nkQdtVwfGgCn3tp+Fa/evS82tmMvtzQbvYi/OsKluay7BRwypVe1thMhXSwztqs9qmQWvQfpW8Fw4705x86jV6yY15zBWjUKDfC97+aGJtITrGJszauSoOueAPC6AxZ3Tr1vQtByzH5lGB+oeInbLzcj0Kn/SelCs8mezyrmGZlea2F2Bz9akoALCBsIkwQ6CpuBaWpnnRpKLGWQmCFXFbE7Lz7bKQOLYvv/3+ZmUC27Gd+QRN4UcY3O1lOPVF3nrzmnbmA7JBE1LMPQsllWWjIFicDFtK8QFCM0mphy8y/9oiO/EKiMQwEpIEUUWtbPE1EEuGJx6NcVzRNYCjuGOEl2JvULv4NB3uZevXHF9ADz1sYJ9PPJb+1JOYqdj+lX19gQ8WlPJbeqH9m7qdEKMNOpM8GLTfQZJhobFu3PYvvMPozwvff2Yn8XlXayYT6pD12rQFSnGXwZIDoxLkcCYbZTHyBVV9HObvTxGi6ztfhXJtyHi1uw+XIcPnYCjWxlBFMI=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR04MB6272.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(39860400002)(366004)(396003)(346002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(122000001)(86362001)(2906002)(71200400001)(4326008)(8936002)(8676002)(54906003)(64756008)(66476007)(66446008)(5660300002)(66946007)(7416002)(66556008)(6916009)(316002)(91956017)(38100700002)(76116006)(966005)(478600001)(82960400001)(6486002)(9686003)(6512007)(41300700001)(26005)(38070700009)(83380400001)(6506007)(33716001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?o+yuFT5qQdxtjcXN7NM/vTFgu/mn/cP+lr0bArLpuRQBFKhcfnLLQSnJD2?=
- =?iso-8859-2?Q?gCje6VXFUyj1ueZRhHK/nvdP4pjan3qGXbDF4VtTIwxdLscwE/lVq7IvXQ?=
- =?iso-8859-2?Q?ASToi0FmzRmlpIS2eIad3N66d44avKIY49T7jSe/1gFj2jhW5RUJR2hDeE?=
- =?iso-8859-2?Q?FkJWazDZ2YnNZsBPLtfC58S5k7TZ08RnAV2P96ugW2k/VVuVyq98AeqXJP?=
- =?iso-8859-2?Q?kR2snJDsMMqr1g8QYtwVp/SjLm56ajuHpzCCGyLof/pK7r/+uz/XBzhdiU?=
- =?iso-8859-2?Q?imom1lnmIgnOzRDymds2voBKwbD+dDvRhaPQGftngueqW69Z9IMaqvrF6P?=
- =?iso-8859-2?Q?uyUlTDIo9Yc/xs+eLt2PRvJvkjN6aEbQoezu7A+Tr00UayqmfQYDSETv4V?=
- =?iso-8859-2?Q?Y4KKu7OC8EPnjKbImUaYIP6H/4lz2PH32GDWgrviieSu5N4yXEVWJBklH7?=
- =?iso-8859-2?Q?LiqZqNbkviyIbuHGC35hVFR+soIDmpho9bRzqF5Pv8w2etjQLcTrhXq6sc?=
- =?iso-8859-2?Q?l+FqVdvGD/Pw27R6rdSYyocgcSgfMibxjieak1GAJXts2aJpKne/VN0Vv5?=
- =?iso-8859-2?Q?oQiLO6fMFTCMeoClYgpiS0Cfr0IYmGZvR4TWbYd/jDG2cHE6IwY1cITLij?=
- =?iso-8859-2?Q?P28dLyqIMWqdBrZ81IKwE0JKW4yRuWAkLbuEKkPCag0dZGD5UKibOQxS6D?=
- =?iso-8859-2?Q?YqnMP4EAXot4+PtXuRcKxKLOxIPzrqZFJ1TCx5BMYKV/oOogmQPxu8DK/s?=
- =?iso-8859-2?Q?hyNql43zf43MvjmdoacTqaeajX+V/ix4D8yYqjtnqHo1E7hFRFYHEh5iV6?=
- =?iso-8859-2?Q?94iChVpzxqgcsG7KWbalRzF53V0iCGVfONOuiSl7DJDVPi6aE4yDBUFyFp?=
- =?iso-8859-2?Q?EuZvetCdabbAjjbEECSWb5ab/+FBdpBzEAI9FqblXPvJBEcPql+eKqkPxB?=
- =?iso-8859-2?Q?94riM4XAoFgdXXmz6dn+QJ1Aby6ooL+OSHW7W1GMSuujx/pS/esSsuwXSY?=
- =?iso-8859-2?Q?ophlvU23Mp6XuMHd/x2l8JVx7R6FyU4XnjHOTh/rz2WzZGbtbbsGfcnQkM?=
- =?iso-8859-2?Q?zjv2J6pm9/VOd5yJkh0KngGaLkb/c9o4IyiLu+MfUKvm0i0bItOvyxWQrK?=
- =?iso-8859-2?Q?Dy/CvaqTnIvl7lZsHCIR+MaIp9/z2gnYT630/o5So7Rnqd+Fk1S3LK45g2?=
- =?iso-8859-2?Q?ySnkz5vNh2Q5dNlLFtI3qJvAngYBZORzZ8ONXYasTH5S1msG+7JmF1Tejk?=
- =?iso-8859-2?Q?GgOGXhh07iNpR1lfYpQ7H0id0HUSb4l/ZBMBVg174Iq6M2HCK5AUDSIRPz?=
- =?iso-8859-2?Q?t7VCQnRZfBon/gsHsGUQhMg+haqK9urJmv87ff9OLrk7ImQJjjwmUb0Ofm?=
- =?iso-8859-2?Q?7+PpLQPFv8h39BkjXIGpOWlBlsEGoqi3jXGwIez2kwoSmWciMYXeXlxS3r?=
- =?iso-8859-2?Q?xvMDyF1EQF0x87hcPg4Q5c5+HFFVWJGMVl4xmj6cQsAxPXeVWVd/cDbORH?=
- =?iso-8859-2?Q?iMIPtaIIG2IXPzVfuC3kOBHY8HkljCpMhduyr9A6gwEtVZMkTqX1bhVFUu?=
- =?iso-8859-2?Q?MZlDaXnQ1boVYzXPP8DddE3p6QMhUitiHAu5k12RzIyWepu0NqwaTFvjCP?=
- =?iso-8859-2?Q?6u52EEkk3JACOJN6JYhgskeFoxO2ZiGESBlx1l0QMH29R81hDPce53JA?=
- =?iso-8859-2?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-ID: <53AAACE1FC9C464697DE0F7228A4727A@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=ventanamicro.com; s=google; t=1703007937; x=1703612737; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=959oPX30wMegwb1RPQMugDw8tMBDjS9o+5BG/fh0FBc=;
+        b=G7zB6JWltfhL+hfXQnIoYIV5sdpPY+NymWT4cEZDWxG8smsr/mf30/SYfVLOwgI3Yt
+         owzOlvbml8ubI6NOtbCYkIqtNyOIAPlnLsMN9dMWXRIxwfa07atBVyxlhnsEalS+BwZA
+         BvxG1+W+j1aHpa/iPmIYp6/gFaB8iHCvuY/hShn1XA6h2bswKgkSkSQXRpVBJFo9dIQw
+         Ug+t1q99ZddFCbaOzy18vvLjvWBj1hsYkvS0vnoTqMQiFZq/yIuBrGTiPALrBKTPMid4
+         E2Eup05wb3CbXFCNC+SxjJW/e7BD7PME0l7M8SUeeL6Veew4SbnUAF0twPL0piopkVsA
+         D8NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703007937; x=1703612737;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=959oPX30wMegwb1RPQMugDw8tMBDjS9o+5BG/fh0FBc=;
+        b=q8pOKIVvluAT4YP6uu4Fl4EfrR0XvKM+Utl9iB9gW148vR5lkJsucKkBuZ17cQitVd
+         BNF2WDEww0j4kas2HsSBfWgPUCKhp/QkF1x+RIg+IaNDhEoNGoR4Tdl5QWSavZ4XDRFf
+         rRlMRlJItps6rHl2VNKK5ncJB14MuDTNCxXfJrpxVhLozgaR6IS1LwBLybg9CypQVvNt
+         P+fvu5iYnIh79/wn6T//LXNPrD8/48yxVR9UjYZYc6HoSJV/0yjMYnoJKTHkfpn6InPs
+         MTb35DH/W+f1ZWGdjI41VOphYhHAPDOeBNuZralDerGyI84jlg1ANMg393bc16N9eS0F
+         dEtA==
+X-Gm-Message-State: AOJu0YxbWIBeTTWWAup/U15ZrHvuqJf2uYx+zbrbj60+IOnnUN1VO6W/
+	28RTLQzBkmE8MjZtNbi7gU9WFw==
+X-Google-Smtp-Source: AGHT+IFwXvF0wStLmtEexCX7/btdTXes/e+r4u90Q61lIBg2zzfPyLBBBtaNfs0lLogbWkW5yL7UDQ==
+X-Received: by 2002:a17:903:11d1:b0:1d0:6ffd:6117 with SMTP id q17-20020a17090311d100b001d06ffd6117mr1910887plh.57.1703007935507;
+        Tue, 19 Dec 2023 09:45:35 -0800 (PST)
+Received: from sunil-pc.Dlink ([106.51.188.200])
+        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b001d3320f6143sm14453015plh.269.2023.12.19.09.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 09:45:35 -0800 (PST)
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v3 00/17] RISC-V: ACPI: Add external interrupt controller support
+Date: Tue, 19 Dec 2023 23:15:09 +0530
+Message-Id: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	SI1vh3gANpiOiK/ZFuM9H+i1U/HfsjG85U0bgtpLU3kUBSKOYLerJREN4YBbOz5c6HGqC8gKkBt0A8Z602gJ3OwxHrM5PS1bsirTsg0K5PNYdv7QzYORgE69yrnbjthh/kYVsBhCwjLQQdibDmgJxUSuffEU6U/g34HQ7eAUkInXaSURs37a0CDaZW7pJZO3XsP1JTMCcYc7Bdb7RRNRr9ldYBNalaqhAOBD1hxkrIs494Qn4+xsPeihHCclPX9fhsJcpniLVYe2wIsR7rFz0KQ5KU5/sQzwo8oUeW4uRF31LXC9R0vzTHO3E5Ap0HaFu1XkxoprthHctwceATWfXVCk0xg3avKVDumw0VcUFEt5Emkb3ObUY6e7W7qXpK3k/Mv6jbdqwxF3m+rYnqGDpFvYdRzKYDwCLGNDhvWX00XKY6VHIHIuetfb8NXhrd1Qr82r9h0uf8KqdxuBppyh+jLPdKcCJyYtSwM/2p4EuaMd8ZCFnR5cvK7eRvb9tImmcdN+Z4c9IhZb5SBmufv3qO2obiZbpR3wSgwQ4FknVpRgl0CAJlIxwsghtnW1nqfp0BK1HbPNclHh/C1+XIeAt/dXKxp/tmAMZWIumABLQAUyyXb83aNsryL9PCgntGnK
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR04MB6272.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fce85d47-d1e2-4ec4-dae1-08dc00a02e35
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2023 14:38:34.9216
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +27xxZ3TBrL10QOWLpmtMT037KyPav4eRFE2I+0DeSczq4mGsQpTxZp0vaYrj59QmmlpVQ0/vbeJIOfzNGltMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6301
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 19, 2023 at 09:20:21AM -0500, Frank Li wrote:
-> On Tue, Dec 19, 2023 at 10:07:14AM +0000, Niklas Cassel wrote:
-> > On Mon, Dec 18, 2023 at 11:48:43PM -0500, Frank Li wrote:
-> > > dw_pcie_ep_inbound_atu()
-> > > {
-> > > 	...
-> > > 	if (!ep->bar_to_atu[bar])
-> > > 		free_win =3D find_first_zero_bit(ep->ib_window_map, pci->num_ib_win=
-dows);
-> > > 	else
-> > > 		free_win =3D ep->bar_to_atu[bar];
-> > > 	...
-> > > }
-> > >=20
-> > > The atu index 0 is valid case for atu number. The find_first_zero_bit=
-()
-> > > will return 6 when second time call into this function if atu is 0. S=
-uppose
-> > > it should use branch 'free_win =3D ep->bar_to_atu[bar]'.
-> > >=20
-> > > Change 'bar_to_atu' to s8. Initialize bar_to_atu as -1 to indicate it=
- have
-> > > not allocate atu to the bar.
-> > >=20
-> > > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-> > > Close: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T=
-/#u
-> > > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() upd=
-ate inbound map address")
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >=20
-> > > Notes:
-> > >     @Niklas:
-> > >     	I have not test your case. I should be equal to previous's fix i=
-n
-> > >     mail list.
-> >=20
-> > Hello Frank,
-> >=20
-> > Thank you for sending a proper fix for this!
-> >=20
-> > Personally, I slightly prefer your fix that saves the iatu index + 1, a=
-nd
-> > keeps 0 to mean unused. That way, you don't need the memset, and you do=
-n't
-> > need to change the type to signed, but either way is fine by me, so:
->=20
-> index + 1 don't match hardware iATU index. It will be confused because
-> other parts is 0 based.
->=20
-> So I choose "-1" as free iATU.
+This series adds support for the below ECR approved by ASWG.
+1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
 
-A s8 can hold a max value of 127.
-CX_ATU_NUM_OUTBOUND_REGIONS seems to be 0-255.
+The series primarily enables irqchip drivers for RISC-V ACPI based
+platforms.
 
-Since the DWC code can be synthesized with 256 iATUs,
-your code will not work on systems with 128 or more iATUs.
+The series can be broadly categorized like below. 
 
-If we continue to use a u8, and offset the saved value by one,
-we will at least be able to support 255-1 =3D=3D 254 iATUs.
+1) PCI ACPI related functions are migrated from arm64 to common file so
+that we don't need to duplicate them for RISC-V.
 
+2) Introduced support for fw_devlink for ACPI nodes for IRQ dependency.
+This helps to support deferred probe of interrupt controller drivers.
 
-Kind regards,
-Niklas=
+3) Modified pnp_irq() to try registering the IRQ  again if it sees it in
+disabled state. This solution is similar to how
+platform_get_irq_optional() works for regular platform devices.
+
+4) Added support for re-ordering the probe of interrupt controllers when
+IRQCHIP_ACPI_DECLARE is used.
+
+5) ACPI support added in RISC-V interrupt controller drivers.
+
+This series is based on Anup's AIA v11 series. Since Anup's AIA v11 is
+not merged yet and first time introducing fw_devlink, deferred probe and
+reordering support for IRQCHIP probe, this series is still kept as RFC.
+Looking forward for the feedback!
+
+Changes since RFC v2:
+	1) Introduced fw_devlink for ACPI nodes for IRQ dependency.
+	2) Dropped patches in drivers which are not required due to
+	   fw_devlink support.
+	3) Dropped pci_set_msi() patch and added a patch in
+	   pci_create_root_bus().
+	4) Updated pnp_irq() patch so that none of the actual PNP
+	   drivers need to change.
+
+Changes since RFC v1:
+	1) Abandoned swnode approach as per Marc's feedback.
+	2) To cope up with AIA series changes which changed irqchip driver
+	   probe from core_initcall() to platform_driver, added patches
+	   to support deferred probing.
+	3) Rebased on top of Anup's AIA v11 and added tags.
+
+To test the series,
+
+1) Qemu should be built using the riscv_acpi_b2_v8 branch at
+https://github.com/vlsunil/qemu.git
+
+2) EDK2 should be built using the instructions at:
+https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
+
+3) Build Linux using this series on top of Anup's AIA v11 series.
+
+Run Qemu:
+qemu-system-riscv64 \
+ -M virt,pflash0=pflash0,pflash1=pflash1,aia=aplic-imsic \
+ -m 2G -smp 8 \
+ -serial mon:stdio \
+ -device virtio-gpu-pci -full-screen \
+ -device qemu-xhci \
+ -device usb-kbd \
+ -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
+ -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
+ -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
+ -kernel arch/riscv/boot/Image \
+ -initrd rootfs.cpio \
+ -append "root=/dev/ram ro console=ttyS0 rootwait earlycon=uart8250,mmio,0x10000000"
+
+To boot with APLIC only, use aia=aplic.
+To boot with PLIC, remove aia= option.
+
+This series is also available in acpi_b2_v3_riscv_aia_v11 branch at
+https://github.com/vlsunil/linux.git
+
+Based-on: 20231023172800.315343-1-apatel@ventanamicro.com
+(https://lore.kernel.org/lkml/20231023172800.315343-1-apatel@ventanamicro.com/)
+
+Sunil V L (17):
+  arm64: PCI: Migrate ACPI related functions to pci-acpi.c
+  RISC-V: ACPI: Implement PCI related functionality
+  PCI: Make pci_create_root_bus() declare its reliance on MSI domains
+  ACPI: Add fw_devlink support for ACPI fwnode for IRQ dependency
+  ACPI: irq: Add support for deferred probe in acpi_register_gsi()
+  pnp.h: Reconfigure IRQ in pnp_irq() to support deferred probe
+  ACPI: scan.c: Add weak arch specific function to reorder the IRQCHIP
+    probe
+  ACPI: RISC-V: Implement arch function to reorder irqchip probe entries
+  irqchip: riscv-intc: Add ACPI support for AIA
+  irqchip: riscv-imsic: Add ACPI support
+  irqchip: riscv-aplic: Add ACPI support
+  irqchip: irq-sifive-plic: Add ACPI support
+  ACPI: bus: Add RINTC IRQ model for RISC-V
+  ACPI: bus: Add acpi_riscv_init function
+  ACPI: RISC-V: Create APLIC platform device
+  ACPI: RISC-V: Create PLIC platform device
+  irqchip: riscv-intc: Set ACPI irqmodel
+
+ arch/arm64/kernel/pci.c                    | 191 ---------------------
+ arch/riscv/Kconfig                         |   2 +
+ arch/riscv/include/asm/irq.h               |  46 +++++
+ arch/riscv/kernel/acpi.c                   |  31 ++--
+ drivers/acpi/bus.c                         |   4 +
+ drivers/acpi/irq.c                         |  22 +++
+ drivers/acpi/property.c                    |  20 +++
+ drivers/acpi/riscv/Makefile                |   2 +-
+ drivers/acpi/riscv/init.c                  |  15 ++
+ drivers/acpi/riscv/init.h                  |   6 +
+ drivers/acpi/riscv/irq.c                   | 169 ++++++++++++++++++
+ drivers/acpi/scan.c                        |   3 +
+ drivers/irqchip/irq-riscv-aplic-direct.c   |  21 ++-
+ drivers/irqchip/irq-riscv-aplic-main.c     |  64 ++++---
+ drivers/irqchip/irq-riscv-aplic-main.h     |   1 +
+ drivers/irqchip/irq-riscv-aplic-msi.c      |   9 +-
+ drivers/irqchip/irq-riscv-imsic-early.c    |  52 +++++-
+ drivers/irqchip/irq-riscv-imsic-platform.c |  51 ++++--
+ drivers/irqchip/irq-riscv-imsic-state.c    | 128 +++++++-------
+ drivers/irqchip/irq-riscv-imsic-state.h    |   2 +-
+ drivers/irqchip/irq-riscv-intc.c           |  96 ++++++++++-
+ drivers/irqchip/irq-sifive-plic.c          |  76 ++++++--
+ drivers/pci/pci-acpi.c                     | 182 ++++++++++++++++++++
+ drivers/pci/probe.c                        |   1 +
+ drivers/pnp/pnpacpi/core.c                 |   7 +
+ include/linux/acpi.h                       |  18 ++
+ include/linux/irqchip/riscv-imsic.h        |  10 ++
+ include/linux/pnp.h                        |  14 +-
+ 28 files changed, 895 insertions(+), 348 deletions(-)
+ create mode 100644 drivers/acpi/riscv/init.c
+ create mode 100644 drivers/acpi/riscv/init.h
+ create mode 100644 drivers/acpi/riscv/irq.c
+
+-- 
+2.39.2
+
 
