@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-1157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F4EA81819D
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 07:37:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41B5C8181AA
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 07:49:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1AC0BB212A4
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 06:37:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 528741C22093
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 06:49:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26EB4749F;
-	Tue, 19 Dec 2023 06:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9429E8480;
+	Tue, 19 Dec 2023 06:49:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="baunNyDg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQjAU0ud"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43059C2C1;
-	Tue, 19 Dec 2023 06:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFE3848D;
+	Tue, 19 Dec 2023 06:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702967857; x=1734503857;
+  t=1702968586; x=1734504586;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=fFUhMnVomwBdChBKrA8kj50b9XVjLJaJBBRWmDJ3yiQ=;
-  b=baunNyDgjetsJoqwCEq+Yyn5ve7X6iWUxaeHuN4P8srjbHeGRg2Ss+s5
-   Ac8DMSa2tF9k/Fvz1PWV6vXZwDLyyzCnPhXaTXidPwWoyL2mSO/sI3RV/
-   bFE2AwfER+8vC6cM3aKmdqCeeZvVBlQBiS2wzo5K0FmW1wgtgImFWslnd
-   jIh7+plHblOJWNlzgDqGSKePLSmE8z6ah2nvCWP9oDdHExUCUiCYu1kRG
-   pFTuz2jfcO8k5nwP9HXDzWYySn1X10ICG26prh57FyDfqW3KpVtCjT72/
-   elce6fmGflTwnLdZsiinG2CNJMH6Hbj2p006WcYblANTP9sjpDi/F09oI
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="2446323"
+  bh=W+wHbowYanNWGwv878mBz39L3MefIcpk/fwhZj0GRfw=;
+  b=mQjAU0udDVdoxwxbmm8GoAFH5X6ltv43RLB/slo+XmwAwqVudO5XZQcX
+   mk0L/oKiPP4Z0LG18ywaezUdMXkdOGt2ewAtnnXi34K9eiCxaTleymkhT
+   WoB9sucpNFEpIWcOwepsDmUFm+HCRRv5xtrxEuQdQT4HN7eCTjMEKLhvQ
+   BaoW1rSvoA2S1untU/6HedbCjFK9337lwHq3yPq/aOvVSROeW6ene7k41
+   Dez2JpTXJzOT6sBfx7QKmimZBHvEbskyg8RLQSNjenWmLf9EVGxZ1quk7
+   tRRD6FIi3+MaGTUPEknPFCwMR9aAQ9fFOt3nSQqlAc2+SCvhb1gw7oBv5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="375767596"
 X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
-   d="scan'208";a="2446323"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 22:37:37 -0800
+   d="scan'208";a="375767596"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 22:49:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,287,1695711600"; 
-   d="scan'208";a="17489808"
+   d="scan'208";a="24086062"
 Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.36]) ([10.93.26.36])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 22:37:34 -0800
-Message-ID: <53ee0c6e-aa33-44d7-b83d-3c15b094cbaf@linux.intel.com>
-Date: Tue, 19 Dec 2023 14:37:31 +0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 22:49:43 -0800
+Message-ID: <a275032f-cb1d-4ccc-9418-9567aba6b343@linux.intel.com>
+Date: Tue, 19 Dec 2023 14:49:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -283,22 +283,23 @@ On 12/19/2023 2:09 PM, Baolu Lu wrote:
 >                 return;
 >
 > +       if (pci_dev_is_disconnected(to_pci_dev(dev)))
-> +               return
-> +
 
-I did this in the first version, but I thought seconds, changed it.
+I like this kind of simplicity, but rationalist always brings me back to 
+the no-error(ugly)
 
-Anyway, not performance critical path, I am okay with them.
-
+style.  :)
 
 Thanks,
 
 Ethan
 
-> sid = info->bus << 8 | info->devfn;
+> + return
+> +
+>         sid = info->bus << 8 | info->devfn;
 >         qdep = info->ats_qdep;
 >         pfsid = info->pfsid;
 >
 > Best regards,
 > baolu
+>
 
