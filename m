@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-1179-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1180-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9FF2818E8B
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 18:48:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 203F9818E8E
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 18:48:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7D71287914
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 17:48:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5C4AB23A17
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Dec 2023 17:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF0537D10;
-	Tue, 19 Dec 2023 17:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5C237D14;
+	Tue, 19 Dec 2023 17:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fN0YXFY+"
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="hXeec/N+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137F039AED
-	for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 17:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3483A1AF
+	for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 17:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d3cb1ccccbso1898776b3a.0
-        for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 09:46:14 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d3eabe9321so1195155ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 19 Dec 2023 09:46:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1703007974; x=1703612774; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1703007980; x=1703612780; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wXn1vXDcIcY9aE9ZluWKdogaSHoQIJLjYHgL6fRVi5k=;
-        b=fN0YXFY+gKPhiZ28irmQajOEihnMc2/x/Tb8coMkWVkhcvzCYaAqElbcdFrydToIxB
-         jhtUFiv9wKlfT3L/g+An+Sb3ZKwLSCGcQ8PsFoSVeV0C81+XtOgdMCIvXUHph8l8FOxI
-         IncCGyZZXZGpDL/lqgeYBq6ubejtYR8AceNniMAXBjJZwExKxlXKzHsTuK6RapdIHJD0
-         K/bU14mD+vslgXgse2YkFiexegHQN/rVX7JzNSf8lTVqC576BMG4/St5tKzeBNTd9Ary
-         Nf9LN9e60ksjQNs0viggAeb+KmhubBlOvim677CS8cALprD6z3xcv63WX/3EFkUROwMS
-         lFHA==
+        bh=DxzCTJ+m1lwBq+RMy/cftySc6UneYPqTwJF8JhbniDw=;
+        b=hXeec/N+8w/TaInjdCZDrwA5oxBuB2FqPrscUupZ/mHRD7vS0bP/9ortxDQJfhhWlq
+         Btu267dcv/FSnCuA0hbLdqLG3jcn/iRqoyYaJDEbtKGTRW9jDnTscM/iX2bifzw6OOnw
+         +7eVmklAy/HVpmz8sj4gl6aBgYUa3w9phzafjcZLNOZeZAZZqRqXvXtMTNjlJZZYxDdN
+         WYYGD4q3WdhPn2XT00MaI7piSCUqWG+DrZzDEgiM/aKPEWyx3DbXaNutdhdwOs042tPt
+         0jGDHitJhY1cuDoBVrGrtIuCvDnfM6yy6tb7en4gtEWcDm8Hso86Dyu2NZ17pz4NnvTr
+         A1DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703007974; x=1703612774;
+        d=1e100.net; s=20230601; t=1703007980; x=1703612780;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wXn1vXDcIcY9aE9ZluWKdogaSHoQIJLjYHgL6fRVi5k=;
-        b=TaXQt5SaJShKMoN5BldUpR5luWYfvihQBtF3bCyGrG/nHvzJl0EqJXskTw+dMIXBoM
-         c37QxWRuiOYTYMzbEmu6Fr3P8ZLLIT8VKtTR5ut5Agz8ibKfivNzi666AqNA/5oGmTWi
-         FeM8BefE2ODFcJ93mvlp7MtgjqbA/1KGAMxQXktR+TGMhC6H3foohur0lR/3tHEOZ1M5
-         hmORdPd1RTQkVKQpAimRajNjsshhm5fu2Q+/rOV7t6pABJCzvzAqxdVtGJX5kPdZc11h
-         hwRO5OlpnEUD445RccLahrIXKr1Owz7t1LFFYxhnFFr56lSkg9YiuUlCvFExy8gYier2
-         bGWw==
-X-Gm-Message-State: AOJu0YysFDc3QND1Wy2IJnJTSCAQ0jqSXFTkMOS5garfcEdiqGmHZGG4
-	/vqzy+5EJtSeCt0cxFLuiBnUMg==
-X-Google-Smtp-Source: AGHT+IEyMcGZ8gZDustI/NrEk9p7KXDerpeWb1pADnYIYBEjwIh1UqME5pxQY3avzxvrA+zMIvUqTw==
-X-Received: by 2002:a17:902:ab84:b0:1d0:6ffe:1e6d with SMTP id f4-20020a170902ab8400b001d06ffe1e6dmr8678824plr.80.1703007974481;
-        Tue, 19 Dec 2023 09:46:14 -0800 (PST)
+        bh=DxzCTJ+m1lwBq+RMy/cftySc6UneYPqTwJF8JhbniDw=;
+        b=gu2AGyPz4FqJ+UsT+fFu/M/RAFMkghhCMtf7Z6vsblYpd8Mto76radTNxo9dtU7yUq
+         W7uhTqAUp661xRJ1xUXgCe+kyZ8CotWSdeLJPIvTASAREmYlNMqtLtK9PUjO/pXmRaZy
+         7CuvWWT+/nrJM/W7VR9RYZehck4YYx4JrS2Av7CIHh1aQygMlExBjB8X1pQ1zvsW6Y2n
+         oQSNaWM0FaXSpcso1oVjaM5AigeGaVie7J/wZ1e7o05tWnNmPXvBIuhRjM5xKsJrYp6H
+         qgEFze7Gtwp5YjbTK4eQIMLA1JKw30OzkP0TyJxsgIOWzYLxroQ6q3FTYDeP4eYbrOqw
+         Mdxg==
+X-Gm-Message-State: AOJu0YweZVGSWuvVCE+F9JUSwrkSsZTfUR7Yc3LJmdv39Wk8JQx0c+zO
+	pbZxN7eBG3EPDVLQWq+qbitCQA==
+X-Google-Smtp-Source: AGHT+IGFtvkGTPcA5+8hPSE9xpA6pHB1AGzz+4bVKCbl0RMQ6TV2kDkPIPCZHZCd/3GrTRkpVagWdQ==
+X-Received: by 2002:a17:903:41c8:b0:1d3:c5e4:b2f3 with SMTP id u8-20020a17090341c800b001d3c5e4b2f3mr2609020ple.100.1703007980064;
+        Tue, 19 Dec 2023 09:46:20 -0800 (PST)
 Received: from sunil-pc.Dlink ([106.51.188.200])
-        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b001d3320f6143sm14453015plh.269.2023.12.19.09.46.09
+        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b001d3320f6143sm14453015plh.269.2023.12.19.09.46.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 09:46:14 -0800 (PST)
+        Tue, 19 Dec 2023 09:46:19 -0800 (PST)
 From: Sunil V L <sunilvl@ventanamicro.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
@@ -79,9 +79,9 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
 	Marc Zyngier <maz@kernel.org>,
 	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [RFC PATCH v3 07/17] ACPI: scan.c: Add weak arch specific function to reorder the IRQCHIP probe
-Date: Tue, 19 Dec 2023 23:15:16 +0530
-Message-Id: <20231219174526.2235150-8-sunilvl@ventanamicro.com>
+Subject: [RFC PATCH v3 08/17] ACPI: RISC-V: Implement arch function to reorder irqchip probe entries
+Date: Tue, 19 Dec 2023 23:15:17 +0530
+Message-Id: <20231219174526.2235150-9-sunilvl@ventanamicro.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
 References: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
@@ -93,59 +93,68 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Unlike OF framework, the irqchip probe using IRQCHIP_ACPI_DECLARE has no
-order defined. Depending on the driver Makefile is not a good idea. So,
-usually it is worked around by mandating only root interrupt controller
-probed using IRQCHIP_ACPI_DECLARE and other interrupt controllers are
-probed via cascade mechanism.
+ACPI MADT entries for interrupt controllers don't have a way to describe
+the hierarchy. However, the hierarchy is known to the architecture and
+on RISC-V platforms, the MADT sub table types are ordered in the
+incremental order from the root controller which is RINTC. So, add
+architecture function for RISC-V to reorder the interrupt controller
+probing as per the hierarchy as below.
 
-However, this is also not a clean solution because if there are multiple
-root controllers (ex: RINTC in RISC-V which is per CPU) which need to be
-probed first, then the cascade will happen for every root controller.
-So, introduce a architecture specific weak function to order the probing
-of the interrupt controllers which can be implemented by different
-architectures as per their interrupt controller hierarchy.
+RINTC->IMSIC->APLIC->PLIC
 
 Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- drivers/acpi/scan.c  | 3 +++
- include/linux/acpi.h | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/acpi/riscv/Makefile |  2 +-
+ drivers/acpi/riscv/irq.c    | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/acpi/riscv/irq.c
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 691d4b7686ee..87f4baebd497 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -2685,6 +2685,8 @@ static int __init acpi_match_madt(union acpi_subtable_headers *header,
- 	return 0;
- }
- 
-+void __weak arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr) { }
+diff --git a/drivers/acpi/riscv/Makefile b/drivers/acpi/riscv/Makefile
+index 8b3b126e0b94..f80b3da230e9 100644
+--- a/drivers/acpi/riscv/Makefile
++++ b/drivers/acpi/riscv/Makefile
+@@ -1,2 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-y 	+= rhct.o
++obj-y 	+= rhct.o irq.o
+diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
+new file mode 100644
+index 000000000000..36e0525b3235
+--- /dev/null
++++ b/drivers/acpi/riscv/irq.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2023, Ventana Micro Systems Inc
++ *	Author: Sunil V L <sunilvl@ventanamicro.com>
++ *
++ */
 +
- int __init __acpi_probe_device_table(struct acpi_probe_entry *ap_head, int nr)
- {
- 	int count = 0;
-@@ -2693,6 +2695,7 @@ int __init __acpi_probe_device_table(struct acpi_probe_entry *ap_head, int nr)
- 		return 0;
- 
- 	mutex_lock(&acpi_probe_mutex);
-+	arch_sort_irqchip_probe(ap_head, nr);
- 	for (ape = ap_head; nr; ape++, nr--) {
- 		if (ACPI_COMPARE_NAMESEG(ACPI_SIG_MADT, ape->id)) {
- 			acpi_probe_count = 0;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index e9a9659314f2..ae045e14126b 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1338,6 +1338,8 @@ struct acpi_probe_entry {
- 	kernel_ulong_t driver_data;
- };
- 
-+void arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr);
++#include <linux/acpi.h>
++#include <linux/sort.h>
 +
- #define ACPI_DECLARE_PROBE_ENTRY(table, name, table_id, subtable,	\
- 				 valid, data, fn)			\
- 	static const struct acpi_probe_entry __acpi_probe_##name	\
++static int irqchip_cmp_func(const void *in0, const void *in1)
++{
++	struct acpi_probe_entry *elem0 = (struct acpi_probe_entry *)in0;
++	struct acpi_probe_entry *elem1 = (struct acpi_probe_entry *)in1;
++
++	return (elem0->type > elem1->type) - (elem0->type < elem1->type);
++}
++
++/*
++ * RISC-V irqchips in MADT of ACPI spec are defined in the same order how
++ * they should be probed. Since IRQCHIP_ACPI_DECLARE doesn't define any
++ * order, this arch function will reorder the probe functions as per the
++ * required order for the architecture.
++ */
++void arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr)
++{
++	struct acpi_probe_entry *ape = ap_head;
++
++	if (nr == 1 || !ACPI_COMPARE_NAMESEG(ACPI_SIG_MADT, ape->id))
++		return;
++	sort(ape, nr, sizeof(*ape), irqchip_cmp_func, NULL);
++}
 -- 
 2.39.2
 
