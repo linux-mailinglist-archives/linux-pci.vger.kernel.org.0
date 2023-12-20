@@ -1,229 +1,104 @@
-Return-Path: <linux-pci+bounces-1198-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1199-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B006D8195FD
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 01:53:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25DC881966F
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 02:39:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D49791C2523C
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 00:53:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6F59284A35
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 01:38:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 022634421;
-	Wed, 20 Dec 2023 00:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD385CB9;
+	Wed, 20 Dec 2023 01:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S8BAewp8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYE+K59H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5376846B0;
-	Wed, 20 Dec 2023 00:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703033554; x=1734569554;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TeO26yGTeKCJ1V78ZWomV1eTGapN19AztW7PHl3ULlg=;
-  b=S8BAewp8Yo+6T3zI0t8W9/eipw/v2Tnfzo6No22UhyRemn04y4+hh8qp
-   ZpwYdHkrQnpt/FqnYtgIeHUJZWVEtRs2kE/zYG77bawu4OM8A6uBt0w1V
-   TcHSnePiBAv2QknmeZIou5MC3/tIdyolUwzP8S6HYyupoa6H4vOkKniiY
-   c7q1PFZ9NmY/PIOUSLOEnTwuTtk/ajaTAo5+FVGYlwOVJLCis9h6Ek6uj
-   a+enHpEaS3xKfDO0DuI5PyJOegaj2zdZsIpf6vOyTSTbNjsS0FaauJMve
-   E4pMIX+1W25QaGf00BgqDcfY2dyziytoUmaYKkOC6CeTxqQdnK8IbtIk2
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="2566104"
-X-IronPort-AV: E=Sophos;i="6.04,290,1695711600"; 
-   d="scan'208";a="2566104"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 16:52:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="1107551580"
-X-IronPort-AV: E=Sophos;i="6.04,290,1695711600"; 
-   d="scan'208";a="1107551580"
-Received: from ply01-vm-store.bj.intel.com ([10.238.153.201])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Dec 2023 16:52:01 -0800
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: bhelgaas@google.com,
-	baolu.lu@linux.intel.com,
-	dwmw2@infradead.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	lukas@wunner.de
-Cc: linux-pci@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] iommu/vt-d: don's issue devTLB flush request when device is disconnected
-Date: Tue, 19 Dec 2023 19:51:53 -0500
-Message-Id: <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
-References: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBB98BEB;
+	Wed, 20 Dec 2023 01:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-203fed05a31so510875fac.0;
+        Tue, 19 Dec 2023 17:38:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703036334; x=1703641134; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GhYNgs7Y2PEFrlksej0FgbSm5TkOzzFf3rOPpKg2tPc=;
+        b=WYE+K59HbomgQzQjD4ukUg6bf98qUw19mSGBGwAzs6B4m1b9Qhx9yOfF3d8eau//in
+         BGlTaSSkV6mZm/I3YOOWU7Ev4qKfxz/ohU4URe0n2+hOCfpzi9LWbGCMFk5UhRHYPSE1
+         mu+k7h+Fp0svLQyOP8w2bhPxwCuF+qkUCiNfFX53SE90KD7u3RIp5UFlBDuUQIFw3i88
+         2pKdk+m840RYc+NsR1+OR8O5pHsei/61e6bgyi0vi9lZB0u3Yvsk8a5Ekyd02SXNEk/z
+         QeAQh16hd3pc0JKUZRs0mrAOkyrAG3vrEAksleX5WhffFu+Jy5vmdqgeLV252GBVrCfq
+         appw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703036334; x=1703641134;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GhYNgs7Y2PEFrlksej0FgbSm5TkOzzFf3rOPpKg2tPc=;
+        b=L2SKWT2OfGDOR3y0jlX/ZMUpcj4hqWKSeRP5eouloBjW0v94HUGYsZ8c+5I0qliSmR
+         hI7akGZEbXZOj1bug1oJhILl0spj3SpLHXMtHGG85Sg7+vKT9Q7RvtiJJ9c2/dthF8QD
+         rLBJaT4OqMfkwtF2bNW3GK+WFMy5NW0DJsYwE4eyHR/ffhWhreYswFebFZuiozz7OFtU
+         0t4wrsMJnFpNt/+kRoiMeMcZQJ0W052y4wIM+ZVQpu92dMxGoyTxChrpNpsjeGne8vJD
+         wPH4S21fHXeAsDzuFVybExBSdPP4px5c19uItCGdYuk5lj7IyyLMikRBQpvxVDyCwaDX
+         bDCA==
+X-Gm-Message-State: AOJu0YyJJ26NCBjd0kvSesYPYp9z6K6S4AorBJELNl5FTvm3Skapk4K4
+	7ZVcGhzfAjqkQqbieF8ttN0=
+X-Google-Smtp-Source: AGHT+IFufCwXfONaC0t0YbJVX/GqDXYDfVM3aANqMewsCM3s3EJt4Lu34OxFMH8A1CBI+cvvOAN7vw==
+X-Received: by 2002:a05:6870:a50a:b0:203:6298:3185 with SMTP id o10-20020a056870a50a00b0020362983185mr9935253oal.40.1703036334023;
+        Tue, 19 Dec 2023 17:38:54 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:b2ca:95aa:9761:8149])
+        by smtp.gmail.com with ESMTPSA id q27-20020a63f95b000000b005c6746620cfsm20255385pgk.51.2023.12.19.17.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 17:38:53 -0800 (PST)
+Date: Tue, 19 Dec 2023 17:38:51 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Esther Shimanovich <eshima@google.com>
+Cc: Esther Shimanovich <eshimanovich@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v2] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <ZYJFq6T3uGJVv0Nh@google.com>
+References: <20231219-thunderbolt-pci-patch-4-v2-1-ec2d7af45a9b@chromium.org>
+ <ZYIWHjr0U08tIHOk@google.com>
+ <CAK5fCsA0ecsWeQgV-gk=9KCkjDMcgaBj8Zh6XP8jAam-Cp0COA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK5fCsA0ecsWeQgV-gk=9KCkjDMcgaBj8Zh6XP8jAam-Cp0COA@mail.gmail.com>
 
-For those endpoint devices connect to system via hotplug capable ports,
-users could request a warm reset to the device by flapping device's link
-through setting the slot's link control register, as pciehpt_ist() DLLSC
-interrupt sequence response, pciehp will unload the device driver and
-then power it off. thus cause an IOMMU devTLB flush request for device to
-be sent and a long time completion/timeout waiting in interrupt context.
+On Tue, Dec 19, 2023 at 06:19:39PM -0500, Esther Shimanovich wrote:
+> > Maybe use PCI_VENDOR_ID_LENOVO and move the check first - it is cheaper
+> > than string comparison. In general, symbolic constants are preferred to
+> > magic numbers.
+> 
+> That makes sense! Will do.
+> 
+> > Actually, do we really need to check DMI given the checks below?
+> 
+> I was advised by Rajat Jain to check DMI. This is the reasoning he
+> gave me: "I'm not certain if you can use subsystem vendor alone
+> because, subsystem vendor & ID are defined by the PCI device vendor I
+> think (Intel here). What if Intel sold the same bridges to another
+> company and has the same subsystem vendor / ID."
 
-That would cause following continuous hard lockup warning and system hang
+I believe subsystem vendor and product IDs are not baked into the device
+but set up by the system firmware, and therefore there should be no
+concerns with mixing up IDs, but I am happy to be corrected by people
+with more experience with PCI.
 
-[ 4211.433662] pcieport 0000:17:01.0: pciehp: Slot(108): Link Down
-[ 4211.433664] pcieport 0000:17:01.0: pciehp: Slot(108): Card not present
-[ 4223.822591] NMI watchdog: Watchdog detected hard LOCKUP on cpu 144
-[ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
-         OE    kernel version xxxx
-[ 4223.822623] Hardware name: vendorname xxxx 666-106,
-BIOS 01.01.02.03.01 05/15/2023
-[ 4223.822623] RIP: 0010:qi_submit_sync+0x2c0/0x490
-[ 4223.822624] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
- 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 1
-0 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
-[ 4223.822624] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
-[ 4223.822625] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
-[ 4223.822625] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
-[ 4223.822625] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
-[ 4223.822626] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
-[ 4223.822626] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
-[ 4223.822626] FS:  0000000000000000(0000) GS:ffffa237ae400000(0000)
-knlGS:0000000000000000
-[ 4223.822627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4223.822627] CR2: 00007ffe86515d80 CR3: 000002fd3000a001 CR4: 0000000000770ee0
-[ 4223.822627] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 4223.822628] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-[ 4223.822628] PKRU: 55555554
-[ 4223.822628] Call Trace:
-[ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
-[ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
-[ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
-[ 4223.822629]  intel_iommu_release_device+0x1f/0x30
-[ 4223.822629]  iommu_release_device+0x33/0x60
-[ 4223.822629]  iommu_bus_notifier+0x7f/0x90
-[ 4223.822630]  blocking_notifier_call_chain+0x60/0x90
-[ 4223.822630]  device_del+0x2e5/0x420
-[ 4223.822630]  pci_remove_bus_device+0x70/0x110
-[ 4223.822630]  pciehp_unconfigure_device+0x7c/0x130
-[ 4223.822631]  pciehp_disable_slot+0x6b/0x100
-[ 4223.822631]  pciehp_handle_presence_or_link_change+0xd8/0x320
-[ 4223.822631]  pciehp_ist+0x176/0x180
-[ 4223.822631]  ? irq_finalize_oneshot.part.50+0x110/0x110
-[ 4223.822632]  irq_thread_fn+0x19/0x50
-[ 4223.822632]  irq_thread+0x104/0x190
-[ 4223.822632]  ? irq_forced_thread_fn+0x90/0x90
-[ 4223.822632]  ? irq_thread_check_affinity+0xe0/0xe0
-[ 4223.822633]  kthread+0x114/0x130
-[ 4223.822633]  ? __kthread_cancel_work+0x40/0x40
-[ 4223.822633]  ret_from_fork+0x1f/0x30
-[ 4223.822633] Kernel panic - not syncing: Hard LOCKUP
-[ 4223.822634] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
-         OE     kernel version xxxx
-[ 4223.822634] Hardware name: vendorname xxxx 666-106,
-BIOS 01.01.02.03.01 05/15/2023
-[ 4223.822634] Call Trace:
-[ 4223.822634]  <NMI>
-[ 4223.822635]  dump_stack+0x6d/0x88
-[ 4223.822635]  panic+0x101/0x2d0
-[ 4223.822635]  ? ret_from_fork+0x11/0x30
-[ 4223.822635]  nmi_panic.cold.14+0xc/0xc
-[ 4223.822636]  watchdog_overflow_callback.cold.8+0x6d/0x81
-[ 4223.822636]  __perf_event_overflow+0x4f/0xf0
-[ 4223.822636]  handle_pmi_common+0x1ef/0x290
-[ 4223.822636]  ? __set_pte_vaddr+0x28/0x40
-[ 4223.822637]  ? flush_tlb_one_kernel+0xa/0x20
-[ 4223.822637]  ? __native_set_fixmap+0x24/0x30
-[ 4223.822637]  ? ghes_copy_tofrom_phys+0x70/0x100
-[ 4223.822637]  ? __ghes_peek_estatus.isra.16+0x49/0xa0
-[ 4223.822637]  intel_pmu_handle_irq+0xba/0x2b0
-[ 4223.822638]  perf_event_nmi_handler+0x24/0x40
-[ 4223.822638]  nmi_handle+0x4d/0xf0
-[ 4223.822638]  default_do_nmi+0x49/0x100
-[ 4223.822638]  exc_nmi+0x134/0x180
-[ 4223.822639]  end_repeat_nmi+0x16/0x67
-[ 4223.822639] RIP: 0010:qi_submit_sync+0x2c0/0x490
-[ 4223.822639] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
- 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 10
- 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
-[ 4223.822640] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
-[ 4223.822640] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
-[ 4223.822640] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
-[ 4223.822641] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
-[ 4223.822641] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
-[ 4223.822641] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
-[ 4223.822641]  ? qi_submit_sync+0x2c0/0x490
-[ 4223.822642]  ? qi_submit_sync+0x2c0/0x490
-[ 4223.822642]  </NMI>
-[ 4223.822642]  qi_flush_dev_iotlb+0xb1/0xd0
-[ 4223.822642]  __dmar_remove_one_dev_info+0x224/0x250
-[ 4223.822643]  dmar_remove_one_dev_info+0x3e/0x50
-[ 4223.822643]  intel_iommu_release_device+0x1f/0x30
-[ 4223.822643]  iommu_release_device+0x33/0x60
-[ 4223.822643]  iommu_bus_notifier+0x7f/0x90
-[ 4223.822644]  blocking_notifier_call_chain+0x60/0x90
-[ 4223.822644]  device_del+0x2e5/0x420
-[ 4223.822644]  pci_remove_bus_device+0x70/0x110
-[ 4223.822644]  pciehp_unconfigure_device+0x7c/0x130
-[ 4223.822644]  pciehp_disable_slot+0x6b/0x100
-[ 4223.822645]  pciehp_handle_presence_or_link_change+0xd8/0x320
-[ 4223.822645]  pciehp_ist+0x176/0x180
-[ 4223.822645]  ? irq_finalize_oneshot.part.50+0x110/0x110
-[ 4223.822645]  irq_thread_fn+0x19/0x50
-[ 4223.822646]  irq_thread+0x104/0x190
-[ 4223.822646]  ? irq_forced_thread_fn+0x90/0x90
-[ 4223.822646]  ? irq_thread_check_affinity+0xe0/0xe0
-[ 4223.822646]  kthread+0x114/0x130
-[ 4223.822647]  ? __kthread_cancel_work+0x40/0x40
-[ 4223.822647]  ret_from_fork+0x1f/0x30
-[ 4223.822647] Kernel Offset: 0x6400000 from 0xffffffff81000000 (relocation
-range: 0xffffffff80000000-0xffffffffbfffffff)
+Thanks.
 
-Fix it by checking the device's error_state in
-devtlb_invalidation_with_pasid() to avoid sending meaningless devTLB flush
-request to link down device that is set to pci_channel_io_perm_failure and
-then power off in
-
-pciehp_ist()
-   pciehp_handle_presence_or_link_change()
-     pciehp_disable_slot()
-       remove_board()
-         pciehp_unconfigure_device()
-
-For SAVE_REMOVAL unplug, link is alive when iommu releases device and
-issues devTLB invalidate request, wouldn't trigger such issue.
-
-This patch works for all kinds of SURPPRISE_REMOVAL unplug operation.
-
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
----
- drivers/iommu/intel/pasid.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 74e8e4c17e81..7dbee9931eb6 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -481,6 +481,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
- 	if (!info || !info->ats_enabled)
- 		return;
- 
-+	if (pci_dev_is_disconnected(to_pci_dev(dev)))
-+		return;
-+
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
 -- 
-2.31.1
-
+Dmitry
 
