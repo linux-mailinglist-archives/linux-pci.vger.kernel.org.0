@@ -1,272 +1,247 @@
-Return-Path: <linux-pci+bounces-1195-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1197-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A585E8195D6
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 01:45:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 940E68195FB
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 01:53:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D4DC1F26705
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 00:45:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DB911F268B8
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 00:53:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFBC31C26;
-	Wed, 20 Dec 2023 00:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC2A3C3E;
+	Wed, 20 Dec 2023 00:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tfeih5zr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XvSImWrJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8820FE
-	for <linux-pci@vger.kernel.org>; Wed, 20 Dec 2023 00:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC5223BB;
+	Wed, 20 Dec 2023 00:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703033136; x=1734569136;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=X7EUmvaRv2bfYfJBwHAlWB39pYYoekrZwYtdxXZCdBQ=;
-  b=Tfeih5zrNhXYdu3GoN2GoBwNakvGaEiexPcMJx9vIVZgneuPB8+UVT4Z
-   Hs/cm5DVVdspf5yXwDU8qO++T/HT1YKXbE6Jiejlxj7Morn0L3eAZxGLr
-   NGL9VCMFRg1pY4VH1ny3PSbV05eVRVNoQaRcPgPt7r3HzrGvLEWLE6+bV
-   5/SyouNagE/lfBlybkX6xE4vIWbdO35CiHMrADEn/S+FOBdlcaS7qMvBw
-   Te+Z7cWrmEVHyuNe99tf/0slzCgEsQjzRoAxnJNpCz7TgTGS556Bux+Tz
-   F6Uk4Q9FfvbTeyBXhAbUZNveMTJ9zG44Bg32r+hpFj10VGItbhjJOjse6
+  t=1703033554; x=1734569554;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nWkB0DhRuUJFODyFvS+WwtqVYahssVR4/V2vWkTPvxA=;
+  b=XvSImWrJNUE6wt4AyltQWpW6Kx80k/Z86ceYCNXfLVkmyztFs+i3X0yq
+   zDjWSZAvgQoBOOaeIWT/AulCp8stNL3DHu2imhjsPsz0GVdzOAPUCtZfw
+   S5wi0kpdhINcnsCgXzsrZJus9cR/OkOz4eZ6j1R6xs5GOuudC/ixGeeHo
+   W4u3fAVOY2qWgwyAlhuIcRF/repBS62W1rsWnNuIsuRYt1xiykeXD61bS
+   twIr00tGhlklDFTULAUGMIsAHfo3eERlFLk0KRzYgvWWsCSHT6+F1PaqL
+   ms1RI4Rk09S/gVilGMCK8wTVLNPNGODsva4Je1XsYRxrjO20fNjxB3Joc
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="17297222"
-X-IronPort-AV: E=Sophos;i="6.04,289,1695711600"; 
-   d="scan'208";a="17297222"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 16:45:33 -0800
+X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="2566092"
+X-IronPort-AV: E=Sophos;i="6.04,290,1695711600"; 
+   d="scan'208";a="2566092"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 16:52:05 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="779665622"
-X-IronPort-AV: E=Sophos;i="6.04,289,1695711600"; 
-   d="scan'208";a="779665622"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Dec 2023 16:45:31 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rFkiH-00068D-2Y;
-	Wed, 20 Dec 2023 00:45:29 +0000
-Date: Wed, 20 Dec 2023 08:44:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:endpoint] BUILD SUCCESS
- 6f517e044096fd78fa6f19b3da20579426980af7
-Message-ID: <202312200854.z8iKTWqK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="1107551563"
+X-IronPort-AV: E=Sophos;i="6.04,290,1695711600"; 
+   d="scan'208";a="1107551563"
+Received: from ply01-vm-store.bj.intel.com ([10.238.153.201])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Dec 2023 16:51:57 -0800
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: bhelgaas@google.com,
+	baolu.lu@linux.intel.com,
+	dwmw2@infradead.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	lukas@wunner.de
+Cc: linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] fix vt-d hard lockup when hotplug ATS capable device
+Date: Tue, 19 Dec 2023 19:51:51 -0500
+Message-Id: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-branch HEAD: 6f517e044096fd78fa6f19b3da20579426980af7  PCI: endpoint: pci-epf-test: Make struct pci_epf_ops const
+ This patchset is used to fix vt-d hard lockup reported when surpprise
+ unplug ATS capable endpoint device connects to system via PCIe switch
+ as following topology.
 
-elapsed time: 1498m
+     +-[0000:15]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d
+     |           +-00.1  Intel Corporation Ice Lake Mesh 2 PCIe
+     |           +-00.2  Intel Corporation Ice Lake RAS
+     |           +-00.4  Intel Corporation Device 0b23
+     |           \-01.0-[16-1b]----00.0-[17-1b]--+-00.0-[18]----00.0 
+                                           NVIDIA Corporation Device 2324
+     |                                           +-01.0-[19]----00.0
+                          Mellanox Technologies MT2910 Family [ConnectX-7]
 
-configs tested: 188
-configs skipped: 9
+ User brought endpoint device 19:00.0's link down by flapping it's hotplug 
+ capable slot 17:01.0 link control register, as sequence DLLSC response, 
+ pciehp_ist() will unload device driver and power it off, durning device
+ driver is unloading an iommu devTlb flush request issued to that link 
+ down device, thus a long time completion/timeout waiting in interrupt
+ context causes continuous hard lockup warnning and system hang.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[ 4211.433662] pcieport 0000:17:01.0: pciehp: Slot(108): Link Down
+[ 4211.433664] pcieport 0000:17:01.0: pciehp: Slot(108): Card not present
+[ 4223.822591] NMI watchdog: Watchdog detected hard LOCKUP on cpu 144
+[ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
+         OE    kernel version xxxx
+[ 4223.822623] Hardware name: vendorname xxxx 666-106,
+BIOS 01.01.02.03.01 05/15/2023
+[ 4223.822623] RIP: 0010:qi_submit_sync+0x2c0/0x490
+[ 4223.822624] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
+ 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 1
+0 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
+[ 4223.822624] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
+[ 4223.822625] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
+[ 4223.822625] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
+[ 4223.822625] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
+[ 4223.822626] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
+[ 4223.822626] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
+[ 4223.822626] FS:  0000000000000000(0000) GS:ffffa237ae400000(0000)
+knlGS:0000000000000000
+[ 4223.822627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 4223.822627] CR2: 00007ffe86515d80 CR3: 000002fd3000a001 CR4: 0000000000770ee0
+[ 4223.822627] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 4223.822628] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
+[ 4223.822628] PKRU: 55555554
+[ 4223.822628] Call Trace:
+[ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
+[ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
+[ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
+[ 4223.822629]  intel_iommu_release_device+0x1f/0x30
+[ 4223.822629]  iommu_release_device+0x33/0x60
+[ 4223.822629]  iommu_bus_notifier+0x7f/0x90
+[ 4223.822630]  blocking_notifier_call_chain+0x60/0x90
+[ 4223.822630]  device_del+0x2e5/0x420
+[ 4223.822630]  pci_remove_bus_device+0x70/0x110
+[ 4223.822630]  pciehp_unconfigure_device+0x7c/0x130
+[ 4223.822631]  pciehp_disable_slot+0x6b/0x100
+[ 4223.822631]  pciehp_handle_presence_or_link_change+0xd8/0x320
+[ 4223.822631]  pciehp_ist+0x176/0x180
+[ 4223.822631]  ? irq_finalize_oneshot.part.50+0x110/0x110
+[ 4223.822632]  irq_thread_fn+0x19/0x50
+[ 4223.822632]  irq_thread+0x104/0x190
+[ 4223.822632]  ? irq_forced_thread_fn+0x90/0x90
+[ 4223.822632]  ? irq_thread_check_affinity+0xe0/0xe0
+[ 4223.822633]  kthread+0x114/0x130
+[ 4223.822633]  ? __kthread_cancel_work+0x40/0x40
+[ 4223.822633]  ret_from_fork+0x1f/0x30
+[ 4223.822633] Kernel panic - not syncing: Hard LOCKUP
+[ 4223.822634] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
+         OE     kernel version xxxx
+[ 4223.822634] Hardware name: vendorname xxxx 666-106,
+BIOS 01.01.02.03.01 05/15/2023
+[ 4223.822634] Call Trace:
+[ 4223.822634]  <NMI>
+[ 4223.822635]  dump_stack+0x6d/0x88
+[ 4223.822635]  panic+0x101/0x2d0
+[ 4223.822635]  ? ret_from_fork+0x11/0x30
+[ 4223.822635]  nmi_panic.cold.14+0xc/0xc
+[ 4223.822636]  watchdog_overflow_callback.cold.8+0x6d/0x81
+[ 4223.822636]  __perf_event_overflow+0x4f/0xf0
+[ 4223.822636]  handle_pmi_common+0x1ef/0x290
+[ 4223.822636]  ? __set_pte_vaddr+0x28/0x40
+[ 4223.822637]  ? flush_tlb_one_kernel+0xa/0x20
+[ 4223.822637]  ? __native_set_fixmap+0x24/0x30
+[ 4223.822637]  ? ghes_copy_tofrom_phys+0x70/0x100
+[ 4223.822637]  ? __ghes_peek_estatus.isra.16+0x49/0xa0
+[ 4223.822637]  intel_pmu_handle_irq+0xba/0x2b0
+[ 4223.822638]  perf_event_nmi_handler+0x24/0x40
+[ 4223.822638]  nmi_handle+0x4d/0xf0
+[ 4223.822638]  default_do_nmi+0x49/0x100
+[ 4223.822638]  exc_nmi+0x134/0x180
+[ 4223.822639]  end_repeat_nmi+0x16/0x67
+[ 4223.822639] RIP: 0010:qi_submit_sync+0x2c0/0x490
+[ 4223.822639] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
+ 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 10
+ 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
+[ 4223.822640] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
+[ 4223.822640] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
+[ 4223.822640] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
+[ 4223.822641] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
+[ 4223.822641] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
+[ 4223.822641] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
+[ 4223.822641]  ? qi_submit_sync+0x2c0/0x490
+[ 4223.822642]  ? qi_submit_sync+0x2c0/0x490
+[ 4223.822642]  </NMI>
+[ 4223.822642]  qi_flush_dev_iotlb+0xb1/0xd0
+[ 4223.822642]  __dmar_remove_one_dev_info+0x224/0x250
+[ 4223.822643]  dmar_remove_one_dev_info+0x3e/0x50
+[ 4223.822643]  intel_iommu_release_device+0x1f/0x30
+[ 4223.822643]  iommu_release_device+0x33/0x60
+[ 4223.822643]  iommu_bus_notifier+0x7f/0x90
+[ 4223.822644]  blocking_notifier_call_chain+0x60/0x90
+[ 4223.822644]  device_del+0x2e5/0x420
+[ 4223.822644]  pci_remove_bus_device+0x70/0x110
+[ 4223.822644]  pciehp_unconfigure_device+0x7c/0x130
+[ 4223.822644]  pciehp_disable_slot+0x6b/0x100
+[ 4223.822645]  pciehp_handle_presence_or_link_change+0xd8/0x320
+[ 4223.822645]  pciehp_ist+0x176/0x180
+[ 4223.822645]  ? irq_finalize_oneshot.part.50+0x110/0x110
+[ 4223.822645]  irq_thread_fn+0x19/0x50
+[ 4223.822646]  irq_thread+0x104/0x190
+[ 4223.822646]  ? irq_forced_thread_fn+0x90/0x90
+[ 4223.822646]  ? irq_thread_check_affinity+0xe0/0xe0
+[ 4223.822646]  kthread+0x114/0x130
+[ 4223.822647]  ? __kthread_cancel_work+0x40/0x40
+[ 4223.822647]  ret_from_fork+0x1f/0x30
+[ 4223.822647] Kernel Offset: 0x6400000 from 0xffffffff81000000 (relocation
+range: 0xffffffff80000000-0xffffffffbfffffff)
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     nsimosci_hs_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20231219   clang
-arm                   randconfig-002-20231219   clang
-arm                   randconfig-003-20231219   clang
-arm                   randconfig-004-20231219   clang
-arm                         s3c6400_defconfig   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                           tegra_defconfig   gcc  
-arm                           u8500_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231219   clang
-arm64                 randconfig-002-20231219   clang
-arm64                 randconfig-003-20231219   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20231219   clang
-hexagon               randconfig-002-20231219   clang
-i386                             alldefconfig   gcc  
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20231219   clang
-i386         buildonly-randconfig-002-20231219   clang
-i386         buildonly-randconfig-003-20231219   clang
-i386         buildonly-randconfig-004-20231219   clang
-i386         buildonly-randconfig-005-20231219   clang
-i386         buildonly-randconfig-006-20231219   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231219   clang
-i386                  randconfig-002-20231219   clang
-i386                  randconfig-003-20231219   clang
-i386                  randconfig-004-20231219   clang
-i386                  randconfig-005-20231219   clang
-i386                  randconfig-006-20231219   clang
-i386                  randconfig-011-20231219   gcc  
-i386                  randconfig-011-20231220   clang
-i386                  randconfig-012-20231219   gcc  
-i386                  randconfig-012-20231220   clang
-i386                  randconfig-013-20231219   gcc  
-i386                  randconfig-013-20231220   clang
-i386                  randconfig-014-20231219   gcc  
-i386                  randconfig-014-20231220   clang
-i386                  randconfig-015-20231219   gcc  
-i386                  randconfig-015-20231220   clang
-i386                  randconfig-016-20231219   gcc  
-i386                  randconfig-016-20231220   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         amcore_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5272c3_defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-m68k                        m5307c3_defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                         db1xxx_defconfig   gcc  
-mips                 decstation_r4k_defconfig   gcc  
-mips                      fuloong2e_defconfig   gcc  
-mips                           ip27_defconfig   gcc  
-mips                           ip32_defconfig   gcc  
-mips                       lemote2f_defconfig   gcc  
-mips                       rbtx49xx_defconfig   gcc  
-nios2                            alldefconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-32bit_defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                    amigaone_defconfig   gcc  
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                      mgcoge_defconfig   gcc  
-powerpc                      ppc40x_defconfig   gcc  
-powerpc                      ppc6xx_defconfig   gcc  
-powerpc               randconfig-002-20231219   clang
-powerpc               randconfig-003-20231219   clang
-powerpc                     redwood_defconfig   gcc  
-powerpc64             randconfig-002-20231219   clang
-powerpc64             randconfig-003-20231219   clang
-riscv                             allnoconfig   clang
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231219   clang
-riscv                 randconfig-002-20231219   clang
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                           se7343_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231219   clang
-um                    randconfig-002-20231219   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231219   clang
-x86_64       buildonly-randconfig-001-20231220   gcc  
-x86_64       buildonly-randconfig-002-20231219   clang
-x86_64       buildonly-randconfig-002-20231220   gcc  
-x86_64       buildonly-randconfig-003-20231219   clang
-x86_64       buildonly-randconfig-003-20231220   gcc  
-x86_64       buildonly-randconfig-004-20231219   clang
-x86_64       buildonly-randconfig-004-20231220   gcc  
-x86_64       buildonly-randconfig-005-20231219   clang
-x86_64       buildonly-randconfig-005-20231220   gcc  
-x86_64       buildonly-randconfig-006-20231219   clang
-x86_64       buildonly-randconfig-006-20231220   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-011-20231219   clang
-x86_64                randconfig-011-20231220   gcc  
-x86_64                randconfig-012-20231219   clang
-x86_64                randconfig-012-20231220   gcc  
-x86_64                randconfig-013-20231219   clang
-x86_64                randconfig-013-20231220   gcc  
-x86_64                randconfig-014-20231219   clang
-x86_64                randconfig-014-20231220   gcc  
-x86_64                randconfig-015-20231219   clang
-x86_64                randconfig-015-20231220   gcc  
-x86_64                randconfig-016-20231219   clang
-x86_64                randconfig-016-20231220   gcc  
-x86_64                randconfig-071-20231219   clang
-x86_64                randconfig-071-20231220   gcc  
-x86_64                randconfig-072-20231219   clang
-x86_64                randconfig-072-20231220   gcc  
-x86_64                randconfig-073-20231219   clang
-x86_64                randconfig-073-20231220   gcc  
-x86_64                randconfig-074-20231219   clang
-x86_64                randconfig-074-20231220   gcc  
-x86_64                randconfig-075-20231219   clang
-x86_64                randconfig-075-20231220   gcc  
-x86_64                randconfig-076-20231219   clang
-x86_64                randconfig-076-20231220   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa                          iss_defconfig   gcc  
+Make a quick fix by checking the device's error_state in
+devtlb_invalidation_with_pasid() to avoid sending meaningless devTLB flush
+request to link down device that is set to pci_channel_io_perm_failure and
+then powered off in
+
+pciehp_ist()
+   pciehp_handle_presence_or_link_change()
+     pciehp_disable_slot()
+       remove_board()
+         pciehp_unconfigure_device()
+ 
+safe_removal unplug doesn't trigger such issue. 
+and this fix works for all supprise_removal unplug operation.
+
+This patchset was tested by yehaorong@bytedance.com on stable-6.7rc4.
+
+
+change log:
+
+v4: 
+- move the PCI device state checking after ATS per Baolu's suggestion.
+v3:
+- fix commit description typo.
+v2:
+- revise commit[1] description part according to Lukas' suggestion.
+- revise commit[2] description to clarify the issue's impact.
+v1:
+- https://lore.kernel.org/lkml/20231213034637.2603013-1-haifeng.zhao@linux.intel.com/T/
+
+
+
+Thanks,
+Ethan
+
+
+Ethan Zhao (2):
+  PCI: make pci_dev_is_disconnected() helper public for other drivers
+  iommu/vt-d: don's issue devTLB flush request when device is
+    disconnected
+
+ drivers/iommu/intel/pasid.c | 21 ++++++++++++++++++++-
+ drivers/pci/pci.h           |  5 -----
+ include/linux/pci.h         |  5 +++++
+ 3 files changed, 25 insertions(+), 6 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.31.1
+
 
