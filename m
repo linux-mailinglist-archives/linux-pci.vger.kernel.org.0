@@ -1,30 +1,30 @@
-Return-Path: <linux-pci+bounces-1209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B66CC819839
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 06:38:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E998481983B
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 06:38:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CC761F26594
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 05:38:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 611E31F265C5
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Dec 2023 05:38:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38DCB101CB;
-	Wed, 20 Dec 2023 05:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA44FBE0;
+	Wed, 20 Dec 2023 05:38:50 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D9B5FBE0;
-	Wed, 20 Dec 2023 05:38:46 +0000 (UTC)
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2465FC06;
+	Wed, 20 Dec 2023 05:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 X-IronPort-AV: E=Sophos;i="6.04,290,1695654000"; 
-   d="scan'208";a="190992007"
+   d="scan'208";a="187105326"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 20 Dec 2023 14:38:40 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 20 Dec 2023 14:38:40 +0900
 Received: from localhost.localdomain (unknown [10.166.13.99])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id E35054169AE3;
-	Wed, 20 Dec 2023 14:38:39 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 222D7416941A;
+	Wed, 20 Dec 2023 14:38:40 +0900 (JST)
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -36,23 +36,11 @@ To: lpieralisi@kernel.org,
 Cc: linux-pci@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>,
-	Roy Zang <roy.zang@nxp.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v4 2/6] PCI: dwc: Rename to .init in struct dw_pcie_ep_ops
-Date: Wed, 20 Dec 2023 14:38:25 +0900
-Message-Id: <20231220053829.1921187-3-yoshihiro.shimoda.uh@renesas.com>
+	Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH v4 3/6] PCI: dwc: Rename to .get_dbi_offset in struct dw_pcie_ep_ops
+Date: Wed, 20 Dec 2023 14:38:26 +0900
+Message-Id: <20231220053829.1921187-4-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231220053829.1921187-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20231220053829.1921187-1-yoshihiro.shimoda.uh@renesas.com>
@@ -64,200 +52,376 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since the name of dw_pcie_ep_ops indicates that it's for ep obviously,
-rename a member .ep_init to .init.
+Since meaning of .func_conf_select is difficult to understand,
+rename it to .get_dbi_offset.
 
-Suggested-by: Serge Semin <fancer.lancer@gmail.com>
 Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Srikanth Thokala <srikanth.thokala@intel.com>
-Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Acked-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Minghuan Lian <minghuan.Lian@nxp.com>
-Cc: Mingkai Hu <mingkai.hu@nxp.com>
-Cc: Roy Zang <roy.zang@nxp.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
----
- drivers/pci/controller/dwc/pci-dra7xx.c           | 2 +-
- drivers/pci/controller/dwc/pci-imx6.c             | 2 +-
- drivers/pci/controller/dwc/pci-keystone.c         | 2 +-
- drivers/pci/controller/dwc/pci-layerscape-ep.c    | 2 +-
- drivers/pci/controller/dwc/pcie-artpec6.c         | 2 +-
- drivers/pci/controller/dwc/pcie-designware-ep.c   | 4 ++--
- drivers/pci/controller/dwc/pcie-designware-plat.c | 2 +-
- drivers/pci/controller/dwc/pcie-designware.h      | 2 +-
- drivers/pci/controller/dwc/pcie-keembay.c         | 2 +-
- drivers/pci/controller/dwc/pcie-qcom-ep.c         | 2 +-
- drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 2 +-
- drivers/pci/controller/dwc/pcie-uniphier-ep.c     | 2 +-
- 12 files changed, 13 insertions(+), 13 deletions(-)
+ .../pci/controller/dwc/pci-layerscape-ep.c    |   5 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   | 108 +++++++++---------
+ drivers/pci/controller/dwc/pcie-designware.h  |   2 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   |   4 +-
+ 4 files changed, 59 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 6125a838f4b1..1ac1be12a235 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -436,7 +436,7 @@ dra7xx_pcie_get_features(struct dw_pcie_ep *ep)
- }
- 
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
--	.ep_init = dra7xx_pcie_ep_init,
-+	.init = dra7xx_pcie_ep_init,
- 	.raise_irq = dra7xx_pcie_raise_irq,
- 	.get_features = dra7xx_pcie_get_features,
- };
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index b02f6f14a411..644916a67a38 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1093,7 +1093,7 @@ imx6_pcie_ep_get_features(struct dw_pcie_ep *ep)
- }
- 
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
--	.ep_init = imx6_pcie_ep_init,
-+	.init = imx6_pcie_ep_init,
- 	.raise_irq = imx6_pcie_ep_raise_irq,
- 	.get_features = imx6_pcie_ep_get_features,
- };
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 3711347ddc87..d0f50cceede9 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -944,7 +944,7 @@ ks_pcie_am654_get_features(struct dw_pcie_ep *ep)
- }
- 
- static const struct dw_pcie_ep_ops ks_pcie_am654_ep_ops = {
--	.ep_init = ks_pcie_am654_ep_init,
-+	.init = ks_pcie_am654_ep_init,
- 	.raise_irq = ks_pcie_am654_raise_irq,
- 	.get_features = &ks_pcie_am654_get_features,
- };
 diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 2ca339f938a8..f4b47bf43aa8 100644
+index f4b47bf43aa8..3bb50169b1e3 100644
 --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
 +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -195,7 +195,7 @@ static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+@@ -184,8 +184,7 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	}
  }
  
- static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
--	.ep_init = ls_pcie_ep_init,
-+	.init = ls_pcie_ep_init,
+-static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
+-						u8 func_no)
++static unsigned int ls_pcie_ep_get_dbi_offset(struct dw_pcie_ep *ep, u8 func_no)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+@@ -198,7 +197,7 @@ static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+ 	.init = ls_pcie_ep_init,
  	.raise_irq = ls_pcie_ep_raise_irq,
  	.get_features = ls_pcie_ep_get_features,
- 	.func_conf_select = ls_pcie_ep_func_conf_select,
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index 2f32fcd8933c..f6afa96a97e4 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -370,7 +370,7 @@ static int artpec6_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- }
- 
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
--	.ep_init = artpec6_pcie_ep_init,
-+	.init = artpec6_pcie_ep_init,
- 	.raise_irq = artpec6_pcie_raise_irq,
+-	.func_conf_select = ls_pcie_ep_func_conf_select,
++	.get_dbi_offset = ls_pcie_ep_get_dbi_offset,
  };
  
+ static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
 diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index f6207989fc6a..ea99a97ce504 100644
+index ea99a97ce504..1100671db887 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -794,8 +794,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		list_add_tail(&ep_func->list, &ep->func_list);
- 	}
- 
--	if (ep->ops->ep_init)
--		ep->ops->ep_init(ep);
-+	if (ep->ops->init)
-+		ep->ops->init(ep);
- 
- 	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
- 			       ep->page_size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/drivers/pci/controller/dwc/pcie-designware-plat.c
-index b625841e98aa..97088b7663e0 100644
---- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-@@ -74,7 +74,7 @@ dw_plat_pcie_get_features(struct dw_pcie_ep *ep)
+@@ -43,14 +43,14 @@ dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
+ 	return NULL;
  }
  
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
--	.ep_init = dw_plat_pcie_ep_init,
-+	.init = dw_plat_pcie_ep_init,
- 	.raise_irq = dw_plat_pcie_ep_raise_irq,
- 	.get_features = dw_plat_pcie_get_features,
- };
+-static unsigned int dw_pcie_ep_func_select(struct dw_pcie_ep *ep, u8 func_no)
++static unsigned int dw_pcie_ep_get_dbi_offset(struct dw_pcie_ep *ep, u8 func_no)
+ {
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 
+-	if (ep->ops->func_conf_select)
+-		func_offset = ep->ops->func_conf_select(ep, func_no);
++	if (ep->ops->get_dbi_offset)
++		dbi_offset = ep->ops->get_dbi_offset(ep, func_no);
+ 
+-	return func_offset;
++	return dbi_offset;
+ }
+ 
+ static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no)
+@@ -59,8 +59,8 @@ static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no
+ 
+ 	if (ep->ops->get_dbi2_offset)
+ 		dbi2_offset = ep->ops->get_dbi2_offset(ep, func_no);
+-	else if (ep->ops->func_conf_select)     /* for backward compatibility */
+-		dbi2_offset = ep->ops->func_conf_select(ep, func_no);
++	else if (ep->ops->get_dbi_offset)     /* for backward compatibility */
++		dbi2_offset = ep->ops->get_dbi_offset(ep, func_no);
+ 
+ 	return dbi2_offset;
+ }
+@@ -68,14 +68,14 @@ static unsigned int dw_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep, u8 func_no
+ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, u8 func_no,
+ 				   enum pci_barno bar, int flags)
+ {
+-	unsigned int func_offset, dbi2_offset;
++	unsigned int dbi_offset, dbi2_offset;
+ 	struct dw_pcie_ep *ep = &pci->ep;
+ 	u32 reg, reg_dbi2;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+ 
+-	reg = func_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
++	reg = dbi_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+ 	reg_dbi2 = dbi2_offset + PCI_BASE_ADDRESS_0 + (4 * bar);
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 	dw_pcie_writel_dbi2(pci, reg_dbi2, 0x0);
+@@ -102,16 +102,16 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+ 		u8 cap_ptr, u8 cap)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	u8 cap_id, next_cap_ptr;
+ 	u16 reg;
+ 
+ 	if (!cap_ptr)
+ 		return 0;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = dw_pcie_readw_dbi(pci, func_offset + cap_ptr);
++	reg = dw_pcie_readw_dbi(pci, dbi_offset + cap_ptr);
+ 	cap_id = (reg & 0x00ff);
+ 
+ 	if (cap_id > PCI_CAP_ID_MAX)
+@@ -127,13 +127,13 @@ static u8 __dw_pcie_ep_find_next_cap(struct dw_pcie_ep *ep, u8 func_no,
+ static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	u8 next_cap_ptr;
+ 	u16 reg;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = dw_pcie_readw_dbi(pci, func_offset + PCI_CAPABILITY_LIST);
++	reg = dw_pcie_readw_dbi(pci, dbi_offset + PCI_CAPABILITY_LIST);
+ 	next_cap_ptr = (reg & 0x00ff);
+ 
+ 	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
+@@ -144,23 +144,23 @@ static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ {
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+-	dw_pcie_writew_dbi(pci, func_offset + PCI_VENDOR_ID, hdr->vendorid);
+-	dw_pcie_writew_dbi(pci, func_offset + PCI_DEVICE_ID, hdr->deviceid);
+-	dw_pcie_writeb_dbi(pci, func_offset + PCI_REVISION_ID, hdr->revid);
+-	dw_pcie_writeb_dbi(pci, func_offset + PCI_CLASS_PROG, hdr->progif_code);
+-	dw_pcie_writew_dbi(pci, func_offset + PCI_CLASS_DEVICE,
++	dw_pcie_writew_dbi(pci, dbi_offset + PCI_VENDOR_ID, hdr->vendorid);
++	dw_pcie_writew_dbi(pci, dbi_offset + PCI_DEVICE_ID, hdr->deviceid);
++	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_REVISION_ID, hdr->revid);
++	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CLASS_PROG, hdr->progif_code);
++	dw_pcie_writew_dbi(pci, dbi_offset + PCI_CLASS_DEVICE,
+ 			   hdr->subclass_code | hdr->baseclass_code << 8);
+-	dw_pcie_writeb_dbi(pci, func_offset + PCI_CACHE_LINE_SIZE,
++	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_CACHE_LINE_SIZE,
+ 			   hdr->cache_line_size);
+-	dw_pcie_writew_dbi(pci, func_offset + PCI_SUBSYSTEM_VENDOR_ID,
++	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_VENDOR_ID,
+ 			   hdr->subsys_vendor_id);
+-	dw_pcie_writew_dbi(pci, func_offset + PCI_SUBSYSTEM_ID, hdr->subsys_id);
+-	dw_pcie_writeb_dbi(pci, func_offset + PCI_INTERRUPT_PIN,
++	dw_pcie_writew_dbi(pci, dbi_offset + PCI_SUBSYSTEM_ID, hdr->subsys_id);
++	dw_pcie_writeb_dbi(pci, dbi_offset + PCI_INTERRUPT_PIN,
+ 			   hdr->interrupt_pin);
+ 	dw_pcie_dbi_ro_wr_dis(pci);
+ 
+@@ -243,17 +243,17 @@ static int dw_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ {
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+-	unsigned int func_offset, dbi2_offset;
++	unsigned int dbi_offset, dbi2_offset;
+ 	enum pci_barno bar = epf_bar->barno;
+ 	size_t size = epf_bar->size;
+ 	int flags = epf_bar->flags;
+ 	u32 reg, reg_dbi2;
+ 	int ret, type;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 	dbi2_offset = dw_pcie_ep_get_dbi2_offset(ep, func_no);
+ 
+-	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + func_offset;
++	reg = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi_offset;
+ 	reg_dbi2 = PCI_BASE_ADDRESS_0 + (4 * bar) + dbi2_offset;
+ 
+ 	if (!(flags & PCI_BASE_ADDRESS_SPACE))
+@@ -337,16 +337,16 @@ static int dw_pcie_ep_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	u32 val, reg;
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	struct dw_pcie_ep_func *ep_func;
+ 
+ 	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+ 	if (!ep_func || !ep_func->msi_cap)
+ 		return -EINVAL;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
++	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+ 	val = dw_pcie_readw_dbi(pci, reg);
+ 	if (!(val & PCI_MSI_FLAGS_ENABLE))
+ 		return -EINVAL;
+@@ -362,16 +362,16 @@ static int dw_pcie_ep_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	u32 val, reg;
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	struct dw_pcie_ep_func *ep_func;
+ 
+ 	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+ 	if (!ep_func || !ep_func->msi_cap)
+ 		return -EINVAL;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
++	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+ 	val = dw_pcie_readw_dbi(pci, reg);
+ 	val &= ~PCI_MSI_FLAGS_QMASK;
+ 	val |= FIELD_PREP(PCI_MSI_FLAGS_QMASK, interrupts);
+@@ -387,16 +387,16 @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no)
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	u32 val, reg;
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	struct dw_pcie_ep_func *ep_func;
+ 
+ 	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+ 	if (!ep_func || !ep_func->msix_cap)
+ 		return -EINVAL;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = ep_func->msix_cap + func_offset + PCI_MSIX_FLAGS;
++	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+ 	val = dw_pcie_readw_dbi(pci, reg);
+ 	if (!(val & PCI_MSIX_FLAGS_ENABLE))
+ 		return -EINVAL;
+@@ -412,7 +412,7 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	u32 val, reg;
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	struct dw_pcie_ep_func *ep_func;
+ 
+ 	ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+@@ -421,19 +421,19 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = ep_func->msix_cap + func_offset + PCI_MSIX_FLAGS;
++	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_FLAGS;
+ 	val = dw_pcie_readw_dbi(pci, reg);
+ 	val &= ~PCI_MSIX_FLAGS_QSIZE;
+ 	val |= interrupts;
+ 	dw_pcie_writew_dbi(pci, reg, val);
+ 
+-	reg = ep_func->msix_cap + func_offset + PCI_MSIX_TABLE;
++	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+ 	val = offset | bir;
+ 	dw_pcie_writel_dbi(pci, reg, val);
+ 
+-	reg = ep_func->msix_cap + func_offset + PCI_MSIX_PBA;
++	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_PBA;
+ 	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
+ 	dw_pcie_writel_dbi(pci, reg, val);
+ 
+@@ -514,7 +514,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	struct dw_pcie_ep_func *ep_func;
+ 	struct pci_epc *epc = ep->epc;
+ 	unsigned int aligned_offset;
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	u16 msg_ctrl, msg_data;
+ 	u32 msg_addr_lower, msg_addr_upper, reg;
+ 	u64 msg_addr;
+@@ -525,22 +525,22 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	if (!ep_func || !ep_func->msi_cap)
+ 		return -EINVAL;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+ 	/* Raise MSI per the PCI Local Bus Specification Revision 3.0, 6.8.1. */
+-	reg = ep_func->msi_cap + func_offset + PCI_MSI_FLAGS;
++	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_FLAGS;
+ 	msg_ctrl = dw_pcie_readw_dbi(pci, reg);
+ 	has_upper = !!(msg_ctrl & PCI_MSI_FLAGS_64BIT);
+-	reg = ep_func->msi_cap + func_offset + PCI_MSI_ADDRESS_LO;
++	reg = ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_LO;
+ 	msg_addr_lower = dw_pcie_readl_dbi(pci, reg);
+ 	if (has_upper) {
+-		reg = ep_func->msi_cap + func_offset + PCI_MSI_ADDRESS_HI;
++		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_ADDRESS_HI;
+ 		msg_addr_upper = dw_pcie_readl_dbi(pci, reg);
+-		reg = ep_func->msi_cap + func_offset + PCI_MSI_DATA_64;
++		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_64;
+ 		msg_data = dw_pcie_readw_dbi(pci, reg);
+ 	} else {
+ 		msg_addr_upper = 0;
+-		reg = ep_func->msi_cap + func_offset + PCI_MSI_DATA_32;
++		reg = ep_func->msi_cap + dbi_offset + PCI_MSI_DATA_32;
+ 		msg_data = dw_pcie_readw_dbi(pci, reg);
+ 	}
+ 	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+@@ -585,7 +585,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	struct dw_pcie_ep_func *ep_func;
+ 	struct pci_epf_msix_tbl *msix_tbl;
+ 	struct pci_epc *epc = ep->epc;
+-	unsigned int func_offset = 0;
++	unsigned int dbi_offset = 0;
+ 	u32 reg, msg_data, vec_ctrl;
+ 	unsigned int aligned_offset;
+ 	u32 tbl_offset;
+@@ -597,9 +597,9 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	if (!ep_func || !ep_func->msix_cap)
+ 		return -EINVAL;
+ 
+-	func_offset = dw_pcie_ep_func_select(ep, func_no);
++	dbi_offset = dw_pcie_ep_get_dbi_offset(ep, func_no);
+ 
+-	reg = ep_func->msix_cap + func_offset + PCI_MSIX_TABLE;
++	reg = ep_func->msix_cap + dbi_offset + PCI_MSIX_TABLE;
+ 	tbl_offset = dw_pcie_readl_dbi(pci, reg);
+ 	bir = FIELD_GET(PCI_MSIX_TABLE_BIR, tbl_offset);
+ 	tbl_offset &= PCI_MSIX_TABLE_OFFSET;
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 5c4518ad1bec..3bc03a93732f 100644
+index 3bc03a93732f..5e36da166ffe 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -332,7 +332,7 @@ struct dw_pcie_rp {
- 
- struct dw_pcie_ep_ops {
- 	void	(*pre_init)(struct dw_pcie_ep *ep);
--	void	(*ep_init)(struct dw_pcie_ep *ep);
-+	void	(*init)(struct dw_pcie_ep *ep);
- 	void	(*deinit)(struct dw_pcie_ep *ep);
- 	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
- 			     enum pci_epc_irq_type type, u16 interrupt_num);
-diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-index 289bff99d762..3c38e047d5ed 100644
---- a/drivers/pci/controller/dwc/pcie-keembay.c
-+++ b/drivers/pci/controller/dwc/pcie-keembay.c
-@@ -325,7 +325,7 @@ keembay_pcie_get_features(struct dw_pcie_ep *ep)
- }
- 
- static const struct dw_pcie_ep_ops keembay_pcie_ep_ops = {
--	.ep_init	= keembay_pcie_ep_init,
-+	.init	= keembay_pcie_ep_init,
- 	.raise_irq	= keembay_pcie_ep_raise_irq,
- 	.get_features	= keembay_pcie_get_features,
+@@ -344,7 +344,7 @@ struct dw_pcie_ep_ops {
+ 	 * return a 0, and implement code in callback function of platform
+ 	 * driver.
+ 	 */
+-	unsigned int (*func_conf_select)(struct dw_pcie_ep *ep, u8 func_no);
++	unsigned int (*get_dbi_offset)(struct dw_pcie_ep *ep, u8 func_no);
+ 	unsigned int (*get_dbi2_offset)(struct dw_pcie_ep *ep, u8 func_no);
  };
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index 9e58f055199a..2b6f7c144c61 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -796,7 +796,7 @@ static void qcom_pcie_ep_init(struct dw_pcie_ep *ep)
- }
  
- static const struct dw_pcie_ep_ops pci_ep_ops = {
--	.ep_init = qcom_pcie_ep_init,
-+	.init = qcom_pcie_ep_init,
- 	.raise_irq = qcom_pcie_ep_raise_irq,
- 	.get_features = qcom_pcie_epc_get_features,
- };
 diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-index cede060e0af8..4fa528347923 100644
+index 4fa528347923..5ef575ace9f3 100644
 --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
 +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-@@ -408,7 +408,7 @@ static unsigned int rcar_gen4_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep,
+@@ -394,7 +394,7 @@ rcar_gen4_pcie_ep_get_features(struct dw_pcie_ep *ep)
+ 	return &rcar_gen4_pcie_epc_features;
+ }
  
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
- 	.pre_init = rcar_gen4_pcie_ep_pre_init,
--	.ep_init = rcar_gen4_pcie_ep_init,
-+	.init = rcar_gen4_pcie_ep_init,
+-static unsigned int rcar_gen4_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
++static unsigned int rcar_gen4_pcie_ep_get_dbi_offset(struct dw_pcie_ep *ep,
+ 						       u8 func_no)
+ {
+ 	return func_no * RCAR_GEN4_PCIE_EP_FUNC_DBI_OFFSET;
+@@ -412,7 +412,7 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
  	.deinit = rcar_gen4_pcie_ep_deinit,
  	.raise_irq = rcar_gen4_pcie_ep_raise_irq,
  	.get_features = rcar_gen4_pcie_ep_get_features,
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-index cba3c88fcf39..40bd468f7e11 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-@@ -284,7 +284,7 @@ uniphier_pcie_get_features(struct dw_pcie_ep *ep)
- }
- 
- static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
--	.ep_init = uniphier_pcie_ep_init,
-+	.init = uniphier_pcie_ep_init,
- 	.raise_irq = uniphier_pcie_ep_raise_irq,
- 	.get_features = uniphier_pcie_get_features,
+-	.func_conf_select = rcar_gen4_pcie_ep_func_conf_select,
++	.get_dbi_offset = rcar_gen4_pcie_ep_get_dbi_offset,
+ 	.get_dbi2_offset = rcar_gen4_pcie_ep_get_dbi2_offset,
  };
+ 
 -- 
 2.25.1
 
