@@ -1,226 +1,211 @@
-Return-Path: <linux-pci+bounces-1266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F21281BAD7
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 16:33:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A4AE81BC5B
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 17:52:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6258B1C25C31
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 15:33:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9FAA282185
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 16:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E08F53A00;
-	Thu, 21 Dec 2023 15:33:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BB1955E73;
+	Thu, 21 Dec 2023 16:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWrdnnqV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eJ7q2kIF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7966053A07;
-	Thu, 21 Dec 2023 15:33:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A75C433C7;
-	Thu, 21 Dec 2023 15:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703172788;
-	bh=WqMM0hMHykVqkITSvFn2nflk549vzqWHBpRnA41PJCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jWrdnnqVMw4J08dxx6MlhxJ2aFU2D1XEnBCVSDTUaChKlj3pbWvAPIGCXPmS2HfEY
-	 bnRhwIYPg+3jiHgKrFnsnPqw6nuF05oUEK4Hwyynfpr1nTVVCNTMlhyY07RofkTaMr
-	 8VL+z/QCLZDNowKFyo/+RDOTAUJpHJkUrJJMDylqo8ZQZsGvuSAeXrgHdzPbRruriY
-	 XfcSMOhOAsk8caFqEGwtyX/aOUF7owD3t0BomtZoamAVkXC/ZhZ5SXzJnOU+eLWeC/
-	 BdCbxZjyq51oV9WNomkBeJgCtN0Ma9S3k4ggU3YyJK62WKz9OtIppWntM2uwOqo3W6
-	 v3BlcRZPmbN9Q==
-Date: Thu, 21 Dec 2023 16:32:57 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Minda Chen <minda.chen@starfivetech.com>
-Cc: Conor Dooley <conor@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v13 15/21] PCI: microchip: Add event irqchip field to
- host port and add PLDA irqchip
-Message-ID: <ZYRaqYTcxWJGwWG8@lpieralisi>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <20231214072839.2367-16-minda.chen@starfivetech.com>
- <8c417157-8884-4e91-8912-0344e71f82c2@starfivetech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90825539FC;
+	Thu, 21 Dec 2023 16:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703177552; x=1734713552;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eZsDedLOgXWQlRcFgbfX4q8Y81MbK/Sk72Bvz168qRo=;
+  b=eJ7q2kIFM3LVsyhSUJPMdOFUzjEAkgB0rWo+9N/IvPnCgd2lhS4Tw2iu
+   dF0w5nBbHab5tpeY71wTl4WUDQQcnCYOHne+4YYcVvmitGayF/EMiLK2A
+   6qYCoYd0w8SJwOzKdGz/8HOOE4LMp9t0xM2cK1SJVLv2d10PPbSPwiav7
+   u0KwHPu9VsaVRMMlRec+yCBH3mjgH95Zdc76OY6Uph54S8HKeaeFRc0cE
+   hCPpkkhyF66m7Jyjw8EFYk98YcJI+ZlIeCdZtkLuQ228QCDvRp2u4t3Yz
+   VcTYIVEh+iwU4aHlPb7CIX0hg5aHwMYM82wt52DqpDjweceEvvN3Few/8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="393166692"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="393166692"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 08:52:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="1108158455"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="1108158455"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 08:52:29 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rGMHa-00000007tn0-1tUC;
+	Thu, 21 Dec 2023 18:52:26 +0200
+Date: Thu, 21 Dec 2023 18:52:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86: p2sb: Allow p2sb_bar() calls during PCI
+ device probe
+Message-ID: <ZYRtSuo1yLKyJASP@smile.fi.intel.com>
+References: <20231221093936.1523908-1-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8c417157-8884-4e91-8912-0344e71f82c2@starfivetech.com>
+In-Reply-To: <20231221093936.1523908-1-shinichiro.kawasaki@wdc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Dec 21, 2023 at 06:56:22PM +0800, Minda Chen wrote:
+On Thu, Dec 21, 2023 at 06:39:36PM +0900, Shin'ichiro Kawasaki wrote:
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
 > 
-> 
-> On 2023/12/14 15:28, Minda Chen wrote:
-> > PolarFire PCIE event IRQs includes PLDA local interrupts and PolarFire
-> > their own IRQs. PolarFire PCIe event irq_chip ops using an event_desc to
-> > unify different IRQ register addresses. On PLDA sides, PLDA irqchip codes
-> > only require to set PLDA local interrupt register. So the PLDA irqchip ops
-> > codes can not be extracted from PolarFire codes.
-> > 
-> > To support PLDA its own event IRQ process, implements PLDA irqchip ops and
-> > add event irqchip field to struct pcie_plda_rp.
-> > 
-> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> > ---
-> >  .../pci/controller/plda/pcie-microchip-host.c | 65 ++++++++++++++++++-
-> >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
-> >  2 files changed, 67 insertions(+), 1 deletion(-)
-> > 
-> Hi Conor
->    Could you take time to review this patch?  For I using event irq chip instead of event ops and the whole patch have been changed.  I think it's better 
->    And I added the implementation of PLDA event irqchip  and make it easier to claim the necessity of the modification.
->    If you approve this, I will add back the review tag. Thanks
-> 
-> Hi Lorenzo
->    Have you reviewed this patch？ Does the commit message and the codes are can be approved ？Thanks
-> 
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
 
-Please wrap the lines at 75 columns in length.
+Thank you for the update!
+My comments below.
 
-I have not reviewed but I am still struggling to understand the
-commit log, I apologise, I can try to review the series and figure
-out what the patch is doing but I would appreciate if commits logs
-could be made easier to parse.
+...
 
-Thanks,
-Lorenzo
+> +/*
+> + * Cache BAR0 of P2SB device functions 0 to 7
+> + * TODO: Move this definition to pci.h together with same other definitions
 
-> > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-> > index fd0d92c3d03f..ff40c1622173 100644
-> > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> > @@ -771,6 +771,63 @@ static struct irq_chip mc_event_irq_chip = {
-> >  	.irq_unmask = mc_unmask_event_irq,
-> >  };
-> > > +static u32 plda_hwirq_to_mask(int hwirq)
-> > +{
-> > +	u32 mask;
-> > +
-> > +	if (hwirq < EVENT_PM_MSI_INT_INTX)
-> > +		mask = BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
-> > +	else if (hwirq == EVENT_PM_MSI_INT_INTX)
-> > +		mask = PM_MSI_INT_INTX_MASK;
-> > +	else
-> > +		mask = BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
-> > +
-> > +	return mask;
-> > +}
-> > +
-> > +static void plda_ack_event_irq(struct irq_data *data)
-> > +{
-> > +	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
-> > +
-> > +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
-> > +		       port->bridge_addr + ISTATUS_LOCAL);
-> > +}
-> > +
-> > +static void plda_mask_event_irq(struct irq_data *data)
-> > +{
-> > +	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
-> > +	u32 mask, val;
-> > +
-> > +	mask = plda_hwirq_to_mask(data->hwirq);
-> > +
-> > +	raw_spin_lock(&port->lock);
-> > +	val = readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> > +	val &= ~mask;
-> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> > +	raw_spin_unlock(&port->lock);
-> > +}
-> > +
-> > +static void plda_unmask_event_irq(struct irq_data *data)
-> > +{
-> > +	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
-> > +	u32 mask, val;
-> > +
-> > +	mask = plda_hwirq_to_mask(data->hwirq);
-> > +
-> > +	raw_spin_lock(&port->lock);
-> > +	val = readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> > +	val |= mask;
-> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> > +	raw_spin_unlock(&port->lock);
-> > +}
-> > +
-> > +static struct irq_chip plda_event_irq_chip = {
-> > +	.name = "PLDA PCIe EVENT",
-> > +	.irq_ack = plda_ack_event_irq,
-> > +	.irq_mask = plda_mask_event_irq,
-> > +	.irq_unmask = plda_unmask_event_irq,
-> > +};
-> > +
-> >  static const struct plda_event_ops plda_event_ops = {
-> >  	.get_events = plda_get_events,
-> >  };
-> > @@ -778,7 +835,9 @@ static const struct plda_event_ops plda_event_ops = {
-> >  static int plda_pcie_event_map(struct irq_domain *domain, unsigned int irq,
-> >  			       irq_hw_number_t hwirq)
-> >  {
-> > -	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq);
-> > +	struct plda_pcie_rp *port = (void *)domain->host_data;
-> > +
-> > +	irq_set_chip_and_handler(irq, port->event_irq_chip, handle_level_irq);
-> >  	irq_set_chip_data(irq, domain->host_data);
-> >  
-> >  	return 0;
-> > @@ -963,6 +1022,9 @@ static int plda_init_interrupts(struct platform_device *pdev,
-> >  	if (!port->event_ops)
-> >  		port->event_ops = &plda_event_ops;
-> >  
-> > +	if (!port->event_irq_chip)
-> > +		port->event_irq_chip = &plda_event_irq_chip;
-> > +
-> >  	ret = plda_pcie_init_irq_domains(port);
-> >  	if (ret) {
-> >  		dev_err(dev, "failed creating IRQ domains\n");
-> > @@ -1040,6 +1102,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
-> >  		return ret;
-> >  
-> >  	port->plda.event_ops = &mc_event_ops;
-> > +	port->plda.event_irq_chip = &mc_event_irq_chip;
-> >  
-> >  	/* Address translation is up; safe to enable interrupts */
-> >  	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
-> > diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-> > index dd8bc2750bfc..24ac50c458dc 100644
-> > --- a/drivers/pci/controller/plda/pcie-plda.h
-> > +++ b/drivers/pci/controller/plda/pcie-plda.h
-> > @@ -128,6 +128,8 @@
-> >   * DMA end : reserved for vendor implement
-> >   */
-> >  
-> > +#define PM_MSI_TO_MASK_OFFSET			19
-> > +
-> >  struct plda_pcie_rp;
-> >  
-> >  struct plda_event_ops {
-> > @@ -150,6 +152,7 @@ struct plda_pcie_rp {
-> >  	raw_spinlock_t lock;
-> >  	struct plda_msi msi;
-> >  	const struct plda_event_ops *event_ops;
-> > +	const struct irq_chip *event_irq_chip;
-> >  	void __iomem *bridge_addr;
-> >  	int num_events;
-> >  };
+Missing periods at the end of sentences.
+
+> + */
+> +#define NR_P2SB_RES_CACHE 8
+
+...
+
+> +static bool p2sb_valid_resource(struct resource *res)
+> +{
+> +	return res->flags;
+> +}
+
+So, now if you look at this, there is no point in having the function.
+But see below.
+
+...
+
+> +	if (!p2sb_valid_resource(pci_resource_n(pdev, 0)))
+> +		return -ENOENT;
+
+As per above (i.e. see below).
+
+...
+
+> +	ret = p2sb_scan_and_cache_devfn(bus, devfn);
+> +	if (ret || PCI_FUNC(devfn) != 0)
+> +		return ret;
+
+This hides the fact that we don't scan functions if P2SB is not 0.
+
+	if (ret)
+		return ret;
+
+	/* ...add a comment like above... */
+	if (PCI_FUNC(devfn) != 0)
+		return 0;
+
+
+> +	/*
+> +	 * When function number of the P2SB device is zero, scan other function
+
+The first part will become the comment above. So, you may drop it from here.
+
+> +	 * numbers. If devices are available, cache their BAR0.
+> +	 */
+
+...
+
+> +		pci_bus_write_config_dword(p2sb_bus, devfn_p2sb, P2SBC,
+> +					   P2SBC_HIDE);
+
+Having it on one line is fine.
+
+...
+
+> +	if (!bus)
+> +		bus = p2sb_bus;
+
+Hmm... Maybe
+
+static struct pci_bus *p2sb_get_bus(bus)
+{
+	static struct pci_bus *p2sb_bus;
+
+	bus = bus ?: p2sb_bus;
+	if (bus)
+		return bus;
+
+	p2sb_bus = ...;
+	return p2sb_bus;
+}
+
+?
+
+...
+
+> +	if (!devfn) {
+
+Maybe move this check to the callee?
+
+> +		ret = p2sb_get_devfn(&devfn);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+...
+
+> +	cache = &p2sb_resources[PCI_FUNC(devfn)];
+> +	if (!p2sb_valid_resource(&cache->res) ||
+> +	    cache->bus_dev_id != bus->dev.id)
+>  		return -ENODEV;
+
+I don't remember if I mentioned in the last email(s), but I think what you want is
+
+static int p2sb_valid_resource(struct resource *res)
+{
+	return res->flags ? 0 : -ENOENT;
+}
+	...
+	cache = &p2sb_resources[PCI_FUNC(devfn)];
+	if (cache->bus_dev_id != bus->dev.id)
+		return -ENODEV;
+
+	ret = p2sb_valid_resource(&cache->res);
+	if (ret)
+		return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
