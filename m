@@ -1,23 +1,23 @@
-Return-Path: <linux-pci+bounces-1258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC05781B3EA
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 11:41:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88EBA81B412
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 11:44:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 775B7281C38
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 10:41:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43751287598
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 10:44:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17DDD6D1B6;
-	Thu, 21 Dec 2023 10:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 499A368EA0;
+	Thu, 21 Dec 2023 10:43:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABC36D1C2;
-	Thu, 21 Dec 2023 10:39:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A7D697A5;
+	Thu, 21 Dec 2023 10:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
@@ -25,21 +25,24 @@ Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CACE02800BBD9;
-	Thu, 21 Dec 2023 11:39:40 +0100 (CET)
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 65770101DD8A5;
+	Thu, 21 Dec 2023 11:42:54 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BFA402A7C1; Thu, 21 Dec 2023 11:39:40 +0100 (CET)
-Date: Thu, 21 Dec 2023 11:39:40 +0100
+	id 298141782A; Thu, 21 Dec 2023 11:42:54 +0100 (CET)
+Date: Thu, 21 Dec 2023 11:42:54 +0100
 From: Lukas Wunner <lukas@wunner.de>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
-	will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] iommu/vt-d: don's issue devTLB flush request when
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>, bhelgaas@google.com,
+	baolu.lu@linux.intel.com, dwmw2@infradead.org, will@kernel.org,
+	linux-pci@vger.kernel.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Haorong Ye <yehaorong@bytedance.com>
+Subject: Re: [PATCH 2/2] iommu/vt-d: don's issue devTLB flush request when
  device is disconnected
-Message-ID: <20231221103940.GA12714@wunner.de>
-References: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
- <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
+Message-ID: <20231221104254.GB12714@wunner.de>
+References: <20231213034637.2603013-1-haifeng.zhao@linux.intel.com>
+ <20231213034637.2603013-3-haifeng.zhao@linux.intel.com>
+ <20231213104417.GA31964@wunner.de>
+ <3b7742c4-bbae-4a78-a5a6-30df936a17d4@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,48 +51,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
+In-Reply-To: <3b7742c4-bbae-4a78-a5a6-30df936a17d4@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Dec 19, 2023 at 07:51:53PM -0500, Ethan Zhao wrote:
-> For those endpoint devices connect to system via hotplug capable ports,
-> users could request a warm reset to the device by flapping device's link
-> through setting the slot's link control register, as pciehpt_ist() DLLSC
-> interrupt sequence response, pciehp will unload the device driver and
-> then power it off. thus cause an IOMMU devTLB flush request for device to
-> be sent and a long time completion/timeout waiting in interrupt context.
+On Wed, Dec 13, 2023 at 11:54:05AM +0000, Robin Murphy wrote:
+> I think if we want to ensure ATCs are invalidated on hot-unplug we need an
+> additional pre-removal notifier to take care of that, and that step would
+> then want to distinguish between an orderly removal where cleaning up is
+> somewhat meaningful, and a surprise removal where it definitely isn't.
 
-I think the problem is in the "waiting in interrupt context".
-
-Can you change qi_submit_sync() to *sleep* until the queue is done?
-Instead of busy-waiting in atomic context?
-
-Is the hardware capable of sending an interrupt once the queue is done?
-If it is not capable, would it be viable to poll with exponential backoff
-and sleep in-between polling once the polling delay increases beyond, say,
-10 usec?
-
-Again, the proposed patch is not a proper solution.  It will paper over
-the issue most of the time but every once in a while someone will still
-get a hard lockup splat and it will then be more difficult to reproduce
-and fix if the proposed patch is accepted.
-
-
-> [ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
->          OE    kernel version xxxx
-
-I don't see any reason to hide the kernel version.
-This isn't Intel Confidential information.
-
-
-> [ 4223.822628] Call Trace:
-> [ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
-> [ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
-> [ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
-
-__dmar_remove_one_dev_info() was removed by db75c9573b08 in v6.0
-one and a half years ago, so the stack trace appears to be from
-an older kernel version.
+Even if a user starts the process for orderly removal, the device may be
+surprise-removed *during* that process.  So we cannot assume that the
+device is actually accessible if orderly removal has been initiated.
+If the form factor supports surprise removal, the device may be gone
+at any time.
 
 Thanks,
 
