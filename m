@@ -1,226 +1,77 @@
-Return-Path: <linux-pci+bounces-1262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4AAA81B47F
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 11:56:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 478D481B491
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 12:01:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30D6B284B44
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 10:56:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 00C66285C70
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 11:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A869F6720B;
-	Thu, 21 Dec 2023 10:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E096A02D;
+	Thu, 21 Dec 2023 11:01:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BCA6BB33;
-	Thu, 21 Dec 2023 10:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 6ECBA7FC9;
-	Thu, 21 Dec 2023 18:56:24 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 21 Dec
- 2023 18:56:24 +0800
-Received: from [192.168.125.85] (113.72.145.47) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 21 Dec
- 2023 18:56:23 +0800
-Message-ID: <8c417157-8884-4e91-8912-0344e71f82c2@starfivetech.com>
-Date: Thu, 21 Dec 2023 18:56:22 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278226A32D;
+	Thu, 21 Dec 2023 11:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6D419101E3643;
+	Thu, 21 Dec 2023 12:01:38 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 400BA4BB67; Thu, 21 Dec 2023 12:01:38 +0100 (CET)
+Date: Thu, 21 Dec 2023 12:01:38 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
+	will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iommu/vt-d: don's issue devTLB flush request when
+ device is disconnected
+Message-ID: <20231221110138.GA27755@wunner.de>
+References: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
+ <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
+ <20231221103940.GA12714@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 15/21] PCI: microchip: Add event irqchip field to host
- port and add PLDA irqchip
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Daire
- McNamara" <daire.mcnamara@microchip.com>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Mason Huo
-	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <20231214072839.2367-16-minda.chen@starfivetech.com>
-From: Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <20231214072839.2367-16-minda.chen@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221103940.GA12714@wunner.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+On Thu, Dec 21, 2023 at 11:39:40AM +0100, Lukas Wunner wrote:
+> On Tue, Dec 19, 2023 at 07:51:53PM -0500, Ethan Zhao wrote:
+> > For those endpoint devices connect to system via hotplug capable ports,
+> > users could request a warm reset to the device by flapping device's link
+> > through setting the slot's link control register, as pciehpt_ist() DLLSC
+> > interrupt sequence response, pciehp will unload the device driver and
+> > then power it off. thus cause an IOMMU devTLB flush request for device to
+> > be sent and a long time completion/timeout waiting in interrupt context.
+> 
+> I think the problem is in the "waiting in interrupt context".
 
+I'm wondering whether Intel IOMMUs possibly have a (perhaps undocumented)
+capability to reduce the Invalidate Completion Timeout to a sane value?
+Could you check whether that's supported?
 
-On 2023/12/14 15:28, Minda Chen wrote:
-> PolarFire PCIE event IRQs includes PLDA local interrupts and PolarFire
-> their own IRQs. PolarFire PCIe event irq_chip ops using an event_desc t=
-o
-> unify different IRQ register addresses. On PLDA sides, PLDA irqchip cod=
-es
-> only require to set PLDA local interrupt register. So the PLDA irqchip =
-ops
-> codes can not be extracted from PolarFire codes.
->=20
-> To support PLDA its own event IRQ process, implements PLDA irqchip ops =
-and
-> add event irqchip field to struct pcie_plda_rp.
->=20
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> ---
->  .../pci/controller/plda/pcie-microchip-host.c | 65 ++++++++++++++++++-
->  drivers/pci/controller/plda/pcie-plda.h       |  3 +
->  2 files changed, 67 insertions(+), 1 deletion(-)
->=20
-Hi Conor
-   Could you take time to review this patch?  For I using event irq chip =
-instead of event ops and the whole patch have been changed.  I think it's=
- better=20
-   And I added the implementation of PLDA event irqchip  and make it easi=
-er to claim the necessity of the modification.
-   If you approve this, I will add back the review tag. Thanks
+Granted, the Implementation Note you've pointed to allows 1 sec + 50%,
+but that's not even a "must", it's a "should".  So devices are free to
+take even longer.  We have to cut off at *some* point.
 
-Hi Lorenzo
-   Have you reviewed this patch=EF=BC=9F Does the commit message and the =
-codes are can be approved =EF=BC=9FThanks
+Thanks,
 
-> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/driver=
-s/pci/controller/plda/pcie-microchip-host.c
-> index fd0d92c3d03f..ff40c1622173 100644
-> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> @@ -771,6 +771,63 @@ static struct irq_chip mc_event_irq_chip =3D {
->  	.irq_unmask =3D mc_unmask_event_irq,
->  };
-> > +static u32 plda_hwirq_to_mask(int hwirq)
-> +{
-> +	u32 mask;
-> +
-> +	if (hwirq < EVENT_PM_MSI_INT_INTX)
-> +		mask =3D BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
-> +	else if (hwirq =3D=3D EVENT_PM_MSI_INT_INTX)
-> +		mask =3D PM_MSI_INT_INTX_MASK;
-> +	else
-> +		mask =3D BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
-> +
-> +	return mask;
-> +}
-> +
-> +static void plda_ack_event_irq(struct irq_data *data)
-> +{
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +
-> +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
-> +		       port->bridge_addr + ISTATUS_LOCAL);
-> +}
-> +
-> +static void plda_mask_event_irq(struct irq_data *data)
-> +{
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +	u32 mask, val;
-> +
-> +	mask =3D plda_hwirq_to_mask(data->hwirq);
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> +	val &=3D ~mask;
-> +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static void plda_unmask_event_irq(struct irq_data *data)
-> +{
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +	u32 mask, val;
-> +
-> +	mask =3D plda_hwirq_to_mask(data->hwirq);
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> +	val |=3D mask;
-> +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static struct irq_chip plda_event_irq_chip =3D {
-> +	.name =3D "PLDA PCIe EVENT",
-> +	.irq_ack =3D plda_ack_event_irq,
-> +	.irq_mask =3D plda_mask_event_irq,
-> +	.irq_unmask =3D plda_unmask_event_irq,
-> +};
-> +
->  static const struct plda_event_ops plda_event_ops =3D {
->  	.get_events =3D plda_get_events,
->  };
-> @@ -778,7 +835,9 @@ static const struct plda_event_ops plda_event_ops =3D=
- {
->  static int plda_pcie_event_map(struct irq_domain *domain, unsigned int=
- irq,
->  			       irq_hw_number_t hwirq)
->  {
-> -	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq);
-> +	struct plda_pcie_rp *port =3D (void *)domain->host_data;
-> +
-> +	irq_set_chip_and_handler(irq, port->event_irq_chip, handle_level_irq)=
-;
->  	irq_set_chip_data(irq, domain->host_data);
-> =20
->  	return 0;
-> @@ -963,6 +1022,9 @@ static int plda_init_interrupts(struct platform_de=
-vice *pdev,
->  	if (!port->event_ops)
->  		port->event_ops =3D &plda_event_ops;
-> =20
-> +	if (!port->event_irq_chip)
-> +		port->event_irq_chip =3D &plda_event_irq_chip;
-> +
->  	ret =3D plda_pcie_init_irq_domains(port);
->  	if (ret) {
->  		dev_err(dev, "failed creating IRQ domains\n");
-> @@ -1040,6 +1102,7 @@ static int mc_platform_init(struct pci_config_win=
-dow *cfg)
->  		return ret;
-> =20
->  	port->plda.event_ops =3D &mc_event_ops;
-> +	port->plda.event_irq_chip =3D &mc_event_irq_chip;
-> =20
->  	/* Address translation is up; safe to enable interrupts */
->  	ret =3D plda_init_interrupts(pdev, &port->plda, &mc_event);
-> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/cont=
-roller/plda/pcie-plda.h
-> index dd8bc2750bfc..24ac50c458dc 100644
-> --- a/drivers/pci/controller/plda/pcie-plda.h
-> +++ b/drivers/pci/controller/plda/pcie-plda.h
-> @@ -128,6 +128,8 @@
->   * DMA end : reserved for vendor implement
->   */
-> =20
-> +#define PM_MSI_TO_MASK_OFFSET			19
-> +
->  struct plda_pcie_rp;
-> =20
->  struct plda_event_ops {
-> @@ -150,6 +152,7 @@ struct plda_pcie_rp {
->  	raw_spinlock_t lock;
->  	struct plda_msi msi;
->  	const struct plda_event_ops *event_ops;
-> +	const struct irq_chip *event_irq_chip;
->  	void __iomem *bridge_addr;
->  	int num_events;
->  };
+Lukas
 
