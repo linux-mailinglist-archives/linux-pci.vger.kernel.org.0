@@ -1,48 +1,69 @@
-Return-Path: <linux-pci+bounces-1275-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1276-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B28681C139
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 23:52:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D485581C1AB
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Dec 2023 00:16:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50C971F25DB5
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 22:52:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 749D61F226B9
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Dec 2023 23:16:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5FD478E81;
-	Thu, 21 Dec 2023 22:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38AB17946F;
+	Thu, 21 Dec 2023 23:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNLxSN+7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhDe3UNV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BAC78E64;
-	Thu, 21 Dec 2023 22:52:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F25C433C8;
-	Thu, 21 Dec 2023 22:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703199141;
-	bh=2Fl8vOhQ64Y7+GgI7caXKohE+Cft0TcjWAivLqeuiFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XNLxSN+70e8qMK73Id71VXLGuAaG3NTghRPhaZpVfAD2rF/O45r/AQ3iqsrWqacAE
-	 U4eipX3qpFy7P8RiHpK8b9sL+ue0nyzfspB9FI1EA+iR0szp/pHUzZagySvSzQ5qLF
-	 EyHNw/jWoYr6RCBT2PWpHfj68Vyts84fRPDcdCGnL3u/1SErtA5td8dmoalY9/qjHL
-	 XEnxuVi5SZBgpyXT4cpbEeqgJ+qvDbAYZVOGdOypLMfZUME8fXP9deNNZLT4vY3VIO
-	 NGVNEr3+aYhQ+ScrV5rhEIyI/G549Zx1GnmhyCH6Q+tdLNMIgrYdIc9xkshr7Yy9rG
-	 Rwpzdwx520EZQ==
-Received: (nullmailer pid 234434 invoked by uid 1000);
-	Thu, 21 Dec 2023 22:52:18 -0000
-Date: Thu, 21 Dec 2023 16:52:18 -0600
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de, krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org, kw@linux.com, l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, lpieralisi@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v5 11/16] dt-bindings: imx6q-pcie: Add imx95 pcie
- compatible string
-Message-ID: <20231221225218.GA232422-robh@kernel.org>
-References: <20231220213615.1561528-1-Frank.Li@nxp.com>
- <20231220213615.1561528-12-Frank.Li@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8EA79463;
+	Thu, 21 Dec 2023 23:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-203fed05a31so840504fac.0;
+        Thu, 21 Dec 2023 15:15:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703200554; x=1703805354; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7nre0qWYcjM9evMPmdd23Q9i0p6aQs6EJahQb/FB+V4=;
+        b=WhDe3UNVuwHHn5UrXUeWAB14j0bLB9Um1cD4/gT8C+rQTbPvHdVxIYrQu2clsAERz5
+         eOVODj04f2Cly7FAT7PESB+SVJChAwXV8d/POkL4gXtBa95D4gDBa3PMjlWgZcWNIADl
+         CvhV5xhv/xn5A82oPgQ22+Abyg9GAScs0w10ZEwgHr4JyR1zYqcEXCIDFupciDMW5Joa
+         fQXZCMtcIcrKt03uXrCg5mQkZdgYchnV55LTJgaOB1QNlmDNFAeF97ow7qUDlFowqpER
+         kvtcYSTgN1MWtPzRWgutqjhoGSgFjFnh7hypQASCwuJhm6SA7rPkezJ4E+Lju8Zhx5ra
+         S/ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703200554; x=1703805354;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7nre0qWYcjM9evMPmdd23Q9i0p6aQs6EJahQb/FB+V4=;
+        b=Z6QT+q70a6YK443RhmZO3L89jFQVJ5da0ML6EntmBmcd0O9w76dM3ME7sWL5Ba1frS
+         3Zn3Ldmok7iWeKZ8pciJ3Yk/nx+ouGCXM4UvcQgSrzncZAZ3J+uaDr4x4vAg1J4PFynD
+         u33TMqdSfoiiSmTAoVqo8mH8sChqF+IcWAHVVrSaeHCR4ms/GCIKWZxtOG+8ek4TCJOR
+         Z4NkLOaMQZe5iiptUWPOuucmFx8TWqxFSCcHngydcihPT6n6qALy81cR7qmtuTlUB+p/
+         82HN8Wm13uvIIOyV/FL1rvJEgXj4G6QMYJt9hYQ/j/GqYf+m7M7FwH/8boLtnbUJA1Zc
+         MmNg==
+X-Gm-Message-State: AOJu0YwJHkl7gahmKOpDSyZQQYk0LKsLnMiSLtwrbMlnk6EBOf8BBRPv
+	XSjDr1+12EUepWJrFGAR9V8=
+X-Google-Smtp-Source: AGHT+IGZzNk23aiTKJG4kCFpEp37Rw4Mliz6BMEAibjlBre9d6rJO2P8sfQb2ikNSQsGZa2mNQ+BxA==
+X-Received: by 2002:a05:6870:8091:b0:203:fbf6:8c36 with SMTP id q17-20020a056870809100b00203fbf68c36mr607260oab.68.1703200553693;
+        Thu, 21 Dec 2023 15:15:53 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:80eb:fd4c:5e0a:7676])
+        by smtp.gmail.com with ESMTPSA id z2-20020a62d102000000b006d9762f2725sm1739140pfg.45.2023.12.21.15.15.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 15:15:53 -0800 (PST)
+Date: Thu, 21 Dec 2023 15:15:50 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Esther Shimanovich <eshimanovich@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+Message-ID: <ZYTHJtn52MseDbr_@google.com>
+References: <20231221-thunderbolt-pci-patch-4-v4-1-2e136e57c9bc@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -51,90 +72,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220213615.1561528-12-Frank.Li@nxp.com>
+In-Reply-To: <20231221-thunderbolt-pci-patch-4-v4-1-2e136e57c9bc@chromium.org>
 
-On Wed, Dec 20, 2023 at 04:36:10PM -0500, Frank Li wrote:
-> From: Richard Zhu <hongxing.zhu@nxp.com>
-> 
-> Add i.MX95 PCIe "fsl,imx95-pcie" compatible string.
-> Add "atu" and "app" to reg-names.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
-> 
-> Notes:
->     Change from v2 to v3
->     - Remove krzy's ACK tag
->     - Add condition check for imx95, which required more reg-names then old
->     platform, so need Krzy review again,
->     
->     Change from v1 to v2
->     - add Krzy's ACK tag
-> 
->  .../bindings/pci/fsl,imx6q-pcie-common.yaml    |  1 +
->  .../bindings/pci/fsl,imx6q-pcie.yaml           | 18 ++++++++++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
-> index a284a27c5e873..1b63089ff0aee 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
-> @@ -207,6 +207,7 @@ allOf:
->                  - fsl,imx6sx-pcie
->                  - fsl,imx6q-pcie
->                  - fsl,imx6qp-pcie
-> +                - fsl,imx95-pcie
->                  - fsl,imx6sx-pcie-ep
->                  - fsl,imx6q-pcie-ep
->                  - fsl,imx6qp-pcie-ep
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> index f20d4f0e3cb6c..8633c622bd178 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> @@ -29,6 +29,7 @@ properties:
->        - fsl,imx8mq-pcie
->        - fsl,imx8mm-pcie
->        - fsl,imx8mp-pcie
-> +      - fsl,imx95-pcie
->  
->    clocks:
->      minItems: 3
-> @@ -80,6 +81,22 @@ required:
->  allOf:
->    - $ref: /schemas/pci/snps,dw-pcie.yaml#
->    - $ref: /schemas/pci/fsl,imx6q-pcie-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx95-pcie
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 4
-> +        reg-names:
-> +          items:
-> +            - const: dbi
-> +            - const: atu
-> +            - const: app
-> +            - const: config
-
-Add new entries to the end. Originally, you had dbi and config. Add ata 
-and app on the end.
-
+On Thu, Dec 21, 2023 at 03:53:42PM -0500, Esther Shimanovich wrote:
+> +static void carbon_X1_fixup_relabel_alpine_ridge(struct pci_dev *dev)
+> +{
+> +	/* Is this JHL6540 PCI component embedded in a Lenovo device? */
+> +	if (dev->subsystem_vendor != PCI_VENDOR_ID_LENOVO)
+> +		return;
 > +
->    - if:
->        properties:
->          compatible:
-> @@ -101,6 +118,7 @@ allOf:
->          compatible:
->            enum:
->              - fsl,imx8mq-pcie
-> +            - fsl,imx95-pcie
->      then:
->        properties:
->          clocks:
-> -- 
-> 2.34.1
-> 
+> +	/* Is this JHL6540 PCI component embedded in an X1 Carbon Gen 7/8? */
+> +	if (dev->subsystem_device != 0x22be && // Gen 8
+> +	    dev->subsystem_device != 0x2292) { // Gen 7
+> +		return;
+> +	}
+> +
+> +	dev_set_removable(&dev->dev, DEVICE_FIXED);
+> +
+> +	/* Not all 0x15d3 components are external facing */
+> +	if (dev->device == 0x15d3 &&
+> +	    dev->devfn != 0x08 &&
+> +	    dev->devfn != 0x20) {
+> +		return;
+> +	}
+> +
+> +	dev->external_facing = true;
+> +}
+> +
+> +/*
+> + * We also need to relabel the root port as a consequence of changing
+> + * the JHL6540's PCIE hierarchy.
+> + */
+> +static void carbon_X1_fixup_rootport_not_removable(struct pci_dev *dev)
+> +{
+> +	/* Is this JHL6540 PCI component embedded in a Lenovo device? */
+> +	if (dev->subsystem_vendor != PCI_VENDOR_ID_LENOVO)
+> +		return;
+> +
+> +	/* Is this JHL6540 PCI component embedded in an X1 Carbon Gen 7/8? */
+> +	if (dev->subsystem_device != 0x22be && // Gen 8
+> +	    dev->subsystem_device != 0x2292) { // Gen 7
+> +		return;
+> +	}
+
+This ventures into the realm of nitpicking, but this can be factored out
+into a helper.
+
+I'll shut up now and let PCI folks handle this.
+
+Thanks.
+
+-- 
+Dmitry
 
