@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-1293-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1294-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA2FF81C9F5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Dec 2023 13:29:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D14F81C9FC
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Dec 2023 13:29:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D2861F22D96
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Dec 2023 12:29:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 320A41F25D40
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Dec 2023 12:29:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC8441804E;
-	Fri, 22 Dec 2023 12:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2FF010A0D;
+	Fri, 22 Dec 2023 12:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P+wgWllB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L7vgg2ex"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8206F18043;
-	Fri, 22 Dec 2023 12:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A5199A1;
+	Fri, 22 Dec 2023 12:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703248155; x=1734784155;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=W9BM0HBysXXzPmYSLOHxDQBjtsNT8ib3ZOWo2DiabTc=;
-  b=P+wgWllBIMF5mvV18Dl68n8K+Pz/uQ/yJtS3oS9IOJMgTkPE9ivW4aOe
-   n/6MHiaJ8gemPbnbekG6aWGYmaHU7ogs4GxVgnObFh/YyQHgd+iRd5Qd5
-   LKNk5kFvSpzWZd4HsWs716FG7V3+AObFp29+jFkvQu+Glcg6BxrhFllnW
-   Lds6BA3KMndONxcVbvfSjovmQs1RPOHNBToDZ5xjV5U44xJkqlSGDcmZj
-   z6rEIz9YvlzqF4bi9pfzCuP1zhnmUD6cmQVFB60RvI3dWjP8MWYlqk27I
-   XMrdF1UuuANZ7FrfqeqpIxnA2bFBBuhA6T2WATOGkXu8cHxHF+0w/pbvv
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3195357"
+  t=1703248168; x=1734784168;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LCe+OPVf6ypAOTjFWig95nNeJVsgngMAJh/hD3RJ254=;
+  b=L7vgg2exjtHCbQFLj8azE2qQZPp1P/e1KlT2Bl+bdqyNxCM536S767yd
+   lo1V9FNCaW3QkGUp3Ac5Bx74DlSs+nU2lNNJ5teENNfkO4nDJYI37TMqv
+   Ua7XKpSF3Fsmx/K/uwpVI2jpbEwW6Njk5O3A3c9sgUsI83LMtffpttWQS
+   YAB1GPE3Sqvfgb6cgN1CR1dsqfuLCILRd5P8yBOYcQ6aihXlQR10rwEf3
+   yj3z3fHWxDBKepEs1uboAtF41orgbZzJOziJETKAJ981e2UMOy2STU/5q
+   2oIQ8dDayblUVt6qDpZaowZ24LKAY7WTlbEddV2MDHY5VRU2Tnip9Dhy3
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="17681298"
 X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="3195357"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:29:15 -0800
+   d="scan'208";a="17681298"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:29:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="805932771"
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="950263952"
 X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="805932771"
+   d="scan'208";a="950263952"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.248.105])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:29:09 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:29:22 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -59,10 +59,12 @@ To: linux-pci@vger.kernel.org,
 	"Rafael J . Wysocki" <rafael@kernel.org>,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 0/7] PCI: Solve two bridge window sizing issues
-Date: Fri, 22 Dec 2023 14:28:54 +0200
-Message-Id: <20231222122901.49538-1-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/7] PCI: Fix resource double counting on remove & rescan
+Date: Fri, 22 Dec 2023 14:28:55 +0200
+Message-Id: <20231222122901.49538-2-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20231222122901.49538-1-ilpo.jarvinen@linux.intel.com>
+References: <20231222122901.49538-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,42 +74,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+pbus_size_mem() keeps the size of the optional resources in
+children_add_size. When calculating the PCI bridge window size,
+calculate_memsize() lower bounds size by old_size before adding
+children_add_size and performing the window size alignment. This
+results in double counting for the resources in children_add_size
+because old_size may be based on the previous size of the bridge
+window after it has already included children_add_size (that is,
+size1 in pbus_size_mem() from an earlier invocation of that
+function).
 
-Here's a series that contains two fixes to PCI bridge window sizing
-algorithm. Together, they should enable remove & rescan cycle to work
-for a PCI bus that has PCI devices with optional resources and/or
-disparity in BAR sizes.
+As a result, on repeated remove of the bus & rescan cycles the resource
+size keeps increasing when children_add_size is non-zero as can be seen
+from this extract:
 
-For the second fix, I chose to expose find_empty_resource_slot() from
-kernel/resource.c because it should increase accuracy of the cannot-fit
-decision (currently that function is called find_resource()). In order
-to do that sensibly, a few improvements seemed in order to make its
-interface and name of the function sane before exposing it. Thus, the
-few extra patches on resource side.
+iomem0:  23fffd00000-23fffdfffff : PCI Bus 0000:03
+iomem1:  20000000000-200001fffff : PCI Bus 0000:03
+iomem2:  20000000000-200002fffff : PCI Bus 0000:03
+iomem3:  20000000000-200003fffff : PCI Bus 0000:03
+iomem4:  20000000000-200004fffff : PCI Bus 0000:03
 
-Unfortunately I don't have a reason to suspect these would help with
-the issues related to the currently ongoing resource regression
-thread [1].
+Solve the double counting by moving old_size check later in
+calculate_memsize() so that children_add_size is already accounted for.
 
-[1] https://lore.kernel.org/linux-pci/ZXpaNCLiDM+Kv38H@marvin.atrad.com.au/
+After the patch, the bridge window retains its size as expected:
 
-Ilpo Järvinen (7):
-  PCI: Fix resource double counting on remove & rescan
-  resource: Rename find_resource() to find_empty_resource_slot()
-  resource: Document find_empty_resource_slot() and resource_constraint
-  resource: Use typedef for alignf callback
-  resource: Handle simple alignment inside __find_empty_resource_slot()
-  resource: Export find_empty_resource_slot()
-  PCI: Relax bridge window tail sizing rules
+iomem0:  23fffd00000-23fffdfffff : PCI Bus 0000:03
+iomem1:  20000000000-200000fffff : PCI Bus 0000:03
+iomem2:  20000000000-200000fffff : PCI Bus 0000:03
 
- drivers/pci/bus.c       | 10 +----
- drivers/pci/setup-bus.c | 81 ++++++++++++++++++++++++++++++++++++++---
- include/linux/ioport.h  | 44 ++++++++++++++++++++--
- include/linux/pci.h     |  5 +--
- kernel/resource.c       | 69 ++++++++++++++++-------------------
- 5 files changed, 150 insertions(+), 59 deletions(-)
+Fixes: a4ac9fea016f ("PCI : Calculate right add_size")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index fd74f1c99dba..e3e6ff8854a7 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -820,11 +820,9 @@ static resource_size_t calculate_memsize(resource_size_t size,
+ 		size = min_size;
+ 	if (old_size == 1)
+ 		old_size = 0;
+-	if (size < old_size)
+-		size = old_size;
+ 
+-	size = ALIGN(max(size, add_size) + children_add_size, align);
+-	return size;
++	size = max(size, add_size) + children_add_size;
++	return ALIGN(max(size, old_size), align);
+ }
+ 
+ resource_size_t __weak pcibios_window_alignment(struct pci_bus *bus,
 -- 
 2.30.2
 
