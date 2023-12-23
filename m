@@ -1,100 +1,102 @@
-Return-Path: <linux-pci+bounces-1320-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1321-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AFFF81D64C
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 20:28:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA8ED81D699
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 22:22:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09EB51F21C96
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 19:28:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D2541F21708
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 21:22:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15FB412E5E;
-	Sat, 23 Dec 2023 19:28:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE66115EBD;
+	Sat, 23 Dec 2023 21:22:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3MFpejYE"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="FcVtCQXD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A46D12E63;
-	Sat, 23 Dec 2023 19:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=DeP/1AZ/38nN87rEPWPcyw9koEzebHDvVMmn0yr4JU0=; b=3MFpejYEjpRUOjz3unIDK9FLhx
-	FAtS3UVuoBYAU1MjilQSwcOiNdiPeQx5fzeHU2om9yN6IePetYGEd9gJ1jcH9SkoYF9EJd6niLUGg
-	FKD2zpRtRhBb98W+BGOMe7M3N96oWZmmRFyFHJS4ioQlYHO9AU3XggD6MLVqeUlvvpqJzgi8PlAp6
-	TigqilEAzT81ybIwjaV39CMxzHGR8le5tOASQHe8gzhNERh4MsuK4GYe+vvGcXA9WljPG6GWn1rpA
-	PVn9LFJmgCasYhoeIC1/c71TtLFCvikdGnAtD+Z8hO2mZ2zYK865JUhldVGkuepejO1NAh42bXbI2
-	4gJ+RKVw==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rH7fR-008O6w-11;
-	Sat, 23 Dec 2023 19:28:13 +0000
-Message-ID: <6026d9b5-dd6f-43f8-acc7-9cc77bdb3df3@infradead.org>
-Date: Sat, 23 Dec 2023 11:28:12 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2D718B19
+	for <linux-pci@vger.kernel.org>; Sat, 23 Dec 2023 21:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-35fea35c432so8975995ab.0
+        for <linux-pci@vger.kernel.org>; Sat, 23 Dec 2023 13:22:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1703366568; x=1703971368; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z7lmKsHU82zrwNWQQ1pGRfuym9Y1WgQ/pwv2dR/0OG8=;
+        b=FcVtCQXDJ3iDhMK/IolMyUjckuYJYgpD9DCBVL+dsDa88goHRH6WKx5dxe6E8nalS1
+         AUu2atclbL2RN+LqSq28mIqKX8D5jLcwVOQA3YHTIH1mLQ3POfJvCs5XhA5VMcD+8g3Z
+         cqSHTwqBw7agUI17zMpxmLCyiL5RO4bqHhX9P3R6Fax7Mr9bvWWzCjOH5zoQgO1i3Ygc
+         G+3TlFies2Z2E0oPjyne/PqKig+0rkKqRbAoODJ4JyntKyGp4Y0WKu9qE4eoDbeuz2FI
+         /26su3qhFXfolw73E0AIQpCmBZhzdnA2uLKKlJLVeCv4sKrL0OHBUZ/+f9VTQRRXB9TA
+         XnBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703366568; x=1703971368;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z7lmKsHU82zrwNWQQ1pGRfuym9Y1WgQ/pwv2dR/0OG8=;
+        b=Q34WFsF//oZLW3N8KnMIdSLpe5kMkKhV/W5ayLentATHR2SZyxDLuAzNLTLj1fGeY8
+         MkrVM55ohMT0lc8xfOuLGUtz2DC+wCWuVnUte8CH+qS+rkDhY8Nt9UHRWVRUKRX+tXk5
+         PH1G1EJPIx6Nzhg4w37U+HxXk1RVFQv5fIrXAVFXTaQLo+iYIHtQpztMCvQvAl+NEhgP
+         l78jh6cIz/g2qszMK+Tyw1UGE7Srob8lk+k7wUq3+QieqLz+ZoVoS4M1dBtINCvAtOlW
+         SbUeV8DWOS/ZXQgN7MH4jHj1u0bEBY5PcLedRMpGevmIvcTRk38ItRjU7QlRdMCa34Uv
+         Yarw==
+X-Gm-Message-State: AOJu0YzWrpzXqCmXPjZllM2JuK5u4f9J0PMKDNOTdcwmjP0hclqUlkI2
+	fRWhiai1Dbt3NApOolTZK0juj61TN0seO6ICfmaZH+p5QKA=
+X-Google-Smtp-Source: AGHT+IFlLeIs/iEkpPooaeEp+02k81cDHr/bf+NvU1W5uCOcaCFfw45drgM2wNaFPj0cMI3aZZrq5Q==
+X-Received: by 2002:a05:6e02:2144:b0:35f:d8f3:10ca with SMTP id d4-20020a056e02214400b0035fd8f310camr5240470ilv.23.1703366568067;
+        Sat, 23 Dec 2023 13:22:48 -0800 (PST)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id pt13-20020a17090b3d0d00b002858ac5e401sm3603775pjb.45.2023.12.23.13.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Dec 2023 13:22:47 -0800 (PST)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: helgaas@kernel.org,
+	bhelgaas@google.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-pci@vger.kernel.org,
+	mika.westerberg@linux.intel.com
+Cc: Matthew W Carlis <mattc@purestorage.com>
+Subject: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER natively.
+Date: Sat, 23 Dec 2023 14:22:34 -0700
+Message-Id: <20231223212235.34293-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation/PCI: fix spelling mistake in
- boot-interrupts
-Content-Language: en-US
-To: attreyee-muk <tintinm2017@gmail.com>, bhelgaas@google.com, corbet@lwn.net
-Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231223184412.25598-1-tintinm2017@gmail.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231223184412.25598-1-tintinm2017@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi,
+During our kernel version migration we encountered an issue preventing DPC
+from being used by the kernel on the downstream ports of PCIe switches.
+After some review of the patch history & code we found that the kernel
+now required pcie_ports=dpc-native command line argument for such devices.
+This came after we picked up:
+    "PCI/portdrv: Allow AER service only for Root Ports & RCECs"
 
-On 12/23/23 10:44, attreyee-muk wrote:
-> Correct to “re-enabled” from “reenabled”.
-> 
-> Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
+Belief is that the above patch is 'more correct' on the AER side, but perhaps
+'less correct' on DPC. I initially reached out in the patch's email
+thread to see whether others had thoughts & whether this change might be
+desireable after which I was asked if I would submit a patch. Took a little
+time to read some of the ACPI/PCIe specifications which are the basis of my
+beliefs about the correctness of this patch. That being, if a user builds the
+kernel with DPC/AER & the kernel receives OS control over AER, then it should
+automatically use AER & DPC where applicable in the PCIe hierarchy.
 
-Is "reenabled" confusing? I don't have a problem with it, but
-one web page [1] says that it's OK to use "re-" if not having
-the hyphen can be confusing.
+Matthew W Carlis (1):
+  PCI/portdrv: Allow DPC if the OS controls AER natively.
 
-[1] https://www.grammarbook.com/blog/hyphens/hyphens-with-the-prefix-re/
+ drivers/pci/pcie/portdrv.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-OTOH, some web sites say the "reenable" is OK, at least as an
-alternative spelling.
 
-Thanks.
-
-> ---
->  Documentation/PCI/boot-interrupts.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-> index 2ec70121bfca..931077bb0953 100644
-> --- a/Documentation/PCI/boot-interrupts.rst
-> +++ b/Documentation/PCI/boot-interrupts.rst
-> @@ -61,7 +61,7 @@ Conditions
->  ==========
->  
->  The use of threaded interrupts is the most likely condition to trigger
-> -this problem today. Threaded interrupts may not be reenabled after the IRQ
-> +this problem today. Threaded interrupts may not be re-enabled after the IRQ
->  handler wakes. These "one shot" conditions mean that the threaded interrupt
->  needs to keep the interrupt line masked until the threaded handler has run.
->  Especially when dealing with high data rate interrupts, the thread needs to
-
+base-commit: ceb6a6f023fd3e8b07761ed900352ef574010bcb
 -- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+2.17.1
+
 
