@@ -1,171 +1,101 @@
-Return-Path: <linux-pci+bounces-1315-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1317-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F5181D61A
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 19:43:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F9D181D620
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 19:45:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A90B2834D6
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 18:43:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CC0C1F21204
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Dec 2023 18:45:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC857FC1D;
-	Sat, 23 Dec 2023 18:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2D9412E5E;
+	Sat, 23 Dec 2023 18:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZwJcPA0P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXmiyKJb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EF512E47
-	for <linux-pci@vger.kernel.org>; Sat, 23 Dec 2023 18:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5542ac8b982so2645321a12.3
-        for <linux-pci@vger.kernel.org>; Sat, 23 Dec 2023 10:43:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F928FC1D;
+	Sat, 23 Dec 2023 18:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6d9af1f12e8so90697b3a.1;
+        Sat, 23 Dec 2023 10:45:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703356983; x=1703961783; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g+gco8BLqAjcPdkrZdCffxU9a4mlAf+P/uZCUnr+h8c=;
-        b=ZwJcPA0PAXjWeQkreV0XnGWRludNXBC0WxAtIC82ZxbC51xH+1DQYfvTv7BymyiBLE
-         SY3mkcrMIU/zkfjZKZVIcLDNYuxqnO+IKV4jht1q1GT9IJPtFjOBofNicPI4IuVZU/aM
-         7VQu2sbpujvi/J9PNbHZuLetrSSExSl6gFCFJpBBnm3lj+vTiNBx1nx74bOjTOSIDyZA
-         AxkXHKCpjLBI6U/n+RF8OXCZtSC9On7GIBwuM9d+q6GskTARrU6FjybClnUyO5w8dD57
-         OFx1zoXsijORFl9WMSfeLkO7zoWto+VNXN8ZdHIi57eGqh9dsgDSsRiCKODVowGtOuLY
-         Azdw==
+        d=gmail.com; s=20230601; t=1703357116; x=1703961916; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/SSYy1HqaQVyEn5ka5c1mnu4H1PoZtaN3vm6W8mKM4g=;
+        b=ZXmiyKJbRylw2NG2itapmPQf8wRKpkVufZWwcXfr6RJFwIKBa94kQcSFuz76nVgl45
+         r5ygyKGmOL5y5DqzN24sN9NJALe2TP6W2nyOBDBNLMG2i3EtwDEEPA+Tuj8QO11+apBa
+         /YA72RMOT7G2THRZRlVRE+UfEXAK7bgqYWaYaKoUZetKmh9g69reKihVGjqKzX5NJKT8
+         ILhYpo4vx70utlCrDdKLz6KEp7Etq7mpAE+uRzev73bQWxyXjSC/yugBsIWbySjsN3kw
+         RfEq08nv4RodxQ+bKBI2z57k2hZXW21zAOiyXeMqWL6dGgMfZjaPrjriTDezTlphsX6u
+         3ooA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703356983; x=1703961783;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g+gco8BLqAjcPdkrZdCffxU9a4mlAf+P/uZCUnr+h8c=;
-        b=iMeOsWRI5lC20+0PLHuUnkDn++vhXw3KloYAueZIW1arIwTd6wgqVrALBP9fE2dxUZ
-         hAAOLTOjva4g6EGhrLZBBgLCPPGMWLWWqQGI8kzcM8CH4lyC/osMz67Zzqhj8kE6w7+5
-         hVG8sf3ZZzSbuzegX7YuTO2WKNWIrjyjmFgTbPv3mdcvpQDALFWkrW9isKwlNL2i8l2a
-         f1uOe94FT7fQOm41Xjkf+N9DA9GN5dGffRnzUE7XYlOAJlY2DdFwDHcIEHKRA/T3SRku
-         WriFyQgBdskndyqOflpvpCSdIZQoB71Of37RO+V4zy02ZklGLdKIB7CtWl9u27GPEC2a
-         64gw==
-X-Gm-Message-State: AOJu0YxJXAKc23Pzo53cTSyDN94SErskrTjwRWVK2epygxjQyIwQ9sj+
-	n9RhlM0MSn6eZlW+g26ijcW7grfCUBF6wQ==
-X-Google-Smtp-Source: AGHT+IH1RiLXz8KYuAkcsiOD+30BiDaipZUpG48Ja6HREcXMHcgv4XmU6K31QzIKR74j9wAUxJoFkQ==
-X-Received: by 2002:a50:a416:0:b0:553:34d3:2ba6 with SMTP id u22-20020a50a416000000b0055334d32ba6mr1964111edb.78.1703356983635;
-        Sat, 23 Dec 2023 10:43:03 -0800 (PST)
-Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id p13-20020a05640210cd00b0055298b38768sm4197774edu.80.2023.12.23.10.43.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Dec 2023 10:43:02 -0800 (PST)
-Message-ID: <524646e6-17d4-4a72-be96-74347be36482@linaro.org>
-Date: Sat, 23 Dec 2023 19:43:01 +0100
+        d=1e100.net; s=20230601; t=1703357116; x=1703961916;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/SSYy1HqaQVyEn5ka5c1mnu4H1PoZtaN3vm6W8mKM4g=;
+        b=kPgknXXQiWNRym9n05j5vLWLN5Sp5+z7Jt8dCviCuChkxjl4kEvNl+qHaUDeG3bMCs
+         ki250DSLelGk77swyHUO8AOxTK5EbETnnNYaUOvlV3geuWJv2ncHXfyeaWF0KcqEbyHj
+         1JuELlLfEFzBRKB1z4y5EGGt/BFeI7G6rc4w7sxrdQ7VpkP/L1Xw3wYECzy1041RjsYy
+         O2+3o5CfHiKMjOztOfbBetG3iBX696XM2r3O0MiiiPmASvRNQ7x8vIE9Q15O2qURZD97
+         wizWnkCKSpFitXyXVGmf7NnMQZ7defRnaP/ZxP4GUEyaEnJ2a92Sd4jguPDLJUbhsxg9
+         GGfQ==
+X-Gm-Message-State: AOJu0YwHTRm+C3w7YuOKY3aaHkF8hXlUjpWHfnX6irZR5dtOYKNA+ETD
+	HBRED+MdN8Y0uZqK/c0IFu2aR/pIJ0GAFg==
+X-Google-Smtp-Source: AGHT+IEC3bjlaGUgsa1xELzYnFrHXQ/5w8hD7NDYLZ75MXkqw2mq8iwq/8wA2vPl+4O3yTpUwV6cjA==
+X-Received: by 2002:a05:6a00:2196:b0:6d0:8895:2c8 with SMTP id h22-20020a056a00219600b006d0889502c8mr1603684pfi.36.1703357115458;
+        Sat, 23 Dec 2023 10:45:15 -0800 (PST)
+Received: from attreyee-HP-Pavilion-Laptop-14-ec0xxx.. ([27.5.150.118])
+        by smtp.gmail.com with ESMTPSA id m14-20020aa78a0e000000b006ce7e65159bsm5406672pfa.28.2023.12.23.10.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Dec 2023 10:45:15 -0800 (PST)
+From: attreyee-muk <tintinm2017@gmail.com>
+To: bhelgaas@google.com,
+	corbet@lwn.net
+Cc: attreyee-muk <tintinm2017@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation/PCI: fix spelling mistake in boot-interrupts
+Date: Sun, 24 Dec 2023 00:14:13 +0530
+Message-Id: <20231223184412.25598-1-tintinm2017@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/16] dt-bindings: imx6q-pcie: remove reg and reg-name
-Content-Language: en-US
-To: Frank Li <Frank.li@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
- conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
- helgaas@kernel.org, hongxing.zhu@nxp.com, imx@lists.linux.dev,
- kernel@pengutronix.de, krzysztof.kozlowski+dt@linaro.org, kw@linux.com,
- l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org,
- linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- lpieralisi@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
-References: <20231220213615.1561528-1-Frank.Li@nxp.com>
- <20231220213615.1561528-11-Frank.Li@nxp.com>
- <20231221225033.GA228866-robh@kernel.org>
- <ZYZYFYBr23OtTtrd@lizhi-Precision-Tower-5810>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZYZYFYBr23OtTtrd@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/12/2023 04:46, Frank Li wrote:
-> On Thu, Dec 21, 2023 at 04:50:33PM -0600, Rob Herring wrote:
->> On Wed, Dec 20, 2023 at 04:36:09PM -0500, Frank Li wrote:
->>> snps,dw-pcie.yaml already have reg and reg-name information. Needn't
->>> duplciate here.
->>>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
->>> ---
->>>
->>> Notes:
->>>     Change from v4 to v5
->>>     - add Rob's Acked
->>
->> Err, that was intended for patch 9, not this one. This patch should be 
->> dropped.
-> 
-> Sorry, will correct it.
-> 
-> Actually I want to move it under Allof
-> 
-> if compatiable string (A, B, C...)
-> then
-> 	reg-names:
-> 		-const: dbi
-> 		-const: config
-> 
-> Differece SOC have difference reg-names required list. If split it, it
-> will be easy when add new SOC. Needn't change two place.
-> 
-> Let me update at next version.
-> 
+Correct to “re-enabled” from “reenabled”.
 
-This patch should be dropped. Why do you remove entries from top-level?
-Are they defined in other schema?
+Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
+---
+ Documentation/PCI/boot-interrupts.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
+index 2ec70121bfca..931077bb0953 100644
+--- a/Documentation/PCI/boot-interrupts.rst
++++ b/Documentation/PCI/boot-interrupts.rst
+@@ -61,7 +61,7 @@ Conditions
+ ==========
+ 
+ The use of threaded interrupts is the most likely condition to trigger
+-this problem today. Threaded interrupts may not be reenabled after the IRQ
++this problem today. Threaded interrupts may not be re-enabled after the IRQ
+ handler wakes. These "one shot" conditions mean that the threaded interrupt
+ needs to keep the interrupt line masked until the threaded handler has run.
+ Especially when dealing with high data rate interrupts, the thread needs to
+-- 
+2.34.1
 
 
