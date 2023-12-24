@@ -1,64 +1,64 @@
-Return-Path: <linux-pci+bounces-1333-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 359A181D875
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 10:02:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD83281D87B
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 10:04:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 963941F217C5
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 09:02:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32A22B2107D
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 09:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0D0215A1;
-	Sun, 24 Dec 2023 09:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A8315A1;
+	Sun, 24 Dec 2023 09:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d+QbtlGZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WMVXnChv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3092B15C5
-	for <linux-pci@vger.kernel.org>; Sun, 24 Dec 2023 09:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1672515C2
+	for <linux-pci@vger.kernel.org>; Sun, 24 Dec 2023 09:04:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40b5155e154so40670955e9.3
-        for <linux-pci@vger.kernel.org>; Sun, 24 Dec 2023 01:02:31 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ccbbb5eb77so4910951fa.2
+        for <linux-pci@vger.kernel.org>; Sun, 24 Dec 2023 01:04:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703408550; x=1704013350; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703408677; x=1704013477; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=mikORaWigqoz+zexEhJ5QPZXv6VeQouYf6VKAdwFvI8=;
-        b=d+QbtlGZ+1WB7zhS27xeNvziiqJtdweVit7aC7p8pqhRDM00ZnOi7Rxfh9cZTSqwjw
-         PhyhIEzY8NaCFOC7jcU4KFoqiYsCSWQplBzvYpxyxPQLazw3yfVSZgUXy0V8dP/8l0Ef
-         7Vv6dN0hdSTWfXmi91XkyoSPSMJPpGqq0wUaYUSEyP3Z+UZmhS1zd/pk8wb2z/6sbXgf
-         uCA3CsWGzuQFg0CPwCxeC+oGEQFtko3sBnszRBX3pigpmObyHhaGekK/3kjIAQIXKg9l
-         m9B9XMWoh1OsSZQkWlUjn8oy0wkIHwAsO5afl6HXbaAvpSc2t5bwGr2oITDgjFEXebsz
-         aWZA==
+        bh=aqzDujsqWz0VQw9T5T+axaCv+22AkTZIRfOcOtMQ8Ds=;
+        b=WMVXnChvznp3ETZrYerICXPvJHmMhqZ+DTcn23Zl8XCRuCwHUUGDcaShjg+G8Ld9Nl
+         d4aEAF/LwhZfx514s6djIGVS6HleeFQSNq+FVPMPCEsDRp6zGUiOIfQ2ki5X6sTHjcuv
+         DB2enElb+Mdph3DBfh5Ui9ZwKEYkYWabXzLdTYZNJlYcajhUl7gZaKqoTuYxCxr9HC0E
+         3EfE7hGYapksuRG0C+3sxl4cacJYwVspL/QRg1eAX10uN9OafJ/JGlX6ch6MDebXzGXv
+         dKW/x5F7Xl8s76XGO+wfbk/S/jXdbU5g7qAN7/CNyH8w0DrgzdirZBHKI2mhEl27GS0R
+         ichQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703408550; x=1704013350;
+        d=1e100.net; s=20230601; t=1703408677; x=1704013477;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mikORaWigqoz+zexEhJ5QPZXv6VeQouYf6VKAdwFvI8=;
-        b=dstiYW1FXoGvRsn+ApM/Mo1JZM8jL4hCpTKwgbxzOpg9roCf27Ng6QYoS/yMF66Wo/
-         +85l16zY6XEzqzrUbXwM5KDk9ZF4Ccu0VzFIFLTReeW96+ZfMHy6X1/GauMAfCXmv/Jw
-         ZDvNwibo0S7HFAnPV5oeQ4c9VlfSAwIHHWH891vCQ/JwLVd4KsQwOZne0wglOC62Bm2P
-         ClncTH6y5f53RnTobwocaZfwgZKEDDoNJuKyBwpXGLE76OwfgaehfIS0KgWV9aP0bkuZ
-         u7BVkqBJSOGb62l/TB5kXbrxQH9o+eL8HfKhGMWzTFACa9aKCAFIe+C3AtZk2dhVw2yz
-         lMiA==
-X-Gm-Message-State: AOJu0YyxhaOa7NEiiWDah2ZdsQXOlFBFYtfuqiT5M5DSE0yXFI91tzhq
-	ie46TpojUTko959UTH7kQFjuoWxqrryljg==
-X-Google-Smtp-Source: AGHT+IF8LMi5Ib/9H9NjAqLPPMqJEdmNFzOXKkAG/sCeozv8KCFi5PmNPV2+MomKOW0BqlIXYPA9cA==
-X-Received: by 2002:a05:600c:4f94:b0:40c:3e0a:692e with SMTP id n20-20020a05600c4f9400b0040c3e0a692emr2113243wmq.232.1703408550391;
-        Sun, 24 Dec 2023 01:02:30 -0800 (PST)
+        bh=aqzDujsqWz0VQw9T5T+axaCv+22AkTZIRfOcOtMQ8Ds=;
+        b=w6M7LCepIN19/Pqbb0ZKg07ac+25gZaGb0rLovID4sxiO7djM82i5K06ARf0TK14di
+         p496dSROsB0lfvdje+nhGgJo/EwJh6kyJ+JeRDm+s/uH7/aorEfBPLLAp3nIJeXw++f4
+         nzUpaYvs8H9y9b8+aPWDz4OeVs0779WZx3z7wGiaHdaFvsyCTBO+FIWbpy7WWISpjMyL
+         Fnwc79Us6sVKca9fp3Aa8kCsTJtrutWo4VNROVKkuLUw4RFKsa0KeQ3Wcf8DU6nMigwq
+         a0D+eVir8zEArshpbVJi3uNlKmF7ob+8KJT9AbTSlz8M9gZSwxPb/cHKKddnilzjgDUU
+         pKkQ==
+X-Gm-Message-State: AOJu0YztCAXxFq65itwQSBUNHTw31InPjWkQrKkj/p3mmDDNJURmOeu+
+	xXSArWKd20+lQGgpLr3lJlJoLn9gbbrqiw==
+X-Google-Smtp-Source: AGHT+IFQqZES9CxVrZn18ztuGXNc1SnevdjCy15/Nqu+9VFEb35MdcS2+OE0KgIsTgpWV7zWasyA3A==
+X-Received: by 2002:a2e:be9c:0:b0:2cc:7328:4d3d with SMTP id a28-20020a2ebe9c000000b002cc73284d3dmr1647135ljr.99.1703408677231;
+        Sun, 24 Dec 2023 01:04:37 -0800 (PST)
 Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id el1-20020a170907284100b00a1c96e987c4sm3784963ejc.101.2023.12.24.01.02.28
+        by smtp.gmail.com with ESMTPSA id by40-20020a05651c1a2800b002cca74289b6sm891953ljb.67.2023.12.24.01.04.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Dec 2023 01:02:29 -0800 (PST)
-Message-ID: <cf231452-e1e6-44bd-bff4-c699d5f2a53a@linaro.org>
-Date: Sun, 24 Dec 2023 10:02:28 +0100
+        Sun, 24 Dec 2023 01:04:36 -0800 (PST)
+Message-ID: <6bf94c6e-adfe-4931-9314-4f6b73f96981@linaro.org>
+Date: Sun, 24 Dec 2023 10:04:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,8 +66,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 04/16] dt-bindings: imx6q-pcie: Add linux,pci-domain as
- required for iMX8MQ
+Subject: Re: [PATCH v5 09/16] dt-bindings: imx6q-pcie: Clean up irrationality
+ clocks check
 Content-Language: en-US
 To: Frank Li <Frank.li@nxp.com>
 Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
@@ -79,9 +79,9 @@ Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
  lpieralisi@kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
  shawnguo@kernel.org
 References: <20231220213615.1561528-1-Frank.Li@nxp.com>
- <20231220213615.1561528-5-Frank.Li@nxp.com>
- <f6d9a333-3259-4dc6-bdc7-23ffa26e590b@linaro.org>
- <ZYeznY7gXM+zoQeB@lizhi-Precision-Tower-5810>
+ <20231220213615.1561528-10-Frank.Li@nxp.com>
+ <9efe017d-e887-4239-a4ca-ff8ffeb08aec@linaro.org>
+ <ZYe252yFqKDsyfke@lizhi-Precision-Tower-5810>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -127,36 +127,28 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZYeznY7gXM+zoQeB@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZYe252yFqKDsyfke@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/12/2023 05:29, Frank Li wrote:
-> On Sat, Dec 23, 2023 at 07:40:28PM +0100, Krzysztof Kozlowski wrote:
+On 24/12/2023 05:43, Frank Li wrote:
+> On Sat, Dec 23, 2023 at 07:42:12PM +0100, Krzysztof Kozlowski wrote:
 >> On 20/12/2023 22:36, Frank Li wrote:
->>> iMX8MQ have two pci controllers. Adds "linux,pci-domain" as required
->>> proptery for iMX8MQ to indicate pci controller index.
+>>> There are clocks and clock-names restriction for difference compatible
+>>> string. So needn't irrationality check again for clock's miniItems and
+>>> maxItems.
 >>
->>
->> Why it has to be required? Everything will work fine if skipped.
->> Otherwise please provide reason why it must be *required*.
+>> That's not really true. Other entry does not restrict clocks and leave
+>> items quite flexible. These entries should be combined so all
+>> constraints are fixed for all variants.
 > 
-> Next patch will use "linux,pci-domain" as PCI slot ID, instead compared
-> with hard code register address.
-> 
-> The below code will be removed.
-> 
-> -		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
-> -			imx6_pcie->controller_id = 1;
-> 
-> 
-> when there are more than 2 controller, this compare logic will become
-> complex. 
-> 
-> So after next patch, "linux,pci-domain" will be required.
+> There are 7 compatible string at pci/fsl,imx6q-pcie.yaml 
 
-Nothing in commit msg explains this. Why you cannot use some
-auto-incremented values when this is missing?
+Then explain it in the commit msg. The file you are touching has
+something entirely else.
+
+And what about -ep binding? Commit msg explains nothing here as well.
+
 
 Best regards,
 Krzysztof
