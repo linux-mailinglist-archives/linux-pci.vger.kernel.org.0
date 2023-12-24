@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-1355-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1356-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 101E281DBF4
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 19:37:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73D2981DBF7
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 19:37:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EA061F217C7
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 18:37:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B002281F6B
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 18:37:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23AD2D2F1;
-	Sun, 24 Dec 2023 18:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0C610785;
+	Sun, 24 Dec 2023 18:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aKCPRhE9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="afnenlQr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2075.outbound.protection.outlook.com [40.107.22.75])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2061.outbound.protection.outlook.com [40.107.22.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D73A18C15;
-	Sun, 24 Dec 2023 18:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ACE18EB9;
+	Sun, 24 Dec 2023 18:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NQ9tjf/9zXDS8pGSne7XsNKhqYY2tqHBwJ7bDQQw84XSoLkNG86wxdjObfclqQQZnlD0tG9Tt/gpfy8+1GWwotPI+S8CW0m+L2cpV1EoEMlkqBpmtomF6HkBli9OqdcKwe4Tc2KAVrd7wWuOAJYMEiSQPvX1SXqcNzK3eNStTs32nDLNo3XVbZSHdVpQqAFzQaTvdOhoLvvrN4BV4yIw+H+aPR3VxHxplMGCxHdIFNedEZTMh/ESStayuT90dDJNfic6bGFRKwp3yMhuHFPwZdoZDo4X7E6qZyJjhLWbo7KyCwr7FLDvL53u/K6ukAp+CDZYPAhctXYaFzkGnutLew==
+ b=MMBrhloQfU4HCnJ7Mc/Qlgo1x7tueOpKUSK26VlwZI/fczBnLBXAY0GDmFxioo0p9nQ7Vmva+Bmng92bGgKbOjnQtU3PWxMLMNMMx2Aby4h2MDmGlpvcEXuELmB0dvY9EDlRVd3Tb7bU1uPnf1IybRxmAb2HKgvmndrb8nWeTcLj936nI9WQdkFoSPtCMIND0zida8jfptE8TSN0Uscjn8SdYKaqeTvuRqcJuHwZhs+SJUS1roCvq1zMo6rfu+ZZs+vnQzk9E3hc7WLVmvhCjwbxv5a+6FP5bsJYJoIx3lqvMcDLnlkZA+2IfPQ2d3o6zhsnHDtsVFvd7+ioBFX9oA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7YQHpyLDTwT3wFqJLJaY+UXcCMsgHUVOZ1xcNx2P6fU=;
- b=Sh+fQD0SXdfDXWOzpz25tMyrByh+fGYSZ8S7zJcYWP8rDGBSlNLD2G90ytRtiSxPb2sWWcK68ay3SoJYiIbEUKpYyCvQ1uyR2rzZmAKvyNtitNXUJNoL2mBgyY9O7lH8hxuW7x7MjxkLxW3Qirwot0wJPA5b+cOVnVi/5rfxgsH3MKlJmBC6qNYSRLxA5kB7rPASwW0abndBAuzPUvzeijHxpfiSpLj28ELpEYc8r2lWHvc5K1x6X7eW0HIMNd3w65Wr73EFAESyQ8P5r9ie58Ywz0tpCSX/dNe9sQdL3AxyWeuHemL2H9IZK4XwHtnbYE6YoiYEcj+Bzq8tYh0Hyw==
+ bh=KqwMa6eMbLnQJ2/DnJpJInA1vRcpd1Bx4zYAn3HEDQw=;
+ b=Dp4r80aCrLr2RJcJFvvb3bQzx3PgFxNC+6uJkkYrSTPd04kkS2wgejSNUkXam9hHgD9jkGbRaksub7hNgflQcQEyIV5rFa3yRLrWZEDHlhszj9Fnb74Pi0LxY3rhgpIhAL4e/KnttwvkFznqMtF9cM20tPkVQ5cex7NmXV3vhBkMNR6r6rwNV6wrYMnQfnAhZPmPBbap75MCTtibBVT5gtJTmPVoVA4RHRwAf/N6aFdDahiGc51v3Szm/GLaF/ALaTU7/q9yKn07KABJDSlcMVPzaqBFOl5/2l76VHC9lG0C6JK5fMy8a1gOAc+Y9Ao1bSQuY2M2MxYu+GYUbNuXog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7YQHpyLDTwT3wFqJLJaY+UXcCMsgHUVOZ1xcNx2P6fU=;
- b=aKCPRhE9Lfdlmr5UcWonXNvl6HULKG97ifZP2gQy3kTbeujBu5qSJziXnZ4tb79aRvi8CbDSw8WU45TFuOFuc3bftrWrDCy1noQadhfD1n81QJ5Ys9b2e1Q3K9Zob/R7j9EYu27YA0iEgg9yZfg0PMfF1Z0DOs2Ewdq/YDfP8KU=
+ bh=KqwMa6eMbLnQJ2/DnJpJInA1vRcpd1Bx4zYAn3HEDQw=;
+ b=afnenlQrnPWRgibC6erFzYcN4qBIj/LP0IUy4x/E1aFsHAe+89G1K7xZI+ZfRQtzB6CVDdsxqSMEhk/OiPD4L5npfKtNAl2KNje2wUoFhYcw+v3uGb8MgsxK2P6CCmqaxlkbV+WY4NEfg1Xn2Ng9KMQid1ewDz/nWl1DjjDIzbU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
  by AS5PR04MB10020.eurprd04.prod.outlook.com (2603:10a6:20b:682::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.26; Sun, 24 Dec
- 2023 18:34:16 +0000
+ 2023 18:34:22 +0000
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::95f5:5118:258f:ee40%7]) with mapi id 15.20.7113.026; Sun, 24 Dec 2023
- 18:34:16 +0000
+ 18:34:22 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: krzysztof.kozlowski@linaro.org
 Cc: Frank.Li@nxp.com,
@@ -70,9 +70,9 @@ Cc: Frank.Li@nxp.com,
 	robh@kernel.org,
 	s.hauer@pengutronix.de,
 	shawnguo@kernel.org
-Subject: [PATCH v6 14/16] PCI: imx6: Add epc_features in imx6_pcie_drvdata
-Date: Sun, 24 Dec 2023 13:32:40 -0500
-Message-Id: <20231224183242.1675372-15-Frank.Li@nxp.com>
+Subject: [PATCH v6 15/16] dt-bindings: imx6q-pcie: Add iMX95 pcie endpoint compatible string
+Date: Sun, 24 Dec 2023 13:32:41 -0500
+Message-Id: <20231224183242.1675372-16-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231224183242.1675372-1-Frank.Li@nxp.com>
 References: <20231224183242.1675372-1-Frank.Li@nxp.com>
@@ -89,123 +89,155 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AS5PR04MB10020:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec15b194-9342-499f-8a5b-08dc04aeef0c
+X-MS-Office365-Filtering-Correlation-Id: 020576e3-213e-4456-11e6-08dc04aef281
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	t+24VW9j+YOSLEMTxx1dFMCnYdIFEHQZ+LNsoGihKGgZ+8iw1A7hQIVxSzNgq94pFfYo4uG1lu662ViAvMYJ37t0wQzROHfsC6TejCnaiFhgxDSaS/oAzvnUZmbhaoctfom4Bfad49wsBMjyVJiiYg63iubu1sAMaABmTffKH/8Q7l9mm/LE1IxnabtSYbUmCVzKLeRdhHKzQgVnplJPq/FfwWUxe5w9DZtoBi4Mf1BbNs4tEvVl0TAR85TXo/8J0mPcpzxrlVljmAFbDM1ChqQfm7AL0gq5WrDRA441Wyl1gZMd8/8ICAN+1EKvctDSHTivtOWHcAldsOeiONE4yh/3fp1Rlfkfmk4iDoBXYi3m5sEd7F3tV8vrAvjenDf+vnCsQFYrC6DMURkYMQUdwMETNwB8qfRPU8PtcYh72P/U7fKlmmfjsQ05BfJGxmdwi4KssSTaoykfEd0ENh6RswWzhADiEkBoMci7ES8oYLzBcaA/WnJ1f8eBspuU3OjjtzMHqf7lq+0DzNJtstzHiHJOMkyoV1EOXJjmQkk7IIGV8LbmVTgCVIve/1uyS5gi8g6cpjK4DmreSS94vpUYsxzXfPZYloXuTEFD44jqGv7qvgxYLrpOGBGvLiODK48A
+	eOVAPqEk0BzFAm0w+lhAHrLyGygXCNaH0t4eTt4jmtu7nQNHul7L6jiQzKf3v3dXUxqeyj/rC3o+NI4N5Dem6rPokqXtWNu+A+/AsUQHMhlCLVrD3/y7lG/VWkrf9I8+q/sLfRuEK+9L9S6r0gNb5s6DZTbNTsjI3BhJtTdFmys14O9aGkPUM6iN64m1Sr8BQ6Df17IUJoy9LrQ1KAVRvpf0WzqaMOo4pEy3ZMxqb65vVxdUwD0qfaDObtbnf7lWVcEg+eu+uUBi2vpy4sxnOCVXTBrFgtUv8iDCDCQY8WwCYqRlHuqPzcJnTBCAscsUlT2u1VJmyWejE7c1w+8C4XZxbVlCCUcPLd8s3DwuQdS9uHKiWR+u0vZ5TcjzYcjtpn2CFjsAHzIWdkchPrMaIp6geB6K0WF0zHlovI81ZUBYqVU2f4dylmGiLQjsubxNW5FEd8Epuu/ec1j7xckJ+HuLBl2RjK6zSubBlS6zmjDq1t4AhW/lRkU0/f/JFW8JGEVxwmYtNQBJk0ntekPq3Fom9ZL83woQRp9To9UQhgearlkz/d7bPotA1ddQ2cKc5K2XAj2Ax2nZ07wubCIU8r48M57n3ZFn4szJtlJ2LQp0Bxp5OqBTa+TM5kSm7dIbnaSNiag3+21XZAshmcg7BQ==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(346002)(376002)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(38350700005)(41300700001)(86362001)(26005)(36756003)(2616005)(1076003)(83380400001)(38100700002)(52116002)(478600001)(6916009)(316002)(66476007)(6666004)(66946007)(66556008)(6512007)(6506007)(8676002)(8936002)(7416002)(5660300002)(2906002)(4326008)(6486002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(346002)(376002)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(38350700005)(41300700001)(86362001)(26005)(36756003)(2616005)(1076003)(83380400001)(38100700002)(52116002)(478600001)(6916009)(316002)(66476007)(6666004)(66946007)(66556008)(6512007)(6506007)(8676002)(8936002)(7416002)(5660300002)(2906002)(4326008)(6486002)(32563001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vHWvrnsV2KSxWMuru2F8pbTxBjV5AkuOSzbmqmQ7LGvqikS94R/mWfreYH6I?=
- =?us-ascii?Q?Y15tlelyzu0zV198oiTqs1h7TWQcUFmPVXXFbhKkn530xgcl2l4jPwFmibBN?=
- =?us-ascii?Q?TLbcOemzataL+IgQF72hAgXXa5HVg208OkYtlglwYodQeOEfnzQYeqfugwIe?=
- =?us-ascii?Q?t8meu2POmyfjoE2c3YiVUYoP2Mq5db0Jtq4e8+HWLSDPyP5nnYWaYVYyCJlL?=
- =?us-ascii?Q?oLL6KuTyXIJJKjhXzgRkClPNFm/bThESDKfPqedU88yVX2KL+igfGsQF+C0N?=
- =?us-ascii?Q?zRJaLR+VYsZGjriSbyAUr/A+Ceiu3PaCdBcwi2N/UkX27ymrs1jkPemV0xkH?=
- =?us-ascii?Q?YsAzcQXZOt6VjlgE642CFRDL7yMPATnMLUvKI5SLdeq33TM/RCsRRn+depy3?=
- =?us-ascii?Q?uA1QE4ywnlzQKxr0zhRfQWndnx2BnxfakrBUQUvrA9DTlK2JM+hyhA8oFOw5?=
- =?us-ascii?Q?Hax4pjvRcgw4LAQSRFwOEIHXkLqsSyme39wL3nsBRY5W9wwrqO/YOAN5ZuOP?=
- =?us-ascii?Q?21esAeJlqRxo8pOZpinODPMd12AhuJxLwR51o9jfSvri6mprz6xn8wctbA1E?=
- =?us-ascii?Q?krLiiUFmS9SbwGYYVp2rSj4J8Vdj1gM1jr75KKUpdZ1mSUbaJ75gxdZwer6n?=
- =?us-ascii?Q?qWWsVYXhdaaKil+kAdUjKDaT5HlAnS4oR2aQCXrizDPOIIzsblwCzPyqU3hR?=
- =?us-ascii?Q?EVXWRgPespdYdXY5GniYhv3kcUpXIP8SYny15CCIheqCDXYQKj+db5/zOLEL?=
- =?us-ascii?Q?FQdTf9UxXxZqveBschAAR+7Xm4iQLe1sZRwW/4bkmps4BZptPnXUrXA2JoU2?=
- =?us-ascii?Q?WgB3oqGLfqmK5i9rOOGOh2YbTBxMZifOfcEM3FO4jWPhUZN5ewB9bDl4O8lo?=
- =?us-ascii?Q?bV92UEtFtlOXu9x9l2C4o6V3LnCPMKXtDMHKzkWh7dJoNNAC6Myhgif87ARh?=
- =?us-ascii?Q?vEAHDnKwdVbdYyOMnqAkMBxhOfGZIgrBoPl38jf3sjXkkLHOwkYCv3RBRITS?=
- =?us-ascii?Q?oLlKqdjK5panSznPJm2l2PGQq3Tjb1xzc5L+okTvrxB9sYp6QLINsdEgqJR6?=
- =?us-ascii?Q?snrZnK3UEuMaaZd9/Ov4HUipPRJgUkjulemf7i/k931QGJyi4rjiYVbTJFlF?=
- =?us-ascii?Q?FDjFo5FfANiyv0WrZUQtBtEekjY+AKmtMf2sbKNWo5rk0linsozMW/iY49lj?=
- =?us-ascii?Q?iTza/qbKcTPMYQ6gn6dASVY8xNzrYuubZyrJY19pOJNOHON/6ghnPjjntwP/?=
- =?us-ascii?Q?1YrFtyFb2eCf2hofU9T72pojc0Zc7Tr2AcJpXAqZztPRnm5QVo4/l3zZZv3S?=
- =?us-ascii?Q?Jdq1ELhASZnlH7EFIWHVom+tGxIlgFImMWngM7uCi+15l/Gb6iYiBJamk6U7?=
- =?us-ascii?Q?zBfTeDZAFhYjgAdGXiomliMbxaKqTBH+ezIYbZbZmGu4u7WWBOYnY5RpnFAN?=
- =?us-ascii?Q?NDK03O5U1saL5Zti1i+xwYJ2tFMotXLs8UNPaXyIYaiXgq4uLK2cyrEDuNAm?=
- =?us-ascii?Q?7yriIeIgyHIsMnwihHznfo8UaNsQEDCkIdlmdn7ag/VJ+KTI8RS5MbuZZ/Qn?=
- =?us-ascii?Q?UG+hyJdD/MiR25p0LAc=3D?=
+	=?us-ascii?Q?ZClNXLJpOH+EwW/sSd3IB3IWHRyeM6vfGHhIvyjkFiz0EVXqprEC1fDmUCJ0?=
+ =?us-ascii?Q?/yv9NVvvkvmfUNer5QxTy2vtRnK/gkaobpdZpAcXVshg2F+io+2eS8QiYArk?=
+ =?us-ascii?Q?NeeA/wK4FPuDWnTIT+1oqibHbKeF1XK7QbadtymxtOx1NTK4DB6DBpE+/hV5?=
+ =?us-ascii?Q?Q4i4Hw3dlpJNLTGESq1dXYf4NLq2Dc25G3B6fFQ3HseYgRS+Fu/Aj8ILPz+u?=
+ =?us-ascii?Q?lj2ajZt/sQFJ6ZvAyZLRZhbBDnnK5E9WJjZ7GsXWc+nDJHIrbrHfwevgVpQm?=
+ =?us-ascii?Q?6UoVPflseW/MEBSR42A9QQTDOuqOtdYpb8tDAB/dbezGmG84kCCyLyhwsX8A?=
+ =?us-ascii?Q?C0fhEoilpTuFUYGp0J2uVmE86DYYaJsfZ0Ceqat7gDape8xTgDP4EhQzl5rv?=
+ =?us-ascii?Q?FWOwLh8j93KtuKR1tsknNJqD4fiZ1CNar74OjXIRVHXKxXDmn4STRJ91zjtN?=
+ =?us-ascii?Q?8al8VaexjxFyL9a6+1BnsUNKBlveK1K1q1Fah3cBqGLEY+YBiKLKp3YSAY6c?=
+ =?us-ascii?Q?/y34bU2gp6frYkqJFkXzw5UKQRQ3qziquT2aFVVZ1H9zbed2iyE1MiBQuCFQ?=
+ =?us-ascii?Q?teqSRFQTrwevtOooos8HA+os1HwFU/Ay/4BukpIa61fQ3eyLWAw8KJ+n8dkZ?=
+ =?us-ascii?Q?t0qSUzjGrw5bfZbwNJYE4q6Du2UPCJtixI02j/VBzeBFPTYnkB8bySkya9pm?=
+ =?us-ascii?Q?Zw1+aaC+Jcee7riXdEHB0penoA/uFjcWsQRqezFJV+I8QiJkNcCd6yrhbfV2?=
+ =?us-ascii?Q?ORdGYktycclG/A2ToCpXgUrhW/Vwf1ttimg1CgDgNadtDrx3VBkj2FLwj7Gm?=
+ =?us-ascii?Q?3tyblD/LUo64qsoHV0hIKCfBBgBYP84PdWR+z5CEO1YFZNxJW/G6EDa1Vd95?=
+ =?us-ascii?Q?ymYyKUZ9ltDQNuaxnhlqAY4SQp3xHc2ThASrym4AvttUswmmZ1hT3hyc/whD?=
+ =?us-ascii?Q?h8rfyrNP+SHd5Cb5uNBT5wqWy6rk2ykpzaSyBMYY9OcRigbOgNjGuy7q1lLq?=
+ =?us-ascii?Q?ZJYa17fycYutuVpA20OQLAbPS+w2ahMw+4xFaH1Vxb0d4NXfpMZO5VGIqTLc?=
+ =?us-ascii?Q?8n2FotfQUThExqyIY/mjIppjezeSSfHW2pg2lgYivlxJl+yaJvuFyNdk7u+f?=
+ =?us-ascii?Q?xGgpa7CQeGgj91nROfd0QsMTOVVqTizSmzRJksbT3CPTeBBX5QAge+qa5Jde?=
+ =?us-ascii?Q?CN+jaUDtTIWZVRPMhctg3mlzUS1TOy4+n8HLk/w4kM+kKZOF4/6j/ltyhj/i?=
+ =?us-ascii?Q?a2HerAAQg/WukNPBy19Z71wDv1tXcrmm9miRvRVrIqW3cEpVLGUT1stLkrDs?=
+ =?us-ascii?Q?I3PT+lHc4KMNF/iRVI04rV81CPeRCv54f91xwDqnFVAjvyeZQVALpexYHnMV?=
+ =?us-ascii?Q?mC1VrFYoO0zZnnAk4EktYag4ZyVVoZLScQ4pvm2ZcXCdz0gF2Yj+8jadSJ4r?=
+ =?us-ascii?Q?6idcrXUNsipFGzmzoYKQnQAVcgLClj2CxP1ev+7JOuFCP/QpZyHSuXxib4tB?=
+ =?us-ascii?Q?3VzQ0oGMtuaJiGiQ7e6YGzJSp0oNWOe0jlCqcPOjhkMMH9MXyHClxC1L4Nfu?=
+ =?us-ascii?Q?T9bsKftYgC0iTD4Cno0=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec15b194-9342-499f-8a5b-08dc04aeef0c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 020576e3-213e-4456-11e6-08dc04aef281
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2023 18:34:16.2863
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Dec 2023 18:34:22.0801
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FkTP6jDM272IYaOIDgX3toBJef+beMjbOn5GbmARCNviAvsprQCAM8GU8X2IwpHbJKYCbttSGeipB3QKMN9nLg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9hy08R4JNseBDA7EX2Z7bLIBwsuFRXtyv3ZpBVYh8hB3b2s5hD08AdyK+I3wZyfssLyi8K72WZVDFE0+so6TtQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB10020
 
-The i.MX EP exhibits variations in epc_features among different EP
-configurations. This introduces the addition of epc_features in
-imx6_pcie_drvdata to accommodate these differences. It's important to note
-that there are no functional changes in this commit; instead, it lays the
-groundwork for supporting i.MX95 EP functions.
+Add i.MX95 PCIe "fsl,imx95-pcie-ep" compatible string.
+Add reg-name: "atu", "dbi2", "dma" and "app".
+Reuse PCI linux,pci-domain as controller id at endpoint.
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
 
 Notes:
-    Change from v5 to v6
-    - add missed maxitems.
-    - add comments about reuse linux,pci-domain as controller id.
-    linux,pci-domain have not defined at PCI endpoint side.
-    
     Change from v1 to v3
-    - new patch at v3
+    - new patches at v3
 
- drivers/pci/controller/dwc/pci-imx6.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ .../bindings/pci/fsl,imx6q-pcie-ep.yaml       | 57 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 4b2b9aafad1b4..6a58fd63a9dd2 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -104,6 +104,7 @@ struct imx6_pcie_drvdata {
- 	const u32 ltssm_mask;
- 	const u32 mode_off[IMX6_PCIE_MAX_INSTANCES];
- 	const u32 mode_mask[IMX6_PCIE_MAX_INSTANCES];
-+	const struct pci_epc_features *epc_features;
- 	int (*init_phy)(struct imx6_pcie *pcie);
- };
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+index ee155ed5f1811..f4d6ae5dab785 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+@@ -22,14 +22,7 @@ properties:
+       - fsl,imx8mm-pcie-ep
+       - fsl,imx8mq-pcie-ep
+       - fsl,imx8mp-pcie-ep
+-
+-  reg:
+-    minItems: 2
+-
+-  reg-names:
+-    items:
+-      - const: dbi
+-      - const: addr_space
++      - fsl,imx95-pcie-ep
  
-@@ -1065,7 +1066,10 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
- static const struct pci_epc_features*
- imx6_pcie_ep_get_features(struct dw_pcie_ep *ep)
- {
--	return &imx8m_pcie_epc_features;
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
+   clocks:
+     minItems: 3
+@@ -62,11 +55,48 @@ required:
+ allOf:
+   - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
+   - $ref: /schemas/pci/fsl,imx6q-pcie-common.yaml#
++  - if:
++      properties:
++        compatible:
++          enum:
++            - fsl,imx8mm-pcie-ep
++            - fsl,imx8mq-pcie-ep
++            - fsl,imx8mp-pcie-ep
++    then:
++      properties:
++        reg:
++          minItems: 2
++          maxItems: 2
++        reg-names:
++          items:
++            - const: dbi
++            - const: addr_space
 +
-+	return imx6_pcie->drvdata->epc_features;
- }
++  - if:
++      properties:
++        compatible:
++          enum:
++            - fsl,imx95-pcie-ep
++    then:
++      properties:
++        reg:
++          minItems: 6
++          maxItems: 6
++        reg-names:
++          items:
++            - const: dbi
++            - const: atu
++            - const: dbi2
++            - const: app
++            - const: dma
++            - const: addr_space
++
+   - if:
+       properties:
+         compatible:
+           enum:
+             - fsl,imx8mq-pcie-ep
++            - fsl,imx95-pcie-ep
+     then:
+       properties:
+         clocks:
+@@ -87,6 +117,17 @@ allOf:
+             - const: pcie_bus
+             - const: pcie_aux
  
- static const struct dw_pcie_ep_ops pcie_ep_ops = {
-@@ -1530,6 +1534,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
- 		.mode_off[1] = IOMUXC_GPR12,
- 		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
-+		.epc_features = &imx8m_pcie_epc_features,
- 		.init_phy = imx8mq_pcie_init_phy,
- 	},
- 	[IMX8MM_EP] = {
-@@ -1540,6 +1545,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
- 		.mode_off[0] = IOMUXC_GPR12,
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
-+		.epc_features = &imx8m_pcie_epc_features,
- 	},
- 	[IMX8MP_EP] = {
- 		.variant = IMX8MP_EP,
-@@ -1549,6 +1555,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
- 		.mode_off[0] = IOMUXC_GPR12,
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
-+		.epc_features = &imx8m_pcie_epc_features,
- 	},
- };
++# reuse PCI linux,pci-domain as controller id at Endpoint
++  - if:
++      properties:
++        compatible:
++          enum:
++            - fsl,imx95-pcie-ep
++    then:
++      properties:
++        linux,pci-domain: true
++      required:
++        - linux,pci-domain
+ 
+ unevaluatedProperties: false
  
 -- 
 2.34.1
