@@ -1,99 +1,103 @@
-Return-Path: <linux-pci+bounces-1339-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1340-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 967C381D8C1
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 11:47:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A955281DADA
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 15:30:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D2981F21952
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 10:47:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 573AE1F2177F
+	for <lists+linux-pci@lfdr.de>; Sun, 24 Dec 2023 14:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AC111FD2;
-	Sun, 24 Dec 2023 10:47:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E2D15D0;
+	Sun, 24 Dec 2023 14:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LK5l2y4U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7328220F9;
-	Sun, 24 Dec 2023 10:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 42C042800B1D7;
-	Sun, 24 Dec 2023 11:47:09 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 30CFF10A64; Sun, 24 Dec 2023 11:47:09 +0100 (CET)
-Date: Sun, 24 Dec 2023 11:47:09 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
-	will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v6 4/4] iommu/vt-d: break out devTLB invalidation if
- target device is gone
-Message-ID: <20231224104709.GB31197@wunner.de>
-References: <20231224050657.182022-1-haifeng.zhao@linux.intel.com>
- <20231224050657.182022-5-haifeng.zhao@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A3A5663
+	for <linux-pci@vger.kernel.org>; Sun, 24 Dec 2023 14:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from pop-os.home ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id HPUSr2aSJZnJmHPUSr5tZE; Sun, 24 Dec 2023 15:30:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1703428207;
+	bh=LCtL5kqOGRBMWH+JxDJBF0/eK646oThHjfyYVTS2Vzk=;
+	h=From:To:Cc:Subject:Date;
+	b=LK5l2y4U3Axg2/JMRLu9icqmznswmGIFSB4S0/gut7pJZcqDUZEi25IrWlcb2iMM8
+	 hBR4amRZlOOHmQ1Pabna28V77wxnIr5UOKrWZ4X6mDblPKwMfkoHuzL1xdcy09n1Ge
+	 yztFcOf8E/OebHBcKMDw1I+jKtftm1GBoRkgAxNNYAsKuIwpQzMCWywXTeXP6W31kN
+	 1cD7I89jcZSt0kYulzu8+s6ocg5CQ2y1we9yEz7hNcdgbmO7xd9IY9iwSfjfXbcqpP
+	 pR74S/khUj036xF4CXytondIlGjHxCQOozvV9YIB8K1cSEQORp+aJGUWOG7nMdUVEx
+	 6TJU2gWI/WLVg==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 24 Dec 2023 15:30:07 +0100
+X-ME-IP: 92.140.202.140
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dmitry Safonov <0x7f454c46@gmail.com>,
+	Daniel Stodden <dns@arista.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: switchtec: Fix an error handling path in switchtec_pci_probe()
+Date: Sun, 24 Dec 2023 15:30:01 +0100
+Message-Id: <01446d2ccb91a578239915812f2b7dfbeb2882af.1703428183.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231224050657.182022-5-haifeng.zhao@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-On Sun, Dec 24, 2023 at 12:06:57AM -0500, Ethan Zhao wrote:
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1423,6 +1423,13 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->  	writel(qi->free_head << shift, iommu->reg + DMAR_IQT_REG);
->  
->  	while (qi->desc_status[wait_index] != QI_DONE) {
-> +		/*
-> +		 * if the devTLB invalidation target device is gone, don't wait
-> +		 * anymore, it might take up to 1min+50%, causes system hang.
-> +		 */
-> +		if (type == QI_DIOTLB_TYPE && iommu->flush_target_dev)
-> +			if (!pci_device_is_present(to_pci_dev(iommu->flush_target_dev)))
-> +				break;
+The commit in Fixes changed the logic on how resources are released and
+introduced a new switchtec_exit_pci() that need to be called explicitly in
+order to undo a corresponding switchtec_init_pci().
 
-As a general approach, this is much better now.
+This was done in the remove function, but not in the probe.
 
-Please combine the nested if-clauses into one.
+Fix the probe now.
 
-Please amend the code comment with a spec reference, i.e.
-"(see Implementation Note in PCIe r6.1 sec 10.3.1)"
-so that readers of the code know where the magic number "1min+50%"
-is coming from.
+Fixes: df25461119d9 ("PCI: switchtec: Fix stdev_release() crash after surprise hot remove")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/pci/switch/switchtec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Is flush_target_dev guaranteed to always be a pci_dev?
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index 1804794d0e68..5a4adf6c04cf 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -1672,7 +1672,7 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
+ 	rc = switchtec_init_isr(stdev);
+ 	if (rc) {
+ 		dev_err(&stdev->dev, "failed to init isr.\n");
+-		goto err_put;
++		goto err_exit_pci;
+ 	}
+ 
+ 	iowrite32(SWITCHTEC_EVENT_CLEAR |
+@@ -1693,6 +1693,8 @@ static int switchtec_pci_probe(struct pci_dev *pdev,
+ 
+ err_devadd:
+ 	stdev_kill(stdev);
++err_exit_pci:
++	switchtec_exit_pci(stdev);
+ err_put:
+ 	ida_free(&switchtec_minor_ida, MINOR(stdev->dev.devt));
+ 	put_device(&stdev->dev);
+-- 
+2.34.1
 
-I'll let iommu maintainers comment on whether storing a flush_target_dev
-pointer is the right approach.  (May store a back pointer from
-struct intel_iommu to struct device_domain_info?)
-
-Maybe move the "to_pci_dev(iommu->flush_target_dev)" lookup outside the
-loop to avoid doing this over and over again?
-
-I think we still have a problem here if the device is not removed
-but simply takes a long time to respond to Invalidate Requests
-(as it is permitted to do per the Implementation Note).  We'll
-busy-wait for the completion and potentially run into the watchdog's
-time limit again.  So I think you or someone else in your org should
-add OKRs to refactor the code so that it sleeps in-between polling
-for Invalidate Completions (instead of busy-waiting with interrupts
-disabled).
-
-Thanks,
-
-Lukas
 
