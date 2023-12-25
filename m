@@ -1,289 +1,349 @@
-Return-Path: <linux-pci+bounces-1373-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D51E81DF65
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 10:12:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2F6F81DF72
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 10:27:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B178028163F
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 09:12:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9A6E1C217CE
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 09:27:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39322580;
-	Mon, 25 Dec 2023 09:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF748443E;
+	Mon, 25 Dec 2023 09:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MzMIkVR3"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fYHVQAda"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F0C2565;
-	Mon, 25 Dec 2023 09:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703495543; x=1735031543;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Pwuy8TEBIxmrqwiqEpHK70A188CdzpTkzOO738fHkPI=;
-  b=MzMIkVR3XZRF1SvW44lQ7LxGDePUWfQlrjpN6TcSU6hW96bguuMm+rto
-   SknXpykbfDCH81Hck8HsrEQKfhqopW7aK49cpWpDr7Wx4K42pvCzl2OSh
-   cCgkj20jc9Vu/voKByX+Y4vgBFR65khX3KXstEpkRrvZnK+ZkzobmsQlS
-   qg517ks1oopJ0mgtKY01JIW8V5GaJ+yDzpXkevowBiZ6F/Ib+244CDXF3
-   U44pRhpO90JqNiP9Phg0kpZKQJJTW/EtSSQP7BYEf9m3tYoddjO+8rRxm
-   LDc6nk4jXJ+D4ktUSkHDSh+nXCTWHZ+Oz8MNVhHiA2rEvd2+1384z7Bzz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8564D4417;
+	Mon, 25 Dec 2023 09:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1703496420; x=1735032420;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Oy/AUuPrflAUc4ECyU8kppsVZKd0weWkvr/4RLAhEF4=;
+  b=fYHVQAdaOtHWtKoSWXLuVDbBQEdsp2XENq29N4vD6aljsrCeCfNOhB4V
+   B7NJ5Rd6Amo0B4MC+LdB6RFRHdeDedfsmGI9btRojI0lGsGMnSPhdpYpT
+   6QOz3E2G4Dq3tYTIIiH6Pcf7FkGpitG25r0GLSOM1ewz9x3c/eOtd0yGF
+   Ig5bz4xMMcN1nQsLLmjcrU1ZSwVnIcF89BoW+Qbw8t6tqSi/xKeLAkben
+   4ysePx0krUHCaLC/8gULzmBEvRq3V7CKpD1U4X/wGB73GKOcFUVOSdjYr
+   2S5FH9JyJzhwiQhQaTSknfqZiLiopZelkejM1SNNsfjNdwFK37/PAHveb
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="375769631"
-X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="375769631"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 01:12:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="777688990"
-X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="777688990"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.36]) ([10.93.26.36])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 01:12:15 -0800
-Message-ID: <be13ce7c-08d1-497c-aa80-e64c892f4ac2@linux.intel.com>
-Date: Mon, 25 Dec 2023 17:12:12 +0800
+X-CSE-ConnectionGUID: VwzfUufiSKOm7epNXo1gMQ==
+X-CSE-MsgGUID: YQR/Y3ZvScSXFcFVQl4ljw==
+X-IronPort-AV: E=Sophos;i="6.04,302,1695657600"; 
+   d="scan'208";a="5616846"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Dec 2023 17:26:59 +0800
+IronPort-SDR: zi9SRCJEYCeFkFXSYBOIkuaasq75vzZAYHG5yKUHViVPOmvVvhI8DGTyX9P4xRxUw26QH5jvWp
+ 7SYIT7utVfBA==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Dec 2023 00:37:36 -0800
+IronPort-SDR: 3VMNLbmv4k3fn8WEwxh9Djn+KMWKNsHemPcROV/7zxnCXm2juwqz1AVtk4lthAph+6hvWsbcOn
+ gHTpeECGwEag==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip01.wdc.com with ESMTP; 25 Dec 2023 01:26:57 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v3] platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+Date: Mon, 25 Dec 2023 18:26:56 +0900
+Message-ID: <20231225092656.2153894-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v6 2/4] iommu/vt-d: don's issue devTLB flush request
- when device is disconnected
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
- will@kernel.org, robin.murphy@arm.com, lukas@wunner.de,
- linux-pci@vger.kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231224224326.GA1412095@bhelgaas>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <20231224224326.GA1412095@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+p2sb_bar() unhides P2SB device to get resources from the device. It
+guards the operation by locking pci_rescan_remove_lock so that parallel
+rescans do not find the P2SB device. However, this lock causes deadlock
+when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+Hence the deadlock.
 
-On 12/25/2023 6:43 AM, Bjorn Helgaas wrote:
-> On Sun, Dec 24, 2023 at 12:06:55AM -0500, Ethan Zhao wrote:
->> For those endpoint devices connect to system via hotplug capable ports,
->> users could request a warm reset to the device by flapping device's link
->> through setting the slot's link control register, as pciehpt_ist() DLLSC
->> interrupt sequence response, pciehp will unload the device driver and
->> then power it off. thus cause an IOMMU devTLB flush request for device to
->> be sent and a long time completion/timeout waiting in interrupt context.
-> s/don's/don't/ (in subject)
-> s/pciehpt_ist/pciehp_ist/
->
-> IIUC you are referring to a specific PCIe transaction, so unless
-> there's another spec that defines "devTLB flush request", please use
-> the actual PCIe transaction name ("ATS Invalidate Request") as Lukas
-> suggested.
->
-> There's no point in using an informal name that we assume "all
-> iommu/PCIe guys could understand."  It's better to use a term that
-> anybody can find by searching the spec.
->
->> That would cause following continuous hard lockup warning and system hang
->>
->> [ 4211.433662] pcieport 0000:17:01.0: pciehp: Slot(108): Link Down
->> [ 4211.433664] pcieport 0000:17:01.0: pciehp: Slot(108): Card not present
->> [ 4223.822591] NMI watchdog: Watchdog detected hard LOCKUP on cpu 144
->> [ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
->>           OE    kernel version xxxx
->> [ 4223.822623] Hardware name: vendorname xxxx 666-106,
->> BIOS 01.01.02.03.01 05/15/2023
->> [ 4223.822623] RIP: 0010:qi_submit_sync+0x2c0/0x490
->> [ 4223.822624] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
->>   57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 1
->> 0 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
->> [ 4223.822624] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
->> [ 4223.822625] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
->> [ 4223.822625] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
->> [ 4223.822625] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
->> [ 4223.822626] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
->> [ 4223.822626] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
->> [ 4223.822626] FS:  0000000000000000(0000) GS:ffffa237ae400000(0000)
->> knlGS:0000000000000000
->> [ 4223.822627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [ 4223.822627] CR2: 00007ffe86515d80 CR3: 000002fd3000a001 CR4: 0000000000770ee0
->> [ 4223.822627] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [ 4223.822628] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
->> [ 4223.822628] PKRU: 55555554
->> [ 4223.822628] Call Trace:
->> [ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
->> [ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
->> [ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
->> [ 4223.822629]  intel_iommu_release_device+0x1f/0x30
->> [ 4223.822629]  iommu_release_device+0x33/0x60
->> [ 4223.822629]  iommu_bus_notifier+0x7f/0x90
->> [ 4223.822630]  blocking_notifier_call_chain+0x60/0x90
->> [ 4223.822630]  device_del+0x2e5/0x420
->> [ 4223.822630]  pci_remove_bus_device+0x70/0x110
->> [ 4223.822630]  pciehp_unconfigure_device+0x7c/0x130
->> [ 4223.822631]  pciehp_disable_slot+0x6b/0x100
->> [ 4223.822631]  pciehp_handle_presence_or_link_change+0xd8/0x320
->> [ 4223.822631]  pciehp_ist+0x176/0x180
->> [ 4223.822631]  ? irq_finalize_oneshot.part.50+0x110/0x110
->> [ 4223.822632]  irq_thread_fn+0x19/0x50
->> [ 4223.822632]  irq_thread+0x104/0x190
->> [ 4223.822632]  ? irq_forced_thread_fn+0x90/0x90
->> [ 4223.822632]  ? irq_thread_check_affinity+0xe0/0xe0
->> [ 4223.822633]  kthread+0x114/0x130
->> [ 4223.822633]  ? __kthread_cancel_work+0x40/0x40
->> [ 4223.822633]  ret_from_fork+0x1f/0x30
->> [ 4223.822633] Kernel panic - not syncing: Hard LOCKUP
->> [ 4223.822634] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
->>           OE     kernel version xxxx
->> [ 4223.822634] Hardware name: vendorname xxxx 666-106,
->> BIOS 01.01.02.03.01 05/15/2023
->> [ 4223.822634] Call Trace:
->> [ 4223.822634]  <NMI>
->> [ 4223.822635]  dump_stack+0x6d/0x88
->> [ 4223.822635]  panic+0x101/0x2d0
->> [ 4223.822635]  ? ret_from_fork+0x11/0x30
->> [ 4223.822635]  nmi_panic.cold.14+0xc/0xc
->> [ 4223.822636]  watchdog_overflow_callback.cold.8+0x6d/0x81
->> [ 4223.822636]  __perf_event_overflow+0x4f/0xf0
->> [ 4223.822636]  handle_pmi_common+0x1ef/0x290
->> [ 4223.822636]  ? __set_pte_vaddr+0x28/0x40
->> [ 4223.822637]  ? flush_tlb_one_kernel+0xa/0x20
->> [ 4223.822637]  ? __native_set_fixmap+0x24/0x30
->> [ 4223.822637]  ? ghes_copy_tofrom_phys+0x70/0x100
->> [ 4223.822637]  ? __ghes_peek_estatus.isra.16+0x49/0xa0
->> [ 4223.822637]  intel_pmu_handle_irq+0xba/0x2b0
->> [ 4223.822638]  perf_event_nmi_handler+0x24/0x40
->> [ 4223.822638]  nmi_handle+0x4d/0xf0
->> [ 4223.822638]  default_do_nmi+0x49/0x100
->> [ 4223.822638]  exc_nmi+0x134/0x180
->> [ 4223.822639]  end_repeat_nmi+0x16/0x67
->> [ 4223.822639] RIP: 0010:qi_submit_sync+0x2c0/0x490
->> [ 4223.822639] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
->>   57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 10
->>   74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
->> [ 4223.822640] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
->> [ 4223.822640] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
->> [ 4223.822640] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
->> [ 4223.822641] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
->> [ 4223.822641] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
->> [ 4223.822641] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
->> [ 4223.822641]  ? qi_submit_sync+0x2c0/0x490
->> [ 4223.822642]  ? qi_submit_sync+0x2c0/0x490
->> [ 4223.822642]  </NMI>
->> [ 4223.822642]  qi_flush_dev_iotlb+0xb1/0xd0
->> [ 4223.822642]  __dmar_remove_one_dev_info+0x224/0x250
->> [ 4223.822643]  dmar_remove_one_dev_info+0x3e/0x50
->> [ 4223.822643]  intel_iommu_release_device+0x1f/0x30
->> [ 4223.822643]  iommu_release_device+0x33/0x60
->> [ 4223.822643]  iommu_bus_notifier+0x7f/0x90
->> [ 4223.822644]  blocking_notifier_call_chain+0x60/0x90
->> [ 4223.822644]  device_del+0x2e5/0x420
->> [ 4223.822644]  pci_remove_bus_device+0x70/0x110
->> [ 4223.822644]  pciehp_unconfigure_device+0x7c/0x130
->> [ 4223.822644]  pciehp_disable_slot+0x6b/0x100
->> [ 4223.822645]  pciehp_handle_presence_or_link_change+0xd8/0x320
->> [ 4223.822645]  pciehp_ist+0x176/0x180
->> [ 4223.822645]  ? irq_finalize_oneshot.part.50+0x110/0x110
->> [ 4223.822645]  irq_thread_fn+0x19/0x50
->> [ 4223.822646]  irq_thread+0x104/0x190
->> [ 4223.822646]  ? irq_forced_thread_fn+0x90/0x90
->> [ 4223.822646]  ? irq_thread_check_affinity+0xe0/0xe0
->> [ 4223.822646]  kthread+0x114/0x130
->> [ 4223.822647]  ? __kthread_cancel_work+0x40/0x40
->> [ 4223.822647]  ret_from_fork+0x1f/0x30
->> [ 4223.822647] Kernel Offset: 0x6400000 from 0xffffffff81000000 (relocation
->> range: 0xffffffff80000000-0xffffffffbfffffff)
-> The timestamps don't help understand the problem, so you could remove
-> them so they aren't a distraction.
->
->> Fix it by checking the device's error_state in
->> devtlb_invalidation_with_pasid() to avoid sending meaningless devTLB flush
->> request to link down device that is set to pci_channel_io_perm_failure and
->> then powered off in
-> A pci_dev_is_disconnected() is racy in this context, so this by itself
-> doesn't look like a complete "fix".
->
->> pciehp_ist()
->>     pciehp_handle_presence_or_link_change()
->>       pciehp_disable_slot()
->>         remove_board()
->>           pciehp_unconfigure_device()
-> There are some interesting steps missing here between
-> pciehp_unconfigure_device() and devtlb_invalidation_with_pasid().
->
-> devtlb_invalidation_with_pasid() is Intel-specific.  ATS Invalidate
-> Requests are not Intel-specific, so all IOMMU drivers must have to
-> deal with the case of an ATS Invalidate Request where we never receive
-> a corresponding ATS Invalidate Completion.  Do other IOMMUs like AMD
-> and ARM have a similar issue?
->
->> For SAVE_REMOVAL unplug, link is alive when iommu releases devcie and
->> issues devTLB invalidate request, wouldn't trigger such issue.
->>
->> This patch works for all links of SURPPRISE_REMOVAL unplug operations.
-> s/devcie/device/
->
-> Writing "SAVE_REMOVAL" and "SURPPRISE_REMOVAL" in all caps with an
-> underscore makes them look like identifiers.  But neither appears in
-> the kernel source.  Write them as normal English words, e.g., "save
-> removal" instead (though I suspect you mean "safe removal"?).
->
-> s/surpprise/surprise/
->
-> It's not completely obvious that a fix that works for the safe removal
-> case also works for the surprise removal case.  Can you briefly
-> explain why it does?
->
->> Tested-by: Haorong Ye <yehaorong@bytedance.com>
->> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
->> ---
->>   drivers/iommu/intel/pasid.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
->> index 74e8e4c17e81..7dbee9931eb6 100644
->> --- a/drivers/iommu/intel/pasid.c
->> +++ b/drivers/iommu/intel/pasid.c
->> @@ -481,6 +481,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
->>   	if (!info || !info->ats_enabled)
->>   		return;
->>   
->> +	if (pci_dev_is_disconnected(to_pci_dev(dev)))
->> +		return;
->> +
->>   	sid = info->bus << 8 | info->devfn;
->>   	qdep = info->ats_qdep;
->>   	pfsid = info->pfsid;
-> This goes on to call qi_submit_sync(), which contains a restart: loop.
-> I don't know the programming model there, but it looks possible that
-> qi_submit_sync() and qi_check_fault() might not handle the case of an
-> unreachable device correctly.  There should be a way to exit that
-> restart: loop in cases where the device doesn't respond at all.
+To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+refer the cache and return to the caller.
 
-Current sychronous model isn't good to handle such case, so does
+Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+---
+This patch reflects discussions held at the Link tag. I confirmed this patch
+fixes the problem using a system with i2c_i801 device, building i2c_i801
+module as both built-in and loadable. Reviews will be appreicated.
 
-the CPU.  the vt-d hardware is integrated, if it is just broken, no response
+Changes from v2:
+* Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+* Reflected other review comments by Andy
 
-at all, it will block all devices I/O attached to that iommu, then bring 
-down
+Changes from v1:
+* Reflected review comments by Andy
+* Removed RFC prefix
 
-the whole system. except individual iommu and its device tree could be
+Changes from RFC v2:
+* Reflected review comments on the list
 
-hotplug capable.  asynchornouse programming module will work for it.
+Changes from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
 
-my undestanding.
+ drivers/platform/x86/p2sb.c | 166 +++++++++++++++++++++++++++---------
+ 1 file changed, 124 insertions(+), 42 deletions(-)
 
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 1cf2471d54dd..2cbfe8b38e14 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -26,6 +26,19 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
+ 	{}
+ };
+ 
++/*
++ * Cache BAR0 of P2SB device functions 0 to 7.
++ * TODO: Move this definition to pci.h together with same other definitions.
++ */
++#define NR_P2SB_RES_CACHE 8
++
++struct p2sb_res_cache {
++	u32 bus_dev_id;
++	struct resource res;
++};
++
++static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
++
+ static int p2sb_get_devfn(unsigned int *devfn)
+ {
+ 	unsigned int fn = P2SB_DEVFN_DEFAULT;
+@@ -39,10 +52,15 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ 	return 0;
+ }
+ 
++static int p2sb_valid_resource(struct resource *res)
++{
++	return res->flags ? 0 : -ENOENT;
++}
++
+ /* Copy resource from the first BAR of the device in question */
+-static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
++static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ {
+-	struct resource *bar0 = &pdev->resource[0];
++	struct resource *bar0 = pci_resource_n(pdev, 0);
+ 
+ 	/* Make sure we have no dangling pointers in the output */
+ 	memset(mem, 0, sizeof(*mem));
+@@ -56,47 +74,61 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+ 	mem->end = bar0->end;
+ 	mem->flags = bar0->flags;
+ 	mem->desc = bar0->desc;
+-
+-	return 0;
+ }
+ 
+-static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
+ {
++	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
+ 	struct pci_dev *pdev;
+-	int ret;
+ 
+ 	pdev = pci_scan_single_device(bus, devfn);
+ 	if (!pdev)
+-		return -ENODEV;
++		return;
+ 
+-	ret = p2sb_read_bar0(pdev, mem);
++	p2sb_read_bar0(pdev, &cache->res);
++	cache->bus_dev_id = bus->dev.id;
+ 
+ 	pci_stop_and_remove_bus_device(pdev);
+-	return ret;
++	return;
+ }
+ 
+-/**
+- * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+- * @bus: PCI bus to communicate with
+- * @devfn: PCI slot and function to communicate with
+- * @mem: memory resource to be filled in
+- *
+- * The BIOS prevents the P2SB device from being enumerated by the PCI
+- * subsystem, so we need to unhide and hide it back to lookup the BAR.
+- *
+- * if @bus is NULL, the bus 0 in domain 0 will be used.
+- * If @devfn is 0, it will be replaced by devfn of the P2SB device.
+- *
+- * Caller must provide a valid pointer to @mem.
+- *
+- * Locking is handled by pci_rescan_remove_lock mutex.
+- *
+- * Return:
+- * 0 on success or appropriate errno value on error.
+- */
+-int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
++{
++	unsigned int slot, fn;
++
++	if (PCI_FUNC(devfn) == 0) {
++		/*
++		 * When function number of the P2SB device is zero, scan it and
++		 * other function numbers, and if devices are available, cache
++		 * their BAR0s.
++		 */
++		slot = PCI_SLOT(devfn);
++		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
++			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
++	} else {
++		/* Scan the P2SB device and cache its BAR0 */
++		p2sb_scan_and_cache_devfn(bus, devfn);
++	}
++
++	return p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res);
++}
++
++static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
++{
++	static struct pci_bus *p2sb_bus;
++
++	bus = bus ?: p2sb_bus;
++	if (bus)
++		return bus;
++
++	/* Assume P2SB is on the bus 0 in domain 0 */
++	p2sb_bus = pci_find_bus(0, 0);
++	return p2sb_bus;
++}
++
++static int p2sb_cache_resources(void)
+ {
+-	struct pci_dev *pdev_p2sb;
++	struct pci_bus *bus;
+ 	unsigned int devfn_p2sb;
+ 	u32 value = P2SBC_HIDE;
+ 	int ret;
+@@ -106,8 +138,9 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* if @bus is NULL, use bus 0 in domain 0 */
+-	bus = bus ?: pci_find_bus(0, 0);
++	bus = p2sb_get_bus(NULL);
++	if (!bus)
++		return -ENODEV;
+ 
+ 	/*
+ 	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+@@ -115,17 +148,16 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 	 */
+ 	pci_lock_rescan_remove();
+ 
+-	/* Unhide the P2SB device, if needed */
++	/*
++	 * The BIOS prevents the P2SB device from being enumerated by the PCI
++	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
++	 * Unhide the P2SB device here, if needed.
++	 */
+ 	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+ 	if (value & P2SBC_HIDE)
+ 		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+ 
+-	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
+-	if (devfn)
+-		ret = p2sb_scan_and_read(bus, devfn, mem);
+-	else
+-		ret = p2sb_read_bar0(pdev_p2sb, mem);
+-	pci_stop_and_remove_bus_device(pdev_p2sb);
++	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
+ 
+ 	/* Hide the P2SB device, if it was hidden */
+ 	if (value & P2SBC_HIDE)
+@@ -133,12 +165,62 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+ 
+ 	pci_unlock_rescan_remove();
+ 
+-	if (ret)
+-		return ret;
++	return ret;
++}
+ 
+-	if (mem->flags == 0)
++/**
++ * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
++ * @bus: PCI bus to communicate with
++ * @devfn: PCI slot and function to communicate with
++ * @mem: memory resource to be filled in
++ *
++ * If @bus is NULL, the bus 0 in domain 0 will be used.
++ * If @devfn is 0, it will be replaced by devfn of the P2SB device.
++ *
++ * Caller must provide a valid pointer to @mem.
++ *
++ * Return:
++ * 0 on success or appropriate errno value on error.
++ */
++int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
++{
++	struct p2sb_res_cache *cache;
++	int ret;
++
++	bus = p2sb_get_bus(bus);
++	if (!bus)
+ 		return -ENODEV;
+ 
++	if (!devfn) {
++		ret = p2sb_get_devfn(&devfn);
++		if (ret)
++			return ret;
++	}
++
++	cache = &p2sb_resources[PCI_FUNC(devfn)];
++	if (cache->bus_dev_id != bus->dev.id)
++		return -ENODEV;
++
++	ret = p2sb_valid_resource(&cache->res);
++	if (ret)
++		return ret;
++
++	memcpy(mem, &cache->res, sizeof(*mem));
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(p2sb_bar);
++
++static int __init p2sb_fs_init(void)
++{
++	p2sb_cache_resources();
++	return 0;
++}
++
++/*
++ * pci_rescan_remove_lock avoids access to unhidden P2SB devices, but it causes
++ * deadlock with sysfs pci bus rescan. To avoid the deadlock, access to P2SB
++ * devices at an early step in kernel initialization and cache required
++ * resources. This should happen after subsys_initcall which initializes PCI
++ * subsystem and before device_initcall which requires P2SB resources.
++ */
++fs_initcall(p2sb_fs_init);
+-- 
+2.43.0
 
-Thanks,
-
-Ethan
-
->
-> Bjorn
->
 
