@@ -1,64 +1,65 @@
-Return-Path: <linux-pci+bounces-1379-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C39DA81E212
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 20:06:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B63B581E213
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 20:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D9031F21F03
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 19:06:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B119B20D06
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 19:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C682453804;
-	Mon, 25 Dec 2023 19:06:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB94652F9C;
+	Mon, 25 Dec 2023 19:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uevB2omZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZFBCugJb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12D8537EB
-	for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 19:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061F3537E7
+	for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 19:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2339262835so400386766b.3
-        for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 11:05:59 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2358a75b69so680483666b.1
+        for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 11:09:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703531158; x=1704135958; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kPhBbAdE7d6cKSPyf8U6dhUpO4g2tJuvPvD5da5ovzA=;
-        b=uevB2omZeUevwjxNklc6maJHRpQ77+XTQubtbYtP9xb4BmXhbb/fiDJXoy8DPeEicC
-         cBCb6vWK5nJ4scgC0JPvGvbS22NjvrCbtUSZlsiHe23Hbm0lrVJgidnMJPoqNvP8eaPp
-         YtA7Swtdl3wrJf5N+tjUCi6/EjdukpLpl22IyJpBhaFrqr+xABoXTASuWz9YBjoZLBUk
-         MrUQb8AEWB10ThZUyox4eBLEEViVHm3R/2LyFipYZargWSbqNA0WjurEAuiu9XKWOHVl
-         MUeWHfxft1E0+77uKxN5EYT9SQyI30KFtQH8EPPqMZnT/MTA5+6mnW0tS4w7s4Yv4prY
-         keMg==
+        d=linaro.org; s=google; t=1703531393; x=1704136193; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=BTiGJJJC0cES6MsB3xVVydw9CgvmShHu6CVakswdI1s=;
+        b=ZFBCugJbJWjnTiByqtNAaule6+pKrb2K0l45oWTA0/+UrtlKfENKgN4bD2cDRHX4ev
+         Elp7zZ9kwXSGI9zgtm6IwH3mfO68udSmSp3DUEjowBmG6o5BEV0HOJmzvrjcf+SikWyW
+         IxsYHMGcOgkSa1cVEsVlq/zLcNJo74NAWTYsS978gln5XXMShHyiN3HwqVe4SLCqBqLV
+         /TwFC81WGETkFltQ9eM4arp0MROdXy4GGw9FlFLTIdoTTZGWmQgffiM7r3qwhWN5kwk0
+         FNUmuOqv10UI2Qe41pmi+CQISMuMi95KkySEwGi3Qh5eki82oSuSigpyn/HHmydCHolo
+         korA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703531158; x=1704135958;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kPhBbAdE7d6cKSPyf8U6dhUpO4g2tJuvPvD5da5ovzA=;
-        b=GHxZnujlnSP/G+myz0qlEijo4GgiZuvEowWZhzgg+S0clpG9GqhvTPplKBP5YOAPWM
-         q1ky8ilwrhY5h7I8VYZ6d1GT4pao9GzIs7c7OBhXMz4X059m8fDJ31Z+nHNlQGwHUyfz
-         T2megUypmUVvwExlLVo21HT4Bq6T0y5F7JGe5SGyKY2G0ATzd2v1MdpnAzNvMvRLPY5I
-         19HXRq7uMdv/QoeWx27J6tvYOOkNiI9TK/zGpe7tb7GVpk2o/t93yGs8VaoVIxQ49Ulu
-         U/7V52t1GSSwO8/ZQhGOuKBJG0BHF9Sr7v3/vXSdQPiBS2f3Y4jyIM3J9brSTGhMA7jo
-         bB8w==
-X-Gm-Message-State: AOJu0YwAUGLqDfE72H6mWDRZqQsCxcLWKeLEBYCFSbpTu6pOA+QyaeMj
-	65THFjWouboa7P9TbnOou8WHuddawR+kXg==
-X-Google-Smtp-Source: AGHT+IFPqC8mWE+xw33Z7UPyeyxIObWtg6LvA27WxcLDKHMQTBc+nJXipDgIqtygM5TrafeFcJCGow==
-X-Received: by 2002:a17:906:154:b0:a26:d9b4:b310 with SMTP id 20-20020a170906015400b00a26d9b4b310mr957611ejh.144.1703531157913;
-        Mon, 25 Dec 2023 11:05:57 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703531393; x=1704136193;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BTiGJJJC0cES6MsB3xVVydw9CgvmShHu6CVakswdI1s=;
+        b=Z6vGrfl1avXyTMkCedYeqwYN5stT7fK6mGIhhT23QVtb7FpsXao8dkOgnjIP7GtqTs
+         mQXUnBAMSc7QVBafKU5ZlWpnyHYkdnq0Cgzpt0Rl5MsagotmpnA2qMhMEgJq0HKUsOtL
+         Db7LT2p4xRDsgMDz9sFnqcZgw3qWYoHgNBrfCQRAyc3wfDqI937NI2FuEOb+WPohubFi
+         mxGTHkL1hvPXeirc3rYwTT5gw38cYFt1sUIBJbmA/U//sqCU+iWzpY/RgrSb5/cwXgZ4
+         C2oyzopNsRUgNXcYU4c2Yk8YN2lf5hdMyr+FNHWDLdjzHvt2RMaFFEpVEt3wMmK99AFT
+         WbZQ==
+X-Gm-Message-State: AOJu0YyuTY1z1jnHsUGRKna23SFdhL08+Nnrgf97se0r5Vsc2IQz6qkA
+	Gyd34TZlnXmnkM5w3Myfr4gi0YUAhisjPw==
+X-Google-Smtp-Source: AGHT+IGQYvBdGSxgNQm3Hqu4O/wa5rUElI4dKsYmgnihnnf0Jla9pZDUPfBxVK4TeImWbrATkAXyYQ==
+X-Received: by 2002:a17:906:1609:b0:a25:cc77:8f95 with SMTP id m9-20020a170906160900b00a25cc778f95mr6718979ejd.32.1703531393534;
+        Mon, 25 Dec 2023 11:09:53 -0800 (PST)
 Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id wl1-20020a170907310100b00a236378a43fsm5032996ejb.62.2023.12.25.11.05.56
+        by smtp.gmail.com with ESMTPSA id u23-20020aa7d0d7000000b005533a9934b6sm6529379edo.54.2023.12.25.11.09.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Dec 2023 11:05:57 -0800 (PST)
-Message-ID: <63d93850-e88b-4311-accb-e7fa9a89d44f@linaro.org>
-Date: Mon, 25 Dec 2023 20:05:55 +0100
+        Mon, 25 Dec 2023 11:09:53 -0800 (PST)
+Message-ID: <cf5fd42f-6ca8-4109-a314-3ede9810a5ed@linaro.org>
+Date: Mon, 25 Dec 2023 20:09:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,6 +70,7 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v6 09/16] dt-bindings: imx6q-pcie: Clean up irrationality
  clocks check
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
  festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com,
@@ -80,7 +82,7 @@ Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
  s.hauer@pengutronix.de, shawnguo@kernel.org
 References: <20231224183242.1675372-1-Frank.Li@nxp.com>
  <20231224183242.1675372-10-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ <63d93850-e88b-4311-accb-e7fa9a89d44f@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -125,29 +127,33 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231224183242.1675372-10-Frank.Li@nxp.com>
+In-Reply-To: <63d93850-e88b-4311-accb-e7fa9a89d44f@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/12/2023 19:32, Frank Li wrote:
-> There are clocks and clock-names restriction for difference compatible
-> string. So needn't irrationality check again for clock's miniItems and
-> maxItems.
+On 25/12/2023 20:05, Krzysztof Kozlowski wrote:
+> On 24/12/2023 19:32, Frank Li wrote:
+>> There are clocks and clock-names restriction for difference compatible
+>> string. So needn't irrationality check again for clock's miniItems and
+>> maxItems.
+>>
+>> In fsl,imx6q-pcie-ep.yaml
 > 
-> In fsl,imx6q-pcie-ep.yaml
-
-It is enough to say that bindings referencing this file already define
-these constraints for each of the variants, so the if:else: is redundant.
-
-Two lines instead of ~20.
-
-> 	...
+> It is enough to say that bindings referencing this file already define
+> these constraints for each of the variants, so the if:else: is redundant.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Two lines instead of ~20.
+> 
+>> 	...
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> How did you get it? Please point me to the lore link. This patch
+> appeared in v5 and there was no response from Rob, AFAIK.
 
-How did you get it? Please point me to the lore link. This patch
-appeared in v5 and there was no response from Rob, AFAIK.
-
+Ah, this patch was added at v4 and Rob acked that one. It's fine then,
+but you still could narrow the commit msg, if there is going to be a
+resend. Please write informative but concise messages.
 
 Best regards,
 Krzysztof
