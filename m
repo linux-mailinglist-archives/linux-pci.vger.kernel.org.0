@@ -1,159 +1,158 @@
-Return-Path: <linux-pci+bounces-1383-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1384-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8685D81E21E
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 20:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C938381E25D
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 21:37:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1134F281A0B
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 19:16:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81C8728173F
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 20:37:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C909253807;
-	Mon, 25 Dec 2023 19:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A76C38DC0;
+	Mon, 25 Dec 2023 20:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fBGHV9rm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OXmuJEIf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDED537EF
-	for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 19:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2370535060so888561466b.1
-        for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 11:16:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703531779; x=1704136579; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SsnNfMV6RyOldoggkHtYHDcUj78NIwqRoBP2/8MBopQ=;
-        b=fBGHV9rmoFQ/NYZ6ruRILpSpOHYwWQqFmFQVB0StBIY9Ea8rB7vNjmpEgAuAuLN5d1
-         J9WHvpqrQVuh7/XPErnurcmCqYN62Yt0oAJsX6mCEKSub/h2dJVkFTgzuGSrYRtY0AT3
-         rxeM8xoD5WTWJ+LnMTLbhB9/WH1ZKy3zQKo4tII51aH5d4Vg5Q2t3KGk9HOC+2P4nMyw
-         TQRc9Sipi29HUPSsRXn6odgL5UHS51wQF2KfPsyZsLv5jagnw/3vQ7Yf3m/JhS/DkUfA
-         AfVmH0BHhGC+lKgdMh2iBz04jHimFagYJhEHrhXNnMdgv0FfKpu9oidt93Aldi6vmGwL
-         I3dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703531779; x=1704136579;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SsnNfMV6RyOldoggkHtYHDcUj78NIwqRoBP2/8MBopQ=;
-        b=e15jEiZNnDp8rTPVwPu+HvgNIcuZnBvwzbEaVFcuqzscz1VI5REzmfJCWf6xo8ZpWD
-         oujzgxVKMHY2Wr4pKq2zivAQdLwDNCPDzPVxIXCtEzDFTTqdxl2oZgmeY/RICM9vtfof
-         9vKASbHSJ6P3kQh82qSKVp82YMOIaZVL3NqAvBE8EvNj+CtjrGFViwytSsjyHr/yazo3
-         4jbBXxQRhssBo/5gfR0jdrzByI/9kfqQDCukfZT61GvST2csQUelQYNOgbcLdUmYzP6M
-         8tFPvtvmx2u1GOTM0jmNZv9ZnOfFu7k6ta6DhohYQVsrxnE2n/lTcn2z1ew4JgN77x96
-         sJOw==
-X-Gm-Message-State: AOJu0Yy7LCNsTD7KNNcjFyDsh9QTsbce3UuhGz8Xklb6N45Imbx20+uC
-	KI0IfyAz8eZT5X/gxZD90qyMJ8+MGsKzyQ==
-X-Google-Smtp-Source: AGHT+IFauXPUfu9yJ40oyO0aVm0k/i7NqRG7PO3cUL3FOpnC1AzRMNMlFEI92wZricR2smiIYIEZwA==
-X-Received: by 2002:a17:906:c143:b0:a1c:4c3e:99e2 with SMTP id dp3-20020a170906c14300b00a1c4c3e99e2mr7906840ejc.22.1703531779252;
-        Mon, 25 Dec 2023 11:16:19 -0800 (PST)
-Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id n16-20020a170906b31000b00a235e5139d2sm5120665ejz.150.2023.12.25.11.16.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Dec 2023 11:16:18 -0800 (PST)
-Message-ID: <6a61f325-a58b-4aa6-9a0a-7a3086f63829@linaro.org>
-Date: Mon, 25 Dec 2023 20:16:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647D11E497
+	for <linux-pci@vger.kernel.org>; Mon, 25 Dec 2023 20:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703536648; x=1735072648;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q1mIITEft+t9JsoofwE77gF4Vd8IZinqlK4yVXS5Tro=;
+  b=OXmuJEIf2JoVN3WZr5oYyV4ZNPiQOv7/Ha3bdAPB2OC502Hs3oMd8WM/
+   c7RXa3zORSfRAlsGgPQ9pcVs/3nQNGvKJHvoB9CcouGY7naGF9AKswNcs
+   sGVjPUT1ERJm0IpohBGP7PtqmA8/NDyjhfWGdak/BAp2zL2Sh5XgI966W
+   +PCES3drF32045scJaWmD/xyTJSVMXSwt501pnZtuKJdihj7ilB4RBS2u
+   o4qCYjEXiwy/dqVIxYVNpyuXTnGLctZglgcNi8G1o2QfiARFbztUlQZNO
+   C1BtMVkgZR/ykrj4nMsGpOk7+gganUbMt+B6sUB/3F9T5pBr8jAOQL7gn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="14982715"
+X-IronPort-AV: E=Sophos;i="6.04,304,1695711600"; 
+   d="scan'208";a="14982715"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 12:37:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="951047368"
+X-IronPort-AV: E=Sophos;i="6.04,304,1695711600"; 
+   d="scan'208";a="951047368"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 25 Dec 2023 12:37:25 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rHrgL-000DfV-1F;
+	Mon, 25 Dec 2023 20:36:38 +0000
+Date: Tue, 26 Dec 2023 04:36:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthew W Carlis <mattc@purestorage.com>, helgaas@kernel.org,
+	bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-pci@vger.kernel.org, mika.westerberg@linux.intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Matthew W Carlis <mattc@purestorage.com>
+Subject: Re: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER
+ natively.
+Message-ID: <202312260431.ZXppQZ1I-lkp@intel.com>
+References: <20231223212235.34293-2-mattc@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 15/16] dt-bindings: imx6q-pcie: Add iMX95 pcie endpoint
- compatible string
-Content-Language: en-US
-To: Frank Li <Frank.Li@nxp.com>
-Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
- festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com,
- imx@lists.linux.dev, kernel@pengutronix.de,
- krzysztof.kozlowski+dt@linaro.org, kw@linux.com, l.stach@pengutronix.de,
- linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- s.hauer@pengutronix.de, shawnguo@kernel.org
-References: <20231224183242.1675372-1-Frank.Li@nxp.com>
- <20231224183242.1675372-16-Frank.Li@nxp.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231224183242.1675372-16-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231223212235.34293-2-mattc@purestorage.com>
 
-On 24/12/2023 19:32, Frank Li wrote:
-> Add i.MX95 PCIe "fsl,imx95-pcie-ep" compatible string.
-> Add reg-name: "atu", "dbi2", "dma" and "app".
-> Reuse PCI linux,pci-domain as controller id at endpoint.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
+Hi Matthew,
 
-...
+kernel test robot noticed the following build errors:
 
-> +# reuse PCI linux,pci-domain as controller id at Endpoint
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx95-pcie-ep
-> +    then:
-> +      properties:
-> +        linux,pci-domain: true
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus linus/master v6.7-rc7 next-20231222]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Same comment: why do you need? Don't ignore my feedback. You responded
-you will fix it, but it is still here...
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthew-W-Carlis/PCI-portdrv-Allow-DPC-if-the-OS-controls-AER-natively/20231225-154046
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20231223212235.34293-2-mattc%40purestorage.com
+patch subject: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER natively.
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20231226/202312260431.ZXppQZ1I-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231226/202312260431.ZXppQZ1I-lkp@intel.com/reproduce)
 
-Best regards,
-Krzysztof
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312260431.ZXppQZ1I-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+>> drivers/pci/pcie/portdrv.c:272:12: error: no member named 'aer_cap' in 'struct pci_dev'; did you mean 'acs_cap'?
+               (dev->aer_cap && host->native_aer)))
+                     ^~~~~~~
+                     acs_cap
+   include/linux/pci.h:519:7: note: 'acs_cap' declared here
+           u16             acs_cap;        /* ACS Capability offset */
+                           ^
+   1 error generated.
+
+
+vim +272 drivers/pci/pcie/portdrv.c
+
+   244	
+   245		/* Root Ports and Root Complex Event Collectors may generate PMEs */
+   246		if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+   247		     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+   248		    (pcie_ports_native || host->native_pme)) {
+   249			services |= PCIE_PORT_SERVICE_PME;
+   250	
+   251			/*
+   252			 * Disable PME interrupt on this port in case it's been enabled
+   253			 * by the BIOS (the PME service driver will enable it when
+   254			 * necessary).
+   255			 */
+   256			pcie_pme_interrupt_enable(dev, false);
+   257		}
+   258	
+   259		/*
+   260		 * _OSC AER Control is required by the OS & requires OS to control AER,
+   261		 * but _OSC DPC Control isn't required by the OS to control DPC; however
+   262		 * it does require the OS to control DPC. _OSC DPC Control also requres
+   263		 * _OSC EDR Control (Error Disconnect Recovery) (PCI Firmware - DPC ECN rev3.2)
+   264		 * PCI_Express_Base 6.1, 6.2.11 Determination of DPC Control recommends
+   265		 * platform fw or OS always link control of DPC to AER.
+   266		 *
+   267		 * With dpc-native, allow Linux to use DPC even if it doesn't have
+   268		 * permission to use AER.
+   269		 */
+   270		if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+   271		    pci_aer_available() && (pcie_ports_dpc_native ||
+ > 272		    (dev->aer_cap && host->native_aer)))
+   273			services |= PCIE_PORT_SERVICE_DPC;
+   274	
+   275		if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+   276		    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+   277			u32 linkcap;
+   278	
+   279			pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &linkcap);
+   280			if (linkcap & PCI_EXP_LNKCAP_LBNC)
+   281				services |= PCIE_PORT_SERVICE_BWNOTIF;
+   282		}
+   283	
+   284		return services;
+   285	}
+   286	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
