@@ -1,136 +1,133 @@
-Return-Path: <linux-pci+bounces-1371-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1372-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2584181DF27
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 09:26:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E41C881DF54
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 09:57:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1AD11F21E38
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 08:26:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13A661C217BD
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 08:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8298186B;
-	Mon, 25 Dec 2023 08:25:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A69161C2E;
+	Mon, 25 Dec 2023 08:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6Qdk983"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJpNCfuq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A944107A6;
-	Mon, 25 Dec 2023 08:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A664A3D74;
+	Mon, 25 Dec 2023 08:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703492747; x=1735028747;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZwYvHcOe8vw7UWjBi/7Fe5r5f9iUZlNZFiDgjbuH7C8=;
-  b=X6Qdk983rwKO0bmHTSNtmu3EYH1bfNjO5CDEDR/MsbObVP23gNznM5Ty
-   7gkkyy8tXer661W7G0OVvmhdXVK6RyMe5rV+Em0poWVlduVZxg8i/voms
-   5rkurAMl4tLqZus/HSm3Mt0pO8PfLSET/bNxD9/u5Mb42bYPmDN+Yx2Mr
-   VZVjbkMUC6eTZt6hYpCue044d13G3gdmz/Y4TET5H8DLzfzgHw9z9IiEV
-   jog2C/myWptOSKPwngTZ7rli/u5r6uxNyZL1SLFDaIwT92f5594/l84h4
-   JjhGst1RqR9fNBylL56VWBCghWPP2sWUPETVTMyTucr2kIjhzpPTQLg6V
+  t=1703494657; x=1735030657;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4sWfpwqIqIKMzSSqACx6Lv3JJINe2WMVJr4cfeM7640=;
+  b=QJpNCfuqLEI0FbG4DHn4dCpwpHVBV8m/5Kk013bAubhzcHIYCzd6LEbY
+   IY30N8C4e0PaFNILXepZdly8W4G6xxN65JWNs9Arq+C5cuA8Y6s0v8dWl
+   5++sUnV9Wb3iPHYRkgLQjpsJ5Su6wJc33a/eRMmgtjlmrD5Rv5+N9+B4F
+   1HyVI5uZ5s0qwzGPa3RgTyXRB6I2VYCfge3E9JJDvZN/7aYzMbvxMk9eg
+   ItjST1n1nELtILQTg8NzCMdM+a09s4+s8vgL2w9gffNhr4QpjbhXBI2sF
+   e09Of5OdY5MoQ/lCpLg/S2pNZzyiq0T5yPcfCnVHwTwF22QVvzUEaboJR
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="3108189"
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="396009000"
 X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="3108189"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 00:25:46 -0800
+   d="scan'208";a="396009000"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 00:57:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="1024856393"
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="753897451"
 X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="1024856393"
-Received: from ply01-vm-store.bj.intel.com ([10.238.153.201])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Dec 2023 00:25:43 -0800
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: bhelgaas@google.com,
-	baolu.lu@linux.intel.com,
-	dwmw2@infradead.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	lukas@wunner.de
-Cc: linux-pci@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v7 4/4] iommu/vt-d: don't issue device-TLB invalidate request when device is disconnected
-Date: Mon, 25 Dec 2023 03:25:32 -0500
-Message-Id: <20231225082532.427362-5-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20231225082532.427362-1-haifeng.zhao@linux.intel.com>
-References: <20231225082532.427362-1-haifeng.zhao@linux.intel.com>
+   d="scan'208";a="753897451"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.36]) ([10.93.26.36])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 00:57:33 -0800
+Message-ID: <7650e7ef-0e84-4673-98b0-64682487e01a@linux.intel.com>
+Date: Mon, 25 Dec 2023 16:57:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v6 4/4] iommu/vt-d: break out devTLB invalidation if
+ target device is gone
+To: Lukas Wunner <lukas@wunner.de>
+Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
+ will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20231224050657.182022-1-haifeng.zhao@linux.intel.com>
+ <20231224050657.182022-5-haifeng.zhao@linux.intel.com>
+ <20231224104709.GB31197@wunner.de>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20231224104709.GB31197@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Except those aggressive hotplug cases - surpise remove a hotplug device
-while its safe removal is requested and handled in process by:
 
-1. pull it out directly.
-2. turn off its power.
-3. bring the link down.
-4. just died there that moment.
+On 12/24/2023 6:47 PM, Lukas Wunner wrote:
+> On Sun, Dec 24, 2023 at 12:06:57AM -0500, Ethan Zhao wrote:
+>> --- a/drivers/iommu/intel/dmar.c
+>> +++ b/drivers/iommu/intel/dmar.c
+>> @@ -1423,6 +1423,13 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+>>   	writel(qi->free_head << shift, iommu->reg + DMAR_IQT_REG);
+>>   
+>>   	while (qi->desc_status[wait_index] != QI_DONE) {
+>> +		/*
+>> +		 * if the devTLB invalidation target device is gone, don't wait
+>> +		 * anymore, it might take up to 1min+50%, causes system hang.
+>> +		 */
+>> +		if (type == QI_DIOTLB_TYPE && iommu->flush_target_dev)
+>> +			if (!pci_device_is_present(to_pci_dev(iommu->flush_target_dev)))
+>> +				break;
+> As a general approach, this is much better now.
+>
+> Please combine the nested if-clauses into one.
+>
+> Please amend the code comment with a spec reference, i.e.
+> "(see Implementation Note in PCIe r6.1 sec 10.3.1)"
+> so that readers of the code know where the magic number "1min+50%"
+> is coming from.
+>
+> Is flush_target_dev guaranteed to always be a pci_dev?
+>
+> I'll let iommu maintainers comment on whether storing a flush_target_dev
+> pointer is the right approach.  (May store a back pointer from
+> struct intel_iommu to struct device_domain_info?)
+>
+> Maybe move the "to_pci_dev(iommu->flush_target_dev)" lookup outside the
+> loop to avoid doing this over and over again?
+>
+> I think we still have a problem here if the device is not removed
+> but simply takes a long time to respond to Invalidate Requests
+> (as it is permitted to do per the Implementation Note).  We'll
 
-etc, in a word, 'gone' or 'disconnected'.
+If the hardware implenmentation didn't extend the PCIe spec, that
 
-Mostly are regular normal safe removal and surprise removal unplug.
-these hot unplug handling process could be optimized for fix the ATS
-invalidation hang issue by calling pci_dev_is_disconnected() in function
-devtlb_invalidation_with_pasid() to check target device state to avoid
-sending meaningless ATS invalidation request to iommu when device is gone.
-(see IMPLEMENTATION NOTE in PCIe spec r6.1 section 10.3.1)
+is possible and horrible case for current synchromous queue model
 
-For safe removal, device wouldn't be removed until the whole software
-handling process is done, it wouldn't trigger the hard lock up issue
-caused by too long ATS invalidation timeout wait. in safe removal path,
-device state isn't set to pci_channel_io_perm_failure in
-pciehp_unconfigure_device() by checking 'presence' parameter, calling
-pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will return
-false there, wouldn't break the function.
+for ATS invalidation. but to wipe the concern and quote info not public
 
-For surprise removal, device state is set to pci_channel_io_perm_failure in
-pciehp_unconfigure_device(), means device is already gone (disconnected)
-call pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will
-return true to break the function not to send ATS invalidation request to
-the disconnected device blindly, thus avoid the further long time waiting
-triggers the hard lockup.
+here, perhaps not proper for me.
 
-safe removal & surprise removal
 
-pciehp_ist()
-   pciehp_handle_presence_or_link_change()
-     pciehp_disable_slot()
-       remove_board()
-         pciehp_unconfigure_device(presence)
+Thanks,
 
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
----
- drivers/iommu/intel/pasid.c | 3 +++
- 1 file changed, 3 insertions(+)
+Ethan
 
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 1c87fb1b1039..a08bdbec90eb 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -481,6 +481,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
- 	if (!info || !info->ats_enabled)
- 		return;
- 
-+	if (pci_dev_is_disconnected(to_pci_dev(dev)))
-+		return;
-+
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
--- 
-2.31.1
-
+> busy-wait for the completion and potentially run into the watchdog's
+> time limit again.  So I think you or someone else in your org should
+> add OKRs to refactor the code so that it sleeps in-between polling
+> for Invalidate Completions (instead of busy-waiting with interrupts
+> disabled).
+>
+> Thanks,
+>
+> Lukas
+>
 
