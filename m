@@ -1,53 +1,52 @@
-Return-Path: <linux-pci+bounces-1361-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1362-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 921B881DD6C
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 02:19:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86DCE81DD75
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 02:46:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 71706B21146
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 01:19:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A59A11C211AD
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Dec 2023 01:46:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6466B654;
-	Mon, 25 Dec 2023 01:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E2965E;
+	Mon, 25 Dec 2023 01:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QuyYC6Tc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EV3Z2Qku"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CD632;
-	Mon, 25 Dec 2023 01:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F0463F;
+	Mon, 25 Dec 2023 01:46:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703467183; x=1735003183;
+  t=1703468793; x=1735004793;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=NMjMjPLJB29o1k0F77U4fBhns7smobkO+fyHvq3P2N0=;
-  b=QuyYC6Tc3OmJz/DGFUu/9qryidTcqA7UDLChpvTi9DaSZAkKszIvRWOF
-   QwQr1vJddtTyiT1V3Rl8eJPqP1xQB5JxghXVJtEXZKYOxDMCB2eIFvPVH
-   WIASGnCl+agb0BbqHkTMCeQK+ihgAu8bI2EG76e/qb0t1dcICrW399EGQ
-   lsVnbfTb0zX9igEP3idRbMfjyHW2t5k5hSd2I9xEXLG6rW7GP+zXZuC/V
-   vivHn31cjuqdzCcIiJJ+5/klrxlioaEhI/E+z3dqjxUAbTWjQzwCEYEs5
-   hcWo5hGejIdCpAUnuiqMQZXfrrwVWWWpq7WKvO6/fYSjqLiFJrfia0XSg
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="460586285"
+  bh=8co69tGQoNWNKKyGvhMZsl0zZYIadpx6fj7p6LVD5pk=;
+  b=EV3Z2QkuEnqGEl1IiDjuYeEvWqpsgM9pQAH9MR9OtFdKHHit0Qon81gE
+   o+1geVPjcG7myovtFT9HDi24+W2x73BkVONtjLIYcnnRL+f0Jp0yqifo0
+   8ffVZEfsfT4bqW1o86lVrWhb/3D35EqmnekDoTuZE/53dpYcfS+sEuQO2
+   6hLdEIEtsSSS+37Etaspex/tQxAX3P41sgMdf3MqES3+Q/wm8hR6pxVrT
+   QQFgxx4f03Tr7nENGN3XR4NWR7Vr3DSssBvKcfjXJLreMuICfNMP9/oFD
+   KMIFGKDgnV2H/iqWaCq1xKPmoGU8uxEc0CnFJg+7H12jTHtrqsJuxqKAw
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="17825834"
 X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="460586285"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 17:19:42 -0800
+   d="scan'208";a="17825834"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 17:46:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="727410894"
 X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="727410894"
+   d="scan'208";a="12086164"
 Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.36]) ([10.93.26.36])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 17:19:39 -0800
-Message-ID: <6f238675-ec98-4d15-8041-ab15921ba053@linux.intel.com>
-Date: Mon, 25 Dec 2023 09:19:37 +0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 17:46:29 -0800
+Message-ID: <d6dedb35-4d2c-49a6-9d5a-e7f573ef3787@linux.intel.com>
+Date: Mon, 25 Dec 2023 09:46:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,13 +87,6 @@ On 12/25/2023 6:43 AM, Bjorn Helgaas wrote:
 > There's no point in using an informal name that we assume "all
 > iommu/PCIe guys could understand."  It's better to use a term that
 > anybody can find by searching the spec.
-
-agree.  will revise them together.
-
-Thanks,
-
-Ethan
-
 >
 >> That would cause following continuous hard lockup warning and system hang
 >>
@@ -207,6 +199,11 @@ Ethan
 >> range: 0xffffffff80000000-0xffffffffbfffffff)
 > The timestamps don't help understand the problem, so you could remove
 > them so they aren't a distraction.
+
+Lukas said he see the qi_submit_sync takes up to 12 seconds to trigger the
+
+watchdog.
+
 >
 >> Fix it by checking the device's error_state in
 >> devtlb_invalidation_with_pasid() to avoid sending meaningless devTLB flush
@@ -214,7 +211,7 @@ Ethan
 >> then powered off in
 > A pci_dev_is_disconnected() is racy in this context, so this by itself
 > doesn't look like a complete "fix".
->
+A quick workaround.
 >> pciehp_ist()
 >>     pciehp_handle_presence_or_link_change()
 >>       pciehp_disable_slot()
@@ -228,12 +225,13 @@ Ethan
 > deal with the case of an ATS Invalidate Request where we never receive
 > a corresponding ATS Invalidate Completion.  Do other IOMMUs like AMD
 > and ARM have a similar issue?
->
+So far fix it in Intel vt-d specific path.
 >> For SAVE_REMOVAL unplug, link is alive when iommu releases devcie and
 >> issues devTLB invalidate request, wouldn't trigger such issue.
 >>
 >> This patch works for all links of SURPPRISE_REMOVAL unplug operations.
 > s/devcie/device/
+got it.
 >
 > Writing "SAVE_REMOVAL" and "SURPPRISE_REMOVAL" in all caps with an
 > underscore makes them look like identifiers.  But neither appears in
@@ -245,7 +243,36 @@ Ethan
 > It's not completely obvious that a fix that works for the safe removal
 > case also works for the surprise removal case.  Can you briefly
 > explain why it does?
->
+
+As I explained to baolu.
+
+For safe_removal, device wouldn't  be removed till the whole software
+
+handling process done, so without this fix, it wouldn't trigger the lockup
+
+issue, and in safe_removal path, device state isn't set to
+
+pci_channel_io_perm_failure in pciehp_unconfigure_device() by checking
+
+'presence',  patch calling this pci_dev_is_disconnected() will return false
+
+there, wouldn't break the function.  so it works.
+
+
+For suprise_removal, device state is set to pci_channel_io_perm_failure in
+
+pciehp_unconfigure_device(), means device already be in power-off/link-down
+
+/removed state, callpci_dev_is_disconnected() hrere will return true to 
+break
+
+the function not to send ATS invalidation request anymore, thus avoid the
+
+further long time waiting trigger the hard lockup.
+
+Do I make it clear enough ?
+
+
 >> Tested-by: Haorong Ye <yehaorong@bytedance.com>
 >> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
 >> ---
@@ -271,6 +298,14 @@ Ethan
 > qi_submit_sync() and qi_check_fault() might not handle the case of an
 > unreachable device correctly.  There should be a way to exit that
 > restart: loop in cases where the device doesn't respond at all.
+
+Yes, fix it in patch[4/4] to break it out when device is gone.
+
+
+Thanks,
+
+Ethan
+
 >
 > Bjorn
 
