@@ -1,58 +1,48 @@
-Return-Path: <linux-pci+bounces-1392-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1393-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1615F81EAD0
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 00:56:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 531BD81EAD3
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 00:59:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5E7F1F21A75
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Dec 2023 23:56:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 033BF1F21ADB
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Dec 2023 23:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 347526127;
-	Tue, 26 Dec 2023 23:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9809C6127;
+	Tue, 26 Dec 2023 23:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDqRFliW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZmb+/AR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103555C9C;
-	Tue, 26 Dec 2023 23:56:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 152A4C433C7;
-	Tue, 26 Dec 2023 23:56:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B87E5C9C;
+	Tue, 26 Dec 2023 23:59:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60DEC433C8;
+	Tue, 26 Dec 2023 23:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703634964;
-	bh=eeVVPhs698tzJMKPnsN0mOMee+NQ/JOkzljbDzyuvrk=;
+	s=k20201202; t=1703635189;
+	bh=qL1wC5X84nPiUycGi2oBV74C3XrBRi70qn0cE9NjEuw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WDqRFliWt4+s1yPPXM6G//iGI15rQXGWKOoUX9AIRwNDaC0lerFygACxFF/fWG8UX
-	 7377qOSvMf1ojfixahrgoBVMCNh2axBW9diJLgSXOmFFD44/BywBakydLB+MWjHgL5
-	 mcyWv1sr9WIsGT3uxSd9hmIqw+qcct4UCnQBwBpYpTrN+pQXdRFE4E1CzvrFtBDQ5c
-	 z1GO4icvo2Y4Wo28r/5iCAASXkZWh7Oo2fCFahN5CR2C6yyLdMqVIzajysf6kA6N+s
-	 YjJ5KSiJlV6v4FEXtbo4KrkqAc2CI01/jvlM3wy0hUDYJjlpfDTvLEKMKDsU+FlOMr
-	 U1H3Z20ISE+RA==
-Date: Tue, 26 Dec 2023 17:56:02 -0600
+	b=oZmb+/ARlpg5Vk9sAtF9KzheCjXEuUzBHt4QSukwKfevMLwNuA718EHgKWkezuSap
+	 FnpUUIw2CJIWFLQPekgw2XMyfGkCwvlN8pNx7oh6R/opBliTvtAUC/rSEnYzVtU3z7
+	 nVzgIA6Df0IdTnlg2I+Ij9sWbQl5JhwO9Acj9+ZtIe8qs7+3bqRGL7HG0WYOrwz4l+
+	 HBNoxyb9vP1WtIXzoa9a2mNY+lJqGmWlg4l4FeBdNWane0edoijGuRna4lt9hm33vI
+	 a944CVCRqrBPPfgCkbca+6pU4km9DzyULAF8AWehhec5vtEMv7iV4I+G0PghkeoRfp
+	 AppR4fTl7e5MA==
+Date: Tue, 26 Dec 2023 17:59:47 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, Haibo Xu <haibo1.xu@intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Anup Patel <anup@brainfault.org>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Will Deacon <will@kernel.org>, Len Brown <lenb@kernel.org>
-Subject: Re: [RFC PATCH v3 03/17] PCI: Make pci_create_root_bus() declare its
- reliance on MSI domains
-Message-ID: <20231226235602.GA1483795@bhelgaas>
+To: Peter Robinson <pbrobinson@gmail.com>
+Cc: Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org
+Subject: Re: [PATCH] PCI: cadence: Fix TI J721E PCIe SoC dependencies
+Message-ID: <20231226235947.GA1483922@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,22 +51,49 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231219174526.2235150-4-sunilvl@ventanamicro.com>
+In-Reply-To: <20231220113214.413632-1-pbrobinson@gmail.com>
 
-On Tue, Dec 19, 2023 at 11:15:12PM +0530, Sunil V L wrote:
-> Similar to [1], declare this dependency for PCI probe in ACPI based
-> flow.
+On Wed, Dec 20, 2023 at 11:32:08AM +0000, Peter Robinson wrote:
+> The J721E PCIe is hardware specific to the TI SoC parts
+> so add a depenency on that so it's available for those
 
-It would be better to refer to this as 9ec37efb8783 ("PCI/MSI: Make
-pci_host_common_probe() declare its reliance on MSI domains") instead
-of a link to the mailing list archives.
+dependency
 
-The git SHA1 is part of the git repo, and git can tell us where that
-SHA1 is included.  The lore URL is external and doesn't say anything
-about what happened to the patch.
+> SoC parts and for compile testing but not necessarily
+> everyone who enables the Cadence PCIe controller.
 
-> This is required especially for RISC-V platforms where MSI controller
-> can be absent.
+Wrap to fill 75 columns.
+
+The subject could possibly be more specific than "fix", e.g.,
+
+  PCI: cadence: Make TI J721E depend on ARCH_K3
+
+> Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+> ---
+>  drivers/pci/controller/cadence/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> [1] - https://lore.kernel.org/all/20210330151145.997953-12-maz@kernel.org/
+> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> index 291d12711363..1d5a70c9055e 100644
+> --- a/drivers/pci/controller/cadence/Kconfig
+> +++ b/drivers/pci/controller/cadence/Kconfig
+> @@ -47,6 +47,7 @@ config PCI_J721E
+>  
+>  config PCI_J721E_HOST
+>  	bool "TI J721E PCIe controller (host mode)"
+> +	depends on ARCH_K3 || COMPILE_TEST
+>  	depends on OF
+>  	select PCIE_CADENCE_HOST
+>  	select PCI_J721E
+> @@ -57,6 +58,7 @@ config PCI_J721E_HOST
+>  
+>  config PCI_J721E_EP
+>  	bool "TI J721E PCIe controller (endpoint mode)"
+> +	depends on ARCH_K3 || COMPILE_TEST
+>  	depends on OF
+>  	depends on PCI_ENDPOINT
+>  	select PCIE_CADENCE_EP
+> -- 
+> 2.43.0
+> 
 
