@@ -1,170 +1,178 @@
-Return-Path: <linux-pci+bounces-1388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EC0381E84B
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Dec 2023 17:12:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F406781E91A
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Dec 2023 20:02:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1878282D4F
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Dec 2023 16:12:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D2F51F21A1A
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Dec 2023 19:02:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49D724F5EA;
-	Tue, 26 Dec 2023 16:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11D5B643;
+	Tue, 26 Dec 2023 19:01:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rYUkC2HT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yTaMjA8L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2079.outbound.protection.outlook.com [40.107.7.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045C44F5E1;
-	Tue, 26 Dec 2023 16:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iT1ePGNyqdhcr1FFGDbLgM8Q659S24wvVRzv6+4B3RFoFBkqvX7Nv9ISCr96JkDDhlTFq+1mkwv5MlFpq1ATbWryTRqanAJBv4r5khH0F9wo3+T3Oje9CNCLtiDH2nbYACYKahkN57gaFq8OaMytyA9iQnogO3qFob819PA9Vr/VFT39M+pNRJgAKYYuU67yXnS6BShwAFc6JrwNBtVDpLvCEghL2CvCk080JPKGLoBfvcS0iQ0MegcRowwgk8eRSdbAYdzM6tBZ57778R0DosDYbLzf40SkikVVWv/TLuHIGBwe/XjyCZzLARtJJUb+1LIyufxxm7nvi2CtyXy7cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8JJZbkEBJhEPRp6OoCkLCg/n1Q94qbuIJy+v1E4dKOc=;
- b=g7iBYy+j0IDS6sxf2gXqAGLFjSNnuCClGn2LCcoBVKob79LhlgJNkojBpztWoD8qac3urmR15ahypX0bK47bPC7RbB2Yk+lTtrjqGJnxHWR/LryRM0eFjgZWadpjN5PKaO7abO2JOodfVXbWlLCHYYiiHxZxkhxf9ivf/sFT23CaWQHx4h2YjFki34zFYjN+FXIzWIJu4qzJrCXM3OuOPaymxgZJmuURdc5sKPiBmJEvZ7iHgt1JVQFzOIRGAR+GgmmM9g1lNZJRWYIfpSTrdOqyydjQfFtoQOq9qApkwirhNU9VCKVCAkfbqEKmv1WI9sZXKk3Uhn/ibKdmA8nhqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8JJZbkEBJhEPRp6OoCkLCg/n1Q94qbuIJy+v1E4dKOc=;
- b=rYUkC2HTBjjTKhEAJetQNFk5RcBj3I/tmNh6ngst9FmfAnthrvO+B9va7QXIFVp+woe3Pl73gVh1qOq2YBHVvbmWxFpj/XM1f/E+mtMsNS+trPB3xV5WctmmldwU9RdGZ1dgcYbh2F7AZiw26aYzZRvDo0kSQkNi0Kic4oZllFw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by PR3PR04MB7210.eurprd04.prod.outlook.com (2603:10a6:102:8f::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Tue, 26 Dec
- 2023 16:12:31 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::95f5:5118:258f:ee40%7]) with mapi id 15.20.7113.027; Tue, 26 Dec 2023
- 16:12:30 +0000
-Date: Tue, 26 Dec 2023 11:12:19 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
-	festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com,
-	imx@lists.linux.dev, kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, kw@linux.com,
-	l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v6 15/16] dt-bindings: imx6q-pcie: Add iMX95 pcie
- endpoint compatible string
-Message-ID: <ZYr7Y+mJea6fChjS@lizhi-Precision-Tower-5810>
-References: <20231224183242.1675372-1-Frank.Li@nxp.com>
- <20231224183242.1675372-16-Frank.Li@nxp.com>
- <6a61f325-a58b-4aa6-9a0a-7a3086f63829@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a61f325-a58b-4aa6-9a0a-7a3086f63829@linaro.org>
-X-ClientProxiedBy: SJ0PR03CA0082.namprd03.prod.outlook.com
- (2603:10b6:a03:331::27) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604DA1104
+	for <linux-pci@vger.kernel.org>; Tue, 26 Dec 2023 19:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a235e394758so476541166b.1
+        for <linux-pci@vger.kernel.org>; Tue, 26 Dec 2023 11:01:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703617316; x=1704222116; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mv/k4E8tNQsDocRbC/Q62jxBeX63xNG+uOzrvraohns=;
+        b=yTaMjA8LGiEBhymAIHJMQruV7Zl3nKkMA2AButKZnyt0FRWJKMYYgYSDgIJ7NROaH9
+         36M2iEUXIdX7I1Q+GT5qTxGHbFkCiZ2sMjiK1vEEiZX/ECAxgzyDV8OMRzX4Z3l1NWa7
+         Cbfnq9YZn0KhjAGO97aqJvykOmO0r/DYQFHO13BuR+GWDZXDH9vwDqfeJj1DvjOh9l23
+         mw4hFgrRd4+5v2cLcLwEWz94F83MdjYY8ha/dD3Ieb1wVayx5COK03rt8k+c0I6MFyGT
+         EJPhWw+8hyGCNJsGjIxKCD2xlXcfR4yrGe/zhafEOzHD2RPYlH2fqQO5taMvUXOikAP/
+         Ln8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703617316; x=1704222116;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mv/k4E8tNQsDocRbC/Q62jxBeX63xNG+uOzrvraohns=;
+        b=FaORQTSOxSFGLpNfZiWw+2aKeOT4SVjOoT/bImgPi+DReGA5ZCG4nFVrMfcpKTIi6C
+         G9PJlZY2SAmZ0ZNzc0qgxGFovLkVqGle1ou1mRwhV7uer6Z6EjWV9xA8gYcN/haK7xW/
+         RSB+5J/wcJwzxIIDwm0ydrKOgLHBuuA/+8LyK+tyPQ7ZlQRFEeN11r8jwnyaanrXn1wu
+         8bMlvzGxwDxrymha1v+8l272mymQVcINN/CPcQp/LZYA7j5XB8dphckga7oiLpnmqio8
+         SH25BWOg0mcmPBvnUPYWJ3c7fxPc0v7l0zHOPw2VeX/HlsgX5ZIRRzImT4IyOA8ZUZof
+         9QSg==
+X-Gm-Message-State: AOJu0Yx561mBO6VjJelReFCGhX+pLOk4yaDTXwMzAj0rMmeZlsh0EK8a
+	GApqi0s+VHiryEu2I1dp3XYDggUCCiXnVA==
+X-Google-Smtp-Source: AGHT+IHsHiD6Zn3OsjK2DGYYWjTYRSHvI51xN7TxWZ3bS/xX57kGlz8kaVDKsTPlumPpdg/oqCnyfQ==
+X-Received: by 2002:a17:906:150:b0:a19:a19b:78a8 with SMTP id 16-20020a170906015000b00a19a19b78a8mr4096990ejh.107.1703617315124;
+        Tue, 26 Dec 2023 11:01:55 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id p18-20020a170906b21200b00a26f69ca8d0sm1759085ejz.71.2023.12.26.11.01.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Dec 2023 11:01:54 -0800 (PST)
+Message-ID: <0233cf48-93cb-4f19-ad1d-e3e1835c1fef@linaro.org>
+Date: Tue, 26 Dec 2023 20:01:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PR3PR04MB7210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1308dec1-02bc-4e98-fb94-08dc062d75de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WtxBghQQ+yEWAVCA8NsbrVgkqJS5Ql/lNYDe5lZkOrZ9kDx4GkYX2VpZ+YDlDvIXbbAYJsO37TD3VbM6kwuZDtWX00j95Vf0l3PLbybfDsYIBKuj8C9yJNAnPZNAzJlZRuf5P7cbTJZhQQIVVdd4qhUzxtjzMEc9ZoiB3WiNu1BcMtNEKPUXD7jc6D2Pfr1o3v++eoMVy9wMuwN0CBcozMmi1Bn85NIh6d4l+S7rPUhykyPsGNa4cmCxvT/hfJMnSSQvgVNmfgYr61AUL9kbwbdy1x1kVr+YNJt97FHLhHeZVLe9BkI0SXmD4HNyRaex/zdgTarAY+SezUbXGPWCfi1CQMUDl86PUfF49D76ohm1uXn2WA9DyaXRdDTvuXaj5ct6EBLTtQWgembshE+K115dp+nFgsDz1OcjagLY/xx3oVsKt3iycrnAzrSp/gk1VUzMR562NDNlq+cm1iflsHIDy8OkXCUaft8Vlryg+sqb+EKJdInMKEm2irC7qOffDPjrRzx/EjhH57RfG4XjIyhYuY+aHyd+Xiy0xtVe7jWtf4gHp1s33xMYlymBZg8k4o60dLaJe81W1pP7kB6CUzRx5VVhAvcTPg83ijvjqkOhLW4ESFouAKmtDaCqM92oXbILPFrpnL9ZNvFpeR11tR/7d/6S0xuK3obtT+4j7CE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(396003)(346002)(136003)(39860400002)(376002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(5660300002)(7416002)(4744005)(2906002)(478600001)(26005)(53546011)(52116002)(6486002)(38100700002)(41300700001)(86362001)(38350700005)(33716001)(316002)(66476007)(66556008)(66946007)(6916009)(9686003)(6512007)(6506007)(8936002)(8676002)(4326008)(6666004)(32563001)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oJofG+n/YuZBfbLWM8dghRGCYBn2JeX8Hh8e5UbIIL01JIrjog1Q99JodYNL?=
- =?us-ascii?Q?kB50RsR+VJNXrQZFCDgKRKN3eF1DVNCuwYgczMaU7GLtngM6fUPNhQ4L1jl/?=
- =?us-ascii?Q?+SiEmpxz61OiCrSB+SwD9c5v2K26IAg81rnUQYPRcp27rCKVZzv6hpG3lPOY?=
- =?us-ascii?Q?szY0K//9prn89Qo3Y3HL6+SMygZCOFbe+GJnJLws5zrAzaGY0yCPDAtDfdo2?=
- =?us-ascii?Q?XXYVkz6ZW3JSXwJ3b7YekadSHlQlbVe3+runw+xp7B4Zwi9IZ9quCAYgg4lv?=
- =?us-ascii?Q?9VYXFVPYTT/lf1qLazUJGn0Dsz8ua3lJJ9Pm0bnLDBCfNrjSk53HbxLUcEYd?=
- =?us-ascii?Q?3mlb7Ab2bqc229Cj5Z+8rubmG+xa5KqsMKnqYs2KHPKmro9N7rJYIzGPE600?=
- =?us-ascii?Q?hq+j3yZ0Gnr7AHxIKI5RR/rcqEJlJtNktHgj3RwUs8lHX9eWBFclFgwaJK/k?=
- =?us-ascii?Q?dqZMiJtvS/+SKM9KTM80v8S+Yx+8S/HHPC6Se34/QJU/+pz+jNiX0xSKJ88H?=
- =?us-ascii?Q?UbAByr0QW2PPuvBH5e4tU4l+L+9gFGdz/fgKzbDXhPUnkGX9VBHt8uvI2fLn?=
- =?us-ascii?Q?NCR0OR6/KN8EE07GKm6prMs94KDhiIPkuywju2OkIn+tgH1De9iDhQXReA4e?=
- =?us-ascii?Q?kAQ0EDZZbPheIWTPCFEq5Y/kg7Fw2NHxrUWeKtSyh1tdI6wdENFGbJvch9K9?=
- =?us-ascii?Q?A+nZ5rnr1d0O/a9ho7LYlT8dm4w4VvHOPvaOFSbDhrUFYHsgvjQpQjEJeKrj?=
- =?us-ascii?Q?rao/zMOfSTdo6z++f15mnHkFOR1yjyoZhSo8e2RS0x+Vy0ImG8hV4x3Pmwi3?=
- =?us-ascii?Q?H/ZfjSgkKGaJAXKaoJOclgxvOqvIy5hibZeVwYLsBHm3CCOyzCBOewlGT9UD?=
- =?us-ascii?Q?cdbfP+rI+7fgTPzlrKACm7UM48n7X7xayfDhrworDL4KiJ3XwzagTfRWqHaY?=
- =?us-ascii?Q?tAtS2psVE/7WJKx9NA6H5+sFrp4koSIsw4KrOFEdBYKsIIiWFdussNNzyBrO?=
- =?us-ascii?Q?CBG/DorX8U03lCyo7ji32j43JDeOpckhFQ1w8Dlvqe38ngXkPmuHghTD0kzx?=
- =?us-ascii?Q?mUyhaf1rNoZ3GY1SZi6iKIUKTWqi+KgwvdHru3AO8qNF5ZRi/Ps1LBVB1SGY?=
- =?us-ascii?Q?Jjh265M299uc4QfHnuqiSv0uFpbRpQXgGn7ON1/zoE2LB4q+4wZe1pumY0TO?=
- =?us-ascii?Q?k1jmLzc3kGcx22yguPiTcp8L5vt8SBiR6+g74HxWRQTDlcGnxcMJJkW9wSXD?=
- =?us-ascii?Q?wmlzTPjNWh0GnGMsjkNzoi7QCCIUg3nK8puJCSYQ9vpK+0cgB6RGOITwKXlb?=
- =?us-ascii?Q?WphDS/1CSlXTlqaqAedd17uyqoRyootBgLjJbKWN+hgNJL5CxZ6imvyirHPU?=
- =?us-ascii?Q?KLXTYEg+NzFCN2xxWFN4NHLtneSgBJ1z4fcn6sM4G9E8wjxfKk75i2fZ4yLD?=
- =?us-ascii?Q?YvnKyxVR0ic2RKi/F21o17FyT8afhortznKYkU+8iZtd0thHdj/vVIVL6umy?=
- =?us-ascii?Q?vKFG0k9ukgY+UYscUPzSrZbrbshrM9kT5GouvnehGDA7rxIftmHxW8ryOglG?=
- =?us-ascii?Q?SC+9C//NWEvq/z0oe8P8Ii3t2Q21wFmcuwnbRamr?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1308dec1-02bc-4e98-fb94-08dc062d75de
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Dec 2023 16:12:30.6825
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Er8J02ANy6GzEtYSLpsvkb3lOu4tE7eW/v0p7DxtvDxGHKep52vxZuZ5wDG3lJVh2OY+toaCTS/9trAr6U312g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7210
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 15/16] dt-bindings: imx6q-pcie: Add iMX95 pcie endpoint
+ compatible string
+Content-Language: en-US
+To: Frank Li <Frank.li@nxp.com>
+Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com,
+ imx@lists.linux.dev, kernel@pengutronix.de,
+ krzysztof.kozlowski+dt@linaro.org, kw@linux.com, l.stach@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ s.hauer@pengutronix.de, shawnguo@kernel.org
+References: <20231224183242.1675372-1-Frank.Li@nxp.com>
+ <20231224183242.1675372-16-Frank.Li@nxp.com>
+ <6a61f325-a58b-4aa6-9a0a-7a3086f63829@linaro.org>
+ <ZYr7Y+mJea6fChjS@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZYr7Y+mJea6fChjS@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 25, 2023 at 08:16:17PM +0100, Krzysztof Kozlowski wrote:
-> On 24/12/2023 19:32, Frank Li wrote:
-> > Add i.MX95 PCIe "fsl,imx95-pcie-ep" compatible string.
-> > Add reg-name: "atu", "dbi2", "dma" and "app".
-> > Reuse PCI linux,pci-domain as controller id at endpoint.
-> > 
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > 
+On 26/12/2023 17:12, Frank Li wrote:
+> On Mon, Dec 25, 2023 at 08:16:17PM +0100, Krzysztof Kozlowski wrote:
+>> On 24/12/2023 19:32, Frank Li wrote:
+>>> Add i.MX95 PCIe "fsl,imx95-pcie-ep" compatible string.
+>>> Add reg-name: "atu", "dbi2", "dma" and "app".
+>>> Reuse PCI linux,pci-domain as controller id at endpoint.
+>>>
+>>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+>>> ---
+>>>
+>>
+>> ...
+>>
+>>> +# reuse PCI linux,pci-domain as controller id at Endpoint
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          enum:
+>>> +            - fsl,imx95-pcie-ep
+>>> +    then:
+>>> +      properties:
+>>> +        linux,pci-domain: true
+>>
+>> Same comment: why do you need? Don't ignore my feedback. You responded
+>> you will fix it, but it is still here...
 > 
-> ...
-> 
-> > +# reuse PCI linux,pci-domain as controller id at Endpoint
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          enum:
-> > +            - fsl,imx95-pcie-ep
-> > +    then:
-> > +      properties:
-> > +        linux,pci-domain: true
-> 
-> Same comment: why do you need? Don't ignore my feedback. You responded
-> you will fix it, but it is still here...
+> DTB_CHECK report error after I remove it. linux,pci-domain is only define
+> in pci, not pci-ep.
 
-DTB_CHECK report error after I remove it. linux,pci-domain is only define
-in pci, not pci-ep.
-
-So I add comments about this. linux,pci-domain was resued ad controller id.
-
-If include pci.yaml, there are too much other properties was involved, but
-not used by pci-ep.
-
-Frank
+Ah, thank you, indeed.
 
 > 
-> Best regards,
-> Krzysztof
+> So I add comments about this. linux,pci-domain was resued ad controller id.
+
+However maybe there is reason why it is not for endpoints. The
+description is saying it is valid only for host bridge, so maybe it
+should not be used for endpoint case?
 > 
+> If include pci.yaml, there are too much other properties was involved, but
+> not used by pci-ep.
+
+Best regards,
+Krzysztof
+
 
