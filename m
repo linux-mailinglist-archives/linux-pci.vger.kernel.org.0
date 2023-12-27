@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-1422-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1423-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E455D81EDDF
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 10:46:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12FF781EDE0
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 10:46:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F9C31F21673
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 09:46:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 378BC1C21616
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 09:46:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E51928E10;
-	Wed, 27 Dec 2023 09:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66ECA28DAF;
+	Wed, 27 Dec 2023 09:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="ykcyHotF";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="jfJC+cj3"
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="FaBpZNlf";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="ZHuvVNFI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1444A2869B
-	for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 09:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB6C24B2F
+	for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 09:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com A6A48C000A
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com DE4F7C000A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1703670371; bh=Ax3NW0xu1vCClYRutt/b2zIyVE//qDwQnJ9GXTEPJXk=;
+	t=1703670373; bh=CcF98B8RDvfXdgFqkGZKx6NB2ZRea34z09tQdPsmn/I=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=ykcyHotFy/RtHGZjBV3MzQmfVzXW3dN0PIb9cAcP47Noe430zood+NPKf5/rU26qy
-	 NT37/fyGrwjW+SUWUpvFcIXx9pr9M+x+svJHl6rI86+T6r3mE5wlrA+eoMjAF56OrT
-	 YQ1c/uxN9cJbKIkQR87rga9df85RRmydrkV87np8pcWE1nheUr8GggXoMROOAPD1lN
-	 05p9qeOvANEVtsqAfOXOcSuvtaph6/0vhatqSTeuSFy6IVgeIrXut+VEudOSLfDBR8
-	 GYo0LDCjRkqgaaXqfAoZT67gj/lgQQXq+KpYQPU7eYGPoIeotYyk6wD5VLowpBMhx9
-	 KX1mcofZaLTDA==
+	b=FaBpZNlfj4qxqu65a6o3degW4NBCd1c2gAM4DydYY3pkRFeM26l+0dwTzcgDMt4vO
+	 iib0K5AJtLtc5cpGWKDHW2OQKy9wh+JvLHJbx9nde5fFn7zNXDk2U6AfJoATD9mYqc
+	 OQpRWLdcbo8rirAA08xxyUXVRAtxso7ndm1alRKiA/au9x70/vD8kS3WJplxAu/sfT
+	 NsKexJPLrHy9Aa74Hs7KtNhIMVmVlRZva+ORpiy1r03Fv0Ndd7sMIxiRlt/63TuG62
+	 HVvssGzXtKcNCcAbeJRtEQreZWGtohMtsCvWCuGsqRZUw3JjKOn38RpohHt1tShJnV
+	 TmFudeJ4Od+og==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1703670371; bh=Ax3NW0xu1vCClYRutt/b2zIyVE//qDwQnJ9GXTEPJXk=;
+	t=1703670373; bh=CcF98B8RDvfXdgFqkGZKx6NB2ZRea34z09tQdPsmn/I=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=jfJC+cj3UWc5XuRvqHh20ekCV5Sxbf8ZSTUF3enZjLnflwp0GECnvL2BQZNE8HBiJ
-	 VMSZrJojgSHYgUfrhYNah8nfMeoyXI1bB5IHY1YpqXCyekuweundfEMrd4LlaCTZsB
-	 171PiV6z4bHUhXsKAcvGbnY2W/mDcu7XhfpGmf4NCxVOBL10f7NWZ3gMBvpVJXKv9/
-	 vxfqAcNtkXCgE4gt35kaosB6u0xpZY+fs29nOQaJaj1bHsyLUEzAyLeJHfAYMaDXeS
-	 NHVjdJ1tsjKL3bwIha+Ttns0cuRG3fyIx5NWPaXjMI+zhKkYLInTg4HAHV8SFSU8l9
-	 xcNSO0d3h3vAg==
+	b=ZHuvVNFI7qiB+n3+zhWcgko7+H14kf6/7RyOcxDCVIkrNzCjbhIRPpAIkwXb6RSKg
+	 +5cxO1dXTSPyOR1j3FI01cxMJyANnT2R1aMVbOMR3C8ePQUU20eFM2WGPhU1xyv94P
+	 g9ASzdxfbNIWP9ck4VW/7eJBxgQryxLwVfp7RIkLABRuLzQTP0zcTsB/Dv4tWK3070
+	 oncNsaLsG22ACky91NGwSyOZKFT8tirvu0sW2k9aG1uOTTs02I0wf+tdra7LWUSw0d
+	 q5cSgl3QloaWCc6HtIJ8izLBWXXv8BjsxQ9Z08AX8RjKxxPTOr59QDMXVQXiPuq3/G
+	 k7+Vc7Yn0Pdiw==
 From: Nikita Proshkin <n.proshkin@yadro.com>
 To: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>
 CC: <linux@yadro.com>, Bjorn Helgaas <helgaas@kernel.org>, Sergei
  Miroshnichenko <s.miroshnichenko@yadro.com>, Nikita Proshkin
 	<n.proshkin@yadro.com>
-Subject: [PATCH v2 07/15] pciutils-pcilmr: Add logging functions for margining
-Date: Wed, 27 Dec 2023 14:44:56 +0500
-Message-ID: <20231227094504.32257-8-n.proshkin@yadro.com>
+Subject: [PATCH v2 08/15] pciutils-pcilmr: Add function for default margining results log
+Date: Wed, 27 Dec 2023 14:44:57 +0500
+Message-ID: <20231227094504.32257-9-n.proshkin@yadro.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231227094504.32257-1-n.proshkin@yadro.com>
 References: <20231227094504.32257-1-n.proshkin@yadro.com>
@@ -64,138 +64,54 @@ Content-Type: text/plain
 X-ClientProxiedBy: T-EXCH-09.corp.yadro.com (172.17.11.59) To
  T-EXCH-08.corp.yadro.com (172.17.11.58)
 
-* Implement option to turn on/off logging for margining;
-* Support systems with several PCI domains;
-* margin_log_margining function prints margining in progress log using
-  one line messages for each Receiver in the form:
-  "Margining - <direction> - Lanes [<current simultaneous lanes>] - ETA:
-  <current direction-lanes margining remaining time> Steps: <current
-  margining steps done> Total ETA: <utility run total remaining time>".
+Lanes are rated according to the minimum/recommended values.
+The minimum values are taken from PCIe Base Spec Rev 5.0 section 8.4.4.
+30% UI recommended value for timing is taken from NVIDIA presentation
+"PCIe 4.0 Mass Electrical Margins Data Collection".
+
+Receiver lanes are called 'Weird' if all results of all receiver lanes
+are equal to the spec minimum value.
 
 Reviewed-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 Signed-off-by: Nikita Proshkin <n.proshkin@yadro.com>
 ---
- lmr/lmr.h        |  24 +++++++++
- lmr/margin.c     |  13 +++++
- lmr/margin_log.c | 135 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+)
- create mode 100644 lmr/margin_log.c
+ lmr/lmr.h            |   8 +++
+ lmr/margin_results.c | 159 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 167 insertions(+)
+ create mode 100644 lmr/margin_results.c
 
 diff --git a/lmr/lmr.h b/lmr/lmr.h
-index fa627a3..c3a5039 100644
+index c3a5039..d35b8ae 100644
 --- a/lmr/lmr.h
 +++ b/lmr/lmr.h
-@@ -181,4 +181,28 @@ struct margin_results *margin_test_link(struct margin_link *link, struct margin_
+@@ -17,6 +17,10 @@
  
- void margin_free_results(struct margin_results *results, u8 results_n);
+ #define MARGIN_STEP_MS 1000
  
-+/* margin_log */
++#define MARGIN_TIM_MIN       20
++#define MARGIN_TIM_RECOMMEND 30
++#define MARGIN_VOLT_MIN      50
 +
-+extern bool margin_global_logging;
-+extern bool margin_print_domain;
+ /* PCI Device wrapper for margining functions */
+ struct margin_dev {
+   struct pci_dev *dev;
+@@ -205,4 +209,8 @@ void margin_log_receiver(struct margin_recv *recv);
+ /* Margining in progress log */
+ void margin_log_margining(struct margin_lanes_data arg);
+ 
++/* margin_results */
 +
-+void margin_log(char *format, ...);
-+
-+/* b:d.f -> b:d.f */
-+void margin_log_bdfs(struct pci_dev *down_port, struct pci_dev *up_port);
-+
-+/* Print Link header (bdfs, width, speed) */
-+void margin_log_link(struct margin_link *link);
-+
-+void margin_log_params(struct margin_params *params);
-+
-+/* Print receiver number */
-+void margin_log_recvn(struct margin_recv *recv);
-+
-+/* Print full info from Receiver struct */
-+void margin_log_receiver(struct margin_recv *recv);
-+
-+/* Margining in progress log */
-+void margin_log_margining(struct margin_lanes_data arg);
++void margin_results_print_brief(struct margin_results *results, u8 recvs_n);
 +
  #endif
-diff --git a/lmr/margin.c b/lmr/margin.c
-index 57bef88..1f1fa2f 100644
---- a/lmr/margin.c
-+++ b/lmr/margin.c
-@@ -256,6 +256,7 @@ margin_test_lanes(struct margin_lanes_data arg)
-         }
- 
-       arg.steps_lane_done = steps_done;
-+      margin_log_margining(arg);
-     }
- 
-   for (int i = 0; i < arg.lanes_n; i++)
-@@ -286,9 +287,11 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
- 
-   results->recvn = recvn;
-   results->lanes_n = lanes_n;
-+  margin_log_recvn(&recv);
- 
-   if (!margin_check_ready_bit(dev->dev))
-     {
-+      margin_log("\nMargining Ready bit is Clear.\n");
-       results->test_status = MARGIN_TEST_READY_BIT;
-       return false;
-     }
-@@ -298,6 +301,7 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
-       recv.lane_reversal = true;
-       if (!read_params_internal(dev, recvn, recv.lane_reversal, &params))
-         {
-+          margin_log("\nError during caps reading.\n");
-           results->test_status = MARGIN_TEST_CAPS;
-           return false;
-         }
-@@ -315,6 +319,8 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
-   results->link_speed = dev->link_speed;
-   results->test_status = MARGIN_TEST_OK;
- 
-+  margin_log_receiver(&recv);
-+
-   results->lanes = xmalloc(sizeof(struct margin_res_lane) * lanes_n);
-   for (int i = 0; i < lanes_n; i++)
-     {
-@@ -324,6 +330,8 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
- 
-   if (args->run_margin)
-     {
-+      if (args->verbosity > 0)
-+        margin_log("\n");
-       struct margin_lanes_data lanes_data
-         = { .recv = &recv, .verbosity = args->verbosity, .steps_utility = args->steps_utility };
- 
-@@ -363,6 +371,8 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
-             }
-           lanes_done += use_lanes;
-         }
-+      if (args->verbosity > 0)
-+        margin_log("\n");
-       if (recv.lane_reversal)
-         {
-           for (int i = 0; i < lanes_n; i++)
-@@ -504,11 +514,14 @@ margin_test_link(struct margin_link *link, struct margin_args *args, u8 *recvs_n
-   u8 receivers_n = status ? args->recvs_n : 1;
-   u8 *receivers = args->recvs;
- 
-+  margin_log_link(link);
-+
-   struct margin_results *results = xmalloc(sizeof(*results) * receivers_n);
- 
-   if (!status)
-     {
-       results[0].test_status = MARGIN_TEST_ASPM;
-+      margin_log("\nCouldn't disable ASPM on the given Link.\n");
-     }
- 
-   if (status)
-diff --git a/lmr/margin_log.c b/lmr/margin_log.c
+diff --git a/lmr/margin_results.c b/lmr/margin_results.c
 new file mode 100644
-index 0000000..6833d1a
+index 0000000..5ee065d
 --- /dev/null
-+++ b/lmr/margin_log.c
-@@ -0,0 +1,135 @@
++++ b/lmr/margin_results.c
+@@ -0,0 +1,159 @@
 +/*
-+ *	The PCI Utilities -- Log margining process
++ *	The PCI Utilities -- Display/save margining results
 + *
 + *	Copyright (c) 2023 KNS Group LLC (YADRO)
 + *
@@ -204,129 +120,153 @@ index 0000000..6833d1a
 + *	SPDX-License-Identifier: GPL-2.0-or-later
 + */
 +
-+#include <stdarg.h>
 +#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
 +
 +#include "lmr.h"
 +
-+bool margin_global_logging = false;
-+bool margin_print_domain = true;
++enum lane_rating {
++  BAD = 0,
++  OKAY,
++  PERFECT,
++  WEIRD,
++  INIT,
++};
 +
-+void
-+margin_log(char *format, ...)
-+{
-+  va_list arg;
-+  va_start(arg, format);
-+  if (margin_global_logging)
-+    vprintf(format, arg);
-+  va_end(arg);
-+}
++static char *const grades[] = { "Bad", "Okay", "Perfect", "Weird" };
++static char *const sts_strings[] = { "NAK", "LIM", "THR" };
++static const double ui[] = { 62.5 / 100, 31.25 / 100 };
 +
-+void
-+margin_log_bdfs(struct pci_dev *down, struct pci_dev *up)
++static enum lane_rating
++rate_lane(double value, double min, double recommended, enum lane_rating cur_rate)
 +{
-+  if (margin_print_domain)
-+    margin_log("%x:%x:%x.%x -> %x:%x:%x.%x", down->domain, down->bus, down->dev, down->func,
-+               up->domain, up->bus, up->dev, up->func);
++  enum lane_rating res = PERFECT;
++  if (value < recommended)
++    res = OKAY;
++  if (value < min)
++    res = BAD;
++  if (cur_rate == INIT)
++    return res;
++  if (res < cur_rate)
++    return res;
 +  else
-+    margin_log("%x:%x.%x -> %x:%x.%x", down->bus, down->dev, down->func, up->bus, up->dev,
-+               up->func);
++    return cur_rate;
 +}
 +
-+void
-+margin_log_link(struct margin_link *link)
++static bool
++check_recv_weird(struct margin_results *results, double tim_min, double volt_min)
 +{
-+  margin_log("Link ");
-+  margin_log_bdfs(link->down_port.dev, link->up_port.dev);
-+  margin_log("\nNegotiated Link Width: %d\n", link->down_port.width);
-+  margin_log("Link Speed: %d.0 GT/s = Gen %d\n", (link->down_port.link_speed - 3) * 16,
-+             link->down_port.link_speed);
-+  margin_log("Available receivers: ");
-+  int receivers_n = 2 + 2 * link->down_port.retimers_n;
-+  for (int i = 1; i < receivers_n; i++)
-+    margin_log("Rx(%X) - %d, ", 10 + i - 1, i);
-+  margin_log("Rx(F) - 6\n");
-+}
++  bool result = true;
 +
-+void
-+margin_log_params(struct margin_params *params)
-+{
-+  margin_log("Independent Error Sampler: %d\n", params->ind_error_sampler);
-+  margin_log("Sample Reporting Method: %d\n", params->sample_report_method);
-+  margin_log("Independent Left and Right Timing Margining: %d\n", params->ind_left_right_tim);
-+  margin_log("Voltage Margining Supported: %d\n", params->volt_support);
-+  margin_log("Independent Up and Down Voltage Margining: %d\n", params->ind_up_down_volt);
-+  margin_log("Number of Timing Steps: %d\n", params->timing_steps);
-+  margin_log("Number of Voltage Steps: %d\n", params->volt_steps);
-+  margin_log("Max Timing Offset: %d\n", params->timing_offset);
-+  margin_log("Max Voltage Offset: %d\n", params->volt_offset);
-+  margin_log("Max Lanes: %d\n", params->max_lanes);
-+}
-+
-+void
-+margin_log_recvn(struct margin_recv *recv)
-+{
-+  margin_log("\nReceiver = Rx(%X)\n", 10 + recv->recvn - 1);
-+}
-+
-+void
-+margin_log_receiver(struct margin_recv *recv)
-+{
-+  margin_log("\nError Count Limit = %d\n", recv->error_limit);
-+  margin_log("Parallel Lanes: %d\n\n", recv->parallel_lanes);
-+
-+  margin_log_params(recv->params);
-+
-+  if (recv->lane_reversal)
++  struct margin_res_lane *lane;
++  for (int i = 0; i < results->lanes_n && result; i++)
 +    {
-+      margin_log("\nWarning: device uses Lane Reversal.\n");
-+      margin_log("However, utility uses logical lane numbers in arguments and for logging.\n");
-+    }
-+}
-+
-+void
-+margin_log_margining(struct margin_lanes_data arg)
-+{
-+  char *ind_dirs[] = { "Up", "Down", "Left", "Right" };
-+  char *non_ind_dirs[] = { "Voltage", "", "Timing" };
-+
-+  if (arg.verbosity > 0)
-+    {
-+      margin_log("\033[2K\rMargining - ");
-+      if (arg.ind)
-+        margin_log("%s", ind_dirs[arg.dir]);
-+      else
-+        margin_log("%s", non_ind_dirs[arg.dir]);
-+
-+      u8 lanes_counter = 0;
-+      margin_log(" - Lanes ");
-+      margin_log("[%d", arg.lanes_numbers[0]);
-+      for (int i = 1; i < arg.lanes_n; i++)
++      lane = &(results->lanes[i]);
++      if (lane->steps[TIM_LEFT] * results->tim_coef != tim_min)
++        result = false;
++      if (results->params.ind_left_right_tim
++          && lane->steps[TIM_RIGHT] * results->tim_coef != tim_min)
++        result = false;
++      if (results->params.volt_support)
 +        {
-+          if (arg.lanes_numbers[i] - 1 == arg.lanes_numbers[i - 1])
-+            {
-+              lanes_counter++;
-+              if (lanes_counter == 1)
-+                margin_log("-");
-+              if (i + 1 == arg.lanes_n)
-+                margin_log("%d", arg.lanes_numbers[i]);
-+            }
-+          else
-+            {
-+              if (lanes_counter > 0)
-+                margin_log("%d", arg.lanes_numbers[i - 1]);
-+              margin_log(",%d", arg.lanes_numbers[i]);
-+              lanes_counter = 0;
-+            }
++          if (lane->steps[VOLT_UP] * results->volt_coef != volt_min)
++            result = false;
++          if (results->params.ind_up_down_volt
++              && lane->steps[VOLT_DOWN] * results->volt_coef != volt_min)
++            result = false;
 +        }
-+      margin_log("]");
++    }
++  return result;
++}
 +
-+      u64 lane_eta_s = (arg.steps_lane_total - arg.steps_lane_done) * MARGIN_STEP_MS / 1000;
-+      u64 total_eta_s = *arg.steps_utility * MARGIN_STEP_MS / 1000 + lane_eta_s;
-+      margin_log(" - ETA: %3ds Steps: %3d Total ETA: %3dm %2ds", lane_eta_s, arg.steps_lane_done,
-+                 total_eta_s / 60, total_eta_s % 60);
++void
++margin_results_print_brief(struct margin_results *results, u8 recvs_n)
++{
++  struct margin_res_lane *lane;
++  struct margin_results *res;
++  struct margin_params params;
 +
-+      fflush(stdout);
++  enum lane_rating lane_rating;
++
++  u8 link_speed;
++
++  char *no_test_msgs[] = { "",
++                           "Margining Ready bit is Clear",
++                           "Error during caps reading",
++                           "Margining prerequisites are not satisfied (16/32 GT/s, D0)",
++                           "Invalid lanes specified with arguments",
++                           "Invalid receivers specified with arguments",
++                           "Couldn't disable ASPM" };
++
++  for (int i = 0; i < recvs_n; i++)
++    {
++      res = &(results[i]);
++      params = res->params;
++      link_speed = res->link_speed - 4;
++
++      if (res->test_status != MARGIN_TEST_OK)
++        {
++          if (res->test_status < MARGIN_TEST_PREREQS)
++            printf("Rx(%X) -", 10 + res->recvn - 1);
++          printf(" Couldn't run test (%s)\n\n", no_test_msgs[res->test_status]);
++          continue;
++        }
++
++      if (res->lane_reversal)
++        printf("Rx(%X) - Lane Reversal\n", 10 + res->recvn - 1);
++
++      if (check_recv_weird(res, MARGIN_TIM_MIN, MARGIN_VOLT_MIN))
++        lane_rating = WEIRD;
++      else
++        lane_rating = INIT;
++
++      for (u8 j = 0; j < res->lanes_n; j++)
++        {
++          lane = &(res->lanes[j]);
++          double left_ui = lane->steps[TIM_LEFT] * res->tim_coef;
++          double right_ui = lane->steps[TIM_RIGHT] * res->tim_coef;
++          double up_volt = lane->steps[VOLT_UP] * res->volt_coef;
++          double down_volt = lane->steps[VOLT_DOWN] * res->volt_coef;
++
++          if (lane_rating != WEIRD)
++            {
++              lane_rating = rate_lane(left_ui, MARGIN_TIM_MIN, MARGIN_TIM_RECOMMEND, INIT);
++              if (params.ind_left_right_tim)
++                lane_rating
++                  = rate_lane(right_ui, MARGIN_TIM_MIN, MARGIN_TIM_RECOMMEND, lane_rating);
++              if (params.volt_support)
++                {
++                  lane_rating = rate_lane(up_volt, MARGIN_VOLT_MIN, MARGIN_VOLT_MIN, lane_rating);
++                  if (params.ind_up_down_volt)
++                    lane_rating
++                      = rate_lane(down_volt, MARGIN_VOLT_MIN, MARGIN_VOLT_MIN, lane_rating);
++                }
++            }
++
++          printf("Rx(%X) Lane %2d - %s\t", 10 + res->recvn - 1, lane->lane, grades[lane_rating]);
++          if (params.ind_left_right_tim)
++            printf("L %4.1f%% UI - %5.2fps - %2dst %s, R %4.1f%% UI - %5.2fps - %2dst %s", left_ui,
++                   left_ui * ui[link_speed], lane->steps[TIM_LEFT],
++                   sts_strings[lane->statuses[TIM_LEFT]], right_ui, right_ui * ui[link_speed],
++                   lane->steps[TIM_RIGHT], sts_strings[lane->statuses[TIM_RIGHT]]);
++          else
++            printf("T %4.1f%% UI - %5.2fps - %2dst %s", left_ui, left_ui * ui[link_speed],
++                   lane->steps[TIM_LEFT], sts_strings[lane->statuses[TIM_LEFT]]);
++          if (params.volt_support)
++            {
++              if (params.ind_up_down_volt)
++                printf(", U %5.1f mV - %3dst %s, D %5.1f mV - %3dst %s", up_volt,
++                       lane->steps[VOLT_UP], sts_strings[lane->statuses[VOLT_UP]], down_volt,
++                       lane->steps[VOLT_DOWN], sts_strings[lane->statuses[VOLT_DOWN]]);
++              else
++                printf(", V %5.1f mV - %3dst %s", up_volt, lane->steps[VOLT_UP],
++                       sts_strings[lane->statuses[VOLT_UP]]);
++            }
++          printf("\n");
++        }
++      printf("\n");
 +    }
 +}
 -- 
