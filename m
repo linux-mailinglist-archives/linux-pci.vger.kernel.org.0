@@ -1,169 +1,290 @@
-Return-Path: <linux-pci+bounces-1437-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1438-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB2E381EEFD
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 13:40:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A850881EF0A
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 13:43:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89C281F2235E
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 12:40:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6046E281BC9
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 12:43:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1643D45C0D;
-	Wed, 27 Dec 2023 12:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D429844C71;
+	Wed, 27 Dec 2023 12:43:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0tt9ZmqE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYp7PIIS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BF4446D2;
-	Wed, 27 Dec 2023 12:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1703680750;
-	bh=Cdexw2n4HbQxTZM8qiQfp93a3YFILA6CwYD1mIyyWME=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=0tt9ZmqETf0TBxM2J2UgjYJ8+xcebCzI4pqoSgsv3BuExqU1j8K+cYcT6dsVJ0nq4
-	 ckS+XOL7dOO2OGUhPH9IIQR8qo5IFunanMt/IqTeS5evLbOGHnVqhtALgkEds0ZGRl
-	 CKE4LmdqBgwErQAKBV8x16y8+t0hu46j/EelxK01G7349ApzDUAXOR/4RnvJhYCoJz
-	 GT2DDcg3/AOARyp1I5xqPpVchcsaf4tJ+rMoIRIIGzRvEF4UDQsl+fp0l+UwShRj0e
-	 ppbf1XUFggpGPjpVQ4C3uix5i/HmGQ9cK1SaCBlC4yZIUNVah/WqiuCg2VUU+hx5/S
-	 Njam0JfivD26g==
-Received: from localhost.localdomain (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 14E0937813EA;
-	Wed, 27 Dec 2023 12:39:04 +0000 (UTC)
-From: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: kernelci@lists.linux.dev,
-	kernel@collabora.com,
-	Tim Bird <Tim.Bird@sony.com>,
-	linux-pci@vger.kernel.org,
-	David Gow <davidgow@google.com>,
-	linux-kselftest@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B232A446C6;
+	Wed, 27 Dec 2023 12:43:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A69FC433C7;
+	Wed, 27 Dec 2023 12:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703681001;
+	bh=fG3U9LgjzHMiSiELkBGqIA/RCiY7QC8U+5CJV01wDKk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IYp7PIISHXbUtOUBLx7LALbsOVeEHZIOhDh3/kcTf/6PDJQKihC8Oh2nG4pNyAe+S
+	 PrT6EZpdAAwtlUS6tVg/hcx2ZQGVijt9bgAns8GbpV+n50CvvBxftlCSNyIkKX2Gna
+	 A6wlYHu4Xp8GHvIXww3W/nOHnQJGABexWJGNMrvfdsSzHj1nQjKHNWx0dQMqntJ9EC
+	 2mW/YZe8tunQtrNvu5AIMPgmr6Rgt/x1nJzGOv+Cw57VLrT885u/uD0tWMgTb7op2S
+	 +blyurKWSClpvWSTcw81KgmR29lKw7xUyzvKWXC17iQu9vVQZf40nSByF//oNkUuK+
+	 FuB6P/5YMzhdQ==
+Date: Wed, 27 Dec 2023 13:43:13 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh+dt@kernel.org>,
-	Doug Anderson <dianders@chromium.org>,
-	linux-usb@vger.kernel.org,
-	Saravana Kannan <saravanak@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	devicetree@vger.kernel.org,
-	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 3/3] kselftest: devices: Add sample board file for XPS 13 9300
-Date: Wed, 27 Dec 2023 09:35:02 -0300
-Message-ID: <20231227123643.52348-4-nfraprado@collabora.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231227123643.52348-1-nfraprado@collabora.com>
-References: <20231227123643.52348-1-nfraprado@collabora.com>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>, tglx@linutronix.de
+Subject: Re: [PATCH v13 15/21] PCI: microchip: Add event irqchip field to
+ host port and add PLDA irqchip
+Message-ID: <ZYwb4UQVoLDZw7kf@lpieralisi>
+References: <20231214072839.2367-1-minda.chen@starfivetech.com>
+ <20231214072839.2367-16-minda.chen@starfivetech.com>
+ <8c417157-8884-4e91-8912-0344e71f82c2@starfivetech.com>
+ <ZYRaqYTcxWJGwWG8@lpieralisi>
+ <025408dd-cc00-4744-8a41-cbd18209ed8b@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <025408dd-cc00-4744-8a41-cbd18209ed8b@starfivetech.com>
 
-Add a sample board file describing the file's format and with the list
-of devices expected to be probed on the XPS 13 9300 machine as an
-example x86 platform.
+[+Thomas]
 
-Test output:
+On Fri, Dec 22, 2023 at 07:18:48PM +0800, Minda Chen wrote:
+> 
+> 
+> On 2023/12/21 23:32, Lorenzo Pieralisi wrote:
+> > On Thu, Dec 21, 2023 at 06:56:22PM +0800, Minda Chen wrote:
+> >> 
+> >> 
+> >> On 2023/12/14 15:28, Minda Chen wrote:
+> >> > PolarFire PCIE event IRQs includes PLDA local interrupts and PolarFire
+> >> > their own IRQs. PolarFire PCIe event irq_chip ops using an event_desc to
+> >> > unify different IRQ register addresses. On PLDA sides, PLDA irqchip codes
+> >> > only require to set PLDA local interrupt register. So the PLDA irqchip ops
+> >> > codes can not be extracted from PolarFire codes.
+> >> > 
+> >> > To support PLDA its own event IRQ process, implements PLDA irqchip ops and
+> >> > add event irqchip field to struct pcie_plda_rp.
+> >> > 
+> >> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> >> > ---
+> >> >  .../pci/controller/plda/pcie-microchip-host.c | 65 ++++++++++++++++++-
+> >> >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
+> >> >  2 files changed, 67 insertions(+), 1 deletion(-)
+> >> > 
+> >> Hi Conor
+> >>    Could you take time to review this patch?  For I using event irq chip instead of event ops and the whole patch have been changed.  I think it's better 
+> >>    And I added the implementation of PLDA event irqchip  and make it easier to claim the necessity of the modification.
+> >>    If you approve this, I will add back the review tag. Thanks
+> >> 
+> >> Hi Lorenzo
+> >>    Have you reviewed this patch？ Does the commit message and the codes are can be approved ？Thanks
+> >> 
+> > 
+> > Please wrap the lines at 75 columns in length.
+> > 
+> OK
+> > I have not reviewed but I am still struggling to understand the
+> > commit log, I apologise, I can try to review the series and figure
+> > out what the patch is doing but I would appreciate if commits logs
+> > could be made easier to parse.
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> 
+> The commit message it is not good.
+> 
+> I draw a graph about the PCIe global event interrupt domain
+> (related to patch 10- 16).
+> Actually all these interrupts patches are for extracting the common 
+> PLDA codes to pcie-plda-host.c and do not change microchip's codes logic.
 
-TAP version 13
-Using board file: boards/Dell Inc.,XPS 13 9300.yaml
-1..22
-ok 1 /pci-controller/14.0/usb2-controller/9/camera.device
-ok 2 /pci-controller/14.0/usb2-controller/9/camera.0.driver
-ok 3 /pci-controller/14.0/usb2-controller/9/camera.1.driver
-ok 4 /pci-controller/14.0/usb2-controller/9/camera.2.driver
-ok 5 /pci-controller/14.0/usb2-controller/9/camera.3.driver
-ok 6 /pci-controller/14.0/usb2-controller/10/bluetooth.device
-ok 7 /pci-controller/14.0/usb2-controller/10/bluetooth.0.driver
-ok 8 /pci-controller/14.0/usb2-controller/10/bluetooth.1.driver
-ok 9 /pci-controller/2.0/gpu.device
-ok 10 /pci-controller/2.0/gpu.driver
-ok 11 /pci-controller/4.0/thermal.device
-ok 12 /pci-controller/4.0/thermal.driver
-ok 13 /pci-controller/12.0/sensors.device
-ok 14 /pci-controller/12.0/sensors.driver
-ok 15 /pci-controller/14.3/wifi.device
-ok 16 /pci-controller/14.3/wifi.driver
-ok 17 /pci-controller/1d.0/0.0/ssd.device
-ok 18 /pci-controller/1d.0/0.0/ssd.driver
-ok 19 /pci-controller/1d.7/0.0/sdcard-reader.device
-ok 20 /pci-controller/1d.7/0.0/sdcard-reader.driver
-ok 21 /pci-controller/1f.3/audio.device
-ok 22 /pci-controller/1f.3/audio.driver
-Totals: pass:22 fail:0 xfail:0 xpass:0 skip:0 error:0
+s/codes/code (please apply this to the the full series)
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+I will have a look at the code but I can't rewrite the commit log myself
+(it does not scale I am afraid), as it stands I don't understand it and
+that's a problem, I am sorry but that's important.
 
----
+I added Thomas (you should CC him for irqchip [only] changes) if he
+has time to review these irqchip changes to make sure they are proper.
 
-Changes in v3:
-- Added this commit
+Thanks,
+Lorenzo
 
- .../devices/boards/Dell Inc.,XPS 13 9300.yaml | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml
-
-diff --git a/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml
-new file mode 100644
-index 000000000000..ff932eb19f0b
---- /dev/null
-+++ b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml	
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# This is the device definition for the XPS 13 9300.
-+# The filename "Dell Inc.,XPS 13 9300" was chosen following the format
-+# "Vendor,Product", where Vendor comes from
-+# /sys/devices/virtual/dmi/id/sys_vendor, and Product comes from
-+# /sys/devices/virtual/dmi/id/product_name.
-+#
-+# See google,spherion.yaml for more information.
-+#
-+- type: pci-controller
-+  # This machine has a single PCI host controller so it's valid to not have any
-+  # key to identify the controller. If it had more than one controller, the UID
-+  # of the controller from ACPI could be used to distinguish as follows:
-+  #acpi-uid: 0
-+  devices:
-+    - path: 14.0
-+      type: usb-controller
-+      usb-version: 2
-+      devices:
-+        - path: 9
-+          name: camera
-+          interfaces: [0, 1, 2, 3]
-+        - path: 10
-+          name: bluetooth
-+          interfaces: [0, 1]
-+    - path: 2.0
-+      name: gpu
-+    - path: 4.0
-+      name: thermal
-+    - path: 12.0
-+      name: sensors
-+    - path: 14.3
-+      name: wifi
-+    - path: 1d.0/0.0
-+      name: ssd
-+    - path: 1d.7/0.0
-+      name: sdcard-reader
-+    - path: 1f.3
-+      name: audio
--- 
-2.43.0
-
+>             +----------------------------------------------------------+
+>             |    microchip  Global event interrupt domain              |
+>             +-----------------------------------+-----------+----------+
+>             |                                   | microchip | PLDA     |
+>             |                                   | event num |(StarFive)|
+>             |                                   |           |event num |
+>             +-----------------------------------+-----------+----------+
+>             |                                   | 0         |          |
+>             |                                   |           |          |
+> (mc pcie    |microchip platform event interrupt |           |          |
+> int line)   |                                   |           |          |
+> ------------|                                   |           |          |
+>             |                                   |10         |          |
+>             +-----------------------------------+-----------+----------+
+>             | PLDA host DMA interrupt           |11         |          |
+>             | (int number is not fixed, defined |           |          |
+>             |  by vendor)                       |14         |          |
+>          +--+-----------------------------------+---------- +----------+-+
+>          |  |  PLDA event interrupt             |15         |0         | |
+>          |  |  (int number is fixed)            |           |          | |
+> ---------|--|                                   |           |          | |
+> (Starfive|  |                                   |           |          | |
+> pcie int |  |   +------------------+            |           |          | |
+> line)    |  |   |INTx event domain |            |           |          | |
+>          |  |   +------------------+            |           |          | |
+>          |  |                                   |           |          | |
+>          |  |   +------------------+            |           |          | |
+>          |  |   |MSI event domain  |            |           |          | |
+>          |  |   +------------------+            |           |          | |
+>          |  |                                   |27         |12        | |
+>          |  +---------------------------------+-+-----------+----------+ |
+>          | extract PLDA event part to common PLDA file.                  |
+>          +---------------------------------------------------------------+
+> 
+> 
+> >> > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+> >> > index fd0d92c3d03f..ff40c1622173 100644
+> >> > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+> >> > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+> >> > @@ -771,6 +771,63 @@ static struct irq_chip mc_event_irq_chip = {
+> >> >  	.irq_unmask = mc_unmask_event_irq,
+> >> >  };
+> >> > > +static u32 plda_hwirq_to_mask(int hwirq)
+> >> > +{
+> >> > +	u32 mask;
+> >> > +
+> >> > +	if (hwirq < EVENT_PM_MSI_INT_INTX)
+> >> > +		mask = BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
+> >> > +	else if (hwirq == EVENT_PM_MSI_INT_INTX)
+> >> > +		mask = PM_MSI_INT_INTX_MASK;
+> >> > +	else
+> >> > +		mask = BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
+> >> > +
+> >> > +	return mask;
+> >> > +}
+> >> > +
+> >> > +static void plda_ack_event_irq(struct irq_data *data)
+> >> > +{
+> >> > +	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+> >> > +
+> >> > +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
+> >> > +		       port->bridge_addr + ISTATUS_LOCAL);
+> >> > +}
+> >> > +
+> >> > +static void plda_mask_event_irq(struct irq_data *data)
+> >> > +{
+> >> > +	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+> >> > +	u32 mask, val;
+> >> > +
+> >> > +	mask = plda_hwirq_to_mask(data->hwirq);
+> >> > +
+> >> > +	raw_spin_lock(&port->lock);
+> >> > +	val = readl_relaxed(port->bridge_addr + IMASK_LOCAL);
+> >> > +	val &= ~mask;
+> >> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
+> >> > +	raw_spin_unlock(&port->lock);
+> >> > +}
+> >> > +
+> >> > +static void plda_unmask_event_irq(struct irq_data *data)
+> >> > +{
+> >> > +	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+> >> > +	u32 mask, val;
+> >> > +
+> >> > +	mask = plda_hwirq_to_mask(data->hwirq);
+> >> > +
+> >> > +	raw_spin_lock(&port->lock);
+> >> > +	val = readl_relaxed(port->bridge_addr + IMASK_LOCAL);
+> >> > +	val |= mask;
+> >> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
+> >> > +	raw_spin_unlock(&port->lock);
+> >> > +}
+> >> > +
+> >> > +static struct irq_chip plda_event_irq_chip = {
+> >> > +	.name = "PLDA PCIe EVENT",
+> >> > +	.irq_ack = plda_ack_event_irq,
+> >> > +	.irq_mask = plda_mask_event_irq,
+> >> > +	.irq_unmask = plda_unmask_event_irq,
+> >> > +};
+> >> > +
+> >> >  static const struct plda_event_ops plda_event_ops = {
+> >> >  	.get_events = plda_get_events,
+> >> >  };
+> >> > @@ -778,7 +835,9 @@ static const struct plda_event_ops plda_event_ops = {
+> >> >  static int plda_pcie_event_map(struct irq_domain *domain, unsigned int irq,
+> >> >  			       irq_hw_number_t hwirq)
+> >> >  {
+> >> > -	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq);
+> >> > +	struct plda_pcie_rp *port = (void *)domain->host_data;
+> >> > +
+> >> > +	irq_set_chip_and_handler(irq, port->event_irq_chip, handle_level_irq);
+> >> >  	irq_set_chip_data(irq, domain->host_data);
+> >> >  
+> >> >  	return 0;
+> >> > @@ -963,6 +1022,9 @@ static int plda_init_interrupts(struct platform_device *pdev,
+> >> >  	if (!port->event_ops)
+> >> >  		port->event_ops = &plda_event_ops;
+> >> >  
+> >> > +	if (!port->event_irq_chip)
+> >> > +		port->event_irq_chip = &plda_event_irq_chip;
+> >> > +
+> >> >  	ret = plda_pcie_init_irq_domains(port);
+> >> >  	if (ret) {
+> >> >  		dev_err(dev, "failed creating IRQ domains\n");
+> >> > @@ -1040,6 +1102,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
+> >> >  		return ret;
+> >> >  
+> >> >  	port->plda.event_ops = &mc_event_ops;
+> >> > +	port->plda.event_irq_chip = &mc_event_irq_chip;
+> >> >  
+> >> >  	/* Address translation is up; safe to enable interrupts */
+> >> >  	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
+> >> > diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
+> >> > index dd8bc2750bfc..24ac50c458dc 100644
+> >> > --- a/drivers/pci/controller/plda/pcie-plda.h
+> >> > +++ b/drivers/pci/controller/plda/pcie-plda.h
+> >> > @@ -128,6 +128,8 @@
+> >> >   * DMA end : reserved for vendor implement
+> >> >   */
+> >> >  
+> >> > +#define PM_MSI_TO_MASK_OFFSET			19
+> >> > +
+> >> >  struct plda_pcie_rp;
+> >> >  
+> >> >  struct plda_event_ops {
+> >> > @@ -150,6 +152,7 @@ struct plda_pcie_rp {
+> >> >  	raw_spinlock_t lock;
+> >> >  	struct plda_msi msi;
+> >> >  	const struct plda_event_ops *event_ops;
+> >> > +	const struct irq_chip *event_irq_chip;
+> >> >  	void __iomem *bridge_addr;
+> >> >  	int num_events;
+> >> >  };
 
