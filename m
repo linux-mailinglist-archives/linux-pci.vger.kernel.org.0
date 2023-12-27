@@ -1,265 +1,371 @@
-Return-Path: <linux-pci+bounces-1468-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1469-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40E5781F164
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 19:32:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 448D181F166
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 19:32:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA8051F230D9
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 18:32:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC61F1F23076
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 18:32:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3212D47A4B;
-	Wed, 27 Dec 2023 18:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A1A1E4A3;
+	Wed, 27 Dec 2023 18:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dik2c5+l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VjhC+pN4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2044.outbound.protection.outlook.com [40.107.104.44])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7915C4CB52;
-	Wed, 27 Dec 2023 18:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h5tahfWqbujAFfY9r4pxAesioXDpe6bS+NDprALCZ6TSnQ89oG/d0WImnd0egeDcfMti53WPRzj/l/797FG9g7yWmYbYv8pzZqNg1yWYMMD9NJAXAIwR7tKYz4ZyTV4auW+Bu+R+aJbQrtVt6bv+JtZ83P36Qu4Vgmo5jC/GpiSYudlALvlEnNyCOlfN2L28PEC2RvUjm0Nt0bjzwtNqth87uD04gOoByTeX7cl6e2pITET0w2jn6NHYzMniTeOuPJZvuArGmnQPuvcDrpQf7wHPfAfGwgYkefbLS8gZHNufEHcN5kJlwZtcctH4+hFY78hHZoGwBfkFoPGHBf2QKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q8vo+UQ9KtGvOP++Or5qDRIkrFEKvxts5Qo6V24QQ9o=;
- b=lyPxgh9XgJ8yP5T9FNNh5l8kHcTTJj1/VNF2OK/m1k/k83RVAONBxthvlCSZb4Vi/UY7OHgfufD9ILuqmzvWWi2M13wVxYX0WHy0PMzmcIbHijmdpmFDFgkh6M6y5Vi6WpbMUFw8y3ekSGafwfWYm0KWD4x6j+N8/Xv1K1t56RpSimzpA8Up/l0OFHUD8kQTZt3GFQ0gt5wjGI0oIWygH/CCS2WBcsRtpz0KSkW+MGpggDVth3CyXomgsmNy8XEMKasDfydXRyKAIf/njgqW5GbX81TwqxdF+BmoMFoQTmkd4Calw0TOnI8Xh8N73FyN2RM0TgnYacVc9Yrr3cIMTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q8vo+UQ9KtGvOP++Or5qDRIkrFEKvxts5Qo6V24QQ9o=;
- b=dik2c5+lvc7D/sNIx/LbnKs5mJxhTZv7QGyAVZrPHVx2AcNaai5u9EIqokWqBBppiGPxs9w/GuSnsulp9HQIBIWhQ5X8Th3T0naT+pDRh4V1tupPLPt0enja+mFOKkvafHfxECCJ6LWOpFJMxo/qodIw5sjI5ltfwWpqeGWcvLo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by PAXPR04MB8271.eurprd04.prod.outlook.com (2603:10a6:102:1ca::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Wed, 27 Dec
- 2023 18:29:15 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::95f5:5118:258f:ee40]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::95f5:5118:258f:ee40%7]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
- 18:29:14 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: krzysztof.kozlowski@linaro.org
-Cc: Frank.Li@nxp.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	festevam@gmail.com,
-	helgaas@kernel.org,
-	hongxing.zhu@nxp.com,
-	imx@lists.linux.dev,
-	kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org,
-	kw@linux.com,
-	l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	s.hauer@pengutronix.de,
-	shawnguo@kernel.org
-Subject: [PATCH v7 16/16] PCI: imx6: Add iMX95 Endpoint (EP) function support
-Date: Wed, 27 Dec 2023 13:27:27 -0500
-Message-Id: <20231227182727.1747435-17-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231227182727.1747435-1-Frank.Li@nxp.com>
-References: <20231227182727.1747435-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ2PR07CA0018.namprd07.prod.outlook.com
- (2603:10b6:a03:505::22) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344731DDF1;
+	Wed, 27 Dec 2023 18:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703701963; x=1735237963;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9VFs9Py1fWtW8BiAoYarPCeYqlsuHLx/ug1nE53tAxo=;
+  b=VjhC+pN48wIkzxZbm2jc3gFQQLuYNYPbvZYOU2SMYJzrg2YPFMgc9WS7
+   yp2gUR6IBwGpgYo3swgKsqFv8A8ydIkxHOJnyi1Emc8rFpjr4uabovHBQ
+   pMu+PA+Liid1V3CfhVVivncsYIUknoQxjRC6dhvVGHGEYwEmT4VvqROdW
+   1xhhfAjN6tYnr+gEwh/z2UeTOGqA9EO00DWPf2z1XlooN41kyusnS4x9s
+   cQ6AGdgqNc5oPWCPqTZsxb9MhWCYrf00Uc+qfCtsyWX/wEzrzXGEbcWVr
+   51PMjkNMFUfaGQHXu+TB0SPSuZL24Lx0T/B+JqPkrPxFImO5ZT0TGMpTy
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="482653320"
+X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
+   d="scan'208";a="482653320"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 10:32:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="844225088"
+X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
+   d="scan'208";a="844225088"
+Received: from hrmarapi-mobl1.ger.corp.intel.com ([10.249.35.233])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 10:32:40 -0800
+Date: Wed, 27 Dec 2023 20:32:38 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, 
+    linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v4] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+In-Reply-To: <20231227072049.2281764-1-shinichiro.kawasaki@wdc.com>
+Message-ID: <5e9040b-caba-463d-c260-a8425736438@linux.intel.com>
+References: <20231227072049.2281764-1-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PAXPR04MB8271:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90c2cc65-335d-421b-fc67-08dc0709ba49
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	vCt3+gXVP18Qy50gV9C9icewQCdaLpjt7Cie4XYDQKAKqsGCac8YCkzuujJb2ZxjR+Be8E853oIkGIaXQsm+2ZJochgSuMhG8/ySnf+emYpwvbtB1+s+1Poy8R4I6ItR6KPexwHMJehJ6TV146dPWj3xC1MXGVIZEJGA0QPDNX8bW/i1GxJ4xO34x3Huk7zgUugWBz08HG7mGmyWaq9HnURwQ0OdBKk/T9fnHlggBIHcJ6Xd8u4NTsRAr9oFULOtciCvJRaSiN12xBmRF4onHrLOLbnM8k/VOk3Y4/g8jPJQ4oRaIf30djd4aBaOxv5yoQWN3pqXee1sf/a6qnwiClni4Lny+nTqZDH9RJekjk4+jODpD8EHrK879MBnEx+81lNglnP2wfdRUHmajopKLqfuhwXxND0MKmMfBQRIs0qjdOiJh3g4c2+hIQWWUdiYOKwbW6taxsQFHGQf0HahkF6eqFBoQWFZbicBozG5COoily7qs+Ysj8JrnIUI2TXl8mvGeLFEMAdx5KSp5BIPGVfUOQqh4HWklCCXZfoIFeGpCDbfEtGyCSKIEOnrqqXwztkOxaZF7tgJDVRwM1nFZWm05v3AMYSKK6dUpcT0W9uWNhfhCIf939jUvx2R6OvR
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(396003)(136003)(346002)(376002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(36756003)(52116002)(6666004)(6512007)(6916009)(6506007)(6486002)(66946007)(66556008)(66476007)(86362001)(38350700005)(26005)(38100700002)(1076003)(41300700001)(2616005)(2906002)(5660300002)(7416002)(478600001)(4326008)(316002)(8676002)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BGDhlxISj9Qg/Mi2OHKaySCVE+5YTKOjxQlH3g6Z83YoeqzUTxAdtrFiwjqW?=
- =?us-ascii?Q?hzYfhf9Jati2A7vU+h65ccqzeXE094qVsdrOr5trHyU6fV9w79BDN29b8rx6?=
- =?us-ascii?Q?29sL3WYKpGkAbjYc+rpd0olV+5NEI1UhTxBJrzbf4XlmsGxK92rsqJ2pgLfM?=
- =?us-ascii?Q?FIgz24p7RhjrNQTJ/v/0JekNOFU4ejJ2Av0ZlqUOX4H3tpJrmWxjgmchDiP7?=
- =?us-ascii?Q?htNq43O81ywO6F8JsMq5rM6gynEedGgsgRF5LMyIZ9XqTrlMMtGaMAUHorcW?=
- =?us-ascii?Q?FkNEEma6Z07ZuQwdNEZlsXWL4IxlEBbmfvOU6KW9ynd+el8LI+4hxwfcLlDF?=
- =?us-ascii?Q?gQ/ChWNV1tdC6AthvhquRLrJgp0QsoWiSKB7dLku5eS/0gChJI32/JT5Ph/Q?=
- =?us-ascii?Q?l4OuGwEQZ3lcI0qt1516r5W5q/6C09TpfCmE/ciOqEbuy7KkRK9kubXyigeu?=
- =?us-ascii?Q?cNxO/AZwR2RQx0LbA1YCuJTl+dIUs8dpGDByT7Aeu78Xvk/bVJVlNkBcoMif?=
- =?us-ascii?Q?WXlqVMKnYiabRPPzGM6a384nYaN/n0/aCtG9aig0GkiPu7fFxr2uZxvSxShx?=
- =?us-ascii?Q?mZbyzbT6ZKeycFkUnw8K/JmWEg4wi6xHhgMtzJAtuEYGTW8eLfbr/cdaMq0G?=
- =?us-ascii?Q?haHW8CD7ViuMcrdeRE0SLNCmxF+IOXFeUyFi5r4B1+jZUk8g9h9kCMXwX0Rr?=
- =?us-ascii?Q?dVDMqZ3visPqbjXBDaFbCGUiJyv3CLdf9P/UjU22PbwHnar1g/HXvXV70vn0?=
- =?us-ascii?Q?9t6F+QHLVSRS+t83BShhJIJZIilYd5708HzB6iw5F1xYmUWIHNFAFiMTuPuV?=
- =?us-ascii?Q?JXaTKUpmHye1xYV1yQtu+pSA/9Udcb/6j5WKOOBkrd8DehKBhGseo/3+5IQ5?=
- =?us-ascii?Q?fmm1l+Sgj0pYJ6C0updBU2lvByotCgiGHkZwzDlAPeBwFaQ/SaWTsWmLXIDf?=
- =?us-ascii?Q?jbR4wiomjiUWyKHQwlJN7SDWkoI7og2Acf+xrDviXHaL6LCoYEp9r49mreJX?=
- =?us-ascii?Q?6+k7c4hJJj8/e/Dp/JkUYWlcxSZHunvvDFUIfGHTquHfH5zkW+YpOKcFJHyW?=
- =?us-ascii?Q?75B+9qV1A1qVGYtKhyRCOrcShmoQGZPswq8FsOwpJnkSzKFtPvyzptQcvlgK?=
- =?us-ascii?Q?okXmufQ+m3NMIyfZjbMfOzX2N3gw2nIJr8YZK6X/f/Cx4gLcuomC2BSoLvHG?=
- =?us-ascii?Q?x+yW65XYXd8R4chFmfp8ayGQmc1cEqCEp7r3ysOUbthXAn+aEBtUOcwFnOgH?=
- =?us-ascii?Q?Er00z+s8wiKQkmp9mAHdbo+/8oUyXHFQmCDpYJ7zjUJkaEV56LVVYenh0uRg?=
- =?us-ascii?Q?qm6EGUkArM1/8hBAYZXSKea6P4tvuNBjkb3ry6q+0MnwvERYmS8IvC39Z362?=
- =?us-ascii?Q?RGAxEHZ/gJMP0lPH/pA/D/0J1X7UBo3cPAVlVi0bD3V5nJA4kufO2iIJw0Vj?=
- =?us-ascii?Q?9npw1kbDVWw+Uq4FWiuZ4TaChaASghvsvVSyZoTl5kwCgYJMHTfLtmErqX1+?=
- =?us-ascii?Q?wARO/is/6y6G4z0ZNcKYswUEUPuVKhBZxghWAoAacIdiJJqLDIcFAynBL++R?=
- =?us-ascii?Q?AOqwuOptmiAhjJM7Wvw=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90c2cc65-335d-421b-fc67-08dc0709ba49
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 18:29:14.2933
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nBzqDje0MZ7S9t+ou6A/REfesmugsM5eLq7YJntk1dFAd5uuZJbb/MsX0r5Vi5GsGeFUzyFoF20l/pBX8YxDng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8271
+Content-Type: text/plain; charset=US-ASCII
 
-Add iMX95 EP function support and add 64bit address support. Internal bus
-bridge for PCI support 64bit dma address in iMX95. So set call
-dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)).
+On Wed, 27 Dec 2023, Shin'ichiro Kawasaki wrote:
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
+> 
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
+> 
+> Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> ---
+> This patch reflects discussions held at the Link tag. I confirmed this patch
+> fixes the problem using a system with i2c_i801 device, building i2c_i801
+> module as both built-in and loadable. Reviews will be appreicated.
 
-Notes:
-    Change from v3 to v4
-    - change align to 4k for imx95
-    Change from v1 to v3
-    - new patches at v3
+Why no Fixes tag?
 
- drivers/pci/controller/dwc/pci-imx6.c | 45 +++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+> Changes from v3:
+> * Modified p2sb_valid_resource() to return boolean
+> 
+> Changes from v2:
+> * Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+> * Reflected other review comments by Andy
+> 
+> Changes from v1:
+> * Reflected review comments by Andy
+> * Removed RFC prefix
+> 
+> Changes from RFC v2:
+> * Reflected review comments on the list
+> 
+> Changes from RFC v1:
+> * Fixed a build warning poitned out in llvm list by kernel test robot
+> 
+>  drivers/platform/x86/p2sb.c | 171 +++++++++++++++++++++++++++---------
+>  1 file changed, 129 insertions(+), 42 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+> index 1cf2471d54dd..ccebfd885718 100644
+> --- a/drivers/platform/x86/p2sb.c
+> +++ b/drivers/platform/x86/p2sb.c
+> @@ -26,6 +26,19 @@ static const struct x86_cpu_id p2sb_cpu_ids[] = {
+>  	{}
+>  };
+>  
+> +/*
+> + * Cache BAR0 of P2SB device functions 0 to 7.
+> + * TODO: Move this definition to pci.h together with same other definitions.
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 6a58fd63a9dd2..00ec59867c17b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -75,6 +75,7 @@ enum imx6_pcie_variants {
- 	IMX8MQ_EP,
- 	IMX8MM_EP,
- 	IMX8MP_EP,
-+	IMX95_EP,
- };
- 
- #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
-@@ -84,6 +85,7 @@ enum imx6_pcie_variants {
- #define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
- #define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
- #define IMX6_PCIE_FLAG_HAS_SERDES		BIT(6)
-+#define IMX6_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
- 
- #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
- 
-@@ -620,6 +622,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
- 		break;
- 	case IMX7D:
- 	case IMX95:
-+	case IMX95_EP:
- 		break;
- 	case IMX8MM:
- 	case IMX8MM_EP:
-@@ -1063,6 +1066,23 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
- 	.align = SZ_64K,
- };
- 
-+/*
-+ * BAR#	| Default BAR enable	| Default BAR Type	| Default BAR Size	| BAR Sizing Scheme
-+ * ================================================================================================
-+ * BAR0	| Enable		| 64-bit		| 1 MB			| Programmable Size
-+ * BAR1	| Disable		| 32-bit		| 64 KB			| Fixed Size
-+ *	| (BAR0 is 64-bit)	| if BAR0 is 32-bit	|			| As Bar0 is 64bit
-+ * BAR2	| Enable		| 32-bit		| 1 MB			| Programmable Size
-+ * BAR3	| Enable		| 32-bit		| 64 KB			| Programmable Size
-+ * BAR4	| Enable		| 32-bit		| 1M			| Programmable Size
-+ * BAR5	| Enable		| 32-bit		| 64 KB			| Programmable Size
-+ */
-+static const struct pci_epc_features imx95_pcie_epc_features = {
-+	.msi_capable = true,
-+	.bar_fixed_size[1] = SZ_64K,
-+	.align = SZ_4K,
-+};
-+
- static const struct pci_epc_features*
- imx6_pcie_ep_get_features(struct dw_pcie_ep *ep)
- {
-@@ -1105,6 +1125,14 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
- 
- 	pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
- 
-+	/*
-+	 * db2 information should fetch from dtb file. dw_pcie_ep_init() can get dbi_base2 from
-+	 * "dbi2" if pci->dbi_base2 is NULL. All code related pcie_dbi2_offset should be removed
-+	 * after all dts added "dbi2" reg.
-+	 */
-+	if (imx6_pcie->drvdata->variant == IMX95_EP)
-+		pci->dbi_base2 = NULL;
-+
- 	ret = dw_pcie_ep_init(ep);
- 	if (ret) {
- 		dev_err(dev, "failed to initialize endpoint\n");
-@@ -1355,6 +1383,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 					     "unable to find iomuxc registers\n");
- 	}
- 
-+	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_SUPPORT_64BIT))
-+		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+
- 	/* Grab PCIe PHY Tx Settings */
- 	if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
- 				 &imx6_pcie->tx_deemph_gen1))
-@@ -1557,6 +1588,19 @@ static const struct imx6_pcie_drvdata drvdata[] = {
- 		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
- 		.epc_features = &imx8m_pcie_epc_features,
- 	},
-+	[IMX95_EP] = {
-+		.variant = IMX95_EP,
-+		.flags = IMX6_PCIE_FLAG_HAS_SERDES |
-+			 IMX6_PCIE_FLAG_SUPPORT_64BIT,
-+		.clk_names = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"},
-+		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
-+		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
-+		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
-+		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
-+		.init_phy = imx95_pcie_init_phy,
-+		.epc_features = &imx95_pcie_epc_features,
-+		.mode = DW_PCIE_EP_TYPE,
-+	},
- };
- 
- static const struct of_device_id imx6_pcie_of_match[] = {
-@@ -1571,6 +1615,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
- 	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
- 	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
- 	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
-+	{ .compatible = "fsl,imx95-pcie-ep", .data = &drvdata[IMX95_EP], },
- 	{},
- };
- 
+"with same other definitions" sounds very odd and I don't understand what 
+you're trying to say here.
+
+> + */
+> +#define NR_P2SB_RES_CACHE 8
+> +
+> +struct p2sb_res_cache {
+> +	u32 bus_dev_id;
+> +	struct resource res;
+> +};
+> +
+> +static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
+> +
+>  static int p2sb_get_devfn(unsigned int *devfn)
+>  {
+>  	unsigned int fn = P2SB_DEVFN_DEFAULT;
+> @@ -39,10 +52,18 @@ static int p2sb_get_devfn(unsigned int *devfn)
+>  	return 0;
+>  }
+>  
+> +static bool p2sb_valid_resource(struct resource *res)
+> +{
+> +	if (res->flags)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  /* Copy resource from the first BAR of the device in question */
+> -static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+> +static void p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+>  {
+> -	struct resource *bar0 = &pdev->resource[0];
+> +	struct resource *bar0 = pci_resource_n(pdev, 0);
+
+This change is just cleanup and belongs IMO to own patch. (It's a good 
+change still, just doesn't belong to this fix.)
+
+>  	/* Make sure we have no dangling pointers in the output */
+>  	memset(mem, 0, sizeof(*mem));
+> @@ -56,47 +77,64 @@ static int p2sb_read_bar0(struct pci_dev *pdev, struct resource *mem)
+>  	mem->end = bar0->end;
+>  	mem->flags = bar0->flags;
+>  	mem->desc = bar0->desc;
+> -
+> -	return 0;
+>  }
+>  
+> -static int p2sb_scan_and_read(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+> +static void p2sb_scan_and_cache_devfn(struct pci_bus *bus, unsigned int devfn)
+>  {
+> +	struct p2sb_res_cache *cache = &p2sb_resources[PCI_FUNC(devfn)];
+>  	struct pci_dev *pdev;
+> -	int ret;
+>  
+>  	pdev = pci_scan_single_device(bus, devfn);
+>  	if (!pdev)
+> -		return -ENODEV;
+> +		return;
+>  
+> -	ret = p2sb_read_bar0(pdev, mem);
+> +	p2sb_read_bar0(pdev, &cache->res);
+> +	cache->bus_dev_id = bus->dev.id;
+>  
+>  	pci_stop_and_remove_bus_device(pdev);
+> -	return ret;
+> +	return;
+>  }
+>  
+> -/**
+> - * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+> - * @bus: PCI bus to communicate with
+> - * @devfn: PCI slot and function to communicate with
+> - * @mem: memory resource to be filled in
+> - *
+> - * The BIOS prevents the P2SB device from being enumerated by the PCI
+> - * subsystem, so we need to unhide and hide it back to lookup the BAR.
+> - *
+> - * if @bus is NULL, the bus 0 in domain 0 will be used.
+> - * If @devfn is 0, it will be replaced by devfn of the P2SB device.
+> - *
+> - * Caller must provide a valid pointer to @mem.
+> - *
+> - * Locking is handled by pci_rescan_remove_lock mutex.
+> - *
+> - * Return:
+> - * 0 on success or appropriate errno value on error.
+> - */
+> -int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+> +static int p2sb_scan_and_cache(struct pci_bus *bus, unsigned int devfn)
+> +{
+> +	unsigned int slot, fn;
+> +
+> +	if (PCI_FUNC(devfn) == 0) {
+> +		/*
+> +		 * When function number of the P2SB device is zero, scan it and
+> +		 * other function numbers, and if devices are available, cache
+> +		 * their BAR0s.
+> +		 */
+> +		slot = PCI_SLOT(devfn);
+> +		for (fn = 0; fn < NR_P2SB_RES_CACHE; fn++)
+> +			p2sb_scan_and_cache_devfn(bus, PCI_DEVFN(slot, fn));
+> +	} else {
+> +		/* Scan the P2SB device and cache its BAR0 */
+> +		p2sb_scan_and_cache_devfn(bus, devfn);
+> +	}
+> +
+> +	if (!p2sb_valid_resource(&p2sb_resources[PCI_FUNC(devfn)].res))
+> +		return -ENOENT;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct pci_bus *p2sb_get_bus(struct pci_bus *bus)
+> +{
+> +	static struct pci_bus *p2sb_bus;
+> +
+> +	bus = bus ?: p2sb_bus;
+> +	if (bus)
+> +		return bus;
+> +
+> +	/* Assume P2SB is on the bus 0 in domain 0 */
+> +	p2sb_bus = pci_find_bus(0, 0);
+> +	return p2sb_bus;
+> +}
+> +
+> +static int p2sb_cache_resources(void)
+>  {
+> -	struct pci_dev *pdev_p2sb;
+> +	struct pci_bus *bus;
+>  	unsigned int devfn_p2sb;
+>  	u32 value = P2SBC_HIDE;
+>  	int ret;
+> @@ -106,8 +144,9 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* if @bus is NULL, use bus 0 in domain 0 */
+> -	bus = bus ?: pci_find_bus(0, 0);
+> +	bus = p2sb_get_bus(NULL);
+> +	if (!bus)
+> +		return -ENODEV;
+>  
+>  	/*
+>  	 * Prevent concurrent PCI bus scan from seeing the P2SB device and
+> @@ -115,17 +154,16 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+>  	 */
+>  	pci_lock_rescan_remove();
+>  
+> -	/* Unhide the P2SB device, if needed */
+> +	/*
+> +	 * The BIOS prevents the P2SB device from being enumerated by the PCI
+> +	 * subsystem, so we need to unhide and hide it back to lookup the BAR.
+> +	 * Unhide the P2SB device here, if needed.
+> +	 */
+>  	pci_bus_read_config_dword(bus, devfn_p2sb, P2SBC, &value);
+>  	if (value & P2SBC_HIDE)
+>  		pci_bus_write_config_dword(bus, devfn_p2sb, P2SBC, 0);
+>  
+> -	pdev_p2sb = pci_scan_single_device(bus, devfn_p2sb);
+> -	if (devfn)
+> -		ret = p2sb_scan_and_read(bus, devfn, mem);
+> -	else
+> -		ret = p2sb_read_bar0(pdev_p2sb, mem);
+> -	pci_stop_and_remove_bus_device(pdev_p2sb);
+> +	ret = p2sb_scan_and_cache(bus, devfn_p2sb);
+>  
+>  	/* Hide the P2SB device, if it was hidden */
+>  	if (value & P2SBC_HIDE)
+> @@ -133,12 +171,61 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+>  
+>  	pci_unlock_rescan_remove();
+>  
+> -	if (ret)
+> -		return ret;
+> +	return ret;
+> +}
+> +
+> +/**
+> + * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
+> + * @bus: PCI bus to communicate with
+> + * @devfn: PCI slot and function to communicate with
+> + * @mem: memory resource to be filled in
+> + *
+> + * If @bus is NULL, the bus 0 in domain 0 will be used.
+> + * If @devfn is 0, it will be replaced by devfn of the P2SB device.
+> + *
+> + * Caller must provide a valid pointer to @mem.
+> + *
+> + * Return:
+> + * 0 on success or appropriate errno value on error.
+> + */
+> +int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
+> +{
+> +	struct p2sb_res_cache *cache;
+> +	int ret;
+>  
+> -	if (mem->flags == 0)
+> +	bus = p2sb_get_bus(bus);
+> +	if (!bus)
+>  		return -ENODEV;
+>  
+> +	if (!devfn) {
+> +		ret = p2sb_get_devfn(&devfn);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	cache = &p2sb_resources[PCI_FUNC(devfn)];
+> +	if (cache->bus_dev_id != bus->dev.id)
+> +		return -ENODEV;
+> +
+> +	if (!p2sb_valid_resource(&cache->res))
+> +		return -ENOENT;
+> +
+> +	memcpy(mem, &cache->res, sizeof(*mem));
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(p2sb_bar);
+> +
+> +static int __init p2sb_fs_init(void)
+> +{
+> +	p2sb_cache_resources();
+> +	return 0;
+> +}
+> +
+> +/*
+> + * pci_rescan_remove_lock avoids access to unhidden P2SB devices, but it causes
+> + * deadlock with sysfs pci bus rescan.
+
+Does this actually tell how situation was before this change? If so, it 
+should be either removed or reworded to something that says "x cannot be 
+used to do y because of z".
+
+> To avoid the deadlock, access to P2SB
+> + * devices at an early step in kernel initialization and cache required
+> + * resources. This should happen after subsys_initcall which initializes PCI
+> + * subsystem and before device_initcall which requires P2SB resources.
+> + */
+> +fs_initcall(p2sb_fs_init);
+> 
+
 -- 
-2.34.1
+ i.
 
 
