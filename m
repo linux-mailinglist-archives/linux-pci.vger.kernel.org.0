@@ -1,294 +1,251 @@
-Return-Path: <linux-pci+bounces-1430-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6320D81EDE7
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 10:46:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 403AC81EEB5
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 12:58:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 880081C222A5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 09:46:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92891B21292
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 11:58:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 347B41095A;
-	Wed, 27 Dec 2023 09:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0116446BE;
+	Wed, 27 Dec 2023 11:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="VTcXYydI";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="wLFHtH0Y"
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="XvOKITcx";
+	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="aUk30iLS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F87286B5
-	for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 09:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com AC3C1C000A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1703670385; bh=6SEouK9QkJobnpLhSQ6RU21HAzZB984JfrkiMala3A4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=VTcXYydIYVltk8gLGny0sYeAdIRSni3h+YNxEpzur4oMBMS9UAPJLgWWs0vCxb12g
-	 BuX4PssUusUvBjwuRTMr4Pn4HqLC8fMZ1uaIJgEHtrS9SjnXfKxJE8D0qjDsxsxrO7
-	 NlfQn86dg/X5eqV+cu/Wo9ja068yIfMswgQ+PeFOFzpr7Qj1wvDn6F7dFovaYvfz2n
-	 WtwGMn4ZzBrjiQDSROixVO8vUltL1NBaRAEPc3+VBeDye0TA3dw3ehslUDIBijYvuH
-	 U6Vyl9X1FqkR5Jn2i+1ZGbGTbd3UiQnRA960GbLDwDy3gIMga2+dE/cArsm046qwRT
-	 UA2om72+wc+dA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1703670385; bh=6SEouK9QkJobnpLhSQ6RU21HAzZB984JfrkiMala3A4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=wLFHtH0YdwyuV1HGjagJfOOixHRxNvpxwAjo+JOX/tUYjrZN7TTY4B7rTAsZIPNRG
-	 CFukz4qaDOHfc19JaGk7EJ6LgwSCNaJNyfY9BeRV4lFNt2rwNcLdd+jFmkqNol7Hgx
-	 5SkJy0RpK1sP8Ufb0nvEN8UqTkqCuX02pYU7ClrBBkrtmIqcKPzAZ7QU7kNgChu/7O
-	 IFbmb/E5oFharHJGdYcqNqFVK9o/7ErA4KVA00zSrQBf9X6AZoO+Bp5Hgt/0OBUoI1
-	 KlalAgybbzSfl4aGwxeb7GgpvyIdYcQiSmypcyO5ZtYwxCN4JZUGZMqgBKU0zDUi30
-	 XNZqJMvrdGjMQ==
-From: Nikita Proshkin <n.proshkin@yadro.com>
-To: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>
-CC: <linux@yadro.com>, Bjorn Helgaas <helgaas@kernel.org>, Sergei
- Miroshnichenko <s.miroshnichenko@yadro.com>, Nikita Proshkin
-	<n.proshkin@yadro.com>
-Subject: [PATCH v2 15/15] pciutils-pcilmr: Add pcilmr man page
-Date: Wed, 27 Dec 2023 14:45:04 +0500
-Message-ID: <20231227094504.32257-16-n.proshkin@yadro.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231227094504.32257-1-n.proshkin@yadro.com>
-References: <20231227094504.32257-1-n.proshkin@yadro.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847D1446B3
+	for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 11:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flawful.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50e67e37661so4527835e87.0
+        for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 03:58:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703678309; x=1704283109;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:dkim-signature:dkim-signature
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tmOgFLjbKObpkaPAeAy9ABsJp2iJpN7M5BSuPIgW5lU=;
+        b=bD+DxxW7BBapRdzdX/UWZItWboesEra33mRj+mYLp8vWeQ/t9nLCwuKA9FxbeW9kEZ
+         LTqvAmCbR+CG8LDmJc4Sh8aLdehL2faj3Njht2mVTi42A4hpkSRKH7eLlw7TD28hq141
+         QkvotcvBpQsYyciDFIhQeM7tkplrn2dXzHz+TjG9LrF9/k8x8EoQ7jjJ5yGQLy9KAdLJ
+         5m65++j6SoifaVCAL06thADSdb8u0TELLn8IJfrTP01WC0RVcmUiJKbC8oEcGTCCpDnB
+         PpBpYHqOZvVq+h0EY/kwcukhh2VbIb9kVL1JEijSWg2KwM4CXsz2FCEn9Cen2RmfDq7Q
+         ooTg==
+X-Gm-Message-State: AOJu0Yy8J4OjAnOttfJ/DVx5SDlVgwhPo/dP7TmhCTUsA9f4MMNLaMQd
+	tHbK8OHdwF2ndJ00HWMEY9XsQPHRr31DPg==
+X-Google-Smtp-Source: AGHT+IFrDFZWpJ4q2xaNOKQ42mtRZji/apH4noD8gcBNYBEduBEgocSXBDCYBLfERppObBWJnKJ62A==
+X-Received: by 2002:ac2:555c:0:b0:50e:56ba:8943 with SMTP id l28-20020ac2555c000000b0050e56ba8943mr2949748lfk.49.1703678309409;
+        Wed, 27 Dec 2023 03:58:29 -0800 (PST)
+Received: from flawful.org (c-55f5e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.245.85])
+        by smtp.gmail.com with ESMTPSA id dw11-20020a0565122c8b00b0050e84c6bfbasm244863lfb.48.2023.12.27.03.58.28
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 03:58:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
+	t=1703678308; bh=+aTZS/59bRS3M6j/U2OkEFP2JKMaeS4bCnmm6beD6nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XvOKITcxX1Ioy2DtrMpnNJ1d2BOp/2MGx/peblwV3hpZkTplJuXu/bjRsvskw8Ozg
+	 p4eoUfGnATt2DGcvEck7IidFhBrOBzGurUm5GrGgY1Ns2VbnMXVrpZqKKbtAyrHM5C
+	 D6rPTBaRMixvHTzX8hPCbEYg4y/AcmEJrDBkDSfA=
+Received: by flawful.org (Postfix, from userid 112)
+	id 0B781B99; Wed, 27 Dec 2023 12:58:28 +0100 (CET)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
+	t=1703678267; bh=+aTZS/59bRS3M6j/U2OkEFP2JKMaeS4bCnmm6beD6nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aUk30iLSvglrSGxT+GYwh/atsutn1bmS8RQYoBu1R+LZDrptXcmHb+Vml9jYqMucA
+	 uTA9B9WtgYWb3/JcUiusQl4GHmET9xiHWvEGA3UN5BuxWYc/qHYLqshJk5JtEP/CA+
+	 HXC6tMeaBSvzvPv2yg7lXeBISi2u4EuL0TF871Lo=
+Received: from x1-carbon (OpenWrt.lan [192.168.1.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by flawful.org (Postfix) with ESMTPSA id 396A5B41;
+	Wed, 27 Dec 2023 12:57:32 +0100 (CET)
+Date: Wed, 27 Dec 2023 12:57:31 +0100
+From: Niklas Cassel <nks@flawful.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Niklas Cassel <niklas.cassel@wdc.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq()
+ alignment support
+Message-ID: <ZYwRK2Vh5PLRcrQo@x1-carbon>
+References: <20231128132231.2221614-1-nks@flawful.org>
+ <20231226221714.GA1468266@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: T-EXCH-09.corp.yadro.com (172.17.11.59) To
- T-EXCH-08.corp.yadro.com (172.17.11.58)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231226221714.GA1468266@bhelgaas>
 
-Reviewed-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Signed-off-by: Nikita Proshkin <n.proshkin@yadro.com>
----
- Makefile   |   2 +-
- pcilmr.c   |   3 +-
- pcilmr.man | 182 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 185 insertions(+), 2 deletions(-)
- create mode 100644 pcilmr.man
+Hello Bjorn,
 
-diff --git a/Makefile b/Makefile
-index ee8e8ee..cb002cb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -71,7 +71,7 @@ LMRINC=lmr/lmr.h
- 
- export
- 
--all: lib/$(PCIIMPLIB) lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lspci.8 setpci.8 pcilib.7 pci.ids.5 update-pciids update-pciids.8 $(PCI_IDS) pcilmr
-+all: lib/$(PCIIMPLIB) lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lspci.8 setpci.8 pcilib.7 pci.ids.5 update-pciids update-pciids.8 $(PCI_IDS) pcilmr pcilmr.8
- 
- lib/$(PCIIMPLIB): $(PCIINC) force
- 	$(MAKE) -C lib all
-diff --git a/pcilmr.c b/pcilmr.c
-index eb5d947..bab2a07 100644
---- a/pcilmr.c
-+++ b/pcilmr.c
-@@ -20,7 +20,8 @@ const char program_name[] = "pcilmr";
- enum mode { MARGIN, FULL, SCAN };
- 
- static const char usage_msg[]
--  = "Usage:\n"
-+  = "! Utility requires preliminary preparation of the system. Refer to the pcilmr man page !\n\n"
-+    "Usage:\n"
-     "pcilmr [--margin] [<margining options>] <downstream component> ...\n"
-     "pcilmr --full [<margining options>]\n"
-     "pcilmr --scan\n\n"
-diff --git a/pcilmr.man b/pcilmr.man
-new file mode 100644
-index 0000000..673262f
---- /dev/null
-+++ b/pcilmr.man
-@@ -0,0 +1,182 @@
-+.TH PCILMR 8 "@TODAY@" "@VERSION@" "The PCI Utilities"
-+.SH NAME
-+pcilmr \- margin PCIe Links
-+.SH SYNOPSIS
-+.B pcilmr
-+.RB [ "--margin" ]
-+.RI [ "<margining options>" ] " <downstream component> ..."
-+.br
-+.B pcilmr --full
-+.RI [ "<margining options>" ]
-+.br
-+.B pcilmr --scan
-+.SH CONFIGURATION
-+List of the requirements for links and system settings
-+to run the margining test.
-+
-+.B BIOS settings
-+(depends on the system, relevant for server baseboards
-+with Xeon CPUs):
-+.IP \[bu] 3
-+Turn off PCIe Leaky Bucket Feature, Re-Equalization and Link Degradation;
-+.IP \[bu]
-+Set Error Thresholds to 0;
-+.IP \[bu]
-+Intel VMD for NVMe SSDs - in case of strange behavior of the
-+.BR pcilmr,
-+try to run it with the VMD turned off.
-+.PP
-+.B Device (link) requirements:
-+.IP
-+.I "Configured by the user before running the utility, the utility does not change them:"
-+.RS
-+.IP \[bu] 3
-+The current Link data rate must be 16.0 GT/s or higher (right now
-+utility supports 16 GT/s and 32 GT/s Links);
-+.IP \[bu]
-+Link Downstream Component must be at D0 Power Management State.
-+.RE
-+.IP
-+.I "Configured by the utility during operation, utility set them to their original "
-+.I "state after receiving the results:"
-+.RS
-+.IP \[bu] 3
-+The ASPM must be disabled in both the Downstream Port and Upstream Port;
-+.IP \[bu]
-+The Hardware Autonomous Speed Disable bit of the Link Control 2 register must be Set in both the
-+Downstream Port and Upstream Port;
-+.IP \[bu]
-+The Hardware Autonomous Width Disable bit of the Link Control register must be Set in both the
-+Downstream Port and Upstream Port.
-+.SH DESCRIPTION
-+.B pcilmr
-+utility allows you to take advantage of the PCIe Lane Margining at the Receiver
-+capability which is mandatory for all Ports supporting a data rate of 16.0 GT/s or
-+higher, including Pseudo Ports (Retimers). Lane Margining at Receiver enables system
-+software to obtain the margin information of a given Receiver while the Link is in the
-+L0 state. The margin information includes both voltage and time, in either direction from
-+the current Receiver position. Margining support for timing is required, while support
-+for voltage is optional at 16.0 GT/s and required at 32.0 GT/s and higher data rates. Also,
-+independent time margining and independent voltage margining is optional.
-+
-+Utility allows to get an approximation of the eye margin diagram in the form of a rhombus
-+(by four points). Lane Margining at the Receiver capability enables users to margin PCIe
-+links without a hardware debugger and without the need to stop the target system. Utility
-+can be useful to debug link issues due to receiver margins.
-+
-+However, the utility results may be not particularly accurate and, as it was found out during
-+testing, specific devices provide rather dubious capability support and the reliability of
-+the information they provide is questionable. The PCIe specification provides reference values
-+for the eye diagram, which are also used by the
-+.B pcilmr
-+to evaluate the results, but it seems that it makes sense to contact the
-+manufacturer of a particular device for references.
-+
-+The PCIe Base Specification Revision 5.0 sets allowed range for Timing Margin from 20%\~UI to 50%\~UI and
-+for Voltage Margin from 50\~mV to 500\~mV. Utility uses 30%\~UI as the recommended
-+value for Timing - taken from NVIDIA presentation ("PCIe 4.0 Mass Electrical Margins Data
-+Collection").
-+
-+.B pcilmr
-+requires root privileges (to access Extended Configuration Space), but during our testing
-+there were no problems with the devices and they successfully returned to their normal initial
-+state after the end of testing.
-+
-+.SH OPTIONS
-+.SS Device Specifier
-+.B "<device/component>" \t
-+.RI [ "<domain>" :] <bus> : <dev> . <func>
-+(see
-+.BR lspci (8))
-+.SS Utility Modes
-+.TP
-+.BI --margin " <downstream component> ..."
-+Margin selected Links.
-+.TP
-+.B --full
-+Margin all ready for testing (in a meaning similar to the
-+.B --scan
-+option) Links in the system (one by one).
-+.TP
-+.B --scan
-+Scan for Links with negotiated speed 16 GT/s or higher. Mark "Ready" those of them
-+in which at least one of the Link sides have Margining Ready bit set meaning that
-+these Links are ready for testing and you can run utility on them.
-+.SS Margining Test options
-+.TP
-+.B -c
-+Print Device Lane Margining Capabilities only. Do not run margining.
-+.TP
-+\fB\-l\fI <lane>\fP[\fI,<lane>...\fP]
-+Specify lanes for margining.
-+.br
-+Remember that Device may use Lane Reversal for Lane numbering. However, utility
-+uses logical lane numbers in arguments and for logging. Utility will automatically
-+determine Lane Reversal and tune its calls.
-+.br
-+Default: all link lanes.
-+.TP
-+.BI -e " <errors>"
-+Specify Error Count Limit for margining.
-+.br
-+Default: 4.
-+.TP
-+\fB-r\fI <recvn>\fP[\fI,<recvn>...\fP]
-+Specify Receivers to select margining targets.
-+.br
-+Default: all available Receivers (including Retimers).
-+.TP
-+.BI -p " <parallel_lanes>"
-+Specify number of lanes to margin simultaneously.
-+.br
-+According to spec it's possible for Receiver to margin up to MaxLanes + 1
-+lanes simultaneously, but during testing, performing margining on several
-+lanes simultaneously led to results that were different from sequential
-+margining, so this feature requires additional verification and
-+.I -p
-+option right now is for experiments mostly.
-+.br
-+Default: 1.
-+.PP
-+.B "Use only one of -T/-t options at the same time (same for -V/-v)."
-+.br
-+.B "Without these options utility will use MaxSteps from Device"
-+.B "capabilities as test limit."
-+.TP
-+.B -T
-+Time Margining will continue until the Error Count is no more
-+than an Error Count Limit. Use this option to find Link limit.
-+.TP
-+.BI -t " <steps>"
-+Specify maximum number of steps for Time Margining.
-+.TP
-+.B -V
-+Same as
-+.I -T
-+option, but for Voltage.
-+.TP
-+.BI -v " <steps>"
-+Specify maximum number of steps for Voltage Margining.
-+.SS Margining Log options
-+.TP
-+.BI -o " <directory>"
-+Save margining results in csv form into the specified directory. Utility
-+will generate file with the name in form of
-+.RI "\[dq]lmr_" "<downstream component>" "_Rx" # _ <timestamp> ".csv\[dq]"
-+for each successfully tested receiver.
-+
-+.SH EXAMPLES
-+Utility syntax example:
-+.RS
-+.BI "pcilmr -l" " 0,1 " "-r" " 1,6 " "-TV" " ab:0.0 52:0.0"
-+.RE
-+
-+.UR https://gist.github.com/bombanya/f2b15263712757ffba1a11eea011c419
-+Examples of collected results on different systems.
-+.UE
-+
-+.SH SEE ALSO
-+.nh
-+.BR lspci (8),
-+.B PCI Express Base Specification (Lane Margining at Receiver)
-+.hy
--- 
-2.34.1
+On Tue, Dec 26, 2023 at 04:17:14PM -0600, Bjorn Helgaas wrote:
+> On Tue, Nov 28, 2023 at 02:22:30PM +0100, Niklas Cassel wrote:
+> > From: Niklas Cassel <niklas.cassel@wdc.com>
+> > 
+> > Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
+> > correct MSI-X table address") modified dw_pcie_ep_raise_msix_irq() to
+> > support iATUs which require a specific alignment.
+> > 
+> > However, this support cannot have been properly tested.
+> > 
+> > The whole point is for the iATU to map an address that is aligned,
+> > using dw_pcie_ep_map_addr(), and then let the writel() write to
+> > ep->msi_mem + aligned_offset.
+> > 
+> > Thus, modify the address that is mapped such that it is aligned.
+> > With this change, dw_pcie_ep_raise_msix_irq() matches the logic in
+> > dw_pcie_ep_raise_msi_irq().
 
+For the record, this patch is already queued up:
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=controller/dwc
+
+
+> 
+> Was there a problem report for this?  Since 6f5e193bfb55 appeared in
+> v5.7 (May 31 2020), and this should affect imx6, keystone am654,
+> dw-pcie (platform), and keembay, it seems a little weird that this bug
+> persisted so long.  Maybe nobody really uses endpoint support yet?
+> 
+> But I assume you observed a failure and tested this fix somewhere.
+
+Yes, I verified it on rockchip rk3588.
+
+I'm working on upstreaming rk3588 EP support:
+https://github.com/floatious/linux/commits/rockchip-pcie-ep
+
+Right now rk3588 only has support for RC in mainline.
+
+
+The fix is only needed for platforms which:
+1) supports MSI-X
+2) has an iATU alignment requirement,
+so where epc->mem->window.page_size != 0.
+
+pci_epc_mem_init() calls pci_epc_multi_mem_init() which
+initializes epc->mem->window.page_size with ep->page_size.
+
+$ git grep page_size drivers/pci/controller/dwc/
+
+So it will not affect pcie-designware-plat.c, nor pcie-keembay.c,
+since they don't set any ep->page_size.
+
+It will not affect pcie-tegra194.c, since it doesn't use
+dw_pcie_ep_raise_msix_irq().
+
+Looking at pci-imx6.c, imx6_pcie_ep_raise_irq() calls
+dw_pcie_ep_raise_msix_irq(), but:
+
+static const struct pci_epc_features imx8m_pcie_epc_features = {
+        .msix_capable = false,
+}
+
+so while pci-imx6.c will call dw_pcie_ep_raise_msix_irq(),
+I assume that it will return early, in this if-statement:
+https://github.com/torvalds/linux/blob/v6.7-rc7/drivers/pci/controller/dwc/pcie-designware-ep.c#L596-L598
+
+That leaves just pci-keystone.c (am654 compatible only).
+
+I don't know why no one has reported this bug before,
+I can only assume insufficient testing.
+
+I guess you might be lucky and happen to get an address that is
+aligned to the iATU alignment requirement, but that is unlikely
+to happen when rebooting and running pcitest.sh multiple times.
+
+
+> 
+> And the failure is that we send the wrong MSI-X vector or something
+> and get an unexpected IRQ and a driver hang or something?  In other
+> words, how does the bug manifest to users?
+
+pcitest.sh fails the MSI-X tests.
+With this fix the MSI-X tests in pcitest.sh passes.
+
+
+> 
+> > Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+> > Fixes: 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSI-X table address")
+> > Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+> > ---
+> > Changes since v1:
+> > -Clarified commit message.
+> > -Add a working email for Kishon to CC.
+> > 
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index f6207989fc6a..bc94d7f39535 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -615,6 +615,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >  	}
+> >  
+> >  	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> > +	msg_addr &= ~aligned_offset;
+> >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> >  				  epc->mem->window.page_size);
+> 
+> Total tangent and I don't know enough to suggest any changes, but it's
+> a little strange as a reader that we want to write to ep->msi_mem, and
+> the ATU setup with dw_pcie_ep_map_addr() doesn't involve ep->msi_mem
+> at all.
+> 
+> I see that ep->msi_mem is allocated and ioremapped far away in
+> dw_pcie_ep_init().  It's just a little weird that there's no
+> connection *here* with ep->msi_mem.
+
+There is a connection. dw_pcie_ep_raise_msix_irq() uses ep->msi_mem_phys,
+which is the physical address of ep->msi_mem:
+
+ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+                                  epc->mem->window.page_size);  
+
+
+> 
+> I assume dw_pcie_ep_map_addr(), writel(), dw_pcie_ep_unmap_addr() have
+> to happen atomically so nobody else uses that piece of the ATU while
+> we're doing this?  There's no mutex here, so I guess we must know this
+> is atomic already because of something else?
+
+Most devices have multiple iATUs (so multiple iATU indexes).
+
+pcie-designware-ep.c:dw_pcie_ep_outbound_atu()
+uses find_first_zero_bit() to make sure that a specific iATU (index)
+is not reused for something else:
+https://github.com/torvalds/linux/blob/v6.7-rc7/drivers/pci/controller/dwc/pcie-designware-ep.c#L208
+
+A specific iATU (index) is then freed by dw_pcie_ep_unmap_addr(),
+which does a clear_bit() for that iATU (index).
+
+It is a bit scary that there is no mutex or anything, since
+find_first_zero_bit() is _not_ atomic, so if we have concurrent calls
+to dw_pcie_ep_map_addr(), things might break, but that is a separate
+issue.
+
+I assume that this patch series will improve the concurrency issue,
+if it gets accepted:
+https://lore.kernel.org/linux-pci/20231212022749.625238-1-yury.norov@gmail.com/
+
+
+Kind regards,
+Niklas
 
