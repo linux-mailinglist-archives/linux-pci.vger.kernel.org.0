@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-1424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C0B781EDE2
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 10:46:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9254681EDE1
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 10:46:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8192B222A7
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 09:46:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48AAB2837EC
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 09:46:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE0629411;
-	Wed, 27 Dec 2023 09:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B79B24B2F;
+	Wed, 27 Dec 2023 09:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="HOVRHUEW";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="Yw0gVHd6"
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="MOd4VX03";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="nkoVJRgO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mta-04.yadro.com (mta-04.yadro.com [89.207.88.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2D91095A
-	for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 09:46:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A052940A
+	for <linux-pci@vger.kernel.org>; Wed, 27 Dec 2023 09:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 8B39DC000A
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-04.yadro.com 3A0D9C000A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1703670375; bh=CHiHv/s9vtWrbYFqTgEJBRebx92tNk5nrBIj8xENWms=;
+	t=1703670377; bh=Qgf3HY9Q/npWtHJ8zz2bI8mQD5n++N9iMXdOnjtXbJA=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=HOVRHUEW532lBgcoaf+NBCOxLqvT4x+j3K2AiojLnoCNNMvEQlI3H5wui+hgQBDJX
-	 oclQ44AtIRwHWhF3NgV4bqofuJ6srKR+qEGU2OQhFkJmSwGx8VQjAN2j5PMjTHD0fj
-	 UIs1lufO0pxlWQlOTaLVaaOSLMjQwUVAO/KPFS4YrY+wu9uPDHsCVHhrnSFqULh6lJ
-	 Qf3935bNO+Bx0McJ9JzYxIOSBmBdBi2bXnzleWbBjtXmEEJ8EDcbvHt4t7V+ictHwL
-	 6TpmVf4hjOc9vU5Yyax4UNa2VOpf2AwZZx7d0o8JRbUFXKFNrvAdLKP6kjlSvdlxDs
-	 EWJpkhGGIo77w==
+	b=MOd4VX03Vt1OzP8VhUYhClq5O6avM53NESMS2VDfjNQIxnWxdf4R9f0fgqyB56lOe
+	 gh2byAM7jDMlLDq/Md39EULYj371I2nBfuV0O+tDjJT2PN6+COQMDpEtC6rpHfyopG
+	 B4XhfSdnCiXeZLczWA+a6lLGyS7M3DPtxpBo3MMSXjOLhse5Z8nWmXnR+hBD2J7x/i
+	 pG+WRs7eOURqpnxRgIU54zDIeucvdKMpsWxAML2MjR7b33c8ZyuNdRlLWaX1hhOaMC
+	 bo6CzsoPGphUZ73ZkPSzGn+8pXX9LaKBtsbDSKny/8XYtC9U8wylyHNb8hIZ4VGv6t
+	 RJ4rYs8nyeYwQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1703670375; bh=CHiHv/s9vtWrbYFqTgEJBRebx92tNk5nrBIj8xENWms=;
+	t=1703670377; bh=Qgf3HY9Q/npWtHJ8zz2bI8mQD5n++N9iMXdOnjtXbJA=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=Yw0gVHd6ZppwU7CNG0c1eUc8Oge7AHJeoQ6i1yFRd1xc35LLG/9Meyro8XQqWOBGs
-	 +GiPZap3/4moVcd0gqQR9dGcNbEGcMSsEhPXwl64TegMbTJ2IsUi0xx6Dpa83zbfS7
-	 axsvgQleL/SNCqxtBKNy86PefXfoEi7EGVQqqREsKnt/ykIrgoXHxeJkGcMV9on1dM
-	 7dRa2ghp/N6JTo1qTHTub53P3sIMpFVo1AvmbLof1qMTGDeLwoCctPgkEEqulYXLWC
-	 TzqKFpS9kcPDE4R4SlTKFLjx+6ixE7MrF+nf26PsAlX55i0DntqXV35fyQj3FWull1
-	 bBXTMX3Y8XXNQ==
+	b=nkoVJRgOIMKXnGiQZ9dgMtgJYG1POI+78z1rd53HQ2IICe9vXxUMDZX1PcG0jWzOX
+	 qQa1Tvna+y8hCm4edOFmHUrw3arDZNglEnj+xHeE09NNw9TgTE0Mgt1j2Y48Ku5fgP
+	 Gz9kKVpdqxD3IGvIvIEpyxpKmnaIFp3vP/shH0Z4k7jsezvgWFfu38P4u/h7igs4bX
+	 yCR/1Av7/L6WQ0AUtR0aH/8kctTHKeXd7AGPGaNGTnySLkaYVargxGTi0lHwbh4NV3
+	 rxXja24wslK0fsvUOweJ8Kn8mB0XXxGKhvQqMr+edLNcGgg6T/r+CkMXR6M6Tu3sRo
+	 +WwYVrv7xIleQ==
 From: Nikita Proshkin <n.proshkin@yadro.com>
 To: <linux-pci@vger.kernel.org>, Martin Mares <mj@ucw.cz>
 CC: <linux@yadro.com>, Bjorn Helgaas <helgaas@kernel.org>, Sergei
  Miroshnichenko <s.miroshnichenko@yadro.com>, Nikita Proshkin
 	<n.proshkin@yadro.com>
-Subject: [PATCH v2 09/15] pciutils-pcilmr: Add utility main function
-Date: Wed, 27 Dec 2023 14:44:58 +0500
-Message-ID: <20231227094504.32257-10-n.proshkin@yadro.com>
+Subject: [PATCH v2 10/15] pciutils-pcilmr: Add support for unique hardware quirks
+Date: Wed, 27 Dec 2023 14:44:59 +0500
+Message-ID: <20231227094504.32257-11-n.proshkin@yadro.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231227094504.32257-1-n.proshkin@yadro.com>
 References: <20231227094504.32257-1-n.proshkin@yadro.com>
@@ -64,354 +64,166 @@ Content-Type: text/plain
 X-ClientProxiedBy: T-EXCH-09.corp.yadro.com (172.17.11.59) To
  T-EXCH-08.corp.yadro.com (172.17.11.58)
 
+Make it possible to change receiver margining parameters depending on
+current hardware specificity.
+
+In our tests Intel Ice Lake CPUs RC ports reported
+MaxVoltageOffset = 50 (RxA), which led to results several times bigger
+than the results of the hardware debugger.
+Looks like in Intel Sapphire Rapids this was fixed, these CPU RC ports
+report MaxVoltageOffset = 12 (RxA). To solve the problem it was decided
+to hardcode Volt Offset to 12 (120 mV) for Ice Lake RC ports.
+
+In the case of margining a specific link, only information about
+Downstream and Upstream ports should be sufficient to decide whether to
+use quirks, so the feature was implemented based on a list of devices
+(vendor - device - revision triples), whose problems are known.
+
+Back to Ice Lake ports, according to Integrators List on the pci-sig site,
+the list of possible RC ports of Ice Lake Xeon's includes at least three
+more options (with ids 347B/C/D) besides the one used in this commit, but
+we don't have such processors to check the relevance of the MaxVoltageOffset
+problem for these ports.
+
 Reviewed-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 Signed-off-by: Nikita Proshkin <n.proshkin@yadro.com>
 ---
- Makefile |  14 ++-
- pcilmr.c | 294 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 306 insertions(+), 2 deletions(-)
- create mode 100644 pcilmr.c
+ lmr/lmr.h        |  6 ++++++
+ lmr/margin.c     | 16 ++++++++++++++++
+ lmr/margin_hw.c  | 24 +++++++++++++++++++++++-
+ lmr/margin_log.c | 16 ++++++++++++++++
+ 4 files changed, 61 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 52538e8..ee8e8ee 100644
---- a/Makefile
-+++ b/Makefile
-@@ -65,9 +65,13 @@ LIBNAME=libpci
- PCIINC=lib/config.h lib/header.h lib/pci.h lib/types.h lib/sysdep.h lib/bitops.h
- PCIINC_INS=lib/config.h lib/header.h lib/pci.h lib/types.h
+diff --git a/lmr/lmr.h b/lmr/lmr.h
+index d35b8ae..bb188fc 100644
+--- a/lmr/lmr.h
++++ b/lmr/lmr.h
+@@ -21,6 +21,8 @@
+ #define MARGIN_TIM_RECOMMEND 30
+ #define MARGIN_VOLT_MIN      50
  
-+LMR=margin_hw.o margin.o margin_log.o margin_results.o
-+LMROBJS=$(addprefix lmr/,$(LMR))
-+LMRINC=lmr/lmr.h
++enum margin_hw { MARGIN_HW_DEFAULT, MARGIN_ICE_LAKE_RC };
 +
- export
+ /* PCI Device wrapper for margining functions */
+ struct margin_dev {
+   struct pci_dev *dev;
+@@ -29,6 +31,8 @@ struct margin_dev {
+   u8 retimers_n;
+   u8 link_speed;
  
--all: lib/$(PCIIMPLIB) lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lspci.8 setpci.8 pcilib.7 pci.ids.5 update-pciids update-pciids.8 $(PCI_IDS)
-+all: lib/$(PCIIMPLIB) lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lspci.8 setpci.8 pcilib.7 pci.ids.5 update-pciids update-pciids.8 $(PCI_IDS) pcilmr
++  enum margin_hw hw;
++
+   /* Saved Device settings to restore after margining */
+   u8 aspm;
+   bool hasd; // Hardware Autonomous Speed Disable
+@@ -209,6 +213,8 @@ void margin_log_receiver(struct margin_recv *recv);
+ /* Margining in progress log */
+ void margin_log_margining(struct margin_lanes_data arg);
  
- lib/$(PCIIMPLIB): $(PCIINC) force
- 	$(MAKE) -C lib all
-@@ -110,6 +114,12 @@ update-pciids: update-pciids.sh
- example$(EXEEXT): example.o lib/$(PCIIMPLIB)
- example.o: example.c $(PCIINC)
++void margin_log_hw_quirks(struct margin_recv *recv);
++
+ /* margin_results */
  
-+$(LMROBJS) pcilmr.o: CFLAGS+=-I .
-+$(LMROBJS): %.o: %.c $(LMRINC) $(PCIINC) pciutils.h
-+
-+pcilmr: pcilmr.o lib/$(PCIIMPLIB) $(LMROBJS) $(COMMON)
-+pcilmr.o: pcilmr.c $(LMRINC) $(PCIINC) pciutils.h
-+
- %$(EXEEXT): %.o
- 	$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
+ void margin_results_print_brief(struct margin_results *results, u8 recvs_n);
+diff --git a/lmr/margin.c b/lmr/margin.c
+index 1f1fa2f..cc142fa 100644
+--- a/lmr/margin.c
++++ b/lmr/margin.c
+@@ -127,6 +127,20 @@ margin_report_cmd(struct margin_dev *dev, u8 lane, margin_cmd cmd, margin_cmd *r
+          && margin_set_cmd(dev, lane, NO_COMMAND);
+ }
  
-@@ -141,7 +151,7 @@ TAGS:
- 
- clean:
- 	rm -f `find . -name "*~" -o -name "*.[oa]" -o -name "\#*\#" -o -name TAGS -o -name core -o -name "*.orig"`
--	rm -f update-pciids lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lib/config.* *.[578] pci.ids.gz lib/*.pc lib/*.so lib/*.so.* lib/*.dll lib/*.def lib/dllrsrc.rc *-rsrc.rc tags
-+	rm -f update-pciids lspci$(EXEEXT) setpci$(EXEEXT) example$(EXEEXT) lib/config.* *.[578] pci.ids.gz lib/*.pc lib/*.so lib/*.so.* lib/*.dll lib/*.def lib/dllrsrc.rc *-rsrc.rc tags pcilmr
- 	rm -rf maint/dist
- 
- distclean: clean
-diff --git a/pcilmr.c b/pcilmr.c
-new file mode 100644
-index 0000000..3634c97
---- /dev/null
-+++ b/pcilmr.c
-@@ -0,0 +1,294 @@
-+/*
-+ *	The PCI Utilities -- Margining utility main function
-+ *
-+ *	Copyright (c) 2023 KNS Group LLC (YADRO)
-+ *
-+ *	Can be freely distributed and used under the terms of the GNU GPL v2+.
-+ *
-+ *	SPDX-License-Identifier: GPL-2.0-or-later
-+ */
-+
-+#include <getopt.h>
-+#include <memory.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+
-+#include "lmr/lmr.h"
-+
-+const char program_name[] = "pcilmr";
-+
-+static const char usage_msg[]
-+  = "Usage:\n"
-+    "pcilmr [<margining options>] <downstream component>\n\n"
-+    "Device Specifier:\n"
-+    "<device/component>:\t[<domain>:]<bus>:<dev>.<func>\n\n"
-+    "Margining options:\n\n"
-+    "Margining Test settings:\n"
-+    "-c\t\t\tPrint Device Lane Margining Capabilities only. Do not run margining.\n"
-+    "-l <lane>[,<lane>...]\tSpecify lanes for margining. Default: all link lanes.\n"
-+    "\t\t\tRemember that Device may use Lane Reversal for Lane numbering.\n"
-+    "\t\t\tHowever, utility uses logical lane numbers in arguments and for logging.\n"
-+    "\t\t\tUtility will automatically determine Lane Reversal and tune its calls.\n"
-+    "-e <errors>\t\tSpecify Error Count Limit for margining. Default: 4.\n"
-+    "-r <recvn>[,<recvn>...]\tSpecify Receivers to select margining targets.\n"
-+    "\t\t\tDefault: all available Receivers (including Retimers).\n"
-+    "-p <parallel_lanes>\tSpecify number of lanes to margin simultaneously.\n"
-+    "\t\t\tDefault: 1.\n"
-+    "\t\t\tAccording to spec it's possible for Receiver to margin up\n"
-+    "\t\t\tto MaxLanes + 1 lanes simultaneously, but usually this works\n"
-+    "\t\t\tbad, so this option is for experiments mostly.\n"
-+    "-T\t\t\tTime Margining will continue until the Error Count is no more\n"
-+    "\t\t\tthan an Error Count Limit. Use this option to find Link limit.\n"
-+    "-V\t\t\tSame as -T option, but for Voltage.\n"
-+    "-t <steps>\t\tSpecify maximum number of steps for Time Margining.\n"
-+    "-v <steps>\t\tSpecify maximum number of steps for Voltage Margining.\n"
-+    "Use only one of -T/-t options at the same time (same for -V/-v).\n"
-+    "Without these options utility will use MaxSteps from Device\n"
-+    "capabilities as test limit.\n\n";
-+
-+static struct pci_dev *
-+dev_for_filter(struct pci_access *pacc, char *filter)
++static void
++margin_apply_hw_quirks(struct margin_recv *recv)
 +{
-+  struct pci_filter pci_filter;
-+  char dev[17] = { 0 };
-+  strncpy(dev, filter, sizeof(dev) - 1);
-+  pci_filter_init(pacc, &pci_filter);
-+  if (pci_filter_parse_slot(&pci_filter, dev))
-+    die("Invalid device ID: %s\n", filter);
-+
-+  if (pci_filter.bus == -1 || pci_filter.slot == -1 || pci_filter.func == -1)
-+    die("Invalid device ID: %s\n", filter);
-+
-+  if (pci_filter.domain == -1)
-+    pci_filter.domain = 0;
-+
-+  for (struct pci_dev *p = pacc->devices; p; p = p->next)
++  switch (recv->dev->hw)
 +    {
-+      if (pci_filter_match(&pci_filter, p))
-+        return p;
++      case MARGIN_ICE_LAKE_RC:
++        if (recv->recvn == 1)
++          recv->params->volt_offset = 12;
++        break;
++      default:
++        break;
 +    }
-+
-+  die("No such PCI device: %s or you don't have enough privileges.\n", filter);
 +}
 +
-+static struct pci_dev *
-+find_down_port_for_up(struct pci_access *pacc, struct pci_dev *up)
+ static bool
+ read_params_internal(struct margin_dev *dev, u8 recvn, bool lane_reversal,
+                      struct margin_params *params)
+@@ -311,6 +325,8 @@ margin_test_receiver(struct margin_dev *dev, u8 recvn, struct margin_args *args,
+ 
+   if (recv.parallel_lanes > params.max_lanes + 1)
+     recv.parallel_lanes = params.max_lanes + 1;
++  margin_apply_hw_quirks(&recv);
++  margin_log_hw_quirks(&recv);
+ 
+   results->tim_coef = (double)params.timing_offset / (double)params.timing_steps;
+   results->volt_coef = (double)params.volt_offset / (double)params.volt_steps * 10.0;
+diff --git a/lmr/margin_hw.c b/lmr/margin_hw.c
+index c000132..fc427c8 100644
+--- a/lmr/margin_hw.c
++++ b/lmr/margin_hw.c
+@@ -10,6 +10,27 @@
+ 
+ #include "lmr.h"
+ 
++static u16 special_hw[][4] =
++  // Vendor ID, Device ID, Revision ID, margin_hw
++  { { 0x8086, 0x347A, 0x4, MARGIN_ICE_LAKE_RC }, 
++    { 0xFFFF, 0, 0, MARGIN_HW_DEFAULT } 
++  };
++
++static enum margin_hw
++detect_unique_hw(struct pci_dev *dev)
 +{
-+  struct pci_dev *down = NULL;
-+  for (struct pci_dev *p = pacc->devices; p; p = p->next)
++  u16 vendor = pci_read_word(dev, PCI_VENDOR_ID);
++  u16 device = pci_read_word(dev, PCI_DEVICE_ID);
++  u8 revision = pci_read_byte(dev, PCI_REVISION_ID);
++
++  for (int i = 0; special_hw[i][0] != 0xFFFF; i++)
 +    {
-+      if (pci_read_byte(p, PCI_SECONDARY_BUS) == up->bus && up->domain == p->domain)
-+        {
-+          down = p;
-+          break;
-+        }
++      if (vendor == special_hw[i][0] && device == special_hw[i][1] && revision == special_hw[i][2])
++        return special_hw[i][3];
 +    }
-+  return down;
++  return MARGIN_HW_DEFAULT;
 +}
 +
-+static u8
-+parse_csv_arg(char *arg, u8 *vals)
+ bool
+ margin_verify_link(struct pci_dev *down_port, struct pci_dev *up_port)
+ {
+@@ -56,7 +77,8 @@ fill_dev_wrapper(struct pci_dev *dev)
+         .retimers_n
+         = (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_RETIMER))
+           + (!!(pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA2) & PCI_EXP_LINKSTA2_2RETIMERS)),
+-        .link_speed = (pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA) & PCI_EXP_LNKSTA_SPEED) };
++        .link_speed = (pci_read_word(dev, cap->addr + PCI_EXP_LNKSTA) & PCI_EXP_LNKSTA_SPEED),
++        .hw = detect_unique_hw(dev) };
+   return res;
+ }
+ 
+diff --git a/lmr/margin_log.c b/lmr/margin_log.c
+index 6833d1a..a93e07b 100644
+--- a/lmr/margin_log.c
++++ b/lmr/margin_log.c
+@@ -133,3 +133,19 @@ margin_log_margining(struct margin_lanes_data arg)
+       fflush(stdout);
+     }
+ }
++
++void
++margin_log_hw_quirks(struct margin_recv *recv)
 +{
-+  u8 cnt = 0;
-+  char *token = strtok(arg, ",");
-+  while (token)
++  switch (recv->dev->hw)
 +    {
-+      vals[cnt] = atoi(token);
-+      cnt++;
-+      token = strtok(NULL, ",");
++      case MARGIN_ICE_LAKE_RC:
++        if (recv->recvn == 1)
++          margin_log("\nRx(A) is Intel Ice Lake RC port.\n"
++                     "Applying next quirks for margining process:\n"
++                     "  - Set MaxVoltageOffset to 12 (120 mV).\n");
++        break;
++      default:
++        break;
 +    }
-+  return cnt;
-+}
-+
-+int
-+main(int argc, char **argv)
-+{
-+  struct pci_access *pacc;
-+
-+  struct pci_dev *up_port;
-+  struct pci_dev *down_port;
-+
-+  struct margin_link link;
-+
-+  bool status = true;
-+
-+  struct margin_results *results;
-+  u8 results_n;
-+
-+  struct margin_args args;
-+
-+  u8 steps_t_arg = 0;
-+  u8 steps_v_arg = 0;
-+  u8 parallel_lanes_arg = 1;
-+  u8 error_limit = 4;
-+
-+  u8 lanes_n = 0;
-+  u8 recvs_n = 0;
-+
-+  bool run_margin = true;
-+
-+  u64 total_steps = 0;
-+
-+  pacc = pci_alloc();
-+  pci_init(pacc);
-+  pci_scan_bus(pacc);
-+
-+  margin_print_domain = false;
-+  for (struct pci_dev *dev = pacc->devices; dev; dev = dev->next)
-+    {
-+      if (dev->domain != 0)
-+        {
-+          margin_print_domain = true;
-+          break;
-+        }
-+    }
-+
-+  margin_global_logging = true;
-+
-+  int c;
-+
-+  while ((c = getopt(argc, argv, ":r:e:l:cp:t:v:VT")) != -1)
-+    {
-+      switch (c)
-+        {
-+          case 't':
-+            steps_t_arg = atoi(optarg);
-+            break;
-+          case 'T':
-+            steps_t_arg = 63;
-+            break;
-+          case 'v':
-+            steps_v_arg = atoi(optarg);
-+            break;
-+          case 'V':
-+            steps_v_arg = 127;
-+            break;
-+          case 'p':
-+            parallel_lanes_arg = atoi(optarg);
-+            break;
-+          case 'c':
-+            run_margin = false;
-+            break;
-+          case 'l':
-+            lanes_n = parse_csv_arg(optarg, args.lanes);
-+            break;
-+          case 'e':
-+            error_limit = atoi(optarg);
-+            break;
-+          case 'r':
-+            recvs_n = parse_csv_arg(optarg, args.recvs);
-+            break;
-+          default:
-+            die("Invalid arguments\n\n%s", usage_msg);
-+        }
-+    }
-+
-+  if (optind != argc - 1)
-+    status = false;
-+  if (!status && argc > 1)
-+    die("Invalid arguments\n\n%s", usage_msg);
-+  if (!status)
-+    {
-+      printf("%s", usage_msg);
-+      exit(0);
-+    }
-+
-+  up_port = dev_for_filter(pacc, argv[argc - 1]);
-+
-+  down_port = find_down_port_for_up(pacc, up_port);
-+  if (!down_port)
-+    die("Cannot find Upstream Component for the specified device: %s\n", argv[argc - 1]);
-+
-+  if (!pci_find_cap(up_port, PCI_CAP_ID_EXP, PCI_CAP_NORMAL))
-+    die("Looks like you don't have enough privileges to access "
-+        "Device Configuration Space.\nTry to run utility as root.\n");
-+
-+  if (!margin_fill_link(down_port, up_port, &link))
-+    {
-+      printf("Link ");
-+      margin_log_bdfs(down_port, up_port);
-+      printf(" is not ready for margining.\n"
-+             "Link data rate must be 16 GT/s or 32 GT/s.\n"
-+             "Downstream Component must be at D0 PM state.\n");
-+      status = false;
-+    }
-+
-+  if (status)
-+    {
-+      args.error_limit = error_limit;
-+      args.lanes_n = lanes_n;
-+      args.recvs_n = recvs_n;
-+      args.steps_t = steps_t_arg;
-+      args.steps_v = steps_v_arg;
-+      args.parallel_lanes = parallel_lanes_arg;
-+      args.run_margin = run_margin;
-+      args.verbosity = 1;
-+      args.steps_utility = &total_steps;
-+
-+      enum margin_test_status args_status;
-+
-+      if ((args_status = margin_process_args(&link.down_port, &args)) != MARGIN_TEST_OK)
-+        {
-+          status = false;
-+          margin_log_link(&link);
-+          if (args_status == MARGIN_TEST_ARGS_RECVS)
-+            margin_log("\nInvalid RecNums specified.\n");
-+          else if (args_status == MARGIN_TEST_ARGS_LANES)
-+            margin_log("\nInvalid lanes specified.\n");
-+        }
-+    }
-+
-+  if (status)
-+    {
-+      struct margin_params params;
-+
-+      for (int i = 0; i < args.recvs_n; i++)
-+        {
-+          if (margin_read_params(pacc, args.recvs[i] == 6 ? up_port : down_port, args.recvs[i],
-+                                 &params))
-+            {
-+              u8 steps_t = steps_t_arg ? steps_t_arg : params.timing_steps;
-+              u8 steps_v = steps_v_arg ? steps_v_arg : params.volt_steps;
-+              u8 parallel_recv = parallel_lanes_arg > params.max_lanes + 1 ? params.max_lanes + 1 :
-+                                                                             parallel_lanes_arg;
-+
-+              u8 step_multiplier
-+                = args.lanes_n / parallel_recv + ((args.lanes_n % parallel_recv) > 0);
-+
-+              total_steps += steps_t * step_multiplier;
-+              if (params.ind_left_right_tim)
-+                total_steps += steps_t * step_multiplier;
-+              if (params.volt_support)
-+                {
-+                  total_steps += steps_v * step_multiplier;
-+                  if (params.ind_up_down_volt)
-+                    total_steps += steps_v * step_multiplier;
-+                }
-+            }
-+        }
-+
-+      results = margin_test_link(&link, &args, &results_n);
-+    }
-+
-+  if (status && run_margin)
-+    {
-+      printf("\nResults:\n");
-+      printf("\nPass/fail criteria:\nTiming:\n");
-+      printf("Minimum Offset (spec): %d %% UI\nRecommended Offset: %d %% UI\n", MARGIN_TIM_MIN,
-+             MARGIN_TIM_RECOMMEND);
-+      printf("\nVoltage:\nMinimum Offset (spec): %d mV\n\n", MARGIN_VOLT_MIN);
-+      printf(
-+        "Margining statuses:\nLIM -\tErrorCount exceeded Error Count Limit (found device limit)\n");
-+      printf("NAK -\tDevice didn't execute last command, \n\tso result may be less reliable\n");
-+      printf("THR -\tThe set (using the utility options) \n\tstep threshold has been reached\n\n");
-+      printf("Notations:\nst - steps\n\n");
-+
-+      margin_results_print_brief(results, results_n);
-+    }
-+
-+  if (status)
-+    margin_free_results(results, results_n);
-+
-+  pci_cleanup(pacc);
-+  return 0;
 +}
 -- 
 2.34.1
