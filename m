@@ -1,127 +1,109 @@
-Return-Path: <linux-pci+bounces-1470-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1471-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8AE281F186
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 20:08:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEBC581F230
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 22:21:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E11C51C22591
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 19:08:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 518281F22F26
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Dec 2023 21:21:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E1A46B88;
-	Wed, 27 Dec 2023 19:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7541747F54;
+	Wed, 27 Dec 2023 21:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5TSRvAA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LLxrhLs2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F96046B87;
-	Wed, 27 Dec 2023 19:08:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4118FC433C7;
-	Wed, 27 Dec 2023 19:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703704095;
-	bh=ATu15DdJu3KphR7LFYKeEXCMXYokrV8F6bk6Aa0fZc4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=F5TSRvAADaGRV2HGx2D8sugO90Z38C23ezQdcbj1FEmLF7yydZRoQ7gLUjrUxqJXS
-	 YlMF0p4wMPtmIXqNH3X52dm5iFwSujhlJ0qk6m6/UFaeax70WR+jE2CJq4XioV28fT
-	 HTWpu9uvSn/bZMt1tn2YKYqmV2jHOCyh96lm/qfaEZwRFsfTkHqnpta//0R+3eJrJT
-	 v7mZqkGHrgCW0rov70FInyDP90P3Yn/S5dPWJ+531cfLshH4RdInaEKHfqqUxqUdXo
-	 e74d5UuX9nTFcm8ZrltAKVoBrXYubi1XgzT7IZvQfYConmO1R9m1hcXTO3Z1/1uOvO
-	 41IlJFs3gH6ow==
-Date: Wed, 27 Dec 2023 13:08:13 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Minda Chen <minda.chen@starfivetech.com>
-Cc: Conor Dooley <conor@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v13 19/21] PCI: Add PCIE_RESET_CONFIG_DEVICE_WAIT_MS
- waiting time value
-Message-ID: <20231227190813.GA1508471@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A885945945;
+	Wed, 27 Dec 2023 21:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=HCosurRW6yUv7qxc0Aw6J2XZAhZw5XHFPIkEQJBxiBA=; b=LLxrhLs2Od+xYkbwxREDMUjrEl
+	lJafovGRc3uINC/tv8CpNM01fWSnC8Jko3VfrgBHinBVFihxHhmj3nMPpP4BO5fpIRhnarLiItNHP
+	/IT+eOreTmub39N1/oc2Ec6vN0blQRpL/2ROXX91e3N7ef77Wi3U1AU7QzGiPHAKzwvTQ4x7+euh6
+	Wf21bkT9SzouS0jT2Pgj309S4ZtaXTraAOlviTL4sCGL69mValcSJglXeXQNWIghGm8/uDzdZgo/H
+	yS97LOo4Jn+9sCRGFsXjsPYXvkvB8HYoEbyepQccMkxnXXJx9I5liBvQFywKE4F1rypY/bq9ecpTO
+	xN6/LZFw==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rIbKt-00FWn3-27;
+	Wed, 27 Dec 2023 21:21:07 +0000
+Message-ID: <dc2d7189-70f2-49e2-ba78-ef2d15211e9b@infradead.org>
+Date: Wed, 27 Dec 2023 13:21:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214072839.2367-20-minda.chen@starfivetech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] resource: Use typedef for alignf callback
+Content-Language: en-US
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring
+ <robh@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20231222122901.49538-1-ilpo.jarvinen@linux.intel.com>
+ <20231222122901.49538-5-ilpo.jarvinen@linux.intel.com>
+ <ZYWPaGc4rjymcm75@smile.fi.intel.com>
+ <8161e59d-2122-562c-dcc7-f772ddbcbdf@linux.intel.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <8161e59d-2122-562c-dcc7-f772ddbcbdf@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 14, 2023 at 03:28:37PM +0800, Minda Chen wrote:
-> From: Kevin Xie <kevin.xie@starfivetech.com>
-> 
-> Add the PCIE_RESET_CONFIG_DEVICE_WAIT_MS macro to define the minimum
-> waiting time between exit from a conventional reset and sending the
-> first configuration request to the device.
-> 
-> As described in PCI base specification r6.0, section 6.6.1 <Conventional
-> Reset>, there are two different use cases of the value:
-> 
->    - "With a Downstream Port that does not support Link speeds greater
->      than 5.0 GT/s, software must wait a minimum of 100 ms following exit
->      from a Conventional Reset before sending a Configuration Request to
->      the device immediately below that Port."
-> 
->    - "With a Downstream Port that supports Link speeds greater than
->      5.0 GT/s, software must wait a minimum of 100 ms after Link training
->      completes before sending a Configuration Request to the device
->      immediately below that Port."
-> 
-> Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
-> Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> ---
->  drivers/pci/pci.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+On 12/27/23 07:54, Ilpo Järvinen wrote:
+> On Fri, 22 Dec 2023, Andy Shevchenko wrote:
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 5ecbcf041179..06f1f1eb878c 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -22,6 +22,22 @@
->   */
->  #define PCIE_PME_TO_L2_TIMEOUT_US	10000
->  
-> +/*
-> + * As described in PCI base specification r6.0, section 6.6.1 <Conventional
-> + * Reset>, there are two different use cases of the value:
-> + *
-> + * - "With a Downstream Port that does not support Link speeds greater
-> + *    than 5.0 GT/s, software must wait a minimum of 100 ms following exit
-> + *    from a Conventional Reset before sending a Configuration Request to
-> + *    the device immediately below that Port."
-> + *
-> + * - "With a Downstream Port that supports Link speeds greater than
-> + *    5.0 GT/s, software must wait a minimum of 100 ms after Link training
-> + *    completes before sending a Configuration Request to the device
-> + *    immediately below that Port."
-> + */
-> +#define PCIE_RESET_CONFIG_DEVICE_WAIT_MS	100
-> +
->  extern const unsigned char pcie_link_speed[];
->  extern bool pci_early_dump;
->  
-> -- 
-> 2.17.1
+>>> +/**
+>>> + * resource_alignf - Resource alignment callback
+>>> + * @data:	Private data used by the callback
+>>> + * @res:	Resource candidate range (an empty resource slot)
+>>> + * @size:	The minimum size of the empty slot
+>>> + * @align:	Alignment from the constraints
+>>> + *
+>>> + * Callback allows calculating resource placement and alignment beyond min,
+>>> + * max, and align fields in the struct resource_constraint.
+>>> + *
+>>> + * Return: Start address for the resource.
+>>> + */
+>>> +typedef resource_size_t (*resource_alignf)(void *data,
+>>> +					   const struct resource *res,
+>>> +					   resource_size_t size,
+>>> +					   resource_size_t align);
+>>
+>> Never saw typedef kernel-doc before, so hopefully this will be rendered
+>> just fine.
 > 
+> This was a good point. It seems that one has to prefix the name with 
+> typedef like this:
+
+That's correct.
+> 
+> /**
+>  * typedef resource_alignf - Resource alignment callback
+> 
+> ...otherwise scripts/kernel-doc attempts to parse it as a function 
+> kerneldoc.
+
+ack.
+
+Thanks.
+
+-- 
+#Randy
 
