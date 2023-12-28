@@ -1,332 +1,139 @@
-Return-Path: <linux-pci+bounces-1485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26A1C81F371
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 01:36:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD82B81F410
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 03:10:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24CC41C227E3
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 00:36:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 287ED2815D4
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 02:10:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C9A368;
-	Thu, 28 Dec 2023 00:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655FA10E6;
+	Thu, 28 Dec 2023 02:09:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hOFVY0gA"
+	dkim=pass (4096-bit key) header.d=crc.id.au header.i=@crc.id.au header.b="ROBTMcwt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from mailfilter.crc.id.au (mailfilter.crc.id.au [202.172.99.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B8B5671
-	for <linux-pci@vger.kernel.org>; Thu, 28 Dec 2023 00:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703723815; x=1735259815;
-  h=date:from:to:cc:subject:message-id;
-  bh=lrYx3ECdO4R0UKFHxxBeFpuw8blk0GIljOioKKJVCug=;
-  b=hOFVY0gABHchRC/YcenFDCNgUfWjnt64aULP3kcpnmnlQlk66Q0K3Gz+
-   9DZrg+92iOVnU6Zc9DYUdH+KOIgfRPk8fNV7mcXZ2lhFpSIMQVR72UWlV
-   bbKSsoTjG1Ch8LzKbPw3SGaXJ+Rqz5oy98ZHn6AlK0JIdLv3E3QWgrWU5
-   8xfOeQJcnMAmdBYRzab0uoNjdx/8Ez6gs/Sv7z8gyZsAgqnBtd9XmFuXC
-   APvnQCDKoRKrh49RLVE0MhDbJXC9vyRDYUyllLCWN46Cm74L8yBn2TneT
-   IIBLVTieP4vekLXyXRe+cK95lHskpkSmKT3dSnAwMXxpHbCWIzqdJbrxe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="482675542"
-X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="482675542"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 16:36:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="781890958"
-X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="781890958"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Dec 2023 16:36:53 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rIeOJ-000Fs7-1g;
-	Thu, 28 Dec 2023 00:36:51 +0000
-Date: Thu, 28 Dec 2023 08:36:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 6936c253ee2e4061f6e62f940efbd46a256f91c0
-Message-ID: <202312280822.grctYmT1-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46FB2904;
+	Thu, 28 Dec 2023 02:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crc.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crc.id.au
+Received: from mailfilter.crc.id.au (localhost.localdomain [127.0.0.1])
+	by mailfilter.crc.id.au (Proxmox) with ESMTP id 73AE761488;
+	Thu, 28 Dec 2023 13:03:12 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crc.id.au; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=default; bh=S9xGU1hFe1/o9hrCC4lEm4q+qvVZbAlcZqEbx5hf2kQ=; b=
+	ROBTMcwtF2eYwwLv4NtWZMVvpJEZ4lYKaw5J5SXmiTBJPgqoKO6dZAnG29dQ4W6l
+	p/Y91igHhSz5G5H0mm7RmRnC/Gpwkg6LZ1cvBibU7k/535Xb+gG8q/V9w6YBHkC0
+	n2gyIzWnBhimCnmSR5LpVUWSKBz/N4GLn4Vg0rU9WleyaLnX5IG8jXXA4H7oTw2C
+	b6VMGmAtIwh372TtJrKoEg/yIPBpsiOzjvPTNYc6pFJcO0Ahp2ccz/X9j1oA7rju
+	v/AIPbuDqqScYcEg0zYsLVgkMtNZ7oSImTzs810YtIk8c+Q/mof4fyLjpkgqaDHC
+	5DLJ2U1JXOXDg+ja4RSETE/bGudp/91c2X2avWKHzNyhVHldSlbWUFwqkThPdNkP
+	3cxv2yaX8vxYnU5q6BtCEmhqPS6Tvx6ljHPItAPz5C2z79TnSX03yFys8+kvHstR
+	LQ5HkGkGSc8h61brsCLupnuDEoZpoLmGWFggi0jAJIC2uSrEQKr//sihAtdwzIZa
+	cMR8FKPZllPpQ0HfBVc8u1tEw+Y7lRjnF/ADZPX2T0bvnF+gFxr0/nmg0+k1G0L0
+	ySGdZDuZBBVOJ6570KeE5xdjWPTOLse8RKMA0eG1GMUrxpyLUrJChUw792yeRICb
+	OYxhIg0jYcQH5RlwQJ3k86GTwVlqNX+dFgNEwQetvZ8=
+Message-ID: <3a7656ab-df4c-4d57-8866-661beffcddd7@crc.id.au>
+Date: Thu, 28 Dec 2023 13:03:10 +1100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Steven Haigh <netwiz@crc.id.au>
+Subject: Qemu KVM thread spins at 100% CPU usage on scsi hot-unplug (kernel
+ 6.6.8 guest)
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, f.ebner@proxmox.com
+Content-Language: en-AU
+Autocrypt: addr=netwiz@crc.id.au; keydata=
+ xjMEZYuvwhYJKwYBBAHaRw8BAQdAKpahulREd3FFQb6QJI7Oa1QG7i0y5GxpKWd/Pgz3bDHN
+ H1N0ZXZlbiBIYWlnaCA8bmV0d2l6QGNyYy5pZC5hdT7CiQQTFggAMRYhBIB4i95REtt8lf8r
+ 5YPV5iDbUrwABQJli6/CAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQg9XmINtSvADhuAEAq5fb
+ ocNh/FVsflYj8owAQlb3jez8GcMdZqBty8OAY2QBAK+xbsxaJ+KtOPFmmmzzLcf5LQFvOYZs
+ o+Y3Ot5ublIIzjgEZYuvwhIKKwYBBAGXVQEFAQEHQH0ZpXIkJEoTdAhHcvEj417Bb55+wGsz
+ 07FgcbLaIl9AAwEIB8J4BBgWCAAgFiEEgHiL3lES23yV/yvlg9XmINtSvAAFAmWLr8ICGwwA
+ CgkQg9XmINtSvABslgD8D7f1NX9bEu5mH8VF7Z58Orygx4Qc7w5qvM1qvQB8UfkBAID3m4bI
+ 0Y9hW5iuV4RfgH3SkrIp4diWii1facZPd4EC
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 6936c253ee2e4061f6e62f940efbd46a256f91c0  Merge branch 'pci/dt-bindings'
+Hi all,
 
-elapsed time: 1451m
+I'm trying to summarise what I'm seeing - please feel free to contact me directly for any further information that I may 
+have missed. I'm also not subscribed to either kernel.org mailing list, so please CC me in any replies.
 
-configs tested: 250
-configs skipped: 2
+History:
+At some point in kernel 6.6.x, SCSI hotplug in qemu VMs broke. This was mostly fixed in the following commit to release 
+6.6.8:
+	commit 5cc8d88a1b94b900fd74abda744c29ff5845430b
+	Author: Bjorn Helgaas <bhelgaas@google.com>
+	Date:   Thu Dec 14 09:08:56 2023 -0600
+	Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+After this commit, the SCSI block device is hotplugged correctly, and a device node as /dev/sdX appears within the qemu VM.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs101_defconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                   randconfig-001-20231227   gcc  
-arc                   randconfig-001-20231228   gcc  
-arc                   randconfig-002-20231227   gcc  
-arc                   randconfig-002-20231228   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm                                 defconfig   clang
-arm                       imx_v6_v7_defconfig   gcc  
-arm                        mvebu_v7_defconfig   gcc  
-arm                       omap2plus_defconfig   gcc  
-arm                          pxa910_defconfig   gcc  
-arm                   randconfig-001-20231227   clang
-arm                   randconfig-001-20231228   gcc  
-arm                   randconfig-002-20231227   clang
-arm                   randconfig-002-20231228   gcc  
-arm                   randconfig-003-20231227   clang
-arm                   randconfig-003-20231228   gcc  
-arm                   randconfig-004-20231227   clang
-arm                   randconfig-004-20231228   gcc  
-arm                           sama5_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231227   clang
-arm64                 randconfig-001-20231228   gcc  
-arm64                 randconfig-002-20231227   clang
-arm64                 randconfig-002-20231228   gcc  
-arm64                 randconfig-003-20231227   clang
-arm64                 randconfig-003-20231228   gcc  
-arm64                 randconfig-004-20231227   clang
-arm64                 randconfig-004-20231228   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231227   gcc  
-csky                  randconfig-001-20231228   gcc  
-csky                  randconfig-002-20231227   gcc  
-csky                  randconfig-002-20231228   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20231227   clang
-hexagon               randconfig-002-20231227   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20231227   clang
-i386         buildonly-randconfig-002-20231227   clang
-i386         buildonly-randconfig-003-20231227   clang
-i386         buildonly-randconfig-004-20231227   clang
-i386         buildonly-randconfig-005-20231227   clang
-i386         buildonly-randconfig-006-20231227   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231227   clang
-i386                  randconfig-002-20231227   clang
-i386                  randconfig-003-20231227   clang
-i386                  randconfig-004-20231227   clang
-i386                  randconfig-005-20231227   clang
-i386                  randconfig-006-20231227   clang
-i386                  randconfig-011-20231227   gcc  
-i386                  randconfig-011-20231228   clang
-i386                  randconfig-012-20231227   gcc  
-i386                  randconfig-012-20231228   clang
-i386                  randconfig-013-20231227   gcc  
-i386                  randconfig-013-20231228   clang
-i386                  randconfig-014-20231227   gcc  
-i386                  randconfig-014-20231228   clang
-i386                  randconfig-015-20231227   gcc  
-i386                  randconfig-015-20231228   clang
-i386                  randconfig-016-20231227   gcc  
-i386                  randconfig-016-20231228   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch                 loongson3_defconfig   gcc  
-loongarch             randconfig-001-20231227   gcc  
-loongarch             randconfig-001-20231228   gcc  
-loongarch             randconfig-002-20231227   gcc  
-loongarch             randconfig-002-20231228   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         amcore_defconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5307c3_defconfig   gcc  
-m68k                            mac_defconfig   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-mips                           ip27_defconfig   gcc  
-mips                   sb1250_swarm_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231227   gcc  
-nios2                 randconfig-001-20231228   gcc  
-nios2                 randconfig-002-20231227   gcc  
-nios2                 randconfig-002-20231228   gcc  
-openrisc                         alldefconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231227   gcc  
-parisc                randconfig-001-20231228   gcc  
-parisc                randconfig-002-20231227   gcc  
-parisc                randconfig-002-20231228   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                       holly_defconfig   gcc  
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                 linkstation_defconfig   gcc  
-powerpc                      ppc6xx_defconfig   gcc  
-powerpc               randconfig-001-20231227   clang
-powerpc               randconfig-001-20231228   gcc  
-powerpc               randconfig-002-20231227   clang
-powerpc               randconfig-002-20231228   gcc  
-powerpc               randconfig-003-20231227   clang
-powerpc               randconfig-003-20231228   gcc  
-powerpc                     redwood_defconfig   gcc  
-powerpc                     sequoia_defconfig   gcc  
-powerpc                     taishan_defconfig   gcc  
-powerpc64             randconfig-001-20231227   clang
-powerpc64             randconfig-001-20231228   gcc  
-powerpc64             randconfig-002-20231227   clang
-powerpc64             randconfig-002-20231228   gcc  
-powerpc64             randconfig-003-20231227   clang
-powerpc64             randconfig-003-20231228   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231227   clang
-riscv                 randconfig-001-20231228   gcc  
-riscv                 randconfig-002-20231227   clang
-riscv                 randconfig-002-20231228   gcc  
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231227   gcc  
-s390                  randconfig-002-20231227   gcc  
-s390                       zfcpdump_defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                         ecovec24_defconfig   gcc  
-sh                        edosk7760_defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                    randconfig-001-20231227   gcc  
-sh                    randconfig-001-20231228   gcc  
-sh                    randconfig-002-20231227   gcc  
-sh                    randconfig-002-20231228   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sh                           se7721_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                        sh7785lcr_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc64                          alldefconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231227   gcc  
-sparc64               randconfig-001-20231228   gcc  
-sparc64               randconfig-002-20231227   gcc  
-sparc64               randconfig-002-20231228   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231227   clang
-um                    randconfig-001-20231228   gcc  
-um                    randconfig-002-20231227   clang
-um                    randconfig-002-20231228   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231227   clang
-x86_64       buildonly-randconfig-002-20231227   clang
-x86_64       buildonly-randconfig-003-20231227   clang
-x86_64       buildonly-randconfig-004-20231227   clang
-x86_64       buildonly-randconfig-005-20231227   clang
-x86_64       buildonly-randconfig-006-20231227   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20231227   gcc  
-x86_64                randconfig-002-20231227   gcc  
-x86_64                randconfig-003-20231227   gcc  
-x86_64                randconfig-004-20231227   gcc  
-x86_64                randconfig-005-20231227   gcc  
-x86_64                randconfig-006-20231227   gcc  
-x86_64                randconfig-011-20231227   clang
-x86_64                randconfig-012-20231227   clang
-x86_64                randconfig-013-20231227   clang
-x86_64                randconfig-014-20231227   clang
-x86_64                randconfig-015-20231227   clang
-x86_64                randconfig-016-20231227   clang
-x86_64                randconfig-071-20231227   clang
-x86_64                randconfig-072-20231227   clang
-x86_64                randconfig-073-20231227   clang
-x86_64                randconfig-074-20231227   clang
-x86_64                randconfig-075-20231227   clang
-x86_64                randconfig-076-20231227   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20231227   gcc  
-xtensa                randconfig-001-20231228   gcc  
-xtensa                randconfig-002-20231227   gcc  
-xtensa                randconfig-002-20231228   gcc  
-xtensa                    xip_kc705_defconfig   gcc  
+New problem:
+
+When the same SCSI block device is hot-unplugged, the QEMU KVM process will spin at 100% CPU usage. The guest shows no 
+CPU being used via top, but the host will continue to spin in the KVM thread until the VM is rebooted.
+
+Further information:
+
+Guest: Fedora 39 with kernel 6.6.8 packages from:
+           https://koji.fedoraproject.org/koji/buildinfo?buildID=2336239
+
+Host: Proxmox 8.1.3 with kernel 6.5.11-7-pve
+
+Messages when a drive is hot-plugged to the guest via:
+           # qm set 104 -scsi1 /dev/sde
+
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: [1af4:1004] type 00 class 0x010000
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: reg 0x10: [io  0x0000-0x003f]
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: reg 0x14: [mem 0x00000000-0x00000fff]
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: reg 0x20: [mem 0x00000000-0x00003fff 64bit pref]
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: BAR 4: assigned [mem 0xc080004000-0xc080007fff 64bit pref]
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: BAR 1: assigned [mem 0xc1801000-0xc1801fff]
+Dec 21 19:44:02 kernel: pci 0000:09:02.0: BAR 0: assigned [io 0x6040-0x607f]
+Dec 21 19:44:02 kernel: virtio-pci 0000:09:02.0: enabling device (0000 -> 0003)
+Dec 21 19:44:02 kernel: scsi host7: Virtio SCSI HBA
+Dec 21 19:44:02 kernel: scsi 7:0:0:1: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+Dec 21 19:44:02 kernel: sd 7:0:0:1: Power-on or device reset occurred
+Dec 21 19:44:02 kernel: sd 7:0:0:1: Attached scsi generic sg1 type 0
+Dec 21 19:44:02 kernel: sd 7:0:0:1: LUN assignments on this target have changed. The Linux SCSI layer does not 
+automatically remap LUN assignments.
+Dec 21 19:44:02 kernel: sd 7:0:0:1: [sdb] 3906994318 512-byte logical blocks: (2.00 TB/1.82 TiB)
+Dec 21 19:44:02 kernel: sd 7:0:0:1: [sdb] Write Protect is off
+Dec 21 19:44:02 kernel: sd 7:0:0:1: [sdb] Mode Sense: 63 00 00 08
+Dec 21 19:44:02 kernel: sd 7:0:0:1: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Dec 21 19:44:02 kernel: sd 7:0:0:1: [sdb] Attached SCSI disk
+
+Device node is then available as /dev/sdb as expected.
+
+Hot-unplugging the device in proxmox is done via:
+	# /usr/sbin/qm set 104 --delete scsi1
+
+where 104 is the VM ID within the proxmox host. I have been trying to trawl through the perl code for the `qm` util to 
+see how that translates to a qemu command, but haven't nailed anything down yet. The code for the qm util is here:
+	https://git.proxmox.com/?p=qemu-server.git;a=tree;h=refs/heads/master;hb=refs/heads/master
+
+After the qm command is executed the device node disappears correctly from the running VM, and the VM seems to operate 
+as normal. The spinning withing the KVM thread seems to only affect the host.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Steven Haigh
+
+📧 netwiz@crc.id.au
+💻 https://crc.id.au
+
+
 
