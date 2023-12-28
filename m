@@ -1,38 +1,38 @@
-Return-Path: <linux-pci+bounces-1491-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1492-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E07CB81F6B1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 11:04:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DF4981F7A2
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 12:25:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9703A285653
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 10:04:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB06C1F2423C
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 11:25:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F52763D3;
-	Thu, 28 Dec 2023 10:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160B96FBB;
+	Thu, 28 Dec 2023 11:25:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC1A63C9;
-	Thu, 28 Dec 2023 10:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ECC6FB6;
+	Thu, 28 Dec 2023 11:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id C498324E386;
-	Thu, 28 Dec 2023 18:04:01 +0800 (CST)
+	by ex01.ufhost.com (Postfix) with ESMTP id 6B4D924E257;
+	Thu, 28 Dec 2023 19:25:32 +0800 (CST)
 Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
  (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Dec
- 2023 18:04:01 +0800
+ 2023 19:25:32 +0800
 Received: from [192.168.125.85] (183.27.97.107) by EXMBX171.cuchost.com
  (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Dec
- 2023 18:04:00 +0800
-Message-ID: <ba4a73af-2fe0-455d-98f8-2b21c59628e3@starfivetech.com>
-Date: Thu, 28 Dec 2023 18:04:00 +0800
+ 2023 19:25:31 +0800
+Message-ID: <abefb75a-10b7-44f6-868c-6ab9591fd1e2@starfivetech.com>
+Date: Thu, 28 Dec 2023 19:25:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -40,8 +40,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 14/21] PCI: microchip: Add get_events() callback and
- add PLDA get_event()
+Subject: Re: [PATCH v13 15/21] PCI: microchip: Add event irqchip field to host
+ port and add PLDA irqchip
 Content-Language: en-US
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>
 CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
@@ -54,228 +54,325 @@ CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
 	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
 	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
 	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
+	Kevin Xie <kevin.xie@starfivetech.com>, <tglx@linutronix.de>
 References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <20231214072839.2367-15-minda.chen@starfivetech.com>
- <ZYxRf8d0+gSoqeRs@lpieralisi>
+ <20231214072839.2367-16-minda.chen@starfivetech.com>
+ <8c417157-8884-4e91-8912-0344e71f82c2@starfivetech.com>
+ <ZYRaqYTcxWJGwWG8@lpieralisi>
+ <025408dd-cc00-4744-8a41-cbd18209ed8b@starfivetech.com>
+ <ZYwb4UQVoLDZw7kf@lpieralisi>
 From: Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <ZYxRf8d0+gSoqeRs@lpieralisi>
+In-Reply-To: <ZYwb4UQVoLDZw7kf@lpieralisi>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX171.cuchost.com
  (172.16.6.91)
 X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 2023/12/28 0:31, Lorenzo Pieralisi wrote:
-> On Thu, Dec 14, 2023 at 03:28:32PM +0800, Minda Chen wrote:
->> PolarFire implements its own PCIe interrupts, additional to the regular
->> PCIe interrupts, due to lack of an MSI controller, so the interrupt to
->> event number mapping is different to the PLDA local interrupts,
-> 
-> I am sorry I don't understand what you mean here.
-> 
-> "its own PCIe interrupts" ?
-> 
-> "regular PCIe interrupts" ?
-> 
-> "PLDA local interrupts" ?
-> 
-> Can you spell out what those are referring to please ?
-> 
+On 2023/12/27 20:43, Lorenzo Pieralisi wrote:
+> [+Thomas]
+>=20
+> On Fri, Dec 22, 2023 at 07:18:48PM +0800, Minda Chen wrote:
+>>=20
+>>=20
+>> On 2023/12/21 23:32, Lorenzo Pieralisi wrote:
+>> > On Thu, Dec 21, 2023 at 06:56:22PM +0800, Minda Chen wrote:
+>> >>=20
+>> >>=20
+>> >> On 2023/12/14 15:28, Minda Chen wrote:
+>> >> > PolarFire PCIE event IRQs includes PLDA local interrupts and Pola=
+rFire
+>> >> > their own IRQs. PolarFire PCIe event irq_chip ops using an event_=
+desc to
+>> >> > unify different IRQ register addresses. On PLDA sides, PLDA irqch=
+ip codes
+>> >> > only require to set PLDA local interrupt register. So the PLDA ir=
+qchip ops
+>> >> > codes can not be extracted from PolarFire codes.
+>> >> >=20
+>> >> > To support PLDA its own event IRQ process, implements PLDA irqchi=
+p ops and
+>> >> > add event irqchip field to struct pcie_plda_rp.
+>> >> >=20
+>> >> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> >> > ---
+>> >> >  .../pci/controller/plda/pcie-microchip-host.c | 65 +++++++++++++=
++++++-
+>> >> >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
+>> >> >  2 files changed, 67 insertions(+), 1 deletion(-)
+>> >> >=20
+>> >> Hi Conor
+>> >>    Could you take time to review this patch?  For I using event irq=
+ chip instead of event ops and the whole patch have been changed.  I thin=
+k it's better=20
+>> >>    And I added the implementation of PLDA event irqchip  and make i=
+t easier to claim the necessity of the modification.
+>> >>    If you approve this, I will add back the review tag. Thanks
+>> >>=20
+>> >> Hi Lorenzo
+>> >>    Have you reviewed this patch=EF=BC=9F Does the commit message an=
+d the codes are can be approved =EF=BC=9FThanks
+>> >>=20
+>> >=20
+>> > Please wrap the lines at 75 columns in length.
+>> >=20
+>> OK
+>> > I have not reviewed but I am still struggling to understand the
+>> > commit log, I apologise, I can try to review the series and figure
+>> > out what the patch is doing but I would appreciate if commits logs
+>> > could be made easier to parse.
+>> >=20
+>> > Thanks,
+>> > Lorenzo
+>> >=20
+>>=20
+>> The commit message it is not good.
+>>=20
+>> I draw a graph about the PCIe global event interrupt domain
+>> (related to patch 10- 16).
+>> Actually all these interrupts patches are for extracting the common=20
+>> PLDA codes to pcie-plda-host.c and do not change microchip's codes log=
+ic.
+>=20
+> s/codes/code (please apply this to the the full series)
+>=20
+> I will have a look at the code but I can't rewrite the commit log mysel=
+f
+> (it does not scale I am afraid), as it stands I don't understand it and
+> that's a problem, I am sorry but that's important.
+>=20
+> I added Thomas (you should CC him for irqchip [only] changes) if he
+> has time to review these irqchip changes to make sure they are proper.
+>=20
 > Thanks,
 > Lorenzo
->
+>=20
+The interrupt irq_chip ops includes ack/mask/unmask. These ops are for=20
+writing the correct register. Microchip Implement their PCIe interrupts
+and require to write their registers. So  the irq_chip ops are different.
 
-"its own PCIe interrupts" ?
+(List below are the microchip interrupt register base and status/mask=20
+register offset. In pcie-microchip-host.c:130)
+ =20
+#define PCIE_EVENT(x) \
+        .base =3D MC_PCIE_CTRL_ADDR, \
+        .offset =3D PCIE_EVENT_INT, \
+        .mask_offset =3D PCIE_EVENT_INT, \
+        .mask_high =3D 1, \
+        .mask =3D PCIE_EVENT_INT_ ## x ## _INT, \
+        .enb_mask =3D PCIE_EVENT_INT_ENB_MASK
 
-PolarFire SoC PCIe implement 11 interrupt in their platform. 
-(can be found in pcie-microchip-host.c:87)
+#define SEC_EVENT(x) \
+        .base =3D MC_PCIE_CTRL_ADDR, \
+        .offset =3D SEC_ERROR_INT, \
+        .mask_offset =3D SEC_ERROR_INT_MASK, \
+        .mask =3D SEC_ERROR_INT_ ## x ## _INT, \
+        .mask_high =3D 1, \
+        .enb_mask =3D 0
 
-#define EVENT_PCIE_L2_EXIT                      0
-#define EVENT_PCIE_HOTRST_EXIT                  1
-#define EVENT_PCIE_DLUP_EXIT                    2
-#define EVENT_SEC_TX_RAM_SEC_ERR                3
-#define EVENT_SEC_RX_RAM_SEC_ERR                4
-#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR          5
-#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR          6
-#define EVENT_DED_TX_RAM_DED_ERR                7
-#define EVENT_DED_RX_RAM_DED_ERR                8
-#define EVENT_DED_PCIE2AXI_RAM_DED_ERR          9
-#define EVENT_DED_AXI2PCIE_RAM_DED_ERR          10
+#define DED_EVENT(x) \
+        .base =3D MC_PCIE_CTRL_ADDR, \
+        .offset =3D DED_ERROR_INT, \
+        .mask_offset =3D DED_ERROR_INT_MASK, \
+        .mask_high =3D 1, \
+        .mask =3D DED_ERROR_INT_ ## x ## _INT, \
+        .enb_mask =3D 0
 
-"regular PCIe interrupts" ?
- 
-"PLDA local interrupts" ?
 
-Actually they are the same. I will change this.
-PLDA interrupt register graph in this patch.
- 
->> necessitating a custom get_events() implementation.
->> 
->> plda_get_events() adds interrupt register to PLDA local event num mapping
->> codes except DMA engine interrupt events. The DMA engine interrupt events
->> are implemented by vendors.
->> 
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Acked-by: Conor Dooley <conor.dooley@microchip.com>
->> ---
->>  .../pci/controller/plda/pcie-microchip-host.c | 35 ++++++++++++++++++-
->>  drivers/pci/controller/plda/pcie-plda.h       | 33 +++++++++++++++++
->>  2 files changed, 67 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
->> index 00250781b11c..fd0d92c3d03f 100644
->> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
->> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
->> @@ -627,6 +627,26 @@ static u32 mc_get_events(struct plda_pcie_rp *port)
->>  	return events;
->>  }
->>  
->> +static u32 plda_get_events(struct plda_pcie_rp *port)
->> +{
->> +	u32 events, val, origin;
->> +
->> +	origin = readl_relaxed(port->bridge_addr + ISTATUS_LOCAL);
->> +
->> +	/* Error events and doorbell events */
->> +	events = (origin & ERROR_AND_DOORBELL_MASK) >> A_ATR_EVT_POST_ERR_SHIFT;
->> +
->> +	/* INTx events */
->> +	if (origin & PM_MSI_INT_INTX_MASK)
->> +		events |= BIT(EVENT_PM_MSI_INT_INTX);
->> +
->> +	/* MSI event and sys events */
->> +	val = (origin & SYS_AND_MSI_MASK) >> PM_MSI_INT_MSI_SHIFT;
->> +	events |= val << EVENT_PM_MSI_INT_MSI;
->> +
->> +	return events;
->> +}
->> +
->>  static irqreturn_t mc_event_handler(int irq, void *dev_id)
->>  {
->>  	struct plda_pcie_rp *port = dev_id;
->> @@ -657,7 +677,7 @@ static void plda_handle_event(struct irq_desc *desc)
->>  
->>  	chained_irq_enter(chip, desc);
->>  
->> -	events = mc_get_events(port);
->> +	events = port->event_ops->get_events(port);
->>  
->>  	for_each_set_bit(bit, &events, port->num_events)
->>  		generic_handle_domain_irq(port->event_domain, bit);
->> @@ -751,6 +771,10 @@ static struct irq_chip mc_event_irq_chip = {
->>  	.irq_unmask = mc_unmask_event_irq,
->>  };
->>  
->> +static const struct plda_event_ops plda_event_ops = {
->> +	.get_events = plda_get_events,
->> +};
->> +
->>  static int plda_pcie_event_map(struct irq_domain *domain, unsigned int irq,
->>  			       irq_hw_number_t hwirq)
->>  {
->> @@ -816,6 +840,10 @@ static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
->>  				0, event_cause[event].sym, plda);
->>  }
->>  
->> +static const struct plda_event_ops mc_event_ops = {
->> +	.get_events = mc_get_events,
->> +};
->> +
->>  static const struct plda_event mc_event = {
->>  	.request_event_irq = mc_request_event_irq,
->>  	.intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
->> @@ -932,6 +960,9 @@ static int plda_init_interrupts(struct platform_device *pdev,
->>  	int i, intx_irq, msi_irq, event_irq;
->>  	int ret;
->>  
->> +	if (!port->event_ops)
->> +		port->event_ops = &plda_event_ops;
->> +
->>  	ret = plda_pcie_init_irq_domains(port);
->>  	if (ret) {
->>  		dev_err(dev, "failed creating IRQ domains\n");
->> @@ -1008,6 +1039,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
->>  	if (ret)
->>  		return ret;
->>  
->> +	port->plda.event_ops = &mc_event_ops;
->> +
->>  	/* Address translation is up; safe to enable interrupts */
->>  	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
->>  	if (ret)
->> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
->> index fba7343f9a96..dd8bc2750bfc 100644
->> --- a/drivers/pci/controller/plda/pcie-plda.h
->> +++ b/drivers/pci/controller/plda/pcie-plda.h
->> @@ -40,6 +40,7 @@
->>  #define  P_ATR_EVT_DISCARD_ERR_SHIFT		22
->>  #define  P_ATR_EVT_DOORBELL_MASK		0x00000000u
->>  #define  P_ATR_EVT_DOORBELL_SHIFT		23
->> +#define  ERROR_AND_DOORBELL_MASK		GENMASK(23, 16)
->>  #define  PM_MSI_INT_INTA_MASK			0x01000000u
->>  #define  PM_MSI_INT_INTA_SHIFT			24
->>  #define  PM_MSI_INT_INTB_MASK			0x02000000u
->> @@ -58,6 +59,7 @@
->>  #define  PM_MSI_INT_EVENTS_SHIFT		30
->>  #define  PM_MSI_INT_SYS_ERR_MASK		0x80000000u
->>  #define  PM_MSI_INT_SYS_ERR_SHIFT		31
->> +#define  SYS_AND_MSI_MASK			GENMASK(31, 28)
->>  #define  NUM_LOCAL_EVENTS			15
->>  #define ISTATUS_LOCAL				0x184
->>  #define IMASK_HOST				0x188
->> @@ -102,6 +104,36 @@
->>  #define EVENT_PM_MSI_INT_SYS_ERR		12
->>  #define NUM_PLDA_EVENTS				13
->>  
->> +/*
->> + * PLDA local interrupt register
->> + *
->> + * 31         27     23              15           7          0
->> + * +--+--+--+-+------+-+-+-+-+-+-+-+-+-----------+-----------+
->> + * |12|11|10|9| intx |7|6|5|4|3|2|1|0| DMA error | DMA end   |
->> + * +--+--+--+-+------+-+-+-+-+-+-+-+-+-----------+-----------+
->> + * 0:  AXI post error
->> + * 1:  AXI fetch error
->> + * 2:  AXI discard error
->> + * 3:  AXI doorbell
->> + * 4:  PCIe post error
->> + * 5:  PCIe fetch error
->> + * 6:  PCIe discard error
->> + * 7:  PCIe doorbell
->> + * 8:  4 INTx interruts
->> + * 9:  MSI interrupt
->> + * 10: AER event
->> + * 11: PM/LTR/Hotplug
->> + * 12: System error
->> + * DMA error : reserved for vendor implement
->> + * DMA end : reserved for vendor implement
->> + */
-"PLDA local interrupts" ?
-
-They are all the PLDA PCIe interrupts .
-
->> +
->> +struct plda_pcie_rp;
->> +
->> +struct plda_event_ops {
->> +	u32 (*get_events)(struct plda_pcie_rp *pcie);
->> +};
->> +
->>  struct plda_msi {
->>  	struct mutex lock;		/* Protect used bitmap */
->>  	struct irq_domain *msi_domain;
->> @@ -117,6 +149,7 @@ struct plda_pcie_rp {
->>  	struct irq_domain *event_domain;
->>  	raw_spinlock_t lock;
->>  	struct plda_msi msi;
->> +	const struct plda_event_ops *event_ops;
->>  	void __iomem *bridge_addr;
->>  	int num_events;
->>  };
->> -- 
->> 2.17.1
->> 
+>>             +---------------------------------------------------------=
+-+
+>>             |    microchip  Global event interrupt domain             =
+ |
+>>             +-----------------------------------+-----------+---------=
+-+
+>>             |                                   | microchip | PLDA    =
+ |
+>>             |                                   | event num |(StarFive=
+)|
+>>             |                                   |           |event num=
+ |
+>>             +-----------------------------------+-----------+---------=
+-+
+>>             |                                   | 0         |         =
+ |
+>>             |                                   |           |         =
+ |
+>> (mc pcie    |microchip platform event interrupt |           |         =
+ |
+>> int line)   |                                   |           |         =
+ |
+>> ------------|                                   |           |         =
+ |
+>>             |                                   |10         |         =
+ |
+>>             +-----------------------------------+-----------+---------=
+-+
+>>             | PLDA host DMA interrupt           |11         |         =
+ |
+>>             | (int number is not fixed, defined |           |         =
+ |
+>>             |  by vendor)                       |14         |         =
+ |
+>>          +--+-----------------------------------+---------- +---------=
+-+-+
+>>          |  |  PLDA event interrupt             |15         |0        =
+ | |
+>>          |  |  (int number is fixed)            |           |         =
+ | |
+>> ---------|--|                                   |           |         =
+ | |
+>> (Starfive|  |                                   |           |         =
+ | |
+>> pcie int |  |   +------------------+            |           |         =
+ | |
+>> line)    |  |   |INTx event domain |            |           |         =
+ | |
+>>          |  |   +------------------+            |           |         =
+ | |
+>>          |  |                                   |           |         =
+ | |
+>>          |  |   +------------------+            |           |         =
+ | |
+>>          |  |   |MSI event domain  |            |           |         =
+ | |
+>>          |  |   +------------------+            |           |         =
+ | |
+>>          |  |                                   |27         |12       =
+ | |
+>>          |  +---------------------------------+-+-----------+---------=
+-+ |
+>>          | extract PLDA event part to common PLDA file.               =
+   |
+>>          +------------------------------------------------------------=
+---+
+>>=20
+>>=20
+>> >> > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/=
+drivers/pci/controller/plda/pcie-microchip-host.c
+>> >> > index fd0d92c3d03f..ff40c1622173 100644
+>> >> > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+>> >> > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+>> >> > @@ -771,6 +771,63 @@ static struct irq_chip mc_event_irq_chip =3D=
+ {
+>> >> >  	.irq_unmask =3D mc_unmask_event_irq,
+>> >> >  };
+>> >> > > +static u32 plda_hwirq_to_mask(int hwirq)
+>> >> > +{
+>> >> > +	u32 mask;
+>> >> > +
+>> >> > +	if (hwirq < EVENT_PM_MSI_INT_INTX)
+>> >> > +		mask =3D BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
+>> >> > +	else if (hwirq =3D=3D EVENT_PM_MSI_INT_INTX)
+>> >> > +		mask =3D PM_MSI_INT_INTX_MASK;
+>> >> > +	else
+>> >> > +		mask =3D BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
+>> >> > +
+>> >> > +	return mask;
+>> >> > +}
+>> >> > +
+>> >> > +static void plda_ack_event_irq(struct irq_data *data)
+>> >> > +{
+>> >> > +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
+>> >> > +
+>> >> > +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
+>> >> > +		       port->bridge_addr + ISTATUS_LOCAL);
+>> >> > +}
+>> >> > +
+>> >> > +static void plda_mask_event_irq(struct irq_data *data)
+>> >> > +{
+>> >> > +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
+>> >> > +	u32 mask, val;
+>> >> > +
+>> >> > +	mask =3D plda_hwirq_to_mask(data->hwirq);
+>> >> > +
+>> >> > +	raw_spin_lock(&port->lock);
+>> >> > +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
+>> >> > +	val &=3D ~mask;
+>> >> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
+>> >> > +	raw_spin_unlock(&port->lock);
+>> >> > +}
+>> >> > +
+>> >> > +static void plda_unmask_event_irq(struct irq_data *data)
+>> >> > +{
+>> >> > +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
+>> >> > +	u32 mask, val;
+>> >> > +
+>> >> > +	mask =3D plda_hwirq_to_mask(data->hwirq);
+>> >> > +
+>> >> > +	raw_spin_lock(&port->lock);
+>> >> > +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
+>> >> > +	val |=3D mask;
+>> >> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
+>> >> > +	raw_spin_unlock(&port->lock);
+>> >> > +}
+>> >> > +
+>> >> > +static struct irq_chip plda_event_irq_chip =3D {
+>> >> > +	.name =3D "PLDA PCIe EVENT",
+>> >> > +	.irq_ack =3D plda_ack_event_irq,
+>> >> > +	.irq_mask =3D plda_mask_event_irq,
+>> >> > +	.irq_unmask =3D plda_unmask_event_irq,
+>> >> > +};
+>> >> > +
+>> >> >  static const struct plda_event_ops plda_event_ops =3D {
+>> >> >  	.get_events =3D plda_get_events,
+>> >> >  };
+>> >> > @@ -778,7 +835,9 @@ static const struct plda_event_ops plda_event=
+_ops =3D {
+>> >> >  static int plda_pcie_event_map(struct irq_domain *domain, unsign=
+ed int irq,
+>> >> >  			       irq_hw_number_t hwirq)
+>> >> >  {
+>> >> > -	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_=
+irq);
+>> >> > +	struct plda_pcie_rp *port =3D (void *)domain->host_data;
+>> >> > +
+>> >> > +	irq_set_chip_and_handler(irq, port->event_irq_chip, handle_leve=
+l_irq);
+>> >> >  	irq_set_chip_data(irq, domain->host_data);
+>> >> > =20
+>> >> >  	return 0;
+>> >> > @@ -963,6 +1022,9 @@ static int plda_init_interrupts(struct platf=
+orm_device *pdev,
+>> >> >  	if (!port->event_ops)
+>> >> >  		port->event_ops =3D &plda_event_ops;
+>> >> > =20
+>> >> > +	if (!port->event_irq_chip)
+>> >> > +		port->event_irq_chip =3D &plda_event_irq_chip;
+>> >> > +
+>> >> >  	ret =3D plda_pcie_init_irq_domains(port);
+>> >> >  	if (ret) {
+>> >> >  		dev_err(dev, "failed creating IRQ domains\n");
+>> >> > @@ -1040,6 +1102,7 @@ static int mc_platform_init(struct pci_conf=
+ig_window *cfg)
+>> >> >  		return ret;
+>> >> > =20
+>> >> >  	port->plda.event_ops =3D &mc_event_ops;
+>> >> > +	port->plda.event_irq_chip =3D &mc_event_irq_chip;
+>> >> > =20
+>> >> >  	/* Address translation is up; safe to enable interrupts */
+>> >> >  	ret =3D plda_init_interrupts(pdev, &port->plda, &mc_event);
+>> >> > diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pc=
+i/controller/plda/pcie-plda.h
+>> >> > index dd8bc2750bfc..24ac50c458dc 100644
+>> >> > --- a/drivers/pci/controller/plda/pcie-plda.h
+>> >> > +++ b/drivers/pci/controller/plda/pcie-plda.h
+>> >> > @@ -128,6 +128,8 @@
+>> >> >   * DMA end : reserved for vendor implement
+>> >> >   */
+>> >> > =20
+>> >> > +#define PM_MSI_TO_MASK_OFFSET			19
+>> >> > +
+>> >> >  struct plda_pcie_rp;
+>> >> > =20
+>> >> >  struct plda_event_ops {
+>> >> > @@ -150,6 +152,7 @@ struct plda_pcie_rp {
+>> >> >  	raw_spinlock_t lock;
+>> >> >  	struct plda_msi msi;
+>> >> >  	const struct plda_event_ops *event_ops;
+>> >> > +	const struct irq_chip *event_irq_chip;
+>> >> >  	void __iomem *bridge_addr;
+>> >> >  	int num_events;
+>> >> >  };
 
