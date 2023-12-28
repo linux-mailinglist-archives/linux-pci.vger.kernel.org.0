@@ -1,295 +1,157 @@
-Return-Path: <linux-pci+bounces-1513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8545B81FA26
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 18:00:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E43981FA2C
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 18:02:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0606B22F83
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 16:59:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFEB61F220A5
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 17:02:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18909101CE;
-	Thu, 28 Dec 2023 16:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CF1F519;
+	Thu, 28 Dec 2023 17:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LARfE/EZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JPFh8xcy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B12410A06;
-	Thu, 28 Dec 2023 16:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E051F50E;
+	Thu, 28 Dec 2023 17:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703782715; x=1735318715;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9cmBqpNWxOkx/qRL+GcnO2FP0hog/X0WaEdjSaE40iI=;
-  b=LARfE/EZYUnTKh5Nv3Zu2DP9KF+4Zu39FXYjJBv7Ly6cvHhaYoYSvY56
-   YQJDvm9mJdjH8KlZ8M//Esik1j0WM0MH13dbe+ALAIqivMwpnjL6QrMkF
-   1alqq41ASjR1AD2xxRfgNN/Q2MnI9o1Io7NNmYCI1Nfn89Lxprq2jbbA+
-   slDfHD3kMdTDI7hSyaXFr5O60VG+7sdT0gAez5uD8Lh4kI8qu9/1e2Piy
-   b4NyF3Nt6aVTec88f4Hl/6sYf75j7HwWng6PN5uwrqnmZNGpiF+weBCHg
-   LQE6qvmWERvjeM6BSc+2Q/qfPrBK1cCDbOzx5GU2r6mS1TvJeQAylvNun
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="381536710"
+  t=1703782934; x=1735318934;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=E4S700sBn75X/3Gsw0UEUvo6avxdYoT8g3X4kF0jwe0=;
+  b=JPFh8xcyiG24ADm0+bvT/B7kkwO8W0tJhNsD6QvQU4is2TaZd8ur5b6D
+   LGbR1ZkypHzyuQrsBK/T9MndjlQRJGXzxMU+R5h7cbxd3zWypj/58Z9/v
+   bTH7pkAozhkPEtGALT4Ne2gEpStHTY5tzal4WQ55ltoKQ0P0x1nx38uGI
+   Lc23nQMqfPyLU4dtJRm4aRY4iPVtftBeFYmApRHVzZwgVOZxQuN5nelaN
+   nyRirIYncwuEW22qW8oU7ULbIm0KyhbmREugJ3GFb7EXMXNCuz8pJfaVU
+   aN/EDjtiJY/w3yc20g07zRl3Osxv9X3cWY9hbzbGWfqrDXS8Iu2larFDx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="18119283"
 X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="381536710"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:34 -0800
+   d="scan'208";a="18119283"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 09:02:12 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="844488561"
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="771757391"
 X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="844488561"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.250.171])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:30 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Igor Mammedov <imammedo@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
+   d="scan'208";a="771757391"
+Received: from ply01-vm-store.bj.intel.com ([10.238.153.201])
+  by orsmga007.jf.intel.com with ESMTP; 28 Dec 2023 09:02:09 -0800
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: kevin.tian@intel.com,
+	bhelgaas@google.com,
+	baolu.lu@linux.intel.com,
+	dwmw2@infradead.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	lukas@wunner.de
+Cc: linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 7/7] PCI: Relax bridge window tail sizing rules
-Date: Thu, 28 Dec 2023 18:57:07 +0200
-Message-Id: <20231228165707.3447-8-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
-References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+Subject: [RFC PATCH v10 0/5] fix vt-d hard lockup when hotplug ATS capable device
+Date: Thu, 28 Dec 2023 12:02:01 -0500
+Message-Id: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-During remove & rescan cycle, PCI subsystem will recalculate and adjust
-the bridge window sizing that was initially done by "BIOS". The size
-calculation is based on the required alignment of the largest resource
-among the downstream resources as per pbus_size_mem() (unimportant or
-zero parameters marked with "..."):
+This patchset is used to fix vt-d hard lockup reported when surprise
+unplug ATS capable endpoint device connects to system via PCIe switch
+as following topology.                                               
+                                                                    
+     +-[0000:15]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d 
+     |           +-00.1  Intel Corporation Ice Lake Mesh 2 PCIe     
+     |           +-00.2  Intel Corporation Ice Lake RAS             
+     |           +-00.4  Intel Corporation Device 0b23              
+     |           \-01.0-[16-1b]----00.0-[17-1b]--+-00.0-[18]----00.0 
+                                           NVIDIA Corporation Device 2324 
+     |                                           +-01.0-[19]----00.0    
+                          Mellanox Technologies MT2910 Family [ConnectX-7]
+                                                                          
+User brought endpoint device 19:00.0's link down by flapping it's hotplug 
+capable slot 17:01.0 link control register, as sequence DLLSC response, 
+pciehp_ist() will unload device driver and power it off, durning device 
+driver is unloading an iommu device-TLB invalidation (Intel VT-d spec, or 
+'ATS Invalidation' in PCIe spec) request issued to that link down device, 
+thus a long time completion/timeout waiting in interrupt context causes   
+continuous hard lockup warnning and system hang.                         
+                                                                         
+Other detail, see every patch commit log.                                
+                                                                         
+patch [3&4] were tested by yehaorong@bytedance.com on stable v6.7-rc4.   
+patch [1-5] passed compiling on stable v6.7-rc6.                    
+                                                                         
+                                                                         
+change log:  
+v10:
+- refactor qi_submit_sync() and its callers to get pci_dev instance, as
+  Kevin pointed out add target_flush_dev to iommu is not right.
+v9:
+- unify all spelling of ATS Invalidation adhere to PCIe spec per Bjorn's
+  suggestion.                                                         
+v8:
+- add a patch to break the loop for timeout device-TLB invalidation, as
+  Bjorn said there is possibility device just no response but not gone.  
+v7:                                                                      
+- reorder patches and revise commit log per Bjorn's guide.              
+- other code and commit log revise per Lukas' suggestion.               
+- rebased to stable v6.7-rc6.                                           
+v6:                                                                     
+- add two patches to break out device-TLB invalidation if device is gone. 
+v5:                                                                       
+- add a patch try to fix the rare case (surprise remove a device in       
+  safe removal process). not work because surprise removal handling can't 
+  re-enter when another safe removal is in process.                       
+v4:                                                                       
+- move the PCI device state checking after ATS per Baolu's suggestion.    
+v3:                                                                       
+- fix commit description typo.                                            
+v2:                                                                       
+- revise commit[1] description part according to Lukas' suggestion.       
+- revise commit[2] description to clarify the issue's impact.             
+v1:                                                                       
+- https://lore.kernel.org/lkml/20231213034637.2603013-1-haifeng.zhao@     
+linux.intel.com/T/                                                        
+                                                                          
+                                                                          
+Thanks,                                                                   
+Ethan                           
 
-	min_align = calculate_mem_align(aligns, max_order);
-	size0 = calculate_memsize(size, ..., min_align);
 
-and then in calculate_memsize():
-	size = ALIGN(max(size, ...) + ..., align);
+Ethan Zhao (5):
+  iommu/vt-d: add pci_dev parameter to qi_submit_sync and refactor
+    callers
+  iommu/vt-d: break out ATS Invalidation if target device is gone
+  PCI: make pci_dev_is_disconnected() helper public for other drivers
+  iommu/vt-d: don't issue ATS Invalidation request when device is
+    disconnected
+  iommu/vt-d: don't loop for timeout ATS Invalidation request forever
 
-If the original bridge window sizing tried to conserve space, this will
-lead to massive increase of the required bridge window size when the
-downstream has a large disparity in BAR sizes. E.g., with 16MiB and
-16GiB BARs this results in 32GiB bridge window size even if 16MiB BAR
-does not require gigabytes of space to fit.
+ drivers/iommu/intel/dmar.c          | 55 ++++++++++++++++++++++-------
+ drivers/iommu/intel/iommu.c         | 26 ++++----------
+ drivers/iommu/intel/iommu.h         | 17 +++++----
+ drivers/iommu/intel/irq_remapping.c |  2 +-
+ drivers/iommu/intel/pasid.c         | 13 +++----
+ drivers/iommu/intel/svm.c           | 13 ++++---
+ drivers/pci/pci.h                   |  5 ---
+ include/linux/pci.h                 |  5 +++
+ 8 files changed, 74 insertions(+), 62 deletions(-)
 
-When doing remove & rescan for a bus that contains such a PCI device, a
-larger bridge window is suddenly required on rescan but when there is a
-bridge window upstream that is already assigned based on the original
-size, it cannot be enlarged to the new requirement. This causes the
-allocation of the bridge window to fail (0x600000000 > 0x400ffffff):
-
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-pci 0000:01:00.0: PCI bridge to [bus 02-04]
-pci 0000:01:00.0:   bridge window [mem 0x40400000-0x406fffff]
-pci 0000:01:00.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-...
-pci_bus 0000:03: busn_res: [bus 03] is released
-pci 0000:03:00.0: reg 0x10: [mem 0x6400000000-0x6400ffffff 64bit pref]
-pci 0000:03:00.0: reg 0x18: [mem 0x6000000000-0x63ffffffff 64bit pref]
-pci 0000:03:00.0: reg 0x30: [mem 0x40400000-0x405fffff pref]
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-pci 0000:02:01.0: BAR 9: no space for [mem size 0x600000000 64bit pref]
-pci 0000:02:01.0: BAR 9: failed to assign [mem size 0x600000000 64bit pref]
-pci 0000:02:01.0: BAR 8: assigned [mem 0x40400000-0x405fffff]
-pci 0000:03:00.0: BAR 2: no space for [mem size 0x400000000 64bit pref]
-pci 0000:03:00.0: BAR 2: failed to assign [mem size 0x400000000 64bit pref]
-pci 0000:03:00.0: BAR 0: no space for [mem size 0x01000000 64bit pref]
-pci 0000:03:00.0: BAR 0: failed to assign [mem size 0x01000000 64bit pref]
-pci 0000:03:00.0: BAR 6: assigned [mem 0x40400000-0x405fffff pref]
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-
-This is a major surprise for users who are suddenly left with a PCIe
-device that was working fine with the original bridge window sizing.
-
-Even if the already assigned bridge window could be enlarged by
-reallocation in some cases (something the current code does not attempt
-to do), it is not possible in general case and the large amount of
-wasted space at the tail of the bridge window may lead to other
-resource exhaustion problems on Root Complex level (think of multiple
-PCIe cards with VFs and BAR size disparity in a single system).
-
-PCI specifications only expect natural alignment for BARs (PCI Express
-Base Specification, rev. 6.1 sect. 7.5.1.2.1) and minimum of 1MiB
-alignment for the bridge window (PCI Express Base Specification,
-rev 6.1 sect. 7.5.1.3). The current bridge window tail alignment rule
-was introduced in the commit 5d0a8965aea9 ("[PATCH] 2.5.14: New PCI
-allocation code (alpha, arm, parisc) [2/2]") that only states:
-"pbus_size_mem: core stuff; tested with randomly generated sets of
-resources". It does not explain the motivation for the extra tail space
-allocated that is not truly needed by the downstream resources. As
-such, it is far from clear if it ever has been required by any HW.
-
-To prevent PCIe cards with BAR size disparity from becoming unusable
-after remove & rescan cycle, attempt to do a truly minimal allocation
-for memory resources if needed. First check if the normally calculated
-bridge window will not fit into an already assigned upstream resource.
-In such case, try with relaxed bridge window tail sizing rules instead
-where no extra tail space is requested beyond what the downstream
-resources require. Only enforce the alignment requirement of the bridge
-window itself (normally 1MiB).
-
-With this patch, the resources are successfully allocated:
-
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-pci 0000:02:01.0: bridge window [mem 0x6000000000-0x6400ffffff 64bit pref] to [bus 03] requires relaxed alignment rules
-pci 0000:02:01.0: BAR 9: assigned [mem 0x6000000000-0x6400ffffff 64bit pref]
-pci 0000:02:01.0: BAR 8: assigned [mem 0x40400000-0x405fffff]
-pci 0000:03:00.0: BAR 2: assigned [mem 0x6000000000-0x63ffffffff 64bit pref]
-pci 0000:03:00.0: BAR 0: assigned [mem 0x6400000000-0x6400ffffff 64bit pref]
-pci 0000:03:00.0: BAR 6: assigned [mem 0x40400000-0x405fffff pref]
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-
-This patch draws inspiration from the initial investigations and work
-by Mika Westerberg.
-
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=216795
-Link: https://lore.kernel.org/linux-pci/20190812144144.2646-1-mika.westerberg@linux.intel.com/
-Fixes: 5d0a8965aea9 ("[PATCH] 2.5.14: New PCI allocation code (alpha, arm, parisc) [2/2]")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/setup-bus.c | 74 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 72 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index e3e6ff8854a7..7a32283262c2 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -21,6 +21,7 @@
- #include <linux/errno.h>
- #include <linux/ioport.h>
- #include <linux/cache.h>
-+#include <linux/limits.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include "pci.h"
-@@ -960,6 +961,62 @@ static inline resource_size_t calculate_mem_align(resource_size_t *aligns,
- 	return min_align;
- }
- 
-+/**
-+ * pbus_upstream_assigned_limit - Check no upstream resource limits allocation
-+ * @bus:	The bus
-+ * @mask:	Mask the resource flag, then compare it with type
-+ * @type:	The type of resource from bridge
-+ * @size:	The size required from the bridge window
-+ * @align:	Required alignment for the resource
-+ *
-+ * Checks that @size can fit inside the upstream bridge resources that are
-+ * already assigned.
-+ *
-+ * Return: -ENOSPC if @size cannot fit into an already assigned resource
-+ * upstream resource.
-+ */
-+static int pbus_upstream_assigned_limit(struct pci_bus *bus, unsigned long mask,
-+					unsigned long type, resource_size_t size,
-+					resource_size_t align)
-+{
-+	struct resource_constraint constraint = {
-+		.max = RESOURCE_SIZE_MAX,
-+		.align = align,
-+	};
-+	struct pci_bus *downstream = bus;
-+	struct resource *r;
-+
-+	while ((bus = bus->parent)) {
-+		if (pci_is_root_bus(bus))
-+			break;
-+
-+		pci_bus_for_each_resource(bus, r) {
-+			if (!r || !r->parent || (r->flags & mask) != type)
-+				continue;
-+
-+			if (resource_size(r) >= size) {
-+				struct resource gap = {};
-+
-+				if (!find_empty_resource_slot(r, &gap, size, &constraint))
-+					return 0;
-+			}
-+
-+			if (bus->self) {
-+				pci_dbg(bus->self,
-+					"Assigned bridge window %pR to %pR cannot fit 0x%llx required for %s bridging to %pR\n",
-+					r, &bus->busn_res,
-+					(unsigned long long)size,
-+					pci_name(downstream->self),
-+					&downstream->busn_res);
-+			}
-+
-+			return -ENOSPC;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * pbus_size_mem() - Size the memory window of a given bus
-  *
-@@ -986,7 +1043,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			 struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
--	resource_size_t min_align, align, size, size0, size1;
-+	resource_size_t min_align, win_align, align, size, size0, size1;
- 	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
- 	int order, max_order;
- 	struct resource *b_res = find_bus_resource_of_type(bus,
-@@ -1064,10 +1121,23 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 		}
- 	}
- 
-+	win_align = window_alignment(bus, b_res->flags);
- 	min_align = calculate_mem_align(aligns, max_order);
--	min_align = max(min_align, window_alignment(bus, b_res->flags));
-+	min_align = max(min_align, win_align);
- 	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
- 	add_align = max(min_align, add_align);
-+
-+	if (bus->self && size0 &&
-+	    pbus_upstream_assigned_limit(bus, mask | IORESOURCE_PREFETCH, type,
-+					 size0, add_align)) {
-+		min_align = 1ULL << (max_order + 20);
-+		min_align = max(min_align, win_align);
-+		size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), win_align);
-+		add_align = win_align;
-+		pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment rules\n",
-+			 b_res, &bus->busn_res);
-+	}
-+
- 	size1 = (!realloc_head || (realloc_head && !add_size && !children_add_size)) ? size0 :
- 		calculate_memsize(size, min_size, add_size, children_add_size,
- 				resource_size(b_res), add_align);
 -- 
-2.30.2
+2.31.1
 
 
