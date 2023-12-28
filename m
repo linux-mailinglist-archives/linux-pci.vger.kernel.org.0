@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-1484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 338C581F363
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 01:34:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26A1C81F371
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 01:36:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD403B2171F
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 00:34:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24CC41C227E3
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 00:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACF30368;
-	Thu, 28 Dec 2023 00:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C9A368;
+	Thu, 28 Dec 2023 00:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DLlQ/bq6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hOFVY0gA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA44EA5
-	for <linux-pci@vger.kernel.org>; Thu, 28 Dec 2023 00:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B8B5671
+	for <linux-pci@vger.kernel.org>; Thu, 28 Dec 2023 00:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703723635; x=1735259635;
+  t=1703723815; x=1735259815;
   h=date:from:to:cc:subject:message-id;
-  bh=kZO/tKh46VkChuDWDByy0BOxnyAIpCc+kGr1RPnP3ig=;
-  b=DLlQ/bq6l89Cf1EEWY2ykka0TJuvd+dO87hK6dTjjlm09qoEw6B9rgTm
-   2MLVlcSOKlt3Sw9ayCiNW0EIUyIE732R2zSoCcLalRrPH2QfVYY3XNL5D
-   d1KwGq9do3AkjRgvTpkmEq5K4vtwX8XRIuPJywHCewVJf1d+Zz4vqgnyr
-   9gSpH2WU46LUr7IhSSl0egq7OwdwGtFox8yNrj2ZmB63oN2gPnKJNX+2u
-   gomaL/DMiUeBYsu6ceNPG420JZpyAcV4GZjp0UGCvXLY1tTvwAGBKa1/R
-   caLWxQQftmfLH4FdQ3nTXpKH+CspU5O2tRozxjhG9KbJQXPEAZT74rwKi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3802014"
+  bh=lrYx3ECdO4R0UKFHxxBeFpuw8blk0GIljOioKKJVCug=;
+  b=hOFVY0gABHchRC/YcenFDCNgUfWjnt64aULP3kcpnmnlQlk66Q0K3Gz+
+   9DZrg+92iOVnU6Zc9DYUdH+KOIgfRPk8fNV7mcXZ2lhFpSIMQVR72UWlV
+   bbKSsoTjG1Ch8LzKbPw3SGaXJ+Rqz5oy98ZHn6AlK0JIdLv3E3QWgrWU5
+   8xfOeQJcnMAmdBYRzab0uoNjdx/8Ez6gs/Sv7z8gyZsAgqnBtd9XmFuXC
+   APvnQCDKoRKrh49RLVE0MhDbJXC9vyRDYUyllLCWN46Cm74L8yBn2TneT
+   IIBLVTieP4vekLXyXRe+cK95lHskpkSmKT3dSnAwMXxpHbCWIzqdJbrxe
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="482675542"
 X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="3802014"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 16:33:55 -0800
+   d="scan'208";a="482675542"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 16:36:54 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="848816512"
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="781890958"
 X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="848816512"
+   d="scan'208";a="781890958"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Dec 2023 16:33:53 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 27 Dec 2023 16:36:53 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rIeLP-000Frn-17;
-	Thu, 28 Dec 2023 00:33:51 +0000
-Date: Thu, 28 Dec 2023 08:33:50 +0800
+	id 1rIeOJ-000Fs7-1g;
+	Thu, 28 Dec 2023 00:36:51 +0000
+Date: Thu, 28 Dec 2023 08:36:26 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- 0942155a48e4cfc2c83e514c86a3de8f78f6af02
-Message-ID: <202312280846.kpPXQOwe-lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS
+ 6936c253ee2e4061f6e62f940efbd46a256f91c0
+Message-ID: <202312280822.grctYmT1-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -63,12 +63,12 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: 0942155a48e4cfc2c83e514c86a3de8f78f6af02  PCI: Remove unused 'node' member from struct pci_driver
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 6936c253ee2e4061f6e62f940efbd46a256f91c0  Merge branch 'pci/dt-bindings'
 
-elapsed time: 1449m
+elapsed time: 1451m
 
-configs tested: 251
+configs tested: 250
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -216,7 +216,6 @@ powerpc                           allnoconfig   gcc
 powerpc                          allyesconfig   clang
 powerpc                       holly_defconfig   gcc  
 powerpc                  iss476-smp_defconfig   gcc  
-powerpc                      katmai_defconfig   clang
 powerpc                 linkstation_defconfig   gcc  
 powerpc                      ppc6xx_defconfig   gcc  
 powerpc               randconfig-001-20231227   clang
