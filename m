@@ -1,85 +1,72 @@
-Return-Path: <linux-pci+bounces-1524-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1525-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 638AC81FC07
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 00:41:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93D3881FC18
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 00:53:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95C491C214F7
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 23:41:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A96341C2133E
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 23:53:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54A5D10A06;
-	Thu, 28 Dec 2023 23:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 577C810A11;
+	Thu, 28 Dec 2023 23:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mztgYsb3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JD5uAs/1"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C8D10A01;
-	Thu, 28 Dec 2023 23:41:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AB1C433C8;
-	Thu, 28 Dec 2023 23:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2113310A00;
+	Thu, 28 Dec 2023 23:53:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F3EC433C7;
+	Thu, 28 Dec 2023 23:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703806891;
-	bh=+SOMzSt6wOwrUHJ7V0j44ZJVizIkipIkwhX7yp1taLg=;
+	s=k20201202; t=1703807630;
+	bh=AtXCWBZ3/hv7kak8skJj92km/jnX8jl2+Cn2Spna3ts=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=mztgYsb3QT/uHmioEvS54FdZrYaMHEEpagL7SZN0wM6HB+t9l3H9Gdwi1CWoPRws0
-	 uEzB44IXpgO0KqajBGgbHj15Ft+hkk3c9vHFB0seJ7Iyb2AvWbsD85bHk37RUD09KQ
-	 ZfAz+p5JkuZgVk9o2Rffac+rxtr8zCqmwEVJLgNIxUcBidufvMcEBIZWpWlRmgZuSL
-	 sc92572rwThm3Tt/amU97tcrd2KcSVkyBJ1pbSdK9dfwJsFJzAQ0BPp8Xd/03BBs7E
-	 crKSf2KLLwvwbYm07cYwtqz6vnwge8DHEoNQDWvG4KOHarRrvXQjSAxKwuVj89ICeG
-	 v9GWgxRl8PYPQ==
-Date: Thu, 28 Dec 2023 17:41:29 -0600
+	b=JD5uAs/1LZEK6k8suyobstsdyxgvjmREdGq1Ruc1dPJ8Cb1dReom3Z6Rhz4IaTFAU
+	 IbD1wsLGISDXayB2Wz4VOZ6uwj+uWdtGhrAguNsvSJn5c5eC1/hS2cgpNHjgrNvaaB
+	 T/j9Ru3/2cuWJsXRq6Q3JQVTa1gBpCf8JiR4NxnbubfIYnrrTHN/M1dOwKMHxYD339
+	 Ibj3wklQoo0bUgX02Y1yTNCIOQj6TDixFnRfZeHcQ/aGKWhRmdwlh983iyE2kUTm5R
+	 UnJnaqtZg8qh6orsRYd013WT9d4RGQKx3qPNzwd73/3kdSZ0a4nBu0Ss9ISkrW/yj+
+	 bmK1XF7GhL1tw==
+Date: Thu, 28 Dec 2023 17:53:48 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: attreyee-muk <tintinm2017@gmail.com>
-Cc: bhelgaas@google.com, corbet@lwn.net, linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] Documentation/PCI: fix spelling mistake in
- boot-interrupts
-Message-ID: <20231228234129.GA1559242@bhelgaas>
+To: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+Cc: Shuah Khan <shuah@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, kernelci@lists.linux.dev,
+	kernel@collabora.com, Tim Bird <Tim.Bird@sony.com>,
+	linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
+	linux-kselftest@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+	Doug Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
+	Saravana Kannan <saravanak@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/3] Add test to verify probe of devices from
+ discoverable busses
+Message-ID: <20231228235348.GA1559485@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231223184412.25598-1-tintinm2017@gmail.com>
+In-Reply-To: <20231227123643.52348-1-nfraprado@collabora.com>
 
-[+cc Randy]
+I have no opinion about the patches themselves, but just a heads-up
+that "busses" may be regarded as a misspelling of "buses", e.g.,
+https://lore.kernel.org/r/20231223184720.25645-1-tintinm2017@gmail.com,
+I'm guessing because codespell complains about it.
 
-On Sun, Dec 24, 2023 at 12:14:13AM +0530, attreyee-muk wrote:
-> Correct to “re-enabled” from “reenabled”.
-> 
-> Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
+Git grep says there are almost as many instances of "busses" as
+"buses" in the kernel, so I don't go out of my way to change them.
+Just FYI, doesn't matter to me either way.
 
-I'm fine with this either way, so I squashed this together with the
-"busses" patch and they're both on pci/misc for v6.8.
-
-> ---
->  Documentation/PCI/boot-interrupts.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/PCI/boot-interrupts.rst b/Documentation/PCI/boot-interrupts.rst
-> index 2ec70121bfca..931077bb0953 100644
-> --- a/Documentation/PCI/boot-interrupts.rst
-> +++ b/Documentation/PCI/boot-interrupts.rst
-> @@ -61,7 +61,7 @@ Conditions
->  ==========
->  
->  The use of threaded interrupts is the most likely condition to trigger
-> -this problem today. Threaded interrupts may not be reenabled after the IRQ
-> +this problem today. Threaded interrupts may not be re-enabled after the IRQ
->  handler wakes. These "one shot" conditions mean that the threaded interrupt
->  needs to keep the interrupt line masked until the threaded handler has run.
->  Especially when dealing with high data rate interrupts, the thread needs to
-> -- 
-> 2.34.1
-> 
+Bjorn
 
