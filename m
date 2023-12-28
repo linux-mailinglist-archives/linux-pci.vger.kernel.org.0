@@ -1,38 +1,53 @@
-Return-Path: <linux-pci+bounces-1493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C13A81F800
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 12:58:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D00CE81F89A
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 14:03:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA4771F212DE
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 11:58:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84B142887F4
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 13:03:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC9296FDE;
-	Thu, 28 Dec 2023 11:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B105F7498;
+	Thu, 28 Dec 2023 13:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OEgPzQ6y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6382A7462;
-	Thu, 28 Dec 2023 11:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id 41A0624E257;
-	Thu, 28 Dec 2023 19:58:32 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Dec
- 2023 19:58:32 +0800
-Received: from [192.168.125.85] (183.27.97.107) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Dec
- 2023 19:58:31 +0800
-Message-ID: <987e4153-236a-4bc6-9db6-f9ad58846267@starfivetech.com>
-Date: Thu, 28 Dec 2023 19:58:30 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8261E79EA;
+	Thu, 28 Dec 2023 13:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703768601; x=1735304601;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zkLfaR5fZ1IAwHA+i0JOyZEOJlu3smUV2Z63DLkicJg=;
+  b=OEgPzQ6ys03rqJ9tsUloN+6wec+Cy2RE2YPyPpjAn4AwGs9mlOxZeQTw
+   I1NxquRx4PV9ZtwoU/m6hOyYhsQj1k6QygHiSdjXpaFOd53gm6rJmL3Tx
+   yFnV3WwGX2wx8sfGR5gASmVw9COHaej0/sPzVMIapVY+GRy5YSuR/aXbY
+   Yk9CTaX2uQNQ2x5DqZRwzQhoXVYKjkyKPBCzdNA0IjALHMpdIhnxXfExu
+   OAOBPZ4G1EAiKaTj9HRNDERqQlc0aJWF5mR5Hifoom20YettVw+P8tfkf
+   zKp6vdsO3zM1K9+jhZw8VJHgNEAQNOm2q0dp6djcsCt3Pu7VXImeUM7Aq
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3379694"
+X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
+   d="scan'208";a="3379694"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 05:03:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="771715639"
+X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
+   d="scan'208";a="771715639"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.249.169.62]) ([10.249.169.62])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 05:03:17 -0800
+Message-ID: <17725ef5-d777-420b-9586-4aade103282e@linux.intel.com>
+Date: Thu, 28 Dec 2023 21:03:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -40,182 +55,255 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 12/21] PCI: microchip: Add request_event_irq()
- callback function
-Content-Language: en-US
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Daire McNamara <daire.mcnamara@microchip.com>, "Emil
- Renner Berthing" <emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
-	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <20231214072839.2367-13-minda.chen@starfivetech.com>
- <ZYxKYhVycTOfbDTI@lpieralisi>
-From: Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <ZYxKYhVycTOfbDTI@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH v9 2/5] iommu/vt-d: break out ATS Invalidation if
+ target device is gone
+To: "Tian, Kevin" <kevin.tian@intel.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+ "dwmw2@infradead.org" <dwmw2@infradead.org>,
+ "will@kernel.org" <will@kernel.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "lukas@wunner.de" <lukas@wunner.de>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20231228001646.587653-1-haifeng.zhao@linux.intel.com>
+ <20231228001646.587653-3-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB5276D70FD60FD1E0733B35AE8C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276D70FD60FD1E0733B35AE8C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EXCAS061.cuchost.com (172.16.6.21) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
 
 
+On 12/28/2023 4:30 PM, Tian, Kevin wrote:
+>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> Sent: Thursday, December 28, 2023 8:17 AM
+>>
+>> For those endpoint devices connect to system via hotplug capable ports,
+>> users could request a warm reset to the device by flapping device's link
+>> through setting the slot's link control register, as pciehp_ist() DLLSC
+>> interrupt sequence response, pciehp will unload the device driver and
+>> then power it off. thus cause an IOMMU device-TLB invalidation (Intel
+>> VT-d spec, or ATS Invalidation in PCIe spec r6.1) request for device to
+>> be sent and a long time completion/timeout waiting in interrupt context.
+> is above describing the behavior of safe removal or surprise removal?
 
-On 2023/12/28 0:01, Lorenzo Pieralisi wrote:
-> On Thu, Dec 14, 2023 at 03:28:30PM +0800, Minda Chen wrote:
->> PolarFire implements specific PCIe interrupts except PLDA local interrupt.
-> 
-> Please explain to me what you want to say here.
-> >> For lack of MSI controller, these interrupts have to be added to global
->> event field. PolarFire PCIe driver also register additional interrupt
->> symbol name.
-> 
-> And here.
-> 
-The sentence mean architecture should have an advance interrupt 
-controller can support MSI interrupt and these new added interrupts should
-be added to MSI interrupt. (Like ARM GIC high level version)
+bring the link down is a kind of surprise removal for hotplug capable
 
-Maybe this commit message should be deleted. The commit message should claim
-why add request_event_irq() callback function.
+device.
 
-Add this callback function is for vendor register the interrupt handler and
-the name of new added PCIe interrupts. 
+>   
+>> That would cause following continuous hard lockup warning and system
+>> hang
+>>
+>> [ 4211.433662] pcieport 0000:17:01.0: pciehp: Slot(108): Link Down
+>> [ 4211.433664] pcieport 0000:17:01.0: pciehp: Slot(108): Card not present
+>> [ 4223.822591] NMI watchdog: Watchdog detected hard LOCKUP on cpu 144
+>> [ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded
+>> Tainted: G S
+>>           OE    kernel version xxxx
+>> [ 4223.822623] Hardware name: vendorname xxxx 666-106,
+>> BIOS 01.01.02.03.01 05/15/2023
+>> [ 4223.822623] RIP: 0010:qi_submit_sync+0x2c0/0x490
+>> [ 4223.822624] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48
+>> 8b
+>>   57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 1
+>> 0 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
+>> [ 4223.822624] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
+>> [ 4223.822625] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX:
+>> 0000000000000005
+>> [ 4223.822625] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI:
+>> ffff9f38401a8340
+>> [ 4223.822625] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09:
+>> 0000000000000000
+>> [ 4223.822626] R10: 0000000000000010 R11: 0000000000000018 R12:
+>> ffff9f384005e200
+>> [ 4223.822626] R13: 0000000000000004 R14: 0000000000000046 R15:
+>> 0000000000000004
+>> [ 4223.822626] FS:  0000000000000000(0000) GS:ffffa237ae400000(0000)
+>> knlGS:0000000000000000
+>> [ 4223.822627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [ 4223.822627] CR2: 00007ffe86515d80 CR3: 000002fd3000a001 CR4:
+>> 0000000000770ee0
+>> [ 4223.822627] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+>> 0000000000000000
+>> [ 4223.822628] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7:
+>> 0000000000000400
+>> [ 4223.822628] PKRU: 55555554
+>> [ 4223.822628] Call Trace:
+>> [ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
+>> [ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
+>> [ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
+>> [ 4223.822629]  intel_iommu_release_device+0x1f/0x30
+>> [ 4223.822629]  iommu_release_device+0x33/0x60
+>> [ 4223.822629]  iommu_bus_notifier+0x7f/0x90
+>> [ 4223.822630]  blocking_notifier_call_chain+0x60/0x90
+>> [ 4223.822630]  device_del+0x2e5/0x420
+>> [ 4223.822630]  pci_remove_bus_device+0x70/0x110
+>> [ 4223.822630]  pciehp_unconfigure_device+0x7c/0x130
+>> [ 4223.822631]  pciehp_disable_slot+0x6b/0x100
+>> [ 4223.822631]  pciehp_handle_presence_or_link_change+0xd8/0x320
+>> [ 4223.822631]  pciehp_ist+0x176/0x180
+>> [ 4223.822631]  ? irq_finalize_oneshot.part.50+0x110/0x110
+>> [ 4223.822632]  irq_thread_fn+0x19/0x50
+>> [ 4223.822632]  irq_thread+0x104/0x190
+>> [ 4223.822632]  ? irq_forced_thread_fn+0x90/0x90
+>> [ 4223.822632]  ? irq_thread_check_affinity+0xe0/0xe0
+>> [ 4223.822633]  kthread+0x114/0x130
+>> [ 4223.822633]  ? __kthread_cancel_work+0x40/0x40
+>> [ 4223.822633]  ret_from_fork+0x1f/0x30
+>> [ 4223.822633] Kernel panic - not syncing: Hard LOCKUP
+>> [ 4223.822634] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded
+>> Tainted: G S
+>>           OE     kernel version xxxx
+>> [ 4223.822634] Hardware name: vendorname xxxx 666-106,
+>> BIOS 01.01.02.03.01 05/15/2023
+>> [ 4223.822634] Call Trace:
+>> [ 4223.822634]  <NMI>
+>> [ 4223.822635]  dump_stack+0x6d/0x88
+>> [ 4223.822635]  panic+0x101/0x2d0
+>> [ 4223.822635]  ? ret_from_fork+0x11/0x30
+>> [ 4223.822635]  nmi_panic.cold.14+0xc/0xc
+>> [ 4223.822636]  watchdog_overflow_callback.cold.8+0x6d/0x81
+>> [ 4223.822636]  __perf_event_overflow+0x4f/0xf0
+>> [ 4223.822636]  handle_pmi_common+0x1ef/0x290
+>> [ 4223.822636]  ? __set_pte_vaddr+0x28/0x40
+>> [ 4223.822637]  ? flush_tlb_one_kernel+0xa/0x20
+>> [ 4223.822637]  ? __native_set_fixmap+0x24/0x30
+>> [ 4223.822637]  ? ghes_copy_tofrom_phys+0x70/0x100
+>> [ 4223.822637]  ? __ghes_peek_estatus.isra.16+0x49/0xa0
+>> [ 4223.822637]  intel_pmu_handle_irq+0xba/0x2b0
+>> [ 4223.822638]  perf_event_nmi_handler+0x24/0x40
+>> [ 4223.822638]  nmi_handle+0x4d/0xf0
+>> [ 4223.822638]  default_do_nmi+0x49/0x100
+>> [ 4223.822638]  exc_nmi+0x134/0x180
+>> [ 4223.822639]  end_repeat_nmi+0x16/0x67
+>> [ 4223.822639] RIP: 0010:qi_submit_sync+0x2c0/0x490
+>> [ 4223.822639] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48
+>> 8b
+>>   57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6
+>> 10
+>>   74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
+>> [ 4223.822640] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
+>> [ 4223.822640] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX:
+>> 0000000000000005
+>> [ 4223.822640] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI:
+>> ffff9f38401a8340
+>> [ 4223.822641] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09:
+>> 0000000000000000
+>> [ 4223.822641] R10: 0000000000000010 R11: 0000000000000018 R12:
+>> ffff9f384005e200
+>> [ 4223.822641] R13: 0000000000000004 R14: 0000000000000046 R15:
+>> 0000000000000004
+>> [ 4223.822641]  ? qi_submit_sync+0x2c0/0x490
+>> [ 4223.822642]  ? qi_submit_sync+0x2c0/0x490
+>> [ 4223.822642]  </NMI>
+>> [ 4223.822642]  qi_flush_dev_iotlb+0xb1/0xd0
+>> [ 4223.822642]  __dmar_remove_one_dev_info+0x224/0x250
+>> [ 4223.822643]  dmar_remove_one_dev_info+0x3e/0x50
+>> [ 4223.822643]  intel_iommu_release_device+0x1f/0x30
+>> [ 4223.822643]  iommu_release_device+0x33/0x60
+>> [ 4223.822643]  iommu_bus_notifier+0x7f/0x90
+>> [ 4223.822644]  blocking_notifier_call_chain+0x60/0x90
+>> [ 4223.822644]  device_del+0x2e5/0x420
+>> [ 4223.822644]  pci_remove_bus_device+0x70/0x110
+>> [ 4223.822644]  pciehp_unconfigure_device+0x7c/0x130
+>> [ 4223.822644]  pciehp_disable_slot+0x6b/0x100
+>> [ 4223.822645]  pciehp_handle_presence_or_link_change+0xd8/0x320
+>> [ 4223.822645]  pciehp_ist+0x176/0x180
+>> [ 4223.822645]  ? irq_finalize_oneshot.part.50+0x110/0x110
+>> [ 4223.822645]  irq_thread_fn+0x19/0x50
+>> [ 4223.822646]  irq_thread+0x104/0x190
+>> [ 4223.822646]  ? irq_forced_thread_fn+0x90/0x90
+>> [ 4223.822646]  ? irq_thread_check_affinity+0xe0/0xe0
+>> [ 4223.822646]  kthread+0x114/0x130
+>> [ 4223.822647]  ? __kthread_cancel_work+0x40/0x40
+>> [ 4223.822647]  ret_from_fork+0x1f/0x30
+>> [ 4223.822647] Kernel Offset: 0x6400000 from 0xffffffff81000000 (relocation
+>> range: 0xffffffff80000000-0xffffffffbfffffff)
+>>
+>> Furthermore even an in-process safe removal unplugged device could be
+>> surprise removed anytime, thus need to check the ATS Invalidation target
+> I don't understand what this sentence is trying to say. what is "in-process
+> safe removal unplugged device"? Are following words about safe removal
+> or surprise removal?
 
-"new added PCIe interrupts" is mean microchip new added interrupt.
-#define EVENT_PCIE_L2_EXIT                      0
-#define EVENT_PCIE_HOTRST_EXIT                  1
-#define EVENT_PCIE_DLUP_EXIT                    2
-#define EVENT_SEC_TX_RAM_SEC_ERR                3
-#define EVENT_SEC_RX_RAM_SEC_ERR                4
-#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR          5
-#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR          6
-#define EVENT_DED_TX_RAM_DED_ERR                7
-#define EVENT_DED_RX_RAM_DED_ERR                8
-#define EVENT_DED_PCIE2AXI_RAM_DED_ERR          9
-#define EVENT_DED_AXI2PCIE_RAM_DED_ERR          10
+That is to say surprise removal unplug action happens when the safe
 
+removal is in the middle of handling process.
 
->> PolarFire PCIe contain total 28 interrupts event while PLDA contain 13
->> local interrupts event, interrupt to event num mapping is different.
-> 
-> It "is different" in different platforms ? Is that correct ?
-> 
-yes
->> So add a callback function to support different IRQ register function.
->> Also Add PLDA default handler function, which will be moved to pcie-
->> plda-host.c in moving codes patch.
-> 
-> As I said before, a patch is a single self-contained change, don't
-> refer to other patches, they may or may not be merged or even exist
-> by the time this one hits mainline.
-> 
-> Lorenzo
-> 
-OK. I will delete the "which will be moved to pcie-plda-host.c in 
-moving codes patch" and change the commit message.
-
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>
+>> device state to see if it is gone, and don't wait for the completion/
+>> timeout blindly, thus avoid the up to 1min+50% (see Implementation Note
+>> in PCIe spec r6.1 sec 10.3.1) waiting and cause hard lockup or system
+>> hang.
+>>
+>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
 >> ---
->>  .../pci/controller/plda/pcie-microchip-host.c | 31 ++++++++++++++++---
->>  drivers/pci/controller/plda/pcie-plda.h       |  5 +++
->>  2 files changed, 32 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
->> index 7b3f4f74745d..624e4e2e97d3 100644
->> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
->> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
->> @@ -643,6 +643,11 @@ static irqreturn_t mc_event_handler(int irq, void *dev_id)
->>  	return IRQ_HANDLED;
->>  }
->>  
->> +static irqreturn_t plda_event_handler(int irq, void *dev_id)
->> +{
->> +	return IRQ_HANDLED;
->> +}
+>>   drivers/iommu/intel/dmar.c | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+>> index 23cb80d62a9a..76903a8bf963 100644
+>> --- a/drivers/iommu/intel/dmar.c
+>> +++ b/drivers/iommu/intel/dmar.c
+>> @@ -1347,6 +1347,7 @@ int qi_submit_sync(struct intel_iommu *iommu,
+>> struct qi_desc *desc,
+>>   		   unsigned int count, unsigned long options)
+>>   {
+>>   	struct q_inval *qi = iommu->qi;
+>> +	struct pci_dev *pdev = NULL;
+>>   	s64 devtlb_start_ktime = 0;
+>>   	s64 iotlb_start_ktime = 0;
+>>   	s64 iec_start_ktime = 0;
+>> @@ -1360,6 +1361,9 @@ int qi_submit_sync(struct intel_iommu *iommu,
+>> struct qi_desc *desc,
+>>   	if (!qi)
+>>   		return 0;
+>>
+>> +	if (iommu->flush_target_dev && dev_is_pci(iommu-
+>>> flush_target_dev))
+>> +		pdev = to_pci_dev(iommu->flush_target_dev);
 >> +
->>  static void plda_handle_event(struct irq_desc *desc)
->>  {
->>  	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
->> @@ -804,6 +809,17 @@ static int mc_pcie_init_clks(struct device *dev)
->>  	return 0;
->>  }
->>  
->> +static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
->> +				int event)
->> +{
->> +	return devm_request_irq(plda->dev, event_irq, mc_event_handler,
->> +				0, event_cause[event].sym, plda);
->> +}
->> +
->> +static const struct plda_event mc_event = {
->> +	.request_event_irq = mc_request_event_irq,
->> +};
->> +
->>  static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
->>  {
->>  	struct device *dev = port->dev;
->> @@ -905,7 +921,9 @@ static void mc_disable_interrupts(struct mc_pcie *port)
->>  	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
->>  }
->>  
->> -static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp *port)
->> +static int plda_init_interrupts(struct platform_device *pdev,
->> +				struct plda_pcie_rp *port,
->> +				const struct plda_event *event)
->>  {
->>  	struct device *dev = &pdev->dev;
->>  	int irq;
->> @@ -929,8 +947,13 @@ static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_r
->>  			return -ENXIO;
->>  		}
->>  
->> -		ret = devm_request_irq(dev, event_irq, mc_event_handler,
->> -				       0, event_cause[i].sym, port);
->> +		if (event->request_event_irq)
->> +			ret = event->request_event_irq(port, event_irq, i);
->> +		else
->> +			ret = devm_request_irq(dev, event_irq,
->> +					       plda_event_handler,
->> +					       0, NULL, port);
->> +
->>  		if (ret) {
->>  			dev_err(dev, "failed to request IRQ %d\n", event_irq);
->>  			return ret;
->> @@ -984,7 +1007,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
->>  		return ret;
->>  
->>  	/* Address translation is up; safe to enable interrupts */
->> -	ret = plda_init_interrupts(pdev, &port->plda);
->> +	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
->>  	if (ret)
->>  		return ret;
->>  
->> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
->> index e3d35cef9894..28ed1374e1de 100644
->> --- a/drivers/pci/controller/plda/pcie-plda.h
->> +++ b/drivers/pci/controller/plda/pcie-plda.h
->> @@ -121,6 +121,11 @@ struct plda_pcie_rp {
->>  	int num_events;
->>  };
->>  
->> +struct plda_event {
->> +	int (*request_event_irq)(struct plda_pcie_rp *pcie,
->> +				 int event_irq, int event);
->> +};
->> +
->>  void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->>  			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->>  			    size_t size);
->> -- 
->> 2.17.1
->> 
+>>   	type = desc->qw0 & GENMASK_ULL(3, 0);
+>>
+>>   	if ((type == QI_IOTLB_TYPE || type == QI_EIOTLB_TYPE) &&
+>> @@ -1423,6 +1427,14 @@ int qi_submit_sync(struct intel_iommu *iommu,
+>> struct qi_desc *desc,
+>>   	writel(qi->free_head << shift, iommu->reg + DMAR_IQT_REG);
+>>
+>>   	while (qi->desc_status[wait_index] != QI_DONE) {
+>> +		/*
+>> +		 * if the device-TLB invalidation target device is gone, don't
+>> +		 * wait anymore, it might take up to 1min+50%, causes
+>> system
+>> +		 * hang. (see Implementation Note in PCIe spec r6.1 sec
+>> 10.3.1)
+>> +		 */
+>> +		if ((type == QI_DIOTLB_TYPE || type == QI_DEIOTLB_TYPE)
+>> && pdev)
+>> +			if (!pci_device_is_present(pdev))
+>> +				break;
+> I'm not sure it's the right thing to do. Such check should be put in the
+> caller which has the device pointer and can already know it's absent
+> to not call those cache invalidation helpers.
+
+Here is to handle such case, the invalidation request is sent, but the
+
+device is just pulled out at that moment.
+
+
+Thanks,
+
+Ethan
+
+>>   		/*
+>>   		 * We will leave the interrupts disabled, to prevent interrupt
+>>   		 * context to queue another cmd while a cmd is already
+>> submitted
+>> --
+>> 2.31.1
+>>
+>
 
