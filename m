@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-1511-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B08181FA1A
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 17:58:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27E2E81FA1C
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 17:59:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16F64284DC0
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 16:58:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3B931F242F1
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 16:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E3DCF50C;
-	Thu, 28 Dec 2023 16:58:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB0D6F9C2;
+	Thu, 28 Dec 2023 16:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HcWG7dvP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzDCblR/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA2C10780;
-	Thu, 28 Dec 2023 16:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497D11094A;
+	Thu, 28 Dec 2023 16:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703782695; x=1735318695;
+  t=1703782706; x=1735318706;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=3UeWqTc17b7iPzk1HVe/oYZDCXCyjBwLkhpNmmvXEjw=;
-  b=HcWG7dvP1MycaW0AkFmXKH+k7N2UigDsmv+fQ94kJYfjEbpO4t87XBwb
-   ISQ0FkV2KnttKjJQ6VNtDPlbezWND87Jk7OewrRVhfME3j31us2YZG5bX
-   xSQkBpu8pxR2UqVZUjtEtltrPegKtqOuHH/zWlbRYldK/XRjJOxYyD87d
-   pNlp5N27nrqWdj2miPFrbOwtFGn5ht1ZsmKRfifbH+LcQEWdnBi35sPdX
-   pl+euJzuK0DuUqm/Lp/159mnXTHCXD1jcEuwZSEHGf7YnP2JaDxX+9DdH
-   T9wNUWQpEtfL3MqOR6YMCqPmTXGdzJmVAx1wYB+Do7wQqa5dae3pCZTdU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="9958053"
+  bh=WYw+ej8p75zSV2PmRVDEXfp4ji6lrtgJzEwDsDP49x0=;
+  b=RzDCblR/5VtUnlVh9tyGo2ztgfg7fST3j6IOU18rCVQU3gZzyKdQNqh+
+   O69b9TtU02E7F1ojIHVyyUFh4Xpl0NBV5dDLpP4ep7yCDWrDkGYLCMVaS
+   Jsq2bQnQpcHg6axtu45IwzLNNFCPG+7jVR1C+6EjsGowZbmlPh9/t8lOD
+   sODrxH/Qc4ByrYBgPoQiW7YcjjG81OqaNs72HEO9RRgv0bnBB2vJj+VTh
+   2GA9Pwfowef8wobV4Zkzu/gcBDN3ar2rITlvD3lJSlevcN5BS5Cvr18eF
+   ZMCIeNXqY4eoZ+HeEOjCq2E9nv7+QwFsO7kk94iSQqvIu0JCBdLPaNEsS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="9958072"
 X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="9958053"
+   d="scan'208";a="9958072"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:15 -0800
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:25 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="951847238"
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="951847269"
 X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="951847238"
+   d="scan'208";a="951847269"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.250.171])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:09 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:19 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -60,9 +60,9 @@ To: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 5/7] resource: Handle simple alignment inside __find_empty_resource_slot()
-Date: Thu, 28 Dec 2023 18:57:05 +0200
-Message-Id: <20231228165707.3447-6-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 6/7] resource: Export find_empty_resource_slot()
+Date: Thu, 28 Dec 2023 18:57:06 +0200
+Message-Id: <20231228165707.3447-7-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
 References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
@@ -75,77 +75,106 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-allocate_resource() accepts ->alignf() callback to perform custom
-alignment beyond constraint->align. If alignf is NULL,
-simple_align_resource() is used which only returns avail->start (no
-change).
+PCI bridge window logic needs to find out in advance to the actual
+allocation if there is an empty slot big enough to fit the window.
 
-Using avail->start directly is natural and can be done with a
-conditional in __find_empty_resource_slot() instead which avoids
-unnecessarily using callback. It makes the code inside
-__find_empty_resource_slot() more obvious and removes the need for the
-caller to provide constraint->alignf unnecessarily.
-
-This is preparation for exporting find_empty_resource_slot().
+Export find_empty_resource_slot() for the purpose. Also move the struct
+resource_constraint into generic header to be able to use the new
+interface.
 
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- kernel/resource.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ include/linux/ioport.h | 22 ++++++++++++++++++++++
+ kernel/resource.c      | 25 ++++---------------------
+ 2 files changed, 26 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 9d7920104120..f0e4d57d0c35 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -563,14 +563,6 @@ void __weak arch_remove_reservations(struct resource *avail)
- {
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 26bfd9515653..b6ed244bc4b9 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -205,6 +205,24 @@ typedef resource_size_t (*resource_alignf)(void *data,
+ 					   resource_size_t size,
+ 					   resource_size_t align);
+ 
++/**
++ * resource_constraint - constraints to be met while searching empty resource slots
++ * @min:		The minimum address for the memory range
++ * @max:		The maximum address for the memory range
++ * @align:		Alignment for the start address of the empty slot
++ * @alignf:		Additional alignment constraints callback
++ * @alignf_data:	Data provided for @alignf callback
++ *
++ * Contains the range and alignment constraints that have to be met during
++ * find_empty_resource_slot(). @alignf can be NULL indicating no alignment
++ * beyond @align is necessary.
++ */
++struct resource_constraint {
++	resource_size_t min, max, align;
++	resource_alignf alignf;
++	void *alignf_data;
++};
++
+ /* PC/ISA/whatever - the normal PC address spaces: IO and memory */
+ extern struct resource ioport_resource;
+ extern struct resource iomem_resource;
+@@ -278,6 +296,10 @@ static inline bool resource_union(const struct resource *r1, const struct resour
+ 	return true;
  }
  
--static resource_size_t simple_align_resource(void *data,
--					     const struct resource *avail,
--					     resource_size_t size,
--					     resource_size_t align)
--{
--	return avail->start;
--}
--
- static void resource_clip(struct resource *res, resource_size_t min,
- 			  resource_size_t max)
- {
-@@ -590,6 +582,7 @@ static int __find_empty_resource_slot(struct resource *root, struct resource *ol
- {
- 	struct resource *this = root->child;
- 	struct resource tmp = *new, avail, alloc;
-+	resource_alignf alignf = constraint->alignf;
++int find_empty_resource_slot(struct resource *root, struct resource *new,
++			     resource_size_t size,
++			     struct resource_constraint *constraint);
++
+ /* Convenience shorthand with allocation */
+ #define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
+ #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+diff --git a/kernel/resource.c b/kernel/resource.c
+index f0e4d57d0c35..c1bbb0943d9c 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -46,24 +46,6 @@ struct resource iomem_resource = {
+ };
+ EXPORT_SYMBOL(iomem_resource);
  
- 	tmp.start = root->start;
- 	/*
-@@ -618,8 +611,12 @@ static int __find_empty_resource_slot(struct resource *root, struct resource *ol
- 		avail.flags = new->flags & ~IORESOURCE_UNSET;
- 		if (avail.start >= tmp.start) {
- 			alloc.flags = avail.flags;
--			alloc.start = constraint->alignf(constraint->alignf_data, &avail,
--					size, constraint->align);
-+			if (alignf) {
-+				alloc.start = alignf(constraint->alignf_data,
-+						     &avail, size, constraint->align);
-+			} else {
-+				alloc.start = avail.start;
-+			}
- 			alloc.end = alloc.start + size - 1;
- 			if (alloc.start <= alloc.end &&
- 			    resource_contains(&avail, &alloc)) {
-@@ -730,9 +727,6 @@ int allocate_resource(struct resource *root, struct resource *new,
- 	int err;
- 	struct resource_constraint constraint;
- 
--	if (!alignf)
--		alignf = simple_align_resource;
+-/**
+- * resource_constraint - constraints to be met while searching empty resource slots
+- * @min:		The minimum address for the memory range
+- * @max:		The maximum address for the memory range
+- * @align:		Alignment for the start address of the empty slot
+- * @alignf:		Additional alignment constraints callback
+- * @alignf_data:	Data provided for @alignf callback
+- *
+- * Contains the range and alignment constraints that have to be met during
+- * find_empty_resource_slot(). @alignf can be NULL indicating no alignment
+- * beyond @align is necessary.
+- */
+-struct resource_constraint {
+-	resource_size_t min, max, align;
+-	resource_alignf alignf;
+-	void *alignf_data;
+-};
 -
- 	constraint.min = min;
- 	constraint.max = max;
- 	constraint.align = align;
+ static DEFINE_RWLOCK(resource_lock);
+ 
+ static struct resource *next_resource(struct resource *p, bool skip_children)
+@@ -650,12 +632,13 @@ next:		if (!this || this->end == root->end)
+  * * %0		- if successful, @new members start, end, and flags are altered.
+  * * %-EBUSY	- if no empty slot was found.
+  */
+-static int find_empty_resource_slot(struct resource *root, struct resource *new,
+-				    resource_size_t size,
+-				    struct resource_constraint *constraint)
++int find_empty_resource_slot(struct resource *root, struct resource *new,
++			     resource_size_t size,
++			     struct resource_constraint *constraint)
+ {
+ 	return  __find_empty_resource_slot(root, NULL, new, size, constraint);
+ }
++EXPORT_SYMBOL_GPL(find_empty_resource_slot);
+ 
+ /**
+  * reallocate_resource - allocate a slot in the resource tree given range & alignment.
 -- 
 2.30.2
 
