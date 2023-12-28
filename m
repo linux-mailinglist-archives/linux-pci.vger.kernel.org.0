@@ -1,109 +1,116 @@
-Return-Path: <linux-pci+bounces-1503-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1504-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B0EB81F956
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 16:01:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6128181F983
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 16:12:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E12ADB22F53
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 15:01:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B3D81C2226E
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Dec 2023 15:12:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C3A3D279;
-	Thu, 28 Dec 2023 15:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28CB8DDCE;
+	Thu, 28 Dec 2023 15:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Xkhfcba5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QQx88cHf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0F9DDB2;
-	Thu, 28 Dec 2023 15:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1703775696;
-	bh=f5uBxFja9DMkfap4ZKntPYZpZ4ZCc3Cy9poJ6+NQsxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xkhfcba5stsYFFBMs8uvuCqj7wU29mNZ9esC/bGRgAABwJ4zVcoYhfdAzJOtf0Hft
-	 mDdPr/ePtvE/595TqtvTVl4nj+tg9bpDpoN0O2EcUblUiVf7PLx9EGaxZ9YlJy25WZ
-	 Kp5QSGeC1PkiYUXgAlL7fFoZ0+gVFQC2z+LMEY6c+49eQSPATck/uFUGdjOuTS/3/W
-	 I5WrwvxAsHJkSCapDLqCN8DuSmYa/D/97DqVihNtloLdt1doP4ZCXN+KStLWaNiHai
-	 FBVRO74QUSTfoIQGWzRvH8yr+AI7FpiIyCVAOpEr4u8DzIhx0U/fbBPhZIRhVQz+/N
-	 AUaTRHkWTT/KA==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A87F537813C4;
-	Thu, 28 Dec 2023 15:01:32 +0000 (UTC)
-Date: Thu, 28 Dec 2023 12:00:59 -0300
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] PCI: mediatek-gen3: Assert MAC reset only if PHY
- reset also present
-Message-ID: <d8cfb804-e47a-471c-8bc0-e974ee045655@notapiano>
-References: <20230504113509.184633-1-angelogioacchino.delregno@collabora.com>
- <20230504113509.184633-3-angelogioacchino.delregno@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE5CDDB1;
+	Thu, 28 Dec 2023 15:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703776350; x=1735312350;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9joJ//r2WbPiqu6shWzXWoF/mATyTHXA55BcruPVTlE=;
+  b=QQx88cHfuXYmBlykUFPEHpba+ZakbER268nDjVkGgKUg9ybm5F8wds+A
+   Sv47NTPNW3cxemQMsj+zgo7td0OAmTPwHYH8ZkuCjUxpA7xBAKxGx3ovx
+   3MOIFXxzj1Fh5/yb4N3lyNJfqB1wZyZ/m3PT+thqYq9/0NENIKxqtxjMm
+   AM+4Fiq5NZdt32HDoWXAutm6ub7M2Pc0P3HMqIMDFrSbB9LHEd6wyq7yR
+   T9YPoOBb5Ob46W+qbKz+AVAYAQ8mXEWRdJIJIQsi0Et1JrXn8ROS9HbpE
+   FBf7ep1iTmV5IsJU2nklBEbV15W1UKp+Yc3x1MFX3N96afjMMpuguJrZb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="482733304"
+X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
+   d="scan'208";a="482733304"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 07:12:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="922117912"
+X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
+   d="scan'208";a="922117912"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Dec 2023 07:12:26 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rIs3c-000GYX-07;
+	Thu, 28 Dec 2023 15:12:24 +0000
+Date: Thu, 28 Dec 2023 23:12:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Stanimir Varbanov <svarbanov@mm-sol.com>,
+	Andrew Murray <amurray@thegoodpenguin.co.uk>,
+	Vinod Koul <vkoul@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH 4/4] PCI: qcom: Implement RC shutdown/power up
+Message-ID: <202312282244.N6b5czwN-lkp@intel.com>
+References: <20231227-topic-8280_pcie-v1-4-095491baf9e4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230504113509.184633-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20231227-topic-8280_pcie-v1-4-095491baf9e4@linaro.org>
 
-On Thu, May 04, 2023 at 01:35:09PM +0200, AngeloGioacchino Del Regno wrote:
-> Some SoCs have two PCI-Express controllers: in the case of MT8195,
-> one of them is using a dedicated PHY, but the other uses a combo PHY
-> that is shared with USB and in that case the PHY cannot be reset
-> from the PCIe driver, or USB functionality will be unable to resume.
-> 
-> Resetting the PCIe MAC without also resetting the PHY will result in
-> a full system lockup at PCIe resume time and the only option to
-> resume operation is to hard reboot the system (with a PMIC cut-off).
-> 
-> To resolve this issue, check if we've got both a PHY and a MAC reset
-> and, if not, never assert resets at PM suspend time: in that case,
-> the link is still getting powered down as both the clocks and the
-> power domains will go down anyway.
-> 
-> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Hi Konrad,
 
-Hi Angelo,
+kernel test robot noticed the following build errors:
 
-It seems this patch was forgotten but it's still very much needed. As you
-describe above, the Tomato Chromebook (MT8195-based) is currently unable to
-resume from suspend due to this issue. Upon resume, the following error is
-printed, and the system hangs:
+[auto build test ERROR on 39676dfe52331dba909c617f213fdb21015c8d10]
 
-[   67.018281] mtk-pcie-gen3 112f8000.pcie: PCIe link down, current LTSSM state: detect.quiet (0x0)
-[   67.027162] mtk-pcie-gen3 112f8000.pcie: PM: dpm_run_callback(): genpd_resume_noirq+0x0/0x24 returns -110
-[   67.036791] mtk-pcie-gen3 112f8000.pcie: PM: failed to resume noirq: error -110
+url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/PCI-qcom-Reshuffle-reset-logic-in-2_7_0-init/20231228-062002
+base:   39676dfe52331dba909c617f213fdb21015c8d10
+patch link:    https://lore.kernel.org/r/20231227-topic-8280_pcie-v1-4-095491baf9e4%40linaro.org
+patch subject: [PATCH 4/4] PCI: qcom: Implement RC shutdown/power up
+config: powerpc64-randconfig-002-20231228 (https://download.01.org/0day-ci/archive/20231228/202312282244.N6b5czwN-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231228/202312282244.N6b5czwN-lkp@intel.com/reproduce)
 
-And further investigation showed that all PCIe registers return 0x0 when read in
-this situation.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312282244.N6b5czwN-lkp@intel.com/
 
-Commenting out the MAC reset in the PCIe DT node fixes the issue: the PCIe
-registers can be read correctly upon resume and resume proceeds succesfully.
-Your patch here essentially does the same as not providing the MAC reset, with
-the benefit of us still being able to describe the reset in DT and thus having a
-more complete HW description.
+All errors (new ones prefixed by >>):
 
-But this patch no longer applies, so please rebase it so we can get working
-suspend/resume on MT8195-Tomato :).
+   powerpc64-linux-ld: warning: orphan section `.stubs' from `drivers/dma/fsl-edma-common.o' being placed in section `.stubs'
+   powerpc64-linux-ld: warning: discarding dynamic section .glink
+   powerpc64-linux-ld: warning: discarding dynamic section .plt
+   powerpc64-linux-ld: linkage table error against `cmd_db_ready'
+   powerpc64-linux-ld: stubs don't match calculated size
+   powerpc64-linux-ld: can not build stubs: bad value
+   powerpc64-linux-ld: drivers/pci/controller/dwc/pcie-qcom.o: in function `qcom_pcie_probe':
+>> pcie-qcom.c:(.text+0x1894): undefined reference to `cmd_db_ready'
 
-Thanks,
-Nícolas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
