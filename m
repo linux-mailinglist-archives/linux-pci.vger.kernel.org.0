@@ -1,87 +1,95 @@
-Return-Path: <linux-pci+bounces-1548-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1549-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 844C681FF71
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 13:34:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92E7581FFAC
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 14:35:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06CEFB21179
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 12:34:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22B951F2185E
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 13:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A25181119E;
-	Fri, 29 Dec 2023 12:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6296911705;
+	Fri, 29 Dec 2023 13:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uoYinAw/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EpeK4v0k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF57111A2;
-	Fri, 29 Dec 2023 12:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1703853276;
-	bh=QwXYveaBC0ig2U8Y++IbF9SuqXAv85RwXyV1v2MqwYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uoYinAw/k9tO5Pzh9Q+ZvHcynf8ItzRqwE+/5fg+cDwTrDQCGqXX0COasXbkLau0l
-	 SCFWZ0neUFGhBjrSTUg+6Gsv9lKfs3fGrO7ZIgOzuWL4skZ27vthnxVZb+IYgxyk+N
-	 3XSNJWtusID5FirWwYQVjpo2FelXQ0TVkmicry6BbWZOg3xwa6ZS6/b4BJB00ZZeZf
-	 JkodFGfrVfuhWEPetUT0Iwsi5nj/ndnsI6+5EOzh0xaOz+lU+0Z6HD9FN7srgr39vr
-	 h9uJ0m0AnVmQPk3925HAf2D2tuZzzAVTCRG0K/RDt1SS4Jr/J4GU6EAxjnrz+ZnvTO
-	 8pjBFHHYhk5Qg==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BE3BB3781472;
-	Fri, 29 Dec 2023 12:34:30 +0000 (UTC)
-Date: Fri, 29 Dec 2023 09:33:57 -0300
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, kernelci@lists.linux.dev,
-	kernel@collabora.com, Tim Bird <Tim.Bird@sony.com>,
-	linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
-	linux-kselftest@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Doug Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
-	Saravana Kannan <saravanak@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/3] Add test to verify probe of devices from
- discoverable busses
-Message-ID: <1d0ecab9-73a3-44e5-8d5b-f4d4cc5a3baf@notapiano>
-References: <20231227123643.52348-1-nfraprado@collabora.com>
- <20231228235348.GA1559485@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E373B11701;
+	Fri, 29 Dec 2023 13:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703856928; x=1735392928;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZaEOkhjRA4RnRkUMFHRun5wqQEWfxz018XWe9ycVN/M=;
+  b=EpeK4v0kqej4yQP//N9YWoFhGQynZzkakXb8jkRmB/o39jvrDBPzupz1
+   QcvzHVImk0YbgnHFfE/2keYFCMKBhr5C7aJwmRXLMftLJnFqsmA2ORxZl
+   BFMqM9baQkYgIAy1r1EzsQI0RYuo6tlmpQycwMqqHxyOiG/lokrg4lmNr
+   1urdqCvDdunumnhjtlfbPIg24JY/2dF3dOFIfdwpFCPI5vviZ29MzQnh3
+   giat95ZIWrL84HG+dbyS+bayNc1VPUIrvN3wXAURgxrmDQC/UpuUg+vWN
+   jkOh9L9qLXIvFHu0k6/NVY0YNeTccnW0T09SYMqp7KeP9TmVc1V5NC+uk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="15292476"
+X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
+   d="scan'208";a="15292476"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:35:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="844697174"
+X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
+   d="scan'208";a="844697174"
+Received: from mlittrel-mobl1.ger.corp.intel.com ([10.252.35.138])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:35:24 -0800
+Date: Fri, 29 Dec 2023 15:34:15 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, 
+    linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+In-Reply-To: <20231229063912.2517922-2-shinichiro.kawasaki@wdc.com>
+Message-ID: <d66c303d-da76-639-56a3-8f2b58401b59@linux.intel.com>
+References: <20231229063912.2517922-1-shinichiro.kawasaki@wdc.com> <20231229063912.2517922-2-shinichiro.kawasaki@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231228235348.GA1559485@bhelgaas>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Dec 28, 2023 at 05:53:48PM -0600, Bjorn Helgaas wrote:
-> I have no opinion about the patches themselves, but just a heads-up
-> that "busses" may be regarded as a misspelling of "buses", e.g.,
-> https://lore.kernel.org/r/20231223184720.25645-1-tintinm2017@gmail.com,
-> I'm guessing because codespell complains about it.
+On Fri, 29 Dec 2023, Shin'ichiro Kawasaki wrote:
+
+> p2sb_bar() unhides P2SB device to get resources from the device. It
+> guards the operation by locking pci_rescan_remove_lock so that parallel
+> rescans do not find the P2SB device. However, this lock causes deadlock
+> when PCI bus rescan is triggered by /sys/bus/pci/rescan. The rescan
+> locks pci_rescan_remove_lock and probes PCI devices. When PCI devices
+> call p2sb_bar() during probe, it locks pci_rescan_remove_lock again.
+> Hence the deadlock.
 > 
-> Git grep says there are almost as many instances of "busses" as
-> "buses" in the kernel, so I don't go out of my way to change them.
-> Just FYI, doesn't matter to me either way.
+> To avoid the deadlock, do not lock pci_rescan_remove_lock in p2sb_bar().
+> Instead, do the lock at fs_initcall. Introduce p2sb_cache_resources()
+> for fs_initcall which gets and caches the P2SB resources. At p2sb_bar(),
+> refer the cache and return to the caller.
+> 
+> Link: https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
+> Fixes: 9745fb07474f ("platform/x86/intel: Add Primary to Sideband (P2SB) bridge support")
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
 
-Thanks for the heads up. The online dictionaries seem to agree on "buses", so
-I'll use that on the next version.
+Thanks for the update. I've replaced the commit in review-ilpo branch with 
+this v5 patch 1/2.
 
-Thanks,
-Nícolas
+-- 
+ i.
+
 
