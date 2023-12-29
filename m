@@ -1,120 +1,115 @@
-Return-Path: <linux-pci+bounces-1534-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1535-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5FC381FD1F
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 06:47:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EBC9781FD49
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 07:39:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 37460B22407
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 05:47:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8E72EB20FAD
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 06:39:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DCE41FB8;
-	Fri, 29 Dec 2023 05:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F01E123A4;
+	Fri, 29 Dec 2023 06:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crc.id.au header.i=@crc.id.au header.b="grMlhT3f"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ULcM+bXC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailfilter.crc.id.au (mailfilter.crc.id.au [202.172.99.24])
+Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A4220FC;
-	Fri, 29 Dec 2023 05:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crc.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crc.id.au
-Received: from mailfilter.crc.id.au (localhost.localdomain [127.0.0.1])
-	by mailfilter.crc.id.au (Proxmox) with ESMTP id F284961599;
-	Fri, 29 Dec 2023 16:46:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crc.id.au; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=default; bh=EzA4I9oxv9twX0fBT
-	4dYB1xTAfs78hsRJSgPdiv8UCk=; b=grMlhT3f661h6Zp+vD+aVcxCIptPyx8yO
-	dXrUj+WazhWR7H0AUNb7j9/bz32uWpmb4xOOBhkPKZm7G8XAkzVmbSW4mt4WsECQ
-	+Q68jD4biXEvjWBKqXYcCPBB7UI73r+Oy0EZsZdOu1tk2wd2M+3rlBqCv89hLg/u
-	YhuuTbMPnK5y3rxbRLAefJ3y6irXywJdG5vHh/I8wuYw+Zf6m+FFnu9OMtWSWK7K
-	d0sLM4joAbfX6+exWIDn1SqJu8bB6Oi85S0nfJt9GRJZJfHohQqN8dY1wd8ADDqC
-	5BgD4zYgoznRYlB3i0L5R54BMzSXAG9Fv6Ow55SzfbyMbCAYEBe/TO+/gb7ZAfgy
-	QzttvtI5lT+plN3k6FLcCQW1trGqt5adnBUk78VG05yWggHmm7sIC0xh0T2TADl4
-	ddSL9VBuFUmUud3fDf+6DYiymmINgDa4cuZOkeGBocQ8sIOIlAizng15yqcU56mI
-	MsbmQMV2cheg3eCdDgdKDgWPGW0j1ySUkqTsoyBEoJnzKRJ6nNZQfUcxTUZeDxH4
-	7vXHs2wfakh0YO649G7o0hOtrUSAwge+nTfz9WrUpgGndpji8C2yymF5JTBB3rEN
-	IKEOuO1sRdarM1ijGK4NCLmxm3mgTFgq3Hc64cYCjHo3srpdE8ZaNH0rtN0lkFSE
-	iJmXbwfELY=
-Message-ID: <5f4dfc03-bdfc-41d1-8c5a-1e767e472a96@crc.id.au>
-Date: Fri, 29 Dec 2023 16:46:50 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1981746A;
+	Fri, 29 Dec 2023 06:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1703831960; x=1735367960;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SR4MkYifRuHdXsTyYORK+g1dgQ/k72RLd2YmwbA7kPc=;
+  b=ULcM+bXCHx8Bvxr0sS4dUPnxclw+yJ1EVL7uRo6e7UB2p2d0N786ecuD
+   NaWFi17YJ5pU7hMM23BgrH6nzm/qFM1vgIl2393jK0Ydaft4Yd6T45yC8
+   8jSDTK7boj6w45xfk+4k6nB08+uyJLAynqu1VduaUnGGW4KwtefBDvboj
+   8bcWWdqMCWiku1H9fnEHhigQn1NYGRYQCsxbJtegkbHcHkW7eol7J8daJ
+   Dvao7Cib6AExllSfQW0TRqhsznIPIzEEiPsEUd0HkR/H7AT3uAvc90fm4
+   dfVfziOSgyHYXCmphnivDOy+qSLY5D2QFoh5PKyrlJGCi+oULyAXiSTJ5
+   g==;
+X-CSE-ConnectionGUID: /p5Vw6zqT1Cxelc+o0fuVA==
+X-CSE-MsgGUID: rb2CWur0QpaDrJZKPOhslw==
+X-IronPort-AV: E=Sophos;i="6.04,314,1695657600"; 
+   d="scan'208";a="6253586"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Dec 2023 14:39:14 +0800
+IronPort-SDR: XGKdP/79cnUjeVieN7o4Pd54wq0L5TSEoWRqDqIBcP4bqd0vri8pcwzvESX4a2sVi/NVdqlArg
+ 5l4oUIg4opHg==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Dec 2023 21:49:47 -0800
+IronPort-SDR: htoqEh9NGbUHEK9duSKalM8F78356T2o4ceGs1KFjfSbJjqE7hKQd2NPC9XW9SXTadBki3PLpN
+ zUJH6WRW2QqQ==
+WDCIronportException: Internal
+Received: from unknown (HELO shindev.ssa.fujisawa.hgst.com) ([10.149.66.30])
+  by uls-op-cesaip01.wdc.com with ESMTP; 28 Dec 2023 22:39:13 -0800
+From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	linux-pci@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Subject: [PATCH v5 0/2] platform/x86: p2sb: Fix deadlock at sysfs PCI bus rescan
+Date: Fri, 29 Dec 2023 15:39:10 +0900
+Message-ID: <20231229063912.2517922-1-shinichiro.kawasaki@wdc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Qemu KVM thread spins at 100% CPU usage on scsi hot-unplug
- (kernel 6.6.8 guest)
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- f.ebner@proxmox.com
-References: <3a7656ab-df4c-4d57-8866-661beffcddd7@crc.id.au>
- <20231228131802.GA21994@wunner.de>
-Content-Language: en-AU
-From: Steven Haigh <netwiz@crc.id.au>
-Autocrypt: addr=netwiz@crc.id.au; keydata=
- xjMEZYuvwhYJKwYBBAHaRw8BAQdAKpahulREd3FFQb6QJI7Oa1QG7i0y5GxpKWd/Pgz3bDHN
- H1N0ZXZlbiBIYWlnaCA8bmV0d2l6QGNyYy5pZC5hdT7CiQQTFggAMRYhBIB4i95REtt8lf8r
- 5YPV5iDbUrwABQJli6/CAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQg9XmINtSvADhuAEAq5fb
- ocNh/FVsflYj8owAQlb3jez8GcMdZqBty8OAY2QBAK+xbsxaJ+KtOPFmmmzzLcf5LQFvOYZs
- o+Y3Ot5ublIIzjgEZYuvwhIKKwYBBAGXVQEFAQEHQH0ZpXIkJEoTdAhHcvEj417Bb55+wGsz
- 07FgcbLaIl9AAwEIB8J4BBgWCAAgFiEEgHiL3lES23yV/yvlg9XmINtSvAAFAmWLr8ICGwwA
- CgkQg9XmINtSvABslgD8D7f1NX9bEu5mH8VF7Z58Orygx4Qc7w5qvM1qvQB8UfkBAID3m4bI
- 0Y9hW5iuV4RfgH3SkrIp4diWii1facZPd4EC
-In-Reply-To: <20231228131802.GA21994@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 29/12/23 00:18, Lukas Wunner wrote:
-> On Thu, Dec 28, 2023 at 01:03:10PM +1100, Steven Haigh wrote:
->> At some point in kernel 6.6.x, SCSI hotplug in qemu VMs broke. This was
->> mostly fixed in the following commit to release 6.6.8:
->> 	commit 5cc8d88a1b94b900fd74abda744c29ff5845430b
->> 	Author: Bjorn Helgaas <bhelgaas@google.com>
->> 	Date:   Thu Dec 14 09:08:56 2023 -0600
->> 	Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
->>
->> After this commit, the SCSI block device is hotplugged correctly, and a device node as /dev/sdX appears within the qemu VM.
->>
->> New problem:
->>
->> When the same SCSI block device is hot-unplugged, the QEMU KVM process will
->> spin at 100% CPU usage. The guest shows no CPU being used via top, but the
->> host will continue to spin in the KVM thread until the VM is rebooted.
-> 
-> Find out the PID of the qemu process on the host, then cat /proc/$PID/stack
-> to see where the CPU time is spent.
+When PCI devices call p2sb_bar() during probe for sysfs PCI bus rescan, deadlock
+happens due to double lock of pci_rescan_remove_lock [1]. The first patch in
+this series addresses the deadlock. The second patch is a code improvement which
+was pointed out during review for the first patch.
 
-Thanks for the tip - I'll certainly do that.
+I confirmed the patches fix the problem using a system with i2c_i801 device,
+building i2c_i801 module as both built-in and loadable.
 
-Annoyingly, since I posted this report originally, then adding in a new report to the kernel.org lists in this, I have 
-been unable to reproduce this problem. I have successfully done ~22 scsi hotplug / remove cycles and none resulted in 
-reproducing the issue.
+[1] https://lore.kernel.org/linux-pci/6xb24fjmptxxn5js2fjrrddjae6twex5bjaftwqsuawuqqqydx@7cl3uik5ef6j/
 
-Kernel versions are still the same on both proxmox host and the Fedora guest - however I see an update on the host of 
-the qemu-kvm packages in Proxmox. The proxmox host hasn't even been rebooted in this time.
+Changes from v4:
+* Separated a hunk for pci_resource_n() as the second patch
+* Reflected other review comments by Ilpo
 
-I wonder if the initial revert included in 6.6.8 fixed the main problem, and the later update to qemu-kvm packages on 
-the proxmox host followed by the last reboot of the VM with the new KVM package sorted the second issue.
+Changes from v3:
+* Modified p2sb_valid_resource() to return boolean
 
-Seeing as I can no longer reproduce this reliably - whereas it was 100% reproducible prior, maybe I'm now chasing ghosts.
+Changes from v2:
+* Improved p2sb_scan_and_cache() and p2sb_scan_and_cache_devfn()
+* Reflected other review comments by Andy
 
-I'll still continue to monitor - as I normally do this SCSI hotplug ~3 times per week doing backups to different 
-external HDDs - so if I do observe it again, I'll grab the stack and reply to this thread again with what I can find.
+Changes from v1:
+* Reflected review comments by Andy
+* Removed RFC prefix
 
-Until then, I don't want to waste other peoples time also chasing ghosts :)
+Changes from RFC v2:
+* Reflected review comments on the list
+
+Changes from RFC v1:
+* Fixed a build warning poitned out in llvm list by kernel test robot
+
+Shin'ichiro Kawasaki (2):
+  platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
+  platform/x86: p2sb: Use pci_resource_n() in p2sb_read_bar0()
+
+ drivers/platform/x86/p2sb.c | 174 +++++++++++++++++++++++++++---------
+ 1 file changed, 132 insertions(+), 42 deletions(-)
 
 -- 
-Steven Haigh
-
-📧 netwiz@crc.id.au
-💻 https://crc.id.au
+2.43.0
 
 
