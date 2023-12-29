@@ -1,91 +1,79 @@
-Return-Path: <linux-pci+bounces-1545-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1546-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CACD081FEC3
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 10:46:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD3E781FEE8
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 11:32:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 123561C2225D
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 09:46:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 194C4282A3C
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 10:32:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C627210A18;
-	Fri, 29 Dec 2023 09:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="EgbTzA5G"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A038410960;
+	Fri, 29 Dec 2023 10:32:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from sender3-of-o58.zoho.com (sender3-of-o58.zoho.com [136.143.184.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4552010A01;
-	Fri, 29 Dec 2023 09:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
-ARC-Seal: i=1; a=rsa-sha256; t=1703843173; cv=none; 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E73B10A18;
+	Fri, 29 Dec 2023 10:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5challer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=5challer.de
+ARC-Seal: i=1; a=rsa-sha256; t=1703845887; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=XKYrmvLuzmk/r08tvchrXv5qgEXmbsTjVRFcDnTVF+VvTVhfs5dIBb9e9uOlUZ30BfUQy+6UqUdJhwQM/WRUqROBflrZCcE1U3DzKGWNuSwuGJD/zQBWbRNvlEBXdE/u9aSpLg+mTJ7qdjHFyr8L8+mh1iyjqVG7yD0wwOkiLA8=
+	b=ZUz0ophMe7kgZIWKtgfj94N1g38oksyaOO+kyH+GdzmMhj/bl4OIlDwJ4H+5SN3R4WAcvDhj/2BDajZlnfRd13BL5tY/phuawK/B11KQ3mEdIJTbHLsNO+tu6P2OlP69RFrhlnrvV2EllasZ/5zwDTWBQGFjnItFUMpWNgBmt04=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1703843173; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=K7r5sOmsaLOjWS98lIO6mw48w74TdCOUpMHvWTK+zR8=; 
-	b=mGnB4hjHctrZsrMyTkUnzLEBqgUS7g/WuXmPND8o9/5JvPncqUQ8HF5NhW722I/omznSqAPtIrZgjBWTPk9GUXxu5p9ag0tZRpneps5ksrkmXaUx7T8f9jXn1hsvFVHM73bt/dPq7eoW1di5v4My4TbXI4Poz5t1A3WiHMTfHO4=
+	t=1703845887; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=rg4b2H0xR+jbn+tpScalYKC7YWYLn3R6QTfq1ObkVf0=; 
+	b=VAYfQAjTKJ4mQ2AKytqxCLR05AWmBCcEeo1zppulN3h8LdRBM9LI74nTYOM+j2mc58H8tpZKrIkvVEcnCl+HZuwsYDUGcgksH/3r8uaMzx5eR0ue2xCIWJzXlPl6T9wEir6Ibq4NcHqOzuJCgtJTM1FkTfcAMDWD+qL2v63P/vc=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1703843173;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=K7r5sOmsaLOjWS98lIO6mw48w74TdCOUpMHvWTK+zR8=;
-	b=EgbTzA5GwIo/K8TixJCJX5e0iNwIrOPXHDTfU+Q0A3o/Bct4YhfWgvBnPHi9XoZX
-	p9YdMkr8h5fwEtnPlwrFwrL30wJu9x+dU803K/2jMpRlB7omuJWdUrqoJ92S06hRxNR
-	X+URABNIXz1YFswM9Yi3QjZYz+z3tfYq8AmE4EnA=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1703843171327603.2461899337034; Fri, 29 Dec 2023 01:46:11 -0800 (PST)
-Date: Fri, 29 Dec 2023 04:46:11 -0500
-From: Li Chen <me@linux.beauty>
-To: "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: "Tom Joseph" <tjoseph@cadence.com>,
-	"Parshuram Thombare" <pthombar@cadence.com>,
-	"Pawel Laszczak" <pawell@cadence.com>,
-	=?UTF-8?Q?=22Przemys=C5=82aw_Gaj=22?= <pgaj@cadence.com>,
-	"Nadeem Athani" <nadeem@cadence.com>,
-	"Siddharth Vadapalli" <s-vadapalli@ti.com>,
-	"Kishon Vijay Abraham I" <kishon@ti.com>,
-	=?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kwilczynski@kernel.org>,
-	"Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-	"linux-pci" <linux-pci@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <18cb4f78be7.118217ede232604.6825928402358580565@linux.beauty>
-In-Reply-To: <20231228134132.GA1486379@bhelgaas>
-References: <20231228134132.GA1486379@bhelgaas>
-Subject: Re: Is Cadence PCIe IP orphaned?
+	spf=pass  smtp.mailfrom=michael@5challer.de;
+	dmarc=pass header.from=<michael@5challer.de>
+Received: from [192.168.144.187] (ipbcc11913.dynamic.kabel-deutschland.de [188.193.25.19]) by mx.zohomail.com
+	with SMTPS id 1703845885553228.68119821986124; Fri, 29 Dec 2023 02:31:25 -0800 (PST)
+Message-ID: <a83ad70d-910e-4bb4-97c8-008dc74526c4@5challer.de>
+Date: Fri, 29 Dec 2023 11:31:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, kai.heng.feng@canonical.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, macro@orcam.me.uk, ajayagarwal@google.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, gregkh@linuxfoundation.org,
+ hkallweit1@gmail.com, michael.a.bottini@linux.intel.com,
+ johan+linaro@kernel.org, "David E. Box" <david.e.box@linux.intel.com>
+References: <20231229002623.GA1560896@bhelgaas>
+Content-Language: en-US
+From: Michael Schaller <michael@5challer.de>
+In-Reply-To: <20231229002623.GA1560896@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+X-ZohoMailClient: External
 
-Hi Bjorn,
+> Hi Michael, thank you very much for debugging and reporting this!
+> Sorry for the major inconvenience.
+> 
+You're welcome and the only inconvenience was doing the bisect. ;-)
 
- ---- On Thu, 28 Dec 2023 08:41:32 -0500  Bjorn Helgaas  wrote --- 
- > Tom Joseph tjoseph@cadence.com> is listed as the maintainer of the
- > Cadence PCIe IP, but email to that address bounces and lore has no
- > correspondence from Tom in the past two years
- > (https://lore.kernel.org/all/?q=f%3Atjoseph).
- > 
- > Does anybody want to step up to maintain this?  Should we apply a
- > patch like the one below?
-
-AFAIK, Cadence people are preparing to upstream their Gen5 controller and PHY drivers. They may update the maintainers when they do so.
-
-Regards,
-Li
-
+> We have some known issues with saving and restoring ASPM state on
+> suspend/resume, in particular with ASPM L1 Substates, which are
+> enabled on this device.
+> 
+> David Box has a patch in the works that should fix one of those
+> issues:
+> https://lore.kernel.org/r/20231221011250.191599-1-david.e.box@linux.intel.com
+> 
+> It's not merged yet, but it's possible it might fix or at least be
+> related to this.  If you try it out, please let us know what happens.
+> 
+I gave the proposed patch a quick test on top of kernel 6.6.8 and it 
+didn't affect this issue (the reboot still happens on resume attempt).
 
