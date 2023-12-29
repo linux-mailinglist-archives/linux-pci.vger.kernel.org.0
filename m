@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-1541-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1542-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D261181FE77
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 10:08:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B66AD81FE91
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 10:19:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B32A1F216F8
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 09:08:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71B8C284A9E
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 09:19:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149AC107A1;
-	Fri, 29 Dec 2023 09:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8CF107B9;
+	Fri, 29 Dec 2023 09:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GBFaum1G"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJqpknZz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0CA10A09;
-	Fri, 29 Dec 2023 09:08:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB6B10A0A;
+	Fri, 29 Dec 2023 09:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703840889; x=1735376889;
+  t=1703841548; x=1735377548;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=KAX2L3dtkmuv8E2Df3D0zLV9/zyFwoPlmG1nSIF/cnQ=;
-  b=GBFaum1GYbJ0Pwhdvz/FKgXTnROgPl6lxtz1m0t5134tYdkZVYJ3ge9z
-   ExkjiDQD+p+Yvjm4PJEvNQGWZ0UF+rdBzteujXYlrisvdeeYPG5YI4sUc
-   yAuKDH+m+D7+Vovt/b0nNifNSmCf3UXKYbtKW4vep/dgqGwbufTsERnyd
-   GxynkUJzcpqMhnRk9vRBrJBIIOo5MS7PqoQvhssxeMqoo0qb0ely7euJN
-   0ff3N3ZJwh4dtCk4QGEutWXKvLcOcIHPvDvmujxScfegKmsE5Mm+xoBnf
-   KlKSDCz9wD6YWMQ7rL7SAbE+Ci5jzv03Po9f+bivn5dZ4Lavt6HJ4BAu6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="393776401"
+  bh=vNb64AnC3cBHyUn7yY6RO10YqcqqNyC1Y4V4OzI0I1E=;
+  b=VJqpknZzNkzPe1SwG0zatNbHtOr49uUQr7hjUf2Sap7I8H/GlZlWc6u4
+   UBih2rCT8Xf/T7weQw4sgC1YizfM7n7KhBO4y/q1Gj5mgXy1rKcVy5CzK
+   zYU18ReieICih6Vp6JvM1enJaBNtWb3sm1EwZMpaeCz5odi//Bu67Z2MO
+   nmCmRcM0Rvw9Vjmwt4wtT47jIZ9ImRhH1gLAoKFfT2xh5lxmlagj+JjRx
+   vEuktX9+I61YIaz15aa/f2IdawnB4TQwxpWFYSbNmkCUNhYQW8u0KsqhZ
+   im6PssioBUfs4OsvF9JNQ1cZ62WhuKxqvqciOfrS2PTRUl1FvoyqZgadp
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="376792035"
 X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
-   d="scan'208";a="393776401"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 01:08:08 -0800
+   d="scan'208";a="376792035"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 01:19:07 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="1110138041"
 X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
-   d="scan'208";a="20504931"
+   d="scan'208";a="1110138041"
 Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.117]) ([10.93.26.117])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 01:08:05 -0800
-Message-ID: <89747805-c322-4b6c-8830-3c1e51606416@linux.intel.com>
-Date: Fri, 29 Dec 2023 17:07:47 +0800
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 01:19:05 -0800
+Message-ID: <3ea89ca4-c6b2-469f-81fd-00bea2e9cac0@linux.intel.com>
+Date: Fri, 29 Dec 2023 17:19:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,33 +100,9 @@ On 12/29/2023 4:06 PM, Tian, Kevin wrote:
 > then it's better to make it clear from beginning that this is about surprise
 > removal in which device is removed and cannot respond to on-going
 > ATS invalidation request incurred in the removal process.
-
-This case, customer insisted he wasn't meant to do "surprise removal", but
-
-did a warm reset, perhas by chance, they populated adapters in the hotplug
-
-capable slots.
-
-typical surprise removal doesn't include such case in my understanding.
-
-1. pull out adapter directly
-
-2. request power off via sysfs.
-
-but the behaviour of pciehp (hotplug driver) is exactly the same as other
-
-surprise removal operation, so just classify it as "surprise removal" , no
-
-items in PCIe spec mentioned this is one typical surprise removal.
-
-perhaps no one did surprise removal via setpci tool to access pci
-
-config space to flap power/link state, why not just pull it out.
-
 >
 > safe removal should be immune from this problem as the device is still
 > responsive in the whole removal process.
-Yup, agree.
 >
 >>>> [ 4223.822628] Call Trace:
 >>>> [ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
@@ -142,28 +119,7 @@ Yup, agree.
 > detached from the driver. At that point presumably the device
 > should be detached from the DMA domain which involves
 > ATS invalidation too.
-
-well, that is not weird as I know
-
-I am sure the device driver was unloaded already before user
-
-tries to do a warm reset to the device.
-
-In fact, customer uses a firmware tool called "mlxfwreset"
-
-the steps that tool executed
-
-1. send reset command to firmware
-
-2. stop driver
-
-3. reset pci (via setpci , then hang here).
-
-
-Thanks,
-
-Ethan
-
+>
 >>>>    	while (qi->desc_status[wait_index] != QI_DONE) {
 >>>> +		/*
 >>>> +		 * if the device-TLB invalidation target device is gone, don't
@@ -185,6 +141,15 @@ Ethan
 >>
 > one problem - the caller could pass multiple descriptors while type
 > only refers to the 1st descriptor.
+
+If the other invalidation request mixed together with ATS invalidation
+
+in the descriptors passed to qi_submit_sync(), would be problem,
+
+so far to Intel VT-d driver, I didn't see such kind of usage, perhaps
+
+will see it later, no one could prevent that.
+
 >
 > btw is it an Intel specific problem? A quick glance at smmu driver
 > suggests the same problem too:
@@ -203,4 +168,14 @@ Ethan
 >                                                 struct arm_smmu_ll_queue *llq)
 >
 > is there a more general way to solve it?
+
+Surprise removal could happen anytime, depends on user,
+
+no preparation could be done, so called 'surprise' :(
+
+
+Thanks,
+
+Ethan
+
 
