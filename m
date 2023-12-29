@@ -1,155 +1,97 @@
-Return-Path: <linux-pci+bounces-1553-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1554-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B639A82003D
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 16:30:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 950EB820047
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 16:33:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 576D61F21E29
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 15:30:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 586E72845C0
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 15:33:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A5C125B0;
-	Fri, 29 Dec 2023 15:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDBB0125B0;
+	Fri, 29 Dec 2023 15:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhIcz4qU"
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="O4dcZzNV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BC0125AD;
-	Fri, 29 Dec 2023 15:30:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFBD4C433C8;
-	Fri, 29 Dec 2023 15:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703863802;
-	bh=rrRRym+4B4/ohQWp8hfDWnDdsCoZaLrAne2Eup3YzEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qhIcz4qUO22X6OPMTIQfrlr2Rps8fsxwxyhzPG/Dy1xiVaP7+vSb2GZnYdB6Prea0
-	 gLM//hbU1L9cx5kys2LRlGA3TLmz5O7rAYZDoTibfTQT5heoPmijRG5HFffzeamBSz
-	 uxa3Ao13IaCBS99AMaZfprby3kcNSPLAmljdSj8hErHqmCaQ69kv5XM7vZUi8UZriE
-	 vOCcSPAEs/563+z0mLn2ez7nb31IKo1c4kjQtIUwZ6ZxL6yWgm30LVT6fheVl67Mfk
-	 DrwqztIDisvjQ1B0koJRwr4bq7tDJxwiPrHFtIK5mSuDao7qPEQupg+A38ABvo32A9
-	 NJYE9SKCmtmtQ==
-Received: from johan by xi.lan with local (Exim 4.96.2)
-	(envelope-from <johan@kernel.org>)
-	id 1rJEo7-0005gI-0h;
-	Fri, 29 Dec 2023 16:29:55 +0100
-Date: Fri, 29 Dec 2023 16:29:55 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72D912B68;
+	Fri, 29 Dec 2023 15:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+Received: from newone.congress.ccc.de (unknown [151.217.64.190])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id B034016392E;
+	Fri, 29 Dec 2023 16:33:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1703863992;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=P/5ISZ6OJ0Mvq7F8hX2ojwDxgD+/zwnsH6ub40eIdx8=;
+	b=O4dcZzNVigyMN8pjMFbpmZw2sxFdkMilPQQL9gvMAiFOzBUQyL6FxZlZ7xnTdj4ei3BG80
+	a3/MM8uKzUJq+q1jXs0UFByxghyCvkqMFxsy/VpbKY3eYqL9ju8k6rqGsDBpfEpMmKvmjJ
+	qwyTuV+uLBahaARY9MDXn79v6lVPRWk=
+From: David Heidelberg <david@ixit.cz>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Stanimir Varbanov <svarbanov@mm-sol.com>,
-	Andrew Murray <amurray@thegoodpenguin.co.uk>,
-	Vinod Koul <vkoul@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>
+Cc: David Heidelberg <david@ixit.cz>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI: qcom: Reshuffle reset logic in 2_7_0 .init
-Message-ID: <ZY7l828-mSGXVwrk@hovoldconsulting.com>
-References: <20231227-topic-8280_pcie-v1-0-095491baf9e4@linaro.org>
- <20231227-topic-8280_pcie-v1-1-095491baf9e4@linaro.org>
- <ZY7R581pgn3uO6kk@hovoldconsulting.com>
- <fa0fbadc-a7c3-4bea-bed7-0006db0616dc@linaro.org>
+Subject: [PATCH v2] dt-bindings: PCI: qcom: delimit number of iommu-map entries
+Date: Fri, 29 Dec 2023 16:32:58 +0100
+Message-ID: <20231229153310.206764-1-david@ixit.cz>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa0fbadc-a7c3-4bea-bed7-0006db0616dc@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-[ Again, please remember to add a newline before you inline comments to
-make you replies readable. ]
+The code or specific SoC doesn't seem to limit the number of iommu-map entries.
 
-On Fri, Dec 29, 2023 at 04:01:27PM +0100, Konrad Dybcio wrote:
-> On 29.12.2023 15:04, Johan Hovold wrote:
-> > On Wed, Dec 27, 2023 at 11:17:19PM +0100, Konrad Dybcio wrote:
-> >> At least on SC8280XP, if the PCIe reset is asserted, the corresponding
-> >> AUX_CLK will be stuck at 'off'.
-> > 
-> > No, this path is exercised on every boot without the aux clock ever
-> > being stuck at off. So something is clearly missing in this description.
+Fixes: 1a24edc38dbf ("dt-bindings: PCI: qcom: Add SM8550 compatible")
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+v2: added Fixes tag
 
-> That's likely because the hardware has been initialized and not cleanly
-> shut down by your bootloader. When you reset it, or your bootloader
-> wasn't so kind, you need to start initialization from scratch.
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-What does that even mean? I'm telling you that this reset is asserted on
-each boot, on all sc8280xp platforms I have access to, and never have I
-seen the aux clk stuck at off.
-
-So clearly your claim above is too broad and the commit message is
-incorrect or incomplete.
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index eadba38171e1..c6111278162f 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -61,8 +61,7 @@ properties:
+     minItems: 1
+     maxItems: 8
  
-> >> Assert the reset (which may end up being a NOP if it was previously
-> >> asserted) and de-assert it back *before* turning on the clocks to avoid
-> >> such cases.
-> >>
-> >> In addition to that, in case the clock bulk enable fails, assert the
-> >> RC reset back, as the hardware is in an unknown state at best.
-> > 
-> > This is arguably a separate change, and not necessarily one that is
-> > correct either
-
-> If the clock enable fails, the PCIe hw is not in reset state, ergo it
-> may be doing "something", and that "something" would eat non-zero power.
-> It's just cleaning up after yourself.
-
-How can it do something without power and clocks? And leaving reset
-asserted for non-powered devices is generally not a good idea.
+-  iommu-map:
+-    maxItems: 2
++  iommu-map: true
  
-> > so should at least go in a separate patch if it should
-> > be done at all.
+   # Common definitions for clocks, clock-names and reset.
+   # Platform constraints are described later.
+-- 
+2.43.0
 
-> I'll grumpily comply..
-
-I suggest you leave it deasserted unless you have documentation
-suggesting that the opposite is safe and recommended for this piece of
-hardware.
- 
-> >> Fixes: ed8cc3b1fc84 ("PCI: qcom: Add support for SDM845 PCIe controller")
-> > 
-> > I think you're being way to liberal with your use of Fixes tags. To
-> > claim that this is a bug, you need to make a more convincing case for
-> > why you think so.
-
-> The first paragraph describes the issue that this patch fixes.
-
-Yes, but this is all very hand-wavy so far. With a complete commit
-message I may agree, but you still haven't convinced me that this is a
-bug and not just a workaround from some not fully-understood issue on
-one particular platform.
- 
-> > Also note Qualcomm's vendor driver is similarly asserting reset after
-> > enabling the clocks.
-
-> It's also not asserting the reset on suspend, see below.
-
-Right, as I mentioned.
- 
-> > That driver does not seem to reset the controller on resume, though, in
-> > case that is relevant for your current experiments.
-
-> I know, the vendor driver doesn't fully shut down the controller. This
-> is however the only sequence that we (partially) have upstream, and the
-> only one that is going to work on SC8280XP (due to hw design).
-> 
-> On other platforms, a "soft shutdown" (i.e. dropping the link, cutting
-> clocks but not fully resetting the RC state) should be possible, but
-> that's not what this patchset concerns.
-
-The commit message does not even mention suspend, it just makes a
-clearly false general claim about a clock being stuck unless you reorder
-things.
-
-Johan
 
