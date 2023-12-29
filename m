@@ -1,119 +1,449 @@
-Return-Path: <linux-pci+bounces-1532-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 432A581FCE3
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 04:46:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F1C281FCE0
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 04:45:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D56A1C20973
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 03:46:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91E011F2151E
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 03:45:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B1EE17FA;
-	Fri, 29 Dec 2023 03:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ah/aicGE"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427CB17E2;
+	Fri, 29 Dec 2023 03:45:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9734B567C;
-	Fri, 29 Dec 2023 03:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703821574; x=1735357574;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vm6p9nuxloRluzYcX979ML+GT8QFdDfRTL49gEoXQn4=;
-  b=Ah/aicGELwRB1UDR92/tVtkjEliD2YeJgdQDbaXjBdctPgzi1culLNtX
-   2T+o2BGygwzY0sQOK0XSbm4wcHrmP3+esO5Xvm9A7CXR8kE/vRo0LtBTh
-   h1G7m5tunRj+UAwDhYaTlgC1Hq3HENcTFxJ6IPnfUYjls0PwrERExeXJc
-   bWYkOVu+FyXg1Nqr/p2E2xOpQjWTbeZYh4mhbky2K7MgKcmMpUEuhTLnn
-   TlpjEK8Y1k3MIs3U+kDTHaLil7io1Sno8jzKRT44Q1C56Ap3wr6xZBlIy
-   ABP8grqmDyheonJ2TCgqO5yw4/pppY0ndFCSTG0jIO4YF4LyjAWkSr0m6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="381591511"
-X-IronPort-AV: E=Sophos;i="6.04,313,1695711600"; 
-   d="scan'208";a="381591511"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 19:46:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="778711269"
-X-IronPort-AV: E=Sophos;i="6.04,313,1695711600"; 
-   d="scan'208";a="778711269"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 28 Dec 2023 19:46:10 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rJ3oz-000H4F-1U;
-	Fri, 29 Dec 2023 03:46:06 +0000
-Date: Fri, 29 Dec 2023 11:42:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Stanimir Varbanov <svarbanov@mm-sol.com>,
-	Andrew Murray <amurray@thegoodpenguin.co.uk>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: Re: [PATCH 4/4] PCI: qcom: Implement RC shutdown/power up
-Message-ID: <202312291155.8v6ZEtrf-lkp@intel.com>
-References: <20231227-topic-8280_pcie-v1-4-095491baf9e4@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC1C849C;
+	Fri, 29 Dec 2023 03:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id 5806924E03E;
+	Fri, 29 Dec 2023 11:44:49 +0800 (CST)
+Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 29 Dec
+ 2023 11:44:49 +0800
+Received: from [192.168.125.85] (183.27.96.32) by EXMBX171.cuchost.com
+ (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 29 Dec
+ 2023 11:44:48 +0800
+Message-ID: <6b70a8ec-7215-44a8-babb-f65f809b5c84@starfivetech.com>
+Date: Fri, 29 Dec 2023 11:44:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231227-topic-8280_pcie-v1-4-095491baf9e4@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 10/21] PCI: microchip: Rename interrupt related
+ functions
+Content-Language: en-US
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Daire McNamara <daire.mcnamara@microchip.com>, "Emil
+ Renner Berthing" <emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
+	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>
+References: <20231214072839.2367-1-minda.chen@starfivetech.com>
+ <20231214072839.2367-11-minda.chen@starfivetech.com>
+ <ZYxIQ9ruBbxWKfIg@lpieralisi>
+From: Minda Chen <minda.chen@starfivetech.com>
+In-Reply-To: <ZYxIQ9ruBbxWKfIg@lpieralisi>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX171.cuchost.com
+ (172.16.6.91)
+X-YovoleRuleAgent: yovoleflag
 
-Hi Konrad,
 
-kernel test robot noticed the following build errors:
 
-[auto build test ERROR on 39676dfe52331dba909c617f213fdb21015c8d10]
+On 2023/12/27 23:52, Lorenzo Pieralisi wrote:
+> On Thu, Dec 14, 2023 at 03:28:28PM +0800, Minda Chen wrote:
+>> Rename mc_* to plda_* for IRQ functions and related IRQ domain ops data
+>> instances.
+>> 
+>> MSI, INTx interrupt codes and IRQ init codes are all can be re-used.
+> 
+> s/codes/code
+> 
+ack.
+>> 
+>> - function rename list:
+>>   mc_allocate_msi_domains()  --> plda_allocate_msi_domains()
+>>   mc_init_interrupts()       --> plda_init_interrupts()
+>>   mc_pcie_init_irq_domain()  --> plda_pcie_init_irq_domains()
+>>   mc_handle_event()          --> plda_handle_event()
+>>   get_events()               --> mc_get_events()
+>> 
+>>   MSI interrupts related functions and IRQ domain
+>>   (primary function is mc_handle_msi()):
+>>     mc_handle_msi()          --> plda_handle_msi()
+>>   INTx interrupts related functions and IRQ domain
+>>   (primary function is mc_handle_intx()):
+>>     mc_handle_intx()         --> plda_handle_intx()
+> 
+> We can read the code you are changing, there is no need to
+> add it to the commit log, especially because it is a trivial
+> rename here.
+> 
+OK, Thanks 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/PCI-qcom-Reshuffle-reset-logic-in-2_7_0-init/20231228-062002
-base:   39676dfe52331dba909c617f213fdb21015c8d10
-patch link:    https://lore.kernel.org/r/20231227-topic-8280_pcie-v1-4-095491baf9e4%40linaro.org
-patch subject: [PATCH 4/4] PCI: qcom: Implement RC shutdown/power up
-config: arm64-allmodconfig (https://download.01.org/0day-ci/archive/20231229/202312291155.8v6ZEtrf-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 8a4266a626914765c0c69839e8a51be383013c1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231229/202312291155.8v6ZEtrf-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312291155.8v6ZEtrf-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: cmd_db_ready
-   >>> referenced by pcie-qcom.c
-   >>>               drivers/pci/controller/dwc/pcie-qcom.o:(qcom_pcie_probe) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: crc8_populate_msb
-   >>> referenced by pcie-qcom.c
-   >>>               drivers/pci/controller/dwc/pcie-qcom.o:(qcom_pcie_config_sid_1_9_0) in archive vmlinux.a
---
->> ld.lld: error: undefined symbol: crc8
-   >>> referenced by pcie-qcom.c
-   >>>               drivers/pci/controller/dwc/pcie-qcom.o:(qcom_pcie_config_sid_1_9_0) in archive vmlinux.a
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>> ---
+>>  .../pci/controller/plda/pcie-microchip-host.c | 112 +++++++++---------
+>>  1 file changed, 59 insertions(+), 53 deletions(-)
+>> 
+>> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+>> index 2e79bcc7c0a5..506e6eeadc76 100644
+>> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
+>> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+>> @@ -318,7 +318,7 @@ static void mc_pcie_enable_msi(struct mc_pcie *port, void __iomem *ecam)
+>>  		       ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_ADDRESS_HI);
+>>  }
+>>  
+>> -static void mc_handle_msi(struct irq_desc *desc)
+>> +static void plda_handle_msi(struct irq_desc *desc)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+>>  	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> @@ -333,7 +333,8 @@ static void mc_handle_msi(struct irq_desc *desc)
+>>  
+>>  	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
+>>  	if (status & PM_MSI_INT_MSI_MASK) {
+>> -		writel_relaxed(status & PM_MSI_INT_MSI_MASK, bridge_base_addr + ISTATUS_LOCAL);
+>> +		writel_relaxed(status & PM_MSI_INT_MSI_MASK,
+>> +			       bridge_base_addr + ISTATUS_LOCAL);
+> 
+> Unrelated change (I suspect checkpatch nudged you to make it; it
+> is tempting but it does not belong in this patch).
+> 
+> Lorenzo
+> 
+>>  		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+>>  		for_each_set_bit(bit, &status, msi->num_vectors) {
+>>  			ret = generic_handle_domain_irq(msi->dev_domain, bit);
+>> @@ -346,7 +347,7 @@ static void mc_handle_msi(struct irq_desc *desc)
+>>  	chained_irq_exit(chip, desc);
+>>  }
+>>  
+>> -static void mc_msi_bottom_irq_ack(struct irq_data *data)
+>> +static void plda_msi_bottom_irq_ack(struct irq_data *data)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+>>  	void __iomem *bridge_base_addr = port->bridge_addr;
+>> @@ -355,7 +356,7 @@ static void mc_msi_bottom_irq_ack(struct irq_data *data)
+>>  	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
+>>  }
+>>  
+>> -static void mc_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>> +static void plda_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+>>  	phys_addr_t addr = port->msi.vector_phy;
+>> @@ -368,21 +369,23 @@ static void mc_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>>  		(int)data->hwirq, msg->address_hi, msg->address_lo);
+>>  }
+>>  
+>> -static int mc_msi_set_affinity(struct irq_data *irq_data,
+>> -			       const struct cpumask *mask, bool force)
+>> +static int plda_msi_set_affinity(struct irq_data *irq_data,
+>> +				 const struct cpumask *mask, bool force)
+>>  {
+>>  	return -EINVAL;
+>>  }
+>>  
+>> -static struct irq_chip mc_msi_bottom_irq_chip = {
+>> -	.name = "Microchip MSI",
+>> -	.irq_ack = mc_msi_bottom_irq_ack,
+>> -	.irq_compose_msi_msg = mc_compose_msi_msg,
+>> -	.irq_set_affinity = mc_msi_set_affinity,
+>> +static struct irq_chip plda_msi_bottom_irq_chip = {
+>> +	.name = "PLDA MSI",
+>> +	.irq_ack = plda_msi_bottom_irq_ack,
+>> +	.irq_compose_msi_msg = plda_compose_msi_msg,
+>> +	.irq_set_affinity = plda_msi_set_affinity,
+>>  };
+>>  
+>> -static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>> -				   unsigned int nr_irqs, void *args)
+>> +static int plda_irq_msi_domain_alloc(struct irq_domain *domain,
+>> +				     unsigned int virq,
+>> +				     unsigned int nr_irqs,
+>> +				     void *args)
+>>  {
+>>  	struct plda_pcie_rp *port = domain->host_data;
+>>  	struct plda_msi *msi = &port->msi;
+>> @@ -397,7 +400,7 @@ static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>>  
+>>  	set_bit(bit, msi->used);
+>>  
+>> -	irq_domain_set_info(domain, virq, bit, &mc_msi_bottom_irq_chip,
+>> +	irq_domain_set_info(domain, virq, bit, &plda_msi_bottom_irq_chip,
+>>  			    domain->host_data, handle_edge_irq, NULL, NULL);
+>>  
+>>  	mutex_unlock(&msi->lock);
+>> @@ -405,8 +408,9 @@ static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>>  	return 0;
+>>  }
+>>  
+>> -static void mc_irq_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+>> -				   unsigned int nr_irqs)
+>> +static void plda_irq_msi_domain_free(struct irq_domain *domain,
+>> +				     unsigned int virq,
+>> +				     unsigned int nr_irqs)
+>>  {
+>>  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+>>  	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(d);
+>> @@ -423,24 +427,24 @@ static void mc_irq_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+>>  }
+>>  
+>>  static const struct irq_domain_ops msi_domain_ops = {
+>> -	.alloc	= mc_irq_msi_domain_alloc,
+>> -	.free	= mc_irq_msi_domain_free,
+>> +	.alloc	= plda_irq_msi_domain_alloc,
+>> +	.free	= plda_irq_msi_domain_free,
+>>  };
+>>  
+>> -static struct irq_chip mc_msi_irq_chip = {
+>> -	.name = "Microchip PCIe MSI",
+>> +static struct irq_chip plda_msi_irq_chip = {
+>> +	.name = "PLDA PCIe MSI",
+>>  	.irq_ack = irq_chip_ack_parent,
+>>  	.irq_mask = pci_msi_mask_irq,
+>>  	.irq_unmask = pci_msi_unmask_irq,
+>>  };
+>>  
+>> -static struct msi_domain_info mc_msi_domain_info = {
+>> +static struct msi_domain_info plda_msi_domain_info = {
+>>  	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+>>  		  MSI_FLAG_PCI_MSIX),
+>> -	.chip = &mc_msi_irq_chip,
+>> +	.chip = &plda_msi_irq_chip,
+>>  };
+>>  
+>> -static int mc_allocate_msi_domains(struct plda_pcie_rp *port)
+>> +static int plda_allocate_msi_domains(struct plda_pcie_rp *port)
+>>  {
+>>  	struct device *dev = port->dev;
+>>  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+>> @@ -455,7 +459,8 @@ static int mc_allocate_msi_domains(struct plda_pcie_rp *port)
+>>  		return -ENOMEM;
+>>  	}
+>>  
+>> -	msi->msi_domain = pci_msi_create_irq_domain(fwnode, &mc_msi_domain_info,
+>> +	msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>> +						    &plda_msi_domain_info,
+>>  						    msi->dev_domain);
+>>  	if (!msi->msi_domain) {
+>>  		dev_err(dev, "failed to create MSI domain\n");
+>> @@ -466,7 +471,7 @@ static int mc_allocate_msi_domains(struct plda_pcie_rp *port)
+>>  	return 0;
+>>  }
+>>  
+>> -static void mc_handle_intx(struct irq_desc *desc)
+>> +static void plda_handle_intx(struct irq_desc *desc)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+>>  	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> @@ -493,7 +498,7 @@ static void mc_handle_intx(struct irq_desc *desc)
+>>  	chained_irq_exit(chip, desc);
+>>  }
+>>  
+>> -static void mc_ack_intx_irq(struct irq_data *data)
+>> +static void plda_ack_intx_irq(struct irq_data *data)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+>>  	void __iomem *bridge_base_addr = port->bridge_addr;
+>> @@ -502,7 +507,7 @@ static void mc_ack_intx_irq(struct irq_data *data)
+>>  	writel_relaxed(mask, bridge_base_addr + ISTATUS_LOCAL);
+>>  }
+>>  
+>> -static void mc_mask_intx_irq(struct irq_data *data)
+>> +static void plda_mask_intx_irq(struct irq_data *data)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+>>  	void __iomem *bridge_base_addr = port->bridge_addr;
+>> @@ -517,7 +522,7 @@ static void mc_mask_intx_irq(struct irq_data *data)
+>>  	raw_spin_unlock_irqrestore(&port->lock, flags);
+>>  }
+>>  
+>> -static void mc_unmask_intx_irq(struct irq_data *data)
+>> +static void plda_unmask_intx_irq(struct irq_data *data)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_data_get_irq_chip_data(data);
+>>  	void __iomem *bridge_base_addr = port->bridge_addr;
+>> @@ -532,24 +537,24 @@ static void mc_unmask_intx_irq(struct irq_data *data)
+>>  	raw_spin_unlock_irqrestore(&port->lock, flags);
+>>  }
+>>  
+>> -static struct irq_chip mc_intx_irq_chip = {
+>> -	.name = "Microchip PCIe INTx",
+>> -	.irq_ack = mc_ack_intx_irq,
+>> -	.irq_mask = mc_mask_intx_irq,
+>> -	.irq_unmask = mc_unmask_intx_irq,
+>> +static struct irq_chip plda_intx_irq_chip = {
+>> +	.name = "PLDA PCIe INTx",
+>> +	.irq_ack = plda_ack_intx_irq,
+>> +	.irq_mask = plda_mask_intx_irq,
+>> +	.irq_unmask = plda_unmask_intx_irq,
+>>  };
+>>  
+>> -static int mc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+>> -			    irq_hw_number_t hwirq)
+>> +static int plda_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+>> +			      irq_hw_number_t hwirq)
+>>  {
+>> -	irq_set_chip_and_handler(irq, &mc_intx_irq_chip, handle_level_irq);
+>> +	irq_set_chip_and_handler(irq, &plda_intx_irq_chip, handle_level_irq);
+>>  	irq_set_chip_data(irq, domain->host_data);
+>>  
+>>  	return 0;
+>>  }
+>>  
+>>  static const struct irq_domain_ops intx_domain_ops = {
+>> -	.map = mc_pcie_intx_map,
+>> +	.map = plda_pcie_intx_map,
+>>  };
+>>  
+>>  static inline u32 reg_to_event(u32 reg, struct event_map field)
+>> @@ -609,7 +614,7 @@ static u32 local_events(struct mc_pcie *port)
+>>  	return val;
+>>  }
+>>  
+>> -static u32 get_events(struct plda_pcie_rp *port)
+>> +static u32 mc_get_events(struct plda_pcie_rp *port)
+>>  {
+>>  	struct mc_pcie *mc_port = container_of(port, struct mc_pcie, plda);
+>>  	u32 events = 0;
+>> @@ -638,7 +643,7 @@ static irqreturn_t mc_event_handler(int irq, void *dev_id)
+>>  	return IRQ_HANDLED;
+>>  }
+>>  
+>> -static void mc_handle_event(struct irq_desc *desc)
+>> +static void plda_handle_event(struct irq_desc *desc)
+>>  {
+>>  	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+>>  	unsigned long events;
+>> @@ -647,7 +652,7 @@ static void mc_handle_event(struct irq_desc *desc)
+>>  
+>>  	chained_irq_enter(chip, desc);
+>>  
+>> -	events = get_events(port);
+>> +	events = mc_get_events(port);
+>>  
+>>  	for_each_set_bit(bit, &events, NUM_EVENTS)
+>>  		generic_handle_domain_irq(port->event_domain, bit);
+>> @@ -741,8 +746,8 @@ static struct irq_chip mc_event_irq_chip = {
+>>  	.irq_unmask = mc_unmask_event_irq,
+>>  };
+>>  
+>> -static int mc_pcie_event_map(struct irq_domain *domain, unsigned int irq,
+>> -			     irq_hw_number_t hwirq)
+>> +static int plda_pcie_event_map(struct irq_domain *domain, unsigned int irq,
+>> +			       irq_hw_number_t hwirq)
+>>  {
+>>  	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq);
+>>  	irq_set_chip_data(irq, domain->host_data);
+>> @@ -750,8 +755,8 @@ static int mc_pcie_event_map(struct irq_domain *domain, unsigned int irq,
+>>  	return 0;
+>>  }
+>>  
+>> -static const struct irq_domain_ops event_domain_ops = {
+>> -	.map = mc_pcie_event_map,
+>> +static const struct irq_domain_ops plda_event_domain_ops = {
+>> +	.map = plda_pcie_event_map,
+>>  };
+>>  
+>>  static inline void mc_pcie_deinit_clk(void *data)
+>> @@ -799,7 +804,7 @@ static int mc_pcie_init_clks(struct device *dev)
+>>  	return 0;
+>>  }
+>>  
+>> -static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
+>> +static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+>>  {
+>>  	struct device *dev = port->dev;
+>>  	struct device_node *node = dev->of_node;
+>> @@ -813,7 +818,8 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
+>>  	}
+>>  
+>>  	port->event_domain = irq_domain_add_linear(pcie_intc_node, NUM_EVENTS,
+>> -						   &event_domain_ops, port);
+>> +						   &plda_event_domain_ops,
+>> +						   port);
+>>  	if (!port->event_domain) {
+>>  		dev_err(dev, "failed to get event domain\n");
+>>  		of_node_put(pcie_intc_node);
+>> @@ -835,7 +841,7 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
+>>  	of_node_put(pcie_intc_node);
+>>  	raw_spin_lock_init(&port->lock);
+>>  
+>> -	return mc_allocate_msi_domains(port);
+>> +	return plda_allocate_msi_domains(port);
+>>  }
+>>  
+>>  static inline void mc_clear_secs(struct mc_pcie *port)
+>> @@ -898,14 +904,14 @@ static void mc_disable_interrupts(struct mc_pcie *port)
+>>  	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
+>>  }
+>>  
+>> -static int mc_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp *port)
+>> +static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp *port)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>>  	int irq;
+>>  	int i, intx_irq, msi_irq, event_irq;
+>>  	int ret;
+>>  
+>> -	ret = mc_pcie_init_irq_domains(port);
+>> +	ret = plda_pcie_init_irq_domains(port);
+>>  	if (ret) {
+>>  		dev_err(dev, "failed creating IRQ domains\n");
+>>  		return ret;
+>> @@ -938,7 +944,7 @@ static int mc_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp
+>>  	}
+>>  
+>>  	/* Plug the INTx chained handler */
+>> -	irq_set_chained_handler_and_data(intx_irq, mc_handle_intx, port);
+>> +	irq_set_chained_handler_and_data(intx_irq, plda_handle_intx, port);
+>>  
+>>  	msi_irq = irq_create_mapping(port->event_domain,
+>>  				     EVENT_LOCAL_PM_MSI_INT_MSI);
+>> @@ -946,10 +952,10 @@ static int mc_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp
+>>  		return -ENXIO;
+>>  
+>>  	/* Plug the MSI chained handler */
+>> -	irq_set_chained_handler_and_data(msi_irq, mc_handle_msi, port);
+>> +	irq_set_chained_handler_and_data(msi_irq, plda_handle_msi, port);
+>>  
+>>  	/* Plug the main event chained handler */
+>> -	irq_set_chained_handler_and_data(irq, mc_handle_event, port);
+>> +	irq_set_chained_handler_and_data(irq, plda_handle_event, port);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -977,7 +983,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>>  		return ret;
+>>  
+>>  	/* Address translation is up; safe to enable interrupts */
+>> -	ret = mc_init_interrupts(pdev, &port->plda);
+>> +	ret = plda_init_interrupts(pdev, &port->plda);
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> -- 
+>> 2.17.1
+>> 
 
