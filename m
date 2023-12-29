@@ -1,119 +1,87 @@
-Return-Path: <linux-pci+bounces-1547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9271F81FF6A
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 13:24:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 844C681FF71
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 13:34:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 483FE1F243BA
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 12:24:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06CEFB21179
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Dec 2023 12:34:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C6D11197;
-	Fri, 29 Dec 2023 12:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A25181119E;
+	Fri, 29 Dec 2023 12:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="efqfWp81"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uoYinAw/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBDB11C80;
-	Fri, 29 Dec 2023 12:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703852674; x=1735388674;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aurePmLofIA0vQ9MuqkyTIcVPSgmqQEk9JYs9fwJovo=;
-  b=efqfWp81sh2CoVmPO7Oh5xlyCNFurVqe/pP/cUR8RoSwq3yqGn6UvN3P
-   GRKF5uFd6BuIMsx2BSpMOQVQ9l5+7qSqMcwQ7rHYMw8YDtidrMiKg0J6B
-   PWZWBt/HKCKtsZ2BaR9twpGwGxONAcC7PUmh2F5ozxdwcsVecngir3IQ7
-   w35RqbG8m/MR+NWhTeguesVTCHcmldBxmu00LM9F8MlnmKddrJndNb6ry
-   dxsMXxGiBx2bPE3mek/xrIIE5zIvcn/97RBto/mI86iYcQDuDhmnPAOkJ
-   zfRSR9sazZ36gTyGtM6fzYwpwidgFFnuekaBsqIKjgs+pwHd1CcbzFvow
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="381617786"
-X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
-   d="scan'208";a="381617786"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 04:24:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="807679892"
-X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
-   d="scan'208";a="807679892"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 29 Dec 2023 04:24:29 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 4A158241; Fri, 29 Dec 2023 14:24:29 +0200 (EET)
-Date: Fri, 29 Dec 2023 14:24:29 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF57111A2;
+	Fri, 29 Dec 2023 12:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1703853276;
+	bh=QwXYveaBC0ig2U8Y++IbF9SuqXAv85RwXyV1v2MqwYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uoYinAw/k9tO5Pzh9Q+ZvHcynf8ItzRqwE+/5fg+cDwTrDQCGqXX0COasXbkLau0l
+	 SCFWZ0neUFGhBjrSTUg+6Gsv9lKfs3fGrO7ZIgOzuWL4skZ27vthnxVZb+IYgxyk+N
+	 3XSNJWtusID5FirWwYQVjpo2FelXQ0TVkmicry6BbWZOg3xwa6ZS6/b4BJB00ZZeZf
+	 JkodFGfrVfuhWEPetUT0Iwsi5nj/ndnsI6+5EOzh0xaOz+lU+0Z6HD9FN7srgr39vr
+	 h9uJ0m0AnVmQPk3925HAf2D2tuZzzAVTCRG0K/RDt1SS4Jr/J4GU6EAxjnrz+ZnvTO
+	 8pjBFHHYhk5Qg==
+Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BE3BB3781472;
+	Fri, 29 Dec 2023 12:34:30 +0000 (UTC)
+Date: Fri, 29 Dec 2023 09:33:57 -0300
+From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, kernelci@lists.linux.dev,
+	kernel@collabora.com, Tim Bird <Tim.Bird@sony.com>,
+	linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
+	linux-kselftest@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+	Doug Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
+	Saravana Kannan <saravanak@google.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
-Message-ID: <20231229122429.GH2543524@black.fi.intel.com>
-References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+Subject: Re: [RFC PATCH v3 0/3] Add test to verify probe of devices from
+ discoverable busses
+Message-ID: <1d0ecab9-73a3-44e5-8d5b-f4d4cc5a3baf@notapiano>
+References: <20231227123643.52348-1-nfraprado@collabora.com>
+ <20231228235348.GA1559485@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20231228235348.GA1559485@bhelgaas>
 
-Hi Ilpo,
+On Thu, Dec 28, 2023 at 05:53:48PM -0600, Bjorn Helgaas wrote:
+> I have no opinion about the patches themselves, but just a heads-up
+> that "busses" may be regarded as a misspelling of "buses", e.g.,
+> https://lore.kernel.org/r/20231223184720.25645-1-tintinm2017@gmail.com,
+> I'm guessing because codespell complains about it.
+> 
+> Git grep says there are almost as many instances of "busses" as
+> "buses" in the kernel, so I don't go out of my way to change them.
+> Just FYI, doesn't matter to me either way.
 
-On Thu, Dec 28, 2023 at 06:57:00PM +0200, Ilpo Järvinen wrote:
-> Hi all,
-> 
-> Here's a series that contains two fixes to PCI bridge window sizing
-> algorithm. Together, they should enable remove & rescan cycle to work
-> for a PCI bus that has PCI devices with optional resources and/or
-> disparity in BAR sizes.
-> 
-> For the second fix, I chose to expose find_empty_resource_slot() from
-> kernel/resource.c because it should increase accuracy of the cannot-fit
-> decision (currently that function is called find_resource()). In order
-> to do that sensibly, a few improvements seemed in order to make its
-> interface and name of the function sane before exposing it. Thus, the
-> few extra patches on resource side.
-> 
-> Unfortunately I don't have a reason to suspect these would help with
-> the issues related to the currently ongoing resource regression
-> thread [1].
-> 
-> [1] https://lore.kernel.org/linux-pci/ZXpaNCLiDM+Kv38H@marvin.atrad.com.au/
-> 
-> v2:
-> - Add "typedef" to kerneldoc to get correct formatting
-> - Use RESOURCE_SIZE_MAX instead of literal
-> - Remove unnecessary checks for io{port/mem}_resource
-> - Apply a few style tweaks from Andy
-> 
-> Ilpo Järvinen (7):
->   PCI: Fix resource double counting on remove & rescan
->   resource: Rename find_resource() to find_empty_resource_slot()
->   resource: Document find_empty_resource_slot() and resource_constraint
->   resource: Use typedef for alignf callback
->   resource: Handle simple alignment inside __find_empty_resource_slot()
->   resource: Export find_empty_resource_slot()
->   PCI: Relax bridge window tail sizing rules
+Thanks for the heads up. The online dictionaries seem to agree on "buses", so
+I'll use that on the next version.
 
-Thanks for doing this! :)
-
-All look good to me,
-
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Thanks,
+N�colas
 
