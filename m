@@ -1,183 +1,117 @@
-Return-Path: <linux-pci+bounces-1598-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1599-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D3AC821EF8
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 16:41:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E83B821F08
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 16:54:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 153A72812CC
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 15:41:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 311831C22357
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 15:54:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6836114293;
-	Tue,  2 Jan 2024 15:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5D114A9C;
+	Tue,  2 Jan 2024 15:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DH5Qk1hm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eeaq0CCT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B138A14A82
-	for <linux-pci@vger.kernel.org>; Tue,  2 Jan 2024 15:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704210109; x=1735746109;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ROU17/gHk/KKPn7C1mTKOCOEF1KQDZX6LP4S7lTeaFU=;
-  b=DH5Qk1hm2ktx4Uf2FglNFZVvkip21K9Fjo+N8k4krFbFg8wHA83fU7dY
-   LY3H7k9Xt/GM7LJt5w9EfSAzmmEXP7pR+qCOd6szzzsdvD/fVfeoxrqkj
-   APyF7cHXrerdPGUY+mpPDbtEIvydG2Q9acQIFR7xypf2Yt0/2fxaJYGku
-   C/3QNJslC+wad5ksuXuhMx8g0WiRKOs9PL/EqOVroFCVggwuRMP3gD343
-   WLRvJwC/RLp2bS2w3aEV9Ui1K/5IPXN+p+xYwiQEbHpEuZMhRQn7DErUw
-   KWnmNv8hZ+roRu82HFCHuR5vOd+9w0Iq2HUHSre6Pc0drNXO/7YZXqT+z
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="381849627"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="381849627"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 07:41:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="1026808255"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="1026808255"
-Received: from mgaona-t14.amr.corp.intel.com (HELO [10.209.62.145]) ([10.209.62.145])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 07:41:48 -0800
-Message-ID: <ed47c116-78eb-40d7-a5e7-0c23e1e6712f@linux.intel.com>
-Date: Tue, 2 Jan 2024 07:41:49 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C0614A9A
+	for <linux-pci@vger.kernel.org>; Tue,  2 Jan 2024 15:54:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F52C433C7;
+	Tue,  2 Jan 2024 15:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704210861;
+	bh=d+QOV5HREj4MesagpDuiJHlqER5Pdbshz+JFNNmMhZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eeaq0CCTJ43lyvGvY4x820jT2qY6Hk+5rYBdNnrW9zhQRJgVbBWW7Q2nwHKLz1tmK
+	 gYlJbqdx+plu8dQve64XqQwUrmj6gLs1P15S0sIgUd9o3JqyzoYdZDComu3PQD11K/
+	 cyJIMoerCyAUXAC8vxsrI1OwpWxiJ7LoMeg3FDkz/9Lkzublpfg+ivObsq6NVoDARX
+	 DpD4+vOIZaDY3f956/wC6ijy14nkatcf5iTh85QiA2eCloig9gpEA6a11qbObDijAy
+	 uvjA5UbeLaAcG6VfhTAMUlAZRBr/a3Nd8PHhQqBE09sbmyz3dacc8MXmu3Z2xKk+ub
+	 cJ8TM1UDaeZ3Q==
+Date: Tue, 2 Jan 2024 21:24:06 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <nks@flawful.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Niklas Cassel <niklas.cassel@wdc.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq()
+ alignment support
+Message-ID: <20240102155406.GA4917@thinkpad>
+References: <20231128132231.2221614-1-nks@flawful.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER
- natively.
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Matthew W Carlis <mattc@purestorage.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- mika.westerberg@linux.intel.com, Keith Busch <kbusch@kernel.org>,
- Lukas Wunner <lukas@wunner.de>
-References: <20231228212340.GA1553749@bhelgaas>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20231228212340.GA1553749@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231128132231.2221614-1-nks@flawful.org>
 
+On Tue, Nov 28, 2023 at 02:22:30PM +0100, Niklas Cassel wrote:
+> From: Niklas Cassel <niklas.cassel@wdc.com>
+> 
+> Commit 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get
+> correct MSI-X table address") modified dw_pcie_ep_raise_msix_irq() to
+> support iATUs which require a specific alignment.
+> 
+> However, this support cannot have been properly tested.
+> 
+> The whole point is for the iATU to map an address that is aligned,
+> using dw_pcie_ep_map_addr(), and then let the writel() write to
+> ep->msi_mem + aligned_offset.
+> 
+> Thus, modify the address that is mapped such that it is aligned.
+> With this change, dw_pcie_ep_raise_msix_irq() matches the logic in
+> dw_pcie_ep_raise_msi_irq().
+> 
+> Cc: Kishon Vijay Abraham I <kishon@kernel.org>
+> Fixes: 6f5e193bfb55 ("PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSI-X table address")
+> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
 
+I apparently missed this patch... LGTM!
 
-On 12/28/2023 1:23 PM, Bjorn Helgaas wrote:
-> [+cc Keith, Lukas]
-> 
-> Hi Matthew, thanks for your work and the patch.
-> 
-> On Sat, Dec 23, 2023 at 02:22:35PM -0700, Matthew W Carlis wrote:
->> This change ensures the kernel will use DPC on a supporting device if
->> the kernel will also control AER on the Root Ports & RCECs.
->>
->> The rules around controlling DPC/AER are somewhat clear in PCIe/ACPI
->> specifications. It is recommended to always link control of both to the
->> same entity, being the OS or system firmware. The kernel wants to be
->> flexible by first having a default policy, but also by providing command
->> line parameters to enable us all to do what we want even if it might
->> violate the recommendations.
->>
->> The following mentioned patch brought the kernels default behavior
->> more in line with the specification around AER, but changed its behavior
->> around DPC on PCIe Downstream Switch Ports; preventing the kernel from
->> controlling DPC on them unless using pcie_ports=dpc-native.
->>     * "PCI/portdrv: Allow AER service only for Root Ports & RCECs"
->> After this change the behavior around using DPC on PCIe switch ports
->> and Root Ports should be as it was before.
->>
->> Signed-off-by: Matthew W Carlis <mattc@purestorage.com>
->> ---
->>  drivers/pci/pcie/portdrv.c | 11 +++++++++--
->>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
->> index 14a4b89a3b83..8e023aa97672 100644
->> --- a/drivers/pci/pcie/portdrv.c
->> +++ b/drivers/pci/pcie/portdrv.c
->> @@ -257,12 +257,19 @@ static int get_port_device_capability(struct pci_dev *dev)
->>  	}
->>  
->>  	/*
->> +	 * _OSC AER Control is required by the OS & requires OS to control AER,
->> +	 * but _OSC DPC Control isn't required by the OS to control DPC; however
->> +	 * it does require the OS to control DPC. _OSC DPC Control also requres
->> +	 * _OSC EDR Control (Error Disconnect Recovery) (PCI Firmware - DPC ECN rev3.2)
->> +	 * PCI_Express_Base 6.1, 6.2.11 Determination of DPC Control recommends
->> +	 * platform fw or OS always link control of DPC to AER.
->> +	 *
->>  	 * With dpc-native, allow Linux to use DPC even if it doesn't have
->>  	 * permission to use AER.
->>  	 */
->>  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->> -	    pci_aer_available() &&
->> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
->> +	    pci_aer_available() && (pcie_ports_dpc_native ||
->> +	    (dev->aer_cap && host->native_aer)))
->>  		services |= PCIE_PORT_SERVICE_DPC;
-> 
-> This is easier to read if we retain the original line breaks, i.e.,
-> 
->   -     (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
->   +     (pcie_ports_dpc_native || (dev->aer_cap && host->native_aer)))
-> 
-> Prior to d8d2b65a940b, we set PCIE_PORT_SERVICE_AER for a device
-> whenever it had an AER Capability.  If it had a DPC Capability, we
-> also set PCIE_PORT_SERVICE_DPC so DPC would work on it.
-> 
-> After d8d2b65a940b, we only set PCIE_PORT_SERVICE_AER for Root Ports
-> and RCECs because the AER driver only binds to those devices.  We no
-> longer set PCIE_PORT_SERVICE_DPC for Switch Downstream Ports because
-> they don't have PCIE_PORT_SERVICE_AER set.
-> 
-> The result is that you need "pcie_ports=dpc-native" to make DPC work
-> on those devices when you didn't need it before d8d2b65a940b.
-> 
-> That's a regression that we need to fix:
-> #regzbot introduced: d8d2b65a940b ("PCI/portdrv: Allow AER service only for Root Ports & RCECs")
-> 
-> _OSC directly supports negotiation of DPC ownership, and I think we
-> should pay attention to what it tell us.  We already request DPC
-> control and set native_dpc accordingly, but we don't use it here;
-> currently we only look at it in the unrelated pciehp_ist() path.
-> 
-> Can you try the patch below and see if it resolves the problem?
-> 
-> I don't think we need to complicate this by trying to enforce the
-> AER/DPC dependencies in the OS.  The firmware spec already requires
-> platforms to either retain ownership of both AER and DPC, or grant
-> ownership of both to the OS.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Change looks fine to me. Once concern is, what if we are dealing with
-a buggy firmware which give DPC native control, but retains AER? Do
-you think it makes sense to have a sanity check to make sure this
-does not happen?
+Btw, since you are sending this patch from a different address, relevant s-o-b
+should also be present.
 
+- Mani
+
+> ---
+> Changes since v1:
+> -Clarified commit message.
+> -Add a working email for Kishon to CC.
 > 
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 14a4b89a3b83..423dadd6727e 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -262,7 +262,7 @@ static int get_port_device_capability(struct pci_dev *dev)
->  	 */
->  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->  	    pci_aer_available() &&
-> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> +	    (pcie_ports_dpc_native || host->native_dpc))
->  		services |= PCIE_PORT_SERVICE_DPC;
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f6207989fc6a..bc94d7f39535 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -615,6 +615,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
 >  
->  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+>  	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> +	msg_addr &= ~aligned_offset;
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>  				  epc->mem->window.page_size);
+>  	if (ret)
+> -- 
+> 2.43.0
+> 
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+மணிவண்ணன் சதாசிவம்
 
