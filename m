@@ -1,131 +1,166 @@
-Return-Path: <linux-pci+bounces-1612-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1613-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 249B78224FC
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 23:53:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F0A4822579
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 00:26:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D1EA1F22EA0
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 22:53:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F95F284923
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 23:26:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2C26171DB;
-	Tue,  2 Jan 2024 22:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8007517740;
+	Tue,  2 Jan 2024 23:26:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gM9f7rxm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfpOimGx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A1F17725;
-	Tue,  2 Jan 2024 22:53:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09423C433C8;
-	Tue,  2 Jan 2024 22:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C6B1773F;
+	Tue,  2 Jan 2024 23:26:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6451C433C8;
+	Tue,  2 Jan 2024 23:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704236009;
-	bh=y3QfViECwSvCP5PWgn4nsZ+h/meHzbUW3g8chYX9B0s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=gM9f7rxmbf2g4oOEk1jl2tI131isEWELUlX7/IufEKlJuj1ctmz2DmV49+mQkbav7
-	 vSmBOFtfgQIqB0bEK177Rnhyv+OULwu5PTMKXyuyAFRnoFq/QovTzreVkhlfsjrXLO
-	 FZQSLgfHwaHqRy8yPBddoekFb4bGYM0suXf9R5XEmbUIAgQ3R65oaKrLljFn0ENrG7
-	 3ukR9SjQZzl87BzqPYHaaTnlpm8x7Btiq5eT6LQj9kYr4uBg2t8YagZ2bLdQRBWpzF
-	 ZIj0Bq3WCa5cIx3YJ8/HYQE9kkmWqdR/XLyuwxLd3S/RnjVqcPcuNlhX+JNz8fkf/G
-	 0Fs/sQpdYeaFg==
-Date: Tue, 2 Jan 2024 16:53:27 -0600
+	s=k20201202; t=1704237964;
+	bh=WuAwk7zWQxqNeWy+iKLUu2zXubSzzN/H4OfczTv4nxA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jfpOimGxKcd/lNdyF4JmHXBCA1H8M/3p9i1QnRTrwe0kkmqKuIwpjYOTp1+4UmaWd
+	 ZVhSaYSVnLrRLosMrPA1y9wgPKDppB/zXajSlvvyn2xz/hVrEJG5oum60EeDXiOsTv
+	 eh64lEOr8RehlCK97W7ZeIdrfAMQLGZBD2afvie6VcsMdnyrcKuu7TwW19Oj7tTYnD
+	 X4s2UPmmqHEr5ZoclapmYC8KO3ZXVQLBu1h+Y6ULCI+9K+DVKMidEfVzMRW2LMgs0N
+	 MpME5ecw+0mNBUBaFmW6nUWy5uYiSsyIl3dJHbLW7aSomdhWK+EyabwyOZWejRIkFY
+	 8pod8hJoC5aZQ==
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 2/3] PCI/AER: Decode Requester ID when no error info found
-Message-ID: <20240102225327.GA1739520@bhelgaas>
+To: Michael Schaller <michael@5challer.de>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
+Date: Tue,  2 Jan 2024 17:25:50 -0600
+Message-Id: <20240102232550.1751655-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
+References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6cc6adf0-e82d-4429-9e76-5fef7dda2d95@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 02, 2024 at 11:22:53AM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 12/6/2023 2:42 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > When a device with AER detects an error, it logs error information in its
-> > own AER Error Status registers.  It may send an Error Message to the Root
-> > Port (RCEC in the case of an RCiEP), which logs the fact that an Error
-> > Message was received (Root Error Status) and the Requester ID of the
-> > message source (Error Source Identification).
-> > 
-> > aer_print_port_info() prints the Requester ID from the Root Port Error
-> > Source in the usual Linux "bb:dd.f" format, but when find_source_device()
-> > finds no error details in the hierarchy below the Root Port, it printed the
-> > raw Requester ID without decoding it.
-> > 
-> > Decode the Requester ID in the usual Linux format so it matches other
-> > messages.
-> > 
-> > Sample message changes:
-> > 
-> >   - pcieport 0000:00:1c.5: AER: Correctable error received: 0000:00:1c.5
-> >   - pcieport 0000:00:1c.5: AER: can't find device of ID00e5
-> >   + pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
-> >   + pcieport 0000:00:1c.5: AER: found no error details for 0000:00:1c.5
-> > 
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Except for the suggestion given below, it looks good to me.
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Thanks for taking a look!
+This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
 
-> > @@ -740,7 +740,7 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
-> >  	u8 bus = info->id >> 8;
-> >  	u8 devfn = info->id & 0xff;
-> >  
-> > -	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
-> > +	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> >  		 info->multi_error_valid ? "Multiple " : "",
-> >  		 aer_error_severity_string[info->severity],
-> >  		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> > @@ -929,7 +929,12 @@ static bool find_source_device(struct pci_dev *parent,
-> >  		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> >  
-> >  	if (!e_info->error_dev_num) {
-> > -		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-> > +		u8 bus = e_info->id >> 8;
-> > +		u8 devfn = e_info->id & 0xff;
-> 
-> You can use PCI_BUS_NUM(e_info->id) for getting bus number.  Since
-> you are extracting this info in more than one place, maybe you can
-> also define a macro PCI_DEVFN(id) (following PCI_BUS_NUM()).
+Michael reported that when attempting to resume from suspend to RAM on ASUS
+mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
+("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
+with no output, followed by a reboot.
 
-Thanks, both good ideas.
+Workarounds include:
 
-We already have a PCI_DEVFN() that *combines* slot + func into devfn,
-so we'd have to come up with a different name.
+  - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+  - Booting with "pcie_aspm=off"
+  - Booting with "pcie_aspm.policy=performance"
+  - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
+    before suspending
+  - Connecting a USB flash drive
 
-I'll add a patch to use PCI_BUS_NUM() in the two places here and in
-pme.c.
+Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+Reported-by: Michael Schaller <michael@5challer.de>
+Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/pci/pci.c       |  6 ++++++
+ drivers/pci/pci.h       |  2 ++
+ drivers/pci/pcie/aspm.c | 19 +++++++++++++++++++
+ 3 files changed, 27 insertions(+)
 
-I think I'll wait with these until after the v6.7 release.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 55bc3576a985..bdbf8a94b4d0 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1335,6 +1335,9 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+ 		pci_restore_bars(dev);
+ 	}
+ 
++	if (dev->bus->self)
++		pcie_aspm_pm_state_change(dev->bus->self);
++
+ 	return 0;
+ }
+ 
+@@ -1429,6 +1432,9 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
+ 				     pci_power_name(dev->current_state),
+ 				     pci_power_name(state));
+ 
++	if (dev->bus->self)
++		pcie_aspm_pm_state_change(dev->bus->self);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 5ecbcf041179..f43873049d52 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -569,10 +569,12 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
+ #ifdef CONFIG_PCIEASPM
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
++void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
++static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+ #endif
+ 
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 50b04ae5c394..8715e951c491 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1008,6 +1008,25 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+ 	up_read(&pci_bus_sem);
+ }
+ 
++/* @pdev: the root port or switch downstream port */
++void pcie_aspm_pm_state_change(struct pci_dev *pdev)
++{
++	struct pcie_link_state *link = pdev->link_state;
++
++	if (aspm_disabled || !link)
++		return;
++	/*
++	 * Devices changed PM state, we should recheck if latency
++	 * meets all functions' requirement
++	 */
++	down_read(&pci_bus_sem);
++	mutex_lock(&aspm_lock);
++	pcie_update_aspm_capable(link->root);
++	pcie_config_aspm_path(link);
++	mutex_unlock(&aspm_lock);
++	up_read(&pci_bus_sem);
++}
++
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
+ {
+ 	struct pcie_link_state *link = pdev->link_state;
+-- 
+2.34.1
 
-> > +		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
-> > +			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
-> > +			 PCI_FUNC(devfn));
-> >  		return false;
-> >  	}
-> >  	return true;
-> 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
 
