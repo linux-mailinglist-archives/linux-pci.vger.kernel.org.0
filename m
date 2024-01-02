@@ -1,126 +1,108 @@
-Return-Path: <linux-pci+bounces-1610-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1611-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DFE68221EF
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 20:23:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C51668221F9
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 20:28:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DFE8284185
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 19:23:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AC0E1F233C3
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 19:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD6615AE6;
-	Tue,  2 Jan 2024 19:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4092115AF7;
+	Tue,  2 Jan 2024 19:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PBlwKhCy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BwbWxHwa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4F016405;
-	Tue,  2 Jan 2024 19:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704223391; x=1735759391;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Pi4zx7xRM7AxSQNbCyQOKolzB32nwlVky/j9CjcIrT4=;
-  b=PBlwKhCyg6lR07E0Xltt/78lZW0zYPGgjffeCfHSQXunxrDPbvgWSlA8
-   yJWcYZTLOncEEl4bvpzhhN7SOS/FHDE812joDCcS1IkzKQY0iTkPpbGiT
-   OaCrnK3nfrKtFvYtEFc9of0lx4G7c4e8P9YA0cmKRM4nNS+cEx9ht7DaP
-   mtMtoRXvmDhw9VC7yF0m9u7ND7mcvsGT9whtHUSOfgC9oVmY0U1/DSbFx
-   SuuY/WESlAfo9xrwbG8C2N+WQU2oTrNTKzAA8fwxgOtNNqnOhqa0Tl5sZ
-   T9kHyNRS1tr0funlVtn7tbE1fqtwpkBz8HF9xJvqKTUBQbn87QmlZ1OL1
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="428078531"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="428078531"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 11:23:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="1111132084"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="1111132084"
-Received: from keithj1-mobl2.amr.corp.intel.com (HELO [10.209.44.31]) ([10.209.44.31])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 11:23:10 -0800
-Message-ID: <cd9e4397-1110-40a5-891a-56e6288bbf91@linux.intel.com>
-Date: Tue, 2 Jan 2024 11:23:11 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56C615AF6
+	for <linux-pci@vger.kernel.org>; Tue,  2 Jan 2024 19:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704223706;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bJ/i/xMtI4WK7rc02jogXWNeclW4uq/A8ibcd1aMymI=;
+	b=BwbWxHwaIY/p2fmFTxma9j34KOrg30XJx+M3YuDBmaVPi8yUUk/DEpiC0f7LWc9M0mMlEk
+	NAnv2OJ7XoIXX+TIXasJ/qxeKF4q6QWL3VqkEnsoerQzvMR9z+Jsh5hklO2I0FjIIzf/4+
+	WJ6BQpQ15pMMJMZ7bWTkZgkN80Vmo3Q=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-338-TlGNiTuzNdSj3CF675G8bg-1; Tue, 02 Jan 2024 14:28:25 -0500
+X-MC-Unique: TlGNiTuzNdSj3CF675G8bg-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7bb0af58117so873720439f.2
+        for <linux-pci@vger.kernel.org>; Tue, 02 Jan 2024 11:28:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704223704; x=1704828504;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bJ/i/xMtI4WK7rc02jogXWNeclW4uq/A8ibcd1aMymI=;
+        b=X7J1KwQOiCLZWhwDIF0BNyc0QPaFB0Mz/Y3kYzuap8fW4qXnHaW40lWw1dRxKuIyUl
+         9C/hd6pf91W8tPTP93HFVLuAzzQAMXnIC6RkiX4/Q0qPRagMFzQqI6Uq7RExgZ90bS17
+         E9HKZ5kMLExp+uIFLKO5jmcp4128EqVxKna5hf1nD1OOZRvC03jIMPHMfYDMj2lP4dZH
+         AfPyU0wEmHIn+H0ZbVGI2FfW5Pj3pl8zq+BMYAtfsNK5xqlskSMqZabuSYOmlDwNGwds
+         ZqoBpzsrrrJ3M0VXb91fVtgxJcIXuFYfeIvpWLSDKcvNdSe6xhPpDTkLyl2NGkGxInD9
+         SCRg==
+X-Gm-Message-State: AOJu0YzxqUHO/rfunK8L2N1FgbTANmI1XtfncwImA5tT6sJmN8RLeHfb
+	yUBt+AJ5/3ccW1i+X/Ab6m3v08UdtADn/wqubDqgKCBnx/EAqOdRXrVWjuQlVZVwjw6GgnI/x3/
+	zN3hbpMFc+xs60urKuc2/gLjclMsh
+X-Received: by 2002:a05:6602:1512:b0:7ba:7fd1:a638 with SMTP id g18-20020a056602151200b007ba7fd1a638mr28289283iow.16.1704223704674;
+        Tue, 02 Jan 2024 11:28:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGQt0k9BpNBf3awzoQ+iFyFl7hdWVxVsXotr+x2FmspxI5w39AFpAC/MeGYdPjdqaflGn15gw==
+X-Received: by 2002:a05:6602:1512:b0:7ba:7fd1:a638 with SMTP id g18-20020a056602151200b007ba7fd1a638mr28289276iow.16.1704223704472;
+        Tue, 02 Jan 2024 11:28:24 -0800 (PST)
+Received: from redhat.com ([38.15.60.12])
+        by smtp.gmail.com with ESMTPSA id s14-20020a02cf2e000000b004647af59c3dsm6948475jar.16.2024.01.02.11.28.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 11:28:24 -0800 (PST)
+Date: Tue, 2 Jan 2024 12:28:22 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Wu Zongyong <wuzongyong@linux.alibaba.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ wutu.xq2@linux.alibaba.com
+Subject: Re: [Question] Is it must for vfio-mdev parent driver to implement
+ a pci-compliant configuration r/w interface
+Message-ID: <20240102122822.768f979c.alex.williamson@redhat.com>
+In-Reply-To: <ZYo6rITis9siz2Av@wuzongyong-alibaba>
+References: <ZYo6rITis9siz2Av@wuzongyong-alibaba>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] PCI/AER: Use 'Correctable' and 'Uncorrectable' spec
- terms for errors
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20231206224231.732765-1-helgaas@kernel.org>
- <20231206224231.732765-2-helgaas@kernel.org>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20231206224231.732765-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 26 Dec 2023 10:30:04 +0800
+Wu Zongyong <wuzongyong@linux.alibaba.com> wrote:
 
+> Hi,
+> 
+> For vfio, I know there are two method to get region size:
+>   1. VFIO_DEVICE_GET_REGION_INFO ioctl
+>   2. write a value of all 1's to the bar register of vfio-device fd
+>     and then read the value back which is described in pci spec
+> 
+> Now I am curious about is it a must for a vfio-mdev parent driver to
+> implement the method 2? Or it is just a optional interface.
 
-On 12/6/2023 2:42 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> The PCIe spec classifies errors as either "Correctable" or "Uncorrectable".
-> Previously we printed these as "Corrected" or "Uncorrected".  To avoid
-> confusion, use the same terms as the spec.
-> 
-> One confusing situation is when one agent detects an error, but another
-> agent is responsible for recovery, e.g., by re-attempting the operation.
-> The first agent may log a "correctable" error but it has not yet been
-> corrected.  The recovery agent must report an uncorrectable error if it is
-> unable to recover.  If we print the first agent's error as "Corrected", it
-> gives the false impression that it has already been resolved.
-> 
-> Sample message change:
-> 
->   - pcieport 0000:00:1c.5: AER: Corrected error received: 0000:00:1c.5
->   + pcieport 0000:00:1c.5: AER: Correctable error received: 0000:00:1c.5
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
+If there's not a working, compliant config space, the device shouldn't
+claim to implement a vfio-pci interface.  There's vfio-platform
+available for non-PCI devices.  While the BAR size may be found via
+either REGION_INFO or config space itself, the BAR address space is
+only found via config space, ie. memory or IO, 32 or 64-bit,
+prefetchable or not.  Thanks,
 
-Looks good to me.
+Alex
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  drivers/pci/pcie/aer.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 42a3bd35a3e1..20db80018b5d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -436,9 +436,9 @@ void pci_aer_exit(struct pci_dev *dev)
->   * AER error strings
->   */
->  static const char *aer_error_severity_string[] = {
-> -	"Uncorrected (Non-Fatal)",
-> -	"Uncorrected (Fatal)",
-> -	"Corrected"
-> +	"Uncorrectable (Non-Fatal)",
-> +	"Uncorrectable (Fatal)",
-> +	"Correctable"
->  };
->  
->  static const char *aer_error_layer[] = {
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
 
