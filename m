@@ -1,49 +1,78 @@
-Return-Path: <linux-pci+bounces-1589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 052EF821581
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jan 2024 23:16:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59A4E821819
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 08:46:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20B0C1C20C2A
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Jan 2024 22:16:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E9071F2204D
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Jan 2024 07:46:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D809EE542;
-	Mon,  1 Jan 2024 22:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 218CE20F8;
+	Tue,  2 Jan 2024 07:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4KseXHX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N1DVmgA3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFB6FBE1;
-	Mon,  1 Jan 2024 22:15:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F61C433C8;
-	Mon,  1 Jan 2024 22:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704147359;
-	bh=vaYP09n7NQRCkMOIIM0dBoEGJ1KUL9tEiUtSqhELX54=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=m4KseXHX5wx9q+NQWukSufL8Ons5NIm6HUAxspt2Me2WIKQipZ9Qowhs7quVQr10r
-	 8jAFoZMMYgEEPZ82kdzVkgzCmYnJ5SHN04u8ud42C65GbLqbxjQDuJyiaiwLtt69cR
-	 H/Nil9ta+37qrsLjFCq00dxafC7WQv5M4EppNgPJTe0fI7fcszB4zjTy64DeU3LUMz
-	 qqAQ+mWPYEOqEn9SAiUL7V+P/bc4HRnul80OcdVxW+ljf7eJ1NuakXbr8F8AAwqSj2
-	 wdi9gt/2ovYjHyUxbf7MCYxFHI2MPqlqDUJLOlAjbw9ZG43AGbDJh44jiE7/oP2bWX
-	 gvZ5IKHMux54Q==
-Date: Mon, 1 Jan 2024 16:15:54 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Michael Schaller <michael@5challer.de>
-Cc: bhelgaas@google.com, kai.heng.feng@canonical.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, macro@orcam.me.uk,
-	ajayagarwal@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	gregkh@linuxfoundation.org, hkallweit1@gmail.com,
-	michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
-Message-ID: <20240101221554.GA1693060@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1AB20E0
+	for <linux-pci@vger.kernel.org>; Tue,  2 Jan 2024 07:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so43629125e9.0
+        for <linux-pci@vger.kernel.org>; Mon, 01 Jan 2024 23:46:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704181563; x=1704786363; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iHhD+e+1GG2LR5Q+uwUPWMKjzXneKZEYPGVrdDS3Exk=;
+        b=N1DVmgA3QG20HYFe8fWTDKWrDtgi2M2/gb+rQdRhJ1T5H1beql8jG6H4UOqTti/7MX
+         sOQeko1606byMN1KGo5kz24RAYGdrTwBDga773ky2w+lcge60ZtwGXrUUgwNeI/GMKlJ
+         emZDJELz+Dl1SOsUS+Z9sRfwxZYfZDkcGOx+d0y0W0IzJHEw/BjBtPn3KR5PoD66hJet
+         0sJ8Nrq6lBBKXfk3CZ5NUcCyZ+1VsSDTPBVkYsC0rESpLM7SsJsPOY93akY3CrDGcK3z
+         x/22GYF0d3JczPn95Oi8V9OqfLyPpVmTLQ5mGjaBxEni5Rw3tOU0MbjDRQkvZIJFQrkq
+         J0/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704181563; x=1704786363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iHhD+e+1GG2LR5Q+uwUPWMKjzXneKZEYPGVrdDS3Exk=;
+        b=KnJdZcklCWTtCibNb2+Pej+iN/2H1mFXfGW0613d/NGpNxJ/67IaOv3M7ltqSvlAC2
+         3TT+H534+zcW/XSGSIZBX5i4orFeddaGb7VjOtWuY8rebGybpPHKKR9gpRibIuWWdu8C
+         E8rJMhC2zW08Kd03+XUqZcCHDE0YqL3wro7OxZmz4qC+dag/d77je3b5q/Myn7Ud0IYw
+         wzvCNAtWF7Fx7lDS16WGa+Fvosvj2hDSqEQoDWUAq5m5LOXIIpMw9It6P5GxRsZlosip
+         RuiKrrIfpogmee8+mRKedlqz0MgTJKpDTyPvLPZiWwIpea11XGcG9rkZ3gqkJ2HPtAGi
+         Egjg==
+X-Gm-Message-State: AOJu0YxA4dptvVZLLYF+7FDBoB5AzTEC/CCl0pCWoVecXgf87BatIzOF
+	/XF5u0fRR33X3j3zoUcSRDTMk7KSnjPpOw==
+X-Google-Smtp-Source: AGHT+IHZM9WS+upGseBJPvyCFjM81kkTRQxUR0kQ5A933R//MIPNKfDQsQzf7os5FOBCXJA8CoAPxg==
+X-Received: by 2002:a05:600c:1987:b0:40d:5798:1797 with SMTP id t7-20020a05600c198700b0040d57981797mr6118743wmq.63.1704181562764;
+        Mon, 01 Jan 2024 23:46:02 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id o20-20020a05600c4fd400b004094d4292aesm43262533wmq.18.2024.01.01.23.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jan 2024 23:46:02 -0800 (PST)
+Date: Tue, 2 Jan 2024 10:45:59 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
+Cc: Shuah Khan <shuah@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, kernelci@lists.linux.dev,
+	kernel@collabora.com, Tim Bird <Tim.Bird@sony.com>,
+	linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
+	linux-kselftest@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+	Doug Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
+	Saravana Kannan <saravanak@google.com>,
+	Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/3] Add test to verify probe of devices from
+ discoverable busses
+Message-ID: <3271d300-74c9-4ef3-b993-a8ddeda6076c@suswa.mountain>
+References: <20231227123643.52348-1-nfraprado@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -52,25 +81,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0f121140-e5dc-4c1a-b510-a9d791004a27@5challer.de>
+In-Reply-To: <20231227123643.52348-1-nfraprado@collabora.com>
 
-On Mon, Jan 01, 2024 at 07:57:40PM +0100, Michael Schaller wrote:
-> On 01.01.24 19:13, Bjorn Helgaas wrote:
-> > On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
-> > ...
+Life hack: Don't put RFC in the subject.  Especially if it's a v2 or
+higher.  No one reads RFC patches.
 
-> > So unless somebody has a counter-argument, I plan to queue a revert of
-> > 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
-> > v6.7.
-> 
-> If it helps I could also try if a partial revert of 08d0cc5f3426 would be
-> sufficient. This might also narrow down the issue and give more insight
-> where the issue originates from.
+This patchset seems like a low risk patch to apply.
 
-We're so close to the v6.7 final release that I doubt we can figure
-out the problem and test a fix before v6.7.  I'm sure Kai-Heng would
-appreciate any additional data, but I don't think it's urgent at this
-point.
+regards,
+dan carpenter
 
-Bjorn
+
 
