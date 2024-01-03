@@ -1,35 +1,35 @@
-Return-Path: <linux-pci+bounces-1629-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1630-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F33B823160
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 17:40:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 061A582318F
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 17:51:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5A741C227BD
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 16:40:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADDD31F220A2
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 16:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E13211B29B;
-	Wed,  3 Jan 2024 16:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC921BDED;
+	Wed,  3 Jan 2024 16:51:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCE81BDCD;
-	Wed,  3 Jan 2024 16:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279231BDEC;
+	Wed,  3 Jan 2024 16:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
 	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
 	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 698962800BB42;
-	Wed,  3 Jan 2024 17:40:06 +0100 (CET)
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id F3C6530000861;
+	Wed,  3 Jan 2024 17:51:19 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 5C41E10B43F; Wed,  3 Jan 2024 17:40:06 +0100 (CET)
-Date: Wed, 3 Jan 2024 17:40:06 +0100
+	id E6CE12B0031; Wed,  3 Jan 2024 17:51:19 +0100 (CET)
+Date: Wed, 3 Jan 2024 17:51:19 +0100
 From: Lukas Wunner <lukas@wunner.de>
 To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
@@ -44,13 +44,12 @@ Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
 	Alex Deucher <alexdeucher@gmail.com>,
 	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Amit Kucheria <amitk@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v3 08/10] PCI/bwctrl: Add "controller" part into PCIe
- bwctrl
-Message-ID: <20240103164006.GA3463@wunner.de>
+Subject: Re: [PATCH v3 06/10] PCI: Cache PCIe device's Supported Speed Vector
+Message-ID: <20240103165119.GB3463@wunner.de>
 References: <20230929115723.7864-1-ilpo.jarvinen@linux.intel.com>
- <20230929115723.7864-9-ilpo.jarvinen@linux.intel.com>
- <20231230184905.GA6104@wunner.de>
- <b56bb460-7876-272a-23ce-83d1dab212b2@linux.intel.com>
+ <20230929115723.7864-7-ilpo.jarvinen@linux.intel.com>
+ <20231230151931.GA25718@wunner.de>
+ <94973372-91fc-27fc-b187-7427af9e4b7d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,65 +59,69 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b56bb460-7876-272a-23ce-83d1dab212b2@linux.intel.com>
+In-Reply-To: <94973372-91fc-27fc-b187-7427af9e4b7d@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Jan 01, 2024 at 08:12:43PM +0200, Ilpo Järvinen wrote:
+On Mon, Jan 01, 2024 at 08:31:39PM +0200, Ilpo Järvinen wrote:
 > On Sat, 30 Dec 2023, Lukas Wunner wrote:
-> > On Fri, Sep 29, 2023 at 02:57:21PM +0300, Ilpo Järvinen wrote:
-> > > --- a/drivers/pci/pcie/bwctrl.c
-> > > +static u16 speed2lnkctl2(enum pci_bus_speed speed)
-> > > +{
-> > > +	static const u16 speed_conv[] = {
-> > > +		[PCIE_SPEED_2_5GT] = PCI_EXP_LNKCTL2_TLS_2_5GT,
-> > > +		[PCIE_SPEED_5_0GT] = PCI_EXP_LNKCTL2_TLS_5_0GT,
-> > > +		[PCIE_SPEED_8_0GT] = PCI_EXP_LNKCTL2_TLS_8_0GT,
-> > > +		[PCIE_SPEED_16_0GT] = PCI_EXP_LNKCTL2_TLS_16_0GT,
-> > > +		[PCIE_SPEED_32_0GT] = PCI_EXP_LNKCTL2_TLS_32_0GT,
-> > > +		[PCIE_SPEED_64_0GT] = PCI_EXP_LNKCTL2_TLS_64_0GT,
-> > > +	};
+> > On Fri, Sep 29, 2023 at 02:57:19PM +0300, Ilpo Järvinen wrote:
+> > > Only the former is currently cached in pcie_bus_speeds in
+> > > the struct pci_bus. The link speeds that are supported is the
+> > > intersection of these two.
 > > 
-> > Looks like this could be a u8 array to save a little bit of memory.
-> > 
-> > Also, this seems to duplicate pcie_link_speed[] defined in probe.c.
+> > I'm wondering if caching both is actually necessary.  Why not cache
+> > just the intersection?  Do we need either of the two somewhere?
 > 
-> It's not the same. pcie_link_speed[] is indexed by a different thing
+> Intersection is enough at least for bwctrl. The only downside that is 
+> barely worth mentioning is that the bus SLSV has to be re-read when
+> function 0 sets the intersection.
+>
+> I can think of somebody wanting to expose the list of both supported speed 
+> to userspace though sysfs (not done by this patch series), but they could 
+> be read from the registers in that case so that use case doesn't really 
+> matter much, IMO.
 
-Ah, missed that.  Those various conversion functions are confusing.
+Yes, that would be a reasonable argument to keep both values instead
+of storing just the intersection.
 
 
-> > > +	dev_speeds = READ_ONCE(bus->pcie_dev_speeds);
+> > > Store the device's Supported Link Speeds Vector into the struct pci_bus
+> > > when the Function 0 is enumerated (the Multi-Function Devices must have
+> > > same speeds the same for all Functions) to be easily able to calculate
+> > > the intersection of Supported Link Speeds.
 > > 
-> > Hm, why is the compiler barrier needed?
+> > Might want to add an explanation what you're going to need this for,
+> > I assume it's accessed frequently by the bandwidth throttling driver
+> > in a subsequent patch?
 > 
-> It's probably an overkill but there could be a checker which finds this 
-> read is not protected by anything while the value could get updated 
-> concurrectly
+> Yes. I tend to try to avoid forward references because some maintainers 
+> complain about them (leading to minimal changes where true motivations 
+> have to be hidden because "future" cannot be used to motivate a change 
+> even if that's often the truest motivation within a patch series). But 
+> I'll add a fwd ref here to make it more obvious. :-)
 
-Why should it be updated?  It's a static value cached on enumeration
-and never changed AFAICS.
+Bjorn has used phrases such as "We're about to ..." a couple of times
+in commit messages to convey that a particular change in the present
+patch will be taken advantage of by a subsequent patch.
 
+I've used the same phrase but got criticized (in other subsystems)
+for using "we".
 
-> If the value selected cannot be set because of endpoint no longer being 
-> there, the other parts of the code will detect that.
+So I use phrases such as:
 
-If the endpoint is hot-unplugged, the link is down, so retraining
-the link will fail.
+ "An upcoming commit will create DOE mailboxes upon device enumeration by
+  the PCI core.  Their lifetime shall not be limited by a driver.
+  Therefore rework..." (see 022b66f38195)
 
-If the device is replaced concurrently to retraining then you may
-try to retrain to a speed which is too fast or too slow for the new
-device.  Maybe it's necessary to cope with that?  Basically find the
-pci_dev on the bus with the device/function id and check if the pci_dev
-pointer still points to the same location.  Another idea would be to
-hook up bwctrl with pciehp so that pciehp tells bwctrl the device is
-gone and any speed changes should be aborted.  We've hooked up DPC
-with pciehp in a similar way.
+Can also reference the past:
 
+ "The PCI core has just been amended to create a pci_doe_mb struct for
+  every DOE instance on device enumeration.  [...]  That leaves [...]
+  without any callers, so drop them." (see 74e491e5d1bc)
 
-> So if I just add a comment to this line why there's the data race and keep 
-> it as is?
-
-I'd just drop the READ_ONCE() here if there's not a good reason for it.
+If someone finds your commit e.g. through git blame, it may help them
+enormously if you provide context in the commit message.  If maintainers
+in other subsystem tell you otherwise, they're wrong. ;)
 
 Thanks,
 
