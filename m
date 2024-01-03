@@ -1,162 +1,182 @@
-Return-Path: <linux-pci+bounces-1626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA7538230AB
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 16:38:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C7838230B5
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 16:41:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5EB5A1F248BB
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 15:38:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F0601F2475D
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 15:41:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD561A730;
-	Wed,  3 Jan 2024 15:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B5C1A735;
+	Wed,  3 Jan 2024 15:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ex+k0lhA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MUaT5R0H"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5741B29E;
-	Wed,  3 Jan 2024 15:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BAE1B26E;
+	Wed,  3 Jan 2024 15:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704296271; x=1735832271;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=v3LfKKN9p0dVjzVKSF2rfOROCJLtzrWPy1Nor0Bhpb8=;
-  b=ex+k0lhAcaIzQiJBo+ydns3a9F0rfnD7WTXL8KSRpijWehmM/6lA9oWR
-   TjGIsjFWE4YbPwFbnRbHqoHllEPW6fbb2E9QkBu+uVc9tejXWvadigEDO
-   dNUOlMyAIem+C44JMrbUaCA1DK6jCKdXkD50OfZSWvVQKZTwyzhP6UL+j
-   vgZHWCvSSJA9gCQ2Qe9a9yZvpN/nTfkJtqFOydcdos3GuMMLG1ASfcf8x
-   wiGh6oVqWJmLYYO1hTjdAHvrVAzvGuIZEwyVDL/AZYHKM+kRFTnpcXlrG
-   EAm08S6YIHpfCjqRxl5es9+g7PKEs8Qp3hGFliL9FavGWbM4RmOsFiopr
+  t=1704296477; x=1735832477;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=8yW+4S0w+uEglASxoKqT/Sve6+lVV5XbEpuHMegpsmE=;
+  b=MUaT5R0HnpXnU4YtvMde8cuFRjkZFxen/Zp1/ciuDh5HPU0P3o0BJgYp
+   GnRDf/uL79Is9uz5apj0TZCBZBC783Rrl2Y7q/XAuWA/Z+fcS5soqVdE1
+   JT76Ox0qMROJJW+yugAuPiJ8696z4H/HGcUcidVxfcGTQn/MxhjzQePtI
+   Is5LQgLssVdQxly5Ex4OjuHrM0hOwNtRNFsAYaZc531yr4JerXs/rSu9N
+   I0IgDZ4B27ChmZ4Wn8MFF4/Y2sbEoPmBEbFizNjPKnDoyS1jZSXxZk1b5
+   6b99ekJ5aUiNqiuY4iEJbkw2L2HIid6VW0Sz7UhGWeUYWCSGQRgW9L+Ju
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="387473495"
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="376511073"
 X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="387473495"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:37:51 -0800
+   d="scan'208";a="376511073"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:41:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="783542879"
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="903476497"
 X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="783542879"
-Received: from posherof-mobl1.amr.corp.intel.com (HELO [10.209.84.213]) ([10.209.84.213])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:37:50 -0800
-Message-ID: <3ab3281e-0e10-4af5-a7ab-f46d3fd1889f@linux.intel.com>
-Date: Wed, 3 Jan 2024 07:37:50 -0800
+   d="scan'208";a="903476497"
+Received: from bergbenj-mobl1.ger.corp.intel.com ([10.251.211.32])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:41:12 -0800
+Date: Wed, 3 Jan 2024 17:41:10 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Michael Schaller <michael@5challer.de>, bhelgaas@google.com, 
+    kai.heng.feng@canonical.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
+    macro@orcam.me.uk, ajayagarwal@google.com, 
+    sathyanarayanan.kuppuswamy@linux.intel.com, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hkallweit1@gmail.com, 
+    michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+In-Reply-To: <20240101181348.GA1684058@bhelgaas>
+Message-ID: <d7e7b133-d373-e850-1f5f-deee8aa86958@linux.intel.com>
+References: <20240101181348.GA1684058@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] PCI/ASPM: Update saved buffers with latest ASPM
-Content-Language: en-US
-To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
- rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
- mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20230125133830.20620-1-vidyas@nvidia.com>
- <20240103103501.2428197-1-vidyas@nvidia.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240103103501.2428197-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323329-1968396436-1704296360=:1706"
+Content-ID: <ad5d1828-34ff-da67-d24d-4f236cae15b@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323329-1968396436-1704296360=:1706
+Content-Type: text/plain; CHARSET=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-ID: <38a9c490-447b-39b3-f8d-1a6f83eb8a6@linux.intel.com>
 
-On 1/3/2024 2:35 AM, Vidya Sagar wrote:
-> Many PCIe device drivers save the configuration state of their respective
-> devices during probe and restore the same when their 'slot_reset' hook
-> is called through PCIe Error Recovery System.
+On Mon, 1 Jan 2024, Bjorn Helgaas wrote:
 
-Recovery System -> Recovery Handler?
-
-
+> On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
+> > Issue:
+> > On resume from suspend to RAM there is no output for about 12 seconds, then
+> > shortly a blinking cursor is visible in the upper left corner on an
+> > otherwise black screen which is followed by a reboot.
+> > 
+> > Setup:
+> > * Machine: ASUS mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1)
+> > * Firmware: 0508 (latest; also tested previous 0505)
+> > * OS: Ubuntu 23.10 (except kernel)
+> > * Kernel: 6.6.8 (also tested 6.7-rc7; config attached)
+> > 
+> > Debugging summary:
+> > * Kernel 5.10.205 isn’t affected.
+> > * Bisect identified commit 08d0cc5f34265d1a1e3031f319f594bd1970976c as
+> > cause.
+> > * PCI device 0000:03:00.0 (Intel 8265 Wifi) causes resume issues as long as
+> > ASPM is enabled (default).
+> > * The commit message indicates that a quirk could be written to mitigate the
+> > issue but I don’t know how to write such a quirk.
+> > 
+> > Confirmed workarounds:
+> > * Connect a USB flash drive (no clue why; maybe this causes a delay that
+> > lets the resume succeed)
+> > * Revert commit 08d0cc5f34265d1a1e3031f319f594bd1970976c (commit seemed
+> > intentional; a quirk seems to be the preferred solution)
+> > * pcie_aspm=off
+> > * pcie_aspm.policy=performance
+> > * echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm
+> > 
+> > Debugging details:
+> > * The resume trigger (power button, keyboard, mouse) doesn’t seem to make
+> > any difference.
+> > * Double checked that the kernel is configured to *not* reboot on panic.
+> > * Double checked that there still isn't any kernel output without quiet and
+> > splash.
+> > * The issue doesn’t happen if a USB flash drive is connected. The content of
+> > the flash drive doesn’t appear to matter. The USB port doesn’t appear to
+> > matter.
+> > * No information in any logs after the reboot. I suspect the resume from
+> > suspend to RAM isn’t getting far enough as that logs could be written.
+> > * Kernel 5.10.205 isn’t affected. Kernel 5.15.145, 6.6.8 and 6.7-rc7 are
+> > affected.
+> > * A kernel bisect has revealed the following commit as cause:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=08d0cc5f34265d1a1e3031f319f594bd1970976c
+> > * The commit was part of kernel 5.20 and has been backported to 5.15.
+> > * The commit mentions that a device-specific quirk could be added in case of
+> > new issues.
+> > * According to sysfs and lspci only device 0000:03:00.0 (Intel 8265 Wifi)
+> > has ASPM enabled by default.
+> > * Disabling ASPM for device 0000:03:00.0 lets the resume from suspend to RAM
+> > succeed.
+> > * Enabling ASPM for all devices except 0000:03:00.0 lets the resume from
+> > suspend to RAM succeed.
+> > * This would indicate that a quirk is missing for the device 0000:03:00.0
+> > (Intel 8265 Wifi) but I have no clue how to write such a quirk or how to get
+> > the specifics for such a quirk.
+> > * I still have no clue how a USB flash drive plays into all this. Maybe some
+> > kind of a timing issue where the connected USB flash drive delays something
+> > long enough so that the resume succeeds. Maybe the code removed by commit
+> > 08d0cc5f34265d1a1e3031f319f594bd1970976c caused a similar delay. ¯\_(ツ)_/¯
 > 
-> If the system has a change in ASPM policy after the driver's probe is
-> called and before error event occurred, 'slot_reset' hook restores the
-> PCIe configuration state to what it was at the time of probe but not with
-> what it was just before the occurrence of the error event.
-> This effectively leads to a mismatch in the ASPM configuration between
-> the device and its upstream parent device.
+> Hmmm.  08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+> appeared in v6.0, released Oct 2, 2022, so it's been there a while.
 > 
-> Update the saved configuration state of the device with the latest info
-> whenever there is a change w.r.t ASPM policy.
+> But I think the best option is to revert it until this issue is
+> resolved.  Per the commit log, 08d0cc5f3426 solved two problems:
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V2:
-> * Rebased on top of the tree code
-> * Addressed Bjorn's review comments
+>   1) ASPM config changes done via sysfs are lost if the device power
+>      state is changed, e.g., typically set to D3hot in .suspend() and
+>      D0 in .resume().
 > 
->  drivers/pci/pcie/aspm.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+>   2) If L1SS is restored during system resume, that restored state
+>      would be overwritten.
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 67b13f26ba7c..d247cabb5e4c 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -138,16 +138,36 @@ static int policy_to_clkpm_state(struct pcie_link_state *link)
->  	return 0;
->  }
->  
-> +static void pci_save_aspm_state(struct pci_dev *dev)
-> +{
-> +	int i = 0;
+> Problem 2) relates to a patch that is currently reverted (a7152be79b62
+> ("Revert "PCI/ASPM: Save L1 PM Substates Capability for
+> suspend/resume""), so I don't think reverting 08d0cc5f3426 will make
+> this problem worse.
+> 
+> Reverting 08d0cc5f3426 will make 1) a problem again.  But my guess is
+> ASPM changes via sysfs are fairly unusual and the device probably
+> remains functional even though it may use more power because the ASPM
+> configuration was lost.
+> 
+> So unless somebody has a counter-argument, I plan to queue a revert of
+> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
+> v6.7.
 
-I don't see a need for this variable. You can use index directly.
+Hi,
 
-> +	struct pci_cap_saved_state *save_state;
-> +	u16 *cap;
-> +
-> +	if (!pci_is_pcie(dev))
-> +		return;
-> +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> +	if (!save_state)
-> +		return;
-> +
-> +	cap = (u16 *)&save_state->cap.data[0];
-> +	i++;
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &cap[i++]);
-> +}
-> +
->  static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
->  {
->  	struct pci_dev *child;
->  	struct pci_bus *linkbus = link->pdev->subordinate;
->  	u32 val = enable ? PCI_EXP_LNKCTL_CLKREQ_EN : 0;
->  
-> -	list_for_each_entry(child, &linkbus->devices, bus_list)
-> +	list_for_each_entry(child, &linkbus->devices, bus_list) {
->  		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
->  						   PCI_EXP_LNKCTL_CLKREQ_EN,
->  						   val);
-> +		pci_save_aspm_state(child);
-> +	}
->  	link->clkpm_enabled = !!enable;
->  }
->  
-> @@ -767,6 +787,10 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
->  		pcie_config_aspm_dev(parent, upstream);
->  
->  	link->aspm_enabled = state;
-> +
-> +	/* Update latest ASPM configuration in saved context */
-> +	pci_save_aspm_state(link->downstream);
-> +	pci_save_aspm_state(parent);
->  }
->  
->  static void pcie_config_aspm_path(struct pcie_link_state *link)
+I cannot understand how 1) even occurs. AFAICT, nothing 
+pcie_aspm_pm_state_change() calls into overwrites link->aspm_disable that 
+is the variable storing user inputs via sysfs. So how the changes via 
+sysfs are lost?
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+ i.
+--8323329-1968396436-1704296360=:1706--
 
