@@ -1,108 +1,128 @@
-Return-Path: <linux-pci+bounces-1617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 578F382299F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 09:42:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA0C28229E3
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 10:04:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D21D1C2306F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 08:42:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEB571C23176
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Jan 2024 09:04:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005071799A;
-	Wed,  3 Jan 2024 08:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D297918043;
+	Wed,  3 Jan 2024 09:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eXBIwOQP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F344318636;
-	Wed,  3 Jan 2024 08:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rKwVf-00042W-Un; Wed, 03 Jan 2024 09:21:55 +0100
-Message-ID: <1c65dc20-774b-4271-aa5e-3ad2c1db5b1e@leemhuis.info>
-Date: Wed, 3 Jan 2024 09:21:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C5A18C07
+	for <linux-pci@vger.kernel.org>; Wed,  3 Jan 2024 09:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704272651;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kimaz79paVloj/e6SryFhzLQ5bfwrfwnGX6HNnH18gM=;
+	b=eXBIwOQP8Rmuoyang2YSyr5cFn8LrKkDaw8XKAHCF4RTTFNfYdPMs4eN9tXBlM68Cjtw68
+	ili09p45mUaf9/E5IZzWaVBsMhUEBQTm6A22/L5lC3XTO/k0m1lIcnrfMSCPgTtrnRMnYp
+	TSmVxnES+IN/b0q6eNcfjf5dWQbl6v8=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-508-wAul_2OmNvePs9KItGsgeQ-1; Wed, 03 Jan 2024 04:04:09 -0500
+X-MC-Unique: wAul_2OmNvePs9KItGsgeQ-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-556971b0353so478450a12.2
+        for <linux-pci@vger.kernel.org>; Wed, 03 Jan 2024 01:04:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704272648; x=1704877448;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kimaz79paVloj/e6SryFhzLQ5bfwrfwnGX6HNnH18gM=;
+        b=Zu98OZl/ZeelKeHpmQ61YWHqtWgv66LCzNX1vDhXgCJ7kjGQhpc55ry/TCPS02G3t6
+         OGaXKAiMz2A6nzkPdf6Qz8wTbpFM/AXTNYxJ6Vm5dTd0oM0MQwqNRNzT0jhi2v/p9Q30
+         A1yJPFMkvoiX7Zv4/7Uo/kxE+ullfbdIo3vL03+9XymnM5ulM1bCK1lZxWBXk69QRZjg
+         Zir4iZEibFP6RVrUOkYdEAHXNf94kTThQJ17/Hv5b2UHTksmcw8sYxa4FsXOePFvLTDh
+         qwlRPr71DS+b75vctO6Wf6M04VUc29mPsTWtSNuavyDLYR48fAQtPk6b6Wt/twYlOjHk
+         Zc5g==
+X-Gm-Message-State: AOJu0YwGYuG7W7AiJ201jN+Q9Sglz25UgGmqdzvF+Nn3mIBuGRw+jfzJ
+	NOLtSuST3KjK9LGi+6WNhH4wjTQf5vustbBDr4lrwXSvX746cPrPY0YJVCr54jQp/PyqQdT6Sm3
+	GiEQ8nT7beEFm25tW/ywifYQKBQYO
+X-Received: by 2002:a50:cd56:0:b0:553:7f36:b90c with SMTP id d22-20020a50cd56000000b005537f36b90cmr11355402edj.1.1704272648342;
+        Wed, 03 Jan 2024 01:04:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFnzXW1T/PtiyMEePFAeIfjoDdcIOAwrLU81pstOcxV+Ri0wVlPHV3elGdnjF9boBnTgsZDvA==
+X-Received: by 2002:a50:cd56:0:b0:553:7f36:b90c with SMTP id d22-20020a50cd56000000b005537f36b90cmr11355396edj.1.1704272648000;
+        Wed, 03 Jan 2024 01:04:08 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com ([185.140.112.229])
+        by smtp.gmail.com with ESMTPSA id ck15-20020a0564021c0f00b00555f908b2e4sm5623610edb.40.2024.01.03.01.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 01:04:07 -0800 (PST)
+Date: Wed, 3 Jan 2024 10:04:06 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [Regression] Commit 40613da52b13 ("PCI: acpiphp: Reassign
+ resources on bridge if necessary")
+Message-ID: <20240103100406.0c5ff818@imammedo.users.ipa.redhat.com>
+In-Reply-To: <ZYPYIpO36YE8V8hQ@marvin.atrad.com.au>
+References: <ZXpaNCLiDM+Kv38H@marvin.atrad.com.au>
+	<20231214143205.4ba0e11a@imammedo.users.ipa.redhat.com>
+	<ZXt+BxvmG6ru63qJ@marvin.atrad.com.au>
+	<ZXw4Ly/csFgl76Lj@marvin.atrad.com.au>
+	<20231215143638.032028eb@imammedo.users.ipa.redhat.com>
+	<ZXziuPCKNBLhbssO@marvin.atrad.com.au>
+	<ZYPYIpO36YE8V8hQ@marvin.atrad.com.au>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
- (bisect done; commit found)
-Content-Language: en-US, de-DE
-To: Michael Schaller <michael@5challer.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, kai.heng.feng@canonical.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, macro@orcam.me.uk, ajayagarwal@google.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, gregkh@linuxfoundation.org,
- hkallweit1@gmail.com, michael.a.bottini@linux.intel.com,
- johan+linaro@kernel.org
-References: <20240101221554.GA1693060@bhelgaas>
- <5598b690-12da-4237-b2bf-c9c691c4647c@5challer.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5598b690-12da-4237-b2bf-c9c691c4647c@5challer.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1704271343;69f8e9d3;
-X-HE-SMSGID: 1rKwVf-00042W-Un
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 02.01.24 14:50, Michael Schaller wrote:
-> On 01.01.24 23:15, Bjorn Helgaas wrote:
->> On Mon, Jan 01, 2024 at 07:57:40PM +0100, Michael Schaller wrote:
->>> On 01.01.24 19:13, Bjorn Helgaas wrote:
->>>> On Mon, Dec 25, 2023 at 07:29:02PM +0100, Michael Schaller wrote:
->>>> ...
->>
->>>> So unless somebody has a counter-argument, I plan to queue a revert of
->>>> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") for
->>>> v6.7.
->>>
->>> If it helps I could also try if a partial revert of 08d0cc5f3426
->>> would be
->>> sufficient. This might also narrow down the issue and give more insight
->>> where the issue originates from.
->>
->> We're so close to the v6.7 final release that I doubt we can figure
->> out the problem and test a fix before v6.7.  I'm sure Kai-Heng would
->> appreciate any additional data, but I don't think it's urgent at this
->> point.
+On Thu, 21 Dec 2023 16:46:02 +1030
+Jonathan Woithe <jwoithe@just42.net> wrote:
+
+> On Sat, Dec 16, 2023 at 10:05:22AM +1030, Jonathan Woithe wrote:
+> > On Fri, Dec 15, 2023 at 02:36:38PM +0100, Igor Mammedov wrote:  
+> > > On Fri, 15 Dec 2023 21:57:43 +1030
+> > > Jonathan Woithe <jwoithe@just42.net> wrote:  
+> > > > As mentioned, testing another kernel can only happen next Thursday.  If
+> > > > you would like other tests done let me know and I'll do them at the same
+> > > > time.  I have remote access to the machine, so it's possible to retrieve
+> > > > information from it at any time.  
+> > > 
+> > > lets wait till you can get logs with dyndbg='...' (I've asked for earlier)
+> > > and one more test with "pci=realloc" on kernel CLI to see if that helps.  
+> > 
+> > Okay.  
 > 
-> We're indeed close to the final v6.7 release, which in turn means that a
-> last minute revert of a 16 month old commit might cause even more
-> regressions as there have been quite a few ASPM changes afterwards and
-> there won't be much testing anymore before the final release.
+> I added the "dyndbg=" option to the 5.15.139 kernel command line and booted. 
+> The resulting dmesg output has been attached to bugzilla 218268.
 > 
-> Furthermore, given the age of the commit and that it has been backported
-> to kernel 5.15, the question is also if the revert would be backported
-> to the affected LTS kernels?
+> I also tested 5.15.139 with the "pci=realloc" kernel parameter.  This was
+> sufficient to allow the system to boot without a GPU initialisation failure.
+> The dmesg output from this boot has also been attached to bugzilla 218268.
 > 
-> If this regression risk is acceptable then I'm all for reverting the
-> commit now and then working on a fix.
+> I used kernel.org's 5.15.139 for these tests because I already had it
+> compiled and was a little short of time.  If you'd like me to repeat the
+> tests with a different kernel let me know which one and I'll see what I can
+> do.  The Christmas break may delay this somewhat.
 
-FWIW (just in case some of you might not be aware of this): Linus not
-that long ago said this about regressions that are somewhat older:
+Thanks for collecting tables and debug logs,
+I'll get back to you if more debug info or testing would be needed.
 
-"""
-There's obviously a time limit: if that "regression in an earlier
-release" was a year or more ago, and just took forever for people to
-notice, and it had semantic changes that now mean that fixing the
-regression could cause a _new_ regression, then that can cause me to
-go "Oh, now the new semantics are what we have to live with".
-"""
+> Regards
+>   jonathan
+> 
 
-For full context see:
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
 
