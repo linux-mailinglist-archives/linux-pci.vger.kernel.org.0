@@ -1,235 +1,96 @@
-Return-Path: <linux-pci+bounces-1687-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1688-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B6EC824930
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 20:43:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CB5B824943
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 20:52:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0407A286204
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 19:43:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E420F1F22EA4
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 19:52:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B2652C1A8;
-	Thu,  4 Jan 2024 19:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC396241EF;
+	Thu,  4 Jan 2024 19:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VHPpOMv3"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="VG1fTf00"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E912C19E;
-	Thu,  4 Jan 2024 19:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704397373; x=1735933373;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BqyzbMM13Y5zOlYIwvUzYCIaGHm3b5tUQ+nNjWlVCrE=;
-  b=VHPpOMv3Ueshk15WXamzSjqu+yAp+bS/KuSqGZzZ5f0b7D8xNmhMNyYb
-   Cxvyll0inlCGiUQanW/0uij4t5rk8hTAyku211L0dxEHesqM93xSeVQ00
-   F60XaWEWy+alzFlmjfdKD3RP/pjJp6RqvK7v7u/oz0fpLZEqIMZ/+ljFh
-   +C5eZbVbNDXw7JoPXeo6xj07/N787rzk1pD6TP9341AYJCEmq0nwgdVms
-   K5qIQ/sta3m8XdWFnNTgHw151JBCee+EIe9FmJtLcTm77s3U3bP8yIzQ6
-   xhYeYYGrJG3F5CnL53XTJd2JGfCVM7rMswaWucDsrbHUlpeTWzoQSFc3b
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="400110189"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="400110189"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 11:42:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="22608141"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.35.85])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 11:42:50 -0800
-Message-ID: <b21cded2-df3c-473f-a414-3651c2f6681a@intel.com>
-Date: Thu, 4 Jan 2024 21:42:44 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF082C1A8
+	for <linux-pci@vger.kernel.org>; Thu,  4 Jan 2024 19:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from pop-os.home ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id LTlmr0sApT1UwLTlnrLohA; Thu, 04 Jan 2024 20:52:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1704397969;
+	bh=27dEHxVblqRTmzTZNOjf3Gz5VvfI9uGlpElf6m2975Y=;
+	h=From:To:Cc:Subject:Date;
+	b=VG1fTf00F44jamkjYhcZD4fxQltM1JJRDg1foif2iDelfGbansTjbmPbE5KRFG7pB
+	 ZsX3svidGOVGFB2dwRhBMkJ6APdV1YJYkbUmAZvywmdRuvGT4WXpi/ZfudQz0PImwI
+	 FYVC6k+skJWAQLwG5VsMwPc3R8Tg2PH+M933Nb+rf/eNdc79IB1UaDES4Po7STOhD9
+	 iLJeaPvbd8URy695x5dve5mGGutCn6WDhjS96+MnaKjMqyyIOfmDoaVFFu13qRK3PT
+	 7JXfgd+7/HwqjXeQ0HVgqLg6VJIgVVLDFDYmuXG5e/beDjPtJzAtrBPh+yIAvCd/Fs
+	 DEd0+k/kIyR5Q==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 04 Jan 2024 20:52:49 +0100
+X-ME-IP: 92.140.202.140
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Eric Dumazet <edumazet@google.com>
+Cc: alexis.lothore@bootlin.com,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI/P2PDMA: Fix a sleeping issue in a RCU read section
+Date: Thu,  4 Jan 2024 20:52:35 +0100
+Message-Id: <02d9ec4a10235def0e764ff1f5be881ba12e16e8.1704397858.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mmc: sdhci-pci-gli: GL975x: Mask rootport's replay
- timer timeout during suspend
-Content-Language: en-US
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Victor Shih <victor.shih@genesyslogic.com.tw>,
- Ben Chuang <benchuanggli@gmail.com>, linux-mmc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>
-References: <20231221032147.434647-1-kai.heng.feng@canonical.com>
- <CAPDyKFo6SGV=Zsqmq=dO09tGNsJAURXuvXfbzLwf-4J3KUsC+w@mail.gmail.com>
- <CAAd53p7k2oBkzKv_RrNUm9rhJB5htV79sUjbdRxWHHJ46ps6HQ@mail.gmail.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAAd53p7k2oBkzKv_RrNUm9rhJB5htV79sUjbdRxWHHJ46ps6HQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 4/01/24 06:10, Kai-Heng Feng wrote:
-> On Wed, Jan 3, 2024 at 6:53 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>
->> On Thu, 21 Dec 2023 at 04:23, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
->>>
->>> Spamming `lspci -vv` can still observe the replay timer timeout error
->>> even after commit 015c9cbcf0ad ("mmc: sdhci-pci-gli: GL9750: Mask the
->>> replay timer timeout of AER"), albeit with a lower reproduce rate.
->>>
->>> Such AER interrupt can still prevent the system from suspending, so let
->>> root port mask and unmask replay timer timeout during suspend and
->>> resume, respectively.
->>>
->>> Cc: Victor Shih <victor.shih@genesyslogic.com.tw>
->>> Cc: Ben Chuang <benchuanggli@gmail.com>
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> ---
->>> v2:
->>>  - Change subject to reflect it works on GL9750 & GL9755
->>>  - Fix when aer_cap is missing
->>>
->>>  drivers/mmc/host/sdhci-pci-core.c |  2 +-
->>>  drivers/mmc/host/sdhci-pci-gli.c  | 55 +++++++++++++++++++++++++++++--
->>>  drivers/mmc/host/sdhci-pci.h      |  1 +
->>>  3 files changed, 55 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
->>> index 025b31aa712c..59ae4da72974 100644
->>> --- a/drivers/mmc/host/sdhci-pci-core.c
->>> +++ b/drivers/mmc/host/sdhci-pci-core.c
->>> @@ -68,7 +68,7 @@ static int sdhci_pci_init_wakeup(struct sdhci_pci_chip *chip)
->>>         return 0;
->>>  }
->>>
->>> -static int sdhci_pci_suspend_host(struct sdhci_pci_chip *chip)
->>> +int sdhci_pci_suspend_host(struct sdhci_pci_chip *chip)
->>>  {
->>>         int i, ret;
->>>
->>> diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
->>> index 77911a57b12c..54943e9df835 100644
->>> --- a/drivers/mmc/host/sdhci-pci-gli.c
->>> +++ b/drivers/mmc/host/sdhci-pci-gli.c
->>> @@ -1429,6 +1429,55 @@ static int sdhci_pci_gli_resume(struct sdhci_pci_chip *chip)
->>>         return sdhci_pci_resume_host(chip);
->>>  }
->>>
->>> +#ifdef CONFIG_PCIEAER
->>> +static void mask_replay_timer_timeout(struct pci_dev *pdev)
->>> +{
->>> +       struct pci_dev *parent = pci_upstream_bridge(pdev);
->>> +       u32 val;
->>> +
->>> +       if (!parent || !parent->aer_cap)
->>
->> Wouldn't it be more correct to use pci_aer_available(), rather than
->> just checking the aer_cap?
-> 
-> pci_aer_available() is more of a global check, so checking aer_cap is
-> still required for the device.
+It is not allowed to sleep within a RCU read section, so use GFP_ATOMIC
+instead of GFP_KERNEL here.
 
-It is not obvious whether aer_cap is meant to be used outside PCI
-internal code.  Maybe reading the offset directly is more
-appropriate?
+Fixes: ae21f835a5bd ("PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This patch is speculative.
+It is based on a discussion related to another patch. See [1].
 
-	aer_pos = pci_find_ext_capability(root, PCI_EXT_CAP_ID_ERR);
+It also matches the doc, IIUC. See [2]
 
+[1]: https://lore.kernel.org/all/20240104143925.194295-3-alexis.lothore@bootlin.com/
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/RCU/whatisRCU.rst#n161
+---
+ drivers/pci/p2pdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->>
->> If pci_aer_available() can be used, we wouldn't even need the stubs as
->> the is already stubs for pci_aer_available().
-> 
-> A helper that checks both aer_cap and  pci_aer_available() can be
-> added for such purpose, but there aren't many users of that.
-> 
-> Kai-Heng
-> 
->>
->>> +               return;
->>> +
->>> +       pci_read_config_dword(parent, parent->aer_cap + PCI_ERR_COR_MASK, &val);
->>> +       val |= PCI_ERR_COR_REP_TIMER;
->>> +       pci_write_config_dword(parent, parent->aer_cap + PCI_ERR_COR_MASK, val);
->>> +}
->>> +
->>> +static void unmask_replay_timer_timeout(struct pci_dev *pdev)
->>> +{
->>> +       struct pci_dev *parent = pci_upstream_bridge(pdev);
->>> +       u32 val;
->>> +
->>> +       if (!parent || !parent->aer_cap)
->>> +               return;
->>> +
->>> +       pci_read_config_dword(pdev, parent->aer_cap + PCI_ERR_COR_MASK, &val);
->>> +       val &= ~PCI_ERR_COR_REP_TIMER;
->>> +       pci_write_config_dword(pdev, parent->aer_cap + PCI_ERR_COR_MASK, val);
->>> +}
->>> +#else
->>> +static inline void mask_replay_timer_timeout(struct pci_dev *pdev) { }
->>> +static inline void unmask_replay_timer_timeout(struct pci_dev *pdev) {  }
->>> +#endif
->>> +
->>> +static int sdhci_pci_gl975x_suspend(struct sdhci_pci_chip *chip)
->>> +{
->>> +       mask_replay_timer_timeout(chip->pdev);
->>> +
->>> +       return sdhci_pci_suspend_host(chip);
->>> +}
->>> +
->>> +static int sdhci_pci_gl975x_resume(struct sdhci_pci_chip *chip)
->>> +{
->>> +       int ret;
->>> +
->>> +       ret = sdhci_pci_gli_resume(chip);
->>> +
->>> +       unmask_replay_timer_timeout(chip->pdev);
->>> +
->>> +       return ret;
->>> +}
->>> +
->>>  static int gl9763e_resume(struct sdhci_pci_chip *chip)
->>>  {
->>>         struct sdhci_pci_slot *slot = chip->slots[0];
->>> @@ -1547,7 +1596,8 @@ const struct sdhci_pci_fixes sdhci_gl9755 = {
->>>         .probe_slot     = gli_probe_slot_gl9755,
->>>         .ops            = &sdhci_gl9755_ops,
->>>  #ifdef CONFIG_PM_SLEEP
->>> -       .resume         = sdhci_pci_gli_resume,
->>> +       .suspend        = sdhci_pci_gl975x_suspend,
->>> +       .resume         = sdhci_pci_gl975x_resume,
->>>  #endif
->>>  };
->>>
->>> @@ -1570,7 +1620,8 @@ const struct sdhci_pci_fixes sdhci_gl9750 = {
->>>         .probe_slot     = gli_probe_slot_gl9750,
->>>         .ops            = &sdhci_gl9750_ops,
->>>  #ifdef CONFIG_PM_SLEEP
->>> -       .resume         = sdhci_pci_gli_resume,
->>> +       .suspend        = sdhci_pci_gl975x_suspend,
->>> +       .resume         = sdhci_pci_gl975x_resume,
->>>  #endif
->>>  };
->>>
->>> diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
->>> index 153704f812ed..19253dce687d 100644
->>> --- a/drivers/mmc/host/sdhci-pci.h
->>> +++ b/drivers/mmc/host/sdhci-pci.h
->>> @@ -190,6 +190,7 @@ static inline void *sdhci_pci_priv(struct sdhci_pci_slot *slot)
->>>  }
->>>
->>>  #ifdef CONFIG_PM_SLEEP
->>> +int sdhci_pci_suspend_host(struct sdhci_pci_chip *chip);
->>>  int sdhci_pci_resume_host(struct sdhci_pci_chip *chip);
->>>  #endif
->>>  int sdhci_pci_enable_dma(struct sdhci_host *host);
->>
->> Kind regards
->> Uffe
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 0c361561b855..4f47a13cb500 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -661,7 +661,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 	p2pdma = rcu_dereference(provider->p2pdma);
+ 	if (p2pdma)
+ 		xa_store(&p2pdma->map_types, map_types_idx(client),
+-			 xa_mk_value(map_type), GFP_KERNEL);
++			 xa_mk_value(map_type), GFP_ATOMIC);
+ 	rcu_read_unlock();
+ 	return map_type;
+ }
+-- 
+2.34.1
 
 
