@@ -1,262 +1,262 @@
-Return-Path: <linux-pci+bounces-1647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA648823DB9
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 09:44:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90989823E2F
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 10:07:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE6571C21407
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 08:44:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38471286F9C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 09:07:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3639D1DDD6;
-	Thu,  4 Jan 2024 08:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50A3320315;
+	Thu,  4 Jan 2024 09:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Hi0ojehq";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="s39VeulS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TLeRTJGB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048241E531;
-	Thu,  4 Jan 2024 08:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1704357764; x=1735893764;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=DmTofNjLcDSgyTD+YxBYRdup2R5/nuFBJYcbPoQ3Z9o=;
-  b=Hi0ojehqXLw/eQo9ljy4cKRo6Pmd4S6M6d9dYiMXQwUn+GEZy0zZCjkR
-   HktHZxXIIqW/AlpS2h89yHi/N1Fhdu13jhXgN2CPv+pRZeY/Pd3qW0vAC
-   ALwJ8rdjlQdOZ/ODNKiM6+SR0w3XMNK63WUoXpdRn8GE2u5iAJAEo4WmC
-   R2EwUzOAHOkorBfwmEDUEyaiKKz2N0k+jZNzItj80kWCYNnqRW7BJQkCL
-   P2lGoxMICz4hRViOJUEvO0exz39EmMlSNw0/QUTA/VJvIEL+s6H5NP8YY
-   QLOpSKOYVfKgK+SxiX3M6X4m+QmdxJFaJvHawhAxsFspyKo4FSwLxJq79
-   w==;
-X-CSE-ConnectionGUID: QnpMhg8AQdS4hp7vCVSl/Q==
-X-CSE-MsgGUID: eGraV379RXyOf7kefCOFLw==
-X-IronPort-AV: E=Sophos;i="6.04,330,1695657600"; 
-   d="scan'208";a="6135327"
-Received: from mail-bn8nam12lp2168.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.168])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Jan 2024 16:41:33 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wzk9KpW54iHR8pJvMLvLRThRCU3Hf57YDv90BIIQU/5p3CpyRiV9MQhvB5AzVKGkC5UOS621ajigUJscbzEmvqP3JNTKjZ+0XCScn51C/H8GKvOw1eKPTKKFf7+yhAYeocJhSOaVOfWs9okjSQIbs02a+vW5R1srJhpqPUMR+8TRnmm6jpEFJ/u80sTmXpcG+naLAJwVQqgXfXugKUaWfERnzwLdhTs+IvpT8zWwYl0xavZhP+PN6wkHR2Lf/AKy+HiwcQ6pnuwaKJtPGKeLyGhXhrqyaJMTYwMCYc28VU1Ha/N7m2Nt5aCYJOWZyCaUdlpzwTw6+4hIQkLF5Oko9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XFgjKZ6wjmzscg20N3EYEQhOTS6ijriZxyjArfEd4D8=;
- b=npvz8umNaPH+wKd6SJMybOm8Pfe5gad2muMuWrmO877CldHcXm98zQfzaFu7CBtlp/JdnyQBLqJs5S+phevKrGhH66K+gIsTkTnbwNxL/kg5L/FkQk2I74gFa7GKkC0y8rwZtUtA4peYx+Z6NcHQY3NeKe+g1p/ACxLV4mHs29EZTpzjIu0N3V9+UYOsKIGCoV5wrmtS31U0oAxuAFJE91Yhkla1wDWGgAtlPbAEwSEV5tEBBCJM6EARILbEtbNrs5jR8hi7ZqbRCjPHy4eQ4BKBrGlkqakWJ0vHUEJFVc0LWGsH0odt5fbN+/lodBe8veehb5FbRptBEse7yHHq8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XFgjKZ6wjmzscg20N3EYEQhOTS6ijriZxyjArfEd4D8=;
- b=s39VeulSm2h2gSPNMeodqqRjlWrAXR67GssBjhMwaTAFUnP4Nu9FpufqwEKBE6amms3f8R1XnBz/tq5BA+I8kbTDO5zBg7tUf4eDuaMI7bIYq7FAO316dWoeJG1CGB/uClEjDKDTtGxCg7/ZSmxQtQFHH8ktQJmzdF6QXI8p++c=
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
- PH0PR04MB7431.namprd04.prod.outlook.com (2603:10b6:510:16::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.13; Thu, 4 Jan 2024 08:41:29 +0000
-Received: from DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::81a9:5f87:e955:16b4]) by DM8PR04MB8037.namprd04.prod.outlook.com
- ([fe80::81a9:5f87:e955:16b4%3]) with mapi id 15.20.7159.015; Thu, 4 Jan 2024
- 08:41:28 +0000
-From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To: Klara Modin <klarasmodin@gmail.com>
-CC: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
-	<ilpo.jarvinen@linux.intel.com>, "linux-i2c@vger.kernel.org"
-	<linux-i2c@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Thread-Topic: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
- PCI device probe
-Thread-Index: AQHaPow80BKhEPvQJ0yVwJLvsqPQE7DJVoSA
-Date: Thu, 4 Jan 2024 08:41:28 +0000
-Message-ID: <oe4cs5ptinmmdaxv6xa524whc7bppfqa7ern5jzc3aca5nffpm@xbmv34mjjxvv>
-References:
- <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
-In-Reply-To:
- <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=wdc.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|PH0PR04MB7431:EE_
-x-ms-office365-filtering-correlation-id: f6327a46-209c-4672-5bc8-08dc0d00f1e2
-wdcipoutbound: EOP-TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- sNjkzRb0cE6HOlChbkH0E9rQcJFtiZkcBKVbBcQ2ziX2pz+JVyT29tMZA9d02Me6hNSINnmMBWFobtDqy7TYwy0nQ+b2jF/ZKFZ58HqaYQ8RJv89WJfzNrKP6E9KPAoB6Y6EIzFe7/P9k0eVJfF3aBpPbXYz01OTe5XP8RDMr9XxdZ/kPxxLZFzix5YEtYumNKs02+6W4rFuxfrRNpcJMhBUu6QEHW7Be6AF3QdUHtRiJ+vac0atb9mjeRf1On2TZO00a8e835BGCKhOjMiNGuR0czEM1LPWVb3dZD2oCO60TQ3gDSyO97TUhKkkNd7n8CPBiciubJGEkZ7OqcY8bQajT7pV3cxGnjrQif/7F+wWytHAMW+AGAD5NZJRLEX8f4sGupQAUu2hNztw/Em3P2X35lDBueppfU77psWXpEeqQtVbuJF5maJ4x0cJ6Oiurqe0JxDqMTmTCtsNyNGC8AUwJulYHSLQ/A4yg7/B4THpQRJPJegw979YkUt5sTZeAleoXs7LgIjJvzvmTlDFqzoGkPXyRfbfCHCv2qJeKjbFaGr/jMzU0aLAw4WYB6AjZA72LmXSW4DCEDyxOXirQyTv9br8R1NBcaM4K05cbdQ=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(376002)(396003)(346002)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(6506007)(6916009)(66446008)(66556008)(6512007)(9686003)(64756008)(6486002)(76116006)(91956017)(66476007)(66946007)(38070700009)(86362001)(966005)(82960400001)(122000001)(83380400001)(41300700001)(26005)(2906002)(38100700002)(71200400001)(478600001)(5660300002)(4326008)(44832011)(33716001)(8676002)(54906003)(8936002)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?AsVIIYZeAUgddfSiW15QK6bHbL0/eqEQ/rfnaDY6lwxqs/bklqCerZTpo3PJ?=
- =?us-ascii?Q?dnt1j6rMtY8FPXmON3VzUG40zf6r8y3CcQw/vLTqnUIyqoDRhqRorgdBp+1G?=
- =?us-ascii?Q?EWq/0XvPEBquPbHglmcl28BvriJHymS9JYCoe2U2GZNAGxvIKPSSN4UKMS6/?=
- =?us-ascii?Q?Zd4HzYMAtbMz232Sb3JnP+mXq2zCR0cmGtYFRo6ltpphzmV+iXTX/p8VSiWH?=
- =?us-ascii?Q?dlUG+IURN7PE00qiudZ3vKCP5NbQe1p2BTNAbCJnwcieiq51hhrVFKnG8nxu?=
- =?us-ascii?Q?/DaPfFeZWEu6c6qesdaeN16IhRSlHnTpiJ5JIlw/onIj6AcgFUGKYmgNvEj0?=
- =?us-ascii?Q?VcCw9I6TZ89tRd2vKUfkKk8nCqIE3eboGKv1sKdEdWgetlShWFjLBOGuoip2?=
- =?us-ascii?Q?2GFI7AyA3E7kPkrP2YJbk3Mmxx+PqoZvrF29y03DaTSHfI9O3ChBvvXjUgWX?=
- =?us-ascii?Q?/7jogWLvgZ0iL/AhoB8UF9aXSbAfOwR8NLrMFbbqbQReL6FUi/E/a1lv/Nm7?=
- =?us-ascii?Q?baiI0P0kFyg42A15mF+JfMCtYGZ76HyIDqS4MD6x7zS1cyfgWJ+Z6nONm6JK?=
- =?us-ascii?Q?s+j8tAiMMA7dCXa2Uwr26b1Ah1b9WsgH26ob6sd5K1uPisAq06Il1gN3ne0v?=
- =?us-ascii?Q?VI13e0f2lgvriQ6Yc0QY7pDi6CHmPLxp6nmkwdxz0jCVYzqKN++Pc0ScfO7l?=
- =?us-ascii?Q?7psX68u7Tf7dGthQ5f4QnFNv1CSgHXPqJJLgytM9d/BSIp63ytIPYpsDdzHI?=
- =?us-ascii?Q?EXSGwxYE43aKG5gWIfnVxX66MTuwKbBI7+KlCe706sFy/xfe5LHYrZO7DOnL?=
- =?us-ascii?Q?CIubH17iyL5rUiE8iX/HjVgqvjfigW7EhIEQA25xkup0qaHdkZd6c639YnKX?=
- =?us-ascii?Q?+ih25zRjsA2akIV4VDhVs1FxZ7e5Ub0kOIL/6uY+Vycln0LYJk6kzJAJT7bK?=
- =?us-ascii?Q?a2gGYglf1JEW9VIl4wWSAqQYKX4DhmqIzM8B5diFhMQ0VUJGSCdziAQJqgb8?=
- =?us-ascii?Q?groXxtAiMXYLp6xJwF5GlH62c8HYBvSd5MHIXxnbnvL8vP+io3jEggO773I1?=
- =?us-ascii?Q?losD4u1jjbJIgcSvlWOAQxHru9qpt82jNL9IrsKcTDYXl72rIi1hbFDKIdjP?=
- =?us-ascii?Q?CX2qRiKQcnJeKgGPbZ+kB+ZP4cr5SSgmHU47jUg6dxDgAh1RwPe7SW3aRIJc?=
- =?us-ascii?Q?9fkoL2hk4zAmeS/Mz3rnRoAuuWk/cHYB95zneXKdDgHbkPb2lxlayiwsJyfa?=
- =?us-ascii?Q?uHndt+tQBaOheF44P3SmjSiFjfu27dudMxSEMTqTCTmuwCiR93ZzqCQwJIQB?=
- =?us-ascii?Q?9OwO5mXJzFxsnNC/hIre8+pdPxrITiXWcmnCmsrt613VUn0LfAFXDQfrK2rq?=
- =?us-ascii?Q?Xprty2DYRQFCSATEhuRTJDRE2683lwhZfz9fJiXems5MbEI1kv+vdgQDC+/a?=
- =?us-ascii?Q?/re53DuD2uS7tZjhPQn+N1joDjh6jrY5xvOWTDRU+sJR2Rmoyj9LXQCVKr9q?=
- =?us-ascii?Q?RnWqYGLqT7nDfgf+XvLMd+83nFj4DC53j6Sk1jkYgf6QNMsrFGLeBb4Uvca+?=
- =?us-ascii?Q?w6gce4vEAhBV2NzVOYwocKmg+tVUYXhVgRdUjp4DENfrlKG9FrWsFknPR1NJ?=
- =?us-ascii?Q?vw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0A39927A7AB29E4DA04093B63C51C639@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6009520309
+	for <linux-pci@vger.kernel.org>; Thu,  4 Jan 2024 09:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704359244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Jsenl4ryPejHUAvVnk0GRNLRuch6fMe21jriRXS4vNY=;
+	b=TLeRTJGBidxeCM2wLNOO9KGOqHbhrSc5bO4nl6SSsg7x61jMESSboH0kGunSzIkXnx62/l
+	8iVLx+NYU7xJHP0aZOdn7ErwNSIiPoDgoC1EdfxyC5mej50MGEucq5jfUA8MBWrE/oDJUx
+	8tplok2h87mDnXwWd2nAKepG7fEMPRE=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-345-80rXIQbcMr-A31UJ2dXDSg-1; Thu, 04 Jan 2024 04:07:23 -0500
+X-MC-Unique: 80rXIQbcMr-A31UJ2dXDSg-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2cd27b00d4bso141631fa.1
+        for <linux-pci@vger.kernel.org>; Thu, 04 Jan 2024 01:07:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704359241; x=1704964041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jsenl4ryPejHUAvVnk0GRNLRuch6fMe21jriRXS4vNY=;
+        b=ttBhQCRFT0eATqtV9IddK8OFBP5+8YfjTNEySO8otiXqxMKYKNjFacX6Qezmkn4ifD
+         f1Wuwle/KwUiF1jFBzocxGKGii0wZXUqq1uwsSpKmBlfGq1UOZIN9yKsvYc8avLd4Arj
+         oR145JG7l47dJ+mDU1rTRgx0OOW/xWT5syj5sJs6oDyuOKWXMTrra4Cn766ZOJaS6oID
+         npgHaCRNk5CQSxbLEDqVYsg4uXZ8Pdpkpj9YAmzXnIJZQWy0gcSYTQUpItjZsYAtykyt
+         mC61XQfAca/7za/0q7nDu0Xetb2oDb8YKnxCzqinPrbV2PtiTfc5nvI6qYVYEJxdsCL2
+         Rezw==
+X-Gm-Message-State: AOJu0YxM4mwMHzjiTErnw2SrBR011E1vxAdxmm7WCj60v8LRBFi1a4c6
+	zidPYfonanTF268x2DJS3EloHJtclE8v4gd6IliNmo22I58UlboSRdtgWH49K43Pap4rvyqvmzj
+	6v3Frr1EJRMGKl/xuBFZ5JYEZcGB4
+X-Received: by 2002:a2e:be8b:0:b0:2cd:11fe:b686 with SMTP id a11-20020a2ebe8b000000b002cd11feb686mr318536ljr.4.1704359241647;
+        Thu, 04 Jan 2024 01:07:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH65xsq4UaUv59BM3JCRmpML+t+4U30EIkbbHGSL0kFGxxoanHC8jrP8up3ugW5IqrJEPJuOQ==
+X-Received: by 2002:a2e:be8b:0:b0:2cd:11fe:b686 with SMTP id a11-20020a2ebe8b000000b002cd11feb686mr318504ljr.4.1704359241266;
+        Thu, 04 Jan 2024 01:07:21 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id h15-20020a5d430f000000b0033740e109adsm8720864wrq.75.2024.01.04.01.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 01:07:20 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>,
+	Kent Overstreet <kent.overstreet@gmail.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Uladzislau Koshchanka <koshchanka@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Baron <jbaron@akamai.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	dakr@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
+Date: Thu,  4 Jan 2024 10:07:04 +0100
+Message-ID: <20240104090708.10571-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	1IWe9lTiMVGBW+iuKFFKsw6bsyzG2KEvuA+nvQwKVbOAsFKgEjSp36g0Ta0cJ7o12WeQgiYw+frX3dMyohG2PmFdtqNW8ZRYu3YFn61G3c3mAP2aSvwpso2lhrWOCJQiyXmbOxJntyAjcrlNu6hI63U+NLIM/ULCe2IT9twbCDu4TpCRwVymQA5zr0Nf2nZpT0bJc7VJXBgnT4k14kNda06jWs1I3stp4r3L+q6m2Hfs+aaycahRnDpX4o52kgkOsgkNp3c03y1y0liX20WC0h3yjpIFObG8ndS/BNIAHaHht7oLz9UILQpNuk/w7rMLlOAz/AP+UPcdQD1rmKbvktRbTzZ5Zc5mM25bu+958Z9LLUSBfRYdZx+39hK9SIQba4Hv3UpCc4QgVkifBRzEP3amVhiJaLPGJaaEEZb+f3JJsr4HVa4CNTld72hvZA8RR/Cd0m4EsPMr25qVKiVte/E6W7rKHefg/Gz1Tuknv8NPowndwhCUaD5KoXxYHzclOcIUH9MiWPKr53LKY9XN4NwPUkhulmYYugTw0UMeDXH37b1BAzYQnUarMPbUhsldWAdbkhvdzoZHnoTu68zX3vvxe1S9425SC++ipzguy1m+ewMqmedU2Lofc28yrKMX
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6327a46-209c-4672-5bc8-08dc0d00f1e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 08:41:28.8540
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KbVoBqpEzS5ZI2fD9BtoG6/L9mSRoJzaye0wL6BxRIrtyoNAEqDjMXJ1nosLW+PK/NAOwzyz/Da2MlCqVwobOdFZTNsrvEhK5gOQFY4wmS8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR04MB7431
+Content-Transfer-Encoding: 8bit
 
-On Jan 03, 2024 / 22:31, Klara Modin wrote:
-> Hi,
->=20
-> With this patch, ata_piix fails to detect my IDE controller (older P4
-> Xeon board). Reverting this on top of 6.7-rc8 resolves the issue for
-> me.
+@Stable-Kernel:
+You receive this patch series because its first patch fixes leaks in
+PCI.
 
-Thanks for the report. According the dmesg and lspci logs, it looks the IDE
-controller has the PCI DEVFN 31:1 (0000:00:1f.1). So, I guess as follows:
+Changes in v5:
+- Add forgotten update to MAINTAINERS file.
 
-- Klara's system has the old ICH (ICH4) which has IDE controller at DEVFN 3=
-1:1.
-  This DEVFN is same as P2SB device that newer PCH Series 100 or later has.
-- The system has ISA bridge 82801BA for LPC, then LPC_ICH driver is loaded.
-  This driver depends on P2SB and calls p2sb_bar(). But p2sb_bar() is calle=
-d
-  only for new features of LPC_ICH driver (SPI flash and GPIO). Then p2sb_b=
-ar()
-  is not called on the system, probably (I want to confirm it).
-- Before the commit b28ff7a7c324 ("platform/x86: p2sb: Allow p2sb_bar() cal=
-ls
-  during PCI device probe"), the DEVFN 31:1 is accessed as P2SB only when
-  p2sb_bar() is called. After the commit, if P2SB is enabled in Kconfig,
-  DEVFN 31:1 is accessed as P2SB to cache P2SB resources. However, the devi=
-ce
-  is not P2SB devcie but IDE controller, then it casued the IDE controller
-  detection failure.
+Changes in v4:
+- Apply Arnd's Reviewed-by's
+- Add ifdef CONFIG_HAS_IOPORT_MAP guard in drivers/pci/iomap.c (build
+  error on openrisc)
+- Fix typo in patch no.5
 
->=20
-> Please tell me if there's anything else you need. I'm willing to test
-> any new patches.
+Changes in v3:
+- Create a separate patch for the leaks in lib/iomap.c. Make it the
+  series' first patch. (Arnd)
+- Turns out the aforementioned bug wasn't just accidentally removing
+  iounmap() with the ifdef, it was also missing ioport_unmap() to begin
+  with. Add it.
+- Move the ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT-mechanism from
+  asm-generic/io.h to asm-generic/ioport.h. (Arnd)
+- Adjust the implementation of iomem_is_ioport() in asm-generic/io.h so
+  that it matches exactly what pci_iounmap() previously did in
+  lib/pci_iomap.c. (Arnd)
+- Move the CONFIG_HAS_IOPORT guard in asm-generic/io.h so that
+  iomem_is_ioport() will always be compiled and just returns false if
+  there are no ports.
+- Add TODOs to several places informing about the generic
+  iomem_is_ioport() in lib/iomap.c not being generic.
+- Add TODO about the followup work to make drivers/pci/iomap.c's
+  pci_iounmap() actually generic.
 
-Could you confirm that p2sb_bar() is not called during boot process on your
-system? Applying the one liner printk patch below, let's confirm that the
-string "p2sb_bar" does not appear in the dmesg log.
-
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 99a0e456f075..e034a58d7531 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -195,6 +195,7 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, s=
-truct resource *mem)
- 	struct p2sb_res_cache *cache;
- 	int ret;
-=20
-+	printk("%s\n", __func__);
- 	bus =3D p2sb_get_bus(bus);
- 	if (!bus)
- 		return -ENODEV;
+Changes in v2:
+- Replace patch 4, previously extending the comment about pci_iounmap()
+  in lib/iomap.c, with a patch that moves pci_iounmap() from that file
+  to drivers/pci/iomap.c, creating a unified version there. (Arnd)
+- Implement iomem_is_ioport() as a new helper in asm-generic/io.h and
+  lib/iomap.c. (Arnd)
+- Move the build rule in drivers/pci/Makefile for iomap.o under the
+  guard of #if PCI. This had to be done because when just checking for
+  GENERIC_PCI_IOMAP being defined, the functions don't disappear, which
+  was the case previously in lib/pci_iomap.c, where the entire file was
+  made empty if PCI was not set by the guard #ifdef PCI. (Intel's Bots)
+- Rephares all patches' commit messages a little bit.
 
 
-If p2sb_bar() is not called on the system, I think P2SB device scan and res=
-ource
-cache shall not run on such old systems. Before the commit 53eb64c88f17
-("platform/x86: p2sb: Don't fail if unknown CPU is found"), p2sb.c had a
-whitelist of Intel CPU IDs to access P2SB device. Its commit message indica=
-tes
-that we can add blacklist of CPU IDs if needed. I think this blacklist will=
- help
-to avoid the failure.
+Sooooooooo. I reworked v1.
 
-So next question is: how to list the CPUs which do not need P2SB resource c=
-ache?
-I don't have clear answer yet. According a P2SB document [1], P2SB support =
-was
-introduced since PCH Series 100, around 2010. Looking at ICH history [2], I=
-CH9
-removed PATA support, so I guess DEVFN 31:1 for IDE controller was removed =
-since
-ICH9, around 2007. So the end of the Intel CPU blacklist could be the CPU
-introduced between 2007 and 2010.
+Please review this carefully, the IO-Ranges are obviously a bit tricky,
+as is the build-system / ifdef-ery.
 
-[1] https://lab.whitequark.org/notes/2017-11-08/accessing-intel-ich-pch-gpi=
-os/
-[2] https://en.wikipedia.org/wiki/I/O_Controller_Hub#ICH8
+Arnd has suggested that architectures defining a custom inb() need their
+own iomem_is_ioport(), as well. I've grepped for inb() and found the
+following list of archs that define their own:
+  - alpha
+  - arm
+  - m68k <--
+  - parisc
+  - powerpc
+  - sh
+  - sparc
+  - x86 <--
 
-My mere idea was to just blacklist Intel CPUs with family !=3D 6. If my gue=
-sses
-are all correct, following patch will avoid the failure on the reported sys=
-tem,
-since the system has CPU with family =3D=3D 0xf. This will cover certain am=
-ount of
-old CPUs which should not access DEVFN 31:1 as P2SB. But family 6 started a=
-round
-2006, then it is not the complete blacklist, probably. I will think about t=
-he
-better way.
+All of those have their own definitons of pci_iounmap(). Therefore, they
+don't need our generic version in the first place and, thus, also need
+no iomem_is_ioport().
+The two exceptions are x86 and m68k. The former uses lib/iomap.c through
+CONFIG_GENERIC_IOMAP, as Arnd pointed out in the previous discussion
+(thus, CONFIG_GENERIC_IOMAP is not really generic in this regard).
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index 99a0e456f075..c9bcef8e2c4c 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -46,6 +46,10 @@ static int p2sb_get_devfn(unsigned int *devfn)
- 	unsigned int fn =3D P2SB_DEVFN_DEFAULT;
- 	const struct x86_cpu_id *id;
-=20
-+	/* ICH/PCHs for old CPUs do not have P2SB */
-+	if (boot_cpu_data.x86 !=3D 6)
-+		return -ENODEV;
-+
- 	id =3D x86_match_cpu(p2sb_cpu_ids);
- 	if (id)
- 		fn =3D (unsigned int)id->driver_data;=
+So as I see it, only m68k WOULD need its own custom definition of
+iomem_is_ioport(). But as I understand it it doesn't because it uses the
+one from asm-generic/pci_iomap.h ??
+
+I wasn't entirely sure how to deal with the address ranges for the
+generic implementation in asm-generic/io.h. It's marked with a TODO.
+Input appreciated.
+
+I removed the guard around define pci_iounmap in asm-generic/io.h. An
+alternative would be to have it be guarded by CONFIG_GENERIC_IOMAP and
+CONFIG_GENERIC_PCI_IOMAP, both. Without such a guard, there is no
+collision however, because generic pci_iounmap() from
+drivers/pci/iomap.c will only get pulled in when
+CONFIG_GENERIC_PCI_IOMAP is actually set.
+
+I cross-built this for a variety of architectures, including the usual
+suspects (s390, m68k). So far successfully. But let's see what Intel's
+robots say :O
+
+P.
+
+
+Original cover letter:
+
+Hi!
+
+So it seems that since ca. 2007 the PCI code has been scattered a bit.
+PCI's devres code, which is only ever used by users of the entire
+PCI-subsystem anyways, resides in lib/devres.c and is guarded by an
+ifdef PCI, just as the content of lib/pci_iomap.c is.
+
+It, thus, seems reasonable to move all of that.
+
+As I were at it, I moved as much of the devres-specific code from pci.c
+to devres.c, too. The only exceptions are four functions that are
+currently difficult to move. More information about that can be read
+here [1].
+
+I noticed these scattered files while working on (new) PCI-specific
+devres functions. If we can get this here merged, I'll soon send another
+patch series that addresses some API-inconsistencies and could move the
+devres-part of the four remaining functions.
+
+I don't want to do that in this series as this here is only about moving
+code, whereas the next series would have to actually change API
+behavior.
+
+I successfully (cross-)built this for x86, x86_64, AARCH64 and ARM
+(allyesconfig). I booted a kernel with it on x86_64, with a Fedora
+desktop environment as payload. The OS came up fine
+
+I hope this is OK. If we can get it in, we'd soon have a very
+consistent PCI API again.
+
+Regards,
+P.
+
+
+
+Philipp Stanner (5):
+  lib/pci_iomap.c: fix cleanup bugs in pci_iounmap()
+  lib: move pci_iomap.c to drivers/pci/
+  lib: move pci-specific devres code to drivers/pci/
+  pci: move devres code from pci.c to devres.c
+  lib, pci: unify generic pci_iounmap()
+
+ MAINTAINERS                            |   1 -
+ drivers/pci/Kconfig                    |   5 +
+ drivers/pci/Makefile                   |   3 +-
+ drivers/pci/devres.c                   | 450 +++++++++++++++++++++++++
+ lib/pci_iomap.c => drivers/pci/iomap.c |  49 +--
+ drivers/pci/pci.c                      | 249 --------------
+ drivers/pci/pci.h                      |  24 ++
+ include/asm-generic/io.h               |  27 +-
+ include/asm-generic/iomap.h            |  21 ++
+ lib/Kconfig                            |   3 -
+ lib/Makefile                           |   1 -
+ lib/devres.c                           | 208 +-----------
+ lib/iomap.c                            |  28 +-
+ 13 files changed, 566 insertions(+), 503 deletions(-)
+ create mode 100644 drivers/pci/devres.c
+ rename lib/pci_iomap.c => drivers/pci/iomap.c (75%)
+
+-- 
+2.43.0
+
 
