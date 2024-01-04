@@ -1,228 +1,262 @@
-Return-Path: <linux-pci+bounces-1646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33195823BF0
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 06:50:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA648823DB9
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 09:44:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BD101C20363
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 05:50:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE6571C21407
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 08:44:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20272179BA;
-	Thu,  4 Jan 2024 05:50:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3639D1DDD6;
+	Thu,  4 Jan 2024 08:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEAWvMiy"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Hi0ojehq";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="s39VeulS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788671A70D
-	for <linux-pci@vger.kernel.org>; Thu,  4 Jan 2024 05:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6dac225bf42so78896b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 03 Jan 2024 21:50:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048241E531;
+	Thu,  4 Jan 2024 08:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1704357764; x=1735893764;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=DmTofNjLcDSgyTD+YxBYRdup2R5/nuFBJYcbPoQ3Z9o=;
+  b=Hi0ojehqXLw/eQo9ljy4cKRo6Pmd4S6M6d9dYiMXQwUn+GEZy0zZCjkR
+   HktHZxXIIqW/AlpS2h89yHi/N1Fhdu13jhXgN2CPv+pRZeY/Pd3qW0vAC
+   ALwJ8rdjlQdOZ/ODNKiM6+SR0w3XMNK63WUoXpdRn8GE2u5iAJAEo4WmC
+   R2EwUzOAHOkorBfwmEDUEyaiKKz2N0k+jZNzItj80kWCYNnqRW7BJQkCL
+   P2lGoxMICz4hRViOJUEvO0exz39EmMlSNw0/QUTA/VJvIEL+s6H5NP8YY
+   QLOpSKOYVfKgK+SxiX3M6X4m+QmdxJFaJvHawhAxsFspyKo4FSwLxJq79
+   w==;
+X-CSE-ConnectionGUID: QnpMhg8AQdS4hp7vCVSl/Q==
+X-CSE-MsgGUID: eGraV379RXyOf7kefCOFLw==
+X-IronPort-AV: E=Sophos;i="6.04,330,1695657600"; 
+   d="scan'208";a="6135327"
+Received: from mail-bn8nam12lp2168.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.168])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Jan 2024 16:41:33 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wzk9KpW54iHR8pJvMLvLRThRCU3Hf57YDv90BIIQU/5p3CpyRiV9MQhvB5AzVKGkC5UOS621ajigUJscbzEmvqP3JNTKjZ+0XCScn51C/H8GKvOw1eKPTKKFf7+yhAYeocJhSOaVOfWs9okjSQIbs02a+vW5R1srJhpqPUMR+8TRnmm6jpEFJ/u80sTmXpcG+naLAJwVQqgXfXugKUaWfERnzwLdhTs+IvpT8zWwYl0xavZhP+PN6wkHR2Lf/AKy+HiwcQ6pnuwaKJtPGKeLyGhXhrqyaJMTYwMCYc28VU1Ha/N7m2Nt5aCYJOWZyCaUdlpzwTw6+4hIQkLF5Oko9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XFgjKZ6wjmzscg20N3EYEQhOTS6ijriZxyjArfEd4D8=;
+ b=npvz8umNaPH+wKd6SJMybOm8Pfe5gad2muMuWrmO877CldHcXm98zQfzaFu7CBtlp/JdnyQBLqJs5S+phevKrGhH66K+gIsTkTnbwNxL/kg5L/FkQk2I74gFa7GKkC0y8rwZtUtA4peYx+Z6NcHQY3NeKe+g1p/ACxLV4mHs29EZTpzjIu0N3V9+UYOsKIGCoV5wrmtS31U0oAxuAFJE91Yhkla1wDWGgAtlPbAEwSEV5tEBBCJM6EARILbEtbNrs5jR8hi7ZqbRCjPHy4eQ4BKBrGlkqakWJ0vHUEJFVc0LWGsH0odt5fbN+/lodBe8veehb5FbRptBEse7yHHq8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704347436; x=1704952236; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Uf9xX6NGzjv1ISMlid2UcA3oN+qjOMTFEKHCEil84EA=;
-        b=XEAWvMiyIvCSukO3FitDAFBdKhzLDI/tvLdqP20JJiSKYV0RUgF9RY4QOGwf2vcmOg
-         B6xCMPebYroO3TAJOzXRNnMDXPiL1PncmhuM9r/a2+JcUgLIuOGoRsGMzzHCPKMCjOQ5
-         eWrPuDkibkQGauMZhr0/sL3E006QsJboJ7LmdULTglMX9Kon/k5xM011qjeO+k/hwQNh
-         Gr5nTFlsuvhuZOEbFiIkoq6FTHzg2eGeBTDOoM3/c66AWC2HztFweJpA3mMop1VJaTlH
-         +X163fQX7Bajk39NDTQ5Qiz6agrfGOINFR5bMmckHoyGto6UvTqCaWXoQuYNwATOOBqO
-         zIRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704347436; x=1704952236;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uf9xX6NGzjv1ISMlid2UcA3oN+qjOMTFEKHCEil84EA=;
-        b=ZkpWkyhPEebUYiFUx8njlQarAV6RPsCbynKwdnIewnAaAaCamKea5g39QD0iXRW61v
-         F/LjBdmMiw3sfWZrOPNpvHGcOj7Je3F4aW3Jn192cmF0nyRoHFalMTu/k1aadx3Cla9o
-         Snw7fUQVrLdpdzPFK86uGPqNz1+cpA7PWm9GjsTM4tH2QBt3pVMMR2hKXyyqsWHJ0Eup
-         cHEK9tzlkCOzdk0+IMueFIBxeA1cR6+8mWosgLysRtFlRjiE+ziaSx4IfIfcI3Y6JIvT
-         Hve0aOozKBSZLy4UcMMj9hke3Hb/wn1OLtGpZD7cslgB2unGTE3KvGDE+3YXWf2uP3/z
-         yfHg==
-X-Gm-Message-State: AOJu0YwVr3VGhPxtbn8rbgiOimDxxwQdIxql27rj43am+SG22zXLNEZQ
-	i5OmXvQZSBCZvMGa+qIrk4A0HQFeXa2c
-X-Google-Smtp-Source: AGHT+IH+YmP6TkldqOBQ8q7LpIRUpnAuB55Y4aNLVXHxOcIszacbpKTctAPDRpPE0LlZCjBp4X2MWA==
-X-Received: by 2002:a05:6a00:2e81:b0:6d9:8d50:55d with SMTP id fd1-20020a056a002e8100b006d98d50055dmr157139pfb.47.1704347435731;
-        Wed, 03 Jan 2024 21:50:35 -0800 (PST)
-Received: from thinkpad ([220.158.159.72])
-        by smtp.gmail.com with ESMTPSA id f22-20020aa78b16000000b006d0d90edd2csm23793210pfd.42.2024.01.03.21.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 21:50:35 -0800 (PST)
-Date: Thu, 4 Jan 2024 11:20:30 +0530
-From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
-	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
-	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Message-ID: <20240104055030.GA3031@thinkpad>
-References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
- <20231130115044.53512-1-shradha.t@samsung.com>
- <20231130165514.GW3043@thinkpad>
- <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XFgjKZ6wjmzscg20N3EYEQhOTS6ijriZxyjArfEd4D8=;
+ b=s39VeulSm2h2gSPNMeodqqRjlWrAXR67GssBjhMwaTAFUnP4Nu9FpufqwEKBE6amms3f8R1XnBz/tq5BA+I8kbTDO5zBg7tUf4eDuaMI7bIYq7FAO316dWoeJG1CGB/uClEjDKDTtGxCg7/ZSmxQtQFHH8ktQJmzdF6QXI8p++c=
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
+ PH0PR04MB7431.namprd04.prod.outlook.com (2603:10b6:510:16::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7159.13; Thu, 4 Jan 2024 08:41:29 +0000
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::81a9:5f87:e955:16b4]) by DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::81a9:5f87:e955:16b4%3]) with mapi id 15.20.7159.015; Thu, 4 Jan 2024
+ 08:41:28 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Klara Modin <klarasmodin@gmail.com>
+CC: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	"hdegoede@redhat.com" <hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Thread-Topic: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Thread-Index: AQHaPow80BKhEPvQJ0yVwJLvsqPQE7DJVoSA
+Date: Thu, 4 Jan 2024 08:41:28 +0000
+Message-ID: <oe4cs5ptinmmdaxv6xa524whc7bppfqa7ern5jzc3aca5nffpm@xbmv34mjjxvv>
+References:
+ <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
+In-Reply-To:
+ <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|PH0PR04MB7431:EE_
+x-ms-office365-filtering-correlation-id: f6327a46-209c-4672-5bc8-08dc0d00f1e2
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ sNjkzRb0cE6HOlChbkH0E9rQcJFtiZkcBKVbBcQ2ziX2pz+JVyT29tMZA9d02Me6hNSINnmMBWFobtDqy7TYwy0nQ+b2jF/ZKFZ58HqaYQ8RJv89WJfzNrKP6E9KPAoB6Y6EIzFe7/P9k0eVJfF3aBpPbXYz01OTe5XP8RDMr9XxdZ/kPxxLZFzix5YEtYumNKs02+6W4rFuxfrRNpcJMhBUu6QEHW7Be6AF3QdUHtRiJ+vac0atb9mjeRf1On2TZO00a8e835BGCKhOjMiNGuR0czEM1LPWVb3dZD2oCO60TQ3gDSyO97TUhKkkNd7n8CPBiciubJGEkZ7OqcY8bQajT7pV3cxGnjrQif/7F+wWytHAMW+AGAD5NZJRLEX8f4sGupQAUu2hNztw/Em3P2X35lDBueppfU77psWXpEeqQtVbuJF5maJ4x0cJ6Oiurqe0JxDqMTmTCtsNyNGC8AUwJulYHSLQ/A4yg7/B4THpQRJPJegw979YkUt5sTZeAleoXs7LgIjJvzvmTlDFqzoGkPXyRfbfCHCv2qJeKjbFaGr/jMzU0aLAw4WYB6AjZA72LmXSW4DCEDyxOXirQyTv9br8R1NBcaM4K05cbdQ=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(376002)(396003)(346002)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(6506007)(6916009)(66446008)(66556008)(6512007)(9686003)(64756008)(6486002)(76116006)(91956017)(66476007)(66946007)(38070700009)(86362001)(966005)(82960400001)(122000001)(83380400001)(41300700001)(26005)(2906002)(38100700002)(71200400001)(478600001)(5660300002)(4326008)(44832011)(33716001)(8676002)(54906003)(8936002)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?AsVIIYZeAUgddfSiW15QK6bHbL0/eqEQ/rfnaDY6lwxqs/bklqCerZTpo3PJ?=
+ =?us-ascii?Q?dnt1j6rMtY8FPXmON3VzUG40zf6r8y3CcQw/vLTqnUIyqoDRhqRorgdBp+1G?=
+ =?us-ascii?Q?EWq/0XvPEBquPbHglmcl28BvriJHymS9JYCoe2U2GZNAGxvIKPSSN4UKMS6/?=
+ =?us-ascii?Q?Zd4HzYMAtbMz232Sb3JnP+mXq2zCR0cmGtYFRo6ltpphzmV+iXTX/p8VSiWH?=
+ =?us-ascii?Q?dlUG+IURN7PE00qiudZ3vKCP5NbQe1p2BTNAbCJnwcieiq51hhrVFKnG8nxu?=
+ =?us-ascii?Q?/DaPfFeZWEu6c6qesdaeN16IhRSlHnTpiJ5JIlw/onIj6AcgFUGKYmgNvEj0?=
+ =?us-ascii?Q?VcCw9I6TZ89tRd2vKUfkKk8nCqIE3eboGKv1sKdEdWgetlShWFjLBOGuoip2?=
+ =?us-ascii?Q?2GFI7AyA3E7kPkrP2YJbk3Mmxx+PqoZvrF29y03DaTSHfI9O3ChBvvXjUgWX?=
+ =?us-ascii?Q?/7jogWLvgZ0iL/AhoB8UF9aXSbAfOwR8NLrMFbbqbQReL6FUi/E/a1lv/Nm7?=
+ =?us-ascii?Q?baiI0P0kFyg42A15mF+JfMCtYGZ76HyIDqS4MD6x7zS1cyfgWJ+Z6nONm6JK?=
+ =?us-ascii?Q?s+j8tAiMMA7dCXa2Uwr26b1Ah1b9WsgH26ob6sd5K1uPisAq06Il1gN3ne0v?=
+ =?us-ascii?Q?VI13e0f2lgvriQ6Yc0QY7pDi6CHmPLxp6nmkwdxz0jCVYzqKN++Pc0ScfO7l?=
+ =?us-ascii?Q?7psX68u7Tf7dGthQ5f4QnFNv1CSgHXPqJJLgytM9d/BSIp63ytIPYpsDdzHI?=
+ =?us-ascii?Q?EXSGwxYE43aKG5gWIfnVxX66MTuwKbBI7+KlCe706sFy/xfe5LHYrZO7DOnL?=
+ =?us-ascii?Q?CIubH17iyL5rUiE8iX/HjVgqvjfigW7EhIEQA25xkup0qaHdkZd6c639YnKX?=
+ =?us-ascii?Q?+ih25zRjsA2akIV4VDhVs1FxZ7e5Ub0kOIL/6uY+Vycln0LYJk6kzJAJT7bK?=
+ =?us-ascii?Q?a2gGYglf1JEW9VIl4wWSAqQYKX4DhmqIzM8B5diFhMQ0VUJGSCdziAQJqgb8?=
+ =?us-ascii?Q?groXxtAiMXYLp6xJwF5GlH62c8HYBvSd5MHIXxnbnvL8vP+io3jEggO773I1?=
+ =?us-ascii?Q?losD4u1jjbJIgcSvlWOAQxHru9qpt82jNL9IrsKcTDYXl72rIi1hbFDKIdjP?=
+ =?us-ascii?Q?CX2qRiKQcnJeKgGPbZ+kB+ZP4cr5SSgmHU47jUg6dxDgAh1RwPe7SW3aRIJc?=
+ =?us-ascii?Q?9fkoL2hk4zAmeS/Mz3rnRoAuuWk/cHYB95zneXKdDgHbkPb2lxlayiwsJyfa?=
+ =?us-ascii?Q?uHndt+tQBaOheF44P3SmjSiFjfu27dudMxSEMTqTCTmuwCiR93ZzqCQwJIQB?=
+ =?us-ascii?Q?9OwO5mXJzFxsnNC/hIre8+pdPxrITiXWcmnCmsrt613VUn0LfAFXDQfrK2rq?=
+ =?us-ascii?Q?Xprty2DYRQFCSATEhuRTJDRE2683lwhZfz9fJiXems5MbEI1kv+vdgQDC+/a?=
+ =?us-ascii?Q?/re53DuD2uS7tZjhPQn+N1joDjh6jrY5xvOWTDRU+sJR2Rmoyj9LXQCVKr9q?=
+ =?us-ascii?Q?RnWqYGLqT7nDfgf+XvLMd+83nFj4DC53j6Sk1jkYgf6QNMsrFGLeBb4Uvca+?=
+ =?us-ascii?Q?w6gce4vEAhBV2NzVOYwocKmg+tVUYXhVgRdUjp4DENfrlKG9FrWsFknPR1NJ?=
+ =?us-ascii?Q?vw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0A39927A7AB29E4DA04093B63C51C639@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	1IWe9lTiMVGBW+iuKFFKsw6bsyzG2KEvuA+nvQwKVbOAsFKgEjSp36g0Ta0cJ7o12WeQgiYw+frX3dMyohG2PmFdtqNW8ZRYu3YFn61G3c3mAP2aSvwpso2lhrWOCJQiyXmbOxJntyAjcrlNu6hI63U+NLIM/ULCe2IT9twbCDu4TpCRwVymQA5zr0Nf2nZpT0bJc7VJXBgnT4k14kNda06jWs1I3stp4r3L+q6m2Hfs+aaycahRnDpX4o52kgkOsgkNp3c03y1y0liX20WC0h3yjpIFObG8ndS/BNIAHaHht7oLz9UILQpNuk/w7rMLlOAz/AP+UPcdQD1rmKbvktRbTzZ5Zc5mM25bu+958Z9LLUSBfRYdZx+39hK9SIQba4Hv3UpCc4QgVkifBRzEP3amVhiJaLPGJaaEEZb+f3JJsr4HVa4CNTld72hvZA8RR/Cd0m4EsPMr25qVKiVte/E6W7rKHefg/Gz1Tuknv8NPowndwhCUaD5KoXxYHzclOcIUH9MiWPKr53LKY9XN4NwPUkhulmYYugTw0UMeDXH37b1BAzYQnUarMPbUhsldWAdbkhvdzoZHnoTu68zX3vvxe1S9425SC++ipzguy1m+ewMqmedU2Lofc28yrKMX
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6327a46-209c-4672-5bc8-08dc0d00f1e2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 08:41:28.8540
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KbVoBqpEzS5ZI2fD9BtoG6/L9mSRoJzaye0wL6BxRIrtyoNAEqDjMXJ1nosLW+PK/NAOwzyz/Da2MlCqVwobOdFZTNsrvEhK5gOQFY4wmS8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR04MB7431
 
-On Wed, Jan 03, 2024 at 11:13:20AM +0530, Shradha Todi wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Shradha Todi <shradha.t@samsung.com>
-> > Sent: 04 December 2023 14:10
-> > To: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-> > Cc: 'lpieralisi@kernel.org' <lpieralisi@kernel.org>; 'kw@linux.com'
-> > <kw@linux.com>; 'robh@kernel.org' <robh@kernel.org>;
-> > 'bhelgaas@google.com' <bhelgaas@google.com>; 'jingoohan1@gmail.com'
-> > <jingoohan1@gmail.com>; 'gustavo.pimentel@synopsys.com'
-> > <gustavo.pimentel@synopsys.com>; 'josh@joshtriplett.org'
-> > <josh@joshtriplett.org>; 'lukas.bulwahn@gmail.com'
-> > <lukas.bulwahn@gmail.com>; 'hongxing.zhu@nxp.com'
-> > <hongxing.zhu@nxp.com>; 'pankaj.dubey@samsung.com'
-> > <pankaj.dubey@samsung.com>; 'linux-kernel@vger.kernel.org' <linux-
-> > kernel@vger.kernel.org>; 'linux-pci@vger.kernel.org' <linux-
-> > pci@vger.kernel.org>
-> > Subject: RE: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > controller
-> > 
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam [mailto:manivannan.sadhasivam@linaro.org]
-> > > Sent: 30 November 2023 22:25
-> > > To: Shradha Todi <shradha.t@samsung.com>
-> > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > bhelgaas@google.com; jingoohan1@gmail.com;
-> > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
-> > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
-> > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
-> > > pci@vger.kernel.org
-> > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > > controller
-> > >
-> > > On Thu, Nov 30, 2023 at 05:20:41PM +0530, Shradha Todi wrote:
-> > > > DesignWare controller provides a vendor specific extended capability
-> > > > called RASDES as an IP feature. This extended capability  provides
-> > > > hardware information like:
-> > > >  - Debug registers to know the state of the link or controller.
-> > > >  - Error injection mechanisms to inject various PCIe errors including
-> > > >    sequence number, CRC
-> > > >  - Statistical counters to know how many times a particular event
-> > > >    occurred
-> > > >
-> > > > However, in Linux we do not have any generic or custom support to be
-> > > > able to use this feature in an efficient manner. This is the reason
-> > > > we are proposing this framework. Debug and bring up time of
-> > > > high-speed IPs are highly dependent on costlier hardware analyzers
-> > > > and this solution will in some ways help to reduce the HW analyzer usage.
-> > > >
-> > > > The debugfs entries can be used to get information about underlying
-> > > > hardware and can be shared with user space. Separate debugfs entries
-> > > > has been created to cater to all the DES hooks provided by the controller.
-> > > > The debugfs entries interacts with the RASDES registers in the
-> > > > required sequence and provides the meaningful data to the user. This
-> > > > eases the effort to understand and use the register information for
-> > > debugging.
-> > > >
-> > > > v1 version was posted long back and for some reasons I couldn't work
-> > > > on it. I apologize for the long break. I'm restarting this activity
-> > > > and have taken care of all previous review comments shared.
-> > > > v1:
-> > > > https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung
-> > > > .c
-> > > > om/T/
-> > > >
-> > >
-> > > There is already a series floating to add similar functionality via
-> > > perf
-> > > subsystem: https://lore.kernel.org/linux-pci/20231121013400.18367-1-
-> > > xueshuai@linux.alibaba.com/
-> > >
-> > > - Mani
-> > >
-> > 
-> > Hi Mani,
-> > 
-> > The series proposed in perf includes only time based-analysis and event counters
-> > which will monitor performance (Group 6 and 7). The patch or framework that we
-> > have proposed includes debug information, error injection facility and error
-> > counters (Group 0 - 5) which are not included as part of the functionality
-> > implemented via perf. In my opinion, these functionalities don't count as
-> > performance monitoring or counters but rather as debug counters. How about
-> > we take this up as a debugfs framework as proposed in my patch?
-> > Or if others feel it can be taken via perf driver then I am happy to extend the perf
-> > driver if authors do not have objection. Let me know what you think of this?
-> > Meanwhile I will review the perf patches and share my feedback.
-> > 
-> 
-> Hello Mani,
-> Any update on the above comment? IMO, even though the perf patches and this
-> patchset are both part of the DWC vendor specific capability - RASDES,  they
-> cover different features. The perf file includes performance based parameters
-> like time-based analysis and event counters for count of packets whereas this
-> patchset includes debugging fields, error injection and event counters for count
-> of errors. I think having a separate debugfs file fits more but would you suggest
-> we extend the perf file itself? 
-> 
+On Jan 03, 2024 / 22:31, Klara Modin wrote:
+> Hi,
+>=20
+> With this patch, ata_piix fails to detect my IDE controller (older P4
+> Xeon board). Reverting this on top of 6.7-rc8 resolves the issue for
+> me.
 
-For the error injection and counters, we already have the EDAC framework. So
-adding them in the DWC driver doesn't make sense to me.
+Thanks for the report. According the dmesg and lspci logs, it looks the IDE
+controller has the PCI DEVFN 31:1 (0000:00:1f.1). So, I guess as follows:
 
-But first check with the perf driver author if they have any plans on adding the
-proposed functionality. If they do not have any plan or not working on it, then
-look into EDAC.
+- Klara's system has the old ICH (ICH4) which has IDE controller at DEVFN 3=
+1:1.
+  This DEVFN is same as P2SB device that newer PCH Series 100 or later has.
+- The system has ISA bridge 82801BA for LPC, then LPC_ICH driver is loaded.
+  This driver depends on P2SB and calls p2sb_bar(). But p2sb_bar() is calle=
+d
+  only for new features of LPC_ICH driver (SPI flash and GPIO). Then p2sb_b=
+ar()
+  is not called on the system, probably (I want to confirm it).
+- Before the commit b28ff7a7c324 ("platform/x86: p2sb: Allow p2sb_bar() cal=
+ls
+  during PCI device probe"), the DEVFN 31:1 is accessed as P2SB only when
+  p2sb_bar() is called. After the commit, if P2SB is enabled in Kconfig,
+  DEVFN 31:1 is accessed as P2SB to cache P2SB resources. However, the devi=
+ce
+  is not P2SB devcie but IDE controller, then it casued the IDE controller
+  detection failure.
 
-- Mani
+>=20
+> Please tell me if there's anything else you need. I'm willing to test
+> any new patches.
 
-> Shradha
-> 
-> > > > Shradha Todi (3):
-> > > >   PCI: dwc: Add support for vendor specific capability search
-> > > >   PCI: debugfs: Add support for RASDES framework in DWC
-> > > >   PCI: dwc: Create debugfs files in DWC driver
-> > > >
-> > > >  drivers/pci/controller/dwc/Kconfig            |   8 +
-> > > >  drivers/pci/controller/dwc/Makefile           |   1 +
-> > > >  .../controller/dwc/pcie-designware-debugfs.c  | 476
-> > > ++++++++++++++++++
-> > > >  .../controller/dwc/pcie-designware-debugfs.h  |   0
-> > > >  drivers/pci/controller/dwc/pcie-designware.c  |  20 +
-> > > > drivers/pci/controller/dwc/pcie-designware.h  |  18 +
-> > > >  6 files changed, 523 insertions(+)
-> > > >  create mode 100644
-> > > > drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> > > >  create mode 100644
-> > > > drivers/pci/controller/dwc/pcie-designware-debugfs.h
-> > > >
-> > > > --
-> > > > 2.17.1
-> > > >
-> > >
-> > > --
-> > > மணிவண்ணன் சதாசிவம்
-> 
-> 
+Could you confirm that p2sb_bar() is not called during boot process on your
+system? Applying the one liner printk patch below, let's confirm that the
+string "p2sb_bar" does not appear in the dmesg log.
 
--- 
-மணிவண்ணன் சதாசிவம்
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 99a0e456f075..e034a58d7531 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -195,6 +195,7 @@ int p2sb_bar(struct pci_bus *bus, unsigned int devfn, s=
+truct resource *mem)
+ 	struct p2sb_res_cache *cache;
+ 	int ret;
+=20
++	printk("%s\n", __func__);
+ 	bus =3D p2sb_get_bus(bus);
+ 	if (!bus)
+ 		return -ENODEV;
+
+
+If p2sb_bar() is not called on the system, I think P2SB device scan and res=
+ource
+cache shall not run on such old systems. Before the commit 53eb64c88f17
+("platform/x86: p2sb: Don't fail if unknown CPU is found"), p2sb.c had a
+whitelist of Intel CPU IDs to access P2SB device. Its commit message indica=
+tes
+that we can add blacklist of CPU IDs if needed. I think this blacklist will=
+ help
+to avoid the failure.
+
+So next question is: how to list the CPUs which do not need P2SB resource c=
+ache?
+I don't have clear answer yet. According a P2SB document [1], P2SB support =
+was
+introduced since PCH Series 100, around 2010. Looking at ICH history [2], I=
+CH9
+removed PATA support, so I guess DEVFN 31:1 for IDE controller was removed =
+since
+ICH9, around 2007. So the end of the Intel CPU blacklist could be the CPU
+introduced between 2007 and 2010.
+
+[1] https://lab.whitequark.org/notes/2017-11-08/accessing-intel-ich-pch-gpi=
+os/
+[2] https://en.wikipedia.org/wiki/I/O_Controller_Hub#ICH8
+
+My mere idea was to just blacklist Intel CPUs with family !=3D 6. If my gue=
+sses
+are all correct, following patch will avoid the failure on the reported sys=
+tem,
+since the system has CPU with family =3D=3D 0xf. This will cover certain am=
+ount of
+old CPUs which should not access DEVFN 31:1 as P2SB. But family 6 started a=
+round
+2006, then it is not the complete blacklist, probably. I will think about t=
+he
+better way.
+
+diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
+index 99a0e456f075..c9bcef8e2c4c 100644
+--- a/drivers/platform/x86/p2sb.c
++++ b/drivers/platform/x86/p2sb.c
+@@ -46,6 +46,10 @@ static int p2sb_get_devfn(unsigned int *devfn)
+ 	unsigned int fn =3D P2SB_DEVFN_DEFAULT;
+ 	const struct x86_cpu_id *id;
+=20
++	/* ICH/PCHs for old CPUs do not have P2SB */
++	if (boot_cpu_data.x86 !=3D 6)
++		return -ENODEV;
++
+ 	id =3D x86_match_cpu(p2sb_cpu_ids);
+ 	if (id)
+ 		fn =3D (unsigned int)id->driver_data;=
 
