@@ -1,104 +1,101 @@
-Return-Path: <linux-pci+bounces-1653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4194823E41
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 10:09:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0642C823EF7
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 10:55:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38FCD1F2501F
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 09:09:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84AED1F2476E
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Jan 2024 09:55:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 592FB20300;
-	Thu,  4 Jan 2024 09:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142A620B21;
+	Thu,  4 Jan 2024 09:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ae8jB8o4"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0uTSwqWG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZQDdmhGK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0uTSwqWG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZQDdmhGK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922E220B28
-	for <linux-pci@vger.kernel.org>; Thu,  4 Jan 2024 09:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704359252;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
-	b=Ae8jB8o4Nkc4MSbkakiLg/Uniiw43NqqBo0T2fYboqZ6CkicwpVTu5xU6dvj8vR+VPuZa8
-	CfJOUX/1ng8l4HPiggy3Lg9KD3Vv7s9lbbRDwt4zeNdcj8CqIEu+jSZu9w5LR+jWzUg+L1
-	Lnm7ppCP/fRNxy5385HybwpfVgNn6y0=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-LdXyORFaM9qQZbkZ6tWj-Q-1; Thu, 04 Jan 2024 04:07:30 -0500
-X-MC-Unique: LdXyORFaM9qQZbkZ6tWj-Q-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50e7de537e9so60812e87.1
-        for <linux-pci@vger.kernel.org>; Thu, 04 Jan 2024 01:07:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704359248; x=1704964048;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
-        b=rMvSI7cRTKvZWRB8GucylLhHynNLymbR7FkHw8TPKI+7sZ3IhAzD0zf+tIBllwGBR6
-         Bf6omrJ+saqpZlEsRm8w7GW3oIwliDTnhMdBGJZXdmZrCC//61trbao3f76ttHs8eWBy
-         OyvVKP0sqn40yAO4/ZeqAY/CenUI+5QiGmUUbbAmLVdVYIUBAR1Dw7S4tOIU0c175cjr
-         jVVUs4KVar2qOqsFlu1oA8z6EOue5CVz+E6AMMqo66JYykYJBojnsbUgtpjea7k9PV6N
-         EjY21mTYlvJhY4184lpFX2lovP+cRTeGLmVgd6JwuUQasOf3ASh9fvNQjcEGXs2EgEaU
-         +6Ww==
-X-Gm-Message-State: AOJu0YzYn8BViJqdWiMO6WZYyplqTzNJ9L8CDGCDCMTmyv6qMw1JO60Y
-	QYjfPNqGJj6xECl8gNsLHuctJvcioohduTY8+gsxavvzS999A+UNleMWJvRBI9sPfNPbC2usDYl
-	I4Gwaxgpd8056oKgKMS51lDLGmPOG
-X-Received: by 2002:a05:651c:2128:b0:2cc:6106:6915 with SMTP id a40-20020a05651c212800b002cc61066915mr333322ljq.1.1704359248008;
-        Thu, 04 Jan 2024 01:07:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGnMYw/9UPaH47sAKOMKUiXeBh1CKms/mGS5BjNl3Ex387RvjL0pboURedgx5y5Yj7h5q3weA==
-X-Received: by 2002:a05:651c:2128:b0:2cc:6106:6915 with SMTP id a40-20020a05651c212800b002cc61066915mr333299ljq.1.1704359247712;
-        Thu, 04 Jan 2024 01:07:27 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id h15-20020a5d430f000000b0033740e109adsm8720864wrq.75.2024.01.04.01.07.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 01:07:27 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	dakr@redhat.com
-Cc: linux-kernel@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55218208B9;
+	Thu,  4 Jan 2024 09:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3E93921E45;
+	Thu,  4 Jan 2024 09:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704362064; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IzesxlcAl0bN1e6lTNS2mKw+gXmikmCcEmTGGck0Bk4=;
+	b=0uTSwqWGukZOa1jS1HwOB7kO4VZAZuoeHvxREnZMcWyGqKi0fGOnjQMrA7YQaJ5yqVOrJS
+	4ZoGKWdU8AcWrPP+ZedWLDergRlfhOZ3y6QYoGbdcuLASkBoUwwgHd5PBVwwqhlh4OzxDk
+	zdaNfrSXtrVWRcGhxGaHtS3g5kmig38=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704362064;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IzesxlcAl0bN1e6lTNS2mKw+gXmikmCcEmTGGck0Bk4=;
+	b=ZQDdmhGK23qwGI9VuZqXiu5vJ0tDd/JDQZzyIMRvSau7ymLaeVv2++9DQxsrIJ5gPaTnUs
+	ySGJ0mCnOCjNOTDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704362064; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IzesxlcAl0bN1e6lTNS2mKw+gXmikmCcEmTGGck0Bk4=;
+	b=0uTSwqWGukZOa1jS1HwOB7kO4VZAZuoeHvxREnZMcWyGqKi0fGOnjQMrA7YQaJ5yqVOrJS
+	4ZoGKWdU8AcWrPP+ZedWLDergRlfhOZ3y6QYoGbdcuLASkBoUwwgHd5PBVwwqhlh4OzxDk
+	zdaNfrSXtrVWRcGhxGaHtS3g5kmig38=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704362064;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=IzesxlcAl0bN1e6lTNS2mKw+gXmikmCcEmTGGck0Bk4=;
+	b=ZQDdmhGK23qwGI9VuZqXiu5vJ0tDd/JDQZzyIMRvSau7ymLaeVv2++9DQxsrIJ5gPaTnUs
+	ySGJ0mCnOCjNOTDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 94A9D137E8;
+	Thu,  4 Jan 2024 09:54:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id DELlIk+AlmXPZwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 04 Jan 2024 09:54:23 +0000
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: ardb@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	bhelgaas@google.com,
+	arnd@arndb.de,
+	zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com,
+	paul@paul-moore.com,
+	jmorris@namei.org,
+	serge@hallyn.com,
+	javierm@redhat.com
+Cc: linux-arch@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	stable@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>
-Subject: [PATCH v5 5/5] lib, pci: unify generic pci_iounmap()
-Date: Thu,  4 Jan 2024 10:07:09 +0100
-Message-ID: <20240104090708.10571-7-pstanner@redhat.com>
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v3 0/4] arch/x86: Remove unnecessary dependencies on bootparam.h
+Date: Thu,  4 Jan 2024 10:51:18 +0100
+Message-ID: <20240104095421.12772-1-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104090708.10571-2-pstanner@redhat.com>
-References: <20240104090708.10571-2-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -106,226 +103,128 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 3.19
+X-Spamd-Bar: +++
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [3.19 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 TO_DN_SOME(0.00)[];
+	 R_MISSING_CHARSET(2.50)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLfgmttzabnpkr34rizty4fwu5)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 FREEMAIL_TO(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,linux.ibm.com,gmail.com,paul-moore.com,namei.org,hallyn.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[22];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0uTSwqWG;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZQDdmhGK
+X-Spam-Level: ***
+X-Rspamd-Queue-Id: 3E93921E45
 
-The implementation of pci_iounmap() is currently scattered over two
-files, drivers/pci/iomap.c and lib/iomap.c. Additionally,
-architectures can define their own version.
+Reduce built time in some cases by removing unnecessary include statements
+for <asm/bootparam.h>. Reorganize some header files accordingly.
 
-To have only one version, it's necessary to create a helper function,
-iomem_is_ioport(), that tells pci_iounmap() whether the passed address
-points to an ioport or normal memory.
+While working on the kernel's boot-up graphics, I noticed that touching
+include/linux/screen_info.h triggers a complete rebuild of the kernel
+on x86. It turns out that the architecture's PCI and EFI headers include
+<asm/bootparam.h>, which depends on <linux/screen_info.h>. But none of
+the drivers have any business with boot parameters or the screen_info
+state.
 
-iomem_is_ioport() can be provided through two different ways:
-  1. The architecture itself provides it. As of today, the version
-     coming from lib/iomap.c de facto is the x86-specific version and
-     comes into play when CONFIG_GENERIC_IOMAP is selected. This rather
-     confusing naming is an artifact left by the removal of IA64.
-  2. As a default version in include/asm-generic/io.h for those
-     architectures that don't use CONFIG_GENERIC_IOMAP, but also don't
-     provide their own version of iomem_is_ioport().
+The patchset moves code from bootparam.h and efi.h into separate header
+files and removes obsolete include statements on x86. I did
 
-Once all architectures that support ports provide iomem_is_ioport(), the
-arch-specific definitions for pci_iounmap() can be removed and the archs
-can use the generic implementation, instead.
+  make allmodconfig
+  make -j28
+  touch include/linux/screen_info.h
+  time make -j28
 
-Create a unified version of pci_iounmap() in drivers/pci/iomap.c.
-Provide the function iomem_is_ioport() in include/asm-generic/io.h
-(generic) and lib/iomap.c ("pseudo-generic" for x86).
+to measure the time it takes to rebuild. Results without the patchset
+are around 20 minutes.
 
-Remove the CONFIG_GENERIC_IOMAP guard around
-ARCH_WANTS_GENERIC_PCI_IOUNMAP so that configs that set
-CONFIG_GENERIC_PCI_IOMAP without CONFIG_GENERIC_IOMAP still get the
-function.
+  real    20m46,705s
+  user    354m29,166s
+  sys     28m27,359s
 
-Add TODOs for follow-up work on the "generic is not generic but
-x86-specific"-Problem.
+And with the patchset applied it goes down to less than one minute.
 
-Suggested-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pci/iomap.c         | 46 +++++++++++++------------------------
- include/asm-generic/io.h    | 27 ++++++++++++++++++++--
- include/asm-generic/iomap.h | 21 +++++++++++++++++
- lib/iomap.c                 | 28 ++++++++++++++++------
- 4 files changed, 83 insertions(+), 39 deletions(-)
+  real    0m56,643s
+  user    4m0,661s
+  sys     0m32,956s
 
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index 91285fcff1ba..b7faf22ec8f5 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -135,44 +135,30 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- EXPORT_SYMBOL_GPL(pci_iomap_wc);
- 
- /*
-- * pci_iounmap() somewhat illogically comes from lib/iomap.c for the
-- * CONFIG_GENERIC_IOMAP case, because that's the code that knows about
-- * the different IOMAP ranges.
-+ * This check is still necessary due to legacy reasons.
-  *
-- * But if the architecture does not use the generic iomap code, and if
-- * it has _not_ defined it's own private pci_iounmap function, we define
-- * it here.
-- *
-- * NOTE! This default implementation assumes that if the architecture
-- * support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
-- * be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
-- * and does not need unmapping with 'ioport_unmap()'.
-- *
-- * If you have different rules for your architecture, you need to
-- * implement your own pci_iounmap() that knows the rules for where
-- * and how IO vs MEM get mapped.
-- *
-- * This code is odd, and the ARCH_HAS/ARCH_WANTS #define logic comes
-- * from legacy <asm-generic/io.h> header file behavior. In particular,
-- * it would seem to make sense to do the iounmap(p) for the non-IO-space
-- * case here regardless, but that's not what the old header file code
-- * did. Probably incorrectly, but this is meant to be bug-for-bug
-- * compatible.
-+ * TODO: Have all architectures that provide their own pci_iounmap() provide
-+ * iomem_is_ioport() instead. Remove this #if afterwards.
-  */
- #if defined(ARCH_WANTS_GENERIC_PCI_IOUNMAP)
- 
--void pci_iounmap(struct pci_dev *dev, void __iomem *p)
-+/**
-+ * pci_iounmap - Unmapp a mapping
-+ * @dev: PCI device the mapping belongs to
-+ * @addr: start address of the mapping
-+ *
-+ * Unmapp a PIO or MMIO mapping.
-+ */
-+void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
- {
--#ifdef ARCH_HAS_GENERIC_IOPORT_MAP
--	uintptr_t start = (uintptr_t) PCI_IOBASE;
--	uintptr_t addr = (uintptr_t) p;
--
--	if (addr >= start && addr < start + IO_SPACE_LIMIT) {
--		ioport_unmap(p);
-+#ifdef CONFIG_HAS_IOPORT_MAP
-+	if (iomem_is_ioport(addr)) {
-+		ioport_unmap(addr);
- 		return;
- 	}
- #endif
--	iounmap(p);
-+
-+	iounmap(addr);
- }
- EXPORT_SYMBOL(pci_iounmap);
- 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index bac63e874c7b..58c7bf4080da 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -1129,11 +1129,34 @@ extern void ioport_unmap(void __iomem *p);
- #endif /* CONFIG_GENERIC_IOMAP */
- #endif /* CONFIG_HAS_IOPORT_MAP */
- 
--#ifndef CONFIG_GENERIC_IOMAP
-+/*
-+ * TODO:
-+ * remove this once all architectures replaced their pci_iounmap() with
-+ * a custom implementation of iomem_is_ioport().
-+ */
- #ifndef pci_iounmap
-+#define pci_iounmap pci_iounmap
- #define ARCH_WANTS_GENERIC_PCI_IOUNMAP
-+#endif /* pci_iounmap */
-+
-+/*
-+ * This function is a helper only needed for the generic pci_iounmap().
-+ * It's provided here if the architecture does not provide its own version.
-+ */
-+#ifndef iomem_is_ioport
-+#define iomem_is_ioport iomem_is_ioport
-+static inline bool iomem_is_ioport(void __iomem *addr_raw)
-+{
-+#ifdef CONFIG_HAS_IOPORT
-+	uintptr_t start = (uintptr_t)PCI_IOBASE;
-+	uintptr_t addr = (uintptr_t)addr_raw;
-+
-+	if (addr >= start && addr < start + IO_SPACE_LIMIT)
-+		return true;
- #endif
--#endif
-+	return false;
-+}
-+#endif /* iomem_is_ioport */
- 
- #ifndef xlate_dev_mem_ptr
- #define xlate_dev_mem_ptr xlate_dev_mem_ptr
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 196087a8126e..2cdc6988a102 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -110,6 +110,27 @@ static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
- }
- #endif
- 
-+/*
-+ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
-+ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
-+ * version from asm-generic/io.h is NOT used and instead the second "generic"
-+ * version from lib/iomap.c is used.
-+ *
-+ * There are currently two generic versions because of a difficult cleanup
-+ * process. Namely, the version in lib/iomap.c once was really generic when IA64
-+ * still existed. Today, it's only really used by x86.
-+ *
-+ * TODO: Move the version from lib/iomap.c to x86 specific code. Then, remove
-+ * this ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT-mechanism.
-+ */
-+#ifdef CONFIG_GENERIC_IOMAP
-+#ifndef iomem_is_ioport
-+#define iomem_is_ioport iomem_is_ioport
-+bool iomem_is_ioport(void __iomem *addr);
-+#define ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT
-+#endif /* iomem_is_ioport */
-+#endif /* CONFIG_GENERIC_IOMAP */
-+
- #include <asm-generic/pci_iomap.h>
- 
- #endif
-diff --git a/lib/iomap.c b/lib/iomap.c
-index 4f8b31baa575..eb9a879ebf42 100644
---- a/lib/iomap.c
-+++ b/lib/iomap.c
-@@ -418,12 +418,26 @@ EXPORT_SYMBOL(ioport_map);
- EXPORT_SYMBOL(ioport_unmap);
- #endif /* CONFIG_HAS_IOPORT_MAP */
- 
--#ifdef CONFIG_PCI
--/* Hide the details if this is a MMIO or PIO address space and just do what
-- * you expect in the correct way. */
--void pci_iounmap(struct pci_dev *dev, void __iomem * addr)
-+/*
-+ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
-+ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
-+ * version from asm-generic/io.h is NOT used and instead the second "generic"
-+ * version from this file here is used.
-+ *
-+ * There are currently two generic versions because of a difficult cleanup
-+ * process. Namely, the version in lib/iomap.c once was really generic when IA64
-+ * still existed. Today, it's only really used by x86.
-+ *
-+ * TODO: Move this function to x86-specific code.
-+ */
-+#if defined(ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT)
-+bool iomem_is_ioport(void __iomem *addr)
- {
--	IO_COND(addr, /* nothing */, iounmap(addr));
-+	unsigned long port = (unsigned long __force)addr;
-+
-+	if (port > PIO_OFFSET && port < PIO_RESERVED)
-+		return true;
-+
-+	return false;
- }
--EXPORT_SYMBOL(pci_iounmap);
--#endif /* CONFIG_PCI */
-+#endif /* ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT */
+The test system is an Intel i5-13500.
+
+v3:
+	* keep setup_header in bootparam.h (Ard)
+	* implement arch_ima_efi_boot_mode() in source file (Ard)
+v2:
+	* only keep struct boot_params in bootparam.h (Ard)
+	* simplify arch_ima_efi_boot_mode define (Ard)
+	* updated cover letter
+
+Thomas Zimmermann (4):
+  arch/x86: Move UAPI setup structures into setup_data.h
+  arch/x86: Move internal setup_data structures into setup_data.h
+  arch/x86: Implement arch_ima_efi_boot_mode() in source file
+  arch/x86: Do not include <asm/bootparam.h> in several files
+
+ arch/x86/boot/compressed/acpi.c        |  2 +
+ arch/x86/boot/compressed/cmdline.c     |  2 +
+ arch/x86/boot/compressed/efi.c         |  2 +
+ arch/x86/boot/compressed/efi.h         |  9 ---
+ arch/x86/boot/compressed/misc.h        |  3 +-
+ arch/x86/boot/compressed/pgtable_64.c  |  1 +
+ arch/x86/boot/compressed/sev.c         |  1 +
+ arch/x86/include/asm/efi.h             | 14 +----
+ arch/x86/include/asm/kexec.h           |  1 -
+ arch/x86/include/asm/mem_encrypt.h     |  2 +-
+ arch/x86/include/asm/pci.h             | 13 ----
+ arch/x86/include/asm/setup_data.h      | 32 ++++++++++
+ arch/x86/include/asm/sev.h             |  3 +-
+ arch/x86/include/asm/x86_init.h        |  2 -
+ arch/x86/include/uapi/asm/bootparam.h  | 72 +---------------------
+ arch/x86/include/uapi/asm/setup_data.h | 83 ++++++++++++++++++++++++++
+ arch/x86/kernel/crash.c                |  1 +
+ arch/x86/kernel/sev-shared.c           |  2 +
+ arch/x86/platform/efi/efi.c            |  5 ++
+ arch/x86/platform/pvh/enlighten.c      |  1 +
+ arch/x86/xen/enlighten_pvh.c           |  1 +
+ arch/x86/xen/vga.c                     |  1 -
+ 22 files changed, 142 insertions(+), 111 deletions(-)
+ create mode 100644 arch/x86/include/asm/setup_data.h
+ create mode 100644 arch/x86/include/uapi/asm/setup_data.h
+
+
+base-commit: 25232eb8a9ac7fa0dac7e846a4bf7fba2b6db39a
+prerequisite-patch-id: 0aa359f6144c4015c140c8a6750be19099c676fb
+prerequisite-patch-id: c67e5d886a47b7d0266d81100837557fda34cb24
+prerequisite-patch-id: cbc453ee02fae02af22fbfdce56ab732c7a88c36
+prerequisite-patch-id: e7a5405fb48608e0c8e3b41bf983fefa2c8bd1f3
+prerequisite-patch-id: f12b8b5465e519f8588e3743e70166be3294009b
+prerequisite-patch-id: c3de42afb37f6240a840f8b12504262d4483873c
+prerequisite-patch-id: 5f31d981a18037906b0e422c0a1031e7dff91a2d
+prerequisite-patch-id: 2345c90842ae2a9117d21b9bd205fe3b89e89c20
 -- 
 2.43.0
 
