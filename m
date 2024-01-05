@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-1711-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1712-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 403AF8252CA
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jan 2024 12:27:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1B038252CD
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jan 2024 12:27:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF00F28615F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jan 2024 11:27:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0DC101C22FD9
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Jan 2024 11:27:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88C1A28E2D;
-	Fri,  5 Jan 2024 11:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A742C28E3B;
+	Fri,  5 Jan 2024 11:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1Edk1rR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3KTqhxj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9F72D035;
-	Fri,  5 Jan 2024 11:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3197128E3F;
+	Fri,  5 Jan 2024 11:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704454002; x=1735990002;
+  t=1704454016; x=1735990016;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nDVupTEiteyopEd8zWRHCGA5BVo9wD2+mWl2dTWBRrI=;
-  b=g1Edk1rRWkuXXQm5XlWM2Q4X+5LpOJpKvHKsaTiFmEFMzTzvRhW9CU33
-   ML+qJrBgLR19QPOSl8LLhHkARdAEwQQ3m0wEJn647/eYaoleTF2Q3Etzm
-   BrnCs1nZjEfFXYSxld6mtC1ppdROyZIUxIyaPZEFe3cvehLVUryhaTYhm
-   DRs69tU7CK3B1RtzkhSNacinnK7htAxFGAhcyzwB19QKvZA8NmbbiUJwb
-   qwZB1du4StJyjm1u2FyD3CZgUcW0YcVhMSyUVgR8U2h9Xr1EO8JiJ7yjM
-   9498QDnIAVFtJS39lKjyMQ+nvKrqQe8ValnWpcP1fQo1V8yE94/5BS6ZM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="10858441"
+  bh=2mz6UXD8CKZpj6xVnd1sdog26enPJbDhqYo4qIbUESI=;
+  b=A3KTqhxjo2+2tda5wtl+DNRBvpMb8h7jzvy43R9242BOgv2cKlgtA26p
+   ag6J0XTTQxlxpXdn7h39GQb1hU3kVWWa6TnYfGcBg+oAOj/nrHitZXS4M
+   hC7BN3hcVRuK7DQUnnxODs5t/WlJgTulfep6yGoHUreGAzJP/vVYWlTT/
+   LLRUuReFz8ntL2UDnrPanycqgF9ycvJFoqNKRG30vPSzPAgNL+E3AN97X
+   mbhtFcT6/aMOW9EFhway0uyqviNIWun38DS3ztN87Ts2EeP6XWi1DKhiE
+   XhPvD3r+wHWIEEU1IN0S6IN5kf8X58vQUX6M10KM8BKX2jn9iTVG2VtM6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="397208915"
 X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="10858441"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 03:26:41 -0800
+   d="scan'208";a="397208915"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 03:26:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="773827832"
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="851118164"
 X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="773827832"
+   d="scan'208";a="851118164"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.38])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 03:26:33 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 03:26:47 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
@@ -58,22 +58,20 @@ To: linux-pci@vger.kernel.org,
 	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-pm@vger.kernel.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Alex Deucher <alexdeucher@gmail.com>,
 	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Amit Kucheria <amitk@kernel.org>,
 	Zhang Rui <rui.zhang@intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v4 3/8] drm/amdgpu: Use RMW accessors for changing LNKCTL2
-Date: Fri,  5 Jan 2024 13:25:42 +0200
-Message-Id: <20240105112547.7301-4-ilpo.jarvinen@linux.intel.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Dean Luick <dean.luick@cornelisnetworks.com>
+Subject: [PATCH v4 4/8] RDMA/hfi1: Use RMW accessors for changing LNKCTL2
+Date: Fri,  5 Jan 2024 13:25:43 +0200
+Message-Id: <20240105112547.7301-5-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240105112547.7301-1-ilpo.jarvinen@linux.intel.com>
 References: <20240105112547.7301-1-ilpo.jarvinen@linux.intel.com>
@@ -96,141 +94,61 @@ a cleanup.
 
 Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Dean Luick <dean.luick@cornelisnetworks.com>
 ---
- drivers/gpu/drm/amd/amdgpu/cik.c | 41 ++++++++++++--------------------
- drivers/gpu/drm/amd/amdgpu/si.c  | 41 ++++++++++++--------------------
- 2 files changed, 30 insertions(+), 52 deletions(-)
+ drivers/infiniband/hw/hfi1/pcie.c | 30 ++++++++----------------------
+ 1 file changed, 8 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-index 4dfaa017cf7f..a3a643254d7a 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-@@ -1638,28 +1638,18 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
- 								   PCI_EXP_LNKCTL_HAWD);
+diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
+index 119ec2f1382b..7133964749f8 100644
+--- a/drivers/infiniband/hw/hfi1/pcie.c
++++ b/drivers/infiniband/hw/hfi1/pcie.c
+@@ -1207,14 +1207,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
+ 		    (u32)lnkctl2);
+ 	/* only write to parent if target is not as high as ours */
+ 	if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) < target_vector) {
+-		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+-		lnkctl2 |= target_vector;
+-		dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
+-			    (u32)lnkctl2);
+-		ret = pcie_capability_write_word(parent,
+-						 PCI_EXP_LNKCTL2, lnkctl2);
++		ret = pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
++							 PCI_EXP_LNKCTL2_TLS,
++							 target_vector);
+ 		if (ret) {
+-			dd_dev_err(dd, "Unable to write to PCI config\n");
++			dd_dev_err(dd, "Unable to change parent PCI target speed\n");
+ 			return_error = 1;
+ 			goto done;
+ 		}
+@@ -1223,22 +1220,11 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
+ 	}
  
- 				/* linkctl2 */
--				pcie_capability_read_word(root, PCI_EXP_LNKCTL2,
--							  &tmp16);
--				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN);
--				tmp16 |= (bridge_cfg2 &
--					  (PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN));
--				pcie_capability_write_word(root,
--							   PCI_EXP_LNKCTL2,
--							   tmp16);
+ 	dd_dev_info(dd, "%s: setting target link speed\n", __func__);
+-	ret = pcie_capability_read_word(dd->pcidev, PCI_EXP_LNKCTL2, &lnkctl2);
++	ret = pcie_capability_clear_and_set_word(dd->pcidev, PCI_EXP_LNKCTL2,
++						 PCI_EXP_LNKCTL2_TLS,
++						 target_vector);
+ 	if (ret) {
+-		dd_dev_err(dd, "Unable to read from PCI config\n");
+-		return_error = 1;
+-		goto done;
+-	}
 -
--				pcie_capability_read_word(adev->pdev,
--							  PCI_EXP_LNKCTL2,
--							  &tmp16);
--				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN);
--				tmp16 |= (gpu_cfg2 &
--					  (PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN));
--				pcie_capability_write_word(adev->pdev,
--							   PCI_EXP_LNKCTL2,
--							   tmp16);
-+				pcie_capability_clear_and_set_word(root, PCI_EXP_LNKCTL2,
-+								   PCI_EXP_LNKCTL2_ENTER_COMP |
-+								   PCI_EXP_LNKCTL2_TX_MARGIN,
-+								   bridge_cfg2 &
-+								   (PCI_EXP_LNKCTL2_ENTER_COMP |
-+								    PCI_EXP_LNKCTL2_TX_MARGIN));
-+				pcie_capability_clear_and_set_word(adev->pdev, PCI_EXP_LNKCTL2,
-+								   PCI_EXP_LNKCTL2_ENTER_COMP |
-+								   PCI_EXP_LNKCTL2_TX_MARGIN,
-+								   gpu_cfg2 &
-+								   (PCI_EXP_LNKCTL2_ENTER_COMP |
-+								    PCI_EXP_LNKCTL2_TX_MARGIN));
- 
- 				tmp = RREG32_PCIE(ixPCIE_LC_CNTL4);
- 				tmp &= ~PCIE_LC_CNTL4__LC_SET_QUIESCE_MASK;
-@@ -1674,16 +1664,15 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
- 	speed_cntl &= ~PCIE_LC_SPEED_CNTL__LC_FORCE_DIS_SW_SPEED_CHANGE_MASK;
- 	WREG32_PCIE(ixPCIE_LC_SPEED_CNTL, speed_cntl);
- 
--	pcie_capability_read_word(adev->pdev, PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
--
-+	tmp16 = 0;
- 	if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)
- 		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2)
- 		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
- 		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
--	pcie_capability_write_word(adev->pdev, PCI_EXP_LNKCTL2, tmp16);
-+	pcie_capability_clear_and_set_word(adev->pdev, PCI_EXP_LNKCTL2,
-+					   PCI_EXP_LNKCTL2_TLS, tmp16);
- 
- 	speed_cntl = RREG32_PCIE(ixPCIE_LC_SPEED_CNTL);
- 	speed_cntl |= PCIE_LC_SPEED_CNTL__LC_INITIATE_LINK_SPEED_CHANGE_MASK;
-diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
-index a757526153e5..23e4ef4fff7c 100644
---- a/drivers/gpu/drm/amd/amdgpu/si.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si.c
-@@ -2331,28 +2331,18 @@ static void si_pcie_gen3_enable(struct amdgpu_device *adev)
- 								   gpu_cfg &
- 								   PCI_EXP_LNKCTL_HAWD);
- 
--				pcie_capability_read_word(root, PCI_EXP_LNKCTL2,
--							  &tmp16);
--				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN);
--				tmp16 |= (bridge_cfg2 &
--					  (PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN));
--				pcie_capability_write_word(root,
--							   PCI_EXP_LNKCTL2,
--							   tmp16);
--
--				pcie_capability_read_word(adev->pdev,
--							  PCI_EXP_LNKCTL2,
--							  &tmp16);
--				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN);
--				tmp16 |= (gpu_cfg2 &
--					  (PCI_EXP_LNKCTL2_ENTER_COMP |
--					   PCI_EXP_LNKCTL2_TX_MARGIN));
--				pcie_capability_write_word(adev->pdev,
--							   PCI_EXP_LNKCTL2,
--							   tmp16);
-+				pcie_capability_clear_and_set_word(root, PCI_EXP_LNKCTL2,
-+								   PCI_EXP_LNKCTL2_ENTER_COMP |
-+								   PCI_EXP_LNKCTL2_TX_MARGIN,
-+								   bridge_cfg2 &
-+								   (PCI_EXP_LNKCTL2_ENTER_COMP |
-+								    PCI_EXP_LNKCTL2_TX_MARGIN));
-+				pcie_capability_clear_and_set_word(adev->pdev, PCI_EXP_LNKCTL2,
-+								   PCI_EXP_LNKCTL2_ENTER_COMP |
-+								   PCI_EXP_LNKCTL2_TX_MARGIN,
-+								   gpu_cfg2 &
-+								   (PCI_EXP_LNKCTL2_ENTER_COMP |
-+								    PCI_EXP_LNKCTL2_TX_MARGIN));
- 
- 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
- 				tmp &= ~LC_SET_QUIESCE;
-@@ -2365,16 +2355,15 @@ static void si_pcie_gen3_enable(struct amdgpu_device *adev)
- 	speed_cntl &= ~LC_FORCE_DIS_SW_SPEED_CHANGE;
- 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
- 
--	pcie_capability_read_word(adev->pdev, PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
--
-+	tmp16 = 0;
- 	if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)
- 		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2)
- 		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
- 		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
--	pcie_capability_write_word(adev->pdev, PCI_EXP_LNKCTL2, tmp16);
-+	pcie_capability_clear_and_set_word(adev->pdev, PCI_EXP_LNKCTL2,
-+					   PCI_EXP_LNKCTL2_TLS, tmp16);
- 
- 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
- 	speed_cntl |= LC_INITIATE_LINK_SPEED_CHANGE;
+-	dd_dev_info(dd, "%s: ..old link control2: 0x%x\n", __func__,
+-		    (u32)lnkctl2);
+-	lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+-	lnkctl2 |= target_vector;
+-	dd_dev_info(dd, "%s: ..new link control2: 0x%x\n", __func__,
+-		    (u32)lnkctl2);
+-	ret = pcie_capability_write_word(dd->pcidev, PCI_EXP_LNKCTL2, lnkctl2);
+-	if (ret) {
+-		dd_dev_err(dd, "Unable to write to PCI config\n");
++		dd_dev_err(dd, "Unable to change device PCI target speed\n");
+ 		return_error = 1;
+ 		goto done;
+ 	}
 -- 
 2.39.2
 
