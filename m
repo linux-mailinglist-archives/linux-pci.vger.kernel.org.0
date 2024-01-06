@@ -1,59 +1,61 @@
-Return-Path: <linux-pci+bounces-1727-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1728-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E92C5825E3F
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 06:02:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6847825E43
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 06:03:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04CB91C2286C
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 05:02:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A7DD284260
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 05:03:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37E3B17E1;
-	Sat,  6 Jan 2024 05:02:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E7515A8;
+	Sat,  6 Jan 2024 05:03:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C249E611F;
-	Sat,  6 Jan 2024 05:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBC91FAA
+	for <linux-pci@vger.kernel.org>; Sat,  6 Jan 2024 05:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6dc20b4595bso198617a34.0;
-        Fri, 05 Jan 2024 21:02:51 -0800 (PST)
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7b7fdde8b54so11264939f.1
+        for <linux-pci@vger.kernel.org>; Fri, 05 Jan 2024 21:03:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704517371; x=1705122171;
+        d=1e100.net; s=20230601; t=1704517430; x=1705122230;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cK8r7/aM3L9XGWvRGZnPsTvaAInBVrLl4heKm8vHNzI=;
-        b=YS0puHaFODOKXkObKOiStsMLaw57hNaLQZ0xw8zI3bruD0ap1YkD34FRGKS5MD2esZ
-         rU9yZEvXZxsbqGcgdAilSGr+69T/GVi+uDcEykLFKza29M/s28IZx1lsVmehUPBM/tTs
-         gj1A8L/cKXBj/NnD4kavAOeZUrnt+XuVhT1C7SIgAi93h+qL8LNGr9OU11bVT5UC1C1k
-         wXOxS2boDfWrituJuVI3hCvPwaXMEbdJvbJDDnSPj9EKGc/HdqXB21CsBjAQO37ZkQDN
-         tETNKjXE8pxLKDWnkT2etcYIcQwg8caHRN2FvNEPCppOpmSWXATUzBvy+7O7Vpo8foYR
-         Sc1g==
-X-Gm-Message-State: AOJu0Yw1xdtcyRXT8RhCqLMT3i6BoyCjKwkFhjAezLJYiEnA061ZN2wd
-	0VtLdbaZr5iNtS6AlXaIvSk=
-X-Google-Smtp-Source: AGHT+IGh4zH5m14dFcFkW/DJT9SQlTB83E+Xq0ErohPZJ1em1dUH8frKAoF1I8TghwO6vOchOVVyRw==
-X-Received: by 2002:a05:6359:7302:b0:175:78d3:1b44 with SMTP id ux2-20020a056359730200b0017578d31b44mr402339rwb.46.1704517370687;
-        Fri, 05 Jan 2024 21:02:50 -0800 (PST)
+        bh=8KdBULEAMakZFG/ZFdoGEm3uHxazCJ1vKCP8DxwNjQM=;
+        b=POum1q3uDNkz0t5UW0LC/0B7+BvPOYyNlWIMj2kpT3ia4t1HXdpVslpc4957JdN69M
+         c5vZPeqgxe1IJ1WqhR3ZqbI+ruqYfoicE5bP+w/U+8+IObLlMWvJjcGcB0VUWJGUxirD
+         pCAwA58DRde540yCB4ijbFlfwDftOSwKZHe7Y276bptS/QalTwzF+Sny4TvUtNrZNUfK
+         Y8Pqsy2L0a4i28J/DTkP/OZcEZ//avsyvqNNwAV0/XDiI85KkbNHJ31QnMnNYcy7akw/
+         Goo1x4sgfcvBrJKrKWlPyPJLEo/6tJ6KVf5+3Rwe2NCEMP6T2aHH/klhiSgrayed9WNP
+         VDhw==
+X-Gm-Message-State: AOJu0YyxN1NtUYRStVg0bQi1KSO5rtMKkRjJCPG/eAq1MWWtjsmP4qio
+	jF7bWPwKerMbXXqzuhCZd3s=
+X-Google-Smtp-Source: AGHT+IGQrq8IInb7oJHfadJzynuQfVBluI8XpfNPiYgz+hWf4TehAKMsnGub2hYSEEVRjn2DMTw3NA==
+X-Received: by 2002:a05:6e02:1489:b0:360:8033:e948 with SMTP id n9-20020a056e02148900b003608033e948mr378552ilk.10.1704517430009;
+        Fri, 05 Jan 2024 21:03:50 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id z21-20020a17090ab11500b0028d19ddb1afsm1089597pjq.33.2024.01.05.21.02.49
+        by smtp.gmail.com with ESMTPSA id 20-20020a170902e9d400b001d3f056bd65sm2208985plk.191.2024.01.05.21.03.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 21:02:49 -0800 (PST)
-Date: Sat, 6 Jan 2024 14:02:47 +0900
+        Fri, 05 Jan 2024 21:03:49 -0800 (PST)
+Date: Sat, 6 Jan 2024 14:03:48 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Peter Robinson <pbrobinson@gmail.com>
-Cc: Tom Joseph <tjoseph@cadence.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: cadence: Make TI J721E depend on ARCH_K3
-Message-ID: <20240106050247.GA1227754@rocinante>
-References: <20240104213910.1426843-1-pbrobinson@gmail.com>
+To: Niklas Cassel <nks@flawful.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Niklas Cassel <niklas.cassel@wdc.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] misc: pci_endpoint_test: Use a unique test pattern for
+ each BAR
+Message-ID: <20240106050348.GB1227754@rocinante>
+References: <20231215105952.1531683-1-nks@flawful.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,18 +64,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240104213910.1426843-1-pbrobinson@gmail.com>
+In-Reply-To: <20231215105952.1531683-1-nks@flawful.org>
 
 Hello,
 
-> The J721E PCIe is hardware specific to TI SoC parts so add a dependency
-> on that so it's available for those SoC parts and for compile testing but
-> not necessarily everyone who enables the Cadence PCIe controller.
+> Use a unique test pattern for each BAR in. This makes it easier to
+> detect/debug address translation issues, since a developer can dump
+> the backing memory on the EP side, using e.g. devmem, to verify that
+> the address translation for each BAR is actually correct.
 
-Applied to controller/cadence, thank you!
+Applied to misc, thank you!
 
-[1/1] PCI: j721e: Make TI J721E depend on ARCH_K3
-      https://git.kernel.org/pci/pci/c/177c9ac6ab3f
+[1/1] misc: pci_endpoint_test: Use a unique test pattern for each BAR
+      https://git.kernel.org/pci/pci/c/516f366434e1
 
 	Krzysztof
 
