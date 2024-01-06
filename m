@@ -1,118 +1,227 @@
-Return-Path: <linux-pci+bounces-1722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93FF3825907
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jan 2024 18:28:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46B05825D88
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 02:03:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3CEB1C22227
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Jan 2024 17:28:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69FD9B21213
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 01:03:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AED231759;
-	Fri,  5 Jan 2024 17:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EA59EDB;
+	Sat,  6 Jan 2024 01:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DKU9Mesv"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EpCFQRm9";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="v8QKoP6D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6043219F
-	for <linux-pci@vger.kernel.org>; Fri,  5 Jan 2024 17:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6d9bee259c5so1203086b3a.1
-        for <linux-pci@vger.kernel.org>; Fri, 05 Jan 2024 09:28:50 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07701FB9;
+	Sat,  6 Jan 2024 01:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1704502996; x=1736038996;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=fDdtoQKvMNPYKykCrW2L6REEg3qK6FvddlT+BPfUovc=;
+  b=EpCFQRm9w1bVTdfaUvoEuOMacTXluEv+OVVYY7OV61hIujEpY7JfKF8z
+   4AuyhXq1ljnPMCMWEy87ssTqUwqDFBNkAz08Lby9HAzA+VDHN8OHKKjun
+   lJJseVhDOqCb1dyKwKYfG4CwKRnjMAQT10+aGcOsR/z3A06OG+TyzOt6t
+   R6B6rImSjGGXOMQHHsc8N2YW9NR3dT0UW977UivVWjCk6MQ7eqUwmxBym
+   AJmFrm29u49zIwtNAaAkvYbmIPqfFaKKlujdzQtJ70Mill6rErNl83OK2
+   VyLRx4S+4BQ+0Xi31j/X+C5M1XK8gx2c2UKnvGvz9KFWy6WaHGyR7De+H
+   g==;
+X-CSE-ConnectionGUID: NbB/2YQLT1SAasL2Q4JDAg==
+X-CSE-MsgGUID: pAmTp8k+Rmq0rfm1j5y70w==
+X-IronPort-AV: E=Sophos;i="6.04,335,1695657600"; 
+   d="scan'208";a="6493590"
+Received: from mail-dm6nam11lp2168.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.168])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Jan 2024 09:03:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EjE7kizAlKnm6La2HmiYJdXACRZW+t7k+tYqoo6UjKBq3tYTNGrUZ+LMYFf3ERAbvlCvUEnJ4pRH358wP+Z+Mxk6XaTqYtgPrDGyXwsLSRZ37LmnvmFWhlNsm4lUbk2i12j5UrsRp8YAKgXIepSxSP0PV5o6vr2Gc+JKdpGGX60g9Z86onwH8N7WgYlpALYiFc2LoQRsmXm8sOa+xc1RbAkky2k8HMRT0xqvJ0N1txg01EPFqDrOx9mTJgrK1b6goPNmauSuhE0f5EVsz8c4wUZYz5GBHWBmhEr6VqpnInBkmPPv+0smOH7TlzZK+wHqKXmbQ9RxmWlwn9lzJzPOWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pn2iU7dYWMfsfoYwYOvQ7lLltE4IKK3tQI8SnypF65I=;
+ b=hd19D+KCPfWM8s83Z4oECxhfLELRWNKKbzzSGXLza+qMrScf75ci7+oL3iDUu5jDisYE19vYHONoDqJt8PhGU1bTsUqSSbwVlwd7Gl6cLxBmVddOdMBDvrDupxMus5a0I+GjxZdGNPy8GVPoiiPt6w8vB5j9NkwgB7QQA8zVARuqtEZWSzHxfiDjq8UF0Cl8Tpv6gVyTK5z621lBEMHz4BR+ADqK4zYnokNtX2XC5LCxA8cuClru8JE/d13xByw21+nMw2LNQFz6j2f0rKxGypexpL9/gDce5psfZoQuNibpNfpNzdphw8ghLqH5GHzbu9Ew0GDk/hV3H3w4qvzG4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704475729; x=1705080529; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MvMmIGG1OTvVGECDwkCBOvxHZpT09eejRG7w2yah/U=;
-        b=DKU9MesvWUkllpmmd9HKqy+pBHXz2rmu50KCSN6VFS/KHFXS/z6LFRzKwI9aSNiSfU
-         /T9dzElDk2owcXjMnlRFEuM5+ywubGSlSn0h+wsyVUHlPC3FnL2JwJIsJqScojx/TYck
-         qoTEHMkHc1FbHqU80V+vcnMfDNb5VSEi0KCOVpXsR1NXvVLZHBWswAg1yDVgDMPN68F7
-         5WubSXiLmeZs5xGx9RbXhEE0FdgSSnY5UvHUfs/nPGe5jok86qcXHLsLgquOxg2LG2Hy
-         4PY9sYtfFJAzXUSVrV6vve7HvG7A0QBjnEOyxANftGKGtyJWDTkWBtr/bi8E9/Jyws58
-         1dfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704475729; x=1705080529;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7MvMmIGG1OTvVGECDwkCBOvxHZpT09eejRG7w2yah/U=;
-        b=EBzE/oaEKKyzKjP9bF+L+gFMDGJUN/0o/a13SJkwS7IcQ9PSzCB/R9ryx3ZDlgjV9j
-         /koNRJt0FIWeseqtBkxveiO6ZyItzIxgYb8hdvguqpcvXFo8yzN8/HOhS28Hdp3BB7xP
-         MZqGIACmATrxZVmeqq0SicTOtdmMCivyxKjhYahJscxRbPztnXQeLuvy1jGQ9bh/gK9y
-         85o1XE004lDwv4+tUJ5h7vzWH82mAetJk4gBjkcrdQhILQr77BbUVkMRxxRRTZb2DIG2
-         qqgcDmV8/U4JhjIJavPpp2aE7qfmFENq/esbkw3c9gM4w2X1Sp/LeiSAg3VJFs0K6KPs
-         Nusg==
-X-Gm-Message-State: AOJu0YzLy3lKCted4v2Ozp0zdPlevZ+XBiFGXy87kbjh+HHBA4EkzvdC
-	4YOf7+aVAV0EfN0evYTI1GEKpu7Vl5yuIw==
-X-Google-Smtp-Source: AGHT+IHuOnm7hs+MIF/YDJktAeTmGWj9vojY0HSziqVUOflzq8jI2uyPNPQQRJu+YUAC/BW/uA1VRg==
-X-Received: by 2002:a05:6a21:6da6:b0:199:4e21:f71d with SMTP id wl38-20020a056a216da600b001994e21f71dmr690529pzb.87.1704475729519;
-        Fri, 05 Jan 2024 09:28:49 -0800 (PST)
-Received: from localhost (75-172-121-199.tukw.qwest.net. [75.172.121.199])
-        by smtp.gmail.com with ESMTPSA id fi39-20020a056a0039a700b006dab0d09ef0sm1622087pfb.45.2024.01.05.09.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 09:28:48 -0800 (PST)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Kevin Xie <kevin.xie@starfivetech.com>, Minda Chen
- <minda.chen@starfivetech.com>, Conor Dooley <conor@kernel.org>, Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring
- <robh+dt@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Daire
- McNamara <daire.mcnamara@microchip.com>, Emil
- Renner Berthing <emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Mason Huo
- <mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
- Minda Chen <minda.chen@starfivetech.com>
-Subject: Re: =?utf-8?B?5Zue5aSNOg==?= [PATCH v13 0/21] Refactoring Microchip
- PCIe driver and add
- StarFive PCIe
-In-Reply-To: <ZQ0PR01MB098128579D86207B4B9BA7D28266A@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <7hfrzeavmj.fsf@baylibre.com>
- <ZQ0PR01MB098128579D86207B4B9BA7D28266A@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
-Date: Fri, 05 Jan 2024 09:28:48 -0800
-Message-ID: <7h34vbbsfj.fsf@baylibre.com>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pn2iU7dYWMfsfoYwYOvQ7lLltE4IKK3tQI8SnypF65I=;
+ b=v8QKoP6Dn68vMeecv8yxKD2lNtl9Y0FhAq0ZANbnzSmgEuHHsiaJMnXc+cIb++oNo5qJAovrToetJxgGH+0bJOnbgV7FqDyCI3OIe8Pd2uUL6dRZPosg0qnmfbK92QyfBHNV/FjReL9t/GwmjN7cr0DydztdyL71v4pGRxC+lmQ=
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com (2603:10b6:8:f::6) by
+ DS0PR04MB8697.namprd04.prod.outlook.com (2603:10b6:8:12d::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7159.16; Sat, 6 Jan 2024 01:03:08 +0000
+Received: from DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::81a9:5f87:e955:16b4]) by DM8PR04MB8037.namprd04.prod.outlook.com
+ ([fe80::81a9:5f87:e955:16b4%3]) with mapi id 15.20.7159.015; Sat, 6 Jan 2024
+ 01:03:07 +0000
+From: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+To: Klara Modin <klarasmodin@gmail.com>
+CC: Lukas Wunner <lukas@wunner.de>, "andriy.shevchenko@linux.intel.com"
+	<andriy.shevchenko@linux.intel.com>, "hdegoede@redhat.com"
+	<hdegoede@redhat.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Thread-Topic: [PATCH v5 1/2] platform/x86: p2sb: Allow p2sb_bar() calls during
+ PCI device probe
+Thread-Index:
+ AQHaPow80BKhEPvQJ0yVwJLvsqPQE7DJVoSAgABBoYCAAUomAIAAB4QAgAAcSwCAABYzgIAA3tKA
+Date: Sat, 6 Jan 2024 01:03:07 +0000
+Message-ID: <h4ok2zbyijoe7fi6h26j3r4qzuwhspwkuyyc3w26buxx7f567a@7ikkcpifi2y2>
+References:
+ <CABq1_vjfyp_B-f4LAL6pg394bP6nDFyvg110TOLHHb0x4aCPeg@mail.gmail.com>
+ <oe4cs5ptinmmdaxv6xa524whc7bppfqa7ern5jzc3aca5nffpm@xbmv34mjjxvv>
+ <20240104123621.GA4876@wunner.de>
+ <b565j7nbqu67pjhjw6ei7i3nkazazirl4dyxhaem3z7ghii3gs@dngmvjcylrjp>
+ <20240105084454.GA28978@wunner.de>
+ <4fjboeaslgcgjtkwemog5qrbbfnew4qcsoyrqbxmt3icesiint@plrjgqxt7naw>
+ <CABq1_vjp3fRWC4HJfG+1VyhYYcQG9tJVvj_LCRQ7nBtTLs8fLA@mail.gmail.com>
+In-Reply-To:
+ <CABq1_vjp3fRWC4HJfG+1VyhYYcQG9tJVvj_LCRQ7nBtTLs8fLA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR04MB8037:EE_|DS0PR04MB8697:EE_
+x-ms-office365-filtering-correlation-id: ea327a15-2b49-4b11-03c3-08dc0e533ec4
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Ydex2+ew0PgyTFeHNbFXno+OiTLgoTdEdjstBC1t86b26kxeFrWdCZgqqnM+QuEOKnTbqUlEV72R+XC4qu+I+cifQAcVhT0GXPpcgf0c8lwvqbcxveo0eHVTey1aIxY/QmwJpvgj0YnbB8mqSPCY7TCD2/bXiBxsN3c+lijBGLgcACvwN+txybJ+u2WEmzMoy3B6zbVuRYHwvkhBnVBTtD6f65xJLXnWtiO5hYRIB0aU5aytgGsNBamFJBdU406gjN7HLvdZ9TvDWKwfw1EoN5zquHCwktDBGtrbZm1N/GUDe4MKMskODwh20iwNgyya4SjV7c4wlkYGUWMJurt7UFNb3EVdUHw8oYJruHdzb7KhNX9bf7yCLQ/eHRMRJW/2WC8aZ8VvfQW+zoyEPMvKlxixLBG/yzBcJKE03jONp8c3pfCu9PXEsFVlD2MfLEZizVhTW5NkhU/fYbn8POo6n7TZM0CQ7xgSWToUGel26SDhEVsB4q97/uIQOaz2bXm35ouke2iSJKHbZrF05iOv875oT+ju6citnFDNDUPtj/EGu0xoILB7WcYhvC/y43r/eY8S4n4dNn1Ac5pQkpm6ejTKaeM3pHKx+hsPlwDuZ/B/65u1PhvJw5SrTA71NqZt
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8037.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(366004)(346002)(396003)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(9686003)(26005)(38100700002)(122000001)(5660300002)(316002)(8676002)(6512007)(4326008)(64756008)(66556008)(6486002)(6916009)(66476007)(66446008)(6506007)(2906002)(8936002)(71200400001)(44832011)(478600001)(54906003)(33716001)(91956017)(41300700001)(76116006)(66946007)(82960400001)(86362001)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?E2oBnn8u5CA8vp/4hxGcaO7hAj99BrsrwJ04f5iwhF4dkmFr57NZpxIdf+Rg?=
+ =?us-ascii?Q?PX6SH9dgrEaVhDIS21i7tEbszEGgTV2j+1Mg2hRrOupRI/F7oj11v0i2F7+t?=
+ =?us-ascii?Q?YVKSEpj21NK/ikOUSO/8/DM/W8wi74awrn1ivmwm2dWlvx9MvRpdpQOj2NPO?=
+ =?us-ascii?Q?vu7kxUT6ECH9sJTHxQ/GHmOC5N19YwgR8tgYlPx9BR1NDumEr1rv50BC3cPj?=
+ =?us-ascii?Q?Ejgwpem64XojIfK857ojn7V6R/3kArIFD8PTyNBPBgCrftquTtdvL3J4GpH6?=
+ =?us-ascii?Q?QFOudKe+Lpm628EJ5fdibrwKlWbb/4UEkANW8xK8QZHRV1XP+SLN8aP5j9i6?=
+ =?us-ascii?Q?Ol7YEVfWFv2I80vnA/7Ix3wEhnCfrPJ8tWJS0YCpEYNXsStdDQy7aWbGdHIS?=
+ =?us-ascii?Q?1R3xDSsSu5RNfuBOu0VEjSqvotigSRXzsJPj3uNQLBX2oeI7Znqed0vfRDxe?=
+ =?us-ascii?Q?9PXX7coS/CcDKUSIJ4dPC7CLZbRZi+SMf1+uddd+Ioe0NvjKmaEBv+90QVGq?=
+ =?us-ascii?Q?XpzIQTQJk9D0NIQIg9dQB5oBRs2TD8zDMLIrBK9X6Z93LnWPgvBpmdzoCeAM?=
+ =?us-ascii?Q?PZFaKYaYMOsZfPIOl0F5J7jP4KULwINWYFbvTqf1n0Y0pQsOA/jlbt9V5ed6?=
+ =?us-ascii?Q?V4LGrm54/nykJ57IyP0RYg7euOr/s2CppnSc/hOQIVQjvkn2IeYftY4Ln6E/?=
+ =?us-ascii?Q?Hd3is7aO2UewlGRVLNzP+k+mBC7d8tk7DV9dM/ksjglO2OTGXk+DyhPg25lu?=
+ =?us-ascii?Q?oL1S3bTi9CmT9/H+X8ISUrSRwYcLTs+t5Dt7EuVoMEloOzw25xEp37aiOghE?=
+ =?us-ascii?Q?ZQ7goqeKuyCmfgPE3+JuJwWJywxRSemnttUcIPa4j4W3NDMYJIFrZz9ytekA?=
+ =?us-ascii?Q?SnGoxresbF8vtxbX1tXuBbn043xWbXPafJR/6WTa5twlpzVQ/AtNnye1SpL8?=
+ =?us-ascii?Q?MXUHZDLiV0L4ifMODPKKSdCfhYApkNLtiurjPlsKIoaq8MazC0g/V46yNVHn?=
+ =?us-ascii?Q?t9TxnSqFYpmgNg87foeVB5lf7Vha9x0JC0j1oKhtuOcBP7u1/3hS3/qS6MwU?=
+ =?us-ascii?Q?IAy7dahWwxE+TLhpmVgXggGKmd3zMcfERQMTUd/gOGAaspzxW0XWwmQchuzz?=
+ =?us-ascii?Q?iN+70D5dq9D6IPhTD6+A9AyZFG+b8FFyxF23LA8qNRqudMnmez6D4lsQXbqK?=
+ =?us-ascii?Q?BIWVQdvQenebJQVMwSRxITeNVAkoeJCLKRi7DKMUq60fzI3WypF8K3iQZOqF?=
+ =?us-ascii?Q?Z5VPysBgpDyM1AWYr7NhjUSPHceyuptBmLuuHjiAyQuXpXW7a5Cu2NB7dtge?=
+ =?us-ascii?Q?Ep0S8V6rFmTd3kkkout3cHu2wPA8I20CtHrWDaZSEDPVytipH2+NKCRkyUyS?=
+ =?us-ascii?Q?NEobC4e3s+78WDFwiDpAZhcpMkMtozeI3BQhGqQ+r6MRJV0+feXGrh940lO8?=
+ =?us-ascii?Q?Zzlu5aSw0Zp2aikmnqUoF9EQldvRYQNRNCL2kBuowKVp1mfxLjDUOTMhdOpg?=
+ =?us-ascii?Q?F7Tj2l0SaEMSGuI6pmtPyr7KMForjSmP79vexxrhJWifdJ6eDKQNRQ6pcybp?=
+ =?us-ascii?Q?bmjoSUg9UKAjRhkt9qG3hYZ0LhhUqfEGsmidv0ZFmF09sxC+J+dIeWucuJjA?=
+ =?us-ascii?Q?TRXeTbid5k+xiAfp6pc/RbY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C446C87554D26D4AA623742ABDD81740@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	gjUOVV7QWdip3kYR6zgHpE9wstD4XE8zn6VDtAJhru4JkckJk8qY0rg4P4foMg9WWkzQI4cF0g0gG7M1KTJ+CqIhrO0QeQRtwxXTXTN4Pla65YRWZBMkYjQHhAM20zsUSXMV4r0EGeeq+177iKvWAd5QDw0ZTSzyFlotRZoBPbOzkI8xE6TUKLQWEcxxXgM7NLVUFdhRidpgVWe1Iw3IuRX0jq2BAsn/DlJRxInNCuJLHUbWy/R6Dl6YCWnb9LpsTcGOu3fMZku5B0l93NJjpvxbYeTs5edRbZaLrER4zrVP41j0hoRk160s9QiDLBFdjM/ktjkqG50neVAyhwzeYiMAZeHwGoo5R7ukeiqMYJIbfLBQT760i8OzaTJ8EzP/b+ou52DlyiDeKnfzrZz5V3I9C8FSNaLAEoAaEBGXGIb/nv7JeToofiJzhYgCxKA3wJhvMuWVD30tu0yQfOw1/qU6koIWt4rvRtYjLRWMvYlMa13vc7LTPtbZgSCETy7kVZCEk+MD2CZ6NrnCJicUHuYxFEYgwl9l0KbJW0W8JeVAvwzl3Tzlerfwx9kb/5nTNYDh6G5QeqR3+EelXSEKQFvqr+lAHg7nxslYDZPE1LYNzEKv7dduFtTYI9tlYlb1
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8037.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea327a15-2b49-4b11-03c3-08dc0e533ec4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2024 01:03:07.7334
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6MFnIhlkDyTjzrZnzR38ORFdO70PYv+oivKkzmTO6dQN6SlLRs/k6ZTVWyLgw71oyF/L05Kt1ApKL/kyVWwKihRjJ7IHSaiXv4J9GUqn8so=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR04MB8697
 
-Kevin Xie <kevin.xie@starfivetech.com> writes:
+On Jan 05, 2024 / 12:45, Klara Modin wrote:
+> Den fre 5 jan. 2024 kl 11:26 skrev Shinichiro Kawasaki
+> <shinichiro.kawasaki@wdc.com>:
+> >
+> > On Jan 05, 2024 / 09:44, Lukas Wunner wrote:
+> > > On Fri, Jan 05, 2024 at 08:18:05AM +0000, Shinichiro Kawasaki wrote:
+> > > > --- a/drivers/platform/x86/p2sb.c
+> > > > +++ b/drivers/platform/x86/p2sb.c
+> > > > @@ -150,6 +153,14 @@ static int p2sb_cache_resources(void)
+> > > >     if (!bus)
+> > > >             return -ENODEV;
+> > > >
+> > > > +   /*
+> > > > +    * When a device with same devfn exists and it is not P2SB, do =
+not
+> > > > +    * touch it.
+> > > > +    */
+> > > > +   pci_bus_read_config_dword(bus, devfn_p2sb, PCI_CLASS_REVISION, =
+&class);
+> > > > +   if (!PCI_POSSIBLE_ERROR(class) && class >> 8 !=3D P2SB_CLASS_CO=
+DE)
+> > > > +           return -ENODEV;
+> > > > +
+> > >
+> > > The function should probably return if PCI_POSSIBLE_ERROR() is true.
+> >
+> > At this point, the P2SB device can be still hidden and PCI_POSSIBLE_ERR=
+OR() can
+> > be true. In that case, the function should not return.
+> >
+> > > Also I think you can use PCI_CLASS_MEMORY_OTHER, so how about:
+> > >
+> > >       if (PCI_POSSIBLE_ERROR(class) || class >> 16 !=3D PCI_CLASS_MEM=
+ORY_OTHER)
+> > >               return -ENODEV;
+> > >
+> > > Can alternatively use "class >> 8 !=3D PCI_CLASS_MEMORY_OTHER << 8" i=
+f you
+> > > want to ensure the lowest byte is 0x00.
+> >
+> > Thanks, it looks the better to use PCI_CLASS_MEMORY_OTHER. Will reflect=
+ it when
+> > I create the formal fix patch.
+>=20
+> Both of the variants seem to work for me.
+>=20
+> I tried the first patch on its own (059b825c5234), with
+>        if (!PCI_POSSIBLE_ERROR(class) && class >> 8 !=3D P2SB_CLASS_CODE)
+>                return -ENODEV;
+>=20
+> Then Lukas' suggestion (b97584391ea7), with
+>         if (PCI_POSSIBLE_ERROR(class) || class >> 16 !=3D PCI_CLASS_MEMOR=
+Y_OTHER)
+>                 return -ENODEV;
+>=20
+> Tested-by: Klara Modin <klarasmodin@gmail.com>
 
->> Minda Chen <minda.chen@starfivetech.com> writes:
->> 
->> > This patchset final purpose is add PCIe driver for StarFive JH7110 SoC.
->> > JH7110 using PLDA XpressRICH PCIe IP. Microchip PolarFire Using the
->> > same IP and have commit their codes, which are mixed with PLDA
->> > controller codes and Microchip platform codes.
->> 
->> Thank you for this series.
->> 
->> I tested this on a VisionFive v2 board, and it seems to probe and find my
->> M.2 NVMe SSD, but then gets timeouts when trying to use the NVMe (e.g.
->> 'blkid' command)
->> 
->
-> Hi, Kevin:
-> Could you please provide the manufacturer and model of the M.2 NVMe SSD
-> you tested?
-
-I have a 256 Gb Silicon Power P34A60 M.2 NVMe SSD (part number: sp256gbp34a60m28)
-
-Also for reference, I tested the same SSD on another arm platform
-(Khadas VIM3) and it works fine.
-
-Kevin
+Thank you for trying it out. This fix approach looks good :) I will create =
+a
+formal patch next week for review.=
 
