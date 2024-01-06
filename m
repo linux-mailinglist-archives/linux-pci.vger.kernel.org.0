@@ -1,104 +1,81 @@
-Return-Path: <linux-pci+bounces-1733-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1734-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B437825FAE
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 14:34:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD8FE825FB7
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 14:44:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C692B217F6
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 13:34:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6009028272D
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Jan 2024 13:44:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5676F6FC8;
-	Sat,  6 Jan 2024 13:34:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2314810F2;
+	Sat,  6 Jan 2024 13:44:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DU65tPTo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAPouwFl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBB47468
-	for <linux-pci@vger.kernel.org>; Sat,  6 Jan 2024 13:34:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4785AC433C8;
-	Sat,  6 Jan 2024 13:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DC27460
+	for <linux-pci@vger.kernel.org>; Sat,  6 Jan 2024 13:44:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E25DC433C8;
+	Sat,  6 Jan 2024 13:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704548076;
-	bh=Mh7Tjmn58tpzvDk6szE0G7B5YY29XWuISdIGGbbZZRo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DU65tPTocy0xL3Izd+YnEDfz0yxgMvcLyKce47gXuHub/ccdb08jacDH072hRUSyj
-	 Yn9VXDzbAbcphJG8JODqGHw5/xeZbfV1jNyvvmjjL1oGJysr7eiONSCoxzswcPqDdC
-	 981fqZBc/6KdYaL+s4uVlzqxijHpevoXWKKDchLdjWxaiws2MMsBMfdj9utCfDgiuP
-	 06tcfIUhF8ccUanREM6xqAfaA/MYOAO5IUTkE+mtz/NesZpzV1FkNnBKFUhqO55pG0
-	 51KQYRjA34lWOSqsv2gw/BHYr2oxigGKM+etPGfvzcT/YvZabp3b8IaTJWY5+fwUNS
-	 ZdT4qvm1KpVug==
-From: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: "Bjorn Helgaas" <bhelgaas@google.com>,
-	"Thippeswamy Havalige" <thippeswamy.havalige@amd.com>,
-	"Bharat Kumar Gogada" <bharat.kumar.gogada@amd.com>
-Cc: "Michal Simek" <michal.simek@amd.com>,
-	"Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-	"Rob Herring" <robh@kernel.org>,
-	"Dan Carpenter" <dan.carpenter@linaro.org>,
-	linux-pci@vger.kernel.org,
+	s=k20201202; t=1704548692;
+	bh=LGTgxqxOygh5aZyaHTVaAXCaHAb1TgYqmHjpgTu+vxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cAPouwFlk2AbtAYvTqNWM0ye8BbaDcT7xGzym7PBoOLzwOY01g0dbHaOfyl5U/BNR
+	 YXSzMXUKnqOvEGTN+x5lXvyX/lomuZ70V7HTwONzIXivr058OTvzcQ4a4s8B2loMjO
+	 scyethOCVcql1VB6e7hnjRNtdD7t6+pMun9zSY2iDjlul5dDd7ibTyqTV+TC+gRxsp
+	 fLLMYwxpLWti6fImpFnWstKl7PKokfMc0lTujk8SbKx0zhO+BDmRVGMMppps7YXf/b
+	 AfQNSJRqi/n6/VMk8anE6dG5uSBdmKEvDjkjKVed661CiW40B2LIJRp1bMxKBcOXbq
+	 iqNDmV8KwOxFw==
+Date: Sat, 6 Jan 2024 22:44:50 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+Cc: Michal Simek <michal.simek@amd.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-pci@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] PCI: xilinx-xdma: Fix uninitialized symbols in xilinx_pl_dma_pcie_setup_irq()
-Date: Sat,  6 Jan 2024 13:34:33 +0000
-Message-ID: <20240106133433.41130-1-kwilczynski@kernel.org>
-X-Mailer: git-send-email 2.43.0
+Subject: Re: [PATCH] PCI: xilinx-xdma: Fix uninitialized symbols in
+ xilinx_pl_dma_pcie_setup_irq()
+Message-ID: <20240106134450.GB3450972@rocinante>
+References: <20240106133433.41130-1-kwilczynski@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240106133433.41130-1-kwilczynski@kernel.org>
 
-The error paths that follow calls to the devm_request_irq() functions
-within the xilinx_pl_dma_pcie_setup_irq() reference an uninitialized
-symbol each that also so happens to be incorrect.
+Hello,
 
-Thus, fix this omission and reference the correct variable when invoking
-a given dev_err() function following an error.
+> The error paths that follow calls to the devm_request_irq() functions
+> within the xilinx_pl_dma_pcie_setup_irq() reference an uninitialized
+> symbol each that also so happens to be incorrect.
+> 
+> Thus, fix this omission and reference the correct variable when invoking
+> a given dev_err() function following an error.
+> 
+> This problem was found using smatch via the 0-DAY CI Kernel Test service:
+> 
+>   drivers/pci/controller/pcie-xilinx-dma-pl.c:638 xilinx_pl_dma_pcie_setup_irq() error: uninitialized symbol 'irq'.
+>   drivers/pci/controller/pcie-xilinx-dma-pl.c:645 xilinx_pl_dma_pcie_setup_irq() error: uninitialized symbol 'irq'.
 
-This problem was found using smatch via the 0-DAY CI Kernel Test service:
+We need to get this fixed, so I applied this change to controller/xilinx,
+as I would like to ensure that it will be included with the rest of the
+changes for the 6.8 release
 
-  drivers/pci/controller/pcie-xilinx-dma-pl.c:638 xilinx_pl_dma_pcie_setup_irq() error: uninitialized symbol 'irq'.
-  drivers/pci/controller/pcie-xilinx-dma-pl.c:645 xilinx_pl_dma_pcie_setup_irq() error: uninitialized symbol 'irq'.
+[1/1] PCI: xilinx-xdma: Fix uninitialized symbols in xilinx_pl_dma_pcie_setup_irq()
+      https://git.kernel.org/pci/pci/c/7aa5f8fcd6d9
 
-Fixes: 8d786149d78c ("PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver")
-Link: https://lore.kernel.org/oe-kbuild/202312120248.5DblxkBp-lkp@intel.com/
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/r/202312120248.5DblxkBp-lkp@intel.com/
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
----
- drivers/pci/controller/pcie-xilinx-dma-pl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-index 2f7d676c683c..96aedc85802a 100644
---- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
-+++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-@@ -635,14 +635,14 @@ static int xilinx_pl_dma_pcie_setup_irq(struct pl_dma_pcie *port)
- 	err = devm_request_irq(dev, port->intx_irq, xilinx_pl_dma_pcie_intx_flow,
- 			       IRQF_SHARED | IRQF_NO_THREAD, NULL, port);
- 	if (err) {
--		dev_err(dev, "Failed to request INTx IRQ %d\n", irq);
-+		dev_err(dev, "Failed to request INTx IRQ %d\n", port->intx_irq);
- 		return err;
- 	}
- 
- 	err = devm_request_irq(dev, port->irq, xilinx_pl_dma_pcie_event_flow,
- 			       IRQF_SHARED | IRQF_NO_THREAD, NULL, port);
- 	if (err) {
--		dev_err(dev, "Failed to request event IRQ %d\n", irq);
-+		dev_err(dev, "Failed to request event IRQ %d\n", port->irq);
- 		return err;
- 	}
- 
--- 
-2.43.0
-
+	Krzysztof
 
