@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-1759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBDA882631D
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 07:17:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02901826322
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 07:27:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93EA5282819
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 06:17:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B473282990
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 06:27:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53123125B4;
-	Sun,  7 Jan 2024 06:16:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A54A8125D1;
+	Sun,  7 Jan 2024 06:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mp4nMo+8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zA9CRdIX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38BC125B6
-	for <linux-pci@vger.kernel.org>; Sun,  7 Jan 2024 06:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109CF125BB
+	for <linux-pci@vger.kernel.org>; Sun,  7 Jan 2024 06:27:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-36082f3cb06so5540165ab.1
-        for <linux-pci@vger.kernel.org>; Sat, 06 Jan 2024 22:16:56 -0800 (PST)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d4c3393f99so6501175ad.0
+        for <linux-pci@vger.kernel.org>; Sat, 06 Jan 2024 22:27:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704608216; x=1705213016; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704608823; x=1705213623; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=tjkLk9BGknFoHjmI/p9bsyEkzetnF4kncdD8DemYfk8=;
-        b=mp4nMo+8oUzgiyAYO3mucOKU/DnbmnmrLiWzjIHWlo99gmScfcpxckZj3UMDQEuIw9
-         eDnKO3F3yQ5SpsXH0oBJa1PtiEA4EHc9dvJlJ42XR2UmaLjw/tc1AWVkCmIKcEYAbHf7
-         ASzB9qAdsyc1Bh+RI/hYc6Cw2/6JTCZrj2oT3fKUoaRhHQPeedccywJbu3hnBW6XDXXl
-         +Stho0pDyLE3nFjVA+rYTMtuxR+7UBSZ3J//NVzUZkxfPzu/znVVv6seKlxcuMpeGPTr
-         UOjWwfH7uNQc5d74Lb9goj8JZ+Vd4ombPfhAlBIHqCvFl6pi5NJYiMzCeU7iZ6Yxow0N
-         NJdg==
+        bh=iW5VT/4eLpp7PKquWlruWMTFNJDHZ9lSGytu3Jmlq4E=;
+        b=zA9CRdIXn+ZYSXunSBqQhUiccYwFAQOTHKctUCKlHRm1K1xqpH2ejGm+Y0eeTJN6YJ
+         7WXeZK1RXn/gLGVQBYldbYrVhw2KciSqqo5j4BasF8+bRd6F5EMNSW0bRAX7dkgKvk34
+         2KMeCtVeMaMU4Us/BT8TkZaPF82TihdQGHccZVU+18URwkoN6XQNT/eTFh9I/UEdf6+/
+         16cm/1G9xNq8ckB1LygB6oAHBsq9YlxC/E8YORpweja32z+LmMltkRi7k++L76fjz2qw
+         Qc4DBdKlePrQraXcCRCHqQcnL4p9M00mWzScC0cOwzoU6hZfGN/tbDy7TDIybJ/1/RBW
+         wjIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704608216; x=1705213016;
+        d=1e100.net; s=20230601; t=1704608823; x=1705213623;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tjkLk9BGknFoHjmI/p9bsyEkzetnF4kncdD8DemYfk8=;
-        b=aYs/yNo9B7DM7GEmtNkMG0SICY2k6s+LMF2wr08tMqDDQfAVIAKrLRBxB8p2ZspIqY
-         B4DrXarZwHuF9HRyEUTElD7oYY+/G2mwG9FlPlbTWw69pnUxYSUK0OjHArPBpRi+gYMx
-         pus8O20JYkC4Ko1qxCQ0zfNuRBZ5cjsU0ig89yUcSo7+64vLIEbzcUkb2dBC+F6nZSv9
-         HTpUBlmLcQUCqOpXNdHoJH+CpEZHixpH/AiEuxuIr6PZejCk/QJjBC2+h0SQp6M/ZT8R
-         z6ESFznq571F+3nP81lNl0gVdURxSZro4Zlojwu4ZgkTaBiA9WmgtFxvpGXLupfRbktp
-         whJQ==
-X-Gm-Message-State: AOJu0YzAt8jaKCNC9LKN9HPSeTCvzU40JFceD1G+2obegFsOsVMKYqwg
-	t3PAw/hVK8WO139UxxxbkiijCCFOGIQhxllIDSynEbSy/dre
-X-Google-Smtp-Source: AGHT+IGkIZ9NUGm1g1hagpBGTj6dUH9zK41yf3/7mRT3F5hk9YWbobujTiV37E3hfHnBnFtEWKlang==
-X-Received: by 2002:a05:6e02:1d17:b0:360:655e:df6b with SMTP id i23-20020a056e021d1700b00360655edf6bmr3772923ila.12.1704608215966;
-        Sat, 06 Jan 2024 22:16:55 -0800 (PST)
+        bh=iW5VT/4eLpp7PKquWlruWMTFNJDHZ9lSGytu3Jmlq4E=;
+        b=JlswnQcHyaa/k0JCMkx2SHs/22xTJ++2jChSIsXBZvr97iKqJTDp83aZyp0TIgNWy8
+         BWT5alD2+22Inte8wy27qzJo2wIBPYo4dCDn01VpP8Pk10sCaimDPsftlQ+duZdRMH2P
+         IokwYxnh7DK4lz66RuFgCg19rwBKuzbmdG4ceG+WEnxqeUM+a9hgKKeLiTEO6VxialNU
+         q93GHHtMKLi2XMTGKoToS08t5vsJYIYvQ7MKFhLa+jAmzKZXmUGsQJQv7LkITq/Y5vAt
+         M4cUsSK+Rlm+r9c6yVODrvkvAb12DeDjYNiqO+aC8TwjbGa072S9xRwRSiHFwLZ6aALB
+         FpQQ==
+X-Gm-Message-State: AOJu0YzkSPEkgfDT5ZgbTGetatM5pBYx0FobKmJ1LIuHu32cP+BRbPcw
+	xSJSWcB920F2zGsC2LUhNXz++EOmnAoL
+X-Google-Smtp-Source: AGHT+IF9EIsAdvfe7SNGb3Xs8d3OsvAgoF/ITk2xEdFgJKxUc+1zTbZHj5eHo35V0G3bc6Ra+uzqcw==
+X-Received: by 2002:a17:902:b70f:b0:1d4:e2bc:88f2 with SMTP id d15-20020a170902b70f00b001d4e2bc88f2mr2077033pls.88.1704608823306;
+        Sat, 06 Jan 2024 22:27:03 -0800 (PST)
 Received: from thinkpad ([103.197.115.97])
-        by smtp.gmail.com with ESMTPSA id v5-20020a170902b7c500b001bbb8d5166bsm3888225plz.123.2024.01.06.22.16.50
+        by smtp.gmail.com with ESMTPSA id b9-20020a170902b60900b001d4c984e02bsm3906425pls.11.2024.01.06.22.26.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jan 2024 22:16:55 -0800 (PST)
-Date: Sun, 7 Jan 2024 11:46:49 +0530
+        Sat, 06 Jan 2024 22:27:02 -0800 (PST)
+Date: Sun, 7 Jan 2024 11:56:54 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: krzysztof.kozlowski@linaro.org, bhelgaas@google.com,
@@ -69,10 +69,11 @@ Cc: krzysztof.kozlowski@linaro.org, bhelgaas@google.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	lpieralisi@kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
 	shawnguo@kernel.org
-Subject: Re: [PATCH v7 14/16] PCI: imx6: Add epc_features in imx6_pcie_drvdata
-Message-ID: <20240107061649.GN3416@thinkpad>
+Subject: Re: [PATCH v7 16/16] PCI: imx6: Add iMX95 Endpoint (EP) function
+ support
+Message-ID: <20240107062654.GO3416@thinkpad>
 References: <20231227182727.1747435-1-Frank.Li@nxp.com>
- <20231227182727.1747435-15-Frank.Li@nxp.com>
+ <20231227182727.1747435-17-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,81 +83,145 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231227182727.1747435-15-Frank.Li@nxp.com>
+In-Reply-To: <20231227182727.1747435-17-Frank.Li@nxp.com>
 
-On Wed, Dec 27, 2023 at 01:27:25PM -0500, Frank Li wrote:
-> The i.MX EP exhibits variations in epc_features among different EP
-> configurations. This introduces the addition of epc_features in
-> imx6_pcie_drvdata to accommodate these differences. It's important to note
-> that there are no functional changes in this commit; instead, it lays the
-> groundwork for supporting i.MX95 EP functions.
+On Wed, Dec 27, 2023 at 01:27:27PM -0500, Frank Li wrote:
+
+Subject: PCI: imx6: Add iMX95 Endpoint (EP) support
+
+> Add iMX95 EP function support and add 64bit address support. Internal bus
+
+Remove 'function' as that refers to endpoint function.
+
+> bridge for PCI support 64bit dma address in iMX95. So set call
+> dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)).
 > 
+
+'Hence, call dma_set_mask_and_coherent() to set 64 bit DMA mask.'
+
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-- Mani
-
 > ---
 > 
 > Notes:
->     Change from v5 to v6
->     - add missed maxitems.
->     - add comments about reuse linux,pci-domain as controller id.
->     linux,pci-domain have not defined at PCI endpoint side.
->     
+>     Change from v3 to v4
+>     - change align to 4k for imx95
 >     Change from v1 to v3
->     - new patch at v3
+>     - new patches at v3
 > 
->  drivers/pci/controller/dwc/pci-imx6.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 45 +++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 4b2b9aafad1b4..6a58fd63a9dd2 100644
+> index 6a58fd63a9dd2..00ec59867c17b 100644
 > --- a/drivers/pci/controller/dwc/pci-imx6.c
 > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -104,6 +104,7 @@ struct imx6_pcie_drvdata {
->  	const u32 ltssm_mask;
->  	const u32 mode_off[IMX6_PCIE_MAX_INSTANCES];
->  	const u32 mode_mask[IMX6_PCIE_MAX_INSTANCES];
-> +	const struct pci_epc_features *epc_features;
->  	int (*init_phy)(struct imx6_pcie *pcie);
+> @@ -75,6 +75,7 @@ enum imx6_pcie_variants {
+>  	IMX8MQ_EP,
+>  	IMX8MM_EP,
+>  	IMX8MP_EP,
+> +	IMX95_EP,
 >  };
 >  
-> @@ -1065,7 +1066,10 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
+>  #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
+> @@ -84,6 +85,7 @@ enum imx6_pcie_variants {
+>  #define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
+>  #define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+>  #define IMX6_PCIE_FLAG_HAS_SERDES		BIT(6)
+> +#define IMX6_PCIE_FLAG_SUPPORT_64BIT		BIT(7)
+>  
+>  #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
+>  
+> @@ -620,6 +622,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  		break;
+>  	case IMX7D:
+>  	case IMX95:
+> +	case IMX95_EP:
+>  		break;
+>  	case IMX8MM:
+>  	case IMX8MM_EP:
+> @@ -1063,6 +1066,23 @@ static const struct pci_epc_features imx8m_pcie_epc_features = {
+>  	.align = SZ_64K,
+>  };
+>  
+> +/*
+> + * BAR#	| Default BAR enable	| Default BAR Type	| Default BAR Size	| BAR Sizing Scheme
+> + * ================================================================================================
+> + * BAR0	| Enable		| 64-bit		| 1 MB			| Programmable Size
+> + * BAR1	| Disable		| 32-bit		| 64 KB			| Fixed Size
+> + *	| (BAR0 is 64-bit)	| if BAR0 is 32-bit	|			| As Bar0 is 64bit
+
+I couldn't understand above. And not aligned properly.
+
+> + * BAR2	| Enable		| 32-bit		| 1 MB			| Programmable Size
+> + * BAR3	| Enable		| 32-bit		| 64 KB			| Programmable Size
+> + * BAR4	| Enable		| 32-bit		| 1M			| Programmable Size
+> + * BAR5	| Enable		| 32-bit		| 64 KB			| Programmable Size
+> + */
+> +static const struct pci_epc_features imx95_pcie_epc_features = {
+> +	.msi_capable = true,
+> +	.bar_fixed_size[1] = SZ_64K,
+> +	.align = SZ_4K,
+> +};
+> +
 >  static const struct pci_epc_features*
 >  imx6_pcie_ep_get_features(struct dw_pcie_ep *ep)
 >  {
-> -	return &imx8m_pcie_epc_features;
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
-> +
-> +	return imx6_pcie->drvdata->epc_features;
->  }
+> @@ -1105,6 +1125,14 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
 >  
->  static const struct dw_pcie_ep_ops pcie_ep_ops = {
-> @@ -1530,6 +1534,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  	pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
+>  
+> +	/*
+
+Use FIXME here.
+
+- Mani
+
+> +	 * db2 information should fetch from dtb file. dw_pcie_ep_init() can get dbi_base2 from
+> +	 * "dbi2" if pci->dbi_base2 is NULL. All code related pcie_dbi2_offset should be removed
+> +	 * after all dts added "dbi2" reg.
+> +	 */
+> +	if (imx6_pcie->drvdata->variant == IMX95_EP)
+> +		pci->dbi_base2 = NULL;
+> +
+>  	ret = dw_pcie_ep_init(ep);
+>  	if (ret) {
+>  		dev_err(dev, "failed to initialize endpoint\n");
+> @@ -1355,6 +1383,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  					     "unable to find iomuxc registers\n");
+>  	}
+>  
+> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_SUPPORT_64BIT))
+> +		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> +
+>  	/* Grab PCIe PHY Tx Settings */
+>  	if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
+>  				 &imx6_pcie->tx_deemph_gen1))
+> @@ -1557,6 +1588,19 @@ static const struct imx6_pcie_drvdata drvdata[] = {
 >  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
->  		.mode_off[1] = IOMUXC_GPR12,
->  		.mode_mask[1] = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
-> +		.epc_features = &imx8m_pcie_epc_features,
->  		.init_phy = imx8mq_pcie_init_phy,
+>  		.epc_features = &imx8m_pcie_epc_features,
 >  	},
->  	[IMX8MM_EP] = {
-> @@ -1540,6 +1545,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
->  		.mode_off[0] = IOMUXC_GPR12,
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
-> +		.epc_features = &imx8m_pcie_epc_features,
->  	},
->  	[IMX8MP_EP] = {
->  		.variant = IMX8MP_EP,
-> @@ -1549,6 +1555,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
->  		.mode_off[0] = IOMUXC_GPR12,
->  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
-> +		.epc_features = &imx8m_pcie_epc_features,
->  	},
+> +	[IMX95_EP] = {
+> +		.variant = IMX95_EP,
+> +		.flags = IMX6_PCIE_FLAG_HAS_SERDES |
+> +			 IMX6_PCIE_FLAG_SUPPORT_64BIT,
+> +		.clk_names = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"},
+> +		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
+> +		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
+> +		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
+> +		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
+> +		.init_phy = imx95_pcie_init_phy,
+> +		.epc_features = &imx95_pcie_epc_features,
+> +		.mode = DW_PCIE_EP_TYPE,
+> +	},
+>  };
+>  
+>  static const struct of_device_id imx6_pcie_of_match[] = {
+> @@ -1571,6 +1615,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+>  	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
+>  	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
+>  	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
+> +	{ .compatible = "fsl,imx95-pcie-ep", .data = &drvdata[IMX95_EP], },
+>  	{},
 >  };
 >  
 > -- 
