@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-1757-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1758-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D80B0826313
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 06:51:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2C95826317
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 06:55:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 748DC282AEE
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 05:51:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B295282AD8
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Jan 2024 05:55:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EEBD8BFE;
-	Sun,  7 Jan 2024 05:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D28F5125A1;
+	Sun,  7 Jan 2024 05:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVFCHCKR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AOzVSo3X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7858C15
-	for <linux-pci@vger.kernel.org>; Sun,  7 Jan 2024 05:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB470125AE
+	for <linux-pci@vger.kernel.org>; Sun,  7 Jan 2024 05:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-28bf1410e37so782737a91.2
-        for <linux-pci@vger.kernel.org>; Sat, 06 Jan 2024 21:51:13 -0800 (PST)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-28bd623c631so771998a91.3
+        for <linux-pci@vger.kernel.org>; Sat, 06 Jan 2024 21:55:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704606673; x=1705211473; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704606920; x=1705211720; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=7eAcb8U/Xr8Afw7sKhM8tyCYADsawYa0chI/2tUTwyk=;
-        b=sVFCHCKRMN19zJwxsPsAv5adID2Zkgkjy5MzrPgRV1igje5sHwz28Vm+8zWLbX1Wo0
-         RO1RX0U8P4Y4qRUHGvqIlCpC9P5JRa1iBhvbSg67b+PebP+aN5Klpo21LYYqjkcreg69
-         XW9FEV8SYxGg4dlKajcUSt1287VrrRxiM0dSP/BY0qykMnSYjNKBeyu7rbBdcapNAUfi
-         lgjW08WUPMJXHT/LZ5wbU1obx13OrBW6fxaTqAfgBZtFa1KbWPtdm2zTqRZhhzCrkDkY
-         amrtntCNRzpvuBIEzsyT+CRKObL7SkTxDJbIg06XBcyPm0FusWV8LwWlNwdOwMkLTjaV
-         mh4Q==
+        bh=npkPTWZbSrPT/J2qTivWUqWZDlbUUJa861d4n1crd6s=;
+        b=AOzVSo3XuBr//L8//JwBoD9vygIZwyOMjsRiMaAzqaAPi1+Y+thjiOYBNEiXpUeGSh
+         S2ar7i8r5IEpK7ENCra3pCU/IMWRpwMbnACdGXkB81OfR7YXoZA4YVfafllDFhmQlLRO
+         QS+I1XSupkAscskSOJLVsOFmc77n8sGuhL5KFQBwKw/zlmuvhYYomS1ohZHLRAnsKrXM
+         kXVSs/pIm36f6gcxRmMasPLl8V83skDO6gUJR3GylJoroqPzZuPxv2x1YSvtEmgSh1u1
+         tAMxwrZnWYDEl/J/vJx7x8NXPzPw0usn+D+j784jwWusupsZPve3ufiwGlg/bYMAXJEq
+         QuWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704606673; x=1705211473;
+        d=1e100.net; s=20230601; t=1704606920; x=1705211720;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7eAcb8U/Xr8Afw7sKhM8tyCYADsawYa0chI/2tUTwyk=;
-        b=EVWchMwC63/BAiGF2Eb0exlAiNr8F0kARO1SajKsTVbmB50+AXttaRZg8lZN8mNzAw
-         z9pKejkvz8LIoa8zi+oeP6HaqNmlBQ8syGwzfz2DMGCAVZSJ0Xu5PJJm+zXdvpOgvdZC
-         rsr1skfijoPY7z45iHvzwb2gbbJs6yKSjmQ3liDsaRP0ZZHcDDgdAD6RUcfjTvE5AWus
-         9ZxdD03tzXtvYt6cG7u0MEUHvpL/AB6WQ0GlZTeE6EWdksesPT+dZF5y0MTPlq3MXsYc
-         aDL0mMyL0fcRZuMLj7Mp8E71x5FB5XBRF38jSXMUVEgah10SdZ1weGEDuxc28a20v5Ug
-         gKBw==
-X-Gm-Message-State: AOJu0Yw5aRQdnyfXqyt1ysqZrm4kOd9IpE/vqNOJEZgDhI6X/kTZ5za5
-	Iko3LFZso28l5KZLdkdj+1Jt106rB0mn
-X-Google-Smtp-Source: AGHT+IGj5EZz0+/fbauC6AN45sMZrVe29Er1ZlBQrJrIMByIAuVk+Xns2TcTYLTphPA7A9ofGaCdPA==
-X-Received: by 2002:a17:902:f54f:b0:1d3:c942:144c with SMTP id h15-20020a170902f54f00b001d3c942144cmr2692451plf.80.1704606673385;
-        Sat, 06 Jan 2024 21:51:13 -0800 (PST)
+        bh=npkPTWZbSrPT/J2qTivWUqWZDlbUUJa861d4n1crd6s=;
+        b=aZYYcOKvTNQfNglzO8Jo+A7v+nZO6tQa48lXzj4tcMHZ0tbR6vxsnRDGKiVH7ON6Tk
+         aVw4Z7LdTlo8TwZELMbLkFfXhuygTrRNTrS3abC5vZkd3h3JKOJM2wouACfgnqC1JVMd
+         oMCUEJrTyPCplnZ8OoH4Mw6MWMGVPVK+4mUOJlnfAj0PN3GvnadIsRWPc2Gaq/wSGwbL
+         OSulqPQthoKEesjT0vlAlOVEf5rfpst11R1C/ZLFbYLdLp/7monVZi7OiPvqqWabkKZj
+         DTbiEXcHR62YaMKLTxg82SC/FNAQGgSbqsMMjjVXab8ExdRoa5tQYx0oc97UgemTarLR
+         AknQ==
+X-Gm-Message-State: AOJu0YzTJQVrUWEtJyiHGlSqZnPCGv7iM9oYzaVN0q9FXmnw6HBwwkuT
+	XTk/t5MqK1+9FjupMXuNRhJJlm7d1fKH
+X-Google-Smtp-Source: AGHT+IGyYHLcrSwSasOKfyMhzH4xhR/SbgU0ri+aHf3n40oDj/JY/IkyQis8SJwfZ2Us7GRm5TN95g==
+X-Received: by 2002:a05:6a20:7a82:b0:199:8953:6e0c with SMTP id u2-20020a056a207a8200b0019989536e0cmr1255512pzh.52.1704606920277;
+        Sat, 06 Jan 2024 21:55:20 -0800 (PST)
 Received: from thinkpad ([103.197.115.97])
-        by smtp.gmail.com with ESMTPSA id j5-20020a170902da8500b001d4e05828a9sm3874717plx.260.2024.01.06.21.51.08
+        by smtp.gmail.com with ESMTPSA id 9-20020a17090a018900b0028a4c85a55csm4287287pjc.27.2024.01.06.21.55.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jan 2024 21:51:12 -0800 (PST)
-Date: Sun, 7 Jan 2024 11:21:06 +0530
+        Sat, 06 Jan 2024 21:55:19 -0800 (PST)
+Date: Sun, 7 Jan 2024 11:25:10 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: krzysztof.kozlowski@linaro.org, bhelgaas@google.com,
@@ -69,10 +69,10 @@ Cc: krzysztof.kozlowski@linaro.org, bhelgaas@google.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	lpieralisi@kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
 	shawnguo@kernel.org
-Subject: Re: [PATCH v7 12/16] PCI: imx6: Add iMX95 PCIe support
-Message-ID: <20240107055106.GL3416@thinkpad>
+Subject: Re: [PATCH v7 13/16] PCI: imx6: Clean up get addr_space code
+Message-ID: <20240107055510.GM3416@thinkpad>
 References: <20231227182727.1747435-1-Frank.Li@nxp.com>
- <20231227182727.1747435-13-Frank.Li@nxp.com>
+ <20231227182727.1747435-14-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,160 +82,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231227182727.1747435-13-Frank.Li@nxp.com>
+In-Reply-To: <20231227182727.1747435-14-Frank.Li@nxp.com>
 
-On Wed, Dec 27, 2023 at 01:27:23PM -0500, Frank Li wrote:
+On Wed, Dec 27, 2023 at 01:27:24PM -0500, Frank Li wrote:
 
-Mention 'RC' in subject.
+Subject: PCI: imx6: Rely on DWC core to fetch 'addr_space' region 
 
-> Add iMX95 PCIe basic root complex function support.
+> The common dw_pcie_ep_init() already do the same thing. Needn't platform
+> driver do it again.
 > 
 
-Add iMX95 PCIe Root Complex support.
+'Since the dw_pcie_ep_init() function is already fetching the 'addr_space'
+region, no need to do the same in this driver.'
 
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+With above changes,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
 > ---
 > 
 > Notes:
 >     Change from v1 to v3
->     - none
+>     - new patches
 > 
->  drivers/pci/controller/dwc/pci-imx6.c | 90 +++++++++++++++++++++++++--
->  1 file changed, 85 insertions(+), 5 deletions(-)
+>  drivers/pci/controller/dwc/pci-imx6.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index d66a2db53bdb7..9e60ab6f1885a 100644
+> index 9e60ab6f1885a..4b2b9aafad1b4 100644
 > --- a/drivers/pci/controller/dwc/pci-imx6.c
 > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -42,6 +42,25 @@
->  #define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
->  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
->  
-> +#define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> +#define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> +
-> +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
-> +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
-> +
-> +#define IMX95_PCIE_SS_RW_REG_0			0xf0
-> +#define IMX95_PCIE_REF_CLKEN			BIT(23)
-> +#define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> +
-> +#define IMX95_PE0_GEN_CTRL_1			0x1050
-> +#define IMX95_PCIE_DEVICE_TYPE			GENMASK(3, 0)
-> +
-> +#define IMX95_PE0_GEN_CTRL_3			0x1058
-> +#define IMX95_PCIE_LTSSM_EN			BIT(0)
-> +
-> +#define IMX95_PE0_PM_STS			0x1064
-> +#define IMX95_PCIE_PM_LINKST_IN_L2		BIT(14)
-> +
->  #define to_imx6_pcie(x)	dev_get_drvdata((x)->dev)
->  
->  enum imx6_pcie_variants {
-> @@ -52,6 +71,7 @@ enum imx6_pcie_variants {
->  	IMX8MQ,
->  	IMX8MM,
->  	IMX8MP,
-> +	IMX95,
->  	IMX8MQ_EP,
->  	IMX8MM_EP,
->  	IMX8MP_EP,
-> @@ -63,6 +83,7 @@ enum imx6_pcie_variants {
->  #define IMX6_PCIE_FLAG_HAS_PHY			BIT(3)
->  #define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
->  #define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
-> +#define IMX6_PCIE_FLAG_HAS_SERDES		BIT(6)
->  
->  #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
->  
-> @@ -179,6 +200,24 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
->  	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
->  }
->  
-> +static int imx95_pcie_init_phy(struct imx6_pcie *imx6_pcie)
-> +{
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +			IMX95_PCIE_SS_RW_REG_0,
-> +			IMX95_PCIE_PHY_CR_PARA_SEL,
-> +			IMX95_PCIE_PHY_CR_PARA_SEL);
-> +
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +			   IMX95_PCIE_PHY_GEN_CTRL,
-> +			   IMX95_PCIE_REF_USE_PAD, 0);
-> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
-> +			   IMX95_PCIE_SS_RW_REG_0,
-> +			   IMX95_PCIE_REF_CLKEN,
-> +			   IMX95_PCIE_REF_CLKEN);
-> +
-> +	return 0;
-> +}
-> +
->  static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
->  {
->  	const struct imx6_pcie_drvdata *drvdata = imx6_pcie->drvdata;
-> @@ -579,6 +618,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
->  		break;
->  	case IMX7D:
-> +	case IMX95:
->  		break;
->  	case IMX8MM:
->  	case IMX8MM_EP:
-> @@ -696,10 +736,19 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
+> @@ -1080,7 +1080,6 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
+>  	int ret;
+>  	unsigned int pcie_dbi2_offset;
+>  	struct dw_pcie_ep *ep;
+> -	struct resource *res;
 >  	struct dw_pcie *pci = imx6_pcie->pci;
+>  	struct dw_pcie_rp *pp = &pci->pp;
 >  	struct device *dev = pci->dev;
-> +	u32 val;
->  
->  	reset_control_deassert(imx6_pcie->pciephy_reset);
->  
->  	switch (imx6_pcie->drvdata->variant) {
-> +	case IMX95:
-> +		/* Polling the MPLL_STATE */
-> +		if (regmap_read_poll_timeout(imx6_pcie->iomuxc_gpr,
-> +					IMX95_PCIE_PHY_MPLLA_CTRL, val,
-> +					val & IMX95_PCIE_PHY_MPLL_STATE,
-> +					10, 10000))
-> +			dev_err(dev, "PCIe PLL lock timeout\n");
-
-You should return err here because, if core deassert is not performed then the
-core itself cannot be used.
-
-> +		break;
->  	case IMX7D:
->  		/* Workaround for ERR010728, failure of PCI-e PLL VCO to
->  		 * oscillate, especially when cold.  This turns off "Duty-cycle
-> @@ -1281,12 +1330,32 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(imx6_pcie->turnoff_reset);
+> @@ -1099,14 +1098,8 @@ static int imx6_add_pcie_ep(struct imx6_pcie *imx6_pcie,
+>  		pcie_dbi2_offset = SZ_4K;
+>  		break;
 >  	}
+> -	pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> -	if (!res)
+> -		return -EINVAL;
 >  
-> +	if (imx6_pcie->drvdata->gpr) {
->  	/* Grab GPR config register range */
-> -	imx6_pcie->iomuxc_gpr =
-> -		 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
-> -	if (IS_ERR(imx6_pcie->iomuxc_gpr)) {
-> -		dev_err(dev, "unable to find iomuxc registers\n");
-> -		return PTR_ERR(imx6_pcie->iomuxc_gpr);
-> +		imx6_pcie->iomuxc_gpr =
-> +			 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
-> +		if (IS_ERR(imx6_pcie->iomuxc_gpr))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->iomuxc_gpr),
-> +					     "unable to find iomuxc registers\n");
-> +	}
-> +
-> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_SERDES)) {
-> +		void __iomem *off = devm_platform_ioremap_resource_byname(pdev, "app");
-> +
-> +		if (IS_ERR(off))
-> +			return dev_err_probe(dev, PTR_ERR(off),
-> +					     "unable to find serdes registers\n");
-> +
-> +		static struct regmap_config regmap_config = {
-
-const
-
-- Mani
+> -	ep->phys_base = res->start;
+> -	ep->addr_size = resource_size(res);
+> -	ep->page_size = SZ_64K;
+> +	pci->dbi_base2 = pci->dbi_base + pcie_dbi2_offset;
+>  
+>  	ret = dw_pcie_ep_init(ep);
+>  	if (ret) {
+> -- 
+> 2.34.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
