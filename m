@@ -1,32 +1,32 @@
-Return-Path: <linux-pci+bounces-1798-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1805-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4895D826C89
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 12:24:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E104A826D09
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 12:40:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E18FA2834DC
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 11:24:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 669571F22038
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 11:40:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C832514AA5;
-	Mon,  8 Jan 2024 11:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D110314ABC;
+	Mon,  8 Jan 2024 11:40:36 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2054.outbound.protection.partner.outlook.cn [139.219.146.54])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2053.outbound.protection.partner.outlook.cn [139.219.17.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5958210F2;
-	Mon,  8 Jan 2024 11:23:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673E614AAE;
+	Mon,  8 Jan 2024 11:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c/0N8jo5K2ZhRC0mR5xHTeYBV9vdKnP6T+0lpBuf6yS0yrnHegIvlLsl/UYkepVWYzhQTUrI4fVE0nepMBfENlqvgHhmUNY/Lv7SjNv/Kll/3HmWqrihTsnHwEy8tgswOem8MfPTJukzJHa4XgCGwPjWj8UozIhA+7Qwm3JALzWncPuDOZAvobc+aLOLrGPyjiJE99hEruNNEpUpopsj2045iSBbpbxaFAloEEn3zXFD/eTOQR3vIOs3pOHzxZy7Wwfj6S815NsTdGN2rpQVjBkpmhIBDiLi9KeAbW60LdeRxymUHfgCTxUKdwuF9YLjSEV3rpT69RLujWD8GR6Gow==
+ b=nNSrxoW480dcSq2maj/fJ3SHoia9EDzinyXewvOLsOYBgr5VZzEyhzkZ6gBxea4WaWJh7E5HC3JV03mSapRSN0nxlhvnaVZIhSdvraIUj4eZMLkk6Z7tyE5ouBz7FK+FiNc8oVCZJ+EKVVe78OA6qEXQHfBOV2IY0RnwZxn0kVuY4LN6/vzIJPkdcVj+8+s6eAZjop7S9E9OyZXhr7aBpj6RWyvsY9AhZLoxYKp9mq6UCGO50He5h3j3S+fSa5xCLqTkGMldg9/YwNdfB96/VroSRrIoJxM0Dsn4s7S4Bw7NUk0PuyyHUHSXgk/vHIErXTWJw8GSKAw7jl6AXrCtaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QeVe7oJD2XTht38gIbXLRqOFThq4NByQNjE9LHlCG6o=;
- b=b+FAS0ahMWTYuq1/qjLgMF/06Y99TW7Sbbs4suko4xnMDrY5EBBDn3SjTM2O2h3UZgmHIaukqmAY6l+K7tFk1F18wAn3t7vAjykShy42pL7XE5axliYlgLhrcHW5ON7luiby+4pQQqOx/4yjIKzsC0Y4M6xFDobqbcj54ACjyFL4obcvYjtCPDWhNkzX8Unt+7EjyUSqtGjybYxAAaoCYHUXO1DEE4fQwuyAvlSYYtExguEEEotJDMMJrZ3qa1CvoKQoW3nTMBH25jKQ3xL9BHgvlBRyGXLaa8tu284JVKjKwK2Jf0/R8q1GEYRKs6OZhfmz6uugvKd1iMQ/UX66Hw==
+ bh=pb6Em/BmQcD7nzISggViwkd990VUOTxwxw4eGNuviyQ=;
+ b=gcSH8haaBzWI4PylBn+zm+gONHcY2r2l/Ik3UHZ/+EuaAoh/ucaTrHWZ/hkH5XtuGBx9gYSbxraOr5mYkKbwylPrFl6TfqDyD2/UXkLDaM8InSKaqyGdHYWhJq7LzTiefUxmlMf1vlnSSQ68Y12qxM3t3ejU3ZmOs9uQhRXTdLf6K9QbgVgKRuYnPCpH1a3BfE+csU5ykNEhVdotWlyk/0Ml7/3cQK6rHWoXOhe4WhoiRli9uD8QBQsbj+G7nYbL/m2kaBd8atGbaxIRSqJBCBm3p5NdbTe3Q7BPcIGOBufE3LcSAVMDkYKfssFelS/coETY1C1Ndt8z+yUaNaQM9A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -36,11 +36,11 @@ Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:25::15) by SHXPR01MB0797.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:26::12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.32; Mon, 8 Jan
- 2024 11:06:44 +0000
+ 2024 11:06:46 +0000
 Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  ([fe80::e6aa:baea:fd8c:4cd2]) by
  SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::e6aa:baea:fd8c:4cd2%7])
- with mapi id 15.20.7135.032; Mon, 8 Jan 2024 11:06:44 +0000
+ with mapi id 15.20.7135.032; Mon, 8 Jan 2024 11:06:46 +0000
 From: Minda Chen <minda.chen@starfivetech.com>
 To: Conor Dooley <conor@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -62,9 +62,9 @@ Cc: devicetree@vger.kernel.org,
 	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
 	Kevin Xie <kevin.xie@starfivetech.com>,
 	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14 11/22] PCI: microchip: Add num_events field to struct plda_pcie_rp
-Date: Mon,  8 Jan 2024 19:06:01 +0800
-Message-Id: <20240108110612.19048-12-minda.chen@starfivetech.com>
+Subject: [PATCH v14 12/22] PCI: microchip: Add request_event_irq() callback function
+Date: Mon,  8 Jan 2024 19:06:02 +0800
+Message-Id: <20240108110612.19048-13-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240108110612.19048-1-minda.chen@starfivetech.com>
 References: <20240108110612.19048-1-minda.chen@starfivetech.com>
@@ -80,118 +80,167 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0797:EE_
-X-MS-Office365-Filtering-Correlation-Id: f5f32a3a-5eae-4af6-a6f2-08dc1039e613
+X-MS-Office365-Filtering-Correlation-Id: 1b70f64c-6715-4a11-0958-08dc1039e740
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	flP+ZoALSXL+w2SLhXW0RW5IUVtloT07IU2kEt/CBFA621/3eZ+7wTDcjnTnkjpe296Qvnd9a2Hsft2OLYQC19QM3ORUfiagGz+F2sruXQuqBHiVIwvRJBgYvpqxa2PNJDhV8NyJJUYqnklWvcDHnHYejj3TU9vn3e0ptbTvg1us9zgzKNAB+6xhhDdQB+XR3RVDtpRhzKj8AqKDNJYbJO6jlXWjQLSpFHqGeXJP+OvfKvHsyiLwyUu1PQuEggQ9Od9OFdT96G2pGWdloOJdVpTxqt61eq45Im+o+uaXlT7ZIJItPAoNtnYYLquFZpt4uzuKxRoswsR14lWR5GtQ2pGNWhHoAuuM0xNy8blYpxxExwYQaLgPKHGJQaaAyswwOhUoNycqgsx2RCZe8t1/fWaQ4MndW+1VU+69oqKIjZRi4NZJJ7jd7zd9WtXQNGDkNFdP/yJ8Sx4rGqrVLMxFYGqWdhulnSLnK3fg7nGLLMBra5U0Z6jnNE2e0F6WWKdEzJkN5Swq+NwBcgPnUoWBbXxklYxgseK2ghBn3QkQ4xym5PUWSEaWdQST6rrGmekV
+	AAkhzz77rVhxzkbhXFnt4rTTxoTgsGsZWGUVLm0/uyvuMUc3cAmAswXKsGMxURwQorp5huvP+E8KrXahzWrLRxZRfdlkZsfKXYjuGBH1zEq8VI8oKZgd1+jjb1L0gOgLrCb/SE0qITzH+J5eBZrMG4pPfv4m4BRIL2rkfm9YLF1I4z9JdLhNBpi08AbTKpKwgZsKLvo37r0o6Mdr/x58Qm2IBNSseHHhz4bbXPFkksTVhMP8lP9onUGTHMyGmgYM3SmBKH4GCuj9avI/wdWyzcw50Wi0WHFl8gZkE3yf2LZZ5VO9Q9AeKP4EZfvKjAr5IF9PqwRkkyoscSNztWt42Mm1MYtVvtDeZqjaAYOl7snp6mYADrrUeMxvc/lOWnC8BtokvzAvc7rspHLL4PWek8uQQjGY4NYsjo7HvSJTtVTCkVImUyNGBnYzXmsyu3iw5oJ7jTAwIebVtxj97JejgvXXu0WsRH4kjOhZ8GCIyjlAuDrKvNadpFco0ECibf9oN6O5gRRejqHApnlOLMU/odrjxzu3f9V2+TJJXOESVPFtiNSZGelfHHT5k+93eVRg
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(39830400003)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8936002)(41320700001)(1076003)(107886003)(26005)(2616005)(83380400001)(44832011)(8676002)(4326008)(86362001)(52116002)(508600001)(66476007)(6666004)(66946007)(66556008)(54906003)(110136005)(40160700002)(38100700002)(38350700005)(2906002)(5660300002)(7416002)(40180700001)(41300700001)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RClnib4o5ffBpZNjimNWGoMVx7b19IExxsno42+S+zZbN2z77veIXHpRKZbv?=
- =?us-ascii?Q?U+xxYgkBXkqyOdpHz2u6b5HV6gCeMuUNaPUdbl3Eq4t5WDCZD11spOzNrwWP?=
- =?us-ascii?Q?GFxkwXQSEF5fa9o/WTYonAGOYm3DurdkJhHvlzW9byHnAfXnzRHPLyz6tSi8?=
- =?us-ascii?Q?zK7oM9AypdCwTP0dJgDByJxJyMn9Ukk4DlBjT8Ntz7c8SGmBPY4WUWWxxiAn?=
- =?us-ascii?Q?XYp9/jSr3SmUjZwkTU67isacXVPEjnQFGeMc8o6Qb8nsvMHkVTjNdGGjz+2S?=
- =?us-ascii?Q?wfy3zN4Yfa09ztlLCTACsYGeik9lhuGuPEXfDyNW5f0U2jFjqdSygWSkt6JK?=
- =?us-ascii?Q?skpOCQBQEsVQ0cTFK2R5VJD8MGVwy9mlfLChVRLdQmZpo3MZz/LbXyBPF5/S?=
- =?us-ascii?Q?2iuvt8Np3ypyiDATGDMoCBZWwympy5+2ShEcQm2hxuM8tpRayx5rFQp3/3L0?=
- =?us-ascii?Q?Y7S7HOC2q8Qv6EsXFzRjYQ+Skalx9nB0DBQiYE89R/1HlQSeDAq7R3xi1whN?=
- =?us-ascii?Q?5xEk8ISs98CUomv8GKSd1fQyJnBWWUg4rdcyyEKLxiTOILomu125LHEox8BG?=
- =?us-ascii?Q?c2qO5eDpgyGdAg3ttHQ5T/y/IlhGVRHKHzvQqtaOhiH/lYGY5NFuIAj55zX+?=
- =?us-ascii?Q?Lxd8e9dndpq5kKU6bi6CBZB7zNE0uoFev0ziPrpIf8Tsbl+P+iEKwxnZvMnk?=
- =?us-ascii?Q?UADkOx/fvpG/yJyruvRQMFh7osZXoEJ5XxKDj43PN8o67GjXk1uuz+4b40f8?=
- =?us-ascii?Q?fwsvG2sBJyV1LrwQ0XlGAXfPX0aG8subccTE7infD+zY61UuUzUi6APzLtjM?=
- =?us-ascii?Q?0URwqOyAEgxow8WFVuygAZKvaRK7Ojnel9H7NYVeQkWICWZsjXXQBk+VWJ0u?=
- =?us-ascii?Q?RMwdR/YCWzu+tNv0NeN8o/lICi3KPDVZO8idAnF+o/RrDbCd+JfpEYCytxGz?=
- =?us-ascii?Q?PFes4eWgTsITf5NFOnX3UHCTzumEdvinnwMj5zLLw4cRC9tZs+NRmnBLwn7y?=
- =?us-ascii?Q?yOsqtCwoYXv39XcELy+gC734v8QbceitUFg//MOfZnTkm44LiygIkHolCSqM?=
- =?us-ascii?Q?pBbZMJqmF9EK1XUQaPzf9msnhZ5Hd5DzjoqUzJZUAVWBp+83GiqJbb3YROqE?=
- =?us-ascii?Q?zwbRCed8SeV0uUr7bR5Mh0qlbie7ITi8b+dJM1XwFMQu/ae10PKqieG7JB8S?=
- =?us-ascii?Q?3Hh+LHBEvRTGBh4zA6ljY8s4SLT56EErfVmUg0xzAqu7cPrV+RLBWj+yMJFb?=
- =?us-ascii?Q?sn5dQtBsX2bZPYZnH5/xMyaeZoDkyERx8shm+MQfwxCM7Lin20uopKjt8QXn?=
- =?us-ascii?Q?RDrcmZ9qs6hjyRWtwp5GcCKi/TYvvRcULhL3VAsJEeB03x/7dT5a2IhLKT2m?=
- =?us-ascii?Q?h5sw7uqOdE0RCl9pKLuTE50l8Y4dpnAqB/qy3g/eFXHGgaY26/Zl/wRuqVN3?=
- =?us-ascii?Q?jhdp3UEPPV2JgEPF22VljrTi9AUTv1zqBFe4MX9ENxFo4nMgjInaRCbU8SxD?=
- =?us-ascii?Q?ETPV/KZKBFreomk3Fra1HZHt2lxG0RpSl+KgwabBnUJ6CUbBo2CniQP7t+f0?=
- =?us-ascii?Q?qyr6f31lPcwbiJX4fhT1Qr3PRGMVsuIAM+NKb36QsK2swpeBcVGWH2hyUpEC?=
- =?us-ascii?Q?Fw=3D=3D?=
+	=?us-ascii?Q?5AmbcUv6nEMSnQ0O+Pw37Eh8xmxjRg/bJXknrRSxiUf5CCK/gBIO4C4ufU6R?=
+ =?us-ascii?Q?bmvfedzaO49dbhhFoAfkak1gl62DgFnWt8e2M5IEkbLQoyGycsmSoRthK74i?=
+ =?us-ascii?Q?gmhK9s/jg8HXVXXwKFV0aj0vHenduj5g731j2WhLMRNaz98T2ac4v8F2seGw?=
+ =?us-ascii?Q?A3tAFhq0mvjCh2tck+/Slr3hSt6TW6+OmHPX6TGmgTeJu24nNC3X5hAEdVnv?=
+ =?us-ascii?Q?LbLw6DTr7K5pUGT4vTl0d4+FDyGgPeR/cmJ6VrwfLvs7w51Y4y8Ug4O96o7E?=
+ =?us-ascii?Q?OCSAW2P6h9Ukizt5mXQ602aVduO1KIO2wullWcbaY6G5lKptHEYdr45SedHv?=
+ =?us-ascii?Q?22fdgjSdqtXUPfb6WfCzYYLVNnAztOdAtQ6HdJ5zx6L3pOQijhIif7kL5MWp?=
+ =?us-ascii?Q?aM1jgWD/VuZGtiWTUL2ttcN6QvineU1ZPrmBe4+hELiBe2wjvZExeVFhb8B8?=
+ =?us-ascii?Q?DsDLJM5DDiaz+rxngv2fhEYPIkXt5S1/tTpamOw0C+1Z0BCCMliNPpUPHWWf?=
+ =?us-ascii?Q?5Gg7oSPW1RUzdHhLmp/QgxpWvipxC3SF13ntOt/Fwph6r7I07gwrjokrqay3?=
+ =?us-ascii?Q?3IYpsqLlzs03/IRNJ/nMUXZgluUCxlkaqg4qUjndC9N8r09xhYP212+Lttjj?=
+ =?us-ascii?Q?miDZ0z1FkFBK7ge0fcYSSiOa3zNBLjUgyOmxqAAwVtVFv4eQ2ZEf9HtQra1J?=
+ =?us-ascii?Q?RmRO+9sVVojolAs1mMPYIiY8aOMXOV0e8JSd3BxVHnjPpEaylGb1CAoOjLj+?=
+ =?us-ascii?Q?vGamVmH7aWDDDpCCpmzhOLUNj7tMhFx5EfAd2B1BLLxW1SiXV60MaXWij1LB?=
+ =?us-ascii?Q?n/Pu5QsW8cPGdDvHpF6+sA5a345UEyZ35BD9CbHpwrzsv+MDFlK+R2rmTOhR?=
+ =?us-ascii?Q?8/jglM3l75DZ5Lev53XfJ7C+ZPntpIL9WALWxkvv0QgyFLw0sOsz0zUJqQdc?=
+ =?us-ascii?Q?zixIVbl/rPmp00HlWvgRUnPs5tKf3+0GFoajFm+5ZSm57Na4luLpdPv20l41?=
+ =?us-ascii?Q?ff2weJdrcvJVuXhU+S+4MZQnlHvIiCRE94enitl1/bR/2AqkuWkua3C9gfsD?=
+ =?us-ascii?Q?4QYELqHRDyM9/WhrXUeK53qKfzGx4INFhuwxYMDpRQdQWkLaj1UJunrxY/6O?=
+ =?us-ascii?Q?FSf9ObYpqwfRCwxJx5DMV4UFf6G6u74rCKRJOwLb3GY+MyBKLUcei72DnyLR?=
+ =?us-ascii?Q?wAWA7T/cLZ7SqhTucAgyF+QI1Mwh3gnugfIysDb+/7tRIz9eRlHrjncnOEhH?=
+ =?us-ascii?Q?c0W9361CV26Vvi1p6ttk3o4icLbHcmKhFIeFsPi1y0UjqTInL5AamPuZ2GGv?=
+ =?us-ascii?Q?HMJrgWZKG9bZQwkI2TU2bx3UrV3COz+OmsbhThCe4tgmQVtn4sheQ/0oS7kj?=
+ =?us-ascii?Q?97+URsgj06VBKZtmqyIvZzGZNWXzHoShLLTLIgKecFbrQ23eQ++B5hAHTQ5R?=
+ =?us-ascii?Q?CXDhJ6v4/grgsFMAq3L8ejKephnkRdwlnqjdaRe7g5KXy7ijtHWvS3AwA6RP?=
+ =?us-ascii?Q?/R+Tz36XMRVd75MPPVdVe7lH+zOQ/YQgoeTG+glJxVDtfAYwWvVZvMZUq39g?=
+ =?us-ascii?Q?X8YdUfffeonM7r6sx/vvg7rFmFhGw/aJ41GKcHYo2Hl6R19L+rFDgLcpVbwH?=
+ =?us-ascii?Q?tw=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5f32a3a-5eae-4af6-a6f2-08dc1039e613
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b70f64c-6715-4a11-0958-08dc1039e740
 X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:06:44.0404
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:06:46.0278
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: twOnW1d8IQmB+s+hGMoMgt5apTt0jgnEhzJUMXdNIzuAsrLXfKTv7GpEigSZZf3YG/8cGL2z3RwDom0CdPjuRXTTqx9GkTO8clOJ7dzwBog=
+X-MS-Exchange-CrossTenant-UserPrincipalName: cGfH8itZEs1gYQ8LbGuOL/Pi9viMeY80lx0ABocOhbgc78oSRf3wUn9i+pq7+2aYcawf+4vItxeykxENUzMFnD2v7ZYD/5ATz5iYKhR6DCQ=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0797
 
-The number of events is different across platforms. In order to share
-interrupt processing code, add a variable that defines the number of
-events so that it can be set per-platform instead of hardcoding it.
+As PLDA dts binding doc(Documentation/devicetree/bindings/pci/
+plda,xpressrich3-axi-common.yaml) showes, PLDA PCIe contains an interrupt
+controller. Microchip Polarfire PCIe add some PCIe interrupts base on
+PLDA IP interrupt controller.
+
+Microchip Polarfire PCIe additional intrerrupts:
+EVENT_PCIE_L2_EXIT
+EVENT_PCIE_HOTRST_EXIT
+EVENT_PCIE_DLUP_EXIT
+EVENT_SEC_TX_RAM_SEC_ERR
+EVENT_SEC_RX_RAM_SEC_ERR
+....
+
+Both codes of register interrupts and mc_event_handler() contain
+additional interrupts symbol names, these can not be re-used. So add a
+new plda_event_handler() functions, which implements PLDA interrupt
+defalt handler. Add request_event_irq() callback function to
+compat Microchip Polorfire PCIe additional interrupts.
 
 Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pci/controller/plda/pcie-microchip-host.c | 8 +++++---
- drivers/pci/controller/plda/pcie-plda.h           | 1 +
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ .../pci/controller/plda/pcie-microchip-host.c | 31 ++++++++++++++++---
+ drivers/pci/controller/plda/pcie-plda.h       |  5 +++
+ 2 files changed, 32 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index 18bc352db389..0a5cd8b214cd 100644
+index 0a5cd8b214cd..bf5ce33ee275 100644
 --- a/drivers/pci/controller/plda/pcie-microchip-host.c
 +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -653,7 +653,7 @@ static void plda_handle_event(struct irq_desc *desc)
+@@ -642,6 +642,11 @@ static irqreturn_t mc_event_handler(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
  
- 	events = mc_get_events(port);
++static irqreturn_t plda_event_handler(int irq, void *dev_id)
++{
++	return IRQ_HANDLED;
++}
++
+ static void plda_handle_event(struct irq_desc *desc)
+ {
+ 	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+@@ -803,6 +808,17 @@ static int mc_pcie_init_clks(struct device *dev)
+ 	return 0;
+ }
  
--	for_each_set_bit(bit, &events, NUM_EVENTS)
-+	for_each_set_bit(bit, &events, port->num_events)
- 		generic_handle_domain_irq(port->event_domain, bit);
++static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
++				int event)
++{
++	return devm_request_irq(plda->dev, event_irq, mc_event_handler,
++				0, event_cause[event].sym, plda);
++}
++
++static const struct plda_event mc_event = {
++	.request_event_irq = mc_request_event_irq,
++};
++
+ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
+ {
+ 	struct device *dev = port->dev;
+@@ -904,7 +920,9 @@ static void mc_disable_interrupts(struct mc_pcie *port)
+ 	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
+ }
  
- 	chained_irq_exit(chip, desc);
-@@ -816,7 +816,8 @@ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
- 		return -EINVAL;
- 	}
+-static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_rp *port)
++static int plda_init_interrupts(struct platform_device *pdev,
++				struct plda_pcie_rp *port,
++				const struct plda_event *event)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	int irq;
+@@ -928,8 +946,13 @@ static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_r
+ 			return -ENXIO;
+ 		}
  
--	port->event_domain = irq_domain_add_linear(pcie_intc_node, NUM_EVENTS,
-+	port->event_domain = irq_domain_add_linear(pcie_intc_node,
-+						   port->num_events,
- 						   &plda_event_domain_ops,
- 						   port);
- 	if (!port->event_domain) {
-@@ -920,7 +921,7 @@ static int plda_init_interrupts(struct platform_device *pdev, struct plda_pcie_r
- 	if (irq < 0)
- 		return -ENODEV;
+-		ret = devm_request_irq(dev, event_irq, mc_event_handler,
+-				       0, event_cause[i].sym, port);
++		if (event->request_event_irq)
++			ret = event->request_event_irq(port, event_irq, i);
++		else
++			ret = devm_request_irq(dev, event_irq,
++					       plda_event_handler,
++					       0, NULL, port);
++
+ 		if (ret) {
+ 			dev_err(dev, "failed to request IRQ %d\n", event_irq);
+ 			return ret;
+@@ -983,7 +1006,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 		return ret;
  
--	for (i = 0; i < NUM_EVENTS; i++) {
-+	for (i = 0; i < port->num_events; i++) {
- 		event_irq = irq_create_mapping(port->event_domain, i);
- 		if (!event_irq) {
- 			dev_err(dev, "failed to map hwirq %d\n", i);
-@@ -1012,6 +1013,7 @@ static int mc_host_probe(struct platform_device *pdev)
+ 	/* Address translation is up; safe to enable interrupts */
+-	ret = plda_init_interrupts(pdev, &port->plda);
++	ret = plda_init_interrupts(pdev, &port->plda, &mc_event);
+ 	if (ret)
+ 		return ret;
  
- 	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	plda->bridge_addr = bridge_base_addr;
-+	plda->num_events = NUM_EVENTS;
- 
- 	/* Allow enabling MSI by disabling MSI-X */
- 	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
 diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index 3a17d8ab5bb2..adfca9f28458 100644
+index adfca9f28458..16b81b23c213 100644
 --- a/drivers/pci/controller/plda/pcie-plda.h
 +++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -124,6 +124,7 @@ struct plda_pcie_rp {
- 	raw_spinlock_t lock;
- 	struct plda_msi msi;
- 	void __iomem *bridge_addr;
-+	int num_events;
+@@ -127,6 +127,11 @@ struct plda_pcie_rp {
+ 	int num_events;
  };
  
++struct plda_event {
++	int (*request_event_irq)(struct plda_pcie_rp *pcie,
++				 int event_irq, int event);
++};
++
  void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 			    phys_addr_t axi_addr, phys_addr_t pci_addr,
+ 			    size_t size);
 -- 
 2.17.1
 
