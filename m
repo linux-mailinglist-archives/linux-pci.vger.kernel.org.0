@@ -1,129 +1,190 @@
-Return-Path: <linux-pci+bounces-1802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0419826CE6
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 12:34:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3864826D39
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 12:58:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 020D31C20BA2
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 11:34:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B1241C2206F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 11:58:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A5014A93;
-	Mon,  8 Jan 2024 11:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2990120316;
+	Mon,  8 Jan 2024 11:58:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c01Cec7i"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="enOChvHJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8655129412;
-	Mon,  8 Jan 2024 11:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 408BYJqA061459;
-	Mon, 8 Jan 2024 05:34:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704713659;
-	bh=6ybS2qS69K54f2tDvHXfkSmY2DjqqOxTa+HLeypQHJQ=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=c01Cec7it89xzE/bLC69pzucAOv1+iGa1pKsrNQKh4akhLHoM05X/1PS4S4VbwNXz
-	 VxJdnCOndTny4ujBvAsefa0biv/aVIYT9GcPaTCssn3W0ws+XXhhBfomXWMOpvdKbQ
-	 y54NSgP3jh3hfGnnGAkH04ynj75FiPt3Uug7nizc=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 408BYJMQ091423
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Jan 2024 05:34:19 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Jan 2024 05:34:18 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Jan 2024 05:34:18 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 408BYE4R062021;
-	Mon, 8 Jan 2024 05:34:15 -0600
-Message-ID: <e4bd76d1-e5d9-4ff6-8917-db5784dea847@ti.com>
-Date: Mon, 8 Jan 2024 17:04:14 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780022575A;
+	Mon,  8 Jan 2024 11:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QX/SygRH9v2ixSVQgRi0PkT00fg3ImKi24T0d4lhv7r8nmkejEx+TlD/RWWZY0vjQzlGE+IDudsbsWEFIGp6qBlEQ6nqccqcGCQ/zvnDbRmCSAi/BKS8CtzsLFI7W84USt4MeZ5C9KuggL4wBVZgPEmqekrCrT+aTjo2xzOW394Uvvk+ffDnqQl0VWne4h2m4xBo6jih0IKcbqSaKiVgIwYXYN6uiW9F/QtLuR5XGhEKPbLlXCSYKOlRNXW2fZsHuv38zRQRymDfoqkm9ubcT+RGuZ08r1wxAlv67BJiKW4rmos+U2kdhSbyfRN6IKooRc0NpDARG38rBcNtp5SBvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7S8wRJY7RrhhwPK0JuWEJ+IDUdTX0ZCfV/IktDYUmpA=;
+ b=fruUvLimxSkQvdltZfCoFSEVjT9DReKVh6TKnbK+5oqHaeZ9g1DFjTu+Z+mqUu2D/Qfrp9TrXB+QXtmdUjh1hVBha7ascvtPIGwNDSzWdSjf4Uwj764Mxb7kf2/v3J/gksAqbL9mUJECB+PNNXC7/7B41zEcgwOUKKGnW2U2JKNYuSz5Z3WBZJADsEB5TzVvYO05P6wk9ocqMt57+3LzLDBX6evWuSV2MaYKkWprREsD+bWwYR9hRQcUDy1A/dWLqecVFB7ehasC1QfERmKWci9KOXxx8Fng4b2uGguYkFZl6jPXGH/ErvhMd0S7sL1K/bsyWnSLiVU6EXYqiPMfnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7S8wRJY7RrhhwPK0JuWEJ+IDUdTX0ZCfV/IktDYUmpA=;
+ b=enOChvHJa4N7gl01HAJ5d1D+OzaBZzOespSSYL48IbxX1pPEY/wvTl+Enww7C9Uqo3zjk9ZSjmfhCfPbSH1H/FJZe6cmqCdD4lvnjF2WryeBCO9siDZ3onHLNtbnBDq1/1ZgV5qsSv5hTp6h1Yga2LsEDsUAMcvUth6vzg9Bcjw/v7Tl6nPqb367oVzaM8s8gRemjyiZi8vCqF/kvJoM+FXtpuFE8xqxBK5+gsD+dib1E8cljkc6C+/+MckDt09AV+upNeEzwgnUQQxnyYrDgdX0FwfKoGbsaM5Skys/CsCkkZBu39u/WRVRxs4wkNWnsiDdox4JP6e2vFWV2If7lg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
+ by MW3PR12MB4490.namprd12.prod.outlook.com (2603:10b6:303:2f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Mon, 8 Jan
+ 2024 11:58:41 +0000
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::55f7:f35f:a684:bf3c]) by PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::55f7:f35f:a684:bf3c%4]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
+ 11:58:40 +0000
+Message-ID: <d8ccc4ea-385a-4def-bc71-574a99538e34@nvidia.com>
+Date: Mon, 8 Jan 2024 17:28:31 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1] PCI/MSI: Fix MSI hwirq truncation
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com,
+ tglx@linutronix.de
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ treding@nvidia.com, jonathanh@nvidia.com, sdonthineni@nvidia.com,
+ kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+References: <20240105134339.3091497-1-vidyas@nvidia.com>
+ <e529aafc-7d97-4e38-b994-26ce99f2715d@linux.intel.com>
+Content-Language: en-US
+From: Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <e529aafc-7d97-4e38-b994-26ce99f2715d@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0023.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:b8::12) To PH8PR12MB6674.namprd12.prod.outlook.com
+ (2603:10b6:510:1c1::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [RFC PATCH] dt-bindings: PCI: ti,j721e-pci-host: Add device-id
- for TI's J784S4 SoC
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-References: <20240108050735.512445-1-s-vadapalli@ti.com>
- <67af1724-6424-456a-aff6-85d9e010c430@linaro.org>
- <bc3a0fb0-6268-476a-a13a-2d538704f61d@ti.com>
- <7d3439c2-35e3-4318-aa99-af9b7c8ed53b@linaro.org>
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <7d3439c2-35e3-4318-aa99-af9b7c8ed53b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6674:EE_|MW3PR12MB4490:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f6dbd60-da96-4a7e-cb82-08dc104127b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	S3PW33u706WreM/Mv538vk2Mo/v7XoH90BrKzyE8kX68FtB0H2uHO8tDTJ1M52hYRMZT6SRn04BPkhiWQWQvW4AtrMWbuIkjWHrEQxbe0v0DTmZoGeZUBwxuSKZEwWLxtoVXER2ZKVJ0jXpxQacP7yeAfX7HkYF+pAgLHHHPkxl0ytulTAZMay4KR4ItFveWc3ImAvKFDnrxnn3INfgSA4gp2kJz5Jk3XHTQDW4lAcQ+zcECuuldlAzOMgK5Bh1FDKWz2SMudlnBEpep7gTu7/tBvQpiUa6lt5kjPS4HDjv2Wv3uNcE6KgXvEqtHLMXv9NRftBXnG/94rXmcfNqPePmxaFrGE9GhfgRH3F/9iOagyFxu30AnZR1yvnxHDFsHkoe0fwaAUhixxwLf/H/OhWxwI4gA/S+evhhvEhEUwC9EG6D562kASP/SLL3Jr2QqdzHjxzqhqAHs9pLvBIm2Wa97JMZ4BM/JPLsCrxokUruS8a/9pqIcgIqgj8dhSAq6xZbKsAe6vkQvg6WYnJtzeoMXBW/pXxDB9UtEX3SeMxu8vw8DaGA1ovT/pBnaNKGluttetPXM+tE5WV2yYV01HJeNuElofXOk6fAzrAn0NFwaDYLv526cQlSvcUmyDrPcQZYNRXAoG1fYOL1Xh17NpY6JLf32m+MoqzcapJGD6YqX1rfTXVQzsR+q7wYE0J0xQt5R12A32CElmMhZWPJ2jmIwHNOaT/MvukAerTDSzvU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(366004)(396003)(376002)(136003)(230922051799003)(230273577357003)(230173577357003)(64100799003)(451199024)(186009)(1800799012)(31686004)(26005)(53546011)(2616005)(6666004)(6512007)(6506007)(478600001)(6486002)(966005)(38100700002)(86362001)(31696002)(36756003)(5660300002)(2906002)(41300700001)(83380400001)(66476007)(66946007)(316002)(66556008)(4326008)(8676002)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?djNJTVBNbzNCa3g5eVFSVzk0RGRlU3dYeE9MOTl1cm90UkNvRjhCZlNneFQx?=
+ =?utf-8?B?dkttRGVESWpQS1dlbklEeGtwWnpRaUZjWDc3SDlyaTJuVXNWUGdyVlF1ODRD?=
+ =?utf-8?B?UG90Nll2MlVXZlpnY1JBUkxjU3FUN2FhRVdrUWZteXJFSmZwb2ZVZ1RjK1N3?=
+ =?utf-8?B?MDNFa3p2eUJUTTJ0YjJCM3ZMZ050ek1oTUswc2kvR0ZhVi9STDdhZnlwZTUr?=
+ =?utf-8?B?YWNmUVRKTzdOSktzZlFHVVUzNXc0cGVBdWRMc2U5blFDUXIzc3hwZW03cVBs?=
+ =?utf-8?B?aG1IVUVKZW4rbHBWQUZFeVl4V0xZSnFUN1hRV21UdGo0OXpHbjJoQlFOVVVY?=
+ =?utf-8?B?NmxsMnNFdnovT3cyUEdpTzRmN0UxTlNmempkcTgrZHdmb2QzN3NCZkFvVDhs?=
+ =?utf-8?B?dkpWbTNxV1ZDdlkzTU1GRUpXM3J4M2U2dUM5ZHYvQkZJWjJTQ0lFc2x5T0p0?=
+ =?utf-8?B?My84d045Y1QyOGNRTWppSXNXMjRaeHA0VU8wVFpDZmZYUGMyYndsZU11OG1j?=
+ =?utf-8?B?NnlMZFdLSWhaNm5rc0VtL2QyanhRUmN5ZkFERXpqR21CQVM5ZFFsMUNaekJl?=
+ =?utf-8?B?SGJSQTEzL2NGVlJSTU1ZSHV3M1hLcCs0cE5icXFXc0NUSDdXbE5KTGlhNFY4?=
+ =?utf-8?B?MXBhZmVxSUJWTU5ER202OUszd1AwcDY3YVluVE81TitVUHZTSU5QdWx1bXFl?=
+ =?utf-8?B?bWtEdWhrUEdHcGtqZjZHaUtEMW15TTNFVFNNaEtJVkRMV21lc1pXZjU2cjFy?=
+ =?utf-8?B?a2I1RTZYYzBHRTVuRE8vU0RqT1oyVUoyN2Y4YUlvQmczTW1CTmE5TWpMcU43?=
+ =?utf-8?B?YTVpemFVL1krVFFTRTBBQWk0Y01sYi9zMnpUS1VwUnZzS0JjT0lBdS9Ob1Jq?=
+ =?utf-8?B?R2lzVWFGcTBRajFVOTgyRlpBL0ZqajBTSml5MW0yalVqeGxUM0o1dElCeXBp?=
+ =?utf-8?B?Rm81ejIvdmlIcThaeGdzU0RVWFJNSTNoRGtzdXRDemVZT2VZWlFmUm9ONUww?=
+ =?utf-8?B?VXJzQmp1K1NWR01mMDZkNW5vY1lvem01elM5OTVFODlEVVI1b2pwTThxcFh3?=
+ =?utf-8?B?Ty9qTHYyNmZaUHd2KzVSeXhVUXdGR0kzZ3VYVmFvQTE1cXJ2U3RRNjU1UVFM?=
+ =?utf-8?B?czVxcGhEa2hwQTNNdWUvYTJBS3BUQUt3eFdCQUcwMGIxZjFoZkVPZzlHVkJv?=
+ =?utf-8?B?eitJc1ZMOUhlekdmWUw1Z1ZHTVc0aGZXWjVyMW5yWTROT3dBTU1Oc1J2c1lv?=
+ =?utf-8?B?UVkzMnRoYjI5Z1hNQ0VqMmtEdEFhV25KRjRQQjVsSHJPS3NCVmU1RDRsM0Qr?=
+ =?utf-8?B?cHo0aUc4ZWdOekNTMTRiaW0yRi9Sa1hkeXQ4ZlhNUkM4YnUyRzZHdWlqN3oz?=
+ =?utf-8?B?K0lROGpuUmhNRWkrZzR0M2diWDEvTGF6eXV5ay96MzFvd3JlQ1FCQmtTWWcw?=
+ =?utf-8?B?S2JuL1k4SnRCcEV5MEFKa1ZJRUVGTm00anJMNnN3cC80b0VhSHgwTWNSbzNs?=
+ =?utf-8?B?anRydGtoSjZiQmVQcW80ZnYrd21QdlprZHZNdjNhMnV6b3FVSzExUkxSaE1E?=
+ =?utf-8?B?Wk5iYUdnRXB4UURQRytUdndEKzVJbk9KQjdyRmtUbC9EL0ViZDBxdHV5UHg5?=
+ =?utf-8?B?RGxnSmwwVGtjRWxTbTgwcUdCSXBhVG4yWk9oY012SXNhUndjcnBoZEgrNGJp?=
+ =?utf-8?B?Z1B5Q1VGZFZOTlBNbXZ0VHVTMkI1UUo3SEVSTktERVlqRm9OaFRHZnZSZGsx?=
+ =?utf-8?B?ZzhuN095YXN6bUk2UTRQWVA5dlBzOVlnZmZCRVQ2TUdBdGREaWQ2emlFbm1o?=
+ =?utf-8?B?M2I0OUhtZjZxSmdUalBHdjBnM1BQazU3ajV6WnhrVUFOL3lPcC9zSUhab3Ra?=
+ =?utf-8?B?MWVFZEN6SHM2SGw3U2dSbGxqLzlpai8yd1pjVy90U013RFhCZ1h1TXNrSmtv?=
+ =?utf-8?B?TnpDMHM2aDNVMDhvOGl1RWxPQWJCT2V0THVxNWJabWpRUXYxanYycUtVbU00?=
+ =?utf-8?B?b3REQ2NQOHhVMFF0R3IwNUhmckhjTlRpQWN4a0hPSVUvN0RkNjJQYUd2a2h2?=
+ =?utf-8?B?NFR5TncxbnZpSHZrRzB4Mi9GWmx0cGJndWx4WEVrRnBIWTMzZldTNlB3VTZ3?=
+ =?utf-8?Q?YWYKXPxRLY15Wppad//cpy+qt?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f6dbd60-da96-4a7e-cb82-08dc104127b7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:58:40.8750
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 76+pMmAOC2DI1Bg9rP/Gt2JxZuk+Hse/i4H+L3ZZHF5Ni7MdA4qa9lHC4xdnwbmOLv2LEgJ/Kuqcb0F3FZhhtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4490
 
 
 
-On 08/01/24 16:51, Krzysztof Kozlowski wrote:
-> On 08/01/2024 11:20, Siddharth Vadapalli wrote:
->> Hello Krzysztof,
+On 1/5/2024 10:32 PM, Kuppuswamy Sathyanarayanan wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On 1/5/2024 5:43 AM, Vidya Sagar wrote:
+>> While calculating the hwirq number for an MSI interrupt, the higher
+>> bits (i.e. from bit-5 onwards a.k.a domain_nr >= 32) of the PCI domain
+>> number gets truncated because of the shifted value casting to u32. This
+>> for example is resulting in same hwirq number for devices 0019:00:00.0
+>> and 0039:00:00.0.
 >>
->> On 08/01/24 12:39, Krzysztof Kozlowski wrote:
->>> On 08/01/2024 06:07, Siddharth Vadapalli wrote:
->>>> Add the device-id of 0xb012 for the PCIe controller on the J784S4 SoC as
->>>> described in the CTRL_MMR_PCI_DEVICE_ID register's PCI_DEVICE_ID_DEVICE_ID
->>>> field. The Register descriptions and the Technical Reference Manual for
->>>> J784S4 SoC can be found at: https://www.ti.com/lit/zip/spruj52
->>>>
->>>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->>>> ---
->>>>
->>>> This patch is based on linux-next tagged next-20240105.
->>>
->>> Why is this patch incomplete? What is missing here? What are you asking
->>> about as RFC?
+>> So, cast the PCI domain number to u64 before left shifting it to
+>> calculate hwirq number.
+> 
+> This seems like a bug fix. Why not add Fixes: tag?
+This doesn't seem to be introduced by any recent change as such. It has
+been from the time the original change appeared in the mainline. I'll
+give the commit ID of the original change for 'Fixes'.
+
+> 
+> Is this issue detected in a platform test? Maybe including the relevant
+> details about it will help reproduce the issue.
+The issue is detected while running ARM's ACS test suite. But, I
+couldn't give that info as there was some bug in the test suite itself
+for which I raised an issue at 
+https://gitlab.arm.com/linux-arm/linux-acs/-/issues/2
+
+> 
 >>
->> Since the merge window is closed, I was hoping to get the patch reviewed in
->> order to get any "Reviewed-by" tags if possible. That way, I will be able to
->> post it again as v1 along with the tags when the merge window opens. For that
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/msi/irqdomain.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+>> index c8be056c248d..cfd84a899c82 100644
+>> --- a/drivers/pci/msi/irqdomain.c
+>> +++ b/drivers/pci/msi/irqdomain.c
+>> @@ -61,7 +61,7 @@ static irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
+>>
+>>        return (irq_hw_number_t)desc->msi_index |
+>>                pci_dev_id(dev) << 11 |
+>> -             (pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
+>> +             ((irq_hw_number_t)(pci_domain_nr(dev->bus) & 0xFFFFFFFF)) << 27;
+>>   }
+>>
+>>   static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
 > 
-> This is v1, so that would be v2.
-> 
->> reason, I have marked it as an RFC patch. Is there an alternative to this "RFC
->> patch" method that I have followed? Please let me know.
-> 
-> Then how does it differ from posting without RFC? Sorry, RFC is
-> incomplete work. Often ignored during review.
-
-I was under the impression that posting patches when the merge window is closed
-will be met with a "post your patch later when the merge window is open"
-response. That is why I chose the "RFC patch" path since RFCs can be posted anytime.
-
-For the Networking Subsystem, it is documented that patches with new features
-shouldn't be posted when the merge window is closed. I have mostly posted
-patches for the Networking Subsystem and am not sure about the rules for the
-device-tree bindings and PCI Subsystems. To be on the safe side I posted this
-patch as an RFC patch.
-
-Thank you for clarifying that it is alright to post patches even when merge
-window is closed. Going forward I shall not post RFC patches unless it really
-requires feedback and suggestions.
-
--- 
-Regards,
-Siddharth.
+> --
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
 
