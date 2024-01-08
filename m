@@ -1,62 +1,59 @@
-Return-Path: <linux-pci+bounces-1772-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1773-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64DAA826961
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 09:24:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 076D182699F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 09:39:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CEAE31F2161B
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 08:24:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A44AC28258A
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Jan 2024 08:39:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478DD2CA9;
-	Mon,  8 Jan 2024 08:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29182BA5E;
+	Mon,  8 Jan 2024 08:39:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzKsL1Jy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPLZNJ5P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2200BB665
-	for <linux-pci@vger.kernel.org>; Mon,  8 Jan 2024 08:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704702287; x=1736238287;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wsEiauYCQ7RWiuHErbDu8crqI+a7BZL8YgOlF2MVW2c=;
-  b=XzKsL1JysznpyMOiOyLFNXHyws09IawnmXPJ3XVfqkS12+Th9gbS/OpE
-   oo9V58bYQ/IkoGhsg4iH2dgUo6wU2/c4HQdsgfBSPsI8a9xIIuKMTAJfA
-   elYdMzFaW8u3LYhDI/777vpGRK35I4EdLu67lQtlQHWmT5q79BSZMlNWE
-   WnV3Ktw1x+VAOhYs5Tj8vsAgoNxJrNI+DiCQJCRJgf03ckJQK+x1gyGFZ
-   2Ddqe8LTMYAq4OAeIM6zapWGiiT1bMs69rPkeIbgC8owG0/OeuwDNKPpN
-   ldgwygq1rYWMvUbbnOfVlh4Xq1/EicUtMXMwJYBFfZydEuXIOXUg65YR+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="401613446"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="401613446"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 00:24:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="1112676601"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="1112676601"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jan 2024 00:24:45 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rMkw7-0004Xw-05;
-	Mon, 08 Jan 2024 08:24:43 +0000
-Date: Mon, 08 Jan 2024 16:24:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/dwc-ep] BUILD SUCCESS
- a171e1d60dadf770348c009f11497aa6007d93f8
-Message-ID: <202401081612.XegcQCDV-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF42DBA4B;
+	Mon,  8 Jan 2024 08:39:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A65C433C7;
+	Mon,  8 Jan 2024 08:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704703152;
+	bh=S/rMSRKH43CMn1oKC9RlDlUXo73YSColFYC3uuFnl3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XPLZNJ5PRF1mtG1hcmuc32q7U58QIjFbxLhcGygkk+1FJUGi6hTJ7K6aYej03tYKx
+	 niO2yLUwph3gPHlv376rzVKbGdDQ1JFaULhsW+sO8f19WjTe9M99QM4hZd66kWtu57
+	 Ultytm0lH8GLNhBRn/ycnrQi2GVS2TBRZOnqb5qCGehDKeKIAtG8HkRhN6jMUsY473
+	 AY9YzXpQXkJ4dY/nZb4rqt5DvZl4QGBDDSIeZmrMeGUoQaZlsg3u/Ba2mvCMmEThSA
+	 nQk2GkkKeaZzIRO+8w9lOejkiqve5tRTHcjvJod/6KhOxFOaZQNkNu3myvZ4hU/d1B
+	 fglnISG44KHCw==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rMlA3-0008Cl-2I;
+	Mon, 08 Jan 2024 09:39:07 +0100
+Date: Mon, 8 Jan 2024 09:39:07 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Michael Schaller <michael@5challer.de>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>,
+	Ajay Agarwal <ajayagarwal@google.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
+Message-ID: <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
+References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
+ <20240102232550.1751655-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,274 +61,121 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102232550.1751655-1-helgaas@kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc-ep
-branch HEAD: a171e1d60dadf770348c009f11497aa6007d93f8  PCI: designware-ep: Move pci_epc_init_notify() inside dw_pcie_ep_init_complete()
+Hi Bjorn,
 
-elapsed time: 1446m
+On Tue, Jan 02, 2024 at 05:25:50PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
+> 
+> Michael reported that when attempting to resume from suspend to RAM on ASUS
+> mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
+> ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
+> with no output, followed by a reboot.
+> 
+> Workarounds include:
+> 
+>   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+>   - Booting with "pcie_aspm=off"
+>   - Booting with "pcie_aspm.policy=performance"
+>   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
+>     before suspending
+>   - Connecting a USB flash drive
+> 
+> Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+> Reported-by: Michael Schaller <michael@5challer.de>
+> Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+ 
+> +/* @pdev: the root port or switch downstream port */
+> +void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+> +{
+> +	struct pcie_link_state *link = pdev->link_state;
+> +
+> +	if (aspm_disabled || !link)
+> +		return;
+> +	/*
+> +	 * Devices changed PM state, we should recheck if latency
+> +	 * meets all functions' requirement
+> +	 */
+> +	down_read(&pci_bus_sem);
+> +	mutex_lock(&aspm_lock);
+> +	pcie_update_aspm_capable(link->root);
+> +	pcie_config_aspm_path(link);
+> +	mutex_unlock(&aspm_lock);
+> +	up_read(&pci_bus_sem);
+> +}
 
-configs tested: 253
-configs skipped: 2
+This function is now restored in 6.7 final and is called in paths which
+already hold the pci_bus_sem as reported by lockdep (see splat below).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This can potentially lead to a deadlock and specifically prevents using
+lockdep on Qualcomm platforms.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240107   gcc  
-arc                   randconfig-001-20240108   gcc  
-arc                   randconfig-002-20240107   gcc  
-arc                   randconfig-002-20240108   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                            hisi_defconfig   gcc  
-arm                         lpc18xx_defconfig   gcc  
-arm                       multi_v4t_defconfig   gcc  
-arm                       omap2plus_defconfig   gcc  
-arm                   randconfig-001-20240107   clang
-arm                   randconfig-001-20240108   gcc  
-arm                   randconfig-002-20240107   clang
-arm                   randconfig-002-20240108   gcc  
-arm                   randconfig-003-20240107   clang
-arm                   randconfig-003-20240108   gcc  
-arm                   randconfig-004-20240107   clang
-arm                   randconfig-004-20240108   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                        spear6xx_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240107   clang
-arm64                 randconfig-001-20240108   gcc  
-arm64                 randconfig-002-20240107   clang
-arm64                 randconfig-002-20240108   gcc  
-arm64                 randconfig-003-20240107   clang
-arm64                 randconfig-003-20240108   gcc  
-arm64                 randconfig-004-20240107   clang
-arm64                 randconfig-004-20240108   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240107   gcc  
-csky                  randconfig-001-20240108   gcc  
-csky                  randconfig-002-20240107   gcc  
-csky                  randconfig-002-20240108   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240107   clang
-hexagon               randconfig-002-20240107   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240107   clang
-i386         buildonly-randconfig-002-20240107   clang
-i386         buildonly-randconfig-003-20240107   clang
-i386         buildonly-randconfig-004-20240107   clang
-i386         buildonly-randconfig-005-20240107   clang
-i386         buildonly-randconfig-006-20240107   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240107   clang
-i386                  randconfig-002-20240107   clang
-i386                  randconfig-003-20240107   clang
-i386                  randconfig-004-20240107   clang
-i386                  randconfig-005-20240107   clang
-i386                  randconfig-006-20240107   clang
-i386                  randconfig-011-20240107   gcc  
-i386                  randconfig-012-20240107   gcc  
-i386                  randconfig-013-20240107   gcc  
-i386                  randconfig-014-20240107   gcc  
-i386                  randconfig-015-20240107   gcc  
-i386                  randconfig-016-20240107   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch                 loongson3_defconfig   gcc  
-loongarch             randconfig-001-20240107   gcc  
-loongarch             randconfig-001-20240108   gcc  
-loongarch             randconfig-002-20240107   gcc  
-loongarch             randconfig-002-20240108   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                     decstation_defconfig   gcc  
-mips                      maltasmvp_defconfig   gcc  
-mips                         rt305x_defconfig   gcc  
-mips                   sb1250_swarm_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240107   gcc  
-nios2                 randconfig-001-20240108   gcc  
-nios2                 randconfig-002-20240107   gcc  
-nios2                 randconfig-002-20240108   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc                randconfig-001-20240107   gcc  
-parisc                randconfig-001-20240108   gcc  
-parisc                randconfig-002-20240107   gcc  
-parisc                randconfig-002-20240108   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     mpc83xx_defconfig   gcc  
-powerpc               randconfig-001-20240107   clang
-powerpc               randconfig-001-20240108   gcc  
-powerpc               randconfig-002-20240107   clang
-powerpc               randconfig-002-20240108   gcc  
-powerpc               randconfig-003-20240107   clang
-powerpc               randconfig-003-20240108   gcc  
-powerpc                     stx_gp3_defconfig   gcc  
-powerpc64                        alldefconfig   gcc  
-powerpc64             randconfig-001-20240107   clang
-powerpc64             randconfig-001-20240108   gcc  
-powerpc64             randconfig-002-20240107   clang
-powerpc64             randconfig-002-20240108   gcc  
-powerpc64             randconfig-003-20240107   clang
-powerpc64             randconfig-003-20240108   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20240107   clang
-riscv                 randconfig-001-20240108   gcc  
-riscv                 randconfig-002-20240107   clang
-riscv                 randconfig-002-20240108   gcc  
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20240107   gcc  
-s390                  randconfig-002-20240107   gcc  
-s390                       zfcpdump_defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                    randconfig-001-20240107   gcc  
-sh                    randconfig-001-20240108   gcc  
-sh                    randconfig-002-20240107   gcc  
-sh                    randconfig-002-20240108   gcc  
-sh                          rsk7269_defconfig   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sh                          sdk7780_defconfig   gcc  
-sh                           se7343_defconfig   gcc  
-sh                           se7721_defconfig   gcc  
-sh                             shx3_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc64                          alldefconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240107   gcc  
-sparc64               randconfig-001-20240108   gcc  
-sparc64               randconfig-002-20240107   gcc  
-sparc64               randconfig-002-20240108   gcc  
-um                               alldefconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240107   clang
-um                    randconfig-001-20240108   gcc  
-um                    randconfig-002-20240107   clang
-um                    randconfig-002-20240108   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240107   clang
-x86_64       buildonly-randconfig-001-20240108   gcc  
-x86_64       buildonly-randconfig-002-20240107   clang
-x86_64       buildonly-randconfig-002-20240108   gcc  
-x86_64       buildonly-randconfig-003-20240107   clang
-x86_64       buildonly-randconfig-003-20240108   gcc  
-x86_64       buildonly-randconfig-004-20240107   clang
-x86_64       buildonly-randconfig-004-20240108   gcc  
-x86_64       buildonly-randconfig-005-20240107   clang
-x86_64       buildonly-randconfig-005-20240108   gcc  
-x86_64       buildonly-randconfig-006-20240107   clang
-x86_64       buildonly-randconfig-006-20240108   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20240107   gcc  
-x86_64                randconfig-002-20240107   gcc  
-x86_64                randconfig-003-20240107   gcc  
-x86_64                randconfig-004-20240107   gcc  
-x86_64                randconfig-005-20240107   gcc  
-x86_64                randconfig-006-20240107   gcc  
-x86_64                randconfig-011-20240107   clang
-x86_64                randconfig-011-20240108   gcc  
-x86_64                randconfig-012-20240107   clang
-x86_64                randconfig-012-20240108   gcc  
-x86_64                randconfig-013-20240107   clang
-x86_64                randconfig-013-20240108   gcc  
-x86_64                randconfig-014-20240107   clang
-x86_64                randconfig-014-20240108   gcc  
-x86_64                randconfig-015-20240107   clang
-x86_64                randconfig-015-20240108   gcc  
-x86_64                randconfig-016-20240107   clang
-x86_64                randconfig-016-20240108   gcc  
-x86_64                randconfig-071-20240107   clang
-x86_64                randconfig-071-20240108   gcc  
-x86_64                randconfig-072-20240107   clang
-x86_64                randconfig-072-20240108   gcc  
-x86_64                randconfig-073-20240107   clang
-x86_64                randconfig-073-20240108   gcc  
-x86_64                randconfig-074-20240107   clang
-x86_64                randconfig-074-20240108   gcc  
-x86_64                randconfig-075-20240107   clang
-x86_64                randconfig-075-20240108   gcc  
-x86_64                randconfig-076-20240107   clang
-x86_64                randconfig-076-20240108   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                          iss_defconfig   gcc  
-xtensa                randconfig-001-20240107   gcc  
-xtensa                randconfig-001-20240108   gcc  
-xtensa                randconfig-002-20240107   gcc  
-xtensa                randconfig-002-20240108   gcc  
+Not sure if you want to propagate whether the bus semaphore is held to
+pcie_aspm_pm_state_change() or if there was some alternative to
+restoring this function which should be explored instead.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Johan
+
+
+   ============================================
+   WARNING: possible recursive locking detected
+   6.7.0 #40 Not tainted
+   --------------------------------------------
+   kworker/u16:5/90 is trying to acquire lock:
+   ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pcie_aspm_pm_state_change+0x58/0xdc
+   pcieport 0002:00:00.0: PME: Signaling with IRQ 197
+   
+               but task is already holding lock:
+   ffffacfa78ced000
+   pcieport 0002:00:00.0: AER: enabled with IRQ 197
+    (pci_bus_sem
+   nvme nvme0: pci function 0002:01:00.0
+   ){++++}-{3:3}
+   nvme 0002:01:00.0: enabling device (0000 -> 0002)
+   , at: pci_walk_bus+0x34/0xbc
+   
+               other info that might help us debug this:
+    Possible unsafe locking scenario:
+
+          CPU0
+          ----
+     lock(pci_bus_sem);
+     lock(pci_bus_sem);
+   
+                *** DEADLOCK ***
+
+    May be due to missing lock nesting notation
+
+   4 locks held by kworker/u16:5/90:
+    #0: ffff06c5c0008d38 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
+    #1: ffff800081c0bdd0 ((work_completion)(&entry->work)){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
+    #2: ffff06c5c0b7d0f8 (&dev->mutex){....}-{3:3}, at: __driver_attach_async_helper+0x3c/0xf4
+    #3: ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
+   
+               stack backtrace:
+   CPU: 1 PID: 90 Comm: kworker/u16:5 Not tainted 6.7.0 #40
+   Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET53W (1.25 ) 10/12/2022
+   Workqueue: events_unbound async_run_entry_fn
+   Call trace:
+    dump_backtrace+0x9c/0x11c
+    show_stack+0x18/0x24
+    dump_stack_lvl+0x60/0xac
+    dump_stack+0x18/0x24
+    print_deadlock_bug+0x25c/0x348
+    __lock_acquire+0x10a4/0x2064
+    lock_acquire+0x1e8/0x318
+    down_read+0x60/0x184
+    pcie_aspm_pm_state_change+0x58/0xdc
+    pci_set_full_power_state+0xa8/0x114
+    pci_set_power_state+0xc4/0x120
+    qcom_pcie_enable_aspm+0x1c/0x3c [pcie_qcom]
+    pci_walk_bus+0x64/0xbc
+    qcom_pcie_host_post_init_2_7_0+0x28/0x34 [pcie_qcom]
 
