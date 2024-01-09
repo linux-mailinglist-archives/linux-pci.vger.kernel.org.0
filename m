@@ -1,38 +1,38 @@
-Return-Path: <linux-pci+bounces-1942-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1943-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A636828BD9
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 19:05:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9893E828C45
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 19:15:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3C60286F50
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 18:05:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE2431F2605C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 18:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9715C3C482;
-	Tue,  9 Jan 2024 18:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67CE53BB33;
+	Tue,  9 Jan 2024 18:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXDY8SkG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcp7JAxN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557223BB25;
-	Tue,  9 Jan 2024 18:03:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C049C433F1;
-	Tue,  9 Jan 2024 18:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3038537144;
+	Tue,  9 Jan 2024 18:06:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E8AAC433C7;
+	Tue,  9 Jan 2024 18:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704823415;
-	bh=0R31HLE3+ZbvwQuChH2OoUhobpCqWxAZJoF/InobdBY=;
+	s=k20201202; t=1704823565;
+	bh=NN/FbWiRX53UohMXPf7fLJZkdhyGG0EUcymSjVK7DwA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mXDY8SkGODZzDpOT/lBscYFSFUXcFq6OdQZmxHjeu5J6ndCS7O2be18/WyT+Pybdh
-	 frZeSearhDu/qxK7xrn+iAz/LLJCiSM8uuCq+hZbkHVMtk/8jMEmae+eaU670gfjiF
-	 pGwVGqXCsulrjhsafzsfmdxNBRUObccLt6Ds+6ZX8LLEHxbjUDFES3fKQHlD6pIpAR
-	 wRRJgq/MCtaEzQmW6fUHSmj0YTh+R2FJAWFWVRegmteeZqsAiMmr0K6ek1NSZ2Rrkv
-	 8LzfIr3wPE/EO80FCF9Pcv4ss3c+uipQN1wNPUnn6xKWhhotH5i9aickhLPipGxpDi
-	 vfH1JE+2JBDhA==
-Date: Tue, 9 Jan 2024 18:03:22 +0000
+	b=kcp7JAxN3AiJT/zSfbaoA2+7fPC3A0ZWVvSpRFAXx0sFyslV297XJ83IYJOjo4WAv
+	 RUdWxNZ+T4f+tX8USIS62YD32DyNu8gWf/EukR9JAZCISzWgu8dBFDlcQVcUef3Qz+
+	 qkeRllPXAqI8/+i1uMFcsFAVDEyFdefmurq958sF8q6Q1EDAqkZtVovABFy0M4KCPP
+	 /3SbdOHFNikwrWGa3c8z8h8x3ZkVs4szS72knM0ROeuCbSWYF8N/GbynYZCQraVBub
+	 IdFyuk+hxImNfwll+1mwS83rquldTk9ZtxZiCRx01zOHozYZdd8m+oaJLcGS5nFK5t
+	 kPz07I2XU00Bw==
+Date: Tue, 9 Jan 2024 18:05:51 +0000
 From: Conor Dooley <conor@kernel.org>
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
@@ -88,10 +88,10 @@ Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
 	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
 	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v6 25/37] dt-bindings: vendor-prefixes: Add iodata
-Message-ID: <20240109-frying-robin-e0f3e83966eb@spud>
+Subject: Re: [DO NOT MERGE v6 26/37] dt-bindings: vendor-prefixes:  Add smi
+Message-ID: <20240109-fructose-bundle-05d01033277b@spud>
 References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <17c6381a733d34e8460fd2979f8b53804e808e04.1704788539.git.ysato@users.sourceforge.jp>
+ <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,63 +99,61 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o5q2SluoJveOoLQv"
+	protocol="application/pgp-signature"; boundary="6n8cYfu9ndq1dxnc"
 Content-Disposition: inline
-In-Reply-To: <17c6381a733d34e8460fd2979f8b53804e808e04.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
 
 
---o5q2SluoJveOoLQv
+--6n8cYfu9ndq1dxnc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 09, 2024 at 05:23:22PM +0900, Yoshinori Sato wrote:
-> Add IO DATA DEVICE INC.
-> https://www.iodata.com/
+On Tue, Jan 09, 2024 at 05:23:23PM +0900, Yoshinori Sato wrote:
+> Add Silicon Mortion Technology Corporation
+> https://www.siliconmotion.com/
 >=20
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-
-I think you are missing an r-b tag here from Geert:
-https://lore.kernel.org/all/CAMuHMdUvNT1tDTOq4ppqn69cocAeveaXrsoL2VQ2efBQ+h=
-v2aA@mail.gmail.com/
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
 > ---
 >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
 >  1 file changed, 2 insertions(+)
 >=20
 > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
 umentation/devicetree/bindings/vendor-prefixes.yaml
-> index 309b94c328c8..94ed63d9f7de 100644
+> index 94ed63d9f7de..a338bdd743ab 100644
 > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
 > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -671,6 +671,8 @@ patternProperties:
->      description: Inventec
->    "^inversepath,.*":
->      description: Inverse Path
-> +  "^iodata,.*":
-> +    description: IO DATA DEVICE Inc.
->    "^iom,.*":
->      description: Iomega Corporation
->    "^irondevice,.*":
+> @@ -1283,6 +1283,8 @@ patternProperties:
+>      description: Skyworks Solutions, Inc.
+>    "^smartlabs,.*":
+>      description: SmartLabs LLC
+> +  "^smi,.*":
+> +    description: Silicon Motion Technology Corporation
+
+How come "smi" is used for a company with this name?
+Why is it not something like SMTC? There's probably some history here
+that I am unaware of.
+
+Cheers,
+Conor.
+
+>    "^smsc,.*":
+>      description: Standard Microsystems Corporation
+>    "^snps,.*":
 > --=20
 > 2.39.2
 >=20
 
---o5q2SluoJveOoLQv
+--6n8cYfu9ndq1dxnc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ2KaQAKCRB4tDGHoIJi
-0mETAQCgS0diIQwRpFymnYZiV1TuFr5jugc1/qE1mlVfoy18EwEA6EVpCvyk1xES
-OQiPDuXqI2XKO8fupXPq+im8bF/hvwU=
-=bocD
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ2K/wAKCRB4tDGHoIJi
+0s/8APwPEbHULafVMSeaB1GSkVcjbGMU9USLjp1+xwbzkhRskwEA53VXD7JPeCRu
+EW9RzYohxhrQuLlQKIa6cMs0R07nowg=
+=ftc0
 -----END PGP SIGNATURE-----
 
---o5q2SluoJveOoLQv--
+--6n8cYfu9ndq1dxnc--
 
