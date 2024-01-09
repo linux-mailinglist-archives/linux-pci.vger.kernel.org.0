@@ -1,26 +1,26 @@
-Return-Path: <linux-pci+bounces-1900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F404828197
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 09:33:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23E4682819D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 09:34:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1967284D80
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 08:33:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 49BF81C2325B
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 08:34:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 998873C46E;
-	Tue,  9 Jan 2024 08:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DD053D0BD;
+	Tue,  9 Jan 2024 08:24:42 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16ABB3C498;
-	Tue,  9 Jan 2024 08:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 126DD3C694;
+	Tue,  9 Jan 2024 08:24:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 5503E1C0C6F;
-	Tue,  9 Jan 2024 17:24:37 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id 205841C0DCB;
+	Tue,  9 Jan 2024 17:24:39 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -86,9 +86,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v6 31/37] sh: Add IO DATA LANDISK dts
-Date: Tue,  9 Jan 2024 17:23:28 +0900
-Message-Id: <4bd1d7b2eec4123285236e930b7a94b19f270288.1704788539.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v6 32/37] sh: Add IO DATA USL-5P dts
+Date: Tue,  9 Jan 2024 17:23:29 +0900
+Message-Id: <ce4606a10bec765868924c9ab2ac50e9dc5709f7.1704788539.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1704788539.git.ysato@users.sourceforge.jp>
 References: <cover.1704788539.git.ysato@users.sourceforge.jp>
@@ -100,23 +100,23 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-IO DATA DEVICE Inc. LANDISK HDL-U devicetree.
+IO DATA DEVICE Inc. USL-5P devicetree.
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boot/dts/landisk.dts | 75 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 arch/sh/boot/dts/landisk.dts
+ arch/sh/boot/dts/usl-5p.dts | 83 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 arch/sh/boot/dts/usl-5p.dts
 
-diff --git a/arch/sh/boot/dts/landisk.dts b/arch/sh/boot/dts/landisk.dts
+diff --git a/arch/sh/boot/dts/usl-5p.dts b/arch/sh/boot/dts/usl-5p.dts
 new file mode 100644
-index 000000000000..a0e3c176fba8
+index 000000000000..1830bee6f884
 --- /dev/null
-+++ b/arch/sh/boot/dts/landisk.dts
-@@ -0,0 +1,75 @@
++++ b/arch/sh/boot/dts/usl-5p.dts
+@@ -0,0 +1,83 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Device Tree Source for the IO DATA DEVICE LANDISK
++ * Device Tree Source for the IO DATA DEVICE USL-5P
 + */
 +
 +/dts-v1/;
@@ -124,8 +124,8 @@ index 000000000000..a0e3c176fba8
 +#include "sh7751r.dtsi"
 +
 +/ {
-+	model = "IO DATA Device LANDISK";
-+	compatible = "iodata,landisk", "renesas,sh7751r";
++	model = "IO-DATA Device USL-5P";
++	compatible = "iodata,usl-5p", "renesas,sh7751r";
 +
 +	aliases {
 +		serial0 = &scif1;
@@ -153,6 +153,14 @@ index 000000000000..a0e3c176fba8
 +				     <10 5>,	/* CF */
 +				     <11 6>,	/* Power Switch */
 +				     <12 7>;	/* Button */
++	};
++
++	compact-flash@b4000040 {
++		compatible = "iodata,usl-5p-ata", "ata-generic";
++		reg = <0xb4000040 0x0e>, <0xb400002c 2>;
++		reg-shift = <1>;
++		interrupt-parent = <&julianintc>;
++		interrupts = <10>;
 +	};
 +};
 +
