@@ -1,26 +1,26 @@
-Return-Path: <linux-pci+bounces-1902-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1903-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BCDD8281A9
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 09:34:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5292B8281B7
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 09:35:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 005FA2851EF
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 08:34:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7285F1C24C2A
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 08:35:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52B142D7B6;
-	Tue,  9 Jan 2024 08:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A122C2E62C;
+	Tue,  9 Jan 2024 08:24:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C8A3D0D4;
-	Tue,  9 Jan 2024 08:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B3D23D54D;
+	Tue,  9 Jan 2024 08:24:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-	by sakura.ysato.name (Postfix) with ESMTPSA id DC9801C0DD9;
-	Tue,  9 Jan 2024 17:24:40 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id A20721C0A19;
+	Tue,  9 Jan 2024 17:24:42 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -86,9 +86,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [DO NOT MERGE v6 33/37] sh: j2_mimas_v2.dts update
-Date: Tue,  9 Jan 2024 17:23:30 +0900
-Message-Id: <22c41c392762f282752b2f31deeaf8f1f2254061.1704788539.git.ysato@users.sourceforge.jp>
+Subject: [DO NOT MERGE v6 34/37] sh: Add dtbs target support.
+Date: Tue,  9 Jan 2024 17:23:31 +0900
+Message-Id: <f1f58604dd76520005c12479fada0b70ac210f89.1704788539.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1704788539.git.ysato@users.sourceforge.jp>
 References: <cover.1704788539.git.ysato@users.sourceforge.jp>
@@ -102,22 +102,21 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boot/dts/j2_mimas_v2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sh/boot/dts/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/sh/boot/dts/j2_mimas_v2.dts b/arch/sh/boot/dts/j2_mimas_v2.dts
-index fa9562f78d53..5dfe20866a1c 100644
---- a/arch/sh/boot/dts/j2_mimas_v2.dts
-+++ b/arch/sh/boot/dts/j2_mimas_v2.dts
-@@ -16,7 +16,7 @@ cpus {
- 
- 		cpu@0 {
- 			device_type = "cpu";
--			compatible = "jcore,j2";
-+			compatible = "jcore,j2", "renesas,sh2";
- 			reg = <0>;
- 			clock-frequency = <50000000>;
- 			d-cache-size = <8192>;
+diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
+index 4a6dec9714a9..e6b93360c213 100644
+--- a/arch/sh/boot/dts/Makefile
++++ b/arch/sh/boot/dts/Makefile
+@@ -1,2 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_USE_BUILTIN_DTB) += $(addsuffix .dtb.o, $(CONFIG_BUILTIN_DTB_SOURCE))
++
++dtb-$(CONFIG_CPU_J2) += j2_mimas_v2.dtb
++dtb-$(CONFIG_CPU_SUBTYPE_SH7751R) += landisk.dtb
++dtb-$(CONFIG_CPU_SUBTYPE_SH7751R) += rts7751r2dplus.dtb
++dtb-$(CONFIG_CPU_SUBTYPE_SH7751R) += usl-5p.dtb
 -- 
 2.39.2
 
