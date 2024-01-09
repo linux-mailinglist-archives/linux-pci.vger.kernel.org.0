@@ -1,181 +1,124 @@
-Return-Path: <linux-pci+bounces-1938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DAD828B4C
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 18:31:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20B85828B96
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 18:58:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B97D283B62
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 17:31:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6EBC1F263D4
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 17:58:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FAC93B780;
-	Tue,  9 Jan 2024 17:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171443BB26;
+	Tue,  9 Jan 2024 17:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcCzoDiH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBXR0hDI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B563B2A4;
-	Tue,  9 Jan 2024 17:31:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7782C433F1;
-	Tue,  9 Jan 2024 17:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBFD38DF8;
+	Tue,  9 Jan 2024 17:58:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD56C433F1;
+	Tue,  9 Jan 2024 17:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704821492;
-	bh=UOEYJi4gJtE8sc2Wj07/bfw21ESQfkQyPOaOQJ8ntis=;
+	s=k20201202; t=1704823097;
+	bh=jPQukDAtVbClY9EBeS+NqfHyLacDsIvaawr24NohtKA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FcCzoDiHW9klwT7ITiw4GovAPaKPnr72xGYdoRaIK7XAnlsIaojUnauhMcef6+alT
-	 Rm9ONxbPUJh8Bew+DaFyg/rm7F98zKKN76tYI+t0eWNSh3mChToLImHOlZ27csWcmK
-	 A9RsIvRVydPCrdx71CO73qGLeVu91A6M03V0c8dErhG1NmqRg5zQc7+65/2g2o+UV1
-	 OKZfIOQgFL61a5GRIUUU4WRt/RNssERHP21qQenhLA2dHCvOaYxe7LnJ1Yb2foX72k
-	 GZqlnbJj6lyLc2u7YZRUxksAM4Fmjb+Jv6bJNKjh47dK+LISNbCJ5fSJ5btMV276Xm
-	 6aPemIi6bTC8g==
-Received: (nullmailer pid 2808343 invoked by uid 1000);
-	Tue, 09 Jan 2024 17:31:24 -0000
-Date: Tue, 9 Jan 2024 11:31:24 -0600
-From: Rob Herring <robh@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de
- >, Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, Michael Karcher <kernel@mkarc
- her.dialup.fu-berlin.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v6 12/37] dt-bindings: pci: pci-sh7751: Add SH7751
- PCI
-Message-ID: <20240109173124.GB2783042-robh@kernel.org>
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <160ee086771703c951c5522d997662aeac122a28.1704788539.git.ysato@users.sourceforge.jp>
- <CACRpkdZMkyJdkFt_x-6iubLZ-KzewvmT0zi4HAas0Xy9DpPn3g@mail.gmail.com>
+	b=pBXR0hDIxuyEvjXNm0ZHkn82qvWJPxEeg8vRLhUWpcgwAjyw9QDysog3LK2PVQult
+	 9Go+Fi125jYvZDB64hW3vCXxDEcn1/BK+pt5NqtqqQKLTdqo9bY948RcuvcxU2solW
+	 4vKCSzlftGX3C8MVRS35uscVo5/xKVpYDqx9lrU9Apjy76V+ddXDE8gB+2mmN0AuZf
+	 oPcWHesQh5ieuYvzxayCuvHpRXx3KbE78X0kmN1z43HIDK8fHuuSm5D93GP6NTB/A2
+	 otf9gtIxEuJz5XBV4wxvbQ8xXHf1BOfBSoPrqMAdPLvPhwTHpw3vbnYVN41E5sHJLi
+	 jqPfsfuLkmYcA==
+Date: Tue, 9 Jan 2024 10:58:14 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, ardb@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	bhelgaas@google.com, arnd@arndb.de, zohar@linux.ibm.com,
+	dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+	serge@hallyn.com, javierm@redhat.com, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] arch/x86: Move internal setup_data structures
+ into setup_data.h
+Message-ID: <20240109175814.GA5981@dev-arch.thelio-3990X>
+References: <20240108095903.8427-3-tzimmermann@suse.de>
+ <202401090800.UOBEKB3W-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdZMkyJdkFt_x-6iubLZ-KzewvmT0zi4HAas0Xy9DpPn3g@mail.gmail.com>
+In-Reply-To: <202401090800.UOBEKB3W-lkp@intel.com>
 
-On Tue, Jan 09, 2024 at 01:42:53PM +0100, Linus Walleij wrote:
-> Hi Yoshinori,
+On Tue, Jan 09, 2024 at 08:28:59AM +0800, kernel test robot wrote:
+> Hi Thomas,
 > 
-> thanks for your patch!
+> kernel test robot noticed the following build warnings:
 > 
-> On Tue, Jan 9, 2024 at 9:24 AM Yoshinori Sato
-> <ysato@users.sourceforge.jp> wrote:
+> [auto build test WARNING on tip/x86/core]
+> [also build test WARNING on efi/next tip/master tip/auto-latest linus/master v6.7 next-20240108]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 > 
-> > Renesas SH7751 PCI Controller json-schema.
-> >
-> > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> (...)
-> > +  renesas,bus-arbit-round-robin:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set DMA bus arbitration to round robin.
-> > +
-> > +  pci-command-reg-fast-back-to-back:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI command register Fast Back-to-Back enable bit.
-> > +
-> > +  pci-command-reg-serr:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI command register SERR# enable.
-> > +
-> > +  pci-command-reg-wait-cycle-control:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI command register Wait cycle control bit.
-> > +
-> > +  pci-command-reg-parity-error-response:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register Parity error response bit.
-> > +
-> > +  pci-command-reg-vga-snoop:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register VGA palette snoop bit.
-> > +
-> > +  pci-command-reg-write-invalidate:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register Memory write and invaldate enable bit.
-> > +
-> > +  pci-command-reg-special-cycle:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register Special cycle bit.
-> > +
-> > +  pci-command-reg-bus-master:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register Bus master bit.
-> > +
-> > +  pci-command-reg-memory-space:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register Memory space bit.
-> > +
-> > +  pci-command-reg-io-space:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: |
-> > +      Set for PCI Command register I/O space bit.
+> url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Zimmermann/arch-x86-Move-UAPI-setup-structures-into-setup_data-h/20240108-180158
+> base:   tip/x86/core
+> patch link:    https://lore.kernel.org/r/20240108095903.8427-3-tzimmermann%40suse.de
+> patch subject: [PATCH v4 2/4] arch/x86: Move internal setup_data structures into setup_data.h
+> config: x86_64-rhel-8.3-bpf (https://download.01.org/0day-ci/archive/20240109/202401090800.UOBEKB3W-lkp@intel.com/config)
+> compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240109/202401090800.UOBEKB3W-lkp@intel.com/reproduce)
 > 
-> Do you really need to configure all these things? It seems they are
-> just set to default values anyway?
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202401090800.UOBEKB3W-lkp@intel.com/
 > 
-> Can't you just look at the compatible "renesas,sh7751-pci" and
-> set it to the values you know are needed for that compatible?
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from arch/x86/realmode/rm/wakemain.c:3:
+>    In file included from arch/x86/boot/boot.h:24:
+>    In file included from arch/x86/include/asm/setup.h:10:
+>    In file included from arch/x86/include/asm/page_types.h:7:
+>    In file included from include/linux/mem_encrypt.h:17:
+>    In file included from arch/x86/include/asm/mem_encrypt.h:18:
+>    In file included from arch/x86/include/uapi/asm/bootparam.h:5:
+> >> arch/x86/include/asm/setup_data.h:10:20: warning: field 'data' with variable sized type 'struct setup_data' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+>       10 |         struct setup_data data;
+>          |                           ^
+>    1 warning generated.
 
-Yes. Please drop all these.
+I think this warning is expected. This structure is now included in the
+realmode part of arch/x86, which has its own set of build flags,
+including -Wall, which includes -Wgnu on clang. The kernel obviously
+uses GNU extensions and states this clearly with '-std=gnu11', so
+-Wno-gnu is unconditionally added to KBUILD_CFLAGS for clang. It seems
+that same treatment is needed for REALMODE_CFLAGS, which also matches
+arch/x86/boot/compressed/Makefile, see commit 6c3b56b19730 ("x86/boot:
+Disable Clang warnings about GNU extensions"):
 
-> 
-> > +  pci-bar:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > +    description: Overwrite to  PCI CONFIG Base Address Registers value.
-> > +    items:
-> > +      items:
-> > +        - description: BAR register number
-> > +        - description: BAR register value
-> > +    minItems: 1
-> > +    maxItems: 6
-> 
-> Same with this, isn't this always the same (hardcoded) values
-> for "renesas,sh7751-pci" if used?
-
-The OpenFirmware PCI bus supplement already defines how to specify BAR 
-values in DT in "reg" or "assigned-addresses". If you need to specify 
-these, use that. Note don't expect the kernel to do anything with them.
-
-Rob
-
-> 
-> > +            interrupt-map = <0x0000 0 0 1 &julianintc 5>,
-> > +                            <0x0000 0 0 2 &julianintc 6>,
-> > +                            <0x0000 0 0 3 &julianintc 7>,
-> > +                            <0x0000 0 0 4 &julianintc 8>,
-> > +                            <0x0800 0 0 1 &julianintc 6>,
-> > +                            <0x0800 0 0 2 &julianintc 7>,
-> > +                            <0x0800 0 0 3 &julianintc 8>,
-> > +                            <0x0800 0 0 4 &julianintc 5>,
-> > +                            <0x1000 0 0 1 &julianintc 7>,
-> > +                            <0x1000 0 0 2 &julianintc 8>,
-> > +                            <0x1000 0 0 3 &julianintc 5>,
-> > +                            <0x1000 0 0 4 &julianintc 6>;
-> 
-> This interrupt-map looks very strange, usually the last cell is the polarity
-> flag and here it is omitted? I would expect something like:
-> 
-> <0x0000 0 0 1 &julianintc 5 IRQ_TYPE_LEVEL_LOW>, (...)
-> 
-> The interrupt-map schema in dtschema isn't really looking at this
-> so it is easy to get it wrong.
-
-dtc should IIRC. Maybe not in the example being incomplete.
-
-Rob
-
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 1a068de12a56..24076db59783 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -53,6 +53,9 @@ REALMODE_CFLAGS += -fno-stack-protector
+ REALMODE_CFLAGS += -Wno-address-of-packed-member
+ REALMODE_CFLAGS += $(cc_stack_align4)
+ REALMODE_CFLAGS += $(CLANG_FLAGS)
++ifdef CONFIG_CC_IS_CLANG
++REALMODE_CFLAGS += -Wno-gnu
++endif
+ export REALMODE_CFLAGS
+ 
+ # BITS is used as extension for files which are available in a 32 bit
 
