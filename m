@@ -1,64 +1,54 @@
-Return-Path: <linux-pci+bounces-1866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB158827DBF
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 05:08:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A257B827DC1
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 05:09:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E489A1C23545
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 04:08:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B14FDB23178
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 04:09:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E10936104;
-	Tue,  9 Jan 2024 04:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58178567E;
+	Tue,  9 Jan 2024 04:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzQpVpKe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aw5qH1Hp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CF813AF8;
-	Tue,  9 Jan 2024 04:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d3e416f303so7056215ad.0;
-        Mon, 08 Jan 2024 20:08:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704773318; x=1705378118; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I/XC7+Hzrqaul1JzDjqFzwqKQMzBB3vpvjl8qHZ5in8=;
-        b=mzQpVpKeXwKSKcLWKuNiVogLVrykrSt+T9LetCfOZdRtvCZEodDvqYjY581i7y5Vu/
-         6bgdpjnR4R6AWDeKAG07+BtF2VyDe1J13/De7jLDPBRsLBnQqjPu3LrRrzMSqN3iug51
-         T02KBWeNwZk2ntZAXW51sfabCLnavW9Rp8k2KEz5uE89yWg/9BOwgvb6huoby+LwTUny
-         TjBIWpeR9Xyrzcfx6bOMTAu2Cuk0m7ZmDK7Ar3kVmKoSwYeBglmVEc5ZbXGnrUZp94PR
-         VR1WfYEKtStPNx4ecMRK3tb/Azk6TvJKKJypAHKJZdmoEe1fDSCGD3PlGe9IyRNMmCfI
-         Buzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704773318; x=1705378118;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/XC7+Hzrqaul1JzDjqFzwqKQMzBB3vpvjl8qHZ5in8=;
-        b=hohrWUeNRgY+MVbEFwWM9ItMTuLR2pqP/Qdapj/sR6DJO9CiRmNsrEi1UDySHJZVVT
-         clwajkP9RLspWFj62wttbC8xBaIaNKszOhwFbB0lR3n2mHquLcjCSlFt2jkTZ5Emg5/1
-         D3HE0d4Yailxth98CiLKjJ646PrZrTQD9wVH4G1FgLD9GyLl4cZ52U+dQwukoPxewYWo
-         R7x8BrgeDcVpzhSDUA5KYU3KcqMwVTJcLJMxi+DSdsbHe86CuZ5o90jr2y03yVcdnI/D
-         tSdEt1sKQdtQC3qU2HsUjk1/9ial+BVtHVOi7ogLIwvGIyAIuoYAB9/R9TJCKFZtyAc2
-         9XUA==
-X-Gm-Message-State: AOJu0Yxa6XUBETVailmVRUk8oVO8q4Y0iW4BxY0kTUWg3zJjMhHLf0pO
-	yhxBn8x4Q0f9jBc2YHJYtGg=
-X-Google-Smtp-Source: AGHT+IHY1ya+YrOLTHexV8PosRb/mNRrliidXjZM2nUEIVPtdG0nc7kbSmQlzxZRWYZv+xROvd6Tgg==
-X-Received: by 2002:a17:902:dac8:b0:1d4:524d:96cb with SMTP id q8-20020a170902dac800b001d4524d96cbmr2692987plx.109.1704773317516;
-        Mon, 08 Jan 2024 20:08:37 -0800 (PST)
-Received: from ?IPV6:2600:8802:b00:ba1:c927:f415:d49b:1377? ([2600:8802:b00:ba1:c927:f415:d49b:1377])
-        by smtp.gmail.com with ESMTPSA id z3-20020a170902834300b001d1d6f6b67dsm651885pln.147.2024.01.08.20.08.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jan 2024 20:08:36 -0800 (PST)
-Message-ID: <a85dbfc3-e327-442a-9aab-5115f86944f7@gmail.com>
-Date: Mon, 8 Jan 2024 20:08:33 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9B725750;
+	Tue,  9 Jan 2024 04:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40948xXA005938;
+	Mon, 8 Jan 2024 22:08:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1704773339;
+	bh=JHMZnTr8NrMx/rQCap/rZ0aFLoj4Fsi96vTmJALCxNM=;
+	h=Date:CC:Subject:To:References:From:In-Reply-To;
+	b=aw5qH1HpWVvHz0h02x+EB8s8RDQs9kJpVZQMDDJF0TObya2yULfhMazIAnU2UZwBr
+	 cxcGoPoXVLZBkpVyIXMqvVLK77NYXHHo934njpx/+SrEyY3a0m7qjaIp06xDl9o4v1
+	 EQmDM7a1lsdCIVBlDo7Ci0CP+PxmqXB3U0O8ePGI=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40948xTD127114
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 8 Jan 2024 22:08:59 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
+ Jan 2024 22:08:59 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 8 Jan 2024 22:08:59 -0600
+Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40948tlO029309;
+	Mon, 8 Jan 2024 22:08:55 -0600
+Message-ID: <d9c8014e-bd78-4802-95d3-aaab8c9c7c22@ti.com>
+Date: Tue, 9 Jan 2024 09:38:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,96 +56,66 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 0/9] PCI: introduce the concept of power sequencing of PCIe
- devices
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [RFC PATCH] dt-bindings: PCI: ti,j721e-pci-host: Add device-id
+ for TI's J784S4 SoC
 Content-Language: en-US
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Kalle Valo <kvalo@kernel.org>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Chris Morgan <macromorgan@hotmail.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>,
- Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Terry Bowman <terry.bowman@amd.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
- Srini Kandagatla <srinivas.kandagatla@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jim Quinlan <jim2101024@gmail.com>, james.quinlan@broadcom.com
-Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20240104130123.37115-1-brgl@bgdev.pl>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240104130123.37115-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+References: <20240108050735.512445-1-s-vadapalli@ti.com>
+ <67af1724-6424-456a-aff6-85d9e010c430@linaro.org>
+ <bc3a0fb0-6268-476a-a13a-2d538704f61d@ti.com>
+ <7d3439c2-35e3-4318-aa99-af9b7c8ed53b@linaro.org>
+ <e4bd76d1-e5d9-4ff6-8917-db5784dea847@ti.com>
+ <5fc52ff2-e903-46e6-a808-b4a41a76ad58@linaro.org>
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <5fc52ff2-e903-46e6-a808-b4a41a76ad58@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello,
 
-On 1/4/2024 5:01 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+On 08/01/24 17:56, Krzysztof Kozlowski wrote:
+> On 08/01/2024 12:34, Siddharth Vadapalli wrote:
+>>>>>
+>>>>> Why is this patch incomplete? What is missing here? What are you asking
+>>>>> about as RFC?
+>>>>
+>>>> Since the merge window is closed, I was hoping to get the patch reviewed in
+>>>> order to get any "Reviewed-by" tags if possible. That way, I will be able to
+>>>> post it again as v1 along with the tags when the merge window opens. For that
+>>>
+>>> This is v1, so that would be v2.
+>>>
+>>>> reason, I have marked it as an RFC patch. Is there an alternative to this "RFC
+>>>> patch" method that I have followed? Please let me know.
+>>>
+>>> Then how does it differ from posting without RFC? Sorry, RFC is
+>>> incomplete work. Often ignored during review.
+>>
+>> I was under the impression that posting patches when the merge window is closed
+>> will be met with a "post your patch later when the merge window is open"
+>> response. That is why I chose the "RFC patch" path since RFCs can be posted anytime.
+>>
+>> For the Networking Subsystem, it is documented that patches with new features
+>> shouldn't be posted when the merge window is closed. I have mostly posted
+>> patches for the Networking Subsystem and am not sure about the rules for the
+>> device-tree bindings and PCI Subsystems. To be on the safe side I posted this
+>> patch as an RFC patch.
 > 
-> During last year's Linux Plumbers we had several discussions centered
-> around the need to power-on PCI devices before they can be detected on
-> the bus.
-> 
-> The consensus during the conference was that we need to introduce a
-> class of "PCI slot drivers" that would handle the power-sequencing.
-> 
-> After some additional brain-storming with Manivannan and the realization
-> that the DT maintainers won't like adding any "fake" nodes not
-> representing actual devices, we decided to reuse the existing
-> infrastructure provided by the PCIe port drivers.
-> 
-> The general idea is to instantiate platform devices for child nodes of
-> the PCIe port DT node. For those nodes for which a power-sequencing
-> driver exists, we bind it and let it probe. The driver then triggers a
-> rescan of the PCI bus with the aim of detecting the now powered-on
-> device. The device will consume the same DT node as the platform,
-> power-sequencing device. We use device links to make the latter become
-> the parent of the former.
-> 
-> The main advantage of this approach is not modifying the existing DT in
-> any way and especially not adding any "fake" platform devices.
+> Ah, so you want to go around that policy by posting non-RFC patch as
+> RFC. It does not work like that.
 
-There is prior work in that area which was applied, but eventually reverted:
+Thank you for clarifying. May I post the v2 of this patch in that case, after
+rebasing it on the latest linux-next? I wish to receive feedback or Reviewed-by
+tags for the v2 patch and post the v3 accordingly when the merge window opens again.
 
-https://www.spinics.net/lists/linux-pci/msg119136.html
-
-and finally re-applied albeit in a different shape:
-
-https://lore.kernel.org/all/20220716222454.29914-1-jim2101024@gmail.com/
-
-so we might want to think about how to have pcie-brcmstb.c converted 
-over your proposed approach. AFAIR there is also pcie-rockchip.c which 
-has some rudimentary support for voltage regulators of PCIe end-points.
-
-What does not yet appear in this RFC is support for suspend/resume, 
-especially for power states where both the RC and the EP might be losing 
-power. There also needs to be some thoughts given to wake-up enabled 
-PCIe devices like Wi-Fi which might need to remain powered on to service 
-Wake-on-WLAN frames if nothing else.
-
-I sense a potential for a lot of custom power sequencing drivers being 
-added and ultimately leading to the decision to create a "generic" one 
-which is entirely driven by Device Tree properties...
-
-Thanks for doing this!
 -- 
-Florian
+Regards,
+Siddharth.
 
