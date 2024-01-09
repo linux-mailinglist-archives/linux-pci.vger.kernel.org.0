@@ -1,170 +1,171 @@
-Return-Path: <linux-pci+bounces-1923-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1924-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E436A828404
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 11:29:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A32782841E
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 11:39:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D00661C20DCB
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 10:29:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 921EF1F24C29
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 10:39:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36DE2360A8;
-	Tue,  9 Jan 2024 10:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EF1D364B9;
+	Tue,  9 Jan 2024 10:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uVO74iKZ"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kUPRfDa8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gg8iSZcH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AE35EE5;
-	Tue,  9 Jan 2024 10:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1704796160; x=1705400960; i=w_armin@gmx.de;
-	bh=QipFuJnYN/Kb6LPSXeIwGxLbJpsBbnELZ8JaGfvIEdc=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=uVO74iKZ82uyXqOPSUH1IJLMn0Bvot5JQtF2vd5YzTpN06fYV4iex98TjLKGbm94
-	 6XD+GmORYulBsOh/L9njMRc5k5F2+wzINoouGfiNPb693Uz6YQ3czAMxrDYmbBPsa
-	 mNsYYH/xSpf2DCQD6GObYsSBg2/OBbnZKSMFipw62BymDGICcV9rM7ZbRXIyRcO/c
-	 +UMbhDDV+/Yak/vn1lPPAnIf7keVtj4ICfykv4v9GnBCjRLCUtlB25TEwXRjbeWiO
-	 vZnv7lue6czKqw0XXpa4hPzOo2CaoJS/dtk34NntzdN8GHxz877P1c5i12HiimtQw
-	 lDRjM0q+yG/NrM/0Qw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MiJZO-1qjAFK2ZPC-00fQ5z; Tue, 09
- Jan 2024 11:29:20 +0100
-Message-ID: <56911b37-c316-43b2-8dc9-10f6fd0a398d@gmx.de>
-Date: Tue, 9 Jan 2024 11:29:19 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37BA36AE0;
+	Tue,  9 Jan 2024 10:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 84F53580995;
+	Tue,  9 Jan 2024 05:39:14 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 09 Jan 2024 05:39:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1704796754;
+	 x=1704803954; bh=HzJqeHJSSvwhWPrjR9Fbt9vP85vPdOff53sUkOuNVq0=; b=
+	kUPRfDa8eYCtgyf4AmSxljf2NqYRMG1F3bZ+Oe98NlK/Bdlj27ZLUzmeNfo2+PBS
+	/KNHuNdsnA69fsyENsXZIifIYFyTC8YAEQ0ioDXm7zmezulOboDG/fd6pGZcAxCD
+	2+NXP+UrN25d/DqL5qDYRlzB/MO1oiuWnfz/dXSeSUmSUWDFHDxOT2p6MGp+DoNb
+	fLAmxSQTe7b+yFJ9DhRgaBdecM+QH0bDjGpdDsOcsZvoH4UUXi073jgVL+khKfxa
+	wKuxVNuLulhqLVwWLNOwjJcLzkUkmYlp/R3wReqzuJV5iZVpqkurYv1E+a/vKAQS
+	YJb0+VyrjWfzP5LvAj1tlw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704796754; x=
+	1704803954; bh=HzJqeHJSSvwhWPrjR9Fbt9vP85vPdOff53sUkOuNVq0=; b=g
+	g8iSZcH/dNzuXP/Xv/Hfm3ka76yYul078pUOJVHhu/i8KJ/omlE7sR3LFwrFvZv3
+	XFUyuwppqvHrBfewlOUc50nJ38PsqCwu1Qk5szxprvvO7YQvUZSmnwdzCMyu+D+S
+	GAPptH1BJg9JPe9jJGzplhk0PDqFBotgQ5HOMMkeF6mk9L8iXyI8qaIHsrKQ+0bD
+	1GiAnSS4e3Pm4uGCxzVBffsQxcnaMi4iEHwrBcoy5ssy8Zf5XZ+SBm7iFud8c/TP
+	WYgZWWiKsl5pSDByDD7RhXkRYwVK8gSi4BLrFntBj96kY+4ip2+AMleH1A+LtAd5
+	lo4q9h91NT06s+1MoePXw==
+X-ME-Sender: <xms:UiKdZRb1EM7JXrvJCWkJPOIOB3eLJgFGnH54EvQhFFOQ3buA3oLhAQ>
+    <xme:UiKdZYY6qEVEgonPkBQzX12qcu9Z3PJQZYAk7prK3G3oiWTEsA2Vj-wsjm780g9VW
+    BL1qS7r0UTDyjbw_Wg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehledgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:UiKdZT-nHewJelcFdkMzsuc6tJ32kzx-oLScKQJVVU5YZA8wV4MO0A>
+    <xmx:UiKdZfo72kFtjawE6s6gD3UJl1vJEalEY_fSKySLUM7s0uLmQ5p_cA>
+    <xmx:UiKdZcrpiW7k18W2bkbCybCcrBERyg7a2MlcCeRroVXRINziwgBV3w>
+    <xmx:UiKdZY8S2D4l_o4eq2ngxEx2KJlrwjo0HPoMeRC5RHCsn0IxgNrHXg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id EC32CB6008D; Tue,  9 Jan 2024 05:39:13 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1364-ga51d5fd3b7-fm-20231219.001-ga51d5fd3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Athul Krishna <athul.krishna.kr@protonmail.com>,
- "corentin.chary@gmail.com" <corentin.chary@gmail.com>,
- "acpi4asus-user@lists.sourceforge.net"
- <acpi4asus-user@lists.sourceforge.net>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-pci@vger.kernel.org
-References: <20240109000033.GA1986948@bhelgaas>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240109000033.GA1986948@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:eyFeimnROql3QynwpU6IC6doTX8iSSBI66lO4SDLrv4mrwp/7m2
- bgbvvBNx6FLx77xfhudKUz3HN4KIHc+BCOTTybTVNJSamfpvXLsKG52iWq5/luRO6kh75ev
- jgXNJY4Ly2MIRRd397DXnBDQJiX8qQ8bU5DPywy0VXAoTSpcDJsMVTjVTsouUOjtr29LLhY
- VNWDK9McDm95wGVqn279w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uURtABLTZvs=;be+4onCGJZFxcyteoHkeTl5+qeR
- Q0QXaUEFfFMDtwfcCWT+HvM6k8OplFiO+U5zGSHv0V3Eo4i1kc5FEZndTwIzWb7DYU7/fy3f7
- OeH/ldz3OsDk/qBrpMZAZ2UvO2Vcvu9GvtyE2Hl4Mm1g/RYaeSyBYlaZPJqqiekrx2qntoOMt
- es9DTzupBrhThji2SM3H23uGLGfG1GhWnyINKlz3Oqaoy9CwjhIuHuOJtzPQaEqt7LRweH9x5
- xQXFWmct8iCx8E474hydssj6gsszFWHjYGw6HEhqr4ck5i0p6IqIgY7IvY2dWudk43CYcEYNc
- uUByEuOKFtjiyqiVGMz+6nVlMt5ysvLwruBKCKac51xUG5nkucvX2CpTWghL25FFZ/L+nYAc9
- 6702nNt3nQ9Z3LCzgE+g/YYj+p6APmPUcf75giuW5tl297KUhDpu4yO2RlB7tGa5yxlRVBWZG
- ARn/CXkzMHKkl6mBJakdY68qRUHR+uZ4M3v6y5bK78J8uCAoX5ZgNPxVUmbhD2bYVH/ENGI7C
- oWyuRAnNFSwD6XAgX/nkrs8tyMhDUF7AurPvGIApBZFkq5gaEA7aA2iHIWZAHF5cSO/dWwE8n
- yFzqjMoTKoeIgtXvvfz7sVTFHZ2kYwFWP4U83iNMoXBO+9ONEZyQJqY1yCLUV0xuZ/BD+Y4O2
- vTVu5TejKCyo42f29guB7ppn9RxTYErNNgie7HnfHln2pm2CoZIWr720LcmUWJhra0EznY/4S
- ZmWQ6S63S6nPVxzmc4nx5SZidjojwUM5EsYFVi4CSnEJJ09NfI8Pzp4yqyAwlrg+mjej+3cgL
- xlm7LvYYG5dI4Oy9elb2bmfflx5MDZH6DmFSfm9j6yGSI91ovJCJ3ZtI0V0pcE+kCKhJ00JN+
- 6VM0NlQYTxX03PWIg/VcaNileA7GhjCSxCHjnntG3wDA5QfpIIr93jw5/t4KIvTfE95JiLJdX
- rmxjGnkSvqzPu2zVsZjabpI8LBk=
+Message-Id: <8f50f1b2-68b0-46bd-9bf8-3ddbbaee249d@app.fastmail.com>
+In-Reply-To: 
+ <CAGXv+5EHc08sv5+=tnFmoDAQhbD7ZS+XBOyaiSndaiSFhMksAA@mail.gmail.com>
+References: <20240104130123.37115-1-brgl@bgdev.pl>
+ <20240104130123.37115-9-brgl@bgdev.pl>
+ <15443d5d-6544-45d0-afeb-b23e6a041ecf@quicinc.com>
+ <87jzoizwz7.fsf@kernel.org>
+ <CAGXv+5FhYY+qyyT8wxY5DggvWPibfM2ypHVKQbsJZ30VkZDAkQ@mail.gmail.com>
+ <87bk9uzum9.fsf@kernel.org>
+ <5904461c-ca3c-4eb1-a44a-876872234545@app.fastmail.com>
+ <CAGXv+5EHc08sv5+=tnFmoDAQhbD7ZS+XBOyaiSndaiSFhMksAA@mail.gmail.com>
+Date: Tue, 09 Jan 2024 11:38:51 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Chen-Yu Tsai" <wenst@chromium.org>
+Cc: "Kalle Valo" <kvalo@kernel.org>,
+ "Jeff Johnson" <quic_jjohnson@quicinc.com>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Bjorn Andersson" <andersson@kernel.org>,
+ "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>,
+ "Chris Morgan" <macromorgan@hotmail.com>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ "Neil Armstrong" <neil.armstrong@linaro.org>,
+ =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>,
+ "Peng Fan" <peng.fan@nxp.com>, "Robert Richter" <rrichter@amd.com>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ "Terry Bowman" <terry.bowman@amd.com>,
+ "Kuppuswamy Sathyanarayanan"
+ <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Huacai Chen" <chenhuacai@kernel.org>, "Alex Elder" <elder@linaro.org>,
+ "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org,
+ "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 8/9] PCI/pwrseq: add a pwrseq driver for QCA6390
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Am 09.01.24 um 01:00 schrieb Bjorn Helgaas:
+On Tue, Jan 9, 2024, at 11:26, Chen-Yu Tsai wrote:
+> On Tue, Jan 9, 2024 at 6:15=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
+rote:
+>> On Tue, Jan 9, 2024, at 11:09, Kalle Valo wrote:
+>> > Chen-Yu Tsai <wenst@chromium.org> writes:
+>> >> On Tue, Jan 9, 2024 at 5:18=E2=80=AFPM Kalle Valo <kvalo@kernel.or=
+g> wrote:
 
-> On Sat, Jan 06, 2024 at 11:33:35PM +0100, Armin Wolf wrote:
->> Am 04.01.24 um 03:50 schrieb Athul Krishna:
+>> If this is indeed what you want, it's still better to do the
+>> equivalent expression in PCIE_PWRSEQ_QCA6390 rather than ATH11K:
 >>
->>>
->>>
->>>
->>> Sent with Proton Mail secure email.
->>>
->>> On Thursday, January 4th, 2024 at 1:05 AM, Armin Wolf <W_Armin@gmx.de> wrote:
->>>
->>>
->>>> Am 03.01.24 um 19:51 schrieb Athul Krishna:
->>>>
->>>>> Hello,
->>>>> This is my first time reporting an issue in the kernel.
->>>>>
->>>>> Device Details:
->>>>>
->>>>> * Asus Zephyrus G14 (||||||GA402RJ)
->>>>> * Latest BIOS
->>>>> * Arch_x86_64
->>>>> * Kernel: 6.6.9
->>>>> * Minimal install using archinstall
->>>>>
->>>>> ISSUE: Using /dgpu_disable /provided by _asus-nb-wmi _to disable and
->>>>> enable dedicated gpu,
->>>>> causes system crash and reboots, randomly.
->>>>> 9/10 times writing 0 to dgpu_disable will produce an Input/Output
->>>>> error, but the value will be changed to 0, half the time system will
->>>>> crash and reboot. While writing 1 to it doesn't produce an error, I
->>>>> have observed system crash twice just after that.
->>>>>
->>>>> Steps to Reproduce:
->>>>>
->>>>> * Remove dpgu: echo 1 | sudo tee ../remove (dgpu path)
->>>>> * echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
->>>>> * echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
->>>>>
->>>>> * echo 1 | sudo tee /sys/bus/pci/rescan
->>>>>
->>>>> After writing 0 to dgpu_disable, there's an entry in journal about an
->>>>> ACPI bug.
->>>>> Output of 'journalctl -p 3' and lspci is attached.
->>>> Hi,
->>>>
->>>> Can you share the output of "acpidump" and the content of "/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof"?
->>>> The bmof files contain a description of the WMI interfaces of your machine, which might be important for diagnosing the error.
->>>>
->>>> Thanks,
->>>> Armin Wolf
->>> Here's the output of 'acpidump > acpidump.out' and 'cat /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof'
->> Ok, it seems the ACPI code tries to access an object ("GC00") which does not exist.
->> This is the reason why disabling the dGPU fails with -EIO.
->>
->> I am unfortunately not that knowledgeable when it comes to PCI problems, i CCed the linux-pci mailing list in hope that
->> they can better help you in this regard.
-> FWIW, I don't know enough about what's going on here to see a PCI
-> connection.  I do see a bunch of PCI-related stuff around rfkill, but
-> I don't think that's involved here.
+>> config PCIE_PWRSEQ_QCA6390
+>>       tristate "PCIe Power Sequencing driver for QCA6390"
+>>       default ATH11K && ARCH_QCOM
 >
-> I think the path here is this, which doesn't seem to touch anything in
-> PCI:
+> PCIE_PWRSEQ_QCA6390 is also guarded by PCIE_PWRSEQ though. That would
+> require the default statement to be duplicated to the PCIE_PWRSEQ opti=
+on
+> as well.
 >
->    dgpu_disable_store
->      asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, ..., &result)
->        asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, ...)
->          asus_wmi_evaluate_method3
->            wmi_evaluate_method(ASUS_WMI_MGMT_GUID, ...)
->      if (result > 1)
->        return -EIO
+> Presumably we'd get a few more power sequencing drivers, and the list =
+of
+> default statements for PCIE_PWRSEQ would grow.
 >
-> But if I missed it, let me know and I'll be happy to take another
-> look.
->
-> Bjorn
+> If that's acceptable then Arnd's proposal plus duplicating it to
+> PCIE_PWRSEQ should work as described.
 
-The issue happens when a PCI bus rescan is done after writing to "dgpu_disable".
-As a side note a bugzilla bugreport for this issue was recently created:
+Does PCIE_PWRSEQ need to be user-visible? If this is a hidden symbol
+that gets selected by PCIE_PWRSEQ_QCA6390 and any future ones, it
+would still get enabled.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=218354
+Another possibility would be to have PCIE_PWRSEQ be default-enabled,
+but allow it to be turned off in order to hide the other options
+when users are sure they don't need it (e.g. when building a
+specialized kernel for a particular board).
 
-Thanks,
-Armin Wolf
-
+     Arnd
 
