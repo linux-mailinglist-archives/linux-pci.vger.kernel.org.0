@@ -1,171 +1,146 @@
-Return-Path: <linux-pci+bounces-1924-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1925-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A32782841E
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 11:39:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86DEF82860D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 13:30:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 921EF1F24C29
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 10:39:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A97EB2283D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 12:30:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EF1D364B9;
-	Tue,  9 Jan 2024 10:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB62C38DCC;
+	Tue,  9 Jan 2024 12:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kUPRfDa8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gg8iSZcH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="chSnIHus"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37BA36AE0;
-	Tue,  9 Jan 2024 10:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 84F53580995;
-	Tue,  9 Jan 2024 05:39:14 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 09 Jan 2024 05:39:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1704796754;
-	 x=1704803954; bh=HzJqeHJSSvwhWPrjR9Fbt9vP85vPdOff53sUkOuNVq0=; b=
-	kUPRfDa8eYCtgyf4AmSxljf2NqYRMG1F3bZ+Oe98NlK/Bdlj27ZLUzmeNfo2+PBS
-	/KNHuNdsnA69fsyENsXZIifIYFyTC8YAEQ0ioDXm7zmezulOboDG/fd6pGZcAxCD
-	2+NXP+UrN25d/DqL5qDYRlzB/MO1oiuWnfz/dXSeSUmSUWDFHDxOT2p6MGp+DoNb
-	fLAmxSQTe7b+yFJ9DhRgaBdecM+QH0bDjGpdDsOcsZvoH4UUXi073jgVL+khKfxa
-	wKuxVNuLulhqLVwWLNOwjJcLzkUkmYlp/R3wReqzuJV5iZVpqkurYv1E+a/vKAQS
-	YJb0+VyrjWfzP5LvAj1tlw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704796754; x=
-	1704803954; bh=HzJqeHJSSvwhWPrjR9Fbt9vP85vPdOff53sUkOuNVq0=; b=g
-	g8iSZcH/dNzuXP/Xv/Hfm3ka76yYul078pUOJVHhu/i8KJ/omlE7sR3LFwrFvZv3
-	XFUyuwppqvHrBfewlOUc50nJ38PsqCwu1Qk5szxprvvO7YQvUZSmnwdzCMyu+D+S
-	GAPptH1BJg9JPe9jJGzplhk0PDqFBotgQ5HOMMkeF6mk9L8iXyI8qaIHsrKQ+0bD
-	1GiAnSS4e3Pm4uGCxzVBffsQxcnaMi4iEHwrBcoy5ssy8Zf5XZ+SBm7iFud8c/TP
-	WYgZWWiKsl5pSDByDD7RhXkRYwVK8gSi4BLrFntBj96kY+4ip2+AMleH1A+LtAd5
-	lo4q9h91NT06s+1MoePXw==
-X-ME-Sender: <xms:UiKdZRb1EM7JXrvJCWkJPOIOB3eLJgFGnH54EvQhFFOQ3buA3oLhAQ>
-    <xme:UiKdZYY6qEVEgonPkBQzX12qcu9Z3PJQZYAk7prK3G3oiWTEsA2Vj-wsjm780g9VW
-    BL1qS7r0UTDyjbw_Wg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehledgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:UiKdZT-nHewJelcFdkMzsuc6tJ32kzx-oLScKQJVVU5YZA8wV4MO0A>
-    <xmx:UiKdZfo72kFtjawE6s6gD3UJl1vJEalEY_fSKySLUM7s0uLmQ5p_cA>
-    <xmx:UiKdZcrpiW7k18W2bkbCybCcrBERyg7a2MlcCeRroVXRINziwgBV3w>
-    <xmx:UiKdZY8S2D4l_o4eq2ngxEx2KJlrwjo0HPoMeRC5RHCsn0IxgNrHXg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id EC32CB6008D; Tue,  9 Jan 2024 05:39:13 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1364-ga51d5fd3b7-fm-20231219.001-ga51d5fd3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F98381D0
+	for <linux-pci@vger.kernel.org>; Tue,  9 Jan 2024 12:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dbdb124491cso2179115276.1
+        for <linux-pci@vger.kernel.org>; Tue, 09 Jan 2024 04:30:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704803446; x=1705408246; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6bnxa+GSR1FpCAvVqbsQV97G8p0dAq+kFC9sgXphqE=;
+        b=chSnIHusUnwn3XCrUTGLl/woFUhegzPC+/qykv4jRfXUGqRo//F7oY6CKp7Ssy6iYA
+         b1HGiRoyj77jg3J4ZSuJcQ1U0aAgpZogjKM5C1Kue04YzIfW0IpaPvdifHezeC9XfmJr
+         L/ViysLijTicR+FY22YHpCtiDyUtFbNy2rcFlivO2XUDLv8kFRUrak8LOI23rPqypVVT
+         tz/letFnoDyMKLsj5Ise4CkaJS1Lgg/ZEMwxpz7LzKtZmdV5QiiXcqiSb6XH+jD/eQ54
+         ZWLSkP+EMLHhGSdFvbG6h+dEvmx5/BqryPukhdMNFGmTgwHfBZTpJmCzWYe38ZS+/X1o
+         2s/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704803446; x=1705408246;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W6bnxa+GSR1FpCAvVqbsQV97G8p0dAq+kFC9sgXphqE=;
+        b=N3GrhsaWIlPw6obzbJOzZgPsMIsefeI4Zv3qz5r/ciOCorMhUoRDWX5WoH1mDbf0A6
+         Y3uwORAXEAaDL/dcrzDFQmEuxxlxTyQYRQ+Cea/gJV53JQJwLAEnUoTG2tfIQtLKNRxj
+         ghYQzlPyjfURR0T3yq6owPXVujwZmfCmxDi4bTJlysIaphcxAzEAlWU7zhZ07oQLb+av
+         LINKsy9nxC6lUO+dvbqS1r2FUh7hLNOXkOM3/tVcowwvPA1/Z0zFNprBsY2ggpZ32+06
+         YfeLzRYH5wfa6FwxkBY5jKxqLN5cDbdUXtLLLLzWDwQNU2V9Zb3D5lpKPN4bwY1D+4Ic
+         KxGg==
+X-Gm-Message-State: AOJu0YwdVTSOladpRkI6cyw386wIszPRyxIcQwbujRlF2dmN43XVAQCU
+	A7HC7D8Z7+S9EJ8tjlXrTFKx4oo6jpA/eqhtOynNPkIAtLCzWg==
+X-Google-Smtp-Source: AGHT+IH/VCIVPEpFPTboTJrdPUTfNhyfiSowrYT19rYtTyqugjFXBvGgie/pxBxc7jOwlQ5dtHwAfNwOTFIHyTrVnOY=
+X-Received: by 2002:a25:1908:0:b0:dbc:ed55:dd7b with SMTP id
+ 8-20020a251908000000b00dbced55dd7bmr248450ybz.36.1704803446144; Tue, 09 Jan
+ 2024 04:30:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <8f50f1b2-68b0-46bd-9bf8-3ddbbaee249d@app.fastmail.com>
-In-Reply-To: 
- <CAGXv+5EHc08sv5+=tnFmoDAQhbD7ZS+XBOyaiSndaiSFhMksAA@mail.gmail.com>
-References: <20240104130123.37115-1-brgl@bgdev.pl>
- <20240104130123.37115-9-brgl@bgdev.pl>
- <15443d5d-6544-45d0-afeb-b23e6a041ecf@quicinc.com>
- <87jzoizwz7.fsf@kernel.org>
- <CAGXv+5FhYY+qyyT8wxY5DggvWPibfM2ypHVKQbsJZ30VkZDAkQ@mail.gmail.com>
- <87bk9uzum9.fsf@kernel.org>
- <5904461c-ca3c-4eb1-a44a-876872234545@app.fastmail.com>
- <CAGXv+5EHc08sv5+=tnFmoDAQhbD7ZS+XBOyaiSndaiSFhMksAA@mail.gmail.com>
-Date: Tue, 09 Jan 2024 11:38:51 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Chen-Yu Tsai" <wenst@chromium.org>
-Cc: "Kalle Valo" <kvalo@kernel.org>,
- "Jeff Johnson" <quic_jjohnson@quicinc.com>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Rob Herring" <robh+dt@kernel.org>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konrad.dybcio@linaro.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
- =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>,
- "Chris Morgan" <macromorgan@hotmail.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Peng Fan" <peng.fan@nxp.com>, "Robert Richter" <rrichter@amd.com>,
- "Dan Williams" <dan.j.williams@intel.com>,
- "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
- "Terry Bowman" <terry.bowman@amd.com>,
- "Kuppuswamy Sathyanarayanan"
- <sathyanarayanan.kuppuswamy@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Huacai Chen" <chenhuacai@kernel.org>, "Alex Elder" <elder@linaro.org>,
- "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC 8/9] PCI/pwrseq: add a pwrseq driver for QCA6390
-Content-Type: text/plain;charset=utf-8
+References: <cover.1704788539.git.ysato@users.sourceforge.jp> <bc794e2165244bd0cee81bc0106f1e2d1bef1613.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <bc794e2165244bd0cee81bc0106f1e2d1bef1613.1704788539.git.ysato@users.sourceforge.jp>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 9 Jan 2024 13:30:34 +0100
+Message-ID: <CACRpkdYLsf-uWdMCTpieji7u1-H3oTGojvC4xm7Erox97XJ6RQ@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 17/37] dt-bindings: interrupt-controller:
+ renesas,sh7751-intc: Add json-schema
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 9, 2024, at 11:26, Chen-Yu Tsai wrote:
-> On Tue, Jan 9, 2024 at 6:15=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> w=
-rote:
->> On Tue, Jan 9, 2024, at 11:09, Kalle Valo wrote:
->> > Chen-Yu Tsai <wenst@chromium.org> writes:
->> >> On Tue, Jan 9, 2024 at 5:18=E2=80=AFPM Kalle Valo <kvalo@kernel.or=
-g> wrote:
+Hi Yoshinori,
 
->> If this is indeed what you want, it's still better to do the
->> equivalent expression in PCIE_PWRSEQ_QCA6390 rather than ATH11K:
->>
->> config PCIE_PWRSEQ_QCA6390
->>       tristate "PCIe Power Sequencing driver for QCA6390"
->>       default ATH11K && ARCH_QCOM
->
-> PCIE_PWRSEQ_QCA6390 is also guarded by PCIE_PWRSEQ though. That would
-> require the default statement to be duplicated to the PCIE_PWRSEQ opti=
-on
-> as well.
->
-> Presumably we'd get a few more power sequencing drivers, and the list =
-of
-> default statements for PCIE_PWRSEQ would grow.
->
-> If that's acceptable then Arnd's proposal plus duplicating it to
-> PCIE_PWRSEQ should work as described.
+thanks for your patch!
 
-Does PCIE_PWRSEQ need to be user-visible? If this is a hidden symbol
-that gets selected by PCIE_PWRSEQ_QCA6390 and any future ones, it
-would still get enabled.
+On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
 
-Another possibility would be to have PCIE_PWRSEQ be default-enabled,
-but allow it to be turned off in order to hide the other options
-when users are sure they don't need it (e.g. when building a
-specialized kernel for a particular board).
+> +  renesas,icr-irlm:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: If true four independent interrupt requests mode (ICR.I=
+RLM is 1).
+> +
+> +  renesas,ipr-map:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      IRQ to IPR mapping definition.
+> +      1st - INTEVT code
+> +      2nd - Register
+> +      3rd - bit index
 
-     Arnd
+(...)
+
+> +            renesas,ipr-map =3D <0x240 IPRD IPR_B12>, /* IRL0 */
+> +                              <0x2a0 IPRD IPR_B8>,  /* IRL1 */
+> +                              <0x300 IPRD IPR_B4>,  /* IRL2 */
+> +                              <0x360 IPRD IPR_B0>,  /* IRL3 */
+(...)
+
+Is it really necessary to have all this in the device tree?
+
+You know from the compatible that this is "renesas,sh7751-intc"
+and I bet this table will be the same for any sh7751 right?
+
+Then just put it in a table in the driver instead and skip this from
+the device tree and bindings. If more interrupt controllers need
+to be supported by the driver, you can simply look up the table from
+the compatible string.
+
+Yours,
+Linus Walleij
 
