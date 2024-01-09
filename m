@@ -1,143 +1,164 @@
-Return-Path: <linux-pci+bounces-1934-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1935-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9C888289FC
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 17:29:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BBD7828A36
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 17:44:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56732287A7F
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 16:29:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF8DD1F2604C
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 16:44:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845963A1D3;
-	Tue,  9 Jan 2024 16:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1486A3A27B;
+	Tue,  9 Jan 2024 16:43:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tO+b64eZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4dkcEVL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4322B3A1C2;
-	Tue,  9 Jan 2024 16:29:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C550C433F1;
-	Tue,  9 Jan 2024 16:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A3E3A26E;
+	Tue,  9 Jan 2024 16:43:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF17C433F1;
+	Tue,  9 Jan 2024 16:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704817760;
-	bh=QgGwzoys5P2Z/fVPtiI4dBsiCdvR2utj2/6oG20yU8I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=tO+b64eZxpE1divDNhiYoF0w5a3carVLU5isQEfJzuMYC7Ujt9cl6FuZJzvfO9gr1
-	 Ek0j32D8E/N9c2ZpF+PncLfrZNjSd2FQgZM+2kYC1xQ0R+Xw89F0O8GkPasA+zPqnY
-	 TcYSEBqUo3329T9TvIcblHnRX7YTBlcAzLppVXfT+gjgWnlfrh3lHQivbfFi5DVqOs
-	 NCuJm5Oov75+0QrXdipVIqhgi8A78rfcgtBFmqiKhzLN2tiQbha10SmTHO2tg+2hlK
-	 KJIWok0gjAPrbvRkttADcxAFt9q9KFQiLJklVJrdqh95LQs5enmxfTrdEwYXxWbA4Y
-	 gcZfH0x+RS8yg==
-Received: (nullmailer pid 2713715 invoked by uid 1000);
-	Tue, 09 Jan 2024 16:29:14 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1704818629;
+	bh=yAp04RHGBK3kZbfdthXQtiaJrJ2VNSMii5hP7oiD+zw=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=G4dkcEVL0oWynRladsUPhZwHfdDo8UD+5c464yEtzLCtGIVanqhEeQwe1/n5CTgM0
+	 B2CqdYV6p+V44I07Mt9gSRhS+Lqvp8DD7HA7Nfj9henMfX/qHATwgT78HqR0qEPClw
+	 fgITg/4pAARBbYA4IiAgLsqB+Sy8geWKI67CP4JUDhbWPzB29ctC5MQ13mXgT3Yxme
+	 yu852Wes/t5ILUt11tKtONA3zuC+OpYLEeVqZNUTFLDr2VMQkWEZNycM8LihQ1SjXl
+	 kl4R6UMi1HH4Vjz/4PCmYe9xSYuEHgM5+QazTkSFUrFew/ZJNUp3fBvlb5T5rMrbLh
+	 /qT6qG0+gcEGg==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Chen-Yu Tsai" <wenst@chromium.org>,  "Jeff Johnson"
+ <quic_jjohnson@quicinc.com>,  "Bartosz Golaszewski" <brgl@bgdev.pl>,
+  "David S . Miller" <davem@davemloft.net>,  "Eric Dumazet"
+ <edumazet@google.com>,  "Jakub Kicinski" <kuba@kernel.org>,  "Paolo Abeni"
+ <pabeni@redhat.com>,  "Rob Herring" <robh+dt@kernel.org>,  "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,  "Conor Dooley"
+ <conor+dt@kernel.org>,  "Bjorn Andersson" <andersson@kernel.org>,  "Konrad
+ Dybcio" <konrad.dybcio@linaro.org>,  "Catalin Marinas"
+ <catalin.marinas@arm.com>,  "Will Deacon" <will@kernel.org>,  "Bjorn
+ Helgaas" <bhelgaas@google.com>,  Heiko =?utf-8?Q?St=C3=BCbner?=
+ <heiko@sntech.de>,  "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>,  "Chris Morgan"
+ <macromorgan@hotmail.com>,  "Linus Walleij" <linus.walleij@linaro.org>,
+  "Geert Uytterhoeven" <geert+renesas@glider.be>,  "Neil Armstrong"
+ <neil.armstrong@linaro.org>,  =?utf-8?Q?N=C3=ADcolas?= F. R. A. Prado
+ <nfraprado@collabora.com>,  "Marek Szyprowski" <m.szyprowski@samsung.com>,
+  "Peng Fan" <peng.fan@nxp.com>,  "Robert Richter" <rrichter@amd.com>,
+  "Dan Williams" <dan.j.williams@intel.com>,  "Jonathan Cameron"
+ <Jonathan.Cameron@huawei.com>,  "Terry Bowman" <terry.bowman@amd.com>,
+  "Kuppuswamy Sathyanarayanan"
+ <sathyanarayanan.kuppuswamy@linux.intel.com>,  Ilpo =?utf-8?Q?J=C3=A4rvin?=
+ =?utf-8?Q?en?=
+ <ilpo.jarvinen@linux.intel.com>,  "Huacai Chen" <chenhuacai@kernel.org>,
+  "Alex Elder" <elder@linaro.org>,  "Srinivas Kandagatla"
+ <srinivas.kandagatla@linaro.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  linux-wireless@vger.kernel.org,  Netdev
+ <netdev@vger.kernel.org>,  devicetree@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
+  "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 8/9] PCI/pwrseq: add a pwrseq driver for QCA6390
+References: <20240104130123.37115-1-brgl@bgdev.pl>
+	<20240104130123.37115-9-brgl@bgdev.pl>
+	<15443d5d-6544-45d0-afeb-b23e6a041ecf@quicinc.com>
+	<87jzoizwz7.fsf@kernel.org>
+	<CAGXv+5FhYY+qyyT8wxY5DggvWPibfM2ypHVKQbsJZ30VkZDAkQ@mail.gmail.com>
+	<87bk9uzum9.fsf@kernel.org>
+	<5904461c-ca3c-4eb1-a44a-876872234545@app.fastmail.com>
+Date: Tue, 09 Jan 2024 18:43:38 +0200
+In-Reply-To: <5904461c-ca3c-4eb1-a44a-876872234545@app.fastmail.com> (Arnd
+	Bergmann's message of "Tue, 09 Jan 2024 11:14:43 +0100")
+Message-ID: <87y1cycv9h.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Jiri Slaby <jirislaby@kernel.org>, dri-devel@lists.freedesktop.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Daniel Vetter <daniel@ffwll.ch>, linux-ide@vger.kernel.org,
-	Helge Deller <deller@gmx.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Yang Xiwen <forbidden405@foxmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Rientjes <rientjes@google.com>, Bin Meng <bmeng@tinylab.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Krzysztof Kozlowski <"krzyszto f.kozlowski+dt"@linaro.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	linux-renesas-soc@vger.kernel.org, Rich Felker <dalias@libc.org>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pci@vger.kernel.org,
-	Sebastian Reichel <sre@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Magnus Damm <magnus.damm@gmail.com>,
-	=?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Stephen Rothwell <sfr@canb.auug.org.au>, devicetree@vger.kernel.org,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	David Airlie <airlied@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Jacky Huang <ychuang3@nuvoton.com>, Lee Jones <lee@kernel.org>,
-	Baoquan He <bhe@redhat.com>, Guenter Roeck <linux@roeck-us.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-clk@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	=?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-fbdev@vger.kernel.org
-In-Reply-To: <a801115c277e65341da079c318a1b970f8d9e671.1704788539.git.ysato@users.sourceforge.jp>
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <a801115c277e65341da079c318a1b970f8d9e671.1704788539.git.ysato@users.sourceforge.jp>
-Message-Id: <170481775440.2713680.11814908609719501949.robh@kernel.org>
-Subject: Re: [DO NOT MERGE v6 19/37] dt-bindings: interrupt-controller:
- renesas,sh7751-irl-ext: Add json-schema
-Date: Tue, 09 Jan 2024 09:29:14 -0700
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+"Arnd Bergmann" <arnd@arndb.de> writes:
 
-On Tue, 09 Jan 2024 17:23:16 +0900, Yoshinori Sato wrote:
-> Renesas SH7751 external interrupt encoder json-schema.
-> 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  .../renesas,sh7751-irl-ext.yaml               | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
-> 
+> On Tue, Jan 9, 2024, at 11:09, Kalle Valo wrote:
+>
+>> Chen-Yu Tsai <wenst@chromium.org> writes:
+>>> On Tue, Jan 9, 2024 at 5:18=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wr=
+ote:
+>>>> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
+>>>>
+>>>> > On 1/4/2024 5:01 AM, Bartosz Golaszewski wrote:
+>>>> >> diff --git a/drivers/pci/pcie/pwrseq/Kconfig b/drivers/pci/pcie/pwr=
+seq/Kconfig
+>>>> >> index 010e31f432c9..f9fe555b8506 100644
+>>>> >> --- a/drivers/pci/pcie/pwrseq/Kconfig
+>>>> >> +++ b/drivers/pci/pcie/pwrseq/Kconfig
+>>>> >> @@ -6,3 +6,14 @@ menuconfig PCIE_PWRSEQ
+>>>> >>      help
+>>>> >>        Say yes here to enable support for PCIe power sequencing
+>>>> >>        drivers.
+>>>> >> +
+>>>> >> +if PCIE_PWRSEQ
+>>>> >> +
+>>>> >> +config PCIE_PWRSEQ_QCA6390
+>>>> >> +    tristate "PCIe Power Sequencing driver for QCA6390"
+>>>> >> +    depends on ARCH_QCOM || COMPILE_TEST
+>>>> >> +    help
+>>>> >> +      Enable support for the PCIe power sequencing driver for the
+>>>> >> +      ath11k module of the QCA6390 WLAN/BT chip.
+>>>> >> +
+>>>> >> +endif
+>>>> >
+>>>> > As I mentioned in the 5/9 patch I'm concerned that the current
+>>>> > definition of PCIE_PWRSEQ and PCIE_PWRSEQ_QCA6390 will effectively h=
+ide
+>>>> > the fact that QCA6390 may need additional configuration since the me=
+nu
+>>>> > item will only show up if you have already enabled PCIE_PWRSEQ.
+>>>> > Yes I see that these are set in the defconfig in 9/9 but I'm concern=
+ed
+>>>> > about the more generic case.
+>>>> >
+>>>> > I'm wondering if there should be a separate config QCA6390 within at=
+h11k
+>>>> > which would then select PCIE_PWRSEQ and PCIE_PWRSEQ_QCA6390
+>>>>
+>>>> Or is it possible to provide an optional dependency in Kconfig (I guess
+>>>
+>>> imply PCIE_PWRSEQ
+>>> imply PCIE_PWRSEQ_QCA6390
+>>> ?
+>>
+>> Nice, I had forgotten imply altogether. Would 'imply
+>> PCIE_PWRSEQ_QCA6390' in ath11k Kconfig be enough to address Jeff's
+>> concern?
+>
+> Please don't use imply (ever), it doesn't normally do
+> what you want. In this case, the only effect the
+> 'imply' has is to change the default of the PCIE_PWRSEQ_QCA6390
+> option when a defconfig contains QCA6390.
+>
+> If this is indeed what you want, it's still better to do the
+> equivalent expression in PCIE_PWRSEQ_QCA6390 rather than ATH11K:
+>
+> config PCIE_PWRSEQ_QCA6390
+>       tristate "PCIe Power Sequencing driver for QCA6390"
+>       default ATH11K && ARCH_QCOM
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Sounds good to me but should it be 'default ATH11K_PCI && ARCH_QCOM'? My
+understanding is that we don't need PWRSEQ for ATH11K_AHB devices.
 
-yamllint warnings/errors:
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.example.dtb: sh7751irl_encoder@a4000000: '#size-cells' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/interrupt-controller/renesas,sh7751-irl-ext.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/a801115c277e65341da079c318a1b970f8d9e671.1704788539.git.ysato@users.sourceforge.jp
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
 
