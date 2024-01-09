@@ -1,119 +1,92 @@
-Return-Path: <linux-pci+bounces-1861-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1862-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD32B827D19
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 03:56:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA9FF827D6D
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 04:42:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E116285388
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 02:56:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 893F6284C52
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 03:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D1E223D5;
-	Tue,  9 Jan 2024 02:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+gGxxSN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E599D3FFF;
+	Tue,  9 Jan 2024 03:42:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EFC5665;
-	Tue,  9 Jan 2024 02:56:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80EB9C43390;
-	Tue,  9 Jan 2024 02:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704768993;
-	bh=b4jGBQYI3SAR2SqDXJaYSqlSOJc84bSHKk28Q7eQgnw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=I+gGxxSNtyHRtO2VzhAKG1nYxNlizcmiZoXKFCvtLD/bgKnVZGF5THvcV9vOW7Y05
-	 yUZgE0r1M3irhKm3qay8Y69ltwwDSXV2AI9B0sipIr/4srk23nvmBjZoTL8WoIafpO
-	 WG29mqY7ZkOyanTcGEs7uBduM+Wt+Yj2iEKdthTMAljDgW50WynNYvHtr6dn4ffuH/
-	 llRnMeOprdU7EPuL1qqzKYnVFUNQrpzul6nnayxvMmngpwI1P2cmQYo64JNrKFFfZ/
-	 Vi+k4ksax1JmRik1uyJnNoXTg9oTqQrmjMIX1W/sTViYDlaqk0PBgvorXSKtuIrIyI
-	 sFImw2+6UsTCQ==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ccec119587so28352311fa.0;
-        Mon, 08 Jan 2024 18:56:33 -0800 (PST)
-X-Gm-Message-State: AOJu0Yzze1mVJlQ+S04p1QibOWengBh4t3O5kMef8019KWu8RJc5fHYg
-	n0zNzitpLos038mBSSW1/tj3aXJHUkk/3o1ZkA==
-X-Google-Smtp-Source: AGHT+IFHEy7UAVttPiN+sVOsHl8ngscwYS/9Rb/gv44VqIDfv2qtD5du9ju0uTnDbeescX9gPj6PS5hAvBUURaQ0pxw=
-X-Received: by 2002:a2e:b7d5:0:b0:2cc:7814:11b with SMTP id
- p21-20020a2eb7d5000000b002cc7814011bmr2061459ljo.65.1704768991715; Mon, 08
- Jan 2024 18:56:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9650479C4;
+	Tue,  9 Jan 2024 03:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6dac8955af0so1076512b3a.0;
+        Mon, 08 Jan 2024 19:42:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704771722; x=1705376522;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRtasBW72KfoDwZ/WxCb0AK88cwbM9CGvhgyqKmj2qs=;
+        b=oBJAecOx7AA74JCFSt03I2pARts5YSFqLgkYpYI3rauTHW5qM4zqRbFkqcRLNJCpqY
+         ImYIFnWlPL9iV5DUrViCVui1quqC3bYY3PPMrSTOZxbxg/cNvYb99QMU6TTCno9ovlNa
+         hsAy60H2zBhsaOtMetEDc8uTaiSnCiDPpXjx25AsfT3eRKAWyEV/NcnG/yj4hNnuPCL4
+         C/cKo+1wyKVqJGuitWBujN22qoUF3IQLMJhjkIqmWibMSBi7b8XWenQdzknNpkNv2pwT
+         i+cP7u0UEKszKvhPhEvAHiTqtCM3XrlRfOR6OCcD/dPcLT4UiHKVGABW479brZkUM9hO
+         vHhQ==
+X-Gm-Message-State: AOJu0Yx7zcMdbOdmHIrVjqKDFG3X6Mz/l9cts/8dfOk+Ozl15Sx4M859
+	d6DZtZevG1wnNkknRSwDbA0=
+X-Google-Smtp-Source: AGHT+IHchAv9sUUY0pJ4PrEniWjBi8YeT0i2qc5gw9KP4S2TS/MsQ6NTHv9pqKerKBoV9HB7dpFcKw==
+X-Received: by 2002:a05:6a00:3a25:b0:6d9:bf50:1c94 with SMTP id fj37-20020a056a003a2500b006d9bf501c94mr2546935pfb.9.1704771721845;
+        Mon, 08 Jan 2024 19:42:01 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id kt3-20020a056a004ba300b006d9aa04574csm603224pfb.52.2024.01.08.19.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 19:42:01 -0800 (PST)
+Date: Tue, 9 Jan 2024 12:41:59 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, ilpo.jarvinen@linux.intel.com,
+	vigneshr@ti.com, r-gunasekaran@ti.com, srk@ti.com
+Subject: Re: [PATCH v3] PCI: keystone: Fix race condition when initializing
+ PHYs
+Message-ID: <20240109034159.GA3301517@rocinante>
+References: <20230927041845.1222080-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104130123.37115-1-brgl@bgdev.pl> <20240104130123.37115-7-brgl@bgdev.pl>
- <20240108191052.GA1893484-robh@kernel.org> <CAMRc=Mc7D1rVHaA4yoOC2DHDkkCptF4wjAm=24Rr=kkqM1ztjg@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc7D1rVHaA4yoOC2DHDkkCptF4wjAm=24Rr=kkqM1ztjg@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 8 Jan 2024 19:56:19 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKGrW-v=fr_9NYKg-8cho_-XbVQ92eXpjYYC1ma0_8UuA@mail.gmail.com>
-Message-ID: <CAL_JsqKGrW-v=fr_9NYKg-8cho_-XbVQ92eXpjYYC1ma0_8UuA@mail.gmail.com>
-Subject: Re: [RFC 6/9] dt-bindings: vendor-prefixes: add a PCI prefix for
- Qualcomm Atheros
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
-	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Terry Bowman <terry.bowman@amd.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230927041845.1222080-1-s-vadapalli@ti.com>
 
-On Mon, Jan 8, 2024 at 12:22=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> On Mon, Jan 8, 2024 at 8:10=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
-e:
-> >
-> > On Thu, Jan 04, 2024 at 02:01:20PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Document the PCI vendor prefix for Qualcomm Atheros so that we can
-> > > define the QCA PCI devices on device tree.
-> >
-> > Why? vendor-prefixes.yaml is only applied to property names. 'qca'
-> > should be the prefix for those.
-> >
-> > Rob
->
-> I didn't have any better idea. PCI devices on DT are defined by their
-> "pci<vendor ID>,<model ID>" compatible, not regular human-readable
-> strings and this makes checkpatch.pl complain.
->
-> I'm open to suggestions.
+Hello,
 
-The checkpatch.pl check predates schemas and we could consider just
-dropping it. The only thing it provides is checking a patch rather
-than the tree (which the schema do). It's pretty hacky because it just
-greps the tree for a compatible string which is not entirely accurate.
-Also, we can extract an exact list of compatibles with
-"dt-extract-compatibles" which would make a better check, but I'm not
-sure making dtschema a dependency on checkpatch would be good.
+> The PCI driver invokes the PHY APIs using the ks_pcie_enable_phy()
+> function. The PHY in this case is the Serdes. It is possible that the
+> PCI instance is configured for 2 lane operation across two different
+> Serdes instances, using 1 lane of each Serdes. In such a configuration,
+> if the reference clock for one Serdes is provided by the other Serdes,
+> it results in a race condition. After the Serdes providing the reference
+> clock is initialized by the PCI driver by invoking its PHY APIs, it is
+> not guaranteed that this Serdes remains powered on long enough for the
+> PHY APIs based initialization of the dependent Serdes. In such cases,
+> the PLL of the dependent Serdes fails to lock due to the absence of the
+> reference clock from the former Serdes which has been powered off by the
+> PM Core.
+> 
+> Fix this by obtaining reference to the PHYs before invoking the PHY
+> initialization APIs and releasing reference after the initialization is
+> complete.
 
-The other option is just ignore the warning. PCI compatibles are fairly rar=
-e.
+Applied to controller/keystone, thank you!
 
-Rob
+[1/1] PCI: keystone: Fix race condition when initializing PHYs
+      https://git.kernel.org/pci/pci/c/c12ca110c613
+
+	Krzysztof
 
