@@ -1,38 +1,38 @@
-Return-Path: <linux-pci+bounces-1943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9893E828C45
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 19:15:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6491E828BF2
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 19:07:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE2431F2605C
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 18:06:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 005EA1F21E04
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Jan 2024 18:07:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67CE53BB33;
-	Tue,  9 Jan 2024 18:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7763BB48;
+	Tue,  9 Jan 2024 18:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcp7JAxN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdxHPo0L"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3038537144;
-	Tue,  9 Jan 2024 18:06:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E8AAC433C7;
-	Tue,  9 Jan 2024 18:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84CB3A1CE;
+	Tue,  9 Jan 2024 18:07:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F66AC433C7;
+	Tue,  9 Jan 2024 18:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704823565;
-	bh=NN/FbWiRX53UohMXPf7fLJZkdhyGG0EUcymSjVK7DwA=;
+	s=k20201202; t=1704823653;
+	bh=fD8gCNccGafKIQNZunBfvTUPrf/8GtlkwJGYpmyTa9c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kcp7JAxN3AiJT/zSfbaoA2+7fPC3A0ZWVvSpRFAXx0sFyslV297XJ83IYJOjo4WAv
-	 RUdWxNZ+T4f+tX8USIS62YD32DyNu8gWf/EukR9JAZCISzWgu8dBFDlcQVcUef3Qz+
-	 qkeRllPXAqI8/+i1uMFcsFAVDEyFdefmurq958sF8q6Q1EDAqkZtVovABFy0M4KCPP
-	 /3SbdOHFNikwrWGa3c8z8h8x3ZkVs4szS72knM0ROeuCbSWYF8N/GbynYZCQraVBub
-	 IdFyuk+hxImNfwll+1mwS83rquldTk9ZtxZiCRx01zOHozYZdd8m+oaJLcGS5nFK5t
-	 kPz07I2XU00Bw==
-Date: Tue, 9 Jan 2024 18:05:51 +0000
+	b=EdxHPo0L24AB3pho4dUsxzDLfK51kvePFsugplIaXKTFjyAfVSXavpw8pC16BLnPO
+	 TYInkmEZPc08M8J7M7LH9zFWh3o/SFUMjnJyVIVJDvrJh11ekVrIt5Dq1hJq/BOeoA
+	 XnnvbU2uTawgKzo0ejBPj2RSb1+milm0/qgZhfP8GU1FZPswxPmEmVXxknlVZTdBSx
+	 VYZiKu6X6gTBXCKio7CJLe+fAja3wJWgZ1+YiSLBKOSWP2GB6wUdBeFNROFKH7BYht
+	 Wc242+3IoWESM7jyMMfSoDBumTiqLk4xsop1GcWqPSctOn1PQXP1Fd7u6J8RKDuSGZ
+	 mbUtxkwaKTOFg==
+Date: Tue, 9 Jan 2024 18:07:19 +0000
 From: Conor Dooley <conor@kernel.org>
 To: Yoshinori Sato <ysato@users.sourceforge.jp>
 Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
@@ -88,10 +88,11 @@ Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
 	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
 	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: Re: [DO NOT MERGE v6 26/37] dt-bindings: vendor-prefixes:  Add smi
-Message-ID: <20240109-fructose-bundle-05d01033277b@spud>
+Subject: Re: [DO NOT MERGE v6 27/37] dt-bindings: ata: ata-generic: Add new
+ targets
+Message-ID: <20240109-scoured-step-9a01fa3c5ac8@spud>
 References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
+ <06fdb2cf7927681acf3099b826390ef75ba321af.1704788539.git.ysato@users.sourceforge.jp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -99,61 +100,62 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6n8cYfu9ndq1dxnc"
+	protocol="application/pgp-signature"; boundary="kLy6Qzp6q5+XVIoJ"
 Content-Disposition: inline
-In-Reply-To: <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <06fdb2cf7927681acf3099b826390ef75ba321af.1704788539.git.ysato@users.sourceforge.jp>
 
 
---6n8cYfu9ndq1dxnc
+--kLy6Qzp6q5+XVIoJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 09, 2024 at 05:23:23PM +0900, Yoshinori Sato wrote:
-> Add Silicon Mortion Technology Corporation
-> https://www.siliconmotion.com/
+On Tue, Jan 09, 2024 at 05:23:24PM +0900, Yoshinori Sato wrote:
+> Added new ata-generic target.
+> - iodata,usl-5p-ata
+> - renesas,rts7751r2d-ata
+>=20
+> Each boards have simple IDE Interface. Use ATA generic driver.
 >=20
 > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
-umentation/devicetree/bindings/vendor-prefixes.yaml
-> index 94ed63d9f7de..a338bdd743ab 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -1283,6 +1283,8 @@ patternProperties:
->      description: Skyworks Solutions, Inc.
->    "^smartlabs,.*":
->      description: SmartLabs LLC
-> +  "^smi,.*":
-> +    description: Silicon Motion Technology Corporation
 
-How come "smi" is used for a company with this name?
-Why is it not something like SMTC? There's probably some history here
-that I am unaware of.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
 Cheers,
 Conor.
 
->    "^smsc,.*":
->      description: Standard Microsystems Corporation
->    "^snps,.*":
+> ---
+>  Documentation/devicetree/bindings/ata/ata-generic.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/ata/ata-generic.yaml b/Doc=
+umentation/devicetree/bindings/ata/ata-generic.yaml
+> index 0697927f3d7e..1025b3b351d0 100644
+> --- a/Documentation/devicetree/bindings/ata/ata-generic.yaml
+> +++ b/Documentation/devicetree/bindings/ata/ata-generic.yaml
+> @@ -18,6 +18,8 @@ properties:
+>        - enum:
+>            - arm,vexpress-cf
+>            - fsl,mpc8349emitx-pata
+> +          - iodata,usl-5p-ata
+> +          - renesas,rts7751r2d-ata
+>        - const: ata-generic
+> =20
+>    reg:
 > --=20
 > 2.39.2
 >=20
 
---6n8cYfu9ndq1dxnc
+--kLy6Qzp6q5+XVIoJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ2K/wAKCRB4tDGHoIJi
-0s/8APwPEbHULafVMSeaB1GSkVcjbGMU9USLjp1+xwbzkhRskwEA53VXD7JPeCRu
-EW9RzYohxhrQuLlQKIa6cMs0R07nowg=
-=ftc0
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ2LVwAKCRB4tDGHoIJi
+0qo2AQCxA1orjzBIX0f26pJYy6xIaLZUn+94r/yUUpQ1tdbWfQD+L843tyrWtpJi
+9se87kQOMuy7uTWb5R0owr1ffpCplAI=
+=N/Ux
 -----END PGP SIGNATURE-----
 
---6n8cYfu9ndq1dxnc--
+--kLy6Qzp6q5+XVIoJ--
 
