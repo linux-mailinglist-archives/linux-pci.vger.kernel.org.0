@@ -1,166 +1,119 @@
-Return-Path: <linux-pci+bounces-1973-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1974-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5ABE82938C
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 07:06:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18BD18293E2
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 07:58:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4460A1F25B7F
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 06:06:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9020EB25387
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 06:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D48DF69;
-	Wed, 10 Jan 2024 06:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71331364CF;
+	Wed, 10 Jan 2024 06:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cqmx5cEY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vEdiWc74"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFBD8C1A;
-	Wed, 10 Jan 2024 06:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40A65Vvi056970;
-	Wed, 10 Jan 2024 00:05:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704866732;
-	bh=yFsMpt0PZNf6JUgPlvVYPwAe1PAy39S8K8+Q7tYKhQA=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=cqmx5cEYvim8cKLqKbv9TH9RwTjaMw2oxjSZ62HszbJeeAd3bu4NNYF45bGJf4gGN
-	 5nri+MnVNt17nUD/exe/Mpks5AoTLQbodqPs6+RMStGcEl0O1GQid8kjuOWPnF/SAc
-	 GFy/t3PA52zbmZmyxrs7CwG7C6shMtS9BIGp6zlU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40A65VWs085615
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Jan 2024 00:05:31 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Jan 2024 00:05:31 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 10 Jan 2024 00:05:29 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40A65P5Y095356;
-	Wed, 10 Jan 2024 00:05:25 -0600
-Message-ID: <f8dbbffd-c209-44bc-8d1e-42b6f1b08aef@ti.com>
-Date: Wed, 10 Jan 2024 11:35:24 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191B234CFF
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 06:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d3e416f303so13794505ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 09 Jan 2024 22:58:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704869880; x=1705474680; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GBt4RNNT5Udrunysdba+pFX1wxxljz+GPhqieimh10g=;
+        b=vEdiWc747a15KMtDZcFBtJpMmcSVIRX82MRTCMcXwXemLEIbZ9ufSrF22IH2ui4Ik5
+         VGjDFVllwuwvDNmVNE1DvzAQ8Uja52ibli2jZJ2LYBo5/YagJtsEP83JdtrZvJUjjKMA
+         E+9346PI5C9bMWbohUBfJLmyoaw8sc89HyumwLh7A5Ta6j+aJnNzM2PRDCbMl7iNvQWL
+         jVKI2gyWTZ3O4hB5miqk+lUyPa/knVLFxYZQxppNlt+47a1JtwN5LHOudNnivJjJCPgW
+         7ZtPXwL2O8dgS2HuF1a6CfCs1jenTeR8nrgWhhi99sk4N5v6oTKb+cS7K65TGWHxVBpf
+         g6PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704869880; x=1705474680;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GBt4RNNT5Udrunysdba+pFX1wxxljz+GPhqieimh10g=;
+        b=P+Kese8Bf27MO80epZ9mo8hRtgYFjnIJxr6OTcxbmqoqwMctwhXfp0iIvxB6h9ffdF
+         gaM0pKKev99e7HXgWglquyPVRl07UmqsnVvugwqJ1bfvAQAVGxOiTGkdfAFUA8JveAsq
+         p93f1Y0rnUlxoj9LYbILNZ27NCjn3wFdYtyqz2olvorw4iGO4dxSgQjw/Se1ahwosEEF
+         1l0rsiWtpK7YeTl2nKav4CoTWFJ0RI3i1hVGRACeoLRDBn7COhXYOQuUokUwwRwnQL28
+         NowxXaA68v5KYhQmRIFufivvJ95zLPuKWFncwLHwmbqTj6y1MybgyJ/6EYROUTm3Cbf0
+         WHsw==
+X-Gm-Message-State: AOJu0YzAtWs2t8aw1hq6Z6T/nMXRejNvTdaDm4WU6qIHT+iQUqbN3CW4
+	rRSkl6lxckdvoHUXn9D/YbfvIP4R4IY4jg==
+X-Google-Smtp-Source: AGHT+IE+fzYVlUMTlLXHdh6PBiZwhLw2zWvoqNw2CQsktuCCXv/r/7cTCDcu6yf84bzkmhKGBHha0g==
+X-Received: by 2002:a17:902:ecc2:b0:1d4:28f:29e5 with SMTP id a2-20020a170902ecc200b001d4028f29e5mr515216plh.24.1704869880397;
+        Tue, 09 Jan 2024 22:58:00 -0800 (PST)
+Received: from localhost ([122.172.81.83])
+        by smtp.gmail.com with ESMTPSA id p3-20020a170902b08300b001cfa0c04553sm2882969plr.116.2024.01.09.22.57.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 22:57:59 -0800 (PST)
+Date: Wed, 10 Jan 2024 12:27:57 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, agross@kernel.org,
+	andersson@kernel.org, konrad.dybcio@linaro.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mani@kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, rafael@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, quic_vbadigan@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+	quic_ramkri@quicinc.com, quic_parass@quicinc.com
+Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
+ state of power domain
+Message-ID: <20240110065757.xde2nvpr3z7c4isu@vireshk-i7>
+References: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
+ <20231102120950.GA115288@bhelgaas>
+ <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
+ <15a98ec0-214b-218b-1e3c-c09f770fce2e@quicinc.com>
+ <0ba9f2af-169e-a9a2-9ae4-4c6a70b0a94e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <ilpo.jarvinen@linux.intel.com>, <vigneshr@ti.com>,
-        <r-gunasekaran@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v3] PCI: keystone: Fix race condition when initializing
- PHYs
-To: Bjorn Helgaas <helgaas@kernel.org>
-References: <20240109212326.GA2018284@bhelgaas>
-Content-Language: en-US
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <20240109212326.GA2018284@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0ba9f2af-169e-a9a2-9ae4-4c6a70b0a94e@quicinc.com>
 
-Hello Bjorn,
-
-On 10/01/24 02:53, Bjorn Helgaas wrote:
-> On Wed, Sep 27, 2023 at 09:48:45AM +0530, Siddharth Vadapalli wrote:
->> The PCI driver invokes the PHY APIs using the ks_pcie_enable_phy()
->> function. The PHY in this case is the Serdes. It is possible that the
->> PCI instance is configured for 2 lane operation across two different
-
-...
-
->>  
->> +	/* Obtain reference(s) to the phy(s) */
->> +	for (i = 0; i < num_lanes; i++)
->> +		phy_pm_runtime_get_sync(ks_pcie->phy[i]);
->> +
->>  	ret = ks_pcie_enable_phy(ks_pcie);
->> +
->> +	/* Release reference(s) to the phy(s) */
->> +	for (i = 0; i < num_lanes; i++)
->> +		phy_pm_runtime_put_sync(ks_pcie->phy[i]);
+On 08-01-24, 18:49, Krishna Chaitanya Chundru wrote:
+> We calculate ICC BW voting based up on PCIe speed and PCIe width.
 > 
-> This looks good and has already been applied, so no immediate action
-> required.
+> Right now we are adding the opp table based up on PCIe speed.
 > 
-> This is the only call to ks_pcie_enable_phy(), and these loops get and
-> put the PM references for the same PHYs initialized in
-> ks_pcie_enable_phy(), so it seems like maybe these loops could be
-> moved *into* ks_pcie_enable_phy().
-
-Does the following look fine?
-===============================================================================
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c
-b/drivers/pci/controller/dwc/pci-keystone.c
-index e02236003b46..6e9f9589d26c 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -962,6 +962,9 @@ static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
-        int num_lanes = ks_pcie->num_lanes;
-
-        for (i = 0; i < num_lanes; i++) {
-+               /* Obtain reference to the phy */
-+               phy_pm_runtime_get_sync(ks_pcie->phy[i]);
-+
-                ret = phy_reset(ks_pcie->phy[i]);
-                if (ret < 0)
-                        goto err_phy;
-@@ -977,12 +980,18 @@ static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
-                }
-        }
-
-+       /* Release reference(s) to the phy(s) */
-+       for (i = 0; i < num_lanes; i++)
-+               phy_pm_runtime_put_sync(ks_pcie->phy[i]);
-+
-        return 0;
-
- err_phy:
-        while (--i >= 0) {
-                phy_power_off(ks_pcie->phy[i]);
-                phy_exit(ks_pcie->phy[i]);
-+               /* Release reference to the phy */
-+               phy_pm_runtime_put_sync(ks_pcie->phy[i]);
-        }
-
-        return ret;
-===============================================================================
-
+> Each PCIe controller can support multiple lane configurations like x1, x2,
+> x4, x8, x16 based up on controller capability.
 > 
-> Is there any similar issue in ks_pcie_disable_phy()?  What if we
-> power-off a PHY that provides a reference clock to other PHYs that are
-> still powered-up?  Will the dependent PHYs still power-off cleanly?
+> So for each GEN speed we need  up to 5 entries in OPP table. This will make
+> OPP table very long.
+> 
+> It is best to calculate the ICC BW voting in the driver itself and apply
+> them through ICC driver.
 
-While debugging the issue fixed by this patch, I had bisected and identified
-that prior to the following commit:
-https://github.com/torvalds/linux/commit/e611f8cd8717c8fe7d4229997e6cd029a1465253
-despite the race condition being present, there was no issue. While I am not
-fully certain, I believe that the above observation indicates that prior to the
-aforementioned commit, the race condition did exist, but there was a slightly
-longer delay between the PHY providing the reference clock being powered off
-within "ks_pcie_enable_phy()". That delay was sufficient for the dependent PHY
-to lock its PLL based on the reference clock provided, following which, despite
-the PHY providing the reference clock being powered off and the dependent PHY
-staying powered on, there was no issue observed. Therefore, it appears to me
-that holding reference to the PHY providing the reference clock isn't necessary
-once the dependent PHY's PLL is locked.
+I see. Are the lane configurations fixed for a platform ? I mean, do you change
+those configurations at runtime or is that something that never changes, but the
+driver can end up getting used on a hardware that supports any one of them ?
 
-...
+If they are fixed (second case), then you can use dev_pm_opp_set_prop_name() to
+make that easier for you. With that you will only need 5 OPP entries, but each
+of them will have five values of bw:
+
+bw-x1, bw-x2, ....  and you can select one of them during initialization.
 
 -- 
-Regards,
-Siddharth.
+viresh
 
