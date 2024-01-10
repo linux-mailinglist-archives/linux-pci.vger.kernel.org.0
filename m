@@ -1,138 +1,139 @@
-Return-Path: <linux-pci+bounces-1994-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1995-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AB8B829ACC
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 13:58:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C505829B35
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 14:29:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EEE59B2630D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 12:58:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E3071C21DC2
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 13:29:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10EB48789;
-	Wed, 10 Jan 2024 12:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HcyNoWgJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B4848CC3;
+	Wed, 10 Jan 2024 13:28:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CE348781;
-	Wed, 10 Jan 2024 12:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40AA2mwO013795;
-	Wed, 10 Jan 2024 12:58:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=/vClWtu3HlYBCHjhqdD40ETyVbpVB8kO2AGNHZOK/lQ=; b=Hc
-	yNoWgJbTUxXloJBbWm+gL+LkCAxj2pPEA398P9hwkFjniMuW/J6q/XwJc1RcCwhG
-	uM6UBj38CiJd4a+tqSri87/pPsz4omqUHPoj89csGSTiZtBsqtPvQ7Ky6r028PY+
-	zNL0SEtmBGb6sK+bfPTZf0plly1hSV9UVbn/KMaF/ssJTHYf5bfMGjhrdxeLLiPf
-	pwgrP8r9q9W3mYTrvFNR1bCeDf1KOB+HxCiAQkH/2PbHt2FyHNdlYQT4XHjnw7Xw
-	DTz9s3YY9EjMcd/OUzXQcFBCVn3v0/kO3aI81UaB1IowSbbFxabzpFtljuzG9tul
-	VX8fWzONYFffncqiGR+Q==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vhs4mgf10-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 12:58:31 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40ACwUlG002890
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jan 2024 12:58:30 GMT
-Received: from [10.216.48.153] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 10 Jan
- 2024 04:58:22 -0800
-Message-ID: <ba732b1c-223c-ee70-d25b-4c78b312402c@quicinc.com>
-Date: Wed, 10 Jan 2024 18:28:19 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD43487A9;
+	Wed, 10 Jan 2024 13:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 95DEA100DE9D6;
+	Wed, 10 Jan 2024 14:28:53 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 631EE2CD58F; Wed, 10 Jan 2024 14:28:53 +0100 (CET)
+Date: Wed, 10 Jan 2024 14:28:53 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 3/9] PCI/portdrv: create platform devices for child OF nodes
+Message-ID: <20240110132853.GA6860@wunner.de>
+References: <20240104130123.37115-1-brgl@bgdev.pl>
+ <20240104130123.37115-4-brgl@bgdev.pl>
+ <20240109144327.GA10780@wunner.de>
+ <CAMRc=MdXO6c6asvRSn_Z8-oFS48hroT+dazGKB6WWY1_Zu7f1Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Content-Language: en-US
-To: Viresh Kumar <viresh.kumar@linaro.org>
-CC: Bjorn Helgaas <helgaas@kernel.org>, <agross@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <vireshk@kernel.org>, <nm@ti.com>, <sboyd@kernel.org>,
-        <mani@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <rafael@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_parass@quicinc.com>
-References: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
- <20231102120950.GA115288@bhelgaas>
- <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
- <15a98ec0-214b-218b-1e3c-c09f770fce2e@quicinc.com>
- <0ba9f2af-169e-a9a2-9ae4-4c6a70b0a94e@quicinc.com>
- <20240110065757.xde2nvpr3z7c4isu@vireshk-i7>
- <376b3716-46ff-2324-73fc-f3afa3f7af1c@quicinc.com>
- <20240110073807.sqwmsyr6nmigg6zc@vireshk-i7>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240110073807.sqwmsyr6nmigg6zc@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ldLzFosc01dSUdg3R4AmVw9dR3hFeRMF
-X-Proofpoint-ORIG-GUID: ldLzFosc01dSUdg3R4AmVw9dR3hFeRMF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
- adultscore=0 impostorscore=0 spamscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401100106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdXO6c6asvRSn_Z8-oFS48hroT+dazGKB6WWY1_Zu7f1Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+
+On Wed, Jan 10, 2024 at 01:55:18PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Jan 9, 2024 at 3:43???PM Lukas Wunner <lukas@wunner.de> wrote:
+> > On Thu, Jan 04, 2024 at 02:01:17PM +0100, Bartosz Golaszewski wrote:
+> > > In order to introduce PCIe power-sequencing, we need to create platform
+> > > devices for child nodes of the port driver node. They will get matched
+> > > against the pwrseq drivers (if one exists) and then the actuak PCIe
+> > > device will reuse the node once it's detected on the bus.
+> > [...]
+> > > --- a/drivers/pci/pcie/portdrv.c
+> > > +++ b/drivers/pci/pcie/portdrv.c
+> > > @@ -715,7 +716,7 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+> > >               pm_runtime_allow(&dev->dev);
+> > >       }
+> > >
+> > > -     return 0;
+> > > +     return devm_of_platform_populate(&dev->dev);
+> > >  }
+> >
+> > I think this belongs in of_pci_make_dev_node(), portdrv seems totally
+> > the wrong place.  Note that you're currently calling this for RCECs
+> > (Root Complex Event Collectors) as well, which is likely not what
+> > you want.
+> >
+> 
+> of_pci_make_dev_node() is only called when the relevant PCI device is
+> instantiated which doesn't happen until it's powered-up and scanned -
+> precisely the problem I'm trying to address.
+
+No, of_pci_make_dev_node() is called *before* device_attach(),
+i.e. before portdrv has even probed.  So it seems this should
+work perfectly well for your use case.
 
 
-On 1/10/2024 1:08 PM, Viresh Kumar wrote:
-> On 10-01-24, 12:42, Krishna Chaitanya Chundru wrote:
->> At present we are not changing the link width after link is initialized, but
->> we have plans to
->>
->> add support change link width dynamically at runtime.
-> Hmm okay.
->
->> So, I think it is better to have ICC BW voting in the driver itself.
-> I guess it is better to have more entries in the OPP table then.. 15-20 OPPs
-> isn't too many to be honest.
->
-> Replicating code is the last thing I would like to do.
->
-> Maybe you can show the different layouts of the OPP table if you are concerned.
-> We can then see if it is getting too much or not.
+> > devm functions can't be used in the PCI core, so symmetrically call
+> > of_platform_unpopulate() from of_pci_remove_node().
+> 
+> I don't doubt what you're saying is true (I've seen worse things) but
+> this is the probe() callback of a driver using the driver model. Why
+> wouldn't devres work?
 
-Viresh,
+The long term plan is to move the functionality in portdrv to
+the PCI core.  Because devm functions can't be used in the PCI
+core, adding new ones to portdrv will *add* a new roadblock to
+migrating portdrv to the PCI core.  In other words, it makes
+future maintenance more difficult.
 
-it might be less only for now may be around 20 opp entries, but PCIe 
-spec is being updated every few years and a new gen
+Generally, only PCIe port services which share the same interrupt
+(hotplug, PME, bandwith notification, flit error counter, ...)
+need to live in portdrv.  Arbitrary other stuff should not be
+shoehorned into portdrv.
 
-gen speed will release, right now PCIe GEN6 is released but I don't we 
-had any device in the market now and GEN7 is in process.
+Thanks,
 
-So in future it might become very big table. Either we need to come up 
-with a framework in the OPP to select the BW based up on lane width
-
-for particular speed or use the driver way.
-
-
-Thanks & Regards,
-
-Krishna Chaitanya.
-
+Lukas
 
