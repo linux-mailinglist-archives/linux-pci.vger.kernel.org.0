@@ -1,113 +1,127 @@
-Return-Path: <linux-pci+bounces-1979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 657CB829469
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 08:38:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCEE0829484
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 08:52:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19B9A1F27619
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 07:38:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8129E1F2793B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 07:52:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F197539859;
-	Wed, 10 Jan 2024 07:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E45D73A1DA;
+	Wed, 10 Jan 2024 07:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVu9vGoo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R3mFbeWh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6183C46A
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 07:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5cec32dedf3so1598150a12.0
-        for <linux-pci@vger.kernel.org>; Tue, 09 Jan 2024 23:38:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704872290; x=1705477090; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i425ufsZh8gIC4EBfEiOE+XzwKt6U3xEd+yozxFH/RE=;
-        b=HVu9vGoosoF9bE53T4yps36VAZK7f/+VRm3UKFtgke1cMXhiPSthcPnpYfVTs7IrpM
-         HxrHZoF55fWViBKTGr80uwiFvOJdHqxmGDqRow97U0vtZNxDNzlLXCftVuiGtEwIa/zB
-         oi5WS7KkHnis+cr8bXb9/DVVPDIG8odtsyC8yCrb1Ga7dZ7A+igeUK5RJwNCvyTOUlx/
-         c56ioCKr1feyrLdgL6Ppokq+UUC9hDmbjTXZLMb4+W+WcRYfOrps8j4A0q3u36lHU1jT
-         8FJFO39SGNGAl+Lu7htW3m6kcjQQTTSha/+BVuMxufli0x+QFezKRl5WnrYFNNeAgdC3
-         e2vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704872290; x=1705477090;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i425ufsZh8gIC4EBfEiOE+XzwKt6U3xEd+yozxFH/RE=;
-        b=DL3YFjKhgVGm7Tiyj/DYUXW5lQFnY7K8fHblyPYGzLFDR2tJ+tiauCgB7Seb+7vrk0
-         uUYoQXIVW0V5WtiJ21x24I02Qxtsmgi+CYzOyfUQcfcvP3iwg1e8YvHb+QuHEJN7ezpb
-         0Ml7yOThYtGUxJiCpkt1uyVRHF9Yppnnufz4SrYcEbtEe4vbyRetgT7gZYyc3kPh0JSW
-         5v1erBPtAmvZPPa2Q34RyEtjQ7t1yPW7Y+U+hMoU2fpewESKhrT5vbicZXGr70KNaqnv
-         1zQe3zKQ4yHTOnEK/83CKHopzqNWdg75R6epAZVmMfup1vM3sijTnM7mstqfJ/KliECZ
-         j2hw==
-X-Gm-Message-State: AOJu0YwTvxF4TUUkuy56wPfeirPfTxilNUjeSXwCVdagLwePlUxu0AJd
-	q6GPIGI5HZ+hXXBCD5BuoOCfvV7u2EISvw==
-X-Google-Smtp-Source: AGHT+IGfhQOZcG6qDB0jtaoLNaZ0xjm2ldvzf/3kNf8p1FfAMSmZmP4rLbwFsZr3Q9tyCoxfpeJwiA==
-X-Received: by 2002:a05:6a20:6697:b0:199:7fab:f7f6 with SMTP id o23-20020a056a20669700b001997fabf7f6mr359628pzh.41.1704872289901;
-        Tue, 09 Jan 2024 23:38:09 -0800 (PST)
-Received: from localhost ([122.172.81.83])
-        by smtp.gmail.com with ESMTPSA id ga18-20020a17090b039200b0028d2521dc53sm786438pjb.46.2024.01.09.23.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 23:38:09 -0800 (PST)
-Date: Wed, 10 Jan 2024 13:08:07 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, agross@kernel.org,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, mani@kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, rafael@kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
-	quic_ramkri@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v5 5/5] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20240110073807.sqwmsyr6nmigg6zc@vireshk-i7>
-References: <20231102053013.7yt7pxin5awlu7w7@vireshk-i7>
- <20231102120950.GA115288@bhelgaas>
- <20231103051247.u4cnckzstcvs4lf5@vireshk-i7>
- <15a98ec0-214b-218b-1e3c-c09f770fce2e@quicinc.com>
- <0ba9f2af-169e-a9a2-9ae4-4c6a70b0a94e@quicinc.com>
- <20240110065757.xde2nvpr3z7c4isu@vireshk-i7>
- <376b3716-46ff-2324-73fc-f3afa3f7af1c@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7333E470;
+	Wed, 10 Jan 2024 07:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704873121; x=1736409121;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pDvYrmhpBlr6Ouka9BO91HIwFCHKwrpkfzJvRUkQeIU=;
+  b=R3mFbeWhyfTUC4FatA/V4kS8eggkySaN2+0iDerTfS8nFdJNEOs59AW8
+   hnaLEjkpJdTpDgR2zVaA1hICj1jIitUkixP6hzv3RWv/6UNDQhdJDYgH6
+   P/i4FNdk0m8l03K5y2DSlKAt6mlphJCVBiJ780e4G2loW35W1clx47hO/
+   Q0YU3YnzNerzXK9kIAI3xEPRycpwXbjMZMuQyYbolWmh9vczdVWAbnvsn
+   AXFlqJ7MJUDgk2I3TldgO68iIfeWzLRupx9O0r4uQkeN8nuNcYgP21CdQ
+   3Mh1ixQFhjmt9OywY0P/ZlHLqGSYBwlsFzvROvLiSl56DOAPfCyACHEDd
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="388882588"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="388882588"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 23:52:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="955281702"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="955281702"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.11.157]) ([10.93.11.157])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 23:51:57 -0800
+Message-ID: <5de13afa-4079-467a-a7b1-badfb9ac95cc@linux.intel.com>
+Date: Wed, 10 Jan 2024 15:51:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <376b3716-46ff-2324-73fc-f3afa3f7af1c@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v10 1/5] iommu/vt-d: add pci_dev parameter to
+ qi_submit_sync and refactor callers
+To: Baolu Lu <baolu.lu@linux.intel.com>, kevin.tian@intel.com,
+ bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
+ robin.murphy@arm.com, lukas@wunner.de
+Cc: linux-pci@vger.kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+ <20231228170206.720675-2-haifeng.zhao@linux.intel.com>
+ <a2e507b3-a018-44d8-9e92-459670505bcd@linux.intel.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <a2e507b3-a018-44d8-9e92-459670505bcd@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10-01-24, 12:42, Krishna Chaitanya Chundru wrote:
-> At present we are not changing the link width after link is initialized, but
-> we have plans to
-> 
-> add support change link width dynamically at runtime.
 
-Hmm okay.
+On 1/10/2024 12:59 PM, Baolu Lu wrote:
+> On 12/29/23 1:02 AM, Ethan Zhao wrote:
+>> Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
+>
+> Please don't leave the message body empty. You should describe why do
+> you want to add the change in this patch.
+Seems the description part was lost, will append next version.
+>
+>> ---
+>>   drivers/iommu/intel/dmar.c          | 45 +++++++++++++++++++++--------
+>>   drivers/iommu/intel/iommu.c         | 26 +++++------------
+>>   drivers/iommu/intel/iommu.h         | 17 +++++------
+>>   drivers/iommu/intel/irq_remapping.c |  2 +-
+>>   drivers/iommu/intel/pasid.c         | 11 ++-----
+>>   drivers/iommu/intel/svm.c           | 13 ++++-----
+>>   6 files changed, 58 insertions(+), 56 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+>> index 23cb80d62a9a..3d661f2b7946 100644
+>> --- a/drivers/iommu/intel/dmar.c
+>> +++ b/drivers/iommu/intel/dmar.c
+>> @@ -1344,7 +1344,7 @@ static int qi_check_fault(struct intel_iommu 
+>> *iommu, int index, int wait_index)
+>>    * can be part of the submission but it will not be polled for 
+>> completion.
+>>    */
+>>   int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+>> -           unsigned int count, unsigned long options)
+>> +           unsigned int count, unsigned long options, struct pci_dev 
+>> *pdev)
+>
+> How about adding a bit in options parameter to tell whether the @pdev is
+> valid?
 
-> So, I think it is better to have ICC BW voting in the driver itself.
+well, checking the option bit or checking pdev == NULL, use one parameter
 
-I guess it is better to have more entries in the OPP table then.. 15-20 OPPs
-isn't too many to be honest.
+to describe another one is common function defination method if one
 
-Replicating code is the last thing I would like to do.
+parameter couldn't self-describe.
 
-Maybe you can show the different layouts of the OPP table if you are concerned.
-We can then see if it is getting too much or not.
+This case, we always check pdev(one checking), and if we check option 
+bit first, then have
 
--- 
-viresh
+to check pdev again (one or two checking).  I prefer checking pdev only.
+
+
+Thanks,
+
+Ethan
+
+>
+> Best regards,
+> baolu
 
