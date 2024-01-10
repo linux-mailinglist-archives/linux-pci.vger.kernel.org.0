@@ -1,128 +1,142 @@
-Return-Path: <linux-pci+bounces-1961-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1962-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51EF782926B
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 03:25:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CAC98292A1
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 04:07:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 520391C23C45
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 02:25:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 422E328908C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 03:07:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D29717E4;
-	Wed, 10 Jan 2024 02:25:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7118E1FA6;
+	Wed, 10 Jan 2024 03:07:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ibjPgV2a"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="X+n90wPi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2067.outbound.protection.outlook.com [40.107.101.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520C117C6;
-	Wed, 10 Jan 2024 02:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704853510; x=1736389510;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ltAGm7e8WuTbTxkqpaXeFz6y+BS7M2LUElb1NNHFRHs=;
-  b=ibjPgV2a51Ry1+kT6Je576uYDIUF3xY20s+1RpibWkjj0Mp5MNqVVtlO
-   g7FqC8gTdC3bEhWtnnK7mN2sEZOy8KyTH3A4JlW+b7RMTe8wZYTNXmS5f
-   HXwymilcJ4fwOwUQ7Z3fGM4mg7cKexPvxWfpNiChgwz2u6ZceqM64gLdy
-   /QD9PVJDLlUMDBFjM400ztMX1cSxz3DPx8rAI1Ch5LkeSUrUBuiHLbe4K
-   16pkoVQxXwhkcI3HGo8BMpU5tjJcb1ZCw/Ax4bFtjirJLlkRuCHwXaWa4
-   9w0xLccdQLl0H0wav4uw7W/g43L74lp1CsNT0rcn+nq6/EeUKJKIzgwl9
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="16975123"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="16975123"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 18:25:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="900971638"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="900971638"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Jan 2024 18:25:05 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNOH9-0006VE-0w;
-	Wed, 10 Jan 2024 02:25:03 +0000
-Date: Wed, 10 Jan 2024 10:24:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	will@kernel.org, frowand.list@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	vidyas@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V1 2/2] PCI: Add support for "preserve-boot-config"
- property
-Message-ID: <202401101015.Dch3YIjG-lkp@intel.com>
-References: <20240109050648.1347255-3-vidyas@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F456107;
+	Wed, 10 Jan 2024 03:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I52n9vFY2w1nLYISY7ukZpDlTDultrU9N8jx7zY6vSpA67ocUXSeTMzhx0/2aezCZUXboib+4UW1tnHGRNrFHPFQnVZsKbCyBhbTcO+xsCERY7LUjIn8fZLYuoiqIbQDiKBBf+YnELchIEUgWVdB40sv//eNjxXa58Op23phqAspG0azxRONhcAATkd+uzPm/KFOthydix9HeSe4NpqHzqcQuEbg0k5AURG9XSw4BZYj5Qic80sb1tDrGr0HrD3uaYj0FkIJi3e2IUeM5BAsrBHrRultvpyo9fWWByhLAHA5IqrTKiz8NIENUdmrGy4uKgIGwTinJxMYHS9WZvJHaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3YemQ/+hHIzt9VIbsAiazc1kPHx6Gwab+tXjpgpLAl4=;
+ b=T+ADdqR9LJ2jr2rkHnzEStHR+9kszo9QZ2ywcXgIMrSyCN6OE6cFMIEime4Tm8YxAN3v3N5R7qeuc3V/KrfRMC3BDVpnS/aPz8fBZGsNTici56ctzkNXv20cKjC63wk7kgKLoYTgSC6ZI5gIknBC2wvVpauYrZ/g+S7Bw8sYqUt4abRW1L4Qjrr8h1bxwSvaDIhzYPhDE3Q1fMO33iyi0+HbXSvVEDLSNp0d/NhFBOZr7Cyxze/poK1DiXi9khN2rZO47Q7V1gUT1ZIfQSFiygrPLJLkoTaUfGRP9ZeO1EDRVVRW4xaW9v3SuuR1+IEgHx4BbWzt4GozwRuap8rONA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3YemQ/+hHIzt9VIbsAiazc1kPHx6Gwab+tXjpgpLAl4=;
+ b=X+n90wPiOyNKflT2VzHECjSrOV8XwaELCgJXk2HGWY//H/JsgvkYwpKzQIai0UaQDNNuIXW0jAbXs3cGswfq8fH/po0d+1XfauH2wQwHCDtlJqx7OaxsBhD2f4/nJi6aKn5g9C4aXVI54QLd+pNTDiF0gCoIaBHjhjXIuPbQYjDNJdpWpiNTA97/zNXhfEZqVmvWdl4aWVgaH9+KxJgdfcbrI4t1djOowXMxb5382pa2FQAv83yb0My/b3x0TeRgs3bfKZL1I7hX7E0CoxIgtGCym6m2GS4M0NcmWIrIjPbWxBijpfwgOr/w6rw3IgqifbbD6q1Zz9IjO+qKDk+wfw==
+Received: from DM6PR04CA0013.namprd04.prod.outlook.com (2603:10b6:5:334::18)
+ by DM4PR12MB5149.namprd12.prod.outlook.com (2603:10b6:5:390::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Wed, 10 Jan
+ 2024 03:07:46 +0000
+Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
+ (2603:10b6:5:334:cafe::e4) by DM6PR04CA0013.outlook.office365.com
+ (2603:10b6:5:334::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23 via Frontend
+ Transport; Wed, 10 Jan 2024 03:07:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.14 via Frontend Transport; Wed, 10 Jan 2024 03:07:46 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 9 Jan 2024
+ 19:07:33 -0800
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 9 Jan 2024 19:07:32 -0800
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Tue, 9 Jan 2024 19:07:28 -0800
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+	<bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <will@kernel.org>, <frowand.list@gmail.com>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2 0/2] Add support to preserve boot config in the DT flow
+Date: Wed, 10 Jan 2024 08:37:23 +0530
+Message-ID: <20240110030725.710547-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109050648.1347255-3-vidyas@nvidia.com>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|DM4PR12MB5149:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1196278-e039-4c89-ca9d-08dc1189521a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	W96fggc0fakjyuX9wRLCH9JxEmBu5i0El+tGjEohuxfoPhzk7Qw2BsZJK1N2lQFEuNaaraeFhOOOBTDsBBpNJHx8KdqKH1qbgFpzjZnmr5cGhP7saoDHWWRJPKRji5Y88aNBUBaQXa7RZrDLZptrso/A7XpNnxH1du1IF7U1EgM4X5mG9NuhiLeN0VmPlOEIJnS+qBAjThP6C/GTfFfqWzJqCHEGOFhn1zdWf1Equ2s3zYZEmFshHR1dOwVztr6bsSfFA18UDheqLi2tkwJl2RPWIKaevyPYUSZgrtGhH5xiZvIs3AhHz1aDTS28IBEXPWn9dcw1+1RDfdgYUG7JRhh/S4IndvZhJSNfKgJaX4IBLi0YYH/s73coBbf0YKVqcof/Y6zDbwuyclhS4GOqJ7qT0Fh16SqgwxqrtlVV8CnKJQFEjygVET2zY8mqbAhiKrKJbjPIO2YD8rDlXCJaSPoVjBsO1/TFl60W6IJruyIkhV48K2vwR6QssSKabopLOLUWFQpfwhEoZ1NGF0NwGXFXZ9K+VN5OPgt1gA/DZQmNhtG3muum5BrLKvZiCZqKJpExX5cn3nBoJHI5MEcN9UZ0mVbf81bku3lEYqpZNaIOQqHVQyDiQAcgCrqZIvrGfHDiqwhA7lBPOl/weg72b7uGkI+S3H7JqQzYFC0yfqxFw7msNZOQhbz+OmO41e09DAUN3Q6n2bAwoGqfrIOTW9JZ8qBIH3vSbl6/ZSO7ywlCdlVTbgNX5zwFBC5mgh9s
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(346002)(396003)(136003)(230922051799003)(186009)(82310400011)(451199024)(1800799012)(64100799003)(46966006)(40470700004)(36840700001)(316002)(54906003)(336012)(426003)(110136005)(36860700001)(8936002)(8676002)(47076005)(36756003)(6666004)(7696005)(83380400001)(40460700003)(4326008)(40480700001)(70206006)(70586007)(26005)(2616005)(1076003)(478600001)(7416002)(4744005)(2906002)(5660300002)(82740400003)(41300700001)(86362001)(7636003)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2024 03:07:46.4040
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1196278-e039-4c89-ca9d-08dc1189521a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099E1.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5149
 
-Hi Vidya,
+Add support to preserve the boot configuration of the PCIe bridges per
+host bridge basis based on the presence of the DT flag "preserve-boot-config"
+in the respective host bridge node. The existing "linux,pci-probe-only" works
+at a system level and can't be used at a single host bridge granularity.
+Also, the support for preserving the boot configuration per host bridge basis
+is already present for the ACPI based boot flow and this patch series extends
+that support for the DT based boot flow.
 
-kernel test robot noticed the following build warnings:
+V2:
+* Addressed issues reported by kernel test robot <lkp@intel.com>
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.7 next-20240109]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Vidya Sagar (2):
+  dt-bindings: Add PCIe "preserve-boot-config" property
+  PCI: Add support for "preserve-boot-config" property
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vidya-Sagar/dt-bindings-Add-PCIe-preserve-boot-config-property/20240109-130938
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240109050648.1347255-3-vidyas%40nvidia.com
-patch subject: [PATCH V1 2/2] PCI: Add support for "preserve-boot-config" property
-config: arc-allnoconfig (https://download.01.org/0day-ci/archive/20240110/202401101015.Dch3YIjG-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101015.Dch3YIjG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401101015.Dch3YIjG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/of.c:271: warning: Function parameter or struct member 'node' not described in 'of_pci_check_preserve_boot_config'
-
-
-vim +271 drivers/pci/of.c
-
-   260	
-   261	/**
-   262	 * of_pci_check_preserve_boot_config - Return true if the boot configuration
-   263	 *                                     needs to be preserved
-   264	 *
-   265	 * This function looks for a property called "preserve-boot-config" for a given
-   266	 * PCIe controller's node and returns true if found. Having this property
-   267	 * for a PCIe controller ensures that the kernel doesn't re-enumerate and
-   268	 * reconfigure the BAR resources that are already done by the platform firmware.
-   269	 */
-   270	bool of_pci_check_preserve_boot_config(struct device_node *node)
- > 271	{
-   272		return of_property_read_bool(node, "preserve-boot-config");
-   273	}
-   274	EXPORT_SYMBOL_GPL(of_pci_check_preserve_boot_config);
-   275	
+ Documentation/devicetree/bindings/pci/pci.txt |  4 ++++
+ drivers/pci/controller/pci-host-common.c      |  5 ++++-
+ drivers/pci/of.c                              | 18 ++++++++++++++++++
+ drivers/pci/probe.c                           |  2 +-
+ include/linux/of_pci.h                        |  6 ++++++
+ 5 files changed, 33 insertions(+), 2 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
 
