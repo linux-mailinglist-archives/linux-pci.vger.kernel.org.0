@@ -1,118 +1,214 @@
-Return-Path: <linux-pci+bounces-2010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E56EA82A1A7
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 21:01:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4297E82A20D
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 21:19:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8294E2826D7
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 20:01:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC27528DCAB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 20:19:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96D94D5AF;
-	Wed, 10 Jan 2024 20:01:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E99F24F1E1;
+	Wed, 10 Jan 2024 20:18:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="V6ZEraV6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LQhgAxeN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855E34CB44
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 20:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d3ec3db764so18518785ad.2
-        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 12:01:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587054EB4B
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 20:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4670adbd76aso1061762137.1
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 12:18:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1704916898; x=1705521698; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/0lv4AI2otwOhf0YWXAf3zw3NIfoMrE5DRtJbvILGQk=;
-        b=V6ZEraV6AJT6H4A6Gr3NJAb22GFGQ0jX6GffVZXuBzoLmRhNb2yCYEIehtJ+dUb0nO
-         03JO4kINKG+oXadptEQx1HajVoOdLb1xxRMrsF16lMEcrkeqWM/EorFZigD2waIXLGda
-         qQz/z/nNLM69Il2C2DiLIv9KJbSJ2GFhUXEdcaaSCM79sDrgmXiM5F31+HMc+eQbXm3v
-         8PbvnfIeM603SiuL745gu044QNRQDIH3aL3ziL48l9rHzIxrR1Lqdve+dQsmmqDUaDXf
-         iAfMrDYPU6PvvghN63coIaqhbTSKBtDTFzp/Vl0vpjrsWdq16XyqAA+VvEP8tWn0SpHL
-         tPLQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704917911; x=1705522711; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xCx5QwVa70fzd8rquMw4I6kP8SoNutWIPIfWbbVPnLc=;
+        b=LQhgAxeNKXARlYaz9p+WirSIlWc1OggKmi2zS4oGjM32ATv5aRdAV3V22iqAdbVIVw
+         Ynjx4nY3CdMQwe40l+d/r/39PuGOniZT8ZYYOX/gw1g/eqIaa6GajUBQGwpm6ux07C7T
+         vNqpGbMZpuP4NB6wq422gmdNErWaEPd9zFSQEipLqoHBHDn6KBOdtqJ+n/2FQKHGT0oc
+         tveRy38ZS3qGMxZtaPJ9fCnn1jqnTspJ/rR3k07pIl13N1F8SfuUXnYF2ghm58gi3s+j
+         qAjYjk9m5fPYJE5SCF2JmemjU1DHxha3QiFeDzN3OswGjvgGVbusdOj1JSMbPaVpvXZD
+         5jXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704916898; x=1705521698;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/0lv4AI2otwOhf0YWXAf3zw3NIfoMrE5DRtJbvILGQk=;
-        b=wBKGOmp0RkOaN6eEqDba7oqUQK8GcgvlOY5KCYPEmLzZEt12kjI3WdULwqfXGARrp1
-         HYdz2DaaqflKwz1MGzsAhSZEVK22MS+hOIYTi5KOyBHvh2lFrC1K+Lk3or2v1Nw+Jesy
-         NNu0jFI/M6d/TsL/VNtZsPiwsnGNRU3vP+f9Apj2DaFYICzPWy78QUump0GsfcirSRra
-         /avFqPhdGSsLKEHqXxWdQ1O7gioorh6V8RfvVECVX5MQecxY/vz12EaYQ/lBD5nA2HKY
-         nm1iosbZd+xYhtmv8JQrWkSPPhtb7QGlDttoFG67l3/RD8p7ENNYXCf64QwSRVDhH4gR
-         TUeQ==
-X-Gm-Message-State: AOJu0Ywo4V8h8oi4BNAWZtGNeivFYv+QlXjuTnBjHObezAgCZOzJnTXf
-	5y0N7Zn4xTs8ynH1yruk85nSohqbt4lHPQ==
-X-Google-Smtp-Source: AGHT+IHHZJX3kD9aPy8hH9OcP3Ut9ClHlOldNAMIMTukZ8wBgz3RDM0eHGoHxoBftnlZq6lN/PlGyw==
-X-Received: by 2002:a17:902:f7c1:b0:1d4:458:7aa8 with SMTP id h1-20020a170902f7c100b001d404587aa8mr62293plw.30.1704916897736;
-        Wed, 10 Jan 2024 12:01:37 -0800 (PST)
-Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id f12-20020a170902ab8c00b001d3bf27000csm4048463plr.293.2024.01.10.12.01.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 12:01:37 -0800 (PST)
-From: Matthew W Carlis <mattc@purestorage.com>
-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Cc: bhelgaas@google.com,
-	helgaas@kernel.org,
-	kbusch@kernel.org,
-	linux-pci@vger.kernel.org,
-	lukas@wunner.de,
-	mattc@purestorage.com,
-	mika.westerberg@linux.intel.com
-Subject: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER natively
-Date: Wed, 10 Jan 2024 13:01:31 -0700
-Message-Id: <20240110200131.5825-1-mattc@purestorage.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com>
-References: <3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com>
+        d=1e100.net; s=20230601; t=1704917911; x=1705522711;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xCx5QwVa70fzd8rquMw4I6kP8SoNutWIPIfWbbVPnLc=;
+        b=TzgrcfzUTcLDFShmLObQR00jbydZM33OZNiz3S5Az2pdv1YMWAvGvdyw48ATQTKSDB
+         NFN3FZ+AU/NjG5SQiVTTqYJtRncig6KCFQu6lXWnDajkPnSPHeFQXbffsgOwi6X+beQT
+         H1noc0ca/IQsroY+pc+0JboFYzFemSo3Zd2mVWAEf881Iy3Ks1Jy4vKSb9fN8Y7UAvHp
+         tOK3Z69M5oVHXBYO/1lbD3tXH99wIpnXdcvDfrdCjIIueb5ZC7LgvMQoYkRJxGpijJ7A
+         3lWb7yih9HwvuYAs9WIG1HfDUubrnIaXyZNR/5XNhJFoYOhHp7Fhm/yGEQGoSSGtI9Ho
+         El/g==
+X-Gm-Message-State: AOJu0Yw6bTM0aOtu46OeVJwib6E7+F6oEZ3EPTQNUJZaNm3F8lrvC/HJ
+	BPIP7XeQl/xzR/shV1xGI8NVez1GOIi9NFfJse6GD7Y/fCGmBw==
+X-Google-Smtp-Source: AGHT+IE6zVAzl+4qyb1eQ51qm1s0EUGP2M/u9h85sqLJbME/ZYvgt4XDXmjce7aWTNg2Jl0ci+FP580NRa/9d4ocW0c=
+X-Received: by 2002:a05:6102:570b:b0:467:1ffb:d6a1 with SMTP id
+ dg11-20020a056102570b00b004671ffbd6a1mr68609vsb.26.1704917911195; Wed, 10 Jan
+ 2024 12:18:31 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 10 Jan 2024 14:18:30 -0600
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <20240110164105.GA13451@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240104130123.37115-1-brgl@bgdev.pl> <20240104130123.37115-4-brgl@bgdev.pl>
+ <20240109144327.GA10780@wunner.de> <CAMRc=MdXO6c6asvRSn_Z8-oFS48hroT+dazGKB6WWY1_Zu7f1Q@mail.gmail.com>
+ <20240110132853.GA6860@wunner.de> <CAMRc=MdBSAb_kEO2r7r-vwLuRAEv7pMODOMtZoCCRAd=zsQb_w@mail.gmail.com>
+ <20240110164105.GA13451@wunner.de>
+Date: Wed, 10 Jan 2024 14:18:30 -0600
+Message-ID: <CAMRc=MdQKPN8UbagmswjFx7_JvmJuBeuq8+9=z-+GBNUmdpWEA@mail.gmail.com>
+Subject: Re: [RFC 3/9] PCI/portdrv: create platform devices for child OF nodes
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
+	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <terry.bowman@amd.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/10/2024 8:41 AM, Kuppuswamy Sathyanarayanan wrote:
-> Since your kernel has EDR source support, why not enable
-> the relevant config? or did I not understand the issue correctly?
+On Wed, 10 Jan 2024 17:41:05 +0100, Lukas Wunner <lukas@wunner.de> said:
+> On Wed, Jan 10, 2024 at 05:26:52PM +0100, Bartosz Golaszewski wrote:
+>> Seems like the following must be true but isn't in my case (from
+>> pci_bus_add_device()):
+>>
+>>     if (pci_is_bridge(dev))
+>>         of_pci_make_dev_node(dev);
+>>
+>> Shouldn't it evaluate to true for ports?
+>
+> It should.
+>
+> What does "lspci -vvvvxxxx -s BB:DD.F" say for the port in question?
+>
 
-As I had said we never intend to use EDR or firmware controlled DPC. Why should
-I have to build in more code that I wouldn't use? I'm not sure that we're
-both using the same lense to consider how & whether _OSC DPC Control supports
-the old world of DPC. i.e OS never required firmware's permission to control
-DPC & it was not tied to EDR. I wish I had been working in this area at the
-time they were drafting the 2019 FW ECN then I might have known to try & influence
-its details.
+I cut out the hexdump part, let me know if you really need it. Output follows.
 
-I think the first & primary problem for the kernel here is not treating root
-ports & switch ports the same when deciding to use DPC. I would like to hear
-from Bjorn first, but I guess I could be open to just relying on the cli
-pcie_ports=dpc-native field if there is reason for the kernel to only support
-the latest additions of the PCIe FW DPC ECN by default. In this case the patch
-would look as the one in Bjorns response on Dec 28 2023 at 1:23PM, included
-again below. We may find others who are using Root Port DPC now needing to
-change their config to support EDR or use the cli pcie_ports=dpc-native as
-a result however.
+Bart
 
-If this is the route that makes the most sense, I can update my patch & resubmit
-as below if that is ok. Perhaps there might also be some docs/notes to be created
-around all of this.
+--
 
--Matt
-
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 14a4b89a3b83..423dadd6727e 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -262,7 +262,7 @@ static int get_port_device_capability(struct pci_dev *dev)
-         */
-        if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-            pci_aer_available() &&
--           (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-+           (pcie_ports_dpc_native || host->native_dpc))
-
+# lspci -vvvvxxxx -s  0000:00:00.0
+0000:00:00.0 PCI bridge: Qualcomm Technologies, Inc Device 010b
+(prog-if 00 [Normal decode])
+	Device tree node: /sys/firmware/devicetree/base/soc@0/pcie@1c00000/pcie@0
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
+Stepping- SERR+ FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 176
+	IOMMU group: 8
+	Region 0: Memory at 60300000 (32-bit, non-prefetchable) [size=4K]
+	Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+	I/O behind bridge: f000-0fff [disabled] [16-bit]
+	Memory behind bridge: 60400000-604fffff [size=1M] [32-bit]
+	Prefetchable memory behind bridge: 00000000fff00000-00000000000fffff
+[disabled] [64-bit]
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [50] MSI: Enable+ Count=1/32 Maskable+ 64bit+
+		Address: 00000000a1c3f000  Data: 0000
+		Masking: fffffffe  Pending: 00000000
+	Capabilities: [70] Express (v2) Root Port (Slot+), MSI 00
+		DevCap:	MaxPayload 128 bytes, PhantFunc 0
+			ExtTag- RBE+
+		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+			MaxPayload 128 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+		LnkCap:	Port #0, Speed 8GT/s, Width x1, ASPM L0s L1, Exit Latency
+L0s <1us, L1 <64us
+			ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 128 bytes, Disabled- CommClk+
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 5GT/s, Width x1
+			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt+
+		SltCap:	AttnBtn+ PwrCtrl+ MRL+ AttnInd+ PwrInd+ HotPlug- Surprise+
+			Slot #0, PowerLimit 0W; Interlock+ NoCompl-
+		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
+			Control: AttnInd Off, PwrInd Off, Power- Interlock-
+		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet- Interlock-
+			Changed: MRL- PresDet- LinkState-
+		RootCap: CRSVisible+
+		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible+
+		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP+ LTR+
+			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+			 FRS- LN System CLS Not Supported, TPHComp+ ExtTPHComp- ARIFwd-
+			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR+
+10BitTagReq- OBFF Disabled, ARIFwd-
+			 AtomicOpsCtl: ReqEn- EgressBlck-
+		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
+		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance-
+ComplianceSOS-
+			 Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-
+EqualizationPhase1-
+			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+			 Retimer- 2Retimers- CrosslinkRes: unsupported
+	Capabilities: [100 v2] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF-
+MalfTLP- ECRC- UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF-
+MalfTLP- ECRC- UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+
+MalfTLP+ ECRC- UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+		RootCmd: CERptEn+ NFERptEn+ FERptEn+
+		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
+			 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
+		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
+	Capabilities: [148 v1] Secondary PCI Express
+		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+		LaneErrStat: 0
+	Capabilities: [168 v1] Transaction Processing Hints
+		No steering table available
+	Capabilities: [1fc v1] L1 PM Substates
+		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+			  PortCommonModeRestoreTime=70us PortTPowerOnTime=0us
+		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+			   T_CommonMode=70us LTR1.2_Threshold=76800ns
+		L1SubCtl2: T_PwrOn=0us
+	Kernel driver in use: pcieport
 
