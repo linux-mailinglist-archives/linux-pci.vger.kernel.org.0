@@ -1,212 +1,155 @@
-Return-Path: <linux-pci+bounces-1996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C999F829C8F
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 15:28:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20CA5829D81
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 16:24:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4409E1F228D5
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 14:28:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEA152845AA
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 15:24:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47BF34B5A3;
-	Wed, 10 Jan 2024 14:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9412C4BAAB;
+	Wed, 10 Jan 2024 15:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nyea32r8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kx/wajo7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D09B4A9B5;
-	Wed, 10 Jan 2024 14:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6ddeb015ec6so1049707a34.0;
-        Wed, 10 Jan 2024 06:28:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704896930; x=1705501730; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIaoX1yjQhXHbsmhohdAZwhtmgurjO4w2Fx+LKGYccs=;
-        b=Nyea32r8R/C0mH32mtZ2WbQtXIE5o7xBaJxVL2XElvGvYMcoXcaDenqoh/0pw4HbND
-         vE4hLziPzckFewL+k6T5sg89paRFXvq/gdaVZAsFsnoo7LL9M1Wtx+Fey/9qCrSPBcVa
-         jN+FgYp7SDzwPb5UzA8UywD8oJDlWpbF1Xdp1j+xLu4038TX668QfBKoL1QhiBzf4N3I
-         748+Wq+6lN3ARvco0eLpHK2lDGS0p/5L2dAltHdKLBhCM3t8810/6UORJj9MeJAlSsl4
-         EeAH3+vVKQvfiyZhfKNyTkSEwMHTMYcZA4YBKxWtHNsWXAlo0wboUKnFrIUrB6gxR/HY
-         lYwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704896930; x=1705501730;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zIaoX1yjQhXHbsmhohdAZwhtmgurjO4w2Fx+LKGYccs=;
-        b=B3U9Uk3UY9T1/gTYCPAkfOrUriffv2BQo7EllAd7QmDJ2McW80wJd2pbpLoGMG65Ge
-         jdXBzflSWttq2IoaAQFcWI02+Zvcxoq35416SaNKMHkzfzbKjgNZ/QI0JGODIs8lDhJB
-         qiau+7kiNp5MUVoB+t5EUopPqTn/q2n0+ANuj6tseuFJBzMy4G2a/gdafodcDbSnfuT6
-         n06WVriHXuGs8NVfVscSeow7U1b2mEN9k+qODx+qdcSpf8M2h5Lz2VLNgcztbx5FGJYC
-         opYQflUSEot0+VYNYkmbofnYcKYywwBeAADYlEbB5sajcAy4y1qtDMKm2xtZoJMMQqJG
-         hc6A==
-X-Gm-Message-State: AOJu0Yy6+V7okdryRmjebv/O9COr2cqYeksXgBZ6bSFJ3oIszmWdlUZK
-	r7PpmBOYAyC1kLf8UlrBE6c=
-X-Google-Smtp-Source: AGHT+IG7sLERgE1XfKcrO3RXf8zO3OfNiwPA15eOOZxyAfLlJXqm615gjKSh1CGFCVXN4fmaNYQHXQ==
-X-Received: by 2002:a05:6871:4319:b0:203:ceec:933c with SMTP id lu25-20020a056871431900b00203ceec933cmr845505oab.69.1704896930388;
-        Wed, 10 Jan 2024 06:28:50 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x190-20020a6363c7000000b005cd945c0399sm3608310pgb.80.2024.01.10.06.28.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 06:28:49 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <a854bbd3-2862-4ea4-b14d-aab2d89ac2df@roeck-us.net>
-Date: Wed, 10 Jan 2024 06:28:45 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17964BAAE
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 15:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704900272; x=1736436272;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=VKFaX1h58LHLImE/7wnOp61T767lCCERSA2kFEZSgzk=;
+  b=kx/wajo7CCpic9JaFal/pT2tABJ/zxoSggiL5FEESxN8p0UspiIDscGK
+   fZtPL3+x2pmkG8ERKREmaxFRYRnDIzAaN1k5CpKqig8mGxKFzbADjXpQp
+   ndjAULvdClVM8rL/4QfIbWSC+qwY9FFZ/OX5n6Z78Ek9LjuM/TTpwyM9f
+   DI4BvexM1Oy2LKZgZMnGrjK6/UatElJ5yIs+gnAercA4yc5VbBGVdhnLt
+   jVyu66TYH91aVqt9KHE4glSCp/titcrT4th3/CYQrwc56sUwxvsOIr/po
+   /RW8Bk7wAZk28BztsZXpqmRfeg5/FRbSum0X5ZS7GO2fmdWlaqw3DNy0z
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="12037050"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="12037050"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 07:24:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="1029186215"
+X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
+   d="scan'208";a="1029186215"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 07:24:31 -0800
+Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
+	by linux.intel.com (Postfix) with ESMTP id 923F5580960;
+	Wed, 10 Jan 2024 07:24:31 -0800 (PST)
+Message-ID: <f95657a40a596c7f9ba0bad413fcd414514cf2b7.camel@linux.intel.com>
+Subject: Re: [PATCH v5] PCI/ASPM: Add back L1 PM Substate save and restore
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, mika.westerberg@linux.intel.com, 
+ sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com, 
+ rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com, 
+ tasev.stefanoska@skynet.be, enriquezmark36@gmail.com, kernel@witt.link, 
+ koba.ko@canonical.com, wse@tuxedocomputers.com,
+ ilpo.jarvinen@linux.intel.com,  ricky_wu@realtek.com,
+ linux-pci@vger.kernel.org, Michael Schaller <michael@5challer.de>
+Date: Wed, 10 Jan 2024 07:24:31 -0800
+In-Reply-To: <20231229003045.GA1561509@bhelgaas>
+References: <20231229003045.GA1561509@bhelgaas>
+Autocrypt: addr=david.e.box@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQENBF2w2YABCACw5TpqmFTR6SgsrNqZE8ro1q2lUgVZda26qIi8GeHmVBmu572RfPydisEpCK246rYM5YY9XAps810ZxgFlLyBqpE/rxB4Dqvh04QePD6fQNui/QCSpyZ6j9F8zl0zutOjfNTIQBkcar28hazL9I8CGnnMko21QDl4pkrq1dgLSgl2r2N1a6LJ2l8lLnQ1NJgPAev4BWo4WAwH2rZ94aukzAlkFizjZXmB/6em+lhinTR9hUeXpTwcaAvmCHmrUMxeOyhx+csO1uAPUjxL7olj2J83dv297RrpjMkDyuUOv8EJlPjvVogJF1QOd5MlkWdj+6vnVDRfO8zUwm2pqg25DABEBAAG0KkRhdmlkIEUuIEJveCA8ZGF2aWQuZS5ib3hAbGludXguaW50ZWwuY29tPokBTgQTAQgAOBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH7Mry1gl3p/NusIAK9z1xnXphedgZMGNzifGUs2UUw/xNl91Q9qRaYGyNYATI6E7zBYmynsUL/4yNFnXK8P/I7WMffiLoMqmUvNp9pG6oYYj8ouvbCexS21jgw54I3m61M+wTokieRIO/GettVlCGhz7YHlHtGGqhzzWB3CGPSJMwsouDPvyFFE+28p5d2v9l6rXSb7T297Kh50VX9Ele8QEKngrG+Z/u2lr/bHEhvx24vI8ka22cuTaZvThYMwLTSC4kq9L9WgRv31JBSa1pcbcHLOCoUl0RaQwe6J8w9hN2uxCssHrrfhSA4YjxKNIIp3YH4IpvzuDR3AadYz1klFTnEOxIM7fvQ2iGu5AQ0EXbDZgAEIAPGbL3wvbYUDGMoBSN89GtiC6ybWo28JSiYIN5N9LhDTwfWROenkRvmTESaE5fAM24sh8S0h+F+eQ7j/E/RF3pM31gSovTKw0Pxk7GorK
+	FSa25CWemxSV97zV8fVegGkgfZkBMLUId+AYCD1d2R+tndtgjrHtVq/AeN0N09xv/d3a+Xzc4ib/SQh9mM50ksqiDY70EDe8hgPddYH80jHJtXFVA7Ar1ew24TIBF2rxYZQJGLe+Mt2zAzxOYeQTCW7WumD/ZoyMm7bg46/2rtricKnpaACM7M0r7g+1gUBowFjF4gFqY0tbLVQEB/H5e9We/C2zLG9r5/Lt22dj7I8A6kAEQEAAYkBNgQYAQgAIBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsMAAoJEH7Mry1gl3p/Z/AH/Re8YwzY5I9ByPM56B3Vkrh8qihZjsF7/WB14Ygl0HFzKSkSMTJ+fvZv19bk3lPIQi5lUBuU5rNruDNowCsnvXr+sFxFyTbXw0AQXIsnX+EkMg/JO+/V/UszZiqZPkvHsQipCFVLod/3G/yig9RUO7A/1efRi0E1iJAa6qHrPqE/kJANbz/x+9wcx1VfFwraFXbdT/P2JeOcW/USW89wzMRmOo+AiBSnTI4xvb1s/TxSfoLZvtoj2MR+2PW1zBALWYUKHOzhfFKs3cMufwIIoQUPVqGVeH+u6Asun6ZpNRxdDONop+uEXHe6q6LzI/NnczqoZQLhM8d1XqokYax/IZ4=
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DO NOT MERGE v6 26/37] dt-bindings: vendor-prefixes: Add smi
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Conor Dooley <conor@kernel.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, linux-sh@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Thomas Gleixner <tglx@linutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
- Heiko Stuebner <heiko@sntech.de>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Chris Morgan <macromorgan@hotmail.com>, Yang Xiwen
- <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
- Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Azeem Shaikh <azeemshaikh38@gmail.com>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Max Filippov <jcmvbkbc@gmail.com>, Palmer Dabbelt <palmer@rivosinc.com>,
- Bin Meng <bmeng@tinylab.org>, Jonathan Corbet <corbet@lwn.net>,
- Jacky Huang <ychuang3@nuvoton.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- Biju Das <biju.das.jz@bp.renesas.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
- Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
- <20240109-fructose-bundle-05d01033277b@spud>
- <CAMuHMdU1z64QHJOVd3jUsOfyuDApB1+khkUV8PvjoKbwsi327g@mail.gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <CAMuHMdU1z64QHJOVd3jUsOfyuDApB1+khkUV8PvjoKbwsi327g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 1/10/24 03:23, Geert Uytterhoeven wrote:
-> Hi Conor,
-> 
-> On Tue, Jan 9, 2024 at 7:06 PM Conor Dooley <conor@kernel.org> wrote:
->> On Tue, Jan 09, 2024 at 05:23:23PM +0900, Yoshinori Sato wrote:
->>> Add Silicon Mortion Technology Corporation
-> 
-> Motion
-> 
->>> https://www.siliconmotion.com/
->>>
->>> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
->>> ---
->>>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
->>> index 94ed63d9f7de..a338bdd743ab 100644
->>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
->>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
->>> @@ -1283,6 +1283,8 @@ patternProperties:
->>>       description: Skyworks Solutions, Inc.
->>>     "^smartlabs,.*":
->>>       description: SmartLabs LLC
->>> +  "^smi,.*":
->>> +    description: Silicon Motion Technology Corporation
->>
->> How come "smi" is used for a company with this name?
->> Why is it not something like SMTC? There's probably some history here
->> that I am unaware of.
-> 
-> See Documentation/devicetree/bindings/display/sm501fb.txt
-> The stock ticker is "SIMO", though.
-> https://www.nasdaq.com/market-activity/stocks/simo
-> 
+On Thu, 2023-12-28 at 18:30 -0600, Bjorn Helgaas wrote:
+> [+cc Michael]
+>=20
+> On Thu, Dec 28, 2023 at 04:31:12PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 20, 2023 at 05:12:50PM -0800, David E. Box wrote:
+> > ...
+>=20
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 55bc3576a985..3c4b2647b4ca 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+>=20
+> > > @@ -1579,7 +1579,7 @@ static void pci_restore_pcie_state(struct pci_d=
+ev
+> > > *dev)
+> > > =C2=A0{
+> > > ...
+>=20
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 So we restore here only t=
+he
+> > > +	 * LNKCTL register with the ASPM control field clear. ASPM will
+> > > +	 * be restored in pci_restore_aspm_state().
+> > > +	 */
+> > > +	val =3D cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
+> > > +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
+> >=20
+> > When CONFIG_PCIEASPM is not set, we will clear ASPMC here and never
+> > restore it.=C2=A0 I don't know if this ever happens.=C2=A0 Do we need t=
+o worry
+> > about this?=C2=A0 Might firmware restore ASPMC itself before we get her=
+e?
+> > What do we want to happen in this case?
 
- From https://en.wikipedia.org/wiki/Silicon_Motion:
+I just checked this. L1 does get disabled which we don't want. We need to s=
+ave
+and restore the BIOS ASPM configuration even when CONFIG_PCIEASPM is not se=
+t.
 
-"Controllers are marketed under the “SMI” brand,
-  enterprise-grade SSDs under the "Shannon Systems" brand.
-"
+> >=20
+> > Since ASPM is intertwined with the PCIe Capability, can we call
+> > pci_restore_aspm_state() from here instead of from
+> > pci_restore_state()?
+> >=20
+> > Calling it here would make it easier to see the required ordering
+> > (LNKCTL with ASPMC cleared, restore ASPM L1SS, restore ASPMC) and
+> > it would be obvious that none of the other stuff in
+> > pci_restore_state() is relevant (PASID, PRI, ATS, VC, etc).
+> >=20
+> > If that could be done, I think it would make sense to do the same with
+> > pci_save_aspm_state() even though it's a little more independent.
+>=20
 
-Guenter
+Makes sense
 
+> The lspci output in Michael's report at
+> https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.d=
+e
+> reminded me that LTR is important for L1.2, and we currently have
+> this:
+>=20
+> =C2=A0 pci_restore_state
+> =C2=A0=C2=A0=C2=A0 pci_restore_ltr_state
+> =C2=A0=C2=A0=C2=A0 pci_restore_pcie_state
+>=20
+> I wonder if pci_restore_ltr_state() should be called from
+> pci_restore_pcie_state() as well?=C2=A0 It's intimately connected to ASPM=
+,
+> and that connection isn't very clear in the current code.
+
+Make sense too since LTR is a required capability for L1.2. I'll send updat=
+ed
+patches after the merge window.
+
+David
 
