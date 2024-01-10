@@ -1,53 +1,54 @@
-Return-Path: <linux-pci+bounces-1972-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1973-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 113EB82935C
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 06:34:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5ABE82938C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 07:06:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A030E288CAA
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 05:33:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4460A1F25B7F
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 06:06:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B6CEDDD4;
-	Wed, 10 Jan 2024 05:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D48DF69;
+	Wed, 10 Jan 2024 06:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z6Nic5D3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cqmx5cEY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53E45DDA9;
-	Wed, 10 Jan 2024 05:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704864833; x=1736400833;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YGke+ibjmKZatt4nYaBojbGAiAATE/h9fTo0wo5i5ew=;
-  b=Z6Nic5D3NxleHGoLTktT6gxn4l9nJtqcb/1zA+y7fW14xqt/wsnNpaaT
-   H7g8xPk3PZQMYoihcTRYaSd65+QtHzY+HkFk8A79AKJuFHiVtQZgGnu21
-   hqsqiXd7GboyiVa0nN5CArQEAWbyb+2LN0ayL1O+XunDcmaPmbhDTci2h
-   Q6mOmK62gHNyNbzAn6yKGAf7XnynTVqf1cTgwiue54C0QVW3OAIAfv/7s
-   8J+ZPhY3sMnLKlpb3El7S0HkSQwaH6HS7nZGtNiM+KDsaAFzS8OkoMRc3
-   j6+55shce60g6r3aFu+el5A3XBzkfMkaH2DZdVZxjOYWGpXHzPpE/qEkI
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="462698659"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="462698659"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 21:33:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="1113321247"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="1113321247"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Jan 2024 21:33:50 -0800
-Message-ID: <aba65111-47c1-4003-b9a9-19c908507c01@linux.intel.com>
-Date: Wed, 10 Jan 2024 13:28:36 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFBD8C1A;
+	Wed, 10 Jan 2024 06:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40A65Vvi056970;
+	Wed, 10 Jan 2024 00:05:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1704866732;
+	bh=yFsMpt0PZNf6JUgPlvVYPwAe1PAy39S8K8+Q7tYKhQA=;
+	h=Date:CC:Subject:To:References:From:In-Reply-To;
+	b=cqmx5cEYvim8cKLqKbv9TH9RwTjaMw2oxjSZ62HszbJeeAd3bu4NNYF45bGJf4gGN
+	 5nri+MnVNt17nUD/exe/Mpks5AoTLQbodqPs6+RMStGcEl0O1GQid8kjuOWPnF/SAc
+	 GFy/t3PA52zbmZmyxrs7CwG7C6shMtS9BIGp6zlU=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40A65VWs085615
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 10 Jan 2024 00:05:31 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
+ Jan 2024 00:05:31 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 10 Jan 2024 00:05:29 -0600
+Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40A65P5Y095356;
+	Wed, 10 Jan 2024 00:05:25 -0600
+Message-ID: <f8dbbffd-c209-44bc-8d1e-42b6f1b08aef@ti.com>
+Date: Wed, 10 Jan 2024 11:35:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,71 +56,111 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v10 5/5] iommu/vt-d: don't loop for timeout ATS
- Invalidation request forever
+CC: <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <ilpo.jarvinen@linux.intel.com>, <vigneshr@ti.com>,
+        <r-gunasekaran@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3] PCI: keystone: Fix race condition when initializing
+ PHYs
+To: Bjorn Helgaas <helgaas@kernel.org>
+References: <20240109212326.GA2018284@bhelgaas>
 Content-Language: en-US
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
- bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
- robin.murphy@arm.com, lukas@wunner.de
-References: <20231228170504.720794-1-haifeng.zhao@linux.intel.com>
- <20231228170504.720794-3-haifeng.zhao@linux.intel.com>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20231228170504.720794-3-haifeng.zhao@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <20240109212326.GA2018284@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 12/29/23 1:05 AM, Ethan Zhao wrote:
-> When the ATS Invalidation request timeout happens, the qi_submit_sync()
-> will restart and loop for the invalidation request forever till it is
-> done, it will block another Invalidation thread such as the fq_timer
-> to issue invalidation request, cause the system lockup as following
-> 
-> [exception RIP: native_queued_spin_lock_slowpath+92]
-> 
-> RIP: ffffffffa9d1025c RSP: ffffb202f268cdc8 RFLAGS: 00000002
-> 
-> RAX: 0000000000000101 RBX: ffffffffab36c2a0 RCX: 0000000000000000
-> 
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffab36c2a0
-> 
-> RBP: ffffffffab36c2a0 R8: 0000000000000001 R9: 0000000000000000
-> 
-> R10: 0000000000000010 R11: 0000000000000018 R12: 0000000000000000
-> 
-> R13: 0000000000000004 R14: ffff9e10d71b1c88 R15: ffff9e10d71b1980
-> 
-> ORIG_RAX: ffffffffffffffff CS: 0010 SS: 0018
-> 
-> (the left part of exception see the hotplug case of ATS capable device)
-> 
-> If one endpoint device just no response to the ATS Invalidation request,
-> but is not gone, it will bring down the whole system, to avoid such
-> case, don't try the timeout ATS Invalidation request forever.
-> 
-> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-> ---
->   drivers/iommu/intel/dmar.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index 0a8d628a42ee..9edb4b44afca 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1453,7 +1453,7 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->   	reclaim_free_desc(qi);
->   	raw_spin_unlock_irqrestore(&qi->q_lock, flags);
->   
-> -	if (rc == -EAGAIN)
-> +	if (rc == -EAGAIN && type !=QI_DIOTLB_TYPE && type != QI_DEIOTLB_TYPE)
->   		goto restart;
->   
->   	if (iotlb_start_ktime)
+Hello Bjorn,
 
-Above is also unnecessary if qi_check_fault() returns -ETIMEDOUT,
-instead of -EAGAIN. Or did I miss anything?
+On 10/01/24 02:53, Bjorn Helgaas wrote:
+> On Wed, Sep 27, 2023 at 09:48:45AM +0530, Siddharth Vadapalli wrote:
+>> The PCI driver invokes the PHY APIs using the ks_pcie_enable_phy()
+>> function. The PHY in this case is the Serdes. It is possible that the
+>> PCI instance is configured for 2 lane operation across two different
 
-Best regards,
-baolu
+...
+
+>>  
+>> +	/* Obtain reference(s) to the phy(s) */
+>> +	for (i = 0; i < num_lanes; i++)
+>> +		phy_pm_runtime_get_sync(ks_pcie->phy[i]);
+>> +
+>>  	ret = ks_pcie_enable_phy(ks_pcie);
+>> +
+>> +	/* Release reference(s) to the phy(s) */
+>> +	for (i = 0; i < num_lanes; i++)
+>> +		phy_pm_runtime_put_sync(ks_pcie->phy[i]);
+> 
+> This looks good and has already been applied, so no immediate action
+> required.
+> 
+> This is the only call to ks_pcie_enable_phy(), and these loops get and
+> put the PM references for the same PHYs initialized in
+> ks_pcie_enable_phy(), so it seems like maybe these loops could be
+> moved *into* ks_pcie_enable_phy().
+
+Does the following look fine?
+===============================================================================
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c
+b/drivers/pci/controller/dwc/pci-keystone.c
+index e02236003b46..6e9f9589d26c 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -962,6 +962,9 @@ static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
+        int num_lanes = ks_pcie->num_lanes;
+
+        for (i = 0; i < num_lanes; i++) {
++               /* Obtain reference to the phy */
++               phy_pm_runtime_get_sync(ks_pcie->phy[i]);
++
+                ret = phy_reset(ks_pcie->phy[i]);
+                if (ret < 0)
+                        goto err_phy;
+@@ -977,12 +980,18 @@ static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
+                }
+        }
+
++       /* Release reference(s) to the phy(s) */
++       for (i = 0; i < num_lanes; i++)
++               phy_pm_runtime_put_sync(ks_pcie->phy[i]);
++
+        return 0;
+
+ err_phy:
+        while (--i >= 0) {
+                phy_power_off(ks_pcie->phy[i]);
+                phy_exit(ks_pcie->phy[i]);
++               /* Release reference to the phy */
++               phy_pm_runtime_put_sync(ks_pcie->phy[i]);
+        }
+
+        return ret;
+===============================================================================
+
+> 
+> Is there any similar issue in ks_pcie_disable_phy()?  What if we
+> power-off a PHY that provides a reference clock to other PHYs that are
+> still powered-up?  Will the dependent PHYs still power-off cleanly?
+
+While debugging the issue fixed by this patch, I had bisected and identified
+that prior to the following commit:
+https://github.com/torvalds/linux/commit/e611f8cd8717c8fe7d4229997e6cd029a1465253
+despite the race condition being present, there was no issue. While I am not
+fully certain, I believe that the above observation indicates that prior to the
+aforementioned commit, the race condition did exist, but there was a slightly
+longer delay between the PHY providing the reference clock being powered off
+within "ks_pcie_enable_phy()". That delay was sufficient for the dependent PHY
+to lock its PLL based on the reference clock provided, following which, despite
+the PHY providing the reference clock being powered off and the dependent PHY
+staying powered on, there was no issue observed. Therefore, it appears to me
+that holding reference to the PHY providing the reference clock isn't necessary
+once the dependent PHY's PLL is locked.
+
+...
+
+-- 
+Regards,
+Siddharth.
 
