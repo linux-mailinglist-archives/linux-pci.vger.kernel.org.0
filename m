@@ -1,161 +1,123 @@
-Return-Path: <linux-pci+bounces-1965-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1966-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AD458292AD
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 04:11:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7A088292D4
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 04:44:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8D891F271C9
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 03:11:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7508C1C25558
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 03:44:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E369C1871;
-	Wed, 10 Jan 2024 03:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F2582579;
+	Wed, 10 Jan 2024 03:44:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fxdK1hJc"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="JB96nfXx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F99523D5
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 03:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5edbcdc323dso34159257b3.3
-        for <linux-pci@vger.kernel.org>; Tue, 09 Jan 2024 19:11:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704856304; x=1705461104; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4d6kdLM2zyfXppW2Q5zuzpAXCPsQmw5b1RArNBQ9sVU=;
-        b=fxdK1hJckKgGXMK0xg1E+A+rE0ItGHJJ81GA9w4EHyGU8UJGq2yNTrvTyiKkukdF3d
-         s/c211krNhhx3Tc8UgfaMP4Ian1AjizSQ4wlufo9QCNpNb5o0wtd+l/cZAoxlcw1OMI5
-         +iYNkCajkqIWvJ65RlMGRnlWwnwmN3uztyWiQ1Wl8ykwkV4LMJaqJEHzmQUsHP1h+f8M
-         hzjhwtG8gUjPXYLFi9vHjE+zT+YRVT69zFXEQtOUn1ojzMD6nFnEIx/CmDgd78gYfyYf
-         TSn/6z57q7nsBe1lue+WGJf4gI/qOH+a4tjsoXx7Bo2G5kpgQHQRb3BBqjJQpSrp0Sxl
-         5Gcg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653233C39
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 03:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 5FCDB3F45F
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 03:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1704858253;
+	bh=pLgcyTZenokYx0uGkUKde9DGt3BHdUFOCmdzdzfj8Zs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=JB96nfXxcu3WdHAzoWp0Puat/DIC8YgfFA4e41kKDPBDc3vvQS8PS2OfoQbizRvyp
+	 Rt0Ggj7Ya89rua1xY2NEr9sAdA2nBgRPX7+204dKkt0UlFvD0ZJYinTLUDxe4gEJQa
+	 4LWfSevm2gvXUjRCpEjFeKvxk/xdjVLrBICXgeSKejia1bkddJGGFv7QM8DfOYFefI
+	 SqjdW2+6DW15sv9ipbPUNBRtUoVpFRLJRK916ZXthfT47yQcF9KylGjLGjpafSqGlk
+	 DoNHuaFiRWqOuLukvhyZWLbeyoCbRULx0A4V7p48S8zEmcBywDmB7AYpQnZ5OpNt0o
+	 x5og6i7lrWdsQ==
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-5963251664cso3627046eaf.0
+        for <linux-pci@vger.kernel.org>; Tue, 09 Jan 2024 19:44:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704856304; x=1705461104;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4d6kdLM2zyfXppW2Q5zuzpAXCPsQmw5b1RArNBQ9sVU=;
-        b=uZBT/Fm91IcUZ42brNY1k6ZcWgWXhI26Hjo/4iol3SykE+67B8lp8qqVp7kWoY8lYZ
-         FAw+NJw7lgcEshsjFgilB3R24k2HWjbOhhZYUqiTboO59mn0Z5JszK55io8ejLt3IDQy
-         Upad7i3KTuSsOUn9uGRw5d1EaWH/7lgt4Zi3rflbcwfMau16CIB1wr2ic9mnuL8a/gFI
-         Hnr/SDBt97NWo/QKwzvzOyDhsxcQUdh2w41cGX5MaBA3o5ooz565vht5QgagobaEuCoH
-         ImRMybvA66hcrCHZp0sFBIL0LRgHLN6fK9+EfcAy0mYPNjDdIvpbXQTGd/YU963V5sEE
-         mXXA==
-X-Gm-Message-State: AOJu0YwalsL3fqgb3hRQEExFJyH8ziXYFNHF8PzGP0J92l0fX2t63kOe
-	sCrR4ppJjoN7klArM1klMQ8G0eDUWtDv
-X-Google-Smtp-Source: AGHT+IExGw+hfQ3V07Z4sxUL0Zg/OgE7HO0brqGsNbKIQpRdruQQOOldw8LcAacx3e3s35Nb3rvCtg==
-X-Received: by 2002:a81:9142:0:b0:5f7:d06c:7464 with SMTP id i63-20020a819142000000b005f7d06c7464mr435219ywg.61.1704856303904;
-        Tue, 09 Jan 2024 19:11:43 -0800 (PST)
-Received: from thinkpad ([2409:40f4:8:c69c:51f1:be5e:dfa1:6e66])
-        by smtp.gmail.com with ESMTPSA id mj22-20020a17090b369600b0028be0ec6e76sm259409pjb.28.2024.01.09.19.11.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 19:11:43 -0800 (PST)
-Date: Wed, 10 Jan 2024 08:41:37 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"quic_bjorande@quicinc.com" <quic_bjorande@quicinc.com>,
-	"fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
-	"vidyas@nvidia.com" <vidyas@nvidia.com>
-Subject: Re: [PATCH v7 0/2] PCI: designware-ep: Fix DBI access before core
- init
-Message-ID: <20240110031137.GA2630@thinkpad>
-References: <20231120084014.108274-1-manivannan.sadhasivam@linaro.org>
- <20240107072707.GC3450972@rocinante>
- <ZZ2JXMhdOI1Upabx@x1-carbon>
+        d=1e100.net; s=20230601; t=1704858252; x=1705463052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pLgcyTZenokYx0uGkUKde9DGt3BHdUFOCmdzdzfj8Zs=;
+        b=D3AZSkoAWwQy7Qh2kU5giFwShR3TT2+tOwtZmB2wa4/EPhmBO9KRDwK64/8xq/dKm7
+         4iFNpL3F4zJr6att7GVTdQcivGlhJiXILAT7EKLz+ZZLAqdGtso8g6E6fYrJUPzkoR6A
+         GQW73lNOKQ9JwUsIr6pcOdPXLcSxinX1UkcKhbb3OThV6B1FLz9rDG5zrGPYJdutcCfw
+         pGEbI6Oj2sR4aQ8TC1m/CINnSa4KMPXjae/MsQUkFc8eKjrSrQSilxuoEp+l/iDsFFZA
+         OXdNy1Zk4I03NRixKcl8Jn5QzCYaRZkt1uvBm+zusPaZZPSMZHSdFDbNB7MnXUy5M+oM
+         i8Jg==
+X-Gm-Message-State: AOJu0YyXli6BXribfENDI447jWkfcPMbpPVCUrcT83kwBW/55WhZ993r
+	8vDnc8U1tuKmRuzc1aZ8ushGrxzcQlLvoebP6jA/+U/DycdSLdTGpKbpYYrYRNX0ZDhDYgwt3qq
+	2sqCvosQ+NUpbxnbO9E/j7pCyXsadpEeR7An+GaEvZv+CfwfNT3ofaJmuRrf+
+X-Received: by 2002:a05:6359:4c1a:b0:175:6b16:437 with SMTP id kj26-20020a0563594c1a00b001756b160437mr372155rwc.41.1704858251844;
+        Tue, 09 Jan 2024 19:44:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHP3KLBfcLw7NKm+OUg78KN9DAiPdJNkz+1tdABIJcKUQk//5olHZgCKbLN9WY67WMLQLRq+vqwQ7ef67NbgVI=
+X-Received: by 2002:a05:6359:4c1a:b0:175:6b16:437 with SMTP id
+ kj26-20020a0563594c1a00b001756b160437mr372145rwc.41.1704858251500; Tue, 09
+ Jan 2024 19:44:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZZ2JXMhdOI1Upabx@x1-carbon>
+References: <954f0b86-dd9e-4d84-8d67-fba7e80bc94e@5challer.de> <20240105155100.GA1861423@bhelgaas>
+In-Reply-To: <20240105155100.GA1861423@bhelgaas>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Wed, 10 Jan 2024 11:43:58 +0800
+Message-ID: <CAAd53p5Eg4J9bRtAHY+JZ11cy1D0TnKmAaLfzcRJzw15VRBxXw@mail.gmail.com>
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Michael Schaller <michael@5challer.de>, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, macro@orcam.me.uk, 
+	ajayagarwal@google.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
+	gregkh@linuxfoundation.org, hkallweit1@gmail.com, 
+	michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 09, 2024 at 05:58:53PM +0000, Niklas Cassel wrote:
-> On Sun, Jan 07, 2024 at 04:27:07PM +0900, Krzysztof Wilczyński wrote:
-> > Hello,
-> 
-> Hello Krzysztof, Manivannan,
-> 
-> > 
-> > > This series is the continuation of previous work by Vidya Sagar [1] to fix the
-> > > issues related to accessing DBI register space before completing the core
-> > > initialization in some EP platforms like Tegra194/234 and Qcom SM8450.
-> > 
-> > Applied to controller/dwc-ep, thank you!
-> > 
-> > [01/02] PCI: designware-ep: Fix DBI access before core init
-> >         https://git.kernel.org/pci/pci/c/d3d13b00a2cf
-> > [02/02] PCI: designware-ep: Move pci_epc_init_notify() inside dw_pcie_ep_init_complete()
-> >         https://git.kernel.org/pci/pci/c/a171e1d60dad
-> > 
-> > 	Krzysztof
-> 
-> Considering that we know that this series introduces new problems
-> for drivers with a .core_init_notifier (i.e. tegra and qcom), see:
-> https://lore.kernel.org/linux-pci/ZWYmX8Y%2F7Q9WMxES@x1-carbon/
-> 
-> Do we really want to apply this series as is?
-> 
-> 
+On Fri, Jan 5, 2024 at 11:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Fri, Jan 05, 2024 at 12:18:32PM +0100, Michael Schaller wrote:
+> > On 05.01.24 04:25, Kai-Heng Feng wrote:
+> > > Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
+> >
+> > Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also result in=
+ a
+> > working resume. I've tested this on kernel 6.6.9 (which still has commi=
+t
+> > 08d0cc5f3426). I've also attached the relevant dmesg output of the
+> > suspend/resume cycle in case this helps.
+>
+> Thanks for testing that!
+>
+> > Furthermore does this mean that commit 08d0cc5f3426 isn't at fault but
+> > rather that we are dealing with a timing issue?
+>
+> PCI does have a few software timing requirements, mostly related to
+> reset and power state (D0/D3cold).  ASPM has some timing parameters,
+> too, but I think they're all requirements on the hardware, not on
+> software.
+>
+> Adding an arbitrary delay anywhere shouldn't break anything, and other
+> than those few required situations, it shouldn't fix anything either.
 
-Niklas, I think I explained it in this thread itself. Let me reiterate here
-again.
+At least it means 8d0cc5f3426 isn't the culprit?
 
-The fact that you are seeing the dmaengine warnings is due to function drivers
-not releasing the channels properly. It is not the job of the DWC driver to
-release the channels. The channels are requested by the function drivers [1]
-and they _should_ release them when the channels are no longer required.
+Michael, does the issue happen when iwlwifi module is not loaded? It
+can be related to iwlwifi firmware.
 
-I know that the PCI_EPF_TEST driver is not doing so and so you are seeing the
-warnings. But I do not have a device to test that function driver. Qcom
-platforms use a dedicated function driver and that releases the channels when it
-gets the LINK_DOWN event from EPC [2].
+Kai-Heng
 
-So my conclusion is that the issue is there even without this series. If you
-still want me to fix the EPF_TEST driver, I can submit a change, but someone has
-to test it.
-
-- Mani
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/functions/pci-epf-test.c#n229
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/endpoint/functions/pci-epf-mhi.c#n563
-
-> Reading the patch, it appears that (at least some) tegra and
-> qcom boards currently causes a whole system hang, which IIUC,
-> renders those boards unusable.
-> 
-> So perhaps the new issues introduced by this series is preferable
-> to a whole system hang.
-> 
-> As such, I can understand the urgency to merge this series.
-> However, at the very least, I think that it might be worth amending
-> the commit message to mention that this will currently not deregister
-> the dma device in a clean way, leading to e.g. superfluous entries in
-> /sys/class/dma/ and debugfs warnings being printed to dmesg.
-> 
-> 
-> Kind regards,
-> Niklas
-
--- 
-மணிவண்ணன் சதாசிவம்
+>
+> Bjorn
 
