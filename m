@@ -1,109 +1,145 @@
-Return-Path: <linux-pci+bounces-1986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0666D829708
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 11:13:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B234E82988B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 12:17:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAB6D282402
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 10:13:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D90F31C2596B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 11:17:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64723EA9B;
-	Wed, 10 Jan 2024 10:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249844776E;
+	Wed, 10 Jan 2024 11:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AO0EkQAO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OQVesUM8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cwML7bh5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853B73FE38;
-	Wed, 10 Jan 2024 10:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1704881544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D5Jxz0T1xD051k59TZhvLPFRayxJvxa5EysVlTILtpo=;
-	b=AO0EkQAOmU9KLlpT3zvCgjQ+6cBekw8ytiyXxpEaeP3cun6dlwjYXVlS1jUP73+qw+0gLW
-	YXt2XapwJB4goMtgQmyHLcC1X8xAJKHWzpX5ldtIJRCv2k+TQ2XvRpEecg9DrbwyaBADq3
-	bh7axWrApkKRAMjP5QqINYBd5o5AKK1BxeIEH8XZvQhPSGVihlct7h6x0eyVQcnf7DUFoN
-	D22LfE+XG+H3FHFqAGoezjmg7Js2fXfGhlVO0BkPJtRy5cOabTTtnalJJdoeyaiaIWXN8R
-	wiy5jdjSmEFtlBCwpvt6xN+uG2yrBiNamjP2VHGlPkdGTAHFVZzhF0yfK8aBUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1704881544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D5Jxz0T1xD051k59TZhvLPFRayxJvxa5EysVlTILtpo=;
-	b=OQVesUM8pL0/7AP3pTe5E/tS5IoD2/91UrVlFi9clP1jyicBi0NXrVv4EOVFC95dd1L4jy
-	ceDQuECqjtL1kfDw==
-To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
- rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- treding@nvidia.com, jonathanh@nvidia.com, sdonthineni@nvidia.com,
- kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com,
- sagar.tv@gmail.com, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH V2] PCI/MSI: Fix MSI hwirq truncation
-In-Reply-To: <20240108120522.1368240-1-vidyas@nvidia.com>
-References: <20240105134339.3091497-1-vidyas@nvidia.com>
- <20240108120522.1368240-1-vidyas@nvidia.com>
-Date: Wed, 10 Jan 2024 11:12:23 +0100
-Message-ID: <87il41jy48.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB074776D
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 11:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240110111708epoutp04677397cfa0c3e094527ce668eed4b87e~o_EOXbCe32057220572epoutp04b
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 11:17:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240110111708epoutp04677397cfa0c3e094527ce668eed4b87e~o_EOXbCe32057220572epoutp04b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1704885428;
+	bh=VNQFld5uD/GfuHVgTJABTKIG7Jx2ishsDZrK5Wsb3xY=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=cwML7bh5qYFIN0dgC+jT4h/cPVV6VIV0dzcsxcKmmp0vj3wttvl4fUMloveq2es3F
+	 55fj8D+qoJNtJ7ZfF5CTBejdSx7u1W6P7lQYUh31HFFU1pbffjzeYOLq//+psLVouE
+	 gA84N+yFnff1fLcCTJR0JXQ1yYM2bRcvKdgArMew=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240110111707epcas5p29a60808bf7c6f7e6af5bd63fd479e48f~o_ENsIrdo0161401614epcas5p22;
+	Wed, 10 Jan 2024 11:17:07 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4T94y92jY7z4x9Pv; Wed, 10 Jan
+	2024 11:17:05 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	39.3F.19369.1BC7E956; Wed, 10 Jan 2024 20:17:05 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240110110143epcas5p2692ec3cbabfdaf2c3387b5a98f072943~o92w6AU3Y1257212572epcas5p2B;
+	Wed, 10 Jan 2024 11:01:43 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240110110143epsmtrp2f3a51c10d6599f76e6b9b3f26c2cd4a9~o92wzdbIx2407724077epsmtrp2q;
+	Wed, 10 Jan 2024 11:01:43 +0000 (GMT)
+X-AuditID: b6c32a50-c99ff70000004ba9-1f-659e7cb148f3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	46.50.18939.6197E956; Wed, 10 Jan 2024 20:01:42 +0900 (KST)
+Received: from cheetah.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240110110140epsmtip1235f38c9714739f034de29f3b12ede6c~o92uYBmfZ2758127581epsmtip1d;
+	Wed, 10 Jan 2024 11:01:40 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, jingoohan1@gmail.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+	linux@armlinux.org.uk, m.szyprowski@samsung.com,
+	manivannan.sadhasivam@linaro.org, Shradha Todi <shradha.t@samsung.com>
+Subject: [PATCH v3 0/2] Add helper function to get and enable all bulk
+ clocks
+Date: Wed, 10 Jan 2024 16:31:13 +0530
+Message-Id: <20240110110115.56270-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmpu7GmnmpBlPmClo8mLeNzWJJU4bF
+	ii8z2S32vt7KbtHQ85vVYtPja6wWH3vusVpc3jWHzeLsvONsFjPO72OyODR1L6NFy58WFou1
+	R+6yW9xt6WS1uHjK1eL/nh3sFv+ubWSx6D1c6yDkcfnaRWaP9zda2T12zrrL7rFgU6nHplWd
+	bB53ru1h83hyZTqTx+Yl9R59W1YxenzeJBfAFZVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9q
+	ZmCoa2hpYa6kkJeYm2qr5OIToOuWmQP0kZJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1
+	ICWnwKRArzgxt7g0L10vL7XEytDAwMgUqDAhO+PWxNOsBXPZKmZtes/awPiXpYuRk0NCwERi
+	8ZanQDYXh5DAHkaJX6feMEM4nxglLt1pZ4Jz3h9pZINpeXT5DStEYiejxJF/+6GqWpkkLrx/
+	yQpSxSagJdH4tQtslojAYkaJWzs2g7UwC5xgkjh6dhsjSJWwgL/E/V3X2EFsFgFVicbLfWBx
+	XgEriV0zX7FC7JOXWL3hANgkCYGZHBJbN02But1F4uehHcwQtrDEq+Nb2CFsKYnP7/ZCHZsu
+	sXLzDKiaHIlvm5cwQdj2EgeuzAGawwF0kabE+l36EGFZiamn1oGVMAvwSfT+fgJVziuxYx6M
+	rSzx5e8eqBMkJeYduwx1p4dEx4+ZYDVCArESrV9OME1glJ2FsGEBI+MqRqnUguLc9NRk0wJD
+	3bzUcnhkJefnbmIEJ1atgB2Mqzf81TvEyMTBeIhRgoNZSYRX4fOcVCHelMTKqtSi/Pii0pzU
+	4kOMpsBAm8gsJZqcD0zteSXxhiaWBiZmZmYmlsZmhkrivK9b56YICaQnlqRmp6YWpBbB9DFx
+	cEo1MDH3uHcttV6t/ior5ce/jUvZpp3QrFWL2/dhp/K5RW+9Qp9vTFNtS77Zb3VT20MxtaP8
+	7qnT2cnx8g92656Q8vzO1mW1f/lM8bppKtWX7DU+sq+2WrO246ehQj47k9s0ibZn8hkGAVMO
+	921gttisHKKv+2ZB8KnPF9axpM+7vepN8+9wvweLFSZopt09bH11Q/Z2VRbWDRssP/QsPaHr
+	mq6d0WXhbL/qgc6+CWeMfa5ZBt5/f/r/VoGleR2NHB6nlmyd3bAu5ImVG/86i3Pf41Oivpjw
+	7lMt/NN8wnLO+38fmi/peSSWFi9QWBDrMmmBMPdjJ5sy+39rFzJ/n9LVlWy16OLqxlWBdnun
+	ZDjyhSixFGckGmoxFxUnAgCgilTbNQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSnK5Y5bxUg793LS0ezNvGZrGkKcNi
+	xZeZ7BZ7X29lt2jo+c1qsenxNVaLjz33WC0u75rDZnF23nE2ixnn9zFZHJq6l9Gi5U8Li8Xa
+	I3fZLe62dLJaXDzlavF/zw52i3/XNrJY9B6udRDyuHztIrPH+xut7B47Z91l91iwqdRj06pO
+	No871/aweTy5Mp3JY/OSeo++LasYPT5vkgvgiuKySUnNySxLLdK3S+DKuDXxNGvBXLaKWZve
+	szYw/mXpYuTkkBAwkXh0+Q1rFyMXh5DAdkaJpefvsEIkJCU+X1zHBGELS6z895wdoqiZSeLu
+	wy5GkASbgJZE49cuZpCEiMByRomfJ58ygTjMAjeYJBob57KDVAkL+ErMPDMfbB+LgKpE4+U+
+	sG5eASuJXTNfQa2Tl1i94QDzBEaeBYwMqxhFUwuKc9NzkwsM9YoTc4tL89L1kvNzNzGCA1sr
+	aAfjsvV/9Q4xMnEwHmKU4GBWEuFV+DwnVYg3JbGyKrUoP76oNCe1+BCjNAeLkjivck5nipBA
+	emJJanZqakFqEUyWiYNTqoFp0/lnfH/u+HPwK3vdbeyZOmnL3n+vI4r5XO6+u8r4wdNCb+WB
+	v327nmx5sLnmXWnSE3vxk5s6ZSNea1denz5zvZzn03/rHR5/nRDZfvBZ7pzd1zrs1k/LXp9z
+	oozr7638Vs0ryulu5ZvUFD6qTPmlb8/jqNn5TDBlXaZb9NqvHNOEltnxq/7dHWaVdn/rPqHJ
+	U9dlndyp2FWeO0un/uifD5Vbsy8u+F7v/ODRxNtKkV2dsvxt07OLXmTa84lfZY6ctyHl5sul
+	Ts785zs07JxnTdSsYuswq+w+/9s597hj/Hmhhk0r6iOmCG4qK7DPlf7xqyfIRC0n/t3sY2dS
+	1id3OEz85Pw5rJ4vKY1dXldPiaU4I9FQi7moOBEA7z/GrtsCAAA=
+X-CMS-MailID: 20240110110143epcas5p2692ec3cbabfdaf2c3387b5a98f072943
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240110110143epcas5p2692ec3cbabfdaf2c3387b5a98f072943
+References: <CGME20240110110143epcas5p2692ec3cbabfdaf2c3387b5a98f072943@epcas5p2.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Mon, Jan 08 2024 at 17:35, Vidya Sagar wrote:
+Create a managed API wrapper to get all the bulk clocks and enable them
+as it is a very common practice in many drivers. The second patch uses
+this API to adapt to clk_bulk_* APIs.
+v1:
+ - https://lore.kernel.org/lkml/20231009062216.6729-1-shradha.t@samsung.com/
+v2:
+ - https://lore.kernel.org/lkml/20231115065621.27014-1-shradha.t@samsung.com/
+ - Addressed Manivannan's comments to improve patch
 
-> While calculating the hwirq number for an MSI interrupt, the higher
-> bits (i.e. from bit-5 onwards a.k.a domain_nr >= 32) of the PCI domain
-> number gets truncated because of the shifted value casting to u32. This
-> for example is resulting in same hwirq number for devices 0019:00:00.0
-> and 0039:00:00.0.
->
-> So, cast the PCI domain number to u64 before left shifting it to
-> calculate hwirq number.
->
-> Fixes: 3878eaefb89a ("PCI/MSI: Enhance core to support hierarchy irqdomain")
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V2:
-> * Added Fixes tag
->
->  drivers/pci/msi/irqdomain.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-> index c8be056c248d..cfd84a899c82 100644
-> --- a/drivers/pci/msi/irqdomain.c
-> +++ b/drivers/pci/msi/irqdomain.c
-> @@ -61,7 +61,7 @@ static irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
->  
->  	return (irq_hw_number_t)desc->msi_index |
->  		pci_dev_id(dev) << 11 |
-> -		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
-> +		((irq_hw_number_t)(pci_domain_nr(dev->bus) & 0xFFFFFFFF)) << 27;
+Shradha Todi (2):
+  clk: Provide managed helper to get and enable bulk clocks
+  PCI: exynos: Adapt to clk_bulk_* APIs
 
-This is not casting to u64. It's casting to unsigned long:
+ drivers/clk/clk-devres.c                | 41 ++++++++++++++++++
+ drivers/pci/controller/dwc/pci-exynos.c | 55 +++----------------------
+ include/linux/clk.h                     | 25 +++++++++++
+ 3 files changed, 71 insertions(+), 50 deletions(-)
 
-  typedef unsigned long irq_hw_number_t;
+-- 
+2.17.1
 
-So this works only correctly on 64bit. On 32bit kernels unsigned long is
-still 32bit. It's probably arguable that the 32bit case is not a
-problem, but the changelog and the change do not match. This needs a
-proper explanation why we don't care about this on 32bit.
-
-Thanks,
-
-        tglx
 
