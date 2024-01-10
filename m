@@ -1,113 +1,118 @@
-Return-Path: <linux-pci+bounces-2008-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2009-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FF4982A09A
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 20:00:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B203282A1A4
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 20:59:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2547A1F220DE
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 19:00:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C6E6B21A3C
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 19:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E50874D590;
-	Wed, 10 Jan 2024 19:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4DA4E1D3;
+	Wed, 10 Jan 2024 19:59:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7nruqNC"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gGF4XW4c"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE0541A86;
-	Wed, 10 Jan 2024 19:00:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D23C433C7;
-	Wed, 10 Jan 2024 19:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704913223;
-	bh=anQjN0x5VGSmfBB0IWVmK180LXiah3BHUEKoVRwvMfU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=g7nruqNCyn9ZKeYSfPvatg0/J1OWuB4JotRQaKHaT10ErQ7jrPOI49GWFBGSsbQ64
-	 BeS4c3+jbHThShUvF9lgxUHUeALGsva7PreghaB+sm8XNtEooft9RkftmJ87mHQmJU
-	 9GSpum7hONtjDF0m76Y7Dq0scplmp2YQfeSeaoUtRwv1P5dR4XW+CsKxngXbkUupQt
-	 ek4NsbVmanVKVH0848odvsmlRcNuppnYotEatmdrBHQfev9eDLPWgru3WleTTV/LkZ
-	 /SEaL2+Q2AfyJJDioF5DfZoB5Nrm+7HsjyQdoFTQaoQn98u80LYUNWnPuFZM8Rllwo
-	 3J3gf5+U77b1Q==
-Date: Wed, 10 Jan 2024 13:00:21 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Sanath S <Sanath.S@amd.com>, shyam-sundar.s-k@amd.com,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [bugzilla-daemon@kernel.org: =?utf-8?Q?=5B?=
- =?utf-8?Q?Bug_218360=5D_New=3A_Disk_drive_of_TBT3=2FUSB4_storage_device_c?=
- =?utf-8?Q?an=E2=80=99t_show_up_i?= =?utf-8?Q?f?= connecting behind TBT3 dock
- or some USB4 docks DFP TBT port]
-Message-ID: <20240110190021.GA2113949@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C9D4D5AF
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 19:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d542701796so23600735ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 11:59:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1704916776; x=1705521576; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/0lv4AI2otwOhf0YWXAf3zw3NIfoMrE5DRtJbvILGQk=;
+        b=gGF4XW4cfDpbQBjz9VqTDSQ3YfGuaUJk0l7rOHEJBC/jb7lwv9tJp+IUqnV46LKYPj
+         YxgpNsKRN/cIx1x89JxpD7S/Dq2xHsvKwjhPoQ8Wz52QMShi9/5zc8QyUyib6D+nAmD4
+         Ei7srreO/P9IErIjwnIV/5m0tRm79aDJAK/sfFBD3Wn5lyg1PlOqyOTtUCe3EWV9yhUz
+         SNdrvs9qDotWQKCfewDN3tt3ungd/t9h/0HEZYnd+17I4es7nWePurvz3w3Rt2xGZ8AI
+         iaeE858iWmLduqxdpw20XkbrM7PAbh4kgsfYrRkwvcmZkjcM1ulmHG3uBxKiRvUUFIiz
+         7/sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704916776; x=1705521576;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/0lv4AI2otwOhf0YWXAf3zw3NIfoMrE5DRtJbvILGQk=;
+        b=e9VWhCAk7hnzSq2aeEH34x5spM4P/ms4pdLqg44l6y9v/VBD0e69eRu+M8mD/7Ds4P
+         /eFkhPUuTa80Tr5JXFO6nET4niR53Ulj7Pdb0gMYzA1t/3Ymd2PoUpYAZ4hc3FafkyvZ
+         VGKdLfxeDCQtNHZ230Nh85hLHS3Z+9CssTTOvYDjYE2YMqyfyv5IAw6PApZPaTzeiVvr
+         io0C170BDkREYbiEcvVjncKdeyjOPApIphBAx3NgZ33bLlmhtXR/0iG0B2g7bTW+SuUx
+         yggcFqozlnpRjMkN00oCa58lUUj4o2nzZDLsJ3DzgvUaZVQs2w6BQe9QqaYEcoZNn8lt
+         b6UQ==
+X-Gm-Message-State: AOJu0YyASYVsrnD2HfcQhecvWm0M5wACVi7M3p10fFlcOjJAnH6yY2uB
+	7JJ3MEU+8iSEQ6ssmjRNss99hHrOH2Asiw==
+X-Google-Smtp-Source: AGHT+IEFwnyqHwEKQy4YPReV8jjF3UWURbJ0awmG6Eybzcdb0QLRmTT87wkMLNkwqawFINt+dEmYlw==
+X-Received: by 2002:a17:902:d58d:b0:1d0:c5f8:22d3 with SMTP id k13-20020a170902d58d00b001d0c5f822d3mr78297plh.10.1704916776228;
+        Wed, 10 Jan 2024 11:59:36 -0800 (PST)
+Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
+        by smtp.googlemail.com with ESMTPSA id p1-20020a1709026b8100b001d50ca466e5sm4019499plk.133.2024.01.10.11.59.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 11:59:35 -0800 (PST)
+From: Matthew W Carlis <mattc@purestorage.com>
+To: sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: bhelgaas@google.com,
+	helgaas@kernel.org,
+	kbusch@kernel.org,
+	linux-pci@vger.kernel.org,
+	lukas@wunner.de,
+	mattc@purestorage.com,
+	mika.westerberg@linux.intel.com
+Subject: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER natively
+Date: Wed, 10 Jan 2024 12:59:29 -0700
+Message-Id: <20240110195929.5775-1-mattc@purestorage.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <65c81900-cec6-4d3a-b2fe-bb8169ee701c@linux.intel.com>
+References: <65c81900-cec6-4d3a-b2fe-bb8169ee701c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 
-#regzbot introduced: d3fcd7360338 ("PCI: Fix runtime PM race with PME polling")
+On 1/10/2024 8:41 AM, Kuppuswamy Sathyanarayanan wrote:
+> Since your kernel has EDR source support, why not enable
+> the relevant config? or did I not understand the issue correctly?
 
-Sanath, thank you very much for this report and the bisection!
+As I had said we never intend to use EDR or firmware controlled DPC. Why should
+I have to build in more code that I wouldn't use? I'm not sure that we're
+both using the same lense to consider how & whether _OSC DPC Control supports
+the old world of DPC. i.e OS never required firmware's permission to control
+DPC & it was not tied to EDR. I wish I had been working in this area at the
+time they were drafting the 2019 FW ECN then I might have known to try & influence
+its details.
 
-I assume this happens on hot-adds, i.e., you boot the kernel, then
-connect a USB4 dock, then connect the TBT3/USB4 storage device to the
-dock?
+I think the first & primary problem for the kernel here is not treating root
+ports & switch ports the same when deciding to use DPC. I would like to hear
+from Bjorn first, but I guess I could be open to just relying on the cli
+pcie_ports=dpc-native field if there is reason for the kernel to only support
+the latest additions of the PCIe FW DPC ECN by default. In this case the patch
+would look as the one in Bjorns response on Dec 28 2023 at 1:23PM, included
+again below. We may find others who are using Root Port DPC now needing to
+change their config to support EDR or use the cli pcie_ports=dpc-native as
+a result however.
 
-Would you be able to attach the complete dmesgs log from working and
-failing kernels?  The ideal would be from d3fcd7360338 ("PCI: Fix
-runtime PM race with PME polling"), which fails, and 5cd903bce9dd
-("PCI/VPD: Add runtime power management to sysfs interface"), which
-presumably works.  But v6.7 and v6.5 is OK too.
+If this is the route that makes the most sense, I can update my patch & resubmit
+as below if that is ok. Perhaps there might also be some docs/notes to be created
+around all of this.
 
-Also the output of "sudo lspci -vv", which I assume doesn't depend on
-which kernel you're running.
+-Matt
 
-Bjorn
+diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+index 14a4b89a3b83..423dadd6727e 100644
+--- a/drivers/pci/pcie/portdrv.c
++++ b/drivers/pci/pcie/portdrv.c
+@@ -262,7 +262,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+         */
+        if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+            pci_aer_available() &&
+-           (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
++           (pcie_ports_dpc_native || host->native_dpc))
 
------ Forwarded message from bugzilla-daemon@kernel.org -----
-
-Date: Wed, 10 Jan 2024 10:52:40 +0000
-From: bugzilla-daemon@kernel.org
-To: bjorn@helgaas.com
-Subject: [Bug 218360] New: Disk drive of TBT3/USB4 storage device can’t show up if connecting behind TBT3 dock
-	or some USB4 docks DFP TBT port
-Message-ID: <bug-218360-41252@https.bugzilla.kernel.org/>
-
-https://bugzilla.kernel.org/show_bug.cgi?id=218360
-
-            Bug ID: 218360
-           Summary: Disk drive of TBT3/USB4 storage device can’t show up
-                    if connecting behind TBT3 dock or some USB4 docks DFP
-                    TBT port
-          Reporter: Sanath.S@amd.com
-
-The disk drive of the TBT3/USB4 storage device can’t show up behind TBT3 dock
-and some USB4 docks have a DFP TBT port.
-
-TBT3/USB4 storage device can be authorized, the disk drive doesn’t show up.
-
-Issue reproduce sequence: Connect USB4 dock to host → Connect TBT3/USB4 storage
-device to dock DFP TBT3 port → TBT3/USB4 storage device disk driver can’t show
-up.
-
-The issue was observed in the latest mainline kernel 6.7.
-
-
-Failing on all the below combination
-
-HP Thunderbolt Dock 120W G2 HSN-IX01    
-HP Hook 2.0 USB4/TBT4 Dock (PV Phase)   
-CalDigit TS3Plus+ Thunderbolt Station 3 Plus    
-Dell Thunderbolt Dock – WD19TB
 
