@@ -1,155 +1,168 @@
-Return-Path: <linux-pci+bounces-1997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-1998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20CA5829D81
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 16:24:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACFF8829D87
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 16:28:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEA152845AA
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 15:24:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE83C1C225E1
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 15:28:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9412C4BAAB;
-	Wed, 10 Jan 2024 15:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65BEB4BA84;
+	Wed, 10 Jan 2024 15:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kx/wajo7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzVq7XT5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17964BAAE
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 15:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704900272; x=1736436272;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=VKFaX1h58LHLImE/7wnOp61T767lCCERSA2kFEZSgzk=;
-  b=kx/wajo7CCpic9JaFal/pT2tABJ/zxoSggiL5FEESxN8p0UspiIDscGK
-   fZtPL3+x2pmkG8ERKREmaxFRYRnDIzAaN1k5CpKqig8mGxKFzbADjXpQp
-   ndjAULvdClVM8rL/4QfIbWSC+qwY9FFZ/OX5n6Z78Ek9LjuM/TTpwyM9f
-   DI4BvexM1Oy2LKZgZMnGrjK6/UatElJ5yIs+gnAercA4yc5VbBGVdhnLt
-   jVyu66TYH91aVqt9KHE4glSCp/titcrT4th3/CYQrwc56sUwxvsOIr/po
-   /RW8Bk7wAZk28BztsZXpqmRfeg5/FRbSum0X5ZS7GO2fmdWlaqw3DNy0z
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="12037050"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="12037050"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 07:24:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10948"; a="1029186215"
-X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="1029186215"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 07:24:31 -0800
-Received: from [10.54.75.156] (debox1-desk1.jf.intel.com [10.54.75.156])
-	by linux.intel.com (Postfix) with ESMTP id 923F5580960;
-	Wed, 10 Jan 2024 07:24:31 -0800 (PST)
-Message-ID: <f95657a40a596c7f9ba0bad413fcd414514cf2b7.camel@linux.intel.com>
-Subject: Re: [PATCH v5] PCI/ASPM: Add back L1 PM Substate save and restore
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, mika.westerberg@linux.intel.com, 
- sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com, 
- rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com, 
- tasev.stefanoska@skynet.be, enriquezmark36@gmail.com, kernel@witt.link, 
- koba.ko@canonical.com, wse@tuxedocomputers.com,
- ilpo.jarvinen@linux.intel.com,  ricky_wu@realtek.com,
- linux-pci@vger.kernel.org, Michael Schaller <michael@5challer.de>
-Date: Wed, 10 Jan 2024 07:24:31 -0800
-In-Reply-To: <20231229003045.GA1561509@bhelgaas>
-References: <20231229003045.GA1561509@bhelgaas>
-Autocrypt: addr=david.e.box@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQENBF2w2YABCACw5TpqmFTR6SgsrNqZE8ro1q2lUgVZda26qIi8GeHmVBmu572RfPydisEpCK246rYM5YY9XAps810ZxgFlLyBqpE/rxB4Dqvh04QePD6fQNui/QCSpyZ6j9F8zl0zutOjfNTIQBkcar28hazL9I8CGnnMko21QDl4pkrq1dgLSgl2r2N1a6LJ2l8lLnQ1NJgPAev4BWo4WAwH2rZ94aukzAlkFizjZXmB/6em+lhinTR9hUeXpTwcaAvmCHmrUMxeOyhx+csO1uAPUjxL7olj2J83dv297RrpjMkDyuUOv8EJlPjvVogJF1QOd5MlkWdj+6vnVDRfO8zUwm2pqg25DABEBAAG0KkRhdmlkIEUuIEJveCA8ZGF2aWQuZS5ib3hAbGludXguaW50ZWwuY29tPokBTgQTAQgAOBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH7Mry1gl3p/NusIAK9z1xnXphedgZMGNzifGUs2UUw/xNl91Q9qRaYGyNYATI6E7zBYmynsUL/4yNFnXK8P/I7WMffiLoMqmUvNp9pG6oYYj8ouvbCexS21jgw54I3m61M+wTokieRIO/GettVlCGhz7YHlHtGGqhzzWB3CGPSJMwsouDPvyFFE+28p5d2v9l6rXSb7T297Kh50VX9Ele8QEKngrG+Z/u2lr/bHEhvx24vI8ka22cuTaZvThYMwLTSC4kq9L9WgRv31JBSa1pcbcHLOCoUl0RaQwe6J8w9hN2uxCssHrrfhSA4YjxKNIIp3YH4IpvzuDR3AadYz1klFTnEOxIM7fvQ2iGu5AQ0EXbDZgAEIAPGbL3wvbYUDGMoBSN89GtiC6ybWo28JSiYIN5N9LhDTwfWROenkRvmTESaE5fAM24sh8S0h+F+eQ7j/E/RF3pM31gSovTKw0Pxk7GorK
-	FSa25CWemxSV97zV8fVegGkgfZkBMLUId+AYCD1d2R+tndtgjrHtVq/AeN0N09xv/d3a+Xzc4ib/SQh9mM50ksqiDY70EDe8hgPddYH80jHJtXFVA7Ar1ew24TIBF2rxYZQJGLe+Mt2zAzxOYeQTCW7WumD/ZoyMm7bg46/2rtricKnpaACM7M0r7g+1gUBowFjF4gFqY0tbLVQEB/H5e9We/C2zLG9r5/Lt22dj7I8A6kAEQEAAYkBNgQYAQgAIBYhBBFoZ8DYRC+DyeuV6X7Mry1gl3p/BQJdsNmAAhsMAAoJEH7Mry1gl3p/Z/AH/Re8YwzY5I9ByPM56B3Vkrh8qihZjsF7/WB14Ygl0HFzKSkSMTJ+fvZv19bk3lPIQi5lUBuU5rNruDNowCsnvXr+sFxFyTbXw0AQXIsnX+EkMg/JO+/V/UszZiqZPkvHsQipCFVLod/3G/yig9RUO7A/1efRi0E1iJAa6qHrPqE/kJANbz/x+9wcx1VfFwraFXbdT/P2JeOcW/USW89wzMRmOo+AiBSnTI4xvb1s/TxSfoLZvtoj2MR+2PW1zBALWYUKHOzhfFKs3cMufwIIoQUPVqGVeH+u6Asun6ZpNRxdDONop+uEXHe6q6LzI/NnczqoZQLhM8d1XqokYax/IZ4=
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09D64C3A8
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 15:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ceb02e2a56so1939567a12.2
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 07:28:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704900480; x=1705505280; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Oy1BsPNrWNFyTJIe0CjvWuVfcQBjFJjZvYEeoC45cD8=;
+        b=zzVq7XT5WQ14sIpafkknaAafuKpwF+XamdHCbgksiqH/AFjQPMx4pnWeR+JDzrWc92
+         k6lZatjf1MPWsQkwZPBlHPmIWdQOUlyxjkhzYfe/GQ/2cSFic0GWnVx3ANvPgOhNmipf
+         XQfEQ6rH37dIhQdGCDECWVPY033NweZBP9P3AbzkMEY50mMSVHRPbMSJpkpNEnQ7asH8
+         sVdlE8JUnaG8WV1L0LyXyMgplJbShIMEFS6O+oPt0B2Wez5v11AezqpSZWNN7AuwrMoP
+         B+NwGqJEDg8tQx51wIEZqrjj1x9t3GcsdaTxez5CTccCBxDED6dcAdZcwBaiYd+6jaeJ
+         WF2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704900480; x=1705505280;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oy1BsPNrWNFyTJIe0CjvWuVfcQBjFJjZvYEeoC45cD8=;
+        b=D4eE93Ee6Wvp7k03+YKS0vF7kUikDY1vp4AemRcshHBSAzQRXBcvndF9yYhH52TwBp
+         BFCOYgBk8PAS8vzrCb3mnycjMh+2wafL/Jic977FXbkFkBeGr2KjLCoYvBdVAQJrb/mR
+         xTJzBqTAzvYIjCIRupGeYDiqmxGWuFVrfpFK38lSG9Xh2Z8n/XXXi0FNA98CglNoQDJU
+         v11DtBFYaiq8wtPyRgfx2Pts1X38kiEQP9UezyfL+GZWI6OMOF3MvIpejf6IRbySbSXT
+         YX55Zdl3RLsbzdqi0hn5SqrSe+hCsyLBMpsDqLji8PGiCygGqffY0CbFe6vVxKpuaCvX
+         4H5w==
+X-Gm-Message-State: AOJu0Yz+xXrtU+Cy++znKbTVFdx22TgjCAVNZjZnO4tB2pfFkBrFGdnU
+	LY6QDY0nOJB4JuJSkihu3Fjgk0U0XfFW
+X-Google-Smtp-Source: AGHT+IGGjrEGNOoCswUBhk7hYcKbxkcFUbdpLqPI7aRZSbFa1coLC7kZZjw7nGCPwkHUONpiYSHoRw==
+X-Received: by 2002:a05:6a20:428d:b0:19a:3187:37c6 with SMTP id o13-20020a056a20428d00b0019a318737c6mr592293pzj.27.1704900479877;
+        Wed, 10 Jan 2024 07:27:59 -0800 (PST)
+Received: from thinkpad ([202.131.159.18])
+        by smtp.gmail.com with ESMTPSA id fm18-20020a056a002f9200b006d9a1812e35sm3623145pfb.119.2024.01.10.07.27.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 07:27:58 -0800 (PST)
+Date: Wed, 10 Jan 2024 20:57:52 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"quic_bjorande@quicinc.com" <quic_bjorande@quicinc.com>,
+	"fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
+	"vidyas@nvidia.com" <vidyas@nvidia.com>
+Subject: Re: [PATCH v7 0/2] PCI: designware-ep: Fix DBI access before core
+ init
+Message-ID: <20240110152752.GA12324@thinkpad>
+References: <20231120084014.108274-1-manivannan.sadhasivam@linaro.org>
+ <20240107072707.GC3450972@rocinante>
+ <ZZ2JXMhdOI1Upabx@x1-carbon>
+ <20240110031137.GA2630@thinkpad>
+ <ZZ5q4oPEj0N1mQED@x1-carbon>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZZ5q4oPEj0N1mQED@x1-carbon>
 
-On Thu, 2023-12-28 at 18:30 -0600, Bjorn Helgaas wrote:
-> [+cc Michael]
->=20
-> On Thu, Dec 28, 2023 at 04:31:12PM -0600, Bjorn Helgaas wrote:
-> > On Wed, Dec 20, 2023 at 05:12:50PM -0800, David E. Box wrote:
-> > ...
->=20
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 55bc3576a985..3c4b2647b4ca 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
->=20
-> > > @@ -1579,7 +1579,7 @@ static void pci_restore_pcie_state(struct pci_d=
-ev
-> > > *dev)
-> > > =C2=A0{
-> > > ...
->=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 So we restore here only t=
-he
-> > > +	 * LNKCTL register with the ASPM control field clear. ASPM will
-> > > +	 * be restored in pci_restore_aspm_state().
-> > > +	 */
-> > > +	val =3D cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
-> > > +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
-> >=20
-> > When CONFIG_PCIEASPM is not set, we will clear ASPMC here and never
-> > restore it.=C2=A0 I don't know if this ever happens.=C2=A0 Do we need t=
-o worry
-> > about this?=C2=A0 Might firmware restore ASPMC itself before we get her=
-e?
-> > What do we want to happen in this case?
+On Wed, Jan 10, 2024 at 10:01:08AM +0000, Niklas Cassel wrote:
+> Hello Mani,
+> 
+> On Wed, Jan 10, 2024 at 08:41:37AM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Jan 09, 2024 at 05:58:53PM +0000, Niklas Cassel wrote:
+> > > On Sun, Jan 07, 2024 at 04:27:07PM +0900, Krzysztof Wilczyński wrote:
+> > > 
+> > > Considering that we know that this series introduces new problems
+> > > for drivers with a .core_init_notifier (i.e. tegra and qcom), see:
+> > > https://lore.kernel.org/linux-pci/ZWYmX8Y%2F7Q9WMxES@x1-carbon/
+> > > 
+> > > Do we really want to apply this series as is?
+> > > 
+> > > 
+> > 
+> > Niklas, I think I explained it in this thread itself. Let me reiterate here
+> > again.
+> > 
+> > The fact that you are seeing the dmaengine warnings is due to function drivers
+> > not releasing the channels properly. It is not the job of the DWC driver to
+> > release the channels. The channels are requested by the function drivers [1]
+> > and they _should_ release them when the channels are no longer required.
+> 
+> Sure, the function driver should release the channels.
+> 
+> 
+> > 
+> > I know that the PCI_EPF_TEST driver is not doing so and so you are seeing the
+> > warnings. But I do not have a device to test that function driver. Qcom
+> > platforms use a dedicated function driver and that releases the channels when it
+> > gets the LINK_DOWN event from EPC [2].
+> > 
+> > So my conclusion is that the issue is there even without this series. If you
+> > still want me to fix the EPF_TEST driver, I can submit a change, but someone has
+> > to test it.
+> 
+> That conclusion is not fully correct.
+> 
+> Let's take e.g. these error messages that this series introduces:
+> [ 1000.714355] debugfs: File 'mf' in directory '/' already present!
+> [ 1000.714890] debugfs: File 'wr_ch_cnt' in directory '/' already present!
+> [ 1000.715476] debugfs: File 'rd_ch_cnt' in directory '/' already present!
+> [ 1000.716061] debugfs: Directory 'registers' with parent '/' already present!
+> 
+> These come from dw_edma_core_debugfs_on(), which is called by dw_edma_probe().
+> 
+> This is a direct result from your patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc-ep&id=9ab5c8bb7a305135b1b6c65cb8db92b4acbef79d
+> 
+> Which moves dw_pcie_edma_detect() from dw_pcie_ep_init_complete() to
+> dw_pcie_ep_late_init() (since dw_pcie_edma_detect() calls dw_edma_probe()).
+> 
+> So without your patch, those debugfs error messages are not seen.
+> 
+> Thus, I do not think that it is sufficient to only modify the pci-epf-test
+> driver to release the dma channels, as I don't see how that will avoid e.g.
+> the debugfs error messages introduced by this patch.
+> 
 
-I just checked this. L1 does get disabled which we don't want. We need to s=
-ave
-and restore the BIOS ASPM configuration even when CONFIG_PCIEASPM is not se=
-t.
+Ah, sorry I overlooked the warnings from the edma core. I think adding
+dw_pcie_edma_remove() to the perst_assert() function would fix this issue. But
+I'm traveling this week, so couldn't verify it on the device.
 
-> >=20
-> > Since ASPM is intertwined with the PCIe Capability, can we call
-> > pci_restore_aspm_state() from here instead of from
-> > pci_restore_state()?
-> >=20
-> > Calling it here would make it easier to see the required ordering
-> > (LNKCTL with ASPMC cleared, restore ASPM L1SS, restore ASPMC) and
-> > it would be obvious that none of the other stuff in
-> > pci_restore_state() is relevant (PASID, PRI, ATS, VC, etc).
-> >=20
-> > If that could be done, I think it would make sense to do the same with
-> > pci_save_aspm_state() even though it's a little more independent.
->=20
+Bjorn, Krzysztof feel free to drop this series for 6.8. I will modify this
+series to address some other issues discussed so far and resubmit it for 6.9.
 
-Makes sense
+- Mani
 
-> The lspci output in Michael's report at
-> https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.d=
-e
-> reminded me that LTR is important for L1.2, and we currently have
-> this:
->=20
-> =C2=A0 pci_restore_state
-> =C2=A0=C2=A0=C2=A0 pci_restore_ltr_state
-> =C2=A0=C2=A0=C2=A0 pci_restore_pcie_state
->=20
-> I wonder if pci_restore_ltr_state() should be called from
-> pci_restore_pcie_state() as well?=C2=A0 It's intimately connected to ASPM=
-,
-> and that connection isn't very clear in the current code.
+> 
+> Kind regards,
+> Niklas
 
-Make sense too since LTR is a required capability for L1.2. I'll send updat=
-ed
-patches after the merge window.
-
-David
+-- 
+மணிவண்ணன் சதாசிவம்
 
