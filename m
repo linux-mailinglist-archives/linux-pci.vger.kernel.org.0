@@ -1,60 +1,60 @@
-Return-Path: <linux-pci+bounces-2009-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2010-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B203282A1A4
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 20:59:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E56EA82A1A7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 21:01:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C6E6B21A3C
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 19:59:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8294E2826D7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Jan 2024 20:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4DA4E1D3;
-	Wed, 10 Jan 2024 19:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96D94D5AF;
+	Wed, 10 Jan 2024 20:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gGF4XW4c"
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="V6ZEraV6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C9D4D5AF
-	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 19:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855E34CB44
+	for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 20:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d542701796so23600735ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 11:59:36 -0800 (PST)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d3ec3db764so18518785ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 12:01:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1704916776; x=1705521576; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1704916898; x=1705521698; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
         bh=/0lv4AI2otwOhf0YWXAf3zw3NIfoMrE5DRtJbvILGQk=;
-        b=gGF4XW4cfDpbQBjz9VqTDSQ3YfGuaUJk0l7rOHEJBC/jb7lwv9tJp+IUqnV46LKYPj
-         YxgpNsKRN/cIx1x89JxpD7S/Dq2xHsvKwjhPoQ8Wz52QMShi9/5zc8QyUyib6D+nAmD4
-         Ei7srreO/P9IErIjwnIV/5m0tRm79aDJAK/sfFBD3Wn5lyg1PlOqyOTtUCe3EWV9yhUz
-         SNdrvs9qDotWQKCfewDN3tt3ungd/t9h/0HEZYnd+17I4es7nWePurvz3w3Rt2xGZ8AI
-         iaeE858iWmLduqxdpw20XkbrM7PAbh4kgsfYrRkwvcmZkjcM1ulmHG3uBxKiRvUUFIiz
-         7/sw==
+        b=V6ZEraV6AJT6H4A6Gr3NJAb22GFGQ0jX6GffVZXuBzoLmRhNb2yCYEIehtJ+dUb0nO
+         03JO4kINKG+oXadptEQx1HajVoOdLb1xxRMrsF16lMEcrkeqWM/EorFZigD2waIXLGda
+         qQz/z/nNLM69Il2C2DiLIv9KJbSJ2GFhUXEdcaaSCM79sDrgmXiM5F31+HMc+eQbXm3v
+         8PbvnfIeM603SiuL745gu044QNRQDIH3aL3ziL48l9rHzIxrR1Lqdve+dQsmmqDUaDXf
+         iAfMrDYPU6PvvghN63coIaqhbTSKBtDTFzp/Vl0vpjrsWdq16XyqAA+VvEP8tWn0SpHL
+         tPLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704916776; x=1705521576;
+        d=1e100.net; s=20230601; t=1704916898; x=1705521698;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=/0lv4AI2otwOhf0YWXAf3zw3NIfoMrE5DRtJbvILGQk=;
-        b=e9VWhCAk7hnzSq2aeEH34x5spM4P/ms4pdLqg44l6y9v/VBD0e69eRu+M8mD/7Ds4P
-         /eFkhPUuTa80Tr5JXFO6nET4niR53Ulj7Pdb0gMYzA1t/3Ymd2PoUpYAZ4hc3FafkyvZ
-         VGKdLfxeDCQtNHZ230Nh85hLHS3Z+9CssTTOvYDjYE2YMqyfyv5IAw6PApZPaTzeiVvr
-         io0C170BDkREYbiEcvVjncKdeyjOPApIphBAx3NgZ33bLlmhtXR/0iG0B2g7bTW+SuUx
-         yggcFqozlnpRjMkN00oCa58lUUj4o2nzZDLsJ3DzgvUaZVQs2w6BQe9QqaYEcoZNn8lt
-         b6UQ==
-X-Gm-Message-State: AOJu0YyASYVsrnD2HfcQhecvWm0M5wACVi7M3p10fFlcOjJAnH6yY2uB
-	7JJ3MEU+8iSEQ6ssmjRNss99hHrOH2Asiw==
-X-Google-Smtp-Source: AGHT+IEFwnyqHwEKQy4YPReV8jjF3UWURbJ0awmG6Eybzcdb0QLRmTT87wkMLNkwqawFINt+dEmYlw==
-X-Received: by 2002:a17:902:d58d:b0:1d0:c5f8:22d3 with SMTP id k13-20020a170902d58d00b001d0c5f822d3mr78297plh.10.1704916776228;
-        Wed, 10 Jan 2024 11:59:36 -0800 (PST)
+        b=wBKGOmp0RkOaN6eEqDba7oqUQK8GcgvlOY5KCYPEmLzZEt12kjI3WdULwqfXGARrp1
+         HYdz2DaaqflKwz1MGzsAhSZEVK22MS+hOIYTi5KOyBHvh2lFrC1K+Lk3or2v1Nw+Jesy
+         NNu0jFI/M6d/TsL/VNtZsPiwsnGNRU3vP+f9Apj2DaFYICzPWy78QUump0GsfcirSRra
+         /avFqPhdGSsLKEHqXxWdQ1O7gioorh6V8RfvVECVX5MQecxY/vz12EaYQ/lBD5nA2HKY
+         nm1iosbZd+xYhtmv8JQrWkSPPhtb7QGlDttoFG67l3/RD8p7ENNYXCf64QwSRVDhH4gR
+         TUeQ==
+X-Gm-Message-State: AOJu0Ywo4V8h8oi4BNAWZtGNeivFYv+QlXjuTnBjHObezAgCZOzJnTXf
+	5y0N7Zn4xTs8ynH1yruk85nSohqbt4lHPQ==
+X-Google-Smtp-Source: AGHT+IHHZJX3kD9aPy8hH9OcP3Ut9ClHlOldNAMIMTukZ8wBgz3RDM0eHGoHxoBftnlZq6lN/PlGyw==
+X-Received: by 2002:a17:902:f7c1:b0:1d4:458:7aa8 with SMTP id h1-20020a170902f7c100b001d404587aa8mr62293plw.30.1704916897736;
+        Wed, 10 Jan 2024 12:01:37 -0800 (PST)
 Received: from dev-mattc2.dev.purestorage.com ([208.88.159.128])
-        by smtp.googlemail.com with ESMTPSA id p1-20020a1709026b8100b001d50ca466e5sm4019499plk.133.2024.01.10.11.59.35
+        by smtp.googlemail.com with ESMTPSA id f12-20020a170902ab8c00b001d3bf27000csm4048463plr.293.2024.01.10.12.01.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 11:59:35 -0800 (PST)
+        Wed, 10 Jan 2024 12:01:37 -0800 (PST)
 From: Matthew W Carlis <mattc@purestorage.com>
 To: sathyanarayanan.kuppuswamy@linux.intel.com
 Cc: bhelgaas@google.com,
@@ -65,11 +65,11 @@ Cc: bhelgaas@google.com,
 	mattc@purestorage.com,
 	mika.westerberg@linux.intel.com
 Subject: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER natively
-Date: Wed, 10 Jan 2024 12:59:29 -0700
-Message-Id: <20240110195929.5775-1-mattc@purestorage.com>
+Date: Wed, 10 Jan 2024 13:01:31 -0700
+Message-Id: <20240110200131.5825-1-mattc@purestorage.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <65c81900-cec6-4d3a-b2fe-bb8169ee701c@linux.intel.com>
-References: <65c81900-cec6-4d3a-b2fe-bb8169ee701c@linux.intel.com>
+In-Reply-To: <3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com>
+References: <3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
