@@ -1,214 +1,186 @@
-Return-Path: <linux-pci+bounces-2024-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2025-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3D6082A6EA
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 05:16:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FD8A82A6EE
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 05:21:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD21D1C231E0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 04:16:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7D3B1F23113
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 04:21:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 382D11110;
-	Thu, 11 Jan 2024 04:16:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479A91110;
+	Thu, 11 Jan 2024 04:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBBrwwU1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ln+aJbhW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C751FD2;
-	Thu, 11 Jan 2024 04:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704946603; x=1736482603;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=c/2WysQqNYiZ6z0uAFyEIPglTGPbFgy884FxU0l/kto=;
-  b=ZBBrwwU1jbb0wklU7LFpn2XaiorYDDjZarhvk8RLDErhFRpLa8Dw/Z1s
-   b7NhPc+DXCOTr2I/cDSQukShbUgYp+a8fI8T4UhjtVaSNpU66+u/pGGDa
-   4zRCmpoMrFG/AwtVhrOMiKZ7EqrVqcu1KzdrSGj8VAWuRnnLi+a+u8l/O
-   U9agYg9i1qq8/7apTUMcWE+c0oGAMLldahCROI39VO7x8oX3lAHTWIFMj
-   G7DOk5i9vqNoM4VNBqRqFVBraZ2vnpeQGi+eYJGCWZ9kH9P55YIcqacyn
-   q1T4Yi6lrov4Nz1eZQ93GtoLfmv58d66AAMVtSfY6O5O+U6HgYtLL0HgO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="5500756"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="5500756"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 20:16:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="1029397881"
-X-IronPort-AV: E=Sophos;i="6.04,185,1695711600"; 
-   d="scan'208";a="1029397881"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.8.238]) ([10.93.8.238])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2024 20:16:38 -0800
-Message-ID: <d255424c-158c-4e6d-b0ef-2fd60c472753@linux.intel.com>
-Date: Thu, 11 Jan 2024 12:16:36 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE971C16
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 04:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-daee86e2d70so4805490276.0
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 20:21:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704946877; x=1705551677; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qz/GZxn/tF2hILBwKLuyHCzoLVGu5jQ5y24x4/ztoE0=;
+        b=Ln+aJbhWM5Ew8rTxpEjrj4dshe8Te94uTrkeX3ap/1el9hVEfH4hhTkHSWz51e2PYn
+         Agxz57LmiH0wqzYOwiyifiXka/OBd6BQ3vLrXl0AxpWGO3iPtDl2Ax3VNjTx6pt1BU9t
+         uP/n+LUQsrmkKCpkYi86jAvEqtsuYin6CXZqPukhZ5z0xXMhMh3VB5Ch8aaWwpVwO0en
+         PUMe5E5mvmmGYw/HDkHEfq6FhAHURn1ZcL9Jf35Rl6UeRY9VjK4yi5HdxJrlBP0t/R1i
+         75TLvXXYm9e8pnzt33+LINNtqcO0xzQmPfe6zhO48c545xaEATs4oW6V8ZWUaWy+OjJL
+         Sjfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704946877; x=1705551677;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qz/GZxn/tF2hILBwKLuyHCzoLVGu5jQ5y24x4/ztoE0=;
+        b=V0Tr33URY1L53lC+zBBv3UqXhm/MaBg7lOcmgCn0TyufYTjDhPvgmZzdFv+qJt0Tnj
+         wI4Z42FaNbZfm6/o25SM/zSG80aH9y/H1eSRB1oCPrXnOUY/Jma1sp85E00vQ6/rDg0u
+         u8hWhQ5eXf7JVVpvmvtrfHCVzurMyGhIE9jaY2GiQgad00qf+zCCse43FGdga9leJigS
+         SJOY3rfDIG8mtgxKgs5/SW5fYnOvcDftk49pBKcIqQ9PCiUfgZvnvBvVRbxJENI12yFQ
+         l6uBIk6fC1F/wkNKNw76iQw7Mi2OgDyCEvjp+pQVoh/mxSVQvho5LJw7s8qq1Zs2loz9
+         hNFQ==
+X-Gm-Message-State: AOJu0YxELLaduorb3w1oSb/G5yER7lIyHtq+VC3ziw8C1e3KZf5WK4E0
+	jWgICtuDLvtUaTgLy7wgOWqTA3FNllSRDG6cTg6iIhgi
+X-Google-Smtp-Source: AGHT+IF89szsak9qybJv5h97LNMEDP0yOWC0C+A95Hm+xu7LWqsPg7PukGGHVoXLvxwaUImAYpW7w7pJv0wZ3aning==
+X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
+ (user=ajayagarwal job=sendgmr) by 2002:a25:abb1:0:b0:dbe:d0a9:2be8 with SMTP
+ id v46-20020a25abb1000000b00dbed0a92be8mr23603ybi.0.1704946877609; Wed, 10
+ Jan 2024 20:21:17 -0800 (PST)
+Date: Thu, 11 Jan 2024 09:51:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v10 4/5] iommu/vt-d: don't issue ATS Invalidation
- request when device is disconnected
-To: Baolu Lu <baolu.lu@linux.intel.com>, kevin.tian@intel.com,
- bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
- robin.murphy@arm.com, lukas@wunner.de
-Cc: linux-pci@vger.kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231228170504.720794-1-haifeng.zhao@linux.intel.com>
- <20231228170504.720794-2-haifeng.zhao@linux.intel.com>
- <8e16ff9b-4dcd-4bec-a78b-61d90205841f@linux.intel.com>
- <b077a691-5790-40a0-8539-0f5294d0fc28@linux.intel.com>
- <1be246aa-4813-43df-af77-9a94f493374b@linux.intel.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <1be246aa-4813-43df-af77-9a94f493374b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
+Message-ID: <20240111042103.392939-1-ajayagarwal@google.com>
+Subject: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	"=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
+	William McVicker <willmcvicker@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Robin Murphy <robin.murphy@arm.com>
+Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+There can be platforms that do not use/have 32-bit DMA addresses
+but want to enumerate endpoints which support only 32-bit MSI
+address. The current implementation of 32-bit IOVA allocation can
+fail for such platforms, eventually leading to the probe failure.
 
-On 1/11/2024 10:24 AM, Baolu Lu wrote:
-> On 1/10/24 4:37 PM, Ethan Zhao wrote:
->>
->> On 1/10/2024 1:24 PM, Baolu Lu wrote:
->>> On 12/29/23 1:05 AM, Ethan Zhao wrote:
->>>> Except those aggressive hotplug cases - surprise remove a hotplug 
->>>> device
->>>> while its safe removal is requested and handled in process by:
->>>>
->>>> 1. pull it out directly.
->>>> 2. turn off its power.
->>>> 3. bring the link down.
->>>> 4. just died there that moment.
->>>>
->>>> etc, in a word, 'gone' or 'disconnected'.
->>>>
->>>> Mostly are regular normal safe removal and surprise removal unplug.
->>>> these hot unplug handling process could be optimized for fix the ATS
->>>> Invalidation hang issue by calling pci_dev_is_disconnected() in 
->>>> function
->>>> devtlb_invalidation_with_pasid() to check target device state to avoid
->>>> sending meaningless ATS Invalidation request to iommu when device 
->>>> is gone.
->>>> (see IMPLEMENTATION NOTE in PCIe spec r6.1 section 10.3.1)
->>>>
->>>> For safe removal, device wouldn't be removed untill the whole software
->>>> handling process is done, it wouldn't trigger the hard lock up issue
->>>> caused by too long ATS Invalidation timeout wait. In safe removal 
->>>> path,
->>>> device state isn't set to pci_channel_io_perm_failure in
->>>> pciehp_unconfigure_device() by checking 'presence' parameter, calling
->>>> pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will 
->>>> return
->>>> false there, wouldn't break the function.
->>>>
->>>> For surprise removal, device state is set to 
->>>> pci_channel_io_perm_failure in
->>>> pciehp_unconfigure_device(), means device is already gone 
->>>> (disconnected)
->>>> call pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() 
->>>> will
->>>> return true to break the function not to send ATS Invalidation 
->>>> request to
->>>> the disconnected device blindly, thus avoid the further long time 
->>>> waiting
->>>> triggers the hard lockup.
->>>>
->>>> safe removal & surprise removal
->>>>
->>>> pciehp_ist()
->>>>     pciehp_handle_presence_or_link_change()
->>>>       pciehp_disable_slot()
->>>>         remove_board()
->>>>           pciehp_unconfigure_device(presence)
->>>>
->>>> Tested-by: Haorong Ye <yehaorong@bytedance.com>
->>>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
->>>> ---
->>>>   drivers/iommu/intel/pasid.c | 2 ++
->>>>   1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
->>>> index 715943531091..3d5ed27f39ef 100644
->>>> --- a/drivers/iommu/intel/pasid.c
->>>> +++ b/drivers/iommu/intel/pasid.c
->>>> @@ -480,6 +480,8 @@ devtlb_invalidation_with_pasid(struct 
->>>> intel_iommu *iommu,
->>>>       if (!info || !info->ats_enabled)
->>>>           return;
->>>>   +    if (pci_dev_is_disconnected(to_pci_dev(dev)))
->>>> +        return;
->>>
->>> Why do you need the above after changes in PATCH 2/5? It's unnecessary
->>> and not complete. We have other places where device TLB invalidation is
->>> issued, right?
->>
->> This one could be regarded as optimization, no need to trapped into 
->> rabbit
->>
->> hole if we could predict the result. because the bad thing is we 
->> don't know
->>
->> what response to us in the rabbit hole from third party switch 
->> (bridges will
->>
->> feedback timeout to requester as PCIe spec mentioned if the endpoint is
->>
->> gone).
->
-> The IOMMU hardware has its own timeout mechanism. This timeout might
-> happen if:
->
-> 1) The link to the endpoint is broken, so the invalidation completion
->    message is lost on the way.
-> 2) The device has a longer timeout value, so the device is still busy
->    with handling the cache invalidation when IOMMU's timeout is
->    triggered.
->
-> Here, we are doing the following:
->
-> For Case 1, we return -ETIMEDOUT directly. For Case 2, we attempt to
-> retry.
+If there is a memory region reserved for the pci->dev, pick up
+the MSI data from this region. This can be used by the platforms
+described above.
 
-Yes, Intel VT-d will setup a hardware timer if devtlb invalidation 
-issued and
+Else, if the memory region is not reserved, try to allocate a
+32-bit IOVA. Additionally, if this allocation also fails, attempt
+a 64-bit allocation for probe to be successful. If the 64-bit MSI
+address is allocated, then the EPs supporting 32-bit MSI address
+will not work.
 
-wait descripton submitted, that hardware timer is limited resource, will 
-tick
+Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+---
+Changelog since v1:
+ - Use reserved memory, if it exists, to setup the MSI data
+ - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
 
-till gets the timeout if the endpoint is dead/broken etc.
+ .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
+ drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+ 2 files changed, 39 insertions(+), 12 deletions(-)
 
-even we bail out in qi_submit_sync() for case #1, the hardware timer still
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 7991f0e179b2..8c7c77b49ca8 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+ 	u64 *msi_vaddr;
+ 	int ret;
+ 	u32 ctrl, num_ctrls;
++	struct device_node *np;
++	struct resource r;
+ 
+ 	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
+ 		pp->irq_mask[ctrl] = ~0;
+@@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+ 	 * order not to miss MSI TLPs from those devices the MSI target
+ 	 * address has to be within the lowest 4GB.
+ 	 *
+-	 * Note until there is a better alternative found the reservation is
+-	 * done by allocating from the artificially limited DMA-coherent
+-	 * memory.
++	 * Check if there is memory region reserved for this device. If yes,
++	 * pick up the msi_data from this region. This will be helpful for
++	 * platforms that do not use/have 32-bit DMA addresses but want to use
++	 * endpoints which support only 32-bit MSI address.
++	 * Else, if the memory region is not reserved, try to allocate a 32-bit
++	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
++	 * allocation. If the 64-bit MSI address is allocated, then the EPs
++	 * supporting 32-bit MSI address will not work.
+ 	 */
+-	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+-	if (ret)
+-		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
++	np = of_parse_phandle(dev->of_node, "memory-region", 0);
++	if (np) {
++		ret = of_address_to_resource(np, 0, &r);
++		if (ret) {
++			dev_err(dev, "No memory address assigned to the region\n");
++			return ret;
++		}
+ 
+-	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+-					GFP_KERNEL);
+-	if (!msi_vaddr) {
+-		dev_err(dev, "Failed to alloc and map MSI data\n");
+-		dw_pcie_free_msi(pp);
+-		return -ENOMEM;
++		pp->msi_data = r.start;
++	} else {
++		dev_dbg(dev, "No %s specified\n", "memory-region");
++		ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
++		if (ret)
++			dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
++
++		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
++						GFP_KERNEL);
++		if (!msi_vaddr) {
++			dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
++			dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
++			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
++							GFP_KERNEL);
++		}
++
++		if (!msi_vaddr) {
++			dev_err(dev, "Failed to alloc and map MSI data\n");
++			dw_pcie_free_msi(pp);
++			return -ENOMEM;
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 55ff76e3d384..c85cf4d56e98 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -317,6 +317,7 @@ struct dw_pcie_rp {
+ 	phys_addr_t		io_bus_addr;
+ 	u32			io_size;
+ 	int			irq;
++	u8			coherent_dma_bits;
+ 	const struct dw_pcie_host_ops *ops;
+ 	int			msi_irq[MAX_MSI_CTRLS];
+ 	struct irq_domain	*irq_domain;
+-- 
+2.43.0.275.g3460e3d667-goog
 
-ticks there, if many of such request issued, the iommu will run out of
-
-hardware resouce.  so we should avoid such case as possible as we could.
-
-though the Intel VT-d says the timeout value will not more than "
-
-PCIe read timeout", but in fact, we got more than 12 seconds before get
-
-ITE.
-
-
-for case #2, the retry has pre-conditon as I know, there is fault, cleared.
-
-So I call it "rabbit hole".
-
-To run into that rabbit hole is last choice, not best.
-
-
-Thanks,
-
-Ethan
-
->
-> Best regards,
-> baolu
 
