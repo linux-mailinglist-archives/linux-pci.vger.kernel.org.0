@@ -1,175 +1,135 @@
-Return-Path: <linux-pci+bounces-2061-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2062-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91EC482B1B3
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 16:25:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1062582B1DD
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 16:32:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41C241F21B2B
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:25:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8CA781F24674
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:32:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDDCC4C3D7;
-	Thu, 11 Jan 2024 15:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DF84CB5D;
+	Thu, 11 Jan 2024 15:32:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gdaM+opE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGv+MjzO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D014BAB5
-	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 15:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e10c4fcso7742132276.3
-        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 07:25:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704986722; x=1705591522; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dZy9tOinq1xQQqvzRrzHSuOcpy/Q+lSYh4VmR4W64MU=;
-        b=gdaM+opE9JBhTIRKJoFy3nivlRq4aDO0kOTnxFl+WO4Gf0d4HrKdEH5c6WzX/HPcmc
-         Wl0skATRQL56TA+2cmgs1nXAmWvdRulWQu4ETTyls2nf4LxJgMecO04HZeIZyA3ExdKc
-         Hj6p46Qe9e8xRnKGX2oLzHlKvNl3lCP/nuo4eiYVnup1dGvq3actQYpfInuvE6owOpn2
-         p8Pib7ck9PzSx0mFH3AqPl+MtUTviEbESlNC4ROTgN8rIYVit3PSBVTA688RNT9keRvE
-         N0JIh/l+0n3E7AfiXrEuIbooC/hPorYZTrvgIBsbeoc6lRPaIRRmXl6nl2N9F6eXAiHC
-         Azcw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D1A4CB3C
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 15:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704987151;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KzKa5s33X3IKu2M/hTuWcesIvEV9ZEphom5s5UiSxgA=;
+	b=dGv+MjzO5IQknBkMFVsrQTxfSFiGJwHUVzZLkdqNqzYXB0DTTTNsVjKxAvFb+C9ZZNqnv2
+	ADe9ZErpDVavscDEwkoSXk+n/MMLsAAOhvGKTgvtv4n7B05O8x3lIuhutCbnHTgTKxrpox
+	9qKW1++GafkRNc6WF26CSmNJnpVOhyQ=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-yZBK9JknOKmiobDOtGTaUQ-1; Thu, 11 Jan 2024 10:32:28 -0500
+X-MC-Unique: yZBK9JknOKmiobDOtGTaUQ-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1d44a50ab19so12090965ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 07:32:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704986722; x=1705591522;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=1e100.net; s=20230601; t=1704987148; x=1705591948;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dZy9tOinq1xQQqvzRrzHSuOcpy/Q+lSYh4VmR4W64MU=;
-        b=AXnY6N6aFRdOjYZ2HJN7yrhUhVuPLDKbrZJX6ZRLkyePY0aAhmIneMM7rDynO+tu2K
-         QIEjMzEPzggLJHG2XtHoxaP7uGf/ur01Q4iya6uoTu2xw1mhGyMC+/AVzVvaPTQ0GyVe
-         qfeYrzS5/2Hr8Ka3CUWQopStotTaM/SSBTNkn5HfjwctKoJHOmN6XL5WTj5DGq+b3eRq
-         3MLsvLXyd9Oeg8vOQF1eUK6hkpsyFQEGVV3vO9Jo6Asx7DPTW7hCTh8CzLg1ftuNwZv2
-         hn+8/Eult3irTh6JY/nUInoUwsKfOCseBYuMPAv6GcTGLg3QWE0sT8a4t/VRfNUPoNdK
-         T+iQ==
-X-Gm-Message-State: AOJu0YxbMGXO4D5cASWnrRYofeyAV0ifli82+QCVTXoG+ueuu8vnAOVx
-	vVUFLjJmXeUwdAgy1hk+gWruY22VxBptds7bilA945kI
-X-Google-Smtp-Source: AGHT+IE8cdV/uHIVBX/XDAjVPLLZAemLrVLLTV0Zouy7GVebrTe3KxyJQPeSW28jmOdDJ1w2sfZuZEFrOojhO9HztA==
-X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a05:6902:a02:b0:dbd:b6cd:92cf with
- SMTP id cb2-20020a0569020a0200b00dbdb6cd92cfmr546551ybb.11.1704986722497;
- Thu, 11 Jan 2024 07:25:22 -0800 (PST)
-Date: Thu, 11 Jan 2024 20:55:17 +0530
+        bh=KzKa5s33X3IKu2M/hTuWcesIvEV9ZEphom5s5UiSxgA=;
+        b=iJtCveH9oEzucorI5lpVympI4t6PIQi+BdrFsUoFjaHuhSOgPSguRXDOWAaKcD46yz
+         pv98BYDQidbl8B5w+xCx1p4xKrcDGb+XnEy3wp2yXfuFfkMBd4hP3dLHb56f/skYjrIX
+         d/GlerQ59ylf+OtFhkLmwGrmiR0xxJn+Fx4q5yh2FtQ5keVyQdUXsc2INJJ/+3YTl5TT
+         gPPdLOkgBY8+YC09f5yJ/w5BJ5Yx6TYBXEi1WiJVxzrmiwmwcsz8LxXJ3bwpb0QRLNhO
+         Kf92fJBgnyMJXoVbkGnyy0xjNSNQlUmocitjEkgK1CCjTMKpUCT2TAfuC0ImWeKDjxrL
+         ju7w==
+X-Gm-Message-State: AOJu0Yz0I/tJ9wDgwyyWmMxUscBumjFBl69Y30wBToOYMuws3efWUkkA
+	eLk8rtpcDe2k4eCRMKxaWtnanuuJOw06ln/wDp9lDUZUfGMm0KMkT30/hPfkUCt8Q++ic/IUHp8
+	T7Sv559QFXw5xXNzB2r2huC1ZGtrA
+X-Received: by 2002:a17:902:db04:b0:1d3:f36a:9d21 with SMTP id m4-20020a170902db0400b001d3f36a9d21mr2604383plx.4.1704987147875;
+        Thu, 11 Jan 2024 07:32:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFbn18LxwZvVOyuJQJGtvaDTZ6vhKK8BhyP+hkC6mfTUc/QgQYyoPY7OXXHe7LVU1236f3k7A==
+X-Received: by 2002:a17:902:db04:b0:1d3:f36a:9d21 with SMTP id m4-20020a170902db0400b001d3f36a9d21mr2604348plx.4.1704987147537;
+        Thu, 11 Jan 2024 07:32:27 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id kh4-20020a170903064400b001d4c9c9be42sm1295127plb.151.2024.01.11.07.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 07:32:26 -0800 (PST)
+Message-ID: <3400ff3fbcd6f310f777be8cceddb253246b87fa.camel@redhat.com>
+Subject: Re: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
+ <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
+ <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
+ Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
+ Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
+ <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
+ Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
+ dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, stable@vger.kernel.org
+Date: Thu, 11 Jan 2024 16:32:07 +0100
+In-Reply-To: <20240111145338.GA2173492@bhelgaas>
+References: <20240111145338.GA2173492@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
-Message-ID: <20240111152517.1881382-1-ajayagarwal@google.com>
-Subject: [PATCH] PCI: dwc: Wait for link up only if link is started
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Jingoo Han <jingoohan1@gmail.com>, Johan Hovold <johan+linaro@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Manu Gautam <manugautam@google.com>, Doug Zobel <zobel@google.com>, 
-	William McVicker <willmcvicker@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Robin Murphy <robin.murphy@arm.com>
-Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
 
-In dw_pcie_host_init() regardless of whether the link has been
-started or not, the code waits for the link to come up. Even in
-cases where start_link() is not defined the code ends up spinning
-in a loop for 1 second. Since in some systems dw_pcie_host_init()
-gets called during probe, this one second loop for each pcie
-interface instance ends up extending the boot time.
-
-Wait for the link up in only if the start_link() is defined.
-
-Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
----
- .../pci/controller/dwc/pcie-designware-host.c | 12 +++++++----
- drivers/pci/controller/dwc/pcie-designware.c  | 20 ++++++++++++-------
- drivers/pci/controller/dwc/pcie-designware.h  |  1 +
- 3 files changed, 22 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 7991f0e179b2..e53132663d1d 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -487,14 +487,18 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (ret)
- 		goto err_remove_edma;
- 
--	if (!dw_pcie_link_up(pci)) {
-+	if (dw_pcie_link_up(pci)) {
-+		dw_pcie_print_link_status(pci);
-+	} else {
- 		ret = dw_pcie_start_link(pci);
- 		if (ret)
- 			goto err_remove_edma;
--	}
- 
--	/* Ignore errors, the link may come up later */
--	dw_pcie_wait_for_link(pci);
-+		if (pci->ops && pci->ops->start_link) {
-+			/* Ignore errors, the link may come up later */
-+			dw_pcie_wait_for_link(pci);
-+		}
-+	}
- 
- 	bridge->sysdata = pp;
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 250cf7f40b85..c067d2e960cf 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -645,9 +645,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
- 	dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
- }
- 
--int dw_pcie_wait_for_link(struct dw_pcie *pci)
-+void dw_pcie_print_link_status(struct dw_pcie *pci)
- {
- 	u32 offset, val;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-+
-+	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-+		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-+		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-+}
-+
-+int dw_pcie_wait_for_link(struct dw_pcie *pci)
-+{
- 	int retries;
- 
- 	/* Check if the link is up or not */
-@@ -663,12 +674,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
- 		return -ETIMEDOUT;
- 	}
- 
--	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
--	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
--
--	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
--		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
--		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-+	dw_pcie_print_link_status(pci);
- 
- 	return 0;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 55ff76e3d384..164214a7219a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -447,6 +447,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
- int dw_pcie_edma_detect(struct dw_pcie *pci);
- void dw_pcie_edma_remove(struct dw_pcie *pci);
-+void dw_pcie_print_link_status(struct dw_pcie *pci);
- 
- int dw_pcie_suspend_noirq(struct dw_pcie *pci);
- int dw_pcie_resume_noirq(struct dw_pcie *pci);
--- 
-2.43.0.275.g3460e3d667-goog
+T24gVGh1LCAyMDI0LTAxLTExIGF0IDA4OjUzIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+
+IE9uIFRodSwgSmFuIDExLCAyMDI0IGF0IDA5OjU1OjM1QU0gKzAxMDAsIFBoaWxpcHAgU3Rhbm5l
+ciB3cm90ZToKPiA+IFNlY29uZCBSZXNlbmQuIFdvdWxkIGJlIGNvb2wgaWYgc29tZW9uZSBjb3Vs
+ZCB0ZWxsIG1lIHdoYXQgSSdsbAo+ID4gaGF2ZSB0bwo+ID4gZG8gc28gd2UgY2FuIGdldCB0aGlz
+IG1lcmdlZC4gVGhpcyBpcyBibG9ja2luZyB0aGUgZm9sbG93dXAgd29yawo+ID4gSSd2ZQo+ID4g
+Z290IGluIHRoZSBwaXBlCj4gCj4gVGhpcyBzZWVtcyBQQ0ktZm9jdXNlZCwgYW5kIEknbGwgbG9v
+ayBhdCBtZXJnaW5nIHRoaXMgYWZ0ZXIgdjYuOC1yYzEKPiBpcyB0YWdnZWQgYW5kIHRoZSBtZXJn
+ZSB3aW5kb3cgY2xvc2VzIChwcm9iYWJseSBKYW4gMjEpLsKgIFRoZW4gSSdsbAo+IHJlYmFzZSBp
+dCB0byB2Ni44LXJjMSwgdGlkeSB0aGUgc3ViamVjdCBsaW5lcyB0byBsb29rIGxpa2UgdGhlIHJl
+c3QKPiBvZiBkcml2ZXJzL3BjaS8sIGV0Yy4KCkNvb2whCgpKdXN0IHBpbmcgeW91IGlmIHlvdSBu
+ZWVkIG1lIHRvIGRvIHNvbWV0aGluZwoKUmVnYXJkcywKUC4KCj4gCj4gPiBQaGlsaXBwIFN0YW5u
+ZXIgKDUpOgo+ID4gwqAgbGliL3BjaV9pb21hcC5jOiBmaXggY2xlYW51cCBidWdzIGluIHBjaV9p
+b3VubWFwKCkKPiA+IMKgIGxpYjogbW92ZSBwY2lfaW9tYXAuYyB0byBkcml2ZXJzL3BjaS8KPiA+
+IMKgIGxpYjogbW92ZSBwY2ktc3BlY2lmaWMgZGV2cmVzIGNvZGUgdG8gZHJpdmVycy9wY2kvCj4g
+PiDCoCBwY2k6IG1vdmUgZGV2cmVzIGNvZGUgZnJvbSBwY2kuYyB0byBkZXZyZXMuYwo+ID4gwqAg
+bGliLCBwY2k6IHVuaWZ5IGdlbmVyaWMgcGNpX2lvdW5tYXAoKQo+ID4gCj4gPiDCoE1BSU5UQUlO
+RVJTwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHzCoMKgIDEgLQo+ID4gwqBkcml2ZXJzL3BjaS9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNSArCj4gPiDCoGRyaXZlcnMvcGNpL01ha2VmaWxlwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDMgKy0KPiA+IMKgZHJpdmVy
+cy9wY2kvZGV2cmVzLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCA0NTAK
+PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysKPiA+IMKgbGliL3BjaV9pb21hcC5jID0+IGRy
+aXZlcnMvcGNpL2lvbWFwLmMgfMKgIDQ5ICstLQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuY8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDI0OSAtLS0tLS0tLS0tLS0t
+LQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCB8wqAgMjQgKysKPiA+IMKgaW5jbHVkZS9hc20tZ2VuZXJpYy9pby5owqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjcgKy0KPiA+IMKgaW5jbHVkZS9hc20tZ2VuZXJp
+Yy9pb21hcC5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjEgKysKPiA+IMKgbGliL0tjb25m
+aWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+fMKgwqAgMyAtCj4gPiDCoGxpYi9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMSAtCj4gPiDCoGxpYi9kZXZyZXMuY8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAyMDggKy0t
+LS0tLS0tLS0tCj4gPiDCoGxpYi9pb21hcC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyOCArLQo+ID4gwqAxMyBmaWxlcyBjaGFuZ2Vk
+LCA1NjYgaW5zZXJ0aW9ucygrKSwgNTAzIGRlbGV0aW9ucygtKQo+ID4gwqBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9wY2kvZGV2cmVzLmMKPiA+IMKgcmVuYW1lIGxpYi9wY2lfaW9tYXAuYyA9
+PiBkcml2ZXJzL3BjaS9pb21hcC5jICg3NSUpCj4gCgo=
 
 
