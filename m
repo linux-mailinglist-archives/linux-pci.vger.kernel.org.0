@@ -1,61 +1,62 @@
-Return-Path: <linux-pci+bounces-2051-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2052-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 029E282AE02
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 12:56:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C08682AE18
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 12:59:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1FF228330A
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 11:56:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2B1FB23234
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 11:59:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D47156C5;
-	Thu, 11 Jan 2024 11:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0762A156F7;
+	Thu, 11 Jan 2024 11:59:26 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B41154B6;
-	Thu, 11 Jan 2024 11:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DADF156C7;
+	Thu, 11 Jan 2024 11:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbc5636b8eso3279063b6e.2;
-        Thu, 11 Jan 2024 03:56:49 -0800 (PST)
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28ca8a37adeso4421349a91.3;
+        Thu, 11 Jan 2024 03:59:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704974209; x=1705579009;
+        d=1e100.net; s=20230601; t=1704974364; x=1705579164;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aRRot3fSPqM/q7yv55Kx8nQqL7oWPBUmdwcMoAjnDzI=;
-        b=f3d3u6E6haVdNUl1q1DGEmanBsFJVarbPa+P8lPLm8quExTXEz1sL12OXkURHULrlW
-         1j/hmVlOZc/PBUhScAaZx8eGtzXDgHfRmt9SMNniew1g8WOCv5TxYJGPU2RoTg9aW1B0
-         7vAJRHELmlSXb/pO2nM/Y86RHmqFu4I81b0bUTZdxNV7nPmukDjSpqKZ0igk1UQtj3wr
-         io0XonpKomaDJL8p4BWLP+2OliWdOR1pJXfi97GUIiArjbIJGgErxyayaPX0wIkviSU7
-         ceV8JJwNPkK3Qz1GI5PQhpRkzr2HHfym6mr/rEJ6FTV+MOLbF9DsgRB+Y7iKHA8MjV8r
-         bBWQ==
-X-Gm-Message-State: AOJu0YwoeXqoi87P9TP2xitmzNUXtLpJxmSVu5j58VuCI6pkeSE/HGj+
-	0Xnyou13VhGFZ8/r9JP3Nrw=
-X-Google-Smtp-Source: AGHT+IH6QIRblUbO7LPVLGc5KQtSUtO/9V3RZZMWBTBUf/ouMAQIu3s88JmEiW1PahzxYrrxcTHaSg==
-X-Received: by 2002:a05:6808:3987:b0:3bb:c56e:7f6b with SMTP id gq7-20020a056808398700b003bbc56e7f6bmr1267990oib.56.1704974209024;
-        Thu, 11 Jan 2024 03:56:49 -0800 (PST)
+        bh=S2B3RdL+7tbmXrXWsW5P+Eh0Rvi86Sc7Lt214actT0w=;
+        b=cAiJNk7M77x23qtlQffV4XWuujQbC86eSzCDRWw982E7pXKKv1ur4AAjV/VgOJPOMB
+         AZIJtOpvyGGUyIC+1hIxpPgmJYW6xTj+ukFxEusAjiKGFsc84jS6qFZQ7lNQ9UotrypD
+         1lWIjcO7dRRHW3KoZLhWGnoNaxctuhXkaM3NdNdT2YK/wdk/85pghVVQfXmJeEfe12xk
+         R1iP8nkjiwTXI0IS6UjtIBWWiLoJ1x8MvkMjc1kDbZ3J9QygZ75TNNwTsdgZBw/c3NX/
+         TcC1CU6coKpA13ysOD4VGEtZdOmE7jIxxUYGCfQOfkQzHnWkTOvPjR+3xjNE2YWdw5uX
+         fgOQ==
+X-Gm-Message-State: AOJu0Yy0TCYJ+UjEULwIJgK3iXrqgoleSLcDTBaQ/hz+wFxWnVVbOIAy
+	QoBV7cAdUrNCjMFeYrWGt0Y=
+X-Google-Smtp-Source: AGHT+IFUDXjiq70+RZxEzqU459peXqmTo1Le9iCSGpjzErTKvXMA6F9V4x+iBAUWAkD1AbnoosKDDg==
+X-Received: by 2002:a17:90a:d187:b0:28d:19ff:5e3f with SMTP id fu7-20020a17090ad18700b0028d19ff5e3fmr875417pjb.86.1704974363859;
+        Thu, 11 Jan 2024 03:59:23 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id le5-20020a056a004fc500b006db00cb78a8sm997489pfb.179.2024.01.11.03.56.47
+        by smtp.gmail.com with ESMTPSA id sk3-20020a17090b2dc300b0028d276f078asm3603261pjb.43.2024.01.11.03.59.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 03:56:48 -0800 (PST)
-Date: Thu, 11 Jan 2024 20:56:46 +0900
+        Thu, 11 Jan 2024 03:59:23 -0800 (PST)
+Date: Thu, 11 Jan 2024 20:59:22 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
 	Phil Elwell <phil@raspberrypi.com>,
 	bcm-kernel-feedback-list@broadcom.com,
 	Conor Dooley <conor+dt@kernel.org>,
 	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>,
@@ -64,8 +65,10 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v8 0/2] PCI: brcmstb: Configure appropriate HW CLKREQ#
  mode
-Message-ID: <20240111115646.GA1443933@rocinante>
-References: <20231113185607.1756-1-james.quinlan@broadcom.com>
+Message-ID: <20240111115922.GB1443933@rocinante>
+References: <ae49227b-5026-43a4-8e19-aeeb63865a6a@broadcom.com>
+ <20231213195947.GA1056194@bhelgaas>
+ <CANCKTBvaFBXAVTBtr4tpz5mYcyP1w84nAEGHbOnGJugogHx4fQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,90 +77,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231113185607.1756-1-james.quinlan@broadcom.com>
+In-Reply-To: <CANCKTBvaFBXAVTBtr4tpz5mYcyP1w84nAEGHbOnGJugogHx4fQ@mail.gmail.com>
 
 Hello,
 
-> V8 -- Un-advertise L1SS capability when in "no-l1ss" mode (Bjorn)
->    -- Squashed last two commits of v7 (Bjorn)
->    -- Fix DT binding description text wrapping (Bjorn)
->    -- Fix incorrect Spec reference (Bjorn)
->          s/PCIe Spec/PCIe Express Mini CEM 2.1 specification/
->    -- Text substitutions (Bjorn)
->          s/WRT/With respect to/ 
->          s/Tclron/T_CLRon/
-> 
-> v7 -- Manivannan Sadhasivam suggested (a) making the property look like a
->       network phy-mode and (b) keeping the code simple (not counting clkreq
->       signal appearances, un-advertising capabilites, etc).  This is
->       what I have done.  The property is now "brcm,clkreq-mode" and
->       the values may be one of "safe", "default", and "no-l1ss".  The
->       default setting is to employ the most capable power savings mode.
-> 
-> v6 -- No code has been changed.
->    -- Changed commit subject and comment in "#PERST" commit (Bjorn, Cyril)
->    -- Changed sign-off and author email address for all commits.
->       This was due to a change in Broadcom's upstreaming policy.
-> 
-> v5 -- Remove DT property "brcm,completion-timeout-us" from	 
->       "DT bindings" commit.  Although this error may be reported	 
->       as a completion timeout, its cause was traced to an	 
->       internal bus timeout which may occur even when there is	 
->       no PCIe access being processed.  We set a timeout of four	 
->       seconds only if we are operating in "L1SS CLKREQ#" mode.
->    -- Correct CEM 2.0 reference provided by HW engineer,
->       s/3.2.5.2.5/3.2.5.2.2/ (Bjorn)
->    -- Add newline to dev_info() string (Stefan)
->    -- Change variable rval to unsigned (Stefan)
->    -- s/implementaion/implementation/ (Bjorn)
->    -- s/superpowersave/powersupersave/ (Bjorn)
->    -- Slightly modify message on "PERST#" commit.
->    -- Rebase to torvalds master
-> 
-> v4 -- New commit that asserts PERST# for 2711/RPi SOCs at PCIe RC
->       driver probe() time.  This is done in Raspian Linux and its
->       absence may be the cause of a failing test case.
->    -- New commit that removes stale comment.
-> 
-> v3 -- Rewrote commit msgs and comments refering panics if L1SS
->       is enabled/disabled; the code snippet that unadvertises L1SS
->       eliminates the panic scenario. (Bjorn)
->    -- Add reference for "400ns of CLKREQ# assertion" blurb (Bjorn)
->    -- Put binding names in DT commit Subject (Bjorn)
->    -- Add a verb to a commit's subject line (Bjorn)
->    -- s/accomodat(\w+)/accommodat$1/g (Bjorn)
->    -- Rewrote commit msgs and comments refering panics if L1SS
->       is enabled/disabled; the code snippet that unadvertises L1SS
->       eliminates the panic scenario. (Bjorn)
-> 
-> v2 -- Changed binding property 'brcm,completion-timeout-msec' to
->       'brcm,completion-timeout-us'.  (StefanW for standard suffix).
->    -- Warn when clamping timeout value, and include clamped
->       region in message. Also add min and max in YAML. (StefanW)
->    -- Qualify description of "brcm,completion-timeout-us" so that
->       it refers to PCIe transactions. (StefanW)
->    -- Remvove mention of Linux specifics in binding description. (StefanW)
->    -- s/clkreq#/CLKREQ#/g (Bjorn)
->    -- Refactor completion-timeout-us code to compare max and min to
->       value given by the property (as opposed to the computed value).
-> 
-> v1 -- The current driver assumes the downstream devices can
->       provide CLKREQ# for ASPM.  These commits accomodate devices
->       w/ or w/o clkreq# and also handle L1SS-capable devices.
-> 
->    -- The Raspian Linux folks have already been using a PCIe RC
->       property "brcm,enable-l1ss".  These commits use the same
->       property, in a backward-compatible manner, and the implementaion
->       adds more detail and also automatically identifies devices w/o
->       a clkreq# signal, i.e. most devices plugged into an RPi CM4
->       IO board.
+[...]
+> What is the status of this submission?
 
-Applied to controller/broadcom, thank you!
+Looks good!  I apologise for the delay.
 
-[01/02] dt-bindings: PCI: brcmstb: Add property "brcm,clkreq-mode"
-        https://git.kernel.org/pci/pci/c/14b15aeb3628
-[02/02] PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device
-        https://git.kernel.org/pci/pci/c/e2596dcf1e9d
+Bjorn is keen to pick this up for 6.8 with other changes, so it should land
+there shortly, given that we have a merge window open now.
 
 	Krzysztof
 
