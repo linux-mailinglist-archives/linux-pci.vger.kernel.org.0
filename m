@@ -1,135 +1,132 @@
-Return-Path: <linux-pci+bounces-2062-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2063-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1062582B1DD
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 16:32:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0838282B202
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 16:43:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8CA781F24674
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:32:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE6021F2276B
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DF84CB5D;
-	Thu, 11 Jan 2024 15:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9EF4CDFE;
+	Thu, 11 Jan 2024 15:43:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGv+MjzO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kszKQUJg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D1A4CB3C
-	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 15:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704987151;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KzKa5s33X3IKu2M/hTuWcesIvEV9ZEphom5s5UiSxgA=;
-	b=dGv+MjzO5IQknBkMFVsrQTxfSFiGJwHUVzZLkdqNqzYXB0DTTTNsVjKxAvFb+C9ZZNqnv2
-	ADe9ZErpDVavscDEwkoSXk+n/MMLsAAOhvGKTgvtv4n7B05O8x3lIuhutCbnHTgTKxrpox
-	9qKW1++GafkRNc6WF26CSmNJnpVOhyQ=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-61-yZBK9JknOKmiobDOtGTaUQ-1; Thu, 11 Jan 2024 10:32:28 -0500
-X-MC-Unique: yZBK9JknOKmiobDOtGTaUQ-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1d44a50ab19so12090965ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 07:32:28 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F094CE0A
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 15:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6daf9d5f111so4048200b3a.0
+        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 07:43:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704987815; x=1705592615; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=emlCTYFoJ7HTQ2zXqmk/2tpC5aAMyfsd8X53K7e0g/Q=;
+        b=kszKQUJgnT75KyoKkYIzgLlr/fSEAnCWEyV8ociIm50uGsifW+ujJj2lzdnpS4V2e5
+         TpSLduHwaf61tiI9e6TNm8n8SDzuu/RPEY00tW3HDx6GBac1m+bW0v7iOr41LCv6O1K5
+         WuIOacooRx/Fc7fujBmRG8HMb8q72AOhh62YBv11g+u8MJ75VOCgTeqfhD8saHFmUBKy
+         AZbcARMlegIENZH6Be82PUTqqVNehl/pIWrb9GBz0MHaqKEe2JE+IiZZgX3mQqLjj/6M
+         g2KuhRvbHujoQmNwygKjj5hI6B6XD6Ms6lvqFAkpKWC4ND/yAwas1R/Z6ul+BOXs3iOE
+         f06Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704987148; x=1705591948;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KzKa5s33X3IKu2M/hTuWcesIvEV9ZEphom5s5UiSxgA=;
-        b=iJtCveH9oEzucorI5lpVympI4t6PIQi+BdrFsUoFjaHuhSOgPSguRXDOWAaKcD46yz
-         pv98BYDQidbl8B5w+xCx1p4xKrcDGb+XnEy3wp2yXfuFfkMBd4hP3dLHb56f/skYjrIX
-         d/GlerQ59ylf+OtFhkLmwGrmiR0xxJn+Fx4q5yh2FtQ5keVyQdUXsc2INJJ/+3YTl5TT
-         gPPdLOkgBY8+YC09f5yJ/w5BJ5Yx6TYBXEi1WiJVxzrmiwmwcsz8LxXJ3bwpb0QRLNhO
-         Kf92fJBgnyMJXoVbkGnyy0xjNSNQlUmocitjEkgK1CCjTMKpUCT2TAfuC0ImWeKDjxrL
-         ju7w==
-X-Gm-Message-State: AOJu0Yz0I/tJ9wDgwyyWmMxUscBumjFBl69Y30wBToOYMuws3efWUkkA
-	eLk8rtpcDe2k4eCRMKxaWtnanuuJOw06ln/wDp9lDUZUfGMm0KMkT30/hPfkUCt8Q++ic/IUHp8
-	T7Sv559QFXw5xXNzB2r2huC1ZGtrA
-X-Received: by 2002:a17:902:db04:b0:1d3:f36a:9d21 with SMTP id m4-20020a170902db0400b001d3f36a9d21mr2604383plx.4.1704987147875;
-        Thu, 11 Jan 2024 07:32:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFbn18LxwZvVOyuJQJGtvaDTZ6vhKK8BhyP+hkC6mfTUc/QgQYyoPY7OXXHe7LVU1236f3k7A==
-X-Received: by 2002:a17:902:db04:b0:1d3:f36a:9d21 with SMTP id m4-20020a170902db0400b001d3f36a9d21mr2604348plx.4.1704987147537;
-        Thu, 11 Jan 2024 07:32:27 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id kh4-20020a170903064400b001d4c9c9be42sm1295127plb.151.2024.01.11.07.32.11
+        d=1e100.net; s=20230601; t=1704987815; x=1705592615;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=emlCTYFoJ7HTQ2zXqmk/2tpC5aAMyfsd8X53K7e0g/Q=;
+        b=lACyRrXN83iQadxGapwAYarp6wS0lWq/gDTF54oHndBcE1JiLnlzI/Sy/agtZchoSQ
+         zrUp4bN5Ntt8zJ9pmVc7WntglPtX6NgDMP4v2Wvk9d6rwoFtn2o1+9277nldS7x+Nryx
+         gMJ85RKTPlJ2VnSF5vD8HryZKwyZrvA8TT0O5nP4SrxfYbKs/b53rWEp7H1luA+8tZ9G
+         cnysjTMNPjEpzN6i2ETIc/x5tJhFfYitZyoXQ6P6w2KDSnwcz2joDIG6vrojTETUvjk3
+         jbVHd4JiRmVC6h0jba4j5sqlB/jFZAcwScf9++UZWAqf5s6qw+fihd1AyOwSmokEktoe
+         Aqmg==
+X-Gm-Message-State: AOJu0YxXplTXtDxvgpQCj4JrvVyiZbF335F1MzdapOy80qYsYZnS4z/z
+	pH8+lAj0M/x7qPumKGrPqTP48QZPDzsV
+X-Google-Smtp-Source: AGHT+IFvJaH4YK0hj1wr5WEnyTQLfJ5o58oJEO/otJH4ybFOLkeh5Ao1CGLtIVFFwC3v7Yp457eJow==
+X-Received: by 2002:a05:6a20:1595:b0:19a:5eb0:4389 with SMTP id h21-20020a056a20159500b0019a5eb04389mr27554pzj.31.1704987815222;
+        Thu, 11 Jan 2024 07:43:35 -0800 (PST)
+Received: from google.com (108.93.126.34.bc.googleusercontent.com. [34.126.93.108])
+        by smtp.gmail.com with ESMTPSA id n8-20020aa78a48000000b006da5e1638b6sm1360917pfa.19.2024.01.11.07.43.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 07:32:26 -0800 (PST)
-Message-ID: <3400ff3fbcd6f310f777be8cceddb253246b87fa.camel@redhat.com>
-Subject: Re: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
- Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
- <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
- <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
- Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
- <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
- Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
- Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
- dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, stable@vger.kernel.org
-Date: Thu, 11 Jan 2024 16:32:07 +0100
-In-Reply-To: <20240111145338.GA2173492@bhelgaas>
-References: <20240111145338.GA2173492@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Thu, 11 Jan 2024 07:43:34 -0800 (PST)
+Date: Thu, 11 Jan 2024 21:13:26 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Johan Hovold <johan@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Sajid Dalvi <sdalvi@google.com>
+Subject: Re: [PATCH] Revert "PCI: dwc: Wait for link up only if link is
+ started"
+Message-ID: <ZaAMnh8lae_Cxvtm@google.com>
+References: <20230706082610.26584-1-johan+linaro@kernel.org>
+ <20230706125811.GD4808@thinkpad>
+ <ZKgJfG5Mi-e77LQT@hovoldconsulting.com>
+ <ZKwwAin4FcCETGq/@google.com>
+ <ZKw03xjH5VdL/JHD@google.com>
+ <20230710170608.GA346178@rocinante>
+ <ZKz8J1jM7zxt3wR7@hovoldconsulting.com>
+ <ZK7m0hjQg7H5rANZ@google.com>
+ <ZLENgbMe4YVOINRQ@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZLENgbMe4YVOINRQ@hovoldconsulting.com>
 
-T24gVGh1LCAyMDI0LTAxLTExIGF0IDA4OjUzIC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+
-IE9uIFRodSwgSmFuIDExLCAyMDI0IGF0IDA5OjU1OjM1QU0gKzAxMDAsIFBoaWxpcHAgU3Rhbm5l
-ciB3cm90ZToKPiA+IFNlY29uZCBSZXNlbmQuIFdvdWxkIGJlIGNvb2wgaWYgc29tZW9uZSBjb3Vs
-ZCB0ZWxsIG1lIHdoYXQgSSdsbAo+ID4gaGF2ZSB0bwo+ID4gZG8gc28gd2UgY2FuIGdldCB0aGlz
-IG1lcmdlZC4gVGhpcyBpcyBibG9ja2luZyB0aGUgZm9sbG93dXAgd29yawo+ID4gSSd2ZQo+ID4g
-Z290IGluIHRoZSBwaXBlCj4gCj4gVGhpcyBzZWVtcyBQQ0ktZm9jdXNlZCwgYW5kIEknbGwgbG9v
-ayBhdCBtZXJnaW5nIHRoaXMgYWZ0ZXIgdjYuOC1yYzEKPiBpcyB0YWdnZWQgYW5kIHRoZSBtZXJn
-ZSB3aW5kb3cgY2xvc2VzIChwcm9iYWJseSBKYW4gMjEpLsKgIFRoZW4gSSdsbAo+IHJlYmFzZSBp
-dCB0byB2Ni44LXJjMSwgdGlkeSB0aGUgc3ViamVjdCBsaW5lcyB0byBsb29rIGxpa2UgdGhlIHJl
-c3QKPiBvZiBkcml2ZXJzL3BjaS8sIGV0Yy4KCkNvb2whCgpKdXN0IHBpbmcgeW91IGlmIHlvdSBu
-ZWVkIG1lIHRvIGRvIHNvbWV0aGluZwoKUmVnYXJkcywKUC4KCj4gCj4gPiBQaGlsaXBwIFN0YW5u
-ZXIgKDUpOgo+ID4gwqAgbGliL3BjaV9pb21hcC5jOiBmaXggY2xlYW51cCBidWdzIGluIHBjaV9p
-b3VubWFwKCkKPiA+IMKgIGxpYjogbW92ZSBwY2lfaW9tYXAuYyB0byBkcml2ZXJzL3BjaS8KPiA+
-IMKgIGxpYjogbW92ZSBwY2ktc3BlY2lmaWMgZGV2cmVzIGNvZGUgdG8gZHJpdmVycy9wY2kvCj4g
-PiDCoCBwY2k6IG1vdmUgZGV2cmVzIGNvZGUgZnJvbSBwY2kuYyB0byBkZXZyZXMuYwo+ID4gwqAg
-bGliLCBwY2k6IHVuaWZ5IGdlbmVyaWMgcGNpX2lvdW5tYXAoKQo+ID4gCj4gPiDCoE1BSU5UQUlO
-RVJTwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHzCoMKgIDEgLQo+ID4gwqBkcml2ZXJzL3BjaS9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgNSArCj4gPiDCoGRyaXZlcnMvcGNpL01ha2VmaWxlwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDMgKy0KPiA+IMKgZHJpdmVy
-cy9wY2kvZGV2cmVzLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCA0NTAK
-PiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysKPiA+IMKgbGliL3BjaV9pb21hcC5jID0+IGRy
-aXZlcnMvcGNpL2lvbWFwLmMgfMKgIDQ5ICstLQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDI0OSAtLS0tLS0tLS0tLS0t
-LQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB8wqAgMjQgKysKPiA+IMKgaW5jbHVkZS9hc20tZ2VuZXJpYy9pby5owqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjcgKy0KPiA+IMKgaW5jbHVkZS9hc20tZ2VuZXJp
-Yy9pb21hcC5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMjEgKysKPiA+IMKgbGliL0tjb25m
-aWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgwqAgMyAtCj4gPiDCoGxpYi9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMSAtCj4gPiDCoGxpYi9kZXZyZXMuY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAyMDggKy0t
-LS0tLS0tLS0tCj4gPiDCoGxpYi9pb21hcC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyOCArLQo+ID4gwqAxMyBmaWxlcyBjaGFuZ2Vk
-LCA1NjYgaW5zZXJ0aW9ucygrKSwgNTAzIGRlbGV0aW9ucygtKQo+ID4gwqBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9wY2kvZGV2cmVzLmMKPiA+IMKgcmVuYW1lIGxpYi9wY2lfaW9tYXAuYyA9
-PiBkcml2ZXJzL3BjaS9pb21hcC5jICg3NSUpCj4gCgo=
+On Fri, Jul 14, 2023 at 10:55:29AM +0200, Johan Hovold wrote:
+> On Wed, Jul 12, 2023 at 11:15:54PM +0530, Ajay Agarwal wrote:
+> > On Tue, Jul 11, 2023 at 08:52:23AM +0200, Johan Hovold wrote:
+> 
+> > > All mainline drivers already start the link before that
+> > > wait-for-link-up, so the commit in question makes very little sense.
+> > > That's why I prefer reverting it, so as to not pollute the git logs
+> > > (e.g. for git blame) with misleading justifications.
+> 
+> > I am developing a PCIe driver which will not have the start_link
+> > callback defined. Instead, the link will be coming up much later based
+> > on some other trigger. So my driver will not attempt the LTSSM training
+> > on probe. So even if the probe is made asynchronous, it will still end
+> > up wasting 1 second of time.
+> 
+> Yeah, I had the suspicion that this was really motivated by some
+> out-of-tree driver, which as I'm sure you know, is not a concern for
+> mainline.
+> 
+> Vendor drivers do all sorts of crazy stuff and we don't carry code in
+> mainline for the sole benefit of such drivers that have not been
+> upstreamed (and likely never will be).
+> 
+> So again, I think this patch should just be reverted.
+> 
+> If you want to get something like this in, you can send a follow-on
+> patch describing your actual motivation and use case. But as it appears
+> to boil down to "I need this for my out-of-tree driver", I suspect such
+> a patch would still be rejected.
+> 
+> Johan
 
+Johan, Mani,
+I submitted https://lore.kernel.org/all/20240111152517.1881382-1-ajayagarwal@google.com/
+which does not return an error value if the dw_pcie_wait_for_link fails
+in probe. Can you please check and provide your comments?
+
+Thanks
+Ajay
 
