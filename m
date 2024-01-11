@@ -1,215 +1,271 @@
-Return-Path: <linux-pci+bounces-2068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7F9182B474
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 19:02:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47D6082B4B3
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 19:21:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62EDA286DAB
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 18:02:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B95771F22466
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 18:21:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D3EF52F83;
-	Thu, 11 Jan 2024 18:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A92F52F74;
+	Thu, 11 Jan 2024 18:21:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z6z/V6Io"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="G3RhxA/L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADC93A1BE
-	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 18:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5cdbc7bebecso2469324a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 10:02:28 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129A253E04
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 18:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cd17a979bcso63678501fa.0
+        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 10:21:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704996148; x=1705600948; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cUCOtH2n97Hz0BIML6TxuTZ5JzlgVY5dhEjVoTSm1xA=;
-        b=z6z/V6Io13JOEEZdBJfNHtbJ4+lTbq3R8+0KAsT+Iq8aX7H9BOHJnGvrWTwLzCHQ06
-         qe/nJcKoykQ6sXFEdcA1Jdw3YoJAzIwYXFEcW5Eb3h7Ou2PUitwAGr0VgpuPu8SsAA+m
-         Lx+pPIKLRXrLdqg7nNsTK8eYxdAPDbbFcjnx8jF67z26NLzU8a83N8vPEMsj7USRhrFU
-         6wy/qlJRHaoel3F5Ln+nrPMoDTr/872/TGtAedTuMI9Wr3OuXUf6Mzv3+xnj2Gltqueu
-         mrpFfS09axjJ7sXTlz5CoiKeOh16X3VzS8X81ru9JYy6NrYSnEGrr4u53fhaEPoay6cl
-         i75A==
+        d=broadcom.com; s=google; t=1704997261; x=1705602061; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EnrmVrgbv7IwHU611qz8VENchHszG5leifVVhPjrGZ4=;
+        b=G3RhxA/L7FDRAe2O0qQdzWR37CjU2Il/jSX3A09WPolpG64GFUGYgsc+A3y+5nAJCF
+         dlTlzNC7/YOXcZoPevOlt+AKwh536aUAwz6HR0joO/UsAQL79nWgvlTkm0M0i8+9aPO1
+         8nliLsphSkSo38Li0e2XUk5gnwbEFNY/sQAuw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704996148; x=1705600948;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cUCOtH2n97Hz0BIML6TxuTZ5JzlgVY5dhEjVoTSm1xA=;
-        b=LHGH0RLbFo/g9eN/wu2lJ9ehPB3V0XQMNaMVzfZeUJTFAoL+nfnjikfDLyWDeSkSlo
-         Izs2MHZr2hGjoklHSCiecxr+rYPZtPgXhBxXfTYbLT3PEBaVJzUr8sWtcCdyZDX19vHe
-         yReaoXU4V5KccnrTRTTeXUASUS3/fIWtNxm4pVkxPhJ4/3O4RjkNU3eIq9nlsp4iUAkA
-         ptVYtpTD2hlX02abMH6VyeKR5pbuQsK9QTOTyZjTz++pJXbNOAXyIRelIfuQLxzhLZ2/
-         fvYMgBRYnsbuHTGlgEFvGvYOur+fMZze1cYXRFDNDPNixQBbP29LADB97GCdFXDYilBd
-         RuOw==
-X-Gm-Message-State: AOJu0YzB++Aoz6cvd52+Qn+DWjNx9j/LPx9SI8FZ5LPXxWssXuGvwk/S
-	/oY9malcoH9Kl5aynP7zdMbySr52NWv/
-X-Google-Smtp-Source: AGHT+IHDjYbtlhhtXjts8IwQNaGvhbSFE46SidbUF0P1YlRIsmIR0dVqvteCf/ns8IiGqaTcP/Obcg==
-X-Received: by 2002:a17:90b:368b:b0:28c:cfd8:92d0 with SMTP id mj11-20020a17090b368b00b0028ccfd892d0mr151069pjb.31.1704996147942;
-        Thu, 11 Jan 2024 10:02:27 -0800 (PST)
-Received: from google.com (108.93.126.34.bc.googleusercontent.com. [34.126.93.108])
-        by smtp.gmail.com with ESMTPSA id bb7-20020a170902bc8700b001d4e765f5efsm1425937plb.110.2024.01.11.10.02.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 10:02:27 -0800 (PST)
-Date: Thu, 11 Jan 2024 23:32:18 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: William McVicker <willmcvicker@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	Sajid Dalvi <sdalvi@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <ZaAtKqj45i3DNfiK@google.com>
-References: <20240111042103.392939-1-ajayagarwal@google.com>
- <ZaAne_KeJaOYnBcu@google.com>
+        d=1e100.net; s=20230601; t=1704997261; x=1705602061;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EnrmVrgbv7IwHU611qz8VENchHszG5leifVVhPjrGZ4=;
+        b=DDtWjapgDoXVQyu8InrvcluN1u2oUguuw0Dh2oF9V+yJkCBYEB1Q/TQWEip4RauKtk
+         y1bsHzVF5q0TMG28zns/iiDz9qfbPBd7K4+mQKgVU2piBTWRJUOrocNRgJ5audCr3uLx
+         EDrfTcC0nytl+1FDQeMsZ85htKasNrxX+4vurjWhNbEhF3LqVbY/CY9PpLQQnjaFS0Q9
+         TTL6dEV68IUh9ZBWWfVFQxEQzfAop813u4Kfu+ZF4GM/je0AK4F7NiHig56b3qPyJwYa
+         DXaWlMHhy+geEXwzID/8q4hkQ13ssr9A5NLPMXNq0wHl8RUFrYRvZHeAxPKWbsJk1yNd
+         FwkQ==
+X-Gm-Message-State: AOJu0Yz2p/tD98obVONnJ6k3CT04MqVz5H/5jstwFcIEvPSXhcoID/VU
+	gRlTNcthXwZkxlP8Mpupwliqm/l/y4K01XJSjOVSf8CJMJyk
+X-Google-Smtp-Source: AGHT+IF/4KF4++0E1sWcD7PFcryGUYNbCwneMjlOaliAsOPqZcqeVC6eO7HpYfXfoR8eA2M0MsduH3rmHZoc+tEou6o=
+X-Received: by 2002:a2e:9205:0:b0:2cd:278b:fe5f with SMTP id
+ k5-20020a2e9205000000b002cd278bfe5fmr37837ljg.99.1704997261041; Thu, 11 Jan
+ 2024 10:21:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZaAne_KeJaOYnBcu@google.com>
+References: <20231113185607.1756-3-james.quinlan@broadcom.com> <20240111172844.GA2184973@bhelgaas>
+In-Reply-To: <20240111172844.GA2184973@bhelgaas>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Thu, 11 Jan 2024 13:20:48 -0500
+Message-ID: <CA+-6iNy03Bz1-Wftf4PpuVFF0FS01d2Yo6coG+gHqwwwpRdFMw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] PCI: brcmstb: Configure HW CLKREQ# mode
+ appropriate for downstream device
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Phil Elwell <phil@raspberrypi.com>, 
+	bcm-kernel-feedback-list@broadcom.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000001cc39f060eaf9cc6"
 
-On Thu, Jan 11, 2024 at 09:38:03AM -0800, William McVicker wrote:
-> Hi Ajay,
-> 
-> Thanks for sending the patch!
-> 
-> On 01/11/2024, Ajay Agarwal wrote:
-> > There can be platforms that do not use/have 32-bit DMA addresses
-> > but want to enumerate endpoints which support only 32-bit MSI
-> > address. The current implementation of 32-bit IOVA allocation can
-> > fail for such platforms, eventually leading to the probe failure.
-> > 
-> > If there is a memory region reserved for the pci->dev, pick up
-> > the MSI data from this region. This can be used by the platforms
-> > described above.
-> > 
-> > Else, if the memory region is not reserved, try to allocate a
-> > 32-bit IOVA. Additionally, if this allocation also fails, attempt
-> > a 64-bit allocation for probe to be successful. If the 64-bit MSI
-> > address is allocated, then the EPs supporting 32-bit MSI address
-> > will not work.
-> > 
-> > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> > ---
-> > Changelog since v1:
-> >  - Use reserved memory, if it exists, to setup the MSI data
-> >  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
-> > 
-> >  .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
-> >  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
-> >  2 files changed, 39 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 7991f0e179b2..8c7c77b49ca8 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >  	u64 *msi_vaddr;
-> >  	int ret;
-> >  	u32 ctrl, num_ctrls;
-> > +	struct device_node *np;
-> > +	struct resource r;
-> >  
-> >  	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
-> >  		pp->irq_mask[ctrl] = ~0;
-> > @@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >  	 * order not to miss MSI TLPs from those devices the MSI target
-> >  	 * address has to be within the lowest 4GB.
-> >  	 *
-> > -	 * Note until there is a better alternative found the reservation is
-> > -	 * done by allocating from the artificially limited DMA-coherent
-> > -	 * memory.
-> > +	 * Check if there is memory region reserved for this device. If yes,
-> > +	 * pick up the msi_data from this region. This will be helpful for
-> > +	 * platforms that do not use/have 32-bit DMA addresses but want to use
-> > +	 * endpoints which support only 32-bit MSI address.
-> > +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
-> > +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
-> > +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
-> > +	 * supporting 32-bit MSI address will not work.
-> >  	 */
-> > -	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> > -	if (ret)
-> > -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> > +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-> > +	if (np) {
-> > +		ret = of_address_to_resource(np, 0, &r);
-> > +		if (ret) {
-> > +			dev_err(dev, "No memory address assigned to the region\n");
-> > +			return ret;
-> > +		}
-> >  
-> > -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > -					GFP_KERNEL);
-> > -	if (!msi_vaddr) {
-> > -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> > -		dw_pcie_free_msi(pp);
-> > -		return -ENOMEM;
-> > +		pp->msi_data = r.start;
-> > +	} else {
-> > +		dev_dbg(dev, "No %s specified\n", "memory-region");
-> > +		ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> > +		if (ret)
-> > +			dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> > +
-> > +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > +						GFP_KERNEL);
-> > +		if (!msi_vaddr) {
-> > +			dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
-> > +			dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> > +			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > +							GFP_KERNEL);
-> > +		}
-> > +
-> > +		if (!msi_vaddr) {
-> > +			dev_err(dev, "Failed to alloc and map MSI data\n");
-> > +			dw_pcie_free_msi(pp);
-> > +			return -ENOMEM;
-> > +		}
-> 
-> Should we just put this second if-check inside the above fallback?
+--0000000000001cc39f060eaf9cc6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jan 11, 2024 at 12:28=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
 >
-Yeah, we can do that. Will fix it in the next version after waiting for
-comments from others.
-> >  	}
-> >  
-> >  	return 0;
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 55ff76e3d384..c85cf4d56e98 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -317,6 +317,7 @@ struct dw_pcie_rp {
-> >  	phys_addr_t		io_bus_addr;
-> >  	u32			io_size;
-> >  	int			irq;
-> > +	u8			coherent_dma_bits;
-> >  	const struct dw_pcie_host_ops *ops;
-> >  	int			msi_irq[MAX_MSI_CTRLS];
-> >  	struct irq_domain	*irq_domain;
-> 
-> Looks like this is a lingering change? Please drop.
-> 
-Sorry about that. Will remove in the next version.
-> Thanks,
-> Will
-> 
-> > -- 
-> > 2.43.0.275.g3460e3d667-goog
-> > 
+> On Mon, Nov 13, 2023 at 01:56:06PM -0500, Jim Quinlan wrote:
+> > The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must =
+be
+> > deliberately set by the PCIe RC HW into one of three mutually exclusive
+> > modes:
+> >
+> > "safe" -- No CLKREQ# expected or required, refclk is always provided.  =
+This
+> >     mode should work for all devices but is not be capable of any refcl=
+k
+> >     power savings.
+> >
+> > "no-l1ss" -- CLKREQ# is expected to be driven by the downstream device =
+for
+> >     CPM and ASPM L0s and L1.  Provides Clock Power Management, L0s, and=
+ L1,
+> >     but cannot provide L1 substate (L1SS) power savings. If the downstr=
+eam
+> >     device connected to the RC is L1SS capable AND the OS enables L1SS,=
+ all
+> >     PCIe traffic may abruptly halt, potentially hanging the system.
+> >
+> > "default" -- Bidirectional CLKREQ# between the RC and downstream device=
+.
+> >     Provides ASPM L0s, L1, and L1SS, but not compliant to provide Clock
+> >     Power Management; specifically, may not be able to meet the T_CLRon=
+ max
+> >     timing of 400ns as specified in "Dynamic Clock Control", section
+> >     3.2.5.2.2 of the PCIe Express Mini CEM 2.1 specification.  This
+> >     situation is atypical and should happen only with older devices.
+> >
+> > Previously, this driver always set the mode to "no-l1ss", as almost all
+> > STB/CM boards operate in this mode.  But now there is interest in
+> > activating L1SS power savings from STB/CM customers, which requires "as=
+pm"
+> > mode.
+>
+> I think this should read "default" mode, not "aspm" mode, since "aspm"
+> is not a mode implemented by this patch, right?
+
+Correct.
+>
+>
+> > In addition, a bug was filed for RPi4 CM platform because most
+> > devices did not work in "no-l1ss" mode.
+>
+> I think this refers to bug 217276, mentioned below?
+
+I guess you are saying I should put a footnote marker there.
+
+>
+>
+> > Note that the mode is specified by the DT property "brcm,clkreq-mode". =
+ If
+> > this property is omitted, then "default" mode is chosen.
+> >
+> > Note: Since L1 substates are now possible, a modification was made
+> > regarding an internal bus timeout: During long periods of the PCIe RC H=
+W
+> > being in an L1SS sleep state, there may be a timeout on an internal bus
+> > access, even though there may not be any PCIe access involved.  Such a
+> > timeout will cause a subsequent CPU abort.
+>
+> This sounds scary.  If a NIC is put in L1.2, does this mean will we
+> see this CPU abort if there's no traffic for a long time?  What is
+> needed to avoid the CPU abort?
+
+I don't think this  happens in normal practice as there are a slew of
+low-level TLPs
+and LTR messages  that are sent on a regular basis.  The only time
+this timeout occured
+is when  a major customer was doing a hack: IIRC, their endpoint
+device has to reboot itself after link-up and driver probe,  so it
+goes into L1.2 to execute this to reboot
+and while doing so the connection is completely silent.
+
+
+>
+> Rega
+> What does this mean for users?  L1SS is designed for long periods of
+> the device being idle, so this leaves me feeling that using L1SS is
+> unsafe in general.  Hopefully this impression is unwarranted, and all
+> we need is some clarification here.
+
+
+I don't think it will affect most users, if any.
+
+Regards,
+Jim Quinlan
+Broadcom STB/CM
+
+
+
+>
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217276
+> >
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 96 ++++++++++++++++++++++++---
+> >  1 file changed, 86 insertions(+), 10 deletions(-)
+> > ...
+
+--0000000000001cc39f060eaf9cc6
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCArH0hk1+ELxOEc/P4sxynXbLJMnh9
+/ASrIV8yhJS+rTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDAx
+MTExODIxMDFaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAMSrMQhIINIFgPLjTRCBHwBubYPibZTD+8Htpo7xDOwaaXxvx
+RUzz12+7rdnPRq0Q83sH1v6cseFYjVmiZ6bQnvQQp3rLdMTFSgm9aXfh58/y9CXzCFO1++k58Xsz
+e6ISxLgzkbK0pjA/5QC/IYci4jV2KoHntETDYW6LMCtX0EOn4FRjOzZt/tTDs08V4IrEe+ZkKm9e
+pias4Srrnd7AltNJvBj0KY6Wq3NJZtGalTRcWUzVawHYyUMr3q1/Ube8YMkZInszXSn1yjWcXWnY
+1aOQY2aStEwiDKQdJPIGRrEkRib9/Kz/EtdbB2emBg3++HL0qUU+suA8iZ3hSLGgOg==
+--0000000000001cc39f060eaf9cc6--
 
