@@ -1,102 +1,103 @@
-Return-Path: <linux-pci+bounces-2056-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2057-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8109882B05F
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:14:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95CC482B112
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:55:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 916A31C2107A
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 14:13:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 918211C240E9
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 14:55:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 282D33C46F;
-	Thu, 11 Jan 2024 14:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAE334F20F;
+	Thu, 11 Jan 2024 14:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="iGT8QY7r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ii9rTNIH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B253B198
-	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 14:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 202401111413418d12d14e4f58e46eb4
-        for <linux-pci@vger.kernel.org>;
-        Thu, 11 Jan 2024 15:13:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=d8P5SF5niklck9uG6u8e0iLUYDzwhhYqU5LhoJl31Ws=;
- b=iGT8QY7rW2ewIQSYYXQwZwhs3xejTEGZKgyOHU0CF2n0zQth5OiZS9aRsuVfNsV9wzViKh
- ewJ+DYgDzwBgowFFoLnCeJ34qkh2YAkQtlbi3k4DkBNCe0GhxQ/Ukb+8voumQC5AbJ5j7j+V
- BlAc7SvPkzvRwFXp9pRVJBTWvVBmg=;
-From: Diogo Ivo <diogo.ivo@siemens.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	linux-phy@lists.infradead.org,
-	tjoseph@cadence.com,
-	linux-pci@vger.kernel.org,
-	ylal@codeaurora.org,
-	gregkh@linuxfoundation.org,
-	regressions@lists.linux.dev
-Cc: diogo.ivo@siemens.com,
-	jan.kiszka@siemens.com
-Subject: [REGRESSION] Keystone PCI driver probing and SerDes PLL timeout
-Date: Thu, 11 Jan 2024 14:13:30 +0000
-Message-ID: <20240111141331.3715265-1-diogo.ivo@siemens.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C694F5EF;
+	Thu, 11 Jan 2024 14:53:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1354C433F1;
+	Thu, 11 Jan 2024 14:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704984820;
+	bh=+BqtsdmJgllie0f+TedmDOkSJxfwyuvJ7XtBHEWUI+w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ii9rTNIHuhCcC5SFO36i+uwShspbZKQIChMO1ToULIRBnM8aehcOxo7Fpwa8NjUph
+	 uLv6MGpH5QGiY9wytE3zVj+6SrNeL9P35PUpSgJqAgKY9Q/kmtV9cOzARg7s7LjCQz
+	 VmXu4CklM0NEtcGAtnYPq+MDPhqOuy6Tg4ascn0bkMa8VyAoAyk3ScssPWxPN00BjC
+	 Ed13owoFf0UZS3HP/dk+UG0HPgar2uFmL8BrDn+D5IkJpj5Og6wFLBJMnU87TysnG0
+	 Mj2shKLMrrPdjSUbF8fffW7hYKhTtMs22pDLQGJtqSBmcXdvGG/s4zeML3RPE7wY9L
+	 dZq3QqKloPQsQ==
+Date: Thu, 11 Jan 2024 08:53:38 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>,
+	Kent Overstreet <kent.overstreet@gmail.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Uladzislau Koshchanka <koshchanka@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
+Message-ID: <20240111145338.GA2173492@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1320519:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111085540.7740-1-pstanner@redhat.com>
 
-Hello,
+On Thu, Jan 11, 2024 at 09:55:35AM +0100, Philipp Stanner wrote:
+> Second Resend. Would be cool if someone could tell me what I'll have to
+> do so we can get this merged. This is blocking the followup work I've
+> got in the pipe
 
-When testing the IOT2050 Advanced M.2 platform with Linux CIP 6.1
-we came across a breakage in the probing of the Keystone PCI driver
-(drivers/phy/ti/pci-keystone.c). This probing was working correctly
-in the previous version we were using, v5.10.
+This seems PCI-focused, and I'll look at merging this after v6.8-rc1
+is tagged and the merge window closes (probably Jan 21).  Then I'll
+rebase it to v6.8-rc1, tidy the subject lines to look like the rest
+of drivers/pci/, etc.
 
-In order to debug this we changed over to mainline Linux and bissecting
-lead us to find that commit e611f8cd8717 is the culprit, and with it applied
-we get the following messages:
-
-[   10.954597] phy-am654 910000.serdes: Failed to enable PLL
-[   10.960153] phy phy-910000.serdes.3: phy poweron failed --> -110
-[   10.967485] keystone-pcie 5500000.pcie: failed to enable phy
-[   10.973560] keystone-pcie: probe of 5500000.pcie failed with error -110
-
-This timeout is occuring in serdes_am654_enable_pll(), called from the 
-phy_ops .power_on() hook.
-
-Due to the nature of the error messages and the contents of the commit we
-believe that this is due to an unidentified race condition in the probing of
-the Keystone PCI driver when enabling the PHY PLLs, since changes in the
-workqueue the deferred probing runs on should not affect if probing works
-or not. To further support the existence of a race condition, commit
-86bfbb7ce4f6 (a scheduler commit) fixes probing, most likely unintentionally
-meaning that the problem may arise in the future again.
-
-One possible explanation is that there are pre-requisites for enabling the PLL
-that are not being met when e611f8cd8717 is applied; to see if this is the case
-help from people more familiar with the hardware details would be useful.
-
-As official support specifically for the IOT2050 Advanced M.2 platform was
-introduced in Linux v6.3 (so in the middle of the commits mentioned above)
-all of our testing was done with the latest mainline DeviceTree with [1]
-applied on top.
-
-This is being reported as a regression even though technically things are
-working with the current state of mainline since we believe the current fix
-to be an unintended by-product of other work.
-
-#regzbot introduced: e611f8cd8717
-
-[1]: https://lore.kernel.org/all/cover.1699087938.git.jan.kiszka@siemens.com/
+> Philipp Stanner (5):
+>   lib/pci_iomap.c: fix cleanup bugs in pci_iounmap()
+>   lib: move pci_iomap.c to drivers/pci/
+>   lib: move pci-specific devres code to drivers/pci/
+>   pci: move devres code from pci.c to devres.c
+>   lib, pci: unify generic pci_iounmap()
+> 
+>  MAINTAINERS                            |   1 -
+>  drivers/pci/Kconfig                    |   5 +
+>  drivers/pci/Makefile                   |   3 +-
+>  drivers/pci/devres.c                   | 450 +++++++++++++++++++++++++
+>  lib/pci_iomap.c => drivers/pci/iomap.c |  49 +--
+>  drivers/pci/pci.c                      | 249 --------------
+>  drivers/pci/pci.h                      |  24 ++
+>  include/asm-generic/io.h               |  27 +-
+>  include/asm-generic/iomap.h            |  21 ++
+>  lib/Kconfig                            |   3 -
+>  lib/Makefile                           |   1 -
+>  lib/devres.c                           | 208 +-----------
+>  lib/iomap.c                            |  28 +-
+>  13 files changed, 566 insertions(+), 503 deletions(-)
+>  create mode 100644 drivers/pci/devres.c
+>  rename lib/pci_iomap.c => drivers/pci/iomap.c (75%)
 
