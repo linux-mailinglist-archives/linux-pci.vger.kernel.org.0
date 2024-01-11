@@ -1,453 +1,196 @@
-Return-Path: <linux-pci+bounces-2022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2023-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98A6982A6A7
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 04:52:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C12CC82A6B6
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 04:59:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E8361C21DB1
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 03:52:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 398081F23EA1
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 03:59:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5569BEC0;
-	Thu, 11 Jan 2024 03:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D839AED4;
+	Thu, 11 Jan 2024 03:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BDqOS1re"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFuOBPVq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204E710FC
-	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 03:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RXnYZWlziiJKswEX4JidJHC7Hxs61IzdIoGww7MQkyK8tu5l99NQbOKqQoOqz88JTiGaY5cYY/Pw03OTbl7wJGtesH2Toq+nhC6NhJJNNmsCMNHgLqMK7lhIlNech63m+q+otJWsRI5qDdheJiZdbZMDwurxCaIK6f2cTA19sy1/r2t92LogpagKW7o1NQaBAZVVaL0zVc7Cq0Gy8zBA8XWyfybjNYdEOst6N5JmG/twcNT8z1H8r53gU0QmzivUu3EUtHMKNOsbMN7VrmGGyGAS2Ongn8EB0Yf68V88706aq7tD7J6PxnVgBTvI+AqugNk8CP/tcavR+DzxNxcCWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b33LMknL3BTYQIQ/JK+g0L0lpPjPGngWOfKVchn9x8I=;
- b=i5CVhZCHyiFsTdsybpLaHdY0HcQRDNZFY9XvIUA9t6u/gQIAsXqpm/0EOJHgcF6Tl+L6txlsmufI6MAB7csR1mnMQBZvAXl6X7tkvQpaX8nbro6JTueEorAYS2TMmenqPnV7u2Rsr1Ai+Oz9ZjCVcHcPuCkJva6LtASayzHeySLNbmJ+Hi4EXeHwTEXZzLIshwEik+eLxFQqBHXKZspKkEC1xozMgrShP/zZ9kyS5LD9MtlPExnlqLyO+R4C+L4SR1TpM3ev34TKDPDLHE4a8yjX+EntC08cRMO+WAkNGCo1g0slHApO6NKEg/wKIzAPXaW6a/NkrrOh9Sh6PsvKQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b33LMknL3BTYQIQ/JK+g0L0lpPjPGngWOfKVchn9x8I=;
- b=BDqOS1rehOYf4rNLRxrL73VNZhNVdIDFJqRJJ2MAiBrTn0JYdRGzWvC7NL2WYssAZ//o1qMQGf0JgWDZG71T4CFzlQwDQqdd8FvyKtXUlR9NyhQSA+ZJ+mILYZHqTQUG84oQlPT/g/Ydtd7BFP/OZ7wHa1ty+2FPeFELb3Li9P0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by SA1PR12MB8161.namprd12.prod.outlook.com (2603:10b6:806:330::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Thu, 11 Jan
- 2024 03:52:07 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::3112:5f54:2e51:cf89]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::3112:5f54:2e51:cf89%5]) with mapi id 15.20.7159.020; Thu, 11 Jan 2024
- 03:52:07 +0000
-Message-ID: <868361f2-889e-47f8-ad54-43b5d8dde522@amd.com>
-Date: Thu, 11 Jan 2024 14:52:00 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH pciutils 2/2] pciutils: Add decode support for IDE
- Extended Capability
-Content-Language: en-US
-Cc: =?UTF-8?Q?Martin_Mare=C5=A1?= <mj@ucw.cz>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20231230124239.310927-1-aik@amd.com>
- <20231230124239.310927-3-aik@amd.com>
-From: Alexey Kardashevskiy <aik@amd.com>
-To: linux-pci@vger.kernel.org
-In-Reply-To: <20231230124239.310927-3-aik@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SYAPR01CA0019.ausprd01.prod.outlook.com (2603:10c6:1::31)
- To CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57530EC0
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 03:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d3f2985425so25354755ad.3
+        for <linux-pci@vger.kernel.org>; Wed, 10 Jan 2024 19:58:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704945534; x=1705550334; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=843E1j+ytC4dpoAD+2eo2an3ENNVlI/ZsKrJRiTl7q4=;
+        b=wFuOBPVqcFrrpy5cniXOIMYq9LBmzDFmKNoKoxcDN1vPwIjNxGXo/qcSLLChMI7zny
+         JkbCr8u5mgzT/+r7C2ProGnrobkaEyoGI0VWjgHrFRy8TT+2vwGvVl3u1+tKjxS6MuYM
+         4haeOuAXmSSIEmN6y1WZ1WdkM9lFEBhM87so6iJY2h0ot3dcvWhPSHOMcBtrDO0iRD8n
+         4BaiibIAjULfDYdY6jIuFsLQR3L83VMhdLF02ENwdyucluZzh1cUcb9UjXJtOvvQ8VYj
+         Opy5ZTsmsw8zq9YWw1n6Nkspx2mOVu1CAAATMhnseLLsXhIRhRIfAPo7JcUWPgzuwldY
+         R6DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704945534; x=1705550334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=843E1j+ytC4dpoAD+2eo2an3ENNVlI/ZsKrJRiTl7q4=;
+        b=BtXk5JFVK+XDtSPq7pWhUUaIhebO9PDuwj3+5TGIOArAZcQvF6xYs/7hUMeHs/ho20
+         5QkJFrkuRdAbr3ULRSdBK2oeYTLzNR7d6KjoC4YxJ/fiNyVcTuhbu/By/zBJLfdWsbTU
+         xJH6hQwfYkI8kjcqrzNxoQTexgIEEvQfqgecm1JSjyaRy9bAEwrpTU57oOAX8WSzTT6J
+         iYPIZ3+7Gox0WFdb6QdDy9e4h5naRpxL5VixIyvl7NrC1yDcIMQkayvCDK0xys+tZmO5
+         iINWP0xsi1VkO+poW7eVD1c8VfQQIHEwQ1adJKWE9SYNB5ULmSYbdObfZRX3HDOHhJ+S
+         hUyw==
+X-Gm-Message-State: AOJu0YyixUOuk1M+VV/ECd1GBoNeY5mkKNhH9ryJxGTXUsrdBtvJ5r8J
+	96nDkTb2YLvln+3UTrZyGsvxC+I3NuZc
+X-Google-Smtp-Source: AGHT+IEbaotSIcA5d3U8yADzRW9dGMVKJH7bXKtBZw2OZ1DiLkmZ227p/wQSDi0izrrGGl1mkfwwkA==
+X-Received: by 2002:a17:903:41c4:b0:1d4:e308:d703 with SMTP id u4-20020a17090341c400b001d4e308d703mr480884ple.73.1704945534305;
+        Wed, 10 Jan 2024 19:58:54 -0800 (PST)
+Received: from google.com (108.93.126.34.bc.googleusercontent.com. [34.126.93.108])
+        by smtp.gmail.com with ESMTPSA id g12-20020a170902c38c00b001d52198a83esm110742plg.153.2024.01.10.19.58.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 19:58:54 -0800 (PST)
+Date: Thu, 11 Jan 2024 09:28:45 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>,
+	Sajid Dalvi <sdalvi@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Set DMA mask to 32 only if ZONE_DMA32 is
+ enabled
+Message-ID: <ZZ9nde5wAdeYlzdD@google.com>
+References: <20231221174051.35420-1-ajayagarwal@google.com>
+ <y64obwzmcwo2raskreebfyda4sofncnsedzvnh4xo2zrnchokl@ovv4mtqzl7xb>
+ <0635ac3c-94d3-4de4-bd56-d76de5d17067@arm.com>
+ <foqjr2iqtjnkpbgefujshp7wj3pnbmk44dr2kwdqvvl5eg2dmp@6aroubspp3lt>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|SA1PR12MB8161:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2716da00-d550-4031-333c-08dc1258ae56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	CkCo3SyW4W5ZpRQsKMHHd9d93ETdjr+aU72r+kHc56yKI7mBt8zZixVlZfKw/gkYmldCYzhRtr5iwspkuTtpqc347ZVNo9j19ZSyJXGnDQIQgbfIDhwy/q9LfrxeRsIWg7Crqv97Wa+ZinsQjdL1m/g1Q+fDuNe91frKLCgu6nmkh5SYdmeFK6XUrr1/lGdkZZWmxaavrrE/y0b+1VapRRW31IbMKdThxTWPqfkz7RewlzST9SmPCF8oNxzpcZR87Xx4sCn3U/o9Rk2rFw5IrKwnrOBY4baxAA2w7sdZZxVcvAnnWTvdT6feVF5NEhueICReBbOabdg960TTcT2yM4YU6J9Sy3fjjxgPtF3g6zES0VzteoYD/6TvUjfX6xs4EIvfICIH/BnSLp1XjhcpPHPMNWaCp42Gb8OzQvNoRHfBo+Y+DWzQ8DebB1fUFYXNYXFoepl7nYPWmg0jxgURwO68/JDqJw2Fgwufb926BVzS0S8Et4MznJVX1KpgiLcXC2/02wPdLE/vaHnz7kEcvHLHj7Pk4CEr2XzMUi4tls7KghuI+i544SPqoX6X8WSyDpQclkW0xAdApVWnEMVTMKBzeIK09ElUm9Hz5JpSBX3Y7LTAfqC7nJGKoXgXjj1jZhVnpCVLrBimA+P7sKbFGw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(39860400002)(396003)(376002)(366004)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(38100700002)(36756003)(31686004)(31696002)(26005)(83380400001)(6512007)(66946007)(66556008)(54906003)(66476007)(316002)(6666004)(478600001)(53546011)(6506007)(8676002)(8936002)(4326008)(19627235002)(6916009)(2616005)(6486002)(5660300002)(30864003)(2906002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bkNlS0dwNWNBVlpNbzhEdnR6ZXFiLyszei95Ynl4Rkk4RE1CYTFkb2sxbmZE?=
- =?utf-8?B?TFdMUUxEVm1sM3hjLzJ4Y2lKaEIwMmFTS1F1RGY5eVhOT0xhNzQ3RmtiQzll?=
- =?utf-8?B?Qkw5RVp5MStjOHpLbVBGY0Y4Y2RwMlBUOERnc1ZaZFloeWVocVNyWnBuc0J0?=
- =?utf-8?B?QmdXNHRXeTNUdzg1Mm1xdEVuc1NrV1dzWHN1QVNLdUlzOHE5aVpWS0U0SDFh?=
- =?utf-8?B?dm44YWtwYmhJcXR5UHhaTlFGbDg0ZTE0VkVYRks4bWRMOXBVZUNrNFhjK1VN?=
- =?utf-8?B?OFk4Y1dCSWJnQ0ozaFFtcGRGNU1sRkwwMjlJZlhscEZkdlFaQTIra3h4VjdG?=
- =?utf-8?B?RUFzVVJ5SGpCblRkM2szQmNMNzRHczc1aXFqWEcwWTdBalUzaldRY0RGcjJm?=
- =?utf-8?B?SDQ3SlZhaitJL3ZsWSs2Q3N4dHZuajZmanJlZlB5SE1aVDVsYkt5QjlaeExS?=
- =?utf-8?B?Mi9yZjJsSGF0UWdpQjNMNUdqZFpkeHBjMlpsUWVpdUVjbThlREtrWlFEbWtP?=
- =?utf-8?B?ZUJZNWFGUkhDZ2lPTUlUaUNiUmIwbmtEVjJyZ1l1WU5RcEQvRXBCVU44azA0?=
- =?utf-8?B?SXQ5WUppSjZLaGFDUnlZd0FBZE5nNzBYOXBjL3NFMlhCUTl6QWJpYjY4ZFNO?=
- =?utf-8?B?SER3OURtQUhuTnROS0UxeXExaUtZQ2dybFRQcktXK0hkZmQyWXJLVlF5VUVY?=
- =?utf-8?B?SzB6UlVCbnlzUTlnRzFYY0I4V1U2ak1qUEVmMXNZTVgwcnFKWmtxNmVjNER6?=
- =?utf-8?B?QUhQNVROUHRMMDl5V3AxamI0ZFNiTTlBazQzT1FNb2NBM3AwUWVXZzF6N1dv?=
- =?utf-8?B?cjcvcy9laUU5SGlqaEo2U3gyTnNON1poUW1XR29kaDlJUU5MQ3Nzcms2TjhD?=
- =?utf-8?B?cm1SN3g4bXNJbXk5aDBROUtlRjBoRTFkckRobFRVeFJ1UjBRM1BBaTZUazNl?=
- =?utf-8?B?U0tXTzhrN2xxZTFZRFpxVVRtaHNaK2szbEdRNFRTSG5EK3JqcXg3aHQrbTBk?=
- =?utf-8?B?RS8zYmxHcExRTDEwMzRYUXo5Qk1idm1XOXlDZmNPS1A2aVVGYkhpUmY4dnVo?=
- =?utf-8?B?KytTOStvOWRKTm1vRTJyd29NKytXbEJSM1VyT24wd0FhTU9rY2F2eGNvOUww?=
- =?utf-8?B?S2dqeEpGL0ZVRmdFVDZoemltSEd3OC9iemdSU1Y5YVVHZnFLMU1jVXlFNzNo?=
- =?utf-8?B?c0tOcXBDY25zYUEvb1JPM2U0d0ovbkRubnBlREhLTzIvMVNJYTZkcDFpSExZ?=
- =?utf-8?B?U3g5RFAxZHR4cys2enhtaEpFT0tmTkdLcEtLZzhXWDBjU3h0alJPd1czRksv?=
- =?utf-8?B?WEZSUDVyR0RpTy8wdFJVNGZKcDZyYU4wNXdSa3JNQXpBYkpFbThGZDJBTHUv?=
- =?utf-8?B?N3hHQkFhYjBScU1lVk9pdjZzYUZqdzRSRDE0NFhGSUFhcXU0YW9zNmtoOWRO?=
- =?utf-8?B?ZE9ycE9qZ2ErdnR2dnlJUmFMaWViUHQ3MXl0aVRhd2kzUzVCdkJkMHRWVVhJ?=
- =?utf-8?B?WEdqOGYvdzlka1FJK1hMMS8rYjh1RThzeGZUamV1bWJGZlhZaUl5TEFybnBP?=
- =?utf-8?B?akZXQlpGbGxVV3dtWVEvczczV0taVjBZcWFBQTlIZlg2YmF4L0s5L1BUYXFU?=
- =?utf-8?B?UFJoZHFqNDdOY240RndpRE1JcVp1WmlZWjRmMStJZ3lGQW1DTjAxVlpDdHpJ?=
- =?utf-8?B?SVllTVhpNzFnK1o3RmE5OGNSVGNuVC9OZGZTOS9WUCtsRlExaDMzaXVJS0pl?=
- =?utf-8?B?RFRvSFcrZEZrK093SUZaZjJSM2RXdmMxMmplK2ptV0RTRndlWDh2N0tnR3Na?=
- =?utf-8?B?cGJOc3YxKzFvanVwYy9yeVJiWU4zZlhkcldzbXZkRk5Fd1QyTk5JTzFUaCtz?=
- =?utf-8?B?Y1UrMmJnZWhSRG9NQmJXRzRGNW9KTXJTZHVDckxvSEpGLzh3aDRTN2hQZzJn?=
- =?utf-8?B?NjlBeDNrT0hHOTg4VlNhcWtNYWFFbVlxd2ltQmZYNk1IcDBCaERKKzdxWEpU?=
- =?utf-8?B?NklhTWNFZWdkRXJ0RXVSVTVoZnd6cjJQNG1jNkhqZU1QNGJHMmlpUnluSFRo?=
- =?utf-8?B?SktPS0FqbWo1TjlvcUF4QmZrdHFaNHJCQ2ZrRi85bDdvMTZBNFRaQjVyMVRy?=
- =?utf-8?Q?KOMqGoLyI4Pen8xuxHEzmyFxs?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2716da00-d550-4031-333c-08dc1258ae56
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jan 2024 03:52:07.4658
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cM7a/nqTrzrnxNMuq8TJuKn4SkZCmkDnCI5BNk51rRddEK4p1WN53pHJIpFPO2yc4vZU0GybMTztD1QJZfz48A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8161
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <foqjr2iqtjnkpbgefujshp7wj3pnbmk44dr2kwdqvvl5eg2dmp@6aroubspp3lt>
 
-On 30/12/23 23:42, Alexey Kardashevskiy wrote:
-> IDE (Integrity & Data Encryption) Extended Capability defined in [1]
-> implements control of the PCI link encryption.
+On Wed, Jan 10, 2024 at 01:47:39AM +0300, Serge Semin wrote:
+> On Mon, Jan 08, 2024 at 05:50:26PM +0000, Robin Murphy wrote:
+> > On 2023-12-21 6:33 pm, Serge Semin wrote:
+> > > Hi Ajay
+> > > 
+> > > On Thu, Dec 21, 2023 at 11:10:51PM +0530, Ajay Agarwal wrote:
+> > > > If CONFIG_ZONE_DMA32 is disabled, then the dmam_alloc_coherent
+> > > > will fail to allocate the memory if there are no 32-bit addresses
+> > > > available. This will lead to the PCIe RC probe failure.
+> > > > Fix this by setting the DMA mask to 32 bits only if the kernel
+> > > > configuration enables DMA32 zone. Else, leave the mask as is.
+> > > > 
+> > > > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> > > > ---
+> > > >   drivers/pci/controller/dwc/pcie-designware-host.c | 7 +++++++
+> > > >   1 file changed, 7 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > index 7991f0e179b2..163a78c5f9d8 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > @@ -377,10 +377,17 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+> > > >   	 * Note until there is a better alternative found the reservation is
+> > > >   	 * done by allocating from the artificially limited DMA-coherent
+> > > >   	 * memory.
+> > > > +	 *
+> > > > +	 * Set the coherent DMA mask to 32 bits only if the DMA32 zone is
+> > > > +	 * supported. Otherwise, leave the mask as is.
+> > > > +	 * This ensures that the dmam_alloc_coherent is successful in
+> > > > +	 * allocating the memory.
+> > > >   	 */
+> > > > +#ifdef CONFIG_ZONE_DMA32
+> > > >   	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> > > >   	if (ret)
+> > > >   		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> > > > +#endif
+> > > 
+> > > Without setting the mask the allocation below may cause having MSI
+> > > data from above 4GB which in its turn will cause MSI not working for
+> > > peripheral PCI-devices supporting 32-bit MSI only. That's the gist of
+> > > this questionable code above and below.
+> > 
+> > Right, this change is wrong on several levels, as it would end up hiding the
+> > warning in cases where it would be most relevant.
+> > 
+> > > The discussion around it can be found here:
+> > > https://lore.kernel.org/linux-pci/20220825185026.3816331-2-willmcvicker@google.com
+> > > and a problem similar to what you described was reported here:
+> > > https://lore.kernel.org/linux-pci/decae9e4-3446-2384-4fc5-4982b747ac03@yadro.com/
+> > > 
+> > > The easiest solution in this case is to somehow pre-define
+> > > pp->msi_data with a PCI-bus address free from RAM behind and avoid
+> > > allocation below at all. The only question is how to do that. See the
+> > > discussions above for details.
+> > 
 > 
-> The example output is:
+> > FWIW there's also the potential question of whether failing to obtain a
+> > 32-bit address needs to be entirely fatal to probe at all. Perhaps it might
+> > be reasonable to just continue without MSI support, or maybe retry with a
+> > larger mask to attempt limited 64-bit-only MSI support - IIRC the latter was
+> > proposed originally, but Will's initial use-case didn't actually need it so
+> > we concluded it was hard to justify the complexity at the time. The main
+> > thing is not to quietly go ahead and do something which we can't guarantee
+> > to fully work, without at least letting the user know.
 > 
-> Capabilities: [830 v1] IDE
-> 	IDECap: Lnk=1 Sel=1 FlowThru- PartHdr- Aggr- PCPC- IDE_KM+
-> 	IDECtl: IntEn-
-> 	LinkIDE#0 Ctl: En- NPR- PR- CPL- PCRC- HdrEnc=no Alg='AES-GCM 256 key size, 96b MAC' TC0 ID0
-> 	LinkIDE#0 Sta: Status=secure RecvChkFail-
-> 	SelectiveIDE#0 Ctl: En- NPR- PR- CPL- PCRC- HdrEnc=no Alg='AES-GCM 256 key size, 96b MAC' TC0 ID0
-> 	SelectiveIDE#0 Sta: insecure RecvChkFail-
-> 	SelectiveIDE#0 RID: Valid- Base=0 Limit=0 SegBase=0
+> Hm, I guess you are right. It may be an overkill to halt the probe
+> procedure if 32-bit mask failed to be specified. Printing some big fat
+> warning looks better at least until it is possible to reserve a
+> PCIe-bus memory within lowest 4GB irrespective to the system RAM
+> availability and the device DMA capabilities.
+>
+Thanks Robin and Serge for your inputs. In the next version of the
+patch, I will try to use the reserved memory, if it exists, to set up
+the MSI data. If the reserved memory does not exist, the patch will try
+to use the standard DMA API to allocate the msi_data.
 
-
-Ping? Suspiciously quiet :)
-
-This is also missing:
-
---- a/setpci.c
-+++ b/setpci.c
-@@ -396,6 +396,7 @@ static const struct reg_name pci_reg_names[] = {
-    { 0x20027,   0, 0, 0x0, "ECAP_LMR" },
-    { 0x20028,   0, 0, 0x0, "ECAP_HIER_ID" },
-    { 0x20029,   0, 0, 0x0, "ECAP_NPEM" },
-+  { 0x20030,   0, 0, 0x0, "ECAP_IDE" },
-
-Which reminded me - one thing I want to do with setpci is changing the 
-"En-"s above to "En+". At the moment setpci.c seems only allowing 
-offsets into a ecapability which is tricky to use as offsets of 
-"LinkIDE#NN Ctl" and "SelectiveIDE#NN Ctl" are not fixed - these are 
-variable length arrays.
-
-So, I could
-1) teach setpci do parsing (repeat what s-ecaps.c does) to allow 
-register names, like "setpci CAP_IDE+LinkIDE#4Ctl", something like this.
-
-2) dump offsets as ([24] in this example and use offsets with setpci 
-which it can do now):
-
-LinkIDE#0 Ctl [24]: En- NPR- PR- CPL- PCRC- HdrEnc=no Alg='AES-GCM 256 
-key size, 96b MAC' TC0 ID0
-
-3) leave lspci/setpci alone and do it elsewhere.
-
-Any advice? Thanks,
-
+> Regarding the Will's patch. His solution wasn't entirely correct. It
+> implied to use the DW PCIe Root-Port MSI capability as a "storage" of
+> the MSI 64-bit flag. It was wrong from two perspective. First DW PCIe
+> iMSI-RX engine always supports 64-bit MSI addresses, so having the MSI
+> 64-bit flag cleared would be at least misleading. Second it was much
+> easier and more correct to just define a flag with the same semantics
+> in the driver private data.
 > 
-> [1] PCIe r6.0.1, sections 6.33, 7.9.26
+> In anyway trying 32-bit mask and then falling back to the 64-bit one
+> sound reasonable indeed.
 > 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> ---
->   lib/header.h |  61 ++++++++
->   ls-ecaps.c   | 162 ++++++++++++++++++++
->   2 files changed, 223 insertions(+)
+Yes, I will add the fallback to 64-bit if the 32-bit allocation fails.
+This fallback will be irrespective of whether the connected/intended EP
+supports 64-bit MSI or not.
+
+> -Serge(y)
 > 
-> diff --git a/lib/header.h b/lib/header.h
-> index 47ee8a6..5df2f57 100644
-> --- a/lib/header.h
-> +++ b/lib/header.h
-> @@ -256,6 +256,7 @@
->   #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
->   #define PCI_EXT_CAP_ID_32GT	0x2a	/* Physical Layer 32.0 GT/s */
->   #define PCI_EXT_CAP_ID_DOE	0x2e	/* Data Object Exchange */
-> +#define PCI_EXT_CAP_ID_IDE	0x30	/* IDE */
->   
->   /*** Definitions of capabilities ***/
->   
-> @@ -1416,6 +1417,66 @@
->   #define  PCI_DOE_STS_ERROR		0x4	/* DOE Error */
->   #define  PCI_DOE_STS_OBJECT_READY	0x80000000 /* Data Object Ready */
->   
-> +/* IDE Extended Capability */
-> +#define PCI_IDE_CAP		0x4
-> +#define  PCI_IDE_CAP_LINK_IDE_SUPP	0x1	/* Link IDE Stream Supported */
-> +#define  PCI_IDE_CAP_SELECTIVE_IDE_SUPP 0x2	/* Selective IDE Streams Supported */
-> +#define  PCI_IDE_CAP_FLOWTHROUGH_IDE_SUPP 0x4	/* Flow-Through IDE Stream Supported */
-> +#define  PCI_IDE_CAP_PARTIAL_HEADER_ENC_SUPP 0x8 /* Partial Header Encryption Supported */
-> +#define  PCI_IDE_CAP_AGGREGATION_SUPP	0x10	/* Aggregation Supported */
-> +#define  PCI_IDE_CAP_PCRC_SUPP		0x20	/* PCRC Supported */
-> +#define  PCI_IDE_CAP_IDE_KM_SUPP	0x40	/* IDE_KM Protocol Supported */
-> +#define  PCI_IDE_CAP_ALG(x)	(((x) >> 8) & 0x1f) /* Supported Algorithms */
-> +#define  PCI_IDE_CAP_ALG_AES_GCM_256	0	/* AES-GCM 256 key size, 96b MAC */
-> +#define  PCI_IDE_CAP_LINK_TC_NUM(x)		(((x) >> 13) & 0x7) /* Number of TCs Supported for Link IDE */
-> +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Number of Selective IDE Streams Supported */
-> +#define PCI_IDE_CTL		0x8
-> +#define  PCI_IDE_CTL_FLOWTHROUGH_IDE	0x4	/* Flow-Through IDE Stream Enabled */
-> +#define PCI_IDE_LINK_STREAM		0xC
-> +/* Link IDE Stream block, up to PCI_IDE_CAP_LINK_TC_NUM */
-> +/* Link IDE Stream Control Register */
-> +#define  PCI_IDE_LINK_CTL_EN		0x1	/* Link IDE Stream Enable */
-> +#define  PCI_IDE_LINK_CTL_TX_AGGR_NPR(x)(((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
-> +#define  PCI_IDE_LINK_CTL_TX_AGGR_PR(x)	(((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
-> +#define  PCI_IDE_LINK_CTL_TX_AGGR_CPL(x)(((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
-> +#define  PCI_IDE_LINK_CTL_PCRC_EN	0x100	/* PCRC Enable */
-> +#define  PCI_IDE_LINK_CTL_PART_ENC(x)	(((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
-> +#define  PCI_IDE_LINK_CTL_ALG(x)	(((x) >> 14) & 0x1f) /* Selected Algorithm */
-> +#define  PCI_IDE_LINK_CTL_TC(x)		(((x) >> 19) & 0x7)  /* Traffic Class */
-> +#define  PCI_IDE_LINK_CTL_ID(x)		(((x) >> 24) & 0xff) /* Stream ID */
-> +/* Link IDE Stream Status Register */
-> +#define  PCI_IDE_LINK_STS_STATUS(x)	((x) & 0xf) /* Link IDE Stream State */
-> +#define  PCI_IDE_LINK_STS_RECVD_INTEGRITY_CHECK	0x80000000 /* Received Integrity Check Fail Message */
-> +/* Selective IDE Stream block, up to PCI_IDE_CAP_SELECTIVE_STREAMS_NUM */
-> +/* Selective IDE Stream Capability Register */
-> +#define  PCI_IDE_SEL_CAP_BLOCKS_NUM(x)	((x) & 0xf) /* Number of Address Association Register Blocks */
-> +/* Selective IDE Stream Control Register */
-> +#define  PCI_IDE_SEL_CTL_EN		0x1	/* Selective IDE Stream Enable */
-> +#define  PCI_IDE_SEL_CTL_TX_AGGR_NPR(x)	(((x) >> 2) & 0x3) /* Tx Aggregation Mode NPR */
-> +#define  PCI_IDE_SEL_CTL_TX_AGGR_PR(x)	(((x) >> 4) & 0x3) /* Tx Aggregation Mode PR */
-> +#define  PCI_IDE_SEL_CTL_TX_AGGR_CPL(x)	(((x) >> 6) & 0x3) /* Tx Aggregation Mode CPL */
-> +#define  PCI_IDE_SEL_CTL_PCRC_EN	0x100	/* PCRC Enable */
-> +#define  PCI_IDE_SEL_CTL_PART_ENC(x)	(((x) >> 10) & 0xf)  /* Partial Header Encryption Mode */
-> +#define  PCI_IDE_SEL_CTL_ALG(x)		(((x) >> 14) & 0x1f) /* Selected Algorithm */
-> +#define  PCI_IDE_SEL_CTL_TC(x)		(((x) >> 19) & 0x7)  /* Traffic Class */
-> +#define  PCI_IDE_SEL_CTL_DEFAULT	0x400000 /* Default Stream */
-> +#define  PCI_IDE_SEL_CTL_ID(x)		(((x) >> 24) & 0xff) /* Stream ID */
-> +/* Selective IDE Stream Status Register */
-> +#define  PCI_IDE_SEL_STS_STATUS(x)	((x) & 0xf) /* Selective IDE Stream State */
-> +#define  PCI_IDE_SEL_STS_RECVD_INTEGRITY_CHECK	0x80000000 /* Received Integrity Check Fail Message */
-> +/* IDE RID Association Register 1 */
-> +#define  PCI_IDE_SEL_RID_1_LIMIT(x)	(((x) >> 8) & 0xffff) /* RID Limit */
-> +/* IDE RID Association Register 2 */
-> +#define  PCI_IDE_SEL_RID_2_VALID	0x1	/* Valid */
-> +#define  PCI_IDE_SEL_RID_2_BASE(x)	(((x) >> 8) & 0xffff) /* RID Base */
-> +#define  PCI_IDE_SEL_RID_2_SEG_BASE(x)	(((x) >> 24) & 0xff) /* Segmeng Base */
-> +/* Selective IDE Address Association Register Block, up to PCI_IDE_SEL_CAP_BLOCKS_NUM */
-> +#define  PCI_IDE_SEL_ADDR_1_VALID	0x1	/* Valid */
-> +#define  PCI_IDE_SEL_ADDR_1_BASE_LOW(x)	(((x) >> 8) & 0xfff) /* Memory Base Lower */
-> +#define  PCI_IDE_SEL_ADDR_1_LIMIT_LOW(x)(((x) >> 20) & 0xfff) /* Memory Limit Lower */
-> +/* IDE Address Association Register 2 is "Memory Limit Upper" */
-> +/* IDE Address Association Register 3 is "Memory Base Upper" */
-> +
->   /*
->    * The PCI interface treats multi-function devices as independent
->    * devices.  The slot/function address of each device is encoded
-> diff --git a/ls-ecaps.c b/ls-ecaps.c
-> index 2d7d827..9f6c3f8 100644
-> --- a/ls-ecaps.c
-> +++ b/ls-ecaps.c
-> @@ -1468,6 +1468,165 @@ cap_doe(struct device *d, int where)
->   	 FLAG(l, PCI_DOE_STS_OBJECT_READY));
->   }
->   
-> +static void
-> +cap_ide(struct device *d, int where)
-> +{
-> +    const char *hdr_enc_mode[] = { "no", "17:2", "25:2", "33:2", "41:2" };
-> +    const char *algo[] = { "AES-GCM 256 key size, 96b MAC" };
-> +    const char *stream_state[] = { "insecure", "secure" };
-> +    const char *aggr[] = { "-", "=2", "=4", "=8" };
-> +    u32 l, l2, linknum = 0, selnum = 0, addrnum, off, i, j;
-> +    char buf1[16], buf2[16];
-> +
-> +    printf("IDE\n");
-> +
-> +    if (verbose < 2)
-> +        return;
-> +
-> +    if (!config_fetch(d, where + PCI_IDE_CAP, 8))
-> +      {
-> +        printf("\t\t<unreadable>\n");
-> +        return;
-> +      }
-> +
-> +    l = get_conf_long(d, where + PCI_IDE_CAP);
-> +    if (l & PCI_IDE_CAP_LINK_IDE_SUPP)
-> +        linknum = PCI_IDE_CAP_LINK_TC_NUM(l) + 1;
-> +    if (l & PCI_IDE_CAP_SELECTIVE_IDE_SUPP)
-> +        selnum = PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(l) + 1;
-> +
-> +    printf("\t\tIDECap: Lnk=%d Sel=%d FlowThru%c PartHdr%c Aggr%c PCPC%c IDE_KM%c\n",
-> +      linknum,
-> +      selnum,
-> +      FLAG(l, PCI_IDE_CAP_FLOWTHROUGH_IDE_SUPP),
-> +      FLAG(l, PCI_IDE_CAP_PARTIAL_HEADER_ENC_SUPP),
-> +      FLAG(l, PCI_IDE_CAP_AGGREGATION_SUPP),
-> +      FLAG(l, PCI_IDE_CAP_PCRC_SUPP),
-> +      FLAG(l, PCI_IDE_CAP_IDE_KM_SUPP));
-> +
-> +    l = get_conf_long(d, where + PCI_IDE_CTL);
-> +    printf("\t\tIDECtl: IntEn%c\n",
-> +      FLAG(l, PCI_IDE_CTL_FLOWTHROUGH_IDE));
-> +
-> +    // The rest of the capability is variable length arrays
-> +    off = where + PCI_IDE_CAP + PCI_IDE_LINK_STREAM;
-> +
-> +    // Link IDE Register Block repeated 0 to 8 times
-> +    if (linknum)
-> +      {
-> +        if (!config_fetch(d, off, 8 * linknum))
-> +          {
-> +            printf("\t\t<unreadable>\n");
-> +            return;
-> +          }
-> +        for (i = 0; i < linknum; ++i)
-> +          {
-> +            // Link IDE Stream Control Register
-> +            l = get_conf_long(d, off);
-> +            off += 4;
-> +            printf("\t\tLinkIDE#%d Ctl: En%c NPR%s PR%s CPL%s PCRC%c HdrEnc=%s Alg='%s' TC%d ID%d\n",
-> +              i,
-> +              FLAG(l, PCI_IDE_LINK_CTL_EN),
-> +              aggr[PCI_IDE_LINK_CTL_TX_AGGR_NPR(l)],
-> +              aggr[PCI_IDE_LINK_CTL_TX_AGGR_PR(l)],
-> +              aggr[PCI_IDE_LINK_CTL_TX_AGGR_CPL(l)],
-> +              FLAG(l, PCI_IDE_LINK_CTL_EN),
-> +              TABLE(hdr_enc_mode, PCI_IDE_LINK_CTL_PART_ENC(l), buf1),
-> +              TABLE(algo, PCI_IDE_LINK_CTL_ALG(l), buf2),
-> +              PCI_IDE_LINK_CTL_TC(l),
-> +              PCI_IDE_LINK_CTL_ID(l)
-> +              );
-> +
-> +            /* Link IDE Stream Status Register */
-> +            l = get_conf_long(d, off);
-> +            off += 4;
-> +            printf("\t\tLinkIDE#%d Sta: Status=%s RecvChkFail%c\n",
-> +              i,
-> +              TABLE(stream_state, PCI_IDE_LINK_STS_STATUS(l), buf1),
-> +              FLAG(l, PCI_IDE_LINK_STS_RECVD_INTEGRITY_CHECK));
-> +          }
-> +      }
-> +
-> +    for (i = 0; i < linknum; ++i)
-> +      {
-> +        // Fetching Selective IDE Stream Capability/Control/Status/RID1/RID2
-> +        if (!config_fetch(d, off, 20))
-> +          {
-> +            printf("\t\t<unreadable>\n");
-> +            return;
-> +          }
-> +
-> +        // Selective IDE Stream Capability Register
-> +        l = get_conf_long(d, off);
-> +        off += 4;
-> +        addrnum = PCI_IDE_SEL_CAP_BLOCKS_NUM(l);
-> +
-> +        // Selective IDE Stream Control Register
-> +        l = get_conf_long(d, off);
-> +        off += 4;
-> +
-> +        printf("\t\tSelectiveIDE#%d Ctl: En%c NPR%s PR%s CPL%s PCRC%c HdrEnc=%s Alg='%s' TC%d ID%d%s\n",
-> +          i,
-> +          FLAG(l, PCI_IDE_SEL_CTL_EN),
-> +          aggr[PCI_IDE_SEL_CTL_TX_AGGR_NPR(l)],
-> +          aggr[PCI_IDE_SEL_CTL_TX_AGGR_PR(l)],
-> +          aggr[PCI_IDE_SEL_CTL_TX_AGGR_CPL(l)],
-> +          FLAG(l, PCI_IDE_SEL_CTL_PCRC_EN),
-> +          TABLE(hdr_enc_mode, PCI_IDE_SEL_CTL_PART_ENC(l), buf1),
-> +          TABLE(algo, PCI_IDE_SEL_CTL_ALG(l), buf2),
-> +          PCI_IDE_SEL_CTL_TC(l),
-> +          PCI_IDE_SEL_CTL_ID(l),
-> +          (l & PCI_IDE_SEL_CTL_DEFAULT) ? " Default" : ""
-> +          );
-> +
-> +        // Selective IDE Stream Status Register
-> +        l = get_conf_long(d, off);
-> +        off += 4;
-> +
-> +        printf("\t\tSelectiveIDE#%d Sta: %s RecvChkFail%c\n",
-> +          i,
-> +          TABLE(stream_state, PCI_IDE_SEL_STS_STATUS(l), buf1),
-> +          FLAG(l, PCI_IDE_SEL_STS_RECVD_INTEGRITY_CHECK));
-> +
-> +        // IDE RID Association Registers
-> +        l = get_conf_long(d, off);
-> +        off += 4;
-> +        l2 = get_conf_long(d, off);
-> +        off += 4;
-> +
-> +        printf("\t\tSelectiveIDE#%d RID: Valid%c Base=%x Limit=%x SegBase=%x\n",
-> +          i,
-> +          FLAG(l2, PCI_IDE_SEL_RID_2_VALID),
-> +          PCI_IDE_SEL_RID_2_BASE(l2),
-> +          PCI_IDE_SEL_RID_1_LIMIT(l),
-> +          PCI_IDE_SEL_RID_2_SEG_BASE(l2));
-> +
-> +        if (!config_fetch(d, off, addrnum * 12))
-> +          {
-> +            printf("\t\t<unreadable>\n");
-> +            return;
-> +          }
-> +
-> +        // IDE Address Association Registers
-> +        for (j = 0; j < addrnum; ++j)
-> +          {
-> +            u64 limit, base;
-> +
-> +            l = get_conf_long(d, off);
-> +            off += 4;
-> +            limit = get_conf_long(d, off);
-> +            off += 4;
-> +            base = get_conf_long(d, off);
-> +            off += 4;
-> +            printf("\t\tSelectiveIDE#%d RID: Valid%c Base=%lx Limit=%lx\n",
-> +              i,
-> +              FLAG(l, PCI_IDE_SEL_ADDR_1_VALID),
-> +              (base << 32) | PCI_IDE_SEL_ADDR_1_BASE_LOW(l),
-> +              (limit << 32) | PCI_IDE_SEL_ADDR_1_LIMIT_LOW(l));
-> +          }
-> +      }
-> +}
-> +
->   void
->   show_ext_caps(struct device *d, int type)
->   {
-> @@ -1621,6 +1780,9 @@ show_ext_caps(struct device *d, int type)
->   	  case PCI_EXT_CAP_ID_DOE:
->   	    cap_doe(d, where);
->   	    break;
-> +	  case PCI_EXT_CAP_ID_IDE:
-> +	    cap_ide(d, where);
-> +	    break;
->   	  default:
->   	    printf("Extended Capability ID %#02x\n", id);
->   	    break;
-
--- 
-Alexey
-
+> > 
+> > Thanks,
+> > Robin.
+> > 
+> > > 
+> > > -Serge(y)
+> > > 
+> > > >   	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> > > >   					GFP_KERNEL);
+> > > > -- 
+> > > > 2.43.0.195.gebba966016-goog
+> > > > 
+> > > > 
 
