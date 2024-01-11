@@ -1,103 +1,155 @@
-Return-Path: <linux-pci+bounces-2057-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2058-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95CC482B112
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:55:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8525382B12F
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 15:59:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 918211C240E9
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 14:55:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2410E1F23B4C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 14:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAE334F20F;
-	Thu, 11 Jan 2024 14:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B47B4A9B0;
+	Thu, 11 Jan 2024 14:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ii9rTNIH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHYalyDO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C694F5EF;
-	Thu, 11 Jan 2024 14:53:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1354C433F1;
-	Thu, 11 Jan 2024 14:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D6E390;
+	Thu, 11 Jan 2024 14:59:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F65AC43390;
+	Thu, 11 Jan 2024 14:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704984820;
-	bh=+BqtsdmJgllie0f+TedmDOkSJxfwyuvJ7XtBHEWUI+w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ii9rTNIHuhCcC5SFO36i+uwShspbZKQIChMO1ToULIRBnM8aehcOxo7Fpwa8NjUph
-	 uLv6MGpH5QGiY9wytE3zVj+6SrNeL9P35PUpSgJqAgKY9Q/kmtV9cOzARg7s7LjCQz
-	 VmXu4CklM0NEtcGAtnYPq+MDPhqOuy6Tg4ascn0bkMa8VyAoAyk3ScssPWxPN00BjC
-	 Ed13owoFf0UZS3HP/dk+UG0HPgar2uFmL8BrDn+D5IkJpj5Og6wFLBJMnU87TysnG0
-	 Mj2shKLMrrPdjSUbF8fffW7hYKhTtMs22pDLQGJtqSBmcXdvGG/s4zeML3RPE7wY9L
-	 dZq3QqKloPQsQ==
-Date: Thu, 11 Jan 2024 08:53:38 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
+	s=k20201202; t=1704985170;
+	bh=obzljcLiJ4GpVaa5SSKo4cJxW9OvkYGDmnjlyQfIlZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nHYalyDOvAOPCXFghAM1koa8SyyhhJbx2NS7oaSccjGMgH7hd8K6PgCbgUYNNxNlV
+	 RmGKdU8H/qelbOpHbdK6lY3z94gtQDkXFLwmXpIo6se2QKdb2/eJHuEYRWwCvqRZqz
+	 d6c/2VhyfKTHc2AOeMEj2o2oEeAhfzNCGN+6T/O6RApd1aGtGh6rdqf/jl/505e4yX
+	 2vkmubzDVpwuYZ5TSUe6C8cnpmoESUorVaftbQJbcjgGD8ONaUd6KceQOl+dy+Jwil
+	 R5sfhQjmbOfzkWmuihvw8I2rFw5SlSma30PRhfosHts/KPzeyEknOc/usqeCbKIhN0
+	 6Aj8MjPf72M2w==
+Date: Thu, 11 Jan 2024 08:59:28 -0600
+From: Rob Herring <robh@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Yang Xiwen <forbidden405@foxmail.com>,
+	Sebastian Reichel <sre@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
-Message-ID: <20240111145338.GA2173492@bhelgaas>
+	Guenter Roeck <linux@roeck-us.net>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [DO NOT MERGE v6 26/37] dt-bindings: vendor-prefixes: Add smi
+Message-ID: <20240111145928.GA538344-robh@kernel.org>
+References: <cover.1704788539.git.ysato@users.sourceforge.jp>
+ <c8aaf67e3fcdb7e60632c53a784691aabfc7733e.1704788539.git.ysato@users.sourceforge.jp>
+ <20240109-fructose-bundle-05d01033277b@spud>
+ <CAMuHMdU1z64QHJOVd3jUsOfyuDApB1+khkUV8PvjoKbwsi327g@mail.gmail.com>
+ <20240110-sincere-tripod-9d34175fcbce@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240111085540.7740-1-pstanner@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240110-sincere-tripod-9d34175fcbce@spud>
 
-On Thu, Jan 11, 2024 at 09:55:35AM +0100, Philipp Stanner wrote:
-> Second Resend. Would be cool if someone could tell me what I'll have to
-> do so we can get this merged. This is blocking the followup work I've
-> got in the pipe
-
-This seems PCI-focused, and I'll look at merging this after v6.8-rc1
-is tagged and the merge window closes (probably Jan 21).  Then I'll
-rebase it to v6.8-rc1, tidy the subject lines to look like the rest
-of drivers/pci/, etc.
-
-> Philipp Stanner (5):
->   lib/pci_iomap.c: fix cleanup bugs in pci_iounmap()
->   lib: move pci_iomap.c to drivers/pci/
->   lib: move pci-specific devres code to drivers/pci/
->   pci: move devres code from pci.c to devres.c
->   lib, pci: unify generic pci_iounmap()
+On Wed, Jan 10, 2024 at 04:11:44PM +0000, Conor Dooley wrote:
+> On Wed, Jan 10, 2024 at 12:23:37PM +0100, Geert Uytterhoeven wrote:
+> > Hi Conor,
+> > 
+> > On Tue, Jan 9, 2024 at 7:06 PM Conor Dooley <conor@kernel.org> wrote:
+> > > On Tue, Jan 09, 2024 at 05:23:23PM +0900, Yoshinori Sato wrote:
+> > > > Add Silicon Mortion Technology Corporation
+> > 
+> > Motion
+> > 
+> > > > https://www.siliconmotion.com/
+> > > >
+> > > > Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > > > index 94ed63d9f7de..a338bdd743ab 100644
+> > > > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > > > @@ -1283,6 +1283,8 @@ patternProperties:
+> > > >      description: Skyworks Solutions, Inc.
+> > > >    "^smartlabs,.*":
+> > > >      description: SmartLabs LLC
+> > > > +  "^smi,.*":
+> > > > +    description: Silicon Motion Technology Corporation
+> > >
+> > > How come "smi" is used for a company with this name?
+> > > Why is it not something like SMTC? There's probably some history here
+> > > that I am unaware of.
+> > 
+> > See Documentation/devicetree/bindings/display/sm501fb.txt
+> > The stock ticker is "SIMO", though.
+> > https://www.nasdaq.com/market-activity/stocks/simo
 > 
->  MAINTAINERS                            |   1 -
->  drivers/pci/Kconfig                    |   5 +
->  drivers/pci/Makefile                   |   3 +-
->  drivers/pci/devres.c                   | 450 +++++++++++++++++++++++++
->  lib/pci_iomap.c => drivers/pci/iomap.c |  49 +--
->  drivers/pci/pci.c                      | 249 --------------
->  drivers/pci/pci.h                      |  24 ++
->  include/asm-generic/io.h               |  27 +-
->  include/asm-generic/iomap.h            |  21 ++
->  lib/Kconfig                            |   3 -
->  lib/Makefile                           |   1 -
->  lib/devres.c                           | 208 +-----------
->  lib/iomap.c                            |  28 +-
->  13 files changed, 566 insertions(+), 503 deletions(-)
->  create mode 100644 drivers/pci/devres.c
->  rename lib/pci_iomap.c => drivers/pci/iomap.c (75%)
+> If there's an existing user, there's little reason to stand in the way I
+> think.
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Or reason not to apply, so I'm applying this.
+
+BTW, 'RFC' is the standard way to say 'DO NOT MERGE'.
+
+Rob
 
