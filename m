@@ -1,93 +1,147 @@
-Return-Path: <linux-pci+bounces-2052-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2053-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C08682AE18
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 12:59:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85FBD82AEB3
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 13:28:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2B1FB23234
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 11:59:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25B841F2309C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 12:28:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0762A156F7;
-	Thu, 11 Jan 2024 11:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E26115AC3;
+	Thu, 11 Jan 2024 12:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hzzFuKry"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DADF156C7;
-	Thu, 11 Jan 2024 11:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28ca8a37adeso4421349a91.3;
-        Thu, 11 Jan 2024 03:59:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704974364; x=1705579164;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S2B3RdL+7tbmXrXWsW5P+Eh0Rvi86Sc7Lt214actT0w=;
-        b=cAiJNk7M77x23qtlQffV4XWuujQbC86eSzCDRWw982E7pXKKv1ur4AAjV/VgOJPOMB
-         AZIJtOpvyGGUyIC+1hIxpPgmJYW6xTj+ukFxEusAjiKGFsc84jS6qFZQ7lNQ9UotrypD
-         1lWIjcO7dRRHW3KoZLhWGnoNaxctuhXkaM3NdNdT2YK/wdk/85pghVVQfXmJeEfe12xk
-         R1iP8nkjiwTXI0IS6UjtIBWWiLoJ1x8MvkMjc1kDbZ3J9QygZ75TNNwTsdgZBw/c3NX/
-         TcC1CU6coKpA13ysOD4VGEtZdOmE7jIxxUYGCfQOfkQzHnWkTOvPjR+3xjNE2YWdw5uX
-         fgOQ==
-X-Gm-Message-State: AOJu0Yy0TCYJ+UjEULwIJgK3iXrqgoleSLcDTBaQ/hz+wFxWnVVbOIAy
-	QoBV7cAdUrNCjMFeYrWGt0Y=
-X-Google-Smtp-Source: AGHT+IFUDXjiq70+RZxEzqU459peXqmTo1Le9iCSGpjzErTKvXMA6F9V4x+iBAUWAkD1AbnoosKDDg==
-X-Received: by 2002:a17:90a:d187:b0:28d:19ff:5e3f with SMTP id fu7-20020a17090ad18700b0028d19ff5e3fmr875417pjb.86.1704974363859;
-        Thu, 11 Jan 2024 03:59:23 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id sk3-20020a17090b2dc300b0028d276f078asm3603261pjb.43.2024.01.11.03.59.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 03:59:23 -0800 (PST)
-Date: Thu, 11 Jan 2024 20:59:22 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 0/2] PCI: brcmstb: Configure appropriate HW CLKREQ#
- mode
-Message-ID: <20240111115922.GB1443933@rocinante>
-References: <ae49227b-5026-43a4-8e19-aeeb63865a6a@broadcom.com>
- <20231213195947.GA1056194@bhelgaas>
- <CANCKTBvaFBXAVTBtr4tpz5mYcyP1w84nAEGHbOnGJugogHx4fQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F1C15AC0
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 12:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704976097; x=1736512097;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=aQBGgJjZ/ElzSVg54nomsvM5m3C31TLHD1iz9cQLJGU=;
+  b=hzzFuKry+9tsPL0nJG+3+bm8H8VaA0wG5dEVJ1ETHqWxgjtqZoFPncaC
+   929QTnUIHAqe4mb+TCW8/6wa5f3rLaWn9R4IvSjGVn7SXOOThVrtqUATD
+   dX91T+a37xhbognIHS8LMJOziu9A8jpQw28Rx36n40+PCkKSeRjD5ybq2
+   HEMFUKvnRg7fmOcpsnnNQ2Y/Mfpl4zKu/gvFO6Oy+GaO//+xJQ9LaVUGV
+   kzkgLmCroYHW0qiG4iki6MlASVH+3kpxO4Y5oaXSDupcRMya7dI0n5iRT
+   5TCVLjOPZwPkwRR9JiXljo4nMsvqdW/qk5E6m3anZymeY3HFei5Gdld5x
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="402603821"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="402603821"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 04:28:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10949"; a="1113819642"
+X-IronPort-AV: E=Sophos;i="6.04,186,1695711600"; 
+   d="scan'208";a="1113819642"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.201])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 04:28:12 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Jan 2024 14:28:06 +0200 (EET)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: "David E. Box" <david.e.box@linux.intel.com>, bhelgaas@google.com, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com, 
+    rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com, 
+    tasev.stefanoska@skynet.be, enriquezmark36@gmail.com, kernel@witt.link, 
+    koba.ko@canonical.com, wse@tuxedocomputers.com, ricky_wu@realtek.com, 
+    linux-pci@vger.kernel.org, Michael Schaller <michael@5challer.de>
+Subject: Re: [PATCH v5] PCI/ASPM: Add back L1 PM Substate save and restore
+In-Reply-To: <20240110184659.GA2113074@bhelgaas>
+Message-ID: <6e258022-229f-88bc-037f-18b0a1568bbf@linux.intel.com>
+References: <20240110184659.GA2113074@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANCKTBvaFBXAVTBtr4tpz5mYcyP1w84nAEGHbOnGJugogHx4fQ@mail.gmail.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1082851991-1704973470=:1278"
+Content-ID: <ad9babed-f384-5062-a9d0-84cc6f0c8872@linux.intel.com>
 
-Hello,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-[...]
-> What is the status of this submission?
+--8323328-1082851991-1704973470=:1278
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <8ca0222d-f6ad-ed4b-e684-7cdb3e16cbeb@linux.intel.com>
 
-Looks good!  I apologise for the delay.
+On Wed, 10 Jan 2024, Bjorn Helgaas wrote:
 
-Bjorn is keen to pick this up for 6.8 with other changes, so it should land
-there shortly, given that we have a merge window open now.
+> On Wed, Jan 10, 2024 at 07:24:31AM -0800, David E. Box wrote:
+> > On Thu, 2023-12-28 at 18:30 -0600, Bjorn Helgaas wrote:
+> > > On Thu, Dec 28, 2023 at 04:31:12PM -0600, Bjorn Helgaas wrote:
+> > > > On Wed, Dec 20, 2023 at 05:12:50PM -0800, David E. Box wrote:
+>=20
+> > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > > index 55bc3576a985..3c4b2647b4ca 100644
+> > > > > --- a/drivers/pci/pci.c
+> > > > > +++ b/drivers/pci/pci.c
+> > >=20
+> > > > > @@ -1579,7 +1579,7 @@ static void pci_restore_pcie_state(struct p=
+ci_dev
+> > > > > *dev)
+> > > > > =A0{
+> > > > > ...
+> > >=20
+> > > > > +=A0=A0=A0=A0=A0=A0=A0 So we restore here only the
+> > > > > +=09 * LNKCTL register with the ASPM control field clear. ASPM wi=
+ll
+> > > > > +=09 * be restored in pci_restore_aspm_state().
+> > > > > +=09 */
+> > > > > +=09val =3D cap[i++] & ~PCI_EXP_LNKCTL_ASPMC;
+> > > > > +=09pcie_capability_write_word(dev, PCI_EXP_LNKCTL, val);
+> > > >=20
+> > > > When CONFIG_PCIEASPM is not set, we will clear ASPMC here and never
+> > > > restore it.=A0 I don't know if this ever happens.=A0 Do we need to =
+worry
+> > > > about this?=A0 Might firmware restore ASPMC itself before we get he=
+re?
+> > > > What do we want to happen in this case?
+> >=20
+> > I just checked this. L1 does get disabled which we don't want. We
+> > need to save and restore the BIOS ASPM configuration even when
+> > CONFIG_PCIEASPM is not set.
+>=20
+> There's some other ASPM stuff that we want even when CONFIG_PCIEASPM
+> is not set.  I think some of that code is currently in probe.c and
+> pci.c.
+>=20
+> I can't find it right now, but we had some discussion about moving
+> that code into aspm.c, compiling aspm.c unconditionally, and adding
+> CONFIG_PCIEASPM ifdefs inside it for these cases.  Maybe this is the
+> time do to that?  If so, probably a preliminary patch or two to do
+> the code movement without any functional changes, followed by the
+> actual fixes.
 
-	Krzysztof
+Hi,
+
+It's here:
+
+https://lore.kernel.org/linux-pci/20231011200442.GA1040348@bhelgaas/
+
+I'm still not even half way done with the update for that patch series=20
+because I got stuck while attempting to do the rtsx driver changes the=20
+new way and moved to work on other stuff for a while.
+
+So far I've only tentatively placed some #ifdef into aspm.c but it wasn't=
+=20
+all thought nor well arranged yet to limit the number of needed #ifdefs so
+nothing ready to be posted yet. And therefore not much effort is lost if=20
+David wants to take a look at it instead in the meantime.
+
+--=20
+ i.
+--8323328-1082851991-1704973470=:1278--
 
