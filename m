@@ -1,57 +1,78 @@
-Return-Path: <linux-pci+bounces-2066-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2067-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8114282B413
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 18:29:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F00C782B437
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 18:38:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4A8D1C241C8
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 17:28:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98952286DE0
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Jan 2024 17:38:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 991AA51C44;
-	Thu, 11 Jan 2024 17:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0634B5A9;
+	Thu, 11 Jan 2024 17:38:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWrm8UpQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="upnxYtko"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1E1537E4;
-	Thu, 11 Jan 2024 17:28:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C516C433C7;
-	Thu, 11 Jan 2024 17:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704994126;
-	bh=UIJqY2ZS5BKXIP6hcLPUvyuDwrfX4nJVEGG8zUnDmng=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jWrm8UpQAVGHyH4zLjc3Xnx/gDrhuFukTgNW66Bpr7BZSSar/gwwP0D9vX2avv87u
-	 AKARqcRvSzKf8318gdgMDiteMsiM7iswKLyqAXMAvN4GszNszBaMAzduGPP7jLvqwk
-	 6uajGTIGS1oq1JBKsHtfu0oqg2keQZe+N2GkUz87/H7zAovmmGBqL/YeUaNWrvWNti
-	 w3bhzCWmouKz5MnBrB4yfYAzCBd+sxiHHd8mvZ3gVVdr+rBImuepIvvB/q1OrRn+FE
-	 14zQ9fIGgdB2zWLaZSPbe3w3+Piwjis2o8mH7bWCUelIvnRHMyO64rh0PMMFQkWz/P
-	 7UGa1CuOmY2FQ==
-Date: Thu, 11 Jan 2024 11:28:44 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Phil Elwell <phil@raspberrypi.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A2D537F5
+	for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 17:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d47fae33e0so1855ad.0
+        for <linux-pci@vger.kernel.org>; Thu, 11 Jan 2024 09:38:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704994688; x=1705599488; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0whomz5a0Tw0vuiJue7tFIh96lkiU1Gem+vCt9Z07Fs=;
+        b=upnxYtkoghDrGfT/suRvq+Dt/4Jxh2TUANKdL5kxv35gPWeZLlF5zwvtjDQmLFZ34Y
+         z2uYSSsJLVEo6SMI+yUWJwUrYhncEtl6lFM0OYj8wCLy6tc8NnJHfA4hmO7fZJyO3AED
+         N2vzClAIV7EQcJqiHr5s/XUovzDmDYO6+Dw1OZa1rGpx760X9tdiOR5evuSyU5DohWKZ
+         cfFNGQIk2vOrf0Ay/51YU50CAKV1yaubbKMapWZjPt2vYsegAq8C+jrSduQHlMDmRNiQ
+         PBQ9Pv4tlqY0eSSg8euJUozpGoFSR19/JrfkPERkESV1s4GpglFUyECc6AL+Mhrhgv0q
+         V8Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704994688; x=1705599488;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0whomz5a0Tw0vuiJue7tFIh96lkiU1Gem+vCt9Z07Fs=;
+        b=B8bmgoR8IyZF/L/lFdCo2xrC/Ysk5iZU5TO3LcryA1x+ND0PDxnyp8mVLq9vPgp+yB
+         T2ZohpBZb6b3XIXeYMH19HcY1dbjS7lfWPsOc9ezqlkzvdzGKMwva5mnlSxeE4bFdfSf
+         X4cyfsNkoy+LhQxSASQNL8NUM22W5Ei+DhtaSACkxRR7KHxEDB4dk3OomrS9IDwMu2e2
+         fVbTNtQklK2vLBuU5Sszk1fqc3+K7hJ7yup0JdH2q/ai6nxPFLlaKSaG+w2E1rVsHpRe
+         zsLaH4N9TRn3pOC8hUA2HzlofMbN+oIIAAr+jZGFOri5OYQtP22cekvuKFQsBpHGkz+Q
+         7t+Q==
+X-Gm-Message-State: AOJu0YzRLvw88rMFUK4kB33k6++tx+EWvoTOuh+/FYuBML1kctr1TzWD
+	NjD3n+Qaif/Chwiu1S+QJXskDSfIt7qM
+X-Google-Smtp-Source: AGHT+IHM//y/Nc0i3nypbvjV/SZ7HeNBlNaxWfrXDnkQqj8IhJ/b5uNQakJTBQRcm049adWacItAAw==
+X-Received: by 2002:a17:902:ba8a:b0:1d4:d451:b439 with SMTP id k10-20020a170902ba8a00b001d4d451b439mr154663pls.5.1704994687889;
+        Thu, 11 Jan 2024 09:38:07 -0800 (PST)
+Received: from google.com (78.250.82.34.bc.googleusercontent.com. [34.82.250.78])
+        by smtp.gmail.com with ESMTPSA id b15-20020a170902d50f00b001d1cd7e4ad2sm1421644plg.125.2024.01.11.09.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 09:38:07 -0800 (PST)
+Date: Thu, 11 Jan 2024 09:38:03 -0800
+From: William McVicker <willmcvicker@google.com>
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 2/2] PCI: brcmstb: Configure HW CLKREQ# mode
- appropriate for downstream device
-Message-ID: <20240111172844.GA2184973@bhelgaas>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>,
+	Sajid Dalvi <sdalvi@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
+Message-ID: <ZaAne_KeJaOYnBcu@google.com>
+References: <20240111042103.392939-1-ajayagarwal@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,67 +81,130 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231113185607.1756-3-james.quinlan@broadcom.com>
+In-Reply-To: <20240111042103.392939-1-ajayagarwal@google.com>
 
-On Mon, Nov 13, 2023 at 01:56:06PM -0500, Jim Quinlan wrote:
-> The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must be
-> deliberately set by the PCIe RC HW into one of three mutually exclusive
-> modes:
+Hi Ajay,
+
+Thanks for sending the patch!
+
+On 01/11/2024, Ajay Agarwal wrote:
+> There can be platforms that do not use/have 32-bit DMA addresses
+> but want to enumerate endpoints which support only 32-bit MSI
+> address. The current implementation of 32-bit IOVA allocation can
+> fail for such platforms, eventually leading to the probe failure.
 > 
-> "safe" -- No CLKREQ# expected or required, refclk is always provided.  This
->     mode should work for all devices but is not be capable of any refclk
->     power savings.
+> If there is a memory region reserved for the pci->dev, pick up
+> the MSI data from this region. This can be used by the platforms
+> described above.
 > 
-> "no-l1ss" -- CLKREQ# is expected to be driven by the downstream device for
->     CPM and ASPM L0s and L1.  Provides Clock Power Management, L0s, and L1,
->     but cannot provide L1 substate (L1SS) power savings. If the downstream
->     device connected to the RC is L1SS capable AND the OS enables L1SS, all
->     PCIe traffic may abruptly halt, potentially hanging the system.
+> Else, if the memory region is not reserved, try to allocate a
+> 32-bit IOVA. Additionally, if this allocation also fails, attempt
+> a 64-bit allocation for probe to be successful. If the 64-bit MSI
+> address is allocated, then the EPs supporting 32-bit MSI address
+> will not work.
 > 
-> "default" -- Bidirectional CLKREQ# between the RC and downstream device.
->     Provides ASPM L0s, L1, and L1SS, but not compliant to provide Clock
->     Power Management; specifically, may not be able to meet the T_CLRon max
->     timing of 400ns as specified in "Dynamic Clock Control", section
->     3.2.5.2.2 of the PCIe Express Mini CEM 2.1 specification.  This
->     situation is atypical and should happen only with older devices.
-> 
-> Previously, this driver always set the mode to "no-l1ss", as almost all
-> STB/CM boards operate in this mode.  But now there is interest in
-> activating L1SS power savings from STB/CM customers, which requires "aspm"
-> mode.  
-
-I think this should read "default" mode, not "aspm" mode, since "aspm"
-is not a mode implemented by this patch, right?
-
-> In addition, a bug was filed for RPi4 CM platform because most
-> devices did not work in "no-l1ss" mode.
-
-I think this refers to bug 217276, mentioned below?
-
-> Note that the mode is specified by the DT property "brcm,clkreq-mode".  If
-> this property is omitted, then "default" mode is chosen.
->
-> Note: Since L1 substates are now possible, a modification was made
-> regarding an internal bus timeout: During long periods of the PCIe RC HW
-> being in an L1SS sleep state, there may be a timeout on an internal bus
-> access, even though there may not be any PCIe access involved.  Such a
-> timeout will cause a subsequent CPU abort.
-
-This sounds scary.  If a NIC is put in L1.2, does this mean will we
-see this CPU abort if there's no traffic for a long time?  What is
-needed to avoid the CPU abort?
-
-What does this mean for users?  L1SS is designed for long periods of
-the device being idle, so this leaves me feeling that using L1SS is
-unsafe in general.  Hopefully this impression is unwarranted, and all
-we need is some clarification here.
-
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217276
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
 > ---
->  drivers/pci/controller/pcie-brcmstb.c | 96 ++++++++++++++++++++++++---
->  1 file changed, 86 insertions(+), 10 deletions(-)
-> ...
+> Changelog since v1:
+>  - Use reserved memory, if it exists, to setup the MSI data
+>  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+> 
+>  .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  2 files changed, 39 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 7991f0e179b2..8c7c77b49ca8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>  	u64 *msi_vaddr;
+>  	int ret;
+>  	u32 ctrl, num_ctrls;
+> +	struct device_node *np;
+> +	struct resource r;
+>  
+>  	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
+>  		pp->irq_mask[ctrl] = ~0;
+> @@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>  	 * order not to miss MSI TLPs from those devices the MSI target
+>  	 * address has to be within the lowest 4GB.
+>  	 *
+> -	 * Note until there is a better alternative found the reservation is
+> -	 * done by allocating from the artificially limited DMA-coherent
+> -	 * memory.
+> +	 * Check if there is memory region reserved for this device. If yes,
+> +	 * pick up the msi_data from this region. This will be helpful for
+> +	 * platforms that do not use/have 32-bit DMA addresses but want to use
+> +	 * endpoints which support only 32-bit MSI address.
+> +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
+> +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
+> +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
+> +	 * supporting 32-bit MSI address will not work.
+>  	 */
+> -	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> -	if (ret)
+> -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> +	if (np) {
+> +		ret = of_address_to_resource(np, 0, &r);
+> +		if (ret) {
+> +			dev_err(dev, "No memory address assigned to the region\n");
+> +			return ret;
+> +		}
+>  
+> -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> -					GFP_KERNEL);
+> -	if (!msi_vaddr) {
+> -		dev_err(dev, "Failed to alloc and map MSI data\n");
+> -		dw_pcie_free_msi(pp);
+> -		return -ENOMEM;
+> +		pp->msi_data = r.start;
+> +	} else {
+> +		dev_dbg(dev, "No %s specified\n", "memory-region");
+> +		ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> +		if (ret)
+> +			dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> +
+> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> +						GFP_KERNEL);
+> +		if (!msi_vaddr) {
+> +			dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
+> +			dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+> +			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> +							GFP_KERNEL);
+> +		}
+> +
+> +		if (!msi_vaddr) {
+> +			dev_err(dev, "Failed to alloc and map MSI data\n");
+> +			dw_pcie_free_msi(pp);
+> +			return -ENOMEM;
+> +		}
+
+Should we just put this second if-check inside the above fallback?
+
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 55ff76e3d384..c85cf4d56e98 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -317,6 +317,7 @@ struct dw_pcie_rp {
+>  	phys_addr_t		io_bus_addr;
+>  	u32			io_size;
+>  	int			irq;
+> +	u8			coherent_dma_bits;
+>  	const struct dw_pcie_host_ops *ops;
+>  	int			msi_irq[MAX_MSI_CTRLS];
+>  	struct irq_domain	*irq_domain;
+
+Looks like this is a lingering change? Please drop.
+
+Thanks,
+Will
+
+> -- 
+> 2.43.0.275.g3460e3d667-goog
+> 
 
