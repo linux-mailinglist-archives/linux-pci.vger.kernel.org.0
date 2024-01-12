@@ -1,194 +1,227 @@
-Return-Path: <linux-pci+bounces-2093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFBD782BDFF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 11:00:40 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0DE682BE10
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 11:04:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23687B223E9
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 10:00:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 212E8B211A4
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 10:04:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 867DA57301;
-	Fri, 12 Jan 2024 10:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8219557310;
+	Fri, 12 Jan 2024 10:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OpOcctWq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJFUuC5a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C355D729
-	for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 10:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-28bc7155755so3378104a91.2
-        for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 02:00:24 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85425D8F4
+	for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 10:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd2f472665so67886841fa.2
+        for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 02:04:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705053624; x=1705658424; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dRYoalgnwKVYfdSiaBfDRevKcT4wc2GOJqsALypTOmU=;
-        b=OpOcctWqWBe3ajchwYGTl3RxOwVKYQiBfBqLvQPnN9D8/8aHpnJz3q8CFxEqBfsUz5
-         JCacvo4unw0zaCQBdj4M6F5i5WoCuGpCHuOYKV7nE+rvVqchOgHOsECliAMxK3y51HLF
-         rzi2gvAQUP7nPGrQ9WApRk9fws2Q2gJarzBju1s7MBOYwc9VHLYA7fkVglDsvqCeeFiE
-         HMZv7RO/ch4OuvWpErEJumEsS1cnaCnNgBIOKwgGGRrYTpMJX1G+kmIsRzVirT88jPKj
-         A+6UBi8td/SRVZ17mRI3eMvlyjP5TqYKFmvFKPuFutppLVyrVbJiu7TXitHS5rFPrKyL
-         6Y8g==
+        d=gmail.com; s=20230601; t=1705053869; x=1705658669; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XBcGK2syEZl20W5ZI7UH16GWhJlkkz3OJf6IWgd3bLI=;
+        b=AJFUuC5aXOZ8mdSdXABwI3sxVJEOwjKdblndCsWXDEPZGSOS5yFJJLn/D7qbXN2eK1
+         dUPNXlTA83mEEUtrC9QCw+hiaBeo+GSEpNb+HrqlsNMPHn5vjJC/EKtXWi4BJo+9Mvfi
+         GeWEyLK5yQz4B0auKC/nKNexRN8X1/+oz704BiWQMXWdUEPEVjBtGTCZndHhTCzcflws
+         Z6gzJo4fGkRKPgJSAXCH2sMWQff6pTJgF1gsZe78PEfdnxEWu92r7hRRVxJQ8+n/tqut
+         4yg44h+/zqaS6KkqAbEJqWK2ngb3cO1WULXAW6cfZG31WvuEhTSeaVfL94WsPulQzg/E
+         t96A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705053624; x=1705658424;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dRYoalgnwKVYfdSiaBfDRevKcT4wc2GOJqsALypTOmU=;
-        b=xA8+A8fByT4xU9IffebJFzsl1HpvXDM2NvALysbyCp9OG6BoUA7z9BxHqFpQLGxL6c
-         R16LgEH9yjyLMlsVfH4nisKB8/5Grab3ub1ke6og1sHbTi9rk9BtcZoI0ZZ+bBTi03tb
-         j6j7vsCP6uWWpD5SzwC7f5oqJowRtmtr3VBGS5Nr5VM0ciEX6clB+2lImcHJiRueznyp
-         0xO9FieNjsEDnWyw9nRzxEjXJML1+D27zEDxHV89gsmB7b87XwQINEk5nIoCiWNZI4iN
-         GbuO5LMBGx2x1THD5DpJ0RFk+KyD8mn1VmJINzo2TM+9ynmSl/uma9lP4qxT9FsPRwHS
-         QZNw==
-X-Gm-Message-State: AOJu0YwtHE+jS90hLsdI8BoXGQMgoTss9cRFS7nnUGOYq6PsHQ+aBPXe
-	yZHu0Mx7yhoedOwgMnewxKLxoifqXSsMtVkl385R7sk3i35CkL4=
-X-Google-Smtp-Source: AGHT+IGVBuc/bzfWDGIQZBxbBGBGgbQ8hy2U6+QesiLzQrB5AGxj9ilSJ5pZ8u646RBth+dnJjW/eA==
-X-Received: by 2002:a17:90a:898b:b0:28d:2b9d:e273 with SMTP id v11-20020a17090a898b00b0028d2b9de273mr917862pjn.74.1705053624143;
-        Fri, 12 Jan 2024 02:00:24 -0800 (PST)
-Received: from google.com (108.93.126.34.bc.googleusercontent.com. [34.126.93.108])
-        by smtp.gmail.com with ESMTPSA id px12-20020a17090b270c00b0028e17b2f27esm58229pjb.13.2024.01.12.02.00.21
+        d=1e100.net; s=20230601; t=1705053869; x=1705658669;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XBcGK2syEZl20W5ZI7UH16GWhJlkkz3OJf6IWgd3bLI=;
+        b=vahopKynkF5n5ccZxlC2TWUIh/mgZwFgvKxVnVrrY/lUgwXLPgdJ9+mBY6RCDn4QYn
+         vNKjLUdRUr107FIqamXyF2AwyidGdF772AVUDkcSs5fpCETJNMgWQkfV9UNs2/58JOhZ
+         rbxIz4AcMYs12ADdBOU60L3G4J+FQLILqennhMtr4hQ2Oi6IOIqd92oGEPvWkd238u74
+         Y/SolmVOG+L1bCdk7dtWJNxY9bwkXzGJqDE3EjrFT3Bxm20xtS/SaLCsW1yZ+UI/JYp1
+         Xg9RJxejZX1NyVa8Kyk9NWHlOY6tSexRcd/Z/bSpslbShomunrLzxoIGRL1upceZZSxN
+         m64A==
+X-Gm-Message-State: AOJu0YwLQ2qGLKEgEwdaxz56jvvE5B6MpywiLwCOggeU9TYI5YOgocbX
+	2OdjMeqV9oOEftn+BlD85fk=
+X-Google-Smtp-Source: AGHT+IG6glVRlZSCq11vBHMsKx1BVzkf/OLxSVN6f/USCBmAc9jmCdjDXjItMAlNqO3XJTVRLRz+KQ==
+X-Received: by 2002:a2e:870d:0:b0:2cd:cf7:9b4a with SMTP id m13-20020a2e870d000000b002cd0cf79b4amr596852lji.73.1705053869257;
+        Fri, 12 Jan 2024 02:04:29 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id m14-20020a2ea58e000000b002cd51dfe317sm410628ljp.117.2024.01.12.02.04.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 02:00:23 -0800 (PST)
-Date: Fri, 12 Jan 2024 15:30:15 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Johan Hovold <johan@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Sajid Dalvi <sdalvi@google.com>
-Subject: Re: [PATCH] Revert "PCI: dwc: Wait for link up only if link is
- started"
-Message-ID: <ZaENr7jQ35winQAe@google.com>
-References: <20230706082610.26584-1-johan+linaro@kernel.org>
- <20230706125811.GD4808@thinkpad>
- <ZKgJfG5Mi-e77LQT@hovoldconsulting.com>
- <ZKwwAin4FcCETGq/@google.com>
- <20230711073719.GA36617@thinkpad>
+        Fri, 12 Jan 2024 02:04:28 -0800 (PST)
+Date: Fri, 12 Jan 2024 13:04:25 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
+	William McVicker <willmcvicker@google.com>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
+Message-ID: <whpdxeilgbishmdb5d57h2qflg4hbd5mzltidrhcoeygvmshhb@bwg6b2ocphd7>
+References: <20240111042103.392939-1-ajayagarwal@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230711073719.GA36617@thinkpad>
+In-Reply-To: <20240111042103.392939-1-ajayagarwal@google.com>
 
-On Tue, Jul 11, 2023 at 01:07:19PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jul 10, 2023 at 09:51:22PM +0530, Ajay Agarwal wrote:
-> > On Fri, Jul 07, 2023 at 02:47:56PM +0200, Johan Hovold wrote:
-> > > On Thu, Jul 06, 2023 at 06:28:11PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Thu, Jul 06, 2023 at 10:26:10AM +0200, Johan Hovold wrote:
-> > > 
-> > > > > Finally, note that the intel-gw driver is the only driver currently not
-> > > > > providing a start_link callback and instead starts the link in its
-> > > > > host_init callback, and which may avoid an additional one-second timeout
-> > > > > during probe by making the link-up wait conditional. If anyone cares,
-> > > > > that can be done in a follow-up patch with a proper motivation.
-> > > 
-> > > > The offending commit is bogus since it makes the intel-gw _special_ w.r.t
-> > > > waiting for the link up. Most of the drivers call dw_pcie_host_init() during the
-> > > > probe time and they all have to wait for 1 sec if the slot is empty.
-> > Mani, can you please explain how my commit made the intel-gw driver
-> > special? The intel driver actually fails the dw_pcie_host_init if the
-> > link does not come up. That was my motivation behind adding the fail
-> > logic in the core driver as well.
+On Thu, Jan 11, 2024 at 09:51:03AM +0530, Ajay Agarwal wrote:
+> There can be platforms that do not use/have 32-bit DMA addresses
+> but want to enumerate endpoints which support only 32-bit MSI
+> address. The current implementation of 32-bit IOVA allocation can
+> fail for such platforms, eventually leading to the probe failure.
 > 
-> Your commit ended up failing the probe, if dw_pcie_wait_for_link() fails for
-> SoCs defining start_link() callback, which is the case for all the drivers
-> except intel-gw. I take back my _special_ argument since it was special before
-> your commit and now you just made its behavior applicable to all SoCs.
->
-You are right. I should not have returned an error from the
-dw_pcie_wait_for_link check. Raised v5 with the error return removed:
-https://lore.kernel.org/all/20240112093006.2832105-1-ajayagarwal@google.com/
+> If there is a memory region reserved for the pci->dev, pick up
+> the MSI data from this region. This can be used by the platforms
+> described above.
 
-> > > 
-> > > Just to clarify, the intel-gw driver starts the link and waits for link
-> > > up in its host_init() callback, which is called during probe. That wait
-> > > could possibly just be dropped in favour of the one in
-> > > dw_pcie_host_init() and/or the driver could be reworked to implement
-> > > start_link().
-> > > 
-> > > Either way, the call in dw_pcie_host_init() will only add an additional
-> > > 1 second delay in cases where the link did *not* come up.
-> > > 
-> > > > As Johan noted, intel-gw should make use of the async probe to avoid the boot
-> > > > delay instead of adding a special case.
-> > > 
-> > > Indeed.
-> > > 
-> > > Johan
-> > Johan, Mani
-> > My apologies for adding this regression in some of the SOCs.
-> > May I suggest to keep my patch and make the following change instead?
-> > This shall keep the existing behavior as is, and save the boot time
-> > for drivers that do not define the start_link()?
-> > 
-> 
-> No, IMO the offending commit was wrong in serving its purpose so a revert makes
-> sense. Because, if the intention was to reduce the boot delay then it did not
-> fix that because dw_pcie_wait_for_link() is still called from intel-gw's
-> host_init() callback. You just skipped another instance which is there in
-> dw_pcie_host_init().
-> 
-> So to fix this issue properly intel-gw needs to do 2 things:
-> 
-> 1. Move the ltssm_enable to start_link() callback and get rid of
-> dw_pcie_wait_for_link() from its host_init() callback. If there is any special
-> reason to not do this way, please explain.
-> 
-> 2. Enable async probe so that other drivers can continue probing while this
-> driver waits for the link to be up. This will almost make the delay negligible.
-> 
-> The above 2 should be done in separate patches.
-> 
-> - Mani
->
-Mani, the intention is not to fix the intel-gw driver in any manner. It
-calls dw_pcie_wait_for_link explicitly in the probe path and checks for
-the error as well. So it has to live with the delay and the probe
-failure if the link does not come up.
+I don't like this part of the change. Here is why
 
-My intention is just to get rid of the 1 sec delay for the drivers that
-do not define the start_link callback, and hence do not expect that the
-link will come up during probe anyway.
+1. One more time DW PCIe iMSI-RX doesn't need any actual _system
+memory_ to work! What is needed a single dword within the PCIe
+bus address space! The solution with using the coherent DMA allocation
+is mainly a hack/workaround to make sure the system memory behind the
+MSI address isn't utilized for something else. The correct solution
+would be to reserve PCIe-bus space memory for MSIs with no RAM behind
+at all. For instance, if no RAM below 4GB what prevents us from using
+the lowest PCIe bus address memory for iMSI-Rx (not saying that IOMMU
+and stuff like in-/outbound iATU can be also utilized to set the
+lowest PCIe bus address space free).
 
-> > ```
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index cf61733bf78d..af6a7cd060b1 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -492,11 +492,8 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> >                 if (ret)
-> >                         goto err_remove_edma;
-> > 
-> > -               if (pci->ops && pci->ops->start_link) {
-> > -                       ret = dw_pcie_wait_for_link(pci);
-> > -                       if (ret)
-> > -                               goto err_stop_link;
-> > -               }
-> > +               if (pci->ops && pci->ops->start_link)
-> > +                       dw_pcie_wait_for_link(pci);
-> >         }
-> > 
-> >         bridge->sysdata = pp;
-> > ```
+You on the contrary suggest to convert a temporal workaround to being
+the platforms DT-bindings convention by defining new "memory-region"
+property semantics. This basically propagates a weak software solution
+to the DT-bindings, which isn't right.
+
+2. Even if we get used to the solution with always coherent DMA
+allocating for iMSI-Rx, I don't really see much benefit in reserving a
+specific system memory for it. If there is no actual RAM below 4GB
+then reserving won't work. If there is what's the point in reserving
+it if normal DMA-mask and dma_alloc_coherent() will work just fine?
+
+3. If, as an emergency solution for this problem, you wish to assign a
+specific DMA-buffer then you don't need to define new non-standard
+"memory-region" property semantics. What about using the
+"restricted-dma-pool" reserved-memory region?
+
+https://www.kernel.org/doc/Documentation/devicetree/bindings/reserved-memory/shared-dma-pool.yaml
+
+-Serge(y)
+
 > 
+> Else, if the memory region is not reserved, try to allocate a
+> 32-bit IOVA. Additionally, if this allocation also fails, attempt
+> a 64-bit allocation for probe to be successful. If the 64-bit MSI
+> address is allocated, then the EPs supporting 32-bit MSI address
+> will not work.
+
+> 
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> ---
+> Changelog since v1:
+>  - Use reserved memory, if it exists, to setup the MSI data
+>  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+> 
+>  .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  2 files changed, 39 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 7991f0e179b2..8c7c77b49ca8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>  	u64 *msi_vaddr;
+>  	int ret;
+>  	u32 ctrl, num_ctrls;
+> +	struct device_node *np;
+> +	struct resource r;
+>  
+>  	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
+>  		pp->irq_mask[ctrl] = ~0;
+> @@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>  	 * order not to miss MSI TLPs from those devices the MSI target
+>  	 * address has to be within the lowest 4GB.
+>  	 *
+> -	 * Note until there is a better alternative found the reservation is
+> -	 * done by allocating from the artificially limited DMA-coherent
+> -	 * memory.
+> +	 * Check if there is memory region reserved for this device. If yes,
+> +	 * pick up the msi_data from this region. This will be helpful for
+> +	 * platforms that do not use/have 32-bit DMA addresses but want to use
+> +	 * endpoints which support only 32-bit MSI address.
+> +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
+> +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
+> +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
+> +	 * supporting 32-bit MSI address will not work.
+>  	 */
+> -	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> -	if (ret)
+> -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> +	if (np) {
+> +		ret = of_address_to_resource(np, 0, &r);
+> +		if (ret) {
+> +			dev_err(dev, "No memory address assigned to the region\n");
+> +			return ret;
+> +		}
+>  
+> -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> -					GFP_KERNEL);
+> -	if (!msi_vaddr) {
+> -		dev_err(dev, "Failed to alloc and map MSI data\n");
+> -		dw_pcie_free_msi(pp);
+> -		return -ENOMEM;
+> +		pp->msi_data = r.start;
+> +	} else {
+> +		dev_dbg(dev, "No %s specified\n", "memory-region");
+> +		ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> +		if (ret)
+> +			dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> +
+> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> +						GFP_KERNEL);
+> +		if (!msi_vaddr) {
+> +			dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
+> +			dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+> +			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> +							GFP_KERNEL);
+> +		}
+> +
+> +		if (!msi_vaddr) {
+> +			dev_err(dev, "Failed to alloc and map MSI data\n");
+> +			dw_pcie_free_msi(pp);
+> +			return -ENOMEM;
+> +		}
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 55ff76e3d384..c85cf4d56e98 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -317,6 +317,7 @@ struct dw_pcie_rp {
+>  	phys_addr_t		io_bus_addr;
+>  	u32			io_size;
+>  	int			irq;
+> +	u8			coherent_dma_bits;
+>  	const struct dw_pcie_host_ops *ops;
+>  	int			msi_irq[MAX_MSI_CTRLS];
+>  	struct irq_domain	*irq_domain;
 > -- 
-> மணிவண்ணன் சதாசிவம்
+> 2.43.0.275.g3460e3d667-goog
+> 
 
