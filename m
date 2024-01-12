@@ -1,39 +1,39 @@
-Return-Path: <linux-pci+bounces-2117-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2118-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AFCD82C3F1
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 17:50:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 051E182C410
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 17:55:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CFBC1F24192
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 16:50:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BECD2855D5
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 16:55:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A8877631;
-	Fri, 12 Jan 2024 16:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 258F97763C;
+	Fri, 12 Jan 2024 16:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jz0yp4T3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqkmWrif"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17F477634;
-	Fri, 12 Jan 2024 16:50:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29A11C433F1;
-	Fri, 12 Jan 2024 16:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F385F7762B;
+	Fri, 12 Jan 2024 16:55:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31544C433C7;
+	Fri, 12 Jan 2024 16:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705078212;
-	bh=l5fSgj+Gi5ykBYgS5TQAK8IZz/Rm0Gr+bg6Qn7vYmQ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jz0yp4T34rc4eH6Dgxm3lyAlylBbl9Lw5WOn+o2+nd7QYglpti6RV7NxLIu4yBnbp
-	 bhS6QWEWLIVNZSaKDtMJgoDt+aKLWvoiWguuXSgaGOAEiJazHtkzTY5Y7lHM8976su
-	 dPVTpfX9tc4OpgGAqguc4nPzLLi9aKW/rHnIVw+32RGf07XYZQcIoPzfWRMk8vdp33
-	 iPC8TL3xzZx+ypPC/sgn7GyqO+8ULN+TsehIn9cNveHgnBQzk1pucXtFsGR5O8eu7D
-	 DMEs5RdBq2k/V0gutS3D9JdUOD7qXlzLCcfiV7AJZO79KzxPmS40TkGCQKooPAW7IU
-	 tzTwMBcFpefGw==
-Date: Fri, 12 Jan 2024 10:50:10 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
+	s=k20201202; t=1705078520;
+	bh=PcazOkIWjzLsmq5KuqLCVTolsMXYCnRASgmcRQYURAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dqkmWrifleooikcdX4tcXl4vk5E1OdvdT7rXIVOuAQp1B+k7vhYAV79K6MzEs3Vxv
+	 Ozs8UtLj5VNW3t5wcbnxVgZ4p6mE9hzFIvmhRVmd2M7lSMuWc1+6aqOxFEZPC8Z46K
+	 DOXzf9dY4lqGvYW2QwYq2AuwByLmRznBTSiZkpF8fVAimceXi7rgklRy9oPL1qTYpu
+	 mNEdHk0szsEe62DzsH8eg9A0Le6lE4+dxEuOvYWieUfspDMuSL7gGslknq55p7f4tN
+	 aOvipYvOOcwBcJT2R3CIdeyIwwdK0qMIqR9e4vN32gDEKvbK0CAjjwvj2pCz/BnfQ6
+	 wUsiL4dVIgEuQ==
+Date: Fri, 12 Jan 2024 16:55:13 +0000
+From: Conor Dooley <conor@kernel.org>
 To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -52,49 +52,72 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
 	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20240112165010.GA2271863@bhelgaas>
+Subject: Re: [PATCH v6 1/6] dt-bindings: PCI: qcom: Add interconnects path as
+ required property
+Message-ID: <20240112-spotty-unplug-23790509cbe5@spud>
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-1-77bbf7d0cc37@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fZ1OjBY90vApCp9r"
+Content-Disposition: inline
+In-Reply-To: <20240112-opp_support-v6-1-77bbf7d0cc37@quicinc.com>
+
+
+--fZ1OjBY90vApCp9r
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240112-opp_support-v6-6-77bbf7d0cc37@quicinc.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 12, 2024 at 07:52:05PM +0530, Krishna chaitanya chundru wrote:
-> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> maintains hardware state of a regulator by performing max aggregation of
-> the requests made by all of the processors.
-> 
-> PCIe controller can operate on different RPMh performance state of power
-> domain based up on the speed of the link. And this performance state varies
-> from target to target.
-> 
-> It is manadate to scale the performance state based up on the PCIe speed
-> link operates so that SoC can run under optimum power conditions.
-> 
-> Add Operating Performance Points(OPP) support to vote for RPMh state based
-> upon GEN speed link is operating.
+On Fri, Jan 12, 2024 at 07:52:00PM +0530, Krishna chaitanya chundru wrote:
+> Add the interconnects path as required property for sm8450 platform.
 
-Thanks for this "OPP" expansion!  Maybe "GEN" is unnecessary in this
-sentence?  And below, could be replaced with actual speeds?
+There's no explaination here as to why you need two different
+compatibles for the instances on this device. Please add one.
 
-> OPP can handle ICC bw voting also, so move icc bw voting through opp
-> framework if opp entries are present.
+Thanks,
+Conor.
 
-s/opp/OPP/ to match
-s/icc/ICC/ similarly (and perhaps expand once)
-Also below in comments, etc.
+>=20
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Docum=
+entation/devicetree/bindings/pci/qcom,pcie.yaml
+> index eadba38171e1..bc28669f6fa0 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -777,6 +777,8 @@ allOf:
+>                - qcom,pcie-sa8540p
+>                - qcom,pcie-sa8775p
+>                - qcom,pcie-sc8280xp
+> +              - qcom,pcie-sm8450-pcie0
+> +              - qcom,pcie-sm8450-pcie1
+>      then:
+>        required:
+>          - interconnects
+>=20
+> --=20
+> 2.42.0
+>=20
 
-> In PCIe certain gen speeds like GEN1x2 & GEN2X1 or GEN3x2 & GEN4x1 use
-> same icc bw and has frequency, so use frequency based search to reduce
-> number of entries in the opp table.
-> 
-> Don't initialize icc if opp is supported.
+--fZ1OjBY90vApCp9r
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Bjorn
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZaFu8QAKCRB4tDGHoIJi
+0gbCAQD/lNEBnbgpsNuQcV25CJ4coOfOWcaad1FDzIPJFxsaIwD+Nfbum+5GewxL
+I2VUdPA3NsBN0ezSTlHrEkL1io/CRQE=
+=yKwa
+-----END PGP SIGNATURE-----
+
+--fZ1OjBY90vApCp9r--
 
