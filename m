@@ -1,227 +1,176 @@
-Return-Path: <linux-pci+bounces-2094-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2095-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0DE682BE10
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 11:04:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B07582BF2E
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 12:24:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 212E8B211A4
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 10:04:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EA631C23944
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 11:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8219557310;
-	Fri, 12 Jan 2024 10:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJFUuC5a"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C26364CFF;
+	Fri, 12 Jan 2024 11:24:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85425D8F4
-	for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 10:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd2f472665so67886841fa.2
-        for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 02:04:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705053869; x=1705658669; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBcGK2syEZl20W5ZI7UH16GWhJlkkz3OJf6IWgd3bLI=;
-        b=AJFUuC5aXOZ8mdSdXABwI3sxVJEOwjKdblndCsWXDEPZGSOS5yFJJLn/D7qbXN2eK1
-         dUPNXlTA83mEEUtrC9QCw+hiaBeo+GSEpNb+HrqlsNMPHn5vjJC/EKtXWi4BJo+9Mvfi
-         GeWEyLK5yQz4B0auKC/nKNexRN8X1/+oz704BiWQMXWdUEPEVjBtGTCZndHhTCzcflws
-         Z6gzJo4fGkRKPgJSAXCH2sMWQff6pTJgF1gsZe78PEfdnxEWu92r7hRRVxJQ8+n/tqut
-         4yg44h+/zqaS6KkqAbEJqWK2ngb3cO1WULXAW6cfZG31WvuEhTSeaVfL94WsPulQzg/E
-         t96A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705053869; x=1705658669;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XBcGK2syEZl20W5ZI7UH16GWhJlkkz3OJf6IWgd3bLI=;
-        b=vahopKynkF5n5ccZxlC2TWUIh/mgZwFgvKxVnVrrY/lUgwXLPgdJ9+mBY6RCDn4QYn
-         vNKjLUdRUr107FIqamXyF2AwyidGdF772AVUDkcSs5fpCETJNMgWQkfV9UNs2/58JOhZ
-         rbxIz4AcMYs12ADdBOU60L3G4J+FQLILqennhMtr4hQ2Oi6IOIqd92oGEPvWkd238u74
-         Y/SolmVOG+L1bCdk7dtWJNxY9bwkXzGJqDE3EjrFT3Bxm20xtS/SaLCsW1yZ+UI/JYp1
-         Xg9RJxejZX1NyVa8Kyk9NWHlOY6tSexRcd/Z/bSpslbShomunrLzxoIGRL1upceZZSxN
-         m64A==
-X-Gm-Message-State: AOJu0YwLQ2qGLKEgEwdaxz56jvvE5B6MpywiLwCOggeU9TYI5YOgocbX
-	2OdjMeqV9oOEftn+BlD85fk=
-X-Google-Smtp-Source: AGHT+IG6glVRlZSCq11vBHMsKx1BVzkf/OLxSVN6f/USCBmAc9jmCdjDXjItMAlNqO3XJTVRLRz+KQ==
-X-Received: by 2002:a2e:870d:0:b0:2cd:cf7:9b4a with SMTP id m13-20020a2e870d000000b002cd0cf79b4amr596852lji.73.1705053869257;
-        Fri, 12 Jan 2024 02:04:29 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id m14-20020a2ea58e000000b002cd51dfe317sm410628ljp.117.2024.01.12.02.04.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 02:04:28 -0800 (PST)
-Date: Fri, 12 Jan 2024 13:04:25 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
-	William McVicker <willmcvicker@google.com>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <whpdxeilgbishmdb5d57h2qflg4hbd5mzltidrhcoeygvmshhb@bwg6b2ocphd7>
-References: <20240111042103.392939-1-ajayagarwal@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831225FEE8;
+	Fri, 12 Jan 2024 11:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TBJyT4wxXz6K7Jp;
+	Fri, 12 Jan 2024 19:21:37 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 59496140A36;
+	Fri, 12 Jan 2024 19:24:16 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 12 Jan
+ 2024 11:24:15 +0000
+Date: Fri, 12 Jan 2024 11:24:14 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: KobayashiDaisuke <kobayashi.da-06@fujitsu.com>,
+	<linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<y-goto@fujitsu.com>
+Subject: Re: [RFC PATCH 0/3] lspci: Display cxl1.1 device link status
+Message-ID: <20240112112414.00006443@Huawei.com>
+In-Reply-To: <659f404a99aad_3d2f92946e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20231220050738.178481-1-kobayashi.da-06@fujitsu.com>
+	<20240109155755.0000087b@Huawei.com>
+	<659f404a99aad_3d2f92946e@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111042103.392939-1-ajayagarwal@google.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Jan 11, 2024 at 09:51:03AM +0530, Ajay Agarwal wrote:
-> There can be platforms that do not use/have 32-bit DMA addresses
-> but want to enumerate endpoints which support only 32-bit MSI
-> address. The current implementation of 32-bit IOVA allocation can
-> fail for such platforms, eventually leading to the probe failure.
+On Wed, 10 Jan 2024 17:11:38 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Jonathan Cameron wrote:
+> > On Wed, 20 Dec 2023 14:07:35 +0900
+> > KobayashiDaisuke <kobayashi.da-06@fujitsu.com> wrote:
+> >   
+> > > Hello.
+> > > 
+> > > This patch series adds a feature to lspci that displays the link status
+> > > of the CXL1.1 device.
+> > > 
+> > > CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
+> > > the link status can be output in the same way as traditional PCIe.
+> > > However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
+> > > different method to obtain the link status from traditional PCIe.
+> > > This is because the link status of the CXL1.1 device is not mapped
+> > > in the configuration space (as per cxl3.0 specification 8.1).
+> > > Instead, the configuration space containing the link status is mapped
+> > > to the memory mapped register region (as per cxl3.0 specification 8.2,
+> > > Table 8-18). Therefore, the current lspci has a problem where it does
+> > > not display the link status of the CXL1.1 device. 
+> > > This patch solves these issues.
+> > > 
+> > > The method of acquisition is in the order of obtaining the device UID,
+> > > obtaining the base address from CEDT, and then obtaining the link
+> > > status from memory mapped register. Considered outputting with the cxl
+> > > command due to the scope of the CXL specification, but devices from
+> > > CXL2.0 onwards can be output in the same way as traditional PCIe.
+> > > Therefore, it would be better to make the lspci command compatible with
+> > > the CXL1.1 device for compatibility reasons.
+> > > 
+> > > I look forward to any comments you may have.  
+> > Yikes. 
+> > 
+> > My gut feeling is that you shouldn't need to do this level of hackery.
+> > 
+> > If we need this information to be exposed to tooling then we should
+> > add support to the kernel to export it somewhere in sysfs and read that
+> > directly.  Do we need it to be available in absence of the CXL driver
+> > stack?   
 > 
-> If there is a memory region reserved for the pci->dev, pick up
-> the MSI data from this region. This can be used by the platforms
-> described above.
-
-I don't like this part of the change. Here is why
-
-1. One more time DW PCIe iMSI-RX doesn't need any actual _system
-memory_ to work! What is needed a single dword within the PCIe
-bus address space! The solution with using the coherent DMA allocation
-is mainly a hack/workaround to make sure the system memory behind the
-MSI address isn't utilized for something else. The correct solution
-would be to reserve PCIe-bus space memory for MSIs with no RAM behind
-at all. For instance, if no RAM below 4GB what prevents us from using
-the lowest PCIe bus address memory for iMSI-Rx (not saying that IOMMU
-and stuff like in-/outbound iATU can be also utilized to set the
-lowest PCIe bus address space free).
-
-You on the contrary suggest to convert a temporal workaround to being
-the platforms DT-bindings convention by defining new "memory-region"
-property semantics. This basically propagates a weak software solution
-to the DT-bindings, which isn't right.
-
-2. Even if we get used to the solution with always coherent DMA
-allocating for iMSI-Rx, I don't really see much benefit in reserving a
-specific system memory for it. If there is no actual RAM below 4GB
-then reserving won't work. If there is what's the point in reserving
-it if normal DMA-mask and dma_alloc_coherent() will work just fine?
-
-3. If, as an emergency solution for this problem, you wish to assign a
-specific DMA-buffer then you don't need to define new non-standard
-"memory-region" property semantics. What about using the
-"restricted-dma-pool" reserved-memory region?
-
-https://www.kernel.org/doc/Documentation/devicetree/bindings/reserved-memory/shared-dma-pool.yaml
-
--Serge(y)
-
+> I am hoping that's a non-goal if only because that makes it more
+> difficult for the kernel to provide some help here without polluting to
+> the PCI core.
 > 
-> Else, if the memory region is not reserved, try to allocate a
-> 32-bit IOVA. Additionally, if this allocation also fails, attempt
-> a 64-bit allocation for probe to be successful. If the 64-bit MSI
-> address is allocated, then the EPs supporting 32-bit MSI address
-> will not work.
-
+> To date, RCRB handling is nothing that the PCI core needs to worry
+> about, and I am not sure I want to open that box.
 > 
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
-> Changelog since v1:
->  - Use reserved memory, if it exists, to setup the MSI data
->  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+> I am wondering about an approach like below is sufficient for lspci.
 > 
->  .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  2 files changed, 39 insertions(+), 12 deletions(-)
+> The idea here is that cxl_pci (or other PCI driver for Type-2 RCDs) can
+> opt-in to publishing these hidden registers.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 7991f0e179b2..8c7c77b49ca8 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	u64 *msi_vaddr;
->  	int ret;
->  	u32 ctrl, num_ctrls;
-> +	struct device_node *np;
-> +	struct resource r;
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 4fd1f207c84e..ee63dff63b68 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -960,6 +960,19 @@ static const struct pci_error_handlers cxl_error_handlers = {
+>         .cor_error_detected     = cxl_cor_error_detected,
+>  };
 >  
->  	for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
->  		pp->irq_mask[ctrl] = ~0;
-> @@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	 * order not to miss MSI TLPs from those devices the MSI target
->  	 * address has to be within the lowest 4GB.
->  	 *
-> -	 * Note until there is a better alternative found the reservation is
-> -	 * done by allocating from the artificially limited DMA-coherent
-> -	 * memory.
-> +	 * Check if there is memory region reserved for this device. If yes,
-> +	 * pick up the msi_data from this region. This will be helpful for
-> +	 * platforms that do not use/have 32-bit DMA addresses but want to use
-> +	 * endpoints which support only 32-bit MSI address.
-> +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
-> +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
-> +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
-> +	 * supporting 32-bit MSI address will not work.
->  	 */
-> -	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> -	if (ret)
-> -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-> +	if (np) {
-> +		ret = of_address_to_resource(np, 0, &r);
-> +		if (ret) {
-> +			dev_err(dev, "No memory address assigned to the region\n");
-> +			return ret;
-> +		}
->  
-> -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> -					GFP_KERNEL);
-> -	if (!msi_vaddr) {
-> -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> -		dw_pcie_free_msi(pp);
-> -		return -ENOMEM;
-> +		pp->msi_data = r.start;
-> +	} else {
-> +		dev_dbg(dev, "No %s specified\n", "memory-region");
-> +		ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> +		if (ret)
-> +			dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> +static struct attribute *cxl_rcd_attrs[] = {
+> +       &dev_attr_rcd_lnkcp.attr,
+> +       &dev_attr_rcd_lnkctl.attr,
+> +       NULL
+> +};
 > +
-> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +						GFP_KERNEL);
-> +		if (!msi_vaddr) {
-> +			dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
-> +			dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> +			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +							GFP_KERNEL);
-> +		}
+> +static struct attribute_group cxl_rcd_group = {
+> +       .attrs = cxl_rcd_attrs,
+> +       .is_visible = cxl_rcd_visible,
+> +};
 > +
-> +		if (!msi_vaddr) {
-> +			dev_err(dev, "Failed to alloc and map MSI data\n");
-> +			dw_pcie_free_msi(pp);
-> +			return -ENOMEM;
-> +		}
->  	}
+> +__ATTRIBUTE_GROUPS(cxl_pci);
+> +
+>  static struct pci_driver cxl_pci_driver = {
+>         .name                   = KBUILD_MODNAME,
+>         .id_table               = cxl_mem_pci_tbl,
+> @@ -967,6 +980,7 @@ static struct pci_driver cxl_pci_driver = {
+>         .err_handler            = &cxl_error_handlers,
+>         .driver = {
+>                 .probe_type     = PROBE_PREFER_ASYNCHRONOUS,
+> +               .dev_groups     = cxl_rcd_groups,
+>         },
+>  };
 >  
->  	return 0;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 55ff76e3d384..c85cf4d56e98 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -317,6 +317,7 @@ struct dw_pcie_rp {
->  	phys_addr_t		io_bus_addr;
->  	u32			io_size;
->  	int			irq;
-> +	u8			coherent_dma_bits;
->  	const struct dw_pcie_host_ops *ops;
->  	int			msi_irq[MAX_MSI_CTRLS];
->  	struct irq_domain	*irq_domain;
-> -- 
-> 2.43.0.275.g3460e3d667-goog
 > 
+> However, the problem I believe is this will end up with:
+> 
+> /sys/bus/pci/devices/$pdev/rcd_lnkcap
+> /sys/bus/pci/devices/$pdev/rcd_lnkctl
+> 
+> ...with valid values, but attributes like:
+> 
+> /sys/bus/pci/devices/$pdev/current_link_speed
+> 
+> ...returning -EINVAL.
+> 
+> So I think the options are:
+> 
+> 1/ Keep the status quo of RCRB knowledge only lives in drivers/cxl/ and
+>    piecemeal enable specific lspci needs with RCD-specific attributes
+
+This one gets my vote.
+
+> 
+> ...or:
+> 
+> 2/ Hack pcie_capability_read_word() to internally figure out that based
+>    on a config offset a device may have a hidden capability and switch over
+>    to RCRB based config-cycle access for those.
+> 
+> Given that the CXL 1.1 RCH topology concept was immediately deprecated
+> in favor of VH topology in CXL 2.0, I am not inclined to pollute the
+> general Linux PCI core with that "aberration of history" as it were.
+Agreed.
+
+
 
