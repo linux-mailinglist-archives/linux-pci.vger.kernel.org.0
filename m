@@ -1,89 +1,104 @@
-Return-Path: <linux-pci+bounces-2075-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2076-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C7B982B99D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 03:35:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 110BF82B9EE
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 04:21:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9B30284D1D
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 02:35:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADA121F21200
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 03:21:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE38654;
-	Fri, 12 Jan 2024 02:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365211A5A4;
+	Fri, 12 Jan 2024 03:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="emBz+nOb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796A5136B;
-	Fri, 12 Jan 2024 02:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.122])
-	by gateway (Coremail) with SMTP id _____8BxHOtapaBlOG4EAA--.13142S3;
-	Fri, 12 Jan 2024 10:35:06 +0800 (CST)
-Received: from [10.20.42.122] (unknown [10.20.42.122])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axz99UpaBl5ZISAA--.48437S3;
-	Fri, 12 Jan 2024 10:35:06 +0800 (CST)
-Message-ID: <2a5e3801-6740-0c63-6819-83a18f552dbf@loongson.cn>
-Date: Fri, 12 Jan 2024 10:35:00 +0800
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508281A5AE
+	for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 03:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705029672; x=1736565672;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=H0Rek8aNOSjKplX9S/q8WY7qJ1sXzAjb+oQyvHTG58A=;
+  b=emBz+nObAF0Ex+0TlTZEd/GWBee8mM9ASM0XeRxTyRQKscTaBZcQ2AXV
+   0xkeTSSEKD7XofKf0J7mt1H14SKs5uIivEQXeDQRJcxDLGj4AccxrUJxs
+   arBkK9v8OrvEZXLg/fYtuPK0Px0wl3TnrwEE8B1J0WsOz0Gt6439dSO34
+   /vhPzTgJNOitRFPTfQt5IJOX3EnJjd5DFoaugwXZhcavEnGUM8CP/xnz+
+   gDUz1AnzJzRbuT3ewnFVJq8y7/bLe7u2ZE4igZbpYbSZsZdRVZtSi7ZJ+
+   qopa0vwbHVfRF6mtMsEgAM7xbGSFvsWGz/IeSx7mWNT/8hlrcVUQ9Eb32
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="465455854"
+X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
+   d="scan'208";a="465455854"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 19:21:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10950"; a="873247255"
+X-IronPort-AV: E=Sophos;i="6.04,188,1695711600"; 
+   d="scan'208";a="873247255"
+Received: from xliu8-mobl.ccr.corp.intel.com (HELO localhost) ([10.255.31.36])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2024 19:21:08 -0800
+Date: Fri, 12 Jan 2024 11:21:02 +0800
+From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, chao.p.peng@linux.intel.com, 
+	chao.p.peng@intel.com, erwin.tsaur@intel.com, feiting.wanyan@intel.com, 
+	qingshun.wang@intel.com, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	"Luck, Tony" <tony.luck@intel.com>
+Subject: Re: [PATCH 1/4] pci/aer: Store more information in aer_err_info
+Message-ID: <r7i7msrz74qtoavvvobem4uklju6nchof3b5qegiwyothnvjpz@kxnpw3shsk6p>
+References: <20240111073227.31488-1-qingshun.wang@linux.intel.com>
+ <20240111073227.31488-2-qingshun.wang@linux.intel.com>
+ <d580ebc1-2581-c1d9-b37f-dbe8595a1ebf@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] PCI: Fix kernel-doc issues
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Manivannan Sadhasivam <mani@kernel.org>, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <20240111162850.2177655-1-helgaas@kernel.org>
-Content-Language: en-US
-From: Sui Jingfeng <suijingfeng@loongson.cn>
-In-Reply-To: <20240111162850.2177655-1-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8Axz99UpaBl5ZISAA--.48437S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrZw4UKFWDJFWUtr18tFy7urX_yoWxKwc_A3
-	y3J3yUGrs7Aw4UAr4rCa9rXF4Y93y0qF9Fqw4rXrZxWFn0kw4Yya97JFyqkF45G3s2kF1Y
-	kFykC3Zaqrn0vosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbxkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUU
-	UUU==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d580ebc1-2581-c1d9-b37f-dbe8595a1ebf@linux.intel.com>
+
+On Thu, Jan 11, 2024 at 01:27:25PM +0200, Ilpo Järvinen wrote:
+> On Thu, 11 Jan 2024, Wang, Qingshun wrote:
+> 
+> > Store status and mask of both correctable and uncorrectable errors in
+> > aer_err_info. Severity of uncorrectable errors and the values of Device
+> > Status register is also recorded in order to filter out errors that
+> > cannot cause Advisory Non-Fatal error.
+> > 
+> > Refactor rest of the code to use cor/uncor_status and cor/uncor_mask
+> > fields instead of status and mask fields.
+> > 
+> > Reviewed-by: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+> > Reviewed-by: "Luck, Tony" <tony.luck@intel.com>
+> > Reviewed-by: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+> 
+> Hi,
+> 
+> I don't recall giving my tag for this. You are not allowed to make them up
+> unless the person explicitly gives that Reviewed-by line to you in one of 
+> the replies. That is, please don't infer the Reviewed-by tag from just 
+> replying.
+> 
+> -- 
+>  i.
 
 Hi,
+I'm sorry about that, and apologies to anyone else whose tags were added by
+mistake, I'll correct it.
 
 
-On 2024/1/12 00:28, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Fix kernel-doc issues reported by
-> "find include -name \*pci\* | xargs scripts/kernel-doc -none":
->
->    include/linux/pci.h:731: warning: Function parameter or member 'pdev' not described in 'pci_is_vga'
->    include/linux/pci-epc.h:154: warning: Function parameter or member 'list_lock' not described in 'pci_epc'
->    include/linux/pci-epf.h:83: warning: expecting prototype for struct pci_epf_event_ops. Prototype was for struct pci_epc_event_ops instead
-
-
-Thanks a lot for the fix.
-
-
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-
-Acked-by: Sui Jingfeng <suijingfeng@loongson.cn>
-
+Best regards,
+Wang, Qingshun
 
