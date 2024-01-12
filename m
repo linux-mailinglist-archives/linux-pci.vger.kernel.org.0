@@ -1,98 +1,121 @@
-Return-Path: <linux-pci+bounces-2107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B826E82C1E8
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 15:33:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 038C982C29E
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 16:17:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 695141F239BD
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 14:33:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9D9CB1F2496E
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Jan 2024 15:17:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D08575FEEA;
-	Fri, 12 Jan 2024 14:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E4866EB46;
+	Fri, 12 Jan 2024 15:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XECdFivI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GCUb9eu4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CD842A85;
-	Fri, 12 Jan 2024 14:33:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FDEC433C7;
-	Fri, 12 Jan 2024 14:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705070003;
-	bh=JQFb0RwgqiOgAMfJwRMmXuTQbRDzY81oEPCIHnqCcqU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XECdFivIpDVFW8d+q1cmUj0ydJ04m25sDXk08JNeJU9TSTa+XzAfMKH3SZIOeywQg
-	 4aqirrDf11dWd0P7Un0TmdFh9UgFGd+se/YhlLdw2i6EFN+ZqbzUUmC8gd+tViFnSs
-	 rJOHj8FRnqenuK9S2LGHVpS2Dr2HVNXE3U1Bbt89TSi6aTTuTyL3E283fecMbHdcyS
-	 Tm3tGHDglm8Dm+BKGjiEm03m7a+85u/yoB8pUaeKGTnaY9EkBT71dZAZ6lvduX6HqE
-	 DdDkCIVOlEd+oU6y/M4YdFspRKI98xxWM4F1t462Y8dTP4oFqXdf6jJU26l16G8ZvZ
-	 bvjQMuzu7vevg==
-Date: Fri, 12 Jan 2024 08:33:20 -0600
-From: Rob Herring <robh@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	will@kernel.org, frowand.list@gmail.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V2 1/2] dt-bindings: Add PCIe "preserve-boot-config"
- property
-Message-ID: <20240112143320.GA3143039-robh@kernel.org>
-References: <20240110030725.710547-1-vidyas@nvidia.com>
- <20240110030725.710547-2-vidyas@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBD61E529
+	for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 15:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3373a30af67so5668387f8f.0
+        for <linux-pci@vger.kernel.org>; Fri, 12 Jan 2024 07:17:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705072650; x=1705677450; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vQNAWDXmxYQgA4LCYNmP7mT3vlvbfkNqLGD29l63sUA=;
+        b=GCUb9eu4TaulOmoyhglouaCBEVoE057d9JYUGF8PwD4yNuxpkLpwo+NPfKMCZc80zZ
+         4YzhDJl1Fx4EK47H7TRgqbGXrFmJdiCYYjruaKe7bH0bTwm0oIHBpdIvPBhhSEELueug
+         J+ieGU65i5BytmVPgTc2GiE+HwZdDWv+3iDlz79w9ENsRY1RzUUHUwyLqqSSt08sjJZF
+         GZ5+g/J3aoRlcvzeMnE6hRbjzna6fo9ZBEWNrbdKHdU7faVmXJxCL6KxRROg16rSwtJR
+         uu4bFUNPHBzadKdgKBzylk1FrpGVPA4yBbCBC9rYiw44lbHTRf6NEWzEf/xzfZPh/eyR
+         ZwVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705072650; x=1705677450;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vQNAWDXmxYQgA4LCYNmP7mT3vlvbfkNqLGD29l63sUA=;
+        b=m8TC8mJIhxP15O8p3PeaWeIh+yRf3ffgmdQ89E12ykwvHR64G0RTPhNp2bYzhCWSlP
+         hTf+Fq9NOFmuyaIC3y6yUmhmJhtYsG7RClQx+04W/vpGsoz0V7DAzKr8X49GY9tTCoDa
+         RmQHeWjPuSgfz4ifziMu/10NM+D9Eh0GB2wylZ2Aqw15uoINc1tFgLmfZ/id64zrngiS
+         GTUcZtKWMSpeTKIEFg40Yex9eJJccz8o3HXhJSTqK2B4xb9uZgBk0KPj8uwzwYqtNeUz
+         GWOgd+NqCHCkMfycENS0T2vcxGuuoObTzeqVsViXLVfXpu0LD3ADG8mH8bnNzgglaQ1r
+         DgCg==
+X-Gm-Message-State: AOJu0YzPjVCuGai+78DqkO7QojkhqG1UmGyXM2IbBG1kyk7rfDg4jvfi
+	Miy6vgNiBbaPEFguPF8qJsmcgrCbA5XC+Q==
+X-Google-Smtp-Source: AGHT+IFSQRMTt3MRHiq8+omkYfNKh6C4s/p8ZGj089lXD4FOE2t74cG6vQoayvJt3ce81EKNlrpH0w==
+X-Received: by 2002:adf:e64f:0:b0:336:ea02:ae93 with SMTP id b15-20020adfe64f000000b00336ea02ae93mr486332wrn.180.1705072650364;
+        Fri, 12 Jan 2024 07:17:30 -0800 (PST)
+Received: from [192.168.100.86] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id r1-20020adfce81000000b0033667867a66sm4147699wrn.101.2024.01.12.07.17.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 07:17:29 -0800 (PST)
+Message-ID: <fecfd2d9-7302-4eb6-92d0-c2efbe824bf4@linaro.org>
+Date: Fri, 12 Jan 2024 15:17:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240110030725.710547-2-vidyas@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/6] PCI: qcom: Add missing icc bandwidth vote for cpu
+ to PCIe path
+Content-Language: en-US
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
+ Brian Masney <bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, vireshk@kernel.org,
+ quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
+ quic_nitegupt@quicinc.com, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 10, 2024 at 08:37:24AM +0530, Vidya Sagar wrote:
-> The existing "linux,pci-probe-only" property applies at a system level
-> and it is not possible to selectively convey individual host bridge's
-> requirement w.r.t preserving the boot configuration done by the platform
-> firmware to the kernel. "preserve-boot-config" addresses that concern
-> and can be used to preserve the boot configuration for host bridges
-> selectivey.
+On 12/01/2024 14:22, Krishna chaitanya chundru wrote:
+> CPU-PCIe path consits for registers PCIe BAR space, config space.
+> As there is less access on this path compared to pcie to mem path
+> add minimum vote i.e GEN1x1 bandwidth always.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> V2:
-> * None
+> In suspend remove the cpu vote after register space access is done.
 > 
->  Documentation/devicetree/bindings/pci/pci.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 6a8f2874a24d..0a5ff998cbe8 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -32,6 +32,10 @@ driver implementation may support the following properties:
->     root port to downstream device and host bridge drivers can do programming
->     which depends on CLKREQ signal existence. For example, programming root port
->     not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
-> +- preserve-boot-config:
-> +   If present this property specifies that this host bridge is already
-> +   configured by the platform firmware and the OS doesn't need to reconfigure
-> +   it again.
+> Fixes: c4860af88d0c ("PCI: qcom: Add basic interconnect support")
 
-Anything new must be a schema.
+If this patch is a Fixes then don't you need the accompanying dts change 
+as a parallel Fixes too ?
 
-Don't create something new to workaround the problem. Extend the 
-existing support. For this, make "linux,pci-probe-only" allowed in host 
-bridge nodes. Yeah, there's the issue that this property sets a global 
-flag, but I'd imagine the PCI maintainers would agree that some flags 
-should/could be per bus.
+i.e. without the dts update - you won't have the nodes in the dts to 
+consume => applying this code to the stable kernel absent the dts will 
+result in no functional change and therefore no bugfix.
 
-Rob
+I'm not sure if you are asked to put a Fixes here but it seems to be it 
+should either be dropped or require a parallel Fixes: tag for the dts 
+and yaml changes.
+
+What is the bug this change fixes in the backport ?
+
+> cc: stable@vger.kernel.org
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+
+---
+bod
 
