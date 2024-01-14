@@ -1,183 +1,249 @@
-Return-Path: <linux-pci+bounces-2136-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2137-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E40182CA4E
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Jan 2024 07:55:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A57FE82D229
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Jan 2024 23:04:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 926A21F236F8
-	for <lists+linux-pci@lfdr.de>; Sat, 13 Jan 2024 06:55:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4566828171B
+	for <lists+linux-pci@lfdr.de>; Sun, 14 Jan 2024 22:04:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86FB7EAEA;
-	Sat, 13 Jan 2024 06:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F641A27A;
+	Sun, 14 Jan 2024 22:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xrdjl5Ci"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="P9jmse89"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C967B17727
-	for <linux-pci@vger.kernel.org>; Sat, 13 Jan 2024 06:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705128937; x=1736664937;
-  h=date:from:to:cc:subject:message-id;
-  bh=ame2Vk0SHlSzArLphMCBQWl+FiWCcQ5tDk/RczbyjzE=;
-  b=Xrdjl5Ciy+pbapnNUZinZYwR6wGDPgdSdKA2vgvq5iGVCinK/pBjYRWX
-   Gfb3arKfjip/128B2BvtU7LCiej+Eycp/om0FIYKNdK1JM+bo2JHsSy7d
-   j0QsLKy+O+p1lab7dNlUYGPwGSPf9eFQ2/KzQvOoKlfRS9GdFncGX/tEw
-   BoboBhJh/vr57HCzMO6YChHQOKe/I5oStBb8vmyEiSR9KiwC+J8Yfoij9
-   m2MEgtdzFufCmEJA9lxfcWIBhthzJWZG8foIzthqajSEf8lQTiuwModYc
-   I4wFiY7sbpX/vHKXzCvw9vsqm4zBGKcL43GTP3TfH2TLSThTA5Pyn6fwl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="389801234"
-X-IronPort-AV: E=Sophos;i="6.04,191,1695711600"; 
-   d="scan'208";a="389801234"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2024 22:55:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10951"; a="902207124"
-X-IronPort-AV: E=Sophos;i="6.04,191,1695711600"; 
-   d="scan'208";a="902207124"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Jan 2024 22:55:35 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rOXvZ-000ACI-2K;
-	Sat, 13 Jan 2024 06:55:33 +0000
-Date: Sat, 13 Jan 2024 14:54:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- e1721eaa13f6ed51bf487d4f52ee11ce517ef27d
-Message-ID: <202401131456.TguAtdYD-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DB519BDC
+	for <linux-pci@vger.kernel.org>; Sun, 14 Jan 2024 22:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cd8b64a52dso35357111fa.2
+        for <linux-pci@vger.kernel.org>; Sun, 14 Jan 2024 14:03:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1705269835; x=1705874635; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1qQ+eCBn3/vQplYkhJOTbcflM73zl2QN5QC73+Ez/s=;
+        b=P9jmse89nFCDB0CXUpsye8lYpG1rRx5VAlTUa7DgW3E8ERWxMxC9BA7VZVgjnu+ARy
+         7z0FIhWE8u3+y3H2xVh4Ygq8nt6bTDEDCys8xLZq6mAs5BFE1GaShsHd6v/j9ajfJBQl
+         2PRNSQt2wuUkGbfHGkfq0h8Ajw8o8iwhVvXcQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705269835; x=1705874635;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G1qQ+eCBn3/vQplYkhJOTbcflM73zl2QN5QC73+Ez/s=;
+        b=YRFjr6NQcBVjIrSkaomye33cWqhkONh+i22fcKnoLBiCx3ACI6kTtFqePyqQvqC4Vw
+         EBH0mZODH6KMmnazH7Z+Zn1GXZ/D7KCikPgBXhcGgAJQ7yVnpqAdnYNKHzBCdhCMCj6i
+         UzuxEJ0zX1JceKDY8QEb3m0lDdr+BNuNn+TodJAXXQQYeNqo7NIgWqIL2cBPe1TttotP
+         Jh9wtAz+KO7zPbbN+6xkToOvQgToV+a9mErWwIsZNmhGuckU8awVS5+IU6GaRuFj1zt/
+         IMUE7Fo1WFhnjLV5fjKoVZI6LJQvwpI3b1+/Dp2Wv8b6AAHZd1OrSrOiuPKaIe2hwwF8
+         2Ppg==
+X-Gm-Message-State: AOJu0YwzXWONxbCJLuKBD4yK4aadbANJxOw2ZIaCYHNtPME97oQdlx9V
+	g1cVjZ1pRa9FdVrhOQaXLwEF0axI7f6aPNEArWUJ/fDhCBbh
+X-Google-Smtp-Source: AGHT+IEWv2yawFl+PENi/PRVPWJUrqvbzN41ilVqwWiWkEJiRfjHqZFI7scma/2/EqVvSNL6B22NtwkgadblL/zozOI=
+X-Received: by 2002:a2e:a801:0:b0:2cd:ac63:feeb with SMTP id
+ l1-20020a2ea801000000b002cdac63feebmr1385925ljq.35.1705269835277; Sun, 14 Jan
+ 2024 14:03:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <CA+-6iNy03Bz1-Wftf4PpuVFF0FS01d2Yo6coG+gHqwwwpRdFMw@mail.gmail.com>
+ <20240111205404.GA2190297@bhelgaas>
+In-Reply-To: <20240111205404.GA2190297@bhelgaas>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Sun, 14 Jan 2024 17:03:43 -0500
+Message-ID: <CA+-6iNyLZV42KqeBwYEE-sxhbE3bbwwbSVii3fY4nmrd0W_LkA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] PCI: brcmstb: Configure HW CLKREQ# mode
+ appropriate for downstream device
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Phil Elwell <phil@raspberrypi.com>, 
+	bcm-kernel-feedback-list@broadcom.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000cc22ca060eef1272"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: e1721eaa13f6ed51bf487d4f52ee11ce517ef27d  PCI: Fix kernel-doc issues
+--000000000000cc22ca060eef1272
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 1781m
+On Thu, Jan 11, 2024 at 3:54=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, Jan 11, 2024 at 01:20:48PM -0500, Jim Quinlan wrote:
+> > On Thu, Jan 11, 2024 at 12:28=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.=
+org> wrote:
+> > > On Mon, Nov 13, 2023 at 01:56:06PM -0500, Jim Quinlan wrote:
+>
+> > > > Previously, this driver always set the mode to "no-l1ss", as almost=
+ all
+> > > > STB/CM boards operate in this mode.  But now there is interest in
+> > > > activating L1SS power savings from STB/CM customers, which requires=
+ "aspm"
+> > > > mode.
+> > >
+> > > I think this should read "default" mode, not "aspm" mode, since "aspm=
+"
+> > > is not a mode implemented by this patch, right?
+> >
+> > Correct.
+>
+> Thanks, I changed that locally.
+>
+> > > > In addition, a bug was filed for RPi4 CM platform because most
+> > > > devices did not work in "no-l1ss" mode.
+> > >
+> > > I think this refers to bug 217276, mentioned below?
+> >
+> > I guess you are saying I should put a footnote marker there.
+>
+> I added a hint here.
+>
+> > > > Note: Since L1 substates are now possible, a modification was made
+> > > > regarding an internal bus timeout: During long periods of the PCIe =
+RC HW
+> > > > being in an L1SS sleep state, there may be a timeout on an internal=
+ bus
+> > > > access, even though there may not be any PCIe access involved.  Suc=
+h a
+> > > > timeout will cause a subsequent CPU abort.
+> > >
+> > > This sounds scary.  If a NIC is put in L1.2, does this mean will we
+> > > see this CPU abort if there's no traffic for a long time?  What is
+> > > needed to avoid the CPU abort?
+> >
+> > I don't think this happens in normal practice as there are a slew
+> > of low-level TLPs and LTR messages that are sent on a regular
+> > basis.
+>
+> OK, I'll have to take your word for this.  I don't know enough about
+> PCIe to know what sort of periodic transmissions are required when a
+> device is idle.
+>
+> LTR messages are required when endpoint service requirements change,
+> but I wouldn't expect those if the device is idle.
+>
+> > The only time this timeout occured is when  a major customer
+> > was doing a hack: IIRC, their endpoint device has to reboot itself
+> > after link-up and driver probe,  so it goes into L1.2 to execute
+> > this to reboot and while doing so the connection is completely
+> > silent.
+>
+> > > What does this mean for users?  L1SS is designed for long periods of
+> > > the device being idle, so this leaves me feeling that using L1SS is
+> > > unsafe in general.  Hopefully this impression is unwarranted, and all
+> > > we need is some clarification here.
+> >
+> > I don't think it will affect most users, if any.
+>
+> I'll try to get this into -next today or tomorrow.
 
-configs tested: 101
-configs skipped: 2
+Bjorn, you are right -- I need to cajole our PCIe HW team to tell me
+why this timeout can never
+happen and/or why it is not a bug.
+Until then,
+Jim Quinlan
+Broadcom STB/CM
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240113   gcc  
-arc                   randconfig-002-20240113   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240113   gcc  
-arm                   randconfig-002-20240113   gcc  
-arm                   randconfig-003-20240113   gcc  
-arm                   randconfig-004-20240113   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240113   gcc  
-arm64                 randconfig-002-20240113   gcc  
-arm64                 randconfig-003-20240113   gcc  
-arm64                 randconfig-004-20240113   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240113   gcc  
-csky                  randconfig-002-20240113   gcc  
-hexagon                           allnoconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240113   clang
-hexagon               randconfig-002-20240113   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240113   gcc  
-i386         buildonly-randconfig-002-20240113   gcc  
-i386         buildonly-randconfig-003-20240113   gcc  
-i386         buildonly-randconfig-004-20240113   gcc  
-i386         buildonly-randconfig-005-20240113   gcc  
-i386         buildonly-randconfig-006-20240113   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240113   gcc  
-i386                  randconfig-002-20240113   gcc  
-i386                  randconfig-003-20240113   gcc  
-i386                  randconfig-004-20240113   gcc  
-i386                  randconfig-005-20240113   gcc  
-i386                  randconfig-006-20240113   gcc  
-i386                  randconfig-011-20240113   clang
-i386                  randconfig-012-20240113   clang
-i386                  randconfig-013-20240113   clang
-i386                  randconfig-014-20240113   clang
-i386                  randconfig-015-20240113   clang
-i386                  randconfig-016-20240113   clang
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240113   gcc  
-loongarch             randconfig-002-20240113   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-nios2                             allnoconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240113   gcc  
-nios2                 randconfig-002-20240113   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240113   gcc  
-parisc                randconfig-002-20240113   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc               randconfig-001-20240113   gcc  
-powerpc               randconfig-002-20240113   gcc  
-powerpc               randconfig-003-20240113   gcc  
-powerpc64             randconfig-001-20240113   gcc  
-powerpc64             randconfig-002-20240113   gcc  
-powerpc64             randconfig-003-20240113   gcc  
-riscv                             allnoconfig   clang
-riscv                               defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                  randconfig-001-20240113   clang
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                    randconfig-001-20240113   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-um                               allmodconfig   clang
-um                               allyesconfig   clang
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
+If
+>
+> Bjorn
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--000000000000cc22ca060eef1272
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDzRDgRhdKLt21D+SAXiI7WFl4Az3mK
+EX515JNwHBNm7DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDAx
+MTQyMjAzNTVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAgCHH7oP3w3VrZynq6Nf8moEk36paFTCXy2wzejvj4W0obf40
+PcyouH6kq9Z1Id213MUNeB+uzQ3EOn5lz8Hqut/rOEF7p8Y33DKRKHLQhZ+LWtNa5t3M9ywwwxJM
+Zjne7Q1UFt9f7W6rbF5Drrq73hiH7Oto0ipoGx3FscwMyJOLL9yT0D0VGbCHHBDEhVNuwcft7Dw9
+2KIAZl8EuBAgAwo730N0aIIT6pg/5rshgLt5+1YnC+8JqAHX9u+/hdoMH9juXhv3RhISAPET2alL
+ePeHMTrOenm36XUC1NT2f7A4jNkhUh9juLnWy7HBf2eKSrrkqk/x326TRiC+0suBtg==
+--000000000000cc22ca060eef1272--
 
