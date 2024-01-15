@@ -1,267 +1,311 @@
-Return-Path: <linux-pci+bounces-2141-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2142-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAAD982D4CD
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 08:59:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF15682D590
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 10:10:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 516C21F218F1
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 07:59:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 369241F218BC
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 09:10:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79FFF5232;
-	Mon, 15 Jan 2024 07:58:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B31C123;
+	Mon, 15 Jan 2024 09:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="feAzD62b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0Sasfhgc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="feAzD62b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0Sasfhgc"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="uL93W0/j"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa1.fujitsucc.c3s2.iphmx.com (esa1.fujitsucc.c3s2.iphmx.com [68.232.152.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C877489;
-	Mon, 15 Jan 2024 07:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 414D521DA5;
-	Mon, 15 Jan 2024 07:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705305527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dlZWexjBzPW5ooyCVz21kzNECq7VS7ZlJlher26Rd9w=;
-	b=feAzD62byRHGPBeyynmUtivbLbhEq51ZKQMwxuULeHpZDXYqGCACyo/RHJGIUdy/KS6jzO
-	qe0Phx/2d48EXVdJYLg31/vfqwOLMUVXXu1P6AnR4e2O758bzEbT01HtwFOU7ozLuQDwMh
-	v5z2iPnpA5x89XFeVOyAOYMD8X8pUVY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705305527;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dlZWexjBzPW5ooyCVz21kzNECq7VS7ZlJlher26Rd9w=;
-	b=0Sasfhgc4pB1FS0UTwd4a4cv/k5vjgrX6pJ1+YshAx7ToW8pPTmHNYx4zAylwd5PIoGehV
-	2w+1YGsp79s7QKDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705305527; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dlZWexjBzPW5ooyCVz21kzNECq7VS7ZlJlher26Rd9w=;
-	b=feAzD62byRHGPBeyynmUtivbLbhEq51ZKQMwxuULeHpZDXYqGCACyo/RHJGIUdy/KS6jzO
-	qe0Phx/2d48EXVdJYLg31/vfqwOLMUVXXu1P6AnR4e2O758bzEbT01HtwFOU7ozLuQDwMh
-	v5z2iPnpA5x89XFeVOyAOYMD8X8pUVY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705305527;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dlZWexjBzPW5ooyCVz21kzNECq7VS7ZlJlher26Rd9w=;
-	b=0Sasfhgc4pB1FS0UTwd4a4cv/k5vjgrX6pJ1+YshAx7ToW8pPTmHNYx4zAylwd5PIoGehV
-	2w+1YGsp79s7QKDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB46713712;
-	Mon, 15 Jan 2024 07:58:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Hr96KLblpGWGeQAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 15 Jan 2024 07:58:46 +0000
-Message-ID: <3e2f70ab-c4de-4fae-9365-4f6f77c847c5@suse.de>
-Date: Mon, 15 Jan 2024 08:58:45 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74749C120;
+	Mon, 15 Jan 2024 09:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1705309820; x=1736845820;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=cF0l8fETEqqmBJZCiRBXPeRjzkmWLsc+pcUpImdzha8=;
+  b=uL93W0/jck5ifi3jtkfnVRNhQmuEAbo1A5MSSm7rPo3bUKuoTYwtTyfi
+   qTiFFeU7GzZark35x1wD5cUmMd8e5FTdY08h57NN/4tnmPc0hvjjxqTgL
+   1OP6ou6y8PUcP01FSvBUCZG2hYNjVWzTwlnyUih6ZTNoGGo+1ku2XFRjS
+   a/oRxfFPFql7sbe3DhZ6qUbjLbaXqJ4ZIeHYBJFKlwtD3QdHDoZF6XJTu
+   a+vJdyLmO3aShr16CW+dQ19awvwO5ECBoNJiWChZt8xtLkf9BQQkAV8NN
+   pj1mCbGyhQXXYVdoXFzgTyLIGNTCQOIC/vyrmvGprnDodGQIXL8A+lLLh
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="19262361"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695654000"; 
+   d="scan'208";a="19262361"
+Received: from mail-os0jpn01lp2105.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.105])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 18:09:07 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zc6Dzd1SJuidHivrQEDWhUmwDoH9tEVU8ZiW4YLPzDK/tlIdJib+qwuDZY9Lv58b84huvTZQ5uT7WpedOc+QFN93TLhlkKdYYrCA6DI9KQoE8+4pcsdiZTJQ9bxGajGJcb8eD25ncV19hpixDrqiBtkcINrTeSSzHwYOkwlBUivjjzvJXBZ43B7e4EghZ9UOp2GJIPALe9OR/w0sn0eRxFtW9+VQLPR7WjqEg6zsuDU5cMJ7LfYWKxq+lDKhsVMayHCPa/nFHYohJCaoKYBaZZkvvwbOQ9XELdtguZKmI8L3LIlNo8jzTrEKYVpLmvX23WsE+vRNe5KV0pv7tnPZFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+tKgY/OdGkaywT062KE964JBVgDqtnwxcYYQwa2niLY=;
+ b=UNE566ntsieyWxmVekTKR/+ZCGt3WzfYMU0rGj2yvMPRHOwzeBCeV1b/Kb8uk6d2eLvXrWIKgc6McgJV7il+z/LC2Jue6/597oNGrIhLjGGnYYmVe+cnsrfQ+vI+otipkhiStMrAf2pcPv2J7t0rBt258a0Uc2OHaMqAS33Df1RBA0PJWL6kuAOEWW/xDfcs/7HEbjKMHvx0Z5/41f21f66t6Lcqdm6xVwKEw4EYq8qpdDemT+rlT2JUgL+Oh8U20vHpBhV8uT3hvywHQ/7zXQokI0jTpDdNXn8Y7dTXAQxIL1rRjMEcTLohPGCmhMhsqC5MVbTQM42AU6PbMWjjqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TYCPR01MB11764.jpnprd01.prod.outlook.com (2603:1096:400:3b8::7)
+ by TYCPR01MB6095.jpnprd01.prod.outlook.com (2603:1096:400:4f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.17; Mon, 15 Jan
+ 2024 09:09:00 +0000
+Received: from TYCPR01MB11764.jpnprd01.prod.outlook.com
+ ([fe80::19d6:fc5e:27ce:1700]) by TYCPR01MB11764.jpnprd01.prod.outlook.com
+ ([fe80::19d6:fc5e:27ce:1700%4]) with mapi id 15.20.7202.017; Mon, 15 Jan 2024
+ 09:09:00 +0000
+From: "Daisuke Kobayashi (Fujitsu)" <kobayashi.da-06@fujitsu.com>
+To: 'Jonathan Cameron' <Jonathan.Cameron@Huawei.com>, Dan Williams
+	<dan.j.williams@intel.com>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "Yasunori Gotou
+ (Fujitsu)" <y-goto@fujitsu.com>
+Subject: RE: [RFC PATCH 0/3] lspci: Display cxl1.1 device link status
+Thread-Topic: [RFC PATCH 0/3] lspci: Display cxl1.1 device link status
+Thread-Index: AQHaMwXr559Y+43gz0Gam6b/l4Ghc7DRwyuAgAItCgCAAj19AIAEiiJQ
+Date: Mon, 15 Jan 2024 09:09:00 +0000
+Message-ID:
+ <TYCPR01MB11764763DFE894B96EF0C6C38BA6C2@TYCPR01MB11764.jpnprd01.prod.outlook.com>
+References: <20231220050738.178481-1-kobayashi.da-06@fujitsu.com>
+	<20240109155755.0000087b@Huawei.com>
+	<659f404a99aad_3d2f92946e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240112112414.00006443@Huawei.com>
+In-Reply-To: <20240112112414.00006443@Huawei.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=199ad4c3-ad50-4f71-b548-25b10445d77f;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2024-01-15T08:43:39Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB11764:EE_|TYCPR01MB6095:EE_
+x-ms-office365-filtering-correlation-id: 13f1c570-26e7-4e46-feba-08dc15a99cdd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ m6N4tYsf/LzDWeJV2V6pvyivgf4sdudoNb2Mjt8Sq3qprM7qUA+0+7f2fi1TiMgP3f/jgCtSi2haQqwcAGHQSk6TYzUPVV1/nd0Nz9F5Rhlv+zotFDvaifWZfXs5KJRAqFjzZk4dCG+zePphEhutwLVXxAJmZSpWJa5Hqa5k/e2oVIc0Z6ZLzbScuupGQyH2LbtITvQQ21VhQtLcbM+xOV6xwbSLkzppnmf8WpZ/C2Ns1COh/0g/VSkgwZUc/u7zXNIu1TR/33wFGUZxF7DgrtqJHXoAzEby+jEvuGoDjr+L6T6ztAQE17tTim6DIgiC0nufLf80pgOqXzA8qIwo1THex09bqhAWez/AGkh1a59U8apbNQdPvrTtPp3z4IHUMNIN1Lkrf9TTwGZfWN+Uq4SEube6wvcIURzhPItGyzxCuBSH6k5JAgPfdSAYQHLKWzYvbWLeeY3mw8r84Mjf9ImeBd8Z5JfGCMmRyTex2QSa0SUe3W1fV6qL/mNDVEo7QDH8SypE8Z9oSUqGGx/sMDzKcbQMNrx2CMimPcm/3eig9npeffxQDOlRrnia5GvfZ05Tl0wmA3THqCEpr8sw9ki+1bK5h7R0RpmYjXAP3bKEVhGPHtNPqejs3TdLWsueTDLQUvG1UhS+dFfzRRKt7A==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11764.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(396003)(366004)(136003)(39860400002)(230922051799003)(64100799003)(1590799021)(186009)(451199024)(1800799012)(55016003)(1580799018)(26005)(53546011)(9686003)(83380400001)(85182001)(86362001)(33656002)(38070700009)(38100700002)(82960400001)(71200400001)(52536014)(110136005)(5660300002)(4326008)(7696005)(6506007)(107886003)(66946007)(122000001)(66476007)(66446008)(64756008)(66556008)(76116006)(316002)(8936002)(54906003)(8676002)(2906002)(41300700001)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?WXhpOGt4TjVGMzN4NURRT2FOWHFnVHdjTFJkenZIdnRyaG5rYTQ2c2kx?=
+ =?iso-2022-jp?B?RThzQ0tLZ0FwcHRWMTNXQ3YyKytsMmI4U1QxKzZrNkx6VURJVVpEcVly?=
+ =?iso-2022-jp?B?OFg1bWNtY09vVDVDc2ZETnRpWkRlUTVOT1F1endWYktvb1B1amlMU0hK?=
+ =?iso-2022-jp?B?a0Qya2lKUTJncE1yTC9Pa01DSnVxZG1DaUpHU3JVMmY4VUtLOTMzQ3py?=
+ =?iso-2022-jp?B?cXlmRGl2MkN5NC9kQ214VWFvYms2RVp2VXV3MXkvNnFZci8zd1d4cnF1?=
+ =?iso-2022-jp?B?L2hjTHdnb01EUzZzTlJZK1c4bmp0ekdjWjVNNklMSDRCbWV3Z1VSMWNt?=
+ =?iso-2022-jp?B?ekJ2UkMxWlhIQjVCMWIrV1hxMFVNQTF2UWpRdjcyTVR3ZTNqS1hHaUNV?=
+ =?iso-2022-jp?B?dXgrYnh3NWp3ZmsreGF1V2JvYzFLMDIxMVVRaW5NVEhxaTRhOC9pS0lW?=
+ =?iso-2022-jp?B?QnhhQnZWMk11ODNIcFQyWmNiTXU4NmFIQi9tdUFuaVVjZ0gxUm9DUHJI?=
+ =?iso-2022-jp?B?WnUzWXhONWxSaUg3V05KU1B4U0d0cm1hRVBZZEIvWld0R3h0RGRULy9E?=
+ =?iso-2022-jp?B?SWxsSGU4dHEwS3I2ZGQ1V2ROSXJrZUJnYitYMGxBVU5DRkVKS2tlZzNE?=
+ =?iso-2022-jp?B?V0hNSlBiSmtGcUk3ektJRTlOZzlyVmtIK2ZrRDVMOWdwQ1EzbE41TlV2?=
+ =?iso-2022-jp?B?K2FCREpxQmo4Y29vUmlzL3AvRlN3b3hXYk1LU3J0cXZ3SmRKTHFKb3Zx?=
+ =?iso-2022-jp?B?WngxZ0pCS2tYczZmL1FDQWc1ZXBjeEJ2T0JkQU80MFd5M1JTbjNvblFJ?=
+ =?iso-2022-jp?B?TE1LZDlubHF1YVJxaStSUDl1NkE5UU5mN0tVdFBKUml3bDIycEphUkg3?=
+ =?iso-2022-jp?B?QTd4VVFoaEtxN0d5VDh2UkVjR3FHQWpON0txbDF0NkdjVnJaWVRzTXFh?=
+ =?iso-2022-jp?B?MVJrdndwbStpVzJTanI4SDMvYzJhbFFVUXdqY3RMYVJFSjlvb25HQ0FX?=
+ =?iso-2022-jp?B?enkwQVRURmV3ejBBdFZDYmhNUGdjQzc2MEJialJpT0FIM3hpLzhMRlFK?=
+ =?iso-2022-jp?B?bkJFZ0tmT1JaamtDQjZzTWpLVzQ3ZXhJZGV4REEza2JBSVJrdkRKNkVI?=
+ =?iso-2022-jp?B?b2RHT1ZNRjVqV3MvZXNadmI1d1o4aDgvRkZZT2o1Nk84YnlhN3BLVy9W?=
+ =?iso-2022-jp?B?ME1DYkRtQzYwL0pxd05UbEdHM3lMc0NZai9kTDVWeEE1bTdiUlpHelNC?=
+ =?iso-2022-jp?B?K0JCRkVQMkJJMVdMV0NOTzZ2TDFKVXZnN3czNU5QSzBnS0gwZEN2SFBI?=
+ =?iso-2022-jp?B?QTFsWjR1TXhES0F5eXJ0UzN1cUNpSlhXZXhKZU9MWlpkbXFZTFVyVTJK?=
+ =?iso-2022-jp?B?cHVQV3BzUlF4SHdSN2hWZ1Zya2FVNys5Q3o2TzYyS1M1cjczZEEwV1gv?=
+ =?iso-2022-jp?B?aFdOVEVqcWM3b3N6YW45aElWSm9pWFFRb3ZqdWo2M1ExU3dDYmZhVlBs?=
+ =?iso-2022-jp?B?R2FvMGdCYWZPNDJ1K3BDYWR4OFlVNW5GaiszU3VHUExLWlRBL1hkV2s4?=
+ =?iso-2022-jp?B?c1hNUGY4amhRZTdvN0JlQnZnTkNkSjRya2FORmJtREovVWRXOHk2OUcz?=
+ =?iso-2022-jp?B?VHNENzZ6dzZpeGNxWnZzMFE5MzhkZEtOUWprSGVzYThya2VWSWpod1lr?=
+ =?iso-2022-jp?B?SUFWVVpXZW5SSXNkUGxJcWJNS3hMemFwZjNhSjhXcU1lT3Ezc3RrV0Qy?=
+ =?iso-2022-jp?B?dnorNm5Sa1RxTm15c2I2czBwaXBYVUZEZGZOMFExVXl5d0hIblc5eDU0?=
+ =?iso-2022-jp?B?U2xSYUtzQUdMd0xTZGIrK2FTa0pFa2NKeTg1SzJrUG9FblF0SXRJSklV?=
+ =?iso-2022-jp?B?MStOdkFZdUhjZTlMZWJDSTNZbFlsN3U2ODdmaXJKMG5BS3NocGtBTzhY?=
+ =?iso-2022-jp?B?Wm1RV01yVnVsQVJ6YXdMbG8wMG16UGZIT2x1NGNUNGlKdlFNRGxJeHJ5?=
+ =?iso-2022-jp?B?VWRVT1ZDUnpZZ1ptMDUyQnFVZy9jV0lzenNwMThIWjF2TThySE1JQlVW?=
+ =?iso-2022-jp?B?dXJ5aXlVMlFWYUdpZE5WcG1IVmRRVW8ydG9QeTNTemRVV0s4ZE9WZVJm?=
+ =?iso-2022-jp?B?dzV5K281cCs5bEdadlZHeCtQUjZldUcwZnI4d1dGK1pVaDZ3aDNxNWto?=
+ =?iso-2022-jp?B?cThER3l3OUZTNWZGZlRtaXlOVUk1YjAzcVhmREJ1b3BtcHovUUR6WWt0?=
+ =?iso-2022-jp?B?VllJN0NldTQ3MWhDSkZlSjJOWXVpZVhaQURNOVplME1HUnpnbnFlaVBr?=
+ =?iso-2022-jp?B?b0hBSEwzMjZ0RUowcWozN3ExQjZZbDNsaEE9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/4] arch/x86: Remove unnecessary dependencies on
- bootparam.h
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: nathan@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- bhelgaas@google.com, arnd@arndb.de, zohar@linux.ibm.com,
- dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, javierm@redhat.com, linux-arch@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-security-module@vger.kernel.org
-References: <20240112095000.8952-1-tzimmermann@suse.de>
- <CAMj1kXGxNTvCca+9TfUfvp06ppyD9XiyO59khYXg88VkyFm1rw@mail.gmail.com>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <CAMj1kXGxNTvCca+9TfUfvp06ppyD9XiyO59khYXg88VkyFm1rw@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------SELvXPdRwuL855MvPw4WOkpW"
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=feAzD62b;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0Sasfhgc
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 HAS_ATTACHMENT(0.00)[];
-	 MIME_BASE64_TEXT_BOGUS(1.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLfgmttzabnpkr34rizty4fwu5)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MIME_BASE64_TEXT(0.10)[];
-	 MX_GOOD(-0.01)[];
-	 SIGNED_PGP(-2.00)[];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:+,3:~];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[22];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,linux.ibm.com,gmail.com,paul-moore.com,namei.org,hallyn.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 414D521DA5
-X-Spam-Level: 
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	2+3Ptpq3JnB1TSElmZPkMZgwM4YPmGlgUgsl1rjtLxyzk9LNRQkcfNnJVDot7ni+26dtgnreFgQyXIjpuiOBs5FBchxz5txDAfrSQjbrVEeGdHZMwN7uJGv5WpZW535IBNJoRE99I8eQYgnje1pTslh8F/0HI4rcs3pdvsJ4MclPwTm6mYj0jmprBa1pmM81K4A9i+gFvdTG+yjLW8+Jn4qJgQuC95uHMJeE+w51O5xHjMvtqHCn+6V0t3tqKuEBQO9dWOoSObz1SqLOTl0OfByot8UUiWSOl+N1Elkh07rU5DBniWj4t/dnsnXo0jt02C+eMPuth/C1U4mwZrdHkamZiI+uadUT2TiPmrY/B0v1I43blQNC7t+K3C50PhkNigfsBJJKzVQpWD/XzHLpZs9l5LvDQjGomOCGIX2yDkf/X4QXdm5g8ojanE8ySGyB3KloYReJ5XWmHrWNjqOKfJemvZjFVRf8w+fiphwNtDYgqAaSJyL3zb2sPPQAC2HGjTRXPrGgKmNDjn/eL04szTD03xdDHSNAOValK9Oid3jx7A3CW5iS6Pgj1R+08Nip+a6OqK1e338YJolFryXPuC9L2hgBYSfUcuD6BNvYL4KII+ZTX1lgKEWfanAT71cx
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11764.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13f1c570-26e7-4e46-feba-08dc15a99cdd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jan 2024 09:09:00.4721
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZgDFeFFDZVm2LXgD18E2ENxZGiILUrvzsVHWFTxJB6xSWWkJNAjZgWpmhS2Fs8uYOTTTwfNW/ERhk5PXoE/d6JFJpFCnZA2ZT9Jz7+8Kik0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB6095
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------SELvXPdRwuL855MvPw4WOkpW
-Content-Type: multipart/mixed; boundary="------------M5SmtNFPrQKoNShNeu4RV0nF";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: nathan@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- bhelgaas@google.com, arnd@arndb.de, zohar@linux.ibm.com,
- dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, javierm@redhat.com, linux-arch@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-security-module@vger.kernel.org
-Message-ID: <3e2f70ab-c4de-4fae-9365-4f6f77c847c5@suse.de>
-Subject: Re: [PATCH v5 0/4] arch/x86: Remove unnecessary dependencies on
- bootparam.h
-References: <20240112095000.8952-1-tzimmermann@suse.de>
- <CAMj1kXGxNTvCca+9TfUfvp06ppyD9XiyO59khYXg88VkyFm1rw@mail.gmail.com>
-In-Reply-To: <CAMj1kXGxNTvCca+9TfUfvp06ppyD9XiyO59khYXg88VkyFm1rw@mail.gmail.com>
 
---------------M5SmtNFPrQKoNShNeu4RV0nF
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-SGkNCg0KQW0gMTIuMDEuMjQgdW0gMTg6Mjggc2NocmllYiBBcmQgQmllc2hldXZlbDoNCj4g
-T24gRnJpLCAxMiBKYW4gMjAyNCBhdCAxMDo1MCwgVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1t
-ZXJtYW5uQHN1c2UuZGU+IHdyb3RlOg0KPj4NCj4+IFJlZHVjZSBidWlsZCB0aW1lIGluIHNv
-bWUgY2FzZXMgYnkgcmVtb3ZpbmcgdW5uZWNlc3NhcnkgaW5jbHVkZSBzdGF0ZW1lbnRzDQo+
-PiBmb3IgPGFzbS9ib290cGFyYW0uaD4uIFJlb3JnYW5pemUgc29tZSBoZWFkZXIgZmlsZXMg
-YWNjb3JkaW5nbHkuDQo+Pg0KPj4gV2hpbGUgd29ya2luZyBvbiB0aGUga2VybmVsJ3MgYm9v
-dC11cCBncmFwaGljcywgSSBub3RpY2VkIHRoYXQgdG91Y2hpbmcNCj4+IGluY2x1ZGUvbGlu
-dXgvc2NyZWVuX2luZm8uaCB0cmlnZ2VycyBhIGNvbXBsZXRlIHJlYnVpbGQgb2YgdGhlIGtl
-cm5lbA0KPj4gb24geDg2LiBJdCB0dXJucyBvdXQgdGhhdCB0aGUgYXJjaGl0ZWN0dXJlJ3Mg
-UENJIGFuZCBFRkkgaGVhZGVycyBpbmNsdWRlDQo+PiA8YXNtL2Jvb3RwYXJhbS5oPiwgd2hp
-Y2ggZGVwZW5kcyBvbiA8bGludXgvc2NyZWVuX2luZm8uaD4uIEJ1dCBub25lIG9mDQo+PiB0
-aGUgZHJpdmVycyBoYXZlIGFueSBidXNpbmVzcyB3aXRoIGJvb3QgcGFyYW1ldGVycyBvciB0
-aGUgc2NyZWVuX2luZm8NCj4+IHN0YXRlLg0KPj4NCj4+IFRoZSBwYXRjaHNldCBtb3ZlcyBj
-b2RlIGZyb20gYm9vdHBhcmFtLmggYW5kIGVmaS5oIGludG8gc2VwYXJhdGUgaGVhZGVyDQo+
-PiBmaWxlcyBhbmQgcmVtb3ZlcyBvYnNvbGV0ZSBpbmNsdWRlIHN0YXRlbWVudHMgb24geDg2
-LiBJIGRpZA0KPj4NCj4+ICAgIG1ha2UgYWxsbW9kY29uZmlnDQo+PiAgICBtYWtlIC1qMjgN
-Cj4+ICAgIHRvdWNoIGluY2x1ZGUvbGludXgvc2NyZWVuX2luZm8uaA0KPj4gICAgdGltZSBt
-YWtlIC1qMjgNCj4+DQo+PiB0byBtZWFzdXJlIHRoZSB0aW1lIGl0IHRha2VzIHRvIHJlYnVp
-bGQuIFJlc3VsdHMgd2l0aG91dCB0aGUgcGF0Y2hzZXQNCj4+IGFyZSBhcm91bmQgMjAgbWlu
-dXRlcy4NCj4+DQo+PiAgICByZWFsICAgIDIwbTQ2LDcwNXMNCj4+ICAgIHVzZXIgICAgMzU0
-bTI5LDE2NnMNCj4+ICAgIHN5cyAgICAgMjhtMjcsMzU5cw0KPj4NCj4+IEFuZCB3aXRoIHRo
-ZSBwYXRjaHNldCBhcHBsaWVkIGl0IGdvZXMgZG93biB0byBsZXNzIHRoYW4gb25lIG1pbnV0
-ZS4NCj4+DQo+PiAgICByZWFsICAgIDBtNTYsNjQzcw0KPj4gICAgdXNlciAgICA0bTAsNjYx
-cw0KPj4gICAgc3lzICAgICAwbTMyLDk1NnMNCj4+DQo+PiBUaGUgdGVzdCBzeXN0ZW0gaXMg
-YW4gSW50ZWwgaTUtMTM1MDAuDQo+Pg0KPj4gdjU6DQo+PiAgICAgICAgICAqIHNpbGVuY2Ug
-Y2xhbmcgd2FybmluZ3MgZm9yIHJlYWwtbW9kZSBjb2RlIChOYXRoYW4pDQo+PiAgICAgICAg
-ICAqIHJldmVydCBib290L2NvbXByZXNzZWQvbWlzYy5oIChrZXJuZWwgdGVzdCByb2JvdCkN
-Cj4+IHY0Og0KPj4gICAgICAgICAgKiBmaXggZndkIGRlY2xhcmF0aW9uIGluIGNvbXByZXNz
-ZWQvbWlzYy5oIChBcmQpDQo+PiB2MzoNCj4+ICAgICAgICAgICoga2VlcCBzZXR1cF9oZWFk
-ZXIgaW4gYm9vdHBhcmFtLmggKEFyZCkNCj4+ICAgICAgICAgICogaW1wbGVtZW50IGFyY2hf
-aW1hX2VmaV9ib290X21vZGUoKSBpbiBzb3VyY2UgZmlsZSAoQXJkKQ0KPj4gdjI6DQo+PiAg
-ICAgICAgICAqIG9ubHkga2VlcCBzdHJ1Y3QgYm9vdF9wYXJhbXMgaW4gYm9vdHBhcmFtLmgg
-KEFyZCkNCj4+ICAgICAgICAgICogc2ltcGxpZnkgYXJjaF9pbWFfZWZpX2Jvb3RfbW9kZSBk
-ZWZpbmUgKEFyZCkNCj4+ICAgICAgICAgICogdXBkYXRlZCBjb3ZlciBsZXR0ZXINCj4+DQo+
-PiBUaG9tYXMgWmltbWVybWFubiAoNCk6DQo+PiAgICBhcmNoL3g4NjogTW92ZSBVQVBJIHNl
-dHVwIHN0cnVjdHVyZXMgaW50byBzZXR1cF9kYXRhLmgNCj4+ICAgIGFyY2gveDg2OiBNb3Zl
-IGludGVybmFsIHNldHVwX2RhdGEgc3RydWN0dXJlcyBpbnRvIHNldHVwX2RhdGEuaA0KPj4g
-ICAgYXJjaC94ODY6IEltcGxlbWVudCBhcmNoX2ltYV9lZmlfYm9vdF9tb2RlKCkgaW4gc291
-cmNlIGZpbGUNCj4+ICAgIGFyY2gveDg2OiBEbyBub3QgaW5jbHVkZSA8YXNtL2Jvb3RwYXJh
-bS5oPiBpbiBzZXZlcmFsIGZpbGVzDQo+Pg0KPiANCj4gVGhpcyBsb29rcyBvayB0byBtZSwg
-dGhhbmtzIGZvciBzdGlja2luZyB3aXRoIGl0Lg0KPiANCj4gRm9yIHRoZSBzZXJpZXMsDQo+
-IA0KPiBSZXZpZXdlZC1ieTogQXJkIEJpZXNoZXV2ZWwgPGFyZGJAa2VybmVsLm9yZz4NCg0K
-VGhhbmsgeW91IHNvIG11Y2guIENhbiB0aGlzIHNlcmllcyBnbyB0aHJvdWdoIHRoZSB4ODYg
-dHJlZT8NCg0KQmVzdCByZWdhcmRzDQpUaG9tYXMNCg0KLS0gDQpUaG9tYXMgWmltbWVybWFu
-bg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2FyZSBTb2x1dGlvbnMg
-R2VybWFueSBHbWJIDQpGcmFua2Vuc3RyYXNzZSAxNDYsIDkwNDYxIE51ZXJuYmVyZywgR2Vy
-bWFueQ0KR0Y6IEl2byBUb3RldiwgQW5kcmV3IE15ZXJzLCBBbmRyZXcgTWNEb25hbGQsIEJv
-dWRpZW4gTW9lcm1hbg0KSFJCIDM2ODA5IChBRyBOdWVybmJlcmcpDQo=
+> -----Original Message-----
+> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Sent: Friday, January 12, 2024 8:24 PM
+> To: Dan Williams <dan.j.williams@intel.com>
+> Cc: Kobayashi, Daisuke/=1B$B>.NS=1B(B =1B$BBg2p=1B(B <kobayashi.da-06@fuj=
+itsu.com>;
+> linux-pci@vger.kernel.org; linux-cxl@vger.kernel.org; Gotou, Yasunori/=1B=
+$B8^Eg=1B(B =1B$B9/=1B(B
+> =1B$BJ8=1B(B <y-goto@fujitsu.com>
+> Subject: Re: [RFC PATCH 0/3] lspci: Display cxl1.1 device link status
+>=20
+> On Wed, 10 Jan 2024 17:11:38 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>=20
+> > Jonathan Cameron wrote:
+> > > On Wed, 20 Dec 2023 14:07:35 +0900
+> > > KobayashiDaisuke <kobayashi.da-06@fujitsu.com> wrote:
+> > >
+> > > > Hello.
+> > > >
+> > > > This patch series adds a feature to lspci that displays the link st=
+atus
+> > > > of the CXL1.1 device.
+> > > >
+> > > > CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
+> > > > the link status can be output in the same way as traditional PCIe.
+> > > > However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
+> > > > different method to obtain the link status from traditional PCIe.
+> > > > This is because the link status of the CXL1.1 device is not mapped
+> > > > in the configuration space (as per cxl3.0 specification 8.1).
+> > > > Instead, the configuration space containing the link status is mapp=
+ed
+> > > > to the memory mapped register region (as per cxl3.0 specification 8=
+.2,
+> > > > Table 8-18). Therefore, the current lspci has a problem where it do=
+es
+> > > > not display the link status of the CXL1.1 device.
+> > > > This patch solves these issues.
+> > > >
+> > > > The method of acquisition is in the order of obtaining the device U=
+ID,
+> > > > obtaining the base address from CEDT, and then obtaining the link
+> > > > status from memory mapped register. Considered outputting with the =
+cxl
+> > > > command due to the scope of the CXL specification, but devices from
+> > > > CXL2.0 onwards can be output in the same way as traditional PCIe.
+> > > > Therefore, it would be better to make the lspci command compatible =
+with
+> > > > the CXL1.1 device for compatibility reasons.
+> > > >
+> > > > I look forward to any comments you may have.
+> > > Yikes.
+> > >
+> > > My gut feeling is that you shouldn't need to do this level of hackery=
+.
+> > >
+> > > If we need this information to be exposed to tooling then we should
+> > > add support to the kernel to export it somewhere in sysfs and read th=
+at
+> > > directly.  Do we need it to be available in absence of the CXL driver
+> > > stack?
+> >
+> > I am hoping that's a non-goal if only because that makes it more
+> > difficult for the kernel to provide some help here without polluting to
+> > the PCI core.
+> >
+> > To date, RCRB handling is nothing that the PCI core needs to worry
+> > about, and I am not sure I want to open that box.
+> >
+> > I am wondering about an approach like below is sufficient for lspci.
+> >
+> > The idea here is that cxl_pci (or other PCI driver for Type-2 RCDs) can
+> > opt-in to publishing these hidden registers.
+> >
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 4fd1f207c84e..ee63dff63b68 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -960,6 +960,19 @@ static const struct pci_error_handlers
+> cxl_error_handlers =3D {
+> >         .cor_error_detected     =3D cxl_cor_error_detected,
+> >  };
+> >
+> > +static struct attribute *cxl_rcd_attrs[] =3D {
+> > +       &dev_attr_rcd_lnkcp.attr,
+> > +       &dev_attr_rcd_lnkctl.attr,
+> > +       NULL
+> > +};
+> > +
+> > +static struct attribute_group cxl_rcd_group =3D {
+> > +       .attrs =3D cxl_rcd_attrs,
+> > +       .is_visible =3D cxl_rcd_visible,
+> > +};
+> > +
+> > +__ATTRIBUTE_GROUPS(cxl_pci);
+> > +
+> >  static struct pci_driver cxl_pci_driver =3D {
+> >         .name                   =3D KBUILD_MODNAME,
+> >         .id_table               =3D cxl_mem_pci_tbl,
+> > @@ -967,6 +980,7 @@ static struct pci_driver cxl_pci_driver =3D {
+> >         .err_handler            =3D &cxl_error_handlers,
+> >         .driver =3D {
+> >                 .probe_type     =3D PROBE_PREFER_ASYNCHRONOUS,
+> > +               .dev_groups     =3D cxl_rcd_groups,
+> >         },
+> >  };
+> >
+> >
+> > However, the problem I believe is this will end up with:
+> >
+> > /sys/bus/pci/devices/$pdev/rcd_lnkcap
+> > /sys/bus/pci/devices/$pdev/rcd_lnkctl
+> >
+> > ...with valid values, but attributes like:
+> >
+> > /sys/bus/pci/devices/$pdev/current_link_speed
+> >
+> > ...returning -EINVAL.
+> >
+> > So I think the options are:
+> >
+> > 1/ Keep the status quo of RCRB knowledge only lives in drivers/cxl/ and
+> >    piecemeal enable specific lspci needs with RCD-specific attributes
+>=20
+> This one gets my vote.
 
---------------M5SmtNFPrQKoNShNeu4RV0nF--
+Thank you for your feedback.
+Like Dan, I also believe that implementing this feature in the kernel may=20
+not be appropriate, as it is specifically needed for CXL1.1 devices.
+Therefore, I understand that it would be better to implement=20
+the link status of CXL1.1 devices directly in lspci.
+Please tell me if my understanding is wrong.
 
---------------SELvXPdRwuL855MvPw4WOkpW
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+>=20
+> >
+> > ...or:
+> >
+> > 2/ Hack pcie_capability_read_word() to internally figure out that based
+> >    on a config offset a device may have a hidden capability and switch =
+over
+> >    to RCRB based config-cycle access for those.
+> >
+> > Given that the CXL 1.1 RCH topology concept was immediately deprecated
+> > in favor of VH topology in CXL 2.0, I am not inclined to pollute the
+> > general Linux PCI core with that "aberration of history" as it were.
+> Agreed.
+>=20
 
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmWk5bYFAwAAAAAACgkQlh/E3EQov+CI
-Jg/+JV+6b+UEvjyYpb9g6+0eMSqeUYO4xAmbmNI8tS+ILRWYjxPq1LS5jvrlnhDYEDEXcdmmzkKi
-Mh3eN8Xrux4gT9oqrlG0WqtJGCPE3MKqBP7fUoXxmEj565EkFnjIW4TPsZn6M629fIV+a3XBX8Uu
-glVRo4pyOSK8ARj15irdKzZV9FhVrar0bYMW1KG9+A08HLG8ohwf84l5SxaXwyqUaWki+q4pfdHT
-8PQq6384lW9D0pfC9Qg6/XwxUrv+0F57SLaXFBXChIW3klHpYdjtCddkYjq+W3B1tWBBXyIe5aRE
-y0uNX7lnl7acBru9rOhgVFsanhd9t8iaGTV5tcXs8UwY8XpaLnTuR4O1QkqrdcSubR4AQuoA5v03
-TyVGhgFG2EHDih0xYY7j7DAl4RrvF/ew/GsA4AnNc+JUuMqfD7ySzsG12yqIMZWSObeWfbMlllFs
-mnANJ0u7OyHo+di/QNKFjo5wd4tQaVVISJu0dA2ErABm6K5UujEaQSy3XyK2dwZNqlYPsj3onEtV
-atT31xjMO9L8M4YimjRGKs1v0JNezTQ86OSp5AisoGvabGBAduwo5TBO1e163vZPvaTqz+u2zC0a
-EVjMBqgKNj0LZy5rIuhQzV6tUAOImj9F1UYryUV75Yrlryh0jZ95cQT2XVhwOX1WvbE0N9P7vcJW
-0Sg=
-=h4X2
------END PGP SIGNATURE-----
-
---------------SELvXPdRwuL855MvPw4WOkpW--
 
