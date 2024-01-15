@@ -1,110 +1,286 @@
-Return-Path: <linux-pci+bounces-2139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4AD882D44F
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 07:54:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1768D82D4C8
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 08:58:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC88A1C21068
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 06:54:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BD541C2103C
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 07:58:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1D21FB9;
-	Mon, 15 Jan 2024 06:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A1C55380;
+	Mon, 15 Jan 2024 07:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V8Xpxit+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pw9PZv5o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7096FA1;
-	Mon, 15 Jan 2024 06:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qfME121268;
-	Sun, 14 Jan 2024 23:52:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705297961;
-	bh=kHXNzqbBb5FPPwGvP0vugldGfFsecWuQTVR1E17V5YQ=;
-	h=From:To:CC:Subject:Date;
-	b=V8Xpxit+Nl1Idr2XbZF5kvWzK+mDoHOe4e3/WYprvQckWQejoanEM2vQIvte67ImM
-	 vcP90DIrGQc/GlV+R291FQyTDSp3Y8cgBMU4GnxhosQJ9fYi3tzb5quEQH1svs2p+f
-	 5gFSwSJCj60hZ564Z+aWzxFzJprPZMDZzQtDQRyE=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40F5qfYU026086
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 14 Jan 2024 23:52:41 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 14
- Jan 2024 23:52:40 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 14 Jan 2024 23:52:40 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qbWo065972;
-	Sun, 14 Jan 2024 23:52:37 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v2] dt-bindings: PCI: ti,j721e-pci-host: Add device-id for TI's J784S4 SoC
-Date: Mon, 15 Jan 2024 11:22:36 +0530
-Message-ID: <20240115055236.1840255-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650626FA6;
+	Mon, 15 Jan 2024 07:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705305523; x=1736841523;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=Z7J9xPHy03mt18iRWUula0r+n8Hcr6zT+lxWC08VcYs=;
+  b=Pw9PZv5o0D8ZZA4NU8dACpWfItFjg5OBqJhRgTIXSZ8uBbzv4MAXHS9G
+   iqPoj8rOa46fI0Tg/ZZQEIVP13XIyu48G74EtAtNPVHL/YNbwDYVXPIK3
+   pnpfu/wnPe+cJFEomQRvZintfqtEOiBeniI+MGg+w+DVHTPsUiglPBoUh
+   oGu+WCQMbgJAzy7vWgjLqZTw1fBdhDgs/EhRNUQqtTamdKEwxoMFdNXiw
+   WDZOVgtvH4GX6QEb/fPBFidjFmX/tUp6O4P/Y99XZiPzCqag8kdisYJEd
+   fnY5ozNuemdA7VOfVbaVH87rlIZAmfsOtXcl4aHdDxvI5/4wG7gkq8JZC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="21034602"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
+   d="scan'208";a="21034602"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 23:58:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="927046183"
+X-IronPort-AV: E=Sophos;i="6.04,196,1695711600"; 
+   d="scan'208";a="927046183"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.254.208.103]) ([10.254.208.103])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 23:58:39 -0800
+Message-ID: <1a2a4069-c737-4a3c-a2f6-cce06823331b@linux.intel.com>
+Date: Mon, 15 Jan 2024 15:58:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v10 0/5] fix vt-d hard lockup when hotplug ATS capable
+ device
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: kevin.tian@intel.com, bhelgaas@google.com, baolu.lu@linux.intel.com,
+ dwmw2@infradead.org, will@kernel.org, robin.murphy@arm.com, lukas@wunner.de
+Cc: linux-pci@vger.kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+In-Reply-To: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add the device-id of 0xb012 for the PCIe controller on the J784S4 SoC as
-described in the CTRL_MMR_PCI_DEVICE_ID register's PCI_DEVICE_ID_DEVICE_ID
-field. The Register descriptions and the Technical Reference Manual for
-J784S4 SoC can be found at: https://www.ti.com/lit/zip/spruj52
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+On 12/29/2023 1:02 AM, Ethan Zhao wrote:
+> This patchset is used to fix vt-d hard lockup reported when surprise
+> unplug ATS capable endpoint device connects to system via PCIe switch
+> as following topology.
+>                                                                      
+>       +-[0000:15]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d
+>       |           +-00.1  Intel Corporation Ice Lake Mesh 2 PCIe
+>       |           +-00.2  Intel Corporation Ice Lake RAS
+>       |           +-00.4  Intel Corporation Device 0b23
+>       |           \-01.0-[16-1b]----00.0-[17-1b]--+-00.0-[18]----00.0
+>                                             NVIDIA Corporation Device 2324
+>       |                                           +-01.0-[19]----00.0
+>                            Mellanox Technologies MT2910 Family [ConnectX-7]
+>                                                                            
+> User brought endpoint device 19:00.0's link down by flapping it's hotplug
+> capable slot 17:01.0 link control register, as sequence DLLSC response,
+> pciehp_ist() will unload device driver and power it off, durning device
+> driver is unloading an iommu device-TLB invalidation (Intel VT-d spec, or
+> 'ATS Invalidation' in PCIe spec) request issued to that link down device,
+> thus a long time completion/timeout waiting in interrupt context causes
+> continuous hard lockup warnning and system hang.
+>                                                                           
+> Other detail, see every patch commit log.
+>                                                                           
+> patch [3&4] were tested by yehaorong@bytedance.com on stable v6.7-rc4.
+> patch [1-5] passed compiling on stable v6.7-rc6.
+>                                                                           
+>                                                                           
+> change log:
+> v10:
+> - refactor qi_submit_sync() and its callers to get pci_dev instance, as
+>    Kevin pointed out add target_flush_dev to iommu is not right.
+> v9:
+> - unify all spelling of ATS Invalidation adhere to PCIe spec per Bjorn's
+>    suggestion.
+> v8:
+> - add a patch to break the loop for timeout device-TLB invalidation, as
+>    Bjorn said there is possibility device just no response but not gone.
+> v7:
+> - reorder patches and revise commit log per Bjorn's guide.
+> - other code and commit log revise per Lukas' suggestion.
+> - rebased to stable v6.7-rc6.
+> v6:
+> - add two patches to break out device-TLB invalidation if device is gone.
+> v5:
+> - add a patch try to fix the rare case (surprise remove a device in
+>    safe removal process). not work because surprise removal handling can't
+>    re-enter when another safe removal is in process.
+> v4:
+> - move the PCI device state checking after ATS per Baolu's suggestion.
+> v3:
+> - fix commit description typo.
+> v2:
+> - revise commit[1] description part according to Lukas' suggestion.
+> - revise commit[2] description to clarify the issue's impact.
+> v1:
+> - https://lore.kernel.org/lkml/20231213034637.2603013-1-haifeng.zhao@
+> linux.intel.com/T/
+>                                                                            
+>                                                                            
+> Thanks,
+> Ethan
+>
+>
+> Ethan Zhao (5):
+>    iommu/vt-d: add pci_dev parameter to qi_submit_sync and refactor
+>      callers
+>    iommu/vt-d: break out ATS Invalidation if target device is gone
+>    PCI: make pci_dev_is_disconnected() helper public for other drivers
+>    iommu/vt-d: don't issue ATS Invalidation request when device is
+>      disconnected
+>    iommu/vt-d: don't loop for timeout ATS Invalidation request forever
+>
+>   drivers/iommu/intel/dmar.c          | 55 ++++++++++++++++++++++-------
+>   drivers/iommu/intel/iommu.c         | 26 ++++----------
+>   drivers/iommu/intel/iommu.h         | 17 +++++----
+>   drivers/iommu/intel/irq_remapping.c |  2 +-
+>   drivers/iommu/intel/pasid.c         | 13 +++----
+>   drivers/iommu/intel/svm.c           | 13 ++++---
+>   drivers/pci/pci.h                   |  5 ---
+>   include/linux/pci.h                 |  5 +++
+>   8 files changed, 74 insertions(+), 62 deletions(-)
 
-This patch is based on linux-next tagged next-20240112.
+How aobut refactor the qi_submit_sync() and qi_check_fault() like
 
-v1:
-https://lore.kernel.org/r/20240108050735.512445-1-s-vadapalli@ti.com/
-Changes since v1:
-- Rebased patch on linux-next tagged next-20240112.
-- Collected Acked-by tag from Rob Herring <robh@kernel.org>
-  https://lore.kernel.org/r/170511031475.3817032.5482957589582376350.robh@kernel.org/
+following, combination of patch
 
-Regards,
-Siddharth.
+[2] iommu/vt-d: break out ATS Invalidation if target device is gone
 
- Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 1 +
- 1 file changed, 1 insertion(+)
+[5] iommu/vt-d: don't loop for timeout ATS Invalidation request forever
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index b7a534cef24d..0b1f21570ed0 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -68,6 +68,7 @@ properties:
-       - 0xb00d
-       - 0xb00f
-       - 0xb010
-+      - 0xb012
-       - 0xb013
- 
-   msi-map: true
--- 
-2.34.1
+but sending them in seperated patches seems better ? each of them
 
+handling different case.
+
+- fold additional errors/fault/exception handling into qi_check_fault()
+
+- the detetion of target device presence use to handle surprise removal
+
+  or device died /no response.
+
+- the ITE part use to break out the timeout ATS invalidation request,
+
+   use to handle the case response time of device is too long.
+
+- if passed invalid target_pdev, means this is ATS invalidation request.
+
+- no error handling change in qi_submit_sync().
+
+
+Please comment.
+
+
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1267,16 +1267,28 @@ static void qi_dump_fault(struct intel_iommu 
+*iommu, u32 fault)
+                (unsigned long long)desc->qw1);
+  }
+
+-static int qi_check_fault(struct intel_iommu *iommu, int index, int 
+wait_index)
++static int qi_check_fault(struct intel_iommu *iommu, int index, int 
+wait_index,
++                  pci_dev *target_pdev)
+  {
+         u32 fault;
+         int head, tail;
++       u64 iqe_err, ice_sid;
+         struct q_inval *qi = iommu->qi;
+         int shift = qi_shift(iommu);
+
+         if (qi->desc_status[wait_index] == QI_ABORT)
+                 return -EAGAIN;
+
++       /*
++        * If the ATS invalidation target device is gone this moment 
+(surprise
++        * removed, died, no response) don't try this request again. this
++        * request will not get valid result anymore. but the request was
++        * already submitted to hardware and we predict to get a ITE in
++        * followed batch of request, if so, it will get handled then.
++        */
++       if (target_pdev && !pci_device_is_present(target_pdev))
++               return -EINVAL;
++
+         fault = readl(iommu->reg + DMAR_FSTS_REG);
+         if (fault & (DMA_FSTS_IQE | DMA_FSTS_ITE | DMA_FSTS_ICE))
+                 qi_dump_fault(iommu, fault);
+@@ -1315,6 +1327,13 @@ static int qi_check_fault(struct intel_iommu 
+*iommu, int index, int wait_index)
+                 tail = readl(iommu->reg + DMAR_IQT_REG);
+                 tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+
++               /*
++                * SID field is valid only when the ITE field is Set in 
+FSTS_REG
++                * see Intel VT-d spec r4.1, section 11.4.9.9
++                */
++               iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
++               ice_sid = DMAR_IQER_REG_ITESID(iqe_err);
++
+                 writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+                 pr_info("Invalidation Time-out Error (ITE) cleared\n");
+
+@@ -1324,6 +1343,16 @@ static int qi_check_fault(struct intel_iommu 
+*iommu, int index, int wait_index)
+                         head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+                 } while (head != tail);
+
++               /*
++                * If got ITE, we need to check if the sid of ITE is the 
+same as
++                * current ATS invalidation target device, if yes, don't 
+try this
++                * request anymore, the target device has a response 
+time beyound
++                * expected. 0 value of ice_sid means old device, no 
+ice_sid value.
++                */
++               if (target_pdev && ice_sid && ice_sid ==
++                   pci_dev_id(pci_physfn(target_pdev))
++                               return -ETIMEDOUT;
++
+                 if (qi->desc_status[wait_index] == QI_ABORT)
+                         return -EAGAIN;
+         }
+@@ -1344,7 +1373,7 @@ static int qi_check_fault(struct intel_iommu 
+*iommu, int index, int wait_index)
+   * can be part of the submission but it will not be polled for completion.
+   */
+  int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+-                  unsigned int count, unsigned long options)
++                  unsigned int count, unsigned long options, pci_dev 
+*target_pdev)
+  {
+         struct q_inval *qi = iommu->qi;
+         s64 devtlb_start_ktime = 0;
+@@ -1430,7 +1459,7 @@ int qi_submit_sync(struct intel_iommu *iommu, 
+struct qi_desc *desc,
+                  * a deadlock where the interrupt context can wait 
+indefinitely
+                  * for free slots in the queue.
+                  */
+-               rc = qi_check_fault(iommu, index, wait_index);
++               rc = qi_check_fault(iommu, index, wait_index, target_pdev);
+                 if (rc)
+                         break;
+
+
+Thanks,
+
+Ethan
+
+>
 
