@@ -1,118 +1,110 @@
-Return-Path: <linux-pci+bounces-2138-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2139-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C8BD82D22F
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Jan 2024 23:31:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4AD882D44F
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 07:54:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA0F81F2134C
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Jan 2024 22:31:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC88A1C21068
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 06:54:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D272225DF;
-	Sun, 14 Jan 2024 22:31:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1D21FB9;
+	Mon, 15 Jan 2024 06:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A63vyc27"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V8Xpxit+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F1B225DA;
-	Sun, 14 Jan 2024 22:31:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84F25C433C7;
-	Sun, 14 Jan 2024 22:31:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705271494;
-	bh=hTSJz+G1XtA211Jnofo+R0wXKdoqASJ5wAO62Dsi5rY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=A63vyc27CxJ8dp+AB136BZws1uryqgpyFCTJppv+P8VK+O12e+Dg65spsr7pL41Y1
-	 SKPJj1DtPIAOLL9faVAoHLDtSfltplwBno7rf3HNZRzxce7XLKB/upTc52obb3lM5M
-	 UAdzso+ojZAO9RDpWOi33NrpTaDYfNo9VfTuQ449qM9ZK1eJ5mK6NrWAeShtBjLjtz
-	 Ui/9IUxK4V/As2GK/x9oIpm5vQwJ2m0cn3GH+fKDxEF9sF8Qx0BLQQ4m3RLTkZCJyX
-	 Dxj3slSrVAYsVErwwRmkg0KsqwYTMT3Zp1KKgrXY6JpPrLbZ9VdAfy23s+2QHFvBPK
-	 G77FMQMQGWm5w==
-Date: Sun, 14 Jan 2024 16:31:32 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Phil Elwell <phil@raspberrypi.com>,
-	bcm-kernel-feedback-list@broadcom.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 2/2] PCI: brcmstb: Configure HW CLKREQ# mode
- appropriate for downstream device
-Message-ID: <20240114223132.GA2358466@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7096FA1;
+	Mon, 15 Jan 2024 06:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qfME121268;
+	Sun, 14 Jan 2024 23:52:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705297961;
+	bh=kHXNzqbBb5FPPwGvP0vugldGfFsecWuQTVR1E17V5YQ=;
+	h=From:To:CC:Subject:Date;
+	b=V8Xpxit+Nl1Idr2XbZF5kvWzK+mDoHOe4e3/WYprvQckWQejoanEM2vQIvte67ImM
+	 vcP90DIrGQc/GlV+R291FQyTDSp3Y8cgBMU4GnxhosQJ9fYi3tzb5quEQH1svs2p+f
+	 5gFSwSJCj60hZ564Z+aWzxFzJprPZMDZzQtDQRyE=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40F5qfYU026086
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 14 Jan 2024 23:52:41 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 14
+ Jan 2024 23:52:40 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 14 Jan 2024 23:52:40 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40F5qbWo065972;
+	Sun, 14 Jan 2024 23:52:37 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v2] dt-bindings: PCI: ti,j721e-pci-host: Add device-id for TI's J784S4 SoC
+Date: Mon, 15 Jan 2024 11:22:36 +0530
+Message-ID: <20240115055236.1840255-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNyLZV42KqeBwYEE-sxhbE3bbwwbSVii3fY4nmrd0W_LkA@mail.gmail.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Sun, Jan 14, 2024 at 05:03:43PM -0500, Jim Quinlan wrote:
-> On Thu, Jan 11, 2024 at 3:54 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Jan 11, 2024 at 01:20:48PM -0500, Jim Quinlan wrote:
-> > > On Thu, Jan 11, 2024 at 12:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Mon, Nov 13, 2023 at 01:56:06PM -0500, Jim Quinlan wrote:
-> ...
+Add the device-id of 0xb012 for the PCIe controller on the J784S4 SoC as
+described in the CTRL_MMR_PCI_DEVICE_ID register's PCI_DEVICE_ID_DEVICE_ID
+field. The Register descriptions and the Technical Reference Manual for
+J784S4 SoC can be found at: https://www.ti.com/lit/zip/spruj52
 
-> > > > > Note: Since L1 substates are now possible, a modification was made
-> > > > > regarding an internal bus timeout: During long periods of the PCIe RC HW
-> > > > > being in an L1SS sleep state, there may be a timeout on an internal bus
-> > > > > access, even though there may not be any PCIe access involved.  Such a
-> > > > > timeout will cause a subsequent CPU abort.
-> > > >
-> > > > This sounds scary.  If a NIC is put in L1.2, does this mean will we
-> > > > see this CPU abort if there's no traffic for a long time?  What is
-> > > > needed to avoid the CPU abort?
-> > >
-> > > I don't think this happens in normal practice as there are a slew
-> > > of low-level TLPs and LTR messages that are sent on a regular
-> > > basis.
-> >
-> > OK, I'll have to take your word for this.  I don't know enough about
-> > PCIe to know what sort of periodic transmissions are required when a
-> > device is idle.
-> >
-> > LTR messages are required when endpoint service requirements change,
-> > but I wouldn't expect those if the device is idle.
-> >
-> > > The only time this timeout occured is when  a major customer
-> > > was doing a hack: IIRC, their endpoint device has to reboot itself
-> > > after link-up and driver probe,  so it goes into L1.2 to execute
-> > > this to reboot and while doing so the connection is completely
-> > > silent.
-> >
-> > > > What does this mean for users?  L1SS is designed for long periods of
-> > > > the device being idle, so this leaves me feeling that using L1SS is
-> > > > unsafe in general.  Hopefully this impression is unwarranted, and all
-> > > > we need is some clarification here.
-> > >
-> > > I don't think it will affect most users, if any.
-> >
-> > I'll try to get this into -next today or tomorrow.
-> 
-> Bjorn, you are right -- I need to cajole our PCIe HW team to tell me
-> why this timeout can never
-> happen and/or why it is not a bug.
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-It'll be good to hear what they have to say.  I will include this
-patch in my pull request for v6.8 unless you want me to wait on it.
-I hope to send the pull request tomorrow or Tuesday at the latest.
+This patch is based on linux-next tagged next-20240112.
 
-Bjorn
+v1:
+https://lore.kernel.org/r/20240108050735.512445-1-s-vadapalli@ti.com/
+Changes since v1:
+- Rebased patch on linux-next tagged next-20240112.
+- Collected Acked-by tag from Rob Herring <robh@kernel.org>
+  https://lore.kernel.org/r/170511031475.3817032.5482957589582376350.robh@kernel.org/
+
+Regards,
+Siddharth.
+
+ Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+index b7a534cef24d..0b1f21570ed0 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -68,6 +68,7 @@ properties:
+       - 0xb00d
+       - 0xb00f
+       - 0xb010
++      - 0xb012
+       - 0xb013
+ 
+   msi-map: true
+-- 
+2.34.1
+
 
