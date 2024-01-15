@@ -1,166 +1,242 @@
-Return-Path: <linux-pci+bounces-2149-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2150-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77C1082DAB7
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 14:57:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F58282DAC1
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 14:59:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE118280E8F
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 13:57:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AED61F227DE
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 13:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 164AD17550;
-	Mon, 15 Jan 2024 13:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JZA5ACCj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D07E317577;
+	Mon, 15 Jan 2024 13:59:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932821754C;
-	Mon, 15 Jan 2024 13:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HFnP9jWqKX+/rGz+HfT/EQt5AMb3ZvM1CAt4m/fGgp0g7lqXZsLQJBQw3xDPNhODq+j8fhxFqSMhUn/+WgmI0MV4FHm39pBVX4SLYYtxZ1d2xCuY2BcnMDG1lMeGpzmyWsGcWpm8iCvvU5AhKjyHC9LWD+wWcvkj14zp2JHXx1K03BMLWh3XF1PDhPiuGmJWVAFmB1skctyLzBiJVsEn/J7IBclpZ6y+PYC9r/sj8wswx4AvoNQfQEswGZViVFkXvdTiTERcWonRGsFoJbQGzx9j0nitdXnfc8R5EUdKyq1+s6ZKWrVI+1BlAts34ChupuC1Kqcrx1cmOt4eKJ99lA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AK34ZKqKDlUqCk2ZpO9Fwx6cd/5UWQ6FI6dB+/GvFzA=;
- b=K03ceaTPiwqLQAixohEUbeqe/E21+eo417Po+OJ4WEae3mrn/0QhOvy8KWetAdHTD6jCFTNvtSAn3Et5QrnXZIiuscxSubLe7+/4VI8SRSVvpV4ZQS7ngtn0zci4l5UN2+HwCxUriN4hRZQQXmEbAZrWIkN4yqcQwdFY5tmGl8/t/U1/o+NZRtgD8gNjhYEfd7OwzqbEXoEC9SVAsuhqEBCNjm9zGDbrYDZZEmLiW55hdzDGgsIBI+C2PUeG5aVsd0GVKisleh3nmYCzKfQL884McXd0A0meiw1TZD3A2NCWgS1hhPx2JDFHS450sLOBu1bTSq/9Xb8QaUmH+A8yow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AK34ZKqKDlUqCk2ZpO9Fwx6cd/5UWQ6FI6dB+/GvFzA=;
- b=JZA5ACCjSPup9Gd834hkX+Tammlx7uXFVF0delJr4QMouFlySl84JsHojNvCqD8n09XCe20hb3DUn0QJgEi0w6TzHFg8Y997jGcs5UhA861iirk28qcXhK6aYe468gJ45j+K0XwoiAb5Ss2z4LOGpNSp1NkbvykGSabPcyKS62RawTS81cBUQLaMAmhYTiYQf4raHklJqScrmlfrYUIIfBUYO0cP8Y0NCm2/Or40ns7IyeAnk3pqJFb1iKGQRxz+QXhmi6r7Ob3JgOJTPEiRK+CDuwJK+0MrxXUvqmgpJjyE9RanFAwPVQcn3fwgId17pFevbvqf/7vvxir0wuTaSw==
-Received: from MW4PR04CA0311.namprd04.prod.outlook.com (2603:10b6:303:82::16)
- by SA0PR12MB4384.namprd12.prod.outlook.com (2603:10b6:806:9f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26; Mon, 15 Jan
- 2024 13:57:00 +0000
-Received: from CO1PEPF000044EF.namprd05.prod.outlook.com
- (2603:10b6:303:82:cafe::c) by MW4PR04CA0311.outlook.office365.com
- (2603:10b6:303:82::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26 via Frontend
- Transport; Mon, 15 Jan 2024 13:57:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CO1PEPF000044EF.mail.protection.outlook.com (10.167.241.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.16 via Frontend Transport; Mon, 15 Jan 2024 13:57:00 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 15 Jan
- 2024 05:56:56 -0800
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Mon, 15 Jan 2024 05:56:55 -0800
-Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Mon, 15 Jan 2024 05:56:52 -0800
-From: Vidya Sagar <vidyas@nvidia.com>
-To: <bhelgaas@google.com>, <rdunlap@infradead.org>,
-	<ilpo.jarvinen@linux.intel.com>, <tglx@linutronix.de>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<treding@nvidia.com>, <jonathanh@nvidia.com>, <sdonthineni@nvidia.com>,
-	<kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-	<sagar.tv@gmail.com>
-Subject: [PATCH V4] PCI/MSI: Fix MSI hwirq truncation
-Date: Mon, 15 Jan 2024 19:26:49 +0530
-Message-ID: <20240115135649.708536-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240111052814.713016-1-vidyas@nvidia.com>
-References: <20240111052814.713016-1-vidyas@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE90C17584;
+	Mon, 15 Jan 2024 13:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dbedb1ee3e4so7115395276.3;
+        Mon, 15 Jan 2024 05:59:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705327161; x=1705931961;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nCoI6wmXQhas4p+QHjRACvDabiOp6RlTb///RFp+bYk=;
+        b=tiSTZFK9+adD4pS2CiBp3H8TjNvhxoFkiEeyDJM3qLno8Xx43Uvjdy/whJLepRGP40
+         f/JUNxXcbwBC1NiMKrPQ5O6mjxsEMayOZw+l7hP+OGkvJ0cIlp9/xrESL6ud2rc14k5c
+         +g4LU/CdOIf1P42IpSu7NCDGmFEWWr8a34O/gElzv6KrM0MO5K/Qxo1/E4zAPazwrvcz
+         iAzMy4H6DJ4l8hwdexcGGRgmLQxnHtYDmYYfHnlNJC6S723bxAXTI6frA3GfAEDGGtJ0
+         idx+3WYRQKDVqknRh6cJB2Lh44m1MIyWNgsSDwT+H0KWkJS4ugZ3/y4ecfpbQ2cOsGwi
+         VyKw==
+X-Gm-Message-State: AOJu0Yw+ysJ8APvGt4ir1qpo8FTztilyNSmmUF09L5UA6NgCR2jYtVdT
+	g/D3hUPw+w1FiPxLKxUmpTfNug4I8TlWKw==
+X-Google-Smtp-Source: AGHT+IE88cEfoMkTPLs3uXh1bjP2h2ZDA1PqvxGd+SApFuHgdVhtMFJ+iBdwagRwRd4K9ubiXU6JRg==
+X-Received: by 2002:a05:6902:2687:b0:db5:c77d:1fae with SMTP id dx7-20020a056902268700b00db5c77d1faemr2834232ybb.29.1705327161525;
+        Mon, 15 Jan 2024 05:59:21 -0800 (PST)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id c6-20020a25a2c6000000b00d9caecd5c86sm3481218ybn.62.2024.01.15.05.59.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Jan 2024 05:59:20 -0800 (PST)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed5d2ad18so7074363276.0;
+        Mon, 15 Jan 2024 05:59:20 -0800 (PST)
+X-Received: by 2002:a25:ad8b:0:b0:dbe:e4d3:bbb7 with SMTP id
+ z11-20020a25ad8b000000b00dbee4d3bbb7mr2479427ybi.99.1705327159968; Mon, 15
+ Jan 2024 05:59:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044EF:EE_|SA0PR12MB4384:EE_
-X-MS-Office365-Filtering-Correlation-Id: e43b50c1-718b-4840-2e40-08dc15d1d86e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	uA++PuQQ126KySYPf1STiDarV3NLMVsXJJb6VeQP5cgyleRUx1+GqgYqAgnIpDpVtWk33lRR+f6miuG55d2Saqi9TPB8kGHkCPd8gdHWVxZkG0Vp/mAl9byXdDmdr2k9E1zeNmEqUzkBNs0HnGOTbPfqiUNiy0nAt4sgaeineRH4WOcGUbQq9662BShJwHE/+ufvHvll6YyxFzyrwkbe+CD1X5f6MSCmB0Mnso3k3egJtoOHz6z1EzThkF2hQW9lHYjcxGbdx/CrLZQ6M/3OfuO/JmBV+NTCSlT1mgK3LGSex3hsLGq7Fb/iP3cFyrBeYxT9qo14ycw6TTQYNG08KHaEnGQaTzhkmOemj3Um78/zOiTOYPwR08uSVhqmel6EaF17pX57mmlVsTTqrEs/2A8bSU+dj1VzQlV8krH7vHFpq0lb+zpKQVCVgf7X2ADbqV/BqG4IJ+Ppj1odIQ5W9zmaFRSCAUOglB28rWEMFK4tW9iWuX5dXyR24aScYIkMDTf8C/9A3xEutuDu4Iia2I/Mmruje2EeJ8PbanN0nuWecHS8bYATTSzn3zo9Io/i0rBmjxQahYWiKROMMVc1ICSQQVSTpteOz3lNT7utwzGu4J69rPBSEa7bDOFVTo2p+qeOYddKJpzkff3cl+FgFAt24SHFvRvz41ATxgawtpBNTRGqlzecAyFdu04EFFcGo/vgWm/oprAthB62x/1flnhpxPtOyt8bzN76rP5XgLVEV4i1jfwKsu0dgzs/JIET
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(346002)(136003)(376002)(230922051799003)(64100799003)(451199024)(1800799012)(82310400011)(186009)(36840700001)(46966006)(40470700004)(478600001)(6666004)(7696005)(426003)(336012)(26005)(1076003)(2616005)(2906002)(5660300002)(110136005)(70586007)(70206006)(54906003)(316002)(8936002)(4326008)(8676002)(36756003)(86362001)(36860700001)(83380400001)(41300700001)(47076005)(82740400003)(7636003)(356005)(40460700003)(40480700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2024 13:57:00.2434
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e43b50c1-718b-4840-2e40-08dc15d1d86e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044EF.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4384
+References: <cover.1704788539.git.ysato@users.sourceforge.jp> <183bc01316cab97a7ae96df525a5a450c477210d.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <183bc01316cab97a7ae96df525a5a450c477210d.1704788539.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 15 Jan 2024 14:59:08 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW-Ak6P3nFH7cdomSYec9=WZf8mZaVwmG=qoYHz1thLMQ@mail.gmail.com>
+Message-ID: <CAMuHMdW-Ak6P3nFH7cdomSYec9=WZf8mZaVwmG=qoYHz1thLMQ@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 09/37] dt-bindings: timer: renesas,tmu: add renesas,tmu-sh7750
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-While calculating the hwirq number for an MSI interrupt, the higher
-bits (i.e. from bit-5 onwards a.k.a domain_nr >= 32) of the PCI domain
-number gets truncated because of the shifted value casting to return
-type of pci_domain_nr() which is 'int'. This for example is resulting
-in same hwirq number for devices 0019:00:00.0 and 0039:00:00.0.
+Hi Sato-san,
 
-So, cast the PCI domain number to 'irq_hw_number_t' before left shifting
-it to calculate hwirq number. Please note that this fixes the issue only
-on 64-bit systems and doesn't change the behavior in 32-bit systems i.e.
-the 32-bit systems continue to have the issue. Since the issue surfaces
-only if there are too many PCIe controllers in the system which usually
-is the case in modern server systems and they don't tend to run 32-bit
-kernels.
+On Tue, Jan 9, 2024 at 9:23=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> Add SH7750 TMU entry.
+>
+> I wanted to replace interrupts and interrupt-names in the if compatible i=
+s
+> "renesas,tmu-7750", but it seems that I can't rewrite it as expected.
+> This resulted in a redundant conditional statement.
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-Fixes: 3878eaefb89a ("PCI/MSI: Enhance core to support hierarchy irqdomain")
-Tested-by: Shanker Donthineni <sdonthineni@nvidia.com>
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-V4:
-* Added extra information in the change log about the impact of this patch
-  in a 32-bit system as suggested by Thomas
+Thanks for your patch!
 
-V3:
-* Addressed review comments from Thomas Gleixner
-* Added Tested-By: Shanker Donthineni <sdonthineni@nvidia.com>
+> --- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+> +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+> @@ -39,14 +39,15 @@ properties:
+>            - renesas,tmu-r8a779a0 # R-Car V3U
+>            - renesas,tmu-r8a779f0 # R-Car S4-8
+>            - renesas,tmu-r8a779g0 # R-Car V4H
+> +          - renesas,tmu-sh7750   # SH7750
 
-V2:
-* Added Fixes tag
+OK
 
- drivers/pci/msi/irqdomain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>        - const: renesas,tmu
+>
+>    reg:
+>      maxItems: 1
+>
+> -  interrupts:
+> -    minItems: 2
+> -    maxItems: 3
+> +  interrupts: true
+> +
+> +  interrupt-names: true
 
-diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
-index c8be056c248d..cfd84a899c82 100644
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -61,7 +61,7 @@ static irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
- 
- 	return (irq_hw_number_t)desc->msi_index |
- 		pci_dev_id(dev) << 11 |
--		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
-+		((irq_hw_number_t)(pci_domain_nr(dev->bus) & 0xFFFFFFFF)) << 27;
- }
- 
- static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
--- 
-2.25.1
+I would drop this change (see below).
 
+>
+>    clocks:
+>      maxItems: 1
+> @@ -75,21 +76,55 @@ required:
+>    - clock-names
+>    - power-domains
+>
+> -if:
+> -  not:
+> -    properties:
+> -      compatible:
+> -        contains:
+> -          enum:
+> -            - renesas,tmu-r8a7740
+> -            - renesas,tmu-r8a7778
+> -            - renesas,tmu-r8a7779
+> -then:
+> -  required:
+> -    - resets
+> -
+>  additionalProperties: false
+>
+> +allOf:
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              enum:
+> +                - renesas,tmu-r8a7740
+> +                - renesas,tmu-r8a7778
+> +                - renesas,tmu-r8a7779
+> +                - renesas,tmu-sh7750
+
+Adding renesas,tmu-sh7750 to this list is OK.
+
+> +
+> +    then:
+> +      required:
+> +        - resets
+> +
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              enum:
+> +                - renesas,tmu-sh7750
+> +
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 2
+> +          maxItems: 3
+> +        interrupt-names:
+> +          items:
+> +            - const: tuni0
+> +            - const: tuni1
+> +            - const: tuni2
+> +
+> +    else:
+> +      properties:
+> +        interrupts:
+> +          minItems: 2
+> +          maxItems: 4
+> +        interrupt-names:
+> +          items:
+> +            - const: tuni0
+> +            - const: tuni1
+> +            - const: tuni2
+> +            - const: ticpi2
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/clock/r8a7779-clock.h>
+
+The new interrupt logic is not really correct: several TMU instances
+on other SoCs do support the fourth interrupt.  It just was not
+documented before, or supported by the driver.
+
+I have sent a patch to document the fourth interrupt[1].  Once that
+patch has been applied, adding support for sh7751 involves adding just
+two new lines.
+
+[1] "PATCH] dt-bindings: timer: renesas,tmu: Document input capture
+     interrupt"
+    https://lore.kernel.org/r/fb1e38c93e62221f94304edd980a2fb79c1f2995.1705=
+325608.git.geert+renesas@glider.be
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
