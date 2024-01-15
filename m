@@ -1,267 +1,95 @@
-Return-Path: <linux-pci+bounces-2144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2145-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F3EE82D66B
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 10:53:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28BE982D69D
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 11:01:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24BED28206D
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 09:53:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA9A4284DA0
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 10:01:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01B32F4E9;
-	Mon, 15 Jan 2024 09:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B6AF9CE;
+	Mon, 15 Jan 2024 10:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V9AB7rvA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S3Guhbe6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54944FC11;
-	Mon, 15 Jan 2024 09:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5e76948cda7so77666167b3.3;
-        Mon, 15 Jan 2024 01:52:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705312368; x=1705917168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wsMhOFSC0mxjAJYvrikbFmAm65pBG0U6QI3j9yJqaic=;
-        b=NqW2mCDtcUyTwgZFAA/rkTMwmahWtBYNzWc32YZPKxNlkm0yMW0+8HOjveMxShuxBy
-         CQcHx+Msh/CWIuQxKxaPkIPXMN/G+5Z2e8g8ISXK/Yjc4+w8vNr3nUS9fgey+uTk+fK2
-         oZzyLlN2CaMWRWehm60qBBYaXqBTu1GEtBVOQH0QeL96x1EN+koc3aPHVxdo6atY5h3R
-         LRf/i8kG84+bhDXyaHj+Lu81cV0ZSKJV8bSKDsaOSjH7n/TWEOtQPeuM8nTNKWhFKvGX
-         Zo7uJl/lwyrGDQzCIk5PIReijBY10X23ny24PH0mO2I69pGmfNF7H7iMjU1mI4muKq8b
-         i7qA==
-X-Gm-Message-State: AOJu0YyjDcFNHqPCE7Bn5PhldVqqWrg8jbyb6Z/+i9fnqy8Rf+XHhjUe
-	lVw2vQYIGyA0BD9THlzr3wSSNvnngfGL5A==
-X-Google-Smtp-Source: AGHT+IEX6uvZVQqpdyFdUkuf26ZeiFhzlynOzPs10JRGhXeNHWRABsgvivhCcxnO9Zwq6nEck/W7MQ==
-X-Received: by 2002:a81:7613:0:b0:5f7:b18e:9298 with SMTP id r19-20020a817613000000b005f7b18e9298mr3674121ywc.67.1705312368108;
-        Mon, 15 Jan 2024 01:52:48 -0800 (PST)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id l6-20020a0de206000000b005ff3b4a89a8sm271889ywe.107.2024.01.15.01.52.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 01:52:47 -0800 (PST)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5e76948cda7so77665967b3.3;
-        Mon, 15 Jan 2024 01:52:47 -0800 (PST)
-X-Received: by 2002:a81:6d41:0:b0:5f6:46b:b0be with SMTP id
- i62-20020a816d41000000b005f6046bb0bemr2963784ywc.61.1705312367679; Mon, 15
- Jan 2024 01:52:47 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80092BAE5;
+	Mon, 15 Jan 2024 10:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705312875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vWTc/rSFrzy3/1ggxjf061xaIHiQjwGl/dNAu/MBe0=;
+	b=V9AB7rvAvU5jeVp2ZvQSW2veFTbKb1r/5ksnjWT4pQtkgIWS718ocgud4l/BoNKpLdscKu
+	HGfOAcgTea2rMp5PvoX5UCsRKj0ajYQxGigZSLlJr5cU532V7TPHA35JZB6ioOKQ3dCa2Z
+	+vj6iy1k9slxbdqN8QTjmcRy/o13wVPgYF+Ixn6Yia9Y86PSwAxohIq73jQoWOZ0KApqKK
+	fJERj6csfYUbM2mJ3n9gHSco9zrCkQxbldecj0/bI35D5Xc01S31hVHX+DpG2tqG2FbdNx
+	Q21wuVrZipVX0UVOv0HfcfEA964EOqCM8YF4/qhAynqSqq3CKexCmqMQdNMCIw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705312875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vWTc/rSFrzy3/1ggxjf061xaIHiQjwGl/dNAu/MBe0=;
+	b=S3Guhbe6wuhdaC/74RW11fsc3I1Ea+q+qR9gSrKQCw+5w1ZHCT51pbbcjcykM4w3Zx2fPg
+	lqSQ1qqOUKgKt3Ag==
+To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
+ rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com,
+ jiang.liu@linux.intel.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ treding@nvidia.com, jonathanh@nvidia.com, sdonthineni@nvidia.com,
+ kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3] PCI/MSI: Fix MSI hwirq truncation
+In-Reply-To: <b9a7b855-af2b-4858-b9d8-3340a0421cfe@nvidia.com>
+References: <20240108120522.1368240-1-vidyas@nvidia.com>
+ <20240111052814.713016-1-vidyas@nvidia.com> <87bk9qim4p.ffs@tglx>
+ <b9a7b855-af2b-4858-b9d8-3340a0421cfe@nvidia.com>
+Date: Mon, 15 Jan 2024 11:01:15 +0100
+Message-ID: <877ckahq50.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704788539.git.ysato@users.sourceforge.jp> <9c3a9caaa1e2fc7e515cac67f07a20af071bd1be.1704788539.git.ysato@users.sourceforge.jp>
-In-Reply-To: <9c3a9caaa1e2fc7e515cac67f07a20af071bd1be.1704788539.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 15 Jan 2024 10:52:36 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWSR3ikL7VZYkNOb1Y8mPU5LaUnc8+WLj-Ec99EOWxs_w@mail.gmail.com>
-Message-ID: <CAMuHMdWSR3ikL7VZYkNOb1Y8mPU5LaUnc8+WLj-Ec99EOWxs_w@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v6 22/37] dt-bindings: display: smi,sm501: SMI
- SM501 binding json-schema
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Sato-san,
+On Fri, Jan 12 2024 at 23:03, Vidya Sagar wrote:
+> On 1/12/2024 9:23 PM, Thomas Gleixner wrote:
+>> On Thu, Jan 11 2024 at 10:58, Vidya Sagar wrote:
+>>> So, cast the PCI domain number to 'irq_hw_number_t' before left shifting
+>>> it to calculate hwirq number.
+>> 
+>> This still does not explain that this fixes it only on 64-bit platforms
+>> and why we don't care for 32-bit systems.
+> Agree that this fixes the issue only on 64-bit platforms. It doesn't
+> change the behavior on 32-bit platforms. My understanding is that the
+> issue surfaces only if there are too many PCIe controllers in the system
+> which usually is the case in modern server systems and it is arguable if
+> the server systems really run 32-bit kernels.
 
-On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Arguably people who do that can keep the pieces.
 
-Thanks for your patch!
+> One way to fix it for both 32-bit and 64-bit systems is by changing the
+> type of 'hwirq' to u64. This may cause two memory reads in 32-bit
+> systems whenever 'hwirq' is accessed and that may intern cause some perf
+> impact?? Is this the way you think I should be handling it?
 
-> ---
->  .../bindings/display/smi,sm501.yaml           | 417 ++++++++++++++++++
->  1 file changed, 417 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/smi,sm501.y=
-aml
+No. Leave it as is. What I'm asking for is that it's properly documented
+in the changelog.
 
-Surely Documentation/devicetree/bindings/display/sm501fb.txt should
-be removed, too?
+Thanks,
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/smi,sm501.yaml
+        tglx
 
-> +  crt:
-> +    type: object
-> +    description: CRT output control
-> +    properties:
-> +      edid:
-> +        $ref: /schemas/types.yaml#/definitions/uint8-array
-> +        description: |
-> +          verbatim EDID data block describing attached display.
-> +          Data from the detailed timing descriptor will be used to
-> +          program the display controller.
-> +
-> +      smi,flags:
-> +        $ref: /schemas/types.yaml#/definitions/string-array
-> +        description: Display control flags.
-> +        items:
-> +          anyOf:
-> +            - const: use-init-done
-> +            - const: disable-at-exit
-> +            - const: use-hwcursor
-> +            - const: use-hwaccel
-
-The "use-*" flags look like software policy, not hardware description,
-and thus do not belong in DT?
-
-> +            - const: panel-no-fpen
-> +            - const: panel-no-vbiasen
-> +            - const: panel-inv-fpen
-> +            - const: panel-inv-vbiasen
-> +        maxItems: 8
-> +
-> +      bpp:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Color depth
-> +
-> +  panel:
-> +    type: object
-> +    description: Panel output control
-> +    properties:
-> +      edid:
-> +        $ref: /schemas/types.yaml#/definitions/uint8-array
-> +        description: |
-> +          verbatim EDID data block describing attached display.
-> +          Data from the detailed timing descriptor will be used to
-> +          program the display controller.
-> +
-> +      smi,flags:
-> +        $ref: /schemas/types.yaml#/definitions/string-array
-> +        description: Display control flags.
-> +        items:
-> +          anyOf:
-> +            - const: use-init-done
-> +            - const: disable-at-exit
-> +            - const: use-hwcursor
-> +            - const: use-hwaccel
-
-The "use-*" flags look like software policy, not hardware description,
-and thus do not belong in DT?
-
-> +            - const: panel-no-fpen
-> +            - const: panel-no-vbiasen
-> +            - const: panel-inv-fpen
-> +            - const: panel-inv-vbiasen
-> +        maxItems: 8
-> +
-> +      bpp:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Color depth
-> +
-> +  smi,devices:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description: Select SM501 device functions.
-> +    items:
-> +      anyOf:
-> +        - const: usb-host
-> +        - const: usb-slave
-> +        - const: ssp0
-> +        - const: ssp1
-> +        - const: uart0
-> +        - const: uart1
-> +        - const: fbaccel
-> +        - const: ac97
-> +        - const: i2s
-> +        - const: gpio
-> +    minItems: 1
-> +    maxItems: 10
-
-I think it would be better to have individual subnodes for the sub devices,
-with status =3D "ok"/"disabled".
-
-If you go that route, you do need some fallback code to handle the lack
-of subnodes in the existing user in arch/powerpc/boot/dts/charon.dts.
-
-BTW, why can sm501_pci_initdata get away with setting ".devices
-=3D SM501_USE_ALL"?  Or, would it hurt to enable all subdevices
-unconditionally?
-
-> +
-> +  smi,mclk:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: mclk frequency.
-> +
-> +  smi,m1xclk:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: m1xclk frequency.
-
-These two should be clock specifiers (i.e. phandles pointing to clock
-nodes + optional clock indices).
-
-> +
-> +  misc-timing:
-> +    type: object
-> +    description: Miscellaneous Timing register values.
-> +    properties:
-> +      ex:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Extend bus holding time.
-> +        enum: [0, 16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, =
-208, 224, 240]
-> +
-> +      xc:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description: Xscale clock input select.
-> +        items:
-> +          enum:
-> +            - internal-pll
-> +            - hclk
-> +            - gpio33
-
-Software policy instead of hardware description again?
-
-I am not familiar with how the SM501 works, so I cannot comment on
-the other properties, but several of them look like they need rework.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
