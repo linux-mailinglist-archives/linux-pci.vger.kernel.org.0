@@ -1,243 +1,518 @@
-Return-Path: <linux-pci+bounces-2187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E3582E299
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 23:31:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADAF282E2C7
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 23:57:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96FF7283B64
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 22:31:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20184B2213F
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 22:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C61961B5BF;
-	Mon, 15 Jan 2024 22:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1991B5BB;
+	Mon, 15 Jan 2024 22:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="GeILUdNQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lufNIUV8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2132.outbound.protection.outlook.com [40.107.13.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAB91B5BB;
-	Mon, 15 Jan 2024 22:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axentia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axentia.se
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=neWrLDfLuZGYCCpfp6EalCwCPh5Y65lyVBE4mbffDzqIgKouvD86ypy39JexA4w3SCeXxt1EJdIGa/mwmU70BQ3UM3GnK0FuamagfFjKwBnoH5mFX43xKV3WsHQEORD3EnwtdIIwcUpxt5h19oVFoIaUXR9LqM/GrUqZiByWqqUHvUZqWeZlfQZWfbMWxiG8zuQHsOf0je2ayZ7N+gIq2sIFxr/INxKiI5NXeqb1JSiqsyJ/dI6P0CahK8yIZmbdFtuidUFlJxE9NI92QVn/13WkjXpaLoiTmxOzDBizWCoJa8+h1AqJyuxeiV523U0Zr6yml8VgRxnpnmlzhC6hng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+QTl0O/f2VIvEidNODRaEcebBWX0rCI4I68ZXLsxDWg=;
- b=l1kucPMhbqYmBn4XqaktP0mVjbnSSpVHHMS2WgcJDyTc/5s+p7hbGzP4p9NqrRtenAaDRI4G6hyDZNbRsBDPO4/mSCRLjrZT7VLRQioG3VWHs39FXLctg6mbMZaYP73x2TDwe2F6nVypRBsz9wkLes0FoIHfppr4m/6Sbl6LWTIj75cTgqUs5uejxH/6StUVZKFzH/mzNDdtT1C4OYXxmRTJUJsjIH00v5TZO59z+6WZlIx0uC8BT1Zw00r82h1Z/X2bJl5T7HdnpCKwpGuCCSO+T6chqxo8Oqs7N/U3ujr0Jdj1HursSs6GtryXJvGfxnhrbWKTYnias0H8VAhnog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+QTl0O/f2VIvEidNODRaEcebBWX0rCI4I68ZXLsxDWg=;
- b=GeILUdNQbFLUjKKBB/Rn/LszSnLBO+gzA4eXLBWIOWgOmuAUJ5BfFb4r3bHoJLEfETenPrlnp/YdoC6B8GhW72ejq1fr9m3xZ1bfgZXV0dRGNEYR7hAZW/vcCOrbQ688qBl6ezWJAWenmPPzaBEsZWU6WwhA0L8Pr1YLdH1SH3s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axentia.se;
-Received: from DU0PR02MB8500.eurprd02.prod.outlook.com (2603:10a6:10:3e3::8)
- by VI0PR02MB10535.eurprd02.prod.outlook.com (2603:10a6:800:1b8::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.26; Mon, 15 Jan
- 2024 22:31:14 +0000
-Received: from DU0PR02MB8500.eurprd02.prod.outlook.com
- ([fe80::4c56:a71b:d42d:11ba]) by DU0PR02MB8500.eurprd02.prod.outlook.com
- ([fe80::4c56:a71b:d42d:11ba%3]) with mapi id 15.20.7181.027; Mon, 15 Jan 2024
- 22:31:13 +0000
-Message-ID: <c147ae1b-87cc-52b1-4ec7-684d5e7cc5db@axentia.se>
-Date: Mon, 15 Jan 2024 23:31:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 04/14] mux: mmio: Add resume support
-To: Thomas Richard <thomas.richard@bootlin.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-4-84e55da52400@bootlin.com>
-Content-Language: sv-SE, en-US
-From: Peter Rosin <peda@axentia.se>
-In-Reply-To: <20240102-j7200-pcie-s2r-v1-4-84e55da52400@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: GV2PEPF00003830.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:144:1:0:5:0:1c) To DU0PR02MB8500.eurprd02.prod.outlook.com
- (2603:10a6:10:3e3::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8D6FBB;
+	Mon, 15 Jan 2024 22:57:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0220C433C7;
+	Mon, 15 Jan 2024 22:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705359424;
+	bh=jLLPMb+BVSeXGjRFG+EJAEgdOcrfDHwVZvAm+mw2Lig=;
+	h=Date:From:To:Cc:Subject:From;
+	b=lufNIUV8T/527ee+p2GKbFHEDJbhRU+5uY9In0N1vFbEqFdvYzE27ln49n42rBJ+q
+	 Ct7imMTwmKqRMhef+JQbIc0Wy6hqvL4nx5i9XpTV3eZidJd7ENAiGeXVWV5qHHolTI
+	 EWEK0GC2KOi723JzUz2KITbBZVlrxzT2NkkkvbjCa+ekxHSENtIw7RUKR+ljUxfDpA
+	 AlfjqhHs8RFx9PKbnGrOK5lBkT5guTei/Nw7/4iDcLhx5setIWUnyFfJte5e15/wo1
+	 Wr7DJa+i7PQ+4MCNlDFtJqE0GXUd3wuDcwupR0x3dZTROGMUj7v45wnByjP5llk8Du
+	 bPsCkO0VMaskA==
+Date: Mon, 15 Jan 2024 16:57:03 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: [GIT PULL] PCI changes for v6.8
+Message-ID: <20240115225703.GA73226@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR02MB8500:EE_|VI0PR02MB10535:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb70fa68-84d2-4963-b4ea-08dc1619ae6a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	m0YZiRNLMrMocaIoLNxIeq31qLvuGArwGzit5a6BX+g/ar4UZsvcHrkR3MwJ7GFlg45zVIJov+4newfnfZtLhiXkYZtxaqMpHOS1CBiWWhdMQvG31XQJIxGufhIFitfCEuhzmUVD24uSyYQ0jhttciOwJuIgCsLVwefv3+QAbomoa70Vv/DheJs6rra4Y520UD5DEzViENJP4ekZ/z5e78d7ncEj1zcrrS6HMyLVt/Jjurb8eGIlM2D5GATBy1eHNEgmJXtXYCbqdsapOeJFKPwBpuMmUbcJilDUV4I1y8+GQn1wVjBp7hFKuU3qEqAo+iq9Ug4uGHhQuk10kY9a9NWzAi7WUp/ztd1NXlZNg0WUCy9CK0PS7SuST6CE+423PbmRkHPqHZc015730a4xQQbz4vNEa3TGl5W0wd50E0YzkNAc4BuNphbx2+78sBOTWakd/sxU3Di/o17KHRIBSbmMTKfJaF+EPeY8fAYNrMkxqeaBnIUKfVw0PICphzamDQ5VuQ+SZV8+GPrTdbmjCg/pOOJuMPns6ix5i/ZC37kZumHPTrIJCsBgQ9PMmZNk8cMoPyD3u2g1tz1qTlbkv+YFd2TfPdUmcMw7edwpSEn6rXKE3fdgQdfBYHiOFKldL/6R/kk4riweqH4gWAecBBrjkL9pcVFGwxyHgpIYm20=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR02MB8500.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(39840400004)(366004)(136003)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(66574015)(83380400001)(2616005)(66946007)(38100700002)(8676002)(5660300002)(8936002)(6512007)(4326008)(41300700001)(7416002)(478600001)(26005)(6486002)(6506007)(921011)(66556008)(110136005)(66476007)(316002)(2906002)(36756003)(86362001)(31696002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QnVGRlU3Z2E4K2VjVlVjcGpSbmxnVE41VWRSTzkzUTdGVXhzT0ExdDk5dSti?=
- =?utf-8?B?UW8zZi8zZlgrMDdZdGZ2TXpzN0Z3cnNuWkJPc21OK0Y1bjdvK0pQUElGZ2ZO?=
- =?utf-8?B?M3pGWjJKZFhJdHk5bm5RRVhORS9mVEE1aWpSSEdkd0R1WjM5dHVqLzBnZEZJ?=
- =?utf-8?B?NnRkQ2JtYTVFanpIcVpkSWx1QVJJd1JQMEptZUM4MHlVRitrYS8rK28rdzVj?=
- =?utf-8?B?ZUMrdVNDVWVEUzNZZzlyM2UxT1NDeE5XaXRFczNIc1E2U0RmbjBIaTBydnVN?=
- =?utf-8?B?Ty8zQ2QrUHJjbFZIRXVoOXVqNnVrYzh3eUZMQVowTEI3N0ZKVEhlRUswdytF?=
- =?utf-8?B?ZmlORzZTZnpwVXF6T3EwZTZwSXZreDR1dDBsaDJ2UDhycjlqcmp5b01heTdh?=
- =?utf-8?B?TUlNVWhKUjBIaUt4WnN0cFMvbW91cytGTDN3U09OaVpXQW9lTG0vd1pvaDBZ?=
- =?utf-8?B?Yi9TMEpEZWY1RGJ0ZlNkL0FJbS9YY3RBSTJIa3Y4cG1PMEQwQlBIM3RlUE9E?=
- =?utf-8?B?NUFMenRSVUM0UTNaNXBDRzIwN0QvL3U5RGtuU2Fpdzg2UDNvQUFuOHlNM2s5?=
- =?utf-8?B?Ukl4Tmo5TmZiOEdHcXJneXh1OTRKZFlQR3N2SnRlUGF1bWw2WGN5dWtoWStL?=
- =?utf-8?B?NE5qSEdvdmdvZXZYTllTTnVYSHFRUFhVSXl3RE1PWEFWTVZueVVYMFE1WmY3?=
- =?utf-8?B?c1BROWlsemhKWFVNTzRJUmhROEpvQXBzUDFDMWIwdEkweERwbVhiTUZmYXd4?=
- =?utf-8?B?eU5TVytXRW9sT3pYbFNPWVRod3FKdXI1dVAvT3VGMFJpSFh6Y3Brdk96aE8y?=
- =?utf-8?B?bkMrSE5kT1ZFcCtGUkphRkI3Qk9IVlp1dGkzRWFHdUo3N295eUE4VExvaFR0?=
- =?utf-8?B?WE5oMEpCVHI2WEN0OGV0cE1mRkVQVU9NRGFJc3kxaVZzQzVEYVFjQUJFL3p1?=
- =?utf-8?B?bEtZeG81QlZIbTRYTlZNL0N1QktrRTFSWTNPVWdNWnZNQXJFTVBuZ20zS0dj?=
- =?utf-8?B?WlZhR0pPYW44T24rc0xMbnRGUUJlN2JBUGMrRjcyYzlKaC9vU2oyOXZteWcy?=
- =?utf-8?B?QnF5OEt6WkhEdjhuTWlZN1pQWjh4Y2FNNU9jSzBuVTloTGRNRHUzQVc5UXFB?=
- =?utf-8?B?TENjeVMrMnlOY1Fic3haU056RDhGL3dUZVozL21EVzNDMVEvMlpCNWdheTV3?=
- =?utf-8?B?YkY4ZTFTbzNubzEwM2JZK3ZHMFZBeHgzQUlEWTZJOVBsODQrTFVPQlVQaEdQ?=
- =?utf-8?B?NDJZMW9pb002SEN6Z0sxak51Nklqb29iRldWNTJMeDd3cEpBNHhGdkovVHpw?=
- =?utf-8?B?dkVpOHEzQStyUXdlSjZQeC9razdqUEhSNUUyVU5rRkE2a3Uvb21NaDhRZmI1?=
- =?utf-8?B?U1Rpb1FTYjU5R3dxMU9TaHgyMVpaVDdyWnNuZDIwY1JPWmNSVGUxd2VyL2Zn?=
- =?utf-8?B?L2VmZnpsM0xSaVdXR2QxMHZJNHRxRmkvSjVXMk9iSGRRT2Zac2lReDZ6RDFr?=
- =?utf-8?B?WkRxQ2JUZkRLaHdGb1ltR0xGbG9Ua1RZMlpHd0g5SkRaTEt1QXlLQnNoTWo3?=
- =?utf-8?B?bk1XY2t2RWZOclZ5ZERmTVVyYlV5THVKeGI5Um9NdWdreFgybFlDQm5QM1hN?=
- =?utf-8?B?L3FkT1YwK0ttTVlJaTV3UFJLbVhaREtRTEFoWUk0Ry9PUEtQSnNQWEhKZDJF?=
- =?utf-8?B?dExkUVJKNFhQWGVQVHY0NDRLT2lvS1VFdTg5TEV2VFlDaUF6RkNmM3VoWlJF?=
- =?utf-8?B?MGsvMnFOR0lPM2R6eStTd1lzcFV1U1lDSGd1L1Z4dEJEWS9qc0hEMkkyWm1G?=
- =?utf-8?B?MGYyQ3k3THpXTGk5bko3bzQvVUZUMHpmZjB0blgvYUh0Q3lJb3QrRHJBaDBD?=
- =?utf-8?B?RXlSRDdlS1hDdDEvd21xODJndU1VTWtsT2Frb0MvRlFJL1ZVbDQvZkxUQUdM?=
- =?utf-8?B?SWhUTkdMU3JxUUR5Z1Z2NEk2QmYrVE9Zb3I1azMxUVF4QWdJWnZEUzJXbUtC?=
- =?utf-8?B?TkVkaGpyZ0JjWEUrN3U5SDNxc0M1a3U1QkdwZkM5UzVRK2xKTlZXQ3I1U1gz?=
- =?utf-8?B?UnNTTU9va240Q1kwSlpyNCtMTnBVRGVNSXYwV3ZsbEo4c0tmVDN4QnNlWXBv?=
- =?utf-8?Q?YfpAVvwRYTuzzv5K842jzkoRa?=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb70fa68-84d2-4963-b4ea-08dc1619ae6a
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR02MB8500.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2024 22:31:13.7393
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bhydkCJxfHzwjonOSyo0e3X3H5e+fm3TparmHQlrVViUiB56e5PPEalqtqJUTtec
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR02MB10535
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi!
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
-2024-01-15 at 17:14, Thomas Richard wrote:
-> From: Théo Lebrun <theo.lebrun@bootlin.com>
-> 
-> Implement resume support
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 
-What Andy said, and please don't omit punctuation. Try to make it a
-pleasure to read your patches!
+are available in the Git repository at:
 
-> 
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
->  drivers/mux/mmio.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
-> index fd1d121a584b..ab4ef195fc0d 100644
-> --- a/drivers/mux/mmio.c
-> +++ b/drivers/mux/mmio.c
-> @@ -125,13 +125,47 @@ static int mux_mmio_probe(struct platform_device *pdev)
->  
->  	mux_chip->ops = &mux_mmio_ops;
->  
-> +	dev_set_drvdata(dev, mux_chip);
-> +
->  	return devm_mux_chip_register(dev, mux_chip);
->  }
->  
-> +#ifdef CONFIG_PM
-> +static int mux_mmio_resume_noirq(struct device *dev)
-> +{
-> +	struct mux_chip *mux_chip = dev_get_drvdata(dev);
-> +	int global_ret = 0;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < mux_chip->controllers; i++) {
-> +		struct mux_control *mux = &mux_chip->mux[i];
-> +		int val = mux->cached_state;
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.8-changes
 
-You are not supposed to look at (or change) cached_state outside the
-mux core.
+for you to fetch changes up to 7119ca35ee4a0129ae86ae9d36f357edc55aab2f:
 
-> +		int ret;
-> +
-> +		if (val == MUX_IDLE_AS_IS)
+  Merge branch 'pci/misc' (2024-01-15 12:10:41 -0600)
 
-The cached_state can never be MUX_IDLE_AS_IS. Sure, it happens to have
-the same actual value as the correct MUX_CACHE_UNKNOWN, but abusing
-that is all kinds of wrong.
+----------------------------------------------------------------
 
-> +			continue;
-> +
-> +		ret = mux_mmio_set(mux, val);
-> +		if (ret) {
+Enumeration:
 
-If mux_mmio_set() fails, cached_state ends up wrong as it should be set
-to MUX_CACHE_UNKNOWN on failure. Low-level stuff like this needs to be
-done by the mux core, or things becomes a maintenance hazard...
+  - Reserve ECAM so we don't assign it to PCI BARs; this works around bugs
+    where BIOS included ECAM in a PNP0A03 host bridge window, didn't
+    reserve it via a PNP0C02 motherboard device, and didn't allocate space
+    for SR-IOV VF BARs (Bjorn Helgaas)
 
-So, the meat of this function belongs in the mux core since none of
-it looks mmio specific. It could probably be named mux_chip_resume()
-or something such. That makes it simple to use the correct constant,
-and the mux_control_set() helper makes it easy to get the handling of
-cached_state right.
+  - Add MMCONFIG/ECAM debug logging (Bjorn Helgaas)
 
-Cheers,
-Peter
+  - Rename 'MMCONFIG' to 'ECAM' to match spec usage (Bjorn Helgaas)
 
-> +			dev_err(dev, "control %u: error restoring mux: %d\n", i, ret);
-> +			if (!global_ret)
-> +				global_ret = ret;
-> +		}
-> +	}
-> +
-> +	return global_ret;
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops mux_mmio_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(NULL, mux_mmio_resume_noirq)
-> +};
-> +
->  static struct platform_driver mux_mmio_driver = {
->  	.driver = {
->  		.name = "mmio-mux",
->  		.of_match_table	= mux_mmio_dt_ids,
-> +		.pm = &mux_mmio_pm_ops,
->  	},
->  	.probe = mux_mmio_probe,
->  };
-> 
+  - Log device type (Root Port, Switch Port, etc) during enumeration (Bjorn
+    Helgaas)
+
+  - Log bridges before downstream devices so the dmesg order is more
+    logical (Bjorn Helgaas)
+
+  - Log resource names (BAR 0, VF BAR 0, bridge window, etc) consistently
+    instead of a mix of names and "reg 0x10" (Puranjay Mohan, Bjorn
+    Helgaas)
+   
+  - Fix 64GT/s effective data rate calculation to use 1b/1b encoding rather
+    than the 8b/10b or 128b/130b used by lower rates (Ilpo Järvinen)
+
+  - Use PCI_HEADER_TYPE_* instead of literals in x86, powerpc, SCSI lpfc
+    (Ilpo Järvinen)
+
+  - Clean up open-coded PCIBIOS return code mangling (Ilpo Järvinen)
+
+Resource management:
+
+  - Restructure pci_dev_for_each_resource() to avoid computing the address
+    of an out-of-bounds array element (the bounds check was performed later
+    so the element was never actually *read*, but it's nicer to avoid even
+    computing an out-of-bounds address) (Andy Shevchenko)
+
+Driver binding:
+
+  - Convert pci-host-common.c platform .remove() callback to .remove_new()
+    returning 'void' since it's not useful to return error codes here (Uwe
+    Kleine-König)
+
+  - Convert exynos, keystone, kirin from .remove() to .remove_new(), which
+    returns void instead of int (Uwe Kleine-König)
+
+  - Drop unused struct pci_driver.node member (Mathias Krause)
+
+Virtualization:
+
+  - Add ACS quirk for more Zhaoxin Root Ports (LeoLiuoc)
+
+Error handling:
+
+  - Log AER errors as "Correctable" (not "Corrected") or "Uncorrectable" to
+    match spec terminology (Bjorn Helgaas)
+
+  - Decode Requester ID when no error info found instead of printing the
+    raw hex value (Bjorn Helgaas)
+
+Endpoint framework:
+
+  - Use a unique test pattern for each BAR in the pci_endpoint_test to make
+    it easier to debug address translation issues (Niklas Cassel)
+
+Broadcom STB PCIe controller driver:
+
+  - Add DT property "brcm,clkreq-mode" and driver support for different
+    CLKREQ# modes to make ASPM L1.x states possible (Jim Quinlan)
+
+Freescale Layerscape PCIe controller driver:
+
+  - Add suspend/resume support for Layerscape LS1043a and LS1021a,
+    including software-managed PME_Turn_Off and transitions between L0,
+    L2/L3_Ready Link states (Frank Li)
+
+MediaTek PCIe controller driver:
+
+  - Clear MSI interrupt status before handler to avoid missing MSIs that
+    occur after the handler (qizhong cheng)
+
+MediaTek PCIe Gen3 controller driver:
+
+  - Update mediatek-gen3 translation window setup to handle MMIO space that
+    is not a power of two in size (Jianjun Wang)
+
+Qualcomm PCIe controller driver:
+
+  - Increase qcom iommu-map maxItems to accommodate SDX55 (five entries)
+    and SDM845 (sixteen entries) (Krzysztof Kozlowski)
+
+  - Describe qcom,pcie-sc8180x clocks and resets accurately (Krzysztof
+    Kozlowski)
+
+  - Describe qcom,pcie-sm8150 clocks and resets accurately (Krzysztof
+    Kozlowski)
+
+  - Correct the qcom "reset-name" property, previously incorrectly called
+    "reset-names" (Krzysztof Kozlowski)
+
+  - Document qcom,pcie-sm8650, based on qcom,pcie-sm8550 (Neil Armstrong)
+
+Renesas R-Car PCIe controller driver:
+
+  - Replace of_device.h with explicit of.h include to untangle header usage
+    (Rob Herring)
+
+  - Add DT and driver support for optional miniPCIe 1.5v and 3.3v
+    regulators on KingFisher (Wolfram Sang)
+
+SiFive FU740 PCIe controller driver:
+
+  - Convert fu740 CONFIG_PCIE_FU740 dependency from SOC_SIFIVE to
+    ARCH_SIFIVE (Conor Dooley)
+
+Synopsys DesignWare PCIe controller driver:
+
+  - Align iATU mapping for endpoint MSI-X (Niklas Cassel)
+
+  - Drop "host_" prefix from struct dw_pcie_host_ops members (Yoshihiro
+    Shimoda)
+
+  - Drop "ep_" prefix from struct dw_pcie_ep_ops members (Yoshihiro
+    Shimoda)
+
+  - Rename struct dw_pcie_ep_ops.func_conf_select() to .get_dbi_offset() to
+    be more descriptive (Yoshihiro Shimoda)
+
+  - Add Endpoint DBI accessors to encapsulate offset lookups (Yoshihiro
+    Shimoda)
+
+TI J721E PCIe driver:
+
+  - Add j721e DT and driver support for 'num-lanes' for devices that
+    support x1, x2, or x4 Links (Matt Ranostay)
+
+  - Add j721e DT compatible strings and driver support for j784s4 (Matt
+    Ranostay)
+
+  - Make TI J721E Kconfig depend on ARCH_K3 since the hardware is specific
+    to those TI SoC parts (Peter Robinson)
+
+TI Keystone PCIe controller driver:
+
+  - Hold power management references to all PHYs while enabling them to
+    avoid a race when one provides clocks to others (Siddharth Vadapalli)
+
+Xilinx XDMA PCIe controller driver:
+
+  - Remove redundant dev_err(), since platform_get_irq() and
+    platform_get_irq_byname() already log errors (Yang Li)
+
+  - Fix uninitialized symbols in xilinx_pl_dma_pcie_setup_irq() (Krzysztof
+    Wilczyński)
+
+  - Fix xilinx_pl_dma_pcie_init_irq_domain() error return when
+    irq_domain_add_linear() fails (Harshit Mogalapalli)
+
+MicroSemi Switchtec management driver:
+
+  - Do dma_mrpc cleanup during switchtec_pci_remove() to match its devm
+    ioremapping in switchtec_pci_probe().  Previously the cleanup was done
+    in stdev_release(), which used stale pointers if stdev->cdev happened
+    to be open when the PCI device was removed (Daniel Stodden)
+
+Miscellaneous:
+
+  - Convert interrupt terminology from "legacy" to "INTx" to be more
+    specific and match spec terminology (Damien Le Moal)
+
+  - In dw-xdata-pcie, pci_endpoint_test, and vmd, replace usage of
+    deprecated ida_simple_*() API with ida_alloc() and ida_free()
+    (Christophe JAILLET)
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      PCI: Avoid potential out-of-bounds read in pci_dev_for_each_resource()
+
+Bjorn Helgaas (43):
+      x86/pci: Reserve ECAM if BIOS didn't include it in PNP0C02 _CRS
+      x86/pci: Reword ECAM EfiMemoryMappedIO logging to avoid 'reserved'
+      x86/pci: Add MCFG debug logging
+      x86/pci: Rename 'MMCONFIG' to 'ECAM', use pr_fmt
+      x86/pci: Rename acpi_mcfg_check_entry() to acpi_mcfg_valid_entry()
+      x86/pci: Rename pci_mmcfg_check_reserved() to pci_mmcfg_reserved()
+      x86/pci: Comment pci_mmconfig_insert() obscure MCFG dependency
+      x86/pci: Return pci_mmconfig_add() failure early
+      x86/pci: Reorder pci_mmcfg_arch_map() definition before calls
+      PCI: Log device type during enumeration
+      PCI: Move pci_read_bridge_windows() below individual window accessors
+      PCI: Supply bridge device, not secondary bus, to read window details
+      PCI: Log bridge windows conditionally
+      PCI: Log bridge info when first enumerating bridge
+      PCI: Rename PCI_IRQ_LEGACY to PCI_IRQ_INTX
+      PCI/AER: Use 'Correctable' and 'Uncorrectable' spec terms for errors
+      PCI/AER: Decode Requester ID when no error info found
+      PCI/AER: Use explicit register sizes for struct members
+      PCI: Fix kernel-doc issues
+      Merge branch 'pci/aer'
+      Merge branch 'pci/ecam'
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/enumeration-logging'
+      Merge branch 'pci/p2pdma'
+      Merge branch 'pci/resource'
+      Merge branch 'pci/switchtec'
+      Merge branch 'pci/virtualization'
+      Merge branch 'pci/controller/broadcom'
+      Merge branch 'pci/controller/cadence'
+      Merge branch 'pci/controller/dwc'
+      Merge branch 'pci/controller/keystone'
+      Merge branch 'pci/controller/kirin'
+      Merge branch 'pci/controller/layerscape'
+      Merge branch 'pci/controller/mediatek'
+      Merge branch 'pci/controller/rcar'
+      Merge branch 'pci/controller/vmd'
+      Merge branch 'pci/controller/xilinx'
+      Merge branch 'pci/controller/remove-void-return'
+      Merge branch 'pci/irq-clean-up'
+      Merge branch 'pci/endpoint'
+      Merge branch 'pci/remove-old-api'
+      Merge branch 'pci/dt-bindings'
+      Merge branch 'pci/misc'
+
+Christophe JAILLET (5):
+      PCI: vmd: Remove usage of the deprecated ida_simple_xx() API
+      PCI: kirin: Use devm_kasprintf() to dynamically allocate clock names
+      PCI: vmd: Remove usage of the deprecated ida_simple_*() API
+      misc: pci_endpoint_test: Remove usage of the deprecated ida_simple_*() API
+      dw-xdata: Remove usage of the deprecated ida_simple_*() API
+
+Conor Dooley (1):
+      PCI: dwc: Convert SOC_SIFIVE to ARCH_SIFIVE
+
+Damien Le Moal (14):
+      PCI: endpoint: Drop PCI_EPC_IRQ_XXX definitions
+      PCI: endpoint: Use INTX instead of legacy
+      PCI: endpoint: Rename LEGACY to INTX in test function driver
+      misc: pci_endpoint_test: Use INTX instead of LEGACY
+      PCI: dra7xx: Rename dra7xx_pcie_raise_legacy_irq()
+      PCI: cadence: Use INTX instead of legacy
+      PCI: dwc: Rename dw_pcie_ep_raise_legacy_irq()
+      PCI: keystone: Use INTX instead of legacy
+      PCI: dw-rockchip: Rename rockchip_pcie_legacy_int_handler()
+      PCI: tegra194: Use INTX instead of legacy
+      PCI: uniphier: Use INTX instead of legacy
+      PCI: rockchip-ep: Use INTX instead of legacy
+      PCI: rockchip-host: Rename rockchip_pcie_legacy_int_handler()
+      PCI: xilinx-nwl: Use INTX instead of legacy
+
+Daniel Stodden (1):
+      PCI: switchtec: Fix stdev_release() crash after surprise hot remove
+
+Frank Li (4):
+      PCI: layerscape: Add function pointer for exit_from_l2()
+      PCI: layerscape: Add suspend/resume for ls1021a
+      PCI: layerscape(ep): Rename pf_* as pf_lut_*
+      PCI: layerscape: Add suspend/resume for ls1043a
+
+Guilherme G. Piccoli (1):
+      PCI: Only override AMD USB controller if required
+
+Harshit Mogalapalli (1):
+      PCI: xilinx-xdma: Fix error code in xilinx_pl_dma_pcie_init_irq_domain()
+
+Heiko Stuebner (1):
+      dt-bindings: PCI: dwc: rockchip: Document optional PCIe reference clock input
+
+Ilpo Järvinen (5):
+      x86/pci: Use PCI_HEADER_TYPE_* instead of literals
+      powerpc/fsl-pci: Use PCI_HEADER_TYPE_MASK instead of literal
+      scsi: lpfc: Use PCI_HEADER_TYPE_MFD instead of literal
+      x86/pci: Clean up open-coded PCIBIOS return code mangling
+      PCI: Fix 64GT/s effective data rate calculation
+
+Jianjun Wang (1):
+      PCI: mediatek-gen3: Fix translation window size calculation
+
+Jim Quinlan (2):
+      dt-bindings: PCI: brcmstb: Add property "brcm,clkreq-mode"
+      PCI: brcmstb: Configure HW CLKREQ# mode appropriate for downstream device
+
+Justin Stitt (1):
+      PCI: iproc: Fix -Wvoid-pointer-to-enum-cast warning
+
+Krzysztof Kozlowski (4):
+      dt-bindings: PCI: qcom: Adjust iommu-map for different SoC
+      dt-bindings: PCI: qcom: Correct clocks for SC8180x
+      dt-bindings: PCI: qcom: Correct clocks for SM8150
+      dt-bindings: PCI: qcom: Correct reset-names property
+
+Krzysztof Wilczyński (1):
+      PCI: xilinx-xdma: Fix uninitialized symbols in xilinx_pl_dma_pcie_setup_irq()
+
+Lars-Peter Clausen (5):
+      PCI: endpoint: Make struct pci_epf_ops in pci_epf_driver const
+      PCI: endpoint: pci-epf-mhi: Make structs pci_epf_ops and pci_epf_event_ops const
+      PCI: endpoint: pci-epf-ntb: Make struct pci_epf_ops const
+      PCI: endpoint: pci-epf-vntb: Make struct pci_epf_ops const
+      PCI: endpoint: pci-epf-test: Make struct pci_epf_ops const
+
+LeoLiuoc (1):
+      PCI: Add ACS quirk for more Zhaoxin Root Ports
+
+Mathias Krause (1):
+      PCI: Remove unused 'node' member from struct pci_driver
+
+Matt Ranostay (5):
+      dt-bindings: PCI: ti,j721e-pci-*: Add checks for num-lanes
+      dt-bindings: PCI: ti,j721e-pci-*: Add j784s4-pci-* compatible strings
+      PCI: j721e: Add per platform maximum lane settings
+      PCI: j721e: Add PCIe 4x lane selection support
+      PCI: j721e: Add TI J784S4 PCIe configuration
+
+Neil Armstrong (1):
+      dt-bindings: PCI: qcom: Document the SM8650 PCIe Controller
+
+Niklas Cassel (2):
+      PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq() alignment support
+      misc: pci_endpoint_test: Use a unique test pattern for each BAR
+
+Peter Robinson (1):
+      PCI: j721e: Make TI J721E depend on ARCH_K3
+
+Puranjay Mohan (2):
+      PCI: Update BAR # and window messages
+      PCI: Use resource names in PCI log messages
+
+Rob Herring (1):
+      PCI: rcar-gen4: Replace of_device.h with explicit of.h include
+
+Siddharth Vadapalli (1):
+      PCI: keystone: Fix race condition when initializing PHYs
+
+Tadeusz Struk (1):
+      PCI/P2PDMA: Remove reference to pci_p2pdma_map_sg()
+
+Uwe Kleine-König (4):
+      PCI: host-generic: Convert to platform remove callback returning void
+      PCI: exynos: Convert to platform remove callback returning void
+      PCI: keystone: Convert to platform remove callback returning void
+      PCI: kirin: Convert to platform remove callback returning void
+
+Wolfram Sang (2):
+      dt-bindings: PCI: rcar-pci-host: Add optional regulators
+      PCI: rcar-host: Add support for optional regulators
+
+Yang Li (1):
+      PCI: xilinx-xdma: Remove redundant dev_err()
+
+Yoshihiro Shimoda (5):
+      PCI: dwc: Drop host prefix from struct dw_pcie_host_ops members
+      PCI: dwc: Rename .ep_init to .init in struct dw_pcie_ep_ops
+      PCI: dwc: Rename .func_conf_select to .get_dbi_offset in struct dw_pcie_ep_ops
+      PCI: dwc: Add dw_pcie_ep_{read,write}_dbi[2] helpers
+      PCI: rcar-gen4: Fix -Wvoid-pointer-to-enum-cast error
+
+attreyee-muk (1):
+      docs: PCI: Fix typos
+
+qizhong cheng (1):
+      PCI: mediatek: Clear interrupt status before dispatching handler
+
+ Documentation/PCI/boot-interrupts.rst              |   2 +-
+ Documentation/PCI/msi-howto.rst                    |   2 +-
+ .../devicetree/bindings/pci/brcm,stb-pcie.yaml     |  18 ++
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  63 +++++-
+ .../devicetree/bindings/pci/rcar-pci-host.yaml     |  11 ++
+ .../devicetree/bindings/pci/rockchip-dw-pcie.yaml  |   2 +
+ .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml   |  39 +++-
+ .../devicetree/bindings/pci/ti,j721e-pci-host.yaml |  39 +++-
+ Documentation/driver-api/pci/p2pdma.rst            |  16 +-
+ arch/powerpc/sysdev/fsl_pci.c                      |   4 +-
+ arch/x86/kernel/aperture_64.c                      |   3 +-
+ arch/x86/kernel/early-quirks.c                     |   4 +-
+ arch/x86/pci/acpi.c                                |   3 +
+ arch/x86/pci/mmconfig-shared.c                     | 178 +++++++++--------
+ arch/x86/pci/mmconfig_32.c                         |   2 +-
+ arch/x86/pci/mmconfig_64.c                         |  42 ++--
+ arch/x86/pci/pcbios.c                              |  28 ++-
+ drivers/misc/dw-xdata-pcie.c                       |   6 +-
+ drivers/misc/pci_endpoint_test.c                   |  50 +++--
+ .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    |   1 -
+ drivers/pci/controller/cadence/Kconfig             |   2 +
+ drivers/pci/controller/cadence/pci-j721e.c         |  45 ++++-
+ drivers/pci/controller/cadence/pcie-cadence-ep.c   |  19 +-
+ drivers/pci/controller/cadence/pcie-cadence.h      |  12 +-
+ drivers/pci/controller/dwc/Kconfig                 |   2 +-
+ drivers/pci/controller/dwc/pci-dra7xx.c            |  14 +-
+ drivers/pci/controller/dwc/pci-exynos.c            |   8 +-
+ drivers/pci/controller/dwc/pci-imx6.c              |  17 +-
+ drivers/pci/controller/dwc/pci-keystone.c          | 109 ++++++-----
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     |  33 ++--
+ drivers/pci/controller/dwc/pci-layerscape.c        | 193 +++++++++++++++---
+ drivers/pci/controller/dwc/pci-meson.c             |   2 +-
+ drivers/pci/controller/dwc/pcie-al.c               |   2 +-
+ drivers/pci/controller/dwc/pcie-armada8k.c         |   2 +-
+ drivers/pci/controller/dwc/pcie-artpec6.c          |  12 +-
+ drivers/pci/controller/dwc/pcie-bt1.c              |   4 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    | 197 +++++++------------
+ drivers/pci/controller/dwc/pcie-designware-host.c  |  30 +--
+ drivers/pci/controller/dwc/pcie-designware-plat.c  |  13 +-
+ drivers/pci/controller/dwc/pcie-designware.h       | 111 ++++++++++-
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c      |   6 +-
+ drivers/pci/controller/dwc/pcie-fu740.c            |   2 +-
+ drivers/pci/controller/dwc/pcie-histb.c            |   2 +-
+ drivers/pci/controller/dwc/pcie-intel-gw.c         |   2 +-
+ drivers/pci/controller/dwc/pcie-keembay.c          |  15 +-
+ drivers/pci/controller/dwc/pcie-kirin.c            |  21 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  10 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             |   6 +-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c        |  23 ++-
+ drivers/pci/controller/dwc/pcie-spear13xx.c        |   2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c         |  21 +-
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c      |  13 +-
+ drivers/pci/controller/dwc/pcie-uniphier.c         |  14 +-
+ drivers/pci/controller/dwc/pcie-visconti.c         |   2 +-
+ drivers/pci/controller/pci-host-common.c           |   4 +-
+ drivers/pci/controller/pci-host-generic.c          |   2 +-
+ drivers/pci/controller/pcie-brcmstb.c              |  96 ++++++++-
+ drivers/pci/controller/pcie-iproc-platform.c       |   2 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c        |  89 +++++----
+ drivers/pci/controller/pcie-mediatek.c             |  10 +-
+ drivers/pci/controller/pcie-rcar-ep.c              |   7 +-
+ drivers/pci/controller/pcie-rcar-host.c            |  18 +-
+ drivers/pci/controller/pcie-rockchip-ep.c          |  23 ++-
+ drivers/pci/controller/pcie-rockchip-host.c        |   4 +-
+ drivers/pci/controller/pcie-xilinx-dma-pl.c        |  14 +-
+ drivers/pci/controller/pcie-xilinx-nwl.c           |  52 ++---
+ drivers/pci/controller/vmd.c                       |   6 +-
+ drivers/pci/endpoint/functions/pci-epf-mhi.c       |   6 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c       |   6 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c      |  16 +-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c      |   9 +-
+ drivers/pci/endpoint/pci-epc-core.c                |   6 +-
+ drivers/pci/iov.c                                  |   7 +-
+ drivers/pci/pci.c                                  |  85 ++++++--
+ drivers/pci/pci.h                                  |   4 +-
+ drivers/pci/pcie/aer.c                             |  21 +-
+ drivers/pci/probe.c                                | 218 +++++++++++++--------
+ drivers/pci/quirks.c                               |  34 +++-
+ drivers/pci/setup-bus.c                            |  30 ++-
+ drivers/pci/setup-res.c                            |  72 ++++---
+ drivers/pci/switch/switchtec.c                     |  25 ++-
+ drivers/scsi/lpfc/lpfc_sli.c                       |   2 +-
+ include/linux/aer.h                                |   8 +-
+ include/linux/pci-ecam.h                           |   2 +-
+ include/linux/pci-epc.h                            |  13 +-
+ include/linux/pci-epf.h                            |   4 +-
+ include/linux/pci.h                                |  19 +-
+ include/uapi/linux/pcitest.h                       |   3 +-
+ 88 files changed, 1519 insertions(+), 877 deletions(-)
 
