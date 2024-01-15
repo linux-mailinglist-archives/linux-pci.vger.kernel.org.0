@@ -1,95 +1,147 @@
-Return-Path: <linux-pci+bounces-2145-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2146-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28BE982D69D
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 11:01:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A7CF82D7E2
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 11:55:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA9A4284DA0
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 10:01:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F9DC1C218C5
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Jan 2024 10:55:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B6AF9CE;
-	Mon, 15 Jan 2024 10:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D28D1E86A;
+	Mon, 15 Jan 2024 10:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V9AB7rvA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S3Guhbe6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4IVxdbM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80092BAE5;
-	Mon, 15 Jan 2024 10:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705312875;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vWTc/rSFrzy3/1ggxjf061xaIHiQjwGl/dNAu/MBe0=;
-	b=V9AB7rvAvU5jeVp2ZvQSW2veFTbKb1r/5ksnjWT4pQtkgIWS718ocgud4l/BoNKpLdscKu
-	HGfOAcgTea2rMp5PvoX5UCsRKj0ajYQxGigZSLlJr5cU532V7TPHA35JZB6ioOKQ3dCa2Z
-	+vj6iy1k9slxbdqN8QTjmcRy/o13wVPgYF+Ixn6Yia9Y86PSwAxohIq73jQoWOZ0KApqKK
-	fJERj6csfYUbM2mJ3n9gHSco9zrCkQxbldecj0/bI35D5Xc01S31hVHX+DpG2tqG2FbdNx
-	Q21wuVrZipVX0UVOv0HfcfEA964EOqCM8YF4/qhAynqSqq3CKexCmqMQdNMCIw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705312875;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vWTc/rSFrzy3/1ggxjf061xaIHiQjwGl/dNAu/MBe0=;
-	b=S3Guhbe6wuhdaC/74RW11fsc3I1Ea+q+qR9gSrKQCw+5w1ZHCT51pbbcjcykM4w3Zx2fPg
-	lqSQ1qqOUKgKt3Ag==
-To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
- rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com,
- jiang.liu@linux.intel.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- treding@nvidia.com, jonathanh@nvidia.com, sdonthineni@nvidia.com,
- kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3] PCI/MSI: Fix MSI hwirq truncation
-In-Reply-To: <b9a7b855-af2b-4858-b9d8-3340a0421cfe@nvidia.com>
-References: <20240108120522.1368240-1-vidyas@nvidia.com>
- <20240111052814.713016-1-vidyas@nvidia.com> <87bk9qim4p.ffs@tglx>
- <b9a7b855-af2b-4858-b9d8-3340a0421cfe@nvidia.com>
-Date: Mon, 15 Jan 2024 11:01:15 +0100
-Message-ID: <877ckahq50.ffs@tglx>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBB18E00;
+	Mon, 15 Jan 2024 10:55:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC42C43142;
+	Mon, 15 Jan 2024 10:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705316150;
+	bh=rfREZzmiD9nPW8TbesDDnUUTWye4kt++Bv0KP8PLvFk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=A4IVxdbM5n6+Wri6LKPCFt4boNRWCZk+x+FvjGA0rMzBKnTq0PG2P4HgdoibE34JU
+	 7I+sl3ic4kVgy6alkJ1V+WOxCGZ2ZCdHvSZazXxPfmb5arAkTMCAyiEierrpoLCjzM
+	 Ygj8ldj/YeV7xxWj3T+cJucDy6g0wviAclEb83PQYKh4IA3J10TosGkmbLnZg7vRG5
+	 klaKs9ycUq3mSQ8r8jOJecX0Mq/uJGiy1/elHSc22WoW1AxZktex9NE9JrxYS5mS2+
+	 cE8gPHQUwUZeynpCd6W3njl/YBfE5cxvvdBerqY16hvAfFGT43Lf9OM8ZBsaDE8gEI
+	 oLYOyEDKggW0A==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50eaaf2c7deso9635020e87.2;
+        Mon, 15 Jan 2024 02:55:49 -0800 (PST)
+X-Gm-Message-State: AOJu0YxdnEmOWayncYpTcwpapO5T9U7QvQyR1lgCXFPUaZhDDk0Xgoa4
+	sLHZZC3R7KyEeShjc05qn4OEMu7gpa2F7aSXYxA=
+X-Google-Smtp-Source: AGHT+IHjiob4d9Y9lHe/Mg25bV/9NI9KuHdlICb0KG40svce27wXXneGwYvZf40noCzmA0/mYLev+nDZBuyx7BNLBuM=
+X-Received: by 2002:a05:6512:130c:b0:50e:df4f:44d7 with SMTP id
+ x12-20020a056512130c00b0050edf4f44d7mr2867593lfu.90.1705316148087; Mon, 15
+ Jan 2024 02:55:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240112095000.8952-1-tzimmermann@suse.de> <CAMj1kXGxNTvCca+9TfUfvp06ppyD9XiyO59khYXg88VkyFm1rw@mail.gmail.com>
+ <3e2f70ab-c4de-4fae-9365-4f6f77c847c5@suse.de>
+In-Reply-To: <3e2f70ab-c4de-4fae-9365-4f6f77c847c5@suse.de>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Mon, 15 Jan 2024 11:55:36 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGECo1E1U8jjrzvA=ZJe80DVOi3v5CvxkhXbnBQKVMT8Q@mail.gmail.com>
+Message-ID: <CAMj1kXGECo1E1U8jjrzvA=ZJe80DVOi3v5CvxkhXbnBQKVMT8Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] arch/x86: Remove unnecessary dependencies on bootparam.h
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: nathan@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	bhelgaas@google.com, arnd@arndb.de, zohar@linux.ibm.com, 
+	dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org, 
+	serge@hallyn.com, javierm@redhat.com, linux-arch@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-integrity@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 12 2024 at 23:03, Vidya Sagar wrote:
-> On 1/12/2024 9:23 PM, Thomas Gleixner wrote:
->> On Thu, Jan 11 2024 at 10:58, Vidya Sagar wrote:
->>> So, cast the PCI domain number to 'irq_hw_number_t' before left shifting
->>> it to calculate hwirq number.
->> 
->> This still does not explain that this fixes it only on 64-bit platforms
->> and why we don't care for 32-bit systems.
-> Agree that this fixes the issue only on 64-bit platforms. It doesn't
-> change the behavior on 32-bit platforms. My understanding is that the
-> issue surfaces only if there are too many PCIe controllers in the system
-> which usually is the case in modern server systems and it is arguable if
-> the server systems really run 32-bit kernels.
+On Mon, 15 Jan 2024 at 08:58, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+> Hi
+>
+> Am 12.01.24 um 18:28 schrieb Ard Biesheuvel:
+> > On Fri, 12 Jan 2024 at 10:50, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+> >>
+> >> Reduce build time in some cases by removing unnecessary include statements
+> >> for <asm/bootparam.h>. Reorganize some header files accordingly.
+> >>
+> >> While working on the kernel's boot-up graphics, I noticed that touching
+> >> include/linux/screen_info.h triggers a complete rebuild of the kernel
+> >> on x86. It turns out that the architecture's PCI and EFI headers include
+> >> <asm/bootparam.h>, which depends on <linux/screen_info.h>. But none of
+> >> the drivers have any business with boot parameters or the screen_info
+> >> state.
+> >>
+> >> The patchset moves code from bootparam.h and efi.h into separate header
+> >> files and removes obsolete include statements on x86. I did
+> >>
+> >>    make allmodconfig
+> >>    make -j28
+> >>    touch include/linux/screen_info.h
+> >>    time make -j28
+> >>
+> >> to measure the time it takes to rebuild. Results without the patchset
+> >> are around 20 minutes.
+> >>
+> >>    real    20m46,705s
+> >>    user    354m29,166s
+> >>    sys     28m27,359s
+> >>
+> >> And with the patchset applied it goes down to less than one minute.
+> >>
+> >>    real    0m56,643s
+> >>    user    4m0,661s
+> >>    sys     0m32,956s
+> >>
+> >> The test system is an Intel i5-13500.
+> >>
+> >> v5:
+> >>          * silence clang warnings for real-mode code (Nathan)
+> >>          * revert boot/compressed/misc.h (kernel test robot)
+> >> v4:
+> >>          * fix fwd declaration in compressed/misc.h (Ard)
+> >> v3:
+> >>          * keep setup_header in bootparam.h (Ard)
+> >>          * implement arch_ima_efi_boot_mode() in source file (Ard)
+> >> v2:
+> >>          * only keep struct boot_params in bootparam.h (Ard)
+> >>          * simplify arch_ima_efi_boot_mode define (Ard)
+> >>          * updated cover letter
+> >>
+> >> Thomas Zimmermann (4):
+> >>    arch/x86: Move UAPI setup structures into setup_data.h
+> >>    arch/x86: Move internal setup_data structures into setup_data.h
+> >>    arch/x86: Implement arch_ima_efi_boot_mode() in source file
+> >>    arch/x86: Do not include <asm/bootparam.h> in several files
+> >>
+> >
+> > This looks ok to me, thanks for sticking with it.
+> >
+> > For the series,
+> >
+> > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+>
+> Thank you so much. Can this series go through the x86 tree?
+>
 
-Arguably people who do that can keep the pieces.
+Yes, this should be taken through the -tip tree. But I am not a -tip maintainer.
 
-> One way to fix it for both 32-bit and 64-bit systems is by changing the
-> type of 'hwirq' to u64. This may cause two memory reads in 32-bit
-> systems whenever 'hwirq' is accessed and that may intern cause some perf
-> impact?? Is this the way you think I should be handling it?
+But please be aware that we are in the middle of the merge window
+right now, and I suspect that the -tip maintainers may have some
+feedback of their own. So give it at least a week or so, and ping this
+thread again to ask how to proceed.
 
-No. Leave it as is. What I'm asking for is that it's properly documented
-in the changelog.
-
-Thanks,
-
-        tglx
-
+Also, please trim the cc list a bit when you do - this is mostly a x86
+specific reshuffle of headers so no need to keep all the other
+subsystem maintainers on cc while we finish up the discussion.
 
