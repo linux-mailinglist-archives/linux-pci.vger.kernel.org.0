@@ -1,161 +1,128 @@
-Return-Path: <linux-pci+bounces-2220-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2221-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E4F982F485
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 19:44:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17F0F82F5F5
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 20:48:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3570DB22AAE
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 18:44:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32A03B2469E
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 19:48:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034081CF8F;
-	Tue, 16 Jan 2024 18:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE8C1D68D;
+	Tue, 16 Jan 2024 19:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4Z0AZN/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXy3QrGz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FA81CD33;
-	Tue, 16 Jan 2024 18:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E477E225A2;
+	Tue, 16 Jan 2024 19:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705430678; cv=none; b=abzVzMBbTSkUmBaxB2HCehU3fkr5HxKbktKnsLEuCxVzq263JROB7cJtnVVJe5L3Gj/f2D+S6JWVnlDxTkUDdZnakf+y8lXH4lLilbeVvc59OhrfMbA51/R+zrZny2T6zgsMDAqQq5C38bmwXMqbguR3h8nGnet94/3O758h+UA=
+	t=1705434203; cv=none; b=h1UVhT1wdSVl7jgyIqOhzZtXR6Zc3eVtObGn+f06a+Iay+YTUHjR0d3eF0t4DNFAlGsQCAxy3kJi3weB50sV8EyJYp7GD7V0LodTPzpvi615ScAQ32XVso3OKtffpvh8ZJc4UDjdDZkyEjzjyuMfOoP98Ep3VYn3BQ+Qr6USjX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705430678; c=relaxed/simple;
-	bh=hQkulcNIkuAvuM+4UOBSRVqqf8pRQ1TkYnDyipqHu9Q=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=LGQYOx6JVrGBSrERRTYy02ogN9yWRnkm+OF8eZkTMjCZ7+5vhxrMhO+ikeOhxB5RIH02taAivgYN0PV+ESMz77z7THNJJPztTQadwRgLqip2GR+x6n3VbYjT4ftEqPKiJfmbpUSsOtIvYfpCzyiU3lnZFIXMvi/5j8RZStYtR08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4Z0AZN/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23771C433F1;
-	Tue, 16 Jan 2024 18:44:38 +0000 (UTC)
+	s=arc-20240116; t=1705434203; c=relaxed/simple;
+	bh=WHVhi86A2O8vCg+56AGU0weJGRfn3BbmTIiJm0xVJdw=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:In-Reply-To:References:MIME-Version:X-stable:
+	 X-Patchwork-Hint:X-stable-base:Content-Transfer-Encoding; b=T3oumuoAMG6emTacJWNtdTs5EaCtCa7WL5dXXYhgPytDqNAcone1umy1uwhlG4ZS0xzJW/HCXZAKeML3FPllM8RLmZht3Qs/vhJVQ7YYgWEK6rbALNdGxrFzU8SEIOExDn0kzh/oYhvm7maprj0gesoHDhcsZRQENUWUZq+/VrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXy3QrGz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E11EC433F1;
+	Tue, 16 Jan 2024 19:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705430678;
-	bh=hQkulcNIkuAvuM+4UOBSRVqqf8pRQ1TkYnDyipqHu9Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=M4Z0AZN/db2RgMT7oCsZe7mx3q9it8JCiTGD84rVdIBh8RyqAfHjYeVKi0zVvADQw
-	 hjyVJKrG2LyryU4fZjmzcDdKGx+sFlEMYCam0MrfEZTVG1Q277dhC+QDiYL1woLucz
-	 /YpkUvebvEkTkc+y8isyvUe42CAfc4L9AqvDFRh9jNVQzA56BAJ2CU+ErVhOSp5GDQ
-	 EVoUmUDVLQxgcRKzIhiBfCFT2HhI0+jq+MOFXF3Yj0YmIcWV8qYcC8u+vFfWIqJ/Ne
-	 wB+s9FfDOvm3uXSXkIgunCgCVYb1VBSpOha2FqRzBSWGKOwWZBwkNHjKtTndCFB00z
-	 auD9dqR0gWeNw==
-Date: Tue, 16 Jan 2024 12:44:36 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	s=k20201202; t=1705434202;
+	bh=WHVhi86A2O8vCg+56AGU0weJGRfn3BbmTIiJm0xVJdw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cXy3QrGzqfvPTTLxbGz9Eanvavc77E7g6IP4F7LKPixpLqU1Bo9bnq0c6hGlkiU0r
+	 mNoRhsg6/VvnTW5NvkXsGdEbMEwDcZ6ABVizM0xq80NQ9OX3ClXPPuAc8aht29TKQN
+	 EONLJxWyenLtiD86KoHy/oKsGQGANtmlNuzuQkTDoigO6rjN0MxyxCjrJb3/e7NGZA
+	 5CYyFjvDuk9nswYu4FdQDPQC38pNJRUTZYDcaTcwLE/YtW62ysDp04/YyG3KjIsjOW
+	 1GlZl4FldgVhBD0vrnzN0LEaBN8eAtW0dGKAIAPa+gRe4Wl6xXML/ZN/lClzXHouYC
+	 XuiPl3NdQD0qw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ido Schimmel <idosch@nvidia.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 01/10] pci: add new set of devres functions
-Message-ID: <20240116184436.GA101781@bhelgaas>
+	Petr Machata <petrm@nvidia.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 020/108] PCI: Add no PM reset quirk for NVIDIA Spectrum devices
+Date: Tue, 16 Jan 2024 14:38:46 -0500
+Message-ID: <20240116194225.250921-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116194225.250921-1-sashal@kernel.org>
+References: <20240116194225.250921-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115144655.32046-3-pstanner@redhat.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 15, 2024 at 03:46:12PM +0100, Philipp Stanner wrote:
-> PCI's devres API is not extensible to ranged mappings and has
-> bug-provoking features. Improve that by providing better alternatives.
+From: Ido Schimmel <idosch@nvidia.com>
 
-I guess "ranged mappings" means a mapping that doesn't cover an entire
-BAR?  Maybe there's a way to clarify?
+[ Upstream commit 3ed48c80b28d8dcd584d6ddaf00c75b7673e1a05 ]
 
-> When the original devres API for PCI was implemented, priority was given
-> to the creation of a set of "pural functions" such as
-> pcim_request_regions(). These functions have bit masks as parameters to
-> specify which BARs shall get mapped. Most users, however, only use those
-> to mapp 1-3 BARs.
-> A complete set of "singular functions" does not exist.
+Spectrum-{1,2,3,4} devices report that a D3hot->D0 transition causes a
+reset (i.e., they advertise NoSoftRst-). However, this transition does
+not have any effect on the device: It continues to be operational and
+network ports remain up. Advertising this support makes it seem as if a
+PM reset is viable for these devices. Mark it as unavailable to skip it
+when testing reset methods.
 
-s/mapp/map/
+Before:
 
-Rewrap to fill 75 columns or add blank lines between paragraphs.  Also
-below.
+ # cat /sys/bus/pci/devices/0000\:03\:00.0/reset_method
+ pm bus
 
-> As functions mapping / requesting multiple BARs at once have (almost) no
-> mechanism in C to return the resources to the caller of the plural
-> function, the devres API utilizes the iomap-table administrated by the
-> function pcim_iomap_table().
-> 
-> The entire PCI devres implementation was strongly tied to that table
-> which only allows for mapping whole, complete BARs, as the BAR's index
-> is used as table index. Consequently, it's not possible to, e.g., have a
-> pcim_iomap_range() function with that mechanism.
-> 
-> An additional problem is that pci-devres has been ipmlemented in a sort
-> of "hybrid-mode": Some unmanaged functions have managed counterparts
-> (e.g.: pci_iomap() <-> pcim_iomap()), making their managed nature
-> obvious to the programmer. However, the region-request functions in
-> pci.c, prefixed with pci_, behave either managed or unmanaged, depending
-> on whether pci_enable_device() or pcim_enable_device() has been called
-> in advance.
+After:
 
-s/ipmlemented/implemented/
+ # cat /sys/bus/pci/devices/0000\:03\:00.0/reset_method
+ bus
 
-> This hybrid API is confusing and should be more cleanly separated by
-> providing always-managed functions prefixed with pcim_.
-> 
-> Thus, the existing devres API is not desirable because:
-> 	a) The vast majority of the users of the plural functions only
-> 	   ever sets a single bit in the bit mask, consequently making
-> 	   them singular functions anyways.
-> 	b) There is no mechanism to request / iomap only part of a BAR.
-> 	c) The iomap-table mechanism is over-engineered, complicated and
-> 	   can by definition not perform bounds checks, thus, provoking
-> 	   memory faults: pcim_iomap_table(pdev)[42]
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/quirks.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Not sure what "pcim_iomap_table(pdev)[42]" means.
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ea476252280a..d208047d1b8f 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3786,6 +3786,19 @@ static void quirk_no_pm_reset(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+ 			       PCI_CLASS_DISPLAY_VGA, 8, quirk_no_pm_reset);
+ 
++/*
++ * Spectrum-{1,2,3,4} devices report that a D3hot->D0 transition causes a reset
++ * (i.e., they advertise NoSoftRst-). However, this transition does not have
++ * any effect on the device: It continues to be operational and network ports
++ * remain up. Advertising this support makes it seem as if a PM reset is viable
++ * for these devices. Mark it as unavailable to skip it when testing reset
++ * methods.
++ */
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MELLANOX, 0xcb84, quirk_no_pm_reset);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MELLANOX, 0xcf6c, quirk_no_pm_reset);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MELLANOX, 0xcf70, quirk_no_pm_reset);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MELLANOX, 0xcf80, quirk_no_pm_reset);
++
+ /*
+  * Thunderbolt controllers with broken MSI hotplug signaling:
+  * Entire 1st generation (Light Ridge, Eagle Ridge, Light Peak) and part
+-- 
+2.43.0
 
-> 	d) region-request functions being sometimes managed and
-> 	   sometimes not is bug-provoking.
-
-Indent with spaces (not tabs) so it still looks good when "git log"
-adds spaces to indent.
-
-> + * Legacy struct storing addresses to whole mapped bars.
-
-s/bar/BAR/ (several places).
-
-> +	/* A region spaning an entire bar. */
-> +	PCIM_ADDR_DEVRES_TYPE_REGION,
-> +
-> +	/* A region spaning an entire bar, and a mapping for that whole bar. */
-> +	PCIM_ADDR_DEVRES_TYPE_REGION_MAPPING,
-> +
-> +	/*
-> +	 * A mapping within a bar, either spaning the whole bar or just a range.
-> +	 * Without a requested region.
-
-s/spaning/spanning/ (several places).
-
-> +	if (start == 0 || len == 0) /* that's an unused BAR. */
-
-s/that/That/
-
-> +	/*
-> +	 * Ranged mappings don't get added to the legacy-table, since the table
-> +	 * only ever keeps track of whole BARs.
-> +	 */
-> +
-
-Spurious blank line.
-
-> +	devres_add(&pdev->dev, res);
-> +	return mapping;
-> +}
-> +EXPORT_SYMBOL(pcim_iomap_range);
-
-Bjorn
 
