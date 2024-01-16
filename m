@@ -1,170 +1,285 @@
-Return-Path: <linux-pci+bounces-2208-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2C4682F08D
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 15:33:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE5EE82F0C1
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 15:44:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B1B31F23E26
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 14:33:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C74771C2354D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 14:44:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 990746FBD;
-	Tue, 16 Jan 2024 14:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7289B1BF2A;
+	Tue, 16 Jan 2024 14:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aGj7n1r6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFUYMXcf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2040.outbound.protection.outlook.com [40.107.93.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E12A2563;
-	Tue, 16 Jan 2024 14:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aw//XRofcSo0Vwht2vHleoTSIlHH1RKg4dbCUlQTt5n412JtxOrmpXonVIoSQ8gYT2Pr/SpFSDhsAS5MSjHo9+UO3YoQ2pvGS0T0D2VQL2Xlf48i3HLa32wwnWcxudDpLsZnIUUfqi2mObIV5DIRH11+7PH/PGRSPFSCBEF4KuB4XUY1XzwExBYYBbc+ZW30RBLq0aOEObl5HSWrRLQHvKmJ03Mo5V5851Ov7OON6zGzlvQS3DRpFZxKsucvKOfwLr953uUJoHCo3F04L06J28kNgUKOYwHwjZwDn9l+3ltAeWS++NrRE2So0z5sjp/cvRh3jyz63xGXoumcYFHM8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vyM5Rg/rDIjkGQERyt74b7460YcodZePpOgnWPw7Gu4=;
- b=fWOJAYxf2roDnB8fxmBCVGevXLqE7HCkrReJumeaoh64zUmu4OcW5ac7sNzkPrpMuhQloTZVNbAX5TiwhEsuXSeZMOfK4tIHjbk2G9B7GzinEqLS3+/9WsktDIyMMHPS/sAnFXh2lS7AEvRFrdWTOwymnJ63bwK0IMetjRje+fDyzHE37AA/AUdPJFDDGr7QkObRtiP0MeTFWFeaIKf7jh104KzC04A9ZEZaUoUK/a6MlJFWOtlPF4Fi3MGP1Nqb6cS1kAet5K/d/ZgzdpvfJ7efzGQkHiNRO74Gq3BPKcs9MUDyl/hK04cDQRJGesT+EkoUiWbanqiGOyorvczk7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vyM5Rg/rDIjkGQERyt74b7460YcodZePpOgnWPw7Gu4=;
- b=aGj7n1r6ca8tabEWe4Ah6+dWQ0msg1+wdCkq/xkjNGPeOg7OAVU4qBk4FY0f+JvNU1qDEvyuy1O9ytVguhTAF6vYcdXdrCs28CNWClxYg4IRsfAN3bALP1nNgV/MKU8EdT33OJtjMO1qeNdbstdfCeel7rOKN6tzX66pD3STewgRzFOA3XjR/FlnJAf1+9cTGEwkHXrnsISxhl1BAASqnOxrYQ4JwZwUwqXqQfpgFDF65pYP5RX6RaNTtx3QX3d3i4gMiHFwCkMG02/uxb7MB4ujVRz31iNtbopleCmJxATI9y1aDJABW0oxsflbjJgNhjF9QZxjWv1TtKawsH+93Q==
-Received: from SJ0PR05CA0006.namprd05.prod.outlook.com (2603:10b6:a03:33b::11)
- by IA0PR12MB8982.namprd12.prod.outlook.com (2603:10b6:208:481::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Tue, 16 Jan
- 2024 14:33:12 +0000
-Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
- (2603:10b6:a03:33b:cafe::c6) by SJ0PR05CA0006.outlook.office365.com
- (2603:10b6:a03:33b::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
- Transport; Tue, 16 Jan 2024 14:33:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.16 via Frontend Transport; Tue, 16 Jan 2024 14:33:12 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 16 Jan
- 2024 06:33:03 -0800
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Tue, 16 Jan 2024 06:33:03 -0800
-Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Tue, 16 Jan 2024 06:33:00 -0800
-From: Vidya Sagar <vidyas@nvidia.com>
-To: <bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
-	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V2] PCI: Clear errors logged in Secondary Status Register
-Date: Tue, 16 Jan 2024 20:02:58 +0530
-Message-ID: <20240116143258.483235-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240104013229.693041-1-vidyas@nvidia.com>
-References: <20240104013229.693041-1-vidyas@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B646EADF;
+	Tue, 16 Jan 2024 14:44:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEA1C433C7;
+	Tue, 16 Jan 2024 14:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705416261;
+	bh=+IrwKlp6UAiY/ETGopdBM6vfi4zQT9+TOVEU95jc+QM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZFUYMXcfrcBlgMFmeOBG6QK4FPWpIj83Hl7iJD0gWIrgeXnRuvx/EFQ5Bir99Xz2O
+	 NlURbUxSzquu2iuaKBp4bgh0i5O4MRaSh2nUrLJlzqqM7EMHqZZTwcZ0KqEmSITu1G
+	 TJEH8sexIdawv5r1pF6yuifT/uLlkXjuszqmEPVyFiJasMWpFnmn06zgGyXprZJAQ7
+	 C6U2nIBTB+RWBh70+rKtDKE1rCaHduyAjpluD78FIJWCq7Xh80FJvVcVSBqm0vX6tO
+	 PiWlcaU3zYVKaNOya3HugBr7Es7jjmKT/IpncFTxda0NAQqQFMNBPxEpiTTbyOb3kh
+	 RysVJs8CatXXQ==
+Date: Tue, 16 Jan 2024 08:44:19 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: PCI: qcom,pcie-sm8550: move SM8550 to
+ dedicated schema
+Message-ID: <20240116144419.GA3856889-robh@kernel.org>
+References: <20240108-dt-bindings-pci-qcom-split-v1-0-d541f05f4de0@linaro.org>
+ <20240108-dt-bindings-pci-qcom-split-v1-1-d541f05f4de0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|IA0PR12MB8982:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee05d27c-f132-417e-e689-08dc16a0115b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8k9MPPa/z7PWEugWSeuKValHgkOblPHq4Y7LPkNgDltOq5hXhCdHAdU8oWno1E4p7UiZ4hnwcFWfA/G7qZJb7wOZCBTB/lo6JTYs3ppDjLHM3o0uAxkSpmFjjrZ8mYTH5RyKBrmFCHXEq3WZiuDXxO30Pi7htWKQE/A3wsNjVojF3G3jsMItnx0wIT7KZ/sxdWc6E5RcnmEqoWlVPuYWTojQWhgPZ1oD79VVm8t0MWAFnOzuLlO6M41UlyEgbydIOg9u26nNOz8q1v2bUqMi//9ocaBQFhj7sJhVzh8WaAg/ohBg1QqZwPz5YJZcUi6xVarTiCE+87OpLwDp83QoGsE35dCRuXnJp1EbV+lIA0ah7lSVFDo2ltus8wQGFMF4wPObZxjGxx6k36GamND4j6LxQmFgzc1eVrZJzrhZpHjnwlHBK7VzpJbZn2UMnGPlD1e99e9qEa58WJC585a7PDMHPdFXtnj6IeUHZQ48Jds3BYw04q8BgEBDF2GK4Nz71YTDnhSXNn/4QmD8Ucz2svuDDfWoEKtQQIIKSZ1dzkSVDwBpUO+9zNWG0KXLFN1A9FeZOyeW8BidNMwe1eQykqY5TMjc1BJZ50r9Mx/GgncY//h2c7MSHtbEUB6kQBoDeWL7tOZsEbKRoqf1m7dSM0hW3sCfdz3EYbha5n5+HGLWr0cdVZiLdO+AmWG715mxNc+nDj9PyX//Yk1x+07xnYBgOiClZ7tgQmHfrL9hmfdHUk27W3pCXZZ8HK2eUO8c
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(39860400002)(376002)(396003)(230922051799003)(64100799003)(82310400011)(451199024)(1800799012)(186009)(40470700004)(36840700001)(46966006)(5660300002)(86362001)(41300700001)(82740400003)(7636003)(356005)(2906002)(6916009)(316002)(70206006)(54906003)(70586007)(2616005)(7696005)(478600001)(4326008)(36860700001)(47076005)(8936002)(8676002)(336012)(426003)(26005)(83380400001)(40460700003)(36756003)(40480700001)(1076003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 14:33:12.1269
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee05d27c-f132-417e-e689-08dc16a0115b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CDF.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8982
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240108-dt-bindings-pci-qcom-split-v1-1-d541f05f4de0@linaro.org>
 
-The enumeration process leaves the 'Received Master Abort' bit set in
-the Secondary Status Register of the downstream port in the following
-scenarios.
+On Mon, Jan 08, 2024 at 03:19:14PM +0100, Krzysztof Kozlowski wrote:
+> The qcom,pcie.yaml binding file containing all possible Qualcomm SoC
+> PCIe root complexes gets quite complicated with numerous if:then:
+> conditions customizing clocks, interrupts, regs and resets.  Adding and
+> reviewing new devices is difficult, so simplify it by having shared
+> common binding and file with only one group of compatible devices:
+> 
+> 1. Copy all common qcom,pcie.yaml properties (so everything except
+>    supplies) to a new shared qcom,pcie-common.yaml schema.
+> 2. Move SM8550 PCIe compatible devices to dedicated binding file.
+> 
+> This creates equivalent SM8550 schema file, except missing required
+> compatible which is actually redundant.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  98 ++++++++++++
+>  .../devicetree/bindings/pci/qcom,pcie-sm8550.yaml  | 171 +++++++++++++++++++++
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         |  38 -----
+>  3 files changed, 269 insertions(+), 38 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> new file mode 100644
+> index 000000000000..125136176f93
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,pcie-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm PCI Express Root Complex Common Properties
+> +
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +properties:
+> +  reg:
+> +    minItems: 4
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    minItems: 4
+> +    maxItems: 6
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +  iommu-map:
+> +    minItems: 1
+> +    maxItems: 16
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 13
+> +
+> +  clock-names:
+> +    minItems: 3
+> +    maxItems: 13
+> +
+> +  dma-coherent: true
+> +
+> +  interconnects:
+> +    maxItems: 2
+> +
+> +  interconnect-names:
+> +    items:
+> +      - const: pcie-mem
+> +      - const: cpu-pcie
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    items:
+> +      - const: pciephy
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 12
+> +
+> +  perst-gpios:
+> +    description: GPIO controlled connection to PERST# signal
+> +    maxItems: 1
+> +
+> +  wake-gpios:
+> +    description: GPIO controlled connection to WAKE# signal
+> +    maxItems: 1
+> +
+> +required:
+> +  - reg
+> +  - reg-names
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - clocks
+> +  - clock-names
+> +
+> +anyOf:
+> +  - required:
+> +      - interrupts
+> +      - interrupt-names
+> +      - "#interrupt-cells"
+> +  - required:
+> +      - msi-map
+> +      - msi-map-mask
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml
+> new file mode 100644
+> index 000000000000..b6d025f153bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8550.yaml
+> @@ -0,0 +1,171 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm SM8550 PCI Express Root Complex
+> +
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description:
+> +  Qualcomm SM8550 SoC (and compatible) PCIe root complex controller is based on
+> +  the Synopsys DesignWare PCIe IP.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: qcom,pcie-sm8550
+> +      - items:
+> +          - enum:
+> +              - qcom,pcie-sm8650
+> +          - const: qcom,pcie-sm8550
+> +
+> +  reg:
+> +    minItems: 5
+> +    maxItems: 6
+> +
+> +  reg-names:
+> +    minItems: 5
+> +    items:
+> +      - const: parf # Qualcomm specific registers
+> +      - const: dbi # DesignWare PCIe registers
+> +      - const: elbi # External local bus interface registers
+> +      - const: atu # ATU address space
+> +      - const: config # PCIe configuration space
+> +      - const: mhi # MHI registers
+> +
+> +  clocks:
+> +    minItems: 7
+> +    maxItems: 8
+> +
+> +  clock-names:
+> +    minItems: 7
+> +    items:
+> +      - const: aux # Auxiliary clock
+> +      - const: cfg # Configuration clock
+> +      - const: bus_master # Master AXI clock
+> +      - const: bus_slave # Slave AXI clock
+> +      - const: slave_q2a # Slave Q2A clock
+> +      - const: ddrss_sf_tbu # PCIe SF TBU clock
+> +      - const: noc_aggr # Aggre NoC PCIe AXI clock
+> +      - const: cnoc_sf_axi # Config NoC PCIe1 AXI clock
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    items:
+> +      - const: pci # PCIe core reset
+> +      - const: link_down # PCIe link down reset
+> +
+> +oneOf:
+> +  - properties:
+> +      interrupts:
+> +        maxItems: 1
+> +      interrupt-names:
+> +        items:
+> +          - const: msi
+> +
+> +  - properties:
+> +      interrupts:
+> +        minItems: 8
+> +      interrupt-names:
+> +        items:
+> +          - const: msi0
+> +          - const: msi1
+> +          - const: msi2
+> +          - const: msi3
+> +          - const: msi4
+> +          - const: msi5
+> +          - const: msi6
+> +          - const: msi7
 
-(1) The device connected to the downstream port has ARI capability
-    and that makes the kernel set the 'ARI Forwarding Enable' bit in
-    the Device Control 2 Register of the downstream port. This
-    effectively makes the downstream port forward the configuration
-    requests targeting the devices downstream of it, even though they
-    don't exist in reality. It causes the downstream devices return
-    completions with UR set in the status in turn causing 'Received
-    Master Abort' bit set.
+How does a given SoC have 1 or 8 interrupts? I guess it is possible. A 
+comment here would be helpful.
 
-    In contrast, if the downstream device doesn't have ARI capability,
-    the 'ARI Forwarding Enable' bit in the downstream port is not set
-    and any configuration requests targeting the downstream devices
-    that don't exist are terminated (section 6.13 of PCI Express Base
-    6.0 spec) in the downstream port itself resulting in no change of
-    the 'Received Master Abort' bit.
-
-(2) A PCIe switch is connected to the downstream port and when the
-    enumeration flow tries to explore the presence of devices that
-    don't really exist downstream of the switch, the downstream
-    port receives the completions with UR set causing the 'Received
-    Master Abort' bit set.
-
-Clear 'Received Master Abort' bit to keep the bridge device in a clean
-state post enumeration.
-
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-V2:
-* Changed commit message based on Bjorn's feedback
-
- drivers/pci/probe.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 795534589b98..640d2871b061 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
- 	}
- 
- out:
-+	/* Clear errors in the Secondary Status Register */
-+	pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
-+
- 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
- 
- 	pm_runtime_put(&dev->dev);
--- 
-2.25.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
 
