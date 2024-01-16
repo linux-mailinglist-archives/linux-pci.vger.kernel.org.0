@@ -1,145 +1,115 @@
-Return-Path: <linux-pci+bounces-2215-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2216-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9436B82F2B0
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 17:55:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BBE582F410
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 19:20:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2231A285CAC
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 16:55:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C09028ABD1
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 18:20:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97B601CA81;
-	Tue, 16 Jan 2024 16:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A1D1CFB5;
+	Tue, 16 Jan 2024 18:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTFtI0JU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsPYcpVq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D2C1C6BC;
-	Tue, 16 Jan 2024 16:55:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE52C433C7;
-	Tue, 16 Jan 2024 16:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE831CFAE;
+	Tue, 16 Jan 2024 18:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705429182; cv=none; b=uS+fGuxlHIPzHAem07HLwlTW5dBuIWZfAAS1k6v52Dsb/V2owD8Y/ZR5Znj02N4eOByafREGSAAQeosgeYSh0qzHsRgV/Wq3mgeOdGcP+S1geyX5dwpg86Vnqp2NvLlsISVoQMKck9KUZiUsCz85F9w49RdANrjMrUSsLlKi45A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705429182; c=relaxed/simple;
+	bh=cK0uK7R2+gEbjOCsenY8rYIQosqscpXTCp6F+qM8Pd8=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To; b=f4qqqu70PiY9s2RJIg1vFMbhOBJJrv52f+4/jsYkaxi57jZ2W7SIAMtX+XwwFcXgBljGh+5tFyOCaPUXJUCTXI8wkt/31vujlAMpGdhqPoBG0xItl0ZQ+wc8C760n3eWSnPuWHXTJnZDnNyzTXDwo4rThA2yKc47T2THVs29cKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsPYcpVq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4490FC433F1;
+	Tue, 16 Jan 2024 18:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705424152;
-	bh=vvb30FWvCMkK5KvuyLxMDAHpy7g1C7TNhUJRnix82e0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HTFtI0JUPYXjGnf23ymD8iN1J/BvQkfvN05xycJohmdD9/dBLLJxrn+lAsQdLf6Gc
-	 HC5VR6YolpNriimnya+VLtufx9UFno8TGB3qAFpP8nuUJJ0gszUw7fotTWZ7+1EJHc
-	 TBGX4Hz6roF9hrQvBnTxUZ7F4b6hE+6IEr/eFsNb9Xicmw6HYeDleHgBY3+2bly1gK
-	 YWGTRv6X4R1OWfeROefuR3dSZemhTckyEbwZtjRlYsF4RQjozf6H9sw2C2AV36NkZt
-	 7J/GMVRl51LoTE4ScvwQt8AT2n8/FqUOfawWA6+KsTuaZkY0/+phMTIOWRNKrGXU+L
-	 yIgKSHYRPQ2Kw==
-Date: Tue, 16 Jan 2024 10:55:50 -0600
-From: Rob Herring <robh@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org, kw@linux.com,
-	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, will@kernel.org, frowand.list@gmail.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-	mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH V2 2/2] PCI: Add support for "preserve-boot-config"
- property
-Message-ID: <20240116165550.GA102137-robh@kernel.org>
-References: <20240112165830.GA2271982@bhelgaas>
- <5e8f6c52-6149-42c0-affb-d8b072a77956@nvidia.com>
+	s=k20201202; t=1705429181;
+	bh=cK0uK7R2+gEbjOCsenY8rYIQosqscpXTCp6F+qM8Pd8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DsPYcpVqeSMaQVwap6TSM10XjoOPuojT6s+DQLUtOv+G5QecnwOOLG/Btd30B9sKD
+	 sPLkDVnjb3Ujys/qaKlj6P/2Q2Q976Ex1Qvf1/GH+yU1SiUnOC2LJ6MwMU6A0kkb4b
+	 laB0h0Yy1fmCV5dvcsLx+/XtcTFLtVXXPReiJfAINVpuOKuFIX3CfdDb/k7vHjTyE8
+	 EpnyMDv5x9RZhgd0oSGVD9/8ujhuWDfhz67X1nUEGE7Q2EVz0/eU202+tc6yopwHJk
+	 mlhOdTwzbhGv1kssB7mJQ3FfHQgC/qjiMsfFWtIYbEVwdvWBzJM/I/6Y3PGVRbGwm5
+	 BA2iB9BUFtu6Q==
+Date: Tue, 16 Jan 2024 12:19:39 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH 13/14] PCI: j721e: move reset GPIO to device struct
+Message-ID: <20240116181939.GA101049@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5e8f6c52-6149-42c0-affb-d8b072a77956@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-13-84e55da52400@bootlin.com>
 
-On Mon, Jan 15, 2024 at 08:02:56PM +0530, Vidya Sagar wrote:
+On Mon, Jan 15, 2024 at 05:14:54PM +0100, Thomas Richard wrote:
+> From: Théo Lebrun <theo.lebrun@bootlin.com>
 > 
-> 
-> On 1/12/2024 10:28 PM, Bjorn Helgaas wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Wed, Jan 10, 2024 at 08:37:25AM +0530, Vidya Sagar wrote:
-> > > Add support for "preserve-boot-config" property that can be used to
-> > > selectively (i.e. per host bridge) instruct the kernel to preserve the
-> > > boot time configuration done by the platform firmware.
-> > > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > > V2:
-> > > * Addressed issues reported by kernel test robot <lkp@intel.com>
-> > > 
-> > >   drivers/pci/controller/pci-host-common.c |  5 ++++-
-> > >   drivers/pci/of.c                         | 18 ++++++++++++++++++
-> > >   drivers/pci/probe.c                      |  2 +-
-> > >   include/linux/of_pci.h                   |  6 ++++++
-> > >   4 files changed, 29 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
-> > > index 6be3266cd7b5..d3475dc9ec44 100644
-> > > --- a/drivers/pci/controller/pci-host-common.c
-> > > +++ b/drivers/pci/controller/pci-host-common.c
-> > > @@ -68,13 +68,16 @@ int pci_host_common_probe(struct platform_device *pdev)
-> > > 
-> > >        of_pci_check_probe_only();
-> > > 
-> > > +     bridge->preserve_config =
-> > > +             of_pci_check_preserve_boot_config(dev->of_node);
-> > 
-> > Thanks for leveraging the existing "preserve_config" support for the
-> > ACPI _DSM.  Is pci_host_common_probe() the best place for this?  I
-> > think there are many DT platform drivers that do not use
-> > pci_host_common_probe(), so I wonder if there's a more generic place
-> > to put this.
-> My understanding is that pci_host_common_probe() is mainly used in
-> systems where the firmware would have taken care of all the platform
-> specific initialization and giving the ECAM and 'ranges' info through DT
-> for the Linux kernel to go ahead and perform the enumeration. This is
-> similar to ACPI way of handing over the system from firmware to the OS.
-> 
-> If PCIe controllers are getting initialized in the kernel itself, then
-> pci_host_probe() is called directly from the respective host controller
-> drivers which is the case with all the DesignWare based implementations
-> including Tegra194 and Tegra234. In those systems, since the controllers
-> themselves have come up and gotten initialized in the kernel, resource
-> assignment has to happen anyway.
-> 
-> > 
-> > I see Rob's concern about adding "preserve-boot-config" vs extending
-> > "linux,pci-probe-only" and I don't really have an opinion on that,
-> > although I do think the "pci-probe-only" name is not as descriptive as
-> > it could be.  I guess somebody will argue that "preserve_config" could
-> > be more descriptive, too :)
-> Honestly I would have liked to repurpose of_pci_check_probe_only() API
-> to look for "preserve-boot-config" in the respective PCIe controller's
-> DT node and not "linux,pci-probe-only" in the chosen entry, had it not
-> for the single usage of of_pci_check_probe_only() in arch/powerpc
-> /platforms/pseries/setup.c file.
-> Also FWIW, "linux,pci-probe-only" is not documented anywhere.
+> Move reset GPIO to device struct, so it can be used at suspend and
+> resume stages.
 
-Yes, it is[1].
+s/Move/Add/ since we're not moving it from one struct to another.  (In
+subject also.)
 
-> 
-> Since there is at least one user for of_pci_check_probe_only(), and
-> combining with the fact that the scope where "linux,pci-probe-only" and
-> "preserve-boot-config" are used (i.e. chosen entry Vs individual PCIe
-> controller node), I prefer to have it as a separate option.
-> Rob, please let me know if you have any strong objections to that?
+s/device struct/struct j721e_pcie/ since "device struct" could also
+refer to the "struct device", which is obviously not relevant here.
 
-Didn't I already object?
+BTW, if you capitalize the PCI subject lines to match previous
+history, it will save some work when applying this series.
 
-What's the concern with existing users? There shouldn't be any. If 
-"linux,pci-probe-only" appeared in a bridge node, it would have been 
-ignored and now would be honored.
+Also rewrap commit logs to fill 75 columns and add blank lines between
+paragraphs (noticed in patch 12/14).
 
-Rob
-
-[1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/chosen.yaml#L140
+> @@ -54,6 +54,7 @@ struct j721e_pcie {
+>  	struct clk		*refclk;
+>  	u32			mode;
+>  	u32			num_lanes;
+> +	struct gpio_desc	*reset_gpio;
+>  	void __iomem		*user_cfg_base;
+>  	void __iomem		*intd_cfg_base;
+>  	u32			linkdown_irq_regfield;
+> @@ -359,7 +360,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  	struct j721e_pcie *pcie;
+>  	struct cdns_pcie_rc *rc = NULL;
+>  	struct cdns_pcie_ep *ep = NULL;
+> -	struct gpio_desc *gpiod;
+>  	void __iomem *base;
+>  	struct clk *clk;
+>  	u32 num_lanes;
 
