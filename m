@@ -1,193 +1,170 @@
-Return-Path: <linux-pci+bounces-2207-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2208-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 496A882F00A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 14:54:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2C4682F08D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 15:33:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4CE2B22F09
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 13:54:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B1B31F23E26
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 14:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627A81BDD3;
-	Tue, 16 Jan 2024 13:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 990746FBD;
+	Tue, 16 Jan 2024 14:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="H/Py/Duj"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aGj7n1r6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2040.outbound.protection.outlook.com [40.107.93.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2AF1BDC8;
-	Tue, 16 Jan 2024 13:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E12A2563;
+	Tue, 16 Jan 2024 14:33:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KR+incU/vuFT65a0D4jOwvrK4w+BBY8sXMgTbTETyOLLceFPuH7GggOxTRRtU5twjDyOv1Sat+gv/ZP4kc8pI/F+loS6Ab2eguyZMVFiy/mFXs4GaxmvKBYaqWOWON2mbxR2sNdazmn8bcC8IYfi8qvpQQULt7phrhCxF9rBPlw6gWGtAXZuMSOcOWaV+7frWzZumBi6wMqRKPdydQtwPJKVziDzYSQhf3xGq0F/4WRuILSFYQ4sBmt5LSNs1TXl1mRN/P+Si9hUO33q0WcgvN/Wt8+mb4icmb2+6+mEQhGdqnL7EQCvsT1koKV6RWRVawiXsGXr1N5N6leIri9Hmg==
+ b=aw//XRofcSo0Vwht2vHleoTSIlHH1RKg4dbCUlQTt5n412JtxOrmpXonVIoSQ8gYT2Pr/SpFSDhsAS5MSjHo9+UO3YoQ2pvGS0T0D2VQL2Xlf48i3HLa32wwnWcxudDpLsZnIUUfqi2mObIV5DIRH11+7PH/PGRSPFSCBEF4KuB4XUY1XzwExBYYBbc+ZW30RBLq0aOEObl5HSWrRLQHvKmJ03Mo5V5851Ov7OON6zGzlvQS3DRpFZxKsucvKOfwLr953uUJoHCo3F04L06J28kNgUKOYwHwjZwDn9l+3ltAeWS++NrRE2So0z5sjp/cvRh3jyz63xGXoumcYFHM8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fInF4TrnvOYo00WXuIw3zcF5pdiUYcUZZD0tomXNqHo=;
- b=KMgts157lMO4EI7QWjrWUQw8K3asO6n5cTnqlT2OIyOEOXk7k2i2HCv/J6kFMrYK4JOYB8H++zRRVbCRvR4p6WQSYvUOiJ/IhsTNyShW0U/knj0f30PvMTwCWyEzM/Q3Bwep8u0Z+ot7/4GXWAXDR6UymiK2uF4zpLVaOlTkJxCjpq6DLz3f0CApzKLHqNNcKr4OiPh9oxTopodRkGIpW/ZMatDGQKPLWeyA18OkETmbhI8Sq5CHMPm3NlCU3HkJHiJDwUOmG2/DBza+xiOZpDKpapyGACSs5vKJnY0Hmv/r+IAUWHrZOsvqAT/9SmczVtgJyLCVvEa+X8rhlNuT+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
+ bh=vyM5Rg/rDIjkGQERyt74b7460YcodZePpOgnWPw7Gu4=;
+ b=fWOJAYxf2roDnB8fxmBCVGevXLqE7HCkrReJumeaoh64zUmu4OcW5ac7sNzkPrpMuhQloTZVNbAX5TiwhEsuXSeZMOfK4tIHjbk2G9B7GzinEqLS3+/9WsktDIyMMHPS/sAnFXh2lS7AEvRFrdWTOwymnJ63bwK0IMetjRje+fDyzHE37AA/AUdPJFDDGr7QkObRtiP0MeTFWFeaIKf7jh104KzC04A9ZEZaUoUK/a6MlJFWOtlPF4Fi3MGP1Nqb6cS1kAet5K/d/ZgzdpvfJ7efzGQkHiNRO74Gq3BPKcs9MUDyl/hK04cDQRJGesT+EkoUiWbanqiGOyorvczk7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fInF4TrnvOYo00WXuIw3zcF5pdiUYcUZZD0tomXNqHo=;
- b=H/Py/Duji3kimjOkYVbp3DO5m5h+fVTE8CKbJGEfe8hd0eBtQ6yRSgnizjRlJVBRes6tpwqpz2xwg2WrqkfTUOqiLflfU6EzFWJkMGxN64r9cBPzzfOqD+m298ng4P8kTAV9rXXEg83zVxbqrMLWo469ZbG2omrJg+O7s4N+ltce+jhi97C1MLVPJg/iNSe5S+em81nfdJMZo/fCJ5jX1ETMOB3+0DlloYzSrkHA13LYcp9t7Oc+848t69rpTR8E32cvnBZ/e50gvbYcecqelpvq9+XudEqhB/DapC4muZ/zC5lov92/RWtGCDuVKwKt3X0x8YOQEsVO0PuAFh4CZw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
- by PH7PR12MB7211.namprd12.prod.outlook.com (2603:10b6:510:206::21) with
+ bh=vyM5Rg/rDIjkGQERyt74b7460YcodZePpOgnWPw7Gu4=;
+ b=aGj7n1r6ca8tabEWe4Ah6+dWQ0msg1+wdCkq/xkjNGPeOg7OAVU4qBk4FY0f+JvNU1qDEvyuy1O9ytVguhTAF6vYcdXdrCs28CNWClxYg4IRsfAN3bALP1nNgV/MKU8EdT33OJtjMO1qeNdbstdfCeel7rOKN6tzX66pD3STewgRzFOA3XjR/FlnJAf1+9cTGEwkHXrnsISxhl1BAASqnOxrYQ4JwZwUwqXqQfpgFDF65pYP5RX6RaNTtx3QX3d3i4gMiHFwCkMG02/uxb7MB4ujVRz31iNtbopleCmJxATI9y1aDJABW0oxsflbjJgNhjF9QZxjWv1TtKawsH+93Q==
+Received: from SJ0PR05CA0006.namprd05.prod.outlook.com (2603:10b6:a03:33b::11)
+ by IA0PR12MB8982.namprd12.prod.outlook.com (2603:10b6:208:481::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.17; Tue, 16 Jan
- 2024 13:54:11 +0000
-Received: from PH8PR12MB6674.namprd12.prod.outlook.com
- ([fe80::55f7:f35f:a684:bf3c]) by PH8PR12MB6674.namprd12.prod.outlook.com
- ([fe80::55f7:f35f:a684:bf3c%4]) with mapi id 15.20.7181.022; Tue, 16 Jan 2024
- 13:54:10 +0000
-Message-ID: <2223a0c6-e627-4608-88ea-230fd1b5c507@nvidia.com>
-Date: Tue, 16 Jan 2024 19:24:01 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] PCI: Clear errors logged in Secondary Status Register
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, treding@nvidia.com, jonathanh@nvidia.com,
- kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20240112170622.GA2272469@bhelgaas>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Tue, 16 Jan
+ 2024 14:33:12 +0000
+Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b:cafe::c6) by SJ0PR05CA0006.outlook.office365.com
+ (2603:10b6:a03:33b::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23 via Frontend
+ Transport; Tue, 16 Jan 2024 14:33:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.16 via Frontend Transport; Tue, 16 Jan 2024 14:33:12 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 16 Jan
+ 2024 06:33:03 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 16 Jan 2024 06:33:03 -0800
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Tue, 16 Jan 2024 06:33:00 -0800
 From: Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <20240112170622.GA2272469@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR01CA0172.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::16) To PH8PR12MB6674.namprd12.prod.outlook.com
- (2603:10b6:510:1c1::18)
+To: <bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2] PCI: Clear errors logged in Secondary Status Register
+Date: Tue, 16 Jan 2024 20:02:58 +0530
+Message-ID: <20240116143258.483235-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240104013229.693041-1-vidyas@nvidia.com>
+References: <20240104013229.693041-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6674:EE_|PH7PR12MB7211:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca544864-8138-4364-e1ac-08dc169a9da0
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|IA0PR12MB8982:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee05d27c-f132-417e-e689-08dc16a0115b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	ee9t0PS/Th2IzlHT1bWeMT2lXqc+cg7usKks2QRL3JqgC0OwLlkKhD9YFBDQ1YN5NezAd7UrAsWo9ETWA9G4M2X3PghO9NuS07DtubMFzyT8eizop+phPdgpDjh/oXdkn4D7pqtXiHyQw2Cy7W6t0g+iEx8IMDyCBv2e3snzBmUupekJiwQWy7tV5lNLVsZ+6PgVNbS5gtugN/ZZL9d2JRIckQGRmsmHiQ4b9ZTOe1Iz4NecjkIshPKiNbxb4DNI7cHZKLiR5fsMdsVL4lom6m+k/v7vAyhfsVw+G+RhNW44W2pEj6mr1CQAybfusFgSSZk3Dg9Lz0pDXIw1srn2XUWJP/as2Ee7UXTCTdAbJebbizyMZkDJ4dcqfTowiiIiIh4lrMcgpJEe0yPHRRV/aOQs1gFnAet+9Fj4urxYmh/znRSqXxG5lqXEg1IT5TFV7koGlrTMJjnSwTJZINIH4aX4aiHKKAjLdqIPDyW7OFUlCciVYnAk720luO+Bx6vVTH0UvGao2AaXr6DPA+QbwUBEjaTAleY0l39Moj9ZTUfOjmFGBUV8Tr5c67ENjSAfK8CPGU47T23R05PVUws9bZjrIkr3DhrR6gFC8CXAj3aEYasNwISvOp1S0EkTPjy/uilyJbtYBTS37SF4lRR5CLeE0tiRYN5FGU1MxQVMHduL9IwEZY9Tks9CcJl+e/jmJm8FwiKXg+Bbymti/H/27qVgrkD1m1fFL4bdRI9oR60=
+	8k9MPPa/z7PWEugWSeuKValHgkOblPHq4Y7LPkNgDltOq5hXhCdHAdU8oWno1E4p7UiZ4hnwcFWfA/G7qZJb7wOZCBTB/lo6JTYs3ppDjLHM3o0uAxkSpmFjjrZ8mYTH5RyKBrmFCHXEq3WZiuDXxO30Pi7htWKQE/A3wsNjVojF3G3jsMItnx0wIT7KZ/sxdWc6E5RcnmEqoWlVPuYWTojQWhgPZ1oD79VVm8t0MWAFnOzuLlO6M41UlyEgbydIOg9u26nNOz8q1v2bUqMi//9ocaBQFhj7sJhVzh8WaAg/ohBg1QqZwPz5YJZcUi6xVarTiCE+87OpLwDp83QoGsE35dCRuXnJp1EbV+lIA0ah7lSVFDo2ltus8wQGFMF4wPObZxjGxx6k36GamND4j6LxQmFgzc1eVrZJzrhZpHjnwlHBK7VzpJbZn2UMnGPlD1e99e9qEa58WJC585a7PDMHPdFXtnj6IeUHZQ48Jds3BYw04q8BgEBDF2GK4Nz71YTDnhSXNn/4QmD8Ucz2svuDDfWoEKtQQIIKSZ1dzkSVDwBpUO+9zNWG0KXLFN1A9FeZOyeW8BidNMwe1eQykqY5TMjc1BJZ50r9Mx/GgncY//h2c7MSHtbEUB6kQBoDeWL7tOZsEbKRoqf1m7dSM0hW3sCfdz3EYbha5n5+HGLWr0cdVZiLdO+AmWG715mxNc+nDj9PyX//Yk1x+07xnYBgOiClZ7tgQmHfrL9hmfdHUk27W3pCXZZ8HK2eUO8c
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(396003)(346002)(136003)(366004)(230922051799003)(230173577357003)(230273577357003)(1800799012)(64100799003)(451199024)(186009)(8676002)(6916009)(6666004)(478600001)(316002)(966005)(66946007)(66556008)(66476007)(6486002)(26005)(6506007)(53546011)(6512007)(2616005)(83380400001)(8936002)(41300700001)(4326008)(5660300002)(2906002)(36756003)(38100700002)(31696002)(86362001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c3VBS2p2NWVKVVhYWVd3SnB1K0VIbHRwTmZXZGI1SXRYMm1BZFd2bitMN0hS?=
- =?utf-8?B?RjJta1BMcElDK0d4WnF5RHVwL081a1NGNkVmZWxabFpTRnAwRStnVlQ3V3FH?=
- =?utf-8?B?c0VBU2h0a0QrVVBRSzFObGdwVDQwSEJpYXBtQUdFTVRCVjFMN2RNbjdDV0xT?=
- =?utf-8?B?UWV3Y1YwRy9QU24wQzRSY0oyNzQveDBnYkJSZ0Rwdk1wb294dVBBQ0srZEEv?=
- =?utf-8?B?VkJrSXZPbFkvMFZTZk1aSjVSa3M3WTJ1WFMvbVd2NjhRUndrTjd3UU9iWlVv?=
- =?utf-8?B?V2pQYVpJLzY4Y2JzV1kvWGVneitObEpTME5UNXJmVnoxMi95aDJmMWV6NXdC?=
- =?utf-8?B?S3hXYU9XcWhuYlNseUtSc0Y0TzJoWHVub3dRbVZLY0cxY2lRajZNL3VYam10?=
- =?utf-8?B?N1BaQzV4Y3hreEkxd1pkblE5WE9PakhlOFJiMU13eHdKNFBkbUFIN3Z1dGlM?=
- =?utf-8?B?OVR1NEVvQVRyNS9ReDBjaWE4RUxRbkU4UTFhWWRFRUZIaFlxK1VpYUpaSHRy?=
- =?utf-8?B?Ylp1aGpFTE43YVlYZkJDUzVJWHNvajZSSitBQmw1TGtqTHZMUS9Za2ZyN0Iz?=
- =?utf-8?B?cmlKRytNNWlubFZidjNpSmRQUStZYzhoeE1jZzlKRFJUVkdRdDRtUFBMalFJ?=
- =?utf-8?B?eURKRjJ2eGQyTVl1eDZSUVR5d1pHSmh0ZjZsYXVwUWhqM1BqcGl5cUlnRTBn?=
- =?utf-8?B?djhYOWlackd3MG80bXByZFhPTVZrVVU1MmhvZW9zU1grdDJJN3dCM1dxU202?=
- =?utf-8?B?ekt1azczYm5QUjRyd3VPQmNkdjN4ZzFVbHVWdjdsd2FoeStucnRjWCtmb3Z6?=
- =?utf-8?B?SHVhZFJmTE5KOWNwVURxdkdKckQ1ajZsb1ZUUktiTjFWV1VMOU9Bd0pSSHNt?=
- =?utf-8?B?dU83QllQdjd3bFM4UkdqbGtvRS9vaWhZMk5udkJkaDZ0T2VPRUl0MTBBQ25n?=
- =?utf-8?B?NHptRnRWL21vTnp4bkNpL1lzTVlTS1FkcWVTSjhIT09QYnFQSmluekhWNkxu?=
- =?utf-8?B?QUlEVWlQdll1YjJQVmJrTlROV0YrZnp4KzJGeHB0OGh5c2hLai8xamRXcXY1?=
- =?utf-8?B?a2MvRUtuQmwrNlB4c1NlUXlTWDhRaFZzU3oraEdhem42b0RrdVoxTEErc0xh?=
- =?utf-8?B?WHVWV2dyeFRIRU4vWWlaZ2NSS3lVMVR1SUdISmJtY1d6bE55VVBTZkxZOHRO?=
- =?utf-8?B?MnRRWnBHOHRZU2l1UmVjTENmT2c5MkIwd3doMkNqazFqdEl1S1lQOVNlMnVD?=
- =?utf-8?B?MG1sdWVNME1PMSs4anNFWUQ1SGNvODJFVm9kU2F3ekwrSlh4dDhvWUs1Visx?=
- =?utf-8?B?OHRzYlNDK3pLQlJNWFc2SFFIcUVHRlhTeVRPbC9JNWsxa3VHT3N6eTBuS3Bz?=
- =?utf-8?B?MHV3T251ZWhFWkdlVEdsZ0NNTzNIajM1SzZaUXAwU3hoeDEyd3hTd0YyM3NU?=
- =?utf-8?B?UG9NMU9BcS9qenl1ZmlsejNaWlBzQXovNnk1b3JRUWg5bk1La016WHp5T1Qv?=
- =?utf-8?B?VzdxcFJYSFVCVG1FWGIyVmtIMzlORmFaeXlkZElHZitNcDRPaFplZ0NSS0g1?=
- =?utf-8?B?OFpWUlptMHdQWnl5ZGhNL01COFdsZmlsR3drRitXNzdoQ3kvMDl2bXdWVWdM?=
- =?utf-8?B?NEZEQjArVnl4THp4T3ZHS21URU9zMFJ1Y25VY0tMZTNnT3dqL3FNY3E3NFlN?=
- =?utf-8?B?ZXJMWWJmUndodklSRGMva1FHMXRqTE5GTTFJbjdXRWd6eFV2RjdQNE5UeTJS?=
- =?utf-8?B?TEZHRE1RQnVGN0J0K2lYQkxaREFBVWViMVcrTW1hVi96c1FORmsxa3YrcFVV?=
- =?utf-8?B?SkhJR3pvWXlVa01PclJqZkRCaEppT0ZMZnpYamZYNnI4S21UMGYrVDFTZWN5?=
- =?utf-8?B?SWZmUzk0THh4bklkUGFMdW03MDdLKzl3V3prSUxIc2tBNmJ5NVU3MXBOajF4?=
- =?utf-8?B?dnVXWUVPbWdkU2pmYm0zRWd5L2JqODhJV1hCdUduVXJDY3Bvd2lUQ2M3bUk4?=
- =?utf-8?B?TnRqakZYZCsyazBoOEJtU09jRHJ1aW1DbTVJbTBRTnl6RElEbG1RdlczelRr?=
- =?utf-8?B?OEpXTXk5ZHlRYUxnK3ljREVEZ2xOYkpGZDFIalhTTEZZcG5YaUd4cTlzT1Jm?=
- =?utf-8?Q?/UD/oBJhSmIMGPf8eNsjnG5YU?=
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(39860400002)(376002)(396003)(230922051799003)(64100799003)(82310400011)(451199024)(1800799012)(186009)(40470700004)(36840700001)(46966006)(5660300002)(86362001)(41300700001)(82740400003)(7636003)(356005)(2906002)(6916009)(316002)(70206006)(54906003)(70586007)(2616005)(7696005)(478600001)(4326008)(36860700001)(47076005)(8936002)(8676002)(336012)(426003)(26005)(83380400001)(40460700003)(36756003)(40480700001)(1076003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca544864-8138-4364-e1ac-08dc169a9da0
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 13:54:10.8620
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2024 14:33:12.1269
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee05d27c-f132-417e-e689-08dc16a0115b
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X0j+KzBnAYUQqxa+vOzYeQKsrdQ/3Kdf6dt28zNuyZPlLJz1IDHvCbj1J4AfNVW5OiEaHjnaGkwy/nbhgYHw/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7211
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8982
 
+The enumeration process leaves the 'Received Master Abort' bit set in
+the Secondary Status Register of the downstream port in the following
+scenarios.
 
+(1) The device connected to the downstream port has ARI capability
+    and that makes the kernel set the 'ARI Forwarding Enable' bit in
+    the Device Control 2 Register of the downstream port. This
+    effectively makes the downstream port forward the configuration
+    requests targeting the devices downstream of it, even though they
+    don't exist in reality. It causes the downstream devices return
+    completions with UR set in the status in turn causing 'Received
+    Master Abort' bit set.
 
-On 1/12/2024 10:36 PM, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Thu, Jan 04, 2024 at 07:02:29AM +0530, Vidya Sagar wrote:
->> If a downstream port has a PCIe switch connected to it, the enumeration
->> process leaves the 'Received Master Abort' bit set in the Secondary
->> Status Register of the downstream port because of the Unsupported
->> Requests (URs) take place in the downstream hierarchy. Since the
->> ownership of Secondary Status Register always lies with the OS including
->> systems with Firmware-First approach for error handling[1], clear the
->> error status bits in the Secondary Status Register post enumeration.
-> 
-> I would expect these URs to happen when enumerating below *all* PCIe
-> Root Ports (not just when switches are present), and Master Aborts
-> should happen in conventional PCI.
-Agree.
-There was a misunderstanding from my side because of which I had said
-that the 'Received Master Abort' bit gets set only if there is a PCIe
-switch connected downstream. I'll correct it in my next patch.
+    In contrast, if the downstream device doesn't have ARI capability,
+    the 'ARI Forwarding Enable' bit in the downstream port is not set
+    and any configuration requests targeting the downstream devices
+    that don't exist are terminated (section 6.13 of PCI Express Base
+    6.0 spec) in the downstream port itself resulting in no change of
+    the 'Received Master Abort' bit.
 
-> 
-> Similarly, I don't think Firmware-First is relevant here.  Only the
-> fact that the OS owns PCI_SEC_STATUS because there's no mechanism to
-> negotiate for platform ownership of it.
-I mentioned about Firmware-First as a continuation to the discussion we
-had in [1]. But, agree that, this being a standalone patch, there is no
-need to mentioned about Firmware-First flow.
+(2) A PCIe switch is connected to the downstream port and when the
+    enumeration flow tries to explore the presence of devices that
+    don't really exist downstream of the switch, the downstream
+    port receives the completions with UR set causing the 'Received
+    Master Abort' bit set.
 
-> 
-> We're in the merge window right now, so we'll start merging v6.9
-> material after v6.8-rc1 is tagged.
-> 
->> [1] https://lore.kernel.org/all/1fb9d746-0695-4d19-af98-f442f31cd464@nvidia.com/T/
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->>   drivers/pci/probe.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 43159965e09e..edf8202465d8 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->>        }
->>
->>   out:
->> +     /* Clear errors in the Secondary Status Register */
->> +     pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
->> +
->>        pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
->>
->>        pm_runtime_put(&dev->dev);
->> --
->> 2.25.1
->>
+Clear 'Received Master Abort' bit to keep the bridge device in a clean
+state post enumeration.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+V2:
+* Changed commit message based on Bjorn's feedback
+
+ drivers/pci/probe.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 795534589b98..640d2871b061 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1470,6 +1470,9 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	}
+ 
+ out:
++	/* Clear errors in the Secondary Status Register */
++	pci_write_config_word(dev, PCI_SEC_STATUS, 0xffff);
++
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+ 
+ 	pm_runtime_put(&dev->dev);
+-- 
+2.25.1
+
 
