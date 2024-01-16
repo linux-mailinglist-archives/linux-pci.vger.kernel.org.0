@@ -1,54 +1,53 @@
-Return-Path: <linux-pci+bounces-2238-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B18B482FCE1
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 23:32:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 067CC82FDD9
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 00:54:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDDE51C27FBE
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 22:32:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 795B9B24BC1
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Jan 2024 23:54:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF0D83D3B1;
-	Tue, 16 Jan 2024 21:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BB467C5D;
+	Tue, 16 Jan 2024 23:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlSoDRge"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A494364C5
-	for <linux-pci@vger.kernel.org>; Tue, 16 Jan 2024 21:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFAD67C50
+	for <linux-pci@vger.kernel.org>; Tue, 16 Jan 2024 23:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705441230; cv=none; b=f86n5B0wP2iP2DZtegv7VMBJdCbxTyjfmuGN7NaGPJ9wzDUw1ZBra4U9rUz3JO/ZqeTM2yeTgSZJTBDI7UpH2kl3GMNEcqjYHF9xug6bpXUzfQWZaPw7wKovNBDopuaiwbpobfbJRv2YV7Oi/CMxBI3X90GRIXAmwfQbWWJepgA=
+	t=1705449248; cv=none; b=Jdd4NgC06EWiqKLZ7ooE2BFKbujnfdF67xROU85iJAN0Onp0iIUg8pOtne5T+FEilwrxHOViBR3q/wJb+Jakl/P0V3P2zkuRXeZLB+93yYhK84vAPVElgKM7NbT254b65PNnmE6Cbll3D2YwfEnTwLvrwDFtO2jJpfKHfSSV9Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705441230; c=relaxed/simple;
-	bh=tvdMsm9MAbU2KTmtR20qA5yN6GLHmSzIv222nnd1ZZ0=;
-	h=Received:From:Date:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=VtGCnnz3tRgYERog5NRkQKor0OcSYTQ36Z5Zfab1RloLSFDFvpNe7gHMIwwMBxb0ZApXcSh1An6Frq3nfJ28gmG7iWBpbsQAg7msLQ1LvKfhdoTNWW0zKrXmkZesJ6tEEdJ/EYhWQ8AKMUuu1HkoyrIJ5RzAMC1YJ5SYUz1a+hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-24-108.elisa-laajakaista.fi [88.113.24.108])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id dc7f56ef-b4b7-11ee-abf4-005056bdd08f;
-	Tue, 16 Jan 2024 23:40:26 +0200 (EET)
-From: andy.shevchenko@gmail.com
-Date: Tue, 16 Jan 2024 23:40:26 +0200
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 09/10] pci: devres: remove legacy pcim_release()
-Message-ID: <Zab3yr6J1S-2ujT9@surfacebook.localdomain>
-References: <20240115144655.32046-2-pstanner@redhat.com>
- <20240115144655.32046-11-pstanner@redhat.com>
+	s=arc-20240116; t=1705449248; c=relaxed/simple;
+	bh=sEBCwKiR5hjmre4jZ+2nLQiYzz/HQ3WCcShoHn6N2gE=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=W4LtmXs4mutEvZkPNFpSucNJpdp7aO9VwCcoEtspJbdYivwM1nyaEiAVaZ3qd0pgH2sq1ama2jMQQk7I3rrQQ494kvh7ViYuQ1rRYSd8PjIzABSrO91t8hOEUqJ/WJIYRE2LamZrQntC+wqwGN+kyGjtS9DDXsXcp4mjHAEKjWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlSoDRge; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77453C433F1;
+	Tue, 16 Jan 2024 23:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705449247;
+	bh=sEBCwKiR5hjmre4jZ+2nLQiYzz/HQ3WCcShoHn6N2gE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=HlSoDRgekRUrJXJhL0epP+YrmvRgaa4ohaMNKQsDlwIGVmkzlgDb5zD+Ez6nBiz/U
+	 39bqZiZXKrN7dnXB3ukNU1FoU4v0fqgNi2nfCrqcTTb0hOzWgwolf5wYvgSfvmWCI6
+	 I/XjDJAEUzLxL1NJzGITaXtfr/iQPlisMOsJyOTjd4RKAu2QaVdY/o1IQ8IJWwhGj8
+	 M4HnFRfFe8KLccv6fHS+wX82lhNs/A0ugGRB8cn0Kp+UsXALrgjJ0ChLQiUuk9MsSq
+	 mjNl7ud1ISCdqnJshvizS0BK89cdS2NlWF8Nw3kKFdGqULKZgHnAav0HAlfyRr6zJ0
+	 52Vt3l5H4//xA==
+Date: Tue, 16 Jan 2024 17:54:05 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
+ rootports
+Message-ID: <20240116235405.GA111628@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,39 +56,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240115144655.32046-11-pstanner@redhat.com>
+In-Reply-To: <2728ad9d38442510c5e0c8174d0f7aae6ff247ac.camel@linux.intel.com>
 
-Mon, Jan 15, 2024 at 03:46:20PM +0100, Philipp Stanner kirjoitti:
-> Thanks to preceding cleanup steps, pcim_release() is now not needed
-> anymore and can be replaced by pcim_disable_device(), which is the exact
-> counterpart to pcim_enable_device().
-> This permits removing further parts of the old devres API.
-> 
-> Replace pcim_release() with pcim_disable_device().
-> Remove the now surplus get_dr() function.
+On Tue, Dec 05, 2023 at 03:20:27PM -0700, Nirmal Patel wrote:
+> ...
 
-...
+> In guest, vmd is passthrough including pci topology behind vmd. ...
 
-> +	devm_add_action(&pdev->dev, pcim_disable_device, pdev);
+IIUC this says the VMD bridge itself is passed through to the guest,
+as well as the VMD Root Ports and devices below them.
 
-No error check?
+Why is the VMD bridge itself passed through to the guest?  I assume
+the host OS vmd driver enables the VMD bridge functionality, i.e., in
+vmd_enable_domain()?
 
-> +	return pci_enable_device(pdev);
+I gleaned this from the dmesg logs at
+https://bugzilla.kernel.org/show_bug.cgi?id=215027.  I assume these
+are from the host:
 
-Maybe
+  pci 0000:00:0e.0: [8086:467f] type 00         # VMD Endpoint
+  vmd 0000:00:0e.0: PCI host bridge to bus 10000:e0
+  pci_bus 10000:e0: root bus resource [bus e0-ff]
+  pci 10000:e0:06.0: [8086:464d] type 01        # VMD Root Port
+  pci 10000:e0:06.0: PCI bridge to [bus e1]
+  pci 10000:e1:00.0: [144d:a80a] type 00        # NVMe
+  nvme 10000:e1:00.0: PCI INT A: not connected
 
-	ret = pci_enable_device(...);
-	if (ret)
-		return ret;
+What does it look like in the guest?  Does the guest see all three of
+these devices (VMD Endpoint, VMD Root Port, NVMe)?
 
-	return devm_add_action_or_reset(...)?
+If the guest sees the VMD Endpoint, what does it do with it?  Does the
+host vmd driver coordinate with the guest vmd driver?
 
-I could think of side effects of this, so perhaps the commit message and/or
-code needs a comment on why the above proposal can _not_ be used?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bjorn
 
