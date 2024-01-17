@@ -1,183 +1,181 @@
-Return-Path: <linux-pci+bounces-2257-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2258-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1168D830320
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 11:03:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F5D0830342
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 11:07:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF6E5287CF5
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 10:03:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48DA21C25074
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 10:07:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20DBD19BA6;
-	Wed, 17 Jan 2024 09:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BbnyZAoH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A16BF14291;
+	Wed, 17 Jan 2024 10:06:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EEC14A83
-	for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 09:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0975014282;
+	Wed, 17 Jan 2024 10:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705485577; cv=none; b=hsx/3pu783BOjLj4VqgZIAe3VPLHmTv4HEv1KxrYr/bUJi/dPmEgYJzzDZpJaZWaWujavFUulhoFeambV976pahXoMtLCLktySAl6p8pCP5oWjPSvEOED4PseV8pLk9JcjvO1vMKcU6ATRTTiAA2hsmuJbndQi+OItUr6hl3F/c=
+	t=1705485978; cv=none; b=pQBfCZa5Xvg+AfObSRFSv6xGACocS7axxPOJkr5ptCbNWh+PyPeCVpxWlw5qNQskovfXS3DBdePfN/VsGlXbeMh/t+DPxYKX5k2vm71ED3uHvCjMhC/JeCcwgGD+VEpe+RIkciK5seXZyIcrU9/MnA6DM1rF3lhJc3k2KwU7Sqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705485577; c=relaxed/simple;
-	bh=BXWuaM6cUVSlh8BuiMCFX+aJ/lumUdUFLhol1mX3ptg=;
-	h=DKIM-Signature:Received:X-MC-Unique:Received:
-	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
-	 X-Google-Smtp-Source:X-Received:Received:Message-ID:Subject:From:
-	 To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version; b=sqfuFr6Y/vkWJ70gPkHnpeY0hqJSeFklIKzNtEJER10rK9hmw6ECpDTEm5ABMnD7qzmOIebhx7CnoH1DZUyeprIUjcQpPfKwGPctb8mMVmpcD/STzXbnihAPXuNyhVe0LXFwuSQPsqnKIKi+GVTOyYAxbRqhUNfWn4F0vNAOhZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BbnyZAoH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705485574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BXWuaM6cUVSlh8BuiMCFX+aJ/lumUdUFLhol1mX3ptg=;
-	b=BbnyZAoH62b58IPXKoIkpMV9SVK+sTZkVFeiWSWOkSFH9Fy+e9rLwUKGRux3drUYy+kWUi
-	f3TENXbuMn6f2vTaAvgIIpGA65RISF6/Uh6Ez5SZBKweALQwXFQLc8/9uczT/j7JTZlBwo
-	jHFfgJi9dcjnOVYbtLoJrolOxfMD+Q4=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-378-AS8-7XWiMb-F4igsuu6wpA-1; Wed, 17 Jan 2024 04:59:33 -0500
-X-MC-Unique: AS8-7XWiMb-F4igsuu6wpA-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78315f4f5c2so194913485a.0
-        for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 01:59:32 -0800 (PST)
+	s=arc-20240116; t=1705485978; c=relaxed/simple;
+	bh=+cxx2b/N2LvNg0nWquPf/YpjQZ5mfMypJFmZWd9uQdc=;
+	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:Received:Received:X-Received:
+	 MIME-Version:References:In-Reply-To:From:Date:
+	 X-Gmail-Original-Message-ID:Message-ID:Subject:To:Cc:Content-Type:
+	 Content-Transfer-Encoding; b=tBoWVinOOOmBbgRDjAGq9ns14o2g5VemiOeTCg7rmZ+DoPGbJT7PsjpOlWBwBENr2aJrXQo5971fe1EeRrzwYMMOSZG036+B4NiDk9DNWZ0md+jAn4unqncTkVIeRuCUTpMYFwum1WCYVKGFLnAhp38fGxhzI70iZS0sEa1ZRvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5f68af028afso92131237b3.2;
+        Wed, 17 Jan 2024 02:06:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705485572; x=1706090372;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BXWuaM6cUVSlh8BuiMCFX+aJ/lumUdUFLhol1mX3ptg=;
-        b=RFiFMQi1Pyf3ruMbkDEWyyoFReYc+qgpBKhjvs9vrsgB4v1RQBjl6+TbF/QelpQHtf
-         V8HT1thzvx1AQcaMeK1MCwY550v4vx32znx3kB4rfkc6xIhmDC/Sj1z5S26OXBvDrR8m
-         lopKG3SCZ1XTt/488EQReYXUnLE0xFkbNjdwOHmnDguqkATL52gJUIzZ5MynDi/ovW/T
-         W+dtiPXc1AAVjDwLu1fcATSjN1KHXp4GEgAhZVwW1RgnwacLruD6PLVmnMfEPuxtsGIx
-         Kr+oPCH6KApQWNtaL/1uNrBBnBx6zta4alJucab8BxeKmoLRsgwG4TycYcxfRt7TmQyu
-         2p5g==
-X-Gm-Message-State: AOJu0Yy0xv5bElbnZ3BZM/qG7BBeKbeSM1GbtckqcV8IfH4vhZhE8Z1S
-	dmqxu7JJExHMylvS/UML+hnXbYH5YfITinjiwq++GT3hBdrrW3XHBVgFncK6l71OwLldwMFb7ok
-	1RtAZXbCIAq857wfsCxolAblDCx18
-X-Received: by 2002:a05:620a:2712:b0:783:54f7:87e3 with SMTP id b18-20020a05620a271200b0078354f787e3mr1912719qkp.3.1705485572529;
-        Wed, 17 Jan 2024 01:59:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFSqiqfszMpvjq99qT6Qsh4E31ne0xTg2kSjDD+8OcYXlRuSFlLMN+j9bbV0ag4d0WislsuJQ==
-X-Received: by 2002:a05:620a:2712:b0:783:54f7:87e3 with SMTP id b18-20020a05620a271200b0078354f787e3mr1912700qkp.3.1705485572147;
-        Wed, 17 Jan 2024 01:59:32 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id w9-20020a05620a148900b0078322355fb7sm4380924qkj.20.2024.01.17.01.59.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 01:59:31 -0800 (PST)
-Message-ID: <5e760f104c75efe37100cee5a26b7ee3581f03b4.camel@redhat.com>
-Subject: Re: [PATCH 00/10] Make PCI's devres API more consistent
-From: Philipp Stanner <pstanner@redhat.com>
-To: andy.shevchenko@gmail.com
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas
- <bhelgaas@google.com>, Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
- linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,  linux-pci@vger.kernel.org
-Date: Wed, 17 Jan 2024 10:59:29 +0100
-In-Reply-To: <ZabyY3csP0y-p7lb@surfacebook.localdomain>
-References: <20240115144655.32046-2-pstanner@redhat.com>
-	 <ZabyY3csP0y-p7lb@surfacebook.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        d=1e100.net; s=20230601; t=1705485975; x=1706090775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ktKDg1Kr1k5upORAnFgj9TjW3VLUUCKOkhGf1ZiTWq0=;
+        b=mFJmS23fQc++YO/zFXRwgtK6yS1H0p2B67RZ2WrktMJuaSr5q5ZP3fK9FDOT2tjwKl
+         wBxJEpMKMTENBQzLKB+5gNSc7haazIGK4bGuaz8TK6YBCOAllduQ84NTI3IvaI6++QIc
+         Jn9Zw2idHIJB3te/cb2s13XR1OdnPUX5xBmcjeUJasUnKZEKoSM1XMoTPqj1T87k84UT
+         qEFtmf+LnWplPEoZ65rE101grFNd28WywjsWwRenMZNh7TkKG/GcnLx82yL3LQKFCtEq
+         DsVssmQvaLX2oXctuwnWlxFux+KEcdc1PABMOxRAIU8+UsGk8aJyLtw/EHJwPn7yFLKd
+         dvxg==
+X-Gm-Message-State: AOJu0YwyXFpO1PtvBCus81+IgUNlnvrvx4eAom/zIY7agMz4xtctefIn
+	TY0sYB6u9Q8JzIdrL/VneoD5tnu31BOVvQ==
+X-Google-Smtp-Source: AGHT+IGvsKro72mIsn7zC0rDold1fCYfQbqHaTRxf3TuiU8P9HI/5ZCiNSd7B6rJpaD3yJoF6v7fBw==
+X-Received: by 2002:a81:e602:0:b0:5ee:65b3:f289 with SMTP id u2-20020a81e602000000b005ee65b3f289mr4814207ywl.3.1705485974739;
+        Wed, 17 Jan 2024 02:06:14 -0800 (PST)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id d4-20020a0ddb04000000b005ff5fc95e34sm982467ywe.55.2024.01.17.02.06.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 02:06:14 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5e54d40cca2so83078567b3.3;
+        Wed, 17 Jan 2024 02:06:14 -0800 (PST)
+X-Received: by 2002:a05:690c:fd5:b0:5ee:7299:e2cf with SMTP id
+ dg21-20020a05690c0fd500b005ee7299e2cfmr5153857ywb.52.1705485974135; Wed, 17
+ Jan 2024 02:06:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <cover.1704788539.git.ysato@users.sourceforge.jp>
+ <bc794e2165244bd0cee81bc0106f1e2d1bef1613.1704788539.git.ysato@users.sourceforge.jp>
+ <CACRpkdYLsf-uWdMCTpieji7u1-H3oTGojvC4xm7Erox97XJ6RQ@mail.gmail.com> <8734uwwavx.wl-ysato@users.sourceforge.jp>
+In-Reply-To: <8734uwwavx.wl-ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 17 Jan 2024 11:06:02 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX_2Tgm2LLM1TgFrkLdokD99gAeKHJWrKy9Y2A+wtf5RA@mail.gmail.com>
+Message-ID: <CAMuHMdX_2Tgm2LLM1TgFrkLdokD99gAeKHJWrKy9Y2A+wtf5RA@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 17/37] dt-bindings: interrupt-controller:
+ renesas,sh7751-intc: Add json-schema
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-sh@vger.kernel.org, 
+	Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-01-16 at 23:17 +0200, andy.shevchenko@gmail.com wrote:
-> Mon, Jan 15, 2024 at 03:46:11PM +0100, Philipp Stanner kirjoitti:
-> > =C2=A1Hola!
->=20
-> i? Vim user? :-)
+Hi Sato-san,
 
-The Dark Side of the Force is the path to many abilities, that some
-consider to be... unnatural
-https://www.neo-layout.org/
+On Wed, Jan 17, 2024 at 10:46=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> On Tue, 09 Jan 2024 21:30:34 +0900,
+> Linus Walleij wrote:
+> > On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
+> > <ysato@users.sourceforge.jp> wrote:
+> >
+> > > +  renesas,icr-irlm:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: If true four independent interrupt requests mode (I=
+CR.IRLM is 1).
+> > > +
+> > > +  renesas,ipr-map:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +    description: |
+> > > +      IRQ to IPR mapping definition.
+> > > +      1st - INTEVT code
+> > > +      2nd - Register
+> > > +      3rd - bit index
+> >
+> > (...)
+> >
+> > > +            renesas,ipr-map =3D <0x240 IPRD IPR_B12>, /* IRL0 */
+> > > +                              <0x2a0 IPRD IPR_B8>,  /* IRL1 */
+> > > +                              <0x300 IPRD IPR_B4>,  /* IRL2 */
+> > > +                              <0x360 IPRD IPR_B0>,  /* IRL3 */
+> > (...)
+> >
+> > Is it really necessary to have all this in the device tree?
+> >
+> > You know from the compatible that this is "renesas,sh7751-intc"
+> > and I bet this table will be the same for any sh7751 right?
+> >
+> > Then just put it in a table in the driver instead and skip this from
+> > the device tree and bindings. If more interrupt controllers need
+> > to be supported by the driver, you can simply look up the table from
+> > the compatible string.
+>
+> The SH interrupt controller has the same structure, only this part is dif=
+ferent for each SoC.
+> Currently, we are targeting only the 7751, but in the future we plan to h=
+andle all SoCs.
+> Is it better to differentiate SoC only by compatible?
 
->=20
-> > PCI's devres API suffers several weaknesses:
-> >=20
-> > 1. There are functions prefixed with pcim_. Those are always
-> > managed
-> > =C2=A0=C2=A0 counterparts to never-managed functions prefixed with pci_=
- =E2=80=93 or
-> > so one
-> > =C2=A0=C2=A0 would like to think. There are some apparently unmanaged
-> > functions
-> > =C2=A0=C2=A0 (all region-request / release functions, and pci_intx()) w=
-hich
-> > =C2=A0=C2=A0 suddenly become managed once the user has initialized the =
-device
-> > with
-> > =C2=A0=C2=A0 pcim_enable_device() instead of pci_enable_device(). This
-> > "sometimes
-> > =C2=A0=C2=A0 yes, sometimes no" nature of those functions is confusing =
-and
-> > =C2=A0=C2=A0 therefore bug-provoking. In fact, it has already caused a =
-bug in
-> > DRM.
-> > =C2=A0=C2=A0 The last patch in this series fixes that bug.
-> > 2. iomappings: Instead of giving each mapping its own callback, the
-> > =C2=A0=C2=A0 existing API uses a statically allocated struct tracking o=
-ne
-> > mapping
-> > =C2=A0=C2=A0 per bar. This is not extensible. Especially, you can't cre=
-ate
-> > =C2=A0=C2=A0 _ranged_ managed mappings that way, which many drivers wan=
-t.
-> > 3. Managed request functions only exist as "plural versions" with a
-> > =C2=A0=C2=A0 bit-mask as a parameter. That's quite over-engineered
-> > considering
-> > =C2=A0=C2=A0 that each user only ever mapps one, maybe two bars.
-> >=20
-> > This series:
-> > - add a set of new "singular" devres functions that use devres the
-> > way
-> > =C2=A0 its intended, with one callback per resource.
-> > - deprecates the existing iomap-table mechanism.
-> > - deprecates the hybrid nature of pci_ functions.
-> > - preserves backwards compatibility so that drivers using the
-> > existing
-> > =C2=A0 API won't notice any changes.
-> > - adds documentation, especially some warning users about the
-> > =C2=A0 complicated nature of PCI's devres.
->=20
-> Instead of adding pcim_intx(), please provide proper one for
-> pci_alloc_irq_vectors(). Ideally it would be nice to deprecate
-> old IRQ management functions in PCI core and delete them in the
-> future.
->=20
+Yes, it is better to differentiate SoC only by compatible value.
 
-In order to deprecate the intermingling with half-managed hyprid devres
-in pci.c, you need to have pci_intx() be backwards compatible. Unless
-you can remove it at once.
-And the least broken way to do that I thought would be pcim_intx(),
-because that's consistent with how I make pci_request_region() & Co.
-call into their managed counterparts.
+When you describe all differences explicitly using properties, you
+might discover later that you missed something important, causing
+backwards compatibility issues with old DTBs.
+DT is a stable ABI, while you can always update a driver when needed.
 
-There are 25 users of pci_intx().
-We'd have to look how many of them call pcim_enable_device() and how
-easy they would be to port to... pci_alloc_irq_vectors() you say? I
-haven't used that before. Would have to look into it and see how we
-could do that.
+Gr{oetje,eeting}s,
 
+                        Geert
 
-P.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
