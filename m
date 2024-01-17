@@ -1,65 +1,76 @@
-Return-Path: <linux-pci+bounces-2271-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2272-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF7BA830459
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 12:16:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CD65830462
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 12:18:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87371287AB9
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 11:16:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B53B91C21431
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 11:18:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F3B1D555;
-	Wed, 17 Jan 2024 11:16:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B91B1D697;
+	Wed, 17 Jan 2024 11:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AJG9/SSh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SX7pIKLW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0271B814;
-	Wed, 17 Jan 2024 11:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724611DDCB
+	for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 11:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705490176; cv=none; b=DWZYJPv1HQFSkRZaYDJNgTeyaiGFbPAGmoziSzfjK8XhEe37aQAP0OfH6/n8IpiLb6O41CsfADI/FzgD1CArUQE2OSfgQlfkdnpoiCW9qeCXifqMdHf8/KYKcO6cRV5ibMEK+A5O7kDnjIkp8d9n298WH3yv23yHlUstMoEJY5w=
+	t=1705490282; cv=none; b=ss9PBjMlPZxU2OQwDVdoyk4cxByXgoX4MiXM71ovwcdZzu2hnHzgIO/1ZyfJtnuiGVVBqlen8IvM2stNWbyKNzM331gLQGZRjH0vnu+qd7F5z/XjP6zAY8OTYcqXd70sF8F9aGiAp6fgFM8+k8YmKaF4T+K2ZHl6cPLmdIYFrqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705490176; c=relaxed/simple;
-	bh=fnSmosHPC+x/JiwxXYkr5lrP52Jf6CQr3IcKZJn6slY=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:CC:Subject:
-	 Content-Language:To:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:X-EXCLAIMER-MD-CONFIG; b=OEUsdCCIgOX3V9nuXgNkGBHdlQ5HWUEYrqLmMpiq0cd7EFFcn8BLDlC9azxVjMughVzWdpaXkk35vwXE+FN9x3waJON3jhSc/PXEtUF3uBlkFiQd77CyE3yj3GxDaMex5th7R1vp+pow065LmqNiGsxZD0RgSQmO+p3Klj0gxI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AJG9/SSh; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40HBFuc8046011;
-	Wed, 17 Jan 2024 05:15:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705490156;
-	bh=oNbdAGa1Ex4tt8z5/1N6Da7Zj6VObjuv7HWDiH8tqo8=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=AJG9/SShq+H50qmdX8ser0mPVUOyjwud1qkGbrF4S6cF4wNah9v63jDCyCCsSLtVC
-	 uSTc29xblaEaUWrqHbYu7OdNKXB+DO5UJ4s5aEVuTPmMvFuI3KD6TI1+HhgxpZa9QD
-	 c4fxGEUsLAzEdLpjXmHytX6DkqHhHmJhFuFBuHSI=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40HBFulM071669
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 17 Jan 2024 05:15:56 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
- Jan 2024 05:15:55 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 17 Jan 2024 05:15:55 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40HBFpTR107080;
-	Wed, 17 Jan 2024 05:15:52 -0600
-Message-ID: <e79a1896-470e-4fba-85b0-f857a4290cbb@ti.com>
-Date: Wed, 17 Jan 2024 16:45:50 +0530
+	s=arc-20240116; t=1705490282; c=relaxed/simple;
+	bh=QRDKON7BGWmqtF99+d9BGwKh8O6Emw8WrlF7c0fsO9E=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=Mpz7lJpIuoQLWrzoeYu/Mr2Kl7dy/GzVvh90OnGEFub8BnRZQrL2JuAVNreftUgM50Ql7gyDuGi+lfbiFGNA9KEFVYIghCYbCyde1caxc4C2hrDzsxghOoHtfMk6otM5RSoRj66ehA8pwDy25H7Uu/HF8ZxqyT2xbpF8HYwILA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SX7pIKLW; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a26f73732c5so1257742066b.3
+        for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 03:18:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705490279; x=1706095079; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l0p59CgV1xC8KsfSCLQYYUuKamfvRchHMY3FNpvGi04=;
+        b=SX7pIKLWD8PW12h1+WBYI3juFlQOWXIFcy5q0idohiaGLFhMxkusuayZrVSKbdEpK2
+         9RymUiVnfU/tD/l1n7B2Iukzo1UYl3FGpEAbTcGeNkpnO834QNVt8SOr4MpRL9gUIUKM
+         z/y9rkjS3YbjTwvzKTTv4tpARdicbjADDF7umCN2rbd44svMEoXEa2DMQpLkkL4ohGTO
+         mYUuiPjgrqsiBV7Y9ubPDg0JQEKut+2beNDrEVUQj37rApAarrxKV273LZ2ONJCmq8iP
+         Nkbu7IPNZ2c82ZHO5Kjz9rsM83REC8QJjv/LYy1afW88xmpdRbFF6fguw2cNXjbS7Pzw
+         w1yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705490279; x=1706095079;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0p59CgV1xC8KsfSCLQYYUuKamfvRchHMY3FNpvGi04=;
+        b=QZVUOXsq9wcNweDVkzlcne/r5WfV/vWNTfbNDK7ibI8vOP7W7qQOiLq4DketLrx1Ab
+         nM4yEWBAPMOVE9/zEADfsIyDvzsyh62jTU4clSRTc9qyworvuG1FLeJmO7md3FdgQZLy
+         rsvO/z0slKYwdAtglfw899Rik2pPRYaWf2cyUcUoHXkzzt63RAgYbXuwsQVVIQD2Ro57
+         aQXYDhMQCwRxiAKe1YEYQvRV1HWY9DbeqO1Gm3Nj+GdtacO8ttvDJVpQq52uzMPYX++W
+         ijmjlj7JBHI1/r3SJQsZ0YTielH02hCgb2Oqd6MZhe/3dA5ECSAY+4nNSMHizyJJIDHQ
+         zu2Q==
+X-Gm-Message-State: AOJu0YyjvXM8DcFTlN65x/SQGazoHTVle3MJvYQBuf/0DmcOChTcvQeA
+	zAxyAP6b1aRCPMUuhmbKNNrB6MZNhfM6ug==
+X-Google-Smtp-Source: AGHT+IGfwFmtbWsAl5I6/i2SFbfFEUTT/dErh+wL86Joc4LmMwfAO7uAOJEVXsXdHCwicNJjh+JXFg==
+X-Received: by 2002:a17:907:9515:b0:a28:88d6:5d9c with SMTP id ew21-20020a170907951500b00a2888d65d9cmr3939094ejc.131.1705490278807;
+        Wed, 17 Jan 2024 03:17:58 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id d15-20020a170906c20f00b00a2ae7fb3fc6sm7707654ejz.93.2024.01.17.03.17.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 03:17:58 -0800 (PST)
+Message-ID: <90bdc95f-c4a7-40c8-aa55-e4460a4ce9dd@linaro.org>
+Date: Wed, 17 Jan 2024 12:17:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,58 +78,198 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <afd@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: PCI: ti,j721e-pci-*: Add checks for
- max-link-speed
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: ti,j721e-pci-*: Fix check for
+ num-lanes
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ vigneshr@ti.com, afd@ti.com, srk@ti.com
 References: <20240117102526.557006-1-s-vadapalli@ti.com>
- <20240117102526.557006-3-s-vadapalli@ti.com>
- <4282b248-cb7f-4486-bde6-105a3aed6be2@linaro.org>
- <92ceb1ea-78db-4bc4-af1f-a1690eaca24c@ti.com>
- <42f44ecc-c7f4-4209-8cb5-805891c35413@linaro.org>
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <42f44ecc-c7f4-4209-8cb5-805891c35413@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+ <20240117102526.557006-2-s-vadapalli@ti.com>
+ <28fd561a-7c13-48dc-9995-230dc758f257@linaro.org>
+ <a25ea57b-4529-4a4c-9e0b-ccd85b0457d6@ti.com>
+ <bd3e809f-5d97-428f-9387-a2475c4f0d7d@linaro.org>
+ <ef9a7718-039c-4eef-915d-c96778d70a0f@ti.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ef9a7718-039c-4eef-915d-c96778d70a0f@ti.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-
-
-On 17/01/24 16:30, Krzysztof Kozlowski wrote:
-> On 17/01/2024 11:58, Siddharth Vadapalli wrote:
->> On 17/01/24 16:05, Krzysztof Kozlowski wrote:
->>> On 17/01/2024 11:25, Siddharth Vadapalli wrote:
->>>> Extend the existing compatible based checks for validating and enforcing
->>>> the "max-link-speed" property.
->>>
->>> Based on what? Driver or hardware? Your entire change suggests you
->>
->> Hardware. The PCIe controller on AM64 SoC supports up to Gen2 link speed while
->> the PCIe controllers on other SoCs support Gen3 link speed.
->>
->>> should just drop it from the binding, because this can be deduced from
->>> compatible.
->>
->> Could you please clarify? Isn't the addition of the checks for "max-link-speed"
->> identical to the checks which were added for "num-lanes", both of which are
->> Hardware specific?
+On 17/01/2024 12:11, Siddharth Vadapalli wrote:
 > 
-> Compatible defines these values, at least what it looks like from the patch.
+> 
+> On 17/01/24 16:23, Krzysztof Kozlowski wrote:
+>> On 17/01/2024 11:47, Siddharth Vadapalli wrote:
+>>> Hello Krzysztof,
+>>>
+>>> On 17/01/24 16:04, Krzysztof Kozlowski wrote:
+>>>> On 17/01/2024 11:25, Siddharth Vadapalli wrote:
+>>>>> The existing implementation for validating the "num-lanes" property
+>>>>> based on the compatible(s) doesn't enforce it. Fix it by updating the
+>>>>> checks to handle both single-compatible and multi-compatible cases.
+>>>>>
+>>>>> Fixes: b3ba0f6e82cb ("dt-bindings: PCI: ti,j721e-pci-*: Add checks for num-lanes")
+>>>>> Fixes: adc14d44d7cb ("dt-bindings: PCI: ti,j721e-pci-*: Add j784s4-pci-* compatible strings")
+>>>>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>>>>> ---
+>>>>>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 26 ++++++++++++++-----
+>>>>>  .../bindings/pci/ti,j721e-pci-host.yaml       | 26 ++++++++++++++-----
+>>>>>  2 files changed, 38 insertions(+), 14 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>>>>> index 97f2579ea908..278e0892f8ac 100644
+>>>>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>>>>> @@ -68,8 +68,9 @@ allOf:
+>>>>>    - if:
+>>>>>        properties:
+>>>>>          compatible:
+>>>>
+>>>> Missing contains:, instead of your change.
+>>>
+>>> I did try the "contains" approach before determining that the implementation in
+>>> this patch is more suitable. Please consider the following:
+>>>
+>>> For AM64 SoC the primary compatible is "ti,am64-pcie-ep" and fallback compatible
+>>> is "ti,j721e-pcie-ep". For J7200 SoC the primary compatible is
+>>> "ti,j7200-pcie-ep" while the fallback compatible is again "ti,j721e-pcie-ep".
+>>>
+>>> Therefore, the device-tree nodes for AM64 and J7200 look like:
+>>>
+>>> AM64:
+>>>     compatible = "ti,am64-pcie-ep", "ti,j721e-pcie-ep";
+>>>     ...
+>>>     num-lanes = 1;
+>>>
+>>> J7200:
+>>>     compatible = "ti,j7200-pcie-ep", "ti,j721e-pcie-ep";
+>>>     ...
+>>>     num-lanes = 4;
+>>>
+>>> This implies that when the check for "num-lanes" is performed on the device-tree
+>>> node for PCIe in J7200, the fallback compatible of "ti,j721e-pcie-ep" within the
+>>> AM64's "compatible: contains:" check will match the schema and it will check the
+>>> existing "num-lanes" being described as "const: 1" against the value in J7200's
+>>> PCIe node resulting in a warning. 
+>>
+>> What warning? What did you put to contains?
+> 
+> The warning is:
+> num-lanes: expected value is 1
+> which it has determined due to the presence of "ti,j721e-pcie-ep" in the first
+> check which is only applicable to AM64. The shared fallback compatible here is
+> responsible for incorrect checks when using "contains".
+> 
+> Using "contains", the check for "num-lanes" with "const: 1" corresponding to
+> AM64 ends up validating against the device-tree node for J7200 since the
+> fallback compatible "ti,j721e-pcie-ep" is "contained" in the list of compatibles
 
-In this patch, I have added checks for the "max-link-speed" property in the same
-section that "num-lanes" is being evaluated. The values for "max-link-speed" are
-based on the Hardware support and this patch is validating the "max-link-speed"
-property in the device-tree nodes for the devices against the Hardware supported
-values which this patch is adding in the corresponding section. Kindly let me
-know if I misunderstood what you meant to convey.
+Why do you put fallback to contains? It does not make sense. You want to
+check for containing the device compatible.
 
--- 
-Regards,
-Siddharth.
+> present in the device-tree node. That shouldn't be the case which is why "items"
+> is used in this patch to get an exact match.
+> 
+>>
+>>> Therefore, using "contains" will result in
+>>> errors if the check has to be performed for device-tree nodes with fallback
+>>> compatibles. The "items" based approach I have used in this patch ensures that
+>>> the schema matches *only* when both the primary and fallback compatible are
+>>> present in the device-tree node.
+>>
+>> Long message, but I don't understand it. Why this binding is different
+>> than all others which rely on contains?
+> 
+> This binding is different because of the existence of a shared fallback
+
+Many other bindings are the same.
+
+> compatible and a shared property being evaluated. In other bindings which use
+> contains, either there isn't a shared fallback compatible, or the property which
+
+No, we do not talk about such bindings. We talk about fallbacks. Using
+contains for other cases is redundant, so why even bringing them up here?
+
+> is present in device-tree nodes which have the shared fallback compatible isn't
+> evaluated.>
+> In brief, with the existing device-tree, without any changes, adding "contains"
+> will throw warnings due to the incorrect schema matching for validating the
+> "num-lanes" property.
+
+? What?
+> 
+>>
+>>>>> +  - if:
+>>>>> +      properties:
+>>>>> +        compatible:
+>>>>> +          items:
+>>>>> +            - const: ti,j784s4-pcie-ep
+>>>>
+>>>> Why? Previous code was correct.
+>>>
+>>> Though I used "patience diff", for some reason the addition of
+>>> "ti,j721e-pcie-ep" in the check has been treated as the removal of
+>>> "ti,j784s4-pcie-ep" first followed by adding the same later for generating the
+>>> diff in this patch. The diff above is equivalent to the addition of:
+>>
+>> No, why do you change existing code? It is correct.
+> 
+> Either a "contains" or an "items" is required to evaluate the "num-lanes"
+> property and neither of them are present in the existing code.
+
+No, it's not. Your code is equivalent to old handling of j784s4.
+Contains is totally irrelevant here.
+
+NAK.
+
+Best regards,
+Krzysztof
+
 
