@@ -1,145 +1,169 @@
-Return-Path: <linux-pci+bounces-2240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48D1F82FE19
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 01:49:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34B9482FF44
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 04:24:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FDDF1C241F6
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 00:49:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B8121C23A74
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 03:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4866980C;
-	Wed, 17 Jan 2024 00:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A361B1C11;
+	Wed, 17 Jan 2024 03:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyOck0fn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dIlBgVMk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A99810E9
-	for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 00:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0575C1C0F;
+	Wed, 17 Jan 2024 03:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705452576; cv=none; b=YZ/VBVaYM5C3QknNLd9vLZcS9N+yIV6dibHMmzGiPpa/dHqIuhSGT4PUhJpCFQ/WRya5DdPlt8TMOylo/qNagiiSLLaAAomcquNvrvGL2Zrq4hkubLuQbcRnww1qmo5f4a3Gi1IMmUp5O6bx0NiUO34aje7ZM1MY76Ju9mNZ84U=
+	t=1705461858; cv=none; b=OLWEHdQBQdNq9Y58LpJGPG/LVinGl+k/5LzPFyZ05GDHPtUDhdBnFXaO+ZNBBvSePDMx3q5CsLF+Gg9XkjKU7jjhza/r7mn+1km/TG9dzD4lS00x3zaqg8gOE5II1ZMNdX0cbYrIP5CkT3GWOIoiR479nDPJ4QJe2G18PbbJEEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705452576; c=relaxed/simple;
-	bh=1x5T5mmc94btZOWMyoysNeaHQy0JfDbFrWai4qMiwck=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=tAkfBiPACTNr452GEVRajv0x9/O8c+niqjD8pT8vtOzb/fj5fKVmWkGepsdKdoyjXYJdFnrDcnv1/+Zbmmu1o+zzDYvqqIU/XdiFA9fmfoIr4RRSB7Z7GrCffBoJ24po6zyD0aC8Wsdyfls04xR+EM0RBcLC7T3FAd47YlsCwEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyOck0fn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EEF9C433C7;
-	Wed, 17 Jan 2024 00:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705452575;
-	bh=1x5T5mmc94btZOWMyoysNeaHQy0JfDbFrWai4qMiwck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OyOck0fnhcLmjQgzt7LKH/hemnRmrW4YdXEUwziO39yIT7BHpubEsqsn8RCHG/wbq
-	 XD0GLj6aSR6iASbDenkj/RgaDjCw/sOSIQrS4x3kejGvuTYkVUQHQutZ0jQfwkunJW
-	 zqF46mr8wK8zB4rh6S+fNvZNTl7xRSMVZ5oauWMTPT/L5gut7wrjOVDQQfVYRXk6VA
-	 BqY4NIyEqhimwKHnot+GG8XbaqHSWFnCBNwUVMSQMvLIZIrp5Ca4Uul9Pgo4DDSj1/
-	 OxmKQi5MLcDU0y8n2feSyHHU9DZapozhd0jaw+HzMKu5ptQA7tyjzm6C4/9biT1PSE
-	 NYwQxkY7sruhQ==
-Date: Tue, 16 Jan 2024 18:49:33 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, samruddh.dhope@intel.com,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20240117004933.GA108810@bhelgaas>
+	s=arc-20240116; t=1705461858; c=relaxed/simple;
+	bh=lQVzJfW4PzGfq9ar+uuKtn+tGVuy7nvv+1dL8Gzr7hw=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:X-IronPort-AV:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Cc:Subject:Content-Language:To:References:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding; b=Lgos4jtLMTSlnaXpMyC/FR9ngGp7pm9q4E4dQc3a0WB7oIb2pCUOcukdoldDaanVaj6J+yv8Igwi3HSdml+UzPZivzNgWfpLIO3vb/Dw46O2HW1FGpZ+ZtlYQn8EZtsWGVWrbKyyu58rnwnL+vG+Ourn50q57fGnxKsCV9Ax1fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dIlBgVMk; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705461857; x=1736997857;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lQVzJfW4PzGfq9ar+uuKtn+tGVuy7nvv+1dL8Gzr7hw=;
+  b=dIlBgVMke2GYF8Gx931wPR1AS887YNQdJIUrm8vNL7oGaA1lbfIZ+f0O
+   BSYkOKM+2zl+N+aRh86Vi6n4wbcmgynCEJbBWSRBMezAvmFK7wQOAAlGv
+   f56nc/q8NnW5t41Lwpg5kwfTGVPlYfwFicdIlvlSZrDQ5Q9TnvVHOdp6N
+   Q0lQasFHcqnTlZAqIh/vXbzzhVLT2ng/cy+SIR45J0A/3csoDt70sq+nx
+   JuWYLAEaS4niRs7RKKGmVCJlKgIX5Hz9/JvHJnEr9JJgmeoeiyoAKjpCr
+   4CBWLeGlmvSKOwDf1obvdmaUyxZws2AQnCkTxkNOnHPRWUCd6oUXbnIMO
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="6814146"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="6814146"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 19:24:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="777303816"
+X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
+   d="scan'208";a="777303816"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.171.146]) ([10.249.171.146])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2024 19:24:12 -0800
+Message-ID: <3ee904e9-8a93-4bd9-8df7-6294885589e4@linux.intel.com>
+Date: Wed, 17 Jan 2024 11:24:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cf8a41181e07ec15dbc95e42c527b6429db8c50.camel@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v10 0/5] fix vt-d hard lockup when hotplug ATS capable
+ device
+Content-Language: en-US
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, kevin.tian@intel.com,
+ bhelgaas@google.com, dwmw2@infradead.org, will@kernel.org,
+ robin.murphy@arm.com, lukas@wunner.de
+References: <20231228170206.720675-1-haifeng.zhao@linux.intel.com>
+ <1a2a4069-c737-4a3c-a2f6-cce06823331b@linux.intel.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <1a2a4069-c737-4a3c-a2f6-cce06823331b@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 01:37:32PM -0700, Nirmal Patel wrote:
-> On Fri, 2024-01-12 at 16:55 -0600, Bjorn Helgaas wrote:
-> ...
+On 2024/1/15 15:58, Ethan Zhao wrote:
+> -static int qi_check_fault(struct intel_iommu *iommu, int index, int 
+> wait_index)
+> +static int qi_check_fault(struct intel_iommu *iommu, int index, int 
+> wait_index,
+> +                  pci_dev *target_pdev)
+>   {
+>          u32 fault;
+>          int head, tail;
+> +       u64 iqe_err, ice_sid;
+>          struct q_inval *qi = iommu->qi;
+>          int shift = qi_shift(iommu);
+> 
+>          if (qi->desc_status[wait_index] == QI_ABORT)
+>                  return -EAGAIN;
+> 
+> +       /*
+> +        * If the ATS invalidation target device is gone this moment 
+> (surprise
+> +        * removed, died, no response) don't try this request again. this
+> +        * request will not get valid result anymore. but the request was
+> +        * already submitted to hardware and we predict to get a ITE in
+> +        * followed batch of request, if so, it will get handled then.
+> +        */
 
-> > Maybe it will help if we can make the
-> > situation more concrete.  I'm basing this on the logs at
-> > https://bugzilla.kernel.org/show_bug.cgi?id=215027.  I assume the
-> > 10000:e0:06.0 Root Port and the 10000:e1:00.0 NVMe device are both
-> > passed through to the guest.  I'm sure I got lots wrong here, so
-> > please correct me :)
-> > 
-> >   Host OS sees:
-> > 
-> >     PNP0A08 host bridge to 0000 [bus 00-ff]
-> >       _OSC applies to domain 0000
-> >       OS owns [PCIeHotplug SHPCHotplug PME PCIeCapability LTR] in
-> > domain 0000
-> >     vmd 0000:00:0e.0: PCI host bridge to domain 10000 [bus e0-ff]
-> >       no _OSC applies in domain 10000;
-> >       host OS owns all PCIe features in domain 10000
-> >     pci 10000:e0:06.0: [8086:464d]             # VMD root port
-> >     pci 10000:e0:06.0: PCI bridge to [bus e1]
-> >     pci 10000:e0:06.0: SltCap: HotPlug+        # Hotplug Capable
-> >     pci 10000:e1:00.0: [144d:a80a]             # nvme
-> > 
-> >   Guest OS sees:
-> > 
-> >     PNP0A03 host bridge to 0000 [bus 00-ff]
-> >       _OSC applies to domain 0000
-> >       platform owns [PCIeHotplug ...]          # _OSC doesn't grant
-> > to OS
-> >     pci 0000:e0:06.0: [8086:464d]              # VMD root port
-> >     pci 0000:e0:06.0: PCI bridge to [bus e1]
-> >     pci 0000:e0:06.0: SltCap: HotPlug+         # Hotplug Capable
-> >     pci 0000:e1:00.0: [144d:a80a]             # nvme
-> > 
-> > So the guest OS sees that the VMD Root Port supports hotplug, but
-> > it can't use it because it was not granted ownership of the
-> > feature?
->
-> You are correct about _OSC not granting access in Guest.
+We can't leave the ITE triggered by this request for the next one, which
+has no context about why this happened. Perhaps move below code down to
+the segment that handles ITEs.
 
-I was assuming the VMD Endpoint itself was not visible in the guest
-and the VMD Root Ports appeared in domain 0000 described by the guest
-PNP0A03.  The PNP0A03 _OSC would then apply to the VMD Root Ports.
-But my assumption appears to be wrong:
+Another concern is about qi_dump_fault(), which pr_err's the fault
+message as long as the register is set. Some faults are predictable,
+such as cache invalidation for surprise-removed devices. Unconditionally
+reporting errors with pr_err() may lead the user to believe that a more
+serious hardware error has occurred. Probably we can refine this part of
+the code as well.
 
-> This is what I see on my setup.
-> 
->   Host OS:
-> 
->     ACPI: PCI Root Bridge [PC11] (domain 0000 [bus e2-fa])
->     acpi PNP0A08:0b: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
->     acpi PNP0A08:0b: _OSC: platform does not support [SHPCHotplug AER DPC]
->     acpi PNP0A08:0b: _OSC: OS now controls [PCIeHotplug PME PCIeCapability LTR]
->     PCI host bridge to bus 0000:e2
-> 
->     vmd 0000:e2:00.5: PCI host bridge to bus 10007:00
->     vmd 0000:e2:00.5: Bound to PCI domain 10007
-> 
->   Guest OS:
-> 
->     ACPI: PCI Root Bridge [PC0G] (domain 0000 [bus 03])
->     acpi PNP0A08:01: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
->     acpi PNP0A08:01: _OSC: platform does not support [PCIeHotplug SHPCHotplug PME AER LTR DPC]
->     acpi PNP0A08:01: _OSC: OS now controls [PCIeCapability]
-> 
->     vmd 0000:03:00.0: Bound to PCI domain 10000
-> 
->     SltCap: PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
+Others look sane to me.
 
-Your example above suggests that the guest has a PNP0A08 device for
-domain 0000, with an _OSC, the guest sees the VMD Endpoint at
-0000:03:00.0, and the VMD Root Ports and devices below them are in
-domain 10000.  Right?
+> +       if (target_pdev && !pci_device_is_present(target_pdev))
+> +               return -EINVAL;
+> +
+>          fault = readl(iommu->reg + DMAR_FSTS_REG);
+>          if (fault & (DMA_FSTS_IQE | DMA_FSTS_ITE | DMA_FSTS_ICE))
+>                  qi_dump_fault(iommu, fault);
+> @@ -1315,6 +1327,13 @@ static int qi_check_fault(struct intel_iommu 
+> *iommu, int index, int wait_index)
+>                  tail = readl(iommu->reg + DMAR_IQT_REG);
+>                  tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+> 
+> +               /*
+> +                * SID field is valid only when the ITE field is Set in 
+> FSTS_REG
+> +                * see Intel VT-d spec r4.1, section 11.4.9.9
+> +                */
+> +               iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+> +               ice_sid = DMAR_IQER_REG_ITESID(iqe_err);
+> +
+>                  writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>                  pr_info("Invalidation Time-out Error (ITE) cleared\n");
+> 
+> @@ -1324,6 +1343,16 @@ static int qi_check_fault(struct intel_iommu 
+> *iommu, int index, int wait_index)
+>                          head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>                  } while (head != tail);
+> 
+> +               /*
+> +                * If got ITE, we need to check if the sid of ITE is the 
+> same as
+> +                * current ATS invalidation target device, if yes, don't 
+> try this
+> +                * request anymore, the target device has a response 
+> time beyound
+> +                * expected. 0 value of ice_sid means old device, no 
+> ice_sid value.
+> +                */
+> +               if (target_pdev && ice_sid && ice_sid ==
+> +                   pci_dev_id(pci_physfn(target_pdev))
+> +                               return -ETIMEDOUT;
+> +
+>                  if (qi->desc_status[wait_index] == QI_ABORT)
+>                          return -EAGAIN;
+>          }
 
-If we decide the _OSC that covers the VMD Endpoint does *not* apply to
-the domain below the VMD bridge, the guest has no _OSC for domain
-10000, so the guest OS should default to owning all the PCIe features
-in that domain.
-
-Bjorn
+Best regards,
+baolu
 
