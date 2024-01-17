@@ -1,181 +1,116 @@
-Return-Path: <linux-pci+bounces-2258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F5D0830342
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 11:07:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1ABD83037B
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 11:26:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48DA21C25074
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 10:07:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73000B246FF
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 10:26:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A16BF14291;
-	Wed, 17 Jan 2024 10:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717B814A83;
+	Wed, 17 Jan 2024 10:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VnS67NBB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0975014282;
-	Wed, 17 Jan 2024 10:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CEB1429B;
+	Wed, 17 Jan 2024 10:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705485978; cv=none; b=pQBfCZa5Xvg+AfObSRFSv6xGACocS7axxPOJkr5ptCbNWh+PyPeCVpxWlw5qNQskovfXS3DBdePfN/VsGlXbeMh/t+DPxYKX5k2vm71ED3uHvCjMhC/JeCcwgGD+VEpe+RIkciK5seXZyIcrU9/MnA6DM1rF3lhJc3k2KwU7Sqs=
+	t=1705487156; cv=none; b=CQRf0xLkSK/+XG7zmqCLeKpY9fc4tcQEsXzOmeJu9a+Qrfbx1hLWVP3zuIoJa+/xunl9eelFQ05clywPGBY/97gStgDx8LE0cfZT19Rq4yEJjL2uHoiiZLW560VZ6ls/WF+5AxCgElvIyoPqZOxDFgBGubJTr/yQkZ9hP0rjUtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705485978; c=relaxed/simple;
-	bh=+cxx2b/N2LvNg0nWquPf/YpjQZ5mfMypJFmZWd9uQdc=;
-	h=Received:X-Google-DKIM-Signature:X-Gm-Message-State:
-	 X-Google-Smtp-Source:X-Received:Received:Received:X-Received:
-	 MIME-Version:References:In-Reply-To:From:Date:
-	 X-Gmail-Original-Message-ID:Message-ID:Subject:To:Cc:Content-Type:
-	 Content-Transfer-Encoding; b=tBoWVinOOOmBbgRDjAGq9ns14o2g5VemiOeTCg7rmZ+DoPGbJT7PsjpOlWBwBENr2aJrXQo5971fe1EeRrzwYMMOSZG036+B4NiDk9DNWZ0md+jAn4unqncTkVIeRuCUTpMYFwum1WCYVKGFLnAhp38fGxhzI70iZS0sEa1ZRvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5f68af028afso92131237b3.2;
-        Wed, 17 Jan 2024 02:06:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705485975; x=1706090775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ktKDg1Kr1k5upORAnFgj9TjW3VLUUCKOkhGf1ZiTWq0=;
-        b=mFJmS23fQc++YO/zFXRwgtK6yS1H0p2B67RZ2WrktMJuaSr5q5ZP3fK9FDOT2tjwKl
-         wBxJEpMKMTENBQzLKB+5gNSc7haazIGK4bGuaz8TK6YBCOAllduQ84NTI3IvaI6++QIc
-         Jn9Zw2idHIJB3te/cb2s13XR1OdnPUX5xBmcjeUJasUnKZEKoSM1XMoTPqj1T87k84UT
-         qEFtmf+LnWplPEoZ65rE101grFNd28WywjsWwRenMZNh7TkKG/GcnLx82yL3LQKFCtEq
-         DsVssmQvaLX2oXctuwnWlxFux+KEcdc1PABMOxRAIU8+UsGk8aJyLtw/EHJwPn7yFLKd
-         dvxg==
-X-Gm-Message-State: AOJu0YwyXFpO1PtvBCus81+IgUNlnvrvx4eAom/zIY7agMz4xtctefIn
-	TY0sYB6u9Q8JzIdrL/VneoD5tnu31BOVvQ==
-X-Google-Smtp-Source: AGHT+IGvsKro72mIsn7zC0rDold1fCYfQbqHaTRxf3TuiU8P9HI/5ZCiNSd7B6rJpaD3yJoF6v7fBw==
-X-Received: by 2002:a81:e602:0:b0:5ee:65b3:f289 with SMTP id u2-20020a81e602000000b005ee65b3f289mr4814207ywl.3.1705485974739;
-        Wed, 17 Jan 2024 02:06:14 -0800 (PST)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id d4-20020a0ddb04000000b005ff5fc95e34sm982467ywe.55.2024.01.17.02.06.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jan 2024 02:06:14 -0800 (PST)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5e54d40cca2so83078567b3.3;
-        Wed, 17 Jan 2024 02:06:14 -0800 (PST)
-X-Received: by 2002:a05:690c:fd5:b0:5ee:7299:e2cf with SMTP id
- dg21-20020a05690c0fd500b005ee7299e2cfmr5153857ywb.52.1705485974135; Wed, 17
- Jan 2024 02:06:14 -0800 (PST)
+	s=arc-20240116; t=1705487156; c=relaxed/simple;
+	bh=Nb2CJ0bK1oMUCCsUK9CaW4LZvMtPCDoCVAESMsVYoSU=;
+	h=Received:DKIM-Signature:Received:Received:Received:Received:From:
+	 To:CC:Subject:Date:Message-ID:X-Mailer:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:X-EXCLAIMER-MD-CONFIG; b=Z6h5JTKkgsrEDpYsYDUh3AvNQr7XDykASn+czEIAqJa+3oUbQpiMplkr02tCKhfW+kcmd3YZCjd+X2uOMvuQ0Ny/tn7vOyeLDwdR7UtaKcc0aQty0YzmXOTYCO/j8aeLXpEE9c4rnF2fa/KwOVGj3WoYe4IFIApz/pW4nkC0mhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VnS67NBB; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40HAPVKx114398;
+	Wed, 17 Jan 2024 04:25:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705487131;
+	bh=7LkBVrRURFM2cubK+y34TH+DKZLZzMJlz5v6+GsGZYg=;
+	h=From:To:CC:Subject:Date;
+	b=VnS67NBBME2H4Ij39GGBn6ZKasFOpPNVCvX1sgGjwam0cxZr30Ye41WvoIMpwo0rY
+	 lemuXlqhdq9g7HV8WO9ZGOyn/Vn43QBioZtbH3VsHLkunqQkWdeiIRhJnF2xc1MiEa
+	 7mcCmrt/UtHUK2/g1fAK2oYFluVg3wWimgnsi/Hk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40HAPVd8025690
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 17 Jan 2024 04:25:31 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 17
+ Jan 2024 04:25:31 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 17 Jan 2024 04:25:31 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40HAPQIf042834;
+	Wed, 17 Jan 2024 04:25:27 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <vigneshr@ti.com>, <afd@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH 0/3] Fix and update ti,j721e-pci-* bindings
+Date: Wed, 17 Jan 2024 15:55:23 +0530
+Message-ID: <20240117102526.557006-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704788539.git.ysato@users.sourceforge.jp>
- <bc794e2165244bd0cee81bc0106f1e2d1bef1613.1704788539.git.ysato@users.sourceforge.jp>
- <CACRpkdYLsf-uWdMCTpieji7u1-H3oTGojvC4xm7Erox97XJ6RQ@mail.gmail.com> <8734uwwavx.wl-ysato@users.sourceforge.jp>
-In-Reply-To: <8734uwwavx.wl-ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 17 Jan 2024 11:06:02 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX_2Tgm2LLM1TgFrkLdokD99gAeKHJWrKy9Y2A+wtf5RA@mail.gmail.com>
-Message-ID: <CAMuHMdX_2Tgm2LLM1TgFrkLdokD99gAeKHJWrKy9Y2A+wtf5RA@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v6 17/37] dt-bindings: interrupt-controller:
- renesas,sh7751-intc: Add json-schema
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-sh@vger.kernel.org, 
-	Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Sato-san,
+Hello,
 
-On Wed, Jan 17, 2024 at 10:46=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> On Tue, 09 Jan 2024 21:30:34 +0900,
-> Linus Walleij wrote:
-> > On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
-> > <ysato@users.sourceforge.jp> wrote:
-> >
-> > > +  renesas,icr-irlm:
-> > > +    $ref: /schemas/types.yaml#/definitions/flag
-> > > +    description: If true four independent interrupt requests mode (I=
-CR.IRLM is 1).
-> > > +
-> > > +  renesas,ipr-map:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +    description: |
-> > > +      IRQ to IPR mapping definition.
-> > > +      1st - INTEVT code
-> > > +      2nd - Register
-> > > +      3rd - bit index
-> >
-> > (...)
-> >
-> > > +            renesas,ipr-map =3D <0x240 IPRD IPR_B12>, /* IRL0 */
-> > > +                              <0x2a0 IPRD IPR_B8>,  /* IRL1 */
-> > > +                              <0x300 IPRD IPR_B4>,  /* IRL2 */
-> > > +                              <0x360 IPRD IPR_B0>,  /* IRL3 */
-> > (...)
-> >
-> > Is it really necessary to have all this in the device tree?
-> >
-> > You know from the compatible that this is "renesas,sh7751-intc"
-> > and I bet this table will be the same for any sh7751 right?
-> >
-> > Then just put it in a table in the driver instead and skip this from
-> > the device tree and bindings. If more interrupt controllers need
-> > to be supported by the driver, you can simply look up the table from
-> > the compatible string.
->
-> The SH interrupt controller has the same structure, only this part is dif=
-ferent for each SoC.
-> Currently, we are targeting only the 7751, but in the future we plan to h=
-andle all SoCs.
-> Is it better to differentiate SoC only by compatible?
+This series fixes the bindings for:
+Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+by updating the checks added for validating and enforcing the
+"num-lanes" property for different compatibles. In the commits
+which introduced and extended the checks for the "num-lanes"
+property, the property was not truly validated but only described.
+Therefore, the bindings are being updated to actually validate
+the "num-lanes" property. While at it, checks for "max-link-speed"
+are also being introduced. The intent of the aforementioned changes
+is to update the bindings for a new SoC namely TI's J722S SoC which
+has a similar PCIe controller to TI's AM64 SoC, but differs from it
+in terms of its support for Gen3 link speeds. For this reason, a new
+compatible is being added instead of reusing the one available for
+AM64 SoC.
 
-Yes, it is better to differentiate SoC only by compatible value.
+Series is based on linux-next tagged next-20240117.
 
-When you describe all differences explicitly using properties, you
-might discover later that you missed something important, causing
-backwards compatibility issues with old DTBs.
-DT is a stable ABI, while you can always update a driver when needed.
+Regards,
+Siddharth.
 
-Gr{oetje,eeting}s,
+Siddharth Vadapalli (3):
+  dt-bindings: PCI: ti,j721e-pci-*: Fix check for num-lanes
+  dt-bindings: PCI: ti,j721e-pci-*: Add checks for max-link-speed
+  dt-bindings: PCI: ti,j721e-pci-host: Add support for J722S
 
-                        Geert
+ .../bindings/pci/ti,j721e-pci-ep.yaml         | 34 +++++++++++---
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 47 ++++++++++++++++---
+ 2 files changed, 67 insertions(+), 14 deletions(-)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+-- 
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
