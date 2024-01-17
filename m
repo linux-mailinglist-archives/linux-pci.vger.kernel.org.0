@@ -1,236 +1,278 @@
-Return-Path: <linux-pci+bounces-2248-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2249-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B090830175
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 09:46:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6238830194
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 09:55:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8789D1C21099
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 08:46:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4262B22123
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Jan 2024 08:55:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC842D26B;
-	Wed, 17 Jan 2024 08:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A679611709;
+	Wed, 17 Jan 2024 08:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h35Njbep"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4SNebiV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8BD12B7C
-	for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 08:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E375013AF0
+	for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 08:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705481155; cv=none; b=Yt33B0WMbTenQKXkqTQlvBNQ+62t/eu+OWwyk2xxU2L2/9EYZi2NCXZu/ltU13kJdR6ev/10DxZipZ5VhiNF9XBjEfP1ITnE/r0SxM03G6cgt/4zVeZu3kA4kgZrfmND1SdmUvqrNkPdvgm6ZnXLFnjrCUwgxuS1FNlAFJ0jFO0=
+	t=1705481695; cv=none; b=PB2RvCXe9QPspASGdWku748qPQnozzs5Ixjo3bXfVHmfCrFrPjOJMs3qhqv1ygFrzPvMcx8H5qvnYUMxXJFDeEWDMCKlBm8n/IH/oA/xTdjDVhNQoDVLNMBr31LYJoUPyCdao/UQVuGkc9yqSDevC3lSkLBxDCP3sh+z4Lcg/sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705481155; c=relaxed/simple;
-	bh=0p02UdZyZJRvm0w97a94sH+J08kKKLeq0PVkfTQBWik=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:X-IronPort-AV:Received:Received:Date:From:To:Cc:
-	 Subject:Message-ID:User-Agent; b=EzissZWobS6zEjLwRKIIAe6nd9WxVeob5zig4e4wwkIrOogW9nQ0t4oL7Cgo3waGFE4mG73Kloeb+vPOHOwA1E1zbOA4hjtyaMZKbH4Lyf/Eh6GaCMrVzy+saV6b0mIHtjqWRGtx2v3Kow6y7595PUq+rCDEbODTQ+y+5ZeZI/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h35Njbep; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705481154; x=1737017154;
-  h=date:from:to:cc:subject:message-id;
-  bh=0p02UdZyZJRvm0w97a94sH+J08kKKLeq0PVkfTQBWik=;
-  b=h35NjbepwI/MWZ8P6dpq480RLF5W79UZ95WZ6sNpkGzpnmQmVMEsqxem
-   nF7ydo1wJbIzY+VSPF4yrrMbsMCIp4EWoKYWIH9vgFRXS7L4wWSuUO1Dy
-   LpWbDTeFIwJzbZNanuSyYJ6uJfBO3j4RvdoV+JqTUjHE6QzqQLEeKSd88
-   jwY0qYQ0neymUt3wvcJKdZQjCu2tQSeacX7Mqn1MACy3KdVQKbdiTbOme
-   dEaA8oX0nZiini8sWcT6OjxLglYR3ZyE5JXqamdzOYWylEudoH+qKrpQX
-   1FKU4Z0MrJmPb1oL93e4q5Mtjf77AoleyM2N+YPqWyO+CPWawQ2rUMH3r
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="390561373"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="390561373"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 00:45:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10955"; a="818452698"
-X-IronPort-AV: E=Sophos;i="6.05,200,1701158400"; 
-   d="scan'208";a="818452698"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 17 Jan 2024 00:45:52 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQ1YT-0001n8-2c;
-	Wed, 17 Jan 2024 08:45:49 +0000
-Date: Wed, 17 Jan 2024 16:45:26 +0800
-From: kernel test robot <lkp@intel.com>
+	s=arc-20240116; t=1705481695; c=relaxed/simple;
+	bh=YbhqHgZ8qrRwRRdHssnLB+nFCjalZT7Y0BQbw4Hg2cQ=;
+	h=DKIM-Signature:Received:X-MC-Unique:Received:
+	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
+	 X-Google-Smtp-Source:X-Received:Received:Message-ID:Subject:From:
+	 To:Cc:Date:In-Reply-To:References:Content-Type:
+	 Content-Transfer-Encoding:User-Agent:MIME-Version; b=iG2/bSlpWQA4udKLRsq6XwKdJqZGss7J+tnrzbfN0VPnRJHX4utl/ygQ8L08lztLnP2+Mka56eb7tCoXkeCh8NaJ0YMPJdvAUQEjnVA3tr/f9usIh6oR5DBvJzH+4e42ppUTF5ODyOlE6Hlp9BQikPVdGjsytFn+QLxQHcnC0bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A4SNebiV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705481692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D00hU3PzeJuPDTbACxnMMgiUCTQ91p211OWtV23tV44=;
+	b=A4SNebiV+WI0csUla7zNRisE0lhY/CmPVFhVO5p3fiwP4pXQuD/GyevMlOUjVKmoxqHp88
+	3vMV/u8xVLz0HpmgS6f/IcyuwaJnShzDtxK8MOdxbWuXsIfgMiwdK/gRW6FbVEtk0VMDhi
+	AT+nxBcsBUoJ4CEoJjvWQUOKtgSE0BY=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-29-KL1caou-PEC5uSJulPizpQ-1; Wed, 17 Jan 2024 03:54:51 -0500
+X-MC-Unique: KL1caou-PEC5uSJulPizpQ-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78315f4f5c2so193790685a.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 Jan 2024 00:54:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705481691; x=1706086491;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D00hU3PzeJuPDTbACxnMMgiUCTQ91p211OWtV23tV44=;
+        b=K5u0TZfRKKtCqu3tM59L8jXdgKHHkqhnGVB3m8hXOfBQJP7hT0Yco80Wh2pt0jxhtu
+         gJIb0dC1vJWzNeroWg4REn6nrcsv9d/Z3QQb/BRG4aIUe9aIdftT/9igp5gfCajF/fJX
+         MqJzjWMWcFhsmD41VWBl6fyKB7vVOsG1mt/3DMdKi66hPLGmq4nPjdAnSXDLk0F+1rfK
+         oBvNgG04/iR6/E5t7wpko5/BTwUeygqaUQY+sqxihSJt/ci0CAUmAwB9qjy+OCV3sT0N
+         2yaLlnYpUWmRmN+ZpQC7QhUNsoXgWkyNEPLaV922RgOmPywMPl0utBmj13+CL20LeJr3
+         FKhQ==
+X-Gm-Message-State: AOJu0YxYQQv6oRNZdKU1woNud/HJkKlrAHyayk38Hk0z0v0EmA1eYzNN
+	dB+HagFle5WbkrGtvu4HPwJrIAFMWaJPymUPKexEM/f3A5zxvvtXycX5z2yYVX0n82xq+rpS8g/
+	QXWyrEiTE9jlJDKca/cqnQXeVQR/d
+X-Received: by 2002:a05:620a:8019:b0:783:68ab:9ade with SMTP id ee25-20020a05620a801900b0078368ab9ademr1389358qkb.7.1705481690791;
+        Wed, 17 Jan 2024 00:54:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH/PfPCNwITnjUQYv8Uu8hwD3Ulky89OHnA+85OkcfyY06xXLEGkkaNflyvHvodm12ON4wvqw==
+X-Received: by 2002:a05:620a:8019:b0:783:68ab:9ade with SMTP id ee25-20020a05620a801900b0078368ab9ademr1389343qkb.7.1705481690454;
+        Wed, 17 Jan 2024 00:54:50 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id vr28-20020a05620a55bc00b0078199077d0asm4355821qkn.125.2024.01.17.00.54.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 00:54:50 -0800 (PST)
+Message-ID: <1983517bf5d0c98894a7d40fbec353ad75160cb4.camel@redhat.com>
+Subject: Re: [PATCH 01/10] pci: add new set of devres functions
+From: Philipp Stanner <pstanner@redhat.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- 2db6b72c989763e30fab83b186e9263fece26bc6
-Message-ID: <202401171624.u5YKkmLy-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas
+ <bhelgaas@google.com>, Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+ linux-pci@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  linux-doc@vger.kernel.org
+Date: Wed, 17 Jan 2024 09:54:47 +0100
+In-Reply-To: <20240116184436.GA101781@bhelgaas>
+References: <20240116184436.GA101781@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: 2db6b72c989763e30fab83b186e9263fece26bc6  PCI: Fix kernel-doc issues
+On Tue, 2024-01-16 at 12:44 -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 15, 2024 at 03:46:12PM +0100, Philipp Stanner wrote:
+> > PCI's devres API is not extensible to ranged mappings and has
+> > bug-provoking features. Improve that by providing better
+> > alternatives.
+>=20
+> I guess "ranged mappings" means a mapping that doesn't cover an
+> entire
+> BAR?=C2=A0 Maybe there's a way to clarify?
 
-elapsed time: 2254m
+That's what it's supposed to mean, yes.
+We could give it the longer title "mappings smaller than the whole BAR"
+or something, I guess.
 
-configs tested: 144
-configs skipped: 2
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+>=20
+> > When the original devres API for PCI was implemented, priority was
+> > given
+> > to the creation of a set of "pural functions" such as
+> > pcim_request_regions(). These functions have bit masks as
+> > parameters to
+> > specify which BARs shall get mapped. Most users, however, only use
+> > those
+> > to mapp 1-3 BARs.
+> > A complete set of "singular functions" does not exist.
+>=20
+> s/mapp/map/
+>=20
+> Rewrap to fill 75 columns or add blank lines between paragraphs.=C2=A0
+> Also
+> below.
+>=20
+> > As functions mapping / requesting multiple BARs at once have
+> > (almost) no
+> > mechanism in C to return the resources to the caller of the plural
+> > function, the devres API utilizes the iomap-table administrated by
+> > the
+> > function pcim_iomap_table().
+> >=20
+> > The entire PCI devres implementation was strongly tied to that
+> > table
+> > which only allows for mapping whole, complete BARs, as the BAR's
+> > index
+> > is used as table index. Consequently, it's not possible to, e.g.,
+> > have a
+> > pcim_iomap_range() function with that mechanism.
+> >=20
+> > An additional problem is that pci-devres has been ipmlemented in a
+> > sort
+> > of "hybrid-mode": Some unmanaged functions have managed
+> > counterparts
+> > (e.g.: pci_iomap() <-> pcim_iomap()), making their managed nature
+> > obvious to the programmer. However, the region-request functions in
+> > pci.c, prefixed with pci_, behave either managed or unmanaged,
+> > depending
+> > on whether pci_enable_device() or pcim_enable_device() has been
+> > called
+> > in advance.
+>=20
+> s/ipmlemented/implemented/
+>=20
+> > This hybrid API is confusing and should be more cleanly separated
+> > by
+> > providing always-managed functions prefixed with pcim_.
+> >=20
+> > Thus, the existing devres API is not desirable because:
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0a) The vast majority of=
+ the users of the plural functions
+> > only
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ever sets =
+a single bit in the bit mask, consequently
+> > making
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 them singu=
+lar functions anyways.
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0b) There is no mechanis=
+m to request / iomap only part of a
+> > BAR.
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0c) The iomap-table mech=
+anism is over-engineered,
+> > complicated and
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 can by def=
+inition not perform bounds checks, thus,
+> > provoking
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memory fau=
+lts: pcim_iomap_table(pdev)[42]
+>=20
+> Not sure what "pcim_iomap_table(pdev)[42]" means.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240117   gcc  
-arc                   randconfig-002-20240117   gcc  
-arm                               allnoconfig   gcc  
-arm                                 defconfig   clang
-arm                         lpc32xx_defconfig   clang
-arm                   randconfig-001-20240117   gcc  
-arm                   randconfig-002-20240117   gcc  
-arm                   randconfig-003-20240117   gcc  
-arm                   randconfig-004-20240117   gcc  
-arm                           sama5_defconfig   gcc  
-arm                         socfpga_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240117   gcc  
-arm64                 randconfig-002-20240117   gcc  
-arm64                 randconfig-003-20240117   gcc  
-arm64                 randconfig-004-20240117   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240117   gcc  
-csky                  randconfig-002-20240117   gcc  
-hexagon                           allnoconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-002-20240117   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240116   clang
-i386         buildonly-randconfig-002-20240116   clang
-i386         buildonly-randconfig-003-20240116   clang
-i386         buildonly-randconfig-004-20240116   clang
-i386         buildonly-randconfig-005-20240116   clang
-i386         buildonly-randconfig-006-20240116   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240116   clang
-i386                  randconfig-002-20240116   clang
-i386                  randconfig-003-20240116   clang
-i386                  randconfig-004-20240116   clang
-i386                  randconfig-005-20240116   clang
-i386                  randconfig-006-20240116   clang
-i386                  randconfig-011-20240116   gcc  
-i386                  randconfig-012-20240116   gcc  
-i386                  randconfig-013-20240116   gcc  
-i386                  randconfig-014-20240116   gcc  
-i386                  randconfig-015-20240116   gcc  
-i386                  randconfig-016-20240116   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          amiga_defconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       alldefconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                      maltaaprp_defconfig   clang
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                       ebony_defconfig   clang
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                    socrates_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                         ecovec24_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240117   gcc  
-x86_64       buildonly-randconfig-002-20240117   gcc  
-x86_64       buildonly-randconfig-003-20240117   gcc  
-x86_64       buildonly-randconfig-004-20240117   gcc  
-x86_64       buildonly-randconfig-005-20240117   gcc  
-x86_64       buildonly-randconfig-006-20240117   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240117   clang
-x86_64                randconfig-002-20240117   clang
-x86_64                randconfig-003-20240117   clang
-x86_64                randconfig-004-20240117   clang
-x86_64                randconfig-005-20240117   clang
-x86_64                randconfig-006-20240117   clang
-x86_64                randconfig-011-20240117   gcc  
-x86_64                randconfig-012-20240117   gcc  
-x86_64                randconfig-013-20240117   gcc  
-x86_64                randconfig-014-20240117   gcc  
-x86_64                randconfig-015-20240117   gcc  
-x86_64                randconfig-016-20240117   gcc  
-x86_64                randconfig-071-20240117   gcc  
-x86_64                randconfig-072-20240117   gcc  
-x86_64                randconfig-073-20240117   gcc  
-x86_64                randconfig-074-20240117   gcc  
-x86_64                randconfig-075-20240117   gcc  
-x86_64                randconfig-076-20240117   gcc  
-x86_64                          rhel-8.3-rust   clang
+That function currently is implemented with this prototype:
+void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+And apparently, it's intended to index directly over the function. And
+that's how at least part of the users use it indeed.
+
+Here in drivers/crypto/inside-secure/safexcel.c, L.1919 for example:
+
+	priv->base =3D pcim_iomap_table(pdev)[0];
+
+I've never seen something that wonderful in C ever before, so it's not
+surprising that you weren't sure what I mean....
+
+pcim_iomap_table() can not and does not perform any bounds check. If
+you do
+
+void __iomem *mappy_map_mapface =3D pcim_iomap_table(pdev)[42];
+
+then it will just return random garbage, or it faults. No -EINVAL or
+anything. You won't even get NULL.
+
+That's why this function must die.
+
+
+>=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0d) region-request funct=
+ions being sometimes managed and
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sometimes =
+not is bug-provoking.
+>=20
+> Indent with spaces (not tabs) so it still looks good when "git log"
+> adds spaces to indent.
+>=20
+> > + * Legacy struct storing addresses to whole mapped bars.
+>=20
+> s/bar/BAR/ (several places).
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* A region spaning an entir=
+e bar. */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PCIM_ADDR_DEVRES_TYPE_REGION=
+,
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* A region spaning an entir=
+e bar, and a mapping for that
+> > whole bar. */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PCIM_ADDR_DEVRES_TYPE_REGION=
+_MAPPING,
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * A mapping within a bar, e=
+ither spaning the whole bar or
+> > just a range.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Without a requested regio=
+n.
+>=20
+> s/spaning/spanning/ (several places).
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (start =3D=3D 0 || len =
+=3D=3D 0) /* that's an unused BAR. */
+>=20
+> s/that/That/
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Ranged mappings don't get=
+ added to the legacy-table,
+> > since the table
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * only ever keeps track of =
+whole BARs.
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> > +
+>=20
+> Spurious blank line.
+
+
+I'll take care of the grammar and spelling stuff in v2.
+
+Thanks,
+P.
+
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0devres_add(&pdev->dev, res);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return mapping;
+> > +}
+> > +EXPORT_SYMBOL(pcim_iomap_range);
+>=20
+> Bjorn
+>=20
+
 
