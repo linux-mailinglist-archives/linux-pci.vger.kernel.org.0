@@ -1,218 +1,198 @@
-Return-Path: <linux-pci+bounces-2312-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2313-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42F9F831511
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 09:48:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70C4E8315C8
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 10:28:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09E3628181B
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 08:48:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECD761F27EBD
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 09:27:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04746EEA5;
-	Thu, 18 Jan 2024 08:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88D21BC55;
+	Thu, 18 Jan 2024 09:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EIzCrCU0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OCN3Zo1T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6850811CB3
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jan 2024 08:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178381F610;
+	Thu, 18 Jan 2024 09:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705567699; cv=none; b=ju2Pqz+lPhsll3P3wZNVegQWKR0GnfXtySoMhWBrTe33mpv9xxlYTMsSw3Cjnxt7hLKZbkIEouwPYxy/Gh9+dfH2P8WLLRegDWXrda8t1xel9/FSU4I05De7uf6ZbjFTGnZ7Cq3/SPMbvpLgtooiqEvpFlYnOJccs4WcY0jKbVA=
+	t=1705570072; cv=none; b=BB+osyaSS81eDAZgCrjYZOzAAHp/n81bJrzRgmP48maqbPyz0XUa88xxR3mOeNV8SqcF6gbPCQkp1vbFCVIsV9mc/uFQ0SdPtzo+jKabvkGXqtskX+rtpTF06rcXXPykesnrG5TIRCrv9AIj00Szwd5/Fp/UWKBXcw/0OZVP0ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705567699; c=relaxed/simple;
-	bh=ltIaIxUBro6oL2eI0AXfMlFTo1Ldlp+RYBlQ9XGXzE0=;
-	h=DKIM-Signature:Received:X-MC-Unique:Received:
-	 X-Google-DKIM-Signature:X-Gm-Message-State:X-Received:
-	 X-Google-Smtp-Source:X-Received:Received:Message-ID:Subject:From:
-	 To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version; b=AQSb4sC/JBcFSc20yIvUBY/vi3g/6/iE0tPe/s1QcDYEzaPp3fIFQfEzTsVYFXcUW7mNUX/FqotEc+23Dlwl8iW8YIM0B0CVfXf55AeOAPJHUeg9YvJA/HJ5V/hSiDQcjusP7cwKt4GfTO240YHPiy/GoxSbY/x068+Suzy5FXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EIzCrCU0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705567697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ltIaIxUBro6oL2eI0AXfMlFTo1Ldlp+RYBlQ9XGXzE0=;
-	b=EIzCrCU0m/mBMK314GacN4OvULt7OXSeHp8t+u7fzbyFNDgK+k9gyAvQl5mt9oyTNxvJsc
-	KmhTkrigcfQPsSxZSf6EsZduR+qHu3gCGbAHABDyK7EqNqQCRbARFMbbCG4sn+Q2hfEuZR
-	2JOFPJfpbXGOlYVzc68W3GEBrDQ9DJE=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-503-HzdktlRAOzenlsYT0ezXsQ-1; Thu, 18 Jan 2024 03:48:15 -0500
-X-MC-Unique: HzdktlRAOzenlsYT0ezXsQ-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7831a20711dso195623985a.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jan 2024 00:48:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705567695; x=1706172495;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ltIaIxUBro6oL2eI0AXfMlFTo1Ldlp+RYBlQ9XGXzE0=;
-        b=mgvpZu2+4mRbO0rzEEY3kPOhhQpw/eEnN7OgtcBYRh0EGiPG8x85YJVibbwFWAeaoK
-         l+pakKg9vmu7whDORtiad676iNkfGV7KpCWeT3BlpvCa7zHv7cuG+RJBZZjX5GFZZzyP
-         NBWlUmeQ2QjAcu0bYBtFfpmTfgCaXlCSJSOA+OSbquL8PvL86tE1SnjOIIDbvEcSIOku
-         G/nmG/RKsFl3oW+RbHEJveznw4JOD48JEDInT8mF5LT29AJ47ddwjrvNSX3GFv32h8aF
-         vtUJDOmOZ+D6y7zfoeBezJOUQhMpoLdw8rxWJHAEVUGzmlQR+3KfO16yrJ/tqW4+PQUk
-         2VqQ==
-X-Gm-Message-State: AOJu0Yw5LP+A/vquUEgQgLYE8CYfHwTRBjLo0XWWWlDJkemG39uo895n
-	v9m21ZzJsIK2tMWsorE09A/a9auvjA4ScBXHz0KVCPYsF6vdg9qrEGlWAQl47zqcs/nX9mnQ8JI
-	4etSwHvna5m25N2RM6Q3tPmMFG2QrRSSntjZ+3odNJmn8JI4GqdsnWxsfbg==
-X-Received: by 2002:a05:6214:1d06:b0:681:770f:c4af with SMTP id e6-20020a0562141d0600b00681770fc4afmr817240qvd.4.1705567695157;
-        Thu, 18 Jan 2024 00:48:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGwYyFKI5f9OpMo2g4V3YbVYvUl96cU/lr7eBalkvPGWVo3fCzvHHWQMyUh2sMkj4110Mx35g==
-X-Received: by 2002:a05:6214:1d06:b0:681:770f:c4af with SMTP id e6-20020a0562141d0600b00681770fc4afmr817230qvd.4.1705567694827;
-        Thu, 18 Jan 2024 00:48:14 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id nc2-20020a0562142dc200b0068187c4b5d2sm739366qvb.111.2024.01.18.00.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 00:48:14 -0800 (PST)
-Message-ID: <96f355a41bf42c6a604aec37449d35246395d929.camel@redhat.com>
-Subject: Re: [PATCH 00/10] Make PCI's devres API more consistent
-From: Philipp Stanner <pstanner@redhat.com>
-To: andy.shevchenko@gmail.com
-Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas
- <bhelgaas@google.com>, Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
- linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,  linux-pci@vger.kernel.org
-Date: Thu, 18 Jan 2024 09:48:11 +0100
-In-Reply-To: <5e760f104c75efe37100cee5a26b7ee3581f03b4.camel@redhat.com>
-References: <20240115144655.32046-2-pstanner@redhat.com>
-	 <ZabyY3csP0y-p7lb@surfacebook.localdomain>
-	 <5e760f104c75efe37100cee5a26b7ee3581f03b4.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1705570072; c=relaxed/simple;
+	bh=We42sBxpYqbo9Mmli+qZoQhq0Gf1SBcgshlP/yaPCZI=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:Received:From:Date:To:cc:Subject:In-Reply-To:
+	 Message-ID:References:MIME-Version:Content-Type; b=EwD2l8gOo0HrAoD9ok/V0Q4UaTs6rmX5rSvYQ1vunwAVy7FEUc2xo/V7WRkxMXlXjLOmVLrv+7UnoRDok5fz9ZpfYcW/0P6WLtrgm/x8a044L1zEN6pk1HHTZ1TKxlARBoKu5LaIm0dVrm2MdaCfWnW3HYMBVsjaBtTo9YiM8u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OCN3Zo1T; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705570071; x=1737106071;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=We42sBxpYqbo9Mmli+qZoQhq0Gf1SBcgshlP/yaPCZI=;
+  b=OCN3Zo1TlF53xTXL0YUuifxwi3J35Tel+ySBbry0tnkHBiF1ioflGTUX
+   eEyKmtqtne5SUUTiL+1Gs6VxhVRTJJJRz4ANDFcO0bFpzEZxwKU0VwMZZ
+   LIPNMMj+39Skq+efN9uBmaIRP6PmNPBLZTPcnXH85JWxh93yym6B3UzL2
+   AG9sTDHbf8l8a/fEnlrnIrswyldF6uKnL2REfrXFT/6yKyrCYpF4vuFTi
+   aFmDy3ZXzR/QePPpkmv5EAhxxFUCEHKVLfm/mnTKtyysrOEsa7BDHo9Ye
+   scevbUgZLCJVhKLD94a9mv8lVoF1ezNxjBegZb3bUACQJbIE5UW8WKd/X
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="293169"
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="293169"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 01:27:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="26727893"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.254.202])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 01:27:46 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 18 Jan 2024 11:27:41 +0200 (EET)
+To: Jonathan Woithe <jwoithe@just42.net>
+cc: Igor Mammedov <imammedo@redhat.com>, linux-pci@vger.kernel.org, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+    Rob Herring <robh@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@intel.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+In-Reply-To: <ZajJzcquyvRebAFN@marvin.atrad.com.au>
+Message-ID: <c930a6db-f1cd-88e2-03b5-9280b755df08@linux.intel.com>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com> <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com> <ZZaiLOR4aO84CG2S@marvin.atrad.com.au> <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au> <ZajJzcquyvRebAFN@marvin.atrad.com.au>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1115935032-1705570061=:1058"
 
-On Wed, 2024-01-17 at 10:59 +0100, Philipp Stanner wrote:
-> On Tue, 2024-01-16 at 23:17 +0200, andy.shevchenko@gmail.com=C2=A0wrote:
-> > Mon, Jan 15, 2024 at 03:46:11PM +0100, Philipp Stanner kirjoitti:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-[...]
+--8323328-1115935032-1705570061=:1058
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> >=20
-> >=20
-> > > PCI's devres API suffers several weaknesses:
+On Thu, 18 Jan 2024, Jonathan Woithe wrote:
+
+> On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:
+> > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:
+> > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:
+> > > > On Thu, 28 Dec 2023 18:57:00 +0200
+> > > > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > > >=20
+> > > > > Hi all,
+> > > > >=20
+> > > > > Here's a series that contains two fixes to PCI bridge window sizi=
+ng
+> > > > > algorithm. Together, they should enable remove & rescan cycle to =
+work
+> > > > > for a PCI bus that has PCI devices with optional resources and/or
+> > > > > disparity in BAR sizes.
+> > > > >=20
+> > > > > For the second fix, I chose to expose find_empty_resource_slot() =
+from
+> > > > > kernel/resource.c because it should increase accuracy of the cann=
+ot-fit
+> > > > > decision (currently that function is called find_resource()). In =
+order
+> > > > > to do that sensibly, a few improvements seemed in order to make i=
+ts
+> > > > > interface and name of the function sane before exposing it. Thus,=
+ the
+> > > > > few extra patches on resource side.
+> > > > >=20
+> > > > > Unfortunately I don't have a reason to suspect these would help w=
+ith
+> > > > > the issues related to the currently ongoing resource regression
+> > > > > thread [1].
+> > > >=20
+> > > > Jonathan,
+> > > > can you test this series on affected machine with broken kernel to =
+see if
+> > > > it's of any help in your case?
 > > >=20
-> > > 1. There are functions prefixed with pcim_. Those are always
-> > > managed
-> > > =C2=A0=C2=A0 counterparts to never-managed functions prefixed with pc=
-i_ =E2=80=93
-> > > or
-> > > so one
-> > > =C2=A0=C2=A0 would like to think. There are some apparently unmanaged
-> > > functions
-> > > =C2=A0=C2=A0 (all region-request / release functions, and pci_intx())=
- which
-> > > =C2=A0=C2=A0 suddenly become managed once the user has initialized th=
-e
-> > > device
-> > > with
-> > > =C2=A0=C2=A0 pcim_enable_device() instead of pci_enable_device(). Thi=
+> > > Certainly, but it will have to wait until next Thursday (11 Jan 2024)=
+=2E  I'm
+> > > still on leave this week, and when at work I only have physical acces=
+s to
+> > > the machine concerned on Thursdays at present.
+> > >=20
+> > > Which kernel would you prefer I apply the series to?
+> >=20
+> > I was very short of time today but I did apply the above series to the
+> > 5.15.y branch (since I had this source available), resulting in version
+> > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after the
+> > bisect reset, so the resulting kernel was not correctly built.  It boot=
+ed
+> > but thought it was a different version and therefore none of the module=
 s
-> > > "sometimes
-> > > =C2=A0=C2=A0 yes, sometimes no" nature of those functions is confusin=
-g and
-> > > =C2=A0=C2=A0 therefore bug-provoking. In fact, it has already caused =
-a bug
-> > > in
-> > > DRM.
-> > > =C2=A0=C2=A0 The last patch in this series fixes that bug.
-> > > 2. iomappings: Instead of giving each mapping its own callback,
-> > > the
-> > > =C2=A0=C2=A0 existing API uses a statically allocated struct tracking=
- one
-> > > mapping
-> > > =C2=A0=C2=A0 per bar. This is not extensible. Especially, you can't c=
-reate
-> > > =C2=A0=C2=A0 _ranged_ managed mappings that way, which many drivers w=
-ant.
-> > > 3. Managed request functions only exist as "plural versions" with
-> > > a
-> > > =C2=A0=C2=A0 bit-mask as a parameter. That's quite over-engineered
-> > > considering
-> > > =C2=A0=C2=A0 that each user only ever mapps one, maybe two bars.
-> > >=20
-> > > This series:
-> > > - add a set of new "singular" devres functions that use devres
-> > > the
-> > > way
-> > > =C2=A0 its intended, with one callback per resource.
-> > > - deprecates the existing iomap-table mechanism.
-> > > - deprecates the hybrid nature of pci_ functions.
-> > > - preserves backwards compatibility so that drivers using the
-> > > existing
-> > > =C2=A0 API won't notice any changes.
-> > > - adds documentation, especially some warning users about the
-> > > =C2=A0 complicated nature of PCI's devres.
+> > could be found.  As a result, the test is invalid.
 > >=20
-> > Instead of adding pcim_intx(), please provide proper one for
-> > pci_alloc_irq_vectors(). Ideally it would be nice to deprecate
-> > old IRQ management functions in PCI core and delete them in the
-> > future.
-> >=20
+> > I will try again in a week when I next have physical access to the syst=
+em.=20
+> > Apologies for the delay.  In the meantime, if there's a specific kernel=
+ I
+> > should apply the patch series against please let me know.  As I underst=
+and
+> > it, you want it applied to one of the kernels which failed, making 5.15=
+=2Ey
+> > (for y < 145) a reasonable choice.
 >=20
-> In order to deprecate the intermingling with half-managed hyprid
-> devres
-> in pci.c, you need to have pci_intx() be backwards compatible. Unless
-> you can remove it at once.
-> And the least broken way to do that I thought would be pcim_intx(),
-> because that's consistent with how I make pci_request_region() & Co.
-> call into their managed counterparts.
+> I did a "make clean" to reset the source tree and recompiled.  However, i=
+t
+> errored out:
 >=20
-> There are 25 users of pci_intx().
-> We'd have to look how many of them call pcim_enable_device() and how
-> easy they would be to port to... pci_alloc_irq_vectors() you say? I
-> haven't used that before. Would have to look into it and see how we
-> could do that.
-
-Alright, so I thought about that a bit.
-
-So pci_intx() is the old way to do it and you would like to deprecate
-it for good. Understood, makes sense
-
-This series, however, is about deprecating PCI's broken devres
-implementation =E2=80=93 not about deprecating outdated PCI features in
-general.
-
-So I wouldn't like to touch anything here unless cleaning up devres
-demands it.
-Now the question would be: how can we solve this?
-
-My suggestion would be:
-Let's implement pcim_intx(), but only make it visible through
-drivers/pci/pci.h. So we won't make it usable for other drivers, don't
-EXPORT_SYMBOL() it and basically only have it as a tool to move the
-devres-part clearly and cleanly from pci.c to devres.c
-
-Further deprecating old PCI stuff could then be done in a separate
-series.
-
-ACK?
-
-P.
-
-
-
+>   drivers/pci/setup-bus.c:988:24: error: =E2=80=98RESOURCE_SIZE_MAX=E2=80=
+=99 undeclared
+>   drivers/pci/setup-bus.c:998:17: error: =E2=80=98pci_bus_for_each_resour=
+ce=E2=80=99 undeclared
 >=20
+> This was with the patch series applied against 5.15.141.  It seems the pa=
+tch
+> targets a kernel that's too far removed from 5.15.x.
 >=20
-> P.
+> Which kernel would you like me to apply the patch series to and test?
 
+Two argument version of pci_bus_for_each_resource() is quite new (so=20
+either 6.6 or 6.7). If want to attempt to compile in 5.15.x, you need=20
+this:
+
+include/linux/limits.h:#define RESOURCE_SIZE_MAX        ((resource_size_t)~=
+0)
+
+And to add one extra argument into pci_bus_for_each_resource(bus, r) in=20
+pbus_upstream_assigned_limit():
+
+=09...
+=09while ((bus =3D bus->parent)) {
++=09=09unsigned int i;
+=09=09if (pci_is_root_bus(bus))
+=09=09=09break;
+
+-=09=09pci_bus_for_each_resource(bus, r) {
++=09=09pci_bus_for_each_resource(bus, r, i) {
+
+Note I've written this "patch" by hand inline so patch command cannot=20
+apply it but you need to edit those in.
+
+
+--=20
+ i.
+
+--8323328-1115935032-1705570061=:1058--
 
