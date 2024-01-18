@@ -1,198 +1,115 @@
-Return-Path: <linux-pci+bounces-2313-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2314-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70C4E8315C8
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 10:28:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 668C48316B4
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 11:33:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECD761F27EBD
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 09:27:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34EF42826DF
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 10:33:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88D21BC55;
-	Thu, 18 Jan 2024 09:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OCN3Zo1T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CD220B10;
+	Thu, 18 Jan 2024 10:33:47 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178381F610;
-	Thu, 18 Jan 2024 09:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B7720B04;
+	Thu, 18 Jan 2024 10:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705570072; cv=none; b=BB+osyaSS81eDAZgCrjYZOzAAHp/n81bJrzRgmP48maqbPyz0XUa88xxR3mOeNV8SqcF6gbPCQkp1vbFCVIsV9mc/uFQ0SdPtzo+jKabvkGXqtskX+rtpTF06rcXXPykesnrG5TIRCrv9AIj00Szwd5/Fp/UWKBXcw/0OZVP0ow=
+	t=1705574027; cv=none; b=O6uP4jcAYT8WY/rnXCZH0aTjXTy6449m2gaE9gCpv1i4BLGLaBcSUXWxVgX6l6fe7aWBBPhsvKbzCxHOwD5EvCk0CRra9uCIPBTB2YZxH4vFANyDP65wvnLAMPItuVZ0IW6hXs021+64teB+MNhTBhe8pVbhn35fDq1eLn/aYKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705570072; c=relaxed/simple;
-	bh=We42sBxpYqbo9Mmli+qZoQhq0Gf1SBcgshlP/yaPCZI=;
-	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
-	 X-IronPort-AV:Received:From:Date:To:cc:Subject:In-Reply-To:
-	 Message-ID:References:MIME-Version:Content-Type; b=EwD2l8gOo0HrAoD9ok/V0Q4UaTs6rmX5rSvYQ1vunwAVy7FEUc2xo/V7WRkxMXlXjLOmVLrv+7UnoRDok5fz9ZpfYcW/0P6WLtrgm/x8a044L1zEN6pk1HHTZ1TKxlARBoKu5LaIm0dVrm2MdaCfWnW3HYMBVsjaBtTo9YiM8u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OCN3Zo1T; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705570071; x=1737106071;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=We42sBxpYqbo9Mmli+qZoQhq0Gf1SBcgshlP/yaPCZI=;
-  b=OCN3Zo1TlF53xTXL0YUuifxwi3J35Tel+ySBbry0tnkHBiF1ioflGTUX
-   eEyKmtqtne5SUUTiL+1Gs6VxhVRTJJJRz4ANDFcO0bFpzEZxwKU0VwMZZ
-   LIPNMMj+39Skq+efN9uBmaIRP6PmNPBLZTPcnXH85JWxh93yym6B3UzL2
-   AG9sTDHbf8l8a/fEnlrnIrswyldF6uKnL2REfrXFT/6yKyrCYpF4vuFTi
-   aFmDy3ZXzR/QePPpkmv5EAhxxFUCEHKVLfm/mnTKtyysrOEsa7BDHo9Ye
-   scevbUgZLCJVhKLD94a9mv8lVoF1ezNxjBegZb3bUACQJbIE5UW8WKd/X
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="293169"
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="293169"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 01:27:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
-   d="scan'208";a="26727893"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.254.202])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 01:27:46 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 18 Jan 2024 11:27:41 +0200 (EET)
-To: Jonathan Woithe <jwoithe@just42.net>
-cc: Igor Mammedov <imammedo@redhat.com>, linux-pci@vger.kernel.org, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-    Rob Herring <robh@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Andy Shevchenko <andriy.shevchenko@intel.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
-In-Reply-To: <ZajJzcquyvRebAFN@marvin.atrad.com.au>
-Message-ID: <c930a6db-f1cd-88e2-03b5-9280b755df08@linux.intel.com>
-References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com> <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com> <ZZaiLOR4aO84CG2S@marvin.atrad.com.au> <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au> <ZajJzcquyvRebAFN@marvin.atrad.com.au>
+	s=arc-20240116; t=1705574027; c=relaxed/simple;
+	bh=15DiUnnoqFmJQ1n4F5shd8NZfrPHdiR0aqhLgWlJuJs=;
+	h=Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+	 User-Agent; b=eyQFJ88pLuZP5sl/dccs20JzopE7wrPn3QMqNjGSER0f/sM6kX/qPSrEe7qD7jp5zORf/rq3gnMRHGnV8tc9kaS+vhkHACdlca/jDyySIjeJobsS1J3Rnuf+fNYD0fnNxd6oQ12pl5aysN3R/NqEVHdns9zPHXll3x3nllRPmHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 9B90A28141EA3;
+	Thu, 18 Jan 2024 11:33:35 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 8FB0ECC6A0; Thu, 18 Jan 2024 11:33:35 +0100 (CET)
+Date: Thu, 18 Jan 2024 11:33:35 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: bhelgaas@google.com, alex.williamson@redhat.com, treding@nvidia.com,
+	jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, vsethi@nvidia.com, kthota@nvidia.com,
+	mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3] PCI: pciehp: Disable ACS Source Validation during
+ hot-remove
+Message-ID: <20240118103335.GA29974@wunner.de>
+References: <20230111190533.29979-1-vidyas@nvidia.com>
+ <20230730191519.3124390-1-vidyas@nvidia.com>
+ <20230730194026.GA19962@wunner.de>
+ <7880aa6e-9fc5-c026-138f-42bef3c48b69@nvidia.com>
+ <20230731195930.GA13000@wunner.de>
+ <f7324ca4-2c57-459c-a9e8-aac09ba65e87@nvidia.com>
+ <20240108141901.GA17779@wunner.de>
+ <7345c2d2-5446-49a6-9ceb-0f1b9ee4ec18@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1115935032-1705570061=:1058"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7345c2d2-5446-49a6-9ceb-0f1b9ee4ec18@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Jan 11, 2024 at 07:14:54PM +0530, Vidya Sagar wrote:
+> On 1/8/2024 7:49 PM, Lukas Wunner wrote:
+> > On Thu, Jan 04, 2024 at 08:01:06PM +0530, Vidya Sagar wrote:
+> > > On 8/1/2023 1:29 AM, Lukas Wunner wrote:
+> > > > As an alternative to disabling ACS, have you explored masking ACS
+> > > > Violations (PCI_ERR_UNC_ACSV) upon de-enumeration of a device and
+> > > > unmasking them after assignment of a bus number?
+> > > 
+> > > I explored this option and it seemed to work as expected. But, the issue
+> > > is that this works only if the AER registers are owned by the OS. If the
+> > > AER registers are owned by the firmware (i.e. Firmware-First approach of
+> > > handling the errors), OS is not supposed to access the AER registers and
+> > > there is no indication from the OS to the firmware as to when the
+> > > enumeration is completed and time is apt to unmask the ACSViolation
+> > > errors in the AER's Uncorrectable Error Mask register.
+> > > Any thoughts on accommodating the Firmware-First approach also?
 
---8323328-1115935032-1705570061=:1058
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I'm sorry, I don't have any good ideas.
 
-On Thu, 18 Jan 2024, Jonathan Woithe wrote:
+I just would like to avoid disabling ACS Source Validation because
+it would diminish our security posture.
 
-> On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:
-> > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:
-> > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:
-> > > > On Thu, 28 Dec 2023 18:57:00 +0200
-> > > > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> > > >=20
-> > > > > Hi all,
-> > > > >=20
-> > > > > Here's a series that contains two fixes to PCI bridge window sizi=
-ng
-> > > > > algorithm. Together, they should enable remove & rescan cycle to =
-work
-> > > > > for a PCI bus that has PCI devices with optional resources and/or
-> > > > > disparity in BAR sizes.
-> > > > >=20
-> > > > > For the second fix, I chose to expose find_empty_resource_slot() =
-from
-> > > > > kernel/resource.c because it should increase accuracy of the cann=
-ot-fit
-> > > > > decision (currently that function is called find_resource()). In =
-order
-> > > > > to do that sensibly, a few improvements seemed in order to make i=
-ts
-> > > > > interface and name of the function sane before exposing it. Thus,=
- the
-> > > > > few extra patches on resource side.
-> > > > >=20
-> > > > > Unfortunately I don't have a reason to suspect these would help w=
-ith
-> > > > > the issues related to the currently ongoing resource regression
-> > > > > thread [1].
-> > > >=20
-> > > > Jonathan,
-> > > > can you test this series on affected machine with broken kernel to =
-see if
-> > > > it's of any help in your case?
-> > >=20
-> > > Certainly, but it will have to wait until next Thursday (11 Jan 2024)=
-=2E  I'm
-> > > still on leave this week, and when at work I only have physical acces=
-s to
-> > > the machine concerned on Thursdays at present.
-> > >=20
-> > > Which kernel would you prefer I apply the series to?
-> >=20
-> > I was very short of time today but I did apply the above series to the
-> > 5.15.y branch (since I had this source available), resulting in version
-> > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after the
-> > bisect reset, so the resulting kernel was not correctly built.  It boot=
-ed
-> > but thought it was a different version and therefore none of the module=
-s
-> > could be found.  As a result, the test is invalid.
-> >=20
-> > I will try again in a week when I next have physical access to the syst=
-em.=20
-> > Apologies for the delay.  In the meantime, if there's a specific kernel=
- I
-> > should apply the patch series against please let me know.  As I underst=
-and
-> > it, you want it applied to one of the kernels which failed, making 5.15=
-=2Ey
-> > (for y < 145) a reasonable choice.
->=20
-> I did a "make clean" to reset the source tree and recompiled.  However, i=
-t
-> errored out:
->=20
->   drivers/pci/setup-bus.c:988:24: error: =E2=80=98RESOURCE_SIZE_MAX=E2=80=
-=99 undeclared
->   drivers/pci/setup-bus.c:998:17: error: =E2=80=98pci_bus_for_each_resour=
-ce=E2=80=99 undeclared
->=20
-> This was with the patch series applied against 5.15.141.  It seems the pa=
-tch
-> targets a kernel that's too far removed from 5.15.x.
->=20
-> Which kernel would you like me to apply the patch series to and test?
+I guess setting the secondary bus number in the hotplug port to 0
+isn't a good solution either because it would allow hotplugged devices
+to temporarily spoof TLPs from devices on the root bus, right?
 
-Two argument version of pci_bus_for_each_resource() is quite new (so=20
-either 6.6 or 6.7). If want to attempt to compile in 5.15.x, you need=20
-this:
+One option might be to have separate code paths:  If AER is owned by
+the OS, mask PCI_ERR_UNC_ACSV on hot-removal, unmask on hot-add.
+If AER is *not* owned by the OS, disable ACS Source Validation on
+hot-removal, enable on hot-add, and warn loudly about the security
+implications.
 
-include/linux/limits.h:#define RESOURCE_SIZE_MAX        ((resource_size_t)~=
-0)
+Another option might be to change error handling, i.e. ignore
+ACS Source Validation errors if they occur before assignment of
+a bus number.  And temporarily disable DPC.
 
-And to add one extra argument into pci_bus_for_each_resource(bus, r) in=20
-pbus_upstream_assigned_limit():
+None of these options look pretty.  I'm generally not a fan of
+having the firmware own certain features.  The user experience
+is better if everything is owned by the OS.  This is just one
+more case in point. :(
 
-=09...
-=09while ((bus =3D bus->parent)) {
-+=09=09unsigned int i;
-=09=09if (pci_is_root_bus(bus))
-=09=09=09break;
+Thanks,
 
--=09=09pci_bus_for_each_resource(bus, r) {
-+=09=09pci_bus_for_each_resource(bus, r, i) {
-
-Note I've written this "patch" by hand inline so patch command cannot=20
-apply it but you need to edit those in.
-
-
---=20
- i.
-
---8323328-1115935032-1705570061=:1058--
+Lukas
 
