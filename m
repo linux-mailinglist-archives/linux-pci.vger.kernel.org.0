@@ -1,89 +1,74 @@
-Return-Path: <linux-pci+bounces-2318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C737831A23
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 14:11:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE15D831B56
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 15:29:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF15528517F
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 13:11:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F0761F26D59
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Jan 2024 14:29:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71DF25116;
-	Thu, 18 Jan 2024 13:11:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02909286B0;
+	Thu, 18 Jan 2024 14:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qRGqsq+1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsdvZXqg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D96424B5F
-	for <linux-pci@vger.kernel.org>; Thu, 18 Jan 2024 13:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFA52C9D;
+	Thu, 18 Jan 2024 14:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705583504; cv=none; b=GCvfmQMwGr/JTjqhzPvB7gP6/roGIcPWftWHBs2iyQzuDhK4brYdb5HyHThTeqevanzHhHrNvCkbyqmXat/Drqd1B5DsQj4nIwfrxDz1A6CCsXpGznDpwLr739+PE/VFj0zvbj15ttDVBsIE/V/uQrC1uFIhNSlEmxvPGM4psE8=
+	t=1705588175; cv=none; b=u70VFdKdP4AofmIcGxfRPgoo4XFQzWjIAeKl4xbuQlONN9HYNZBnJ5SytTMa2PazJtvlFsqTUlPfgx4ZW2Zb7qKi2Z/Sg8UpwRVHvBVHgvQNx9LLTP8I6Np6qqtwoW6/TDYiQl5iXjh1QqFBvmaw3wH5jtPLwHmUEV6hIHDeWSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705583504; c=relaxed/simple;
-	bh=n++XuhRB4EVG1dnVu6UFfzLPoEhlNslsnkhQrRbhM9k=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=YVX0RtRtUwDX2lv5350lb4fHm6jx+cMDsGMC63InPaA8VRMGwur6spZd4ktbh5nQ7BZls4XSGTc8jS4ssqqCRoxPeJ3cxtCnCUUKxofYy/2j90ld3W2B0B0GBdp5LthcKYgpchzN2k45aDhZOum/vDKN8XSaMyAbOiCyukwsg8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qRGqsq+1; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4b7480a80ceso438212e0c.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jan 2024 05:11:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705583501; x=1706188301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MHW8mrwPYeD3SY8y17cH7gnw3XovI7cNYSvj0nnf3+8=;
-        b=qRGqsq+1bJuMzygpcPUnex5SggsPvLRZYTJseFdBGyl4S/GAZKSuc7bdKJ4EjIdPmO
-         hdJbXf83QFKgssHvoAAGG1ZyqA9VDp1iB5g/O1pI+5UQvDmBCffzWB9C4FkEJyXknb98
-         Ez0ibwxLiYz6GZ0QwMFqKfE0SPZlmRIKIZifWQ2sQrJ6buPgp1eHUrtQiUxRrKE0LXLf
-         zHVOuqd704GbXXI28ckuPnx5KtXwNCjiGA+Xo3bonHuN+rwkj+srZUVeG31S8zky+GxE
-         8OsymlU/9SdFKfojInsqMLnOYxQvE8J2YHnaNHmTl7QbL5IOG5UfKpFP2uT9RyllV1Ke
-         ilMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705583501; x=1706188301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MHW8mrwPYeD3SY8y17cH7gnw3XovI7cNYSvj0nnf3+8=;
-        b=Jm/uwxyyCN8NZp/VuFOs0+IV7m/ejpJ7zznB+iG7irAjILhF4mIjPnqUvyP2+uN28x
-         pyRoQAsmwmys/5oeh+LTxPCfwlHwIybqBa+VQtiFHsttB1CUVkhr0JLlWFulM6pPiznO
-         FQK+MEkMnLbCnADI3jrImjpeeLRuofO5BDHt/tKSyRJfJ2QVt49gr+hvji7cgnE4/TJ1
-         gPpw9/C943jyywyhFktfch+jwMzmx1BfZ9FUNhO8+nemKy0JlOHVnn+Op31webHg8DSS
-         0RG3UD1A4FBBJuHq6G2Dv/OkYx5ahX3SiV9W9JLoDC26FgubKJ6o+3PnIB/disHNxLIi
-         LpXw==
-X-Gm-Message-State: AOJu0Yz7ulTwiCdprdKjYOzjFmrhK4NbW5RQ1qOTMwkopK8h+Tv5X/v2
-	GIn7nBUplq3DqB13tj0LkWCLNFjsSTOMWTLiBIwPLpaKhE33+E1Oq90aWq6KhoI+0lhxfekf9kF
-	JMIVzPY0k+kO/E9l4x47iRDhVK9gfzhW+zAHg/g==
-X-Google-Smtp-Source: AGHT+IGTGw8HnvT5D8+nH/KgquXG/RE7XEsMEneP3Lg56sqfViwsfnFVV4sR0gvqRyQwQNymy/UlduMSCG1+S/3he4Q=
-X-Received: by 2002:a05:6122:128b:b0:4b7:2c46:32bb with SMTP id
- i11-20020a056122128b00b004b72c4632bbmr1337533vkp.13.1705583501195; Thu, 18
- Jan 2024 05:11:41 -0800 (PST)
+	s=arc-20240116; t=1705588175; c=relaxed/simple;
+	bh=iPGPVXXwyd5DFSfC8msMPU1CSz0Q7jm4kMOswDCGfn4=;
+	h=Received:DKIM-Signature:Received:X-Gm-Message-State:
+	 X-Google-Smtp-Source:X-Received:MIME-Version:References:
+	 In-Reply-To:From:Date:X-Gmail-Original-Message-ID:Message-ID:
+	 Subject:To:Cc:Content-Type:Content-Transfer-Encoding; b=ip9Lb9o5+v/xopGfYyqJRx92WpEtbAG+CrCRt1RuFghv+Dgep6PKtKedvtyfUJyKifPt/25VlEbnfDlnlNiZuH/mP8/OP1NSc3wB9gdGVYW7EFeYtcs+ihvgPN8TtvTtactFfPYCk8w3+B3f/v9/yNK0BPGY76IEF9nW20RmQjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsdvZXqg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F12C433F1;
+	Thu, 18 Jan 2024 14:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705588175;
+	bh=iPGPVXXwyd5DFSfC8msMPU1CSz0Q7jm4kMOswDCGfn4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VsdvZXqg71HEfgsj0TMAnjwKaNJMB8YfV6RHoZIdngwczm2R9BalAiS5dSBxF/NrL
+	 erLZWbXItZ4BJ6n81aA/hPD0PYCZm6fEu12ayLT9FZfGysL7vb2J3y09rJV1X4911/
+	 MBEXc9UdwGEo5F/NM5qneMKqNPWFdbpUWfna3Q/ATOmcFlFSvJ2ZCnK33394PoGWWK
+	 0amzGNrDh/+luAUELiD7dijo+uyMJYTqc79GJ+76E/xh/UgqUBpv1lRLL3oqgVICPv
+	 asLg/+x7hG0hL+vbHXy42so1VIPsEp6KBRMfkbqOXFA/Jh9AV/Vi2eFCKuWmkZUqoH
+	 m8Kn5sBfqvM/Q==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a28f66dc7ffso150582166b.0;
+        Thu, 18 Jan 2024 06:29:35 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx7lQmVM/2uB32FZsOLjE6ponPfM/bNQEmtmqIkOCd2+SmISR63
+	6RSy8Zea6NCZMIW1YPi39cIitzfw1Q4F9wadORGJWte8rkb9J4aX2EVxDFYWrC8/a957ZoHOYAY
+	pJZJImWuYEM5jALqfFzTTmpBxIQ==
+X-Google-Smtp-Source: AGHT+IFh30Wa29ABtnduwX0kE65ZA9bKjWTFtwY7A2f10u3apUDt/6uU2eD5vEaD6OSynYOp5n7MROLZi+0BQu7ZbM0=
+X-Received: by 2002:a19:644a:0:b0:50e:e1c3:f97b with SMTP id
+ b10-20020a19644a000000b0050ee1c3f97bmr1677678lfj.3.1705588153618; Thu, 18 Jan
+ 2024 06:29:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117160748.37682-1-brgl@bgdev.pl> <20240117160748.37682-5-brgl@bgdev.pl>
- <65a7feb3ea48f_3b8e294bf@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <65a7feb3ea48f_3b8e294bf@dwillia2-xfh.jf.intel.com.notmuch>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 18 Jan 2024 14:11:30 +0100
-Message-ID: <CAMRc=McUdR5oVEpbwXF+Sc1OaEtYH-UCv0ScFwrbGyWtyh8W0A@mail.gmail.com>
-Subject: Re: [PATCH 4/9] PCI: create platform devices for child OF nodes of
- the port node
-To: Dan Williams <dan.j.williams@intel.com>
+References: <20240117160748.37682-1-brgl@bgdev.pl>
+In-Reply-To: <20240117160748.37682-1-brgl@bgdev.pl>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Thu, 18 Jan 2024 08:29:01 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+0xb-otvjkbLqB8gNKadVqnigwGB_k+VGrj740Y6wxjg@mail.gmail.com>
+Message-ID: <CAL_Jsq+0xb-otvjkbLqB8gNKadVqnigwGB_k+VGrj740Y6wxjg@mail.gmail.com>
+Subject: Re: [PATCH 0/9] PCI: introduce the concept of power sequencing of
+ PCIe devices
+To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
 	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
 	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
@@ -93,9 +78,9 @@ Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>,
 	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
 	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
 	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
-	Robert Richter <rrichter@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
+	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <terry.bowman@amd.com>, 
+	Lukas Wunner <lukas@wunner.de>, Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
 	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
 	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
@@ -106,56 +91,47 @@ Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 5:22=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
-com> wrote:
+On Wed, Jan 17, 2024 at 10:08=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > In order to introduce PCI power-sequencing, we need to create platform
-> > devices for child nodes of the port node. They will get matched against
-> > the pwrseq drivers (if one exists) and then the actual PCI device will
-> > reuse the node once it's detected on the bus.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> [..]
-> > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> > index d749ea8250d6..77be0630b7b3 100644
-> > --- a/drivers/pci/remove.c
-> > +++ b/drivers/pci/remove.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  #include <linux/pci.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> >  #include "pci.h"
-> >
-> >  static void pci_free_resources(struct pci_dev *dev)
-> > @@ -18,11 +19,11 @@ static void pci_stop_dev(struct pci_dev *dev)
-> >       pci_pme_active(dev, false);
-> >
-> >       if (pci_dev_is_added(dev)) {
-> > -
-> >               device_release_driver(&dev->dev);
-> >               pci_proc_detach_device(dev);
-> >               pci_remove_sysfs_dev_files(dev);
-> >               of_pci_remove_node(dev);
-> > +             of_platform_depopulate(&dev->dev);
-> >
-> >               pci_dev_assign_added(dev, false);
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Why is pci_stop_dev() not in strict reverse order of
-> pci_bus_add_device()? I see that pci_dev_assign_added() was already not
-> in reverse "add" order before your change, but I otherwise would have
-> expected of_platform_depopulate() before of_pci_remove_node() (assumed
-> paired with of_pci_make_dev_node()).
+> The responses to the RFC were rather positive so here's a proper series.
 
-The naming here is confusing but the two have nothing in common. One
-is used by CONFIG_PCI_DYNAMIC_OF_NODES to *create* new DT nodes for
-detected PCI devices. The one I'm adding, creates power sequencing
-*devices* (no nodes) for *existing* DT nodes.
+Thanks for tackling this.
 
-So the order is not really relevant here but I can change in v2.
+> During last year's Linux Plumbers we had several discussions centered
+> around the need to power-on PCI devices before they can be detected on
+> the bus.
+>
+> The consensus during the conference was that we need to introduce a
+> class of "PCI slot drivers" that would handle the power-sequencing.
+>
+> After some additional brain-storming with Manivannan and the realization
+> that DT maintainers won't like adding any "fake" nodes not representing
+> actual devices, we decided to reuse existing PCI infrastructure.
 
-Bartosz
+Thank you. :)
+
+> The general idea is to instantiate platform devices for child nodes of
+> the PCIe port DT node. For those nodes for which a power-sequencing
+> driver exists, we bind it and let it probe. The driver then triggers a
+> rescan of the PCI bus with the aim of detecting the now powered-on
+> device. The device will consume the same DT node as the platform,
+> power-sequencing device. We use device links to make the latter become
+> the parent of the former.
+>
+> The main advantage of this approach is not modifying the existing DT in
+> any way and especially not adding any "fake" platform devices.
+
+Suspend/resume has been brought up already, but I disagree we can
+worry about that later unless there is and always will be no power
+sequencing during suspend/resume for all devices ever. Given the
+supplies aren't standard, it wouldn't surprise me if standard PCI
+power management isn't either. The primary issue I see with this
+design is we will end up with 2 drivers doing the same power
+sequencing: the platform driver for initial power on and the device's
+PCI driver for suspend/resume.
+
+Rob
 
