@@ -1,127 +1,151 @@
-Return-Path: <linux-pci+bounces-2351-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2353-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E90598329A4
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 13:46:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304D78329E1
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 14:01:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55FA4B227BD
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 12:46:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2A722848DA
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 13:01:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 599895103F;
-	Fri, 19 Jan 2024 12:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04C7A51C58;
+	Fri, 19 Jan 2024 13:00:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfUiVApl"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AklFT0or"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D42651018;
-	Fri, 19 Jan 2024 12:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A8B524A2;
+	Fri, 19 Jan 2024 13:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705668381; cv=none; b=bvB8rk1928jozqp8xyT9Xcr0Na4o6pecg5D6jPcDMauGjtq3kt0HCtJbw4ZrqNsdCxByyNiFSumENWGvRhGRnoJXVPbJVLuWLW6eDhShziz0ZoYQ1FSUnR+QAVQCidOhqbfQZeWPTeiCTg+RpsXzYfgG1q+3n6jC98KUfJ6lghU=
+	t=1705669257; cv=none; b=rZ+eUiWAUwGrzDQ57HKxAZdOFXrLa80ymo5s54BHEKumrEet0P6bm/hmaqi9XpMTjKH+zjf1FdVc8d5vI+1lWaZA54LNqRp+pfruF232ComAV38iaUdFsec1VurZsJIhSDvLVlbxE7TcHjK92YKF2AYapFnPPAXydvY1Rmw8sIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705668381; c=relaxed/simple;
-	bh=xk3x+2RM2H/oAdspTIOEfhbsgKMkXla9iDqO6jQMg9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjK5gf/X223H2du87MXZU2MF/OmRXFWQbatBC933fiqzZYFh3J18/vsOvhbG+/qBzuvUf7XZh6DA1CGpCkWgT+LdBNlr9VeRPlzQe5hF/KKsIVjeIwbK2Y0AGbPCcDicMHvxX+Jmzs9OQ7y3rG/id18sqXn+rIKfw7sQScyAGy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfUiVApl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8450AC433F1;
-	Fri, 19 Jan 2024 12:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705668380;
-	bh=xk3x+2RM2H/oAdspTIOEfhbsgKMkXla9iDqO6jQMg9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AfUiVAplPTiBub9LycMtmRS8kyKnJwiWqP+Ej/vi17J69lPhymH5nTmCXvLGlxY8u
-	 k6VNqjchBuLPnqiWUAww7Pv2NTVX7VxAl69BMMoDyUDfpRgRt884JIjZvRan68GpWd
-	 R9EukABSUPGXAvyId+6ej9ZXkICKHIrLaIEn/Xue6vGP+2cZKW55MtoHIZBaOaIMG4
-	 2JplkA4DX/6ArH46zF9ocdvsrUeODfJMiuFin2LRchWbNLTOWhzBnkfxc3msEYaFKr
-	 rjq1ic5DwwiC8cRFlUtAEM4N316Kzpy2ztrXWoxcjt68sY7vn7LqS4BRoiADWQ/9ZD
-	 sps0MZ5+CZkbA==
-Date: Fri, 19 Jan 2024 13:46:12 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: dwc: Cleanup in dw_pcie_ep_raise_msi_irq()
-Message-ID: <ZapvFNHnhppQkoys@x1-carbon>
-References: <c5035dc2-a379-48f0-8544-aa57d642136b@moroto.mountain>
- <e231e268-d537-4613-a87c-876d99ea49e4@moroto.mountain>
+	s=arc-20240116; t=1705669257; c=relaxed/simple;
+	bh=rjihEl0PPCpJTaosRQlidZuXrEBnlcGLGWWWHhGU7Z0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=KroC3GOlBkIUh+f5UVVVfbgn4539X2FLW0zatfcveTRenOHoQ5GCmW8IKIqdnMkp6RMg3sEiPw3eUBILuOPA4Q/Gv3v6Z3ZBAehHR1Le0+7g/zwa08WyvCEtEtWDSonoo0g+yB8R+PP63VZ8lgvfYhTdBbiIMK0KPaaKyHqoiPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AklFT0or; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40JCU8R2022916;
+	Fri, 19 Jan 2024 13:00:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=TmGjiCctrlSu
+	utJGDhSLxkxmIhS8B4TTbbnE2BeZiu4=; b=AklFT0orPGE7KNb3OgiqVtecA+l8
+	edCv3BQL+o5F4Nleqba4GYg+2zsuGSuSANxQ3mDi1EW7YNc1kFCLLA9tVnHW8VLq
+	I9pJwCeEopTz2BKs/d8d7Y+l4KR828pFugHSt/FRWpJW9rI2uZ9WyTcRocwLTs6N
+	CBQSwYhPdFyqoJ38KNPfS8YtgkByuUq3uEojun4dIbz8uty2yu+QqmWsRGKTakyo
+	D5WR1NcrYKQAcbCHiSE/mQUh+i8NCuC0Ro6mz6LHhxz0x7CFWIdF3mIuo4xs3kJN
+	8hKSLmeilpCEzfaR1JW42Le2GxG1EDh0IEz5FnelyMjveDPlTwOHj2Pg3Q==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vqn89ghm8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jan 2024 13:00:36 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 40JD0Wfg023730;
+	Fri, 19 Jan 2024 13:00:32 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3vkkkmtgqt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 19 Jan 2024 13:00:32 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40JD0WkR023724;
+	Fri, 19 Jan 2024 13:00:32 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 40JD0V8t023713;
+	Fri, 19 Jan 2024 13:00:32 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+	id 0D608273A; Fri, 19 Jan 2024 18:30:31 +0530 (+0530)
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To: vkoul@kernel.org, jingoohan1@gmail.com, conor+dt@kernel.org,
+        konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org,
+        robh+dt@kernel.org
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_parass@quicinc.com,
+        quic_schintav@quicinc.com, quic_shijjose@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
+Subject: [PATCH v1 0/6] Add Change to integrate HDMA with dwc ep driver
+Date: Fri, 19 Jan 2024 18:30:16 +0530
+Message-Id: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: epo6p-1FcXSHNkhTjx5fREvGlbo5I4XY
+X-Proofpoint-ORIG-GUID: epo6p-1FcXSHNkhTjx5fREvGlbo5I4XY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-19_07,2024-01-19_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=581 clxscore=1011
+ suspectscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 impostorscore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401190065
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e231e268-d537-4613-a87c-876d99ea49e4@moroto.mountain>
 
-On Fri, Jan 19, 2024 at 11:24:18AM +0300, Dan Carpenter wrote:
-> The alignment code in dw_pcie_ep_raise_msix_irq() and
-> dw_pcie_ep_raise_msi_irq() is quite similar.  I recently update the code
-> in the former, so tweak the latter to match as well for consistency sake.
-> 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> v2: Add this new patch
-> 
-> I wrote two versions of this, one where both patches were folded
-> together and this one where the style tweaks are separated out into
-> their own patch.  This is the better version.
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 2b6607c23541..ccfc21cd0bb0 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -456,8 +456,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  	u32 msg_addr_lower, msg_addr_upper, reg;
->  	struct dw_pcie_ep_func *ep_func;
->  	struct pci_epc *epc = ep->epc;
-> -	unsigned int aligned_offset;
->  	u16 msg_ctrl, msg_data;
-> +	u64 aligned_offset;
->  	bool has_upper;
->  	u64 msg_addr;
->  	int ret;
-> @@ -483,8 +483,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
->  	}
->  	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
-> -	msg_addr = ((u64)msg_addr_upper) << 32 |
-> -			(msg_addr_lower & ~aligned_offset);
-> +	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
-> +	msg_addr &= ~aligned_offset;
->  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
->  				  epc->mem->window.page_size);
->  	if (ret)
-> -- 
-> 2.43.0
-> 
+Hyper DMA (HDMA) is already supported by the dw-edma dmaengine driver.
+Unlike it's predecessor Embedded DMA (eDMA), HDMA supports only the
+unrolled mapping format. This patch series is to integrate HDMA with
+dwc ep driver.
 
-I like this change, but like Ilpo said, perhaps even cleaner with:
-msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
-msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+Add change to provide a valid base address of the CSRs from the
+platform driver and also provides read/write channels count from
+platform driver since there is no standard way to auto detect the
+number of available read/write channels in a platform and set the
+mapping format in platform driver for HDMA.
 
-As we can remove the aligned_offset variable completely,
-no need to even change the type.
+This series passes 'struct dw_edma_chip' to irq_vector() as it needs
+to access that particular structure and fix to get the eDMA/HDMA
+max channel count. Also move the HDMA max channel definition to edma.h
+to maintain uniformity with eDMA.
 
-(dw_pcie_ep_raise_msix_irq() would obviously only need the
-second statement.)
+Dependency
+----------
+Depends on:
+https://lore.kernel.org/dmaengine/20231117-b4-feature_hdma_mainline-v6-0-ebf7aa0e40d7@bootlin.com/
+https://lore.kernel.org/all/1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com/
 
+Manivannan Sadhasivam (4):
+  dmaengine: dw-edma: Pass 'struct dw_edma_chip' to irq_vector()
+  dmaengine: dw-edma: Introduce helpers for getting the eDMA/HDMA max
+    channel count
+  PCI: dwc: Add HDMA support
+  dmaengine: dw-edma: Move HDMA_V0_MAX_NR_CH definition to edma.h
 
-Kind regards,
-Niklas
+Mrinmay Sarkar (2):
+  PCI: qcom-ep: Provide number of read/write channel for HDMA
+  PCI: epf-mhi: Add flag to enable HDMA for SA8775P
+
+ drivers/dma/dw-edma/dw-edma-core.c           | 29 ++++++++++---
+ drivers/dma/dw-edma/dw-edma-pcie.c           |  4 +-
+ drivers/dma/dw-edma/dw-hdma-v0-core.c        |  4 +-
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h        |  3 +-
+ drivers/pci/controller/dwc/pcie-designware.c | 63 ++++++++++++++++++++++------
+ drivers/pci/controller/dwc/pcie-qcom-ep.c    | 19 ++++++++-
+ drivers/pci/endpoint/functions/pci-epf-mhi.c |  1 +
+ include/linux/dma/edma.h                     | 18 +++++++-
+ 8 files changed, 115 insertions(+), 26 deletions(-)
+
+-- 
+2.7.4
+
 
