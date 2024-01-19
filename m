@@ -1,178 +1,109 @@
-Return-Path: <linux-pci+bounces-2370-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2371-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD715832D15
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 17:26:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17D60832D3C
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 17:34:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1C181C21433
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 16:25:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 942A6B23282
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 16:34:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B7C455788;
-	Fri, 19 Jan 2024 16:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hjZYzM0k"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7696555766;
+	Fri, 19 Jan 2024 16:34:17 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079D355782;
-	Fri, 19 Jan 2024 16:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0886E1F60B;
+	Fri, 19 Jan 2024 16:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705681538; cv=none; b=clwEAws8kY31uA/k5WMlwsh16Xkb5BnF3CwNm1AtqgxeIIazWw/b0ik94t4yWnKVopcl7usxu/Dn+d83mmUILEEsXxMGS8PmdnyuyBfgxk+5FuqFeYbULqgvZp84c2iFpqYxGZfNlYVvXXfpzVZrGhUmtlCpRQ6E5mUe9zFDRvg=
+	t=1705682057; cv=none; b=M7+aqLle61XINW/PZGZX4mYE0JckDjyoV7CNpFYIsxDF6FCG2bJEZ1RvnnFn088p7xfZ2ZhbwAgB+YTHgwh7SbcdBo66Vik2WQnOsoaJN587ha22UNu9ImSkepWzmvyAXbOk3Z0Rc8MEBlMuAs/nGibJa4UQTdN7zfHU+ind/c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705681538; c=relaxed/simple;
-	bh=QE00sVqAMOv90auTG/0kJ8UjMag7rnQLOwAFPBft88c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=omhw57z8e9vfaxjsDeIhpBKZPxd+QDaBW6KrtgBUls1QWwQkGjp9DynYNmL5vOkt83BppeDRkCGuaTIMhPb2Vjk1vO+NzhXPQW9nFbsJiLETs+GY6OdUsN28NfkJQeFwJ6C1hsaVSaHATfoALagRKm2e10BCDHh0ani9NMAd+hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hjZYzM0k; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C016B240002;
-	Fri, 19 Jan 2024 16:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705681533;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e1EvaPvXApBgyAhcuA6NX5wpZMQGqeoo3nUdtJav3rw=;
-	b=hjZYzM0kQHuRZNPcdU8ob/JNxW9huON2tGjrVWhmWYsIggW9L/0Bsy6cvtDtllZXtvdQs9
-	xE7HL4oEC/LAcvDR9umcjSB13cJboiMZkGSqT4croOz5W7E+lyEA0Ebon8ewkcnllnk489
-	cpfKUdcrfL/3cq3CC1XuRM4VLhLQSr0xY4/t5SPbBztssntRCkxEm+bttpGYrugkEBfr70
-	sSkhTFovjaSNa7M6u0F5yqTzyT2vTy0IevqKxWeVWImlgl8OBAuaWxF5kqvo9RFvFd6NqM
-	kWjZ8Iw9D+540DaTDSNT38aFE+Fz2R2ETVccGuE783UjmK9xBB1t4fZS9O64VQ==
-Message-ID: <828dd9ba-60f1-419b-9121-204d622739d3@bootlin.com>
-Date: Fri, 19 Jan 2024 17:25:30 +0100
+	s=arc-20240116; t=1705682057; c=relaxed/simple;
+	bh=D2LgJwRjxJYglnLH2h53TIEgwBrE9PHOgnordbiozD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nkDUpOo0f8dj+RbGMsa8WS2tGpE639ruip02XLo4cyx+rZx37U7ANOtFuX9crAslmdOf3ADFjOLDgbg/gBWgrdnhbGgdF3s+5OMctd3030L6qjpNdJtctGfMm8kk3OBobUWo7PoIcElmiMoRJkTuR83zMauMntlBRK1+aYmmEjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 6E25130006284;
+	Fri, 19 Jan 2024 17:34:05 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 50F591D3C6; Fri, 19 Jan 2024 17:34:05 +0100 (CET)
+Date: Fri, 19 Jan 2024 17:34:05 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>, linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 0/9] PCI: introduce the concept of power sequencing of
+ PCIe devices
+Message-ID: <20240119163405.GA32506@wunner.de>
+References: <20240117160748.37682-1-brgl@bgdev.pl>
+ <CAA8EJpoQfPqoMVyTmUjPs4c1Uc-p4n7zNcG+USNjXX0Svp362w@mail.gmail.com>
+ <CAA8EJpqyK=pkjEofWV595tp29vjkCeWKYr-KOJh_hBiBbkVBew@mail.gmail.com>
+ <CAMRc=McUZh0jhjMW7H6aVKbw29WMCQ3wdkVAz=yOZVK5wc45OA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/14] mux: mmio: Add resume support
-Content-Language: en-US
-To: Peter Rosin <peda@axentia.se>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-4-84e55da52400@bootlin.com>
- <c147ae1b-87cc-52b1-4ec7-684d5e7cc5db@axentia.se>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <c147ae1b-87cc-52b1-4ec7-684d5e7cc5db@axentia.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McUZh0jhjMW7H6aVKbw29WMCQ3wdkVAz=yOZVK5wc45OA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hello Peter,
+On Fri, Jan 19, 2024 at 12:52:00PM +0100, Bartosz Golaszewski wrote:
+> We have two separate issues: one is powering-up a PCI device so that
+> it can be detected
 
-Thanks for the review.
+Just wondering, I note in really_probe() we configure the pin controller,
+active the pm_domain etc before probing a driver.
 
-On 1/15/24 23:31, Peter Rosin wrote:
-> Hi!
-> 
-> 2024-01-15 at 17:14, Thomas Richard wrote:
->> From: Théo Lebrun <theo.lebrun@bootlin.com>
->>
->> Implement resume support
-> 
-> What Andy said, and please don't omit punctuation. Try to make it a
-> pleasure to read your patches!
+Would it make sense for the issue you mention above to similarly
+amend pci_scan_device() to enable whatever clocks or regulators
+are described in the devicetree as providers for the given PCI device?
 
-Yes my commit message needs to be more verbose, sorry.
+Thanks,
 
-> 
->>
->> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
->> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->> ---
->>  drivers/mux/mmio.c | 34 ++++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
->> index fd1d121a584b..ab4ef195fc0d 100644
->> --- a/drivers/mux/mmio.c
->> +++ b/drivers/mux/mmio.c
->> @@ -125,13 +125,47 @@ static int mux_mmio_probe(struct platform_device *pdev)
->>  
->>  	mux_chip->ops = &mux_mmio_ops;
->>  
->> +	dev_set_drvdata(dev, mux_chip);
->> +
->>  	return devm_mux_chip_register(dev, mux_chip);
->>  }
->>  
->> +#ifdef CONFIG_PM
->> +static int mux_mmio_resume_noirq(struct device *dev)
->> +{
->> +	struct mux_chip *mux_chip = dev_get_drvdata(dev);
->> +	int global_ret = 0;
->> +	unsigned int i;
->> +
->> +	for (i = 0; i < mux_chip->controllers; i++) {
->> +		struct mux_control *mux = &mux_chip->mux[i];
->> +		int val = mux->cached_state;
-> 
-> You are not supposed to look at (or change) cached_state outside the
-> mux core.
-> 
->> +		int ret;
->> +
->> +		if (val == MUX_IDLE_AS_IS)
-> 
-> The cached_state can never be MUX_IDLE_AS_IS. Sure, it happens to have
-> the same actual value as the correct MUX_CACHE_UNKNOWN, but abusing
-> that is all kinds of wrong.
-> 
->> +			continue;
->> +
->> +		ret = mux_mmio_set(mux, val);
->> +		if (ret) {
-> 
-> If mux_mmio_set() fails, cached_state ends up wrong as it should be set
-> to MUX_CACHE_UNKNOWN on failure. Low-level stuff like this needs to be
-> done by the mux core, or things becomes a maintenance hazard...
-> 
-> So, the meat of this function belongs in the mux core since none of
-> it looks mmio specific. It could probably be named mux_chip_resume()
-> or something such. That makes it simple to use the correct constant,
-> and the mux_control_set() helper makes it easy to get the handling of
-> cached_state right.
-> 
-
-Thanks for the explanations.
-
-So I created a mux_chip_resume function in the mux core.
-This function restores each mux using mux_control_set.
-The restored state is the cached state.
-The muxes with a MUX_CACHE_UNKNOWN cache state are ignored.
-
-So this patch will be splitted, one patch for the core, one for the mmio
-driver.
-
-Regards,
-
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Lukas
 
