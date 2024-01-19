@@ -1,87 +1,123 @@
-Return-Path: <linux-pci+bounces-2394-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2395-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B31D68330C8
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 23:34:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 659A98330FC
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 23:53:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12C84B22AFB
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 22:34:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07051B22FEA
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 22:52:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 794744436D;
-	Fri, 19 Jan 2024 22:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E94428694;
+	Fri, 19 Jan 2024 22:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJLMTo9q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPbd2X83"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498C41DDD7;
-	Fri, 19 Jan 2024 22:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA260CA4E;
+	Fri, 19 Jan 2024 22:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705703680; cv=none; b=rIshqCdZCDxdciorJHODwvcSL/KJTs5z7UOrx5n2RT/zMox+WGvXGmAJa3TI/9gZpeDHK4W3x6Fr4C0HTZOH4gj0J1yt4C9QVoEdCMge5c2xHndcy+fi+F5vt5q2TzOUTMGeiRXe+HLW4IUHElFfD8Kq+eko962u0Q605lTHbic=
+	t=1705704773; cv=none; b=rB2Z9N0AZ1nN+Ju/MNaQhM6614elP9JAxEoDlJ1kIDtWnu8Az2tBVR7cqu5jF9cBGCqTdcRl+9ZJ07wOHHjqEbRjNviQ5qv22VJ3uIjGDvSJmGcal15kmv7j2eAdlm8Gec9nMlICXZbk258SfauHK/D4Lt0Cmr5UmEs4YI8nNfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705703680; c=relaxed/simple;
-	bh=Tb/IF/3dnB+KD/SYWtRz1VcIoMLT0oJr5xplyBvSeDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4NBpCd8aI/96m7ZNLxeIGr0IqO9oJzxuetNdrrL9G3pKlWdFTWQ5duAAS4qtIQ6yMbk6tDq7Sj1+FQ9gBc2Tro5Pib2MBe+fldEzBHcfndoio8gP/5qzS5kDFCKvoXtl37Wr7J/To5XBZs0o5fmDtQjKX+3po85jAs2hLF3gyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJLMTo9q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E509EC433F1;
-	Fri, 19 Jan 2024 22:34:39 +0000 (UTC)
+	s=arc-20240116; t=1705704773; c=relaxed/simple;
+	bh=0ijwrmTk2cnJeJUszdORJ/iITtlbDTse4Ksm2/cj9MM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=j8m1YxL5kvkpjwbZ/1oNt8oGRYPzb9eymkC7qfyvXbTa/Jp8j5m+HN/V1WYZLJUjC2FqbOCwrEVw/2I9Fqb/puNsltyAdGpWhjw6W1apqXbjAj/2+Z+2s6YuTLc1PYMeZOiDNYH5JFpwE3850p8iU1eL4etP5BX2bFK7IL5fnxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPbd2X83; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04AD9C433C7;
+	Fri, 19 Jan 2024 22:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705703680;
-	bh=Tb/IF/3dnB+KD/SYWtRz1VcIoMLT0oJr5xplyBvSeDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TJLMTo9q1wdgV+lwBQQZfmMaHmb+B3Dwm40qcJizh2E0tvM8XDVz6lGc+iQRDLv2c
-	 XNIH1IxPk9itUI7VrfrFyqR/r8Iis7FR6mPqEv1INxM9ZU3a0RHppz8/JOhx5Bslrn
-	 x83geQtdq2nOc8pKLTyCi08aqDW5++JVubQJ+GRFB0zr/I+8WZ1ok1oa7yGT33frcI
-	 ueg0LgzeQ+CRz8CWx9q9RsyJn2GGs8DrBUTt2pUbXhuWmNeHJzofE1fDcPjPcdxPL7
-	 jLxZ3HEnIn7MYi9whncFoWK80jhz8Z1Tf48Q8xAsiwEMhkswW5EVpCWrAS6bjzIi6U
-	 67fudl0y9QIsQ==
-Date: Fri, 19 Jan 2024 16:34:37 -0600
-From: Rob Herring <robh@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Georgi Djakov <djakov@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	quic_skananth@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>, vireshk@kernel.org,
-	Brian Masney <bmasney@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-pci@vger.kernel.org,
-	quic_nitegupt@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Johan Hovold <johan+linaro@kernel.org>, quic_vbadigan@quicinc.com,
-	Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v6 1/6] dt-bindings: PCI: qcom: Add interconnects path as
- required property
-Message-ID: <170570367676.1246878.13604821231091886465.robh@kernel.org>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-1-77bbf7d0cc37@quicinc.com>
+	s=k20201202; t=1705704772;
+	bh=0ijwrmTk2cnJeJUszdORJ/iITtlbDTse4Ksm2/cj9MM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FPbd2X83mblIBLmExB3N0keu3JjEQwVSlmgpo4q/2+TuJMvG1HK0bnVCM2812dnyg
+	 hLcNc3LPVtMJMT4TKbum/Sp3ThwagoHU0Bbbj8vLxECywo5ZxTzLC8xRSdI7xRQheI
+	 Y3kENQ/KZdzF/aZh+H2qSe/lO99RoQ7FmZfxmFnmCNP+W9CyipXmEgA7huBOO2jOHD
+	 kYMTXCK2K5DJ7C4ZADJaBu48vGyjLv/NAJtv4Xn3W7wQ3Uova5V0sWsvt4P2umScLG
+	 P6ZZ+o5ub8Qk/n8TXsZ0G7Xx7Ewsb+8Dw3AtGyUO1xNLKfFkIJo2+YHjaKgJsL8l+z
+	 u5HrrXYQQNDhA==
+Date: Fri, 19 Jan 2024 16:52:50 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 01/10] pci: add new set of devres functions
+Message-ID: <20240119225250.GA191270@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240112-opp_support-v6-1-77bbf7d0cc37@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1983517bf5d0c98894a7d40fbec353ad75160cb4.camel@redhat.com>
 
-
-On Fri, 12 Jan 2024 19:52:00 +0530, Krishna chaitanya chundru wrote:
-> Add the interconnects path as required property for sm8450 platform.
+On Wed, Jan 17, 2024 at 09:54:47AM +0100, Philipp Stanner wrote:
+> On Tue, 2024-01-16 at 12:44 -0600, Bjorn Helgaas wrote:
+> > On Mon, Jan 15, 2024 at 03:46:12PM +0100, Philipp Stanner wrote:
+> > > PCI's devres API is not extensible to ranged mappings and has
+> > > bug-provoking features. Improve that by providing better
+> > > alternatives.
+> > 
+> > I guess "ranged mappings" means a mapping that doesn't cover an
+> > entire BAR?  Maybe there's a way to clarify?
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> That's what it's supposed to mean, yes.  We could give it the longer
+> title "mappings smaller than the whole BAR" or something, I guess.
+
+"partial BAR mappings"?
+
+> > > to the creation of a set of "pural functions" such as
+
+s/pural/plural/ (I missed this before).
+
+> > >         c) The iomap-table mechanism is over-engineered,
+> > > complicated and
+> > >            can by definition not perform bounds checks, thus,
+> > > provoking
+> > >            memory faults: pcim_iomap_table(pdev)[42]
+> > 
+> > Not sure what "pcim_iomap_table(pdev)[42]" means.
 > 
+> That function currently is implemented with this prototype:
+> void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
+> 
+> And apparently, it's intended to index directly over the function. And
+> that's how at least part of the users use it indeed.
+> 
+> Here in drivers/crypto/inside-secure/safexcel.c, L.1919 for example:
+> 
+> 	priv->base = pcim_iomap_table(pdev)[0];
+> 
+> I've never seen something that wonderful in C ever before, so it's not
+> surprising that you weren't sure what I mean....
+> 
+> pcim_iomap_table() can not and does not perform any bounds check. If
+> you do
+> 
+> void __iomem *mappy_map_mapface = pcim_iomap_table(pdev)[42];
+> 
+> then it will just return random garbage, or it faults. No -EINVAL or
+> anything. You won't even get NULL.
+> 
+> That's why this function must die.
 
-Acked-by: Rob Herring <robh@kernel.org>
+No argument except that this example only makes sense after one looks
+up the prototype and connects the dots.
 
+Bjorn
 
