@@ -1,90 +1,92 @@
-Return-Path: <linux-pci+bounces-2333-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13F2F832501
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 08:28:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EC25832519
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 08:40:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFC18285F97
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 07:28:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F17AFB222A0
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 07:40:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D996A3C0A;
-	Fri, 19 Jan 2024 07:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E6D9D29E;
+	Fri, 19 Jan 2024 07:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yy6dS/VR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HTL18LzH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40567944F
-	for <linux-pci@vger.kernel.org>; Fri, 19 Jan 2024 07:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE03CA4A
+	for <linux-pci@vger.kernel.org>; Fri, 19 Jan 2024 07:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705649333; cv=none; b=rX+PQEPm7VonPeP/iP/wbk6L34tVBu1vTYr4FF/pIeIw8daCbIUfst2yV1NmcvgZVbROtgp8bh/kDdZxbyOY6a1tl94d9GKGWpMb/MN/CM8lLo+5dbBty8fVPuMnba68Sv/7wNVnDCjysKnjln/3AxzMeEBiWYYFk2evLEUVaPg=
+	t=1705650041; cv=none; b=bE3TQmks7otZ871+mXOigQIjPZNWUTA07ufhkiISeyXIln4yQiYYFImH2ffk4jeATIn3ckDr/lu3DpGWMfKPiKov6VrTnJhwbA5TptiNEmPtN/ijh65EdzWRbCOFxtxz8rmEp3qFTDlf9xIci19KsJjE7CKT+/AUkfbbVXNglA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705649333; c=relaxed/simple;
-	bh=69/RqV/A9lodeZFJ33s4o7jKp84bmhN8cSxnNImvxjs=;
+	s=arc-20240116; t=1705650041; c=relaxed/simple;
+	bh=doJXC6Va4CIGwN0Iih+lnDY4rEtE9LT5x0R3GE7ft3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TC0PLP6qOFhRHIDiCAHdFkoH0om9qdFBAcgF2zxF9kzyGGlDb/9Uk6YiD1xNsvM9OHVTDXsv5eOTIqjbMm8jSo5ZR27aEVCnaoIrL7/LUmSqfp46LZGTc+8uJIVMnpFONkuRAwYsIm/V2bTj4rhHom8jtCKqlKh5pYGLi8GmurM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yy6dS/VR; arc=none smtp.client-ip=209.85.161.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zft49CBA05mvH1FnbjKXSLMqIzWmImQXi4aeHE/LIvy51olcTljOs6d8QRlcrZ35tiILrBWATRZ+nCsZQONNwmActczMAdAHuMYqyU7NXfjW48fdER3hLmDIzuepsz53oRo0OdTjMbSS933Z6LdRSvefcug+sixhhx/9eqRUFBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HTL18LzH; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5989d8decbfso281375eaf.2
-        for <linux-pci@vger.kernel.org>; Thu, 18 Jan 2024 23:28:52 -0800 (PST)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5ebca94cf74so4915127b3.0
+        for <linux-pci@vger.kernel.org>; Thu, 18 Jan 2024 23:40:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705649331; x=1706254131; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705650039; x=1706254839; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8jAiFI/yvaL8Qq4R2H+lz7RghStZviQ8Vc/0mAOlq10=;
-        b=Yy6dS/VRYBeOZI65JXWlGe1Ah84Co7IbQXLvXJCtaUsLjVjLFU1jE6rxM68vZ6+ND+
-         X1VVjJQGsCa1JbU47XNqy3JNyeszfcq7ldQvqion/wdMlNQhkEWg/Ytt+kTMsUkIkUQp
-         OgQ4n+hJd/c8AMMxVLxQhrXArUYz8tA3BQe2f2pfX79UQDPgiXAaNkTmgrqFY55ikAGx
-         CDtFXlCeC13kS6OfGPell2GXi9pfoa6Y3p6KsLdc6OmTlZodCsBg+SvkzNVtJ8QGxyQj
-         o/H+Py6G6/ueAECSBZ7+YJauA2byIIjC4bVIs1a6mrhwRH+xoWigWwuiCKNrbZxB+E1p
-         fUCg==
+        bh=Y/pCciHi5Q2QbdDlTTGF4sQWlv8rfTqfk0RnQ7BpddI=;
+        b=HTL18LzHcTuZEbp5aft3GZIOckw+LNLs5gM4ora3uwPplOORc7F2a5wKF3LnJegAo2
+         6bLkydg0XTZEd6WtLuxrWPx+DFU0RgH68/jVPoM/2C5FyKwLXAaeNbzbh23rPYT9aIPp
+         XgtooxoXWJDPfvuTx5qfS3X7QsPsX5Ucv42DB/DRLbEy6EHuK2iSbZEgoG088OIDJtoF
+         uX8+ACF23oS0n16BtjB+jaIxVh/BFl3gCKKRDpYcswOpcEaVSru/wzl9OMShOJjI66wS
+         E/sBdO/Pv3WjgBeD2u6AIchyZQL/kFA20x+LAIBnCXuWbQd1aZ6CaFnciFqIhDLSAoQI
+         uuEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705649331; x=1706254131;
+        d=1e100.net; s=20230601; t=1705650039; x=1706254839;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8jAiFI/yvaL8Qq4R2H+lz7RghStZviQ8Vc/0mAOlq10=;
-        b=VTXh2sEPNzLVxleuvt3ev5JfQLu8cpKL/QdhW2+CsBzX6I723xE+A/VrGe08FGxttt
-         ReoOZJ7uNmbkiMw40Wg3dm4SCjhJSTiENTJ8eqyfOu0+PvG7OkYp6WdComyAI7/Oa8aM
-         ixCsGNzQaOtoBi8bbRgyu2wytqtO3gUEv+PyLJdHfhbfqgrDHPqtxL5OCAdTNdW6WMJ0
-         azsGq9NDlBLUHFeGj+X89ZiH4qyy9ILvq1vZ8Nx8aKontnnN0kKxwOBGxemilYz9qGlT
-         1d5/fdUuPFvOn6XpvtnfilauWEazkX6EoygorkYaFSlDzFUJS+Mk41kUN8KBQXamcJk+
-         8Z7g==
-X-Gm-Message-State: AOJu0Yz+2zsVq9MQGkrzp7inpfFfJbObyuUzlsc+Fno+DfWs0uooJ2oi
-	hN/5GuBRzYRSngdlz13sR4poDTy5uj3rK+gKMfblDCDw3aA68oAvqspUvyOX9Q==
-X-Google-Smtp-Source: AGHT+IFtESwXBzDIx6X05cuoaycVAwHJT1YpO5zrXOdBalBmMS1AXy1MxIWoy3U8FOBs+zefArabcw==
-X-Received: by 2002:a05:6359:a11:b0:175:9fdb:8345 with SMTP id el17-20020a0563590a1100b001759fdb8345mr2101692rwb.10.1705649331225;
-        Thu, 18 Jan 2024 23:28:51 -0800 (PST)
+        bh=Y/pCciHi5Q2QbdDlTTGF4sQWlv8rfTqfk0RnQ7BpddI=;
+        b=wAptdLQw30GJRtjutdatT8x0MxOo9OoAz2swpjzPiWlaMIRokkgmOuTjuvKlLSqwjo
+         R8wT6JjKBXtQnLmRjG+CJHtGomOslwEo3O3Im9TGsT3Ze9AbKJdfhQPghCvHNWp2nv/G
+         qbmDh19niJoaWH1dW7vkLxk4MngJk1NkFtdAJpVY5bIRuIDSJK9n0/Qbw3bIdiLhO7hn
+         7CpIoiTprafUj9brRjjfRFW6O1e3tr3sdNRJLTwoOaRp7IIYEdBQcR6Dfb8BQlfmf67m
+         4F5X5O5bwCfF1CqrKq/wucIvrqO5Q7l5Q42PcI0LdaNjmzUP32m2+eGkVfEelbkKMZK1
+         u8Kw==
+X-Gm-Message-State: AOJu0Yx6xtaHSbUgYnmn5M+Khq980FZvBsZiLygP9B/6FEHT0zz+oiuj
+	X1adZXy6oF61wM3HFXuj0+8SRbvMFKz9edAUy1SqX8oAsveJL49K+O4+y9/tyA==
+X-Google-Smtp-Source: AGHT+IFif71Ycltu5NAwE+xEaIuhXpxYXlFAE9CPDleciOcCYkZ8dIHhV7jbWLz1sVNxISitJziMVw==
+X-Received: by 2002:a81:9c46:0:b0:5d7:1940:7d8f with SMTP id n6-20020a819c46000000b005d719407d8fmr1746824ywa.102.1705650039184;
+        Thu, 18 Jan 2024 23:40:39 -0800 (PST)
 Received: from thinkpad ([117.248.2.56])
-        by smtp.gmail.com with ESMTPSA id v23-20020aa78517000000b006d9b8572e77sm4421823pfn.120.2024.01.18.23.28.48
+        by smtp.gmail.com with ESMTPSA id bq26-20020a05622a1c1a00b0042a1e10d46asm1009984qtb.25.2024.01.18.23.40.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 23:28:50 -0800 (PST)
-Date: Fri, 19 Jan 2024 12:58:46 +0530
+        Thu, 18 Jan 2024 23:40:38 -0800 (PST)
+Date: Fri, 19 Jan 2024 13:10:30 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH v7 1/2] PCI: designware-ep: Fix DBI access before core
- init
-Message-ID: <20240119070116.GA2866@thinkpad>
-References: <ZWYmX8Y/7Q9WMxES@x1-carbon>
- <ZWcitTbK/wW4VY+K@x1-carbon>
- <20231129155140.GC7621@thinkpad>
- <ZWdob6tgWf6919/s@x1-carbon>
- <20231130063800.GD3043@thinkpad>
- <ZWhwdkpSNzIdi23t@x1-carbon>
- <20231130135757.GS3043@thinkpad>
- <ZYY9QHRE4Zz30LG8@x1-carbon>
- <20240106151238.GC2512@thinkpad>
- <Zalu//dNi5BhZlBU@x1-carbon>
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Johan Hovold <johan@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Sajid Dalvi <sdalvi@google.com>
+Subject: Re: [PATCH] Revert "PCI: dwc: Wait for link up only if link is
+ started"
+Message-ID: <20240119074030.GB2866@thinkpad>
+References: <20230706082610.26584-1-johan+linaro@kernel.org>
+ <20230706125811.GD4808@thinkpad>
+ <ZKgJfG5Mi-e77LQT@hovoldconsulting.com>
+ <ZKwwAin4FcCETGq/@google.com>
+ <20230711073719.GA36617@thinkpad>
+ <ZaENr7jQ35winQAe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,110 +96,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zalu//dNi5BhZlBU@x1-carbon>
+In-Reply-To: <ZaENr7jQ35winQAe@google.com>
 
-On Thu, Jan 18, 2024 at 06:33:35PM +0000, Niklas Cassel wrote:
-> Hello Mani,
-> 
-> On Sat, Jan 06, 2024 at 08:42:38PM +0530, Manivannan Sadhasivam wrote:
-> > > 
-> > > So to give you a clear example:
-> > > If you:
-> > > 1) start the EP, start the pci-epf-test
-> > > 2) start the RC
-> > > 3) run pci-epf-test
-> > > 4) reboot the RC
-> > > 
-> > > this will trigger a link-down reset IRQ on the EP side (link_req_rst_not).
-> > > 
+On Fri, Jan 12, 2024 at 03:30:15PM +0530, Ajay Agarwal wrote:
+
+[...]
+
+> > No, IMO the offending commit was wrong in serving its purpose so a revert makes
+> > sense. Because, if the intention was to reduce the boot delay then it did not
+> > fix that because dw_pcie_wait_for_link() is still called from intel-gw's
+> > host_init() callback. You just skipped another instance which is there in
+> > dw_pcie_host_init().
 > > 
-> > Right. This is the sane RC reboot scenario. Although, there is no guarantee
-> > that the EP will get LINK_DOWN event before perst_assert (I've seen this with
-> > some RC platforms).
+> > So to fix this issue properly intel-gw needs to do 2 things:
 > > 
-> > But can you confirm whether your EP is receiving PERST assert/deassert when RC
-> > reboots?
+> > 1. Move the ltssm_enable to start_link() callback and get rid of
+> > dw_pcie_wait_for_link() from its host_init() callback. If there is any special
+> > reason to not do this way, please explain.
+> > 
+> > 2. Enable async probe so that other drivers can continue probing while this
+> > driver waits for the link to be up. This will almost make the delay negligible.
+> > 
+> > The above 2 should be done in separate patches.
+> > 
+> > - Mani
+> >
+> Mani, the intention is not to fix the intel-gw driver in any manner. It
+> calls dw_pcie_wait_for_link explicitly in the probe path and checks for
+> the error as well. So it has to live with the delay and the probe
+> failure if the link does not come up.
 > 
-> Yes, it does:
-> 
-> ## RC side:
-> # reboot
-> 
-> ## EP side
-> [  845.606810] pci: PERST asserted by host!
-> [  845.657058] pci: PCIE_CLIENT_INTR_STATUS_MISC: 0x4
-> [  845.657759] pci: hot reset or link-down reset (LTSSM_STATUS: 0x0)
-> [  852.483985] pci: PERST de-asserted by host!
-> [  852.503041] pci: PERST asserted by host!
-> [  852.521616] pci: PCIE_CLIENT_INTR_STATUS_MISC: 0x2003
-> [  852.522375] pci: link up! (LTSSM_STATUS: 0x230011)
-> [  852.610318] pci: PERST de-asserted by host!
-> 
-> The time between 845 and 852 is the time it takes for the RC to
-> boot and probe the RC PCIe driver.
-> 
-> Note that I currently don't do anything in the perst gpio handler,
-> I only print when receiving the PERST GPIO IRQ, as I wanted to be
-> able to answer your question.
-> 
-> /
-> Currently, what I do instead, in order to handle a link down
-> (which clears all the RESBAR registers) followed by a link up,
-> is to re-write the RESBAR registers when receiving the link down IRQ.
-> (This is only to handle the case of the RC rebooting.)
-> 
-> A nicer solution would probably be to modify dw_pcie_ep_set_bar() to
-> properly handle controllers with the Resizable BAR capability, and remove
-> the RESBAR related code from dw_pcie_ep_init_complete().
-> 
-> However, that would still require changes in pci-epf-test.c to call
-> set_bar() after a hot reset/link-down reset (and it is not possible
-> to distinguish between them), which could be done by either:
-> 1) Making sure that the glue drivers (that implement Resizable BAR capability)
->  call dw_pcie_ep_init_notify() when receiving a hot reset/link-down reset
->  IRQ (or maybe instead when getting the link up IRQ), as that will
->  trigger pci-epf-test.c to (once again) call set_bar().
-> or
-> 2) Modifying pci-epf-test.c:pci_epf_test_link_up() to call set_bar()
->  (If epc_features doesn't have a core_init_notifier, as in that case
->  set_bar() is called by pci_epf_test_core_init()).
->  (Since I assume that not all SoCs might have a PERST GPIO.)
-> or
-> 3) We could allow glue drivers that use an internal refclk to still make
->  use of the PERST GPIO IRQ, and only call dw_pcie_ep_init_notify(),
->  as that would also cause pci-epf-test.c to call set_bar().
->  (These glue drivers, which implement the Resizable BAR capability would
->  however not need to perform a full core reset, etc. in the PERST GPIO
->  IRQ handler, they only need to call dw_pcie_ep_init_notify().)
-> 
-> Right now, I think I prefer 1).
-> 
-> What do you think?
+> My intention is just to get rid of the 1 sec delay for the drivers that
+> do not define the start_link callback, and hence do not expect that the
+> link will come up during probe anyway.
 > 
 
-[For this context, I'm not only focusing on REBAR but all of the non-sticky DWC
-registers]
-
-If the PCIe spec has mandated using PERST# for all endpoints, I would've
-definitely went with option 3. But the spec has made PERST# as optional for the
-endpoints, so we cannot force the glue drivers to make use of PERST# IRQ.
-
-But the solution I'm thinking is, we should reconfigure all non-sticky DWC
-registers during LINK_DOWN phase irrespective of whether core_init_notifier is
-used or not. This should work for both cases because we can skip configuring the
-DWC registers when the core_init platforms try to do it again during PERST#
-deassert.
-
-Wdyt?
+Ok, this clarifies, thanks.
 
 - Mani
-
-> Since it seems that not many SoCs that use a DWC core, have Resizable
-> BAR capability implemented, I will try to see what I can come up with.
-> 
-> 
-> Kind regards,
-> Niklas
 
 -- 
 மணிவண்ணன் சதாசிவம்
