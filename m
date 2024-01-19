@@ -1,69 +1,69 @@
-Return-Path: <linux-pci+bounces-2363-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2364-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7EDB832B09
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 15:11:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2489832B96
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 15:48:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DC1C4B23F99
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 14:11:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09F371C23436
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Jan 2024 14:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6CA53E3E;
-	Fri, 19 Jan 2024 14:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6D7C53E25;
+	Fri, 19 Jan 2024 14:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vZcfMALE"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kjAr4a+T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49BF53E29
-	for <linux-pci@vger.kernel.org>; Fri, 19 Jan 2024 14:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1DA537ED
+	for <linux-pci@vger.kernel.org>; Fri, 19 Jan 2024 14:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705673490; cv=none; b=mSDupd0FPI3m10s2mAj/8gqso5f/IR0JCl5y8D7In9JHg9a+YzVkGev3nv34zpXkwxyGilHXKNBX4OErcxqoWoWXLGXw8vTC+6CGIAB4+n0Xou7Ypch0P/6Z8RlgjlOyBf1UsfE7dc2WfM71kXpc4KtdbVCek8jqd0Z3VaH28Uw=
+	t=1705675717; cv=none; b=Z+FoK1f+4UvTVMgTK8WdDyp2E24VcqtzBhXV0r39haXA6+GaTwNze+a1PdL7dK1tUp2PO1i9XCkjYy4cSd8TW/SnGKMGmcV9fmc2qY13oJYK+lNKrUdY11llAndwA/hwV7qFyvmscureK7KjfpYAKytkmjcTP6h2Ixv/cIyDr5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705673490; c=relaxed/simple;
-	bh=TqPHp6thk907FTTvm3tboLNknd3v+aqQVcopEpXBIu8=;
+	s=arc-20240116; t=1705675717; c=relaxed/simple;
+	bh=mcasdrK9tsgv64zuh5ad3tAh8I6lDw0EnAs5pD7vPtk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uZLreJBVk3fRXoooleNgNG3xvoKld8JeWH9YNgfyjaxwWCh3oivIwUVbPG1f0AOA9M5FsNYaf5naeKrgcvZV3TpB6HSIV3ZKrxO76HyDp6n3cl6Fly+6P8wpH368XTl/vMWBoSNBBCan1WE0QtrYIrwtQm4hfbIdtvBVrTfiFic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vZcfMALE; arc=none smtp.client-ip=209.85.160.48
+	 To:Cc:Content-Type; b=bd4EkYTOjidt9jkIvkbqK1epoimmDSDiJN7S5DKqMOKNGGM7JDZGZSYDkdPyoLug0JxgwwoPDmcbyh8WXUrPhnoPhggIVvDk2IjTbfnRDuG4IU0bjAOgFX0zy2H1aIS5Lk3Oso7Ce1UWM2+BH8UXnMrmlHG/O+0BAtDyj083lgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kjAr4a+T; arc=none smtp.client-ip=209.85.221.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2045542eec3so397635fac.3
-        for <linux-pci@vger.kernel.org>; Fri, 19 Jan 2024 06:11:28 -0800 (PST)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4b739b29686so564971e0c.0
+        for <linux-pci@vger.kernel.org>; Fri, 19 Jan 2024 06:48:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705673488; x=1706278288; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705675715; x=1706280515; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Yve1j093zhPAT03KqE6u8/WuOBcMWVIgTCIkj2nZNFY=;
-        b=vZcfMALEiskUtPprj7p5P4EcBDWlLP3gVBs2HaeH1PzrhMuVWYf0jccfRpjlgrxzfJ
-         edC+w5lLW/B9yohTi5nklamyrZ5Auhq6RmboTNN+hi3COglPggs0JsdM7TqaX0ngZ821
-         VAm2Ue41HJB7YeEWJUGJxRF+rv2pKIMA2ffrPJeMDoGkB1qLPMrEgNRzeZ0Nh6cCKH41
-         UWpH/yMzHRlforjcjL2NFunLWFKap6JoIe8EouBGNdBw7Am8wdKmDudp74wCOiGyzw/Q
-         m03Pp7nM3sUTchSfg6zqlRcSHxwMg4DgyUvVX2YxW2qUklqjXTC9fJzaeXeXk4Sbn6L7
-         Xc7g==
+        bh=PT8Ncx8OtnbiClPBAKlN7utHv1YM0P6Lld/QOdOjhZo=;
+        b=kjAr4a+TNkom7z+wvvf0AkTXKB7onWYxHdsOZbEJuRxnkXa0xOsctLFm05bXl3y+YK
+         me6k+7D1rrRmJeI1T98Wc+4FjHnvGceH9MxagV/FgnZLGZkmHxB2iaoNxnrsUBuR5ZJU
+         BU8sEcAChS7aefUKBn5cQlAafaX+ryiq3go+SWesG7B2DD9Ggaxcl8s3Zezy/WpU1tjq
+         p9Qzh66zjzb4HJMrPBL3jZbWnO/u8U4GD/qymIJo9cal6ikESZqgS0vpc/Oh2/8UD6AL
+         s3NIlj8oEw9mR8LAFSBHvjg/N1dscISyt1heEESpsL084F0i/1Jl+EUbA1EhAF1Aq1b3
+         jJJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705673488; x=1706278288;
+        d=1e100.net; s=20230601; t=1705675715; x=1706280515;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Yve1j093zhPAT03KqE6u8/WuOBcMWVIgTCIkj2nZNFY=;
-        b=ByeonUOkPpRQGMtb5dZ70P7KCGz6nbdUYR6bSInBZjc+xLTImvxyZbQgpd3lcp92xb
-         CM/JVxvg8CjrHfCOurvgL61OqIax4ptaQY0Od+Y2T2tE3jZoycELFuyjC7aPQSUmyWHP
-         D8gkqeb8GkhsRqWsPh5CuYJv+eYiA2GXvBzyYkAye4x3OJxAGOSjsu2bt9hv+lvNZyyt
-         c8iGAm+rTQl7aOS0X/s8sTgIsEBesYXG0CHy/h4Ww+rJ5S5LtNZXQc6MHGvGSLwKkm+F
-         ogSRdp8HfAk4VehcMxKdJdnsZoazDZwCmqzD/EOThdmSfW6CAZOZMKhb7dmEO+YIpv5I
-         t9Jg==
-X-Gm-Message-State: AOJu0Yw5L3AqzxmD8x6WqQm2DenbFDfAnsO9Of+Swa521Fkh9fGa18t9
-	+ifZIUXk6PRBzzQqJD6Slf2aLBD8fASBmbROl0T88nrEdP/PMJRWjtqylL1RstHG3VdHe8Nn60b
-	LWHwd7/Gy3AS+mR1OaoZ0L0t7716/CdB3mtMLjg==
-X-Google-Smtp-Source: AGHT+IEzKXt1iaQ6NmzAsJq/01qfzT3pF8iI8eJNn96nqR6Ib5KEm8Td2wQBXRzywiLI+5x36vj8wMIivUvhBtXqPv4=
-X-Received: by 2002:a05:6870:548c:b0:20e:364b:eba9 with SMTP id
- f12-20020a056870548c00b0020e364beba9mr2008699oan.9.1705673488006; Fri, 19 Jan
- 2024 06:11:28 -0800 (PST)
+        bh=PT8Ncx8OtnbiClPBAKlN7utHv1YM0P6Lld/QOdOjhZo=;
+        b=I+gop282a2A6M0kaMzRRkAdHpo7g+1yb5rOxDuiy6B/gb8YrgEIgQL0TEtPpFnV3fY
+         ZC4VfZeog8SGUVdcCy++NlBy2bKTNWolfkp+19jIFfKJuzsP3XZf22juissjYA542HRW
+         Xw5JNPAWhIFYfkPsd5YfLgAqnO1/elqir/az7EO8u+mThnBfC1uYEcT1lF83yT8vAB7w
+         ikJiYltZENcu1KagLZ1xmtnIA1JT0PTjoPNLD9JZHFIoIflhQ85M7cDQvjqiYzkyWZGZ
+         OYBORKjnlF8Tj8Q2qqhQY+YZAq5fLSjjh0hdRW8Ozx2NiGIl5SMSgNyNRM+NC3DNAEcp
+         Akjg==
+X-Gm-Message-State: AOJu0YyN9iaibZVpzXw+x0pMt/HYdubn0XM2gwW+XWT46zG+ju4p8EUk
+	tFs4e3EzarMvCDu0GgiD7KnN3U/AOix6hpLEGG4X/AErk5be1Spt20n0CPJV/drSbc/rPBXZTvT
+	l+8v70wkTBhcm3c+EEI18bewPUi2uXt3IlmVDnw==
+X-Google-Smtp-Source: AGHT+IH148GvFKhyvnpCBTcw5sd5a4Uf8p3RqnETOxUeuPL4kpb132tH+JeiNaZaa8YtTlrHdfJUvfTNHdTZygq7GEk=
+X-Received: by 2002:a05:6122:2224:b0:4bb:3b8:afbd with SMTP id
+ bb36-20020a056122222400b004bb03b8afbdmr5000vkb.0.1705675715289; Fri, 19 Jan
+ 2024 06:48:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,11 +74,12 @@ References: <20240117160748.37682-1-brgl@bgdev.pl> <CAA8EJpoQfPqoMVyTmUjPs4c1Uc-
  <CAA8EJpqyK=pkjEofWV595tp29vjkCeWKYr-KOJh_hBiBbkVBew@mail.gmail.com>
  <CAMRc=McUZh0jhjMW7H6aVKbw29WMCQ3wdkVAz=yOZVK5wc45OA@mail.gmail.com>
  <CAA8EJprFV6SS_dGF8tOHcBG+y8j74vO0B40Y=e7Kj1-ZThNqPA@mail.gmail.com>
- <CAMRc=MdOALzkDtpnbqF16suShvP5apGYy4LTQ4dTc3r9Rbb1kg@mail.gmail.com> <CAA8EJpr=PMdOWzp8fahL9e9QC-qgS=hSaTqT1XdUs8Dvvsxqgg@mail.gmail.com>
-In-Reply-To: <CAA8EJpr=PMdOWzp8fahL9e9QC-qgS=hSaTqT1XdUs8Dvvsxqgg@mail.gmail.com>
+ <CAMRc=MdOALzkDtpnbqF16suShvP5apGYy4LTQ4dTc3r9Rbb1kg@mail.gmail.com>
+ <CAA8EJpr=PMdOWzp8fahL9e9QC-qgS=hSaTqT1XdUs8Dvvsxqgg@mail.gmail.com> <CAMRc=McdXC8zP4_+a3hBijVLXmLFakfjdXjzPOwaNsPCwPT36w@mail.gmail.com>
+In-Reply-To: <CAMRc=McdXC8zP4_+a3hBijVLXmLFakfjdXjzPOwaNsPCwPT36w@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 19 Jan 2024 15:11:16 +0100
-Message-ID: <CAMRc=McdXC8zP4_+a3hBijVLXmLFakfjdXjzPOwaNsPCwPT36w@mail.gmail.com>
+Date: Fri, 19 Jan 2024 15:48:24 +0100
+Message-ID: <CAMRc=Mfi=R9ogkdiKGuCO_rf__shA7B7VOpLxAHEFzL5Y-N_KQ@mail.gmail.com>
 Subject: Re: [PATCH 0/9] PCI: introduce the concept of power sequencing of
  PCIe devices
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
@@ -107,61 +108,70 @@ Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 19, 2024 at 3:07=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Fri, Jan 19, 2024 at 3:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-
-[snip]
-
+> On Fri, Jan 19, 2024 at 3:07=E2=80=AFPM Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+> >
+>
+> [snip]
+>
+> > > >
 > > >
+> > > Alright, so let's imagine we do model the PMU on the device tree. It =
+would
+> > > look something like this:
+> > >
+> > > qca6390_pmu: pmic@0 {
+> > >         compatible =3D "qcom,qca6390-pmu";
+> > >
+> > >         bt-gpios =3D <...>;
+> > >         wlan-gpios =3D <...>;
+> > >
+> > >         vdd-supply =3D <&vreg...>;
+> > >         ...
+> > >
+> > >         regulators-0 {
+> > >                 vreg_x: foo {
+> > >                         ...
+> > >                 };
+> > >
+> > >                 ...
+> > >         };
+> > > };
+> > >
+> > > Then the WLAN and BT consume the regulators from &qca6390_pmu. Obviou=
+sly we
+> > > cannot go:
+> > >
+> > > wlan {
+> > >         pwrseq =3D &qca6390_pmu;
+> > > };
+> > >
+> > > But it's enough to:
+> > >
+> > > wlan {
+> > >         vdd-supply =3D <&vreg_x>;
+> > > };
 > >
-> > Alright, so let's imagine we do model the PMU on the device tree. It wo=
-uld
-> > look something like this:
+> > I'm not sure this will fly. This means expecting that regulator
+> > framework is reentrant, which I think is not the case.
 > >
-> > qca6390_pmu: pmic@0 {
-> >         compatible =3D "qcom,qca6390-pmu";
-> >
-> >         bt-gpios =3D <...>;
-> >         wlan-gpios =3D <...>;
-> >
-> >         vdd-supply =3D <&vreg...>;
-> >         ...
-> >
-> >         regulators-0 {
-> >                 vreg_x: foo {
-> >                         ...
-> >                 };
-> >
-> >                 ...
-> >         };
-> > };
-> >
-> > Then the WLAN and BT consume the regulators from &qca6390_pmu. Obviousl=
-y we
-> > cannot go:
-> >
-> > wlan {
-> >         pwrseq =3D &qca6390_pmu;
-> > };
-> >
-> > But it's enough to:
-> >
-> > wlan {
-> >         vdd-supply =3D <&vreg_x>;
-> > };
 >
-> I'm not sure this will fly. This means expecting that regulator
-> framework is reentrant, which I think is not the case.
+> Oh maybe I didn't make myself clear. That's the DT representation of
+> HW. With pwrseq, the BT or ATH11K drivers wouldn't use the regulator
+> framework. They would use the pwrseq framework and it could use the
+> phandle of the regulator to get into the correct pwrseq device without
+> making Rob and Krzysztof angry.
 >
+> Bart
+>
+> [snip]
 
-Oh maybe I didn't make myself clear. That's the DT representation of
-HW. With pwrseq, the BT or ATH11K drivers wouldn't use the regulator
-framework. They would use the pwrseq framework and it could use the
-phandle of the regulator to get into the correct pwrseq device without
-making Rob and Krzysztof angry.
+I'm working on a PoC of the generic pwrseq framework but without the
+explicit pwrseq modelling in DT. Should have an RFC ready early next
+week.
 
 Bart
-
-[snip]
 
