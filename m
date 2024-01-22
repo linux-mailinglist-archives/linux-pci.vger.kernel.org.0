@@ -1,162 +1,129 @@
-Return-Path: <linux-pci+bounces-2431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D2F8836C13
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 17:57:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 274AB83708E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 19:47:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FE371C263E1
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 16:57:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 572501C280CF
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 18:47:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B4746539;
-	Mon, 22 Jan 2024 15:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A4993FE31;
+	Mon, 22 Jan 2024 18:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aVCff82c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RD8iuvLT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723B53D963;
-	Mon, 22 Jan 2024 15:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51A53FE20;
+	Mon, 22 Jan 2024 18:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705937434; cv=none; b=ZcaW5xhWQDpTf2MMTGr73OIl9U8GjY37a/GoJ5+04Ns0gQUCK8f0YSlP9nGK63xJL90k2Z4aas9yj3YahoVkuXUGP76pTh4NPKuG29WPZSCUW5jQg6VWaiInq/zynT4PwOZ+LiHw42cGO54hKD3tcHSuZrmxw+5hgcpjVKg+Tc8=
+	t=1705947128; cv=none; b=Bl2++bUxbMKsSyPrvQWX1g3sLpW8g8s3dJ3r2h6CdrP2q+xa7KizlHKNylpUtjPaG1snWjLnYlmQBRJNlOBXusiZyPN549IQ2iKdRl7s7JlJh9G2FEtCBfZ2pxa7+blHCpkkE96y+N1vMfSkkKou4UWZbG6SeubZ/T/BES8k+L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705937434; c=relaxed/simple;
-	bh=gVMMJSucJVrsOQI7wa8WRq4Iqy9YmtcGWO5GPgFu3T4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KxjCU+cXCOndsPlWnK+JUnyiN+lqPGtP2Q4cWmjVZRi0lJ8gShwsQIFF7dRmxZdekWXVO7Kk0FQrakkWbKCIutFGY0pnAdX5687/fJYFVYrysGdsNQ+3btAWFltSqwQKWHYtRLzCDePYH5ueCvnuJpb9EGV7FaGFd50lQ6+eX/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aVCff82c; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E11E740005;
-	Mon, 22 Jan 2024 15:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705937428;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ad8iZ7cAOLjC59VsXGmNvP0Dte+iZHPsXSv80mGa8CY=;
-	b=aVCff82cAuUdGWnH6XJ5zxRCCb74hOkkbM+j+P+f8CkTkim32vuf+HKFY9Kt2/sX+1eDq1
-	3s/POnlwJJi2GuKXxbTIMbWYpV/NbIqDQBnJ4zlAaMiyVmVn+eqSpBsrMxnYcSX2zvNW3k
-	3N5pReSGFlppvUTmwSqQxqa1kXzcXd+ErnfpGawcUR4dvFZIJjjwoOyrTuluKifAAp1BNx
-	HvdRodBSQRvBf3KlAenpmTj6amh/BRx3m5fsVT8T95utZkNphW4e1R2MINb4jt+L0hVCN7
-	vzwZ9lmNs1zn5a1nWyNnE6oYFbm2hZUkfOYNsOfddRAWok8+bjtjY5uUNSOVRA==
-Message-ID: <9cb47f37-bd98-4136-b844-33cf2be593df@bootlin.com>
-Date: Mon, 22 Jan 2024 16:30:26 +0100
+	s=arc-20240116; t=1705947128; c=relaxed/simple;
+	bh=X7GfhZVrnsTjbrFniNSElkwaarUNiRIasEFIuqkBbsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XpiI4M86cWTacKbd+mR2FtRLgqklB7SvgHVIf8Jv06zoSoDlskFNdTSDMWkxc+MAA5/S7RN8ULrkHAnkcQVJ95+TYhWApD/8t+1cc9pcF5cBwfCdC+AmLE4Hg7SW+xkZpukFcL3o55269DKWGofUbskb0SbjJ2gSS/h8zgcZ4Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RD8iuvLT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E09C433C7;
+	Mon, 22 Jan 2024 18:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705947127;
+	bh=X7GfhZVrnsTjbrFniNSElkwaarUNiRIasEFIuqkBbsc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RD8iuvLT4Sv4aBKpW/AH0z/cICipgVW1lAjoC1YM1SyiKLBhrgz3HpvzH1fu0nXxq
+	 vQj2C7z9nKhUhA7/137/0FAZ1UBUIJEqX2EfctHJRDcwwbF0B3eM2QUwSTO0EFM+S8
+	 Yg16Li20dF9C76zTt/31v+fnBYVns0Nfn05p0rt7gygIitxU3Bb83OBnj1axDQ0+VJ
+	 EZwq7+GP7yVeDXZO1XkZwJDVdbVocBqnaLtJc502siNpXTksX+/aFBCBazIDD38kBZ
+	 t4xqOKiSwtjFP4ljsbSdg9zoGDHylXjw2ljwv+rHUHDX1WLpXQ1t5goVu8GYMzXfC7
+	 VPLhQabcjhzIA==
+Date: Mon, 22 Jan 2024 12:12:05 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com, David Airlie <airlied@gmail.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	intel-xe@lists.freedesktop.org,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-sound@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+	Daniel Vetter <daniel@ffwll.ch>, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] pm: runtime: Simplify pm_runtime_get_if_active()
+ usage
+Message-ID: <20240122181205.GA275751@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/14] PCI: j721e: add suspend and resume support
-Content-Language: en-US
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-14-84e55da52400@bootlin.com>
- <CAHp75VfPQz4PWdzFUU_n+R=XohBjyXM0zsjD-bUD2jmb42ds8Q@mail.gmail.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VfPQz4PWdzFUU_n+R=XohBjyXM0zsjD-bUD2jmb42ds8Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122114121.56752-2-sakari.ailus@linux.intel.com>
 
-Hello Andy,
+On Mon, Jan 22, 2024 at 01:41:21PM +0200, Sakari Ailus wrote:
+> There are two ways to opportunistically increment a device's runtime PM
+> usage count, calling either pm_runtime_get_if_active() or
+> pm_runtime_get_if_in_use(). The former has an argument to tell whether to
+> ignore the usage count or not, and the latter simply calls the former with
+> ign_usage_count set to false. The other users that want to ignore the
+> usage_count will have to explitly set that argument to true which is a bit
+> cumbersome.
 
-On 1/15/24 21:13, Andy Shevchenko wrote:
-> On Mon, Jan 15, 2024 at 6:16 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> From: Théo Lebrun <theo.lebrun@bootlin.com>
->>
->> Add suspend and resume support for rc mode.
-> 
-> Same comments as for earlier patches.
-> Since it's wide, please, check the whole series for the same issues
-> and address them.
-> 
-> ...
-> 
->> +               if (pcie->reset_gpio)
-> 
-> Dup, why?
+s/explitly/explicitly/
 
-This pcie->reset_gpio corresponds to PERST# of PCIe endpoints.
-I assert it during suspend, because I have to deassert it (with a delay)
-during resume stage [1].
+> To make this function more practical to use, remove the ign_usage_count
+> argument from the function. The main implementation is renamed as
+> pm_runtime_get_conditional().
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Alex Elder <elder@linaro.org> # drivers/net/ipa/ipa_smp2p.c
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Takashi Iwai <tiwai@suse.de> # sound/
+> Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com> # drivers/accel/ivpu/
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> # drivers/gpu/drm/i915/
+> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 
-> 
->> +                       gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> 
-> ...
-> 
->> +               if (pcie->reset_gpio) {
->> +                       usleep_range(100, 200);
-> 
-> fsleep() ?
-> Btw, why is it needed here, perhaps a comment?
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/
 
-The comment should be the same than in the probe [1].
-Should I copy it? Or should I just add a reference to the probe?
+> -EXPORT_SYMBOL_GPL(pm_runtime_get_if_active);
+> +EXPORT_SYMBOL_GPL(pm_runtime_get_conditional);
 
-[1]
-https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/pci/controller/cadence/pci-j721e.c#L535
+If pm_runtime_get_conditional() is exported, shouldn't it also be
+documented in Documentation/power/runtime_pm.rst?
 
-> 
->> +                       gpiod_set_value_cansleep(pcie->reset_gpio, 1);
->> +               }
-> 
-> ...
-> 
->> +               ret = cdns_pcie_host_setup(rc, false);
->> +               if (ret < 0) {
->> +                       clk_disable_unprepare(pcie->refclk);
->> +                       return -ENODEV;
-> 
-> Why is the error code being shadowed?
+But I'm dubious about exporting it because
+__intel_runtime_pm_get_if_active() is the only caller, and you end up
+with the same pattern there that we have before this series in the PM
+core.  Why can't intel_runtime_pm.c be updated to use
+pm_runtime_get_if_active() or pm_runtime_get_if_in_use() directly, and
+make pm_runtime_get_conditional() static?
 
-Yes I should return ret instead.
+> +++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
+> @@ -246,7 +246,7 @@ static intel_wakeref_t __intel_runtime_pm_get_if_active(struct intel_runtime_pm
+>  		 * function, since the power state is undefined. This applies
+>  		 * atm to the late/early system suspend/resume handlers.
+>  		 */
+> -		if (pm_runtime_get_if_active(rpm->kdev, ignore_usecount) <= 0)
+> +		if (pm_runtime_get_conditional(rpm->kdev, ignore_usecount) <= 0)
+>  			return 0;
+>  	}
 
-> 
->> +               }
-> 
-> ...
-> 
->> +#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-> 
-> Is container_of.h included in this file?
-
-linux/container_of.h is included in linux/kernel.h.
-And linux/kernel.h is included in pcie-cadence.h
-(https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/pci/controller/cadence/pcie-cadence.h#L9).
-
-Regards,
-
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Bjorn
 
