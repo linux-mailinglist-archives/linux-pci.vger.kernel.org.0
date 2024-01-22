@@ -1,113 +1,153 @@
-Return-Path: <linux-pci+bounces-2433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2437-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A31837288
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 20:28:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C9A2837213
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 20:13:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA456B39C92
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 18:49:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 541691F2CFBA
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 19:13:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5764D3C693;
-	Mon, 22 Jan 2024 18:16:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33E2742068;
+	Mon, 22 Jan 2024 18:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KyTBGJ/R"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I+gkp7Ma"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7963A8C4;
-	Mon, 22 Jan 2024 18:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C213DB9E;
+	Mon, 22 Jan 2024 18:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947412; cv=none; b=MFHArN1UogRnw0oE85cesRDuAAA19cSqQTmymcEimh23QdVkkPch9mOKHKco7PP5+gW7P5qs5ZUCMA1oZ7kATuPs24k6CrriuTb0tL+T+esac7/4pEOLV6eAoNx3nZhEJWAC/d61zF8QsgiFh7E/uWieQHulo+Ar/GrHa0wWQT4=
+	t=1705949748; cv=none; b=oGOd/pFhXYlyV5dT3hr65PRCykjfF/V5TbVQZNAxPypV3hyPY+A5QcZX1NiG6c2DaXvB2AoHpf64z6jQRADaPQcnKYzJtkB+1SHh4kZ6MU0sznDiikyv1pYDEiExq6HTOgOKvLDo/7tpJrOQ82wcOwypv7jbVqVBXFWuH83/wxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947412; c=relaxed/simple;
-	bh=zs4odd+WvZxxeJZAIgTFXLhjdsQ/+nQnKFxVYEnrn5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QeNGMvgCWK1oy7KgEcf/LrW0kVD4wvk0TXW+oS6kY7TuLAPIjFq/CgTgn3JpIqnifUawX/2whVMTlSpzKc69UlSLR/mdRD3Bqqmqm2U4lXnjP2cK55xN4qNtBML2XAGYuS+RC2WINjQsSX6gCdPkwoY+opPr/WlAmtDrC+bQQ0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KyTBGJ/R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC88C43390;
-	Mon, 22 Jan 2024 18:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705947411;
-	bh=zs4odd+WvZxxeJZAIgTFXLhjdsQ/+nQnKFxVYEnrn5E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KyTBGJ/Roe52KXBtV6pUS2z2guHxTPRqLqAbKA7P7brGduEu6SHbdDU5jikzGQ/5+
-	 W/ERfaZ450P+TB1QSC3SG27MfKirkVxWRso1UHQ/p1oLAZVJN8VzE2f2S4n/pA8tUn
-	 /b3PDIfS7yt634Rv5MhUjn6h9gv497E7B3KbLq7lC8LF9EmkXW99PiE9fNJM2GbiPd
-	 Jv3rzlMqRfUmSSN2WK60I0MrOXbj6Me1dPQSzYkJ+jn1IvJ0TKd+DMH7HoqiR6sDTe
-	 pXxHDyvFAYvRvfk4SDDTLA3LrOVZxUFJ+2FjZWX46RAV2iV1vJzNfSiA2VPsXfY53R
-	 maWi+q3muzhtg==
-Date: Mon, 22 Jan 2024 12:16:49 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Dongdong Liu <liudongdong3@huawei.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/DPC: Fix TLP Prefix register reading offset
-Message-ID: <20240122181649.GA276863@bhelgaas>
+	s=arc-20240116; t=1705949748; c=relaxed/simple;
+	bh=/kA5lAH45fxwuthlEiD+vf1dP3hl/faQzu+RmcAfVWk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O6hAzDNVtgSKS4lKD08i/U6NtRZ9rrt3Fryb43/g1RrKwcJfLBbUTlMtLKtvu1362DSRS4+TUbAd0coJrTHaCUciI4KNkhjsYjelgiiv6BBG1nHwSdxA2As+hr6n82C4QenHCeWnYu2FpNAhZOHBitXeRg0NSNR8lA4jE0mGRZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I+gkp7Ma; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705949744;
+	bh=/kA5lAH45fxwuthlEiD+vf1dP3hl/faQzu+RmcAfVWk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=I+gkp7Maenr8HD2rs1ztDVK8yjY1aBUnqvwba+v3rVePuOkXCCBgKr5ceZXzGSIGQ
+	 VK78iwfUdmmmq5iFf5RSWRnrnb1V5oXq64ULDpkQemCpUOp0VSRZz8/wpkzPPD6NWm
+	 Cg2MUDnoUYiMFaW2TH7LOtKD7n2sLoLgCx2EoePyDVRbx1XfPQvUB8JQvuMGWtJI20
+	 6fBWYyartg3yYfTVEUT7285afqBuR1W3qQmgv2dszcYy9Ezrea84XuUYOm14AEDpTa
+	 8fC6TACh4Ay7GCw6E33GOUpwDohjykx98xMP2Kp6mmgbVecFttbjiez63T+aEjcuCU
+	 tNey8ii0DneSA==
+Received: from [192.168.0.47] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C4E5B37820A4;
+	Mon, 22 Jan 2024 18:55:38 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Subject: [PATCH v4 0/3] Add test to verify probe of devices from
+ discoverable buses
+Date: Mon, 22 Jan 2024 15:53:20 -0300
+Message-Id: <20240122-discoverable-devs-ksft-v4-0-d602e1df4aa2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240118110815.3867-1-ilpo.jarvinen@linux.intel.com>
+X-B4-Tracking: v=1; b=H4sIAKC5rmUC/zXMQQrCMBCF4auUWRtJJomkrnTlIcRF2kyaYG0lU
+ 4pQeneD4PKD9/4NmEomhnOzQaE1c56nCnNooE9+GkjkUA0o0UiFKELmfl6p+G4kEWhl8eS4iDZ
+ YqUgrPDkH9fwuFPPnF74/qmOZX2JJhfw/V7foUFtt3PF2Vda2xtlLl2gcvGfY9y/OXpdbnAAAA
+ A==
+To: Shuah Khan <shuah@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: kernelci@lists.linux.dev, kernel@collabora.com, 
+ Tim Bird <Tim.Bird@sony.com>, linux-pci@vger.kernel.org, 
+ David Gow <davidgow@google.com>, linux-kselftest@vger.kernel.org, 
+ Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@chromium.org>, 
+ linux-usb@vger.kernel.org, Saravana Kannan <saravanak@google.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, 
+ Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.12.4
 
-On Thu, Jan 18, 2024 at 01:08:15PM +0200, Ilpo Järvinen wrote:
-> The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
-> 7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading
-> from the first DWORD. Add the iteration count based offset calculation
-> into the config read.
-> 
-> Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+This is part of an effort to improve detection of regressions impacting
+device probe on all platforms. The recently merged DT kselftest [3]
+detects probe issues for all devices described statically in the DT.
+That leaves out devices discovered at run-time from discoverable buses.
 
-Applied to pci/dpc for v6.9 with commit log below, thanks!
+This is where this test comes in. All of the devices that are connected
+through discoverable buses (ie USB and PCI), and which are internal and
+therefore always present, can be described based on their position in
+the system topology in a per-platform YAML file so they can be checked
+for. The test will check that the device has been instantiated and bound
+to a driver.
 
-    PCI/DPC: Print all TLP Prefixes, not just the first
-    
-    The TLP Prefix Log Register consists of multiple DWORDs (PCIe r6.1 sec
-    7.9.14.13) but the loop in dpc_process_rp_pio_error() keeps reading from
-    the first DWORD, so we print only the first PIO TLP Prefix (duplicated
-    several times), and we never print the second, third, etc., Prefixes.
-    
-    Add the iteration count based offset calculation into the config read.
-    
-    Fixes: f20c4ea49ec4 ("PCI/DPC: Add eDPC support")
-    Link: https://lore.kernel.org/r/20240118110815.3867-1-ilpo.jarvinen@linux.intel.com
-    Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-    [bhelgaas: add user-visible details to commit log]
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Patch 1 introduces the test. Patch 2 and 3 add the device definitions
+for the google,spherion machine (Acer Chromebook 514) and XPS 13 as
+examples.
 
-> ---
->  drivers/pci/pcie/dpc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 94111e438241..e5d7c12854fa 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -234,7 +234,7 @@ static void dpc_process_rp_pio_error(struct pci_dev *pdev)
->  
->  	for (i = 0; i < pdev->dpc_rp_log_size - 5; i++) {
->  		pci_read_config_dword(pdev,
-> -			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
-> +			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG + i * 4, &prefix);
->  		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
->  	}
->   clear_status:
-> -- 
-> 2.39.2
-> 
+This is the output from the test running on Spherion:
+
+TAP version 13
+Using board file: boards/google,spherion.yaml
+1..8
+ok 1 /usb2-controller@11200000/1.4.1/camera.device
+ok 2 /usb2-controller@11200000/1.4.1/camera.0.driver
+ok 3 /usb2-controller@11200000/1.4.1/camera.1.driver
+ok 4 /usb2-controller@11200000/1.4.2/bluetooth.device
+ok 5 /usb2-controller@11200000/1.4.2/bluetooth.0.driver
+ok 6 /usb2-controller@11200000/1.4.2/bluetooth.1.driver
+ok 7 /pci-controller@11230000/0.0/0.0/wifi.device
+ok 8 /pci-controller@11230000/0.0/0.0/wifi.driver
+Totals: pass:8 fail:0 xfail:0 xpass:0 skip:0 error:0
+
+[3] https://lore.kernel.org/all/20230828211424.2964562-1-nfraprado@collabora.com/
+
+Changes in v4:
+- Dropped RFC tag
+- Fixed 'busses' misspelling
+- Link to v3: https://lore.kernel.org/all/20231227123643.52348-1-nfraprado@collabora.com
+
+Changes in v3:
+- Reverted approach of encoding stable device reference in test file
+from device match fields (from modalias) back to HW topology (from v1)
+- Changed board file description to YAML
+- Rewrote test script in python to handle YAML and support x86 platforms
+- Link to v2: https://lore.kernel.org/all/20231127233558.868365-1-nfraprado@collabora.com
+
+Changes in v2:
+- Changed approach of encoding stable device reference in test file from
+HW topology to device match fields (the ones from modalias)
+- Better documented test format
+- Link to v1: https://lore.kernel.org/all/20231024211818.365844-1-nfraprado@collabora.com
+
+---
+Nícolas F. R. A. Prado (3):
+      kselftest: Add test to verify probe of devices from discoverable buses
+      kselftest: devices: Add sample board file for google,spherion
+      kselftest: devices: Add sample board file for XPS 13 9300
+
+ tools/testing/selftests/Makefile                   |   1 +
+ tools/testing/selftests/devices/Makefile           |   4 +
+ .../devices/boards/Dell Inc.,XPS 13 9300.yaml      |  40 +++
+ .../selftests/devices/boards/google,spherion.yaml  |  50 ++++
+ tools/testing/selftests/devices/ksft.py            |  90 ++++++
+ .../selftests/devices/test_discoverable_devices.py | 318 +++++++++++++++++++++
+ 6 files changed, 503 insertions(+)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240122-discoverable-devs-ksft-9d501e312688
+
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
+
 
