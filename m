@@ -1,191 +1,199 @@
-Return-Path: <linux-pci+bounces-2407-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2408-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B63A6835AD3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 07:14:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55172835B07
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 07:36:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2C5F1C221B4
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 06:14:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 665A21C2233F
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 06:36:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D815673;
-	Mon, 22 Jan 2024 06:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80031612B;
+	Mon, 22 Jan 2024 06:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="otfN9K2E"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cOiaj8K2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2053.outbound.protection.outlook.com [40.107.243.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690D63A0
-	for <linux-pci@vger.kernel.org>; Mon, 22 Jan 2024 06:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705904087; cv=none; b=bw0OgHEBQgE4dgbPQeFJTvkRI/8jrT+GEZDfv+4ExtH/x6Jpk74etLZgqhZrKZTZ8d6cWv5T70O6a8MRFF74UVgMdhFCPcTe5nOo8TqOCp4Fznu/7cnA4wPeb1NA9G0qs9xXnToJ/pgsi0C9jjTbIBNNfDYkrAAiyov3wytCO48=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705904087; c=relaxed/simple;
-	bh=IqFk0ZG+Ywe8d9lKcc11GMakHlu6AOCXT6tR+0OpWxY=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KvCylPvVxPtRvwSG6UDOFBEcrJwR8mvkzLxOYeLBlV2VgrzvrqT3uU+6xk+2HeSgt5pazEW1BQ2JsxfQGdLRvoCSx213pBIBoNnV+dZxsKPyOsM3rCWkL86GNIeyCyJbFg07VxqVbncTOge0RdkQxSMcXkOVxbFN5dNXj39mdPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=otfN9K2E; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40M6Ds3P056965;
-	Mon, 22 Jan 2024 00:13:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1705904034;
-	bh=aMRk3G/zudbpMm1J9wHh8HkzZmrJoEqNPMez3+2ReM0=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=otfN9K2Ef89mBE+UDlXbLXAJtjnrehwXyO1ZywSCPyGM2fGHeOO5W55cgMlCtWzAz
-	 m1p86JV1b4T/A5C2AIqu4hXb7g4vFS3dCiJJ7bNEvW4h+BxyA2Twox62Nd+lwPR8oU
-	 E6y9ZoCXdyODXJX0qT0gZXyhl5RKsjLEUMozUEyU=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40M6DsFw008279
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 22 Jan 2024 00:13:54 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
- Jan 2024 00:13:52 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 22 Jan 2024 00:13:52 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40M6Dmaf083625;
-	Mon, 22 Jan 2024 00:13:49 -0600
-Message-ID: <5b7cd38c-7047-4528-ac6b-8d7a31a1f22f@ti.com>
-Date: Mon, 22 Jan 2024 11:43:47 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B07641;
+	Mon, 22 Jan 2024 06:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705905373; cv=fail; b=WcHm4bP+jRN7aDxCE13sXUEPCBI7ePWpBLH+XndoArCSmnrH1d6ajbzg4x+1EpOwlM41Ftz7rnLXxBorYhHSfOnSzuxuCGSLKSNERLuhjW7ESLypB2FqlOrhBeuil+m9Gq1d87gmHsDSPOWGDoGO0OuJtgbOgFArBQIFndR3Fe0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705905373; c=relaxed/simple;
+	bh=hdzwDsk14qB6pL+Ld3c8GFeYAxqZWeAzUBmUl9/QhUM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ExHFtURODHgE6ZyQa1+zENiLibWafOJnEcgc9JsswX4eatMePdzyhCW3/H+8KCaK65vyPTqXXPBWARx9vynBHcc1migKApkBGrNE8viB555BIpab9WLoHST63AEgu6T7wXmeCXvhZNcLUdysOVTAhgVCQ0czF3EbMhZ+J5TNkiM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cOiaj8K2; arc=fail smtp.client-ip=40.107.243.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S5DBsruXseLpU3zdRyLwerkzt9oJBnMDkFyWLO7s3D6DoOAaGN4X1HM3khozq7xDjVMHSxYQApfvyUZ5F2XGHqMzHdJWUJHxl590jOsAfCF2k/23FNBCWy+YKRmcWkIujuyrcjqE04ca6NL0/JKzOktglsTvxltvxc0+w7VMUHRgccmPpZ9TPslPD0whqe85ateAcbbhBobq8CiPuGgrbunY/wldj+UkHSKQa7NvD3Ga4Eb7uZqI/gzzyFFycBEleSSb1Sypc0GVZ6Tvp7ajcoIcBa0SHeFTfjw1/Z3/+LCIaVGOtekyb4LnPbDf3yTt3OuTqWowu3lLnUUMy5xR+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hdzwDsk14qB6pL+Ld3c8GFeYAxqZWeAzUBmUl9/QhUM=;
+ b=CeFv5Yoyal/zmg2StmQCMYCsVtOf+S7DpvM/zF8g6RnOctIf0wc/bbvFNG6xYL+cbCopD75Byn6s+exYta4F9we2eaO19zfB//yowJm/2GyyM4VHKtrchKvIqtPXk3eRqQU9hNeHtsn3S2tE+e3ClNbVKNwTU6JIKF7U/U5tuoZfhaGByXIUHU/Cr89xCBZZNtEuBVRETwpqoBB7Ciihj93teyAJ0MNaC9458kd+ucaJR0vxPGMdqTWy5N/nrXbNk44GlQToxFSkukyQHU1pNLxPZ+3Qc28ZS3cJQp2Uv7dRpVUQ0zFWqFmXywT+13nRJVYA1f/om6+dhiQJYNS41g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hdzwDsk14qB6pL+Ld3c8GFeYAxqZWeAzUBmUl9/QhUM=;
+ b=cOiaj8K2+zjpJX29tl2/oA9h7EJcNk6zXPr2akPIy6IyV8GsQkAMtERRDOndvE5u1qFE6jQq3eJ6/RNHxhqW216jtizy3JU/OyP9y6Znup4jZn3fuC3j41tJulpSB37lmLxwBS7I+eojnx4z2yFWdjnSgflhmeWkMc6FSzhSvZA=
+Received: from BL1PR12MB5849.namprd12.prod.outlook.com (2603:10b6:208:384::18)
+ by DS0PR12MB7558.namprd12.prod.outlook.com (2603:10b6:8:133::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Mon, 22 Jan
+ 2024 06:36:07 +0000
+Received: from BL1PR12MB5849.namprd12.prod.outlook.com
+ ([fe80::bafd:1985:94e6:ef33]) by BL1PR12MB5849.namprd12.prod.outlook.com
+ ([fe80::bafd:1985:94e6:ef33%7]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
+ 06:36:07 +0000
+From: "Chen, Jiqian" <Jiqian.Chen@amd.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>
+CC: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Boris Ostrovsky
+	<boris.ostrovsky@oracle.com>, =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?=
+	<roger.pau@citrix.com>, "xen-devel@lists.xenproject.org"
+	<xen-devel@lists.xenproject.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "Hildebrand, Stewart"
+	<Stewart.Hildebrand@amd.com>, "Huang, Ray" <Ray.Huang@amd.com>, "Chen,
+ Jiqian" <Jiqian.Chen@amd.com>
+Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Thread-Topic: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Thread-Index: AQHaP5+doYjSbLzTtkiUcLxinuNXV7DmALcA
+Date: Mon, 22 Jan 2024 06:36:07 +0000
+Message-ID:
+ <BL1PR12MB58494E7F0735B26A44D7F683E7752@BL1PR12MB5849.namprd12.prod.outlook.com>
+References: <20240105062217.349645-1-Jiqian.Chen@amd.com>
+ <20240105062217.349645-4-Jiqian.Chen@amd.com>
+In-Reply-To: <20240105062217.349645-4-Jiqian.Chen@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: BL1PR12MB5112.namprd12.prod.outlook.com
+ (15.20.7202.013)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR12MB5849:EE_|DS0PR12MB7558:EE_
+x-ms-office365-filtering-correlation-id: ae13a4f5-8065-458b-c6d3-08dc1b146a41
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ pGzibaJgrQ2BofsPuj/NTC4ijCz+mm7vrbUEtWPSq6O9udm6pRcK0P+USpmpNbPhtUYj0bVYlCuusCb7I48aR4I6mEdgZLq8e/Djy6K3ioI84wpeSA+uzNat6poEhWDn4ySCufvMyeMlJYwlmkgBN+YYHtNYOCs2wdWuEjJ5OXzUPa5zVai70l79o1HPCyGMSMbequrV6AxWDLXK3HFpuCTl1bER6LQTEyI/CsC1ufdyHRsgl9sIkSg+SbEEFuGSVhR7lu4xpnjDNlaf31NHhZ7bbDAUYB5Gs0zrzi6IL7FV6+vRfET91B6M2RceyCznIIe9ZWlQmHjlomDu26QxLH2w7+6Cz8QAamxVdMHSLSuAg+FxTClAdHohEV0juKZu93SfiMyzCt1o0xaAljN4Mt2yksX7PcaNVDxLIPyqBSyyq4W4akgu8mVuYU2QpC+0xAPjkKIZ1h5m8ZIK54LrbAlCyrXZTx1xuj7fSHEXkv3kLDmO14lJIyeGm6g/Z7Qy8iTIQHdw0IM7Zp9eCIEE1vmU24sqM3xOiB74s0pcz0O2HdO5it8EsuDY7MRITlZfuttpWWDVyyvdh7kui7PyprGJWUwNjfkU5908V0o3kuMOL2z5jkdhxBt6WIkErma/
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(366004)(376002)(136003)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(38070700009)(55016003)(7696005)(6506007)(8936002)(8676002)(54906003)(478600001)(71200400001)(9686003)(66446008)(110136005)(76116006)(53546011)(66476007)(66946007)(64756008)(5660300002)(66556008)(52536014)(316002)(4326008)(83380400001)(122000001)(33656002)(2906002)(38100700002)(7416002)(41300700001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?SVFmNmZ5ZGRLSDIwQVJ5Qmlub1c3RjRDVGZHeUFRMzgzTUx0MjFyNnFRbmV5?=
+ =?utf-8?B?MnVERktDUGN6S1UyRFZGSzFKRmdwbWt5UHB4bTZ3Wjg4VzlTZzJzYWlZTnA0?=
+ =?utf-8?B?Skc2TWx0SlJ3SW9kWnYwak4vSUU4RG50bXk2TE1nVDltK0tOQUdtYUtkdmZm?=
+ =?utf-8?B?ditxMnlRT2VjM3N4Ni84QzJoM0pzdUlqYzJYV1FGekd1RmlSL0hRS3NiWXp2?=
+ =?utf-8?B?b1FNRVIzYXFhQ0N5blJiQ3NoTlFHczhQemhkSWowODRPbGw5d0Nuck5nb3dF?=
+ =?utf-8?B?cmREN1p1c1NXSnBtVUdrOXZXSHo0S1VtUHlYVWhzL0dTTnQ1TEhGVmJVQVpZ?=
+ =?utf-8?B?cExwVlVxZWV1czM2UGVVWm5FT1lBYXB4dlRuL1IxOXEzcG0xWmF5eFBHM252?=
+ =?utf-8?B?R2swZlFFVmdBVGV4OFZ5SVZvTVRXQ3F4NXFEV3grdWhxbW4zY0hweHBSZnly?=
+ =?utf-8?B?Mzl3RjhHZVR3bUZ4cWZsc0NKRmdGK3ZtZi9BODB0RXJhSFNTU1k1NDNqdnhQ?=
+ =?utf-8?B?M0dTbFMxMG9iUmFJc0FWdGJzMXZTRWlKc1ZPblJTeUJVQmg5dytUckNLUHBx?=
+ =?utf-8?B?SU81eUpMdWVMYWdzY28vYzJvckRkVGx0L0lRQWNjSXJ3TFJQK0prQ2RIVVFK?=
+ =?utf-8?B?OTBBR1JIVHI1SjBlMGIzK0ptdXcrZkJDWk5UdE9hOVEwSjgxbkFkTzJzUVBx?=
+ =?utf-8?B?RHpxT3pkb3FGSUpOQnFhNkRVYTJ2UGZTR0RzQ0pNTFExb0Jnd0EzNW41bXJZ?=
+ =?utf-8?B?d0g0SXBwS29oQkRMbzBBeEkreWh0NnZEYUt5WTRmbUxvbk14YjE2bXN2aXhG?=
+ =?utf-8?B?bUE4L0NhZ3Z5OGdxMzFOVXVoWlpPRjljRjcwNU1lOUFuVnF4QW5QSlhjdUhY?=
+ =?utf-8?B?L3BSMWhxYzhvYUgrSGxLVEt0TzkxK0N3WTZQRHBWZVNJUFpISWVHd1hLR1FE?=
+ =?utf-8?B?RGQ2ODQrak9LMHhxL1Bjd25YS1ZQV25iRE9LQmhESmdwQ01hcFA5U3U4YnQy?=
+ =?utf-8?B?aTF6RkZXZjMyUDJuVjg2OWdnaVhIQjdxa21rajJnNjA2UnFtOUhxTGdINXI2?=
+ =?utf-8?B?RDhmdDZHUVpkRUxFbERhNWloM3JWUXUzN1JhTVRmZWUvMXFkYTF6dkpvcit1?=
+ =?utf-8?B?dTQ2TFVXeExzWnVReWpKbDBsbmF2SmNtZ3d6Vjlra1JzcHFyd202ZVNlTmNL?=
+ =?utf-8?B?czExOHZvczl2cXViQzVuSFhCNVV3K3oxZXZqN3pzS0ZQTnQ2WGxKTFVxUVNI?=
+ =?utf-8?B?cnBzTTYyVVRiSGpxUjVrRVhiOUxWcTlIeEo0UVlZb0N3RmVkTnVwNlBwVmNl?=
+ =?utf-8?B?ZmRhVENGY1k5WEJiaFZNM2NjYjQ5RWNLMGFwdXNZWjc4N3gyc2VLWHp4UWV4?=
+ =?utf-8?B?WVMvOWFGQmN1UkNpUDB1MlBvQ2hVdDV6Sk1TeW9EMkJhNTJRYW0zZWtOVTUv?=
+ =?utf-8?B?N3JRNDVnOHZzUHZqaWRTUVR4aGpiRktKb3ViQ3NvSzBvVHcrTXpaM0hFRm9U?=
+ =?utf-8?B?Wk5DSFVpaStPb2FqaEVyZHlhY3VHMEFzMFhqTUw3KytLYnhQTkxzbU13OUM0?=
+ =?utf-8?B?dGxBZGphVzlMTDltcXZ2T0xtZWJEa1BtcXI5OG9SYitNKzFzSGNMWUIrbU1O?=
+ =?utf-8?B?OExyQjhpUXdZZVRMYkZHK1JuQlhpVy83SDhKNGUyZzhNR0xmQU5aVWdnMjcw?=
+ =?utf-8?B?cjhDSGNFZG51ZG1ncEQ0VjMyZ0RWYi9wSmhqdC83dlF3UW9iakc3eTc1VE5R?=
+ =?utf-8?B?V2ZLQ0dCL0Y3SWs5UEVtRUV6WDJyQmxOUkI2Vnc0bk1oK2lialprYUtSeHVq?=
+ =?utf-8?B?d1YwcDYvdkhqRzlDLzdMYTRnNktHRDB1T1V5M0QremdoZWJnZDJ4QWl5SWxS?=
+ =?utf-8?B?eWQvRHJDMzlDa2hxcXBKVzNnQmZTR2tpOXZOVW96ekR0cFBudlNFZDZndnRI?=
+ =?utf-8?B?UWpyM2xrK09lMDBLNEhNbU1PQm9KU2s3ZXJGZVMxWlVTVjdONkJUd0Z0R0ZB?=
+ =?utf-8?B?bExKM2NEUWlCcGhPaEZyR3ppYVczQkRoMUpHSmhRd1ZVanMwQit5NTJyMGdR?=
+ =?utf-8?B?YU82UFNCUzNWM0UzeG15VGQ0M2xYUGYyMnhOdz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <757C99A95E60414AB6B70EDE1A6F9E5E@amdcloud.onmicrosoft.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <vkoul@kernel.org>, <kishon@kernel.org>, <linux-phy@lists.infradead.org>,
-        <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
-        <ylal@codeaurora.org>, <regressions@lists.linux.dev>,
-        <jan.kiszka@siemens.com>, <s-vadapalli@ti.com>
-Subject: Re: [REGRESSION] Keystone PCI driver probing and SerDes PLL timeout
-Content-Language: en-US
-To: Kishon Vijay Abraham I <kvijayab@amd.com>,
-        Diogo Ivo
-	<diogo.ivo@siemens.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-References: <20240111141331.3715265-1-diogo.ivo@siemens.com>
- <2024011246-corned-disregard-7123@gregkh>
- <1cce86b1-b309-40e0-afff-45baeb013e1f@siemens.com>
- <88e450b5-5be0-2203-3474-45778503699d@amd.com>
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <88e450b5-5be0-2203-3474-45778503699d@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae13a4f5-8065-458b-c6d3-08dc1b146a41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2024 06:36:07.5292
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ose/pYXiKfHC/gH42HTRZ1RCU2fHfjt5g2zEPqE1iEUb00kHcAIavwZgeA7zRtig1j6+V2bPUUEWxNoyRsINlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7558
 
-
-
-On 22/01/24 11:22, Kishon Vijay Abraham I wrote:
-> +Siddharth
-> 
-> Hi Diogo,
-> 
-> On 1/12/2024 5:16 PM, Diogo Ivo wrote:
->>
->> On 1/12/24 07:57, Greg KH wrote:
->>> On Thu, Jan 11, 2024 at 02:13:30PM +0000, Diogo Ivo wrote:
->>>> Hello,
->>>>
->>>> When testing the IOT2050 Advanced M.2 platform with Linux CIP 6.1
->>>> we came across a breakage in the probing of the Keystone PCI driver
->>>> (drivers/phy/ti/pci-keystone.c). This probing was working correctly
->>>> in the previous version we were using, v5.10.
->>>>
->>>> In order to debug this we changed over to mainline Linux and bissecting
->>>> lead us to find that commit e611f8cd8717 is the culprit, and with it applied
->>>> we get the following messages:
->>>>
->>>> [   10.954597] phy-am654 910000.serdes: Failed to enable PLL
->>>> [   10.960153] phy phy-910000.serdes.3: phy poweron failed --> -110
->>>> [   10.967485] keystone-pcie 5500000.pcie: failed to enable phy
->>>> [   10.973560] keystone-pcie: probe of 5500000.pcie failed with error -110
->>>>
->>>> This timeout is occuring in serdes_am654_enable_pll(), called from the
->>>> phy_ops .power_on() hook.
->>>>
->>>> Due to the nature of the error messages and the contents of the commit we
->>>> believe that this is due to an unidentified race condition in the probing of
->>>> the Keystone PCI driver when enabling the PHY PLLs, since changes in the
->>>> workqueue the deferred probing runs on should not affect if probing works
->>>> or not. To further support the existence of a race condition, commit
->>>> 86bfbb7ce4f6 (a scheduler commit) fixes probing, most likely unintentionally
->>>> meaning that the problem may arise in the future again.
->>>>
->>>> One possible explanation is that there are pre-requisites for enabling the PLL
->>>> that are not being met when e611f8cd8717 is applied; to see if this is the case
->>>> help from people more familiar with the hardware details would be useful.
->>>>
->>>> As official support specifically for the IOT2050 Advanced M.2 platform was
->>>> introduced in Linux v6.3 (so in the middle of the commits mentioned above)
->>>> all of our testing was done with the latest mainline DeviceTree with [1]
->>>> applied on top.
->>>>
->>>> This is being reported as a regression even though technically things are
->>>> working with the current state of mainline since we believe the current fix
->>>> to be an unintended by-product of other work.
->>>>
->>>> #regzbot introduced: e611f8cd8717
->>> A "regression" for a commit that was in 5.13, i.e. almost 2 years ago,
->>> is a bit tough, and not something I would consider really a "regression"
->>> as it is core code that everyone runs.  Given you point at scheduler
->>> changes also fixing the issue, this seems like a hint as to what is
->>> wrong with your driver/platform, but is not the root cause of it and
->>> needs to be resolved.  Please look at fixing it in your drivers?  Are
->>> they all in Linus's tree?
->>>
->>> thanks,
->>>
->>> greg k-h
->> Hello,
->>
->> I see the point that this code has been living in the kernel for a
->> long time now and that it becomes more difficult to justify it as
->> a regression; I reported it as such based on the supposition that
->> the current fix is not the proper one and that technically this
->> support was broken between the identified commits.
->>
->> If this situation is incompatible with a regression report then it
->> can be dropped as one and we keep it is as a bug report for which
->> we are looking for input from the community.
->>
->> I agree that this needs to be fixed in the driver since all other
->> drivers are working fine with e611f8cd8717, and yes, all of the
->> drivers in question are in mainline, where we performed the bissection.
-> 
-> Looks like Siddharth from TI fixed a similar issue reported by you here.
-> https://lore.kernel.org/r/20230927041845.1222080-1-s-vadapalli@ti.com
-
-Kishon,
-
-Thank you for looping me in.
-
-Diogo,
-
-The issue you are referring to is identical to the one fixed in the patch shared
-above by Kishon. I had also bisected the culprit to commit e611f8cd8717 which
-doesn't have anything to do with PCIe/Serdes in particular. It only seems to
-expose the underlying race condition which has always existed. The fix has been
-merged and is now a part of mainline Linux:
-https://github.com/torvalds/linux/commit/c12ca110c613a81cb0f0099019c839d078cd0f38
-
-Additionally, you might run into an issue once you fix the above which happens
-to be a 45 second delay when no Endpoint Device is connected to the PCIe
-connector. I have posted a patch for fixing that issue as well:
-https://lore.kernel.org/r/20231019081330.2975470-1-s-vadapalli@ti.com/
-
--- 
-Regards,
-Siddharth.
+SGkgQmpvcm4gSGVsZ2FhcywNCg0KRG8geW91IGhhdmUgYW55IGNvbW1lbnRzIG9uIHRoaXMgcGF0
+Y2g/DQoNCk9uIDIwMjQvMS81IDE0OjIyLCBDaGVuLCBKaXFpYW4gd3JvdGU6DQo+IFRoZXJlIGlz
+IGEgbmVlZCBmb3Igc29tZSBzY2VuYXJpb3MgdG8gdXNlIGdzaSBzeXNmcy4NCj4gRm9yIGV4YW1w
+bGUsIHdoZW4geGVuIHBhc3N0aHJvdWdoIGEgZGV2aWNlIHRvIGR1bVUsIGl0IHdpbGwNCj4gdXNl
+IGdzaSB0byBtYXAgcGlycSwgYnV0IGN1cnJlbnRseSB1c2Vyc3BhY2UgY2FuJ3QgZ2V0IGdzaQ0K
+PiBudW1iZXIuDQo+IFNvLCBhZGQgZ3NpIHN5c2ZzIGZvciB0aGF0IGFuZCBmb3Igb3RoZXIgcG90
+ZW50aWFsIHNjZW5hcmlvcy4NCj4gDQo+IENvLWRldmVsb3BlZC1ieTogSHVhbmcgUnVpIDxyYXku
+aHVhbmdAYW1kLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogSmlxaWFuIENoZW4gPEppcWlhbi5DaGVu
+QGFtZC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9hY3BpL3BjaV9pcnEuYyAgfCAgMSArDQo+ICBk
+cml2ZXJzL3BjaS9wY2ktc3lzZnMuYyB8IDExICsrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4
+L3BjaS5oICAgICB8ICAyICsrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKykN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2FjcGkvcGNpX2lycS5jIGIvZHJpdmVycy9hY3Bp
+L3BjaV9pcnEuYw0KPiBpbmRleCA2MzBmZTBhMzRiYzYuLjczOWE1ODc1NWRmMiAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9hY3BpL3BjaV9pcnEuYw0KPiArKysgYi9kcml2ZXJzL2FjcGkvcGNpX2ly
+cS5jDQo+IEBAIC00NDksNiArNDQ5LDcgQEAgaW50IGFjcGlfcGNpX2lycV9lbmFibGUoc3RydWN0
+IHBjaV9kZXYgKmRldikNCj4gIAkJa2ZyZWUoZW50cnkpOw0KPiAgCQlyZXR1cm4gMDsNCj4gIAl9
+DQo+ICsJZGV2LT5nc2kgPSBnc2k7DQo+ICANCj4gIAlyYyA9IGFjcGlfcmVnaXN0ZXJfZ3NpKCZk
+ZXYtPmRldiwgZ3NpLCB0cmlnZ2VyaW5nLCBwb2xhcml0eSk7DQo+ICAJaWYgKHJjIDwgMCkgew0K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpLXN5c2ZzLmMgYi9kcml2ZXJzL3BjaS9wY2kt
+c3lzZnMuYw0KPiBpbmRleCAyMzIxZmRmZWZkN2QuLmM1MWRmODhkMDc5ZSAxMDA2NDQNCj4gLS0t
+IGEvZHJpdmVycy9wY2kvcGNpLXN5c2ZzLmMNCj4gKysrIGIvZHJpdmVycy9wY2kvcGNpLXN5c2Zz
+LmMNCj4gQEAgLTcxLDYgKzcxLDE2IEBAIHN0YXRpYyBzc2l6ZV90IGlycV9zaG93KHN0cnVjdCBk
+ZXZpY2UgKmRldiwNCj4gIH0NCj4gIHN0YXRpYyBERVZJQ0VfQVRUUl9STyhpcnEpOw0KPiAgDQo+
+ICtzdGF0aWMgc3NpemVfdCBnc2lfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ICsJCQlzdHJ1
+Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwNCj4gKwkJCWNoYXIgKmJ1ZikNCj4gK3sNCj4gKwlz
+dHJ1Y3QgcGNpX2RldiAqcGRldiA9IHRvX3BjaV9kZXYoZGV2KTsNCj4gKw0KPiArCXJldHVybiBz
+eXNmc19lbWl0KGJ1ZiwgIiV1XG4iLCBwZGV2LT5nc2kpOw0KPiArfQ0KPiArc3RhdGljIERFVklD
+RV9BVFRSX1JPKGdzaSk7DQo+ICsNCj4gIHN0YXRpYyBzc2l6ZV90IGJyb2tlbl9wYXJpdHlfc3Rh
+dHVzX3Nob3coc3RydWN0IGRldmljZSAqZGV2LA0KPiAgCQkJCQkgc3RydWN0IGRldmljZV9hdHRy
+aWJ1dGUgKmF0dHIsDQo+ICAJCQkJCSBjaGFyICpidWYpDQo+IEBAIC01OTYsNiArNjA2LDcgQEAg
+c3RhdGljIHN0cnVjdCBhdHRyaWJ1dGUgKnBjaV9kZXZfYXR0cnNbXSA9IHsNCj4gIAkmZGV2X2F0
+dHJfcmV2aXNpb24uYXR0ciwNCj4gIAkmZGV2X2F0dHJfY2xhc3MuYXR0ciwNCj4gIAkmZGV2X2F0
+dHJfaXJxLmF0dHIsDQo+ICsJJmRldl9hdHRyX2dzaS5hdHRyLA0KPiAgCSZkZXZfYXR0cl9sb2Nh
+bF9jcHVzLmF0dHIsDQo+ICAJJmRldl9hdHRyX2xvY2FsX2NwdWxpc3QuYXR0ciwNCj4gIAkmZGV2
+X2F0dHJfbW9kYWxpYXMuYXR0ciwNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcGNpLmgg
+Yi9pbmNsdWRlL2xpbnV4L3BjaS5oDQo+IGluZGV4IGRlYTA0M2JjMWUzOC4uMDYxOGQ0YTg3YTUw
+IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3BjaS5oDQo+ICsrKyBiL2luY2x1ZGUvbGlu
+dXgvcGNpLmgNCj4gQEAgLTUyOSw2ICs1MjksOCBAQCBzdHJ1Y3QgcGNpX2RldiB7DQo+ICANCj4g
+IAkvKiBUaGVzZSBtZXRob2RzIGluZGV4IHBjaV9yZXNldF9mbl9tZXRob2RzW10gKi8NCj4gIAl1
+OCByZXNldF9tZXRob2RzW1BDSV9OVU1fUkVTRVRfTUVUSE9EU107IC8qIEluIHByaW9yaXR5IG9y
+ZGVyICovDQo+ICsNCj4gKwl1bnNpZ25lZCBpbnQJZ3NpOw0KPiAgfTsNCj4gIA0KPiAgc3RhdGlj
+IGlubGluZSBzdHJ1Y3QgcGNpX2RldiAqcGNpX3BoeXNmbihzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0K
+DQotLSANCkJlc3QgcmVnYXJkcywNCkppcWlhbiBDaGVuLg0K
 
