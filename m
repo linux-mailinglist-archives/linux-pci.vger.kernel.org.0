@@ -1,137 +1,106 @@
-Return-Path: <linux-pci+bounces-2421-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2422-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8DBB8365B2
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 15:43:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A77CA836730
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 16:12:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FC9C28A8E1
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 14:43:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5EE001F22D72
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 15:12:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1453120DF0;
-	Mon, 22 Jan 2024 14:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0E2E4F895;
+	Mon, 22 Jan 2024 14:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lRJ3HRio"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JPULy5oB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9B33D96B
-	for <linux-pci@vger.kernel.org>; Mon, 22 Jan 2024 14:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A965D4F891;
+	Mon, 22 Jan 2024 14:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705934597; cv=none; b=mgiait5zq7yfnCZ7jMQsyrqNdq+vlvCjjszba2YhDld/lc2NYzbE+K2fFRiC4EyCjhmzavkH0kZ52IaM30MjW0uZcoDaeK/R4nv4eE87bnYz3kPuNmU4Eo4pvRiGsh+NmvjeCdV4hvc1ogJO+qyvc48gzJ+3fcLQAZCEyh+ol+s=
+	t=1705935486; cv=none; b=TT2TuLG3c6pc4RfVvKzj+oBTI4pICiVZvFsg060uLr6/LHKac1CE5ducYrkCwnsKzJql36PLSu0W77YiCqaxgWXv2G9FqD9n/ibELyn72UFIMo+H+RStrIeX5CboaBucC4PZGI28Uv7Z8YCC+Vz5UTwnCM/rwaX5ja3secNUSYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705934597; c=relaxed/simple;
-	bh=1bCYhPgmI6PSb0c7/Nbpwr9CEkRnr3NsLIcKlUjtDKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Gw4xy9uiKJ34fH7aRqoE2Ma3kcUtgwmNttvOZpd2lMscpm9kOL3T+QnHgPjnFHR7u0GN9P3oTCJxLxuQEe7Uk23EprnTzVbc47Pjwz+fKefu86SB6IzVgVVH3Vt0EsyEZX+SjWUE5TOHTP3UmsqcHS93bOcV+tRXWl3C5OiqEY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lRJ3HRio; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-336c5b5c163so1949239f8f.1
-        for <linux-pci@vger.kernel.org>; Mon, 22 Jan 2024 06:43:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705934593; x=1706539393; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aLKGcjYNziLpYJx8DEHJXoX7hbusqCo8+fmev07YcQc=;
-        b=lRJ3HRio8O3SlKrlt7u6BStGC32jZZCmv1v65lrMkVKOLrJaZR/pM45yauZ6SPnIEx
-         C8ZZdeJm+MpzFLwH+caHS46ZBJZNO37HWC3g5/YPNNxUA5thQVCri8GJpnKrEcnO5W75
-         /i8Ll91ogr5ZsdqrN6dKwGOgfTcm0kthiLOfjZyO53upWgS3hG6qfc1qDbrrTVZbozQi
-         +R+/Tcx3X3V8L/gP8NJeE5T/VjM5zsMalI2FpNkuiT7dpjBQsc+50iuG6Vp5D3oEr3vL
-         R9VurANlE7Y4Te/FeYXCjH13SFFKSx6TnMhaw0a0gShUljF6SsvpA2iBnWyMGuht0+O/
-         0W5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705934593; x=1706539393;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aLKGcjYNziLpYJx8DEHJXoX7hbusqCo8+fmev07YcQc=;
-        b=jQF0rZlejmFJVw02KfvPM+OLdT/o7Yh4/dL3OhHRAHK/a37wZDNrwRC7hdgHrDy3l4
-         kNLOAzveTIyWKHt42NK6N2w/GqpvH6kjT6W1V5TUxuT1S11jtso8tok5m2ZE1LdMcvny
-         RAyS7qnLdErhwpvv6vZCgRkQxZFohcQQ6xDnNwBF6yyOvaP5QIxLltq9F/LMq59NjDw7
-         RT7qX48sm3i9pBZy3n1vCm60Mgh4zzAYi3G1FTUYc+zv8X7bdh3+bqrCDqWB2ZqTelhw
-         7ZQcczfuMbu30lWMO8jqEcbDEdpn/HvV/cr3ZmlKJDDqGtPI6HhXK12SAyzMLrlAcz30
-         Qb9A==
-X-Gm-Message-State: AOJu0Ywrra3meATkyFl4vEmlXFChOMICLl1bJ1egxgOsOP6QIW6K4HCl
-	QhzOMdobzrxKo15KRIN0z5A4CK8aD1EqMFbv69KSL3uiXxue+D2wqquunNn4Tr4=
-X-Google-Smtp-Source: AGHT+IFiae/b6xmgfkZ632PsFZd74HZSeHBAm/8QKjNJUuN8n8mzxih+epz8zkalE8leQo+zyOAaBQ==
-X-Received: by 2002:adf:fac6:0:b0:337:bdf7:2e32 with SMTP id a6-20020adffac6000000b00337bdf72e32mr1591570wrs.23.1705934593446;
-        Mon, 22 Jan 2024 06:43:13 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id n17-20020a5d67d1000000b003392f229b60sm4346652wrw.40.2024.01.22.06.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 06:43:12 -0800 (PST)
-Date: Mon, 22 Jan 2024 17:43:09 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org
-Subject: [bug report] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
-Message-ID: <29ee741c-7fbd-4061-87c6-c4ae46c372c1@moroto.mountain>
+	s=arc-20240116; t=1705935486; c=relaxed/simple;
+	bh=Na4YO0JjGFwKvNknEcCzXZmeYejhdT7chmhMjnYgpEU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pPmsKNPATUL532JO+lP9TLa8D21Qoui4AHopHsPy1PMIwGp5cWqVfpc2G+MTuJ8olWWCBKFIwIUIEOyxGydoWkqdxVxj/vfTLiC8KW1b3lOVcAnxfAiM+6Qd3+m53WGbxphdthrChAx6Aa7jBecdo3IYPoJtdNybohXqr1wpby0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JPULy5oB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE5EC43399;
+	Mon, 22 Jan 2024 14:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935486;
+	bh=Na4YO0JjGFwKvNknEcCzXZmeYejhdT7chmhMjnYgpEU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JPULy5oBi4eIuLiTT4A3kAREWT/XPI8PrzpitWyLR2JsU23XN82HAKFDkiiM6ECMt
+	 UGz+1jIWbbVU/mOGkynHm0FIH947bheiy3GhMuOZCJZ0Bk3vmLWQLjDVb74vyWaPru
+	 Row/UxBCuVrTN0YGZSPlGA2YGQ5SIYf8Ph5IcgYel1wIRt4TTqyEk04BIze2OHgeyu
+	 o4rTPCGRYg8fbyO5mhRbzyBBKtZ5xy6qNF7AwR9n8FzDNPFqearcNHWbq/DCUqMHKk
+	 GwTjHU/MeyypnHdAPJPt/U7VdzJqjftDCk5HyhXEoNfuDC0AgxQYPKSG9oK5ba+xGY
+	 2xJA9E+uu7Xgg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 29/88] PCI: add INTEL_HDA_ARL to pci_ids.h
+Date: Mon, 22 Jan 2024 09:51:02 -0500
+Message-ID: <20240122145608.990137-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122145608.990137-1-sashal@kernel.org>
+References: <20240122145608.990137-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.1
+Content-Transfer-Encoding: 8bit
 
-Hello Bjorn Helgaas,
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-The patch f93e71aea6c6: "Revert "PCI/ASPM: Remove
-pcie_aspm_pm_state_change()"" from Jan 1, 2024 (linux-next), leads to
-the following Smatch static checker warning:
+[ Upstream commit 5ec42bf04d72fd6d0a6855810cc779e0ee31dfd7 ]
 
-	drivers/pci/pcie/aspm.c:1017 pcie_aspm_pm_state_change()
-	warn: sleeping in atomic context
+The PCI ID insertion follows the increasing order in the table, but
+this hardware follows MTL (MeteorLake).
 
-drivers/pci/pcie/aspm.c
-    1007 void pcie_aspm_pm_state_change(struct pci_dev *pdev)
-    1008 {
-    1009         struct pcie_link_state *link = pdev->link_state;
-    1010 
-    1011         if (aspm_disabled || !link)
-    1012                 return;
-    1013         /*
-    1014          * Devices changed PM state, we should recheck if latency
-    1015          * meets all functions' requirement
-    1016          */
---> 1017         down_read(&pci_bus_sem);
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20231204212710.185976-2-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/pci_ids.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-This is a revert from a patch from 2022 which was before I had written
-this "sleeping in atomic" static checker thing.
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 275799b5f535..97cc0baad0f4 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3065,6 +3065,7 @@
+ #define PCI_DEVICE_ID_INTEL_82443GX_0	0x71a0
+ #define PCI_DEVICE_ID_INTEL_82443GX_2	0x71a2
+ #define PCI_DEVICE_ID_INTEL_82372FB_1	0x7601
++#define PCI_DEVICE_ID_INTEL_HDA_ARL	0x7728
+ #define PCI_DEVICE_ID_INTEL_HDA_RPL_S	0x7a50
+ #define PCI_DEVICE_ID_INTEL_HDA_ADL_S	0x7ad0
+ #define PCI_DEVICE_ID_INTEL_HDA_MTL	0x7e28
+-- 
+2.43.0
 
-    1018         mutex_lock(&aspm_lock);
-    1019         pcie_update_aspm_capable(link->root);
-    1020         pcie_config_aspm_path(link);
-    1021         mutex_unlock(&aspm_lock);
-    1022         up_read(&pci_bus_sem);
-    1023 }
-
-The call trees that Smatch is complaining about are:
-
-vortex_boomerang_interrupt() <- disables preempt
--> _vortex_interrupt()
--> _boomerang_interrupt()
-   -> vortex_error()
-      -> vortex_up()
-velocity_suspend() <- disables preempt
--> velocity_set_power_state()
-         -> pci_set_power_state()
-            -> pci_set_low_power_state()
-               -> pcie_aspm_pm_state_change()
-
-So what Smatch is saying is the vortex_boomerang_interrupt() and
-velocity_suspend() hold spin locks and then set the power state.  The
-call trees are quite long so I'm not really able to be sure if this is
-a false positive or not...  I wish this warning were more useful.
-
-These emails are a one time thing.  Just reply if it's a false positive
-and I'll note it down.  Otherwise feel free to ignore it.
-
-regards,
-dan carpenter
 
