@@ -1,203 +1,165 @@
-Return-Path: <linux-pci+bounces-2412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25417836020
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 11:53:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02F2783624E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 12:44:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48A041C2186F
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 10:53:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 914EA1F2150E
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 11:44:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D1A73A8CC;
-	Mon, 22 Jan 2024 10:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D5333D56B;
+	Mon, 22 Jan 2024 11:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0uU6dC/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zc0oP46+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6353A8C6;
-	Mon, 22 Jan 2024 10:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6BF3D3BC;
+	Mon, 22 Jan 2024 11:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920806; cv=none; b=cZVMhHKRe6PkFQtCp/SucLcCDjQQjyH8ZYFTrp8hwempsZlUseUr3rwt1tUp46iLtQQ+EELyO0oBSzldGh22JsfaFXCVl/QV9sSuMnDFRUTGXDjGnCtlJZtx5cWjYGuE3PP7Cf+Hb55zupoQsHQ+Jne7v0ZyBMBP3PUcBfDyaaI=
+	t=1705923695; cv=none; b=CLdveub9mrodnnLokbpOYDO7Jy30VB75F8ZiTW7QdtLlkK9CT+L4Q8TCBuKzMYQLiedQnSkAntCpreevKLWSgFIx620/nq8tAwfd072IHIC/gTHRs5tQnsGnN/OrkZa3zLaRg6uLH6hCo36nvKGRyMMfwrKv6UJ9f/SD/oQfxYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920806; c=relaxed/simple;
-	bh=Mv/eIsF4cLBVJCplW6zKFPzyppMCYU3H18HJx+nE56g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZwn7EkET5hW6fjn3spvbpGUa3f/HAsZSIi3nZSrHm5O3fI0WaT+eP582DColb4XmVNzCVXEjKsDOg6JsrF+MpZ04JGVatx3iYiCGk0VXZoowT9qaaw9LlXLssImT8FN3K3X3w8ow7xFcRXGb2L1ogkwQqnNYymvaQvk7wEIUtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0uU6dC/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C55C43394;
-	Mon, 22 Jan 2024 10:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705920805;
-	bh=Mv/eIsF4cLBVJCplW6zKFPzyppMCYU3H18HJx+nE56g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D0uU6dC/KV/ygNWsBOXmuRkS0ZTgQ4EIO/qOPHGKTn91hN9t82/Zci8gvPikvww/Y
-	 9h5mZtDXIBoTuF7y8TFSCvBaY/Im0kugIQrwJn/wtgLNpB94s1enWwg/ASF0joLwno
-	 +TiyD4dVPTE13d0xQLUvlegXkYwothIhOM8vzINL2AuXtxha1Po/n1Rd++QeDibWvk
-	 ZyAAnCHxB6fZ01cRC5anq28UN/tnPQsq1+FgXqEAN+R5PCQ9MN8Aws04NavnFMFp7F
-	 gu9dTGs6aVF2iJWyw9BS5pZvGF5MNitihUImN8Bto9kMeT6zhw3NebN234dYb++NXp
-	 T+mX+WOYxVJqw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rRrvr-000000007a8-3dba;
-	Mon, 22 Jan 2024 11:53:36 +0100
-Date: Mon, 22 Jan 2024 11:53:35 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Michael Schaller <michael@5challer.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	s=arc-20240116; t=1705923695; c=relaxed/simple;
+	bh=TFWI6JTKREohL41oXLi1D5cttfNwbBSLh8m7YgHZDUg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PAm+J11DMDZdhjejr8I8mFu0dI8JjeBj0U13hmDx04PCun4TsUwHYRuAKP4u0oKwJBOtIUINCcGhsHADf6ibuJNFq83yWYC3FQiH66E5kOcBV9by73dEBV04WEZ8qC2JLCJynrfAVxe3HW8KnTnUKtNUDdZn1qFd/ayLRL+Ukiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zc0oP46+; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705923693; x=1737459693;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TFWI6JTKREohL41oXLi1D5cttfNwbBSLh8m7YgHZDUg=;
+  b=Zc0oP46+2c3YTs6ZRrxSzC2w+MyvRR3FozqmHryTVPkMrdLyB+7weC6h
+   oYkTsZOCy2qDATPdtt+IWWCV9S9Z0XsZCPtJi/8jmc95uxSBU8/l7dJah
+   pvyPEcyUv+5DDxyPp+TEUOqdYKFJ8uozmbuJA36uPEoLkJpztIYyMh2xu
+   4jUCrak0xKNwf9zBE/D3ZhBaYi0CWY84mDxAJ1QTQxlTcGY6fgAyCwQsJ
+   ryCp5A54wFcldGpBDsFjZyO0o25ZkEuH6tj4lScMQNlWI7Bwx38gJ+2qG
+   pQcQmZ8wvgqoyCdgQjqqwhOhbCFwZuy2pGNYKEtNykWWyI80F9ec6xPu+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="432347123"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="432347123"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:41:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="904825864"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="904825864"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:41:26 -0800
+Received: from svinhufvud.ger.corp.intel.com (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id E3EFC11FAD4;
+	Mon, 22 Jan 2024 13:41:21 +0200 (EET)
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-pm@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Alex Elder <elder@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-	regressions@leemhuis.info
-Subject: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH] Revert
- "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-Message-ID: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
-References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
- <20240102232550.1751655-1-helgaas@kernel.org>
- <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Mark Brown <broonie@kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH v3 0/2] Small runtime PM API changes
+Date: Mon, 22 Jan 2024 13:41:20 +0200
+Message-Id: <20240122114121.56752-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZu0qx2cmn7IwTyQ@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Bjorn,
+Hi folks,
 
-I never got a reply to this one so resending with updated Subject in
-case it got buried in your inbox.
+Here's a small but a different set of patches for making two relatively
+minor changes to runtime PM API. I restarted version numbering as this is
+meaningfully different from the previous set.
 
-On Mon, Jan 08, 2024 at 09:39:07AM +0100, Johan Hovold wrote:
- 
-> On Tue, Jan 02, 2024 at 05:25:50PM -0600, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
-> > 
-> > Michael reported that when attempting to resume from suspend to RAM on ASUS
-> > mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
-> > ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
-> > with no output, followed by a reboot.
-> > 
-> > Workarounds include:
-> > 
-> >   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> >   - Booting with "pcie_aspm=off"
-> >   - Booting with "pcie_aspm.policy=performance"
-> >   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
-> >     before suspending
-> >   - Connecting a USB flash drive
-> > 
-> > Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> > Reported-by: Michael Schaller <michael@5challer.de>
-> > Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: <stable@vger.kernel.org>
-> > ---
->  
-> > +/* @pdev: the root port or switch downstream port */
-> > +void pcie_aspm_pm_state_change(struct pci_dev *pdev)
-> > +{
-> > +	struct pcie_link_state *link = pdev->link_state;
-> > +
-> > +	if (aspm_disabled || !link)
-> > +		return;
-> > +	/*
-> > +	 * Devices changed PM state, we should recheck if latency
-> > +	 * meets all functions' requirement
-> > +	 */
-> > +	down_read(&pci_bus_sem);
-> > +	mutex_lock(&aspm_lock);
-> > +	pcie_update_aspm_capable(link->root);
-> > +	pcie_config_aspm_path(link);
-> > +	mutex_unlock(&aspm_lock);
-> > +	up_read(&pci_bus_sem);
-> > +}
-> 
-> This function is now restored in 6.7 final and is called in paths which
-> already hold the pci_bus_sem as reported by lockdep (see splat below).
-> 
-> This can potentially lead to a deadlock and specifically prevents using
-> lockdep on Qualcomm platforms.
-> 
-> Not sure if you want to propagate whether the bus semaphore is held to
-> pcie_aspm_pm_state_change() or if there was some alternative to
-> restoring this function which should be explored instead.
+pm_runtime_get_if_active() loses its second argument as it only made sense
+to have ign_usage_count argument true.
 
-So to summarise, this patch, which is now commit
+The other change is also small but it has an effect on callers:
+pm_runtime_put_autosuspend() will, in the future, be re-purposed to
+include a call to pm_runtime_mark_last_busy() as well. Before this,
+current users of the function are moved to __pm_runtime_put_autosuspend()
+(added by this patchset) which will continue to have the current
+behaviour.
 
-	f93e71aea6c6 ("Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"")
+I haven't included the conversion patches in this set as I only want to do
+that once this set has been approved and merged. The tree specific patches
+can be found here, on linux-next master (there are some V4L2 patches
+there, too, please ignore them for now):
+<URL:https://git.kernel.org/pub/scm/linux/kernel/git/sailus/linux-next.git/log/?h=pm>
 
-introduced a regression in 6.7-final for Qualcomm platforms (and some
-Intel platforms) similar to the one recently fixed by commit
+Later on, users calling pm_runtime_mark_last_busy() immediately followed
+by __pm_runtime_put_autosuspend() will be switched back to
+pm_runtime_put_autosuspend() once its behaviour change has been done (a
+patch near top of that branch). I'll provide these once the preceding ones
+have been merged.
 
-	f352ce999260 ("PCI: qcom: Fix potential deadlock when enabling ASPM").
+Comments are welcome.
 
-Johan
+since v2:
 
+- Rebase on v6.8-rc1 (no changes).
 
-#regzbot introduced: f93e71aea6c6
+- Add Rodrigo's Reviewed-by: to the 1st patch.
 
->    ============================================
->    WARNING: possible recursive locking detected
->    6.7.0 #40 Not tainted
->    --------------------------------------------
->    kworker/u16:5/90 is trying to acquire lock:
->    ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pcie_aspm_pm_state_change+0x58/0xdc
->    pcieport 0002:00:00.0: PME: Signaling with IRQ 197
->    
->                but task is already holding lock:
->    ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
->    
->                other info that might help us debug this:
->     Possible unsafe locking scenario:
-> 
->           CPU0
->           ----
->      lock(pci_bus_sem);
->      lock(pci_bus_sem);
->    
->                 *** DEADLOCK ***
-> 
->     May be due to missing lock nesting notation
-> 
->    4 locks held by kworker/u16:5/90:
->     #0: ffff06c5c0008d38 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
->     #1: ffff800081c0bdd0 ((work_completion)(&entry->work)){+.+.}-{0:0}, at: process_one_work+0x150/0x53c
->     #2: ffff06c5c0b7d0f8 (&dev->mutex){....}-{3:3}, at: __driver_attach_async_helper+0x3c/0xf4
->     #3: ffffacfa78ced000 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x34/0xbc
->    
->                stack backtrace:
->    CPU: 1 PID: 90 Comm: kworker/u16:5 Not tainted 6.7.0 #40
->    Hardware name: LENOVO 21BYZ9SRUS/21BYZ9SRUS, BIOS N3HET53W (1.25 ) 10/12/2022
->    Workqueue: events_unbound async_run_entry_fn
->    Call trace:
->     dump_backtrace+0x9c/0x11c
->     show_stack+0x18/0x24
->     dump_stack_lvl+0x60/0xac
->     dump_stack+0x18/0x24
->     print_deadlock_bug+0x25c/0x348
->     __lock_acquire+0x10a4/0x2064
->     lock_acquire+0x1e8/0x318
->     down_read+0x60/0x184
->     pcie_aspm_pm_state_change+0x58/0xdc
->     pci_set_full_power_state+0xa8/0x114
->     pci_set_power_state+0xc4/0x120
->     qcom_pcie_enable_aspm+0x1c/0x3c [pcie_qcom]
->     pci_walk_bus+0x64/0xbc
->     qcom_pcie_host_post_init_2_7_0+0x28/0x34 [pcie_qcom]
+since v1:
+
+- patch 1: Rename __pm_runtime_get_conditional() as
+  pm_runtime_get_conditional().
+
+- patch 1: Reword documentation on driver use of
+  pm_runtime_get_conditional().
+
+Sakari Ailus (2):
+  pm: runtime: Simplify pm_runtime_get_if_active() usage
+  pm: runtime: Add pm_runtime_put_autosuspend() replacement
+
+ Documentation/power/runtime_pm.rst      | 22 ++++++++-----
+ drivers/accel/ivpu/ivpu_pm.c            |  2 +-
+ drivers/base/power/runtime.c            | 10 ++++--
+ drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
+ drivers/gpu/drm/xe/xe_pm.c              |  2 +-
+ drivers/media/i2c/ccs/ccs-core.c        |  2 +-
+ drivers/media/i2c/ov64a40.c             |  2 +-
+ drivers/media/i2c/thp7312.c             |  2 +-
+ drivers/net/ipa/ipa_smp2p.c             |  2 +-
+ drivers/pci/pci.c                       |  2 +-
+ include/linux/pm_runtime.h              | 44 ++++++++++++++++++++++---
+ sound/hda/hdac_device.c                 |  2 +-
+ 12 files changed, 68 insertions(+), 26 deletions(-)
+
+-- 
+2.39.2
+
 
