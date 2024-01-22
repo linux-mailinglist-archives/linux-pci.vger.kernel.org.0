@@ -1,168 +1,106 @@
-Return-Path: <linux-pci+bounces-2440-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2441-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CC32837223
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 20:14:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0EE583729F
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 20:32:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 767B028F4F3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 19:14:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E3551F25EF2
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 19:32:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0955E48791;
-	Mon, 22 Jan 2024 18:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6586F3DB86;
+	Mon, 22 Jan 2024 19:32:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="H/fJHhNA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQV39dII"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E4048780;
-	Mon, 22 Jan 2024 18:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E693D553
+	for <linux-pci@vger.kernel.org>; Mon, 22 Jan 2024 19:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705949764; cv=none; b=pGqDe8wZFPT9OSz2IvipYAXD2OSrO39lFNG7LrlasDYsmBM70W+dH841GgxCuJexrt+3vpdT7YrZXWuVqysFOQNvCTW2OYi+wYZCOGJzFGJwVOwT+8DNX8Z4pjk6QKpr+CVVEjSl568V7AD9eWZh7Eu3VILh85Q04+KXXRjXbpg=
+	t=1705951970; cv=none; b=sfrlB6AauEJjnc6B9m+wpHfv1BRhXdq85dNOWvTDTKh9RZo0x6lSbBaOZZITaGsWRDseqkcR7YEVWcF7/WASdlZPFRY4nt04hMXFYo5T2Xaf6mrl+ix+dD6csSSLE7nK7LwwYsJ8qY0Uqc+BwzokPy6tZ6qSBjPD8JeUlMQGiHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705949764; c=relaxed/simple;
-	bh=bK4Q2EbBc/nuHHjpU5lTiNRDOBSyU7sMPKPNpqyyg8s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jLsiQbgH1jKwA/JXeE/8j/Jz5qRA8Pzmu9tsdPVnjwc+9WqnokRgEVUc6DBP4PL1Rq3coJki0vZ1iE3mqBT3bKZvXo8TE5vwkhVEhu0qINXh6yteCgs92fdWfhkPYhQf5t596vgfPAz7w9mNJzFNWCNYPhhSA7s4BG2FkM55u/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=H/fJHhNA; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705949762;
-	bh=bK4Q2EbBc/nuHHjpU5lTiNRDOBSyU7sMPKPNpqyyg8s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H/fJHhNArVz1m4aahhjDKDMbAHLrTGImjOS6d8WXBOLSU3QHcj+lcol49NLXYXp5b
-	 CyopSGhNUGpL/R8gv7kXjsa0Xkttk21qkISVdly8gShz9gCHWphNffpyXjvg5NzOSp
-	 pimw3bG0TzWrZBgnwnz+wV6Dn9k/DIMajrJzwZNbd6+XO+S+/+n9MQNKSokYut0L9w
-	 T9VZGNDVzZT/4etPJ+tplbSG+zV3lASWBsLH2XNiMMYveIkx6Q94iMCX7NMMK6oW7L
-	 6ns751E6MT+BrpAOUZdB/boLgB+n0qPNEv/JEET95uctoMchB9SEVusByxVqizI4UJ
-	 /cBQJy86FAO9Q==
-Received: from [192.168.0.47] (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AABFF37820A7;
-	Mon, 22 Jan 2024 18:55:56 +0000 (UTC)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Mon, 22 Jan 2024 15:53:23 -0300
-Subject: [PATCH v4 3/3] kselftest: devices: Add sample board file for XPS
- 13 9300
+	s=arc-20240116; t=1705951970; c=relaxed/simple;
+	bh=+CTqE86ejFEzDh3C0eu1DjjD3DcSFQOo3Rginwp5CRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rdACIlvCfhfSE9y0yKQZ8lp/IiQ48CT1+RufTGZ44TLdUvuj0Njn2xgqZA15CT9BvpixaVcnDBTyJY60DiDp3vcZmiBl7X/EpGk2zsSI9s4Fir+cDxDYLshHZ9aHSFwB1PEEkIqx2z0doth0LuQnf2uiOA02u+uBhXJ+jqQit84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQV39dII; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9028EC433C7;
+	Mon, 22 Jan 2024 19:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705951969;
+	bh=+CTqE86ejFEzDh3C0eu1DjjD3DcSFQOo3Rginwp5CRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FQV39dIIOXff94BG/dmg/7tnJehNsy91U603HyUS9Yy8ch8Jtzgrwx6Wqga+dCUCr
+	 rPjGy7oNB4HSuaoi6DR0ZxwSdU61CqzNMkAwlIjCiQPqufze7rEMkGDg02GJmOXoRW
+	 7SBACZSlTGlivY7cMR+UPO/UdwyuK4IRLJ85dkGtpP5vISEK54plRmKoVNXCpRAKQS
+	 KlXMclKms/DQ3M9lbIWuwA2RrVjzFNhynlgVc/jTG72dKqH7SUFQKw0bDAWi51PKG5
+	 UwKQRxqMRkv+LsjLulBPzBJFRgV31xvPUn14ONaxEIRQECWF4tbxBqRRS2HU7xn2bW
+	 oqWLFW48pIMUQ==
+Date: Mon, 22 Jan 2024 13:32:47 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Matthew W Carlis <mattc@purestorage.com>
+Cc: sathyanarayanan.kuppuswamy@linux.intel.com, bhelgaas@google.com,
+	kbusch@kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de,
+	mika.westerberg@linux.intel.com
+Subject: Re: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER
+ natively.
+Message-ID: <20240122193247.GA278696@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240122-discoverable-devs-ksft-v4-3-d602e1df4aa2@collabora.com>
-References: <20240122-discoverable-devs-ksft-v4-0-d602e1df4aa2@collabora.com>
-In-Reply-To: <20240122-discoverable-devs-ksft-v4-0-d602e1df4aa2@collabora.com>
-To: Shuah Khan <shuah@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: kernelci@lists.linux.dev, kernel@collabora.com, 
- Tim Bird <Tim.Bird@sony.com>, linux-pci@vger.kernel.org, 
- David Gow <davidgow@google.com>, linux-kselftest@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@chromium.org>, 
- linux-usb@vger.kernel.org, Saravana Kannan <saravanak@google.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, 
- Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109001508.32359-1-mattc@purestorage.com>
 
-Add a sample board file describing the file's format and with the list
-of devices expected to be probed on the XPS 13 9300 machine as an
-example x86 platform.
+On Mon, Jan 08, 2024 at 05:15:08PM -0700, Matthew W Carlis wrote:
+> A small part is probably historical; we've been using DPC on PCIe
+> switches since before there was any EDR support in the kernel. It
+> looks like there was a PCIe DPC ECN as early as Feb 2012, but this
+> EDR/DPC fw ECN didn't come in till Jan 2019 & kernel support for ECN
+> was even later. Its not immediately clear I would want to use EDR in
+> my newer architecures & then there are also the older architecures
+> still requiring support. When I submitted this patch I came at it
+> with the approach of trying to keep the old behavior & still support
+> the newer EDR behavior. Bjorns patch from Dec 28 2023 would seem to
+> change the behavior for both root ports & switch ports, requiring
+> them to set _OSC Control Field bit 7 (DPC) and _OSC Support Field
+> bit 7 (EDR) or a kernel command line value. I think no matter what,
+> we want to ensure that PCIe Root Ports and PCIe switches arrive at
+> the same policy here.
 
-Test output:
+Is there an approved DPC ECN to the PCI Firmware spec that adds DPC
+control negotiation, but does *not* add the EDR requirement?
 
-TAP version 13
-Using board file: boards/Dell Inc.,XPS 13 9300.yaml
-1..22
-ok 1 /pci-controller/14.0/usb2-controller/9/camera.device
-ok 2 /pci-controller/14.0/usb2-controller/9/camera.0.driver
-ok 3 /pci-controller/14.0/usb2-controller/9/camera.1.driver
-ok 4 /pci-controller/14.0/usb2-controller/9/camera.2.driver
-ok 5 /pci-controller/14.0/usb2-controller/9/camera.3.driver
-ok 6 /pci-controller/14.0/usb2-controller/10/bluetooth.device
-ok 7 /pci-controller/14.0/usb2-controller/10/bluetooth.0.driver
-ok 8 /pci-controller/14.0/usb2-controller/10/bluetooth.1.driver
-ok 9 /pci-controller/2.0/gpu.device
-ok 10 /pci-controller/2.0/gpu.driver
-ok 11 /pci-controller/4.0/thermal.device
-ok 12 /pci-controller/4.0/thermal.driver
-ok 13 /pci-controller/12.0/sensors.device
-ok 14 /pci-controller/12.0/sensors.driver
-ok 15 /pci-controller/14.3/wifi.device
-ok 16 /pci-controller/14.3/wifi.driver
-ok 17 /pci-controller/1d.0/0.0/ssd.device
-ok 18 /pci-controller/1d.0/0.0/ssd.driver
-ok 19 /pci-controller/1d.7/0.0/sdcard-reader.device
-ok 20 /pci-controller/1d.7/0.0/sdcard-reader.driver
-ok 21 /pci-controller/1f.3/audio.device
-ok 22 /pci-controller/1f.3/audio.driver
-Totals: pass:22 fail:0 xfail:0 xpass:0 skip:0 error:0
+I'm looking at
+https://members.pcisig.com/wg/PCI-SIG/document/previewpdf/12888, which
+seems to be the final "Downstream Port Containment Related
+Enhancements" ECN, which is dated 1/28/2019 and applies to the PCI
+Firmware spec r3.2.
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- .../devices/boards/Dell Inc.,XPS 13 9300.yaml      | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+It adds bit 7, "PCI Express Downstream Port Containment Configuration
+control", to the passed-in _OSC Control field, which indicates that
+the OS supports both "native OS control and firmware ownership models
+(i.e. Error Disconnect Recover notification) of Downstream Port
+Containment."
 
-diff --git a/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml
-new file mode 100644
-index 000000000000..ff932eb19f0b
---- /dev/null
-+++ b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml	
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# This is the device definition for the XPS 13 9300.
-+# The filename "Dell Inc.,XPS 13 9300" was chosen following the format
-+# "Vendor,Product", where Vendor comes from
-+# /sys/devices/virtual/dmi/id/sys_vendor, and Product comes from
-+# /sys/devices/virtual/dmi/id/product_name.
-+#
-+# See google,spherion.yaml for more information.
-+#
-+- type: pci-controller
-+  # This machine has a single PCI host controller so it's valid to not have any
-+  # key to identify the controller. If it had more than one controller, the UID
-+  # of the controller from ACPI could be used to distinguish as follows:
-+  #acpi-uid: 0
-+  devices:
-+    - path: 14.0
-+      type: usb-controller
-+      usb-version: 2
-+      devices:
-+        - path: 9
-+          name: camera
-+          interfaces: [0, 1, 2, 3]
-+        - path: 10
-+          name: bluetooth
-+          interfaces: [0, 1]
-+    - path: 2.0
-+      name: gpu
-+    - path: 4.0
-+      name: thermal
-+    - path: 12.0
-+      name: sensors
-+    - path: 14.3
-+      name: wifi
-+    - path: 1d.0/0.0
-+      name: ssd
-+    - path: 1d.7/0.0
-+      name: sdcard-reader
-+    - path: 1f.3
-+      name: audio
+It also adds the dependency that "If the OS sets bit 7 of the Control
+field, it must set bit 7 of the Support field, indicating support for
+the Error Disconnect Recover event."
 
--- 
-2.43.0
+So I'm trying to figure out if the "support DPC but not EDR" situation
+was ever a valid place to be.  Maybe it's a mistake to have separate
+CONFIG_PCIE_DPC and CONFIG_PCIE_EDR options.
 
+CONFIG_PCIE_EDR depends on CONFIG_ACPI, so the situation is a little
+bit murky on non-ACPI systems that support DPC.
+
+Bjorn
 
