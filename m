@@ -1,127 +1,137 @@
-Return-Path: <linux-pci+bounces-2420-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2421-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6205A836584
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 15:34:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8DBB8365B2
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 15:43:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02A9B1F23B92
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 14:34:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FC9C28A8E1
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 14:43:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A023D96B;
-	Mon, 22 Jan 2024 14:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1453120DF0;
+	Mon, 22 Jan 2024 14:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iyDQ3mV2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lRJ3HRio"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F99E3D546;
-	Mon, 22 Jan 2024 14:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9B33D96B
+	for <linux-pci@vger.kernel.org>; Mon, 22 Jan 2024 14:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705934033; cv=none; b=qKGFoaake9yXOX8EjMVSaqqRfLHGs+6mgbucwHIAgoMdcFzLZc2nY3YEMgQTvjBMMX8tju25GLENn/9jrrv+0im+TUQvqyDB/q5igh+mwEALd3cQWYeI8FrmPV0uUttAR4HLwbmGfwSCHnGZ7wXhxBLKC5wqhA+/S+wT7asjew0=
+	t=1705934597; cv=none; b=mgiait5zq7yfnCZ7jMQsyrqNdq+vlvCjjszba2YhDld/lc2NYzbE+K2fFRiC4EyCjhmzavkH0kZ52IaM30MjW0uZcoDaeK/R4nv4eE87bnYz3kPuNmU4Eo4pvRiGsh+NmvjeCdV4hvc1ogJO+qyvc48gzJ+3fcLQAZCEyh+ol+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705934033; c=relaxed/simple;
-	bh=Rf7Jgcc8Z6wSO7zZHP0dF/g0jawoHIFG5QnvQX8+fDQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BnI9BZKjacPkRbDG5R5f2bihHLfK7u47tYcxFl4bwIuLf2BqqUCRj8wtxcsnHTGWVc7wiAPIXw/5N8NIa8BMa7rI7dIujXBkEX+Bl3j0fccYT4ceViF+Tki0TglYPp4oztuCsvCRfSu7GdoIj3ZJXsP21MVDQch3xxIq0EOOSrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iyDQ3mV2; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B9AD3C0005;
-	Mon, 22 Jan 2024 14:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705934029;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ECi8ka7o1qBq74OdBGRcMDsclI+BCMKdvpZSkSVLU5c=;
-	b=iyDQ3mV2HYp9n6jneaoazt/KuPqicWfJiZkwpHsB42dxKDV8a1uDS6ss0GeAMuass4XZhM
-	RynadnWy/eWHcEfPdnp6xnFS/nRFlSVsPxhu3zGw5+7itca99ey3jHqb9PKY5tB0Sblduw
-	BK4sHegl3lmj6Uz2+oX/9fpruduP/U35zav7+2dMH+/nGHfinVAYM06VL8fD/sMoz+qEWp
-	K2waEve2OrLdorRlnfCMTPUgfIzWiR9Ou4I65R8Hr//9gwjVSeOh9JaAqgmfuxPnNBVgy0
-	lUt+dPqyOEpAQUpnIYdZG1BWm9x1fP/pacpIWJbdT7Hiud0xlghzcBww476yAg==
-Message-ID: <b59067f0-fdba-40d1-bb52-9f66fd833f40@bootlin.com>
-Date: Mon, 22 Jan 2024 15:33:47 +0100
+	s=arc-20240116; t=1705934597; c=relaxed/simple;
+	bh=1bCYhPgmI6PSb0c7/Nbpwr9CEkRnr3NsLIcKlUjtDKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Gw4xy9uiKJ34fH7aRqoE2Ma3kcUtgwmNttvOZpd2lMscpm9kOL3T+QnHgPjnFHR7u0GN9P3oTCJxLxuQEe7Uk23EprnTzVbc47Pjwz+fKefu86SB6IzVgVVH3Vt0EsyEZX+SjWUE5TOHTP3UmsqcHS93bOcV+tRXWl3C5OiqEY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lRJ3HRio; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-336c5b5c163so1949239f8f.1
+        for <linux-pci@vger.kernel.org>; Mon, 22 Jan 2024 06:43:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705934593; x=1706539393; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aLKGcjYNziLpYJx8DEHJXoX7hbusqCo8+fmev07YcQc=;
+        b=lRJ3HRio8O3SlKrlt7u6BStGC32jZZCmv1v65lrMkVKOLrJaZR/pM45yauZ6SPnIEx
+         C8ZZdeJm+MpzFLwH+caHS46ZBJZNO37HWC3g5/YPNNxUA5thQVCri8GJpnKrEcnO5W75
+         /i8Ll91ogr5ZsdqrN6dKwGOgfTcm0kthiLOfjZyO53upWgS3hG6qfc1qDbrrTVZbozQi
+         +R+/Tcx3X3V8L/gP8NJeE5T/VjM5zsMalI2FpNkuiT7dpjBQsc+50iuG6Vp5D3oEr3vL
+         R9VurANlE7Y4Te/FeYXCjH13SFFKSx6TnMhaw0a0gShUljF6SsvpA2iBnWyMGuht0+O/
+         0W5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705934593; x=1706539393;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aLKGcjYNziLpYJx8DEHJXoX7hbusqCo8+fmev07YcQc=;
+        b=jQF0rZlejmFJVw02KfvPM+OLdT/o7Yh4/dL3OhHRAHK/a37wZDNrwRC7hdgHrDy3l4
+         kNLOAzveTIyWKHt42NK6N2w/GqpvH6kjT6W1V5TUxuT1S11jtso8tok5m2ZE1LdMcvny
+         RAyS7qnLdErhwpvv6vZCgRkQxZFohcQQ6xDnNwBF6yyOvaP5QIxLltq9F/LMq59NjDw7
+         RT7qX48sm3i9pBZy3n1vCm60Mgh4zzAYi3G1FTUYc+zv8X7bdh3+bqrCDqWB2ZqTelhw
+         7ZQcczfuMbu30lWMO8jqEcbDEdpn/HvV/cr3ZmlKJDDqGtPI6HhXK12SAyzMLrlAcz30
+         Qb9A==
+X-Gm-Message-State: AOJu0Ywrra3meATkyFl4vEmlXFChOMICLl1bJ1egxgOsOP6QIW6K4HCl
+	QhzOMdobzrxKo15KRIN0z5A4CK8aD1EqMFbv69KSL3uiXxue+D2wqquunNn4Tr4=
+X-Google-Smtp-Source: AGHT+IFiae/b6xmgfkZ632PsFZd74HZSeHBAm/8QKjNJUuN8n8mzxih+epz8zkalE8leQo+zyOAaBQ==
+X-Received: by 2002:adf:fac6:0:b0:337:bdf7:2e32 with SMTP id a6-20020adffac6000000b00337bdf72e32mr1591570wrs.23.1705934593446;
+        Mon, 22 Jan 2024 06:43:13 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id n17-20020a5d67d1000000b003392f229b60sm4346652wrw.40.2024.01.22.06.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 06:43:12 -0800 (PST)
+Date: Mon, 22 Jan 2024 17:43:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org
+Subject: [bug report] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
+Message-ID: <29ee741c-7fbd-4061-87c6-c4ae46c372c1@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to
- suspend_noirq/resume_noirq
-Content-Language: en-US
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com>
- <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
- <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com>
- <CAHp75VcaABafPh7o1TjrHW2txXRRSxjT443XJe33gfS1YD4bhA@mail.gmail.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VcaABafPh7o1TjrHW2txXRRSxjT443XJe33gfS1YD4bhA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 1/19/24 17:11, Andy Shevchenko wrote:
-> On Fri, Jan 19, 2024 at 6:08 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->> On 1/15/24 21:02, Andy Shevchenko wrote:
->>> On Mon, Jan 15, 2024 at 6:16 PM Thomas Richard
->>> <thomas.richard@bootlin.com> wrote:
-> 
-> ...
-> 
->>>> +static const struct dev_pm_ops pinctrl_single_pm_ops = {
->>>> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
->>>> +                                     pinctrl_single_resume_noirq)
->>>> +};
->>>
->>> Use proper / modern macro.
->>
->> fixed, use DEFINE_NOIRQ_DEV_PM_OPS now
-> 
-> ...
-> 
->>>>  #endif
->>>
->>> Why ifdeferry is needed (esp. taking into account pm_ptr() use below)?
->>
->> We may have an "unused variable" warning for pinctrl_single_pm_ops if
->> CONFIG_PM is undefined (due to pm_ptr).
-> 
-> This is coupled with the above. Fixing above will automatically make
-> the right thing.
+Hello Bjorn Helgaas,
 
-Yes you're right.
-By the way I can use pm_sleep_ptr instead of pm_ptr.
+The patch f93e71aea6c6: "Revert "PCI/ASPM: Remove
+pcie_aspm_pm_state_change()"" from Jan 1, 2024 (linux-next), leads to
+the following Smatch static checker warning:
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+	drivers/pci/pcie/aspm.c:1017 pcie_aspm_pm_state_change()
+	warn: sleeping in atomic context
 
+drivers/pci/pcie/aspm.c
+    1007 void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+    1008 {
+    1009         struct pcie_link_state *link = pdev->link_state;
+    1010 
+    1011         if (aspm_disabled || !link)
+    1012                 return;
+    1013         /*
+    1014          * Devices changed PM state, we should recheck if latency
+    1015          * meets all functions' requirement
+    1016          */
+--> 1017         down_read(&pci_bus_sem);
+
+This is a revert from a patch from 2022 which was before I had written
+this "sleeping in atomic" static checker thing.
+
+    1018         mutex_lock(&aspm_lock);
+    1019         pcie_update_aspm_capable(link->root);
+    1020         pcie_config_aspm_path(link);
+    1021         mutex_unlock(&aspm_lock);
+    1022         up_read(&pci_bus_sem);
+    1023 }
+
+The call trees that Smatch is complaining about are:
+
+vortex_boomerang_interrupt() <- disables preempt
+-> _vortex_interrupt()
+-> _boomerang_interrupt()
+   -> vortex_error()
+      -> vortex_up()
+velocity_suspend() <- disables preempt
+-> velocity_set_power_state()
+         -> pci_set_power_state()
+            -> pci_set_low_power_state()
+               -> pcie_aspm_pm_state_change()
+
+So what Smatch is saying is the vortex_boomerang_interrupt() and
+velocity_suspend() hold spin locks and then set the power state.  The
+call trees are quite long so I'm not really able to be sure if this is
+a false positive or not...  I wish this warning were more useful.
+
+These emails are a one time thing.  Just reply if it's a false positive
+and I'll note it down.  Otherwise feel free to ignore it.
+
+regards,
+dan carpenter
 
