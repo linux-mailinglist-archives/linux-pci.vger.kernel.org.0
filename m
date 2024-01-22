@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-2424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0AF683697E
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 17:02:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39FDA836A15
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 17:18:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 507791F22330
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 16:02:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D2D71C24A27
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Jan 2024 16:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66131823BC;
-	Mon, 22 Jan 2024 15:10:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81725133405;
+	Mon, 22 Jan 2024 15:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzGxj7WR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1Ud4kuu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E344823B8;
-	Mon, 22 Jan 2024 15:10:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA30133400;
+	Mon, 22 Jan 2024 15:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936246; cv=none; b=X2x6l/TGwvIw+N00uPAZX9R9FWaTobXRQ2EB/q0441just0DhLXK8X3EGNmz0BaPIffPSuiT+ZJBX5OdELMGq2Xa6lh2WTgSv+pT4aU1x3kVtogyM4mkfuCJAeopFs78rOAPhIdFPu0Slp9QOHBlbAjmmb+rmDx8v9nvlNMURnk=
+	t=1705936420; cv=none; b=phdvDsrsm1dmDa+MMhZZHBJ8nut/ljmtEb+irKOE+r+zp7F3ObVavD2Q/Um7jhBGkE1XEsOshHmyjT9sqgx6eOFtQu4XY0K8AHs0oZd7xmL+gz8Ta4z3jZ+FddseCOoeThh4Z8NgGMhFk5hDHh3uH89tUOdOy+XVh/+YtPHfLHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936246; c=relaxed/simple;
-	bh=JskSdRkoo0zPlNHzPVsJK+zaOzyDnAdrRS/w8B/YknM=;
+	s=arc-20240116; t=1705936420; c=relaxed/simple;
+	bh=lQOSQ28UkDSE40o9G5OVcuJT0caczPt1IrfMwV8sRq4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QQtuHDDQBuerBSq6Ue8v8aj6VhpaEsPD46ELTA6ikYqHs75bic5Ib4emcJbSmZ+qDFEqZ2YCkfYrrLjPqOVNMbSoR78ru/8oP+kSIIfiYbs8fPuESma/BM+gkxaqh4J/U3ipylCTo9GxBlmZHQcCFW8yFXnCiZQYCvVEUdNFgQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzGxj7WR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A4FCC43399;
-	Mon, 22 Jan 2024 15:10:44 +0000 (UTC)
+	 MIME-Version:Content-Type; b=j9GWD7FbUYwSkMMPPolP9Y1xu3bqRgq2m82wbz/zuybmLsexD5UPYf7slz0m0dQg98/u2bwhu6k+XsCkh8tNQbbsqPGyOl6MT5v8DwWY36Dttu9tiHXQG5ae0SVJKUWzTozIb5FeGt4/KN9x87M7uF9XxaEAyjzuuqzvkWWroks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1Ud4kuu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDD7C433F1;
+	Mon, 22 Jan 2024 15:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936245;
-	bh=JskSdRkoo0zPlNHzPVsJK+zaOzyDnAdrRS/w8B/YknM=;
+	s=k20201202; t=1705936420;
+	bh=lQOSQ28UkDSE40o9G5OVcuJT0caczPt1IrfMwV8sRq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XzGxj7WRqPosDBG5jVPgebCcvUaBJ32tPAkOw2i2w4mLf14BeZVJ2JQoV6rg2Kx0f
-	 JFlnAKwyckKMljQaOJEqScTtt5vcwrcE246DBWBS/XuiUkn2E46JAYwycOKPA+NswG
-	 hnEddimskZ4qgQGbNVmbzDatHVw2sm/5DCDYVf8oTfgGBpp3CtjGmGQ/8TYT0xUNqT
-	 nmx7B9SdYi740yHAEKezmQRIRoUL4AEc0fiY+N6sThzrgQ3WV/zKYm7Jpl1Eu72Jnz
-	 PFkJ7AnRvR+xpWqYluU6VNadSZOUzH7LW4oJil3Cmj4EuR6+zVFKqt0dLEXj0MfZlx
-	 JsJht4g+ULkjg==
+	b=u1Ud4kuunyQGrWHr9wvRGwVL/tsIJ+/MMWkjAPITbUMYUyWnebIZlI0KlF7QAVXHy
+	 35k9Q+h2MEH1Jn673gIyb26guWQn5EFu7CJKSdMOhxaMQg4NScQmqydLQR3BIBHqMU
+	 m5bPEpPP6kjRflmP/MD+3oGjeKQjsBzcgemgJgOs0xnB4+S2H0Vih9QK2RA9Y5vgNq
+	 ZX2h7l4eoAamCh5lALtp0wHd/Myc+Es9X2pH/0oBsgh1ofo06oq7hyTBM82lshopiA
+	 zsAJLH+n1+BQgnHYZYM8E1yyx9m03zjLMuiADXEngy+ZrIOdu1vGr+o4ZKZzMkwOL8
+	 9Bt7fnqkzvCNA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -52,12 +52,12 @@ Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	bhelgaas@google.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 21/53] PCI: add INTEL_HDA_ARL to pci_ids.h
-Date: Mon, 22 Jan 2024 10:08:22 -0500
-Message-ID: <20240122150949.994249-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 15/35] PCI: add INTEL_HDA_ARL to pci_ids.h
+Date: Mon, 22 Jan 2024 10:12:12 -0500
+Message-ID: <20240122151302.995456-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122150949.994249-1-sashal@kernel.org>
-References: <20240122150949.994249-1-sashal@kernel.org>
+In-Reply-To: <20240122151302.995456-1-sashal@kernel.org>
+References: <20240122151302.995456-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,7 +67,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.74
+X-stable-base: Linux 5.15.147
 Content-Transfer-Encoding: 8bit
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
@@ -89,10 +89,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index b76ff0850618..73cc1e7dd15a 100644
+index d2d5e854c692..2590ccda29ab 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -3000,6 +3000,7 @@
+@@ -2999,6 +2999,7 @@
  #define PCI_DEVICE_ID_INTEL_82443GX_0	0x71a0
  #define PCI_DEVICE_ID_INTEL_82443GX_2	0x71a2
  #define PCI_DEVICE_ID_INTEL_82372FB_1	0x7601
