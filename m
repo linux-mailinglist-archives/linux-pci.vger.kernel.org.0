@@ -1,204 +1,158 @@
-Return-Path: <linux-pci+bounces-2457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCFFA8387E0
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 08:18:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD31D838832
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 08:45:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B54F1C22E55
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 07:18:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFB091C22A69
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 07:45:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D0052F8A;
-	Tue, 23 Jan 2024 07:18:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A8752F9B;
+	Tue, 23 Jan 2024 07:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+BjxU0T"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1peFCRO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CB652F7E;
-	Tue, 23 Jan 2024 07:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE80524DC;
+	Tue, 23 Jan 2024 07:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705994316; cv=none; b=qAnzk1XcdbWd8TEAah+ozAKTPZhipih+tUjaNjYcutxtfj1HNCHVrqQb6gDJTCqZ+058aAmD7rIdzaiVN29o8zzsoqaizzK/QUn2kgL147hjRMNNSnvVWOaFJDsQ26jl8gdi+ANrnUBrwlVUDdQztB9Dut75BbU72v85SmDsaGI=
+	t=1705995916; cv=none; b=pRcsU14aQNLEOh/gd3dqvD+q5euXJfEfo0GhhCqT/l2wjkMxZrWODzzI0gNSkMLg5QMBlb1SWvhacnU62ixKYhRmR6BtGDyz/zWHirtu9pHMym/3SM33jdtwJM/R10nNrUmKpTzqO8Oa4r9yHQ0EZJHTy5raxsDxTZte7pJHKbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705994316; c=relaxed/simple;
-	bh=TTjPVKSuyim+Y5YMrAL6bgP1bnNaR126K293xNj8wus=;
+	s=arc-20240116; t=1705995916; c=relaxed/simple;
+	bh=gR1DaQBEiwp7b8LXQ3gqb1TinU2mUqOSau6sGyjnT/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDmyhJW9T7k5bN7/Bp5fD0XfzSUJKtnwRMgofoIqry87H82o2vyymHwNARWO+sULdA4UmoQTIfyz5gMRRYyPvvEDX68hTzUqa+3gxVDA5MtEUWJflMMVF4eQM/r1hrLNdMwx7jRO3+ArhZdGZnb1NB2Ck22bFcG+pP99D/gK+CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+BjxU0T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E8BC433A6;
-	Tue, 23 Jan 2024 07:18:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705994315;
-	bh=TTjPVKSuyim+Y5YMrAL6bgP1bnNaR126K293xNj8wus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P+BjxU0TR2OpXB4waPzTZj1kTTGDgUdfUuxRh7lU3N0AOex+AnlIqKpSBZ5g/OwxB
-	 UbQyfRyI5U6o0uEZK7E3aIl0/IuMuuhmzeBnIiXVwrqPz1KvhvyYcFnyyA/V8Gs0WM
-	 GRdWsDUTTOvZOLHVz62FXOkW87+k6D5UBQMweVNfNn4tzAHmlPvaEfB2gN1UHuxbV/
-	 7JfT2gRpZZ8wl1tnHPRvrS/6KdaKW3NQSYdElD6rpyT0qWK3TaGxq06mAttAq85YuN
-	 aqeQjeaqXwYmYNX/zfQhVdoKiFi4eF7y35V6mSYkWlmKtBD4JkwDa4nYtpiShQ4to4
-	 wTvdM6T0eigbg==
-Date: Tue, 23 Jan 2024 12:48:31 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH 05/14] phy: ti: phy-j721e-wiz: make wiz_clock_init
- callable multiple times
-Message-ID: <Za9oR8BpoufCRNIw@matsya>
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-5-84e55da52400@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qFA8TbyE+uxp/hex/XOvsWPWp1Qeg3y5NEFgExC4UauoA89NoUplrQAIu8iKbFtQbRigIsSXZw6YhT6XZ98h4sMohyC5YVdmBys5P0FJFvg9tLPJ9J2ghxHJuaNgCQHSgvSE2ufDF9SnxRUma0vUIk3IOPbkwkjjMF8nME5dm5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1peFCRO; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705995915; x=1737531915;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=gR1DaQBEiwp7b8LXQ3gqb1TinU2mUqOSau6sGyjnT/I=;
+  b=h1peFCROm9fade0rEu976ABmV1J9R9L4GGyBGxIBuzOXGqiOsmu2gilY
+   P4omdRlUA6oAv9eUjAlumNfh9LO4+PjvCm9U0+IxQRGsCYCacxEvy/U5O
+   5BsWHfuAlZLu27bQFDuDQhGVoroqxkUQ51z9x5pRR5IsYSH1Wi4lMX664
+   zjzjUea6mCJ7o3ajNb/9jjbxv8hqel12Xf6/oxLNs+DfOA/SxBqKhGki/
+   8pANVaCC3DawY9yeoJXrgKiCPQJEVqdi3xiIl1WT6ZrZ/HGaLXbUdlSDq
+   Zb69fvlTviKiKnHo0FvKlrS+IIA1qOceOH/z1qA86DbiX/9v+zdD9oZqu
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1336526"
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="1336526"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 23:45:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="909211748"
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="909211748"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 23:45:06 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 81AD911FB9B;
+	Tue, 23 Jan 2024 09:45:03 +0200 (EET)
+Date: Tue, 23 Jan 2024 07:45:03 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pm@vger.kernel.org,
+	linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com, David Airlie <airlied@gmail.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	intel-xe@lists.freedesktop.org,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-sound@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+	Daniel Vetter <daniel@ffwll.ch>, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] pm: runtime: Simplify pm_runtime_get_if_active()
+ usage
+Message-ID: <Za9uf3icrVE6Ajbe@kekkonen.localdomain>
+References: <20240122114121.56752-2-sakari.ailus@linux.intel.com>
+ <20240122181205.GA275751@bhelgaas>
+ <CAJZ5v0gUpo6Shz2kQzie4XE23=fiPvD0=2yhjGptw8QbCq2SAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102-j7200-pcie-s2r-v1-5-84e55da52400@bootlin.com>
+In-Reply-To: <CAJZ5v0gUpo6Shz2kQzie4XE23=fiPvD0=2yhjGptw8QbCq2SAg@mail.gmail.com>
 
-On 15-01-24, 17:14, Thomas Richard wrote:
-> For suspend and resume support, wiz_clock_init needs to be called
-> multiple times.
-> Add a parameter to wiz_clock_init to be able to skip clocks
-> registration.
-> 
-> Based on the work of Th�o Lebrun <theo.lebrun@bootlin.com>
-> 
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
->  drivers/phy/ti/phy-j721e-wiz.c | 60 +++++++++++++++++++++++++-----------------
->  1 file changed, 36 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-> index fc3cd98c60ff..09f7edf16562 100644
-> --- a/drivers/phy/ti/phy-j721e-wiz.c
-> +++ b/drivers/phy/ti/phy-j721e-wiz.c
-> @@ -1076,7 +1076,7 @@ static int wiz_clock_register(struct wiz *wiz)
->  	return ret;
->  }
->  
-> -static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
-> +static int wiz_clock_init(struct wiz *wiz, struct device_node *node, bool probe)
->  {
->  	const struct wiz_clk_mux_sel *clk_mux_sel = wiz->clk_mux_sel;
->  	struct device *dev = wiz->dev;
-> @@ -1087,14 +1087,36 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
->  	int ret;
->  	int i;
->  
-> -	clk = devm_clk_get(dev, "core_ref_clk");
-> -	if (IS_ERR(clk)) {
-> -		dev_err(dev, "core_ref_clk clock not found\n");
-> -		ret = PTR_ERR(clk);
-> -		return ret;
-> +	if (probe) {
-> +		clk = devm_clk_get(dev, "core_ref_clk");
-> +		if (IS_ERR(clk)) {
-> +			dev_err(dev, "core_ref_clk clock not found\n");
-> +			ret = PTR_ERR(clk);
-> +			return ret;
-> +		}
-> +		wiz->input_clks[WIZ_CORE_REFCLK] = clk;
-> +
-> +		if (wiz->data->pma_cmn_refclk1_int_mode) {
-> +			clk = devm_clk_get(dev, "core_ref1_clk");
-> +			if (IS_ERR(clk)) {
-> +				dev_err(dev, "core_ref1_clk clock not found\n");
-> +				ret = PTR_ERR(clk);
-> +				return ret;
-> +			}
-> +			wiz->input_clks[WIZ_CORE_REFCLK1] = clk;
-> +		}
-> +
-> +		clk = devm_clk_get(dev, "ext_ref_clk");
-> +		if (IS_ERR(clk)) {
-> +			dev_err(dev, "ext_ref_clk clock not found\n");
-> +			ret = PTR_ERR(clk);
-> +			return ret;
-> +		}
-> +		wiz->input_clks[WIZ_EXT_REFCLK] = clk;
->  	}
-> -	wiz->input_clks[WIZ_CORE_REFCLK] = clk;
->  
-> +
-> +	clk = wiz->input_clks[WIZ_CORE_REFCLK];
->  	rate = clk_get_rate(clk);
->  	if (rate >= 100000000)
->  		regmap_field_write(wiz->pma_cmn_refclk_int_mode, 0x1);
-> @@ -1121,14 +1143,7 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
->  	}
->  
->  	if (wiz->data->pma_cmn_refclk1_int_mode) {
-> -		clk = devm_clk_get(dev, "core_ref1_clk");
-> -		if (IS_ERR(clk)) {
-> -			dev_err(dev, "core_ref1_clk clock not found\n");
-> -			ret = PTR_ERR(clk);
-> -			return ret;
-> -		}
-> -		wiz->input_clks[WIZ_CORE_REFCLK1] = clk;
-> -
-> +		clk = wiz->input_clks[WIZ_CORE_REFCLK1];
->  		rate = clk_get_rate(clk);
->  		if (rate >= 100000000)
->  			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x1);
-> @@ -1136,20 +1151,17 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
->  			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x3);
->  	}
->  
-> -	clk = devm_clk_get(dev, "ext_ref_clk");
-> -	if (IS_ERR(clk)) {
-> -		dev_err(dev, "ext_ref_clk clock not found\n");
-> -		ret = PTR_ERR(clk);
-> -		return ret;
-> -	}
-> -	wiz->input_clks[WIZ_EXT_REFCLK] = clk;
-> -
-> +	clk = wiz->input_clks[WIZ_EXT_REFCLK];
->  	rate = clk_get_rate(clk);
->  	if (rate >= 100000000)
->  		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x0);
->  	else
->  		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x2);
->  
-> +	/* What follows is about registering clocks. */
-> +	if (!probe)
-> +		return 0;
-> +
->  	switch (wiz->type) {
->  	case AM64_WIZ_10G:
->  	case J7200_WIZ_10G:
-> @@ -1592,7 +1604,7 @@ static int wiz_probe(struct platform_device *pdev)
->  		goto err_get_sync;
->  	}
->  
-> -	ret = wiz_clock_init(wiz, node);
-> +	ret = wiz_clock_init(wiz, node, true);
+Hi Rafael, Björn,
 
-You are calling it one once? So what am I missing
+Thanks for the review.
+
+On Mon, Jan 22, 2024 at 07:16:54PM +0100, Rafael J. Wysocki wrote:
+> On Mon, Jan 22, 2024 at 7:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Mon, Jan 22, 2024 at 01:41:21PM +0200, Sakari Ailus wrote:
+> > > There are two ways to opportunistically increment a device's runtime PM
+> > > usage count, calling either pm_runtime_get_if_active() or
+> > > pm_runtime_get_if_in_use(). The former has an argument to tell whether to
+> > > ignore the usage count or not, and the latter simply calls the former with
+> > > ign_usage_count set to false. The other users that want to ignore the
+> > > usage_count will have to explitly set that argument to true which is a bit
+> > > cumbersome.
+> >
+> > s/explitly/explicitly/
+> >
+> > > To make this function more practical to use, remove the ign_usage_count
+> > > argument from the function. The main implementation is renamed as
+> > > pm_runtime_get_conditional().
+> > >
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Reviewed-by: Alex Elder <elder@linaro.org> # drivers/net/ipa/ipa_smp2p.c
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Acked-by: Takashi Iwai <tiwai@suse.de> # sound/
+> > > Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com> # drivers/accel/ivpu/
+> > > Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> # drivers/gpu/drm/i915/
+> > > Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> >
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/
+> >
+> > > -EXPORT_SYMBOL_GPL(pm_runtime_get_if_active);
+> > > +EXPORT_SYMBOL_GPL(pm_runtime_get_conditional);
+> >
+> > If pm_runtime_get_conditional() is exported, shouldn't it also be
+> > documented in Documentation/power/runtime_pm.rst?
+> >
+> > But I'm dubious about exporting it because
+> > __intel_runtime_pm_get_if_active() is the only caller, and you end up
+> > with the same pattern there that we have before this series in the PM
+> > core.  Why can't intel_runtime_pm.c be updated to use
+> > pm_runtime_get_if_active() or pm_runtime_get_if_in_use() directly, and
+> > make pm_runtime_get_conditional() static?
+> 
+> Sounds like a good suggestion to me.
+
+The i915 driver uses both but I guess it's not too much different to check
+ignore_usecount separately than passing it to the API function?
+
+I'll add another patch to do this and moving
+pm_runtime_get_if_{active,in_use} implementations to runtime.c.
 
 -- 
-~Vinod
+Regards,
+
+Sakari Ailus
 
