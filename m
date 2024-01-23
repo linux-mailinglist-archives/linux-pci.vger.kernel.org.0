@@ -1,180 +1,204 @@
-Return-Path: <linux-pci+bounces-2456-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2457-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A074838745
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 07:19:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCFFA8387E0
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 08:18:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B50A28CA51
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 06:19:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B54F1C22E55
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 07:18:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 187635025A;
-	Tue, 23 Jan 2024 06:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D0052F8A;
+	Tue, 23 Jan 2024 07:18:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azjYG4gi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+BjxU0T"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2945025B;
-	Tue, 23 Jan 2024 06:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CB652F7E;
+	Tue, 23 Jan 2024 07:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705990708; cv=none; b=jJLZdZq4snByAj3pOIGH7fbqPQ8lkrRxWo47F3Udciqhu3T6t4zMgn/E2HtgN6UjVElEztunWDOaudgBztrSt/vVb60xjrkx8t4IQNhLcLAg5Z08jRYXIG4PmxUGeKm2o4LWYK1xszZxSObcjQT4bhg3jItMgioSuiBaBPvBUkA=
+	t=1705994316; cv=none; b=qAnzk1XcdbWd8TEAah+ozAKTPZhipih+tUjaNjYcutxtfj1HNCHVrqQb6gDJTCqZ+058aAmD7rIdzaiVN29o8zzsoqaizzK/QUn2kgL147hjRMNNSnvVWOaFJDsQ26jl8gdi+ANrnUBrwlVUDdQztB9Dut75BbU72v85SmDsaGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705990708; c=relaxed/simple;
-	bh=xBese3EjrHpBy6b6usLoEuNNOkbyMDMvVUWw0nYxG/k=;
+	s=arc-20240116; t=1705994316; c=relaxed/simple;
+	bh=TTjPVKSuyim+Y5YMrAL6bgP1bnNaR126K293xNj8wus=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=APEreUDt3FPwKPD3XQiFVX+xbtkHWimMTbXbZp9PBzLtYoVDvq5CJr+lyf9+WyYxFtaspqG8Xmxzlvk0sH2SarZz88vNvPJVVtPfL2YR4eOQ7UrXC/weIk6YTXy/jD4Gsc8T+SD2y4MsdAGLmjcWRqDtmDQ8LeDppabPWfYLiJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=azjYG4gi; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705990706; x=1737526706;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xBese3EjrHpBy6b6usLoEuNNOkbyMDMvVUWw0nYxG/k=;
-  b=azjYG4giwNgYAYyHqWgp20/mSbMT5RD+iPy+tPKrxt5UJSFAhMGHc/oO
-   keATHLlVetE5P9mZHUPVsE3mxaUqaRqoc64ZXdpiErneZunpHHYQhgs66
-   aLfxJRGSmpxiRo8qqVlaxPxrMmmYiQy1By0Y39WIsDxKCFzIYnJGYlgT+
-   jM++wTtXaOJfZlwi8L/22PUbv6Nc1F2AhrrJTzb9yDhhYb90R9UOpLKN7
-   ep1vg/Az/LUVz/hNPVymbZ3fc812/O6LoqNIci0/qEVPbtGRoouipsJkz
-   kiG4bA/yIlNwesmmC7wDXvUqLeTh0Im8Td/Vr0SsUFBiIVAONtQc7uAPT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="401082741"
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="401082741"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 22:18:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="929235690"
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="929235690"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Jan 2024 22:18:22 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 320099F; Tue, 23 Jan 2024 08:18:20 +0200 (EET)
-Date: Tue, 23 Jan 2024 08:18:20 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Esther Shimanovich <eshimanovich@chromium.org>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-Message-ID: <20240123061820.GL2543524@black.fi.intel.com>
-References: <20231228132517.GA12586@wunner.de>
- <20231228133949.GG2543524@black.fi.intel.com>
- <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
- <20240118060002.GV2543524@black.fi.intel.com>
- <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
- <ZalOCPrVA52wyFfv@google.com>
- <20240119053756.GC2543524@black.fi.intel.com>
- <20240119074829.GD2543524@black.fi.intel.com>
- <20240119102258.GE2543524@black.fi.intel.com>
- <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDmyhJW9T7k5bN7/Bp5fD0XfzSUJKtnwRMgofoIqry87H82o2vyymHwNARWO+sULdA4UmoQTIfyz5gMRRYyPvvEDX68hTzUqa+3gxVDA5MtEUWJflMMVF4eQM/r1hrLNdMwx7jRO3+ArhZdGZnb1NB2Ck22bFcG+pP99D/gK+CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+BjxU0T; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80E8BC433A6;
+	Tue, 23 Jan 2024 07:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705994315;
+	bh=TTjPVKSuyim+Y5YMrAL6bgP1bnNaR126K293xNj8wus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P+BjxU0TR2OpXB4waPzTZj1kTTGDgUdfUuxRh7lU3N0AOex+AnlIqKpSBZ5g/OwxB
+	 UbQyfRyI5U6o0uEZK7E3aIl0/IuMuuhmzeBnIiXVwrqPz1KvhvyYcFnyyA/V8Gs0WM
+	 GRdWsDUTTOvZOLHVz62FXOkW87+k6D5UBQMweVNfNn4tzAHmlPvaEfB2gN1UHuxbV/
+	 7JfT2gRpZZ8wl1tnHPRvrS/6KdaKW3NQSYdElD6rpyT0qWK3TaGxq06mAttAq85YuN
+	 aqeQjeaqXwYmYNX/zfQhVdoKiFi4eF7y35V6mSYkWlmKtBD4JkwDa4nYtpiShQ4to4
+	 wTvdM6T0eigbg==
+Date: Tue, 23 Jan 2024 12:48:31 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH 05/14] phy: ti: phy-j721e-wiz: make wiz_clock_init
+ callable multiple times
+Message-ID: <Za9oR8BpoufCRNIw@matsya>
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-5-84e55da52400@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-5-84e55da52400@bootlin.com>
 
-On Mon, Jan 22, 2024 at 05:50:24PM -0600, Mario Limonciello wrote:
-> On 1/19/2024 04:22, Mika Westerberg wrote:
-> > On Fri, Jan 19, 2024 at 09:48:29AM +0200, Mika Westerberg wrote:
-> > > On Fri, Jan 19, 2024 at 07:37:56AM +0200, Mika Westerberg wrote:
-> > > > On Thu, Jan 18, 2024 at 08:12:56AM -0800, Dmitry Torokhov wrote:
-> > > > > On Thu, Jan 18, 2024 at 09:47:07AM -0600, Mario Limonciello wrote:
-> > > > > > On 1/18/2024 00:00, Mika Westerberg wrote:
-> > > > > > > > Before my patch, you see that the JHL6540 controller is inaccurately
-> > > > > > > > labeled “removable”:
-> > > > > > > > $ udevadm info -a -p /sys/bus/pci/devices/0000:05:00.0 | grep -e
-> > > > > > > > {removable} -e {device} -e {vendor} -e looking
-> > > > > > > >     looking at device '/devices/pci0000:00/0000:00:1d.4/0000:05:00.0':
-> > > > > > > >       ATTR{device}=="0x15d3"
-> > > > > > > >       ATTR{removable}=="removable"
-> > > > > > > >       ATTR{vendor}=="0x8086"
-> > > > > > > 
-> > > > > > > This is actually accurate. The Thunderbolt controller is itself
-> > > > > > > hot-removable and that BTW happens to be hot-removed when fwupd applies
-> > > > > > > firmware upgrades to the device.
-> > > > > 
-> > > > > This is quite interesting take. Does fwupd rip the controller out of the
-> > > > > box to update it? By that account your touchpad is also removable as it
-> > > > > may stop functioning when its firmware gets updated.
-> > > > 
-> > > > The Thunderbolt controller is connected to a hotpluggable PCIe root port
-> > > > so it will be dissappear from the userspace so that "removable" in that
-> > > > sense is accurate.
-> > > 
-> > > There are systems as well where the Thunderbolt (and/or xHCI) controller
-> > > only appears if there is anything plugged to the physical Type-C ports
-> > > and it gets removed pretty soon after the physical device gets
-> > > unplugged. These are also the same Alpine Ridge and Titan Ridge
-> > > controllers that this patch is dealing with.
-> > > 
-> > > I tried to think about some sort of more generic heuristic how to figure
-> > > out that the controller is actually inside the physical system but there
-> > > is a problem that the same controller can appear on the bus as well, eg.
-> > > you plug in Thunderbolt dock and that one has xHCI controller too. That
-> > > device should definitely be "removable". With the "software CM" systems
-> > > we have a couple of additional hints in the ACPI tables that can be used
-> > > to identify the "tunneled" ports but this does not apply to the older
-> > > systems I'm afraid.
-> > 
-> > The below "might" work:
-> > 
-> > 1. A device that is directly behind a PCIe root or downstream port that
-> >     has ->external_facing == 1.
-> > 
-> > 2. It is a PCIe endpoint.
-> > 
-> > 3. It is a sibling to or has any of the below PCI IDs (see
-> >     drivers/thunderbolt/nhi.h for the definitions):
-> > 
-> >     PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_4C_NHI
-> >     PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_2C_NHI
-> >     PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_LP_USBONLY_NHI
-> >     PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_USBONLY_NHI
-> >     PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_C_USBONLY_NHI
-> >     PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI
-> >     PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI
-> > 
-> >     And for all USB4 we can use the PCI class:
-> > 
-> >     PCI_CLASS_SERIAL_USB_USB4
-> > 
-> > (4. With USB4 systems we could also add the check that the device is not
-> > below the tunneled PCIe ports but that's kind of redundant).
-> > 
-> > I think this covers the existing devices as well as future discrete USB4
-> > controllers and marks both the NHI and the xHCI as "fixed" which we
-> > could also use to lift the bounce buffering restriction from them.
-> > 
-> > @Mario, did I miss anything?
+On 15-01-24, 17:14, Thomas Richard wrote:
+> For suspend and resume support, wiz_clock_init needs to be called
+> multiple times.
+> Add a parameter to wiz_clock_init to be able to skip clocks
+> registration.
 > 
-> The bounce buffering restriction is only for unaligned DMA isn't it? Does
-> that tend to happen a lot?
-
-AFAICT no but this would allow to use IOMMU identity mappings instead of
-full mappings with these devices.
-
-> But otherwise I think this does a good job.  It will cover external
-> enclosure cases too because of having to check it's directly behind a root
-> port.
+> Based on the work of Th�o Lebrun <theo.lebrun@bootlin.com>
 > 
-> But it should also include comments about why it's not needed on newer
-> systems (IE the ACPI hints for someone with no prior knowledge looking at
-> this to find).
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+>  drivers/phy/ti/phy-j721e-wiz.c | 60 +++++++++++++++++++++++++-----------------
+>  1 file changed, 36 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
+> index fc3cd98c60ff..09f7edf16562 100644
+> --- a/drivers/phy/ti/phy-j721e-wiz.c
+> +++ b/drivers/phy/ti/phy-j721e-wiz.c
+> @@ -1076,7 +1076,7 @@ static int wiz_clock_register(struct wiz *wiz)
+>  	return ret;
+>  }
+>  
+> -static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
+> +static int wiz_clock_init(struct wiz *wiz, struct device_node *node, bool probe)
+>  {
+>  	const struct wiz_clk_mux_sel *clk_mux_sel = wiz->clk_mux_sel;
+>  	struct device *dev = wiz->dev;
+> @@ -1087,14 +1087,36 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
+>  	int ret;
+>  	int i;
+>  
+> -	clk = devm_clk_get(dev, "core_ref_clk");
+> -	if (IS_ERR(clk)) {
+> -		dev_err(dev, "core_ref_clk clock not found\n");
+> -		ret = PTR_ERR(clk);
+> -		return ret;
+> +	if (probe) {
+> +		clk = devm_clk_get(dev, "core_ref_clk");
+> +		if (IS_ERR(clk)) {
+> +			dev_err(dev, "core_ref_clk clock not found\n");
+> +			ret = PTR_ERR(clk);
+> +			return ret;
+> +		}
+> +		wiz->input_clks[WIZ_CORE_REFCLK] = clk;
+> +
+> +		if (wiz->data->pma_cmn_refclk1_int_mode) {
+> +			clk = devm_clk_get(dev, "core_ref1_clk");
+> +			if (IS_ERR(clk)) {
+> +				dev_err(dev, "core_ref1_clk clock not found\n");
+> +				ret = PTR_ERR(clk);
+> +				return ret;
+> +			}
+> +			wiz->input_clks[WIZ_CORE_REFCLK1] = clk;
+> +		}
+> +
+> +		clk = devm_clk_get(dev, "ext_ref_clk");
+> +		if (IS_ERR(clk)) {
+> +			dev_err(dev, "ext_ref_clk clock not found\n");
+> +			ret = PTR_ERR(clk);
+> +			return ret;
+> +		}
+> +		wiz->input_clks[WIZ_EXT_REFCLK] = clk;
+>  	}
+> -	wiz->input_clks[WIZ_CORE_REFCLK] = clk;
+>  
+> +
+> +	clk = wiz->input_clks[WIZ_CORE_REFCLK];
+>  	rate = clk_get_rate(clk);
+>  	if (rate >= 100000000)
+>  		regmap_field_write(wiz->pma_cmn_refclk_int_mode, 0x1);
+> @@ -1121,14 +1143,7 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
+>  	}
+>  
+>  	if (wiz->data->pma_cmn_refclk1_int_mode) {
+> -		clk = devm_clk_get(dev, "core_ref1_clk");
+> -		if (IS_ERR(clk)) {
+> -			dev_err(dev, "core_ref1_clk clock not found\n");
+> -			ret = PTR_ERR(clk);
+> -			return ret;
+> -		}
+> -		wiz->input_clks[WIZ_CORE_REFCLK1] = clk;
+> -
+> +		clk = wiz->input_clks[WIZ_CORE_REFCLK1];
+>  		rate = clk_get_rate(clk);
+>  		if (rate >= 100000000)
+>  			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x1);
+> @@ -1136,20 +1151,17 @@ static int wiz_clock_init(struct wiz *wiz, struct device_node *node)
+>  			regmap_field_write(wiz->pma_cmn_refclk1_int_mode, 0x3);
+>  	}
+>  
+> -	clk = devm_clk_get(dev, "ext_ref_clk");
+> -	if (IS_ERR(clk)) {
+> -		dev_err(dev, "ext_ref_clk clock not found\n");
+> -		ret = PTR_ERR(clk);
+> -		return ret;
+> -	}
+> -	wiz->input_clks[WIZ_EXT_REFCLK] = clk;
+> -
+> +	clk = wiz->input_clks[WIZ_EXT_REFCLK];
+>  	rate = clk_get_rate(clk);
+>  	if (rate >= 100000000)
+>  		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x0);
+>  	else
+>  		regmap_field_write(wiz->pma_cmn_refclk_mode, 0x2);
+>  
+> +	/* What follows is about registering clocks. */
+> +	if (!probe)
+> +		return 0;
+> +
+>  	switch (wiz->type) {
+>  	case AM64_WIZ_10G:
+>  	case J7200_WIZ_10G:
+> @@ -1592,7 +1604,7 @@ static int wiz_probe(struct platform_device *pdev)
+>  		goto err_get_sync;
+>  	}
+>  
+> -	ret = wiz_clock_init(wiz, node);
+> +	ret = wiz_clock_init(wiz, node, true);
 
-Agree.
+You are calling it one once? So what am I missing
+
+-- 
+~Vinod
 
