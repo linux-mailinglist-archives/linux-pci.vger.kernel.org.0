@@ -1,158 +1,104 @@
-Return-Path: <linux-pci+bounces-2458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD31D838832
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 08:45:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BC1D8388B7
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 09:20:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFB091C22A69
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 07:45:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFB40B22A47
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 08:20:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A8752F9B;
-	Tue, 23 Jan 2024 07:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251E056B62;
+	Tue, 23 Jan 2024 08:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h1peFCRO"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aBl1u3WK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE80524DC;
-	Tue, 23 Jan 2024 07:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9CF56768;
+	Tue, 23 Jan 2024 08:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705995916; cv=none; b=pRcsU14aQNLEOh/gd3dqvD+q5euXJfEfo0GhhCqT/l2wjkMxZrWODzzI0gNSkMLg5QMBlb1SWvhacnU62ixKYhRmR6BtGDyz/zWHirtu9pHMym/3SM33jdtwJM/R10nNrUmKpTzqO8Oa4r9yHQ0EZJHTy5raxsDxTZte7pJHKbU=
+	t=1705998023; cv=none; b=PQ2v7hChx0MYxd2bMyGgN+yRP8OgZeW6wTxo2QN6NE3Rd42yccQAGKF2ttlyK8JZBry+z6dPkHFYXmwhIY6xIq5msZRz99H5YqCLBAvTDfDoFei5QqpYeB00QCSXTKpBPOEuP4PUri58sROq0hYHS71046OsjS+WKh0ek/SdONg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705995916; c=relaxed/simple;
-	bh=gR1DaQBEiwp7b8LXQ3gqb1TinU2mUqOSau6sGyjnT/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFA8TbyE+uxp/hex/XOvsWPWp1Qeg3y5NEFgExC4UauoA89NoUplrQAIu8iKbFtQbRigIsSXZw6YhT6XZ98h4sMohyC5YVdmBys5P0FJFvg9tLPJ9J2ghxHJuaNgCQHSgvSE2ufDF9SnxRUma0vUIk3IOPbkwkjjMF8nME5dm5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h1peFCRO; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705995915; x=1737531915;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=gR1DaQBEiwp7b8LXQ3gqb1TinU2mUqOSau6sGyjnT/I=;
-  b=h1peFCROm9fade0rEu976ABmV1J9R9L4GGyBGxIBuzOXGqiOsmu2gilY
-   P4omdRlUA6oAv9eUjAlumNfh9LO4+PjvCm9U0+IxQRGsCYCacxEvy/U5O
-   5BsWHfuAlZLu27bQFDuDQhGVoroqxkUQ51z9x5pRR5IsYSH1Wi4lMX664
-   zjzjUea6mCJ7o3ajNb/9jjbxv8hqel12Xf6/oxLNs+DfOA/SxBqKhGki/
-   8pANVaCC3DawY9yeoJXrgKiCPQJEVqdi3xiIl1WT6ZrZ/HGaLXbUdlSDq
-   Zb69fvlTviKiKnHo0FvKlrS+IIA1qOceOH/z1qA86DbiX/9v+zdD9oZqu
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1336526"
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="1336526"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 23:45:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="909211748"
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="909211748"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 23:45:06 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 81AD911FB9B;
-	Tue, 23 Jan 2024 09:45:03 +0200 (EET)
-Date: Tue, 23 Jan 2024 07:45:03 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pm@vger.kernel.org,
-	linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	Jaroslav Kysela <perex@perex.cz>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	laurent.pinchart@ideasonboard.com, David Airlie <airlied@gmail.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	linux-media@vger.kernel.org,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	intel-gfx@lists.freedesktop.org,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	intel-xe@lists.freedesktop.org,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-sound@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-	Daniel Vetter <daniel@ffwll.ch>, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] pm: runtime: Simplify pm_runtime_get_if_active()
- usage
-Message-ID: <Za9uf3icrVE6Ajbe@kekkonen.localdomain>
-References: <20240122114121.56752-2-sakari.ailus@linux.intel.com>
- <20240122181205.GA275751@bhelgaas>
- <CAJZ5v0gUpo6Shz2kQzie4XE23=fiPvD0=2yhjGptw8QbCq2SAg@mail.gmail.com>
+	s=arc-20240116; t=1705998023; c=relaxed/simple;
+	bh=8w+80Oj0dEeWrwkODQ7mQYpIvHywugtJ5h/IUiUyu0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WNpW4LbEsemrwmCilHdILlCqQWY+1CTyuq/wnN41oO8DwgZb78vUWVRJ0lkXWU0boPyWk4N5F8Ff5A4wKs7kvLhXNXaHH45Ttcv5/DYj2UJ43rwlL6E0vZovoKtvrQa0Q/NbK1ToZkviv00zYm00cLXqeq2KdxPORXiRx53Uz5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aBl1u3WK; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 48FE360005;
+	Tue, 23 Jan 2024 08:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705998012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hRb7TeIHk44yo6aUmwYhCI2i2ouU8zTc+wLvrMIpmr4=;
+	b=aBl1u3WK+HzKOi12YlfomEPiXE7oEjgKgdx9VA4kJ607Zqrod7ESeoT2g8JjsJyFYARVSn
+	8hqbBf0oCB1OO9XCYJ3b6msx1ODtd6kQ7Vay/Tdi6BA24BUi5FaTbbtBFHkTplj3lzkmZl
+	bfkxBc0hTEk1hKVRwHEWMpi11uw5zt683rJdppYxfmIKeTti0ptM74oGMWiRGnDs77h6Y/
+	kbZbcbW1GElFkmmQFze0Nrx4jgK01qfw99AtNBOnhPsRX/dUlhYpmcp6GJ9B8UcDZaBhSi
+	Gn0nD1t7Ef5dFHw/aG5RzE8T4P2ifgrIZMFb4h1Tx4a20+06K+UVKPoynRFrQg==
+Message-ID: <d005e3c5-08b3-4a4f-b1ed-e02bde82c2f9@bootlin.com>
+Date: Tue, 23 Jan 2024 09:20:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gUpo6Shz2kQzie4XE23=fiPvD0=2yhjGptw8QbCq2SAg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/14] phy: ti: phy-j721e-wiz: make wiz_clock_init
+ callable multiple times
+Content-Language: en-US
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-5-84e55da52400@bootlin.com>
+ <Za9oR8BpoufCRNIw@matsya>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <Za9oR8BpoufCRNIw@matsya>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hi Rafael, Björn,
-
-Thanks for the review.
-
-On Mon, Jan 22, 2024 at 07:16:54PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Jan 22, 2024 at 7:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Mon, Jan 22, 2024 at 01:41:21PM +0200, Sakari Ailus wrote:
-> > > There are two ways to opportunistically increment a device's runtime PM
-> > > usage count, calling either pm_runtime_get_if_active() or
-> > > pm_runtime_get_if_in_use(). The former has an argument to tell whether to
-> > > ignore the usage count or not, and the latter simply calls the former with
-> > > ign_usage_count set to false. The other users that want to ignore the
-> > > usage_count will have to explitly set that argument to true which is a bit
-> > > cumbersome.
-> >
-> > s/explitly/explicitly/
-> >
-> > > To make this function more practical to use, remove the ign_usage_count
-> > > argument from the function. The main implementation is renamed as
-> > > pm_runtime_get_conditional().
-> > >
-> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > Reviewed-by: Alex Elder <elder@linaro.org> # drivers/net/ipa/ipa_smp2p.c
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Acked-by: Takashi Iwai <tiwai@suse.de> # sound/
-> > > Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com> # drivers/accel/ivpu/
-> > > Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> # drivers/gpu/drm/i915/
-> > > Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> >
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/
-> >
-> > > -EXPORT_SYMBOL_GPL(pm_runtime_get_if_active);
-> > > +EXPORT_SYMBOL_GPL(pm_runtime_get_conditional);
-> >
-> > If pm_runtime_get_conditional() is exported, shouldn't it also be
-> > documented in Documentation/power/runtime_pm.rst?
-> >
-> > But I'm dubious about exporting it because
-> > __intel_runtime_pm_get_if_active() is the only caller, and you end up
-> > with the same pattern there that we have before this series in the PM
-> > core.  Why can't intel_runtime_pm.c be updated to use
-> > pm_runtime_get_if_active() or pm_runtime_get_if_in_use() directly, and
-> > make pm_runtime_get_conditional() static?
+>>  
+>> -	ret = wiz_clock_init(wiz, node);
+>> +	ret = wiz_clock_init(wiz, node, true);
 > 
-> Sounds like a good suggestion to me.
+> You are calling it one once? So what am I missing
 
-The i915 driver uses both but I guess it's not too much different to check
-ignore_usecount separately than passing it to the API function?
+In patch 6/14, wiz_clock_init is called in resume_noirq callback:
 
-I'll add another patch to do this and moving
-pm_runtime_get_if_{active,in_use} implementations to runtime.c.
+ret = wiz_clock_init(wiz, node, false);
+
+Regards
 
 -- 
-Regards,
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Sakari Ailus
 
