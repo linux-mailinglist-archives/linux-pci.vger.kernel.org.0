@@ -1,184 +1,145 @@
-Return-Path: <linux-pci+bounces-2483-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2484-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 480198391BE
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 15:51:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9A8C8392C7
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:34:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 008312826FD
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 14:51:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DA49293999
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 15:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257D15A110;
-	Tue, 23 Jan 2024 14:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 638B65FDCD;
+	Tue, 23 Jan 2024 15:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4I66temL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kh6yeZGq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083DA50271;
-	Tue, 23 Jan 2024 14:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B50B5FDCC;
+	Tue, 23 Jan 2024 15:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706021492; cv=none; b=boq8GU4r3MbDya0ztrMMjbljZ+6fhJzA904OL5xNhpSPnfU0z3FNUWj/0bqNqhX1sus/skPi8vuplp7VpKVg1IOnuFB1EiAaQcZETAqUeWGwyMO3Vaj+q6ki0fqREus2HArOrAQuXw8ZN3emp+QeDxyq8sb8I3VTh4GEIw4raAg=
+	t=1706024045; cv=none; b=uiAc94v/3dQsviQnf/JCACdTxTHODeDsimZOsfAMMTmWP284lFASqmztqC5YUDF9aUiJbfcNiw/2m+t0UMMIo3md4grk5ZCJI3io5+QKhxFYqkouAEv1PiD+dfoPyJSSyjpu87N6EBgewxyGiJI985OjW9qCQpU8TCuIK0YTqng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706021492; c=relaxed/simple;
-	bh=wEw+KYIsI+l2yNlbx9fd4O3Ky0EddoloG2ibdw/iJBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DiuHJE2Z3fb3Qca8MDNYfCNTOuKgtfMc4I4hm8WRQ+gDivpuemNeii6vFTq62NbeL/DaSU1zJ/J+VIYMctjGl11/HKOqzOlPFNbjbbEaul27ZjP/2ZNc8lRyDMiORbSDcPi7LVM9pNZhmeLHFCXerXo/Pl/MlrahSRswKjhNCJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4I66temL; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706021488;
-	bh=wEw+KYIsI+l2yNlbx9fd4O3Ky0EddoloG2ibdw/iJBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=4I66temLW7YZ/eOjiSK0m5zzsPhHoocpYfI5SF81LwSYVevO1XceIsj6e4G1UfiJZ
-	 5TqbcaXxf49DgUjaBqJPD5IxKgYkp+2lIUgRUkPx5P2qEudzs/Um4tuAVcxKeEv7nV
-	 CK6sA2J/ieXPk+ufcNaplofq5PW3T6FM6k8vNvFS+6Ej+HUErWAQ9CA9ybCAnu+5Jq
-	 LwS2fzBbOE7o6rl70wV+/3Avr16hg3XuSt8v9xaRuVjOuf7kQhEYwl4c6niegPyh4B
-	 CvrHlDBMMbxi3sz9XFsLOLQ+46Y/PXa++OOFpc2RFJ5gUYCligNHza2A1lNVJUjbEN
-	 uFYyCs25J4qyA==
-Received: from notapiano (zone.collabora.co.uk [167.235.23.81])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4370337820AD;
-	Tue, 23 Jan 2024 14:51:21 +0000 (UTC)
-Date: Tue, 23 Jan 2024 11:50:49 -0300
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Shuah Khan <shuah@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, kernelci@lists.linux.dev,
-	kernel@collabora.com, Tim Bird <Tim.Bird@sony.com>,
-	linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
-	linux-kselftest@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Doug Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
-	Saravana Kannan <saravanak@google.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] kselftest: devices: Add sample board file for XPS
- 13 9300
-Message-ID: <2ea14eb2-d5b3-40b2-af4b-d14fe398886f@notapiano>
-References: <20240122-discoverable-devs-ksft-v4-0-d602e1df4aa2@collabora.com>
- <20240122-discoverable-devs-ksft-v4-3-d602e1df4aa2@collabora.com>
- <7aa0df3d-ae9d-414d-ad7f-ed7588e70f3e@collabora.com>
+	s=arc-20240116; t=1706024045; c=relaxed/simple;
+	bh=eO93GGLHp0ZcnzDKSh3eiLP5th+pkR8mzGIZ1UxqY2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mBprgUtmBPzP1m/nmUOohBHTiKefm620uklfBWkbL/GyFWE5sf+CmaSiLsAfdZa4b9YXxLIEuCcAnt4onP1WBo6HQvlHOGUaz2TqqNnM1S8wQItPaRpSvlBNlpEgEf6krxkbUF3sTT4q6/6N1Wlkf622/GTaQrL9cU2N0Eve4AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kh6yeZGq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3955C433C7;
+	Tue, 23 Jan 2024 15:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706024045;
+	bh=eO93GGLHp0ZcnzDKSh3eiLP5th+pkR8mzGIZ1UxqY2s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kh6yeZGq4zV2F2DkqVWr5sRKJMQhnkJOH2C1lJjjw4hkrGLiYK3ds6LVWqHJP0Pur
+	 GfK/XWsVfKDa2DAF80+W49Cmpln/YuFS4wEWGXjUppYMacm/iBzTymHO0el+9b3eH/
+	 Asqwvgmnn/gYe9bulNgdcmiXEtOdOuOVWcPQWy7XDCJD9d6wYt3bo8XzT6+kppcgVp
+	 FvPvHhEZUQgpcsZA57g+FkCg4VXq3wauOUisZQa3nvmMgDylaM6c2UQSABpjDWGgRr
+	 ORLbicBWjldkWWmPbzICNkOyuFdbiN98oSpmONgc/xZAYG9nioHSgpVYccj/VCtojw
+	 yBOEbenGnnmDA==
+Date: Tue, 23 Jan 2024 09:34:03 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Athul Krishna <athul.krishna.kr@protonmail.com>,
+	"corentin.chary@gmail.com" <corentin.chary@gmail.com>,
+	"acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
+Message-ID: <20240123153403.GA290377@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7aa0df3d-ae9d-414d-ad7f-ed7588e70f3e@collabora.com>
+In-Reply-To: <56911b37-c316-43b2-8dc9-10f6fd0a398d@gmx.de>
 
-On Tue, Jan 23, 2024 at 12:08:22PM +0100, AngeloGioacchino Del Regno wrote:
-> Il 22/01/24 19:53, Nícolas F. R. A. Prado ha scritto:
-> > Add a sample board file describing the file's format and with the list
-> > of devices expected to be probed on the XPS 13 9300 machine as an
-> > example x86 platform.
+On Tue, Jan 09, 2024 at 11:29:19AM +0100, Armin Wolf wrote:
+> Am 09.01.24 um 01:00 schrieb Bjorn Helgaas:
+> > On Sat, Jan 06, 2024 at 11:33:35PM +0100, Armin Wolf wrote:
+> > > Am 04.01.24 um 03:50 schrieb Athul Krishna:
+> > > > On Thursday, January 4th, 2024 at 1:05 AM, Armin Wolf <W_Armin@gmx.de> wrote:
+> > > > > Am 03.01.24 um 19:51 schrieb Athul Krishna:
+> > > > > 
+> > > > > > Hello,
+> > > > > > This is my first time reporting an issue in the kernel.
+> > > > > > 
+> > > > > > Device Details:
+> > > > > > 
+> > > > > > * Asus Zephyrus G14 (||||||GA402RJ)
+> > > > > > * Latest BIOS
+> > > > > > * Arch_x86_64
+> > > > > > * Kernel: 6.6.9
+> > > > > > * Minimal install using archinstall
+> > > > > > 
+> > > > > > ISSUE: Using /dgpu_disable /provided by _asus-nb-wmi _to disable and
+> > > > > > enable dedicated gpu,
+> > > > > > causes system crash and reboots, randomly.
+> > > > > > 9/10 times writing 0 to dgpu_disable will produce an Input/Output
+> > > > > > error, but the value will be changed to 0, half the time system will
+> > > > > > crash and reboot. While writing 1 to it doesn't produce an error, I
+> > > > > > have observed system crash twice just after that.
+> > > > > > 
+> > > > > > Steps to Reproduce:
+> > > > > > 
+> > > > > > * Remove dpgu: echo 1 | sudo tee ../remove (dgpu path)
+> > > > > > * echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
+> > > > > > * echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
+> > > > > > 
+> > > > > > * echo 1 | sudo tee /sys/bus/pci/rescan
+> > > > > > 
+> > > > > > After writing 0 to dgpu_disable, there's an entry in journal about an
+> > > > > > ACPI bug.
+> > > > > > Output of 'journalctl -p 3' and lspci is attached.
+> > > > > 
+> > > > > Can you share the output of "acpidump" and the content of "/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof"?
+> > > > > The bmof files contain a description of the WMI interfaces of your machine, which might be important for diagnosing the error.
+> > > > > 
+> > > > Here's the output of 'acpidump > acpidump.out' and 'cat /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof'
+> > > Ok, it seems the ACPI code tries to access an object ("GC00") which does not exist.
+> > > This is the reason why disabling the dGPU fails with -EIO.
+> > > 
+> > > I am unfortunately not that knowledgeable when it comes to PCI problems, i CCed the linux-pci mailing list in hope that
+> > > they can better help you in this regard.
+> >
+> > FWIW, I don't know enough about what's going on here to see a PCI
+> > connection.  I do see a bunch of PCI-related stuff around rfkill, but
+> > I don't think that's involved here.
 > > 
-> > Test output:
+> > I think the path here is this, which doesn't seem to touch anything in
+> > PCI:
 > > 
-> > TAP version 13
-> > Using board file: boards/Dell Inc.,XPS 13 9300.yaml
-> > 1..22
-> > ok 1 /pci-controller/14.0/usb2-controller/9/camera.device
-> > ok 2 /pci-controller/14.0/usb2-controller/9/camera.0.driver
-> > ok 3 /pci-controller/14.0/usb2-controller/9/camera.1.driver
-> > ok 4 /pci-controller/14.0/usb2-controller/9/camera.2.driver
-> > ok 5 /pci-controller/14.0/usb2-controller/9/camera.3.driver
-> > ok 6 /pci-controller/14.0/usb2-controller/10/bluetooth.device
-> > ok 7 /pci-controller/14.0/usb2-controller/10/bluetooth.0.driver
-> > ok 8 /pci-controller/14.0/usb2-controller/10/bluetooth.1.driver
-> > ok 9 /pci-controller/2.0/gpu.device
-> > ok 10 /pci-controller/2.0/gpu.driver
-> > ok 11 /pci-controller/4.0/thermal.device
-> > ok 12 /pci-controller/4.0/thermal.driver
-> > ok 13 /pci-controller/12.0/sensors.device
-> > ok 14 /pci-controller/12.0/sensors.driver
-> > ok 15 /pci-controller/14.3/wifi.device
-> > ok 16 /pci-controller/14.3/wifi.driver
-> > ok 17 /pci-controller/1d.0/0.0/ssd.device
-> > ok 18 /pci-controller/1d.0/0.0/ssd.driver
-> > ok 19 /pci-controller/1d.7/0.0/sdcard-reader.device
-> > ok 20 /pci-controller/1d.7/0.0/sdcard-reader.driver
-> > ok 21 /pci-controller/1f.3/audio.device
-> > ok 22 /pci-controller/1f.3/audio.driver
-> > Totals: pass:22 fail:0 xfail:0 xpass:0 skip:0 error:0
-> > 
-> > Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> > ---
-> >   .../devices/boards/Dell Inc.,XPS 13 9300.yaml      | 40 ++++++++++++++++++++++
-> >   1 file changed, 40 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml
-> > new file mode 100644
-> > index 000000000000..ff932eb19f0b
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml	
-> > @@ -0,0 +1,40 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# This is the device definition for the XPS 13 9300.
-> > +# The filename "Dell Inc.,XPS 13 9300" was chosen following the format
-> > +# "Vendor,Product", where Vendor comes from
-> > +# /sys/devices/virtual/dmi/id/sys_vendor, and Product comes from
-> > +# /sys/devices/virtual/dmi/id/product_name.
-> > +#
-> > +# See google,spherion.yaml for more information.
+> >    dgpu_disable_store
+> >      asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, ..., &result)
+> >        asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, ...)
+> >          asus_wmi_evaluate_method3
+> >            wmi_evaluate_method(ASUS_WMI_MGMT_GUID, ...)
+> >      if (result > 1)
+> >        return -EIO
 > 
-> What if - instead of taking google,spherion.yaml as an example - you create a new
-> file named something like
+> The issue happens when a PCI bus rescan is done after writing to "dgpu_disable".
+> As a side note a bugzilla bugreport for this issue was recently created:
 > 
-> "example,device.yaml"
-> 
-> that would be a fantasy device, bringing examples for all .. or most of .. the
-> currently supported types/devices?
-> 
-> You would also move the nice documentation that you wrote in spherion.yaml to the
-> new example,device.yaml and ask to refer to that instead in all of the real device
-> specific definitions.
-> 
-> # SPDX-License-Identifier: GPL-2.0 <--- (GPL-2.0 OR MIT) like device trees perhaps?
-> #
-> # This is the device definition for the Example Device
-> # The filename "Example Device" was chosen following the format
-> # "Vendor,Product", where:
-> #  - Vendor is "Example" and comes from /sys/devices/virtual/dmi/id/sys_vendor
-> #  - Product is "Device" and comes from /sys/devices/virtual/dmi/id/product_name
-> #
-> # ....the rest of the blurb goes here
-> #
-> 
-> - type : .... this that the other
->   devices:
->     - the least amount of device descriptions that you can use for documenting how
->       to write this stuff :-)
-> 
-> Anything against that?
+> https://bugzilla.kernel.org/show_bug.cgi?id=218354
 
-That'd also work. Though I feel like a single example file for both a DT-based
-and an ACPI-based platform might get unnecessarily confusing (given the
-different way for identifying the machine - DMI vs DT compatible - and for
-identifying the root level controller - ACPI UID vs DT MMIO).
+Ah, the original email talked about dgpu_disable causing Input/Output
+errors and random crashes just after using dgpu_disable, so it wasn't
+clear to me that the PCI rescan was related.
 
-I also feel like a real machine example is helpful to have.
+Athul, can you capture any information about the crash, e.g., an oops
+or panic message?  Possibly a screenshot or video?
 
-In my opinion, your suggestion would make much more sense - and be needed even -
-if we had several machine files in this directory, so that the documentation
-stands out among them. However the feedback that I got from Shuah during
-Plumbers was that maintaining per-machine files in-tree wasn't going to happen.
-So these two files serve as the documentation, with real-life examples, that
-other machines could build upon in a separate repository.
+Booting with kernel parameters like "ignore_loglevel boot_delay=60
+lpj=3200000" (might need tweaking and depends on
+CONFIG_BOOT_PRINTK_DELAY) might be needed to slow things down enough
+to capture.
 
-Thanks,
-Nícolas
+Bjorn
 
