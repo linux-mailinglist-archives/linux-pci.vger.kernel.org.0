@@ -1,159 +1,163 @@
-Return-Path: <linux-pci+bounces-2494-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2495-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ECEF83982D
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 19:47:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D4578398FA
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 20:03:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8D36284354
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 18:47:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E6161F2D2FA
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 19:03:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E902823C6;
-	Tue, 23 Jan 2024 18:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AFBC823A8;
+	Tue, 23 Jan 2024 18:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r++rzSzb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddRhw6eZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ABC823A8;
-	Tue, 23 Jan 2024 18:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C6085C69
+	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 18:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035585; cv=none; b=BuK6ob6D3rQhSSs6nbPhB5C4corp9mVDj5WEMfWp4rRGaxeIgtqX+zdWgJ1XPpGp9wb/VaaN/zuDc/k9g0UYfagC9SQVUiEcdZbeJQDeA2EPTZIwMU/htSGe/FVRS0G0oZ+PTsnzI1yzYvtwB4+TfBDh5r7xzYfSJAxXMKlGYy4=
+	t=1706036209; cv=none; b=ueaJgO13DOuMI2ESBym+wJdKgf3Dpn6IvS0T0jETMep8kn9QXnzUXyC57vaJVAUn2JnYLShEAX9EVBLXTDG3rOSWAh4X8bWy+XlOFsD+1vQ5AdzbSzh9Y/vGDjcOmOrpp1pjorRFqZd9RJTu4yKzotuHAa4873lka2yBhkaLBiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706035585; c=relaxed/simple;
-	bh=xlETS4vfNKM7NA6UlEXX0jTXt3XzQwXBLD5Nx+jrOU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=naKaqtqBScPjwxf/mUlJFu8mq0jHUyn1mXA5uGc0VFXKumFSqyIUnOOf85KULFuKfg3kXi2lcjKW6QqGEkm/rQMafuf1ppmSbuNx1cBAsj5UXgsuUEatKFX5HwiCO6IIPfnqoX6XQkPBnjeKYNrwBHHqusa5yjjZ92eTaghbZ7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r++rzSzb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D114C433F1;
-	Tue, 23 Jan 2024 18:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706035584;
-	bh=xlETS4vfNKM7NA6UlEXX0jTXt3XzQwXBLD5Nx+jrOU4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=r++rzSzbdOdCg4Bk0FX/ltZades3wcWMo1/cZDk8BsIK2avLSDgrXRVlu66sDs15D
-	 k9AJPhr/bXSZRZkZCSMtl/swPKxnNzYP7gn4ONuOqeD1aVEW2yg4OwVIu+k/mJ0V5p
-	 krJMR+aBE/hp+oRzL9ujwC2hhYqZMOXu/oP1uMcmGMZoMLskHgeCBIANhwRT+aDUam
-	 nv0iym9WNfKYAmSszPhqcOIvlTk6VjKMJmJFMuHvLfnBdIf0NbbI3m+qnVJPhV2zKi
-	 IzcaQcLcfGDGKvUxQW0cQFt/pOLPqir/dfbCKLBahPOjoMGsogXqEkKVSMEpuBl/QO
-	 CKjRk1JRsUkFQ==
-Date: Tue, 23 Jan 2024 12:46:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, stable@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v5 RESEND 1/5] lib/pci_iomap.c: fix cleanup bugs in
- pci_iounmap()
-Message-ID: <20240123184622.GA322265@bhelgaas>
+	s=arc-20240116; t=1706036209; c=relaxed/simple;
+	bh=qSfcqTgi80cGyZFL7Fdh0Wbjh0Z12CZZDhoQAka/lr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lO/3P3c2DPwm0Ik3NMnGdNrhvMNov8AswM0SiVCaMUfBqIN7roFLiMv76bXUaKbfqyMuYml4SlvXr7fGG7ILLu453W67O219pC4x1lqDo2BiE1vEsGQm4PeYkd538TsirKHvGqxLH3gLxOTFUYczu19hr4KGBdJy/WXNTyVmpSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ddRhw6eZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706036206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xGc+rsyj3BH1TNg1iP09uGhIjOCkKzn+qg59sLt6VDg=;
+	b=ddRhw6eZtswIzRHzbLaB9N3/BcoYMPWwV8beF83xYigExz4VwMyT/SXrgNN2uLJ2Cnl6AL
+	QGFzfjmThIsK3x/cP3hXZkR6LR9roXw5OWN29Uk9akaVzWA2jBylFLu1RqShow4kKMHpPY
+	mDzSlf3DVH4M33GgroD4GZauKK/NPgs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-55-KFDufQFTNUaXcXL28HrTzQ-1; Tue, 23 Jan 2024 13:56:43 -0500
+X-MC-Unique: KFDufQFTNUaXcXL28HrTzQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AFB1D185A785;
+	Tue, 23 Jan 2024 18:56:42 +0000 (UTC)
+Received: from omen.home.shazbot.org (unknown [10.22.17.210])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 025D951D5;
+	Tue, 23 Jan 2024 18:56:41 +0000 (UTC)
+From: Alex Williamson <alex.williamson@redhat.com>
+To: bhelgaas@google.com
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org,
+	lukas@wunner.de,
+	mika.westerberg@linux.intel.com,
+	rafael@kernel.org,
+	sanath.s@amd.com
+Subject: [PATCH] PCI: Fix active state requirement in PME polling
+Date: Tue, 23 Jan 2024 11:55:31 -0700
+Message-ID: <20240123185548.1040096-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111085540.7740-2-pstanner@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Thu, Jan 11, 2024 at 09:55:36AM +0100, Philipp Stanner wrote:
-> pci_iounmap() in lib/pci_iomap.c is supposed to check whether an address
-> is within ioport-range IF the config specifies that ioports exist. If
-> so, the port should be unmapped with ioport_unmap(). If not, it's a
-> generic MMIO address that has to be passed to iounmap().
-> 
-> The bugs are:
->   1. ioport_unmap() is missing entirely, so this function will never
->      actually unmap a port.
+The commit noted in fixes added a bogus requirement that runtime PM
+managed devices need to be in the RPM_ACTIVE state for PME polling.
+In fact, only devices in low power states should be polled.
 
-The preceding comment suggests that in this default implementation,
-the ioport does not need unmapping, and it wasn't something it was
-supposed to do but just failed to do:
+However there's still a requirement that the device config space must
+be accessible, which has implications for both the current state of
+the polled device and the parent bridge, when present.  It's not
+sufficient to assume the bridge remains in D0 and cases have been
+observed where the bridge passes the D0 test, but the PM state
+indicates RPM_SUSPENDING and config space of the polled device becomes
+inaccessible during pci_pme_wakeup().
 
- * NOTE! This default implementation assumes that if the architecture
- * support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
- * be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
- * and does not need unmapping with 'ioport_unmap()'.
- *
- * If you have different rules for your architecture, you need to
- * implement your own pci_iounmap() that knows the rules for where
- * and how IO vs MEM get mapped.
+Therefore, since the bridge is already effectively required to be in
+the RPM_ACTIVE state, formalize this in the code and elevate the PM
+usage count to maintain the state while polling the subordinate
+device.
 
-Almost all ioport_unmap() implementations are empty, so in most cases
-it's a no-op (parisc is an exception).
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Fixes: d3fcd7360338 ("PCI: Fix runtime PM race with PME polling")
+Reported-by: Sanath S <sanath.s@amd.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218360
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/pci/pci.c | 37 ++++++++++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
-I'm happy to add the ioport_unmap() even just for symmetry, but if we
-do, I think we should update or remove that comment.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index bdbf8a94b4d0..764d7c977ef4 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2433,29 +2433,36 @@ static void pci_pme_list_scan(struct work_struct *work)
+ 		if (pdev->pme_poll) {
+ 			struct pci_dev *bridge = pdev->bus->self;
+ 			struct device *dev = &pdev->dev;
+-			int pm_status;
++			struct device *bdev = bridge ? &bridge->dev : NULL;
++			int bref = 0;
+ 
+ 			/*
+-			 * If bridge is in low power state, the
+-			 * configuration space of subordinate devices
+-			 * may be not accessible
++			 * If we have a bridge, it should be in an active/D0
++			 * state or the configuration space of subordinate
++			 * devices may not be accessible or stable over the
++			 * course of the call.
+ 			 */
+-			if (bridge && bridge->current_state != PCI_D0)
+-				continue;
++			if (bdev) {
++				bref = pm_runtime_get_if_active(bdev, true);
++				if (!bref)
++					continue;
++
++				if (bridge->current_state != PCI_D0)
++					goto put_bridge;
++			}
+ 
+ 			/*
+-			 * If the device is in a low power state it
+-			 * should not be polled either.
++			 * The device itself should be suspended but config
++			 * space must be accessible, therefore it cannot be in
++			 * D3cold.
+ 			 */
+-			pm_status = pm_runtime_get_if_active(dev, true);
+-			if (!pm_status)
+-				continue;
+-
+-			if (pdev->current_state != PCI_D3cold)
++			if (pm_runtime_suspended(dev) &&
++			    pdev->current_state != PCI_D3cold)
+ 				pci_pme_wakeup(pdev, NULL);
+ 
+-			if (pm_status > 0)
+-				pm_runtime_put(dev);
++put_bridge:
++			if (bref > 0)
++				pm_runtime_put(bdev);
+ 		} else {
+ 			list_del(&pme_dev->list);
+ 			kfree(pme_dev);
+-- 
+2.43.0
 
->   2. the #ifdef for the ioport-ranges accidentally also guards
->      iounmap(), potentially compiling an empty function. This would
->      cause the mapping to be leaked.
-> 
-> Implement the missing call to ioport_unmap().
-> 
-> Move the guard so that iounmap() will always be part of the function.
-
-I think we should fix this bug in a separate patch because the
-ioport_unmap() is much more subtle and doesn't need to be complicated
-with this fix.
-
-> CC: <stable@vger.kernel.org> # v5.15+
-> Fixes: 316e8d79a095 ("pci_iounmap'2: Electric Boogaloo: try to make sense of it all")
-> Reported-by: Danilo Krummrich <dakr@redhat.com>
-
-Is there a URL we can include for Danilo's report?  I found
-https://lore.kernel.org/all/a6ef92ae-0747-435b-822d-d0229da4683c@redhat.com/,
-but I'm not sure that's the right part of the conversation.
-
-> Suggested-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  lib/pci_iomap.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-> index ce39ce9f3526..6e144b017c48 100644
-> --- a/lib/pci_iomap.c
-> +++ b/lib/pci_iomap.c
-> @@ -168,10 +168,12 @@ void pci_iounmap(struct pci_dev *dev, void __iomem *p)
->  	uintptr_t start = (uintptr_t) PCI_IOBASE;
->  	uintptr_t addr = (uintptr_t) p;
->  
-> -	if (addr >= start && addr < start + IO_SPACE_LIMIT)
-> +	if (addr >= start && addr < start + IO_SPACE_LIMIT) {
-> +		ioport_unmap(p);
->  		return;
-> -	iounmap(p);
-> +	}
->  #endif
-> +	iounmap(p);
->  }
->  EXPORT_SYMBOL(pci_iounmap);
->  
-> -- 
-> 2.43.0
-> 
 
