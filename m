@@ -1,173 +1,137 @@
-Return-Path: <linux-pci+bounces-2485-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2486-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 758F18393E0
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:56:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 429448393FE
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:59:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A2FC1C2397B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 15:56:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A5551C265FD
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 15:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCC7360ECD;
-	Tue, 23 Jan 2024 15:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1CEC6166C;
+	Tue, 23 Jan 2024 15:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5JmPDOA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwNmB4AN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C7B60DD1
-	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 15:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1FB6166B
+	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 15:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706025343; cv=none; b=LiH67KBp3cdJ4S53ISvxVEsEjIWIPueVO8GghzUzm5Cc1771pTD+Lq4Jdd5l9goPD7A4Fg6tFRj3UdX8faqOZ9Ia5FsZz2q8WzxHRlLRoucGDw6x7DnHOGSM8Hidlh1fVXi/eUI+eKLEGAMr/HrFN1V27evtfOL8fJYW2Aai0+c=
+	t=1706025563; cv=none; b=njBHHRz4uSv0oZlDEmaal9DKzrDMKNyHnUK6HfhhvQh37SNfRQTKgOghHs/lmRdXgYEWMRxVyizFs8yLg/0KGtr1aZ4VVrWoM1F9T9GP/glocczEdKY/vaXsfYOIQz3HCzlycql7K8Dg7oQVmvdOIjdswP3mLBs6BXRyyCZKH5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706025343; c=relaxed/simple;
-	bh=szUZSkb5KkY1XXTL2ydXpMJbCb8a3hnlpzYn5FWYKKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sGy3y++mT4/DIiBvf4rutUsoKJvPH14jZ1gbO/wuoEKpv8jiS5sQzmwuAfZryLJ2Aiyk13nqocnLQbYxWxp/Hy5r+h2LWWeOuVBfunTuUgxrakZIQFZIwtINxjYKtvQPF2hWU8uXL2IJjx5cNz9EwgC1eF7s52W3k2CeXUfRjAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e5JmPDOA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706025338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sCueOm7+YIV1uypCrFlqek9GTnabxDJ4c738N9GAnY4=;
-	b=e5JmPDOAL+vw2jF6mvSR2R10awCM2Sd6puKaTCSYJlUp9CjhpXhnETpwpNFxIZF9yrtprB
-	ST//a/gNCHaxERZKjvJnNYD4IkaHXdbFHU/1/R7MpQ44OCSAgucCI2z/GNrxjA68uB7lsl
-	F7PMftTS0x2VnwbVhbKaGje6mCeJYV8=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-e13B8aloMtKa_KTtRnOk-g-1; Tue, 23 Jan 2024 10:55:35 -0500
-X-MC-Unique: e13B8aloMtKa_KTtRnOk-g-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7baa66ebd17so473298539f.1
-        for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 07:55:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706025323; x=1706630123;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sCueOm7+YIV1uypCrFlqek9GTnabxDJ4c738N9GAnY4=;
-        b=NoDZT9gPHpcSyr/yc73eBkmdqP8f12cpzYhlZjUIuleQD0QcWs6mB0OLLcdJI0Lr+q
-         y50O7ucVfKFtcjKs+9lrHHkNTTCsR+Da5LZZ3/uiJ6ZKcmpopMo7O93IEH+EPsrUUI1c
-         8POxrPCxb3ChgUswEVymL20QMT1QGDvpk5pTcE2sda07wsSVW+vBemCVzXsXbNXFXVWb
-         PqexFtNsHFClIbtiAGsXQmU93T/hD3wlFUBuFG/uFuo2xJPGC9GhPpQpMl6po1g+GaCV
-         Avnge2p9nFX9Tqa7lrJG4WYnq9iIWWMiz0V8Swl/xXVHnq/1VgN5NXP3gOg84JNr5SMt
-         ITMA==
-X-Gm-Message-State: AOJu0YzbGIeX7Gaz5e/hUQXVEb8edGe4aWsBriLxbrrXGngTmIqijWiH
-	TC6JPm/mhTgFXlpAqD1C8l8wLMvDlFGGttHanDdP33JFHGQYt6EyG3cSLvvHrlDK8CZTwfvq7FM
-	sKtHrjbxJA4yviCbOKnplwsDYza0Yy/mfujuETDkP1RLu5nW/2gFpAWm20Q==
-X-Received: by 2002:a6b:6515:0:b0:7bf:705c:f9cd with SMTP id z21-20020a6b6515000000b007bf705cf9cdmr99564iob.38.1706025323699;
-        Tue, 23 Jan 2024 07:55:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH38iCjX+AEd64T4UT/2KKdkE95022H/qcfVu2tE/vKCgVvGn5gfiViiWPx9v0cG2g2zKjB3g==
-X-Received: by 2002:a6b:6515:0:b0:7bf:705c:f9cd with SMTP id z21-20020a6b6515000000b007bf705cf9cdmr99549iob.38.1706025323389;
-        Tue, 23 Jan 2024 07:55:23 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id x2-20020a029482000000b0046d17aff31bsm3738272jah.157.2024.01.23.07.55.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 07:55:22 -0800 (PST)
-Date: Tue, 23 Jan 2024 08:55:21 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
- linux-kernel@vger.kernel.org, eric.auger@redhat.com,
- mika.westerberg@linux.intel.com, rafael.j.wysocki@intel.com,
- Sanath.S@amd.com
-Subject: Re: [PATCH v2 2/2] PCI: Fix runtime PM race with PME polling
-Message-ID: <20240123085521.07e2b978.alex.williamson@redhat.com>
-In-Reply-To: <20240123104519.GA21747@wunner.de>
-References: <20230803171233.3810944-1-alex.williamson@redhat.com>
-	<20230803171233.3810944-3-alex.williamson@redhat.com>
-	<20240118115049.3b5efef0.alex.williamson@redhat.com>
-	<20240122221730.GA16831@wunner.de>
-	<20240122155003.587225aa.alex.williamson@redhat.com>
-	<20240123104519.GA21747@wunner.de>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1706025563; c=relaxed/simple;
+	bh=Z1ewUysKuYxCB6wsq+stpRYzm1t4ED2X8HpS7b/6Wnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HXEnggPXg3eP/qQ7oEss4NxwmcHBy53ufV6yd6xsSwpM62F2GTTEbz1Xr0KRmpxZyw+Bzm6MXB3JRAKiXQohCCErdhaX/IpioC22nQlDRLM/2XwrS77tM3Sw/T1nurja/MZKaMCjVmvOo3x6Y9ehFN4qZ6VJyPCxXncv7mz5O1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwNmB4AN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEF1CC433F1;
+	Tue, 23 Jan 2024 15:59:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706025563;
+	bh=Z1ewUysKuYxCB6wsq+stpRYzm1t4ED2X8HpS7b/6Wnw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mwNmB4ANi3uCwpdZPUUyfQ8E43Jdbh5XE+tMg7qW19cV07XGiIK5wUY+7IIqiKUOF
+	 sHJ44Jvub1aLZ4bgNeexXw8X8+f0BEp85nZ9LiVknTPbuWoT4kVq284B8B4OjU7/DN
+	 jhI6FbLruMMvTZyS9mkYNHIFfcnrEm76iuSNayOkaswa6OmgPmqdZKiAx+jj3L25uU
+	 B+ADQPZwnA/zO7bIg22B0bd4ZtSvWtimGckNGZySFVVfUtRa557vfjhQUO223lXzIX
+	 5jcy8NE+7GTMnjaepfNafr9sUQbx8wch9gOMjPX6SJTBm923Otpc+agJYnDLlEB+wU
+	 Y5NHfYXGZbNfA==
+Date: Tue, 23 Jan 2024 09:59:21 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Matthew W Carlis <mattc@purestorage.com>, bhelgaas@google.com,
+	kbusch@kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de,
+	mika.westerberg@linux.intel.com
+Subject: Re: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER
+ natively.
+Message-ID: <20240123155921.GA316585@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f97e2a24-80b3-4f0f-ab46-65f20cc811d8@linux.intel.com>
 
-On Tue, 23 Jan 2024 11:45:19 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
-
-> On Mon, Jan 22, 2024 at 03:50:03PM -0700, Alex Williamson wrote:
-> > On Mon, 22 Jan 2024 23:17:30 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > On Thu, Jan 18, 2024 at 11:50:49AM -0700, Alex Williamson wrote:  
-> > > > To do that I used pm_runtime_get_if_active(), but in retrospect this
-> > > > requires the device to be in RPM_ACTIVE so we end up skipping anything
-> > > > suspended or transitioning.    
-> > > 
-> > > How about dropping the calls to pm_runtime_get_if_active() and
-> > > pm_runtime_put() and instead simply do:
-> > > 
-> > > 			if (pm_runtime_suspended(&pdev->dev) &&
-> > > 			    pdev->current_state != PCI_D3cold)
-> > > 				pci_pme_wakeup(pdev, NULL);  
-> > 
-> > Do we require that the polled device is in the RPM_SUSPENDED state?  
+On Mon, Jan 22, 2024 at 06:37:48PM -0800, Kuppuswamy Sathyanarayanan wrote:
 > 
-> If the device is RPM_SUSPENDING, why immediately resume it for polling?
-> It's sufficient to poll it the next time around, i.e. 1 second later.
+> On 1/22/24 11:32 AM, Bjorn Helgaas wrote:
+> > On Mon, Jan 08, 2024 at 05:15:08PM -0700, Matthew W Carlis wrote:
+> >> A small part is probably historical; we've been using DPC on PCIe
+> >> switches since before there was any EDR support in the kernel. It
+> >> looks like there was a PCIe DPC ECN as early as Feb 2012, but this
+> >> EDR/DPC fw ECN didn't come in till Jan 2019 & kernel support for ECN
+> >> was even later. Its not immediately clear I would want to use EDR in
+> >> my newer architecures & then there are also the older architecures
+> >> still requiring support. When I submitted this patch I came at it
+> >> with the approach of trying to keep the old behavior & still support
+> >> the newer EDR behavior. Bjorns patch from Dec 28 2023 would seem to
+> >> change the behavior for both root ports & switch ports, requiring
+> >> them to set _OSC Control Field bit 7 (DPC) and _OSC Support Field
+> >> bit 7 (EDR) or a kernel command line value. I think no matter what,
+> >> we want to ensure that PCIe Root Ports and PCIe switches arrive at
+> >> the same policy here.
+> > Is there an approved DPC ECN to the PCI Firmware spec that adds DPC
+> > control negotiation, but does *not* add the EDR requirement?
+> >
+> > I'm looking at
+> > https://members.pcisig.com/wg/PCI-SIG/document/previewpdf/12888, which
+> > seems to be the final "Downstream Port Containment Related
+> > Enhancements" ECN, which is dated 1/28/2019 and applies to the PCI
+> > Firmware spec r3.2.
+> >
+> > It adds bit 7, "PCI Express Downstream Port Containment Configuration
+> > control", to the passed-in _OSC Control field, which indicates that
+> > the OS supports both "native OS control and firmware ownership models
+> > (i.e. Error Disconnect Recover notification) of Downstream Port
+> > Containment."
+> >
+> > It also adds the dependency that "If the OS sets bit 7 of the Control
+> > field, it must set bit 7 of the Support field, indicating support for
+> > the Error Disconnect Recover event."
+> >
+> > So I'm trying to figure out if the "support DPC but not EDR" situation
+> > was ever a valid place to be.  Maybe it's a mistake to have separate
+> > CONFIG_PCIE_DPC and CONFIG_PCIE_EDR options.
 > 
-> Likewise, if it's already RPM_RESUMING or RPM_ACTIVE anyway, no need
-> to poll PME.
+> My understanding is also similar. I have raised the same point in
+> https://lore.kernel.org/all/3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com/
 
-I'm clearly not an expert on PME, but this is not obvious to me and
-before the commit that went in through this thread, PME wakeup was
-triggered regardless of the PM state.  I was trying to restore the
-behavior of not requiring a specific PM state other than deferring
-polling across transition states.
+Ah, sorry, I missed that.
 
-> This leaves RPM_SUSPENDED as the only state in which it makes sense to
-> poll.
->
-> > Also pm_runtime_suspended() can also only be trusted while holding the
-> > device power.lock, we need a usage count reference to maintain that
-> > state.  
+> IMO, we don't need a separate config for EDR. I don't think user can
+> gain anything with disabling EDR and enabling DPC. As long as
+> firmware does not user EDR support, just compiling the code should
+> be harmless.
 > 
-> Why?  Let's say there's a race and the device resumes immediately after
-> we call pm_runtime_suspended() here.  So we might call pci_pme_wakeup()
-> gratuitouly.  So what?  No biggie.
-
-The issue I'm trying to address is that config space of the device can
-become inaccessible while calling pci_pme_wakeup() on it, causing a
-system fault on some hardware.  So a gratuitous pci_pme_wakeup() can be
-detrimental.
-
-We require the device config space to remain accessible, therefore the
-instantaneous test against D3cold and that the parent bridge is in D0
-is not sufficient.  I see traces where the parent bridge is in D0, but
-the PM state is RPM_SUSPENDING and the endpoint device transitions to
-D3cold while we're executing pci_pme_wakeup().
-
-Therefore at a minimum, I think we need to enforce that the bridge is
-in RPM_ACTIVE and remains in that state across pci_pme_wakeup(), which
-means we need to hold a usage count reference, and that usage count
-reference must be acquired under power.lock in RPM_ACTIVE state to be
-effective.
-
-> > +			if (bdev) {
-> > +				spin_lock_irq(&bdev->power.lock);  
+> So we can either remove it, or select it by default if user selects
+> DPC config.
 > 
-> Hm, I'd expect that lock to be internal to the PM core,
-> although there *are* a few stray users outside of it.
+> > CONFIG_PCIE_EDR depends on CONFIG_ACPI, so the situation is a little
+> > bit murky on non-ACPI systems that support DPC.
+> 
+> If we are going to remove the EDR config, it might need #ifdef
+> CONFIG_ACPI changes in edr.c to not compile ACPI specific code.
+> Alternative choice is to compile edr.c with CONFIG_ACPI.
 
-Right, there are.  It's possible that if we only need to hold a
-reference on the bridge we can abstract this through
-pm_runtime_get_if_active(), the semantics worked better to essentially
-open code it in this iteration though.  Thanks,
+Right.  I think we should probably remove CONFIG_PCIE_EDR completely
+and make everything controlled by CONFIG_PCIE_DPC.
 
-Alex
+edr.c only provides two interfaces: pci_acpi_add_edr_notifier() and
+pci_acpi_remove_edr_notifier(), which are only used by pci-acpi.c,
+which is only compiled if CONFIG_ACPI, so we could probably also
+compile edr.c only if CONFIG_ACPI.
 
+And the declarations in include/linux/pci-acpi.h could probably be
+moved to drivers/pci/pci.h since they're never used outside
+drivers/pci/.
+
+Bjorn
 
