@@ -1,70 +1,61 @@
-Return-Path: <linux-pci+bounces-2492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2493-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83ED483965B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 18:26:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEA01839679
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 18:33:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F3D2B25920
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 17:25:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F21501C272D1
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 17:33:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00E57FBB2;
-	Tue, 23 Jan 2024 17:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415CD8004C;
+	Tue, 23 Jan 2024 17:33:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVeaiKmt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ua6xuyLQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CCF7FBB7;
-	Tue, 23 Jan 2024 17:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0D780047
+	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 17:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706030740; cv=none; b=koILiff/dGsVsvCgpeelak+Qt054br/bDXu26m/VawdV2Q9fmGKju1/8TOnTk2dqcVbmfpQjMCO8fdwF+xlCitZP2jIv590rdETsG1J5ltIdn4jq6clqpYlJjd9FKRHAGF3TZ9VnJqsuzin1/lVvJ2rqbGY/t3FzSJtOCd1WvB8=
+	t=1706031197; cv=none; b=pDRMYcdJJ/1E5dpoJOyl+vZEemKr9eVb/sjtSFlaW9mmHq4k8DVSs7BGmokGQGyfWDtGkW30LrQC1y6XXfxqbwtMEH77KwcUN3AO3RBhbJ/0OCPAgBPYKHD2i+iH8tGwmM/cyMPjAgjOt82AHWb8nv/H1tDvhOpAB187Mt/rkyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706030740; c=relaxed/simple;
-	bh=owFnlOk5Q+Eu97Jy5r3Vid9vDSX0Lx7bNco6ENdRQVA=;
+	s=arc-20240116; t=1706031197; c=relaxed/simple;
+	bh=JXkTPS3QFT83mAH3b+X6kEVG9h0vym3H1T72WAQuz+o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QzuO/UnXyFOrC+o3AiOlntRsdzotIq3IKfLUsVKWx7j9tEV/NXA+Q0m/sMKc4M1ibyypGJwkv3jDbD/JRUj0ChdsG7LqO9AXo9vsAy3dlkIxwRJ0hkC1Xm8WDwr9paiMqukr+8Hy/tU8Hn4fQyXn64Otx3Wre+JnUie0yGyBVKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVeaiKmt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9132C433F1;
-	Tue, 23 Jan 2024 17:25:39 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6lG61onkkUCWyvSmrFTut3v/cLkejyJ7WWpdOmKJBanwAnB7uL3qKBYKbanVC5TD+ShKb9doPSoRUOjOepJxKd3bvmoFwxRVH89IxVmkNEEKkPLQrlC8UJkngcBTjzfPZH2cNxKn83jY4wnLsXSzGKRBRgX5V5ZgLmSFzEZgCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ua6xuyLQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C91C43394;
+	Tue, 23 Jan 2024 17:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706030739;
-	bh=owFnlOk5Q+Eu97Jy5r3Vid9vDSX0Lx7bNco6ENdRQVA=;
+	s=k20201202; t=1706031196;
+	bh=JXkTPS3QFT83mAH3b+X6kEVG9h0vym3H1T72WAQuz+o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gVeaiKmtcDgGgLP2BYukxjpQuCpS7FHhAOVvGmITyqQmxJjHmQAmJSho2kK9qbYys
-	 N7hnRBqP593yishGnCQ2Xz1+0IgedKNu5UsjM99Bedc+EvL1a5PEnJ7kuyAiBSfMgO
-	 IYrpWRJ3AStrid4TzT4QGOB9RSFiuEKjVn5sYjWp4of9NnGTw+540q6CvXzkD2ijJx
-	 uHvfmY/+viLzh5Sl+SFyT6C9r5AAozbEuIk5ix/4UhqCSaLSZvWLzmjfdv1PklNkJG
-	 vpM4YbB3kQkJC2ZBc9XKQakq+HPWXOBOZLI6ttq2KRhQp9W7pneReTea9xsPNzHWfz
-	 CzMX1q7Rt+pGg==
+	b=ua6xuyLQ1SOXVev77HAA8rvPX3/erDZv8thiirBsvEbh23/JADSTObIBBBC0cFH4q
+	 ot0YoRy3vouYLMeVgOPt/6OiaKmfE5AgAs51MZL9zyb6W/qtC8WTkIdcb4p5Q3sr+v
+	 x14Po8Z299vaM6tJ2A9O7BaIdVBGtv7tC7GIqafIUV5jX8LKGuuqfV1fnR9aOeE4F+
+	 UxHq8uVq/wUkfthRhOdqoObXvODox6u1nuehE4JexWW1yUDdss/gp7tBFMyd5QszFW
+	 4IMjE2XGfZA3af4u/PitMXCT+cmtBx7iFVHuxIQ7fGezU2/wT9lhdvQY/LAtJCiH7w
+	 xDfdfxi5w6bpg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1rSKX2-0000000007X-1K2C;
-	Tue, 23 Jan 2024 18:25:53 +0100
-Date: Tue, 23 Jan 2024 18:25:52 +0100
+	id 1rSKeP-000000000Bc-2Mbv;
+	Tue, 23 Jan 2024 18:33:30 +0100
+Date: Tue, 23 Jan 2024 18:33:29 +0100
 From: Johan Hovold <johan@kernel.org>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Michael Schaller <michael@5challer.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-	regressions@leemhuis.info
-Subject: Re: PCI/ASPM locking regression in 6.7-final (was: Re: [PATCH]
- Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-Message-ID: <Za_2oKTUksw8Di5E@hovoldconsulting.com>
-References: <Za5JLxRC-K20sIfG@hovoldconsulting.com>
- <20240122182615.GA277100@bhelgaas>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [bug report] Revert "PCI/ASPM: Remove
+ pcie_aspm_pm_state_change()"
+Message-ID: <Za_4aY93mWFzp9A4@hovoldconsulting.com>
+References: <29ee741c-7fbd-4061-87c6-c4ae46c372c1@moroto.mountain>
+ <20240122182849.GA277265@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,42 +64,66 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240122182615.GA277100@bhelgaas>
+In-Reply-To: <20240122182849.GA277265@bhelgaas>
 
-On Mon, Jan 22, 2024 at 12:26:15PM -0600, Bjorn Helgaas wrote:
-> On Mon, Jan 22, 2024 at 11:53:35AM +0100, Johan Hovold wrote:
-
-> > I never got a reply to this one so resending with updated Subject in
-> > case it got buried in your inbox.
+On Mon, Jan 22, 2024 at 12:28:49PM -0600, Bjorn Helgaas wrote:
+> [+cc Johan, Kai-Heng]
 > 
-> I did see it but decided it was better to fix the problem with resume
-> causing an unintended reboot, even though fixing that meant breaking
-> lockdep again, since I don't think we have user reports of the
-> potential deadlock lockdep finds.
+> On Mon, Jan 22, 2024 at 05:43:09PM +0300, Dan Carpenter wrote:
+> > Hello Bjorn Helgaas,
+> > 
+> > The patch f93e71aea6c6: "Revert "PCI/ASPM: Remove
+> > pcie_aspm_pm_state_change()"" from Jan 1, 2024 (linux-next), leads to
+> > the following Smatch static checker warning:
+> > 
+> > 	drivers/pci/pcie/aspm.c:1017 pcie_aspm_pm_state_change()
+> > 	warn: sleeping in atomic context
+> 
+> Thanks Dan, this is probably related to the lockdep issue Johan
+> reported here:
+> https://lore.kernel.org/r/ZZu0qx2cmn7IwTyQ@hovoldconsulting.com
 
-That may be because I fixed the previous regression in 6.7-rc1 before
-any users had a chance to hit the deadlock on Qualcomm platforms.
+This looks like a separate issue actually.
 
-I can easily trigger a deadlock on the X13s by instrumenting 6.7-final
-with a delay to increase the race window.
+> > drivers/pci/pcie/aspm.c
+> >     1007 void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+> >     1008 {
+> >     1009         struct pcie_link_state *link = pdev->link_state;
+> >     1010 
+> >     1011         if (aspm_disabled || !link)
+> >     1012                 return;
+> >     1013         /*
+> >     1014          * Devices changed PM state, we should recheck if latency
+> >     1015          * meets all functions' requirement
+> >     1016          */
+> > --> 1017         down_read(&pci_bus_sem);
+> > 
+> > This is a revert from a patch from 2022 which was before I had written
+> > this "sleeping in atomic" static checker thing.
+> > 
+> >     1018         mutex_lock(&aspm_lock);
+> >     1019         pcie_update_aspm_capable(link->root);
+> >     1020         pcie_config_aspm_path(link);
+> >     1021         mutex_unlock(&aspm_lock);
+> >     1022         up_read(&pci_bus_sem);
+> >     1023 }
+> > 
+> > The call trees that Smatch is complaining about are:
+> > 
+> > vortex_boomerang_interrupt() <- disables preempt
+> > -> _vortex_interrupt()
+> > -> _boomerang_interrupt()
+> >    -> vortex_error()
+> >       -> vortex_up()
+> > velocity_suspend() <- disables preempt
+> > -> velocity_set_power_state()
+> >          -> pci_set_power_state()
+> >             -> pci_set_low_power_state()
+> >                -> pcie_aspm_pm_state_change()
 
-And any user hitting this occasionally is likely not going to be able to
-track it down to this lock inversion (unless they have lockdep enabled).
- 
-> 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") was a
-> start at fixing other problems and also improving the ASPM style, so I
-> hope somebody steps up to fix both it and the lockdep issue.  I
-> haven't looked at it enough to have a preference for *how* to fix it.
-
-Ok, but since you were the one introducing the locking regression in
-6.7-final shouldn't you look into fixing it?
-
-Especially if there were alternatives to restoring the offending commit
-which would solve the underlying issue for the resume failure without
-breaking other platforms.
-
-I don't want to spend more time on this if the offending commit could
-simply be reverted.
+Based on a very quick look, I don't think it has ever been valid to call
+pci_set_power_state() from atomic context as it for, for example, can
+call pci_bus_set_current_state() which also takes the bus semaphore.
 
 Johan
 
