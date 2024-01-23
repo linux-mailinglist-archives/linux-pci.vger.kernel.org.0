@@ -1,65 +1,59 @@
-Return-Path: <linux-pci+bounces-2488-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2489-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A00A3839415
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 17:03:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04264839468
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 17:13:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56FB1283D10
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:03:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99B521F21774
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:13:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 105D6612E0;
-	Tue, 23 Jan 2024 16:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6h4Q+yW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023B761670;
+	Tue, 23 Jan 2024 16:12:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D931A5FDC6;
-	Tue, 23 Jan 2024 16:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFE25F54F;
+	Tue, 23 Jan 2024 16:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706025775; cv=none; b=qsJeM6sUnoqygT2/8r5PVckNwI13G4n5EBlSrZQkj1IDI6ZN1t4I7kse1MTQj0bbGlYHitNIQafZWagERPIuK6mEj705Dj6DoaLroHa7fiILlL4TvsjXR1l4MYUVJfrjGPeZ/UQKS6yKrucN5+t6NfkbG4aVybtMfuXIzyxQc4A=
+	t=1706026365; cv=none; b=bJU5PeG/RtNF44nSeuG92Y0yirNJKsBN8pidyOubCn2BEM0aL8Ss/IN4Y6uHMOR42eAf4uXidFyKBg5HXKCq4poaH+SGNpYA6eK4Wu0cvzl8voadEenIk6AX/4BzPsHPoTClDvL1EC8Thj0NRkfTYgYC5vJbZCUspn5FYx8A84A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706025775; c=relaxed/simple;
-	bh=fBQWnLEBcYKTR5Qq7Ag6Kr3ZXGVUxHSMlcYjRnrDpCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TIMCpJBWl2QlqQ72NYW4Vlgc7Z8SWBTow8o2qI4b2shCpI6tNMbkRjrGvpNqNJQaYLfk6vX4YYhk1CPSaWS0pYq7NlOgHkDG1LevyRee8IkgSUFiBPQbuWEV7q4FBPucrL1E2U8n1utGn1AGz2VeiqfURYWC0BJ+9/gTLgaLedU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6h4Q+yW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE89C433F1;
-	Tue, 23 Jan 2024 16:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706025774;
-	bh=fBQWnLEBcYKTR5Qq7Ag6Kr3ZXGVUxHSMlcYjRnrDpCw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=W6h4Q+yW/ndZBGBIYtAlkUk50X2t2NYM6vTxdjLeHdF0LS7L/E7xxpzJYiLpK3ZVf
-	 cxLMQ6NCDTLGEQb3Ee69CTnTiPCnP5O7OAKltCTwxTbk6Tng/0W8zHUfqUrZzaJlOr
-	 JEGR09vZVL32iC1gSTucjmxerZB1C+BrO7Nge/bay5nEfiRf7JvahldiZKXN6yeNNl
-	 wjxbZxVI8GjvV+ieI3y1Z6Nb1l72e93Ql8ayabmkdTLQgWY07nx5uo+dBgiRV/GV5s
-	 RBAt7o76WucKEx7ES6icgfU/zS67hfRDPH3KzAm1KlHvrrY4zNRdXCxGkV33OcfaUX
-	 ARNNR+BTs1psA==
-Date: Tue, 23 Jan 2024 10:02:52 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Chen, Jiqian" <Jiqian.Chen@amd.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"Hildebrand, Stewart" <Stewart.Hildebrand@amd.com>,
-	"Huang, Ray" <Ray.Huang@amd.com>,
-	"Ragiadakou, Xenia" <Xenia.Ragiadakou@amd.com>
-Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
-Message-ID: <20240123160252.GA316914@bhelgaas>
+	s=arc-20240116; t=1706026365; c=relaxed/simple;
+	bh=hAHznUzSv6dTrsoCKG1BmoIFAUP2Qu7H99Ld4q6fwBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s4Nik8/hx18X7wHwe36BVBDuTtZf4FA8e5k5GdshI1phvhO8kjvpU9hYxBgdSGWC30dOU1yPwSw3zB4Eu08XSpb+XdJnfJmVb4/MiJnl9/twDHUhtXU/uVPzMuoL0wiQenwaXSfxu1utuxm3zbxNY7y3g7UIv6rSOZ+Vxy5VMZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id D493630000625;
+	Tue, 23 Jan 2024 17:12:39 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id C39B37AB23; Tue, 23 Jan 2024 17:12:39 +0100 (CET)
+Date: Tue, 23 Jan 2024 17:12:39 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+	linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+	mika.westerberg@linux.intel.com, rafael.j.wysocki@intel.com,
+	Sanath.S@amd.com
+Subject: Re: [PATCH v2 2/2] PCI: Fix runtime PM race with PME polling
+Message-ID: <20240123161239.GA1386@wunner.de>
+References: <20230803171233.3810944-1-alex.williamson@redhat.com>
+ <20230803171233.3810944-3-alex.williamson@redhat.com>
+ <20240118115049.3b5efef0.alex.williamson@redhat.com>
+ <20240122221730.GA16831@wunner.de>
+ <20240122155003.587225aa.alex.williamson@redhat.com>
+ <20240123104519.GA21747@wunner.de>
+ <20240123085521.07e2b978.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,29 +62,49 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BL1PR12MB5849D7A9EC2BEB55CAF3A889E7742@BL1PR12MB5849.namprd12.prod.outlook.com>
+In-Reply-To: <20240123085521.07e2b978.alex.williamson@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jan 23, 2024 at 10:13:52AM +0000, Chen, Jiqian wrote:
-> On 2024/1/23 07:37, Bjorn Helgaas wrote:
-> > On Fri, Jan 05, 2024 at 02:22:17PM +0800, Jiqian Chen wrote:
-> >> There is a need for some scenarios to use gsi sysfs.
-> >> For example, when xen passthrough a device to dumU, it will
-> >> use gsi to map pirq, but currently userspace can't get gsi
-> >> number.
-> >> So, add gsi sysfs for that and for other potential scenarios.
-> ...
+On Tue, Jan 23, 2024 at 08:55:21AM -0700, Alex Williamson wrote:
+> On Tue, 23 Jan 2024 11:45:19 +0100 Lukas Wunner <lukas@wunner.de> wrote:
+> > If the device is RPM_SUSPENDING, why immediately resume it for polling?
+> > It's sufficient to poll it the next time around, i.e. 1 second later.
+> > 
+> > Likewise, if it's already RPM_RESUMING or RPM_ACTIVE anyway, no need
+> > to poll PME.
+> 
+> I'm clearly not an expert on PME, but this is not obvious to me and
+> before the commit that went in through this thread, PME wakeup was
+> triggered regardless of the PM state.  I was trying to restore the
+> behavior of not requiring a specific PM state other than deferring
+> polling across transition states.
 
-> > I don't know enough about Xen to know why it needs the GSI in
-> > userspace.  Is this passthrough brand new functionality that can't be
-> > done today because we don't expose the GSI yet?
->
-> In Xen architecture, there is a privileged domain named Dom0 that
-> has ACPI support and is responsible for detecting and controlling
-> the hardware, also it performs privileged operations such as the
-> creation of normal (unprivileged) domains DomUs. When we give to a
-> DomU direct access to a device, we need also to route the physical
-> interrupts to the DomU. In order to do so Xen needs to setup and map
-> the interrupts appropriately.
+There are broken devices which are incapable of signaling PME.
+As a workaround, the kernel polls these devices once per second.
+The first time the device signals PME, the kernel stops polling
+that particular device because PME is clearly working.
 
-What kernel interfaces are used for this setup and mapping?
+So this is just a best-effort way to support PME for broken devices.
+If it takes a little longer to detect that PME was signaled, it's not
+a big deal.
+
+
+> The issue I'm trying to address is that config space of the device can
+> become inaccessible while calling pci_pme_wakeup() on it, causing a
+> system fault on some hardware.  So a gratuitous pci_pme_wakeup() can be
+> detrimental.
+> 
+> We require the device config space to remain accessible, therefore the
+> instantaneous test against D3cold and that the parent bridge is in D0
+> is not sufficient.  I see traces where the parent bridge is in D0, but
+> the PM state is RPM_SUSPENDING and the endpoint device transitions to
+> D3cold while we're executing pci_pme_wakeup().
+
+We have pci_config_pm_runtime_{get,put}() helpers to ensure the parent
+of a device is in D0 so that the device's config space is accessible.
+So you may need to use that in pci_pme_wakeup().
+
+Thanks,
+
+Lukas
 
