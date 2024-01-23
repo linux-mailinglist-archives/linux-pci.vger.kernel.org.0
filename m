@@ -1,104 +1,187 @@
-Return-Path: <linux-pci+bounces-2459-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2460-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BC1D8388B7
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 09:20:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E0F88389E0
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 10:00:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EFB40B22A47
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 08:20:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 703341C22E76
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 09:00:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251E056B62;
-	Tue, 23 Jan 2024 08:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5416524A9;
+	Tue, 23 Jan 2024 09:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aBl1u3WK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I6tnzK6m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9CF56768;
-	Tue, 23 Jan 2024 08:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D32F51C54;
+	Tue, 23 Jan 2024 09:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705998023; cv=none; b=PQ2v7hChx0MYxd2bMyGgN+yRP8OgZeW6wTxo2QN6NE3Rd42yccQAGKF2ttlyK8JZBry+z6dPkHFYXmwhIY6xIq5msZRz99H5YqCLBAvTDfDoFei5QqpYeB00QCSXTKpBPOEuP4PUri58sROq0hYHS71046OsjS+WKh0ek/SdONg=
+	t=1706000435; cv=none; b=ExLfgyeA6cj64CzbXcEL9d21NY3LxLuE3jCL4xr4Ovb5mgHWA42UXa17hB6ZxVoUtD5HoeHvBIPS/ZP5as0yckon8/kjGGZKRavbNFLLjI7LhGJ5/MMOXrVFmcCcc+il/Wjw3G/5wYbPAMA3COUjoecPqV1ynDAi0XsUEKv0r94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705998023; c=relaxed/simple;
-	bh=8w+80Oj0dEeWrwkODQ7mQYpIvHywugtJ5h/IUiUyu0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WNpW4LbEsemrwmCilHdILlCqQWY+1CTyuq/wnN41oO8DwgZb78vUWVRJ0lkXWU0boPyWk4N5F8Ff5A4wKs7kvLhXNXaHH45Ttcv5/DYj2UJ43rwlL6E0vZovoKtvrQa0Q/NbK1ToZkviv00zYm00cLXqeq2KdxPORXiRx53Uz5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aBl1u3WK; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 48FE360005;
-	Tue, 23 Jan 2024 08:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705998012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hRb7TeIHk44yo6aUmwYhCI2i2ouU8zTc+wLvrMIpmr4=;
-	b=aBl1u3WK+HzKOi12YlfomEPiXE7oEjgKgdx9VA4kJ607Zqrod7ESeoT2g8JjsJyFYARVSn
-	8hqbBf0oCB1OO9XCYJ3b6msx1ODtd6kQ7Vay/Tdi6BA24BUi5FaTbbtBFHkTplj3lzkmZl
-	bfkxBc0hTEk1hKVRwHEWMpi11uw5zt683rJdppYxfmIKeTti0ptM74oGMWiRGnDs77h6Y/
-	kbZbcbW1GElFkmmQFze0Nrx4jgK01qfw99AtNBOnhPsRX/dUlhYpmcp6GJ9B8UcDZaBhSi
-	Gn0nD1t7Ef5dFHw/aG5RzE8T4P2ifgrIZMFb4h1Tx4a20+06K+UVKPoynRFrQg==
-Message-ID: <d005e3c5-08b3-4a4f-b1ed-e02bde82c2f9@bootlin.com>
-Date: Tue, 23 Jan 2024 09:20:08 +0100
+	s=arc-20240116; t=1706000435; c=relaxed/simple;
+	bh=0svduiBP+izLXYyEtAJohWESFuhORT2hBDiCUsVLtqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UMz6BQvkfSyzQiEDfQlX2COHPmWLBOwSEZR27gqQmTlyH02xY+0hvr8L5G6smhdcXvJeuwm2TD/iyqdtTgc5Pzxoqfmiq8FiNlQEGW/4uCeqzCYQDZcbyJVraQfrR5DIJ6WN4Aqgg06uI9/4Q0s6sI2bPeLEa+MGHTBIuEUMxUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I6tnzK6m; arc=none smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706000433; x=1737536433;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0svduiBP+izLXYyEtAJohWESFuhORT2hBDiCUsVLtqM=;
+  b=I6tnzK6mFiHtaDKcjgkrBqkPDvD2HLnwkClrBJzxr3zwWl7A1U2okl4x
+   pQwyO9F38D7xse/cB/APYSzlxLnAVsyWeIol9cpYbUomJnBKelHbxkElo
+   ErJf9WN632IyZuJ9HcTuzMSsv/L45/YAvzJLEx95egWDplcamGOfxawNY
+   cwgC5kYcNRFPNnFboWSayDSJgFSxZqW7dhanwUAYwpcvRr5U5POw7w8su
+   K3zK3jns8aodvjb/t7/9ZMM6YGtvrF0EpMF5bf/LveuCiH7Th+lNaGJoM
+   3g7fxAEz/O9rWZ4Hsrs4LCmQVN5dCcL4mHrxNMUQS/6fOv4/dRaxtE3fe
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400314541"
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="400314541"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 01:00:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="1522808"
+Received: from abityuts-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.41.26])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 01:00:27 -0800
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Subject: [RFC] PCI/AER: Block runtime suspend when handling errors
+Date: Tue, 23 Jan 2024 10:00:16 +0100
+Message-Id: <20240123090016.281252-1-stanislaw.gruszka@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/14] phy: ti: phy-j721e-wiz: make wiz_clock_init
- callable multiple times
-Content-Language: en-US
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-5-84e55da52400@bootlin.com>
- <Za9oR8BpoufCRNIw@matsya>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <Za9oR8BpoufCRNIw@matsya>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8bit
 
->>  
->> -	ret = wiz_clock_init(wiz, node);
->> +	ret = wiz_clock_init(wiz, node, true);
-> 
-> You are calling it one once? So what am I missing
+PM runtime can be done simultaneously with AER error handling.
+Avoid that by using pm_runtime_get_sync() just after pci_dev_get()
+and pm_runtime_put() just before pci_dev_put() in AER recovery
+procedures.
 
-In patch 6/14, wiz_clock_init is called in resume_noirq callback:
+I'm not sure about DPC case since I do not see get/put there. It
+just call pci_do_recovery() from threaded irq dcd_handler().
+I think pm_runtime* should be added to this handler as well.
 
-ret = wiz_clock_init(wiz, node, false);
+pm_runtime_get_sync() will increase dev->power.usage_count counter to
+prevent any rpm actives. When there is suspending pending, it will wait
+for it and do the rpm resume. Not sure if that problem, on my testing
+I did not encounter issues with that.
 
-Regards
+I tested with igc device by doing simultaneous aer_inject and 
+rpm suspend/resume via /sys/bus/pci/devices/PCI_ID/power/control
+and can reproduce: 
 
+[  853.253938] igc 0000:02:00.0: not ready 65535ms after bus reset; giving up
+[  853.253973] pcieport 0000:00:1c.2: AER: Root Port link has been reset (-25)
+[  853.253996] pcieport 0000:00:1c.2: AER: subordinate device reset failed
+[  853.254099] pcieport 0000:00:1c.2: AER: device recovery failed
+[  853.254178] igc 0000:02:00.0: Unable to change power state from D3hot to D0, device inaccessible
+
+The problem disappears when applied this patch.
+
+Signed-off-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+---
+ drivers/pci/pcie/aer.c | 8 ++++++++
+ drivers/pci/pcie/edr.c | 3 +++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 42a3bd35a3e1..9b56460edc76 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -23,6 +23,7 @@
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+ #include <linux/pm.h>
++#include <linux/pm_runtime.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/delay.h>
+@@ -813,6 +814,7 @@ static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+ {
+ 	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+ 		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
++		pm_runtime_get_sync(&dev->dev);
+ 		e_info->error_dev_num++;
+ 		return 0;
+ 	}
+@@ -1111,6 +1113,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ {
+ 	cxl_rch_handle_error(dev, info);
+ 	pci_aer_handle_error(dev, info);
++
++	pm_runtime_put(&dev->dev);
+ 	pci_dev_put(dev);
+ }
+ 
+@@ -1143,6 +1147,8 @@ static void aer_recover_work_func(struct work_struct *work)
+ 			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+ 			continue;
+ 		}
++		pm_runtime_get_sync(&pdev->dev);
++
+ 		pci_print_aer(pdev, entry.severity, entry.regs);
+ 		/*
+ 		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
+@@ -1159,6 +1165,8 @@ static void aer_recover_work_func(struct work_struct *work)
+ 		else if (entry.severity == AER_FATAL)
+ 			pcie_do_recovery(pdev, pci_channel_io_frozen,
+ 					 aer_root_reset);
++
++		pm_runtime_put(&pdev->dev);
+ 		pci_dev_put(pdev);
+ 	}
+ }
+diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+index 5f4914d313a1..bd96babd7249 100644
+--- a/drivers/pci/pcie/edr.c
++++ b/drivers/pci/pcie/edr.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/pci.h>
+ #include <linux/pci-acpi.h>
++#include <linux/pm_runtime.h>
+ 
+ #include "portdrv.h"
+ #include "../pci.h"
+@@ -169,6 +170,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+ 		return;
+ 	}
+ 
++	pm_runtime_get_sync(&edev->dev);
+ 	pci_dbg(pdev, "Reported EDR dev: %s\n", pci_name(edev));
+ 
+ 	/* If port does not support DPC, just send the OST */
+@@ -209,6 +211,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+ 		acpi_send_edr_status(pdev, edev, EDR_OST_FAILED);
+ 	}
+ 
++	pm_runtime_put(&edev->dev);
+ 	pci_dev_put(edev);
+ }
+ 
 -- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
 
 
