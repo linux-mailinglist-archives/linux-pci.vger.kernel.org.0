@@ -1,61 +1,73 @@
-Return-Path: <linux-pci+bounces-2493-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2494-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEA01839679
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 18:33:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1ECEF83982D
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 19:47:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F21501C272D1
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 17:33:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8D36284354
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 18:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415CD8004C;
-	Tue, 23 Jan 2024 17:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E902823C6;
+	Tue, 23 Jan 2024 18:46:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ua6xuyLQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r++rzSzb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0D780047
-	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 17:33:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ABC823A8;
+	Tue, 23 Jan 2024 18:46:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706031197; cv=none; b=pDRMYcdJJ/1E5dpoJOyl+vZEemKr9eVb/sjtSFlaW9mmHq4k8DVSs7BGmokGQGyfWDtGkW30LrQC1y6XXfxqbwtMEH77KwcUN3AO3RBhbJ/0OCPAgBPYKHD2i+iH8tGwmM/cyMPjAgjOt82AHWb8nv/H1tDvhOpAB187Mt/rkyI=
+	t=1706035585; cv=none; b=BuK6ob6D3rQhSSs6nbPhB5C4corp9mVDj5WEMfWp4rRGaxeIgtqX+zdWgJ1XPpGp9wb/VaaN/zuDc/k9g0UYfagC9SQVUiEcdZbeJQDeA2EPTZIwMU/htSGe/FVRS0G0oZ+PTsnzI1yzYvtwB4+TfBDh5r7xzYfSJAxXMKlGYy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706031197; c=relaxed/simple;
-	bh=JXkTPS3QFT83mAH3b+X6kEVG9h0vym3H1T72WAQuz+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6lG61onkkUCWyvSmrFTut3v/cLkejyJ7WWpdOmKJBanwAnB7uL3qKBYKbanVC5TD+ShKb9doPSoRUOjOepJxKd3bvmoFwxRVH89IxVmkNEEKkPLQrlC8UJkngcBTjzfPZH2cNxKn83jY4wnLsXSzGKRBRgX5V5ZgLmSFzEZgCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ua6xuyLQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C91C43394;
-	Tue, 23 Jan 2024 17:33:16 +0000 (UTC)
+	s=arc-20240116; t=1706035585; c=relaxed/simple;
+	bh=xlETS4vfNKM7NA6UlEXX0jTXt3XzQwXBLD5Nx+jrOU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=naKaqtqBScPjwxf/mUlJFu8mq0jHUyn1mXA5uGc0VFXKumFSqyIUnOOf85KULFuKfg3kXi2lcjKW6QqGEkm/rQMafuf1ppmSbuNx1cBAsj5UXgsuUEatKFX5HwiCO6IIPfnqoX6XQkPBnjeKYNrwBHHqusa5yjjZ92eTaghbZ7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r++rzSzb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D114C433F1;
+	Tue, 23 Jan 2024 18:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706031196;
-	bh=JXkTPS3QFT83mAH3b+X6kEVG9h0vym3H1T72WAQuz+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ua6xuyLQ1SOXVev77HAA8rvPX3/erDZv8thiirBsvEbh23/JADSTObIBBBC0cFH4q
-	 ot0YoRy3vouYLMeVgOPt/6OiaKmfE5AgAs51MZL9zyb6W/qtC8WTkIdcb4p5Q3sr+v
-	 x14Po8Z299vaM6tJ2A9O7BaIdVBGtv7tC7GIqafIUV5jX8LKGuuqfV1fnR9aOeE4F+
-	 UxHq8uVq/wUkfthRhOdqoObXvODox6u1nuehE4JexWW1yUDdss/gp7tBFMyd5QszFW
-	 4IMjE2XGfZA3af4u/PitMXCT+cmtBx7iFVHuxIQ7fGezU2/wT9lhdvQY/LAtJCiH7w
-	 xDfdfxi5w6bpg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rSKeP-000000000Bc-2Mbv;
-	Tue, 23 Jan 2024 18:33:30 +0100
-Date: Tue, 23 Jan 2024 18:33:29 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [bug report] Revert "PCI/ASPM: Remove
- pcie_aspm_pm_state_change()"
-Message-ID: <Za_4aY93mWFzp9A4@hovoldconsulting.com>
-References: <29ee741c-7fbd-4061-87c6-c4ae46c372c1@moroto.mountain>
- <20240122182849.GA277265@bhelgaas>
+	s=k20201202; t=1706035584;
+	bh=xlETS4vfNKM7NA6UlEXX0jTXt3XzQwXBLD5Nx+jrOU4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=r++rzSzbdOdCg4Bk0FX/ltZades3wcWMo1/cZDk8BsIK2avLSDgrXRVlu66sDs15D
+	 k9AJPhr/bXSZRZkZCSMtl/swPKxnNzYP7gn4ONuOqeD1aVEW2yg4OwVIu+k/mJ0V5p
+	 krJMR+aBE/hp+oRzL9ujwC2hhYqZMOXu/oP1uMcmGMZoMLskHgeCBIANhwRT+aDUam
+	 nv0iym9WNfKYAmSszPhqcOIvlTk6VjKMJmJFMuHvLfnBdIf0NbbI3m+qnVJPhV2zKi
+	 IzcaQcLcfGDGKvUxQW0cQFt/pOLPqir/dfbCKLBahPOjoMGsogXqEkKVSMEpuBl/QO
+	 CKjRk1JRsUkFQ==
+Date: Tue, 23 Jan 2024 12:46:22 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>,
+	Kent Overstreet <kent.overstreet@gmail.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Uladzislau Koshchanka <koshchanka@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, stable@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>
+Subject: Re: [PATCH v5 RESEND 1/5] lib/pci_iomap.c: fix cleanup bugs in
+ pci_iounmap()
+Message-ID: <20240123184622.GA322265@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,66 +76,84 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240122182849.GA277265@bhelgaas>
+In-Reply-To: <20240111085540.7740-2-pstanner@redhat.com>
 
-On Mon, Jan 22, 2024 at 12:28:49PM -0600, Bjorn Helgaas wrote:
-> [+cc Johan, Kai-Heng]
+On Thu, Jan 11, 2024 at 09:55:36AM +0100, Philipp Stanner wrote:
+> pci_iounmap() in lib/pci_iomap.c is supposed to check whether an address
+> is within ioport-range IF the config specifies that ioports exist. If
+> so, the port should be unmapped with ioport_unmap(). If not, it's a
+> generic MMIO address that has to be passed to iounmap().
 > 
-> On Mon, Jan 22, 2024 at 05:43:09PM +0300, Dan Carpenter wrote:
-> > Hello Bjorn Helgaas,
-> > 
-> > The patch f93e71aea6c6: "Revert "PCI/ASPM: Remove
-> > pcie_aspm_pm_state_change()"" from Jan 1, 2024 (linux-next), leads to
-> > the following Smatch static checker warning:
-> > 
-> > 	drivers/pci/pcie/aspm.c:1017 pcie_aspm_pm_state_change()
-> > 	warn: sleeping in atomic context
+> The bugs are:
+>   1. ioport_unmap() is missing entirely, so this function will never
+>      actually unmap a port.
+
+The preceding comment suggests that in this default implementation,
+the ioport does not need unmapping, and it wasn't something it was
+supposed to do but just failed to do:
+
+ * NOTE! This default implementation assumes that if the architecture
+ * support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
+ * be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
+ * and does not need unmapping with 'ioport_unmap()'.
+ *
+ * If you have different rules for your architecture, you need to
+ * implement your own pci_iounmap() that knows the rules for where
+ * and how IO vs MEM get mapped.
+
+Almost all ioport_unmap() implementations are empty, so in most cases
+it's a no-op (parisc is an exception).
+
+I'm happy to add the ioport_unmap() even just for symmetry, but if we
+do, I think we should update or remove that comment.
+
+>   2. the #ifdef for the ioport-ranges accidentally also guards
+>      iounmap(), potentially compiling an empty function. This would
+>      cause the mapping to be leaked.
 > 
-> Thanks Dan, this is probably related to the lockdep issue Johan
-> reported here:
-> https://lore.kernel.org/r/ZZu0qx2cmn7IwTyQ@hovoldconsulting.com
+> Implement the missing call to ioport_unmap().
+> 
+> Move the guard so that iounmap() will always be part of the function.
 
-This looks like a separate issue actually.
+I think we should fix this bug in a separate patch because the
+ioport_unmap() is much more subtle and doesn't need to be complicated
+with this fix.
 
-> > drivers/pci/pcie/aspm.c
-> >     1007 void pcie_aspm_pm_state_change(struct pci_dev *pdev)
-> >     1008 {
-> >     1009         struct pcie_link_state *link = pdev->link_state;
-> >     1010 
-> >     1011         if (aspm_disabled || !link)
-> >     1012                 return;
-> >     1013         /*
-> >     1014          * Devices changed PM state, we should recheck if latency
-> >     1015          * meets all functions' requirement
-> >     1016          */
-> > --> 1017         down_read(&pci_bus_sem);
-> > 
-> > This is a revert from a patch from 2022 which was before I had written
-> > this "sleeping in atomic" static checker thing.
-> > 
-> >     1018         mutex_lock(&aspm_lock);
-> >     1019         pcie_update_aspm_capable(link->root);
-> >     1020         pcie_config_aspm_path(link);
-> >     1021         mutex_unlock(&aspm_lock);
-> >     1022         up_read(&pci_bus_sem);
-> >     1023 }
-> > 
-> > The call trees that Smatch is complaining about are:
-> > 
-> > vortex_boomerang_interrupt() <- disables preempt
-> > -> _vortex_interrupt()
-> > -> _boomerang_interrupt()
-> >    -> vortex_error()
-> >       -> vortex_up()
-> > velocity_suspend() <- disables preempt
-> > -> velocity_set_power_state()
-> >          -> pci_set_power_state()
-> >             -> pci_set_low_power_state()
-> >                -> pcie_aspm_pm_state_change()
+> CC: <stable@vger.kernel.org> # v5.15+
+> Fixes: 316e8d79a095 ("pci_iounmap'2: Electric Boogaloo: try to make sense of it all")
+> Reported-by: Danilo Krummrich <dakr@redhat.com>
 
-Based on a very quick look, I don't think it has ever been valid to call
-pci_set_power_state() from atomic context as it for, for example, can
-call pci_bus_set_current_state() which also takes the bus semaphore.
+Is there a URL we can include for Danilo's report?  I found
+https://lore.kernel.org/all/a6ef92ae-0747-435b-822d-d0229da4683c@redhat.com/,
+but I'm not sure that's the right part of the conversation.
 
-Johan
+> Suggested-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  lib/pci_iomap.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+> index ce39ce9f3526..6e144b017c48 100644
+> --- a/lib/pci_iomap.c
+> +++ b/lib/pci_iomap.c
+> @@ -168,10 +168,12 @@ void pci_iounmap(struct pci_dev *dev, void __iomem *p)
+>  	uintptr_t start = (uintptr_t) PCI_IOBASE;
+>  	uintptr_t addr = (uintptr_t) p;
+>  
+> -	if (addr >= start && addr < start + IO_SPACE_LIMIT)
+> +	if (addr >= start && addr < start + IO_SPACE_LIMIT) {
+> +		ioport_unmap(p);
+>  		return;
+> -	iounmap(p);
+> +	}
+>  #endif
+> +	iounmap(p);
+>  }
+>  EXPORT_SYMBOL(pci_iounmap);
+>  
+> -- 
+> 2.43.0
+> 
 
