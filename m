@@ -1,204 +1,156 @@
-Return-Path: <linux-pci+bounces-2502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2503-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CCAC839A6C
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 21:39:42 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 708E6839A7C
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 21:44:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD0081F2A28E
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 20:39:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC349B2B882
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 20:44:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D66C20F1;
-	Tue, 23 Jan 2024 20:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BB96210F;
+	Tue, 23 Jan 2024 20:44:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K15YvAFr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6LkV1EI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC076AAB
-	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 20:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251355662;
+	Tue, 23 Jan 2024 20:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706042363; cv=none; b=sDt2BdGQx41kRly48Bq7ymuejFqkvXzBwb3wrRHlBaH5Y6u1n2iUOZ6OO2gW4jDzBLmKuruJ4cRiYhNRTAfIfkKi0GCiAIbA5bYnmVSOXt+NAZ54QaoNxvbtDExjYAw9W8rekNGTTynKBRMNwYV2CBUWdJ+YTkx0AJdrGYzKXds=
+	t=1706042656; cv=none; b=IqUKdQaNUwpr8DsPmoY4RTP9/wHVNjZQe6q+u27PxEC33T1gvT2/X1jCcYQFTCqVRp/OklZalc2K793tllYVeu+zBQhHBO0zlchHFM0TSlkG6mgZ3I6kIGKXgL/bB8dvBaQ69p+6ZvlZUr9ttRazeJbhhAihoVuN1p3HAeBa2Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706042363; c=relaxed/simple;
-	bh=gjPCV/TN/mj+V72WzQsFZHcy0G3DJKrYkfV8ufHL6pU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EKzUngLQiJIxm5ETlOF9qbuMXcGx3+XasMbWEenV2MsSLbNlmmTgZSpjEB7m6+pDd+Udfx9B0hRj6OKnENxKeyDgjyjIm/LrLSCFezHSnD2n7kEedLXZ+HWsNpHHWi2+f0suVe+qlHSKEeFoyN0qRCHrZRseOFwGtSn6I2MGptI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K15YvAFr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706042360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5qZvJ4XyFRm/orqM3JDktkw5W23C2bHZYs4F6xr3L9w=;
-	b=K15YvAFrTljG0X5D48jg3bf/Kf+UXJeqZpIanP87zHiZwM6fKEXqXfBFfHLcJgMIQQs6Ax
-	izf5f86x66ZyXHdVb+PGpgcrzovn/kgumYr8TTAkEzgAMmySAkIcFsylBuNwPgfmrD9Ca0
-	KI1x6HNbEs4A2kSEqfKh4loHronwBXk=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-660-87_5KrAPNXWiKSaItJPSxg-1; Tue, 23 Jan 2024 15:39:19 -0500
-X-MC-Unique: 87_5KrAPNXWiKSaItJPSxg-1
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36280fd2213so15023745ab.1
-        for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 12:39:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706042358; x=1706647158;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5qZvJ4XyFRm/orqM3JDktkw5W23C2bHZYs4F6xr3L9w=;
-        b=BK5vSyp9cR/aWLBJs71aRwkpb3o7VrHjTpuZjtlpuvst5kBi+BmatdPh3MLyrasmK0
-         P8NJH/qsU98fL/dBMxmvasZN/8OKRNqRc4C9ER2iZ6MI9N8E1YNOnCNJBk5Cjtf827rh
-         n0UTuyQYl/3rafe2uyy/Z7rZgaEfNX6Emgfxe2XZqsbHy8rDCi7Nj9BwdS/kp85lPUjo
-         BYZiB+Yd6O5/Y6AP7W1Sxsk+CeOPwJzsKuY9WM292iqiTmMJi3VRzjMa4PGwk4CqxPpQ
-         DDx0eZyoVzOcHwMftvhcCjSJF3u1dWvA6HLFBmIi6wFOw+xXj77HQhHpxkgWkQdXOK+y
-         l7dg==
-X-Gm-Message-State: AOJu0YyJFNMlbppo3B4lmKkTwDegTyxvGvcswORrHY73mAi0VTqz9PXj
-	XLlCyA6jXC2kCuA6M8KbLUDoJEVfYDEop5gaH3Pqer2AKu7zymFPM+HTFVWIlxrhM0GdT2THszi
-	VN/OtMFWQFwsujZN1DA35nCH6mRPjjss9TZrV2yl0lnPUDLv69aORwnxodw==
-X-Received: by 2002:a05:6e02:1845:b0:361:b16e:27a8 with SMTP id b5-20020a056e02184500b00361b16e27a8mr501339ilv.56.1706042358560;
-        Tue, 23 Jan 2024 12:39:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGmiODcL9zp+99JCvdM4Kstsy1lBqYLTUCZtl6v/mUlKZDT16hqYuulnT4BDx1TlHQvm9SXYQ==
-X-Received: by 2002:a05:6e02:1845:b0:361:b16e:27a8 with SMTP id b5-20020a056e02184500b00361b16e27a8mr501335ilv.56.1706042358342;
-        Tue, 23 Jan 2024 12:39:18 -0800 (PST)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id bp15-20020a056e02348f00b00362768a8dccsm2213778ilb.30.2024.01.23.12.39.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 12:39:17 -0800 (PST)
-Date: Tue, 23 Jan 2024 13:39:17 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de,
- mika.westerberg@linux.intel.com, sanath.s@amd.com
-Subject: Re: [PATCH] PCI: Fix active state requirement in PME polling
-Message-ID: <20240123133917.765743ed.alex.williamson@redhat.com>
-In-Reply-To: <CAJZ5v0hLaka9od=_DB8L5nVJMPdu-9WKDgt5ro3jzE5b7MY-rQ@mail.gmail.com>
-References: <20240123185548.1040096-1-alex.williamson@redhat.com>
-	<CAJZ5v0gcjxmBnFy=qrUfPCwJyvzS_gy139TqhoF=gf_U_E2jPA@mail.gmail.com>
-	<20240123125052.133a42bc.alex.williamson@redhat.com>
-	<CAJZ5v0hLaka9od=_DB8L5nVJMPdu-9WKDgt5ro3jzE5b7MY-rQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1706042656; c=relaxed/simple;
+	bh=YTYq9NKaF9Qyd5spfDIHdzZzMX2Nn0CsEqHbs7SWNQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7mH4xSl3b7g1H4jV40FnP8dEVY4YQDnfETY6kLCyEt+3pb4TWcDsko0DX3qXkxrVDhEo0HcNGWtN2iWINal+LxDoMgtT1ap1phXdfRzqt2UrEOES6KvdHa/j4OnhljKK5q8zE+tkn1EgxlrOcNGB3RC+WEAXDobIE2Ww6hxFIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6LkV1EI; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706042655; x=1737578655;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YTYq9NKaF9Qyd5spfDIHdzZzMX2Nn0CsEqHbs7SWNQo=;
+  b=C6LkV1EIWCLsYBwDFmHNKwBKMCwhZE5rt2ttdKiYHQyLM3L2L4oGN8QB
+   C7ZuWdXR6AEE1mPiohT2CAJcUiSIgDM/RwoSL577UIrq8ZwoZhY0lyQk4
+   zgm0TpfAZEbKvGFtiE70m1X7YtGBCTfT05fiIJqGS3wgNU+pCsCbXAeJM
+   I1NUe9d1P8Gmk1nvcE8JLQxCv0+0JUdmtO0Y8DkSk8DdIjgOmi7ehYyX4
+   enfa6LoXEURFbwoCFocq0eSoBbAlUmUQuXYL8Z0T/TQhxE+D3MMRIGqJZ
+   E4yspDEdwYywB4qjSvkIbHn4pvPnYCaywUtmv3XE43OV1DTP/xZCrVHvW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="23114666"
+X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
+   d="scan'208";a="23114666"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 12:44:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="905365871"
+X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
+   d="scan'208";a="905365871"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 12:44:07 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 7F17811FAD4;
+	Tue, 23 Jan 2024 22:44:04 +0200 (EET)
+Date: Tue, 23 Jan 2024 20:44:04 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com, David Airlie <airlied@gmail.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	linux-media@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	intel-xe@lists.freedesktop.org,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-sound@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+	Daniel Vetter <daniel@ffwll.ch>, netdev@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] pm: runtime: Simplify pm_runtime_get_if_active()
+ usage
+Message-ID: <ZbAlFKE_fZ_riRVu@kekkonen.localdomain>
+References: <20240123095642.97303-2-sakari.ailus@linux.intel.com>
+ <20240123172423.GA317147@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123172423.GA317147@bhelgaas>
 
-On Tue, 23 Jan 2024 20:59:50 +0100
-"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+Hi Bjorn,
 
-> On Tue, Jan 23, 2024 at 8:51=E2=80=AFPM Alex Williamson
-> <alex.williamson@redhat.com> wrote:
-> >
-> > On Tue, 23 Jan 2024 20:40:32 +0100
-> > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> > =20
-> > > On Tue, Jan 23, 2024 at 7:56=E2=80=AFPM Alex Williamson
-> > > <alex.williamson@redhat.com> wrote: =20
-> > > >
-> > > > The commit noted in fixes added a bogus requirement that runtime PM
-> > > > managed devices need to be in the RPM_ACTIVE state for PME polling.
-> > > > In fact, only devices in low power states should be polled.
-> > > >
-> > > > However there's still a requirement that the device config space mu=
-st
-> > > > be accessible, which has implications for both the current state of
-> > > > the polled device and the parent bridge, when present.  It's not
-> > > > sufficient to assume the bridge remains in D0 and cases have been
-> > > > observed where the bridge passes the D0 test, but the PM state
-> > > > indicates RPM_SUSPENDING and config space of the polled device beco=
-mes
-> > > > inaccessible during pci_pme_wakeup().
-> > > >
-> > > > Therefore, since the bridge is already effectively required to be in
-> > > > the RPM_ACTIVE state, formalize this in the code and elevate the PM
-> > > > usage count to maintain the state while polling the subordinate
-> > > > device.
-> > > >
-> > > > Cc: Lukas Wunner <lukas@wunner.de>
-> > > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Cc: Rafael J. Wysocki <rafael@kernel.org>
-> > > > Fixes: d3fcd7360338 ("PCI: Fix runtime PM race with PME polling")
-> > > > Reported-by: Sanath S <sanath.s@amd.com>
-> > > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218360
-> > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > > > ---
-> > > >  drivers/pci/pci.c | 37 ++++++++++++++++++++++---------------
-> > > >  1 file changed, 22 insertions(+), 15 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > index bdbf8a94b4d0..764d7c977ef4 100644
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -2433,29 +2433,36 @@ static void pci_pme_list_scan(struct work_s=
-truct *work)
-> > > >                 if (pdev->pme_poll) {
-> > > >                         struct pci_dev *bridge =3D pdev->bus->self;
-> > > >                         struct device *dev =3D &pdev->dev;
-> > > > -                       int pm_status;
-> > > > +                       struct device *bdev =3D bridge ? &bridge->d=
-ev : NULL;
-> > > > +                       int bref =3D 0;
-> > > >
-> > > >                         /*
-> > > > -                        * If bridge is in low power state, the
-> > > > -                        * configuration space of subordinate devic=
-es
-> > > > -                        * may be not accessible
-> > > > +                        * If we have a bridge, it should be in an =
-active/D0
-> > > > +                        * state or the configuration space of subo=
-rdinate
-> > > > +                        * devices may not be accessible or stable =
-over the
-> > > > +                        * course of the call.
-> > > >                          */
-> > > > -                       if (bridge && bridge->current_state !=3D PC=
-I_D0)
-> > > > -                               continue;
-> > > > +                       if (bdev) {
-> > > > +                               bref =3D pm_runtime_get_if_active(b=
-dev, true);
-> > > > +                               if (!bref) =20
-> > >
-> > > I would check bref <=3D 0 here.
-> > > =20
-> > > > +                                       continue;
-> > > > +
-> > > > +                               if (bridge->current_state !=3D PCI_=
-D0) =20
-> > >
-> > > Isn't the power state guaranteed to be PCI_D0 at this point?  If it
-> > > isn't, then why? =20
-> >
-> > Both of these seem necessary to support !CONFIG_PM, where bref would be
-> > -EINVAL and provides no indication of the current_state.  Is that
-> > incorrect?  Thanks, =20
->=20
-> Well, CONFIG_PCIE_PME depends on CONFIG_PM, so I'm not sure how
-> dev->pme_poll can be set without it.
+Thanks for the review.
 
-I only see that drivers/pci/pci.c:pci_pm_init() sets pme_poll true and
-I'm not spotting a dependency on either PCIE_PME or PM to get there.  I
-see a few places where pme.c, governed by PCIE_PME, can set pme_poll
-false though.
+On Tue, Jan 23, 2024 at 11:24:23AM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 23, 2024 at 11:56:42AM +0200, Sakari Ailus wrote:
+> > There are two ways to opportunistically increment a device's runtime PM
+> > usage count, calling either pm_runtime_get_if_active() or
+> > pm_runtime_get_if_in_use(). The former has an argument to tell whether to
+> > ignore the usage count or not, and the latter simply calls the former with
+> > ign_usage_count set to false. The other users that want to ignore the
+> > usage_count will have to explitly set that argument to true which is a bit
+> > cumbersome.
+> > 
+> > To make this function more practical to use, remove the ign_usage_count
+> > argument from the function. The main implementation is renamed as
+> > pm_runtime_get_conditional().
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Reviewed-by: Alex Elder <elder@linaro.org> # drivers/net/ipa/ipa_smp2p.c
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Acked-by: Takashi Iwai <tiwai@suse.de> # sound/
+> > Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com> # drivers/accel/ivpu/
+> > Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> # drivers/gpu/drm/i915/
+> > Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/
+> 
+> - Previous PM history uses "PM: " in the subject lines (not "pm: ").
 
-It's also not clear to me that we should skip scanning a device if
-pm_runtime_get_if_active() returns -EINVAL for the bridge due to
-power.disable_depth.  If runtime PM isn't enabled on the bridge,
-shouldn't we be able to test current_state and assume it won't change?
-Thanks,
+Oops. I'm not sure why I used lower case. (Maybe I've written too many
+times "media:" prefix to the subject?) I'll fix this in v5.
 
-Alex
+> 
+> - I don't know whether it's feasible, but it would be nice if the
+>   intel_pm_runtime_pm.c rework could be done in one shot instead of
+>   being split between patches 1/3 and 2/3.
+> 
+>   Maybe it could be a preliminary patch that uses the existing
+>   if_active/if_in_use interfaces, followed by the trivial if_active
+>   updates in this patch.  I think that would make the history easier
+>   to read than having the transitory pm_runtime_get_conditional() in
+>   the middle.
 
+I think I'd merge the two patches. The second patch is fairly small, after
+all, and both deal with largely the same code.
+
+> 
+> - Similarly, it would be nice if pm_runtime_get_conditional() never
+>   had to be published in pm_runtime.h, instead of being temporarily
+>   added there by this patch and then immediately made private by 2/3.
+>   Maybe that's not practical, I dunno.
+
+-- 
+Regards,
+
+Sakari Ailus
 
