@@ -1,145 +1,173 @@
-Return-Path: <linux-pci+bounces-2484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9A8C8392C7
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:34:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 758F18393E0
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 16:56:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DA49293999
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 15:34:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A2FC1C2397B
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 15:56:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 638B65FDCD;
-	Tue, 23 Jan 2024 15:34:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCC7360ECD;
+	Tue, 23 Jan 2024 15:55:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kh6yeZGq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5JmPDOA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B50B5FDCC;
-	Tue, 23 Jan 2024 15:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C7B60DD1
+	for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 15:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024045; cv=none; b=uiAc94v/3dQsviQnf/JCACdTxTHODeDsimZOsfAMMTmWP284lFASqmztqC5YUDF9aUiJbfcNiw/2m+t0UMMIo3md4grk5ZCJI3io5+QKhxFYqkouAEv1PiD+dfoPyJSSyjpu87N6EBgewxyGiJI985OjW9qCQpU8TCuIK0YTqng=
+	t=1706025343; cv=none; b=LiH67KBp3cdJ4S53ISvxVEsEjIWIPueVO8GghzUzm5Cc1771pTD+Lq4Jdd5l9goPD7A4Fg6tFRj3UdX8faqOZ9Ia5FsZz2q8WzxHRlLRoucGDw6x7DnHOGSM8Hidlh1fVXi/eUI+eKLEGAMr/HrFN1V27evtfOL8fJYW2Aai0+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024045; c=relaxed/simple;
-	bh=eO93GGLHp0ZcnzDKSh3eiLP5th+pkR8mzGIZ1UxqY2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mBprgUtmBPzP1m/nmUOohBHTiKefm620uklfBWkbL/GyFWE5sf+CmaSiLsAfdZa4b9YXxLIEuCcAnt4onP1WBo6HQvlHOGUaz2TqqNnM1S8wQItPaRpSvlBNlpEgEf6krxkbUF3sTT4q6/6N1Wlkf622/GTaQrL9cU2N0Eve4AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kh6yeZGq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3955C433C7;
-	Tue, 23 Jan 2024 15:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706024045;
-	bh=eO93GGLHp0ZcnzDKSh3eiLP5th+pkR8mzGIZ1UxqY2s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kh6yeZGq4zV2F2DkqVWr5sRKJMQhnkJOH2C1lJjjw4hkrGLiYK3ds6LVWqHJP0Pur
-	 GfK/XWsVfKDa2DAF80+W49Cmpln/YuFS4wEWGXjUppYMacm/iBzTymHO0el+9b3eH/
-	 Asqwvgmnn/gYe9bulNgdcmiXEtOdOuOVWcPQWy7XDCJD9d6wYt3bo8XzT6+kppcgVp
-	 FvPvHhEZUQgpcsZA57g+FkCg4VXq3wauOUisZQa3nvmMgDylaM6c2UQSABpjDWGgRr
-	 ORLbicBWjldkWWmPbzICNkOyuFdbiN98oSpmONgc/xZAYG9nioHSgpVYccj/VCtojw
-	 yBOEbenGnnmDA==
-Date: Tue, 23 Jan 2024 09:34:03 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Athul Krishna <athul.krishna.kr@protonmail.com>,
-	"corentin.chary@gmail.com" <corentin.chary@gmail.com>,
-	"acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: Re: ERROR: Writing to dgpu_disable cause Input/Output error
-Message-ID: <20240123153403.GA290377@bhelgaas>
+	s=arc-20240116; t=1706025343; c=relaxed/simple;
+	bh=szUZSkb5KkY1XXTL2ydXpMJbCb8a3hnlpzYn5FWYKKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sGy3y++mT4/DIiBvf4rutUsoKJvPH14jZ1gbO/wuoEKpv8jiS5sQzmwuAfZryLJ2Aiyk13nqocnLQbYxWxp/Hy5r+h2LWWeOuVBfunTuUgxrakZIQFZIwtINxjYKtvQPF2hWU8uXL2IJjx5cNz9EwgC1eF7s52W3k2CeXUfRjAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e5JmPDOA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706025338;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sCueOm7+YIV1uypCrFlqek9GTnabxDJ4c738N9GAnY4=;
+	b=e5JmPDOAL+vw2jF6mvSR2R10awCM2Sd6puKaTCSYJlUp9CjhpXhnETpwpNFxIZF9yrtprB
+	ST//a/gNCHaxERZKjvJnNYD4IkaHXdbFHU/1/R7MpQ44OCSAgucCI2z/GNrxjA68uB7lsl
+	F7PMftTS0x2VnwbVhbKaGje6mCeJYV8=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-224-e13B8aloMtKa_KTtRnOk-g-1; Tue, 23 Jan 2024 10:55:35 -0500
+X-MC-Unique: e13B8aloMtKa_KTtRnOk-g-1
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7baa66ebd17so473298539f.1
+        for <linux-pci@vger.kernel.org>; Tue, 23 Jan 2024 07:55:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706025323; x=1706630123;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sCueOm7+YIV1uypCrFlqek9GTnabxDJ4c738N9GAnY4=;
+        b=NoDZT9gPHpcSyr/yc73eBkmdqP8f12cpzYhlZjUIuleQD0QcWs6mB0OLLcdJI0Lr+q
+         y50O7ucVfKFtcjKs+9lrHHkNTTCsR+Da5LZZ3/uiJ6ZKcmpopMo7O93IEH+EPsrUUI1c
+         8POxrPCxb3ChgUswEVymL20QMT1QGDvpk5pTcE2sda07wsSVW+vBemCVzXsXbNXFXVWb
+         PqexFtNsHFClIbtiAGsXQmU93T/hD3wlFUBuFG/uFuo2xJPGC9GhPpQpMl6po1g+GaCV
+         Avnge2p9nFX9Tqa7lrJG4WYnq9iIWWMiz0V8Swl/xXVHnq/1VgN5NXP3gOg84JNr5SMt
+         ITMA==
+X-Gm-Message-State: AOJu0YzbGIeX7Gaz5e/hUQXVEb8edGe4aWsBriLxbrrXGngTmIqijWiH
+	TC6JPm/mhTgFXlpAqD1C8l8wLMvDlFGGttHanDdP33JFHGQYt6EyG3cSLvvHrlDK8CZTwfvq7FM
+	sKtHrjbxJA4yviCbOKnplwsDYza0Yy/mfujuETDkP1RLu5nW/2gFpAWm20Q==
+X-Received: by 2002:a6b:6515:0:b0:7bf:705c:f9cd with SMTP id z21-20020a6b6515000000b007bf705cf9cdmr99564iob.38.1706025323699;
+        Tue, 23 Jan 2024 07:55:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH38iCjX+AEd64T4UT/2KKdkE95022H/qcfVu2tE/vKCgVvGn5gfiViiWPx9v0cG2g2zKjB3g==
+X-Received: by 2002:a6b:6515:0:b0:7bf:705c:f9cd with SMTP id z21-20020a6b6515000000b007bf705cf9cdmr99549iob.38.1706025323389;
+        Tue, 23 Jan 2024 07:55:23 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id x2-20020a029482000000b0046d17aff31bsm3738272jah.157.2024.01.23.07.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 07:55:22 -0800 (PST)
+Date: Tue, 23 Jan 2024 08:55:21 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+ linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+ mika.westerberg@linux.intel.com, rafael.j.wysocki@intel.com,
+ Sanath.S@amd.com
+Subject: Re: [PATCH v2 2/2] PCI: Fix runtime PM race with PME polling
+Message-ID: <20240123085521.07e2b978.alex.williamson@redhat.com>
+In-Reply-To: <20240123104519.GA21747@wunner.de>
+References: <20230803171233.3810944-1-alex.williamson@redhat.com>
+	<20230803171233.3810944-3-alex.williamson@redhat.com>
+	<20240118115049.3b5efef0.alex.williamson@redhat.com>
+	<20240122221730.GA16831@wunner.de>
+	<20240122155003.587225aa.alex.williamson@redhat.com>
+	<20240123104519.GA21747@wunner.de>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56911b37-c316-43b2-8dc9-10f6fd0a398d@gmx.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 09, 2024 at 11:29:19AM +0100, Armin Wolf wrote:
-> Am 09.01.24 um 01:00 schrieb Bjorn Helgaas:
-> > On Sat, Jan 06, 2024 at 11:33:35PM +0100, Armin Wolf wrote:
-> > > Am 04.01.24 um 03:50 schrieb Athul Krishna:
-> > > > On Thursday, January 4th, 2024 at 1:05 AM, Armin Wolf <W_Armin@gmx.de> wrote:
-> > > > > Am 03.01.24 um 19:51 schrieb Athul Krishna:
-> > > > > 
-> > > > > > Hello,
-> > > > > > This is my first time reporting an issue in the kernel.
-> > > > > > 
-> > > > > > Device Details:
-> > > > > > 
-> > > > > > * Asus Zephyrus G14 (||||||GA402RJ)
-> > > > > > * Latest BIOS
-> > > > > > * Arch_x86_64
-> > > > > > * Kernel: 6.6.9
-> > > > > > * Minimal install using archinstall
-> > > > > > 
-> > > > > > ISSUE: Using /dgpu_disable /provided by _asus-nb-wmi _to disable and
-> > > > > > enable dedicated gpu,
-> > > > > > causes system crash and reboots, randomly.
-> > > > > > 9/10 times writing 0 to dgpu_disable will produce an Input/Output
-> > > > > > error, but the value will be changed to 0, half the time system will
-> > > > > > crash and reboot. While writing 1 to it doesn't produce an error, I
-> > > > > > have observed system crash twice just after that.
-> > > > > > 
-> > > > > > Steps to Reproduce:
-> > > > > > 
-> > > > > > * Remove dpgu: echo 1 | sudo tee ../remove (dgpu path)
-> > > > > > * echo 1 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
-> > > > > > * echo 0 | sudo tee /sys/devices/platform/asus-nb-wmi/dgpu_disable
-> > > > > > 
-> > > > > > * echo 1 | sudo tee /sys/bus/pci/rescan
-> > > > > > 
-> > > > > > After writing 0 to dgpu_disable, there's an entry in journal about an
-> > > > > > ACPI bug.
-> > > > > > Output of 'journalctl -p 3' and lspci is attached.
-> > > > > 
-> > > > > Can you share the output of "acpidump" and the content of "/sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof"?
-> > > > > The bmof files contain a description of the WMI interfaces of your machine, which might be important for diagnosing the error.
-> > > > > 
-> > > > Here's the output of 'acpidump > acpidump.out' and 'cat /sys/bus/wmi/devices/05901221-D566-11D1-B2F0-00A0C9062910[-X]/bmof'
-> > > Ok, it seems the ACPI code tries to access an object ("GC00") which does not exist.
-> > > This is the reason why disabling the dGPU fails with -EIO.
+On Tue, 23 Jan 2024 11:45:19 +0100
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> On Mon, Jan 22, 2024 at 03:50:03PM -0700, Alex Williamson wrote:
+> > On Mon, 22 Jan 2024 23:17:30 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
+> > > On Thu, Jan 18, 2024 at 11:50:49AM -0700, Alex Williamson wrote:  
+> > > > To do that I used pm_runtime_get_if_active(), but in retrospect this
+> > > > requires the device to be in RPM_ACTIVE so we end up skipping anything
+> > > > suspended or transitioning.    
 > > > 
-> > > I am unfortunately not that knowledgeable when it comes to PCI problems, i CCed the linux-pci mailing list in hope that
-> > > they can better help you in this regard.
-> >
-> > FWIW, I don't know enough about what's going on here to see a PCI
-> > connection.  I do see a bunch of PCI-related stuff around rfkill, but
-> > I don't think that's involved here.
+> > > How about dropping the calls to pm_runtime_get_if_active() and
+> > > pm_runtime_put() and instead simply do:
+> > > 
+> > > 			if (pm_runtime_suspended(&pdev->dev) &&
+> > > 			    pdev->current_state != PCI_D3cold)
+> > > 				pci_pme_wakeup(pdev, NULL);  
 > > 
-> > I think the path here is this, which doesn't seem to touch anything in
-> > PCI:
-> > 
-> >    dgpu_disable_store
-> >      asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, ..., &result)
-> >        asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, ...)
-> >          asus_wmi_evaluate_method3
-> >            wmi_evaluate_method(ASUS_WMI_MGMT_GUID, ...)
-> >      if (result > 1)
-> >        return -EIO
+> > Do we require that the polled device is in the RPM_SUSPENDED state?  
 > 
-> The issue happens when a PCI bus rescan is done after writing to "dgpu_disable".
-> As a side note a bugzilla bugreport for this issue was recently created:
+> If the device is RPM_SUSPENDING, why immediately resume it for polling?
+> It's sufficient to poll it the next time around, i.e. 1 second later.
 > 
-> https://bugzilla.kernel.org/show_bug.cgi?id=218354
+> Likewise, if it's already RPM_RESUMING or RPM_ACTIVE anyway, no need
+> to poll PME.
 
-Ah, the original email talked about dgpu_disable causing Input/Output
-errors and random crashes just after using dgpu_disable, so it wasn't
-clear to me that the PCI rescan was related.
+I'm clearly not an expert on PME, but this is not obvious to me and
+before the commit that went in through this thread, PME wakeup was
+triggered regardless of the PM state.  I was trying to restore the
+behavior of not requiring a specific PM state other than deferring
+polling across transition states.
 
-Athul, can you capture any information about the crash, e.g., an oops
-or panic message?  Possibly a screenshot or video?
+> This leaves RPM_SUSPENDED as the only state in which it makes sense to
+> poll.
+>
+> > Also pm_runtime_suspended() can also only be trusted while holding the
+> > device power.lock, we need a usage count reference to maintain that
+> > state.  
+> 
+> Why?  Let's say there's a race and the device resumes immediately after
+> we call pm_runtime_suspended() here.  So we might call pci_pme_wakeup()
+> gratuitouly.  So what?  No biggie.
 
-Booting with kernel parameters like "ignore_loglevel boot_delay=60
-lpj=3200000" (might need tweaking and depends on
-CONFIG_BOOT_PRINTK_DELAY) might be needed to slow things down enough
-to capture.
+The issue I'm trying to address is that config space of the device can
+become inaccessible while calling pci_pme_wakeup() on it, causing a
+system fault on some hardware.  So a gratuitous pci_pme_wakeup() can be
+detrimental.
 
-Bjorn
+We require the device config space to remain accessible, therefore the
+instantaneous test against D3cold and that the parent bridge is in D0
+is not sufficient.  I see traces where the parent bridge is in D0, but
+the PM state is RPM_SUSPENDING and the endpoint device transitions to
+D3cold while we're executing pci_pme_wakeup().
+
+Therefore at a minimum, I think we need to enforce that the bridge is
+in RPM_ACTIVE and remains in that state across pci_pme_wakeup(), which
+means we need to hold a usage count reference, and that usage count
+reference must be acquired under power.lock in RPM_ACTIVE state to be
+effective.
+
+> > +			if (bdev) {
+> > +				spin_lock_irq(&bdev->power.lock);  
+> 
+> Hm, I'd expect that lock to be internal to the PM core,
+> although there *are* a few stray users outside of it.
+
+Right, there are.  It's possible that if we only need to hold a
+reference on the bridge we can abstract this through
+pm_runtime_get_if_active(), the semantics worked better to essentially
+open code it in this iteration though.  Thanks,
+
+Alex
+
 
