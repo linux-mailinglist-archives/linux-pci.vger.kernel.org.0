@@ -1,110 +1,203 @@
-Return-Path: <linux-pci+bounces-2478-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2479-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC978838C66
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 11:47:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49BB1838CF9
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 12:09:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BCBF1C22FE6
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 10:47:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DB791C21757
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Jan 2024 11:09:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01BA05C8FD;
-	Tue, 23 Jan 2024 10:45:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2AC5D745;
+	Tue, 23 Jan 2024 11:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WHSJGS+3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C985D8F3;
-	Tue, 23 Jan 2024 10:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6AC5F545;
+	Tue, 23 Jan 2024 11:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706006730; cv=none; b=uJNW0UI2IeGmdltYTjXjPqcE+KCILRd7Oq2Mm32UtvdpV2Y0cv3G9AZycMcRUQngrbir58XRi098plOwonK5Y47XVUGod/dcmKCb4zGmc9roAA9as1pddS2BjZenxHPJiPn9tYCMT15QvA/DKvpuFhyLYG/dAlHzytDpg2hb1ss=
+	t=1706008108; cv=none; b=ZDWCZlYcwbk4AKRIHFCumxrjge64zVNi9erBTg8PZbxOrkAY01kKqctkQ0TyaDcJJ9v4hQzwi6WSIl1lizpph4/suta/GvJvVshGBwhn1u8ps147WZHwkFUOUrZkaAOs4ACUj7s8jQOs/eaDDciK48DQ42Mr2LLlWZ8vHVfVuV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706006730; c=relaxed/simple;
-	bh=QakUB1msMWnHAe3TzOTeuX7uJ1mjP5spjvgGTHzwFuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b+8OZIfoAqLHOL7p0agdtP65MCT4QQlYK6hslEKKqEFYnNgY4Gj6vhvyrWjZYgUO3WfEB2DWh9eHv0zdefoeAX8tZZPUgegDr1S0fqAdvsxAmetxBekVfIHQ0R7IZ4hFnl1lv3UibtrRRxmBThKMVNQEz6uiV0XapMxSROJw5u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 562B62800BBC5;
-	Tue, 23 Jan 2024 11:45:19 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 49DE6382E4; Tue, 23 Jan 2024 11:45:19 +0100 (CET)
-Date: Tue, 23 Jan 2024 11:45:19 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
-	linux-kernel@vger.kernel.org, eric.auger@redhat.com,
-	mika.westerberg@linux.intel.com, rafael.j.wysocki@intel.com,
-	Sanath.S@amd.com
-Subject: Re: [PATCH v2 2/2] PCI: Fix runtime PM race with PME polling
-Message-ID: <20240123104519.GA21747@wunner.de>
-References: <20230803171233.3810944-1-alex.williamson@redhat.com>
- <20230803171233.3810944-3-alex.williamson@redhat.com>
- <20240118115049.3b5efef0.alex.williamson@redhat.com>
- <20240122221730.GA16831@wunner.de>
- <20240122155003.587225aa.alex.williamson@redhat.com>
+	s=arc-20240116; t=1706008108; c=relaxed/simple;
+	bh=ePXcq+3ZYklh/Ja9ctOyMj+QSXTswOpfPk1EoxnOuU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XDms6oNGBbjbFBZHEAKQNWfIG0IgacaoqLLB5DXsD/kfL98f8GT72xgVUuQLbwOfDybIceb37hwjuxOt+2KuvBgs5MIiRCWfUDw5Nb0Qp1f7P7v5hGcSBy24dGUmWc49M6LZDfXdOAWzL4nbRZ6vhZzWbHNqjT8ghwywzSnqxlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WHSJGS+3; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706008104;
+	bh=ePXcq+3ZYklh/Ja9ctOyMj+QSXTswOpfPk1EoxnOuU4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WHSJGS+3u3ESf596ATW3fy0qn2TXktoZ06Uz5ewlpPDDesf2vkDWRY4ohIN1UQU2G
+	 5B520CKex7b/cjHF4YzApi0HsCnwDLfu0N+MKHaV46OWWbL7gXjFGzyr5AI4fmGfWh
+	 LX18pgHn3sZeYDx4HtAsZEdZYMYxgp4QcMBqWqUqFOknwhl961AP9qy1cAJVtjJc0X
+	 Vcu4x/GdUBD21iP3eOWCTWDpw6UxTaUYmGGDLVjM39+ofyez/vvdu3roY7Rm3Q/Jax
+	 jyYby5c7HcVd0z+yH2F21B1DAQqEPuLaVEEaDHmvwzwUcnTt7BEr1sxywPg17uY8mG
+	 rUE1GE3yzdgSw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0FEB437820AA;
+	Tue, 23 Jan 2024 11:08:23 +0000 (UTC)
+Message-ID: <7aa0df3d-ae9d-414d-ad7f-ed7588e70f3e@collabora.com>
+Date: Tue, 23 Jan 2024 12:08:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122155003.587225aa.alex.williamson@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] kselftest: devices: Add sample board file for XPS
+ 13 9300
+Content-Language: en-US
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Shuah Khan <shuah@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: kernelci@lists.linux.dev, kernel@collabora.com,
+ Tim Bird <Tim.Bird@sony.com>, linux-pci@vger.kernel.org,
+ David Gow <davidgow@google.com>, linux-kselftest@vger.kernel.org,
+ Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@chromium.org>,
+ linux-usb@vger.kernel.org, Saravana Kannan <saravanak@google.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Guenter Roeck
+ <groeck@chromium.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240122-discoverable-devs-ksft-v4-0-d602e1df4aa2@collabora.com>
+ <20240122-discoverable-devs-ksft-v4-3-d602e1df4aa2@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240122-discoverable-devs-ksft-v4-3-d602e1df4aa2@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 03:50:03PM -0700, Alex Williamson wrote:
-> On Mon, 22 Jan 2024 23:17:30 +0100 Lukas Wunner <lukas@wunner.de> wrote:
-> > On Thu, Jan 18, 2024 at 11:50:49AM -0700, Alex Williamson wrote:
-> > > To do that I used pm_runtime_get_if_active(), but in retrospect this
-> > > requires the device to be in RPM_ACTIVE so we end up skipping anything
-> > > suspended or transitioning.  
-> > 
-> > How about dropping the calls to pm_runtime_get_if_active() and
-> > pm_runtime_put() and instead simply do:
-> > 
-> > 			if (pm_runtime_suspended(&pdev->dev) &&
-> > 			    pdev->current_state != PCI_D3cold)
-> > 				pci_pme_wakeup(pdev, NULL);
+Il 22/01/24 19:53, Nícolas F. R. A. Prado ha scritto:
+> Add a sample board file describing the file's format and with the list
+> of devices expected to be probed on the XPS 13 9300 machine as an
+> example x86 platform.
 > 
-> Do we require that the polled device is in the RPM_SUSPENDED state?
+> Test output:
+> 
+> TAP version 13
+> Using board file: boards/Dell Inc.,XPS 13 9300.yaml
+> 1..22
+> ok 1 /pci-controller/14.0/usb2-controller/9/camera.device
+> ok 2 /pci-controller/14.0/usb2-controller/9/camera.0.driver
+> ok 3 /pci-controller/14.0/usb2-controller/9/camera.1.driver
+> ok 4 /pci-controller/14.0/usb2-controller/9/camera.2.driver
+> ok 5 /pci-controller/14.0/usb2-controller/9/camera.3.driver
+> ok 6 /pci-controller/14.0/usb2-controller/10/bluetooth.device
+> ok 7 /pci-controller/14.0/usb2-controller/10/bluetooth.0.driver
+> ok 8 /pci-controller/14.0/usb2-controller/10/bluetooth.1.driver
+> ok 9 /pci-controller/2.0/gpu.device
+> ok 10 /pci-controller/2.0/gpu.driver
+> ok 11 /pci-controller/4.0/thermal.device
+> ok 12 /pci-controller/4.0/thermal.driver
+> ok 13 /pci-controller/12.0/sensors.device
+> ok 14 /pci-controller/12.0/sensors.driver
+> ok 15 /pci-controller/14.3/wifi.device
+> ok 16 /pci-controller/14.3/wifi.driver
+> ok 17 /pci-controller/1d.0/0.0/ssd.device
+> ok 18 /pci-controller/1d.0/0.0/ssd.driver
+> ok 19 /pci-controller/1d.7/0.0/sdcard-reader.device
+> ok 20 /pci-controller/1d.7/0.0/sdcard-reader.driver
+> ok 21 /pci-controller/1f.3/audio.device
+> ok 22 /pci-controller/1f.3/audio.driver
+> Totals: pass:22 fail:0 xfail:0 xpass:0 skip:0 error:0
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>   .../devices/boards/Dell Inc.,XPS 13 9300.yaml      | 40 ++++++++++++++++++++++
+>   1 file changed, 40 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml
+> new file mode 100644
+> index 000000000000..ff932eb19f0b
+> --- /dev/null
+> +++ b/tools/testing/selftests/devices/boards/Dell Inc.,XPS 13 9300.yaml	
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# This is the device definition for the XPS 13 9300.
+> +# The filename "Dell Inc.,XPS 13 9300" was chosen following the format
+> +# "Vendor,Product", where Vendor comes from
+> +# /sys/devices/virtual/dmi/id/sys_vendor, and Product comes from
+> +# /sys/devices/virtual/dmi/id/product_name.
+> +#
+> +# See google,spherion.yaml for more information.
 
-If the device is RPM_SUSPENDING, why immediately resume it for polling?
-It's sufficient to poll it the next time around, i.e. 1 second later.
+What if - instead of taking google,spherion.yaml as an example - you create a new
+file named something like
 
-Likewise, if it's already RPM_RESUMING or RPM_ACTIVE anyway, no need
-to poll PME.
+"example,device.yaml"
 
-This leaves RPM_SUSPENDED as the only state in which it makes sense to
-poll.
+that would be a fantasy device, bringing examples for all .. or most of .. the
+currently supported types/devices?
 
+You would also move the nice documentation that you wrote in spherion.yaml to the
+new example,device.yaml and ask to refer to that instead in all of the real device
+specific definitions.
 
-> Also pm_runtime_suspended() can also only be trusted while holding the
-> device power.lock, we need a usage count reference to maintain that
-> state.
+# SPDX-License-Identifier: GPL-2.0 <--- (GPL-2.0 OR MIT) like device trees perhaps?
+#
+# This is the device definition for the Example Device
+# The filename "Example Device" was chosen following the format
+# "Vendor,Product", where:
+#  - Vendor is "Example" and comes from /sys/devices/virtual/dmi/id/sys_vendor
+#  - Product is "Device" and comes from /sys/devices/virtual/dmi/id/product_name
+#
+# ....the rest of the blurb goes here
+#
 
-Why?  Let's say there's a race and the device resumes immediately after
-we call pm_runtime_suspended() here.  So we might call pci_pme_wakeup()
-gratuitouly.  So what?  No biggie.
+- type : .... this that the other
+   devices:
+     - the least amount of device descriptions that you can use for documenting how
+       to write this stuff :-)
 
+Anything against that?
 
-> +			if (bdev) {
-> +				spin_lock_irq(&bdev->power.lock);
+Cheers,
+Angelo
 
-Hm, I'd expect that lock to be internal to the PM core,
-although there *are* a few stray users outside of it.
+> +#
+> +- type: pci-controller
+> +  # This machine has a single PCI host controller so it's valid to not have any
+> +  # key to identify the controller. If it had more than one controller, the UID
+> +  # of the controller from ACPI could be used to distinguish as follows:
+> +  #acpi-uid: 0
+> +  devices:
+> +    - path: 14.0
+> +      type: usb-controller
+> +      usb-version: 2
+> +      devices:
+> +        - path: 9
+> +          name: camera
+> +          interfaces: [0, 1, 2, 3]
+> +        - path: 10
+> +          name: bluetooth
+> +          interfaces: [0, 1]
+> +    - path: 2.0
+> +      name: gpu
+> +    - path: 4.0
+> +      name: thermal
+> +    - path: 12.0
+> +      name: sensors
+> +    - path: 14.3
+> +      name: wifi
+> +    - path: 1d.0/0.0
+> +      name: ssd
+> +    - path: 1d.7/0.0
+> +      name: sdcard-reader
+> +    - path: 1f.3
+> +      name: audio
+> 
 
-Thanks,
-
-Lukas
 
