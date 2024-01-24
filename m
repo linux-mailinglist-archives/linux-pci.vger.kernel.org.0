@@ -1,72 +1,73 @@
-Return-Path: <linux-pci+bounces-2518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 324F983A879
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 12:49:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DB4D83A87C
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 12:49:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5CB61F21E3C
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 11:49:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4097B21F0D
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 11:49:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555C15B200;
-	Wed, 24 Jan 2024 11:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A9962C6A1;
+	Wed, 24 Jan 2024 11:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZQPhwcOO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zx3Sgs3f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DB158223
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 11:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAA059173
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 11:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706096866; cv=none; b=NHSQlUM6QLvc4lyyZ73ccBNQx7oI8CUUlLV6G20FkShssHqeaWRLcmQT23/jjw5NOvZVywzjMIPF9lUjnOqUQEgXUwl1mcgNR/nZiHMQlIBFENd9m2GoarORsEG1WnxSPc/UHZVQ41VxLxG9h/w+rFCK9dBRTCqJ3YuaFR1cfIY=
+	t=1706096873; cv=none; b=uk3keTkvYmsqoeznahlwT/NxOX1rhAQTebxyRRBZpd32LmQ+NOzqZIeL2ROJShKl6QLRcU/ltVsHZt0MXGn57a7u5HsRJgTQl09vLD40VGrR5wGzFvGKPpZ6Mvdn1iWBcZTYz2rIVGwS75I5LbcjHQsDhSK0AJwhC1lXVosKk+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706096866; c=relaxed/simple;
-	bh=dwUFUgXnc97o1JhfPJM4lmSZq785hcoEF4F3egx8Bq4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=eniOLS/D8mLd+XSBQ6BXsxOjEZzOUrfSPc+wUXi1O9aqiAxQLOL1Jn2QeterEZQ5z9ucdzMLivhBbp6dptLGnoof5/7wV97CQKXGrKp1DBgfE5sqiTYXnr/klwx+lMyedznixufVrb/HTqtEBo+96DwKXjoxQXcy1Vkcx+6uVhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZQPhwcOO; arc=none smtp.client-ip=203.254.224.24
+	s=arc-20240116; t=1706096873; c=relaxed/simple;
+	bh=Q2Lv21q+LPYK+1GamQvuvIuUxtbkeVPHvD2B7RxGgdg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
+	 References; b=CA+/OPeD07TDZ1rQeW9xgWNJzpnmnyESYk3ymnRNOzN1/fK/ffEiJpnvxCzkoCfEt8ths+cL6cLLb+JKnDIiDVVMwu5JuGj0PvVJfJTesVTmGMw9bDazG0bahbs6M8Kc4Mji0Hy7r2YIUk9PqCgyI98rqxDE0/upSD3UpYummUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Zx3Sgs3f; arc=none smtp.client-ip=203.254.224.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240124114740epoutp01acdf1da9186eaeafa54f2ee7d7ac4a49~tRg42hSi90196801968epoutp01O
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 11:47:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240124114740epoutp01acdf1da9186eaeafa54f2ee7d7ac4a49~tRg42hSi90196801968epoutp01O
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240124114749epoutp0438e3078de9fbc2de2d1a048826c5340b~tRhBG5G_i1012210122epoutp04y
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 11:47:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240124114749epoutp0438e3078de9fbc2de2d1a048826c5340b~tRhBG5G_i1012210122epoutp04y
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1706096860;
-	bh=FAgkRhdAC59JFAtm6cZa0lcuph+thmUnykW5y5DcQUI=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=ZQPhwcOOfJhIjaSXLhqK2zJoqczs0rv2migJCof/kn3ULLzW8g0KCQYcFiCl24kGr
-	 uQUujZUwy26sFlTqUSfNSSB09LOAnXeUEl5JrqQwmhnA3N3t4owtlU5n8jucRMlSI/
-	 qoZeie0nFR4yq6jC7TUg6KVlsgTyPgUEnJHxS4jQ=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	s=mail20170921; t=1706096869;
+	bh=O+tABnUnHrJhacFqwRIfEaygao34+wSqrWI/LqRW9yA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Zx3Sgs3fErkJhtj11/K5XGyPlpx6jR8LJwuioedMyAO7bYVEEPuS1P+gh+lgMiZ3T
+	 NVt7o7SzJhjecNLlLGUcf6RYbX26Y1P24pHsT3dXplzrQqLd7vNhsdlYo+hBCDT/Qo
+	 XsFRrgq0j2iSeyNF42e/wN2qeKvn8PEopgdN1FX8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
 	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240124114740epcas5p13e64a477aeab25808dfb39ee2f01be06~tRg4XzjGz0304803048epcas5p1s;
-	Wed, 24 Jan 2024 11:47:40 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4TKhyy3jbvz4x9Pv; Wed, 24 Jan
-	2024 11:47:38 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	11.D5.19369.AD8F0B56; Wed, 24 Jan 2024 20:47:38 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1~tQkx79-pI2047220472epcas5p47;
-	Wed, 24 Jan 2024 10:38:50 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240124103850epsmtrp126601239072c5bb26298f097af4e18d4~tQkx6KDW32198721987epsmtrp1T;
-	Wed, 24 Jan 2024 10:38:50 +0000 (GMT)
-X-AuditID: b6c32a50-c99ff70000004ba9-ff-65b0f8da8882
+	20240124114748epcas5p19c19c7a52bd78878d3be50572c99e215~tRhAKg7AO0246702467epcas5p1C;
+	Wed, 24 Jan 2024 11:47:48 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4TKhz65RwRz4x9Px; Wed, 24 Jan
+	2024 11:47:46 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F5.35.09634.2E8F0B56; Wed, 24 Jan 2024 20:47:46 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d~tQk2i396z2401024010epcas5p21;
+	Wed, 24 Jan 2024 10:38:55 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240124103855epsmtrp2a7f6b1794ef3de4fae42c9c2e1221ff7~tQk2h0d2j2380723807epsmtrp2P;
+	Wed, 24 Jan 2024 10:38:55 +0000 (GMT)
+X-AuditID: b6c32a49-159fd700000025a2-69-65b0f8e2a0ec
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	04.6C.08817.9B8E0B56; Wed, 24 Jan 2024 19:38:49 +0900 (KST)
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3F.2E.07368.EB8E0B56; Wed, 24 Jan 2024 19:38:54 +0900 (KST)
 Received: from cheetah.sa.corp.samsungelectronics.net (unknown
 	[107.109.115.53]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240124103847epsmtip26853ef4be44a9903676df0f3deffbbfd~tQkvY2buE0212502125epsmtip2q;
-	Wed, 24 Jan 2024 10:38:47 +0000 (GMT)
+	20240124103852epsmtip251e8ba5a9680c4140a2a0264c5f62669~tQk0CbMz_0276602766epsmtip2a;
+	Wed, 24 Jan 2024 10:38:52 +0000 (GMT)
 From: Shradha Todi <shradha.t@samsung.com>
 To: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -77,86 +78,166 @@ Cc: mturquette@baylibre.com, sboyd@kernel.org, jingoohan1@gmail.com,
 	linux@armlinux.org.uk, m.szyprowski@samsung.com,
 	manivannan.sadhasivam@linaro.org, pankaj.dubey@samsung.com, Shradha Todi
 	<shradha.t@samsung.com>
-Subject: [PATCH v4 0/2] Add helper function to get and enable all bulk
+Subject: [PATCH v4 1/2] clk: Provide managed helper to get and enable bulk
  clocks
-Date: Wed, 24 Jan 2024 16:08:36 +0530
-Message-Id: <20240124103838.32478-1-shradha.t@samsung.com>
+Date: Wed, 24 Jan 2024 16:08:37 +0530
+Message-Id: <20240124103838.32478-2-shradha.t@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmpu6tHxtSDT7cEbN4MG8bm8WSpgyL
+In-Reply-To: <20240124103838.32478-1-shradha.t@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIJsWRmVeSWpSXmKPExsWy7bCmlu6jHxtSDWZdVrd4MG8bm8WSpgyL
 	FV9mslvsfb2V3aKh5zerxabH11gtPvbcY7W4vGsOm8XZecfZLGac38dkcWjqXkaLlj8tLBZr
 	j9xlt7jb0slqcfGUq8WirV/YLf7v2cFu8e/aRhaL3sO1DsIel69dZPZ4f6OV3WPnrLvsHgs2
 	lXpsWtXJ5nHn2h42jydXpjN5bF5S79G3ZRWjx+dNcgFcUdk2GamJKalFCql5yfkpmXnptkre
 	wfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUBvKSmUJeaUAoUCEouLlfTtbIryS0tSFTLy
-	i0tslVILUnIKTAr0ihNzi0vz0vXyUkusDA0MjEyBChOyMw7828Ja8JCz4tmrlAbGD+xdjJwc
-	EgImElOamtm6GLk4hAT2MErcOtXNBOF8YpQ48e4wO4TzjVFiVuNTli5GDrCWr1v9IOJ7GSX+
-	fullgXBamSQ+7uoCm8smoCXR+LWLGSQhIrAYaO6OzawgDrPAEyaJJTf+soBUCQv4Szw5uo8V
-	xGYRUJX4ufwzWDevgJXE1O2f2SAulJdYveEA2CQJgbUcEh3Nk6ESLhKf9r9lgrCFJV4d3wL1
-	kpTEy/42KDtdYuXmGcwQdo7Et81LoOrtJQ5cmQP2D7OApsT6XfoQYVmJqafWgZUwC/BJ9P5+
-	AlXOK7FjHoytLPHl7x4WCFtSYt6xy6wQtofEjLfTwGqEBGIlFixuZZ/AKDsLYcMCRsZVjFKp
-	BcW56anJpgWGunmp5fCoSs7P3cQITq9aATsYV2/4q3eIkYmD8RCjBAezkgjvDcl1qUK8KYmV
-	ValF+fFFpTmpxYcYTYGBNpFZSjQ5H5jg80riDU0sDUzMzMxMLI3NDJXEeV+3zk0REkhPLEnN
-	Tk0tSC2C6WPi4JRqYOrwDwhQVk6sj0hu0bSWLltwNcQ+/X3p/ocbemoqnF6+v787SLNI+/XT
-	uYe+7LT5Zm/tI3Wl7LjhsicGy9/1XTv508nvlujUmdH3+TYvFQniV1u9zeXegbDwqFuOb+yO
-	7ebNeqLi0VR7Mq4t4a192Ly3BVrVc3cvcI13n37p8TyB28t1LwWdty+Lm7KkZq5brkCFlEtd
-	fS7Ldwmh4xu4P/VKPXhx9PYb1fNXAnz7sp9NtV4RMWnOSutPkZ51IVcfC7Guk8oy7dO90rz8
-	hvXCj4wZOxvE1X6vfO8lvknni5jwec/N+5ddmXGzw4v36f+vK0WNfL2f9fxrN+t/WXvGePFG
-	jV7937w8Umax7zq5LJRYijMSDbWYi4oTAd8/t8c4BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWy7bCSvO7OFxtSDS7ssbJ4MG8bm8WSpgyL
+	i0tslVILUnIKTAr0ihNzi0vz0vXyUkusDA0MjEyBChOyMyYseMZYMEuq4vSGP8wNjHtFuxg5
+	OCQETCSm7s/oYuTkEBLYzSjROCW3i5ELyP7EKPH4XjczhPONUeJXx3lmkCqQhlMts9kgEnsZ
+	JY59uMAI4bQySTyauY4RpIpNQEui8WsXWLuIwGJGiVs7NrOCOMwCT5gkltz4ywJSJSwQLLGp
+	9TwbiM0ioCrx/Gs7O4jNK2Al8X76BUaIffISqzccANvNKWAt8fncPrDdEgJHOCR6Nl2FKnKR
+	uN3/nB3CFpZ4dXwLlC0l8fndXjYIO11i5eYZUE/kSHzbvIQJwraXOHBlDgsoNJgFNCXW79KH
+	CMtKTD21DqyEWYBPovf3E6hyXokd82BsZYkvf/ewQNiSEvOOXWaFsD0kls7ohwZeH6PE7etn
+	mCYwys1CWLGAkXEVo2RqQXFuemqxaYFhXmo5PNqS83M3MYLTrpbnDsa7Dz7oHWJk4mA8xCjB
+	wawkwntDcl2qEG9KYmVValF+fFFpTmrxIUZTYABOZJYSTc4HJv68knhDE0sDEzMzMxNLYzND
+	JXHe161zU4QE0hNLUrNTUwtSi2D6mDg4pRqY1CdvzGdmKZXa9uPXVvUyx8KWL0nXatRapnUw
+	rjntFy2wS5V7auPmb+V3fLlfz/nSe3dWO4eWdI+FMm/Ez0bv0vjP+lPD3Pb7Pr8Qd8NfY/Is
+	677DtdsZ38nMqQ/oYF3pdO382fT7zfN0ZX8FLnj6KOBsTPmu6s9zZs1rqMiXim76Ihjv/3tN
+	QuO+awq77ZfE/Gye7RFodtZ2BWeag0LMmh9JRSa8ir2OfcXmjtPXico92u/Kt8/rmdmdec1y
+	BvO23ljmVXY59P3vtFUtVzrKPnPektmevNIoOsrN/1PeGv4zon+Pzrvevdubq+lPq4vWovPL
+	ZJ6fnsGoxrJF/96mqgMZk3zW31BbwaN9SatFiaU4I9FQi7moOBEAFGUtZ0QEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsWy7bCSvO6+FxtSDZY9sLR4MG8bm8WSpgyL
 	FV9mslvsfb2V3aKh5zerxabH11gtPvbcY7W4vGsOm8XZecfZLGac38dkcWjqXkaLlj8tLBZr
 	j9xlt7jb0slqcfGUq8WirV/YLf7v2cFu8e/aRhaL3sO1DsIel69dZPZ4f6OV3WPnrLvsHgs2
-	lXpsWtXJ5nHn2h42jydXpjN5bF5S79G3ZRWjx+dNcgFcUVw2Kak5mWWpRfp2CVwZB/5tYS14
-	yFnx7FVKA+MH9i5GDg4JAROJr1v9uhi5OIQEdjNKzH14gqWLkRMoLinx+eI6JghbWGLlv+fs
-	EEXNTBLt/w6wgSTYBLQkGr92MYMkRASWM0r8PPmUCcRhFvjCJDHp4S4mkBXCAr4SJ2+VgjSw
-	CKhK/Fz+mR3E5hWwkpi6/TMbxAZ5idUbDjBPYORZwMiwilEytaA4Nz232LDAKC+1XK84Mbe4
-	NC9dLzk/dxMjOMi1tHYw7ln1Qe8QIxMH4yFGCQ5mJRHeG5LrUoV4UxIrq1KL8uOLSnNSiw8x
-	SnOwKInzfnvdmyIkkJ5YkpqdmlqQWgSTZeLglGpg0s75XbaO4/P+SR94++7fz1pySv3WzRXN
-	99QXM1qFSc4MVfHjv/KDIYWj6sad6F19UrKJf/K2pgRbnrvy5BVXYlX7jcrSCIkVf9wPfdhZ
-	NC0t9PexdfLPHz5fbppvqXxFeIGyoJ/4+80c4eu6GpLXd6wyTPWMYOd9Pbn4u1fx3J/WZad+
-	+gc9eTZvWlDkosQdOrKNG2WnNnhsalrou3nxsp3M9+7YNAWI/uVPOZ11+912xn98+ZrXN+1M
-	M68u/SKzNPnlRg7WWTOyFn29e80p6fgqm2u5Gb+mHPbx5T33nLe6uDZta59p06Rl7QXmUm2m
-	Cwx/Xnjw7njk++W/Pk/YZq11ZZH2waMc+3Vqv12Z+EeJpTgj0VCLuag4EQAt8+rK4QIAAA==
-X-CMS-MailID: 20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1
+	lXpsWtXJ5nHn2h42jydXpjN5bF5S79G3ZRWjx+dNcgFcUVw2Kak5mWWpRfp2CVwZExY8YyyY
+	JVVxesMf5gbGvaJdjJwcEgImEqdaZrN1MXJxCAnsZpSY92IOG0RCUuLzxXVMELawxMp/z9kh
+	ipqZJGZ9/soCkmAT0JJo/NrFDJIQEVjOKPHz5FMmEIdZ4AuTxKSHu8DahQUCJW5dfwRmswio
+	Sjz/2s4OYvMKWEm8n36BEWKFvMTqDQeYQWxOAWuJz+f2gZ0hBFTzcUYX8wRGvgWMDKsYJVML
+	inPTc5MNCwzzUsv1ihNzi0vz0vWS83M3MYJjQ0tjB+O9+f/0DjEycTAeYpTgYFYS4b0huS5V
+	iDclsbIqtSg/vqg0J7X4EKM0B4uSOK/hjNkpQgLpiSWp2ampBalFMFkmDk6pBqbVU65ssfzs
+	W3j0xv9ZZ8+KnT9bLhwx6aCyi5pSQlLEvotdjw5tWdLNGHtWQ+Qxu1vNpukJW2PErjKbu6ye
+	v7IrevuFjH3TLr5tNdpj7Th9cfl7059r1Tq0Jjr+tdvHc4NV9NOf2f5W/XtX3p+gJZE4j3P1
+	FIZnuw+a7co4cOFD5HLxHy/UnLiuaih5t5iVlb+cfaLJvf9Qe2eP5iRF5Qdakte+iJpuOVHN
+	6Bqx2Uqg10NFUyM1q55Dc6nVyvZbLkwLKrNWrDBbv+6EK+e/krhV3gKPBG+ufz/XS+LSzYq0
+	omO3JW5pym7XrbgaFF3yP4ZDY0kmw6PZDg3xEve6xQpeKu5vFTqYYef14oHVnCYlluKMREMt
+	5qLiRABSbpLx/AIAAA==
+X-CMS-MailID: 20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1
-References: <CGME20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1@epcas5p4.samsung.com>
+X-CMS-RootMailID: 20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d
+References: <20240124103838.32478-1-shradha.t@samsung.com>
+	<CGME20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d@epcas5p2.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-Create a managed API wrapper to get all the bulk clocks and enable them
-as it is a very common practice in many drivers. The second patch uses
-this API to adapt to clk_bulk_* APIs in the exynos driver.
-v1:
- - https://lore.kernel.org/lkml/20231009062216.6729-1-shradha.t@samsung.com/
-v2:
- - https://lore.kernel.org/lkml/20231115065621.27014-1-shradha.t@samsung.com/
- - Addressed Manivannan's comments to improve patch
-v3:
- - https://lore.kernel.org/all/20240110110115.56270-1-shradha.t@samsung.com/
- - Took Marek's suggestion to make a common bulk clk wrapper and use it in
-   the exynos driver
-v4:
- - Addressed Alim and Manivannan's comments
- - Changed enabled->enable and disabled->disable in function name
- - Remove num_clks out parameter as it is not required by user
- - Removed exit callback and used function name directly in release
+Provide a managed devm_clk_bulk* wrapper to get and enable all
+bulk clocks in order to simplify drivers that keeps all clocks
+enabled for the time of driver operation.
 
-Shradha Todi (2):
-  clk: Provide managed helper to get and enable bulk clocks
-  PCI: exynos: Adapt to clk_bulk_* APIs
+Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+---
+ drivers/clk/clk-devres.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/clk.h      | 24 ++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
- drivers/clk/clk-devres.c                | 40 ++++++++++++++++++
- drivers/pci/controller/dwc/pci-exynos.c | 54 ++-----------------------
- include/linux/clk.h                     | 24 +++++++++++
- 3 files changed, 68 insertions(+), 50 deletions(-)
-
+diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+index 4fb4fd4b06bd..cbbd2cc339c3 100644
+--- a/drivers/clk/clk-devres.c
++++ b/drivers/clk/clk-devres.c
+@@ -182,6 +182,46 @@ int __must_check devm_clk_bulk_get_all(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
+ 
++static void devm_clk_bulk_release_all_enable(struct device *dev, void *res)
++{
++	struct clk_bulk_devres *devres = res;
++
++	clk_bulk_disable_unprepare(devres->num_clks, devres->clks);
++	clk_bulk_put_all(devres->num_clks, devres->clks);
++}
++
++int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
++					      struct clk_bulk_data **clks)
++{
++	struct clk_bulk_devres *devres;
++	int ret;
++
++	devres = devres_alloc(devm_clk_bulk_release_all_enable,
++			      sizeof(*devres), GFP_KERNEL);
++	if (!devres)
++		return -ENOMEM;
++
++	ret = clk_bulk_get_all(dev, &devres->clks);
++	if (ret > 0) {
++		*clks = devres->clks;
++		devres->num_clks = ret;
++	} else {
++		devres_free(devres);
++		return ret;
++	}
++
++	ret = clk_bulk_prepare_enable(devres->num_clks, *clks);
++	if (!ret) {
++		devres_add(dev, devres);
++	} else {
++		clk_bulk_put_all(devres->num_clks, devres->clks);
++		devres_free(devres);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all_enable);
++
+ static int devm_clk_match(struct device *dev, void *res, void *data)
+ {
+ 	struct clk **c = res;
+diff --git a/include/linux/clk.h b/include/linux/clk.h
+index 1ef013324237..a005e709b7bd 100644
+--- a/include/linux/clk.h
++++ b/include/linux/clk.h
+@@ -438,6 +438,23 @@ int __must_check devm_clk_bulk_get_optional(struct device *dev, int num_clks,
+ int __must_check devm_clk_bulk_get_all(struct device *dev,
+ 				       struct clk_bulk_data **clks);
+ 
++/**
++ * devm_clk_bulk_get_all_enable - managed get multiple clk consumers and
++ *				  enable all clks
++ * @dev: device for clock "consumer"
++ * @clks: pointer to the clk_bulk_data table of consumer
++ *
++ * Returns success (0) or negative errno.
++ *
++ * This helper function allows drivers to get several clk
++ * consumers and enable all of them in one operation with management.
++ * The clks will automatically be disabled and freed when the device
++ * is unbound.
++ */
++
++int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
++					      struct clk_bulk_data **clks);
++
+ /**
+  * devm_clk_get - lookup and obtain a managed reference to a clock producer.
+  * @dev: device for clock "consumer"
+@@ -960,6 +977,13 @@ static inline int __must_check devm_clk_bulk_get_all(struct device *dev,
+ 	return 0;
+ }
+ 
++static inline int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
++						struct clk_bulk_data **clks)
++{
++
++	return 0;
++}
++
+ static inline struct clk *devm_get_clk_from_child(struct device *dev,
+ 				struct device_node *np, const char *con_id)
+ {
 -- 
 2.17.1
 
