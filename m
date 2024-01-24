@@ -1,129 +1,152 @@
-Return-Path: <linux-pci+bounces-2527-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF37483AD94
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 16:42:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 43EBC83AE07
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 17:10:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EA6C1C25C5F
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 15:42:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 769151C23796
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 16:10:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2597765D;
-	Wed, 24 Jan 2024 15:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E41A7C09A;
+	Wed, 24 Jan 2024 16:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMRd8K2r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Txqt/r9E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019777C087;
-	Wed, 24 Jan 2024 15:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F7540C1B;
+	Wed, 24 Jan 2024 16:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706110945; cv=none; b=ephc6MCXW7uRuZb2Du852efukWw1XgM5OaucGQR+PPG5N9CKkf16xgnxMdxVEejpPB2AIpvUu0UmbqanLzumKUOSZ1SAOHNnz3iakQ2hlCxsfWZZR+ctpBFoSE/4RFifmk4p4Vog5aDTf2OllXjHOrKwteicv0FkOWzqXM+FDyc=
+	t=1706112629; cv=none; b=cKyiHq3o1AstkyJjLv699kI9IEhOTXoutaRzK8zT2XGKIEQK8jP3wkMT7br9VxVQeTlyyd6Yw0NOdjYZ29hTHCNNa3EOxIeU3lzmFhsnRvkg7wjPx7pU8zHhnxt2uNafBGvXr3Om7MPxuPP84tqNWTaFSHPrv8Z6z80wxSFT1Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706110945; c=relaxed/simple;
-	bh=SBoWD63q8kLgyAD+GKynKP95gGumgebOok1RHetlrEc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SZ1cz2CaJsLNPzepycRGh8kQBPHVG9p2AZQfvtkTIcXxch8uX/FltLzBvEUrr7RmeFuPVc2p8dLyQnlhlrifaGgZUN+phmDK6F68iHIwdyPYYNysyxVEJN1xX0dOTM+9xppXrJb72SnwBiEICpY9QvFcy/fC70Mwmd/HZTKkBTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMRd8K2r; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706110944; x=1737646944;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SBoWD63q8kLgyAD+GKynKP95gGumgebOok1RHetlrEc=;
-  b=IMRd8K2r5vRPrGEedaOOiiOsYQ8B3mOcoEbjKN160vHvaaOOFgnxs33z
-   w4DUigu0CVOXZVwvLW44hDP/m0owE6NR5pApps6stgQ/kUzlEbu/B2mng
-   tfdv2Na7tTZveXCkmNlW6tBkqNyaB3m2BWecPeZISpWHV91yx2eWqLHU1
-   XLNIdluPa4r9dLL53FiVce0/Fdrt2OqYF1WxkJChl/5uLdL55GlfZW/xZ
-   qT5HF5hP9hy3C1tr5xVNdMNO0q7l1GfcyX1FzN2sjZIjpAVT3mfb2Cnm+
-   aeItDzyNJlUYH+99ZCz/bqKugmeihELV7HsurXIvszLEF7XZY11oow0/H
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="401538485"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="401538485"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 07:42:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="20754382"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 07:42:19 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 24 Jan 2024 17:42:14 +0200 (EET)
-To: Dan Carpenter <dan.carpenter@linaro.org>
-cc: Jingoo Han <jingoohan1@gmail.com>, 
-    Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-    linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] PCI: dwc: Cleanup in dw_pcie_ep_raise_msi_irq()
-In-Reply-To: <64ef42f0-5618-40fd-b715-0d412121045c@moroto.mountain>
-Message-ID: <d38e9f8f-ade9-8e77-2d19-756f76ecec76@linux.intel.com>
-References: <64ef42f0-5618-40fd-b715-0d412121045c@moroto.mountain>
+	s=arc-20240116; t=1706112629; c=relaxed/simple;
+	bh=SalXPkmNubfGiQcSbtanqRQSq5xrw4Ucd7dpoHNEfPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK9j234Qep87NZq3uV0lVvxO817RC1s/LofeMTfDfhp8gqckRry03BtIj9P9/7uxuKuZ+1Wqk0TRB1/P4fF6chBm7MESy4MNOI02JeZvQq020bEojuFflqrJ3dKt80zAvlE2Vzk5qJq12/PUH6tOnltS5RDWb+Ti84LH4Rt3uFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Txqt/r9E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47ADDC433C7;
+	Wed, 24 Jan 2024 16:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706112629;
+	bh=SalXPkmNubfGiQcSbtanqRQSq5xrw4Ucd7dpoHNEfPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Txqt/r9E4X+x35VNp0w/xCp316LfHogdEXOyL+dfA+JhLsthGLWmBPZVc7aAmwVjs
+	 oAYyBDzF6pCTvE3Lly4F3Q09AEetMXO9i06J7YJEt2ckvA4n0/Jido+oJfC0ObyLWd
+	 XC2ZZ/TG7MAhLyg48x/Ks5U1DNUZ6cctYX02P+ZZnBajhdVaWxe+KG2g5Ln1+DeGt5
+	 g+2lRiDKODDHjOqPZt4M5RPecQLJAK8sAdryi1eIOUMX8OCXr6rnfR7vbISEGCRVZm
+	 MvvhxCEev7ZKdLLQXrqY7CllqJjOzsEzBFlWDa1tEkqBwlX4oQmYwJfGFstKbiZkJp
+	 ODRbW4wYNQvcA==
+Date: Wed, 24 Jan 2024 16:10:24 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, afd@ti.com,
+	srk@ti.com
+Subject: Re: [PATCH v3] dt-bindings: PCI: ti,j721e-pci-host: Add support for
+ J722S SoC
+Message-ID: <20240124-unmatched-plating-019a3055cf5e@spud>
+References: <20240124122936.816142-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-442463817-1706110934=:1372"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XMTtUXZ1FD8n2B8o"
+Content-Disposition: inline
+In-Reply-To: <20240124122936.816142-1-s-vadapalli@ti.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-442463817-1706110934=:1372
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+--XMTtUXZ1FD8n2B8o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 24 Jan 2024, Dan Carpenter wrote:
-
-> I recently changed the alignment code in dw_pcie_ep_raise_msix_irq().
-> The code in dw_pcie_ep_raise_msi_irq() is similar so update it to match
-> as well, just for consistency.  (No effect on runtime, just a cleanup).
+On Wed, Jan 24, 2024 at 05:59:36PM +0530, Siddharth Vadapalli wrote:
+> TI's J722S SoC has one instance of a Gen3 Single-Lane PCIe controller.
+> The controller on J722S SoC is similar to the one present on TI's AM64
+> SoC, with the difference being that the controller on AM64 SoC supports
+> up to Gen2 link speed while the one on J722S SoC supports Gen3 link speed.
 >=20
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Update the bindings with a new compatible for J722S SoC.
+>=20
+> Technical Reference Manual of J722S SoC: https://www.ti.com/lit/zip/spruj=
+b3
+>=20
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
 > ---
-> v4: style improvements
-> v3: use ALIGN_DOWN()
-> v2: new patch
 >=20
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> Hello,
 >=20
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pc=
-i/controller/dwc/pcie-designware-ep.c
-> index 51679c6702cf..d2de41f02a77 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -482,9 +482,10 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, =
-u8 func_no,
->  =09=09reg =3D ep_func->msi_cap + PCI_MSI_DATA_32;
->  =09=09msg_data =3D dw_pcie_ep_readw_dbi(ep, func_no, reg);
->  =09}
-> -=09aligned_offset =3D msg_addr_lower & (epc->mem->window.page_size - 1);
-> -=09msg_addr =3D ((u64)msg_addr_upper) << 32 |
-> -=09=09=09(msg_addr_lower & ~aligned_offset);
-> +=09msg_addr =3D ((u64)msg_addr_upper) << 32 | msg_addr_lower;
-> +
-> +=09aligned_offset =3D msg_addr & (epc->mem->window.page_size - 1);
-> +=09msg_addr =3D ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+> This patch is based on linux-next tagged next-20240124.
+>=20
+> v2:
+> https://lore.kernel.org/r/20240122064457.664542-1-s-vadapalli@ti.com/
+> Changes since v2:
+> - Added fallback compatible for "ti,j722s-pcie-host" as
+>   "ti,j721e-pcie-host" based on Conor's suggestion at:
+>   https://lore.kernel.org/r/20240122-getting-drippy-bb22a0634092@spud/#t
+>=20
+> v1:
+> https://lore.kernel.org/r/20240117102526.557006-1-s-vadapalli@ti.com/
+> Changes since v1:
+> - Dropped patches 1/3 and 2/3 of the v1 series as discussed in the v1
+>   thread.
+> - Updated patch 3/3 which is the v1 for this patch by dropping the checks
+>   for the "num-lanes" property and "max-link-speed" property since the PCI
+>   driver already validates the "num-lanes" property.
+>=20
+> Regards,
+> Siddharth.
+>=20
+>  Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml=
+ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> index b7a534cef24d..ac69deeaf1ee 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> @@ -23,6 +23,10 @@ properties:
+>          items:
+>            - const: ti,j7200-pcie-host
+>            - const: ti,j721e-pcie-host
+> +      - description: PCIe controller in J722S
+> +        items:
+> +          - const: ti,j722s-pcie-host
+> +          - const: ti,j721e-pcie-host
+> =20
+>    reg:
+>      maxItems: 4
+> --=20
+> 2.34.1
+>=20
 
-After you've added the #include in 1/2, for both patches:
+--XMTtUXZ1FD8n2B8o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbE2bwAKCRB4tDGHoIJi
+0jHrAQCIBSaSCKrkq41PAo1JM5MQwnH1H5lerQzNSHd34orjQQD/QiTReBxf2B8K
+0HBXqv1UMcgBysJE8No3ifA4Cdp2vA0=
+=tVT8
+-----END PGP SIGNATURE-----
 
---=20
- i.
-
---8323328-442463817-1706110934=:1372--
+--XMTtUXZ1FD8n2B8o--
 
