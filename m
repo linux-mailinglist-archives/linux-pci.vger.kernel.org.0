@@ -1,174 +1,235 @@
-Return-Path: <linux-pci+bounces-2513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBA8083A467
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 09:43:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6DB083A577
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 10:31:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B29A2818B2
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 08:43:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2E54B2D7F9
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 09:27:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627D11799A;
-	Wed, 24 Jan 2024 08:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25D4AEEC2;
+	Wed, 24 Jan 2024 09:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t5rB2M5+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AIJhfkCv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39561775B
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 08:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E941B271
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 09:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706085808; cv=none; b=K4pwSKEIDaBBnoZGTW6XQ48Nbl40VRmwQl960iLHCPSHNs2D8xlBwmFYNY0gZJiiryQTuXm26PISUR+M0vUHxtEKoCS3uPgK0WulHnu4BjW/ZX1yV6d39rR5LEoCmmo31wl00jvkCSmdkwCscMEL9Lf9VElHmEs8fI1EMuBrB+4=
+	t=1706088310; cv=none; b=nTExVPsWU1L02q6O7c2t27RoqETH4FPunCHTeNr8mYHZAhNte5KvPTFMViMn0nnI1facf/zWyh2i2mV1Ok1zjTSfk1AIjxOpsIJ07C7pKn9tU13NNNff49S+yvPw3QsERucCv41I3/ZQ+Y9hd2oec/Jo/M4DJ9wLpCzfsZfpEaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706085808; c=relaxed/simple;
-	bh=a5+Y4PK8Tvf+sigWvxT2Oizf/v8oqo1GVxi7PwImtVY=;
+	s=arc-20240116; t=1706088310; c=relaxed/simple;
+	bh=GaZnXa6XsQpIYb4yo9o8IhlmIso3DO+1Q0OzIeyZOGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=psD5JlMtyV7R+nTwC9+2kcEpmSrkkI/QmUPgsYPVWyR/HzEWGBWdcrPnZLE3trZ0O1EhFa+nJbZSkbiokUOcJv5afGmDbd1vUlsOmRSiJePvYnoDcEeTrTfZv8kvXcLbC/gsVUHSTD6dfV3pyNxNm0MJymBqGZmq4GMPPf76HHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t5rB2M5+; arc=none smtp.client-ip=209.85.167.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bd5c4cffefso5181364b6e.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 00:43:25 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPDTnJ20gQ/ahLgSWBqiiL8ysSh4z7ZEgTRC3q4ha+G2euLud9ruPP8teyt2QBrkg+YTJK2gKIskFLlFlZG9YCkWvWM4NamXcbyfuSdPBzQMOl93lY3xF+Tg/vdeYbNakwfmpojNqBd1um1PPQnnUjEMF5zFGa54L39cbC1USJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AIJhfkCv; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d427518d52so37725435ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 01:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706085804; x=1706690604; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5F77cepD96Xl+KWE10eagNpd7WlTaV/PHMJWTPQtzTE=;
-        b=t5rB2M5+MAajF2aV9uQKCMpPhUIeDzUSKVnfCNkSHl/CL1QkZJiTOo1juuU6mFlSMA
-         pv1MwOhTUEc0Aop8nlSlEcz3dCt+qRhDkzZONQ8LcgwjQRdFtelJWPKb+l/NutDdspIc
-         6DM7FjDTmNrjrxtrPm5tR04FzonWwrCuhgaovkR8huepuM6LZ4e/wY2KSQNlwBSCEnUt
-         z9N/u6MYNNSHIv63ippwl0nd4QvnQE2VkxQQqxtSurerPLwLu+csuVCxfPcXLX22aaRE
-         Prmstzb7hAB+WRhsmj8ivh/ylHiDBIsOPLLzrpUjoSAWN2X3cI2swI1qV29vLPCTj+4f
-         T0vQ==
+        d=google.com; s=20230601; t=1706088308; x=1706693108; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wNmoGhIYjvtapaZ8omtVSlUol/i2RmR9P90NAqUIL1o=;
+        b=AIJhfkCvtmrfDks+ycbheDRpvrxpIy6kRF4FSZRt2smVihWM4hozV+I5iHNnSr+6du
+         g5fO7HEsmlS2C+WmgPFHlvKO+34sqDg5MeFiiaiXjjqrRqRTgGpHgZD/c8KrhIdPER7f
+         PuFTCeJN44ehHmd2bwuZiaxXyBuvqMwR8QdSVQpK3T66Bqln4ZE18DqHHt6i0Ppe6rSz
+         YDSqzSHWd7oQ2O0+iVbMcXObdXjRGSFGf3J//DpCCPIfUlDYl9f+5IZz3v5Lg7eY4guT
+         gSgXFrJFPZvH1WtVaAhdDM843jx5z/nLBuLND2ijor7MP5bobjNVmxKxoxaA+Y+8u17G
+         fqCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706085804; x=1706690604;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5F77cepD96Xl+KWE10eagNpd7WlTaV/PHMJWTPQtzTE=;
-        b=nbc2N27ZN3gM9u0CejC+0d8PssQdMJwWFUOlwXJVsIcwhuN26jXaVdvMAyWomJMHoA
-         ZlU3lVws6XAmcCsJVR+Hq9q6ohKngfy8Xba0yrYA4h6x8ncKv8qOf7wT4dqm0gr5El/g
-         jC9qqvAraeU+RP3qLnGD3xJG21wlBB/MO0qzRYFIWJ0XPaVYCTCDwf7ycMC5IwqKXG90
-         jOcYy6eSlztXOJ2DRCHIEZlqJ7Q85sxNnqU3wwFpC66H66+/LfFZBTaaFUd861eu0wLE
-         8QELuRmukEDQotxjEp47tYusJh+6GjNowSCbMYMCkJQBjyRkzhQ5UqSCVhTVnT3O7Gnx
-         EWlw==
-X-Gm-Message-State: AOJu0YwKyV6HkiL9y0eBgpZrlYtP5yT2/YjxH1igtTyUEAH4Nb62d7Vy
-	jNkryxQaczkfnOxmL1IW2h1BVIn26KEiAHAx59zlFUTEQxd9WZZKwmspNGTqIg==
-X-Google-Smtp-Source: AGHT+IHKCJEXy30SfEdm+8xbyObjZ+0ZwuX9yqOA4WKKW5OGso/7AlJuDblMWxjiQyWpjfRUI6IqJA==
-X-Received: by 2002:a05:6808:11c9:b0:3bd:9ff7:6051 with SMTP id p9-20020a05680811c900b003bd9ff76051mr1163124oiv.72.1706085804661;
-        Wed, 24 Jan 2024 00:43:24 -0800 (PST)
-Received: from thinkpad ([117.217.189.109])
-        by smtp.gmail.com with ESMTPSA id s36-20020a056a0017a400b006dd89752e8asm1067422pfg.22.2024.01.24.00.43.18
+        d=1e100.net; s=20230601; t=1706088308; x=1706693108;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wNmoGhIYjvtapaZ8omtVSlUol/i2RmR9P90NAqUIL1o=;
+        b=EbmH//ISRq+g4cfFESUb4cLrZF8g1ae9K86/N9i9+oZaewb3GLoqO8iPVVpxk9wv4s
+         cnBaQMD7Ohbqm4K/wiK0QCXuoTZ6brT+Kq2HXpWGBTcnpgf+kNcheHF/V9MbgSLfNaKa
+         3IFuU7G5avW4iOFEOwhR4if7kv+LLumBBMTVZrtqZQcPllrYUImXGEWm82a248kiDmIX
+         telr2kk8qfNrZf7iXbAcw/IiFUjt0cbB8/jTV7LvPX1Oh15YPIy39y6p8aiRnwBo9Pj7
+         A7sxpC/JYbllFj/DqUvJJ3Y8klkCVA/u8JXn5XyMMZ5Ffrc1+UVe90bTMxTLkw6LnCgF
+         jbPw==
+X-Gm-Message-State: AOJu0Yyzkolqfz7MXAyRVHad9/PEF0Eav7oTya4b89j36K9Z2Y9M7joP
+	nGtFFn915dRcS58RAUa+Q5gqEcs983Fj4ZB+ng/gISGoXL+Hr0ZsOY1Ub9476B0pIF6eG6nv18A
+	JQHb6
+X-Google-Smtp-Source: AGHT+IEmV1Y1VUIwS1O0AKu8nxVenRpi8tzr7+bX+vC9RLMT5gh9tD0jnLTELtipIu0TQOIj5OOWvw==
+X-Received: by 2002:a17:903:245:b0:1d7:3d40:3cd6 with SMTP id j5-20020a170903024500b001d73d403cd6mr928357plh.1.1706088307466;
+        Wed, 24 Jan 2024 01:25:07 -0800 (PST)
+Received: from google.com (108.93.126.34.bc.googleusercontent.com. [34.126.93.108])
+        by smtp.gmail.com with ESMTPSA id q13-20020a170902c9cd00b001d71eedae33sm8309787pld.45.2024.01.24.01.25.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 00:43:24 -0800 (PST)
-Date: Wed, 24 Jan 2024 14:13:13 +0530
-From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
-	linux@armlinux.org.uk, m.szyprowski@samsung.com,
-	pankaj.dubey@samsung.com
-Subject: Re: [PATCH v3 1/2] clk: Provide managed helper to get and enable
- bulk clocks
-Message-ID: <20240124084313.GD4906@thinkpad>
-References: <20240110110115.56270-1-shradha.t@samsung.com>
- <CGME20240110110156epcas5p36bac4093be0fa6eaa501d7eaed4d43d3@epcas5p3.samsung.com>
- <20240110110115.56270-2-shradha.t@samsung.com>
- <20240120150303.GB5405@thinkpad>
- <05ea01da4e92$0357d310$0a077930$@samsung.com>
+        Wed, 24 Jan 2024 01:25:07 -0800 (PST)
+Date: Wed, 24 Jan 2024 14:54:58 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>, Doug Zobel <zobel@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Xiaolei Wang <xiaolei.wang@windriver.com>
+Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
+Message-ID: <ZbDXahCrh-k__k82@google.com>
+References: <20240112093006.2832105-1-ajayagarwal@google.com>
+ <20240119204211.GA185359@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <05ea01da4e92$0357d310$0a077930$@samsung.com>
+In-Reply-To: <20240119204211.GA185359@bhelgaas>
 
-On Wed, Jan 24, 2024 at 12:23:15PM +0530, Shradha Todi wrote:
+On Fri, Jan 19, 2024 at 02:42:11PM -0600, Bjorn Helgaas wrote:
+> [+cc Bjorn A, Fabio, Xiaolei, who reported the v4 issue]
 > 
+> On Fri, Jan 12, 2024 at 03:00:06PM +0530, Ajay Agarwal wrote:
+> > In dw_pcie_host_init() regardless of whether the link has been
+> > started or not, the code waits for the link to come up. Even in
+> > cases where start_link() is not defined the code ends up spinning
+> > in a loop for 1 second. Since in some systems dw_pcie_host_init()
+> > gets called during probe, this one second loop for each pcie
+> > interface instance ends up extending the boot time.
 > 
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 20 January 2024 20:33
-> > To: Shradha Todi <shradha.t@samsung.com>
-> > Cc: linux-clk@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-
-> > soc@vger.kernel.org; mturquette@baylibre.com; sboyd@kernel.org;
-> > jingoohan1@gmail.com; lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; krzysztof.kozlowski@linaro.org;
-> > alim.akhtar@samsung.com; linux@armlinux.org.uk;
-> > m.szyprowski@samsung.com
-> > Subject: Re: [PATCH v3 1/2] clk: Provide managed helper to get and enable bulk
-> > clocks
+> s/start_link()/.start_link()/ to hint that this is a function pointer,
+> not a function name in its own right (also below).
+> s/1/one/ to be consistent.
+> s/pcie/PCIe/ to follow spec usage.
+> 
+Sure, will fix it in the patch series.
+
+> > Wait for the link up in only if the start_link() is defined.
 > > 
-> > On Wed, Jan 10, 2024 at 04:31:14PM +0530, Shradha Todi wrote:
-> > > Provide a managed devm_clk_bulk* wrapper to get and enable all bulk
-> > > clocks in order to simplify drivers that keeps all clocks enabled for
-> > > the time of driver operation.
-> > >
-> > > Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> > > ---
-> > >  drivers/clk/clk-devres.c | 41
-> > ++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/clk.h      | 25 ++++++++++++++++++++++++
-> > >  2 files changed, 66 insertions(+)
-> > >
-> > > diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c index
-> > > 4fb4fd4b06bd..05b0ff4bc1d4 100644
-> > > --- a/drivers/clk/clk-devres.c
-> > > +++ b/drivers/clk/clk-devres.c
-> > > @@ -102,6 +102,7 @@
-> > EXPORT_SYMBOL_GPL(devm_clk_get_optional_enabled);
-> > >  struct clk_bulk_devres {
-> > >  	struct clk_bulk_data *clks;
-> > >  	int num_clks;
-> > > +	void (*exit)(int num_clks, const struct clk_bulk_data *clks);
-> > >  };
-> > >
-> > >  static void devm_clk_bulk_release(struct device *dev, void *res) @@
-> > > -182,6 +183,46 @@ int __must_check devm_clk_bulk_get_all(struct device
-> > > *dev,  }  EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
-> > >
-> > > +static void devm_clk_bulk_release_all_enabled(struct device *dev,
-> > > +void *res) {
-> > > +	struct clk_bulk_devres *devres = res;
-> > > +
-> > > +	if (devres->exit)
-> > > +		devres->exit(devres->num_clks, devres->clks);
-> > > +
-> > > +	clk_bulk_put_all(devres->num_clks, devres->clks); }
-> > > +
-> > > +int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
-> > > +				  struct clk_bulk_data **clks, int *num_clks)
-> > 
-> > What is the user supposed to do with "num_clks" when you are already handling
-> > the enable part?
-> > 
+> > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> > ---
+> > v4 was applied, but then reverted. The reason being v4 added a
+> > regression on some products which expect the link to not come up as a
+> > part of the probe. Since v4 returned error from dw_pcie_wait_for_link
+> > check, the probe function of these products started to fail.
 > 
-> Since the initial clk_bulk_get_all was returning the num_clks value, the thought was to maintain this
-> as the user might want to have a check in their driver whether x number of clocks were successfully
-> retrieved and enabled.
+> I know this part doesn't get included in the commit log, but I think
+> it would be nice to include the relevant commits here:
 > 
+>   da56a1bfbab5 ("PCI: dwc: Wait for link up only if link is started")
+>   c5097b9869a1 ("Revert "PCI: dwc: Wait for link up only if link is started"")
+> 
+> because the latter includes details about the actual failure, so we
+> can review this with that platform in mind.
+> 
+Sure, will add the details in the patch series.
 
-IIUC, the returned clock count is only used for enabling or disabling the
-clocks later. Since you are already handling it inside this API, I do not see a
-necessity to return the count.
+> > Changelog since v4:
+> >  - Do not return error from dw_pcie_wait_for_link check
+> > 
+> >  .../pci/controller/dwc/pcie-designware-host.c | 12 +++++++----
+> >  drivers/pci/controller/dwc/pcie-designware.c  | 20 ++++++++++++-------
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+> >  3 files changed, 22 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > index 7991f0e179b2..e53132663d1d 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > @@ -487,14 +487,18 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> >  	if (ret)
+> >  		goto err_remove_edma;
+> >  
+> > -	if (!dw_pcie_link_up(pci)) {
+> > +	if (dw_pcie_link_up(pci)) {
+> > +		dw_pcie_print_link_status(pci);
+> > +	} else {
+> >  		ret = dw_pcie_start_link(pci);
+> >  		if (ret)
+> >  			goto err_remove_edma;
+> > -	}
+> >  
+> > -	/* Ignore errors, the link may come up later */
+> > -	dw_pcie_wait_for_link(pci);
+> > +		if (pci->ops && pci->ops->start_link) {
+> > +			/* Ignore errors, the link may come up later */
+> > +			dw_pcie_wait_for_link(pci);
+> > +		}
+> > +	}
+> >  
+> >  	bridge->sysdata = pp;
+> >  
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 250cf7f40b85..c067d2e960cf 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -645,9 +645,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
+> >  	dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
+> >  }
+> >  
+> > -int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > +void dw_pcie_print_link_status(struct dw_pcie *pci)
+> >  {
+> >  	u32 offset, val;
+> > +
+> > +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > +	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> > +
+> > +	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
+> > +		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
+> > +		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
+> > +}
+> > +
+> > +int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > +{
+> >  	int retries;
+> >  
+> >  	/* Check if the link is up or not */
+> > @@ -663,12 +674,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> >  		return -ETIMEDOUT;
+> >  	}
+> >  
+> > -	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > -	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> > -
+> > -	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
+> > -		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
+> > -		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
+> > +	dw_pcie_print_link_status(pci);
+> >  
+> >  	return 0;
+> >  }
+> 
+> This part (pcie-designware.c and pcie-designware.h changes) could
+> arguably be in a separate patch so they're not a distraction from the 
+> important functional change.
+> 
+Sure, will separate it out in the patch series.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 55ff76e3d384..164214a7219a 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -447,6 +447,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
+> >  void dw_pcie_iatu_detect(struct dw_pcie *pci);
+> >  int dw_pcie_edma_detect(struct dw_pcie *pci);
+> >  void dw_pcie_edma_remove(struct dw_pcie *pci);
+> > +void dw_pcie_print_link_status(struct dw_pcie *pci);
+> >  
+> >  int dw_pcie_suspend_noirq(struct dw_pcie *pci);
+> >  int dw_pcie_resume_noirq(struct dw_pcie *pci);
+> > -- 
+> > 2.43.0.381.gb435a96ce8-goog
+> > 
 
