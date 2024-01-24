@@ -1,69 +1,69 @@
-Return-Path: <linux-pci+bounces-2516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98DF183A56D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 10:28:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61FE083A560
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 10:27:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1CCB4B2D04D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 09:27:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 181141F22A49
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Jan 2024 09:27:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7023C17C6B;
-	Wed, 24 Jan 2024 09:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E12A17BC6;
+	Wed, 24 Jan 2024 09:26:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjy8+86Y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ErdTiBmt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58EA17C62
-	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 09:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB68817C62
+	for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 09:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706088362; cv=none; b=Q15+DY86UAfaGYQjDNnMFR9HTvw1bB13D4e120kXKkkhPFy+2rdvL3ACLmtaqQGPZRaYSQanGwHJT7s2ZxwYThELZ6i1PP40HdsmzXRPZtXhEgPH5VlOllIqJ+yENQBgn0cdUk90+lUkvqvV+vaA6cMBFAmmfcBUokugTpwtOfE=
+	t=1706088367; cv=none; b=j4FllRyH2DIDkPExmDLkyEYu4el526Hh5AJGMLte0NMXZq6hXnyyw/AzsA0zX9vM7FHUylJllCbtldbERDCG3WCoh5KMvgwxZyh0MDzSkYpyN+KkTFjH8RL3jmf9vBAUTiYt478VrqUk8hkqygPf7yy3WEdy5vZs+WASy6jIBug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706088362; c=relaxed/simple;
-	bh=/T4qp7NeBxf2y4VlW3CTSxvFocyExxLNjf4XK9Y98ok=;
+	s=arc-20240116; t=1706088367; c=relaxed/simple;
+	bh=yFNikLmen+a8FyJL+DWGcDRPH56JYeRJ47yOImVxRrI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QtxqBHhheLudh/zqidR7qhOGqebEGSa5kc2f9t0/XRAuhddu7+CSWaIQGP6w/F/lfgs7iD07iTPYwotOZ5GbooEZQoAt5U+PmV85KnN1GlaeiPuuayC3ECFLPIUTg5Y2yBoBkyHfsaWFjy4MSF5p41Pi3zxsJu4/GG/0kR34dhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gjy8+86Y; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=ZEoHnZHB/Y/H3Ai2rqK8WoML4tInLMmo0HHQSpPazW46pm7I6eqntZo5zPWDVot5PxjdLZZKgYypuEuUYYh9WpT9+Di+eMM3bFWxQYYAxtcWMcS4f1Y6e0sZqKLDg+7rZNei4MPoQX/yiqEbOzFtDLH/bbFdZiP3twtYoSV8a40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ErdTiBmt; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-602990c3b65so12855537b3.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 01:26:00 -0800 (PST)
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso7716585276.1
+        for <linux-pci@vger.kernel.org>; Wed, 24 Jan 2024 01:26:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706088360; x=1706693160; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706088365; x=1706693165; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MWHRVmzUr4KBxNqEMy2tpsvz4kpYJ3pdbxTLEf+rBg4=;
-        b=gjy8+86YHv7k9E4nuCW8V1Q9odx2tQ68pWZ/xxsSWBTAnjs7lq/dNOWg2Su2qvfiVX
-         pfifvFQrREEUTwrMSPEFBOLjwhFZ8ah3JYIICe+1nBljK38E77vcONYRjGRdKMzjPvRO
-         4cjHyIt89oO89QjgxDqwAlDObt9HD+z+zFRwrd/ZFSPsrUUQqzXdxT6c/QYIvRt77uwR
-         2NIe/Jcdgl7dPnLLpDXmyZDecx9Z6sdLkn0lGV8uAHNcT5rrLZgjvFxYWaEqw54dljM/
-         qIp0P996ZWqrkizkN8LJ9871e9wGG0K9wjp5KXc0yeDnLGNQ1BYXE0aYRih/FiD1ZWcD
-         laNg==
+        bh=aD5F04IP2GzMz61vo2l6voOzlKXJ9JFRvBWtw7JtpAI=;
+        b=ErdTiBmtxZK49ikaZJ5c/zC0PBsZXBY8K6GCFOdCbWc6f+ws4qWrSV90q/DEtZ62QG
+         4HcLUXCQyjMd74z+DisbeGzw6IbDZ5IT2NZkE53k9nnyi54IR9NLzn2cDNY6AHrY26rQ
+         YDbaznG41BGLNzQhfe6B3PiLJNvx0R3jafC5Va46L6epCe5mffL5uTPbD3lce8x8hBJn
+         H/KJgi5kLlYn9EOzAuywJwrnYN6k2yJrgDny3fu6v1D+AiWqh/lWRGwrFdtUXYz+7cOo
+         V0gVrUUxe4Z3ioDV35kSMP5p/h9pgiatEeYy/N6L1qHdykCLrkVW0wiYUzbEW0fDuZLm
+         yjaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706088360; x=1706693160;
+        d=1e100.net; s=20230601; t=1706088365; x=1706693165;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MWHRVmzUr4KBxNqEMy2tpsvz4kpYJ3pdbxTLEf+rBg4=;
-        b=lfNBPq3rfK44JA4puwAzY61bNSJK6YvS9txKc2+6Iu0euWnLKj7XmRFSM7vaRKroYm
-         tPIEZnbeUsa4RJSPE2dMnPcnTLaS9qQrsw3p+gEkAjmgl3CsBuik1PaHCN8YAA+nih4U
-         BSft/ekAi60R8Wwak/8CFdi2j/v8D8PmFh2C76HlbQMl73K4pSdxCwMVYo6KJc0Ectwd
-         LXYSdkBoVJ9LwKghCCSh/lUKJSbCV4dJ8J5mAVf5SXMZn4zn5eUuGgC3huaz/1VMzi0p
-         k+4TU7H+6TwkkQwT/QzdiacETLpoqSnwO2FxeNXJgExwuYs126bTACemUviR6ubRiOTj
-         LwvA==
-X-Gm-Message-State: AOJu0Yxmgcot/G/QKG8beug1/G/cT8vrFCeDyV7BdHdCNm2kL+GWAW6M
-	gEn9cB/Kg0oTZ2kk3R8y84XM6u1GbTYDhZOlIjWJWgEmZaYa+AamfQNpvztWf0lBTRV0j4e7H4J
-	RkO91oW5lIXdWWE+E3GaSkg==
-X-Google-Smtp-Source: AGHT+IGhFhiCpwOPxI3ZTCpAKwgK4gpBc7OUdyO0zxBSWFeFdsh+XfrbsoGJJ1PqBfUZB+AQjZZxzXp0cWaOpuQaWA==
+        bh=aD5F04IP2GzMz61vo2l6voOzlKXJ9JFRvBWtw7JtpAI=;
+        b=XHXxqZSpV864lBjtYOXdxfEtFpT/62kvdgiAjE0JJKvpi568C//5K2SGuMKldH84Db
+         bCkj3J5OXTWNENrN0WvuuM5FbWAUBFg2rOEae39Q4pbBHiaCiXxcmNWSmAiT4eoQc0dL
+         UXGWUv7dV0jJOuSd13LqeYQJ9fgki86H9HqiQMtp8sfT9q0eLCuNU3bJpD4Pz/HykRej
+         5foQlCrFk4zBA0NmoV5JPlOkCgCepzzCgDQ1uvzwluddwgcH0ViESBrv1aTfPXJCCs66
+         sGOQFkx6EchNWn1fVCdGHIX+5jGDnCNCxEu+B45bYcj1295slv2eg/XnvVxyPcuT5VxO
+         q/5Q==
+X-Gm-Message-State: AOJu0Yy5xl5M67W3YqYzv51nperay7/OGEdZUavmlUYinIDlRJNOJXDw
+	qD5e6oPQIlHPJ5bRCI1KL2cxbWrRUZN3Y7V/MaK99yMbz9qzRS/LqYri4Wbb2vg7ZEH56wjtucd
+	LFB/5fP9VVhmxs5Vu0G8efg==
+X-Google-Smtp-Source: AGHT+IGpm5pbUKRaua3G8PxDx1Ii5KdghkY8OgO/jjvezXQyRzb0EBmYxWPiqfQP1GK9R1juO+clB3FjhrvcfTFDYw==
 X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a81:9982:0:b0:5f8:b9b8:b120 with SMTP
- id q124-20020a819982000000b005f8b9b8b120mr272205ywg.2.1706088359988; Wed, 24
- Jan 2024 01:25:59 -0800 (PST)
-Date: Wed, 24 Jan 2024 14:55:32 +0530
+ (user=ajayagarwal job=sendgmr) by 2002:a05:6902:b16:b0:dc2:4469:e9ea with
+ SMTP id ch22-20020a0569020b1600b00dc24469e9eamr241996ybb.11.1706088364797;
+ Wed, 24 Jan 2024 01:26:04 -0800 (PST)
+Date: Wed, 24 Jan 2024 14:55:33 +0530
 In-Reply-To: <20240124092533.1267836-1-ajayagarwal@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -73,8 +73,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240124092533.1267836-1-ajayagarwal@google.com>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240124092533.1267836-2-ajayagarwal@google.com>
-Subject: [PATCH v1 1/2] PCI: dwc: Add helper function to print link status
+Message-ID: <20240124092533.1267836-3-ajayagarwal@google.com>
+Subject: [PATCH v1 2/2] PCI: dwc: Wait for link up only if link is started
 From: Ajay Agarwal <ajayagarwal@google.com>
 To: Jingoo Han <jingoohan1@gmail.com>, Johan Hovold <johan+linaro@kernel.org>, 
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jon Hunter <jonathanh@nvidia.com>, 
@@ -86,68 +86,59 @@ To: Jingoo Han <jingoohan1@gmail.com>, Johan Hovold <johan+linaro@kernel.org>,
 Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add helper function `dw_pcie_print_link_status` to print the link
-speed and width. This function can be called from various places
-to print the link status when desired.
+In dw_pcie_host_init(), regardless of whether the link has been
+started or not, the code waits for the link to come up. Even in
+cases where .start_link() is not defined the code ends up
+spinning in a loop for one second. Since in some systems
+dw_pcie_host_init() gets called during probe, this one second
+loop for each PCIe interface instance ends up extending the boot
+time.
 
 Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 20 +++++++++++++-------
- drivers/pci/controller/dwc/pcie-designware.h |  1 +
- 2 files changed, 14 insertions(+), 7 deletions(-)
+This is actually patch v6 for [1] which I have made a part of the
+patch series.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 250cf7f40b85..c067d2e960cf 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -645,9 +645,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
- 	dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
- }
+v4 [2] was applied, but then reverted [3]. The reason being v4 added
+a regression on some products which expect the link to not come
+up as a part of the probe. Since v4 returned error from
+dw_pcie_wait_for_link check, the probe function of these products
+started to fail.
+
+[1] https://lore.kernel.org/all/20240112093006.2832105-1-ajayagarwal@google.com/
+[2] https://lore.kernel.org/all/20230412093425.3659088-1-ajayagarwal@google.com/
+[3] https://lore.kernel.org/all/20230706082610.26584-1-johan+linaro@kernel.org/
+
+ drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 7991f0e179b2..e53132663d1d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -487,14 +487,18 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (ret)
+ 		goto err_remove_edma;
  
--int dw_pcie_wait_for_link(struct dw_pcie *pci)
-+void dw_pcie_print_link_status(struct dw_pcie *pci)
- {
- 	u32 offset, val;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-+
-+	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-+		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-+		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-+}
-+
-+int dw_pcie_wait_for_link(struct dw_pcie *pci)
-+{
- 	int retries;
+-	if (!dw_pcie_link_up(pci)) {
++	if (dw_pcie_link_up(pci)) {
++		dw_pcie_print_link_status(pci);
++	} else {
+ 		ret = dw_pcie_start_link(pci);
+ 		if (ret)
+ 			goto err_remove_edma;
+-	}
  
- 	/* Check if the link is up or not */
-@@ -663,12 +674,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
- 		return -ETIMEDOUT;
- 	}
+-	/* Ignore errors, the link may come up later */
+-	dw_pcie_wait_for_link(pci);
++		if (pci->ops && pci->ops->start_link) {
++			/* Ignore errors, the link may come up later */
++			dw_pcie_wait_for_link(pci);
++		}
++	}
  
--	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
--	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
--
--	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
--		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
--		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-+	dw_pcie_print_link_status(pci);
+ 	bridge->sysdata = pp;
  
- 	return 0;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 55ff76e3d384..164214a7219a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -447,6 +447,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
- int dw_pcie_edma_detect(struct dw_pcie *pci);
- void dw_pcie_edma_remove(struct dw_pcie *pci);
-+void dw_pcie_print_link_status(struct dw_pcie *pci);
- 
- int dw_pcie_suspend_noirq(struct dw_pcie *pci);
- int dw_pcie_resume_noirq(struct dw_pcie *pci);
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
