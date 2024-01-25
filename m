@@ -1,236 +1,159 @@
-Return-Path: <linux-pci+bounces-2541-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2542-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8450683C109
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 12:38:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 575F683C2A2
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 13:36:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 126401F26194
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 11:38:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0530A292E6E
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 12:36:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35CC32C699;
-	Thu, 25 Jan 2024 11:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FDCB45950;
+	Thu, 25 Jan 2024 12:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gR2Fz18k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hssU5OUD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2EE2C68F
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 11:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A490035280
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 12:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706182537; cv=none; b=aKy33a3dHEQ/PjBLjut9pQjtIqY3nmMbYzmlrFmcuNmbdiBBY8YHfHzv6cIhLOKGGjXli5AqpP0bxGcIsf9O85+OkfNqMaA8ql7wd8fabz6dQPx7gcQ6QPgJIZIi8Sp6BqTJgq/ilUHwQEV0gVCjJ57YgjXItxTMb8KDm87JpU4=
+	t=1706186160; cv=none; b=Aj7y/0XlEuuFNo3SjnH0WFJs9+m01nvmBrgAehFv+08OgEMYaxASFIK4j28liJJVOfU4RYsoFq3TdYcf2Z5Ln/DOFiUOyeRDQK4BQ6JYVLfW6ymDr6LYfahfj44QWYydn5W9+wNFb2qHWnOMQxCXx2awm2GKpLzU8AGFQDz6Izc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706182537; c=relaxed/simple;
-	bh=QkSifBmhNnh9J/ox6L1kLoVfm7f2dkDpGrgfAkkmiqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=O7pdWQGVoLxR7sUumjqW2scIZq2qkcXIoiLtnqd+zMRz6kBZ/GYWRq45hnWRNfhSt/RT46hmngLo8NnJH6+mfcYeN3kV5eOWcT9NmCVkYmNJObMseC4ufUllPu+YSfIusxYZZQSxMg9HxaDnzh/KnGxkSjhXesSEHwmyTdD3p44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gR2Fz18k; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706182534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ND0M38vqg/f3DX4i2e40ekWPh2ueLITyqRBQvx6nxv0=;
-	b=gR2Fz18kJ4yINuNndOQcm7OvQ1KfOxzJpJ5f7EHdrwjdP4kVCaU1R02JjPpFCaL7Em9j7z
-	HatCM0UHfc/QfB65F8PhJvw11cTxrHh2kD5rdwhTOWWzVN7LnLYe+xB8yfqGRwDIU36QLC
-	WtBgu9CZVpRBLSdSjNykq5hKvU53D9k=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-250-K4fKE0D9NpKXifSw-sf4sg-1; Thu, 25 Jan 2024 06:35:32 -0500
-X-MC-Unique: K4fKE0D9NpKXifSw-sf4sg-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-5fc6463b0edso108736437b3.0
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 03:35:32 -0800 (PST)
+	s=arc-20240116; t=1706186160; c=relaxed/simple;
+	bh=dW0TbzH85SjVANvAD4Sg0V7ktB0kgMzX7+8Ml8WnKYA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uBGmAIis2T0C4KbpNqmZqTxwPrXAXu/Zv9vEnK6SXc1kYKjdLzBAI0Ge1I1jSas/riVKOZr3pVS/xnnrfcJnQpmNusv4g+2aNrUsEiJqw01ts9dEcb5i7jw5EK0r6iEx5m4dGJo7BwYuMW8m4vRiHthDkkUrK52K3ay/WsqXLiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hssU5OUD; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40ed1e78835so5248505e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 04:35:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706186157; x=1706790957; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UKB+WrASShPGpvGZObpE9E8WIuSvj1nO7qysCIW9sOs=;
+        b=hssU5OUDfQhkxpresbD/LtQJ9XIb6agRYoXsWjzlYOEH0K1z4qnptIbHErbuO/mMEM
+         9clo4MDqSUYVunrqCp+GwdXjzocBLwKCCiCt78HFWj25khsKyPUCvKk0STGgO0rLWkhr
+         hK8iPBm8lqW3tJgkcAMvB31iixnrm/ec3aEDpt/2Kw9NulS6mBXukQAn/aNSlIn9fRY3
+         wNDt3LFFc8mTvtIvu8lbefDT891b8hhVdD5gaRemMl7Ml2UWdWhIk8v4CP+yJZGz2I9v
+         CXpDOQ+E4oqHOAaboE8QdtqBKpyfv0L1Ta1JmIhI43fPIN75c2hi7SfWp8CXkoe0OBPe
+         qhvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706182531; x=1706787331;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ND0M38vqg/f3DX4i2e40ekWPh2ueLITyqRBQvx6nxv0=;
-        b=QyvuRhiSH2NXLc14flZmII0fyA5t64qaHNcGB0VskwILoiJ7la5IIM/YcUyGQlUGm0
-         iGTC7UeX/KOgqCTgUcb2SWx1xdqC/xc/tS4JXSMo53BGiGKItHU/jx2PPe+zvcwqnlkX
-         x9eQlJ29DBQda0k0h/8v6GSXpDbd3uNq+BUIl5HVCGNkOuZtKP8GMeoXEZKRuMWU9vvX
-         psNCXKpZz0nfAVJRlTZYNYsQdLasnL3WauSuXA0vmx7uleCUieCaTOcnkFHCfdMpMWAe
-         KzsGHcwC9Lf2QlhFVZiOBnInfS2VzFOX6r117dbdFg7cqjkVmK0Q35jj09UDhM/bfgKF
-         veBQ==
-X-Gm-Message-State: AOJu0YyPBW4smjSw1tvRYeyEdE5BvlmT4lAJHa3iLratv7zOGVF7J5jY
-	K1bFd68lZxPSYXMliKTa7Il1Neqix1asrhcfCV5tbK+jQg5fHx6CUABgaKbavmR5Qe+dHBFVIGl
-	tesibXY008hm2WHMJZJPQawvEPMbgiyw0vjn49kxxW7NanGr4LLODpKH5ow==
-X-Received: by 2002:a81:5702:0:b0:5ff:97d0:6535 with SMTP id l2-20020a815702000000b005ff97d06535mr552292ywb.83.1706182531058;
-        Thu, 25 Jan 2024 03:35:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFlpvmBp8xlQD5XCxbHNI/yAx/NEl7+aASAlI1TcIgGwaDJTRqIImA/z84168W/ZHhbcdOW+g==
-X-Received: by 2002:a81:5702:0:b0:5ff:97d0:6535 with SMTP id l2-20020a815702000000b005ff97d06535mr552276ywb.83.1706182530618;
-        Thu, 25 Jan 2024 03:35:30 -0800 (PST)
-Received: from localhost.localdomain ([2a00:23c6:4a05:9f01:cede:7b45:1f9d:67f])
-        by smtp.gmail.com with ESMTPSA id bp31-20020a05620a459f00b007833c4dddfdsm4924094qkb.53.2024.01.25.03.35.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 03:35:30 -0800 (PST)
-Date: Thu, 25 Jan 2024 11:35:26 +0000
-From: Juri Lelli <juri.lelli@redhat.com>
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Georges Da Costa <georges.da-costa@irit.fr>
-Subject: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux Kernel
- VI edition (OSPM-summit 2024)
-Message-ID: <ZbJHfiWnujLz2Pfm@localhost.localdomain>
+        d=1e100.net; s=20230601; t=1706186157; x=1706790957;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UKB+WrASShPGpvGZObpE9E8WIuSvj1nO7qysCIW9sOs=;
+        b=Ql2x3kFicTUa3WZuVKdrIwChI96HHT6RYKuForUiBePeC18pNFFO7bYG4X0/7InTSy
+         tC1rws5KQxtiCeRUJdIkMjPYM64Bg6Pu57qoAOm9UkYixaRraanXxca+l5MyvuDWMlQt
+         FK1VvLZwvUHoegS0wsGWEPjuCq/ZvVh4zxBdKxZ2RzDiuCxYi4hRDysZndlyyQ10LQ7K
+         4KVGju3ASMSUzYD5E3pH34xrOeYtuisTdr6lojQf0TSUogs0h8wbOXGdak2ZVB0+o9cu
+         XY/0ZvU7vBfEF5/q/lwsCovhtrT1y7nPGnmFgjXCfL+ld7QfgSzVtdtqEb6TIHhnckXu
+         G2Gg==
+X-Gm-Message-State: AOJu0YySrgTgVr8FeFqyHU9I26RYC4kCM5gb40KTkeNh1CjLiOR6ckbp
+	/9SDenX8bJBXyG3m/QBwbc3C3MyJkdPZD06gzEn9uJquRR1SeFnH96VQLsuSpKw=
+X-Google-Smtp-Source: AGHT+IF3ESUT6NJ0IzUKzPatabf5gQRJ63HMWK6IJcQa5KRp/+HOK55vK+YSV24Bn/payaQzhufL1g==
+X-Received: by 2002:a05:600c:4f90:b0:40e:4119:cb4a with SMTP id n16-20020a05600c4f9000b0040e4119cb4amr347141wmq.15.1706186156918;
+        Thu, 25 Jan 2024 04:35:56 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05600c19cf00b0040e39cbf2a4sm2451204wmq.42.2024.01.25.04.35.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 04:35:56 -0800 (PST)
+Message-ID: <c06b02b1-f04a-497c-a84b-2516f160e8a5@linaro.org>
+Date: Thu, 25 Jan 2024 13:35:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: PCI: qcom,pcie-sm8550: move SM8550 to
+ dedicated schema
+Content-Language: en-US
+To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240108-dt-bindings-pci-qcom-split-v1-0-d541f05f4de0@linaro.org>
+ <20240108-dt-bindings-pci-qcom-split-v1-1-d541f05f4de0@linaro.org>
+ <20240116144419.GA3856889-robh@kernel.org> <20240117063039.GA8708@thinkpad>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240117063039.GA8708@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Power Management and Scheduling in the Linux Kernel (OSPM-summit) VI
-edition
+On 17/01/2024 07:30, Manivannan Sadhasivam wrote:
+>>
+>> How does a given SoC have 1 or 8 interrupts? I guess it is possible. A 
+>> comment here would be helpful.
+>>
+> 
+> No, this is due to kernel developers not able to find out the max MSI numbers
+> for each platforms out of the Qcom internal documentation.
+> 
+> Let it be for now, I will try to fetch these numbers to make it accurate later.
 
-May 30-31, 2024
-Institut de Recherche en Informatique de Toulouse
-Toulouse, France
+I'll complete the interrupts the binding and the DTS.
 
----
-
-.:: FOCUS
-
-OSPM is moving to France!
-
-The VI edition of the Power Management and Scheduling in the Linux
-Kernel (OSPM) summit aims at fostering discussions on power management
-and (real-time) scheduling techniques. Summit will be held in Toulouse
-(France) on May 30-31, 2024.
-
-We welcome anybody interested in having discussions on the broad scope
-of scheduler techniques for reducing energy consumption while meeting
-performance and latency requirements, real-time systems, real-time and
-non-real-time scheduling, tooling, debugging and tracing.
-
-Feel free to take a look at what happened previous years:
-
- I   edition - https://lwn.net/Articles/721573/
- II  edition - https://lwn.net/Articles/754923/
- III edition - https://lwn.net/Articles/793281/
- IV  edition - https://lwn.net/Articles/820337/ (online)
- V   edition - https://lwn.net/Articles/934142/
-               https://lwn.net/Articles/934459/
-               https://lwn.net/Articles/935180/
-
-.:: FORMAT
-
-The summit is organized to cover two days of discussions and talks.
-
-The list of topics of interest includes (but it is not limited to):
-
- * Power management techniques
- * Scheduling techniques (real-time and non real-time)
- * Energy consumption and CPU capacity aware scheduling
- * Real-time virtualization
- * Mobile/Server power management real-world use cases (successes and
-   failures)
- * Power management and scheduling tooling (configuration, integration,
-   testing, etc.)
- * Tracing
- * Recap/lightning talks
-
-Presentations (50 min) can cover recently developed technologies,
-ongoing work and new ideas. Please understand that this workshop is not
-intended for presenting sales and marketing pitches.
-
-.:: ATTENDING
-
-Attending the OSPM-summit is free of charge, but registration to the
-event is mandatory. The event can allow a maximum of 50 people (so, be
-sure to register early!).
-
-Registrations open on February 26th, 2024.
-To register fill in the registration form available at
-https://forms.gle/SooSmYMChBcn5rmM8
-
-While it is not strictly required to submit a topic/presentation (see
-below), registrations with a topic/presentation proposal will take
-precedence.
-
-.:: SUBMIT A TOPIC/PRESENTATION
-
-To submit a topic/presentation add its details to this list:
-https://docs.google.com/spreadsheets/d/13lOYsbNWhQU7pNbyHI97fC7GT0Eu8aMbU9ATvPJfV0A/edit?usp=sharing
-
-Or, if you prefer, simply reply (only to me, please :) to this email
-specifying:
-
-- name/surname
-- affiliation
-- short bio
-- email address
-- title
-- abstract
-
-Deadline for submitting topics/presentations is 19th of February 2024.
-Notifications for accepted topics/presentations will be sent out 26th of
-February 2024.
-
-.:: VENUE
-
-The workshop will take place at IRIT [1], University of Toulouse [2],
-France.
-
-The workshop venue is accessible [3] from downtown, where you can find
-most of the hotels/accommodations suggested below, by metro (line B) in
-30 minutes [4]. You can reach IRIT by the metro B (approx one every 2
-minutes in rush hours) or by bus (several lines, between 40 and 60
-minutes depending on the line and the traffic). Several buses arrive at
-the metro station of the university. A map of the city center with the
-venue, transportation and food/drinks places is provided here [5].
-
-It is recommended to pick a hotel close to a “Ligne B” subway station,
-anywhere between “Jean-Jaures” and “Les Carmes”.
-
-From the station, choose “Ramonville” direction and get off at the
-station “Université Paul Sabatier” [6]. The station is right inside the
-university. From there follow the map [7] to reach the IRIT building
-entrance. 
-
-Toulouse airport, “Aéroport Toulouse-Blagnac (TLS), Blagnac”, has a lot
-of direct flights from European airports like Paris, Amsterdam, London,
-Munich among others. There is a shuttle “La Navette” [8], every 20
-minutes, bringing you to downtown in more or less 30 minutes depending
-on the traffic. 
-
-A list of hotels on the metro line B (direct to the workshop location):
-http://www.hotel-oursblanc.com/
-https://www.athome-ah.com/
-https://www.discoverasr.com/fr/citadines/france/citadines-wilson-toulouse
-https://www.pullman-toulouse-centre-ramblas.fr
-
-[1] https://www.irit.fr/
-[2] https://www.univ-tlse3.fr/
-[3] https://maps.app.goo.gl/rdcrKx6x8ntm4uij6
-[4] https://maps.app.goo.gl/Y8UPRvHmbrjCSnvu5
-[5] https://www.toulouse-visit.com/interactive-map
-[6] https://metro-toulouse.com/ligne-B-metro-toulouse.php
-[7] https://goo.gl/maps/ojiAeQoL5Ewgb2gp7
-[8] https://www.toulouse.aeroport.fr/en/transports/public-transport?tabs4633=tab_4631
-
-.:: ORGANIZERS
-
-Juri Lelli (Red Hat)
-Daniel Bristot de Oliveira (Red Hat)
-Daniel Lezcano(Linaro)
-Georges Da Costa (IRIT)
-Tommaso Cucinotta (SSSA)
-Lorenzo Pieralisi (Linaro)
+Best regards,
+Krzysztof
 
 
