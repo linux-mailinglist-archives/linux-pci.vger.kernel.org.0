@@ -1,200 +1,228 @@
-Return-Path: <linux-pci+bounces-2552-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2553-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 873B183C6C7
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 16:34:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B37683C77E
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 17:07:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15EB91F215F0
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 15:34:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0C491C24D7D
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 16:07:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 769F47317F;
-	Thu, 25 Jan 2024 15:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18EA74E04;
+	Thu, 25 Jan 2024 16:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="C4WjfChq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hcIQjCT8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2058.outbound.protection.outlook.com [40.107.21.58])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDDA6EB79;
-	Thu, 25 Jan 2024 15:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706196812; cv=fail; b=tyjbJZ7oiCZGE7dvEzR4OY2e+c3BR+GQP5mGl5C6GNo90CvXZEb3MLFjBCD5BhLxatfiLR6iCC8ATFQf8rCgnWY8ZAT4got3OtaOed8wrbq9j88zmiIWjAAOdLY3lN8mWuPFyAaM5IJ6haSbECQMP0XUPGoUHBqwFMVwvzZ2eHQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706196812; c=relaxed/simple;
-	bh=NKw2hf6813Lh6ypUkSn8ss4G5gtuq+lT2TfrReZz3RY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=En3qd9mmgc0gCSioyjZQPje64jAiY931ETTJzeqIqGD1Py42sx7GwnOThCBzzEe7umYtLWegXZopyIwItmo4LCbmcO81xnUSt7+8nXKmAZFqaWtoL1l24MNvRPEI1HzkbXLOG6ZOAOG0mfIrEFKGdNI1E7qxuj5eJitLB+aTXEg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=C4WjfChq; arc=fail smtp.client-ip=40.107.21.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ixTn0lrOx19pOvrlvmLLFOrygK0b3x4XDd+DZAN8L3LINS89GDq4Xsvs6e1KdBA4hBwYPVtaU1YjZIkTqaI2YOq+QrP3RrSXgbfgYmxLHduLS82fep842h3PVgZWAebr/VHHE4NOgbYcUrTMlA1AfcgtlwcHRGMoQ1NLXa5j2h24a2Q1wZQ0c4953Zz0TdebHyOIDbpUhhn2fPH8RUaqzXcnBl7zj0R+X01pBTxuXn6Vui6cbw8CsEViKK1TdR0j6VyUbVEzLsXnSkVQ9TJrwHxpmzrBZHjcc9p7l8XZjGuV3EDPPqLU7GMR1jDIzgZF01TKnzdt7HgGYTk5yikyRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G8kwLYoOzd5mrJzXOjb67xEHQPGjNewcoIKUMcAwGNs=;
- b=Re4s966h927I7uGmlWaAdG+bB8rwOIz67kONkRtA+KpyoJgyDq0Vy14pFp+j9oQqLHMdZvfMKXHDloeFUb4DY+ltT+u3roovygqJQAExrstiXb60xtNz8mrB2Ss+/1Z/iPr1Nggjxln1GPh2/z+XZxY6Iyn59BPDgU6aifmGbntAGCSPX3oYuOJp4KVPypgbosrSdVbTftmNSkBXtdCPNpcWLKdHnvbWCX13iwCxZ1rinUCaXIjt6lfzSVXPhoAApkWMJdieR6oaiDoRq/ByrLg/H8P//McnKhmPg+129fasTCLK2orfgb6bfHuH9FikLoyNNAae8inHSemgNJ26BA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8kwLYoOzd5mrJzXOjb67xEHQPGjNewcoIKUMcAwGNs=;
- b=C4WjfChqP4/6dbqubhUj4H3cldCjUBOOUUi91p/g46t6QmZk2DNsL6M5VzCsy6suc9QVJRDsdRauSBdeqVexMg4V1QL95uJdfWitZ0E/NUxtNEjjYcHV/TtAlGWAJC/iWzyxVZvJgyw66sgual8cBfGeoauxJf/G5NgvKGKJtiE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM9PR04MB8539.eurprd04.prod.outlook.com (2603:10a6:20b:436::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Thu, 25 Jan
- 2024 15:33:26 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7202.035; Thu, 25 Jan 2024
- 15:33:25 +0000
-Date: Thu, 25 Jan 2024 10:33:19 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: mani@kernel.org
-Cc: allenbh@gmail.com, bhelgaas@google.com, dave.jiang@intel.com,
-	imx@lists.linux.dev, jdmason@kudzu.us, kishon@kernel.org,
-	kw@linux.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lpieralisi@kernel.org,
-	ntb@lists.linux.dev
-Subject: Re: [PATCH v4 1/1] PCI: endpoint: pci-epf-vntb: Fix transfer failure
- for fixed size BARs
-Message-ID: <ZbJ/P5ldcrSs16q8@lizhi-Precision-Tower-5810>
-References: <20240108151015.2030469-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240108151015.2030469-1-Frank.Li@nxp.com>
-X-ClientProxiedBy: SN7PR04CA0175.namprd04.prod.outlook.com
- (2603:10b6:806:125::30) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E587317F
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 16:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706198818; cv=none; b=j8QF7cLXBDiRsA5x72Z0+7UufdJRLzxhA5cKsPQoXUFVllKM57vKK1PWMs2ZnIz/8bbcGM5grvu87kAOUgw8DUTTVIja11kWCKstPnAfbf2vLKGvZibMYIGi4A7zerTDApKi0S59FLhgCUDjA/z+/H0jVkNPOHB2tY6a80JcvWg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706198818; c=relaxed/simple;
+	bh=mxpNg8/1ezqQlLi/nL6WpBh0YQxmcWqg4k8WpwRk6L8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nYpmqiscQVyuHZgG1W0cqpqSK3JrzUxKJT637yITALHaQlhvPVFsQ+AbWt4LQnRkZo6lljJfJG8feenRfR64hJiirS6X9tLmmvxmVxSGC525uJls+myobqxxvSkQksfRwHHEJNzCfsNhpfW4n4OjisVdgSo1mnB4Nsg5pTnEYtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hcIQjCT8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706198816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mxpNg8/1ezqQlLi/nL6WpBh0YQxmcWqg4k8WpwRk6L8=;
+	b=hcIQjCT8o75xvYc/QecNfaHM6s9bJBxD5kPdtnTz5c3OyqEbeB1+aNm6+31ZoU8gMyMfJz
+	rL50WqLCnPV/ak5+eeb58kaNNvhQ7jA00OZoLzNBX9RkMQhqqVnEMTj+RULcXdM6ZWUlXZ
+	16quqrS5fDJevCrdWRmBeQ5FML+OTvw=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-54-8TUtODJxP8ypdjTrUIaT7A-1; Thu, 25 Jan 2024 11:06:54 -0500
+X-MC-Unique: 8TUtODJxP8ypdjTrUIaT7A-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50e743156d0so1495807e87.1
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 08:06:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706198813; x=1706803613;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mxpNg8/1ezqQlLi/nL6WpBh0YQxmcWqg4k8WpwRk6L8=;
+        b=UK+5ofUuZkycRfw+mA4FQI3e4sdLlqIMKnyKexuBwAbq9VhK5TdNsxcS4hwek6FOvb
+         BQ97gsN46J5zSszfPTXJF/kTS5pjOSxibGlVM4c2VkEDGH0yLzZFSmXPUCmiEYDpkxpz
+         dLhLW0PmNg61rWVoKgOgNbBv5eeaW7djUtD2+7QA6aUSceZB90tBCUvLBywqsmb230IU
+         nDDSmxDnOiaAp/E7bhoEbVdNMKOPgaHfr2zl7dFMfR3tniyI8chI4rUnjTHfbXD2j5KC
+         rpa/CjvOCvDAy1tJr5Avj1J2dyjV6vlgaOOGa6bYlc1UGRrJV7GczH3K+WDksNz34wU+
+         5SKA==
+X-Gm-Message-State: AOJu0YzZYBWtiu8GKEnzidPhK/JxM46mKPDSTGT1xHrfNPl7RnnId7NR
+	zTplGJnA/fv9Syv1LerGwtA5w7HIWbNzYEStTc9UIS5GMM2+4pTUbpolKxONTei39gfk8BKe7gx
+	KeugOJxhV3JK3tKaBCbdEpgGcpZZlxrGBn9R6T53GZ7Fmw/1PHse0XbmaVQ==
+X-Received: by 2002:a05:6512:60c:b0:50e:7f87:f5aa with SMTP id b12-20020a056512060c00b0050e7f87f5aamr12434lfe.3.1706198812939;
+        Thu, 25 Jan 2024 08:06:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFBkcCfKPSYS4yUtZFQ7r7nSyx1JvC1HiMYB6WLPCzF5Q9dQrseRgsbWq9zVsViEq5CRZzQeQ==
+X-Received: by 2002:a05:6512:60c:b0:50e:7f87:f5aa with SMTP id b12-20020a056512060c00b0050e7f87f5aamr12394lfe.3.1706198812557;
+        Thu, 25 Jan 2024 08:06:52 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-u.redhat.com. [149.14.88.27])
+        by smtp.gmail.com with ESMTPSA id je1-20020a05600c1f8100b0040e5cf9a6c7sm3073530wmb.13.2024.01.25.08.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 08:06:52 -0800 (PST)
+Message-ID: <13319e46cf2a8caa0b397ef67db7d406261a64b0.camel@redhat.com>
+Subject: Re: [PATCH v5 RESEND 1/5] lib/pci_iomap.c: fix cleanup bugs in
+ pci_iounmap()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
+ <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
+ <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
+ Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
+ Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
+ <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
+ Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
+ dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, stable@vger.kernel.org,  Arnd Bergmann
+ <arnd@kernel.org>
+Date: Thu, 25 Jan 2024 17:06:38 +0100
+In-Reply-To: <20240123184622.GA322265@bhelgaas>
+References: <20240123184622.GA322265@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8539:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6090660-df72-44e7-e640-08dc1dbaf8f2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Ew+IZXT/soWIaOPpC+V/1wQt63wI5vLKjGs3yznA5ceVUf7vmLudGM2+H1woMK+Qmo4+l9LDQml0XB/7PpRYGL6JAgjmi+lNJnHBqVZB72Y3x29v1uyQVUckJFuz69lRkwIdLiOHdVqL64UuvPIPCOKsVyrX85YbhxLXc/hQwXqp5OGv75G2MJhYLg6Lw8x7RVCN2WAqlmwCgL8xeI8mSetoUB749uQ8pDOX5v8KftHnQ0RGmdky64XiaqeWW1s9362g3IOSZ1ezrI/KLMeVLexy4gpUUhYMfcOuwDSpPMqG4I01K0fb7vNkXEP3LnFi7TMLQCTqDXIOjwX35LgZONzNKOEMMLN0j9uhsC/IMorY9i0l1im6X4tE2Vjhs2XmXPV5lQhH5Iea20/HEKRnjxt9NVZr0nHD1H4gfWLo3DWTIXbeKGpOfFru/OtRqF3em5iBJwzzeQvHuARnkzOHOqH9MRhqOIxNe3f01aW99t+Kq8vNJjms7RZNuxNHqfH7umIlQcHb7FnYrjdI7lxVT0cUFtyfyb69477p2yVAa0AUXr82HBj2t4lJhqtzgAUoqbC9Hys1NtBHEGtzcSOsWxnsC2UMrZlcnAdC6WHY72o0s4/W5wPTotJTQMKveBQs
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(396003)(346002)(376002)(39860400002)(136003)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(8936002)(4326008)(8676002)(2906002)(7416002)(5660300002)(66476007)(86362001)(66946007)(66556008)(6916009)(316002)(38350700005)(6486002)(38100700002)(52116002)(478600001)(6512007)(6506007)(9686003)(6666004)(83380400001)(26005)(41300700001)(33716001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wS1Hj+hrTJkOvYM4Cdt2/A0SypLHcCLham7sFMXohCjsOGfwOgHXOxBma0nG?=
- =?us-ascii?Q?wpOSLmZ+dGmDoptCYT8mbxLLsraPZCnol01l8OqavsCr4zrx1lt5AKMRg+vm?=
- =?us-ascii?Q?hhCdLJXdRK6Y1eGow+a++k+p/doRranYD7iiwP1PmgIfGK/ViLgQONBw6QOR?=
- =?us-ascii?Q?ETIlO5qQTkNVJdYqkA+37tzIKuaJHcTCgrKQiyZE+wzdhx9IaBSy9QyfjFi8?=
- =?us-ascii?Q?AzaLh8iJm+tTQb46DqBPUxnoPr4EBSyN8Hvz9R9htWbq8VFm3NM3SnnkoZHF?=
- =?us-ascii?Q?4mEQSza+00jqMjbeO0psjDECwKwxaK41lSm0PVasVtrA67GVwOopu7ZwjCQo?=
- =?us-ascii?Q?0c5Epuae7iMKmi8QqaCTzEG1NlTlT/L9umWpHjU1ME4yUpLdViJBKJcUr+2N?=
- =?us-ascii?Q?8PXcAC0VPv0wUnKHGcEN/QaMCLPVA+XBqGBGQQ3VtQowSR0jl1yRkbB0efDG?=
- =?us-ascii?Q?zCak5jJff5vX21sT44tpMtLIvqwpwqfX8H8ENl0ucv5haWzIVd6o7JyyS3QV?=
- =?us-ascii?Q?AlvYO5rovbG3X9eKvDwEI3w/xl5wiUHDahbNJKrba4C5bqKfiBW4RNFg4zZq?=
- =?us-ascii?Q?qzrS8vCtnxCDM8Gypw2jtgVVE6+h7kguYLI/JpmjKfZLZrzZI/DT7AYj4bly?=
- =?us-ascii?Q?cfe/3+O8zaQjECWsBKLMZ/G0liE9AqwLElRHkMGnGghWjvle6ubzM2JLAqFn?=
- =?us-ascii?Q?PfsjiWU5B+rQah4/iQPqEunlANAVZRoQyX/wp33EUT291UsSxWwQp2sZr4Z+?=
- =?us-ascii?Q?UABgn9H7tek6KibfecM9VlCAcEoKvgU97HzHu8ifcWbYBx9gVPEFtuCmxIJk?=
- =?us-ascii?Q?p8t8Sbb7QiWcb2FdN3tutSMloL+U0EaiTh5wbRpIAHys2D2uNskCJDEJjxJX?=
- =?us-ascii?Q?QHa4h7AeTJwNNPoT+ahGEF0cPIm9jsEYYz1f+WPrRYzYvGrIP4ZN6ZTvGkug?=
- =?us-ascii?Q?1BQMMzwLp2cFPw7+dye/0RKsw0k4VXPKpt9N2PRctuql8PzDv3It02HlNDxo?=
- =?us-ascii?Q?Z+JQAPNGXUZengvKJZQ63SBDnnq0zhtEJ9R/WWqOsUGPrWBAwStk6P8dGcQA?=
- =?us-ascii?Q?7yA9kjz4T0sAKSSousx3cvHwF/MlJBH0WRhbnuEZy9kTeiafpBADsYeMnhjf?=
- =?us-ascii?Q?rFxj6GrlFOBCyb9H6vOL7z80YKmXpnLw43FPvpEHVsf7hPuyFbcRW0anv9pC?=
- =?us-ascii?Q?2th9tzPYxCQ2v+vqm6prWLXsO2LLcuZViyXXl33uG0P1Jz0WTt7tN65PsMpo?=
- =?us-ascii?Q?jf83Zh47Un3ralSNskLp255y0Jq2U7ONbumuebFExu30dLvrMNrqEtMpV2FI?=
- =?us-ascii?Q?5x7AKOJY1olJexxeiYrWxznG+7QQ24q2z9hXs0/nPWd+51EQO3x/PjsEZ9yy?=
- =?us-ascii?Q?L6GCf79sV8ieDwbi2zbf4XGssoPaeFMe544WNctcwEWWGfLog+VKcW9dqXLF?=
- =?us-ascii?Q?FRDAKKYJum2RXL/UiDiKf43pNuoF+NAEsYDgtOO6oKknZyNysBknrbPOiLZf?=
- =?us-ascii?Q?fvFD3SEj6DvPGvsdrCA2LJZc3BrAbDGLzlCfPvZ9ECmL52FwviE9/KBakSId?=
- =?us-ascii?Q?T/Qy0NlAQ+r3tTDF2+4=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6090660-df72-44e7-e640-08dc1dbaf8f2
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 15:33:25.9205
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P8uyZ/ZBzYQIWotyBnr70ukMwi94KeQpyAeVO3ilp/t3LG0dYe2PzMPjD7PdBiG2IAmXGQonHn6pONnI7ps7jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8539
 
-On Mon, Jan 08, 2024 at 10:10:15AM -0500, Frank Li wrote:
-> For the inbound MEM/IO TLPs, iATU on the endpoint expects the target
-> address to be aligned to the size of the BAR. For configurable BARs, there
-> is no issue because both host and endpoint will know the exact size of the
-> BAR region. But for fixed size BARs available in some controllers, if the
-> BAR size advertised by the endpoint is not same as of the actual BAR size
-> used in the controller, then the MEM/IO TLPs generated by the host will not
-> be translated properly by the endpoint iATU.
-> 
-> So if the fixed size BARs are available in endpoint controllers, always use
-> the actual BAR size.
-> 
-> This only fixes doorbell (DB) BAR. A similar fix is needed for memory map
-> windows(MW) BARs.
-> 
-> Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
+On Tue, 2024-01-23 at 12:46 -0600, Bjorn Helgaas wrote:
+> On Thu, Jan 11, 2024 at 09:55:36AM +0100, Philipp Stanner wrote:
+> > pci_iounmap() in lib/pci_iomap.c is supposed to check whether an
+> > address
+> > is within ioport-range IF the config specifies that ioports exist.
+> > If
+> > so, the port should be unmapped with ioport_unmap(). If not, it's a
+> > generic MMIO address that has to be passed to iounmap().
+> >=20
+> > The bugs are:
+> > =C2=A0 1. ioport_unmap() is missing entirely, so this function will
+> > never
+> > =C2=A0=C2=A0=C2=A0=C2=A0 actually unmap a port.
+>=20
+> The preceding comment suggests that in this default implementation,
+> the ioport does not need unmapping, and it wasn't something it was
+> supposed to do but just failed to do:
+>=20
+> =C2=A0* NOTE! This default implementation assumes that if the architectur=
+e
+> =C2=A0* support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
+> =C2=A0* be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
+> =C2=A0* and does not need unmapping with 'ioport_unmap()'.
+> =C2=A0*
+> =C2=A0* If you have different rules for your architecture, you need to
+> =C2=A0* implement your own pci_iounmap() that knows the rules for where
+> =C2=A0* and how IO vs MEM get mapped.
+>=20
+> Almost all ioport_unmap() implementations are empty, so in most cases
+> it's a no-op (parisc is an exception).
 
-@lpieralisi:
+That sounds correct.
 
-	Could you please pick this fix patch?
+>=20
+> I'm happy to add the ioport_unmap() even just for symmetry, but if we
+> do, I think we should update or remove that comment.
 
-Frank
+Yes, I think it's the right way: either all architectures should
+provide ioport_unmap(), empty or not, or all should use a centralized
+PCI function
 
-> 
-> Notes:
->     Change from v3 to v4
->     - add notes: fixing the issue only for DB BAR and a similar fix is needed
->     for other MW BARs
->     - Add Manivannan Sadhasivam's review tag
->     
->     Change from v2 to v3
->     - rework commti message
->     - add fixes and cc stable
->     - return -ENOMEN when request size > fix bar size
->     Change from v1 to v2
->     - Remove unnessary set align when fix_bar_size.
-> 
->  drivers/pci/endpoint/functions/pci-epf-vntb.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> index 3f60128560ed0..85120978fb8c9 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
-> @@ -550,6 +550,14 @@ static int epf_ntb_db_bar_init(struct epf_ntb *ntb)
->  
->  	barno = ntb->epf_ntb_bar[BAR_DB];
->  
-> +	if (epc_features->bar_fixed_size[barno]) {
-> +		if (size > epc_features->bar_fixed_size[barno]) {
-> +			dev_err(dev, "Fixed BAR%d is too small for doorbell\n", barno);
-> +			return -ENOMEM;
-> +		}
-> +		size = epc_features->bar_fixed_size[barno];
-> +	}
-> +
->  	mw_addr = pci_epf_alloc_space(ntb->epf, size, barno, align, 0);
->  	if (!mw_addr) {
->  		dev_err(dev, "Failed to allocate OB address\n");
-> -- 
-> 2.34.1
-> 
+I can remove the wrong statement.
+
+>=20
+> > =C2=A0 2. the #ifdef for the ioport-ranges accidentally also guards
+> > =C2=A0=C2=A0=C2=A0=C2=A0 iounmap(), potentially compiling an empty func=
+tion. This would
+> > =C2=A0=C2=A0=C2=A0=C2=A0 cause the mapping to be leaked.
+> >=20
+> > Implement the missing call to ioport_unmap().
+> >=20
+> > Move the guard so that iounmap() will always be part of the
+> > function.
+>=20
+> I think we should fix this bug in a separate patch because the
+> ioport_unmap() is much more subtle and doesn't need to be complicated
+> with this fix.
+
+If we agree that one is a bug and the other isn't, then ACK, we should
+probably split it.
+
+>=20
+> > CC: <stable@vger.kernel.org> # v5.15+
+> > Fixes: 316e8d79a095 ("pci_iounmap'2: Electric Boogaloo: try to make
+> > sense of it all")
+> > Reported-by: Danilo Krummrich <dakr@redhat.com>
+>=20
+> Is there a URL we can include for Danilo's report?=C2=A0 I found
+> https://lore.kernel.org/all/a6ef92ae-0747-435b-822d-d0229da4683c@redhat.c=
+om/
+> ,
+> but I'm not sure that's the right part of the conversation.
+
+He pointed out it's a bug in an offlist conversation with me. The link
+you provided is his only public statement about the topic.
+The Reported-by served more acknowledging the contribution than issue-
+tracking
+
+
+P.
+
+>=20
+> > Suggested-by: Arnd Bergmann <arnd@kernel.org>
+> > Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > =C2=A0lib/pci_iomap.c | 6 ++++--
+> > =C2=A01 file changed, 4 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
+> > index ce39ce9f3526..6e144b017c48 100644
+> > --- a/lib/pci_iomap.c
+> > +++ b/lib/pci_iomap.c
+> > @@ -168,10 +168,12 @@ void pci_iounmap(struct pci_dev *dev, void
+> > __iomem *p)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0uintptr_t start =3D (ui=
+ntptr_t) PCI_IOBASE;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0uintptr_t addr =3D (uin=
+tptr_t) p;
+> > =C2=A0
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (addr >=3D start && addr =
+< start + IO_SPACE_LIMIT)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (addr >=3D start && addr =
+< start + IO_SPACE_LIMIT) {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0ioport_unmap(p);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return;
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iounmap(p);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > =C2=A0#endif
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iounmap(p);
+> > =C2=A0}
+> > =C2=A0EXPORT_SYMBOL(pci_iounmap);
+> > =C2=A0
+> > --=20
+> > 2.43.0
+> >=20
+>=20
+
 
