@@ -1,135 +1,111 @@
-Return-Path: <linux-pci+bounces-2556-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2557-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0737883CB2C
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 19:34:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D4C083D0E4
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 00:45:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65CF4B263C7
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 18:34:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A3211C243EC
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 23:45:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC86135A49;
-	Thu, 25 Jan 2024 18:31:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE92F125BB;
+	Thu, 25 Jan 2024 23:45:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4wtXRhi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bzP+HFTJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E34413399E;
-	Thu, 25 Jan 2024 18:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309B1111BF
+	for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 23:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706207470; cv=none; b=c6rcsRGiysT06u3B5vfAPAB0vetgxUznZ0YdgRa8m+qHFR3pBgOTKGRqdwoOroTAd9nQHzOGYnLVSI/TNOvOGRmenBkRZs9gXELYD4xyNVL6UlqqQWT9qFCVnD59gj8ZRq9MpJhC9B01ARFKtzEE/t26RiOtAUwk0mxxiDhAhf8=
+	t=1706226355; cv=none; b=hT0+jwWT1er/247qB23AhZA+TNZqvrCMxiaZfqHwVj8kqjE2INBQtF3dnMN5QoF7NxkXy6v5Q7KyWCqyAj0GeLqbr3Kot+J7PyufvC9RSyzEMlZOgii2oRF7wx9yR5JfeX9FMS3LDMoW1jg9i53cacB2fq/hD3YQ8VufZgdg2Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706207470; c=relaxed/simple;
-	bh=LTM9Rq0ah24lwvVn1y8YRCHc6j5ROIsgGb706zCSPEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QK91g528v5d+AXFY78YA3hDlkK0LNcTjXrSxCoH2thZf/M86CwAzMsdd1F6896a2xY+YCkvjD3I5APkkkkeMFvOd27VQK4gSkBrzbryZkUf5seE7PTLJ4pDzOzFeSZcOLECPd0lVgNJjzyatQvm/QHfZxxnmCZvK9aqfHnNOjFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4wtXRhi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC4DC433F1;
-	Thu, 25 Jan 2024 18:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706207469;
-	bh=LTM9Rq0ah24lwvVn1y8YRCHc6j5ROIsgGb706zCSPEw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=S4wtXRhiDkmqHfxDMkUhXRmGNOlc2t6Dxgow2TFcrq/mWLHuIVpkF9dTF3+NdSXEw
-	 jZmifn0eFFKIR8Hf3ZuJ1j0R6xhj4QvHqIz9eeW9NbXopCjBKQQJ0CZF2PDzpL1Jjl
-	 zHbWVTgyhu11TS7DO4fXyVOMnXjWjP7l3x6q0o5Xqug0ySRSOwCA95u2546yaYGRFw
-	 8c0o6Y8RJu0qV+KNPupq3A4FZK8BPZy50azhxOYhmYcBFK/zC7qj6gfujx6g4V140i
-	 n6tmfWv63Jx/zDFXdWVrAHs8lCM8GhxbySSBkxwbNzQ0FbR7fC3hxlKeYpfyZjTjGm
-	 LMjxQ2FYEQPAg==
-Date: Thu, 25 Jan 2024 12:31:07 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v5 RESEND 2/5] lib: move pci_iomap.c to drivers/pci/
-Message-ID: <20240125183107.GA393314@bhelgaas>
+	s=arc-20240116; t=1706226355; c=relaxed/simple;
+	bh=LXvDRzf49Xc6i7nbu9yyGuvjQOAoA3TL234yTyYg3TA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k6sUA78D5vRUsPWHutfjZTc12ZA5m1ayQQCtYSFAwFWrbSd5O/SZ4rMiun9jRacM70fpgntIeRc6kU8yXxEFpxT8G5ePeRe/IPc1sPwKA5TgPLWBcH0XqlNKbfRc0YeHcjgDxatf+/td1CFlkkAGwY3W/BXKiz5eUI957XaqqVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bzP+HFTJ; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4bd7614325eso898940e0c.0
+        for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 15:45:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706226353; x=1706831153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LXvDRzf49Xc6i7nbu9yyGuvjQOAoA3TL234yTyYg3TA=;
+        b=bzP+HFTJN9qJRVR6nRggpZsTrVSSLwk8Y3qJ1yMWERbQc13nA7/NI+N7pAroChQ5fy
+         Dr1cG1lDBEaFUBTcZX5bNQ8hYQnQcBymvo1W5UGmumFZfCNda9IFXVh5pvHoVIBsaSU6
+         m8KF9yDDxv6XWOBfF11VQKdVObHdxkQpkvV74=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706226353; x=1706831153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LXvDRzf49Xc6i7nbu9yyGuvjQOAoA3TL234yTyYg3TA=;
+        b=WE0Z/6opdYqOZt1Bozfsv1XIZrag/X6J44thFoT1/nwxtzOaL65VRdcjhIpuVzUtWP
+         g+p9zB22sH0agK5obVzcf7iF4GagoPJ1hLFqnf0hW4gchLj3FuOaFymD1g0ru/Q+lGMb
+         KGc/TO+4zgItVCGxDFwN3FmtTlB1KZyTgctP03kaVkSc1A+kZIw3ONla82lvSPeN0wpJ
+         712hEPw7oigAKL1NDo8Ppxz1oVSDRmxilRNPlxGGY92TS1lbfaCV9Yrj+PFwkwskpztT
+         g/O43PYBjG4z4mvTk+i2o5cTpowc7MlcIZZfqk/OfF7mp3LkqmsSvSGTtezPu2BXwMtP
+         cfzw==
+X-Gm-Message-State: AOJu0YylS/1SIU8fzqi6fTFWfo9ZL5EUPMTlwCN5knpvvjqDO8szJdGh
+	jSZewnM+vQ+U/r8keYz/mtK/2rg0uw/EY6FhgXhhLwwHnmRttvRks82XBBkeoTJqufZIsAF+FsT
+	XZYQ8FzfToJCGOOrouCcZePaqDcDwAuhXPvoA
+X-Google-Smtp-Source: AGHT+IF2+F505DKuWe7knptgJ6CrgZ6lJYDfYgxq0eDiARp7SSTxq8AnE5m0ctWL4L37g8+L1T2m1jJz9ZYlvqQ+HGo=
+X-Received: by 2002:a05:6122:2001:b0:4bd:54d0:e6df with SMTP id
+ l1-20020a056122200100b004bd54d0e6dfmr40784vkd.1.1706226353098; Thu, 25 Jan
+ 2024 15:45:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3abf071d12de5b69e146665dfb57386e3b0ddfe0.camel@redhat.com>
+References: <20231228132517.GA12586@wunner.de> <20231228133949.GG2543524@black.fi.intel.com>
+ <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
+ <20240118060002.GV2543524@black.fi.intel.com> <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
+ <ZalOCPrVA52wyFfv@google.com> <20240119053756.GC2543524@black.fi.intel.com>
+ <20240119074829.GD2543524@black.fi.intel.com> <20240119102258.GE2543524@black.fi.intel.com>
+ <03926c6c-43dc-4ec4-b5a0-eae57c17f507@amd.com> <20240123061820.GL2543524@black.fi.intel.com>
+In-Reply-To: <20240123061820.GL2543524@black.fi.intel.com>
+From: Esther Shimanovich <eshimanovich@chromium.org>
+Date: Thu, 25 Jan 2024 18:45:42 -0500
+Message-ID: <CA+Y6NJFMDcB7NV49r2WxFzcfgarRiWsWO0rEPwz43PKDiXk61g@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 03:54:51PM +0100, Philipp Stanner wrote:
-> On Tue, 2024-01-23 at 14:20 -0600, Bjorn Helgaas wrote:
-> > On Thu, Jan 11, 2024 at 09:55:37AM +0100, Philipp Stanner wrote:
-> > > This file is guarded by an #ifdef CONFIG_PCI. It, consequently,
-> > > does not
-> > > belong to lib/ because it is not generic infrastructure.
-> > > 
-> > > Move the file to drivers/pci/ and implement the necessary changes
-> > > to
-> > > Makefiles and Kconfigs.
-> > > ...
-> > 
-> > > --- a/drivers/pci/Kconfig
-> > > +++ b/drivers/pci/Kconfig
-> > > @@ -13,6 +13,11 @@ config FORCE_PCI
-> > >         select HAVE_PCI
-> > >         select PCI
-> > >  
-> > > +# select this to provide a generic PCI iomap,
-> > > +# without PCI itself having to be defined
-> > > +config GENERIC_PCI_IOMAP
-> > > +       bool
-> > 
-> > > --- a/lib/pci_iomap.c
-> > > +++ b/drivers/pci/iomap.c
-> > > @@ -9,7 +9,6 @@
-> > >  
-> > >  #include <linux/export.h>
-> > >  
-> > > -#ifdef CONFIG_PCI
-> > 
-> > IIUC, in the case where CONFIG_GENERIC_PCI_IOMAP=y but CONFIG_PCI was
-> > not set, pci_iomap.c was compiled but produced no code because the
-> > entire file was wrapped with this #ifdef.
-> > 
-> > But after this patch, it looks like pci_iomap_range(),
-> > pci_iomap_wc_range(), etc., *will* be compiled?
-> > 
-> > Is that what you intend, or did I miss something?
-> 
-> They *will* be compiled when BOTH, CONFIG_PCI and
-> CONFIG_GENERIC_PCI_IOMAP have been set.
+On Fri, Jan 19, 2024 at 11:03=E2=80=AFAM Esther Shimanovich
+<eshimanovich@chromium.org> wrote:
+> Next week I'll try those devices in our inventory to see if I can find
+> another one with this bug. I'll get back to you on that!
 
-I was asking about CONFIG_GENERIC_PCI_IOMAP=y but CONFIG_PCI unset.
+I ended up finding 11 additional models with this bug, from various
+manufacturers such as HP, Dell and Lenovo, that use the following
+thunderbolt controllers: JHL6240, JHL6340, JHL6540, JHL7540. So making
+this fix apply to all affected devices would make sense.
 
-But the Makefile contains this:
+On Mon, Jan 22, 2024 at 1:10=E2=80=AFAM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> Yes, you are missing the 1. that it needs to be directly behind the PCIe
+> root or downstream port that is marked as ->external_facing, and the
+> fact that there can't be NHI's (that's the host controller with the IDs
+> I listed in 3.) anywhere else except starting the topology according the
+> USB4 spec (and the same applies to Thunderbolt 1-3).
 
-  ifdef CONFIG_PCI
-  obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
-  endif
-
-So iomap.c will not be compiled when CONFIG_PCI is unset, which is
-what I missed.
-
-Bjorn
+Thanks for the explanation. I'll write up a patch that implements this
+and takes into account all the feedback. Then I'll test it on multiple
+models, and then send it your way. Let me know if it makes sense to
+add you as a co-author.
+Very much appreciate your insights.
 
