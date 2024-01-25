@@ -1,85 +1,71 @@
-Return-Path: <linux-pci+bounces-2555-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2556-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8320183C97E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 18:11:18 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0737883CB2C
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 19:34:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E4C81F21E15
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 17:11:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65CF4B263C7
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Jan 2024 18:34:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD7E413BEAE;
-	Thu, 25 Jan 2024 17:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC86135A49;
+	Thu, 25 Jan 2024 18:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gxnmfUgS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4wtXRhi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3388D13BEB2
-	for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 17:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E34413399E;
+	Thu, 25 Jan 2024 18:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706202223; cv=none; b=KECyhCw+APa1DBxDXjca1UOhi0vy8ww8JklV9gXrVXRY9eOkW/JXtI+Oa1VZ+sINxDM+r13pT1hoNHz3S9htxUzCxra9QMehEvZKV7+FDiIrakMm4d5j25eeFQaA8KxktMHQ29ujlcEFFXu77XKeDacGGBEk/HOQPI3Ha00Z5fg=
+	t=1706207470; cv=none; b=c6rcsRGiysT06u3B5vfAPAB0vetgxUznZ0YdgRa8m+qHFR3pBgOTKGRqdwoOroTAd9nQHzOGYnLVSI/TNOvOGRmenBkRZs9gXELYD4xyNVL6UlqqQWT9qFCVnD59gj8ZRq9MpJhC9B01ARFKtzEE/t26RiOtAUwk0mxxiDhAhf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706202223; c=relaxed/simple;
-	bh=EtjuxVfRaMmROi8vU5EKNyZbFHvQzfftjUCQ1eYs2Rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amMfAslO4O2QvkP2EyffbzwSX7HdbQUA8MwCZgKhkifJqv4hKRBytFQ88bdIrbIP1slAmnVl78+3EMjoBvz/ZhvCPtBjrygsBkyEaWcQftSkKXwR0nxEwObiXwrFzt457IgmVJp6b+4GyKNFToDC9j6irZlflqbt6tK7I/qCE94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gxnmfUgS; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5ceb3fe708eso3406535a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 25 Jan 2024 09:03:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706202220; x=1706807020; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=c23ZTeIVxs6yEnWydo0j3V6m4oKMAUU00aaWAQnKjog=;
-        b=gxnmfUgSAiyPTtVHdomyCyCTp10Zhrx+hUqhaqyi4zmyHpa+rNbSO3yHHqPsVPpNNm
-         6iJ4YQnpPLASme479i4S0gI+xXqiY67GMO8JO9FuYkBTCmeTSM58O++OxYbpx+gweRHe
-         WgEbfQtxF+M5r2a3d17P+eUeLrKiabZ0JC1mt4Q5fKg73Kml7DywI30NAyIOHn4UvjHr
-         6DTilvtTemupZ5BgdMeCe+IpGHfqlbV8LFjISjHDizXsmJPt9Uv0jifz11Nj0+2Y4PyQ
-         9umNfDYvtt82KkpjC/K7sEXP6BHu3KLOLJS/ug3bDeKp+vVTMzquUS5xjbWktGozRa0K
-         u3ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706202220; x=1706807020;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c23ZTeIVxs6yEnWydo0j3V6m4oKMAUU00aaWAQnKjog=;
-        b=KHIL1VhBwvUcALOsb93qIhJ7gATDOvwcSziavOpIKJUW5J4+gQJLzN+pE1mvFX9kco
-         L5Ksxq0SwmXZwaMC3fYpSBdQ+cvym0lEw3w2wFDP/Ble/YkroQQ96R5wJ5hAqA6ELL7t
-         PwGwBCe16wHZeJETMMkzoBfHAUfFC+1sycIy3VgIdI3Wul3RJiMCXrya/Tut06YdL379
-         y1wATgsekTxTW9uPUBlY/Ljxe19/dzjf8KlA+DHP8nDzvGkk8B2KVsIbUkdTm7KJPq9I
-         ZgWHPFllIsZ9HsWNAJHtcGEKBZuYsfg/ETeqlRlMLXOmCJp0MKAY/WaQCKrUwIUCrrnM
-         70/w==
-X-Gm-Message-State: AOJu0Yx+NV/ZYou/4PPU24uK0Fgm4IGyGnqJcP6Ho86rbVd0SK4nErZh
-	1d1Cv9piOV699X6XKf5I0IJGBBm8eKvkG3iXh1b85poI4l6kPq6cMr7/Lrk+Iw==
-X-Google-Smtp-Source: AGHT+IFb5JGtW8dJ+mUO3mIA3dSMaKRRrd77+BxY9Bk/slj5Q2gpOozeiZOOGGMJe5dfpWi69/EH9A==
-X-Received: by 2002:a17:90a:6fe2:b0:290:2844:50a9 with SMTP id e89-20020a17090a6fe200b00290284450a9mr1107862pjk.26.1706202220345;
-        Thu, 25 Jan 2024 09:03:40 -0800 (PST)
-Received: from thinkpad ([117.217.187.68])
-        by smtp.gmail.com with ESMTPSA id s17-20020aa78d51000000b006ce9c8c4001sm16075282pfe.47.2024.01.25.09.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 09:03:39 -0800 (PST)
-Date: Thu, 25 Jan 2024 22:33:32 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] PCI: dwc: Cleanup in dw_pcie_ep_raise_msi_irq()
-Message-ID: <20240125170332.GB6390@thinkpad>
-References: <888c23ff-1ee4-4795-8c24-7631c6c37da6@moroto.mountain>
- <64ef42f0-5618-40fd-b715-0d412121045c@moroto.mountain>
+	s=arc-20240116; t=1706207470; c=relaxed/simple;
+	bh=LTM9Rq0ah24lwvVn1y8YRCHc6j5ROIsgGb706zCSPEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=QK91g528v5d+AXFY78YA3hDlkK0LNcTjXrSxCoH2thZf/M86CwAzMsdd1F6896a2xY+YCkvjD3I5APkkkkeMFvOd27VQK4gSkBrzbryZkUf5seE7PTLJ4pDzOzFeSZcOLECPd0lVgNJjzyatQvm/QHfZxxnmCZvK9aqfHnNOjFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4wtXRhi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC4DC433F1;
+	Thu, 25 Jan 2024 18:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706207469;
+	bh=LTM9Rq0ah24lwvVn1y8YRCHc6j5ROIsgGb706zCSPEw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=S4wtXRhiDkmqHfxDMkUhXRmGNOlc2t6Dxgow2TFcrq/mWLHuIVpkF9dTF3+NdSXEw
+	 jZmifn0eFFKIR8Hf3ZuJ1j0R6xhj4QvHqIz9eeW9NbXopCjBKQQJ0CZF2PDzpL1Jjl
+	 zHbWVTgyhu11TS7DO4fXyVOMnXjWjP7l3x6q0o5Xqug0ySRSOwCA95u2546yaYGRFw
+	 8c0o6Y8RJu0qV+KNPupq3A4FZK8BPZy50azhxOYhmYcBFK/zC7qj6gfujx6g4V140i
+	 n6tmfWv63Jx/zDFXdWVrAHs8lCM8GhxbySSBkxwbNzQ0FbR7fC3hxlKeYpfyZjTjGm
+	 LMjxQ2FYEQPAg==
+Date: Thu, 25 Jan 2024 12:31:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
+	John Sanpe <sanpeqf@gmail.com>,
+	Kent Overstreet <kent.overstreet@gmail.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Uladzislau Koshchanka <koshchanka@gmail.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
+	Rae Moar <rmoar@google.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Marco Elver <elver@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v5 RESEND 2/5] lib: move pci_iomap.c to drivers/pci/
+Message-ID: <20240125183107.GA393314@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,49 +75,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <64ef42f0-5618-40fd-b715-0d412121045c@moroto.mountain>
+In-Reply-To: <3abf071d12de5b69e146665dfb57386e3b0ddfe0.camel@redhat.com>
 
-On Wed, Jan 24, 2024 at 06:03:51PM +0300, Dan Carpenter wrote:
-> I recently changed the alignment code in dw_pcie_ep_raise_msix_irq().
-> The code in dw_pcie_ep_raise_msi_irq() is similar so update it to match
-> as well, just for consistency.  (No effect on runtime, just a cleanup).
+On Thu, Jan 25, 2024 at 03:54:51PM +0100, Philipp Stanner wrote:
+> On Tue, 2024-01-23 at 14:20 -0600, Bjorn Helgaas wrote:
+> > On Thu, Jan 11, 2024 at 09:55:37AM +0100, Philipp Stanner wrote:
+> > > This file is guarded by an #ifdef CONFIG_PCI. It, consequently,
+> > > does not
+> > > belong to lib/ because it is not generic infrastructure.
+> > > 
+> > > Move the file to drivers/pci/ and implement the necessary changes
+> > > to
+> > > Makefiles and Kconfigs.
+> > > ...
+> > 
+> > > --- a/drivers/pci/Kconfig
+> > > +++ b/drivers/pci/Kconfig
+> > > @@ -13,6 +13,11 @@ config FORCE_PCI
+> > >         select HAVE_PCI
+> > >         select PCI
+> > >  
+> > > +# select this to provide a generic PCI iomap,
+> > > +# without PCI itself having to be defined
+> > > +config GENERIC_PCI_IOMAP
+> > > +       bool
+> > 
+> > > --- a/lib/pci_iomap.c
+> > > +++ b/drivers/pci/iomap.c
+> > > @@ -9,7 +9,6 @@
+> > >  
+> > >  #include <linux/export.h>
+> > >  
+> > > -#ifdef CONFIG_PCI
+> > 
+> > IIUC, in the case where CONFIG_GENERIC_PCI_IOMAP=y but CONFIG_PCI was
+> > not set, pci_iomap.c was compiled but produced no code because the
+> > entire file was wrapped with this #ifdef.
+> > 
+> > But after this patch, it looks like pci_iomap_range(),
+> > pci_iomap_wc_range(), etc., *will* be compiled?
+> > 
+> > Is that what you intend, or did I miss something?
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> They *will* be compiled when BOTH, CONFIG_PCI and
+> CONFIG_GENERIC_PCI_IOMAP have been set.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I was asking about CONFIG_GENERIC_PCI_IOMAP=y but CONFIG_PCI unset.
 
-- Mani
+But the Makefile contains this:
 
-> ---
-> v4: style improvements
-> v3: use ALIGN_DOWN()
-> v2: new patch
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 51679c6702cf..d2de41f02a77 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -482,9 +482,10 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
->  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
->  	}
-> -	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
-> -	msg_addr = ((u64)msg_addr_upper) << 32 |
-> -			(msg_addr_lower & ~aligned_offset);
-> +	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
-> +
-> +	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
-> +	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
->  				  epc->mem->window.page_size);
->  	if (ret)
-> -- 
-> 2.43.0
-> 
+  ifdef CONFIG_PCI
+  obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
+  endif
 
--- 
-மணிவண்ணன் சதாசிவம்
+So iomap.c will not be compiled when CONFIG_PCI is unset, which is
+what I missed.
+
+Bjorn
 
