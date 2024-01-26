@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-2561-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2562-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A0A383D227
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 02:41:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB23B83D229
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 02:41:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5425D1C253EA
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 01:41:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1F6F4B274C1
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 01:41:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60451A937;
-	Fri, 26 Jan 2024 01:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22D3515CC;
+	Fri, 26 Jan 2024 01:40:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nl9HJmOX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GmtPGp5Q"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E638F66;
-	Fri, 26 Jan 2024 01:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7841EAD49;
+	Fri, 26 Jan 2024 01:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706233232; cv=none; b=gnPX3ufqS5ullOOGbG56shTkVy1Ye0ZUc5goEAoL0OJeFltm8/ulC3b4HoTDnbYk3N4x8tIuWplavzN5IiG3oSI3awc4ULf0t7WMEL/56c1nhY2/JeY5yB3xRt6w9QzQOO4lb6WZ15XK5ohzytLEsaWO1jO5LiQs+x2Fwl2VYzE=
+	t=1706233236; cv=none; b=FUXLoXyjgcx28LHWSU/HyOaGZs61Ya8GiCfMzSYPQT38spFcdkYOofMdXKFJ/2G16kQ6KzyDy9BsXX8OsdMEqn4x3fUcSsOn455h69PLKSE1t7hXRXCeR/I8H/Awf2ony0apOzepOUzlNXYVKRYtgwqMVla3SxNNJo+BsGrdHIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706233232; c=relaxed/simple;
-	bh=q2qOvYluDvLjuk2djtt50RKGW5uxSvlbJiVtYpV+LNo=;
+	s=arc-20240116; t=1706233236; c=relaxed/simple;
+	bh=CXF2rO6vNLbMO2Xepa62X8TKjLOzx8JqzSpWfxi/P1o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OmpSBG6s4RReS5jwYxUNM6XPejijV/DbimpavImzC8KE7SUZjPCex3pIp/a4KZ48ZbSrGLKV+r2onsXz0/tse5p3zJqiPznFUY+T0fTjKB4O+zOANZwh8JNtZfj/SqRlXe1QJdgUxU7LDeSaR1fWhjjDTieSaSXRloXT69aoE98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nl9HJmOX; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=XytKy78fwvtULrwrJmndeYuHHg8Lm5qXlD8QwLZQbo99MMtWgTLpj+RXX0YjzR5M1Rvx3FBvJPycaIMPpizPwWF42TkvFKFO5lCcVvbkcYUiG2deA4t+QpcdGk7vpnZrMsddK0XbN8qXfy4n+lr98NLQqiGwB6TmtUkGU9t6eEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GmtPGp5Q; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706233231; x=1737769231;
+  t=1706233234; x=1737769234;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=q2qOvYluDvLjuk2djtt50RKGW5uxSvlbJiVtYpV+LNo=;
-  b=nl9HJmOXc5Gs2iDjLIlxc2rKDJ+Oh0KQE72V7Dti9oCVAYXBxGKeHNDW
-   5OY+wP0gzEdpB1qfIsS0W/yA03N7TTEFK+jpB5MHUB0IQNHNBrj7bi/Om
-   DyIh9S27IM9xGQHWhaG7XYcSdvwGLRvZkaPvSmRe4pRVmWN8iXtnC4MHo
-   pw0efkeOLFMVHdya6izdzwDLBTB2zgqh17YJxj9jmHvZahRY8ON3HODCP
-   gw/xfLCA4s7EBC2SyWzM3Kn4v+dnMwNcGmwARuREio6AU9Yn1PMP2lFZZ
-   aGJEmWoi/ySh4mA/dLtEKT60/Z0E+EVPXQWs3SPNtHsAfJ1g/nADnvqIQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718469"
+  bh=CXF2rO6vNLbMO2Xepa62X8TKjLOzx8JqzSpWfxi/P1o=;
+  b=GmtPGp5QysgKMBQXcedCph5byAWJ0JoEBzm8d0ke6+/copJbqESQVgRP
+   pAFVRKmQ+mVKVjpFYX3pL8X+V7ASbLiOGYYz+jZeqX3Su6Yp5fKdnm+cT
+   abd4r67w06ByFc8EU/vkyP0NC4j9bnbzUKfF8QKT3JMMdAxL5FXxO+85r
+   66qHlLSszIeaohO6jlxR160QMjDUgR6YbvJKftw3gQ0hNnn8ghU0sWac9
+   MpHXMKG/hXBuI3B23+V2SInA926SU8kQ8LKOtZb5LvwGQhclnGkgQV3G5
+   gL8GiUO49YOESt6F94LJ62r0/LOuZ6TixlcSNdxIY7Svf/+mLplBV6t/O
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718487"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15718469"
+   d="scan'208";a="15718487"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:30 -0800
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2533117"
+   d="scan'208";a="2533129"
 Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:26 -0800
+  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:30 -0800
 From: Ethan Zhao <haifeng.zhao@linux.intel.com>
 To: baolu.lu@linux.intel.com,
 	bhelgaas@google.com,
@@ -67,11 +67,10 @@ Cc: kevin.tian@intel.com,
 	iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>,
-	Haorong Ye <yehaorong@bytedance.com>
-Subject: [PATCH v11 2/5] iommu/vt-d: don't issue ATS Invalidation request when device is disconnected
-Date: Thu, 25 Jan 2024 20:39:59 -0500
-Message-Id: <20240126014002.481294-3-haifeng.zhao@linux.intel.com>
+	Ethan Zhao <haifeng.zhao@linux.intel.com>
+Subject: [PATCH v11 3/5] iommu/vt-d: simplify parameters of qi_submit_sync() ATS invalidation callers
+Date: Thu, 25 Jan 2024 20:40:00 -0500
+Message-Id: <20240126014002.481294-4-haifeng.zhao@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
 References: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
@@ -83,191 +82,248 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For those endpoint devices connect to system via hotplug capable ports,
-users could request a hot reset to the device by flapping device's link
-through setting the slot's link control register, as pciehp_ist() DLLSC
-interrupt sequence response, pciehp will unload the device driver and
-then power it off. thus cause an IOMMU device-TLB invalidation (Intel
-VT-d spec, or ATS Invalidation in PCIe spec r6.1) request for non-existence
-target device to be sent and deadly loop to retry that request after ITE
-fault triggered in interrupt context.
+fold parameters back to struct device_domain_info *info instead of extract
+and pass them, thus decrease the number of the parameter passed for
+following functions
 
-That would cause following continuous hard lockup warning and system hang
+qi_flush_dev_iotlb()
+qi_flush_dev_iotlb_pasid()
+quirk_extra_dev_tlb_flush()
 
-[ 4211.433662] pcieport 0000:17:01.0: pciehp: Slot(108): Link Down
-[ 4211.433664] pcieport 0000:17:01.0: pciehp: Slot(108): Card not present
-[ 4223.822591] NMI watchdog: Watchdog detected hard LOCKUP on cpu 144
-[ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
-         OE    kernel version xxxx
-[ 4223.822623] Hardware name: vendorname xxxx 666-106,
-BIOS 01.01.02.03.01 05/15/2023
-[ 4223.822623] RIP: 0010:qi_submit_sync+0x2c0/0x490
-[ 4223.822624] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
- 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 1
-0 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
-[ 4223.822624] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
-[ 4223.822625] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
-[ 4223.822625] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
-[ 4223.822625] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
-[ 4223.822626] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
-[ 4223.822626] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
-[ 4223.822626] FS:  0000000000000000(0000) GS:ffffa237ae400000(0000)
-knlGS:0000000000000000
-[ 4223.822627] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 4223.822627] CR2: 00007ffe86515d80 CR3: 000002fd3000a001 CR4: 0000000000770ee0
-[ 4223.822627] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 4223.822628] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-[ 4223.822628] PKRU: 55555554
-[ 4223.822628] Call Trace:
-[ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
-[ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
-[ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
-[ 4223.822629]  intel_iommu_release_device+0x1f/0x30
-[ 4223.822629]  iommu_release_device+0x33/0x60
-[ 4223.822629]  iommu_bus_notifier+0x7f/0x90
-[ 4223.822630]  blocking_notifier_call_chain+0x60/0x90
-[ 4223.822630]  device_del+0x2e5/0x420
-[ 4223.822630]  pci_remove_bus_device+0x70/0x110
-[ 4223.822630]  pciehp_unconfigure_device+0x7c/0x130
-[ 4223.822631]  pciehp_disable_slot+0x6b/0x100
-[ 4223.822631]  pciehp_handle_presence_or_link_change+0xd8/0x320
-[ 4223.822631]  pciehp_ist+0x176/0x180
-[ 4223.822631]  ? irq_finalize_oneshot.part.50+0x110/0x110
-[ 4223.822632]  irq_thread_fn+0x19/0x50
-[ 4223.822632]  irq_thread+0x104/0x190
-[ 4223.822632]  ? irq_forced_thread_fn+0x90/0x90
-[ 4223.822632]  ? irq_thread_check_affinity+0xe0/0xe0
-[ 4223.822633]  kthread+0x114/0x130
-[ 4223.822633]  ? __kthread_cancel_work+0x40/0x40
-[ 4223.822633]  ret_from_fork+0x1f/0x30
-[ 4223.822633] Kernel panic - not syncing: Hard LOCKUP
-[ 4223.822634] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
-         OE     kernel version xxxx
-[ 4223.822634] Hardware name: vendorname xxxx 666-106,
-BIOS 01.01.02.03.01 05/15/2023
-[ 4223.822634] Call Trace:
-[ 4223.822634]  <NMI>
-[ 4223.822635]  dump_stack+0x6d/0x88
-[ 4223.822635]  panic+0x101/0x2d0
-[ 4223.822635]  ? ret_from_fork+0x11/0x30
-[ 4223.822635]  nmi_panic.cold.14+0xc/0xc
-[ 4223.822636]  watchdog_overflow_callback.cold.8+0x6d/0x81
-[ 4223.822636]  __perf_event_overflow+0x4f/0xf0
-[ 4223.822636]  handle_pmi_common+0x1ef/0x290
-[ 4223.822636]  ? __set_pte_vaddr+0x28/0x40
-[ 4223.822637]  ? flush_tlb_one_kernel+0xa/0x20
-[ 4223.822637]  ? __native_set_fixmap+0x24/0x30
-[ 4223.822637]  ? ghes_copy_tofrom_phys+0x70/0x100
-[ 4223.822637]  ? __ghes_peek_estatus.isra.16+0x49/0xa0
-[ 4223.822637]  intel_pmu_handle_irq+0xba/0x2b0
-[ 4223.822638]  perf_event_nmi_handler+0x24/0x40
-[ 4223.822638]  nmi_handle+0x4d/0xf0
-[ 4223.822638]  default_do_nmi+0x49/0x100
-[ 4223.822638]  exc_nmi+0x134/0x180
-[ 4223.822639]  end_repeat_nmi+0x16/0x67
-[ 4223.822639] RIP: 0010:qi_submit_sync+0x2c0/0x490
-[ 4223.822639] Code: 48 be 00 00 00 00 00 08 00 00 49 85 74 24 20 0f 95 c1 48 8b
- 57 10 83 c1 04 83 3c 1a 03 0f 84 a2 01 00 00 49 8b 04 24 8b 70 34 <40> f6 c6 10
- 74 17 49 8b 04 24 8b 80 80 00 00 00 89 c2 d3 fa 41 39
-[ 4223.822640] RSP: 0018:ffffc4f074f0bbb8 EFLAGS: 00000093
-[ 4223.822640] RAX: ffffc4f040059000 RBX: 0000000000000014 RCX: 0000000000000005
-[ 4223.822640] RDX: ffff9f3841315800 RSI: 0000000000000000 RDI: ffff9f38401a8340
-[ 4223.822641] RBP: ffff9f38401a8340 R08: ffffc4f074f0bc00 R09: 0000000000000000
-[ 4223.822641] R10: 0000000000000010 R11: 0000000000000018 R12: ffff9f384005e200
-[ 4223.822641] R13: 0000000000000004 R14: 0000000000000046 R15: 0000000000000004
-[ 4223.822641]  ? qi_submit_sync+0x2c0/0x490
-[ 4223.822642]  ? qi_submit_sync+0x2c0/0x490
-[ 4223.822642]  </NMI>
-[ 4223.822642]  qi_flush_dev_iotlb+0xb1/0xd0
-[ 4223.822642]  __dmar_remove_one_dev_info+0x224/0x250
-[ 4223.822643]  dmar_remove_one_dev_info+0x3e/0x50
-[ 4223.822643]  intel_iommu_release_device+0x1f/0x30
-[ 4223.822643]  iommu_release_device+0x33/0x60
-[ 4223.822643]  iommu_bus_notifier+0x7f/0x90
-[ 4223.822644]  blocking_notifier_call_chain+0x60/0x90
-[ 4223.822644]  device_del+0x2e5/0x420
-[ 4223.822644]  pci_remove_bus_device+0x70/0x110
-[ 4223.822644]  pciehp_unconfigure_device+0x7c/0x130
-[ 4223.822644]  pciehp_disable_slot+0x6b/0x100
-[ 4223.822645]  pciehp_handle_presence_or_link_change+0xd8/0x320
-[ 4223.822645]  pciehp_ist+0x176/0x180
-[ 4223.822645]  ? irq_finalize_oneshot.part.50+0x110/0x110
-[ 4223.822645]  irq_thread_fn+0x19/0x50
-[ 4223.822646]  irq_thread+0x104/0x190
-[ 4223.822646]  ? irq_forced_thread_fn+0x90/0x90
-[ 4223.822646]  ? irq_thread_check_affinity+0xe0/0xe0
-[ 4223.822646]  kthread+0x114/0x130
-[ 4223.822647]  ? __kthread_cancel_work+0x40/0x40
-[ 4223.822647]  ret_from_fork+0x1f/0x30
-[ 4223.822647] Kernel Offset: 0x6400000 from 0xffffffff81000000 (relocation
-range: 0xffffffff80000000-0xffffffffbfffffff)
+no function change.
 
-Such issue could be triggered by all kinds of regular surprise removal
-hotplug operation. like:
-
-1. pull EP(endpoint device) out directly.
-2. turn off EP's power.
-3. bring the link down.
-etc.
-
-this patch aims to work for regular safe removal and surprise removal
-unplug. these hot unplug handling process could be optimized to fix the
-ATS Invalidation hang issue by calling pci_dev_is_disconnected() in 
-function devtlb_invalidation_with_pasid() to check target device state to
-avoid sending meaningless ATS Invalidation request to iommu when device is
-gone. (see IMPLEMENTATION NOTE in PCIe spec r6.1 section 10.3.1)
-
-For safe removal, device wouldn't be removed until the whole software
-handling process is done, it wouldn't trigger the hard lock up issue
-caused by too long ATS Invalidation timeout wait. In safe removal path,
-device state isn't set to pci_channel_io_perm_failure in
-pciehp_unconfigure_device() by checking 'presence' parameter, calling
-pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will return
-false there, wouldn't break the function.
-
-For surprise removal, device state is set to pci_channel_io_perm_failure in
-pciehp_unconfigure_device(), means device is already gone (disconnected)
-call pci_dev_is_disconnected() in devtlb_invalidation_with_pasid() will
-return true to break the function not to send ATS Invalidation request to
-the disconnected device blindly, thus avoid to trigger further ITE fault,
-and ITE fault will block all invalidation request to be handled.
-furthermore retry the timeout request could trigger hard lockup.
-
-safe removal (present) & surprise removal (not present)
-
-pciehp_ist()
-   pciehp_handle_presence_or_link_change()
-     pciehp_disable_slot()
-       remove_board()
-         pciehp_unconfigure_device(presence) {
-           if (!presence)
-                pci_walk_bus(parent, pci_dev_set_disconnected, NULL);
-           }
-
-this patch works for regular safe removal and surprise removal of ATS
-capable endpoint on PCIe switch downstream ports.
-
-Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table interface")
-Tested-by: Haorong Ye <yehaorong@bytedance.com>
 Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
 ---
- drivers/iommu/intel/pasid.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iommu/intel/dmar.c   | 26 ++++++++++++++++++++++----
+ drivers/iommu/intel/iommu.c  | 26 +++++++-------------------
+ drivers/iommu/intel/iommu.h  | 17 ++++++++---------
+ drivers/iommu/intel/nested.c |  9 ++-------
+ drivers/iommu/intel/pasid.c  |  9 ++-------
+ drivers/iommu/intel/svm.c    |  7 +++----
+ 6 files changed, 44 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 3239cefa4c33..953592125e4a 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -214,6 +214,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 23cb80d62a9a..ab5e1760bd59 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1517,11 +1517,20 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+ 	qi_submit_sync(iommu, &desc, 1, 0);
+ }
+ 
+-void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+-			u16 qdep, u64 addr, unsigned mask)
++void qi_flush_dev_iotlb(struct intel_iommu *iommu,
++			struct device_domain_info *info, u64 addr,
++			unsigned int mask)
+ {
++	u16 sid, qdep, pfsid;
+ 	struct qi_desc desc;
+ 
++	if (!info || !info->ats_enabled)
++		return;
++
++	sid = info->bus << 8 | info->devfn;
++	qdep = info->ats_qdep;
++	pfsid = info->pfsid;
++
+ 	/*
+ 	 * VT-d spec, section 4.3:
+ 	 *
+@@ -1590,11 +1599,20 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
+ }
+ 
+ /* PASID-based device IOTLB Invalidate */
+-void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+-			      u32 pasid,  u16 qdep, u64 addr, unsigned int size_order)
++void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
++			      struct device_domain_info *info, u64 addr, u32 pasid,
++			      unsigned int size_order)
+ {
+ 	unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order - 1);
+ 	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
++	u16 sid, qdep, pfsid;
++
++	if (!info || !dev_is_pci(info->dev))
++		return;
++
++	sid = info->bus << 8 | info->devfn;
++	qdep = info->ats_qdep;
++	pfsid = info->pfsid;
+ 
+ 	/*
+ 	 * VT-d spec, section 4.3:
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 6fb5f6fceea1..65bd867dafdd 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1310,16 +1310,11 @@ static void iommu_disable_pci_caps(struct device_domain_info *info)
+ static void __iommu_flush_dev_iotlb(struct device_domain_info *info,
+ 				    u64 addr, unsigned int mask)
+ {
+-	u16 sid, qdep;
+-
  	if (!info || !info->ats_enabled)
  		return;
  
-+	if (pci_dev_is_disconnected(to_pci_dev(dev)))
-+		return;
-+
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
+-	sid = info->bus << 8 | info->devfn;
+-	qdep = info->ats_qdep;
+-	qi_flush_dev_iotlb(info->iommu, sid, info->pfsid,
+-			   qdep, addr, mask);
+-	quirk_extra_dev_tlb_flush(info, addr, mask, IOMMU_NO_PASID, qdep);
++	qi_flush_dev_iotlb(info->iommu, info, addr, mask);
++	quirk_extra_dev_tlb_flush(info, addr, IOMMU_NO_PASID, mask);
+ }
+ 
+ static void iommu_flush_dev_iotlb(struct dmar_domain *domain,
+@@ -1342,11 +1337,7 @@ static void iommu_flush_dev_iotlb(struct dmar_domain *domain,
+ 		if (!info->ats_enabled)
+ 			continue;
+ 
+-		qi_flush_dev_iotlb_pasid(info->iommu,
+-					 PCI_DEVID(info->bus, info->devfn),
+-					 info->pfsid, dev_pasid->pasid,
+-					 info->ats_qdep, addr,
+-					 mask);
++		qi_flush_dev_iotlb_pasid(info->iommu, info, addr, dev_pasid->pasid, mask);
+ 	}
+ 	spin_unlock_irqrestore(&domain->lock, flags);
+ }
+@@ -4990,9 +4981,8 @@ static void __init check_tylersburg_isoch(void)
+  *
+  * As a reminder, #6 will *NEED* this quirk as we enable nested translation.
+  */
+-void quirk_extra_dev_tlb_flush(struct device_domain_info *info,
+-			       unsigned long address, unsigned long mask,
+-			       u32 pasid, u16 qdep)
++void quirk_extra_dev_tlb_flush(struct device_domain_info *info, u32 pasid,
++			       unsigned long address, unsigned long mask)
+ {
+ 	u16 sid;
+ 
+@@ -5001,11 +4991,9 @@ void quirk_extra_dev_tlb_flush(struct device_domain_info *info,
+ 
+ 	sid = PCI_DEVID(info->bus, info->devfn);
+ 	if (pasid == IOMMU_NO_PASID) {
+-		qi_flush_dev_iotlb(info->iommu, sid, info->pfsid,
+-				   qdep, address, mask);
++		qi_flush_dev_iotlb(info->iommu, info, address, mask);
+ 	} else {
+-		qi_flush_dev_iotlb_pasid(info->iommu, sid, info->pfsid,
+-					 pasid, qdep, address, mask);
++		qi_flush_dev_iotlb_pasid(info->iommu, info, address, pasid, mask);
+ 	}
+ }
+ 
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index d02f916d8e59..f68f17476d85 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -1037,18 +1037,17 @@ void qi_flush_context(struct intel_iommu *iommu, u16 did,
+ 		      u16 sid, u8 fm, u64 type);
+ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
+ 		    unsigned int size_order, u64 type);
+-void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+-			u16 qdep, u64 addr, unsigned mask);
+-
++void qi_flush_dev_iotlb(struct intel_iommu *iommu,
++			struct device_domain_info *info, u64 addr,
++			unsigned int mask);
+ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
+ 		     unsigned long npages, bool ih);
+ 
+-void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+-			      u32 pasid, u16 qdep, u64 addr,
+-			      unsigned int size_order);
+-void quirk_extra_dev_tlb_flush(struct device_domain_info *info,
+-			       unsigned long address, unsigned long pages,
+-			       u32 pasid, u16 qdep);
++void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
++			      struct device_domain_info *info, u64 addr,
++			      u32 pasid, unsigned int size_order);
++void quirk_extra_dev_tlb_flush(struct device_domain_info *info, u32 pasid,
++			       unsigned long address, unsigned long mask);
+ void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu,
+ 			  u32 pasid);
+ 
+diff --git a/drivers/iommu/intel/nested.c b/drivers/iommu/intel/nested.c
+index f26c7f1c46cc..d15f72b55940 100644
+--- a/drivers/iommu/intel/nested.c
++++ b/drivers/iommu/intel/nested.c
+@@ -78,18 +78,13 @@ static void nested_flush_dev_iotlb(struct dmar_domain *domain, u64 addr,
+ {
+ 	struct device_domain_info *info;
+ 	unsigned long flags;
+-	u16 sid, qdep;
+ 
+ 	spin_lock_irqsave(&domain->lock, flags);
+ 	list_for_each_entry(info, &domain->devices, link) {
+ 		if (!info->ats_enabled)
+ 			continue;
+-		sid = info->bus << 8 | info->devfn;
+-		qdep = info->ats_qdep;
+-		qi_flush_dev_iotlb(info->iommu, sid, info->pfsid,
+-				   qdep, addr, mask);
+-		quirk_extra_dev_tlb_flush(info, addr, mask,
+-					  IOMMU_NO_PASID, qdep);
++		qi_flush_dev_iotlb(info->iommu, info, addr, mask);
++		quirk_extra_dev_tlb_flush(info, IOMMU_NO_PASID, addr, mask);
+ 	}
+ 	spin_unlock_irqrestore(&domain->lock, flags);
+ }
+diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
+index 953592125e4a..5dacdea3cab7 100644
+--- a/drivers/iommu/intel/pasid.c
++++ b/drivers/iommu/intel/pasid.c
+@@ -208,7 +208,6 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+ 			       struct device *dev, u32 pasid)
+ {
+ 	struct device_domain_info *info;
+-	u16 sid, qdep, pfsid;
+ 
+ 	info = dev_iommu_priv_get(dev);
+ 	if (!info || !info->ats_enabled)
+@@ -217,10 +216,6 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+ 	if (pci_dev_is_disconnected(to_pci_dev(dev)))
+ 		return;
+ 
+-	sid = info->bus << 8 | info->devfn;
+-	qdep = info->ats_qdep;
+-	pfsid = info->pfsid;
+-
+ 	/*
+ 	 * When PASID 0 is used, it indicates RID2PASID(DMA request w/o PASID),
+ 	 * devTLB flush w/o PASID should be used. For non-zero PASID under
+@@ -228,9 +223,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+ 	 * efficient to flush devTLB specific to the PASID.
+ 	 */
+ 	if (pasid == IOMMU_NO_PASID)
+-		qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
++		qi_flush_dev_iotlb(iommu, info, 0, 64 - VTD_PAGE_SHIFT);
+ 	else
+-		qi_flush_dev_iotlb_pasid(iommu, sid, pfsid, pasid, qdep, 0, 64 - VTD_PAGE_SHIFT);
++		qi_flush_dev_iotlb_pasid(iommu, info, 0, pasid, 64 - VTD_PAGE_SHIFT);
+ }
+ 
+ void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct device *dev,
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index 40edd282903f..abc226220029 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -181,11 +181,10 @@ static void __flush_svm_range_dev(struct intel_svm *svm,
+ 
+ 	qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, address, pages, ih);
+ 	if (info->ats_enabled) {
+-		qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info->pfsid,
+-					 svm->pasid, sdev->qdep, address,
++		qi_flush_dev_iotlb_pasid(sdev->iommu, info, address, svm->pasid,
+ 					 order_base_2(pages));
+-		quirk_extra_dev_tlb_flush(info, address, order_base_2(pages),
+-					  svm->pasid, sdev->qdep);
++		quirk_extra_dev_tlb_flush(info, svm->pasid, address,
++					  order_base_2(pages));
+ 	}
+ }
+ 
 -- 
 2.31.1
 
