@@ -1,65 +1,55 @@
-Return-Path: <linux-pci+bounces-2599-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2600-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E119F83E229
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 20:07:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B373083E285
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 20:29:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C86CAB2341C
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 19:07:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70110283EAA
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 19:29:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E5AD21373;
-	Fri, 26 Jan 2024 19:07:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 393D5224C9;
+	Fri, 26 Jan 2024 19:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dI/lt0Id"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZXhBhTq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26760224C2;
-	Fri, 26 Jan 2024 19:07:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3382261A;
+	Fri, 26 Jan 2024 19:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706296035; cv=none; b=bTY1ngQ0P07tKkfDTUnF638URX4z7wW6M1YHci9FgoqQzHX338IjzJcM/CTiQMeDq7AdaP3CeCiGEsxaSbtzx1apKkpEq/PERY1+hUaGZ2UE5sXnbDOJ1rf3iyCmI3NbsboxIUbMAgLN/sAdNH6WMfJSMSanCpBkysL4BTBPq6M=
+	t=1706297380; cv=none; b=Nbss/HCZsDRPeK1aLjDJRe6iKno0n/v3f70GxDPc1GxyiloWwjPINf/omRted7iTShoXFD7bAwLD61mJ6srNNIM5anjifoTdaWoOpoIZlEdEK7/my3Sc5yOOLDSPLS+xkC16Q45R4CTfWN2eBHLLimyN1N15Ao389FO0N4lJ3VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706296035; c=relaxed/simple;
-	bh=ulx0BesNORlowdCSLIs9aXzhc69P+j4oO28lOdTdOZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BlyEBXTZLGVFfzQV4EXjZUjEzhPX8fkRfybmkW1MCKE6rR3KZkSBMawfxweMPkZuKFDXB0mcmeI/9sEktHBPTZm81waTjfzJrf4VeId53vjwlMRThmV3fyk/NQmEuB5uQnG4WB+xiis+6hqlR6PQAxWHPBs9uV+kz/NB05nuwgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dI/lt0Id; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D3AC433C7;
-	Fri, 26 Jan 2024 19:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706296034;
-	bh=ulx0BesNORlowdCSLIs9aXzhc69P+j4oO28lOdTdOZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dI/lt0Id7RtS0u5U6BAPCCQ1N6ohoDFe/LJB4tsJ/fDbMomYeCwcDpC/HQxHH34Pt
-	 Nsbny0iix7DE9Z9BnY38ZqULQlDjuQhRTlV1wRH0lm/kjFbZUBDzcRfatImT3TPwYJ
-	 5rihqK4HrOk7pEOrAGXFoXDUdT8Me9oRjQ9kiGsM=
-Date: Fri, 26 Jan 2024 11:07:13 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alistair Francis <alistair23@gmail.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, Jonathan.Cameron@huawei.com,
-	lukas@wunner.de, alex.williamson@redhat.com,
-	christian.koenig@amd.com, kch@nvidia.com, logang@deltatee.com,
-	linux-kernel@vger.kernel.org, chaitanyak@nvidia.com,
-	rdunlap@infradead.org, Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [PATCH v6 2/3] sysfs: Add a attr_is_visible function to
- attribute_group
-Message-ID: <2024012631-removed-stuffed-ecc0@gregkh>
-References: <2023083139-underling-amuser-772e@gregkh>
- <2023090142-circling-probably-7828@gregkh>
- <2023100539-playgroup-stoppable-d5d4@gregkh>
- <CAKmqyKOgej1jiiHsoLuDKXwdLDGa4njrndu6c1=bxnqk2NM58Q@mail.gmail.com>
- <2023101113-swimwear-squealer-464c@gregkh>
- <CAKmqyKMX3HDphrWHYcdnLEjMwe1pCROcPNZchPonhsLOq=FoHw@mail.gmail.com>
- <CAKmqyKOOSBF7qDpqAp6nn3+3wAnaGmqu88Fk3KY58fmgQ-44Jw@mail.gmail.com>
- <2024012321-envious-procedure-4a58@gregkh>
- <65b1739b2c789_37ad294f5@dwillia2-xfh.jf.intel.com.notmuch>
- <65b400bf65c33_51c7f294c5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	s=arc-20240116; t=1706297380; c=relaxed/simple;
+	bh=wplePetjGGSutFZASxBToeC5djPktb7V8+iOKkDud5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JjJC3Qf4aM1VJQExJUE0J1VVAso46uGwSBEcZnUTfeAn0gn3KqfsAwTzMa5+w6m9t4rV1f1qX+OAIFIWIA+6w7iNqIehTq4HrZkw7++srTOn69hYTl3fuOjxURtPkmEbtNHD7ZfbBituEsVJA0dbx/guj+A0EXwGPFfKHoZvtus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZXhBhTq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D9E0C433C7;
+	Fri, 26 Jan 2024 19:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706297379;
+	bh=wplePetjGGSutFZASxBToeC5djPktb7V8+iOKkDud5k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=eZXhBhTqFDJRwK21waHVWzEiVFadEQmlKIaRoUq0enXE4XeWC1PT2+6Wd89GwXCtq
+	 Z0djqqRK/nY0iMv5jYilo97ZyK23MFkA6iBUnKHewIz4JiYcHwHU/vxogMFRu9g/37
+	 K96uyKXVWdcZ0TbUEQq6t/0HDzZdEb8yM0tl6gjv5g2BKqU1qZWUzDPVyahyU2iyeG
+	 bmJ5k225dKtWKUBQhFkTKbogy3tH/TKgoJNyuZFdu4XBx7bT1rOENtoGXQODid9hD7
+	 SMMwU8UcBW40lLTpypz5HanH5zvt9iPg3gth8qLq+toRcYTHpjvZXwp3nbKVKch49H
+	 S4uE9HcM6S5Gw==
+Date: Fri, 26 Jan 2024 13:29:37 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/pci: Stop requiring ECAM to be declared in E820,
+ ACPI or EFI
+Message-ID: <20240126192937.GA448790@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,61 +58,75 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <65b400bf65c33_51c7f294c5@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <a4b2a119-ed12-4be8-ba75-4a046770efa7@amd.com>
 
-On Fri, Jan 26, 2024 at 10:58:07AM -0800, Dan Williams wrote:
-> Dan Williams wrote:
-> > Greg KH wrote:
-> > [..]
-> > > > 
-> > > > Hey Greg,
-> > > > 
-> > > > I wanted to follow up on this and see if you are able to provide more
-> > > > details for reproducing or if you are able to look into it?
-> > > 
-> > > Last I tried this, it still crashed and would not boot either on my
-> > > laptop or my workstation.  I don't know how it is working properly for
-> > > you, what systems have you tried it on?
-> > > 
-> > > I'm not going to be able to look at this for many weeks due to
-> > > conference stuff, so if you want to take the series and test it and
-> > > hopefully catch my error, that would be great, I'd love to move forward
-> > > and get this merged someday.
+On Fri, Jan 26, 2024 at 12:32:34PM -0600, Mario Limonciello wrote:
+> On 1/25/2024 18:35, Bjorn Helgaas wrote:
+> > On Wed, Jan 17, 2024 at 11:53:50AM -0600, Mario Limonciello wrote:
+> > > On 12/15/2023 16:03, Mario Limonciello wrote:
+> > > > commit 7752d5cfe3d1 ("x86: validate against acpi motherboard resources")
+> > > > introduced checks for ensuring that MCFG table also has memory region
+> > > > reservations to ensure no conflicts were introduced from a buggy BIOS.
+> ...
+
+> > > Any thoughts on this version since our last conversation on V1?
 > > 
-> > I mentioned to Lukas that I was working on a "sysfs group visibility"
-> > patch and he pointed me to this thread. I will note that I tried to make
-> > the "hide group if all attributes are invisible" approach work, but
-> > reverted to a "new is_group_visible() callback" approach. I did read
-> > through the thread and try to improve the argument in the changelog
-> > accordingly.
+> > Just to let you know that I'm not ignoring this, and I'm trying to
+> > formulate a useful response.
+> 
+> Thanks, I had been wondering.
+> 
+> FYI - we've also added another place to make noise about this ECAM
+> issue in AMDGPU.  This warning should go into 6.9:
+> 
+> https://lore.kernel.org/amd-gfx/20240110101319.695169-1-Jun.Ma2@amd.com/
+
+Looks similar to the PCI core warning here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/probe.c?id=v6.7#n1134
+
+The comment says it doesn't work for devices on the root bus, though.
+Maybe it could be made to work there as well?
+
+> > mmconfig-shared.c has grown into an
+> > extremely complicated mess and is a continual source of problems, so
+> > I'd really like to untangle it a tiny bit if we can.
 > > 
-> > I do admit to liking the cleanliness (not touching 'struct
-> > attribute_group') of the "hide if no visible attribute" approch, but see
-> > the criticism of that alternative below, and let me know if it is
-> > convincing. I tested it locally with the following hack to make the
-> > group disappear every other sysfs_update_group() event:
+> > One thing is that per spec, ACPI motherboard resources are the ONLY
+> > way to reserve ECAM space.  I'd like to reclaim a little clarity about
+> > that and separate out the E820 and EFI stuff as secondary hacks.  But
+> > there's an insane amount of history that got us here.
 > 
-> Hey Greg,
+> I guess you know better than anyone here.  But if my idea is
+> actually viable then the E820 and EFI stuff turn into "information
+> only".
+
+That would definitely be a good thing.  I would like it if that were
+more obvious from reading the code because I spend waaay too much time
+staring at that labyrinth.
+
+> > The problem we have to avoid is assigning a BAR that overlaps ECAM.
+> > We assign BARs for lots of reasons.  dGPU and resizable BARs are
+> > examples but there are others, like hotplug and SR-IOV.  The fact that
+> > Windows works is a red herring because it allocates BARs differently.
 > 
-> Ignore this version:
+> Have we actually observed a case that assigning the BAR overlaps
+> ECAM region thus far or it's hypothetical?
+
+Yes, it has happened.  There's an example in the commit log here:
+https://git.kernel.org/linus/070909e56a7d ("x86/pci: Reserve ECAM if
+BIOS didn't include it in PNP0C02 _CRS")
+
+> > And of course, if there's any way to solve this safely without
+> > adding yet another kernel parameter, that would be vastly
+> > preferable.
 > 
-> ---
-> From: Dan Williams <dan.j.williams@intel.com>
-> Date: Tue, 23 Jan 2024 20:20:39 -0800
-> Subject: [PATCH] sysfs: Introduce is_group_visible() for attribute_groups
-> ---
-> 
-> I am going back to your approach without a new callback, and some fixups
-> to avoid unintended directory removal. I will post that shortly with its
-> consumer.
+> The kernel isn't static though; something we could do is keep the
+> parameter around a year or two to get the bug feedback loop of
+> people testing it and then rip it out if nothing comes up.
 
-Ignore it?  I was just about to write an email that said "maybe this is
-the right way forward" :)
+Yeah.  It's pretty hard to remove those options though.  For example,
+"pci=routeirq" was added in the pre-git era and probably isn't
+necessary, but how do we know nobody uses it?
 
-What happened to cause it to not be ok?  And if you can find the bug in
-the posted patch here, that would be great as well.
-
-thanks,
-
-greg k-h
+Bjorn
 
