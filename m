@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-2563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2564-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E15083D22B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 02:42:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8239383D22D
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 02:42:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B29351C25CC9
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 01:42:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26BFD28A268
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 01:42:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41F851864;
-	Fri, 26 Jan 2024 01:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD4E469D;
+	Fri, 26 Jan 2024 01:40:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DxX8dsga"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZsOyMVR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A03BE4E;
-	Fri, 26 Jan 2024 01:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF6EBE5B;
+	Fri, 26 Jan 2024 01:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706233241; cv=none; b=fXSgTt4wKr8rWgHYDOOVl3Cd2Z1AR1dSTIHokVEnWIzUUM54T2YbCSVE6NLTFP/gjNHk++xZAeFRliY2KVh4xzJSgv+A1quTf0sLFnlRhqotLrfHUcBvjdR0WZSLja+rsNaz7AIGvnAyY3TMbzQQ5a0vRdZ/sVdoy1dFb+l7YWQ=
+	t=1706233243; cv=none; b=Csoz0jTfCp3Q/nKg0seATY10r4FX5peHozRaPdseu/uxuDwylcSVYiKmdGCWSWQHxTNjKX8W3dw8HbevepK2/4lmHiF41TCDBp8tHIcHv3F3tpv9koYSn+2D1xuUKhB5nx4bUAtiwy0mqNFO8qh2z8uRAhCcWduLN17z4QNHGHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706233241; c=relaxed/simple;
-	bh=ItgP093gIYVsRymsymHY0/QTT+jDlduQBou/FdU9F6Y=;
+	s=arc-20240116; t=1706233243; c=relaxed/simple;
+	bh=FcKQPcK9DSVvVLptnofw+fKVNv4QmsDqpMonokbwkz0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f/7bqPMZGLkpSZcIBvOkglkboJx+AYfMamTHNRIjUoIX90U+/KPkQmLdZjMk/iqvgKgYdZEXC6u/YnEULG3hLpVluWYXctU+J1AlnV1YY4o4XmK5QKzhuWUd86DSk/7Cj08vWMbscRnIUTZybROZPeUg94t9nxCFWfbOD2iy/Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DxX8dsga; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=Net+WrS96aNeh2JiCbJCttvaWKEgpk+0vwdrZ/FE86UDB41qdLKI83J/o/2iZL6c3dciTPNMJj4Sve4KETuTZUQJ/klhhKsWh23E0j+6sZnxl6zGZ9zeP/8lJY89kNoK3icVXknCZvpw20wXSB7bUaKpUcs/PKVO0ioKeaeBYnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZsOyMVR; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706233239; x=1737769239;
+  t=1706233242; x=1737769242;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ItgP093gIYVsRymsymHY0/QTT+jDlduQBou/FdU9F6Y=;
-  b=DxX8dsgaRKdj/OnTyQL74Zlldno1b7jHZ8NE9MR+kWscjNFXUA+FrCfI
-   kdFaeEVh1jMxSF+QohUJwhnD/awG/yEJWCMDABGmQWYgYatwZvnCtuC+U
-   wRGuK3wibDGoF66+JiFZvH/VhFY/heJBTj6O8hYTQnAR9crsmMtjFOaPo
-   MCDmO4b+pzbSrY7/eaTOnSWLqARp9N6mbIfWMMo2ltDNXYbyBx1Vp+mgb
-   3sRVlIn2TG6jmR97+AXbo4E2SDJ/Pw70HZXMbmZ+lNgchbQRoVUej6MgT
-   59faqGS0QF48heAUbabNYBRnnPrKFP8p8bwRR7Ywft7reNYWvjUCxm4XA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718503"
+  bh=FcKQPcK9DSVvVLptnofw+fKVNv4QmsDqpMonokbwkz0=;
+  b=DZsOyMVRFBgq6h9Ix+AhJEFRBDRy9IYt1Pq38rn6zvJK57FGsNRz7Jjn
+   2zq0FN3i09Gnu+UASLTrL0zQB1KA8I/cLSQg/TggWoWmNiyXUwAnN2rrb
+   elR+PCTFhpPlYU+xKuQBI5/Z+hZWcGOAbYDKqlqMfswtdE8Rnlj52jsfR
+   y9Ybh2BZR9Y41RaYEyg5TPYQ/OOo3Zxa/geSwdTq8TqMl6vTue/MDW4EA
+   kqGV1jUX2LaJI64zRT5G1nZgtH4IHqPZi4OCxn/wicztqCsDwfwgKt7yX
+   rbxsP5s4yUfmcrlYektoS3Hg1ZjLeqJBvnuYqu79l5D23+eOd+JOal/LV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718519"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15718503"
+   d="scan'208";a="15718519"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:39 -0800
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2533142"
+   d="scan'208";a="2533153"
 Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:34 -0800
+  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:39 -0800
 From: Ethan Zhao <haifeng.zhao@linux.intel.com>
 To: baolu.lu@linux.intel.com,
 	bhelgaas@google.com,
@@ -68,9 +68,9 @@ Cc: kevin.tian@intel.com,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: [PATCH v11 4/5] iommu/vt-d: pass pdev parameter for qi_check_fault() and refactor callers
-Date: Thu, 25 Jan 2024 20:40:01 -0500
-Message-Id: <20240126014002.481294-5-haifeng.zhao@linux.intel.com>
+Subject: [PATCH v11 5/5] iommu/vt-d: improve ITE fault handling if target device isn't present
+Date: Thu, 25 Jan 2024 20:40:02 -0500
+Message-Id: <20240126014002.481294-6-haifeng.zhao@linux.intel.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
 References: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
@@ -82,228 +82,63 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-to check state of ATS capable pci device in qi_check_fault() for surprise
-removal case, we need to pass the target pci device of ATS invalidation
-request to qi_check_fault(). if pdev is valid, means current request is for
-ATS invalidation, vice vesa.
-
-no function change.
+Because surprise removal could happen anytime, e.g. user could request safe
+removal to EP(endpoint device) via sysfs and brings its link down to do
+surprise removal cocurrently. such aggressive cases would cause ATS 
+invalidation request issued to non-existence target device, then deadly
+loop to retry that request after ITE fault triggered in interrupt context.
+this patch aims to optimize the ITE handling by checking the target device
+presence state to avoid retrying the timeout request blindly, thus avoid
+hard lockup or system hang.
 
 Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
 ---
- drivers/iommu/intel/dmar.c          | 31 ++++++++++++++++++-----------
- drivers/iommu/intel/iommu.h         |  3 ++-
- drivers/iommu/intel/irq_remapping.c |  2 +-
- drivers/iommu/intel/pasid.c         |  2 +-
- drivers/iommu/intel/svm.c           |  6 +++---
- 5 files changed, 26 insertions(+), 18 deletions(-)
+ drivers/iommu/intel/dmar.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index ab5e1760bd59..814134e9aa5a 100644
+index 814134e9aa5a..e2d5ea2b0683 100644
 --- a/drivers/iommu/intel/dmar.c
 +++ b/drivers/iommu/intel/dmar.c
-@@ -1267,7 +1267,8 @@ static void qi_dump_fault(struct intel_iommu *iommu, u32 fault)
- 	       (unsigned long long)desc->qw1);
- }
- 
--static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
-+static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
-+			  struct pci_dev *pdev)
+@@ -1272,6 +1272,7 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
  {
  	u32 fault;
  	int head, tail;
-@@ -1344,7 +1345,8 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
-  * can be part of the submission but it will not be polled for completion.
-  */
- int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
--		   unsigned int count, unsigned long options)
-+		   unsigned int count, unsigned long options,
-+		   struct pci_dev *pdev)
- {
++	u64 iqe_err, ite_sid;
  	struct q_inval *qi = iommu->qi;
- 	s64 devtlb_start_ktime = 0;
-@@ -1430,7 +1432,7 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
- 		 * a deadlock where the interrupt context can wait indefinitely
- 		 * for free slots in the queue.
- 		 */
--		rc = qi_check_fault(iommu, index, wait_index);
-+		rc = qi_check_fault(iommu, index, wait_index, pdev);
- 		if (rc)
- 			break;
+ 	int shift = qi_shift(iommu);
  
-@@ -1476,7 +1478,7 @@ void qi_global_iec(struct intel_iommu *iommu)
- 	desc.qw3 = 0;
+@@ -1316,6 +1317,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
+ 		tail = readl(iommu->reg + DMAR_IQT_REG);
+ 		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
  
- 	/* should never fail */
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- void qi_flush_context(struct intel_iommu *iommu, u16 did, u16 sid, u8 fm,
-@@ -1490,7 +1492,7 @@ void qi_flush_context(struct intel_iommu *iommu, u16 did, u16 sid, u8 fm,
- 	desc.qw2 = 0;
- 	desc.qw3 = 0;
- 
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
-@@ -1514,23 +1516,27 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
- 	desc.qw2 = 0;
- 	desc.qw3 = 0;
- 
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- void qi_flush_dev_iotlb(struct intel_iommu *iommu,
- 			struct device_domain_info *info, u64 addr,
- 			unsigned int mask)
- {
-+	struct pci_dev *pdev = NULL;
- 	u16 sid, qdep, pfsid;
- 	struct qi_desc desc;
- 
- 	if (!info || !info->ats_enabled)
- 		return;
- 
-+	if (info->dev || !dev_is_pci(info->dev))
-+		return;
++		/*
++		 * SID field is valid only when the ITE field is Set in FSTS_REG
++		 * see Intel VT-d spec r4.1, section 11.4.9.9
++		 */
++		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
++		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
 +
-+	pdev = to_pci_dev(info->dev);
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
--
- 	/*
- 	 * VT-d spec, section 4.3:
- 	 *
-@@ -1554,7 +1560,7 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu,
- 	desc.qw2 = 0;
- 	desc.qw3 = 0;
+ 		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+ 		pr_info("Invalidation Time-out Error (ITE) cleared\n");
  
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, pdev);
- }
+@@ -1325,6 +1333,16 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
+ 			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+ 		} while (head != tail);
  
- /* PASID-based IOTLB invalidation */
-@@ -1595,7 +1601,7 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
- 				QI_EIOTLB_AM(mask);
++		/*
++		 * If got ITE, we need to check if the sid of ITE is the same as
++		 * current ATS invalidation target device, if yes, don't try this
++		 * request anymore if the target device isn't present.
++		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
++		 */
++		if (pdev && ite_sid && !pci_device_is_present(pdev) &&
++			ite_sid == pci_dev_id(pci_physfn(pdev)))
++			return -ETIMEDOUT;
++
+ 		if (qi->desc_status[wait_index] == QI_ABORT)
+ 			return -EAGAIN;
  	}
- 
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- /* PASID-based device IOTLB Invalidate */
-@@ -1605,15 +1611,16 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
- {
- 	unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order - 1);
- 	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
-+	struct pci_dev *pdev = NULL;
- 	u16 sid, qdep, pfsid;
- 
- 	if (!info || !dev_is_pci(info->dev))
- 		return;
- 
-+	pdev = to_pci_dev(info->dev);
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	pfsid = info->pfsid;
--
- 	/*
- 	 * VT-d spec, section 4.3:
- 	 *
-@@ -1657,7 +1664,7 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
- 		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
- 	}
- 
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, pdev);
- }
- 
- void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did,
-@@ -1667,7 +1674,7 @@ void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did,
- 
- 	desc.qw0 = QI_PC_PASID(pasid) | QI_PC_DID(did) |
- 			QI_PC_GRAN(granu) | QI_PC_TYPE;
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- /*
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index f68f17476d85..72e1d5fb2114 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -1052,7 +1052,8 @@ void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64 granu,
- 			  u32 pasid);
- 
- int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
--		   unsigned int count, unsigned long options);
-+		   unsigned int count, unsigned long options,
-+		   struct pci_dev *pdev);
- /*
-  * Options used in qi_submit_sync:
-  * QI_OPT_WAIT_DRAIN - Wait for PRQ drain completion, spec 6.5.2.8.
-diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-index 566297bc87dd..09276bfa127d 100644
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -153,7 +153,7 @@ static int qi_flush_iec(struct intel_iommu *iommu, int index, int mask)
- 	desc.qw2 = 0;
- 	desc.qw3 = 0;
- 
--	return qi_submit_sync(iommu, &desc, 1, 0);
-+	return qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- static int modify_irte(struct irq_2_iommu *irq_iommu,
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 5dacdea3cab7..8bba5721aeba 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -200,7 +200,7 @@ pasid_cache_invalidation_with_pasid(struct intel_iommu *iommu,
- 	desc.qw2 = 0;
- 	desc.qw3 = 0;
- 
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- static void
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index abc226220029..2a2cd82d781b 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -538,7 +538,7 @@ void intel_drain_pasid_prq(struct device *dev, u32 pasid)
- 			QI_DEV_IOTLB_PFSID(info->pfsid);
- qi_retry:
- 	reinit_completion(&iommu->prq_complete);
--	qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
-+	qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN, NULL);
- 	if (readl(iommu->reg + DMAR_PRS_REG) & DMA_PRS_PRO) {
- 		wait_for_completion(&iommu->prq_complete);
- 		goto qi_retry;
-@@ -641,7 +641,7 @@ static void handle_bad_prq_event(struct intel_iommu *iommu,
- 		desc.qw3 = 0;
- 	}
- 
--	qi_submit_sync(iommu, &desc, 1, 0);
-+	qi_submit_sync(iommu, &desc, 1, 0, NULL);
- }
- 
- static irqreturn_t prq_event_thread(int irq, void *d)
-@@ -797,7 +797,7 @@ int intel_svm_page_response(struct device *dev,
- 				ktime_to_ns(ktime_get()) - prm->private_data[0]);
- 		}
- 
--		qi_submit_sync(iommu, &desc, 1, 0);
-+		qi_submit_sync(iommu, &desc, 1, 0, NULL);
- 	}
- out:
- 	return ret;
 -- 
 2.31.1
 
