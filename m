@@ -1,207 +1,178 @@
-Return-Path: <linux-pci+bounces-2558-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2559-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2BA783D187
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 01:35:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88D8083D221
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 02:40:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 134731C231A9
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 00:35:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBFBC1C21837
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 01:40:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67153387;
-	Fri, 26 Jan 2024 00:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1105010EB;
+	Fri, 26 Jan 2024 01:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZGCtXP2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oJZxwOJh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EB8197;
-	Fri, 26 Jan 2024 00:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718D8EC3;
+	Fri, 26 Jan 2024 01:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706229319; cv=none; b=Jaj+X73ZiqMv5aOmvzqkxaJ+gM3K0E+ceQ7Y1kfUTHAxnpp42YCOzyIiHPlp4LeLKH7/aIP3T5Fg2/eVsJpP9yjMkk6gLfMOuugSjF/80ON3rL3iMhX9ftiCYiAdehxITUzc40/QJQk2e6uDpt6RBDiGYvSo6L0BJjPvwtsiAfg=
+	t=1706233225; cv=none; b=jPAkGOpqRj8PVZmBFwLLyGuGNI2mywM3wxyKntasNJJ4XfjY4HOp3P5MiAvjeUlS1jI0SVGp0jcaCmCUcrWGB7swz+olVcx0tYBIdh6qXY22ZtmNHc/RR9mNki3N5i3DWlhuzFi7Zp9aRTTzo6fAV6fNtH2x1vZVdQ3Z1fD2DBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706229319; c=relaxed/simple;
-	bh=m986K6zFIlrT+3xx6AdVYmVw1p6r7qdl+tS4SPDV+JU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MI1CxMNBrlYte7bHajUzalIu2FpxxdaG6TbUSMvAUOTlZXIiC/DuEDLe1KfiNRDZy1V4S+zAsbhLAiuSU8VcFzfIU3iRlCIJgffUKQgERo3QSVqt+qArGz4t2dBHCoacCkootjni1bJ7zuOQsvbFL3PTeG5aQ5ylfFy9g8XqRNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZGCtXP2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37EFC433C7;
-	Fri, 26 Jan 2024 00:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706229318;
-	bh=m986K6zFIlrT+3xx6AdVYmVw1p6r7qdl+tS4SPDV+JU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rZGCtXP25jujiWfIT6A0DUPA418VQFoekhEs7OAHyAQhR7ckr4N8L9mfTuBexZKzP
-	 HW6eF7ZDxd59YFWh9VUPFW1JIuHox+x9TE0hE4Uqp6IBQwL0cTTsArKqQc5mj9Bp1t
-	 OSF7faXSn9a7mJr79/J++7mhrn0/EGW9kSYdLiHux6oqnV0pD8A6vyD9JSJT5LQ3Sl
-	 MfGfcSSwfTKQHjsLI60FC1nYpSh+GmPK6hZ6Pd2UL2SBp7Il6POOR1tftxQnMoaUEf
-	 Ib8YQ0L67MCm4liiAkMx+UeYmffw0vn9h+KvUy/avCg6jgLghK9QYnSF7YNYZas/Oz
-	 KPhZV9Cg/P4xA==
-Date: Thu, 25 Jan 2024 18:35:14 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/pci: Stop requiring ECAM to be declared in E820,
- ACPI or EFI
-Message-ID: <20240126003514.GA407167@bhelgaas>
+	s=arc-20240116; t=1706233225; c=relaxed/simple;
+	bh=4dlBSbHCmNEO4tqCGXWVdwuxmbBaTOw3I9YxMiM23sY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eXOf4j7aiQBhzmr7/ILb/zd1dEvPnkAJYQKCy78i/UdaVlkJe55I2G7a6M+phWJXjpHSmPZmsvNqAMY30EALD8LD9/0S6DRpiaau36OQMTpyH3zgww/ixkZMjQMvzDl1NhJhiIdz4wLYcGCK2N8eaJ5jMf+4WxTsy2c3lP7fLKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oJZxwOJh; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706233223; x=1737769223;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4dlBSbHCmNEO4tqCGXWVdwuxmbBaTOw3I9YxMiM23sY=;
+  b=oJZxwOJhsAqNhJVm4g3ruRTDE6g42ggsxbm8+cC/Kl+t1ipTODVQNMsh
+   veENgtfDmqJcXIciRD9SQoMrzT52yohmm4EfpmJAHW0ZbBSFu9cJUS+jo
+   9UYgxwPhie0L6WlYTanE3dOFeKb3gMJ9jcjT9gb62Hwii2sNa0xPBXanb
+   NX85HazPbPEZy3LlNlJzjsdAU4LL673buAt9QjgqEa1+tn2P8yIKpvBtt
+   dCpcDvcouUzkh6JwnX1GP9LYq7evz1yP3AkJsFBwx3NNv1/EBjzB3gE/A
+   KDiUaZy4C8zwgGGuwGzZ+91AxQqKd1whORPhuq3kj+jrxU+fxSVr6XUIe
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718431"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="15718431"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2533076"
+Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
+  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:19 -0800
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: baolu.lu@linux.intel.com,
+	bhelgaas@google.com,
+	robin.murphy@arm.com,
+	jgg@ziepe.ca
+Cc: kevin.tian@intel.com,
+	dwmw2@infradead.org,
+	will@kernel.org,
+	lukas@wunner.de,
+	yi.l.liu@intel.com,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Ethan Zhao <haifeng.zhao@linux.intel.com>
+Subject: [PATCH v11 0/5] fix vt-d hard lockup when hotplug ATS capable device
+Date: Thu, 25 Jan 2024 20:39:57 -0500
+Message-Id: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7caefe4b-bf05-49a3-bfb8-75e7fd73343b@amd.com>
 
-On Wed, Jan 17, 2024 at 11:53:50AM -0600, Mario Limonciello wrote:
-> On 12/15/2023 16:03, Mario Limonciello wrote:
-> > commit 7752d5cfe3d1 ("x86: validate against acpi motherboard resources")
-> > introduced checks for ensuring that MCFG table also has memory region
-> > reservations to ensure no conflicts were introduced from a buggy BIOS.
-> > 
-> > This has proceeded over time to add other types of reservation checks
-> > for ACPI PNP resources and EFI MMIO memory type.  The PCI firmware spec
-> > does say that these checks are only required when the operating system
-> > doesn't comprehend the firmware region:
-> > 
-> > ```
-> > If the operating system does not natively comprehend reserving the MMCFG
-> > region, the MMCFG region must be reserved by firmware. The address range
-> > reported in the MCFG table or by _CBA method (see Section 4.1.3) must be
-> > reserved by declaring a motherboard resource. For most systems, the
-> > motherboard resource would appear at the root of the ACPI namespace
-> > (under \_SB) in a node with a _HID of EISAID (PNP0C02), and the resources
-> > in this case should not be claimed in the root PCI bus’s _CRS. The
-> > resources can optionally be returned in Int15 E820h or EFIGetMemoryMap
-> > as reserved memory but must always be reported through ACPI as a
-> > motherboard resource.
-> > ```
-> > 
-> > Running this check causes problems with accessing extended PCI
-> > configuration space on OEM laptops that don't specify the region in PNP
-> > resources or in the EFI memory map. That later manifests as problems with
-> > dGPU and accessing resizable BAR. Similar problems don't exist in Windows
-> > 11 with exact same laptop/firmware stack.
-> > 
-> > Due to the stability of the Windows ecosystem that x86 machines participate
-> > it is unlikely that using the region specified in the MCFG table as
-> > a reservation will cause a problem. The possible worst circumstance could
-> > be that a buggy BIOS causes a larger hole in the memory map that is
-> > unusable for devices than intended.
-> > 
-> > Change the default behavior to keep the region specified in MCFG even if
-> > it's not specified in another source. This is expected to improve
-> > machines that otherwise couldn't access PCI extended configuration space.
-> > 
-> > In case this change causes problems, add a kernel command line parameter
-> > that can restore the previous behavior.
-> > 
-> > Link: https://members.pcisig.com/wg/PCI-SIG/document/15350
-> >        PCI Firmware Specification 3.3
-> >        Section 4.1.2 MCFG Table Description Note 2
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > ---
-> 
-> Bjorn,
-> 
-> Any thoughts on this version since our last conversation on V1?
+This patchset is used to fix vt-d hard lockup reported when surprise
+unplug ATS capable endpoint device connects to system via PCIe switch
+as following topology.
 
-Just to let you know that I'm not ignoring this, and I'm trying to
-formulate a useful response.  mmconfig-shared.c has grown into an
-extremely complicated mess and is a continual source of problems, so
-I'd really like to untangle it a tiny bit if we can.
+     +-[0000:15]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d
+     |           +-00.1  Intel Corporation Ice Lake Mesh 2 PCIe
+     |           +-00.2  Intel Corporation Ice Lake RAS
+     |           +-00.4  Intel Corporation Device 0b23
+     |           \-01.0-[16-1b]----00.0-[17-1b]--+-00.0-[18]----00.0
+                                           NVIDIA Corporation Device 2324
+     |                                           +-01.0-[19]----00.0
+                          Mellanox Technologies MT2910 Family [ConnectX-7]
 
-One thing is that per spec, ACPI motherboard resources are the ONLY
-way to reserve ECAM space.  I'd like to reclaim a little clarity about
-that and separate out the E820 and EFI stuff as secondary hacks.  But
-there's an insane amount of history that got us here.
+User brought endpoint device 19:00.0's link down by flapping it's hotplug
+capable slot 17:01.0 link control register, as sequence DLLSC response,
+pciehp_ist() will unload device driver and power it off, durning device
+driver is unloading an iommu device-TLB invalidation (Intel VT-d spec, or
+'ATS Invalidation' in PCIe spec) request issued to that link down device,
+thus a long time completion/timeout waiting in interrupt context causes
+continuous hard lockup warnning and system hang.
 
-The problem we have to avoid is assigning a BAR that overlaps ECAM.
-We assign BARs for lots of reasons.  dGPU and resizable BARs are
-examples but there are others, like hotplug and SR-IOV.  The fact that
-Windows works is a red herring because it allocates BARs differently.
+Other detail, see every patch commit log.
 
-It's also little bit of a burr under my saddle to add things for a
-problem on unspecified machines, where I don't even know whether the
-machines are already in the field or the firmware could still be
-fixed.
+patch [1&2] were tested by yehaorong@bytedance.com on stable v6.7-rc4.
+patch [1-5] passed compiling on stable v6.8rc1.
 
-And of course, if there's any way to solve this safely without adding
-yet another kernel parameter, that would be vastly preferable.
+change log:
+v11: 
+- update per latest comment and suggestion from Baolu and YiLiu.
+- split refactoring patch into two patches, [3/5] for simplify parameters
+  and [4/5] for pdev parameter passing.
+- re-order patches.
+- fold target device presence check into qi_check_fault().
+- combine patch[2][5] in v10 into one patch[5].
+- some commit description correctness.
+- add fixes tag to patch[2/5].
+- rebased on 6.8rc1
+v10:
+- refactor qi_submit_sync() and its callers to get pci_dev instance, as
+  Kevin pointed out add target_flush_dev to iommu is not right.
+v9:
+- unify all spelling of ATS Invalidation adhere to PCIe spec per Bjorn's
+  suggestion.
+v8:
+- add a patch to break the loop for timeout device-TLB invalidation, as
+  Bjorn said there is possibility device just no response but not gone.
+v7:
+- reorder patches and revise commit log per Bjorn's guide.
+- other code and commit log revise per Lukas' suggestion.
+- rebased to stable v6.7-rc6.
+v6:
+- add two patches to break out device-TLB invalidation if device is gone.
+v5:
+- add a patch try to fix the rare case (surprise remove a device in
+  safe removal process). not work because surprise removal handling can't
+  re-enter when another safe removal is in process.
+v4:
+- move the PCI device state checking after ATS per Baolu's suggestion.
+v3:
+- fix commit description typo.
+v2:
+- revise commit[1] description part according to Lukas' suggestion.
+- revise commit[2] description to clarify the issue's impact.
+v1:
+- https://lore.kernel.org/lkml/20231213034637.2603013-1-haifeng.zhao@
+linux.intel.com/T/
 
-Sorry, nothing actionable here but wanted to let you know that it's
-keeping me awake at night ;)
 
-Bjorn
+Thanks,
+Ethan 
 
-> > v1->v2:
-> >   * Rebase on pci/next
-> >   * Add an escape hatch
-> >   * Reword commit message
-> > ---
-> >   .../admin-guide/kernel-parameters.txt         |  6 ++++++
-> >   arch/x86/pci/mmconfig-shared.c                | 19 +++++++++++++++----
-> >   2 files changed, 21 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index 65731b060e3f..eacd0c0521c2 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -1473,6 +1473,12 @@
-> >   			(in particular on some ATI chipsets).
-> >   			The kernel tries to set a reasonable default.
-> > +	enforce_ecam_resv [X86]
-> > +			Enforce requiring an ECAM reservation specified in
-> > +			BIOS for PCI devices.
-> > +			This parameter is only valid if CONFIG_PCI_MMCONFIG
-> > +			is enabled.
-> > +
-> >   	enforcing=	[SELINUX] Set initial enforcing status.
-> >   			Format: {"0" | "1"}
-> >   			See security/selinux/Kconfig help text.
-> > diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-> > index 0cc9520666ef..aee117c6bbf9 100644
-> > --- a/arch/x86/pci/mmconfig-shared.c
-> > +++ b/arch/x86/pci/mmconfig-shared.c
-> > @@ -34,6 +34,15 @@ static DEFINE_MUTEX(pci_mmcfg_lock);
-> >   LIST_HEAD(pci_mmcfg_list);
-> > +static bool enforce_ecam_resv __read_mostly;
-> > +static int __init parse_ecam_options(char *str)
-> > +{
-> > +	enforce_ecam_resv = true;
-> > +
-> > +	return 1;
-> > +}
-> > +__setup("enforce_ecam_resv", parse_ecam_options);
-> > +
-> >   static void __init pci_mmconfig_remove(struct pci_mmcfg_region *cfg)
-> >   {
-> >   	if (cfg->res.parent)
-> > @@ -569,10 +578,12 @@ static void __init pci_mmcfg_reject_broken(int early)
-> >   	list_for_each_entry(cfg, &pci_mmcfg_list, list) {
-> >   		if (!pci_mmcfg_reserved(NULL, cfg, early)) {
-> > -			pr_info("not using ECAM (%pR not reserved)\n",
-> > -				&cfg->res);
-> > -			free_all_mmcfg();
-> > -			return;
-> > +			pr_info("ECAM %pR not reserved, %s\n", &cfg->res,
-> > +				enforce_ecam_resv ? "ignoring" : "using anyway");
-> > +			if (enforce_ecam_resv) {
-> > +				free_all_mmcfg();
-> > +				return;
-> > +			}
-> >   		}
-> >   	}
-> >   }
-> > 
-> > base-commit: 67e04d921cb6902e8c2abdbf748279d43f25213e
-> 
+
+Ethan Zhao (5):
+  PCI: make pci_dev_is_disconnected() helper public for other drivers
+  iommu/vt-d: don't issue ATS Invalidation request when device is
+    disconnected
+  iommu/vt-d: simplify parameters of qi_submit_sync() ATS invalidation
+    callers
+  iommu/vt-d: pass pdev parameter for qi_check_fault() and refactor
+    callers
+  iommu/vt-d: improve ITE fault handling if target device isn't present
+
+ drivers/iommu/intel/dmar.c          | 71 +++++++++++++++++++++++------
+ drivers/iommu/intel/iommu.c         | 26 +++--------
+ drivers/iommu/intel/iommu.h         | 20 ++++----
+ drivers/iommu/intel/irq_remapping.c |  2 +-
+ drivers/iommu/intel/nested.c        |  9 +---
+ drivers/iommu/intel/pasid.c         | 12 ++---
+ drivers/iommu/intel/svm.c           | 13 +++---
+ drivers/pci/pci.h                   |  5 --
+ include/linux/pci.h                 |  5 ++
+ 9 files changed, 93 insertions(+), 70 deletions(-)
+
+-- 
+2.31.1
+
 
