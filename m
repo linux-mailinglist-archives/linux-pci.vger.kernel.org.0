@@ -1,195 +1,159 @@
-Return-Path: <linux-pci+bounces-2578-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2579-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A35C983DBB8
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 15:25:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7D5383DC25
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 15:37:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A16F1F23A98
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 14:25:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA67F1C20979
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Jan 2024 14:37:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B83FC1C6A0;
-	Fri, 26 Jan 2024 14:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C2731B7F2;
+	Fri, 26 Jan 2024 14:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="HqyE4prg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pGkLV9Sp"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jYJ+UGbM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wnew4-smtp.messagingengine.com (wnew4-smtp.messagingengine.com [64.147.123.18])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294A81C695;
-	Fri, 26 Jan 2024 14:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54D01CD07;
+	Fri, 26 Jan 2024 14:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706279055; cv=none; b=UVSLvv3x6jNEpQITdv/Y9GBoQX7c9FVE/TOjqb+iPY+41MF+AT0h8SlYMee9ltQHqACnwVoq1Q4TgCG56HevFVG3Qg1fZ7uqjErdKu5+tyyYnRALvRc3Wb1wj1V2aXgHu2Ka1V2mVqrQkgIWZJrDzgwGAvrmCkPA/kmqmNv3Dl4=
+	t=1706279863; cv=none; b=Ozq8UEVlYUZFZabQ+tSn1Q62C6lFNo3zGeVzlR2fLm1ZJFZkt+enfPmIzvd8On4GrRvXnYgN9nEAB8SbhCwZP3hb7MuUzysBDNtvyS/0upVH4W1yHVU0EnQ+Q/thq02gMU7MV0uBuFAOsCP4vnhftA6H9MzxFCIFRhu8/S7N7pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706279055; c=relaxed/simple;
-	bh=hKIfs47ddSkIptRXRENQTpOASHv1OOHXf/8ceRFn0/k=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=TjjzkOhzEGawZ2GqHCits+UttT3I0o6R3iCDr0Hl686f6iUZyOEmRnCUJhMHHr2G0WqutrqaFJi2+IIPMk84nGvXv41XYneKuPiRcHrYTBVseUsFwHni9olUjx6euZZHrmloURm7FYgP8T5B4eLUfSoPkugkXwWFKk93H36A3Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=HqyE4prg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pGkLV9Sp; arc=none smtp.client-ip=64.147.123.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.west.internal (Postfix) with ESMTP id 96C8F2B004D0;
-	Fri, 26 Jan 2024 09:24:09 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 26 Jan 2024 09:24:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1706279049;
-	 x=1706286249; bh=TF+Ka+GXK+ztTGKn5RdSG0DNk91ZmYKf5EL+gc74hng=; b=
-	HqyE4prgfd8Ba0Bmvq/8hIZN547wH19SUJZbqUpbMCd9JpXwBct8mBDqhraHb6+T
-	mbEoF+BMPvsLE5Z6tS5/47kjcZTno7n4oyeu5Nvyg2oRBQNuOMTMFsI70KjowdOa
-	WWkkaRlFFmgtM9fD8rzxvdoU53s1ecmYxb2NeqwEltV2IzbJUxJqbOCK0c5HTCfJ
-	OuoQDl5Z6Nte2EOdaf12WHv9aBi5cBdWmr4UuK9N6YyNUqzWsLCAmBnpytyaR8gd
-	CfJUI/PNAEQu2q0rdgXsnulMtUvqDMeMRA36m21aK+OsMhzO352cjVje325yedg3
-	oVbHxxlz+MLgoISc0YNFkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706279049; x=
-	1706286249; bh=TF+Ka+GXK+ztTGKn5RdSG0DNk91ZmYKf5EL+gc74hng=; b=p
-	GkLV9SpgJfadZtrnSQJaU54TnuTjuQAOSG7J4wwGwen4oY9YDdsI2Q4vTsi7bkkI
-	qukYU5RWgE3Jl+MbDh5Kgt6V9dS0chTDsV8ow0UreRfs9EJLa5zRpXU/DNf+l8Jt
-	YwaH4yJy/cDQ+NTxm+LNLwqKT/CClboWq+iYWnzPRthNjvmMeSL+uks6YTKckt5A
-	eOyXg7QcQliOomfqnDF7BVa6NB9QfNto5Yvxg02IhQ6tgn3N8icCXsnRGnBV15dH
-	FnYE4/Iwef6aw+Vk0cgGiZ1JeW8EYwiANDxPywQN/tlrwJPo4sTKIDqZXa4rEHFA
-	e3SiE4Vmf2TmUwZs3MTkA==
-X-ME-Sender: <xms:iMCzZQNYer9f7VdPOXoyPKfCj2jFtSHFwUmb2nP_5Yohb-DdxY4JHA>
-    <xme:iMCzZW9H5HZ_r4Jx6Ozw0c9htRvipTfjcFPBGtvrVcc6c_lhcCFO6BgUhbNPqrvUg
-    1qqYnu0RGIY-GDYGS0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeljedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:iMCzZXR8FMsOmcKyqhh09tq2UAow3bwCtteuyDRN_V4F3-ngFw2Zjg>
-    <xmx:iMCzZYuhXHdz5KCGUV9bj3HgMcnsXTn-IPyg-j8fV4a7h_6SEtmPOA>
-    <xmx:iMCzZYdu-71nQpJwF7TblWOq2VuZmgeBISgs0-h7I18TvXQEcVLtfQ>
-    <xmx:icCzZbyhv8qGURYbFFSDIlfrgqETSP8vTsrazydnRbntID8tzlG8773dWCk>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 60C02B6008D; Fri, 26 Jan 2024 09:24:08 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	s=arc-20240116; t=1706279863; c=relaxed/simple;
+	bh=xgBJPPCeFx6F8RvuJZb3CDZIbr5zJcVGTJYWir/0iIY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PtZHDb8awaOPUmsyum+NuRw91odl5U5e7zn9DTT2rciTigcoqt7pPYt5z3YCr3v5L1ngVdCc+6ZeoQjAV6DWLqWOvz5DZR8UenBFVZXsMaNElMCe1ycIJqHge4PVKbkwp0vgmVKgiHDGH5SgLDZQiKM9A/YyA0wMEIdk3ZgKsPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jYJ+UGbM; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A5F94000C;
+	Fri, 26 Jan 2024 14:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706279851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=62/qYpK4+YlKzbTb8Bu4FQMVmVipXLL21WAgCC0RYzA=;
+	b=jYJ+UGbML212yaitjT4mp/B0Uhj+CdJw4jD57IsqiYRIgwE1hfwmCP4ECofgfoBbqQnNM1
+	e5uVAXyA5/zPYjCo9OvZwSdnBssk0iN6GMJX+eWzY2rE2ctgKmhw9xAwV5f+86HVqVGSnY
+	NoIlCcSt5qwkRpmaPKkO78NxWwWIP8nRtDmqwyGY/y5YhHSNYsmLZPyqOuo841+KBD4ys/
+	3h94YI4MafeM0g6YI+/sN6zd2r5qGVHN48dh1XVQ2ebTqiP7bvyrtsyiXGFiE798lcgEDM
+	vNhrh6WJx/tIpjPMgqDkRa7oXoJUA1g3LymgdRex25VzqieDKKrJy4xV8WqVJw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v2 00/15] Add suspend to ram support for PCIe on J7200
+Date: Fri, 26 Jan 2024 15:36:42 +0100
+Message-Id: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <c11243e0-fcaf-4eda-92d3-c06a8f8cdb2d@app.fastmail.com>
-In-Reply-To: <70b8db3ec0f8730fdd23dae21edc1a93d274b048.camel@redhat.com>
-References: <20240123210553.GA326783@bhelgaas>
- <70b8db3ec0f8730fdd23dae21edc1a93d274b048.camel@redhat.com>
-Date: Fri, 26 Jan 2024 15:23:47 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Philipp Stanner" <pstanner@redhat.com>,
- "Bjorn Helgaas" <helgaas@kernel.org>
-Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Neil Brown" <neilb@suse.de>,
- "John Sanpe" <sanpeqf@gmail.com>,
- "Kent Overstreet" <kent.overstreet@gmail.com>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>,
- "Dave Jiang" <dave.jiang@intel.com>,
- "Uladzislau Koshchanka" <koshchanka@gmail.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "David Gow" <davidgow@google.com>, "Kees Cook" <keescook@chromium.org>,
- "Rae Moar" <rmoar@google.com>,
- "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "wuqiang.matt" <wuqiang.matt@bytedance.com>,
- "Yury Norov" <yury.norov@gmail.com>, "Jason Baron" <jbaron@akamai.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Marco Elver" <elver@google.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Ben Dooks" <ben.dooks@codethink.co.uk>,
- "Danilo Krummrich" <dakr@redhat.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- stable@vger.kernel.org, "Arnd Bergmann" <arnd@kernel.org>
-Subject: Re: [PATCH v5 RESEND 5/5] lib, pci: unify generic pci_iounmap()
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHrDs2UC/3WNTQ6CMBBGr0K6dsy00iCuvIdh0ZZRxmhLOoRoC
+ He3sHf5vp+8RQllJlGXalGZZhZOsYA5VCoMLj4IuC+sDJoaNRp4NgYRxsAEYjJQ8Nq1TUsn26h
+ y8k4IfHYxDNvt7WSivBVjpjt/dtOtKzywTCl/d/Gst/SvY9aAcK7J2t7ZMsGrT2l6cTyG9Fbdu
+ q4/Q9ZwwccAAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Fri, Jan 26, 2024, at 14:59, Philipp Stanner wrote:
-> On Tue, 2024-01-23 at 15:05 -0600, Bjorn Helgaas wrote:
->> On Thu, Jan 11, 2024 at 09:55:40AM +0100, Philipp Stanner wrote:
->>=20
->> The kernel-doc addition could possibly also move there since it isn't
->> related to the unification.
->
-> You mean the one from my devres-patch-series? Or documentation
-> specifically about pci_iounmap()?
->
->>=20
->> > =C2=A0{
->> > -#ifdef ARCH_HAS_GENERIC_IOPORT_MAP
->> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0uintptr_t start =3D (uin=
-tptr_t) PCI_IOBASE;
->> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0uintptr_t addr =3D (uint=
-ptr_t) p;
->> > -
->> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (addr >=3D start && a=
-ddr < start + IO_SPACE_LIMIT) {
->> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0ioport_unmap(p);
->> > +#ifdef CONFIG_HAS_IOPORT_MAP
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (iomem_is_ioport(addr=
-)) {
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0ioport_unmap(addr);
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return;
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
->> > =C2=A0#endif
->> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iounmap(p);
->> > +
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iounmap(addr);
->> > =C2=A0}
->>=20
->> > + * If CONFIG_GENERIC_IOMAP is selected and the architecture does
->> > NOT provide its
->> > + * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that
->> > the generic
->> > + * version from asm-generic/io.h is NOT used and instead the
->> > second "generic"
->> > + * version from this file here is used.
->> > + *
->> > + * There are currently two generic versions because of a difficult
->> > cleanup
->> > + * process. Namely, the version in lib/iomap.c once was really
->> > generic when IA64
->> > + * still existed. Today, it's only really used by x86.
->> > + *
->> > + * TODO: Move this function to x86-specific code.
->>=20
->> Some of these TODOs look fairly simple.=C2=A0 Are they actually hard,=
- or
->> could they just be done now?
->
-> If they were simple from my humble POV I would have implemented them.
-> The information about the x86-specficity is from Arnd Bergmann, the
-> header-maintainer.
->
-> I myself am not that sure how much work it would be to move the entire
-> lib/iomap.c file to x86. At least some (possibley "dead") hooks to it
-> still exist, for example here:
-> arch/powerpc/platforms/Kconfig  # L.189
+This add suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-This one definitely takes some work to untangle, it's selected
-by two powerpc platforms, but one doesn't actually need it any
-more, and the other one uses it only for non-PCI devices.
+In RC mode, the reset pin for endpoints is managed by a gpio expander on a
+i2c bus. This pin shall be managed in suspend_noirq() and resume_noirq().
+The suspend/resume has been moved to suspend_noirq()/resume_noirq() for
+pca953x (expander) and pinctrl-single.
 
-I think the other architectures are easier to change and do
-fix real bugs, but it's probably best done one at a time.
+To do i2c accesses during suspend_noirq/resume_noirq, we need to force the
+wakeup of the i2c controller (which is autosuspended) during suspend
+callback. 
+It's the only way to wakeup the controller if it's autosuspended, as
+runtime pm is disabled in suspend_noirq and resume_noirq.
 
-     Arnd
+The main change in this v2 is the add of mux_chip_resume() function in the
+mux core.
+This function restores the state of mux-chip using cached state. It's used
+by mmio driver in the resume_noirq() callback.
+
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+
+---
+Thomas Richard (11):
+      gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+      pinctrl: pinctrl-single: move suspend()/resume() callbacks to noirq
+      i2c: omap: wakeup the controller during suspend() callback
+      mux: add mux_chip_resume() function
+      phy: ti: phy-j721e-wiz: make wiz_clock_init callable multiple times
+      phy: ti: phy-j721e-wiz: add resume support
+      phy: cadence-torrent: extract calls to clk_get from cdns_torrent_clk
+      phy: cadence-torrent: register resets even if the phy is already configured
+      phy: cadence-torrent: add already_configured to struct cdns_torrent_phy
+      phy: cadence-torrent: remove noop_ops phy operations
+      phy: cadence-torrent: add suspend and resume support
+
+Théo Lebrun (4):
+      mux: mmio: add resume support
+      PCI: cadence: add resume support to cdns_pcie_host_setup()
+      PCI: j721e: add reset GPIO to struct j721e_pcie
+      PCI: j721e: add suspend and resume support
+
+ drivers/gpio/gpio-pca953x.c                        |   7 +-
+ drivers/i2c/busses/i2c-omap.c                      |  14 +++
+ drivers/mux/core.c                                 |  27 +++++
+ drivers/mux/mmio.c                                 |  12 ++
+ drivers/pci/controller/cadence/pci-j721e.c         |  93 ++++++++++++++--
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  49 +++++----
+ drivers/pci/controller/cadence/pcie-cadence-plat.c |   2 +-
+ drivers/pci/controller/cadence/pcie-cadence.h      |   4 +-
+ drivers/phy/cadence/phy-cadence-torrent.c          | 122 +++++++++++++++------
+ drivers/phy/ti/phy-j721e-wiz.c                     |  95 ++++++++++++----
+ drivers/pinctrl/pinctrl-single.c                   |  28 ++---
+ include/linux/mux/driver.h                         |   1 +
+ 12 files changed, 343 insertions(+), 111 deletions(-)
+---
+base-commit: 00ff0f9ce40db8e64fe16c424a965fd7ab769c42
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
+
 
