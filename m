@@ -1,165 +1,150 @@
-Return-Path: <linux-pci+bounces-2617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5362C83EABE
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Jan 2024 04:55:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E896383F00E
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Jan 2024 21:59:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86A701C21ADC
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Jan 2024 03:55:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D0B3B21957
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Jan 2024 20:59:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E89B1170A;
-	Sat, 27 Jan 2024 03:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC8E17543;
+	Sat, 27 Jan 2024 20:59:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mzj2cAyX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LE0BRl6u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8170A11C80;
-	Sat, 27 Jan 2024 03:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5457E1947E
+	for <linux-pci@vger.kernel.org>; Sat, 27 Jan 2024 20:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706327729; cv=none; b=TibgpiOOn29CxAohOFVNjGD2JfYtIrJ1d8gyn84braCTUChCSq0VFAxbqYd56baEEQhY18MEhVAsz/3IIOKd6xvX2qAwCd5cJDrHzmH/abBW3FhOLXDvVOpCvuHa499EquGWzMGHxy0qIEiMrND7o0G1CbX8/Ge4mLNa+NM8RX0=
+	t=1706389175; cv=none; b=n9BQlK33uf4ZON5o9YEjhmxrk+rOkTLfOv+Q5tijWf/XMGcahKGtsqJBMaRemWg4eB66uWr6kyp1B9rdowTLvP4Q6G7yhnYuefIoGkWZayYVfRMpjPbOxhGnARGEm98YO/c97WuY+u+Qoyw43QMlhLT4NIlWZzLMznKwZdR4OqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706327729; c=relaxed/simple;
-	bh=2YlrNsvY5YZx4tzdNL1t9wV1F+wTN43iqnuvGWOALuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WB8IsMvYbvVXTtUzeD8CKsnByWD8mu7lvt8vvfUt7LhAq0G9gPxUcSWtts+gxPOTdDZhaeBqBYVwrnnRE0vljowLuGF7hb3Qq9v2Tsbx9XjS5I+/zHSfzrizjF3oL1wYhGTVh677ZdCrT1D92paK5nCxLe3A0ou3T1Wsnt79r48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mzj2cAyX; arc=none smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706327726; x=1737863726;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2YlrNsvY5YZx4tzdNL1t9wV1F+wTN43iqnuvGWOALuI=;
-  b=mzj2cAyX5vh6OuuISaGqkkA5leUdepStDnG0wYBM0fq+axoqObDIMkoz
-   I5mL/A0ICPsSmUdLKPn5xusAT3fVQSwTIlDqWElF9PkqQy/Nu03XTex81
-   C/Vtqch78hxxLzfiTWR7q80O7ad+yAFohtrVYfbjK5tdU92HHa7E7ACre
-   XQ380N7JmPQdHIETQeMEvW6eqd7xKeHzZrBoZorZ/6thc09VhoR6ZUiG2
-   gNnxy4Hk5sI6DbLcVcaBoL7nmm3P+rZZuWp4iMhiUsezvllEFygUYaO2t
-   sUNGupLYmi6OsZ7/gXFhGqH8wmf4ALcyzQ4fD7W2NMb6/iGL6E5BXM8ls
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="466917310"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="466917310"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 19:55:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="29280502"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 26 Jan 2024 19:55:23 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTZmq-0001ck-31;
-	Sat, 27 Jan 2024 03:55:20 +0000
-Date: Sat, 27 Jan 2024 11:55:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>, baolu.lu@linux.intel.com,
-	bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca
-Cc: oe-kbuild-all@lists.linux.dev, kevin.tian@intel.com,
-	dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
-	yi.l.liu@intel.com, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: Re: [PATCH v11 3/5] iommu/vt-d: simplify parameters of
- qi_submit_sync() ATS invalidation callers
-Message-ID: <202401271122.0kJRQe33-lkp@intel.com>
-References: <20240126014002.481294-4-haifeng.zhao@linux.intel.com>
+	s=arc-20240116; t=1706389175; c=relaxed/simple;
+	bh=X7sfGFwjXzv3hDjZ7pBOcFdlwJFwBoQuoJ8UWnTjxa4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0dRoGSQTjAVwjFzyphJzgh9QbYwhowE9WsKbMVfMySRWuBPGaKh56Q6WZHP04HAdvCKuJTwSMKl41q2uwTF3065L+3M0ktdqg9lKZqokkY7yg0J+OHZ6y9Y33gTlwDsRZkEGxOFdr5p4JIc0j4+vJID81EXbMh9JdL9j+0V3rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LE0BRl6u; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-783d916d039so115222285a.2
+        for <linux-pci@vger.kernel.org>; Sat, 27 Jan 2024 12:59:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706389172; x=1706993972; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xi+XXGXLtGOnaTnHAzpID7MnZZG5IPUxmL4L9FGcLVk=;
+        b=LE0BRl6u8pGAYbXPj2TltHHMj5sgjsvlRiXMPjku3ejzVRa74uhaY9HkJxhUoNZ7FB
+         gJA27MdJNPaQSGYaRm+DrNgFLj52sbOAj581XOJktHeHu2bbG0M5v0QE5kADi3WGWKdR
+         fF7UOFRaeEbL3Rctx8TH2RelGg/lEs7XIOvhixiRgKmWrHP1YabP4uLofVYF9hFRbdEC
+         l+p+03d9MJT6xjSwhDUFJ6J7EZRiZVyvcxzI6rh35Yu/Qlti3CQ9DkLH/A44yI5ksJwA
+         A63VbGTMWJFqq3rKTaecturOD8PanVubpBdsUOLu1fx4yirmAiM/pB71a6wi95b3hEB0
+         ni9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706389172; x=1706993972;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xi+XXGXLtGOnaTnHAzpID7MnZZG5IPUxmL4L9FGcLVk=;
+        b=ktDWnOvfmrcUvesJVQXiuxmcqimYTfFGFaEn1DIr/zADQsg8O+7E0LWVlai1IdHEjd
+         wI8JBbQZAr+Eu94iiqj+gFiFdnY+bnFgSFOjfuFyorMCnU7P6r6lqb76F/con93H0Tv2
+         oj639AAbaIAbH9Ouhu/oBr0ylFsvOwI12gSVq7Qker9gx0Tm6HtGrjbCz5w7AW/q22Cs
+         SpsOnX/wKO5h/VkaSMzQri6Y+aXsGViBDVGyecZqF80i6TdVSlFJ9UPuQCWcwpIVSozL
+         1+VWh92knwbwnjSKPYYBuYHBkLlghqSxNFdr0WTEnaHpiTEhx73Ggw4Zt87ChSI6tCNa
+         cy7w==
+X-Gm-Message-State: AOJu0YxoBvxUwAWg0qCmfGIHtd88eNn9EF7J/24ff509v0eEB5i/tt2f
+	2YFHxi8BEHpfOFvrBPUPIswldDNvrPA17qx3y25hdJysKeUW6EXhyDOb5qaYyabYAExRUBp5iT3
+	Gk2nUUuyYCHzB5vwf2AXlsblnE3riYNP+EPz1yQ==
+X-Google-Smtp-Source: AGHT+IHfJzVeJM2xkAmUTr8ZLVYE1O6BzSpTjAVfgyKB0IlYK7KettRLZzpgOBAYKoyC3tCT7jMMH6X40Yjsa9zTcz0=
+X-Received: by 2002:ac8:5893:0:b0:42a:96ef:6deb with SMTP id
+ t19-20020ac85893000000b0042a96ef6debmr1350096qta.61.1706389172118; Sat, 27
+ Jan 2024 12:59:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126014002.481294-4-haifeng.zhao@linux.intel.com>
+References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com> <20240102-j7200-pcie-s2r-v2-1-8e4f7d228ec2@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v2-1-8e4f7d228ec2@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sat, 27 Jan 2024 21:59:21 +0100
+Message-ID: <CAMRc=MepTF6vV=MwqDNL2_PRjymn18b-RH7TN5TYAGaO=VGDWw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/15] gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, 
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ethan,
+On Fri, Jan 26, 2024 at 3:37=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> Some IOs can be needed during suspend_noirq()/resume_noirq().
+> So move suspend()/resume() to noirq.
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 00ffa168e405..6e495fc67a93 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -1234,7 +1234,7 @@ static void pca953x_save_context(struct pca953x_chi=
+p *chip)
+>         regcache_cache_only(chip->regmap, true);
+>  }
+>
+> -static int pca953x_suspend(struct device *dev)
+> +static int pca953x_suspend_noirq(struct device *dev)
+>  {
+>         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+>
+> @@ -1248,7 +1248,7 @@ static int pca953x_suspend(struct device *dev)
+>         return 0;
+>  }
+>
+> -static int pca953x_resume(struct device *dev)
+> +static int pca953x_resume_noirq(struct device *dev)
+>  {
+>         struct pca953x_chip *chip =3D dev_get_drvdata(dev);
+>         int ret;
+> @@ -1268,7 +1268,8 @@ static int pca953x_resume(struct device *dev)
+>         return ret;
+>  }
+>
+> -static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x=
+_resume);
+> +static DEFINE_NOIRQ_DEV_PM_OPS(pca953x_pm_ops,
+> +                              pca953x_suspend_noirq, pca953x_resume_noir=
+q);
+>
+>  /* convenience to stop overlong match-table lines */
+>  #define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __=
+int))
+>
+> --
+> 2.39.2
+>
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.8-rc1 next-20240125]
-[cannot apply to joro-iommu/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ethan-Zhao/PCI-make-pci_dev_is_disconnected-helper-public-for-other-drivers/20240126-094305
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20240126014002.481294-4-haifeng.zhao%40linux.intel.com
-patch subject: [PATCH v11 3/5] iommu/vt-d: simplify parameters of qi_submit_sync() ATS invalidation callers
-config: i386-buildonly-randconfig-001-20240127 (https://download.01.org/0day-ci/archive/20240127/202401271122.0kJRQe33-lkp@intel.com/config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240127/202401271122.0kJRQe33-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401271122.0kJRQe33-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/iommu/intel/iommu.c: In function 'quirk_extra_dev_tlb_flush':
->> drivers/iommu/intel/iommu.c:4987:6: warning: variable 'sid' set but not used [-Wunused-but-set-variable]
-     u16 sid;
-         ^~~
-
-
-vim +/sid +4987 drivers/iommu/intel/iommu.c
-
-e65a6897be5e49 Jacob Pan  2022-12-01  4957  
-e65a6897be5e49 Jacob Pan  2022-12-01  4958  /*
-e65a6897be5e49 Jacob Pan  2022-12-01  4959   * Here we deal with a device TLB defect where device may inadvertently issue ATS
-e65a6897be5e49 Jacob Pan  2022-12-01  4960   * invalidation completion before posted writes initiated with translated address
-e65a6897be5e49 Jacob Pan  2022-12-01  4961   * that utilized translations matching the invalidation address range, violating
-e65a6897be5e49 Jacob Pan  2022-12-01  4962   * the invalidation completion ordering.
-e65a6897be5e49 Jacob Pan  2022-12-01  4963   * Therefore, any use cases that cannot guarantee DMA is stopped before unmap is
-e65a6897be5e49 Jacob Pan  2022-12-01  4964   * vulnerable to this defect. In other words, any dTLB invalidation initiated not
-e65a6897be5e49 Jacob Pan  2022-12-01  4965   * under the control of the trusted/privileged host device driver must use this
-e65a6897be5e49 Jacob Pan  2022-12-01  4966   * quirk.
-e65a6897be5e49 Jacob Pan  2022-12-01  4967   * Device TLBs are invalidated under the following six conditions:
-e65a6897be5e49 Jacob Pan  2022-12-01  4968   * 1. Device driver does DMA API unmap IOVA
-e65a6897be5e49 Jacob Pan  2022-12-01  4969   * 2. Device driver unbind a PASID from a process, sva_unbind_device()
-e65a6897be5e49 Jacob Pan  2022-12-01  4970   * 3. PASID is torn down, after PASID cache is flushed. e.g. process
-e65a6897be5e49 Jacob Pan  2022-12-01  4971   *    exit_mmap() due to crash
-e65a6897be5e49 Jacob Pan  2022-12-01  4972   * 4. Under SVA usage, called by mmu_notifier.invalidate_range() where
-e65a6897be5e49 Jacob Pan  2022-12-01  4973   *    VM has to free pages that were unmapped
-e65a6897be5e49 Jacob Pan  2022-12-01  4974   * 5. Userspace driver unmaps a DMA buffer
-e65a6897be5e49 Jacob Pan  2022-12-01  4975   * 6. Cache invalidation in vSVA usage (upcoming)
-e65a6897be5e49 Jacob Pan  2022-12-01  4976   *
-e65a6897be5e49 Jacob Pan  2022-12-01  4977   * For #1 and #2, device drivers are responsible for stopping DMA traffic
-e65a6897be5e49 Jacob Pan  2022-12-01  4978   * before unmap/unbind. For #3, iommu driver gets mmu_notifier to
-e65a6897be5e49 Jacob Pan  2022-12-01  4979   * invalidate TLB the same way as normal user unmap which will use this quirk.
-e65a6897be5e49 Jacob Pan  2022-12-01  4980   * The dTLB invalidation after PASID cache flush does not need this quirk.
-e65a6897be5e49 Jacob Pan  2022-12-01  4981   *
-e65a6897be5e49 Jacob Pan  2022-12-01  4982   * As a reminder, #6 will *NEED* this quirk as we enable nested translation.
-e65a6897be5e49 Jacob Pan  2022-12-01  4983   */
-e2fcf16ac26679 Ethan Zhao 2024-01-25  4984  void quirk_extra_dev_tlb_flush(struct device_domain_info *info, u32 pasid,
-e2fcf16ac26679 Ethan Zhao 2024-01-25  4985  			       unsigned long address, unsigned long mask)
-e65a6897be5e49 Jacob Pan  2022-12-01  4986  {
-e65a6897be5e49 Jacob Pan  2022-12-01 @4987  	u16 sid;
-e65a6897be5e49 Jacob Pan  2022-12-01  4988  
-e65a6897be5e49 Jacob Pan  2022-12-01  4989  	if (likely(!info->dtlb_extra_inval))
-e65a6897be5e49 Jacob Pan  2022-12-01  4990  		return;
-e65a6897be5e49 Jacob Pan  2022-12-01  4991  
-e65a6897be5e49 Jacob Pan  2022-12-01  4992  	sid = PCI_DEVID(info->bus, info->devfn);
-4298780126c298 Jacob Pan  2023-08-09  4993  	if (pasid == IOMMU_NO_PASID) {
-e2fcf16ac26679 Ethan Zhao 2024-01-25  4994  		qi_flush_dev_iotlb(info->iommu, info, address, mask);
-e65a6897be5e49 Jacob Pan  2022-12-01  4995  	} else {
-e2fcf16ac26679 Ethan Zhao 2024-01-25  4996  		qi_flush_dev_iotlb_pasid(info->iommu, info, address, pasid, mask);
-e65a6897be5e49 Jacob Pan  2022-12-01  4997  	}
-e65a6897be5e49 Jacob Pan  2022-12-01  4998  }
-dc57875866ab9f Kan Liang  2023-01-31  4999  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
