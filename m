@@ -1,62 +1,58 @@
-Return-Path: <linux-pci+bounces-2634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A147983F6A7
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 17:16:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33CE983F6FE
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 17:22:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D421F1C20D2A
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 16:15:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D67AB2095A
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 16:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 039A54F1E2;
-	Sun, 28 Jan 2024 16:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECA23C484;
+	Sun, 28 Jan 2024 16:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKsqy+66"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0nEYbeG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAE84EB59;
-	Sun, 28 Jan 2024 16:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1748B3C467;
+	Sun, 28 Jan 2024 16:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706458321; cv=none; b=V8AdNezMgEDPcSNolF9nhU6llTxeiOPk1XGTEQKb0kd/bKZHFab9W5JTEcg5Y9+AD2zuwnF9cQ+3lSuuYisel+oKzWHprBNwD/sbEg7JbH3LE4fTFyWGsrC4BMcvDsEmZcRyDlF3xqWBDGgzp3ISbj4Tq6T9XIFrg1Cmsrm4rt0=
+	t=1706458398; cv=none; b=WZn83OyLmIJEbmXrzaESJkZpdXKSJTkL7a5nQlUXRFVaRLY7DbIoaAKvtcBpxa0WNyK6er4CSp9rwgzGuorHZ9ebMziapBwsb0cYs/MihsGEaQMS530ST01A6wNHg5B/T43RNFH5TdJ/wDe3n82BbThSyJhjkCfPDiGFCve1q/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706458321; c=relaxed/simple;
-	bh=WYtvcZdqJ8pNoAfwZvGB/+WiZqV/FO2qv9+uJ0BGxoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mEhPTSFZQodppLuVTcn70oymjX9AHUewJBOJ894Zxfnfoyc+CmzsJk2h2RoPZDmoW18aFEVI8F2D1xqsCfG8rnCWzK0ZKdxI+/kmZC7uYE+vrhfbQDCQAtrhuo9/Z6n2CefN6I1yyTfycweQywEVSsFSOdj6wrJKHAaT4Squ50c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKsqy+66; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE22BC43390;
-	Sun, 28 Jan 2024 16:12:00 +0000 (UTC)
+	s=arc-20240116; t=1706458398; c=relaxed/simple;
+	bh=QuWlol0LArnTvrXDBi3hNCwSdHzhFmjcSvL5Sl8hzR4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ew0uvYN+YKqXhDOZzmfKyNJwV3E1OtPk3BCsPRd6kFkv8fSlwRNBeSos2IV3AIuveqByB31eRcvpXXrb7duYFk4IbBzOMZ1dTpa5RwxTQRkJC9BoiFe7lN5IlqAoXmjWe/lgg0/FFnMe1X9mJufy0RuL6rj6JWrfiYFNKT0R+5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0nEYbeG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A649C433C7;
+	Sun, 28 Jan 2024 16:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706458321;
-	bh=WYtvcZdqJ8pNoAfwZvGB/+WiZqV/FO2qv9+uJ0BGxoQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FKsqy+663Z6/Ulhbmz53IgbiXpj9ZLmv6RcdBvodQjH7g7CmXrb830pYbA1MSbkFt
-	 eiWvzom5LTbdetVZzkPk4m+sPDB3LqJm0ftZH6P4G1axKW9o47pa73a9Z2beM/ZpDM
-	 SYrCv7T5aV0CjqReFXN87IrRsTNpmoOs44UZl2yr7D1kSgbROboj4RVZOyvte6BQTb
-	 asffXtSEECr9oPnbmlvqnKaf2/u3x90006Nm1/TkqlGK4t/k1rglLcLX1UKCeBr3Qq
-	 EAfT19ChNQhwT3p3LZ1xFLmdsjhpbC1BIntyJB+y4QNhoaNBoYCDSVeFJld2SrY+P8
-	 XpK1brxE7d+ow==
+	s=k20201202; t=1706458397;
+	bh=QuWlol0LArnTvrXDBi3hNCwSdHzhFmjcSvL5Sl8hzR4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=u0nEYbeGxKDXEoNvnL67jm4rdTVX2rx4ZWnqrDrgddHcdetvSGW8gjZiPxosOzAJ/
+	 1N82UVsoetMIdb82B1EiIolNFPUdiuHkk5F2/aHIEB2/lPtC5qmXJ3Zk7oF2g8JjFj
+	 FuUQFPlwKgVlfZ43MrCFG7Lq+XLiLNdIwwuAqzTGFBXOlemtUyerbrZ8aEjgoC8mC3
+	 u810pTb8znmIqG4HDdHST7JR82nAjL2kHvob3TanGkecJccI9nzq9gSGuPosWO5whL
+	 +FKhBCV1LNhG0PZNlboP+CojFuWrhgOqfWaazAx1u/jOqEZI+H16CiZ8U7m8qrlcpX
+	 0yZPt7lLn+zjw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Vicki Pfau <vi@endrift.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mahesh@linux.ibm.com,
-	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 17/39] PCI/AER: Decode Requester ID when no error info found
-Date: Sun, 28 Jan 2024 11:10:37 -0500
-Message-ID: <20240128161130.200783-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 01/31] PCI: Only override AMD USB controller if required
+Date: Sun, 28 Jan 2024 11:12:31 -0500
+Message-ID: <20240128161315.201999-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240128161130.200783-1-sashal@kernel.org>
-References: <20240128161130.200783-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,70 +61,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.2
+X-stable-base: Linux 6.6.14
 Content-Transfer-Encoding: 8bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 
-[ Upstream commit 1291b716bbf969e101d517bfb8ba18d958f758b8 ]
+[ Upstream commit e585a37e5061f6d5060517aed1ca4ccb2e56a34c ]
 
-When a device with AER detects an error, it logs error information in its
-own AER Error Status registers.  It may send an Error Message to the Root
-Port (RCEC in the case of an RCiEP), which logs the fact that an Error
-Message was received (Root Error Status) and the Requester ID of the
-message source (Error Source Identification).
+By running a Van Gogh device (Steam Deck), the following message
+was noticed in the kernel log:
 
-aer_print_port_info() prints the Requester ID from the Root Port Error
-Source in the usual Linux "bb:dd.f" format, but when find_source_device()
-finds no error details in the hierarchy below the Root Port, it printed the
-raw Requester ID without decoding it.
+  pci 0000:04:00.3: PCI class overridden (0x0c03fe -> 0x0c03fe) so dwc3 driver can claim this instead of xhci
 
-Decode the Requester ID in the usual Linux format so it matches other
-messages.
+Effectively this means the quirk executed but changed nothing, since the
+class of this device was already the proper one (likely adjusted by newer
+firmware versions).
 
-Sample message changes:
+Check and perform the override only if necessary.
 
-  - pcieport 0000:00:1c.5: AER: Correctable error received: 0000:00:1c.5
-  - pcieport 0000:00:1c.5: AER: can't find device of ID00e5
-  + pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
-  + pcieport 0000:00:1c.5: AER: found no error details for 0000:00:1c.5
-
-Link: https://lore.kernel.org/r/20231206224231.732765-3-helgaas@kernel.org
+Link: https://lore.kernel.org/r/20231120160531.361552-1-gpiccoli@igalia.com
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Vicki Pfau <vi@endrift.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aer.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 42a3bd35a3e1..38e3346772cc 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -740,7 +740,7 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
- 	u8 bus = info->id >> 8;
- 	u8 devfn = info->id & 0xff;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index e0081914052f..76beed053bf7 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -702,10 +702,13 @@ static void quirk_amd_dwc_class(struct pci_dev *pdev)
+ {
+ 	u32 class = pdev->class;
  
--	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
-+	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
- 		 info->multi_error_valid ? "Multiple " : "",
- 		 aer_error_severity_string[info->severity],
- 		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-@@ -929,7 +929,12 @@ static bool find_source_device(struct pci_dev *parent,
- 		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
- 
- 	if (!e_info->error_dev_num) {
--		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-+		u8 bus = e_info->id >> 8;
-+		u8 devfn = e_info->id & 0xff;
-+
-+		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
-+			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
-+			 PCI_FUNC(devfn));
- 		return false;
- 	}
- 	return true;
+-	/* Use "USB Device (not host controller)" class */
+-	pdev->class = PCI_CLASS_SERIAL_USB_DEVICE;
+-	pci_info(pdev, "PCI class overridden (%#08x -> %#08x) so dwc3 driver can claim this instead of xhci\n",
+-		 class, pdev->class);
++	if (class != PCI_CLASS_SERIAL_USB_DEVICE) {
++		/* Use "USB Device (not host controller)" class */
++		pdev->class = PCI_CLASS_SERIAL_USB_DEVICE;
++		pci_info(pdev,
++			"PCI class overridden (%#08x -> %#08x) so dwc3 driver can claim this instead of xhci\n",
++			class, pdev->class);
++	}
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_NL_USB,
+ 		quirk_amd_dwc_class);
 -- 
 2.43.0
 
