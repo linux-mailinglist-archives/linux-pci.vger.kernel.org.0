@@ -1,117 +1,135 @@
-Return-Path: <linux-pci+bounces-2653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF22A83F81F
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 17:49:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45BBD83FAED
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 00:32:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7378128AEC4
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 16:49:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC0E828203B
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 23:32:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B197524D5;
-	Sun, 28 Jan 2024 16:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C47446C6;
+	Sun, 28 Jan 2024 23:32:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kimVa8Gp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tydek15V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5041524CE;
-	Sun, 28 Jan 2024 16:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC7C446CA;
+	Sun, 28 Jan 2024 23:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706458626; cv=none; b=ScnmdyWpuuLQPufnxM4fWCAMQTk3YSa+smelUCf4y7IYm7og4C3QqGm1shPIZVzuvNqyiYjPHNcfxv//Ix5P5bjSe2KA1B9dUfsufo4X2I/8afhhMF0vU7Q/g8RB0QhxXPZdvJgbS9Bj8NW18YuixDZrejomDLMN/6/lbrQivHE=
+	t=1706484736; cv=none; b=re+yVJ+rZWA1znFpRVnoPEtFC2Z7eSN4kq2zpToQJeWt9zLU3i0gdt+gYpoPI7qQlV3st7di9EgBuo08WzxbGy8puN+tBKeu7DiERFReciGH1tphLSYAr/fpmCj26XBOFZlr7lfg2ZnSwH+blR7OVQ3OxWj9/PpL80I6MqvmPug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706458626; c=relaxed/simple;
-	bh=u0q5FwEYgYwFyxIi/xiCF/f00BSFyTncHUQhJOmA/oU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MchCz34PRweTfO0g5q8+XzD70lsEQL6j5iN9qtzIIJ6ITzyzJdtUju48SPpji0NxDvymcc5cRBq7g2UcfA3Kt3jNr9HqxnkST8J8hdEeE6dt7NCIkbCsI3zqkAwTs1GkOVGn1KAg9LZyGCFVfVQ5/nzeukLOGVV4DJQVnOdMmP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kimVa8Gp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76284C433C7;
-	Sun, 28 Jan 2024 16:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706458626;
-	bh=u0q5FwEYgYwFyxIi/xiCF/f00BSFyTncHUQhJOmA/oU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kimVa8GpB7Ve8hR1grHF8iV/zVNMj+Pm0JxVXZjCgj7veRQSlMlsWrTYC6ytXNEZf
-	 PMGslZXPVecSEHGjp/yod+vAcoEARcaJp6wzmrLyhnoqoJBWurfmT9Op8+f06SGyWT
-	 Ha+iam4V/RV1u8I62QrtSsyAEUF4KwGQ8aLheUQgs0xdFCyFeltXBpAEGAJFI0TZEm
-	 YtDU0cFH5YF5EAB/yTZKCrNc+k6ot+MrLC+HXjkt5ClnVwu/QKo9lJ7TIyoKbcfSev
-	 saMjlJEFFU2WgFMBjpt7qsFWWXqE58hY2ZtsR25ceJPRzLet4OqtK/9ndbBkBYS7+b
-	 150TN9WGyxSvA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Vicki Pfau <vi@endrift.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 1/8] PCI: Only override AMD USB controller if required
-Date: Sun, 28 Jan 2024 11:16:52 -0500
-Message-ID: <20240128161704.205756-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1706484736; c=relaxed/simple;
+	bh=O2DJ6Mu5KMdLzbxSBZdon80LtAPdKg3vJDjBKzmyAyc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LEBx3eMWI8Ty0o8B1BIZAepnkdT9oP/gx8SIYyu/CS8VGwWsXEcxVQSEOce21ogF6VOWoUTE6ZEGY+aBQswX5lKWQHAqL1BhR5Po38gczGyiygtpVibNYkkvBpW9nbi1cKyOrImlj0lX+I3DtE2qOE3VcnWJ98DdCQAcK1zeBVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tydek15V; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706484734; x=1738020734;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O2DJ6Mu5KMdLzbxSBZdon80LtAPdKg3vJDjBKzmyAyc=;
+  b=Tydek15VmtoZGZ1Up8DsMfwV4JI1u5TO0m2NcFfmPqFnBkKj6oOp9Pt4
+   pB6sEDVNcSAhPfB5WAeQRMvPndDp3QqynQG+P7VHNP2v1qM/gALvBKq/q
+   dkNJLWoBe0h9D05hr5PVAYvS7Pcd5EhJuHQkZzTY4topUFXzjBJ3PrFI7
+   DaCBCypa2grnWGXa2KeVXe7X4ud6CRM1mmhi4wHZjCyL6FCFGD99LAAv+
+   E05E6J9h2wXmArPf+kN6g9E399k2m/8zV5OZxpTMuVlns7sE/71DdexKL
+   hdtJhXTEDLwns1K6/0tQ0yCdZIeo5o5QFLZNsxB4twaY+6q49zqfCcOU8
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="406535984"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="406535984"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 15:32:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="857921252"
+X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
+   d="scan'208";a="857921252"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 15:32:12 -0800
+Received: from debox1-desk4.intel.com (sdutta-mobl2.amr.corp.intel.com [10.209.55.52])
+	by linux.intel.com (Postfix) with ESMTP id 3036D580D78;
+	Sun, 28 Jan 2024 15:32:12 -0800 (PST)
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: mika.westerberg@linux.intel.com,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	bhelgaas@google.com,
+	rjw@rjwysocki.net
+Cc: tasev.stefanoska@skynet.be,
+	enriquezmark36@gmail.com,
+	kernel@witt.link,
+	wse@tuxedocomputers.com,
+	vidyas@nvidia.com,
+	kai.heng.feng@canonical.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	ricky_wu@realtek.com,
+	mario.limonciello@amd.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Always build aspm.c
+Date: Sun, 28 Jan 2024 15:32:07 -0800
+Message-Id: <20240128233212.1139663-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.306
 Content-Transfer-Encoding: 8bit
 
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Here is the series to always build aspm.c, add back L1SS save/restore, and
+consolidate all ASPM related code in aspm.c.
 
-[ Upstream commit e585a37e5061f6d5060517aed1ca4ccb2e56a34c ]
+Patch 1 - Moves all PCI core functions running under CONFIG_PCIEASPM into
+aspm.c and changes they Makefile to always build it. No functional changes.
 
-By running a Van Gogh device (Steam Deck), the following message
-was noticed in the kernel log:
+Patch 2 - Creates a separate function to save the L1SS offset and places it
+outside of CONFIG_PCIEASPM in aspm.c so that the offset is available for
+later use by the L1SS save/restore code which needs to run when
+CONFIG_PCIEASPM=n.
 
-  pci 0000:04:00.3: PCI class overridden (0x0c03fe -> 0x0c03fe) so dwc3 driver can claim this instead of xhci
+Patch 3 - Updated L1 Substate save/restore patch from previous V5 [1].
 
-Effectively this means the quirk executed but changed nothing, since the
-class of this device was already the proper one (likely adjusted by newer
-firmware versions).
+Patch 4 - Moves the LTR save/restore state functions into aspm.c outside of
+CONFIG_PCIEASPM.
 
-Check and perform the override only if necessary.
+Patch 5 - Moves the LTR save/restore state calls into
+pci_save/restore_pcie_state().
 
-Link: https://lore.kernel.org/r/20231120160531.361552-1-gpiccoli@igalia.com
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Vicki Pfau <vi@endrift.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/quirks.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+The series does not continue any of the ASPM robustness changes proposed by
+Ilpo [2]. But if we think it's worth combining with this series I can
+add it and help continue the work.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index eb507751c115..af9aba7c196e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -611,10 +611,13 @@ static void quirk_amd_dwc_class(struct pci_dev *pdev)
- {
- 	u32 class = pdev->class;
- 
--	/* Use "USB Device (not host controller)" class */
--	pdev->class = PCI_CLASS_SERIAL_USB_DEVICE;
--	pci_info(pdev, "PCI class overridden (%#08x -> %#08x) so dwc3 driver can claim this instead of xhci\n",
--		 class, pdev->class);
-+	if (class != PCI_CLASS_SERIAL_USB_DEVICE) {
-+		/* Use "USB Device (not host controller)" class */
-+		pdev->class = PCI_CLASS_SERIAL_USB_DEVICE;
-+		pci_info(pdev,
-+			"PCI class overridden (%#08x -> %#08x) so dwc3 driver can claim this instead of xhci\n",
-+			class, pdev->class);
-+	}
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_NL_USB,
- 		quirk_amd_dwc_class);
+[1] https://lore.kernel.org/linux-pci/20231221011250.191599-1-david.e.box@linux.intel.com/
+[2] https://lore.kernel.org/linux-pci/20230918131103.24119-1-ilpo.jarvinen@linux.intel.com/
+
+David E. Box (5):
+  PCI: Always build aspm.c
+  PCI: Create function to save L1SS offset
+  PCI/ASPM: Add back L1 PM Substate save and restore
+  PCI: Move pci_save/restore_ltr_state() to aspm.c
+  PCI: Call LTR save/restore state from PCIe save/restore
+
+ drivers/pci/pci.c         |  91 ++++----------
+ drivers/pci/pci.h         |  10 +-
+ drivers/pci/pcie/Makefile |   2 +-
+ drivers/pci/pcie/aspm.c   | 257 ++++++++++++++++++++++++++++++++++++--
+ drivers/pci/probe.c       |  62 +--------
+ include/linux/pci.h       |   4 +-
+ 6 files changed, 283 insertions(+), 143 deletions(-)
+
+
+base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
 -- 
-2.43.0
+2.34.1
 
 
