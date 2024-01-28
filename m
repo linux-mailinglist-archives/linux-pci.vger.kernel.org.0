@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-2658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68FE783FAF3
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 00:32:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FD2183FAF4
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 00:32:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DE0431F2379F
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 23:32:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CB0128474A
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 23:32:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BD8748790;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBCF14C60C;
 	Sun, 28 Jan 2024 23:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWWsE4pW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KB42YIRH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D117C446DC;
-	Sun, 28 Jan 2024 23:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DA64595D;
+	Sun, 28 Jan 2024 23:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706484738; cv=none; b=gsiZulFQVTP/M/fm1GfqKmt2B7ax71uwYfYZINURu8laMP885KGQeT/aW4fzcNJXO7EK9ZS2MW5x9vg6dyhmKTUli29d0lMPzLjdjToSsbqsPkno5wMp9jDclvaIn/PpPZtcTg7ORNtNIkv2UJaRCkVdqkBdqdRNpPuk5lHplMI=
+	t=1706484738; cv=none; b=Fsp4gZWasuFbtiVrVkGpI1ni0ouziL67rn8xRY/KjAnMBlNAsY8xOm9LUNCo8FLGCfY4GgcAQz6b3DtmvG5FSW2ugXSzjlFfYMJlXiGnJaOwaLoSAt0MqsTXYJOu3DjzhMHAlHM/dh1565yGZU/GrjZUkGL/s03D930ITxyg+R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706484738; c=relaxed/simple;
-	bh=rro8bua4GahrpLh+0Y+aOJSQnICNHshw7fWOe3S8s9w=;
+	bh=bx8duAkTrynztEMQULCsS8d2N4dVOXeKVQtbu5S9ZNg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cWCRBLxp+lFZUXTrLg/v1h8UBuJy1r9nhxPCxWuHlzAI7HnhXwj35YXrtwn2Sk/XUD6cZXWHM4VPqko0Pv6T2TMSe6aAaN+00MwlO9F/LZFwOgjhY3tXJEE/gczsEIrAJAXIRgqtby0R12dou+TL4+t26dHaeSqFbXeCvwWUQyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWWsE4pW; arc=none smtp.client-ip=134.134.136.31
+	 MIME-Version; b=Dsoa4hUlwB7B5G3MLZIDuhd1QoT/045iaruvjZ9X4SiE7IHvDk95Do5qQ16YhIVBQuBJJJYWMF2cwwk/4FfRMKiS0TNxiKUp2vPBdTt9G0wzV2rQH7Rg+NTO1cWT8ehPMCvBNcoxM+RVlNoAFV6NTARljp39TEtkdtD8EN6rtuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KB42YIRH; arc=none smtp.client-ip=134.134.136.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706484736; x=1738020736;
+  t=1706484737; x=1738020737;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=rro8bua4GahrpLh+0Y+aOJSQnICNHshw7fWOe3S8s9w=;
-  b=AWWsE4pWRIgm56TwixDWvb5csfBr/CCcCJ63zC/UuZcHXLG2VJ52LOd/
-   Q289JrlMWG/JycZWOVxlqzm4PbA1p74Od2J0nrG46ZT/wLPUkPekt5A8Y
-   PgPzyQAx81SvoheSF0qQdQfWRP0WGx1gGN7zKovamhRN5YQQfvZdZgZ9C
-   dcly75jyCEHfanuHNpYHEDn3v2tLxbYQFq9X99W7Bn03h8hTvq5niiKch
-   pmno7ntw8wbhgppVNBPD9rQK/2z4VYf13zvj8qmP2SQLv5C3yUYO943y+
-   PNC+rz/FYeAAWKDuMo8i8HLYmtXk4iFpylSH+KBqVnzPxfLc5Lj7KYTrv
+  bh=bx8duAkTrynztEMQULCsS8d2N4dVOXeKVQtbu5S9ZNg=;
+  b=KB42YIRH/UaRoyB0x2L/QGye/5MNpgpWjmrYB25jR7nuQemssAC+QkI4
+   7M+1z11B0VYLKWWlylIHFy65OupVMwfyC8rbhLVNcgOg8tOSdi23tr1VH
+   V3K08mrGTp30+gHYgD2EAM3Y19tz6nubc+wcx+Q6QmiuAR0G6quBAC5Cm
+   IeREyRD/6WplW3HuE+ozu1Sia3n4tOuliamr4Pr3L9bn5qROspXJSRRLI
+   gvCjTrDW6GiV7hkfCYmCieySZVoxDeg9Hy46XPUaru/gfLn1dQJYx8Fnz
+   iSVWKgwEscPX0p02A/TMo/hy6te6LiSbrLxyi27onwxyU+Ie/LWqIyRlq
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="467081116"
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="467081131"
 X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="467081116"
+   d="scan'208";a="467081131"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 15:32:15 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="930913782"
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="930913784"
 X-IronPort-AV: E=Sophos;i="6.05,226,1701158400"; 
-   d="scan'208";a="930913782"
+   d="scan'208";a="930913784"
 Received: from linux.intel.com ([10.54.29.200])
   by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2024 15:32:14 -0800
 Received: from debox1-desk4.intel.com (sdutta-mobl2.amr.corp.intel.com [10.209.55.52])
-	by linux.intel.com (Postfix) with ESMTP id AAAD0580D78;
-	Sun, 28 Jan 2024 15:32:13 -0800 (PST)
+	by linux.intel.com (Postfix) with ESMTP id 12C9F580DDD;
+	Sun, 28 Jan 2024 15:32:14 -0800 (PST)
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: mika.westerberg@linux.intel.com,
 	david.e.box@linux.intel.com,
@@ -75,9 +75,9 @@ Cc: tasev.stefanoska@skynet.be,
 	mario.limonciello@amd.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] PCI: Move pci_save/restore_ltr_state() to aspm.c
-Date: Sun, 28 Jan 2024 15:32:11 -0800
-Message-Id: <20240128233212.1139663-5-david.e.box@linux.intel.com>
+Subject: [PATCH 5/5] PCI: Save and restore LTR state from pci_save/restore_pcie_state()
+Date: Sun, 28 Jan 2024 15:32:12 -0800
+Message-Id: <20240128233212.1139663-6-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240128233212.1139663-1-david.e.box@linux.intel.com>
 References: <20240128233212.1139663-1-david.e.box@linux.intel.com>
@@ -89,132 +89,62 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since the LTR Capability is linked with ASPM and only enabled when
-CONFIG_PCIEASPM is set, move the save/restore code to aspm.c
+ASPM state is saved and restored from pci_save/restore_pcie_state().
+Since the LTR Capability is linked with ASPM, move the LTR save and
+restore calls there as well.
 
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/pci/pci.c       | 40 ----------------------------------------
- drivers/pci/pci.h       |  2 ++
- drivers/pci/pcie/aspm.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 42 insertions(+), 40 deletions(-)
+ drivers/pci/pci.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 0a8613e77dab..61e56e040510 100644
+index 61e56e040510..78c3c9d82b3b 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1636,46 +1636,6 @@ static void pci_restore_pcix_state(struct pci_dev *dev)
- 	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
+@@ -1561,6 +1561,7 @@ static int pci_save_pcie_state(struct pci_dev *dev)
+ 	pcie_capability_read_word(dev, PCI_EXP_SLTCTL2, &cap[i++]);
+ 
+ 	pci_save_aspm_state(dev);
++	pci_save_ltr_state(dev);
+ 
+ 	return 0;
  }
+@@ -1571,6 +1572,12 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+ 	struct pci_cap_saved_state *save_state;
+ 	u16 *cap, val;
  
--static void pci_save_ltr_state(struct pci_dev *dev)
--{
--	int ltr;
--	struct pci_cap_saved_state *save_state;
--	u32 *cap;
--
--	if (!pci_is_pcie(dev))
--		return;
--
--	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
--	if (!ltr)
--		return;
--
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
--	if (!save_state) {
--		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
--		return;
--	}
--
--	/* Some broken devices only support dword access to LTR */
--	cap = &save_state->cap.data[0];
--	pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
--}
--
--static void pci_restore_ltr_state(struct pci_dev *dev)
--{
--	struct pci_cap_saved_state *save_state;
--	int ltr;
--	u32 *cap;
--
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
--	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
--	if (!save_state || !ltr)
--		return;
--
--	/* Some broken devices only support dword access to LTR */
--	cap = &save_state->cap.data[0];
--	pci_write_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap);
--}
--
- /**
-  * pci_save_state - save the PCI configuration space of a device before
-  *		    suspending
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 7b14cdbe2e69..98f54b48f013 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -100,6 +100,8 @@ void pci_bridge_d3_update(struct pci_dev *dev);
- void pci_aspm_get_l1ss(struct pci_dev *pdev);
- void pci_save_aspm_state(struct pci_dev *pdev);
- void pci_restore_aspm_state(struct pci_dev *pdev);
-+void pci_save_ltr_state(struct pci_dev *dev);
-+void pci_restore_ltr_state(struct pci_dev *dev);
- int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
++	/*
++	 * Restore max latencies (in the LTR capability) before enabling
++	 * LTR itself (in the PCIe capability).
++	 */
++	pci_restore_ltr_state(dev);
++
+ 	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
+ 	if (!save_state)
+ 		return;
+@@ -1660,7 +1667,6 @@ int pci_save_state(struct pci_dev *dev)
+ 	if (i != 0)
+ 		return i;
  
- static inline void pci_wakeup_event(struct pci_dev *dev)
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 3185058e9c41..f7712d8453a4 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -155,6 +155,46 @@ void pci_restore_aspm_state(struct pci_dev *pdev)
- 	pcie_capability_set_word(pdev, PCI_EXP_LNKCTL, val);
- }
+-	pci_save_ltr_state(dev);
+ 	pci_save_dpc_state(dev);
+ 	pci_save_aer_state(dev);
+ 	pci_save_ptm_state(dev);
+@@ -1761,12 +1767,6 @@ void pci_restore_state(struct pci_dev *dev)
+ 	if (!dev->state_saved)
+ 		return;
  
-+void pci_save_ltr_state(struct pci_dev *dev)
-+{
-+	int ltr;
-+	struct pci_cap_saved_state *save_state;
-+	u32 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!ltr)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!save_state) {
-+		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
-+		return;
-+	}
-+
-+	/* Some broken devices only support dword access to LTR */
-+	cap = &save_state->cap.data[0];
-+	pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
-+}
-+
-+void pci_restore_ltr_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	int ltr;
-+	u32 *cap;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-+	if (!save_state || !ltr)
-+		return;
-+
-+	/* Some broken devices only support dword access to LTR */
-+	cap = &save_state->cap.data[0];
-+	pci_write_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap);
-+}
-+
- #ifdef CONFIG_PCIEASPM
- 
- #ifdef MODULE_PARAM_PREFIX
+-	/*
+-	 * Restore max latencies (in the LTR capability) before enabling
+-	 * LTR itself (in the PCIe capability).
+-	 */
+-	pci_restore_ltr_state(dev);
+-
+ 	pci_restore_pcie_state(dev);
+ 	pci_restore_pasid_state(dev);
+ 	pci_restore_pri_state(dev);
 -- 
 2.34.1
 
