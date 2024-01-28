@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-2651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8B7783F804
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 17:47:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92AC783F80C
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 17:47:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 592CC1F238C5
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 16:47:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C53701C2256C
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 16:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885B31420C2;
-	Sun, 28 Jan 2024 16:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0825A145320;
+	Sun, 28 Jan 2024 16:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wh/2DCXU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fS0W0u7J"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B9D1420BA;
-	Sun, 28 Jan 2024 16:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF6F14463A;
+	Sun, 28 Jan 2024 16:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706458601; cv=none; b=XRn+1moMK0zPVUsIAjHJxSjoZmzSyF4Q8XU4/z1chbtCP/fjuiKSweqIlSjnozmoyMRzkjrYWJKiCK5hk6a5Xm0XVEc7UKxS0BJxB3sfGnddUkDJy6yTgUo3vrz8w7QBEuol7+w/Af+sgDh6dX8eOrC3zTwynGXmMYPmh8QRjGs=
+	t=1706458606; cv=none; b=XoaSctYmi6HxAeMZyqKsTgaoH4Kg7MK1TavaJrNCSqD4ePf5k8Zi+ewaRGztNUUB+EVPAIKMWdRhTHGHRnD42gvqKE65XScP/n00t/cEBLjTk9F+majlkvXhb2GMuCWkjxbeJCtQKNrvViEO1N6FICa5VzWJf+s9RfBK3sQ/65Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706458601; c=relaxed/simple;
-	bh=1TzxqmGFddfhzqSfSrIvvEKg5b+f+nUUuCyd9mP52VM=;
+	s=arc-20240116; t=1706458606; c=relaxed/simple;
+	bh=ibuTUKfdCzg4UDqPb3PSDJf0BgqNp+ixUt1f6mQxToA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l99AFmCU5cufqmF9suWgWuEmjvIhKzvT7f4ZV5t1PueddnQKlt7uRI5CGP0sH8UtEKPOMbU1V4MIyFey2m8eNR22M341II1E01r0JFBzrDJCAeb8W1+eJrQ3pV0MuYQ3W64Kihu/km35dhHo1J1ejpoTUDCc+wJvM80y/AQalnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wh/2DCXU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB72C43399;
-	Sun, 28 Jan 2024 16:16:40 +0000 (UTC)
+	 MIME-Version; b=fy0mEilp2OiwlnhtSzfGoNwAjKIuMF/B1zvFnTpO7svjrYSuI+WgDudF3L0z8i1NR8wtezFjoutb3qEXLqXOJh504JkSEoAe0+jkP050WhNGRD+3bviJ+adIgUKp1wPQqjE2j7xQmXXkz+CN8piD3YHtx7HlDQIBWZyT+VzvKBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fS0W0u7J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF8EC43399;
+	Sun, 28 Jan 2024 16:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706458601;
-	bh=1TzxqmGFddfhzqSfSrIvvEKg5b+f+nUUuCyd9mP52VM=;
+	s=k20201202; t=1706458606;
+	bh=ibuTUKfdCzg4UDqPb3PSDJf0BgqNp+ixUt1f6mQxToA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wh/2DCXUTuX6urhtIQ/SRXaseCPBd8myy7+uO83/kw6Kq7j01rUgsbihKLgkyczjY
-	 r9sGDaRRqKndwAs0WScm9EOL7+aCMq6j7AUIz0cJg3piyJlx6wuEV+OLK/v7z6bcRu
-	 UkGpZ8M8EtVTU+DjUGBaVfijbogH+XNihMLLOKJwVCHINXAzm8NaBBlDxrPCbKM2z7
-	 R2IO61tuap/k5i2DgIyRwrYIdeDT0e4tEGq5Qn2NQb+/4R1pmgUO+W0mqK/kQe5TSU
-	 LB1fT+FbGJTUtzq/K4YJ7HHDReh0ptiyMnEXC9LwBAUCQ+c+UzxXguRFAey5WuWV0L
-	 9A+o46Mu3T6sg==
+	b=fS0W0u7J3fzQ/RhXsp5XlTTBjuxphbq7Pff35JQrbp47YEHfkU7BnVPZ2jJnFSEjr
+	 l2m+x9Nkhedi1NAmgJTi+BmHakdSyOSB7OI6a8sbcXl0ijvKBfThte4umLKY0WXa+a
+	 Su1AqK5EbTikRv1GYGaHkWbRb3j5lnr7rJU7uUoIBu1GqcbNIa2iCnnGz3iyuIHIUb
+	 ZB0jIO+opAgYkjxfFaBLZv7WpVbPgnT/4dzreOnx/OirhV2pGqQP4vCuzqs8ZX1RDy
+	 555Nsly1a6XOUJgKPQhzfUTQdXHtKIbCKH3b1hXhIIULa0p5Qu/DWSIfbyfhB01jvA
+	 BCAvwdK5Y6yIg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Daniel Stodden <dns@arista.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dmitry Safonov <dima@arista.com>,
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	kurt.schwemmer@microsemi.com,
+	mahesh@linux.ibm.com,
+	linuxppc-dev@lists.ozlabs.org,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 02/11] PCI: switchtec: Fix stdev_release() crash after surprise hot remove
-Date: Sun, 28 Jan 2024 11:16:23 -0500
-Message-ID: <20240128161637.205509-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 05/11] PCI/AER: Decode Requester ID when no error info found
+Date: Sun, 28 Jan 2024 11:16:26 -0500
+Message-ID: <20240128161637.205509-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240128161637.205509-1-sashal@kernel.org>
 References: <20240128161637.205509-1-sashal@kernel.org>
@@ -68,102 +68,67 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.268
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Stodden <dns@arista.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit df25461119d987b8c81d232cfe4411e91dcabe66 ]
+[ Upstream commit 1291b716bbf969e101d517bfb8ba18d958f758b8 ]
 
-A PCI device hot removal may occur while stdev->cdev is held open. The call
-to stdev_release() then happens during close or exit, at a point way past
-switchtec_pci_remove(). Otherwise the last ref would vanish with the
-trailing put_device(), just before return.
+When a device with AER detects an error, it logs error information in its
+own AER Error Status registers.  It may send an Error Message to the Root
+Port (RCEC in the case of an RCiEP), which logs the fact that an Error
+Message was received (Root Error Status) and the Requester ID of the
+message source (Error Source Identification).
 
-At that later point in time, the devm cleanup has already removed the
-stdev->mmio_mrpc mapping. Also, the stdev->pdev reference was not a counted
-one. Therefore, in DMA mode, the iowrite32() in stdev_release() will cause
-a fatal page fault, and the subsequent dma_free_coherent(), if reached,
-would pass a stale &stdev->pdev->dev pointer.
+aer_print_port_info() prints the Requester ID from the Root Port Error
+Source in the usual Linux "bb:dd.f" format, but when find_source_device()
+finds no error details in the hierarchy below the Root Port, it printed the
+raw Requester ID without decoding it.
 
-Fix by moving MRPC DMA shutdown into switchtec_pci_remove(), after
-stdev_kill(). Counting the stdev->pdev ref is now optional, but may prevent
-future accidents.
+Decode the Requester ID in the usual Linux format so it matches other
+messages.
 
-Reproducible via the script at
-https://lore.kernel.org/r/20231113212150.96410-1-dns@arista.com
+Sample message changes:
 
-Link: https://lore.kernel.org/r/20231122042316.91208-2-dns@arista.com
-Signed-off-by: Daniel Stodden <dns@arista.com>
+  - pcieport 0000:00:1c.5: AER: Correctable error received: 0000:00:1c.5
+  - pcieport 0000:00:1c.5: AER: can't find device of ID00e5
+  + pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
+  + pcieport 0000:00:1c.5: AER: found no error details for 0000:00:1c.5
+
+Link: https://lore.kernel.org/r/20231206224231.732765-3-helgaas@kernel.org
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Dmitry Safonov <dima@arista.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/switch/switchtec.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ drivers/pci/pcie/aer.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-index 2c9c3061894b..0037f368f62b 100644
---- a/drivers/pci/switch/switchtec.c
-+++ b/drivers/pci/switch/switchtec.c
-@@ -1082,13 +1082,6 @@ static void stdev_release(struct device *dev)
- {
- 	struct switchtec_dev *stdev = to_stdev(dev);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index aec1748cc821..6b5c9f7916fa 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -782,7 +782,7 @@ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
+ 	u8 bus = info->id >> 8;
+ 	u8 devfn = info->id & 0xff;
  
--	if (stdev->dma_mrpc) {
--		iowrite32(0, &stdev->mmio_mrpc->dma_en);
--		flush_wc_buf(stdev);
--		writeq(0, &stdev->mmio_mrpc->dma_addr);
--		dma_free_coherent(&stdev->pdev->dev, sizeof(*stdev->dma_mrpc),
--				stdev->dma_mrpc, stdev->dma_mrpc_dma_addr);
--	}
- 	kfree(stdev);
- }
+-	pci_info(dev, "%s%s error received: %04x:%02x:%02x.%d\n",
++	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
+ 		 info->multi_error_valid ? "Multiple " : "",
+ 		 aer_error_severity_string[info->severity],
+ 		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
+@@ -968,7 +968,12 @@ static bool find_source_device(struct pci_dev *parent,
+ 	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
  
-@@ -1131,7 +1124,7 @@ static struct switchtec_dev *stdev_create(struct pci_dev *pdev)
- 		return ERR_PTR(-ENOMEM);
- 
- 	stdev->alive = true;
--	stdev->pdev = pdev;
-+	stdev->pdev = pci_dev_get(pdev);
- 	INIT_LIST_HEAD(&stdev->mrpc_queue);
- 	mutex_init(&stdev->mrpc_mutex);
- 	stdev->mrpc_busy = 0;
-@@ -1165,6 +1158,7 @@ static struct switchtec_dev *stdev_create(struct pci_dev *pdev)
- 	return stdev;
- 
- err_put:
-+	pci_dev_put(stdev->pdev);
- 	put_device(&stdev->dev);
- 	return ERR_PTR(rc);
- }
-@@ -1407,6 +1401,18 @@ static int switchtec_init_pci(struct switchtec_dev *stdev,
- 	return 0;
- }
- 
-+static void switchtec_exit_pci(struct switchtec_dev *stdev)
-+{
-+	if (stdev->dma_mrpc) {
-+		iowrite32(0, &stdev->mmio_mrpc->dma_en);
-+		flush_wc_buf(stdev);
-+		writeq(0, &stdev->mmio_mrpc->dma_addr);
-+		dma_free_coherent(&stdev->pdev->dev, sizeof(*stdev->dma_mrpc),
-+				  stdev->dma_mrpc, stdev->dma_mrpc_dma_addr);
-+		stdev->dma_mrpc = NULL;
-+	}
-+}
+ 	if (!e_info->error_dev_num) {
+-		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
++		u8 bus = e_info->id >> 8;
++		u8 devfn = e_info->id & 0xff;
 +
- static int switchtec_pci_probe(struct pci_dev *pdev,
- 			       const struct pci_device_id *id)
- {
-@@ -1464,6 +1470,9 @@ static void switchtec_pci_remove(struct pci_dev *pdev)
- 	ida_simple_remove(&switchtec_minor_ida, MINOR(stdev->dev.devt));
- 	dev_info(&stdev->dev, "unregistered.\n");
- 	stdev_kill(stdev);
-+	switchtec_exit_pci(stdev);
-+	pci_dev_put(stdev->pdev);
-+	stdev->pdev = NULL;
- 	put_device(&stdev->dev);
- }
- 
++		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
++			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
++			 PCI_FUNC(devfn));
+ 		return false;
+ 	}
+ 	return true;
 -- 
 2.43.0
 
