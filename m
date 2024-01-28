@@ -1,162 +1,123 @@
-Return-Path: <linux-pci+bounces-2622-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2623-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17DE683F0F6
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Jan 2024 23:39:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2391C83F26D
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 01:13:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 799CAB21182
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Jan 2024 22:39:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D7A5B23B0F
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 00:13:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0DF1B954;
-	Sat, 27 Jan 2024 22:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28A381E;
+	Sun, 28 Jan 2024 00:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IEnq8nG6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Knd4iKg1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDE515AF9;
-	Sat, 27 Jan 2024 22:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58D97FD
+	for <linux-pci@vger.kernel.org>; Sun, 28 Jan 2024 00:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706395169; cv=none; b=FH9vfSoe2rPApoyBjlIgNaKRuXKHhejzf3ZcgSjM5xf1juAfpkhjU1dR4v4tiHYwHI0e35rUEVTBGNhAbRtm3MsEklZRPbMnmAAz0FnbVl1YYUbwkxEty7CCp8vS2BGUNyjEYVIpi1nfUEFY8oG3mXQsiFHfyyKD9qOD/kuIHjU=
+	t=1706400783; cv=none; b=P0RdsfixDzPIcL1saIa0JWS1Vc/2taNRrg7b3S7xV+MaCkkeDPWVD/anlKG20Rbdy773H3vdEg9CNOJK4hgzcqX5rGoZ9uaXAVahJTfi1IR/tLFvlzpbN635KrbbkWJiuOwtOt3RfyJEdmqzriruw13ffrdbBl1Ukwf3H60kJ7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706395169; c=relaxed/simple;
-	bh=KILTeulNNllPlgSx8Rimk1bazTt4jJRe8N47roW2STk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tNIiW3em4CF3mqStbA6ZNDEm3UAwBQRwrfz8HMzcjQrok+8VnSBtt268vyIFVbytWFw2h2MeMceMGfLsXchiMS/Q5OcKRr93026LTAzaZz3Kq+lRxWYTBBIDbucZDgFGFhXEETN8DWukE7tJetId3OYjeqcSDdoxMoPo+Obk6ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IEnq8nG6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66009C433F1;
-	Sat, 27 Jan 2024 22:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706395168;
-	bh=KILTeulNNllPlgSx8Rimk1bazTt4jJRe8N47roW2STk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IEnq8nG6w8KAzYK9CYm5TyiDZpEF4UOBcq38OH/kDHd6DgpysPY4scZ00FAkKcup3
-	 HX09PCGMGQB84qgsiBJHIlrsYnASDHcdc4GXWzW77g2SvcboqNypn71najuV6HsVwd
-	 UcafB9IfC9RD6H76trkDG7SdxAcmhTjyx7YF7RJ6aeix88X3x999ojFH4NrCom+z67
-	 Q8rXaGTpKBVcq5NKC1Y08novzvGaiOT1rWnySkkB8ubGJ/5PQOmwZuiNRpO1XlRO+t
-	 lUsrH5LX1A0OGxDBxhH8/UBOY1H7afzXxugYqmy22awjLHYpj8fB2wXVNcFWJ8G+SB
-	 9S81rtqRHx6iw==
-Date: Sat, 27 Jan 2024 16:39:26 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>, Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>, dakr@redhat.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, stable@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v5 RESEND 5/5] lib, pci: unify generic pci_iounmap()
-Message-ID: <20240127223926.GA461814@bhelgaas>
+	s=arc-20240116; t=1706400783; c=relaxed/simple;
+	bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=inUxsmIKKnpgGrXM2rpSbarASeCRHWamtFmYn14NZgRhelD4vdbmxnehCsVQ5GOMuy0NFToquRpXKyXDOp01FoUbwvAgsoYQFeLqdWjHgi+4vnp7lVB7/yU83dcwrj2mLTw0TV+TO3asviawYzhJmNeYTRCcTFiRl9fWGLm/cIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Knd4iKg1; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-602ab446cd8so16316977b3.1
+        for <linux-pci@vger.kernel.org>; Sat, 27 Jan 2024 16:13:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706400781; x=1707005581; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
+        b=Knd4iKg18Z4f0c8GB15trf0zkYf10XvmbfR5oXYzrrhmQUjpmU9uoDvHZvi3hWtwUy
+         pallI8zTdUyh0weWLu1Gfuer47d+3tUawW4tJjSrfmOBJ4asFkkNwGp1Gz2EAPtcS1LL
+         x5goR1nqRi6Ib+VCLFygbtkPW3Tqao/24HSqOOrLerpHgX9LrebCCLT3IzfntwHLSf/l
+         5OaJ+ZMj6QUT8rjl4XuTnEX9B3oe9trxxKOzpFCejA/2s/x3+TNkpjvDiS5kjl0PQt9y
+         d8nCeUyjIPsnwz5gh5leGsrloqmj4Uhpfy16wAUhrvrdWelLB9/4ua7VfTzuB/2tYMoJ
+         5CIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706400781; x=1707005581;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
+        b=Ks/j0p2An28m5k6kx5fgDMccrJGZAEyWJ+XV11rUhMmqdsfShXBaxYR8ZszKENHbWa
+         L8cycsH6SwLWepLhuYvGG/eu6K+NRR/TmdnS+HiNHRy9aQhIqDYHvmMBLWZTnOF6JetL
+         dvvu9Lq7O1oKaHacyqz2MckXMwB6/QefFjE773aTe89HNNLdgVOMGvtDeDiaroUwQpZ0
+         n/9sUVTKP/kjjNNu8AsMFkmlM4spIGiOmZxIeuhS/N3tFDGpYVpEAQFr1WrxZZ/7tqJr
+         R1UeLHYnaozZW4jOOFjlTH1/A7l1SYQ03FqVxE1mdk3E5yYHnyyXzzC3r3k4+sR0QSqC
+         O94Q==
+X-Gm-Message-State: AOJu0YxOJaW1GmA4CvkckLk5AjQOV7CuMpM5Ocit7L/qNbw0N5F+/tup
+	tbzy+/F7WtMQBuWySYjkIg1lxj02mW+Q2o3AX9buK5SXkSkvGoUD50kul1v+Mb/KcjHQyl9Gc9j
+	j63B/c9/6uVhl9JsCFfZu5Ybs0K0fx+MMiRrGYQ==
+X-Google-Smtp-Source: AGHT+IEZVSZUzzjxzZn0Av2/7INObuTua3Mia5HKhwhoo7tJ2m/wqcv1w98aBP4XbcXGiLtyHqQ0OWN/g5UmL4382Eg=
+X-Received: by 2002:a81:4426:0:b0:602:c9ad:f979 with SMTP id
+ r38-20020a814426000000b00602c9adf979mr1944880ywa.75.1706400780839; Sat, 27
+ Jan 2024 16:13:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <70b8db3ec0f8730fdd23dae21edc1a93d274b048.camel@redhat.com>
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com> <20240116074333.GO5185@atomide.com>
+ <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
+In-Reply-To: <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 28 Jan 2024 01:12:50 +0100
+Message-ID: <CACRpkdYUVbFoDq91uLbUy8twtG_AiD+CY2+nqzCyHV7ZyBC3sA@mail.gmail.com>
+Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to suspend_noirq/resume_noirq
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Tony Lindgren <tony@atomide.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 02:59:20PM +0100, Philipp Stanner wrote:
-> On Tue, 2024-01-23 at 15:05 -0600, Bjorn Helgaas wrote:
-> > On Thu, Jan 11, 2024 at 09:55:40AM +0100, Philipp Stanner wrote:
-> ...
+On Fri, Jan 19, 2024 at 6:01=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 1/16/24 08:43, Tony Lindgren wrote:
+> > * Thomas Richard <thomas.richard@bootlin.com> [240115 16:16]:
+> >> Some IOs can be needed during suspend_noirq/resume_noirq.
+> >> So move suspend/resume callbacks to noirq.
+> >
+> > So have you checked that the pca953x_save_context() and restore works
+> > this way? There's i2c traffic and regulators may sleep.. I wonder if
+> > you instead just need to leave gpio-pca953x enabled in some cases
+> > instead?
+> >
+>
+> Yes I tested it, and it works (with my setup).
+> But this patch may have an impact for other people.
+> How could I leave it enabled in some cases ?
 
-> > > -void pci_iounmap(struct pci_dev *dev, void __iomem *p)
-> > > +/**
-> > > + * pci_iounmap - Unmapp a mapping
-> > > + * @dev: PCI device the mapping belongs to
-> > > + * @addr: start address of the mapping
-> > > + *
-> > > + * Unmapp a PIO or MMIO mapping.
-> > > + */
-> > > +void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-> > 
-> > Maybe move the "p" to "addr" rename to the patch that fixes the
-> > pci_iounmap() #ifdef problem, since that's a trivial change that
-> > already has to do with handling both PIO and MMIO?  Then this patch
-> > would be a little more focused.
-> > 
-> > The kernel-doc addition could possibly also move there since it isn't
-> > related to the unification.
-> 
-> You mean the one from my devres-patch-series? Or documentation
-> specifically about pci_iounmap()?
+I guess you could define both pca953x_suspend() and
+pca953x_suspend_noirq() and selectively bail out on one
+path on some systems?
 
-I had in mind the patch that fixes the pci_iounmap() #ifdef problem,
-which (if you split it out from 1/5) would be a relatively trivial
-patch.  Or the kernel-doc addition could be its own separate patch.
-The point is that this unification patch is fairly complicated, so
-anything we can do to move things unrelated to unification elsewhere
-makes this one easier to review.
+Worst case using if (of_machine_is_compatible("my,machine"))...
 
-> > It seems like implementing iomem_is_ioport() for the other arches
-> > would be straightforward and if done first, could make this patch
-> > look
-> > tidier.
-> 
-> That would be the cleanest solution. But the cleaner you want to be,
-> the more time you have to spend ;)
-> I can take another look and see if I could do that with reasonable
-> effort.
-> Otherwise I'd go for:
-> 
-> > Or if the TODOs can't be done now, maybe the iomem_is_ioport()
-> > addition could be done as a separate patch to make the unification
-> > more obvious.
-
-It looks like iomem_is_ioport() is basically the guards in
-pci_iounmap() implementations that, if true, prevent calling
-iounmap(), so it it seems like they should be trivial, e.g.,
-
-  return !__is_mmio(addr); # alpha
-
-  return (addr < VMALLOC_START || addr >= VMALLOC_END); # arm
-
-  return isa_vaddr_is_ioport(addr) || pcibios_vaddr_is_ioport(addr); # microblaze
-
-Unless they're significantly more complicated than that, I don't see
-the point of deferring them.
-
-> > > + */
-> > > +#if defined(ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT)
-> > > +bool iomem_is_ioport(void __iomem *addr)
-> > >  {
-> > > -       IO_COND(addr, /* nothing */, iounmap(addr));
-> > > +       unsigned long port = (unsigned long __force)addr;
-> > > +
-> > > +       if (port > PIO_OFFSET && port < PIO_RESERVED)
-> > > +               return true;
-> > > +
-> > > +       return false;
-> > >  }
-> > > -EXPORT_SYMBOL(pci_iounmap);
-> > > -#endif /* CONFIG_PCI */
-> > > +#endif /* ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT */
-> > > -- 
-> > > 2.43.0
-> > > 
-> > 
-> 
+Yours,
+Linus Walleij
 
