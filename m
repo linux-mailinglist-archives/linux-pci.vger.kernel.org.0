@@ -1,61 +1,77 @@
-Return-Path: <linux-pci+bounces-2627-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2628-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 695E583F36B
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 03:58:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B51E583F3F2
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 06:02:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10DE8B2236B
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 02:58:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CB91B225D8
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Jan 2024 05:02:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B83D01C06;
-	Sun, 28 Jan 2024 02:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59BC1611B;
+	Sun, 28 Jan 2024 05:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="re3sFDq2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y+1cLkCS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A23C17F5;
-	Sun, 28 Jan 2024 02:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDAD53A6;
+	Sun, 28 Jan 2024 05:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706410701; cv=none; b=KG52dQJCUTkvn+Pm/k1pXPvYij4+MMBtmLfMPsb294xkHLmo7qWtTti1FVbbJj9/zcDRHwGdW7GBVnQgLaXFg4fRcuL+rz2IdWGqWXH/Ysfyzj6QG8wbG4J5GA2D8x3tseC9jNuDVCAwB3gSUehJK/P5XpMihEYn4PTVIDdxcH0=
+	t=1706418140; cv=none; b=LysV2g5Qu7Z6dQmgjxPxVRPzVry19AIpq7/g2nlcYKey9vckc+dKugzGHqwKVnJ1fy+aupE7wkN8i5Rv2tfXKr3JyCl91/JT2OrhFnvLzNIQpO/carNfZUmNYlXOrB/RLZjW6x7VcAJT3qUrbfrmBxoZ9ibUk2KYnpoTeNCMnys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706410701; c=relaxed/simple;
-	bh=I2JHP2n51qFJXJlFgu6I1eAj34ctCNFkTtkBruBv+7o=;
+	s=arc-20240116; t=1706418140; c=relaxed/simple;
+	bh=EqmmZIu81GWPbHbee6X4MmpvxWOYMvGa84unotv6/pM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bduqJH461UavZZfJigAlv+WAJslgPH8QqKliGR2vT0YBAlD1dJuqEUd4H7bCIogWS57gQXbSfhvBTLgmfkfQUDoFpJVKe6VkygyTjPBr9bjWM9o2tlmOrm1XUwqBc4xTOL2WDR/WjkNixsGukyzhjwXAV4VD5Zacamba39LAavs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=re3sFDq2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBD5CC433C7;
-	Sun, 28 Jan 2024 02:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706410701;
-	bh=I2JHP2n51qFJXJlFgu6I1eAj34ctCNFkTtkBruBv+7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=re3sFDq2VrRHtBJpU5WFEzsvCO3D4//VGt8/TPGPUEHLuOcc+0LArSoGeiJWeAaM1
-	 0PwhWNvQ218v4SmjQ70WyaSkFM6aGV+u2r+46EgMH3c1W9tfcHBw/qONMj9aBYXjSD
-	 +JEapPqzF7wE0edCFPLwYNLqDKkojra5cRCKbt314xwnew0aA6s8i5do+/LWop085s
-	 s9X0yfqnX/msm9kZZckiFT1ZSD9t4VMeVLCgWDTWQ5AMUlKV+4CUKIqXfyAAqlJV8R
-	 CqutGiZitH/FESUFT7lMQYs5HXgrlcUijnWgEKRQ8L866a6nCqcLlhfdNyMLUwspHd
-	 u9+jplvnbb0cw==
-Date: Sat, 27 Jan 2024 20:58:17 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-Cc: agross@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, konrad.dybcio@linaro.org, mani@kernel.org, robh+dt@kernel.org, 
-	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, quic_ramkri@quicinc.com, 
-	quic_nayiluri@quicinc.com, dmitry.baryshkov@linaro.org, robh@kernel.org, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, quic_parass@quicinc.com, 
-	quic_schintav@quicinc.com, quic_shijjose@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mhi@lists.linux.dev
-Subject: Re: [PATCH v9 0/5] arm64: qcom: sa8775p: add support for EP PCIe
-Message-ID: <pm2emx3nnypdtfo63f6vly4guybl3pguqe3djgeqgiojxgqttl@oainfndei3qa>
-References: <1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mo3he8J3hL5xTcxO3O8gs88/7cPHR89qnBVeRkCT6RETT+AD1NJ7+Og0dEh7gGasYL0kaNKDsHZ3HeAbmM9UZBoAuAsM8oIFWewkqjqcxihtyqO2yRvH6lu/eaEd2rVI/KM2qztctwRgNVsBDxVybBBFtx/D1ehKiG7moJs8Nxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y+1cLkCS; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706418139; x=1737954139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EqmmZIu81GWPbHbee6X4MmpvxWOYMvGa84unotv6/pM=;
+  b=Y+1cLkCSDPpFrIp0ZgbuG2MudjtS/froZdtJLahSsqdD2rucdlLfUoLu
+   tJSbcsol52g4ZIK5u/qJvol+1n1NTC7BK90XFz5F/wCXqIHauE1Hyq5aK
+   Fm9nbU/4Th1CaEYI5fi0FWZIBh66W3AQDPHa8tKe2buvtx1ZgL2FC02t6
+   QjFQDUQnzuAWZ1GrlHkD3x2NtJ/jov52xzN5SXYjAmf7ahSp7IS2tqNIG
+   DGCEBKa8aPrEfsDAxFsWaE/GfL90GjMB3A8JfgzHoH4eX2XAyicbRh8Zq
+   aEkaTuTfd3m+IZiR1BxcNbt8YwQA1Ft0XyGWOz9azzevs/p2kLGPvUFEk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="9394995"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="9394995"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 21:02:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="821532394"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="821532394"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 27 Jan 2024 21:02:14 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rTxJ6-00035q-08;
+	Sun, 28 Jan 2024 05:02:12 +0000
+Date: Sun, 28 Jan 2024 13:01:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, baolu.lu@linux.intel.com,
+	bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca
+Cc: oe-kbuild-all@lists.linux.dev, kevin.tian@intel.com,
+	dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
+	yi.l.liu@intel.com, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	Ethan Zhao <haifeng.zhao@linux.intel.com>
+Subject: Re: [PATCH v11 3/5] iommu/vt-d: simplify parameters of
+ qi_submit_sync() ATS invalidation callers
+Message-ID: <202401281203.zNQINNbM-lkp@intel.com>
+References: <20240126014002.481294-4-haifeng.zhao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,89 +80,84 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com>
+In-Reply-To: <20240126014002.481294-4-haifeng.zhao@linux.intel.com>
 
-On Fri, Dec 01, 2023 at 05:36:11PM +0530, Mrinmay Sarkar wrote:
-> This series adds the relavent DT bindings, new compatible string,
-> add support to EPF driver and add EP PCIe node in dtsi file for
-> ep pcie0 controller.
-> 
+Hi Ethan,
 
-Waiting for the driver changes to be picked up, so that I can merge
-patch 5 through the qcom tree. Are there any unresolved issues that I'm
-failing to spot?
+kernel test robot noticed the following build warnings:
 
-Regards,
-Bjorn
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.8-rc1 next-20240125]
+[cannot apply to joro-iommu/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> v8 -> v9:
-> - update author in "Add pci_epf_mhi_ prefix to the function" patch.
-> - add ack by and reviewed by tag in commit message.
-> 
-> v7 -> v8:
-> - Add new patch PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function
->   names
-> - Update PCI: epf-mhi: Add support for SA8775P patch on top of the new
->   patch and update commit message.
-> 
-> v6 -> v7:
-> - add reviewed by tag in commit message in all patches.
-> - update commit message in patch 2 as per comment.
-> - update reason for reusing PID in commit message.
-> 
-> v5 -> v6:
-> - update cover letter.
-> 
-> v4 -> v5:
-> - add maxItems to the respective field to constrain io space and
->   interrupt in all variants.
-> 
-> v3 -> v4:
-> - add maxItems field in dt bindings
-> - update comment in patch2
-> - dropped PHY driver patch as it is already applied [1]
-> - update comment in EPF driver patch
-> - update commect in dtsi and add iommus instead of iommu-map
-> 
-> [1] https://lore.kernel.org/all/169804254205.383714.18423881810869732517.b4-ty@kernel.org/
-> 
-> v2 -> v3:
-> - removed if/then schemas, added minItems for reg,
->   reg-bnames, interrupt and interrupt-names instead.
-> - adding qcom,sa8775p-pcie-ep compitable for sa8775p
->   as we have some specific change to add.
-> - reusing sm8450's pcs_misc num table as it is same as sa8775p.
->   used appropriate namespace for pcs.
-> - remove const from sa8775p_header as kernel test robot
->   throwing some warnings due to this.
-> - remove fallback compatiable as we are adding compatiable for sa8775p.
-> 
-> v1 -> v2:
-> - update description for dma
-> - Reusing qcom,sdx55-pcie-ep compatibe so remove compaitable
->   for sa8775p
-> - sort the defines in phy header file and remove extra defines
-> - add const in return type pci_epf_header and remove MHI_EPF_USE_DMA
->   flag as hdma patch is not ready
-> - add fallback compatiable as qcom,sdx55-pcie-ep, add iommu property
-> 
-> 
-> Manivannan Sadhasivam (1):
->   PCI: epf-mhi: Add "pci_epf_mhi_" prefix to the function names
-> 
-> Mrinmay Sarkar (4):
->   dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC
->   PCI: qcom-ep: Add support for SA8775P SOC
->   PCI: epf-mhi: Add support for SA8775P
->   arm64: dts: qcom: sa8775p: Add ep pcie0 controller node
-> 
->  .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 64 +++++++++++++++++++++-
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 46 ++++++++++++++++
->  drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
->  drivers/pci/endpoint/functions/pci-epf-mhi.c       | 21 ++++++-
->  4 files changed, 128 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Ethan-Zhao/PCI-make-pci_dev_is_disconnected-helper-public-for-other-drivers/20240126-094305
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20240126014002.481294-4-haifeng.zhao%40linux.intel.com
+patch subject: [PATCH v11 3/5] iommu/vt-d: simplify parameters of qi_submit_sync() ATS invalidation callers
+config: x86_64-randconfig-005-20240128 (https://download.01.org/0day-ci/archive/20240128/202401281203.zNQINNbM-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240128/202401281203.zNQINNbM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401281203.zNQINNbM-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/iommu/intel/svm.c: In function 'intel_flush_svm_all':
+>> drivers/iommu/intel/svm.c:229:67: warning: passing argument 2 of 'qi_flush_dev_iotlb_pasid' makes pointer from integer without a cast [-Wint-conversion]
+     229 |                         qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info->pfsid,
+         |                                                               ~~~~^~~~~
+         |                                                                   |
+         |                                                                   u16 {aka short unsigned int}
+   In file included from drivers/iommu/intel/svm.c:22:
+   drivers/iommu/intel/iommu.h:1047:58: note: expected 'struct device_domain_info *' but argument is of type 'u16' {aka 'short unsigned int'}
+    1047 |                               struct device_domain_info *info, u64 addr,
+         |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+   drivers/iommu/intel/svm.c:229:25: error: too many arguments to function 'qi_flush_dev_iotlb_pasid'
+     229 |                         qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info->pfsid,
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/iommu/intel/iommu.h:1046:6: note: declared here
+    1046 | void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/iommu/intel/svm.c:232:25: error: too many arguments to function 'quirk_extra_dev_tlb_flush'
+     232 |                         quirk_extra_dev_tlb_flush(info, 0, 64 - VTD_PAGE_SHIFT,
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/iommu/intel/iommu.h:1049:6: note: declared here
+    1049 | void quirk_extra_dev_tlb_flush(struct device_domain_info *info, u32 pasid,
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/qi_flush_dev_iotlb_pasid +229 drivers/iommu/intel/svm.c
+
+2f26e0a9c9860d drivers/iommu/intel-svm.c David Woodhouse 2015-09-09  217  
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  218  static void intel_flush_svm_all(struct intel_svm *svm)
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  219  {
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  220  	struct device_domain_info *info;
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  221  	struct intel_svm_dev *sdev;
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  222  
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  223  	rcu_read_lock();
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  224  	list_for_each_entry_rcu(sdev, &svm->devs, list) {
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  225  		info = dev_iommu_priv_get(sdev->dev);
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  226  
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  227  		qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, 0, -1UL, 0);
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  228  		if (info->ats_enabled) {
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22 @229  			qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info->pfsid,
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  230  						 svm->pasid, sdev->qdep,
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  231  						 0, 64 - VTD_PAGE_SHIFT);
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  232  			quirk_extra_dev_tlb_flush(info, 0, 64 - VTD_PAGE_SHIFT,
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  233  						  svm->pasid, sdev->qdep);
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  234  		}
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  235  	}
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  236  	rcu_read_unlock();
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  237  }
+e7ad6c2a4b1aa7 drivers/iommu/intel/svm.c Lu Baolu        2023-11-22  238  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
