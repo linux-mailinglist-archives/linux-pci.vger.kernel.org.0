@@ -1,254 +1,142 @@
-Return-Path: <linux-pci+bounces-2722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 767048407E7
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 15:10:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76870840822
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 15:21:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BA031C21875
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 14:10:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9AB21C22C0C
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 14:21:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05E72657C3;
-	Mon, 29 Jan 2024 14:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2931B664A4;
+	Mon, 29 Jan 2024 14:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hj2zh2wY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDjvJGfh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F333C657AF;
-	Mon, 29 Jan 2024 14:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F314365BB9;
+	Mon, 29 Jan 2024 14:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706537447; cv=none; b=p4OXla4e7tBstybes6YbY3NbHxsItqCc/jYF4BHxAkqZ3BnwG/4bKWhg0gGRl/Blnwk02NBoUX61V2Q8tDf/4Ojk+ZWvYce2zduhVVZWOqcyTt6ycOx1V+TqWHesic6DB168qIwBoVJg94E5zeYEuGsbfKBjG7tAXLympytjrTU=
+	t=1706537994; cv=none; b=H3QsSRoypJ68yTMPA/arPV82QuVmoMWKtZrM9vOFik62LmI7mpRySpjcAd7yp7w1v3Dv3B7XP0GsULlDL7nUcbECxUnxT8dkjXBMBG2db4+rh1zRFZUtel2i1ltx75mWxdP1e5WVpcV2xi805Ql+rDDp17yaXcwSaX5zmahkgfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706537447; c=relaxed/simple;
-	bh=cpIteSb46C7vMPSZyBEbfueXL51jR4Onxer+aqnEGgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O5OGVWdk3gpkZnlRrYt1xpHIgNDJ8hkCfyg23QTNRtk72HB81J3qu0kfNI5pNU2KDeRWbb6itI1JsdwjoJOSFLh5wRZeIu8DPy+1tnDge2+FxNadB30s8/fs8SBjmcGJjSHiAKRrBNprGpyAuZNBsSqAbj+2JXB/6gZqEMaPKBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hj2zh2wY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40TBccn5003188;
-	Mon, 29 Jan 2024 14:10:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=AobKpWswbqzb3U1KiN/ccc5Pg0YoZC3EQk3XnnWFgbE=; b=Hj
-	2zh2wYurC8clzcltNifz9pQeuPrYPwWXNo9Vb/e/iUOIT1vo4+9+ot3o0WohSFee
-	5YyzzdpfmLKkLxoFC1PBacj8d4vqj7ZMmGIE1XeINHdpO742f/JT1tJsRRFw5p8X
-	5QQM9W7eyrX4CYAj6lxIQ7pyv1mscK74w0AB9xUtbYrAZfvLnb93BLzmE93rBmZg
-	bIQshIq6jb6orGfjylzIxI28bZJ5nRcq1QHDG83FhN3FZE2P3sp1bYoYRAVsUkQA
-	yzIGt/UAoDsg04xcAZgSnRoic141cU6xutXoFwr92hiZoCwqtMnrcycjHy1ftyz2
-	4Jq4fqMTOGXprDIYMAsA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvqhmv7ee-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 14:10:31 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40TEAUpu026646
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Jan 2024 14:10:30 GMT
-Received: from [10.216.42.199] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
- 2024 06:10:22 -0800
-Message-ID: <8eb63c69-b769-3623-fd34-b1df959ba7b1@quicinc.com>
-Date: Mon, 29 Jan 2024 19:40:19 +0530
+	s=arc-20240116; t=1706537994; c=relaxed/simple;
+	bh=6lCTggBgr0R66dy/5DnPFw7G9wnDCHveSsJHdM5MT/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cCf9EfM9W1bYIu2qc1ePCSZpKUvYDcX86XCzsX/ue6VOslrpIc/rzy3PDh4q4PwGQnWaZPEhzy1k3tNtD82ZplQseB8kuQVjI9VrUDRbLeYblSWZxmPooGtMCANkMDdk4+cAPhlpWIOGlhcX5HOSweqX7AqLkHlt3xDLKITwDtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDjvJGfh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095BEC433C7;
+	Mon, 29 Jan 2024 14:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706537993;
+	bh=6lCTggBgr0R66dy/5DnPFw7G9wnDCHveSsJHdM5MT/s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nDjvJGfhJslWP/7AW1mE65MkSjlLNIlWCQM8DdsgKOU0An+Klrbdr2wGIZwI13S1A
+	 wMO65g7yeqrTnMXu8br7hS5SD8ghEy2AVeHi7PUHtxgXPgRonrP2qFOySfDfetflqO
+	 Lsa22Z0b+v2CUOhj1KMJnWxsEQPgzYHsPZeurFUz9YxzN+ZwxbqzUL4t2SUv5Qh4zv
+	 Ogy1MP7DLHBhMRGn7mGWEsrQKyWghzHBUVky4qNHDXr813FvYiCHeIaDZbxtralC0+
+	 nqYYB/mrd9I7gqs1YH54+hWUW00ZFZiXdL9DkTGUa7+DqAChx2vxjrdsn56gJZiVyG
+	 gTztrHhcRB08w==
+Message-ID: <3aa071cc-32f2-4228-bd32-6dc2375a4c2c@kernel.org>
+Date: Mon, 29 Jan 2024 15:19:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v6 3/6] PCI: qcom: Add missing icc bandwidth vote for cpu
- to PCIe path
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: qcom: Document the X1E80100 PCIe
+ Controller
 Content-Language: en-US
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Johan
- Hovold" <johan+linaro@kernel.org>,
-        Brian Masney <bmasney@redhat.com>,
-        "Georgi
- Djakov" <djakov@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-3-77bbf7d0cc37@quicinc.com>
- <CAA8EJprq1s42hkbXXKtXTGnyYePQN98t+gmFoHDOGMWJH4Ot3g@mail.gmail.com>
- <2bc92420-b3b9-047d-e5e4-22a19b4d07d3@quicinc.com>
- <20240117063938.GC8708@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240117063938.GC8708@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240129-x1e80100-pci-v2-0-a466d10685b6@linaro.org>
+ <20240129-x1e80100-pci-v2-1-a466d10685b6@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240129-x1e80100-pci-v2-1-a466d10685b6@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UMNi7JRKp41clxxn5vu224Uw6Lk23tS1
-X-Proofpoint-ORIG-GUID: UMNi7JRKp41clxxn5vu224Uw6Lk23tS1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-29_07,2024-01-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 clxscore=1011 mlxscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401290104
+
+On 29/01/2024 12:10, Abel Vesa wrote:
+> Document the PCIe Controllers on the X1E80100 platform. They are similar
+> to the ones found on SM8550, but they don't have SF QTB clock.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts_getmaintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, use mainline), work on fork of kernel (don't, use
+mainline) or you ignore some maintainers (really don't). Just use b4 and
+all the problems go away.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
 
 
+Best regards,
+Krzysztof
 
-On 1/17/2024 12:09 PM, Manivannan Sadhasivam wrote:
-> On Tue, Jan 16, 2024 at 10:27:23AM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 1/12/2024 9:00 PM, Dmitry Baryshkov wrote:
->>> On Fri, 12 Jan 2024 at 16:24, Krishna chaitanya chundru
->>> <quic_krichai@quicinc.com> wrote:
->>>>
->>>> CPU-PCIe path consits for registers PCIe BAR space, config space.
->>>> As there is less access on this path compared to pcie to mem path
->>>> add minimum vote i.e GEN1x1 bandwidth always.
->>>
->>> Is this BW amount a real requirement or just a random number? I mean,
->>> the register space in my opinion consumes much less bandwidth compared
->>> to Gen1 memory access.
->>>
->> Not register space right the BAR space and config space access from CPU
->> goes through this path only. There is no recommended value we need to
->> vote for this path. Keeping BAR space and config space we tried to vote
->> for GEN1x1.
->>
->> Please suggest any recommended value, I will change that in the next
->> series.
->>
-> 
-> You should ask the HW folks on the recommended value to keep the reg access
-> clocking. We cannot suggest a value here.
-> 
-> If they say, "there is no recommended value", then ask them what would the
-> minimum value and use it here.
-> 
-> - Mani
-> 
-HW team suggested to use minimum value of 1Kbps for this path.
-I will update the patches to use 1Kbps in the next series.
-
-- Krishna Chaitanya.
->> - Krishna Chaitanya.
->>>>
->>>> In suspend remove the cpu vote after register space access is done.
->>>>
->>>> Fixes: c4860af88d0c ("PCI: qcom: Add basic interconnect support")
->>>> cc: stable@vger.kernel.org
->>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>>> ---
->>>>    drivers/pci/controller/dwc/pcie-qcom.c | 31 +++++++++++++++++++++++++++++--
->>>>    1 file changed, 29 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> index 11c80555d975..035953f0b6d8 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> @@ -240,6 +240,7 @@ struct qcom_pcie {
->>>>           struct phy *phy;
->>>>           struct gpio_desc *reset;
->>>>           struct icc_path *icc_mem;
->>>> +       struct icc_path *icc_cpu;
->>>>           const struct qcom_pcie_cfg *cfg;
->>>>           struct dentry *debugfs;
->>>>           bool suspended;
->>>> @@ -1372,6 +1373,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->>>>           if (IS_ERR(pcie->icc_mem))
->>>>                   return PTR_ERR(pcie->icc_mem);
->>>>
->>>> +       pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
->>>> +       if (IS_ERR(pcie->icc_cpu))
->>>> +               return PTR_ERR(pcie->icc_cpu);
->>>>           /*
->>>>            * Some Qualcomm platforms require interconnect bandwidth constraints
->>>>            * to be set before enabling interconnect clocks.
->>>> @@ -1381,7 +1385,18 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->>>>            */
->>>>           ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
->>>>           if (ret) {
->>>> -               dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
->>>> +               dev_err(pci->dev, "failed to set interconnect bandwidth for pcie-mem: %d\n",
->>>> +                       ret);
->>>> +               return ret;
->>>> +       }
->>>> +
->>>> +       /*
->>>> +        * The config space, BAR space and registers goes through cpu-pcie path.
->>>> +        * Set peak bandwidth to single-lane Gen1 for this path all the time.
->>>> +        */
->>>> +       ret = icc_set_bw(pcie->icc_cpu, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
->>>> +       if (ret) {
->>>> +               dev_err(pci->dev, "failed to set interconnect bandwidth for cpu-pcie: %d\n",
->>>>                           ret);
->>>>                   return ret;
->>>>           }
->>>> @@ -1573,7 +1588,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->>>>            */
->>>>           ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
->>>>           if (ret) {
->>>> -               dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
->>>> +               dev_err(dev, "Failed to set interconnect bandwidth for pcie-mem: %d\n", ret);
->>>>                   return ret;
->>>>           }
->>>>
->>>> @@ -1597,6 +1612,12 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->>>>                   pcie->suspended = true;
->>>>           }
->>>>
->>>> +       /* Remove cpu path vote after all the register access is done */
->>>> +       ret = icc_set_bw(pcie->icc_cpu, 0, 0);
->>>> +       if (ret) {
->>>> +               dev_err(dev, "failed to set interconnect bandwidth for cpu-pcie: %d\n", ret);
->>>> +               return ret;
->>>> +       }
->>>>           return 0;
->>>>    }
->>>>
->>>> @@ -1605,6 +1626,12 @@ static int qcom_pcie_resume_noirq(struct device *dev)
->>>>           struct qcom_pcie *pcie = dev_get_drvdata(dev);
->>>>           int ret;
->>>>
->>>> +       ret = icc_set_bw(pcie->icc_cpu, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
->>>> +       if (ret) {
->>>> +               dev_err(dev, "failed to set interconnect bandwidth for cpu-pcie: %d\n", ret);
->>>> +               return ret;
->>>> +       }
->>>> +
->>>>           if (pcie->suspended) {
->>>>                   ret = qcom_pcie_host_init(&pcie->pci->pp);
->>>>                   if (ret)
->>>>
->>>> --
->>>> 2.42.0
->>>>
->>>>
->>>
->>>
->>
-> 
 
