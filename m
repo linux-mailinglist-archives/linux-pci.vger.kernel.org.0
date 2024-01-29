@@ -1,40 +1,41 @@
-Return-Path: <linux-pci+bounces-2671-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D150083FBA5
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 02:16:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D533B83FBA1
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 02:15:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C9131F21077
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 01:16:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05FA51C20892
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 01:15:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934E7D267;
-	Mon, 29 Jan 2024 01:16:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8F7C8C4;
+	Mon, 29 Jan 2024 01:15:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2084.outbound.protection.partner.outlook.cn [139.219.17.84])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2056.outbound.protection.partner.outlook.cn [139.219.17.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEE1DDA3;
-	Mon, 29 Jan 2024 01:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035C4D267;
+	Mon, 29 Jan 2024 01:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706490968; cv=fail; b=ovGNLywtrHZewv9GDOf/TeMBRAQB5T78K/R1Z+qP1oQsK62e+Sd1SXyif/OOWFn0Txiy1VB64pZ7ceaCnwFdLUktCmpxy9Wxi2JkJmhDySTSKmLOZEn0N9nguSdQN4exw25aLa5n2eR0qYRwMHwMcsIx6inapjnT3RShglGlnQM=
+	t=1706490946; cv=fail; b=Nx2cetx+NSoT7I9QuMbE+HAowywbICOAl6xk3Q9cVcY7Ae2tRiRD65NfQDjGNTC9d2CxyVoJkBCjCtC5Tw/trf1vwvWNbWvYPJI1+TuZgR7f8JXRyjZKrzViDHNiV4jGuLoua5rSf1prqEBJxhkTrUIGqUOHZQfST81fCnZW7zk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706490968; c=relaxed/simple;
-	bh=JbW+UxZUp866Fhyk9NXneVY+ZT+ecAdOHbvukAn2S04=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=At6++/etSd81opNkIxWGn217TMGaBJDua7vhvWMpVcwwWvj17636sey4e7qFicb6li/y8AET1s+LId++7e1gzeZG43NfMEnPnCygIsHqvQo+iJubAbesGGFw/HFYgUaUx1W3E3vIe5G3qo8j8T3dv5UWiy0aZB5iwIQACTtWFzc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.84
+	s=arc-20240116; t=1706490946; c=relaxed/simple;
+	bh=J1Vs67zFQuxJfPh0mWcRE1H80ffa1MU7C06LvBAwQ1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ktwk9fJ6HCPaEsxSjhKjm0Ml02CO1NXYoQBvfE0QP5sxWA1IxXNOr81m9hjhO9KHhrPnmxTTnIUTGnaS7Ziv2P/riwBGwwjb8uuGfUmQzVqI5SQRINlmlNY8V29fNeHnRCuLQjxLnZYLBnOrgGw9XS3allCX4MVaztTwaMQeiUg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Alrj7Vxcq21ly6tpjtHMByT5Pvv8nV1HMmhYdEAZqSn2PKZTLDXE65zEc7r5+MS9+h4yMmOgRh2b0osskxhEvCdbbt9QGDlkzKq8Sx/qnJTOgf2Vxh0dPHOTgGqrYPxCq3xpIutSy7dxjYgdTh62n+zyNcBR8cO/n00G1pdsoGeLjRui+IRmDyhwNG0kgg+xfy1WQHBA8WxflGtgOH8CQhewWztF4D7SLq5IRPPRzKKVS3Ry+ny+XyZgk9BFRPGmpj15ks3RcZw38FjXyRTBSBTT+Ajg52GqmTjI14k+phYUMofWkzkkrXZ1XpqCV7RzRmcblbHKCM5CrSJ1jjqOWw==
+ b=LTryLzGzwujo7mnKS1MoivSe5PL4Xy2hDNCB8OdAsecarfRgxYj/Nmz3xjZfM6PN0UAFzmCw24KckpiUjs5TdbnHmnbJC+W0K3dej+chc60B2froF1TN+yQ9I+FUlyHnsIa0rpzG3IaekPwtAFYaW4xBhgu0fIBTWv8WjxEFIbKYxqvFhNO8oGJiuVVaXCw1uLGkyO+BMBiQegMr6l2Ut+dscWgKT38H7dUKGaFUJSO/QhW39p7ZHmfJpL0kyrM2rbhovXntQdqdbRjlQ7JwcSbhNioHXRIHOn/WN7B2DH86ycWBxhSU0YK8NhKuQYefs54vez/NRIT/NBAM1UaaZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e32gHqF3/4Ta8V5kx4q5V2+D4dF4zhKKR6XIQgjmQYE=;
- b=JXvbwRknv3lmy514E5JUiihvQuVm2tyvxsGiWs+rr0uUooPdw/GreF3UP3J9lZYAF7h1Ba26ZZoBSOlCRxn7e5cLNpuZ9zIMR0GsfIFqHu04EvcGzCqQj30eczEHBOt/qy6BD/qdGvr8AYe7HzsLjm6CyuxdUVpn/tUMaDV4LFQ9+Hv9M7NGqGiGz9cn8JC2nywUKihcL0pERp/CdDsJfboSJ0q1xRHs8S7ZBfVmHmUL0oBUPWIxMl6ynBz/dF0JuNgpIoekE/9rOZ1v9TorVwiL4GDDBQb6zDAdxErXNsACAyrWnyycFEhwTB807j32boEBC37uhqnJ28EmxTBqJA==
+ bh=Itcg3aSqPauiN5XQFv7dSMmeVokhY5xZ4+FWKeBoZIs=;
+ b=D7/6S015+vJek6eAcHzuZzoBHo9ykkzt+ZwE2gWy+MTF+WC+0H4VIvJGblyforRC4LEj3WOborLFnwAY4eW16Q8RtBnG03EH5UDh2lbC1Jxf2PQI5kjvHs1UyceH+Uu4K8H7e7u5RSj5b03fJhzYgwLRZB//roNYtjwvHmOz8Mvec7rOWonHwf1FM36bRdn83CWlnp6OXtoSpj1NxjfjhTZ6LLsa1lYcEtqipGsSHyBXxzDqvgGOjAKOpLRCi4qcaTujnbW5Jlle9PSb4hrr0Om3Mxa57kXJd6Gl4m6kIsJyH2HgH+dcwotqMkbtTQPwkOo96hD9QgLG9Wi9YkSuYA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -44,11 +45,11 @@ Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c211:18::12) by BJXPR01MB0630.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c211:14::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Mon, 29 Jan
- 2024 01:00:06 +0000
+ 2024 01:00:07 +0000
 Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
  ([fe80::1ea1:19d5:efef:6fc6]) by
  BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn ([fe80::1ea1:19d5:efef:6fc6%4])
- with mapi id 15.20.7228.029; Mon, 29 Jan 2024 01:00:06 +0000
+ with mapi id 15.20.7228.029; Mon, 29 Jan 2024 01:00:07 +0000
 From: Minda Chen <minda.chen@starfivetech.com>
 To: Conor Dooley <conor@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -70,10 +71,12 @@ Cc: devicetree@vger.kernel.org,
 	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
 	Kevin Xie <kevin.xie@starfivetech.com>,
 	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14,RESEND 02/22] PCI: microchip: Move pcie-microchip-host.c to plda directory
-Date: Mon, 29 Jan 2024 08:59:47 +0800
-Message-Id: <20240129005958.3613-1-minda.chen@starfivetech.com>
+Subject: [PATCH v14,RESEND 03/22] PCI: microchip: Move PLDA IP register macros to pcie-plda.h
+Date: Mon, 29 Jan 2024 08:59:48 +0800
+Message-Id: <20240129005958.3613-2-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240129005958.3613-1-minda.chen@starfivetech.com>
+References: <20240129005958.3613-1-minda.chen@starfivetech.com>
 Content-Type: text/plain
 X-ClientProxiedBy: SHXPR01CA0010.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:1b::19) To BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
@@ -86,183 +89,333 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BJXPR01MB0855:EE_|BJXPR01MB0630:EE_
-X-MS-Office365-Filtering-Correlation-Id: e649555f-52ba-4b64-d1cf-08dc2065a1f9
+X-MS-Office365-Filtering-Correlation-Id: bff46389-2aa3-47cd-3ac0-08dc2065a2c9
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	B8Q1RttqYNI21ZfZuxeUYXxvrrOynorQs7u85YJ00m6SoQjLFbNlDqN/Xz3dv4a9+5uCeStHApp0tXMTOdNepYXfhEFqH01seSv9nukzkBEuFvlDrRnMrpXcYqw++bEINUbu2/PusgMx5iN2Es5pqI3poGCQgFKqibS77qP/p+jXuz4Kj5cv1JI/IuGls63NG/D2BAwYP1nXQp2vSubLEG8YQh9P8a5t9bOItWMYjn09VEgQVbSKU75Nzvj40tzyWRB2WIBgqnoT7lupPl0yBIH3EogocGurSElAZLbX9AMOsnAxDkycRgBBb8/P6j2chFgE/RPsiU6SiWJeQ98ufz4sO/phHogeXwqWFAITo6Dtb/HDrpEVWN0iCT0resHGr6BbgjEL9OCpx04o+cZxCJwsG+eslv3VQEhfEXFtSOHJ8dmT+8BNA6AQdciP4GmNP0iHswK5hD98xtoWhhDC2zGWKa9Ci/BsHMyW8nCWTuvYq7W4qPYNbJuiPkoLsYfkY2PmuR9HHAM1ONk3Or/E2+JZivIvIS6Y7l8LUp5EPnE=
+	3hP2BF1MvR3TCgMDoyFqKmm7BxHOIZAtRUL9u3IxZfqfasgGlzoSIsfFSsJjDjRkgaYkjAozQsseL0ahCjm7Ph//D3hZ1FHztvJ81gLaplRC5QWuB8njA0mxQj6b4iWNaiB2qxXn+Fo9K8Y80uc52Xrt9qOSRfJbIFPuGy47DpkSM3Oz7JGKHEhkSLfxf7uCsMqDi//ievQUHIdybuf0ZuFFIvTisU+GmapESCMVl8A60K1UNwyFU86SsR8hxwGXgR+OPezrbfgUamaHK56bgc/nUsn+bjo7igixLJeiV88GTLhYTo8TOM8Mmj1CBHkmzZuCAoBMndlGJfVT/1FnPmD9tVjUsqqMW+l6re+IkFi0oV3kb7HPA7wY4i/gNtG6c9/YnbacW/CoWoQdJrtwwlDJ+pfol4Yzdw0DL9It7p5KZ7jbOGMbw+1rl+WlaLFpl/QOWYhxuxu93xaThJrqU7msB70dsnNBIvSp11GooJxMubNG0sk5XejQLxEjzFXsytDFlVKXMocyw9Bt8n9TjdjO403mweQTOyjJ45BiSWrWaZQpVsy6UxEENw5ffBc4
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(136003)(39830400003)(396003)(346002)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(83380400001)(41320700001)(40180700001)(86362001)(40160700002)(36756003)(38350700005)(1076003)(38100700002)(2616005)(26005)(107886003)(2906002)(52116002)(45080400002)(508600001)(6666004)(41300700001)(110136005)(66946007)(66556008)(66476007)(54906003)(5660300002)(8936002)(4326008)(44832011)(8676002)(7416002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(136003)(39830400003)(396003)(346002)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(83380400001)(41320700001)(40180700001)(86362001)(40160700002)(36756003)(38350700005)(1076003)(38100700002)(2616005)(26005)(107886003)(2906002)(30864003)(52116002)(508600001)(6666004)(41300700001)(110136005)(66946007)(66556008)(66476007)(54906003)(5660300002)(8936002)(4326008)(44832011)(8676002)(7416002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?23XvUu1sQUwT6+bmg7YUS8ErmSQS9ig4dpbb7eu4qnkIQNUI6BkEuyYvT5iX?=
- =?us-ascii?Q?6GJKN3UERJD1bLWvELz+9y5CEdqNkkXPyWTFaIdFreGb4AMHvYBygkL4yIPj?=
- =?us-ascii?Q?Rh4qrj2iwGCY3MWufsOLVVZFwwDbSyEfugzHgiN06bJnnGQLA8fev5DSD6J8?=
- =?us-ascii?Q?41PVQH655pIRIwZstfrWB57he5y7J/sjjRhdud1fgtYhhHjlpiaxh5ywM04e?=
- =?us-ascii?Q?fBEWrUkdVGN900xm7Bn4k7JBpzhazOshLW8amxD0C8PP+K2pKKTw9o3XRFrc?=
- =?us-ascii?Q?Gd+0RZ1mGCkZey4TV8FGJ6L41J7dn/0naJg4h3CnJstCFiPb0jEdinsZ2rG6?=
- =?us-ascii?Q?Pf6ikiYfLh9/J163OYT8w8O5xTi7G4yt89tdOQM+OOX42/WL6jb16dKXC3gx?=
- =?us-ascii?Q?+aJdA866TvWAADSQuPAq/d785H2IGpXi8xma8LpkzS39Mr5yDJeBc1dSV7PT?=
- =?us-ascii?Q?eTKcE7V9KCDvZFMpDp5+kgw4x0dwGUU6UKOHmJCvpVUEbrXK89TJlS8B3jwd?=
- =?us-ascii?Q?ya/KluZU1P2pUrkVvoKficIWw2e0UYOp8Rd3uLbWuyrGr/PgPLd7m5lAwkNj?=
- =?us-ascii?Q?WLKfR3IpO4QtyoZxBKBxvdJQSe9I0GmoF3WczhBN05pUizQDewuFgfnlvIXw?=
- =?us-ascii?Q?PyGkZ4zgRyaoRlQdgLVwLQz4hTn/UCycqIOPLiVx29SM1fOBJBrJtNfv12gm?=
- =?us-ascii?Q?TqkSG7yywSKKxKSWTY/GsY2H+RUnitcU1jwItVFaP6kVmm8YxAvONzleoGcZ?=
- =?us-ascii?Q?En+DTQ9t+AMdYPsmC8AhEZuBcp8th7zUB6yAwOfdud6idiK7n9vqtG6N8SsT?=
- =?us-ascii?Q?BW+ogdXkjhBQ/DGrqm/41uIpHsaqDZ6ahoqJLBjpUF48lZbVQplOpd+GxQqT?=
- =?us-ascii?Q?UCPZMGFNEJyS2ke84n3hNaQexm5pYI2d3/uGV6qGytAIxLvFBlwsGOD4oRXj?=
- =?us-ascii?Q?UhVTmZuXIuLX3F8s/LpnXhhUtG1nOpfJDMcJrw2V7LXKelQzzcCKDb0MSomE?=
- =?us-ascii?Q?5WcHrmNcqpF5hv1Y+jK7i+eE3BCHVuKOvvzHwNW70xDVPzLHbJf4I9OjgbEy?=
- =?us-ascii?Q?k04uD3ADo4xCykaBYs+Toemm2wzgz0n+9qELfCixrcdk2MotYhpYeprbb+we?=
- =?us-ascii?Q?XTJvRh/S1mVdEpgul9DdRuTYpDm4U285njhK/pDX74h2HK7L6mr73+9vlfb1?=
- =?us-ascii?Q?uetqkQNgiSu7pHOUcNoiYHfW5iCNYNv8Us+4CQN1q1oQF0A0sGYnTn83utE5?=
- =?us-ascii?Q?3zv7/enZzgZNy9DH9xERvhvs8KXddtGuSDqMuqo8vjqd+FIyGokvPUU1dACq?=
- =?us-ascii?Q?CAKuz6UDC07oSiAZ/ayH23XhnGS93bLTO/AZliseA7gmRMzV+KN/J6gOKB5P?=
- =?us-ascii?Q?lzg5qv/B9/6MxkXJ49ZfJDZJReM4qVHeQPMGXHilJ453hISZDQpPO2cQhPN1?=
- =?us-ascii?Q?UOx+DXHuZ2s2NioqCrHokn8SYLiDh0QxFs4rSsAxORNAOjtWaLsuKhMu2Np2?=
- =?us-ascii?Q?4mYRh63JW9bXmLkRJnjkWNMxk98qMZb12rPz7chJzdJxOH1whaO78T+Ev1JH?=
- =?us-ascii?Q?MzKBJmHm3Ilz/ri3byQ9F/0eh6ura+wj2j784FUHLIIruuM0f1XAqIJf5Us/?=
- =?us-ascii?Q?3Q=3D=3D?=
+	=?us-ascii?Q?Rlqf7olskp2Pqfiq20hQ33mEOhwyUxCQ/AZjlMy5QLZesxOvJwg0Q1mbmwih?=
+ =?us-ascii?Q?DqLDyiLruJwV5qJ0AUbCFt1gve7CuK6f3+UYOnK+6PHUUNu0wA5GO71r1Ol3?=
+ =?us-ascii?Q?atd+noQs756fgs2PWavld9y9w7cdjnPR+6ATFsI8vGpDl7Cq3GmUxsHMNlHI?=
+ =?us-ascii?Q?1H9lCUTa5S68aH89srs49Dx3Z8ERNyx3/cpyFv937PPR3SQIqYWi1qnQMpji?=
+ =?us-ascii?Q?t6hhBw91chIl+p35GhSyK6QRW+9A4PNhJHlmv7hopxZnKUW8rqpu4TwpnXcK?=
+ =?us-ascii?Q?+kItLmRX1MTA+lLomdDna1j3kRYW1H6PLIh11hz3gA46yvkSgAnySdLI2FJx?=
+ =?us-ascii?Q?w905JnaGkFOPSsZ8EqwvZ/+UrDptjD9usuFuPtIyYKGsnWhb+yLJOFu0KPIe?=
+ =?us-ascii?Q?bR9eYU0/NDCmtzenqh4E/FrONJP5ntA+GVRXeMZ4gvAoZ7o2wTi/UOVWmydM?=
+ =?us-ascii?Q?ZOTGpM/Mt+38fAkWXRQkreshMmttUSe4ODnlV3dFed3jnHexaLbA1ob0JqZe?=
+ =?us-ascii?Q?yw7Fd1haeTeVX0VDBsmzmckjt+9qXPVOMF5HOXHKgHc1b2cDi15wnwDKohCZ?=
+ =?us-ascii?Q?KM/XxcCUY72dPGHiMuj2lF0tsKxKFtLbqehUlOZw0aH529G9sMPKgw6+UaKe?=
+ =?us-ascii?Q?JLLkk5McUp6DkY3MULlDIqhtMvOTtYrrbv9Pq3A9/Ue3MfDK72XEX4SVGJqY?=
+ =?us-ascii?Q?7fT8hzw4tzwv6yZ75uRjhhmPXHYc8RFQUAGlPYlIEo4/tfFG9akO4CqyryWj?=
+ =?us-ascii?Q?xfmfNCglk12UDD5e8KgkHFEYwrnR+ey1t3ejIp0pHhWRSvSI8f1ZQyHtV3Bj?=
+ =?us-ascii?Q?6mkEoXRpDgsa+fsGoaNSbkVSDUV9p2eb8JZKuFg660u9xqrayVT5+MHOqAK7?=
+ =?us-ascii?Q?c3llMn/T1f90kpMZLAlgX+p1pN2T74+UG4hmy+4WLfwlOvA767bvNFGVPApO?=
+ =?us-ascii?Q?5NEHcGdMpMequVliIqKB/Vn5kz/m0yQuesxvdIwtNVILzI+3jUAkCbquYn9q?=
+ =?us-ascii?Q?6GIG1nzmdDxkcmvge182TXYjaXH3N2p3T2sfARv2H4jxwaIomhoeS/H9C9OE?=
+ =?us-ascii?Q?j6tjCrBGIGhWchtzqO/TJlnokIlx3EZF66DcWcfVA67uKcf9QIZW27PWhHT6?=
+ =?us-ascii?Q?ofxzNtMMMOS5Tt34UOePdsMj7e9hMPATkzKVDdHDms8P6Y0oRFpEdMPhcGdV?=
+ =?us-ascii?Q?1QxEVsJAAguL/Neqzru0eZGbd8odUcorqqrzbqN3R/RYqozh87JB/Kg8ZUD8?=
+ =?us-ascii?Q?aWnF3iC7Vrhc8U4wRQEvjsSrNbJgyPKKafIbKJjAQ5tkL22NIUkAO2MZc6Kt?=
+ =?us-ascii?Q?GdP5O+vVnSLIsn+hXg7ukrVdQDnN9w11SfRBOeitIeRKp6B69F62M+1sNGaU?=
+ =?us-ascii?Q?XO3Fe4W1hXBE//89agqOlLwUuLxgY0G11Uijexz2XURiEMFg0cE7QIAp6yky?=
+ =?us-ascii?Q?/wYw8m4ZJPBvlfKuKhEkAs0774E30E/ZKj6EurFTwfGd0XVlJ7MJhLfAaUBC?=
+ =?us-ascii?Q?NWn9q5bjRoeORRyo+JSoeVwYhNGV19BYEoMwdypmZ7poVYhnzTiLDqtpoHD6?=
+ =?us-ascii?Q?6T77yzreFf7v/XC+l09AbzXQo7t5D4XqT5tepnp9fe3hzoKX+g1IbkKBTcmz?=
+ =?us-ascii?Q?rA=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e649555f-52ba-4b64-d1cf-08dc2065a1f9
+X-MS-Exchange-CrossTenant-Network-Message-Id: bff46389-2aa3-47cd-3ac0-08dc2065a2c9
 X-MS-Exchange-CrossTenant-AuthSource: BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 01:00:06.2077
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 01:00:07.5926
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3ga0AmoB9kNm0DyQsc5/4KWgkZ8Psffoo/LO9G39kIjMXyi8uSdHovtvnfeMtINun2HLzDjcnUC3mtlkH04rFtJbw1I/dzMeA/++2iVS1t0=
+X-MS-Exchange-CrossTenant-UserPrincipalName: ghncKGugvMWn8DjrgYd3dvPCASKHf7nwuIevJ4dCA0M2GmDG303Tmky474Ju3pRFDb1XiH5bdg4N3mXYIi1fHwR4kU8A7c3XNufwRantLIM=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJXPR01MB0630
 
-For Microchip Polarfire PCIe host is PLDA XpressRich IP, move to plda
-directory. Prepare for refactoring the codes.
+Move PLDA PCIe host controller IP registers macros to pcie-plda.h,
+including bridge registers and PLDA IRQ event number.
 
 Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
 Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- MAINTAINERS                                        |  4 ++--
- drivers/pci/controller/Kconfig                     |  9 +--------
- drivers/pci/controller/Makefile                    |  2 +-
- drivers/pci/controller/plda/Kconfig                | 14 ++++++++++++++
- drivers/pci/controller/plda/Makefile               |  2 ++
- .../controller/{ => plda}/pcie-microchip-host.c    |  2 +-
- 6 files changed, 21 insertions(+), 12 deletions(-)
- create mode 100644 drivers/pci/controller/plda/Kconfig
- create mode 100644 drivers/pci/controller/plda/Makefile
- rename drivers/pci/controller/{ => plda}/pcie-microchip-host.c (99%)
+ MAINTAINERS                                   |   8 ++
+ .../pci/controller/plda/pcie-microchip-host.c | 108 +++---------------
+ drivers/pci/controller/plda/pcie-plda.h       | 108 ++++++++++++++++++
+ 3 files changed, 132 insertions(+), 92 deletions(-)
+ create mode 100644 drivers/pci/controller/plda/pcie-plda.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d1052fa6a69..44daaf962065 100644
+index 44daaf962065..3b8d7ba12807 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -17034,7 +17034,7 @@ M:	Daire McNamara <daire.mcnamara@microchip.com>
- L:	linux-pci@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/pci/microchip*
--F:	drivers/pci/controller/*microchip*
-+F:	drivers/pci/controller/plda/*microchip*
+@@ -16802,6 +16802,14 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+ F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
  
- PCIE DRIVER FOR QUALCOMM MSM
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-@@ -18827,7 +18827,7 @@ F:	drivers/clk/microchip/clk-mpfs*.c
- F:	drivers/firmware/microchip/mpfs-auto-update.c
- F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
--F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pci/controller/plda/pcie-microchip-host.c
- F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
- F:	drivers/rtc/rtc-mpfs.c
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index e534c02ee34f..4d2c188f5835 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -215,14 +215,6 @@ config PCIE_MT7621
- 	help
- 	  This selects a driver for the MediaTek MT7621 PCIe Controller.
- 
--config PCIE_MICROCHIP_HOST
--	tristate "Microchip AXI PCIe controller"
--	depends on PCI_MSI && OF
--	select PCI_HOST_COMMON
--	help
--	  Say Y here if you want kernel to support the Microchip AXI PCIe
--	  Host Bridge driver.
--
- config PCI_HYPERV_INTERFACE
- 	tristate "Microsoft Hyper-V PCI Interface"
- 	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
-@@ -356,4 +348,5 @@ config PCIE_XILINX_CPM
- source "drivers/pci/controller/cadence/Kconfig"
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/mobiveil/Kconfig"
-+source "drivers/pci/controller/plda/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index f2b19e6174af..038ccbd9e3ba 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -33,7 +33,6 @@ obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
- obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
- obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_MEDIATEK_GEN3) += pcie-mediatek-gen3.o
--obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
- obj-$(CONFIG_VMD) += vmd.o
- obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
- obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
-@@ -44,6 +43,7 @@ obj-$(CONFIG_PCIE_MT7621) += pcie-mt7621.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- obj-y				+= mobiveil/
-+obj-y				+= plda/
- 
- 
- # The following drivers are for devices that use the generic ACPI
-diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
-new file mode 100644
-index 000000000000..5cb3be4fc98c
---- /dev/null
-+++ b/drivers/pci/controller/plda/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0
++PCI DRIVER FOR PLDA PCIE IP
++M:	Daire McNamara <daire.mcnamara@microchip.com>
++M:	Kevin Xie <kevin.xie@starfivetech.com>
++L:	linux-pci@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pci/plda,*
++F:	drivers/pci/controller/plda/*plda*
 +
-+menu "PLDA-based PCIe controllers"
-+	depends on PCI
-+
-+config PCIE_MICROCHIP_HOST
-+	tristate "Microchip AXI PCIe controller"
-+	depends on PCI_MSI && OF
-+	select PCI_HOST_COMMON
-+	help
-+	  Say Y here if you want kernel to support the Microchip AXI PCIe
-+	  Host Bridge driver.
-+
-+endmenu
-diff --git a/drivers/pci/controller/plda/Makefile b/drivers/pci/controller/plda/Makefile
-new file mode 100644
-index 000000000000..e1a265cbf91c
---- /dev/null
-+++ b/drivers/pci/controller/plda/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-similarity index 99%
-rename from drivers/pci/controller/pcie-microchip-host.c
-rename to drivers/pci/controller/plda/pcie-microchip-host.c
-index 137fb8570ba2..cb09a8137e25 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
+ PCI DRIVER FOR RENESAS R-CAR
+ M:	Marek Vasut <marek.vasut+renesas@gmail.com>
+ M:	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+index cb09a8137e25..d9030d550482 100644
+--- a/drivers/pci/controller/plda/pcie-microchip-host.c
 +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -18,7 +18,7 @@
- #include <linux/pci-ecam.h>
+@@ -19,6 +19,7 @@
  #include <linux/platform_device.h>
  
--#include "../pci.h"
-+#include "../../pci.h"
+ #include "../../pci.h"
++#include "pcie-plda.h"
  
  /* Number of MSI IRQs */
  #define MC_MAX_NUM_MSI_IRQS			32
+@@ -30,84 +31,6 @@
+ #define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
+ #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
+ 
+-/* PCIe Bridge Phy Regs */
+-#define PCIE_PCI_IRQ_DW0			0xa8
+-#define  MSIX_CAP_MASK				BIT(31)
+-#define  NUM_MSI_MSGS_MASK			GENMASK(6, 4)
+-#define  NUM_MSI_MSGS_SHIFT			4
+-
+-#define IMASK_LOCAL				0x180
+-#define  DMA_END_ENGINE_0_MASK			0x00000000u
+-#define  DMA_END_ENGINE_0_SHIFT			0
+-#define  DMA_END_ENGINE_1_MASK			0x00000000u
+-#define  DMA_END_ENGINE_1_SHIFT			1
+-#define  DMA_ERROR_ENGINE_0_MASK		0x00000100u
+-#define  DMA_ERROR_ENGINE_0_SHIFT		8
+-#define  DMA_ERROR_ENGINE_1_MASK		0x00000200u
+-#define  DMA_ERROR_ENGINE_1_SHIFT		9
+-#define  A_ATR_EVT_POST_ERR_MASK		0x00010000u
+-#define  A_ATR_EVT_POST_ERR_SHIFT		16
+-#define  A_ATR_EVT_FETCH_ERR_MASK		0x00020000u
+-#define  A_ATR_EVT_FETCH_ERR_SHIFT		17
+-#define  A_ATR_EVT_DISCARD_ERR_MASK		0x00040000u
+-#define  A_ATR_EVT_DISCARD_ERR_SHIFT		18
+-#define  A_ATR_EVT_DOORBELL_MASK		0x00000000u
+-#define  A_ATR_EVT_DOORBELL_SHIFT		19
+-#define  P_ATR_EVT_POST_ERR_MASK		0x00100000u
+-#define  P_ATR_EVT_POST_ERR_SHIFT		20
+-#define  P_ATR_EVT_FETCH_ERR_MASK		0x00200000u
+-#define  P_ATR_EVT_FETCH_ERR_SHIFT		21
+-#define  P_ATR_EVT_DISCARD_ERR_MASK		0x00400000u
+-#define  P_ATR_EVT_DISCARD_ERR_SHIFT		22
+-#define  P_ATR_EVT_DOORBELL_MASK		0x00000000u
+-#define  P_ATR_EVT_DOORBELL_SHIFT		23
+-#define  PM_MSI_INT_INTA_MASK			0x01000000u
+-#define  PM_MSI_INT_INTA_SHIFT			24
+-#define  PM_MSI_INT_INTB_MASK			0x02000000u
+-#define  PM_MSI_INT_INTB_SHIFT			25
+-#define  PM_MSI_INT_INTC_MASK			0x04000000u
+-#define  PM_MSI_INT_INTC_SHIFT			26
+-#define  PM_MSI_INT_INTD_MASK			0x08000000u
+-#define  PM_MSI_INT_INTD_SHIFT			27
+-#define  PM_MSI_INT_INTX_MASK			0x0f000000u
+-#define  PM_MSI_INT_INTX_SHIFT			24
+-#define  PM_MSI_INT_MSI_MASK			0x10000000u
+-#define  PM_MSI_INT_MSI_SHIFT			28
+-#define  PM_MSI_INT_AER_EVT_MASK		0x20000000u
+-#define  PM_MSI_INT_AER_EVT_SHIFT		29
+-#define  PM_MSI_INT_EVENTS_MASK			0x40000000u
+-#define  PM_MSI_INT_EVENTS_SHIFT		30
+-#define  PM_MSI_INT_SYS_ERR_MASK		0x80000000u
+-#define  PM_MSI_INT_SYS_ERR_SHIFT		31
+-#define  NUM_LOCAL_EVENTS			15
+-#define ISTATUS_LOCAL				0x184
+-#define IMASK_HOST				0x188
+-#define ISTATUS_HOST				0x18c
+-#define IMSI_ADDR				0x190
+-#define ISTATUS_MSI				0x194
+-
+-/* PCIe Master table init defines */
+-#define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
+-#define  ATR0_PCIE_ATR_SIZE			0x25
+-#define  ATR0_PCIE_ATR_SIZE_SHIFT		1
+-#define ATR0_PCIE_WIN0_SRC_ADDR			0x604u
+-#define ATR0_PCIE_WIN0_TRSL_ADDR_LSB		0x608u
+-#define ATR0_PCIE_WIN0_TRSL_ADDR_UDW		0x60cu
+-#define ATR0_PCIE_WIN0_TRSL_PARAM		0x610u
+-
+-/* PCIe AXI slave table init defines */
+-#define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
+-#define  ATR_SIZE_SHIFT				1
+-#define  ATR_IMPL_ENABLE			1
+-#define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
+-#define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
+-#define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
+-#define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
+-#define  PCIE_TX_RX_INTERFACE			0x00000000u
+-#define  PCIE_CONFIG_INTERFACE			0x00000001u
+-
+-#define ATR_ENTRY_SIZE				32
+-
+ /* PCIe Controller Phy Regs */
+ #define SEC_ERROR_EVENT_CNT			0x20
+ #define DED_ERROR_EVENT_CNT			0x24
+@@ -179,20 +102,21 @@
+ #define EVENT_LOCAL_DMA_END_ENGINE_1		12
+ #define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
+ #define EVENT_LOCAL_DMA_ERROR_ENGINE_1		14
+-#define EVENT_LOCAL_A_ATR_EVT_POST_ERR		15
+-#define EVENT_LOCAL_A_ATR_EVT_FETCH_ERR		16
+-#define EVENT_LOCAL_A_ATR_EVT_DISCARD_ERR	17
+-#define EVENT_LOCAL_A_ATR_EVT_DOORBELL		18
+-#define EVENT_LOCAL_P_ATR_EVT_POST_ERR		19
+-#define EVENT_LOCAL_P_ATR_EVT_FETCH_ERR		20
+-#define EVENT_LOCAL_P_ATR_EVT_DISCARD_ERR	21
+-#define EVENT_LOCAL_P_ATR_EVT_DOORBELL		22
+-#define EVENT_LOCAL_PM_MSI_INT_INTX		23
+-#define EVENT_LOCAL_PM_MSI_INT_MSI		24
+-#define EVENT_LOCAL_PM_MSI_INT_AER_EVT		25
+-#define EVENT_LOCAL_PM_MSI_INT_EVENTS		26
+-#define EVENT_LOCAL_PM_MSI_INT_SYS_ERR		27
+-#define NUM_EVENTS				28
++#define NUM_MC_EVENTS				15
++#define EVENT_LOCAL_A_ATR_EVT_POST_ERR		(NUM_MC_EVENTS + PLDA_AXI_POST_ERR)
++#define EVENT_LOCAL_A_ATR_EVT_FETCH_ERR		(NUM_MC_EVENTS + PLDA_AXI_FETCH_ERR)
++#define EVENT_LOCAL_A_ATR_EVT_DISCARD_ERR	(NUM_MC_EVENTS + PLDA_AXI_DISCARD_ERR)
++#define EVENT_LOCAL_A_ATR_EVT_DOORBELL		(NUM_MC_EVENTS + PLDA_AXI_DOORBELL)
++#define EVENT_LOCAL_P_ATR_EVT_POST_ERR		(NUM_MC_EVENTS + PLDA_PCIE_POST_ERR)
++#define EVENT_LOCAL_P_ATR_EVT_FETCH_ERR		(NUM_MC_EVENTS + PLDA_PCIE_FETCH_ERR)
++#define EVENT_LOCAL_P_ATR_EVT_DISCARD_ERR	(NUM_MC_EVENTS + PLDA_PCIE_DISCARD_ERR)
++#define EVENT_LOCAL_P_ATR_EVT_DOORBELL		(NUM_MC_EVENTS + PLDA_PCIE_DOORBELL)
++#define EVENT_LOCAL_PM_MSI_INT_INTX		(NUM_MC_EVENTS + PLDA_INTX)
++#define EVENT_LOCAL_PM_MSI_INT_MSI		(NUM_MC_EVENTS + PLDA_MSI)
++#define EVENT_LOCAL_PM_MSI_INT_AER_EVT		(NUM_MC_EVENTS + PLDA_AER_EVENT)
++#define EVENT_LOCAL_PM_MSI_INT_EVENTS		(NUM_MC_EVENTS + PLDA_MISC_EVENTS)
++#define EVENT_LOCAL_PM_MSI_INT_SYS_ERR		(NUM_MC_EVENTS + PLDA_SYS_ERR)
++#define NUM_EVENTS				(NUM_MC_EVENTS + PLDA_INT_EVENT_NUM)
+ 
+ #define PCIE_EVENT_CAUSE(x, s)	\
+ 	[EVENT_PCIE_ ## x] = { __stringify(x), s }
+diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
+new file mode 100644
+index 000000000000..65e0f3b72184
+--- /dev/null
++++ b/drivers/pci/controller/plda/pcie-plda.h
+@@ -0,0 +1,108 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * PLDA PCIe host controller driver
++ */
++
++#ifndef _PCIE_PLDA_H
++#define _PCIE_PLDA_H
++
++/* PCIe Bridge Phy Regs */
++#define PCIE_PCI_IRQ_DW0			0xa8
++#define  MSIX_CAP_MASK				BIT(31)
++#define  NUM_MSI_MSGS_MASK			GENMASK(6, 4)
++#define  NUM_MSI_MSGS_SHIFT			4
++
++#define IMASK_LOCAL				0x180
++#define  DMA_END_ENGINE_0_MASK			0x00000000u
++#define  DMA_END_ENGINE_0_SHIFT			0
++#define  DMA_END_ENGINE_1_MASK			0x00000000u
++#define  DMA_END_ENGINE_1_SHIFT			1
++#define  DMA_ERROR_ENGINE_0_MASK		0x00000100u
++#define  DMA_ERROR_ENGINE_0_SHIFT		8
++#define  DMA_ERROR_ENGINE_1_MASK		0x00000200u
++#define  DMA_ERROR_ENGINE_1_SHIFT		9
++#define  A_ATR_EVT_POST_ERR_MASK		0x00010000u
++#define  A_ATR_EVT_POST_ERR_SHIFT		16
++#define  A_ATR_EVT_FETCH_ERR_MASK		0x00020000u
++#define  A_ATR_EVT_FETCH_ERR_SHIFT		17
++#define  A_ATR_EVT_DISCARD_ERR_MASK		0x00040000u
++#define  A_ATR_EVT_DISCARD_ERR_SHIFT		18
++#define  A_ATR_EVT_DOORBELL_MASK		0x00000000u
++#define  A_ATR_EVT_DOORBELL_SHIFT		19
++#define  P_ATR_EVT_POST_ERR_MASK		0x00100000u
++#define  P_ATR_EVT_POST_ERR_SHIFT		20
++#define  P_ATR_EVT_FETCH_ERR_MASK		0x00200000u
++#define  P_ATR_EVT_FETCH_ERR_SHIFT		21
++#define  P_ATR_EVT_DISCARD_ERR_MASK		0x00400000u
++#define  P_ATR_EVT_DISCARD_ERR_SHIFT		22
++#define  P_ATR_EVT_DOORBELL_MASK		0x00000000u
++#define  P_ATR_EVT_DOORBELL_SHIFT		23
++#define  PM_MSI_INT_INTA_MASK			0x01000000u
++#define  PM_MSI_INT_INTA_SHIFT			24
++#define  PM_MSI_INT_INTB_MASK			0x02000000u
++#define  PM_MSI_INT_INTB_SHIFT			25
++#define  PM_MSI_INT_INTC_MASK			0x04000000u
++#define  PM_MSI_INT_INTC_SHIFT			26
++#define  PM_MSI_INT_INTD_MASK			0x08000000u
++#define  PM_MSI_INT_INTD_SHIFT			27
++#define  PM_MSI_INT_INTX_MASK			0x0f000000u
++#define  PM_MSI_INT_INTX_SHIFT			24
++#define  PM_MSI_INT_MSI_MASK			0x10000000u
++#define  PM_MSI_INT_MSI_SHIFT			28
++#define  PM_MSI_INT_AER_EVT_MASK		0x20000000u
++#define  PM_MSI_INT_AER_EVT_SHIFT		29
++#define  PM_MSI_INT_EVENTS_MASK			0x40000000u
++#define  PM_MSI_INT_EVENTS_SHIFT		30
++#define  PM_MSI_INT_SYS_ERR_MASK		0x80000000u
++#define  PM_MSI_INT_SYS_ERR_SHIFT		31
++#define  NUM_LOCAL_EVENTS			15
++#define ISTATUS_LOCAL				0x184
++#define IMASK_HOST				0x188
++#define ISTATUS_HOST				0x18c
++#define IMSI_ADDR				0x190
++#define ISTATUS_MSI				0x194
++
++/* PCIe Master table init defines */
++#define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
++#define  ATR0_PCIE_ATR_SIZE			0x25
++#define  ATR0_PCIE_ATR_SIZE_SHIFT		1
++#define ATR0_PCIE_WIN0_SRC_ADDR			0x604u
++#define ATR0_PCIE_WIN0_TRSL_ADDR_LSB		0x608u
++#define ATR0_PCIE_WIN0_TRSL_ADDR_UDW		0x60cu
++#define ATR0_PCIE_WIN0_TRSL_PARAM		0x610u
++
++/* PCIe AXI slave table init defines */
++#define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
++#define  ATR_SIZE_SHIFT				1
++#define  ATR_IMPL_ENABLE			1
++#define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
++#define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
++#define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
++#define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
++#define  PCIE_TX_RX_INTERFACE			0x00000000u
++#define  PCIE_CONFIG_INTERFACE			0x00000001u
++
++#define ATR_ENTRY_SIZE				32
++
++enum plda_int_event {
++	PLDA_AXI_POST_ERR,
++	PLDA_AXI_FETCH_ERR,
++	PLDA_AXI_DISCARD_ERR,
++	PLDA_AXI_DOORBELL,
++	PLDA_PCIE_POST_ERR,
++	PLDA_PCIE_FETCH_ERR,
++	PLDA_PCIE_DISCARD_ERR,
++	PLDA_PCIE_DOORBELL,
++	PLDA_INTX,
++	PLDA_MSI,
++	PLDA_AER_EVENT,
++	PLDA_MISC_EVENTS,
++	PLDA_SYS_ERR,
++	PLDA_INT_EVENT_NUM
++};
++
++#define PLDA_NUM_DMA_EVENTS			16
++
++#define PLDA_MAX_EVENT_NUM			(PLDA_NUM_DMA_EVENTS + PLDA_INT_EVENT_NUM)
++
++#endif
 -- 
 2.17.1
 
