@@ -1,41 +1,41 @@
-Return-Path: <linux-pci+bounces-2667-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09D2583FB92
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 02:02:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE7E83FB96
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 02:03:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B39BA2827C4
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 01:02:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FF6EB20C80
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 01:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18565EEDB;
-	Mon, 29 Jan 2024 01:02:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B1038F70;
+	Mon, 29 Jan 2024 01:02:11 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2063.outbound.protection.partner.outlook.cn [139.219.17.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D09DDF46;
-	Mon, 29 Jan 2024 01:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB05F515;
+	Mon, 29 Jan 2024 01:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706490129; cv=fail; b=OkwhLaNWtdftmw79nLhrhSG8r/Dlz308upiESUFAeTgttihhExDSvJEuWvq57gVajP8UAlth+khKgvdhkem761wgHO3E8PuKzn+AuVmI/hmbDBlBZ0NnBh7O/TUa+hq2yS5xBDGnw9Gsjbj+KVvxbEG6BGdxnUr3mjWJd4Ff9Ag=
+	t=1706490131; cv=fail; b=ex6QUsvx5DZmR0ZwwJEE9FOOX+oM7r0dxwnvGgU+mmbyqF5Qp2kD54mApgSutjFdnHcvcLJ8iDoRriQbcKRl05nDvOh5A8so5WAyKzeDbmAs+0VBFS7hALbfMUkM0ZBzZ8Va3hcckAOPpYkiyJk4CWyGpBwG9OM5m9CyH5BJVfs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706490129; c=relaxed/simple;
-	bh=GQ7qXJo5MKWyH40Ex3HVziIEH7KxJvBXh0pR8GnF8Zc=;
+	s=arc-20240116; t=1706490131; c=relaxed/simple;
+	bh=S2lDL0gD7pPak+dReXlI6JFdBr+tBRJUw89XXRjBFG4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SkceXI3jS4Je9umO2pOijQUfPkxPP4fdlQMw2VEcDaYiC/wGvD9bs3fI07zd7aCQJSaaaqmzpcqn3ghHfsZdV2ZQsO6xLkiMNbl3/DkW5uDxSvnZi2Fn8rlsKGB3WgWOVWfQmUAXuR9CRxLYfF0eI7GwBRNODmM8n+0igSsW+S4=
+	 Content-Type:MIME-Version; b=ovnQVjn8fuW+Dze6qsOmpUFy3pqFeY6b03yOZ+NYtmm2TmGyI/h/gr5QFICxz3QaCd8MXKoyllkQTfEgcs53elOwTVIxlIMqDgZGeG58ZG6y745XxUliXL9VgqGpkLTONpMeQNQA+es60bYOKdXL33U42nlouFE3r0pcDad7ZsA=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.63
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WxrF9/9m2PB/gfjwka9TrQLwkT+ORyx9gmq3b7O4ZvCXDgMzEkZf8Ogt7A1IgsxnqOFWYS+kjuESXALV2A+UVB4YsEEk4FTMipztzLt3l6M/JuadPaSPs+MATH3FfGCH0a1FpfyYEBrwPtpPiq1qbTTcPvpAnn8AmWo9jMVZUzEoWccQwOkJroSDn3ElQRCH2mrHEXRJwcsgwVKknDpsbF9DKLk/wUV8znj0yxj/PVLM20CtFAxD7JBtQTYV7NiWlAPZcthZ51CdkkwTOmpcPhJw4g/y94zqa3FmRzV2GbNddABzPXB3WZ1SuUAQJVKFEB/EDE4dFchqz6cPWh269w==
+ b=BcisV9TWTTWpRcb63z0QsLALaQRNlrFTYsrmbVa1h9P+t76y7/YqJOyhL3IFeB4boTp3B2xJ0uL6pPXuc1x01XJ1kDWfhrvJR4Gvlquvk9coXQPL01gpHdJqV3QyYEAwV5YDnqlnpS6D2Uv35Kwt3J37vfiSAfGTzsGl+nJo0cdol8Z+GsoNRmB44q07KMuAOVHDOZVSc+hayKL0RYvoyojGW7XaxxNEKSNJugd/92BbIFKYGU/3CDwtJKGpDR+PiE5NaxSk1kCDf2bapH/dXseZf0ZvFFdWqCFeXQj6jRAqkMjdQfKeLPBvpcBAyUd3AUaIf4sWjLOEl5xYB2cIAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qP2Vis3RtKbGjNEiaOaeGcLrec2A0EyTP5CqIfMTsdw=;
- b=mx0gLEWqaUHP8XDwaELUGun7f4JMflc5Gn1vCZeNuzbBUVGymGwkk1CVxmzYieFrxDZPrGaTY4xXrgiOg7fsLJHsu7Cav9h91eOxFfhb82o2xGMVp71Kc9uMogsegkq8QsC0W6bfG/SvaZ7r6Ole/q8Eym4Im1hf8b65GWjSRIMNBl+jBVD2X24eoBruwLzP5VyhiSJPvZqmJwhS170ttKw892bpJkezl3Z0rELiyYUGv9FyTDxxaIzzfMKoINjOJa0HI/gMePKGzw3loL3TDLNse+bwEaTqDEb6wRwivMrAi8lkErpp2eTTnGxUMJluC2a4DCPOxZcRuXmYssFN8w==
+ bh=nIXi8JBQnxVNAlvrZCPiLc7iuf6UII3Un7BOHkCInrQ=;
+ b=D2FR9lBFHVzrWAZjiGqeE5REc0AOQqhmlEZH6PMg33YUT7YgE9XwvJ3o3JOsuw+1hDlg/2TbXZdXU/1ByFh6Uor/0ueqKQdpjMN5UJq/IFD0/pZOwxwdfha69n3G8EIdIDWn0q+MGehen0H7VPZiYj01rqrZ11kxop+VEI8GH+nko+nnjeLTFJiqlcR0BfxuNn5c/0UgMlZPNShAHBsSIeK3TkuFhZNlrPR8BAT1eD/ms1VztwhoTxUFlzHMDppvCGf+PoFnrjG23bJX295kcm6YQ97IyQTbdudcp4obcfvOwfUtiMgjaQqdv71IBMOVwo0CH12wJehItvx65mqOEg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -45,11 +45,11 @@ Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c211:18::12) by BJXPR01MB0552.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c211:13::12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Mon, 29 Jan
- 2024 01:01:56 +0000
+ 2024 01:02:00 +0000
 Received: from BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
  ([fe80::1ea1:19d5:efef:6fc6]) by
  BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn ([fe80::1ea1:19d5:efef:6fc6%4])
- with mapi id 15.20.7228.029; Mon, 29 Jan 2024 01:01:56 +0000
+ with mapi id 15.20.7228.029; Mon, 29 Jan 2024 01:02:00 +0000
 From: Minda Chen <minda.chen@starfivetech.com>
 To: Conor Dooley <conor@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -71,9 +71,9 @@ Cc: devicetree@vger.kernel.org,
 	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
 	Kevin Xie <kevin.xie@starfivetech.com>,
 	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14,RESEND 20/22] PCI: Add PCIE_RESET_CONFIG_DEVICE_WAIT_MS waiting time value
-Date: Mon, 29 Jan 2024 09:01:40 +0800
-Message-Id: <20240129010142.3732-5-minda.chen@starfivetech.com>
+Subject: [PATCH v14,RESEND 22/22] riscv: dts: starfive: add PCIe dts configuration for JH7110
+Date: Mon, 29 Jan 2024 09:01:42 +0800
+Message-Id: <20240129010142.3732-7-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240129010142.3732-1-minda.chen@starfivetech.com>
 References: <20240129010142.3732-1-minda.chen@starfivetech.com>
@@ -89,108 +89,242 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BJXPR01MB0855:EE_|BJXPR01MB0552:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88dc84b8-79df-4977-42c5-08dc2065e3e6
+X-MS-Office365-Filtering-Correlation-Id: 8d90048d-25de-4956-adeb-08dc2065e5c0
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	YbHjR+sc7i34CpQ2zI2ZOAe0s3hjmz+e+hym6hw8WnZJ9et21ToxdIUOoaK/yL9EqRKUml1VEXAMBvqwkN/1pHkqeNtaOnW7OVpDiL1bkQylEjm80YUgqMX074Du1kYXmGo8FCidG2fh4EqTPOO2rwFy75I+X8/eK8VYTDr/s+GN3apYFySaV5mjpMzbU8TLxcTlvCikTZIn5zyyILROebmZrID3iN2/tYP8FaIEvp4+NBON5sBwACFrvPP9ocxLoOcRBVSxQIvkCu/tlmL92qzcRMekUcOsf+Tovu/g9+nlShZV8X+uiLJM6bsT6V9t/sL5zHe2izqcbkRzzAAKWnJOrrShTfeYIMr2gSP9VXgsVJT2OyPg3QgnL6Q0YxfdVWu0R8QmimcwIqZB6kWwi7U2ktvy5ExtLrj0VUq/bN//p2+xVBt6kWdcqEABdPQVzuPKIZ9rRX0eHP/2HaaKwoT69xVEM6M+57hfVbXFgCKmej7ki2w+uACHUtFCHxGotbY4NGgimuo0+GC9nX2d9lt9fBqwBhirlJ1PADOJ00JTgEMO2NNpfrUXI02Cn4fU
+	XChOFFnG9VdyXuQFXksUq9g1AAebnNe2piVREg3ZUiJ3LXkVZTVow53Qqi/AfFAJfjHzrPIiFTuYBJXUdYjoLpJeMPXHK5hGxIG+k203NBdpdNQwDmYgyhtTHR2rzSjsJu9iTLnqT27lIfhVhm4EljsFPRtjk6PBE2aYv1HJjd81M6H5f1mJm4fg4MhuWsIKoiblXR5UVQWoi3GULkTMhPda2+VY9CakdqzoOQClCHt0yfhxc9bk7MgpkeqgZkQg7aZ3C+CoFSE3N3shTsiqY7QrcVQQF2CEXoMczYV/QhQ3ZmpxIMeTPK9k+Zgwc2/v5+DzoqCa33c8I1STtzuXVakFDQ3D2C5IW4bGl9XqAxtDZwiyd91/6Ak8jpPQiDBFRmOqrttaql4dbOY1jwSDzpudYYMsSfxR61fsmqgM7C4ktWpkCDD/li7/647Z0tKOBvYpNdDkN+DTZ68yNDhe7YO/J+ewgyZ/vAByvuI/Wq7QTiamc/ROFqa7CEW4HPJjT6DAFtlQeE1dx+3t6qoxbd5mtmDbbbXUdf31DwFGKJmLgp/v407NT4DUf7BZvnBY
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(39830400003)(366004)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(107886003)(2616005)(1076003)(41300700001)(26005)(41320700001)(40180700001)(40160700002)(38350700005)(508600001)(6666004)(83380400001)(54906003)(52116002)(36756003)(38100700002)(2906002)(66476007)(5660300002)(8936002)(86362001)(66946007)(110136005)(44832011)(4326008)(7416002)(8676002)(66556008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IeHav3IBZf61OPSEXfVIzu7GPdrxrHMeFan3o4SWQbw+9KUfgaSDgFPZc8B5?=
- =?us-ascii?Q?XwP2x7igWuQUIbG00Wip6ZuKftOty4+L1h+tsz2EG9ka1Sy+gpfyt7DuVUlD?=
- =?us-ascii?Q?LFCXi2KWuFxfZj9WP1tSaLSnuS+PqY8gc4HhoLHkrlcmoDvM9KiUtPstGQxA?=
- =?us-ascii?Q?XYk892DVmckMQy7IrCHHRt3b9zoY0Iq6g5CulO4D1cdMFXPlfl4G9mJI65Ip?=
- =?us-ascii?Q?BtJjZ6Xomp3vvT+S7kIAJAijEPLyOLnh12WBvlvq2eIEDYXalSrEGXSfcmBv?=
- =?us-ascii?Q?d1k3as6xn1D0dpupdfnD3gFH7IT91cdEOgrzC7Yi1jH+B9vWWT5XPjQRUGiy?=
- =?us-ascii?Q?tRHtnorhVdptLzBfM+9/7oartHFLongQkdIbwhawLmSWx+IDJUZLHSueDelr?=
- =?us-ascii?Q?rdnW6d1sULeQEWUaI5/7DXwPDXWyv9TnORX0SExziJjwWMkJApUByCRHdo5l?=
- =?us-ascii?Q?N4x3xUyQoc+adg4EmKeoRbf+mWkddht/HdpdqgHWQDODbksljpoCRVf1VdxM?=
- =?us-ascii?Q?e4kzg1p++K0EWsRXrGfjGohDn8yo2jIfmyTgZRFzO3L/wVOXamRX2KPTplP/?=
- =?us-ascii?Q?ckZxQUCFOXxxiRLFFMGC7kfDGdSWVZZr2b/fk+86tPz5q2jVG3KsKaRRNWzw?=
- =?us-ascii?Q?66y7HCz+yFLARbVmh8EalYXCt3p9hPicOhpV4pkCt9d4nfKj4Cqai3eaSAQh?=
- =?us-ascii?Q?NSJyAAqe/VMjR/PExNCdElAtNmh7Qtzp1J9lqHhfEmt08GoHvmwN5Hch/jW6?=
- =?us-ascii?Q?WQ8nXgA8HcIKj2gPQCAsmOpWWhGWj5hKliD5q+ydm5Beuhg2wp/C9Wm5GTC5?=
- =?us-ascii?Q?zwAGXK/G6RuxFwmkI4JxO2UFncrYezsFOfHY0ZTh95RPFocEaaVmzG4hZp0i?=
- =?us-ascii?Q?0j69tKI6Acn9OnDKFEdMXYapTcGlIVKiap2XNjaOwSrTyJ7dQcq3zAsP3EhF?=
- =?us-ascii?Q?gXZTmPYkAuX5y3QH8omoA160CXf92OcPTEmh225SIDTxfNx5NVdkFMdbNP5X?=
- =?us-ascii?Q?fWRLR076bA43B4DYQCTQZ5YZYjahjyCMgMxFM2WAHu3Dfdi0KOVdUdw6njnt?=
- =?us-ascii?Q?3pwCThTqTIbcRcUZBA+W0f4R9t6aAHn588OmC64eAdkQZj8Fb6n11MPcPHRv?=
- =?us-ascii?Q?t9vKmLzPygpKuqnJWwRPF8+MQfm5xST9FXvi9WOlGlt8JQq2BEDjKsxPqsTf?=
- =?us-ascii?Q?HogUB8C7xsHyXFc0SPLCQO+bAlbcTmMSJuCfx59qxEz/WqFdcnBA9a2XLtsF?=
- =?us-ascii?Q?z3g74LoFQYEFmN9sAdQBrj1MG6T6Is/SUMfzQKF1A6/Rmv4XQ+ONybGT87eh?=
- =?us-ascii?Q?9aHi/wfP5xeZ3x6goHozBoeVYyR6tjNu5UZALKYZ3LxVYmu/pFU2npuPiVMQ?=
- =?us-ascii?Q?Y/OGjriwSdJA7Yb2/GejFYK1c+GK0s8WkX1xmd15yyfVyEAMk//7zMyXLutK?=
- =?us-ascii?Q?22pfH49D2Mn4ZlaJYgF6VeuwLKAWskHJ+qKN/ZwjqaA9iL4Oj4sqQ4MCDMg2?=
- =?us-ascii?Q?N6vHdWe5N6gr2F1zCT5IHnzXfd/4XOsDoDXI3RWiodQma0EButr1fl0uE951?=
- =?us-ascii?Q?mH3zjNfDBWhN7a6QOKUvj4bqmbb1WZiwluXB5cmFir88sDQJNJwikGasi1ZG?=
- =?us-ascii?Q?jQ=3D=3D?=
+	=?us-ascii?Q?suqYYL6Z0Elz+9dTUfe35YjsAt1H45+EFUtbQDgoNuWAkE3baJU3eZ2Bn+N0?=
+ =?us-ascii?Q?wWfNloboxBTInLduckNtbFOUqPfNgoz0YUEiJY0o/w48KtuykZLw5yWsKpX2?=
+ =?us-ascii?Q?+2JAQahF6Q8GrUMIV8sWua/AmNnHuH8sbY5AqeUZAvDBuzJAU6JxMqp9J7aA?=
+ =?us-ascii?Q?ay38D6du+DVtxuCICuIC2dwl91Ajc32tmQxvcD6iOZOPS6jsCLgCUqMjkPUk?=
+ =?us-ascii?Q?HhvJZFew4kMDAqiuwNhXM2ZIIyX4Ff4VURGgCTw5wjgsmVBocELAci3WcCHY?=
+ =?us-ascii?Q?hUU1o2PyhszB1ODsUX9lRsNWFhpK9Vq5FsqFTaYQCegZeTInZZkQnuKPamAN?=
+ =?us-ascii?Q?Dq5K+luKPDmOF3CL0Mdhv9T4wyilgvMuNudhzatsH+Z3/sS0vsEZ6IZ2nRXB?=
+ =?us-ascii?Q?qDo87UHZM65T05wRIu+Xb3BtIJtQNoNLW1PP9OaQJBdZ9eosRbc82Md4U+cY?=
+ =?us-ascii?Q?8zLITwN6SFXJbDhOrlvC8yRIGMlnwih0GEWOddNQA3SP10lugTt3C2lTsusU?=
+ =?us-ascii?Q?Ogw0Zz/SOV4jK6YrHkH+//r5UpXg5MSt/v6Dl6qIZzJTgAtsf6VUp4KK9JG2?=
+ =?us-ascii?Q?Z5SzomDgnsviGAk5MaL9USlTLF3yQEQxHfVOS3rgPTQBgduBOHnorGM+4IpO?=
+ =?us-ascii?Q?0OTmqt9UgPrMh2qyl+HraY15EGxQqiipm69MBToQkwpHxLWHE7/KckzdaRaS?=
+ =?us-ascii?Q?mkh5DIeY7L494iTx4sgwlaL4bl0Q9W18GsC4VvRlePSce6G4I9QOw06ngg/R?=
+ =?us-ascii?Q?RQyIoM7INaO+On2kK1bpeeb4pkerac+t0fhij9Ktfw++iXfVvVnO/l1TvWy0?=
+ =?us-ascii?Q?0BSjvAtfNPqa+vwzXFMSJ2k3IGVEvlqfPG9AFhBAC8cY7GfoA/2EpS0Stu33?=
+ =?us-ascii?Q?skunBpZQ7/eEWuGHQqF0kbX4uCMyUGHIjT2csJqgVYvAfpk/9J3aEEMlj49l?=
+ =?us-ascii?Q?4VOJhbJeiKAmTlMmDIAVux/yrSM4hJDzNwKWV3olAcrcDEjxnN9KzG9sFZ62?=
+ =?us-ascii?Q?OHbIL0H2WMgimyAh9kM0Hqh3u5BDm3iysnPAUaujqAcfXP56lr9V1Qf8BC7w?=
+ =?us-ascii?Q?Fltq/5xDCEhttv27frKt0UPRXqLnwulukR34Xtace84/PduyvElM7rogUs3A?=
+ =?us-ascii?Q?K/CPNrbLXfmsCe1bRUc40KgnJb0yFHQdG2cZQAME6zJDfcpdIGAH8RTraNdd?=
+ =?us-ascii?Q?C9tWAf67JMuVr6qFtCt0RQ27ZElp369DkjgScDYOzXIZ0CsNwRR/pnb7vTtm?=
+ =?us-ascii?Q?0GOEirFuAt1IQH9r4nmufQOr16JS8K0VGmXtYxa1Fq22E1QgwICEKWZbC4VZ?=
+ =?us-ascii?Q?WZct52C7vobJlF9DF9FpVCk61nt3fqVcztF1wPShNpm4d0MwAjnHQidqZbz5?=
+ =?us-ascii?Q?nE1tifHfGGMjN98N2VI2YMURsTRIz/2VZehYCHKsSio70kdEAIQUsVvhLtgD?=
+ =?us-ascii?Q?DnxJxJyAagHrWan713UjWj+LBme6KBSBWborE1uKkxgYqWT6uY7ouDaoSmV+?=
+ =?us-ascii?Q?KVDYdO8ugj3ARdjDEbMo0eZcLohPv6Ro7n7+tmoxFH3zuGf7A7arztu/wM1D?=
+ =?us-ascii?Q?65fo63+nN50E7r429gdU4DEGDALP19NVYTdh3lC7SsKhfI69OXhxS9BxFxF4?=
+ =?us-ascii?Q?Yw=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88dc84b8-79df-4977-42c5-08dc2065e3e6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d90048d-25de-4956-adeb-08dc2065e5c0
 X-MS-Exchange-CrossTenant-AuthSource: BJXPR01MB0855.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 01:01:56.8445
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 01:01:59.9357
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OgZjEArD8s2KbjCFBFyjnKTjIVnRr6DMyOIkFOCUER0gqZ4Mf0M7ticWh6F8VDVWpRg6ylE5vPUSsKtsLW5zNeX4dgdlbIpfD2stVpBVcjs=
+X-MS-Exchange-CrossTenant-UserPrincipalName: /9BAYzmTeGYnWOATaiTflZkXeKGzcHvwTchJ0849LZF750nI99rgDJ9kYH6ONCYWE5pke3lqAjt+XGtWaZrVr34UW3SxDnOpMdLUzXj83CQ=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJXPR01MB0552
 
-From: Kevin Xie <kevin.xie@starfivetech.com>
+Add PCIe dts configuraion for JH7110 SoC platform.
 
-Add the PCIE_RESET_CONFIG_DEVICE_WAIT_MS macro to define the minimum
-waiting time between exit from a conventional reset and sending the
-first configuration request to the device.
-
-As described in PCI base specification r6.0, section 6.6.1 <Conventional
-Reset>, there are two different use cases of the value:
-
-   - "With a Downstream Port that does not support Link speeds greater
-     than 5.0 GT/s, software must wait a minimum of 100 ms following exit
-     from a Conventional Reset before sending a Configuration Request to
-     the device immediately below that Port."
-
-   - "With a Downstream Port that supports Link speeds greater than
-     5.0 GT/s, software must wait a minimum of 100 ms after Link training
-     completes before sending a Configuration Request to the device
-     immediately below that Port."
-
-Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
-Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
 ---
- drivers/pci/pci.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../jh7110-starfive-visionfive-2.dtsi         | 64 ++++++++++++++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
+ 2 files changed, 150 insertions(+)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2336a8d1edab..bd38b3a69d8b 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -22,6 +22,22 @@
-  */
- #define PCIE_PME_TO_L2_TIMEOUT_US	10000
+diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
+index b89e9791efa7..2f8056d6f817 100644
+--- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
++++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
+@@ -287,6 +287,22 @@
+ 	status = "okay";
+ };
  
-+/*
-+ * As described in PCI base specification r6.0, section 6.6.1 <Conventional
-+ * Reset>, there are two different use cases of the value:
-+ *
-+ * - "With a Downstream Port that does not support Link speeds greater
-+ *    than 5.0 GT/s, software must wait a minimum of 100 ms following exit
-+ *    from a Conventional Reset before sending a Configuration Request to
-+ *    the device immediately below that Port."
-+ *
-+ * - "With a Downstream Port that supports Link speeds greater than
-+ *    5.0 GT/s, software must wait a minimum of 100 ms after Link training
-+ *    completes before sending a Configuration Request to the device
-+ *    immediately below that Port."
-+ */
-+#define PCIE_RESET_CONFIG_DEVICE_WAIT_MS	100
++&pcie0 {
++	perst-gpios = <&sysgpio 26 GPIO_ACTIVE_LOW>;
++	phys = <&pciephy0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_pins>;
++	status = "okay";
++};
 +
- extern const unsigned char pcie_link_speed[];
- extern bool pci_early_dump;
++&pcie1 {
++	perst-gpios = <&sysgpio 28 GPIO_ACTIVE_LOW>;
++	phys = <&pciephy1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_pins>;
++	status = "okay";
++};
++
+ &qspi {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+@@ -513,6 +529,54 @@
+ 		};
+ 	};
  
++	pcie0_pins: pcie0-0 {
++		clkreq-pins {
++			pinmux = <GPIOMUX(27, GPOUT_LOW,
++					      GPOEN_DISABLE,
++					      GPI_NONE)>;
++			bias-pull-down;
++			drive-strength = <2>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++
++		wake-pins {
++			pinmux = <GPIOMUX(32, GPOUT_LOW,
++					      GPOEN_DISABLE,
++					      GPI_NONE)>;
++			bias-pull-up;
++			drive-strength = <2>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++	};
++
++	pcie1_pins: pcie1-0 {
++		clkreq-pins {
++			pinmux = <GPIOMUX(29, GPOUT_LOW,
++					      GPOEN_DISABLE,
++					      GPI_NONE)>;
++			bias-pull-down;
++			drive-strength = <2>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++
++		wake-pins {
++			pinmux = <GPIOMUX(21, GPOUT_LOW,
++					      GPOEN_DISABLE,
++					      GPI_NONE)>;
++			bias-pull-up;
++			drive-strength = <2>;
++			input-enable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++	};
++
+ 	spi0_pins: spi0-0 {
+ 		mosi-pins {
+ 			pinmux = <GPIOMUX(52, GPOUT_SYS_SPI0_TXD,
+diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+index 45213cdf50dc..dfa2f94ed5b2 100644
+--- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
++++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+@@ -1138,5 +1138,91 @@
+ 			#reset-cells = <1>;
+ 			power-domains = <&pwrc JH7110_PD_VOUT>;
+ 		};
++
++		pcie0: pcie@940000000 {
++			compatible = "starfive,jh7110-pcie";
++			reg = <0x9 0x40000000 0x0 0x1000000>,
++			      <0x0 0x2b000000 0x0 0x100000>;
++			reg-names = "cfg", "apb";
++			linux,pci-domain = <0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
++				 <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
++			interrupts = <56>;
++			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
++					<0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
++					<0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
++					<0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
++			msi-controller;
++			device_type = "pci";
++			starfive,stg-syscon = <&stg_syscon>;
++			bus-range = <0x0 0xff>;
++			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
++				 <&stgcrg JH7110_STGCLK_PCIE0_TL>,
++				 <&stgcrg JH7110_STGCLK_PCIE0_AXI_MST0>,
++				 <&stgcrg JH7110_STGCLK_PCIE0_APB>;
++			clock-names = "noc", "tl", "axi_mst0", "apb";
++			resets = <&stgcrg JH7110_STGRST_PCIE0_AXI_MST0>,
++				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV0>,
++				 <&stgcrg JH7110_STGRST_PCIE0_AXI_SLV>,
++				 <&stgcrg JH7110_STGRST_PCIE0_BRG>,
++				 <&stgcrg JH7110_STGRST_PCIE0_CORE>,
++				 <&stgcrg JH7110_STGRST_PCIE0_APB>;
++			reset-names = "mst0", "slv0", "slv", "brg",
++				      "core", "apb";
++			status = "disabled";
++
++			pcie_intc0: interrupt-controller {
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++				interrupt-controller;
++			};
++		};
++
++		pcie1: pcie@9c0000000 {
++			compatible = "starfive,jh7110-pcie";
++			reg = <0x9 0xc0000000 0x0 0x1000000>,
++			      <0x0 0x2c000000 0x0 0x100000>;
++			reg-names = "cfg", "apb";
++			linux,pci-domain = <1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges = <0x82000000  0x0 0x38000000  0x0 0x38000000 0x0 0x08000000>,
++				 <0xc3000000  0x9 0x80000000  0x9 0x80000000 0x0 0x40000000>;
++			interrupts = <57>;
++			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc1 0x1>,
++					<0x0 0x0 0x0 0x2 &pcie_intc1 0x2>,
++					<0x0 0x0 0x0 0x3 &pcie_intc1 0x3>,
++					<0x0 0x0 0x0 0x4 &pcie_intc1 0x4>;
++			msi-controller;
++			device_type = "pci";
++			starfive,stg-syscon = <&stg_syscon>;
++			bus-range = <0x0 0xff>;
++			clocks = <&syscrg JH7110_SYSCLK_NOC_BUS_STG_AXI>,
++				 <&stgcrg JH7110_STGCLK_PCIE1_TL>,
++				 <&stgcrg JH7110_STGCLK_PCIE1_AXI_MST0>,
++				 <&stgcrg JH7110_STGCLK_PCIE1_APB>;
++			clock-names = "noc", "tl", "axi_mst0", "apb";
++			resets = <&stgcrg JH7110_STGRST_PCIE1_AXI_MST0>,
++				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV0>,
++				 <&stgcrg JH7110_STGRST_PCIE1_AXI_SLV>,
++				 <&stgcrg JH7110_STGRST_PCIE1_BRG>,
++				 <&stgcrg JH7110_STGRST_PCIE1_CORE>,
++				 <&stgcrg JH7110_STGRST_PCIE1_APB>;
++			reset-names = "mst0", "slv0", "slv", "brg",
++				      "core", "apb";
++			status = "disabled";
++
++			pcie_intc1: interrupt-controller {
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++				interrupt-controller;
++			};
++		};
+ 	};
+ };
 -- 
 2.17.1
 
