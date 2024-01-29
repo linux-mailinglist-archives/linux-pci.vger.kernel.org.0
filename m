@@ -1,62 +1,63 @@
-Return-Path: <linux-pci+bounces-2728-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2729-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C58D8408E5
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 15:49:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD1C28409B7
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 16:20:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B14D31F21BC4
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 14:49:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8511428C095
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 15:20:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1530B152DE8;
-	Mon, 29 Jan 2024 14:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00C51153BC1;
+	Mon, 29 Jan 2024 15:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NARfMgzI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tA9L37g+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82335152DE0;
-	Mon, 29 Jan 2024 14:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5A815443F;
+	Mon, 29 Jan 2024 15:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706539746; cv=none; b=OSdXkklJh4h2UCa78psL4QVqYASvFy8C17EkSi2rKaAo5ocnP3Th5HjGL/0bXsoc51+/wuCkEEvaJyEIeTM61hZ9BMGhAZtwfUvs/8LeS2SCis/N6B4YzdLBavYHBwCBxgUzR1TGamr7UC+Dks8TF9GCKzSaQvRVzk34WYnvm6I=
+	t=1706541595; cv=none; b=qpLZ9/8yoqoq1QL64c0MscwGETwYvPtDhCOl//r2eHn1lLK2ogQEEbQbhVQuiXNh6w5ye8/Tnsbg+bjqcacOac0IIcrEkPZDm+QwkPs91tATe6XTkJsW1PGpcfREw1JfcV8hmkEFFg/ggtXo6/EQcXAj271RDsUKeNwNrY3fdDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706539746; c=relaxed/simple;
-	bh=B+Q7J9j4jl1343Xufi5xIgruTezV/90wo8FCib5ZR9U=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cnRop6YX+Gn2f+D3P8Jv9Xh9naa3RzORNi3RdQ17emi5k6tArnxu6sjtZFERhAQeeLTRxsC1KlMc7GAP2bext0aG64PbuhBTPZywXVWf/9mrP5j0JQ6Ni/fcjB5wUO+KJvzAZxoak6sC81FboSr0MvZ5YGUGnHBRM3ZAgLg+27E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NARfMgzI; arc=none smtp.client-ip=192.55.52.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706539743; x=1738075743;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=B+Q7J9j4jl1343Xufi5xIgruTezV/90wo8FCib5ZR9U=;
-  b=NARfMgzI18WTFMR551Rxnos7Bp5cFdzf/QnyUxiCCmpnc4okQPWIMLFZ
-   pjb1vHE7Gt/fl/i6wgkspX1G3bGdEkoPGEbhU/fmgaaVZ436PMrsrgKYn
-   gXsW5cBZRasot6oGuREfX0hNjlFGw2Br12BFx5u46NfXUv5jhGaBczCDE
-   rTOijaXPCFk9HKtK99r5mGBjLrjCTe7Z7sKgu3ISRXf9JIRkvm3iYW24k
-   1Kn7PBFuSqV/pZR+Eu3bsdoOcrb/bAeV6SRLzBXkFaKF38gwRLMEbYx/o
-   ZDnenzYfnAYGacaQjcq06Dm/so7r/1ve6ip0LDDPHd6CabP8BBIq5ll6x
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="402609503"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="402609503"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 06:49:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="960907268"
-X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
-   d="scan'208";a="960907268"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.174.51]) ([10.249.174.51])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 06:48:58 -0800
-Message-ID: <46e0c704-cc77-4d23-9503-0d6d5d07bb26@linux.intel.com>
-Date: Mon, 29 Jan 2024 22:48:56 +0800
+	s=arc-20240116; t=1706541595; c=relaxed/simple;
+	bh=ZP/y7rwTNXQRRS57Mj+sf0zKJdTCjZmzL7LSP32iLCI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nn/HaWDky8/AVw6/U9zRQVEMpBpDot1i6FxU4qqxNGl3k1Gi8nuNQAPwDX/jZhENs1hu2oCrHACHss1v3ablWSMLHIyLRNEyWgi+o29OPv9Rsmq1mYkn7+3XuqIhRwjJWfbmMG/jJGTcmJwZ7r4c68aJ9abycnqbwCbTzC8gAtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tA9L37g+; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TFJfSl091902;
+	Mon, 29 Jan 2024 09:19:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706541581;
+	bh=LfcJ9zlfwzsGfl0+LgvF4CNibbNNKcmZOBPqSOAfWHE=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=tA9L37g+pjnQgFLbIPV3hITGSdJ5U6xepE4CRSItBY+A36zluNNw7cm4dr5JK0CZd
+	 WBvwQzXPQ3dCgBacqCSN4krPJsnsWEz93fTeCl6LlLL48TSbNcGD2/m3NE6graaNxK
+	 BQ9BRJEIsi3kP5axXUsMYQEMjw/6laK+Kv07SDnE=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TFJfMj019376
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 29 Jan 2024 09:19:41 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
+ Jan 2024 09:19:40 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 29 Jan 2024 09:19:40 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TFJew2086755;
+	Mon, 29 Jan 2024 09:19:40 -0600
+Message-ID: <077682de-7789-4f1f-8dcc-aa47f4fb2dff@ti.com>
+Date: Mon, 29 Jan 2024 09:19:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,108 +65,95 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "dwmw2@infradead.org" <dwmw2@infradead.org>,
- "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
- "Liu, Yi L" <yi.l.liu@intel.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
- device isn't present
-To: "Tian, Kevin" <kevin.tian@intel.com>,
- Ethan Zhao <haifeng.zhao@linux.intel.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
-References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
- <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
- <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: Re: [PATCH] PCI: j721e: Extend j721e_pcie_ctrl_init() for non syscon
+ nodes
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, <bhelgaas@google.com>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <vigneshr@ti.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+References: <20240129104958.1139787-1-s-vadapalli@ti.com>
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20240129104958.1139787-1-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 2024/1/29 17:06, Tian, Kevin wrote:
->> From: Ethan Zhao<haifeng.zhao@linux.intel.com>
->> Sent: Monday, January 29, 2024 11:49 AM
->>
->> Because surprise removal could happen anytime, e.g. user could request safe
->> removal to EP(endpoint device) via sysfs and brings its link down to do
->> surprise removal cocurrently. such aggressive cases would cause ATS
->> invalidation request issued to non-existence target device, then deadly
->> loop to retry that request after ITE fault triggered in interrupt context.
->> this patch aims to optimize the ITE handling by checking the target device
->> presence state to avoid retrying the timeout request blindly, thus avoid
->> hard lockup or system hang.
->>
->> Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
->> ---
->>   drivers/iommu/intel/dmar.c | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
->> index 814134e9aa5a..2e214b43725c 100644
->> --- a/drivers/iommu/intel/dmar.c
->> +++ b/drivers/iommu/intel/dmar.c
->> @@ -1272,6 +1272,7 @@ static int qi_check_fault(struct intel_iommu
->> *iommu, int index, int wait_index,
->>   {
->>   	u32 fault;
->>   	int head, tail;
->> +	u64 iqe_err, ite_sid;
->>   	struct q_inval *qi = iommu->qi;
->>   	int shift = qi_shift(iommu);
->>
->> @@ -1316,6 +1317,13 @@ static int qi_check_fault(struct intel_iommu
->> *iommu, int index, int wait_index,
->>   		tail = readl(iommu->reg + DMAR_IQT_REG);
->>   		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
->>
->> +		/*
->> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
->> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
->> +		 */
->> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
->> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
->> +
->>   		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
->>   		pr_info("Invalidation Time-out Error (ITE) cleared\n");
->>
->> @@ -1325,6 +1333,16 @@ static int qi_check_fault(struct intel_iommu
->> *iommu, int index, int wait_index,
->>   			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
->>   		} while (head != tail);
->>
->> +		/*
->> +		 * If got ITE, we need to check if the sid of ITE is the same as
->> +		 * current ATS invalidation target device, if yes, don't try this
->> +		 * request anymore if the target device isn't present.
->> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
->> +		 */
->> +		if (pdev && ite_sid && !pci_device_is_present(pdev) &&
->> +			ite_sid == pci_dev_id(pci_physfn(pdev)))
->> +			return -ETIMEDOUT;
->> +
-> since the hardware already reports source id leading to timeout, can't we
-> just find the pci_dev according to reported ite_sid? this is a slow path (either
-> due to device in bad state or removed) hence it's not necessary to add more
-> intelligence to pass the pci_dev in, leading to only a partial fix can be backported.
+On 1/29/24 4:49 AM, Siddharth Vadapalli wrote:
+> The "ti,syscon-pcie-ctrl" device-tree property is used to obtain
+> reference to the "pcie_ctrl" register within the System Controller Module
+> in order to configure the link speed, number of lanes and the mode of
+> operation of the PCIe controller. The existing implementation of the
+> "j721e_pcie_ctrl_init()" function handles the case where the compatible for
+> the System Controller Module node specified using the "ti,syscon-pcie-ctrl"
+> property is "syscon". Since the System Controller Module can be modelled as
+> a "simple-bus" as well, extend the implementation of the
+> "j721e_pcie_ctrl_init()" function to handle the "simple-bus" case.
 > 
-> It's also more future-proof, say if one day the driver allows batching invalidation
-> requests for multiple devices then no need to pass in a list of devices.
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> 
+> Hello,
+> 
+> This patch is based on linux-next tagged next-20240129.
+> 
+> The System Controller Module is modelled as a "simple-bus" in J784S4 SoC at
+> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi#L45
+> The existing SoCs such as J721E and J7200 which currently model the node as
+> a Syscon node will also be updated to model it as a "simple-bus".
+> Therefore this patch aims to update the driver in order to handle the
+> migration of the System Controller Module to the "simple-bus" compatible
+> without breaking PCIe functionality on existing TI SoCs which make use
+> of the pci-j721e.c driver.
+> 
+> Regards,
+> Siddharth.
+> 
+>   drivers/pci/controller/cadence/pci-j721e.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index 85718246016b..2ace7e78a880 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -224,12 +224,20 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+>   {
+>   	struct device *dev = pcie->cdns_pcie->dev;
+>   	struct device_node *node = dev->of_node;
+> +	struct device_node *scm_conf;
+>   	struct of_phandle_args args;
+>   	unsigned int offset = 0;
+>   	struct regmap *syscon;
+>   	int ret;
+>   
+> -	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
+> +	scm_conf = of_parse_phandle(node, "ti,syscon-pcie-ctrl", 0);
+> +	if (!scm_conf) {
+> +		dev_err(dev, "unable to get System Controller node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	syscon = device_node_to_regmap(scm_conf);
 
-I have ever thought about this solution and gave up in the end due to
-the locking issue.
+Turning the entire "simple-bus" region into a regmap using this
+function is just as broken as having it as a "syscon". The core
+problem we are solving by getting rid of the blanket syscon nodes
+is that it causes multiple mappings of the same register. This
+can cause issues with regmap caching, read–modify–write, etc..
 
-A batch of qi requests must be handled in the spin lock critical region
-to enforce that only one batch of requests is submitted at a time.
-Searching pci_dev in this locking region might result in nested locking
-issues, and I haven't found a good solution for this yet.
+What you want to do is add a subnode to the simple-bus, have that
+encapsulate just the registers used for PCIe, and have the PCIe
+node point to that. Then this patch isn't needed.
 
-Unless someone can bring up a better solution, perhaps we have to live
-in a world where only single device TLB invalidation request in a batch
-could be submitted to the queue.
+For an example, see how it's done for DSS[0].
 
-Best regards,
-baolu
+Andrew
+
+[0] https://github.com/torvalds/linux/blob/41bccc98fb7931d63d03f326a746ac4d429c1dd3/arch/arm64/boot/dts/ti/k3-am65-main.dtsi#L502
+
+> +	of_node_put(scm_conf);
+>   	if (IS_ERR(syscon)) {
+>   		dev_err(dev, "Unable to get ti,syscon-pcie-ctrl regmap\n");
+>   		return PTR_ERR(syscon);
 
