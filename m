@@ -1,127 +1,126 @@
-Return-Path: <linux-pci+bounces-2738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDAEE841554
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 23:01:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C160841572
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 23:16:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8684B28253A
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 22:01:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB70328929E
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 22:16:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1617158D89;
-	Mon, 29 Jan 2024 22:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963C2159573;
+	Mon, 29 Jan 2024 22:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vfdddmn/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQZAohOc"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D4E7605C;
-	Mon, 29 Jan 2024 22:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCEC15956E;
+	Mon, 29 Jan 2024 22:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706565675; cv=none; b=fL/zBBKQKljLzAq61ZEMh49DXhcT0grgQQxWm1Yde+0QmtUFvObbVft88CZ/f+Xb67nh6Q1x2vIlWqoNdARrFeRXO0BCocQu+uYQFxoCgUDAZfKduzxmDdzsfBngQWCDC/sK5oak0o6RF5gUk0Z/mF8TYRD8ke0lbVhggGhBM8s=
+	t=1706566609; cv=none; b=Dp/o3WP4xVKLrVHQPyl1Q7xdnmfp7B3898QDaJ0Aaikb5mKHHi7MAWQ7VsnGLlZHIeA1TUlhLkhvQtYcBtKb/SFm/G3v10XsN/uMVoTMMGzRFuUTC4+IcE7MpZ0l1SIN7i/5Pg2BH5jwpiA8oKb5RZjT8vK87vrS6Ahs88AZrW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706565675; c=relaxed/simple;
-	bh=cV/c+lxwpIFnbqiq+B+v39dXErDc5uXplFaoJSoJCJ4=;
+	s=arc-20240116; t=1706566609; c=relaxed/simple;
+	bh=fWlUMRgvqVY95h4dXufWc8ddniO0qcwX7UwmN7CzrKY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mlY9QcWVftEVlntSaIh60FfDs2K+bCiHfyeP9UV91j2NUNVw//PWO4RXjItLuIjMHdOHPZEPV51Gdt2rQhM4p5iyRM48ih+a/m4NMwEC+f128Eha2Yi0SBP53wn6Pa2jwm4TTcLQGZsnSCGUf/9N8kvf8a2k3XGqq/NOR1ZFdAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vfdddmn/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01A3C433C7;
-	Mon, 29 Jan 2024 22:01:14 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=qTrGaDsxABPRYBO77pCXAtCPHM9LiRnp8/RMBRZjGQcXkjyK0I6K6+gMyBPHyb3A/BKmpH7C4iNrIkZ6XTwIuU7LKmJrmkRs2brY+mU+RK8XerSUYzNfGDXdikbWlUNC0tEFUwDm/9VG6vfMgg0Bs5lTBJpLu6M1MAnThlOBjgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQZAohOc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A644C433F1;
+	Mon, 29 Jan 2024 22:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706565674;
-	bh=cV/c+lxwpIFnbqiq+B+v39dXErDc5uXplFaoJSoJCJ4=;
+	s=k20201202; t=1706566608;
+	bh=fWlUMRgvqVY95h4dXufWc8ddniO0qcwX7UwmN7CzrKY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Vfdddmn/0f2BfvE7vHxcAViKU0mKrmZTpyQ5tRCfSEaQJjjHvh14JIjQoqlgOfP7v
-	 T1TASQ17qXlrKzZ8Wlef66DxfbfK7vJpFSNfW3nWR+oijHfEW7WilBVpk0gbGbEw8T
-	 E8Ee6swgvKZePW5j7bLr5wZW76qZ9MbLX4sBQvhvb3h8AjePrhzHlQVx55IJBgedgI
-	 b4rhvnU5N18+JzLGJ5+NGjoV8yLnnn1Qr8X+kwNTnzPxwmi3R9iAXOFT694aPi/szP
-	 HArljeBdBljSeaeVwKoIyr4l0zpPOJhI27c6tb2NmfaSNtrrZhST5N+oDk4rs1LPyF
-	 F354Sd83H4xFg==
-Date: Mon, 29 Jan 2024 16:01:13 -0600
+	b=MQZAohOc8Dgk2cjX6jvaB2a8InqsFsEgUpwwpZU2S7fbZRA0vBXW6WQSwHknPL5pw
+	 Db8Yfblz+iPuvPB/SJoPzIfMgTJVjPMp80BU6HK9ZWiykjcov7UibFqd9OAb/hbzTo
+	 02w2rI+/oZM/9FvV4tFg8DgNOGIo438LRESCHy+xdUfXgegDc4FK6gwqbOM1S1KUfk
+	 93rCTIQMZz7MV4r01diHmg33R/SlkevQOAMb86W1RWwkaeO63dCQN5tCYK1C+q17z/
+	 GuvYkKdEKIKG/PsskcufS7cJyHu5gt6cbRS3bxgctjjxpKbilNfvy8YnhfdMXizSJf
+	 Dz3Pdr5WXM7sA==
+Date: Mon, 29 Jan 2024 16:16:47 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Chen, Jiqian" <Jiqian.Chen@amd.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"Hildebrand, Stewart" <Stewart.Hildebrand@amd.com>,
-	"Huang, Ray" <Ray.Huang@amd.com>,
-	"Ragiadakou, Xenia" <Xenia.Ragiadakou@amd.com>
-Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
-Message-ID: <20240129220113.GA475965@bhelgaas>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v2 13/15] PCI: cadence: add resume support to
+ cdns_pcie_host_setup()
+Message-ID: <20240129221647.GA477676@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BL1PR12MB5849B51FADC8226764078A98E77A2@BL1PR12MB5849.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240126214336.GA453589@bhelgaas>
 
-On Thu, Jan 25, 2024 at 07:17:24AM +0000, Chen, Jiqian wrote:
-> On 2024/1/24 00:02, Bjorn Helgaas wrote:
-> > On Tue, Jan 23, 2024 at 10:13:52AM +0000, Chen, Jiqian wrote:
-> >> On 2024/1/23 07:37, Bjorn Helgaas wrote:
-> >>> On Fri, Jan 05, 2024 at 02:22:17PM +0800, Jiqian Chen wrote:
-> >>>> There is a need for some scenarios to use gsi sysfs.
-> >>>> For example, when xen passthrough a device to dumU, it will
-> >>>> use gsi to map pirq, but currently userspace can't get gsi
-> >>>> number.
-> >>>> So, add gsi sysfs for that and for other potential scenarios.
-> >> ...
+On Fri, Jan 26, 2024 at 03:43:39PM -0600, Bjorn Helgaas wrote:
+> In subject, capitalize "Add ..." to follow historical convention.
+> Also the other driver/pci/ patches.
+> 
+> On Fri, Jan 26, 2024 at 03:36:55PM +0100, Thomas Richard wrote:
+> > From: Théo Lebrun <theo.lebrun@bootlin.com>
 > > 
-> >>> I don't know enough about Xen to know why it needs the GSI in
-> >>> userspace.  Is this passthrough brand new functionality that can't be
-> >>> done today because we don't expose the GSI yet?
+> > That function mixes probe structure init and hardware config.
+> > The whole hardware config part must be done at resume after a suspend to
+> > ram.
+> > We therefore pass it a boolean flag determining if we are at probe or at
+> > resume.
+> ...
 
-I assume this must be new functionality, i.e., this kind of
-passthrough does not work today, right?
+> This is pretty similar but slightly different from the DWC pattern:
+> 
+>   imx6_pcie_probe
+>     ... do structure init ...
+>     if (RC)
+>       dw_pcie_host_init
+> 	pp->ops->init
+> 	  imx6_pcie_host_init
+> 
+>   imx6_pcie_resume_noirq
+>     imx6_pcie_host_init
+> 
+>   j721e_pcie_probe
+>     j721e_pcie_ctrl_init
+>     if (RC)
+>       cdns_pcie_host_setup(true)
+> 
+>   j721e_pcie_resume_noirq
+>     j721e_pcie_ctrl_init
+>     if (RC)
+>       cdns_pcie_host_setup(false)
+> 
+> It'd be super nice to have them the same.  Passing in a "probe" flag
+> works but seems a little harder to read in cdns_pcie_host_setup() and
+> you have to keep track of what it means in the callers.
 
-> >> has ACPI support and is responsible for detecting and controlling
-> >> the hardware, also it performs privileged operations such as the
-> >> creation of normal (unprivileged) domains DomUs. When we give to a
-> >> DomU direct access to a device, we need also to route the physical
-> >> interrupts to the DomU. In order to do so Xen needs to setup and map
-> >> the interrupts appropriately.
-> > 
-> > What kernel interfaces are used for this setup and mapping?
->
-> For passthrough devices, the setup and mapping of routing physical
-> interrupts to DomU are done on Xen hypervisor side, hypervisor only
-> need userspace to provide the GSI info, see Xen code:
-> xc_physdev_map_pirq require GSI and then will call hypercall to pass
-> GSI into hypervisor and then hypervisor will do the mapping and
-> routing, kernel doesn't do the setup and mapping.
-
-So we have to expose the GSI to userspace not because userspace itself
-uses it, but so userspace can turn around and pass it back into the
-kernel?
-
-It seems like it would be better for userspace to pass an identifier
-of the PCI device itself back into the hypervisor.  Then the interface
-could be generic and potentially work even on non-ACPI systems where
-the GSI concept doesn't apply.
-
-> For devices on PVH Dom0, Dom0 setups interrupts for devices as the
-> baremetal Linux kernel does, through using acpi_pci_irq_enable->
-> acpi_register_gsi-> __acpi_register_gsi->acpi_register_gsi_ioapic.
-
-This case sounds like it's all inside Linux, so I assume there's no
-problem with this one?  If you can call acpi_pci_irq_enable(), you
-have the pci_dev, so I assume there's no need to expose the GSI in
-sysfs?
+Maybe a better way to say this is that this patch uses the "probe"
+flag to select the behavior of cdns_pcie_host_setup(), and I think it
+would be nicer to split those two behaviors into separate functions.
 
 Bjorn
 
