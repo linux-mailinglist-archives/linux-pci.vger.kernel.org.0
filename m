@@ -1,139 +1,133 @@
-Return-Path: <linux-pci+bounces-2709-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2710-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C98B2840331
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 11:50:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48A92840386
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 12:10:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 805CA1F2357F
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 10:50:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AD7E1C2199B
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 11:10:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B836656740;
-	Mon, 29 Jan 2024 10:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09C65BAC0;
+	Mon, 29 Jan 2024 11:10:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pq0MY3Db"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yW7XWvmY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4A956469;
-	Mon, 29 Jan 2024 10:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A50E55E52
+	for <linux-pci@vger.kernel.org>; Mon, 29 Jan 2024 11:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706525423; cv=none; b=fT2wP1YzzGquvFOCNoDc75mQREtd2RCnYkV4yqOAtdpADIbMnqwNoqZGYPE3ez1wFgGjy0l1VrilTloz8YTQ5KK3+oVTKwqrI8nTDmNrEbfV9jiuMZedUde5bs+wLLTZYWH26JsKoPSFDKjf4l6uKOhlnpP0hUtTHAC+2i/ynbE=
+	t=1706526640; cv=none; b=J2kJgSu3dwRAIrWEf+BQqOKyQvHjWG689wvcXY1EsLSjvqpYR3HmbB9JC5+3PKlRwlUkaEBzrlXfmdmm4USOk+Nt84CR+7kT1+dg9WW7n0ZvYI3nNslS8NI48I6R7S8FJkg370PccpTWuML8P60hJX+QLKIHu+BZvbzuHYwCibo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706525423; c=relaxed/simple;
-	bh=je4BCKddaeJFCgeD8nlqFK65Ey9jQCjtMpDtUG1yxqQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t1+1pACAi6hFvkVYQB4MlYWg5XAEfMoxqTnKIHUV+4lFXOzXUIbtz6XygAQqaMZzcQMtzyHEdqnJ0EOPkaHaRwtaDuVQjrJ7WaANhpPCtMbN4a7ZEWVEGDtXe2KpnptejoMurGCP4MxiGLrKa8fTtTJftkwXhhvrg8lTSXLJ/zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pq0MY3Db; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40TAo3CC022630;
-	Mon, 29 Jan 2024 04:50:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706525403;
-	bh=m0htI7go7or/yzNzVCGjz5hppU2wqyr8vuBJ7cUUKzs=;
-	h=From:To:CC:Subject:Date;
-	b=pq0MY3DbCuwjGFSt3hP10A1JzEymc3OC0rI+bosIlb/TCrzTgTjdsrYhJSPOGuqoF
-	 0l0/lPPOGrYdeHoEcJJbi1tOKkGNDDqgyPEmUEOLAfpmeiGhMueuVSxeIR+6KV2oSn
-	 D8HSvHThPk9E+6O0Pt0p0M9XBXhO1sHICKx/OGjI=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40TAo3hD030235
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 29 Jan 2024 04:50:03 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 29
- Jan 2024 04:50:02 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 29 Jan 2024 04:50:03 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40TAnxhF088113;
-	Mon, 29 Jan 2024 04:49:59 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, <vigneshr@ti.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <afd@ti.com>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH] PCI: j721e: Extend j721e_pcie_ctrl_init() for non syscon nodes
-Date: Mon, 29 Jan 2024 16:19:58 +0530
-Message-ID: <20240129104958.1139787-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706526640; c=relaxed/simple;
+	bh=kaq0OgPo/9vol1D2bYM76Ta9GssTvOOm0ZJv+0O3b8M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EchzwCi8zFhqQU4OqGS08mTJpE+kt4VGihzpJMIdUB3FHBRi7vMK2z9NGv5WLhTA943ay4DSiHRUPFivr0c7qMbe1NP7aX3Q6aBPeCdQHDMzyE85h+877RUXuCstgDQdpAJfGYOgQRHWQRr4LtXy503Gp+g+rH0KyG8PJtamDtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yW7XWvmY; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so386816666b.0
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jan 2024 03:10:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706526637; x=1707131437; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRaRfDbDYLX14FrKlogP0cv2vAUvFXFj6eUZ8j21eOw=;
+        b=yW7XWvmY3sJ/v0QjhdlNvwLFrrtHMa8wv7xSAvEnPCRqo7VbmtFED0p6Q0vpuX/wqv
+         JZ9lbXUVhMpgX1r+57LS1msVvFY4WjHr/3Z4LKv2ueLDBb8vnqNhCU7KUaBj0mPPYszR
+         4aJ+oeYTv9m5Q4te5vc5XI/RrjPJINv4XjjxEhjx0CXHDcnY4ARMLt/YE452vlj6Myjs
+         dGIC8iUMlDjSBCeyb+QWde2ExFg1WbB42exAjnmV2/v7U2E8qbz2eC703foXEnSj4fRO
+         zLVKAvb8rKR3ZqLcTVUAa1uE2n1Z/mpl2qelfmS73Fa1MxYwO5fJ5vikeTWvm8hJLfWN
+         hNCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706526637; x=1707131437;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HRaRfDbDYLX14FrKlogP0cv2vAUvFXFj6eUZ8j21eOw=;
+        b=BcvsL78SU+0PExHs79BZOUqNfyJUsdmhyf1BlD4BKGw5wBoOEMaN1ht5vmEdeRX1p7
+         VLf7A/d71fhtcIJoPQaCcc7jIFrwGlKn0QMbaxlb75MvP8pbwvhbB/h1N/m+sdA/9rkc
+         l/yqTpDs1Kr2RjruSeRGQTVh83wH6nUD8yIMxWatjkS/LXmrnpZOGIsWq+kUfsajtchI
+         HIMDY22R51B/PWafcg8asjq70L5ZAV9an/Q3N07vhgxEhsbu9BzZ9m6dKYxXW7dpGGL9
+         yg6Br/uShlCg3SpqGDyHQOxocFNphfzRF7Hfib0dDw5reOMRZi9gvC/tIkGhRYrmEWhh
+         62yQ==
+X-Gm-Message-State: AOJu0Yw7E5NPxB1fzxksUE8jyZR4oyNGdHiSkra4d6Zv4oIizP+xZ091
+	retWDEbpJ+9Gw9esAKJuSh/1zLOOzyLdfLL+pUuWdRfmyHJCjTSWtMLMM0GffNk=
+X-Google-Smtp-Source: AGHT+IFdGR7DwC3V+AcNwApIE6x6SYSmmC81K54nXEd72Ad4K9TD5UyxiF2+FW9bIvC7KDOu9MPpPw==
+X-Received: by 2002:a17:906:454d:b0:a31:29fc:6ef2 with SMTP id s13-20020a170906454d00b00a3129fc6ef2mr4747444ejq.41.1706526637312;
+        Mon, 29 Jan 2024 03:10:37 -0800 (PST)
+Received: from [127.0.1.1] ([79.115.23.25])
+        by smtp.gmail.com with ESMTPSA id tj4-20020a170907c24400b00a352f7a57a4sm2934620ejc.178.2024.01.29.03.10.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 03:10:36 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH v2 0/2] PCI: qcom: Add PCIe support for X1E80100
+Date: Mon, 29 Jan 2024 13:10:25 +0200
+Message-Id: <20240129-x1e80100-pci-v2-0-a466d10685b6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKGHt2UC/1WNQQ6CMBBFr2K6tmamgIAr72FYtDDAJKQlUyUYw
+ t0t7Fy+n7z/NhVJmKJ6XDYltHDk4BOY60W1o/UDae4SKwMmQwOoV6QKEEDPLWvKbFdjUTlncpU
+ UZyNpJ9a3Y5L8Z5rSOAv1vJ6NV5N45PgO8j2TCx7r8Z4Dmvr/fUGNmvquL4uqLu8Ez4m9lXALM
+ qhm3/cfLlogyb4AAAA=
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=733; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=kaq0OgPo/9vol1D2bYM76Ta9GssTvOOm0ZJv+0O3b8M=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlt4ekpsF3X7YJyrnDVqN+171lOsGtT2eIe4S4c
+ n5g7+WGKWqJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbeHpAAKCRAbX0TJAJUV
+ Vp8lD/0VzRSzxozsfLD/lTH+A26kdlKd+ybLr23ujjxI6fClzrK2JNl7SWLRArBXpN8tOe8fCix
+ 4ygHZJOjDfgo1cX9IqOGh2IVf4+fwU6mDCygLos3qcDW4nf2+OwIi4pS4TQk7CKJUN/hjmWGG2H
+ 5pbYSq9z/xqp0u0JiOm3A78xynvYK1isXtksSlrh2a0ShG+ToUqHw4w7r95Unzbi7GKgmJShSr8
+ Jpt+J/+XJE+yny5lkwdrkEr5qgEtqWrE53EtALEdH5ZeYReKLQ4a3bKsxpflSaoqc4OCYEBKmTz
+ zNpR+t4RpM1bxY2ah4AMTqoxv8RrL2MhEHHsNWTe+EF98E2OXaQdhq66jeSba9AfCfcZb/Juzbv
+ F86g++xrmZaHJsgKqc1EGSGmgnKt1NZ0XwUv8kZG+ZmemzU8kzt1gEGQ0zE2IGfp9XInrgrQG5W
+ XutOdgqmcEZD3C454t1+AZTbvz5+BL8qRmhnwbCqiIVlxozpal5HWoM2Qv6+tKGqEVyt75qJv48
+ Fk7J0gec7dqK8byBxwbga01yS31sbhQIngDx+9Rj1WhSyfz4HmQ7kyxXML33pNZnPrkBovmDiu0
+ +th//D3Xi4XJgALKTJBAO6lubjHJrXdrT4zv2O+YvHB0sA2hrLwnyZ6f9amn3lfl2b1H7xanean
+ DeYqVVcUxwJ1paw==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-The "ti,syscon-pcie-ctrl" device-tree property is used to obtain
-reference to the "pcie_ctrl" register within the System Controller Module
-in order to configure the link speed, number of lanes and the mode of
-operation of the PCIe controller. The existing implementation of the
-"j721e_pcie_ctrl_init()" function handles the case where the compatible for
-the System Controller Module node specified using the "ti,syscon-pcie-ctrl"
-property is "syscon". Since the System Controller Module can be modelled as
-a "simple-bus" as well, extend the implementation of the
-"j721e_pcie_ctrl_init()" function to handle the "simple-bus" case.
+Add support for PCIe controllers found on X1E80100 platform.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
+Changes in v2:
+- Documented the compatible
+- Link to v1: https://lore.kernel.org/r/20240129-x1e80100-pci-v1-1-efdf758976e0@linaro.org
 
-Hello,
+---
+Abel Vesa (2):
+      dt-bindings: PCI: qcom: Document the X1E80100 PCIe Controller
+      PCI: qcom: Add X1E80100 PCIe support
 
-This patch is based on linux-next tagged next-20240129.
+ .../devicetree/bindings/pci/qcom,pcie.yaml         | 29 ++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom.c             |  1 +
+ 2 files changed, 30 insertions(+)
+---
+base-commit: 01af33cc9894b4489fb68fa35c40e9fe85df63dc
+change-id: 20231201-x1e80100-pci-e3ad9158bb24
 
-The System Controller Module is modelled as a "simple-bus" in J784S4 SoC at
-https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi#L45
-The existing SoCs such as J721E and J7200 which currently model the node as
-a Syscon node will also be updated to model it as a "simple-bus".
-Therefore this patch aims to update the driver in order to handle the
-migration of the System Controller Module to the "simple-bus" compatible
-without breaking PCIe functionality on existing TI SoCs which make use
-of the pci-j721e.c driver.
-
-Regards,
-Siddharth.
-
- drivers/pci/controller/cadence/pci-j721e.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 85718246016b..2ace7e78a880 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -224,12 +224,20 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
- {
- 	struct device *dev = pcie->cdns_pcie->dev;
- 	struct device_node *node = dev->of_node;
-+	struct device_node *scm_conf;
- 	struct of_phandle_args args;
- 	unsigned int offset = 0;
- 	struct regmap *syscon;
- 	int ret;
- 
--	syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
-+	scm_conf = of_parse_phandle(node, "ti,syscon-pcie-ctrl", 0);
-+	if (!scm_conf) {
-+		dev_err(dev, "unable to get System Controller node\n");
-+		return -ENODEV;
-+	}
-+
-+	syscon = device_node_to_regmap(scm_conf);
-+	of_node_put(scm_conf);
- 	if (IS_ERR(syscon)) {
- 		dev_err(dev, "Unable to get ti,syscon-pcie-ctrl regmap\n");
- 		return PTR_ERR(syscon);
+Best regards,
 -- 
-2.34.1
+Abel Vesa <abel.vesa@linaro.org>
 
 
