@@ -1,216 +1,156 @@
-Return-Path: <linux-pci+bounces-2759-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B08A841BB5
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 07:03:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBED2841BC7
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 07:11:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92833B24325
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 06:03:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E8551F27BF1
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 06:11:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB109381DF;
-	Tue, 30 Jan 2024 06:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D9A383B6;
+	Tue, 30 Jan 2024 06:11:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="cAXOg7gq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GiCQ9Irg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9DC381B9
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 06:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67E23839C
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 06:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706594572; cv=none; b=h5clyxhnO1NuuwinTitHRfVKoLo3d95mjE9CX3YfP9VBAKDMA6KX4O6BTmsTAyCJKIqQeNDv0Hg51b9pMhTEk82WQFiC8UY3VrKQgnXk/Y3WJGTsks6A864tmnO+qWWs/6LHyrX0BoftX6nmPtwKT2ZvKgMa4wmmUc3AOS2MI9U=
+	t=1706595076; cv=none; b=Fa0s2HAnAVFEWGgqBQkOHEwCxrt/1cd+mHMKGSAWku04EG0vC8KV9lXf9emeSmw6LrJ5sj6a+UOHuq5SSVCsMOVrD4h09kUXctkW3eTjVhMdoL+nSLgyVJOjb/1pZbDwA8nZ8gaj6xdDnSn5w/yjahz8K2irAqKoPjngQDGwy94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706594572; c=relaxed/simple;
-	bh=4br/Ua+azXBzhdQ97Yt9a8Dsc3D0lJpwdMuxGOCCxsg=;
+	s=arc-20240116; t=1706595076; c=relaxed/simple;
+	bh=xOea63INGOSG465h0CfnONEMeWR4NZ/xHm0T3eI1GNI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XxW6AT/axqglMYVVjCo3yLkSJrJvaANivzhhCjzsP0ETbBpy3Y0jxzS39mvBzfOLNWTUDSEiiN5O/6BWW/0eWaBqy55qOQJBeP1MIvyp6fd6czPxVoIdpitPddt6PfItiJUHwDeW+YST6FWgqw7WoRKH29/sXS4J0Qxkcx7JWTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=cAXOg7gq; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2954b34ddd0so1623760a91.0
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jan 2024 22:02:49 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pmgtsbh0LDf/sVrxv7vOT2L/bk7MWXHT4vXAGzqaVv47iRntF2gzZabsugsn93tsXyvlBRX60AyHag2Fl24abk4tNTksd3FjiqO2ISrrg00KdUFAyrFPXhJa0bInezKqfQHie/vYyhkTR6MhRbSDypwHkYbL4vDEBxZt9VxMROw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GiCQ9Irg; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5ceb3fe708eso2062026a12.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Jan 2024 22:11:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1706594569; x=1707199369; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xWLJZhOYSryL+JD6+g86jHbcKwp+hE7AslVqd+M2GlQ=;
-        b=cAXOg7gqybiL+GoOLKYne/mRhyLa96mmj6WVFMAP8odP/b6sU6CsqNIMPoTUhPFfvO
-         9scK/3o6PDJJK2tAkPHEUrJhzPmnuIZbqYPF4wACBHxkRmOO+UQCoxhF00q7OXZr39E5
-         Q/mF/vEVsYfkUmLOiwHgX1jnt8lP1kaecYqBiWQOiBvdEOTILZSALBubXwubqTzfSMDF
-         PGBNiDQ2yj4h33oLFoG+lcvHELai1f+zU1qb7eaJw4XWlxYu0upUveVBINKQNj06m90+
-         QJ0xo7ZLZ3fhDO1yGInJn659H7oKJYwTYKOhsPEC5CsoHHSmhVQ+R3zkbAT8DSd3fb1D
-         nFLQ==
+        d=linaro.org; s=google; t=1706595074; x=1707199874; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ypr/6L0QoG7N6GIlemwTnozF/H7mKp62EyexXYwz5pA=;
+        b=GiCQ9IrgMVPbmdtdFVAeUN1n4D6V7cxsZOK4HhmuQU0eKV84YBAqrxEwHlvh/tjvJs
+         5jjVL5BXDDvVFO2BwPywJy1jVBoxufJZSpoaz7qjMF2hO/TJHFddloz8Z4kKIF9Kdboy
+         oemECYg8ZmWSjScIBbOMn6TeD9qbygpDCW5El+lkpgW4jKQYvXVlj9YAyouO+2XasUj+
+         W6CUEj3l4Pdnd46ng88xbV8IjYuhrEbxGyrHTNgfwWP6Jm8Fev8AczEoD98k/8nD1vcW
+         CLNT00EXXg8SX5Fw03D0o+nVT/fSmBWGyfzQazrt8za2H6GQeJfoJfnZYHYEHGHTgITm
+         GuXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706594569; x=1707199369;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xWLJZhOYSryL+JD6+g86jHbcKwp+hE7AslVqd+M2GlQ=;
-        b=WT3NjQ4bSiyh61seRqQQAZT+qTHyBmVUK7ZTAuMQrKl0ToPYez/rB5GS30CpB+4j1S
-         4505ftIErOA4OCl423C+t8d+VP/LYR52k1FjwlGTNIm/07BdJ3b+hfQTQPUI0KjqhuYV
-         cJafVxfqX8XdW2wXy3mp7nt1VzfGm/+IzExkgAv7JOb8A5SCWdMz+bmsOOrsxT4SW8xe
-         2r2FCBcF5aJTktQppSuc781M734kSKMPkWoMcg82qitlRXZbUAs7bUSlnRW/4140IY5o
-         co8hMXJ+2UkxtEUtZlEDr7bx0JTJ5TRQL1QWyk73EaRFRn869024/R+Ev3xc8w4s6W9+
-         x3EQ==
-X-Gm-Message-State: AOJu0YyVXHlz5IBqjy0J5XzGUd3sfpyGtrGz+5tXfBmGb+vsTg1nl6Nl
-	TX/D8f/AKJt2NG8IYEAGF3UmiSSWEkCEZ16ArTxboKwSWPqk+KD+IZ0lXV2zhjA=
-X-Google-Smtp-Source: AGHT+IFKZAHGBi+fEdW2P5cUvSK/6ac2dz3pUpO8dYb7X5Yq8/JiJKtWenAEAb33oYqNI300DuJRkg==
-X-Received: by 2002:a17:90a:9284:b0:294:97c1:b58f with SMTP id n4-20020a17090a928400b0029497c1b58fmr5078955pjo.9.1706594568825;
-        Mon, 29 Jan 2024 22:02:48 -0800 (PST)
-Received: from sunil-laptop ([106.51.190.212])
-        by smtp.gmail.com with ESMTPSA id n17-20020a17090ade9100b00295b45b7e5fsm151060pjv.1.2024.01.29.22.02.42
+        d=1e100.net; s=20230601; t=1706595074; x=1707199874;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ypr/6L0QoG7N6GIlemwTnozF/H7mKp62EyexXYwz5pA=;
+        b=c2N9LRUfNTl9M7B8GxTAgTK5LD5bHWdKjWthaYx2TZi7vo6Dwav1gZ0BsFtIILB3on
+         wdjsngP49IrzxNXSH7gjAPwH71UC7MALXjG97dDr25VJPtB/X5g2CuVx5fNV7crG5lag
+         pHQBLt9cCN72Z6MoM7ve4hmzeEaERVKcAAeZqFBXnhXaLN75fd/uqPHV6srM9f3ym2+p
+         u0NT44E3Hn5Q3pfqYnqAJ4H3pDN7LHVRZG3UKbLXuG12Phd8NevG2oeq7j0Aep6kRLAF
+         V1fXDYe9B4eNi47BQlw0INsx4RTuXm7oB2eO2e1y7mNUzppbUbdRkDCf3DymRT9K4v3B
+         Piyw==
+X-Gm-Message-State: AOJu0YwaYzCamRByRFMQLzY/y48Jre+Dvyb3NC2Jb1OinOOrGWuve/mP
+	qCl2o2qc3VD/efHrTTYcGKwicCBRg+x6maB3T5pqCM5jV+WYIk0XoRRoiGVRYGs=
+X-Google-Smtp-Source: AGHT+IFXCiqNz56YhR8ZeAD95eE8xtQBHXRFokosutQyCwkchVIu/T59v2/TzAC66N+peWYD8bpDLw==
+X-Received: by 2002:a17:902:8f97:b0:1d4:79b7:b8ce with SMTP id z23-20020a1709028f9700b001d479b7b8cemr4631604plo.44.1706595074065;
+        Mon, 29 Jan 2024 22:11:14 -0800 (PST)
+Received: from localhost ([122.172.83.95])
+        by smtp.gmail.com with ESMTPSA id jg17-20020a17090326d100b001d8fae3220fsm1447045plb.73.2024.01.29.22.11.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 22:02:48 -0800 (PST)
-Date: Tue, 30 Jan 2024 11:32:38 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Haibo Xu <haibo1.xu@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-	Marc Zyngier <maz@kernel.org>
-Subject: Re: [RFC PATCH v3 00/17] RISC-V: ACPI: Add external interrupt
- controller support
-Message-ID: <ZbiQ/tO/odnJCBD1@sunil-laptop>
-References: <20231219174526.2235150-1-sunilvl@ventanamicro.com>
- <CAJZ5v0j6Veze8xDFKTbVZ5=WAfmLdeJ8NXRnh9kwCZgyaDdgew@mail.gmail.com>
+        Mon, 29 Jan 2024 22:11:13 -0800 (PST)
+Date: Tue, 30 Jan 2024 11:41:11 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: sm8450: Add opp table support
+ to PCIe
+Message-ID: <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-5-77bbf7d0cc37@quicinc.com>
+ <20240129160420.GA27739@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0j6Veze8xDFKTbVZ5=WAfmLdeJ8NXRnh9kwCZgyaDdgew@mail.gmail.com>
+In-Reply-To: <20240129160420.GA27739@thinkpad>
 
-On Tue, Dec 19, 2023 at 06:50:19PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Dec 19, 2023 at 6:45 PM Sunil V L <sunilvl@ventanamicro.com> wrote:
-> >
-> > This series adds support for the below ECR approved by ASWG.
-> > 1) MADT - https://drive.google.com/file/d/1oMGPyOD58JaPgMl1pKasT-VKsIKia7zR/view?usp=sharing
-> >
-> > The series primarily enables irqchip drivers for RISC-V ACPI based
-> > platforms.
-> >
-> > The series can be broadly categorized like below.
-> >
-> > 1) PCI ACPI related functions are migrated from arm64 to common file so
-> > that we don't need to duplicate them for RISC-V.
-> >
-> > 2) Introduced support for fw_devlink for ACPI nodes for IRQ dependency.
-> > This helps to support deferred probe of interrupt controller drivers.
-> >
-> > 3) Modified pnp_irq() to try registering the IRQ  again if it sees it in
-> > disabled state. This solution is similar to how
-> > platform_get_irq_optional() works for regular platform devices.
-> >
-> > 4) Added support for re-ordering the probe of interrupt controllers when
-> > IRQCHIP_ACPI_DECLARE is used.
-> >
-> > 5) ACPI support added in RISC-V interrupt controller drivers.
-> >
-> > This series is based on Anup's AIA v11 series. Since Anup's AIA v11 is
-> > not merged yet and first time introducing fw_devlink, deferred probe and
-> > reordering support for IRQCHIP probe, this series is still kept as RFC.
-> > Looking forward for the feedback!
-> >
-> > Changes since RFC v2:
-> >         1) Introduced fw_devlink for ACPI nodes for IRQ dependency.
-> >         2) Dropped patches in drivers which are not required due to
-> >            fw_devlink support.
-> >         3) Dropped pci_set_msi() patch and added a patch in
-> >            pci_create_root_bus().
-> >         4) Updated pnp_irq() patch so that none of the actual PNP
-> >            drivers need to change.
-> >
-> > Changes since RFC v1:
-> >         1) Abandoned swnode approach as per Marc's feedback.
-> >         2) To cope up with AIA series changes which changed irqchip driver
-> >            probe from core_initcall() to platform_driver, added patches
-> >            to support deferred probing.
-> >         3) Rebased on top of Anup's AIA v11 and added tags.
-> >
-> > To test the series,
-> >
-> > 1) Qemu should be built using the riscv_acpi_b2_v8 branch at
-> > https://github.com/vlsunil/qemu.git
-> >
-> > 2) EDK2 should be built using the instructions at:
-> > https://github.com/tianocore/edk2/blob/master/OvmfPkg/RiscVVirt/README.md
-> >
-> > 3) Build Linux using this series on top of Anup's AIA v11 series.
-> >
-> > Run Qemu:
-> > qemu-system-riscv64 \
-> >  -M virt,pflash0=pflash0,pflash1=pflash1,aia=aplic-imsic \
-> >  -m 2G -smp 8 \
-> >  -serial mon:stdio \
-> >  -device virtio-gpu-pci -full-screen \
-> >  -device qemu-xhci \
-> >  -device usb-kbd \
-> >  -blockdev node-name=pflash0,driver=file,read-only=on,filename=RISCV_VIRT_CODE.fd \
-> >  -blockdev node-name=pflash1,driver=file,filename=RISCV_VIRT_VARS.fd \
-> >  -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
-> >  -kernel arch/riscv/boot/Image \
-> >  -initrd rootfs.cpio \
-> >  -append "root=/dev/ram ro console=ttyS0 rootwait earlycon=uart8250,mmio,0x10000000"
-> >
-> > To boot with APLIC only, use aia=aplic.
-> > To boot with PLIC, remove aia= option.
-> >
-> > This series is also available in acpi_b2_v3_riscv_aia_v11 branch at
-> > https://github.com/vlsunil/linux.git
-> >
-> > Based-on: 20231023172800.315343-1-apatel@ventanamicro.com
-> > (https://lore.kernel.org/lkml/20231023172800.315343-1-apatel@ventanamicro.com/)
-> >
-> > Sunil V L (17):
-> >   arm64: PCI: Migrate ACPI related functions to pci-acpi.c
-> >   RISC-V: ACPI: Implement PCI related functionality
-> >   PCI: Make pci_create_root_bus() declare its reliance on MSI domains
-> >   ACPI: Add fw_devlink support for ACPI fwnode for IRQ dependency
-> >   ACPI: irq: Add support for deferred probe in acpi_register_gsi()
-> >   pnp.h: Reconfigure IRQ in pnp_irq() to support deferred probe
-> >   ACPI: scan.c: Add weak arch specific function to reorder the IRQCHIP
-> >     probe
-> >   ACPI: RISC-V: Implement arch function to reorder irqchip probe entries
-> >   irqchip: riscv-intc: Add ACPI support for AIA
-> >   irqchip: riscv-imsic: Add ACPI support
-> >   irqchip: riscv-aplic: Add ACPI support
-> >   irqchip: irq-sifive-plic: Add ACPI support
-> >   ACPI: bus: Add RINTC IRQ model for RISC-V
-> >   ACPI: bus: Add acpi_riscv_init function
-> >   ACPI: RISC-V: Create APLIC platform device
-> >   ACPI: RISC-V: Create PLIC platform device
-> >   irqchip: riscv-intc: Set ACPI irqmodel
+On 29-01-24, 21:34, Manivannan Sadhasivam wrote:
+> On Fri, Jan 12, 2024 at 07:52:04PM +0530, Krishna chaitanya chundru wrote:
+> > PCIe needs to choose the appropriate performance state of RPMH power
+> > domain and interconnect bandwidth based up on the PCIe gen speed.
+> > 
+> > Add the OPP table support to specify RPMH performance states and
+> > interconnect peak bandwidth.
+> > 
+> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sm8450.dtsi | 74 ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 74 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > index 6b1d2e0d9d14..eab85ecaeff0 100644
+> > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > @@ -1827,7 +1827,32 @@ pcie0: pcie@1c00000 {
+> >  			pinctrl-names = "default";
+> >  			pinctrl-0 = <&pcie0_default_state>;
+> >  
+> > +			operating-points-v2 = <&pcie0_opp_table>;
+> > +
+> >  			status = "disabled";
+> > +
+> > +			pcie0_opp_table: opp-table {
+> > +				compatible = "operating-points-v2";
+> > +
+> > +				opp-2500000 {
+> > +					opp-hz = /bits/ 64 <2500000>;
+> > +					required-opps = <&rpmhpd_opp_low_svs>;
+> > +					opp-peak-kBps = <250000 250000>;
 > 
-> JFYI, I have no capacity to provide any feedback on this till 6.8-rc1 is out.
+> This is a question for Viresh: We already have macros in the driver to derive
+> the bandwidth based on link speed. So if OPP core exposes a callback to allow
+> the consumers to set the bw on its own, we can get rid of this entry.
 > 
-Hi Rafael,
+> Similar to config_clks()/config_regulators(). Is that feasible?
 
-Gentle ping.
+I don't have any issues with a new callback for bw. But, AFAIU, the DT
+is required to represent the hardware irrespective of what any OS
+would do with it. So DT should ideally have these values here, right ?
 
-Could you please provide feedback on the series? Patches 4, 5, 6, 7 and
-8 are bit critical IMO. So, I really look forward for your and other
-ACPI experts!.
+Also, the driver has already moved away from using those macros now
+and depend on the OPP core to do the right thing. It only uses the
+macro for the cases where the DT OPP table isn't available. And as
+said by few others as well already, the driver really should try to
+add OPPs dynamically in that case to avoid multiple code paths and
+stick to a single OPP based solution.
 
-Thanks!
-Sunil
+-- 
+viresh
 
