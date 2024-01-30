@@ -1,103 +1,187 @@
-Return-Path: <linux-pci+bounces-2796-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2797-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F34258420E3
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 11:13:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5901A842300
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:28:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36227B21547
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 10:13:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D3C41C210B8
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 11:28:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA8166089C;
-	Tue, 30 Jan 2024 10:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2393A66B49;
+	Tue, 30 Jan 2024 11:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nd+UIPQc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5ZBE44i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1869760885;
-	Tue, 30 Jan 2024 10:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22315657BC;
+	Tue, 30 Jan 2024 11:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706609621; cv=none; b=r0EtmyxDyOlGMiwJyRK1IXG79+PAOI52cL5RUPjLNqre4CgXAymcrFV9rq3uKJ/O6ZD3wNl6riVs/tBAQM0tx4wNFH6hUL9HxGKxEH01B0W3deUSjfLn7b7x/yUTXy55fw26u2MqMefEHDPTtFYkhu6Eqqw6JgEFrpmRSM8/wD4=
+	t=1706614100; cv=none; b=WgSlaytZRoTwchKQkxOqmicrF9lCjLZe8im2oOhxX8z4X7huREBCqfyV/Zzu2rrLujnczIVVrdP8qlc0unaPU2OpLMH4PKmmM6sN76xOrWk3urw1gkD2qU7m28sVm4/CgN9CfALunWUXvISbcSsc1TwuKnEfZC6FmCAidG6sGKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706609621; c=relaxed/simple;
-	bh=PBHyE/70hNgy03hBgSuUnxkVHspsZdCRdFN/IU+Qe0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TduT4+so9qkdc44DQYPWf52bRIpajJJfAxFkbRhpSpGzlAsBXDsnTxuIJjvdqyP89JtJk2OReH04ATBR3ezogeIxGv7msvA+xbzZY1GTRtqO158lOXg7iQm1C+iwXFLc0XV3hEc6JBagihOM8X8qM3+vD7CCAVhIqcgc+1UcN5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nd+UIPQc; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1706614100; c=relaxed/simple;
+	bh=eJL/XKRz5Rj/B0GXTvlJ17kxFpJtQk9pJgOJUKAx18U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kqw8mrUYo9yC738I4dyiOpTgcKyloCnfBF/QcTJnBQXqNHyVLMulsQMT0drs0cHpm5RXzzcjAovdawJxDMQlQcI8DpO45/KOaCIiezc01wCjZMAUHBem09eOiJ02L8RXlXexWLcXTIrfKzPqcw99I5ELXQRJUqDzIk1mNM4IxTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5ZBE44i; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706609620; x=1738145620;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PBHyE/70hNgy03hBgSuUnxkVHspsZdCRdFN/IU+Qe0U=;
-  b=Nd+UIPQcaw0QGlsDhF8RWVCua0RcB+4FL2LnZEQzbjNhB6l3dLSP5msG
-   wJE48E0boCAaEyygo3PRjWLthEroC6ONFY03yiet29e9Big6KqzuB6cPw
-   N6nt0DvBRviRckFV6Q+OkCkQhzb4MK4YkmhRq6ZHzeCULLQZE59rTPH5F
-   cjlI/bbAPyKSal1GP37KXQTdrqgFoPOhm6CMUeeV8X03Qocy+CBabyIHo
-   N9jyCVK+fJWqZc5TJCC4+WEXIHixWPgjRarqU0Vfic3tAcf8OoTwR1rRc
-   k8KMKUWhIdwGrnSTwRgQUNc4WJ8R0TQNA8Q0tIs87DN5fwNJTVr87yQcL
+  t=1706614098; x=1738150098;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eJL/XKRz5Rj/B0GXTvlJ17kxFpJtQk9pJgOJUKAx18U=;
+  b=T5ZBE44iGwk3VTXEYYj1WQqbzyxBac2kLQWJ6yVkpRtnqCyI3qFmPEcl
+   BBGqWXBdG3ucZ3P6dQV1naXTfPS50lKZT1EcRz0jeL4e/oV0qQlQmTroQ
+   H8ZGGzv8EVK5IBPmjhsNPqrJwl2MvPiOgrTnjmOxWXUAgJ05wQLHY1puN
+   v2RZkpqMgItTTVBkrgjpyosVxarPKfWKUtgGZhwiFIYRvjEVNt6ILhDHT
+   SWdRoM3Q1xjC1dDpgB987VosM7poA2NEOnpXZUWfgdcsnIVzfd5Oj/Xl4
+   LCPB6Hj4yWBL9EkmDg6dL0NqYxTk/6IS4QJD//02Ch8hPdCRa8I0Nnpbf
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="9903473"
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24727162"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="9903473"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 02:13:39 -0800
+   d="scan'208";a="24727162"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 03:28:17 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="931396166"
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="878410341"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="931396166"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Jan 2024 02:13:36 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 3B759DE; Tue, 30 Jan 2024 12:13:35 +0200 (EET)
-Date: Tue, 30 Jan 2024 12:13:35 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Jian-Hong Pan <jhp@endlessos.org>
-Cc: David Box <david.e.box@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS
- B1400CEAE
-Message-ID: <20240130101335.GU2543524@black.fi.intel.com>
-References: <20240130095933.14158-1-jhp@endlessos.org>
+   d="scan'208";a="878410341"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 03:28:10 -0800
+Received: from svinhufvud.ger.corp.intel.com (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 8512811F8D2;
+	Tue, 30 Jan 2024 13:28:05 +0200 (EET)
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-pm@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	laurent.pinchart@ideasonboard.com,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Mark Brown <broonie@kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH v5 0/2] Small runtime PM API changes
+Date: Tue, 30 Jan 2024 13:28:04 +0200
+Message-Id: <20240130112805.158790-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240130095933.14158-1-jhp@endlessos.org>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi folks,
 
-On Tue, Jan 30, 2024 at 05:59:33PM +0800, Jian-Hong Pan wrote:
-> Some systems, like ASUS B1400CEAE equipped with the SATA controller
-> [8086:a0d3] can use LPM policy to save power, especially for s2idle.
-> 
-> However, the same controller may be failed on other platforms. So,
-> commit (ata: ahci: Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI
-> controller") drops LPM policy for [8086:a0d3]. But, this blocks going
-> to deeper CPU Package C-state when s2idle with enabled Intel VMD.
+Here's a small but a different set of patches for making two relatively
+minor changes to runtime PM API. I restarted version numbering as this is
+meaningfully different from the previous set.
 
-Tiger Lake really should support this with no issues (as are the
-generations after it). I suggest trying to figure out what was the root
-cause of the original problem that triggered the revert, if possible at
-all, perhaps it is is something not related to LPM and that would allow
-us to enable this unconditionally on all Tiger Lake.
+pm_runtime_get_if_active() loses its second argument as it only made sense
+to have ign_usage_count argument true.
 
-I'm pretty sure the platform where this was reported suffers the same
-s2idle issue you are seeing without this patch.
+The other change is also small but it has an effect on callers:
+pm_runtime_put_autosuspend() will, in the future, be re-purposed to
+include a call to pm_runtime_mark_last_busy() as well. Before this,
+current users of the function are moved to __pm_runtime_put_autosuspend()
+(added by this patchset) which will continue to have the current
+behaviour.
+
+I haven't included the conversion patches in this set as I only want to do
+that once this set has been approved and merged. The tree specific patches
+can be found here, on linux-next master (there are some V4L2 patches
+there, too, please ignore them for now):
+<URL:https://git.kernel.org/pub/scm/linux/kernel/git/sailus/linux-next.git/log/?
+
+Later on, users calling pm_runtime_mark_last_busy() immediately followed
+by __pm_runtime_put_autosuspend() will be switched back to
+pm_runtime_put_autosuspend() once its behaviour change has been done (a
+patch near top of that branch). I'll provide these once the preceding ones
+have been merged.
+
+Comments are welcome.
+
+since v4:
+
+- patch 1: Squash patch 2
+  <URL:https://lists.freedesktop.org/archives/dri-devel/2024-January/438739.html>.
+
+- patch 1: Add to documentation of pm_runtime_get_if_{active,in_use} that
+  if PM runtime is disabled, an error is returned and the usage_count
+  remains unmodified.
+
+- patch 1: Fix spelling of "explicitly" in the commit message.
+
+- Use upper case "PM:" prefix in subject.
+
+since v3:
+
+- patch 1: Drop the previously added documentation on driver use of
+  pm_runtime_get_conditional().
+
+- Add a patch to make pm_runtime_get_conditional() static, including
+  switching i915 to pm_runtime_get_if_{active,in_use}.
+
+since v2:
+
+- Rebase on v6.8-rc1 (no changes).
+
+- Add Rodrigo's Reviewed-by: to the 1st patch.
+
+since v1:
+
+- patch 1: Rename __pm_runtime_get_conditional() as
+  pm_runtime_get_conditional().
+
+- patch 1: Reword documentation on driver use of
+  pm_runtime_get_conditional().
+
+Sakari Ailus (2):
+  PM: runtime: Simplify pm_runtime_get_if_active() usage
+  PM: runtime: Add pm_runtime_put_autosuspend() replacement
+
+ Documentation/power/runtime_pm.rst      | 22 +++++++++-------
+ drivers/accel/ivpu/ivpu_pm.c            |  2 +-
+ drivers/base/power/runtime.c            | 35 +++++++++++++++++++++++--
+ drivers/gpu/drm/i915/intel_runtime_pm.c |  5 +++-
+ drivers/gpu/drm/xe/xe_pm.c              |  2 +-
+ drivers/media/i2c/ccs/ccs-core.c        |  2 +-
+ drivers/media/i2c/ov64a40.c             |  2 +-
+ drivers/media/i2c/thp7312.c             |  2 +-
+ drivers/net/ipa/ipa_smp2p.c             |  2 +-
+ drivers/pci/pci.c                       |  2 +-
+ include/linux/pm_runtime.h              | 30 ++++++++++-----------
+ sound/hda/hdac_device.c                 |  2 +-
+ 12 files changed, 73 insertions(+), 35 deletions(-)
+
+-- 
+2.39.2
+
 
