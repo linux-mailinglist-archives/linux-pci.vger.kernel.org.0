@@ -1,117 +1,110 @@
-Return-Path: <linux-pci+bounces-2812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7C0C842988
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:38:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 917978429E8
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:49:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6ACEC288F19
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 16:38:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DC7C288F35
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 16:49:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCAA1292D1;
-	Tue, 30 Jan 2024 16:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WJnGlYvs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8487386AEF;
+	Tue, 30 Jan 2024 16:49:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46B128388;
-	Tue, 30 Jan 2024 16:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 683B267A0F;
+	Tue, 30 Jan 2024 16:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706632702; cv=none; b=cPkMig5llDg0pMilykzhr+u6+3eTk7nvT3QG99KubRg8DkQB0IRUkivD5scUBYxeKB+vZe0cLqi3VD6Qh60wpkLbGFG9T5aLBj8P5ymd189cMySlqkdIT8JOM3zzk7wPiNzEzdlByyDb2yJDTS9bNsQ901eZOY9ainrZeFGD7fQ=
+	t=1706633374; cv=none; b=aLW0DKjDITkRDM9kvuTDWVMmtPfbiTWQeMtXM3QZ+iGBDzfmTFZ6P6eqEPes15x5YJqjXwR3g150h+86YzrQnPzoyjEYR8SDqMY4xJdHad8/8RM8yKCw3tQKOP6DmYui0TlZYEfEDdLgWVpEYMzZBxBMh4mzXlW8uAEoh+D616g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706632702; c=relaxed/simple;
-	bh=M2wO7sSvCPR2982vZ06PIUvIfGKMG54QQ49RvdvfJ4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5bGL3U1v8nIb9taC0nv1lBGU9QxIxr0cMEbh7HFu7+ItShq5PtfKKtgceNWE+fiGBzICyCdbfVz1XYqUN7xgofgqNrb0hkgs/+HISMIhbI/4wt3KEfhlVE4EMEHH2M9Ftckjw9fNe6DT701Xd19ITyTF4WHySRgXYPDPze1P/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WJnGlYvs; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C932FF802;
-	Tue, 30 Jan 2024 16:38:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706632690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TplrVwlT1KQQSHzhl19fkElU89ykPDWXpM5Ja8kRAJg=;
-	b=WJnGlYvsLktLg5YVEN9Gc1gRr1+qFsRheBxrdMHtKhX0EhYL6k098CAcruxMCEhyHXGutn
-	vFpG6qz/d4LOwRUl4ySVuhnkRWEaRDVB/weY8qLcaLhH4lVfe59poYOcxtBCfQLdIsQgsT
-	cr+TW103IMpfivL5fTtM6wDz2VB0cl1yixDpo0WKESic98lfwYdjvkOMTFxJCEyKvUEabW
-	mteGb4Ee6jVAsVdMafL7bmIXSQRjTkhrB4gIDXJQJNMh68dL2595yEmPLQCqqJYohbIpan
-	ibg0KXyFQrPgV/3vESu7rY8nQo9lUZ651P006nibWUVpZ+tGeyoBDKzZMv5Lvg==
-Message-ID: <3fa57200-4218-4ac8-86b9-3f86723d5cd8@bootlin.com>
-Date: Tue, 30 Jan 2024 17:38:08 +0100
+	s=arc-20240116; t=1706633374; c=relaxed/simple;
+	bh=EjZYQSAeVcbB/ATJve01M75Q052kcfkHcSMWKh7NAYk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VSGSbQ5yZtTkDCpcZXdr1p0bB+FcvkjDf8IhtljI5EVT+WCb7wgyxs/o+20kBt0yq8AX4q/ISK5EcFJ413L9Rn4WSSVvaIumw+o0RYgPvOu0YJ8dvtF0CcXkgeF6pIEVfz2CHSToisEokTJOAXUeTRR1SAyZhooKqsp7alaMxMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 6C7FD92009C; Tue, 30 Jan 2024 17:41:34 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 6601D92009B;
+	Tue, 30 Jan 2024 16:41:34 +0000 (GMT)
+Date: Tue, 30 Jan 2024 16:41:34 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
+ quirk
+In-Reply-To: <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk>
+References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/15] mux: add mux_chip_resume() function
-Content-Language: en-US
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
- <20240102-j7200-pcie-s2r-v2-4-8e4f7d228ec2@bootlin.com>
- <CAHp75Ve2K=v=OrNPH0q+K6vp2283HSMBYYSh0hYbw56snGd+xg@mail.gmail.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75Ve2K=v=OrNPH0q+K6vp2283HSMBYYSh0hYbw56snGd+xg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8BIT
 
-On 1/26/24 22:28, Andy Shevchenko wrote:
-> On Fri, Jan 26, 2024 at 4:37 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> The mux_chip_resume() function restores a mux_chip using the cached state
->> of each mux.
-> 
-> ...
-> 
->> +int mux_chip_resume(struct mux_chip *mux_chip)
->> +{
->> +       int ret, i;
->> +
->> +       for (i = 0; i < mux_chip->controllers; ++i) {
->> +               struct mux_control *mux = &mux_chip->mux[i];
-> 
->> +               if (mux->cached_state != MUX_CACHE_UNKNOWN) {
-> 
->   if (_state == ...)
->     continue;
-> 
-> ?
+On Tue, 30 Jan 2024, Ilpo Järvinen wrote:
 
-Yes it makes the code easier to read.
-Fixed in next iteration.
+> First of all, this is not true for pcie_failed_link_retrain():
+>  * Return TRUE if the link has been successfully retrained, otherwise FALSE.
+> If LBMS is not set, the Target Speed quirk is not applied but the function 
+> still returns true. I think that should be changed to early return false
+> when no LBMS is present.
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ I think there is a corner case here indeed.  If Link Active reporting is 
+supported and neither DLLLA nor LBMS are set at entry, then the function 
+indeed returns success even though the link is down and no attempt to 
+retrain will have been made.  So this does indeed look a case for a return 
+with the FALSE result.
 
+ I think most easily this can be sorted by delegating the return result to 
+a temporary variable, preset to FALSE and then only updated from results 
+of the calls to `pcie_retrain_link'.  I can offer a patch as the author of 
+the code and one who has means to verify it right away if that helped.
+
+ Overall I guess it's all legacy of how this code evolved before it's been 
+finally merged.
+
+> > >   3. pci_bridge_wait_for_secondary_bus() then calls pci_dev_wait() which
+> > >      cannot succeed (but waits ~1 minute, delaying the resume).
+> > > 
+> > > The Target Speed trick (in step 2) is only used if LBMS bit (PCIe r6.1
+> > > sec 7.5.3.8) is set. For links that have been operational before
+> > > suspend, it is well possible that LBMS has been set at the bridge and
+> > > remains on. Thus, after resume, LBMS does not indicate the link needs
+> > > the Target Speed quirk. Clear LBMS on resume for bridges to avoid the
+> > > issue.
+
+ This can be problematic AFAICT however.  While I am not able to verify 
+suspend/resume operation with my devices, I expect the behaviour to be 
+exactly the same after resume as after a bus reset: the link will fail to 
+negotiate and the LBMS and DLLLA bits will be respectively set and clear.  
+Consequently if you clear LBMS at resume, then the workaround won't 
+trigger and the link will remain inoperational in its limbo state.
+
+ What kind of scenario does the LBMS bit get set in that you have a 
+trouble with?  You write that in your case the downstream device has been 
+disconnected while the bug hierarchy was suspended and it is not present 
+anymore at resume, is that correct?
+
+ But in that case no link negotiation could have been possible and 
+consequently the LBMS bit mustn't have been set by hardware (according to 
+my understanding of PCIe), because (for compliant, non-broken devices 
+anyway) it is only specified to be set for ports that can communicate with 
+the other link end (the spec explicitly says there mustn't have been a 
+transition through the DL_Down status for the port).
+
+ Am I missing something?
+
+  Maciej
 
