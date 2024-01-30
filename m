@@ -1,161 +1,117 @@
-Return-Path: <linux-pci+bounces-2804-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2805-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 757828425F7
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 14:15:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E37528425FD
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 14:16:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FF0E293540
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:15:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A06CD291EEB
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D99506BB40;
-	Tue, 30 Jan 2024 13:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 875726A353;
+	Tue, 30 Jan 2024 13:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DX9tCY39"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rU5q95vO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C057460874;
-	Tue, 30 Jan 2024 13:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B606A34B;
+	Tue, 30 Jan 2024 13:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706620527; cv=none; b=OGgc+sW/TmDe7mo/hAMgvSWiWI+GlyWUzZTA8YkU6Vo4fGQXxNQjmQTE1vGATWps4jzd6D9sFw7b9VV+gDPKm5G7URElGyk3eU92500GqOwxxzIqdqdUKIYoqQh+i/Wjcxh1QHHUGmYrEEwJTiZXVd0dSuizkWGt4xM7DjY5Yg8=
+	t=1706620598; cv=none; b=cBXqHgi3w8fkRaSxh9ysevJz0mflmhqv2TMABPHhKUwXY5hJpquwaWvXYs0pbOJNEo/9cpGJzVuUeMvyGlXFxsHqWMfOMT9pz3dejIhSgnelJTgfBsqztN+7GnX7kxB79++I4RIz8M0/P9cyD67xtkiQ/Dm8qyHtgcLF/2HrKTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706620527; c=relaxed/simple;
-	bh=YqZzIcojda4nyn+FMMQhoHdEpUzR5h93PZGcwzJyjac=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FXLGD7HWxpAJzywr+dHFokValGm8njkrVoYm4q/4/b7taTK0eMcxo60bO5zqbf0xn/Ngc1kBNtAwudgDyzduBa3Cajqo9GouQxjkTGFkLoeN+tzn2NDPldr2es6etlSDXBs1Z2m5HB6B4lgZUmSeZ7MibUzEfkQzqN7DTKuXY2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DX9tCY39; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706620525; x=1738156525;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=YqZzIcojda4nyn+FMMQhoHdEpUzR5h93PZGcwzJyjac=;
-  b=DX9tCY39w4M1QuS0D/1KtNHbhz4M38NCDfHtDdYEjlsJxIkeaZ6PyrGI
-   MjfbtrqRJIUr9ePkD9nTi3udyNxfEl4ahonqer0tMFuc/XqAnzSB84MU6
-   YuNbMINZZK8gaLnex9NtOMukEeZBJWjMHB6BD/qZb3AuUilZLuZ/MLi95
-   EtrGSpA4Hw2v/CLd0ZNJ5Hrt7VDhKeqfnE/E4RL5MLqrFntclB+4awYsC
-   xU0NrG7PuIO8mvayj2iQztXpMWzgL/dEK2VLqIFIk8NZrEf/sTZy4FiDK
-   CqugLfmu+B7vL17Z39M59hLTYxe3dUYLkcv7uSzYhb+xGS+r9QrltFWj1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="400413381"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="400413381"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 05:15:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3689802"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.252])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 05:15:22 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Jan 2024 15:15:18 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 2/2] PCI: Do not wait for disconnected devices when
- resuming
-In-Reply-To: <20240129185544.GA471021@bhelgaas>
-Message-ID: <964b697f-a412-2fd5-a649-036e9f6b596e@linux.intel.com>
-References: <20240129185544.GA471021@bhelgaas>
+	s=arc-20240116; t=1706620598; c=relaxed/simple;
+	bh=v489qvkgYg0wbgSdIMBu2Bfp4yEzx5Cxzf30sjZ8BqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jKNPjCPv1zQwFtJOfuaaW6ystsS51pEF0Ks5ElmCxaTdcnowZbMZcgMhdD7/unCgSXsdyw+WSOfccXMukHfLY/eo8OQGZuylkvF2WbEoxr6SFsV+LMuWtb2idCSPgvQivtSWOrHk+jKcHm+3x3CuvQHDRW5cGU3fF0gSTwHlk7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rU5q95vO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17FDCC433C7;
+	Tue, 30 Jan 2024 13:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706620597;
+	bh=v489qvkgYg0wbgSdIMBu2Bfp4yEzx5Cxzf30sjZ8BqQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rU5q95vOkv05SN8BwXNBW8vlDKa37YodUmFyb78ag5MwtIzrQUaxEZQ09x2ztsqDr
+	 slw63v/+K4BR24NBZ9O0eYd5cvKxJgmVwpf3A9ROebbQb3ydOx0J8Z7Zekhj/yeQS2
+	 HF+SwApnW2cw7nvhh5p5n8feTR67Jd3YqrpKZfN0SR+fna9I7s+Z8Y9/LYBhkCGLt0
+	 xRFE2I8R4CntHeH03iKl2S+uZxswQD8rXCk+l7Un8AlLD0HPLmJa8x/MDOjW457neu
+	 x4AX2LxJQBNf2KgUICUZ23WMIcU4+rF5zSjkNNjVtptUj7VcmDRl5K5YERHo2IIReq
+	 btUbSfulr7/MQ==
+Date: Tue, 30 Jan 2024 18:46:25 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: sm8450: Add opp table support
+ to PCIe
+Message-ID: <20240130131625.GA2554@thinkpad>
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-5-77bbf7d0cc37@quicinc.com>
+ <20240129160420.GA27739@thinkpad>
+ <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
+ <20240130071449.GG32821@thinkpad>
+ <20240130083619.lqbj47fl7aa5j3k5@vireshk-i7>
+ <20240130094804.GD83288@thinkpad>
+ <20240130095508.zgufudflizrpxqhy@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1132523681-1706620518=:1000"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1132523681-1706620518=:1000
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240130095508.zgufudflizrpxqhy@vireshk-i7>
 
-On Mon, 29 Jan 2024, Bjorn Helgaas wrote:
+On Tue, Jan 30, 2024 at 03:25:08PM +0530, Viresh Kumar wrote:
+> On 30-01-24, 15:18, Manivannan Sadhasivam wrote:
+> > So you are saying that the ICC core itself should get the bw values from DT
+> > instead of hardcoding in the driver? If so, I'd like to get the opinion from
+> > Georgi/Bjorn.
+> 
+> Not really. The drivers or the ICC core doesn't need to do anything I
+> guess. Since the values are coming via the OPP, we must just use it to
+> hide all these details.
+> 
+> Why is the ICC core required to get into this here ? ICC core should
+> be ready to get the information from DT (may or may not via the OPP
+> core), or from driver.
+> 
 
-> On Mon, Jan 29, 2024 at 01:27:10PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > On runtime resume, pci_dev_wait() is called:
-> >   pci_pm_runtime_resume()
-> >     pci_pm_bridge_power_up_actions()
-> >       pci_bridge_wait_for_secondary_bus()
-> >         pci_dev_wait()
-> >=20
-> > While a device is runtime suspended along with its PCIe hierarchy, the
-> > device could get disconnected. In such case, the link will not come up
-> > no matter how log pci_dev_wait() waits for it.
->=20
-> s/PCIe/PCI/ (unless this is a PCIe-specific thing)
-> s/log/long/
->=20
-> > Besides the above mentioned case, there could be other ways to get the
-> > device disconnected while pci_dev_wait() is waiting for the link to
-> > come up.
-> >=20
-> > Make pci_dev_wait() to exit if the device is already disconnected to
-> > avoid unnecessary delay. As disconnected device is not really even a
-> > failure in the same sense as link failing to come up for whatever
-> > reason, return 0 instead of errno.
->=20
-> The device being disconnected is not the same as a link failure.
+Agree. But what I'm saying is, right now there is no DT property in the
+interconnect consumer nodes to specificy the bw requirements. This is all
+hardcoded in the respective ICC consumer drivers.
 
-This we agree and it's what I tried to write above.
+But when we use OPP to control bw, the bw requirements come from DT. This is
+what I see as a difference. Because, only nodes making use of OPP will specify
+bw in DT and other nodes making use of just ICC will not.
 
-> Do
-> all the callers do the right thing if pci_dev_wait() returns success
-> when there's no device there?
+Maybe I'm worrying too much about these details... But it looks like
+inconsistency to me.
 
-It's a bit complicated. I honestly don't know what is the best approach=20
-here so I'm very much open to your suggestion what would be preferrable.
+- Mani
 
-There are two main use cases (more than two callers but they seem boil=20
-down to two use cases).
-
-One use case is reset related functions and those would probably prefer to=
-=20
-have error returned if the wait, and thus reset, failed.
-
-Then the another is wait for buses, that is,=20
-pci_bridge_wait_for_secondary_bus() which return 0 if there's no device=20
-(wait successful). For it, it would make sense to return 0 also when=20
-device is disconnected because it seems analoguous to the case where=20
-there's no device in the first place.
-
-Perhaps it would be better to return -ENOTTY from pci_dev_wait() and check=
-=20
-for that disconnected condition inside=20
-pci_bridge_wait_for_secondary_bus()? To further complicate things,=20
-however, DPC also depends on the return value of=20
-pci_bridge_wait_for_secondary_bus() and from its perspective, returning=20
-error when there is a device that is disconnected might be the desirable=20
-alternative (but I'm not fully sure how everything in DPC works but I=20
-highly suspect I'm correct here).
-
-Either way, the fix itself does care and seemed to work regardless of the=
-=20
-actual value returned by pci_dev_wait().
-
-> > Also make sure compiler does not become too clever with
-> > dev->error_state and use READ_ONCE() to force a fetch for the
-> > up-to-date value.
->=20
-> I think we should have a comment there to say why READ_ONCE() is
-> needed.  Otherwise it's hard to know whether a future change might
-> make it unnecessary.
-
-Sure, I'll add a comment there.
-
---=20
- i.
-
---8323328-1132523681-1706620518=:1000--
+-- 
+மணிவண்ணன் சதாசிவம்
 
