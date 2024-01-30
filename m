@@ -1,68 +1,69 @@
-Return-Path: <linux-pci+bounces-2801-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2802-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CD6884249F
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:16:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D52B48424A3
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:17:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 858CE1F2CAF9
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:16:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06CB81C24AF1
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:17:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8257B66B37;
-	Tue, 30 Jan 2024 12:16:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B4267A08;
+	Tue, 30 Jan 2024 12:17:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U2anRYq9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lzz7YL2x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F734C66
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 12:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4343A66B37
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 12:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706616965; cv=none; b=ZANHY1ll33ZIozloCSfBy8OIgVtKm/f1gdtbN8aMxS83NjDbks0hL0eVQJks9Bl3KTxLXeP8EaxmhD+FY+QnckP0Atnx1awpSj9Xy27qW0BHfg8zEV4aWuZ1ujbVVAx8GaoWUz5U/jipRsmBr0WirRWeEAGVxQzeDPROKz/a534=
+	t=1706617071; cv=none; b=H48UqKrxmVXVO9khcEtalExYpvJofW8+JpPZSoAvF0tXrHVXLNEIJa0BOq2yWDKRMFotQHitAAI66noB+JpvIbZD74F4xTWun+sF/YrcuV91nvqFmkk5779vN0mEy8jASMb+jURNOmGmjmtRIzmoM3+qkLR6ZuZego0dVhH1bEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706616965; c=relaxed/simple;
-	bh=bAPMknSkV4Qohs+0fK1VhM6ac2r7HgXWORL2n/jAI3A=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=BWqc9ZCRCs8xvfGZAvojn5PuzqtFFiMS+Gx2Tls7sqAaeR5pQXE+nk/LRW52xqsCgsDwOK+k3bI2a6nqCjGiuTS3VdS+eeDaxS3xQgB40nT6NQBa8y+etrDvNv0meRCD8BSHUQJ/tMDxs8Yghr5xz3dU/D/GovHEhLA6/Qr6+SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U2anRYq9; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1706617071; c=relaxed/simple;
+	bh=PW9Jx0oLfKcFIj6oPoxE7u+aTaO0Oq1zQgSTR42xbRE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Guh/YALq7a0T8kl+VhoWgE72MVjkhXz1Fgy46B+JIa9fFJlSVR33Htwsn/4jR6siEJU54BRjWQBChqy7+RiF9DHk60f0Aa1e4S81WN+ETaZpYGZHU2N86l7pRaSzSByV0iHHk0vbVR81VXy+lQselLyFzjWKXkG+Ms1Yydgj8+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lzz7YL2x; arc=none smtp.client-ip=192.55.52.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706616964; x=1738152964;
+  t=1706617070; x=1738153070;
   h=date:from:to:cc:subject:message-id;
-  bh=bAPMknSkV4Qohs+0fK1VhM6ac2r7HgXWORL2n/jAI3A=;
-  b=U2anRYq9volGTFbhDV1gwo3OJTaaUC6l2DAiC27/WkiTqb8ocl5VhrjR
-   HkfUy4fQ+6oDI9ZIim3KoGR4SZt+tLqNnD2S84ZM2BwPoOt3KaWiO/Pf7
-   ANeqOB8drE6HcAWRN/p7nHA9mxq4Pd+RdRwhwGYNmT+LGjZcAU6Z5Em14
-   Rk2wp/3sXcrOW7c3C6JFi+xpHk9tSQs+6gbXjCuaGvFL67up+Wm83gFjv
-   juUoJ8Wy+9aRoHH5Yu+wInExkcxbuBha0e4pfSHQXbRiRl7cVJfvIivkW
-   8pQK5ek/iwUrrW+K7ouPInzKCxgtzNA1shZED23MlYm/6l2dgnaL0/i77
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16645223"
+  bh=PW9Jx0oLfKcFIj6oPoxE7u+aTaO0Oq1zQgSTR42xbRE=;
+  b=Lzz7YL2xUxV7/brzOrJXvphf9ih/0JVLC8jiUkaHQd202NGTlgbZDlBl
+   40S2ojTRZmWLJjYSnGzWhm2Yj3PHentatdEMXtM5bRyndurMXQsOdGm1M
+   L2SgCAPOyZbXInjCLe9BibXZbdlzY0Au23+yMPZVQ0Mvr4PhyqAC0wD2A
+   eAA9Z2DfNrHiNKfQcZlf3zsih44u9UvSomK0T47fkdRkuPyMKqp8rW7oY
+   X49f/h0BdDaQ14bgHDuiBthz9rshsj7kKDIfcN0NjuNrliR9t6C3ZkdlQ
+   mvR6aL4hfZHuF/af1p+RUhEEpoUrx8EXQ6lgubwgWg+StvXuoUv8Ogm0I
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="400400239"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="16645223"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 04:16:04 -0800
+   d="scan'208";a="400400239"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 04:17:49 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="1119259367"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3696772"
+   d="scan'208";a="1119259367"
 Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 30 Jan 2024 04:16:02 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2024 04:17:48 -0800
 Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rUn0P-0000GL-13;
-	Tue, 30 Jan 2024 12:14:35 +0000
-Date: Tue, 30 Jan 2024 20:12:04 +0800
+	id 1rUn2Y-0000Gc-1z;
+	Tue, 30 Jan 2024 12:16:36 +0000
+Date: Tue, 30 Jan 2024 20:13:26 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:enumeration] BUILD SUCCESS
- 1e8cc8e6bd85d7b25e0ed3759aedde804c91ba97
-Message-ID: <202401302002.s0WBpuFb-lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS
+ 95bf9132f8b48f8ca59eacd9b40afa5cce4feb53
+Message-ID: <202401302023.Qiezkr2u-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -70,10 +71,10 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
-branch HEAD: 1e8cc8e6bd85d7b25e0ed3759aedde804c91ba97  PCI: Place interrupt related code into irq.c
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 95bf9132f8b48f8ca59eacd9b40afa5cce4feb53  Merge branch 'pci/dpc'
 
-elapsed time: 733m
+elapsed time: 735m
 
 configs tested: 154
 configs skipped: 3
