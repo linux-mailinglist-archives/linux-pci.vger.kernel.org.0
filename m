@@ -1,222 +1,86 @@
-Return-Path: <linux-pci+bounces-2821-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2822-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E09B842B1F
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:40:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34376842B63
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 19:01:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 322111C259CD
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:40:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DECDA1F26343
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:01:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1516960897;
-	Tue, 30 Jan 2024 17:40:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 853A7156965;
+	Tue, 30 Jan 2024 18:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SP3HKBR9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BD746A3
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 17:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F39151CC5;
+	Tue, 30 Jan 2024 18:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706636409; cv=none; b=eRXAibcvVi/E9fe/y5QfG46+8axGwI/k8Q2UkKwn/r5DeD9OlDCkm622xwwfxB3IqfCIiGPhHDS7Mfl8i1khY7p3VXmIfFP4K+qBSdgv7T10hfAIAto+C1czOkpfJ9urUEL2dHwdg+IhSkPVDokMWNOfOWm6Seb8CnPJe9Hrs30=
+	t=1706637642; cv=none; b=aPXGxpCmgQZC2nJBtDzClRbgpVvzP0jwTbT4AuU1/LE7fgSVG/SVzx/oki06z2RynMtAm0seVU/7TIdm7b5ASCkjDQZMrlYJMcS5LxDNccE0Sgc3qWYDoNmTyqZYtAQGtLbgaB2eqKYeS6u5pYVLrL5aDC+I3f1EXKmFisUc49Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706636409; c=relaxed/simple;
-	bh=JLlmYJadHwBqZGwyng0GE1rA9axKYd9JXInOvSAErCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dCVtDftnEHN/9fY9Uuv9YSzw1dmXOJXT3M+8EOJyYT3xBfuUAqyINKmGk2a9xhKpEGriLumn8GwJWmYLcncvGq+A8qMHFRqI+IowMDJPCs3qy6ZfhN1tv1XzwglZ7fVUbxwl0Jh/7A75reorBC3LDNxAS2RlHeq7wgbsFgtzvxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76365DA7;
-	Tue, 30 Jan 2024 09:40:44 -0800 (PST)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 020A63F5A1;
-	Tue, 30 Jan 2024 09:39:57 -0800 (PST)
-Message-ID: <7bea3e41-1c41-4a05-aca4-637b1bba4cb5@arm.com>
-Date: Tue, 30 Jan 2024 17:39:55 +0000
+	s=arc-20240116; t=1706637642; c=relaxed/simple;
+	bh=jmEGxZN9eYlnIeXi/0mGgvvYWPqlfpHZqWmehh8Vc14=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ISecXq2RimPlHNR2mm5pf9oPIvlUa/tV5XiNGlmdMa3IIr1kCJoe8v89wpr/oIs1mAUUUfYn8Ji3zncxgkexCGMxX5ta6AADoP2GE7s5Y8Hqv5P/3vuvIt5h6xo5hNvk4Nc1u+/VgYrVTwq8Kl4gU/ad48aUlL+K0TT57XC5g/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SP3HKBR9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8927FC433F1;
+	Tue, 30 Jan 2024 18:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706637641;
+	bh=jmEGxZN9eYlnIeXi/0mGgvvYWPqlfpHZqWmehh8Vc14=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SP3HKBR9cXVVQTQSJ2YaAzeKPdbiCOgkHbpOombxoJdnTqnEGTkQf96c80E2KZXUS
+	 7ucVgJth0eMCxO/9iBJnLyafsAFTUyLQj4v6mB8ZyWXnGEn0lWOdpXkN6aC3gWpLNJ
+	 dvpIulGF/OfoI5CdRlqiRNC3X/ebXBG4jbViajfIbVLKED3PPwCtZVs2a+SBAuH5kD
+	 3bkFXuzadURq9dnA2vy6tSbA8vecRsno1W1gnnvR2GEqfOAP3T8B3aUS3zpuVyooSQ
+	 7uZKfEukyqC78t6VHl/3pBgu16oMnzyIM9b7mRuHGppSZVNK7qij2gnOkqGF3E+Y2d
+	 tRA48FZec8aPA==
+Date: Tue, 30 Jan 2024 12:00:40 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 2/2] PCI: qcom: Add X1E80100 PCIe support
+Message-ID: <20240130180040.GA527428@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
-Content-Language: en-GB
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Sajid Dalvi <sdalvi@google.com>, Jingoo Han <jingoohan1@gmail.com>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Manivannan Sadhasivam <mani@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Manu Gautam <manugautam@google.com>,
- William McVicker <willmcvicker@google.com>,
- Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org
-References: <20240111042103.392939-1-ajayagarwal@google.com>
- <b1ef4ad8-99c4-46ba-90fd-d57bd17163b9@arm.com>
- <CAEbtx1=hoDTtpkavk7gp5tmcvdYj6euAuDsQYRPW=EDeVsbUqg@mail.gmail.com>
- <5ef31b1c-3069-4da7-8124-44efba0ad718@arm.com> <ZaoPmgeVfXeseTfN@google.com>
-From: Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <ZaoPmgeVfXeseTfN@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130065506.GE32821@thinkpad>
 
-On 19/01/2024 5:58 am, Ajay Agarwal wrote:
-> On Tue, Jan 16, 2024 at 09:02:48PM +0000, Robin Murphy wrote:
->> On 2024-01-16 5:18 pm, Sajid Dalvi wrote:
->>> On Tue, Jan 16, 2024 at 7:30 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>>>
->>>> On 2024-01-11 4:21 am, Ajay Agarwal wrote:
->>>>> There can be platforms that do not use/have 32-bit DMA addresses
->>>>> but want to enumerate endpoints which support only 32-bit MSI
->>>>> address. The current implementation of 32-bit IOVA allocation can
->>>>> fail for such platforms, eventually leading to the probe failure.
->>>>>
->>>>> If there is a memory region reserved for the pci->dev, pick up
->>>>> the MSI data from this region. This can be used by the platforms
->>>>> described above.
->>>>>
->>>>> Else, if the memory region is not reserved, try to allocate a
->>>>> 32-bit IOVA. Additionally, if this allocation also fails, attempt
->>>>> a 64-bit allocation for probe to be successful. If the 64-bit MSI
->>>>> address is allocated, then the EPs supporting 32-bit MSI address
->>>>> will not work.
->>>>>
->>>>> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
->>>>> ---
->>>>> Changelog since v1:
->>>>>     - Use reserved memory, if it exists, to setup the MSI data
->>>>>     - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
->>>>>
->>>>>     .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
->>>>>     drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->>>>>     2 files changed, 39 insertions(+), 12 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
->>> b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> index 7991f0e179b2..8c7c77b49ca8 100644
->>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>> @@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp
->>> *pp)
->>>>>         u64 *msi_vaddr;
->>>>>         int ret;
->>>>>         u32 ctrl, num_ctrls;
->>>>> +     struct device_node *np;
->>>>> +     struct resource r;
->>>>>
->>>>>         for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
->>>>>                 pp->irq_mask[ctrl] = ~0;
->>>>> @@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct
->>> dw_pcie_rp *pp)
->>>>>          * order not to miss MSI TLPs from those devices the MSI target
->>>>>          * address has to be within the lowest 4GB.
->>>>>          *
->>>>> -      * Note until there is a better alternative found the reservation
->>> is
->>>>> -      * done by allocating from the artificially limited DMA-coherent
->>>>> -      * memory.
->>>>> +      * Check if there is memory region reserved for this device. If
->>> yes,
->>>>> +      * pick up the msi_data from this region. This will be helpful for
->>>>> +      * platforms that do not use/have 32-bit DMA addresses but want
->>> to use
->>>>> +      * endpoints which support only 32-bit MSI address.
->>>>> +      * Else, if the memory region is not reserved, try to allocate a
->>> 32-bit
->>>>> +      * IOVA. Additionally, if this allocation also fails, attempt a
->>> 64-bit
->>>>> +      * allocation. If the 64-bit MSI address is allocated, then the
->>> EPs
->>>>> +      * supporting 32-bit MSI address will not work.
->>>>>          */
->>>>> -     ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->>>>> -     if (ret)
->>>>> -             dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices
->>> with only 32-bit MSI support may not work properly\n");
->>>>> +     np = of_parse_phandle(dev->of_node, "memory-region", 0);
->>>>> +     if (np) {
->>>>> +             ret = of_address_to_resource(np, 0, &r);
->>>>
->>>> This is incorrect in several ways - reserved-memory nodes represent
->>>> actual system memory, so can't be used to reserve arbitrary PCI memory
->>>> space (which may be different if DMA offsets are involved); the whole
->>>> purpose of going through the DMA API is to ensure we get a unique *bus*
->>>> address. Obviously we don't want to reserve actual memory for something
->>>> that functionally doesn't need it, but conversely having a
->>>> reserved-memory region for an address which isn't memory would be
->>>> nonsensical. And even if this *were* a viable approach, you haven't
->>>> updated the DWC binding to allow it, nor defined a reserved-memory
->>>> binding for the node itself.
->>>>
->>>> If it was reasonable to put something in DT at all, then the logical
->>>> thing would be a property expressing an MSI address directly on the
->>>> controller node itself, but even that would be dictating software policy
->>>> rather than describing an aspect of the platform itself. Plus this is
->>>> far from the only driver with this concern, so it wouldn't make much
->>>> sense to hack just one binding without all the others as well. The rest
->>>> of the DT already describes everything an OS needs to know in order to
->>>> decide an MSI address to use, it's just a matter of making this
->>>> particular OS do a better job of putting it all together.
->>>>
->>>> Thanks,
->>>> Robin.
->>>>
->>>
->>> Robin,
->>> Needed some clarification.
->>> It seems you are implying that the pcie device tree node should define a
->>> property for the MSI address within the PCIe address space.
->>> However, you also state that this would not be an ideal solution, and
->>> would prefer using existing device tree constructs.
->>> I am not sure what you mean by, " The rest of the DT already describes
->>> everything."
->>> Do you mean adding an "msi" reg to reg-names and defining the address
->>> in the reg list?
->>
->> No, I'm saying the closest this should come to DT at all is the possibility
->> of the low-level driver hard-coding a platform-specific value for
+On Tue, Jan 30, 2024 at 12:25:06PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Jan 29, 2024 at 04:41:20PM +0200, Abel Vesa wrote:
+> > Add the compatible and the driver data for X1E80100.
 > 
-> I am assuming that you mean the platform driver (IOW, vendor driver) by
-> the "low-level" driver? Please confirm.
+> If you happen to respin the series, please add info about the PCIe controller
+> found on this SoC. Like IP version, Gen speed, max. link width etc...
 
-Indeed, I mean the vendor/platform driver (sorry if I'm not aware of any 
-standard terminology here - I think I picked up "low-level driver" from 
-one of the previous threads).
+FWIW, I always prefer actual speeds, e.g., "8 GT/s", instead of things
+like "Gen3", for the reason mentioned in the spec:
 
->> pp->msi_data based on some platform-specific compatible, as Serge pointed to
->> on v1.
->>
-> Does this look ok to you? The expectation is that the pp->msi_data will
-> have to be populated by the platform driver if it wants to ensure the
-> support for all kinds of endpoints.
-> 
-> +       if (pp->msi_data)
-> +               return 0;
-> +
->          ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->          if (ret)
->                  dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
->   
->          msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
->                                          GFP_KERNEL);
-> +       if (!msi_vaddr) {
-> +               dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
-> +               dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> +               msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +                                               GFP_KERNEL);
-> +       }
-> +
->          if (!msi_vaddr) {
->                  dev_err(dev, "Failed to alloc and map MSI data\n");
->                  dw_pcie_free_msi(pp);
+  Terms like "PCIe Gen3" are ambiguous and should be avoided. For
+  example, "gen3" could mean (1) compliant with Base 3.0, (2)
+  compliant with Base 3.1 (last revision of 3.x), (3) compliant with
+  Base 3.0 and supporting 8.0 GT/s, (4) compliant with Base 3.0 or
+  later and supporting 8.0 GT/s, ....
 
-Yeah, something like that. Personally I'd still be tempted to try some 
-mildly more involved logic to just have a single dev_warn(), but I think 
-that's less important than just having something which clearly works.
-
-Thanks,
-Robin.
+Bjorn
 
