@@ -1,70 +1,67 @@
-Return-Path: <linux-pci+bounces-2785-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2786-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 147C2841F57
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 10:25:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43B00841F58
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 10:25:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE3EC283E75
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 09:25:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68BFB1C25379
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 09:25:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E65BE60866;
-	Tue, 30 Jan 2024 09:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0248060B8C;
+	Tue, 30 Jan 2024 09:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VEnWuY4h"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZKpS3l2g"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B06338DEC
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 09:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0360160B97
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 09:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606647; cv=none; b=awyLV6FBkk7yh6Awq/n74SG7J+j3a0Rhjbb8IqC2pTy7HE6EALN5tAGDKFJuZsMi5E8ECIMeYH0lU+Q5Y7FT81kNzl/LEllYnaeqKoPq/mKEqv5ZLlgFWQGl4BTddA4VDUjCC4V+2Tc5BNu0s+FZATvKJFRauFZD1mYFF0NiOlQ=
+	t=1706606652; cv=none; b=N+NaQhJ1JTVzDJE7KqDG+RtbWjB7tVELKQk0ehC38W7JykisfOaYKDB+UxQiE7Lqc7cAhviX4zFuDKRhE9GJGMNhLPUZJ/NY4svbOi7xdWIeDwaQPLHE3DRi4eNZxnvgbuR3teAzV42/eVirQ/QHMAzkDoPKs2P4QXu9hwMlMe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606647; c=relaxed/simple;
-	bh=GkuAJg9CebG58qzZActEEIhXLKXqXyptorLfURmgRsE=;
+	s=arc-20240116; t=1706606652; c=relaxed/simple;
+	bh=nIZRVvuaMSKoi1E+P4eke63UOXkToOu6hJbfGXNf7mU=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aeOp6zKV60u8F1ZhA6xdD4E5fRs2hkgqFjYYJj0StWZfVkh4wCpBFxPejFFh/MW23h7O4Wp/elJT7ZCjljStzeoHj2EdF7HKXp7IX2Jbz1WXbd54MuaxUYma+sbhEIlZcnqep+nTnFdzibGaCH01I1JAPRLM4gQCORh0U6dRThM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VEnWuY4h; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=UJEKUpom+hPSPgKQy6BvQrA5GP+x0cEunBPTjB562tEiy+BenycPIBG9RzoAnWL2PIpe0VzlpmGyP4vrtkrttkSKFMYYf8bn8CyXZQU0TvHcdOLxZayF/5UH6iyaJiL4kl7BzPCczUYsrDkJzQfXZ8tZXaacawyrmLisnpPUlWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZKpS3l2g; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706606646; x=1738142646;
+  t=1706606651; x=1738142651;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GkuAJg9CebG58qzZActEEIhXLKXqXyptorLfURmgRsE=;
-  b=VEnWuY4h0P2tGwhEx9jSMduMyW0pRGjmMp/jBNVNuGKZ0F+Zc1nIc09Z
-   QLStnt1SgmC0ZLzHZAeuMj7gs6mxg8HiyhDr+AuM7E49VDpYsVE77NT8P
-   VzZCNrlPGsluzbcVsVIOJYi8fZqdaiyEj5QUVKp+2WK7UOpP9ggZSlb39
-   ah5F/SB5MDwJF74e6oVv/CSrVm9gecce8yrEPOvf/S25GyOFQKEJHM9t1
-   OT6oNUqOT9QIz2pmKkn25B0Uda92fJp9bZ2hcUgyuaNMGRE5gTNQCBFK/
-   vrtGGl8jrvMIllehiltrSIX52vKeOoZxxXltxFseo/0yobJ+DlP6qgXol
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24699925"
+  bh=nIZRVvuaMSKoi1E+P4eke63UOXkToOu6hJbfGXNf7mU=;
+  b=ZKpS3l2g95DoOoa0Ci4JtZC6jSizgCTcPNjut5CA/httOeQ3BgTny3OH
+   YV6F5iBMEQUfiNcqbaS3bD46So6pk0BUTwgxwe026PPYkO9VEzhgw3jE2
+   pihiyWzfspJmVgkbFiA4CHVYsYuPmYgwTU7zIS5Wy6bNOwgUaE3UqcH0r
+   5oQtaWHvE94loLA4BTx+pqTZ8pHfnkLuqC0s7ROWg4WNkeItz1gHS1qWf
+   PTtUYZf/ce33qSKQQOrbigQJSjNAll2la7t1e8cAJvLI8OZQ1H5EJwTsz
+   VLFvGM5gpXkNKuEyUnosykfPrs5oJVaY/ycd7YS64bEZMvBtAnACL6yF0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24699937"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="24699925"
+   d="scan'208";a="24699937"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:05 -0800
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:08 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="788141877"
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="788141965"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="788141877"
+   d="scan'208";a="788141965"
 Received: from djayasin-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.72.104])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:03 -0800
-Subject: [RFC PATCH 3/5] coco/tsm: Introduce a shared class device for TSMs
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:08 -0800
+Subject: [RFC PATCH 4/5] sysfs: Introduce a mechanism to hide static
+ attribute_groups
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-coco@lists.linux.dev
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>,
- Isaku Yamahata <isaku.yamahata@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
- Wu Hao <hao.wu@intel.com>, Yilun Xu <yilun.xu@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
- linux-pci@vger.kernel.org, gregkh@linuxfoundation.org
-Date: Tue, 30 Jan 2024 01:24:02 -0800
-Message-ID: <170660664287.224441.947018257307932138.stgit@dwillia2-xfh.jf.intel.com>
+Cc: linux-pci@vger.kernel.org, gregkh@linuxfoundation.org
+Date: Tue, 30 Jan 2024 01:24:08 -0800
+Message-ID: <170660664848.224441.8152468052311375109.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com>
 References: <170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -77,221 +74,249 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-A "tsm" is a platform component that provides an API for securely
-provisioning resources for a confidential guest (TVM) to consume. "TSM"
-also happens to be the acronym the PCI specification uses to define the
-platform agent that carries out device-security operations. That
-platform capability is commonly called TEE I/O. It is this arrival of
-TEE I/O platforms that requires the "tsm" concept to grow from a
-low-level arch-specific detail of TVM instantiation, to a frontend
-interface to mediate device setup and interact with general purpose
-kernel subsystems outside of arch/ like the PCI core.
+Add a mechanism for named attribute_groups to hide their directory at
+sysfs_update_group() time, or otherwise skip emitting the group
+directory when the group is first registered. It piggybacks on
+is_visible() in a similar manner as SYSFS_PREALLOC, i.e. special flags
+in the upper bits of the returned mode. To use it, specify a symbol
+prefix to DEFINE_SYSFS_GROUP_VISIBLE(), and then pass that same prefix
+to SYSFS_GROUP_VISIBLE() when assigning the @is_visible() callback:
 
-Provide a virtual (as in /sys/devices/virtual) class device interface to
-front all of the aspects of a TSM and TEE I/O that are
-cross-architecture common. This includes mechanisms like enumerating
-available platform TEE I/O capabilities and provisioning connections
-between the platform TSM and device DSMs.
+	DEFINE_SYSFS_GROUP_VISIBLE($prefix)
 
-It is expected to handle hardware TSMs, like AMD SEV-SNP and ARM CCA
-where there is a physical TEE coprocessor device running firmware, as
-well as software TSMs like Intel TDX and RISC-V COVE, where there is a
-privileged software module loaded at runtime.
+	struct attribute_group $prefix_group = {
+		.name = $name,
+		.is_visible = SYSFS_GROUP_VISIBLE($prefix),
+	};
 
-For now this is just the scaffolding for registering a TSM device and/or
-TSM-specific attribute groups.
+SYSFS_GROUP_VISIBLE() expects a definition of $prefix_group_visible()
+and $prefix_attr_visible(), where $prefix_group_visible() just returns
+true / false and $prefix_attr_visible() behaves as normal.
 
-Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>
-Cc: Wu Hao <hao.wu@intel.com>
-Cc: Yilun Xu <yilun.xu@intel.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: John Allen <john.allen@amd.com>
+The motivation for this capability is to centralize PCI device
+authentication in the PCI core with a named sysfs group while keeping
+that group hidden for devices and platforms that do not meet the
+requirements. In a PCI topology, most devices will not support
+authentication, a small subset will support just PCI CMA (Component
+Measurement and Authentication), a smaller subset will support PCI CMA +
+PCIe IDE (Link Integrity and Encryption), and only next generation
+server hosts will start to include a platform TSM (TEE Security
+Manager).
+
+Without this capability the alternatives are:
+
+* Check if all attributes are invisible and if so, hide the directory.
+  Beyond trouble getting this to work [1], this is an ABI change for
+  scenarios if userspace happens to depend on group visibility absent any
+  attributes. I.e. this new capability avoids regression since it does
+  not retroactively apply to existing cases.
+
+* Publish an empty /sys/bus/pci/devices/$pdev/tsm/ directory for all PCI
+  devices (i.e. for the case when TSM platform support is present, but
+  device support is absent). Unfortunate that this will be a vestigial
+  empty directory in the vast majority of cases.
+
+* Reintroduce usage of runtime calls to sysfs_{create,remove}_group()
+  in the PCI core. Bjorn has already indicated that he does not want to
+  see any growth of pci_sysfs_init() [2].
+
+* Drop the named group and simulate a directory by prefixing all
+  TSM-related attributes with "tsm_". Unfortunate to not use the naming
+  capability of a sysfs group as intended.
+
+In comparison, there is a small potential for regression if for some
+reason an @is_visible() callback had dependencies on how many times it
+was called. Additionally, it is no longer an error to update a group
+that does not have its directory already present, and it is no longer a
+WARN() to remove a group that was never visible.
+
+Link: https://lore.kernel.org/all/2024012321-envious-procedure-4a58@gregkh/ [1]
+Link: https://lore.kernel.org/linux-pci/20231019200110.GA1410324@bhelgaas/ [2]
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/ABI/testing/sysfs-class-tsm |   12 +++
- drivers/virt/coco/tsm/Kconfig             |    7 ++
- drivers/virt/coco/tsm/Makefile            |    3 +
- drivers/virt/coco/tsm/class.c             |  100 +++++++++++++++++++++++++++++
- include/linux/tsm.h                       |    8 ++
- 5 files changed, 130 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-tsm
- create mode 100644 drivers/virt/coco/tsm/class.c
+ fs/sysfs/group.c      |   45 ++++++++++++++++++++++++++++-------
+ include/linux/sysfs.h |   63 ++++++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 87 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-new file mode 100644
-index 000000000000..304b50b53e65
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-tsm
-@@ -0,0 +1,12 @@
-+What:		/sys/class/tsm/tsm0/host
-+Date:		January 2024
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		(RO) For hardware TSMs represented by a device in /sys/devices,
-+		@host is a link to that device.
-+		Links to hardware TSM sysfs ABIs:
-+		- Documentation/ABI/testing/sysfs-driver-ccp
-+
-+		For software TSMs instantiated by a software module, @host is a
-+		directory with attributes for that TSM, and those attributes are
-+		documented below.
-diff --git a/drivers/virt/coco/tsm/Kconfig b/drivers/virt/coco/tsm/Kconfig
-index 69f04461c83e..595d86917462 100644
---- a/drivers/virt/coco/tsm/Kconfig
-+++ b/drivers/virt/coco/tsm/Kconfig
-@@ -5,3 +5,10 @@
- config TSM_REPORTS
- 	select CONFIGFS_FS
- 	tristate
-+
-+config ARCH_HAS_TSM
-+	bool
-+
-+config TSM
-+	depends on ARCH_HAS_TSM && SYSFS
-+	tristate
-diff --git a/drivers/virt/coco/tsm/Makefile b/drivers/virt/coco/tsm/Makefile
-index b48504a3ccfd..f7561169faed 100644
---- a/drivers/virt/coco/tsm/Makefile
-+++ b/drivers/virt/coco/tsm/Makefile
-@@ -4,3 +4,6 @@
+diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+index 138676463336..ccb275cdabcb 100644
+--- a/fs/sysfs/group.c
++++ b/fs/sysfs/group.c
+@@ -31,6 +31,17 @@ static void remove_files(struct kernfs_node *parent,
+ 			kernfs_remove_by_name(parent, (*bin_attr)->attr.name);
+ }
  
- obj-$(CONFIG_TSM_REPORTS) += tsm_reports.o
- tsm_reports-y := reports.o
-+
-+obj-$(CONFIG_TSM) += tsm.o
-+tsm-y := class.o
-diff --git a/drivers/virt/coco/tsm/class.c b/drivers/virt/coco/tsm/class.c
-new file mode 100644
-index 000000000000..a569fa6b09eb
---- /dev/null
-+++ b/drivers/virt/coco/tsm/class.c
-@@ -0,0 +1,100 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/tsm.h>
-+#include <linux/rwsem.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/cleanup.h>
-+
-+static DECLARE_RWSEM(tsm_core_rwsem);
-+struct class *tsm_class;
-+struct tsm_subsys {
-+	struct device dev;
-+	const struct tsm_info *info;
-+} *tsm_subsys;
-+
-+int tsm_register(const struct tsm_info *info)
++static umode_t __first_visible(const struct attribute_group *grp, struct kobject *kobj)
 +{
-+	struct device *dev __free(put_device) = NULL;
-+	struct tsm_subsys *subsys;
-+	int rc;
++	if (grp->attrs && grp->is_visible)
++		return grp->is_visible(kobj, grp->attrs[0], 0);
 +
-+	guard(rwsem_write)(&tsm_core_rwsem);
-+	if (tsm_subsys) {
-+		pr_warn("failed to register: \"%s\", \"%s\" already registered\n",
-+			info->name, tsm_subsys->info->name);
-+		return -EBUSY;
-+	}
-+
-+	subsys = kzalloc(sizeof(*subsys), GFP_KERNEL);
-+	if (!subsys)
-+		return -ENOMEM;
-+
-+	subsys->info = info;
-+	dev = &subsys->dev;
-+	dev->class = tsm_class;
-+	dev->groups = info->groups;
-+	dev_set_name(dev, "tsm0");
-+	rc = device_register(dev);
-+	if (rc)
-+		return rc;
-+
-+	if (info->host) {
-+		rc = sysfs_create_link(&dev->kobj, &info->host->kobj, "host");
-+		if (rc)
-+			return rc;
-+	}
-+
-+	/* don't auto-free @dev */
-+	dev = NULL;
-+	tsm_subsys = subsys;
++	if (grp->bin_attrs && grp->is_bin_visible)
++		return grp->is_bin_visible(kobj, grp->bin_attrs[0], 0);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(tsm_register);
 +
-+void tsm_unregister(const struct tsm_info *info)
-+{
-+	guard(rwsem_write)(&tsm_core_rwsem);
-+	if (!tsm_subsys || info != tsm_subsys->info) {
-+		pr_warn("failed to unregister: \"%s\", not currently registered\n",
-+			info->name);
-+		return;
+ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
+ 			kuid_t uid, kgid_t gid,
+ 			const struct attribute_group *grp, int update)
+@@ -52,6 +63,7 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
+ 				kernfs_remove_by_name(parent, (*attr)->name);
+ 			if (grp->is_visible) {
+ 				mode = grp->is_visible(kobj, *attr, i);
++				mode &= ~SYSFS_GROUP_INVISIBLE;
+ 				if (!mode)
+ 					continue;
+ 			}
+@@ -81,6 +93,7 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
+ 						(*bin_attr)->attr.name);
+ 			if (grp->is_bin_visible) {
+ 				mode = grp->is_bin_visible(kobj, *bin_attr, i);
++				mode &= ~SYSFS_GROUP_INVISIBLE;
+ 				if (!mode)
+ 					continue;
+ 			}
+@@ -127,16 +140,31 @@ static int internal_create_group(struct kobject *kobj, int update,
+ 
+ 	kobject_get_ownership(kobj, &uid, &gid);
+ 	if (grp->name) {
++		umode_t mode = __first_visible(grp, kobj);
++
++		if (mode & SYSFS_GROUP_INVISIBLE)
++			mode = 0;
++		else
++			mode = S_IRWXU | S_IRUGO | S_IXUGO;
++
+ 		if (update) {
+ 			kn = kernfs_find_and_get(kobj->sd, grp->name);
+ 			if (!kn) {
+-				pr_warn("Can't update unknown attr grp name: %s/%s\n",
+-					kobj->name, grp->name);
+-				return -EINVAL;
++				pr_debug("attr grp %s/%s not created yet\n",
++					 kobj->name, grp->name);
++				/* may have been invisible prior to this update */
++				update = 0;
++			} else if (!mode) {
++				sysfs_remove_group(kobj, grp);
++				kernfs_put(kn);
++				return 0;
+ 			}
+-		} else {
+-			kn = kernfs_create_dir_ns(kobj->sd, grp->name,
+-						  S_IRWXU | S_IRUGO | S_IXUGO,
++		}
++
++		if (!update) {
++			if (!mode)
++				return 0;
++			kn = kernfs_create_dir_ns(kobj->sd, grp->name, mode,
+ 						  uid, gid, kobj, NULL);
+ 			if (IS_ERR(kn)) {
+ 				if (PTR_ERR(kn) == -EEXIST)
+@@ -279,9 +307,8 @@ void sysfs_remove_group(struct kobject *kobj,
+ 	if (grp->name) {
+ 		kn = kernfs_find_and_get(parent, grp->name);
+ 		if (!kn) {
+-			WARN(!kn, KERN_WARNING
+-			     "sysfs group '%s' not found for kobject '%s'\n",
+-			     grp->name, kobject_name(kobj));
++			pr_debug("sysfs group '%s' not found for kobject '%s'\n",
++				 grp->name, kobject_name(kobj));
+ 			return;
+ 		}
+ 	} else {
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index b717a70219f6..a42642b277dd 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -61,22 +61,32 @@ do {							\
+ /**
+  * struct attribute_group - data structure used to declare an attribute group.
+  * @name:	Optional: Attribute group name
+- *		If specified, the attribute group will be created in
+- *		a new subdirectory with this name.
++ *		If specified, the attribute group will be created in a
++ *		new subdirectory with this name. Additionally when a
++ *		group is named, @is_visible and @is_bin_visible may
++ *		return SYSFS_GROUP_INVISIBLE to control visibility of
++ *		the directory itself.
+  * @is_visible:	Optional: Function to return permissions associated with an
+- *		attribute of the group. Will be called repeatedly for each
+- *		non-binary attribute in the group. Only read/write
++ *		attribute of the group. Will be called repeatedly for
++ *		each non-binary attribute in the group. Only read/write
+  *		permissions as well as SYSFS_PREALLOC are accepted. Must
+- *		return 0 if an attribute is not visible. The returned value
+- *		will replace static permissions defined in struct attribute.
++ *		return 0 if an attribute is not visible. The returned
++ *		value will replace static permissions defined in struct
++ *		attribute. Use SYSFS_GROUP_VISIBLE() when assigning this
++ *		callback to specify separate _group_visible() and
++ *		_attr_visible() handlers.
+  * @is_bin_visible:
+  *		Optional: Function to return permissions associated with a
+  *		binary attribute of the group. Will be called repeatedly
+  *		for each binary attribute in the group. Only read/write
+- *		permissions as well as SYSFS_PREALLOC are accepted. Must
+- *		return 0 if a binary attribute is not visible. The returned
+- *		value will replace static permissions defined in
+- *		struct bin_attribute.
++ *		permissions as well as SYSFS_PREALLOC (and the
++ *		visibility flags for named groups) are accepted. Must
++ *		return 0 if a binary attribute is not visible. The
++ *		returned value will replace static permissions defined
++ *		in struct bin_attribute. If @is_visible is not set, Use
++ *		SYSFS_GROUP_VISIBLE() when assigning this callback to
++ *		specify separate _group_visible() and _attr_visible()
++ *		handlers.
+  * @attrs:	Pointer to NULL terminated list of attributes.
+  * @bin_attrs:	Pointer to NULL terminated list of binary attributes.
+  *		Either attrs or bin_attrs or both must be provided.
+@@ -91,13 +101,42 @@ struct attribute_group {
+ 	struct bin_attribute	**bin_attrs;
+ };
+ 
++#define SYSFS_PREALLOC		010000
++#define SYSFS_GROUP_INVISIBLE	020000
++
++/*
++ * The first call to is_visible() in the create / update path may
++ * indicate visibility for the entire group
++ */
++#define DEFINE_SYSFS_GROUP_VISIBLE(name)                             \
++	static inline umode_t sysfs_group_visible_##name(            \
++		struct kobject *kobj, struct attribute *attr, int n) \
++	{                                                            \
++		if (n == 0 && !name##_group_visible(kobj))           \
++			return SYSFS_GROUP_INVISIBLE;                \
++		return name##_attr_visible(kobj, attr, n);           \
 +	}
 +
-+	if (info->host)
-+		sysfs_remove_link(&tsm_subsys->dev.kobj, "host");
-+	device_unregister(&tsm_subsys->dev);
-+	tsm_subsys = NULL;
-+}
-+EXPORT_SYMBOL_GPL(tsm_unregister);
++/*
++ * Same as DEFINE_SYSFS_GROUP_VISIBLE, but for groups with only binary
++ * attributes
++ */
++#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name)                             \
++	static inline umode_t sysfs_group_visible_##name(                \
++		struct kobject *kobj, struct bin_attribute *attr, int n) \
++	{                                                                \
++		if (n == 0 && !name##_group_visible(kobj))               \
++			return SYSFS_GROUP_INVISIBLE;                    \
++		return name##_attr_visible(kobj, attr, n);               \
++	}
 +
-+static void tsm_release(struct device *dev)
-+{
-+	struct tsm_subsys *subsys = container_of(dev, typeof(*subsys), dev);
++#define SYSFS_GROUP_VISIBLE(fn) sysfs_group_visible_##fn
 +
-+	kfree(subsys);
-+}
-+
-+static int __init tsm_init(void)
-+{
-+	tsm_class = class_create("tsm");
-+	if (IS_ERR(tsm_class))
-+		return PTR_ERR(tsm_class);
-+
-+	tsm_class->dev_release = tsm_release;
-+	return 0;
-+}
-+module_init(tsm_init)
-+
-+static void __exit tsm_exit(void)
-+{
-+	class_destroy(tsm_class);
-+}
-+module_exit(tsm_exit)
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Trusted Security Module core device model");
-diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-index 28753608fcf5..8cb8a661ba41 100644
---- a/include/linux/tsm.h
-+++ b/include/linux/tsm.h
-@@ -5,6 +5,12 @@
- #include <linux/sizes.h>
- #include <linux/types.h>
+ /*
+  * Use these macros to make defining attributes easier.
+  * See include/linux/device.h for examples..
+  */
  
-+struct tsm_info {
-+	const char *name;
-+	struct device *host;
-+	const struct attribute_group **groups;
-+};
-+
- #define TSM_REPORT_INBLOB_MAX 64
- #define TSM_REPORT_OUTBLOB_MAX SZ_32K
- 
-@@ -66,4 +72,6 @@ extern const struct config_item_type tsm_report_extra_type;
- int tsm_report_register(const struct tsm_report_ops *ops, void *priv,
- 			const struct config_item_type *type);
- int tsm_report_unregister(const struct tsm_report_ops *ops);
-+int tsm_register(const struct tsm_info *info);
-+void tsm_unregister(const struct tsm_info *info);
- #endif /* __TSM_H */
+-#define SYSFS_PREALLOC 010000
+-
+ #define __ATTR(_name, _mode, _show, _store) {				\
+ 	.attr = {.name = __stringify(_name),				\
+ 		 .mode = VERIFY_OCTAL_PERMISSIONS(_mode) },		\
 
 
