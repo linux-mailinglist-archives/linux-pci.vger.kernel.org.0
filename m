@@ -1,151 +1,118 @@
-Return-Path: <linux-pci+bounces-2767-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2768-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E3F6841C64
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 08:15:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72089841C93
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 08:30:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F28AAB220E0
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 07:15:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26C301F26404
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 07:30:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FC945012;
-	Tue, 30 Jan 2024 07:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24C24F1F5;
+	Tue, 30 Jan 2024 07:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQUzVE32"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A+uQvlLt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3D045006;
-	Tue, 30 Jan 2024 07:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408E94D583;
+	Tue, 30 Jan 2024 07:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706598902; cv=none; b=LdMPMJ4CEM3oeDvc11KP+e8lGLj0XbXKz9U+z/Em0zRlEVG/GiC7c3MpC+WDfuLWK5e0W9EwZrxeAw7fald65avp3+q9uyDItA6iH9Slwu30NziyWm1qvMykpizvAxOOIf2PGYWzfhMl4lg+1FTY4mmbKjFKI19rqZKJWTeN+yk=
+	t=1706599847; cv=none; b=QeNrtp7EHkDKx6JivBO+tTYhrioc2eYBTj1zHTtpwNiSQ8TACp6ocrTNl6ba6Osk0B4ooWred39f6si/WrpcVOrudPfJB3HUq5jwM2jKZ9+7kKXxTwCNVEsDF6KXy+l1709TIDC/A1pHoJD3PCYqMGGKTRp9HTn+XCiXUnJHVIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706598902; c=relaxed/simple;
-	bh=3O2f3C735+i3w3e95T2JFKr5hUPP5tDZtu+rWvTmjuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d+GPi7OSLEbT8I1LPymYNfJcdDJKTUAdNrD9+O8IQYEcsKNYezOLzBfweGVgB0duWclWvvPT2UUeeA4eKsL/8nmvhA5lq8HPxj0K6ZeX1HX6V7jU9arosD3o7GQYq9OBmbaUUYP7WngHln0FoJYUVycSS/9uniiE6aH8NUJRInw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQUzVE32; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F7E5C433C7;
-	Tue, 30 Jan 2024 07:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706598901;
-	bh=3O2f3C735+i3w3e95T2JFKr5hUPP5tDZtu+rWvTmjuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tQUzVE32pRfeLHULf0XVo2M0xQIfe8i4jvnS8c2seESF4a9Uwx+lGrzKu/FLDdNXS
-	 Zk3inblB2vJfluBo6SBAYsbGf6rbjFM7kV2IhN3cR09JMjXi2Dc/zxAx6O1itT9Os2
-	 mpfxSjZjTcw4cuHQ9vUdvxwrbeJ+Kzfb8MFkQnGgNKT4mlQMcmjQx8CFZb4J65BK1c
-	 jvXq0zFxhESchT72bs03+YznWaPr5Cndpnphex39hCYFpShT85x64J9QQodCDlM6ND
-	 fYcwZ+QeUdDkSg7g098MdLFezdzVVgTGoRKN3hQGnYQbFF4GArgSo25LLYOiU4dsxj
-	 25v2pDD0LeViw==
-Date: Tue, 30 Jan 2024 12:44:49 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	vireshk@kernel.org, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: sm8450: Add opp table support
- to PCIe
-Message-ID: <20240130071449.GG32821@thinkpad>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-5-77bbf7d0cc37@quicinc.com>
- <20240129160420.GA27739@thinkpad>
- <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
+	s=arc-20240116; t=1706599847; c=relaxed/simple;
+	bh=foOvR8njiSdEDNybt1uvmEL+bBp2j5RmuiwsLhRfcE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QOR0OR3g40y3unNVw1lgYPcxsS07nS1ucc6r5RsxhzHJP9GP6zwiEzMXyuIyqX01x6W6uwBdvgnexttYISe0iyTqhrKb7C2PpzRpl00CR58PWHsH28Z5pHiEgzvruaTBMKAf1DpWBUk1rMJ7CFloqzB/sFXnaURemdn44R/hs2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A+uQvlLt; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706599846; x=1738135846;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=foOvR8njiSdEDNybt1uvmEL+bBp2j5RmuiwsLhRfcE8=;
+  b=A+uQvlLtHwGlNOMpjlM3NlUcmhAMhzSaexY2fKLoUwjSv/mEcjNeTy7C
+   zn1xZetU7vhMBVJr9Sl72z60iSJwaFd6dh5nBQPPoMYj3l/jLkZWZw5zT
+   FiLJuRHv8u/T116DwBzqZiRZIfNgqgZeDGcL1mNeUvLs/n5v8eQuQ9t3q
+   DO+S/F4Wu5K72EN9Q2yUlhGXmC0rfK7fm91oFZETP5kjeWHyCql6CcRaP
+   s5pcWzFxpjUqkpVfdlRRYGUO3YmWXqfZfshUyOViWZQnLVRvL+PSAKbmg
+   ZxDuKdB3MbbWHF8788ZzijE3awvX3JoWx6L34oBLxNMZdPtIp9ksUXbBg
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="3029061"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="3029061"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 23:30:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="931352719"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="931352719"
+Received: from hexu1-mobl1.ccr.corp.intel.com (HELO [10.249.174.131]) ([10.249.174.131])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 23:30:42 -0800
+Message-ID: <b3af83cf-b6c7-4543-b793-f2a9547ca9d2@linux.intel.com>
+Date: Tue, 30 Jan 2024 15:30:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 4/5] iommu/vt-d: pass pdev parameter for
+ qi_check_fault() and refactor callers
+To: "Tian, Kevin" <kevin.tian@intel.com>,
+ "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>,
+ "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+ "Liu, Yi L" <yi.l.liu@intel.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
+ <20240129034924.817005-5-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB5276BAB9620D3A7B07B24F328C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276BAB9620D3A7B07B24F328C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 30, 2024 at 11:41:11AM +0530, Viresh Kumar wrote:
-> On 29-01-24, 21:34, Manivannan Sadhasivam wrote:
-> > On Fri, Jan 12, 2024 at 07:52:04PM +0530, Krishna chaitanya chundru wrote:
-> > > PCIe needs to choose the appropriate performance state of RPMH power
-> > > domain and interconnect bandwidth based up on the PCIe gen speed.
-> > > 
-> > > Add the OPP table support to specify RPMH performance states and
-> > > interconnect peak bandwidth.
-> > > 
-> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sm8450.dtsi | 74 ++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 74 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > index 6b1d2e0d9d14..eab85ecaeff0 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > > @@ -1827,7 +1827,32 @@ pcie0: pcie@1c00000 {
-> > >  			pinctrl-names = "default";
-> > >  			pinctrl-0 = <&pcie0_default_state>;
-> > >  
-> > > +			operating-points-v2 = <&pcie0_opp_table>;
-> > > +
-> > >  			status = "disabled";
-> > > +
-> > > +			pcie0_opp_table: opp-table {
-> > > +				compatible = "operating-points-v2";
-> > > +
-> > > +				opp-2500000 {
-> > > +					opp-hz = /bits/ 64 <2500000>;
-> > > +					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <250000 250000>;
-> > 
-> > This is a question for Viresh: We already have macros in the driver to derive
-> > the bandwidth based on link speed. So if OPP core exposes a callback to allow
-> > the consumers to set the bw on its own, we can get rid of this entry.
-> > 
-> > Similar to config_clks()/config_regulators(). Is that feasible?
-> 
-> I don't have any issues with a new callback for bw. But, AFAIU, the DT
-> is required to represent the hardware irrespective of what any OS
-> would do with it. So DT should ideally have these values here, right ?
-> 
 
-Not necessarily. Because, right now the bandwidth values of the all peripherals
-are encoded within the drivers. Only OPP has the requirement to define the
-values in DT.
+On 1/29/2024 4:58 PM, Tian, Kevin wrote:
+>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> Sent: Monday, January 29, 2024 11:49 AM
+>>
+>> to check state of ATS capable pci device in qi_check_fault() for surprise
+>> removal case, we need to pass the target pci device of ATS invalidation
+>> request to qi_check_fault(). if pdev is valid, means current request is for
+>> ATS invalidation, vice vesa.
+>>
+>> no function change.
+> qi_submit_sync() is used for all kinds of iotlb/cache/devtlb invalidations.
+> it's a bit weird to see a device pointer (even being NULL) in places where
+> a device doesn't even matter.
+>
+> having a new qi_submit_sync_devtlb() wrapper sounds cleaner to me,
+> with an internal __qi_submit_sync() helper to accept a device pointer.
+>
+> qi_submit_sync() calls __qi_submit_sync() with a null device pointer then
+> non-devtlb paths are intact.
 
-> Also, the driver has already moved away from using those macros now
-> and depend on the OPP core to do the right thing. It only uses the
-> macro for the cases where the DT OPP table isn't available. And as
-> said by few others as well already, the driver really should try to
-> add OPPs dynamically in that case to avoid multiple code paths and
-> stick to a single OPP based solution.
-> 
+Make sense !
 
-Still I prefer to use OPP for bandwidth control because both the voltage and
-bandwidth values need to be updated at the same time. My only point here is, if
-OPP exposes a callback for bw, then we can keep the DT behavior consistent.
+That way, could keep about 10 qi_submit_sync() calling intact, while
 
-- Mani
+only 2-3 qi_submit_sync_devtlb() wrapper calling needed.
 
-> -- 
-> viresh
+Thanks,
 
--- 
-மணிவண்ணன் சதாசிவம்
+Ethan
+
 
