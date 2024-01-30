@@ -1,195 +1,135 @@
-Return-Path: <linux-pci+bounces-2806-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2807-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CF8B84260D
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 14:19:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2EE4842768
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 16:00:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1C9E1C20FB7
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:19:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 817681F28A25
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 15:00:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82A416BB29;
-	Tue, 30 Jan 2024 13:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98FBB7CF2D;
+	Tue, 30 Jan 2024 15:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mYl2brf5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T/qAWyz2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F8160874;
-	Tue, 30 Jan 2024 13:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18D37CF08;
+	Tue, 30 Jan 2024 15:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706620767; cv=none; b=WyIhxKsArkI68fYFtikOexX8trqpwimyDdg6gmWwIsxWbqc+DtoVWlutDT0NMMvYXT78z0FEdM5rtP5Vkk5AFSYO6axsrwv/WGiVS66EVb/siWQo2JqGyzf2nGVIeF0UUYWUI3uber6VEjMpLEhTD9mCSQgXlA2tqUoGo3lcznI=
+	t=1706626833; cv=none; b=U1rjDTwT2f3pfbmBSeybHJaGv4DZB1+rjiLueiKDKh2PROnQjxZ88UYIFd8XKqV2mRU9raA/yvhVMDt/1W1KWuvLakcHRMxCsE+ndi+EAtb4nzvz16B4aIMDqttTPQuKVpwqJoK7JojvvxqcV5P2p8ca/0mGmg6MHhB8pppQ3mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706620767; c=relaxed/simple;
-	bh=4A4P0uoIH22Pj/8ZZK68o4PUetBKhjiM5+2BHQM5qS0=;
+	s=arc-20240116; t=1706626833; c=relaxed/simple;
+	bh=yf/E+KrZm1v3DbFb8PD3BM4OlyyFjS4+n1tQ1b2z4Lk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dYVcCyTgCBAdO8WmCt4Qe1xb4utPzidajJ4FUimOhSvwiqdLveh/0+IR0pL5MOTXqxnC7ZEuoIOdiDKfZWBGT0QRuRsvTflhkFDcjSMwBamf0T35iOQT4rhDJ8E4Q7ImMZYEmj6D2xv2p/nIjW0uiZMOjK00UH27N29M/Ze/zD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mYl2brf5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40UAUcOC006626;
-	Tue, 30 Jan 2024 13:19:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=zSn8G5clqP1F5joA8rvlouwTo37FDpDga5azQ0UnSMk=; b=mY
-	l2brf5Cx4WhCsBKsnmQBNJnwSkycyNZUaElWNe4QA6cmfNcyJ8RqVEWMk4S60N/d
-	M/PKd6QcifD74ko5+jwcz2Tg4ZrdMk6ZbfKuEI6lCsPfHt82zNajMCvhv2kFnjga
-	syZyAJiiMwqsNsJm4i/bnNJv2CfFRq/N/eebCKswwiOHYaNGMqF2x4+S8Acyk8hV
-	JTkjxoDS+By5q2FTGiYMO9ps9J22G8lmc9iJ69mzJsemcvPfujYZqd8WrFFGnxPS
-	7zIcJU+0H2jvC0hgkvuOoJAxfSzkaGlT2m0RKF2WBv4L0TTtsI/WJs/LE8I/+B89
-	tga1sQ3r/8C31+WuMbvQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vxydh0cee-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jan 2024 13:19:06 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40UDJ5mg016445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 30 Jan 2024 13:19:05 GMT
-Received: from [10.218.10.86] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 30 Jan
- 2024 05:18:57 -0800
-Message-ID: <9daddb2a-e20c-6189-f319-e343eb918248@quicinc.com>
-Date: Tue, 30 Jan 2024 18:48:35 +0530
+	 In-Reply-To:Content-Type; b=Ljv3ypSs+0b7tnSS995OzDo2xLcCR+C63iOkr9iPDU5W4eeKS2kVMN9IehSMor29sKNvpya/i62W8Z1Q/k3YXlr/sY6XlpXFpL/KcNT5+wnsHG+Jzti7m8F6PrdpRTdyAJ4lkofGUW/5tJZ16YpCoOXdgLvve3Le++T+PXK0ytQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=T/qAWyz2; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40UF039E005424;
+	Tue, 30 Jan 2024 09:00:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706626803;
+	bh=cLew7QEnbGPCJQBzmHXkmCYYlM0RwNdCJ9orZc+7ESg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=T/qAWyz2n4znNZBy/rurIjG4AgjwQjl8Ci0wQii/S/bySa4NSLuX+6dh5mjGvZTWp
+	 k/uxK1zbXdJaICGbIL8YmHzp0h6BmiPs5gW1Y5z6/42PznGuZHhb+R/cDPpPmiaOOV
+	 pxpk2jZMHRLFiZkwsyitZps6rn3x7t1ujjar3smM=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40UF03AD115946
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 30 Jan 2024 09:00:03 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 30
+ Jan 2024 09:00:02 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 30 Jan 2024 09:00:02 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40UF02vC014189;
+	Tue, 30 Jan 2024 09:00:02 -0600
+Message-ID: <2a373360-9bf2-411c-a9aa-0a7451b9ba38@ti.com>
+Date: Tue, 30 Jan 2024 09:00:01 -0600
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v1 5/6] PCI: qcom-ep: Provide number of read/write channel
- for HDMA
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <jingoohan1@gmail.com>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <quic_shazhuss@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nayiluri@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <quic_krichai@quicinc.com>,
-        <quic_vbadigan@quicinc.com>, <quic_parass@quicinc.com>,
-        <quic_schintav@quicinc.com>, <quic_shijjose@quicinc.com>,
-        Gustavo Pimentel
-	<gustavo.pimentel@synopsys.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Kishon Vijay Abraham
- I" <kishon@kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <mhi@lists.linux.dev>
-References: <1705669223-5655-1-git-send-email-quic_msarkar@quicinc.com>
- <1705669223-5655-6-git-send-email-quic_msarkar@quicinc.com>
- <20240130085301.GB83288@thinkpad>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: j721e: Extend j721e_pcie_ctrl_init() for non syscon
+ nodes
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <vigneshr@ti.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+References: <20240129104958.1139787-1-s-vadapalli@ti.com>
+ <077682de-7789-4f1f-8dcc-aa47f4fb2dff@ti.com>
+ <792c972b-052e-4e24-a85f-9415fe02aa01@ti.com>
 Content-Language: en-US
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-In-Reply-To: <20240130085301.GB83288@thinkpad>
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <792c972b-052e-4e24-a85f-9415fe02aa01@ti.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 8GmV8PNkEEBYkv4MFnp5j7xycW1G7OpK
-X-Proofpoint-GUID: 8GmV8PNkEEBYkv4MFnp5j7xycW1G7OpK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-30_07,2024-01-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- mlxscore=0 malwarescore=0 clxscore=1015 spamscore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=876
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401300098
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-
-On 1/30/2024 2:23 PM, Manivannan Sadhasivam wrote:
-> On Fri, Jan 19, 2024 at 06:30:21PM +0530, Mrinmay Sarkar wrote:
->> There is no standard way to auto detect the number of available
->> read/write channels in a platform. So adding this change to provide
->> read/write channels count and also provide "EDMA_MF_HDMA_NATIVE"
->> flag to support HDMA for 8775 platform.
+On 1/29/24 10:50 PM, Siddharth Vadapalli wrote:
+> Hello Andrew,
+> 
+> On 29/01/24 20:49, Andrew Davis wrote:
+>> On 1/29/24 4:49 AM, Siddharth Vadapalli wrote:
+> 
+> ...
+> 
+>>>        int ret;
+>>>    -    syscon = syscon_regmap_lookup_by_phandle(node, "ti,syscon-pcie-ctrl");
+>>> +    scm_conf = of_parse_phandle(node, "ti,syscon-pcie-ctrl", 0);
+>>> +    if (!scm_conf) {
+>>> +        dev_err(dev, "unable to get System Controller node\n");
+>>> +        return -ENODEV;
+>>> +    }
+>>> +
+>>> +    syscon = device_node_to_regmap(scm_conf);
 >>
->> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for
->> this platform. Add struct qcom_pcie_ep_cfg as match data. Assign
->> hdma_supported flag into struct qcom_pcie_ep_cfg and set it true
->> in cfg_1_34_0.
+>> Turning the entire "simple-bus" region into a regmap using this
+>> function is just as broken as having it as a "syscon". The core
+>> problem we are solving by getting rid of the blanket syscon nodes
+>> is that it causes multiple mappings of the same register. This
+>> can cause issues with regmap caching, read–modify–write, etc..
 >>
->> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom-ep.c | 19 ++++++++++++++++++-
->>   1 file changed, 18 insertions(+), 1 deletion(-)
+>> What you want to do is add a subnode to the simple-bus, have that
+>> encapsulate just the registers used for PCIe, and have the PCIe
+>> node point to that. Then this patch isn't needed.
 >>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> index 45008e0..8d56435 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
->> @@ -149,6 +149,10 @@ enum qcom_pcie_ep_link_status {
->>   	QCOM_PCIE_EP_LINK_DOWN,
->>   };
->>   
-> Add kdoc comment please as like the below struct.
->
->> +struct qcom_pcie_ep_cfg {
->> +	bool hdma_supported;
->> +};
->> +
->>   /**
->>    * struct qcom_pcie_ep - Qualcomm PCIe Endpoint Controller
->>    * @pci: Designware PCIe controller struct
->> @@ -167,6 +171,7 @@ enum qcom_pcie_ep_link_status {
->>    * @num_clks: PCIe clocks count
->>    * @perst_en: Flag for PERST enable
->>    * @perst_sep_en: Flag for PERST separation enable
->> + * @cfg: PCIe EP config struct
->>    * @link_status: PCIe Link status
->>    * @global_irq: Qualcomm PCIe specific Global IRQ
->>    * @perst_irq: PERST# IRQ
->> @@ -194,6 +199,7 @@ struct qcom_pcie_ep {
->>   	u32 perst_en;
->>   	u32 perst_sep_en;
->>   
->> +	const struct qcom_pcie_ep_cfg *cfg;
->>   	enum qcom_pcie_ep_link_status link_status;
->>   	int global_irq;
->>   	int perst_irq;
->> @@ -511,6 +517,10 @@ static void qcom_pcie_perst_assert(struct dw_pcie *pci)
->>   	pcie_ep->link_status = QCOM_PCIE_EP_LINK_DISABLED;
->>   }
->>   
->> +static const struct qcom_pcie_ep_cfg cfg_1_34_0 = {
->> +	.hdma_supported = true,
->> +};
->> +
->>   /* Common DWC controller ops */
->>   static const struct dw_pcie_ops pci_ops = {
->>   	.link_up = qcom_pcie_dw_link_up,
->> @@ -816,6 +826,13 @@ static int qcom_pcie_ep_probe(struct platform_device *pdev)
->>   	pcie_ep->pci.ops = &pci_ops;
->>   	pcie_ep->pci.ep.ops = &pci_ep_ops;
->>   	pcie_ep->pci.edma.nr_irqs = 1;
->> +
->> +	pcie_ep->cfg = of_device_get_match_data(dev);
-> Why do you want to cache "cfg" since it is only used in probe()?
+>> For an example, see how it's done for DSS[0].
+> 
+> Thank you for reviewing the patch. I will implement it similar to what's done
+> for DSS as you pointed out. However, what about the existing SoCs which make use
+> of the "ti,syscon-pcie-ctrl" property? Do you suggest that I add another
+> device-tree property for pointing to the PCIE_CTRL register within the CTRL_MMR
+> region, or do you suggest that I reuse the existing "ti,syscon-pcie-ctrl"
+> property differently in the SoCs like J784S4 where the scm_conf node is a
+> "simple-bus"?
+> 
+> The "ti,syscon-pcie-ctrl" property as defined in the device-tree bindings has
+> two elements with the first being the phandle to the scm_conf node and the
+> second being the offset of the PCIE_CTRL register. The newer implementation you
+> are suggesting will either require a new property which accepts only one element
+> namely the phandle to the node within scm_conf corresponding to the PCIE_CTRL
+> register. Will adding a new property be acceptable?
+> 
 
-Yes Mani, no need to cache "cfg" we can use directly here .
+Why would you need a new property? If there is no offset to the PCIE_CTRL register
+in the new syscon space then just set the offset = 0x0, easy.
 
->> +	if (pcie_ep->cfg && pcie_ep->cfg->hdma_supported) {
->> +		pcie_ep->pci.edma.ll_wr_cnt = 1;
->> +		pcie_ep->pci.edma.ll_rd_cnt = 1;
-> Is the platform really has a single r/w channel?
-the platform has 8 r/w channels. but as per the use case we need to use 
-single r/w channel.
-> - Mani
-Thanks,
-Mrinmay
+Andrew
 
