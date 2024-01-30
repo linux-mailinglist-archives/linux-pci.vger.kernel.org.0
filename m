@@ -1,97 +1,88 @@
-Return-Path: <linux-pci+bounces-2824-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2825-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D0FB842BE2
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 19:36:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81E35842BF2
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 19:39:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 727A71F2136A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:36:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EC6428155A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555B378B4F;
-	Tue, 30 Jan 2024 18:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48D9078B50;
+	Tue, 30 Jan 2024 18:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UphBbX9f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XjxBiw7h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C6A78B46
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 18:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B80769D1E
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 18:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639795; cv=none; b=T9cUMKcjgHUB4oqqFvDmeAa/07fL2DY8O+d6JK0igHhBp6EXqa/woOUpIJQipbhnMKjkaYMvQV4ly1j3h/XLcCFtEWUNZyWVdSVuUKn1gboAqcQ6ONUM5K1se6haSDPKZeop/TFqDwhgNKoWVGdI99Ksf70GFLcARvCOxjGvJ9o=
+	t=1706639978; cv=none; b=D2GmE2QBQJCWoSPUKbvM6ksHXcxI+Uki9IEmc11asKo6o/vcTqztTUTIS+jqNRFk6Axt/AkUI2VzvDrpa1p30NfS1qH9RSr4Ji/ZlBc/ftWx7weMjskfTAxemS7PW1ENRnDGymLCXzd1aGoWqjOr2jsqiRqWUA7KKic4rtRkeUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639795; c=relaxed/simple;
-	bh=ikwwqNyc6jFd2II17OfRBnwrHMd8IINbASWuUS4Ug44=;
+	s=arc-20240116; t=1706639978; c=relaxed/simple;
+	bh=MI0NDS6Iev4PjDUdrQb7Fd1NOLSljNC70XXvSCaQOzE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDSJ0jWIcjHqiRBMcuADiAkVHFYU7cxJxOccxNckw+LqHlJThL8S/FSN2ucR5FORIFN9oNEviIYM3TLyzEPec2bvvNkmhicXyHIKvppt8XJa2KdpjrOJ41jM6b7hhXY3TjIt2D4hMweIACo+Ty/R2Actyo66BT2VJGixevjDxWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UphBbX9f; arc=none smtp.client-ip=209.85.216.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=FThIKqjp+lkqA1hl45OWebsvqo3PW2FEzeFJgfPlnjgQRg3t57e6nrmbyTkabbQNHtAqxodW1blTVW6cbn9NWbmMTe+T4ATe8w0WmKCP3F1paJgVTMuE17AtD6n8zGoKM4GZtBSgGjjfMnM5UxRIxG1xHBELZA8uOQGfLmoaDLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XjxBiw7h; arc=none smtp.client-ip=209.85.167.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-295d56c4871so75135a91.3
-        for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 10:36:33 -0800 (PST)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3be48947186so1357972b6e.3
+        for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 10:39:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706639793; x=1707244593; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706639975; x=1707244775; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=vgNv0GUPFWxdfW4TQ+hGQyRUvV2dvHLPxpXYdqFryBE=;
-        b=UphBbX9fdOI6BgQLPfZt1Fp310NNHcBlOcZLvogx6jfnVAkKjq9kO+5SucZN5ZOrtS
-         1A9BAgjkwt/l++z14mfvV7S/15Y79A3GFqGzc9y6NuB+1utzoFa74i4SFQgnoKlSisLn
-         /xhbX1CC3nPSpe+0fyz3Myuse/96AO1sREpfFx6w47rKEGXHn3wzmC3XWWwQVGj5oBHL
-         i5aZZhM6G7+ezc/LuB+LFbRuiYOqXfuar3gUJ2rt072c29ITtiYIntMTl6ioT2RcGdXh
-         9klrx2gxutYdbuFgKVUrF7T6gBFwdoN7cgKF88gGMbR/BUrCMBt9c8gPNXjCU0VMCrDB
-         w3QQ==
+        bh=pOjCTKxf4sFvuTCxIsDxH4OosQIHqdZ2rmZHkDuD9II=;
+        b=XjxBiw7hNjXi97wqdnaZnr50iZg6Un6HCWlkP1K/7QQbCT1ZxHcRBeE+UcgXnKdb6h
+         JO2JiBVA6wlXrucB1uiOuH9z3UxPSqOGuEnPipvw5hfO+eGrtQHa8FV1F0cl7GIP+OsU
+         STuUwEwcQHkj3hBPw4ciud70s9Fm0iWEep1p0gLXY7QUyniSB2npKnlwSpdyKSzl3fcn
+         7siI3wgPFmajLyQi2dZXNRzWuGrZF0LaO8kOnj0keSjW9a6YGwtw6jHRTjWHO5A0IS/A
+         Ktw6qPi3LslO+LporoUnnF2hOpSP7tESbicSCKjphYvJHtY1jc8qgeESkSMR3VJ3AM2a
+         6A4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706639793; x=1707244593;
+        d=1e100.net; s=20230601; t=1706639975; x=1707244775;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgNv0GUPFWxdfW4TQ+hGQyRUvV2dvHLPxpXYdqFryBE=;
-        b=wG9IQ/aBDQ9qSR5NdrhKwkC+xm7tRHg3AzmHFdF3M5rV5ijU685Waz3PExpBAvnOQ4
-         9jPbxEcHeFyUfpouF6JZjNB/UdVFBsbXgL7ZsGDh4Clj1qFHH3Agyhwaj2mwMCu+DwAI
-         FF3QaOOMywXp3UQB72/elDDm8eM3qEtKZa1SByo6FsGxBjW3tiBlj4mBQyitTkROtNwp
-         wzFimJbjoh4Ol4VUuFiQKC1lzVy+5pq0shA/9bwV93FMOJZ9/sy+2+UP6mXQiQ7etx6a
-         BCeoeHL7LoYFSBCqApOoOhRtQJjj+5afjJG/0r8KT2MBqJtRA9z3dbi3Gp/lAMEwClFK
-         pjVg==
-X-Gm-Message-State: AOJu0YyKHR0T34sjHTn3kRhWXkAFRuX8EjYUCwKO2AitQ/Nz9phHCPKP
-	lbr2GWciIIBqmIp2sg4w7wGdS3HrVL9WTkmZ8fxHhe+DPibxaOT8DW9OtTovOg==
-X-Google-Smtp-Source: AGHT+IGq6ucnvVNgc2u60zUK0WDJ2P8/HWXvMXVc+LI3CfgeVdOfvu3uzyW0eLpHYqXEsOqdXuKrag==
-X-Received: by 2002:a17:90a:a393:b0:294:7bf1:3cb7 with SMTP id x19-20020a17090aa39300b002947bf13cb7mr4820162pjp.14.1706639792781;
-        Tue, 30 Jan 2024 10:36:32 -0800 (PST)
+        bh=pOjCTKxf4sFvuTCxIsDxH4OosQIHqdZ2rmZHkDuD9II=;
+        b=M4KsdlRHg/bWI7UkYhkVz0bI9594UqSrqQb5zikMiiYbvxTrXIsby0UNjTXVriGGcK
+         Y2Oux0A/Z2TCItUJpVBmRHed7soGiAOB5MT1PdG8xeivwWJkhXbZ+FBKJD4Q4UKNV8uj
+         LdnPk3Ac/1PnhxlRZVvaEgRGdL89zTS0VfUemGtLY5oltmIW4QluPijAZc118kjb2pMi
+         89U7p3cutncyNFvsBCbXJWVlurOdcIadArmII5QdQ2CZK2qMXMm1ocvpCBFuqdQMK81N
+         1M44vhtHEobaVpOci/UJxKy86rwObMWeyQvxw3og/gBMMYCmpq8eAm9D0o8XxVk38XMZ
+         kqRw==
+X-Gm-Message-State: AOJu0YwtxVjiUpFRjD+b8EMryv8MgaeuD8s1l8apnCJb04mQDuqhppiy
+	DiobnEXuTBEyEtl4zu/n2UR9n4QQht5EjiY6VY3i4Sr7ZBIHtFcUiy4iBWcr6g==
+X-Google-Smtp-Source: AGHT+IHKbwYWqn9d33FCtu9hgL0/2+JLAXUvS/DetlfUcPARSY8K+NddJ08iJ+7Sj53243anjwXCdg==
+X-Received: by 2002:a05:6808:17a7:b0:3be:ac08:ea3e with SMTP id bg39-20020a05680817a700b003beac08ea3emr981434oib.40.1706639975619;
+        Tue, 30 Jan 2024 10:39:35 -0800 (PST)
 Received: from thinkpad ([103.28.246.123])
-        by smtp.gmail.com with ESMTPSA id az10-20020a170902a58a00b001d50ca466e5sm7405864plb.133.2024.01.30.10.36.27
+        by smtp.gmail.com with ESMTPSA id fb8-20020a056a002d8800b006dd8148efd8sm8081795pfb.103.2024.01.30.10.39.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 10:36:32 -0800 (PST)
-Date: Wed, 31 Jan 2024 00:06:26 +0530
+        Tue, 30 Jan 2024 10:39:35 -0800 (PST)
+Date: Wed, 31 Jan 2024 00:09:30 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20240130183626.GE4218@thinkpad>
-References: <20240120143434.GA5405@thinkpad>
- <ZbdLBySr2do2M_cs@google.com>
- <20240129071025.GE2971@thinkpad>
- <ZbdcJDWcZG3Y3efJ@google.com>
- <20240129081254.GF2971@thinkpad>
- <ZbengMb5zrigs_2Z@google.com>
- <20240130064555.GC32821@thinkpad>
- <Zbi6q1aigV35yy9b@google.com>
- <20240130122906.GE83288@thinkpad>
- <Zbkvg92pb-bqEwy2@google.com>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 2/2] PCI: qcom: Add X1E80100 PCIe support
+Message-ID: <20240130183930.GF4218@thinkpad>
+References: <20240130065506.GE32821@thinkpad>
+ <20240130180040.GA527428@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,104 +92,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zbkvg92pb-bqEwy2@google.com>
+In-Reply-To: <20240130180040.GA527428@bhelgaas>
 
-On Tue, Jan 30, 2024 at 10:48:59PM +0530, Ajay Agarwal wrote:
-> On Tue, Jan 30, 2024 at 05:59:06PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
+On Tue, Jan 30, 2024 at 12:00:40PM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 30, 2024 at 12:25:06PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jan 29, 2024 at 04:41:20PM +0200, Abel Vesa wrote:
+> > > Add the compatible and the driver data for X1E80100.
 > > 
-> > [...]
-> > 
-> > > > > > > > If that's the case with your driver, when are you starting the link training?
-> > > > > > > > 
-> > > > > > > The link training starts later based on a userspace/debugfs trigger.
-> > > > > > > 
-> > > > > > 
-> > > > > > Why does it happen as such? What's the problem in starting the link during
-> > > > > > probe? Keep it in mind that if you rely on the userspace for starting the link
-> > > > > > based on a platform (like Android), then if the same SoC or peripheral instance
-> > > > > > get reused in other platform (non-android), the it won't be a seamless user
-> > > > > > experience.
-> > > > > > 
-> > > > > > If there are any other usecases, please state them.
-> > > > > > 
-> > > > > > - Mani
-> > > > > >
-> > > > > This SoC is targeted for an android phone usecase and the endpoints
-> > > > > being enumerated need to go through an appropriate and device specific
-> > > > > power sequence which gets triggered only when the userspace is up. The
-> > > > > PCIe probe cannot assume that the EPs have been powered up already and
-> > > > > hence the link-up is not attempted.
-> > > > 
-> > > > Still, I do not see the necessity to not call start_link() during probe. If you
-> > > I am not adding any logic/condition around calling the start_link()
-> > > itself. I am only avoiding the wait for the link to be up if the
-> > > controller driver has not defined start_link().
-> > > 
-> > 
-> > I'm saying that not defining the start_link() callback itself is wrong.
-> > 
-> Whether the start_link() should be defined or not, is a different
-> design discussion. We currently have 2 drivers in upstream (intel-gw and
-> dw-plat) which do not have start_link() defined. Waiting for the link to
-> come up for the platforms using those drivers is not a good idea. And
-> that is what we are trying to avoid.
+> > If you happen to respin the series, please add info about the PCIe controller
+> > found on this SoC. Like IP version, Gen speed, max. link width etc...
+> 
+> FWIW, I always prefer actual speeds, e.g., "8 GT/s", instead of things
+> like "Gen3", for the reason mentioned in the spec:
+> 
+>   Terms like "PCIe Gen3" are ambiguous and should be avoided. For
+>   example, "gen3" could mean (1) compliant with Base 3.0, (2)
+>   compliant with Base 3.1 (last revision of 3.x), (3) compliant with
+>   Base 3.0 and supporting 8.0 GT/s, (4) compliant with Base 3.0 or
+>   later and supporting 8.0 GT/s, ....
 > 
 
-NO. The sole intention of this patch is to fix the delay observed with _your_
-out-of-tree controller driver as you explicitly said before. Impact for the
-existing 2 drivers are just a side effect.
-
-> > > > add PROBE_PREFER_ASYNCHRONOUS to your controller driver, this delay would become
-> > > > negligible. The reason why I'm against not calling start_link() is due to below
-> > > > reasons:
-> > > > 
-> > > > 1. If the same SoC gets reused for other platforms, even other android phones
-> > > > that powers up the endpoints during boot, then it creates a dependency with
-> > > > userspace to always start the link even though the devices were available.
-> > > > That's why we should never fix the behavior of the controller drivers based on a
-> > > > single platform.
-> > > I wonder how the behavior is changing with this patch. Do you have an
-> > > example of a platform which does not have start_link() defined but would
-> > > like to still wait for a second for the link to come up?
-> > > 
-> > 
-> > Did you went through my reply completely? I mentioned that the 1s delay would be
-> > gone if you add the async flag to your driver and you are ignoring that.
-> > 
-> Yes, I did go through your suggestion of async probe and that might
-> solve my problem of the 1 sec delay. But I would like to fix the problem
-> at the core.
-> 
-
-There is no problem at the core. The problem is with some controller drivers.
-Please do not try to fix a problem which is not there. There are no _special_
-reasons for those 2 drivers to not define start_link() callback. I'm trying to
-point you in the right path, but you are always chosing the other one.
-
-> > But again, I'm saying that not defining start_link() itself is wrong and I've
-> > already mentioned the reasons.
-> > 
-> > > For example, consider the intel-gw driver. The 1 sec wait time in its
-> > > probe path is also a waste because it explicitly starts link training
-> > > later in time.
-> > > 
-> > 
-> > I previously mentioned that the intel-gw needs fixing since there is no point in
-> > starting the link and waiting for it to come up in its probe() if the DWC core
-> > is already doing that.
-> > 
-> > - Mani
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
-> I think we are at a dead-end in terms of agreeing to a policy. I would
-> like the maintainers to pitch in here with their views.
-
-I'm the maintainer of the DWC drivers that you are proposing the patch for. If
-you happen to spin future revision of this series, please carry:
-
-Nacked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Makes sense. Will keep a note of it, thanks!
 
 - Mani
 
