@@ -1,244 +1,171 @@
-Return-Path: <linux-pci+bounces-2802-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2803-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D52B48424A3
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:17:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 453D88424EF
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:29:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06CB81C24AF1
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:17:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC6AF2813BC
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:29:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B4267A08;
-	Tue, 30 Jan 2024 12:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 830FF67E90;
+	Tue, 30 Jan 2024 12:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lzz7YL2x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQKfdz5t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4343A66B37
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 12:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB87E67E66
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 12:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706617071; cv=none; b=H48UqKrxmVXVO9khcEtalExYpvJofW8+JpPZSoAvF0tXrHVXLNEIJa0BOq2yWDKRMFotQHitAAI66noB+JpvIbZD74F4xTWun+sF/YrcuV91nvqFmkk5779vN0mEy8jASMb+jURNOmGmjmtRIzmoM3+qkLR6ZuZego0dVhH1bEI=
+	t=1706617756; cv=none; b=A8ybsfAl7I1x8zwRNnOh0rE1bUMCj7jTnJKhaJtWbsvJusIM10rCM2ntXXoufubXRtRtSAIxynDSvw3i5mndO2r/KDTkKX9IqmIrFSZKKLjb5qO0Zx5JEo3sOaIP4PIS3U8191m0UoxuLEgERPIpdU8V6mjrFu+kSJdftBqKPKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706617071; c=relaxed/simple;
-	bh=PW9Jx0oLfKcFIj6oPoxE7u+aTaO0Oq1zQgSTR42xbRE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Guh/YALq7a0T8kl+VhoWgE72MVjkhXz1Fgy46B+JIa9fFJlSVR33Htwsn/4jR6siEJU54BRjWQBChqy7+RiF9DHk60f0Aa1e4S81WN+ETaZpYGZHU2N86l7pRaSzSByV0iHHk0vbVR81VXy+lQselLyFzjWKXkG+Ms1Yydgj8+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lzz7YL2x; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706617070; x=1738153070;
-  h=date:from:to:cc:subject:message-id;
-  bh=PW9Jx0oLfKcFIj6oPoxE7u+aTaO0Oq1zQgSTR42xbRE=;
-  b=Lzz7YL2xUxV7/brzOrJXvphf9ih/0JVLC8jiUkaHQd202NGTlgbZDlBl
-   40S2ojTRZmWLJjYSnGzWhm2Yj3PHentatdEMXtM5bRyndurMXQsOdGm1M
-   L2SgCAPOyZbXInjCLe9BibXZbdlzY0Au23+yMPZVQ0Mvr4PhyqAC0wD2A
-   eAA9Z2DfNrHiNKfQcZlf3zsih44u9UvSomK0T47fkdRkuPyMKqp8rW7oY
-   X49f/h0BdDaQ14bgHDuiBthz9rshsj7kKDIfcN0NjuNrliR9t6C3ZkdlQ
-   mvR6aL4hfZHuF/af1p+RUhEEpoUrx8EXQ6lgubwgWg+StvXuoUv8Ogm0I
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="400400239"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="400400239"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 04:17:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="1119259367"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="1119259367"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2024 04:17:48 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rUn2Y-0000Gc-1z;
-	Tue, 30 Jan 2024 12:16:36 +0000
-Date: Tue, 30 Jan 2024 20:13:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 95bf9132f8b48f8ca59eacd9b40afa5cce4feb53
-Message-ID: <202401302023.Qiezkr2u-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1706617756; c=relaxed/simple;
+	bh=WYV79eqs8EX6+PoVYLFkIJPG5P9GerzOH+CSQWG7gJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVyZ5POCg/W970/m0HZrNrWsnr1D4soq+7gS8g7zbOonHPbn0eV+fW0dF/mQ2grQCeLOlFswQtBWOfTDF+K3m2s4vhRFPHV3a/DKRLn6Brh8bOvfvNxPysm0/TqFn5llFVHyKtpmDoP6OS50fkUK9luCL4mahswEfb9pGcqMsyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dQKfdz5t; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6de2e24ea87so1213309b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 04:29:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706617754; x=1707222554; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=L7FzOKAxGetGKZLcjTXfQ+63UEVvuNkv8U7bj2gyECQ=;
+        b=dQKfdz5tZSp6GsqkgAe0da55D79pAxEs4szIKeYXy8wjQLOOinLouFLwqnASLOXVmZ
+         gcB3Qzoivnzu+9tq/OJxQ5p8fAdjtYA0n5JaMVB4i9IwQt1HHyc9COljhuAU1aaR/573
+         o5K6QraQbO+SDHYfdGphDZodFUJkAjlgPdGX0YKmjuGtNuCt9yFdvuFpbjGIRWE5wR1E
+         DJgr1TWsG4ubhQW5jjP1ps41UWO51dXDrgDxNESQPF8542W5+j0o1Si04qdRLoLyKAo4
+         c9xlV60NWrZzXYZzj7xQQ6PWfWnvM0XJ0iycpU7RHih+UTxpyrLe5FNDdkarJNU+IUwr
+         2Ylw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706617754; x=1707222554;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L7FzOKAxGetGKZLcjTXfQ+63UEVvuNkv8U7bj2gyECQ=;
+        b=bfG+cpzm7VGrtyGG2ZtC8yVYTqQFfGHh/Xz4zGkDfInScHCGjlDjSJxZITwaKqk9a2
+         lBhsB06a4IVZTo0L0EvQCV3a4Llp1fR6xU2zE4lHgIIzjaPHGbY05So2trULeTpTmenD
+         t8xzu5k049Xp/l5DRilBQILc8FfKonVQss22AFKUeAjq531E7CvmccwgvYjsfnnLejK/
+         W6rZOg4N89g1okHlzWlP1vDJQ2zPqti2OYZlU/2n1Pkmqec30QLmX1lFmOus9+eLLZXc
+         gluBXMKPDAziUogJWqor9HF5misOy+HRiSYUkafvr6sAqHn+GqzgyB1ksK7CzFl0GfUZ
+         MOxg==
+X-Gm-Message-State: AOJu0YzWkNpW67238G7nUWogtKMm9biF/cNkhp+S2OOmrozqIRFawJj/
+	Ao/GjSxgpgtREWlirMx6p5VY+ibaV5GZ2xnRyoi8wq5Ye5YyVHVRFHR7J6PBgw==
+X-Google-Smtp-Source: AGHT+IG81ShMSjJPHN/JsXSWiwEv+/heJXnfbxvVirzY+ZlLtNxTyNJD9lf6Eijrugmb6PklWmMTZw==
+X-Received: by 2002:a17:903:186:b0:1d9:11c8:b3c8 with SMTP id z6-20020a170903018600b001d911c8b3c8mr736072plg.64.1706617754147;
+        Tue, 30 Jan 2024 04:29:14 -0800 (PST)
+Received: from thinkpad ([117.202.188.6])
+        by smtp.gmail.com with ESMTPSA id ka7-20020a170903334700b001d7252fef6bsm7101666plb.299.2024.01.30.04.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 04:29:13 -0800 (PST)
+Date: Tue, 30 Jan 2024 17:59:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Manu Gautam <manugautam@google.com>, Doug Zobel <zobel@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
+Message-ID: <20240130122906.GE83288@thinkpad>
+References: <20240119075219.GC2866@thinkpad>
+ <Zaq4ejPNomsvQuxO@google.com>
+ <20240120143434.GA5405@thinkpad>
+ <ZbdLBySr2do2M_cs@google.com>
+ <20240129071025.GE2971@thinkpad>
+ <ZbdcJDWcZG3Y3efJ@google.com>
+ <20240129081254.GF2971@thinkpad>
+ <ZbengMb5zrigs_2Z@google.com>
+ <20240130064555.GC32821@thinkpad>
+ <Zbi6q1aigV35yy9b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zbi6q1aigV35yy9b@google.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 95bf9132f8b48f8ca59eacd9b40afa5cce4feb53  Merge branch 'pci/dpc'
+On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
 
-elapsed time: 735m
+[...]
 
-configs tested: 154
-configs skipped: 3
+> > > > > > If that's the case with your driver, when are you starting the link training?
+> > > > > > 
+> > > > > The link training starts later based on a userspace/debugfs trigger.
+> > > > > 
+> > > > 
+> > > > Why does it happen as such? What's the problem in starting the link during
+> > > > probe? Keep it in mind that if you rely on the userspace for starting the link
+> > > > based on a platform (like Android), then if the same SoC or peripheral instance
+> > > > get reused in other platform (non-android), the it won't be a seamless user
+> > > > experience.
+> > > > 
+> > > > If there are any other usecases, please state them.
+> > > > 
+> > > > - Mani
+> > > >
+> > > This SoC is targeted for an android phone usecase and the endpoints
+> > > being enumerated need to go through an appropriate and device specific
+> > > power sequence which gets triggered only when the userspace is up. The
+> > > PCIe probe cannot assume that the EPs have been powered up already and
+> > > hence the link-up is not attempted.
+> > 
+> > Still, I do not see the necessity to not call start_link() during probe. If you
+> I am not adding any logic/condition around calling the start_link()
+> itself. I am only avoiding the wait for the link to be up if the
+> controller driver has not defined start_link().
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'm saying that not defining the start_link() callback itself is wrong.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240130   gcc  
-arc                   randconfig-002-20240130   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                         nhk8815_defconfig   gcc  
-arm                             pxa_defconfig   gcc  
-arm                   randconfig-001-20240130   gcc  
-arm                   randconfig-002-20240130   gcc  
-arm                   randconfig-003-20240130   gcc  
-arm                   randconfig-004-20240130   gcc  
-arm                         s3c6400_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240130   gcc  
-arm64                 randconfig-002-20240130   gcc  
-arm64                 randconfig-003-20240130   gcc  
-arm64                 randconfig-004-20240130   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240130   gcc  
-csky                  randconfig-002-20240130   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240130   clang
-hexagon               randconfig-002-20240130   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240130   gcc  
-i386         buildonly-randconfig-002-20240130   gcc  
-i386         buildonly-randconfig-003-20240130   gcc  
-i386         buildonly-randconfig-004-20240130   gcc  
-i386         buildonly-randconfig-005-20240130   gcc  
-i386         buildonly-randconfig-006-20240130   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240130   gcc  
-i386                  randconfig-002-20240130   gcc  
-i386                  randconfig-003-20240130   gcc  
-i386                  randconfig-004-20240130   gcc  
-i386                  randconfig-005-20240130   gcc  
-i386                  randconfig-006-20240130   gcc  
-i386                  randconfig-011-20240130   clang
-i386                  randconfig-012-20240130   clang
-i386                  randconfig-013-20240130   clang
-i386                  randconfig-014-20240130   clang
-i386                  randconfig-015-20240130   clang
-i386                  randconfig-016-20240130   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240130   gcc  
-loongarch             randconfig-002-20240130   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   gcc  
-mips                         rt305x_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240130   gcc  
-nios2                 randconfig-002-20240130   gcc  
-openrisc                         alldefconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240130   gcc  
-parisc                randconfig-002-20240130   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      pcm030_defconfig   gcc  
-powerpc               randconfig-001-20240130   gcc  
-powerpc               randconfig-002-20240130   gcc  
-powerpc               randconfig-003-20240130   gcc  
-powerpc                     sequoia_defconfig   gcc  
-powerpc                 xes_mpc85xx_defconfig   gcc  
-powerpc64             randconfig-001-20240130   gcc  
-powerpc64             randconfig-002-20240130   gcc  
-powerpc64             randconfig-003-20240130   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20240130   gcc  
-riscv                 randconfig-002-20240130   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20240130   clang
-s390                  randconfig-002-20240130   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                    randconfig-001-20240130   gcc  
-sh                    randconfig-002-20240130   gcc  
-sh                           se7343_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240130   gcc  
-sparc64               randconfig-002-20240130   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240130   gcc  
-um                    randconfig-002-20240130   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240130   gcc  
-xtensa                randconfig-002-20240130   gcc  
+> > add PROBE_PREFER_ASYNCHRONOUS to your controller driver, this delay would become
+> > negligible. The reason why I'm against not calling start_link() is due to below
+> > reasons:
+> > 
+> > 1. If the same SoC gets reused for other platforms, even other android phones
+> > that powers up the endpoints during boot, then it creates a dependency with
+> > userspace to always start the link even though the devices were available.
+> > That's why we should never fix the behavior of the controller drivers based on a
+> > single platform.
+> I wonder how the behavior is changing with this patch. Do you have an
+> example of a platform which does not have start_link() defined but would
+> like to still wait for a second for the link to come up?
+> 
+
+Did you went through my reply completely? I mentioned that the 1s delay would be
+gone if you add the async flag to your driver and you are ignoring that.
+
+But again, I'm saying that not defining start_link() itself is wrong and I've
+already mentioned the reasons.
+
+> For example, consider the intel-gw driver. The 1 sec wait time in its
+> probe path is also a waste because it explicitly starts link training
+> later in time.
+> 
+
+I previously mentioned that the intel-gw needs fixing since there is no point in
+starting the link and waiting for it to come up in its probe() if the DWC core
+is already doing that.
+
+- Mani
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
