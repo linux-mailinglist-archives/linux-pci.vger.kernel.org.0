@@ -1,386 +1,166 @@
-Return-Path: <linux-pci+bounces-2798-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2799-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D9C1842302
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:28:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2AE6842423
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:53:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B8D511F2A1B3
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 11:28:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89189B23E7F
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 11:53:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E69657BC;
-	Tue, 30 Jan 2024 11:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27FA167751;
+	Tue, 30 Jan 2024 11:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D48PLFxO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f7jz4KrY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A576466B24;
-	Tue, 30 Jan 2024 11:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BDC6773C;
+	Tue, 30 Jan 2024 11:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706614101; cv=none; b=Txw/ZLUZuJiFAXwMcDN8YM0NeBajpUJZ/f/L4xbXZX6SOrbPohPlrjDr8L1oih30WlHHFHx9bIu7ezCshkz1EjMJ70p9qwcSP4Mh4ZrM4d5S+yCjeeqQl3/ojqfmYnKkQsHGMWz9lW+rYQ/v6hQ/sG39P6sxxb74DyrqyyWf56k=
+	t=1706615594; cv=none; b=dvgO9XD7zp/DlFAlIJKQJUbntSjezzJyDAVbgK+Qx/PLP/Z5iGCB9FGtAvf+S4oa+nzRuvBtLIx97f34Ve6L7bBIu+CdPlw9RXL6YHCpLjpTVMDK+nCoN+zAq3x7OUQwwf0I8nGil1B+lVZFtfjJJZBQnzRUg0ebJCneXaPYIWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706614101; c=relaxed/simple;
-	bh=p26BQJECcTWiyJgSsIztcnzh4ip7rv+gHoIKmYjiu4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Vbje0Oj56hVcj39gPpodcVhhymtqsc3HrwjfS104JvDsKQ1zvoFeMQTo60NSQz7+CiQoi4/YRMT2iLWFoZLNgjsKJZKWlc8ZmI4XuVp30uOLlTTrLe+6yOoanIOuevU6yiSdi3kt8/hgrJ5TPG8O3PAwyCP7HkVI8MgK2gsJMU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D48PLFxO; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1706615594; c=relaxed/simple;
+	bh=CiBDXOMbsf4fXKRpaWeY7ZHWwrT44E4KCMxjUpnuUHU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cmnEtQURv2vdCRw99AehgxlSH43DcHp/RnxHT5FyYG1cSNZBT53F0TOYDsw/RlWzYzGOCGx36xsnrdwqg2GAB72Z9xK9+CYMKOi8n2mfJNxVX4WMgOo9R5bW28/k2NZ0A1F4jBAIVxgcc9AAAqqS4iW/sevy7tkP/Z5ea+ZvOLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f7jz4KrY; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706614100; x=1738150100;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=p26BQJECcTWiyJgSsIztcnzh4ip7rv+gHoIKmYjiu4Q=;
-  b=D48PLFxOEzeS1T2EQGBf+ApQ72A6h+rak8V+uhRFMBqbAAJ7sRoz8ZrK
-   b2MhbMjtIr0ayPadGHq5BXHrmL5foigvmOpzINYhyqmlalEAx2yDQ2eoB
-   OYgD8I3JvKlEksPsTdc9ljSpSJCjl8lXG5373DkhHOxI3ZPqxbZSKfjZB
-   7QHCa9Fhy6v0RX2gP+BTZVTZ5+YNpGlViODC3BLzoSHgbGi2HXrFLtwOj
-   Q0Kfb2ciuniO8ZDcw0R2d1roKhmD9Lb4TDwMXI1spS58H9zW7h0Twy3+t
-   JA5gbjHVCSLaN4wwRDtziF9OU2KoeEJttK/kDPqU/NkJi7NBlAgY/FKxT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24727173"
+  t=1706615592; x=1738151592;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=CiBDXOMbsf4fXKRpaWeY7ZHWwrT44E4KCMxjUpnuUHU=;
+  b=f7jz4KrY8DbagkyZ3SbouvSFkwpwye6PbgWCf3aaMHGxphbq8GEgoggq
+   ftBRLFFs8vldVQPg4UJ6nohUsKZ9zoC5f9Gk3HrHNDqsYswQ1FquXO1qT
+   6i5m+5vAwC/rePAWCCNCe3PF2WSyDUcuygtMokdCK0vpGh64Gt/+gahhh
+   IQFt2WEEfPFEMtf+dqxhdi8IXSzUzrK/yfXBSj2wrHGJ+5DktwYojhjO3
+   C2t7jWNvXo7e2t45IFpNCuR0WS7dV9FToZXjZjAOZHvlz+4yJsuTThdb3
+   dMt+zbd/Z1v38xa2NbMOnfzXXkc9OIWqbTMTAmlUaI6obv+Xxv2ODfmrx
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="16640094"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="24727173"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 03:28:19 -0800
+   d="scan'208";a="16640094"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 03:53:12 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="878410349"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="878410349"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 03:28:12 -0800
-Received: from svinhufvud.ger.corp.intel.com (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 1740011FBD1;
-	Tue, 30 Jan 2024 13:28:08 +0200 (EET)
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-pm@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	laurent.pinchart@ideasonboard.com,
-	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Mark Brown <broonie@kernel.org>,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	linux-media@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH v5 1/2] PM: runtime: Simplify pm_runtime_get_if_active() usage
-Date: Tue, 30 Jan 2024 13:28:05 +0200
-Message-Id: <20240130112805.158790-2-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240130112805.158790-1-sakari.ailus@linux.intel.com>
-References: <20240130112805.158790-1-sakari.ailus@linux.intel.com>
+   d="scan'208";a="22414275"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.252])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 03:53:09 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 30 Jan 2024 13:53:04 +0200 (EET)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
+ quirk
+In-Reply-To: <20240129184354.GA470131@bhelgaas>
+Message-ID: <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com>
+References: <20240129184354.GA470131@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1875071770-1706615584=:1000"
 
-There are two ways to opportunistically increment a device's runtime PM
-usage count, calling either pm_runtime_get_if_active() or
-pm_runtime_get_if_in_use(). The former has an argument to tell whether to
-ignore the usage count or not, and the latter simply calls the former with
-ign_usage_count set to false. The other users that want to ignore the
-usage_count will have to explicitly set that argument to true which is a
-bit cumbersome.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-To make this function more practical to use, remove the ign_usage_count
-argument from the function. The main implementation is in a static
-function called pm_runtime_get_conditional() and implementations of
-pm_runtime_get_if_active() and pm_runtime_get_if_in_use() are moved to
-runtime.c.
+--8323328-1875071770-1706615584=:1000
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Alex Elder <elder@linaro.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Takashi Iwai <tiwai@suse.de> # sound/
-Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com> # drivers/accel/ivpu/
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> # drivers/gpu/drm/i915/
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci/
----
- Documentation/power/runtime_pm.rst      |  5 ++--
- drivers/accel/ivpu/ivpu_pm.c            |  2 +-
- drivers/base/power/runtime.c            | 35 +++++++++++++++++++++++--
- drivers/gpu/drm/i915/intel_runtime_pm.c |  5 +++-
- drivers/gpu/drm/xe/xe_pm.c              |  2 +-
- drivers/media/i2c/ccs/ccs-core.c        |  2 +-
- drivers/media/i2c/ov64a40.c             |  2 +-
- drivers/media/i2c/thp7312.c             |  2 +-
- drivers/net/ipa/ipa_smp2p.c             |  2 +-
- drivers/pci/pci.c                       |  2 +-
- include/linux/pm_runtime.h              | 18 +++----------
- sound/hda/hdac_device.c                 |  2 +-
- 12 files changed, 50 insertions(+), 29 deletions(-)
+On Mon, 29 Jan 2024, Bjorn Helgaas wrote:
 
-diff --git a/Documentation/power/runtime_pm.rst b/Documentation/power/runtime_pm.rst
-index 65b86e487afe..da99379071a4 100644
---- a/Documentation/power/runtime_pm.rst
-+++ b/Documentation/power/runtime_pm.rst
-@@ -396,10 +396,9 @@ drivers/base/power/runtime.c and include/linux/pm_runtime.h:
-       nonzero, increment the counter and return 1; otherwise return 0 without
-       changing the counter
- 
--  `int pm_runtime_get_if_active(struct device *dev, bool ign_usage_count);`
-+  `int pm_runtime_get_if_active(struct device *dev);`
-     - return -EINVAL if 'power.disable_depth' is nonzero; otherwise, if the
--      runtime PM status is RPM_ACTIVE, and either ign_usage_count is true
--      or the device's usage_count is non-zero, increment the counter and
-+      runtime PM status is RPM_ACTIVE, increment the counter and
-       return 1; otherwise return 0 without changing the counter
- 
-   `void pm_runtime_put_noidle(struct device *dev);`
-diff --git a/drivers/accel/ivpu/ivpu_pm.c b/drivers/accel/ivpu/ivpu_pm.c
-index 0af8864cb3b5..c6d93c7a1c58 100644
---- a/drivers/accel/ivpu/ivpu_pm.c
-+++ b/drivers/accel/ivpu/ivpu_pm.c
-@@ -292,7 +292,7 @@ int ivpu_rpm_get_if_active(struct ivpu_device *vdev)
- {
- 	int ret;
- 
--	ret = pm_runtime_get_if_active(vdev->drm.dev, false);
-+	ret = pm_runtime_get_if_in_use(vdev->drm.dev);
- 	drm_WARN_ON(&vdev->drm, ret < 0);
- 
- 	return ret;
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 05793c9fbb84..5275a6b2e980 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1176,7 +1176,7 @@ int __pm_runtime_resume(struct device *dev, int rpmflags)
- EXPORT_SYMBOL_GPL(__pm_runtime_resume);
- 
- /**
-- * pm_runtime_get_if_active - Conditionally bump up device usage counter.
-+ * pm_runtime_get_conditional - Conditionally bump up device usage counter.
-  * @dev: Device to handle.
-  * @ign_usage_count: Whether or not to look at the current usage counter value.
-  *
-@@ -1197,7 +1197,7 @@ EXPORT_SYMBOL_GPL(__pm_runtime_resume);
-  * The caller is responsible for decrementing the runtime PM usage counter of
-  * @dev after this function has returned a positive value for it.
-  */
--int pm_runtime_get_if_active(struct device *dev, bool ign_usage_count)
-+static int pm_runtime_get_conditional(struct device *dev, bool ign_usage_count)
- {
- 	unsigned long flags;
- 	int retval;
-@@ -1218,8 +1218,39 @@ int pm_runtime_get_if_active(struct device *dev, bool ign_usage_count)
- 
- 	return retval;
- }
-+
-+/**
-+ * pm_runtime_get_if_active - Bump up runtime PM usage counter if the device is
-+ *			      in active state
-+ * @dev: Target device.
-+ *
-+ * Increment the runtime PM usage counter of @dev if its runtime PM status is
-+ * %RPM_ACTIVE, in which case it returns 1. If the device is in a different
-+ * state, 0 is returned. -EINVAL is returned if runtime PM is disabled for the
-+ * device, in which case also the usage_count will remain unmodified.
-+ */
-+int pm_runtime_get_if_active(struct device *dev)
-+{
-+	return pm_runtime_get_conditional(dev, true);
-+}
- EXPORT_SYMBOL_GPL(pm_runtime_get_if_active);
- 
-+/**
-+ * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
-+ * @dev: Target device.
-+ *
-+ * Increment the runtime PM usage counter of @dev if its runtime PM status is
-+ * %RPM_ACTIVE and its runtime PM usage counter is greater than 0, in which case
-+ * it returns 1. If the device is in a different state or its usage_count is 0,
-+ * 0 is returned. -EINVAL is returned if runtime PM is disabled for the device,
-+ * in which case also the usage_count will remain unmodified.
-+ */
-+int pm_runtime_get_if_in_use(struct device *dev)
-+{
-+	return pm_runtime_get_conditional(dev, false);
-+}
-+EXPORT_SYMBOL_GPL(pm_runtime_get_if_in_use);
-+
- /**
-  * __pm_runtime_set_status - Set runtime PM status of a device.
-  * @dev: Device to handle.
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 860b51b56a92..d4e844128826 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -246,7 +246,10 @@ static intel_wakeref_t __intel_runtime_pm_get_if_active(struct intel_runtime_pm
- 		 * function, since the power state is undefined. This applies
- 		 * atm to the late/early system suspend/resume handlers.
- 		 */
--		if (pm_runtime_get_if_active(rpm->kdev, ignore_usecount) <= 0)
-+		if ((ignore_usecount &&
-+		     pm_runtime_get_if_active(rpm->kdev) <= 0) ||
-+		    (!ignore_usecount &&
-+		     pm_runtime_get_if_in_use(rpm->kdev) <= 0))
- 			return 0;
- 	}
- 
-diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index b429c2876a76..dd110058bf74 100644
---- a/drivers/gpu/drm/xe/xe_pm.c
-+++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -330,7 +330,7 @@ int xe_pm_runtime_put(struct xe_device *xe)
- 
- int xe_pm_runtime_get_if_active(struct xe_device *xe)
- {
--	return pm_runtime_get_if_active(xe->drm.dev, true);
-+	return pm_runtime_get_if_active(xe->drm.dev);
- }
- 
- void xe_pm_assert_unbounded_bridge(struct xe_device *xe)
-diff --git a/drivers/media/i2c/ccs/ccs-core.c b/drivers/media/i2c/ccs/ccs-core.c
-index e21287d50c15..e1ae0f9fad43 100644
---- a/drivers/media/i2c/ccs/ccs-core.c
-+++ b/drivers/media/i2c/ccs/ccs-core.c
-@@ -674,7 +674,7 @@ static int ccs_set_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
- 	}
- 
--	pm_status = pm_runtime_get_if_active(&client->dev, true);
-+	pm_status = pm_runtime_get_if_active(&client->dev);
- 	if (!pm_status)
- 		return 0;
- 
-diff --git a/drivers/media/i2c/ov64a40.c b/drivers/media/i2c/ov64a40.c
-index 4fba4c2cb064..541bf74581d2 100644
---- a/drivers/media/i2c/ov64a40.c
-+++ b/drivers/media/i2c/ov64a40.c
-@@ -3287,7 +3287,7 @@ static int ov64a40_set_ctrl(struct v4l2_ctrl *ctrl)
- 					 exp_max, 1, exp_val);
- 	}
- 
--	pm_status = pm_runtime_get_if_active(ov64a40->dev, true);
-+	pm_status = pm_runtime_get_if_active(ov64a40->dev);
- 	if (!pm_status)
- 		return 0;
- 
-diff --git a/drivers/media/i2c/thp7312.c b/drivers/media/i2c/thp7312.c
-index 2806887514dc..19bd923a7315 100644
---- a/drivers/media/i2c/thp7312.c
-+++ b/drivers/media/i2c/thp7312.c
-@@ -1052,7 +1052,7 @@ static int thp7312_s_ctrl(struct v4l2_ctrl *ctrl)
- 	if (ctrl->flags & V4L2_CTRL_FLAG_INACTIVE)
- 		return -EINVAL;
- 
--	if (!pm_runtime_get_if_active(thp7312->dev, true))
-+	if (!pm_runtime_get_if_active(thp7312->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
-index 5620dc271fac..cbf3d4761ce3 100644
---- a/drivers/net/ipa/ipa_smp2p.c
-+++ b/drivers/net/ipa/ipa_smp2p.c
-@@ -92,7 +92,7 @@ static void ipa_smp2p_notify(struct ipa_smp2p *smp2p)
- 		return;
- 
- 	dev = &smp2p->ipa->pdev->dev;
--	smp2p->power_on = pm_runtime_get_if_active(dev, true) > 0;
-+	smp2p->power_on = pm_runtime_get_if_active(dev) > 0;
- 
- 	/* Signal whether the IPA power is enabled */
- 	mask = BIT(smp2p->enabled_bit);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index d8f11a078924..f8293ae71389 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2510,7 +2510,7 @@ static void pci_pme_list_scan(struct work_struct *work)
- 			 * If the device is in a low power state it
- 			 * should not be polled either.
- 			 */
--			pm_status = pm_runtime_get_if_active(dev, true);
-+			pm_status = pm_runtime_get_if_active(dev);
- 			if (!pm_status)
- 				continue;
- 
-diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-index 7c9b35448563..436baa167498 100644
---- a/include/linux/pm_runtime.h
-+++ b/include/linux/pm_runtime.h
-@@ -72,7 +72,8 @@ extern int pm_runtime_force_resume(struct device *dev);
- extern int __pm_runtime_idle(struct device *dev, int rpmflags);
- extern int __pm_runtime_suspend(struct device *dev, int rpmflags);
- extern int __pm_runtime_resume(struct device *dev, int rpmflags);
--extern int pm_runtime_get_if_active(struct device *dev, bool ign_usage_count);
-+extern int pm_runtime_get_if_active(struct device *dev);
-+extern int pm_runtime_get_if_in_use(struct device *dev);
- extern int pm_schedule_suspend(struct device *dev, unsigned int delay);
- extern int __pm_runtime_set_status(struct device *dev, unsigned int status);
- extern int pm_runtime_barrier(struct device *dev);
-@@ -94,18 +95,6 @@ extern void pm_runtime_release_supplier(struct device_link *link);
- 
- extern int devm_pm_runtime_enable(struct device *dev);
- 
--/**
-- * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
-- * @dev: Target device.
-- *
-- * Increment the runtime PM usage counter of @dev if its runtime PM status is
-- * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
-- */
--static inline int pm_runtime_get_if_in_use(struct device *dev)
--{
--	return pm_runtime_get_if_active(dev, false);
--}
--
- /**
-  * pm_suspend_ignore_children - Set runtime PM behavior regarding children.
-  * @dev: Target device.
-@@ -275,8 +264,7 @@ static inline int pm_runtime_get_if_in_use(struct device *dev)
- {
- 	return -EINVAL;
- }
--static inline int pm_runtime_get_if_active(struct device *dev,
--					   bool ign_usage_count)
-+static inline int pm_runtime_get_if_active(struct device *dev)
- {
- 	return -EINVAL;
- }
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index 7f7b67fe1b65..068c16e52dff 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -612,7 +612,7 @@ EXPORT_SYMBOL_GPL(snd_hdac_power_up_pm);
- int snd_hdac_keep_power_up(struct hdac_device *codec)
- {
- 	if (!atomic_inc_not_zero(&codec->in_pm)) {
--		int ret = pm_runtime_get_if_active(&codec->dev, true);
-+		int ret = pm_runtime_get_if_active(&codec->dev);
- 		if (!ret)
- 			return -1;
- 		if (ret < 0)
--- 
-2.39.2
+> On Mon, Jan 29, 2024 at 01:27:09PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > While a device is runtime suspended along with its PCIe hierarchy, the
+> > device could get disconnected. Because of the suspend, the device
+> > disconnection cannot be detected until portdrv/hotplug have resumed. On
+> > runtime resume, pcie_wait_for_link_delay() is called:
+> >=20
+> >   pci_pm_runtime_resume()
+> >     pci_pm_bridge_power_up_actions()
+> >       pci_bridge_wait_for_secondary_bus()
+> >         pcie_wait_for_link_delay()
+> >=20
+> > Because the device is already disconnected, this results in cascading
+> > failures:
+> >=20
+> >   1. pcie_wait_for_link_status() returns -ETIMEDOUT.
+> >=20
+> >   2. After the commit a89c82249c37 ("PCI: Work around PCIe link
+> >      training failures"),
+>=20
+> I this this also depends on the merge resolution in 1abb47390350
+> ("Merge branch 'pci/enumeration'").  Just looking at a89c82249c37 in
+> isolation suggests that pcie_wait_for_link_status() returning
+> -ETIMEDOUT would not cause pcie_wait_for_link_delay() to call
+> pcie_failed_link_retrain().
 
+I was aware of the merge but I seem to have somehow misanalyzed the return=
+=20
+values earlier since I cannot anymore reach my earlier conclusion and now
+ended up agreeing with your analysis that 1abb47390350 broke it.
+
+That would imply there is a logic error in 1abb47390350 in addition to=20
+the LBMS-logic problem in a89c82249c37 my patch is fixing... However, I=20
+cannot pinpoint a single error because there seems to be more than one in=
+=20
+the whole code.
+
+First of all, this is not true for pcie_failed_link_retrain():
+ * Return TRUE if the link has been successfully retrained, otherwise FALSE=
+=2E
+If LBMS is not set, the Target Speed quirk is not applied but the function=
+=20
+still returns true. I think that should be changed to early return false
+when no LBMS is present.
+
+But if I make that change, then pcie_wait_for_link_delay() will do=20
+msleep() + return true, and pci_bridge_wait_for_secondary_bus() will call=
+=20
+long ~60s pci_dev_wait().
+
+I'll try to come up another patch to cleanup all that return logic so that=
+=20
+it actually starts to make some sense.
+
+> >      pcie_failed_link_retrain() spuriously detects
+> >      this failure as a Link Retraining failure and attempts the Target
+> >      Speed trick, which also fails.
+>=20
+> Based on the comment below, I guess "Target Speed trick" probably
+> refers to the "retrain at 2.5GT/s, then remove the speed restriction
+> and retrain again" part of pcie_failed_link_retrain() (which I guess
+> is basically the entire point of the function)?
+
+Yes. I'll change the wording slightly to make it more obvious and put=20
+(Target Speed quirk) into parenthesis so I can use it below.
+
+> >   3. pci_bridge_wait_for_secondary_bus() then calls pci_dev_wait() whic=
+h
+> >      cannot succeed (but waits ~1 minute, delaying the resume).
+> >=20
+> > The Target Speed trick (in step 2) is only used if LBMS bit (PCIe r6.1
+> > sec 7.5.3.8) is set. For links that have been operational before
+> > suspend, it is well possible that LBMS has been set at the bridge and
+> > remains on. Thus, after resume, LBMS does not indicate the link needs
+> > the Target Speed quirk. Clear LBMS on resume for bridges to avoid the
+> > issue.
+
+
+--=20
+ i.
+
+--8323328-1875071770-1706615584=:1000--
 
