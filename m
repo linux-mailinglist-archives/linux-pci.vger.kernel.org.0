@@ -1,90 +1,61 @@
-Return-Path: <linux-pci+bounces-2817-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2818-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2942842AC3
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:22:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4696842AE3
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:28:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 306201C21046
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:22:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FDEE1F26029
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:28:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A42364AC;
-	Tue, 30 Jan 2024 17:22:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 558421292DC;
+	Tue, 30 Jan 2024 17:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0oezNouq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvoKLUts"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953E41292DB
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 17:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278901292D0;
+	Tue, 30 Jan 2024 17:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706635335; cv=none; b=TKxocu2w15YMlt/yAuYepsSYVtEAZkxVDG5W1LVX7XLsOmmIT1k9kiZG/G5dCLkFUQ292/dENYBfh5EUpGpVRpRbGUI9cuTL+kheBYQsXdm8m8yNBtysFnSj0BFwuNR7jjTViquBjUGkXX2IS/EX9kika6bMyvQAEX6+HTDqnYo=
+	t=1706635684; cv=none; b=i7EC29L3CdsisaWliKNA37ZGxkpzo0YPoWit/u7eE91Khq80PYjwrQhXTE6yK9g6dv0xFp/7JDJoJlKx59Wpwn25X01FNgTHOUQbQ16PTsLYF6heto28HiUvHeOWJqzfSuBkukUm1nIzhoFPwRTys7JE+5IuHWQeBJF16+WrhxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706635335; c=relaxed/simple;
-	bh=0IsgiQ7Zt+YuGCo/7lyACXSm9Ay95p7xxxCUnEnNmWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DGzxnt07ObOd8vdCnzcvwUoIqoHAzp4kUT5oYTr9Wjv64B64Wci6FYtkyDWp87BX15fnIs6ZvgFAq4+gLMw2arC1vnYSuyrn5Xda3w7uMoIt0Dn7b7ppKyzi9dOEyvtd1de+v9uLTJSQOhGH9/MqLq3mGuVOWCTlvu2hKGcSqhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0oezNouq; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5cf2d73a183so7036a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 09:22:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706635334; x=1707240134; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0IsgiQ7Zt+YuGCo/7lyACXSm9Ay95p7xxxCUnEnNmWI=;
-        b=0oezNouqdAaNRvW1G3fY91gPSNLYsAwWVEOn+atadwbyrEDJSom7ufxuWyug/ykeaE
-         k+v+3o25z+57BuJHnGkn8T8OcA6XUxF+JWbzTPq+bzuiM2A9bOP0aq5PRuAO6K6o2vT3
-         hHrUSvALT0IsZYeJ1Safmz/nqUG1YKkN829UK5ksLrGntviYA34I9pjftL/wosnuCPB3
-         I5jX/hkKwT8E7wwWkI9UtO5ZUCH+7yziPLwpe7oMI0rS0FmKUQ8cqsOn+QgrSKS5JDa6
-         joipSun6JxTqs3ktOgFLFP+qsZpPs88OQZ3WFc3pwLCEF7VtvDqrYntQ20RmfjHiLbSw
-         GP2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706635334; x=1707240134;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0IsgiQ7Zt+YuGCo/7lyACXSm9Ay95p7xxxCUnEnNmWI=;
-        b=GMJJhch1UfhluPOwK6BHWzHzIio7Gqrc7hqkZooCkX18se/h5iintOQgWZtS7boJfv
-         fZTEmWvSFX8mID5z9qGbUcfseomht/fkU+Drk5hqng/Nji7Lufbq6q/Hz05hDeVM9T9d
-         pxnAs704G20S/4r4XK9CxCNP9LYnn3GxryqN5Z6XHLerD+4nKfxtiHjsNDQ3rMcDMQ1P
-         7LyH39ohCEQFOWTEl2Zh2gxLscfEqCbitdhOf43eDRc5LdTMCkZvm/qLYBHKytMj+cNY
-         XdqQwd2H0zzmL/7vBtmJmMhX+uOJK8iLBpBQU1mB8EujHzzmrNIU23DwLRQ81ytxnAKo
-         mmdw==
-X-Gm-Message-State: AOJu0YznP6LArGUFY3z2ASluXn8avF3oi3uemEec/yKfUabrRBhJ1Obt
-	kWYbeaW7j7683ZvctBrgVaeWQ0DY5v8jGVGcBl/cUQyQDsPvjbRzc4uIR3DzeA==
-X-Google-Smtp-Source: AGHT+IFM36TXzwwfZ4E0G0pTypDMaayBeXTP1OQlciQ/p2PDDUIUUXq27ogILHs0kltgknmPgWNLRQ==
-X-Received: by 2002:a05:6a20:ce4d:b0:19c:6620:483c with SMTP id id13-20020a056a20ce4d00b0019c6620483cmr1703597pzb.23.1706635333745;
-        Tue, 30 Jan 2024 09:22:13 -0800 (PST)
-Received: from google.com (223.253.124.34.bc.googleusercontent.com. [34.124.253.223])
-        by smtp.gmail.com with ESMTPSA id t5-20020a62d145000000b006dde36aaae7sm8419740pfl.64.2024.01.30.09.22.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 09:22:13 -0800 (PST)
-Date: Tue, 30 Jan 2024 22:52:05 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Robin Murphy <robin.murphy@arm.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: Sajid Dalvi <sdalvi@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <ZbkwPVyqL8x4yeIy@google.com>
-References: <20240111042103.392939-1-ajayagarwal@google.com>
- <b1ef4ad8-99c4-46ba-90fd-d57bd17163b9@arm.com>
- <CAEbtx1=hoDTtpkavk7gp5tmcvdYj6euAuDsQYRPW=EDeVsbUqg@mail.gmail.com>
- <5ef31b1c-3069-4da7-8124-44efba0ad718@arm.com>
- <ZaoPmgeVfXeseTfN@google.com>
+	s=arc-20240116; t=1706635684; c=relaxed/simple;
+	bh=28S1L4bBFK8hBbbAvq3VNr8X9WWe5HGCxwCf29i8V1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Nyop9XKyGxI83TEBX/awvhPxoLUUsw4tXDezLRVvJUKQzFJoaw2eiP/DSosqIBP+J1NbTE5dAj2YXaLyEL0E9ic6mampMD7rHc1/pkFNYukvQ4QlJj7MR4o5dPBG3bL3QfCUSAkp6bOuakJn9jU8h1X8XoFza9q+BhEKDZf3jvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvoKLUts; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42B2EC433C7;
+	Tue, 30 Jan 2024 17:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706635683;
+	bh=28S1L4bBFK8hBbbAvq3VNr8X9WWe5HGCxwCf29i8V1s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KvoKLUtsIhLo2iMrs/tk4Fs3ck6VQ5kxNc+ZJ1x4OAoe+Xu+1Xp9EI6O7jz6m4POn
+	 0EpF+zc2ffFd6iFqslbBTpCRtfKvng58DEEix/QDAPO7LFy1u5jiDnHS85U5E6PrMg
+	 54HPIQfzeLPLPzfxwnCtR+V13T600V2YKsnk22rqiGbEJ6JhJ0qalSUUOgjl5rQ9oU
+	 +1DF1ZJI0x3l+BpE/9x431FqlOaxvqt91LahCdbmAARYTkK5IhNrrkIixVYvThYnWk
+	 dro5+5Ob8zwzJM1sqhSSUrAdUT++UeofSTsHiAxj+Xum7b0zcbjk+tyTXIUrVehb+a
+	 LGZNtqVALhhOw==
+Date: Tue, 30 Jan 2024 11:28:01 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	David Box <david.e.box@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@endlessos.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH 2/2] PCI: vmd: enable PCI PM's L1 substates of remapped
+ PCIe port and NVMe
+Message-ID: <20240130172801.GA525128@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,8 +64,122 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZaoPmgeVfXeseTfN@google.com>
+In-Reply-To: <20240130163519.GA521777@bhelgaas>
 
-Hi Robin, Sergey
-A friendly ping for your review.
+[+cc Johan since qcom has similar code]
+
+On Tue, Jan 30, 2024 at 10:35:19AM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 30, 2024 at 06:00:51PM +0800, Jian-Hong Pan wrote:
+> > The remmapped PCIe port and NVMe have PCI PM L1 substates capability on
+> > ASUS B1400CEAE, but they are disabled originally:
+> >
+> > Capabilities: [900 v1] L1 PM Substates
+> >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+> >                   PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+> >         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> >                    T_CommonMode=0us LTR1.2_Threshold=0ns
+> >         L1SubCtl2: T_PwrOn=10us
+> > 
+> > Power on all of the VMD remapped PCI devices before enable PCI-PM L1 PM
+> > Substates by following "Section 5.5.4 of PCIe Base Spec Revision 5.0
+> > Version 0.1". Then, PCI PM's L1 substates control are enabled
+> > accordingly.
+> > 
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+> > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > ---
+> >  drivers/pci/controller/vmd.c | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index 87b7856f375a..b1bbe8e6075a 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -738,6 +738,12 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
+> >  	vmd_bridge->native_dpc = root_bridge->native_dpc;
+> >  }
+> >  
+> > +static int vmd_power_on_pci_device(struct pci_dev *pdev, void *userdata)
+> > +{
+> > +	pci_set_power_state(pdev, PCI_D0);
+> > +	return 0;
+> > +}
+> > +
+> >  /*
+> >   * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
+> >   */
+> > @@ -928,6 +934,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> >  	vmd_acpi_begin();
+> >  
+> >  	pci_scan_child_bus(vmd->bus);
+> > +
+> > +	/*
+> > +	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
+> > +	 * Section 5.5.4 of PCIe Base Spec Revision 5.0 Version 0.1
+> > +	 */
+> > +	pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL);
+> 
+> Sec 5.5.4 indeed says "If setting either or both of the enable bits
+> for PCI-PM L1 PM Substates, both ports must be configured ... while in
+> D0."
+> 
+> This applies to *all* PCIe devices, not just those below a VMD bridge,
+> so I'm not sure this is the right place to do this.  Is there anything
+> that prevents a similar issue for non-VMD hierarchies?
+> 
+> I guess the bridges (Root Ports and Switch Ports) must already be in
+> D0, or we wouldn't be able to enumerate anything below them, right?
+> 
+> It would be nice to connect this more closely with the L1 PM Substates
+> configuration.  I don't quite see the connection here.  The only path
+> I see for L1SS configuration is this:
+> 
+>   pci_scan_slot
+>     pcie_aspm_init_link_state
+>       pcie_aspm_cap_init
+> 	aspm_l1ss_init
+> 
+> which of course is inside pci_scan_child_bus(), which happens *before*
+> this patch puts the devices in D0.  Where does the L1SS configuration
+> happen after this vmd_power_on_pci_device()?
+
+I think I found it; a more complete call tree is like this, where the
+L1SS configuration is inside the pci_enable_link_state_locked() done
+by the vmd_pm_enable_quirk() bus walk:
+
+  vmd_enable_domain
+    pci_scan_child_bus
+      ...
+        pci_scan_slot
+          pcie_aspm_init_link_state
+            pcie_aspm_cap_init
+              aspm_l1ss_init
++   pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL)
+    ...
+    pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features)
+      vmd_pm_enable_quirk
+        pci_enable_link_state_locked(PCIE_LINK_STATE_ALL)
+          __pci_enable_link_state
+            link->aspm_default |= ...
+            pcie_config_aspm_link
+              pcie_config_aspm_l1ss
+                pci_clear_and_set_config_dword(PCI_L1SS_CTL1)  # <--
+              pcie_config_aspm_dev
+                pcie_capability_clear_and_set_word(PCI_EXP_LNKCTL)
+
+qcom_pcie_enable_aspm() does a similar pci_set_power_state(PCI_D0)
+before calling pci_enable_link_state_locked().  I would prefer to
+avoid the D0 precondition, but at the very least, I think we should
+add a note to the pci_enable_link_state_locked() kernel-doc saying the
+caller must ensure the device is in D0.
+
+I think vmd_pm_enable_quirk() is also problematic because it
+configures the LTR Capability *after* calling
+pci_enable_link_state_locked(PCIE_LINK_STATE_ALL).
+
+The pci_enable_link_state_locked() will enable ASPM L1.2, but sec
+5.5.4 says LTR_L1.2_THRESHOLD must be programmed *before* ASPM L1.2
+Enable is set.
+
+Bjorn
 
