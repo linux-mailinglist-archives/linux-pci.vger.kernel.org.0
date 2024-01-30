@@ -1,58 +1,56 @@
-Return-Path: <linux-pci+bounces-2748-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2749-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D628B84171E
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 00:46:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 220D1841765
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 01:15:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14B3C1C21B07
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Jan 2024 23:46:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A375C282E3D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 00:15:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D3353E29;
-	Mon, 29 Jan 2024 23:46:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E52AE2F2D;
+	Tue, 30 Jan 2024 00:14:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NClr7Kfn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmPFQL83"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3869253E24;
-	Mon, 29 Jan 2024 23:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80F533CC4;
+	Tue, 30 Jan 2024 00:14:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706571989; cv=none; b=J9DA9mBEOZcCYokA2zzTBjl2L0LEW1leiM3jFR8QZSOp6GmeO4Vo9Zul2wmGVZzdZaTpaTp5LzlwZU8upkI2HmSgUrwriCA5hl3Kin12D4KNz1Fks4X/9XVxtwWWHxpDxLvlo/rWIEdspvsSOsLwgOiwFQc4f9whNWezqE746OY=
+	t=1706573678; cv=none; b=dTn/a5V3d8yuVmQdFIov0z0hpdhsDfUFp471CSHZ3IRwuQL/zOpyFg+kIA/jg4wERcr8X2IPqNYNN83vfjvo6riXbJcjt0zeblIAj3BH0nnjLsgfZTOT2Q+f2AlCkJmfqC9HL/CDzBw7vxEzn5o+pzsRwILdl7xzTtblgiBQYoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706571989; c=relaxed/simple;
-	bh=cpXCtIujLMZQdsxt28UBk2BvsjLuYdx+fvr2xcxohvw=;
+	s=arc-20240116; t=1706573678; c=relaxed/simple;
+	bh=V3Szgd6mAQG1ZhPQ3NrVXBfiwPaXNxU5t+WMiXVPJ68=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jemYC7g4ii2tkG9sve5q8+FcVwaUnU+O2ofqF1a3dUbfgUp0ghLPN3Df2+VYC4hK6bZYUJTROgoj3YIOcEF/rL68tYr+BpJOAIXw7imgn+F1UQzw6NqLZ12+YbauRXSUf/V0rUzTz1Adqbz3mtw6Q4X095+RZgGl8shKCi8DAu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NClr7Kfn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F366C43394;
-	Mon, 29 Jan 2024 23:46:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=XlPdfxlf4AKjSCugVRAebRq61nxmQIx1ngnn2Q25Kk7IP8XUBMgsGIFS7UJCcr657u6xsvS5GndBXBmmQOmOJnWPxZ7/yVX2eZN9CqH/F2QdlgEXSn4uMxIR5L4bgxigjuwp8GC0EAp2rMx4ajKKUy6XRe+JMgYkUkg/lU1Ceyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmPFQL83; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF32C433F1;
+	Tue, 30 Jan 2024 00:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706571988;
-	bh=cpXCtIujLMZQdsxt28UBk2BvsjLuYdx+fvr2xcxohvw=;
+	s=k20201202; t=1706573678;
+	bh=V3Szgd6mAQG1ZhPQ3NrVXBfiwPaXNxU5t+WMiXVPJ68=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NClr7Kfnhc8HKEZ7PRgBd01SHUvK/vdBeLPHv1PNjEQao4xcYyA15tk/CbD3jjxdb
-	 SFJTu1zvsz/9tNLPgnrcpX29SY5HN6ijYB0NlDcLrwNzsMvkE+0Vgg8j44GVQ/TiXP
-	 lRgcmtJ8s2M5LptuXveifrfAN71rpSzrj1ztFyvbig4APCt2K39d0R9KXNhH3BQUdY
-	 QRMY3Zipka53Ubk/Qe3lw6s1DhWXySI1t+s6FlGuVFOAHVYlH27yzYGMB8ykH1R5M2
-	 t7AC1mLYr4VYeGMAKJYUgclaKqg6M/a7J+c+rgUVw8f/dn5uc7eOi5Wgt2t++X3p8D
-	 o9X72JDZg8dMg==
-Date: Mon, 29 Jan 2024 17:46:27 -0600
+	b=EmPFQL83yKl/w8/E6UFtuSUmnL1Ygrv5hIjMh49URoZlmCY+zJN6Y7c4Y744ueo4+
+	 YP/sZ+MhVnZJD2wJ4kWe/8/dbloz56MRvRJT7HMhP/nRT/Tcm6ql4SIo6bkq/rCqof
+	 EzD9FqF92qR7nrWDN6pMrShjkOl9xf5OnJWh+g+txzalatMkW7rY1eLfXv5FF7/jvc
+	 rM6L13JL0YUSJJDwKCZxkY1oJ2LitlfKVd59wTooQ6tLRSo5YnikaU7icaHnp76hQ5
+	 9BuC1Z+UiMfeYZBaEWw0jghO5vqfeaO3ui0hP+Z5l8Ikaw7skBKH/K5smfpiO4Lj7s
+	 ohsCf82A6CcZQ==
+Date: Mon, 29 Jan 2024 18:14:36 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: mika.westerberg@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com, rjw@rjwysocki.net, tasev.stefanoska@skynet.be,
-	enriquezmark36@gmail.com, kernel@witt.link, wse@tuxedocomputers.com,
-	vidyas@nvidia.com, kai.heng.feng@canonical.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, ricky_wu@realtek.com,
-	mario.limonciello@amd.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Always build aspm.c
-Message-ID: <20240129234627.GA487749@bhelgaas>
+To: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [RFC] PCI/AER: Block runtime suspend when handling errors
+Message-ID: <20240130001436.GA488226@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,52 +59,137 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240128233212.1139663-1-david.e.box@linux.intel.com>
+In-Reply-To: <20240123090016.281252-1-stanislaw.gruszka@linux.intel.com>
 
-On Sun, Jan 28, 2024 at 03:32:07PM -0800, David E. Box wrote:
-> Here is the series to always build aspm.c, add back L1SS save/restore, and
-> consolidate all ASPM related code in aspm.c.
-> 
-> Patch 1 - Moves all PCI core functions running under CONFIG_PCIEASPM into
-> aspm.c and changes they Makefile to always build it. No functional changes.
-> 
-> Patch 2 - Creates a separate function to save the L1SS offset and places it
-> outside of CONFIG_PCIEASPM in aspm.c so that the offset is available for
-> later use by the L1SS save/restore code which needs to run when
-> CONFIG_PCIEASPM=n.
-> 
-> Patch 3 - Updated L1 Substate save/restore patch from previous V5 [1].
-> 
-> Patch 4 - Moves the LTR save/restore state functions into aspm.c outside of
-> CONFIG_PCIEASPM.
-> 
-> Patch 5 - Moves the LTR save/restore state calls into
-> pci_save/restore_pcie_state().
-> 
-> The series does not continue any of the ASPM robustness changes proposed by
-> Ilpo [2]. But if we think it's worth combining with this series I can
-> add it and help continue the work.
-> 
-> [1] https://lore.kernel.org/linux-pci/20231221011250.191599-1-david.e.box@linux.intel.com/
-> [2] https://lore.kernel.org/linux-pci/20230918131103.24119-1-ilpo.jarvinen@linux.intel.com/
-> 
-> David E. Box (5):
->   PCI: Always build aspm.c
->   PCI: Create function to save L1SS offset
->   PCI/ASPM: Add back L1 PM Substate save and restore
->   PCI: Move pci_save/restore_ltr_state() to aspm.c
->   PCI: Call LTR save/restore state from PCIe save/restore
-> 
->  drivers/pci/pci.c         |  91 ++++----------
->  drivers/pci/pci.h         |  10 +-
->  drivers/pci/pcie/Makefile |   2 +-
->  drivers/pci/pcie/aspm.c   | 257 ++++++++++++++++++++++++++++++++++++--
->  drivers/pci/probe.c       |  62 +--------
->  include/linux/pci.h       |   4 +-
->  6 files changed, 283 insertions(+), 143 deletions(-)
-> 
-> 
-> base-commit: 0dd3ee31125508cd67f7e7172247f05b7fd1753a
+On Tue, Jan 23, 2024 at 10:00:16AM +0100, Stanislaw Gruszka wrote:
+> PM runtime can be done simultaneously with AER error handling.
+> Avoid that by using pm_runtime_get_sync() just after pci_dev_get()
+> and pm_runtime_put() just before pci_dev_put() in AER recovery
+> procedures.
 
-Rebased to v6.8-rc1 and applied to pci/aspm for v6.9, thanks!
+I guess there must be a general rule here, like "PCI core must use
+pm_runtime_get_sync() whenever touching the device asynchronously,
+i.e., when it's doing something unrelated to a call from the driver"?
+
+Probably would apply to all subsystem cores, not just PCI.
+
+> I'm not sure about DPC case since I do not see get/put there. It
+> just call pci_do_recovery() from threaded irq dcd_handler().
+> I think pm_runtime* should be added to this handler as well.
+
+s/dcd_handler/dpc_handler/
+
+I'm guessing the "threaded" part really doesn't matter; just the fact
+that this is in response to an interrupt, not something directly
+called by a driver?
+
+> pm_runtime_get_sync() will increase dev->power.usage_count counter to
+> prevent any rpm actives. When there is suspending pending, it will wait
+> for it and do the rpm resume. Not sure if that problem, on my testing
+> I did not encounter issues with that.
+
+Sorry, I didn't catch your meaning here.  IIUC, you can reproduce the
+problem with the simultaneous aer_inject and rpm suspend/resume, and
+this patch fixes it.
+
+But there's some other scenario where you *don't* see the problem?
+
+> I tested with igc device by doing simultaneous aer_inject and 
+> rpm suspend/resume via /sys/bus/pci/devices/PCI_ID/power/control
+> and can reproduce: 
+> 
+> [  853.253938] igc 0000:02:00.0: not ready 65535ms after bus reset; giving up
+> [  853.253973] pcieport 0000:00:1c.2: AER: Root Port link has been reset (-25)
+> [  853.253996] pcieport 0000:00:1c.2: AER: subordinate device reset failed
+> [  853.254099] pcieport 0000:00:1c.2: AER: device recovery failed
+> [  853.254178] igc 0000:02:00.0: Unable to change power state from D3hot to D0, device inaccessible
+
+Drop the timestamps; they don't add to understanding the problem.
+
+> The problem disappears when applied this patch.
+> 
+> Signed-off-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+> ---
+>  drivers/pci/pcie/aer.c | 8 ++++++++
+>  drivers/pci/pcie/edr.c | 3 +++
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 42a3bd35a3e1..9b56460edc76 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/errno.h>
+>  #include <linux/pm.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/delay.h>
+> @@ -813,6 +814,7 @@ static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+>  {
+>  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+>  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+> +		pm_runtime_get_sync(&dev->dev);
+>  		e_info->error_dev_num++;
+>  		return 0;
+>  	}
+> @@ -1111,6 +1113,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	cxl_rch_handle_error(dev, info);
+>  	pci_aer_handle_error(dev, info);
+> +
+> +	pm_runtime_put(&dev->dev);
+>  	pci_dev_put(dev);
+>  }
+>  
+> @@ -1143,6 +1147,8 @@ static void aer_recover_work_func(struct work_struct *work)
+>  			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+>  			continue;
+>  		}
+> +		pm_runtime_get_sync(&pdev->dev);
+> +
+>  		pci_print_aer(pdev, entry.severity, entry.regs);
+>  		/*
+>  		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
+> @@ -1159,6 +1165,8 @@ static void aer_recover_work_func(struct work_struct *work)
+>  		else if (entry.severity == AER_FATAL)
+>  			pcie_do_recovery(pdev, pci_channel_io_frozen,
+>  					 aer_root_reset);
+> +
+> +		pm_runtime_put(&pdev->dev);
+>  		pci_dev_put(pdev);
+>  	}
+>  }
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index 5f4914d313a1..bd96babd7249 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/pci.h>
+>  #include <linux/pci-acpi.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  #include "portdrv.h"
+>  #include "../pci.h"
+> @@ -169,6 +170,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  		return;
+>  	}
+>  
+> +	pm_runtime_get_sync(&edev->dev);
+>  	pci_dbg(pdev, "Reported EDR dev: %s\n", pci_name(edev));
+>  
+>  	/* If port does not support DPC, just send the OST */
+> @@ -209,6 +211,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  		acpi_send_edr_status(pdev, edev, EDR_OST_FAILED);
+>  	}
+>  
+> +	pm_runtime_put(&edev->dev);
+>  	pci_dev_put(edev);
+>  }
+>  
+> -- 
+> 2.34.1
+> 
 
