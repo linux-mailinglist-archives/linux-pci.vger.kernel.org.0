@@ -1,171 +1,161 @@
-Return-Path: <linux-pci+bounces-2803-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2804-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 453D88424EF
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:29:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 757828425F7
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 14:15:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC6AF2813BC
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 12:29:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FF0E293540
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 13:15:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 830FF67E90;
-	Tue, 30 Jan 2024 12:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D99506BB40;
+	Tue, 30 Jan 2024 13:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQKfdz5t"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DX9tCY39"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB87E67E66
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 12:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C057460874;
+	Tue, 30 Jan 2024 13:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706617756; cv=none; b=A8ybsfAl7I1x8zwRNnOh0rE1bUMCj7jTnJKhaJtWbsvJusIM10rCM2ntXXoufubXRtRtSAIxynDSvw3i5mndO2r/KDTkKX9IqmIrFSZKKLjb5qO0Zx5JEo3sOaIP4PIS3U8191m0UoxuLEgERPIpdU8V6mjrFu+kSJdftBqKPKM=
+	t=1706620527; cv=none; b=OGgc+sW/TmDe7mo/hAMgvSWiWI+GlyWUzZTA8YkU6Vo4fGQXxNQjmQTE1vGATWps4jzd6D9sFw7b9VV+gDPKm5G7URElGyk3eU92500GqOwxxzIqdqdUKIYoqQh+i/Wjcxh1QHHUGmYrEEwJTiZXVd0dSuizkWGt4xM7DjY5Yg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706617756; c=relaxed/simple;
-	bh=WYV79eqs8EX6+PoVYLFkIJPG5P9GerzOH+CSQWG7gJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZVyZ5POCg/W970/m0HZrNrWsnr1D4soq+7gS8g7zbOonHPbn0eV+fW0dF/mQ2grQCeLOlFswQtBWOfTDF+K3m2s4vhRFPHV3a/DKRLn6Brh8bOvfvNxPysm0/TqFn5llFVHyKtpmDoP6OS50fkUK9luCL4mahswEfb9pGcqMsyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dQKfdz5t; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6de2e24ea87so1213309b3a.3
-        for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 04:29:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706617754; x=1707222554; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=L7FzOKAxGetGKZLcjTXfQ+63UEVvuNkv8U7bj2gyECQ=;
-        b=dQKfdz5tZSp6GsqkgAe0da55D79pAxEs4szIKeYXy8wjQLOOinLouFLwqnASLOXVmZ
-         gcB3Qzoivnzu+9tq/OJxQ5p8fAdjtYA0n5JaMVB4i9IwQt1HHyc9COljhuAU1aaR/573
-         o5K6QraQbO+SDHYfdGphDZodFUJkAjlgPdGX0YKmjuGtNuCt9yFdvuFpbjGIRWE5wR1E
-         DJgr1TWsG4ubhQW5jjP1ps41UWO51dXDrgDxNESQPF8542W5+j0o1Si04qdRLoLyKAo4
-         c9xlV60NWrZzXYZzj7xQQ6PWfWnvM0XJ0iycpU7RHih+UTxpyrLe5FNDdkarJNU+IUwr
-         2Ylw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706617754; x=1707222554;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L7FzOKAxGetGKZLcjTXfQ+63UEVvuNkv8U7bj2gyECQ=;
-        b=bfG+cpzm7VGrtyGG2ZtC8yVYTqQFfGHh/Xz4zGkDfInScHCGjlDjSJxZITwaKqk9a2
-         lBhsB06a4IVZTo0L0EvQCV3a4Llp1fR6xU2zE4lHgIIzjaPHGbY05So2trULeTpTmenD
-         t8xzu5k049Xp/l5DRilBQILc8FfKonVQss22AFKUeAjq531E7CvmccwgvYjsfnnLejK/
-         W6rZOg4N89g1okHlzWlP1vDJQ2zPqti2OYZlU/2n1Pkmqec30QLmX1lFmOus9+eLLZXc
-         gluBXMKPDAziUogJWqor9HF5misOy+HRiSYUkafvr6sAqHn+GqzgyB1ksK7CzFl0GfUZ
-         MOxg==
-X-Gm-Message-State: AOJu0YzWkNpW67238G7nUWogtKMm9biF/cNkhp+S2OOmrozqIRFawJj/
-	Ao/GjSxgpgtREWlirMx6p5VY+ibaV5GZ2xnRyoi8wq5Ye5YyVHVRFHR7J6PBgw==
-X-Google-Smtp-Source: AGHT+IG81ShMSjJPHN/JsXSWiwEv+/heJXnfbxvVirzY+ZlLtNxTyNJD9lf6Eijrugmb6PklWmMTZw==
-X-Received: by 2002:a17:903:186:b0:1d9:11c8:b3c8 with SMTP id z6-20020a170903018600b001d911c8b3c8mr736072plg.64.1706617754147;
-        Tue, 30 Jan 2024 04:29:14 -0800 (PST)
-Received: from thinkpad ([117.202.188.6])
-        by smtp.gmail.com with ESMTPSA id ka7-20020a170903334700b001d7252fef6bsm7101666plb.299.2024.01.30.04.29.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 04:29:13 -0800 (PST)
-Date: Tue, 30 Jan 2024 17:59:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>, Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20240130122906.GE83288@thinkpad>
-References: <20240119075219.GC2866@thinkpad>
- <Zaq4ejPNomsvQuxO@google.com>
- <20240120143434.GA5405@thinkpad>
- <ZbdLBySr2do2M_cs@google.com>
- <20240129071025.GE2971@thinkpad>
- <ZbdcJDWcZG3Y3efJ@google.com>
- <20240129081254.GF2971@thinkpad>
- <ZbengMb5zrigs_2Z@google.com>
- <20240130064555.GC32821@thinkpad>
- <Zbi6q1aigV35yy9b@google.com>
+	s=arc-20240116; t=1706620527; c=relaxed/simple;
+	bh=YqZzIcojda4nyn+FMMQhoHdEpUzR5h93PZGcwzJyjac=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FXLGD7HWxpAJzywr+dHFokValGm8njkrVoYm4q/4/b7taTK0eMcxo60bO5zqbf0xn/Ngc1kBNtAwudgDyzduBa3Cajqo9GouQxjkTGFkLoeN+tzn2NDPldr2es6etlSDXBs1Z2m5HB6B4lgZUmSeZ7MibUzEfkQzqN7DTKuXY2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DX9tCY39; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706620525; x=1738156525;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YqZzIcojda4nyn+FMMQhoHdEpUzR5h93PZGcwzJyjac=;
+  b=DX9tCY39w4M1QuS0D/1KtNHbhz4M38NCDfHtDdYEjlsJxIkeaZ6PyrGI
+   MjfbtrqRJIUr9ePkD9nTi3udyNxfEl4ahonqer0tMFuc/XqAnzSB84MU6
+   YuNbMINZZK8gaLnex9NtOMukEeZBJWjMHB6BD/qZb3AuUilZLuZ/MLi95
+   EtrGSpA4Hw2v/CLd0ZNJ5Hrt7VDhKeqfnE/E4RL5MLqrFntclB+4awYsC
+   xU0NrG7PuIO8mvayj2iQztXpMWzgL/dEK2VLqIFIk8NZrEf/sTZy4FiDK
+   CqugLfmu+B7vL17Z39M59hLTYxe3dUYLkcv7uSzYhb+xGS+r9QrltFWj1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="400413381"
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="400413381"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 05:15:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
+   d="scan'208";a="3689802"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.252])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 05:15:22 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 30 Jan 2024 15:15:18 +0200 (EET)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 2/2] PCI: Do not wait for disconnected devices when
+ resuming
+In-Reply-To: <20240129185544.GA471021@bhelgaas>
+Message-ID: <964b697f-a412-2fd5-a649-036e9f6b596e@linux.intel.com>
+References: <20240129185544.GA471021@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1132523681-1706620518=:1000"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1132523681-1706620518=:1000
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zbi6q1aigV35yy9b@google.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
+On Mon, 29 Jan 2024, Bjorn Helgaas wrote:
 
-[...]
+> On Mon, Jan 29, 2024 at 01:27:10PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > On runtime resume, pci_dev_wait() is called:
+> >   pci_pm_runtime_resume()
+> >     pci_pm_bridge_power_up_actions()
+> >       pci_bridge_wait_for_secondary_bus()
+> >         pci_dev_wait()
+> >=20
+> > While a device is runtime suspended along with its PCIe hierarchy, the
+> > device could get disconnected. In such case, the link will not come up
+> > no matter how log pci_dev_wait() waits for it.
+>=20
+> s/PCIe/PCI/ (unless this is a PCIe-specific thing)
+> s/log/long/
+>=20
+> > Besides the above mentioned case, there could be other ways to get the
+> > device disconnected while pci_dev_wait() is waiting for the link to
+> > come up.
+> >=20
+> > Make pci_dev_wait() to exit if the device is already disconnected to
+> > avoid unnecessary delay. As disconnected device is not really even a
+> > failure in the same sense as link failing to come up for whatever
+> > reason, return 0 instead of errno.
+>=20
+> The device being disconnected is not the same as a link failure.
 
-> > > > > > If that's the case with your driver, when are you starting the link training?
-> > > > > > 
-> > > > > The link training starts later based on a userspace/debugfs trigger.
-> > > > > 
-> > > > 
-> > > > Why does it happen as such? What's the problem in starting the link during
-> > > > probe? Keep it in mind that if you rely on the userspace for starting the link
-> > > > based on a platform (like Android), then if the same SoC or peripheral instance
-> > > > get reused in other platform (non-android), the it won't be a seamless user
-> > > > experience.
-> > > > 
-> > > > If there are any other usecases, please state them.
-> > > > 
-> > > > - Mani
-> > > >
-> > > This SoC is targeted for an android phone usecase and the endpoints
-> > > being enumerated need to go through an appropriate and device specific
-> > > power sequence which gets triggered only when the userspace is up. The
-> > > PCIe probe cannot assume that the EPs have been powered up already and
-> > > hence the link-up is not attempted.
-> > 
-> > Still, I do not see the necessity to not call start_link() during probe. If you
-> I am not adding any logic/condition around calling the start_link()
-> itself. I am only avoiding the wait for the link to be up if the
-> controller driver has not defined start_link().
-> 
+This we agree and it's what I tried to write above.
 
-I'm saying that not defining the start_link() callback itself is wrong.
+> Do
+> all the callers do the right thing if pci_dev_wait() returns success
+> when there's no device there?
 
-> > add PROBE_PREFER_ASYNCHRONOUS to your controller driver, this delay would become
-> > negligible. The reason why I'm against not calling start_link() is due to below
-> > reasons:
-> > 
-> > 1. If the same SoC gets reused for other platforms, even other android phones
-> > that powers up the endpoints during boot, then it creates a dependency with
-> > userspace to always start the link even though the devices were available.
-> > That's why we should never fix the behavior of the controller drivers based on a
-> > single platform.
-> I wonder how the behavior is changing with this patch. Do you have an
-> example of a platform which does not have start_link() defined but would
-> like to still wait for a second for the link to come up?
-> 
+It's a bit complicated. I honestly don't know what is the best approach=20
+here so I'm very much open to your suggestion what would be preferrable.
 
-Did you went through my reply completely? I mentioned that the 1s delay would be
-gone if you add the async flag to your driver and you are ignoring that.
+There are two main use cases (more than two callers but they seem boil=20
+down to two use cases).
 
-But again, I'm saying that not defining start_link() itself is wrong and I've
-already mentioned the reasons.
+One use case is reset related functions and those would probably prefer to=
+=20
+have error returned if the wait, and thus reset, failed.
 
-> For example, consider the intel-gw driver. The 1 sec wait time in its
-> probe path is also a waste because it explicitly starts link training
-> later in time.
-> 
+Then the another is wait for buses, that is,=20
+pci_bridge_wait_for_secondary_bus() which return 0 if there's no device=20
+(wait successful). For it, it would make sense to return 0 also when=20
+device is disconnected because it seems analoguous to the case where=20
+there's no device in the first place.
 
-I previously mentioned that the intel-gw needs fixing since there is no point in
-starting the link and waiting for it to come up in its probe() if the DWC core
-is already doing that.
+Perhaps it would be better to return -ENOTTY from pci_dev_wait() and check=
+=20
+for that disconnected condition inside=20
+pci_bridge_wait_for_secondary_bus()? To further complicate things,=20
+however, DPC also depends on the return value of=20
+pci_bridge_wait_for_secondary_bus() and from its perspective, returning=20
+error when there is a device that is disconnected might be the desirable=20
+alternative (but I'm not fully sure how everything in DPC works but I=20
+highly suspect I'm correct here).
 
-- Mani
+Either way, the fix itself does care and seemed to work regardless of the=
+=20
+actual value returned by pci_dev_wait().
 
--- 
-மணிவண்ணன் சதாசிவம்
+> > Also make sure compiler does not become too clever with
+> > dev->error_state and use READ_ONCE() to force a fetch for the
+> > up-to-date value.
+>=20
+> I think we should have a comment there to say why READ_ONCE() is
+> needed.  Otherwise it's hard to know whether a future change might
+> make it unnecessary.
+
+Sure, I'll add a comment there.
+
+--=20
+ i.
+
+--8323328-1132523681-1706620518=:1000--
 
