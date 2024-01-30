@@ -1,200 +1,222 @@
-Return-Path: <linux-pci+bounces-2820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BCC7842B0E
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:33:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E09B842B1F
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 18:40:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FDB61C20B01
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:33:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 322111C259CD
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 17:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25C3714E2C2;
-	Tue, 30 Jan 2024 17:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JmAuULQF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1516960897;
+	Tue, 30 Jan 2024 17:40:09 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CA914D42D;
-	Tue, 30 Jan 2024 17:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BD746A3
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 17:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706636029; cv=none; b=If50Fs12w2Xgs0GQN/xhfVQ68/P2qhy081Z5fvtjsjLIfN7Rf3L1aKlLNURcXVHoudNFPfv8vQiBSly9/cy92TQw0KP2vJ05C5R6kZGltQtZi8WHhlOkhE2Gpr5o8Nbvg77RXxRXpFULuCmh0hqBJA3RiTHnXwcVBh9wKSVqhZs=
+	t=1706636409; cv=none; b=eRXAibcvVi/E9fe/y5QfG46+8axGwI/k8Q2UkKwn/r5DeD9OlDCkm622xwwfxB3IqfCIiGPhHDS7Mfl8i1khY7p3VXmIfFP4K+qBSdgv7T10hfAIAto+C1czOkpfJ9urUEL2dHwdg+IhSkPVDokMWNOfOWm6Seb8CnPJe9Hrs30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706636029; c=relaxed/simple;
-	bh=8y+JtA3p8jEEm3d08iS6Ys4QTmjqBCUJKENj1h5OFiI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VDjOXMAO6kt8iGkvwkwUZL2p44tBatwlVur0XTq7fVOo7OiKm4uKcynHWtCsevLvDACvwBa3AWlDGuYP8tueFHiISISg89uJOdmkmmvlawOAuvC0xP8Gc6g1K8YJcY3tlOOhRCLLYcTayIbjNCPIjrouz5LISq/iFSvegDpYq2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JmAuULQF; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706636027; x=1738172027;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=8y+JtA3p8jEEm3d08iS6Ys4QTmjqBCUJKENj1h5OFiI=;
-  b=JmAuULQFeuQJ2ner7n2uJQGBZrJJYEynZx03xXjWdgVzDECkvQyggSff
-   4gEkrYG4/MCcGIcclAhiC/0lXu13Cf+yApi9KYDqYhyzvOgNVqBebUovN
-   3nA6VHRh/TAL/kjk1BUzbiWZKanurqVs/LofYioSFUWzTKmgHuEJ/nM8i
-   MYUlFePqa3b0zZJn7B4xaqmnRhfwlp6n1CnEPfdrQCo6B2egHCfbuSdmc
-   w3Wdx3U2qR+qWe4sKBeDVlSmW54pW97mul1D4TBkehwwv0q+LLZDICsqf
-   XGEZCocjZwQYYDbX257L2WxLTyKsfzE0PPPW6QPIA4mwwaRcvsUhD/wP9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="400498088"
-X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
-   d="scan'208";a="400498088"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 09:33:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,230,1701158400"; 
-   d="scan'208";a="36564490"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.34.252])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 09:33:44 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Jan 2024 19:33:39 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
- quirk
-In-Reply-To: <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk>
-Message-ID: <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com>
-References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk>
+	s=arc-20240116; t=1706636409; c=relaxed/simple;
+	bh=JLlmYJadHwBqZGwyng0GE1rA9axKYd9JXInOvSAErCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dCVtDftnEHN/9fY9Uuv9YSzw1dmXOJXT3M+8EOJyYT3xBfuUAqyINKmGk2a9xhKpEGriLumn8GwJWmYLcncvGq+A8qMHFRqI+IowMDJPCs3qy6ZfhN1tv1XzwglZ7fVUbxwl0Jh/7A75reorBC3LDNxAS2RlHeq7wgbsFgtzvxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76365DA7;
+	Tue, 30 Jan 2024 09:40:44 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 020A63F5A1;
+	Tue, 30 Jan 2024 09:39:57 -0800 (PST)
+Message-ID: <7bea3e41-1c41-4a05-aca4-637b1bba4cb5@arm.com>
+Date: Tue, 30 Jan 2024 17:39:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1129339086-1706636019=:1000"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: dwc: Strengthen the MSI address allocation logic
+Content-Language: en-GB
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Sajid Dalvi <sdalvi@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+ Manivannan Sadhasivam <mani@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Manu Gautam <manugautam@google.com>,
+ William McVicker <willmcvicker@google.com>,
+ Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org
+References: <20240111042103.392939-1-ajayagarwal@google.com>
+ <b1ef4ad8-99c4-46ba-90fd-d57bd17163b9@arm.com>
+ <CAEbtx1=hoDTtpkavk7gp5tmcvdYj6euAuDsQYRPW=EDeVsbUqg@mail.gmail.com>
+ <5ef31b1c-3069-4da7-8124-44efba0ad718@arm.com> <ZaoPmgeVfXeseTfN@google.com>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <ZaoPmgeVfXeseTfN@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 19/01/2024 5:58 am, Ajay Agarwal wrote:
+> On Tue, Jan 16, 2024 at 09:02:48PM +0000, Robin Murphy wrote:
+>> On 2024-01-16 5:18 pm, Sajid Dalvi wrote:
+>>> On Tue, Jan 16, 2024 at 7:30 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>>
+>>>> On 2024-01-11 4:21 am, Ajay Agarwal wrote:
+>>>>> There can be platforms that do not use/have 32-bit DMA addresses
+>>>>> but want to enumerate endpoints which support only 32-bit MSI
+>>>>> address. The current implementation of 32-bit IOVA allocation can
+>>>>> fail for such platforms, eventually leading to the probe failure.
+>>>>>
+>>>>> If there is a memory region reserved for the pci->dev, pick up
+>>>>> the MSI data from this region. This can be used by the platforms
+>>>>> described above.
+>>>>>
+>>>>> Else, if the memory region is not reserved, try to allocate a
+>>>>> 32-bit IOVA. Additionally, if this allocation also fails, attempt
+>>>>> a 64-bit allocation for probe to be successful. If the 64-bit MSI
+>>>>> address is allocated, then the EPs supporting 32-bit MSI address
+>>>>> will not work.
+>>>>>
+>>>>> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+>>>>> ---
+>>>>> Changelog since v1:
+>>>>>     - Use reserved memory, if it exists, to setup the MSI data
+>>>>>     - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+>>>>>
+>>>>>     .../pci/controller/dwc/pcie-designware-host.c | 50 ++++++++++++++-----
+>>>>>     drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>>>>>     2 files changed, 39 insertions(+), 12 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>> index 7991f0e179b2..8c7c77b49ca8 100644
+>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>> @@ -331,6 +331,8 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp
+>>> *pp)
+>>>>>         u64 *msi_vaddr;
+>>>>>         int ret;
+>>>>>         u32 ctrl, num_ctrls;
+>>>>> +     struct device_node *np;
+>>>>> +     struct resource r;
+>>>>>
+>>>>>         for (ctrl = 0; ctrl < MAX_MSI_CTRLS; ctrl++)
+>>>>>                 pp->irq_mask[ctrl] = ~0;
+>>>>> @@ -374,20 +376,44 @@ static int dw_pcie_msi_host_init(struct
+>>> dw_pcie_rp *pp)
+>>>>>          * order not to miss MSI TLPs from those devices the MSI target
+>>>>>          * address has to be within the lowest 4GB.
+>>>>>          *
+>>>>> -      * Note until there is a better alternative found the reservation
+>>> is
+>>>>> -      * done by allocating from the artificially limited DMA-coherent
+>>>>> -      * memory.
+>>>>> +      * Check if there is memory region reserved for this device. If
+>>> yes,
+>>>>> +      * pick up the msi_data from this region. This will be helpful for
+>>>>> +      * platforms that do not use/have 32-bit DMA addresses but want
+>>> to use
+>>>>> +      * endpoints which support only 32-bit MSI address.
+>>>>> +      * Else, if the memory region is not reserved, try to allocate a
+>>> 32-bit
+>>>>> +      * IOVA. Additionally, if this allocation also fails, attempt a
+>>> 64-bit
+>>>>> +      * allocation. If the 64-bit MSI address is allocated, then the
+>>> EPs
+>>>>> +      * supporting 32-bit MSI address will not work.
+>>>>>          */
+>>>>> -     ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>>>>> -     if (ret)
+>>>>> -             dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices
+>>> with only 32-bit MSI support may not work properly\n");
+>>>>> +     np = of_parse_phandle(dev->of_node, "memory-region", 0);
+>>>>> +     if (np) {
+>>>>> +             ret = of_address_to_resource(np, 0, &r);
+>>>>
+>>>> This is incorrect in several ways - reserved-memory nodes represent
+>>>> actual system memory, so can't be used to reserve arbitrary PCI memory
+>>>> space (which may be different if DMA offsets are involved); the whole
+>>>> purpose of going through the DMA API is to ensure we get a unique *bus*
+>>>> address. Obviously we don't want to reserve actual memory for something
+>>>> that functionally doesn't need it, but conversely having a
+>>>> reserved-memory region for an address which isn't memory would be
+>>>> nonsensical. And even if this *were* a viable approach, you haven't
+>>>> updated the DWC binding to allow it, nor defined a reserved-memory
+>>>> binding for the node itself.
+>>>>
+>>>> If it was reasonable to put something in DT at all, then the logical
+>>>> thing would be a property expressing an MSI address directly on the
+>>>> controller node itself, but even that would be dictating software policy
+>>>> rather than describing an aspect of the platform itself. Plus this is
+>>>> far from the only driver with this concern, so it wouldn't make much
+>>>> sense to hack just one binding without all the others as well. The rest
+>>>> of the DT already describes everything an OS needs to know in order to
+>>>> decide an MSI address to use, it's just a matter of making this
+>>>> particular OS do a better job of putting it all together.
+>>>>
+>>>> Thanks,
+>>>> Robin.
+>>>>
+>>>
+>>> Robin,
+>>> Needed some clarification.
+>>> It seems you are implying that the pcie device tree node should define a
+>>> property for the MSI address within the PCIe address space.
+>>> However, you also state that this would not be an ideal solution, and
+>>> would prefer using existing device tree constructs.
+>>> I am not sure what you mean by, " The rest of the DT already describes
+>>> everything."
+>>> Do you mean adding an "msi" reg to reg-names and defining the address
+>>> in the reg list?
+>>
+>> No, I'm saying the closest this should come to DT at all is the possibility
+>> of the low-level driver hard-coding a platform-specific value for
+> 
+> I am assuming that you mean the platform driver (IOW, vendor driver) by
+> the "low-level" driver? Please confirm.
 
---8323328-1129339086-1706636019=:1000
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Indeed, I mean the vendor/platform driver (sorry if I'm not aware of any 
+standard terminology here - I think I picked up "low-level driver" from 
+one of the previous threads).
 
-On Tue, 30 Jan 2024, Maciej W. Rozycki wrote:
+>> pp->msi_data based on some platform-specific compatible, as Serge pointed to
+>> on v1.
+>>
+> Does this look ok to you? The expectation is that the pp->msi_data will
+> have to be populated by the platform driver if it wants to ensure the
+> support for all kinds of endpoints.
+> 
+> +       if (pp->msi_data)
+> +               return 0;
+> +
+>          ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>          if (ret)
+>                  dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+>   
+>          msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+>                                          GFP_KERNEL);
+> +       if (!msi_vaddr) {
+> +               dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
+> +               dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+> +               msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> +                                               GFP_KERNEL);
+> +       }
+> +
+>          if (!msi_vaddr) {
+>                  dev_err(dev, "Failed to alloc and map MSI data\n");
+>                  dw_pcie_free_msi(pp);
 
-> On Tue, 30 Jan 2024, Ilpo J=C3=A4rvinen wrote:
->=20
-> > First of all, this is not true for pcie_failed_link_retrain():
-> >  * Return TRUE if the link has been successfully retrained, otherwise F=
-ALSE.
-> > If LBMS is not set, the Target Speed quirk is not applied but the funct=
-ion=20
-> > still returns true. I think that should be changed to early return fals=
-e
-> > when no LBMS is present.
->=20
->  I think there is a corner case here indeed.  If Link Active reporting is=
-=20
-> supported and neither DLLLA nor LBMS are set at entry, then the function=
-=20
-> indeed returns success even though the link is down and no attempt to=20
-> retrain will have been made.  So this does indeed look a case for a retur=
-n=20
-> with the FALSE result.
->=20
->  I think most easily this can be sorted by delegating the return result t=
-o=20
-> a temporary variable, preset to FALSE and then only updated from results=
-=20
-> of the calls to `pcie_retrain_link'.  I can offer a patch as the author o=
-f=20
-> the code and one who has means to verify it right away if that helped.
+Yeah, something like that. Personally I'd still be tempted to try some 
+mildly more involved logic to just have a single dev_warn(), but I think 
+that's less important than just having something which clearly works.
 
-I already wrote a patch which addresses this together with the caller=20
-site changes.
-
->  Overall I guess it's all legacy of how this code evolved before it's bee=
-n=20
-> finally merged.
-
-Indeed, it looks the step by step changed didn't yield good result here.
-
-> > > >   3. pci_bridge_wait_for_secondary_bus() then calls pci_dev_wait() =
-which
-> > > >      cannot succeed (but waits ~1 minute, delaying the resume).
-> > > >=20
-> > > > The Target Speed trick (in step 2) is only used if LBMS bit (PCIe r=
-6.1
-> > > > sec 7.5.3.8) is set. For links that have been operational before
-> > > > suspend, it is well possible that LBMS has been set at the bridge a=
-nd
-> > > > remains on. Thus, after resume, LBMS does not indicate the link nee=
-ds
-> > > > the Target Speed quirk. Clear LBMS on resume for bridges to avoid t=
-he
-> > > > issue.
->=20
->  This can be problematic AFAICT however.  While I am not able to verify=
-=20
-> suspend/resume operation with my devices, I expect the behaviour to be=20
-> exactly the same after resume as after a bus reset: the link will fail to=
-=20
-> negotiate and the LBMS and DLLLA bits will be respectively set and clear.=
- =20
-> Consequently if you clear LBMS at resume, then the workaround won't=20
-> trigger and the link will remain inoperational in its limbo state.
-
-How do you get the LBMS set in the first place? Isn't that because the=20
-link tries to come up so shouldn't it reassert that bit again before the=20
-code ends up into the target speed quirk? That is, I assumed you actually=
-=20
-wanted to detect LBMS getting set during pcie_wait_for_link_status() call=
-=20
-preceeding pcie_failed_link_retrain() call?
-
-There's always an option to store it into pci_dev for later use when the=20
-quirk is found to be working for the first time if other solutions don't=20
-work.
-
-In any case and unrelated to this patch, the way this quirk monopolizes=20
-LBMS bit is going to have to be changed because it won't be reliable with=
-=20
-the PCIe BW controller that sets up and irq for LBMS (and clears the bit).
-In bwctrl v5 (yet to be posted) I'll add LBMS counter into bwctrl to allow=
-=20
-this quirk to keep working (which will need to be confirmed).
-
->  What kind of scenario does the LBMS bit get set in that you have a=20
-> trouble with?  You write that in your case the downstream device has been=
-=20
-> disconnected while the bug hierarchy was suspended and it is not present=
-=20
-> anymore at resume, is that correct?
->
->  But in that case no link negotiation could have been possible and=20
-> consequently the LBMS bit mustn't have been set by hardware (according to=
-=20
-> my understanding of PCIe), because (for compliant, non-broken devices=20
-> anyway) it is only specified to be set for ports that can communicate wit=
-h=20
-> the other link end (the spec explicitly says there mustn't have been a=20
-> transition through the DL_Down status for the port).
->
->  Am I missing something?
-
-Yes, when resuming the device is already gone but the bridge still has=20
-LBMS set. My understanding is that it was set because it was there
-from pre-suspend time but I've not really taken a deep look into it=20
-because the problem and fix seemed obvious.
-
-I read that "without the Port transitioning through DL_Down status"=20
-differently than you, I only interpret that it relates to the two=20
-bullets following it. ...So if retrain bit is set, and link then goes=20
-down, the bullet no longer applies and LBMS should not be set because=20
-there was transition through DL_Down. But I could well be wrong...
-
---=20
- i.
-
---8323328-1129339086-1706636019=:1000--
+Thanks,
+Robin.
 
