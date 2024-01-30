@@ -1,148 +1,154 @@
-Return-Path: <linux-pci+bounces-2841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0BAF842E1B
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 21:44:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 035FB842EB1
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 22:37:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6197D1F25A6B
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 20:44:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 359191C21B7A
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 21:37:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0DF479DD3;
-	Tue, 30 Jan 2024 20:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC05678B4C;
+	Tue, 30 Jan 2024 21:37:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r3Am/ZUF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3bgtw3f"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A6555E6B;
-	Tue, 30 Jan 2024 20:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4314F61
+	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 21:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706647445; cv=none; b=RIWSysdzF7yfPSW8Kvud1ZrYObdBiaJKFqxJ5RyAsxE7DTgYn0ClGVLqAe5E5VseyIGCTAdPcJgvzRfB451iNVIYug+6R4sOGflQCI4LhaMM6wtlv0kZ3Zf31wmMii9+8w23FikEVgSEIBGBeN9SbZYMfUbLQkn5GhrIudeYzfU=
+	t=1706650664; cv=none; b=ol/jC3C1XJA+V0XU17AfciLfrE++uKRZmS5p4RwZ93mCvK38pFifNPp5sQz3RSEQLpq7Xme1wDf8aEz/egF7pE3mB8vaP7k6/Z1YVJY3xHXObThg7Ic0jVAmDJTJiYPjqBusClNqOWibPius9w5SnMZRSpCiSxvBRf3+ajqB7QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706647445; c=relaxed/simple;
-	bh=bPw6ruebyasCXorT1LdxWx1GajiUvbLKrTDw9DFK5FA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dHRxn6Jn+lZoPm0BJZL/P1o9RgsZjiSDL4ITbfhrSYYdbq0q/A2NLYCaoZbBPoGzYu4ImusDLta3CYEBK3oO4I/woOJ97aTjasjC+gJQ5S2YtrXXBOGBCoTue6+3kFAmGuoaPjgGryNMdn+0LY1XT/wJB23fYl+/asvyCwknga8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r3Am/ZUF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EBFC433F1;
-	Tue, 30 Jan 2024 20:44:04 +0000 (UTC)
+	s=arc-20240116; t=1706650664; c=relaxed/simple;
+	bh=Uax2ZCgxgcsu5NjsDLNXuRL9t/YRrqXst4f1rGME1/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTlCNxY7X9/hVED2Sr8dcVfvWCxq2DGmNqWfVCi1Uj8Q59H0UG0sZ1CRAW+Rigx1v36OzoQ2RAYgK2LQR0kQU6aXR0f3d00UKd20pECWb0hObO46o9ExvxyZrEVCYm4lJ3QSxQm9RFlAqKxkVoxnquNGRttnAL/3PCCj2HTU9e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3bgtw3f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A752C433F1;
+	Tue, 30 Jan 2024 21:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706647444;
-	bh=bPw6ruebyasCXorT1LdxWx1GajiUvbLKrTDw9DFK5FA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=r3Am/ZUFJ5LvciFl7LpCgQQZ28jpBwPyRmGVj9C9/vS9yk40Aa7U+KC6hq/oO2B7n
-	 wDQJ8uK7Ltr51lQF8BQiAA8Skty5QBeFsH0/3E1VTaUey75oUEjjsZccrwn+o0MZeE
-	 Miv8UzxNckXMSMLvDHFGUgNXH0sZypZ7xRpaMpeTurT916gRzkt54hEEq2RxhsCyxH
-	 s9nK0ukGPiRl9D3B/hcIKbaI2t/XGCd1zfkzJo3hNN89BP3waa48nxA5jOnij4C3r2
-	 kY5KfQ5U4IsSneu4O25TjKls3lCrZLcTzm7OdlZZdjiu5xgCsOncdeDuXSXJQsxfgP
-	 3wdiZdO2KG//w==
-Date: Tue, 30 Jan 2024 14:44:03 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-Cc: "Chen, Jiqian" <Jiqian.Chen@amd.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"Hildebrand, Stewart" <Stewart.Hildebrand@amd.com>,
-	"Huang, Ray" <Ray.Huang@amd.com>,
-	"Ragiadakou, Xenia" <Xenia.Ragiadakou@amd.com>
-Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
-Message-ID: <20240130204403.GA562912@bhelgaas>
+	s=k20201202; t=1706650663;
+	bh=Uax2ZCgxgcsu5NjsDLNXuRL9t/YRrqXst4f1rGME1/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g3bgtw3f/jGsv5F74o1tNlTDOFmYVF7mxraq2bHypFhF7BukAZkgwTJmhxPrHUoKR
+	 Co/wLim8pJjZWQZSi/nM+IN8/yx8nvXH3ppcB+mxONZ6i5I9hg2y9SB4h+MAWc6z1F
+	 jzyNwXBguPqSFN3CL0XlP8ltsCwWNg9iFNobpYsHYRw53LKbz+4Y3UqkSHoTWhjUA5
+	 OlE4WpRSgFT6GN9+AIniGfXwAJhqCoaS8jvp+Anibvrr0T8FtK/YcZ0OeFiJ1rbdD6
+	 iDCnbY9jB1L2Ec2OSJILSvs7qHVC99cNi+JYzw5/8HjS/oB8US8oyaxaRvaNmUImjv
+	 GL0gRGn8aN5VQ==
+Date: Tue, 30 Jan 2024 22:37:32 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/3] PCI: endpoint: improve pci_epf_alloc_space()
+Message-ID: <ZblsHCzCx7JNBFe9@x1-carbon>
+References: <20240130193214.713739-1-cassel@kernel.org>
+ <20240130193214.713739-3-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zbi8WJPEUSMgjuVY@macbook>
+In-Reply-To: <20240130193214.713739-3-cassel@kernel.org>
 
-On Tue, Jan 30, 2024 at 10:07:36AM +0100, Roger Pau Monné wrote:
-> On Mon, Jan 29, 2024 at 04:01:13PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Jan 25, 2024 at 07:17:24AM +0000, Chen, Jiqian wrote:
-> > > On 2024/1/24 00:02, Bjorn Helgaas wrote:
-> > > > On Tue, Jan 23, 2024 at 10:13:52AM +0000, Chen, Jiqian wrote:
-> > > >> On 2024/1/23 07:37, Bjorn Helgaas wrote:
-> > > >>> On Fri, Jan 05, 2024 at 02:22:17PM +0800, Jiqian Chen wrote:
-> > > >>>> There is a need for some scenarios to use gsi sysfs.
-> > > >>>> For example, when xen passthrough a device to dumU, it will
-> > > >>>> use gsi to map pirq, but currently userspace can't get gsi
-> > > >>>> number.
-> > > >>>> So, add gsi sysfs for that and for other potential scenarios.
-> > > >> ...
-> > > > 
-> > > >>> I don't know enough about Xen to know why it needs the GSI in
-> > > >>> userspace.  Is this passthrough brand new functionality that can't be
-> > > >>> done today because we don't expose the GSI yet?
-> > 
-> > I assume this must be new functionality, i.e., this kind of
-> > passthrough does not work today, right?
-> > 
-> > > >> has ACPI support and is responsible for detecting and controlling
-> > > >> the hardware, also it performs privileged operations such as the
-> > > >> creation of normal (unprivileged) domains DomUs. When we give to a
-> > > >> DomU direct access to a device, we need also to route the physical
-> > > >> interrupts to the DomU. In order to do so Xen needs to setup and map
-> > > >> the interrupts appropriately.
-> > > > 
-> > > > What kernel interfaces are used for this setup and mapping?
-> > >
-> > > For passthrough devices, the setup and mapping of routing physical
-> > > interrupts to DomU are done on Xen hypervisor side, hypervisor only
-> > > need userspace to provide the GSI info, see Xen code:
-> > > xc_physdev_map_pirq require GSI and then will call hypercall to pass
-> > > GSI into hypervisor and then hypervisor will do the mapping and
-> > > routing, kernel doesn't do the setup and mapping.
-> > 
-> > So we have to expose the GSI to userspace not because userspace itself
-> > uses it, but so userspace can turn around and pass it back into the
-> > kernel?
+On Tue, Jan 30, 2024 at 08:32:10PM +0100, Niklas Cassel wrote:
+> pci_epf_alloc_space() already performs checks on the requested BAR size,
+> and will allocate and set epf_bar->size to a size higher than the
+> requested BAR size if some constraint deems it necessary.
 > 
-> No, the point is to pass it back to Xen, which doesn't know the
-> mapping between GSIs and PCI devices because it can't execute the ACPI
-> AML resource methods that provide such information.
+> However, other than pci_epf_alloc_space() performing these roundups,
+> there are checks and roundups in two different places in pci-epf-test.c.
 > 
-> The (Linux) kernel is just a proxy that forwards the hypercalls from
-> user-space tools into Xen.
-
-But I guess Xen knows how to interpret a GSI even though it doesn't
-have access to AML?
-
-> > It seems like it would be better for userspace to pass an identifier
-> > of the PCI device itself back into the hypervisor.  Then the interface
-> > could be generic and potentially work even on non-ACPI systems where
-> > the GSI concept doesn't apply.
+> And further checks are proposed to other endpoint function drivers, see:
+> https://lore.kernel.org/linux-pci/20240108151015.2030469-1-Frank.Li@nxp.com/
 > 
-> We would still need a way to pass the GSI to PCI device relation to
-> the hypervisor, and then cache such data in the hypervisor.
+> Having these checks spread out at different places in the EPF driver
+> (and potentially in multiple EPF drivers) is not maintainable and makes
+> the code hard to follow.
 > 
-> I don't think we have any preference of where such information should
-> be exposed, but given GSIs are an ACPI concept not specific to Xen
-> they should be exposed by a non-Xen specific interface.
+> Since pci_epf_alloc_space() already performs roundups, move the checks and
+> roundups performed by pci-epf-test.c to pci_epf_alloc_space().
+> 
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c |  8 --------
+>  drivers/pci/endpoint/pci-epf-core.c           | 10 +++++++++-
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 15bfa7d83489..981894e40681 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -841,12 +841,6 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  	}
+>  	test_reg_size = test_reg_bar_size + msix_table_size + pba_size;
+>  
+> -	if (epc_features->bar_fixed_size[test_reg_bar]) {
+> -		if (test_reg_size > bar_size[test_reg_bar])
+> -			return -ENOMEM;
+> -		test_reg_size = bar_size[test_reg_bar];
+> -	}
+> -
+>  	base = pci_epf_alloc_space(epf, test_reg_size, test_reg_bar,
+>  				   epc_features, PRIMARY_INTERFACE);
+>  	if (!base) {
+> @@ -888,8 +882,6 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
+>  		bar_fixed_64bit = !!(epc_features->bar_fixed_64bit & (1 << i));
+>  		if (bar_fixed_64bit)
+>  			epf_bar->flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
+> -		if (epc_features->bar_fixed_size[i])
+> -			bar_size[i] = epc_features->bar_fixed_size[i];
+>  	}
+>  }
+>  
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index e44f4078fe8b..37d9651d2026 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -260,6 +260,7 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>  			  const struct pci_epc_features *epc_features,
+>  			  enum pci_epc_interface_type type)
+>  {
+> +	u64 bar_fixed_size = epc_features->bar_fixed_size[bar];
+>  	size_t align = epc_features->align;
+>  	struct pci_epf_bar *epf_bar;
+>  	dma_addr_t phys_addr;
+> @@ -270,7 +271,14 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+>  	if (size < 128)
+>  		size = 128;
+>  
+> -	if (align)
+> +	if (bar_fixed_size && size > bar_fixed_size) {
+> +		dev_err(dev, "requested BAR size is larger than fixed size\n");
+> +		return NULL;
+> +	}
+> +
+> +	if (bar_fixed_size)
+> +		size = bar_fixed_size;
+> +	else if (align)
+>  		size = ALIGN(size, align);
+>  	else
+>  		size = roundup_pow_of_two(size);
 
-AFAIK Linux doesn't expose GSIs directly to userspace yet.  The GSI
-concept relies on ACPI MADT, _MAT, _PRT, etc.  A GSI is associated
-with some device (PCI in this case) and some interrupt controller
-entry.  I don't understand how a GSI value is useful without knowing
-something about that framework in which GSIs exist.
+We actually need to perform the alignment even for fixed size BARs too,
+since some platforms have fixed_size_bars that are smaller than the
+iATU MIN REGION.
 
-Obviously I know less than nothing about Xen, so I apologize for
-asking all these stupid questions, but it just doesn't all make sense
-to me yet.
+Will fix in v2.
 
-Bjorn
+
+Kind regards,
+Niklas
 
