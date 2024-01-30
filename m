@@ -1,87 +1,74 @@
-Return-Path: <linux-pci+bounces-2766-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2767-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2864841C37
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 07:55:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E3F6841C64
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 08:15:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C0FD1F24097
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 06:55:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F28AAB220E0
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 07:15:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 786A03F9E3;
-	Tue, 30 Jan 2024 06:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FC945012;
+	Tue, 30 Jan 2024 07:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iLq/DByo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQUzVE32"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0351038DF7
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 06:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3D045006;
+	Tue, 30 Jan 2024 07:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706597714; cv=none; b=Hw+rohn+5/ZjHmh7gaTjL9iC5V2gblJNsd/F8nEPTUW/PWfFqQTmF4HRgld83HkX2VUc6iYzVzgD7eGsLuE3JDwRmeNJGwh5pS4RPN1z/UOHdwcpy4d8VuYz79uqAyC0ImVnFRggUxLtMIJPq0nSLpNtrezvnof0XCd8eWLw3D4=
+	t=1706598902; cv=none; b=LdMPMJ4CEM3oeDvc11KP+e8lGLj0XbXKz9U+z/Em0zRlEVG/GiC7c3MpC+WDfuLWK5e0W9EwZrxeAw7fald65avp3+q9uyDItA6iH9Slwu30NziyWm1qvMykpizvAxOOIf2PGYWzfhMl4lg+1FTY4mmbKjFKI19rqZKJWTeN+yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706597714; c=relaxed/simple;
-	bh=EkTqePDnNNyNFnIyaLgdsTnaerx5Rl5JacQROhGX8hk=;
+	s=arc-20240116; t=1706598902; c=relaxed/simple;
+	bh=3O2f3C735+i3w3e95T2JFKr5hUPP5tDZtu+rWvTmjuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQLkwuuCMbFdMTFWu/lXplYJjG5H8kANNl9IX9M+3U1J9IMRaDcZSNZyn+jU2jnwbayR4VdcsMnyRxF302AHw2301eAm6QfdTinGV2uyw31kPxAo7hITv6E+pozeQVGU91FO+yEj/p7ayHZyUBhMsT5RE99g2pP9SjC/RjjQwkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iLq/DByo; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddcfda697cso2746440b3a.2
-        for <linux-pci@vger.kernel.org>; Mon, 29 Jan 2024 22:55:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706597712; x=1707202512; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fOCYfEkoC2QCe8jutzidzqDGcrnmYG0jwgxAFd3FC1Q=;
-        b=iLq/DByorYq9Lf33mXuhkN3lpGjA5vB3UI4GfKwRebOg6LUSVfA2aPEE7kvRL+K5pm
-         3sptrrvy/PsZ2gLKdgG2m/6v/UOFJGgYuAV/syLckemXR5q4JPhpgav5A1CE3dbgkoPa
-         2TVyon8j74r4BZvVI2RY5tbARVvX65FsNOF8B96dNB4qwMnmntELNDjUefk2vBwJMvyj
-         EAkTt2q3VOynEBn87K3/5afyH4u4nHeR32owi25QXXEIWZ2eXNOYPcZWCKw/aKn7ESit
-         ePQT9QS8zgsC8jFqvf693R8v168R+bXfnbKNSZCt6OhO5NX+wP8x5BDra49M8XZyJ/Vo
-         MXDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706597712; x=1707202512;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOCYfEkoC2QCe8jutzidzqDGcrnmYG0jwgxAFd3FC1Q=;
-        b=GNe/BpCDfpHvnCjQ1bx8VY/oCxp1NKymqcT3PTyjRSUcTQxgJg+LfWm+sDDZzV7ACH
-         03L0nsYJL45nFR/9P6J2gV4NiYUPBKzLUqKiukcHh9v/YdTRAbdvS2quORFjIj17gGGF
-         Xg3BCKj2VAYWAaBf/LgYsl5rNQ0+QNWm6OXA171Y9slp4+tXPW+QocUBKujtTzQV1oOo
-         4lF44RJYFSfoTTdTjIZbtv+wXV/54Z4AwNx273QLMo3BqVSM6vZ+Rn0wGIIZaGCSJLqw
-         4Ew8S0KtgiHF1KVEdQV3kMbz8YGXBM9tTKKW4AtFTVOsgWfWpun0uTe2Io6VtFXDVx5E
-         sWjw==
-X-Gm-Message-State: AOJu0YxB7RGAJOthVV/dfqiF2JgttwgpUT7APADNoGkuLCGE4iWAdMjj
-	D51OYQ/Hr8OAXlosIiv+3rxf71OZWD+7Xpe2Xzh3v3pCoaxHDxlMyHP3WpGUcA==
-X-Google-Smtp-Source: AGHT+IFHCY64sy0FfJm5owYE0QeTqXLHkOWLmTCFbUd6gfTEpZRJ/WaOf85v6uwmght9xcZGQDfqCQ==
-X-Received: by 2002:aa7:93d1:0:b0:6de:8ad:dad1 with SMTP id y17-20020aa793d1000000b006de08addad1mr5595313pff.19.1706597712383;
-        Mon, 29 Jan 2024 22:55:12 -0800 (PST)
-Received: from thinkpad ([117.202.188.6])
-        by smtp.gmail.com with ESMTPSA id hq24-20020a056a00681800b006dbdbe7f71csm7214997pfb.98.2024.01.29.22.55.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 22:55:12 -0800 (PST)
-Date: Tue, 30 Jan 2024 12:25:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+GPi7OSLEbT8I1LPymYNfJcdDJKTUAdNrD9+O8IQYEcsKNYezOLzBfweGVgB0duWclWvvPT2UUeeA4eKsL/8nmvhA5lq8HPxj0K6ZeX1HX6V7jU9arosD3o7GQYq9OBmbaUUYP7WngHln0FoJYUVycSS/9uniiE6aH8NUJRInw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQUzVE32; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F7E5C433C7;
+	Tue, 30 Jan 2024 07:14:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706598901;
+	bh=3O2f3C735+i3w3e95T2JFKr5hUPP5tDZtu+rWvTmjuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tQUzVE32pRfeLHULf0XVo2M0xQIfe8i4jvnS8c2seESF4a9Uwx+lGrzKu/FLDdNXS
+	 Zk3inblB2vJfluBo6SBAYsbGf6rbjFM7kV2IhN3cR09JMjXi2Dc/zxAx6O1itT9Os2
+	 mpfxSjZjTcw4cuHQ9vUdvxwrbeJ+Kzfb8MFkQnGgNKT4mlQMcmjQx8CFZb4J65BK1c
+	 jvXq0zFxhESchT72bs03+YznWaPr5Cndpnphex39hCYFpShT85x64J9QQodCDlM6ND
+	 fYcwZ+QeUdDkSg7g098MdLFezdzVVgTGoRKN3hQGnYQbFF4GArgSo25LLYOiU4dsxj
+	 25v2pDD0LeViw==
+Date: Tue, 30 Jan 2024 12:44:49 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 2/2] PCI: qcom: Add X1E80100 PCIe support
-Message-ID: <20240130065506.GE32821@thinkpad>
-References: <20240129-x1e80100-pci-v2-0-5751ab805483@linaro.org>
- <20240129-x1e80100-pci-v2-2-5751ab805483@linaro.org>
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: sm8450: Add opp table support
+ to PCIe
+Message-ID: <20240130071449.GG32821@thinkpad>
+References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
+ <20240112-opp_support-v6-5-77bbf7d0cc37@quicinc.com>
+ <20240129160420.GA27739@thinkpad>
+ <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,41 +78,73 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240129-x1e80100-pci-v2-2-5751ab805483@linaro.org>
+In-Reply-To: <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
 
-On Mon, Jan 29, 2024 at 04:41:20PM +0200, Abel Vesa wrote:
-> Add the compatible and the driver data for X1E80100.
+On Tue, Jan 30, 2024 at 11:41:11AM +0530, Viresh Kumar wrote:
+> On 29-01-24, 21:34, Manivannan Sadhasivam wrote:
+> > On Fri, Jan 12, 2024 at 07:52:04PM +0530, Krishna chaitanya chundru wrote:
+> > > PCIe needs to choose the appropriate performance state of RPMH power
+> > > domain and interconnect bandwidth based up on the PCIe gen speed.
+> > > 
+> > > Add the OPP table support to specify RPMH performance states and
+> > > interconnect peak bandwidth.
+> > > 
+> > > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sm8450.dtsi | 74 ++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 74 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > index 6b1d2e0d9d14..eab85ecaeff0 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> > > @@ -1827,7 +1827,32 @@ pcie0: pcie@1c00000 {
+> > >  			pinctrl-names = "default";
+> > >  			pinctrl-0 = <&pcie0_default_state>;
+> > >  
+> > > +			operating-points-v2 = <&pcie0_opp_table>;
+> > > +
+> > >  			status = "disabled";
+> > > +
+> > > +			pcie0_opp_table: opp-table {
+> > > +				compatible = "operating-points-v2";
+> > > +
+> > > +				opp-2500000 {
+> > > +					opp-hz = /bits/ 64 <2500000>;
+> > > +					required-opps = <&rpmhpd_opp_low_svs>;
+> > > +					opp-peak-kBps = <250000 250000>;
+> > 
+> > This is a question for Viresh: We already have macros in the driver to derive
+> > the bandwidth based on link speed. So if OPP core exposes a callback to allow
+> > the consumers to set the bw on its own, we can get rid of this entry.
+> > 
+> > Similar to config_clks()/config_regulators(). Is that feasible?
+> 
+> I don't have any issues with a new callback for bw. But, AFAIU, the DT
+> is required to represent the hardware irrespective of what any OS
+> would do with it. So DT should ideally have these values here, right ?
 > 
 
-If you happen to respin the series, please add info about the PCIe controller
-found on this SoC. Like IP version, Gen speed, max. link width etc...
+Not necessarily. Because, right now the bandwidth values of the all peripherals
+are encoded within the drivers. Only OPP has the requirement to define the
+values in DT.
 
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> Also, the driver has already moved away from using those macros now
+> and depend on the OPP core to do the right thing. It only uses the
+> macro for the cases where the DT OPP table isn't available. And as
+> said by few others as well already, the driver really should try to
+> add OPPs dynamically in that case to avoid multiple code paths and
+> stick to a single OPP based solution.
+> 
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Still I prefer to use OPP for bandwidth control because both the voltage and
+bandwidth values need to be updated at the same time. My only point here is, if
+OPP exposes a callback for bw, then we can keep the DT behavior consistent.
 
 - Mani
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 10f2d0bb86be..2a6000e457bc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1642,6 +1642,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
-> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
->  	{ }
->  };
->  
-> 
 > -- 
-> 2.34.1
-> 
+> viresh
 
 -- 
 மணிவண்ணன் சதாசிவம்
