@@ -1,1041 +1,257 @@
-Return-Path: <linux-pci+bounces-2787-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2788-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16B4E841FB7
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 10:38:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8703841F59
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 10:25:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E579B2C465
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 09:25:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 676921F24560
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Jan 2024 09:25:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AEEF59B7C;
-	Tue, 30 Jan 2024 09:24:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC0A059169;
+	Tue, 30 Jan 2024 09:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Me82qmXa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E2Bhw1PZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EDD60B98
-	for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 09:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706606658; cv=none; b=sA5rpScxPg5NGXmmKl/7MrMtvkYivKAipUGjrXor1PXJ8QRmujaj/bIPwSTUcharWh82KNf1Me0rYPIKTpG719ewf6P0qeyA3T4RXSUsMm91X3A6812aC/QRsFPH7DJhd7X3LsCcREQRKnspTpiQl5fSAE/cSG0MVoTNH0gCpwA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706606658; c=relaxed/simple;
-	bh=rzvrlArXqVPxfk5fdQHv3p57w2Vb9jK7bvVqBB7xYVI=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p1NN77ASobTRzMkC0WT9oVWCOWu37+VTOQCsWKKhk0ZXxHlo37DiZcSb0k2tjsJA6R+oZW3NWPt0OzzxoNLna9iXtiU2qSLKHyd+BetrAui/8con24iOMJpEcdxSCx8gz2+qt/mCSykcPOVsPWGv2AkhiQI7zrLAFx76KHcVGPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Me82qmXa; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBFD60B9A;
+	Tue, 30 Jan 2024 09:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706606671; cv=fail; b=t1TJ7kZKm72LcJBiDuQTSRqDQThOkrkKaRpUTOkkCmRdq8/hy7O4NjCgzFxWC7wZ9H26os+EQldxQFllxSF3o4yxuJmp9gfUMfDQmoh4FXRfzfkjlZoWdyVef+G55U+NcLMBykekGVSc96QBlRQPvzx1BKFDsgb/sOaFJL0yrx8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706606671; c=relaxed/simple;
+	bh=uyT0MRBwHJJrqd5Ovflhk2AwVEvS56Vlfn8jVgODWJE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eB0dK0pCpc2ZVqhY3VFf5KkQ6nreuY4AMsD8U0U0eOKnPN8Re8jYCZy+Zkgnaly7bb0QY4/a07ejBw0LKl35oy2La7pBlSMz4E7ExS8WT+qcGekT6tRI1XiTBeHkgGkuB9PXCTmMOf7yrDX6Bfb8QjSvf8QfTgqolVLJ2VeoMrM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E2Bhw1PZ; arc=fail smtp.client-ip=134.134.136.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706606655; x=1738142655;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rzvrlArXqVPxfk5fdQHv3p57w2Vb9jK7bvVqBB7xYVI=;
-  b=Me82qmXaUTbCFJto7fR+Sn53NpXL2d/k19QpZzM55xm8xwZn0kvVTXH6
-   zrhNJkGc9yFgj+4PPGYnz5h96rZ+6Hg7PJhJP4BfOTVjDvT8dxidlJQqY
-   5xAZZArGZsf0VRwmMiA2fkVrcInfdX82cZw8au+sXleGYSFdDnofWasDT
-   PFPhrU1dqbHUjZa274AaIqUC2RPBYWcss3WYd0BloAoVF1lISNnDdJdyg
-   LepqD8VLtnT0OWOO3/Lx3Ksr0ewkCGrvqUcyJazUIAXcajv5FW2cdWUIf
-   Tc9IExYTeWgrFLsHfFs9UOe/92F7BJhGGBlINbBXzYGS/yl5H59yqUi5i
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="24699944"
+  t=1706606670; x=1738142670;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=uyT0MRBwHJJrqd5Ovflhk2AwVEvS56Vlfn8jVgODWJE=;
+  b=E2Bhw1PZgrbLrhJiJljWQ818PpAgt6z+BZcNY6mkiyJpY6W73/SLD5Hg
+   ToLm6ag9QjIqayYeFJ8ZkRcjEX6Eh/UroF/4Wu6rY6wb7emrj32fVPHhB
+   x0BHsshbqTUAYFN2p1vbo+sdyptK0FGMgPDIYZfehTk1NeusOJ2yJvBOK
+   AyBGSXYdFrgkWdCsI49H9nlAKlQKlv3V4MGunmKIWyRHIOloc5whm05BQ
+   mn3lwYIl3iLsFboOvEPN2l0BmpHtEnTgZLccBH59nLhi7btIdEKoUNLD9
+   rbG45mASCF2Q4FJWSPBwnMCxyblLGlTVH1eKt9MK1ivk3cSSODiGX74OZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="393654170"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="24699944"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:14 -0800
+   d="scan'208";a="393654170"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="788142051"
 X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="788142051"
-Received: from djayasin-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.72.104])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 01:24:14 -0800
-Subject: [RFC PATCH 5/5] PCI/TSM: Authenticate devices via platform TSM
-From: Dan Williams <dan.j.williams@intel.com>
-To: linux-coco@lists.linux.dev
-Cc: Wu Hao <hao.wu@intel.com>, Yilun Xu <yilun.xu@intel.com>,
- Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
- Alexey Kardashevskiy <aik@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, gregkh@linuxfoundation.org
-Date: Tue, 30 Jan 2024 01:24:14 -0800
-Message-ID: <170660665391.224441.13963835575448844460.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com>
-References: <170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="29843951"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 Jan 2024 01:24:30 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Jan 2024 01:24:29 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 30 Jan 2024 01:24:28 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 30 Jan 2024 01:24:28 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 30 Jan 2024 01:24:28 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YOd1EscjfCYJDfkun6DGs5et/p72wTELDZh9JCYc8YxM7u2fBAGqgzKj1kiWftsuoP6y6dQq+p+eiBl/O5nyKbEeAp3bG4IyRYu3sgBI+A+l8pXhLAUQ190gv6BzjAuh+0PsEaQjPBXZ/CVmb5QwK/Ebel8lBzreGJ9xsheNTdFrg0oxfLuSWXMVkwsxoM24ms2UYvrk+iUZTBYpnXpwdXekXBGUDBbguojlHdBfr0464Cy53DOtRxQn4esEyo82LH/oULAnYMw85+cZmHG5n7FToSynP7sVrCE26b0MRW7tqtcOOpChtxSVC7HRYv6ckNk7H4RDFpazM2oiJpj6Hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uyT0MRBwHJJrqd5Ovflhk2AwVEvS56Vlfn8jVgODWJE=;
+ b=SRBBHgt6cMIlUgTpDP+jF3DLk3ReWBlB2ZXQxOkjF7nyWDIPmc9EBWdculFZhgxWAYk3x5vSrZJZrHAjUE3DI5xm5+Yfy7XFHxkM0NazxGfNVbZcj/aEYnwhJuR+rt1sYKkJZwnJABWwa29otifMQdq0Pt4XdhfrKPbm0G2hhT8YLG5EdgzDjyOcEgz6nnB3wrwTu7OIix8vI59K7C6SgVo/bFr9pDgkWblMCtn98Kp0/f1tUNPvqkzKdgzfE+W31tePXOO2mTBA/d8xl2ts5Ve0TW2MocB2D6kRkX3fzOR+NQzzgfHO8taVRgA8mmwVrkUHYwVYhd92zQ2U1pq4uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by CH0PR11MB5331.namprd11.prod.outlook.com (2603:10b6:610:be::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Tue, 30 Jan
+ 2024 09:24:26 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::a8e9:c80f:9484:f7cb]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::a8e9:c80f:9484:f7cb%3]) with mapi id 15.20.7228.029; Tue, 30 Jan 2024
+ 09:24:26 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
+CC: "dwmw2@infradead.org" <dwmw2@infradead.org>, "will@kernel.org"
+	<will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+Thread-Topic: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+Thread-Index: AQHaUmY538BcsBx6UEOae7WqjB1D5LDweayAgAAKqQCAAUzCgIAADpYAgAAkhICAAAGe8IAADpGAgAABNJA=
+Date: Tue, 30 Jan 2024 09:24:26 +0000
+Message-ID: <BN9PR11MB5276CDBA6ED200319C8455EE8C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
+ <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
+ <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
+ <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
+ <BN9PR11MB527674172BBA9BDC49A004D08C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <56a9971e-7015-4584-89c7-80056b7ec547@linux.intel.com>
+In-Reply-To: <56a9971e-7015-4584-89c7-80056b7ec547@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|CH0PR11MB5331:EE_
+x-ms-office365-filtering-correlation-id: ed0724e2-7370-4b20-a3a6-08dc2175413a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: om6O9WJUqDxipnvSUT+w9lVZ5S4X5szHdjo1FJS94byCQM4MkQPaf16gnqMIksxMMlEJG5eWLf1u24lSkQ6huFXFCjY/RxNQdXf037WOi7hOeJSpqXQgzf2PjJoVdvu1hQ8NebB0qS5FRibsRrZycZvDcfcv6hQOh2KBGhc8dunZnGJ/vCVckeNb7PTKJ9hihagLx6kLKYV+15414bG34Sr5rZIRYQsnWhKvEW8gPkoZ0PQNRYqW3BiS1Gf0j0XEQTVjQGYmTW7c1tsIpnPnNJtRpFPcAUYUmHSKe4LQj3PhiNMB0lKgGutjS2voSpXB1sgMh4RgcdL7RoA4WnimWiRlahJs+GFN3VuV9dY5BvR07sGfzw5+pmfOdRZKWj+swmxSwvHqEIzEQpgJzJQR+7l9MQOV8ibbYxzDFZegx+4WiqiV0tqTc4Gmc1YFUqDiEZ8E2GzlrYK/9qEx3KmVBBsjAkXEnzf46GjjmloNrEfhJ5zHn6zEN+YPYoGtvQthZzkSZ91YE7d1J6RHEuNGt0JdDp2SBsabxTwaf2yzDCTvOebJP9McV/e6uV1t9ouFo8sgnrbUsQ4gPBF3qrCTBAQB37+aofN4YbYYoDor9WE8aeFyp9QsScBLiNSSTd/+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(376002)(396003)(39860400002)(346002)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(41300700001)(55016003)(38070700009)(478600001)(7696005)(6506007)(53546011)(9686003)(71200400001)(26005)(83380400001)(38100700002)(82960400001)(122000001)(86362001)(110136005)(76116006)(2906002)(33656002)(5660300002)(316002)(66946007)(64756008)(66446008)(66476007)(66556008)(54906003)(8676002)(8936002)(4326008)(7416002)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dXVRRUtXc2h4L0J2MHhTbG16emV0S1FvSi9UeXh0dkFNOStBb0RTMERPbEZB?=
+ =?utf-8?B?SWhGMjhvcGV5U0ZZQTBtTmNVSEI0M3ZvZkd3TFJ6dmtjVGE3VDFVbW4xODRu?=
+ =?utf-8?B?aHpQRE8rMHZzdnM3a3dKWTZKd2FINy9TMlpJOFlkeHFEamlkVmxTMlZDN05U?=
+ =?utf-8?B?eDc5QTdMaGNZcCsyRS9ZSlViQTBCSTVnd2Joak0wUnprSW9SUTMyQkdQcGQ4?=
+ =?utf-8?B?QUZrcXhWUEZKR3dKbXBOSzg4TFZsK3VSSmw5VlhKUEhJRkNkdjQyMXBTYjhJ?=
+ =?utf-8?B?dThEWFMveTcrR3AzZ2t4K0ZHMVM2SFVLZVZkZGJ1TmRna2ZCWTNDNlJFbk1h?=
+ =?utf-8?B?bGE3UHJKU0lSaVl4dkRuZ25WT0M3YVFZdVUwOTZsVzFKU0l0VHNzUDFzUWJ5?=
+ =?utf-8?B?am1idGZqc0VFRVNJbFg2S0w5b2tGVHJBTUhnbVJOQzR5NjZ1WDNIT1BDS3NF?=
+ =?utf-8?B?WkdaRFdvV002UGl6UGF5emhBV2Q2Q0thcWNrUHBnay85VG95cm1iaEFveWtu?=
+ =?utf-8?B?U2VLWU9naDRDekIwUVQyY2RPNWs2MlJIVjU3eEdHVjI2UjUrZVQ5ZzFXdyth?=
+ =?utf-8?B?ZDRNbmVPMkNmN0ZibCtJemNpVmJ5N2NTRkZhcHhoYWRibmsxcGxaSnpuL0Jy?=
+ =?utf-8?B?TEE1LzFQMkR3cCtMNS8xb2pLWlQwVjRFcmFvMVpNRVJTa2dDTEFsMTBiYTdI?=
+ =?utf-8?B?Q1pjSTB2TVNTZDEzcHdWT2FkdDhDOVE3UDVycm5uZ1JCQWU3b1ZoQUJEaytF?=
+ =?utf-8?B?eldoeUZPaVR6eG1jd2toSHkyQnRFR1VCTVQzcThIdEV6Y2xoUmZRZVlHajBt?=
+ =?utf-8?B?Y0RCSGdXYU5DR2tCdnNvSmJFbDdBSlI0NTdKYzdOMWxobk5mdTlSV1RDZW0z?=
+ =?utf-8?B?bkhkUUhDVmttYnhKQUVDd2U1a3MvRlNsV1lxQnhoRFFudko5M0xsZnora01o?=
+ =?utf-8?B?cElkZnNVTXVqem1CcHFzU3dNRlJmRzVjdFgvS2pTZXozdEhxaVBDNWQzelF5?=
+ =?utf-8?B?NjhhLzhUcFcwMkhRYzQ3VXZMNEdQRmltcWs2U01HcVZNY3BHNkVTeWJsN1ZS?=
+ =?utf-8?B?U3VtSDllSTFLVmt2Ymt1Yjg4UXZVS1B0Nzl3eW9LOFlVYWNQRExrTXdaRVQ2?=
+ =?utf-8?B?TTlGMkJoUDZ0OVg5cm1ENzM2QnowZlVlS3h4TU4yRUhPVnVEaFgrdEFjdUFu?=
+ =?utf-8?B?NTFJeE83Z0VPdk1leHBjRVR0STNCR05RQkJ5cS9DQkpiOGp6UTYySmxWS1BC?=
+ =?utf-8?B?czEzWE1Pd3RidWFhT2RCSEJMamE0Y2JNa2VxMGNUUnhjTnZMdnUvZHNDMHNZ?=
+ =?utf-8?B?Qk1OVnFTdExTK2hHQzE2QjhQYk9YZy9QSVVqTVdsMDlqU2k3NlkyOFJpczBh?=
+ =?utf-8?B?bnY4K3RPeXdUY3pLOUNnTlk2c1g1OSs4Z3IydFpqZll6WXlCSlZHNFZRWUxs?=
+ =?utf-8?B?V1JXdXFCQzlYYUdJR3RvRUJ1aFBjbGF2K29vYWdTNytlT2VUWlhHcDMycDU4?=
+ =?utf-8?B?NXgxWHNHWDlORy81TlJ6VGE5WFZDajBRbEE1Q0hzQUxadzcyOVN2ZFBGWEZj?=
+ =?utf-8?B?MjNIaEhKd0t5YlI1eWZGVFJERkhQL2JkcjRWSkhRcWZxWHRMaEM3eHU3Mk9I?=
+ =?utf-8?B?RWRBVk02VWEyU0RoSm03L2VqMERRc2E2YzNzc2gvTjVtZGlkd2o4YXJnTzRB?=
+ =?utf-8?B?NDE1Wi9TOTB5ekRqUWZjclU0VjN4WnU4bVlxaWpHZnB3Q1I4dW5wYmdvNkp4?=
+ =?utf-8?B?Q1hmc25QUk1FejIvRUhEeHRzWG9XNmFkMHh1UlRMeDExWUxHd1dtZllBOGYr?=
+ =?utf-8?B?SlAxbWVoZnNxbE9oVEhHTHFBSGI5eWo4UytQamlzM3JXT2h5OHdBVEx2QktU?=
+ =?utf-8?B?TGVDSzRkQUIyeVdiMi9zN2I0U0VhM3ZEaVZldGlVSG1hSWpIM3hCQUtQNEsr?=
+ =?utf-8?B?OTdQMXBGQUNWMnFKUFhyYmN3S3liaDJsT2RDSGRoS1NackYyV2VNSmE0VHVx?=
+ =?utf-8?B?TDN1eWJjL0kvelhlZXF1MEJDVytpdDExNHB1RTRkTGZyS1dBL2Y3bmlVbnBn?=
+ =?utf-8?B?d205VnRrSmRlVms1SFBqR0JVeVdoR2daa0pwdE5QdjdVS2RLdzk4cFY4b2dL?=
+ =?utf-8?Q?pKv9VcLIWqsSf5/TSj8QGAS++?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed0724e2-7370-4b20-a3a6-08dc2175413a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2024 09:24:26.8833
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zSMmdM1u79EHKy3u5IVuPpCcdskrBuDpF/TDu12/R6HPcr+hGLFPgEPA9pJEcB6Evm4+JxKBGM2sfa4nlo+KQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5331
+X-OriginatorOrg: intel.com
 
-The PCIe 6.1 specification, section 11, introduces the Trusted
-Execution Environment (TEE) Device Interface Security Protocol (TDISP).
-This interface definition builds upon CMA, component measurement and
-authentication, and IDE, link integrity and data encryption. It adds
-support for establishing virtual functions within a device that can be
-assigned to a confidential VM such that the assigned device is enabled
-to access guest private memory protected by technologies like Intel TDX,
-AMD SEV-SNP, RISCV COVE, or ARM CCA.
-
-The "TSM" (TEE Security Manager) is a concept in the TDISP specification
-of an agent that mediates between a device security manager (DSM) and
-system software in both a VMM and a VM. From a Linux perspective the TSM
-abstracts many of the details of TDISP, IDE, and CMA. Some of those
-details leak through at times, but for the most part TDISP is an
-internal implementation detail of the TSM.
-
-Similar to the PCI core extensions to support CONFIG_PCI_CMA,
-CONFIG_PCI_TSM builds upon that to reuse the "authenticated" sysfs
-attribute, and add more properties + controls in a tsm/ subdirectory of
-the PCI device sysfs interface. Unlike CMA that can depend on a local to
-the PCI core implementation, PCI_TSM needs to be prepared for late
-loading of the platform TSM driver. Consider that the TSM driver may
-itself be a PCI driver. Userspace can depend on the common TSM device
-uevent to know when the PCI core has TSM services enabled. The PCI
-device tsm/ subdirectory is supplemented by the TSM device pci/
-directory for platform global TSM properties + controls.
-
-All vendor TSM implementations share the property of asking the VMM to
-perform DOE mailbox operations on behalf of the TSM. That common
-capability is centralized in PCI core code that invokes an ->exec()
-operation callback potentially multiple times to service a given request
-(struct pci_tsm_req). Future operations / verbs will be handled
-similarly with the "request + exec" model. For now, only "connect" and
-"disconnect" are implemented which at a minimum is expected to establish
-IDE for the link.
-
-In addition to requests the low-level TSM implementation is notified of
-device arrival and departure events so that it can filter devices that
-the TSM is not prepared to support, or otherwise setup and teardown
-per-device context.
-
-Cc: Wu Hao <hao.wu@intel.com>
-Cc: Yilun Xu <yilun.xu@intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Samuel Ortiz <sameo@rivosinc.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-pci   |   43 +++-
- Documentation/ABI/testing/sysfs-class-tsm |   23 ++
- drivers/pci/Kconfig                       |   15 +
- drivers/pci/Makefile                      |    2 
- drivers/pci/cma.c                         |    5 
- drivers/pci/pci-sysfs.c                   |    3 
- drivers/pci/pci.h                         |   14 +
- drivers/pci/probe.c                       |    1 
- drivers/pci/remove.c                      |    1 
- drivers/pci/tsm.c                         |  346 +++++++++++++++++++++++++++++
- drivers/virt/coco/tsm/Makefile            |    1 
- drivers/virt/coco/tsm/class.c             |   22 +-
- drivers/virt/coco/tsm/pci.c               |   83 +++++++
- drivers/virt/coco/tsm/tsm.h               |   28 ++
- include/linux/pci.h                       |    3 
- include/linux/tsm.h                       |   77 ++++++
- include/uapi/linux/pci_regs.h             |    3 
- 17 files changed, 662 insertions(+), 8 deletions(-)
- create mode 100644 drivers/pci/tsm.c
- create mode 100644 drivers/virt/coco/tsm/pci.c
- create mode 100644 drivers/virt/coco/tsm/tsm.h
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 35b0e11fd0e6..0eef2128cf09 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -508,11 +508,16 @@ Description:
- 		This file contains "native" if the device authenticated
- 		successfully with CMA-SPDM (PCIe r6.1 sec 6.31). It contains
- 		"none" if the device failed authentication (and may thus be
--		malicious).
-+		malicious). It transitions from "native" to "tsm" after
-+		successful connection to a tsm, see the "connect" attribute
-+		below.
- 
- 		Writing "native" to this file causes reauthentication with
- 		kernel-selected keys and the kernel's certificate chain.  That
--		may be opportune after updating the .cma keyring.
-+		may be opportune after updating the .cma keyring. Note
-+		that once connected to a tsm this returns -EBUSY to attempts to
-+		write "native", i.e. first disconnect from the tsm to retrigger
-+		native authentication.
- 
- 		The file is not visible if authentication is unsupported
- 		by the device.
-@@ -529,3 +534,37 @@ Description:
- 		The reason why authentication support could not be determined
- 		is apparent from "dmesg".  To probe for authentication support
- 		again, exercise the "remove" and "rescan" attributes.
-+
-+What:		/sys/bus/pci/devices/.../tsm/
-+Date:		January 2024
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		This directory only appears if a device supports CMA and IDE,
-+		and only after a TSM driver has loaded and accepted / setup this
-+		PCI device. Similar to the 'authenticated' attribute, trigger
-+		"remove" and "rescan" to retry the initialization. See
-+		Documentation/ABI/testing/sysfs-class-tsm for enumerating the
-+		platform's TSM capabilities.
-+
-+What:		/sys/bus/pci/devices/.../tsm/connect
-+Date:		January 2024
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		(RW) Writing "1" to this file triggers the TSM to establish a
-+		secure connection with the device. This typically includes an
-+		SPDM (DMTF Security Protocols and Data Models) session over PCIe
-+		DOE (Data Object Exchange) and PCIe IDE (Integrity and Data
-+		Encryption) establishment. For TSMs and devices that support
-+		both modes of IDE ("link" and "selective") the "connect_mode"
-+		attribute selects the mode.
-+
-+What:		/sys/bus/pci/devices/.../tsm/connect_mode
-+Date:		January 2024
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		(RO) Returns the available connection modes optionally with
-+		brackets around the currently active mode if the device is
-+		connected. For example it may show "link selective" for a
-+		disconnected device, "link [selective]" for a selective
-+		connected device, and it may hide a mode that is not supported
-+		by the device or TSM.
-diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-index 304b50b53e65..77957882738a 100644
---- a/Documentation/ABI/testing/sysfs-class-tsm
-+++ b/Documentation/ABI/testing/sysfs-class-tsm
-@@ -10,3 +10,26 @@ Description:
- 		For software TSMs instantiated by a software module, @host is a
- 		directory with attributes for that TSM, and those attributes are
- 		documented below.
-+
-+
-+What:		/sys/class/tsm/tsm0/pci/link_capable
-+Date:		January, 2024
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		(RO) When present this returns "1\n" to indicate that the TSM
-+		supports establishing Link IDE with a given root-port attached
-+		device. See "tsm/connect_mode" in
-+		Documentation/ABI/testing/sysfs-bus-pci
-+
-+
-+What:		/sys/class/tsm/tsm0/pci/selective_streams
-+Date:		January, 2024
-+Contact:	linux-coco@lists.linux.dev
-+Description:
-+		(RO) When present this returns the number of currently available
-+		selective IDE streams available to the TSM. When a stream id is
-+		allocated this number is decremented and a link to the PCI
-+		device(s) consuming the stream(s) appears alonside this
-+		attribute in the /sys/class/tsm/tsm0/pci/ directory. See
-+		"tsm/connect" and "tsm/connect_mode" in
-+		Documentation/ABI/testing/sysfs-bus-pci.
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index a5c3cadddd6f..11d788038d19 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -129,6 +129,21 @@ config PCI_CMA
- 	  A PCI DOE mailbox is used as transport for DMTF SPDM based
- 	  authentication, measurement and secure channel establishment.
- 
-+config PCI_TSM
-+	bool "TEE Security Manager for Device Security"
-+	depends on PCI_CMA
-+	depends on TSM
-+	help
-+	  The TEE (Trusted Execution Environment) Device Interface
-+	  Security Protocol (TDISP) defines a "TSM" as a platform agent
-+	  that manages device authentication, link encryption, link
-+	  integrity protection, and assignment of PCI device functions
-+	  (virtual or physical) to confidential computing VMs that can
-+	  access (DMA) guest private memory.
-+
-+	  Say Y to enable the PCI subsystem to enable the IDE and
-+	  TDISP capabilities of devices via TSM semantics.
-+
- config PCI_DOE
- 	bool
- 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index cc8b5d1d15b9..c4117d67ea83 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -38,6 +38,8 @@ obj-$(CONFIG_PCI_CMA)		+= cma.o cma.asn1.o
- $(obj)/cma.o:			$(obj)/cma.asn1.h
- $(obj)/cma.asn1.o:		$(obj)/cma.asn1.c $(obj)/cma.asn1.h
- 
-+obj-$(CONFIG_PCI_TSM)		+= tsm.o
-+
- # Endpoint library must be initialized before its users
- obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
- 
-diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
-index be7d2bb21b4c..5a69e9919589 100644
---- a/drivers/pci/cma.c
-+++ b/drivers/pci/cma.c
-@@ -39,6 +39,9 @@ static ssize_t authenticated_store(struct device *dev,
- 	if (!sysfs_streq(buf, "native"))
- 		return -EINVAL;
- 
-+	if (pci_tsm_authenticated(pdev))
-+		return -EBUSY;
-+
- 	rc = pci_cma_reauthenticate(pdev);
- 	if (rc)
- 		return rc;
-@@ -55,6 +58,8 @@ static ssize_t authenticated_show(struct device *dev,
- 	    (pdev->cma_init_failed || pdev->doe_init_failed))
- 		return -ENOTTY;
- 
-+	if (pci_tsm_authenticated(pdev))
-+		return sysfs_emit(buf, "tsm\n");
- 	if (spdm_authenticated(pdev->spdm_state))
- 		return sysfs_emit(buf, "native\n");
- 	return sysfs_emit(buf, "none\n");
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 368c4f71cc55..4327f8c2e6b5 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1654,6 +1654,9 @@ const struct attribute_group *pci_dev_attr_groups[] = {
- #endif
- #ifdef CONFIG_PCI_CMA
- 	&pci_cma_attr_group,
-+#endif
-+#ifdef CONFIG_PCI_TSM
-+	&pci_tsm_attr_group,
- #endif
- 	NULL,
- };
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 2b7d8d0b2e21..daa20866bc90 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -350,6 +350,20 @@ static inline int pci_cma_reauthenticate(struct pci_dev *pdev)
- }
- #endif
- 
-+#ifdef CONFIG_PCI_TSM
-+void pci_tsm_init(struct pci_dev *pdev);
-+void pci_tsm_destroy(struct pci_dev *pdev);
-+extern const struct attribute_group pci_tsm_attr_group;
-+bool pci_tsm_authenticated(struct pci_dev *pdev);
-+#else
-+static inline void pci_tsm_init(struct pci_dev *pdev) { }
-+static inline void pci_tsm_destroy(struct pci_dev *pdev) { }
-+static inline bool pci_tsm_authenticated(struct pci_dev *pdev)
-+{
-+	return false;
-+}
-+#endif
-+
- /**
-  * pci_dev_set_io_state - Set the new error state if possible.
-  *
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 6b09c962c0b8..f60d6c3c8c48 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2542,6 +2542,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_rcec_init(dev);		/* Root Complex Event Collector */
- 	pci_doe_init(dev);		/* Data Object Exchange */
- 	pci_cma_init(dev);		/* Component Measurement & Auth */
-+	pci_tsm_init(dev);		/* TEE Security Manager connection */
- 
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index f009ac578997..228fa6ccf911 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -39,6 +39,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
- 	list_del(&dev->bus_list);
- 	up_write(&pci_bus_sem);
- 
-+	pci_tsm_destroy(dev);
- 	pci_cma_destroy(dev);
- 	pci_doe_destroy(dev);
- 	pcie_aspm_exit_link_state(dev);
-diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
-new file mode 100644
-index 000000000000..f74de0ee49a0
---- /dev/null
-+++ b/drivers/pci/tsm.c
-@@ -0,0 +1,346 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * TEE Security Manager for the TEE Device Interface Security Protocol
-+ * (TDISP, PCIe r6.1 sec 11)
-+ *
-+ * Copyright(c) 2024 Intel Corporation. All rights reserved.
-+ */
-+
-+#define dev_fmt(fmt) "TSM: " fmt
-+
-+#include <linux/pci.h>
-+#include <linux/tsm.h>
-+#include <linux/sysfs.h>
-+#include <linux/xarray.h>
-+#include "pci.h"
-+
-+/* collect tsm capable devices to rendezvous with the tsm driver */
-+static DEFINE_XARRAY(pci_tsm_devs);
-+
-+/*
-+ * Provide a read/write lock against the init / exit of pdev tsm
-+ * capabilities and arrival/departure of a tsm instance
-+ */
-+static DECLARE_RWSEM(pci_tsm_rwsem);
-+static const struct tsm_pci_ops *tsm_ops;
-+
-+void generic_pci_tsm_req_free(struct pci_tsm_req *req)
-+{
-+	kfree(req);
-+}
-+EXPORT_SYMBOL_GPL(generic_pci_tsm_req_free);
-+
-+struct pci_tsm_req *generic_pci_tsm_req_alloc(struct pci_dev *pdev, enum pci_tsm_op op)
-+{
-+	struct pci_tsm_req *req = kzalloc(sizeof(*req), GFP_KERNEL);
-+
-+	if (!req)
-+		return NULL;
-+	req->op = op;
-+	return req;
-+}
-+EXPORT_SYMBOL_GPL(generic_pci_tsm_req_alloc);
-+
-+DEFINE_FREE(req_free, struct pci_tsm_req *, if (_T) tsm_ops->req_free(_T))
-+
-+static int pci_tsm_disconnect(struct pci_dev *pdev)
-+{
-+	struct pci_tsm_req *req __free(req_free) = NULL;
-+
-+	/* opportunistic state checks to skip allocating a request */
-+	if (pdev->tsm->state < PCI_TSM_CONNECT)
-+		return 0;
-+
-+	req = tsm_ops->req_alloc(pdev, PCI_TSM_OP_DISCONNECT);
-+	if (!req)
-+		return -ENOMEM;
-+
-+	scoped_cond_guard(mutex_intr, return -EINTR, tsm_ops->lock) {
-+		enum pci_tsm_op_status status;
-+
-+		/* revalidate state */
-+		if (pdev->tsm->state < PCI_TSM_CONNECT)
-+			return 0;
-+		if (pdev->tsm->state < PCI_TSM_INIT)
-+			return -ENXIO;
-+
-+		do {
-+			status = tsm_ops->exec(pdev, req);
-+			req->seq++;
-+			/* TODO: marshal SPDM request */
-+		} while (status == PCI_TSM_SPDM_REQ);
-+
-+		if (status == PCI_TSM_FAIL)
-+			return -EIO;
-+		pdev->tsm->state = PCI_TSM_INIT;
-+	}
-+	return 0;
-+}
-+
-+static int pci_tsm_connect(struct pci_dev *pdev)
-+{
-+	struct pci_tsm_req *req __free(req_free) = NULL;
-+
-+	/* opportunistic state checks to skip allocating a request */
-+	if (pdev->tsm->state >= PCI_TSM_CONNECT)
-+		return 0;
-+
-+	req = tsm_ops->req_alloc(pdev, PCI_TSM_OP_CONNECT);
-+	if (!req)
-+		return -ENOMEM;
-+
-+	scoped_cond_guard(mutex_intr, return -EINTR, tsm_ops->lock) {
-+		enum pci_tsm_op_status status;
-+
-+		/* revalidate state */
-+		if (pdev->tsm->state >= PCI_TSM_CONNECT)
-+			return 0;
-+		if (pdev->tsm->state < PCI_TSM_INIT)
-+			return -ENXIO;
-+
-+		do {
-+			status = tsm_ops->exec(pdev, req);
-+			req->seq++;
-+		} while (status == PCI_TSM_SPDM_REQ);
-+
-+		if (status == PCI_TSM_FAIL)
-+			return -EIO;
-+		pdev->tsm->state = PCI_TSM_CONNECT;
-+	}
-+	return 0;
-+}
-+
-+static ssize_t connect_store(struct device *dev, struct device_attribute *attr,
-+			     const char *buf, size_t len)
-+{
-+	bool connect;
-+	int rc = kstrtobool(buf, &connect);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (rc)
-+		return rc;
-+
-+	if (connect) {
-+		if (!spdm_authenticated(pdev->spdm_state)) {
-+			pci_dbg(pdev, "SPDM authentication pre-requisite not met.\n");
-+			return -ENXIO;
-+		}
-+		rc = pci_tsm_connect(pdev);
-+		if (rc)
-+			return rc;
-+		return len;
-+	}
-+
-+	rc = pci_tsm_disconnect(pdev);
-+	if (rc)
-+		return rc;
-+	return len;
-+}
-+
-+static ssize_t connect_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	return sysfs_emit(buf, "%d\n", pdev->tsm->state >= PCI_TSM_CONNECT);
-+}
-+static DEVICE_ATTR_RW(connect);
-+
-+static const char *const pci_tsm_modes[] = {
-+	[PCI_TSM_MODE_LINK] = "link",
-+	[PCI_TSM_MODE_SELECTIVE] = "selective",
-+};
-+
-+static ssize_t connect_mode_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t len)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	int i;
-+
-+	guard(mutex)(tsm_ops->lock);
-+	if (pdev->tsm->state >= PCI_TSM_CONNECT)
-+		return -EBUSY;
-+	for (i = 0; i < ARRAY_SIZE(pci_tsm_modes); i++)
-+		if (sysfs_streq(buf, pci_tsm_modes[i]))
-+			break;
-+	if (i == PCI_TSM_MODE_LINK) {
-+		if (pdev->tsm->link_capable)
-+			pdev->tsm->mode = PCI_TSM_MODE_LINK;
-+		return -EOPNOTSUPP;
-+	} else if (i == PCI_TSM_MODE_SELECTIVE) {
-+		if (pdev->tsm->selective_capable)
-+			pdev->tsm->mode = PCI_TSM_MODE_SELECTIVE;
-+		return -EOPNOTSUPP;
-+	} else
-+		return -EINVAL;
-+	return len;
-+}
-+
-+static ssize_t connect_mode_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t count = 0;
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pci_tsm_modes); i++) {
-+		if (i == PCI_TSM_MODE_LINK) {
-+			if (!pdev->tsm->link_capable)
-+				continue;
-+		} else if (i == PCI_TSM_MODE_SELECTIVE) {
-+			if (!pdev->tsm->selective_capable)
-+				continue;
-+		}
-+
-+		if (i == pdev->tsm->mode)
-+			count += sysfs_emit_at(buf, count, "[%s] ",
-+					       pci_tsm_modes[i]);
-+		else
-+			count += sysfs_emit_at(buf, count, "%s ",
-+					       pci_tsm_modes[i]);
-+	}
-+
-+	if (count)
-+		buf[count - 1] = '\n';
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(connect_mode);
-+
-+static umode_t pci_tsm_attr_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (a == &dev_attr_connect_mode.attr) {
-+		if (pdev->tsm->link_capable || pdev->tsm->selective_capable)
-+			return a->mode;
-+		return 0;
-+	}
-+
-+	return a->mode;
-+}
-+
-+static bool pci_tsm_group_visible(struct kobject *kobj)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (pdev->tsm && pdev->tsm->state > PCI_TSM_IDLE)
-+		return true;
-+	return false;
-+}
-+DEFINE_SYSFS_GROUP_VISIBLE(pci_tsm);
-+
-+static struct attribute *pci_tsm_attrs[] = {
-+	&dev_attr_connect.attr,
-+	&dev_attr_connect_mode.attr,
-+	NULL,
-+};
-+
-+const struct attribute_group pci_tsm_attr_group = {
-+	.name = "tsm",
-+	.attrs = pci_tsm_attrs,
-+	.is_visible = SYSFS_GROUP_VISIBLE(pci_tsm),
-+};
-+
-+static int pci_tsm_add(struct pci_dev *pdev)
-+{
-+	lockdep_assert_held(&pci_tsm_rwsem);
-+	if (!tsm_ops)
-+		return 0;
-+	scoped_guard(mutex, tsm_ops->lock) {
-+		if (pdev->tsm->state < PCI_TSM_INIT) {
-+			int rc = tsm_ops->add(pdev);
-+
-+			if (rc)
-+				return rc;
-+		}
-+		pdev->tsm->state = PCI_TSM_INIT;
-+	}
-+	return sysfs_update_group(&pdev->dev.kobj, &pci_tsm_attr_group);
-+}
-+
-+static void pci_tsm_del(struct pci_dev *pdev)
-+{
-+	lockdep_assert_held(&pci_tsm_rwsem);
-+	/* shutdown sysfs operations before tsm delete */
-+	pdev->tsm->state = PCI_TSM_IDLE;
-+	sysfs_update_group(&pdev->dev.kobj, &pci_tsm_attr_group);
-+	guard(mutex)(tsm_ops->lock);
-+	tsm_ops->del(pdev);
-+}
-+
-+int pci_tsm_register(const struct tsm_pci_ops *ops)
-+{
-+	struct pci_dev *pdev;
-+	unsigned long index;
-+
-+	guard(rwsem_write)(&pci_tsm_rwsem);
-+	if (tsm_ops)
-+		return -EBUSY;
-+	tsm_ops = ops;
-+	xa_for_each(&pci_tsm_devs, index, pdev)
-+		pci_tsm_add(pdev);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pci_tsm_register);
-+
-+void pci_tsm_unregister(const struct tsm_pci_ops *ops)
-+{
-+	struct pci_dev *pdev;
-+	unsigned long index;
-+
-+	guard(rwsem_write)(&pci_tsm_rwsem);
-+	if (ops != tsm_ops)
-+		return;
-+	xa_for_each(&pci_tsm_devs, index, pdev)
-+		pci_tsm_del(pdev);
-+	tsm_ops = NULL;
-+}
-+EXPORT_SYMBOL_GPL(pci_tsm_unregister);
-+
-+void pci_tsm_init(struct pci_dev *pdev)
-+{
-+	u16 ide_cap;
-+	int rc;
-+
-+	if (!pdev->cma_capable)
-+		return;
-+
-+	ide_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
-+	if (!ide_cap)
-+		return;
-+
-+	struct pci_tsm *tsm __free(kfree) = kzalloc(sizeof(*tsm), GFP_KERNEL);
-+	if (!tsm)
-+		return;
-+
-+	tsm->ide_cap = ide_cap;
-+
-+	rc = xa_insert(&pci_tsm_devs, (unsigned long)pdev, pdev, GFP_KERNEL);
-+	if (rc) {
-+		pci_dbg(pdev, "failed to register tsm capable device\n");
-+		return;
-+	}
-+
-+	guard(rwsem_write)(&pci_tsm_rwsem);
-+	pdev->tsm = no_free_ptr(tsm);
-+	pci_tsm_add(pdev);
-+}
-+
-+void pci_tsm_destroy(struct pci_dev *pdev)
-+{
-+	guard(rwsem_write)(&pci_tsm_rwsem);
-+	pci_tsm_del(pdev);
-+	xa_erase(&pci_tsm_devs, (unsigned long)pdev);
-+	kfree(pdev->tsm);
-+	pdev->tsm = NULL;
-+}
-+
-+bool pci_tsm_authenticated(struct pci_dev *pdev)
-+{
-+	guard(rwsem_read)(&pci_tsm_rwsem);
-+	return pdev->tsm && pdev->tsm->state >= PCI_TSM_CONNECT;
-+}
-diff --git a/drivers/virt/coco/tsm/Makefile b/drivers/virt/coco/tsm/Makefile
-index f7561169faed..a4f0d07d7d97 100644
---- a/drivers/virt/coco/tsm/Makefile
-+++ b/drivers/virt/coco/tsm/Makefile
-@@ -7,3 +7,4 @@ tsm_reports-y := reports.o
- 
- obj-$(CONFIG_TSM) += tsm.o
- tsm-y := class.o
-+tsm-$(CONFIG_PCI_TSM) += pci.o
-diff --git a/drivers/virt/coco/tsm/class.c b/drivers/virt/coco/tsm/class.c
-index a569fa6b09eb..a459e51c0892 100644
---- a/drivers/virt/coco/tsm/class.c
-+++ b/drivers/virt/coco/tsm/class.c
-@@ -8,13 +8,11 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/cleanup.h>
-+#include "tsm.h"
- 
- static DECLARE_RWSEM(tsm_core_rwsem);
--struct class *tsm_class;
--struct tsm_subsys {
--	struct device dev;
--	const struct tsm_info *info;
--} *tsm_subsys;
-+static struct class *tsm_class;
-+static struct tsm_subsys *tsm_subsys;
- 
- int tsm_register(const struct tsm_info *info)
- {
-@@ -52,6 +50,10 @@ int tsm_register(const struct tsm_info *info)
- 	dev = NULL;
- 	tsm_subsys = subsys;
- 
-+	rc = tsm_pci_init(info);
-+	if (rc)
-+		pr_err("PCI initialization failure: %d\n", rc);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(tsm_register);
-@@ -65,6 +67,8 @@ void tsm_unregister(const struct tsm_info *info)
- 		return;
- 	}
- 
-+	tsm_pci_destroy(info);
-+
- 	if (info->host)
- 		sysfs_remove_link(&tsm_subsys->dev.kobj, "host");
- 	device_unregister(&tsm_subsys->dev);
-@@ -79,6 +83,13 @@ static void tsm_release(struct device *dev)
- 	kfree(subsys);
- }
- 
-+static const struct attribute_group *tsm_attr_groups[] = {
-+#ifdef CONFIG_PCI_TSM
-+	&tsm_pci_attr_group,
-+#endif
-+	NULL,
-+};
-+
- static int __init tsm_init(void)
- {
- 	tsm_class = class_create("tsm");
-@@ -86,6 +97,7 @@ static int __init tsm_init(void)
- 		return PTR_ERR(tsm_class);
- 
- 	tsm_class->dev_release = tsm_release;
-+	tsm_class->dev_groups = tsm_attr_groups;
- 	return 0;
- }
- module_init(tsm_init)
-diff --git a/drivers/virt/coco/tsm/pci.c b/drivers/virt/coco/tsm/pci.c
-new file mode 100644
-index 000000000000..b3684ad7114f
---- /dev/null
-+++ b/drivers/virt/coco/tsm/pci.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/tsm.h>
-+#include <linux/device.h>
-+#include "tsm.h"
-+
-+static ssize_t link_capable_show(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct tsm_subsys *subsys = container_of(dev, typeof(*subsys), dev);
-+
-+	return sysfs_emit(buf, "%u\n", subsys->info->link_stream_capable);
-+}
-+static DEVICE_ATTR_RO(link_capable);
-+
-+static ssize_t selective_streams_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct tsm_subsys *subsys = container_of(dev, typeof(*subsys), dev);
-+
-+	return sysfs_emit(buf, "%u\n", subsys->info->nr_selective_streams);
-+}
-+static DEVICE_ATTR_RO(selective_streams);
-+
-+static umode_t tsm_pci_attr_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct tsm_subsys *subsys = container_of(dev, typeof(*subsys), dev);
-+	const struct tsm_info *info = subsys->info;
-+
-+	if (a == &dev_attr_link_capable.attr) {
-+		if (info->link_stream_capable)
-+			return a->mode;
-+		return 0;
-+	}
-+
-+	if (a == &dev_attr_selective_streams.attr) {
-+		if (info->nr_selective_streams)
-+			return a->mode;
-+		return 0;
-+	}
-+
-+	return a->mode;
-+}
-+
-+static bool tsm_pci_group_visible(struct kobject *kobj)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct tsm_subsys *subsys = container_of(dev, typeof(*subsys), dev);
-+
-+	if (subsys->info->pci_ops)
-+		return true;
-+	return false;
-+}
-+DEFINE_SYSFS_GROUP_VISIBLE(tsm_pci);
-+
-+static struct attribute *tsm_pci_attrs[] = {
-+	&dev_attr_link_capable.attr,
-+	&dev_attr_selective_streams.attr,
-+	NULL,
-+};
-+
-+const struct attribute_group tsm_pci_attr_group = {
-+	.name = "pci",
-+	.attrs = tsm_pci_attrs,
-+	.is_visible = SYSFS_GROUP_VISIBLE(tsm_pci),
-+};
-+
-+int tsm_pci_init(const struct tsm_info *info)
-+{
-+	if (!info->pci_ops)
-+		return 0;
-+
-+	return pci_tsm_register(info->pci_ops);
-+}
-+
-+void tsm_pci_destroy(const struct tsm_info *info)
-+{
-+	pci_tsm_unregister(info->pci_ops);
-+}
-diff --git a/drivers/virt/coco/tsm/tsm.h b/drivers/virt/coco/tsm/tsm.h
-new file mode 100644
-index 000000000000..407c388a109b
---- /dev/null
-+++ b/drivers/virt/coco/tsm/tsm.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __TSM_CORE_H
-+#define __TSM_CORE_H
-+
-+#include <linux/device.h>
-+
-+struct tsm_info;
-+struct tsm_subsys {
-+	struct device dev;
-+	const struct tsm_info *info;
-+};
-+
-+#ifdef CONFIG_PCI_TSM
-+int tsm_pci_init(const struct tsm_info *info);
-+void tsm_pci_destroy(const struct tsm_info *info);
-+extern const struct attribute_group tsm_pci_attr_group;
-+#else
-+static inline int tsm_pci_init(const struct tsm_info *info)
-+{
-+	return 0;
-+}
-+static inline void tsm_pci_destroy(const struct tsm_info *info)
-+{
-+}
-+#endif
-+
-+#endif /* TSM_CORE_H */
-+
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 4a04ce7685e7..132962b21e04 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -522,6 +522,9 @@ struct pci_dev {
- 	struct spdm_state *spdm_state;	/* Security Protocol and Data Model */
- 	unsigned int	cma_capable:1;	/* Authentication supported */
- 	unsigned int	cma_init_failed:1;
-+#endif
-+#ifdef CONFIG_PCI_TSM
-+	struct pci_tsm *tsm;		/* TSM operation state */
- #endif
- 	u16		acs_cap;	/* ACS Capability offset */
- 	phys_addr_t	rom;		/* Physical address if not from BAR */
-diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-index 8cb8a661ba41..f5dbdfa65d8d 100644
---- a/include/linux/tsm.h
-+++ b/include/linux/tsm.h
-@@ -4,11 +4,15 @@
- 
- #include <linux/sizes.h>
- #include <linux/types.h>
-+#include <linux/mutex.h>
- 
- struct tsm_info {
- 	const char *name;
- 	struct device *host;
- 	const struct attribute_group **groups;
-+	const struct tsm_pci_ops *pci_ops;
-+	unsigned int nr_selective_streams;
-+	unsigned int link_stream_capable:1;
- };
- 
- #define TSM_REPORT_INBLOB_MAX 64
-@@ -74,4 +78,77 @@ int tsm_report_register(const struct tsm_report_ops *ops, void *priv,
- int tsm_report_unregister(const struct tsm_report_ops *ops);
- int tsm_register(const struct tsm_info *info);
- void tsm_unregister(const struct tsm_info *info);
-+
-+enum pci_tsm_op_status {
-+	PCI_TSM_FAIL = -1,
-+	PCI_TSM_OK,
-+	PCI_TSM_SPDM_REQ,
-+};
-+
-+enum pci_tsm_op {
-+	PCI_TSM_OP_CONNECT,
-+	PCI_TSM_OP_DISCONNECT,
-+};
-+
-+struct pci_tsm_req {
-+	enum pci_tsm_op op;
-+	unsigned int seq;
-+};
-+
-+struct pci_dev;
-+/**
-+ * struct tsm_pci_ops - Low-level TSM-exported interface to the PCI core
-+ * @add: accept device for tsm operation, locked
-+ * @del: teardown tsm context for @pdev, locked
-+ * @req_alloc: setup context for given operation, unlocked
-+ * @req_free: teardown context for given request, unlocked
-+ * @exec: run @req, may be invoked multiple times per @req, locked
-+ * @lock: tsm work is one device and one op at a time
-+ */
-+struct tsm_pci_ops {
-+	int (*add)(struct pci_dev *pdev);
-+	void (*del)(struct pci_dev *pdev);
-+	struct pci_tsm_req *(*req_alloc)(struct pci_dev *pdev,
-+					 enum pci_tsm_op op);
-+	struct pci_tsm_req *(*req_free)(struct pci_tsm_req *req);
-+	enum pci_tsm_op_status (*exec)(struct pci_dev *pdev,
-+				       struct pci_tsm_req *req);
-+	struct mutex *lock;
-+};
-+
-+enum pci_tsm_state {
-+	PCI_TSM_IDLE,
-+	PCI_TSM_INIT,
-+	PCI_TSM_CONNECT,
-+};
-+
-+enum pci_tsm_mode {
-+	PCI_TSM_MODE_LINK,
-+	PCI_TSM_MODE_SELECTIVE,
-+};
-+
-+struct pci_tsm {
-+	enum pci_tsm_state state;
-+	enum pci_tsm_mode mode;
-+	u16 ide_cap;
-+	unsigned int link_capable:1;
-+	unsigned int selective_capable:1;
-+	void *tsm_data;
-+};
-+
-+#ifdef CONFIG_PCI_TSM
-+int pci_tsm_register(const struct tsm_pci_ops *ops);
-+void pci_tsm_unregister(const struct tsm_pci_ops *ops);
-+void generic_pci_tsm_req_free(struct pci_tsm_req *req);
-+struct pci_tsm_req *generic_pci_tsm_req_alloc(struct pci_dev *pdev,
-+					      enum pci_tsm_op op);
-+#else
-+static inline int pci_tsm_register(const struct tsm_pci_ops *ops)
-+{
-+	return 0;
-+}
-+static inline void pci_tsm_unregister(const struct tsm_pci_ops *ops)
-+{
-+}
-+#endif
- #endif /* __TSM_H */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index a39193213ff2..1219d50f8e89 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -742,7 +742,8 @@
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
- #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
--#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
-+#define PCI_EXT_CAP_ID_IDE	0x30	/* Integrity and Data Encryption */
-+#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
- 
- #define PCI_EXT_CAP_DSN_SIZEOF	12
- #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-
+PiBGcm9tOiBFdGhhbiBaaGFvIDxoYWlmZW5nLnpoYW9AbGludXguaW50ZWwuY29tPg0KPiBTZW50
+OiBUdWVzZGF5LCBKYW51YXJ5IDMwLCAyMDI0IDU6MTMgUE0NCj4gDQo+IE9uIDEvMzAvMjAyNCA0
+OjQzIFBNLCBUaWFuLCBLZXZpbiB3cm90ZToNCj4gPj4gRnJvbTogRXRoYW4gWmhhbyA8aGFpZmVu
+Zy56aGFvQGxpbnV4LmludGVsLmNvbT4NCj4gPj4gU2VudDogVHVlc2RheSwgSmFudWFyeSAzMCwg
+MjAyNCA0OjE2IFBNDQo+ID4+DQo+ID4+IE9uIDEvMzAvMjAyNCAyOjIyIFBNLCBUaWFuLCBLZXZp
+biB3cm90ZToNCj4gPj4+IEhlcmUgd2UgbmVlZCBjb25zaWRlciB0d28gc2l0dWF0aW9ucy4NCj4g
+Pj4+DQo+ID4+PiBPbmUgaXMgdGhhdCB0aGUgZGV2aWNlIGlzIG5vdCBib3VuZCB0byBhIGRyaXZl
+ciBvciBib3VuZCB0byBhIGRyaXZlcg0KPiA+Pj4gd2hpY2ggZG9lc24ndCBkbyBhY3RpdmUgd29y
+ayB0byB0aGUgZGV2aWNlIHdoZW4gaXQncyByZW1vdmVkLiBJbg0KPiA+Pj4gdGhhdCBjYXNlIG9u
+ZSBtYXkgb2JzZXJ2ZSB0aGUgdGltZW91dCBzaXR1YXRpb24gb25seSBpbiB0aGUgcmVtb3ZhbA0K
+PiA+Pj4gcGF0aCBhcyB0aGUgc3RhY2sgZHVtcCBpbiB5b3VyIHBhdGNoMDIgc2hvd3MuDQo+ID4+
+IFdoZW4gaW9tbXVfYnVzX25vdGlmaWVyKCkgZ290IGNhbGxlZCBmb3IgaG90cGx1ZyByZW1vdmFs
+IGNhc2VzIHRvDQo+ID4+IGZsdXNoIGRldlRMQiAoQVRTIGludmFsaWRhdGlvbiksIGRyaXZlciB3
+YXMgYWxyZWFkeSB1bmxvYWRlZC4NCj4gPj4gd2hhdGV2ZXIgc2FmZSByZW1vdmFsIG9yIHN1cnBy
+aXNlIHJlbW92YWwuIHNvIGluIHRoZW9yeSBubyBhY3RpdmUNCj4gPj4gZHJpdmVyIHdvcmtpbmcg
+dGhlcmUuDQo+ID4+DQo+ID4+IHBjaWVocF9pc3QoKQ0KPiA+PiAgICBwY2llaHBfZGlzYWJsZV9z
+bG90KCkNCj4gPj4gICAgIHJlbW92ZV9ib2FyZCgpDQo+ID4+ICAgICAgcGNpZWhwX3VuY29uZmln
+dXJlX2RldmljZSgpDQo+ID4+ICAgICAgIHBjaV9zdG9wX2FuZF9yZW1vdmVfYnVzX2RldmljZSgp
+DQo+ID4+ICAgICAgICBwY2lfc3RvcF9idXNfZGV2aWNlKCktLS0+aGVyZSB1bmxvYWQgZHJpdmVy
+DQo+ID4+ICAgICAgICBwY2lfcmVtb3ZlX2J1c19kZXZpY2UoKS0+aGVyZSBxaV9mbHVzaF9kZXZf
+aW90bGIoKSBnb3QgY2FsbGVkLg0KPiA+IHllcywgc28gcGF0Y2gwMiBjYW4gZml4IHRoaXMgY2Fz
+ZS4NCj4gPg0KPiA+Pj4gcGF0Y2gwMiBjYW4gZml4IHRoYXQgY2FzZSBieSBjaGVja2luZyB3aGV0
+aGVyIHRoZSBkZXZpY2UgaXMgcHJlc2VudA0KPiA+Pj4gdG8gc2tpcCBzZW5kaW5nIHRoZSBpbnZh
+bGlkYXRpb24gcmVxdWVzdHMuIFNvIHRoZSBsb2dpYyBiZWluZyBkaXNjdXNzZWQNCj4gPj4+IGhl
+cmUgZG9lc24ndCBtYXR0ZXIuDQo+ID4+Pg0KPiA+Pj4gVGhlIDJuZCBzaXR1YXRpb24gaXMgbW9y
+ZSB0cmlja3kuIFRoZSBkZXZpY2UgbWlnaHQgYmUgYm91bmQgdG8NCj4gPj4+IGEgZHJpdmVyIHdo
+aWNoIGlzIGRvaW5nIGFjdGl2ZSB3b3JrIHRvIHRoZSBkZXZpY2Ugd2l0aCBpbi1mbHkNCj4gPj4+
+IEFUUyBpbnZhbGlkYXRpb24gcmVxdWVzdHMuIEluIHRoaXMgY2FzZSBpbi1mbHkgcmVxdWVzdHMg
+bXVzdCBiZSBhYm9ydGVkDQo+ID4+PiBiZWZvcmUgdGhlIGRyaXZlciBjYW4gYmUgZGV0YWNoZWQg
+ZnJvbSB0aGUgcmVtb3ZlZCBkZXZpY2UuDQo+IENvbmNlcHR1YWxseQ0KPiA+Pj4gYSBkZXZpY2Ug
+aXMgcmVtb3ZlZCBmcm9tIHRoZSBidXMgb25seSBhZnRlciBpdHMgZHJpdmVyIGlzIGRldGFjaGVk
+Lg0KPiA+PiBTb21lIHRyaWNreSBzaXR1YXRpb25zOg0KPiA+Pg0KPiA+PiAxLiBUaGUgQVRTIGlu
+dmFsaWRhdGlvbiByZXF1ZXN0IGlzIGlzc3VlZCBmcm9tIGRyaXZlciBkcml2ZXIsIHdoaWxlIGl0
+IGlzDQo+ID4+IGluIGhhbmRsaW5nLCBkZXZpY2UgaXMgcmVtb3ZlZC4gdGhpcyBtb21tZW50LCB0
+aGUgZGV2aWNlIGluc3RhbmNlIHN0aWxsDQo+ID4+IGV4aXN0cyBpbiB0aGUgYnVzIGxpc3QuIHll
+cywgaWYgc2VhcmNoaW5nIGl0IGJ5IEJERiwgY291bGQgZ2V0IGl0Lg0KPiA+IGl0J3Mgc2VhcmNo
+YWJsZSBiZXR3ZWVuIHRoZSBwb2ludCB3aGVyZSB0aGUgZGV2aWNlIGlzIHJlbW92ZWQgYW5kIHRo
+ZQ0KPiA+IHBvaW50IHdoZXJlIHRoZSBkcml2ZXIgaXMgdW5sb2FkZWQ6DQo+ID4NCj4gPiAgICAg
+ICAgICBDUFUwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDUFUxDQo+ID4gICAgKERy
+aXZlciBpcyBhY3RpdmUpICAgICAgICAgICAgICAgICAgICAocGNpZWhwIGhhbmRsZXIpDQo+ID4g
+ICAgcWlfc3VibWl0X3N5bmMoKSAgICAgICAgICAgICAgICAgICAgICBwY2llaHBfaXN0KCkNCj4g
+PiAgICAgIC4uLiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLi4uDQo+ID4gICAg
+ICBsb29wIGZvciBjb21wbGV0aW9uKCkgeyAgICAgICAgICAgICAgIHBjaWVocF91bmNvbmZpZ3Vy
+ZV9kZXZpY2UoKQ0KPiA+ICAgICAgICAuLi4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHBjaV9kZXZfc2V0X2Rpc2Nvbm5lY3RlZCgpDQo+ID4gICAgICAgIGlmIChJVEUpIHsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgLi4uDQo+ID4gICAgICAgICAgLy9maW5kIHBjaV9kZXYg
+ZnJvbSBzaWQgICAgICAgICAgICAgcGNpX3JlbW92ZV9idXNfZGV2aWNlKCkNCj4gPiAgICAgICAg
+ICBpZiAocGNpX2Rldl9pc19jb25uZWN0ZWQoKSkgICAgICAgICAgIGRldmljZV9kZWwoKQ0KPiA+
+ICAgICAgICAgICAgYnJlYWs7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBidXNfcmVt
+b3ZlX2RldmljZSgpDQo+ID4gICAgICAgIH0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgZGV2aWNlX3JlbW92ZV9kcml2ZXIoKQ0KPiANCj4gSWYgdGhlIGRldmljZSB3
+YXMgaG90IHBsdWdpbiBvciByZS1zY2FubmVkLCB0aGUgZGV2aWNlIGhhcyBhIFBDSV9ERVZfQURE
+RUQNCj4gZmxhZywNCg0KaW4gdGhpcyBjYXNlIGlzIHBjaV9kZXZfaXNfZGlzY29ubmVjdGVkKCkg
+dHJ1ZSBvciBmYWxzZT8gDQoNCmhvdyBpcyB0aGlzIHBhdGNoIHN1cHBvc2VkIHRvIHdvcmsgd2l0
+aCBpdD8NCg0KPiBpZiBzbyB0aGUgZHJpdmVyIHVubG9hZGluZyB3b3JrIGlzbid0IGRlZmVyZWQg
+dG8gdGhlIHRhaWwgb2YgZGV2aWNlX2RlbCgpLCBpdA0KPiBpcyB1bmxvYWRlZCBiZWZvcmUgcGNp
+X3JlbW92ZV9idXNfZGV2aWNlKCktPmRldmljZV9kZWwoKSwgaW4gcGNpX3N0b3BfZGV2DQo+IA0K
+PiBwY2lfc3RvcF9idXNfZGV2aWNlKCkNCj4gICBwY2lfc3RvcF9kZXYoKQ0KPiAgIHsNCj4gICAg
+aWYgKHBjaV9kZXZfaXNfYWRkZWQoZGV2KSkgew0KPiAgICAgICAgZGV2aWNlX3JlbGVhc2VfZHJp
+dmVyKCZkZXYtPmRldik7DQo+ICAgfQ0KDQpubyBtYXR0ZXIgd2hlcmUgZHJpdmVyIHVubG9hZCBp
+cyByZXF1ZXN0ZWQsIGl0IG5lZWRzIHRvIHdhaXQgZm9yIGFib3J0aW5nDQppbi1mbHkgcmVxdWVz
+dCBvbiBDUFUwLg0KDQo+IA0KPiBTbyB0aGUgaW50ZXJ2YWwgdGhlIGRldmljZSBpcyBzZWFyY2hh
+YmxlLCBvbmx5IGFwcGxpZWQgdG8gdGhvc2UgZGV2aWNlcw0KPiBub3QgaG90IHBsdWdnZWQsIG9y
+IG5ldmVyIGJlIHNjYW5uZWQuDQo+IA0KDQphbmQgaW4gdGhlIHdvcnN0IGNhc2UgZXZlbiBpZiBw
+Y2lfZGV2IGlzIG5vdCBzZWFyY2hhYmxlLCBpc24ndCBpdCBhbHJlYWR5DQphbiBpbmRpY2F0b3Ig
+dGhhdCB0aGUgZGV2aWNlIGlzIGFic2VudCB0aGVuIHFpX3N1Ym1pdF9zeW5jKCkgc2hvdWxkDQpq
+dXN0IGV4aXQgdXBvbiBJVEU/DQo=
 
