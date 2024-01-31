@@ -1,132 +1,120 @@
-Return-Path: <linux-pci+bounces-2870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2871-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2360C8439D2
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 09:55:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FBAF843A1A
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 10:04:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7DBD1F2B993
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 08:55:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81D901C27BC6
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 09:04:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764CF69D15;
-	Wed, 31 Jan 2024 08:46:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E3B629FE;
+	Wed, 31 Jan 2024 08:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqYyOtWz"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="IgJxrBM+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F388605DD;
-	Wed, 31 Jan 2024 08:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002F769D0D
+	for <linux-pci@vger.kernel.org>; Wed, 31 Jan 2024 08:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706690818; cv=none; b=Jpmj7Rs8fzpzve2n2GCw+Ea52tp+bdFTi3lBrrwCu/fWd9a4t6MvmcqIRkilsH2fpmaIYv+hi9cvCG/Am/d5a2fLQtPrihZr3Hu3qn3JBIzqSin3v9gFs0B7+qAveUmk4IuR+GORs3GNHRmr6xyxxGDHSUcwqcDOHhnntxR4UMU=
+	t=1706691425; cv=none; b=owgwJgk3ersfB8ipshmzaB/YYw3M6V5L6ESZcr2LWkTRMRtirdatSjtge07UIOfbb2Oe30cgJ3EQsh80nX5F7SLNd20vVCTEitGVO+uvf65ZIPwkSl6J8OVuUhw+2oJ4Za92TZ/15eGH1lHHEOR5B/UhNzWPwzBLJKUJX1JFWEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706690818; c=relaxed/simple;
-	bh=4BkvKFgglVdCeGCFuHgP4W0v2mzK44qTzIo31u8u7+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dEpazUu1yI0zqMeFwphBwb+mNsdxaSphcSEL3JQCNs2lcD6Bx/GMxIh3JPTd6fmwmBlWPfjG8/W5ms3MTQ/zP+/PDZMb3pDBZdd9WTOQ4jXtqmm0tlM2pvHmzrTLQZk/aMYo8GdB3hwXG0Nlx5peLgIOZIY4Tjt/Bw28B9MYEYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqYyOtWz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 632E0C433C7;
-	Wed, 31 Jan 2024 08:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706690817;
-	bh=4BkvKFgglVdCeGCFuHgP4W0v2mzK44qTzIo31u8u7+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iqYyOtWzgUP5d3v0ololIBtkDRw9WWO09sd7gzCIIZgBxAVy9xat/jVBxOlXH+Ota
-	 YllfHjS+fywz95pELreHMdcRlqvYFz4jsazUgYcpK+JUOomn95jfjK2JzWKm6LhjNF
-	 Sw3frW+HAnotWiExQZFAHpvynylQmuOMLTnCWCw/JEPkwWco4Lk/KNihcL57pCHTwi
-	 yQv9czAHewVkFrRyByVCT4EgG8MlFLQF8x664CKTKg2PXEClUz0pSurPWpB9YnUqui
-	 nPxYK89diN8aDA5sgV5J6Anwow34s92tz/Dz6OAyi0s0exKKSK5qWNNnYx3HU1Fm55
-	 kJu35LRJzFDoQ==
-Date: Wed, 31 Jan 2024 14:16:45 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	vireshk@kernel.org, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: sm8450: Add opp table support
- to PCIe
-Message-ID: <20240131084645.GA3481@thinkpad>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-5-77bbf7d0cc37@quicinc.com>
- <20240129160420.GA27739@thinkpad>
- <20240130061111.eeo2fzaltpbh35sj@vireshk-i7>
- <20240130071449.GG32821@thinkpad>
- <20240130083619.lqbj47fl7aa5j3k5@vireshk-i7>
- <20240130094804.GD83288@thinkpad>
- <20240130095508.zgufudflizrpxqhy@vireshk-i7>
- <20240130131625.GA2554@thinkpad>
- <20240131052335.6nqpmccgr64voque@vireshk-i7>
+	s=arc-20240116; t=1706691425; c=relaxed/simple;
+	bh=PKv1oho1laKgagdEbM4KbckuWDsfrLBNKB+tjbPNi3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BM6pLS2vNOLH2XPghXgwGZ5yqwiDU0uQi7V7wlVm3307n9Rt9RtPZbfFEP67lGvwz90M0Yeg3bZgAbBT9dJcE8qWKUUMcTapy97azNXomk7/Xvok8Sfd0PdtZENMJUUi/QmC6ZrvX8SeUsOpJwxQ0Kl/ZvQm8ItB7bMnaeS+gr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=IgJxrBM+; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6040e7ebf33so1916537b3.0
+        for <linux-pci@vger.kernel.org>; Wed, 31 Jan 2024 00:57:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1706691423; x=1707296223; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PKv1oho1laKgagdEbM4KbckuWDsfrLBNKB+tjbPNi3M=;
+        b=IgJxrBM+2Ws/5QsIxdv95oTwl5UAoPG5XIJPXncZ47xfU7k/N2oqOAZw5ChVg0llDX
+         4qrlGRHrUo9EI9CqIEAX2QB8vx4abLHe4mLWpEL77WOiEsWyLZOUwPw/jJZKVfWDNYgg
+         6EZTO/61DcUg404oh90qSt5srbSjSqZNsjdy3XTadQcxihze0nPYQ+gC8Bvt2p9my69+
+         uGYNNLLL5QoW9M1Ck2jDiS5mEoLtp8Fuz6reSEzZ5ktLinP1W/a4qBRcKah2KutuDyr5
+         0SKcamLORZyUYYp1L7+qHkOnjv3QjolOt+gy2RyfWVJ5KNfxlV+Ic3R2OtdD+xg+eZ5T
+         EAVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706691423; x=1707296223;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PKv1oho1laKgagdEbM4KbckuWDsfrLBNKB+tjbPNi3M=;
+        b=L9lJ45ZnzWZqsR0TOqIZdGXd0g6hvPAUTQ53wtA/x1h7fnjvc/q5Vrhx430PhDhQ2+
+         SCJLqbNRi85fXVhOtVn7GcRG6DMSHUryWYdBbvi29wHWQSloHGuMeBCcvVpQC7TQUvPb
+         FvHuJV+5C+k+YjljdsIdpVDpJu99bWOEnkzk5qX6MoaogAmFhMrBRIYyGaJE2p5EKDZ5
+         dBE/or4IilmEa/4hj5xMF/sFpwjroH1JoQTSL7xPPWGK9nRNz4OX7Z70OjnNc8B+GE4h
+         2ASuYsH0Y+sojOQ9M0Gzay2Nv3qfWLfHFxPwH30BWkXB1zleTfjm0xGzWleY/zBqmUXl
+         989A==
+X-Gm-Message-State: AOJu0YzdE+BR7sTmewVBPJrmIZK2D8srFEz9RN0wQ5XF506T+e+6F6gz
+	/Wx/KIz5jHcw/QWSRMlziHZXfMj74JH2UzbpMWbU0pfFOrmJK61nSs+h8svQG7LTIXVEKs0NEnm
+	B6clLnm7TYxQU6Ge14YqGU916uwkhAZL5bplGOQ==
+X-Google-Smtp-Source: AGHT+IEurEtJTDYK3AVBhc4LATERu/lu8Wto+rGGt4fDZxRZeeNTLdsLZXKV6YQFlqOMO/7asswXfe4jQzkS04JOTfs=
+X-Received: by 2002:a0d:eb48:0:b0:604:3ef:a729 with SMTP id
+ u69-20020a0deb48000000b0060403efa729mr1442117ywe.15.1706691422846; Wed, 31
+ Jan 2024 00:57:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240131052335.6nqpmccgr64voque@vireshk-i7>
+References: <20240130095933.14158-1-jhp@endlessos.org> <20240130101335.GU2543524@black.fi.intel.com>
+In-Reply-To: <20240130101335.GU2543524@black.fi.intel.com>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Wed, 31 Jan 2024 16:56:27 +0800
+Message-ID: <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: David Box <david.e.box@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-ide@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessos.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 10:53:35AM +0530, Viresh Kumar wrote:
-> On 30-01-24, 18:46, Manivannan Sadhasivam wrote:
-> > Agree. But what I'm saying is, right now there is no DT property in the
-> > interconnect consumer nodes to specificy the bw requirements. This is all
-> > hardcoded in the respective ICC consumer drivers.
-> 
-> I thought there are a lot of users already in there..
-> 
-> $ git grep -i opp.*bps arch/arm64/boot/dts/ | wc -l
-> 864
+Mika Westerberg <mika.westerberg@linux.intel.com> =E6=96=BC 2024=E5=B9=B41=
+=E6=9C=8830=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:13=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On Tue, Jan 30, 2024 at 05:59:33PM +0800, Jian-Hong Pan wrote:
+> > Some systems, like ASUS B1400CEAE equipped with the SATA controller
+> > [8086:a0d3] can use LPM policy to save power, especially for s2idle.
+> >
+> > However, the same controller may be failed on other platforms. So,
+> > commit (ata: ahci: Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI
+> > controller") drops LPM policy for [8086:a0d3]. But, this blocks going
+> > to deeper CPU Package C-state when s2idle with enabled Intel VMD.
+>
+> Tiger Lake really should support this with no issues (as are the
+> generations after it). I suggest trying to figure out what was the root
+> cause of the original problem that triggered the revert, if possible at
+> all, perhaps it is is something not related to LPM and that would allow
+> us to enable this unconditionally on all Tiger Lake.
+>
+> I'm pretty sure the platform where this was reported suffers the same
+> s2idle issue you are seeing without this patch.
 
-Most of the hits are from CPU nodes... For some reasons, peripheral drivers are
-sticking to hardcoded values.
+Simply applying LPM policy to [8086:a0d3] sounds like a good idea!
 
-> 
-> > But when we use OPP to control bw, the bw requirements come from DT. This is
-> > what I see as a difference. Because, only nodes making use of OPP will specify
-> > bw in DT and other nodes making use of just ICC will not.
-> > 
-> > Maybe I'm worrying too much about these details... But it looks like
-> > inconsistency to me.
-> 
-> Right. So is there inconsistency right now ? Yes, there is.
-> 
-> The important question we need to answer is where do we want to see
-> all these drivers (specially new ones) in the future. What's the right
-> thing to do eventually ? Hardcode stuff ? Or Move it to DT ?
-> 
-> The answer is DT for me, so the code can be generic enough to be
-> reused. This is just one step in the right direction I guess.
-> Eventually the drivers must get simplified, which they are I guess.
-> 
+I installed an SATA storage into ASUS B1400CEAE and tested with
+enabled & disabled VMD again. Both the NVMe and SATA storage work with
+applying LPM policy to [8086:a0d3], which means that it does not hit
+the issue mentioned in the commit (ata: ahci: Revert "ata: ahci: Add
+Tiger Lake UP{3,4} AHCI controller").
 
-I completely agree that hardcoding the bw values is not the right thing, but was
-worried about the inconsistency. But anyway, I hope either ICC will also move
-towards DT for bw or we will convert all the drivers to use OPP in the future.
-
-Thanks for the discussion so far! It clarified.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Jian-Hong Pan
 
