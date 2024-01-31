@@ -1,229 +1,140 @@
-Return-Path: <linux-pci+bounces-2879-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2880-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47BC4843CF5
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 11:40:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B260843D76
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 11:59:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C019F1F319E4
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 10:40:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15A7929093F
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 10:59:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A0069D29;
-	Wed, 31 Jan 2024 10:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E337174E10;
+	Wed, 31 Jan 2024 10:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+o10Gyq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2123.outbound.protection.partner.outlook.cn [139.219.146.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A61E69D0B;
-	Wed, 31 Jan 2024 10:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706697637; cv=fail; b=o0/jZuTcbVsnk87E6sMj1r6LbLOeOIvgvdeSZDXWy/FJgBem44l8Praf6aG9c1ntlqC/DkGau5rueW6ytQzH2mb64lHVf8VskZXUGJtDAXs/I1bMgAKX3DSzFNd+jQE8B9dTj6JOnITzLwTQvGdq+JZehK6Lqh4dikcgYHJS25k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706697637; c=relaxed/simple;
-	bh=WrngU0cqJWE8iYOCGJHyDNFOSufIx64Og0cutRtDVtQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZL7cMMzcUoG7SqcL9QNYYZEef6ryZoVaxx4a1fRM9nZ93xj9El7hsYYRkgL0NRJ0qymt+Lw9Kg7g5u8o6ivjRol/6zIpO3moXCHWWddhiV/nHTzMoiZUeDs+jSLJCMiikIye1p6tr0xG6dAHuYZ6uT6a/Oo9VB4oMpVTL3AT83s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QgrMSJsQyXDmroakVZPCF0/rQRm18XiCmXUyzsGJDCVepksxuOr0OlbLMg/31v9kRRAnJiRNkhe09FSlaWR5V7loSgduEx+MLOxkWNsUrGgBwAlkpyFAZQtKKwv7GXLV8Hwda7DUvOyQw4VkTPJ3cHIhUpvSqfRjIzsQRwxekuAJxR30/w80+/QDoTVKzyOSv2bn9wwobgeW767pTjt4dllOQhg6qIKdnSCQ7K1X3bDnUoyPsjKY1TlxwFliR9/XhlddWJIMrvbKe6Ou8pFORcYS9sOD5berVeZr/X20GAzDgnjaWeMg6MDX2XY1sASfs9xNB0+rbQzhGFH+IjwVWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zhADv0OpMlAftKwUCinfh10J8mx+tVIicHFmgxSwuQ0=;
- b=HtYn1sm/VdNtHAaCnCPnqXhfI4cKbmo5rSYUZ9um/A9tsXRkes5Jd+uWSXUhbETWx7eUV95blhsLFGhV5+SD+oU5BHsB9syoqlwuLq78ysjzRqrTtzv9AyQLgPFqJNQDzf9UX0mUzNsW/MIYlBQ5q2HGOgyb/iLSddIl1UnIqXibgS2ymvOA+YhOoZyfJK6nArOh4Nv4rSsDMlkXqGdhOAgk8DQGhpp5plqivcm6QyHj5nBBjBUd3JPcSxhyj56jwQnr08zDkL1TsElo1TYizyD/Myq1f7RkPx7JD3leWB6vE+m2ouh9zCAvIt6yA/hsadBAGGGLgdCi8CNAERakwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0797.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
- 2024 10:07:09 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::5a5a:fa59:15fd:63dc]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7228.029; Wed, 31 Jan 2024 10:07:08 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Rob Herring <robh@kernel.org>
-CC: Palmer Dabbelt <palmer@dabbelt.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Kevin Xie <kevin.xie@starfivetech.com>, Leyfoon Tan
-	<leyfoon.tan@starfivetech.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Daire McNamara
-	<daire.mcnamara@microchip.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mason Huo
-	<mason.huo@starfivetech.com>, Emil Renner Berthing
-	<emil.renner.berthing@canonical.com>, Conor Dooley <conor@kernel.org>, Paul
- Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v14,RESEND 19/22] dt-bindings: PCI: Add StarFive JH7110
- PCIe controller
-Thread-Topic: [PATCH v14,RESEND 19/22] dt-bindings: PCI: Add StarFive JH7110
- PCIe controller
-Thread-Index: AQHaUk7ANof4CuKrsESG58uORquI7LDxXlAAgAEciACAATsJUA==
-Date: Wed, 31 Jan 2024 10:07:08 +0000
-Message-ID:
- <SHXPR01MB0863F3FFB671A0B95324A830E67CA@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
-References: <20240129010142.3732-1-minda.chen@starfivetech.com>
- <20240129010142.3732-4-minda.chen@starfivetech.com>
- <170656679886.3057.12378312489853176077.robh@kernel.org>
- <20240130151934.GA1636501-robh@kernel.org>
-In-Reply-To: <20240130151934.GA1636501-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0797:EE_
-x-ms-office365-filtering-correlation-id: e20775ca-71d4-44bf-17d1-08dc224462b5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- +eTndG5e8ZDFNKThe/FTof5rojlAiIQkdBV1uom3wmhYjdEqyDh9q31jfne+V/uYMKKm41d0Zj0FIOZRiZHHKBbGSYA/GgmgWefgs8gQfecs8Btwut6MIpV8X+YSZeGGlabHulHaQukz5WjaVkN0NdRrAxKv1+38ttBSnwEngX5uGgi1jTAJ6ZgnEXXMRwwWoi4gJruxPQ54aZrrMPOAB/Lm4FAx7ifz2Q9iJfKBRy5DGdXx5rBRfykiIWPOdJZ5NM7BzFgNXV1dPAPpm/nqErqm/qUTDda8hRePOMOyn0GByh0jos2Zc/Bg73Za4AX4+Qxsbu+h8hXDD58vKiJNnqKnmH0l+HdYzcw8PQwn71KdHTqYMtmKK15mImWeCeskuSx73Dxrbis9f1DyZuRT/+Bi9sLMZhkMOcHD4v+ef4+dAebQAMB83IY/nwuTu2luO0UJVEMgsWfTZ8VVf+1xYlKgWFZobcqzVWQtI/f3DgDeWlAHmizJAHtGpkDoW1gp04b0Ol4g+XPICObJydUbrTWuilBmq6X3OYEG2/HtBFS6+XDsAVkHqhXYsbsBdcfKOkpvS05zEys8qDmT3w1UOnDppi4W295/fPVY8ykyfHg=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(346002)(366004)(136003)(396003)(230922051799003)(230273577357003)(230173577357003)(64100799003)(1800799012)(451199024)(186009)(38070700009)(7416002)(41320700001)(2906002)(40180700001)(5660300002)(33656002)(41300700001)(86362001)(66446008)(64756008)(76116006)(54906003)(66476007)(83380400001)(66946007)(6916009)(966005)(508600001)(66556008)(71200400001)(7696005)(9686003)(55016003)(8676002)(26005)(44832011)(122000001)(4326008)(8936002)(38100700002)(40160700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?iZLFVnPiawQsG6dKofl+88tg8LdCLBrx1rwXDDCeO8mWCXcfBEkzVcybFi?=
- =?iso-8859-2?Q?MWcf8s9HRNLv1SVNn/9wHYbP0tEnfDOUk7e+YGR93zy4eUPOG4Z03jl8cd?=
- =?iso-8859-2?Q?TjNBb3J0wuQzS7aYjLJwY+OHMuM9kSjxOgz7NfY0cFziXVOW4ZwU231aUc?=
- =?iso-8859-2?Q?MdLSkBk7WpSc8AtvKIScwZUhdT8qWB9lDk4DvooSZ5lXmvXhsiMIZ9vqIL?=
- =?iso-8859-2?Q?gSCH9k8syA4maG97dil+BrkiNQa3dmL92h1xuwhVDDLdujL1IUypPH5qO9?=
- =?iso-8859-2?Q?AmRDOw4YZMGappm4HW+me8iRVo+z/7wtZUq96NuX1+eRtrzB9g7YQIH7/a?=
- =?iso-8859-2?Q?voxGaV1C6JtnwM+fdqWXuWgRBywXMyv199/QwZvU/opBhvSiMgQSW8Vam7?=
- =?iso-8859-2?Q?9a73/tIXKFWkssbp3g5OmW0xClt2zd4zd0tYSKvzTsgy4oOB254e/m8xEU?=
- =?iso-8859-2?Q?a8Ib4nlc4+vV7BraBLrZ/8N40neoMN2byv+ATciGnWl7lkDrCN3x1cxv72?=
- =?iso-8859-2?Q?MmTmAoJOOfurQU+crBUimYT+yCPkpcaSMfVoG+a8DRwUhOCktazyq69fd5?=
- =?iso-8859-2?Q?wCYRUW1110V6urdGWhhVPqpR3JIXMXiQa2DsbF3jp+cR5adqjdwMURJOqH?=
- =?iso-8859-2?Q?SmGzkmmPawgBg6bLubYvbIFyvPIBgsmizs447D3QlvKcyR6dpTwupqXBl2?=
- =?iso-8859-2?Q?gzqqQNZGJ40gzktT7Y2eGpnWz57eJDS/sPXcsKXyxtbqPiMoTugAnUYJab?=
- =?iso-8859-2?Q?zhEm0ZxkDEjO9vNUDExAiLerwsV0zH8Fu7j3NAzaUh8vvfAi5Q5FLSvjMI?=
- =?iso-8859-2?Q?u5ZyfJZifXDDE7U9JRTNlJD/gIvu5WmkP7frdfwgtBzLmsYW5kvDTk3dLz?=
- =?iso-8859-2?Q?ERpQtvW/ouf0NZZjSu1m78sSkVNSDV/gzcR4IbFtH2HGRLVSrz/k8ALirp?=
- =?iso-8859-2?Q?f+zzwnVFkvW3PgvNz/USn+9M/veu7/FXo9yG07lc9dQFFBq4WEZ7tTfrFw?=
- =?iso-8859-2?Q?TkvyP4DNARuD7jCFjAMoLcTHJBbknpJ4ig9SnbZci4OA6CfiJIzrqc70Cj?=
- =?iso-8859-2?Q?YLb+iyEOBMdSymxm5NF+bPPTLBEcxWr6m8o65aNevEp3nX5JzyZTDUcrMn?=
- =?iso-8859-2?Q?U0SzKViohLup1f2tHPLHCFk8XMIMzOA7nTnHF/kIgL4ys3vocodBnaLFcu?=
- =?iso-8859-2?Q?aMIQLC8OMgk5IAeamc3nZGdEX6MJkI/Besw/+gNQwyEG358mR8HSps+nyw?=
- =?iso-8859-2?Q?x7O+po8KAgHqYWTnu7Y9ysUwf3cx6B0v9vZuc8CwkQEb011T4E5jYzw5bm?=
- =?iso-8859-2?Q?4VJ/lbpLoW8Wtv5sMsILkWfNYPpsVMJtYawDxpq+eu9rzOITalVffICBNq?=
- =?iso-8859-2?Q?a6h9XWFYMzIhUBHm3NO56CWxSs3t8ghztLafHjL/NY4Q59Kc5fS7gQ9ddc?=
- =?iso-8859-2?Q?8aBCD5V/OA/MTxVDmonAtHRfOIhF4smwTak8oJJBi5XXsuy0CfkHKkB9Dv?=
- =?iso-8859-2?Q?yR3OwFCU1vRYMJdcb7HYSh5h/lZ827kFFPySJgknucaFBB9Gz1CbyLsJgN?=
- =?iso-8859-2?Q?PbRKwyHddC0hDa2y9k8RpHFiqchuMZbyMS2qTpLNNVnb1Dwf8QJkx5c+Vv?=
- =?iso-8859-2?Q?cybX83Ul1tHF+GZZVALLnj9YoC2e5+DkNs?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608B69D39;
+	Wed, 31 Jan 2024 10:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706698669; cv=none; b=cYZtg1HBJIUZMn8mTsfWx8n9t8JEmdrXgLlt6XegLxkRii9o61AqOwQp3T0rBjH16CP1AlGz9LVZ71xuwfQCaCMZxhieDt/KnJaaGBPMjYBdwjYl5O6HkuBA4Tkbvq4lJWUpTdkr0rdKV+nnPwIcvA3FMcp2G2Skb9O0A5BIhDk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706698669; c=relaxed/simple;
+	bh=lLdNASUUSAW/vwijOg8ZDB4AJvgTlx50ujLdt2AbEhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qQ2mqqMYauAkq62N6iW5YEFQVGWrJwYUsnk+PiugDfZLIbpPKIoksHVomzXFb0f/WUav3Wp6XqsUGKUFj4l2KcK1L2gDw/KbUkqaF91FEHAwoTZ/36DRpbPRNCfIcPEOeR2e2VrtTP8gkRWIAxmoYjehMJqixF20AV7fqgdklMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+o10Gyq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51711C433C7;
+	Wed, 31 Jan 2024 10:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706698669;
+	bh=lLdNASUUSAW/vwijOg8ZDB4AJvgTlx50ujLdt2AbEhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a+o10GyqrwYwZNT9xLVn33bySqifWeG82B4UwnkdI0pnDfIacopHS4hSqWHWmVZMa
+	 fgKl0FLfKmQXgm8xw4gwdksIHpopiRkdWgIR74e/eZNwA/va4WK2AIpZLm84IwHchc
+	 +vwAS2SDH0XKYDsNl8K8hymY85L0hua3PTayDkEoVLFSltzJrkHF3xpkK1TBrGfdyi
+	 lrL+6vCHtdSISI/0GuqAYQM51yivnV0rL3xPzUrYzRr28yICl2nZm0/Opt6QcHJdsJ
+	 XcF+rGBpzyvXBrdQzaZ+3DbWIEk9GLncBGEsWD6GYivhfh0FTzaWwPQy1Mo9uc8N/w
+	 1sPm4L+DGrwjg==
+Date: Wed, 31 Jan 2024 11:57:42 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	David Box <david.e.box@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@endlessos.org
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS
+ B1400CEAE
+Message-ID: <Zbonprq/1SircQon@x1-carbon>
+References: <20240130095933.14158-1-jhp@endlessos.org>
+ <20240130101335.GU2543524@black.fi.intel.com>
+ <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: e20775ca-71d4-44bf-17d1-08dc224462b5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jan 2024 10:07:08.8646
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2tuRH9VHICaUrxhvK7y47hamdbhcTDak1DGM3lnBPqYKRGia89/pEEKhcnwsZzOUCivEXe26esJ/5ojoivphS1gbSRuSv9lOM9D06QyRQ44=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0797
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
 
-
->=20
-> On Mon, Jan 29, 2024 at 04:21:12PM -0600, Rob Herring wrote:
+On Wed, Jan 31, 2024 at 04:56:27PM +0800, Jian-Hong Pan wrote:
+> Mika Westerberg <mika.westerberg@linux.intel.com> 於 2024年1月30日 週二 下午6:13寫道：
 > >
-> > On Mon, 29 Jan 2024 09:01:39 +0800, Minda Chen wrote:
-> > > Add StarFive JH7110 SoC PCIe controller dt-bindings. JH7110 using
-> > > PLDA XpressRICH PCIe host controller IP.
+> > Hi,
+> >
+> > On Tue, Jan 30, 2024 at 05:59:33PM +0800, Jian-Hong Pan wrote:
+> > > Some systems, like ASUS B1400CEAE equipped with the SATA controller
+> > > [8086:a0d3] can use LPM policy to save power, especially for s2idle.
 > > >
-> > > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> > > Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
-> > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  .../bindings/pci/starfive,jh7110-pcie.yaml    | 120 ++++++++++++++++=
-++
-> > >  1 file changed, 120 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
-> > >
+> > > However, the same controller may be failed on other platforms. So,
+> > > commit (ata: ahci: Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI
+> > > controller") drops LPM policy for [8086:a0d3]. But, this blocks going
+> > > to deeper CPU Package C-state when s2idle with enabled Intel VMD.
 > >
-> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m
-> dt_binding_check'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> > Tiger Lake really should support this with no issues (as are the
+> > generations after it). I suggest trying to figure out what was the root
+> > cause of the original problem that triggered the revert, if possible at
+> > all, perhaps it is is something not related to LPM and that would allow
+> > us to enable this unconditionally on all Tiger Lake.
 > >
-> > yamllint warnings/errors:
-> >
-> > dtschema/dtc warnings/errors:
-> >
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
-ci/s
-> tarfive,jh7110-pcie.yaml:
-> > Error in referenced schema matching $id:
-> > http://devicetree.org/schemas/pci/plda,xpressrich3-axi-common.yaml
-> >
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
-ci/s
-> tarfive,jh7110-pcie.example.dtb: pcie@940000000: False schema does not
-> allow {'compatible': ['starfive,jh7110-pcie'], 'reg': [[9, 1073741824, 0,
-> 268435456], [0, 721420288, 0, 16777216]], 'reg-names': ['cfg', 'apb'],
-> '#address-cells': [[3]], '#size-cells': [[2]], '#interrupt-cells': [[1]],=
- 'device_type':
-> ['pci'], 'ranges': [[2181038080, 0, 805306368, 0, 805306368, 0, 134217728=
-],
-> [3271557120, 9, 0, 9, 0, 0, 1073741824]], 'starfive,stg-syscon': [[429496=
-7295]],
-> 'bus-range': [[0, 255]], 'interrupts': [[56]], 'interrupt-map-mask': [[0,=
- 0, 0, 7]],
-> 'interrupt-map': [[0, 0, 0, 1, 2, 1], [0, 0, 0, 2, 2, 2], [0, 0, 0, 3, 2,=
- 3], [0, 0, 0, 4, 2, 4]],
-> 'msi-controller': True, 'clocks': [[4294967295, 86], [4294967295, 10],
-> [4294967295, 8], [4294967295, 9]], 'clock-names': ['noc', 'tl', 'axi_mst0=
-', 'apb'],
-> 'resets': [[4294967295, 11], [4294967295, 12], [4294967295, 13], [4294967=
-295,
-> 14], [4294967295, 15], [4294967295, 16]], 'perst-gpios': [[4294967295, 26=
-, 1]],
-> 'phys': [[4294967295]], 'interrupt-controller': {'#address-cells': [[0]],
-> '#interrupt-cells': [[1]], 'interrupt-controller': True, 'phandle': [[2]]=
-}, '$nodename':
-> ['pcie@940000000']}
-> > 	from schema $id:
-> > http://devicetree.org/schemas/pci/starfive,jh7110-pcie.yaml#
-> >
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
-ci/s
-> tarfive,jh7110-pcie.example.dtb: pcie@940000000: Unevaluated properties a=
-re
-> not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-ra=
-nge',
-> 'device_type', 'interrupt-controller', 'interrupt-map', 'interrupt-map-ma=
-sk',
-> 'interrupts', 'msi-controller', 'ranges', 'reg', 'reg-names' were unexpec=
-ted)
-> > 	from schema $id:
-> > http://devicetree.org/schemas/pci/starfive,jh7110-pcie.yaml#
->=20
-> These are probably due to only patches 16-22 showing up in lore.
->=20
-> Rob
+> > I'm pretty sure the platform where this was reported suffers the same
+> > s2idle issue you are seeing without this patch.
+> 
+> Simply applying LPM policy to [8086:a0d3] sounds like a good idea!
+> 
+> I installed an SATA storage into ASUS B1400CEAE and tested with
+> enabled & disabled VMD again. Both the NVMe and SATA storage work with
+> applying LPM policy to [8086:a0d3], which means that it does not hit
+> the issue mentioned in the commit (ata: ahci: Revert "ata: ahci: Add
+> Tiger Lake UP{3,4} AHCI controller").
 
-Yes.
-The plda,xpressrich3-axi-common.yaml file is not added to kernel.
+We would like to enable LPM for Tiger Lake again, but last time we tried
+to do so, we got a bunch of reports:
+https://bugzilla.kernel.org/show_bug.cgi?id=217114
+https://bbs.archlinux.org/viewtopic.php?id=283906
 
-Error in referenced schema matching $id:
-> > http://devicetree.org/schemas/pci/plda,xpressrich3-axi-common.yaml
+Where people complained that their SATA drive dissappeared as a result.
+
+
+The bug reports were reported on the following hardware:
+ASUS Vivobook 15 X513EAN
+Lenovo L3-15ITL6 IdeaPad
+Acer A515-56-32DK
+Acer A514
+HP Pavilion 14-dv0589na
+
+Usually, when a single vendor manages to mess something up in their
+platform firmware, and we deal with that by adding a quirk for that
+specific vendor.
+
+But here it is four different vendors... This kind of suggests that
+there could be a some more fundamental LPM related issue at play here.
+
+
+Yes, we are fully aware that on some other platforms, not having
+LPM enabled stops those platforms from entering the lowest CPU power
+states. So right now we are doomed if we do enable LPM, doomed if we
+don't.
+
+However, having some systems drawing more power than needed is better
+than some other systems not detecting their SATA drives at all.
+
+Unfortunately, we don't have any of these laptops that has a Tiger Lake
+AHCI controller (with a disappearing drive), so until someone who does
+debugs this, I think we are stuck at status quo.
+
+
+Kind regards,
+Niklas
 
