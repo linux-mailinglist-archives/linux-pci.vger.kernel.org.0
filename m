@@ -1,288 +1,519 @@
-Return-Path: <linux-pci+bounces-2851-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2852-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DA1084323D
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 01:48:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B036C8433D8
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 03:27:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1D40B225E8
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 00:47:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6083A28868D
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 02:27:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFBA215C8;
-	Wed, 31 Jan 2024 00:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 955315672;
+	Wed, 31 Jan 2024 02:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fQufqIj6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YmaqH6Uj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2062.outbound.protection.outlook.com [40.107.20.62])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3884DF63;
-	Wed, 31 Jan 2024 00:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706661982; cv=fail; b=fkdaeFkS0hFaHFI6ge3+/8EnFnZ7Kxg5mNg5DnIDL0fLkpgHzoIlEykZXJRj7LPklhzhLo7InBLqoUAPzpBTTpUMFeEM2CohyB8BMqQM28P32nVa7F0mFVi9QH6AJ9zAEpIYIUdpb7oHJq8UyH0pIXj+LP9nMFWCVpUfeWaT5Lc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706661982; c=relaxed/simple;
-	bh=w5ej/3IyEY+WZO1JvfC0AqolZMkMcYnAfQL4D+f2MCA=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=dST3smhvJXD1EsE2KVY5r6Zud/2wUUuGWkPq/S7dicmBywfkLsG+yOArXP2nvsM5mUmrW9ceGBdYvVs2v6/pkY9V2df9lTFlQra67tcHLaxnvFH4sPB2m5GAYvAoITdmVPABnxZnJcKCBS0HoUE8ogRokxkRQuc4+vtIHNE3zT0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=fQufqIj6; arc=fail smtp.client-ip=40.107.20.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KxcX9lcWCe3uW/D9Oo5kgr20TlonZf6fZJrZZYTlZPYmHyEE9fNFqxdWqtNzIJ9I6FTN2GPEapTATrP653Gc/e7QZwMNhVyog7quJ2AxSK85Rnf2eKTgCUnZz/Yjg4SuILjfTMpODffJgu7W3hPzcO0yE80lHk2HZSR9SF4cL4Tjj1IxtXPLZI8A/ZfQZwct8uJaJ+1ysjK1ms8ehG9dJm9EC1gd/mg1FskfSrU9EkPQVlKMAxsYA1eiy6xv0gQukV/PUfyHMn+sXR2xybhJ1sxESGXYypvbe7jFnz2+T8JHudR4olkmpdXhRUcxyuHumH/hvz0UNKVXGGJKqSIE2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oEbzfKH1xUS89dtwi8tCWKu2ZeVTsxGddGeKiXwLfVQ=;
- b=SMQUNrOl/Ti6yl4sRx5jG0lJaBEmBoRj2fDHrc7+Yj6zF03xY922aKnQttF++5yBcX0G48biooQnWJtQo6FB/rKi6kk0GlQ6tKa2NZJsrrW5wKepI7XItRntY8V/b3Btv/cfFtgPQuKZveh8wxHrd3CFhZn+egBsRJQgkyZarLcLYfDHr8gwcRf6xLdFPt91a6DGaDg8sYwoox6gDaY69IYZ805MspqPp+O0pswqsk5adoJrsOOe9XHi/l7apuNCrIzwiln3RLPSfLZYYe2/AmjKSRZB0q5NaJ5vYgEWIk0mT8piPKKc1Z7/vyYC3Iv1l4epYahWFc3fn7fYiclwhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oEbzfKH1xUS89dtwi8tCWKu2ZeVTsxGddGeKiXwLfVQ=;
- b=fQufqIj6sAwGvAWiSI4kfn03Rvqf6pdofp1+Lgd86c8oV88bp3PFdsrh6JeKGG8FPOAZUH2LKKZZJ/mFz73J4xi9q4C8YaV3L2ITMk30NcasAeHXrjDRxnjZSQollpDkPk4uLlr5CDJVZ34o/ePRmQtStKNrXM2k8eZwuWuJMug=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB6877.eurprd04.prod.outlook.com (2603:10a6:803:131::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Wed, 31 Jan
- 2024 00:46:16 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7228.029; Wed, 31 Jan 2024
- 00:46:16 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Tue, 30 Jan 2024 19:45:31 -0500
-Subject: [PATCH 6/6] PCI: dwc: Add common send pme_turn_off message method
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240130-pme_msg-v1-6-d52b0add5c7c@nxp.com>
-References: <20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com>
-In-Reply-To: <20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1706661950; l=4224;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=w5ej/3IyEY+WZO1JvfC0AqolZMkMcYnAfQL4D+f2MCA=;
- b=G9CDMmzzSg7ushqUxI6CN1B3eanQca1agkuFSlgt7Z96N/+IWj1Dz1TT11jgLoP40rVCKd8IZ
- 5JBpVI4l/0RC9IEcmAhFTTupT5H7tIkIpOhubhJediz/2++36LbkZzZ
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SJ0PR03CA0225.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D48B1BC49;
+	Wed, 31 Jan 2024 02:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706668006; cv=none; b=Vq/KPzssfZ3ZQmfroSmF1fylHdIsJwornSmrNs7Uxje+6Uwfy2SZhCrOl+na5vT0vbavxcmZjLKJ0JBBcjJgBIIksvuWweCrofdhHvOEh7pOlu5YxBAacU7nkFEHEEBXZOOtmF91qV8o1ycvVAyveClWNAEkTaoubWq3zPe9e1M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706668006; c=relaxed/simple;
+	bh=bj8cWvQXrmKq86waIXDVsaQ2lA8WS1l0Aluov5ssNAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Frd6Im94GOyjz9GV3x1r4kMjaXQAUYBhD2km2EOS0PylXBMpZ67v0PnZ+nj+TIeY52ppd7mZk2wQY9ak4Yg3iq0YqM2QiCQBecA9TGPbgeQXQg6/Fafb3nwQBvbmB3pvxurxQSCqpMhThshmpzcO/K6VuKUyh4ykda9ae6Yce1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YmaqH6Uj; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706668005; x=1738204005;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bj8cWvQXrmKq86waIXDVsaQ2lA8WS1l0Aluov5ssNAA=;
+  b=YmaqH6UjpCrqQ61qRpOzj68JylYj1TntH6afJ2vWn6D4R4cBTrGRu49b
+   OQRe8VjASJ8DufVMasOF99E+vnKe7vDJ2HbjiNU8mZX0eGAmfwHszBaQ6
+   Gk5KvAJa7N8UNDT4CaMSKCAaBW1odUbi6Nbqj/rWkSN++90Ri3A/TYEWE
+   3JTZOH5sdE1Wq2mpWfaQD+XY9a8nirZvMg4bi+aKKTz6+GDabkB7OBm1C
+   mEpmvj2TLRvMR3X44DTN+1KdT57bLj+c0J1M0XSMOBkpQKlMBnigcfJ+A
+   eoky30elEkoLpkOLJQP0N1ZLPpsrwKMn9GLIzjal6miIFCineeUjCEeKx
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3337293"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="3337293"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 18:26:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119468425"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="1119468425"
+Received: from pangchin-mobl3.amr.corp.intel.com (HELO [10.209.54.246]) ([10.209.54.246])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 18:26:41 -0800
+Message-ID: <6ecb7bbf-0eba-4cea-b9b8-05fd092b7d01@linux.intel.com>
+Date: Tue, 30 Jan 2024 18:26:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB6877:EE_
-X-MS-Office365-Filtering-Correlation-Id: 663c77f4-7ead-435e-fb9c-08dc21f607ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	fGI8HVw6CITlVT19yLJ50uYeVZ2MvmQqhch15yZl1dLmBwpC44QPgfoibMlDDkB3YdKI2nM/lA7uXUWze4+WExiUw4HsS98F3QU/Fgjy+IHoWzZHaHdNSN7lRRcBcyXRdg6rnPYDqMM5VtG7GDKrKdzPBD06PcaPBwvzJKqdwJh828agxWF5yxcZTvTq9rrrjG6KhccI8RNhyjymXR30YfX5x2mf6hysRMaaeSUo4dBR40jKM37a1sDuuBcm+llRLfQVVX2BglsPk33PpLy6qBzLm5CtLjkhJ3K2hk139aZmfuvoPYHvREtl5k6ruNht7/6YiaPsxdEyqUd2luscXbOvq6nE5nl5vKsT3q0eH/yEs+J4E/Kj4jqjNDO3+1brk42LymxtOzEniFHq+CsMJAJ5XRjbxN+DEKUKppbqT45SoCGDMQS9jpjzFLFWqC2hHOGIiNyv+zdpVPjuu3VAIA084dtCZSoeiqiLyYtAdLyojniYfg4OV8+a0YSanu3w2z1nuCu8epmkB0wn2QnKhE3/Ghyvacp5YfSzLxzpCkKOXA+F4m/pnn/ysINRb4Jq9BaOIBOx5264+LJpDEUsYGZXvlxf3xBg5L2GrEBBWwxK2up4GvDoH5t5VBAuSAGkVFQJdDDRlPqEnLEfuKbvSA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(39860400002)(376002)(136003)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(41300700001)(921011)(26005)(36756003)(316002)(66476007)(38350700005)(6512007)(52116002)(478600001)(83380400001)(2616005)(6666004)(6486002)(6506007)(38100700002)(86362001)(5660300002)(7416002)(2906002)(66556008)(66946007)(15650500001)(8676002)(8936002)(4326008)(110136005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q3J4L2V6cEZUZ1A2VlZ3M05laUkwWVBSZDhJUDhpWUh1MUhESGM5QmhKTDlu?=
- =?utf-8?B?cm1SQjI1S2NOVVRZMGwwdkptdkxDUWh1T2YxRWlZUTMzeUNIY3hDU0l1NlRJ?=
- =?utf-8?B?c3VnUmxNMHZsMW9mdzRINE1GeFRuYWhzTHhVSFJ4WWpDRC9KOGtBT0ZkSDJo?=
- =?utf-8?B?UGdubUpQRWN0QVRmRk5FM01qQ2d0MlRkQjZGV012SytVdG5uVE5OWHVrcDNh?=
- =?utf-8?B?dVhGa01TVVczQWZHdTVteDhEa2Z1NHB6OForbHZKRTEwbCtrbnJCMXR1UHhS?=
- =?utf-8?B?YkQxOXRLSnNWTFdjVklzQXBFUDJ3SGRxNWIwVjh6M1h2V2NuMlhaUEtNNjZm?=
- =?utf-8?B?am9FK1p5VUpqS0d1Z0h3QTV3RmRhSGlXWnFQVkdtQjVlbVhxdjhWcndUR2pT?=
- =?utf-8?B?cEZSTS9QdzdxNnA0Z2NHVG0rTEFQQmFsUndFMjF0N0YvMm5nSlFzS0JlWGhp?=
- =?utf-8?B?VVRSSVM3NUJRc281M2ptV2FTUUJJQWFiZUgwd0E0SnAxeXBOM2U2Z1QyaVdS?=
- =?utf-8?B?WkVCelVZYklSYzBSR0gxWVFRZFBFbjNpTWx4OTB2WmRSamsrVTFPQ0MvS0dq?=
- =?utf-8?B?L3p3VnkyK2UzS0xTdm02UE9BYXp2QmlLV2VtaGtyTHozZHBZL0FFd3p2aWtO?=
- =?utf-8?B?YmtxQjU4K2JoVm1KaHNRNndlMkFtdHpqakxheHVlZ09sV2RobjFVNEIzRW54?=
- =?utf-8?B?R1h5SjFueGdKZG5sWTFPdStLMGo4amdEMDdSMERqVFA3M1hFOVFjR29wS3NI?=
- =?utf-8?B?aFoyM0V2N3ZPS0hsWitlWXVPQ0dsaUVDazNoaE1UTVc5NnQ5NVU0aW4vWmhz?=
- =?utf-8?B?cHcxZ2xnTVRHVmRiclQxVWJaRUxKVTd6T09hc3pNNHJRUFA0MmtPS01CNWlh?=
- =?utf-8?B?Y2dpNllxZWJxY2hPNCtRaklJektBSjdpK3gwOWFuYXJ5QWY5U1FYTmpCM3oy?=
- =?utf-8?B?RkJZWHNaNEVGb1JLVjN2eHZON0hJVENEMlBNTU53cGJsY1dFTFhLUzA4ZmRU?=
- =?utf-8?B?eTc0Q0NicGFXUk1KK1czNlYyUFlBL0J5dVZxY094UG8rZm9jazZlcWZuc0Uz?=
- =?utf-8?B?Z3VHM3R1ejUyUXROcXpvWkRNc0hRa0FGN0ZoRHRsZXltN1IyN254aXFpM0RJ?=
- =?utf-8?B?NVRQdlNFVGlEMGg3MWcwYkVaTHV4S0lvSnJTbXZ4Y1cvZnhwSmp3RWpSTFd2?=
- =?utf-8?B?Q0lBZm1lRTJRKzVwa2tYZ2QyNkNJZGkyL2tUa3pyc1kzTjBVd1p2eWtJSjF3?=
- =?utf-8?B?SUhUMzJLTTcya2luTW5kZzFqQmZHWDg0ajQ3TFpabFMvTXIxbkthSHY5cTdL?=
- =?utf-8?B?OGhjMTR0RWpzZWZYM2gxbHNvdm5NeDZKWkl3dmd0Nkx3a1JpQ3RrTUNDcGtZ?=
- =?utf-8?B?RnViOVIrZkxQWHgwV3VjRlFiVFNrMkg5c0gvRWhFUFVPcVhNU25HbEhhKzlR?=
- =?utf-8?B?Y29sNUExTFdJTXVwQSttMzdiQXh1Ri9HZ2IxK3J0eUtmVDBBaThuZHVQMnp6?=
- =?utf-8?B?VDB2c2J5WURWYUxmQjd3OHhXUHBnQzA5R3VEajZQNTZNQXFNWkd5eUFYekhi?=
- =?utf-8?B?ZjJrUUxkZDkydGc4bUd4L3Q2azhTOU15L3Z1SDZraEg2MnFVK2ppRW1KMC91?=
- =?utf-8?B?ZTdySExEN3FmWUxZTDh6aDBmRWVibEV3TTNMaWJSQkFncTduV3BnRm1rUFRt?=
- =?utf-8?B?R1pvTkZHMUpFVFEwK1ZIRk83OU5lcXAzZmw3T28zN3I3anZXM3o5MEZYVTBX?=
- =?utf-8?B?MmV0ZW5qTEdiUE9FanJHWVZkVlNEYzR0WVYzRFNkcUFBYzFhSUNtemcvOWdU?=
- =?utf-8?B?MUhraitYWFhLNVN0RElTeTVFaGc0V3FEUUFnSm0rWVNsREtoK2tiNHJ4d0Ns?=
- =?utf-8?B?RHJSTlpjVVQ3U0Zodk9BenVOVVRZdDZYaWNHNTRsbVFKV2xpYmFibUszY3Ur?=
- =?utf-8?B?MU5MbzNuWFVPZG9HL0tXeGo1RWM2aEp5U3Erc0lEaDFabmpnYVRoUE5ITGVF?=
- =?utf-8?B?YnZuNGRGelJ1UTZVQVpnWEtXUnlIN1QvZ2Ewb2VLT0VSTmJTQ2JhcExreFBl?=
- =?utf-8?B?eXIvek5DSW52a2JZaFBWVHR4NWt6SVptN1lpMUh2KyttMFV6Z0dPVzJIVVMv?=
- =?utf-8?Q?+0UmepxrY7aaqQdlxrbn91uqo?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 663c77f4-7ead-435e-fb9c-08dc21f607ee
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2024 00:46:15.9457
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4atgBjHqpHz2pa+JAZCOMI8oXcJE/IBAqkHJJXGncIO8r5AC+NQciJKDJdEad4bh+NMa78FdTCrljUd/iFcV1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6877
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] PCI/AER: Store more information in aer_err_info
+Content-Language: en-US
+To: "Wang, Qingshun" <qingshun.wang@linux.intel.com>,
+ linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-acpi@vger.kernel.org
+Cc: chao.p.peng@linux.intel.com, erwin.tsaur@intel.com,
+ feiting.wanyan@intel.com, qingshun.wang@intel.com,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
+ Borislav Petkov <bp@alien8.de>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Bjorn Helgaas <helgaas@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ Shiju Jose <shiju.jose@huawei.com>, Adam Preble <adam.c.preble@intel.com>,
+ Li Yang <leoyang.li@nxp.com>, Lukas Wunner <lukas@wunner.de>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-edac@vger.kernel.org
+References: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
+ <20240125062802.50819-2-qingshun.wang@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240125062802.50819-2-qingshun.wang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Set outbound ATU map memory write to send PCI message. So one MMIO write
-can trigger a PCI message, such as pme_turn_off.
 
-Add common dw_pcie_send_pme_turn_off_by_atu() function.
+On 1/24/24 10:27 PM, Wang, Qingshun wrote:
+> When Advisory Non-Fatal errors are raised, both correctable and
 
-Call dw_pcie_send_pme_turn_off_by_atu() to send out pme_turn_off message in
-general dw_pcie_suspend_noirq() if there are not platform callback
-pme_turn_off() exist.
+Maybe you can start with same info about what Advisory Non-FataL
+errors are and the specification reference. I know that you included
+it in cover letter. But it is good to include it in commit log.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 51 +++++++++++++++++++++--
- drivers/pci/controller/dwc/pcie-designware.c      |  8 ++++
- drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
- 3 files changed, 58 insertions(+), 4 deletions(-)
+> uncorrectable error statuses will be set. The current kernel code cannot
+> store both statuses at the same time, thus failing to handle ANFE properly.
+> In addition, to avoid clearing UEs that are not ANFE by accident, UE
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 267687ab33cbc..2a281060f3aad 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -728,6 +728,8 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
- 			 pci->num_ob_windows);
- 
-+	pci->msg_atu_index = i;
-+
- 	i = 0;
- 	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
- 		if (resource_type(entry->res) != IORESOURCE_MEM)
-@@ -833,11 +835,49 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- }
- EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
- 
-+static int dw_pcie_send_pme_turn_off_by_atu(struct dw_pcie *pci)
-+{
-+	struct dw_pcie_ob_atu_cfg atu = { 0 };
-+	void __iomem *m;
-+	int ret = 0;
-+
-+	if (pci->num_ob_windows <= pci->msg_atu_index)
-+		return -EINVAL;
-+
-+	atu.code = PCI_MSG_CODE_PME_TURN_OFF;
-+	atu.routing = PCI_MSG_TYPE_R_BC;
-+	atu.type = PCIE_ATU_TYPE_MSG;
-+	atu.size = pci->msg_io_size;
-+
-+	if (!atu.size) {
-+		dev_dbg(pci->dev,
-+			"atu memory map windows is zero, please check 'msg' reg in dts\n");
-+		return -ENOMEM;
-+	}
-+
-+	atu.cpu_addr = pci->msg_io_base;
-+
-+	ret = dw_pcie_prog_outbound_atu(pci, &atu);
-+	if (ret)
-+		return ret;
-+
-+	m = ioremap(atu.cpu_addr, PAGE_SIZE);
-+	if (!m)
-+		return -ENOMEM;
-+
-+	/* A dummy write is converted to a Msg TLP */
-+	writel(0, m);
-+
-+	iounmap(m);
-+
-+	return ret;
-+}
-+
- int dw_pcie_suspend_noirq(struct dw_pcie *pci)
- {
- 	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
--	int ret;
-+	int ret = 0;
- 
- 	/*
- 	 * If L1SS is supported, then do not put the link into L2 as some
-@@ -849,10 +889,13 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
- 	if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
- 		return 0;
- 
--	if (!pci->pp.ops->pme_turn_off)
--		return 0;
-+	if (pci->pp.ops->pme_turn_off)
-+		pci->pp.ops->pme_turn_off(&pci->pp);
-+	else
-+		ret = dw_pcie_send_pme_turn_off_by_atu(pci);
- 
--	pci->pp.ops->pme_turn_off(&pci->pp);
-+	if (ret)
-+		return ret;
- 
- 	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
- 				PCIE_PME_TO_L2_TIMEOUT_US/10,
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index ba909fade9db1..eb24362009bb6 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -155,6 +155,14 @@ int dw_pcie_get_resources(struct dw_pcie *pci)
- 		}
- 	}
- 
-+	if (!pci->msg_io_base) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "msg");
-+		if (res) {
-+			pci->msg_io_base = res->start;
-+			pci->msg_io_size = res->end - res->start + 1;
-+		}
-+	}
-+
- 	/* LLDD is supposed to manually switch the clocks and resets state */
- 	if (dw_pcie_cap_is(pci, REQ_RES)) {
- 		ret = dw_pcie_get_clocks(pci);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 703b50bc5e0f1..866ab44df9fd1 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -424,6 +424,9 @@ struct dw_pcie {
- 	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
- 	struct gpio_desc		*pe_rst;
- 	bool			suspended;
-+	int			msg_atu_index;
-+	phys_addr_t		msg_io_base;
-+	size_t			msg_io_size;
- };
- 
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+Please add some details about the impact of not clearing them.
+> severity and Device Status also need to be recorded: any fatal UE cannot
+> be ANFE, and if Fatal/Non-Fatal Error Detected is set in Device Status, do
+> not take any assumption and let UE handler to clear UE status.
+>
+> Store status and mask of both correctable and uncorrectable errors in
+> aer_err_info. The severity of UEs and the values of the Device Status
+> register are also recorded, which will be used to determine UEs that should
+> be handled by the ANFE handler. Refactor the rest of the code to use
+> cor/uncor_status and cor/uncor_mask fields instead of status and mask
+> fields.
+>
+> Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+> ---
+>  drivers/acpi/apei/ghes.c | 10 ++++-
+>  drivers/cxl/core/pci.c   |  6 ++-
+>  drivers/pci/pci.h        |  8 +++-
+>  drivers/pci/pcie/aer.c   | 93 ++++++++++++++++++++++++++--------------
+>  include/linux/aer.h      |  4 +-
+>  include/linux/pci.h      | 27 ++++++++++++
+>  6 files changed, 111 insertions(+), 37 deletions(-)
+>
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 7b7c605166e0..6034039d5cff 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -593,6 +593,8 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+>  
+>  	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
+>  	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
+> +		struct pcie_capability_regs *pcie_caps;
+> +		u16 device_status = 0;
+>  		unsigned int devfn;
+>  		int aer_severity;
+>  		u8 *aer_info;
+> @@ -615,11 +617,17 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+>  			return;
+>  		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
+>  
+> +		if (pcie_err->validation_bits & CPER_PCIE_VALID_CAPABILITY) {
+> +			pcie_caps = (struct pcie_capability_regs *)pcie_err->capability;
+> +			device_status = pcie_caps->device_status;
+> +		}
+> +
+>  		aer_recover_queue(pcie_err->device_id.segment,
+>  				  pcie_err->device_id.bus,
+>  				  devfn, aer_severity,
+>  				  (struct aer_capability_regs *)
+> -				  aer_info);
+> +				  aer_info,
+> +				  device_status);
+>  	}
+>  #endif
+>  }
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 6c9c8d92f8f7..9111a4415a63 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -903,6 +903,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  	struct aer_capability_regs aer_regs;
+>  	struct cxl_dport *dport;
+>  	struct cxl_port *port;
+> +	u16 device_status;
+>  	int severity;
+>  
+>  	port = cxl_pci_find_port(pdev, &dport);
+> @@ -917,7 +918,10 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
+>  		return;
+>  
+> -	pci_print_aer(pdev, severity, &aer_regs);
+> +	if (pcie_capability_read_word(pdev, PCI_EXP_DEVSTA, &device_status))
+> +		return;
+> +
+> +	pci_print_aer(pdev, severity, &aer_regs, device_status);
+>  
+>  	if (severity == AER_CORRECTABLE)
+>  		cxl_handle_rdport_cor_ras(cxlds, dport);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 2336a8d1edab..f881a1b42f14 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -407,8 +407,12 @@ struct aer_err_info {
+>  	unsigned int __pad2:2;
+>  	unsigned int tlp_header_valid:1;
+>  
+> -	unsigned int status;		/* COR/UNCOR Error Status */
+> -	unsigned int mask;		/* COR/UNCOR Error Mask */
+> +	u32 cor_mask;		/* COR Error Mask */
+> +	u32 cor_status;		/* COR Error Status */
+> +	u32 uncor_mask;		/* UNCOR Error Mask */
+> +	u32 uncor_status;	/* UNCOR Error Status */
+> +	u32 uncor_severity;	/* UNCOR Error Severity */
+> +	u16 device_status;
+>  	struct aer_header_log_regs tlp;	/* TLP Header */
+>  };
+>  
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 05fc30bb5134..6583dcf50977 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -615,7 +615,7 @@ const struct attribute_group aer_stats_attr_group = {
+>  static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+>  				   struct aer_err_info *info)
+>  {
+> -	unsigned long status = info->status & ~info->mask;
+> +	unsigned long status;
+>  	int i, max = -1;
+>  	u64 *counter = NULL;
+>  	struct aer_stats *aer_stats = pdev->aer_stats;
+> @@ -625,16 +625,19 @@ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+>  
+>  	switch (info->severity) {
+>  	case AER_CORRECTABLE:
+> +		status = info->cor_status & ~info->cor_mask;
+>  		aer_stats->dev_total_cor_errs++;
+>  		counter = &aer_stats->dev_cor_errs[0];
+>  		max = AER_MAX_TYPEOF_COR_ERRS;
+>  		break;
+>  	case AER_NONFATAL:
+> +		status = info->uncor_status & ~info->uncor_mask;
+>  		aer_stats->dev_total_nonfatal_errs++;
+>  		counter = &aer_stats->dev_nonfatal_errs[0];
+>  		max = AER_MAX_TYPEOF_UNCOR_ERRS;
+>  		break;
+>  	case AER_FATAL:
+> +		status = info->uncor_status & ~info->uncor_mask;
+>  		aer_stats->dev_total_fatal_errs++;
+>  		counter = &aer_stats->dev_fatal_errs[0];
+>  		max = AER_MAX_TYPEOF_UNCOR_ERRS;
+> @@ -674,15 +677,17 @@ static void __print_tlp_header(struct pci_dev *dev,
+>  static void __aer_print_error(struct pci_dev *dev,
+>  			      struct aer_err_info *info)
+>  {
+> +	unsigned long status;
+>  	const char **strings;
+> -	unsigned long status = info->status & ~info->mask;
+>  	const char *level, *errmsg;
+>  	int i;
+>  
+>  	if (info->severity == AER_CORRECTABLE) {
+> +		status = info->cor_status & ~info->cor_mask;
+>  		strings = aer_correctable_error_string;
+>  		level = KERN_WARNING;
+>  	} else {
+> +		status = info->uncor_status & ~info->uncor_mask;
+>  		strings = aer_uncorrectable_error_string;
+>  		level = KERN_ERR;
+>  	}
+> @@ -700,18 +705,27 @@ static void __aer_print_error(struct pci_dev *dev,
+>  
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> +	u32 status, mask;
+>  	int layer, agent;
+>  	int id = pci_dev_id(dev);
+>  	const char *level;
+>  
+> -	if (!info->status) {
+> +	if (info->severity == AER_CORRECTABLE) {
+> +		status = info->cor_status;
+> +		mask = info->cor_mask;
+> +	} else {
+> +		status = info->uncor_status;
+> +		mask = info->uncor_mask;
+> +	}
+> +
+> +	if (!status) {
+>  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>  			aer_error_severity_string[info->severity]);
+>  		goto out;
+>  	}
+>  
+> -	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+> -	agent = AER_GET_AGENT(info->severity, info->status);
+> +	layer = AER_GET_LAYER_ERROR(info->severity, status);
+> +	agent = AER_GET_AGENT(info->severity, status);
+>  
+>  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>  
+> @@ -720,7 +734,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  		   aer_error_layer[layer], aer_agent_string[agent]);
+>  
+>  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> -		   dev->vendor, dev->device, info->status, info->mask);
+> +		   dev->vendor, dev->device, status, mask);
+>  
+>  	__aer_print_error(dev, info);
+>  
+> @@ -731,7 +745,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	if (info->id && info->error_dev_num > 1 && info->id == id)
+>  		pci_err(dev, "  Error of this Agent is reported first\n");
+>  
+> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> +	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>  			info->severity, info->tlp_header_valid, &info->tlp);
+>  }
+>  
+> @@ -763,7 +777,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>  #endif
+>  
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> -		   struct aer_capability_regs *aer)
+> +		   struct aer_capability_regs *aer, u16 device_status)
+>  {
+>  	int layer, agent, tlp_header_valid = 0;
+>  	u32 status, mask;
+> @@ -783,8 +797,12 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  
+>  	memset(&info, 0, sizeof(info));
+>  	info.severity = aer_severity;
+> -	info.status = status;
+> -	info.mask = mask;
+> +	info.cor_status = aer->cor_status;
+> +	info.cor_mask = aer->cor_mask;
+> +	info.uncor_status = aer->uncor_status;
+> +	info.uncor_severity = aer->uncor_severity;
+> +	info.uncor_mask = aer->uncor_mask;
+> +	info.device_status = device_status;
+>  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+>  
+>  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> @@ -996,9 +1014,9 @@ static bool cxl_error_is_native(struct pci_dev *dev)
+>  static bool is_internal_error(struct aer_err_info *info)
+>  {
+>  	if (info->severity == AER_CORRECTABLE)
+> -		return info->status & PCI_ERR_COR_INTERNAL;
+> +		return info->cor_status & PCI_ERR_COR_INTERNAL;
+>  
+> -	return info->status & PCI_ERR_UNC_INTN;
+> +	return info->uncor_status & PCI_ERR_UNC_INTN;
+>  }
+>  
+>  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+> @@ -1097,7 +1115,7 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  		 */
+>  		if (aer)
+>  			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+> -					info->status);
+> +					info->cor_status);
+>  		if (pcie_aer_is_native(dev)) {
+>  			struct pci_driver *pdrv = dev->driver;
+>  
+> @@ -1128,6 +1146,7 @@ struct aer_recover_entry {
+>  	u8	devfn;
+>  	u16	domain;
+>  	int	severity;
+> +	u16	device_status;
+>  	struct aer_capability_regs *regs;
+>  };
+>  
+> @@ -1148,7 +1167,7 @@ static void aer_recover_work_func(struct work_struct *work)
+>  			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+>  			continue;
+>  		}
+> -		pci_print_aer(pdev, entry.severity, entry.regs);
+> +		pci_print_aer(pdev, entry.severity, entry.regs, entry.device_status);
+>  		/*
+>  		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
+>  		 * ghes_estatus_pool to protect it from overwriting when multiple sections
+> @@ -1177,7 +1196,7 @@ static DEFINE_SPINLOCK(aer_recover_ring_lock);
+>  static DECLARE_WORK(aer_recover_work, aer_recover_work_func);
+>  
+>  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+> -		       int severity, struct aer_capability_regs *aer_regs)
+> +		       int severity, struct aer_capability_regs *aer_regs, u16 device_status)
+>  {
+>  	struct aer_recover_entry entry = {
+>  		.bus		= bus,
+> @@ -1185,6 +1204,7 @@ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>  		.domain		= domain,
+>  		.severity	= severity,
+>  		.regs		= aer_regs,
+> +		.device_status	= device_status,
+>  	};
+>  
+>  	if (kfifo_in_spinlocked(&aer_recover_ring, &entry, 1,
+> @@ -1213,38 +1233,49 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  	int temp;
+>  
+>  	/* Must reset in this function */
+> -	info->status = 0;
+> +	info->cor_status = 0;
+> +	info->uncor_status = 0;
+> +	info->uncor_severity = 0;
+>  	info->tlp_header_valid = 0;
+>  
+>  	/* The device might not support AER */
+>  	if (!aer)
+>  		return 0;
+>  
+> -	if (info->severity == AER_CORRECTABLE) {
+> +	if (info->severity == AER_CORRECTABLE ||
+> +	    info->severity == AER_NONFATAL ||
+> +	    type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    type == PCI_EXP_TYPE_RC_EC ||
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+
+
+It looks like you are reading both uncorrectable and correctable status
+by default for both NONFATAL and CORRECTABLE errors. Why not do
+it conditionally only for ANFE errors?
+
+
+> +		/* Link is healthy for IO reads */
+>  		pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+> -			&info->status);
+> +				      &info->cor_status);
+>  		pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK,
+> -			&info->mask);
+> -		if (!(info->status & ~info->mask))
+> -			return 0;
+> -	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> -		   type == PCI_EXP_TYPE_RC_EC ||
+> -		   type == PCI_EXP_TYPE_DOWNSTREAM ||
+> -		   info->severity == AER_NONFATAL) {
+> -
+> -		/* Link is still healthy for IO reads */
+> +				      &info->cor_mask);
+>  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
+> -			&info->status);
+> +				      &info->uncor_status);
+> +		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_SEVER,
+> +				      &info->uncor_severity);
+>  		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
+> -			&info->mask);
+> -		if (!(info->status & ~info->mask))
+> +				      &info->uncor_mask);
+> +		pcie_capability_read_word(dev, PCI_EXP_DEVSTA,
+> +					  &info->device_status);
+> +	} else {
+> +		return 1;
+> +	}
+> +
+> +	if (info->severity == AER_CORRECTABLE) {
+> +		if (!(info->cor_status & ~info->cor_mask))
+> +			return 0;
+> +	} else {
+> +		if (!(info->uncor_status & ~info->uncor_mask))
+>  			return 0;
+>  
+>  		/* Get First Error Pointer */
+>  		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &temp);
+>  		info->first_error = PCI_ERR_CAP_FEP(temp);
+>  
+> -		if (info->status & AER_LOG_TLP_MASKS) {
+> +		if (info->uncor_status & AER_LOG_TLP_MASKS) {
+>  			info->tlp_header_valid = 1;
+>  			pci_read_config_dword(dev,
+>  				aer + PCI_ERR_HEADER_LOG, &info->tlp.dw0);
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index ae0fae70d4bd..38ac802250ac 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -52,9 +52,9 @@ static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> -		    struct aer_capability_regs *aer);
+> +		    struct aer_capability_regs *aer, u16 device_status);
+>  int cper_severity_to_aer(int cper_severity);
+>  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+> -		       int severity, struct aer_capability_regs *aer_regs);
+> +		       int severity, struct aer_capability_regs *aer_regs, u16 device_status);
+>  #endif //_AER_H_
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index add9368e6314..259812620d4d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -318,6 +318,33 @@ struct pci_sriov;
+>  struct pci_p2pdma;
+>  struct rcec_ea;
+>  
+> +struct pcie_capability_regs {
+> +	u8 pcie_cap_id;
+> +	u8 next_cap_ptr;
+> +	u16 pcie_caps;
+> +	u32 device_caps;
+> +	u16 device_control;
+> +	u16 device_status;
+> +	u32 link_caps;
+> +	u16 link_control;
+> +	u16 link_status;
+> +	u32 slot_caps;
+> +	u16 slot_control;
+> +	u16 slot_status;
+> +	u16 root_control;
+> +	u16 root_caps;
+> +	u32 root_status;
+> +	u32 device_caps_2;
+> +	u16 device_control_2;
+> +	u16 device_status_2;
+> +	u32 link_caps_2;
+> +	u16 link_control_2;
+> +	u16 link_status_2;
+> +	u32 slot_caps_2;
+> +	u16 slot_control_2;
+> +	u16 slot_status_2;
+> +};
+> +
+IIUC, this struct is only used drivers/acpi/apei/ghes.c . Why not define it in that file?
+>  /* The pci_dev structure describes PCI devices */
+>  struct pci_dev {
+>  	struct list_head bus_list;	/* Node in per-bus list */
 
 -- 
-2.34.1
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
