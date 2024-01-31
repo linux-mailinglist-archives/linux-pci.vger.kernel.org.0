@@ -1,148 +1,220 @@
-Return-Path: <linux-pci+bounces-2862-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2863-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 670FE84368C
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 07:21:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19B86843804
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 08:38:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99DD41C230BE
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 06:21:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C87B1F213F2
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 07:38:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A94463E48F;
-	Wed, 31 Jan 2024 06:21:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C81A54277;
+	Wed, 31 Jan 2024 07:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KaWI4yUS"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="IP32mZMZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29293E481;
-	Wed, 31 Jan 2024 06:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D1D5577C
+	for <linux-pci@vger.kernel.org>; Wed, 31 Jan 2024 07:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706682088; cv=none; b=BGpJvapJOsmOSiMIDgaRi9iWliyO7ds8RNFmTLPScnnX7mAOgpMT7JBHOGuB8iih+RHtl1hAHvRdGBGaQ4IS8xGyYwbmq5OTwNsNZXYPngWMeNiJ2XxgMTV0OLOt+5PFwLJUrUp6Ku5qtH2q4jVTtvpw6f/s3E4GU6JX/72DaOM=
+	t=1706686712; cv=none; b=mBKAyNHvx4/dzk3NH98D68/VPulsu4EMmpRburfautWajo/qQ5VereoVD8+FU1fy7QjGb8lu0cCRvtuj8DRfDowi1z3eC71bojniXdy76oZD+pnHSxZn8WbEzMrcbl6bmal9y3VVA7vLslueSxpUFxRArXpddz7ANC/blzrHGFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706682088; c=relaxed/simple;
-	bh=BFal/c7OdPWIXpcKKVgoT+h8Uly3mTIFcWBHU8qcqPc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SUSH3/W80CbpfPLwgPPUfGbTLiVjYifl2RwT4B2dAoJ0H6mClaWxz02FVfllVCVzWuHj3ChIIQRH3iivM3VTIInwDSRMw9nOoBQafv7X9EGT3tfw2ElisPWRLQ+WwqjQHZHQYK8JHYPFKxRY4xZzMqiygKlAtPMbPFbMa/OfZNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KaWI4yUS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706682087; x=1738218087;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BFal/c7OdPWIXpcKKVgoT+h8Uly3mTIFcWBHU8qcqPc=;
-  b=KaWI4yUS7aDiFgNzqm2DN3a0d+v0lNWDZSsQ3+qrRR09/EArXmZMCuyL
-   O+NSpok14vmV5hFNaijh8A4+ITzVbKrdeF8pS7YTi5WP+3QRo6XPxpTwv
-   lZSiyUCNH3w1zXVunAfmKPWyI5RuFw1k+MkNlzxr/spUoGD/uSdTApX50
-   C3C65IXDjj5ezhMKxXfN8UwBb3AxgPUlDnxD45b76jBTJTN+knH0zGNjc
-   XXfH4Do49iBrLOqsfbQViK6mkrprCa0ysWqdyACpWPKV/O22y6RYaNQ1Q
-   IXtYo2wIriXzZCUQq55yOO79fo8AM0WMwSZDwphgWEEXdb/rbDVV/BUvH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3347747"
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="3347747"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:21:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="36759621"
-Received: from wwang17-mobl.ccr.corp.intel.com (HELO [10.249.175.9]) ([10.249.175.9])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:21:22 -0800
-Message-ID: <6a48f023-2701-4f2f-8077-14fe348794dd@linux.intel.com>
-Date: Wed, 31 Jan 2024 14:21:20 +0800
+	s=arc-20240116; t=1706686712; c=relaxed/simple;
+	bh=0VkofOVuv+VGb0SiWtlMfvFRHiagXQVv83ecDww4ty4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jt0yg0DXFxwZ1xOwnXyh3G0+CNoYj5QVaJBBy0Glj/RejBw5uObXd7TOOjks+AMlsU9i7wqoaEB8bWA53bWTXz4VRCEIB1hkTZ+t5srvjahihOfAwwoC9ojHPsR6dzYUmvPF7l+yik305d4vFJxJJlS3EBQ7itQYBE4iaZRtX1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=IP32mZMZ; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-604058c081eso7082827b3.3
+        for <linux-pci@vger.kernel.org>; Tue, 30 Jan 2024 23:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1706686709; x=1707291509; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S1vG6DEvYTBMzwx6KyWyWg1VwbWa1uPpliPdi/uJnH8=;
+        b=IP32mZMZV5/sRHJYGqF2rBJ/v0JZqNIQW5K1Wp6O0i7tpQmg+ktIvcyBMvQdFU/yTj
+         sbaLhfaHFH6fi/42yBSGbTblYTJKezGHHTiq66oKJejZfB/PGo9kXm7l+vDbgBgjr4TZ
+         RXFsKhrHikW93sl6E8buSATA1+FQBgoc/90bfTmO9t9W9jG7a/HAd34tRrxLJbybzcrR
+         zWvEO/zTlcmLapDYYdzertlYwtbosQP2Y4cjS9hoxCykXPrXViDMOGQ8Z2faKz57eIUt
+         kef/UomymtVquD+N+fcqx/uZmuL5Kn9GRwaHezLyeAtekQ5HCqv3uR6bPuh8tgXRqwUz
+         HZgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706686709; x=1707291509;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S1vG6DEvYTBMzwx6KyWyWg1VwbWa1uPpliPdi/uJnH8=;
+        b=jy06jOsLRsufeqKabsqHUD3QUYrnPjrj1h1FTL2zrqrIjbSjE+3JLD6RE2JjV9+CKt
+         u1PA3S4fN6bial7ndFM8qbbo7ebm8augMYjZJGpeYtt3xyIgWIzpgL9RQ+rH9sXNCdyH
+         qaLBfux9zo28P34upiqPISi+JH43GF6j1E9sJ0U5fKV6cechGnA+sueWCGEh5wRybmA+
+         Fhh/r8byqkmxShzPqdSTgLEWFBEDmjLx1b3YGIHRX+5mBKkTlGOedSXxjrEFftFuP2j/
+         SqcJBHH8UQfnt+T1SiHJU+bnXF4jG0DlDa47yA70XfthSr+Znkq7rEpU3aa4K73yGPgI
+         a5KA==
+X-Gm-Message-State: AOJu0YxmHNpCpp+l8ua4GtREu4oMLFNYngVw5feNRrggKIkQdyNQy4k2
+	CmFkUYVEgPqmqCizU1At3oSet0xEei01b+59H5yOY9GT0lFB6ZBzw7XJuWmXBJaJNR/V+X7wlBe
+	ZjRxQLAnduOuwFYFLbcMOftR8WKRFpbQiMdgs5g==
+X-Google-Smtp-Source: AGHT+IEmxGcqyYm+HhbqHdbpDr8Ze2LhOYmFejzXnbP2kr/z5C3WhX++vCKtlvFWjwfSDjOxUYFegq5PzkCkJ/E45Oc=
+X-Received: by 2002:a81:a20f:0:b0:604:25d:a9f6 with SMTP id
+ w15-20020a81a20f000000b00604025da9f6mr750236ywg.44.1706686709149; Tue, 30 Jan
+ 2024 23:38:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
- "Liu, Yi L" <yi.l.liu@intel.com>, "bhelgaas@google.com"
- <bhelgaas@google.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "dwmw2@infradead.org" <dwmw2@infradead.org>,
- "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
- device isn't present
-To: Jason Gunthorpe <jgg@ziepe.ca>, Ethan Zhao <haifeng.zhao@linux.intel.com>
-References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
- <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
- <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
- <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
- <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
- <20240130162958.GF50608@ziepe.ca>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240130162958.GF50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240130163519.GA521777@bhelgaas> <20240130172801.GA525128@bhelgaas>
+In-Reply-To: <20240130172801.GA525128@bhelgaas>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Wed, 31 Jan 2024 15:37:53 +0800
+Message-ID: <CAPpJ_edNHfK-LAiFPxXsuxeH93W=a=G+5FMYnE3VKWfF=6jmrg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: vmd: enable PCI PM's L1 substates of remapped
+ PCIe port and NVMe
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	David Box <david.e.box@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-ide@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessos.org, 
+	Johan Hovold <johan+linaro@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/1/31 0:29, Jason Gunthorpe wrote:
-> On Tue, Jan 30, 2024 at 04:15:33PM +0800, Ethan Zhao wrote:
->> Some tricky situations:
->>
->> 1. The ATS invalidation request is issued from driver driver, while it is
->> in handling, device is removed. this momment, the device instance still
->> exists in the bus list. yes, if searching it by BDF, could get it.
->>
->> 2. The ATS invalidation request is issued from iommu_bus_notifier()
->> for surprise removal reason, as shown in above calltrace, device was
->> already removed from bus list. if searching it by BDF, return NULL.
->>
->> 3. The ATS invlidation request is issued from iommu_bus_notifier()
->> for safe removal, when is in handling, device is removed or link
->> is down. also as #2, device was already removed from bus list.
->> if searching it by BDF. got NULL.
->> ...
->>
->> so, searching device by BDF, only works for the ATS invalidation
->> request is from device driver.
-> In the good path, where the hot removal is expected and this is about
-> coordinating, the IOMMU driver should do an orderly shutdown of the
-> ATS mechanism:
-> 
->   1 Write to PCI config space to disable the ATS
->   2 Make the IOMMU respond to ATS requests with UR and set it to BLOCKED
->   3 Issue a flush of the ATC
->   4 Wait for all outstanding ATC flushes to complete
-> 
-> If it is a bad/surprise path where the device is already gone then:
-> 
->   1 should automatically not do anything, possibly timing out
->   2 must succeed
->   3 should time out
->   4 should "complete" in that the ATC flushes are all timed out
-> 
-> IMHO all you need to do is not crash/lockup while processing the ATC
-> timeouts. If this is a surprise path then the ATC timeout might
-> already happened before the iommu driver remove notifier event happens.
-> 
-> If the driver needs to translate from the IOMMU device table index
-> into a struct device it is probably best to do that inside the driver.
-> 
-> eg ARM maintains a rbtree in the iommu dev data. (see
-> arm_smmu_insert_master)
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2024=E5=B9=B41=E6=9C=8831=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=881:28=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> [+cc Johan since qcom has similar code]
+>
+> On Tue, Jan 30, 2024 at 10:35:19AM -0600, Bjorn Helgaas wrote:
+> > On Tue, Jan 30, 2024 at 06:00:51PM +0800, Jian-Hong Pan wrote:
+> > > The remmapped PCIe port and NVMe have PCI PM L1 substates capability =
+on
+> > > ASUS B1400CEAE, but they are disabled originally:
+> > >
+> > > Capabilities: [900 v1] L1 PM Substates
+> > >         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_=
+PM_Substates+
+> > >                   PortCommonModeRestoreTime=3D32us PortTPowerOnTime=
+=3D10us
+> > >         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+> > >                    T_CommonMode=3D0us LTR1.2_Threshold=3D0ns
+> > >         L1SubCtl2: T_PwrOn=3D10us
+> > >
+> > > Power on all of the VMD remapped PCI devices before enable PCI-PM L1 =
+PM
+> > > Substates by following "Section 5.5.4 of PCIe Base Spec Revision 5.0
+> > > Version 0.1". Then, PCI PM's L1 substates control are enabled
+> > > accordingly.
+> > >
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+> > > Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+> > > ---
+> > >  drivers/pci/controller/vmd.c | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vm=
+d.c
+> > > index 87b7856f375a..b1bbe8e6075a 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -738,6 +738,12 @@ static void vmd_copy_host_bridge_flags(struct pc=
+i_host_bridge *root_bridge,
+> > >     vmd_bridge->native_dpc =3D root_bridge->native_dpc;
+> > >  }
+> > >
+> > > +static int vmd_power_on_pci_device(struct pci_dev *pdev, void *userd=
+ata)
+> > > +{
+> > > +   pci_set_power_state(pdev, PCI_D0);
+> > > +   return 0;
+> > > +}
+> > > +
+> > >  /*
+> > >   * Enable ASPM and LTR settings on devices that aren't configured by=
+ BIOS.
+> > >   */
+> > > @@ -928,6 +934,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd=
+, unsigned long features)
+> > >     vmd_acpi_begin();
+> > >
+> > >     pci_scan_child_bus(vmd->bus);
+> > > +
+> > > +   /*
+> > > +    * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
+> > > +    * Section 5.5.4 of PCIe Base Spec Revision 5.0 Version 0.1
+> > > +    */
+> > > +   pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL);
+> >
+> > Sec 5.5.4 indeed says "If setting either or both of the enable bits
+> > for PCI-PM L1 PM Substates, both ports must be configured ... while in
+> > D0."
+> >
+> > This applies to *all* PCIe devices, not just those below a VMD bridge,
+> > so I'm not sure this is the right place to do this.  Is there anything
+> > that prevents a similar issue for non-VMD hierarchies?
+> >
+> > I guess the bridges (Root Ports and Switch Ports) must already be in
+> > D0, or we wouldn't be able to enumerate anything below them, right?
+> >
+> > It would be nice to connect this more closely with the L1 PM Substates
+> > configuration.  I don't quite see the connection here.  The only path
+> > I see for L1SS configuration is this:
+> >
+> >   pci_scan_slot
+> >     pcie_aspm_init_link_state
+> >       pcie_aspm_cap_init
+> >       aspm_l1ss_init
+> >
+> > which of course is inside pci_scan_child_bus(), which happens *before*
+> > this patch puts the devices in D0.  Where does the L1SS configuration
+> > happen after this vmd_power_on_pci_device()?
+>
+> I think I found it; a more complete call tree is like this, where the
+> L1SS configuration is inside the pci_enable_link_state_locked() done
+> by the vmd_pm_enable_quirk() bus walk:
+>
+>   vmd_enable_domain
+>     pci_scan_child_bus
+>       ...
+>         pci_scan_slot
+>           pcie_aspm_init_link_state
+>             pcie_aspm_cap_init
+>               aspm_l1ss_init
+> +   pci_walk_bus(vmd->bus, vmd_power_on_pci_device, NULL)
+>     ...
+>     pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features)
+>       vmd_pm_enable_quirk
+>         pci_enable_link_state_locked(PCIE_LINK_STATE_ALL)
+>           __pci_enable_link_state
+>             link->aspm_default |=3D ...
+>             pcie_config_aspm_link
+>               pcie_config_aspm_l1ss
+>                 pci_clear_and_set_config_dword(PCI_L1SS_CTL1)  # <--
+>               pcie_config_aspm_dev
+>                 pcie_capability_clear_and_set_word(PCI_EXP_LNKCTL)
+>
+> qcom_pcie_enable_aspm() does a similar pci_set_power_state(PCI_D0)
+> before calling pci_enable_link_state_locked().  I would prefer to
+> avoid the D0 precondition, but at the very least, I think we should
+> add a note to the pci_enable_link_state_locked() kernel-doc saying the
+> caller must ensure the device is in D0.
+>
+> I think vmd_pm_enable_quirk() is also problematic because it
+> configures the LTR Capability *after* calling
+> pci_enable_link_state_locked(PCIE_LINK_STATE_ALL).
+>
+> The pci_enable_link_state_locked() will enable ASPM L1.2, but sec
+> 5.5.4 says LTR_L1.2_THRESHOLD must be programmed *before* ASPM L1.2
+> Enable is set.
 
-An rbtree for IOMMU device data for the VT-d driver would be beneficial.
-It also benefits other paths of fault handling, such as the I/O page
-fault handling path, where it currently still relies on the PCI
-subsystem to convert a RID value into a pci_device structure.
+Thanks!  This inspires me why LTR1.2_Threshold is 0ns here.
 
-Given that such an rbtree would be helpful for multiple individual
-drivers that handle PCI devices, it seems valuable to implement it in
-the core?
-
-Best regards,
-baolu
+Jian-Hong Pan
 
