@@ -1,62 +1,61 @@
-Return-Path: <linux-pci+bounces-2861-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2862-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A075843626
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 06:42:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 670FE84368C
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 07:21:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BA551C20AA1
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 05:42:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99DD41C230BE
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 06:21:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C53E3D982;
-	Wed, 31 Jan 2024 05:42:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A94463E48F;
+	Wed, 31 Jan 2024 06:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h34K48fK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KaWI4yUS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8023DB92;
-	Wed, 31 Jan 2024 05:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29293E481;
+	Wed, 31 Jan 2024 06:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706679763; cv=none; b=IbdV9dSz9IfseJW4WD7z7cprWm4WcBIlSjAC7a8ma5WJSEmScDfZYyBBvzxSELnjHmxWEvPkxZjw05E5Xj+WOyoaLJLJp55Wy8FvksxRPnlOQJYIz+D+pC1/JCx3WOCG+xuKzFvofZ3qZMlF1rikdYRQ16dHuafdWcUE5w4P0j0=
+	t=1706682088; cv=none; b=BGpJvapJOsmOSiMIDgaRi9iWliyO7ds8RNFmTLPScnnX7mAOgpMT7JBHOGuB8iih+RHtl1hAHvRdGBGaQ4IS8xGyYwbmq5OTwNsNZXYPngWMeNiJ2XxgMTV0OLOt+5PFwLJUrUp6Ku5qtH2q4jVTtvpw6f/s3E4GU6JX/72DaOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706679763; c=relaxed/simple;
-	bh=2KCNaKjDztHsR7PieMgniR5qU5EYgWjlyweWqhhAVb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N9kZXcV+1ZcOU2Jjs8FSGN9AlQv6Otv1ONlYkNu/dV5aS1FeTR5SThxTRdPQvqT+i+Y+YNN6/uUA97GgPoI7EhITd3gn+afIxdCNxtFujQ88RSgxwBdHzSL2Ptb/tQT9pPJvOTHnTmJOPAjznVn04adE9vyeuVTUcl82fkefTBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h34K48fK; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1706682088; c=relaxed/simple;
+	bh=BFal/c7OdPWIXpcKKVgoT+h8Uly3mTIFcWBHU8qcqPc=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=SUSH3/W80CbpfPLwgPPUfGbTLiVjYifl2RwT4B2dAoJ0H6mClaWxz02FVfllVCVzWuHj3ChIIQRH3iivM3VTIInwDSRMw9nOoBQafv7X9EGT3tfw2ElisPWRLQ+WwqjQHZHQYK8JHYPFKxRY4xZzMqiygKlAtPMbPFbMa/OfZNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KaWI4yUS; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706679761; x=1738215761;
-  h=message-id:date:mime-version:subject:to:cc:references:
+  t=1706682087; x=1738218087;
+  h=message-id:date:mime-version:cc:subject:to:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=2KCNaKjDztHsR7PieMgniR5qU5EYgWjlyweWqhhAVb0=;
-  b=h34K48fKdTl/RiJcSmCmdAQVYdM0nf8ZdMaOxUV2jNv0FjiF9MXKC2Dc
-   +2uHBY77Jb3/1HITG4apxwkqzg+LPPEZioUBFTnEXwwfs2fr07FZlP8Fr
-   tRYs0DFUzRAtecHAYRQalOsqh1AdBg4++iKRrnU1SjNunL06kh+wzaNsX
-   SaaqxBq2AQ00PT+xhdrhn8HnBaL8PovsAT5SeJ+ApAMeQ/iKG3+XEVcEO
-   0i01hh/ys0O9+ZR/jsivcvVxdCWr9Zq84Rj4DJHGL20VJPQdJgbmil42s
-   Y/c3pUfnjG8oG7krk3hn7xOqoNu6JH4ldeWLW8lWid45mWsqPAaIiHo+A
+  bh=BFal/c7OdPWIXpcKKVgoT+h8Uly3mTIFcWBHU8qcqPc=;
+  b=KaWI4yUS7aDiFgNzqm2DN3a0d+v0lNWDZSsQ3+qrRR09/EArXmZMCuyL
+   O+NSpok14vmV5hFNaijh8A4+ITzVbKrdeF8pS7YTi5WP+3QRo6XPxpTwv
+   lZSiyUCNH3w1zXVunAfmKPWyI5RuFw1k+MkNlzxr/spUoGD/uSdTApX50
+   C3C65IXDjj5ezhMKxXfN8UwBb3AxgPUlDnxD45b76jBTJTN+knH0zGNjc
+   XXfH4Do49iBrLOqsfbQViK6mkrprCa0ysWqdyACpWPKV/O22y6RYaNQ1Q
+   IXtYo2wIriXzZCUQq55yOO79fo8AM0WMwSZDwphgWEEXdb/rbDVV/BUvH
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="24972093"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="3347747"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="24972093"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 21:42:40 -0800
+   d="scan'208";a="3347747"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:21:26 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="911678156"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="911678156"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.254.210.203]) ([10.254.210.203])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 21:42:35 -0800
-Message-ID: <f28f9e0c-ea19-456b-9016-9d69fb90048a@linux.intel.com>
-Date: Wed, 31 Jan 2024 13:42:33 +0800
+   d="scan'208";a="36759621"
+Received: from wwang17-mobl.ccr.corp.intel.com (HELO [10.249.175.9]) ([10.249.175.9])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 22:21:22 -0800
+Message-ID: <6a48f023-2701-4f2f-8077-14fe348794dd@linux.intel.com>
+Date: Wed, 31 Jan 2024 14:21:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,17 +63,17 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
- device isn't present
-To: "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>,
+Cc: baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+ "Liu, Yi L" <yi.l.liu@intel.com>, "bhelgaas@google.com"
+ <bhelgaas@google.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "dwmw2@infradead.org" <dwmw2@infradead.org>,
  "will@kernel.org" <will@kernel.org>, "lukas@wunner.de" <lukas@wunner.de>,
  "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+To: Jason Gunthorpe <jgg@ziepe.ca>, Ethan Zhao <haifeng.zhao@linux.intel.com>
 References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
  <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
  <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
@@ -82,114 +81,68 @@ References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
  <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
  <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
  <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
- <BN9PR11MB527674172BBA9BDC49A004D08C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <56a9971e-7015-4584-89c7-80056b7ec547@linux.intel.com>
- <BN9PR11MB5276CDBA6ED200319C8455EE8C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276CDBA6ED200319C8455EE8C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20240130162958.GF50608@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240130162958.GF50608@ziepe.ca>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/30/2024 5:24 PM, Tian, Kevin wrote:
->> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
->> Sent: Tuesday, January 30, 2024 5:13 PM
+On 2024/1/31 0:29, Jason Gunthorpe wrote:
+> On Tue, Jan 30, 2024 at 04:15:33PM +0800, Ethan Zhao wrote:
+>> Some tricky situations:
 >>
->> On 1/30/2024 4:43 PM, Tian, Kevin wrote:
->>>> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
->>>> Sent: Tuesday, January 30, 2024 4:16 PM
->>>>
->>>> On 1/30/2024 2:22 PM, Tian, Kevin wrote:
->>>>> Here we need consider two situations.
->>>>>
->>>>> One is that the device is not bound to a driver or bound to a driver
->>>>> which doesn't do active work to the device when it's removed. In
->>>>> that case one may observe the timeout situation only in the removal
->>>>> path as the stack dump in your patch02 shows.
->>>> When iommu_bus_notifier() got called for hotplug removal cases to
->>>> flush devTLB (ATS invalidation), driver was already unloaded.
->>>> whatever safe removal or surprise removal. so in theory no active
->>>> driver working there.
->>>>
->>>> pciehp_ist()
->>>>     pciehp_disable_slot()
->>>>      remove_board()
->>>>       pciehp_unconfigure_device()
->>>>        pci_stop_and_remove_bus_device()
->>>>         pci_stop_bus_device()--->here unload driver
->>>>         pci_remove_bus_device()->here qi_flush_dev_iotlb() got called.
->>> yes, so patch02 can fix this case.
->>>
->>>>> patch02 can fix that case by checking whether the device is present
->>>>> to skip sending the invalidation requests. So the logic being discussed
->>>>> here doesn't matter.
->>>>>
->>>>> The 2nd situation is more tricky. The device might be bound to
->>>>> a driver which is doing active work to the device with in-fly
->>>>> ATS invalidation requests. In this case in-fly requests must be aborted
->>>>> before the driver can be detached from the removed device.
->> Conceptually
->>>>> a device is removed from the bus only after its driver is detached.
->>>> Some tricky situations:
->>>>
->>>> 1. The ATS invalidation request is issued from driver driver, while it is
->>>> in handling, device is removed. this momment, the device instance still
->>>> exists in the bus list. yes, if searching it by BDF, could get it.
->>> it's searchable between the point where the device is removed and the
->>> point where the driver is unloaded:
->>>
->>>           CPU0                                CPU1
->>>     (Driver is active)                    (pciehp handler)
->>>     qi_submit_sync()                      pciehp_ist()
->>>       ...                                   ...
->>>       loop for completion() {               pciehp_unconfigure_device()
->>>         ...                                   pci_dev_set_disconnected()
->>>         if (ITE) {                            ...
->>>           //find pci_dev from sid             pci_remove_bus_device()
->>>           if (pci_dev_is_connected())           device_del()
->>>             break;                                bus_remove_device()
->>>         }                                           device_remove_driver()
->> If the device was hot plugin or re-scanned, the device has a PCI_DEV_ADDED
->> flag,
-> in this case is pci_dev_is_disconnected() true or false?
->
-> how is this patch supposed to work with it?
-
-pci_dev_is_disconnected() is true for safe removal, false for surprise 
-removal, but it not called in this patch, is used in patch[2/5], 
-explained in its commit log. This patch use the pci_device_is_present() 
-to check device present or not. if pci_dev_is_disconnected() returns true, then check its presence by pci vendor
-configuration reading (a specific protocal in PCIe spec).
-
->
->> if so the driver unloading work isn't defered to the tail of device_del(), it
->> is unloaded before pci_remove_bus_device()->device_del(), in pci_stop_dev
+>> 1. The ATS invalidation request is issued from driver driver, while it is
+>> in handling, device is removed. this momment, the device instance still
+>> exists in the bus list. yes, if searching it by BDF, could get it.
 >>
->> pci_stop_bus_device()
->>    pci_stop_dev()
->>    {
->>     if (pci_dev_is_added(dev)) {
->>         device_release_driver(&dev->dev);
->>    }
-> no matter where driver unload is requested, it needs to wait for aborting
-> in-fly request on CPU0.
-
-yes, the progress of driver unloading has complex sync mechanism in
-  __device_release_driver() to do that.
-
->
->> So the interval the device is searchable, only applied to those devices
->> not hot plugged, or never be scanned.
+>> 2. The ATS invalidation request is issued from iommu_bus_notifier()
+>> for surprise removal reason, as shown in above calltrace, device was
+>> already removed from bus list. if searching it by BDF, return NULL.
 >>
-> and in the worst case even if pci_dev is not searchable, isn't it already
-> an indicator that the device is absent then qi_submit_sync() should
-> just exit upon ITE?
+>> 3. The ATS invlidation request is issued from iommu_bus_notifier()
+>> for safe removal, when is in handling, device is removed or link
+>> is down. also as #2, device was already removed from bus list.
+>> if searching it by BDF. got NULL.
+>> ...
+>>
+>> so, searching device by BDF, only works for the ATS invalidation
+>> request is from device driver.
+> In the good path, where the hot removal is expected and this is about
+> coordinating, the IOMMU driver should do an orderly shutdown of the
+> ATS mechanism:
+> 
+>   1 Write to PCI config space to disable the ATS
+>   2 Make the IOMMU respond to ATS requests with UR and set it to BLOCKED
+>   3 Issue a flush of the ATC
+>   4 Wait for all outstanding ATC flushes to complete
+> 
+> If it is a bad/surprise path where the device is already gone then:
+> 
+>   1 should automatically not do anything, possibly timing out
+>   2 must succeed
+>   3 should time out
+>   4 should "complete" in that the ATC flushes are all timed out
+> 
+> IMHO all you need to do is not crash/lockup while processing the ATC
+> timeouts. If this is a surprise path then the ATC timeout might
+> already happened before the iommu driver remove notifier event happens.
+> 
+> If the driver needs to translate from the IOMMU device table index
+> into a struct device it is probably best to do that inside the driver.
+> 
+> eg ARM maintains a rbtree in the iommu dev data. (see
+> arm_smmu_insert_master)
 
-Hmmm, pci_dev is not searchable, but that pci_dev instance is just not in
-the bus list or device list, not mean is disconnected or not present that
-moment. :)
+An rbtree for IOMMU device data for the VT-d driver would be beneficial.
+It also benefits other paths of fault handling, such as the I/O page
+fault handling path, where it currently still relies on the PCI
+subsystem to convert a RID value into a pci_device structure.
 
+Given that such an rbtree would be helpful for multiple individual
+drivers that handle PCI devices, it seems valuable to implement it in
+the core?
 
-Thanks,
-Ethan
-
+Best regards,
+baolu
 
