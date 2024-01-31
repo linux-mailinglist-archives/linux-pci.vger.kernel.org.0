@@ -1,116 +1,584 @@
-Return-Path: <linux-pci+bounces-2882-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2883-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 400CA843E4E
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 12:28:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0370E843E2D
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 12:20:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED3EBB25CA1
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 11:09:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 824A51F23B15
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 11:20:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39A8769DE1;
-	Wed, 31 Jan 2024 11:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47AD6E2A0;
+	Wed, 31 Jan 2024 11:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="bvhgdwvQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQK2Q2vl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8533776043
-	for <linux-pci@vger.kernel.org>; Wed, 31 Jan 2024 11:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE6169DFD
+	for <linux-pci@vger.kernel.org>; Wed, 31 Jan 2024 11:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706699331; cv=none; b=XFgHyNJWquKCHeAasDTxm+2AfMecFwaPXzXBwbFojVruJLqKGXe6G31zyy1GGjWBdEecIfZ22Gcj5IEhsySXlEwq+VW8MBrNjh6aASTqFpKZ6dKueYBB7UTaOdPKczgxcjMh9bLPt0kzVH1DetFwlOSffuOYugNclsU2giVYPI0=
+	t=1706700009; cv=none; b=Kvt6Ac842rYoU+/JqIO9IfRLZKuLExQckN3FAES2OsHsYNnaFYCzcB3yBy2mxGN5Yo5MUmVdKRbdZDaSBL3aHypp7sxERDOLCIp0mk2Oii5Eina6tYVS5Mah7ckliomTIIOWzBdi7NHHLm4oIOVQl2KcFlqlPxNdPK9QuTzRUqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706699331; c=relaxed/simple;
-	bh=vFODrHMqiV3HY8+m5nSz6cb0kesdcNwMLRKYCpAKcWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pylMA/Z29RpWsOHXTW2zjF3tZUtZ7O5bxaFb1y16A+U3fjZUgHV27Lm7Hebp5KpFuXDWmtLzwKjjFjz8zdgIOF1adBKbS/IfHKCw3N8FF5BXUdm07D6nymhn4zyHSHUKeUIk4JeaLDTC1WibfgTvQgNLBOX5iykpMqvoZGhC8hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=bvhgdwvQ; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc26698a5bfso1483642276.0
-        for <linux-pci@vger.kernel.org>; Wed, 31 Jan 2024 03:08:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1706699328; x=1707304128; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nDAR7PJX+EQMyirL/3W1Y6Qsu12zaieB0DRPT6UdUiA=;
-        b=bvhgdwvQy871L3F5qJLo6O1lJ0Mepz0zG4mXTBg7yPn+y5BS3gE2saBNMqXryHnKl7
-         hf3DybZ8d1a29s8P1LGZbXyc64BwODFEykbUmX++byV050cgeVopMNDO3/LkD5KiJfQ6
-         I5IZb6RILHJXQYEAubvvBfA82npKFEKoAWbIQr+LIIBksPWzPDC227XTgAPXise1pXAC
-         ZMmiFMFlAVn104+h2pfVdPLFvc630m0zuciEh40fSp0gSTMKo06mwgnDGFcXERyQdtqr
-         tuU8gKQ8k9XiJTb/kaR2SKfffRlVfHYlsnoevSBCYDSJFO2pl2PCFDie12KonNByygsv
-         xkng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706699328; x=1707304128;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nDAR7PJX+EQMyirL/3W1Y6Qsu12zaieB0DRPT6UdUiA=;
-        b=mLCOU9KAux8Wn40A+/JZ192v9zQ1sv6w8CI1pgmMizPjT7bBcjcA1FM5mobgGfk+w2
-         n4Czjz2zuSRUA1LiYTxTIbSIiSzHhYDsBlB87Qmsv9n9eOdY3ORK5jJ5ZsmEsbFeNkTZ
-         VXMnSlBF5hmXtxrbZB7sk+obuXZ/xwRcTpwptzq1hJyy1xTI9lEiQYaGN5Qe+kGNmPir
-         Iqorgm3izCTTyhmXPb/8kTz3gIy6ttQkz1co3AGfV8ClJ8QECv5QDa4nXyzwajjiOSwD
-         XA3+eJEb+IdsyD6FRJSMjI0Le/WDtKLdoovbyoL6Cdzd2BXYi+L+BPUM4fdqtRvXv2Aa
-         zrOw==
-X-Forwarded-Encrypted: i=0; AJvYcCXp1130vLLC6lMy5YetnT9WYrJXuNfpoZc5JL1kIdfr9G3w+Nh4NavX2FxYSjFnv1ps5xELyXfLog1qdbdTeyzw8QwT4+fNLV55
-X-Gm-Message-State: AOJu0YwtiE3Uy7K/DAgXMolr1pzXuFHxfEph2bI43Wy2g3fvUkzmi+Tv
-	22rHc3wUaalluq6obGg9ESeifaHxqzcSj6oHVLrY57NdmatSWwrgenYlzzXIogFB6PydkljRGXG
-	ZtL1Kz4nyijkXKyxzVbwe58YgH7TW5lkZIghIaQ==
-X-Google-Smtp-Source: AGHT+IGmAJYZ5cT3bVX5ItNSUhqyQs9ricprzI2Qyl4PaknWlx7aDB3XuBabzFiY5c8lSvvNorSCWQig/oBi/Q5U3pE=
-X-Received: by 2002:a25:e08a:0:b0:dc6:9dbf:8247 with SMTP id
- x132-20020a25e08a000000b00dc69dbf8247mr950340ybg.3.1706699328384; Wed, 31 Jan
- 2024 03:08:48 -0800 (PST)
+	s=arc-20240116; t=1706700009; c=relaxed/simple;
+	bh=2WOOlCBz/TQD0tiKB8nosefwmYV9yVI1hLd2bSr3A7M=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=KcoY/amz8ObcqJuL2SkPMBIhkULPxvWekiVr6J/9AwGvE8RBp5h8iqfOszdvS7LPpvJjOliAaJxyNhhdSObbRgUnckZWIpeDt8Ay9b4zM2mQn8bsXo2FUmuOr2ceqceHd/xreG7+++CFErN+5MBJIy7+Fk/VTAWxuvdzrmjwrNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQK2Q2vl; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706700007; x=1738236007;
+  h=date:from:to:cc:subject:message-id;
+  bh=2WOOlCBz/TQD0tiKB8nosefwmYV9yVI1hLd2bSr3A7M=;
+  b=WQK2Q2vlYVbNBrOtEp2A3Wd1lczPb5TLfK6JmizXml6SiQ58wwGmfQJ7
+   CfctmWt2LEJuFfJ4cBgSvjEd0ytZXWfqc7Xn6u+i2jBLX7MujA5+W6GbW
+   W8Zqsoo4VWGE0T3RjckxeQ/u6MvIvpUMdo/Bt5+dAQA6k+kMkkqkIVAUR
+   CHfXOEAwMvB12E5BxchbXpsmC0FdGw8fRg/lcITBuM0k0nmP2fzBPHtKV
+   BGV8oaNebMJgx10zoSblRf5/xn5XNtj0IWwRUVXU9LEG6k6H9PpD2UHwm
+   Xdx7vYAv4kIEwqMWB8sjTZAbBeUcmoRGCSxem20BCbv8o73yTElRicpYk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="407288496"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="407288496"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2024 03:20:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="858781635"
+X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
+   d="scan'208";a="858781635"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Jan 2024 03:20:04 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rV8dO-0001VA-15;
+	Wed, 31 Jan 2024 11:20:02 +0000
+Date: Wed, 31 Jan 2024 19:19:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Memory Management List <linux-mm@kvack.org>,
+ linux-pci@vger.kernel.org
+Subject: [linux-next:pending-fixes] BUILD SUCCESS WITH WARNING
+ 60b9561aaa2811b5bff20d52b08d72bd2183f7cb
+Message-ID: <202401311902.KTjhRkMc-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240130095933.14158-1-jhp@endlessos.org> <20240130101335.GU2543524@black.fi.intel.com>
- <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com> <Zbonprq/1SircQon@x1-carbon>
-In-Reply-To: <Zbonprq/1SircQon@x1-carbon>
-From: Daniel Drake <drake@endlessos.org>
-Date: Wed, 31 Jan 2024 07:08:12 -0400
-Message-ID: <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jian-Hong Pan <jhp@endlessos.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	David Box <david.e.box@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Nirmal Patel <nirmal.patel@linux.intel.com>, 
-	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-ide@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessos.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 6:57=E2=80=AFAM Niklas Cassel <cassel@kernel.org> w=
-rote:
-> Unfortunately, we don't have any of these laptops that has a Tiger Lake
-> AHCI controller (with a disappearing drive), so until someone who does
-> debugs this, I think we are stuck at status quo.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git pending-fixes
+branch HEAD: 60b9561aaa2811b5bff20d52b08d72bd2183f7cb  Merge branch 'for-linux-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
 
-I've asked for volunteers to help test things on those original bug
-reports (and may have one already) and would appreciate any suggested
-debugging approaches from those more experienced with SATA/AHCI. What
-would be your first few suggested debugging steps?
+Warning reports:
 
-Non-LPM boot:
-ata1: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202100 irq 145
-ata2: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202180 irq 145
-ata2: SATA link down (SStatus 0 SControl 300)
-ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+https://lore.kernel.org/oe-kbuild-all/202401310949.NbpFjuGe-lkp@intel.com
 
-LPM failed boot:
-ata1: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202100 irq 145
-ata2: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202180 irq 145
-ata1: SATA link down (SStatus 4 SControl 300)
-ata2: SATA link down (SStatus 4 SControl 300)
+Warning: (recently discovered and may have been fixed)
 
-note SStatus=3D4 on both ports  (means "PHY in offline mode"?)
+drivers/pci/bus.c:440: warning: Function parameter or struct member 'cb' not described in 'pci_walk_bus'
+drivers/pci/bus.c:440: warning: Function parameter or struct member 'top' not described in 'pci_walk_bus'
+drivers/pci/bus.c:440: warning: Function parameter or struct member 'userdata' not described in 'pci_walk_bus'
 
-Daniel
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allnoconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- alpha-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- alpha-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arc-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arc-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arc-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm64-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- csky-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- csky-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- csky-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-011-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-012-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-013-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-014-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-015-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-016-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- loongarch-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- loongarch-allnoconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- loongarch-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- loongarch-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- loongarch-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- microblaze-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- microblaze-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- microblaze-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- mips-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- openrisc-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- parisc-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- parisc-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- parisc-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- parisc-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- riscv-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- riscv-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- s390-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- s390-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- s390-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- s390-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- sparc-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- sparc64-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- sparc64-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- sparc64-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-003-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-004-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-005-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-006-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+`-- xtensa-randconfig-001-20240131
+    |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+    |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+    `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+clang_recent_errors
+|-- arm-defconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm-randconfig-003-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- arm64-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-buildonly-randconfig-006-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-003-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-004-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-005-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-006-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- i386-randconfig-141-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc-allmodconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc-randconfig-003-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc64-randconfig-001-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc64-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- powerpc64-randconfig-003-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- riscv-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-allyesconfig
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-buildonly-randconfig-002-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-buildonly-randconfig-003-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-buildonly-randconfig-005-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-011-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+|-- x86_64-randconfig-012-20240131
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+|   |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+|   `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+`-- x86_64-rhel-8.3-rust
+    |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-cb-not-described-in-pci_walk_bus
+    |-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-top-not-described-in-pci_walk_bus
+    `-- drivers-pci-bus.c:warning:Function-parameter-or-struct-member-userdata-not-described-in-pci_walk_bus
+
+elapsed time: 767m
+
+configs tested: 153
+configs skipped: 3
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240131   gcc  
+arc                   randconfig-002-20240131   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240131   clang
+arm                   randconfig-002-20240131   clang
+arm                   randconfig-003-20240131   clang
+arm                   randconfig-004-20240131   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240131   clang
+arm64                 randconfig-002-20240131   clang
+arm64                 randconfig-003-20240131   clang
+arm64                 randconfig-004-20240131   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240131   gcc  
+csky                  randconfig-002-20240131   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240131   clang
+hexagon               randconfig-002-20240131   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240131   clang
+i386         buildonly-randconfig-002-20240131   clang
+i386         buildonly-randconfig-003-20240131   clang
+i386         buildonly-randconfig-004-20240131   clang
+i386         buildonly-randconfig-005-20240131   clang
+i386         buildonly-randconfig-006-20240131   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240131   clang
+i386                  randconfig-002-20240131   clang
+i386                  randconfig-003-20240131   clang
+i386                  randconfig-004-20240131   clang
+i386                  randconfig-005-20240131   clang
+i386                  randconfig-006-20240131   clang
+i386                  randconfig-011-20240131   gcc  
+i386                  randconfig-012-20240131   gcc  
+i386                  randconfig-013-20240131   gcc  
+i386                  randconfig-014-20240131   gcc  
+i386                  randconfig-015-20240131   gcc  
+i386                  randconfig-016-20240131   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240131   gcc  
+loongarch             randconfig-002-20240131   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240131   gcc  
+nios2                 randconfig-002-20240131   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240131   gcc  
+parisc                randconfig-002-20240131   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240131   clang
+powerpc               randconfig-002-20240131   clang
+powerpc               randconfig-003-20240131   clang
+powerpc64             randconfig-001-20240131   clang
+powerpc64             randconfig-002-20240131   clang
+powerpc64             randconfig-003-20240131   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20240131   clang
+riscv                 randconfig-002-20240131   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20240131   gcc  
+s390                  randconfig-002-20240131   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240131   gcc  
+sh                    randconfig-002-20240131   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240131   gcc  
+sparc64               randconfig-002-20240131   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240131   clang
+um                    randconfig-002-20240131   clang
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240131   clang
+x86_64       buildonly-randconfig-002-20240131   clang
+x86_64       buildonly-randconfig-003-20240131   clang
+x86_64       buildonly-randconfig-004-20240131   clang
+x86_64       buildonly-randconfig-005-20240131   clang
+x86_64       buildonly-randconfig-006-20240131   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240131   gcc  
+x86_64                randconfig-002-20240131   gcc  
+x86_64                randconfig-003-20240131   gcc  
+x86_64                randconfig-004-20240131   gcc  
+x86_64                randconfig-005-20240131   gcc  
+x86_64                randconfig-006-20240131   gcc  
+x86_64                randconfig-011-20240131   clang
+x86_64                randconfig-012-20240131   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240131   gcc  
+xtensa                randconfig-002-20240131   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
