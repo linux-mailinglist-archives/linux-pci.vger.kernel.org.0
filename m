@@ -1,66 +1,62 @@
-Return-Path: <linux-pci+bounces-2899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1EFA844B30
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 23:44:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1009F844B51
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 23:59:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C4BF1F27F4D
-	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 22:44:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8C4828F959
+	for <lists+linux-pci@lfdr.de>; Wed, 31 Jan 2024 22:59:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7138C383A4;
-	Wed, 31 Jan 2024 22:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkdCyod1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FCE13A1AA;
+	Wed, 31 Jan 2024 22:59:08 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405C83A1D3;
-	Wed, 31 Jan 2024 22:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829073A8C5;
+	Wed, 31 Jan 2024 22:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706741047; cv=none; b=s5jFTLatFxxkqYPK4J9PNjKsE+0J60mIJOtMA/w4c/Ax1Si58WmJWf5FQLmBuRZ1RsrwlS4UIpNRX/npyopDArRcghGFn8vSXSsC/v3g3tLj/GN2u5pU5CtDbW62pULb2iz1RTd/InCya1e6E/bWVvgGbpAPg977CdVtqGZdVcY=
+	t=1706741948; cv=none; b=Euey6KQESTq+Xv8Exrj6pd/Rep90MV61fW9CNTIATxEnJwUYxTUfzMLPf3KUaan8OjinPcH3xrYMduV7n//FpqAXnEZ5J1LjBMM+zIk5wY3waa7DwO2IXxpLsbATh/Ztqug8i8BnVoUeU4dt2sFJEwcRpbYIM6ukdETcTnUVytM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706741047; c=relaxed/simple;
-	bh=CDDV5nzO303GZ5Eq1xlfWVsb0CkQf/w57BtEmOpSHdY=;
+	s=arc-20240116; t=1706741948; c=relaxed/simple;
+	bh=K7ewgk79QCombkqi3c5WQVJe6Ip0DZ6iX8pogb7qiwg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PFsw+DTlrOgbEg0a+bEhCTh5RNEQGL0C986LVpL1qhG5PHVoppE2wU6w1T64YOwTFfspGSb5U5M5mY4xZdIKb5pOXSsExkhHKVfrYlvoyD0IIyUhLkuuzhgsZhKdqyAUfutkx/b3dM2xzcqOldZ5PiSaDpRECY/XoWuiQcXDU5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkdCyod1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476C7C433F1;
-	Wed, 31 Jan 2024 22:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706741046;
-	bh=CDDV5nzO303GZ5Eq1xlfWVsb0CkQf/w57BtEmOpSHdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lkdCyod12UwkHMoZFnHdOixtATV3t5zPDh5xlxIgMXeux28RVHIflE5+YqXj/rg+h
-	 MMgsZA980RvF08seJZcLXNuJDf3Sek48tzM2qPuScpzmMv+5KWwK5LaXa57vRXIroP
-	 wyfksOn4zDYGvT/bO4mMJUmfFI0XjKZAwkQdiuQ6dvj/9PtTG8j34GiNb9t2Bxepdv
-	 Dq16Yt9VjalKAbOOobu357jmzicxGfgdpxnDcZb7z7fCvemOQGxVVD0V9usZ44HsxB
-	 kYhjW6q6igVmUbbckNxIiKrgL6ArF+SdSkloWNyFtDLABN1z9L5WiujB+r95aEk8QB
-	 pb3uKEe7KdK4Q==
-Date: Wed, 31 Jan 2024 23:43:59 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Daniel Drake <drake@endlessos.org>,
-	Vitalii Solomonov <solomonov.v@gmail.com>
-Cc: Jian-Hong Pan <jhp@endlessos.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	David Box <david.e.box@linux.intel.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@endlessos.org
-Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS
- B1400CEAE
-Message-ID: <ZbrNLxHL03R66PxQ@x1-carbon>
-References: <20240130095933.14158-1-jhp@endlessos.org>
- <20240130101335.GU2543524@black.fi.intel.com>
- <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
- <Zbonprq/1SircQon@x1-carbon>
- <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FYbr4+nNR3OSKfXJ8PsVsivjxCc1WjwIOUBmwbGSNhq7MqE8Rf0m/Yqwe2MtPCRNJsQIoJIlSTB/lfeXqIv5e1lEa0idzpo76JB7K7aIKbFqLEp0PQw7xhUYn4dd0YJwjtiuBf20gX4Pejyj3Mz5iQzYxx6cgVykbTVNQS26v5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.17.2/8.17.2) with ESMTPS id 40VMmx1W001349
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Thu, 1 Feb 2024 09:19:00 +1030
+Date: Thu, 1 Feb 2024 09:18:59 +1030
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+Message-ID: <ZbrOW/eTC0FFPjec@marvin.atrad.com.au>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+ <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com>
+ <ZZaiLOR4aO84CG2S@marvin.atrad.com.au>
+ <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au>
+ <ZajJzcquyvRebAFN@marvin.atrad.com.au>
+ <Za0T_siv79qz1jkk@smile.fi.intel.com>
+ <Za2YtnwLKKeMquv6@marvin.atrad.com.au>
+ <62b66d58-7824-3650-6a73-12068a22563e@linux.intel.com>
+ <20240122144520.7761c5a6@imammedo.users.ipa.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,108 +66,128 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
+In-Reply-To: <20240122144520.7761c5a6@imammedo.users.ipa.redhat.com>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-On Wed, Jan 31, 2024 at 07:08:12AM -0400, Daniel Drake wrote:
-> On Wed, Jan 31, 2024 at 6:57 AM Niklas Cassel <cassel@kernel.org> wrote:
-> > Unfortunately, we don't have any of these laptops that has a Tiger Lake
-> > AHCI controller (with a disappearing drive), so until someone who does
-> > debugs this, I think we are stuck at status quo.
+On Mon, Jan 22, 2024 at 02:45:20PM +0100, Igor Mammedov wrote:
+> On Mon, 22 Jan 2024 14:37:32 +0200 (EET)
+> Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
 > 
-> I've asked for volunteers to help test things on those original bug
-> reports (and may have one already) and would appreciate any suggested
-> debugging approaches from those more experienced with SATA/AHCI. What
-> would be your first few suggested debugging steps?
+> > On Mon, 22 Jan 2024, Jonathan Woithe wrote:
+> > 
+> > > On Sun, Jan 21, 2024 at 02:54:22PM +0200, Andy Shevchenko wrote:  
+> > > > On Thu, Jan 18, 2024 at 05:18:45PM +1030, Jonathan Woithe wrote:  
+> > > > > On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:  
+> > > > > > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:  
+> > > > > > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:  
+> > > > > > > > On Thu, 28 Dec 2023 18:57:00 +0200
+> > > > > > > > Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > > > > > > >   
+> > > > > > > > > Hi all,
+> > > > > > > > > 
+> > > > > > > > > Here's a series that contains two fixes to PCI bridge window sizing
+> > > > > > > > > algorithm. Together, they should enable remove & rescan cycle to work
+> > > > > > > > > for a PCI bus that has PCI devices with optional resources and/or
+> > > > > > > > > disparity in BAR sizes.
+> > > > > > > > > 
+> > > > > > > > > For the second fix, I chose to expose find_empty_resource_slot() from
+> > > > > > > > > kernel/resource.c because it should increase accuracy of the cannot-fit
+> > > > > > > > > decision (currently that function is called find_resource()). In order
+> > > > > > > > > to do that sensibly, a few improvements seemed in order to make its
+> > > > > > > > > interface and name of the function sane before exposing it. Thus, the
+> > > > > > > > > few extra patches on resource side.
+> > > > > > > > > 
+> > > > > > > > > Unfortunately I don't have a reason to suspect these would help with
+> > > > > > > > > the issues related to the currently ongoing resource regression
+> > > > > > > > > thread [1].  
+> > > > > > > > 
+> > > > > > > > Jonathan,
+> > > > > > > > can you test this series on affected machine with broken kernel to see if
+> > > > > > > > it's of any help in your case?  
+> > > > > > > 
+> > > > > > > Certainly, but it will have to wait until next Thursday (11 Jan 2024).  I'm
+> > > > > > > still on leave this week, and when at work I only have physical access to
+> > > > > > > the machine concerned on Thursdays at present.
+> > > > > > > 
+> > > > > > > Which kernel would you prefer I apply the series to?  
+> > > > > > 
+> > > > > > I was very short of time today but I did apply the above series to the
+> > > > > > 5.15.y branch (since I had this source available), resulting in version
+> > > > > > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after the
+> > > > > > bisect reset, so the resulting kernel was not correctly built.  It booted
+> > > > > > but thought it was a different version and therefore none of the modules
+> > > > > > could be found.  As a result, the test is invalid.
+> > > > > > 
+> > > > > > I will try again in a week when I next have physical access to the system. 
+> > > > > > Apologies for the delay.  In the meantime, if there's a specific kernel I
+> > > > > > should apply the patch series against please let me know.  As I understand
+> > > > > > it, you want it applied to one of the kernels which failed, making 5.15.y
+> > > > > > (for y < 145) a reasonable choice.  
+> > > > > 
+> > > > > I did a "make clean" to reset the source tree and recompiled.  However, it
+> > > > > errored out:
+> > > > > 
+> > > > >   drivers/pci/setup-bus.c:988:24: error: ‘RESOURCE_SIZE_MAX’ undeclared
+> > > > >   drivers/pci/setup-bus.c:998:17: error: ‘pci_bus_for_each_resource’ undeclared
+> > > > > 
+> > > > > This was with the patch series applied against 5.15.141.  It seems the patch
+> > > > > targets a kernel that's too far removed from 5.15.x.
+> > > > > 
+> > > > > Which kernel would you like me to apply the patch series to and test?  
+> > > > 
+> > > > The rule of thumb is to test against latest vanilla (as of today v6.7).
+> > > > Also makes sense to test against Linux Next. The v5.15 is way too old for
+> > > > a new code.  
+> > > 
+> > > Thanks, and understood.  In this case the request from Igor was 
+> > > 
+> > >     can you test this series on affected machine with broken kernel to see if
+> > >     it's of any help in your case?
+> > > 
+> > > The latest vanilla kernel (6.7) has (AFAIK) had the offending commit
+> > > reverted, so it's not a "broken" kernel in this respect.  Therefore, if I've
+> > > understood the request correctly, working with that kernel won't produce the
+> > > desired test.  
+> > 
+> > Well, you can revert the revert again to get back to the broken state.
 > 
-> Non-LPM boot:
-> ata1: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202100 irq 145
-> ata2: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202180 irq 145
-> ata2: SATA link down (SStatus 0 SControl 300)
-> ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> 
-> LPM failed boot:
-> ata1: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202100 irq 145
-> ata2: SATA max UDMA/133 abar m2048@0x50202000 port 0x50202180 irq 145
-> ata1: SATA link down (SStatus 4 SControl 300)
-> ata2: SATA link down (SStatus 4 SControl 300)
-> 
-> note SStatus=4 on both ports  (means "PHY in offline mode"?)
+> either this or just a hand patching as Ilpo has suggested earlier
+> would do.
 
-Hello Daniel, Vitalii,
+No problem.  This was the easiest approach for me and I have now done this. 
+Apologies for the delay in getting to this: I ran out of time last Thursday.
 
-The attachments that you uploaded to bugzilla:
-https://bugzilla.kernel.org/show_bug.cgi?id=217114
-namely dmesg_VMD_off and dmesg_VMD_on:
+> There is non zero chance that this series might fix issues
+> Jonathan is facing. i.e. failed resource reallocation which
+> offending patches trigger.
 
-dmesg_VMD_off:[    1.020080] ahci 0000:00:17.0: AHCI 0001.0301 32 slots 1 ports 6 Gbps 0x1 impl SATA mode
-dmesg_VMD_off:[    1.020095] ahci 0000:00:17.0: flags: 64bit ncq sntf pm clo only pio slum part deso sadm sds 
-dmesg_VMD_off:[    1.020645] ata1: SATA max UDMA/133 abar m2048@0x80902000 port 0x80902100 irq 123 lpm-pol 0
-dmesg_VMD_off:[    1.330090] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+I can confirm that as expected, this patch series has had no effect on the
+system which experiences the failed resource reallocation.  From syslog,
+running a 5.15.141+ kernel[1]:
 
+    kernel: radeon 0000:4b:00.0: Fatal error during GPU init
+    kernel: radeon: probe of 0000:4b:00.0 failed with error -12
 
-dmesg_VMD_on:[    0.973901] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6 Gbps 0x1 impl SATA mode
-dmesg_VMD_on:[    0.973904] ahci 10000:e0:17.0: flags: 64bit ncq sntf pm clo only pio slum part deso sadm sds 
-dmesg_VMD_on:[    0.974094] ata1: SATA max UDMA/133 abar m2048@0x82102000 port 0x82102100 irq 142 lpm-pol 0
-dmesg_VMD_on:[    1.287221] ata1: SATA link down (SStatus 4 SControl 300)
+This is unchanged from what is seen with the unaltered 5.15.141 kernel.
 
+In case it's important, can also confirm that the errors related to the
+thunderbolt device are are also still present in the patched 5.15.141+
+kernel:
 
-I assume that both of these logs are from the same kernel binary.
-Does this kernel binary have the Tiger Lake LPM enablement patch included?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/patch/?id=104ff59af73aba524e57ae0fef70121643ff270e
+    thunderbolt 0000:04:00.0: interrupt for TX ring 0 is already enabled
+    :
+    thunderbolt 0000:04:00.0: interrupt for RX ring 0 is already enabled
+    :
 
-If so, since with Intel VMD turned off we can detect the SATA drive,
-but with Intel VMD turned on we do not, which strongly suggests that
-the problem is related to Intel VMD.
+Like the GPU failure, they do not appear in the working kernels on this
+system.
 
+Let me know if you would like to me to run further tests.
 
+Regards
+  jonathan
 
-In libata we perform a reset of the port at boot, see:
-libata-sata.c:sata_link_hardreset()
-after writing to SControl, we call
-libata-core.c:ata_wait_ready() that will poll for the port being ready
-by calling the check_ready callback.
-For AHCI, this callback funcion is set to:
-libahci.c:ahci_check_ready().
-
-A reset should take the device out of deep power state and should be
-sufficient to establish a connection (and that also seems to be the
-case when not using Intel VMD).
-
-However, if you want to debug, I would start by adding prints to
-libata-sata.c:sata_link_hardreset()
-libata-core.c:ata_wait_ready()
-libahci.c:ahci_check_ready().
-
-
-
-Vitalii,
-
-I noticed that the prints says "lpm-pol 0"
-Do you have:
-CONFIG_SATA_MOBILE_LPM_POLICY set to 0?
-
-CONFIG_SATA_MOBILE_LPM_POLICY=0
-means do not touch any settings set by firmware.
-
-This means that this code:
-https://github.com/torvalds/linux/blob/v6.8-rc2/drivers/ata/libata-eh.c#L3572-L3579
-https://github.com/torvalds/linux/blob/v6.8-rc2/drivers/ata/libata-eh.c#L3067-L3072
-
-will not call ata_eh_set_lpm(), which means that ahci_set_lpm() will not
-be called, which means that sata_link_scr_lpm() will not be called.
-
-While this shouldn't make a difference, and I didn't check the code
-to see where "SATA link up" is printed, but possibly, when using VMD,
-perhaps it is so quick to put the device to a deeper power state after
-a reset, and with policy == 0, we will never send a ATA_LPM_WAKE_ONLY
-that sets PxCMD.ICC to the active state (brings the device out of sleep).
-
-Could you please try to set:
-CONFIG_SATA_MOBILE_LPM_POLICY=3
-and enable VMD again, and see if that makes you able to detect the SATA
-drive even with VMD enabled.
-
-
-Kind regards,
-Niklas
+[1] This is 5.15.141, patched with the series of interest here and the hand
+    patch from Ilpo.
 
