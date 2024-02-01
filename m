@@ -1,250 +1,188 @@
-Return-Path: <linux-pci+bounces-2916-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2917-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3292B84547F
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 10:47:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AFDD845505
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 11:17:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEDF528724B
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 09:47:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 943681F2B65F
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 10:17:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE794D9E5;
-	Thu,  1 Feb 2024 09:47:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF61115AABD;
+	Thu,  1 Feb 2024 10:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZX3x6Hfw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u6uGVWes"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2051.outbound.protection.outlook.com [40.107.237.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9B04D9FC;
-	Thu,  1 Feb 2024 09:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706780868; cv=none; b=tQwacElF3Do/Y5c1PKZUGIEWERi6dRLvVGeobhHrw640f9ssKmObUo6PNlynKO7wvEYuB7wieWETPEczbb3Rdg040PMp6ZMwinDYVDBJbCQJrJ1G538cxfiIo/srrwt7j2JoQ44Kd8leEf8Pgp71JJUXEG/R7ZjRFEtBLO70p/4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706780868; c=relaxed/simple;
-	bh=ojcSkXlz2RRabTXBWkspP5EDTZLEIi8uQ4kSGlO3ehY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Rt3X7aemH/0C9fKsun+j+T67KGhF/92/G3fxtrhYj14DgF/+fW0MTaTEgCaRTrvH0euGdnkq3eVs1hai6RN9mtLTbfhPAXC5+3Y0YviQA7B1jMMr9+EOPmuaPLDYqVt6lW68ZB4Bm0EtEOUXKQwZjo+U9xCi44pSKo58hFO5hkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZX3x6Hfw; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706780867; x=1738316867;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ojcSkXlz2RRabTXBWkspP5EDTZLEIi8uQ4kSGlO3ehY=;
-  b=ZX3x6HfwLHZ9i1iVXOQvQO3UrvQpkLeiG2P1SjCTivpO1V/tvryVqC3w
-   C5+nXzr35pyi0+xlrM6n/EBreD8SRGh33I+7ipduoUZsns8JEIqqASp5/
-   SUUcEfG44h9PgC26ZKtvgX9EDUMJBNFBJpZdOchGviiPF29iEpLrLQzhG
-   FDW8tBvi9Dj2IqfxJuVwY5Xo9nLnMAURwKvvKnZw+oOSG7vxfjln4YkyO
-   igYfVdMvUG0ltTbRpds1pI0haW3kJRmA3lzbsldbjai7lkf8Lu98jj1JF
-   hKpPplEnhQ4eWTej2qdNBO6DS7HnRqTCx8dtSn78/ipOT0pzJmR29vRsQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="402702305"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="402702305"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:47:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="788897871"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="788897871"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.1])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:47:42 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 1 Feb 2024 11:47:38 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-    Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
- quirk
-In-Reply-To: <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com>
-Message-ID: <d5f14b8f-f935-5d5e-e098-f2e78a2766c6@linux.intel.com>
-References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk> <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE7E1586E0;
+	Thu,  1 Feb 2024 10:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706782608; cv=fail; b=DoNsw9fBHTxZJyYNvGAY4F4tczxzwncuh+aG1Ib0eRf9MNfOTKgAJAlJFyKnj85l+lftYT50xlx0I1tptHY2cYaE+agPtsodaaOyvocXSbiXi2HKVzvQwSQxdR+BzEnppOniOCH8qRmLNTsgBBY1Nm4qAwTZ3tfEMuX3Dx+38eE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706782608; c=relaxed/simple;
+	bh=vsbr52wRtzp5r2T0DCjIBPtGP3rRjRhSs6CeJRjRR7I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FSj5g91wGasthjrBa94ckaM0rJbACjWJAttZX2fBUbB+paFuUubjHeZT1pVmL2KKRPONsE+JdHsmwfz46AwQRv8T8EBnP4QXEvnsQdLw/wnO8w9ey6N02DmX7JK8WRoljPUs4zaIZNwjdXFCL6CdOkf8U9ufAc6aBQHJlonGGUs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u6uGVWes; arc=fail smtp.client-ip=40.107.237.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FcNU3a+3oFsx+56MiwNqa6ah/QmlUOlY1oXrlRcd5IU/8VnHoulAf34XAYBdnBErAVxSgP1VwySIexZwsmHYAE/abZUiLPtCwxAYiGX6wiZvRStT0HKT7DnDCYG04SL/8YJKj2wjDI4x8vI9mv150aDVZRYUzwSZkD2cJ0sh7CSMscp3r4V7NV6sEHBzWHCQycf1OCQrME/nPLhMn0DOxeD2QPi0yLlZqbshVHmbR/BTLAwTHpqrKhLvJF6oJlJLl07W3c7vNUHe38awqjvrPEh30cvsKYepTw0lfsCHyn1WZechNoUWf8Rq0Uvy0zomy6GsnCWMsqPEYIQj+l1YiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nOrJe5HKDFq8O0snB6lbAnsxAqXqeQInEtQU2TvmvgQ=;
+ b=aFYey7s1rMlWxDo/zvaB+/dOdj3oNS4D/KrIGoaWmlxLMERP+b5njoQnYzoUb3nQ5A/Y+mQ3j4Ft6ooWDo+a/p38jxsCPGg8Au1AtoqWb+mLeboB4XOF6Tbr05JbaFgZgOfoa5EOTbJK2c2OPrqKhzQCENaEJTnFsY1P0lKnU8p8CUIgflH6mvLH2U39r8bCYBpR5dbWkSfs6f32N9aTxrfJiVlau8wAbErhOLK64Z11XpTNUn2/evCdF1YdZy7rLAhb7vSsU5BCaMJT12jmfPHfC2eLNo6zj6estDavoK1bfk9egDgEBDcJgfUKaK1VoNNJIKqxQx5qbdUjD3yckQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nOrJe5HKDFq8O0snB6lbAnsxAqXqeQInEtQU2TvmvgQ=;
+ b=u6uGVWesytomhgmWpTc8gyL5a0yTdIksdRGPrz83fybb1dTbVN0p5QS6EJPuLnm+alrMcsiXwzBsPYBZZbUQLjMSRVXjsw63bZf48Y8pnjSIaaxj3mxGqT96fL/LN7zjpWKIxwbiMBh3FQDRfBqEz3HYiOorLoYKyyyGXnqw6W4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by SA1PR12MB7198.namprd12.prod.outlook.com (2603:10b6:806:2bf::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.11; Thu, 1 Feb
+ 2024 10:16:44 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::c167:ed6d:bcf1:4638]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::c167:ed6d:bcf1:4638%7]) with mapi id 15.20.7228.029; Thu, 1 Feb 2024
+ 10:16:44 +0000
+Message-ID: <895b31de-f7f8-425c-870b-1524be21c688@amd.com>
+Date: Thu, 1 Feb 2024 21:16:37 +1100
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH kernel 1/4] pci/doe: Define protocol types and make those
+ public
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>
+References: <20240201060228.3070928-1-aik@amd.com>
+ <20240201060228.3070928-2-aik@amd.com> <20240201065040.GA31925@wunner.de>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <20240201065040.GA31925@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SYBPR01CA0084.ausprd01.prod.outlook.com
+ (2603:10c6:10:3::24) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-292880410-1706780858=:1028"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|SA1PR12MB7198:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00430813-4906-4648-897a-08dc230ee3ea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	UD8cxXbwipBrxSZ5h0+P7tI/cjnA9Qefo1TrXhdPLgTPCCHbRKx8mtUsViWAKsFkQ8TNbkFMrviWvvbQ+yWTjj9Akx7drZ7nzw5SBNP94Gx4jL0MjTu2zKZbTNGK+82RlQ5fIrGA011O1d0THbrofyTiG8heF5JwVeUP9dszzL0GawHPc2VaDxjp1quedys+lVOkdvayldO3ySmLjShqc/hix6u+h7u5CP7wp6e4NjqdbF5VWnhqODtioyUeOVLkF66aILBl7nd7TJqs0gAZMFT0fxpM7HRfByN5qUM946z4ljc2AAxZ1ml1bdqpegcYPiU5UzhrbKwp6sE54AgPsYP/jYYZIGuBUIcEk8mrXznvxz4C3dBLbKEca8dhpoQc30I/sP/ybah1FbZRQ5NgKmuy9qyCcKScPxrxj7ay/YgxrePiXW48cB/0gNAQX868WVSrkDErujfc1ZlnE6sKybzoujq/BrsfPdkFSIk0FgXfmzZIYkNHB/f5fwfKhPX29w8lIu5cE1S5gvqH/u7nvdXRVItTQheZ5/6xVOvUlRB6ZQxNxDnnxHJGtPM+TrhFBya60PcgUrCqiejCDltyyaxLqPI+JRXQnF3WSkJAR4k0caRVbncrgJpc0L4uyCRo
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(396003)(346002)(366004)(39860400002)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(31686004)(36756003)(31696002)(41300700001)(2616005)(26005)(38100700002)(6512007)(6486002)(966005)(6506007)(2906002)(478600001)(6916009)(66946007)(66556008)(316002)(66476007)(53546011)(54906003)(6666004)(4326008)(5660300002)(8936002)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d1Bjc0NOWjRBQnhNOEwvWG5qYWRqdGliWUZhcWRrZG1Cd0tsSW50OUY4aHl6?=
+ =?utf-8?B?OUlmY1ZrdEhleTRuYVhWa2F4S1pCSll0MjZQUkgwSnJLOHd4KytCWjJBVXFn?=
+ =?utf-8?B?emh3SStORHAvSlhxZS9BUjR6Nll6dDZxUlNlblpvWXB0bVNZOWtQZmgydnhl?=
+ =?utf-8?B?QytCVytwR0pYWG9KMUg3Y2tYU09KT3QzTmZZbWZaNzNLWk9JZ2dXSURsbG1D?=
+ =?utf-8?B?c2tmQ1ltSnB4L3NTbnAzVHhnSUFNZ1cyRzM5d1VaSFdybW85UEtLNldTUzdx?=
+ =?utf-8?B?WkUrK1AxVFlRUGJyOG41OXRpWUJVSGVnOENhOTgxVVJnSUhBcXF3T1dkOTZ0?=
+ =?utf-8?B?Q3JXOFgxakJxZU9MN3hpampWUUl6eFRsMk9zVnQ4bkhxUnRTVlUvTlE3c0o3?=
+ =?utf-8?B?TjMrUFphdWtpTFVMV01vVlpmVHV0ZS9tYVNkeWJ2QW1NMmdmcHBtNmg4Ylp3?=
+ =?utf-8?B?NGQ1aC9Yb200YjNFNkVvNkZ5NDVjTkxDUnRoMjF1ZWZTakdXOEw3V1pWcjZX?=
+ =?utf-8?B?L2xuYS9SV255Q1lTMjJ2bW5WQkl5aXV4dTNQNFVEaGVTUm9vT1dScTllTVhw?=
+ =?utf-8?B?aXQ0RnNUSGwzc0orRnlxMksvd0l0WjltNHdKQ25KWDMzeUN3eWlLMDlqTDZm?=
+ =?utf-8?B?UTJLWGpXODRtVExiMFVsYkJqa0RKTlhyY0dab0hiVTJSNEl5ZWR6SE1heWZp?=
+ =?utf-8?B?YWZHdVBMR29WWXpLUlE1cEhpTkl6ZUxCaXduQzBRQkJ4cUwySXVtdVpuZ01F?=
+ =?utf-8?B?ekZvbjg2V3RzUUwzdTNSdE1yVVVEdTc2d0ova3RjWkp2eEJOYnNWdGpxVlg5?=
+ =?utf-8?B?Sjc3SWoraTVocmpibTNqUnZIaW1kSUQyMnArd2g5MjBhODhQKzIzNjhHYUky?=
+ =?utf-8?B?dSsyY1hoQlNzb2xORGZzYkZBcjY3eGJlMnJoZUl4SGhjc2tueENUdk92NUlZ?=
+ =?utf-8?B?YnprUXdnZ053KzRWUzlKSTNxYjc1cTBoUEg1OEIwZ1FpSkRqWmJzQnJVcUtP?=
+ =?utf-8?B?alNCVkhtUDlxVUVPU2Zob2o5SVJGclBJQ3JSSlF0bEpZN3JwVFcrVWw1Qm9B?=
+ =?utf-8?B?L1pXTVVGOTZkWTE2S3JxbW1tRmVKUlpaZE8xUDZMd0Y2ajUzSWR6WGpIOWEv?=
+ =?utf-8?B?VkwvU0NVVUJpbHVrUVVzTkhKVjYwbWYwNEVEVWdTU0FLUHNnaXlacVdNYmFP?=
+ =?utf-8?B?MFl5ZlozSGxyYThETXlnZG1IL2pEaGZ2aFY2S3U5eFUvNFZFY1FCUHB2c1M4?=
+ =?utf-8?B?eUJISng3bjZFRU9LbEgvS014MTVQT3V0eVNNYzJKSkloVWFWbjl4cEVhSy9p?=
+ =?utf-8?B?WFpWc2ZmUG0rMW1MNVpkbmEyODdZV203WUtIdEhiVGt4bVFYQmpTS2E3dCtW?=
+ =?utf-8?B?NE1mWjkzQmh4QWVKUEZTYkNlTXpsRDlTR3dnbXRTRFZ5L0RWUEhmQ05hY3FH?=
+ =?utf-8?B?NCtJSWQ5WTQ0N0dpVVlxMS9JUGNhd3l6Ymg5QnNhVGZNOXVRbDJia2w3M3A3?=
+ =?utf-8?B?ZmIwS3BwekMrcGtzeVgvazNGRFhBYUVxWkxhS1E0bGNWOE03aEJiVkE2dklQ?=
+ =?utf-8?B?M3pkK3FFVjFXdkZaOXdMbWNtU0VMaHB5dGwzZEtvWWR5am43VnhzNksxYWsr?=
+ =?utf-8?B?Ty9YZmpXM2c1Y2NvTVdmUHU5YVRBbTlYWk9GZlpKbEJEd2tQb1ZEM0J3c3Ix?=
+ =?utf-8?B?QnhuOFZRK2RLRHpkcHhwS2NKVEYwclFPZXJiTXpvaHl5VytjVlIwYjlvL2tS?=
+ =?utf-8?B?amFYVmU0OUJmampHaU5CelpUOXpDRzRFbDF1cEJFMW16YlFaYWdRRGdwa3Nz?=
+ =?utf-8?B?dTBRRjUvemd1RTBqR3NUazdhRHpqQitzc0tqRnB3VC9zdHN2UnZGcFFnWG11?=
+ =?utf-8?B?azlmYXVYbXluRVpuc1RGcmVnSG5NMyt2VTB2anpIQjJyOXNWellUdXVlQ3A1?=
+ =?utf-8?B?OERsZDlzR25GYkZuNnQ5b0ZNcHNTSzBScjZrYzRlaFU3SDcyeHd2YWhWV1M3?=
+ =?utf-8?B?d0QveUxqa1p2M2RpWHdUYlZ3ZWppSlI1L2tzNjRJNWNGZ2szSnduenNNK1Ft?=
+ =?utf-8?B?SGMxTkhRWEcrUDdNZW5BK01sTjdNbHVvUU1YN25KVDFicUZLZlBkbUpOd01X?=
+ =?utf-8?Q?X6t2a0tLjLr9lr6gaeA39//hv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00430813-4906-4648-897a-08dc230ee3ea
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2024 10:16:44.3091
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7HNryE/chGGDDnYWdRvPxaVIyg1B9Id0PgyeqQpNl/4XaDkXX0mtIQ7o+3QrZR+sJtJkxiszh6eSjjGMdV0TRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7198
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 1/2/24 17:50, Lukas Wunner wrote:
+> On Thu, Feb 01, 2024 at 05:02:25PM +1100, Alexey Kardashevskiy wrote:
+>> Already public pci_doe() takes a protocol type argument.
+>> PCIe 6.0 defines three, define them in a header for use with pci_doe().
+> [...]
+>> --- a/include/linux/pci-doe.h
+>> +++ b/include/linux/pci-doe.h
+>> @@ -13,6 +13,10 @@
+>>   #ifndef LINUX_PCI_DOE_H
+>>   #define LINUX_PCI_DOE_H
+>>   
+>> +#define PCI_DOE_PROTOCOL_DISCOVERY		0
+>> +#define PCI_DOE_PROTOCOL_CMA_SPDM		1
+>> +#define PCI_DOE_PROTOCOL_SECURED_CMA_SPDM	2
+> 
+> These are deliberately defined in the .c files which actually need them,
+> i.e. DISCOVERY is defined in drivers/pci/doe.c and CMA_SPDM is defined in
+> drivers/pci/cma.c:
+> 
+> https://lore.kernel.org/all/7721bfa3b4f8a99a111f7808ad8890c3c13df56d.1695921657.git.lukas@wunner.de/
+> 
+> I don't see why they would have to be public if they're each only needed
+> in a single .c file.
 
---8323328-292880410-1706780858=:1028
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+SEV TIO needs both CMA and SECURED_CMA for DOE device<->firmware 
+bouncing and it is going to use pci_doe() for this. I should have put 
+this into the commit log, sorry about that.
 
-On Tue, 30 Jan 2024, Ilpo J=C3=A4rvinen wrote:
+Or the plan is to add pci_doe_secure_transport() to cma.c and force 
+everyone use that?
 
-> On Tue, 30 Jan 2024, Maciej W. Rozycki wrote:
->=20
-> > On Tue, 30 Jan 2024, Ilpo J=C3=A4rvinen wrote:
-> >=20
-> > > First of all, this is not true for pcie_failed_link_retrain():
-> > >  * Return TRUE if the link has been successfully retrained, otherwise=
- FALSE.
-> > > If LBMS is not set, the Target Speed quirk is not applied but the fun=
-ction=20
-> > > still returns true. I think that should be changed to early return fa=
-lse
-> > > when no LBMS is present.
-> >=20
-> >  I think there is a corner case here indeed.  If Link Active reporting =
-is=20
-> > supported and neither DLLLA nor LBMS are set at entry, then the functio=
-n=20
-> > indeed returns success even though the link is down and no attempt to=
-=20
-> > retrain will have been made.  So this does indeed look a case for a ret=
-urn=20
-> > with the FALSE result.
-> >=20
-> >  I think most easily this can be sorted by delegating the return result=
- to=20
-> > a temporary variable, preset to FALSE and then only updated from result=
-s=20
-> > of the calls to `pcie_retrain_link'.  I can offer a patch as the author=
- of=20
-> > the code and one who has means to verify it right away if that helped.
->=20
-> I already wrote a patch which addresses this together with the caller=20
-> site changes.
->=20
-> >  Overall I guess it's all legacy of how this code evolved before it's b=
-een=20
-> > finally merged.
->=20
-> Indeed, it looks the step by step changed didn't yield good result here.
->=20
-> > > > >   3. pci_bridge_wait_for_secondary_bus() then calls pci_dev_wait(=
-) which
-> > > > >      cannot succeed (but waits ~1 minute, delaying the resume).
-> > > > >=20
-> > > > > The Target Speed trick (in step 2) is only used if LBMS bit (PCIe=
- r6.1
-> > > > > sec 7.5.3.8) is set. For links that have been operational before
-> > > > > suspend, it is well possible that LBMS has been set at the bridge=
- and
-> > > > > remains on. Thus, after resume, LBMS does not indicate the link n=
-eeds
-> > > > > the Target Speed quirk. Clear LBMS on resume for bridges to avoid=
- the
-> > > > > issue.
-> >=20
-> >  This can be problematic AFAICT however.  While I am not able to verify=
-=20
-> > suspend/resume operation with my devices, I expect the behaviour to be=
-=20
-> > exactly the same after resume as after a bus reset: the link will fail =
-to=20
-> > negotiate and the LBMS and DLLLA bits will be respectively set and clea=
-r. =20
-> > Consequently if you clear LBMS at resume, then the workaround won't=20
-> > trigger and the link will remain inoperational in its limbo state.
->=20
-> How do you get the LBMS set in the first place? Isn't that because the=20
-> link tries to come up so shouldn't it reassert that bit again before the=
-=20
-> code ends up into the target speed quirk? That is, I assumed you actually=
-=20
-> wanted to detect LBMS getting set during pcie_wait_for_link_status() call=
-=20
-> preceeding pcie_failed_link_retrain() call?
->=20
-> There's always an option to store it into pci_dev for later use when the=
-=20
-> quirk is found to be working for the first time if other solutions don't=
-=20
-> work.
->=20
-> In any case and unrelated to this patch, the way this quirk monopolizes=
-=20
-> LBMS bit is going to have to be changed because it won't be reliable with=
-=20
-> the PCIe BW controller that sets up and irq for LBMS (and clears the bit)=
-=2E
-> In bwctrl v5 (yet to be posted) I'll add LBMS counter into bwctrl to allo=
-w=20
-> this quirk to keep working (which will need to be confirmed).
->=20
-> >  What kind of scenario does the LBMS bit get set in that you have a=20
-> > trouble with?  You write that in your case the downstream device has be=
-en=20
-> > disconnected while the bug hierarchy was suspended and it is not presen=
-t=20
-> > anymore at resume, is that correct?
-> >
-> >  But in that case no link negotiation could have been possible and=20
-> > consequently the LBMS bit mustn't have been set by hardware (according =
-to=20
-> > my understanding of PCIe), because (for compliant, non-broken devices=
-=20
-> > anyway) it is only specified to be set for ports that can communicate w=
-ith=20
-> > the other link end (the spec explicitly says there mustn't have been a=
-=20
-> > transition through the DL_Down status for the port).
-> >
-> >  Am I missing something?
->=20
-> Yes, when resuming the device is already gone but the bridge still has=20
-> LBMS set. My understanding is that it was set because it was there
-> from pre-suspend time but I've not really taken a deep look into it=20
-> because the problem and fix seemed obvious.
->=20
-> I read that "without the Port transitioning through DL_Down status"=20
-> differently than you, I only interpret that it relates to the two=20
-> bullets following it. ...So if retrain bit is set, and link then goes=20
-> down, the bullet no longer applies and LBMS should not be set because=20
-> there was transition through DL_Down. But I could well be wrong...
+The PCI SIG DOE protocol numbers (discovery, CMA, secure CMA) are all 
+defined in one place in the PCIe spec and defining them in different 
+places (doe.c, cma.c) is weird imho.
 
-Hi again,
 
-I went to check Root Ports on some machines and toggled their Link=20
-Disable bit on. None of the Root Ports I tested cleared LBMS. That means
-LBMS being on after resume is not enough to differentiate the HW which=20
-needs Target Speed quirk and which does not. Unless we clear LBMS at some=
-=20
-point which was what this patch tried to do.
+> 
+> Thanks,
+> 
+> Lukas
 
-So this misidentification problem in the quirk looks quite widespread but=
-=20
-is mostly dormant because Links do come up normally so the quirk code is=20
-never called.
+-- 
+Alexey
 
-I might conduct even larger set of tests once I script a way to=20
-automatically pick a "safe" Root Port (something that is connected to a=20
-device but unused, I manually picked Root Ports above unused NICs for the=
-=20
-manual tests I already did). But I don't believe it changes anything and=20
-in the end I won't find any Root Ports that would actually clear LBMS on=20
-their own when Link goes down.
-
-So I would be really curious now to know how you get the LBMS on the=20
-device that needs the Target Speed quirk? Is this true (from the commit=20
-a89c82249c37 ("PCI: Work around PCIe link training failures")):
-
-"Instead the link continues oscillating between the two speeds, at the=20
-rate of 34-35 times per second, with link training reported repeatedly=20
-active ~84% of the time."
-
-?
-
-Because if it is constantly picking another speed, it would mean you get=20
-LBMS set over and over again, no? If that happens 34-35 times per second,=
-=20
-it should be set already again when we get into that quirk because there=20
-was some wait before it gets called.
-
---=20
- i.
-
---8323328-292880410-1706780858=:1028--
 
