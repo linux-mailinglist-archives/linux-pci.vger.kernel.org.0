@@ -1,156 +1,232 @@
-Return-Path: <linux-pci+bounces-2958-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2959-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 102BA8460D4
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 20:20:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02989846104
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 20:34:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8DF828A68C
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 19:20:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EB661F26632
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 19:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA99A85270;
-	Thu,  1 Feb 2024 19:20:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F074A7C6C1;
+	Thu,  1 Feb 2024 19:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jo3EkCOb"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R0SsYqXy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FB884FDF
-	for <linux-pci@vger.kernel.org>; Thu,  1 Feb 2024 19:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DDE84FC7
+	for <linux-pci@vger.kernel.org>; Thu,  1 Feb 2024 19:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706815245; cv=none; b=PWSYJIeMPn7bZpO5IatjBz6KggSMMFb6n3dg4OQtec3OkL9sVhtOzZF2gM+5p/Y+BFogvCAKgQfuWIlTU3C4nduTj3CEyo4IT6Wyc7AclV6RxOc3TOZItMOFrCUj27mQ7QawOWYAV2OSmDssBQ3yPmtUbQGaKOe8+Ev8iT2z6Nc=
+	t=1706816072; cv=none; b=nCwl5YVmRaYPyjGdvlhBj4uecAtP8u6v7aW7qAqUbu6AXydWmeIJwmCF5+PofDfzSdNZwvJTyFOLcBWYfQ17ZMYsnywgqKsQvIt2YgDBQooKVm6oe/YcMEOmeX5qhvbRsjGUU6+WDriCARvoa4psqoqJU3L/VbCd1RLC5mMJzXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706815245; c=relaxed/simple;
-	bh=U+iiBNU8Gwu7+hHtESnBs94dPAmhn+bnt9MP94sadns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uYeHl+Xutei3ucoSa/cLVYKoPYkldH6dlJmQ0A08ZlNOIvM9EycPRU3c7FNU1p1Nl8yPDGDMFsdKJpqSNrZEmgFVPtAPIDl7Yaw3H32Y3EJEVeSzORLx4tXOLFrj/Iw9qnJTy/IIq/8L5aU17hdHlpuiX0KV1WYOA6eziMV3sSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jo3EkCOb; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a366ad7ad45so168768166b.3
-        for <linux-pci@vger.kernel.org>; Thu, 01 Feb 2024 11:20:43 -0800 (PST)
+	s=arc-20240116; t=1706816072; c=relaxed/simple;
+	bh=azrHQn5NRzloniAve6lH8WYk89pATs5I0qI/dcR5hT0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=llOu/FvMQAuDkitqGeZjlYvjVxl29yY4+tyRQcuaE49ORUAKuVKee8+FNttn7cpuMFRk+Yu2vAfEDbVjGo3isdHOUlT+QM2j9iiIEzpq7ED6U8VNSc4kyxpcPa+1dBBK+Wj2gR0EuK/qxVb8AaZPLXl9snWnFCbK4EGxeAezepc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=R0SsYqXy; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-42993124fa1so7837111cf.3
+        for <linux-pci@vger.kernel.org>; Thu, 01 Feb 2024 11:34:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706815242; x=1707420042; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qldQrnD4NCa7JMcPYN/JJw49V6ME+4BY945ba5mg8WM=;
-        b=jo3EkCObpyhc9ArCunSRUZJeaSQ9p93nlsCGP932eF7XCIBALianuyP5srvG8F/Oad
-         yWa5cyXv+syzFGPeGKLCM1nkD6c3ibe9vFueV1JklGT36w6EBBAPHY3IKHUb9yvrghV2
-         7/cspfDJ0z30HBw/hEZtocSVslys99iuGEL/LjfUIiI0gll3V1xV+GuCVAz87v4KSQXP
-         cQK5OdDtmrwzOrUwdfik3igr9PO+C6v3IDe8/cNKX4XGZdk6pWJlqwpRZS5ZoacJHdu+
-         LkWs13wlNholN1OPfQLxyB0rOxF8pT2ISsiSiFKOMQL0fetLCUIrTDqwyu2X2kh0tWik
-         q1/g==
+        d=ziepe.ca; s=google; t=1706816069; x=1707420869; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=27QC2KxXWf1pwp+Uy5SzOL0al7IZt0TnuDDgoIUMSOo=;
+        b=R0SsYqXydKzxQgNWd1bG3V9t/6K0eBG0tDK13+3R5xYapUx16sFftURbblkXx3LOY0
+         P4pgGtU0s/2093N2q1hj98H24BSq1QhXcXfTEuTwTsWExsuf6fnFERzan8YhCe7eWfS2
+         CvpiEIjG8lXmSVnIBk57wFqDNDemuAeBbxY+WPfGif1gLzDer5/JIvZPkzX2yg54sJG+
+         uNU3ivcGsKpmx+AlHt20Tw3KRcWlvgizBifEEutKli+3bgKWM8hHTU1as1HC1ZIbqNdj
+         dEo/vPqq0LF0xYTayEPvH61BbNeSSqSVAmkRsnh2sjt8ZS434sVjANiPIYa4vcNVZY37
+         d4Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706815242; x=1707420042;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qldQrnD4NCa7JMcPYN/JJw49V6ME+4BY945ba5mg8WM=;
-        b=Z4rmQeAHy06CV3iFNt/486ylBIQg2ulNIz+k8CHOjOnsoLAnuVpjSLLm/BQKi7oFpS
-         ZJU1KWYEUlB+XR4hw/ROBACe9/QQuH0I2tzT1NXpP+4UNB15TzDeMQmR576sKIsfBnCh
-         Ucg5Pfbs5aOE6r6rnjaMblKP11v63wyw6hpUuvJPMoQHn/Grlc/nXfBbBxsvIqp57i6E
-         onNevdkM9KOcZc3sd66idS78epn/7CGc/3+0ibG7ygM2JlG3p2n1FFmDG1i1I+qOjnRF
-         dzOPPZsfDBeSwVXsBAVMrL9vDNDrRlDfiSrSa1PnFrpABnOzvVXMICJ3XNOjRSlZaQN/
-         hgAA==
-X-Gm-Message-State: AOJu0YyuMe34uh12JcF+y1oFiIBN4FkZz7epsvpZDuz7bAT8Ri3Cxpaj
-	L0egNEB9BS4K/VpQW5WbBtcy2bOeWYSDUDqTsZP7mFEn62e/KZrCtQ8nIVd6r8KcqXMr/uYtLMH
-	k
-X-Google-Smtp-Source: AGHT+IFUdcrJxb+88easc7bB/96Rke+fS38MGkWXidc+J+CjUUbWsJNOl5TyfZ1g+qiWMWL/sV77tA==
-X-Received: by 2002:a17:906:7086:b0:a36:b64:e0c0 with SMTP id b6-20020a170906708600b00a360b64e0c0mr38364ejk.67.1706815242312;
-        Thu, 01 Feb 2024 11:20:42 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVMVns9gpoWFOybeV1DMvn4pPGGY5MkEt63PHJWMRrKgtEQehgezgkv0+G26rOrtcVEVg9N28ODKnhp3jDh74UBByr24lWHd4QBLtpgZ4tx9m5PKQWTRlTAcnj5cUDjDVUwEuQg3DHS2HfG8B8QncBVliEdUTlZyMbw0u3Hv5bLN3DrT15DQz42Mx3GIdpHd7fOJF+YEGF5HzWSFR7BZa31qb3Tp2L3dYjzg6ldJhJGtNioxhuDslJQpybMuGiFS7nbaQ8aWwyVwdARrBEEUfEFM+i4dMU5fKd6kpZCxUQMhTBeXRoll6nrbbMsUv0p
-Received: from [192.168.159.104] (178235179129.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.129])
-        by smtp.gmail.com with ESMTPSA id vk8-20020a170907cbc800b00a36f8fdeb98sm23088ejc.59.2024.02.01.11.20.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 11:20:41 -0800 (PST)
-Message-ID: <30360d96-4513-40c4-9646-e3ae09121fa7@linaro.org>
-Date: Thu, 1 Feb 2024 20:20:40 +0100
+        d=1e100.net; s=20230601; t=1706816069; x=1707420869;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=27QC2KxXWf1pwp+Uy5SzOL0al7IZt0TnuDDgoIUMSOo=;
+        b=BfukLxjxeh97+bs0qr9bP68h7lk2QVyiJwbzEN+8AVWyfl3Vg+cZulWlim2kgscrDu
+         1lGxNSAYCnMXcutVieOXDjRA8j+YRxT/5oPTVMT0KyXAc1H2pBwOpOmZ5ZoWr8Uh+Cys
+         aMXaADXbUmp4jI26i/MkpwjWO8V24vHNMavaYhpxjfHSHVUAjb25iUeDVJibvlZnHH2X
+         vIKwoG9jOZRhq9LsW2cGr8U0nx2EV+uT/HJ3xZSJ/Mw61YA3bWgqp38mqMq/mxNCvLZC
+         SmoVmhLpMFLlOaB4NytT4gMj/0e24hbM303kVdwQng0wgKU+LNIIsLAw/YJ4kYxeWxNW
+         m5nA==
+X-Gm-Message-State: AOJu0YyUhiEjx3WIJme1itzOr3pNsZoQ3m6jixsszpYW7EQ5rGTn5yTO
+	SUR87kBStQ+hTI/0MOTuc7fVRZZiQ89JWgiAXDPuQPtsqW+kxA2s1E7b5v3FIUk=
+X-Google-Smtp-Source: AGHT+IFJvj4DtYD8GbuWKqJRSEbmY0qhb1v/YCGOdt98bAnNJl49tIasu3xQLSRVIi4ugxyxoKbq3g==
+X-Received: by 2002:a05:6214:f63:b0:68c:7f6f:2d9 with SMTP id iy3-20020a0562140f6300b0068c7f6f02d9mr3180586qvb.6.1706816068946;
+        Thu, 01 Feb 2024 11:34:28 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUOTKhvn23O8MoIzJe4VL2yxzCphW1meyPvWhVVaDhxZ2f4PKX7FWacO5zfm7VIbsjDCCGckv6IRbNc85dURbbjvUMZCiAlif3X3IvQ9vZLauO8zZknxh1HewOfUL9yKrmMN4kdwNdaChP5xKKLvwt/yC2Qm+p48Youy3MWY1xmbdsKaGYAml+JtvAq86ICgr80GNL//qKUtXI+NTuw+9FSAz7M+C+FeyMy3Xz7iHO4Qnv4XBSXn1btWfHcS4i3WBsiuwhBZAYRWMouS38wLuhPoD7R5rYvqPNEDqn0N7oUau0HK4UlfiIW+GEeIIiBhuwqbcehauiTZ/QctutL871fY5D4dGZ6AxI/kw==
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id mz9-20020a0562142d0900b0068c4b6000ccsm61796qvb.121.2024.02.01.11.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Feb 2024 11:34:28 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rVcpP-00AoUU-Ju;
+	Thu, 01 Feb 2024 15:34:27 -0400
+Date: Thu, 1 Feb 2024 15:34:27 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
+	"Tian, Kevin" <kevin.tian@intel.com>,
+	"Liu, Yi L" <yi.l.liu@intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"dwmw2@infradead.org" <dwmw2@infradead.org>,
+	"will@kernel.org" <will@kernel.org>,
+	"lukas@wunner.de" <lukas@wunner.de>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v12 5/5] iommu/vt-d: improve ITE fault handling if target
+ device isn't present
+Message-ID: <20240201193427.GQ50608@ziepe.ca>
+References: <20240129034924.817005-1-haifeng.zhao@linux.intel.com>
+ <20240129034924.817005-6-haifeng.zhao@linux.intel.com>
+ <BN9PR11MB52761CC3E5F08D4B7BAD7F918C7E2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <7adec292-9d38-41ab-a982-bd840b24f3ab@intel.com>
+ <0aee453c-e98f-4b72-8107-31d4731abcdb@linux.intel.com>
+ <BN9PR11MB5276D3372267CE9246170FA78C7D2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <500c4582-ec05-4a9e-9b68-d2ae19aed49b@linux.intel.com>
+ <20240130162958.GF50608@ziepe.ca>
+ <6a48f023-2701-4f2f-8077-14fe348794dd@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Add X1E80100 PCIe support
-Content-Language: en-US
-To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240129-x1e80100-pci-v2-0-a466d10685b6@linaro.org>
- <20240129-x1e80100-pci-v2-2-a466d10685b6@linaro.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240129-x1e80100-pci-v2-2-a466d10685b6@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6a48f023-2701-4f2f-8077-14fe348794dd@linux.intel.com>
 
-On 29.01.2024 12:10, Abel Vesa wrote:
-> Add the compatible and the driver data for X1E80100.
+On Wed, Jan 31, 2024 at 02:21:20PM +0800, Baolu Lu wrote:
+> An rbtree for IOMMU device data for the VT-d driver would be beneficial.
+> It also benefits other paths of fault handling, such as the I/O page
+> fault handling path, where it currently still relies on the PCI
+> subsystem to convert a RID value into a pci_device structure.
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 10f2d0bb86be..2a6000e457bc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1642,6 +1642,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->  	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
-> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+> Given that such an rbtree would be helpful for multiple individual
+> drivers that handle PCI devices, it seems valuable to implement it in
+> the core?
 
-I swear I'm not delaying everything related to x1 on purpose..
+rbtree is already supposed to be a re-usable library.
 
-But..
+There is already good helper support in rbtree to make things easy to
+implement. I see arm hasn't used them yet, it should look something
+like this:
 
-Would a "qcom,pcie-v1.9.0" generic match string be a good idea?
-
-Konrad
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index f58e77b99d476b..ebf86c6a8787c4 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -1673,26 +1673,37 @@ static int arm_smmu_init_l2_strtab(struct arm_smmu_device *smmu, u32 sid)
+ 	return 0;
+ }
+ 
++static int arm_smmu_streams_cmp_key(const void *lhs, const struct rb_node *rhs)
++{
++	struct arm_smmu_stream *stream_rhs =
++		rb_entry(rhs, struct arm_smmu_stream, node);
++	const u32 *sid_lhs = lhs;
++
++	if (*sid_lhs < stream_rhs->id)
++		return -1;
++	if (*sid_lhs > stream_rhs->id)
++		return 1;
++	return 0;
++}
++
++static int arm_smmu_streams_cmp_node(struct rb_node *lhs,
++				     const struct rb_node *rhs)
++{
++	return arm_smmu_streams_cmp_key(
++		&rb_entry(lhs, struct arm_smmu_stream, node)->id, rhs);
++}
++
+ static struct arm_smmu_master *
+ arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
+ {
+ 	struct rb_node *node;
+-	struct arm_smmu_stream *stream;
+ 
+ 	lockdep_assert_held(&smmu->streams_mutex);
+ 
+-	node = smmu->streams.rb_node;
+-	while (node) {
+-		stream = rb_entry(node, struct arm_smmu_stream, node);
+-		if (stream->id < sid)
+-			node = node->rb_right;
+-		else if (stream->id > sid)
+-			node = node->rb_left;
+-		else
+-			return stream->master;
+-	}
+-
+-	return NULL;
++	node = rb_find(&sid, &smmu->streams, arm_smmu_streams_cmp_key);
++	if (!node)
++		return NULL;
++	return rb_entry(node, struct arm_smmu_stream, node)->master;
+ }
+ 
+ /* IRQ and event handlers */
+@@ -3324,8 +3335,6 @@ static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
+ {
+ 	int i;
+ 	int ret = 0;
+-	struct arm_smmu_stream *new_stream, *cur_stream;
+-	struct rb_node **new_node, *parent_node = NULL;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
+ 
+ 	master->streams = kcalloc(fwspec->num_ids, sizeof(*master->streams),
+@@ -3336,6 +3345,7 @@ static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
+ 
+ 	mutex_lock(&smmu->streams_mutex);
+ 	for (i = 0; i < fwspec->num_ids; i++) {
++		struct arm_smmu_stream *new_stream;
+ 		u32 sid = fwspec->ids[i];
+ 
+ 		new_stream = &master->streams[i];
+@@ -3347,28 +3357,13 @@ static int arm_smmu_insert_master(struct arm_smmu_device *smmu,
+ 			break;
+ 
+ 		/* Insert into SID tree */
+-		new_node = &(smmu->streams.rb_node);
+-		while (*new_node) {
+-			cur_stream = rb_entry(*new_node, struct arm_smmu_stream,
+-					      node);
+-			parent_node = *new_node;
+-			if (cur_stream->id > new_stream->id) {
+-				new_node = &((*new_node)->rb_left);
+-			} else if (cur_stream->id < new_stream->id) {
+-				new_node = &((*new_node)->rb_right);
+-			} else {
+-				dev_warn(master->dev,
+-					 "stream %u already in tree\n",
+-					 cur_stream->id);
+-				ret = -EINVAL;
+-				break;
+-			}
+-		}
+-		if (ret)
++		if (rb_find_add(&new_stream->node, &smmu->streams,
++				arm_smmu_streams_cmp_node)) {
++			dev_warn(master->dev, "stream %u already in tree\n",
++				 sid);
++			ret = -EINVAL;
+ 			break;
+-
+-		rb_link_node(&new_stream->node, parent_node, new_node);
+-		rb_insert_color(&new_stream->node, &smmu->streams);
++		}
+ 	}
+ 
+ 	if (ret) {
 
