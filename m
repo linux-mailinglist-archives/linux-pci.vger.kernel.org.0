@@ -1,188 +1,233 @@
-Return-Path: <linux-pci+bounces-2921-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2922-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1829E8456F2
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 13:08:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8ADD0845816
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 13:50:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3615290CDD
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 12:08:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40C1F28833A
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 12:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FEF15DBB8;
-	Thu,  1 Feb 2024 12:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4508BA4D;
+	Thu,  1 Feb 2024 12:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5ufFrP9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8KcsluY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5CC15DBB0;
-	Thu,  1 Feb 2024 12:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254818664E
+	for <linux-pci@vger.kernel.org>; Thu,  1 Feb 2024 12:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789274; cv=none; b=L/S4PWpdcieDKZfRBhJucYtP3X4fTRyV+DU9i21mZvbeiTwSpOxSJ4HxMwpQ4O+5l2ZeJlyHboray488cEgP6TyvSRPthQlwWNL8ZHyc6bgvpgBAnG1SfHLfwHxMyS1/F9DZNO8YqBUpdbI+UuzUoQyHmNjceDz6z7HUnAfJ/cE=
+	t=1706791798; cv=none; b=UsGeAkZ2lvH2tbdOjcACCF6+9cZGBZ9MF+pssdt4cDZ33bGZazPNE5HoepxAsJJ2Cz0F0C1TJkVxI9YZQ+mva3yGR889X+KLSAI4LOQx/812zp5wea9+SFjZriJV9IyJ++P0Yb4sttyljuTS66Rdy8xUKBAj6eGsdA/OfxeKKc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789274; c=relaxed/simple;
-	bh=fS2LtSupcmm3ZXyoVBzO9/Kodhf7J87JZaH+pdhJneo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNJU96rYUQEirwfLSfHtPBoGrvUKAY/dWES6rzt11SRFQ4HmZW4p0hNmKZA2AVK5LI28ge1TX1gzBpL/05LsdHttFdONwjT34aUOn0UkNTXq35mGlpu5jErBuyOtWOaCRCieNafEwqHoFxNuFk7EnivVSIfai0amIvkwXiTYqOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5ufFrP9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F2A1C433F1;
-	Thu,  1 Feb 2024 12:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706789274;
-	bh=fS2LtSupcmm3ZXyoVBzO9/Kodhf7J87JZaH+pdhJneo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G5ufFrP9K+FQCp02N/zFYcw8gNFiY6WBscknVj1Qy0ASTbs2O4Jx4nCAo7yxdHo9P
-	 JIPOl09R/iY4apB2FTy26235jBu0LOsdGDnyyiZN4nHlII0IUMcwGptvsjhpwL1UJH
-	 dYn27ERC2l3qZitah7MLlfiVpC29Mo9X2/X2B1cLqQo640IHgGSQTc7TMWaVTlJpWM
-	 2qB4rok7ILSg06up8unpc41P8iG6CsWxxVlHEce5bIqo47Wf0eukGWGmHA6nsu9C7v
-	 aHzY0zkJzUhEwrI0C30duNzyRWXFxJxS5dvgRf1qMxHoDMxtTCVZcN7q3n4dG6a8FF
-	 ICG8bBsOIX3dQ==
-Date: Thu, 1 Feb 2024 17:37:40 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	vireshk@kernel.org, quic_vbadigan@quicinc.com,
-	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20240201120740.GB2934@thinkpad>
-References: <20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com>
- <20240112-opp_support-v6-6-77bbf7d0cc37@quicinc.com>
- <CAA8EJpqwOfeS-QpLVvYGf0jmTVxiT02POwK+9tkN03Cr4DgL+g@mail.gmail.com>
- <da1945ce-7e34-6ad5-7b9b-478fcbd4a2c6@quicinc.com>
- <CAA8EJpoZakDcBXYE57bRPMFvGEXh1o82r7Znv8mwCK6mRf5xog@mail.gmail.com>
- <20240201115415.GA2934@thinkpad>
- <CAA8EJppAL44ZLL5SnmX7SSwzvRUm2PffFUL6=gQRjq4neaLtRA@mail.gmail.com>
+	s=arc-20240116; t=1706791798; c=relaxed/simple;
+	bh=SMpGlSy20P5hvCw6h90PRubJZird1ayAEYy2XhexgoU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jFAIcJqTdwgzre//Xz9l9hs54NEMqAI11o4drXGSViARuXJdObHr8K2s9sPQRJ1iQePAH+k4cSDqceXq0JzOY5pm7OIRKlZJk03E8M0qtLVtpE0N3n1yPHr7xrxe364o89EWMo4ET4enzNFY+nbasQrmEErEy3IGEQGZzUsZ8wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h8KcsluY; arc=none smtp.client-ip=192.55.52.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706791797; x=1738327797;
+  h=date:from:to:cc:subject:message-id;
+  bh=SMpGlSy20P5hvCw6h90PRubJZird1ayAEYy2XhexgoU=;
+  b=h8KcsluYZLiZ/SgWSAR9q71ADzJ52OZQc7cg+oj4yHiS99ifSHUWeIIQ
+   l+eyDmh8X8XTSUbzUpeGkld5DbsCmg6vdMemPicnLE2sY1rJRYA09IlFI
+   6dy5ystyXUMIwe9fLLGj+NlGeiOuHggIgrImAKbH1PC99eF6QzUNnTwxs
+   A4N7sbxn31js/sOsD7Cew3K0m/1SXcCFBCYX8VB7atSLJUUqb+wF2IGMA
+   eL5iPY/1vleKpoeMcIDLzv0JYKvbRf21X62/rl8r6Oczq7Ovxsqz2iN8j
+   6rDESJgqATsyTlm0WoWDP0AwAhuLuUEzqI+C8yrFo6AYphrPCMwX+HTw5
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="403496528"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="403496528"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:49:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822911452"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="822911452"
+Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 01 Feb 2024 04:49:52 -0800
+Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rVWVq-0002md-16;
+	Thu, 01 Feb 2024 12:49:50 +0000
+Date: Thu, 01 Feb 2024 20:49:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:devres] BUILD SUCCESS
+ 291a79e85626947cebe249188f1b2b8975eaf8e9
+Message-ID: <202402012046.o9g3K54W-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA8EJppAL44ZLL5SnmX7SSwzvRUm2PffFUL6=gQRjq4neaLtRA@mail.gmail.com>
 
-On Thu, Feb 01, 2024 at 01:58:58PM +0200, Dmitry Baryshkov wrote:
-> On Thu, 1 Feb 2024 at 13:54, Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Tue, Jan 16, 2024 at 11:55:17AM +0200, Dmitry Baryshkov wrote:
-> > > On Tue, 16 Jan 2024 at 07:17, Krishna Chaitanya Chundru
-> > > <quic_krichai@quicinc.com> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On 1/12/2024 9:03 PM, Dmitry Baryshkov wrote:
-> > > > > On Fri, 12 Jan 2024 at 16:25, Krishna chaitanya chundru
-> > > > > <quic_krichai@quicinc.com> wrote:
-> > > > >>
-> > > > >> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> > > > >> maintains hardware state of a regulator by performing max aggregation of
-> > > > >> the requests made by all of the processors.
-> > > > >>
-> > > > >> PCIe controller can operate on different RPMh performance state of power
-> > > > >> domain based up on the speed of the link. And this performance state varies
-> > > > >> from target to target.
-> > > > >>
-> > > > >> It is manadate to scale the performance state based up on the PCIe speed
-> > > > >> link operates so that SoC can run under optimum power conditions.
-> > > > >>
-> > > > >> Add Operating Performance Points(OPP) support to vote for RPMh state based
-> > > > >> upon GEN speed link is operating.
-> > > > >>
-> > > > >> OPP can handle ICC bw voting also, so move icc bw voting through opp
-> > > > >> framework if opp entries are present.
-> > > > >>
-> > > > >> In PCIe certain gen speeds like GEN1x2 & GEN2X1 or GEN3x2 & GEN4x1 use
-> > > > >> same icc bw and has frequency, so use frequency based search to reduce
-> > > > >> number of entries in the opp table.
-> > > > >>
-> > > > >> Don't initialize icc if opp is supported.
-> > > > >>
-> > > > >> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > > > >> ---
-> > > > >>   drivers/pci/controller/dwc/pcie-qcom.c | 83 ++++++++++++++++++++++++++++------
-> > > > >>   1 file changed, 70 insertions(+), 13 deletions(-)
-> > > > >>
-> > > > >> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > >> index 035953f0b6d8..31512dc9d6ff 100644
-> > > > >> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > > >> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> >
-> > [...]
-> >
-> > > > >>   static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-> > > > >> @@ -1471,8 +1502,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> > > > >>   static int qcom_pcie_probe(struct platform_device *pdev)
-> > > > >>   {
-> > > > >>          const struct qcom_pcie_cfg *pcie_cfg;
-> > > > >> +       unsigned long max_freq = INT_MAX;
-> > > > >>          struct device *dev = &pdev->dev;
-> > > > >>          struct qcom_pcie *pcie;
-> > > > >> +       struct dev_pm_opp *opp;
-> > > > >>          struct dw_pcie_rp *pp;
-> > > > >>          struct resource *res;
-> > > > >>          struct dw_pcie *pci;
-> > > > >> @@ -1539,9 +1572,33 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> > > > >>                  goto err_pm_runtime_put;
-> > > > >>          }
-> > > > >>
-> > > > >> -       ret = qcom_pcie_icc_init(pcie);
-> > > > >> -       if (ret)
-> > > > >> +        /* OPP table is optional */
-> > > > >> +       ret = devm_pm_opp_of_add_table(dev);
-> > > > >> +       if (ret && ret != -ENODEV) {
-> > > > >> +               dev_err_probe(dev, ret, "Failed to add OPP table\n");
-> > > > >>                  goto err_pm_runtime_put;
-> > > > >> +       }
-> > > > >
-> > > > > Can we initialise the table from the driver if it is not found? This
-> > > > > will help us by having the common code later on.
-> > > > >
-> > > > we already icc voting if there is no opp table present in the dts.
-> > >
-> > > Yes. So later we have two different code paths: one for the OPP table
-> > > being present and another one for the absent OPP table. My suggestion
-> > > is to initialise minimal OPP table by hand and then have a common code
-> > > path in qcom_pcie_icc_update().
-> > >
-> >
-> > Are you suggesting to duplicate DT in the driver?
-> 
-> As a fallback for the cases when there is no OPP table in the driver
-> it might make sense. See
-> Otherwise the DT is still somewhat duplicated in the form of calling
-> icc functions directly.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devres
+branch HEAD: 291a79e85626947cebe249188f1b2b8975eaf8e9  PCI: Move devres code from pci.c to devres.c
 
-No, DT is not duplicated. With this approach, we will end up hardcoding the DT
-entries in the driver which sounds backwards to me. Even with 2 different code
-paths, the hardware info will be left to the DT itself, so the driver just
-consumes it.
+elapsed time: 915m
 
-So please, let's not do it.
+configs tested: 138
+configs skipped: 3
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240201   gcc  
+i386         buildonly-randconfig-002-20240201   gcc  
+i386         buildonly-randconfig-003-20240201   gcc  
+i386         buildonly-randconfig-004-20240201   gcc  
+i386         buildonly-randconfig-005-20240201   gcc  
+i386         buildonly-randconfig-006-20240201   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240201   gcc  
+i386                  randconfig-002-20240201   gcc  
+i386                  randconfig-003-20240201   gcc  
+i386                  randconfig-004-20240201   gcc  
+i386                  randconfig-005-20240201   gcc  
+i386                  randconfig-006-20240201   gcc  
+i386                  randconfig-011-20240201   clang
+i386                  randconfig-012-20240201   clang
+i386                  randconfig-013-20240201   clang
+i386                  randconfig-014-20240201   clang
+i386                  randconfig-015-20240201   clang
+i386                  randconfig-016-20240201   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+nios2                         10m50_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      arches_defconfig   gcc  
+powerpc                   currituck_defconfig   gcc  
+powerpc                    ge_imp3a_defconfig   gcc  
+powerpc                     ksi8560_defconfig   gcc  
+powerpc                      ppc40x_defconfig   gcc  
+powerpc                  storcenter_defconfig   gcc  
+powerpc                        warp_defconfig   gcc  
+riscv                            allmodconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+s390                             allmodconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          polaris_defconfig   gcc  
+sh                          r7785rp_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240201   gcc  
+x86_64       buildonly-randconfig-002-20240201   gcc  
+x86_64       buildonly-randconfig-003-20240201   gcc  
+x86_64       buildonly-randconfig-004-20240201   gcc  
+x86_64       buildonly-randconfig-005-20240201   gcc  
+x86_64       buildonly-randconfig-006-20240201   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-011-20240201   gcc  
+x86_64                randconfig-012-20240201   gcc  
+x86_64                randconfig-013-20240201   gcc  
+x86_64                randconfig-014-20240201   gcc  
+x86_64                randconfig-015-20240201   gcc  
+x86_64                randconfig-016-20240201   gcc  
+x86_64                randconfig-071-20240201   gcc  
+x86_64                randconfig-072-20240201   gcc  
+x86_64                randconfig-073-20240201   gcc  
+x86_64                randconfig-074-20240201   gcc  
+x86_64                randconfig-075-20240201   gcc  
+x86_64                randconfig-076-20240201   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
