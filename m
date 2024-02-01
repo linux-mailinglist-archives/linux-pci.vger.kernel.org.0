@@ -1,275 +1,251 @@
-Return-Path: <linux-pci+bounces-2914-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2915-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9A8A8452F8
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 09:43:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7237845432
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 10:38:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 711F21F231E6
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 08:43:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 078931C2592D
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Feb 2024 09:38:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8334C15AAA0;
-	Thu,  1 Feb 2024 08:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AA3B15B984;
+	Thu,  1 Feb 2024 09:36:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQyd9Tfg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mlCbJshU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8100315A4AC
-	for <linux-pci@vger.kernel.org>; Thu,  1 Feb 2024 08:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874884D9F4;
+	Thu,  1 Feb 2024 09:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706776954; cv=none; b=WFusNHUxe11rNjCKqRqjpf1bn/t12dkBskOWoXdnzMgbIvDlOX0b1VGjxuPsxmXLIll9dH5LXdDQoWKOzvcQJ8GkhCKuCWsDAlJphmmmilkhqJH8QSZK3BLLkiMjai2+OeJ12TOFq0RdlEFz+CYVoFZN/jpapNObc/iZbDRnvlE=
+	t=1706780175; cv=none; b=IUnY32Sf0zrmDgBv+z0qPg5jH6GK+MZ7Y4OfNIi4pVxLapwZnVi6Ds46Kp+L6530pdI1JjZAaTQN92aXI9n7YYshGtnTbj6aEtU52mB5eYq7WISi0tYMFr5JaVFpsBzYqL8M2JDqZqDIyBhXmqwijAnc0NAeLp97424NUpFwfhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706776954; c=relaxed/simple;
-	bh=ZNTTpWKcAxjG/qEkzbi4Ez5pg5zJfk6RjGD+HrjJ8Ow=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=tjuIs8QVLxsNdi+2EGzmCKnvpxG8MWKoBzOy+gzKoDC/hmLtTqfMul77xqeS8TtZyKaua7WDwMZY6g636XXCRTgedcYyIljOmhJzJ+awzVVgaq8eQONQ1NFvOIX3r5q2CncPwOwR/gmPfGrGZons4WURHIINK2lfW2atL1sEhII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQyd9Tfg; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706780175; c=relaxed/simple;
+	bh=mDE6VJ8DhRRfEQyPHRAPoOs3sRJP6GQ0yAKIbQgDNBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jpr82hxcBC4Zb6MR14Few0318exBRPWqWCWPsBbhPsTb2gS8ijozRSnAgeTRBQnjzF7Lc2X/s4BMXv/KKPMKx9FySu8OdMzGZhbXCMjXvFOGF8911eXglRZp21h3Wnxs5NiQgWACNiGjI2hhWSH5w730oGC8VMgoDHmw+zSDJC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mlCbJshU; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706776952; x=1738312952;
-  h=date:from:to:cc:subject:message-id;
-  bh=ZNTTpWKcAxjG/qEkzbi4Ez5pg5zJfk6RjGD+HrjJ8Ow=;
-  b=YQyd9TfgPfj0TTMVpafU+jUmhBMdWutU/ft0VfyP7mOmmNY5Bdnm0bDP
-   wIwBT31xcpkEOj/ppDt6WD1w2dDFVumfrxhwfCt3JLnwmFtE3EP+WFia8
-   ePT4FGr8kj9/++omG3oMS4WjL7yFc8lovmXAZhelwYCMM3VpYC1uptXPo
-   7w9UzX15ehvRrPMq6/4jO3r4f9NPZ1ttHq0FLulGLbksPh0XJXrRFmUxD
-   41tS0kE70UideMafK3LtgsbTaHz88OaqLXDg2cPMECHiq+PYk1i03qP3i
-   iCNeNP/E86MiRYxC0rt3d2bTuhIvTfK9qRw7Bjuu70TKTvw+kAuIbBnUR
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="394293500"
+  t=1706780173; x=1738316173;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mDE6VJ8DhRRfEQyPHRAPoOs3sRJP6GQ0yAKIbQgDNBs=;
+  b=mlCbJshUUkif4ugz92BFBhXXxDZKFZHV0hk31YcpZygQOTVlo0ElPCOs
+   I9eSFLmVRWKxVndjonZ5cnqajk4uowb8J+CfrUkDmUeOKmFuW3p3ma7zv
+   Z5/AsSCkLNHNX5Iv0osfgv72Wfdm3EDdXiIsRtLDt8MyjvtMYLRd37mbd
+   Cmz3R1eENFou3+p3o19BBNNLhZVpzwoLZ7NzG4viBpTgucUKhSACEs61B
+   /LZWHfA0m7pViP8+TsYvDa4QAi6Zz2OA7NFAh/+P0WuFySHjMvOKflyRj
+   e7n/ecJk4p3GgUVZVGsT7PAmvEwfvCTTsa8BLWhoCkv7YiYWJZAhK4tPT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="11224962"
 X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="394293500"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 00:42:31 -0800
+   d="scan'208";a="11224962"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:36:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822867640"
 X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="822867640"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 01 Feb 2024 00:42:30 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rVSeS-0002b1-0B;
-	Thu, 01 Feb 2024 08:42:28 +0000
-Date: Thu, 01 Feb 2024 16:42:14 +0800
-From: kernel test robot <lkp@intel.com>
+   d="scan'208";a="30548770"
+Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.41.120])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 01:36:11 -0800
+Date: Thu, 1 Feb 2024 10:36:07 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- 925bd5e08106bd5bfbd1cb8e124c89a0b4003569
-Message-ID: <202402011612.j4lnlkRe-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [RFC] PCI/AER: Block runtime suspend when handling errors
+Message-ID: <ZbtmB2GXPIwW1fLl@linux.intel.com>
+References: <20240123090016.281252-1-stanislaw.gruszka@linux.intel.com>
+ <20240130001436.GA488226@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240130001436.GA488226@bhelgaas>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: 925bd5e08106bd5bfbd1cb8e124c89a0b4003569  MAINTAINERS: Add Manivannan Sadhasivam as PCI Endpoint maintainer
+On Mon, Jan 29, 2024 at 06:14:36PM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 23, 2024 at 10:00:16AM +0100, Stanislaw Gruszka wrote:
+> > PM runtime can be done simultaneously with AER error handling.
+> > Avoid that by using pm_runtime_get_sync() just after pci_dev_get()
+> > and pm_runtime_put() just before pci_dev_put() in AER recovery
+> > procedures.
+> 
+> I guess there must be a general rule here, like "PCI core must use
+> pm_runtime_get_sync() whenever touching the device asynchronously,
+> i.e., when it's doing something unrelated to a call from the driver"?
 
-elapsed time: 1029m
+Clear rules would be nice, that's for sure.
 
-configs tested: 185
-configs skipped: 4
+> Probably would apply to all subsystem cores, not just PCI.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+If they have something similar like AER.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                            hsdk_defconfig   gcc  
-arc                   randconfig-001-20240201   gcc  
-arc                   randconfig-002-20240201   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240201   gcc  
-arm                   randconfig-002-20240201   gcc  
-arm                   randconfig-003-20240201   gcc  
-arm                   randconfig-004-20240201   gcc  
-arm                           sama5_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240201   gcc  
-arm64                 randconfig-002-20240201   gcc  
-arm64                 randconfig-003-20240201   gcc  
-arm64                 randconfig-004-20240201   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240201   gcc  
-csky                  randconfig-002-20240201   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240201   clang
-hexagon               randconfig-002-20240201   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240201   gcc  
-i386         buildonly-randconfig-002-20240201   gcc  
-i386         buildonly-randconfig-003-20240201   gcc  
-i386         buildonly-randconfig-004-20240201   gcc  
-i386         buildonly-randconfig-005-20240201   gcc  
-i386         buildonly-randconfig-006-20240201   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240201   gcc  
-i386                  randconfig-002-20240201   gcc  
-i386                  randconfig-003-20240201   gcc  
-i386                  randconfig-004-20240201   gcc  
-i386                  randconfig-005-20240201   gcc  
-i386                  randconfig-006-20240201   gcc  
-i386                  randconfig-011-20240201   clang
-i386                  randconfig-012-20240201   clang
-i386                  randconfig-013-20240201   clang
-i386                  randconfig-014-20240201   clang
-i386                  randconfig-015-20240201   clang
-i386                  randconfig-016-20240201   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240201   gcc  
-loongarch             randconfig-002-20240201   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                            mac_defconfig   gcc  
-m68k                            q40_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                           gcw0_defconfig   gcc  
-mips                            gpr_defconfig   gcc  
-mips                      loongson3_defconfig   gcc  
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240201   gcc  
-nios2                 randconfig-002-20240201   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc                randconfig-001-20240201   gcc  
-parisc                randconfig-002-20240201   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      arches_defconfig   gcc  
-powerpc                   currituck_defconfig   gcc  
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                    ge_imp3a_defconfig   gcc  
-powerpc                     ksi8560_defconfig   gcc  
-powerpc                      ppc40x_defconfig   gcc  
-powerpc               randconfig-001-20240201   gcc  
-powerpc               randconfig-002-20240201   gcc  
-powerpc               randconfig-003-20240201   gcc  
-powerpc                  storcenter_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-powerpc64             randconfig-001-20240201   gcc  
-powerpc64             randconfig-002-20240201   gcc  
-powerpc64             randconfig-003-20240201   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20240201   gcc  
-riscv                 randconfig-002-20240201   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20240201   clang
-s390                  randconfig-002-20240201   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                          r7785rp_defconfig   gcc  
-sh                    randconfig-001-20240201   gcc  
-sh                    randconfig-002-20240201   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240201   gcc  
-sparc64               randconfig-002-20240201   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240201   gcc  
-um                    randconfig-002-20240201   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240201   gcc  
-x86_64       buildonly-randconfig-002-20240201   gcc  
-x86_64       buildonly-randconfig-003-20240201   gcc  
-x86_64       buildonly-randconfig-004-20240201   gcc  
-x86_64       buildonly-randconfig-005-20240201   gcc  
-x86_64       buildonly-randconfig-006-20240201   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-011-20240201   gcc  
-x86_64                randconfig-012-20240201   gcc  
-x86_64                randconfig-013-20240201   gcc  
-x86_64                randconfig-014-20240201   gcc  
-x86_64                randconfig-015-20240201   gcc  
-x86_64                randconfig-016-20240201   gcc  
-x86_64                randconfig-071-20240201   gcc  
-x86_64                randconfig-072-20240201   gcc  
-x86_64                randconfig-073-20240201   gcc  
-x86_64                randconfig-074-20240201   gcc  
-x86_64                randconfig-075-20240201   gcc  
-x86_64                randconfig-076-20240201   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240201   gcc  
-xtensa                randconfig-002-20240201   gcc  
+> > I'm not sure about DPC case since I do not see get/put there. It
+> > just call pci_do_recovery() from threaded irq dcd_handler().
+> > I think pm_runtime* should be added to this handler as well.
+> 
+> s/dcd_handler/dpc_handler/
+>
+> I'm guessing the "threaded" part really doesn't matter; just the fact
+> that this is in response to an interrupt, not something directly
+> called by a driver?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yes. I added "threaded" just to emphasis that it's safe to add sleeping
+functions there. In context of possible solution, not related to
+the problem itself.
+ 
+> > pm_runtime_get_sync() will increase dev->power.usage_count counter to
+> > prevent any rpm actives. When there is suspending pending, it will wait
+> > for it and do the rpm resume. Not sure if that problem, on my testing
+> > I did not encounter issues with that.
+> 
+> Sorry, I didn't catch your meaning here.
+I tired to write two things:
+
+First, pm_runtime_get_sync() after exit prevents possibility of
+runtime suspend, so we are sure device will not be powered off
+
+Second, if during pm_runtime_get_sync(), there is pending attempt
+to suspend device, it will be synchronized and device will
+be resumed. This can be problematic as device is in error state.
+But at least from software perspective we should end in device
+being in active state and then we can perform reset of it.
+
+[ Third scenario, i.e device is suspended, and device has to be resumed
+by pm_runtime_get_sync() can not really happen, because we can not
+get error from disabled device. ]
+
+... after writing this I realized that is not true, as we can do
+recovery for several devices on subordinate bus, some of them can
+be rpm suspended, I presume. Need to think more about this case.
+
+> IIUC, you can reproduce the
+> problem with the simultaneous aer_inject and rpm suspend/resume, and
+> this patch fixes it.
+
+Yes.
+
+> But there's some other scenario where you *don't* see the problem?
+
+For example there are no runtime pm related race conditions with
+.probe, .remove , (system) .suspend, .resume. All of those have 
+proper synchronization with runtime pm in the device core.
+
+> > I tested with igc device by doing simultaneous aer_inject and 
+> > rpm suspend/resume via /sys/bus/pci/devices/PCI_ID/power/control
+> > and can reproduce: 
+> > 
+> > [  853.253938] igc 0000:02:00.0: not ready 65535ms after bus reset; giving up
+> > [  853.253973] pcieport 0000:00:1c.2: AER: Root Port link has been reset (-25)
+> > [  853.253996] pcieport 0000:00:1c.2: AER: subordinate device reset failed
+> > [  853.254099] pcieport 0000:00:1c.2: AER: device recovery failed
+> > [  853.254178] igc 0000:02:00.0: Unable to change power state from D3hot to D0, device inaccessible
+> 
+> Drop the timestamps; they don't add to understanding the problem.
+
+Ok.
+
+Regards
+Stanislaw
+> 
+> > The problem disappears when applied this patch.
+> > 
+> > Signed-off-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+> > ---
+> >  drivers/pci/pcie/aer.c | 8 ++++++++
+> >  drivers/pci/pcie/edr.c | 3 +++
+> >  2 files changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 42a3bd35a3e1..9b56460edc76 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -23,6 +23,7 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/errno.h>
+> >  #include <linux/pm.h>
+> > +#include <linux/pm_runtime.h>
+> >  #include <linux/init.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/delay.h>
+> > @@ -813,6 +814,7 @@ static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+> >  {
+> >  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+> >  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+> > +		pm_runtime_get_sync(&dev->dev);
+> >  		e_info->error_dev_num++;
+> >  		return 0;
+> >  	}
+> > @@ -1111,6 +1113,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+> >  {
+> >  	cxl_rch_handle_error(dev, info);
+> >  	pci_aer_handle_error(dev, info);
+> > +
+> > +	pm_runtime_put(&dev->dev);
+> >  	pci_dev_put(dev);
+> >  }
+> >  
+> > @@ -1143,6 +1147,8 @@ static void aer_recover_work_func(struct work_struct *work)
+> >  			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+> >  			continue;
+> >  		}
+> > +		pm_runtime_get_sync(&pdev->dev);
+> > +
+> >  		pci_print_aer(pdev, entry.severity, entry.regs);
+> >  		/*
+> >  		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
+> > @@ -1159,6 +1165,8 @@ static void aer_recover_work_func(struct work_struct *work)
+> >  		else if (entry.severity == AER_FATAL)
+> >  			pcie_do_recovery(pdev, pci_channel_io_frozen,
+> >  					 aer_root_reset);
+> > +
+> > +		pm_runtime_put(&pdev->dev);
+> >  		pci_dev_put(pdev);
+> >  	}
+> >  }
+> > diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> > index 5f4914d313a1..bd96babd7249 100644
+> > --- a/drivers/pci/pcie/edr.c
+> > +++ b/drivers/pci/pcie/edr.c
+> > @@ -10,6 +10,7 @@
+> >  
+> >  #include <linux/pci.h>
+> >  #include <linux/pci-acpi.h>
+> > +#include <linux/pm_runtime.h>
+> >  
+> >  #include "portdrv.h"
+> >  #include "../pci.h"
+> > @@ -169,6 +170,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+> >  		return;
+> >  	}
+> >  
+> > +	pm_runtime_get_sync(&edev->dev);
+> >  	pci_dbg(pdev, "Reported EDR dev: %s\n", pci_name(edev));
+> >  
+> >  	/* If port does not support DPC, just send the OST */
+> > @@ -209,6 +211,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+> >  		acpi_send_edr_status(pdev, edev, EDR_OST_FAILED);
+> >  	}
+> >  
+> > +	pm_runtime_put(&edev->dev);
+> >  	pci_dev_put(edev);
+> >  }
+> >  
+> > -- 
+> > 2.34.1
+> > 
+> 
 
