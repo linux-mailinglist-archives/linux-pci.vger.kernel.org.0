@@ -1,157 +1,141 @@
-Return-Path: <linux-pci+bounces-2984-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2985-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 254E8846A75
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 09:19:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28E4D846AD3
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 09:37:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73FE1B20C66
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 08:19:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 563001C2540A
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 08:37:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDC2441218;
-	Fri,  2 Feb 2024 08:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42E5554BD5;
+	Fri,  2 Feb 2024 08:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vhjaHTTr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gm91MX46"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F183947F45
-	for <linux-pci@vger.kernel.org>; Fri,  2 Feb 2024 08:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1AC18C3B
+	for <linux-pci@vger.kernel.org>; Fri,  2 Feb 2024 08:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706861610; cv=none; b=J2dz7s2HAdw4UnE5ezd/0JZgnftm7FIfUdg71j6c7jeUjBXsLrcVpjlT+2Hknfn8p/LYUdjpVAbqg8TRM8rt8e3SgNV/4WCqhwjeX1DqmZFIc6/hDK86upGz620Hcwmq7v2UXCAEx9vA6PGVC9WD7kb21VlwgTbFWFvXr8Ca0FA=
+	t=1706863032; cv=none; b=V/mD6Ysbe0um2eBwvBnYteLJZp9vVaOV/7IFt5gWvEzOeXA/iXgBsJN+pFGysk5P+LlT+xY1WrS93/V41tfJ+AGvo2yshxwMfuBN//+/Q4edeJqx/bYMi1/T/ddze/IK3EE0q9stYtdMUmjheU8qbOdX+0sb6Qc0RYTlOcjYAMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706861610; c=relaxed/simple;
-	bh=KSqyD8wFxqc0yy9pvP/WpF5qy+7BoasQAlz83MIgEFM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aIZZY9XthZFrg9NgOCjMNehu3Fs5oaAqS7K5adAg8ieqqHplxk1qcP1WaRN51yXw8YswvCpPD3+e4Wem/io+nQ5bGvmIzgYCsiBY64DKnQ/ycXfFnE921r8LyfHlYPqbKNMJT0Ezf8eYSUkqcLBb5z3+ubWmDpffYgHoHfGz/Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vhjaHTTr; arc=none smtp.client-ip=209.85.167.45
+	s=arc-20240116; t=1706863032; c=relaxed/simple;
+	bh=Czyfyr+8UKrQ+XX6ruEHTKv5D+HXacJ7bTJvUHfQlFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQu6uNfQcPdRSNqVKlPNzdy/+i9Gr4IkhPlGfHNQ8TOk/e8HXVOknmVeXmDxgaR/NCNKcvMbKfrjb9btYITW5limh1IgzZO5Hgzgy3+yP2906D8GgPln9HQiwJO56U9V7XvMpL3N8JgQDJHIiy1A3lk6qN+Mvsefa2sf0LA59xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gm91MX46; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-511344235c6so904430e87.0
-        for <linux-pci@vger.kernel.org>; Fri, 02 Feb 2024 00:13:28 -0800 (PST)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3bba50cd318so1467321b6e.0
+        for <linux-pci@vger.kernel.org>; Fri, 02 Feb 2024 00:37:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706861607; x=1707466407; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6ggsCfwMJnBPvg51wpVBNnYRzEbc6WGF98qXbqSsoo8=;
-        b=vhjaHTTrRv55XOLOwhJ9ehANIc8/geNwHoPaqGGStTFUBTd+KSjEZjQt1FKZePPm6h
-         w9ZWFXc1tuu9YBXOrrN+Fu6uvce3sl/XcmaAm9oHfBEQP+HIvgkro/sPKFON/vCrWBYI
-         ydaJqTqJn0G/ccQ6gMIJfh8OlvXoqOiX3H2xY54CbRBoVD+2IfvTlJsYFQ9eSticAmoz
-         1LUOWWrkiEW0+/WKElOVV2AiZlaSVkvukvZcqFKSx940LZmbjw3oYwOgor4oqGI8cZfA
-         p+22F49PV46lE9JeNOVxijWi/FDWnbxQ5AReHZ6l/qTYdUMkkrH5qbESiq0Qqbup2u3C
-         KgGA==
+        d=linaro.org; s=google; t=1706863028; x=1707467828; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bSVa4tdnarzL2RCty+6WSO/tCFxJU0zF/PeB4CCvMzU=;
+        b=gm91MX46JKYbjXDDKYtTf1SQzg2lSvQOJioWoHky2+951OEem4+ZDtuclFBP+kNAGJ
+         HudO2qIoVjdN41D5fBS9pFTLD6C2oQ/QEydTjqWNpPs0aZoHP4I+1fSAC1/e3YqrIbgl
+         /ItGMyoMoEYd21wtleUT58jTdEOSu2tkAGUy3kSAlHVOHo2yXHGQ8sDvemUau8IOEnVm
+         D4GHjdEzrquA7aJulsdM3v88kUEsEcsDwXFRMiLQ1UX/e2eVhZUT5/MBqFvYfJc0BF1Z
+         ukMFHmgFRPfLFrPi4j675986IKqQ8ryiJnLXgwfmG7PvueE1znR0gg4fsYn3iFZI3IH4
+         /7yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706861607; x=1707466407;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6ggsCfwMJnBPvg51wpVBNnYRzEbc6WGF98qXbqSsoo8=;
-        b=GOgeAxBFXzn1YeueM8yBxXCecrqm7+QTShVaay9cGbbmciSQdzfXKOAhiTxGUJEK5/
-         elHr+BqO+dBmCsbNEqpDvBDWguXc8Z6kAnH8JjMdFBjlK5OyrrEWkETwdJcz/JBgI70+
-         jJj5OJvFuPTIIOjDLndpRicd+3fMrhJPWM4vAdn8KZoZLmd4GN6tEDtlcu2wSGMChuG+
-         /XGqHOpHYgy+qU3rgGE9EchvqpneiHvhkKWQxfCSi1JGSCOwEolgjiHCsY/4mTf34ZFw
-         R6buGaxMbwaJ+AlMIOiMYyDGt9goC/G17hK0X3jRSnAZPzvZJB7QrBPPm0F4XVSQ+ub4
-         rKdQ==
-X-Gm-Message-State: AOJu0Yw5jU1lfRk4rq60Dsx1n1OI/TGM8RDLNStgO7qxI8ghZjzDNds2
-	06/sM5qgkHv++HWF5DN6CmHySxc/guAQV5LLD32ogs8KNi7ka+qAP4t8jV+5BaWcarq7WWj3CYQ
-	WtorTsQ==
-X-Google-Smtp-Source: AGHT+IEJZvr5kBd7N/uLExR+nlfQRTw3XzobmgpihI7SxYGEJ7N7Rzp7gcee9AvFMvm88xVUmJnjvQ==
-X-Received: by 2002:a19:6554:0:b0:511:33a4:f9ed with SMTP id c20-20020a196554000000b0051133a4f9edmr730537lfj.66.1706861606951;
-        Fri, 02 Feb 2024 00:13:26 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXmVd6YvaDYmQQ8oB5BhpZPgJvR2HoqkJuxrJAYY99jZ/su1ySz622Zvp3FmKkqKAx6WylUJJUYzhQeb7/31o/noVHuwxRMhkuniEHNbRCaRE+Xz6bKV/6nVhyJsS2eYDPYuQA4h/ZgHmiMGDCn1qZN4kSH2D3ZgmEqGFQ0qOqlw47a/vOWmyUyvI+/a0bmZWW+4yXQc9ir/Q+R9WQXN3cmS1kgcvQKsYugN+fNqcgH21auvOUh9pLzj3zKwbUKGla0IJA99pVQxShv9UJmjsniID3rVJ6iFxjJKNDPrEm/J+BzhrftdE1yERov1hrzyBaR0TcOaVNvVrLLKCMjVF6wX9nNaw==
-Received: from ?IPV6:2a01:e0a:982:cbb0:560a:f70f:7627:2c48? ([2a01:e0a:982:cbb0:560a:f70f:7627:2c48])
-        by smtp.gmail.com with ESMTPSA id 13-20020a05600c228d00b0040fb0c90da6sm6547641wmf.14.2024.02.02.00.13.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 00:13:26 -0800 (PST)
-Message-ID: <a0034c34-4af7-4733-93f7-f82f665f36f3@linaro.org>
-Date: Fri, 2 Feb 2024 09:13:25 +0100
+        d=1e100.net; s=20230601; t=1706863028; x=1707467828;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bSVa4tdnarzL2RCty+6WSO/tCFxJU0zF/PeB4CCvMzU=;
+        b=ZOCsWgXqRIAMsRGl54lrsUvUQOhKJNmcGubdt3nqFrcuVrr6ovhYuv7/gFdzyhYSVY
+         rw89l3CNaaVdeS8297uTf1gui2g0AxjyJFwLMlFgwHsPyhaFMXifYYrv4ikbYnhHAMHN
+         xszwtrLCexAEBIMmoi8kY1m2dGgfk5rN3A8Lh64Icntxe8kntttDzBm23gZfh3SFdg6b
+         GxkI3HRHrB5SbMaGSMVgipBm1jbqPfp2nO5P1nws1Oq0U+R4M0MT2IPKBvLbl9U2hEy7
+         ecuZcLG17GqWGKDW/rLyEX+UTR0f926ijRokUpCcUQ1ljfcu7ORIZu1kZgfcg1ApjZRt
+         Z83A==
+X-Gm-Message-State: AOJu0YxISXoQSsXkm6PfEE05d46TkN7xgNwdXhV1kSwgpn66E4CODHhl
+	NH0ABM97ZZXnyKv+xmKrW+2ac++CqjNlI78/vSU7WsVEuEscFOuIKrWuR1ao8w==
+X-Google-Smtp-Source: AGHT+IGPn26W49Y/fv0406NegzmywFht1rc4/4sVvSA2xSWRrwV8LyXlXjr6gVQA5zWJm3hYY+2P2Q==
+X-Received: by 2002:a05:6808:1a8c:b0:3be:5d77:cfa7 with SMTP id bm12-20020a0568081a8c00b003be5d77cfa7mr7226958oib.1.1706863028549;
+        Fri, 02 Feb 2024 00:37:08 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWTL1PQAzxV0geR3WrgESJkz78kNMxmsYVbPIJbqltu/GulAojCJxjGumkUXdnOo1LrWQvIcQCDj5QQuoRAJrqrtt33m1Uk6GK510HfYKN2iC/Hla7bOdQx+UWR3U0Kmwlgn0zPdiFg98KhF6pmTYlMi08LO+KIK5ERvScCAhrBI3OK5LT01n1wjSJ7hC9VLQS2tD0Gb78QcQXxB/ju4B62VsdjMyN9BOSxq0cDTDLCFL7sO5RBXGxQs6aAdfqqYIYkIjshpISuPjhCShbLd/iO/M0XTOxJREtJp8OTjB6uvznF3bZpOda+
+Received: from thinkpad ([120.56.198.122])
+        by smtp.gmail.com with ESMTPSA id g3-20020a62e303000000b006d9a6a9992dsm1044148pfh.123.2024.02.02.00.37.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 00:37:08 -0800 (PST)
+Date: Fri, 2 Feb 2024 14:07:01 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>, ntb@lists.linux.dev,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI: endpoint: refactor pci_epf_alloc_space()
+Message-ID: <20240202083701.GC2961@thinkpad>
+References: <20240130193214.713739-1-cassel@kernel.org>
+ <20240130193214.713739-2-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Add X1E80100 PCIe support
-Content-Language: en-US, fr
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, Abel Vesa
- <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240129-x1e80100-pci-v2-0-a466d10685b6@linaro.org>
- <20240129-x1e80100-pci-v2-2-a466d10685b6@linaro.org>
- <30360d96-4513-40c4-9646-e3ae09121fa7@linaro.org>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <30360d96-4513-40c4-9646-e3ae09121fa7@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240130193214.713739-2-cassel@kernel.org>
 
-On 01/02/2024 20:20, Konrad Dybcio wrote:
-> On 29.01.2024 12:10, Abel Vesa wrote:
->> Add the compatible and the driver data for X1E80100.
->>
->> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 10f2d0bb86be..2a6000e457bc 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -1642,6 +1642,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->>   	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
->>   	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
->>   	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
->> +	{ .compatible = "qcom,pcie-x1e80100", .data = &cfg_1_9_0 },
+On Tue, Jan 30, 2024 at 08:32:09PM +0100, Niklas Cassel wrote:
+> Refactor pci_epf_alloc_space() to take epc_features as a parameter.
+> This is a preparation patch needed for further cleanups.
 > 
-> I swear I'm not delaying everything related to x1 on purpose..
-> 
-> But..
-> 
-> Would a "qcom,pcie-v1.9.0" generic match string be a good idea?
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
-Yes as fallback, this is why I used qcom,pcie-sm8550 as fallback for SM8650.
+One comment below. With that addressed,
 
-> 
-> Konrad
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 5 ++---
+>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 4 ++--
+>  drivers/pci/endpoint/pci-epf-core.c           | 6 ++++--
+>  include/linux/pci-epf.h                       | 4 +++-
+>  5 files changed, 12 insertions(+), 9 deletions(-)
 > 
 
+[...]
+
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 2c32de667937..e44f4078fe8b 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -251,14 +251,16 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
+>   * @epf: the EPF device to whom allocate the memory
+>   * @size: the size of the memory that has to be allocated
+>   * @bar: the BAR number corresponding to the allocated register space
+> - * @align: alignment size for the allocation region
+> + * @epc: the features provided by the EPC specific to this endpoint function
+>   * @type: Identifies if the allocation is for primary EPC or secondary EPC
+>   *
+>   * Invoke to allocate memory for the PCI EPF register space.
+>   */
+>  void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+> -			  size_t align, enum pci_epc_interface_type type)
+> +			  const struct pci_epc_features *epc_features,
+
+s/epc/epc_features
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
