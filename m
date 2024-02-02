@@ -1,108 +1,161 @@
-Return-Path: <linux-pci+bounces-3035-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3036-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C074A847563
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 17:52:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 719508475A4
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 18:05:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1F461C27526
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 16:52:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 098E5B29F5B
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 17:05:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9189C14A0B6;
-	Fri,  2 Feb 2024 16:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7558414901A;
+	Fri,  2 Feb 2024 17:03:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2D9EslL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPZbVFv7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDB6148FFA;
-	Fri,  2 Feb 2024 16:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECC214900B;
+	Fri,  2 Feb 2024 17:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706892736; cv=none; b=msi8S+hEbvxEt3m6/f87l00AbL7gQdvMu/cZjDzUMqlj8LoUYYIxpW0mXxU2PFWzcDOxmJ9i9ij1JaZsJbWgbRLkHrkgYdz+SRLGjlQ+Jq1gMdRGAbDVWQjb4taRStSvnFpKD9aVzhZ0DdMBITp97486PwLac1x9HHizBAEICTk=
+	t=1706893402; cv=none; b=TgsOlk1PuPIeX+pl88BYgPgPdfYvoNZzGNsKsjimBmkdsT4jsubtYWi408GNnJFtP9aKuOIxgBvFlOQVHQcRNQXf9ZYtEMFKKG81Aa/H0U75jjDDOXjD12DIeBdNw5OTGOMqAA0/i1DPJD6csSZbG8e2ybPqqXRSZFbs8bvFuGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706892736; c=relaxed/simple;
-	bh=o6Wk5X1+6XzuAVSiW3qXZI3/x4eFqjgXnq87Cvd29GI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtCb91fRUVqajnrpaQ8mpoiCY35U8T8pPscEXWaDjmmgRE5Keg5lzI8TOmU61kHf37d9HRYGdVfS5TVy4gKZ+04/lomprZhrd9RQGNsie80i0E0IQEpuCX9LmZkyWwbjevTADjaOfNLx0/caBBi4q0vJQrbQuxYNfI7EtxVzt9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2D9EslL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E628FC433F1;
-	Fri,  2 Feb 2024 16:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706892735;
-	bh=o6Wk5X1+6XzuAVSiW3qXZI3/x4eFqjgXnq87Cvd29GI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f2D9EslL+3JfRKRa4YVOQ6d3cpGJBLXuXVPoK7d3gweqK5VgBTvQvTMm2uTxWg6AF
-	 FsjPVQ23903rAzgBgl5LC+dLx7E8JI8a0il9LUcp5exeLA6UXPHIaTwBOcZXr3Wk0H
-	 661iqFLChJGxHaRXPSNiTN6dEtPMs4YFlogPE7ooBrt6vw/g0iv9J50tlIBW0sNAlH
-	 QG6wEOudTpX/y3Ilp/dsZYX1XCfdEdR0GJxfyR4yrtOZMJColGW8gdbvr41Nnebooa
-	 BK8OadhTp8LBEa3R1tzpgx4xwZ2KXER3c2SW6NHaAaBia9jiZq6JjEGIsZ9rEfLmQE
-	 5RZOmsYJmtOJw==
-Date: Fri, 2 Feb 2024 10:52:11 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: Re: [RFC 8/9] PCI/pwrctl: add PCI power control core code
-Message-ID: <2q5vwm7tgmpgbrm4dxfhypbs5pdggprxouvzfcherqeevpjhrj@6wtkv4za2gg5>
-References: <20240201155532.49707-1-brgl@bgdev.pl>
- <20240201155532.49707-9-brgl@bgdev.pl>
- <7tbhdkqpl4iuaxmc73pje2nbbkarxxpgmabc7j4q26d2rhzrv5@ltu6niel5eb4>
- <CAMRc=Md1oTrVMjZRH+Ux3JJKYeficKMYh+8V7ZA=Xz_X1hNd1g@mail.gmail.com>
+	s=arc-20240116; t=1706893402; c=relaxed/simple;
+	bh=rZLMeTlxZA/EwnRxj6VIy4cYWe9sHIWrTOCd03DOiuw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DLPAWea0wXwiI1WJUrE0rreer/jtpRoLcQ8hNsiNnkNF6Ky/iryhtbK3j0NCgYMqTTDxYExpAeRHx10VH+zzKBRQdB07pcUW/g1ceBToRGymTutb4hUQ9VRnzrJ5VNSdajDZ8kU4tmklktPLOMjB/MF1BiIyb1trtPSjakJVufM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPZbVFv7; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706893401; x=1738429401;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rZLMeTlxZA/EwnRxj6VIy4cYWe9sHIWrTOCd03DOiuw=;
+  b=IPZbVFv7xR+FGxn/6z3HPHrnRVzXtx6YYPS71NkZY9MtJBCchAF8XyHP
+   fwQuhI7mSjQCj1A/ExNWUiCCDDuLHUJrVpE7pJtgorrrwwIX++QVQtl52
+   quOzYuAn2XOm3zQ2sbfqA8hK6QSiiNAyrllH/5lsWclSC+s8X5/rRseOH
+   utdAF/7CBWL1mf7XYmezhJ/VuyhcFM9xdjVO5aPZzjs8292PT08hR6tX9
+   gpMGbkyEffKXiAlvsXGpoD0KnUTeMyOKKkQ6an7P3uQ/0Xz0eq3zvSu8k
+   XZ5BkvSXL9VleoKl+wnnFV14oxWJJ5vEwvNFIok1BPUuyV3x7LcMocZXS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="11560083"
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="11560083"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 09:03:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
+   d="scan'208";a="417485"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.50.66])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 09:03:17 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 2 Feb 2024 19:03:12 +0200 (EET)
+To: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+    linux-pci@vger.kernel.org, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 2/2] PCI: Do not wait for disconnected devices when
+ resuming
+In-Reply-To: <964b697f-a412-2fd5-a649-036e9f6b596e@linux.intel.com>
+Message-ID: <088bce2b-1d2f-f921-1fdb-b411abc9fe71@linux.intel.com>
+References: <20240129185544.GA471021@bhelgaas> <964b697f-a412-2fd5-a649-036e9f6b596e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-1519507509-1706893392=:1020"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1519507509-1706893392=:1020
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md1oTrVMjZRH+Ux3JJKYeficKMYh+8V7ZA=Xz_X1hNd1g@mail.gmail.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Fri, Feb 02, 2024 at 10:11:42AM +0100, Bartosz Golaszewski wrote:
-> On Fri, Feb 2, 2024 at 4:53 AM Bjorn Andersson <andersson@kernel.org> wrote:
-[..]
-> > > +             break;
-> > > +     }
-> > > +
-> > > +     return NOTIFY_DONE;
-> > > +}
-> > > +
-> > > +int pci_pwrctl_device_enable(struct pci_pwrctl *pwrctl)
-> >
-> > This function doesn't really "enable the device", looking at the example
-> > driver it's rather "device_enabled" than "device_enable"...
-> >
-> 
-> I was also thinking about pci_pwrctl_device_ready() or
-> pci_pwrctl_device_prepared().
+On Tue, 30 Jan 2024, Ilpo J=C3=A4rvinen wrote:
 
-I like both of these.
+> On Mon, 29 Jan 2024, Bjorn Helgaas wrote:
+>=20
+> > On Mon, Jan 29, 2024 at 01:27:10PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > > On runtime resume, pci_dev_wait() is called:
+> > >   pci_pm_runtime_resume()
+> > >     pci_pm_bridge_power_up_actions()
+> > >       pci_bridge_wait_for_secondary_bus()
+> > >         pci_dev_wait()
+> > >=20
+> > > While a device is runtime suspended along with its PCIe hierarchy, th=
+e
+> > > device could get disconnected. In such case, the link will not come u=
+p
+> > > no matter how log pci_dev_wait() waits for it.
+> >=20
+> > s/PCIe/PCI/ (unless this is a PCIe-specific thing)
+> > s/log/long/
+> >=20
+> > > Besides the above mentioned case, there could be other ways to get th=
+e
+> > > device disconnected while pci_dev_wait() is waiting for the link to
+> > > come up.
+> > >=20
+> > > Make pci_dev_wait() to exit if the device is already disconnected to
+> > > avoid unnecessary delay. As disconnected device is not really even a
+> > > failure in the same sense as link failing to come up for whatever
+> > > reason, return 0 instead of errno.
+> >=20
+> > The device being disconnected is not the same as a link failure.
+>=20
+> This we agree and it's what I tried to write above.
+>=20
+> > Do
+> > all the callers do the right thing if pci_dev_wait() returns success
+> > when there's no device there?
+>=20
+> It's a bit complicated. I honestly don't know what is the best approach=
+=20
+> here so I'm very much open to your suggestion what would be preferrable.
+>=20
+> There are two main use cases (more than two callers but they seem boil=20
+> down to two use cases).
+>=20
+> One use case is reset related functions and those would probably prefer t=
+o=20
+> have error returned if the wait, and thus reset, failed.
+>=20
+> Then the another is wait for buses, that is,=20
+> pci_bridge_wait_for_secondary_bus() which return 0 if there's no device=
+=20
+> (wait successful). For it, it would make sense to return 0 also when=20
+> device is disconnected because it seems analoguous to the case where=20
+> there's no device in the first place.
+>=20
+> Perhaps it would be better to return -ENOTTY from pci_dev_wait() and chec=
+k=20
+> for that disconnected condition inside=20
+> pci_bridge_wait_for_secondary_bus()? To further complicate things,=20
+> however, DPC also depends on the return value of=20
+> pci_bridge_wait_for_secondary_bus() and from its perspective, returning=
+=20
+> error when there is a device that is disconnected might be the desirable=
+=20
+> alternative (but I'm not fully sure how everything in DPC works but I=20
+> highly suspect I'm correct here).
 
-I guess the bigger question is how the flow would look like in the event
-that we need to power-cycle the attached PCIe device, e.g. because
-firmware has gotten into a really bad state.
+Just to note here I intend to reverse the return to -ENOTTY in v2.=20
+It is easier and doing anything more complicated than that felt=20
+over-engineering because it would have just avoided marking same=20
+disconnected devices disconnected for another time which is harmless.
 
-Will we need an operation that removes the device first, and then cut
-the power, or do we cut the power and then call unprepared()?
+--=20
+ i.
 
-Regards,
-Bjorn
-
-> 
-> Bart
-> 
-> [snip!]
+--8323328-1519507509-1706893392=:1020--
 
