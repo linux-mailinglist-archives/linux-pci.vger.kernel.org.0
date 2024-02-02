@@ -1,274 +1,252 @@
-Return-Path: <linux-pci+bounces-3031-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3032-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F289C847321
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 16:27:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F0480847452
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 17:12:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D2891C21682
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 15:27:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 062271C251A6
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 16:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8716144629;
-	Fri,  2 Feb 2024 15:27:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903291482F4;
+	Fri,  2 Feb 2024 16:09:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fp1UGuaX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7YvTGd6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2563522085;
-	Fri,  2 Feb 2024 15:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3071474A1;
+	Fri,  2 Feb 2024 16:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706887663; cv=none; b=knv4iTU8+T3cEmmZSFJZZ5U8uXsmwKrQpCoOoYpf0KGIlJyOjWIUWh2GXv4muOipaJd1l0cQCWjcUDkaU5NYam933t9D1Yb1kf0IMDfPheDfuW1duwXYJ0EU3/HfjVlBMxzENiFJsr5AK8+JjMxakW4d8zD24hWwe9qFH47K0Kk=
+	t=1706890169; cv=none; b=R2wU+0c9w8JiE89whoLDVEZ87XVxNlNEksb09wpxz7wE43d9DYVCt0FEVTg/FP0TQnYWpf2qMI6Fq10m5lnS4enwXqpLVSq4zl1OYJlq4ofwRThX7SaMl1eYnLGT4/wNyYqED5loEMd4vRqUrtRGVSSJm86w1WtXNnm6+gpsCRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706887663; c=relaxed/simple;
-	bh=RhCaan2xTl8pGQjWVw71sQan87Rb8PlWXG6TrDgynRg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PJIw5WLBEs3KFfcVUomraKljLAMgHxOTaCp03Stl10sCr2LXkjZFYhJFQJ8GWEPsKK4ZZpyYBWhr50Yj0Qyl/2x8K248E/krRae9jzKpj79Z3BgrmQqCqEVhinqAfYnzMpsPIazHwKYQkY+9daKd4EYV+OWzn0H3MXOFkNYfwR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fp1UGuaX; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706887662; x=1738423662;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=RhCaan2xTl8pGQjWVw71sQan87Rb8PlWXG6TrDgynRg=;
-  b=fp1UGuaXrClAb6fC5wlH2lsdisU2HNcGvL0ZZOFOAlJ8Fmc4/NSTl3Wj
-   zOT2KmeX7W0jwDhDGTQUF1Vqf77YIeAttpbtd7YZqQdn1SwVw3SV/8P/A
-   x6UI/BSsr+9AmQTq18SbpgctFc9J0AaM7oj5mcchlzJf/7pM7FhAcytlY
-   RDmpGp0Gy9FeFllT5kCjk5EC7OhhF26WiT7pi5JvbfLkDAShJvr+xEAxd
-   NknwtplfhO1v2Nzbily3n8BImnR5nHW8a9k0PpDlXBwk+0/LQIt1KfAOj
-   N8MtdvFUZqi+tPWdRQeWsy6Ov8OhWMSrDgUK4LAOFvihfsKG0J+iCPhmU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10971"; a="338877"
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="338877"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 07:27:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,238,1701158400"; 
-   d="scan'208";a="376364"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.50.66])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2024 07:27:39 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 Feb 2024 17:27:34 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
- quirk
-In-Reply-To: <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk>
-Message-ID: <d9f6efe3-3e99-0e4b-0d1c-5dc3442c2419@linux.intel.com>
-References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk> <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com> <d5f14b8f-f935-5d5e-e098-f2e78a2766c6@linux.intel.com>
- <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk>
+	s=arc-20240116; t=1706890169; c=relaxed/simple;
+	bh=JKjik19irTKxH29Yeweq9zfMl6xdzxEg/mcUMqTql/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKyFF+Mg7vUQTLzggEEE6HMcS+F2OOsqAZIAMqTi41StXh5tm5/aiQ4NHpFV7WYf3LOcd53ysqpxJK7wVXLZ0xd3q16HRtdSXc+k7mjptRrHsixkE8AYYz/m21jKOWLPR3Fq8OoHPRsEcsMMpShg4OfyVJvJXsKNQM7kjJjx5m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7YvTGd6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28503C43390;
+	Fri,  2 Feb 2024 16:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706890168;
+	bh=JKjik19irTKxH29Yeweq9zfMl6xdzxEg/mcUMqTql/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G7YvTGd6PqeZiR/6qwBVmTm6pnRj4NRc0t7Fe3yBdyiZueJYfHWnjr/WF33qsQ3NM
+	 9BkYwn4HAtLckhN4p+XA5NePJpResF+HzXgsnwJf6gnOIMUu7LTOypFH6JbL53mXJZ
+	 SSD5BOtTIJgyjm0c56PUA0Ayk/lu9aggST3FmdNxx7J5eEputg3mPURGBbkT0tQAPZ
+	 4CaU2c3foqmWduaXLmEuFxDK0Vif8gqBw0M23ydFLgO6qgSQmMP0iEZTtomVzA8nog
+	 fIun+LiASDvAXFh9yGnQxorH8bK4L9bDiZs+r6Xlgcvcm7nPX9rHVEQjXPwua2SvW2
+	 +mclvUQYrBzNA==
+Date: Fri, 2 Feb 2024 10:09:25 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: Re: [RFC 2/9] arm64: dts: qcom: qrb5165-rb5: model the PMU of
+ the QCA6391
+Message-ID: <sdxnybvszlcfrjexc2fuqkozormhsrx6guauvnlozuh5c6poec@kj2wlb4tnbnz>
+References: <20240201155532.49707-1-brgl@bgdev.pl>
+ <20240201155532.49707-3-brgl@bgdev.pl>
+ <5lirm5mnf7yqbripue5nyqu6ej54sx4rtmgmyqjrqanabsriyp@2pjiv5xbmxpk>
+ <CAA8EJpp=gYhx6XKHNzyR5n8i7vg-MJXN5XJp4CPKZMYS5GBHvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-987821708-1706879739=:1020"
-Content-ID: <9428fc1c-220f-94a7-802d-c45a846ed36f@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJpp=gYhx6XKHNzyR5n8i7vg-MJXN5XJp4CPKZMYS5GBHvw@mail.gmail.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, Feb 02, 2024 at 06:59:48AM +0200, Dmitry Baryshkov wrote:
+> On Fri, 2 Feb 2024 at 06:34, Bjorn Andersson <andersson@kernel.org> wrote:
+> >
+> > On Thu, Feb 01, 2024 at 04:55:25PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Add a node for the PMU module of the QCA6391 present on the RB5 board.
+> > > Assign its LDO power outputs to the existing Bluetooth module. Add a
+> > > node for the PCIe port to sm8250.dtsi and define the WLAN node on it in
+> > > the board's .dts and also make it consume the power outputs of the PMU.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts | 128 +++++++++++++++++++++--
+> > >  arch/arm64/boot/dts/qcom/sm8250.dtsi     |  10 ++
+> > >  2 files changed, 127 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+> > > index cd0db4f31d4a..fab5bebafbad 100644
+> > > --- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+> > > +++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+> > > @@ -108,6 +108,87 @@ lt9611_3v3: lt9611-3v3 {
+> > >               regulator-always-on;
+> > >       };
+> > >
+> > > +     qca6390_pmu: pmu@0 {
+> > > +             compatible = "qcom,qca6390-pmu";
+> > > +
+> > > +             pinctrl-names = "default";
+> > > +             pinctrl-0 = <&bt_en_state>, <&wlan_en_state>;
+> > > +
+> > > +             vddaon-supply = <&vreg_s6a_0p95>;
+> > > +             vddpmu-supply = <&vreg_s2f_0p95>;
+> > > +             vddrfa1-supply = <&vreg_s2f_0p95>;
+> > > +             vddrfa2-supply = <&vreg_s8c_1p3>;
+> > > +             vddrfa3-supply = <&vreg_s5a_1p9>;
+> > > +             vddpcie1-supply = <&vreg_s8c_1p3>;
+> > > +             vddpcie2-supply = <&vreg_s5a_1p9>;
+> > > +             vddio-supply = <&vreg_s4a_1p8>;
+> > > +
+> > > +             wlan-enable-gpios = <&tlmm 20 GPIO_ACTIVE_HIGH>;
+> > > +             bt-enable-gpios = <&tlmm 21 GPIO_ACTIVE_HIGH>;
+> > > +
+> > > +             regulators {
+> > > +                     vreg_pmu_rfa_cmn: ldo0 {
+> > > +                             regulator-name = "vreg_pmu_rfa_cmn";
+> > > +                             regulator-min-microvolt = <760000>;
+> > > +                             regulator-max-microvolt = <840000>;
+> >
+> > I'm still not convinced that the PMU has a set of LDOs, and looking at
+> > your implementation you neither register these with the regulator
+> > framework, nor provide any means of controlling the state or voltage of
+> > these "regulators".
+> 
+> Please take a look at the description of VDD08_PMU_RFA_CMN and
+> VDD_PMU_AON_I pins in the spec (80-WL522-1, page 25). I'm not sure if
+> I'm allowed to quote it, so I won't. But the spec clearly describes
+> VDD_PMU_AON_I as 0.95V LDO input and VDD08_PMU_RFA_CMN as 0.8 LDO
+> output generated using that input. I think this proves that the
+> on-chip PMU has actual LDOs.
+> 
 
---8323328-987821708-1706879739=:1020
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <66007069-bb7d-66e7-d4f6-94c027dc9ebb@linux.intel.com>
+You're correct, thank you for the pointer and clarification. I now agree
+with you, the PMU consumes what I saw as the chip input supplies, and
+based on WL_EN and BT_EN will provide power on pads, which are then
+externally routed to respective block.
 
-On Thu, 1 Feb 2024, Maciej W. Rozycki wrote:
+> I must admit, I find this representation very verbose, but on the
+> other hand Bartosz is right, it represents actual hardware.
 
-> On Thu, 1 Feb 2024, Ilpo J=E4rvinen wrote:
+I agree, this is actual hardware.
 
-> > > >  This can be problematic AFAICT however.  While I am not able to ve=
-rify=20
-> > > > suspend/resume operation with my devices, I expect the behaviour to=
- be=20
-> > > > exactly the same after resume as after a bus reset: the link will f=
-ail to=20
-> > > > negotiate and the LBMS and DLLLA bits will be respectively set and =
-clear. =20
-> > > > Consequently if you clear LBMS at resume, then the workaround won't=
-=20
-> > > > trigger and the link will remain inoperational in its limbo state.
-> > >=20
-> > > How do you get the LBMS set in the first place? Isn't that because th=
-e=20
-> > > link tries to come up so shouldn't it reassert that bit again before =
-the=20
-> > > code ends up into the target speed quirk? That is, I assumed you actu=
-ally=20
-> > > wanted to detect LBMS getting set during pcie_wait_for_link_status() =
-call=20
-> > > preceeding pcie_failed_link_retrain() call?
->=20
->  It is a good question what the sequence of events exactly is that sets=
-=20
-> the LBMS bit.  I don't know the answer offhand.
->
-> > > In any case and unrelated to this patch, the way this quirk monopoliz=
-es=20
-> > > LBMS bit is going to have to be changed because it won't be reliable =
-with=20
-> > > the PCIe BW controller that sets up and irq for LBMS (and clears the =
-bit).
-> > > In bwctrl v5 (yet to be posted) I'll add LBMS counter into bwctrl to =
-allow=20
-> > > this quirk to keep working (which will need to be confirmed).
->=20
->  If there's an interrupt handler for LBMS events, then it may be the best=
-=20
-> approach if the quirk is triggered by the handler instead, possibly as a=
-=20
-> softirq.
+> Maybe we
+> can drop some of the properties of corresponding regulator blocks, as
+> we don't actually need them and they are internal properties of the
+> hardware.
+> 
 
-Okay, I'll look into changing the code towards that direction. The small=20
-trouble there is that soon I've very little that can be configured away=20
-from the bandwidth controller because this quirk already relates to the=20
-target speed changing code and the LBMS will require the other side to be=
-=20
-always compiled too...
+To me this really looks like a fancy "regulator-fixed" with multiple
+inputs, two gpios and multiple outputs.
 
-> > > >  What kind of scenario does the LBMS bit get set in that you have a=
-=20
-> > > > trouble with?  You write that in your case the downstream device ha=
-s been=20
-> > > > disconnected while the bug hierarchy was suspended and it is not pr=
-esent=20
-> > > > anymore at resume, is that correct?
-> > > >
-> > > >  But in that case no link negotiation could have been possible and=
-=20
-> > > > consequently the LBMS bit mustn't have been set by hardware (accord=
-ing to=20
-> > > > my understanding of PCIe), because (for compliant, non-broken devic=
-es=20
-> > > > anyway) it is only specified to be set for ports that can communica=
-te with=20
-> > > > the other link end (the spec explicitly says there mustn't have bee=
-n a=20
-> > > > transition through the DL_Down status for the port).
-> > > >
-> > > >  Am I missing something?
-> > >=20
-> > > Yes, when resuming the device is already gone but the bridge still ha=
-s=20
-> > > LBMS set. My understanding is that it was set because it was there
-> > > from pre-suspend time but I've not really taken a deep look into it=
-=20
-> > > because the problem and fix seemed obvious.
->=20
->  I've always been confused with the suspend/resume terminology: I'd have=
-=20
-> assumed this would have gone through a power cycle, in which case the LBM=
-S=20
-> bit would have necessarily been cleared in the transition, because its=20
-> required state at power-up/reset is 0, so the value of 1 observed would b=
-e=20
-> a result of what has happened solely through the resume stage.  Otherwise=
-=20
-> it may make sense to clear the bit in the course of the suspend stage,=20
-> though it wouldn't be race-free I'm afraid.
+This would also imply that we don't need to invent the power sequence
+framework to tie WiFi and BT to the PMU's state.
 
-I also thought suspend as one possibility but yes, it racy. Mika also=20
-suggested clearing LBMS after each successful retrain but that wouldn't=20
-cover all possible ways to get LBMS set as devices can set it=20
-independently of OS. Keeping it cleared constantly is pretty much what=20
-will happen with the bandwidth controller anyway.
+The PMU is a thing, so we can represent that in DeviceTree, it consumes
+M input power rails, and two gpios, it provides N WiFi supplies and O BT
+supplies (with some overlap between N and O). The WiFi node consumes its
+N supplies, the BT node consumes its O supplies.
 
-> > > I read that "without the Port transitioning through DL_Down status"=
-=20
-> > > differently than you, I only interpret that it relates to the two=20
-> > > bullets following it. ...So if retrain bit is set, and link then goes=
-=20
-> > > down, the bullet no longer applies and LBMS should not be set because=
-=20
-> > > there was transition through DL_Down. But I could well be wrong...
->=20
-> What I refer to is that if you suspend your system, remove the device=20
-> that originally caused the quirk to trigger and then resume your system=
-=20
-> with the device absent,
+If any of the N regulators are requested enabled the qca6390-pmu driver
+enables all M input rails, then enables WL_EN. If any of the O BT
+regulators are requested enabled, the driver enables all M input rails,
+then enables BT_EN.
 
-A small correction here, the quirk didn't trigger initially for the=20
-device, it does that only after resume. And even then quirk is called=20
-only because the link doesn't come up.
+> >
+> > [..]
+> > >
+> > >  &uart6 {
+> > > @@ -1311,17 +1418,16 @@ &uart6 {
+> > >       bluetooth {
+> > >               compatible = "qcom,qca6390-bt";
+> > >
+> > > -             pinctrl-names = "default";
+> > > -             pinctrl-0 = <&bt_en_state>;
+> > > -
+> > > -             enable-gpios = <&tlmm 21 GPIO_ACTIVE_HIGH>;
+> > > -
+> > > -             vddio-supply = <&vreg_s4a_1p8>;
+> > > -             vddpmu-supply = <&vreg_s2f_0p95>;
+> > > -             vddaon-supply = <&vreg_s6a_0p95>;
+> > > -             vddrfa0p9-supply = <&vreg_s2f_0p95>;
+> > > -             vddrfa1p3-supply = <&vreg_s8c_1p3>;
+> > > -             vddrfa1p9-supply = <&vreg_s5a_1p9>;
+> > > +             vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
+> > > +             vddaon-supply = <&vreg_pmu_aon_0p59>;
+> > > +             vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
+> > > +             vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
+> > > +             vddbtcmx-supply = <&vreg_pmu_btcmx_0p85>;
+> > > +             vddrfa0-supply = <&vreg_pmu_rfa_0p8>;
+> > > +             vddrfa1-supply = <&vreg_pmu_rfa_1p2>;
+> > > +             vddrfa2-supply = <&vreg_pmu_rfa_1p7>;
+> > > +             vddpcie0-supply = <&vreg_pmu_pcie_0p9>;
+> > > +             vddpcie1-supply = <&vreg_pmu_pcie_1p8>;
+> >
+> > As I asked before, why does bluetooth suddenly care about PCIe supplies?
+> 
+> Power sequencing in the same spec describes that PCIe voltages should
+> be up even if only BT is being brought up. PMU itself handles
+> distributing voltages according to the actual load needs.
+> 
 
-On longer term, I'd actually want to have hotplug resumed earlier so the=20
-disconnect could be detected before/while all this waiting related to link=
-=20
-up is done. But that's very complicated to realize in practice because=20
-hotplug lurks behind portdrv so resuming it earlier isn't going to be=20
-about just moving a few lines around.
+You're right, the power sequence diagram in the docs do indicate that
+VDD13_PMU_PCIE_I and VDD19_PMU_PCIE_I should be enabled before either
+WL_EN or BT_EN are driven high.
 
-> then LBMS couldn't have been set in the course of=20
-> resume, because the port couldn't have come out of the DL_Down status in=
-=20
-> the absence of the downstream device.  Do you interpret it differently?
+But I don't see anything stating that the output from the PMU
+(VDD09_PMU_PCIE) in turn is fed to the bluetooth block.
 
-That's a good question and I don't have an answer to this yet, that is,
-I don't fully understand what happens to those device during runtime=20
-suspend/resume cycle and what is the exact mechanism that preserves the=20
-LBMS bit, I'll look more into it.
+Regards,
+Bjorn
 
-But I agree that if the device goes cold enough and downstream is=20
-disconnected, the port should no longer have a way to reassert LBMS.
-
-> Of course once set the bit isn't self-clearing except at power-up/reset.
-
-Okay, I misunderstood you meant it would be self-clearing whenever=20
-DL_Down happens. I can see that could have been one possible=20
-interpretation of the text fragment in the spec.
-
-> > So I would be really curious now to know how you get the LBMS on the=20
-> > device that needs the Target Speed quirk? Is this true (from the commit=
-=20
-> > a89c82249c37 ("PCI: Work around PCIe link training failures")):
-> >=20
-> > "Instead the link continues oscillating between the two speeds, at the=
-=20
-> > rate of 34-35 times per second, with link training reported repeatedly=
-=20
-> > active ~84% of the time."
-> >=20
-> > ?
->=20
->  That is what I have observed.  It was so long ago I don't remember how I=
-=20
-> calculated the figures anymore, it may have been with a U-Boot debug patc=
-h=20
-> made to collect samples (because with U-Boot you can just poll the LT bit=
-=20
-> while busy-looping).  I'd have to try and dig out the old stuff.
-
-I'd guess it probably sets the bit on each try, or perhaps only on the=20
-subset of tries which were "successful" before the link almost immediately=
-=20
-runs into another error (that 16% of the time).
-
-> > Because if it is constantly picking another speed, it would mean you ge=
-t=20
-> > LBMS set over and over again, no? If that happens 34-35 times per secon=
-d,=20
-> > it should be set already again when we get into that quirk because ther=
-e=20
-> > was some wait before it gets called.
->=20
->  I'll see if I can experiment with the hardware over the next couple of=
-=20
-> days and come back with my findings.
-
-Okay thanks.
-
-
---=20
- i.
---8323328-987821708-1706879739=:1020--
+> >
+> > Regards,
+> > Bjorn
+> >
+> > >       };
+> > >  };
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> > > index 4d849e98bf9b..7cd21d4e7278 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> > > @@ -2203,6 +2203,16 @@ pcie0: pcie@1c00000 {
+> > >                       dma-coherent;
+> > >
+> > >                       status = "disabled";
+> > > +
+> > > +                     pcieport0: pcie@0 {
+> > > +                             device_type = "pci";
+> > > +                             reg = <0x0 0x0 0x0 0x0 0x0>;
+> > > +                             #address-cells = <3>;
+> > > +                             #size-cells = <2>;
+> > > +                             ranges;
+> > > +
+> > > +                             bus-range = <0x01 0xff>;
+> > > +                     };
+> > >               };
+> > >
+> > >               pcie0_phy: phy@1c06000 {
+> > > --
+> > > 2.40.1
+> > >
+> >
+> 
+> 
+> -- 
+> With best wishes
+> Dmitry
 
