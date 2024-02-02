@@ -1,64 +1,59 @@
-Return-Path: <linux-pci+bounces-3041-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3042-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5BF0847915
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 20:07:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44DFE8479BA
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 20:33:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F5051C22184
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 19:07:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEF751F27ABD
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 19:33:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2022812D773;
-	Fri,  2 Feb 2024 18:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxF3wj8I"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A35915E5D7;
+	Fri,  2 Feb 2024 19:33:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08D483A0C;
-	Fri,  2 Feb 2024 18:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F4B15E5A5;
+	Fri,  2 Feb 2024 19:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706900012; cv=none; b=gKuL/QY5vkWpAixYzx2HnYOCU5v5GKCmHbW0paXAv1Bil8EBaHABmUVbB1r0isS0fu8ffVTZhKSOeZAMgVeHSpgWzZO0ixeiAVr9ghtMGTh9HCCqq6yqYJhl6qZWpE16LrIIvcSeHLkiiqVTEWOPQylQiKJlb0Zonl2za0FFpWY=
+	t=1706902411; cv=none; b=XSDtU3RGbWNdktWxV8vatCFOoFrrViXqd8DTY172DJphJnhQa9l6b0d55NiU4MaAaZWpZ2Fz65srPeafu6AABflaAMIT7IPO0fsVKx9D/90T6qE/xg4xG/K4fy9RbY+ehoApQfF9yezzB0z5ZJw7Qtc/O5dYUTYrj/ZFNSsVaYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706900012; c=relaxed/simple;
-	bh=BfPWVLXVjqnU3vmc0U9hEmE5mio5hV7S7WnYSfm85Rc=;
+	s=arc-20240116; t=1706902411; c=relaxed/simple;
+	bh=3dZeOsFXiecrBV5F+z7IGlq533Nw04Zs9kPXrW3vdFE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSFd0JxNrN7BLan8/QFA7H5RQxRBr3J50ibtvzM45IY071YrU+VKwKeNuHD+RyD+3ZdWGtl45cnjHWApfuGTDzYmbA1V6QQPtGGsfbIkA4cVQN0jNUgu7l4j3E6wnZjyWPD3TWnZBxLMluXgusEnLurvOxO7Oq32w+414vbXIvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxF3wj8I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6FF8C433F1;
-	Fri,  2 Feb 2024 18:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706900011;
-	bh=BfPWVLXVjqnU3vmc0U9hEmE5mio5hV7S7WnYSfm85Rc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AxF3wj8I2VxPoq8egSbA5R0YteSmSNgyQVUNHdbT2JAAEHtxLynsEzCHnJUjzV9UN
-	 FN6LOFbvl84FcQ69c0N4TaRgEMuxF/iEC7x76G5G3vAS5Nat7z9f/qi07x6VqVrio/
-	 wxilcN3kCwrlPQNUI21rirBkMMxpTUx2WyZ+wUESqWHEU1NKrf00Z66OA41SUSQxx7
-	 OPQ4sMFzMT80Aj/Y+Xrt7g2Uk2Yo7BKe+PFvqiAve8zuM/Igaka5F3uF9Iia5Z3cd0
-	 rDMkw4UJ6kHvbjAfT/tBHU7qOdqbx33zxFwyQC1vZz8IhTqXQMXK81pSH0crRkVjTL
-	 0TL/s5Z5AlQCQ==
-Date: Fri, 2 Feb 2024 19:53:24 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-	conor+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
-	helgaas@kernel.org, hongxing.zhu@nxp.com, imx@lists.linux.dev,
-	kernel@pengutronix.de, krzysztof.kozlowski+dt@linaro.org,
-	krzysztof.kozlowski@linaro.org, kw@linux.com,
-	l.stach@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
-	shawnguo@kernel.org
-Subject: Re: [PATCH v9 05/16] PCI: imx6: Using "linux,pci-domain" as slot ID
-Message-ID: <Zb06JL5X8EiHEyFD@lpieralisi>
-References: <20240119171122.3057511-1-Frank.Li@nxp.com>
- <20240119171122.3057511-6-Frank.Li@nxp.com>
- <ZbzcOarorCS1MPRc@lpieralisi>
- <ZbztZkNQ+wydticD@lizhi-Precision-Tower-5810>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qmPCefRhF/Ug9CyXCX2ydowMg9XasP8wiAUv3vCcNaDStj5crsgvK9vaXCYDxDxErBLkRN0s17xZ8qZlBHRMKMidSdZfCJ3zaDKwwxtJnueZPrLfRduUrKZQC80iPBHPC1Lt1nSXREueqrIB99IjxHbKuA+2hF3Zm5MwA0gwDec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 71A0B3000C980;
+	Fri,  2 Feb 2024 20:33:26 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 63DB1418804; Fri,  2 Feb 2024 20:33:26 +0100 (CET)
+Date: Fri, 2 Feb 2024 20:33:26 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/2] Enable D3 support for Qualcomm bridges
+Message-ID: <20240202193326.GA29000@wunner.de>
+References: <20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org>
+ <20240202090033.GA9589@wunner.de>
+ <20240202100041.GB8020@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,43 +62,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZbztZkNQ+wydticD@lizhi-Precision-Tower-5810>
+In-Reply-To: <20240202100041.GB8020@thinkpad>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Feb 02, 2024 at 08:25:58AM -0500, Frank Li wrote:
-> On Fri, Feb 02, 2024 at 01:12:41PM +0100, Lorenzo Pieralisi wrote:
-> > "PCI: imx6: Use "linux,pci-domain" as slot ID"
+On Fri, Feb 02, 2024 at 03:30:41PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Feb 02, 2024 at 10:00:33AM +0100, Lukas Wunner wrote:
+> > Please amend platform_pci_bridge_d3() to call a new of_pci_bridge_d3()
+> > function which determines whether D3 is supported by the platform.
 > > 
-> > On Fri, Jan 19, 2024 at 12:11:11PM -0500, Frank Li wrote:
-> > > Avoid use get slot id by compared with register physical address. If there
-> > > are more than 2 slots, compared logic will become complex.
-> > > 
-> > > "linux,pci-domain" already exist at dts since commit:
-> > > 	commit (c0b70f05c87f3b arm64: dts: imx8mq: use_dt_domains for pci node).
-> > > 
-> > > So it is safe to remove compare basic address code:
-> > > 	...
-> > > 	if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
-> > > 		imx6_pcie->controller_id = 1;
-> > 
-> > No it is not unless you magically update all firmware out
-> > there in the field.
+> > E.g. of_pci_bridge_d3() could contain a whitelist of supported VID/DID
+> > tuples.  Or it could be defined as a __weak function which always
+> > returns false but can be overridden at link time by a function
+> > defined somewhere in arch/arm/, arch/arm64/ or in some driver
+> > whose Kconfig option is enabled in Qualcomm platforms.
 > 
-> commit c0b70f05c87f3b09b391027c6f056d0facf331ef
-> Author:     Peng Fan <peng.fan@nxp.com>
-> AuthorDate: Fri Jan 15 11:26:57 2021 +0800
-> Commit:     Shawn Guo <shawnguo@kernel.org>
-> CommitDate: Fri Jan 29 14:46:28 2021 +0800
-> 
-> I am not sure if it is neccesary to compatible with 2 years ago's dts.
-> I think it may not boot at all with using 2 year agao dtb file directly.
-> 
-> Do you have other comments? I can remove it from this big patch series,
+> Hmm. If we go with a DT based solution, then introducing a new property like
+> "d3-support" in the PCI bridge node would be the right approach. But then, it
+> also requires defining the PCI bridge node in all the DTs. But that should be
+> fine since it will help us to support WAKE# (per bridge) in the future.
 
-I will have a look at the full series first we can decide whether
-to drop it later.
+I'm not sure whether a "d3-support" property would be acceptable.
+My understanding is that capabilities which can be auto-sensed by
+the driver (or the PCI core in this case), e.g. by looking at the
+PCI IDs or compatible string, should not be described in the DT.
 
-I am travelling so I am not sure I can review it before February
-12th, FYI.
+My point was really that this should be determined by
+platform_pci_bridge_d3(), that's what the function is for,
+instead of inventing a new mechanism.  Exactly how the capability
+is detected by of_pci_bridge_d3() is up to DT schema maintainers.
 
-Lorenzo
+A DT property does have the advantage of better maintainability,
+unlike a whitelist which may need to constantly be extended.
+
+Thanks,
+
+Lukas
 
