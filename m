@@ -1,167 +1,186 @@
-Return-Path: <linux-pci+bounces-2991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2992-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D72E846B2E
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 09:49:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DA13846B38
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 09:50:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E48F1C2695B
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 08:49:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECD1F1F2AD0A
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 08:50:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1411C60244;
-	Fri,  2 Feb 2024 08:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22DE15FDC3;
+	Fri,  2 Feb 2024 08:49:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lpOw8qrT"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="Yf+voq//"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEE05FF14
-	for <linux-pci@vger.kernel.org>; Fri,  2 Feb 2024 08:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D79B5FDB6
+	for <linux-pci@vger.kernel.org>; Fri,  2 Feb 2024 08:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706863722; cv=none; b=OemScakCVzfHFaXHpk8B4ijTHCHrVnFGqd6/nEuM9JQaR4QeQX96ABODRrvY6EWSmQAExS/mn5QOMYt7vm5sAQMHfKkd4ArmhZZtMF3LRk6zE41QF00gjMyiiSXWumOiljxixp7LjF6p+72cHQtHcoTGzEt34bHwYN15aA1t6qw=
+	t=1706863780; cv=none; b=Y89Z9LYPeYG7/q1SNtBTCb+FReraOEhWgmT7S1iWiMX2hTA0rzflDN9l3PWV+mKuFrrm+I2lnQmng66lWNWFD6ej8zRg7J0+o/9sMsRsKxMYz5pAIYrmdZQMapcYd/EUI/cB8k+znRdP8Lk82YTbRXmtW2O+vxReafUkw5n/z0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706863722; c=relaxed/simple;
-	bh=sxX6A1jY2QUTnGziquDNeweaFL0CvM8/+UjRl9k6dKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EVR/14fGmEwE9Y6Wciz5auFgp1I+b215Mw/hD/bC4Oj/JcDuDa5h9Ot8/S9BnWEa96bBsr39tp/ITNZU7VbgWBelcSTxRdPZXJ+Xp4/E3vv5EqN9SiKUxI+K1SNByvdPtOtyAHLpHUcNKHlZE3UiMmFFaC2zvuvOn0mCE1+/g0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lpOw8qrT; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-290a55f3feaso1464705a91.2
-        for <linux-pci@vger.kernel.org>; Fri, 02 Feb 2024 00:48:40 -0800 (PST)
+	s=arc-20240116; t=1706863780; c=relaxed/simple;
+	bh=s5g5tND4VncSJJnpgai+1STmfwY17PR0zOkvpBvqkBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brDcjs4vtZG/Grj76EKtUQiy1YS97gCWEHsveBvtjJoxL6YUaLGg3fA/iRVlNmpK6iXYB1rsAQIMt6Qp9Fd+uLyb2MECxPdPiWIbaMrHHJ/0JMeF8iWIYej+cjlcgZYPznSDeEZC9raU9VA/GIuu13PDDdydHrjuLyExWOJVoY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=Yf+voq//; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-603fdc46852so19169207b3.2
+        for <linux-pci@vger.kernel.org>; Fri, 02 Feb 2024 00:49:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1706863720; x=1707468520; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TItsROaQHyjEbJFLwPA4KC7BHoQVWA8FloUjcj8REgk=;
-        b=lpOw8qrT/7eEPoth7zOhVcLEX9OJWruHy4yfIfIdqquPCOvj67p5PV4ysnSJnTnSEW
-         qCwxnCOsE7nfCHNbgbIJwaz0M47byGNvhfWcaP0XNotebjeCXZcy9+zH09oTXXgunGO6
-         Nq/kYlqIz+ZHMwJlGCFVp7Wn0NFGLegQQdCbIkR1Dw2NlA2p8oXAuFSlyxzFUwq976c8
-         M5MpsXewjGUnFOrvBLuMfQVErU35kcW6O+bEIOHzvAmiA0ytXdAnV96XTQIr+j9pXjsI
-         nwicTAbaFkyI3IAfO2vAvHLlB0i5yud7pRqT/hW5SwIb3sjjWDc2eEVe3u3Tc2VOmZpD
-         aJ8w==
+        d=endlessos.org; s=google; t=1706863776; x=1707468576; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VIPMr9gZ2ntFdhqS2A/x2RHH72S8+R3tOzCoETsh9oA=;
+        b=Yf+voq//sAGg3WTgaevPYQy0hb2RJg9y1SmIIKJU7lM4x11x609ILkQt1cu2oHjB11
+         Z2byK6cWb22h0AieGDxN6hJd5KWDgPQJA+yE1LuhaRujjc9Buj/NH40pWddd0Jbk4daC
+         dgXn/5d2kptmSvpFMFiUH//ege/HU9nA4ebB3WOCkxIMXC5K2+ABZ2IDtAbc5OGsTP8O
+         3I2bjeCZZCM6vKOVnLHBhJsM667LvF2IgOHAtu0aX9JC9r5/xInNL1adptRErMzJh/Nb
+         jxGpHQV4QdGuTlVnuV4KFw3gYHt5vFHRn7YspplLO8TRUpzmPrD9kbnDVEw07Djaa636
+         ZlCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706863720; x=1707468520;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TItsROaQHyjEbJFLwPA4KC7BHoQVWA8FloUjcj8REgk=;
-        b=O7kusrPWJQpOFf88FaQzY91QKuIbIY7VSIBQBe4xiSpcfTKEarlCoiQORkiJsn3RAz
-         EmMKJwPR02YwR/I3Z3bIzCk2HD8mVcoZCupj/HMGPEYLa2PQos98egzD6J99AE5LzS0X
-         MfUWsBK8hVzyqTYcz0fAZ1F+JJED+A1i7DXZPNi+nhMjdfbkwuf9m4C+3bugIpfLuiSq
-         pNB2QGhOcfBHFGrTRChc8PtJgvc0hCnH+tUraypH8gRFU2PeKl3UypzyLe+Ru+6IM0G5
-         14jdXwW4PnD6XDump0FFVp7qa+swe2Z0T1WWhY4lhZDNyUKfsM7H5X/WjcdWn8B+VLp+
-         1qVA==
-X-Gm-Message-State: AOJu0Yxg+koH3QAWARr7VDT4mvH2dHYPScAw9bLBckEA54SGg/ndUiAa
-	yOkg7lWHt8BPmV7ZgFqwoPMnav/wAeryt3b9rONc1armKY7U4p2IT2E3hSNZSKQ=
-X-Google-Smtp-Source: AGHT+IFKJTKBJ1qZaEdzHRI6R3ULv7nSG6aIb1erLw8eof4kdB83jJqiV5IsTHm9r+TtHnCR1jZmWQ==
-X-Received: by 2002:a17:90a:9415:b0:293:eaec:fd67 with SMTP id r21-20020a17090a941500b00293eaecfd67mr7058447pjo.14.1706863719736;
-        Fri, 02 Feb 2024 00:48:39 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXTEwJbtE+hsf4fe9iCtFquFGaddaPiWZ6SnyAr0Einu4dhTiJbRdR7UsVh3wDijhbLCJy4cgq+WMa32kNB4DVIJ2CTvjvXu0QA+jepl2n5oU047rQfjh9yHEHsiiZ+3aZVPN2LIIzPHR59vKArcMIcOGJnWSGcxBhqXb0TN0G04w4wTYfPowAIDmztFuw3hXmNVpH/zvuBW4p/QvlVMswA4AJlDPiFke0+cJC8VBOZEPAQgzm4hnXEjuGRTNbSYioOI/Q++uuarI9wkhlxcl5I/iYC8zOTF+O5BAWMOKXF8GJmHwEOCoeUxQ21aQ/KeZpdSNG+68oMJ51E2GniW1hMaJrxApOTFBMSMCQGwlT0ne8wRSNvA2p5z5j4f9Y1MkgOUW/sdryWa5PgJxIHDqPHSheCrCT7xbEOIL8mNdusCKQpve8UzaMbCRG6fEz3HztBo4io4GCsbdgYf/1hEo6jY7yscTM4euX7ng586XMYFPY4lUWHwAeHZb1XYtHyRIKmbQ43J31dY25rJbxYBSi2SXlZTf1I+etr5v6pZjLBurjzWF9YzWmS602pOBZV+Th8SH99xW9a0+HO/D+WYHwmaRpdLRXX+xGrUGyJKI4iS992HPL5L2yc2C19Aiu/pkxxCLNMOjjMh6SewbZHG5CEqgva9cPnS9GJGjqgxTvbudduv7QTe0cO9p6r6VSsC1kZ
-Received: from sunil-laptop ([106.51.184.12])
-        by smtp.gmail.com with ESMTPSA id kb3-20020a17090ae7c300b0029647c140ddsm564007pjb.17.2024.02.02.00.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Feb 2024 00:48:39 -0800 (PST)
-Date: Fri, 2 Feb 2024 14:18:31 +0530
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-serial@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Haibo Xu <haibo1.xu@intel.com>
-Subject: Re: [RFC PATCH v2 05/21] pnp.h: Return -EPROBE_DEFER for disabled
- IRQ resource in pnp_irq()
-Message-ID: <ZbysXzWX6FH5e6AH@sunil-laptop>
-References: <20231025202344.581132-1-sunilvl@ventanamicro.com>
- <20231025202344.581132-6-sunilvl@ventanamicro.com>
- <CAJZ5v0hHYa4c2U-tegdBtoTak=MirXwyBXbN9yrWPx_x-+yMzg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1706863776; x=1707468576;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VIPMr9gZ2ntFdhqS2A/x2RHH72S8+R3tOzCoETsh9oA=;
+        b=FVKRsbNejBaIFLk6LOe3KFHTEuLIvC2NJrqCMUDl2uWMVfxpbtD0boS+QHmFN6JaTK
+         WwOriXJ4jaGdRNOSz6Ud312DGXDchnTnGDncUR7FNXcDcdFfL0zCV+PvWQWDjpwgPWtW
+         7y3czC8FYwQURRKnFPACs+zxmAgFYmSxU8lNdHSA1nX8goTAYKKDah1FKtgw7khSaudj
+         C4sLUlW7csJ8SE5kc73RwQ6VGu0amTSrRYhZsQHyv56UNwY3QJYQQb5hHsi1CJJpPloz
+         NmcdB4Qb6n7V7oIxm7qGiolge2zDGbUEwvb2K2EFCYDlVpDOb/mZGbQCgYu9GhyYfDd0
+         UWlQ==
+X-Gm-Message-State: AOJu0Ywj9sN4iPMNnjzKVtTXWq45Zd/BwRTslFCmMm7EagBuSBy+PNLQ
+	begPByMGnFYCeHrxp4CKQhpHAqAjfBoSC/kBjsv31qqX+42zCDt8pbTRXuzfIY7gkYjnwLoZC6K
+	LgaExuCc8DwqhEpDL4qS4YAyGH/zJiO/b7gjcLA==
+X-Google-Smtp-Source: AGHT+IF0D39gNrmGTF17Hmk0hB+DrIWvGVp5pVLHi+wF6FPshuZ7YrcQykD87BeYp9GozcMFufqOk9CZnK7/8cpL6D0=
+X-Received: by 2002:a25:c782:0:b0:dc2:2f4b:c9d8 with SMTP id
+ w124-20020a25c782000000b00dc22f4bc9d8mr7270958ybe.16.1706863776050; Fri, 02
+ Feb 2024 00:49:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hHYa4c2U-tegdBtoTak=MirXwyBXbN9yrWPx_x-+yMzg@mail.gmail.com>
+References: <20240130095933.14158-1-jhp@endlessos.org> <20240130101335.GU2543524@black.fi.intel.com>
+ <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
+ <Zbonprq/1SircQon@x1-carbon> <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
+ <ZbrNLxHL03R66PxQ@x1-carbon> <ZbuyVbMEBWKi729y@x1-carbon>
+In-Reply-To: <ZbuyVbMEBWKi729y@x1-carbon>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 2 Feb 2024 16:49:00 +0800
+Message-ID: <CAPpJ_efmzy_FU0urdHDmO5htOBCPaX-T5W+Er7AmWYhqUTwnyA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Daniel Drake <drake@endlessos.org>, Vitalii Solomonov <solomonov.v@gmail.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, David Box <david.e.box@linux.intel.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-ide@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessos.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 01, 2024 at 07:00:51PM +0100, Rafael J. Wysocki wrote:
-> On Wed, Oct 25, 2023 at 10:24 PM Sunil V L <sunilvl@ventanamicro.com> wrote:
+Niklas Cassel <cassel@kernel.org> =E6=96=BC 2024=E5=B9=B42=E6=9C=881=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8811:01=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, Jan 31, 2024 at 11:43:59PM +0100, Niklas Cassel wrote:
+> > On Wed, Jan 31, 2024 at 07:08:12AM -0400, Daniel Drake wrote:
+>
+> (snip)
+>
+> > In libata we perform a reset of the port at boot, see:
+> > libata-sata.c:sata_link_hardreset()
+> > after writing to SControl, we call
+> > libata-core.c:ata_wait_ready() that will poll for the port being ready
+> > by calling the check_ready callback.
+> > For AHCI, this callback funcion is set to:
+> > libahci.c:ahci_check_ready().
 > >
-> > To support deferred PNP driver probe, pnp_irq() must return -EPROBE_DEFER
-> > so that the device driver can do deferred probe if the interrupt controller
-> > is not probed early.
+> > A reset should take the device out of deep power state and should be
+> > sufficient to establish a connection (and that also seems to be the
+> > case when not using Intel VMD).
 > >
-> > Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-> > ---
-> >  include/linux/pnp.h | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/linux/pnp.h b/include/linux/pnp.h
-> > index c2a7cfbca713..21cf833789fb 100644
-> > --- a/include/linux/pnp.h
-> > +++ b/include/linux/pnp.h
-> > @@ -147,12 +147,18 @@ static inline resource_size_t pnp_mem_len(struct pnp_dev *dev,
-> >  }
-> >
-> >
-> > -static inline resource_size_t pnp_irq(struct pnp_dev *dev, unsigned int bar)
-> > +static inline int pnp_irq(struct pnp_dev *dev, unsigned int bar)
-> >  {
-> >         struct resource *res = pnp_get_resource(dev, IORESOURCE_IRQ, bar);
-> >
-> > -       if (pnp_resource_valid(res))
-> > +       if (pnp_resource_valid(res)) {
-> > +#if IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI)
-> > +               if (!pnp_resource_enabled(res))
-> > +                       return -EPROBE_DEFER;
-> > +#endif
-> 
-> What would be wrong with
-> 
-> if (IS_ENABLED(CONFIG_ARCH_ACPI_DEFERRED_GSI) && !pnp_resource_enabled(res))
->         return -EPROBE_DEFER;
-> 
-> ?
-Hi Rafael,
+> > However, if you want to debug, I would start by adding prints to
+> > libata-sata.c:sata_link_hardreset()
+> > libata-core.c:ata_wait_ready()
+> > libahci.c:ahci_check_ready().
+>
+> FWIW, this will dump SStatus.DET every time the check_ready callback func=
+tion
+> (ahci_check_ready()) is called:
+>
+>
+> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+> index 1a63200ea437..0467e150601e 100644
+> --- a/drivers/ata/libahci.c
+> +++ b/drivers/ata/libahci.c
+> @@ -1533,6 +1533,12 @@ int ahci_check_ready(struct ata_link *link)
+>  {
+>         void __iomem *port_mmio =3D ahci_port_base(link->ap);
+>         u8 status =3D readl(port_mmio + PORT_TFDATA) & 0xFF;
+> +       u32 cur =3D 0;
+> +
+> +       sata_scr_read(link, SCR_STATUS, &cur);
+> +
+> +       ata_link_info(link, "BUSY ? %d (status: %#x) SStatus.DET: %#x\n",
+> +                     status & ATA_BUSY, status, cur & 0xf);
+>
+>         return ata_check_ready(status);
+>  }
 
-Actually, this is v2 version of the patch and there is recent v3. Please
-take a look at [1] for the latest version.
+I think I can join the test based on kernel v6.8-rc2, too.
 
-However, your comment is still valid for v3. I will update as you
-mentioned.
+The original ASUS B1400CEAE has only one NVMe SSD.  I prepare the
+patch ("ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE") to
+fix the power consumption issue for s2idle with enabled VMD.
 
-[1] - https://lore.kernel.org/linux-arm-kernel/20231219174526.2235150-7-sunilvl@ventanamicro.com/
+The patch is a quirk limiting ASUS B1400CEAE only, not generic for the
+SATA controller [8086:a0d3].  Then, I install another SATA HDD into
+ASUS B1400CEAE for test.  The SATA HDD shows up and works.
 
-Thanks,
-Sunil
-> 
-> > +
-> >                 return res->start;
-> > +       }
-> >         return -1;
-> >  }
-> >
-> > --
-> > 2.39.2
-> >
+$ dmesg | grep SATA
+[    0.785120] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+Gbps 0x1 impl SATA mode
+[    0.785269] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+0x76102100 irq 144 lpm-pol 3
+[    1.096684] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+
+However, if I simply revert the commit 6210038aeaf4 ("ata: ahci:
+Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI controller"") (fix the
+conflict, of course), then the SATA HDD disappears!!?  Both
+CONFIG_SATA_MOBILE_LPM_POLICY=3D3 and 0 can reproduce the issue.
+
+$ dmesg | grep SATA
+[    0.783211] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+Gbps 0x1 impl SATA mode
+[    0.783399] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+0x76102100 irq 144 lpm-pol 3
+[    1.096685] ata1: SATA link down (SStatus 4 SControl 300)
+
+Here is the dmesg of reverting ("ata: ahci: Revert "ata: ahci: Add
+Tiger Lake UP{3,4} AHCI controller"")
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217114#c27
+The code already includes the debug message in ahci_check_ready() from
+Niklas.  However, the dmesg does not show the "BUSY ? ..." from
+ahci_check_ready().
+
+From these scenarios mentioned above, they all apply LPM policy to the
+SATA controller [8086:a0d3].  But, they apply LPM policy at different
+time:
+* The patch ("ata: ahci: Add force LPM policy quirk for ASUS
+B1400CEAE") applies LPM policy in early ahci_init_one(), which is the
+probe callback.
+* Reverting 6210038aeaf4 ("ata: ahci: Revert "ata: ahci: Add Tiger
+Lake UP{3,4} AHCI controller"") applies LPM policy via "ahci_pci_tbl"
+table.
+
+Jian-Hong Pan
 
