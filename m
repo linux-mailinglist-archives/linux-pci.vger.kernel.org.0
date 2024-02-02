@@ -1,90 +1,89 @@
-Return-Path: <linux-pci+bounces-2996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A16AD846B6F
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 10:01:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61D30846B79
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 10:03:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B80B1F2447C
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 09:01:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2EF4B23C77
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 09:03:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1CF64A92;
-	Fri,  2 Feb 2024 09:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B7907691E;
+	Fri,  2 Feb 2024 09:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZiS8kvwk"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="WqIn5s2Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E86674299
-	for <linux-pci@vger.kernel.org>; Fri,  2 Feb 2024 09:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9B1768ED
+	for <linux-pci@vger.kernel.org>; Fri,  2 Feb 2024 09:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706864504; cv=none; b=O1Tev//sR+1RoFSnf8nuuDyB5yxlbyF76ABDErNmPaU8YkZCejUSO8kqn+ZzzKHnFAAaHoxTGPIeu1aHfEJCrn28WGWxSpi8ibmJLrNtzV1rq+g0vCDZ5F2qNS/PZ2WarVPXJby3c14FX/++pRCly3/YkOxpXogdEaHCkfIxWZw=
+	t=1706864614; cv=none; b=swmuaEgNDOLyjg1cRPANBQxuF66WJoXTk/vjzHC73L2HeDyrvj7ifFbZ99GstJKNBfexKR3aWZ7jGK0TsOsfCbXVo0IeszYy0zkSzzSjMbi1iRrODyMrVW+liq30KpFVngxBJLAjYrgn2SGmNSD3VksPx+9EiXXpkxZlCylytQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706864504; c=relaxed/simple;
-	bh=I2zQrzLcgpV7z4j3Ksfthr+Iax2qqYhf5dnO1IkBizM=;
+	s=arc-20240116; t=1706864614; c=relaxed/simple;
+	bh=nmIJ6o/nKGoxCdPeNHhdm2ww0WnXp6xk8MnUITWzxRE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DUNbIeF81d+5LHb2PDQviHKjKyIEaseJ9Vgeny+F9/9gSQx53LFyUUZRjoJRMV7SjUCQ4tLJYWQ7cLol00VCACK1JXcGQ7p+psrFmDlZ7cA4KshvjxbQbqGqBDrCn73F0TNzbY+ndwprZUYx2ZycOxZEdP8OK7jRtF71K60BjpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZiS8kvwk; arc=none smtp.client-ip=209.85.221.178
+	 To:Cc:Content-Type; b=AvNsVJwzmwCUou85tfc7wEKWFFnStyhrydxorss7B+E8kv6igI+EVhTlrIjf0mWxlK27rfKPP/23L/ygCxLRjfjg9gTu/pZVGONPyQgL2RLxxui2KZzv7cNPxKjTpT2L2Lrf2Enjs313Hdh51HlYoFgzd/l03gc3H2fZBj9ia9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=WqIn5s2Z; arc=none smtp.client-ip=209.85.222.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4bfffed970bso573367e0c.3
-        for <linux-pci@vger.kernel.org>; Fri, 02 Feb 2024 01:01:42 -0800 (PST)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7d6275d7d4dso650149241.2
+        for <linux-pci@vger.kernel.org>; Fri, 02 Feb 2024 01:03:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706864501; x=1707469301; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706864611; x=1707469411; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SvF2xXBHFPm+BTDgleNyCm2Lv+WJH8Y5ccw3uGZn2Bg=;
-        b=ZiS8kvwkUbLdn54vXRerU1iY+/40zfY33XG6Ls437A0SqZ3yHrshFFiHFkiGPy+Eu4
-         iOWefC1uxFFg0J+vi95DIj6Y4bP2AV7xh/uQzI6ihuYiH0f6yi7kBEE3ppF2a9burL9L
-         WSnEskaxyJ19lualtJT8XjlRgwDVQznDFRvvXInkFkZWq6dTCpeQ8wR1wdidQr4DeuQl
-         UP4sKV6NdIZ2ZxibNTYGgwxN50lbZjukXbBYvVQm53QDQofLo1Tatv6qwfiV17a5LJ8O
-         C/aGxtO5SPBpsj7DvJ9q9RWVBC3olKx2kfoRfzhekPUfB7b56p35tf77lc9WMRKVunb2
-         toVg==
+        bh=fCN752qmd2T78irI31vKFY9eZlBq4rpwdzKMS8r/StY=;
+        b=WqIn5s2Z6bkhf3P5cAAoCC9Q3A30eCh8bUEZHZ0HV0w+yDCqC571tWio40+CKl41Al
+         ix6+KWifm1ILiNg8UuNjRnacnyPdGJgJA8FxlyhHURpqIvXsY3Nc7URPmlHIojZoHnQS
+         NLoqGXcDFeqqaCeGNzU8MexsETy/Ms23RhbXD1nUP+TbN5ab5qPZ+A/LS22Wbhp5RWcA
+         c6+CgpI6se0Z0SPtzzjGm70oGHQ9Dy0UZCSJNQ821Y8l01aet+0Phav2n2gmWKvf2yvC
+         nx2tlaU/beQO2bISeCILOp71XyFT5rhKloE45IQSXyo0KtIJtUV201PlOQ0INh6zjc4J
+         FF4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706864501; x=1707469301;
+        d=1e100.net; s=20230601; t=1706864611; x=1707469411;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SvF2xXBHFPm+BTDgleNyCm2Lv+WJH8Y5ccw3uGZn2Bg=;
-        b=kq1tGHtbTK7abggxsRF7YNvrzunqDNB5VUEYiBRHkMkunmhnUuaio7hYSQtXjuqf5h
-         pC0aCOydGOOzIZDTIN7qYWp65LqlQliJYy8Hbp17NVIrPbBA2bxouV4204TQzmPUrgib
-         3/h4N03P4O0DLb1OCy3r9C7Xi5q8yAhWqpDx5jw9ydH7xgcMx6uZ1Xv3U6Bgd+NQqqCj
-         BWh213Y4CZdUYle/CiaSDnM1Z11TAi0H+IVNL3A8gNRCMbrXwHIrnDpNz8HbNp6FFUI2
-         5YsuDu8rnM9DxBZM2CJ+z7iy64HEjILiQoMkWl3lU0zp+WF9s/ZIAVo0SAXQivGwZGXI
-         vp5A==
-X-Forwarded-Encrypted: i=0; AJvYcCXHjRo/w79gRkzCjnBj3maY8bQMCJQSbpR/ddxbUPuwZADIbtMKlJqdkgG/4hs9ZsVTpi+GpbhoNGgCJu6Ui4uDxhvWCnavR+qa
-X-Gm-Message-State: AOJu0YzE+C4rneCZD+0dh98PfEzbaKNXyf3kGE4mXxJsqTXVlz2pJmF1
-	aupF5nM9ITSuYyVee3FP6upr4YkpjXNWaSTYLJY17sKbCPxnN9hRqYCJTFic88JVGMBjvOQPDDl
-	CMyb9NvP74NfZ9eQ2Q8ndoPR8CY2EaJgAirewDA==
-X-Google-Smtp-Source: AGHT+IHdRDYbTn45U1Gk7PQJ5Nplhs7Q8O/wm2k+RRnc7OXTW/JybdBa+Q6hLwd7fTBfycRkvqLHTJnU8kP4B/0auVo=
-X-Received: by 2002:a05:6122:2527:b0:4c0:ca9:9d7d with SMTP id
- cl39-20020a056122252700b004c00ca99d7dmr1578768vkb.11.1706864501127; Fri, 02
- Feb 2024 01:01:41 -0800 (PST)
+        bh=fCN752qmd2T78irI31vKFY9eZlBq4rpwdzKMS8r/StY=;
+        b=o+DH/iz4DFYbO12SB0Vrfjtf1jZEP5iyOHyCWaLXQZXoqS2b7nhXO89Ys6mIK8DUyT
+         Dk5ebxNP6iANW/appo1TK/c86UJ77JUWqJjiI9W7cfd088+kzRHivp0yy8ZyO7Mkjj0E
+         kRbht1Ma6sqBLKWULGIRSvhKCDPYFfYqUDePIhAm+zEgpcboIN6LTv9IELtZz1HaA6y1
+         D+q2YRf3SDCqz6En5/hIzWXNk74mz/NmQN9kG15rjWN/KA94IGCksGvm2sFUi695XPo0
+         OteDXXGfePZi17GJeORP2cMcOwYZAPUZwpgqgpR1x4eivOK3bkRvvlK7Xds6P4Z1DPbK
+         cqsg==
+X-Gm-Message-State: AOJu0YxO/Ao3i2I2pbhaUBjRiJmvvVbFz45EqJ0HS2kXEMmNijBdxhz+
+	7qzbUcXogGMcyNP1Ul64Odj++iflwz125PytSQuzKGHtNAFoMNrvAYfM+kfhYZdQPPKMHEILM5C
+	GJv8bsGq32JFHRDXDERPq+e1tCVEh+u9JGD351g==
+X-Google-Smtp-Source: AGHT+IEqs2bNIvCzWVgomnMreMb0zjFg7P+zxxYTKm00L9KfymfIWV9u5SWsm3QuvME2u5gS+F7nU11SjJyZUsZhto0=
+X-Received: by 2002:a05:6122:1d16:b0:4b6:d4c2:61d3 with SMTP id
+ gc22-20020a0561221d1600b004b6d4c261d3mr8184430vkb.0.1706864611683; Fri, 02
+ Feb 2024 01:03:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201155532.49707-1-brgl@bgdev.pl> <20240201155532.49707-5-brgl@bgdev.pl>
- <ys45p7mdiur4liwzlexqm3aji7iz5panpb73ixg34wcio2qbvz@wkjcyazbzb4p> <CAA8EJpo7LwG2Kt0JSPc=MazWUme3YVmKHa9Fr6jc=NrZirEYUg@mail.gmail.com>
-In-Reply-To: <CAA8EJpo7LwG2Kt0JSPc=MazWUme3YVmKHa9Fr6jc=NrZirEYUg@mail.gmail.com>
+References: <20240201155532.49707-1-brgl@bgdev.pl> <20240201155532.49707-7-brgl@bgdev.pl>
+ <4epbzsmxj2gfvjcufclfw7vnamr6hyeickrbyakibdtubwnefs@lkyt7mth43nq>
+In-Reply-To: <4epbzsmxj2gfvjcufclfw7vnamr6hyeickrbyakibdtubwnefs@lkyt7mth43nq>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 2 Feb 2024 10:01:30 +0100
-Message-ID: <CAMRc=Md1xGma+=UzmtO4QLzF36xAe6HcRVF6WmPd6Zys=+j4YQ@mail.gmail.com>
-Subject: Re: [RFC 4/9] power: pwrseq: add a driver for the QCA6390 PMU module
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+Date: Fri, 2 Feb 2024 10:03:19 +0100
+Message-ID: <CAMRc=Mdps2CccmoYM06W_iiNcw8QauEueGSWZOEvD5P8PFgLVQ@mail.gmail.com>
+Subject: Re: [RFC 6/9] PCI: create platform devices for child OF nodes of the
+ port node
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
 	Abel Vesa <abel.vesa@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
 	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
@@ -94,247 +93,115 @@ Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 2, 2024 at 8:48=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Fri, Feb 2, 2024 at 3:59=E2=80=AFAM Bjorn Andersson <andersson@kernel.or=
+g> wrote:
 >
-> On Fri, 2 Feb 2024 at 06:54, Bjorn Andersson <andersson@kernel.org> wrote=
-:
+> On Thu, Feb 01, 2024 at 04:55:29PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > On Thu, Feb 01, 2024 at 04:55:27PM +0100, Bartosz Golaszewski wrote:
-> > > diff --git a/drivers/power/sequencing/pwrseq-qca6390.c b/drivers/powe=
-r/sequencing/pwrseq-qca6390.c
-> > [..]
-> > > +static int pwrseq_qca6390_power_on(struct pwrseq_device *pwrseq)
-> > > +{
-> > > +     struct pwrseq_qca6390_ctx *ctx =3D pwrseq_device_get_data(pwrse=
-q);
-> > > +     int ret;
-> > > +
-> > > +     ret =3D regulator_bulk_enable(ctx->pdata->num_vregs, ctx->regs)=
-;
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     gpiod_set_value_cansleep(ctx->bt_gpio, 1);
-> > > +     gpiod_set_value_cansleep(ctx->wlan_gpio, 1);
-> >
-> > So it's no longer possible to power these independently?
+> > In order to introduce PCI power-sequencing,
 >
-> I'd second this, there must be a way to power them on and off
-> separately. In the end, this provides a good way to restart the BT
-> core if it gets sick.
+> Please provide a proper problem description.
+>
+> > we need to create platform
+>
+> And properly express why this is a "need".
+>
+> > devices for child nodes of the port node. They will get matched against
+> > the pwrseq drivers
+>
+> That's not what happens in your code, the child nodes of the bridge node
+> in DeviceTree will match against arbitrary platform_drivers.
+>
+> I also would like this commit message to express that the job of the
+> matched device is to:
+>
+> 1) power up said device, followed by triggering a scan on the parent PCI
+> bus during it's probe function.
+>
+> 2)  power down said device, during its remove function.
+>
+> > (if one exists) and then the actual PCI device will
+> > reuse the node once it's detected on the bus.
+>
+> I think the "reuse" deserves to be clarified as there will be both a pci
+> and a platform device associated with the same of_node.
 >
 
-Makes sense, I'll think about it. I'm thinking about adding a flags
-argument for this kind of switching.
+Noted all of the above. Thanks!
 
 > >
-> > > +
-> > > +     if (ctx->pdata->pwup_delay_msec)
-> > > +             msleep(ctx->pdata->pwup_delay_msec);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int pwrseq_qca6390_power_off(struct pwrseq_device *pwrseq)
-> > > +{
-> > > +     struct pwrseq_qca6390_ctx *ctx =3D pwrseq_device_get_data(pwrse=
-q);
-> > > +
-> > > +     gpiod_set_value_cansleep(ctx->bt_gpio, 0);
-> > > +     gpiod_set_value_cansleep(ctx->wlan_gpio, 0);
-> > > +
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >  drivers/pci/bus.c    | 9 ++++++++-
+> >  drivers/pci/remove.c | 2 ++
+> >  2 files changed, 10 insertions(+), 1 deletion(-)
 > >
-> > The answer that was provided recently was that the WiFi and BT modules
-> > absolutely must be modelled together, because there must be a 100ms
-> > delay between bt_gpio going low and wlan_gpio going high.
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 826b5016a101..17ab41094c4e 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/errno.h>
+> >  #include <linux/ioport.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> >  #include <linux/proc_fs.h>
+> >  #include <linux/slab.h>
+> >
+> > @@ -342,8 +343,14 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >        */
+> >       pcibios_bus_add_device(dev);
+> >       pci_fixup_device(pci_fixup_final, dev);
+> > -     if (pci_is_bridge(dev))
+> > +     if (pci_is_bridge(dev)) {
+> >               of_pci_make_dev_node(dev);
+> > +             retval =3D of_platform_populate(dev->dev.of_node, NULL, N=
+ULL,
+> > +                                           &dev->dev);
 >
-> For the reference, it was for the QCA6490 (not QCA6390, next
-> revision), which maps to WCN6855.
+> I'm not familiar enough with the ins and outs of the PCI code. Can you
+> confirm that there are no problems with this (possibly) calling
+> pci_rescan_bus() before the bridge device is fully initialized below?
 >
 
-The docs for QCA6390 also mention the 100ms delay but it doesn't seem
-to be necessary. But yes, this was done after Dmitry raised concerns
-about the QCA6490.
+I'll clarify that. I'm not that well versed with PCI code either but
+will get help from the right people.
 
 Bart
 
+> Regards,
+> Bjorn
 >
+> > +             if (retval)
+> > +                     pci_err(dev, "failed to populate child OF nodes (=
+%d)\n",
+> > +                             retval);
+> > +     }
+> >       pci_create_sysfs_dev_files(dev);
+> >       pci_proc_attach_device(dev);
+> >       pci_bridge_d3_update(dev);
+> > diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> > index d749ea8250d6..fc9db2805888 100644
+> > --- a/drivers/pci/remove.c
+> > +++ b/drivers/pci/remove.c
+> > @@ -1,6 +1,7 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <linux/pci.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of_platform.h>
+> >  #include "pci.h"
 > >
-> > If you're not going to address that concern, then I fail to see the
-> > reason for adding the power sequence framework - just let the BT and
-> > PCI power control (WiFi) do their thing independently.
+> >  static void pci_free_resources(struct pci_dev *dev)
+> > @@ -22,6 +23,7 @@ static void pci_stop_dev(struct pci_dev *dev)
+> >               device_release_driver(&dev->dev);
+> >               pci_proc_detach_device(dev);
+> >               pci_remove_sysfs_dev_files(dev);
+> > +             of_platform_depopulate(&dev->dev);
+> >               of_pci_remove_node(dev);
 > >
-> > > +     return regulator_bulk_disable(ctx->pdata->num_vregs, ctx->regs)=
-;
-> > > +}
-> > > +
-> > > +static int pwrseq_qca6390_match(struct pwrseq_device *pwrseq,
-> > > +                             struct device *dev)
-> > > +{
-> > > +     struct pwrseq_qca6390_ctx *ctx =3D pwrseq_device_get_data(pwrse=
-q);
-> > > +     struct device_node *dev_node =3D dev->of_node;
-> > > +
-> > > +     /*
-> > > +      * The PMU supplies power to the Bluetooth and WLAN modules. bo=
-th
-> > > +      * consume the PMU AON output so check the presence of the
-> > > +      * 'vddaon-supply' property and whether it leads us to the righ=
-t
-> > > +      * device.
-> > > +      */
-> > > +     if (!of_property_present(dev_node, "vddaon-supply"))
-> > > +             return 0;
-> > > +
-> > > +     struct device_node *reg_node __free(of_node) =3D
-> > > +                     of_parse_phandle(dev_node, "vddaon-supply", 0);
-> > > +     if (!reg_node)
-> > > +             return 0;
-> > > +
-> > > +     /*
-> > > +      * `reg_node` is the PMU AON regulator, its parent is the `regu=
-lators`
-> > > +      * node and finally its grandparent is the PMU device node that=
- we're
-> > > +      * looking for.
-> > > +      */
-> > > +     if (!reg_node->parent || !reg_node->parent->parent ||
-> > > +         reg_node->parent->parent !=3D ctx->of_node)
-> > > +             return 0;
+> >               pci_dev_assign_added(dev, false);
+> > --
+> > 2.40.1
 > >
-> > Your DeviceTree example gives a sense that a set of supplies feeds the
-> > PMU, which then supplies power to the BT and WiFi nodes through some
-> > entity that can switch power on and off, and adjust the voltage level.
-> >
-> > Then comes this function, which indicates that the DeviceTree model was
-> > just for show.
-> >
-> > > +
-> > > +     return 1;
-> > > +}
-> > > +
-> > > +static int pwrseq_qca6390_probe(struct platform_device *pdev)
-> > > +{
-> > > +     struct device *dev =3D &pdev->dev;
-> > > +     struct pwrseq_qca6390_ctx *ctx;
-> > > +     struct pwrseq_config config;
-> > > +     int ret, i;
-> > > +
-> > > +     ctx =3D devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > > +     if (!ctx)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     ctx->of_node =3D dev->of_node;
-> > > +
-> > > +     ctx->pdata =3D of_device_get_match_data(dev);
-> > > +     if (!ctx->pdata)
-> > > +             return dev_err_probe(dev, -ENODEV,
-> > > +                                  "Failed to obtain platform data\n"=
-);
-> > > +
-> > > +     if (ctx->pdata->vregs) {
-> > > +             ctx->regs =3D devm_kcalloc(dev, ctx->pdata->num_vregs,
-> > > +                                      sizeof(*ctx->regs), GFP_KERNEL=
-);
-> > > +             if (!ctx->regs)
-> > > +                     return -ENOMEM;
-> > > +
-> > > +             for (i =3D 0; i < ctx->pdata->num_vregs; i++)
-> > > +                     ctx->regs[i].supply =3D ctx->pdata->vregs[i].na=
-me;
-> > > +
-> > > +             ret =3D devm_regulator_bulk_get(dev, ctx->pdata->num_vr=
-egs,
-> > > +                                           ctx->regs);
-> > > +             if (ret < 0)
-> > > +                     return dev_err_probe(dev, ret,
-> > > +                                          "Failed to get all regulat=
-ors\n");
-> > > +
-> > > +             for (i =3D 0; i < ctx->pdata->num_vregs; i++) {
-> > > +                     if (!ctx->pdata->vregs[1].load_uA)
-> > > +                             continue;
-> > > +
-> > > +                     ret =3D regulator_set_load(ctx->regs[i].consume=
-r,
-> > > +                                              ctx->pdata->vregs[i].l=
-oad_uA);
-> > > +                     if (ret)
-> > > +                             return dev_err_probe(dev, ret,
-> > > +                                                  "Failed to set vre=
-g load\n");
-> > > +             }
-> > > +     }
-> > > +
-> > > +     ctx->bt_gpio =3D devm_gpiod_get_optional(dev, "bt-enable", GPIO=
-D_OUT_LOW);
-> >
-> > Why are these optional? Does it make sense to have a qca6390 without
-> > both of these gpios connected?
-> >
-> > Regards,
-> > Bjorn
-> >
-> > > +     if (IS_ERR(ctx->bt_gpio))
-> > > +             return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
-> > > +                                  "Failed to get the Bluetooth enabl=
-e GPIO\n");
-> > > +
-> > > +     ctx->wlan_gpio =3D devm_gpiod_get_optional(dev, "wlan-enable",
-> > > +                                              GPIOD_OUT_LOW);
-> > > +     if (IS_ERR(ctx->wlan_gpio))
-> > > +             return dev_err_probe(dev, PTR_ERR(ctx->wlan_gpio),
-> > > +                                  "Failed to get the WLAN enable GPI=
-O\n");
-> > > +
-> > > +     memset(&config, 0, sizeof(config));
-> > > +
-> > > +     config.parent =3D dev;
-> > > +     config.owner =3D THIS_MODULE;
-> > > +     config.drvdata =3D ctx;
-> > > +     config.match =3D pwrseq_qca6390_match;
-> > > +     config.power_on =3D pwrseq_qca6390_power_on;
-> > > +     config.power_off =3D pwrseq_qca6390_power_off;
-> > > +
-> > > +     ctx->pwrseq =3D devm_pwrseq_device_register(dev, &config);
-> > > +     if (IS_ERR(ctx->pwrseq))
-> > > +             return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
-> > > +                                  "Failed to register the power sequ=
-encer\n");
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id pwrseq_qca6390_of_match[] =3D {
-> > > +     {
-> > > +             .compatible =3D "qcom,qca6390-pmu",
-> > > +             .data =3D &pwrseq_qca6390_of_data,
-> > > +     },
-> > > +     { }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, pwrseq_qca6390_of_match);
-> > > +
-> > > +static struct platform_driver pwrseq_qca6390_driver =3D {
-> > > +     .driver =3D {
-> > > +             .name =3D "pwrseq-qca6390",
-> > > +             .of_match_table =3D pwrseq_qca6390_of_match,
-> > > +     },
-> > > +     .probe =3D pwrseq_qca6390_probe,
-> > > +};
-> > > +module_platform_driver(pwrseq_qca6390_driver);
-> > > +
-> > > +MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>"=
-);
-> > > +MODULE_DESCRIPTION("QCA6390 PMU power sequencing driver");
-> > > +MODULE_LICENSE("GPL");
-> > > --
-> > > 2.40.1
-> > >
-> >
->
->
-> --
-> With best wishes
-> Dmitry
 
