@@ -1,167 +1,165 @@
-Return-Path: <linux-pci+bounces-2967-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-2968-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BF438464BD
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 01:03:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93D96846519
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 01:41:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0A4E1C2372F
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 00:03:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B86911C243C9
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 00:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E28E137B;
-	Fri,  2 Feb 2024 00:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60A604C78;
+	Fri,  2 Feb 2024 00:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1O0LXPh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oz1LoouU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56BA4C71;
-	Fri,  2 Feb 2024 00:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A2F3C23;
+	Fri,  2 Feb 2024 00:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706832198; cv=none; b=ZvLvFtPL76f50iY77iGChNyC9cKG45fNQwXHxLxcWlsj6EOOgB94RfBl8mWN4hT78f3ag10v5y0cKGil4zS6KAbqap3VUTB1pT8aafExvAqFNt+5RAvJE0h2PUDAEIA+ETz1pCu80QSp9lIEq1Mi/GLTWedUv6bbafd5d6xeStc=
+	t=1706834455; cv=none; b=LF65N9Nx0t0zF+ixjmnbzhD6ZweO1i0oiEs/MQHRDP/wE3aWPqw5KILv+RYpFK6L2lCyv46/43PgXHoUJRpUvpJLTC+cKcSu7E2cqZsBf3QCsF3ssTtI72iNl71rGlzihAdM63vG/StbfHMy+FtDMrMZA2+N7F5++qzPdCHnJDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706832198; c=relaxed/simple;
-	bh=S77eR3+aBnUK3p2BE5Am64ezv1OvD+YOIoEHYe29IuI=;
+	s=arc-20240116; t=1706834455; c=relaxed/simple;
+	bh=dLf5cloqiSaHlekbWkAHkgFrqJzKTS7rJSxj4m9pkNw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fRVTNj4KTS3xbmMJH1e9f2z8BKzdN8lEulStru61NTFKWNs53piWBTQo0K+kOlRT4ygVFLr3kLh4E72UQ4UKOjN0H+HdsTHDfvVec+NDnVaOcOK3FmMuoaVWVdoM2gKIhXues1JmogqOQPJkfLvmv8yshpaSAG7qpZixOupOF6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1O0LXPh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F322C433F1;
-	Fri,  2 Feb 2024 00:03:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cI3xETHSpxpirktKonC4f186YIBKMx+Pewru366XT6MnTjFjyJUZJuMm8oxxgTtRXf37P8H8OdU/35BqTkBEuoMuHwUYw408VKsxK2BQr10DnJOO4HmkVy/SlMCbEEqQjqkd01qOqtGUi62a63Wu30GcNhwVgzTZkbOt0CAHuRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oz1LoouU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07665C433C7;
+	Fri,  2 Feb 2024 00:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706832197;
-	bh=S77eR3+aBnUK3p2BE5Am64ezv1OvD+YOIoEHYe29IuI=;
+	s=k20201202; t=1706834454;
+	bh=dLf5cloqiSaHlekbWkAHkgFrqJzKTS7rJSxj4m9pkNw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o1O0LXPhHzpi1Rs6bzSdUB3LcjO1MINeMXN+1VP+sLsOBbB1lmcWYZuIO4+mnQAL7
-	 MpNreOS7S3fgAQVhYTOwYixsFgyWORbDq1gNT16Srdh7+9QduAlF2WLSh7ATYq9A/m
-	 Y0Lm0CB7nQpLHDTRuIF6IujMeKqllKNE//q8Nn3cMmddLrW3fdHEFrHNrIdxf9+VMQ
-	 1T/iRH19Hl/og9XJiEqS8kUbH26YuegOXXgC2QmD8Clxt3tze7TsIaPCE17/GfHVgz
-	 xNSreoCPH085OxjKknjT/WMdY6EMheAbPZNwG25VNnB9eCHX5WAsJbaqJNBaD471hM
-	 CnqXZHJo7xVJg==
-Date: Thu, 1 Feb 2024 18:03:12 -0600
+	b=oz1LoouUgbOyVQzt99sDj3Ic+NNgrwdyDpyOTD7l77xb4miDPki4x6F9ZILOQ1tr2
+	 EYTgfp6ytRYeXdDGPXAqK9+H3TFQDbgXqUvz7ktIe9pNyWzIaz+IHdTN+hox60Kpot
+	 mwFTcdcq5zS9g8npvGMhtOMvGreSG2+P67MMjBzDu63iZXtlhuZKLWT3F909SacwCk
+	 ZiXhvTWllzwJjXK3EMeD41FRTipnXYR2q+X7L8QqXHn15uctUMheaQ1wAaAP50dtQV
+	 tPh1ZF3go10X2JZt9dXMoLQZ2m9exWq8p7gzzj548QxOA4vibe8X2csE5HFx5Hmmmz
+	 8cIdJDEhS2j5Q==
+Date: Thu, 1 Feb 2024 18:40:50 -0600
 From: Bjorn Andersson <andersson@kernel.org>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Chris Morgan <macromorgan@hotmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, 
-	=?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: Re: Re: [PATCH 4/9] PCI: create platform devices for child OF
- nodes of the port node
-Message-ID: <oiwvcvu6wdmpvhss3t7uaqkl5q73mki5pz6liuv66bap4dr2mp@jtjjwzlvt6za>
-References: <20240117160748.37682-1-brgl@bgdev.pl>
- <20240117160748.37682-5-brgl@bgdev.pl>
- <2024011707-alibi-pregnancy-a64b@gregkh>
- <CAMRc=Mef7wxRccnfQ=EDLckpb1YN4DNLoC=AYL8v1LLJ=uFH2Q@mail.gmail.com>
- <2024011836-wok-treadmill-c517@gregkh>
- <d2he3ufg6m46zos4swww4t3peyq55blxhirsx37ou37rwqxmz2@5khumvic62je>
- <CAMRc=MeXJjpJhDjyn_P-SGo4rDnEuT9kGN5jAbRcuM_c7_aDzQ@mail.gmail.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pci@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFC 0/9] power: sequencing: implement the subsystem and add
+ first users
+Message-ID: <xdef5sjo5bvdvgx2ezgubeboos45mkeb2dcua63qhmztqrk6ja@m5ylrmdrwmia>
+References: <20240201155532.49707-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeXJjpJhDjyn_P-SGo4rDnEuT9kGN5jAbRcuM_c7_aDzQ@mail.gmail.com>
+In-Reply-To: <20240201155532.49707-1-brgl@bgdev.pl>
 
-On Wed, Jan 31, 2024 at 12:04:14PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Jan 30, 2024 at 10:54 PM Bjorn Andersson <andersson@kernel.org> wrote:
-> >
-> > On Thu, Jan 18, 2024 at 12:15:27PM +0100, Greg Kroah-Hartman wrote:
-> > > On Thu, Jan 18, 2024 at 11:58:50AM +0100, Bartosz Golaszewski wrote:
-> > > > On Wed, Jan 17, 2024 at 5:45 PM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Wed, Jan 17, 2024 at 05:07:43PM +0100, Bartosz Golaszewski wrote:
-> > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > > >
-> > > > > > In order to introduce PCI power-sequencing, we need to create platform
-> > > > > > devices for child nodes of the port node.
-> > > > >
-> > > > > Ick, why a platform device?  What is the parent of this device, a PCI
-> > > > > device?  If so, then this can't be a platform device, as that's not what
-> > > > > it is, it's something else so make it a device of that type,.
-> > > > >
-> > > >
-> > > > Greg,
-> > > >
-> > > > This is literally what we agreed on at LPC. In fact: during one of the
-> > > > hall track discussions I said that you typically NAK any attempts at
-> > > > using the platform bus for "fake" devices but you responded that this
-> > > > is what the USB on-board HUB does and while it's not pretty, this is
-> > > > what we need to do.
-> > >
-> > > Ah, you need to remind me of these things, this changelog was pretty
-> > > sparse :)
-> > >
-> >
-> > I believe I missed this part of the discussion, why does this need to be
-> > a platform_device? What does the platform_bus bring that can't be
-> > provided by some other bus?
-> >
-> 
-> Does it need to be a platform_device? No, of course not. Does it make
-> sense for it to be one? Yes, for two reasons:
-> 
-> 1. The ATH11K WLAN module is represented on the device tree like a
-> platform device, we know it's always there and it consumes regulators
-> from another platform device. The fact it uses PCIe doesn't change the
-> fact that it is logically a platform device.
-
-Are you referring to the ath11k SNOC (firmware running on co-processor
-in the SoC) variant?
-
-Afaict the PCIe-attached ath11k is not represented as a platform_device
-in DeviceTree.
-
-Said platform_device is also not a child under the PCIe bus, so this
-would be a different platform_device...
-
-> 2. The platform bus already provides us with the entire infrastructure
-> that we'd now need to duplicate (possibly adding bugs) in order to
-> introduce a "power sequencing bus".
+On Thu, Feb 01, 2024 at 04:55:23PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
 
-This is a perfectly reasonable desire. Look at our PMICs, they are full
-of platform_devices. But through the years it's been said many times,
-that this is not a valid or good reason for using platform_devices, and
-as a result we have e.g. auxiliary bus.
+We now have 3 RFC and 1 PATCH versions of these patches on the list in
+under a month. Please at least add a version to your subject...
 
-Anyway, (please) don't claim that "we need to", when it actually is "we
-want to use platform_device because that's more convenient"!
+> I'd like to preface the cover letter by saying right away that this
+> series is not complete. It's an RFC that presents my approach and is sent
+> to the list for discussion. There are no DT bindings nor docs in
+> Documentation/ yet. Please review it as an RFC and not an upstreambound
+> series. If the approach is accepted as correct, I'll add missing bits.
+> 
+> The RFC[1] presenting my proposed device-tree representation of the
+> QCA6391 package present on the RB5 board - while not really officially
+> accepted - was not outright rejected which is a good sign.
+> 
+> This series incorporates it and builds a proposed power sequencing
+> subsystem together with the first dedicated driver around it. Then it
+> adds first two users: the Bluetooth and WLAN modules of the QCA6391.
+> 
+> The Bluetooth part is pretty straightforward. The WLAN however is a PCIe
+> device and as such needs to be powered-up *before* it's detected on the
+> PCI bus. To that end, we modify the PCI core to instantiate platform
+> devices for existing DT child nodes of the PCIe ports. For those nodes
+> for which a power-sequencing driver exists, we bind it and let it probe.
+> The driver then triggers a rescan of the PCI bus with the aim of
+> detecting the now powered-on device. The device will consume the same DT
+> node as the platform, power-sequencing device. We use device links to
+> make the latter become the parent of the former.
+> 
+> The main advantage of the above approach (both for PCI as well as
+> generic power sequencers) is that we don't introduce significant changes
+> in DT bindings and don't introduce new properties. We merely define new
+> resources.
+> 
+
+How can we tell? There are still no Documentation/dt-bindings changes in
+your series.
 
 Regards,
 Bjorn
 
-> Bart
+> [1] https://lore.kernel.org/all/CAMRc=MckG32DQv7b1AQL-mbnYdx4fsdYWtLwCyXc5Ma7EeSAKw@mail.gmail.com/T/#md5dc62007d12f6833d4e51658b14e0493954ba68
 > 
-> > (I'm not questioning the need for having a bus, creating devices, and
-> > matching/binding them to a set of drivers)
-> >
-> > Regards,
-> > Bjorn
-> >
+> Bartosz Golaszewski (9):
+>   of: provide a cleanup helper for OF nodes
+>   arm64: dts: qcom: qrb5165-rb5: model the PMU of the QCA6391
+>   power: sequencing: new subsystem
+>   power: pwrseq: add a driver for the QCA6390 PMU module
+>   Bluetooth: qca: use the power sequencer for QCA6390
+>   PCI: create platform devices for child OF nodes of the port node
+>   PCI: hold the rescan mutex when scanning for the first time
+>   PCI/pwrctl: add PCI power control core code
+>   PCI/pwrctl: add a PCI power control driver for power sequenced devices
 > 
-> [snip]
+>  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts  | 128 +++++-
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi      |  10 +
+>  drivers/bluetooth/hci_qca.c               |  30 ++
+>  drivers/pci/Kconfig                       |   1 +
+>  drivers/pci/Makefile                      |   1 +
+>  drivers/pci/bus.c                         |   9 +-
+>  drivers/pci/probe.c                       |   2 +
+>  drivers/pci/pwrctl/Kconfig                |  17 +
+>  drivers/pci/pwrctl/Makefile               |   4 +
+>  drivers/pci/pwrctl/core.c                 |  82 ++++
+>  drivers/pci/pwrctl/pci-pwrctl-pwrseq.c    |  83 ++++
+>  drivers/pci/remove.c                      |   2 +
+>  drivers/power/Kconfig                     |   1 +
+>  drivers/power/Makefile                    |   1 +
+>  drivers/power/sequencing/Kconfig          |  28 ++
+>  drivers/power/sequencing/Makefile         |   6 +
+>  drivers/power/sequencing/core.c           | 482 ++++++++++++++++++++++
+>  drivers/power/sequencing/pwrseq-qca6390.c | 232 +++++++++++
+>  include/linux/of.h                        |   4 +
+>  include/linux/pci-pwrctl.h                |  24 ++
+>  include/linux/pwrseq/consumer.h           |  53 +++
+>  include/linux/pwrseq/provider.h           |  41 ++
+>  22 files changed, 1229 insertions(+), 12 deletions(-)
+>  create mode 100644 drivers/pci/pwrctl/Kconfig
+>  create mode 100644 drivers/pci/pwrctl/Makefile
+>  create mode 100644 drivers/pci/pwrctl/core.c
+>  create mode 100644 drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+>  create mode 100644 drivers/power/sequencing/Kconfig
+>  create mode 100644 drivers/power/sequencing/Makefile
+>  create mode 100644 drivers/power/sequencing/core.c
+>  create mode 100644 drivers/power/sequencing/pwrseq-qca6390.c
+>  create mode 100644 include/linux/pci-pwrctl.h
+>  create mode 100644 include/linux/pwrseq/consumer.h
+>  create mode 100644 include/linux/pwrseq/provider.h
+> 
+> -- 
+> 2.40.1
+> 
 
