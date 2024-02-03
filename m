@@ -1,68 +1,61 @@
-Return-Path: <linux-pci+bounces-3058-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3059-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73A00847D4C
-	for <lists+linux-pci@lfdr.de>; Sat,  3 Feb 2024 00:42:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42577847D6D
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Feb 2024 01:05:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5ED21C216A8
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Feb 2024 23:42:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C93B51F27986
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Feb 2024 00:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99E60132486;
-	Fri,  2 Feb 2024 23:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8317B196;
+	Sat,  3 Feb 2024 00:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zZaZBQti"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI7IupAl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7F5132480;
-	Fri,  2 Feb 2024 23:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57704625;
+	Sat,  3 Feb 2024 00:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706917284; cv=none; b=cyo6352daf3vZkL682RqS/dVtjGbHgw9ahPN46c1B7W0bIq8XFi9vpQ87j1MiQv+EX1cT5w3aeRCDSAUmYyIeJAbdpuNUTq6AVpAkjPHUwF09lZvJAbZ7NUBJS8bd3bBDEVw7VB/j/x15jyNsh97dkahsnIG3kVRy828+LxVxeA=
+	t=1706918712; cv=none; b=JzGlOPoKnvs65fnGg0wc2uo7BPCezIdfu4B2AwCSnkmC3KNNoAgVjlWFpoCcVZMRp9rLu4hXjHG1yMzudf/ozAP8THsouuRTzN+pdg4ofiqpYitmMZIWcp5KJz0PnCChKUNDTM1ENl1AUx/g21mC87W7StndN8z/3cMRK+i4cFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706917284; c=relaxed/simple;
-	bh=gX+4EF1aa8LAyzPJib2hQOtkg0CUXK5HquVqw1n55so=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFs8gdxcj8N9Airq5RhY43wj5OxueDzIVq7WOGncvu/lLEplgE4mLi4Y/xYqVMfiR2MVeIa0TlCgqlCZRFGb00g6vUDecAQjUt8zwNWxJlP3CFkvzGS/KEGPCetirt+/vyhtMjJMMbippS6H7UzRxeUTdCEJDgaaLIKUlVoUFfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zZaZBQti; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC7DDC433A6;
-	Fri,  2 Feb 2024 23:41:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706917283;
-	bh=gX+4EF1aa8LAyzPJib2hQOtkg0CUXK5HquVqw1n55so=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zZaZBQtipCcf5XBGD66l7h1yJKY1ffHOnvxlbMtnRWA3xh9aONF4zzKTO6U6oVTZG
-	 j4ftTBoZkLHG6gZyYjjrMLkVh+1o6h3+gq5c0PQg91mWkhiEgE6ngXzTGsBf+39xK8
-	 S0wo69WpngQm/A6CTieAkB6+8kZG8WR58yEq4TGw=
-Date: Fri, 2 Feb 2024 15:41:23 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Hamza Mahfooz <hamza.mahfooz@amd.com>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Le Ma <le.ma@amd.com>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	James Zhu <James.Zhu@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Alex Shi <alexs@kernel.org>, Jerry Snitselaar <jsnitsel@redhat.com>,
-	Wei Liu <wei.liu@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] drm/amdgpu: wire up the can_remove() callback
-Message-ID: <2024020216-letdown-uproar-718d@gregkh>
-References: <20240202222603.141240-1-hamza.mahfooz@amd.com>
- <20240202222603.141240-3-hamza.mahfooz@amd.com>
+	s=arc-20240116; t=1706918712; c=relaxed/simple;
+	bh=30NXHrEg3FK6BQ39cfSMRrxz2GANhbrY1bn8h8hUjSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=R7lFbIgE8QfwPwhktQlRr0CXR+yO5UM91S5JPsXYWhEOrF/Kh5U2EcC0CdSM/GJ9G2lHxeAs4g0iJRa/UzajZ5cCU4CqkO0Mtk6GSVQ3M/qZKDsYBppwPlZvbLXbPjg1x63XE/TCCRvfg8lhELiUpzPHyK7jD+vdpwkzyltg4zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI7IupAl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8798CC433C7;
+	Sat,  3 Feb 2024 00:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706918711;
+	bh=30NXHrEg3FK6BQ39cfSMRrxz2GANhbrY1bn8h8hUjSM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=BI7IupAlZJxxwlTraPZPHgUy2G+wNxm5B1zNLy8MRGv7jZDkYu9xRGsQHTpGfmALz
+	 ULNMvrkuprFyvMQzzuzIeiGGQ8Hrikj3ICvDgPmtQRFhdmSUwQBGW5nMnALJHswHc6
+	 vNAhhT+92v0nEiuz7EMPobJD3Lu/QDcLRzrMJlvJ2+IoRaPqiyfRXc+/jSxr3e5rFN
+	 R2Zqx/JTgsBLrYBfFoiZUppdT8er49HM/mSCFCQrhineuoxr2nBhMR3VnfDHUeSOgh
+	 1tb38ieCQg5U5zhrB2rAhHV+y7HkrGnmffx92pRtFrguQfXyh46m6shU4hqu6W2T6L
+	 qkANSMwAn2O9g==
+Date: Fri, 2 Feb 2024 18:05:10 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	David Box <david.e.box@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux@endlessos.org
+Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
+ PCIe Root Port and NVMe
+Message-ID: <20240203000510.GA738687@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,49 +64,116 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240202222603.141240-3-hamza.mahfooz@amd.com>
+In-Reply-To: <20240202071110.8515-3-jhp@endlessos.org>
 
-On Fri, Feb 02, 2024 at 05:25:56PM -0500, Hamza Mahfooz wrote:
-> Removing an amdgpu device that still has user space references allocated
-> to it causes undefined behaviour. So, implement amdgpu_pci_can_remove()
-> and disallow devices that still have files allocated to them from being
-> unbound.
+On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
+> The remapped PCIe Root Port and NVMe have PCI PM L1 substates
+> capability, but they are disabled originally:
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> Here is an example on ASUS B1400CEAE:
 > 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> index cc69005f5b46..cfa64f3c5be5 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-> @@ -2323,6 +2323,22 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
->  	return ret;
->  }
+> Capabilities: [900 v1] L1 PM Substates
+>         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+>                   PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+>         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+>                    T_CommonMode=0us LTR1.2_Threshold=0ns
+>         L1SubCtl2: T_PwrOn=10us
+> 
+> Power on all of the VMD remapped PCI devices and quirk max snoop LTR
+> before enable PCI-PM L1 PM Substates by following "Section 5.5.4 of PCIe
+> Base Spec Revision 6.0". Then, PCI PM's L1 substates control are
+> initialized & enabled accordingly.
+
+> Also, update the comments of
+> pci_enable_link_state() and pci_enable_link_state_locked() for
+> kernel-doc, too.
+
+The aspm.c changes should be in a separate patch.  Presumably the
+aspm.c code change fixes a defect, and that defect can be described in
+that patch.  That fix may be needed for non-VMD situations, and having
+it in this vmd patch means it won't be as easy to find and backport.
+
+Nit: rewrap commit log to fill 75 columns.
+
+> @@ -751,11 +751,9 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
+>  		return 0;
 >  
-> +static bool amdgpu_pci_can_remove(struct pci_dev *pdev)
-> +{
-> +	struct drm_device *dev = pci_get_drvdata(pdev);
-> +
-> +	mutex_lock(&dev->filelist_mutex);
-> +
-> +	if (!list_empty(&dev->filelist)) {
-> +		mutex_unlock(&dev->filelist_mutex);
-> +		return false;
-> +	}
-> +
-> +	mutex_unlock(&dev->filelist_mutex);
-> +
-> +	return true;
+> -	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+> -
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
+>  	if (!pos)
+> -		return 0;
+> +		goto out_enable_link_state;
+>  
+>  	/*
+>  	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
+> @@ -763,7 +761,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	 */
+>  	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
+>  	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
+> -		return 0;
+> +		goto out_enable_link_state;
+>  
+>  	/*
+>  	 * Set the default values to the maximum required by the platform to
+> @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
+>  	pci_info(pdev, "VMD: Default LTR value set by driver\n");
 
-Also, to be pedantic, this will not work as right after you returned
-"true" here, userspace could open a file, causing the same issue you are
-trying to prevent to have happen, happen.
+You're not changing this part, and I don't understand exactly how LTR
+works, but it makes me a little bit queasy to read "set the LTR value
+to the maximum required to allow the deepest power management
+savings" and then we set the max snoop values to a fixed constant.
 
-So even if we wanted to do this, which again, we do not, this isn't even
-a solution for it because it will still cause you problems.
+I don't think the goal is to "allow the deepest power savings"; I
+think it's to enable L1.2 *when the device has enough buffering to
+absorb L1.2 entry/exit latencies*.
 
-greg k-h
+The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set this to
+the platform's maximum supported latency or less," so it seems like
+that value must be platform-dependent, not fixed.
+
+And I assume the "_DSM for Latency Tolerance Reporting" is part of the
+way to get those platform-dependent values, but Linux doesn't actually
+use that yet.
+
+I assume that setting the max values incorrectly may lead to either
+being too conservative, so we don't use L1.2 when we could, or too
+aggressive, so we use L1.2 when we shouldn't, and the device loses
+data because it doesn't have enough internal buffering to absorb the
+entry/exit delays.
+
+This paper has a lot of background and might help answer some of my
+questions:
+https://www.intel.co.za/content/dam/doc/white-paper/energy-efficient-platforms-white-paper.pdf
+
+> +out_enable_link_state:
+> +	/*
+> +	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
+> +	 * Section 5.5.4 of PCIe Base Spec Revision 6.0
+> +	 */
+> +	pci_set_power_state_locked(pdev, PCI_D0);
+> +	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+
+Hmmm.  PCIE_LINK_STATE_ALL includes ASPM L1.2.  We may do this even if
+the device doesn't have an LTR Capability.  ASPM L1.2 cannot work
+without LTR.
+
+I only took a quick look but was not convinced that
+pci_enable_link_state() does the right thing when we enable
+PCIE_LINK_STATE_ALL (including ASPM L1.2) on a device that doesn't
+have LTR.  I think it *should* decline to set PCI_L1SS_CTL1_ASPM_L1_2,
+but I'm not sure it does.  Can you double check that path?  Maybe
+that's another defect in aspm.c.
+
+> @@ -1164,6 +1164,8 @@ static int __pci_enable_link_state(struct pci_dev *pdev, int state, bool locked)
+>  		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
+>  	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+>  		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
+> +	if (state & ASPM_STATE_L1_2_MASK)
+> +		aspm_l1ss_init(link);
+>  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+>  
+>  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
 
