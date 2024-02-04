@@ -1,293 +1,166 @@
-Return-Path: <linux-pci+bounces-3064-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3065-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C0558489D5
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 01:04:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85FE0848B68
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 07:13:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1AE301F238E0
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 00:04:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA4C61C21676
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 06:13:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9F2D17E;
-	Sun,  4 Feb 2024 00:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0FD96FA8;
+	Sun,  4 Feb 2024 06:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P8pyP68y"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="raAk0hg7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5365B17585
-	for <linux-pci@vger.kernel.org>; Sun,  4 Feb 2024 00:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707005057; cv=none; b=JwNcwTzFOGfGilVM9EFrbmyDWJSwe6X9PKZrjpJZogbM1PdNFUI9XNaHfWsVQBNWX8h+V6zFyVd2l6Re4eBE0rLD5wrP7CqcJD7KCb5k/X+ib3FIf+06GfP7UljpgxVHHaCs7xqS9FvlS/J47q5rf00/0Ne5fnnhmY0rkSaLSAk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707005057; c=relaxed/simple;
-	bh=+6CtH2DxglGEdvUzMknIm/nrALJL33TUox+Ig0ZMK78=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=igMbLXfnbS+ybRsvj1GEefX5i4+0QsL7EUEM/ZxVg1z9lFX2jFQYCIe5HlcnXxkivZFlVoEZPMzCopGEta65zgyi95wm/jm9Ry48mq3BeS40iLAFOPytEk3H8ZLOGfjyqwRRuRBulsrT/fN+1808J9fzB83ozslGugjbrJ6SvTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P8pyP68y; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707005055; x=1738541055;
-  h=date:from:to:cc:subject:message-id;
-  bh=+6CtH2DxglGEdvUzMknIm/nrALJL33TUox+Ig0ZMK78=;
-  b=P8pyP68yQQm2SEq4ZtYv4h98+bk52GdjAnPA/Nz67t4kN6fLIknDXeOS
-   yIUFci2+r5YALIpt0iaR+HqbGJvhbjP09U7gPYeHUtH4D7jIhcDjOzz6L
-   t8VZpnEeUpL/747Ew/1dBCXqZJdF3N246OL4eFaVOAyVvITkoDdkryfdc
-   uN2H9amZ50tT4G5xf7LJ0SwxI7FS/uy+lpai6yAgTkGLJUbfhFT6wEzL/
-   L6Y1BpleOrPWiYFli/hJBvW2GcbpOPHASHwRBymnxbabySoKktU/Z+j7u
-   /iVZbn83bkheJzHc8gdD2YEPoGBw10FK2GKoZKGT/UeApqVMni0lVGELp
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10973"; a="3314360"
-X-IronPort-AV: E=Sophos;i="6.05,241,1701158400"; 
-   d="scan'208";a="3314360"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2024 16:04:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,241,1701158400"; 
-   d="scan'208";a="392380"
-Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 03 Feb 2024 16:04:13 -0800
-Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rWPzW-0005lI-14;
-	Sun, 04 Feb 2024 00:04:10 +0000
-Date: Sun, 04 Feb 2024 08:03:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 1281aa073d3701b03cc6e716dc128df5ba47509d
-Message-ID: <202402040822.mBySBlAL-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E065B7460;
+	Sun,  4 Feb 2024 06:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707027218; cv=fail; b=Dd6c1u9rnQlwibBhpw0Aq0AyEbPIXocJTfWdRAy5KtR/xu9oWkJ7KBNtmfZ6/7DlvpnAZMy7iViJ712G1uIf/sOvH4VZ+zKv57PJKXlPcCABTvmzEp2PA+UHX7rHO1o1lrmZSdXtBlQcZE30In2MbGy8OwsuKb9YazQ0QdA7COM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707027218; c=relaxed/simple;
+	bh=ByZ8BP3v21BouqKjmZGNflfo+TK9zRKs+uXVcVUZLJU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h94kQxqRbaE9XBWAKrZ1/UVVpOG7fgD5GPJj5CEcu5/j2t4QMmxH9zku4tq4DpP1FOM8qbjvgGlzjtNhrGc8sW5X8dD0ni6OTe3TK9+BE69wxcerl7LbjNZHBpwdiwnGlfmRhyRL1jKmOQLoeOrUufKW9RcoAa65KOfiqwuOVrY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=raAk0hg7; arc=fail smtp.client-ip=40.107.237.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NuzuPRo7gMOaCKKKCBtCu1RZE/XfZ3SgtB1IU32pxwVWo655xF0UJM6iZzOrtVC+3/Pk+iWAKuKAhWzg5BOfAZsg+Jc3l99Y51l1+RC8KiSqCFhBo0IATB6VbmfGZQIB4DHtgU0JhCl5mVFQX7OgZ2PBzxtQo5Zsrpoggv+nWNPnzQdN+wHkXTiSb6y6Cg5k+gRFaaftHmrhLcpSDWgz1kMYZcZaEQbAZoclcNeaxYyTyZeEzGboTpuyqiM0LtNTI+GRxOSN+Z0VyPMFcn420f1I4dNJQAzMVqLZzF8IvZYqimi/1nbZiKgHEPrRMFEMitL7/hD2z6D/LnIhC6T6lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tOcQ3n89PK94DuMrj0kqWbgPixgTgPyrzVZuNor2Qtw=;
+ b=N+Dn+3BTRMnsnoYdqdV9SM/be693Rr/yMr0ZXYcic0J49ojTH2WwmdamuiO3s7gqEcwOmRG4cxh0c3N+uTXGzBvBzYk3gmjw8e7otoK1kKz2acKZ6PaxZKQocuFSfvQQmnn2ijzX/liDewYiKnSHjx6tJJe2HH++NZMieSFYficsC44S9u6PJfxQUosFPkUHpgU98yEJ0OokMCcQgvfYkZMkgQBcgVWXq1GhNCpXs08PSj4LoZDqVs//RuBAcOGrN53XAjVVYQMz6cO/s4APR5WBGAx36BAbil6w+9TXrBQ6tx3vBAPcjF+MpTtTxdHcGKOhkmh8i1wAfJuh0CEc9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tOcQ3n89PK94DuMrj0kqWbgPixgTgPyrzVZuNor2Qtw=;
+ b=raAk0hg72TzqIPOHBVAv2bzWgfBixWbAfiu8t07PmumDRUXYA46Nxx84e6y4D8H/JZmyh72gldcD7osMiszCUFT4EKwn4297SNSE9kKqBGzxTws+8LljsEXd/T+DITJ/PInQ6+xwn6lJZnyr7AT77VMbO81SB9nIuaCWwOmYVnU=
+Received: from SN1PR12CA0087.namprd12.prod.outlook.com (2603:10b6:802:21::22)
+ by SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.13; Sun, 4 Feb
+ 2024 06:13:33 +0000
+Received: from SA2PEPF00001508.namprd04.prod.outlook.com
+ (2603:10b6:802:21:cafe::86) by SN1PR12CA0087.outlook.office365.com
+ (2603:10b6:802:21::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.31 via Frontend
+ Transport; Sun, 4 Feb 2024 06:13:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SA2PEPF00001508.mail.protection.outlook.com (10.167.242.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Sun, 4 Feb 2024 06:13:33 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sun, 4 Feb
+ 2024 00:13:32 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Sat, 3 Feb
+ 2024 22:13:32 -0800
+Received: from emily-Z10PA-U8-Series.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34
+ via Frontend Transport; Sun, 4 Feb 2024 00:13:30 -0600
+From: Emily Deng <Emily.Deng@amd.com>
+To: <amd-gfx@lists.freedesktop.org>, <bhelgaas@google.com>,
+	<alex.williamson@redhat.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+CC: Emily Deng <Emily.Deng@amd.com>
+Subject: [PATCH] PCI: Add vf reset notification for pf
+Date: Sun, 4 Feb 2024 14:12:57 +0800
+Message-ID: <20240204061257.1408243-1-Emily.Deng@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001508:EE_|SA1PR12MB7199:EE_
+X-MS-Office365-Filtering-Correlation-Id: 893b5e49-c479-42d9-a45e-08dc25486a4e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8DvhlD1tDLYzGOkHKPLmmpbNlI42K7oDJx4RyOEHbpRDkQlM1BJ4vtCK8rKrAVPl1ma73hXk3as9bq6JWEfCf4n8Ms3yKq2e82bsyPKQu0mUVng/7JKGykB4A/e9OfWXDBxCoTQx3G7F9AC0wAqdZS/KoygNFnTVdJN/Ub8FMLUEk9+jzqWtBFqtxON03NeSMRJ30mozRGeEqpoyab4hMzb2UV+jcrOvXwbmDd7DKI/D1hjE+UrQahR5260PiO6y7xV+M8Esw4VjeTNlBkqsm5PtSsrJag8Y5mARpGeunrPhWfyh13zHdyUs5uOkJM1LaoKQXT00AZ/V1oWRS+93qBq4qgMPEh86E2ZigFJ7DhbGl02xzL49MCviFVscC4Nrcabxyv1rnsr8eJqiUiY0LX0Qxie8eHxv/CJfc5NV3mQThADy3+aj2EU25eUmCLpqcI5wNa+hccpidoTymcRT1xWve7sl1aAOPHALNd5VzXbN/Sn99VkC1ijuAjDsiblYQO+W4Iw9kOfMwTW3Qv1oRq+oO7ffChw68YqvHvcRo4WkObZ5KYwKfDzrUM6zjKuHlP96mjBFVmofY/q7RKn0R/gJs8KWheMb9bcV5WlvnmuOCtWAp5PwpR7bhP1hyqeDJaco9ta9Tio2nQiVBymRUuIBEsrseQK7wzciAvSJYqrIBd6bmlqTYdVk/7pY/V/0WKI4Ucy49JsuxuFCdFQAriC1TethpeuN+3QN8rHKL1i8IRZ2npwWJC8a4s2sWUkmtfzZ9JiNi33PfHv88yAskw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(376002)(346002)(230922051799003)(82310400011)(1800799012)(186009)(64100799003)(451199024)(46966006)(40470700004)(36840700001)(40460700003)(40480700001)(2906002)(15650500001)(478600001)(5660300002)(8936002)(83380400001)(110136005)(47076005)(70586007)(36756003)(7696005)(316002)(4326008)(8676002)(6666004)(70206006)(426003)(336012)(41300700001)(1076003)(356005)(86362001)(82740400003)(2616005)(26005)(36860700001)(81166007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2024 06:13:33.0398
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 893b5e49-c479-42d9-a45e-08dc25486a4e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001508.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7199
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 1281aa073d3701b03cc6e716dc128df5ba47509d  Merge branch 'pci/enumeration'
+When a vf has been reset, the pf wants to get notification to remove the vf
+out of schedule.
 
-elapsed time: 1444m
+Solution:
+Add the callback function in pci_driver sriov_vf_reset_notification. When
+vf reset happens, then call this callback function.
 
-configs tested: 204
-configs skipped: 3
+Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+---
+ drivers/pci/pci.c   | 8 ++++++++
+ include/linux/pci.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                   randconfig-001-20240203   gcc  
-arc                   randconfig-001-20240204   gcc  
-arc                   randconfig-002-20240203   gcc  
-arc                   randconfig-002-20240204   gcc  
-arc                           tb10x_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                                 defconfig   clang
-arm                       netwinder_defconfig   gcc  
-arm                   randconfig-001-20240204   gcc  
-arm                   randconfig-003-20240203   gcc  
-arm                   randconfig-004-20240204   gcc  
-arm                         s5pv210_defconfig   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                         socfpga_defconfig   gcc  
-arm                           u8500_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240204   gcc  
-arm64                 randconfig-003-20240203   gcc  
-arm64                 randconfig-003-20240204   gcc  
-arm64                 randconfig-004-20240203   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240203   gcc  
-csky                  randconfig-001-20240204   gcc  
-csky                  randconfig-002-20240203   gcc  
-csky                  randconfig-002-20240204   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             alldefconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240204   gcc  
-i386         buildonly-randconfig-002-20240203   gcc  
-i386         buildonly-randconfig-002-20240204   gcc  
-i386         buildonly-randconfig-003-20240204   gcc  
-i386         buildonly-randconfig-004-20240204   gcc  
-i386         buildonly-randconfig-005-20240204   gcc  
-i386         buildonly-randconfig-006-20240203   gcc  
-i386         buildonly-randconfig-006-20240204   gcc  
-i386                                defconfig   clang
-i386                  randconfig-002-20240203   gcc  
-i386                  randconfig-004-20240203   gcc  
-i386                  randconfig-004-20240204   gcc  
-i386                  randconfig-006-20240203   gcc  
-i386                  randconfig-006-20240204   gcc  
-i386                  randconfig-012-20240203   gcc  
-i386                  randconfig-012-20240204   gcc  
-i386                  randconfig-013-20240203   gcc  
-i386                  randconfig-014-20240203   gcc  
-i386                  randconfig-015-20240203   gcc  
-i386                  randconfig-016-20240203   gcc  
-i386                  randconfig-016-20240204   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240203   gcc  
-loongarch             randconfig-001-20240204   gcc  
-loongarch             randconfig-002-20240203   gcc  
-loongarch             randconfig-002-20240204   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                       bvme6000_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            alldefconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240203   gcc  
-nios2                 randconfig-001-20240204   gcc  
-nios2                 randconfig-002-20240203   gcc  
-nios2                 randconfig-002-20240204   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240203   gcc  
-parisc                randconfig-001-20240204   gcc  
-parisc                randconfig-002-20240203   gcc  
-parisc                randconfig-002-20240204   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                    mvme5100_defconfig   gcc  
-powerpc                         ps3_defconfig   gcc  
-powerpc               randconfig-001-20240204   gcc  
-powerpc               randconfig-002-20240204   gcc  
-powerpc               randconfig-003-20240204   gcc  
-powerpc64             randconfig-001-20240204   gcc  
-powerpc64             randconfig-002-20240203   gcc  
-powerpc64             randconfig-003-20240204   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-002-20240204   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240203   gcc  
-s390                  randconfig-002-20240204   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                    randconfig-001-20240203   gcc  
-sh                    randconfig-001-20240204   gcc  
-sh                    randconfig-002-20240203   gcc  
-sh                    randconfig-002-20240204   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                           se7780_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                        sh7785lcr_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240203   gcc  
-sparc64               randconfig-001-20240204   gcc  
-sparc64               randconfig-002-20240203   gcc  
-sparc64               randconfig-002-20240204   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                    randconfig-001-20240204   gcc  
-um                    randconfig-002-20240204   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240204   clang
-x86_64       buildonly-randconfig-002-20240204   clang
-x86_64       buildonly-randconfig-005-20240204   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-003-20240203   clang
-x86_64                randconfig-003-20240204   clang
-x86_64                randconfig-004-20240204   clang
-x86_64                randconfig-013-20240203   clang
-x86_64                randconfig-014-20240203   clang
-x86_64                randconfig-015-20240203   clang
-x86_64                randconfig-015-20240204   clang
-x86_64                randconfig-016-20240203   clang
-x86_64                randconfig-016-20240204   clang
-x86_64                randconfig-071-20240203   clang
-x86_64                randconfig-073-20240203   clang
-x86_64                randconfig-074-20240203   clang
-x86_64                randconfig-074-20240204   clang
-x86_64                randconfig-075-20240203   clang
-x86_64                randconfig-075-20240204   clang
-x86_64                randconfig-076-20240203   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  nommu_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240203   gcc  
-xtensa                randconfig-001-20240204   gcc  
-xtensa                randconfig-002-20240203   gcc  
-xtensa                randconfig-002-20240204   gcc  
-xtensa                    smp_lx200_defconfig   gcc  
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 60230da957e0..aca937b05531 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
+  */
+ int pcie_reset_flr(struct pci_dev *dev, bool probe)
+ {
++	struct pci_dev *pf_dev;
++
++	if (dev->is_virtfn) {
++		pf_dev = dev->physfn;
++		if (pf_dev->driver->sriov_vf_reset_notification)
++			pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
++	}
++
+ 	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+ 		return -ENOTTY;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c69a2cc1f412..4fa31d9b0aa7 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -926,6 +926,7 @@ struct pci_driver {
+ 	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
+ 	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+ 	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
++	void  (*sriov_vf_reset_notification)(struct pci_dev *pf, struct pci_dev *vf);
+ 	const struct pci_error_handlers *err_handler;
+ 	const struct attribute_group **groups;
+ 	const struct attribute_group **dev_groups;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.36.1
+
 
