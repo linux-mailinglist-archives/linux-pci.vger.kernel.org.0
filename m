@@ -1,152 +1,223 @@
-Return-Path: <linux-pci+bounces-3071-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3072-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4E25849058
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 21:28:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BBDD8490E7
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 22:52:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E7481F2249E
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 20:28:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06EB4B22426
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 21:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40C62511F;
-	Sun,  4 Feb 2024 20:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7914B249F7;
+	Sun,  4 Feb 2024 21:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="ALaAIbcx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYim0ZDY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4910F25561;
-	Sun,  4 Feb 2024 20:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834472C68F
+	for <linux-pci@vger.kernel.org>; Sun,  4 Feb 2024 21:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707078511; cv=none; b=jOMwaSRtWLZSZPvtgKW1IjoZRFGLpQyhsmcoCB/T8KIhIDdawvRywadxRCH4agsRW3eNubqjdWTMv4zgCkm8GUD3qIlv3xXi/3KvGYD7xJ0Nng/N0pjpc5P6vP/pJ8G4JpG5CV2UcL9p6hmvlMo0fMoP6ESRd7op+mrfhmWT6Rg=
+	t=1707083572; cv=none; b=Gzxm8VbulybUBGMt+WoX6hL1nC/p9hGTa1wGhunV8mBD6IUEEhP1buixf7b8+b235vMfGI0Tjgw+Vj84t2zZQ+chlfFdvATCnvLAnjMd60iGvIoNU5ilyETRkzgegT9YQrfjIzryDLwwBbrS0N1d7RFw0ZYeOJC+XkdUXYcBT2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707078511; c=relaxed/simple;
-	bh=RRCLSllk/dva2G67ul2MmtyLcjpVRvPRfARykcNQ2Tg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=H5tcsNOunzn05KIB/vXR7JVsAcvXufI5GgsDlj0P0lpogZmS/OCyXzI8j+F5nc1s0nZUzvXCNsn4OnnKQSuM/RjDNafSZIv8WJ3Tfo0eaFTBS6FBk956tKbq52nMjh5lMsP1oDCFS2oD/1qrPPX4TgL2hDlGcG31+OCZ0mJhQOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=ALaAIbcx reason="key not found in DNS"; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+	s=arc-20240116; t=1707083572; c=relaxed/simple;
+	bh=2ixbZLaCeZ/ZDlBWbZq8BWjaueHP2Ey7QFL4/SsC9fg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BhefWuiDX+80pV2y8ulttd5gedy/AOGM/HHl2WKc1bm9Ufqe5m4PH9e3s3r2PeXsv6LTiYh6M68jIr5LyYQQm82zw1YOvqSwO21CBEq3+bnlQMY8YX/eL4WHSTiJCIybzHCR216XDl4egNkiAiD5A19DoTThoaw7UowfrPD+IvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IYim0ZDY; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-296855c0d71so324924a91.1;
-        Sun, 04 Feb 2024 12:28:30 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51109060d6aso5354683e87.2
+        for <linux-pci@vger.kernel.org>; Sun, 04 Feb 2024 13:52:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707083568; x=1707688368; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zuiUj1ce6u5WC8yJYcA2F7eIoP+TpA1trOScy5PHCQM=;
+        b=IYim0ZDYJAXj4HjlSuS7Kbiu19NDsurDgMcbL1z0wJWmaqtIIJYyRiZsFTWAgJ7t8G
+         /cYgsv+GQQ8IfzlXUlTc2ePK2+bMVUE8y3rgS0867qV8UmAPx/bhf1H+H8gOeEv2L+Hk
+         sqp1CJ9gRspt9MDJ3lsMMCQS+pEgmf1T28IanLD4tTUZ9USU64Qpk/7ot8dXok6PmrBq
+         4VsVds/X+joH5Qv6bm94od0qshK2hQAFuWHQQwOFZLx5pP1S4JXfFdLX8HD7whlGO9f+
+         yV6Ar0Og0Qr4Y9148rZS05jrJiMYPeF2FtyeohFXWFvHrLBFhF0aHri6PSx+iGa/hm9s
+         9TuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707078509; x=1707683309;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1707083568; x=1707688368;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AZyzkVisa85tXBmaGDAlY9JwNyrAUGZi87nExzLR28k=;
-        b=WVImLoxih3fLEySGm2BrO5uwPRBqd/oly2NP732rIZhLaEb+elAjPa6VP0LyHt6HBH
-         CUVZ9G4XMF+hs/Du0nGZGh6KGoiSqE82SDTmDiabsd8ZS/FmWNvbfsLfm9N9H14ye4i3
-         RrDtiQ2IAWJDe3hD44IkFXstqoxKycGmlBg7SzSoe28xvtHJDWw1hneTdNj9vnBmvSBK
-         jmKXkX2kGnPU+CiTQFCmvGYeedEr5W/uWbIBEmAztQkkQuFOkSOBD0VhqLiWXgui2Di9
-         G7LN3Oj2Vm7xH5JVppch30Ltafw2lt+7crdd0e3s/C8WNZItggfNZbCOGwebw7ExDIOj
-         8qIw==
-X-Gm-Message-State: AOJu0YyG63LlLUruaZnypyjXcWGFTi6wHLlJikAbrwao7yMWH96f6+JE
-	DNtekY8bCrEQUTSaVQKpWLUoVzuJNwI+0wPIWGvVT6/GBEVNhGTtF5mmtCwNg5uzrw==
-X-Google-Smtp-Source: AGHT+IE32prgA+85zzPEW6sOrhd9fBWgUfwAA5LQ2uAbi9+DCSuJyhy7UzWrtayKsN8EqHoTlx3faQ==
-X-Received: by 2002:a17:90b:1283:b0:296:4188:10f1 with SMTP id fw3-20020a17090b128300b00296418810f1mr5604863pjb.7.1707078509537;
-        Sun, 04 Feb 2024 12:28:29 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUeNGgYx9QfQ/v0FzSyhM5876GqlTTI4bi03Fw7oTwBz7X4cSslm6/PRhwaAget4SS4ZPv+qtDqaMUzRv+C0d2X3onlDlkXhiDqr5afsTDbeGzfsT4Y60UkfnCuty53v7jMkYpl/JCHyhzXeDatGApRW/UML4GtK5lZ26DTtSYcbEUlREsNbEJwIuB8SiAAagHg7FhumiWRJNvvfCqFRK+y8HDRq6nbLyKAAYhEDckhCMOKUuEb69zYxwD/gGGgFpM=
-Received: from mail.marliere.net ([24.199.118.162])
-        by smtp.gmail.com with ESMTPSA id v5-20020a17090a898500b00295fac343cfsm3692160pjn.8.2024.02.04.12.28.28
+        bh=zuiUj1ce6u5WC8yJYcA2F7eIoP+TpA1trOScy5PHCQM=;
+        b=MSfcbSSAUU+bIaf+n4uh2shlAOTarCAwPJKGdAmIfxodyC0wvOElzYvvkzSfjpIiHO
+         tNb+tf/WdsJLXuRk/KnhIdou3zp9zQtvm/vAw+6XOiHsleFbzPx3liYthe+EYBGIDIy1
+         zfKDdaKbroYwUws0wH/hCbszekfXeKbOnS5oPY56dKJ3Rm1wXEIZe3FiseP7XRDq8WL+
+         +SzbLWCUy414FvuWnNKVu4cuU49XWuSa1WyqJDtfdygahqHoRCWMTKV1Uyn9mzcQQ+vp
+         GSTNLUgqI+EKfz3HYDpQEAxfVRKMg9AJx8syuAbhIw85YQFviaXOfVwL9b9lkeW3lwCN
+         PXNA==
+X-Gm-Message-State: AOJu0YzK0JxwmVPuNnHanx0XjhTl7gFulDBz4jsoyTLEb+8LCiRVIXAE
+	1cddF3uTveB1CQiR7+/iVPBKWRzPlEPe6z/fD8Q/9aEX2bKTox6GFrYlr6BYIL4=
+X-Google-Smtp-Source: AGHT+IGyr9vELnELjAu8Pzpw2/8mY0xvhgqmm/NnA2ZUupNrwCzdgHWMK1XrqbVzUF2sSMmWT8DkOQ==
+X-Received: by 2002:a05:6512:3d88:b0:511:4e8f:e21f with SMTP id k8-20020a0565123d8800b005114e8fe21fmr1270283lfv.6.1707083568115;
+        Sun, 04 Feb 2024 13:52:48 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWE7jo22+VyArtecjMPdv1YMYsKVXzPbUuPl7Dcf9si/u0T5WnbS5StVIkflUu5XrNMXt8bspmxO2gg+Cmmty2iy3OfweSH9aGdl9jNsUHIY6wWONWtLzxVu9hBJw93+WORyVYsh1YM24gR34fdPFuH+uTny9GuvEbXKC+8rfSZZWijqZr28V/YYvjm6lvsysvlM7EY+bfrqFrpVMUT5kImfjwXSgkw8OHJ6WXlZHQtx4Wua/NXRu/Yrn+Lg0TsECg6IGDL3jSyV1m3P8xXtoYlCiMxJlSui5Vg9olrrH20KVemooAepTzIpEff8vB3y6e+VgIjYQTKgZniSPl9uls9BIcGHg3mvsRqlwbl19x0TPGJBSSSvg1/GX2Fqo0=
+Received: from mobilestation ([95.79.203.166])
+        by smtp.gmail.com with ESMTPSA id l14-20020ac24a8e000000b005114efca6eesm179843lfp.37.2024.02.04.13.52.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Feb 2024 12:28:29 -0800 (PST)
-From: "Ricardo B. Marliere" <ricardo@marliere.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
-	s=2023; t=1707078507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=AZyzkVisa85tXBmaGDAlY9JwNyrAUGZi87nExzLR28k=;
-	b=ALaAIbcxjDxefM7vgoumnBR4vqsaVCwGPs1yRdo6leEP16Ah6qa0mPHpAbbpHKCU/9ulu0
-	4AhKX9EAfwuhRX+KLWapezYOPb2Z1Xi2/PNdjNXscYW3OPcXY4siH/2/VCyaQ9fJrgeK/p
-	AzhClPqK2i6z3QpE/xvl59zH0Z4uwjcu7IXasJPxum0ZB1G6hsJOUk+vjT+3UIqczIxZVo
-	k8xWGq2VItde3+CMlTg7wWKK7dBxGokZ3oQ5WGh5OjIxQQXf07AUpJYKGe3wN8RV/YnGJJ
-	1qD5XrFe7raTjlp7RfiZDhtnx6x834PgUm/X7O0QnY9AvJaDvNb7TiMHlykUVA==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
-Date: Sun, 04 Feb 2024 17:28:58 -0300
-Subject: [PATCH] pci: endpoint: make pci_epf_bus_type const
+        Sun, 04 Feb 2024 13:52:47 -0800 (PST)
+Date: Mon, 5 Feb 2024 00:52:45 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Ajay Agarwal <ajayagarwal@google.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>, 
+	Sajid Dalvi <sdalvi@google.com>, William McVicker <willmcvicker@google.com>, 
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: dwc: Strengthen the MSI address allocation logic
+Message-ID: <2kvgqhaitacl7atqf775vr2z3ty5qeqxuv5g3wflkmhgj4yk76@fsmrosfwobfx>
+References: <20240204112425.125627-1-ajayagarwal@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
-X-B4-Tracking: v=1; b=H4sIAInzv2UC/x3MTQqAIBBA4avErBNMrKCrRIQ/Yw2EiYMRRHdPW
- n6L9x5gzIQMU/NAxouYzljRtQ243cQNBflqUFJpqaQWtvDqDjSxJJEciTBKO/je9NYFqFXKGOj
- +j/Pyvh/oZwPmYQAAAA==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Ricardo B. Marliere" <ricardo@marliere.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1398; i=ricardo@marliere.net;
- h=from:subject:message-id; bh=RRCLSllk/dva2G67ul2MmtyLcjpVRvPRfARykcNQ2Tg=;
- b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv/OKdIMGul4wCgFnoEfeI7KtsNOS+66/OYPmn
- tGCpi9ety6JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb/zigAKCRDJC4p8Y4ZY
- pjCMEACMmaS1QqpGmPkkUEdiwf23FwtT0cLiFl0ZOIvAW+4mrY7tx6a9ibnvxJ8WAtkC2nn+H5n
- XiJBRx45+FhXh+P/KW7bookQK2B0wEoWG+457jMWClv/921OdJlwWZ/Ol95AgGJAb2slVFcrHaz
- FXcWWwJM1iBUh+gBhK6Gl4ShYdjBXTDq5GSCTXW5JvHKGElpzhO0QKOSbs6RykA9fAMQg4XXqHs
- AlM5BOYVVSViE9zGSQmh5ykW4kaIiv1k/Oo2tpkwNJnMnesADE5pu2t4ygb9iH+bnkcHRJqA4gW
- 4SbwWGCqoswVd4FFU2PdslQsc3rJBl2mGeBbuM1RSk44HvtIy8N1UOUwzNwnHelUkmKZwmpUWem
- B9NDRPkBPd1pFNjmtai4nepcdRCrVbEEeo6ykm766E7OS1zGsN5dJxeqxmYJXjV/N+GEgqurYyz
- dSlW3rgBkoioIXlpaHC5mppEge8j6WhOVj6yMhWhozyXnD8Eyvo2XEvYZ6piR8X5E5fXgnOPDE3
- TJJRqvp5e8e/RvKstDzbRJVTPGpNfUrncixrcLMZyZ5rHpqR4341Dtf2pEFd0AR+o/Soegl3yIZ
- cHSq1s9BGxnRQP+FCdVuhu3Qf9uQ9ncXNd1saJhJ99IMt4bWf/ZFRQX5vcU9gJpduPDDMo7sWJc
- 5ELFGl7GxiIUPBA==
-X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
- fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240204112425.125627-1-ajayagarwal@google.com>
 
-Now that the driver core can properly handle constant struct bus_type,
-move the pci_epf_bus_type variable to be a constant structure as well,
-placing it into read-only memory which can not be modified at runtime.
+On Sun, Feb 04, 2024 at 04:54:25PM +0530, Ajay Agarwal wrote:
+> There can be platforms that do not use/have 32-bit DMA addresses
+> but want to enumerate endpoints which support only 32-bit MSI
+> address. The current implementation of 32-bit IOVA allocation can
+> fail for such platforms, eventually leading to the probe failure.
+> 
+> If there vendor driver has already setup the MSI address using
+> some mechanism, use the same. This method can be used by the
+> platforms described above to support EPs they wish to.
+> 
+> Else, if the memory region is not reserved, try to allocate a
+> 32-bit IOVA. Additionally, if this allocation also fails, attempt
+> a 64-bit allocation for probe to be successful. If the 64-bit MSI
+> address is allocated, then the EPs supporting 32-bit MSI address
+> will not work.
+> 
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> ---
+> Changelog since v2:
+>  - If the vendor driver has setup the msi_data, use the same
+> 
+> Changelog since v1:
+>  - Use reserved memory, if it exists, to setup the MSI data
+>  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+> 
+>  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++++-----
+>  1 file changed, 20 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index d5fc31f8345f..512eb2d6591f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -374,10 +374,18 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>  	 * order not to miss MSI TLPs from those devices the MSI target
+>  	 * address has to be within the lowest 4GB.
+>  	 *
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
----
- drivers/pci/endpoint/pci-epf-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> -	 * Note until there is a better alternative found the reservation is
+> -	 * done by allocating from the artificially limited DMA-coherent
+> -	 * memory.
 
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index 2c32de667937..bf655383e5ed 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -17,7 +17,7 @@
- 
- static DEFINE_MUTEX(pci_epf_mutex);
- 
--static struct bus_type pci_epf_bus_type;
-+static const struct bus_type pci_epf_bus_type;
- static const struct device_type pci_epf_type;
- 
- /**
-@@ -507,7 +507,7 @@ static void pci_epf_device_remove(struct device *dev)
- 	epf->driver = NULL;
- }
- 
--static struct bus_type pci_epf_bus_type = {
-+static const struct bus_type pci_epf_bus_type = {
- 	.name		= "pci-epf",
- 	.match		= pci_epf_device_match,
- 	.probe		= pci_epf_device_probe,
+Why do you keep deleting this statement? The driver still uses the
+DMA-coherent memory as a workaround. Your solution doesn't solve the
+problem completely. This is another workaround. One more time: the
+correct solution would be to allocate a 32-bit address or some range
+within the 4GB PCIe bus memory with no _RAM_ or some other IO behind.
+Your solution relies on the platform firmware/glue-driver doing that,
+which isn't universally applicable. So please don't drop the comment.
 
----
-base-commit: 1281aa073d3701b03cc6e716dc128df5ba47509d
-change-id: 20240204-bus_cleanup-pci-f70b6d5a5bcf
+> +	 * Check if the vendor driver has setup the MSI address already. If yes,
+> +	 * pick up the same.
 
-Best regards,
--- 
-Ricardo B. Marliere <ricardo@marliere.net>
+This is inferred from the code below. So drop it.
 
+> This will be helpful for platforms that do not
+> +	 * use/have 32-bit DMA addresses but want to use endpoints which support
+> +	 * only 32-bit MSI address.
+
+Please merge it into the first part of the comment as like: "Permit
+the platforms to override the MSI target address if they have a free
+PCIe-bus memory specifically reserved for that."
+
+> +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
+> +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
+> +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
+> +	 * supporting 32-bit MSI address will not work.
+
+This is easily inferred from the code below. So drop it.
+
+>  	 */
+
+> +	if (pp->msi_data)
+
+Note this is a physical address for which even zero value might be
+valid. In this case it's the address of the PCIe bus space for which
+AFAICS zero isn't reserved for something special.
+
+> +		return 0;
+> +
+>  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>  	if (ret)
+>  		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> @@ -385,9 +393,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>  	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+>  					GFP_KERNEL);
+>  	if (!msi_vaddr) {
+> -		dev_err(dev, "Failed to alloc and map MSI data\n");
+> -		dw_pcie_free_msi(pp);
+> -		return -ENOMEM;
+> +		dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
+> +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> +						GFP_KERNEL);
+> +		if (!msi_vaddr) {
+> +			dev_err(dev, "Failed to alloc and map MSI data\n");
+> +			dw_pcie_free_msi(pp);
+> +			return -ENOMEM;
+> +		}
+
+On Tue, Jan 30, 2024 at 08:40:48PM +0000, Robin Murphy wrote:
+> Yeah, something like that. Personally I'd still be tempted to try some
+> mildly more involved logic to just have a single dev_warn(), but I think
+> that's less important than just having something which clearly works.
+
+I guess this can be done but in a bit clumsy way. Like this:
+
+	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) ||
+	      !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
+	if (ret) {
+		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
+
+		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+		ret = !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
+		if (ret) {
+			dev_err(dev, "Failed to allocate MSI target address\n");
+			return -ENOMEM;
+		}
+	}
+
+Not sure whether it's much better than what Ajay suggested but at
+least it has a single warning string describing the error, and we can
+drop the unused msi_vaddr variable.
+
+-Serge(y)
+
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.43.0.594.gd9cf4e227d-goog
+> 
 
