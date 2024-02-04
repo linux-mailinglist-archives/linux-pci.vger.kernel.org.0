@@ -1,115 +1,152 @@
-Return-Path: <linux-pci+bounces-3070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F24684900C
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 20:19:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4E25849058
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 21:28:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F29C41F2316D
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 19:19:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E7481F2249E
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 20:28:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C585524A12;
-	Sun,  4 Feb 2024 19:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40C62511F;
+	Sun,  4 Feb 2024 20:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OoyrtVtH"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="ALaAIbcx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4677424B54
-	for <linux-pci@vger.kernel.org>; Sun,  4 Feb 2024 19:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4910F25561;
+	Sun,  4 Feb 2024 20:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707074340; cv=none; b=eKWHiaVc+xfJYiNT+bX6LSMFYivTS8PnykgDLW6MSTsNM2pIeTaCz/GIlRt8rncgoDu/uIGs0B0pY683NDsy90Yk52960YqHpUkK7GoXGkIJKL/JxDM7WLIPxyYWV5lgCstXxkbhkDZKZ3Jqtw8sDTFffhMjJFeLhd4CRevJwRc=
+	t=1707078511; cv=none; b=jOMwaSRtWLZSZPvtgKW1IjoZRFGLpQyhsmcoCB/T8KIhIDdawvRywadxRCH4agsRW3eNubqjdWTMv4zgCkm8GUD3qIlv3xXi/3KvGYD7xJ0Nng/N0pjpc5P6vP/pJ8G4JpG5CV2UcL9p6hmvlMo0fMoP6ESRd7op+mrfhmWT6Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707074340; c=relaxed/simple;
-	bh=U7fuHKCS7P0gibNRuhCi/+lWNbl//hi+bf2tD9GrdHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uEO5j7K2ghBGEyF+3R/Ioj4x4Q3/BkTgPEQfDCz3DShE5KGXRaazWCnWJmBTA4F0CLd+W8XymOLQ/k7dlqimRZwmDSG1tM2W6+ONP9ODzc9lMagxlEcLXJFxXpkyDmGtAft/2OSExJca6494PT6y4FeTjwhZn67Et8E7gsRdFto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OoyrtVtH; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7bc32b0fdadso168820039f.2
-        for <linux-pci@vger.kernel.org>; Sun, 04 Feb 2024 11:18:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707074338; x=1707679138; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U7fuHKCS7P0gibNRuhCi/+lWNbl//hi+bf2tD9GrdHo=;
-        b=OoyrtVtHrVGc2XeI/zv7GteSD0rgrVV7Zm1CKj+zBeRYXCnoqxy4GZvG395QtuC7/X
-         g1/T27YUxx0t8Ua3E8lghdv0Hd+69QaWAjOePCbSxo6Uppk0DsuFN2WI+6C2EO9px4PN
-         eyrsYFqKPl74A5ktS2WvogEmKlMkugznf7jQRyk755BFPktvr1ce6GLWv7od0EipZ3DN
-         xe/SB0vHCxS3oOL7qSr+Xmvaqr4KdWqEdSr6wOIzbnHcEcwoQwSLiY/flcOa+1wVnson
-         DIjdM5C9cNypkvbwtSS6bhNuYixH+PmkQcR7VKsGPayjha7oFSwu6RmTNRoqj4IOj2Er
-         in0g==
+	s=arc-20240116; t=1707078511; c=relaxed/simple;
+	bh=RRCLSllk/dva2G67ul2MmtyLcjpVRvPRfARykcNQ2Tg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=H5tcsNOunzn05KIB/vXR7JVsAcvXufI5GgsDlj0P0lpogZmS/OCyXzI8j+F5nc1s0nZUzvXCNsn4OnnKQSuM/RjDNafSZIv8WJ3Tfo0eaFTBS6FBk956tKbq52nMjh5lMsP1oDCFS2oD/1qrPPX4TgL2hDlGcG31+OCZ0mJhQOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=ALaAIbcx reason="key not found in DNS"; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-296855c0d71so324924a91.1;
+        Sun, 04 Feb 2024 12:28:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707074338; x=1707679138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U7fuHKCS7P0gibNRuhCi/+lWNbl//hi+bf2tD9GrdHo=;
-        b=B3+lSSvd0eA802Ag7/sBa1yLFSMOVfHNmUmq0s2v3vIGNOGb/CASsBiPNdF/oZi33a
-         7+xFe0KFCwNe5YtHSibJOTSyJGVZ6o7YIBhPpe7C9xV3h51xoIE5xXdGhyz0+pM7Outq
-         RSJ1ez6F4uUUK+oDFjoBIVhTpPGR2gT0UMQvtV6sfoLffG7zbj2fDNr+TpiF3OU/la0J
-         rl4Z86Fqi5v6FfjRjgtKHyMzb3LeYUEWsozUBZQH12BVMRmXVaEyAiO+pTMxb2eOjpP6
-         aCXmkWueXVxUyrlk/S4cjtTi+CTrCbCead5YwG/B1E0Yq4N0mnXrClpi66l6iYJHm/hV
-         MZQQ==
-X-Gm-Message-State: AOJu0Yx6QT+Hce7ezTB/znhuzPCXeSJ0DLaWMy9hkNSalsq6pWg4GidF
-	TokfLdPvnaiOh4x6df0+Vi6mYZM99e+EIWFMWSWsd4SOh1IcrkGWgSXhWSsMkz0j/2IAwzVxzB0
-	jbNjXSCqYAa9tPKK72PC0ku1jq9Qz81oYpmolxA==
-X-Google-Smtp-Source: AGHT+IG030GFNoRO+D9HsQtpRkpxOEHuKCB6i5c74CD190x3V48aR41aB7RFrMKEewt7N4ui/ox4/rbyj64984Kw2d8=
-X-Received: by 2002:a05:6e02:2184:b0:363:bf96:560 with SMTP id
- j4-20020a056e02218400b00363bf960560mr4301345ila.15.1707074338436; Sun, 04 Feb
- 2024 11:18:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707078509; x=1707683309;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZyzkVisa85tXBmaGDAlY9JwNyrAUGZi87nExzLR28k=;
+        b=WVImLoxih3fLEySGm2BrO5uwPRBqd/oly2NP732rIZhLaEb+elAjPa6VP0LyHt6HBH
+         CUVZ9G4XMF+hs/Du0nGZGh6KGoiSqE82SDTmDiabsd8ZS/FmWNvbfsLfm9N9H14ye4i3
+         RrDtiQ2IAWJDe3hD44IkFXstqoxKycGmlBg7SzSoe28xvtHJDWw1hneTdNj9vnBmvSBK
+         jmKXkX2kGnPU+CiTQFCmvGYeedEr5W/uWbIBEmAztQkkQuFOkSOBD0VhqLiWXgui2Di9
+         G7LN3Oj2Vm7xH5JVppch30Ltafw2lt+7crdd0e3s/C8WNZItggfNZbCOGwebw7ExDIOj
+         8qIw==
+X-Gm-Message-State: AOJu0YyG63LlLUruaZnypyjXcWGFTi6wHLlJikAbrwao7yMWH96f6+JE
+	DNtekY8bCrEQUTSaVQKpWLUoVzuJNwI+0wPIWGvVT6/GBEVNhGTtF5mmtCwNg5uzrw==
+X-Google-Smtp-Source: AGHT+IE32prgA+85zzPEW6sOrhd9fBWgUfwAA5LQ2uAbi9+DCSuJyhy7UzWrtayKsN8EqHoTlx3faQ==
+X-Received: by 2002:a17:90b:1283:b0:296:4188:10f1 with SMTP id fw3-20020a17090b128300b00296418810f1mr5604863pjb.7.1707078509537;
+        Sun, 04 Feb 2024 12:28:29 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUeNGgYx9QfQ/v0FzSyhM5876GqlTTI4bi03Fw7oTwBz7X4cSslm6/PRhwaAget4SS4ZPv+qtDqaMUzRv+C0d2X3onlDlkXhiDqr5afsTDbeGzfsT4Y60UkfnCuty53v7jMkYpl/JCHyhzXeDatGApRW/UML4GtK5lZ26DTtSYcbEUlREsNbEJwIuB8SiAAagHg7FhumiWRJNvvfCqFRK+y8HDRq6nbLyKAAYhEDckhCMOKUuEb69zYxwD/gGGgFpM=
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id v5-20020a17090a898500b00295fac343cfsm3692160pjn.8.2024.02.04.12.28.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 12:28:29 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707078507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AZyzkVisa85tXBmaGDAlY9JwNyrAUGZi87nExzLR28k=;
+	b=ALaAIbcxjDxefM7vgoumnBR4vqsaVCwGPs1yRdo6leEP16Ah6qa0mPHpAbbpHKCU/9ulu0
+	4AhKX9EAfwuhRX+KLWapezYOPb2Z1Xi2/PNdjNXscYW3OPcXY4siH/2/VCyaQ9fJrgeK/p
+	AzhClPqK2i6z3QpE/xvl59zH0Z4uwjcu7IXasJPxum0ZB1G6hsJOUk+vjT+3UIqczIxZVo
+	k8xWGq2VItde3+CMlTg7wWKK7dBxGokZ3oQ5WGh5OjIxQQXf07AUpJYKGe3wN8RV/YnGJJ
+	1qD5XrFe7raTjlp7RfiZDhtnx6x834PgUm/X7O0QnY9AvJaDvNb7TiMHlykUVA==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 17:28:58 -0300
+Subject: [PATCH] pci: endpoint: make pci_epf_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201155532.49707-1-brgl@bgdev.pl> <20240201155532.49707-2-brgl@bgdev.pl>
- <CAL_JsqKq8AngeC7ohsbYB0w70uALD+PX-df53cswTDUY-Rrdgw@mail.gmail.com>
-In-Reply-To: <CAL_JsqKq8AngeC7ohsbYB0w70uALD+PX-df53cswTDUY-Rrdgw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sun, 4 Feb 2024 20:18:47 +0100
-Message-ID: <CAMRc=MdxgETs-Zx3Njao3msmE3T+DeKkPc0YMD3CvVW-Lj2qoQ@mail.gmail.com>
-Subject: Re: [RFC 1/9] of: provide a cleanup helper for OF nodes
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Abel Vesa <abel.vesa@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAInzv2UC/x3MTQqAIBBA4avErBNMrKCrRIQ/Yw2EiYMRRHdPW
+ n6L9x5gzIQMU/NAxouYzljRtQ243cQNBflqUFJpqaQWtvDqDjSxJJEciTBKO/je9NYFqFXKGOj
+ +j/Pyvh/oZwPmYQAAAA==
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1398; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=RRCLSllk/dva2G67ul2MmtyLcjpVRvPRfARykcNQ2Tg=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv/OKdIMGul4wCgFnoEfeI7KtsNOS+66/OYPmn
+ tGCpi9ety6JAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb/zigAKCRDJC4p8Y4ZY
+ pjCMEACMmaS1QqpGmPkkUEdiwf23FwtT0cLiFl0ZOIvAW+4mrY7tx6a9ibnvxJ8WAtkC2nn+H5n
+ XiJBRx45+FhXh+P/KW7bookQK2B0wEoWG+457jMWClv/921OdJlwWZ/Ol95AgGJAb2slVFcrHaz
+ FXcWWwJM1iBUh+gBhK6Gl4ShYdjBXTDq5GSCTXW5JvHKGElpzhO0QKOSbs6RykA9fAMQg4XXqHs
+ AlM5BOYVVSViE9zGSQmh5ykW4kaIiv1k/Oo2tpkwNJnMnesADE5pu2t4ygb9iH+bnkcHRJqA4gW
+ 4SbwWGCqoswVd4FFU2PdslQsc3rJBl2mGeBbuM1RSk44HvtIy8N1UOUwzNwnHelUkmKZwmpUWem
+ B9NDRPkBPd1pFNjmtai4nepcdRCrVbEEeo6ykm766E7OS1zGsN5dJxeqxmYJXjV/N+GEgqurYyz
+ dSlW3rgBkoioIXlpaHC5mppEge8j6WhOVj6yMhWhozyXnD8Eyvo2XEvYZ6piR8X5E5fXgnOPDE3
+ TJJRqvp5e8e/RvKstDzbRJVTPGpNfUrncixrcLMZyZ5rHpqR4341Dtf2pEFd0AR+o/Soegl3yIZ
+ cHSq1s9BGxnRQP+FCdVuhu3Qf9uQ9ncXNd1saJhJ99IMt4bWf/ZFRQX5vcU9gJpduPDDMo7sWJc
+ 5ELFGl7GxiIUPBA==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
-On Thu, Feb 1, 2024 at 11:18=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Thu, Feb 1, 2024 at 9:55=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Allow to use __free() to automatically put references to OF nodes.
->
-> Jonathan has already been working on this[1].
->
-> Rob
->
-> [1] https://lore.kernel.org/all/20240128160542.178315-1-jic23@kernel.org/
+Now that the driver core can properly handle constant struct bus_type,
+move the pci_epf_bus_type variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
-Thanks, I will watch this but for now I'll have to stick to carrying
-it in my series until it gets upstream.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/pci/endpoint/pci-epf-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Bart
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 2c32de667937..bf655383e5ed 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -17,7 +17,7 @@
+ 
+ static DEFINE_MUTEX(pci_epf_mutex);
+ 
+-static struct bus_type pci_epf_bus_type;
++static const struct bus_type pci_epf_bus_type;
+ static const struct device_type pci_epf_type;
+ 
+ /**
+@@ -507,7 +507,7 @@ static void pci_epf_device_remove(struct device *dev)
+ 	epf->driver = NULL;
+ }
+ 
+-static struct bus_type pci_epf_bus_type = {
++static const struct bus_type pci_epf_bus_type = {
+ 	.name		= "pci-epf",
+ 	.match		= pci_epf_device_match,
+ 	.probe		= pci_epf_device_probe,
+
+---
+base-commit: 1281aa073d3701b03cc6e716dc128df5ba47509d
+change-id: 20240204-bus_cleanup-pci-f70b6d5a5bcf
+
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
+
 
