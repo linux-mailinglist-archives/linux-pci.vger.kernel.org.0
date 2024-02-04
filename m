@@ -1,160 +1,175 @@
-Return-Path: <linux-pci+bounces-3068-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3069-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A46848D20
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 12:24:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F0F6848FAB
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 18:25:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27F85B218E5
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 11:24:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 706BC1C21A3E
+	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 17:25:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C56F3219EB;
-	Sun,  4 Feb 2024 11:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R3GDWnKM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03B51249E4;
+	Sun,  4 Feb 2024 17:25:22 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277572230C
-	for <linux-pci@vger.kernel.org>; Sun,  4 Feb 2024 11:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2D824215;
+	Sun,  4 Feb 2024 17:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707045884; cv=none; b=QlsD9sqxwaFs2Ij/tjrcSa7rLRlX7YEArZraihFXuQ6gA8hmvLiXDIouBZLQfxxqY/qexCbQ3nzTpjvYDELO4Yv8gIglz8Xx3pxjsPl4E/KkdBJiGAgc+H1RnzMCx1JpS+4aSQ/2TkyOsFn3x+F/DOQCf73tYPRISCx8uQJ9BdM=
+	t=1707067521; cv=none; b=GM1kqxvichtTG0GoZZ4cNM7S4FUxVaBp41QrXgstMIbRoG7MbskpnEscNjV1MIHKpGkEt9rg1JHpPj2j2uRdmOOOtrCy7kmClVs2mEs7vRim/4Ol0oT7RUtri1tEoeWhKW7tw+hFo1ztumsfvgMLfHWwf4j1C1poJWXBEQ/PzcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707045884; c=relaxed/simple;
-	bh=3YMkJ3/U5jHiJnbEXC+x9HrR/wgi1y/VDM0eb88kaYg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dgN5SVXYa0ga0w5xMiVFgsuRoLEB8QM8XzHzcMRv6xMbuDCkhdfCLhoUzvNaIgetytvk1v8IienQcJzFu15V7wvrLx+TfOmTde6pLcqY8wtsg3FeXKRfE1TgTcGCQL38dHkPcyH+yrMudLnzHrPeJd618R/F8Pb3VF9n8UX0+0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R3GDWnKM; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6ba69e803so6002756276.2
-        for <linux-pci@vger.kernel.org>; Sun, 04 Feb 2024 03:24:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707045882; x=1707650682; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6bmVoePft+RwUxr61hOdSqiODUKNKhjiuspLfMzOBBM=;
-        b=R3GDWnKMOGWPt/hZlZfSHvdEqA+h//cjnqFP8WiS1oSTISsdzyuSdTkFY7h0Tu8FBr
-         3HN7yMD7OeSe2YPyvzOKfI4/t/0mBTCGEKfMVjyeA2awAiWjRaXS2K/nTtkWMTDlC4eN
-         BLEhSlXEDhYgEzXlKeQiw12IyK4Sf2yhl8gvl6JaBzTj+TkA6Qs+ZtrEvmNVo1vAbjAR
-         ZP09Uet45gTYmgHqT/uRkv232VVDJJzOmyLP9y7if4K7BgdXuym0wTIUvNEDUoafndP5
-         gvjoeh63cn3tbEsFF3aJNOwC7hP/KkvdpND1xlxhU5yDqvEHT9YeKDL/xv1HOsl5DZDi
-         hdaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707045882; x=1707650682;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6bmVoePft+RwUxr61hOdSqiODUKNKhjiuspLfMzOBBM=;
-        b=A02jOirRvFqW8UEJbeF3dcoEGO7ZAKC4kfyNr4wubJiT2QOB9N0VD2ewS25zPv8cmA
-         LpvLqPL3IyVu2aGwzKVS9CRjg1xt2znA/v26Nl5fsHkzLodkt4zdMD6E4Jlzux+2BFa9
-         JxoEacAqUjHPtQ1s1C9UvEZu+FqGmCXf7r8Pl88WqF2xeqe1c3LxBPF5Vs+GKjJHqnOc
-         46Yu1NZPYON9d0OLmyN/MNln/PGjyttJ6L08SpQM+7nkw9VcZwka2czvNPRp4OqLq7Mv
-         XzuOXrRE0pRjVinME9Q1rU9FHifmUKG6MHycV7HtEcbYf0RB4qf8hbG6D1pGGRfIGeqO
-         eETg==
-X-Gm-Message-State: AOJu0Yw9c2fyuLzWkXpfeY7gerCBXuaODh9p4kJW2WQN+3cZDRIQrN0E
-	Uc4oR0LyAwtFZnPp1ju9TR5jOkpwS8LyrvMKi+iWj8h+LebYH+YTvRa1hWWC77tzAmcMJS/ztue
-	1Xl+erDTCPQWpzcEJYmDbGg==
-X-Google-Smtp-Source: AGHT+IErtOzosb9Pv01qSPEXwxRelgy+P2wMkzAIWsHdmu6XnZkGmUQ4vCtDaOwGChJ65AkQgVfiWe8VUBftg8ku/Q==
-X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a05:6902:200a:b0:dc2:3441:897f with
- SMTP id dh10-20020a056902200a00b00dc23441897fmr2011144ybb.6.1707045882059;
- Sun, 04 Feb 2024 03:24:42 -0800 (PST)
-Date: Sun,  4 Feb 2024 16:54:25 +0530
+	s=arc-20240116; t=1707067521; c=relaxed/simple;
+	bh=o6XgZklQg99ao472cPaHWFZkdLc8gXrmjSvTwRxHuxo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TN1avc3WT/XHGYEkLHNFOWH4ajWnHA1mlu09SaaoYq3nTErMNinLTVO++B90QFMD5Hq/AoVYu1VgnV2DW1mmEXMPe97840OoD1kF3sWZ2ySKwLTJSptf57J7FWI6quGfO5rjUEOQckHsywGb/SAd0UNS3rrJquwSyaI7tcUyxOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 5E0872800B3C2;
+	Sun,  4 Feb 2024 18:25:10 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 463422F90E5; Sun,  4 Feb 2024 18:25:10 +0100 (CET)
+Date: Sun, 4 Feb 2024 18:25:10 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
+	linuxarm@huawei.com, David Box <david.e.box@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
+	Zhi Wang <zhi.a.wang@intel.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
+Message-ID: <20240204172510.GA19805@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
+ <20231003153937.000034ca@Huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.594.gd9cf4e227d-goog
-Message-ID: <20240204112425.125627-1-ajayagarwal@google.com>
-Subject: [PATCH v3] PCI: dwc: Strengthen the MSI address allocation logic
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
-	William McVicker <willmcvicker@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Robin Murphy <robin.murphy@arm.com>
-Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231003153937.000034ca@Huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-There can be platforms that do not use/have 32-bit DMA addresses
-but want to enumerate endpoints which support only 32-bit MSI
-address. The current implementation of 32-bit IOVA allocation can
-fail for such platforms, eventually leading to the probe failure.
+On Tue, Oct 03, 2023 at 03:39:37PM +0100, Jonathan Cameron wrote:
+> On Thu, 28 Sep 2023 19:32:37 +0200 Lukas Wunner <lukas@wunner.de> wrote:
+> > +/**
+> > + * spdm_challenge_rsp_sz() - Calculate CHALLENGE_AUTH response size
+> > + *
+> > + * @spdm_state: SPDM session state
+> > + * @rsp: CHALLENGE_AUTH response (optional)
+> > + *
+> > + * A CHALLENGE_AUTH response contains multiple variable-length fields
+> > + * as well as optional fields.  This helper eases calculating its size.
+> > + *
+> > + * If @rsp is %NULL, assume the maximum OpaqueDataLength of 1024 bytes
+> > + * (SPDM 1.0.0 table 21).  Otherwise read OpaqueDataLength from @rsp.
+> > + * OpaqueDataLength can only be > 0 for SPDM 1.0 and 1.1, as they lack
+> > + * the OtherParamsSupport field in the NEGOTIATE_ALGORITHMS request.
+> > + * For SPDM 1.2+, we do not offer any Opaque Data Formats in that field,
+> > + * which forces OpaqueDataLength to 0 (SPDM 1.2.0 margin no 261).
+> > + */
+> > +static size_t spdm_challenge_rsp_sz(struct spdm_state *spdm_state,
+> > +				    struct spdm_challenge_rsp *rsp)
+> > +{
+> > +	size_t  size  = sizeof(*rsp)		/* Header */
+> 
+> Double spaces look a bit strange...
+> 
+> > +		      + spdm_state->h		/* CertChainHash */
+> > +		      + 32;			/* Nonce */
+> > +
+> > +	if (rsp)
+> > +		/* May be unaligned if hash algorithm has unusual length. */
+> > +		size += get_unaligned_le16((u8 *)rsp + size);
+> > +	else
+> > +		size += SPDM_MAX_OPAQUE_DATA;	/* OpaqueData */
+> > +
+> > +	size += 2;				/* OpaqueDataLength */
+> > +
+> > +	if (spdm_state->version >= 0x13)
+> > +		size += 8;			/* RequesterContext */
+> > +
+> > +	return  size  + spdm_state->s;		/* Signature */
+> 
+> Double space here as well looks odd to me.
 
-If there vendor driver has already setup the MSI address using
-some mechanism, use the same. This method can be used by the
-platforms described above to support EPs they wish to.
+This was criticized by Ilpo as well, but the double spaces are
+intentional to vertically align "size" on each line for neatness.
 
-Else, if the memory region is not reserved, try to allocate a
-32-bit IOVA. Additionally, if this allocation also fails, attempt
-a 64-bit allocation for probe to be successful. If the 64-bit MSI
-address is allocated, then the EPs supporting 32-bit MSI address
-will not work.
+How strongly do you guys feel about it? ;)
 
-Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
----
-Changelog since v2:
- - If the vendor driver has setup the msi_data, use the same
 
-Changelog since v1:
- - Use reserved memory, if it exists, to setup the MSI data
- - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+> > +int spdm_authenticate(struct spdm_state *spdm_state)
+> > +{
+> > +	size_t transcript_sz;
+> > +	void *transcript;
+> > +	int rc = -ENOMEM;
+> > +	u8 slot;
+> > +
+> > +	mutex_lock(&spdm_state->lock);
+> > +	spdm_reset(spdm_state);
+[...]
+> > +	rc = spdm_challenge(spdm_state, slot);
+> > +
+> > +unlock:
+> > +	if (rc)
+> > +		spdm_reset(spdm_state);
+> 
+> I'd expect reset to also clear authenticated. Seems odd to do it separately
+> and relies on reset only being called here. If that were the case and you
+> were handling locking and freeing using cleanup.h magic, then
+> 
+> 	rc = spdm_challenge(spdm_state);
+> 	if (rc)
+> 		goto reset;
+> 	return 0;
+> 
+> reset:
+> 	spdm_reset(spdm_state);
 
- .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++++-----
- 1 file changed, 20 insertions(+), 6 deletions(-)
+Unfortunately clearing "authenticated" in spdm_reset() is not an
+option:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d5fc31f8345f..512eb2d6591f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -374,10 +374,18 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 	 * order not to miss MSI TLPs from those devices the MSI target
- 	 * address has to be within the lowest 4GB.
- 	 *
--	 * Note until there is a better alternative found the reservation is
--	 * done by allocating from the artificially limited DMA-coherent
--	 * memory.
-+	 * Check if the vendor driver has setup the MSI address already. If yes,
-+	 * pick up the same. This will be helpful for platforms that do not
-+	 * use/have 32-bit DMA addresses but want to use endpoints which support
-+	 * only 32-bit MSI address.
-+	 * Else, if the memory region is not reserved, try to allocate a 32-bit
-+	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
-+	 * allocation. If the 64-bit MSI address is allocated, then the EPs
-+	 * supporting 32-bit MSI address will not work.
- 	 */
-+	if (pp->msi_data)
-+		return 0;
-+
- 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
- 	if (ret)
- 		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-@@ -385,9 +393,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
- 					GFP_KERNEL);
- 	if (!msi_vaddr) {
--		dev_err(dev, "Failed to alloc and map MSI data\n");
--		dw_pcie_free_msi(pp);
--		return -ENOMEM;
-+		dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
-+		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-+		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-+						GFP_KERNEL);
-+		if (!msi_vaddr) {
-+			dev_err(dev, "Failed to alloc and map MSI data\n");
-+			dw_pcie_free_msi(pp);
-+			return -ENOMEM;
-+		}
- 	}
- 
- 	return 0;
--- 
-2.43.0.594.gd9cf4e227d-goog
+Note that spdm_reset() is also called at the top of spdm_authenticate().
 
+If the device was previously successfully authenticated and is now
+re-authenticated successfully, clearing "authenticated" in spdm_reset()
+would cause the flag to be briefly set to false, which may irritate
+user space inspecting the sysfs attribute at just the wrong moment.
+
+If the device was previously successfully authenticated and is
+re-authenticated successfully, I want the "authenticated" attribute
+to show "true" without any gaps.  Hence it's only cleared at the end
+of spdm_authenticate() if there was an error.
+
+I agree with all your other review feedback and have amended the
+patch accordingly.  Thanks a lot!
+
+Lukas
 
