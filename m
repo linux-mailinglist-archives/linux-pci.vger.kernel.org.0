@@ -1,152 +1,191 @@
-Return-Path: <linux-pci+bounces-3084-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3085-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E0C88498D2
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 12:29:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 375008498E8
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 12:33:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1B2B1F2143E
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 11:29:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 873DC281AEE
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 11:33:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAF21865A;
-	Mon,  5 Feb 2024 11:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41F3A18EAD;
+	Mon,  5 Feb 2024 11:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRajZHSR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TpXloMUH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD2818633;
-	Mon,  5 Feb 2024 11:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8C118E28;
+	Mon,  5 Feb 2024 11:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707132538; cv=none; b=q4rHfm6H1GqGAT6PpZj4Mw8fzWMiUDF0hU3MKNsFQjgQRAU90xZPg8hQgvCEp5Ds5IB9cua4uC4qIZzbHwDYfQP0f1lCDmIXLRgj+8lRnxnM/a9/Cjd0/1nkJo6wnHA8wSwSpsUhKAQhBaREGYIweVj31fv4OSv95RU6rEtsCmA=
+	t=1707132822; cv=none; b=BhrwbQC3lUudXvs4vTaM4xtRlhe+rCNsiDpAV7khM0opgW696bZYKk9muhFniihI+DxIwj5tLUHRCG8Rl1iDtJZKoXiEyjzXzbYdiY81qSIJK7JEQi+zYYrdMN1crK2s+x4YxqelLPkWcI4ELjY7zWKuhFTW8MqNcCVl494W5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707132538; c=relaxed/simple;
-	bh=Iy7qWAcNmkq6knfxBeo+GhtMBZwWjH+8//v2LemNuss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CWEvho4sN7bDOYbns6fY//Pg6w09h2vtfoTAJrjMT2CtxkOXCG+RpaAR9isXGvKdmHIfPjrrYnMWDBE9klJaZMsky1iKnXAYlWcVGLqwrdBzCD8ergTR7xKeNeAoPRx29gekdNgNT0lGY1ZZmTD99mLe1T+uTSWJcc6DIiTNmj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRajZHSR; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5111e5e4e2bso6630153e87.3;
-        Mon, 05 Feb 2024 03:28:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707132534; x=1707737334; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TcnrZiFoKqoviNxRH/t3HUNFg1NWrZniLXis+Ehl3kQ=;
-        b=NRajZHSRMX6yUyusc9qN/PPyLWmixYK7RcADVil/VsBA7MqGOJiIk6dMxIsUcNXdgT
-         XTSKjL1knOgrPp4Dh/Zt9AsdVyEauh30aMcttt4a/4mc1KomjXSXZ7E8vbqlK+jymOuS
-         zoJC1FoP6npsPM80s3/iQkMIImbZ/UciB6kxTp47TLUbTDCf/ID9tXKakobtC2/+zXL3
-         UsiCC/pGihC1aNPCEizeprHIEo462aJIi5X0Eyd0wuU440Tt634LJS4odCidZbSlR+tJ
-         dLt7aO9eS99ezc9WPQT/f7G+NQkQPjCeHK5sSPm+2GnwlqgpsRVTHZzdJ5T9muFJqN79
-         PHxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707132534; x=1707737334;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TcnrZiFoKqoviNxRH/t3HUNFg1NWrZniLXis+Ehl3kQ=;
-        b=QZpsO1iz909316k+Z6RiesBDe3mS5HRij78Zda6W17t7X2egmh/z91iTx/YI4sUQTO
-         NOrdCi/haEyEBa7b1eBH+EnrbYB7LHtxukzbh+Rpw0dpAgbRYFJuZ5QuYUIGhaT1NX1E
-         q5Fhwk/27B1tm1rs94K+H92sf7EpKscc1aAFMk/NCnpOlMlns7ciAgviTuryVOKYxKfL
-         vWFFwCd/Riwm0CsgGk9RJmOegKdb+tUZaqpm407D5lTSsNuePkhqrSOKP9+1+jxfE9Hj
-         Ghwdz/b7k528zXbEPxlcRiBRkYvofZtFXdL08y2pNlB68Pp+BCeMrS/oo4CCY/26tOhC
-         26ng==
-X-Gm-Message-State: AOJu0Ywia4qr3dPMeOoLqp/AyIeoyK64BKWABWPRnnv7NMbFcgH8U7Sn
-	FstcjSCsbXjAMF/0/MXDsIdufKGECgmKNC5xbn/XyTOh2fBg74v5
-X-Google-Smtp-Source: AGHT+IHduzacAbB+gmsJTfUXIU/uuqegqXDQipzDg06tYFlUORm6tm/gFiQIkB2iylDysb5O+TBzgg==
-X-Received: by 2002:ac2:5238:0:b0:511:4943:6066 with SMTP id i24-20020ac25238000000b0051149436066mr3046237lfl.25.1707132534315;
-        Mon, 05 Feb 2024 03:28:54 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUGg9Ncywyi1UvMZFL0Fsb4Xpf05vHlc2PN+5pEVK5/JEIZ2r/ER06DGI0d4oAKnSSJ45cXkUZcLNmG4OHRHhzjmOu3MgfgRPE1+OHBijH+NXixyZwCaXaZq5XziX9zxSppM9UE1Oqy05yad4OsfJHrtfxYQzPlh4poVjjU96rLVdQ8SuPO2beI2AYW7SjCrau8wb1fF4tFNWNalcO5tPFBmHzLxFEf25RKtZepOYKGHPEheTibxZ7ldG5fzoXZuW2JgowWjYR3dwZfEu8=
-Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id bi7-20020a05600c3d8700b0040fdd18f6fasm1448578wmb.39.2024.02.05.03.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Feb 2024 03:28:53 -0800 (PST)
-Message-ID: <db589d23-6e15-4b54-845f-fb719e59949d@gmail.com>
-Date: Mon, 5 Feb 2024 12:28:51 +0100
+	s=arc-20240116; t=1707132822; c=relaxed/simple;
+	bh=1MwSAUc78W5tJXQDmXiVVWL6LW0tWArwoySoZ/FGdlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mah912x7cgX6ozTZ+cpAyiPJixHVA/0LjUhfxVTo5rCpNnQpTtWkjrxCmfbI8QMMZtVXqOhDybNfpoFW235/V71c/fwHMdnx814Zu0d8JF4IA2gwVYQDjlY+VGfqHIwjEgnaA8OGXZBGSpFevPG3TCWDbkJB5SfuScPJUHa5Juk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TpXloMUH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F10C433C7;
+	Mon,  5 Feb 2024 11:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707132821;
+	bh=1MwSAUc78W5tJXQDmXiVVWL6LW0tWArwoySoZ/FGdlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TpXloMUHVvgOT++sJP7NBERncauAvbB6ry4KrcJTiSaciNWRV+DSyRYS+aG8Sioma
+	 t6iLwz1RM85qLT6G9Ca/U6FC+XoRgFdiD4kLjovPNM+SVaRqBiJH5791i6WyWYiQos
+	 FmttZ3GJk4+4F6djl9PeTMvUq0PonAfvWXtfDYi5SZQba0/Zg+PlqptTC/pfIMtZGL
+	 bjEboxt4JN/Q/9y6zfZ4fkdwI3X1oDizR4dA1v8QcPZ6tQnKT0rHmkt4yTc1baR/fj
+	 g2SBCEbI/D+HFbVapiKdMQE0fstZtVWBdvgD/IqHZNQ3hz1K3AL0tkeSdbg4VKKgW0
+	 6j1xiFneU7IEw==
+Date: Mon, 5 Feb 2024 12:33:34 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Daniel Drake <drake@endlessos.org>,
+	Vitalii Solomonov <solomonov.v@gmail.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	David Box <david.e.box@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@endlessos.org
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS
+ B1400CEAE
+Message-ID: <ZcDHjsYJNlJ/9nNT@x1-carbon>
+References: <20240130095933.14158-1-jhp@endlessos.org>
+ <20240130101335.GU2543524@black.fi.intel.com>
+ <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
+ <Zbonprq/1SircQon@x1-carbon>
+ <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
+ <ZbrNLxHL03R66PxQ@x1-carbon>
+ <ZbuyVbMEBWKi729y@x1-carbon>
+ <CAPpJ_efmzy_FU0urdHDmO5htOBCPaX-T5W+Er7AmWYhqUTwnyA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Add vf reset notification for pf
-Content-Language: en-US
-To: Emily Deng <Emily.Deng@amd.com>, amd-gfx@lists.freedesktop.org,
- bhelgaas@google.com, alex.williamson@redhat.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20240204061257.1408243-1-Emily.Deng@amd.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20240204061257.1408243-1-Emily.Deng@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPpJ_efmzy_FU0urdHDmO5htOBCPaX-T5W+Er7AmWYhqUTwnyA@mail.gmail.com>
 
-Am 04.02.24 um 07:12 schrieb Emily Deng:
-> When a vf has been reset, the pf wants to get notification to remove the vf
-> out of schedule.
->
-> Solution:
-> Add the callback function in pci_driver sriov_vf_reset_notification. When
-> vf reset happens, then call this callback function.
+On Fri, Feb 02, 2024 at 04:49:00PM +0800, Jian-Hong Pan wrote:
+> Niklas Cassel <cassel@kernel.org> 於 2024年2月1日 週四 下午11:01寫道：
+> >
+> > On Wed, Jan 31, 2024 at 11:43:59PM +0100, Niklas Cassel wrote:
+> > > On Wed, Jan 31, 2024 at 07:08:12AM -0400, Daniel Drake wrote:
+> >
+> > (snip)
+> >
+> > > In libata we perform a reset of the port at boot, see:
+> > > libata-sata.c:sata_link_hardreset()
+> > > after writing to SControl, we call
+> > > libata-core.c:ata_wait_ready() that will poll for the port being ready
+> > > by calling the check_ready callback.
+> > > For AHCI, this callback funcion is set to:
+> > > libahci.c:ahci_check_ready().
+> > >
+> > > A reset should take the device out of deep power state and should be
+> > > sufficient to establish a connection (and that also seems to be the
+> > > case when not using Intel VMD).
+> > >
+> > > However, if you want to debug, I would start by adding prints to
+> > > libata-sata.c:sata_link_hardreset()
+> > > libata-core.c:ata_wait_ready()
+> > > libahci.c:ahci_check_ready().
+> >
+> > FWIW, this will dump SStatus.DET every time the check_ready callback function
+> > (ahci_check_ready()) is called:
+> >
+> >
+> > diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+> > index 1a63200ea437..0467e150601e 100644
+> > --- a/drivers/ata/libahci.c
+> > +++ b/drivers/ata/libahci.c
+> > @@ -1533,6 +1533,12 @@ int ahci_check_ready(struct ata_link *link)
+> >  {
+> >         void __iomem *port_mmio = ahci_port_base(link->ap);
+> >         u8 status = readl(port_mmio + PORT_TFDATA) & 0xFF;
+> > +       u32 cur = 0;
+> > +
+> > +       sata_scr_read(link, SCR_STATUS, &cur);
+> > +
+> > +       ata_link_info(link, "BUSY ? %d (status: %#x) SStatus.DET: %#x\n",
+> > +                     status & ATA_BUSY, status, cur & 0xf);
+> >
+> >         return ata_check_ready(status);
+> >  }
+> 
+> I think I can join the test based on kernel v6.8-rc2, too.
+> 
+> The original ASUS B1400CEAE has only one NVMe SSD.  I prepare the
+> patch ("ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE") to
+> fix the power consumption issue for s2idle with enabled VMD.
+> 
+> The patch is a quirk limiting ASUS B1400CEAE only, not generic for the
+> SATA controller [8086:a0d3].  Then, I install another SATA HDD into
+> ASUS B1400CEAE for test.  The SATA HDD shows up and works.
+> 
+> $ dmesg | grep SATA
+> [    0.785120] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+> Gbps 0x1 impl SATA mode
+> [    0.785269] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+> 0x76102100 irq 144 lpm-pol 3
+> [    1.096684] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+> 
+> However, if I simply revert the commit 6210038aeaf4 ("ata: ahci:
+> Revert "ata: ahci: Add Tiger Lake UP{3,4} AHCI controller"") (fix the
+> conflict, of course), then the SATA HDD disappears!!?  Both
+> CONFIG_SATA_MOBILE_LPM_POLICY=3 and 0 can reproduce the issue.
+> 
+> $ dmesg | grep SATA
+> [    0.783211] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+> Gbps 0x1 impl SATA mode
+> [    0.783399] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+> 0x76102100 irq 144 lpm-pol 3
+> [    1.096685] ata1: SATA link down (SStatus 4 SControl 300)
+> 
+> Here is the dmesg of reverting ("ata: ahci: Revert "ata: ahci: Add
+> Tiger Lake UP{3,4} AHCI controller"")
+> https://bugzilla.kernel.org/show_bug.cgi?id=217114#c27
+> The code already includes the debug message in ahci_check_ready() from
+> Niklas.  However, the dmesg does not show the "BUSY ? ..." from
+> ahci_check_ready().
+> 
+> From these scenarios mentioned above, they all apply LPM policy to the
+> SATA controller [8086:a0d3].  But, they apply LPM policy at different
+> time:
+> * The patch ("ata: ahci: Add force LPM policy quirk for ASUS
+> B1400CEAE") applies LPM policy in early ahci_init_one(), which is the
+> probe callback.
+> * Reverting 6210038aeaf4 ("ata: ahci: Revert "ata: ahci: Add Tiger
+> Lake UP{3,4} AHCI controller"") applies LPM policy via "ahci_pci_tbl"
+> table.
 
-Well that doesn't make much sense. As other already noted as well a VF 
-should be an encapsulated representation of a physical devices 
-functionality.
+I don't see why it should matter if we set the AHCI_HFLAG_USE_LPM_POLICY
+flag using ahci_pci_tbl, or by your suggested quirk in ahci_init_one(),
+as in both cases the flag will be set before ahci_init_one() calls
+ahci_update_initial_lpm_policy().
 
-AMD implemented that a bit different with a hypervisor to control which 
-PF functionality a VF exposes, but that doesn't mean that we can leak 
-this AMD specific handling into the common Linux PCI subsystem.
 
-Additional to that a technical blocker is that when a VF is passed into 
-a VM you don't have access to the PF any more to make this reset 
-notification.
+Could it perhaps be that in order for libata to be able to detect your
+drive, when VMD is enabled, we also need your patch
+"PCI: vmd: enable PCI PM's L1 substates of remapped PCIe port and NVMe" ?
 
-Regards,
-Christian.
 
->
-> Signed-off-by: Emily Deng <Emily.Deng@amd.com>
-> ---
->   drivers/pci/pci.c   | 8 ++++++++
->   include/linux/pci.h | 1 +
->   2 files changed, 9 insertions(+)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 60230da957e0..aca937b05531 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
->    */
->   int pcie_reset_flr(struct pci_dev *dev, bool probe)
->   {
-> +	struct pci_dev *pf_dev;
-> +
-> +	if (dev->is_virtfn) {
-> +		pf_dev = dev->physfn;
-> +		if (pf_dev->driver->sriov_vf_reset_notification)
-> +			pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
-> +	}
-> +
->   	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
->   		return -ENOTTY;
->   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c69a2cc1f412..4fa31d9b0aa7 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -926,6 +926,7 @@ struct pci_driver {
->   	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
->   	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
->   	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
-> +	void  (*sriov_vf_reset_notification)(struct pci_dev *pf, struct pci_dev *vf);
->   	const struct pci_error_handlers *err_handler;
->   	const struct attribute_group **groups;
->   	const struct attribute_group **dev_groups;
+If that is not the case, and there actually is a difference between using
+ahci_pci_tbl and your suggested quirk, then my next suggestion would be to
+add prints to libata-sata.c:sata_link_scr_lpm(). That way you can dump the
+exact SCR writes that are being done for the working case vs. the
+non-working case. (Since I assume that there must be some difference.)
 
+
+Kind regards,
+Niklas
 
