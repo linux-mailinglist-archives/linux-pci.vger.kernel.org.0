@@ -1,96 +1,169 @@
-Return-Path: <linux-pci+bounces-3074-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3075-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08211849420
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 08:00:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B9E184943D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 08:16:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE9401C22B17
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 07:00:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8274A1C2280D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 07:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C1DC14F;
-	Mon,  5 Feb 2024 07:00:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C056BC147;
+	Mon,  5 Feb 2024 07:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="tH36ZgQu"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a2hvI48m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47115C133;
-	Mon,  5 Feb 2024 06:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707116400; cv=none; b=HxGlW41j6Gn+uUyD06o3Uwa+AUWRf9Uk5uGcfg5fTqjzZOTffbygLrRRKvPH+Hl+wTO9paGeXyw3erhG2rRWkOkLW4RjDG1DleUyy7GctS/uv8xlTzbzD0dTBfe+29sFqbyRk7vnFypwGHdFc4HeHJQzobGRs0zZNqKvvrV41Ys=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707116400; c=relaxed/simple;
-	bh=zt0C46DodJBw5mMiz+hdsd1ggKvdZL8FZ+OjMed37Rk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSOaa94oOx/C4iuMWjIHLgH79pacR2wabZ/CbSlU8zTGY+iT4WqzdISN8uYvfC//6QH1k978l9Nwou6b87t690k8/+c5+gdIZJom7LYssHxAjA7PJjE/dkHuCF+eUL39P3AlsvhPn+v6StOmDvzUamVAnF5VSr6+TDAIndjVdgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=tH36ZgQu; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 3015060461;
-	Mon,  5 Feb 2024 06:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707116398;
-	bh=zt0C46DodJBw5mMiz+hdsd1ggKvdZL8FZ+OjMed37Rk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tH36ZgQuTy82CmmwbwrfaK6mcnilerxyth/pAfkT84LOG4s04CTqsIidYWsJCJTc1
-	 apeqTj9Ms8UG356uohWBjDVKt31g8C9hKjXd7dhaVjMRHC3ertJwBG9ydwEbnNDt8e
-	 CQhDuXlo0wPxJWJJd/UVIVCM/J0Tfktzoh6ampZMQQ9nv5xQRb1TblzH3KgH3RF5Ip
-	 M9zqc2fCDXTlZz5Skz7zQs2Jo9X7tgWF6JXlp++gtHN6gZPY6N0Ae2TkQjZSqoYlHl
-	 uGD7cs673Ujl6skOSecx0oIAZe6gCl8kskqZ5oA6cQj2GxY8GYx4dc+Pmezp51aRAF
-	 Y4Wr2WQsVmz/A==
-Date: Mon, 5 Feb 2024 08:58:48 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v2 01/15] gpio: pca953x: move suspend()/resume() to
- suspend_noirq()/resume_noirq()
-Message-ID: <20240205065848.GC5185@atomide.com>
-References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
- <20240102-j7200-pcie-s2r-v2-1-8e4f7d228ec2@bootlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4C9C148;
+	Mon,  5 Feb 2024 07:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707117354; cv=fail; b=hYHkEegNp06BNonOjZq0WHQGPH3Rou8ceeQ8lX7jvwdCJuW3hHknG6hbsFcJ2HwlfMkotGwVZD8yBD2W9UP8ue6NW09qFngfU6gXn//DfqNIH/qKGZRDxDlbikxgjRqxIZJaoam0YUK0DMrc35RcpfKwlqd5Oibb339zhmmhO7Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707117354; c=relaxed/simple;
+	bh=3L+FOPsYwtTvOMeNpENsatgn7x0UpbGEa4ghrigY1/4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=It4aogNMzemdggDnBbPvrzh/4KbAgM5zLNbpnARdqJZ8umU4ISUkdOuWb8ZFNLqiE4fxhE+Gf2YOEk4BybFgOIvnHWavqrPEDm4L+aspyrmOX0tR6HDa83hq950u3+HJDQltsALXwccgoOiJXZZCE6ZyP/mJMtwbsqA3fU3cZ+M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a2hvI48m; arc=fail smtp.client-ip=40.107.92.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KZbkuPybk+Fib++wVCKQhFCXn214/uw4l3auTjktdbMjlLJa0mf5ObBwGMfSHpM11C9GXHw1dZZ2hLV8yhSY17+Ts1C/arFZ0yJukWwmacHqyXzmC++jv7YVAgHHQvq9IqnjU7DtgLYfjZ4FLpmq/FnDemKL69mZy54BAEuvDyzX1BQdXnMqFcxnCBdvVNvZfjouRg+1RjMvVDKGgOVpI3HLDI7sIChrwP9ZS5usvqLSdhbfgGOhpZ43//z3uBHRAMtV6DlKGwQXj21uGefsdB+hhDk+3I6gVMQX5Mhe9EQPGfmVDoCNX7imA6Q4QJh0w3LrGfE1htSEl4TmLsWHUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SDZoyxV0PBYEGXzdw06CQ7HWzz1npsZS2UYPoIw1f/o=;
+ b=Hjt/T8U0NGmqLBfSDHnjIX9dnhBf9N2GNVLqyTGUb7sey/4TSo5/JEjCRRXYSOpz7Wt7kvbNlmqhYrtY+eWKX67DGCIiGdEBrK2AY8tADDgzDUWVVJjlBX8wludrkbiCvrVenm8keMixyFyUHNqg7oVggW80NhVNuGaZOVMECHBBoZ0C+WAyfK3JtxLwuy5ZKlKfF/dCH+7O3vChIu0be3rgZZUtbfFWEFVRJPBZoScGP+VIoUQw/fTGMY+UZwX3WoN3pEhsIjxDBYY6zMSa0UtWMfc1vSs/QEj2wOjktxF5ows2HYsXkMT+8MhoXhDBHiltm4GdNRW3fBqvrdi45Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SDZoyxV0PBYEGXzdw06CQ7HWzz1npsZS2UYPoIw1f/o=;
+ b=a2hvI48masqBA+ZjrwS9EedJpzcqRyNJpISnGL50Dlh8G3+VtZ+OtQuHKU17b5UHE0prBHC3xz0kwE61CJcuOTq24TycFtglxGq4k0eCTv/8fBV3xnjIs9aCJKJfyIcvZz5EJRV0rYpXBW5syIRftp6+iQD+hZC6k86vuhUgLhE=
+Received: from BN9PR03CA0053.namprd03.prod.outlook.com (2603:10b6:408:fb::28)
+ by SJ2PR12MB7992.namprd12.prod.outlook.com (2603:10b6:a03:4c3::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.15; Mon, 5 Feb
+ 2024 07:15:49 +0000
+Received: from BN2PEPF000044A7.namprd04.prod.outlook.com
+ (2603:10b6:408:fb:cafe::d2) by BN9PR03CA0053.outlook.office365.com
+ (2603:10b6:408:fb::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.34 via Frontend
+ Transport; Mon, 5 Feb 2024 07:15:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044A7.mail.protection.outlook.com (10.167.243.101) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Mon, 5 Feb 2024 07:15:49 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 5 Feb
+ 2024 01:15:49 -0600
+Received: from emily-Z10PA-U8-Series.amd.com (10.180.168.240) by
+ SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.34
+ via Frontend Transport; Mon, 5 Feb 2024 01:15:46 -0600
+From: Emily Deng <Emily.Deng@amd.com>
+To: <bhelgaas@google.com>, <alex.williamson@redhat.com>,
+	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kvm@vger.kernel.org>
+CC: <Jerry.Jiang@amd.com>, <Andy.Zhang@amd.com>, <HaiJun.Chang@amd.com>,
+	<Monk.Liu@amd.com>, <Horace.Chen@amd.com>, <ZhenGuo.Yin@amd.com>, Emily Deng
+	<Emily.Deng@amd.com>
+Subject: [PATCH 1/2] PCI: Add VF reset notification to PF's VFIO user mode driver
+Date: Mon, 5 Feb 2024 15:15:37 +0800
+Message-ID: <20240205071538.2665628-1-Emily.Deng@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v2-1-8e4f7d228ec2@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A7:EE_|SJ2PR12MB7992:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9c238bb4-fd5b-43a6-8226-08dc261a47da
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	AWttwe5zmuO/kJ9UV+E3LKMPN4ivsIBvEP/LfUa1PyKEJ7b05VBZfNyB9oz4jBhtZvPImVl/KMkhMvwiop9FMEpejhWFXeq8r5wJA4iazVn8Bk5/B+y5Wn+nTA33HAte6b7gBkkK0FiOX1YjIso0l/prfdr/7kAVB24UIPQ5TAzf1Ly1XVUPyc7mGASq9OU5giWGnUCwKen6KaaaJ6qekicuuMGcH5cbUS7npIMLd+kDgYBdZAYNH49Xf6eBytz4FospoBWHu+AiIWeWOxqylvIkFnkcEWhmfNvuIYHSJBZVRyjwFqiB+xgWtCob12JGyWzGUDfnkOLZeGZhvl4+Z2DG1H2J8BwB35GJZ5LoMvgIH10A/EwDm7cMcwyLxACYXwmkXVPnDjPPl4T2dvh5vbCMajpKl4IyPgrPrxhEu876VUSnf+baArWH2n06htMXmkcrEa4ZFWr5DpCrAZdMhJywYX+/1fuSECga1bmBECI8QQDad7X/rPoxW6HL/P8fU/mWjGNLKvTXmpgEPafQbKOHCgY3nHKfvv0Y9CmXxd/Cs7CBQn7J40fbER9FednlxpY24OTvRlshMGQ4kq4e7ZukPe/quHqALs/X3u3lMcAeLTQKvG26e9bQ/80ol6k0bNa75TFd3XaQ6dpimtlSylW5TOuhSEqdNdwDw1Oe/6tszsWTDsogVzQNLKjdMgkdV09VueujUR5I7hgiu8M2b7NwUfJlPEJZeTMSMEi0LFJF2u1QIDuHwvJIbj2/qs6mExVyDzrBT04Hn0lqzxBnvw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(346002)(396003)(39860400002)(230922051799003)(82310400011)(64100799003)(186009)(1800799012)(451199024)(46966006)(36840700001)(40470700004)(41300700001)(40480700001)(40460700003)(86362001)(478600001)(36756003)(426003)(336012)(1076003)(2616005)(81166007)(82740400003)(47076005)(356005)(26005)(83380400001)(2906002)(316002)(5660300002)(70206006)(54906003)(7696005)(6666004)(36860700001)(8676002)(4326008)(8936002)(70586007)(110136005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Feb 2024 07:15:49.5806
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c238bb4-fd5b-43a6-8226-08dc261a47da
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A7.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7992
 
-* Thomas Richard <thomas.richard@bootlin.com> [240126 14:37]:
-> Some IOs can be needed during suspend_noirq()/resume_noirq().
-> So move suspend()/resume() to noirq.
+VF doesn't have the ability to reset itself completely which will cause the
+hardware in unstable state. So notify PF driver when the VF has been reset
+to let the PF resets the VF completely, and remove the VF out of schedule.
 
-Hmm so what happened to the earlier i2c transfer at noirq level comments
-from me and Linus W here? It seems the cover letter mentions it but I
-don't see the related changes in this patch?
+How to implement this?
+Add the reset callback function in pci_driver
 
-Regards,
+Implement the callback functin in VFIO_PCI driver.
 
-Tony
+Add the VF RESET IRQ for user mode driver to let the user mode driver
+know the VF has been reset.
+
+Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+---
+ drivers/pci/pci.c   | 8 ++++++++
+ include/linux/pci.h | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 60230da957e0..aca937b05531 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
+  */
+ int pcie_reset_flr(struct pci_dev *dev, bool probe)
+ {
++	struct pci_dev *pf_dev;
++
++	if (dev->is_virtfn) {
++		pf_dev = dev->physfn;
++		if (pf_dev->driver->sriov_vf_reset_notification)
++			pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
++	}
++
+ 	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+ 		return -ENOTTY;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c69a2cc1f412..4fa31d9b0aa7 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -926,6 +926,7 @@ struct pci_driver {
+ 	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
+ 	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+ 	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
++	void  (*sriov_vf_reset_notification)(struct pci_dev *pf, struct pci_dev *vf);
+ 	const struct pci_error_handlers *err_handler;
+ 	const struct attribute_group **groups;
+ 	const struct attribute_group **dev_groups;
+-- 
+2.36.1
+
 
