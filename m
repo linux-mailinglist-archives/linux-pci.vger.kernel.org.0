@@ -1,223 +1,221 @@
-Return-Path: <linux-pci+bounces-3072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BBDD8490E7
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 22:52:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22A308492D5
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 04:47:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06EB4B22426
-	for <lists+linux-pci@lfdr.de>; Sun,  4 Feb 2024 21:52:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4786E1C21C44
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 03:47:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7914B249F7;
-	Sun,  4 Feb 2024 21:52:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1BD979E4;
+	Mon,  5 Feb 2024 03:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYim0ZDY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bMZ7BbZE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2077.outbound.protection.outlook.com [40.107.244.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834472C68F
-	for <linux-pci@vger.kernel.org>; Sun,  4 Feb 2024 21:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707083572; cv=none; b=Gzxm8VbulybUBGMt+WoX6hL1nC/p9hGTa1wGhunV8mBD6IUEEhP1buixf7b8+b235vMfGI0Tjgw+Vj84t2zZQ+chlfFdvATCnvLAnjMd60iGvIoNU5ilyETRkzgegT9YQrfjIzryDLwwBbrS0N1d7RFw0ZYeOJC+XkdUXYcBT2U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707083572; c=relaxed/simple;
-	bh=2ixbZLaCeZ/ZDlBWbZq8BWjaueHP2Ey7QFL4/SsC9fg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BhefWuiDX+80pV2y8ulttd5gedy/AOGM/HHl2WKc1bm9Ufqe5m4PH9e3s3r2PeXsv6LTiYh6M68jIr5LyYQQm82zw1YOvqSwO21CBEq3+bnlQMY8YX/eL4WHSTiJCIybzHCR216XDl4egNkiAiD5A19DoTThoaw7UowfrPD+IvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IYim0ZDY; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51109060d6aso5354683e87.2
-        for <linux-pci@vger.kernel.org>; Sun, 04 Feb 2024 13:52:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707083568; x=1707688368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zuiUj1ce6u5WC8yJYcA2F7eIoP+TpA1trOScy5PHCQM=;
-        b=IYim0ZDYJAXj4HjlSuS7Kbiu19NDsurDgMcbL1z0wJWmaqtIIJYyRiZsFTWAgJ7t8G
-         /cYgsv+GQQ8IfzlXUlTc2ePK2+bMVUE8y3rgS0867qV8UmAPx/bhf1H+H8gOeEv2L+Hk
-         sqp1CJ9gRspt9MDJ3lsMMCQS+pEgmf1T28IanLD4tTUZ9USU64Qpk/7ot8dXok6PmrBq
-         4VsVds/X+joH5Qv6bm94od0qshK2hQAFuWHQQwOFZLx5pP1S4JXfFdLX8HD7whlGO9f+
-         yV6Ar0Og0Qr4Y9148rZS05jrJiMYPeF2FtyeohFXWFvHrLBFhF0aHri6PSx+iGa/hm9s
-         9TuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707083568; x=1707688368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zuiUj1ce6u5WC8yJYcA2F7eIoP+TpA1trOScy5PHCQM=;
-        b=MSfcbSSAUU+bIaf+n4uh2shlAOTarCAwPJKGdAmIfxodyC0wvOElzYvvkzSfjpIiHO
-         tNb+tf/WdsJLXuRk/KnhIdou3zp9zQtvm/vAw+6XOiHsleFbzPx3liYthe+EYBGIDIy1
-         zfKDdaKbroYwUws0wH/hCbszekfXeKbOnS5oPY56dKJ3Rm1wXEIZe3FiseP7XRDq8WL+
-         +SzbLWCUy414FvuWnNKVu4cuU49XWuSa1WyqJDtfdygahqHoRCWMTKV1Uyn9mzcQQ+vp
-         GSTNLUgqI+EKfz3HYDpQEAxfVRKMg9AJx8syuAbhIw85YQFviaXOfVwL9b9lkeW3lwCN
-         PXNA==
-X-Gm-Message-State: AOJu0YzK0JxwmVPuNnHanx0XjhTl7gFulDBz4jsoyTLEb+8LCiRVIXAE
-	1cddF3uTveB1CQiR7+/iVPBKWRzPlEPe6z/fD8Q/9aEX2bKTox6GFrYlr6BYIL4=
-X-Google-Smtp-Source: AGHT+IGyr9vELnELjAu8Pzpw2/8mY0xvhgqmm/NnA2ZUupNrwCzdgHWMK1XrqbVzUF2sSMmWT8DkOQ==
-X-Received: by 2002:a05:6512:3d88:b0:511:4e8f:e21f with SMTP id k8-20020a0565123d8800b005114e8fe21fmr1270283lfv.6.1707083568115;
-        Sun, 04 Feb 2024 13:52:48 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWE7jo22+VyArtecjMPdv1YMYsKVXzPbUuPl7Dcf9si/u0T5WnbS5StVIkflUu5XrNMXt8bspmxO2gg+Cmmty2iy3OfweSH9aGdl9jNsUHIY6wWONWtLzxVu9hBJw93+WORyVYsh1YM24gR34fdPFuH+uTny9GuvEbXKC+8rfSZZWijqZr28V/YYvjm6lvsysvlM7EY+bfrqFrpVMUT5kImfjwXSgkw8OHJ6WXlZHQtx4Wua/NXRu/Yrn+Lg0TsECg6IGDL3jSyV1m3P8xXtoYlCiMxJlSui5Vg9olrrH20KVemooAepTzIpEff8vB3y6e+VgIjYQTKgZniSPl9uls9BIcGHg3mvsRqlwbl19x0TPGJBSSSvg1/GX2Fqo0=
-Received: from mobilestation ([95.79.203.166])
-        by smtp.gmail.com with ESMTPSA id l14-20020ac24a8e000000b005114efca6eesm179843lfp.37.2024.02.04.13.52.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Feb 2024 13:52:47 -0800 (PST)
-Date: Mon, 5 Feb 2024 00:52:45 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Ajay Agarwal <ajayagarwal@google.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>, 
-	Sajid Dalvi <sdalvi@google.com>, William McVicker <willmcvicker@google.com>, 
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <2kvgqhaitacl7atqf775vr2z3ty5qeqxuv5g3wflkmhgj4yk76@fsmrosfwobfx>
-References: <20240204112425.125627-1-ajayagarwal@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D157F8F44;
+	Mon,  5 Feb 2024 03:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707104826; cv=fail; b=a9X/Ac6mO5SF2tOB0KacfRdFuk4Sr1ehtiAx1hs3voQAStTeWXrrRJxovok1dCoIfvuEv5AKTtOa8lZLPmXjHtzcjXUfzrN2DXUrsBZwgjwKIomMgH/tEVgklNXSbjOp+4Lit8veIVEJtFauYUgEXcxyHS2rxqQp+UFsICrR4Sc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707104826; c=relaxed/simple;
+	bh=avqDGisFce63KRlmQHvZoLVbq3fcyCvruGar4O2wxAc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QQRvun43PqA1hTcVSaAo3dr6chnMaVH3fnLQYfqhtMIV+wMxPFV4GlMfZUupmjNy1B69pskj3pKsD0tKp5pQ3ji9YdPcMl4krL47RX55X8pRti7EflmnAA/WDjkeM/CatnMe2rwLRpHXl/SZNyLKxxqND1n/QyeeA303ZWKuyLQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bMZ7BbZE; arc=fail smtp.client-ip=40.107.244.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kl6IDSEuORZENEJ7+Mz+wqEVci+YMPXkYwnjAl5Ol+SPZRfr8ljE9ieXPhZFKRk7SKqrPXKOjH7D3obqXD7mPwiaubKQz52dm7rQ9TMOaJXvacPdKMRBpSKCK+SVI5vBnEvemZUKpqrJbfMhhQ4SVTuyb9IlNrzWBG71Ktos/OifCEDHphlTCGYVyFaAXdtMXj9hkvyiXN2Cs3a6WhJT/S1M4u0eH80LtT1i4lVIqq04VfPrTt673B3i9ccT9YR/QH7wawhGiYC1KJTft2wz/0ifoeQM3LU4FLvv3XjAz7dAY/AIaiZwxdXVDt7bJhZ2a3yU+0h90JrkdXKrf6fdSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TogeLJwY7aTJwGMl4krqMlCtkKHY35TYdxq67sXZJBE=;
+ b=XutfM8k3Ns2s/18YRIPUkVVbeTAWHG4LcUpLtv6xTdXCI627X8YVNdIEqOysiWidWJPkN++GMq0fro0PUOBjKyzKZi5+tPCh/jdbEY8eZJn1xbTL0SiiPgnkyg01opL+JcgZxOZFhASdzmz2/fUD2xVEHiuROkLXx9OG5/O7nWPUo8E+KKL4c9kleCN1868bW4UgU9T0fZXPFqZjQSse2+uMmsYK8sRq4HmOwLXg8RyLuV2y9OaU8QKs+pTF4cRJPN0DkOFksgK8xFRXROh3so2TnupVCZ975jh83JymH98JxIgDZ1mWQYqd3ks4tAYyGv1NAfsz6AWdmaDqMzQtnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TogeLJwY7aTJwGMl4krqMlCtkKHY35TYdxq67sXZJBE=;
+ b=bMZ7BbZEjH1Hn4WLqpLBybjc6L1wR0vbvIcktj5myupuiFElXCknYHPttDrR6/1i0US4UHYFZwvauTjGAUVX5NDaHmTPxMB1bJLc4tnYupzXxsSLtrL2EDkvDmvHLbC0H/Ioumx6IO6RSBtyS3K34eqf52nt/abiAaOVFQQfeQ4=
+Received: from PH0PR12MB5417.namprd12.prod.outlook.com (2603:10b6:510:e1::10)
+ by CYXPR12MB9443.namprd12.prod.outlook.com (2603:10b6:930:db::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.14; Mon, 5 Feb
+ 2024 03:47:03 +0000
+Received: from PH0PR12MB5417.namprd12.prod.outlook.com
+ ([fe80::653a:d381:dc93:d690]) by PH0PR12MB5417.namprd12.prod.outlook.com
+ ([fe80::653a:d381:dc93:d690%4]) with mapi id 15.20.7270.015; Mon, 5 Feb 2024
+ 03:47:02 +0000
+From: "Deng, Emily" <Emily.Deng@amd.com>
+To: Leon Romanovsky <leon@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH] PCI: Add vf reset notification for pf
+Thread-Topic: [PATCH] PCI: Add vf reset notification for pf
+Thread-Index: AQHaVzFPJS4FqX9EC0KTmNBs3b7rorD6CgAAgAES9YA=
+Date: Mon, 5 Feb 2024 03:47:02 +0000
+Message-ID:
+ <PH0PR12MB5417A9E79D51D2D21AB695178F472@PH0PR12MB5417.namprd12.prod.outlook.com>
+References: <20240204061257.1408243-1-Emily.Deng@amd.com>
+ <20240204112044.GC5400@unreal>
+In-Reply-To: <20240204112044.GC5400@unreal>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ActionId=fde1eb36-7dc6-4627-9e0d-07d278d5db91;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_ContentBits=0;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Enabled=true;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Method=Standard;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_Name=General;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SetDate=2024-02-05T03:44:50Z;MSIP_Label_4342314e-0df4-4b58-84bf-38bed6170a0f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR12MB5417:EE_|CYXPR12MB9443:EE_
+x-ms-office365-filtering-correlation-id: 9df5757e-89ac-4f67-0281-08dc25fd1d4c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ dtP1zlzOHti0M8i9iwIZzeBYEjrmTMV4csI/lzrO4xx4Qe/k55Xu4149Oa54dhFosBgMEd7N5l+ylTRUDSr6Y3hGdYe1v0zNw8JGSwCFQ4DRCc+VUWrb9YkvcBJm8r84pboy1RHfpDjiKu9mdkAbxsMblVXMXfLTbiIibUsV6jYXvpsscpXqqc9cyIby3KpifgLEgcj3Ge2ZeRWwzKeY3fYMc4yFUNNyYy7sbd5tFzr+Cx2JJdSdGfm6+wj9aMjc9LSp7pwhZROBBeOeZJO116A4LHSVuKUyo4NDF+FojfrLVd0R6tRW1FQDEXmWgtRCgdH/muQ8TEIvQnlTj2UwYj/eg2v/WpSq1Or8uDV5O7LuoKliMOVhVTJIj9TQm4KRh5YLxdr6RzyqcVtpYYsKeix4U/YvW48gyVg4XkxMUkYlHPDRc0WOU40balpa9uafrXmi7Bd1rCdcSNWtzTVJd2qdHujn1JSIcLZcq+ZwbDJTmtyujaELJKHD0AIJz9iw131j7DurbnQ2AD1qq253K5pIgpb4s35pnGOivZDnYCugJwevirG5GB0N4K8u/QUA2kRGV7uGRdfR/NoU22soPOocEC4Mh+VYOzv4Z0DSsEiTOuzQFsi/T23iwCapXptt
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB5417.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(136003)(396003)(39860400002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(55016003)(33656002)(478600001)(9686003)(86362001)(38070700009)(41300700001)(83380400001)(26005)(66946007)(6916009)(76116006)(5660300002)(66476007)(4326008)(54906003)(7696005)(6506007)(52536014)(66556008)(66446008)(64756008)(38100700002)(316002)(15650500001)(71200400001)(2906002)(8936002)(122000001)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?HWfVflDRqEQ2PbAZ892jpIhtWl9s/Zek4Vjg1wtORwJGdzpH3doLb3S4gA17?=
+ =?us-ascii?Q?aBzRc/855Eja8IDhk3vdf5bHjas1xoeXb5D2RUz8n8RsGAtvCqSP1SICMrdQ?=
+ =?us-ascii?Q?6EhbNEtthJq1w/5K6ohoAWipesyzlt0PVOkOLHMvOBuS7Jq6vHCJEbXANrGe?=
+ =?us-ascii?Q?ysqBJRd9Nqv7VqS+AjW+23oeeL/F/+ZP3ba1FVwXou3xcp/GWMqm3zINSTZk?=
+ =?us-ascii?Q?PUT8TM6oDZs9B6YDOR2Ge2tSstA+sEx5kXzMO+1g9QSIESUpAjcfsMie9m8E?=
+ =?us-ascii?Q?SQvsC99DxqfcRwMdforNUhPO2WDXRvg2Oin4gAPob7STVMYEluS5ze4PWEn3?=
+ =?us-ascii?Q?wlFHAUtFbIVuz+B3bRz8GbxvbGsQRqC3P4Al93OmV0O+nRCna7F9lvSzWECS?=
+ =?us-ascii?Q?LpJkmDalYpHf4aRQ/2w/4pzgucauFKcrf2LREbzhW0Ur6CgXGWmwWyeFG9eQ?=
+ =?us-ascii?Q?mNqO8riUer2886QxhNFuVvJE5WdwHTn4Y4bREyICv761mC+kGZ5coe+3kBRh?=
+ =?us-ascii?Q?4cDQ+bz3TqZvKN274HGtpx1Egkq1s3yoQl2Y1+Z6xdOYGER67XnqnCIYrz7X?=
+ =?us-ascii?Q?kvmg4Ab7mKI28dAeDCL5u7R5yS3C1ZlEquIeFaRtb1bNkP/irrmFV6lc1hXQ?=
+ =?us-ascii?Q?qWy909UGxnL8YfqjpufzS3hi8hNg0bbUvEWDJzaOx84oeLOUTPRhYez+JlU/?=
+ =?us-ascii?Q?JBMN+3s8YL/XhEOLaIG5X6eItOlA7WIersTekntEBNBugwRFsaN9Eec8jcKw?=
+ =?us-ascii?Q?ftZGLfpU55NAkBIxBQP+JGCVAzNr2PWVKk4cOUj6PUYgIdFdyudb2hlwec2s?=
+ =?us-ascii?Q?SD97o/raK2UPGEJ9Fyecfhh/U34Iw1lLE/aAj9Ma3UESopsxLxfUVHuLTKnm?=
+ =?us-ascii?Q?ktI1C1ujYSyScP+nVzQk6dYGIbJLgKuiv9+jL695e2RNDYDrcI0e8lAiayrP?=
+ =?us-ascii?Q?IIwWJYCBLRLpRlb4g/lg8TJuN3ohQkNuCZU5AHx9V4cwn5YS1jjNMFTod7lJ?=
+ =?us-ascii?Q?FF0F03Fpu8JqZV4A4ckF3Bf3DyiDz0+Y/hHAsDzDsXrBF8auSaGr74yqE3gV?=
+ =?us-ascii?Q?rZ2edpRjbBMOl13eDIWu6sHDxi9fRMaSWB/psVMunkVpj73GeJpvgEnXav20?=
+ =?us-ascii?Q?ghCGwJuY/3GdXWOoprycURv+vAtXRodVNRATou6Umx7aFbEH+o+EX4mYylgo?=
+ =?us-ascii?Q?r4/+Kt+OMGr7ZBttFEKh5UjJ3bJl6ZyhfSP4j+46ATKBfFJn6mtcIL+1l3+X?=
+ =?us-ascii?Q?sb7CdmcqeGo2foRDvbeRFqzDkogRO3dcOATGMMWfk4eJ/hJRxxCQO0iuECod?=
+ =?us-ascii?Q?h1R3iqtoNrvPzldGELZzUvpgkg2TthMD6eM2DaS/jkt/Anluv+y72py7sr6A?=
+ =?us-ascii?Q?V923wFiDngpLbj/YdLOYMWMGo+gUrRPLnKp/zOQRRMX07ntBu+RZkRTThFWI?=
+ =?us-ascii?Q?oVPZUbWdIzDDUrx8n8Y3BvQ1hNcpUqSTcXXSC7uNxeI/zR/C4N05J2U39AAY?=
+ =?us-ascii?Q?KvUH/qPoCnEbva8WOBtoBq0xu0oP5qWjW/KrmdIIx+vRoi2RGaYmBDWR2Lzf?=
+ =?us-ascii?Q?rEgkxyEGIWUMQeZOge8=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240204112425.125627-1-ajayagarwal@google.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB5417.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9df5757e-89ac-4f67-0281-08dc25fd1d4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Feb 2024 03:47:02.7898
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rHRa1KBhck/1HCsZk69YNQcWXdidtRFOIX9khwnYzK11YrSvJqYXA+AcXdNkq6zY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9443
 
-On Sun, Feb 04, 2024 at 04:54:25PM +0530, Ajay Agarwal wrote:
-> There can be platforms that do not use/have 32-bit DMA addresses
-> but want to enumerate endpoints which support only 32-bit MSI
-> address. The current implementation of 32-bit IOVA allocation can
-> fail for such platforms, eventually leading to the probe failure.
-> 
-> If there vendor driver has already setup the MSI address using
-> some mechanism, use the same. This method can be used by the
-> platforms described above to support EPs they wish to.
-> 
-> Else, if the memory region is not reserved, try to allocate a
-> 32-bit IOVA. Additionally, if this allocation also fails, attempt
-> a 64-bit allocation for probe to be successful. If the 64-bit MSI
-> address is allocated, then the EPs supporting 32-bit MSI address
-> will not work.
-> 
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
-> Changelog since v2:
->  - If the vendor driver has setup the msi_data, use the same
-> 
-> Changelog since v1:
->  - Use reserved memory, if it exists, to setup the MSI data
->  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
-> 
->  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++++-----
->  1 file changed, 20 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d5fc31f8345f..512eb2d6591f 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -374,10 +374,18 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	 * order not to miss MSI TLPs from those devices the MSI target
->  	 * address has to be within the lowest 4GB.
->  	 *
+[AMD Official Use Only - General]
 
-> -	 * Note until there is a better alternative found the reservation is
-> -	 * done by allocating from the artificially limited DMA-coherent
-> -	 * memory.
+The use case is the vfio-pci driver, which is used to support a user mode P=
+F driver. Will also sent out the vfio-pci driver patch. And add more commen=
+ts in the patch. Thanks.
 
-Why do you keep deleting this statement? The driver still uses the
-DMA-coherent memory as a workaround. Your solution doesn't solve the
-problem completely. This is another workaround. One more time: the
-correct solution would be to allocate a 32-bit address or some range
-within the 4GB PCIe bus memory with no _RAM_ or some other IO behind.
-Your solution relies on the platform firmware/glue-driver doing that,
-which isn't universally applicable. So please don't drop the comment.
+Emily Deng
+Best Wishes
 
-> +	 * Check if the vendor driver has setup the MSI address already. If yes,
-> +	 * pick up the same.
 
-This is inferred from the code below. So drop it.
 
-> This will be helpful for platforms that do not
-> +	 * use/have 32-bit DMA addresses but want to use endpoints which support
-> +	 * only 32-bit MSI address.
-
-Please merge it into the first part of the comment as like: "Permit
-the platforms to override the MSI target address if they have a free
-PCIe-bus memory specifically reserved for that."
-
-> +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
-> +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
-> +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
-> +	 * supporting 32-bit MSI address will not work.
-
-This is easily inferred from the code below. So drop it.
-
->  	 */
-
-> +	if (pp->msi_data)
-
-Note this is a physical address for which even zero value might be
-valid. In this case it's the address of the PCIe bus space for which
-AFAICS zero isn't reserved for something special.
-
-> +		return 0;
-> +
->  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->  	if (ret)
->  		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> @@ -385,9 +393,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
->  					GFP_KERNEL);
->  	if (!msi_vaddr) {
-> -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> -		dw_pcie_free_msi(pp);
-> -		return -ENOMEM;
-> +		dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
-> +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +						GFP_KERNEL);
-> +		if (!msi_vaddr) {
-> +			dev_err(dev, "Failed to alloc and map MSI data\n");
-> +			dw_pcie_free_msi(pp);
-> +			return -ENOMEM;
-> +		}
-
-On Tue, Jan 30, 2024 at 08:40:48PM +0000, Robin Murphy wrote:
-> Yeah, something like that. Personally I'd still be tempted to try some
-> mildly more involved logic to just have a single dev_warn(), but I think
-> that's less important than just having something which clearly works.
-
-I guess this can be done but in a bit clumsy way. Like this:
-
-	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) ||
-	      !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
-	if (ret) {
-		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
-
-		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-		ret = !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
-		if (ret) {
-			dev_err(dev, "Failed to allocate MSI target address\n");
-			return -ENOMEM;
-		}
-	}
-
-Not sure whether it's much better than what Ajay suggested but at
-least it has a single warning string describing the error, and we can
-drop the unused msi_vaddr variable.
-
--Serge(y)
-
->  	}
->  
->  	return 0;
-> -- 
-> 2.43.0.594.gd9cf4e227d-goog
-> 
+>-----Original Message-----
+>From: Leon Romanovsky <leon@kernel.org>
+>Sent: Sunday, February 4, 2024 7:21 PM
+>To: Deng, Emily <Emily.Deng@amd.com>
+>Cc: amd-gfx@lists.freedesktop.org; bhelgaas@google.com;
+>alex.williamson@redhat.com; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; kvm@vger.kernel.org
+>Subject: Re: [PATCH] PCI: Add vf reset notification for pf
+>
+>On Sun, Feb 04, 2024 at 02:12:57PM +0800, Emily Deng wrote:
+>> When a vf has been reset, the pf wants to get notification to remove
+>> the vf out of schedule.
+>
+>It is very questionable if this is right thing to do. The idea of SR-IOV i=
+s that
+>VFs represent a physical device and they should be treated separately from
+>the PF.
+>
+>In addition to that Keith said, this patch needs better justification.
+>
+>Thanks
+>
+>>
+>> Solution:
+>> Add the callback function in pci_driver sriov_vf_reset_notification.
+>> When vf reset happens, then call this callback function.
+>>
+>> Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+>> ---
+>>  drivers/pci/pci.c   | 8 ++++++++
+>>  include/linux/pci.h | 1 +
+>>  2 files changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
+>> 60230da957e0..aca937b05531 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
+>>   */
+>>  int pcie_reset_flr(struct pci_dev *dev, bool probe)  {
+>> +    struct pci_dev *pf_dev;
+>> +
+>> +    if (dev->is_virtfn) {
+>> +            pf_dev =3D dev->physfn;
+>> +            if (pf_dev->driver->sriov_vf_reset_notification)
+>> +                    pf_dev->driver->sriov_vf_reset_notification(pf_dev,
+>dev);
+>> +    }
+>> +
+>>      if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>>              return -ENOTTY;
+>>
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h index
+>> c69a2cc1f412..4fa31d9b0aa7 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -926,6 +926,7 @@ struct pci_driver {
+>>      int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF=
+ */
+>>      int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int
+>msix_vec_count); /* On PF */
+>>      u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
+>> +    void  (*sriov_vf_reset_notification)(struct pci_dev *pf, struct
+>> +pci_dev *vf);
+>>      const struct pci_error_handlers *err_handler;
+>>      const struct attribute_group **groups;
+>>      const struct attribute_group **dev_groups;
+>> --
+>> 2.36.1
+>>
+>>
 
