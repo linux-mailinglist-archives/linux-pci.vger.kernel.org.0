@@ -1,220 +1,188 @@
-Return-Path: <linux-pci+bounces-3081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D509A84963E
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 10:19:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E2EDD84975B
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 11:08:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 061AC1C21919
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 09:19:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 133141C21211
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 10:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E424125B3;
-	Mon,  5 Feb 2024 09:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hSH8rq0v"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3927014270;
+	Mon,  5 Feb 2024 10:07:59 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEC9125B7
-	for <linux-pci@vger.kernel.org>; Mon,  5 Feb 2024 09:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37CB168D9;
+	Mon,  5 Feb 2024 10:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707124764; cv=none; b=p0P/gwC1Ylu7I6nLsQ77KCmEHj1G++t6SzdneYyLrxW63EE95PfcH3xm/9MfOlQTV2q17mi5ULUrSkYYhDXLQzp8RB7srFi83jiZFBlbc9ULmnPtVRSqkLzzOJmFOjF4CFsdJgVulZasNnXjLbbxzUP5B30LMNQHyt7Zig1ipf4=
+	t=1707127679; cv=none; b=aI/jCq6PKunj/bSeJq7XxqoDLtJPwDo8ry4i+00hayWrW+W5b1F0NhuldU7AE/dK0GRhtk0bNgeNu/9q0ZlPUZcd123cNCjLRGxaD0P8zl1XOcBPZBJ4P9c/xzGSXil8PVjxY/n2BEGGXzTnOIHWTcQPY1mNuG8UeNUttkxhlT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707124764; c=relaxed/simple;
-	bh=JOZyY44o3VjmqxPeYm2CxNUhG2xfl45AjDv+Izabiy0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:In-Reply-To:
-	 Content-Type:References; b=Cub83/Bw662fEFcJ7nPAeL7jvSjXf/IeTxEXLSoCbmrCdTk6PZdHdmnCd7TUvZ3cSjxAMjqKs9mxGvnn9fuqkVVcasi1Sdcfctbyyf9Xx2hQSo6G/Gka3vQ4/oaui6Pat4RhbdaoRjFXDnElogV5OuP82lF6HyjhLqMyWunk0IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hSH8rq0v; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240205091919euoutp02484491ade50953c70e88a18db560110c~w7Ox2AN8V1679616796euoutp02S
-	for <linux-pci@vger.kernel.org>; Mon,  5 Feb 2024 09:19:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240205091919euoutp02484491ade50953c70e88a18db560110c~w7Ox2AN8V1679616796euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707124759;
-	bh=x11oEt2Z68lZhuN1htWEnhx4xVZleMPJJZ1X62idi6Y=;
-	h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
-	b=hSH8rq0vRLoaSosTYdcEhyDnQ7Szp4iBHuaR11zkwvwT53s+0Lmd8kbnx4lNHlHrw
-	 t8Y6bmp2a4cHRG2gEWYju/1i+znVWhRYYg6Qa+nkWeWABV5voRklxJC2c8pPVNmqXA
-	 RGZXi/+XWGSWk82PER54NGfkydVJG7mE/bvqv5uk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240205091918eucas1p23872d9f15a22c9e23103857a5ae2b9c6~w7OxUt-NP1676616766eucas1p2I;
-	Mon,  5 Feb 2024 09:19:18 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 43.EC.09539.618A0C56; Mon,  5
-	Feb 2024 09:19:18 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240205091917eucas1p2cde1af2ad3532e2e44664132af9ee9ff~w7OwxvkO-1177511775eucas1p2c;
-	Mon,  5 Feb 2024 09:19:17 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240205091917eusmtrp10525cabc0eb7cc0ab1e77b90141b186c~w7Oww9zHD0227302273eusmtrp1M;
-	Mon,  5 Feb 2024 09:19:17 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-f6-65c0a8160d53
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 87.70.09146.518A0C56; Mon,  5
-	Feb 2024 09:19:17 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240205091916eusmtip2cadae4e7a9f14d4a43acec119e6d566e~w7OvyCn8w2786927869eusmtip2S;
-	Mon,  5 Feb 2024 09:19:16 +0000 (GMT)
-Message-ID: <8e336720-ce08-4391-ad36-b83fea246cab@samsung.com>
-Date: Mon, 5 Feb 2024 10:19:16 +0100
+	s=arc-20240116; t=1707127679; c=relaxed/simple;
+	bh=iBaUmXBlN0VxxLhGqD9SvUefjOy+3CbgHgnuPzCue3A=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FxqXdmmtIAicsRKyp9mODHykKfiu6kIQfQow/pK6ddGWPfp2kPpZHzueGHtzDS0lPMILClToBaDDJOEvV0heuhZqZlP+JXY5jwfMxyYXEfxs4hK6QU/gWCWqLAW1Zdw/KsQDtYy8GXSFsZV3QCrRmPxwDkbxrtDHgySs3pwNJqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TT26g0TNXz6GBd5;
+	Mon,  5 Feb 2024 18:04:43 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id BFC8314185F;
+	Mon,  5 Feb 2024 18:07:54 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 5 Feb
+ 2024 10:07:54 +0000
+Date: Mon, 5 Feb 2024 10:07:53 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Lukas Wunner <lukas@wunner.de>
+CC: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Bjorn
+ Helgaas" <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, "David
+ Woodhouse" <dwmw2@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Alex Williamson
+	<alex.williamson@redhat.com>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <linuxarm@huawei.com>, David Box
+	<david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>, Zhi Wang
+	<zhi.a.wang@intel.com>, Alistair Francis <alistair.francis@wdc.com>, Wilfred
+ Mallawa <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, Tom
+ Lendacky <thomas.lendacky@amd.com>, "Sean Christopherson"
+	<seanjc@google.com>, Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
+Message-ID: <20240205100753.0000798b@Huawei.com>
+In-Reply-To: <20240204172510.GA19805@wunner.de>
+References: <cover.1695921656.git.lukas@wunner.de>
+	<89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
+	<20231003153937.000034ca@Huawei.com>
+	<20240204172510.GA19805@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4 1/2] clk: Provide managed helper to get and enable
- bulk clocks
-To: Shradha Todi <shradha.t@samsung.com>, 'Manivannan Sadhasivam'
-	<manivannan.sadhasivam@linaro.org>, sboyd@kernel.org,
-	mturquette@baylibre.com
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, jingoohan1@gmail.com,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
-	linux@armlinux.org.uk, pankaj.dubey@samsung.com
-Content-Language: en-US
-In-Reply-To: <08a901da55cf$4ee48000$ecad8000$@samsung.com>
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFKsWRmVeSWpSXmKPExsWy7djP87piKw6kGpy8LG3xYN42NoslTRkW
-	K77MZLfY+3oru0VDz29Wi02Pr7FafOy5x2pxedccNouz846zWcw4v4/J4tDUvYwWLX9aWCzu
-	tnSyWlw85WqxaOsXdov/e3awW/y7tpHFovdwrYOQx+VrF5k93t9oZffYOesuu8eCTaUem1Z1
-	snncubaHzePJlelMHpuX1Hv0bVnF6PF5k1wAVxSXTUpqTmZZapG+XQJXRuOMJSwFu8Qqvs38
-	wN7AuEqoi5GTQ0LAROLwkl1sXYxcHEICKxglTm+5C+V8YZR48GciM4TzmVHi6ZItTDAtWy4t
-	YQexhQSWM0os/JMPUfSRUaKrcSYrSIJXwE7i2tYOFhCbRUBF4vS8FWwQcUGJkzOfgMVFBeQl
-	7t+aATaITcBQouttF1iNsEC4xJeuSWBniAhMZpSY3PYN7AxmgS9MEvufLgDrZhYQl7j1ZD7Y
-	SZwCVhKf3/SxQsTlJba/nQPWICFwjlOipasf6m4XiUefFrJB2MISr45vYYewZSROT+5hgWho
-	Z5RY8Ps+E4QzgVGi4fktRogqa4k7534BdXMArdCUWL9LH8SUEHCUuPmjDMLkk7jxVhDiBj6J
-	SdumM0OEeSU62qCBrSYx6/g6uK0HL1xinsCoNAspXGYh+WwWkm9mIaxdwMiyilE8tbQ4Nz21
-	2DAvtVyvODG3uDQvXS85P3cTIzA5nv53/NMOxrmvPuodYmTiYDzEKMHBrCTCO0F4b6oQb0pi
-	ZVVqUX58UWlOavEhRmkOFiVxXtUU+VQhgfTEktTs1NSC1CKYLBMHp1QDU0nUqpa9DfIrrHdU
-	mVzunrft4vp/IW7fJU3+rL4fKP5ZdYedvt73Y7tckrtaJe4ozDzOG3d/ZenC7Kbv57XEOnTn
-	7nV9w/wv96z/n/eP+r20POuk9Z9vP9/0NSrH6khsqOsstmJO1Qe3uq6l8N/kN1ssxGCsf8i3
-	5dQiy0SHpGL+9MciXtUtIg+fB3ee6Km9WMrm+vW8z63dr/xUtrxeVbKwUGTdlWnrDv88/mxd
-	X4j+V47CfTyXWcpq5lrv7N/ad/rSsxDugoNFAu1Ndru6jR3k+RgbtR9eblf1n7ZKaqZRvft1
-	hVzV1m59zaCYIv6PUxu9VuV2O7r/evPbPHuacc6fCKt3nl1dx7c3HctQYinOSDTUYi4qTgQA
-	42seRf0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xe7qiKw6kGuz5ZGjxYN42NoslTRkW
-	K77MZLfY+3oru0VDz29Wi02Pr7FafOy5x2pxedccNouz846zWcw4v4/J4tDUvYwWLX9aWCzu
-	tnSyWlw85WqxaOsXdov/e3awW/y7tpHFovdwrYOQx+VrF5k93t9oZffYOesuu8eCTaUem1Z1
-	snncubaHzePJlelMHpuX1Hv0bVnF6PF5k1wAV5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJ
-	pZ6hsXmslZGpkr6dTUpqTmZZapG+XYJeRuOMJSwFu8Qqvs38wN7AuEqoi5GTQ0LARGLLpSXs
-	XYxcHEICSxkl1v99ygyRkJE4Oa2BFcIWlvhzrYsNoug9o8T79n5GkASvgJ3Eta0dLCA2i4CK
-	xOl5K9gg4oISJ2c+AYuLCshL3L81gx3EZhMwlOh62wVWIywQLvFx5UlGkKEiApMZJU7N6wfb
-	xizwhUni+IkCiG2TmCT6Hk9hh0iIS9x6Mp8JxOYUsJL4/KYPqsFMomtrFyOELS+x/e0c5gmM
-	QrOQHDILSfssJC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJEZgOth37uXkH47xX
-	H/UOMTJxMB5ilOBgVhLhnSC8N1WINyWxsiq1KD++qDQntfgQoykwNCYyS4km5wMTUl5JvKGZ
-	gamhiZmlgamlmbGSOK9nQUeikEB6YklqdmpqQWoRTB8TB6dUA5PkjjWT9A/FOopumCVUfuNx
-	mVt6krs0/7wst4c5Yn6m8bmBgrPuzPi86PTtTp0Le3d9POozKcAy3js/4uDsedr79llJZ979
-	uTR533vbfVfcJyrMCps749bDT/e7vz6erb/oU+zmfJ4dVa/L2wXzFuzbNXPiyijWanXVM2uC
-	H3Zqn0wqCetZcy75PV+m9c/CWQK/8na5qYTczk7ReqqtnxezXbNHd/kNA6mvGyTObwrvKX9d
-	dO99beuUoMQel9kF7U/ymJyP9cxxiepy+V7Vpt5z4JvsBF8bS9v/hm/SZ8Uy/lGxZYjsuBon
-	4vTmk9ixtYvfp1y463qVhY3RZudl69Ys037b+bJPdix22Z5+REmJpTgj0VCLuag4EQBf5msC
-	kAMAAA==
-X-CMS-MailID: 20240205091917eucas1p2cde1af2ad3532e2e44664132af9ee9ff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d
-References: <20240124103838.32478-1-shradha.t@samsung.com>
-	<CGME20240124103855epcas5p27400bd95df42f36b9547a4e28aa26f5d@epcas5p2.samsung.com>
-	<20240124103838.32478-2-shradha.t@samsung.com>
-	<20240129065448.GC2971@thinkpad>
-	<08a901da55cf$4ee48000$ecad8000$@samsung.com>
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 02.02.2024 12:59, Shradha Todi wrote:
->> -----Original Message-----
->> From: Manivannan Sadhasivam<manivannan.sadhasivam@linaro.org>
->> Sent: 29 January 2024 12:25
->> To: Shradha Todi<shradha.t@samsung.com>
->> Subject: Re: [PATCH v4 1/2] clk: Provide managed helper to get and enable bulk
->> clocks
->>
->> On Wed, Jan 24, 2024 at 04:08:37PM +0530, Shradha Todi wrote:
->>> Provide a managed devm_clk_bulk* wrapper to get and enable all bulk
->>> clocks in order to simplify drivers that keeps all clocks enabled for
->>> the time of driver operation.
->>>
->>> Suggested-by: Marek Szyprowski<m.szyprowski@samsung.com>
->>> Signed-off-by: Shradha Todi<shradha.t@samsung.com>
->>> ---
->>>   drivers/clk/clk-devres.c | 40
->> ++++++++++++++++++++++++++++++++++++++++
->>>   include/linux/clk.h      | 24 ++++++++++++++++++++++++
->>>   2 files changed, 64 insertions(+)
->>>
->>> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c index
->>> 4fb4fd4b06bd..cbbd2cc339c3 100644
->>> --- a/drivers/clk/clk-devres.c
->>> +++ b/drivers/clk/clk-devres.c
->>> @@ -182,6 +182,46 @@ int __must_check devm_clk_bulk_get_all(struct
->>> device *dev,  }  EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
->>>
->>> +static void devm_clk_bulk_release_all_enable(struct device *dev, void
->>> +*res) {
->>> +	struct clk_bulk_devres *devres = res;
->>> +
->>> +	clk_bulk_disable_unprepare(devres->num_clks, devres->clks);
->>> +	clk_bulk_put_all(devres->num_clks, devres->clks); }
->>> +
->>> +int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
->>> +					      struct clk_bulk_data **clks) {
->>> +	struct clk_bulk_devres *devres;
->>> +	int ret;
->>> +
->>> +	devres = devres_alloc(devm_clk_bulk_release_all_enable,
->>> +			      sizeof(*devres), GFP_KERNEL);
->>> +	if (!devres)
->>> +		return -ENOMEM;
->>> +
->>> +	ret = clk_bulk_get_all(dev, &devres->clks);
->>> +	if (ret > 0) {
->>> +		*clks = devres->clks;
->>> +		devres->num_clks = ret;
->>> +	} else {
->>> +		devres_free(devres);
->>> +		return ret;
->>> +	}
->> How about:
->>
->> 	ret = clk_bulk_get_all(dev, &devres->clks);
->> 	if (ret <= 0) {
->> 		devres_free(devres);
->> 		return ret;
->> 	}
->>
->> 	*clks = devres->clks;
->> 	devres->num_clks = ret;
->>
->> Even though this patch follows the pattern used by the rest of the APIs in the
->> driver, IMO above makes it more readable.
->>
-> Since I have usually seen that maintainers suggest to maintain the coding style of the file, I followed the same.
-> If you have a stronger reason to change this, please let me know
-> Marek, Michael, Stephen please let us know what do you think about this?
+On Sun, 4 Feb 2024 18:25:10 +0100
+Lukas Wunner <lukas@wunner.de> wrote:
 
-I suggest to keep the same style as is used in the modified file (if it 
-doesn't conflict with the rules enforced by checkpatch and kernel's 
-coding style).
+> On Tue, Oct 03, 2023 at 03:39:37PM +0100, Jonathan Cameron wrote:
+> > On Thu, 28 Sep 2023 19:32:37 +0200 Lukas Wunner <lukas@wunner.de> wrote:  
+> > > +/**
+> > > + * spdm_challenge_rsp_sz() - Calculate CHALLENGE_AUTH response size
+> > > + *
+> > > + * @spdm_state: SPDM session state
+> > > + * @rsp: CHALLENGE_AUTH response (optional)
+> > > + *
+> > > + * A CHALLENGE_AUTH response contains multiple variable-length fields
+> > > + * as well as optional fields.  This helper eases calculating its size.
+> > > + *
+> > > + * If @rsp is %NULL, assume the maximum OpaqueDataLength of 1024 bytes
+> > > + * (SPDM 1.0.0 table 21).  Otherwise read OpaqueDataLength from @rsp.
+> > > + * OpaqueDataLength can only be > 0 for SPDM 1.0 and 1.1, as they lack
+> > > + * the OtherParamsSupport field in the NEGOTIATE_ALGORITHMS request.
+> > > + * For SPDM 1.2+, we do not offer any Opaque Data Formats in that field,
+> > > + * which forces OpaqueDataLength to 0 (SPDM 1.2.0 margin no 261).
+> > > + */
+> > > +static size_t spdm_challenge_rsp_sz(struct spdm_state *spdm_state,
+> > > +				    struct spdm_challenge_rsp *rsp)
+> > > +{
+> > > +	size_t  size  = sizeof(*rsp)		/* Header */  
+> > 
+> > Double spaces look a bit strange...
+> >   
+> > > +		      + spdm_state->h		/* CertChainHash */
+> > > +		      + 32;			/* Nonce */
+> > > +
+> > > +	if (rsp)
+> > > +		/* May be unaligned if hash algorithm has unusual length. */
+> > > +		size += get_unaligned_le16((u8 *)rsp + size);
+> > > +	else
+> > > +		size += SPDM_MAX_OPAQUE_DATA;	/* OpaqueData */
+> > > +
+> > > +	size += 2;				/* OpaqueDataLength */
+> > > +
+> > > +	if (spdm_state->version >= 0x13)
+> > > +		size += 8;			/* RequesterContext */
+> > > +
+> > > +	return  size  + spdm_state->s;		/* Signature */  
+> > 
+> > Double space here as well looks odd to me.  
+> 
+> This was criticized by Ilpo as well, but the double spaces are
+> intentional to vertically align "size" on each line for neatness.
+> 
+> How strongly do you guys feel about it? ;)
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I suspect we'll see 'fixes' for this creating noise for maintainers.
+So whilst I don't feel that strongly about it I'm not sure the alignment
+really helps much with readability either.
+ 
+> 
+> 
+> > > +int spdm_authenticate(struct spdm_state *spdm_state)
+> > > +{
+> > > +	size_t transcript_sz;
+> > > +	void *transcript;
+> > > +	int rc = -ENOMEM;
+> > > +	u8 slot;
+> > > +
+> > > +	mutex_lock(&spdm_state->lock);
+> > > +	spdm_reset(spdm_state);  
+> [...]
+> > > +	rc = spdm_challenge(spdm_state, slot);
+> > > +
+> > > +unlock:
+> > > +	if (rc)
+> > > +		spdm_reset(spdm_state);  
+> > 
+> > I'd expect reset to also clear authenticated. Seems odd to do it separately
+> > and relies on reset only being called here. If that were the case and you
+> > were handling locking and freeing using cleanup.h magic, then
+> > 
+> > 	rc = spdm_challenge(spdm_state);
+> > 	if (rc)
+> > 		goto reset;
+> > 	return 0;
+> > 
+> > reset:
+> > 	spdm_reset(spdm_state);  
+> 
+> Unfortunately clearing "authenticated" in spdm_reset() is not an
+> option:
+> 
+> Note that spdm_reset() is also called at the top of spdm_authenticate().
+> 
+> If the device was previously successfully authenticated and is now
+> re-authenticated successfully, clearing "authenticated" in spdm_reset()
+> would cause the flag to be briefly set to false, which may irritate
+> user space inspecting the sysfs attribute at just the wrong moment.
+
+That makes sense. Thanks.
+
+> 
+> If the device was previously successfully authenticated and is
+> re-authenticated successfully, I want the "authenticated" attribute
+> to show "true" without any gaps.  Hence it's only cleared at the end
+> of spdm_authenticate() if there was an error.
+> 
+> I agree with all your other review feedback and have amended the
+> patch accordingly.  Thanks a lot!
+> 
+> Lukas
+> 
 
 
