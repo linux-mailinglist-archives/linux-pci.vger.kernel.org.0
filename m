@@ -1,151 +1,145 @@
-Return-Path: <linux-pci+bounces-3086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11DA1849A04
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 13:22:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 801A3849C85
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 15:01:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8FCEB1F29592
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 12:22:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CD5F284F72
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 14:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0742F1B962;
-	Mon,  5 Feb 2024 12:22:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A0122EF0;
+	Mon,  5 Feb 2024 14:01:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nivcp35n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUGTWMmG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A5C1B965;
-	Mon,  5 Feb 2024 12:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B47928DD1
+	for <linux-pci@vger.kernel.org>; Mon,  5 Feb 2024 14:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707135732; cv=none; b=SIk3WcKPt+GJYE5uPBs54mzm2fsG+2YGfMHqONoBNNEvrFdfJExAqx5WhdBNHb+st5ezbklaXM8lDAoXxuCtuJZC0GLq+N5hAWgZJVnH9lG+xWzwYi48iYJjOou5/e6siTAoG6wEoZ7zUAzIvjaSbMFKOHGvxwtjFlUuA+YNpis=
+	t=1707141702; cv=none; b=NO3Wrn5OHOGmmSeIxNXensEnWuQRVX5JnrvsOq3svuB/vmGDqIKGbG6ROtOXz9S37w+recMvZRuqEeQEmmVmlKGXiSeRTIT2LUuRKUD103VTRlz9Huh5Y92E9qk8eUm+l8ZAviSzBBLUDVjjDed8yXdE6re+5Lt+pOw+mubvgs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707135732; c=relaxed/simple;
-	bh=XIAPB8q/DK2TzGwBrFZCsv/o8pM8cw6viAqrxp3BUXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iq+9Lp3dmFIpMFVmrXi4nGDk9lAP6TCWH9xUwcE/eM4amiyFxTqeatWL3e/vRzDXc9ZaDQ3np7yrsx/m5RCTDSqrZJ4mKocLz4iKd726bZYb9kUbTfBz8Yy+NXlAsC1MM2cYou0d8gqaQFmloZThcWiRY2KKb/9GFXMbR6Ueps0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nivcp35n; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51155f9eff4so32514e87.0;
-        Mon, 05 Feb 2024 04:22:10 -0800 (PST)
+	s=arc-20240116; t=1707141702; c=relaxed/simple;
+	bh=MyTVmMBQT9yymCwADUCyBGvNYezZ+M55ItXy/0ugLZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=szXG50qo1So7Ic5LZIH7GGkL/LnRNG63Ete/tuWwFgBAYqCr2b7oh3xctc+WG/N94m1yqS7ZyQBCY5abrdj+FmZppyHn2qT5oI4INuNQyEuxTCGXfSmUHCfvjmcGRI8wpraQCo0AMD2PSQjjFkQ6u5Q8ObNlccZLWP6A5kiSEkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qUGTWMmG; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d95d67ff45so28039535ad.2
+        for <linux-pci@vger.kernel.org>; Mon, 05 Feb 2024 06:01:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707135729; x=1707740529; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DsTopB40v8e+57R3FP+15KsfdhxipZbBAJNJON7l3mE=;
-        b=Nivcp35nKYpNWuYe3eTA6iNpOvmgwoWH9yI02g00P1hf0FUqNRpxCuad08oJlaD/Lc
-         iyHWcVE70Tu2t4uD+qVXw0pmMs4Nj+CJXIrHuA5tBWLe7Mg7Zasnvvp5J7VllxHgZUzB
-         AgFive3jXkNn5e/buBE25Vhi//t27S2C4lH/3fPvZS13jP/Nlm3EDEZfl3rhF2xYmhnv
-         6nf5cDLb/Sm8zmATXmHQaydcklHsYGk7XRbpwxFkGQxK+murogofVgf69CfvjV3TPHoE
-         u08uLsddhUDejDXi9O3Wo3MJl5/VtqPmmqhhdl54nftyvps8luMk0taHidXzIShuHtS0
-         Steg==
+        d=linaro.org; s=google; t=1707141700; x=1707746500; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=i3rlc43mBAmmIKSu5xBLrJwDwD6hK6gTpzaGPsgcsxg=;
+        b=qUGTWMmGNBPoB8i9rTw31wfFMWYrAeq02bK68paGUH/CVdiha3qvKTcz/mByhsAm5S
+         7lOVKQhVi7frm1OEW+0AcUClFhAKBVkE+E/wYNXQn+9hmCPL+j9oLSkGG6c6pnzURkfp
+         PdZFBueXfXeWRi/8QgHVwBV/qPtqHcfl9uBrh6NxE63kIQmLK0gQRHTvh8R8Uwdaiul9
+         TShHfY5S3ZBV+IBM74jhn2E+mTJNi0fdz3aZeqyXN7hcZ8r9Q4kYUOkTOUG3uRnb9WK5
+         9IcsDR1wsZqKo0Yl/bpuXdG8EkT6sUcXovAG2u/c2nvjBYUvhuTxhdgmsgKlg+pkioyG
+         34QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707135729; x=1707740529;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DsTopB40v8e+57R3FP+15KsfdhxipZbBAJNJON7l3mE=;
-        b=CL7iRmDFl46yjUw8vUbUcniNJkz4GEvbGPXFNEEzs6qzDj9Wa/Ub9AtL/Pg59fsDNo
-         r1UEmpx9QJeKhYcgUmRjtmSn4UsDNwQsZ7yoBLDJPW7NRxhp4fJQIZy+IzxpXQhHGVEJ
-         UcCKlxufV+ggpMxxP+QJj9Opz/ztzV5FCLpJsg+Qb7xs9GhEvE9iPvvKN/3a8lq2qwSy
-         md6I/pVfBFb9q8d8IKMWi5qb59guizCDUPcii1CDc2gDJ+WevoQvoiSn68u2yy+NvTIM
-         M25yXvkxrxG2kzMgYXOH9/rD/omISQupKym3r8m02khL2SwrTuejVQLJn4R70fFYDgFS
-         w3Lw==
-X-Gm-Message-State: AOJu0YwG9Bib1q+z6nfoFwKix0leMbkL4dX6ZB3Ow01duiE7oIB9gpvJ
-	fm3u0tCnck0HzIMFT5uE/sM23gHQ2A9qW/Lfj2XMf1Vabfav2Q8d
-X-Google-Smtp-Source: AGHT+IEOF08DEpMV/aE/bR6THEAkaKyqbsTR+aZvoSd+B423zZBGK06bqHI29Me8zUQgNkJYYs7TIg==
-X-Received: by 2002:a05:6512:1055:b0:511:536b:89e with SMTP id c21-20020a056512105500b00511536b089emr1248133lfb.0.1707135728790;
-        Mon, 05 Feb 2024 04:22:08 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUhuGx+c5f52OKpYK4sIjM/j/qWUhfNP+BN/x2fhUnmjyAzVzpkMsHvapI0lc9LK4pbGDi3BGiiv1Ui42/31CQYcszxMRDVgM+61GVxVdDlh4vzLszfdlRR7gvACXgCSXb0WU7Ug/ZdPF3oiugFfnbr13PshUReJyFZl7XFrubNFxuT2iPzsm4L1p23j8e16x6ieuHxCeik5Ok2K87jhnv+JehO17/7b04fUeVDyw==
-Received: from localhost ([193.209.96.43])
-        by smtp.gmail.com with ESMTPSA id w13-20020a05651234cd00b00511560092e3sm27526lfr.298.2024.02.05.04.22.08
+        d=1e100.net; s=20230601; t=1707141700; x=1707746500;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3rlc43mBAmmIKSu5xBLrJwDwD6hK6gTpzaGPsgcsxg=;
+        b=Re3MRoysB/EGwTrfrH8betkaZMtq8c1w6GaSOgSuVEIKDuecE97H8Asrv0D+T6JtLb
+         w/pO9ZiouNz9ENfBRcjQ4rDGnROEnrFL6HmgmRU+X3S6st2syRUH57aKg7tupvbgZw/w
+         0gle9+ym5IaL19esVLEbTDxeWQXr4SGQfbjs/Q55SVjXVDdJh6trksom9QsE+wdBiOwF
+         ApK4wVnv7Utvewn625KSkWI9ACAA745J5tC1JZBZpqI3GKrZoV7NiAqHTWJhSViZDujV
+         lCluYR214A22V0jXFLbpDvzLRYxyJPwTbOuAuVLmYTXe1UVGa1KVymcx3LrHfeFGAG5v
+         DFVg==
+X-Gm-Message-State: AOJu0YxjmzRiHsYZ4vafRnCo/fauBo61rc2WEBd7CnnS1lKgTWCiJ7bO
+	I9KGfEP0gTdfoA4u31Iq1Yo2Df+1Rp4faWrryQRi3xXSyk4jsUSN1CiqiybuX59kirnlSzJM6G4
+	=
+X-Google-Smtp-Source: AGHT+IGkD3eNo22b10rbAKAEVpZrr9NRYYGZtbsfRgoJbeWb7EKAAMIWc9ujJ7xFK40zBZ7wNKqtrA==
+X-Received: by 2002:a17:902:e981:b0:1d7:244e:531e with SMTP id f1-20020a170902e98100b001d7244e531emr8689792plb.25.1707141700327;
+        Mon, 05 Feb 2024 06:01:40 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUfHNwuYa8MJRPrOHempccXKIzbSidWB3DSkhZaf9iZkwjtK1uCNRodO6SV8a/drGuCro1p6/P1EW33Nl1ufCyCGuFJJuCvil5GGiLzRdydeqxf9kq/byI6Z4OJWbGLuSBMPkX17pPmQ6qUu/LslFIFx4KXxmTe08C2aar9LIyFELU1/64zfkBZi0KEKM5viadAvAMxtl6hw5ovumdtzmUju6BZn19LfxqMu7X3I1AXHdvDCUuskjWjRg==
+Received: from thinkpad ([120.138.12.228])
+        by smtp.gmail.com with ESMTPSA id ju15-20020a170903428f00b001d75c26e857sm6349179plb.288.2024.02.05.06.01.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 04:22:08 -0800 (PST)
-Date: Mon, 5 Feb 2024 14:22:07 +0200
-From: Zhi Wang <zhi.wang.linux@gmail.com>
-To: Emily Deng <Emily.Deng@amd.com>
-Cc: <amd-gfx@lists.freedesktop.org>, <bhelgaas@google.com>,
- <alex.williamson@redhat.com>, <linux-pci@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Add vf reset notification for pf
-Message-ID: <20240205142207.0000685a.zhi.wang.linux@gmail.com>
-In-Reply-To: <20240204061257.1408243-1-Emily.Deng@amd.com>
-References: <20240204061257.1408243-1-Emily.Deng@amd.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
+        Mon, 05 Feb 2024 06:01:39 -0800 (PST)
+Date: Mon, 5 Feb 2024 19:31:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] pci: endpoint: make pci_epf_bus_type const
+Message-ID: <20240205140135.GA9617@thinkpad>
+References: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240204-bus_cleanup-pci-v1-1-300267a1e99e@marliere.net>
 
-On Sun, 4 Feb 2024 14:12:57 +0800
-Emily Deng <Emily.Deng@amd.com> wrote:
+On Sun, Feb 04, 2024 at 05:28:58PM -0300, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the pci_epf_bus_type variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-> When a vf has been reset, the pf wants to get notification to remove
-> the vf out of schedule.
-> 
-> Solution:
-> Add the callback function in pci_driver sriov_vf_reset_notification.
-> When vf reset happens, then call this callback function.
-> 
-> Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
 > ---
->  drivers/pci/pci.c   | 8 ++++++++
->  include/linux/pci.h | 1 +
->  2 files changed, 9 insertions(+)
+>  drivers/pci/endpoint/pci-epf-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 60230da957e0..aca937b05531 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
->   */
->  int pcie_reset_flr(struct pci_dev *dev, bool probe)
->  {
-> +	struct pci_dev *pf_dev;
-> +
-> +	if (dev->is_virtfn) {
-> +		pf_dev = dev->physfn;
-> +		if (pf_dev->driver->sriov_vf_reset_notification)
-> +
-> pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
-> +	}
-> +
->  	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
->  		return -ENOTTY;
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 2c32de667937..bf655383e5ed 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -17,7 +17,7 @@
 >  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index c69a2cc1f412..4fa31d9b0aa7 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -926,6 +926,7 @@ struct pci_driver {
->  	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs);
-> /* On PF */ int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int
-> msix_vec_count); /* On PF */ u32  (*sriov_get_vf_total_msix)(struct
-> pci_dev *pf);
-> +	void  (*sriov_vf_reset_notification)(struct pci_dev *pf,
-> struct pci_dev *vf); const struct pci_error_handlers *err_handler;
->  	const struct attribute_group **groups;
->  	const struct attribute_group **dev_groups;
+>  static DEFINE_MUTEX(pci_epf_mutex);
+>  
+> -static struct bus_type pci_epf_bus_type;
+> +static const struct bus_type pci_epf_bus_type;
+>  static const struct device_type pci_epf_type;
+>  
+>  /**
+> @@ -507,7 +507,7 @@ static void pci_epf_device_remove(struct device *dev)
+>  	epf->driver = NULL;
+>  }
+>  
+> -static struct bus_type pci_epf_bus_type = {
+> +static const struct bus_type pci_epf_bus_type = {
+>  	.name		= "pci-epf",
+>  	.match		= pci_epf_device_match,
+>  	.probe		= pci_epf_device_probe,
+> 
+> ---
+> base-commit: 1281aa073d3701b03cc6e716dc128df5ba47509d
+> change-id: 20240204-bus_cleanup-pci-f70b6d5a5bcf
+> 
+> Best regards,
+> -- 
+> Ricardo B. Marliere <ricardo@marliere.net>
+> 
 
-Hi:
-
-I would suggest you can provide a cover letter including a complete
-picture that tells the background, detailed problem statement, the
-solutions and plus the users. As this seems very like a generic change,
-it needs a better justification to convince folks why this is the best
-solution. Without a complete picture, the solution just looks like a
-workaround.
-
-Thanks,
-Zhi.
+-- 
+மணிவண்ணன் சதாசிவம்
 
