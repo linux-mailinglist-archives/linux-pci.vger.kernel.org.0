@@ -1,376 +1,163 @@
-Return-Path: <linux-pci+bounces-3091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03FD4849F25
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 17:02:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D90AD849FB2
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 17:44:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE55F289130
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 16:02:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AF671C2137D
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Feb 2024 16:44:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC423FB37;
-	Mon,  5 Feb 2024 15:58:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E6FD44C8C;
+	Mon,  5 Feb 2024 16:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iwaEo2so"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q435hbCi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DCE33CF9
-	for <linux-pci@vger.kernel.org>; Mon,  5 Feb 2024 15:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614C841770
+	for <linux-pci@vger.kernel.org>; Mon,  5 Feb 2024 16:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707148698; cv=none; b=epDJReWw2aqiYMePyjz0rUfIj9QqmwhtSrAribl+dwg+5GJqbJOGrgG4/39pgnctzvFfgFqRKBMhvbts/nYZYoE+b6L8hz7QWd1qoQ9NcUxPf1ZDtk8hpQtceLJwaGPbFDoENYDB9N1zn6mak31Ic2+n1T2k1TDQUmJ7w4irINs=
+	t=1707151420; cv=none; b=MHqAymd12jTZtuBlzenAMmt0EeCg9/REzuJbW9KQQGlbFJXseoTY7stBbcb44GQ3iSSlx53qj3C4qlpeMU97h1yXtgm71B2423XcVGiyWA8rMPS5pF2N+3/FV08yGY+nCOC2SzlyulWukltD+nT/jKVKfVXWhvFnmi4gWqq0VnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707148698; c=relaxed/simple;
-	bh=nHHToYVe7UDazNBh0UHL8RPPmFaMG4R39iXsV4seckA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bmiSUgxEIuZCMB6D74MnbSO6MojuAHj3ia+rQj4UEXrObsT7nbYc3HZWFqNqq3tMrqaVzsNlc9qiXMZ9aVdZMgYjmYDwWSGmb58ELrazmkYwpqTtbOeTrndbxjrkzzgX+TMpIVf6UqUoDk360AYWmAdfn/4MkfjMswQ0FtbvxKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iwaEo2so; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40f033c2e30so41490795e9.0
-        for <linux-pci@vger.kernel.org>; Mon, 05 Feb 2024 07:58:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707148695; x=1707753495; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xd67LVywORJcC5ZhK9PLnVObuzsV4zR/OauMaIQMMEo=;
-        b=iwaEo2so8fktDghhwOOackrRRZenyMhSbKxaSSTUeLczTjzYzuKBZD3gLbXao+4KcT
-         OaZmA6RNgI7dhCQauh5zIvtNrzYejLlHqr45/UKzmhZ+XdCTqpXDfor5SMfghzv7/31d
-         cFEMEQKKJZyct20UEo4UK6g77od7mumrv43A8G7MaDhaUxR28LhyRR6mwRF+qIaGAY/j
-         67jAyzoaTbU9OfL+dq/bSeP3eQYViB0ue8UsR0ettmuDrufVcjQb9NRulANQ0uT8JHGO
-         RZOi1Lem1UVpnkT3JI4lIA4JtcUg0Zb7Fh5ansEoI4DVNztD9aeX6varXJoHZItn5FEx
-         YPsQ==
+	s=arc-20240116; t=1707151420; c=relaxed/simple;
+	bh=U/7TW3OSEZ6qhrwVPvN+Z5zX92htnPgIigRf5YEJMiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aZXeHv1wrYVfvacGqgLIq6bzJ1XzY/zHBGtJr7/8ViT8JUtLBYep6CF6D+5G9IXRGYIQPNZTqDL8sC0JyW6EI9cXEP6mLkQ7t5lh2WTxQnGAaSnBqV25hyu9SvTXXv6cdxLOsWDp0/UBiyBKum6z3Q+OhnVvAppB+LsHch9ExFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q435hbCi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707151417;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/eXP+XOU0IwSKfk9/shij3ieifTghjGjp9NYVzTL26w=;
+	b=Q435hbCidTqZGx9TOzQfKistzE2cwjcvspieaGVIf9w9XYM4J2IyvGpK3fxsOPa7VxymBa
+	pRzfn5J8+ugof2pv/pLCJXrHYR4heYRkYx3mDBvMld+t6Hh9Ufuv9DWqk0gNpJEpcr1hdJ
+	BDIkJno910NSBmWCF15Z061i/U7w3mE=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-695-pbzTgJYmO6KGe92VNIbk4Q-1; Mon, 05 Feb 2024 11:43:33 -0500
+X-MC-Unique: pbzTgJYmO6KGe92VNIbk4Q-1
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bf863c324dso309965139f.0
+        for <linux-pci@vger.kernel.org>; Mon, 05 Feb 2024 08:43:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707148695; x=1707753495;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1707151413; x=1707756213;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xd67LVywORJcC5ZhK9PLnVObuzsV4zR/OauMaIQMMEo=;
-        b=oc1UR/24t5wT434qIEs0wVVZ5yehCzECdnhyUvL82Aja5aeVQe9oZ7vEkxWBm9PG6f
-         /TpT9VGi/XsTdAhq6muIZ8N/s72K0dCSEPE7zY3Dxca+EMxHN2UfxNigz1Rtxo7lYPSD
-         Eu/EQL6f8h3qEsN7YbCvlxwvcsiyqWgDXLkZ90aEyIh2bRrSlhRfdeMT+CJciF0oRNVN
-         dC3a/gruKv3JTC71YUy3m+5X1f8iyiw5lI3nb2PEBrBp5YjOMHpRSEkXa3K9sL6AV85T
-         lelW1iorg/VbGY3oz41kYjOAz1P53nMxu/K1iyngm8sss33qruNVinHOiFVHpQKPe+9W
-         en8g==
-X-Gm-Message-State: AOJu0YwCIbMKilNFgbMHLax4yvho1QS68yetKD5Dh9wiX1qgFBdZm13D
-	yPzI66oKNQ97FFSX1ZHww2vEgj4jQNIslCU1WkiVh9Q4olFywjSNleWoC0H8aTzJ450eq6YwGxH
-	4
-X-Google-Smtp-Source: AGHT+IGDuVQQtVJ5jNm79dOhLXCyGQIYaviUdG02y+lpA+4WPODAzqez7/K4R8u8hsGwhq3RP16IfA==
-X-Received: by 2002:a05:600c:4f95:b0:40e:f3ee:5622 with SMTP id n21-20020a05600c4f9500b0040ef3ee5622mr159015wmq.11.1707148694950;
-        Mon, 05 Feb 2024 07:58:14 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUifZdu33C96BZpe+tFkmI0RVRx8WLvi5A3F44DdITKPd/iaG8hGd5vgBDF2lReQskUo+KWjbvgj3/er0VN5uh6xacfHxCAaatUeCJpFkA2rSUBYbUlCnsuEzk1Rmo5EbUffpwLj9xNOL/fFSffGNqaNOqwaOE2ZyC6d+2lNaWOiEi+CcOKXY+CFLObalsRfe7nMczF3bokRhx8VU/N+MzWnTXlQmLB6YTsi2UAMeGma4fGlpx51MuzCa7MFa7xjDFAn4wSqWgRgSa1dhVmOsuWqOrtW5O+WQegJKtv3CVVC4tQGsh8qqC4JNazMNwVqBc+S/eb5sEKTBgf6sBD3TALzd/kG8FCgQCiK6uL6zKicepma+8vluUqnVWPz5DiQ96YAIiQYHNbrp0eFDAoA5BQna99fBCUFtmxZcPdwU+wRc/Ng4jBvUKwiQtdJP+5VbiAdpRQ
-Received: from [127.0.1.1] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id fc11-20020a05600c524b00b0040fddae917bsm243714wmb.9.2024.02.05.07.58.13
+        bh=/eXP+XOU0IwSKfk9/shij3ieifTghjGjp9NYVzTL26w=;
+        b=PAAQgWQoqNNFn5Dvdz8u5C7B8T792hI4Tgv7U1MVuL/7UwT/qGJotV6tIUTBruIory
+         6Ke5Klq2934hxxd95t9YcakT/5lhp3fQFO74xmzcVSfY0nDdr/6ONAGnaY1KpISt5bYn
+         qcQELb7ngxhp+RMSr+wMbw/dUC2c6ItVoknQdshYmVVLOdEZYadu1Q0bkTJHICjpARFC
+         3M7Epcxy36qKS22wlL0N1er/W5xhsO1SPvsGVoit54QmF61XX6eNqiFQNDTCX41KHnWL
+         AZ9xmxWgDfzKbsD52rn/+dz2Kkff1HhzIgQ9QXxg/Jbq9cor3615JUeNL5ND2U4/a6m5
+         yRCg==
+X-Gm-Message-State: AOJu0YwiKASoRRmE2SerqANCbTv6d2heh/ahze2NSI0SLERUjbJPYmin
+	efPzXzykew05fAOubSpnMK/DHnEQNZXf2D04mLKd3mdFrzAseRMGp9Sqrek9cruc/BirLXpSBQy
+	Pnk6FHccr6Ataj7fza2Z9tmoO+tNlvvc7KOezK/uExyOCX/wh3SDULW9cOA==
+X-Received: by 2002:a05:6e02:164e:b0:360:628e:659f with SMTP id v14-20020a056e02164e00b00360628e659fmr200865ilu.5.1707151413051;
+        Mon, 05 Feb 2024 08:43:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGtaN4sEtvX2yaCb3cjEWCzbhiFSIYee5cINdZg+zrkrji5H3Ahcz7txIlReM70s7z7FBdE2g==
+X-Received: by 2002:a05:6e02:164e:b0:360:628e:659f with SMTP id v14-20020a056e02164e00b00360628e659fmr200841ilu.5.1707151412753;
+        Mon, 05 Feb 2024 08:43:32 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCU9nO84Ymt1SJKhzCuTL1objeZ5SSsE27RlJtvPYNi8r42f5mWWmIrH7Zn1RORfSf3iRjRG0nVdtbSdQV2aZkDLX91MB+PO7viz93UWxdXlN+MR6yyWU2BfxH1kyh3r1CppHdrXdbMzwqmnUYwyZe2ePeQBEw3iTWZNHIWSt/CCCId4cmjIcUAhyLhd74ujVHh1MNm84xYNdlCIP5okWpTEtJ5suECt02cKBKxITe8sQ26Snldjn31xRJVWYssCIewwB6l23QD5m4cFoyDJHIBLkBvw23emfyWQRjL2dz8J77lcbt0pE8A9QDgMfzTfNQk+IZh/FHYS
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id g19-20020a056638061300b004713ae4c62asm34884jar.46.2024.02.05.08.43.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 07:58:14 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Mon, 05 Feb 2024 16:58:03 +0100
-Subject: [PATCH 3/3] dt-bindings: PCI: qcom,pcie-sa8775p: move SA8775p to
- dedicated schema
+        Mon, 05 Feb 2024 08:43:32 -0800 (PST)
+Date: Mon, 5 Feb 2024 09:43:30 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Emily Deng <Emily.Deng@amd.com>
+Cc: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <Jerry.Jiang@amd.com>, <Andy.Zhang@amd.com>, <HaiJun.Chang@amd.com>,
+ <Monk.Liu@amd.com>, <Horace.Chen@amd.com>, <ZhenGuo.Yin@amd.com>
+Subject: Re: [PATCH 1/2] PCI: Add VF reset notification to PF's VFIO user
+ mode driver
+Message-ID: <20240205094330.59ca4c0a.alex.williamson@redhat.com>
+In-Reply-To: <20240205071538.2665628-1-Emily.Deng@amd.com>
+References: <20240205071538.2665628-1-Emily.Deng@amd.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240205-dt-bindings-pci-qcom-split-continued-v1-3-c333cab5eeea@linaro.org>
-References: <20240205-dt-bindings-pci-qcom-split-continued-v1-0-c333cab5eeea@linaro.org>
-In-Reply-To: <20240205-dt-bindings-pci-qcom-split-continued-v1-0-c333cab5eeea@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8285;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=nHHToYVe7UDazNBh0UHL8RPPmFaMG4R39iXsV4seckA=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBlwQWQihmErBYS9Z1zBNfPnFt5Mj/4JqB8FNs7S
- NqBE/B2J62JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZcEFkAAKCRDBN2bmhouD
- 1y9zD/4+gr5chQPKMCgooZvd9ON2IXvsoTcYxo87MjsY9CatpIp4y9kssx6OnMi49aTovszNuF9
- OdrxzOTbARSen2NDepjmk5ZlefA+aRPM2T1GttmSG3wCXvUfGBuk9bVGm7vbNogj+rCeqcJctPD
- roli2D4VdF2aTOkXRuI29B9BaXxKFLjTWCvrz9UiN6hzFN9cNMttdtP4wUtL7NCC4NuNwxudroT
- CRat/ggqfVK1hnVqXvlDOxdTwnHh3sqL6ygwsoCF0/136qm0XVw16HJNQ1MpfPLjVUpZvstBqKH
- gMwnIBVBAdBVfYoqYSkLwa/hlcll/j6yI4+fp3uR7bCWQc3nntcNStMOdQN+mYubrJfLsXRws2T
- gHStI5QlCNFxcN/rxS30fcdF/SucdmRObP0OcKayleatThRZfSwUePFwAliHB9W6nsWnzWcZzmV
- CM3KKSWRJf5p2gr4+ibdW8xtYUqm03z1zAZS55VuC3gsXbrcADNfh8WRrZsOc3qLPa7syc8+vgx
- yzN4LiEhwPSACougxUrDc2C/NDxybWCnckcEWu1LuOsXMjDcO79GhbS9sMjgPYAeGGEmvWhgxCP
- ttjRJZi8ArsfMvQeUpGzPCls2KuMjKHCOCj8HitFQIrEazQBHYI8bBigVHyuBlrcvYrNYpv8sPV
- Sw3P1Ie1B4kwvFg==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Move SA8775p PCIe devices from qcom,pcie.yaml binding to a dedicated file
-to make reviewing easier.
+On Mon, 5 Feb 2024 15:15:37 +0800
+Emily Deng <Emily.Deng@amd.com> wrote:
 
-This creates equivalent schema file, except:
- - Missing required compatible which is actually redundant.
- - Expecting eight MSI interrupts, instead of only one, which was
-   incomplete hardware description.
+> VF doesn't have the ability to reset itself completely which will cause the
+> hardware in unstable state. So notify PF driver when the VF has been reset
+> to let the PF resets the VF completely, and remove the VF out of schedule.
+> 
+> How to implement this?
+> Add the reset callback function in pci_driver
+> 
+> Implement the callback functin in VFIO_PCI driver.
+> 
+> Add the VF RESET IRQ for user mode driver to let the user mode driver
+> know the VF has been reset.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 166 +++++++++++++++++++++
- .../devicetree/bindings/pci/qcom,pcie.yaml         |  38 -----
- 2 files changed, 166 insertions(+), 38 deletions(-)
+The solution that already exists for this sort of issue is a vfio-pci
+variant driver for the VF which communicates with an in-kernel PF
+driver to coordinate the VF FLR with the PF driver.  This can be done
+by intercepting the userspace access to the VF FLR config space region.
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-new file mode 100644
-index 000000000000..efde49d1bef8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sa8775p.yaml
-@@ -0,0 +1,166 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/qcom,pcie-sa8775p.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm SA8775p PCI Express Root Complex
-+
-+maintainers:
-+  - Bjorn Andersson <andersson@kernel.org>
-+  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+description:
-+  Qualcomm SA8775p SoC PCIe root complex controller is based on the Synopsys
-+  DesignWare PCIe IP.
-+
-+properties:
-+  compatible:
-+    const: qcom,pcie-sa8775p
-+
-+  reg:
-+    minItems: 6
-+    maxItems: 6
-+
-+  reg-names:
-+    items:
-+      - const: parf # Qualcomm specific registers
-+      - const: dbi # DesignWare PCIe registers
-+      - const: elbi # External local bus interface registers
-+      - const: atu # ATU address space
-+      - const: config # PCIe configuration space
-+      - const: mhi # MHI registers
-+
-+  clocks:
-+    minItems: 5
-+    maxItems: 5
-+
-+  clock-names:
-+    items:
-+      - const: aux # Auxiliary clock
-+      - const: cfg # Configuration clock
-+      - const: bus_master # Master AXI clock
-+      - const: bus_slave # Slave AXI clock
-+      - const: slave_q2a # Slave Q2A clock
-+
-+  interrupts:
-+    minItems: 8
-+    maxItems: 8
-+
-+  interrupt-names:
-+    items:
-+      - const: msi0
-+      - const: msi1
-+      - const: msi2
-+      - const: msi3
-+      - const: msi4
-+      - const: msi5
-+      - const: msi6
-+      - const: msi7
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+      - const: pci
-+
-+required:
-+  - interconnects
-+  - interconnect-names
-+
-+allOf:
-+  - $ref: qcom,pcie-common.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interconnect/qcom,sa8775p-rpmh.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@1c00000 {
-+            compatible = "qcom,pcie-sa8775p";
-+            reg = <0x0 0x01c00000 0x0 0x3000>,
-+                  <0x0 0x40000000 0x0 0xf20>,
-+                  <0x0 0x40000f20 0x0 0xa8>,
-+                  <0x0 0x40001000 0x0 0x4000>,
-+                  <0x0 0x40100000 0x0 0x100000>,
-+                  <0x0 0x01c03000 0x0 0x1000>;
-+            reg-names = "parf", "dbi", "elbi", "atu", "config", "mhi";
-+            ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
-+                     <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-+
-+            bus-range = <0x00 0xff>;
-+            device_type = "pci";
-+            linux,pci-domain = <0>;
-+            num-lanes = <2>;
-+
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+
-+            assigned-clocks = <&gcc GCC_PCIE_0_AUX_CLK>;
-+            assigned-clock-rates = <19200000>;
-+
-+            clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-+                     <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+                     <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+                     <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+                     <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-+            clock-names = "aux",
-+                          "cfg",
-+                          "bus_master",
-+                          "bus_slave",
-+                          "slave_q2a";
-+
-+            dma-coherent;
-+
-+            interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "msi0",
-+                              "msi1",
-+                              "msi2",
-+                              "msi3",
-+                              "msi4",
-+                              "msi5",
-+                              "msi6",
-+                              "msi7";
-+            #interrupt-cells = <1>;
-+            interrupt-map-mask = <0 0 0 0x7>;
-+            interrupt-map = <0 0 0 1 &intc GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
-+                            <0 0 0 2 &intc GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
-+                            <0 0 0 3 &intc GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
-+                            <0 0 0 4 &intc GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>;
-+
-+            interconnects = <&pcie_anoc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-+                            <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
-+            interconnect-names = "pcie-mem", "cpu-pcie";
-+
-+            iommu-map = <0x0 &pcie_smmu 0x0000 0x1>,
-+                        <0x100 &pcie_smmu 0x0001 0x1>;
-+
-+            phys = <&pcie0_phy>;
-+            phy-names = "pciephy";
-+
-+            power-domains = <&gcc PCIE_0_GDSC>;
-+
-+            resets = <&gcc GCC_PCIE_0_BCR>;
-+            reset-names = "pci";
-+
-+            perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
-+            wake-gpios = <&tlmm 0 GPIO_ACTIVE_HIGH>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 6c50d887ad5f..aedd23a71c70 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -28,7 +28,6 @@ properties:
-           - qcom,pcie-ipq8074-gen3
-           - qcom,pcie-msm8996
-           - qcom,pcie-qcs404
--          - qcom,pcie-sa8775p
-           - qcom,pcie-sdm845
-           - qcom,pcie-sdx55
-       - items:
-@@ -200,7 +199,6 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - qcom,pcie-sa8775p
-               - qcom,pcie-sdx55
-     then:
-       properties:
-@@ -495,41 +493,6 @@ allOf:
-           items:
-             - const: pci # PCIe core reset
+This solution of involving PCI-core and extending the vfio-pci interface
+only exists for userspace PF drivers.  I don't see that facilitating
+vendors to implement their PF drivers in userspace to avoid upstreaming
+is a compelling reason to extend the vfio-pci interface.  Thanks,
+
+Alex
  
--  - if:
--      properties:
--        compatible:
--          contains:
--            enum:
--              - qcom,pcie-sa8775p
--    then:
--      properties:
--        clocks:
--          minItems: 5
--          maxItems: 5
--        clock-names:
--          items:
--            - const: aux # Auxiliary clock
--            - const: cfg # Configuration clock
--            - const: bus_master # Master AXI clock
--            - const: bus_slave # Slave AXI clock
--            - const: slave_q2a # Slave Q2A clock
--        resets:
--          maxItems: 1
--        reset-names:
--          items:
--            - const: pci # PCIe core reset
--
--  - if:
--      properties:
--        compatible:
--          contains:
--            enum:
--              - qcom,pcie-sa8775p
--    then:
--      required:
--        - interconnects
--        - interconnect-names
--
-   - if:
-       not:
-         properties:
-@@ -565,7 +528,6 @@ allOf:
-           contains:
-             enum:
-               - qcom,pcie-msm8996
--              - qcom,pcie-sa8775p
-               - qcom,pcie-sdm845
-     then:
-       oneOf:
-
--- 
-2.34.1
+> Signed-off-by: Emily Deng <Emily.Deng@amd.com>
+> ---
+>  drivers/pci/pci.c   | 8 ++++++++
+>  include/linux/pci.h | 1 +
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 60230da957e0..aca937b05531 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
+>   */
+>  int pcie_reset_flr(struct pci_dev *dev, bool probe)
+>  {
+> +	struct pci_dev *pf_dev;
+> +
+> +	if (dev->is_virtfn) {
+> +		pf_dev = dev->physfn;
+> +		if (pf_dev->driver->sriov_vf_reset_notification)
+> +			pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
+> +	}
+> +
+>  	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>  		return -ENOTTY;
+>  
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index c69a2cc1f412..4fa31d9b0aa7 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -926,6 +926,7 @@ struct pci_driver {
+>  	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
+>  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+>  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
+> +	void  (*sriov_vf_reset_notification)(struct pci_dev *pf, struct pci_dev *vf);
+>  	const struct pci_error_handlers *err_handler;
+>  	const struct attribute_group **groups;
+>  	const struct attribute_group **dev_groups;
 
 
