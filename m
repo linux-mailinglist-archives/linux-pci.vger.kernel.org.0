@@ -1,70 +1,74 @@
-Return-Path: <linux-pci+bounces-3141-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3142-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 757A784B53D
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 13:33:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D63B984B54F
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 13:35:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6441B28A09
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 12:33:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4119BB24DF0
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 12:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED043D54A;
-	Tue,  6 Feb 2024 12:19:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E64B7133422;
+	Tue,  6 Feb 2024 12:29:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A9UWKuJp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EB/7Ztmq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FAF1332A6;
-	Tue,  6 Feb 2024 12:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA8E133986;
+	Tue,  6 Feb 2024 12:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707221964; cv=none; b=Hjj71MGLnKZTNjAUPNQIaK6gdfW0Ap5DtY+YYANz+HAVuaZ3vIS22jACO7AmEnGDCJ+nGmG6GFz+BFY2PcMTaqzH/V3h7OrWEapOGSkJtYAcAplS4C2dEBPbyB3vHKp4tmKmXMtXNrkaBQNs+JuaJMa+knsg6uR99a+kKlSwjEI=
+	t=1707222563; cv=none; b=h3GxhoUA7nzd9pVLFwwaIqJWPKsLDDI401GKJuO8g0Ha+XUaJ17bsgbWba50il9Ji8C+QymleK+HS75VAwx1ku+/75l/iFalznxMXqF8saUzA4t5uLfWozq3MGKNByHVQuzsU+i57dbTDp5gdOqTTywH9xiBqjH9fn9dbUqMQjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707221964; c=relaxed/simple;
-	bh=vOPlbom+hZu2FqS78/OBAPTU/ql3MwKYrdqCAkJSiKU=;
+	s=arc-20240116; t=1707222563; c=relaxed/simple;
+	bh=N3tSWxq5d5518zQa7I8VL2vhjsdygSC917jFzsn8AM8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tiK5G1ylD15/VH2fpGmPpbujRRZjugO3Vj18byhu8R0AMxktqAzxUpLJfEBJBIr58qCCGCSeIhENb0IP2G7D7cGF4z/ZK5V5WkcW1D1CPF5IijoHRhotMX/qYYz+GRPox3tImbcu/GMX5ezmriRbnc4o8SVEUmZImCBQyfUipcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A9UWKuJp; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=ILg7LdaQ2cK9ni/5sKYmFmkm4cMnRJ+/+YQlAIeE2PZ5YphNNcC+nvzQtv9zDl0m7fO/2UYpdVRURSKSVs3bvSVlWbE7V8WXXPmLtzeRLgMOlOAFf/0CkDRMtgpYE6MK2T541Jxy8l5RqbC/LPRcMGZaPKq2uxUEAqE35ZT8IDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EB/7Ztmq; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707221963; x=1738757963;
+  t=1707222562; x=1738758562;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=vOPlbom+hZu2FqS78/OBAPTU/ql3MwKYrdqCAkJSiKU=;
-  b=A9UWKuJpf0ja4NyaMtw8XyX4PiNzwv3v+pmFAPqjVVxKGm9sr0PeDo3l
-   Dy0RL3IMfO57ofY02CT6KLcPKJNR6z5hBGcwd4cizz4cbiwW8aiC8o6EV
-   mWlWlpJVonIb7RvjiyrZZeiv1wf6abc1topycwZ0fClpxiiQT/gL2ErjJ
-   R/6KXTDGr7Glvo3m+oJfjy33V3TwwnbtpQEPH7RxqM38CgHGDkOkbeefP
-   VUdtQbjbPCAhHjRS20uE0FmY1mNjBYQ/Ntww+z+rKHZk5/U94Lk1BTN43
-   n/k1/Ka5WkPC8aHIyEw4wN59TzhiaCPsMixWzXpCHKb8JgzlP+o9JyuWO
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="631608"
+  bh=N3tSWxq5d5518zQa7I8VL2vhjsdygSC917jFzsn8AM8=;
+  b=EB/7ZtmqYdkc9V+BzpYDef6YRqOrnrsGf1smuYUDYMD1lBoEEWcc8r9C
+   WK6Qf1+yPPMOX1UuE0VlsPhGhuNvd4endf68z1GDNaCBLi94vTojXaf29
+   w9oVzzl1u9MFC17dGT10HF+tr1TIdgqx2FYZNakGYsN6M+I2tbXYFFNbT
+   y/Yype/QjlP7JLBexiYOp6XReuLoIhGdljOIPO+4f1BlytYwziKeOJcRl
+   7tOMxn76CDPWYPW/Nl1c5Qf/jgbWJskNIxipS3ryhJkbOMwMrMjzcODRV
+   jji27u24cPQE0jO4l73JIAgTGyS1gxcc42uTj8G06RRNNf7lEHcZR7rG5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="18157132"
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="631608"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 04:19:21 -0800
+   d="scan'208";a="18157132"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 04:29:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="31826258"
+   d="scan'208";a="5606667"
 Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.36.139])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 04:19:18 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 04:29:17 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 Feb 2024 14:19:13 +0200 (EET)
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-cc: linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, 
-    Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v7] PCI/DPC: Ignore Surprise Down error on hot removal
-In-Reply-To: <20240205190321.103164-1-Smita.KoralahalliChannabasappa@amd.com>
-Message-ID: <881a8ba0-729f-7d36-d696-4fa80b1b03c2@linux.intel.com>
-References: <20240205190321.103164-1-Smita.KoralahalliChannabasappa@amd.com>
+Date: Tue, 6 Feb 2024 14:29:12 +0200 (EET)
+To: Jian-Hong Pan <jhp@endlessos.org>
+cc: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold <johan@kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    David Box <david.e.box@linux.intel.com>, 
+    Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+    Nirmal Patel <nirmal.patel@linux.intel.com>, 
+    Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux@endlessos.org
+Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
+ PCIe Root Port and NVMe
+In-Reply-To: <20240202071110.8515-3-jhp@endlessos.org>
+Message-ID: <72b9ef46-851b-3555-0a43-8da4d4ab0fad@linux.intel.com>
+References: <20240202071110.8515-3-jhp@endlessos.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,150 +77,95 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 5 Feb 2024, Smita Koralahalli wrote:
+On Fri, 2 Feb 2024, Jian-Hong Pan wrote:
 
-> According to PCIe r6.0 sec 6.7.6 [1], async removal with DPC may result in
-> surprise down error. This error is expected and is just a side-effect of
-> async remove.
+> The remapped PCIe Root Port and NVMe have PCI PM L1 substates
+> capability, but they are disabled originally:
 > 
-> Ignore surprise down error generated as a side-effect of async remove.
-> Typically, this error is benign as the pciehp handler invoked by PDC
-> or/and DLLSC alongside DPC, de-enumerates and brings down the device
-> appropriately. But the error messages might confuse users. Get rid of
-> these irritating log messages with a 1s delay while pciehp waits for
-> dpc recovery.
+> Here is an example on ASUS B1400CEAE:
 > 
-> The implementation is as follows: On an async remove a DPC is triggered
-> along with a Presence Detect State change and/or DLL State Change.
-> Determine it's an async remove by checking for DPC Trigger Status in DPC
-> Status Register and Surprise Down Error Status in AER Uncorrected Error
-> Status to be non-zero. If true, treat the DPC event as a side-effect of
-> async remove, clear the error status registers and continue with hot-plug
-> tear down routines. If not, follow the existing routine to handle AER and
-> DPC errors.
+> Capabilities: [900 v1] L1 PM Substates
+>         L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1- L1_PM_Substates+
+>                   PortCommonModeRestoreTime=32us PortTPowerOnTime=10us
+>         L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2+ ASPM_L1.1-
+>                    T_CommonMode=0us LTR1.2_Threshold=0ns
+>         L1SubCtl2: T_PwrOn=10us
 > 
-> Please note that, masking Surprise Down Errors was explored as an
-> alternative approach, but left due to the odd behavior that masking only
-> avoids the interrupt, but still records an error per PCIe r6.0.1 Section
-> 6.2.3.2.2. That stale error is going to be reported the next time some
-> error other than Surprise Down is handled.
+> Power on all of the VMD remapped PCI devices and quirk max snoop LTR
+> before enable PCI-PM L1 PM Substates by following "Section 5.5.4 of PCIe
+> Base Spec Revision 6.0". Then, PCI PM's L1 substates control are
+> initialized & enabled accordingly. Also, update the comments of
+> pci_enable_link_state() and pci_enable_link_state_locked() for
+> kernel-doc, too.
 > 
-> Dmesg before:
-> 
->   pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
->   pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
->   pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
->   pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
->   pcieport 0000:00:01.4:    [ 5] SDES (First)
->   nvme nvme2: frozen state error detected, reset controller
->   pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
->   pcieport 0000:00:01.4: AER: subordinate device reset failed
->   pcieport 0000:00:01.4: AER: device recovery failed
->   pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
->   nvme2n1: detected capacity change from 1953525168 to 0
->   pci 0000:04:00.0: Removing from iommu group 49
-> 
-> Dmesg after:
-> 
->  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
->  nvme1n1: detected capacity change from 1953525168 to 0
->  pci 0000:04:00.0: Removing from iommu group 37
-> 
-> [1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
->     https://members.pcisig.com/wg/PCI-SIG/document/16609
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+> Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 > ---
 > v2:
-> 	Indentation is taken care. (Bjorn)
-> 	Unrelevant dmesg logs are removed. (Bjorn)
-> 	Rephrased commit message, to be clear on native vs FW-First
-> 	handling. (Bjorn and Sathyanarayanan)
-> 	Prefix changed from pciehp_ to dpc_. (Lukas)
-> 	Clearing ARI and AtomicOp Requester are performed as a part of
-> 	(de-)enumeration in pciehp_unconfigure_device(). (Lukas)
-> 	Changed to clearing all optional capabilities in DEVCTL2.
-> 	OS-First -> native. (Sathyanarayanan)
+>   - Power on the VMD remapped devices with pci_set_power_state_locked()
+>   - Prepare the PCIe LTR parameters before enable L1 Substates
+>   - Add note into the comments of both pci_enable_link_state() and
+>     pci_enable_link_state_locked() for kernel-doc.
+>   - The original patch set can be split as individual patches.
 > 
-> v3:
-> 	Added error message when root port become inactive.
-> 	Modified commit description to add more details.
-> 	Rearranged code comments and function calls with no functional
-> 	change.
-> 	Additional check for is_hotplug_bridge.
-> 	dpc_completed_waitqueue to wakeup pciehp handler.
-> 	Cleared only Fatal error detected in DEVSTA.
+>  drivers/pci/controller/vmd.c | 15 ++++++++++-----
+>  drivers/pci/pcie/aspm.c      | 10 ++++++++++
+>  2 files changed, 20 insertions(+), 5 deletions(-)
 > 
-> v4:
-> 	Made read+write conditional on "if (pdev->dpc_rp_extensions)"
-> 	for DPC_RP_PIO_STATUS.
-> 	Wrapped to 80 chars.
-> 	Code comment for clearing PCI_STATUS and PCI_EXP_DEVSTA.
-> 	Added pcie_wait_for_link() check.
-> 	Removed error message for root port inactive as the message
-> 	already existed.
-> 	Check for is_hotplug_bridge before registers read.
-> 	Section 6.7.6 of the PCIe Base Spec 6.0 -> PCIe r6.0 sec 6.7.6.
-> 	Made code comment more meaningful.
-> 
-> v5:
-> 	$SUBJECT correction.
-> 	Added "Reviewed-by" tag.
-> 	No code changes. Re-spin on latest base to get Bjorn's
-> 	attention.
-> 
-> v6:
-> 	Change to write 1's to clear error. (Sathyanarayanan)
-> 
-> v7:
-> 	No changes. Rebasing on pci main branch as per Bjorn comments.
-> ---
->  drivers/pci/pcie/dpc.c | 67 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
-
-> +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
-> +{
-> +	u16 status;
-> +
-> +	if (!pdev->is_hotplug_bridge)
-> +		return false;
-> +
-> +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS,
-> +			     &status);
-> +
-
-> +	if (!(status & PCI_ERR_UNC_SURPDN))
-> +		return false;
-> +
-> +	return true;
-
-It would be simpler to just state and also easier to understand:
-
-	return status & PCI_ERR_UNC_SURPDN;
-
-C rules will handle the conversion to bool.
-
-> +}
-> +
->  static irqreturn_t dpc_handler(int irq, void *context)
->  {
->  	struct pci_dev *pdev = context;
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 87b7856f375a..66e47a0dbf1a 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -751,11 +751,9 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
+>  		return 0;
 >  
+> -	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
+> -
+>  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
+>  	if (!pos)
+> -		return 0;
+> +		goto out_enable_link_state;
+>  
+>  	/*
+>  	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
+> @@ -763,7 +761,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	 */
+>  	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
+>  	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
+> -		return 0;
+> +		goto out_enable_link_state;
+>  
+>  	/*
+>  	 * Set the default values to the maximum required by the platform to
+> @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+>  	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
+>  	pci_info(pdev, "VMD: Default LTR value set by driver\n");
+>  
+> +out_enable_link_state:
 > +	/*
-> +	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
-> +	 * of async removal and should be ignored by software.
+> +	 * Make PCI devices at D0 when enable PCI-PM L1 PM Substates from
+> +	 * Section 5.5.4 of PCIe Base Spec Revision 6.0
+
+I don't understand what are you trying to say here? Are there some typos 
+or grammar errors or something entire missing from the comment?
+
 > +	 */
-> +	if (dpc_is_surprise_removal(pdev)) {
-> +		dpc_handle_surprise_removal(pdev);
-> +		return IRQ_HANDLED;
-> +	}
+> +	pci_set_power_state_locked(pdev, PCI_D0);
+> +	pci_enable_link_state_locked(pdev, PCIE_LINK_STATE_ALL);
 > +
->  	dpc_process_error(pdev);
+>  	return 0;
+>  }
 >  
->  	/* We configure DPC so it only triggers on ERR_FATAL */
+> @@ -926,7 +932,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  				   dev_get_msi_domain(&vmd->dev->dev));
+>  
+>  	vmd_acpi_begin();
+> -
+>  	pci_scan_child_bus(vmd->bus);
+>  	vmd_domain_reset(vmd);
+
+Spurious newline change.
 
 
 -- 
