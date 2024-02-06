@@ -1,258 +1,281 @@
-Return-Path: <linux-pci+bounces-3171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3172-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8D0184BB70
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 17:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D7CB84BBA8
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 18:10:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1E6F28493B
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 16:53:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8E74282624
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 17:10:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D70BD4A34;
-	Tue,  6 Feb 2024 16:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 476E66116;
+	Tue,  6 Feb 2024 17:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvElM4ZJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VVxbRL8z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23CD63DF
-	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 16:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B21AB652
+	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 17:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707238406; cv=none; b=gPvE9Z07babsV+u2jr9/TpBYOkWpQjNrpQZ79/hNBG1KQ3Fr2Vbmr3p/XZizNzMokyKe6bwq/wIlWIE5cP2LYzmmiIcACANMKxjCEkAHKripJG/XS0hLjAHcOl2k6GUkpo1IKpBp7rdHaHZutdRUWXWTQkjU8b44QGO75pjcbIg=
+	t=1707239453; cv=none; b=Dy6uBYoqClSw5NEiKDqfJKUwa9oad541RRgcCIxzgrmatWg/yjQWhhIk+10cbq5mXeR+mOmUDKhoX3q8mZPOMTsapWsWveDGf3jrz9Bj6yn8togTm3xHpEj1hl9IdiPPjWTXXeC+SO/C5jUa9e9/ce6T5V0vaeOmN6Sq0XNSGu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707238406; c=relaxed/simple;
-	bh=rou4R/beABf8TRM7GWkpkjoc7CoYJQTcpclMYyHpsR8=;
+	s=arc-20240116; t=1707239453; c=relaxed/simple;
+	bh=EV68goH/lze21RDEV86RaT0o7GC4OAsf6rElMCkIhHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nvl3OrKnSSiypU3o2TQqcDTqsSQ50mjOLjKk4MoX/WAhTup/EH1t99kunf5wPD6NE4+r2FCf+z7+c4EPibQAMvucI0OLAJbKXdBgAwvBNhLyd7sOHnqG2VvgopuXxD7ujkufvd24FeApNm/sPOOV6Wr/s0udAavkH3tHpt78EwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BvElM4ZJ; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-511206d1c89so8435202e87.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 08:53:24 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=lLtRzctO/eYIcfcMDkng1IoGBypmDutgvfXYcPoC7lxMxVdKMZih/aRcX3LPY79oam8mmkRq+1auOjd3Ui1P0DzeDRcplEI3/uUj8FBiPTiCUC/6fhhpZUZ5YhxoYLBLnbGIZsgsVeJQV2/nbe78mLrZkWCnG8BkCyVYJwk6vPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VVxbRL8z; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d9b2400910so5915295ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 09:10:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707238403; x=1707843203; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XXDFMhYZw8LhChEWFgEkWByxhKuOaFOTpUlUGtwQ6VU=;
-        b=BvElM4ZJhTBsrUNEtAkiFgevarE1ruKM/0ygQjk7m7fk8K+Clwf0YUiQjUwsdz08qB
-         Jd0DJv5XrEatyTT5o4u8UPCmVPmFxqT1xMBEJ5PpnGImtIredDCgpnXNZ1Nyi2lr2x4L
-         oUjJRJ4+xepnH+lfKQ4dw5CNmY0RU07DwJUY6nl0jriSWEgGa9Dl1UYP34khGOLvWase
-         MydT7F+iQtdFuEgg4Vbfc/oKrubT/TTkYfRpOyr3tcBZfSiBFW6Z4UHfdz8OjBAyZxna
-         HbkPOD+O+LrugqIIHa/DHb/SjgDg/3DF423vJWwYtbyLMIl5W9SK6R9Sod6Sa/uk90qX
-         djpA==
+        d=linaro.org; s=google; t=1707239450; x=1707844250; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qTM4f7KyeHcVcu9cnb0XrnzX2YN9NImIrLOFDGzEbBo=;
+        b=VVxbRL8zHNkMzAiBQLV88gWTkcGsGxuTbrcI05SsFG8VsxXiXkhGWCpgsGsEXS/qfa
+         si6Nu66Wr0rSCXz7jYDnrFKh65ocx5s3P6Lnx+bBLKA43F0DXwAQ8OxoyGY/SgoryPzA
+         MMPdu4g1FXRXSn7Tifo6QMUv4XkKONgw4+sk5a9hp0cZe0hOgbe3x+ftDMfdoehtSUJJ
+         VlXtialmyWZTFst1oxxjO5cTNofWLQt8GkkSPTCr8170I3/Pd6TuIAk22wvUbPbwBh+M
+         bcYANgiMLkU3HaGBbkgV1gQOxgYHzcVL4Ps0XhSh6nLfLmeB9UqJ3jnxrzdUHXoWqxU5
+         JFTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707238403; x=1707843203;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XXDFMhYZw8LhChEWFgEkWByxhKuOaFOTpUlUGtwQ6VU=;
-        b=G5+5sV0c8d0fZCZkrkJe8Mu4bjuo0ZhXS2wYTZiY4KQkYftkLauyfzONpyJnJstg7F
-         Gyy0EoP3iALlkfqFd6cEwrNLvLJu9E0yJgEvVeEvoexturW/ZyE+bwrZaOEIuowz30/C
-         JouGNTsTjd7QOgWqYs1SIkS/8Ytkv7XGRxTJErNzmA2yA8pssDxnfyE/YGQ5Kd0SGNyd
-         vWTsT3eniHWgrUGxYq/FoO14EvB1q4HIjJ8UiYEX7HhfghzgEiKH3+DahmC3q6JVSxDE
-         oH9xq57VR12R+nJCRj442aiPNYW6qUn7cwQjEsNBxemRPxUc/XkqXY28I1ulzCD2jJrp
-         e/xA==
-X-Gm-Message-State: AOJu0YzxHInvQh+TBrGrgoJzUVjBNCMfv5iidmRuOakuS8v4LBx4uzFA
-	kL7/BBoQw6EW2GKmwHxAHHRWJHcuKBiUEwt8QbiMlIjEwqMZff+K
-X-Google-Smtp-Source: AGHT+IHahpbMGr++ieUCZHx1YkmJuKEwJmxd1q5N9CRY6ITDLETLwoP2pP6f0mOes6TgLndXx2csjg==
-X-Received: by 2002:a05:6512:3ca1:b0:511:62f7:14fa with SMTP id h33-20020a0565123ca100b0051162f714famr154632lfv.29.1707238402492;
-        Tue, 06 Feb 2024 08:53:22 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXr2RWC6kVO5ZYBcHRmwnrBEGtfVurE4uA3XzXHi0W4kP1LRycE0Ii2REehi1kEQQM5vpP3Wy/KHSL3Xq2jYWgZPDzFfrXteCX3Bb9AVv011Q2zjEfyCW6+lrenjmqn6yKBHgYR3eCXwY+TtGDYqGmMghf1opcfTdAqIU3gzrrKLjgFHFk5dMPlnGN6VJx0MZ9TsjnwYudezTR6Ei1OypZKK9jMq70TiB9jIt0BJTldWwms9nnRN5eRsUyonZLX5uKaOrrcccMX7qpqEt2m0Gc45ZkYxupoUe49g4VgVDVQEPkzzkbiftjVdf939J8wajIpPOcGMMV71Bg94vCPF2QAWm2Z5piaObSrrhMWmTX8aQC4oqeB+CyLG+3pIhE=
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id j11-20020ac2550b000000b005113e122511sm287327lfk.17.2024.02.06.08.53.21
+        d=1e100.net; s=20230601; t=1707239450; x=1707844250;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qTM4f7KyeHcVcu9cnb0XrnzX2YN9NImIrLOFDGzEbBo=;
+        b=nyyq6OEcyesm6/h2XwcT6r6X9dyzDon5gASmWmQMNS9OHwEI24EJnbNpGLdmiogout
+         BTNRenj0X421Y2kLH3HzadtcvJRt398eDkdFjs4JmMe62TmVOmWyJf+Lx2OoK/nrHSbd
+         KVFamC+R8+uJ92/OjxbESqw6/olDtO5Wj4bCkdJtrTErl445Cj8m91HiIess3IObtjps
+         7fV2kI1P0HMd3IIdVtbLxL7YqXFMdrvZADK/yZOcs5IsFB2UalQNgO7qktOZpE3wxMya
+         xQCVACQo2Iz+QbBvG+FLT5TlOL11MerbIIdPc6zHHQMboKQC0hQK1SVVYEWojyFFET61
+         /zFg==
+X-Gm-Message-State: AOJu0Yw8Uw191EJzHieFYWKbvttD+GJ7K1VLkW6itGl1D94+sK1fCiN7
+	x0qjcvUzpkVDGHd7U1GUxLgpjZomSnFEk8bqNzdIX1LWchc/8LXh31uAee9xnQ==
+X-Google-Smtp-Source: AGHT+IHi/L7AHgD06gpAXQvPS+ie7mGrjZqvFd6tDJnuYEUDRubH1PBNHPwf2vvhR7UuFxiFRHuhmg==
+X-Received: by 2002:a17:902:ec86:b0:1d9:30e3:ea84 with SMTP id x6-20020a170902ec8600b001d930e3ea84mr3471664plg.2.1707239450460;
+        Tue, 06 Feb 2024 09:10:50 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVtXdw1EauiJGESh9RlwRkExNszl+kAiyqBlhuzP6gM6eSkNkatF0P49qeMAUqqs2Q9E7cRwm3skx/LAUZEE7YojXGkQY37MEsmnF91wyRV5S++lFdQo7YU6718eSyj9dtxz3mK41M2jyM7438XWb8FDkaLlidFgmL+xlB0qUkgPx5D+0aw+qoJBbjEeUfthLe4ghPOVpHXjFtYkFYTBNlK5bEj8k8xAFAvFfnMaOTAN2KcCFHy6s4NK8tixzaX8eUEOv0L1Rj4qaDJDBlN1V1NjB6sDw34HjODOz4IXWvBy2uPnrur10r8GN6fnXbhs6Gn+mmatd2ONYHk5SyfscLEvVLtSZQb5joEjQbHrEnJXRUf0zQS6f9TmuG0WZDZ1rXhvYC05uVE/i6S1RBEfUax7mH+oNU4Ev1ed7okCeFZo1Qi0FgKQslljf+Vow==
+Received: from thinkpad ([120.138.12.111])
+        by smtp.gmail.com with ESMTPSA id lo11-20020a170903434b00b001d91b608a9csm2091202plb.279.2024.02.06.09.10.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 08:53:22 -0800 (PST)
-Date: Tue, 6 Feb 2024 19:53:19 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
+        Tue, 06 Feb 2024 09:10:50 -0800 (PST)
+Date: Tue, 6 Feb 2024 22:40:43 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>, 
-	Sajid Dalvi <sdalvi@google.com>, William McVicker <willmcvicker@google.com>, 
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <rjhceek7fjr6qglqewzrojc2nooewmhxq5ifzpqhpzuvc5deqa@l4u7kgzn2vo7>
-References: <20240204112425.125627-1-ajayagarwal@google.com>
- <2kvgqhaitacl7atqf775vr2z3ty5qeqxuv5g3wflkmhgj4yk76@fsmrosfwobfx>
- <ZcJhhHK6eQOUfVKf@google.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
+	Doug Zobel <zobel@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+	Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
+Message-ID: <20240206171043.GE8333@thinkpad>
+References: <20240129071025.GE2971@thinkpad>
+ <ZbdcJDWcZG3Y3efJ@google.com>
+ <20240129081254.GF2971@thinkpad>
+ <ZbengMb5zrigs_2Z@google.com>
+ <20240130064555.GC32821@thinkpad>
+ <Zbi6q1aigV35yy9b@google.com>
+ <20240130122906.GE83288@thinkpad>
+ <Zbkvg92pb-bqEwy2@google.com>
+ <20240130183626.GE4218@thinkpad>
+ <ZcC_xMhKdpK2G_AS@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZcJhhHK6eQOUfVKf@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZcC_xMhKdpK2G_AS@google.com>
 
-On Tue, Feb 06, 2024 at 10:12:44PM +0530, Ajay Agarwal wrote:
-> On Mon, Feb 05, 2024 at 12:52:45AM +0300, Serge Semin wrote:
-> > On Sun, Feb 04, 2024 at 04:54:25PM +0530, Ajay Agarwal wrote:
-> > > There can be platforms that do not use/have 32-bit DMA addresses
-> > > but want to enumerate endpoints which support only 32-bit MSI
-> > > address. The current implementation of 32-bit IOVA allocation can
-> > > fail for such platforms, eventually leading to the probe failure.
++ Joao
+
+On Mon, Feb 05, 2024 at 04:30:20PM +0530, Ajay Agarwal wrote:
+> On Wed, Jan 31, 2024 at 12:06:26AM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Jan 30, 2024 at 10:48:59PM +0530, Ajay Agarwal wrote:
+> > > On Tue, Jan 30, 2024 at 05:59:06PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > > > > If that's the case with your driver, when are you starting the link training?
+> > > > > > > > > > 
+> > > > > > > > > The link training starts later based on a userspace/debugfs trigger.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Why does it happen as such? What's the problem in starting the link during
+> > > > > > > > probe? Keep it in mind that if you rely on the userspace for starting the link
+> > > > > > > > based on a platform (like Android), then if the same SoC or peripheral instance
+> > > > > > > > get reused in other platform (non-android), the it won't be a seamless user
+> > > > > > > > experience.
+> > > > > > > > 
+> > > > > > > > If there are any other usecases, please state them.
+> > > > > > > > 
+> > > > > > > > - Mani
+> > > > > > > >
+> > > > > > > This SoC is targeted for an android phone usecase and the endpoints
+> > > > > > > being enumerated need to go through an appropriate and device specific
+> > > > > > > power sequence which gets triggered only when the userspace is up. The
+> > > > > > > PCIe probe cannot assume that the EPs have been powered up already and
+> > > > > > > hence the link-up is not attempted.
+> > > > > > 
+> > > > > > Still, I do not see the necessity to not call start_link() during probe. If you
+> > > > > I am not adding any logic/condition around calling the start_link()
+> > > > > itself. I am only avoiding the wait for the link to be up if the
+> > > > > controller driver has not defined start_link().
+> > > > > 
+> > > > 
+> > > > I'm saying that not defining the start_link() callback itself is wrong.
+> > > > 
+> > > Whether the start_link() should be defined or not, is a different
+> > > design discussion. We currently have 2 drivers in upstream (intel-gw and
+> > > dw-plat) which do not have start_link() defined. Waiting for the link to
+> > > come up for the platforms using those drivers is not a good idea. And
+> > > that is what we are trying to avoid.
 > > > 
-> > > If there vendor driver has already setup the MSI address using
-> > > some mechanism, use the same. This method can be used by the
-> > > platforms described above to support EPs they wish to.
-> > > 
-> > > Else, if the memory region is not reserved, try to allocate a
-> > > 32-bit IOVA. Additionally, if this allocation also fails, attempt
-> > > a 64-bit allocation for probe to be successful. If the 64-bit MSI
-> > > address is allocated, then the EPs supporting 32-bit MSI address
-> > > will not work.
-> > > 
-> > > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> > > ---
-> > > Changelog since v2:
-> > >  - If the vendor driver has setup the msi_data, use the same
-> > > 
-> > > Changelog since v1:
-> > >  - Use reserved memory, if it exists, to setup the MSI data
-> > >  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
-> > > 
-> > >  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++++-----
-> > >  1 file changed, 20 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index d5fc31f8345f..512eb2d6591f 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -374,10 +374,18 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> > >  	 * order not to miss MSI TLPs from those devices the MSI target
-> > >  	 * address has to be within the lowest 4GB.
-> > >  	 *
 > > 
-> > > -	 * Note until there is a better alternative found the reservation is
-> > > -	 * done by allocating from the artificially limited DMA-coherent
-> > > -	 * memory.
-> > 
-> > Why do you keep deleting this statement? The driver still uses the
-> > DMA-coherent memory as a workaround. Your solution doesn't solve the
-> > problem completely. This is another workaround. One more time: the
-> > correct solution would be to allocate a 32-bit address or some range
-> > within the 4GB PCIe bus memory with no _RAM_ or some other IO behind.
-> > Your solution relies on the platform firmware/glue-driver doing that,
-> > which isn't universally applicable. So please don't drop the comment.
+> > NO. The sole intention of this patch is to fix the delay observed with _your_
+> > out-of-tree controller driver as you explicitly said before. Impact for the
+> > existing 2 drivers are just a side effect.
 > >
-> ACK.
+> Hi Mani,
+> What is the expectation from the pcie-designware-host driver? If the
+> .start_link() has to be defined by the vendor driver, then shouldn't the
+> probe be failed if the vendor has not defined it? Thereby failing the
+> probe for intel-gw and pcie-dw-plat drivers?
 > 
-> > > +	 * Check if the vendor driver has setup the MSI address already. If yes,
-> > > +	 * pick up the same.
-> > 
-> > This is inferred from the code below. So drop it.
-> > 
-> ACK.
-> 
-> > > This will be helpful for platforms that do not
-> > > +	 * use/have 32-bit DMA addresses but want to use endpoints which support
-> > > +	 * only 32-bit MSI address.
-> > 
-> > Please merge it into the first part of the comment as like: "Permit
-> > the platforms to override the MSI target address if they have a free
-> > PCIe-bus memory specifically reserved for that."
-> > 
-> ACK.
-> 
-> > > +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
-> > > +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
-> > > +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
-> > > +	 * supporting 32-bit MSI address will not work.
-> > 
-> > This is easily inferred from the code below. So drop it.
-> > 
-> ACK.
-> 
-> > >  	 */
-> > 
-> > > +	if (pp->msi_data)
-> > 
-> > Note this is a physical address for which even zero value might be
-> > valid. In this case it's the address of the PCIe bus space for which
-> > AFAICS zero isn't reserved for something special.
-> >
 
-> That is a fair point. What do you suggest we do? Shall we define another
-> op `set_msi_data` (like init/msi_init/start_link) and if it is defined
-> by the vendor, then call it? Then vendor has to set the pp->msi_data
-> there? Let me know.
+intel-gw maintainer agreed to fix the driver [1], but I cannot really comment on
+the other one. It is not starting the link at all, so don't know how it works.
+I've CCed the driver author to get some idea.
 
-You can define a new capability flag here
-drivers/pci/controller/dwc/pcie-designware.h (see DW_PCIE_CAP_* macros)
-, set it in the glue driver by means of the dw_pcie_cap_set() macro
-function and instead of checking msi_data value test the flag for
-being set by dw_pcie_cap_is().
+[1] https://lore.kernel.org/linux-pci/BY3PR19MB50764E90F107B3256189804CBD432@BY3PR19MB5076.namprd19.prod.outlook.com/
 
+> Additionally, if the link fails to come up even after 1 sec of wait
+> time, shouldn't the probe be failed in that case too?
 > 
-> > > +		return 0;
-> > > +
-> > >  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> > >  	if (ret)
-> > >  		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> > > @@ -385,9 +393,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> > >  	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > >  					GFP_KERNEL);
-> > >  	if (!msi_vaddr) {
-> > > -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> > > -		dw_pcie_free_msi(pp);
-> > > -		return -ENOMEM;
-> > > +		dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
-> > > +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> > > +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > > +						GFP_KERNEL);
-> > > +		if (!msi_vaddr) {
-> > > +			dev_err(dev, "Failed to alloc and map MSI data\n");
-> > > +			dw_pcie_free_msi(pp);
-> > > +			return -ENOMEM;
-> > > +		}
-> > 
-> > On Tue, Jan 30, 2024 at 08:40:48PM +0000, Robin Murphy wrote:
-> > > Yeah, something like that. Personally I'd still be tempted to try some
-> > > mildly more involved logic to just have a single dev_warn(), but I think
-> > > that's less important than just having something which clearly works.
-> > 
-> > I guess this can be done but in a bit clumsy way. Like this:
-> > 
-> > 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) ||
-> > 	      !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
-> > 	if (ret) {
-> > 		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
-> > 
-> > 		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> > 		ret = !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
-> > 		if (ret) {
-> > 			dev_err(dev, "Failed to allocate MSI target address\n");
-> > 			return -ENOMEM;
+
+Why? The device can be attached at any point of time. What I'm stressing is, the
+driver should check for the link to be up during probe and if there is no
+device, then it should just continue and hope for the device to show up later.
+This way, the driver can detect the powered up devices during boot and also
+detect the hotplug devices.
+
+> My understanding of these drivers is that the .start_link() is an
+> OPTIONAL callback and that the dw_pcie_host_init should help setup the
+> SW structures regardless of whether the .start_link() has been defined
+> or not, and whether the link is up or not. The vendor should be allowed
+> to train the link at a later point of time as well.
 > 
-> As you pointed out already, this looks pretty clumsy. I think we should
-> stick to the more descriptive and readable code that I suggested.
 
-I do not know which solution is better really. Both have pros and
-cons. Let's wait for Bjorn, Mani or Robin opinion about this.
+What do you mean by later point of time? Bringing the link through debugfs? NO.
+We cannot let each driver behave differently, unless there is a really valid
+reason.
 
--Serge(y)
-
+> Please let me know your thoughts.
+> > > > > > add PROBE_PREFER_ASYNCHRONOUS to your controller driver, this delay would become
+> > > > > > negligible. The reason why I'm against not calling start_link() is due to below
+> > > > > > reasons:
+> > > > > > 
+> > > > > > 1. If the same SoC gets reused for other platforms, even other android phones
+> > > > > > that powers up the endpoints during boot, then it creates a dependency with
+> > > > > > userspace to always start the link even though the devices were available.
+> > > > > > That's why we should never fix the behavior of the controller drivers based on a
+> > > > > > single platform.
+> > > > > I wonder how the behavior is changing with this patch. Do you have an
+> > > > > example of a platform which does not have start_link() defined but would
+> > > > > like to still wait for a second for the link to come up?
+> > > > > 
+> > > > 
+> > > > Did you went through my reply completely? I mentioned that the 1s delay would be
+> > > > gone if you add the async flag to your driver and you are ignoring that.
+> > > > 
+> The async probe might not help in all the cases. Consider a situation
+> where the PCIe is probed after the boot is already completed. The user
+> will face the delay then. Do you agree?
 > 
-> > 		}
-> > 	}
-> > 
-> > Not sure whether it's much better than what Ajay suggested but at
-> > least it has a single warning string describing the error, and we can
-> > drop the unused msi_vaddr variable.
-> > 
-> > -Serge(y)
-> > 
-> > >  	}
-> > >  
-> > >  	return 0;
-> > > -- 
-> > > 2.43.0.594.gd9cf4e227d-goog
+
+You mean loading the driver module post boot? If the link is still not up, yes
+the users will see the 1sec delay.
+
+But again, the point I'm trying to make here is, all the drivers have to follow
+one flow. We cannot let each driver do its way of starting the link. There could
+be exceptions if we get a valid reason for a driver to not do so, but so far I
+haven't come across such reason. (the existing drivers, intel-gw and
+designware-plat are not exceptions, but they need fixing).
+
+For your driver, you said that the userspace brings up the link, post boot when
+the devices are powered on. So starting the link during probe incurs 1s delay,
+as there would be no devices. But I suggested you to enable async probe to
+nullify the 1s delay during probe and you confirmed that it fixes the issue for
+you.
+
+Then you are again debating about not defining the start_link() callback :(
+
+I've made by point clear, please do not take inspiration from those drivers,
+they really need fixing. And for your usecase, allowing the controller driver
+to start the link post boot just because a device on your Pixel phone comes up
+later is not a good argument. You _should_not_ define the behavior of a
+controller driver based on one platform, it is really a bad design.
+
+- Mani
+
+> > > Yes, I did go through your suggestion of async probe and that might
+> > > solve my problem of the 1 sec delay. But I would like to fix the problem
+> > > at the core.
 > > > 
+> > 
+> > There is no problem at the core. The problem is with some controller drivers.
+> > Please do not try to fix a problem which is not there. There are no _special_
+> > reasons for those 2 drivers to not define start_link() callback. I'm trying to
+> > point you in the right path, but you are always chosing the other one.
+> > 
+> > > > But again, I'm saying that not defining start_link() itself is wrong and I've
+> > > > already mentioned the reasons.
+> > > > 
+> > > > > For example, consider the intel-gw driver. The 1 sec wait time in its
+> > > > > probe path is also a waste because it explicitly starts link training
+> > > > > later in time.
+> > > > > 
+> > > > 
+> > > > I previously mentioned that the intel-gw needs fixing since there is no point in
+> > > > starting the link and waiting for it to come up in its probe() if the DWC core
+> > > > is already doing that.
+> > > > 
+> > > > - Mani
+> > > > 
+> > > > -- 
+> > > > மணிவண்ணன் சதாசிவம்
+> > > I think we are at a dead-end in terms of agreeing to a policy. I would
+> > > like the maintainers to pitch in here with their views.
+> > 
+> > I'm the maintainer of the DWC drivers that you are proposing the patch for. If
+> > you happen to spin future revision of this series, please carry:
+> > 
+> > Nacked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > - Mani
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
