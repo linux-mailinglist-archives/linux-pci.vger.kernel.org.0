@@ -1,281 +1,130 @@
-Return-Path: <linux-pci+bounces-3172-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3173-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D7CB84BBA8
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 18:10:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A0A584BBBF
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 18:23:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8E74282624
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 17:10:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D8A11C23002
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 17:23:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 476E66116;
-	Tue,  6 Feb 2024 17:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C08246FB1;
+	Tue,  6 Feb 2024 17:23:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VVxbRL8z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbH/xjJY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B21AB652
-	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 17:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E4CCA4A;
+	Tue,  6 Feb 2024 17:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707239453; cv=none; b=Dy6uBYoqClSw5NEiKDqfJKUwa9oad541RRgcCIxzgrmatWg/yjQWhhIk+10cbq5mXeR+mOmUDKhoX3q8mZPOMTsapWsWveDGf3jrz9Bj6yn8togTm3xHpEj1hl9IdiPPjWTXXeC+SO/C5jUa9e9/ce6T5V0vaeOmN6Sq0XNSGu4=
+	t=1707240217; cv=none; b=W+NRZ+NbhvI6LkVxj25VuVzbT6bhH9pEyLGEyYuHKp8kyj0CisKCFo3AfoSS34wZtBlDHyTkollysPsYrt66B6rULPmCtx4BO2wsJ5XVIy8DiM9YRN34EW6q3ZiDFJqUG0njBOHACavmpRRg9whkJEW+vs5ebUcJ3iT9F5L3A1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707239453; c=relaxed/simple;
-	bh=EV68goH/lze21RDEV86RaT0o7GC4OAsf6rElMCkIhHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lLtRzctO/eYIcfcMDkng1IoGBypmDutgvfXYcPoC7lxMxVdKMZih/aRcX3LPY79oam8mmkRq+1auOjd3Ui1P0DzeDRcplEI3/uUj8FBiPTiCUC/6fhhpZUZ5YhxoYLBLnbGIZsgsVeJQV2/nbe78mLrZkWCnG8BkCyVYJwk6vPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VVxbRL8z; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d9b2400910so5915295ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 09:10:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707239450; x=1707844250; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qTM4f7KyeHcVcu9cnb0XrnzX2YN9NImIrLOFDGzEbBo=;
-        b=VVxbRL8zHNkMzAiBQLV88gWTkcGsGxuTbrcI05SsFG8VsxXiXkhGWCpgsGsEXS/qfa
-         si6Nu66Wr0rSCXz7jYDnrFKh65ocx5s3P6Lnx+bBLKA43F0DXwAQ8OxoyGY/SgoryPzA
-         MMPdu4g1FXRXSn7Tifo6QMUv4XkKONgw4+sk5a9hp0cZe0hOgbe3x+ftDMfdoehtSUJJ
-         VlXtialmyWZTFst1oxxjO5cTNofWLQt8GkkSPTCr8170I3/Pd6TuIAk22wvUbPbwBh+M
-         bcYANgiMLkU3HaGBbkgV1gQOxgYHzcVL4Ps0XhSh6nLfLmeB9UqJ3jnxrzdUHXoWqxU5
-         JFTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707239450; x=1707844250;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qTM4f7KyeHcVcu9cnb0XrnzX2YN9NImIrLOFDGzEbBo=;
-        b=nyyq6OEcyesm6/h2XwcT6r6X9dyzDon5gASmWmQMNS9OHwEI24EJnbNpGLdmiogout
-         BTNRenj0X421Y2kLH3HzadtcvJRt398eDkdFjs4JmMe62TmVOmWyJf+Lx2OoK/nrHSbd
-         KVFamC+R8+uJ92/OjxbESqw6/olDtO5Wj4bCkdJtrTErl445Cj8m91HiIess3IObtjps
-         7fV2kI1P0HMd3IIdVtbLxL7YqXFMdrvZADK/yZOcs5IsFB2UalQNgO7qktOZpE3wxMya
-         xQCVACQo2Iz+QbBvG+FLT5TlOL11MerbIIdPc6zHHQMboKQC0hQK1SVVYEWojyFFET61
-         /zFg==
-X-Gm-Message-State: AOJu0Yw8Uw191EJzHieFYWKbvttD+GJ7K1VLkW6itGl1D94+sK1fCiN7
-	x0qjcvUzpkVDGHd7U1GUxLgpjZomSnFEk8bqNzdIX1LWchc/8LXh31uAee9xnQ==
-X-Google-Smtp-Source: AGHT+IHi/L7AHgD06gpAXQvPS+ie7mGrjZqvFd6tDJnuYEUDRubH1PBNHPwf2vvhR7UuFxiFRHuhmg==
-X-Received: by 2002:a17:902:ec86:b0:1d9:30e3:ea84 with SMTP id x6-20020a170902ec8600b001d930e3ea84mr3471664plg.2.1707239450460;
-        Tue, 06 Feb 2024 09:10:50 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVtXdw1EauiJGESh9RlwRkExNszl+kAiyqBlhuzP6gM6eSkNkatF0P49qeMAUqqs2Q9E7cRwm3skx/LAUZEE7YojXGkQY37MEsmnF91wyRV5S++lFdQo7YU6718eSyj9dtxz3mK41M2jyM7438XWb8FDkaLlidFgmL+xlB0qUkgPx5D+0aw+qoJBbjEeUfthLe4ghPOVpHXjFtYkFYTBNlK5bEj8k8xAFAvFfnMaOTAN2KcCFHy6s4NK8tixzaX8eUEOv0L1Rj4qaDJDBlN1V1NjB6sDw34HjODOz4IXWvBy2uPnrur10r8GN6fnXbhs6Gn+mmatd2ONYHk5SyfscLEvVLtSZQb5joEjQbHrEnJXRUf0zQS6f9TmuG0WZDZ1rXhvYC05uVE/i6S1RBEfUax7mH+oNU4Ev1ed7okCeFZo1Qi0FgKQslljf+Vow==
-Received: from thinkpad ([120.138.12.111])
-        by smtp.gmail.com with ESMTPSA id lo11-20020a170903434b00b001d91b608a9csm2091202plb.279.2024.02.06.09.10.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 09:10:50 -0800 (PST)
-Date: Tue, 6 Feb 2024 22:40:43 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	s=arc-20240116; t=1707240217; c=relaxed/simple;
+	bh=po8vFxWrgnIMI30IcGK3wKjOx+diDmMTZZJBoYh+eQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ptp/Ub1Vh+vRM3vexZNK4ipHEDE4MBnoiODARqM4nuUtT/wjZ76mPTUIrQIrF+NnmC6p2iZs6KhXvKQInMbbFWjvX9gXMgBQ/zzosX3e0m+o4wVJzj3LBZJ2llRSs9BwTTv91vEvUg1DrR7Ikdkklf/tDOvTariT/aj0KJcAzu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbH/xjJY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C145DC433F1;
+	Tue,  6 Feb 2024 17:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707240217;
+	bh=po8vFxWrgnIMI30IcGK3wKjOx+diDmMTZZJBoYh+eQs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=VbH/xjJYNUgcSHYX8q6R3XOgMBMYdLFz0wwh7u9in+aDxvfieDaQsfcKyvc8IJljm
+	 b4KjHmApQTFpV3dO3iDbgzIq452iChe4Hlh+NbWkOfvbUZAwcqMJKOmdrdWJDvx820
+	 yGKAU6o3UzpUqJtxSEDdVVdgjfhrjOOzt539Zz72GbRfzqXZni2RnBmRWm0weRDqIa
+	 abarX5VsT/PfIoUpx71JSSklbKAA2HtBv69vFwRwxqV13L9xCWMblKCxtAmGpAIqwi
+	 8sqKs24ZwA9C+e3TEvivW9S6Jps4z6qQAk8w70V+oieQDehciCMb6nvmk5plKPIwiL
+	 i1EveBd1FnZ6A==
+Date: Tue, 6 Feb 2024 11:23:35 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org, chao.p.peng@linux.intel.com,
+	erwin.tsaur@intel.com, feiting.wanyan@intel.com,
+	qingshun.wang@intel.com, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20240206171043.GE8333@thinkpad>
-References: <20240129071025.GE2971@thinkpad>
- <ZbdcJDWcZG3Y3efJ@google.com>
- <20240129081254.GF2971@thinkpad>
- <ZbengMb5zrigs_2Z@google.com>
- <20240130064555.GC32821@thinkpad>
- <Zbi6q1aigV35yy9b@google.com>
- <20240130122906.GE83288@thinkpad>
- <Zbkvg92pb-bqEwy2@google.com>
- <20240130183626.GE4218@thinkpad>
- <ZcC_xMhKdpK2G_AS@google.com>
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Adam Preble <adam.c.preble@intel.com>, Li Yang <leoyang.li@nxp.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] PCI/AER: Store more information in aer_err_info
+Message-ID: <20240206172335.GA872811@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZcC_xMhKdpK2G_AS@google.com>
+In-Reply-To: <2rfnevhnhylik4r6smr56uunsxweo7s5elo65sjhiztvxnr6bq@5fcyv22zxyyp>
 
-+ Joao
-
-On Mon, Feb 05, 2024 at 04:30:20PM +0530, Ajay Agarwal wrote:
-> On Wed, Jan 31, 2024 at 12:06:26AM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Jan 30, 2024 at 10:48:59PM +0530, Ajay Agarwal wrote:
-> > > On Tue, Jan 30, 2024 at 05:59:06PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > > > > > > If that's the case with your driver, when are you starting the link training?
-> > > > > > > > > > 
-> > > > > > > > > The link training starts later based on a userspace/debugfs trigger.
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > Why does it happen as such? What's the problem in starting the link during
-> > > > > > > > probe? Keep it in mind that if you rely on the userspace for starting the link
-> > > > > > > > based on a platform (like Android), then if the same SoC or peripheral instance
-> > > > > > > > get reused in other platform (non-android), the it won't be a seamless user
-> > > > > > > > experience.
-> > > > > > > > 
-> > > > > > > > If there are any other usecases, please state them.
-> > > > > > > > 
-> > > > > > > > - Mani
-> > > > > > > >
-> > > > > > > This SoC is targeted for an android phone usecase and the endpoints
-> > > > > > > being enumerated need to go through an appropriate and device specific
-> > > > > > > power sequence which gets triggered only when the userspace is up. The
-> > > > > > > PCIe probe cannot assume that the EPs have been powered up already and
-> > > > > > > hence the link-up is not attempted.
-> > > > > > 
-> > > > > > Still, I do not see the necessity to not call start_link() during probe. If you
-> > > > > I am not adding any logic/condition around calling the start_link()
-> > > > > itself. I am only avoiding the wait for the link to be up if the
-> > > > > controller driver has not defined start_link().
-> > > > > 
-> > > > 
-> > > > I'm saying that not defining the start_link() callback itself is wrong.
-> > > > 
-> > > Whether the start_link() should be defined or not, is a different
-> > > design discussion. We currently have 2 drivers in upstream (intel-gw and
-> > > dw-plat) which do not have start_link() defined. Waiting for the link to
-> > > come up for the platforms using those drivers is not a good idea. And
-> > > that is what we are trying to avoid.
+On Wed, Feb 07, 2024 at 12:41:41AM +0800, Wang, Qingshun wrote:
+> On Mon, Feb 05, 2024 at 05:12:31PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Jan 25, 2024 at 02:27:59PM +0800, Wang, Qingshun wrote:
+> > > When Advisory Non-Fatal errors are raised, both correctable and
+> > > uncorrectable error statuses will be set. The current kernel code cannot
+> > > store both statuses at the same time, thus failing to handle ANFE properly.
+> > > In addition, to avoid clearing UEs that are not ANFE by accident, UE
+> > > severity and Device Status also need to be recorded: any fatal UE cannot
+> > > be ANFE, and if Fatal/Non-Fatal Error Detected is set in Device Status, do
+> > > not take any assumption and let UE handler to clear UE status.
 > > > 
+> > > Store status and mask of both correctable and uncorrectable errors in
+> > > aer_err_info. The severity of UEs and the values of the Device Status
+> > > register are also recorded, which will be used to determine UEs that should
+> > > be handled by the ANFE handler. Refactor the rest of the code to use
+> > > cor/uncor_status and cor/uncor_mask fields instead of status and mask
+> > > fields.
 > > 
-> > NO. The sole intention of this patch is to fix the delay observed with _your_
-> > out-of-tree controller driver as you explicitly said before. Impact for the
-> > existing 2 drivers are just a side effect.
-> >
-> Hi Mani,
-> What is the expectation from the pcie-designware-host driver? If the
-> .start_link() has to be defined by the vendor driver, then shouldn't the
-> probe be failed if the vendor has not defined it? Thereby failing the
-> probe for intel-gw and pcie-dw-plat drivers?
+> > There's a lot going on in this patch.  Could it possibly be split up a
+> > bit, e.g., first tease apart aer_err_info.status/.mask into
+> > .cor_status/mask and .uncor_status/mask, then add .uncor_severity,
+> > then add the device_status bit separately?  If it could be split up, I
+> > think the ANFE case would be easier to see.
 > 
+> Thanks for the feedback! Will split it up into two pacthes in the next
+> version.
 
-intel-gw maintainer agreed to fix the driver [1], but I cannot really comment on
-the other one. It is not starting the link at all, so don't know how it works.
-I've CCed the driver author to get some idea.
+Or even three:
 
-[1] https://lore.kernel.org/linux-pci/BY3PR19MB50764E90F107B3256189804CBD432@BY3PR19MB5076.namprd19.prod.outlook.com/
+  1) tease apart aer_err_info.status/.mask into .cor_status/mask and
+     .uncor_status/mask
 
-> Additionally, if the link fails to come up even after 1 sec of wait
-> time, shouldn't the probe be failed in that case too?
-> 
+  2) add .uncor_severity
 
-Why? The device can be attached at any point of time. What I'm stressing is, the
-driver should check for the link to be up during probe and if there is no
-device, then it should just continue and hope for the device to show up later.
-This way, the driver can detect the powered up devices during boot and also
-detect the hotplug devices.
+  3) add device_status
 
-> My understanding of these drivers is that the .start_link() is an
-> OPTIONAL callback and that the dw_pcie_host_init should help setup the
-> SW structures regardless of whether the .start_link() has been defined
-> or not, and whether the link is up or not. The vendor should be allowed
-> to train the link at a later point of time as well.
-> 
+Looking at this again, I'm a little confused about 2) and 3).  I see
+the new read of PCI_ERR_UNCOR_SEVER into .uncor_severity, but there's
+no actual *use* of it.
 
-What do you mean by later point of time? Bringing the link through debugfs? NO.
-We cannot let each driver behave differently, unless there is a really valid
-reason.
+Same for 3), I see the new read of PCI_EXP_DEVSTA, but AFAICS there's
+no use of that value.
 
-> Please let me know your thoughts.
-> > > > > > add PROBE_PREFER_ASYNCHRONOUS to your controller driver, this delay would become
-> > > > > > negligible. The reason why I'm against not calling start_link() is due to below
-> > > > > > reasons:
-> > > > > > 
-> > > > > > 1. If the same SoC gets reused for other platforms, even other android phones
-> > > > > > that powers up the endpoints during boot, then it creates a dependency with
-> > > > > > userspace to always start the link even though the devices were available.
-> > > > > > That's why we should never fix the behavior of the controller drivers based on a
-> > > > > > single platform.
-> > > > > I wonder how the behavior is changing with this patch. Do you have an
-> > > > > example of a platform which does not have start_link() defined but would
-> > > > > like to still wait for a second for the link to come up?
-> > > > > 
-> > > > 
-> > > > Did you went through my reply completely? I mentioned that the 1s delay would be
-> > > > gone if you add the async flag to your driver and you are ignoring that.
-> > > > 
-> The async probe might not help in all the cases. Consider a situation
-> where the PCIe is probed after the boot is already completed. The user
-> will face the delay then. Do you agree?
-> 
+We should have the addition of these new values in the same patch
+that *uses* them.
 
-You mean loading the driver module post boot? If the link is still not up, yes
-the users will see the 1sec delay.
-
-But again, the point I'm trying to make here is, all the drivers have to follow
-one flow. We cannot let each driver do its way of starting the link. There could
-be exceptions if we get a valid reason for a driver to not do so, but so far I
-haven't come across such reason. (the existing drivers, intel-gw and
-designware-plat are not exceptions, but they need fixing).
-
-For your driver, you said that the userspace brings up the link, post boot when
-the devices are powered on. So starting the link during probe incurs 1s delay,
-as there would be no devices. But I suggested you to enable async probe to
-nullify the 1s delay during probe and you confirmed that it fixes the issue for
-you.
-
-Then you are again debating about not defining the start_link() callback :(
-
-I've made by point clear, please do not take inspiration from those drivers,
-they really need fixing. And for your usecase, allowing the controller driver
-to start the link post boot just because a device on your Pixel phone comes up
-later is not a good argument. You _should_not_ define the behavior of a
-controller driver based on one platform, it is really a bad design.
-
-- Mani
-
-> > > Yes, I did go through your suggestion of async probe and that might
-> > > solve my problem of the 1 sec delay. But I would like to fix the problem
-> > > at the core.
-> > > 
-> > 
-> > There is no problem at the core. The problem is with some controller drivers.
-> > Please do not try to fix a problem which is not there. There are no _special_
-> > reasons for those 2 drivers to not define start_link() callback. I'm trying to
-> > point you in the right path, but you are always chosing the other one.
-> > 
-> > > > But again, I'm saying that not defining start_link() itself is wrong and I've
-> > > > already mentioned the reasons.
-> > > > 
-> > > > > For example, consider the intel-gw driver. The 1 sec wait time in its
-> > > > > probe path is also a waste because it explicitly starts link training
-> > > > > later in time.
-> > > > > 
-> > > > 
-> > > > I previously mentioned that the intel-gw needs fixing since there is no point in
-> > > > starting the link and waiting for it to come up in its probe() if the DWC core
-> > > > is already doing that.
-> > > > 
-> > > > - Mani
-> > > > 
-> > > > -- 
-> > > > மணிவண்ணன் சதாசிவம்
-> > > I think we are at a dead-end in terms of agreeing to a policy. I would
-> > > like the maintainers to pitch in here with their views.
-> > 
-> > I'm the maintainer of the DWC drivers that you are proposing the patch for. If
-> > you happen to spin future revision of this series, please carry:
-> > 
-> > Nacked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
-> > - Mani
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bjorn
 
