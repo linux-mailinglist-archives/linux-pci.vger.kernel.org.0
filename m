@@ -1,80 +1,81 @@
-Return-Path: <linux-pci+bounces-3137-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3138-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32B2984B167
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 10:36:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17DF284B175
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 10:38:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 565B61C20F21
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 09:36:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C9011C21F60
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 09:38:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DE3912D156;
-	Tue,  6 Feb 2024 09:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B84412E1DB;
+	Tue,  6 Feb 2024 09:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFZAAUlP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQYyh1YC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC07012CD97
-	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 09:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F58612E1D3
+	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 09:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707212212; cv=none; b=hZgNDHXjCLcAoXk1+KpISwU7cezySMeQDACxzC4erAFJnbMRzE5EI0J+dt0S72ST6q3c2MwqwYxY5grm+FHF6b7fhNeA3eztxSIOPsY/M3Y5ppBLPmWYTAzEYC1OK71cXl/NfCoDTgjPlr0lpgWbDo5q1pfmUHZRq+4jTZ/d/iI=
+	t=1707212279; cv=none; b=lS4mH/FskHP8bdAC+GKKPHItJHrBAZYSsimDTBR4KvW4U/NWLF1Y7BneNv+x+JkiMguLIde1o5TjYmjibInSCqwkTEPmF0N0+BhrBtSrE524IMKGGORzOg7ZF3zgZb9YCu/0XRuFUFkf67INDl50NOn+gdt2R68yxBeh0N3Iph4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707212212; c=relaxed/simple;
-	bh=on79fhII02mEwej/WPS02bX/q4h1znp3R1RIv7m+C8M=;
+	s=arc-20240116; t=1707212279; c=relaxed/simple;
+	bh=UFw0/tki7MzcuGpQDjCWPan97sbo8eZxmh34JYGWwvw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jh3ij9sa14QjHXXeZZEuVHoWyfVFz459yK9tt29WYXOYlwGkBXPa0Nr/A3MMpI0KkVzCHxWifLSJi2eJZlwmo0gJyar4Cy4Vlja/qcAodWFAvyBqU8loueJaEjt20PG5GMgy7T1/SHHxBrF9ecirRWGftSgVlCEkSmpFe0aZuF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OFZAAUlP; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:MIME-Version; b=EP+G4qCi4QAl8tKtXVfKFNbS94MH7d19fgvRErkW5iwKnQRj7PrOVKg3SqFbysLOes9GwCMlAr9UjzTvlN5gMxUmHLLIgtga07+AzaCXNeObw1DE10iSfu1umooNnUTxiPW4Vioi1quKo6Di2aqf1Hj7rOxMzKCdCLzGnkKVSNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LQYyh1YC; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707212209;
+	s=mimecast20190719; t=1707212275;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=on79fhII02mEwej/WPS02bX/q4h1znp3R1RIv7m+C8M=;
-	b=OFZAAUlPN2RxtqjHbVFRIKAoLUW+9yo5X4Ip6/29VDzPJyAJrl7TP3EDk2JmZVk3xb6sVa
-	7VbZg4QAsKjSsEbt7GiSZ+spyQ0dug7eiwZ4WAldVxfauQm24o298T3icF/fDH09ckLs/d
-	Og/WkujNjTzPd7ZxVjL67pnBklGGbLE=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UFw0/tki7MzcuGpQDjCWPan97sbo8eZxmh34JYGWwvw=;
+	b=LQYyh1YCgm5oJ5Dkb+QXw0Lk8lAt3jR4bka+yekYw7CDj25rRKmumB1QuEZNHdkCr7rlTy
+	NwM4b8q2CS4PIprImakYtVIpSKPGAJily6hbAYwXWwl30OnE+AbiW4WaOApOFilvjxl+sR
+	Y5ByKXmmUrrcYQWKNeXRS6I5u4BN0BA=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-eA-Uq3M7PyqR5cScHkhyXw-1; Tue, 06 Feb 2024 04:36:47 -0500
-X-MC-Unique: eA-Uq3M7PyqR5cScHkhyXw-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78313358d3bso253420685a.0
-        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 01:36:47 -0800 (PST)
+ us-mta-184-MivjGBmOPOi-SJonHXZFWg-1; Tue, 06 Feb 2024 04:37:52 -0500
+X-MC-Unique: MivjGBmOPOi-SJonHXZFWg-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-68c7b8c18f2so10245446d6.1
+        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 01:37:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707212207; x=1707817007;
+        d=1e100.net; s=20230601; t=1707212272; x=1707817072;
         h=mime-version:user-agent:content-transfer-encoding:references
          :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=on79fhII02mEwej/WPS02bX/q4h1znp3R1RIv7m+C8M=;
-        b=g5F+Q4B+ewdJ52miZYjh/Dfr0eqrn1+PdH9OKJ9sIVEmUkCiu60oD2HKlwbekIOYFK
-         tLyuL+2jQrYNB1kYmhP+2Wshkn7dCOdcpDyS57yHYt+D4K/55+EH2Ax18lU1L911STgY
-         m/ij7znj7ACy317WoSAX3GWoDFvBzgWLxYKPO2Tf6BjZHYW+qZFREm2cq7Ne3x9JNCXY
-         DKFkSwiiJZ3VZUimg7FkM2Xjyc7fIcEepsST/LgFaRmHKVoAyGH6K6qKmBptFsMKCG1w
-         oRD9ogEJY649rj4k1GuQNgUJ2By3ox7SOFGGg/r0YGpJv5iwyvTtuyikQBGIwoqkhBX5
-         5+jg==
-X-Gm-Message-State: AOJu0YyWk/1tLF5khEx1kvEWIg7z9mkoqsFJxZqqk6JHDvERMKyq7pl4
-	WU6V9Equ+N6HbNIH0Y1DjLVYrlxmgdZbF6IVroaaRuyf2HyxX2XMpq/TByeFjAf5IuFl5FGLf1N
-	l12DmLQ6JPpRxN8oJpDomDGG7Kbh3vu/GKtY478nsMgrqHMaw+sTRyI8NFw==
-X-Received: by 2002:a05:620a:2944:b0:785:9521:9603 with SMTP id n4-20020a05620a294400b0078595219603mr41469qkp.0.1707212207129;
-        Tue, 06 Feb 2024 01:36:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEkHldplqRxmO52+L+0eJA1m1uj5lNB4s/lraQFTlJXdSoQ8+eMUpZ3MxLcOt2DHo0CKDKGtg==
-X-Received: by 2002:a05:620a:2944:b0:785:9521:9603 with SMTP id n4-20020a05620a294400b0078595219603mr41440qkp.0.1707212206863;
-        Tue, 06 Feb 2024 01:36:46 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCX0eTKyaNqU4MvNt6IPt9W+TM5FdOYvSlOLajLKFA2fW8GASp50CgRgqzJy77fGHzP9yOeUwO9ikj2fYEgJJLsLQdl9kxKq4o8tc3cAK9Mel02Ms9kSK23XBQHTBJ53pmBI8N4wE+go0Fh+3IFr1rfFQuMuO99odI+3nJImFay5fb2m4vKqe1ceYf7fsj2Gf1QI0LYbv8sOVezeWygJn/VB62Niy2i7UOS7hKJe6Ixx4S+LUvUVSCigmNC3SLNy82hrPzx+DVkZdfzBvnTwlQyqBvuwwg7Th4Rsym1aD75U9qdtaMhbN9gVR5EUGLZIklbgMT6yucWQT8PlYpf4vGZjoHvStofuQGec/WBk+zb4ICzA/62QGfP8hePqOHtB366RdqbFUICUAlY+QLg6dzMsk0rH9lED0/bJdZj1DT3QURaf6UIUTvCEUkgG7ILXnHxd+VdMZIegrl/Wa9Yddyz/F8L/Rl+84nqIpP9ihh2W3z4o/kcEOwrY8Rqxa3YwnBelLSpv7ewRnSIp3Q+ULAD9vdu+BpUHuhIGNN7Fd+2LKFUrEdj1tlaJ4LA6s6EC/wnanDBWIjtGPqg/b5KG9uXlceQmehYCeO5oVUxTuihcucKTaeYrhnkQpf25uSZgry4b5OPq36tkYEQwQMtDmLF3nds/1s9S+G7cBbHlVAHIF+uUznuW+seY0FapwWP3RLh7+0x/ugrK6TiK/ryiDuWYyxzj1T1vuBaMPDhGB1DAb72Yx6ToV18nmE26WUA4kY9aueYsX38HcddJw+59lDAy6xjITysumcSLrIy+Aoke05ZoDkEgvSlEncuA5p2vQB4tsWNI8zIZFWlW94Q9jDYf2AYNUY6riqeW
+        bh=UFw0/tki7MzcuGpQDjCWPan97sbo8eZxmh34JYGWwvw=;
+        b=apgVqGsHcGo14lB+7IuGzAks5q/qlugigCEUX9TsyS/oEtZgIDjPeDklf551ZMFq/z
+         nxlqAqmrz2nqnYD8eoP+O7l7DUPFmq0sATiYWNYwYD2W2U3hgtrdbGQJYjlr1xVFJ5gQ
+         KITOXSsOvnrMKbDLabpuQvXrnuA8jHrOwGBlRQxCcBdjea6gjYhcSsMqYBTyF6WmbAEa
+         SAlQbtVUEcffn4q+Dujt+XJq/zXimnPvsF4ri2t+XaJrIo5MFvcTLNjf9GVlmJtDxfZI
+         YqYCmtFmTkN4p288SAvN+gbvAM0HUj9XHc1RnioX1H1uWKKHa//XZd1Pn1hcH59pACDL
+         bcvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVALBejxUvWzKxQz3YytgRgYwtqFIURMRrrRPT7rdRGV5mnuNgvoYW/DFE2VSufKUnxVJ/AFUJ1wPAiSfPN7wu/IdanxTxyfJ1E
+X-Gm-Message-State: AOJu0YzzMZ++ydyr8OBas6Un+gQOICUVaGdqSXLwaXxIZlGBb6vylKPG
+	yKvXR3FX/fOFMuuDdHSMDbvMSbfKRSgifOEHFFxmjUmv3YnnkjKkMOHdjo+IyyD4BAUmi4WKjLg
+	g0DQv9N3kWh/s8OcTRa/NKFkV+LA/pA1mLTsia6cy2HreUh0JtCtCyyA2Nw==
+X-Received: by 2002:a0c:fd81:0:b0:68c:892d:3580 with SMTP id p1-20020a0cfd81000000b0068c892d3580mr1906094qvr.2.1707212272243;
+        Tue, 06 Feb 2024 01:37:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFf8jMGPfr9HK+wkVYLwf6cn8LeUVvvC77sfjQ9swGgq33sBn/RFP3wypkxfuqD7DIvGYoWnw==
+X-Received: by 2002:a0c:fd81:0:b0:68c:892d:3580 with SMTP id p1-20020a0cfd81000000b0068c892d3580mr1906059qvr.2.1707212271977;
+        Tue, 06 Feb 2024 01:37:51 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWfUoaFEr7eaRe5ycg1DbG6mUeacI7DqXnDEQAqR/uOtVZi5iFHBIfAHWtmdID07LMES9Vqtbf3/fDfcaZBNv9q/LKcJCvpZ+uQgCEVeMTU7NVUBYA6uY3aLynfiw2uUhE6tdAOuqYInOKJAQMomBkV5l/VJHC3+6tIX1TH85D9DfaFx4gpu4oHJ9rLu6wOO0BQ0v7WkpB66r/8MT495M3IZvXMbKXAho54eYMqxSohWmzS4Zd18vYFR4tA84odtM96MQSFKSOl66yhSwJICX8VzbMZ86CzFpYkQOtXuq4de74sUrDbH2gwURZHiKSoRT+JAmDyPQmqGzsTWGvejl0gWUwHvuLSpEMqIhBpD0ajsqFXhituE+IuAVn9KzdCPnsmVJsflajKjmzFfzx68lxghXJEfEVQcBMshWKP+AkEELVUdAv396VdpP5cA1WWIjG78Eo70CI60B+/VpjL+S7Gd66bOCtvZNl1TF8bp6nsW/g7ptgrScj9NXW78jFSRoABrhjp6hePZSYF5zjuX/QCUCpgLIh/t/9sqHaAjQ3eLvBVeYWIl6Q3glSL6Z2/hF7z65mnsPfgT0Q1j2b/ZRVPyzV0wIt+YyUirpjo5VPamlgylLEZoE52w/gYK37P7Tz/dx3lm+IGXJl/voSUee/Jo89OYHX2E9Tg2064/fHk9rU2p93kU70XkZ0op6YcaD5MRTq8NgaDFjOfnUEOGsKHwv0WaugrX0/jDwkA8bmBGJuaYo+1TM+wHVksIRvhJJ+G+MLpXKZOgqyPD16p8gvlfK2Lc81+EI4sm4Ef2kz7Oz2nXhnO3UB1jo36t2eCbozlgmx4xz7ijA==
 Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id x7-20020a05620a0ec700b0078552f53b85sm750891qkm.86.2024.02.06.01.36.43
+        by smtp.gmail.com with ESMTPSA id bo14-20020a05621414ae00b0068c67a3647dsm846048qvb.76.2024.02.06.01.37.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 01:36:46 -0800 (PST)
-Message-ID: <1797620e544e77cad9a8cc86d9145e1046d84e6b.camel@redhat.com>
-Subject: Re: [PATCH v6 1/4] lib/pci_iomap.c: fix cleanup bug in pci_iounmap()
+        Tue, 06 Feb 2024 01:37:51 -0800 (PST)
+Message-ID: <20c967ffac2cec6c9d89017d606967551b30d20d.camel@redhat.com>
+Subject: Re: [PATCH v6 4/4] PCI: Move devres code from pci.c to devres.c
 From: Philipp Stanner <pstanner@redhat.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
@@ -90,11 +91,10 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
  Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
  Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
  dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, stable@vger.kernel.org,  Arnd Bergmann
- <arnd@kernel.org>
-Date: Tue, 06 Feb 2024 10:36:42 +0100
-In-Reply-To: <20240131210944.GA599710@bhelgaas>
-References: <20240131210944.GA599710@bhelgaas>
+ linux-arch@vger.kernel.org, stable@vger.kernel.org
+Date: Tue, 06 Feb 2024 10:37:47 +0100
+In-Reply-To: <20240131211235.GA599807@bhelgaas>
+References: <20240131211235.GA599807@bhelgaas>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
@@ -105,43 +105,46 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-01-31 at 15:09 -0600, Bjorn Helgaas wrote:
-> On Wed, Jan 31, 2024 at 10:00:20AM +0100, Philipp Stanner wrote:
-> > The #ifdef for the ioport-ranges accidentally also guards
-> > iounmap(),
-> > potentially compiling an empty function. This would cause the
-> > mapping to
-> > be leaked.
-> >=20
-> > Move the guard so that iounmap() will always be part of the
-> > function.
+On Wed, 2024-01-31 at 15:12 -0600, Bjorn Helgaas wrote:
+> On Wed, Jan 31, 2024 at 10:00:23AM +0100, Philipp Stanner wrote:
+> > The file pci.c is very large and contains a number of devres-
+> > functions.
+> > These functions should now reside in devres.c
+> > ...
 >=20
-> I tweaked the subject and commit log to be more explicit about what
-> the bug is.=C2=A0 Let me know if I got it wrong:
-
-Mostly correct IMO
-
+> > +struct pci_devres *find_pci_dr(struct pci_dev *pdev)
+> > +{
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pci_is_managed(pdev))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0return devres_find(&pdev->dev, pcim_release, NULL,
+> > NULL);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
+> > +}
+> > +EXPORT_SYMBOL(find_pci_dr);
 >=20
-> =C2=A0 pci_iounmap(): Fix MMIO mapping leak
->=20
-> =C2=A0 The #ifdef ARCH_HAS_GENERIC_IOPORT_MAP accidentally also guards
-> iounmap(),
-> =C2=A0 which means MMIO mappings are leaked.
+> find_pci_dr() was not previously exported, and I don't think it needs
+> to be exported now, so I dropped the EXPORT_SYMBOL.=C2=A0 It's still
+> usable
+> inside drivers/pci since it's declared in drivers/pci/pci.h; it's
+> just
+> not usable from modules.=C2=A0 Let me know if I missed something.
 
-nit: I wasn't entirely sure when they are actually leaked, just that
-they _could_ be leaked. To know for sure we'd need to search who sets
-ARCH_WANTS_GENERIC_PCI_IOUNMAP without setting
-ARCH_HAS_GENERIC_IOPORT_MAP.
+No, ACK, you are right.
+I forgot this since find_pci_dr() is removed later anyways.
 
-I think your formulation should be fine, though, since it's definitely
-a bug.
 
 P.
 
+
 >=20
-> =C2=A0 Move the guard so we call iounmap() for MMIO mappings.
->=20
-> Bjorn
+> > -static struct pci_devres *find_pci_dr(struct pci_dev *pdev)
+> > -{
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pci_is_managed(pdev))
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0return devres_find(&pdev->dev, pcim_release, NULL,
+> > NULL);
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
+> > -}
 >=20
 
 
