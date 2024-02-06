@@ -1,114 +1,147 @@
-Return-Path: <linux-pci+bounces-3136-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3137-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4061B84B110
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 10:24:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32B2984B167
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 10:36:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EFDD4285D32
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 09:24:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 565B61C20F21
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 09:36:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8E9212DD93;
-	Tue,  6 Feb 2024 09:23:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DE3912D156;
+	Tue,  6 Feb 2024 09:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d6OkSwdk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFZAAUlP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C1012D151;
-	Tue,  6 Feb 2024 09:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC07012CD97
+	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 09:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707211406; cv=none; b=dctInU3eW0OPGJtvMU4BWA3DzgsZHOYdcSzjzhbgeyr2l9hGIr7abWumeQpci5hKHfAuwv/vuVWOtjSEt5m7iHgpyvJc8H4B7+w5waCASgu4Isdw3tg7lkN30KTDqnFMhawTu+FH5A/UNcETJxjLjMt5V3AP3fl0uXTWKhdw4Es=
+	t=1707212212; cv=none; b=hZgNDHXjCLcAoXk1+KpISwU7cezySMeQDACxzC4erAFJnbMRzE5EI0J+dt0S72ST6q3c2MwqwYxY5grm+FHF6b7fhNeA3eztxSIOPsY/M3Y5ppBLPmWYTAzEYC1OK71cXl/NfCoDTgjPlr0lpgWbDo5q1pfmUHZRq+4jTZ/d/iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707211406; c=relaxed/simple;
-	bh=OsUGkPdqDQyuFkmYKqt4shx9dyA+PqArb74I3usMKzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3N9ENaJDIGN/jUS+FGgfZZ47NqmYyAhxOWeCyPWkn8iqHvc+3fERTEc5r9KqxwkTyY9AzkEfFiuSQv1KoHDRHnvUWyayCp4IcKKwJbzKm2YkOKLGeHq9+XMoCu0En6EDKVdKpouuSv8sj2INxAHXvBp8juDksMYS2kenpSmo5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d6OkSwdk; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707211406; x=1738747406;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OsUGkPdqDQyuFkmYKqt4shx9dyA+PqArb74I3usMKzs=;
-  b=d6OkSwdkdyGIwCLijKgx2Xovsex2dLdk/Z+1wVFfVuV2xK1k/nFRocp7
-   BC1K8dTdzNzADxbKiEhHIpx7T51W0kF2NVmsCod9bY/hRuhhGDdYsA5PC
-   78tTvE1f2FzUj9vUHv5x7SNXVY2bthAKkI+UvoHWPo8ak8tz9T82uT+53
-   2yOfclKaYcYSXYw8CHhsfo2fOdXrpjAWRcdRVx4mwEiKGef97FCqlP89W
-   WGCNJ3el8cBPJ4dSF9J8zEyJMKT9a3k+uCTdEkKI8+ZMgm2nM3dKT8lib
-   4dJVo42BgI7PpPzrxKw062M7bTk7yIzj46xqsC9C8jAcN5gfapm5l3Vuj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="4586667"
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="4586667"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:23:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,246,1701158400"; 
-   d="scan'208";a="5584235"
-Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.196])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 01:23:19 -0800
-Date: Tue, 6 Feb 2024 10:23:17 +0100
-From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-To: Onkarnarth <onkarnath.1@samsung.com>
-Cc: rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-	viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-	r.thapliyal@samsung.com, maninder1.s@samsung.com
-Subject: Re: [PATCH 2/2] kernel: sched: print errors with %pe for better
- readability of logs
-Message-ID: <ZcH6hR+QnjKsv7+4@linux.intel.com>
-References: <20240206051120.4173475-1-onkarnath.1@samsung.com>
- <CGME20240206051402epcas5p2ae3737fc0d71ba1d7a7f8bee90438ff2@epcas5p2.samsung.com>
- <20240206051120.4173475-2-onkarnath.1@samsung.com>
+	s=arc-20240116; t=1707212212; c=relaxed/simple;
+	bh=on79fhII02mEwej/WPS02bX/q4h1znp3R1RIv7m+C8M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jh3ij9sa14QjHXXeZZEuVHoWyfVFz459yK9tt29WYXOYlwGkBXPa0Nr/A3MMpI0KkVzCHxWifLSJi2eJZlwmo0gJyar4Cy4Vlja/qcAodWFAvyBqU8loueJaEjt20PG5GMgy7T1/SHHxBrF9ecirRWGftSgVlCEkSmpFe0aZuF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OFZAAUlP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707212209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=on79fhII02mEwej/WPS02bX/q4h1znp3R1RIv7m+C8M=;
+	b=OFZAAUlPN2RxtqjHbVFRIKAoLUW+9yo5X4Ip6/29VDzPJyAJrl7TP3EDk2JmZVk3xb6sVa
+	7VbZg4QAsKjSsEbt7GiSZ+spyQ0dug7eiwZ4WAldVxfauQm24o298T3icF/fDH09ckLs/d
+	Og/WkujNjTzPd7ZxVjL67pnBklGGbLE=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-496-eA-Uq3M7PyqR5cScHkhyXw-1; Tue, 06 Feb 2024 04:36:47 -0500
+X-MC-Unique: eA-Uq3M7PyqR5cScHkhyXw-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78313358d3bso253420685a.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 01:36:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707212207; x=1707817007;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=on79fhII02mEwej/WPS02bX/q4h1znp3R1RIv7m+C8M=;
+        b=g5F+Q4B+ewdJ52miZYjh/Dfr0eqrn1+PdH9OKJ9sIVEmUkCiu60oD2HKlwbekIOYFK
+         tLyuL+2jQrYNB1kYmhP+2Wshkn7dCOdcpDyS57yHYt+D4K/55+EH2Ax18lU1L911STgY
+         m/ij7znj7ACy317WoSAX3GWoDFvBzgWLxYKPO2Tf6BjZHYW+qZFREm2cq7Ne3x9JNCXY
+         DKFkSwiiJZ3VZUimg7FkM2Xjyc7fIcEepsST/LgFaRmHKVoAyGH6K6qKmBptFsMKCG1w
+         oRD9ogEJY649rj4k1GuQNgUJ2By3ox7SOFGGg/r0YGpJv5iwyvTtuyikQBGIwoqkhBX5
+         5+jg==
+X-Gm-Message-State: AOJu0YyWk/1tLF5khEx1kvEWIg7z9mkoqsFJxZqqk6JHDvERMKyq7pl4
+	WU6V9Equ+N6HbNIH0Y1DjLVYrlxmgdZbF6IVroaaRuyf2HyxX2XMpq/TByeFjAf5IuFl5FGLf1N
+	l12DmLQ6JPpRxN8oJpDomDGG7Kbh3vu/GKtY478nsMgrqHMaw+sTRyI8NFw==
+X-Received: by 2002:a05:620a:2944:b0:785:9521:9603 with SMTP id n4-20020a05620a294400b0078595219603mr41469qkp.0.1707212207129;
+        Tue, 06 Feb 2024 01:36:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEkHldplqRxmO52+L+0eJA1m1uj5lNB4s/lraQFTlJXdSoQ8+eMUpZ3MxLcOt2DHo0CKDKGtg==
+X-Received: by 2002:a05:620a:2944:b0:785:9521:9603 with SMTP id n4-20020a05620a294400b0078595219603mr41440qkp.0.1707212206863;
+        Tue, 06 Feb 2024 01:36:46 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCX0eTKyaNqU4MvNt6IPt9W+TM5FdOYvSlOLajLKFA2fW8GASp50CgRgqzJy77fGHzP9yOeUwO9ikj2fYEgJJLsLQdl9kxKq4o8tc3cAK9Mel02Ms9kSK23XBQHTBJ53pmBI8N4wE+go0Fh+3IFr1rfFQuMuO99odI+3nJImFay5fb2m4vKqe1ceYf7fsj2Gf1QI0LYbv8sOVezeWygJn/VB62Niy2i7UOS7hKJe6Ixx4S+LUvUVSCigmNC3SLNy82hrPzx+DVkZdfzBvnTwlQyqBvuwwg7Th4Rsym1aD75U9qdtaMhbN9gVR5EUGLZIklbgMT6yucWQT8PlYpf4vGZjoHvStofuQGec/WBk+zb4ICzA/62QGfP8hePqOHtB366RdqbFUICUAlY+QLg6dzMsk0rH9lED0/bJdZj1DT3QURaf6UIUTvCEUkgG7ILXnHxd+VdMZIegrl/Wa9Yddyz/F8L/Rl+84nqIpP9ihh2W3z4o/kcEOwrY8Rqxa3YwnBelLSpv7ewRnSIp3Q+ULAD9vdu+BpUHuhIGNN7Fd+2LKFUrEdj1tlaJ4LA6s6EC/wnanDBWIjtGPqg/b5KG9uXlceQmehYCeO5oVUxTuihcucKTaeYrhnkQpf25uSZgry4b5OPq36tkYEQwQMtDmLF3nds/1s9S+G7cBbHlVAHIF+uUznuW+seY0FapwWP3RLh7+0x/ugrK6TiK/ryiDuWYyxzj1T1vuBaMPDhGB1DAb72Yx6ToV18nmE26WUA4kY9aueYsX38HcddJw+59lDAy6xjITysumcSLrIy+Aoke05ZoDkEgvSlEncuA5p2vQB4tsWNI8zIZFWlW94Q9jDYf2AYNUY6riqeW
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id x7-20020a05620a0ec700b0078552f53b85sm750891qkm.86.2024.02.06.01.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 01:36:46 -0800 (PST)
+Message-ID: <1797620e544e77cad9a8cc86d9145e1046d84e6b.camel@redhat.com>
+Subject: Re: [PATCH v6 1/4] lib/pci_iomap.c: fix cleanup bug in pci_iounmap()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
+ <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
+ <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
+ Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
+ Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
+ <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
+ Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
+ dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org, stable@vger.kernel.org,  Arnd Bergmann
+ <arnd@kernel.org>
+Date: Tue, 06 Feb 2024 10:36:42 +0100
+In-Reply-To: <20240131210944.GA599710@bhelgaas>
+References: <20240131210944.GA599710@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206051120.4173475-2-onkarnath.1@samsung.com>
 
-On Tue, Feb 06, 2024 at 10:41:20AM +0530, Onkarnarth wrote:
-> From: Onkarnath <onkarnath.1@samsung.com>
-> 
-> instead of printing errros as a number(%ld), it's better to print in string
-> format for better readability of logs.
-> 
-> Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+On Wed, 2024-01-31 at 15:09 -0600, Bjorn Helgaas wrote:
+> On Wed, Jan 31, 2024 at 10:00:20AM +0100, Philipp Stanner wrote:
+> > The #ifdef for the ioport-ranges accidentally also guards
+> > iounmap(),
+> > potentially compiling an empty function. This would cause the
+> > mapping to
+> > be leaked.
+> >=20
+> > Move the guard so that iounmap() will always be part of the
+> > function.
+>=20
+> I tweaked the subject and commit log to be more explicit about what
+> the bug is.=C2=A0 Let me know if I got it wrong:
 
-> ---
->  kernel/sched/cpufreq_schedutil.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index eece6244f9d2..2c42eaa56fa3 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -671,7 +671,7 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
->  				"sugov:%d",
->  				cpumask_first(policy->related_cpus));
->  	if (IS_ERR(thread)) {
-> -		pr_err("failed to create sugov thread: %ld\n", PTR_ERR(thread));
-> +		pr_err("failed to create sugov thread: %pe\n", thread);
->  		return PTR_ERR(thread);
->  	}
->  
-> -- 
-> 2.25.1
-> 
-> 
+Mostly correct IMO
+
+>=20
+> =C2=A0 pci_iounmap(): Fix MMIO mapping leak
+>=20
+> =C2=A0 The #ifdef ARCH_HAS_GENERIC_IOPORT_MAP accidentally also guards
+> iounmap(),
+> =C2=A0 which means MMIO mappings are leaked.
+
+nit: I wasn't entirely sure when they are actually leaked, just that
+they _could_ be leaked. To know for sure we'd need to search who sets
+ARCH_WANTS_GENERIC_PCI_IOUNMAP without setting
+ARCH_HAS_GENERIC_IOPORT_MAP.
+
+I think your formulation should be fine, though, since it's definitely
+a bug.
+
+P.
+
+>=20
+> =C2=A0 Move the guard so we call iounmap() for MMIO mappings.
+>=20
+> Bjorn
+>=20
+
 
