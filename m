@@ -1,233 +1,150 @@
-Return-Path: <linux-pci+bounces-3176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E421D84BE66
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 21:06:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BA3284BF2A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 22:25:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10D2F1C2285F
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 20:06:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2543B1F2517E
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 21:25:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84C314AA9;
-	Tue,  6 Feb 2024 20:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79CFF1B94D;
+	Tue,  6 Feb 2024 21:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8/nwTvK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kg7PyCXe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8D21AAD3
-	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 20:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11D21B94C;
+	Tue,  6 Feb 2024 21:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707249997; cv=none; b=MhpvR7hTJ2lmiCCTae+HRgJVQOpgqtRjbU6hrMJLA7iZVijg/vwM2Mz3dJvkxD2SmzzyadiTX2XqggRSCupuxai9b1Kt/rfuwzwSeCZtc9teC6gSweftoAc8VvCVGhLnDg+nIqSbaHLOL7THehfaZ03zWgEOLKVz2fTbi06qRHE=
+	t=1707254734; cv=none; b=pj+W58G/nTpUVqyffG0xUo9Dk/h3QWlvmIAWQEi7FrDqv+2jjFMxtt3+R4e5uzB+fdk7/ht3dGmFMpHVRqor5gMgTBqA2/9ic+G01Q7flT0daWWXWD74ZcUMYEI78EBqC98tyEH4iXvfVTIQRo75btYBEo4PvLy6HOTStRX3NgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707249997; c=relaxed/simple;
-	bh=PlwzN8x3eCddfNLwl0tQFZUsWaNW3CGdFeSD9FE45xU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hE53Lf2UNFbDRPZoEJjbJtxyg5aQLPs8G3fimY7z3Awi+vAh2tqXiEzEcXzw7871mYI+6pjYUEbR4/xwyRhN5NGqwjh3VmFeEDSbYyG5BXkXROJzIj09+W4vfs3DBfdtuVVRZvqxguXt2aFRCXX/igdkK/PbnsHLEq5svE+zLEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U8/nwTvK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707249993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i/cd++jXszRXmfjXBwbNRqBwPxegiEkXzkrYtiCv0c8=;
-	b=U8/nwTvKJsfMtqE9DdVM4mDRtMuivNQg2jfo2G/cHpK1RbI1COhuvw/RxuuqPFex5P6eFv
-	vv/X9pdbysl+OBi18aXTPVEjjOjBcA97JyPUdiWTIVUzZRDwHWIk1qnVgW2IJWaDKCXBj4
-	IKaota8H0uM5CBErSTBQ59JJ32ITGTc=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-l-TPCUeCMUGZseU_Igle5g-1; Tue, 06 Feb 2024 15:06:31 -0500
-X-MC-Unique: l-TPCUeCMUGZseU_Igle5g-1
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-598b4d37248so6217263eaf.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 12:06:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707249991; x=1707854791;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i/cd++jXszRXmfjXBwbNRqBwPxegiEkXzkrYtiCv0c8=;
-        b=byZ67n3HS9HY5beZIl6fikwVmQY7IP4uTp2V+r6L8qrC90IAvlGyg0RDnTB9eMM3ej
-         PX5iDMnGWaAfvOPJ1L4bfBbfrP6ueC56E4AWihezK2E4E4IMp3sVzUioN4CyYxBgkBIm
-         PpoMWenqhbrcnRxqPIzeVMAPRfDrrHcFtBgI9ghP4Ey70fhVmyLPSv927j050HF7ftsr
-         QOKGuxYTT69Lb12+4GrCYE561ijiL0A8B+2HHwaeA/OaL7aV1jaY8vU9JP7ZQQzT/bYL
-         gHVXk25+RcvXeUo+55T8bFGEZ3NiE1QVYwpL0/Z9mIn9j1Wpm6cPp7zVtv2dBkMOkNym
-         kIXg==
-X-Gm-Message-State: AOJu0YyF8FrszW80B6ERknkUrwdtW3OOEvZ8yIAZeezuWll1/8turNUG
-	2HmzVMCY+/ZfO4sieEFeAQgeLZY/HQ+BI3qfKG1pyPOoWiTJbNzMttaAIOVDiVGmC3N0Hw2HN+7
-	ctD2RjDCKGK/gzuLOWIPeK5A6wiOHBWDYZXJKOhqEjLiZlbL2lYx4y+Brlw==
-X-Received: by 2002:a4a:8112:0:b0:59c:8b80:fe3e with SMTP id b18-20020a4a8112000000b0059c8b80fe3emr3080584oog.7.1707249991150;
-        Tue, 06 Feb 2024 12:06:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFJwnWL1LGz3lFyVKe1dlWAr2U11D5Zjkj6P8Frn4x+0vRY5zeaZeq+tu6iHoegpEk7pc/9Bg==
-X-Received: by 2002:a4a:8112:0:b0:59c:8b80:fe3e with SMTP id b18-20020a4a8112000000b0059c8b80fe3emr3080568oog.7.1707249990851;
-        Tue, 06 Feb 2024 12:06:30 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXTlxv9RzqLCQNh9HJ7dSEM6u9dfW+aPvwY4ta3GiTxq7u4+IR4p/bnaJcGc57IteapASuaQESeyIaa2RM2mFIzrI/znQlTiv6yqgA2ckgbIoRE98/kvZAK5X3Rt9+nXNOjaN4IzNMNTzulBSnALH/JACVxliCZLGNHU9vphCiIsWNRmKyFOFkv83DwTzOsxnD5JdtO8NnVAn5ThS61u6+jU2pzf0aFR3EP/pFLOCckE7lbI2CZdG69P13Byh78UP5WRUa4cze+bTeQXp436I+w7qHOdPcAN6TtjPZIVmvdtq9bl1DL6y0U/4pcUifCDS5AxdynY5yGWWC3zmt3Ex8NSyhauqfLa/BuEd38oeI=
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id h1-20020a4a6f01000000b0059a975f3b8esm433475ooc.33.2024.02.06.12.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 12:06:30 -0800 (PST)
-Date: Tue, 6 Feb 2024 13:06:27 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: "Liu, Monk" <Monk.Liu@amd.com>
-Cc: Leon Romanovsky <leon@kernel.org>, "Deng, Emily" <Emily.Deng@amd.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
- <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, "Jiang, Jerry (SW)" <Jerry.Jiang@amd.com>, "Zhang,
- Andy" <Andy.Zhang@amd.com>, "Chang, HaiJun" <HaiJun.Chang@amd.com>, "Chen,
- Horace" <Horace.Chen@amd.com>, "Yin, ZhenGuo (Chris)" <ZhenGuo.Yin@amd.com>
-Subject: Re: [PATCH 1/2] PCI: Add VF reset notification to PF's VFIO user
- mode driver
-Message-ID: <20240206130627.5c10fec7.alex.williamson@redhat.com>
-In-Reply-To: <BL1PR12MB526972B4E7CF6B2C993A2E6984462@BL1PR12MB5269.namprd12.prod.outlook.com>
-References: <20240205071538.2665628-1-Emily.Deng@amd.com>
-	<20240205090438.GB6294@unreal>
-	<BL1PR12MB526972B4E7CF6B2C993A2E6984462@BL1PR12MB5269.namprd12.prod.outlook.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1707254734; c=relaxed/simple;
+	bh=Syy1MLZwGxTTCjGzcJtKt49dnx/gi9kybwgAMuY3iWo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Q4kjKJBMhpxmNxD9kc6FRTJUvBeQTZapg416o3GU8vObFDQXwD41Fk6tFbK9oqiF4ZNoysLmuMr+1VpPZz7egygREQjLe5Sl+zuockzfqp/lLXzmNtG7Sj2sHIWGL+HPKBVR1vL9D3o61PBGsKXEe0EuMOD/ugbP9sXgT0ElZDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kg7PyCXe; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707254732; x=1738790732;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=Syy1MLZwGxTTCjGzcJtKt49dnx/gi9kybwgAMuY3iWo=;
+  b=kg7PyCXe/255fWSgoAtewt12SeuRM/EOtLRCZLnwh44YWYlzTJO0nCMv
+   5MneCe4TLBFT4QelaAkjeeuEKSO5fuWZze0OYsxwhucUVoXY/YF3g3G9C
+   8GCKmv5SeLlQWjgD9AO73Tp4jGTBzhgQ+RB28PTp3YQS3j0qRnvfFL7hG
+   2Uzwhbrlz8eIQu7HLjLKTMN7ALM0Y7YJQyH8slpMjmDH8asq5RNLsR9vw
+   hjNw9lOapEXFV5p2SlCkA+WpaMtoc9fmChFLYcXAa6ly98dZLztlvAgep
+   AlkIa+zDK/ryYRZWilW78z8jGiAV3CskJDcnRflC99zmyZ2TY1rsFcxt3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="11432748"
+X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
+   d="scan'208";a="11432748"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 13:25:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
+   d="scan'208";a="5765875"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 13:25:30 -0800
+Received: from dbhadrax-mobl5.amr.corp.intel.com (unknown [10.255.229.168])
+	by linux.intel.com (Postfix) with ESMTP id AFF27580DB9;
+	Tue,  6 Feb 2024 13:25:29 -0800 (PST)
+Message-ID: <9cfc65c594deef33f24b60a66b7c78c742da7203.camel@linux.intel.com>
+Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
+ PCIe Root Port and NVMe
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Bjorn Helgaas <helgaas@kernel.org>, puranjay12@gmail.com
+Cc: Jian-Hong Pan <jhp@endlessos.org>, Johan Hovold <johan@kernel.org>, Mika
+ Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Nirmal Patel
+ <nirmal.patel@linux.intel.com>, Jonathan Derrick
+ <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux@endlessos.org
+Date: Tue, 06 Feb 2024 13:25:29 -0800
+In-Reply-To: <02938148545933dc9865ddbc5551e3e8a579d57e.camel@linux.intel.com>
+References: <20240205224215.GA829734@bhelgaas>
+	 <02938148545933dc9865ddbc5551e3e8a579d57e.camel@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 6 Feb 2024 04:08:18 +0000
-"Liu, Monk" <Monk.Liu@amd.com> wrote:
+Adding Puranjay
 
-> [AMD Official Use Only - General]
->=20
-> Hi Leon
->=20
-> The thing is when qemu reset a VM it calls vfio=E2=80=99s reset ioctl to =
+On Mon, 2024-02-05 at 15:05 -0800, David E. Box wrote:
+> On Mon, 2024-02-05 at 16:42 -0600, Bjorn Helgaas wrote:
+> > On Mon, Feb 05, 2024 at 11:37:16AM -0800, David E. Box wrote:
+> > > On Fri, 2024-02-02 at 18:05 -0600, Bjorn Helgaas wrote:
+> > > > On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
+> > > ...
+> >=20
+> > > > > @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_de=
+v
+> > > > > *pdev,
+> > > > > void *userdata)
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_write_config_=
+dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
+> > > > > ltr_reg);
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_info(pdev, "V=
+MD: Default LTR value set by driver\n");
+> > > >=20
+> > > > You're not changing this part, and I don't understand exactly how L=
+TR
+> > > > works, but it makes me a little bit queasy to read "set the LTR val=
+ue
+> > > > to the maximum required to allow the deepest power management
+> > > > savings" and then we set the max snoop values to a fixed constant.
+> > > >=20
+> > > > I don't think the goal is to "allow the deepest power savings"; I
+> > > > think it's to enable L1.2 *when the device has enough buffering to
+> > > > absorb L1.2 entry/exit latencies*.
+> > > >=20
+> > > > The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set this to
+> > > > the platform's maximum supported latency or less," so it seems like
+> > > > that value must be platform-dependent, not fixed.
+> > > >=20
+> > > > And I assume the "_DSM for Latency Tolerance Reporting" is part of =
 the
-> given VF device, and in kernel the VFIO-pci module will do the reset
-> to that VF device via its PCI config space register, but
-> unfortunately our VF GPU isnot designed to support those
-> =E2=80=9Creset=E2=80=9D/=E2=80=9Dflr=E2=80=9D commands =E2=80=A6 not supp=
-orted by the VF, (and even many PF
-> cannot handle those commands well)
-
-PFs are not required to implement FLR, VFs are.
-
-SR-IOV spec, rev. 1.1:
-
-	2.2.2. FLR That Targets a VF
-
-	VFs must support Function Level Reset (FLR).
-
+> > > > way to get those platform-dependent values, but Linux doesn't actua=
+lly
+> > > > use that yet.
+> > >=20
+> > > This may indeed be the best way but we need to double check with our
+> > > BIOS folks.=C2=A0 AFAIK BIOS writes the LTR values directly so there
+> > > hasn't been a need to use this _DSM. But under VMD the ports are
+> > > hidden from BIOS which is why we added it here. I've brought up the
+> > > question internally to find out how Windows handles the DSM and to
+> > > get a recommendation from our firmware leads.
+> >=20
+> > We want Linux to be able to program LTR itself, don't we?=C2=A0 We
+> > shouldn't have to rely on firmware to do it.=C2=A0 If Linux can't do
+> > it, hot-added devices aren't going to be able to use L1.2, right?
 >=20
-> So the idea we can cook up is to move those Vf=E2=80=99s reset notificati=
-on
-> to our PF driver (which is a user mode driver running on PF=E2=80=99s VFIO
-> arch), and our user mode driver can program HW and do the reset for
-> that VF.
+> Agreed. We just want to make sure we are not conflicting with what BIOS m=
+ay be
+> doing.
 
-The PF driver being able to arbitrarily reset a VF device provided to
-another userspace process doesn't sound like separate, isolated
-devices.  What else can the PF access?
+So the feedback is to run the _DSM and just overwrite any BIOS values. Look=
+ing
+up the _DSM I saw there was an attempt to upstream this 4 years ago [1]. I'=
+m not
+sure why the effort stalled but we can pick up this work again.
 
-As noted in my other reply, vf-tokens should not be normalized and
-users of VFs provided by third party userspace PF drivers should
-consider the device no less tainted than if it were provided by an
-out-of-tree kernel driver.
-
-The idea to virtualize FLR on the VF to resolve the hardware defect is a
-good one, but it should be done in the context of a vfio-pci variant
-driver.  Thanks,
-
-Alex
-
-
-> From: Leon Romanovsky <leon@kernel.org>
-> Date: Monday, February 5, 2024 at 17:04
-> To: Deng, Emily <Emily.Deng@amd.com>
-> Cc: bhelgaas@google.com <bhelgaas@google.com>,
-> alex.williamson@redhat.com <alex.williamson@redhat.com>,
-> linux-pci@vger.kernel.org <linux-pci@vger.kernel.org>,
-> linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>,
-> kvm@vger.kernel.org <kvm@vger.kernel.org>, Jiang, Jerry (SW)
-> <Jerry.Jiang@amd.com>, Zhang, Andy <Andy.Zhang@amd.com>, Chang,
-> HaiJun <HaiJun.Chang@amd.com>, Liu, Monk <Monk.Liu@amd.com>, Chen,
-> Horace <Horace.Chen@amd.com>, Yin, ZhenGuo (Chris)
-> <ZhenGuo.Yin@amd.com> Subject: Re: [PATCH 1/2] PCI: Add VF reset
-> notification to PF's VFIO user mode driver On Mon, Feb 05, 2024 at
-> 03:15:37PM +0800, Emily Deng wrote:
-> > VF doesn't have the ability to reset itself completely which will
-> > cause the hardware in unstable state. So notify PF driver when the
-> > VF has been reset to let the PF resets the VF completely, and
-> > remove the VF out of schedule. =20
->=20
->=20
-> I'm sorry but this explanation is not different from the previous
-> version. Please provide a better explanation of the problem, why it is
-> needed, which VFs need and can't reset themselves, how and why it
-> worked before e.t.c.
->=20
-> In addition, please follow kernel submission guidelines, write
-> changelong, add versions, cover letter e.t.c.
->=20
-> Thanks
->=20
-> >
-> > How to implement this?
-> > Add the reset callback function in pci_driver
-> >
-> > Implement the callback functin in VFIO_PCI driver.
-> >
-> > Add the VF RESET IRQ for user mode driver to let the user mode
-> > driver know the VF has been reset.
-> >
-> > Signed-off-by: Emily Deng <Emily.Deng@amd.com>
-> > ---
-> >  drivers/pci/pci.c   | 8 ++++++++
-> >  include/linux/pci.h | 1 +
-> >  2 files changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 60230da957e0..aca937b05531 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -4780,6 +4780,14 @@ EXPORT_SYMBOL_GPL(pcie_flr);
-> >   */
-> >  int pcie_reset_flr(struct pci_dev *dev, bool probe)
-> >  {
-> > +     struct pci_dev *pf_dev;
-> > +
-> > +     if (dev->is_virtfn) {
-> > +             pf_dev =3D dev->physfn;
-> > +             if (pf_dev->driver->sriov_vf_reset_notification)
-> > +
-> > pf_dev->driver->sriov_vf_reset_notification(pf_dev, dev);
-> > +     }
-> > +
-> >        if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-> >                return -ENOTTY;
-> >
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index c69a2cc1f412..4fa31d9b0aa7 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -926,6 +926,7 @@ struct pci_driver {
-> >        int  (*sriov_configure)(struct pci_dev *dev, int num_vfs);
-> > /* On PF */ int  (*sriov_set_msix_vec_count)(struct pci_dev *vf,
-> > int msix_vec_count); /* On PF */ u32
-> > (*sriov_get_vf_total_msix)(struct pci_dev *pf);
-> > +     void  (*sriov_vf_reset_notification)(struct pci_dev *pf,
-> > struct pci_dev *vf); const struct pci_error_handlers *err_handler;
-> >        const struct attribute_group **groups;
-> >        const struct attribute_group **dev_groups;
-> > --
-> > 2.36.1
-> >
-> > =20
-
+https://patchwork.kernel.org/project/linux-pci/patch/20201015080311.7811-1-=
+puranjay12@gmail.com/
 
