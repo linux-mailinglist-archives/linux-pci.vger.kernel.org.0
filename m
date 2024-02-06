@@ -1,150 +1,214 @@
-Return-Path: <linux-pci+bounces-3177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BA3284BF2A
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 22:25:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 257B484BFCE
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 23:07:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2543B1F2517E
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 21:25:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4ACF31C22657
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 22:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79CFF1B94D;
-	Tue,  6 Feb 2024 21:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A386E1BC30;
+	Tue,  6 Feb 2024 22:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kg7PyCXe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2rz6brI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11D21B94C;
-	Tue,  6 Feb 2024 21:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE0F1BF27;
+	Tue,  6 Feb 2024 22:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707254734; cv=none; b=pj+W58G/nTpUVqyffG0xUo9Dk/h3QWlvmIAWQEi7FrDqv+2jjFMxtt3+R4e5uzB+fdk7/ht3dGmFMpHVRqor5gMgTBqA2/9ic+G01Q7flT0daWWXWD74ZcUMYEI78EBqC98tyEH4iXvfVTIQRo75btYBEo4PvLy6HOTStRX3NgE=
+	t=1707257237; cv=none; b=dbHjhuwV3IjsiiM2fJFBGcKSq0v4Ukk4AXmDW1y4sQH0eUY1xBDFreZOI7yVSd4DrjIKAdNxyzCGtukSSAeJ+2kbqArOCThNxKZ6NOxPb4dx+W9mkuh2Se2G4SH4m42cb8gD+aKK36JyYl+wzsRqhQx+c8w0lp/sg1Pe+HrgfmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707254734; c=relaxed/simple;
-	bh=Syy1MLZwGxTTCjGzcJtKt49dnx/gi9kybwgAMuY3iWo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Q4kjKJBMhpxmNxD9kc6FRTJUvBeQTZapg416o3GU8vObFDQXwD41Fk6tFbK9oqiF4ZNoysLmuMr+1VpPZz7egygREQjLe5Sl+zuockzfqp/lLXzmNtG7Sj2sHIWGL+HPKBVR1vL9D3o61PBGsKXEe0EuMOD/ugbP9sXgT0ElZDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kg7PyCXe; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707254732; x=1738790732;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Syy1MLZwGxTTCjGzcJtKt49dnx/gi9kybwgAMuY3iWo=;
-  b=kg7PyCXe/255fWSgoAtewt12SeuRM/EOtLRCZLnwh44YWYlzTJO0nCMv
-   5MneCe4TLBFT4QelaAkjeeuEKSO5fuWZze0OYsxwhucUVoXY/YF3g3G9C
-   8GCKmv5SeLlQWjgD9AO73Tp4jGTBzhgQ+RB28PTp3YQS3j0qRnvfFL7hG
-   2Uzwhbrlz8eIQu7HLjLKTMN7ALM0Y7YJQyH8slpMjmDH8asq5RNLsR9vw
-   hjNw9lOapEXFV5p2SlCkA+WpaMtoc9fmChFLYcXAa6ly98dZLztlvAgep
-   AlkIa+zDK/ryYRZWilW78z8jGiAV3CskJDcnRflC99zmyZ2TY1rsFcxt3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="11432748"
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="11432748"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 13:25:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,248,1701158400"; 
-   d="scan'208";a="5765875"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 13:25:30 -0800
-Received: from dbhadrax-mobl5.amr.corp.intel.com (unknown [10.255.229.168])
-	by linux.intel.com (Postfix) with ESMTP id AFF27580DB9;
-	Tue,  6 Feb 2024 13:25:29 -0800 (PST)
-Message-ID: <9cfc65c594deef33f24b60a66b7c78c742da7203.camel@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
- PCIe Root Port and NVMe
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Bjorn Helgaas <helgaas@kernel.org>, puranjay12@gmail.com
-Cc: Jian-Hong Pan <jhp@endlessos.org>, Johan Hovold <johan@kernel.org>, Mika
- Westerberg <mika.westerberg@linux.intel.com>, Damien Le Moal
- <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Nirmal Patel
- <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux@endlessos.org
-Date: Tue, 06 Feb 2024 13:25:29 -0800
-In-Reply-To: <02938148545933dc9865ddbc5551e3e8a579d57e.camel@linux.intel.com>
-References: <20240205224215.GA829734@bhelgaas>
-	 <02938148545933dc9865ddbc5551e3e8a579d57e.camel@linux.intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1707257237; c=relaxed/simple;
+	bh=he+I/UCK6FL9LSq+O6Vk2TSyVxWnDcam7kWXM+qnado=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KbdJUjwcAyO5Qjn+Dx9A1e0iguFUqK5qSLwx2i98M8YQ7nKMTeaVvFP/mJI13kn0dfuOgdLT1Qce0gdtWmDXzb/sEaaxpt9cm2nsKRIQJ6XB0wxc8raYXJA6zBVP2QcsW+lLBCbx1kNGDBbgxbjGAPWr6wv5KVpoYWaAH763bsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2rz6brI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F2FC433C7;
+	Tue,  6 Feb 2024 22:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707257237;
+	bh=he+I/UCK6FL9LSq+O6Vk2TSyVxWnDcam7kWXM+qnado=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=s2rz6brI+qQTR3Yjc1EXr+RlXyLdB5kCTKWSmKsX5CO767MX7Fvkw+cBvuMwZhV4K
+	 PsDUJ35xkFQE1d/Yrlbfuaq4q7J93TFriN0GdgM70rh+BIV/kRN/PiGUALcKXr/xVN
+	 lsjJR8CVofUeBWyPhueFJjw64hXXr4oLnRNwcZXFQk3wpwon6xOKFl0yUtBriQCRFN
+	 iD+mimbRV5Qd+GRtIxuRtaBISpphp4rCVUpzIfcJuGafsgmRZTTq2Jnqzyj9sfW+sv
+	 zMYVtV3iqHXjPV4YqvclM5f38IvQxv8Eg5jE9ukDPXrx+Asdk+fO/2f527OpqO7toh
+	 SFFPW4jarXjkw==
+Date: Tue, 6 Feb 2024 16:07:15 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alexander.stein@ew.tq-group.com,
+	decui@microsoft.com,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
+Message-ID: <20240206220715.GA884075@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com>
 
-Adding Puranjay
+[+cc Krzysztof]
 
-On Mon, 2024-02-05 at 15:05 -0800, David E. Box wrote:
-> On Mon, 2024-02-05 at 16:42 -0600, Bjorn Helgaas wrote:
-> > On Mon, Feb 05, 2024 at 11:37:16AM -0800, David E. Box wrote:
-> > > On Fri, 2024-02-02 at 18:05 -0600, Bjorn Helgaas wrote:
-> > > > On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
-> > > ...
-> >=20
-> > > > > @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pci_de=
-v
-> > > > > *pdev,
-> > > > > void *userdata)
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_write_config_=
-dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
-> > > > > ltr_reg);
-> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_info(pdev, "V=
-MD: Default LTR value set by driver\n");
-> > > >=20
-> > > > You're not changing this part, and I don't understand exactly how L=
-TR
-> > > > works, but it makes me a little bit queasy to read "set the LTR val=
-ue
-> > > > to the maximum required to allow the deepest power management
-> > > > savings" and then we set the max snoop values to a fixed constant.
-> > > >=20
-> > > > I don't think the goal is to "allow the deepest power savings"; I
-> > > > think it's to enable L1.2 *when the device has enough buffering to
-> > > > absorb L1.2 entry/exit latencies*.
-> > > >=20
-> > > > The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set this to
-> > > > the platform's maximum supported latency or less," so it seems like
-> > > > that value must be platform-dependent, not fixed.
-> > > >=20
-> > > > And I assume the "_DSM for Latency Tolerance Reporting" is part of =
-the
-> > > > way to get those platform-dependent values, but Linux doesn't actua=
-lly
-> > > > use that yet.
-> > >=20
-> > > This may indeed be the best way but we need to double check with our
-> > > BIOS folks.=C2=A0 AFAIK BIOS writes the LTR values directly so there
-> > > hasn't been a need to use this _DSM. But under VMD the ports are
-> > > hidden from BIOS which is why we added it here. I've brought up the
-> > > question internally to find out how Windows handles the DSM and to
-> > > get a recommendation from our firmware leads.
-> >=20
-> > We want Linux to be able to program LTR itself, don't we?=C2=A0 We
-> > shouldn't have to rely on firmware to do it.=C2=A0 If Linux can't do
-> > it, hot-added devices aren't going to be able to use L1.2, right?
->=20
-> Agreed. We just want to make sure we are not conflicting with what BIOS m=
-ay be
-> doing.
+On Fri, Dec 08, 2023 at 07:46:16PM -0800, Saurabh Sengar wrote:
+> Currently there is a race in calling pci_create_resource_files function
+> from two different therads, first therad is triggered by pci_sysfs_init
+> from the late initcall where as the second thread is initiated by
+> pci_bus_add_devices from the respective PCI drivers probe.
+> 
+> The synchronization between these threads relies on the sysfs_initialized
+> flag. However, in pci_sysfs_init, sysfs_initialized is set right before
+> calling pci_create_resource_files which is wrong as it can create race
+> condition with pci_bus_add_devices threads. Fix this by setting
+> sysfs_initialized flag at the end of pci_sysfs_init and direecly call the
+> pci_create_resource_files function from it.
+> 
+> There can be an additional case where driver probe is so delayed that
+> pci_bus_add_devices is called after the sysfs is created by pci_sysfs_init.
+> In such cases, attempting to access already existing sysfs resources is
+> unnecessary. Fix this by adding a check for sysfs attributes and return
+> if they are already allocated.
+> 
+> In both cases, the consequence will be the removal of sysfs resources that
+> were appropriately allocated by pci_sysfs_init following the warning below.
+> 
+> [    3.376688] sysfs: cannot create duplicate filename '/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/device:07/VMBUS:01/47505500-0001-0000-3130-444531454238/pci0001:00/0001:00:00.0/resource0'
+> [    3.385103] CPU: 3 PID: 9 Comm: kworker/u8:0 Not tainted 5.15.0-1046-azure #53~20.04.1-Ubuntu
+> [    3.389585] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
+> [    3.394663] Workqueue: events_unbound async_run_entry_fn
+> [    3.397687] Call Trace:
+> [    3.399312]  <TASK>
+> [    3.400780]  dump_stack_lvl+0x38/0x4d
+> [    3.402998]  dump_stack+0x10/0x16
+> [    3.406050]  sysfs_warn_dup.cold+0x17/0x2b
+> [    3.408476]  sysfs_add_file_mode_ns+0x17b/0x190
+> [    3.411072]  sysfs_create_bin_file+0x64/0x90
+> [    3.413514]  pci_create_attr+0xc7/0x260
+> [    3.415827]  pci_create_resource_files+0x6f/0x150
+> [    3.418455]  pci_create_sysfs_dev_files+0x18/0x30
+> [    3.421136]  pci_bus_add_device+0x30/0x70
+> [    3.423512]  pci_bus_add_devices+0x31/0x70
+> [    3.425958]  hv_pci_probe+0x4ce/0x640
+> [    3.428106]  vmbus_probe+0x67/0x90
+> [    3.430121]  really_probe.part.0+0xcb/0x380
+> [    3.432516]  really_probe+0x40/0x80
+> [    3.434581]  __driver_probe_device+0xe8/0x140
+> [    3.437119]  driver_probe_device+0x23/0xb0
+> [    3.439504]  __driver_attach_async_helper+0x31/0x90
+> [    3.442296]  async_run_entry_fn+0x33/0x120
+> [    3.444666]  process_one_work+0x225/0x3d0
+> [    3.447043]  worker_thread+0x4d/0x3e0
+> [    3.449233]  ? process_one_work+0x3d0/0x3d0
+> [    3.451632]  kthread+0x12a/0x150
+> [    3.453583]  ? set_kthread_struct+0x50/0x50
+> [    3.456103]  ret_from_fork+0x22/0x30
+> 
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+> There has been earlier attempts to fix this problem, below are the patches
+> for reference of these attempts.
+> 1. https://lore.kernel.org/linux-pci/20230316103036.1837869-1-alexander.stein@ew.tq-group.com/T/#u
+> 2. https://lwn.net/ml/linux-kernel/20230316091540.494366-1-alexander.stein@ew.tq-group.com/
+> 
+> Bug details: https://bugzilla.kernel.org/show_bug.cgi?id=215515
+> 
+>  drivers/pci/pci-sysfs.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index f2909ae93f2f..a31f6f2cf309 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1230,6 +1230,10 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+>  		if (!pci_resource_len(pdev, i))
+>  			continue;
+>  
+> +		/* Check if resource already allocated and proceed no further */
+> +		if (pdev->res_attr[i] || pdev->res_attr_wc[i])
+> +			return 0;
+> +
+>  		retval = pci_create_attr(pdev, i, 0);
+>  		/* for prefetchable resources, create a WC mappable file */
+>  		if (!retval && arch_can_pci_mmap_wc() &&
+> @@ -1411,9 +1415,8 @@ static int __init pci_sysfs_init(void)
+>  	struct pci_bus *pbus = NULL;
+>  	int retval;
+>  
+> -	sysfs_initialized = 1;
+>  	for_each_pci_dev(pdev) {
+> -		retval = pci_create_sysfs_dev_files(pdev);
+> +		retval = pci_create_resource_files(pdev);
+>  		if (retval) {
+>  			pci_dev_put(pdev);
+>  			return retval;
+> @@ -1423,6 +1426,8 @@ static int __init pci_sysfs_init(void)
+>  	while ((pbus = pci_find_next_bus(pbus)))
+>  		pci_create_legacy_files(pbus);
+>  
+> +	sysfs_initialized = 1;
+> +
+>  	return 0;
+>  }
+>  late_initcall(pci_sysfs_init);
 
-So the feedback is to run the _DSM and just overwrite any BIOS values. Look=
-ing
-up the _DSM I saw there was an attempt to upstream this 4 years ago [1]. I'=
-m not
-sure why the effort stalled but we can pick up this work again.
+Sorry for the delay in looking at this.  Consider the following
+sequence where thread A is executing pci_sysfs_init() at the same time
+as thread B enumerates and adds device X:
 
-https://patchwork.kernel.org/project/linux-pci/patch/20201015080311.7811-1-=
-puranjay12@gmail.com/
+  Thread A:
+
+    pci_sysfs_init
+      for_each_pci_dev(pdev) {                  # device X not included
+        pci_create_resource_files(pdev);
+      }
+
+  Thread B:
+
+    pci_bus_add_device                          # add device X
+      pci_create_sysfs_dev_files
+        if (!sysfs_initialized)                 # sysfs_initialized still zero
+          return -EACCES;
+        pci_create_resource_files(pdev);        # not executed
+
+  Thread A:
+
+    while ((pbus = pci_find_next_bus(pbus)))
+      pci_create_legacy_files(pbus);
+
+    sysfs_initialized = 1;
+
+Doesn't this have a similar race where instead of the duplicate
+filename from having two threads try to create the resource files,
+neither thread creates them and device X ends up with no resource
+files at all?
+
+Krzysztof has done a ton of work to convert these files to static
+attributes, where the device model prevents most of these races:
+
+  506140f9c06b ("PCI/sysfs: Convert "index", "acpi_index", "label" to static attributes")
+  d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
+  f42c35ea3b13 ("PCI/sysfs: Convert "reset" to static attribute")
+  527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
+  e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute")
+
+and he even posted a series to do the same for the resource files:
+
+  https://lore.kernel.org/linux-pci/20210910202623.2293708-1-kw@linux.com/
+
+I can't remember why we didn't apply that at the time, and it no
+longer applies cleanly, but I think that's the direction we should go.
+
+Bjorn
 
