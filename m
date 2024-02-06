@@ -1,146 +1,112 @@
-Return-Path: <linux-pci+bounces-3139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEBB884B180
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 10:41:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B97E84B194
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 10:48:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7590228686D
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 09:41:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB9EE2819BC
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Feb 2024 09:48:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE8D12D163;
-	Tue,  6 Feb 2024 09:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11E8112D761;
+	Tue,  6 Feb 2024 09:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYUu/u/j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7LPWBde"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D316612D14E
-	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 09:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C72612D148
+	for <linux-pci@vger.kernel.org>; Tue,  6 Feb 2024 09:48:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707212482; cv=none; b=KVz8vJY4nBH7VCc9XN1HNivNpJUI5Y5N2JaXCON2xEwfz7H8suKV3SY/1LrJtQ2ErG8sioTgVGT6JKj7Ya0vYlZEuPRAksjqxMXoi1gyPEf7kyxC0sC7DqV9Nvpza/2nY2GfTwndU0kvNjmN7771JpobE5A26e0hq0oi8V8x6jE=
+	t=1707212924; cv=none; b=oJe4ZituuGOJmlND3kMBef8CxuDpqswarbSMtxAp0hJO1ivjzCu4byhwD6b7eSsCWiOPk7KFldXfQPUI5Y8G1ziG9jAe8+AQEXY71opTPxDYG9KZpz9W3xdXusRm9HxiiArhtiAQCq+Rd+XQaUxr/DFeXXtHrzgicm8d+nXxkNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707212482; c=relaxed/simple;
-	bh=PS7FDfG+KJoasqQRxO3VrowxY9G2OSe3PNqnq4tkY48=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rXSbytq36Dd9Qj54wCFTc73umJQTSJCMbUEZ2yIXqMhdt8JVEWeilgq+ELsHosv3thCI3GFhAUfaFBpsx3PuhXmmundu7r+tz5AUQ0x/WCCH770dnznl1CLFDCdWP4XHlBPZHlJ2dRlAYanWEZ2RbC5YcT2Hd1NoAgEknomvjEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FYUu/u/j; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1707212924; c=relaxed/simple;
+	bh=ZECXte5D6jxim+3xK4HKfAtIsgXPnPOa+pKdouz7m2A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kHc3lMDq5+BkIcOvH4u8Vn6D99iwUhNd1e5Q21A80AhmbTC1t7RcwfcsFszpGp/EKieQY02Rz3Ull6kJZN/pqCjGQMU5sb++tJbKd550JQOQ3JaNQ/bdgiETnTzpN3EUntbfTmb4JLfwCSRN1/rAiNOKrdNtZItiYvLjKdSkZQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7LPWBde; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707212479;
+	s=mimecast20190719; t=1707212921;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PS7FDfG+KJoasqQRxO3VrowxY9G2OSe3PNqnq4tkY48=;
-	b=FYUu/u/jBA+tEKvmHQhq5Zti1rdPmUaw89U/IA/ZfBl4jJszPPfPQE6COnOFhJEEp6nrMs
-	4cbzXU++IV2PjhR65xw8saDpnqh1g5qPSa7Q+I/R9B8OsblpNzzDUi778jQsCOmaCP7Yyo
-	LRZRJx/529+uZqRhpAD7tVWD0s8FKTE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ZECXte5D6jxim+3xK4HKfAtIsgXPnPOa+pKdouz7m2A=;
+	b=a7LPWBdeloZA9TdkhkxZyMRiiD/aA7JPfqBpfDnQOqiNYb2XXFdaiL5y2/doYsx8JFFlXq
+	ddeQDGw540MpHBcqj6L5g5ZkDQKz7VfSsTKraaiw0amWNIVflnQBViJg5Z4vsJd77FFRjA
+	SYcrUhvpS7pQK7GsycErpPGAY5WYV7E=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-bVbKbQ-XM06O48T5aA-mwg-1; Tue, 06 Feb 2024 04:41:18 -0500
-X-MC-Unique: bVbKbQ-XM06O48T5aA-mwg-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-42a89aea9aeso11498211cf.1
-        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 01:41:18 -0800 (PST)
+ us-mta-634-LiEl-tM7MBKQd-NUDGraSg-1; Tue, 06 Feb 2024 04:48:40 -0500
+X-MC-Unique: LiEl-tM7MBKQd-NUDGraSg-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7816bea8d28so71323785a.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 01:48:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707212478; x=1707817278;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PS7FDfG+KJoasqQRxO3VrowxY9G2OSe3PNqnq4tkY48=;
-        b=sd5GTsR5112dYzn6EbYYHb3yN0KV/6K/oVYUsrp+166r4meD0y62u6sD9BvUsUPn+l
-         oJuywzMYkh2VldsNxRBZYs73AZMpXg77FdlAJcdUOfBlW273rNE0j4LKmXm5ZL90MBfS
-         5NxNx+RGQmqPK3FCIDrRGeJvgVLLcWJpIIdMPdc4PH730Kys4W2Norkb/30hoYy3EDWE
-         Xk3m19AfFBLJ8UPTQGIfYpFateD+b2FJ70oVrpqHQT+K/bo+h96C6a3QAVhTubC5/Yu3
-         VPNinKafddMP5nFtHTZvjVgXZGCHxXwYQ13U0TMSyhEIsN15x3gX/5Za0UZZBaushURm
-         4JYg==
-X-Gm-Message-State: AOJu0Yy4kcObiowH1z29G46Sdr8Z8wkKrDlYObs23obvNZ48U2KlSM7E
-	jhRawhzLs2xj26F5sP2K+qO1kiSkbnxwVJiZy1gP7PyCs61fk0AV865KTKm/Ioa5KwN7FDeO6gy
-	HDtVqynoBPD2aeoKmhhqQMd8xMJwb4nTyYvmnxMl06Heg6R65zM8zUAwZnA==
-X-Received: by 2002:a05:622a:287:b0:42c:239c:d87b with SMTP id z7-20020a05622a028700b0042c239cd87bmr2109366qtw.1.1707212477981;
-        Tue, 06 Feb 2024 01:41:17 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGPwOtJwoBj0o9iD/y81KvrC9NDjv+GvZjnfPUHrQ3iRktuwoj5UA2yWl9XCSI2hrawY6IgDA==
-X-Received: by 2002:a05:622a:287:b0:42c:239c:d87b with SMTP id z7-20020a05622a028700b0042c239cd87bmr2109350qtw.1.1707212477710;
-        Tue, 06 Feb 2024 01:41:17 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCW02GSkdtkEVcCB0rGUiv9DRBd1zjZ8LddiDrSMXsyASTobjGW9NuSrarIZIzLiMxjuwwYqMInwnChcTJLIuNQU4odVW1PqV0Ed5Cry4MTH35lt5TYhmNeWgd1oQ+keBNlfm9XPwhGsJ6wh2TJBnl175Ym2e26wYqELtjfm5TUovGpFqbnNztWTzZ6FvSwTFW8j4bRruOQYUplo2SkFfEKzkii1mcQ+B0HtoUkkO51gNylEg0t7i3B7xmUYk7IG+z+bTSQecqUFBI88y/QTOZGXJ9/iTOepV+H0DfcBqtPkmWku6ovriT5KE7Ceg4MwPov8qoX5m61Zycrtbx0b0ksAeV0eJc3meQLAER2Ypb6Q6O22Ga66CFsSe9+EVchBTJfKjklxxVS7bnfG6zu+MpvV+9FXcoofBiHT15F3wLnvafoKR/jaA+O+CQjiGTAJrvTEP28TMaVYAGeqKr3icT2YbsyAPivpaENRQJl49sGmgGiv4II84grTQSJqvon/x3IFbc20UszUYpKICKbrIeqGJE2fwiw75awDA3ZYDYJF0RblOuBjXBbWcRhlfdRmwtIiKHnEfpcEeK8NWBaDfM/kMFDLxi5XGCYDHkdws/1LYLoewFDHcFbt9wzJnzejcg0Orsa5lct0nbW96Z40ljRqeUP1dLCH2yucWEuXDRsVBz/t3fr8vmSFHyATtiz/jGfrb9tMbELht7zjv+D/tzlyKMB7Fw0HNq97YWMB7BHplgy25WfdVWZ0ji603aZsIkArUvFVPqGpy2g1YGDZ+tKge0Duom8fFda/8bgoZdRVAmhSfaA00aFSTb7XoxyPd14gTTq7W8K1fg==
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id x25-20020ac85399000000b0042aaa37e316sm735315qtp.22.2024.02.06.01.41.14
+        d=1e100.net; s=20230601; t=1707212919; x=1707817719;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZECXte5D6jxim+3xK4HKfAtIsgXPnPOa+pKdouz7m2A=;
+        b=JbQyMT1hANHDarWf1flzD9B8lBsgFU0KZW2oA2qg2qjvInRnI+a4YQzxCC+1qPhYMQ
+         ug2aqrJEiVdIV6pZmIGA5op6jbFUaaE/VWzIj0O0g8iZKuF/9hJkfvPTm16yZNTGNyA8
+         7G/5P3xnp91ald0lnG4sYFcQYBskn4eve87/XFAaDjs38eQU45LTQJlmZ2SOySvntXmm
+         3HQKEGRrANYsFCg1Y3kPG2ggkr29IiTuebB7g6L+WRpl8Yji+mVGeM6TUTdzDV2DtggK
+         0a21+xfLQENjZKB5/Fe0hAk2jlKtOut2RZaS0CGvr6Tqeq0rw7EfvVMdey7SN9nKu+D6
+         4HXw==
+X-Gm-Message-State: AOJu0YxIoZMZdIegpUndVgHJefeo1O3YLDKpYcFfUOaotHh+v/2vbm6j
+	yX1xFAb4+A72qDnsOSfpqxiB6bw9lbym6eEpXllgCIBe7geRBQf1FHR3Z+hoH37GAVc5/HsUvaW
+	yJh9Qw1qpuTzPRCkN0PtO2FTtaxHCCsBZW/tcd4CMXanWWzF+KgcgjPgTt8YbKXua3Q==
+X-Received: by 2002:a05:620a:a0a:b0:785:440c:88d9 with SMTP id i10-20020a05620a0a0a00b00785440c88d9mr3132315qka.26.1707212919012;
+        Tue, 06 Feb 2024 01:48:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFVZHwKbOSJItUHx/ikHRtM9wqEPD3H5+QvbQpwtzXtmamlTFpTYFt3g/syo8NgZPxdcW1S0Q==
+X-Received: by 2002:a05:620a:a0a:b0:785:440c:88d9 with SMTP id i10-20020a05620a0a0a00b00785440c88d9mr3132299qka.26.1707212918799;
+        Tue, 06 Feb 2024 01:48:38 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCWrwQH0hQVhe0VPR2hZe1xCBNzOga+tBypyXg9hbQvH1pSJTdI7ZgtdHVcgn6rRQl+DcDxogftvodzYEPMJcaE1n9N7qNBFDS0DzHuY5qac4HvBPl4xY1ZKtO+OG4//zVUqXI6pu9szxT6PbFd+Mg3/Q9NK+yt1QHl673JhfVjN68a+gsIW7JBv8B72s99yHahQdNhMJQCacc10tltod0G851RTWM9eydTsNB65V+244gDRPrxEs38kkuQhc6VsRrfWU8+x+p2KzxN+bFCXjenbh5UvaUgCP/k6wcRaVPZrJmqidM9WzpAXS3w4drJCjsCrAcyPeFlYA3KX3DIPbbrQYBfaanGCJ0r+tQvk66smv+0XgnTtph+0swz1geuaMIoW0VbyW6unIY58owxDU/xoismXsKre7CN8N+hBbz5NFQwr1kx4d9KCg+tBBCw9KWPXRf+Msue1u9Zrurx3kdKYb5j5P+NtCZ28MKScxPbx7tshK/gRorlyHgmpvKz39Q2Wr9OKV7QbVqKcQsTDAwFBNc6/VzBZYuROo9rQkomBdVIQMrxdgleexKu8XRwurJTaACHsWiMlbACtt6c7Aqv5VstSx/I8wnE6bQ==
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id vr11-20020a05620a55ab00b007815c25b32bsm764188qkn.35.2024.02.06.01.48.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Feb 2024 01:41:17 -0800 (PST)
-Message-ID: <1f1be7418b6f52854abdd25ad7b1c526a9a7e35d.camel@redhat.com>
-Subject: Re: [PATCH v6 0/4] Regather scattered PCI-Code
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
- Johannes Berg <johannes@sipsolutions.net>, Randy Dunlap
- <rdunlap@infradead.org>, NeilBrown <neilb@suse.de>,  John Sanpe
- <sanpeqf@gmail.com>, Kent Overstreet <kent.overstreet@gmail.com>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Dave Jiang <dave.jiang@intel.com>,
- Uladzislau Koshchanka <koshchanka@gmail.com>, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>, David Gow <davidgow@google.com>, Kees Cook
- <keescook@chromium.org>, Rae Moar <rmoar@google.com>, Geert Uytterhoeven
- <geert@linux-m68k.org>, "wuqiang.matt" <wuqiang.matt@bytedance.com>, Yury
- Norov <yury.norov@gmail.com>, Jason Baron <jbaron@akamai.com>, Thomas
- Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, Andrew
- Morton <akpm@linux-foundation.org>, Ben Dooks <ben.dooks@codethink.co.uk>,
- dakr@redhat.com, linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org,
- linux-arch@vger.kernel.org, stable@vger.kernel.org
-Date: Tue, 06 Feb 2024 10:41:13 +0100
-In-Reply-To: <20240131210842.GA599075@bhelgaas>
-References: <20240131210842.GA599075@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Tue, 06 Feb 2024 01:48:38 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Onkarnarth <onkarnath.1@samsung.com>, rafael@kernel.org,
+ lenb@kernel.org, bhelgaas@google.com, viresh.kumar@linaro.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+ r.thapliyal@samsung.com, maninder1.s@samsung.com, Onkarnath
+ <onkarnath.1@samsung.com>
+Subject: Re: [PATCH 2/2] kernel: sched: print errors with %pe for better
+ readability of logs
+In-Reply-To: <20240206051120.4173475-2-onkarnath.1@samsung.com>
+References: <20240206051120.4173475-1-onkarnath.1@samsung.com>
+ <CGME20240206051402epcas5p2ae3737fc0d71ba1d7a7f8bee90438ff2@epcas5p2.samsung.com>
+ <20240206051120.4173475-2-onkarnath.1@samsung.com>
+Date: Tue, 06 Feb 2024 10:48:33 +0100
+Message-ID: <xhsmhh6ilhqj2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-T24gV2VkLCAyMDI0LTAxLTMxIGF0IDE1OjA4IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOgo+
-IE9uIFdlZCwgSmFuIDMxLCAyMDI0IGF0IDEwOjAwOjE5QU0gKzAxMDAsIFBoaWxpcHAgU3Rhbm5l
-ciB3cm90ZToKPiA+IEBCam9ybjoKPiA+IEkgZGVjaWRlZCB0aGF0IGl0J3Mgbm93IGFjdHVhbGx5
-IHBvc3NpYmxlIHRvIGp1c3QgZW1iZWQgdGhlIGRvY3UKPiA+IHVwZGF0ZXMKPiA+IHRvIHRoZSBy
-ZXNwZWN0aXZlIHBhdGNoZXMsIGluc3RlYWQgb2YgYSBzZXBhcmF0ZSBwYXRjaC4KPiA+IEFsc28g
-ZHJvcHBlZCB0aGUgaW9wb3J0X3VubWFwKCkgZm9yIG5vdy4KPiAKPiBUaGFua3MuwqAgSSBkaWRu
-J3Qgc2VlIGFueSBkb2N1bWVudGF0aW9uIHVwZGF0ZXMgKG90aGVyIHRoYW4gdGhvc2UKPiByZWxh
-dGVkIHRvIHRoZSBjaGFuZ2VkIHBhdGggbmFtZXMpIGluIHRoaXMgc2VyaWVzLCBzbyBJIGFzc3Vt
-ZSB0aGUKPiB1cGRhdGVzIHlvdSBtZW50aW9uIHdvdWxkIGJlIGluIGEgZnV0dXJlIHNlcmllcy4K
-Ck5vLCBJIGFjdHVhbGx5IG1lYW50IHRoZSBjaGFuZ2VkIHBhdGggbmFtZXMuCgpUaGUgbmV4dCBz
-ZXJpZXMgKG5ldyBkZXZyZXMgZnVuY3Rpb25zKSBqdXN0IGFkZHMgbW9yZSBkb2NzdHJpbmdzIHRv
-CmlvbWFwLmMsIGRldnJlcy5jIGFuZCBwY2kuYyBpbiBkcml2ZXJzL3BjaS8sIHdoaWNoLCBhZnRl
-ciB0aGlzIHNlcmllcwpoZXJlIGlzIGFwcGxpZWQsIGFyZSBhbGwgYWxyZWFkeSBhZGRlZCB0byB0
-aGUgRG9jdS4KCj4gCj4gPiAuLi4KPiA+IFBoaWxpcHAgU3Rhbm5lciAoNCk6Cj4gPiDCoCBsaWIv
-cGNpX2lvbWFwLmM6IGZpeCBjbGVhbnVwIGJ1ZyBpbiBwY2lfaW91bm1hcCgpCj4gPiDCoCBsaWI6
-IG1vdmUgcGNpX2lvbWFwLmMgdG8gZHJpdmVycy9wY2kvCj4gPiDCoCBsaWI6IG1vdmUgcGNpLXNw
-ZWNpZmljIGRldnJlcyBjb2RlIHRvIGRyaXZlcnMvcGNpLwo+ID4gwqAgUENJOiBNb3ZlIGRldnJl
-cyBjb2RlIGZyb20gcGNpLmMgdG8gZGV2cmVzLmMKPiA+IAo+ID4gwqBEb2N1bWVudGF0aW9uL2Ry
-aXZlci1hcGkvZGV2aWNlLWlvLnJzdCB8wqDCoCAyICstCj4gPiDCoERvY3VtZW50YXRpb24vZHJp
-dmVyLWFwaS9wY2kvcGNpLnJzdMKgwqAgfMKgwqAgNiArCj4gPiDCoE1BSU5UQUlORVJTwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDEg
-LQo+ID4gwqBkcml2ZXJzL3BjaS9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfMKgwqAgNSArCj4gPiDCoGRyaXZlcnMvcGNpL01ha2VmaWxlwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDMgKy0KPiA+IMKgZHJpdmVycy9wY2kvZGV2
-cmVzLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCA0NTAKPiA+ICsrKysr
-KysrKysrKysrKysrKysrKysrKysKPiA+IMKgbGliL3BjaV9pb21hcC5jID0+IGRyaXZlcnMvcGNp
-L2lvbWFwLmMgfMKgwqAgNSArLQo+ID4gwqBkcml2ZXJzL3BjaS9wY2kuY8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDI0OSAtLS0tLS0tLS0tLS0tLQo+ID4gwqBk
-cml2ZXJzL3BjaS9wY2kuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCB8wqAgMjQgKysKPiA+IMKgbGliL0tjb25maWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMyAtCj4gPiDCoGxpYi9NYWtlZmlsZcKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAg
-MSAtCj4gPiDCoGxpYi9kZXZyZXMuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfCAyMDggKy0tLS0tLS0tLS0tCj4gPiDCoDEyIGZpbGVzIGNoYW5n
-ZWQsIDQ5MCBpbnNlcnRpb25zKCspLCA0NjcgZGVsZXRpb25zKC0pCj4gPiDCoGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL3BjaS9kZXZyZXMuYwo+ID4gwqByZW5hbWUgbGliL3BjaV9pb21hcC5j
-ID0+IGRyaXZlcnMvcGNpL2lvbWFwLmMgKDk5JSkKPiAKPiBBcHBsaWVkIHRvIHBjaS9kZXZyZXMg
-Zm9yIHY2LjksIHRoYW5rcyEKClRoeCEKCg==
+On 06/02/24 10:41, Onkarnarth wrote:
+> From: Onkarnath <onkarnath.1@samsung.com>
+>
+> instead of printing errros as a number(%ld), it's better to print in string
+> format for better readability of logs.
+>
+> Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
+
+I quick ripgrep tells me this is the only culprit in sched, so:
+
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
 
 
