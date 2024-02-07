@@ -1,134 +1,227 @@
-Return-Path: <linux-pci+bounces-3208-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3209-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E632184CED6
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 17:26:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9449E84CEE3
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 17:30:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A39F828D1C3
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 16:26:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0FB428B93C
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 16:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1CE68120B;
-	Wed,  7 Feb 2024 16:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFF781AC0;
+	Wed,  7 Feb 2024 16:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tEn9GZR2"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IXLKnbWP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FD35A100
-	for <linux-pci@vger.kernel.org>; Wed,  7 Feb 2024 16:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF6E33CA;
+	Wed,  7 Feb 2024 16:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707323190; cv=none; b=dL1xK4FSY0sG1hFkd+nLJfNFGBdn2glseypXPsmUi9rtW4r7l2mmD0DxmPrPtlCWfONFwAgK8s4AHRaMEoMg8Pc3A1wmrOki1C6UIeaTT1fCKAXaezuCNnx4T7PH0tTUU1BNhxb9IqA5seZoJGOl/1KSvchfTB+JJoMi4UasWb8=
+	t=1707323430; cv=none; b=pEVxXBX7GVu39CRx7evwbvm3KqDRX8LIOI8L1Zz0yJLY8gJXKFNXDX7RhKBbDX8TYpluNI4eGQAW9CnYawMi3HWM6tc2JiCdStTr1p1H1FQGCbQyd3NUzPYBOzlwsB8TU7Be41yDMkDbtLNwc1evzfsBmhoTSFMrksAUPR1qzrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707323190; c=relaxed/simple;
-	bh=s/XBm+dZXo326rp4+k8nxRmZZap7vVe94gNKobiXRkE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dey3T1GqjUwkpBepchP9MRr+7rgxQqokZ5Ccqk6Nx6iMO/KFEgSb/W7yLNa0KpWccHWepcBj+Woe9pY/m5zW9OkPeKCSsz+UcqH5wa9RFi8IPrQzi+8QFBOdNWxqy34ZiWtxc8a3fWucv7eNM84Pv+w2uP24OCVgq6D2BYP5ICg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tEn9GZR2; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7d698a8d93cso338957241.3
-        for <linux-pci@vger.kernel.org>; Wed, 07 Feb 2024 08:26:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707323188; x=1707927988; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WitkzYepwCuA/S4ttZlXhAljZ+JINQO7bz0r64E60hU=;
-        b=tEn9GZR2YW5QIUhpfy9WbjVoRZUSL8A4E2UxFn9joY8wr7taRtruBFS5ZDP8cbC/PE
-         +rY/R+HXqckBU0/cXttDcGD8TCgthunpbB4V+xxuVs64YsAYfzGTEsPkWv0siLLFEIJt
-         q3DRPVhLVBcUb5jBXacEuRnI5LYw3CQmqxcHc5jRCIqyXO9Rhtg1XmecZnDl43NRf/DZ
-         Ma9XYvgXTZFHFCFw4JMHkOKYtcBvEqC1yVzvOe6OgZF3+3A36F8PJYG6fEx6CLDNeUpA
-         GiD81yogPwnuljwzAB75RmxCo3njmj1PQmWCi6ASwK+B3pAMs3hRAFhoYC2KTb1nhvBd
-         uLEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707323188; x=1707927988;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WitkzYepwCuA/S4ttZlXhAljZ+JINQO7bz0r64E60hU=;
-        b=FPbfyg9RE6vTFfcArhFSxPIxiPeMchs+8nrpwuejTTSsdLUc6PGXpe4tx069Olq09w
-         Kkb5XcUZ/g2HTqa6xccD/Pd9LpiPaQwyGUXyhGoZ0Hhead6gjecM3eiYuMb5zjHrECKA
-         C3XjcCssQY5ipAQr8seouQIE7Dm7V08pFfUAo0LFdEYFnAyYtKD+EhlrfjAY5Aj++ywK
-         vQ42TZbtCdlc+ajKoibiScwd8T/W3mxY5r5/ZTwuxYYNDkHX2+vyf5Wvi89vHM+BG6UM
-         0mGZNmLSGq2NemeFeexl9r/e/acWswkIJr6RZlVYza/Q8Ode0I2ImLyI+KXp9fPr0g7l
-         J+IA==
-X-Gm-Message-State: AOJu0YzK4eVnTVF8eYVJkMmI2zNKgYCDJl7cWgxaRmxDANDv3/tQj9PZ
-	lX3douO8XDyiQpoSCxIjowtJJG1aIe1BC4EqQefiZeJ7Upf8Zr+XpmATefA4pibIH5GMgetPIls
-	ff3F3prb42DM9Kmj/QQUcxvquT/C1uyslHVnMfQ==
-X-Google-Smtp-Source: AGHT+IGUHF6vzAm6fF7RlJC8wV7QGPTkkEw3A+jO1stlUQVB3BJSXCPScQIS002+UPorZpqyfxR0CW3Oxe6kmokSvso=
-X-Received: by 2002:a67:f597:0:b0:46d:295d:1c5a with SMTP id
- i23-20020a67f597000000b0046d295d1c5amr3129996vso.30.1707323187759; Wed, 07
- Feb 2024 08:26:27 -0800 (PST)
+	s=arc-20240116; t=1707323430; c=relaxed/simple;
+	bh=M7XNmpXkCernHXFKYJVeFrVvhYtZ0ecElH59OoqntzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tE1aFHrix/rHR4ChyBCc7MnhKPbCup5wpzJZtzHcFjMGM6cYP75oRBL+spq2dBreH9RJ4GyfH6ZtV+trByuhx92rR1/g49htKX1Zss5QXsUTOAS7jeFgpYVTimKyOBlIa//PB0i7GmtgQ7k4p4CCYwBj999QAv/AUiLrreRmPqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IXLKnbWP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id BF493207E710; Wed,  7 Feb 2024 08:30:27 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF493207E710
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1707323427;
+	bh=14lkH5/QyhbhCK3x+1ZM9xL0SppWtCFQ+0DYG8K9wCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IXLKnbWPSNjpuhwLhFZPsmzU03yYekEb8DFmB+7e0q97fm+eY+MLunk6YjGUjOFfC
+	 0rGfcEyysV9XnZHSOs/N+PuqVXipp233U/9iOw+QI40TR6Ys7JpqA0n+u66A2gqJT/
+	 gabsGrckqzQtWpvp2rJ2ztglwqgShKWB/B6e7aGI=
+Date: Wed, 7 Feb 2024 08:30:27 -0800
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alexander.stein@ew.tq-group.com,
+	decui@microsoft.com,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
+Message-ID: <20240207163027.GA13964@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com>
+ <20240206220715.GA884075@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240201155532.49707-1-brgl@bgdev.pl> <20240201155532.49707-9-brgl@bgdev.pl>
- <7tbhdkqpl4iuaxmc73pje2nbbkarxxpgmabc7j4q26d2rhzrv5@ltu6niel5eb4>
- <CAMRc=Md1oTrVMjZRH+Ux3JJKYeficKMYh+8V7ZA=Xz_X1hNd1g@mail.gmail.com> <2q5vwm7tgmpgbrm4dxfhypbs5pdggprxouvzfcherqeevpjhrj@6wtkv4za2gg5>
-In-Reply-To: <2q5vwm7tgmpgbrm4dxfhypbs5pdggprxouvzfcherqeevpjhrj@6wtkv4za2gg5>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 7 Feb 2024 17:26:16 +0100
-Message-ID: <CAMRc=MfsdsD4f3sC-BnR_sqvaHNEKWCZ+Xe+-ZhLU8vFYA06=w@mail.gmail.com>
-Subject: Re: Re: [RFC 8/9] PCI/pwrctl: add PCI power control core code
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Abel Vesa <abel.vesa@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
-	linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206220715.GA884075@bhelgaas>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Fri, Feb 2, 2024 at 5:52=E2=80=AFPM Bjorn Andersson <andersson@kernel.or=
-g> wrote:
->
-> On Fri, Feb 02, 2024 at 10:11:42AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Feb 2, 2024 at 4:53=E2=80=AFAM Bjorn Andersson <andersson@kerne=
-l.org> wrote:
-> [..]
-> > > > +             break;
-> > > > +     }
-> > > > +
-> > > > +     return NOTIFY_DONE;
-> > > > +}
-> > > > +
-> > > > +int pci_pwrctl_device_enable(struct pci_pwrctl *pwrctl)
-> > >
-> > > This function doesn't really "enable the device", looking at the exam=
-ple
-> > > driver it's rather "device_enabled" than "device_enable"...
-> > >
-> >
-> > I was also thinking about pci_pwrctl_device_ready() or
-> > pci_pwrctl_device_prepared().
->
-> I like both of these.
->
-> I guess the bigger question is how the flow would look like in the event
-> that we need to power-cycle the attached PCIe device, e.g. because
-> firmware has gotten into a really bad state.
->
-> Will we need an operation that removes the device first, and then cut
-> the power, or do we cut the power and then call unprepared()?
->
+On Tue, Feb 06, 2024 at 04:07:15PM -0600, Bjorn Helgaas wrote:
+> [+cc Krzysztof]
+> 
+> On Fri, Dec 08, 2023 at 07:46:16PM -0800, Saurabh Sengar wrote:
+> > Currently there is a race in calling pci_create_resource_files function
+> > from two different therads, first therad is triggered by pci_sysfs_init
+> > from the late initcall where as the second thread is initiated by
+> > pci_bus_add_devices from the respective PCI drivers probe.
+> > 
+> > The synchronization between these threads relies on the sysfs_initialized
+> > flag. However, in pci_sysfs_init, sysfs_initialized is set right before
+> > calling pci_create_resource_files which is wrong as it can create race
+> > condition with pci_bus_add_devices threads. Fix this by setting
+> > sysfs_initialized flag at the end of pci_sysfs_init and direecly call the
+> > pci_create_resource_files function from it.
+> > 
+> > There can be an additional case where driver probe is so delayed that
+> > pci_bus_add_devices is called after the sysfs is created by pci_sysfs_init.
+> > In such cases, attempting to access already existing sysfs resources is
+> > unnecessary. Fix this by adding a check for sysfs attributes and return
+> > if they are already allocated.
+> > 
+> > In both cases, the consequence will be the removal of sysfs resources that
+> > were appropriately allocated by pci_sysfs_init following the warning below.
+> > 
+> > [    3.376688] sysfs: cannot create duplicate filename '/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/device:07/VMBUS:01/47505500-0001-0000-3130-444531454238/pci0001:00/0001:00:00.0/resource0'
+> > [    3.385103] CPU: 3 PID: 9 Comm: kworker/u8:0 Not tainted 5.15.0-1046-azure #53~20.04.1-Ubuntu
+> > [    3.389585] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
+> > [    3.394663] Workqueue: events_unbound async_run_entry_fn
+> > [    3.397687] Call Trace:
+> > [    3.399312]  <TASK>
+> > [    3.400780]  dump_stack_lvl+0x38/0x4d
+> > [    3.402998]  dump_stack+0x10/0x16
+> > [    3.406050]  sysfs_warn_dup.cold+0x17/0x2b
+> > [    3.408476]  sysfs_add_file_mode_ns+0x17b/0x190
+> > [    3.411072]  sysfs_create_bin_file+0x64/0x90
+> > [    3.413514]  pci_create_attr+0xc7/0x260
+> > [    3.415827]  pci_create_resource_files+0x6f/0x150
+> > [    3.418455]  pci_create_sysfs_dev_files+0x18/0x30
+> > [    3.421136]  pci_bus_add_device+0x30/0x70
+> > [    3.423512]  pci_bus_add_devices+0x31/0x70
+> > [    3.425958]  hv_pci_probe+0x4ce/0x640
+> > [    3.428106]  vmbus_probe+0x67/0x90
+> > [    3.430121]  really_probe.part.0+0xcb/0x380
+> > [    3.432516]  really_probe+0x40/0x80
+> > [    3.434581]  __driver_probe_device+0xe8/0x140
+> > [    3.437119]  driver_probe_device+0x23/0xb0
+> > [    3.439504]  __driver_attach_async_helper+0x31/0x90
+> > [    3.442296]  async_run_entry_fn+0x33/0x120
+> > [    3.444666]  process_one_work+0x225/0x3d0
+> > [    3.447043]  worker_thread+0x4d/0x3e0
+> > [    3.449233]  ? process_one_work+0x3d0/0x3d0
+> > [    3.451632]  kthread+0x12a/0x150
+> > [    3.453583]  ? set_kthread_struct+0x50/0x50
+> > [    3.456103]  ret_from_fork+0x22/0x30
+> > 
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> > There has been earlier attempts to fix this problem, below are the patches
+> > for reference of these attempts.
+> > 1. https://lore.kernel.org/linux-pci/20230316103036.1837869-1-alexander.stein@ew.tq-group.com/T/#u
+> > 2. https://lwn.net/ml/linux-kernel/20230316091540.494366-1-alexander.stein@ew.tq-group.com/
+> > 
+> > Bug details: https://bugzilla.kernel.org/show_bug.cgi?id=215515
+> > 
+> >  drivers/pci/pci-sysfs.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index f2909ae93f2f..a31f6f2cf309 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -1230,6 +1230,10 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+> >  		if (!pci_resource_len(pdev, i))
+> >  			continue;
+> >  
+> > +		/* Check if resource already allocated and proceed no further */
+> > +		if (pdev->res_attr[i] || pdev->res_attr_wc[i])
+> > +			return 0;
+> > +
+> >  		retval = pci_create_attr(pdev, i, 0);
+> >  		/* for prefetchable resources, create a WC mappable file */
+> >  		if (!retval && arch_can_pci_mmap_wc() &&
+> > @@ -1411,9 +1415,8 @@ static int __init pci_sysfs_init(void)
+> >  	struct pci_bus *pbus = NULL;
+> >  	int retval;
+> >  
+> > -	sysfs_initialized = 1;
+> >  	for_each_pci_dev(pdev) {
+> > -		retval = pci_create_sysfs_dev_files(pdev);
+> > +		retval = pci_create_resource_files(pdev);
+> >  		if (retval) {
+> >  			pci_dev_put(pdev);
+> >  			return retval;
+> > @@ -1423,6 +1426,8 @@ static int __init pci_sysfs_init(void)
+> >  	while ((pbus = pci_find_next_bus(pbus)))
+> >  		pci_create_legacy_files(pbus);
+> >  
+> > +	sysfs_initialized = 1;
+> > +
+> >  	return 0;
+> >  }
+> >  late_initcall(pci_sysfs_init);
+> 
+> Sorry for the delay in looking at this.  Consider the following
+> sequence where thread A is executing pci_sysfs_init() at the same time
+> as thread B enumerates and adds device X:
+> 
+>   Thread A:
+> 
+>     pci_sysfs_init
+>       for_each_pci_dev(pdev) {                  # device X not included
+>         pci_create_resource_files(pdev);
+>       }
+> 
+>   Thread B:
+> 
+>     pci_bus_add_device                          # add device X
+>       pci_create_sysfs_dev_files
+>         if (!sysfs_initialized)                 # sysfs_initialized still zero
+>           return -EACCES;
+>         pci_create_resource_files(pdev);        # not executed
+> 
+>   Thread A:
+> 
+>     while ((pbus = pci_find_next_bus(pbus)))
+>       pci_create_legacy_files(pbus);
+> 
+>     sysfs_initialized = 1;
+> 
+> Doesn't this have a similar race where instead of the duplicate
+> filename from having two threads try to create the resource files,
+> neither thread creates them and device X ends up with no resource
+> files at all?
+> 
+> Krzysztof has done a ton of work to convert these files to static
+> attributes, where the device model prevents most of these races:
+> 
+>   506140f9c06b ("PCI/sysfs: Convert "index", "acpi_index", "label" to static attributes")
+>   d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
+>   f42c35ea3b13 ("PCI/sysfs: Convert "reset" to static attribute")
+>   527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
+>   e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute")
+> 
+> and he even posted a series to do the same for the resource files:
+> 
+>   https://lore.kernel.org/linux-pci/20210910202623.2293708-1-kw@linux.com/
+> 
+> I can't remember why we didn't apply that at the time, and it no
+> longer applies cleanly, but I think that's the direction we should go.
+> 
+> Bjorn
 
-How would the core be notified about this power-cycle from the PCI
-subsystem? I honestly don't know. Is there a notifier we could
-subscribe to? Is the device unbound and rebound in such case?
 
-Bart
+Thanks for you review.
+
+Krzysztof,
+
+Please inform me if there's existing feedback explaining why this
+series hasn't been merged yet. I am willing to further improve it
+if necessary.
+
+- Saurabh
 
