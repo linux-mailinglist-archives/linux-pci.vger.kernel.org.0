@@ -1,227 +1,192 @@
-Return-Path: <linux-pci+bounces-3209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9449E84CEE3
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 17:30:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE40384CEE9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 17:33:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0FB428B93C
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 16:30:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB2CC1C26010
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 16:33:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFF781AC0;
-	Wed,  7 Feb 2024 16:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F53D81ABF;
+	Wed,  7 Feb 2024 16:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IXLKnbWP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZL+hZ9pA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BF6E33CA;
-	Wed,  7 Feb 2024 16:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA893383BE
+	for <linux-pci@vger.kernel.org>; Wed,  7 Feb 2024 16:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707323430; cv=none; b=pEVxXBX7GVu39CRx7evwbvm3KqDRX8LIOI8L1Zz0yJLY8gJXKFNXDX7RhKBbDX8TYpluNI4eGQAW9CnYawMi3HWM6tc2JiCdStTr1p1H1FQGCbQyd3NUzPYBOzlwsB8TU7Be41yDMkDbtLNwc1evzfsBmhoTSFMrksAUPR1qzrQ=
+	t=1707323574; cv=none; b=pMOVwICIbM855oGDFN37GFT2xZDAtIyvJjbZLYGvWzKOMEo/h1r5+xQ287PrVqG1zIHbYOQaziviSpgZtI6Cja5tMs85XHHGYLgG9Mg7xwCZtp0WQloTk+UJ3l43wlamkGA9fGqmKClvNwfYly/aPBkZnOqMklOqPcziQLDV62k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707323430; c=relaxed/simple;
-	bh=M7XNmpXkCernHXFKYJVeFrVvhYtZ0ecElH59OoqntzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tE1aFHrix/rHR4ChyBCc7MnhKPbCup5wpzJZtzHcFjMGM6cYP75oRBL+spq2dBreH9RJ4GyfH6ZtV+trByuhx92rR1/g49htKX1Zss5QXsUTOAS7jeFgpYVTimKyOBlIa//PB0i7GmtgQ7k4p4CCYwBj999QAv/AUiLrreRmPqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IXLKnbWP; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id BF493207E710; Wed,  7 Feb 2024 08:30:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF493207E710
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1707323427;
-	bh=14lkH5/QyhbhCK3x+1ZM9xL0SppWtCFQ+0DYG8K9wCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IXLKnbWPSNjpuhwLhFZPsmzU03yYekEb8DFmB+7e0q97fm+eY+MLunk6YjGUjOFfC
-	 0rGfcEyysV9XnZHSOs/N+PuqVXipp233U/9iOw+QI40TR6Ys7JpqA0n+u66A2gqJT/
-	 gabsGrckqzQtWpvp2rJ2ztglwqgShKWB/B6e7aGI=
-Date: Wed, 7 Feb 2024 08:30:27 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, alexander.stein@ew.tq-group.com,
-	decui@microsoft.com,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
-Message-ID: <20240207163027.GA13964@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com>
- <20240206220715.GA884075@bhelgaas>
+	s=arc-20240116; t=1707323574; c=relaxed/simple;
+	bh=6Yo/fyYh7fG38u08ZGJVpdUslT92MuMedlOE+fskdT4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ig+xylaEVu5zB0Dw7couaha3T+auBDIlh6uuJ1zLUYxcRqYRZQll2gp0xfih7LVmJ/JnH1HEJYJMYp3JTYmIvtxjzKf7DN6sSDL/U9v6a3bpW97sJhfA3+OgjNfl53B/CiLgssrl1IkZT2KVzi8fJsyg2/CT08+xJPi7miids1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZL+hZ9pA; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc6c4a5bf2fso842450276.1
+        for <linux-pci@vger.kernel.org>; Wed, 07 Feb 2024 08:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707323570; x=1707928370; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Yo/fyYh7fG38u08ZGJVpdUslT92MuMedlOE+fskdT4=;
+        b=ZL+hZ9pAzfYVNJ5X4fBcLg98ndLaGNBYNck/AGtAA7VIwl+S3EzDE5SR8pbD2kfH5l
+         Z1TncIKTTzRVVDES9JJYV1zrVXgx57Vi5m1lZvp14iG/TIlWwfTNZRULuKa4ZQGQDo/j
+         rNpe1Svy1sqh88W83WF4u3ZZozQpX6xZX0Go07Cl6o0E9jfIwQ4upB2+hN5+d8mQy7jQ
+         HCj7onieCi3bvpel3sD5Y6BilbfKMoDilGzKNVagV77JXL4aFaBNsdNcb9Tfa/fFwj7a
+         gZKGCWpVW7Xialj9vVy7WMbglDL3NPCof+8Bn+QFI1EhM2cqXmOzVqJd10LSat8CbeAi
+         7mlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707323570; x=1707928370;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Yo/fyYh7fG38u08ZGJVpdUslT92MuMedlOE+fskdT4=;
+        b=hj/s1HNPx5EpB0nmKrXR2JfIxDiaJX8hVmARiUznUqh7VKBv6ioHxNYBS5p+DjBZS9
+         e4l3TZw992uRNbmh6L49+Sspjy0LwkrJLubkK7FLZCiX4pnp3DU8hPF8nzGLKlCKVybj
+         MgiuYeaV5wxBgPbBkm/fuiw9daBF/00em9r+SCrTn9Y6XUMT33g+P1OjGgfVH6ih51DN
+         hfZCiBTjS/cnosrp1S0BPjOqecunUoF8N7dDLA3Ec6ni6Nq8HFZOMSB5EYlQZB1JoFO2
+         wKjQEDDyAf9C9rj0i8K2L1LCYe33qIeo5QEAlPbP7uz4/HRW83EsyczkwxPzT8QFpc2P
+         eCzw==
+X-Gm-Message-State: AOJu0Yyfq/Dp/yTk3si8kEL9BKoiYz6lzrpggDvT/BzjiBsDdD9XtL4x
+	mpUy1unxPBLkyK9cY+8HZmzJulcfduHZsppzgrODWpc/pH4U9OSPvvF4K8XZlTNzEq1QiHnG45G
+	O785j1aCpPpbMC875eJXrVB14Z0c579vSfx2w5A==
+X-Google-Smtp-Source: AGHT+IE3zCdfJVGHV2I6xOZuAs5X41g7XZwMrMfSjZMfsSrqtH+jCnKdu76h60nVbqejDK2GD8n0GFHFIxgNUHOMEGE=
+X-Received: by 2002:a5b:74f:0:b0:dc6:de64:f74 with SMTP id s15-20020a5b074f000000b00dc6de640f74mr4960135ybq.9.1707323569174;
+ Wed, 07 Feb 2024 08:32:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206220715.GA884075@bhelgaas>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20240117160748.37682-1-brgl@bgdev.pl> <20240117160748.37682-5-brgl@bgdev.pl>
+ <2024011707-alibi-pregnancy-a64b@gregkh> <CAMRc=Mef7wxRccnfQ=EDLckpb1YN4DNLoC=AYL8v1LLJ=uFH2Q@mail.gmail.com>
+ <2024011836-wok-treadmill-c517@gregkh> <d2he3ufg6m46zos4swww4t3peyq55blxhirsx37ou37rwqxmz2@5khumvic62je>
+ <CAMRc=MeXJjpJhDjyn_P-SGo4rDnEuT9kGN5jAbRcuM_c7_aDzQ@mail.gmail.com>
+ <oiwvcvu6wdmpvhss3t7uaqkl5q73mki5pz6liuv66bap4dr2mp@jtjjwzlvt6za> <CAMRc=McT8wt6UbKtyofkJo3WcyJ-S4d2MPp8oZmjWbX6LGbETQ@mail.gmail.com>
+In-Reply-To: <CAMRc=McT8wt6UbKtyofkJo3WcyJ-S4d2MPp8oZmjWbX6LGbETQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 7 Feb 2024 17:32:38 +0100
+Message-ID: <CAMRc=MeWgp27YcS=-dbYdN1is1MEuZ2ar=pW_p9oY0Nf1EbFHA@mail.gmail.com>
+Subject: Re: Re: Re: [PATCH 4/9] PCI: create platform devices for child OF
+ nodes of the port node
+To: Bjorn Andersson <andersson@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
+	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <terry.bowman@amd.com>, 
+	Lukas Wunner <lukas@wunner.de>, Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 06, 2024 at 04:07:15PM -0600, Bjorn Helgaas wrote:
-> [+cc Krzysztof]
-> 
-> On Fri, Dec 08, 2023 at 07:46:16PM -0800, Saurabh Sengar wrote:
-> > Currently there is a race in calling pci_create_resource_files function
-> > from two different therads, first therad is triggered by pci_sysfs_init
-> > from the late initcall where as the second thread is initiated by
-> > pci_bus_add_devices from the respective PCI drivers probe.
-> > 
-> > The synchronization between these threads relies on the sysfs_initialized
-> > flag. However, in pci_sysfs_init, sysfs_initialized is set right before
-> > calling pci_create_resource_files which is wrong as it can create race
-> > condition with pci_bus_add_devices threads. Fix this by setting
-> > sysfs_initialized flag at the end of pci_sysfs_init and direecly call the
-> > pci_create_resource_files function from it.
-> > 
-> > There can be an additional case where driver probe is so delayed that
-> > pci_bus_add_devices is called after the sysfs is created by pci_sysfs_init.
-> > In such cases, attempting to access already existing sysfs resources is
-> > unnecessary. Fix this by adding a check for sysfs attributes and return
-> > if they are already allocated.
-> > 
-> > In both cases, the consequence will be the removal of sysfs resources that
-> > were appropriately allocated by pci_sysfs_init following the warning below.
-> > 
-> > [    3.376688] sysfs: cannot create duplicate filename '/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A03:00/device:07/VMBUS:01/47505500-0001-0000-3130-444531454238/pci0001:00/0001:00:00.0/resource0'
-> > [    3.385103] CPU: 3 PID: 9 Comm: kworker/u8:0 Not tainted 5.15.0-1046-azure #53~20.04.1-Ubuntu
-> > [    3.389585] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
-> > [    3.394663] Workqueue: events_unbound async_run_entry_fn
-> > [    3.397687] Call Trace:
-> > [    3.399312]  <TASK>
-> > [    3.400780]  dump_stack_lvl+0x38/0x4d
-> > [    3.402998]  dump_stack+0x10/0x16
-> > [    3.406050]  sysfs_warn_dup.cold+0x17/0x2b
-> > [    3.408476]  sysfs_add_file_mode_ns+0x17b/0x190
-> > [    3.411072]  sysfs_create_bin_file+0x64/0x90
-> > [    3.413514]  pci_create_attr+0xc7/0x260
-> > [    3.415827]  pci_create_resource_files+0x6f/0x150
-> > [    3.418455]  pci_create_sysfs_dev_files+0x18/0x30
-> > [    3.421136]  pci_bus_add_device+0x30/0x70
-> > [    3.423512]  pci_bus_add_devices+0x31/0x70
-> > [    3.425958]  hv_pci_probe+0x4ce/0x640
-> > [    3.428106]  vmbus_probe+0x67/0x90
-> > [    3.430121]  really_probe.part.0+0xcb/0x380
-> > [    3.432516]  really_probe+0x40/0x80
-> > [    3.434581]  __driver_probe_device+0xe8/0x140
-> > [    3.437119]  driver_probe_device+0x23/0xb0
-> > [    3.439504]  __driver_attach_async_helper+0x31/0x90
-> > [    3.442296]  async_run_entry_fn+0x33/0x120
-> > [    3.444666]  process_one_work+0x225/0x3d0
-> > [    3.447043]  worker_thread+0x4d/0x3e0
-> > [    3.449233]  ? process_one_work+0x3d0/0x3d0
-> > [    3.451632]  kthread+0x12a/0x150
-> > [    3.453583]  ? set_kthread_struct+0x50/0x50
-> > [    3.456103]  ret_from_fork+0x22/0x30
-> > 
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> > There has been earlier attempts to fix this problem, below are the patches
-> > for reference of these attempts.
-> > 1. https://lore.kernel.org/linux-pci/20230316103036.1837869-1-alexander.stein@ew.tq-group.com/T/#u
-> > 2. https://lwn.net/ml/linux-kernel/20230316091540.494366-1-alexander.stein@ew.tq-group.com/
-> > 
-> > Bug details: https://bugzilla.kernel.org/show_bug.cgi?id=215515
-> > 
-> >  drivers/pci/pci-sysfs.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index f2909ae93f2f..a31f6f2cf309 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -1230,6 +1230,10 @@ static int pci_create_resource_files(struct pci_dev *pdev)
-> >  		if (!pci_resource_len(pdev, i))
-> >  			continue;
-> >  
-> > +		/* Check if resource already allocated and proceed no further */
-> > +		if (pdev->res_attr[i] || pdev->res_attr_wc[i])
-> > +			return 0;
-> > +
-> >  		retval = pci_create_attr(pdev, i, 0);
-> >  		/* for prefetchable resources, create a WC mappable file */
-> >  		if (!retval && arch_can_pci_mmap_wc() &&
-> > @@ -1411,9 +1415,8 @@ static int __init pci_sysfs_init(void)
-> >  	struct pci_bus *pbus = NULL;
-> >  	int retval;
-> >  
-> > -	sysfs_initialized = 1;
-> >  	for_each_pci_dev(pdev) {
-> > -		retval = pci_create_sysfs_dev_files(pdev);
-> > +		retval = pci_create_resource_files(pdev);
-> >  		if (retval) {
-> >  			pci_dev_put(pdev);
-> >  			return retval;
-> > @@ -1423,6 +1426,8 @@ static int __init pci_sysfs_init(void)
-> >  	while ((pbus = pci_find_next_bus(pbus)))
-> >  		pci_create_legacy_files(pbus);
-> >  
-> > +	sysfs_initialized = 1;
-> > +
-> >  	return 0;
-> >  }
-> >  late_initcall(pci_sysfs_init);
-> 
-> Sorry for the delay in looking at this.  Consider the following
-> sequence where thread A is executing pci_sysfs_init() at the same time
-> as thread B enumerates and adds device X:
-> 
->   Thread A:
-> 
->     pci_sysfs_init
->       for_each_pci_dev(pdev) {                  # device X not included
->         pci_create_resource_files(pdev);
->       }
-> 
->   Thread B:
-> 
->     pci_bus_add_device                          # add device X
->       pci_create_sysfs_dev_files
->         if (!sysfs_initialized)                 # sysfs_initialized still zero
->           return -EACCES;
->         pci_create_resource_files(pdev);        # not executed
-> 
->   Thread A:
-> 
->     while ((pbus = pci_find_next_bus(pbus)))
->       pci_create_legacy_files(pbus);
-> 
->     sysfs_initialized = 1;
-> 
-> Doesn't this have a similar race where instead of the duplicate
-> filename from having two threads try to create the resource files,
-> neither thread creates them and device X ends up with no resource
-> files at all?
-> 
-> Krzysztof has done a ton of work to convert these files to static
-> attributes, where the device model prevents most of these races:
-> 
->   506140f9c06b ("PCI/sysfs: Convert "index", "acpi_index", "label" to static attributes")
->   d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
->   f42c35ea3b13 ("PCI/sysfs: Convert "reset" to static attribute")
->   527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
->   e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute")
-> 
-> and he even posted a series to do the same for the resource files:
-> 
->   https://lore.kernel.org/linux-pci/20210910202623.2293708-1-kw@linux.com/
-> 
-> I can't remember why we didn't apply that at the time, and it no
-> longer applies cleanly, but I think that's the direction we should go.
-> 
-> Bjorn
+On Fri, Feb 2, 2024 at 11:02=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> On Fri, Feb 2, 2024 at 1:03=E2=80=AFAM Bjorn Andersson <andersson@kernel.=
+org> wrote:
+> >
+>
+> [snip]
+>
+> > > >
+> > > > I believe I missed this part of the discussion, why does this need =
+to be
+> > > > a platform_device? What does the platform_bus bring that can't be
+> > > > provided by some other bus?
+> > > >
+> > >
+> > > Does it need to be a platform_device? No, of course not. Does it make
+> > > sense for it to be one? Yes, for two reasons:
+> > >
+> > > 1. The ATH11K WLAN module is represented on the device tree like a
+> > > platform device, we know it's always there and it consumes regulators
+> > > from another platform device. The fact it uses PCIe doesn't change th=
+e
+> > > fact that it is logically a platform device.
+> >
+> > Are you referring to the ath11k SNOC (firmware running on co-processor
+> > in the SoC) variant?
+> >
+> > Afaict the PCIe-attached ath11k is not represented as a platform_device
+> > in DeviceTree.
+> >
+>
+> My bad. In RB5 it isn't (yet - I want to add it in the power
+> sequencing series). It is in X13s though[1].
+>
+> > Said platform_device is also not a child under the PCIe bus, so this
+> > would be a different platform_device...
+> >
+>
+> It's the child of the PCIe port node but there's a reason for it to
+> have the `compatible` property. It's because it's an entity of whose
+> existence we are aware before the system boots.
+>
+> > > 2. The platform bus already provides us with the entire infrastructur=
+e
+> > > that we'd now need to duplicate (possibly adding bugs) in order to
+> > > introduce a "power sequencing bus".
+> > >
+> >
+> > This is a perfectly reasonable desire. Look at our PMICs, they are full
+> > of platform_devices. But through the years it's been said many times,
+> > that this is not a valid or good reason for using platform_devices, and
+> > as a result we have e.g. auxiliary bus.
+> >
+>
+> Ok, so I cannot find this information anywhere (nor any example). Do
+> you happen to know if the auxiliary bus offers any software node
+> integration so that the `compatible` property from DT can get
+> seamlessly mapped to auxiliary device IDs?
+>
 
+So I was just trying to port this to using the auxiliary bus, only to
+find myself literally reimplementing functions from
+drivers/of/device.c. I have a feeling that this is simply wrong. If
+we're instantiating devices well defined on the device-tree then IMO
+we *should* make them platform devices. Anything else and we'll be
+reimplementing drivers/of/ because we will need to parse the device
+nodes, check the compatible, match it against drivers etc. Things that
+are already implemented for the platform bus and of_* APIs.
 
-Thanks for you review.
+Greg: Could you chime in and confirm that it's alright to use the
+platform bus here? Or maybe there is some infrastructure to create
+auxiliary devices from software nodes?
 
-Krzysztof,
+Bartosz
 
-Please inform me if there's existing feedback explaining why this
-series hasn't been merged yet. I am willing to further improve it
-if necessary.
-
-- Saurabh
+> > Anyway, (please) don't claim that "we need to", when it actually is "we
+> > want to use platform_device because that's more convenient"!
+>
+> Bart
+>
+> [snip]
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts#n744
 
