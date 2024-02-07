@@ -1,494 +1,429 @@
-Return-Path: <linux-pci+bounces-3183-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3184-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2A0284C4F0
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 07:24:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5337284C503
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 07:32:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E09BC1C243DA
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 06:24:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B71621F251F9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 06:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B91451BF2F;
-	Wed,  7 Feb 2024 06:24:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BF551773D;
+	Wed,  7 Feb 2024 06:32:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="peLzen/b"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="u2BJ1zHU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2078.outbound.protection.outlook.com [40.107.13.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FAA1CF87;
-	Wed,  7 Feb 2024 06:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707287070; cv=fail; b=C86VKobNHP4XgeHeOXDGJ2MUhMcWfcHdaa2ZbTU2dPrZ1IdxOp7P4g3xuBKq6RJJlvcUakrTmM2XbfAcDk/heWYtizsovLlSfyltZUzNDj13N7vl8a5WriLJMWqGuOiwu+xb+8f1w/gtciwUK5FCJKS+Sc8z8VyDQjZNF+p/x6I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707287070; c=relaxed/simple;
-	bh=2hOWvUgOfbO+GtoFYixeUKdBDgmY0G6lX/h4IEa2R4k=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=QewJ3hx3F22jQiNVWopNOy8RVfA/m0RMT1EFXJ/3SCrT8LMfvLivKqDTAskE0HLAeRFuqRNKAVoONzRjLuG0zk2yInJGnE56Ci5Qf2jAkxAs3Rgj3epPO7T9+FKwBiMUnlS/1XYbXTITyt2F1rNa9R5i76ecvkcCnQPO+MUutf4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=peLzen/b; arc=fail smtp.client-ip=40.107.13.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HV2SNveeVlYEaSxWb1eF/+FJ9oAx2O9j45C67+lB6MH8HgwUKycTapmLc90Be2NUmeOFBuJxzk+w92F4UmAUlHLfAixVpuWuavjEjV9Z+m6PmVpTvwaOGg3U5UPz3mmBmcqylIHkRWcMfcrwzeYRr/zQFLyA7J9vLjZ+XDWGMJ8NdqQEa9tV0ZsMA/F50rrmJHuiAFW6HRfu6cQQgeMVyLHgeUoYM/7O7kml0DNyUG/K/cvbZS1tcSfCY3a9+2PjGf6W/BfvOFUzRxIOYWqpr/bvrCdtf7twKfM43k+RFMgsG2hTBw+VSZQjfpZWG6IN7a6BnL39aTh1RTTznlW1KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9J+uDlQ71IlsL2ROCGPQx7s3FHMxqFolgrVvkpWpz2Q=;
- b=F4K8HHae3clESnPi3MWFihUQE1V1neP79O4VYvLtkZCQy18MykfRT5KfD5Og05Ls1i37BkRYezuXP3hgSrOVQZn056cCVNT/dnQoW9riuDFlZvnuiz+yATPs6YT08huqKA7wAxqSH+NOz+ZSsDzBRDwsf/Q3Lan766REJlh6XDCHuTnEGKa7XcYSJdcgdoExEAC6BrbY4ZsCinIHMgyDvru4JNM8DiMGEnpqMCQXJbDHNxnR9DAlm7rYtzz5Yr3KIgek5lG3ospRx3tPaxMZczqFcHX/eIVMumhKYaw7rwvmy2IaZOY2INT0/XDY4iZ851rqA4BuVsm+MN22k43Ulw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9J+uDlQ71IlsL2ROCGPQx7s3FHMxqFolgrVvkpWpz2Q=;
- b=peLzen/bSYOSSkjkjTVYet+hczHHqSpTfucyEJqaHkUOcRYp1iR8162ML3Y/H+7zUrBTq8EZ3RmJb8fVW8jLtxVj60F6lKFIQqYmoD/dIGCarAqwuwBY3GlQxLSmts3ZXVyBqAZf2/I3ugQdvuKt5nYI0ju1c5qZq96H4VEtcyo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB8895.eurprd04.prod.outlook.com (2603:10a6:102:20e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Wed, 7 Feb
- 2024 06:24:24 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7249.035; Wed, 7 Feb 2024
- 06:24:24 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml file
-Date: Wed,  7 Feb 2024 01:24:02 -0500
-Message-Id: <20240207062403.304367-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0128.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259D61CD2C
+	for <linux-pci@vger.kernel.org>; Wed,  7 Feb 2024 06:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707287529; cv=none; b=dOMjXvFem21OBzRUsZ6PiC1J14lpsvU7PgC2+eBKYNAauErt5p1cZetrStuaIf/xsrTo95qkSMI43kZCFK+tJCZeKoCjlKe777awpUPXeP2LlxiOf0V/vyioY7T9PdI897GvchzjCCs6mMfjwwIME6o1DiK6YFJsJ+VFOQbquTk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707287529; c=relaxed/simple;
+	bh=jtmLBplwCG56G8uZAmBLDccQpfNCfshXHxvjHmht6Uc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gSuqq+o9LQkOtONjg7ZohqLSBulmI9S68gw4QO0v9vLDricL3UujlyVHSV0mAiW6Mn2DJVRqf7qt6QQSOqP5F/IpDcfOd/qTnyNX2MUQJhuaKsW65yo+xoRjJ99BGjaa9BPw8jLMUMafZg7TM2UcIok77VK6pFwpn/7nLaTG8VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=u2BJ1zHU; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-604842b3726so3665307b3.0
+        for <linux-pci@vger.kernel.org>; Tue, 06 Feb 2024 22:32:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1707287525; x=1707892325; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2MLmYhwM6V0Q4nXC/yPki6tk1W/Oozpyls+lfDZ2B0U=;
+        b=u2BJ1zHU1zzwhH+jvFH3/papExRRABjBxZua6Ro/OHim9XFUsdC4MmxAoqnIGEsCLp
+         197knX75EplRV4X/XP3KmOu7tfVibqM233XYjV4BnbYxq2X7S0mK3nyQdGR7S9UcOVFH
+         PdS/gSqUMnSmWEkuiCJUZFBF2nj88eAGcXGNJya9wfJbX2ARDi0jDvOHnSwlpXWZEy9d
+         d16V/fyITKB/KuGqV11T0QMx6P+GiXk46ba3WXqjvRBtxFxvLIoACGhtl4CgA7Ko5vAK
+         Vu0xcaKWmLJNOgTt3LYkdUx3rMKf8K/0FTQDwu9D/RqbQQuhg4vnRSOPqnqGwoA8CoDe
+         pDLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707287525; x=1707892325;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2MLmYhwM6V0Q4nXC/yPki6tk1W/Oozpyls+lfDZ2B0U=;
+        b=GXF0Zfnha8+YyujjTZAfiB80SSdhCNmR/3FsVLwfvnf713iJk3uC/u3tZ+KxOlAl8X
+         /RK+LSrb6RjNxNM3bvI/0VHLYw/g8HwFpweL/dOL5GFFnkXs3D75YKC1L39C7ny/42iG
+         Jd+rm/omxaSycuAqafUB1ZpWTei2yJ44FzPo0J2+x9bSku5vuzmqOaIpWFeyzhZZOeTc
+         vLiDzuJaUK/KOyzXYDEET5jjmmcwwMheI7WoF151i0m6tzksRNY73W8amD/XABaGIasm
+         WuBcV2hAr1h5rv6OZde90ITqBIHRck/fEOBI4Tt2nAzKMI4emZ4lm82U3T8Vmzy/eFu5
+         xxmg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjE5Y4iTBQ+TTI2t4Hsow+pDy/pb7R9WGIvXq6Zsdc6x3HH3ZUMNnQxy/enfoWfiNPF7tiq39aZxemuOrzvNxYbbogiZN9UUX6
+X-Gm-Message-State: AOJu0YwkgvzdJ4JWIRriIHJ9z+F8kagvbXHg+kIYfENS9FlVD5m82xoZ
+	sahmvC5HrzbzGXgK31Ry6eYYzhwEE5Id/4xHQsraQ7F5sEwFBcbWIY8O76VkD6u4XW5UNvU9Xew
+	9ybeKymYoQR7oMFJY7PWdgr2bPmXj/wWMsi3ulA==
+X-Google-Smtp-Source: AGHT+IH785L7G8bGbuWEDhetEWGon5IfyyMyXQ4okyvhpWeiGgm8OmTnGt7st1LaD+Jkftr3t7dJuZ8/QQQTflhkoow=
+X-Received: by 2002:a81:bc54:0:b0:5eb:1d7a:2664 with SMTP id
+ b20-20020a81bc54000000b005eb1d7a2664mr3698543ywl.29.1707287524989; Tue, 06
+ Feb 2024 22:32:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8895:EE_
-X-MS-Office365-Filtering-Correlation-Id: f43310ae-ca4d-475f-76d4-08dc27a56d96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	af1UuzzFBAOYwKjPXAwHvR3sp5sbZWtRwpIRXg565HF7vODvAzahNqakla3OnShoMVGLyLS6Y7sh/m9IwZEYEtUmhDffxDlAF3AAdS8k2g301QJQNsnG5p60uJZ4zxhV2XxHqu7Dxsfj1jifnnkN6KwWrGTf+4AhnUtVa3X/qWnwtg42QBD8sblFjxM1voorEUAs32YaB9j2Dud2Gp0/+HAB/NdIsfjFAVUaFSzVxrHUVMuYKZxP4yHOBWsVU838WQtqCRnW/Z6TurRK11I2j0dSFT3tVYU9S1OJlcm4LLYQMjqlLdOIoSUIzHGmiSETHeDgWIC4AhPO2oFvgom2VIBQFqyUeh66Qphbc8ggn3f/V2Xu91VrjdyZ4MeNawEW8lNofxT6noY59YpUpCl8wr/mvRhQDx7u/bKjTjKZvf/8R1WTWyqnkIg9LsuhWdkmrkoOQTyzq+jHQqSDMPm303nPC2iVFtr1YdXBHerm/jqOY3NqY5hG/HfJaHDqdKbeBZbZey6MVmWKphjzxvqnLGp9t6Mj5HDBfut8ySvVnMWEEdQ7JLOIvqfcysoFomMslGdXat5HJk9D5Te5jNziP+a0kMBsXRYCk5tBPA7jvXU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(136003)(376002)(346002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(83380400001)(2906002)(38100700002)(41300700001)(316002)(26005)(38350700005)(66556008)(66946007)(66476007)(110136005)(7416002)(30864003)(8676002)(86362001)(8936002)(4326008)(6506007)(52116002)(2616005)(6666004)(5660300002)(6512007)(1076003)(478600001)(6486002)(36756003)(966005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oJ+MNXFm98LMxC7INJI27w5728vxdN+ATOI2YaDm7eKwJzky8+tH2D16/ira?=
- =?us-ascii?Q?TSwSPLWBTzocG6bQW4OCtSRpQC+Uw8chpftzouUk7Yo1RIhNaeECuGcgih04?=
- =?us-ascii?Q?sKSF7nWVAZl2Z0AvECmOJMY1pLsQGLiwvl0TCPtgxtxHVyHETwssFF2r8M+y?=
- =?us-ascii?Q?+VhjNtwxu63bWDfoOPnDSKvoT78O9dYzyQx0E8F1p1+rFOLfPAF0J8BaUB1Z?=
- =?us-ascii?Q?bcATnAyhvsdkGczgeQD/R42BSetq9VwAy9oESYp+y6jPpHOrxBRV4lsq0WDa?=
- =?us-ascii?Q?FV9K6uo/XKQXrSGVILr+AMns1HnWCZGbx9cJyPQ7i9lof7WKOfgUPuaiw1EZ?=
- =?us-ascii?Q?FwNy0t+EB8PB0nvzIled1gW+MSIbePy1HdgFZiIbbC2wbMcVqx4a3SQDo7qS?=
- =?us-ascii?Q?BOH8yGM9SFk5nnzDwkoqVOI6GLLtPjMb+nH5Pwkqp0czItK0TCmyon3Lm+LO?=
- =?us-ascii?Q?TvERTR3izQ48pHiERzTpsRnMb4zKOjR+CHYRe6+IcsJb9LLEnRrfvYZlDTK7?=
- =?us-ascii?Q?iMuexBXMrtl6ORbrFcy1FZzM4v1l9ul1MI+1vvr2UCLo8f9lu8EREqgz4p00?=
- =?us-ascii?Q?98T932o6EA+ZdJVJjGTAabN+S4DuIKdojSeejzNkK1FwERE5Q0ChW8/k3q+8?=
- =?us-ascii?Q?bCatgLQ0w6pLcVxAjBdkqMaixeihZClgNtoJSAcmERgULH0RmwP4cvZHmon8?=
- =?us-ascii?Q?zREqlxB65OQzBePuanLfhH1/q6Y1uHVpA/fe0ctvfM10JG8qseVk3n+AK5jQ?=
- =?us-ascii?Q?wRgt+P3CIrVY4cWw95bCzVn118R0uC1PpGlpWoy214rJOsedQpYX2sukOVMJ?=
- =?us-ascii?Q?Ku+Hm2wRVY+odtlyp7BPxga14LoSBBb8jIsxla72g2nqh//YA0q94Y3+TjCn?=
- =?us-ascii?Q?snU9GeNcEIo+jIOLzQwUxofwe9tDChe0v5uUl8JrK/EezmzzDfDNhn0e+nT8?=
- =?us-ascii?Q?ffZ9q24O/uF2mQRQhezvhvRCUy9dKE9zJM293hV0pssJFHaowHAJTv1HkJq9?=
- =?us-ascii?Q?UVnwDWuXQHoUHDM5klfsHQp962cpboRS3EIKwqq8G0Vx9ubYiYJkVvbQriBt?=
- =?us-ascii?Q?RBwbF/nLkaCrT/psm6U0VP2YbAIN7z8blmQOOlR8pmecySILB8l+092k0cLC?=
- =?us-ascii?Q?4N7YkoSnf3KnUvqgJ3Epu3VO2ot8ZyYP71ee2rdi2wIWC6AnCEL2WMS5HEFC?=
- =?us-ascii?Q?tUtJ/U7eidpxy3hE7doB7wqe8eoVERPMuyWiOHGg75JgfU/k6KLyqm5RZA92?=
- =?us-ascii?Q?45X2lFVsXeyINB0XDYWY6CPBBr1UUzrGoezuiuNnS85Qky2WvtJRGJmIVjVH?=
- =?us-ascii?Q?oxynr9QQ77nSrWH/qym4rnTO8Hx9kC/TkkdzNGd20N3IL4s+CnIcXBOpkqRc?=
- =?us-ascii?Q?5pT6JJ0uRtxYTKWdSPEzY7SUEl81gq8gSXN/smEPO0EAi5QA9DqH0hPrKcq5?=
- =?us-ascii?Q?+lH7zP+4ZJR+XED/U7MsDUdS/LS3UbAUb0ySl/iGDByACvfe5dzY6LAw9A1B?=
- =?us-ascii?Q?txkz7EgL1M1BaqosDW5xNnhKScpfwSlcOopBRB9qlTi4oS280JpaKhd/SqUm?=
- =?us-ascii?Q?fIjfwfPczYLUktfQ1CI=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f43310ae-ca4d-475f-76d4-08dc27a56d96
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2024 06:24:24.4348
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5In9dPYek0269yQ1VNglEyHXabeGV7Zds1wCU5B8iV8aLGEb4ZuONpUFpP+7NEExp+XQkt9HBsUdILj2uaDbkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8895
+References: <20240130095933.14158-1-jhp@endlessos.org> <20240130101335.GU2543524@black.fi.intel.com>
+ <CAPpJ_ef4KuZzBaMupH-iW0ricyY_9toa7A4rB2vyeaFu7ROiDA@mail.gmail.com>
+ <Zbonprq/1SircQon@x1-carbon> <CAD8Lp47SH+xcCbZ9qdRwrk2KOHNoHUE5AMieVHoSMbVsMrdiNg@mail.gmail.com>
+ <ZbrNLxHL03R66PxQ@x1-carbon> <ZbuyVbMEBWKi729y@x1-carbon> <CAPpJ_efmzy_FU0urdHDmO5htOBCPaX-T5W+Er7AmWYhqUTwnyA@mail.gmail.com>
+ <ZcDHjsYJNlJ/9nNT@x1-carbon> <CAPpJ_ec0H6zr6wcNstFn9dRcFgPXspU3MYvgGMNAS5wnw-0pTw@mail.gmail.com>
+ <ZcIwMb0WPZLG85LR@x1-carbon>
+In-Reply-To: <ZcIwMb0WPZLG85LR@x1-carbon>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Wed, 7 Feb 2024 14:31:29 +0800
+Message-ID: <CAPpJ_efbRDqA9ybmdJ9iNunVmoHukGekuFtEE3X-nwOxfYivcg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ata: ahci: Add force LPM policy quirk for ASUS B1400CEAE
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, Daniel Drake <drake@endlessos.org>, 
+	Vitalii Solomonov <solomonov.v@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	David Box <david.e.box@linux.intel.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Nirmal Patel <nirmal.patel@linux.intel.com>, 
+	Jonathan Derrick <jonathan.derrick@linux.dev>, linux-ide@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessos.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert layerscape pcie bind document to yaml file.
+Niklas Cassel <cassel@kernel.org> =E6=96=BC 2024=E5=B9=B42=E6=9C=886=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=889:12=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Tue, Feb 06, 2024 at 04:39:02PM +0800, Jian-Hong Pan wrote:
+> > Niklas Cassel <cassel@kernel.org> =E6=96=BC 2024=E5=B9=B42=E6=9C=885=E6=
+=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:33=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Have the comparison:
+> >
+> > * Bind LPM policy with the patch "ata: ahci: Add force LPM policy
+> > quirk for ASUS B1400CEAE" based on kernel v6.8-rc2:
+> >
+> > $ dmesg | grep -E "(SATA|ata1|ahci)"
+> > [    0.791497] ahci 10000:e0:17.0: version 3.0
+> > [    0.791499] ahci 10000:e0:17.0: force controller follow LPM policy
+> > [    0.791517] ahci 10000:e0:17.0: can't derive routing for PCI INT A
+> > [    0.791518] ahci 10000:e0:17.0: PCI INT A: no GSI
+> > [    0.791637] ahci 10000:e0:17.0: ahci_update_initial_lpm_policy: poli=
+cy 3
+> > [    0.791652] ahci 10000:e0:17.0: ahci_intel_pcs_quirk: not Intel,
+> > the vendor is 0xffffffff
+> > [    0.791662] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+> > Gbps 0x1 impl SATA mode
+> > [    0.791663] ahci 10000:e0:17.0: flags: 64bit ncq sntf pm clo only
+> > pio slum part deso sadm sds
+> > [    0.791771] scsi host0: ahci
+> > [    0.791806] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+> > 0x76102100 irq 145 lpm-pol 3
+> > [    0.791808] ahci 10000:e0:17.0: ahci_init_one: probed
+> > [    1.109393] ata1: sata_link_resume: rc=3D0
+> > [    1.109415] ata1: BUSY ? 0 (status: 0x50) SStatus.DET: 0x3
+> > [    1.109418] ata1: sata_link_hardreset: is 0
+> > [    1.109420] ata1: sata_link_hardreset: is on line, returns 0
+> > [    1.109444] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+> > [    1.110161] ata1.00: ATA-10: WDC WD10SPZX-80Z10T2, 04.01A04, max UDM=
+A/133
+> > [    1.112047] ata1.00: 1953525168 sectors, multi 16: LBA48 NCQ (depth =
+32), AA
+> > [    1.112054] ata1.00: Features: NCQ-prio
+> > [    1.114814] ata1.00: configured for UDMA/133
+> > [    1.114821] ata1: ahci_set_lpm: policy=3D3
+> > [    1.114837] ata1: sata_link_scr_lpm: policy is 3 and original
+> > scontrol 0x00000300
+> > [    1.114840] ata1: sata_link_scr_lpm: write scontrol 0x00000000
+> >
+> > The SATA link is up and SATA storage shows up.
+> > Full dmesg as the attachment of
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D217114#c28
+> >
+> > * Bind LPM policy with PCI IDs like commit 104ff59af73a ("ata: ahci:
+> > Add Tiger Lake UP{3,4} AHCI controller"):
+> >
+> > $ dmesg | grep -E "(SATA|ata1|ahci)"
+> > [    0.783125] ahci 10000:e0:17.0: version 3.0
+> > [    0.783143] ahci 10000:e0:17.0: can't derive routing for PCI INT A
+> > [    0.783145] ahci 10000:e0:17.0: PCI INT A: no GSI
+> > [    0.783257] ahci 10000:e0:17.0: ahci_update_initial_lpm_policy: poli=
+cy 3
+> > [    0.783280] ahci 10000:e0:17.0: ahci_intel_pcs_quirk: PCS_6 is 0x000=
+0
+> > [    0.783281] ahci 10000:e0:17.0: ahci_intel_pcs_quirk: write PCS_6 wi=
+th 0x0001
+> > [    0.783296] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+> > Gbps 0x1 impl SATA mode
+> > [    0.783298] ahci 10000:e0:17.0: flags: 64bit ncq sntf pm clo only
+> > pio slum part deso sadm sds
+> > [    0.783402] scsi host0: ahci
+> > [    0.783440] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+> > 0x76102100 irq 144 lpm-pol 3
+> > [    0.783442] ahci 10000:e0:17.0: ahci_init_one: probed
+> > [    1.096930] ata1: sata_link_resume: rc=3D0
+> > [    1.096960] ata1: sata_link_hardreset: ata_phys_link_offline is True
+> > [    1.096962] ata1: sata_link_hardreset: is off line, returns 0
+> > [    1.097000] ata1: SATA link down (SStatus 4 SControl 300)
+> > [    1.097025] ata1: ahci_set_lpm: policy=3D3
+> > [    1.097051] ata1: sata_link_scr_lpm: policy is 3 and original
+> > scontrol 0x00000300
+> > [    1.097054] ata1: sata_link_scr_lpm: write scontrol 0x00000304
+> >
+> > The SATA link is down and SATA storage disappears.
+> > Full dmesg as the attachment of
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D217114#c29
+> >
+>
+> So in summary:
+> When Intel VMD is on, and the ahci_intel_pcs_quirk is applied =3D> NOT OK
+> When Intel VMD is on, and the ahci_intel_pcs_quirk is not applied =3D> OK
+>
+> When Intel VMD is off, and the ahci_intel_pcs_quirk is applied =3D> OK
+> When Intel VMD is off, and the ahci_intel_pcs_quirk is not applied =3D> ?
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../bindings/pci/fsl,layerscape-pcie-ep.yaml  |  84 +++++++++
- .../bindings/pci/fsl,layerscape-pcie.yaml     | 163 ++++++++++++++++++
- .../bindings/pci/layerscape-pci.txt           |  79 ---------
- 3 files changed, 247 insertions(+), 79 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci.txt
+When Intel VMD is off, and the ahci_intel_pcs_quirk is not applied =3D> OK
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-new file mode 100644
-index 0000000000000..3b592c820eb4c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Layerscape PCIe controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+description: |+
-+  This PCIe endpoint controller is based on the Synopsys DesignWare PCIe IP
-+  and thus inherits all the common properties defined in snps,dw-pcie-ep.yaml.
-+
-+  This controller derives its clocks from the Reset Configuration Word (RCW)
-+  which is used to describe the PLL settings at the time of chip-reset.
-+
-+  Also as per the available Reference Manuals, there is no specific 'version'
-+  register available in the Freescale PCIe controller register set,
-+  which can allow determining the underlying DesignWare PCIe controller version
-+  information.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,ls2088a-pcie-ep
-+      - fsl,ls1088a-pcie-ep
-+      - fsl,ls1046a-pcie-ep
-+      - fsl,ls1028a-pcie-ep
-+      - fsl,lx2160ar2-pcie-ep
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: regs
-+      - const: addr_space
-+
-+  fsl,pcie-scfg:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: A phandle to the SCFG device node. The second entry is the
-+      physical PCIe controller index starting from '0'. This is used to get
-+      SCFG PEXN registers.
-+
-+  dma-coherent:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Indicates that the hardware IP block can ensure the coherency
-+      of the data transferred from/to the IP block. This can avoid the software
-+      cache flush/invalid actions, and improve the performance significantly.
-+
-+  big-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: If the PEX_LUT and PF register block is in big-endian, specify
-+      this property.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - device_type
-+  - bus-range
-+  - ranges
-+
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls1028a-pcie-ep
-+            - fsl,ls1046a-pcie-ep
-+            - fsl,ls1088a-pcie-ep
-+    then:
-+      properties:
-+        interrupt-names:
-+          items:
-+            - const: pme
-+
-+unevaluatedProperties: false
-diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-new file mode 100644
-index 0000000000000..e3719da306f25
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-@@ -0,0 +1,163 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Layerscape PCIe controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+description: |+
-+  This PCIe host controller is based on the Synopsys DesignWare PCIe IP
-+  and thus inherits all the common properties defined in snps,dw-pcie.yaml.
-+
-+  This controller derives its clocks from the Reset Configuration Word (RCW)
-+  which is used to describe the PLL settings at the time of chip-reset.
-+
-+  Also as per the available Reference Manuals, there is no specific 'version'
-+  register available in the Freescale PCIe controller register set,
-+  which can allow determining the underlying DesignWare PCIe controller version
-+  information.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,ls1021a-pcie
-+      - fsl,ls2080a-pcie
-+      - fsl,ls2085a-pcie
-+      - fsl,ls2088a-pcie
-+      - fsl,ls1088a-pcie
-+      - fsl,ls1046a-pcie
-+      - fsl,ls1043a-pcie
-+      - fsl,ls1012a-pcie
-+      - fsl,ls1028a-pcie
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: regs
-+      - const: config
-+
-+  fsl,pcie-scfg:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: A phandle to the SCFG device node. The second entry is the
-+      physical PCIe controller index starting from '0'. This is used to get
-+      SCFG PEXN registers.
-+
-+  dma-coherent:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Indicates that the hardware IP block can ensure the coherency
-+      of the data transferred from/to the IP block. This can avoid the software
-+      cache flush/invalid actions, and improve the performance significantly.
-+
-+  big-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: If the PEX_LUT and PF register block is in big-endian, specify
-+      this property.
-+
-+  msi-parent: true
-+
-+  iommu-map: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - device_type
-+  - bus-range
-+  - ranges
-+  - interrupts
-+  - interrupt-names
-+  - "#interrupt-cells"
-+  - interrupt-map-mask
-+  - interrupt-map
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls1028a-pcie
-+            - fsl,ls1046a-pcie
-+            - fsl,ls1043a-pcie
-+            - fsl,ls1012a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 2
-+        interrupt-names:
-+          items:
-+            - const: pme
-+            - const: aer
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls2080a-pcie
-+            - fsl,ls2085a-pcie
-+            - fsl,ls2088a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        interrupt-names:
-+          items:
-+            - const: intr
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls1088a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        interrupt-names:
-+          items:
-+            - const: aer
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pcie@3400000 {
-+        compatible = "fsl,ls1088a-pcie";
-+        reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
-+            <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
-+        reg-names = "regs", "config";
-+        interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+        interrupt-names = "aer";
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        dma-coherent;
-+        device_type = "pci";
-+        bus-range = <0x0 0xff>;
-+        ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
-+                 0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-+        msi-parent = <&its>;
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0 0 0 7>;
-+        interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
-+        iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-deleted file mode 100644
-index ee8a4791a78b4..0000000000000
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ /dev/null
-@@ -1,79 +0,0 @@
--Freescale Layerscape PCIe controller
--
--This PCIe host controller is based on the Synopsys DesignWare PCIe IP
--and thus inherits all the common properties defined in snps,dw-pcie.yaml.
--
--This controller derives its clocks from the Reset Configuration Word (RCW)
--which is used to describe the PLL settings at the time of chip-reset.
--
--Also as per the available Reference Manuals, there is no specific 'version'
--register available in the Freescale PCIe controller register set,
--which can allow determining the underlying DesignWare PCIe controller version
--information.
--
--Required properties:
--- compatible: should contain the platform identifier such as:
--  RC mode:
--        "fsl,ls1021a-pcie"
--        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
--        "fsl,ls2088a-pcie"
--        "fsl,ls1088a-pcie"
--        "fsl,ls1046a-pcie"
--        "fsl,ls1043a-pcie"
--        "fsl,ls1012a-pcie"
--        "fsl,ls1028a-pcie"
--  EP mode:
--	"fsl,ls1028a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,lx2160ar2-pcie-ep", "fsl,ls-pcie-ep"
--- reg: base addresses and lengths of the PCIe controller register blocks.
--- interrupts: A list of interrupt outputs of the controller. Must contain an
--  entry for each entry in the interrupt-names property.
--- interrupt-names: It could include the following entries:
--  "aer": Used for interrupt line which reports AER events when
--	 non MSI/MSI-X/INTx mode is used
--  "pme": Used for interrupt line which reports PME events when
--	 non MSI/MSI-X/INTx mode is used
--  "intr": Used for SoCs(like ls2080a, lx2160a, ls2080a, ls2088a, ls1088a)
--	  which has a single interrupt line for miscellaneous controller
--	  events(could include AER and PME events).
--- fsl,pcie-scfg: Must include two entries.
--  The first entry must be a link to the SCFG device node
--  The second entry is the physical PCIe controller index starting from '0'.
--  This is used to get SCFG PEXN registers
--- dma-coherent: Indicates that the hardware IP block can ensure the coherency
--  of the data transferred from/to the IP block. This can avoid the software
--  cache flush/invalid actions, and improve the performance significantly.
--
--Optional properties:
--- big-endian: If the PEX_LUT and PF register block is in big-endian, specify
--  this property.
--
--Example:
--
--        pcie@3400000 {
--                compatible = "fsl,ls1088a-pcie";
--                reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
--                      <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
--                reg-names = "regs", "config";
--                interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
--                interrupt-names = "aer";
--                #address-cells = <3>;
--                #size-cells = <2>;
--                device_type = "pci";
--                dma-coherent;
--                num-viewport = <256>;
--                bus-range = <0x0 0xff>;
--                ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
--                          0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
--                msi-parent = <&its>;
--                #interrupt-cells = <1>;
--                interrupt-map-mask = <0 0 0 7>;
--                interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
--                                <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
--                                <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
--                                <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
--                iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
--        };
--- 
-2.34.1
+> Excellent find!
+>
+>
+>
+> In the bad case:
+>
+> sata_link_hardreset() sets SControl.DET to 1, to establish the interface
+> communication. Then sleeps for 1 ms.
+>
+> Then it calls sata_link_resume(), which clears SControl.DET to 0.
+> (This matches the AHCI spec which says that SControl.DET should be set
+> to 1 for at least 1 ms.)
+>
+> sata_link_hardreset() then calls ata_phys_link_offline(),
+> which is essentially defined as: return !(SStatus.DET =3D=3D 0x3)
+> ata_phys_link_offline() returns true, since SStatus.DET =3D=3D 0x4.
+>
+> SStatus.DET =3D=3D 0x4 means: Phy in offline mode as a result of the
+> interface being disabled or running in a BIST loopback mode.
+>
+> If the physical link is not established, there is no point to call
+> ata_wait_ready() (which waits for the device to become ready on the
+> protocol level), as the physical link could not even be established.
+>
+> After that, we write SControl.DET to set bit 4 to disable the port,
+> in order to save power. This is only done because sata_link_hardreset()
+> failed to establish a link after toggling SControl.DET =3D=3D 1.
+>
+> So the problem is that SStatus.DET never changed to 0x3 after toggling
+> SControl.DET =3D=3D 1.
+>
+>
+> >
+> > However, I notice more interesting thing:
+> > "drivers/ata/ahci.c:ahci_intel_pcs_quirk()"!
+> > If bind LPM policy with PCI IDs matching, then it does the PCS quirk.
+> > But, binding with the patch "ata: ahci: Add force LPM policy quirk for
+> > ASUS B1400CEAE" does not, because the vendor is ANY vendor, not Intel.
+> >
+> > So, I did following test:
+> >
+> > If I modify the PCI vendor check condition with the pdev, not the PCI
+> > ID's vendor:
+> >
+> > diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+> > index 7ecd56c8262a..ece709ac20d6 100644
+> > --- a/drivers/ata/ahci.c
+> > +++ b/drivers/ata/ahci.c
+> > @@ -1706,12 +1709,16 @@ static void ahci_intel_pcs_quirk(struct
+> > pci_dev *pdev, struct ahci_host_priv *hp
+> >         /*
+> >          * Only apply the 6-port PCS quirk for known legacy platforms.
+> >          */
+> > -       if (!id || id->vendor !=3D PCI_VENDOR_ID_INTEL)
+> > +       if (!id || pdev->vendor !=3D PCI_VENDOR_ID_INTEL) {
+> > +               dev_info(&pdev->dev, "%s: not Intel, the vendor is
+> > 0x%08x\n", __func__, id->vendor);
+> >                 return;
+> > +       }
+>
+> The reason why you are seeing this is because Tiger Lake does not have
+> an entry in the ahci_pci_tbl in mainline, so it uses the generic entry
+> which matches on the AHCI class code:
+> https://github.com/torvalds/linux/blob/v6.8-rc3/drivers/ata/ahci.c#L636
+>
+> If you revert 6210038aeaf4 ("ata: ahci: Revert "ata: ahci: Add Tiger Lake
+> UP{3,4} AHCI controller""), you will get an explicit entry in the
+> ahci_pci_tbl.
+>
+> But to clarify, I think that it would make sense to add:
+>
+> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
+> index d2460fa985b7..e462509a45e8 100644
+> --- a/drivers/ata/ahci.c
+> +++ b/drivers/ata/ahci.c
+> @@ -1672,12 +1672,18 @@ static void ahci_update_initial_lpm_policy(struct=
+ ata_port *ap,
+>
+>  static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_=
+priv *hpriv)
+>  {
+> -       const struct pci_device_id *id =3D pci_match_id(ahci_pci_tbl, pde=
+v);
+> +       const struct pci_device_id *id;
+>         u16 tmp16;
+>
+> +       /* If the detected PCI device is not an Intel device, skip. */
+> +       if (pdev->vendor !=3D PCI_VENDOR_ID_INTEL)
+> +               return;
+> +
+>         /*
+> -        * Only apply the 6-port PCS quirk for known legacy platforms.
+> +        * See if there is an explicit entry for this PCI device in
+> +        * ahci_pci_tbl, if there is not, do not apply the quirk.
+>          */
+> +       id =3D pci_match_id(ahci_pci_tbl, pdev);
+>         if (!id || id->vendor !=3D PCI_VENDOR_ID_INTEL)
+>                 return;
+>
+>
+>
+> >
+> > Then, the SATA HDD always disappears like binding the LPM policy with
+> > PCI IDs matching, even with the patch "ata: ahci: Add force LPM policy
+> > quirk for ASUS B1400CEAE".
+> > So, I think ahci_intel_pcs_quirk() is the key point.
+>
+> I agree.
+>
+>
+> Can you verify that things work as expected when doing a:
+> $ git revert 6210038aeaf49c395c2da57572246d93ec67f6d4
+> to re-add the explicit entry, if you also do a:
+>
+> --- a/drivers/ata/ahci.c
+> +++ b/drivers/ata/ahci.c
+> @@ -1672,6 +1672,7 @@ static void ahci_update_initial_lpm_policy(struct a=
+ta_port *ap,
+>
+>  static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_=
+priv *hpriv)
+>  {
+> +#if 0
+>         const struct pci_device_id *id =3D pci_match_id(ahci_pci_tbl, pde=
+v);
+>         u16 tmp16;
+>
+> @@ -1698,6 +1699,7 @@ static void ahci_intel_pcs_quirk(struct pci_dev *pd=
+ev, struct ahci_host_priv *hp
+>                 tmp16 |=3D hpriv->port_map;
+>                 pci_write_config_word(pdev, PCS_6, tmp16);
+>         }
+> +#endif
+>  }
+>
+> To make the quirk a no-op?
 
+Here is the test result:
+
+Both enabled & disabled VMD with no-op ahci_intel_pcs_quirk() shows
+the SATA storage on ASUS B1400CEAE. =3D> OK
+
+$ cat /tmp/dmesg.log
+[    0.799439] ahci 10000:e0:17.0: version 3.0
+[    0.799459] ahci 10000:e0:17.0: can't derive routing for PCI INT A
+[    0.799460] ahci 10000:e0:17.0: PCI INT A: no GSI
+[    0.799582] ahci 10000:e0:17.0: ahci_update_initial_lpm_policy: policy 3
+[    0.799615] ahci 10000:e0:17.0: AHCI 0001.0301 32 slots 1 ports 6
+Gbps 0x1 impl SATA mode
+[    0.799617] ahci 10000:e0:17.0: flags: 64bit ncq sntf pm clo only
+pio slum part deso sadm sds
+[    0.799722] scsi host0: ahci
+[    0.799760] ata1: SATA max UDMA/133 abar m2048@0x76102000 port
+0x76102100 irq 144 lpm-pol 3
+[    0.799761] ahci 10000:e0:17.0: ahci_init_one: probed
+[    1.112519] ata1: sata_link_resume: rc=3D0
+[    1.112541] ata1: BUSY ? 0 (status: 0x50) SStatus.DET: 0x3
+[    1.112545] ata1: sata_link_hardreset: is 0
+[    1.112547] ata1: sata_link_hardreset: is on line, returns 0
+[    1.112571] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[    1.113280] ata1.00: ATA-10: WDC WD10SPZX-80Z10T2, 04.01A04, max UDMA/13=
+3
+[    1.114880] ata1.00: 1953525168 sectors, multi 16: LBA48 NCQ (depth 32),=
+ AA
+[    1.114887] ata1.00: Features: NCQ-prio
+[    1.117148] ata1.00: configured for UDMA/133
+[    1.117154] ata1: ahci_set_lpm: policy=3D3
+[    1.117169] ata1: sata_link_scr_lpm: policy is 3 and original
+scontrol 0x00000300
+[    1.117172] ata1: sata_link_scr_lpm: write scontrol 0x00000000
+
+Jian-Hong Pan
+
+> To be honest, this quirk looks horrible.
+>
+> Looking at the original commit:
+> c312ef176399 ("libata/ahci: Drop PCS quirk for Denverton and beyond")
+>
+> It claims that:
+>
+> Rather than try to fix the PCS quirk to consider the DNV register layout
+> instead require explicit opt-in. The assumption is that the OS driver
+> need not touch this register, and platforms can be added with a new
+> boad_ahci_pcs7 board-id when / if problematic platforms are found in the
+> future.
+>
+> However, it does NOT require an explicit opt-in!
+>
+> If we were to add an entry with board type "board_ahci" or
+> "board_ahci_low_power" for Tiger Lake, the quirk gets applied...
+>
+> See also:
+> 09d6ac8dc51a ("libata/ahci: Fix PCS quirk application")
+>
+> So basically, what ahci_intel_pcs_quirk() does is that it checks
+> if there is an explicit entry in ahci_pci_tbl.
+> If there is not, the quirk is not applied.
+>
+> If there is an entry, and the enum for that board has a value that
+> is less than board_ahci_pcs7, the quirk is applied...
+>
+> But that will be *ALL* other board types since board_ahci_pcs7 is
+> defined last in the enum:
+> https://github.com/torvalds/linux/blob/v6.8-rc3/drivers/ata/ahci.c#L75
+>
+> Not only that but the comment for that enum is wrong:
+> https://github.com/torvalds/linux/blob/v6.8-rc3/drivers/ata/ahci.c#L71-L7=
+4
+>
+>         /*
+>          * board IDs for Intel chipsets that support more than 6 ports
+>          * *and* end up needing the PCS quirk.
+>          */
+>
+> Is is the opposite... board IDs that do NOT need the PCS quirk...
+>
+> But this is not the way we add quirks.
+> We add a flag and a new board_id and mark the PCI device and vendor ids
+> that are affected to use that board, see e.g.
+> 20730e9b2778 ("ahci: add 43-bit DMA address quirk for ASMedia ASM1061 con=
+trollers")
+>
+> We don't add a quirk and apply it for everything (board_ahci,
+> board_ahci_low_power) except for a specific entry (board_ahci_pcs7).
+>
+> It seems that at least Intel AHCI controllers that also have Intel VMD
+> enabled break when this quirk is applied.
+>
+> I guess one way would be to do a:
+> git show c312ef176399:drivers/ata/ahci.c | grep "PCI_VDEVICE(INTEL"
+> and replace everything that is not: board_ahci_pcs7
+> with a board_ahci_pcs_quirk, board_ahci_low_power_pcs_quirk, and
+> board_ahci_avn_pcs_quirk, and after that change all board_ahci_pcs7
+> entries to board_ahci, and assume that entries added since c312ef176399
+> do not need the quirk.
+>
+> But it would be nice if someone from Intel could clean this up.
+>
+>
+> Kind regards,
+> Niklas
 
