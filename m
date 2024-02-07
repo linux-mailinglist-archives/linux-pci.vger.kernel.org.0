@@ -1,245 +1,190 @@
-Return-Path: <linux-pci+bounces-3203-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3204-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C03F84CABF
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 13:34:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEA2A84CAC5
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 13:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60C1F1C23E8A
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 12:34:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 736D028C77D
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 12:37:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B752B3EA67;
-	Wed,  7 Feb 2024 12:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF57A76032;
+	Wed,  7 Feb 2024 12:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KtmoFhCs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNEXD5EA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADB076037;
-	Wed,  7 Feb 2024 12:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3188F76037;
+	Wed,  7 Feb 2024 12:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707309248; cv=none; b=pU/M9uPj9LG1BxXONvjV9ZqJsoET0sIPOr1g9yMFoZLHK2pOMcwGvz77PK/k1C+pejOE/Urv3YfC06mzoTQ0KlTVs8UtE4F941f2LVsKoZ/XEHGskGRaAfZ3/BnZE6B2R3F0K0yqRvp6ZoQ0Ww3ChQwKUOwQFAuyDSyLRdYDOyo=
+	t=1707309457; cv=none; b=e6HxcrAJc+pzrMiMMLnIylcircXAJP5eIAOzQtWxcLzgM3TvcoE68CaRAFCdNS9GCwsEQ7JzBLj9jLmq+5oCTopqjM9xH82UbYlgpKykLNTVVMBFN+fWMPhE6WFEWksyvRlg2C4NOy8WI/b8F9VK9dtoHEv4vXlksWMhKpi11j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707309248; c=relaxed/simple;
-	bh=gicNa3q2ViIvmx6Y88aUX11nhY9Sw9dGhFiEn5z6B9A=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=D1p+Mcra8dN+mKhKWk9+xgKSfM/WHaUVvWD3bv+7T91MoVl3DCB/nliQ/rdq/An1pvSxFJc6D/caIxDF6O2GXt33nB2yX2TM2hfQyXN/JFC82PLxhKacx5VTMJqPk3HNqvn49VqB8048hUZ/Fpdv1vtPApBQP02oBBt39GvLOio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KtmoFhCs; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707309246; x=1738845246;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=gicNa3q2ViIvmx6Y88aUX11nhY9Sw9dGhFiEn5z6B9A=;
-  b=KtmoFhCsz2xWmuCIXQmoDWjqC6V/TFN2VB92u/WZQgB047RqATPYU73h
-   Z+VuYIXxcMPbViHnmVOslKon4j0cjt78DclqxuxXp4PgDkHF3xGolrrme
-   N2RvM4bbuq3K0ke92YB3meGyf5i7lAFxvlY1VhTjhKoPOO0tXWomXiLsf
-   VOUJvjfdh6ZNsyAOhvfqK1wdnH8uh39LV3PWoKzrzSbrrM3fDv4oWe1u5
-   gzvinOwbXaCPG1adIHtDcEVOFWw87gSdQTuG5Gb9LggtACNSlG4MdSt4l
-   Nfq1G+4dIi9eVVCjo1U/QRj2FQpxQK1DZsEcBp8IvKCFfmSwz5I6jjKcc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="18490770"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="18490770"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 04:34:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10976"; a="933757694"
-X-IronPort-AV: E=Sophos;i="6.05,250,1701158400"; 
-   d="scan'208";a="933757694"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.51.96])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 04:34:04 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 7 Feb 2024 14:33:58 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>, 
-    Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/2] PCI: Clear LBMS on resume to avoid Target Speed
- quirk
-In-Reply-To: <d9f6efe3-3e99-0e4b-0d1c-5dc3442c2419@linux.intel.com>
-Message-ID: <a0b070b7-14ce-7cc5-4e6c-6e15f3fcab75@linux.intel.com>
-References: <20240129184354.GA470131@bhelgaas> <aa2d1c4e-9961-d54a-00c7-ddf8e858a9b0@linux.intel.com> <alpine.DEB.2.21.2401301537070.15781@angie.orcam.me.uk> <a7ff7695-77c5-cf5a-812a-e24b716c3842@linux.intel.com> <d5f14b8f-f935-5d5e-e098-f2e78a2766c6@linux.intel.com>
- <alpine.DEB.2.21.2402011800320.15781@angie.orcam.me.uk> <d9f6efe3-3e99-0e4b-0d1c-5dc3442c2419@linux.intel.com>
+	s=arc-20240116; t=1707309457; c=relaxed/simple;
+	bh=JYSGh6UALamju5u5Q0FvgbPBMp9aifKa7BR1nqjWr8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDXzj75nEDF06UBkSr6RG+/Ix2ZKJFZQ8VoZzGXXMqmG1qcrKK/Em/Xo3SVQ7L/KPDwpqz+OzkPqjWPd9105cGN85skex8TacQCdQVsRzKvv0nzs1T1Nqbh36O0Exv/6Vcx8pJPSK1DlWqtKPN24qZELcHJGQpDmWa4k6hn3/nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNEXD5EA; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51142b5b76dso947135e87.2;
+        Wed, 07 Feb 2024 04:37:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707309454; x=1707914254; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zGCMNGG4Outy/qci7fXlqmZvH2mFLm4kVAJGLfS6kyc=;
+        b=fNEXD5EAihREMOkKm+v+4oAemofj7IsWSwXB/Ur2Nhx7YwxkZHDKj2FuyhmAx1Nw71
+         v0EvtfoQYmo/wlWGcPETmWch6C5HHybaFop5TgZp1uho/hGDv6AfZfxWoexvCQpv6cyd
+         f/mXk+be8hTdv5Yn/qAOkR2WkpYWeq2413yXmFC8HUzuXHvgPih0G5h9dYcpVWReoH3C
+         q2IobDppVbw3bKnHNCoh5dmYrR4mdVR9JONogW8iFJ87kfoPOc/zD34foH/0vDwmd8ln
+         NbcZ/IhJF403oDhtF90bBzl15W8NAZkhWdY28HuJ6PeKLmpRivuvt9ApMbFWDfeAcMvR
+         gPFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707309454; x=1707914254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zGCMNGG4Outy/qci7fXlqmZvH2mFLm4kVAJGLfS6kyc=;
+        b=ZkxJk3ukxahIXMcqODjO7rtl6DEscRwP/hwAE28aKdM1c/8ONqp8ODYqL+93iVBupO
+         kg5UmlQsRXfaUnWHRzpMzECLA4mWgiRWnOmyvOKXfNUDHyZprYGSolOPIJmwlCCUVasz
+         KY0IFmHSSPHfZnQMHFa9kfZytSkUU+A+/DWTHWbVX71AlY9pBmTuSDxZZvp5QyFXJHLk
+         +A4rHKg0+qX4bwzmXt+le9guoFRpBKRjMbQilo3asXe2ODZed7tat4ckcW7O1MiizD2d
+         cGE53qBaKHjGoWj9U0mcPx4OTAnctkLmcWAmIm03uq+oGwfue8ruJE1RAsktaA1Stkyc
+         g+BQ==
+X-Gm-Message-State: AOJu0Yy9d1O8srwGg6/3nIiWEZWibSep6VSLlICp85P/9c1ifJyRQ418
+	vSHQ9AZTgqK44KR9L9YnmKEgdaJi98KRnYxhr6QaQu9i9bSCNzbh
+X-Google-Smtp-Source: AGHT+IFmdZIvSukjR3HB+CHNwYdlKLeGdKD2AlYJsMfK/dq72+aokU/wJNSuID6UbnlZyL1HjQOGFw==
+X-Received: by 2002:a05:6512:32ab:b0:511:627e:36cd with SMTP id q11-20020a05651232ab00b00511627e36cdmr2765484lfe.24.1707309453846;
+        Wed, 07 Feb 2024 04:37:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVSR8gTLtdE6q+cbgDFP453ovI67jbu3o5RbMRzLK9RbioD1CNwftojad54BRvTf2dK3D9SdGo7Rz+RTI9YpNMInSGmopiV34RdOfeX4Vlkrczj7XDDus4iCEXTLj4Wu1Qu/t0651NhofHIbg2K4zm+4azluHsQ4Jl6tXb2b20jXcxzqmtsk0PuPqGeYzIVsJvoriQGSt7Qz0x4kkAg/ef+MXWD5MB9QVc0Eqk5Bv9TfXSI63HN6+l0mY9G1qfXbA+fyWii6uaXJMp30Q1DE8RTiUkTEVyg7RQhkvaCq2tvHgZ9ePJhCHvnkRd8jhZ5lQ/q34ZOprPVtsQXIf9pXQikeIkoHzC88Z8SaEc4ptRSffUA9JjYMoxpX4Qve8lqCoYqt7ag6AOSqgiKFYgV4vWONzD3k7z1HCIutWHGfZNjICvzNTPRzFn6s/1Y0OtDsvaGrlItGFnJKB/KrGE=
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id 8-20020ac25f48000000b005114ee99515sm165135lfz.220.2024.02.07.04.37.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Feb 2024 04:37:33 -0800 (PST)
+Date: Wed, 7 Feb 2024 15:37:30 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Frank Li <Frank.li@nxp.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] dt-bindings: PCI: dwc: Add 'msg' register region
+Message-ID: <luk5hswq4wnk5p7axml73qih35hio3y3pfnklctbn6rwres62s@mumnvygjh5ch>
+References: <20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com>
+ <20240202-pme_msg-v3-5-ff2af57a02ad@nxp.com>
+ <eg7wrjp5ebz43g37fvebr44nwkoh4rptbtyu76nalbmgbbnqke@4zugpgwesyqd>
+ <20240205183048.GA3818249-robh@kernel.org>
+ <ZcEzYdZKotBJlR5i@lizhi-Precision-Tower-5810>
+ <ZcK2/tmLG9O7CBEH@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1491708970-1707308919=:1119"
-Content-ID: <310c15e8-21e3-64e6-31d0-5446c450f139@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZcK2/tmLG9O7CBEH@lizhi-Precision-Tower-5810>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Feb 06, 2024 at 05:47:26PM -0500, Frank Li wrote:
+> On Mon, Feb 05, 2024 at 02:13:37PM -0500, Frank Li wrote:
+> > On Mon, Feb 05, 2024 at 06:30:48PM +0000, Rob Herring wrote:
+> > > On Sat, Feb 03, 2024 at 01:44:31AM +0300, Serge Semin wrote:
+> > > > On Fri, Feb 02, 2024 at 10:11:27AM -0500, Frank Li wrote:
+> > > > > Add an outbound iATU-capable memory-region which will be used to send PCIe
+> > > > > message (such as PME_Turn_Off) to peripheral. So all platforms can use
+> > > > > common method to send out PME_Turn_Off message by using one outbound iATU.
+> > > > > 
+> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 4 ++++
+> > > > >  1 file changed, 4 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > > > index 022055edbf9e6..25a5420a9ce1e 100644
+> > > > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > > > @@ -101,6 +101,10 @@ properties:
+> > > > 
+> > > > >              Outbound iATU-capable memory-region which will be used to access
+> > > > >              the peripheral PCIe devices configuration space.
+> > > > >            const: config
+> > > > > +        - description:
+> > > > > +            Outbound iATU-capable memory-region which will be used to send
+> > > > > +            PCIe message (such as PME_Turn_Off) to peripheral.
+> > > > > +          const: msg
+> > > > 
+> > > > Note there is a good chance Rob won't like this change. AFAIR he
+> > > > already expressed a concern regarding having the "config" reg-name
+> > > > describing a memory space within the outbound iATU memory which is
+> > > > normally defined by the "ranges" property. Adding a new reg-entry with
+> > > > similar semantics I guess won't receive warm welcome.
+> > > 
+> > > I do think it is a bit questionable. Ideally, the driver could 
+> > > just configure this on its own. However, since we don't describe all of 
+> > > the CPU address space (that's input to the iATU) already, that's not 
+> > > going to be possible. I suppose we could fix that, but then config space 
+> > > would have to be handled differently too.
+> > 
+> > Sorry, I have not understand what your means. Do you means, you want
+> > a "cpu-space", for example, 0x8000000 - 0x9000000 for all ATU. 
+> > 
+> > Then allocated some space to 'config', 'io', 'memory' and this 'msg'.
+> 
+> @rob:
+> 
+>     So far, I think "msg" is feasilbe solution. Or give me some little
+> detail direction?
 
---8323328-1491708970-1707308919=:1119
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <c4b4649f-fe05-1d38-cc0b-02f19b5e96cc@linux.intel.com>
+Found the Rob' note about the iATU-space chunks utilized in the reg
+property:
+https://lore.kernel.org/linux-pci/CAL_JsqLp7QVgxrAZkW=z38iB7SV5VeWH1O6s+DVCm9p338Czdw@mail.gmail.com/
 
-On Fri, 2 Feb 2024, Ilpo J=E4rvinen wrote:
-> On Thu, 1 Feb 2024, Maciej W. Rozycki wrote:
-> > On Thu, 1 Feb 2024, Ilpo J=E4rvinen wrote:
-> >
-> > > > >  What kind of scenario does the LBMS bit get set in that you have=
- a=20
-> > > > > trouble with?  You write that in your case the downstream device =
-has been=20
-> > > > > disconnected while the bug hierarchy was suspended and it is not =
-present=20
-> > > > > anymore at resume, is that correct?
-> > > > >
-> > > > >  But in that case no link negotiation could have been possible an=
-d=20
-> > > > > consequently the LBMS bit mustn't have been set by hardware (acco=
-rding to=20
-> > > > > my understanding of PCIe), because (for compliant, non-broken dev=
-ices=20
-> > > > > anyway) it is only specified to be set for ports that can communi=
-cate with=20
-> > > > > the other link end (the spec explicitly says there mustn't have b=
-een a=20
-> > > > > transition through the DL_Down status for the port).
-> > > > >
-> > > > >  Am I missing something?
-> > > >=20
-> > > > Yes, when resuming the device is already gone but the bridge still =
-has=20
-> > > > LBMS set. My understanding is that it was set because it was there
-> > > > from pre-suspend time but I've not really taken a deep look into it=
-=20
-> > > > because the problem and fix seemed obvious.
-> >=20
-> >  I've always been confused with the suspend/resume terminology: I'd hav=
-e=20
-> > assumed this would have gone through a power cycle, in which case the L=
-BMS=20
-> > bit would have necessarily been cleared in the transition, because its=
-=20
-> > required state at power-up/reset is 0, so the value of 1 observed would=
- be=20
-> > a result of what has happened solely through the resume stage.  Otherwi=
-se=20
-> > it may make sense to clear the bit in the course of the suspend stage,=
-=20
-> > though it wouldn't be race-free I'm afraid.
->=20
-> I also thought suspend as one possibility but yes, it racy. Mika also=20
-> suggested clearing LBMS after each successful retrain but that wouldn't=
-=20
-> cover all possible ways to get LBMS set as devices can set it=20
-> independently of OS. Keeping it cleared constantly is pretty much what=20
-> will happen with the bandwidth controller anyway.
->=20
-> > > > I read that "without the Port transitioning through DL_Down status"=
-=20
-> > > > differently than you, I only interpret that it relates to the two=
-=20
-> > > > bullets following it. ...So if retrain bit is set, and link then go=
-es=20
-> > > > down, the bullet no longer applies and LBMS should not be set becau=
-se=20
-> > > > there was transition through DL_Down. But I could well be wrong...
-> >=20
-> > What I refer to is that if you suspend your system, remove the device=
-=20
-> > that originally caused the quirk to trigger and then resume your system=
-=20
-> > with the device absent,
->=20
-> A small correction here, the quirk didn't trigger initially for the=20
-> device, it does that only after resume. And even then quirk is called=20
-> only because the link doesn't come up.
->=20
-> On longer term, I'd actually want to have hotplug resumed earlier so the=
-=20
-> disconnect could be detected before/while all this waiting related to lin=
-k=20
-> up is done. But that's very complicated to realize in practice because=20
-> hotplug lurks behind portdrv so resuming it earlier isn't going to be=20
-> about just moving a few lines around.
->=20
-> > then LBMS couldn't have been set in the course of=20
-> > resume, because the port couldn't have come out of the DL_Down status i=
-n=20
-> > the absence of the downstream device.  Do you interpret it differently?
->=20
-> That's a good question and I don't have an answer to this yet, that is,
-> I don't fully understand what happens to those device during runtime=20
-> suspend/resume cycle and what is the exact mechanism that preserves the=
-=20
-> LBMS bit, I'll look more into it.
->=20
-> But I agree that if the device goes cold enough and downstream is=20
-> disconnected, the port should no longer have a way to reassert LBMS.
+So basically Rob meant back then that
+either originally we should have defined a new reg-name like "atu-out"
+with the entire outbound iATU CPU-space specified and unpin the
+regions like "config"/"ecam"/"msg"/etc from there in the driver
+or, well, stick to the chunking further. The later path was chosen
+after the patch with the "ecam" reg-name was accepted (see the link
+above).
 
-It seems that the root cause here is that the bridge ports do not enter=20
-D3cold but remain in D3hot because of an ACPI power resource that is=20
-shared (with Thunderbolt in this case but that's just one example, there=20
-could be other similar sharings outside of what PCI controls).
+Really ECAM/config space access, custom TLP messages, legacy interrupt
+TLPs, etc are all application-specific features. Each of them is
+implemented based on a bit specific but basically the same outbound
+iATU engine setup. Thus from the "DT is a hardware description" point
+of view it would have been enough to describe the entire outbound iATU
+CPU address space and then let the software do the space
+reconfiguration in runtime based on it' application needs.
 
-There is an attempt to power off the entire hierarchy into D3cold on=20
-suspend but the ports won't reach that state. Because the port remains in=
-=20
-D3hot, the config space is preserved and LBMS bit along with it.
+* Rob, correct me if am wrong.
 
-So it seems that we cannot make the assumption that a device enters D3cold=
-=20
-just because it was suspended.
+On the other hand it's possible to have more than one disjoint CPU
+address region handled by the outbound iATU (especially if there is no
+AXI-bridge enabled, see XALI - application transmit client interfaces
+in HW manual). Thus having a single reg-property might get to be
+inapplicable in some cases. Thinking about that got me to an idea.
+What about just extending the PCIe "ranges" property flags
+(IORESOURCE_TYPE_BITS) with the new ones in this case indicating the
+TLP Msg mapping? Thus we can avoid creating app-specific reg-names and
+use the flag to define a custom memory range for the TLP messages
+generation. At some point it can be also utilized for the config-space
+mapping. What do you think?
 
+-Serge(y)
 
-On the positive side, it was also tested that the logic fix I sent earlier=
-=20
-solved the most visible problem which is the delay on resume. It doesn't=20
-address the false activation of Target Speed quirk because LBMS bit is=20
-still set but the symptoms are no longer the same because of the=20
-corrected logic.
-
-So to solve the main issue with delay, there's no need to clear the LBMS=20
-and the patch you're preparing/testing for pcie_failed_link_retrain()
-together with the logic fix on its caller are enough to address the first=
-=20
-issue.
-
-I still think those two should be put into the same commit because the
-true <-> false changes, if made separately, lead to additional
-incoherent states but if Bjorn wants them separately, at least they=20
-should be put back-to-back so the brokeness is just within a single=20
-commit in the history.
-
-In addition, my 2nd patch addresses another issue which is unrelated=20
-to this despite similar symptoms with extra delay on resume. I'll send v2=
-=20
-of that 2nd path separately with the inverted return value.
-
-> > > Because if it is constantly picking another speed, it would mean you =
-get=20
-> > > LBMS set over and over again, no? If that happens 34-35 times per sec=
-ond,=20
-> > > it should be set already again when we get into that quirk because th=
-ere=20
-> > > was some wait before it gets called.
-> >=20
-> >  I'll see if I can experiment with the hardware over the next couple of=
-=20
-> > days and come back with my findings.
->=20
-> Okay thanks.
-
-One point I'd be very interested to know if the link actually comes up=20
-successfully (even if briefly) because this has large implications whether=
-=20
-the quirk can actually be invoked from the bandwidth controller code.
-
-
---=20
- i.
---8323328-1491708970-1707308919=:1119--
+> 
+> Frank
+> 
+> > 
+> > Frank
+> > 
+> > > 
+> > > Rob
 
