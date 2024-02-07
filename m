@@ -1,430 +1,299 @@
-Return-Path: <linux-pci+bounces-3216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1205484D027
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 18:49:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C52284D105
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 19:19:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90BFE1F26BF2
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 17:49:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A49B1F22EDB
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 18:19:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9A818286B;
-	Wed,  7 Feb 2024 17:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD5218289A;
+	Wed,  7 Feb 2024 18:19:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SW1Wg5LN"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HHGybyUi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2053.outbound.protection.outlook.com [40.107.13.53])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1952282C6C;
-	Wed,  7 Feb 2024 17:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D80882D8E;
+	Wed,  7 Feb 2024 18:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707328174; cv=fail; b=uG4Ld7VAcIuy1N0w2jkjSrTOsImGkEGVuCY4oCi7E0V0or1Jmw4s5gLCBObwfwOqvXrUEm9vgKaTKjVTf7n8SwYioT2IzMWZcvQVgcvCu9caK/iiBXO9iL4oslYHhjbSCe0Y6xzAmE3TKwxZWRZlDUrJdjM8YGsrnd1nwMteOMU=
+	t=1707329953; cv=fail; b=hylPkqTaPeyl6jRHsn/PkIEmbuk687A28B2X2fvcsGwQ2VmOX8EemsbjAX2WtcKkZrklHMiHmjdx12VCt6M/RLlwRxGZeHrstXkKD9pRMIykeCVZSkLYuS0qD0SGbp4bO1b6nVGeLpYGXsdIKy5su/ScY77rP4yaDFv/ZRd5oeY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707328174; c=relaxed/simple;
-	bh=3oZP++KCdfj2gHycN1UzAQeoOrdejJpQ64fg09/xZLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ns2nc6HySyxfxclbkA6WS7ZkpjQxKMQzvIxtTPU2e0geJC9PA/Z/8/lvzflcv3SUpcIKb1lKde2QWEkmB+rfiU/oqplT9qomdarwn7l65qMthdONyQvNxnPBY99+CQbSpKIH6AXApMgEXPcqHuZZGKoBAt1mWOY9eDEwgmoSuGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=SW1Wg5LN; arc=fail smtp.client-ip=40.107.13.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1707329953; c=relaxed/simple;
+	bh=j4nVcHFZ5cjss67dU05dAsDBJy7+H09d2nEaGSNgyZg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GPI6cZ4bhOKAIoKtiLR9+BTk0o03akp0ydXFOidxS4KmTp3q5Xud7mzUzhJDueMPm4zKh47J/8mz5O0UezFCMN5Mm2nTl64GzdN7zWfLIU5RYRG929H3daaSmzFQdYMa+LBRWysijkE+qCbUsYATnHSvSe5YyvwCB4AVFZhWx4M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HHGybyUi; arc=fail smtp.client-ip=40.107.220.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hMr4hoG+/KTi9zkaAm9lnwqaCF2GE5MfSWKQUmS3Hi0YEALDp7ZP1VJCWjo25Z4Fn/TLJi+PHlHyz7e0lXu2pxflrYStp5W3Al6vw4krOos/3STDwjyxlsorfCl67i3Cdyh45Oi0UvZ3CSN+rKoS2lUYeGYr+Z6kDBg2L/NVqyBuPjt5zKUqJl6R3ozANuKTdDW1y1Q9tSWyrUlWW+Yfz+nN9mA0SkYlykgVO+ibVWF/lT7ziNeZXa+bnmV7xk7NRjWUyUBrUQp5pqIcVEqzt9feR9DccXRc0EJ4yjXCIHVt/+vPs/k3TZCMWum6mo03cH+brlw7slaZ4DVVfGpx2Q==
+ b=ZPm82qCDYvNHD2k6QGgJki1YS4Bs9WGx8OtEshO4uyLd2rqV7M6mDBmzY3vNMkIGmGcOVg6Tvc7YswExUirLDcpewJPoLje0KgbiWu7mMX/YaIs28OC+vvjtTjhsMwWEnL8eil0NYxB3wQgR3FD1IxtnwK9oCrL0Q88P1PnvoNNZjqdCFtLdYS3IUECTOCmUdCrMQt8QfYaXQLIiYBsNhr3977adcEOzaFhqckOqKMZlq8e+eUmUsnqihSqI+FLrrzV6sQxOGOf5YDM+DFW8dNUCwKrmI6JIJ3PTMfxlLHVNw4kYStmFz1ltZrfJ3EYmhZ1FJa0R3mDZB8a0WVHMqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SSSfMltVLACx8AfS+RkqCrRpOu4akAyCd1AZB+CqFY4=;
- b=U//1nCnBA/rBLi9lEm+dGLjTaWb30H8yEv+8qF2N78WU9PjVqj/78Z+ApUyS3OBQHmhK0DmjVJFAxpsBXouyiugXPprH4uLqE9ESEHKA6hXEvThLC4GX4t/2lKTTyWjbtpGeNxZMxE69CqRJhoYetqRn9WXS30d3Ys/hJWkHGkLyUu8AyBcw6TiNpAKBAUzdulpbByFaTYU2pjuPlMvx3yYLjsq2uivMAsHOKYJ+ZfdXoNPUW9ZkM/hyqWCA3V8mHl8t15Lf4JteqFRwln/JdebnDLZXdh39sMI4N8rjxK0TPwf9rEiEWIBs0LmXdzpurNDO4ygiM/ZMB7MMBPgPJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=lO66k5iwNLMB31YnzP1dNcNLNUU4hn1b+fFiDIWKyUc=;
+ b=Q/CK9v8t0+tzPYRUN8PPHaHfAXNDcaQ2O2/Z6fdNmoyuQ2eDZkmO1x4SJ0xqxb2Ru6JNnDUUz+zcNNU0obVFqUL7uKcLnPEIC3YGkyJvCIqjcIUm8UNHVx4DbImSYuWRr8T+E5Uf26/LPJ2paY5+RH/i9ejzA5CjDAbhgcSDWtetFknVxOtAFBJ5p8ztk6GUJAHClQtyhKiHkoYVRMbNMkWDCeI9Tb3KPwBDJE5kx2d3p1jAkZ3j/usVunQk4cXwg1OZlCfPXlvKxeg/fqBgEhbu7O3bI1b7eHDkp8itUAeeX6Yq6CM5JmxkkhtQa/NzrKUzAvYXvKgfBAKwogcQrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SSSfMltVLACx8AfS+RkqCrRpOu4akAyCd1AZB+CqFY4=;
- b=SW1Wg5LNpQAOk6FHcyjzyi/a7vl8Qd3NqPtYPPNetcm8uEZMqzHDhE/6dl4gVTUAXXUyv0intn5OUZ3rEYCX4gly8yrmirLR97ts+5Qmf1c9D7TLhcute9UclOuup+VihFziuxSTtTZzJS2pMACMWZ5c34S1JQfeLcakpi99FPM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB10027.eurprd04.prod.outlook.com (2603:10a6:800:1e1::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.36; Wed, 7 Feb
- 2024 17:49:27 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7249.035; Wed, 7 Feb 2024
- 17:49:27 +0000
-Date: Wed, 7 Feb 2024 12:49:19 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
- file
-Message-ID: <ZcPCn8q7viB/qcOH@lizhi-Precision-Tower-5810>
-References: <20240207062403.304367-1-Frank.Li@nxp.com>
- <20240207-yoga-mobility-90a728f6342c@spud>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240207-yoga-mobility-90a728f6342c@spud>
-X-ClientProxiedBy: BY5PR17CA0057.namprd17.prod.outlook.com
- (2603:10b6:a03:167::34) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ bh=lO66k5iwNLMB31YnzP1dNcNLNUU4hn1b+fFiDIWKyUc=;
+ b=HHGybyUiE0Y1RhrZeeG4YcAHU/iGEnzha34lIllu1qY2ntrEIX0Yeb6yomgkneWk57ElKsGODgX9d+tRfHv1TEIk6TrxYn6C1mJh4aBCnnXxcQHLKt0p4yGzneqRWtUqa7QRtDgOkcIJH0Ykay20gfKMDmCKCoM3PG78jo0JHYY=
+Received: from DM5PR08CA0043.namprd08.prod.outlook.com (2603:10b6:4:60::32) by
+ DM8PR12MB5398.namprd12.prod.outlook.com (2603:10b6:8:3f::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7270.14; Wed, 7 Feb 2024 18:19:07 +0000
+Received: from DS1PEPF00017092.namprd03.prod.outlook.com
+ (2603:10b6:4:60:cafe::52) by DM5PR08CA0043.outlook.office365.com
+ (2603:10b6:4:60::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.37 via Frontend
+ Transport; Wed, 7 Feb 2024 18:19:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017092.mail.protection.outlook.com (10.167.17.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7249.19 via Frontend Transport; Wed, 7 Feb 2024 18:19:07 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 7 Feb
+ 2024 12:19:05 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, Mahesh J Salgaonkar
+	<mahesh@linux.ibm.com>, Lukas Wunner <lukas@wunner.de>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v9] PCI/DPC: Ignore Surprise Down error on hot removal
+Date: Wed, 7 Feb 2024 18:18:54 +0000
+Message-ID: <20240207181854.121335-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB10027:EE_
-X-MS-Office365-Filtering-Correlation-Id: 540d6676-ea95-44c5-33ca-08dc280520c1
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017092:EE_|DM8PR12MB5398:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2786a269-0b6f-4cd7-fb01-08dc28094608
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	2lmXNsxARyjLTdTxdBLP/aflbw+U3YoObD2w3ADxYF6B1qbAntuIlfjtX8eJhVaUsJFh/uVoc9tDyJTJ//B0DTX5ZphLTpj9J0SvjYTNy0xDg8e64it2AZ9gqROz47zKB0fLWhliy14MwBbHNqUsKZLAvhIanwSSj/GnvsOsvnnGC3ao5FKbbwmy6G78MBa2wJP1BeyUZLgn1CKBu5O0gHPxb1rLxNwS6YB7kX6LSG70K/CCiu687zpRn/eoEXzFXpnFIkveme3LaBqrAhmcamWBZ5TgAdjTJ8rn/QFiBJVL0/sav8Pt75fOnDQGHbs0mtUgXxNokKY5zwnhrQw2Op7LXixmCKgiqdO3/XlSBjLsM2STgwXzt9kfu402N8cyl3p5j0Yg0C0hBkB1r5k4YCSosnkIdwcmNENjXLzUtTExd1ymcaDI72lAR6AgpXDx3pJ7UhiLD1O6HBuEP9zPSXGJWRxd9pBSbSbtTq8BYvENaSV9LXRkh8K1RqQ2bmh79W9J3BXolM96YI/cCkzaN9cB4tJjlGeJ6vX2+UQ+ZE7nlHQ5IBco+pJ/WWpgIa+weZM2iUiFxstKotDPo61H587PtqEeDUiJoEqHBtrjU/U=
+	1yMFUCE1AfPjiat2Lf0iAphSHObsLPKv+kQqMGpOh4pdIeStv87sqMQs7euW/liAajEI1mbakw1x1ViKFP3ZY8/+y0h/Bvx0q8NX0LR0mvzXlBtsdDqUpbuZjjTKYk2Skl8U/TCyJOfPSw/5NFZ/6yLo53egyvcwg1xNGN37szn5ZySt6TGB6KynkPr8J7Z+LsR9TKpQ3OrCOm37/qqfh/EK3rQ1b+xavaKGHX9tbFmWmCF0QBl1GtdLZW2mWhtyZzG3WRkY58hIP9c1UqcFoMPr/updoKWQC1r5fsAZRpM46tkqA0S/PgBn6hzsDjGY4+Xq7rw4/tz5rI6Jl70h4JyA8/BChd7dO168rpLIx4teGgb4Jc9vfH3hrDShXLenrnWw6qiBrHVgUnysrLNQC1QmPF7RNe4vr6vCtTddB9LX3ZFleGmr61Bq6o6U+LU1MV+bEyfuMrz/b3K0OVtACfbPuZWNtQOZnRxAF5UUiB83n4B2kSErcqp7k+seJPPLi3OinhEZpixDk/HpUfrkoN9/zkysd1ufCTgTzOnpbdrWKsgzZ0Zk3BMBTmA3/t+tlwAkrj/O9jPk62M/MqkCLGoJ23TQaLKtnL66K13UiZR0YJI/RjlfXk0aWa8+xiwnA6Z3ZW75RUU4Jyb5rs1pgQ/iGoIV3JyUZqbxHw1J40k7Drf9A8a6RYo7kUHw2q3BNVwKkJCX55dl01U5RBWQ3raBXKcfm1WYyNsnq1as1PEdXMbELwQy61JvGPPoMXnlDX1m5+8rtGxZDRGzljxxZw==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(396003)(366004)(346002)(376002)(39860400002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(41300700001)(2906002)(5660300002)(8936002)(7416002)(83380400001)(38100700002)(966005)(478600001)(6486002)(6916009)(66556008)(316002)(26005)(54906003)(8676002)(66946007)(66476007)(4326008)(6506007)(52116002)(6666004)(9686003)(6512007)(33716001)(86362001)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OWlGA7gJImtzVh5CVaYUxBHL/IxMsNwynSUgBZpsa9Xu567NCYyio5MR+qFu?=
- =?us-ascii?Q?L33viyuKUz3gbpSrqwPegf033WyKMEr1PYajXcDHShCq14zvqXGXKSXxvRsI?=
- =?us-ascii?Q?E+v4EqSm1ghPh1n7IHZd6mdCquRJ73afRvoY6ty1IN6RTDj2WxyBxTFyAmrV?=
- =?us-ascii?Q?d6u55lrNj4ZF1VAX/UfUPdCgn4ApphLgvEQXef5oesrUKJgbb0XcTL5o4Fo7?=
- =?us-ascii?Q?tV/nt6zeJ+MCnWO8oeV/Sc72CJwf4tJiJ4M3b3NJVqv7Xr0v8Lq5sBUbZWac?=
- =?us-ascii?Q?euFH+GrTa3L4N95gdIo/V92k3CPCNlAZDrSybmTBl+9KplE2dXgS8xEShwwL?=
- =?us-ascii?Q?MsTcG0zrJDF11LZUEDItz9OodOp9jguvtUTGfFRnGw8CpCsAQJ7HLDJpIBDH?=
- =?us-ascii?Q?bBiOsxTAwRKTpvA2JhtxPjFZPZGxHq35/lU8sucV0FEnUOUkVkgu2+wcEc/X?=
- =?us-ascii?Q?/G4RrMJ77x99l/u1NbaHYr7eFwpYYdzL2Pf7TmcnX4xllPZ26xtPsjOz4e+t?=
- =?us-ascii?Q?gTrFehREvfZO0B//2sofVqnkb+SQ1vIS+V+QThRfcpKpJAdK77tvsQEj+m8t?=
- =?us-ascii?Q?YT1tug8NLtGBy+hYbLhVaBhJTIIzob9oyBpD57umiKw82BUP1IOx3IQIrh2h?=
- =?us-ascii?Q?DZ5gahsxOnRnDRH2KcKp0Jhssfvgnf9TNAUeBQR+enwBogDP3p4mhNGLXpVI?=
- =?us-ascii?Q?CYY5qh8IcXHpWTwxehAzztPaht7njh9GMG2CRJXl02LjKIPyQ0Y29GzUSZEv?=
- =?us-ascii?Q?/cdZ5uRL79gnV5LmctLJeNSRUussia+hpKsJI60bZKzh4/on1I42v/aGqB0D?=
- =?us-ascii?Q?qaYXZ0yWKdEY2onpXYd6NM85nxA0WVBi64z+P0hUT4b/eKVD7Z24sUfC77Su?=
- =?us-ascii?Q?cq98o0+azHJIsIBH1GW2xP/b6umLAdKhgwNAfo0d+DGpaR7WXQmMTy/4Gs/T?=
- =?us-ascii?Q?3egyOjgCEgMpyq+s0YbHsUj553bMYyQo3Tu5q7zqBDO5ZwU4J7rNDD6eZK/J?=
- =?us-ascii?Q?7wHogI/KTeI60iopJDbT0wsqqY4fxs8tKRTvJjEW+IPwrxykqN/M5r3qy7ed?=
- =?us-ascii?Q?QGOVsOOYDLx87qUmBEpNcyCyel1u5pFVgP+GdGEU2w2wEoC3oaFBN8i9pCN4?=
- =?us-ascii?Q?ln/MGkduzV9+7zEaw4oye+yKjdY5Ju+8/ICByckVxD8OAujihPLHPMF+wRaT?=
- =?us-ascii?Q?95FMfTBzIistCUilm7tOTs/jNTYUdE7yShSNpmooQMJ6E6L/IMGkH8Sm1+Ci?=
- =?us-ascii?Q?ZQcixKHxrjJb/Z7Nw5p6lcHFVvslLX1DPXCMrP/0Al2QdZ0DMarXPOd205aE?=
- =?us-ascii?Q?LLqNmt99d57fJelI5SfJ3BucZL+PxHjmEI8b+JgG749zk+ahBqs2ZH5G35nn?=
- =?us-ascii?Q?jfmCu/jHRNFy1ecxEu5lnCgf5XTorQhHWM4wyicTupJe1Y+A3GWg1ET9Jjef?=
- =?us-ascii?Q?vyK45APNqEvZntYSGHrDmTSFussg/os9YQbw+3ZirOFDS5/I2V9KG6Pxz4hi?=
- =?us-ascii?Q?V8kxzUDRmI8TA9PkQy1CG1BDjxZjyP3IFQbXQfKwoK2V9YGFsXWkOlMUTIi1?=
- =?us-ascii?Q?jWZ0MCcWP9WIoxuTbC4=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 540d6676-ea95-44c5-33ca-08dc280520c1
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2024 17:49:27.4318
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(39860400002)(346002)(396003)(230922051799003)(451199024)(186009)(1800799012)(82310400011)(64100799003)(40470700004)(46966006)(36840700001)(966005)(36860700001)(41300700001)(7696005)(26005)(70206006)(6666004)(2616005)(16526019)(5660300002)(478600001)(86362001)(8936002)(426003)(4326008)(336012)(8676002)(47076005)(2906002)(70586007)(54906003)(316002)(110136005)(81166007)(82740400003)(356005)(83380400001)(36756003)(1076003)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2024 18:19:07.0828
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6IrjX+AgWbloWVSKP8TDyuQYmeRULLmFgLZwWs8Ng1aJhg1DBxdtxukB2OUV1RhsAYvoBlWJQpJL+kJSxT4OOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB10027
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2786a269-0b6f-4cd7-fb01-08dc28094608
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017092.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR12MB5398
 
-On Wed, Feb 07, 2024 at 05:17:55PM +0000, Conor Dooley wrote:
-> Hey Frank,
-> 
-> On Wed, Feb 07, 2024 at 01:24:02AM -0500, Frank Li wrote:
-> > Convert layerscape pcie bind document to yaml file.
-> > 
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  |  84 +++++++++
-> >  .../bindings/pci/fsl,layerscape-pcie.yaml     | 163 ++++++++++++++++++
-> >  .../bindings/pci/layerscape-pci.txt           |  79 ---------
-> >  3 files changed, 247 insertions(+), 79 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> > new file mode 100644
-> > index 0000000000000..3b592c820eb4c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> > @@ -0,0 +1,84 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Freescale Layerscape PCIe controller
-> > +
-> > +maintainers:
-> > +  - Frank Li <Frank.Li@nxp.com>
-> > +
-> > +description: |+
-> 
-> Are you sure that you need this chomping operator?
-> 
-> > +  This PCIe endpoint controller is based on the Synopsys DesignWare PCIe IP
-> 
-> > +  and thus inherits all the common properties defined in snps,dw-pcie-ep.yaml.
-> 
-> You shouldn't need this statement given you have the ref: below.
-> 
-> > +
-> > +  This controller derives its clocks from the Reset Configuration Word (RCW)
-> > +  which is used to describe the PLL settings at the time of chip-reset.
-> > +
-> > +  Also as per the available Reference Manuals, there is no specific 'version'
-> > +  register available in the Freescale PCIe controller register set,
-> > +  which can allow determining the underlying DesignWare PCIe controller version
-> > +  information.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - fsl,ls2088a-pcie-ep
-> > +      - fsl,ls1088a-pcie-ep
-> > +      - fsl,ls1046a-pcie-ep
-> > +      - fsl,ls1028a-pcie-ep
-> > +      - fsl,lx2160ar2-pcie-ep
-> 
-> Where did the fallback compatible go?
+According to PCIe r6.0 sec 6.7.6 [1], async removal with DPC may result in
+surprise down error. This error is expected and is just a side-effect of
+async remove.
 
-So far, no fallback compatible needed now. each devices already have its
-compatible string.
+Ignore surprise down error generated as a side-effect of async remove.
+Typically, this error is benign as the pciehp handler invoked by PDC
+or/and DLLSC alongside DPC, de-enumerates and brings down the device
+appropriately. But the error messages might confuse users. Get rid of
+these irritating log messages with a 1s delay while pciehp waits for
+dpc recovery.
 
-> 
-> > +
-> > +  reg:
-> > +    maxItems: 2
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: regs
-> > +      - const: addr_space
-> 
-> The example uses "regs" and "config". Where did addr_space come from?
+The implementation is as follows: On an async remove a DPC is triggered
+along with a Presence Detect State change and/or DLL State Change.
+Determine it's an async remove by checking for DPC Trigger Status in DPC
+Status Register and Surprise Down Error Status in AER Uncorrected Error
+Status to be non-zero. If true, treat the DPC event as a side-effect of
+async remove, clear the error status registers and continue with hot-plug
+tear down routines. If not, follow the existing routine to handle AER and
+DPC errors.
 
-Example just show pcie-host part. Not show pcie-ep part.
-pcie-ep part need 'addr_space'.
+Please note that, masking Surprise Down Errors was explored as an
+alternative approach, but left due to the odd behavior that masking only
+avoids the interrupt, but still records an error per PCIe r6.0.1 Section
+6.2.3.2.2. That stale error is going to be reported the next time some
+error other than Surprise Down is handled.
 
-> 
-> > +  fsl,pcie-scfg:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: A phandle to the SCFG device node. The second entry is the
-> > +      physical PCIe controller index starting from '0'. This is used to get
-> > +      SCFG PEXN registers.
-> > +
-> > +  dma-coherent:
-> 
-> dma-coherent: true
-> 
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: Indicates that the hardware IP block can ensure the coherency
-> > +      of the data transferred from/to the IP block. This can avoid the software
-> > +      cache flush/invalid actions, and improve the performance significantly.
-> > +
-> > +  big-endian:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: If the PEX_LUT and PF register block is in big-endian, specify
-> > +      this property.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> 
-> This was not previously required, why is it required now?
+Dmesg before:
 
-Actually its needed. 
+  pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
+  pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
+  pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
+  pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
+  pcieport 0000:00:01.4:    [ 5] SDES (First)
+  nvme nvme2: frozen state error detected, reset controller
+  pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
+  pcieport 0000:00:01.4: AER: subordinate device reset failed
+  pcieport 0000:00:01.4: AER: device recovery failed
+  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
+  nvme2n1: detected capacity change from 1953525168 to 0
+  pci 0000:04:00.0: Removing from iommu group 49
 
-> 
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - device_type
-> > +  - bus-range
-> > +  - ranges
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          enum:
-> > +            - fsl,ls1028a-pcie-ep
-> > +            - fsl,ls1046a-pcie-ep
-> > +            - fsl,ls1088a-pcie-ep
-> > +    then:
-> > +      properties:
-> > +        interrupt-names:
-> > +          items:
-> > +            - const: pme
-> 
-> Please define the interrupt properties at the top-level and constrain
-> them on a per-device basis.
-> 
-> > +
-> > +unevaluatedProperties: false
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> > new file mode 100644
-> > index 0000000000000..e3719da306f25
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> > @@ -0,0 +1,163 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> 
-> Only brief comments here, as it most is the same comments as for the 
-> > +
-> > +title: Freescale Layerscape PCIe controller
-> > +
-> > +maintainers:
-> > +  - Frank Li <Frank.Li@nxp.com>
-> > +
-> > +description: |+
-> > +  This PCIe host controller is based on the Synopsys DesignWare PCIe IP
-> > +  and thus inherits all the common properties defined in snps,dw-pcie.yaml.
-> 
-> Same two comments here as above.
-> 
-> > +
-> > +  This controller derives its clocks from the Reset Configuration Word (RCW)
-> > +  which is used to describe the PLL settings at the time of chip-reset.
-> > +
-> > +  Also as per the available Reference Manuals, there is no specific 'version'
-> > +  register available in the Freescale PCIe controller register set,
-> > +  which can allow determining the underlying DesignWare PCIe controller version
-> > +  information.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - fsl,ls1021a-pcie
-> > +      - fsl,ls2080a-pcie
-> > +      - fsl,ls2085a-pcie
-> > +      - fsl,ls2088a-pcie
-> > +      - fsl,ls1088a-pcie
-> > +      - fsl,ls1046a-pcie
-> > +      - fsl,ls1043a-pcie
-> > +      - fsl,ls1012a-pcie
-> > +      - fsl,ls1028a-pcie
-> > +
-> > +  reg:
-> > +    maxItems: 2
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: regs
-> > +      - const: config
-> > +
-> > +  fsl,pcie-scfg:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: A phandle to the SCFG device node. The second entry is the
-> > +      physical PCIe controller index starting from '0'. This is used to get
-> > +      SCFG PEXN registers.
-> > +
-> > +  dma-coherent:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: Indicates that the hardware IP block can ensure the coherency
-> > +      of the data transferred from/to the IP block. This can avoid the software
-> > +      cache flush/invalid actions, and improve the performance significantly.
-> 
-> Same here.
-> 
-> > +
-> > +  big-endian:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description: If the PEX_LUT and PF register block is in big-endian, specify
-> > +      this property.
-> > +
-> > +  msi-parent: true
-> > +
-> > +  iommu-map: true
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> 
-> Same here.
-> 
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - device_type
-> > +  - bus-range
-> > +  - ranges
-> > +  - interrupts
-> > +  - interrupt-names
-> > +  - "#interrupt-cells"
-> > +  - interrupt-map-mask
-> > +  - interrupt-map
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > +
-> 
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          enum:
-> > +            - fsl,ls1028a-pcie
-> > +            - fsl,ls1046a-pcie
-> > +            - fsl,ls1043a-pcie
-> > +            - fsl,ls1012a-pcie
-> > +    then:
-> > +      properties:
-> > +        interrupts:
-> > +          maxItems: 2
-> > +        interrupt-names:
-> > +          items:
-> > +            - const: pme
-> > +            - const: aer
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          enum:
-> > +            - fsl,ls2080a-pcie
-> > +            - fsl,ls2085a-pcie
-> > +            - fsl,ls2088a-pcie
-> > +    then:
-> > +      properties:
-> > +        interrupts:
-> > +          maxItems: 1
-> > +        interrupt-names:
-> > +          items:
-> > +            - const: intr
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          enum:
-> > +            - fsl,ls1088a-pcie
-> > +    then:
-> > +      properties:
-> > +        interrupts:
-> > +          maxItems: 1
-> > +        interrupt-names:
-> > +          items:
-> > +            - const: aer
-> 
-> And same here.
-> 
-> Thanks,
-> Conor.
+Dmesg after:
 
+ pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
+ nvme1n1: detected capacity change from 1953525168 to 0
+ pci 0000:04:00.0: Removing from iommu group 37
+
+[1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
+    https://members.pcisig.com/wg/PCI-SIG/document/16609
+
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+v2:
+	Indentation is taken care. (Bjorn)
+	Unrelevant dmesg logs are removed. (Bjorn)
+	Rephrased commit message, to be clear on native vs FW-First
+	handling. (Bjorn and Sathyanarayanan)
+	Prefix changed from pciehp_ to dpc_. (Lukas)
+	Clearing ARI and AtomicOp Requester are performed as a part of
+	(de-)enumeration in pciehp_unconfigure_device(). (Lukas)
+	Changed to clearing all optional capabilities in DEVCTL2.
+	OS-First -> native. (Sathyanarayanan)
+
+v3:
+	Added error message when root port become inactive.
+	Modified commit description to add more details.
+	Rearranged code comments and function calls with no functional
+	change.
+	Additional check for is_hotplug_bridge.
+	dpc_completed_waitqueue to wakeup pciehp handler.
+	Cleared only Fatal error detected in DEVSTA.
+
+v4:
+	Made read+write conditional on "if (pdev->dpc_rp_extensions)"
+	for DPC_RP_PIO_STATUS.
+	Wrapped to 80 chars.
+	Code comment for clearing PCI_STATUS and PCI_EXP_DEVSTA.
+	Added pcie_wait_for_link() check.
+	Removed error message for root port inactive as the message
+	already existed.
+	Check for is_hotplug_bridge before registers read.
+	Section 6.7.6 of the PCIe Base Spec 6.0 -> PCIe r6.0 sec 6.7.6.
+	Made code comment more meaningful.
+
+v5:
+	$SUBJECT correction.
+	Added "Reviewed-by" tag.
+	No code changes. Re-spin on latest base to get Bjorn's
+	attention.
+
+v6:
+	Change to write 1's to clear error. (Sathyanarayanan)
+
+v7:
+	No changes. Rebasing on pci main branch as per Bjorn comments.
+
+v8:
+	Just return "status & PCI_ERR_UNC_SURPDN" instead of true and
+	false and allow C to handle the conversion to bool. (Ilpo)
+
+v9:
+	Handle errors from pci_write_config_word().
+	Write 1 to clear PIO_STATUS.
+---
+ drivers/pci/pcie/dpc.c | 60 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 94111e438241..17f166504b54 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -303,10 +303,70 @@ void dpc_process_error(struct pci_dev *pdev)
+ 	}
+ }
+ 
++static void pci_clear_surpdn_errors(struct pci_dev *pdev)
++{
++	if (pdev->dpc_rp_extensions)
++		pci_write_config_dword(pdev, pdev->dpc_cap +
++				       PCI_EXP_DPC_RP_PIO_STATUS, ~0);
++
++	/*
++	 * In practice, Surprise Down errors have been observed to also set
++	 * error bits in the Status Register as well as the Fatal Error
++	 * Detected bit in the Device Status Register.
++	 */
++	pci_write_config_word(pdev, PCI_STATUS, 0xffff);
++
++	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
++}
++
++static void dpc_handle_surprise_removal(struct pci_dev *pdev)
++{
++	if (!pcie_wait_for_link(pdev, false)) {
++		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
++		goto out;
++	}
++
++	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
++		goto out;
++
++	pci_aer_raw_clear_status(pdev);
++	pci_clear_surpdn_errors(pdev);
++
++	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
++			      PCI_EXP_DPC_STATUS_TRIGGER);
++
++out:
++	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
++	wake_up_all(&dpc_completed_waitqueue);
++}
++
++static bool dpc_is_surprise_removal(struct pci_dev *pdev)
++{
++	u16 status;
++
++	if (!pdev->is_hotplug_bridge)
++		return false;
++
++	if (pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS,
++				 &status))
++		return false;
++
++	return status & PCI_ERR_UNC_SURPDN;
++}
++
+ static irqreturn_t dpc_handler(int irq, void *context)
+ {
+ 	struct pci_dev *pdev = context;
+ 
++	/*
++	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
++	 * of async removal and should be ignored by software.
++	 */
++	if (dpc_is_surprise_removal(pdev)) {
++		dpc_handle_surprise_removal(pdev);
++		return IRQ_HANDLED;
++	}
++
+ 	dpc_process_error(pdev);
+ 
+ 	/* We configure DPC so it only triggers on ERR_FATAL */
+-- 
+2.17.1
 
 
