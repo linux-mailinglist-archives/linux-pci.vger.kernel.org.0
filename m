@@ -1,242 +1,192 @@
-Return-Path: <linux-pci+bounces-3220-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3221-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 320E684D268
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 20:51:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC54E84D293
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 21:05:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8589FB27075
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 19:51:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D14328B5BB
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 20:05:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAAA686AD2;
-	Wed,  7 Feb 2024 19:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E4A78665E;
+	Wed,  7 Feb 2024 20:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9k778Iz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3uUcr1h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E698563E;
-	Wed,  7 Feb 2024 19:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F6E126F0A;
+	Wed,  7 Feb 2024 20:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707335501; cv=none; b=mNG+JM/oGG3kiNRHj7MYeknzAcUxVjqvpgNiaTqjqb5pYH0RKuzGZkP12z+FP0FltznA7xau6TCzpRm4VKf9FkY56feRYOhRc1QXVA+LPKl3qNm4GRfVZxlD2VsqBQdp58cKtJRoA/tnIJ0Dt+lHn4IJSG2ZJS7xW+VninEpItA=
+	t=1707336340; cv=none; b=Lob+zuEoV+EE0wyB2iyIMf7w0LVJDv8CP9ecYxsPix6VnysQG6cFIr/rNpidCJSwZPOKKpGqJ50J68rk/RMosPs/RZPlAW3I89mPqbIdTYLtC9+QtqRYj29+yHt7KF5C19wp9J6SmyAOJzu86Vmnc2HA91G2+RAsghn02IswCxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707335501; c=relaxed/simple;
-	bh=pv2VRu3SrRdSAM9IiT+hebyhoOnb9uKKlZWg141JHHw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=f3auuo2Y/ngWkAp7lHG3mH+JXtcPt1N6fnPxzAeiLSDOC+nPnxUHOlQoEhP4Y7pZFlhnyPkwF4+Dt8XVIMhuupv5hhwrRsvvgs6RyU1JNLOsNaH7YEeG+zq90vcJ2gWkWZfDqBH2jnkYlx6j4vK7eIoz+ORlPxzvXn716ItLz5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9k778Iz; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707335499; x=1738871499;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=pv2VRu3SrRdSAM9IiT+hebyhoOnb9uKKlZWg141JHHw=;
-  b=n9k778Iz3oX8rjdnM0+X3B+FGY9wYxRjsMNWkzolC78u1AbpX0u/yYTv
-   DcKvrDcdgOTnDtimLyodOyFPNFvYafjJ9417vY18K46m5Z+6GDt+f/w52
-   uHuPOjDKTGo9+E9Eve73rLrVrayOKKoL1POfpA53xbabqIIm7FU4eqVKd
-   Zt6HezyA1QdBPI2jof6nUnLD84+qTND7Ur3dT2Ebh+sGnwQHeNk5V1mCx
-   WucSX1C79UodHEyhxCzOQB2/LSH6OW9J0/aO20EZdBwdamhkD/NtrpjsJ
-   WJdnOz2f2LYtteblZpdrluh0sERcrn4EP0Bwc/Y0AHYonIFNbehr20eGM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10977"; a="436205073"
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="436205073"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 11:51:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,251,1701158400"; 
-   d="scan'208";a="1791657"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2024 11:51:39 -0800
-Received: from hsinjuiy-mobl.amr.corp.intel.com (unknown [10.209.57.193])
-	by linux.intel.com (Postfix) with ESMTP id 60E07580DCE;
-	Wed,  7 Feb 2024 11:51:38 -0800 (PST)
-Message-ID: <3ebd2ea35aadc23cf122af250bec47294fc2d9e2.camel@linux.intel.com>
-Subject: Re: [PATCH v2] PCI: vmd: Enable PCI PM's L1 substates of remapped
- PCIe Root Port and NVMe
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: puranjay12@gmail.com, Jian-Hong Pan <jhp@endlessos.org>, Johan Hovold
- <johan@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
- Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
- Nirmal Patel <nirmal.patel@linux.intel.com>, Jonathan Derrick
- <jonathan.derrick@linux.dev>,  linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux@endlessos.org
-Date: Wed, 07 Feb 2024 11:51:38 -0800
-In-Reply-To: <20240206233007.GA886412@bhelgaas>
-References: <20240206233007.GA886412@bhelgaas>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1707336340; c=relaxed/simple;
+	bh=zVLu/Me3Xv0QeEeWdOcnivT42o54BAx6yp83UTbIVRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Ta4yzzRMMwXnPPn1aCIOVX/+gboJOYPPPlKSXTno6ktUdwcfCC29Szt9Da1BrSVY5TWM0UMC7S+tY7lDMGQFMT30MFRi0WW7OIBGj9Zz5UBwMVYginGxYChYFKjoVzRpJR3PErH9ouiORWG5R98cPfOWjTa6xC1+1PPccExze+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3uUcr1h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DF8C433F1;
+	Wed,  7 Feb 2024 20:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707336340;
+	bh=zVLu/Me3Xv0QeEeWdOcnivT42o54BAx6yp83UTbIVRU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=A3uUcr1hFB1TaQI4fFerVSyrdccM8G6kZ8Ir6zq0BMAL4h94HRt0tQEmNntzxZxWi
+	 aLSUhWima9yS32RbFBN3xx0qZ/uiKuI5XuBB3UZpiwm6r7EcMMp6ONDS03fXr8zmEa
+	 kGEmx1/iBFZzW1ylFdmwKdDDSGrFfzV/pU7jNBXheKIIth28PgSpQ0lENJ3H5CFzri
+	 xrX/T68gWXQsMHIkNSuDtuURU4LR8J5i/5BHmTdAap8GXcGCrfXZiVwVWVTYM8eZ6Z
+	 mNkTm4Zffl6FuBgxfIIOVzJl6nQr1uXHG30QQKHtcRDYgF7cgYdTfrV61kGwfAVOtu
+	 gQuiGyYKtutIw==
+Date: Wed, 7 Feb 2024 14:05:38 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Daniel Drake <drake@endlessos.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bhelgaas@google.com, david.e.box@linux.intel.com,
+	mario.limonciello@amd.com, rafael@kernel.org, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux@endlessos.org
+Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
+Message-ID: <20240207200538.GA912749@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240207084452.9597-1-drake@endlessos.org>
 
-On Tue, 2024-02-06 at 17:30 -0600, Bjorn Helgaas wrote:
-> On Tue, Feb 06, 2024 at 01:25:29PM -0800, David E. Box wrote:
-> > On Mon, 2024-02-05 at 15:05 -0800, David E. Box wrote:
-> > > On Mon, 2024-02-05 at 16:42 -0600, Bjorn Helgaas wrote:
-> > > > On Mon, Feb 05, 2024 at 11:37:16AM -0800, David E. Box wrote:
-> > > > > On Fri, 2024-02-02 at 18:05 -0600, Bjorn Helgaas wrote:
-> > > > > > On Fri, Feb 02, 2024 at 03:11:12PM +0800, Jian-Hong Pan wrote:
-> > > > > ...
-> > > >=20
-> > > > > > > @@ -775,6 +773,14 @@ static int vmd_pm_enable_quirk(struct pc=
-i_dev
-> > > > > > > *pdev,
-> > > > > > > void *userdata)
-> > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_write_con=
-fig_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
-> > > > > > > ltr_reg);
-> > > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_info(pdev=
-, "VMD: Default LTR value set by driver\n");
-> > > > > >=20
-> > > > > > You're not changing this part, and I don't understand exactly h=
-ow
-> > > > > > LTR
-> > > > > > works, but it makes me a little bit queasy to read "set the LTR
-> > > > > > value
-> > > > > > to the maximum required to allow the deepest power management
-> > > > > > savings" and then we set the max snoop values to a fixed consta=
-nt.
-> > > > > >=20
-> > > > > > I don't think the goal is to "allow the deepest power savings";=
- I
-> > > > > > think it's to enable L1.2 *when the device has enough buffering=
- to
-> > > > > > absorb L1.2 entry/exit latencies*.
-> > > > > >=20
-> > > > > > The spec (PCIe r6.0, sec 7.8.2.2) says "Software should set thi=
-s to
-> > > > > > the platform's maximum supported latency or less," so it seems =
-like
-> > > > > > that value must be platform-dependent, not fixed.
-> > > > > >=20
-> > > > > > And I assume the "_DSM for Latency Tolerance Reporting" is part=
- of
-> > > > > > the
-> > > > > > way to get those platform-dependent values, but Linux doesn't
-> > > > > > actually
-> > > > > > use that yet.
-> > > > >=20
-> > > > > This may indeed be the best way but we need to double check with =
-our
-> > > > > BIOS folks.=C2=A0 AFAIK BIOS writes the LTR values directly so th=
-ere
-> > > > > hasn't been a need to use this _DSM. But under VMD the ports are
-> > > > > hidden from BIOS which is why we added it here. I've brought up t=
-he
-> > > > > question internally to find out how Windows handles the DSM and t=
-o
-> > > > > get a recommendation from our firmware leads.
-> > > >=20
-> > > > We want Linux to be able to program LTR itself, don't we?=C2=A0 We
-> > > > shouldn't have to rely on firmware to do it.=C2=A0 If Linux can't d=
-o
-> > > > it, hot-added devices aren't going to be able to use L1.2,
-> > > > right?
-> > >=20
-> > > Agreed. We just want to make sure we are not conflicting with what
-> > > BIOS may be doing.
-> >=20
-> > So the feedback is to run the _DSM and just overwrite any BIOS
-> > values. Looking up the _DSM I saw there was an attempt to upstream
-> > this 4 years ago [1]. I'm not sure why the effort stalled but we can
-> > pick up this work again.
-> >=20
-> > https://patchwork.kernel.org/project/linux-pci/patch/20201015080311.781=
-1-1-puranjay12@gmail.com/
->=20
-> There was a PCI SIG discussion about this a few years ago that never
-> really seemed to get resolved:
-> https://members.pcisig.com/wg/PCIe-Protocol/mail/thread/35064
->=20
-> Unfortunately that discussion is not public, but the summary is:
->=20
-> =C2=A0 Q: How is the LTR_L1.2_THRESHOLD value determined?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 PCIe r5.0, sec 5.5.4, says the same value must b=
-e programmed into
-> =C2=A0=C2=A0=C2=A0=C2=A0 both Ports.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 A: As noted in sec 5.5.4, the value is determine=
-d primarily by
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0the amount of time it wil=
-l take to re-establish the common
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mode bias on the AC coupl=
-ing caps, and it is assumed that the
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIOS knows this.
->=20
-> =C2=A0 Q: How are the LTR Max Snoop values determined?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 PCI Firmware r3.3, sec 4.6.6, says the LTR _DSM =
-reports the max
-> =C2=A0=C2=A0=C2=A0=C2=A0 values for each Downstream Port embedded in the =
-platform, and the
-> =C2=A0=C2=A0=C2=A0=C2=A0 OS should calculate latencies along the path bet=
-ween each
-> =C2=A0=C2=A0=C2=A0=C2=A0 Downstream Port and any Upstream Port (Switch Up=
-stream Port or
-> =C2=A0=C2=A0=C2=A0=C2=A0 Endpoint).
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 Of course, Switches not embedded in the platform=
- (e.g., external
-> =C2=A0=C2=A0=C2=A0=C2=A0 Thunderbolt hierarchies) will not have this _DSM=
-, but I assume
-> =C2=A0=C2=A0=C2=A0=C2=A0 they should contribute to this sum?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 A: The fundamental problem is that there is no p=
-ractical way for
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0software to discover the =
-AC coupling capacitor sizes and
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0common mode bias circuit =
-impedance.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Software could compute co=
-nservative values, but they would
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0likely be 10x worse than =
-typical, so the L1.2 exit latency
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0would be significantly lo=
-nger than actually required to be.
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0The interoperability issu=
-es here were understood when
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0designing L1 Substates, b=
-ut no viable solution was found.
->=20
-> So the main reason Puranjay's work got stalled is that I didn't feel
-> confident enough that we understood how to do this, especially for
-> external devices.
->=20
-> It would be great if somebody *did* feel confident about interpreting
-> and implementing all this.
+On Wed, Feb 07, 2024 at 09:44:51AM +0100, Daniel Drake wrote:
+> The Asus B1400 with original shipped firmware versions and VMD disabled
+> cannot resume from suspend: the NVMe device becomes unresponsive and
+> inaccessible.
+> 
+> This is because the NVMe device and parent PCI bridge get put into D3cold
+> during suspend, and this PCI bridge cannot be recovered from D3cold mode:
+> 
+>   echo "0000:01:00.0" > /sys/bus/pci/drivers/nvme/unbind
+>   echo "0000:00:06.0" > /sys/bus/pci/drivers/pcieport/unbind
+>   setpci -s 00:06.0 CAP_PM+4.b=03 # D3hot
+>   acpidbg -b "execute \_SB.PC00.PEG0.PXP._OFF"
+>   acpidbg -b "execute \_SB.PC00.PEG0.PXP._ON"
+>   setpci -s 00:06.0 CAP_PM+4.b=0 # D0
+>   echo "0000:00:06.0" > /sys/bus/pci/drivers/pcieport/bind
+>   echo "0000:01:00.0" > /sys/bus/pci/drivers/nvme/bind
+>   # NVMe probe fails here with -ENODEV
 
-As it is BIOS (at least Intel BIOS) is already writing the maximum allowed =
-LTR
-value on Upstream Ports that have it set to 0. So we can't do any worse if =
-we
-write the BIOS provided _DSM value for all Upstream Ports, including extern=
-al
-devices. Sounds like the worst case scenario is that devices take longer th=
-an
-needed to exit L1.2 (I'm still asking about this detail). But I think this =
-is
-better than not programming the LTR at all which could prevent the platform=
- from
-power gating they very resources that LTR is meant to help manage.
+Can you run "sudo lspci -vvxxxx -s00:06.0" before putting the Root
+Port in D3hot, and then again after putting it back in D0 (when NVMe
+is inaccessible), and attach both outputs to the bugzilla?
 
-If that reasoning is okay with you, I'll submit patches to use the _DSM.
+> This appears to be an untested D3cold transition by the vendor; Intel
+> socwatch shows that Windows leaves the NVMe device and parent bridge in D0
+> during suspend, even though these firmware versions have StorageD3Enable=1.
+> 
+> Experimenting with the DSDT, the _OFF method calls DL23() which sets a L23E
+> bit at offset 0xe2 into the PCI configuration space for this root port.
+> This is the specific write that the _ON routine is unable to recover from.
+> This register is not documented in the public chipset datasheet.
+> 
+> Disallow D3cold on the PCI bridge to enable successful suspend/resume.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215742
+> Signed-off-by: Daniel Drake <drake@endlessos.org>
+> ---
+>  arch/x86/pci/fixup.c | 45 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> v2:
+> Match only specific BIOS versions where this quirk is required.
+> Add subsequent patch to this series to revert the original S3 workaround
+> now that s2idle is usable again.
+> 
+> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+> index f347c20247d30..6b0b341178e4f 100644
+> --- a/arch/x86/pci/fixup.c
+> +++ b/arch/x86/pci/fixup.c
+> @@ -907,6 +907,51 @@ static void chromeos_fixup_apl_pci_l1ss_capability(struct pci_dev *dev)
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_save_apl_pci_l1ss_capability);
+>  DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_fixup_apl_pci_l1ss_capability);
+>  
+> +/*
+> + * Disable D3cold on Asus B1400 PCIe bridge at 00:06.0.
 
-David
+I doubt the 00:06.0 PCI address is relevant here.
+
+> + * On this platform with VMD off, the NVMe's parent PCI bridge cannot
+> + * successfully power back on from D3cold, resulting in unresponsive NVMe on
+> + * resume. This appears to be an untested transition by the vendor: Windows
+> + * leaves the NVMe and parent bridge in D0 during suspend.
+> + * This is only needed on BIOS versions before 308; the newer versions flip
+> + * StorageD3Enable from 1 to 0.
+
+Given that D3cold is just "main power off," and obviously the Root
+Port *can* transition from D3cold to D0 (at initial platform power-up
+if nothing else), this seems kind of strange and makes me think we may
+not completely understand the root cause, e.g., maybe some config
+didn't get restored.
+
+But the fact that Windows doesn't use D3cold in this case suggests
+that either (1) Windows has a similar quirk to work around this, or
+(2) Windows decides whether to use D3cold differently than Linux does.
+
+I have no data, but (1) seems sort of unlikely.  In case it turns out
+to be (2) and we figure out how to fix it that way someday, can you
+add the output of "sudo lspci -vvxxxx" of the system to the bugzilla?
+
+What would be the downside of skipping the DMI table and calling
+pci_d3cold_disable() always?  If this truly is a Root Port defect, it
+should affect all platforms with this device, and what's the benefit
+of relying on BIOS to use StorageD3Enable to avoid the defect?
+
+Rewrap into a single paragraph or add a blank line between paragraphs.
+
+> + */
+> +static const struct dmi_system_id asus_nvme_broken_d3cold_table[] = {
+> +	{
+> +		.matches = {
+> +				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.304"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.305"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.306"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.307"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+> +static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
+> +{
+> +	if (dmi_check_system(asus_nvme_broken_d3cold_table) > 0)
+> +		pci_d3cold_disable(pdev);
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
+> +
+>  #ifdef CONFIG_SUSPEND
+>  /*
+>   * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
+> -- 
+> 2.43.0
+> 
 
