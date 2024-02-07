@@ -1,95 +1,121 @@
-Return-Path: <linux-pci+bounces-3218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95B5684D1DA
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 19:56:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5670C84D206
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 20:10:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C50201C20D26
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 18:56:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E90081F254FC
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 19:10:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C0884FAF;
-	Wed,  7 Feb 2024 18:55:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D1385286;
+	Wed,  7 Feb 2024 19:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwfZp65n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3ymfeSd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2941E506
-	for <linux-pci@vger.kernel.org>; Wed,  7 Feb 2024 18:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663EE82D73;
+	Wed,  7 Feb 2024 19:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707332152; cv=none; b=VS90dwu9XQQ7MMoHTQNjg52teBKU8J+oMe0P2bj9SKLS9uLiy03aB3rnMYuQ7J57r85ofpihzQ2RFL2z7hQ95RdqZTzx70bTL1ZH6WyCQm2iql8UgfNSw4A1cdUddkPOVFK022RYGOPr9b4Ren++iX7qclr4ufMoOkhve2Vu4sU=
+	t=1707333052; cv=none; b=R6rsRnmeCD0TDQlZoEB5WhoQiyYDaKEKi79IsxXz5qj0r6UGVXlI6+FSheh7zetyyQz7ZTo0MlBinVOYwHNMDw9xwWO7EQ6oI7qjs3t4q9zCgvDa286x6+Z1uo8JPQyz4bNfXHoiu6UP6xP8EbXOGxZQTXiXFP9/9+b7mrY2Jag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707332152; c=relaxed/simple;
-	bh=+ny9U/MprK9HUht7EqD3pvuq0hpKdIilxYnokCDxKjc=;
+	s=arc-20240116; t=1707333052; c=relaxed/simple;
+	bh=OCnvHMbEgGstPQ+6RSJ1FJWLuiwrN1X56YrscIQU1ps=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=VIesaxkul81Um+hGg2PGLGh7G02SlFoCwbphqpMWuuuprX5y2dPvZSbxhFcYJAqeP7jKqm62WQy3Ca9ZGnJNe9QLVkV0u4SPupAvQAzY2LPI+1B6Srw2W7hW91VTkBBjXsaoMjWStbcZ3vMRzGvTtnbJbJsQ6uohpSKUetIYv58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwfZp65n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C670C433F1;
-	Wed,  7 Feb 2024 18:55:51 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=I61fqL9beUI2jb1iYEN4fBfq3v7fnCuvY243JejRFfl/1lObttI/67Un0Nl7OvDsOuVLkiPTe/uAL5xM+mihMKA62H99tD0QRAIeexWvvKq+iNAPZGriED+vKqkgORvFmX45IIfZx7QFTyHAulbhr2arc3wl7sYBhzBeWCVTFC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3ymfeSd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD0FC433F1;
+	Wed,  7 Feb 2024 19:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707332151;
-	bh=+ny9U/MprK9HUht7EqD3pvuq0hpKdIilxYnokCDxKjc=;
+	s=k20201202; t=1707333051;
+	bh=OCnvHMbEgGstPQ+6RSJ1FJWLuiwrN1X56YrscIQU1ps=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rwfZp65nUXTiISyDNuhpcr4/ELe5MwPy7m66vK2H57Z5LqWJci1nqsBR2Qu5lwDDg
-	 M1CTvqXQGoRL6Yzq4xfSMf9ZXgC0x/0vGlI+TTrEReXnZQ1u4kYmJsClFEzdBkC5G5
-	 chICkTnpU30MK3Ss591wiTXxhXiQ5ALROAKqXd9WGmin/PRrhWmb2DtuLGE9Wxi3d7
-	 yV0Nzx5kc1y2vETjYZoEuKHJgURxGAFxjbVgGM7mmGQP2TwnMB9AygiSuBufQplS6/
-	 nKGqit8J/qs/7eJxjXPoMjc+uvJ+HOlmfNMFXXabKNasjiL1Y7EFPpuzQdmQ5Q3VAm
-	 1QeJJH7zEQArQ==
-Date: Wed, 7 Feb 2024 12:55:49 -0600
+	b=k3ymfeSdbhT2bqIwZJS9xY+5EqNd0Bcsp4td7PM/2zlnSyoEqO6cpotVx0zrxuUNC
+	 0BaCBHHx/vV9Z/gbSlX5ZtlEZ01yzL0GgyHimwHldvTzywMRpsS1g+rCVyEeGVPjGi
+	 V6XxpTqHO+dZk803Wb91hawO+t7PUEyoly+kALzl79DrE+Az5fB9+/pYT3rLkUfjYV
+	 H8i0oRKW4YDLZhRDdhr/xv/PiY29kdcqa3+4fA5VlBNtMwc5awStF+Wtn9kpQBMeju
+	 nDiCUc+f2pf8zB/+Ce1IaU/9XnzAWhmpKFiO+MuCIuxYTvCgSWVe2yFKtoaSF/uN9E
+	 Re7Junm/vc3WA==
+Date: Wed, 7 Feb 2024 13:10:50 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20240207185549.GA910460@bhelgaas>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Niklas Cassel <niklas.cassel@wdc.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] PCI: dwc: Fix a 64bit bug in
+ dw_pcie_ep_raise_msix_irq()
+Message-ID: <20240207191050.GA912556@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a296e02527c6465edcb051d2393e2e6e612a1b0d.camel@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <af59c7ad-ab93-40f7-ad4a-7ac0b14d37f5@moroto.mountain>
 
-On Tue, Feb 06, 2024 at 05:27:29PM -0700, Nirmal Patel wrote:
-> ...
-> Did you have a chance to look at my response on January 16th to your
-> questions? I tried to summarize all of the potential problems and
-> issues with different fixes. Please let me know if it is easier if I
-> resend the explanation. Thanks.
+On Fri, Jan 26, 2024 at 11:40:37AM +0300, Dan Carpenter wrote:
+> The "msg_addr" variable is u64.  However, the "aligned_offset" is an
+> unsigned int.  This means that when the code does:
+> 
+>         msg_addr &= ~aligned_offset;
+> 
+> it will unintentionally zero out the high 32 bits.  Use ALIGN_DOWN()
+> to do the alignment instead.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 2217fffcd63f ("PCI: dwc: endpoint: Fix dw_pcie_ep_raise_msix_irq() alignment support")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I did see your Jan 16 response, thanks.
+I applied both of these to for-linus for v6.8, thanks!
 
-I had more questions after reading it, but they're more about
-understanding the topology seen by the host and the guest:
-  Jan 16: https://lore.kernel.org/r/20240117004933.GA108810@bhelgaas
-  Feb  1: https://lore.kernel.org/r/20240201211620.GA650432@bhelgaas
-
-As I mentioned in my second Feb 1 response
-(https://lore.kernel.org/r/20240201222245.GA650725@bhelgaas), the
-usual plan envisioned by the PCI Firmware spec is that an OS can use a
-PCIe feature if the platform has granted the OS ownership via _OSC and
-a device advertises the feature via a Capability in config space.
-
-My main concern with the v2 patch
-(https://lore.kernel.org/r/20231127211729.42668-1-nirmal.patel@linux.intel.com)
-is that it overrides _OSC for native_pcie_hotplug, but not for any of
-the other features (AER, PME, LTR, DPC, etc.)
-
-I think it's hard to read the specs and conclude that PCIe hotplug is
-a special case, and I think we're likely to have similar issues with
-other features in the future.
-
-But if you think this is the best solution, I'm OK with merging it.
-
-Bjorn
+> ---
+> v5: Add the #include.
+> v4: Add stable and r-b from Niklas
+> v3: Use ALIGN_DOWN()
+> v2: fix typo in commit message
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 5befed2dc02b..d6b66597101e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -6,6 +6,7 @@
+>   * Author: Kishon Vijay Abraham I <kishon@ti.com>
+>   */
+>  
+> +#include <linux/align.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -551,7 +552,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  	}
+>  
+>  	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> -	msg_addr &= ~aligned_offset;
+> +	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>  				  epc->mem->window.page_size);
+>  	if (ret)
+> -- 
+> 2.43.0
+> 
 
