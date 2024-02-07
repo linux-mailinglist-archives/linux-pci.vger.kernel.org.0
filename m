@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-3194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3196-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E11FC84C92A
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 12:06:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43DFD84C94B
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 12:14:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BA1828647B
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 11:06:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C25441F2786E
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Feb 2024 11:13:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A46E317BCD;
-	Wed,  7 Feb 2024 11:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1CB817BDD;
+	Wed,  7 Feb 2024 11:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="alpugtYz"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="UYLBu0of"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C33217BC5
-	for <linux-pci@vger.kernel.org>; Wed,  7 Feb 2024 11:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B591802E
+	for <linux-pci@vger.kernel.org>; Wed,  7 Feb 2024 11:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707303966; cv=none; b=Ej0SL+BiHds8zJRn+CppPKiZqM6Sv98hfVL/MjPVpNn5DTZ7aC1elcyOXovhsS1vQhfYaBes2Sdo33hstSsNfqvZJ42KkhZq2cGxXFmWqUcc5CnEQtIqmvS3gbtjR0aWtZLrCxdzXX9iRPtKlUrbyJ2pOcSlffkItGXnyT7WPsY=
+	t=1707304435; cv=none; b=XRqZZM8c3wAklH7VF8D04YjCsWpZmd4SekJeHYVb+F9zEKO9bU23h/EMCbRubFjydnjHQ1D/X9MyRi/KkYFa8Pyjpvrn/zAtaLXDfa0REFwnJcByL08Otl6hd3dBzvq+/cPBrb78i2ShnZlaC56b+HxPT4Sh4T7V8mvFIZDZ43s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707303966; c=relaxed/simple;
-	bh=SjX79JlzoG9HgwRP50O7RXEJOgSTsPbHECRNLSXhvhI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xyc6G7PBmWLaJx5ZBWWvZdAfIvbJhoTyPVpdvKhfuEVzImSHM0RqudhyU/ckV2iB/bYD3CzvFCegaMB0TcOpHiuKwEnefZYj5ZdmSI2A00wWIA91s6uoeZ5p52DMgYhvV1uYv4UMKzJ6yKiPNagwRTsTw9IvTU5Os0jCeaTAiaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=alpugtYz; arc=none smtp.client-ip=209.85.210.54
+	s=arc-20240116; t=1707304435; c=relaxed/simple;
+	bh=tro8ragEiatxrzVyhM2KBl3dAfGGbhXMHer3p8yIa1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bUQHyxGBipiB31eHdHML837pDP6Y1qLEyv54yCOSlrLWfgugrX88Pcw4PZt9TK/iRxdjsCJ8kFuD3J/bSWBZNrln6GEME7rTk4u2otwn9/EnuajvU5hnmhGvDSjstkt5NNUZ8Phi2X4yoZc3B/j/z5fjQUadwp7NJolvC3TIDBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=UYLBu0of; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e12d0af927so324317a34.0
-        for <linux-pci@vger.kernel.org>; Wed, 07 Feb 2024 03:06:03 -0800 (PST)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d70b0e521eso4046235ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 07 Feb 2024 03:13:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessos.org; s=google; t=1707303963; x=1707908763; darn=vger.kernel.org;
+        d=endlessos.org; s=google; t=1707304433; x=1707909233; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+91b1XqNAFALlb1Najn1v2c7o/wK9zms0vvE0c08CY=;
-        b=alpugtYzYj+GtL0xFb4gEXIXCMg4r5jhWqsm70CewTrq3Fqiq0vPKEUJLxmitz6OOh
-         CjptrzFz6EpRDKC7xE0yYqXlpsWbT9Pp10ukkaBfZeRkcMLpC//5Sdnt4bClKfLqzymJ
-         5N8kxDtTfZdYQRB9kJm6fhjjA2IGdeJa8PevxflXQOcjtRcK5PM+DKgkbbyznj+zlcqL
-         FmrkiHASYyeO0gNOq3aGD34rliLBMujO1IIVCRJQF3+IG6DwkKYXby7MS1O6f+K4P8h4
-         WAiLs3qmGhkkWkzX4v9/5EbYwgsBv9YyWaevEph04jwaXFlvVY21GADpD5D4PJE6eAaN
-         yQsQ==
+        bh=4bOqg2l6/pVQQK6oz5sCjnvNtEXfm6tGtms7+YNZ0l8=;
+        b=UYLBu0ofnkihM/tICzvmGXejcLPPm2D+MmmQw8XrahA6J8ewk8GhVppWDgdwfClJW8
+         olYMwNuS7M6w7ZJki2Id4ISlUXtz7xXX/J2/D2seZWZphrFsJPeWcxDU8KrRERJASrZk
+         qH1gyxpuAl8OXCbGn/We/UNvjew2botuDgLgEvdFe06pbWprMdqbzbzC6+eF3F67y1R5
+         sKEMBBUAnMmQ1Ra+Q9iQim5PDU9xSEiQhTMCmqHEcPKVahxeY/HkBrzidWH3GnrlnNuG
+         Kpxkc/77bPH1WFjmvjJv2I3E3g57FyjwlKwgOa87NQv35EWt2YEEJDCTRoTku/ImOh1V
+         eeSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707303963; x=1707908763;
+        d=1e100.net; s=20230601; t=1707304433; x=1707909233;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=H+91b1XqNAFALlb1Najn1v2c7o/wK9zms0vvE0c08CY=;
-        b=TUFm2WTYsmEd2O90ti2XyGCxGNglRNYUi+76Kfe/TQ2URlZEKmGTUf5jQuODJyFDQR
-         3FLqDmiXNG2wQ+Qto6FR6msRClqdQiCDBad1wuYCWX8XQMkPgrvMPumdzYef8k6ne44o
-         KB126TcV1SJK/qfx307fFrmi2B5++yIfaGpAPbMXNMrm57uvPAH4srFr5FpwS/iCz8Vm
-         jiQstcoRi/1vTGGA1LAY3SNVXZsqlzJzvxJhdNGNxGV1iDBjMMTnDThOFQimJhLiVY8T
-         TgqdDNCNTPXfYF1TI/rFKbCnmvbtnSFh1ISMyUlrNQlNM8QPX3/2ucu/Ula8Mq96TYqF
-         Pe0g==
-X-Gm-Message-State: AOJu0YwpLbvuEGBJSAdptSwS07i8cE2mJo0GMDRrF1yyuqdCgYsT8MN8
-	vOzqSmuYJABxdsyFMU20KU63hPmbaJbpQXkfMo/vuIHzNTZr3z5Hx6VUS/pRqss=
-X-Google-Smtp-Source: AGHT+IET9hW3lKuKYOuuZgQD3VliQnO2AI+JzGh6QwYp3W6pJ2omlYdD1GoU7TBOj3Hgsmo+KI1xyg==
-X-Received: by 2002:a05:6358:d390:b0:176:cf18:d0bb with SMTP id mp16-20020a056358d39000b00176cf18d0bbmr3130789rwb.13.1707303963130;
-        Wed, 07 Feb 2024 03:06:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWE1jg5D4Q08mRtPkrwIAlKIor83cVkpbALTMa43LCtTq3h09wgMmlQppTtehC5mVHdTfoRjajSqUDFO3l7VysvMOAb8TDy8tnDkgAyUYLl9IQ4+Z2p+ZUykNiBPvN+VXDkR20+BLcfc8S9yno8XmxfH/irG5gL2UpjRGIYkezNbquPLz6I/9AbJWzwlz1GKOoFkKkf2exEBXet2N5+gzaKfYAvlYqF0suoH/R0sQuC65HypSYRp/f+dNvfQD53qsatkmd+XSJ1xOtWFzrIF3WxnW0tZxm98zerq1QnH0lMlstslyZ4FlLEBsqeSybwzlvuZO7yBdBcdl216aSuEwLJMkr0JcTbPYdpNHbyoJQlb2EFa8/7UEc=
+        bh=4bOqg2l6/pVQQK6oz5sCjnvNtEXfm6tGtms7+YNZ0l8=;
+        b=CamwcuIDVhZGlOMl0d/u7GUDfrtLfz6V1lu+6dGwEIrWHILXFwlPQFQZ7EJRR3/Mrz
+         8Z96zuPgAvULcqMn6t6mRno2TArJhIOwzy+OzAjKNRBv48Vqz06k1tQ+5qCgYATwbVvJ
+         nzpA1V/zsPBZq/1xyh+toiwJlSPI3jO4DIxsvhIVk0YJTaUORfG/+YdoOjn9Oe9gRPMq
+         jYo17AwM1konk2SmaiZ66Ny81Ls6F/XXSJbJ5ucUe1+bGSV2BVsgjzUxigHtysZKKtrg
+         qGzUcZ4jAq0Y36Yx8i0um5fZ5JiUZ2bifAJ48aBLsFFT0euKOuV7byHPR9Xg93hMcKs/
+         cmuQ==
+X-Gm-Message-State: AOJu0Ywoa30L4GDxa6heSyYNcqyuh9wN+pQW3z2Dkm08zp0iD+42qaL4
+	XVIXI1HHDYMs8WrwJjuMoxhAUE/MQl5G+EaUuXYz5oEvJK4RlqMiBZprs9Thy1s=
+X-Google-Smtp-Source: AGHT+IEMM33I1mRf3qbVJCVIjvQWYDJtRxsXJDDEil45HxeXjK8i5H0rpNmzDJEgjoSgP1/Q05BGvg==
+X-Received: by 2002:a17:903:1108:b0:1d9:6c3:e24f with SMTP id n8-20020a170903110800b001d906c3e24fmr5075235plh.38.1707304433286;
+        Wed, 07 Feb 2024 03:13:53 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUg/yi/uJnxEcXcmd+ClMWaL8fo5FJp0E7pxLW4vkdPZBq2tQuH3k264ISX7sYs/6PkEusBcLp0t8vxUU1nEdwp6+GcqrFv2vXIkJxrTB0JJcPoty+/55pKqExpwVbHzkGNCCg58NY/f/RUoZkCSr26jNWoAL+rGGxWBlA0WC4WnH0DaRpuZ0qfTjDsi7dpnN0MLDSSdzC91W1zuXT+KeUNea3scWS60so7bDtfaDhLjy5x872vL7GDVkg0i0YF80Va8OlQATzjAoqy76EzUDm0965k0HbemZgpZsZ7nIJaQcWYP5Wwv/THKdoKcCvm/uK/QMjiiIcVXYZG42O4O0KTui/0hYj9Or4+XymP7PtrCROpQIBNDjY=
 Received: from starnight.endlessm-sf.com ([123.51.167.56])
-        by smtp.googlemail.com with ESMTPSA id ff15-20020a056a002f4f00b006e04efcfbc2sm1232068pfb.74.2024.02.07.03.06.00
+        by smtp.googlemail.com with ESMTPSA id jv12-20020a170903058c00b001d9602f3dbesm1176957plb.24.2024.02.07.03.13.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Feb 2024 03:06:02 -0800 (PST)
+        Wed, 07 Feb 2024 03:13:52 -0800 (PST)
 From: Jian-Hong Pan <jhp@endlessos.org>
 To: Bjorn Helgaas <helgaas@kernel.org>,
 	Johan Hovold <johan@kernel.org>,
@@ -78,8 +78,8 @@ Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	linux@endlessos.org,
 	Jian-Hong Pan <jhp@endlessos.org>
 Subject: [PATCH v3 1/3] PCI: vmd: Enable PCI PM's L1 substates of remapped PCIe Root Port and NVMe
-Date: Wed,  7 Feb 2024 19:02:29 +0800
-Message-ID: <20240207110227.575983-3-jhp@endlessos.org>
+Date: Wed,  7 Feb 2024 19:08:43 +0800
+Message-ID: <20240207110842.576091-2-jhp@endlessos.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -108,6 +108,18 @@ Substates by following PCI Express Base Specification Revision 6.0, section
 Link: https://bugzilla.kernel.org/show_bug.cgi?id=218394
 Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
 ---
+v2:
+- Power on the VMD remapped devices with pci_set_power_state_locked()
+- Prepare the PCIe LTR parameters before enable L1 Substates
+- Add note into the comments of both pci_enable_link_state() and
+  pci_enable_link_state_locked() for kernel-doc.
+- The original patch set can be split as individual patches.
+
+v3:
+- Re-send for the missed version information.
+- Split drivers/pci/pcie/aspm.c modification into following patches.
+- Fix the comment for enasuring the PCI devices in D0.
+
  drivers/pci/controller/vmd.c | 13 +++++++++----
  1 file changed, 9 insertions(+), 4 deletions(-)
 
