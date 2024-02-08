@@ -1,56 +1,58 @@
-Return-Path: <linux-pci+bounces-3261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 323B784EB12
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 23:02:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DA8784EB4D
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 23:09:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D92C31F224E1
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 22:02:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 483EA281C3F
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 22:09:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B98364F5EF;
-	Thu,  8 Feb 2024 22:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 451624B5CA;
+	Thu,  8 Feb 2024 22:09:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCrHwv+l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mT+8tKSB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913384F601;
-	Thu,  8 Feb 2024 22:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6AE50254;
+	Thu,  8 Feb 2024 22:09:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707429723; cv=none; b=gowPVHVqHeVcLat4Qg3zjxOtNnMH0wOMPrq6lS+iZv6+S5CQ4QInVBbKJGVmjsLQT20CrOu8S8Kk9a1n2L/t1ntLHB7BmOtv2Mu0zTUSb2oahVgsYk+jovIWGIf8ciuvb8/S/ApULNrp5C4M6I+Z0QvCQJjQxbtzjMQsz2DuaTA=
+	t=1707430152; cv=none; b=LpJH1oDH1zlkW1Y2YNSoWulFWkXL6I0wOOyGtmyzBf3dLvjN6huYWkmPNT/6lyEyD6FlM++8o3+9Fxc1Y1ovKx8aG1BbD82eVSkvwz7LhUVktW3+LvfOyo1CfE65VHfCs5JOmslSF56ccYci5s77jbHZQN3eCkvuwST+BgelW0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707429723; c=relaxed/simple;
-	bh=51zhCU+hWU/GXYJG/dlGZH1DFkMa0Z8FeHW08IHlo9I=;
+	s=arc-20240116; t=1707430152; c=relaxed/simple;
+	bh=zCTdDIPjuasHpxRE5ZrlrLvYc6g4okK5pNPNcQLFAzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=M/no5cDDV/zYWvvpjMYSyD3S5+KXVfLqvdRb1w79jKpRw+fvDnD33YwwzOIBTZlEsxKAFeq5TQRGTnMSRtjt4ZUR+WsGqiOQMYkqiZKtMCNbKE4Y6dCoBe23saPVDHYg3cvE+WQVGxFA2ALBe+dfoKP4AlhYgzvdxf0qcCy9sh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCrHwv+l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D52D4C43390;
-	Thu,  8 Feb 2024 22:02:02 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=DcEWCr678xv6nYe38KzqZTr1csdsrq0H0j8BKejKqd6sBJRdbh/YaJS7qPJQEEKRJtqlEsDxnLR1Q/C5cJLaOskLoiIRkVWX12lrlqCU2gA4HbHkEtLBIlvl5xOn31WdoPw0sCqzT+ElHs0I0Ko562C4b5gfSNAAAvufJ6fJyGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mT+8tKSB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64736C433F1;
+	Thu,  8 Feb 2024 22:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707429723;
-	bh=51zhCU+hWU/GXYJG/dlGZH1DFkMa0Z8FeHW08IHlo9I=;
+	s=k20201202; t=1707430151;
+	bh=zCTdDIPjuasHpxRE5ZrlrLvYc6g4okK5pNPNcQLFAzk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dCrHwv+lDZFL0m+4iWHQvgV9D7FWwuHtx9vKhwjSe70u+CqElDLO9SmX+FmkfGL+A
-	 6TXKRwi+Zg7hnY6Df6vms9bKKJw6Gku7kuyMqTcl8GKsvoVdYjUuO4VxoJYH+5C9kd
-	 JHu8z855NAymSwSbwRWcsM8Fd6F00+r3P9cvUYtHY0Mf1ypNJHTqElqs2grAMXyeYj
-	 /BtRbrN44a+ny7V/3h/D5cYlkE4q0EiFLYE+conojF5jc7wrtYVuh4ZNPx77mHoum4
-	 BRj5NNwCiWK5BbrNgcHonSxkRXBjLCIWzNHUb3hznX4R9ahxN7H6Z/KKQW2gyrO8Oz
-	 tfTFxHr0VwhjA==
-Date: Thu, 8 Feb 2024 16:02:01 -0600
+	b=mT+8tKSBg8wEHst4eh5rqoZerbYW911kDFB100NX0quIf+L2OTudcJdj13bov/BYD
+	 15mVAszuHlw5873PPuRtsIjsr8syMJn3vd6xfSBpyCpWA2nTiR9IctGMZ8ZSq3SEKy
+	 g6Amgg1GcaHAvt/NHA9znoqeTMoS1GzyOu7inTs3wAe+lnXXh1ygshiyUzs/MN+sm0
+	 ZJkf8kIzydsmLII4i4ugEI5areu4fFtp5IOIITSun/3p4mm7ZiS6D9fGxM6EOzA+Rb
+	 M6wKtLGu5EBwozo/7LByzWpEIrpn0NOPcJwA4MTlvnhB4eJuOkq6kV1KL0D+7OWvm7
+	 36N9Lmqv4xiZA==
+Date: Thu, 8 Feb 2024 16:09:09 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH kernel 4/4] pci: Define Integrity and Data Encryption
- (IDE) extended capability
-Message-ID: <20240208220201.GA975089@bhelgaas>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-coco@lists.linux.dev, Wu Hao <hao.wu@intel.com>,
+	Yilun Xu <yilun.xu@intel.com>, Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: Re: [RFC PATCH 1/5] PCI/CMA: Prepare to interoperate with TSM
+ authentication
+Message-ID: <20240208220909.GA975234@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,43 +61,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240201060228.3070928-5-aik@amd.com>
+In-Reply-To: <170660663177.224441.2104783746551322918.stgit@dwillia2-xfh.jf.intel.com>
 
-On Thu, Feb 01, 2024 at 05:02:28PM +1100, Alexey Kardashevskiy wrote:
-> PCIe 6.0 introduces the "Integrity & Data Encryption (IDE)" feature which
-> adds a new capability with id=0x30.
+On Tue, Jan 30, 2024 at 01:23:51AM -0800, Dan Williams wrote:
+> A TSM (TEE Security Manager) is a platform agent that facilitates TEE
+> I/O (device assignment for confidential VMs). It uses PCI CMA, IDE, and
+> TDISP to authenticate, encrypt/integrity-protect the link, and bind
+> device-virtual-functions capable of accessing private memory to
+> confidential VMs (TVMs).
 > 
-> Add the new id to the list of capabilities.
+> Unlike native PCI CMA many of the details of establishing a connection
+> between a device (DSM) and the TSM are abstracted through platform APIs.
+> I.e. in the native case Linux picks the keys and validates the
+> certificates, in the TSM case Linux just sees a "success" from invoking
+> a "connect" API with the TSM.
 > 
-> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> ---
-> 
-> This only adds an id. The rest is here:
-> https://github.com/aik/pciutils/commit/ide
+> SPDM only allows for one session-owner per transport (DOE), so the
+> expectation is that authentication will only ever be in the "native"
+> established case, or the "tsm" established case.
 
-We can add this #define when we have need for it in Linux, so let's
-hold it until that need appears.
+Holy cow, this is tasty nested acronym soup.  TEE, CMA, IDE, TDISP,
+TVM, DSM, SPDM, DOE?  I know these will all become common knowledge in
+a few years, but this is a big mouthful right now.  Is there any
+overview or glossary in Documentation/ or similar?
 
-> Not sure how much of that we want in the Linux.
-> ---
->  include/uapi/linux/pci_regs.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index e60b4df1f7d9..b8d447b2c793 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -743,7 +743,8 @@
->  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
->  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
->  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
-> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
-> +#define PCI_EXT_CAP_ID_IDE	0x30	/* Integrity and Data Encryption (IDE) */
-> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
->  
->  #define PCI_EXT_CAP_DSN_SIZEOF	12
->  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> -- 
-> 2.41.0
-> 
+Bjorn
 
