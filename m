@@ -1,149 +1,168 @@
-Return-Path: <linux-pci+bounces-3240-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3241-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F312484E584
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 17:54:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 03AC484E5A7
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 17:57:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF86F28354E
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 16:54:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85528286A15
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 16:57:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F52C7F7CA;
-	Thu,  8 Feb 2024 16:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0744980058;
+	Thu,  8 Feb 2024 16:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ybhq7Kd4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMZ5PSoR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A067EF01
-	for <linux-pci@vger.kernel.org>; Thu,  8 Feb 2024 16:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A957EEE9;
+	Thu,  8 Feb 2024 16:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707411244; cv=none; b=guYE8EhfMkUotDQ2NEc1ktPrOF6Xcl7eaa56IThBReNdk3D9AJL5jf6FoFnLgQ+1y2ixouUGuDUm1kwknGYc1hZ7OL5n3lXcCz6eGf0qZvmAoSrs6GztMgkKrZjjNRTzS9NxGCwsabZdNOw+bWIuMAakK+3XXgwOV+ATzDG1I6I=
+	t=1707411435; cv=none; b=RyxM55HpxRalyz96SC2NbVls3DTBWBPCYO7RZ8IyFsPjTWWnPeSQ1LzDzYRGwu/7SAi8dhoyRxFk6mtOpbVzFJtrdVHOi8DzHJROta8vmQmxZ+ZA9qoKu+uf6jpZAKtT7Y7c6Rl+aRjjw4kRC60FYR81hwtAQyXHd/jcpIiHT+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707411244; c=relaxed/simple;
-	bh=+WnqOpqwrKMN/Ii8lvXs8Tih6LFYmoJMhLY7pjgCWgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oQMzAwaFl8A8rfyJMzCe9IG6RG2BK5yK9xmDghTD1cCrepD/94OIhkpJQ4CCQVf9OCcii+85mBhKMLyOCBskOh96pAD2TdYo0Tk7GthwcY/xeOiYi7TeUvsxt0Nt2SrRFCFY4U88a84kNj+PZNnIXSroH5bCq3qqVNtvd9DbY0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ybhq7Kd4; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4c0232861afso735636e0c.1
-        for <linux-pci@vger.kernel.org>; Thu, 08 Feb 2024 08:54:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707411242; x=1708016042; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+WnqOpqwrKMN/Ii8lvXs8Tih6LFYmoJMhLY7pjgCWgA=;
-        b=ybhq7Kd4EMNxKxmH4ppuNsp011IeTINhTWm2q7GuUWAv5EqZBIkATzyQ9VKsHy1R/A
-         KoNAq5/5s9fWZdWz2IE4LwathQ79bUe8E4PRhfXAFm+Jwy01C5eoS5LXtfgsgqRDXfJP
-         J+UmGtPyvWe9VPaqJeqUgqyWY8R0LtYHN/c2gnoXv4bs2qWlZNTAY6Irczsgi2MitD2c
-         ZttpnCpa6Qs+GdkJYreRIgbblmOckIg/yEViEx29BV5Pip2kkZnpYFLGtCg8K989IzdA
-         sXJuRd7Pqb1z0d1iTKQzilqo+71GswvYS3E4Pvk8FqkeocxGFcCSZVmWFxx96kgmdOYl
-         cG7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707411242; x=1708016042;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+WnqOpqwrKMN/Ii8lvXs8Tih6LFYmoJMhLY7pjgCWgA=;
-        b=DGA8gHj1afW5RrrAko8w1EAJvvYsuT/oyCY2//pAop1n/5QVOFpo6OdWy3QSiBbmPA
-         h7C3KK+HPrV6Mv8lRmxwsi2M+8C7fiok9bMOxCjGsEbW1EPaAvw4berksJMSQgSeVRQa
-         hNNjxmN9S1t8D0ubK+YRYEUSGXpPoVixGzUzH0m1wRX8k7dy7yYT8A4GuX1hJR0tKW3f
-         n6RvoEh+2hOmgAHF9TUEed1zjscTBV94IeEexdXie30LQtNk7fUxDL3RATUeRncstBaE
-         7PX2348tO4Me6iMqHHPSxDOY7xHSRwemW2AANDM3ltZuVVC+MRuUk6lcij41QSoBwe6C
-         GGaA==
-X-Gm-Message-State: AOJu0YwYJDCtxHw2v79VWqYU00XzX+X3hj9diAv9WqtyZ+lFz4kVRfOp
-	hEuUraAIpHuvzIkzcDJhiBm28bdQIgVAm2FEkqKGq6kFoU/0JNM0Fv+4tEMPIkSqTeFYFh4mYxa
-	ZYVpAp5Cz4DyVF6VEtqi6szlXmorP9V99PeqU+Q==
-X-Google-Smtp-Source: AGHT+IHz0CjsWbNfwLVsvbsu2GnwvD6mVTutx2G227R7kTzOxqJNrEtSn6iMso2qq7PPj4o9RHpX9LDEy5dwka8VO8g=
-X-Received: by 2002:a1f:e681:0:b0:4c0:2416:6fc2 with SMTP id
- d123-20020a1fe681000000b004c024166fc2mr161766vkh.5.1707411241926; Thu, 08 Feb
- 2024 08:54:01 -0800 (PST)
+	s=arc-20240116; t=1707411435; c=relaxed/simple;
+	bh=oupV3kTT50Gb/TGEGdVzk1Z4pRuREEf427kVS39VzdQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SJf3F650l/OBYIg/udlfYPIEKyyR36di7CERG6DyjRVEhbyV3REQHKWSxTO+e06abAbtuJGUZnXM+8rrSwSWP9pubPYJTBInJmKE4uqTCLd6dR659uBnMYTzZJyUamqLiVoYhhETcoImTN6cS8uiBxLKhgoPJdhqyYGlpxfEboQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMZ5PSoR; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707411435; x=1738947435;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=oupV3kTT50Gb/TGEGdVzk1Z4pRuREEf427kVS39VzdQ=;
+  b=QMZ5PSoRCbKfK8Gme951C45eUBpfyQCmg9JfTPM/s0WNmnDHZMZpqTDl
+   1TvCEVlBByIWDR2EAnIHUNic/OwHm+sm7ARxGCUG7/5EaSCaFtGB0Vv/M
+   MT6cu4UIPJHaRfVLG/KdMi8IyaaEF90Yhbneci44nex8cTHACKqKLlM5C
+   65XAJ1DuPV30FNCtpviiewRzgKz0pjR7Dd2TwWlKzdH+SSgGQoxOsAWzb
+   N8invHlQ1ymtmJb+l3+aUk8NwnTOu7TO3Y57OrKBQpt6TKD0Hk+VggqJq
+   1n1M7sxUzKTdRgKd/kuZj/7gAQy9gnpq794OARJtZ6ftX5SD3er7I5k+1
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1557693"
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="1557693"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:57:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
+   d="scan'208";a="2072780"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:57:14 -0800
+Received: from ricardo2-mobl.amr.corp.intel.com (ricardo2-mobl.amr.corp.intel.com [10.209.74.190])
+	by linux.intel.com (Postfix) with ESMTP id DA4F1580C9A;
+	Thu,  8 Feb 2024 08:57:12 -0800 (PST)
+Message-ID: <9654146ac849bb00faf2fe963d3da94ad65003b8.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Daniel Drake <drake@endlessos.org>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bhelgaas@google.com,  mario.limonciello@amd.com, rafael@kernel.org,
+ lenb@kernel.org,  linux-acpi@vger.kernel.org, linux@endlessos.org
+Date: Thu, 08 Feb 2024 08:57:12 -0800
+In-Reply-To: <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
+References: <20240207084452.9597-1-drake@endlessos.org>
+	 <20240207200538.GA912749@bhelgaas>
+	 <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
+	 <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com> <20240116074333.GO5185@atomide.com>
- <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com> <CACRpkdYUVbFoDq91uLbUy8twtG_AiD+CY2+nqzCyHV7ZyBC3sA@mail.gmail.com>
- <95032042-787e-494a-bad9-81b62653de52@bootlin.com>
-In-Reply-To: <95032042-787e-494a-bad9-81b62653de52@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 8 Feb 2024 17:53:50 +0100
-Message-ID: <CAMRc=MfSkuYocKMGyVjqQ5qk=MSkR_W4F5PNs+M6HwBkmjcK0Q@mail.gmail.com>
-Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to suspend_noirq/resume_noirq
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Tony Lindgren <tony@atomide.com>, 
-	Andy Shevchenko <andy@kernel.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 8, 2024 at 5:19=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> On 1/28/24 01:12, Linus Walleij wrote:
-> > On Fri, Jan 19, 2024 at 6:01=E2=80=AFPM Thomas Richard
-> > <thomas.richard@bootlin.com> wrote:
-> >> On 1/16/24 08:43, Tony Lindgren wrote:
-> >>> * Thomas Richard <thomas.richard@bootlin.com> [240115 16:16]:
-> >>>> Some IOs can be needed during suspend_noirq/resume_noirq.
-> >>>> So move suspend/resume callbacks to noirq.
-> >>>
-> >>> So have you checked that the pca953x_save_context() and restore works
-> >>> this way? There's i2c traffic and regulators may sleep.. I wonder if
-> >>> you instead just need to leave gpio-pca953x enabled in some cases
-> >>> instead?
-> >>>
-> >>
-> >> Yes I tested it, and it works (with my setup).
-> >> But this patch may have an impact for other people.
-> >> How could I leave it enabled in some cases ?
-> >
-> > I guess you could define both pca953x_suspend() and
-> > pca953x_suspend_noirq() and selectively bail out on one
-> > path on some systems?
->
-> Yes.
->
-> What do you think if I use a property like for example "ti,pm-noirq" to
-> select the right path ?
-> Is a property relevant for this use case ?
->
+On Thu, 2024-02-08 at 10:52 +0100, Daniel Drake wrote:
+> On Thu, Feb 8, 2024 at 9:37=E2=80=AFAM Daniel Drake <drake@endlessos.org>=
+ wrote:
+> > > What would be the downside of skipping the DMI table and calling
+> > > pci_d3cold_disable() always?=C2=A0 If this truly is a Root Port defec=
+t, it
+> > > should affect all platforms with this device, and what's the benefit
+> > > of relying on BIOS to use StorageD3Enable to avoid the defect?
+> >=20
+> > I had more assumed that it was a platform-specific DSDT bug, in that
+> > PEG0.PXP._OFF is doing something that PEG0.PXP._ON is unable to
+> > recover from, and that other platforms might handle the suspend/resume
+> > of this root port more correctly. Not sure if it is reasonable to
+> > assume that all other platforms on the same chipset have the same bug
+> > (if that's what this is).
 
-I prefer a new property than calling of_machine_is_compatible().
-Please do run it by the DT maintainers, I think it should be fine.
-Maybe even don't limit it to TI but make it a generic property.
+This does look like a firmware bug. We've had reports of D3cold support mis=
+sing
+when running in non-VMD mode on systems that were designed with VMD for Win=
+dows.
+These issues have been caught and addressed by OEMs during enabling of Linu=
+x
+systems. Does D3cold work in VMD mode?
 
-Bart
+David
 
-> Regards,
->
-> >
-> > Worst case using if (of_machine_is_compatible("my,machine"))...
-> >
-> > Yours,
-> > Linus Walleij
-> --
-> Thomas Richard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
+>=20
+> Just realised my main workstation (Dell XPS) has the same chipset.
+>=20
+> The Dell ACPI table has the exact same suspect-buggy function, which
+> the affected Asus system calls from PEG0.PXP._OFF:
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Method (DL23, 0, Serialized)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L23E =
+=3D One
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Sleep =
+(0x10)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Local0=
+ =3D Zero
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 While =
+(L23E)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 If ((Local0 > 0x04))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Break
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 }
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 Sleep (0x10)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 Local0++
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SCB0 =
+=3D One
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=20
+> (the "L23E =3D One" line is the one that writes a value to config offset
+> 0xe2, if you comment out this line then everything works)
+>=20
+> However, on the Dell XPS system, nothing calls DL23() i.e. it is dead cod=
+e.
+>=20
+> Comparing side by side:
+> Asus root port (PC00.PEG0) has the PXP power resource which gets
+> powered down during D3cold transition as it becomes unused. Dell root
+> port has no power resources (no _PR0).
+> Asus NVM device sitting under that root port (PC00.PEG0.PEGP) has
+> no-op _PS3 method, but Dell does not have _PS3. This means that Dell
+> doesn't attempt D3cold on NVMe nor the parent root port during suspend
+> (both go to D3hot only).
+>=20
+> Let me know if you have any ideas for other useful comparative experiment=
+s.
+> Daniel
+
 
