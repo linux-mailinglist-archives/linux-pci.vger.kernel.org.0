@@ -1,136 +1,100 @@
-Return-Path: <linux-pci+bounces-3260-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3261-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 192EA84EB0C
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 23:00:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 323B784EB12
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 23:02:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2712B1C26AF4
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 22:00:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D92C31F224E1
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 22:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFCC24F21A;
-	Thu,  8 Feb 2024 22:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B98364F5EF;
+	Thu,  8 Feb 2024 22:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAC18m2n"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCrHwv+l"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B46C24F88C;
-	Thu,  8 Feb 2024 22:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913384F601;
+	Thu,  8 Feb 2024 22:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707429629; cv=none; b=usY3ZjjJJF+U/UqXsL9ezCcgR7i5T2bF3VLWRe7mRj201kSABElhFOpiqymgErla+LdeKnUErbW43MO5tn62J7ifOS8tviX5ET0gmFcfC1F+ZcYOcEU5LL56RnU8DIUcRgZt90v/fMlisfjjEDWpZMioaBVh3AyhMFsnMiT9n34=
+	t=1707429723; cv=none; b=gowPVHVqHeVcLat4Qg3zjxOtNnMH0wOMPrq6lS+iZv6+S5CQ4QInVBbKJGVmjsLQT20CrOu8S8Kk9a1n2L/t1ntLHB7BmOtv2Mu0zTUSb2oahVgsYk+jovIWGIf8ciuvb8/S/ApULNrp5C4M6I+Z0QvCQJjQxbtzjMQsz2DuaTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707429629; c=relaxed/simple;
-	bh=sfqU/s/3SiEvSEePFviZWJkwmQb3jHOvGvS8pWeeXZU=;
+	s=arc-20240116; t=1707429723; c=relaxed/simple;
+	bh=51zhCU+hWU/GXYJG/dlGZH1DFkMa0Z8FeHW08IHlo9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A3A5BErObC8r9ZetdIXrVz26z/wDsfWeMl7U9X4cuZvB5DuDuZllu9ELW1hv/ur6YfXosKj1KcqsB0yz9Rjxyl9TO7AgptTCIZP1U/w1/LSeUYmJOe+mYIkAMgtyaT+PqP7fa/aWr3QNt636jk3LZuofLaIgn4JT3SoEw3NbfMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAC18m2n; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45EA6C433C7;
-	Thu,  8 Feb 2024 22:00:29 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=M/no5cDDV/zYWvvpjMYSyD3S5+KXVfLqvdRb1w79jKpRw+fvDnD33YwwzOIBTZlEsxKAFeq5TQRGTnMSRtjt4ZUR+WsGqiOQMYkqiZKtMCNbKE4Y6dCoBe23saPVDHYg3cvE+WQVGxFA2ALBe+dfoKP4AlhYgzvdxf0qcCy9sh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCrHwv+l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D52D4C43390;
+	Thu,  8 Feb 2024 22:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707429629;
-	bh=sfqU/s/3SiEvSEePFviZWJkwmQb3jHOvGvS8pWeeXZU=;
+	s=k20201202; t=1707429723;
+	bh=51zhCU+hWU/GXYJG/dlGZH1DFkMa0Z8FeHW08IHlo9I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HAC18m2ncaPmq5J7DCM9ZqsPgRFcSlY9RiD20SThR76iZUy348j/TuwqqdfxdQ9u1
-	 WmjqgY7vOj2hJ1j7KW6M1bnJddK7MWjWSy8KNt7lnqICugcvxM6Rjo+tKjR/t9ncKy
-	 l1l8hL91Rqx7ufOWymvpq6esMakpcr/F9Jh86t98kC1KA2Kpj2jQUx1/+gsPD5Ku2+
-	 c274pG+q4NzJsUw3WczdAt9TbFozmyCXAOTiI2KcAuUvnzxmsDAxjWvK+NPLfS3Wii
-	 9qjKFQRVYY6geRg+oy3FWZj53OX6raJRGiEHcBzi2uIhfdT8J0U+6/bPEtyP5Sti4G
-	 9J/1G2LlMmD+A==
-Date: Thu, 8 Feb 2024 16:00:27 -0600
+	b=dCrHwv+lDZFL0m+4iWHQvgV9D7FWwuHtx9vKhwjSe70u+CqElDLO9SmX+FmkfGL+A
+	 6TXKRwi+Zg7hnY6Df6vms9bKKJw6Gku7kuyMqTcl8GKsvoVdYjUuO4VxoJYH+5C9kd
+	 JHu8z855NAymSwSbwRWcsM8Fd6F00+r3P9cvUYtHY0Mf1ypNJHTqElqs2grAMXyeYj
+	 /BtRbrN44a+ny7V/3h/D5cYlkE4q0EiFLYE+conojF5jc7wrtYVuh4ZNPx77mHoum4
+	 BRj5NNwCiWK5BbrNgcHonSxkRXBjLCIWzNHUb3hznX4R9ahxN7H6Z/KKQW2gyrO8Oz
+	 tfTFxHr0VwhjA==
+Date: Thu, 8 Feb 2024 16:02:01 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Alexey Kardashevskiy <aik@amd.com>
 Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Jonathan Cameron <jonathan.cameron@huawei.com>,
 	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH kernel 2/4] pci/doe: Support discovery version
-Message-ID: <20240208220027.GA975008@bhelgaas>
+Subject: Re: [PATCH kernel 4/4] pci: Define Integrity and Data Encryption
+ (IDE) extended capability
+Message-ID: <20240208220201.GA975089@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240201060228.3070928-3-aik@amd.com>
+In-Reply-To: <20240201060228.3070928-5-aik@amd.com>
 
-On Thu, Feb 01, 2024 at 05:02:26PM +1100, Alexey Kardashevskiy wrote:
-> PCIe spec v6.1 defines a "DOE Discovery Version" field in the DOE Discovery
-> Request Data Object Contents (3rd DW) as:
-
-Please include spec section number, e.g., "PCIe r6.1, sec xx.xx".
-
-(Also note PCI-SIG uses "revision" as the major, "version" as the
-minor, so this would be "PCIe r6.1", not "PCIe v6.1".)
-
-> 15:8 DOE Discovery Version – must be 02h if the Capability Version in
-> the Data Object Exchange Extended Capability is 02h or greater.
+On Thu, Feb 01, 2024 at 05:02:28PM +1100, Alexey Kardashevskiy wrote:
+> PCIe 6.0 introduces the "Integrity & Data Encryption (IDE)" feature which
+> adds a new capability with id=0x30.
 > 
-> Add support for the version on devices with the DOE v2 capability.
+> Add the new id to the list of capabilities.
 > 
 > Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
 > ---
->  include/uapi/linux/pci_regs.h |  1 +
->  drivers/pci/doe.c             | 11 ++++++++---
->  2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> This only adds an id. The rest is here:
+> https://github.com/aik/pciutils/commit/ide
+
+We can add this #define when we have need for it in Linux, so let's
+hold it until that need appears.
+
+> Not sure how much of that we want in the Linux.
+> ---
+>  include/uapi/linux/pci_regs.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index a39193213ff2..b9c681f14181 100644
+> index e60b4df1f7d9..b8d447b2c793 100644
 > --- a/include/uapi/linux/pci_regs.h
 > +++ b/include/uapi/linux/pci_regs.h
-> @@ -1144,6 +1144,7 @@
->  #define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
+> @@ -743,7 +743,8 @@
+>  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+>  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+>  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+> +#define PCI_EXT_CAP_ID_IDE	0x30	/* Integrity and Data Encryption (IDE) */
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_IDE
 >  
->  #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
-> +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER	0x0000ff00
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 61f0531d2b1d..f57def002175 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -381,11 +381,13 @@ static void pci_doe_task_complete(struct pci_doe_task *task)
->  	complete(task->private);
->  }
->  
-> -static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
-> +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
->  			     u8 *protocol)
->  {
-> +	u32 disver = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
-> +				(capver >= 2) ? 2 : 0);
->  	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
-> -				    *index);
-> +				    *index) | disver;
->  	__le32 request_pl_le = cpu_to_le32(request_pl);
->  	__le32 response_pl_le;
->  	u32 response_pl;
-> @@ -419,13 +421,16 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
->  {
->  	u8 index = 0;
->  	u8 xa_idx = 0;
-> +	u32 hdr = 0;
-> +
-> +	pci_read_config_dword(doe_mb->pdev, doe_mb->cap_offset, &hdr);
->  
->  	do {
->  		int rc;
->  		u16 vid;
->  		u8 prot;
->  
-> -		rc = pci_doe_discovery(doe_mb, &index, &vid, &prot);
-> +		rc = pci_doe_discovery(doe_mb, PCI_EXT_CAP_VER(hdr), &index, &vid, &prot);
->  		if (rc)
->  			return rc;
->  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
 > -- 
 > 2.41.0
 > 
