@@ -1,168 +1,236 @@
-Return-Path: <linux-pci+bounces-3241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3242-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03AC484E5A7
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 17:57:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73FE84E8BF
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 20:13:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85528286A15
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 16:57:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 621361F2FF92
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Feb 2024 19:13:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0744980058;
-	Thu,  8 Feb 2024 16:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F88636132;
+	Thu,  8 Feb 2024 19:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QMZ5PSoR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lo7R4CcH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A957EEE9;
-	Thu,  8 Feb 2024 16:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCA436121;
+	Thu,  8 Feb 2024 19:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707411435; cv=none; b=RyxM55HpxRalyz96SC2NbVls3DTBWBPCYO7RZ8IyFsPjTWWnPeSQ1LzDzYRGwu/7SAi8dhoyRxFk6mtOpbVzFJtrdVHOi8DzHJROta8vmQmxZ+ZA9qoKu+uf6jpZAKtT7Y7c6Rl+aRjjw4kRC60FYR81hwtAQyXHd/jcpIiHT+k=
+	t=1707419573; cv=none; b=ib/lOUYYUEKCIvTEgDPWFutZmp3Vt40A9sToHGOo3b/bSMoJrlYlW7u20aUFJ2LeyfBJkJhsrh8n1T6D9Xpg9M3LEK4WPygg38Qic6zGRmUcZvTIuzf/qmmgOrC4BDiwayUXecjnIlXXFKcqxZN1bVYU36g4Wk6AoOYeotDSu+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707411435; c=relaxed/simple;
-	bh=oupV3kTT50Gb/TGEGdVzk1Z4pRuREEf427kVS39VzdQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SJf3F650l/OBYIg/udlfYPIEKyyR36di7CERG6DyjRVEhbyV3REQHKWSxTO+e06abAbtuJGUZnXM+8rrSwSWP9pubPYJTBInJmKE4uqTCLd6dR659uBnMYTzZJyUamqLiVoYhhETcoImTN6cS8uiBxLKhgoPJdhqyYGlpxfEboQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QMZ5PSoR; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707411435; x=1738947435;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=oupV3kTT50Gb/TGEGdVzk1Z4pRuREEf427kVS39VzdQ=;
-  b=QMZ5PSoRCbKfK8Gme951C45eUBpfyQCmg9JfTPM/s0WNmnDHZMZpqTDl
-   1TvCEVlBByIWDR2EAnIHUNic/OwHm+sm7ARxGCUG7/5EaSCaFtGB0Vv/M
-   MT6cu4UIPJHaRfVLG/KdMi8IyaaEF90Yhbneci44nex8cTHACKqKLlM5C
-   65XAJ1DuPV30FNCtpviiewRzgKz0pjR7Dd2TwWlKzdH+SSgGQoxOsAWzb
-   N8invHlQ1ymtmJb+l3+aUk8NwnTOu7TO3Y57OrKBQpt6TKD0Hk+VggqJq
-   1n1M7sxUzKTdRgKd/kuZj/7gAQy9gnpq794OARJtZ6ftX5SD3er7I5k+1
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1557693"
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="1557693"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:57:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,254,1701158400"; 
-   d="scan'208";a="2072780"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2024 08:57:14 -0800
-Received: from ricardo2-mobl.amr.corp.intel.com (ricardo2-mobl.amr.corp.intel.com [10.209.74.190])
-	by linux.intel.com (Postfix) with ESMTP id DA4F1580C9A;
-	Thu,  8 Feb 2024 08:57:12 -0800 (PST)
-Message-ID: <9654146ac849bb00faf2fe963d3da94ad65003b8.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Daniel Drake <drake@endlessos.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com,  mario.limonciello@amd.com, rafael@kernel.org,
- lenb@kernel.org,  linux-acpi@vger.kernel.org, linux@endlessos.org
-Date: Thu, 08 Feb 2024 08:57:12 -0800
-In-Reply-To: <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
-References: <20240207084452.9597-1-drake@endlessos.org>
-	 <20240207200538.GA912749@bhelgaas>
-	 <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
-	 <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1707419573; c=relaxed/simple;
+	bh=qxWxhPD5BRxGx/8XjhWHfoKRfl1hlFiGpqLEiC51qZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KCngwToU292RZEhw8KAdzyd+YxE++hMYWhMnXWpuYPH5JDHmvSdpettBE5BXSW/bdBDfdFxMHJ9pNnc29AgVsYA/yged/DiZKKIL20b/7zL/r0qngwED0x5OE0+BkhVXggyrC3xsZRO2LJ+h81+xA+q2Cnx43RNo+7yMLP22AJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lo7R4CcH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506BBC433F1;
+	Thu,  8 Feb 2024 19:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707419572;
+	bh=qxWxhPD5BRxGx/8XjhWHfoKRfl1hlFiGpqLEiC51qZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lo7R4CcHxQOs7jopOpFDfOJl/mXi7YjRJaUBLFVVrbjbqkJnBLIo0D892ioPXPsT1
+	 D8TyFzhjX0ub3cvDhGf4OAMpQI/WRa8+WZ80lRvQ5NllZQ3UPOy4LEZIDYK0OLYfzh
+	 HmaK6zQ6ql5IMXE9r6+sskT9iSNTD+QCYSl7UP6hQBS6ZnfaPWQzXvRZXLfeTTmLJd
+	 NWGm6e4k7WenEMiWxXVO6SXrKoCoofDnKLrwvFimENLNyuoEd/tGFBy54YVd4Jt5Dl
+	 FrQErSW/Zb4K3hi68BZEfnMLg6dYbZozsatEGYyxl0sIfYg86ty1PKOZBWkujePgWw
+	 PfFdLemuhaoOg==
+Date: Thu, 8 Feb 2024 19:12:47 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
+ file
+Message-ID: <20240208-jarring-frolic-8d4c9b409127@spud>
+References: <20240207062403.304367-1-Frank.Li@nxp.com>
+ <20240207-yoga-mobility-90a728f6342c@spud>
+ <ZcPCn8q7viB/qcOH@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SRpmeCfQQ7dek33O"
+Content-Disposition: inline
+In-Reply-To: <ZcPCn8q7viB/qcOH@lizhi-Precision-Tower-5810>
 
-On Thu, 2024-02-08 at 10:52 +0100, Daniel Drake wrote:
-> On Thu, Feb 8, 2024 at 9:37=E2=80=AFAM Daniel Drake <drake@endlessos.org>=
- wrote:
-> > > What would be the downside of skipping the DMI table and calling
-> > > pci_d3cold_disable() always?=C2=A0 If this truly is a Root Port defec=
-t, it
-> > > should affect all platforms with this device, and what's the benefit
-> > > of relying on BIOS to use StorageD3Enable to avoid the defect?
+
+--SRpmeCfQQ7dek33O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Feb 07, 2024 at 12:49:19PM -0500, Frank Li wrote:
+> On Wed, Feb 07, 2024 at 05:17:55PM +0000, Conor Dooley wrote:
+> > Hey Frank,
 > >=20
-> > I had more assumed that it was a platform-specific DSDT bug, in that
-> > PEG0.PXP._OFF is doing something that PEG0.PXP._ON is unable to
-> > recover from, and that other platforms might handle the suspend/resume
-> > of this root port more correctly. Not sure if it is reasonable to
-> > assume that all other platforms on the same chipset have the same bug
-> > (if that's what this is).
+> > On Wed, Feb 07, 2024 at 01:24:02AM -0500, Frank Li wrote:
+> > > Convert layerscape pcie bind document to yaml file.
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  |  84 +++++++++
+> > >  .../bindings/pci/fsl,layerscape-pcie.yaml     | 163 ++++++++++++++++=
+++
+> > >  .../bindings/pci/layerscape-pci.txt           |  79 ---------
+> > >  3 files changed, 247 insertions(+), 79 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layersc=
+ape-pcie-ep.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layersc=
+ape-pcie.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-=
+pci.txt
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pci=
+e-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.ya=
+ml
+> > > new file mode 100644
+> > > index 0000000000000..3b592c820eb4c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.ya=
+ml
+> > > @@ -0,0 +1,84 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Freescale Layerscape PCIe controller
+> > > +
+> > > +maintainers:
+> > > +  - Frank Li <Frank.Li@nxp.com>
+> > > +
+> > > +description: |+
+> >=20
+> > Are you sure that you need this chomping operator?
+> >=20
+> > > +  This PCIe endpoint controller is based on the Synopsys DesignWare =
+PCIe IP
+> >=20
+> > > +  and thus inherits all the common properties defined in snps,dw-pci=
+e-ep.yaml.
+> >=20
+> > You shouldn't need this statement given you have the ref: below.
+> >=20
+> > > +
+> > > +  This controller derives its clocks from the Reset Configuration Wo=
+rd (RCW)
+> > > +  which is used to describe the PLL settings at the time of chip-res=
+et.
+> > > +
+> > > +  Also as per the available Reference Manuals, there is no specific =
+'version'
+> > > +  register available in the Freescale PCIe controller register set,
+> > > +  which can allow determining the underlying DesignWare PCIe control=
+ler version
+> > > +  information.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - fsl,ls2088a-pcie-ep
+> > > +      - fsl,ls1088a-pcie-ep
+> > > +      - fsl,ls1046a-pcie-ep
+> > > +      - fsl,ls1028a-pcie-ep
+> > > +      - fsl,lx2160ar2-pcie-ep
+> >=20
+> > Where did the fallback compatible go?
+>=20
+> So far, no fallback compatible needed now. each devices already have its
+> compatible string.
 
-This does look like a firmware bug. We've had reports of D3cold support mis=
-sing
-when running in non-VMD mode on systems that were designed with VMD for Win=
-dows.
-These issues have been caught and addressed by OEMs during enabling of Linu=
-x
-systems. Does D3cold work in VMD mode?
+It used to exist though, have you checked that u-boot or *bsd etc do not
+use the fallback compatible? You also need to mention your justification
+for removing it in the commit message.
 
-David
+> > > +
+> > > +  reg:
+> > > +    maxItems: 2
+> > > +
+> > > +  reg-names:
+> > > +    items:
+> > > +      - const: regs
+> > > +      - const: addr_space
+> >=20
+> > The example uses "regs" and "config". Where did addr_space come from?
+>=20
+> Example just show pcie-host part. Not show pcie-ep part.
+> pcie-ep part need 'addr_space'.
+
+Okay. Again, please mention where this is coming from.
 
 >=20
-> Just realised my main workstation (Dell XPS) has the same chipset.
+> >=20
+> > > +  fsl,pcie-scfg:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: A phandle to the SCFG device node. The second entry=
+ is the
+> > > +      physical PCIe controller index starting from '0'. This is used=
+ to get
+> > > +      SCFG PEXN registers.
+> > > +
+> > > +  dma-coherent:
+> >=20
+> > dma-coherent: true
+> >=20
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: Indicates that the hardware IP block can ensure the=
+ coherency
+> > > +      of the data transferred from/to the IP block. This can avoid t=
+he software
+> > > +      cache flush/invalid actions, and improve the performance signi=
+ficantly.
+> > > +
+> > > +  big-endian:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description: If the PEX_LUT and PF register block is in big-endi=
+an, specify
+> > > +      this property.
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - reg-names
+> >=20
+> > This was not previously required, why is it required now?
 >=20
-> The Dell ACPI table has the exact same suspect-buggy function, which
-> the affected Asus system calls from PEG0.PXP._OFF:
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Method (DL23, 0, Serialized)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 L23E =
-=3D One
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Sleep =
-(0x10)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Local0=
- =3D Zero
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 While =
-(L23E)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 If ((Local0 > 0x04))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Break
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 }
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 Sleep (0x10)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 Local0++
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SCB0 =
-=3D One
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->=20
-> (the "L23E =3D One" line is the one that writes a value to config offset
-> 0xe2, if you comment out this line then everything works)
->=20
-> However, on the Dell XPS system, nothing calls DL23() i.e. it is dead cod=
-e.
->=20
-> Comparing side by side:
-> Asus root port (PC00.PEG0) has the PXP power resource which gets
-> powered down during D3cold transition as it becomes unused. Dell root
-> port has no power resources (no _PR0).
-> Asus NVM device sitting under that root port (PC00.PEG0.PEGP) has
-> no-op _PS3 method, but Dell does not have _PS3. This means that Dell
-> doesn't attempt D3cold on NVMe nor the parent root port during suspend
-> (both go to D3hot only).
->=20
-> Let me know if you have any ideas for other useful comparative experiment=
-s.
-> Daniel
+> Actually its needed.
 
+Well, if it wasn't, I'd hope that you wouldn't be making it required.
+But I asked /why/ and you've not given a reason. Please mention the why
+in your commit message for v2.
+
+Cheers,
+Conor.
+
+
+--SRpmeCfQQ7dek33O
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcUnrwAKCRB4tDGHoIJi
+0mtuAP9E4kgj16HNkIGd1VacL4AXJRLPuj/WspJh0e0xb9YX7wD+I6Mvg4AGjDL0
+57vFoWWJHnkFY8XXol6QAMWynXGjggg=
+=XvWb
+-----END PGP SIGNATURE-----
+
+--SRpmeCfQQ7dek33O--
 
