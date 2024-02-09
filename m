@@ -1,168 +1,153 @@
-Return-Path: <linux-pci+bounces-3294-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3295-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB3A584FABE
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 18:12:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C972F84FAE4
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 18:20:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 373911F2980B
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 17:12:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A12AB274BC
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 17:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A52217BAF4;
-	Fri,  9 Feb 2024 17:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F8180BEE;
+	Fri,  9 Feb 2024 17:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LkfefxMY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a66ebNfQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E789080C10
-	for <linux-pci@vger.kernel.org>; Fri,  9 Feb 2024 17:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70C37F493;
+	Fri,  9 Feb 2024 17:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707498719; cv=none; b=I+ApWFulUNyZp0m1bDx41U+9wNep1K6Fi7IDYsn0buOJsNeJPM1879TfITOJBZOztEXx5m0HJYjaZmZ6/Rj6paTc3UK49e6HB2tX58AmwMJISv8rNElG+vWe5ggLRaTS+XKHBkv51I9dKhU2ZhxQx+DG2SgeG4K3LFIWx2e6LVs=
+	t=1707499163; cv=none; b=qveY3wRcdXwNW3jS702MdfvGpxRgFlj4qHeN536iVmIRSEQEhrIXAZPcLnLuYl3BL4JLFLWofwqnJUYJYWI1jv88nRjl1P3FCM6ZmoDIntCDWdoDdc4qXq5UYi5tZlitP9YHrpWYCTJxfRrKeyhRemGMrkD0zUQZE9ea2Iijfao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707498719; c=relaxed/simple;
-	bh=uBXa1G+h4BG6CpiX4pgjvA79P/or7/cF4fVnQiDpxWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YuzXN9Sb+sZOvwKDHH70h8uyMRLucbeUJJ3hDTUoU9UM5X47iiHg6ITgk/GTDE2La4cyeGlzXA0K8YEr2ykBNJDe+bYfnDtNcVX/sGp/r+a/OmT6h2HNiwcUJcoFWkJ5O9pw00gQTU1wh+g4aiYcOapCB45cFBt8NHB5/vK2n2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LkfefxMY; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e06d2180b0so947823b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 09 Feb 2024 09:11:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707498717; x=1708103517; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dKDaFEKDf3M5+RLQofTsLbvyKTMDtF18ICqSKZ0WLRQ=;
-        b=LkfefxMYVSzW/oPFyJXY0y8Uu1Fyfy/SEAArfJHd8QuSWk/XiUOr+ZcXTYmXidz+3e
-         IDAsMOiUg68yv8xyJ2uTp3+nlEqrv7WR1DGv5nUOUYwO4etto4ejaFNrb1sYezk65ULW
-         L1Gl1WZTBECi4YdeF7zIdL/F0QR77Ar0but8wz0Npa/dtGqgyUW2BFAAK7VBZsUR80sm
-         avPM9QVoJtNeT7CpDRja4qHCEwfT0BeyxBq1zL9wyPqLPXIcG4PWNnkZJioGU+LNVEh+
-         oVOGRT1mn/4l3Xks3ju9261skiHTvl2hB1vDoHh3ztQ8kyWLgNhmMwPsXAPtbeZdLZnF
-         pIsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707498717; x=1708103517;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dKDaFEKDf3M5+RLQofTsLbvyKTMDtF18ICqSKZ0WLRQ=;
-        b=oLXhWLqBeWvQFb1m0TtFB9tbB7y0hfExt9mZFmlTx4k0DRE9nDPTRpZGGI2o2+z0XL
-         oDDGz9tdyVppJtpqZQMPnaqoM3xM5hux6ZXX0RQVOE9xs9vKGOY7E4w3D+9vxY7IMTM1
-         +CYgYGkd4x/hACpQrG3Cud4K+6rbKjk4ox+zFEpwpZhIIBrcMh22hNX4/a8bnRAd8kco
-         mkl1Gzc1gteSgg/Bj+mfG1cavqFW2ZOw2Qm/2ld0Xu+8MSSMBlG6jjOEk4KnkwF+aznX
-         DwxOxM+6EebeQP/s/OSFxALCIl4AMukW6Gcyu9oG4wtzT2xrTDcwyXQG41fxSjvZMYrr
-         bydg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6sqhFubVawgQ3MxCZbgHu5TxA+zAWAAe0Mpiu+o9PEXVFBgowgXpTdCBBVGONnN3r/2+HA1K9iy5X5oDYbYawRwFwuov4mpMe
-X-Gm-Message-State: AOJu0YyZPvAAnIbNnqd9cMuq7p+0ZcQFGWvduUFWz7Euc63z7V1mOdZt
-	/urdmrKhIh+3jNR+LQ/JCg/E+pJTd9i5FHqkhLNKu8kT1Dn8DXyTVzzaImpXAA==
-X-Google-Smtp-Source: AGHT+IGMj/UcXGGayRnB/SeVZid1zac0tr5hP7LPr9u0jYjdRznTCi+OIWFpankR3E+qPbjxlpiJww==
-X-Received: by 2002:a05:6a00:3a8a:b0:6e0:8f06:1103 with SMTP id fk10-20020a056a003a8a00b006e08f061103mr1814914pfb.20.1707498716876;
-        Fri, 09 Feb 2024 09:11:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV1b+Q36/q1KITK1TQvGypCaT3kj41tmS+hICWXqlR8dw8m5D6BQVmy+PCF2jJuoRl44/KVFELqjqTjZNhcaSnfuqqDOXVroBrNH5ujB5q2p/QY/wlAo2kJfaewuMMWOfh0OP1UqtZc62wxjK47pyx6I1Of/nrdRws5docMIq9QzDktvkQehJsmhSdUNk8mzB4fYJo4fM8xjdHS+SQ=
-Received: from thinkpad ([103.28.246.136])
-        by smtp.gmail.com with ESMTPSA id o20-20020a056a001b5400b006e051fcc0f4sm764256pfv.47.2024.02.09.09.11.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 09:11:56 -0800 (PST)
-Date: Fri, 9 Feb 2024 22:41:52 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
-	lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [pci:endpoint 3/5] drivers/pci/endpoint/pci-epf-core.c:275
- pci_epf_alloc_space() error: uninitialized symbol 'dev'.
-Message-ID: <20240209171152.GI12035@thinkpad>
-References: <7ea6ca33-3954-43a0-a9b8-a09c5db095b6@moroto.mountain>
+	s=arc-20240116; t=1707499163; c=relaxed/simple;
+	bh=VRJlINL6pxzWElhznPgpcMFZwr/R2ULvU04lgrJbPs0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=plkJAbt+UvgHgs5ENf+cZU//k10bLSWv7W2DPFdrdvFDrGvdWMskatY5D9EFeJmkwZ70ixTJ1K+zuheA9dbzUsJ1nzRngtyMAVF4RkE8caTjUke6kJcETRU8Vwbjk50GoQEGsCd7nxgXvpMcMdUV31l9lQOTnaKyBd4mc0171PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a66ebNfQ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707499162; x=1739035162;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=VRJlINL6pxzWElhznPgpcMFZwr/R2ULvU04lgrJbPs0=;
+  b=a66ebNfQvxSXrWpBTnuyWd0uR9akmuokHSqgPntVDkc0RH37VeVoQawk
+   VD+ZAL+K3GCvx3h05X2ldiqJkw6JXDPp+XcH9EcLMxpKQav2yxpRFBZ0p
+   EDfG/t5Z3dA/U79rBWOpTgxDVg7NfSiKXKodtFva0QZW9g1gr2Ca8yI9e
+   af/ahpV64InNzP2tL0vWVo6lZG6z4eR2M7clRA5tXN3C2kXVqXFuD143C
+   GTQ7ZkdovgxzLY9BctroSUaflGLn5aSNVHEwc79tI0sXjrIHafxyzRmM8
+   PtHNkaE7EB2KZX92XBWIRr86NziLqeF3PUBMGERU9n5NdVJBK8HrxxF8D
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1326078"
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="1326078"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:19:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
+   d="scan'208";a="2195068"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:19:20 -0800
+Received: from spboulos-mobl1.amr.corp.intel.com (spboulos-mobl1.amr.corp.intel.com [10.209.44.214])
+	by linux.intel.com (Postfix) with ESMTP id C48635804FA;
+	Fri,  9 Feb 2024 09:19:19 -0800 (PST)
+Message-ID: <ecb40fbc2dc50cc2ebe7cc5393c2b0d6da58e4f3.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
+From: "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To: Daniel Drake <drake@endlessos.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de,
+ mingo@redhat.com,  bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com,  linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bhelgaas@google.com, 
+ mario.limonciello@amd.com, rafael@kernel.org, lenb@kernel.org, 
+ linux-acpi@vger.kernel.org, linux@endlessos.org
+Date: Fri, 09 Feb 2024 09:19:19 -0800
+In-Reply-To: <CAD8Lp44tO_pz_HZmPOKUQ-LEQT=c856eH52xWL9nBtAtJwjL1g@mail.gmail.com>
+References: <20240207084452.9597-1-drake@endlessos.org>
+	 <20240207200538.GA912749@bhelgaas>
+	 <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
+	 <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
+	 <9654146ac849bb00faf2fe963d3da94ad65003b8.camel@linux.intel.com>
+	 <CAD8Lp44tO_pz_HZmPOKUQ-LEQT=c856eH52xWL9nBtAtJwjL1g@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ea6ca33-3954-43a0-a9b8-a09c5db095b6@moroto.mountain>
 
-On Fri, Feb 09, 2024 at 08:02:21PM +0300, Dan Carpenter wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint
-> head:   f7bcec825e728e0baecf96118e36c8afb7b93f8a
-> commit: 6441639b8a253254b00d7ccfbc2c9c67a8f42d10 [3/5] PCI: endpoint: Improve pci_epf_alloc_space() API
-> config: x86_64-randconfig-161-20240209 (https://download.01.org/0day-ci/archive/20240210/202402100046.9zcFnPl3-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> | Closes: https://lore.kernel.org/r/202402100046.9zcFnPl3-lkp@intel.com/
-> 
+On Fri, 2024-02-09 at 09:36 +0100, Daniel Drake wrote:
+> On Thu, Feb 8, 2024 at 5:57=E2=80=AFPM David E. Box <david.e.box@linux.in=
+tel.com>
+> wrote:
+> > This does look like a firmware bug. We've had reports of D3cold support
+> > missing
+> > when running in non-VMD mode on systems that were designed with VMD for
+> > Windows.
+> > These issues have been caught and addressed by OEMs during enabling of =
+Linux
+> > systems. Does D3cold work in VMD mode?
+>=20
+> On Windows for the VMD=3Don case, we only tested this on a BIOS with
+> StorageD3Enable=3D0. The NVMe device and parent bridge stayed in D0 over
+> suspend, but that's exactly what the BIOS asked for, so it doesn't
+> really answer your question.
+>=20
+> On Linux with VMD=3Don and StorageD3Enable=3D1, the NVMe storage device
+> and the VMD parent bridge are staying in D0 over suspend. I don't know
+> why this is, I would have expected at least D3hot.
 
-Thanks for the report. Fixed the issue in offending commit.
+Yeah something is missing here. When StorageD3Enable is set, the nvme drive=
+r
+prints the following message during boot:
 
-- Mani
+	"platform quirk: setting simple suspend"
 
-> smatch warnings:
-> drivers/pci/endpoint/pci-epf-core.c:275 pci_epf_alloc_space() error: uninitialized symbol 'dev'.
-> 
-> vim +/dev +275 drivers/pci/endpoint/pci-epf-core.c
-> 
-> 2a9a801620efac Kishon Vijay Abraham I 2019-03-25  259  void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
-> e891becdccaa90 Niklas Cassel          2024-02-07  260  			  const struct pci_epc_features *epc_features,
-> e891becdccaa90 Niklas Cassel          2024-02-07  261  			  enum pci_epc_interface_type type)
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  262  {
-> 6441639b8a2532 Niklas Cassel          2024-02-07  263  	u64 bar_fixed_size = epc_features->bar_fixed_size[bar];
-> e891becdccaa90 Niklas Cassel          2024-02-07  264  	size_t align = epc_features->align;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  265  	struct pci_epf_bar *epf_bar;
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  266  	dma_addr_t phys_addr;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  267  	struct pci_epc *epc;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  268  	struct device *dev;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  269  	void *space;
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  270  
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  271  	if (size < 128)
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  272  		size = 128;
-> 2a9a801620efac Kishon Vijay Abraham I 2019-03-25  273  
-> 6441639b8a2532 Niklas Cassel          2024-02-07  274  	if (bar_fixed_size && size > bar_fixed_size) {
-> 6441639b8a2532 Niklas Cassel          2024-02-07 @275  		dev_err(dev, "requested BAR size is larger than fixed size\n");
-> 
-> "dev" is uninitialized.
-> 
-> 6441639b8a2532 Niklas Cassel          2024-02-07  276  		return NULL;
-> 6441639b8a2532 Niklas Cassel          2024-02-07  277  	}
-> 6441639b8a2532 Niklas Cassel          2024-02-07  278  
-> 6441639b8a2532 Niklas Cassel          2024-02-07  279  	if (bar_fixed_size)
-> 6441639b8a2532 Niklas Cassel          2024-02-07  280  		size = bar_fixed_size;
-> 6441639b8a2532 Niklas Cassel          2024-02-07  281  
-> 2a9a801620efac Kishon Vijay Abraham I 2019-03-25  282  	if (align)
-> 2a9a801620efac Kishon Vijay Abraham I 2019-03-25  283  		size = ALIGN(size, align);
-> 2a9a801620efac Kishon Vijay Abraham I 2019-03-25  284  	else
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  285  		size = roundup_pow_of_two(size);
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  286  
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  287  	if (type == PRIMARY_INTERFACE) {
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  288  		epc = epf->epc;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  289  		epf_bar = epf->bar;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  290  	} else {
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  291  		epc = epf->sec_epc;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  292  		epf_bar = epf->sec_epc_bar;
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  293  	}
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  294  
-> 63840ff5322373 Kishon Vijay Abraham I 2021-02-02  295  	dev = epc->dev.parent;
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  296  	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  297  	if (!space) {
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  298  		dev_err(dev, "failed to allocate mem space\n");
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  299  		return NULL;
-> 5e8cb4033807e3 Kishon Vijay Abraham I 2017-04-10  300  	}
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+If you don't see this, then the driver never saw StorageD3Enable=3D1. Possi=
+ble
+reasons are:
 
--- 
-மணிவண்ணன் சதாசிவம்
+	- The property doesn't exist
+	- The property isn't set under the ACPI companion device
+	- There is no associated ACPI companion device
+	- The "nvme=3Dnoacpi" parameter was passed on the kernel cmdline
+	- The nvme driver was quirked to not use D3 with
+	   NVME_QUIRK_FORCE_NO_SIMPLE_SUSPEND.
+
+How was the D-state status confirmed? You can use the following to see the =
+D
+state of PCI devices during suspend in the kernel log:
+
+echo -n "file pci-driver.c +p" > /sys/kernel/debug/dynamic_debug/control
+
+David
+
+> =C2=A0 However, given
+> that the NVMe device has no firmware_node under the VMD=3Don setup, I
+> believe there is no way it would enter D3cold because there's no
+> linkage to an ACPI device, so no available _PS3 or _PR0 or whatever is
+> the precise definition of D3cold.
+>=20
+> I also realise I may have made a bad assumption in my previous mail
+> when looking at the Dell device: I was assuming that a parent PCI
+> bridge cannot go into D3cold if its child devices only got as far as
+> D3hot, but I now realise I'm not sure if that constraint actually
+> exists.
+>=20
+> Not sure if these questions are relevant for the consideration of this
+> patch, but I'll try to find some time to answer them next week.
+>=20
+> Daniel
+
 
