@@ -1,218 +1,195 @@
-Return-Path: <linux-pci+bounces-3300-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3301-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D02EE84FD9A
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 21:32:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 51BD884FE1F
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 22:05:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0157E1C21980
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 20:32:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7595B1C23E30
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 21:05:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1810B5673;
-	Fri,  9 Feb 2024 20:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BEF616410;
+	Fri,  9 Feb 2024 21:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwQK9UoM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED1023B1;
-	Fri,  9 Feb 2024 20:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3907DF55;
+	Fri,  9 Feb 2024 21:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707510731; cv=none; b=mr0mV2Thy90uzXwhmGLtG/GXiYACATOlmTKiqFbvbBWZ4y0XTxwRfSrdUx2wqBsmpDNPerLKhKg0Jpsi6f66liVzzjfrjft4mSBauEDXIXsk8xJBGDRWL3yuwKiGI6Yg9jGCW1c6cIiH4I6WLvKmMJ0YTOlD24P0UTqS8aY97U0=
+	t=1707512752; cv=none; b=lfjvpmxRoOoMfJnxUiWRU9JR02VC2t4UneRnpMEia4VTFXYAH665x2vezOmiCsELOte9C1HHBpeA5kJ4L+ZVtsMo8gekEaQzaAwbBuanJ5yN18LLABW/KRD2Zo97OlQNiIiKe7eFoR1sFnBCKR7+PcsVCvN/QPcwyIXWPO1DdPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707510731; c=relaxed/simple;
-	bh=W4hX4Fr27kDfOqCWn6zXDk0H9YB1rKxtALyMNKxVk4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=by9URIP60WTQrCWub5K32hvG3K43Xv7yJlU4QT+TfazPQ9lHlq/4P/1w7BJdxS4Z9+njgFzxKsQ7Q1HStGHC5IFHKag9kfbR4I9CgQy9a1e4IwilVQ8JdvZPcPFl7pb5cSSnT8e9X93vt1Fkt78+QSriscI7CbGppoAFQxXQyRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 9FB682800B767;
-	Fri,  9 Feb 2024 21:32:04 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 808144D3896; Fri,  9 Feb 2024 21:32:04 +0100 (CET)
-Date: Fri, 9 Feb 2024 21:32:04 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kvm@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linuxarm@huawei.com,
-	David Box <david.e.box@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>,
-	Zhi Wang <zhi.a.wang@intel.com>,
-	Alistair Francis <alistair.francis@wdc.com>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Alexander Graf <graf@amazon.com>
-Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
-Message-ID: <20240209203204.GA5850@wunner.de>
-References: <cover.1695921656.git.lukas@wunner.de>
- <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de>
- <5d0e75-993c-3978-8ccf-60bfb7cac10@linux.intel.com>
+	s=arc-20240116; t=1707512752; c=relaxed/simple;
+	bh=rjVvpgkdjij/VYXtLbzigiHQtkw04AlRvlQ3kPwWPAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=CFP5AwL2L0W3iYXEu43s/ADWv7w19SbB43/jZfV3pICmfpYc/38E7TseFSk26zZVV6t5BgyrHQMuW8zeGzt+EuWjOoF5pxIMZ9gheBEGue1nvJjiudgibv3TX4uoO8A7uZjTPWss8gsZtOfQnzJjxu5DC1Al7zbs6+ZVinNb8CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwQK9UoM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F711C433C7;
+	Fri,  9 Feb 2024 21:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707512751;
+	bh=rjVvpgkdjij/VYXtLbzigiHQtkw04AlRvlQ3kPwWPAA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kwQK9UoMLNlCNW4mnILL/fjh6js/5cqzhXmOYR58/NZ49GCoEo35noV1N0Rexcjxg
+	 lAo1KlEs60klZiyOyPrxgCKJTJAnrWYuu+tl+4qSVBQtv8xU+/SujJcpOgyxKVu+sh
+	 KmtcuwLxpMN1rKL4twh466o9n/Qy3jLRTlt/hdebS8LRqcnolN4XCPDOcKoHGhNyf4
+	 g7NULVMt5QtAfP+Hj7xejLKShQinuhM6827OqwAbYFZM0Y8BKAxgPkOfVHljo5k/4h
+	 Z2HqW/rZs2uP/V42MoFVA1hXFtNXb0Zhp+pPSPlH//BjNALkVszex5H72/M+Iy1IJB
+	 QpisPIJPit19w==
+Date: Fri, 9 Feb 2024 15:05:49 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+Cc: "Chen, Jiqian" <Jiqian.Chen@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"Hildebrand, Stewart" <Stewart.Hildebrand@amd.com>,
+	"Huang, Ray" <Ray.Huang@amd.com>,
+	"Ragiadakou, Xenia" <Xenia.Ragiadakou@amd.com>
+Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Message-ID: <20240209210549.GA884438@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d0e75-993c-3978-8ccf-60bfb7cac10@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ZbtY1R15pYZz3F3B@macbook>
 
-On Tue, Oct 03, 2023 at 01:35:26PM +0300, Ilpo J�rvinen wrote:
-> On Thu, 28 Sep 2023, Lukas Wunner wrote:
-> > +typedef int (spdm_transport)(void *priv, struct device *dev,
-> > +                          const void *request, size_t request_sz,
-> > +                          void *response, size_t response_sz);
+On Thu, Feb 01, 2024 at 09:39:49AM +0100, Roger Pau Monné wrote:
+> On Wed, Jan 31, 2024 at 01:00:14PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Jan 31, 2024 at 09:58:19AM +0100, Roger Pau Monné wrote:
+> > > On Tue, Jan 30, 2024 at 02:44:03PM -0600, Bjorn Helgaas wrote:
+> > > > On Tue, Jan 30, 2024 at 10:07:36AM +0100, Roger Pau Monné wrote:
+> > > > > On Mon, Jan 29, 2024 at 04:01:13PM -0600, Bjorn Helgaas wrote:
+> > > > > > On Thu, Jan 25, 2024 at 07:17:24AM +0000, Chen, Jiqian wrote:
+> > > > > > > On 2024/1/24 00:02, Bjorn Helgaas wrote:
+> > > > > > > > On Tue, Jan 23, 2024 at 10:13:52AM +0000, Chen, Jiqian wrote:
+> > > > > > > >> On 2024/1/23 07:37, Bjorn Helgaas wrote:
+> > > > > > > >>> On Fri, Jan 05, 2024 at 02:22:17PM +0800, Jiqian Chen wrote:
+> > > > > > > >>>> There is a need for some scenarios to use gsi sysfs.
+> > > > > > > >>>> For example, when xen passthrough a device to dumU, it will
+> > > > > > > >>>> use gsi to map pirq, but currently userspace can't get gsi
+> > > > > > > >>>> number.
+> > > > > > > >>>> So, add gsi sysfs for that and for other potential scenarios.
+> > > > > > > >> ...
+> > > > > > > > 
+> > > > > > > >>> I don't know enough about Xen to know why it needs the GSI in
+> > > > > > > >>> userspace.  Is this passthrough brand new functionality that can't be
+> > > > > > > >>> done today because we don't expose the GSI yet?
+> > > > > > 
+> > > > > > I assume this must be new functionality, i.e., this kind of
+> > > > > > passthrough does not work today, right?
+> > > > > > 
+> > > > > > > >> has ACPI support and is responsible for detecting and controlling
+> > > > > > > >> the hardware, also it performs privileged operations such as the
+> > > > > > > >> creation of normal (unprivileged) domains DomUs. When we give to a
+> > > > > > > >> DomU direct access to a device, we need also to route the physical
+> > > > > > > >> interrupts to the DomU. In order to do so Xen needs to setup and map
+> > > > > > > >> the interrupts appropriately.
+> > > > > > > > 
+> > > > > > > > What kernel interfaces are used for this setup and mapping?
+> > > > > > >
+> > > > > > > For passthrough devices, the setup and mapping of routing physical
+> > > > > > > interrupts to DomU are done on Xen hypervisor side, hypervisor only
+> > > > > > > need userspace to provide the GSI info, see Xen code:
+> > > > > > > xc_physdev_map_pirq require GSI and then will call hypercall to pass
+> > > > > > > GSI into hypervisor and then hypervisor will do the mapping and
+> > > > > > > routing, kernel doesn't do the setup and mapping.
+> > > > > > 
+> > > > > > So we have to expose the GSI to userspace not because userspace itself
+> > > > > > uses it, but so userspace can turn around and pass it back into the
+> > > > > > kernel?
+> > > > > 
+> > > > > No, the point is to pass it back to Xen, which doesn't know the
+> > > > > mapping between GSIs and PCI devices because it can't execute the ACPI
+> > > > > AML resource methods that provide such information.
+> > > > > 
+> > > > > The (Linux) kernel is just a proxy that forwards the hypercalls from
+> > > > > user-space tools into Xen.
+> > > > 
+> > > > But I guess Xen knows how to interpret a GSI even though it doesn't
+> > > > have access to AML?
+> > > 
+> > > On x86 Xen does know how to map a GSI into an IO-APIC pin, in order
+> > > configure the RTE as requested.
+> > 
+> > IIUC, mapping a GSI to an IO-APIC pin requires information from the
+> > MADT.  So I guess Xen does use the static ACPI tables, but not the AML
+> > _PRT methods that would connect a GSI with a PCI device?
 > 
-> This returns a length or an error, right? If so return ssize_t instead.
+> Yes, Xen can parse the static tables, and knows the base GSI of
+> IO-APICs from the MADT.
 > 
-> If you make this change, alter the caller types too.
-
-Alright, I've changed the types in __spdm_exchange() and spdm_exchange().
-
-However the callers of those functions assign the result to an "rc" variable
-which is also used to receive an "int" return value.
-E.g. spdm_get_digests() assigns the ssize_t result of spdm_exchange() to rc
-but also the int result of crypto_shash_update().
-
-It feels awkward to change the type of "rc" to "ssize_t" in those
-functions, so I kept "int".
-
-
-> > +} __packed;
-> > +
-> > +#define SPDM_GET_CAPABILITIES 0xE1
+> > I guess this means Xen would not be able to deal with _MAT methods,
+> > which also contains MADT entries?  I don't know the implications of
+> > this -- maybe it means Xen might not be able to use with hot-added
+> > devices?
 > 
-> There's non-capital hex later in the file, please try to be consistent.
-
-The spec uses capital hex characters, so this was done to ease
-connecting the implementation to the spec.
-
-OTOH I don't want to capitalize all the hex codes in enum spdm_error_code.
-
-So I guess consistency takes precedence and I've amended the
-patch to downcase all hex characters, as you've requested.
-
-
-> > +struct spdm_error_rsp {
-> > +	u8 version;
-> > +	u8 code;
-> > +	enum spdm_error_code error_code:8;
-> > +	u8 error_data;
-> > +
-> > +	u8 extended_error_data[];
-> > +} __packed;
+> It's my understanding _MAT will only be present on some very specific
+> devices (IO-APIC or CPU objects).  Xen doesn't support hotplug of
+> IO-APICs, but hotplug of CPUs should in principle be supported with
+> cooperation from the control domain OS (albeit it's not something that
+> we tests on our CI).  I don't expect however that a CPU object _MAT
+> method will return IO APIC entries.
 > 
-> Is this always going to produce the layout you want given the alignment 
-> requirements for the storage unit for u8 and enum are probably different?
-
-Yes, the __packed attribute forces the compiler to avoid padding.
-
-
-> > +	spdm_state->responder_caps = le32_to_cpu(rsp->flags);
+> > The tables (including DSDT and SSDTS that contain the AML) are exposed
+> > to userspace via /sys/firmware/acpi/tables/, but of course that
+> > doesn't mean Xen knows how to interpret the AML, and even if it did,
+> > Xen probably wouldn't be able to *evaluate* it since that could
+> > conflict with the host kernel's use of AML.
 > 
-> Earlier, unaligned accessors where used with the version_number_entries.
-> Is it intentional they're not used here (I cannot see what would be 
-> reason for this difference)?
-
-Thanks, good catch.  Indeed this is not necessarily naturally aligned
-because the GET_CAPABILITIES request and response succeeds the
-GET_VERSION response in the same allocation.  And the GET_VERSION
-response size is a multiple of 2, but not always a multiple of 4.
-
-So I've amended the patch to use a separate allocation for the
-GET_CAPABILITIES request and response.  The spec-defined struct layout
-of those messages is such that the 32-bit accesses are indeed always
-naturally aligned.
-
-The existing unaligned accessor in spdm_get_version() turned out
-to be unnecessary after taking a closer look, so I dropped that one.
-
-
-> > +static int spdm_negotiate_algs(struct spdm_state *spdm_state,
-> > +			       void *transcript, size_t transcript_sz)
-> > +{
-> > +	struct spdm_req_alg_struct *req_alg_struct;
-> > +	struct spdm_negotiate_algs_req *req;
-> > +	struct spdm_negotiate_algs_rsp *rsp;
-> > +	size_t req_sz = sizeof(*req);
-> > +	size_t rsp_sz = sizeof(*rsp);
-> > +	int rc, length;
-> > +
-> > +	/* Request length shall be <= 128 bytes (SPDM 1.1.0 margin no 185) */
-> > +	BUILD_BUG_ON(req_sz > 128);
+> Indeed, there can only be a single OSPM, and that's the dom0 OS (Linux
+> in our context).
 > 
-> I don't know why this really has to be here? This could be static_assert()
-> below the struct declaration.
+> Getting back to our context though, what would be a suitable place for
+> exposing the GSI assigned to each device?
 
-A follow-on patch to add key exchange support increases req_sz based on
-an SPDM_MAX_REQ_ALG_STRUCT macro defined here in front of the function
-where it's used.  That's the reason why the size is checked here as well.
+IIUC, the Xen hypervisor:
 
+  - Interprets /sys/firmware/acpi/tables/APIC (or gets this via
+    something running on the Dom0 kernel) to find the physical base
+    address and GSI base, e.g., from I/O APIC, I/O SAPIC.
 
-> > +static int spdm_get_certificate(struct spdm_state *spdm_state, u8 slot)
-> > +{
-> > +	struct spdm_get_certificate_req req = {
-> > +		.code = SPDM_GET_CERTIFICATE,
-> > +		.param1 = slot,
-> > +	};
-> > +	struct spdm_get_certificate_rsp *rsp;
-> > +	struct spdm_cert_chain *certs = NULL;
-> > +	size_t rsp_sz, total_length, header_length;
-> > +	u16 remainder_length = 0xffff;
-> 
-> 0xffff in this function should use either U16_MAX or SZ_64K - 1.
+  - Needs the GSI to locate the APIC and pin within the APIC.  The
+    Dom0 kernel is the OSPM, so only it can evaluate the AML _PRT to
+    learn the PCI device -> GSI mapping.
 
-The SPDM spec uses 0xffff so I'm deliberately using that as well
-to make the connection to the spec obvious.
+  - Has direct access to the APIC physical base address to program the
+    Redirection Table.
 
+The patch seems a little messy to me because the PCI core has to keep
+track of the GSI even though it doesn't need it itself.  And the
+current patch exposes it on all arches, even non-ACPI ones or when
+ACPI is disabled (easily fixable).
 
-> > +static void spdm_create_combined_prefix(struct spdm_state *spdm_state,
-> > +					const char *spdm_context, void *buf)
-> > +{
-> > +	u8 minor = spdm_state->version & 0xf;
-> > +	u8 major = spdm_state->version >> 4;
-> > +	size_t len = strlen(spdm_context);
-> > +	int rc, zero_pad;
-> > +
-> > +	rc = snprintf(buf, SPDM_PREFIX_SZ + 1,
-> > +		      "dmtf-spdm-v%hhx.%hhx.*dmtf-spdm-v%hhx.%hhx.*"
-> > +		      "dmtf-spdm-v%hhx.%hhx.*dmtf-spdm-v%hhx.%hhx.*",
-> > +		      major, minor, major, minor, major, minor, major, minor);
-> 
-> Why are these using s8 formatting specifier %hhx ??
+We only call acpi_pci_irq_enable() in the pci_enable_device() path, so
+we don't know the GSI unless a Dom0 driver has claimed the device and
+called pci_enable_device() for it, which seems like it might not be
+desirable.
 
-I don't quite follow, "%hhx" is an unsigned char, not a signed char.
+I was hoping we could put it in /sys/firmware/acpi/interrupts, but
+that looks like it's only for SCI statistics.  I guess we could moot a
+new /sys/firmware/acpi/gsi/ directory, but then each file there would
+have to identify a device, which might not be as convenient as the
+/sys/devices/ directory that already exists.  I guess there may be
+GSIs for things other than PCI devices; will you ever care about any
+of those?
 
-spdm_state->version may contain e.g. 0x12 which is converted to
-"dmtf-spdm-v1.2.*" here.
-
-The question is what happens if the major or minor version goes beyond 9.
-The total length of the prefix is hard-coded by the spec, hence my
-expectation is that 1.10 will be represented as "dmtf-spdm-v1.a.*"
-to not exceed the length.  The code follows that expectation.
-
-Thanks for taking a look!   I've amended the patch to take all your
-other feedback into account.
-
-Lukas
+Bjorn
 
