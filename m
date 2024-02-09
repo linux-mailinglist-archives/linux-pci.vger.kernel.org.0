@@ -1,148 +1,124 @@
-Return-Path: <linux-pci+bounces-3277-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3278-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECCEC84F1CD
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 09:56:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 425CE84F1E0
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 10:04:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D9C01C22811
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 08:56:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B91E1B23156
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 09:04:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14A6E664B7;
-	Fri,  9 Feb 2024 08:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YyxwCu+G"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70664664B7;
+	Fri,  9 Feb 2024 09:04:39 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B43A664B5
-	for <linux-pci@vger.kernel.org>; Fri,  9 Feb 2024 08:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E37664BD;
+	Fri,  9 Feb 2024 09:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707468978; cv=none; b=IpgnhYowbKJx/XHfI/h3hZv/2IN1/l+NTvNkrxSHTAK3wNhCfilcex76paTQs/zJLx/5TcDqNBkmhi9llzh0VinLPAX0ghVw3RLg7R7OD/pHgFfR/19/IkNZ1n/69g84Otsuyjbzr1dTam9qRArR+8Q9diVEFalvgzOHuvgTQ8w=
+	t=1707469479; cv=none; b=Ek/COwWCJGeT4MKX70+zsFGyBYoRgcBBnpM/3GLdDpZKkASb95FsABiXZfPN501vkayXSA4aXAGmGnVOu1euTiH5nejrQ62uAcn4zCjTNXZLAj9JoTDB48ga3TDlrW1KaFWf0IL3Zhr1y6+rJLMXRf2OBRgleG0PWzT+50B17I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707468978; c=relaxed/simple;
-	bh=Tsk3+SWBU2wtfCviD1D0EIgRdEZr+tyO/cWXmkE5rdM=;
+	s=arc-20240116; t=1707469479; c=relaxed/simple;
+	bh=WDlbkaEhExeSC6m6O4mA/Olpggr5HL955m2MFzYt5XY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CU9aoljKQ/UiaT2EL6HDhAJ/4k3u+wtFSblrIE93q18tLPoiaxrTb9zVU4sAqYPUN3Q9pK61ZmU+bxnz0Lo1PzsDsYQum0oQoNb9tJ1cvV9TVVOxueKx3QrAnSJibQHELJ8T2oSTc57YXQdECRIWpE7qEzTGDPTzr8xc8FCaEdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YyxwCu+G; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e08dd0fa0bso168689b3a.1
-        for <linux-pci@vger.kernel.org>; Fri, 09 Feb 2024 00:56:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707468976; x=1708073776; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3lo5xA9QhcQnRR0TlF3RgqNJRfAbqwqu9OwhqreO4As=;
-        b=YyxwCu+GBUaC4A1qvR/zkHQB+N01lCm7KwX6grdgQdUk6ecDmnfEfMbFceuHPQwXq7
-         IgmsE/Eu6y3SfSbfPUkXP+Kpm8qWpjjomWu/bS9KyvVffRuCnO4shUFY8CZXLQY1HDzM
-         9eMJqOWWv/U9kaoPQO4xNhGQfY03IGan00CXfqD96Nx3NoDz/+zb/WGe1OEENkUBYFA2
-         O/8i2gWx7w7L0l4l8bfjL7s0WH4iSZUt1ME4N51GRuMmZVGIh0TP1aCkKEkFSRRfLKEZ
-         Yw73erWaAFEhpaaUbfpIy5HgzIFUb7jwsbUTjPPZ+l6IkQar0bB6exUEPYOdM+pq1goJ
-         RXHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707468976; x=1708073776;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3lo5xA9QhcQnRR0TlF3RgqNJRfAbqwqu9OwhqreO4As=;
-        b=Fv2vzfY+qnyvNx7Y6SbarvJumomgPAVQk9w+mPvb9MQ/63SrgC3Rw0DBAY35LgLa9W
-         QoDlduq04rFNrAcQOCrtewGjxQyrkHC+D5DdXjNyhRwVPYKj8gl+1Ai/5iB12U7cUgYq
-         TOxxV6z5UZv7xIikRnJaWtq7cHxyqGZqDsaQswKfQcOL5kHyuNRghu//Y9ssDUZKY9zt
-         gtG34SQMNegGP3/iNBQIX12LonXOj8BHkQKQkm+7gvxc3BAt6F7ui+8WtyMjRPBhjwVH
-         FgloweeYsc/1Fu40k4QK1OdNR/DgYYxFZN4t3b1v1Me8g++G5Zf/FVUCXifDus+TwIoS
-         qKQg==
-X-Gm-Message-State: AOJu0YxLhgHIP8+YK2BT3zuyTdMnQ2mrVCavX8bQuQWy6q1/fQ89kjjd
-	HHw9Ur7nNIsws/+2VjSv+5de6oAysNEkPt6QFHGw2zax+tuPsi+uUzV2v1QExA==
-X-Google-Smtp-Source: AGHT+IEXsA9uACLUeyN8xPmf8XG/8zUXkMIT0ahSD4Po+zfV0lmB1Kjq8X5WYnzQm7sT8g8xordHFA==
-X-Received: by 2002:a05:6a00:92a2:b0:6e0:50cb:5f0a with SMTP id jw34-20020a056a0092a200b006e050cb5f0amr523099pfb.12.1707468975686;
-        Fri, 09 Feb 2024 00:56:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVJAz69nCCB+96fo5TstLe7LOYwqTtw/dUxesoLLYPclY9CaH4H9q4NKLFKzwHuTTt7xbQGNcVpz+J53U8mdgNPqbAMRL/yv0INmsubL/Ys2DA9uf7Fn0VYHS8TuBoOIEHvGV7062M7CytL6NMHTfBPSf9xn6+ylhrJw8KJDqMZBOAHTn9iU+2QU/Bz9PSn3DF0ySFGTV6G6Kxf2L5JZTDCIQ==
-Received: from thinkpad ([120.138.12.20])
-        by smtp.gmail.com with ESMTPSA id d16-20020a056a00199000b006e0427b57e8sm1134443pfl.4.2024.02.09.00.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Feb 2024 00:56:15 -0800 (PST)
-Date: Fri, 9 Feb 2024 14:26:11 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZJmWwd5+C39B15Eans5KmeXgbzk5+vcU67kVXZKmpTE1FnazAoJT+aniAfVZLJnZpv942J+Fz0+NBziwP9PJPnn0CaVVtjbagMs8olWoDQmPw1l/X7QX41ZZiaV0TS+iiQ0dFVOv3o5K7CJwRWv2/VZdzwUNa4inLZ0HDDb8lZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 352F72800C91D;
+	Fri,  9 Feb 2024 10:04:33 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 240BE4E7B09; Fri,  9 Feb 2024 10:04:33 +0100 (CET)
+Date: Fri, 9 Feb 2024 10:04:33 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH] MAINTAINERS: Step down as PCI ENDPOINT maintainer
-Message-ID: <20240209085611.GG12035@thinkpad>
-References: <20240129165933.33428-1-lpieralisi@kernel.org>
- <20240131150116.GA585251@bhelgaas>
- <Zb2RVNkL+AkvqXWq@lizhi-Precision-Tower-5810>
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: Re: [RFC 8/9] PCI/pwrctl: add PCI power control core code
+Message-ID: <20240209090433.GA18651@wunner.de>
+References: <20240201155532.49707-1-brgl@bgdev.pl>
+ <20240201155532.49707-9-brgl@bgdev.pl>
+ <7tbhdkqpl4iuaxmc73pje2nbbkarxxpgmabc7j4q26d2rhzrv5@ltu6niel5eb4>
+ <CAMRc=Md1oTrVMjZRH+Ux3JJKYeficKMYh+8V7ZA=Xz_X1hNd1g@mail.gmail.com>
+ <2q5vwm7tgmpgbrm4dxfhypbs5pdggprxouvzfcherqeevpjhrj@6wtkv4za2gg5>
+ <CAMRc=MfsdsD4f3sC-BnR_sqvaHNEKWCZ+Xe+-ZhLU8vFYA06=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zb2RVNkL+AkvqXWq@lizhi-Precision-Tower-5810>
+In-Reply-To: <CAMRc=MfsdsD4f3sC-BnR_sqvaHNEKWCZ+Xe+-ZhLU8vFYA06=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Feb 02, 2024 at 08:05:24PM -0500, Frank Li wrote:
-> On Wed, Jan 31, 2024 at 09:01:16AM -0600, Bjorn Helgaas wrote:
-> > On Mon, Jan 29, 2024 at 05:59:33PM +0100, Lorenzo Pieralisi wrote:
-> > > The PCI endpoint subsystem is evolving at a rate I
-> > > cannot keep up with, therefore I am standing down as
-> > > a maintainer handing over to Manivannan (currently
-> > > reviewer for this code) and Krzysztof who are doing
-> > > an excellent job on the matter - they don't need my
-> > > help any longer.
-> > > 
-> > > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Cc: Krzysztof Wilczyński <kw@linux.com>
-> > 
-> > Applied with Mani's ack to for-linus for v6.8, thanks!
+On Wed, Feb 07, 2024 at 05:26:16PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Feb 2, 2024 at 5:52???PM Bjorn Andersson <andersson@kernel.org> wrote:
+> > On Fri, Feb 02, 2024 at 10:11:42AM +0100, Bartosz Golaszewski wrote:
+> > > I was also thinking about pci_pwrctl_device_ready() or
+> > > pci_pwrctl_device_prepared().
+> >
+> > I like both of these.
+> >
+> > I guess the bigger question is how the flow would look like in the event
+> > that we need to power-cycle the attached PCIe device, e.g. because
+> > firmware has gotten into a really bad state.
+> >
+> > Will we need an operation that removes the device first, and then cut
+> > the power, or do we cut the power and then call unprepared()?
 > 
-> One question:
-> 
-> who will pick up endpoint patches? 
-> 
+> How would the core be notified about this power-cycle from the PCI
+> subsystem? I honestly don't know. Is there a notifier we could
+> subscribe to? Is the device unbound and rebound in such case?
 
-I will pick them.
+To power-manage the PCI device for runtime PM (suspend to D3cold)
+or system sleep, you need to amend:
 
-- Mani
+  platform_pci_power_manageable()
+  platform_pci_set_power_state()
+  platform_pci_get_power_state()
+  platform_pci_refresh_power_state()
+  platform_pci_choose_state()
 
-> Frank
-> 
-> > 
-> > > ---
-> > >  MAINTAINERS | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > 
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 8d1052fa6a69..a40cfcd1c65e 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -16856,9 +16856,8 @@ F:	Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> > >  F:	drivers/pci/controller/pcie-xilinx-cpm.c
-> > >  
-> > >  PCI ENDPOINT SUBSYSTEM
-> > > -M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >  M:	Krzysztof Wilczyński <kw@linux.com>
-> > > -R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >  R:	Kishon Vijay Abraham I <kishon@kernel.org>
-> > >  L:	linux-pci@vger.kernel.org
-> > >  S:	Supported
-> > > -- 
-> > > 2.34.1
-> > > 
+E.g. platform_pci_power_manageable() would check for presence of a
+regulator in the DT and platform_pci_set_power_state() would disable
+or enable the regulator.
 
--- 
-மணிவண்ணன் சதாசிவம்
+To reset the device by power cycling it, amend pci_reset_fn_methods[]
+to provide a reset method which disables and re-enables the regulator.
+Then you can choose that reset method via sysfs and power-cycle the
+device.  The PCI core will also automatically use that reset method
+if there's nothing else available (e.g. if no Secondary Bus Reset
+is available because the device has siblings or children, or if FLR
+is not supported).
+
+Thanks,
+
+Lukas
 
