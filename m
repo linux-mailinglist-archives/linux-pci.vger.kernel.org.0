@@ -1,153 +1,222 @@
-Return-Path: <linux-pci+bounces-3295-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3296-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C972F84FAE4
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 18:20:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0819884FB4E
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 18:57:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A12AB274BC
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 17:20:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B885028CC9F
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 17:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F8180BEE;
-	Fri,  9 Feb 2024 17:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BFE57F493;
+	Fri,  9 Feb 2024 17:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a66ebNfQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bky1nssf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70C37F493;
-	Fri,  9 Feb 2024 17:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC1D69E16
+	for <linux-pci@vger.kernel.org>; Fri,  9 Feb 2024 17:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707499163; cv=none; b=qveY3wRcdXwNW3jS702MdfvGpxRgFlj4qHeN536iVmIRSEQEhrIXAZPcLnLuYl3BL4JLFLWofwqnJUYJYWI1jv88nRjl1P3FCM6ZmoDIntCDWdoDdc4qXq5UYi5tZlitP9YHrpWYCTJxfRrKeyhRemGMrkD0zUQZE9ea2Iijfao=
+	t=1707501413; cv=none; b=AuXUzZARz0Rvl4SdnbZPVbnBY3BwFgHShUn/J3CKSYceMhMXkcYFrHOq4X1li6CkPgEzslIM12Nr3heCQVsO3jWrhrfzr1r6WYbbXcNtmAALT/EUgG6LOOX2XJStNiQbUeiR9pGmZ41WGtMARNtobMO30rA6kcZT/W4IyzBsLd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707499163; c=relaxed/simple;
-	bh=VRJlINL6pxzWElhznPgpcMFZwr/R2ULvU04lgrJbPs0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=plkJAbt+UvgHgs5ENf+cZU//k10bLSWv7W2DPFdrdvFDrGvdWMskatY5D9EFeJmkwZ70ixTJ1K+zuheA9dbzUsJ1nzRngtyMAVF4RkE8caTjUke6kJcETRU8Vwbjk50GoQEGsCd7nxgXvpMcMdUV31l9lQOTnaKyBd4mc0171PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a66ebNfQ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707499162; x=1739035162;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=VRJlINL6pxzWElhznPgpcMFZwr/R2ULvU04lgrJbPs0=;
-  b=a66ebNfQvxSXrWpBTnuyWd0uR9akmuokHSqgPntVDkc0RH37VeVoQawk
-   VD+ZAL+K3GCvx3h05X2ldiqJkw6JXDPp+XcH9EcLMxpKQav2yxpRFBZ0p
-   EDfG/t5Z3dA/U79rBWOpTgxDVg7NfSiKXKodtFva0QZW9g1gr2Ca8yI9e
-   af/ahpV64InNzP2tL0vWVo6lZG6z4eR2M7clRA5tXN3C2kXVqXFuD143C
-   GTQ7ZkdovgxzLY9BctroSUaflGLn5aSNVHEwc79tI0sXjrIHafxyzRmM8
-   PtHNkaE7EB2KZX92XBWIRr86NziLqeF3PUBMGERU9n5NdVJBK8HrxxF8D
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10979"; a="1326078"
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="1326078"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:19:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,257,1701158400"; 
-   d="scan'208";a="2195068"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 09:19:20 -0800
-Received: from spboulos-mobl1.amr.corp.intel.com (spboulos-mobl1.amr.corp.intel.com [10.209.44.214])
-	by linux.intel.com (Postfix) with ESMTP id C48635804FA;
-	Fri,  9 Feb 2024 09:19:19 -0800 (PST)
-Message-ID: <ecb40fbc2dc50cc2ebe7cc5393c2b0d6da58e4f3.camel@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
-From: "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To: Daniel Drake <drake@endlessos.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, tglx@linutronix.de,
- mingo@redhat.com,  bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com,  linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, bhelgaas@google.com, 
- mario.limonciello@amd.com, rafael@kernel.org, lenb@kernel.org, 
- linux-acpi@vger.kernel.org, linux@endlessos.org
-Date: Fri, 09 Feb 2024 09:19:19 -0800
-In-Reply-To: <CAD8Lp44tO_pz_HZmPOKUQ-LEQT=c856eH52xWL9nBtAtJwjL1g@mail.gmail.com>
-References: <20240207084452.9597-1-drake@endlessos.org>
-	 <20240207200538.GA912749@bhelgaas>
-	 <CAD8Lp47DjuAAxqwt+yKD22UNMyvqE00x0u+JeM74KO2OC+Otrg@mail.gmail.com>
-	 <CAD8Lp44-8WhPyOrd2dCWyG3rRuCqzJ-aZCH6b1r0kyhfcXJ8xg@mail.gmail.com>
-	 <9654146ac849bb00faf2fe963d3da94ad65003b8.camel@linux.intel.com>
-	 <CAD8Lp44tO_pz_HZmPOKUQ-LEQT=c856eH52xWL9nBtAtJwjL1g@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1707501413; c=relaxed/simple;
+	bh=dE0fOch8GFREEflrjtAJ8hYUXgvgOrldg31BXyPBLjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WrfpFuHe7GbsIrIHuhsVO6E6E+jb04P2SnDI1GYnE4xq4D7FhO86n1oXhqak0TbZND7V95XRljgwYUjEXSPzZ6BnoFKIAe9k7lp6BocUzkiUTzIZ/xitgg7yDswau3eej9DKM0A3Pt5iypJC1PsdzZ7hktKZF81FydMjs9x0gH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bky1nssf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707501410;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lroj6ntugWqRCbAoq4c/1l3q2HF6eEjLQk8CU/pQV34=;
+	b=Bky1nssf59Cz1D/JAeQbMozTf1dD2SYMOmpc4pDY092uLOifQ0WQ57dSLnFMbM9mvWesLc
+	E+oTcwVM9LIIie7dzNKPoiS5ZypuYD1/5QF9cZ0lRsaEE9VVGr1QNbJJrQEnCy/eM+FrUD
+	ObBkSSo7RaFgKvZeQocigPpQ9zFj1vA=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-408-ngl1fC94OriO-kmBXTy2aA-1; Fri, 09 Feb 2024 12:56:48 -0500
+X-MC-Unique: ngl1fC94OriO-kmBXTy2aA-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7baa6cc3af2so139361139f.2
+        for <linux-pci@vger.kernel.org>; Fri, 09 Feb 2024 09:56:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707501408; x=1708106208;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lroj6ntugWqRCbAoq4c/1l3q2HF6eEjLQk8CU/pQV34=;
+        b=dtuRZC53oOxPBQXUBZWF2N+XZWKkFa+MYhFch15HzjI6Vq8N675aDtXYPz6K8HTXxv
+         wNu5E2QrS97XYVbltjEfsrDHfWa9ujDjqOmix3oEVTfiXhqXvdAhs8YG7IZN4Uwxz3hy
+         ccwwIivh4UK4Wr3XfsmYvgQlPek8u0O7xaWq+tK3FD2CBOt5DvBcIojW66J+EQ9pPA+Q
+         Fb4yZT04lDMnBYraXsdttYlePYhj0D9wrS5uA+SdzsjIgso6kO1RjGy0eLAvHBgXaV3f
+         hD6bH0ehrRrceb3qkuGlzfLetmI4xOm2JCR+HaynDknyJy/UzdojtpiuJjdakGFcOMfL
+         F2yg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7HHU5FbRsnMFgYrD2niT5/vM2gULBsUKaUoM1pTYjpQXbDSLYFlr+Zn20g7/1xvjd0MmtjDvVnSR+cY6xQunjrPaesAlA+FGw
+X-Gm-Message-State: AOJu0Yx6o6njskHZZMdV6pYEJ/sMzhlQgAR6dYvfy/pgfUwDV6x9hGit
+	oqL/K7hYihnHiy/ysu/iCpK3dKJWVV97vlUR62KdP3XjvL/VC/FPkM57l2JQ1MaKUMA01sBdwtV
+	ABuBPiPrCBX22DnmQD4Eb0hu/S+6/BaJtIFGN2weMPET6Nho30DXAPa3G1w==
+X-Received: by 2002:a6b:e302:0:b0:7c3:e885:2550 with SMTP id u2-20020a6be302000000b007c3e8852550mr101490ioc.12.1707501407780;
+        Fri, 09 Feb 2024 09:56:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGqIxLFt2RpI4QH9xSgWGzJRpn6EIMlFn+k+gCAz4/W2cxdgpWFsNZnXfkFG+XUU2/+bwfdOA==
+X-Received: by 2002:a6b:e302:0:b0:7c3:e885:2550 with SMTP id u2-20020a6be302000000b007c3e8852550mr101473ioc.12.1707501407444;
+        Fri, 09 Feb 2024 09:56:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXtp6b3T6OIgIJQ1c4hAK7yhFYkWhES/MQfVhMWc0cpcOhQLuOJ0oWekR790Q4hUzFLAk9fZwUaRyjkBJyH/m6d0jCw3lbou3j9wBDsATvg/beYHoRPsvX1oZWEUT4/rdm+YCMUXknDXh4NLeGeoMnb53IXqrWYRG4oQDV6cxQ5iTqqN3xW2s+12DMY4EAkK8ltXGENq4Sd5eNbLRMZ38Vs
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id g88-20020a028561000000b00471578e87d9sm535482jai.21.2024.02.09.09.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Feb 2024 09:56:46 -0800 (PST)
+Date: Fri, 9 Feb 2024 10:56:44 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, lukas@wunner.de,
+ mika.westerberg@linux.intel.com, rafael@kernel.org, sanath.s@amd.com
+Subject: Re: [PATCH] PCI: Fix active state requirement in PME polling
+Message-ID: <20240209105644.745682a5.alex.williamson@redhat.com>
+In-Reply-To: <20240209163521.GA1003145@bhelgaas>
+References: <20240123185548.1040096-1-alex.williamson@redhat.com>
+	<20240209163521.GA1003145@bhelgaas>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2024-02-09 at 09:36 +0100, Daniel Drake wrote:
-> On Thu, Feb 8, 2024 at 5:57=E2=80=AFPM David E. Box <david.e.box@linux.in=
-tel.com>
-> wrote:
-> > This does look like a firmware bug. We've had reports of D3cold support
-> > missing
-> > when running in non-VMD mode on systems that were designed with VMD for
-> > Windows.
-> > These issues have been caught and addressed by OEMs during enabling of =
-Linux
-> > systems. Does D3cold work in VMD mode?
->=20
-> On Windows for the VMD=3Don case, we only tested this on a BIOS with
-> StorageD3Enable=3D0. The NVMe device and parent bridge stayed in D0 over
-> suspend, but that's exactly what the BIOS asked for, so it doesn't
-> really answer your question.
->=20
-> On Linux with VMD=3Don and StorageD3Enable=3D1, the NVMe storage device
-> and the VMD parent bridge are staying in D0 over suspend. I don't know
-> why this is, I would have expected at least D3hot.
+On Fri, 9 Feb 2024 10:35:21 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Yeah something is missing here. When StorageD3Enable is set, the nvme drive=
-r
-prints the following message during boot:
+> On Tue, Jan 23, 2024 at 11:55:31AM -0700, Alex Williamson wrote:
+> > The commit noted in fixes added a bogus requirement that runtime PM
+> > managed devices need to be in the RPM_ACTIVE state for PME polling.
+> > In fact, only devices in low power states should be polled.
+> > 
+> > However there's still a requirement that the device config space must
+> > be accessible, which has implications for both the current state of
+> > the polled device and the parent bridge, when present.  It's not
+> > sufficient to assume the bridge remains in D0 and cases have been
+> > observed where the bridge passes the D0 test, but the PM state
+> > indicates RPM_SUSPENDING and config space of the polled device becomes
+> > inaccessible during pci_pme_wakeup().
+> > 
+> > Therefore, since the bridge is already effectively required to be in
+> > the RPM_ACTIVE state, formalize this in the code and elevate the PM
+> > usage count to maintain the state while polling the subordinate
+> > device.  
+> 
+> This apparently fixes a problem: the bugzilla says something about
+> disks attached to Thunderbolt/USB4 docks not working, but I doubt it's
+> actually specific to Thunderbolt/USB4 or to disks.
 
-	"platform quirk: setting simple suspend"
+Right, AIUI it's simply a PCIe hierarchy where a bridge was previously
+scanned in response to a PME and no longer is because of the invalid
+requirement added in d3fcd7360338 that the runtime power management
+status of the device is active.
 
-If you don't see this, then the driver never saw StorageD3Enable=3D1. Possi=
-ble
-reasons are:
+> The bugzilla also indicates that d3fcd7360338 was a regression.
+> d3fcd7360338 appeared in v6.6, so this fix is likely a candidate for
+> the current release (v6.8).
 
-	- The property doesn't exist
-	- The property isn't set under the ACPI companion device
-	- There is no associated ACPI companion device
-	- The "nvme=3Dnoacpi" parameter was passed on the kernel cmdline
-	- The nvme driver was quirked to not use D3 with
-	   NVME_QUIRK_FORCE_NO_SIMPLE_SUSPEND.
+Agreed.
 
-How was the D-state status confirmed? You can use the following to see the =
-D
-state of PCI devices during suspend in the kernel log:
+> I'd like to mention both the user-visible problem being fixed and 
+> the fact that it fixes a regression here in the commit log so we can
+> make the case for putting this in v6.8.
 
-echo -n "file pci-driver.c +p" > /sys/kernel/debug/dynamic_debug/control
+Ok, I've not experienced the regression myself, but I can add a
+paragraph describing my understanding of the bugzilla.  I'd probably
+just say:
 
-David
+	This resolves a regression reported in the bugzilla below where
+	a Thunderbolt/USB4 hierarchy fails to scan for an attached NVMe
+	endpoint downstream of a bridge in a D3hot power state.
 
-> =C2=A0 However, given
-> that the NVMe device has no firmware_node under the VMD=3Don setup, I
-> believe there is no way it would enter D3cold because there's no
-> linkage to an ACPI device, so no available _PS3 or _PR0 or whatever is
-> the precise definition of D3cold.
->=20
-> I also realise I may have made a bad assumption in my previous mail
-> when looking at the Dell device: I was assuming that a parent PCI
-> bridge cannot go into D3cold if its child devices only got as far as
-> D3hot, but I now realise I'm not sure if that constraint actually
-> exists.
->=20
-> Not sure if these questions are relevant for the consideration of this
-> patch, but I'll try to find some time to answer them next week.
->=20
-> Daniel
+If you'd like a respin including that or if you have further
+phrasing/info suggestions, please let me know.  Thanks,
+
+Alex
+
+> > Cc: Lukas Wunner <lukas@wunner.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: Rafael J. Wysocki <rafael@kernel.org>
+> > Fixes: d3fcd7360338 ("PCI: Fix runtime PM race with PME polling")
+> > Reported-by: Sanath S <sanath.s@amd.com>
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218360
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > ---
+> >  drivers/pci/pci.c | 37 ++++++++++++++++++++++---------------
+> >  1 file changed, 22 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index bdbf8a94b4d0..764d7c977ef4 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -2433,29 +2433,36 @@ static void pci_pme_list_scan(struct work_struct *work)
+> >  		if (pdev->pme_poll) {
+> >  			struct pci_dev *bridge = pdev->bus->self;
+> >  			struct device *dev = &pdev->dev;
+> > -			int pm_status;
+> > +			struct device *bdev = bridge ? &bridge->dev : NULL;
+> > +			int bref = 0;
+> >  
+> >  			/*
+> > -			 * If bridge is in low power state, the
+> > -			 * configuration space of subordinate devices
+> > -			 * may be not accessible
+> > +			 * If we have a bridge, it should be in an active/D0
+> > +			 * state or the configuration space of subordinate
+> > +			 * devices may not be accessible or stable over the
+> > +			 * course of the call.
+> >  			 */
+> > -			if (bridge && bridge->current_state != PCI_D0)
+> > -				continue;
+> > +			if (bdev) {
+> > +				bref = pm_runtime_get_if_active(bdev, true);
+> > +				if (!bref)
+> > +					continue;
+> > +
+> > +				if (bridge->current_state != PCI_D0)
+> > +					goto put_bridge;
+> > +			}
+> >  
+> >  			/*
+> > -			 * If the device is in a low power state it
+> > -			 * should not be polled either.
+> > +			 * The device itself should be suspended but config
+> > +			 * space must be accessible, therefore it cannot be in
+> > +			 * D3cold.
+> >  			 */
+> > -			pm_status = pm_runtime_get_if_active(dev, true);
+> > -			if (!pm_status)
+> > -				continue;
+> > -
+> > -			if (pdev->current_state != PCI_D3cold)
+> > +			if (pm_runtime_suspended(dev) &&
+> > +			    pdev->current_state != PCI_D3cold)
+> >  				pci_pme_wakeup(pdev, NULL);
+> >  
+> > -			if (pm_status > 0)
+> > -				pm_runtime_put(dev);
+> > +put_bridge:
+> > +			if (bref > 0)
+> > +				pm_runtime_put(bdev);
+> >  		} else {
+> >  			list_del(&pme_dev->list);
+> >  			kfree(pme_dev);
+> > -- 
+> > 2.43.0
+> >   
+> 
 
 
