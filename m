@@ -1,148 +1,143 @@
-Return-Path: <linux-pci+bounces-3314-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3315-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 487BF8500E1
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Feb 2024 00:52:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 292F38501BA
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Feb 2024 02:27:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6CE621C23DEC
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Feb 2024 23:52:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E3431C27E2D
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Feb 2024 01:27:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11FB238DFB;
-	Fri,  9 Feb 2024 23:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC36720F1;
+	Sat, 10 Feb 2024 01:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mN14RZDL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uP/nY3bJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044F538399;
-	Fri,  9 Feb 2024 23:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992A94414;
+	Sat, 10 Feb 2024 01:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707522742; cv=none; b=qYsCvZntC1Xb7vqZKhUV+JOxWaV5hJaRStZg8SEt2zz4FSd7M9LwhEw33rb5BPOaGnGNCpsnUcsd/RcC1SEVhiveVT0fpb0zaFwd/YrsnSPAycNwRoNccsGoPsnH+j1RUPtowuQF+reFH+ITuh5BpA4qQU2n3EUdjTOrVzqcw40=
+	t=1707528418; cv=none; b=nUuOmwtlP+w395itsfv62kr5MFbkE6A1SAQK1yMO7J7GX4AlprLapSmCQe/7LcHNFK8SJj4457MGiG48Zy3pO1AOj+WjjtNfIAXn5bWwP6XZpHlJ8VRqtqF6yehKTW6wpNYJvRyHtWBjU1srKxrRa6+6j5q8ddlQ9AOxERc7y0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707522742; c=relaxed/simple;
-	bh=WLrHOuX9LdrO7L5O1dP72CK5rXJ4snnRsQhv9u8vEK0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=DIMALQU1CgVjvKMuPZ9zJqZhQREBbzrjNPmTa7EprKTHXNkjG0VGksDiWJSFHMzQPpAeEt44g8I4owtygi5LqwS8YxKRW97xa27UovHbvpaVyIFgrmV0ikNozk2wcC6H7WlTI7OEZtw3w5MiPcycvnxvI01SpMPpNZtAjlQZemY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mN14RZDL; arc=none smtp.client-ip=211.189.100.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20240209235219usoutp0184de282892a811f8b9d7e9d2b15b3cbc~yVuJldZpG0135901359usoutp01F;
-	Fri,  9 Feb 2024 23:52:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20240209235219usoutp0184de282892a811f8b9d7e9d2b15b3cbc~yVuJldZpG0135901359usoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707522739;
-	bh=WLrHOuX9LdrO7L5O1dP72CK5rXJ4snnRsQhv9u8vEK0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=mN14RZDLHqp2SNMowOLAWAowlYnXEl0FcmsVph8ugmoaXOMn6CbUhuxAYJj6U6414
-	 SQzYMDTl7M+Ye444r5OHYP57uZX/BoBVIM552DA2HODRWR6QB0BXzSlLY9gORN0PrK
-	 e9rVv5Yr3AToaUlZtM4QadfA9Eoe/V9fJHgGCMKw=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-	[203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240209235218uscas1p122a48f65d0cbd18350608763c21ef317~yVuJfB9Ov2264622646uscas1p1O;
-	Fri,  9 Feb 2024 23:52:18 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges1new.samsung.com (USCPEMTA) with SMTP id 55.51.09678.2BAB6C56; Fri, 
-	9 Feb 2024 18:52:18 -0500 (EST)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-	[203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240209235218uscas1p2d0978af6623037fa1b9358a2ad2320c5~yVuJLHlSF3138731387uscas1p2u;
-	Fri,  9 Feb 2024 23:52:18 +0000 (GMT)
-X-AuditID: cbfec36d-acdff700000025ce-cf-65c6bab23583
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.3.66]) by
-	ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 97.EB.50948.2BAB6C56; Fri, 
-	9 Feb 2024 18:52:18 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Fri, 9 Feb 2024 15:52:17 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
-	9 Feb 2024 15:52:17 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Leon Romanovsky <leonro@nvidia.com>, "Jason
- Gunthorpe" <jgg@nvidia.com>, Alex Williamson <alex.williamson@redhat.com>,
-	"pierre.cregut@orange.com" <pierre.cregut@orange.com>
-Subject: [PATCH v2 2/2] pci/iov: fix kobject_uevent() ordering in
- sriov_enable()
-Thread-Topic: [PATCH v2 2/2] pci/iov: fix kobject_uevent() ordering in
-	sriov_enable()
-Thread-Index: AQHaW7MDr2cp3vZCgUeCreKO+yDYPA==
-Date: Fri, 9 Feb 2024 23:52:17 +0000
-Message-ID: <170752273749.1693615.1293677023514112939.stgit@bgt-140510-bm01.eng.stellus.in>
-In-Reply-To: <170752254154.1693615.9176696143128338408.stgit@bgt-140510-bm01.eng.stellus.in>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2400EE9658E5F547852121863CD747C6@ssi.samsung.com>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1707528418; c=relaxed/simple;
+	bh=ZbSoZXx/9HDBf8DsNqbS8trxVTS30KxSnV3BsPNQp3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZFMaxO+f8Y6iO1uFcdXNHFxBI8Ud8vWzgUiC1Vo3n2BIAFVtKZwh7818Q5kp7BP1eo1xS8XtAeZpFO+ma3kEqotubkimdV/VwK9rDjSw1e+b3cOfmXmknbmfzxhrB8i3pJltUEgtPIoKS7DVjmk1EBKi47pYn5kamFYbw3k5HvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uP/nY3bJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8D5C433C7;
+	Sat, 10 Feb 2024 01:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707528418;
+	bh=ZbSoZXx/9HDBf8DsNqbS8trxVTS30KxSnV3BsPNQp3k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uP/nY3bJB+/VTamjus0HHPCwu+bMefQIk78SOUwKphz3+gWiLnNZ4DakrWJNSDx2O
+	 VTaU1OxpBh4Fd/KtZ/2pjL1q+TKDtJUf8zOpHrKnjwejf9chfYQoZVkUAXZhKzAIfu
+	 SDsy166t5sAGJfNCF1XfXPzm5tVktGrse6iCTgqRp5bo3wt8aQePan4sr1nAzLc/uc
+	 edCfP+fu0w8DPgThvXuOXR80kthoHTXbhU40CJP3tCwQNP/qI51uex6hw93abDldML
+	 HebBcWwW1alYdWU39xT8wSx8JXVAASlK1C5I7HzfBtF8ISK3R54aY/5uWJ0lpqRKAd
+	 onWTuotlmiQIQ==
+From: Niklas Cassel <cassel@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>,
+	Roy Zang <roy.zang@nxp.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Jon Mason <jdmason@kudzu.us>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	ntb@lists.linux.dev
+Subject: [PATCH 0/2] PCI endpoint BAR hardware description cleanup
+Date: Sat, 10 Feb 2024 02:26:24 +0100
+Message-ID: <20240210012634.600301-1-cassel@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJKsWRmVeSWpSXmKPExsWy7djX87qbdh1LNfi8zsTi2/8eNoslTRkW
-	V/7tYbTYtOEJi8XlXXPYLM7OO85msf7rezYHdo8Fm0o9epvfsXm0PDvJ5vF+31U2j8+b5AJY
-	o7hsUlJzMstSi/TtErgyVj/6wFiwhbPixPnNrA2MUzi7GDk5JARMJC7fnsvexcjFISSwklGi
-	Y9FSKKeVSaLr8kwWmKpfPyewQSTWMEqsXfWTFcL5yCgx/90LqMxSRolNf5+wgrSwCWhK/Lqy
-	hgkkISJwlUli8uoPzCAJYYEgiQdPXzGC2CIC4RIH3jexQdh6Eidm3GYCsVkEVCS+fnwLVsMr
-	EC2xe+c5sDinQIzEu75NYHMYBcQkvp9aAxZnFhCXuPVkPhPErYISi2bvYYawxST+7XrIBmEr
-	Stz//hLoOQ6gek2J9bv0IVrtJDb1TWSDsBUlpnQ/ZIdYKyhxcuYTqPclJQ6uuMEC8ouEwBkO
-	ibvvZkDtcpHYf/8M1C5pielrLkM1ZEusXN/BBLJLQqBAouFIEETYWmLhn/VQJ/NJ/P31iHEC
-	o/IsJB/MQrhuFpLrZiG5bhaS6xYwsq5iFC8tLs5NTy02zEst1ytOzC0uzUvXS87P3cQITE2n
-	/x3O3cG449ZHvUOMTByMhxglOJiVRHhDlhxJFeJNSaysSi3Kjy8qzUktPsQozcGiJM5raHsy
-	WUggPbEkNTs1tSC1CCbLxMEp1cC0UOzw/p0LjoR4dp9LOpM7b8NG9p1ekd8DAzcozuw04pxm
-	6Ms3eVVg1+mroQFKV69od/+e051UyTXbZM4bz/sFsi7c9ey/1q3LynzcueGydsrPIoV7LTv2
-	cnw/EibstXfBJUmTl4lOHIbNTK65LOXr+1z6L126bJmdtd7g1o99xjud/81RXPWUR9NHS/CD
-	rTBva/jdQ7J/4ms+Ol3o/9324kvHU/bIyuU+c10PeqRyOnJcbAxOeL+oKcc5dolyndTcK8YR
-	L5yUyjoeSz+ZU7dBjonZjPH0boXbK3Xr2tZebD+e0ynLnfgk0On809yOS4ee3+S7LSo13SlP
-	JdeY4cGqG56S6/TYUjcmfJr43lKJpTgj0VCLuag4EQABwtNZvAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsWS2cDspLtp17FUg44HShbf/vewWSxpyrC4
-	8m8Po8WmDU9YLC7vmsNmcXbecTaL9V/fszmweyzYVOrR2/yOzaPl2Uk2j/f7rrJ5fN4kF8Aa
-	xWWTkpqTWZZapG+XwJWx+tEHxoItnBUnzm9mbWCcwtnFyMkhIWAi8evnBLYuRi4OIYFVjBJN
-	/z4wQzgfGSXedj5jh3CWMkp8uXyCEaSFTUBT4teVNUwgCRGBq0wSk1eDtHByCAsESTx4+gqs
-	SEQgXGLP4oPsELaexIkZt5lAbBYBFYmvH9+C1fAKREvs3nkOLC4EZM+fOBmsnlMgRuJd3yaw
-	mYwCYhLfT60Bq2EWEJe49WQ+E8TdAhJL9pxnhrBFJV4+/scKYStK3P/+EmgOB1C9psT6XfoQ
-	rXYSm/omskHYihJTuh+yQ5wgKHFy5hMWiFZJiYMrbrBMYBSfhWTbLIRJs5BMmoVk0iwkkxYw
-	sq5iFC8tLs5Nryg2zkst1ytOzC0uzUvXS87P3cQIjN/T/w7H7GC8d+uj3iFGJg7GQ4wSHMxK
-	IrwhS46kCvGmJFZWpRblxxeV5qQWH2KU5mBREue9+0AjVUggPbEkNTs1tSC1CCbLxMEp1cBU
-	6HT4YFyPMENx7U2bpwK//ucua9nLZ5T8eFnxkc49rrPterL2B+/O/33T9cq2UKHZE1gf5nWy
-	W5+d8tdLJODpgz1y7kssmSwsNsvsOmWwNYxt3TTmSbOXzi4/5ZywIcP7l4VY0MW2GfW3DofW
-	5/3J/Prb0GTeDXWr69wGTNxMO/6KVqyKX3T69oTdD6Tv3fwuWvJ7erVCpTl785TErt2tvgWs
-	995yXpHd4LX3gYvLnnovy5RrXhmm5x374kSePftvyew5X+Xq9PvXAlTXTmlvEeu19PVf2tJ6
-	vkzwwMavCZVbynWTYpn+rehh4e1XW2rfLrBW8lur/vm/Ln7rl37NUdpzPmf7lOA1Xxtvuj5T
-	YinOSDTUYi4qTgQAO5jdO04DAAA=
-X-CMS-MailID: 20240209235218uscas1p2d0978af6623037fa1b9358a2ad2320c5
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20240209235218uscas1p2d0978af6623037fa1b9358a2ad2320c5
-References: <170752254154.1693615.9176696143128338408.stgit@bgt-140510-bm01.eng.stellus.in>
-	<CGME20240209235218uscas1p2d0978af6623037fa1b9358a2ad2320c5@uscas1p2.samsung.com>
+Content-Transfer-Encoding: 8bit
 
-V2FpdCB0byBjYWxsIGtvYmplY3RfdWV2ZW50KCkgdW50aWwgYWxsIG9mIHRoZSBhc3NvY2lhdGVk
-IGNoYW5nZXMgYXJlIGRvbmUsCmluY2x1ZGluZyB1cGRhdGluZyB0aGUgbnVtX1ZGcyB2YWx1ZS4g
-VGhpcyBhdm9pZHMgYW55IHBvc3NpYmlsaXR5IG9mCnVzZXJzcGFjZSByZXNwb25kaW5nIHRvIHRo
-ZSBldmVudCBhbmQgZ2V0dGluZyBhIHN0YWxlIHZhbHVlIChhbHRob3VnaApwcm9iYWJseSBpbXBv
-c3NpYmxlIHRvIGFjdHVhbGx5IGhhcHBlbikuCgpTdWdnZXN0ZWQtYnk6IExlb24gUm9tYW5vdnNr
-eSA8bGVvbnJvQG52aWRpYS5jb20+ClJldmlld2VkLWJ5OiBMZW9uIFJvbWFub3Zza3kgPGxlb25y
-b0BudmlkaWEuY29tPgpTaWduZWQtb2ZmLWJ5OiBKaW0gSGFycmlzIDxqaW0uaGFycmlzQHNhbXN1
-bmcuY29tPgotLS0KIGRyaXZlcnMvcGNpL2lvdi5jIHwgICAgMiArLQogMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-aW92LmMgYi9kcml2ZXJzL3BjaS9pb3YuYwppbmRleCAwY2EyMGNkNTE4ZDUuLmMwMGIwZjgyMjUy
-NiAxMDA2NDQKLS0tIGEvZHJpdmVycy9wY2kvaW92LmMKKysrIGIvZHJpdmVycy9wY2kvaW92LmMK
-QEAgLTY3Nyw4ICs2NzcsOCBAQCBzdGF0aWMgaW50IHNyaW92X2VuYWJsZShzdHJ1Y3QgcGNpX2Rl
-diAqZGV2LCBpbnQgbnJfdmlydGZuKQogCWlmIChyYykKIAkJZ290byBlcnJfcGNpYmlvczsKIAot
-CWtvYmplY3RfdWV2ZW50KCZkZXYtPmRldi5rb2JqLCBLT0JKX0NIQU5HRSk7CiAJaW92LT5udW1f
-VkZzID0gbnJfdmlydGZuOworCWtvYmplY3RfdWV2ZW50KCZkZXYtPmRldi5rb2JqLCBLT0JKX0NI
-QU5HRSk7CiAKIAlyZXR1cm4gMDsKIAoK
+The series is based on top of:
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=endpoint
+
+
+Hello all,
+
+This series cleans up the hardware description for PCI endpoint BARs.
+
+The problems with the existing hardware description:
+-The documentation is lackluster.
+-Some of the names are confusingly similar, e.g. fixed_64bit and
+ fixed_size, even though these are for completely unrelated things.
+-The way that the BARs are defined in the endpoint controller drivers
+ is messy, because the left hand side is not a BAR, so you can mark a
+ BAR as e.g. both fixed size and reserved.
+
+This series tries to address all the problems above.
+
+Personally, I think that the code is more readable, both the endpoint
+controller drivers, but also pci-epc-core.c.
+
+(Oh, and as you can probably guess, I will be sending out a patch series
+that adds BAR_RESIZABLE to enum pci_epc_bar_type in the coming week(s).)
+
+
+Kind regards,
+Niklas
+
+
+Niklas Cassel (2):
+  PCI: endpoint: Clean up hardware description for BARs
+  PCI: endpoint: Drop only_64bit on reserved BARs
+
+ drivers/pci/controller/dwc/pci-imx6.c         |  3 +-
+ drivers/pci/controller/dwc/pci-keystone.c     | 12 +++---
+ .../pci/controller/dwc/pci-layerscape-ep.c    |  5 ++-
+ drivers/pci/controller/dwc/pcie-keembay.c     |  8 +++-
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   |  4 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c    | 10 +++--
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c | 15 ++++++--
+ drivers/pci/controller/pcie-rcar-ep.c         | 14 ++++---
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |  4 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |  8 ++--
+ drivers/pci/endpoint/functions/pci-epf-vntb.c |  2 +-
+ drivers/pci/endpoint/pci-epc-core.c           | 25 +++++-------
+ drivers/pci/endpoint/pci-epf-core.c           | 15 ++++----
+ include/linux/pci-epc.h                       | 38 ++++++++++++++++---
+ 14 files changed, 105 insertions(+), 58 deletions(-)
+
+-- 
+2.43.0
+
 
