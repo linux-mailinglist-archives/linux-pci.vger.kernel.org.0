@@ -1,134 +1,168 @@
-Return-Path: <linux-pci+bounces-3331-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3332-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 889B185089C
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Feb 2024 11:24:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B21C850B0A
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Feb 2024 20:15:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC93C1C20FA7
-	for <lists+linux-pci@lfdr.de>; Sun, 11 Feb 2024 10:24:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27C71281A70
+	for <lists+linux-pci@lfdr.de>; Sun, 11 Feb 2024 19:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E8C59B70;
-	Sun, 11 Feb 2024 10:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BACF85D462;
+	Sun, 11 Feb 2024 19:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JF3i2AmN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mYEzlpYp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6F258231;
-	Sun, 11 Feb 2024 10:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AFA1E860;
+	Sun, 11 Feb 2024 19:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707647057; cv=none; b=jMNTJrO+54T4a0MMzy0uRw5/U5pjSBH8m2iZ/nJo+AsXp5mBx2l5tXk0ZM4p78+kfrQ6fBGdOhHa138fnOmM+7lEdXMB8iOTL4LQ04+OKCiGiuqijRkZcpRFnReWZK5u6JbQOk/tPD57Go1l080yJvFmCxQwiI2/9gXq7okaVDw=
+	t=1707678947; cv=none; b=BRXR9BIZMifUZTCNdkJOu5yr86W2dxMgDg6aKl26BKIGow8vKo6sYbnTImcejvdIZ8tENVUIitBxXUBK0QapDzKXIyvHcv+GLMykJKiqYNluhfWyaLsWGwqd7WYCWsSwZb9A4YXYog73T+avbGVrsHiiMWvhHCQadK0MDKz4jBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707647057; c=relaxed/simple;
-	bh=G9HaVw97O+LYW4l6xGCSfqbxt1JQDfTA/uIljpKPgyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ouSpWCZIrRDsd6T7CP9by5/hUYzh+OgVt5F8tbBjUpuV4rEh5UVihfJ1M8QlAriG7EiyLAm5OMrGC2kjBfCZkI42t7bhrtl/A+sMUKAzEACCdBGugNZsg77bd1DdO16u08K6pw7bfBD5lpLdJXrr39kdkpwIwsPxgFbQ1lG+JUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JF3i2AmN; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cf3ed3b917so28505481fa.1;
-        Sun, 11 Feb 2024 02:24:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707647053; x=1708251853; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zckA8DZFW8+bg9rPpoe1KSTinRRqZY6mOlpa6NbcucI=;
-        b=JF3i2AmNbnihlDmFz9Egd4nneX12KxIPNtcZPa2Z/bI0Ozp0qJ4HYGTePzsvPIEuXN
-         uMQWnUQaulmq68U//5OgRHTsP2dzRPfxNfWtlUB9hYGarcKVRgJDSVguxFygP/avDiXS
-         fprplNlE4gGfKttbaT4akG91+1N4ayyomdn420MIO0fsM6f950cm7ANtn76CpETiYjVb
-         vtvt+ZKmzWwgSUMRLHuIPgQ2a21GZxt9yIG7+HTMHJGw3mqETkalCEIlVtMx5OXROwXF
-         TprorQzsTS+Cq5Ba8GSqrIDQaSpWPEifovgbTDFiw9I1HAWV4ZETrQBIGIxIVoBUFNSR
-         4K8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707647053; x=1708251853;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zckA8DZFW8+bg9rPpoe1KSTinRRqZY6mOlpa6NbcucI=;
-        b=YcWKa2+EA4exxtDRUR2gtvY6rQJZCZWJBPHTVqdLXoEpKwyPpTn0KCAZ7QjgzZT5qL
-         QrRfzZnS9weuoh3mLvQnLGRScHeieg73C5JTnzPXbi1Cia6132JXKl7Lf2R7Gh7lsF1J
-         Jdog/7xhT3tFwbOGywvedTLEUjOSasTKC9/Dz049AWdh0hJM9FBjXytXOP39vWvxmjPZ
-         66ElXWn+6phKD+OtxGzsTZqmCW7c9qwM2D+BzCKDvd9yja+pWbdSxyW7a//G3PJ0hXWt
-         dVpdnWfpZVqO+hRuXrdnme9ZTHXNJqPcklwISLow5IzRCXNxiYec4aqRPsuPI8e0XnCJ
-         K1lA==
-X-Gm-Message-State: AOJu0Yx26Vog5gK4ArgfwOK1Tg7hTkCfdJxe/UNKDuubRuOzDC4bJfAC
-	fsl0/EqGP2ZbJ4G3RyWK2napwRRE7azRrvoYLXYtxxORuiV8OQx1
-X-Google-Smtp-Source: AGHT+IG/Y+vymfS1k32/vI0JC93GeK6g/gBGreL7xJWAvtaCUCYhRfqQxaQr0neJDl0OsLUybZhCPA==
-X-Received: by 2002:a2e:b0f4:0:b0:2d0:be75:5fcb with SMTP id h20-20020a2eb0f4000000b002d0be755fcbmr2920815ljl.6.1707647053004;
-        Sun, 11 Feb 2024 02:24:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVLLewjw1xDZZbPa1Ls7XWMl049vg34MboYDrwod/8Q6ET3Wi9yFgYI5oW7Vkj4DHW9ilA4KZfiFszIzchMUIkCGqth/6i+K5ZpWgXIuOZkCruZvVk2eO6RJMwe0ydWmWlnuIyZj7fh7u+esBR0e6w9ntI9RKV2SET/Vbyn/bBGlp5mPh6H9ZnVi6hGyY8etr6wZtvLq//VMGR0pRY4pBBxkZT7HCaQdtPWnilNp7HLEmrttmo5w+o7lAUxd2wkIkyD3xmJm18LwGMOn+sHJaCM3AEGAzHEVRNSSOPkF2PP3a/kY5Vz6zyxvEnbv0c+lLTh5hAwjm7Si3N42l8hZXdCQWrm5OrsPgCSZYZHYPI=
-Received: from mobilestation ([85.249.21.200])
-        by smtp.gmail.com with ESMTPSA id h23-20020a2e3a17000000b002d0d0d06fcfsm856271lja.103.2024.02.11.02.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 02:24:12 -0800 (PST)
-Date: Sun, 11 Feb 2024 13:24:08 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>, Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-hwmon@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add maintainer for MIPS Baikal-T1
- platform code
-Message-ID: <ytmxjd7qeaj32qtenodhzir3qlfjxcfs44n7s32bflhwbw6psj@nbm4gsvvfmkk>
-References: <20231122170506.27267-1-Sergey.Semin@baikalelectronics.ru>
- <20231122170506.27267-4-Sergey.Semin@baikalelectronics.ru>
+	s=arc-20240116; t=1707678947; c=relaxed/simple;
+	bh=56x/jvIhC05yachM7n0DI39wwW9IIY/gr0UEahLt/j4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PxwpWvY7kWeykyC41m+sweSytlmAZ5fw2pKyQpGwsEOQnpv2weBAL9i8GgiIgGF683KueGS7OoVZBMBCDF0zmIWhZ6bYZm+opxLf67P8oZn2p7/Y3qv1HHvtQt7ABLMVfBTu2mWwOonA0wXnGJMEJfenzfkPUY+lAzRRQxm/QDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mYEzlpYp; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707678946; x=1739214946;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=56x/jvIhC05yachM7n0DI39wwW9IIY/gr0UEahLt/j4=;
+  b=mYEzlpYpND8fKcY44g03PgsMQGTRIjXFKYP/h5hy26iURCQ53P4rjnx8
+   e+EQbtfRnZzX0Y/8RvidD2HgWc3tb1bdA+u70qajE91ldZaGUS8wXzFvC
+   Jkfo7OMwveNGQhQndXzFAez9YF0NT2yHz6a7bR6G0udt6EKCHM6lNCnT6
+   mzfTGpk0r3qlOFqPT6Yq2gfd5qaBvLIgjiYsci/mtkRi0/vmvQBC9TBbB
+   QAXRdmqsqQX7jHd4li+3jyKJ09Ac79VYNlZjZ3FL7GT+eD6EI9MvWpiJy
+   k6GzegLBykwKSPmN2ookLJqLDQJxBPg0gK+zmIjTQpmIsrQA2nvIXJ9zS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1797813"
+X-IronPort-AV: E=Sophos;i="6.05,261,1701158400"; 
+   d="scan'208";a="1797813"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 11:15:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,261,1701158400"; 
+   d="scan'208";a="39863315"
+Received: from ybradsha-mobl1.amr.corp.intel.com (HELO [10.209.92.13]) ([10.209.92.13])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 11:15:45 -0800
+Message-ID: <fbe4efac-2ce3-443c-9b49-de207e4ba82f@linux.intel.com>
+Date: Sun, 11 Feb 2024 11:15:44 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231122170506.27267-4-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
+ sriov_numvfs reads vs writes"
+Content-Language: en-US
+To: Leon Romanovsky <leonro@nvidia.com>
+Cc: Jim Harris <jim.harris@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Jason Gunthorpe <jgg@nvidia.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ "pierre.cregut@orange.com" <pierre.cregut@orange.com>
+References: <170752254154.1693615.9176696143128338408.stgit@bgt-140510-bm01.eng.stellus.in>
+ <CGME20240209235213uscas1p2e8de2bdf05e6e7cba51bd41ddb42a8e4@uscas1p2.samsung.com>
+ <170752273224.1693615.11371097645648272257.stgit@bgt-140510-bm01.eng.stellus.in>
+ <10d63412-583b-4647-bb5c-4113a466324e@linux.intel.com>
+ <20240211084844.GA805332@unreal>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240211084844.GA805332@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Nov 22, 2023 at 08:04:52PM +0300, Serge Semin wrote:
-> Add myself as a maintainer of the MIPS Baikal-T1 platform-specific
-> drivers. The arch-code hasn't been submitted yet, but will be soon enough.
-> Until then it's better to have the already available drivers marked as
-> maintained.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Thomas, kind ping to merge this in. Thanks.
+On 2/11/24 12:48 AM, Leon Romanovsky wrote:
+> On Fri, Feb 09, 2024 at 07:20:28PM -0800, Kuppuswamy Sathyanarayanan wrote:
+>> On 2/9/24 3:52 PM, Jim Harris wrote:
+>>> If an SR-IOV enabled device is held by vfio, and the device is removed,
+>>> vfio will hold device lock and notify userspace of the removal. If
+>>> userspace reads the sriov_numvfs sysfs entry, that thread will be blocked
+>>> since sriov_numvfs_show() also tries to acquire the device lock. If that
+>>> same thread is responsible for releasing the device to vfio, it results in
+>>> a deadlock.
+>>>
+>>> The proper way to detect a change to the num_VFs value is to listen for a
+>>> sysfs event, not to add a device_lock() on the attribute _show() in the
+>>> kernel.
+>> Since you are reverting a commit that synchronizes SysFS read
+>> /write, please add some comments about why it is not an
+>> issue anymore.
+> It was never an issue, the idea that sysfs read and write should be serialized by kernel
+> is not correct by definition. 
 
--Serge(y)
+What:           /sys/bus/pci/devices/.../sriov_numvfs
+Date:           November 2012
+Contact:        Donald Dutile <ddutile@redhat.com>
+Description:
+                This file appears when a physical PCIe device supports SR-IOV.
+                Userspace applications can read and write to this file to
+                determine and control the enablement or disablement of Virtual
+                Functions (VFs) on the physical function (PF). A read of this
+                file will return the number of VFs that are enabled on this PF.
 
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 52ee905c50f4..a56e241608ae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14491,6 +14491,17 @@ F:	arch/mips/
->  F:	drivers/platform/mips/
->  F:	include/dt-bindings/mips/
->  
-> +MIPS BAIKAL-T1 PLATFORM
-> +M:	Serge Semin <fancer.lancer@gmail.com>
-> +L:	linux-mips@vger.kernel.org
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/bus/baikal,bt1-*.yaml
-> +F:	Documentation/devicetree/bindings/clock/baikal,bt1-*.yaml
-> +F:	drivers/bus/bt1-*.c
-> +F:	drivers/clk/baikal-t1/
-> +F:	drivers/memory/bt1-l2-ctl.c
-> +F:	drivers/mtd/maps/physmap-bt1-rom.[ch]
-> +
->  MIPS BOSTON DEVELOPMENT BOARD
->  M:	Paul Burton <paulburton@kernel.org>
->  L:	linux-mips@vger.kernel.org
-> -- 
-> 2.42.1
-> 
-> 
+I am not very clear about the user of this SysFs. But, as per above description,
+this sysfs seems to controls the number of VFs. A typical usage is to allow user
+to write a value and then read to check the enabled/disabled number of VMs,
+right?
+
+If you are not synchronizing, then the value returned may not reflect the actual
+number of enabled / disabled VFs. So wont this change affect the existing user
+of this SysFS.
+
+>
+> Thanks
+>
+>>> This reverts commit 35ff867b76576e32f34c698ccd11343f7d616204.
+>>> Revert had a small conflict, the sprintf() is now changed to sysfs_emit().
+>>>
+>>> Link: https://lore.kernel.org/linux-pci/ZXJI5+f8bUelVXqu@ubuntu/
+>>> Suggested-by: Leon Romanovsky <leonro@nvidia.com>
+>>> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+>>> Signed-off-by: Jim Harris <jim.harris@samsung.com>
+>>> ---
+>>>  drivers/pci/iov.c |    8 +-------
+>>>  1 file changed, 1 insertion(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+>>> index aaa33e8dc4c9..0ca20cd518d5 100644
+>>> --- a/drivers/pci/iov.c
+>>> +++ b/drivers/pci/iov.c
+>>> @@ -395,14 +395,8 @@ static ssize_t sriov_numvfs_show(struct device *dev,
+>>>  				 char *buf)
+>>>  {
+>>>  	struct pci_dev *pdev = to_pci_dev(dev);
+>>> -	u16 num_vfs;
+>>> -
+>>> -	/* Serialize vs sriov_numvfs_store() so readers see valid num_VFs */
+>>> -	device_lock(&pdev->dev);
+>>> -	num_vfs = pdev->sriov->num_VFs;
+>>> -	device_unlock(&pdev->dev);
+>>>  
+>>> -	return sysfs_emit(buf, "%u\n", num_vfs);
+>>> +	return sysfs_emit(buf, "%u\n", pdev->sriov->num_VFs);
+>>>  }
+>>>  
+>>>  /*
+>>>
+>> -- 
+>> Sathyanarayanan Kuppuswamy
+>> Linux Kernel Developer
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
