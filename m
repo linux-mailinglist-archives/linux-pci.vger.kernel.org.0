@@ -1,165 +1,239 @@
-Return-Path: <linux-pci+bounces-3342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2870851102
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 11:35:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EF0F851291
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 12:47:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23A901C22060
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 10:35:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE9141F2283F
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 11:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD97C28387;
-	Mon, 12 Feb 2024 10:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C482A39877;
+	Mon, 12 Feb 2024 11:47:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="haSv7bqJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRFO39h3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C022B9C0
-	for <linux-pci@vger.kernel.org>; Mon, 12 Feb 2024 10:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B471F39859;
+	Mon, 12 Feb 2024 11:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707734127; cv=none; b=kmsoeykBCLcIEy9hqF4Bvbm1bjbbR5uLaAOHirtlZf+1j1lq843fvgWWuZEsalvCmLOAC67SEs9WpbPbIyhY0VdVds9R8uQ9uDXQuQr02AEJIDo6YydGM0hG3khJK/l08qj5yTf8b3bTkxWq1zv7ksWcBGPEDlZvZep+4raAUcc=
+	t=1707738450; cv=none; b=nQr/y9jJBKwbVcUO3bYc/Vt+fu1j3b8+rOjgW/rafYsaPz1WpoTFUAzHLUJf0/7cgtO25cuyUsPXbAnAI6VCQY6WCpXDuZjNp7gyp+Zk4RO2huqG+C2FPghMVp1gkZCCbaFWDU+V5z/IlxCr5jNnoa/KHM2SVv8uzu7NABVJtEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707734127; c=relaxed/simple;
-	bh=oEN+dwSDlX4Wf7XHSwlhkxtlCib+wj4mwpgMAlW6/PU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=YldJGgDCXPwmyxyu1gUyeQ6JsLvFh9BufVBkJ5PSPl/cgk5T0XrPOTa+IbLt7xOJ6R2cZF4ygIg4REfXt3Y+9ScrJfESgZLzR2fD8CtX8A8k+QUMAyvvwUtFxP/BYq1XNf/zVJdVGwfhEgId34a5XM4S6qH5urTLgOwllkMUey0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=haSv7bqJ; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240212103524epoutp043d1c9aa3466e79290680b84b4dfbc66e~zFyNREoCX1479314793epoutp04O
-	for <linux-pci@vger.kernel.org>; Mon, 12 Feb 2024 10:35:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240212103524epoutp043d1c9aa3466e79290680b84b4dfbc66e~zFyNREoCX1479314793epoutp04O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707734124;
-	bh=hE+eDG2GxhJPpLaElEHIROodVE8STJFl+Q2ht+hx3xE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=haSv7bqJZE4ZeskYWr0X7iOFvchScxYZGegfCG956YjPFhLb6iHZ8GJWKbh8XKcHu
-	 hDp5eBt6RKU1cohYqdWR5bbv5p6RhRdUWkb067LDGbUXqorYxOf1TKHfsxQXL+5YS9
-	 YWZZkXRllnp7zbGpqbMmjFKcwS2AlFRbcItpke/c=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240212103523epcas5p34acfeaf02bab59f0263b944dfb9d320c~zFyMS6TqR1499914999epcas5p3d;
-	Mon, 12 Feb 2024 10:35:23 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	79.07.09672.A64F9C56; Mon, 12 Feb 2024 19:35:22 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996~zFooENVFL3127531275epcas5p1a;
-	Mon, 12 Feb 2024 10:24:25 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240212102425epsmtrp188e8822434c2a4d1347dabb50dbbc173~zFooDNwj10772407724epsmtrp1j;
-	Mon, 12 Feb 2024 10:24:25 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff700000025c8-f4-65c9f46a0f1b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1C.88.07368.9D1F9C56; Mon, 12 Feb 2024 19:24:25 +0900 (KST)
-Received: from localhost.localdomain (unknown [107.109.224.44]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240212102421epsmtip22276b86b88307151f59ab9ad28d86385~zFokQfgB_1200912009epsmtip2I;
-	Mon, 12 Feb 2024 10:24:21 +0000 (GMT)
-From: Onkarnarth <onkarnath.1@samsung.com>
-To: rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-	viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	bristot@redhat.com, vschneid@redhat.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-	r.thapliyal@samsung.com, maninder1.s@samsung.com, helgaas@kernel.org,
-	Onkarnath <onkarnath.1@samsung.com>, Stanislaw Gruszka
-	<stanislaw.gruszka@linux.intel.com>
-Subject: [PATCH v2 2/2] cpufreq/schedutil: print errors with %pe for better
- readability of logs
-Date: Mon, 12 Feb 2024 15:54:04 +0530
-Message-Id: <20240212102404.1900708-2-onkarnath.1@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240212102404.1900708-1-onkarnath.1@samsung.com>
+	s=arc-20240116; t=1707738450; c=relaxed/simple;
+	bh=qlzqXd3E8EN9sGyZ5zlZscBBy3a7+JL3uMmODD1BNa0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KyppGbCIDoJVlP0AV0H0VchTepF92I9NI4TqQoZTfpEJ9Cdy2Tw9HQ/bOuFONM33FMd+QMlsbz9nmao6GiKfu+YBC6Km7nYCThbVG7aDwcfShGUem/hq831gIjjoWGhx48C8ttqb1cs8Y1coUQGGkbWXj6mlAMeE2lRfKI9qdE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRFO39h3; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707738448; x=1739274448;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=qlzqXd3E8EN9sGyZ5zlZscBBy3a7+JL3uMmODD1BNa0=;
+  b=kRFO39h3EAp2KcpdJsox+3/AUQOiWtcZEuRw3eK158CIwRNfIuAM/ngV
+   0fecrquCzUP4hvZIKF/DzB5VxgHd0e9X7ylOUJadt9u2PHzApHcz7d+vf
+   cVzoGy58KpnQd2cH9pKLc3FiL7VMHvJQclXyP88dAej4SADvR02hMqy9X
+   6nJClK6Cpxj6kRworZTtRBJ5CX4ifoaoKX5IyIovw8mLk7Zrc9yQQpT/6
+   ljZLS80nSaeh7c6DSt+YAxVk6Ml0M5TvqOwmMDBD4uWa2rWAyjZUk++BX
+   ujQXCAtQWuIIpjQHBeDRxahRHKsH+ydnVtzKZ4XWplwckb5004bSVcu5Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="2054877"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="2054877"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:47:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="911459436"
+X-IronPort-AV: E=Sophos;i="6.06,263,1705392000"; 
+   d="scan'208";a="911459436"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.49.160])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 03:47:20 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 12 Feb 2024 13:47:14 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>, 
+    David Woodhouse <dwmw2@infradead.org>, 
+    Herbert Xu <herbert@gondor.apana.org.au>, 
+    "David S. Miller" <davem@davemloft.net>, 
+    Alex Williamson <alex.williamson@redhat.com>, linux-pci@vger.kernel.org, 
+    linux-cxl@vger.kernel.org, linux-coco@lists.linux.dev, 
+    keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, 
+    kvm@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    linuxarm@huawei.com, David Box <david.e.box@intel.com>, 
+    Dan Williams <dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+    "Li, Ming" <ming4.li@intel.com>, Zhi Wang <zhi.a.wang@intel.com>, 
+    Alistair Francis <alistair.francis@wdc.com>, 
+    Wilfred Mallawa <wilfred.mallawa@wdc.com>, 
+    Alexey Kardashevskiy <aik@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+    Sean Christopherson <seanjc@google.com>, Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 07/12] spdm: Introduce library to authenticate devices
+In-Reply-To: <20240209203204.GA5850@wunner.de>
+Message-ID: <5de3ae38-023f-0a3f-d750-fbfa1af7a8ee@linux.intel.com>
+References: <cover.1695921656.git.lukas@wunner.de> <89a83f42ae3c411f46efd968007e9b2afd839e74.1695921657.git.lukas@wunner.de> <5d0e75-993c-3978-8ccf-60bfb7cac10@linux.intel.com> <20240209203204.GA5850@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDKsWRmVeSWpSXmKPExsWy7bCmum7Wl5OpBtsPWFssacqwuPT4KpvF
-	9JeNLBZPJ2xltnh1Zi2bxd3+qSwWOx++ZbNYvq+f0eLyrjlsFmfnHWez+Nx7hNHi8Pw2FovJ
-	754xWlw6sIDJYkXPB1aL470HmCw23su2mPtlKrPFvo4HTBYf92xgtOg48o3ZYuNXD4utR7+z
-	O4h7rJm3htGjZd8tdo8Fm0o9Nq/Q8ti0qpPN4861PWwe804Gerzfd5XNo2/LKkaPzaerPT5v
-	kgvgjuKySUnNySxLLdK3S+DKmLtjLltBH0fFpCeHmBsYP7J1MXJySAiYSJy72skEYgsJ7GaU
-	mD1BqIuRC8j+xCgxb9IzFojEN0aJnRfFYBrm9FxnhSjayyhxrWMuE4TzhVFi5vfpYB1sAloS
-	M+4cAEuICGxhklhy6SA7iMMsMJtJYt2372BVwgKJEn/XvgOzWQRUJV4uec4OYvMK2Elc+v2L
-	EWKfvMTMS9/B4pwC9hKP1i1jhqgRlDg58wlYLzNQTfPW2cwgCyQE2jkl9i3cAPWdi8ScvdvY
-	IWxhiVfHt0DZUhIv+9ug7HyJltmzgJo5gOwaiatPVSHC9hJPLi5kBQkzC2hKrN+lDxGWlZh6
-	ah0TxFo+id7fT5gg4rwSO+bB2KoSv6ZMZYGwpSXu/54LdY2HRP+in9Cgm8QosfD+TfYJjAqz
-	kLwzC8k7sxBWL2BkXsUomVpQnJueWmxaYJyXWq5XnJhbXJqXrpecn7uJEZxAtbx3MD568EHv
-	ECMTB+MhRgkOZiUR3kszTqQK8aYkVlalFuXHF5XmpBYfYpTmYFES533dOjdFSCA9sSQ1OzW1
-	ILUIJsvEwSnVwOTmc0G6KGd/MhOTx+rilx8m9FWblUS5t7sLzPHzVp5/6Lf4x6Vb/S7Zbny0
-	tajD9FSK8RQLNl+DVb/vc/Tusy5df0hzg5umovK8zil7LnvWhnvsOmlfv/f5PMZEdqPaxAts
-	QiETv/FE/g7ayhSzSafL6N7bXnafvbt+SSpsWNggE39kc5D1gYtnbjnLrlD+rOKtwmJUy27v
-	elAyNL2Sd8n3nqXuh3+2823IV7LfHPbsiNaRYpPnMvyW829svc8/If2+cHQGh66ozVeVR+xT
-	GDf6zqy5zv83s6xAoG1iymE1l06h2bGrHjm/mxm3SpHhxun2vvxpt/M/6kv80OxR3tl6b9+7
-	zr1+FooVFx62KbEUZyQaajEXFScCAE7tRGsPBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsWy7bCSvO7NjydTDbrOqlksacqwuPT4KpvF
-	9JeNLBZPJ2xltnh1Zi2bxd3+qSwWOx++ZbNYvq+f0eLyrjlsFmfnHWez+Nx7hNHi8Pw2FovJ
-	754xWlw6sIDJYkXPB1aL470HmCw23su2mPtlKrPFvo4HTBYf92xgtOg48o3ZYuNXD4utR7+z
-	O4h7rJm3htGjZd8tdo8Fm0o9Nq/Q8ti0qpPN4861PWwe804Gerzfd5XNo2/LKkaPzaerPT5v
-	kgvgjuKySUnNySxLLdK3S+DKmLtjLltBH0fFpCeHmBsYP7J1MXJySAiYSMzpuc7axcjFISSw
-	m1HiyqVbUAlpiU+X57BD2MISK/89Z4co+sQocXv6E1aQBJuAlsSMOweYQBIiAseYJKb1b2QB
-	cZgFFjNJbOxewAhSJSwQL7Fx4UIwm0VAVeLlkudgY3kF7CQu/f7FCLFCXmLmpe9gcU4Be4lH
-	65Yxg9hCQDV3d91hgqgXlDg58wkLiM0MVN+8dTbzBEaBWUhSs5CkFjAyrWKUTC0ozk3PTTYs
-	MMxLLdcrTswtLs1L10vOz93ECI5ULY0djPfm/9M7xMjEwXiIUYKDWUmE99KME6lCvCmJlVWp
-	RfnxRaU5qcWHGKU5WJTEeQ1nzE4REkhPLEnNTk0tSC2CyTJxcEo1MOkIHX6y69juhXJKF3Y/
-	N1kSLbCLc9+cm0wlj0KtLszbbqcWudBztWGXs/WRmHtWqm49cY8Xq7YE3VXOme20rPv3J3Yf
-	fpfF4heboyezTPgvsvpI1SMlg7aktZfdfD3/WZ8K3SZlumdLjv7ps1aO4SdOFlophz8J+tZ+
-	/qbi4buVvXei//7XDefabWXjUyG6M31d6c79ttx/Ig8IrdXey3DgsP5Em79fU4+eO/NP8v93
-	o+mXfu+a3zjl8xuXx/v2+cZe8zZ2myFv8ujp7n4GTg/Btj1+FU82H9vlqfrub0PXXLZzSxnd
-	5r2MTEpuSb6lleEb5+eRn13ys+iGm7vQjrzjcoLxmesMz191i/vj2a3EUpyRaKjFXFScCACn
-	w033QwMAAA==
-X-CMS-MailID: 20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996
-References: <20240212102404.1900708-1-onkarnath.1@samsung.com>
-	<CGME20240212102425epcas5p176017ab3c94d39af29bbeaa72a43a996@epcas5p1.samsung.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-136259284-1707737012=:1013"
+Content-ID: <fd482b13-2b88-f6d9-c1f8-18cb38ef1b33@linux.intel.com>
 
-From: Onkarnath <onkarnath.1@samsung.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Instead of printing errros as a number(%ld), it's better to print in string
-format for better readability of logs.
+--8323328-136259284-1707737012=:1013
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <ea362b92-2407-d2f9-8869-a76532c7362f@linux.intel.com>
 
-Signed-off-by: Onkarnath <onkarnath.1@samsung.com>
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
----
-v1->v2: Updated subject as per file history
+On Fri, 9 Feb 2024, Lukas Wunner wrote:
 
- kernel/sched/cpufreq_schedutil.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, Oct 03, 2023 at 01:35:26PM +0300, Ilpo J=E4rvinen wrote:
+> > On Thu, 28 Sep 2023, Lukas Wunner wrote:
+> > > +typedef int (spdm_transport)(void *priv, struct device *dev,
+> > > +                          const void *request, size_t request_sz,
+> > > +                          void *response, size_t response_sz);
+> >=20
+> > This returns a length or an error, right? If so return ssize_t instead.
+> >=20
+> > If you make this change, alter the caller types too.
+>=20
+> Alright, I've changed the types in __spdm_exchange() and spdm_exchange().
+>=20
+> However the callers of those functions assign the result to an "rc" varia=
+ble
+> which is also used to receive an "int" return value.
+> E.g. spdm_get_digests() assigns the ssize_t result of spdm_exchange() to =
+rc
+> but also the int result of crypto_shash_update().
+>=20
+> It feels awkward to change the type of "rc" to "ssize_t" in those
+> functions, so I kept "int".
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index eece6244f9d2..2c42eaa56fa3 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -671,7 +671,7 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
- 				"sugov:%d",
- 				cpumask_first(policy->related_cpus));
- 	if (IS_ERR(thread)) {
--		pr_err("failed to create sugov thread: %ld\n", PTR_ERR(thread));
-+		pr_err("failed to create sugov thread: %pe\n", thread);
- 		return PTR_ERR(thread);
- 	}
- 
--- 
-2.25.1
+Using ssize_t type variable for return values is not that uncommon (kernel=
+=20
+wide). Obviously that results in int -> ssize_t conversion if they call=20
+any function that only needs to return an int. But it seems harmless.
 
+crypto_shash_update() doesn't input size_t like (spdm_transport)() does.
+
+> > > +struct spdm_error_rsp {
+> > > +=09u8 version;
+> > > +=09u8 code;
+> > > +=09enum spdm_error_code error_code:8;
+> > > +=09u8 error_data;
+> > > +
+> > > +=09u8 extended_error_data[];
+> > > +} __packed;
+> >=20
+> > Is this always going to produce the layout you want given the alignment=
+=20
+> > requirements for the storage unit for u8 and enum are probably differen=
+t?
+>=20
+> Yes, the __packed attribute forces the compiler to avoid padding.
+
+Okay, so I assume compiler is actually able put enum with u8, seemingly=20
+bitfield code generation has gotten better than it used to be.
+
+With how little is promised wordings in the spec (unless there is later=20
+update I've not seen), I'd suggest you still add a static_assert for the=20
+sizeof of the struct to make sure it is always of correct size.=20
+Mislayouting is much easier to catch on build time.
+
+> > > +static int spdm_negotiate_algs(struct spdm_state *spdm_state,
+> > > +=09=09=09       void *transcript, size_t transcript_sz)
+> > > +{
+> > > +=09struct spdm_req_alg_struct *req_alg_struct;
+> > > +=09struct spdm_negotiate_algs_req *req;
+> > > +=09struct spdm_negotiate_algs_rsp *rsp;
+> > > +=09size_t req_sz =3D sizeof(*req);
+> > > +=09size_t rsp_sz =3D sizeof(*rsp);
+> > > +=09int rc, length;
+> > > +
+> > > +=09/* Request length shall be <=3D 128 bytes (SPDM 1.1.0 margin no 1=
+85) */
+> > > +=09BUILD_BUG_ON(req_sz > 128);
+> >=20
+> > I don't know why this really has to be here? This could be static_asser=
+t()
+> > below the struct declaration.
+>=20
+> A follow-on patch to add key exchange support increases req_sz based on
+> an SPDM_MAX_REQ_ALG_STRUCT macro defined here in front of the function
+> where it's used.  That's the reason why the size is checked here as well.
+
+Okay, understood. I didn't go that in my analysis so I missed the later=20
+addition.
+
+> > > +static int spdm_get_certificate(struct spdm_state *spdm_state, u8 sl=
+ot)
+> > > +{
+> > > +=09struct spdm_get_certificate_req req =3D {
+> > > +=09=09.code =3D SPDM_GET_CERTIFICATE,
+> > > +=09=09.param1 =3D slot,
+> > > +=09};
+> > > +=09struct spdm_get_certificate_rsp *rsp;
+> > > +=09struct spdm_cert_chain *certs =3D NULL;
+> > > +=09size_t rsp_sz, total_length, header_length;
+> > > +=09u16 remainder_length =3D 0xffff;
+> >=20
+> > 0xffff in this function should use either U16_MAX or SZ_64K - 1.
+>=20
+> The SPDM spec uses 0xffff so I'm deliberately using that as well
+> to make the connection to the spec obvious.
+
+It's not obvious when somebody is reading 0xffff. If you want to make the=
+=20
+connection obvious, you create a proper #define + add a comment where its=
+=20
+defined with the spec ref.
+
+> > > +static void spdm_create_combined_prefix(struct spdm_state *spdm_stat=
+e,
+> > > +=09=09=09=09=09const char *spdm_context, void *buf)
+> > > +{
+> > > +=09u8 minor =3D spdm_state->version & 0xf;
+> > > +=09u8 major =3D spdm_state->version >> 4;
+> > > +=09size_t len =3D strlen(spdm_context);
+> > > +=09int rc, zero_pad;
+> > > +
+> > > +=09rc =3D snprintf(buf, SPDM_PREFIX_SZ + 1,
+> > > +=09=09      "dmtf-spdm-v%hhx.%hhx.*dmtf-spdm-v%hhx.%hhx.*"
+> > > +=09=09      "dmtf-spdm-v%hhx.%hhx.*dmtf-spdm-v%hhx.%hhx.*",
+> > > +=09=09      major, minor, major, minor, major, minor, major, minor);
+> >=20
+> > Why are these using s8 formatting specifier %hhx ??
+>=20
+> I don't quite follow, "%hhx" is an unsigned char, not a signed char.
+>=20
+> spdm_state->version may contain e.g. 0x12 which is converted to
+> "dmtf-spdm-v1.2.*" here.
+>=20
+> The question is what happens if the major or minor version goes beyond 9.
+> The total length of the prefix is hard-coded by the spec, hence my
+> expectation is that 1.10 will be represented as "dmtf-spdm-v1.a.*"
+> to not exceed the length.  The code follows that expectation.
+
+It's actually fine.
+
+I just got tunnel vision when looking what that %hhx is in the first=20
+place, in Documentation/core-api/printk-formats.rst there's this list:
+
+=09        signed char             %d or %hhx
+                unsigned char           %u or %x
+
+But of course %hhx is just as valid for unsigned.
+
+--=20
+ i.
+--8323328-136259284-1707737012=:1013--
 
