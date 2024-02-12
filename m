@@ -1,139 +1,104 @@
-Return-Path: <linux-pci+bounces-3335-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3336-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 952D6850D8A
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 07:32:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7303A850EAB
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 09:13:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5196D2859B7
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 06:32:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 082E9281BB7
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Feb 2024 08:13:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8B643C15;
-	Mon, 12 Feb 2024 06:32:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8827379C3;
+	Mon, 12 Feb 2024 08:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KeZ6oAxh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acih2wtU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74AF1876;
-	Mon, 12 Feb 2024 06:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CD48C11;
+	Mon, 12 Feb 2024 08:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707719565; cv=none; b=f8nqdqzXdnynHaKnNrPoFZbYBTXMnzZ2E888e5chuimPgjgKDpByNQdKfNefY42xqve98BknC7529bQIGlMtQontq/fjDpQ6jbIEMBnrPY2v+Wk8oyrjVEvkMtc1DllUWNGbhCqlt5nlgJVQ8Sosm2t/N10JgaPXe3bMSU0Qgh4=
+	t=1707725593; cv=none; b=Rr6xB9aK1R95NrM/DFmgTR7QT5cPA9jWzEHLKBY8XXLgyLnlrWKyfRRpFVX/2Kr5ZyTcAk2617Myp/hzeBpdZ4JUv1nI2+1s9DU3VodWXCZ0o+unPjEvjGArQ10CSDwHLCk8L4s4orXuYOpUonP4/dyjLD3pkJNrpR6y4eHtBCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707719565; c=relaxed/simple;
-	bh=WtENbaXqtArIZ1h/ul86KKlsUh8sF5NCgydYyrUusME=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=icVHeoPGZGiRuz1UhSqnuzo1YwDa0h/FR2aFLqlE5wDkoTcG0CRJzJMFUUjJHi73J3wWWRSY2Vj+MmUB5nWQSaOTTCp9ZiIvdWzsIw/SGTvnbvvojDYgB23ljYlKnT47iLZxlujrPDyDYu4zH4lNWFfFRpk1paJB/LaLfqIrADU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KeZ6oAxh; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
+	s=arc-20240116; t=1707725593; c=relaxed/simple;
+	bh=XMY8hQUo8ccDb9Sq56m5DaIdv4tVDtGMJ0OG5L9YX9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pJg9Wl47nNVwwZeAMxzU7K4VqX8uTq6UHWKv3PfnJO1qPa6w+0r1mx8VWoX8Y6pgFf3bXCZpvw1HaIvg5QKzPP31CbG3WemXHukLpCz7vX7jk2dNL2YthTW60pZhOaOFETWA9MGVSF1htI2witUPMmkObFg5K+jEYfwrUZwUkps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acih2wtU; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707719564; x=1739255564;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WtENbaXqtArIZ1h/ul86KKlsUh8sF5NCgydYyrUusME=;
-  b=KeZ6oAxh/OFsHP3Hpk3UKglRsnIl0Aq+h/ANK0HNVQ7YfO8i3BZiiqv0
-   KF8inZLt9ZeeeJPMVJpC41yuA/ik4WnjGrTR575psTLTSAbV/vA3Klykm
-   eyJ+uVGlh3ABwyjugCl3pS5gmwJr64QdChhifDPDG9zZTSWWD3ORVfaOL
-   p+zi/AVHITwMQUxiF4lcOwdk+hoSSX2vKSCN8/COdkCGLh0n3HITgpb9d
-   q46HPILfwtfZd7jDbYix/5SbCRKzwDcUrTtDtR4YJR/NzIpJWvttufZso
-   HZHprdb3Db9vr4bBP/lhT5mrhNHgSehhwXm4w966oCObMWWZI4p8ihi/V
+  t=1707725592; x=1739261592;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XMY8hQUo8ccDb9Sq56m5DaIdv4tVDtGMJ0OG5L9YX9E=;
+  b=acih2wtU9UUlj1Bmr7M853FSCdUcA7hkvWMdZQSO/ctFF2Oiahp65UuM
+   MQxbqbI0MdaKx+TmOEwxkIRqlUUSt0z53yV7hlV9r3BaxY1OC6OpzmPi7
+   3wehA0fC4GCioGLTL9PhCWUdm5RnRtIkuZxY8brf0UaUM/HzzKxpTMZQN
+   +2Xh04JO6f5u0WS9wWW08jAZ9aYeMBb23XnT1JkRbK9ziAFw1zRG/Wc3a
+   o0z9Tw63mWGHjotbjKtgszHCi3P0VQ+ylQ0TajLpI9LloY2Ev4X2EaDJt
+   Pxacfon3judwmAlRck2fcPHeM5W+2PPXuZnv3oLQF4RDPDy8gtD1tzYWx
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1538558"
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="1843897"
 X-IronPort-AV: E=Sophos;i="6.05,262,1701158400"; 
-   d="scan'208";a="1538558"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2024 22:32:44 -0800
+   d="scan'208";a="1843897"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 00:13:11 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10981"; a="825748126"
 X-IronPort-AV: E=Sophos;i="6.05,262,1701158400"; 
-   d="scan'208";a="2897133"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by orviesa008.jf.intel.com with ESMTP; 11 Feb 2024 22:32:41 -0800
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 882D01CAEA;
-	Mon, 12 Feb 2024 12:02:39 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 837061600100; Mon, 12 Feb 2024 12:02:39 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: bhelgaas@google.com,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	stanislaw.gruszka@linux.intel.com,
-	lukas@wunner.de,
-	rafael@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-pci@vger.kernel.org,
+   d="scan'208";a="825748126"
+Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.62.245])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2024 00:13:08 -0800
+Date: Mon, 12 Feb 2024 09:13:06 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
 	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] PCI / PM: Really allow runtime PM without callback functions
-Date: Mon, 12 Feb 2024 12:02:33 +0530
-Message-Id: <20240212063233.5599-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH] PCI/AER: Block runtime suspend when handling errors
+Message-ID: <ZcnSgGBjpH3w9ZJa@linux.intel.com>
+References: <20240209140841.1854711-1-stanislaw.gruszka@linux.intel.com>
+ <64ad8d52-ba67-4156-8e36-7346605bdf48@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64ad8d52-ba67-4156-8e36-7346605bdf48@linux.intel.com>
 
-Commit c5eb1190074c ("PCI / PM: Allow runtime PM without callback
-functions") tried to eliminate the need for runtime PM callbacks
-by modifying pci_pm_runtime_suspend() and pci_pm_runtime_resume(),
-but didn't modify pci_pm_runtime_idle() with relevant changes, which
-still returns -ENOSYS if the driver supplies no runtime PM callbacks.
+On Fri, Feb 09, 2024 at 07:45:05AM -0800, Kuppuswamy Sathyanarayanan wrote:
+> 
+> On 2/9/24 6:08 AM, Stanislaw Gruszka wrote:
+> > PM runtime can be done simultaneously with AER error handling.
+> > Avoid that by using pm_runtime_get_sync() before and pm_runtime_put()
+> > after reset in pcie_do_recovery() for all recovering devices.
+> >
+> > pm_runtime_get_sync() will increase dev->power.usage_count counter
+> > to prevent any possible future request to runtime suspend a device,
+> > as well as resume device is was in D3hot state.
+> runtime suspend a device or resume a device that was in D3hot state.
 
-Fix this by modifying pci_pm_runtime_idle() such that it allows PCI
-device power state transitions without runtime PM callbacks.
+I think "or" is not proper here, since both: resume and prevention
+of suspend are done. I'll reword this way:
 
- 0)               |  pm_runtime_work() {
- 0)               |    rpm_idle() {
- 0)               |      rpm_check_suspend_allowed() {
- 0)   1.500 us    |        __dev_pm_qos_resume_latency(); /* = 0x7fffffff */
- 0)   4.840 us    |      } /* rpm_check_suspend_allowed = 0x0 */
- 0)   1.550 us    |      __rpm_get_callback(); /* = 0xffffffffb4bc84f0 */
- 0)   1.800 us    |      pci_pm_runtime_idle(); /* = -38 */
- 0) + 17.070 us   |    } /* rpm_idle = -38 */
- 0) + 22.450 us   |  } /* pm_runtime_work = -38 */
+pm_runtime_get_sync() will increase dev->power.usage_count counter
+to prevent any possible future request to runtime suspend a device
+It will also resume a device, if it was previously in D3hot state. 
 
-Debugged-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
----
+Hope that's clearer.
 
-This is not marked for linux-stable for the need of extensive testing
-and can be backported after a few releases if no issues are reported.
-
- drivers/pci/pci-driver.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 51ec9e7e784f..bb7f6775b350 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1382,10 +1382,7 @@ static int pci_pm_runtime_idle(struct device *dev)
- 	if (!pci_dev->driver)
- 		return 0;
- 
--	if (!pm)
--		return -ENOSYS;
--
--	if (pm->runtime_idle)
-+	if (pm && pm->runtime_idle)
- 		return pm->runtime_idle(dev);
- 
- 	return 0;
--- 
-2.35.3
+Thanks
+Stanislaw
 
 
