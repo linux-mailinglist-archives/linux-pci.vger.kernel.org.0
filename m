@@ -1,161 +1,134 @@
-Return-Path: <linux-pci+bounces-3379-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C58D185289D
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 07:13:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18D088528CB
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 07:19:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 632911F23FD1
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 06:13:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABB321F24E15
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 06:19:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E67912E40;
-	Tue, 13 Feb 2024 06:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251C413AC3;
+	Tue, 13 Feb 2024 06:19:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dtrye5rG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRiVg+nO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC51B1428E;
-	Tue, 13 Feb 2024 06:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28D812E59;
+	Tue, 13 Feb 2024 06:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707804813; cv=none; b=kq9ahtP/QVZT34/4j9pjAUJ/TRYSc4oFX7s85dD+/z2hbmI0JiSqojXxMeJYT7SnE7/1Cz2P1sG4gY3BBkxoA+QS4CcUyXEN6si20KYe5W06A79LqhFfAehHqwEBphpRVPc+Ek5JcWoFG7hVSp2K9+cvNDF1m1h9d91IpWXo0tI=
+	t=1707805162; cv=none; b=GZCeLaDHGHWnrwzGUKwZkPIoInZ8v3NW2VAyyyXAtO/FfVruF5UziS5AD6XlvUU+IoTCDkHlTGzk0H3Sk4lcTuBgmN9C3pMfohJ0KBi1QI20qo/MLeM2F6iX8TIFEC0yFhmxvLyQpyFf0XPDSCeCZqkanQna8HtT9zhFTzUyWNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707804813; c=relaxed/simple;
-	bh=+OluaC2nfCC3QuXSPU0HcOwT7ap3mPRpLCz86/Gs6DA=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CpM1Bcn5RlEnIhubDnSXUfiPHcdLyTL3hypTLU9Nde4z93jayy+n8y57zht1PtdetIRnsV+1j838Qjxi4biewGUy2Lcm0xGRCUdPwCectsp4a5k9Ca26ceW2kjOlFG3NWklM4WOkJoPIBYkLVzGpNa8B/2PhrJ49dD+ZuaIgMwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Dtrye5rG; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41D6DMbg023971;
-	Tue, 13 Feb 2024 00:13:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707804802;
-	bh=Rv/j7HNyUc7U+67Hp/SX9I0XSishaJ1nAKVKGyANHvI=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=Dtrye5rGo1nQPIp3HoTylynJzEGI+L3lO8Gfjyt213nQferSwJjmsg1CfsE6vhSyM
-	 H/kxPTGg8VRKQQcbcAUjP672UCUcUkRmz/DzCAX9p9tAmEf7qrnHxmWtupHyOFEYgP
-	 dPOLz2162GUNkB/KKLvYnetC3kJ7Kj4kunTzP6Ic=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41D6DMSe013493
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 13 Feb 2024 00:13:22 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 13
- Feb 2024 00:13:22 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 13 Feb 2024 00:13:21 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41D6DHkN050952;
-	Tue, 13 Feb 2024 00:13:18 -0600
-Message-ID: <619dd947-a3da-49ee-9bee-8b21c7e7ca1a@ti.com>
-Date: Tue, 13 Feb 2024 11:43:17 +0530
+	s=arc-20240116; t=1707805162; c=relaxed/simple;
+	bh=Bq6I128bvmfP7CIPbKWfRx5XljFIN1hpkee+rcCuW0g=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=PZes3KE+ueLX9hH6FbiiKrxqq3IrI+0xAnK3Lqs5hR3f7qYYmUKI0HaHQPOvQEIGGGEC2KS8tQEBo6fx4Rh/OiWnAZfmnfvNIb3cNwm29kDv15fU8hPiu3wB4CdP3fcbvk4JJMOHHVEZIs7Hsrw3pk7I7mcu1TueZt9f9VGWRis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRiVg+nO; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e09aada5fdso1452842b3a.2;
+        Mon, 12 Feb 2024 22:19:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707805160; x=1708409960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pSUXxf9rKIZ5QHJT17kboCjddB2OwzgjJk8RE9Ix4hs=;
+        b=lRiVg+nOsUdlRrN+4Fx/8z36EupMGQBfytx15FBWUtSGRFcAavJDff14e9NEF2p4+p
+         R45bK2UJWU++xY41rU7UBGvXk7xyFWLJwRxqD9ywhIZ8wMSw+nbEwdoqh9kMUtgbGY4I
+         vBObv30V+RcxnZ+LYWWG//Cw0aoA+3S5Gx+8bqPb6QDW8HiCatxagn2by8bXUkDq6lOX
+         cd1Y1gNHFOgRPTEdZs+r44wcLmCP3sjrRlu9z4jkmHROJihZTDWocCo0rWmsznSlWx9s
+         /nxSfFoqk4CJpcLHUtTOWh/iF5Ix8fpEWEnYKA7ch9LL+Sw28EjpcXsg7TnUkiwaJf2E
+         wFVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707805160; x=1708409960;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pSUXxf9rKIZ5QHJT17kboCjddB2OwzgjJk8RE9Ix4hs=;
+        b=vveUK+1MrpH59+Jg8j+eOF7Gm1BCGzHkiu8/lw4k5zo/vv8IwQ8ObKJe6aYgzuCZz7
+         9jEdWvsK6q2bu32HoKQf1OwX5XCIYo+OhnSDNg5thsIpwfx0IeNc/rCmd3Tfu1LCqiS4
+         jme6CiGFxVzif/xYU+yfGvudvTEKVQO2u0g+IIGgojfa88tcJ+Zt8fhvPlB2T91Dv5Ew
+         XiP8IKZEYVKmQhHeCh+4PuhUjrGbcArdwkj5IFG9hoxV8ejDrDMjTsT78fbcZM4tP4zB
+         NVxZ6WkcDfd90Z8rLJcQfxgGyuro4HbvzWUjGu2Htz4UN/N22IAUDM4ey2AW2bSok0He
+         Jxjg==
+X-Gm-Message-State: AOJu0YywwzcJzeafkNCdbeOMyMtQIooaUhCXb2uozdoWh/7SukrFlxIs
+	LtIhrmTJ2+ZG146n0WfcegmOuVuaVL0MgWHATFzo5pCFUYXhlJ+i
+X-Google-Smtp-Source: AGHT+IFb9qEI5aDNOFETMlf8ChN7RcGGnNFlSGRIfhszVaPMtK8xMjyklgPBTZNZmR8K0M8dn/xdvQ==
+X-Received: by 2002:aa7:8814:0:b0:6dd:8a07:6969 with SMTP id c20-20020aa78814000000b006dd8a076969mr8113667pfo.5.1707805159836;
+        Mon, 12 Feb 2024 22:19:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUIz6JYz+XlZe1sf3x+i71yopgigoDCFglxMi3mzhK2vX5j+U2gDCfWMH2a69rcKoxZeNP6DAodAXivquITdspmLCoMCz7K8730GC6BUp3L1hKO1wrWiAIDxcp70Yk7PJnEbVTeZUI7/mhAiLQIJNRYg0ARtQsfA3sIrXU47DXnYQVQBJHJfRHO0mRN9R4p1ttYKydrSiK8SFaU1XQL52h2GmzCj5jDAqnIPAsd0ogV2e3qcuY/8r3KgCVsVp1nmkU9qLag4WH4SaAZjAiT8TFTyYg8wMhesUp/+O6v/PPJHeZNdH7el0YZSBw21dRaKV9nQM2bWfKXBSo=
+Received: from mhkubun.hawaii.rr.com (076-173-166-017.res.spectrum.com. [76.173.166.17])
+        by smtp.gmail.com with ESMTPSA id j20-20020a056a00175400b006e04553a4c5sm6595921pfc.52.2024.02.12.22.19.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 22:19:19 -0800 (PST)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH 1/1] PCI: hv: Fix ring buffer size calculation
+Date: Mon, 12 Feb 2024 22:19:10 -0800
+Message-Id: <20240213061910.782060-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <vigneshr@ti.com>, <afd@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v3] dt-bindings: PCI: ti,j721e-pci-host: Add support for
- J722S SoC
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <robh@kernel.org>, Conor Dooley <conor@kernel.org>
-References: <20240124122936.816142-1-s-vadapalli@ti.com>
- <20240124-unmatched-plating-019a3055cf5e@spud>
-Content-Language: en-US
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <20240124-unmatched-plating-019a3055cf5e@spud>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
+From: Michael Kelley <mhklinux@outlook.com>
 
+For a physical PCI device that is passed through to a Hyper-V guest VM,
+current code specifies the VMBus ring buffer size as 4 pages.  But this
+is an inappropriate dependency, since the amount of ring buffer space
+needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
+size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ring
+size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
+is used for only a few messages during device setup and removal, so any
+space above a few Kbytes is wasted.
 
-On 24/01/24 21:40, Conor Dooley wrote:
-> On Wed, Jan 24, 2024 at 05:59:36PM +0530, Siddharth Vadapalli wrote:
->> TI's J722S SoC has one instance of a Gen3 Single-Lane PCIe controller.
->> The controller on J722S SoC is similar to the one present on TI's AM64
->> SoC, with the difference being that the controller on AM64 SoC supports
->> up to Gen2 link speed while the one on J722S SoC supports Gen3 link speed.
->>
->> Update the bindings with a new compatible for J722S SoC.
->>
->> Technical Reference Manual of J722S SoC: https://www.ti.com/lit/zip/sprujb3
->>
->> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
+Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
+header is properly accounted for, and so the size is rounded up to a
+page boundary, using the page size for which the kernel is built. While
+w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
+64 Kbyte ring buffer, that's the smallest possible with that page size.
+It's still 128 Kbytes better than the current code.
 
-Bjorn, Rob,
+Cc: <stable@vger.kernel.org> # 5.15.x
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Could you please merge this patch? This patch applies cleanly on the latest
-linux-next tagged next-20240213.
-
-> 
-> Cheers,
-> Conor.
-> 
->> ---
->>
->> Hello,
->>
->> This patch is based on linux-next tagged next-20240124.
->>
->> v2:
->> https://lore.kernel.org/r/20240122064457.664542-1-s-vadapalli@ti.com/
->> Changes since v2:
->> - Added fallback compatible for "ti,j722s-pcie-host" as
->>   "ti,j721e-pcie-host" based on Conor's suggestion at:
->>   https://lore.kernel.org/r/20240122-getting-drippy-bb22a0634092@spud/#t
->>
->> v1:
->> https://lore.kernel.org/r/20240117102526.557006-1-s-vadapalli@ti.com/
->> Changes since v1:
->> - Dropped patches 1/3 and 2/3 of the v1 series as discussed in the v1
->>   thread.
->> - Updated patch 3/3 which is the v1 for this patch by dropping the checks
->>   for the "num-lanes" property and "max-link-speed" property since the PCI
->>   driver already validates the "num-lanes" property.
->>
->> Regards,
->> Siddharth.
->>
->>  Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> index b7a534cef24d..ac69deeaf1ee 100644
->> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
->> @@ -23,6 +23,10 @@ properties:
->>          items:
->>            - const: ti,j7200-pcie-host
->>            - const: ti,j721e-pcie-host
->> +      - description: PCIe controller in J722S
->> +        items:
->> +          - const: ti,j722s-pcie-host
->> +          - const: ti,j721e-pcie-host
->>  
->>    reg:
->>      maxItems: 4
->> -- 
->> 2.34.1
->>
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 1eaffff40b8d..5f22ad38bb98 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -465,7 +465,7 @@ struct pci_eject_response {
+ 	u32 status;
+ } __packed;
+ 
+-static int pci_ring_size = (4 * PAGE_SIZE);
++static int pci_ring_size = VMBUS_RING_SIZE(16 * 1024);
+ 
+ /*
+  * Driver specific state.
 -- 
-Regards,
-Siddharth.
+2.25.1
+
 
