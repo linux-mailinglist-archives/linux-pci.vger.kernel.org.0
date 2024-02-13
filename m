@@ -1,200 +1,233 @@
-Return-Path: <linux-pci+bounces-3412-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3413-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7329C853D59
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 22:40:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 099CE853D97
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 22:51:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D9669B28982
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 21:40:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB10F283D5D
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 21:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D556167F;
-	Tue, 13 Feb 2024 21:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044CC61683;
+	Tue, 13 Feb 2024 21:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CG5OjAY8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3eI7Vgg9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Jh56rXSt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T7+nWStY"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mTcM80r4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2053.outbound.protection.outlook.com [40.107.8.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9776E61669;
-	Tue, 13 Feb 2024 21:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707860358; cv=none; b=R/YMmEqRPKduJNw9KNt1Vv4+Nhke45vICGMrJ2b8rOHZ39ulA4tu/1K/L0rZCTwPAUJ6E7oK858UEQhX2Md+9eJvjqWddbiAmWjZPVy87Dl91Y18wmNIDXte9x0yWL34y4lhtSna7C5pL2wJDI1JyFLvPtDMD+zq/pQkI7hADpo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707860358; c=relaxed/simple;
-	bh=BUAr3sBqzq/mIhmYqhWP/6DEipOWW5FMJ0P2Le+dOos=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DHxK3Mud+qpha+MB+/9IOWR8mr/ra3OrewXWRV7Zxv3lUSSLJ2WMWbpYKTSn32B+bI63SAwS03SVic4TeoR9SMnCdKQbkyR2Qgzr4MXi1shSZ6OmkfjNdgtsD5t+FqQQojydUfd0lQinmQyTJrUppg1hRbkBSRdjr8Ex0rbqo9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CG5OjAY8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3eI7Vgg9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Jh56rXSt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T7+nWStY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A9E92212F;
-	Tue, 13 Feb 2024 21:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707860354; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dTiPPmHDw2aZAXgldAitJ1VDBOydclpHipfi4Efd+uU=;
-	b=CG5OjAY81AO9CnJJAtnesw5zPIc79sj4Fe8+R8Yo3Gwe95bWPbcOvTWooQvAG3Gw7283f6
-	AD8LWr1cjrfySghnGvLknGePBFgx1GXwquDVFWWw3KzV1UexbmAzFAqsG9ag3NmfvBDas/
-	z66wPZHaN7MVRuPEy7js0VPAGRKa2f8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707860354;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dTiPPmHDw2aZAXgldAitJ1VDBOydclpHipfi4Efd+uU=;
-	b=3eI7Vgg9TOCwpoU123vWAup+/YF9/lGDVBVSiMJHXH7SC/KLKaASnd/2cr5V1zKJpRg+iK
-	02gjDHGZ8qCE5dBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1707860353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dTiPPmHDw2aZAXgldAitJ1VDBOydclpHipfi4Efd+uU=;
-	b=Jh56rXStMSm4uiLr+Ly4+66CE77knqnOzeFbyC6SfD5CDcfRODrUN6GeXDfJcQUXcB2U74
-	Pz20djMRl7FeoWBMgx+xU8ETDu3Sxr7NNu13J5dsbpa2+R4G7+Spm3oFo0IyXhBDL+7gz8
-	Y/adp1HkkIBKm+ZBefiHXUMNXj9EZMM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1707860353;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dTiPPmHDw2aZAXgldAitJ1VDBOydclpHipfi4Efd+uU=;
-	b=T7+nWStY/NnsxwQHVTBCTEU5mF/3aKc/5vfsfvbZNkdUdXrFF/dQ/qLkV06/c6+y9mCVwA
-	m419U2pMxk64p3Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 352E3136F5;
-	Tue, 13 Feb 2024 21:39:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8Ao0BoDhy2XzGwAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Tue, 13 Feb 2024 21:39:12 +0000
-Date: Tue, 13 Feb 2024 22:39:08 +0100
-From: Jean Delvare <jdelvare@suse.de>
-To: Mateusz =?UTF-8?B?Sm/FhGN6eWs=?= <mat.jonczyk@o2.pl>
-Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Bjorn Helgaas
- <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
- <lenb@kernel.org>, Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v4] acpi,pci: warn about duplicate IRQ routing entries
- returned from _PRT
-Message-ID: <20240213223908.435aec7b@endymion.delvare>
-In-Reply-To: <20231226124254.66102-1-mat.jonczyk@o2.pl>
-References: <20231226124254.66102-1-mat.jonczyk@o2.pl>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-suse-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E58D29B;
+	Tue, 13 Feb 2024 21:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1707861076; cv=fail; b=sQv4nrc7PrVemawnc7FRNQCaT+8fj7tSBrNQxPdNr8dDTThNGi+XXPAScKcbUG8+zxmdilGhozdzCNKAl7eSIuDJAafOmW28d8bBirHYG1ThuF2k7mkBRmp0bb56tijSYLDg56BwL7J9eSRu5RM1gP/iZEWijyzUBhkM7OmZTR0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1707861076; c=relaxed/simple;
+	bh=AyyJMp2+Qcrn3pGor6mbyj9sliBRvWPHI5MD/RL7Wdc=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=m6PxHyMQdkBFexJ7IlrEX9J3MmES2b/Atrwq1tgZP9shwQEEl4J9H0iOdGhOs3nRufYMaktaV2Qhcxfn6QSbGc75XwoP4opAFPfVaRtNNE7qYwlnWqajKkSV0yHNLCIvMaQwEGQwa34XH8YpLkQRyreLcP2AwC1vq0aT69xG2nI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=mTcM80r4; arc=fail smtp.client-ip=40.107.8.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J+suZKBuryl87zsHs4XZPNtCD9MV74NqrTGBVfQo18r6rH/SjtN7TLu5IzDqa1HGfrHaA6ssj7uVQBbod/3a+4MrFSBvPW/u8oLyzbp2HXNDKC6MkwfNc2YQ4LLZyVMgAdY7/EH83pjwQV8lePdGBI0WrDq39jSVRgMt3rmN0fGoXxRdWJ1PjRxgnkqfaVf03Pp/LU3X2Oieqc+JfNiEJpsNGXuJQ3GMKEqOYG1oNMTAf6/WqM7gLxSK89NL1jsATtnp364fEkm3WDeSEptY9EgsDthdO9dzWu8eOhrfL6R8WXyevYmhip05Vv0QLymlloUuOGD6g7hMxtfS+EAyjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aLY0mjxBohsr00gjCctd9l2dOKJPBvUHKCM47QaKh5Q=;
+ b=TrJ1U5XPIxuOFXILj4RE7p7y1KNWRiDGTDlrCSU1jO1URhFuzJqAv37Hu+hvFTbaFNrZS62y7Rop2IERPklgRiaCHnmG+4Om4Bm78JCHkfd9+pI6DDRIzzMS/flBWe1jEzw11qw7hAglOjOsXG1VxaIXS46kFXicNOGcBGPbMR1IwkSaBw0UsB8N64fpd4QS8/r3qlcktcDU2KcZf3xoCAmAx2CXu0+Ds6zKIf1RmwZaOgyeK/S4VjjxdcdE4fjVYqkuXiuwB9Gwoo+OnQYbAeDt8gSXLdQd3ioRK76Dg7ZyCodOXQyDnwl4C0VA/65tTRh2MrMXqPKDnAQVY0irDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aLY0mjxBohsr00gjCctd9l2dOKJPBvUHKCM47QaKh5Q=;
+ b=mTcM80r4/RAilCUTHbfq6uDNgaq3dnSz0LvxWsGRwIVxVAvfSIx6Q1W1qG4lh5z8tV4gykuAreEp49003R/VxbinIUJhwGbbW9KvNxLhmrhN2iZsTTR4fceV01E/DxfuSdSbj6fTcg1/abXC1tSk+FgHY2cffBr8fUS/GprCq28=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DU2PR04MB8837.eurprd04.prod.outlook.com (2603:10a6:10:2e0::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.44; Tue, 13 Feb
+ 2024 21:51:11 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7270.025; Tue, 13 Feb 2024
+ 21:51:11 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v4 0/5] PCI: dwc: Add common pme_turn_off message by using
+ outbound iATU
+Date: Tue, 13 Feb 2024 16:50:21 -0500
+Message-Id: <20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB3ky2UC/2XMTQ7CIBCG4asY1mJgWqC68h7GGIShZdGfgCE1T
+ e8u7QaNy28yz7uQiMFjJJfDQgImH/045FEfD8R0emiReps3AQY14xWjU4+PPrbUWrANRzw3jST
+ 5ewro/LyXbve8Ox9fY3jv4cS3638jccqoFfBk2lphlLkO83QyY0+2QoKigPGiICuppGICHEpd/
+ 6rqW0FRVVbOgXZCaQbaFrWu6wd+bEGhCAEAAA==
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Serge Semin <fancer.lancer@gmail.com>
+X-Mailer: b4 0.13-dev-c87ef
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1707861066; l=3521;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=AyyJMp2+Qcrn3pGor6mbyj9sliBRvWPHI5MD/RL7Wdc=;
+ b=iZ8VyJbTRi46TWI9JpwSDS13CF2/LN7wY2j044YmJEIesdYvgGmQxb9t8dE41Sp7G+YyboF32
+ p2fcGtHko+nCyfuPthOQajfvx+waNf/01aKWm4/LT3LzCW8mmzZGc6k
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0PR13CA0211.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::6) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Jh56rXSt;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=T7+nWStY
-X-Spamd-Result: default: False [-3.31 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 HAS_ORG_HEADER(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:url,suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 7A9E92212F
-X-Spam-Level: 
-X-Spam-Score: -3.31
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB8837:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77502cbf-c3dd-4119-c22c-08dc2cdde444
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	BNuMlZsL9ma0jZouMmn+Ijp4QgPm5GiCY51jX7lIG6X+m+WEh0WuV8yKGhNIB15rdr/Bceky0/IHgqWVh6FnIvheZm21bU1LUy7/4YuiY28k0bTZixvl1+Z0EC0kxP3F2R68bm2+1y0b9xDv3E0YQWcT6Qg4TWOJXPx16/KYhfY6IEGSJ3PZs3cHHycHPxobTLpSWf+U97Bb4a2BnxNphT/+Ask13H6EcNJpcQR046ckCfnW35bt3OzITyzkQeN/sZJ6XwBRUl8yqmtr5ny+vJLGX5fjwSi0WO7IwSzY1O5kmDl5mXrUEcYYxFIHPhNK8wRwYsMNpUQxSKl2RUoaxXtS/Stnft6OG7l9OLpd76hx0hoHB0q9yKuA+G0d6cjMoF7v2AWiyV6OsQrMnxeNOIZuHJP6OI7KUXbPTHHJXIlSAVa27BoMuxJFN+QU2UoC1wtK3RW/elcKrStGWhSg/6K4hz2S1TKwU78fQe2RNZuk7heuGHkC54U9X7hcxL1dv8YsYH6o6Yf6dEL9D2Zq/rwt/8W7emBybpUNErXjBmB5qENVQKGpo9ozoK9EveLRhLBDcDDcT+HOsGqFunUdExKUmNzOubgGaaE2Zu6lmPeJFP9ffWNmMZpokGwbjqF/
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(346002)(396003)(136003)(366004)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(83380400001)(2616005)(6486002)(478600001)(966005)(6512007)(6506007)(52116002)(7416002)(26005)(316002)(54906003)(110136005)(66946007)(6666004)(66556008)(66476007)(8676002)(4326008)(38350700005)(8936002)(5660300002)(15650500001)(2906002)(36756003)(921011)(86362001)(38100700002)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aFVFcDdrU1BvSzVaaEVqT2ZvcFcwczVHUlJPUHRHZVZNVEVQeW1XMWRwZzNN?=
+ =?utf-8?B?MjdUZE4vdXVjWXVjaitrMVY5YWF4bzdBYTFOTjIxRmN3NGQrUFMvSG5XWFZl?=
+ =?utf-8?B?MkxFOFNFRzJuTHM0ZVZFVkRPK2lGUE5JK0VMMGwrcjZTbUNnSWg5b1dUcThQ?=
+ =?utf-8?B?NFVPYWhkSW5rZWxGalhWYzFDQlZtc3lTR05nR3c5M1pvdnNmY3dBckRBZGRB?=
+ =?utf-8?B?VUI3WDB4a25ySWc2M0RyQm1lOXhZdkoycGtNNWRSSU1OL1FycFBDTHlPV2J4?=
+ =?utf-8?B?K0lvTUZtK3FyaTloOE02eUg4UVl3ZFNmTGVxZ2syNVVWRldiNEU5Q1pndS9Y?=
+ =?utf-8?B?dmJOWlZWdEhySEIybXhZRklIU2dKdzdNYUxlVmt2NlFNQWlKMnBuUGdkWXVH?=
+ =?utf-8?B?OThhQXI2K2k4cExDek1TbGhjdjBKUDAzN1lmSG5HSjFNalFrVXlEbTFiK1Zs?=
+ =?utf-8?B?VTJ2SWE4Y2dUSHF4ZkU3UGJMVWtTbzJxcytvcmtkeHd1dnFVYkl1UXVzdzZt?=
+ =?utf-8?B?UUZKdVZtZUQyQ3ZsSEFQbVJRMVJBSFNUYUhCY3dXUERKcXkyenVzaVpmbDJp?=
+ =?utf-8?B?aHhiYkM4K1pDdlBCT0dwdlVWRzdDM3pwN1grZTBVZnBjRFMvZ2dlRk9OQzA4?=
+ =?utf-8?B?S1Qxc2ZFc3dtbHdWT0ZXNXNXQWU3RUExWFFyN1kvRXluY2VleWM4cDF0T01N?=
+ =?utf-8?B?Z3RNWEhXTXJOcVBvbkFHa3FFWEF4M1lHcTdOdGU0eTJUdUZoUnQ5dlRvUnFu?=
+ =?utf-8?B?VFNSdFhSOU5rT2R6SzM1cExXZkRncnM2d1dtUkFCbmI5aHhMV0IzZjNwbit5?=
+ =?utf-8?B?MkhRQmo2TkcyUkNmNHp1NGQ1dzF0TXYxSDJ3dE5zZ3NGVXg4WHFQSjZsSTR4?=
+ =?utf-8?B?Slk0UW1xNUNReHVreDFCYzM1REVhb3ZwemJGOHNzMkJ5UlloUkQxVXFrbWdD?=
+ =?utf-8?B?THRkMTQ1eFhlZHcvaTRTTDQzMnYvaXVGSFNpY0JXNlhJeHdDNUt0NlVpb1ZG?=
+ =?utf-8?B?YlJYdjI4TmU3WDZEREhGeU5sVFlzei8rbkMrOUpZZzRiaUtkRlZ3blpWbElh?=
+ =?utf-8?B?dmJBQndGR0ZETlU2dEl0UEx6QXZkYURHNXRWcVE0bGRjSHZ4MENVSi8ya2RP?=
+ =?utf-8?B?Nk5BejFWeHRuUkg1MXNxS1lVTkRWS3JEQ1kwNmZ0cEIxS3JUNGk5VjEvTVdZ?=
+ =?utf-8?B?VVV1VngxVXFqUmVOdFVKby9OekVUYmpoR254enBhSVdKSHlYZnlaNjZBWmc2?=
+ =?utf-8?B?bHBNeDhzaDZaZk9QOXhpNDFuRlV3cVByWklhNysyUTArWkhLUDNaaGJxVG5Z?=
+ =?utf-8?B?aC9MRjY1MnFBeWNrejFmRjRrVVhVeElJVER1OWVzSHdnY2s3NDloN1FYUGF0?=
+ =?utf-8?B?WXBHNVdkQWwxWDBvVnE0bklVdG9BWGZrVzBBOHYrZ3hrMnhhSVVYcDRiRDVR?=
+ =?utf-8?B?SmtLb0lkOEY5bWtuU050VHlrQm14Ukx6YXBMV1R2MXZ1VjE1ZXk2aE5PdlhV?=
+ =?utf-8?B?OGRveWk1dUd0SENNK08xZGVvODlKQUdEM3NDYXk4V3RBU2dtOVlxcHZwVDRP?=
+ =?utf-8?B?cmVsbUgvNTZQYjdTeS80b2VlZlpkVFhKQWFVZ1ZrSXBybUgzeFVmb3BmbXZJ?=
+ =?utf-8?B?Y2YzS2RyS0VPdW9kUG9tS205MENEeWc5V04vQ2VjV0R6Nlc1SWpVZHBzd2J2?=
+ =?utf-8?B?Mkp2dmNWT1ZkTFM4NnE4dEtkYWtnZ2gxdlZiblVleVk5UzIybndXWXY1WnA0?=
+ =?utf-8?B?OURnazBoeU13Y3RzbEZveFhOcVN5Z2laMXFkWXRQOFd6K3RMbTFPU0lNTHhl?=
+ =?utf-8?B?N2JGb01mVDRKdjNuYTdzaGhPd0lKckN0OG5rT1ZCVlM3QnE3eGI1SzZsd2p1?=
+ =?utf-8?B?LzBDb1N3QlFmTkVITE5vTzRuaHZKUWx0OGlBYXpaaGFuUXNZdDRVeUFERzlF?=
+ =?utf-8?B?cStmU1d6NXFoams1T1RGNnlwcEEvRHB5aEZWcXRrcHFaaWJ3TUZjdXoweHZm?=
+ =?utf-8?B?QTY1T0Q4eTB6dFIyTndxdG56RVNvTnlDVWdrRHdHSXRXMTBSVmJLcFc3ZkJs?=
+ =?utf-8?B?RTdIOGlKTlFqb010Y3lDaGpodHRoaEMwWTlleGlwbEpHQXJsS0dWWS9JY1J5?=
+ =?utf-8?Q?wpaJ36kLiP/xD1ST5u2d0UaUP?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77502cbf-c3dd-4119-c22c-08dc2cdde444
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2024 21:51:10.9900
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3O839UJa/5Fml9DHV6qojzQeWlMfcrrid91c1iNmHn3MbHfnBSRJyxWReoQZrHtbyLBQeTA6VaoiVzfJJr+v+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8837
 
-Hi Mateusz,
+Involve an new and common mathod to send pme_turn_off() message. Previously
+pme_turn_off() implement by platform related special register to trigge    
+it.                                                                        
+                                                                           
+But Yoshihiro give good idea by using iATU to send out message. Previously 
+Yoshihiro provide patches to raise INTx message by dummy write to outbound 
+iATU.                                                                      
+                                                                           
+Use similar mathod to send out pme_turn_off message.                       
+                                                                           
+Previous two patches is picked from Yoshihiro' big patch serialise.        
+ PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()                 
+ PCI: Add INTx Mechanism Messages macros                                   
+                                                                           
+PCI: Add PME_TURN_OFF message macro                                        
+dt-bindings: PCI: dwc: Add 'msg" register region, Add "msg" region to use  
+to map PCI msg.                                                            
+                                                                           
+PCI: dwc: Add common pme_turn_off message method                           
+Using common pme_turn_off() message if platform have not define their.
 
-On Tue, 26 Dec 2023 13:42:54 +0100, Mateusz Jo=C5=84czyk wrote:
-> On some platforms, the ACPI _PRT function returns duplicate interrupt
-> routing entries. Linux uses the first matching entry, but sometimes the
-> second matching entry contains the correct interrupt vector.
->=20
-> As a debugging aid, print a warning to dmesg if duplicate interrupt
-> routing entries are present. This way, we could check how many models
-> are affected.
->=20
-> This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
-> SMBus controller. This controller is nonfunctional unless its interrupt
-> usage is disabled (using the "disable_features=3D0x10" module parameter).
->=20
-> After investigation, it turned out that the driver was using an
-> incorrect interrupt vector: in lspci output for this device there was:
->         Interrupt: pin B routed to IRQ 19
-> but after running i2cdetect (without using any i2c-i801 module
-> parameters) the following was logged to dmesg:
->=20
->         [...]
->         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
->         i801_smbus 0000:00:1f.3: Transaction timeout
->         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
->         i801_smbus 0000:00:1f.3: Transaction timeout
->         irq 17: nobody cared (try booting with the "irqpoll" option)
->=20
-> Existence of duplicate entries in a table returned by the _PRT method
-> was confirmed by disassembling the ACPI DSDT table.
->=20
-> Windows XP is using IRQ3 (as reported by HWiNFO32 and in the Device
-> Manager), which is neither of the two vectors returned by _PRT.
-> As HWiNFO32 decoded contents of the SPD EEPROMs, the i2c-i801 device is
-> working under Windows. It appears that Windows has reconfigured the
-> chipset independently to use another interrupt vector for the device.
-> This is possible, according to the chipset datasheet [1], page 436 for
-> example (PIRQ[n]_ROUT=E2=80=94PIRQ[A,B,C,D] Routing Control Register).
->=20
-> [1] https://www.intel.com/content/dam/doc/datasheet/io-controller-hub-9-d=
-atasheet.pdf
->=20
-> Signed-off-by: Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Jean Delvare <jdelvare@suse.de>
-> Previously-reviewed-by: Jean Delvare <jdelvare@suse.de>
-> Previously-tested-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Changes in v4:
+- Remove dt-binding patch. Needn't change any dts file and binding doc.
+  Reserve a region at end of first IORESOURCE_MEM window by call
+  request_resource(). So PCIe stack will not use this reserve region to any
+PCIe devices.
+  I tested it by reserve at begin of IORESOURCE_MEM window. PCIe stack
+will skip it as expection.
 
-I'm still happy with this patch, so you can change that back to:
+  Fixed a issue, forget set iATU index when sent PME_turn_off.
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Tested-by: Jean Delvare <jdelvare@suse.de>
+- Link to v3: https://lore.kernel.org/r/20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com
 
-Thanks,
---=20
-Jean Delvare
-SUSE L3 Support
+Changes in v3:
+- fix 'MSG"
+- Add pcie spec ref in head file
+- using function name dw_pci_pme_turn_off()
+- Using PCIE_ prefix macro
+- Link to v2: https://lore.kernel.org/r/20240201-pme_msg-v2-0-6767052fe6a4@nxp.com
+
+Changes in v2:
+  - Add my sign off at PCI: dwc: Add outbound MSG TLPs support
+  - Add Bjorn review tag at  Add INTx Mechanism Messages macros
+  - using PME_Turn_Off match PCIe spec
+  - ref to pcie spec v6.1
+  - using section number.
+
+- Link to v1: https://lore.kernel.org/r/20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com
+
+---
+Frank Li (2):
+      PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+      PCI: dwc: Add common send PME_Turn_Off message method
+
+Yoshihiro Shimoda (3):
+      PCI: Add INTx Mechanism Messages macros
+      PCI: dwc: Consolidate args of dw_pcie_prog_outbound_atu() into a structure
+      PCI: dwc: Add outbound MSG TLPs support
+
+ drivers/pci/controller/dwc/pcie-designware-ep.c   |  21 ++--
+ drivers/pci/controller/dwc/pcie-designware-host.c | 145 +++++++++++++++++++---
+ drivers/pci/controller/dwc/pcie-designware.c      |  54 ++++----
+ drivers/pci/controller/dwc/pcie-designware.h      |  21 +++-
+ drivers/pci/pci.h                                 |  20 +++
+ 5 files changed, 197 insertions(+), 64 deletions(-)
+---
+base-commit: e08fc59eee9991afa467d406d684d46d543299a9
+change-id: 20240130-pme_msg-dd2d81ee9886
+
+Best regards,
+-- 
+Frank Li <Frank.Li@nxp.com>
+
 
