@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-3375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0D2085243B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 01:46:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22BAC852499
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 01:56:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 200731C23645
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 00:46:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3F782831C9
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 00:56:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5176D64CEC;
-	Tue, 13 Feb 2024 00:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E8F81AB2;
+	Tue, 13 Feb 2024 00:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaFB/0mK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3N7p0nV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2464CD9;
-	Tue, 13 Feb 2024 00:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F80A81755;
+	Tue, 13 Feb 2024 00:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707783718; cv=none; b=VZttJfJOg7vX16u8voO2kMCYlk/V4SBNNnbegnfyoXaC6PY9WQS+YcOY+Tg40iQLbd5PewpuaXBhuHLeFAJAhpTI9A/0SVoZbLRF8Q+pcCMp4C2A+WCkzTK8+Avlf+O0jghRpea2+qgovT8XPj9FOjApukx2MfGaWfF7ec+hIB0=
+	t=1707783789; cv=none; b=NcGzfTkkYiAXE9NTWVF0dO2kFe4UJxjwcWZ5qg2kgbjacd0K/CYzl2OwYgHXb1+yNEYOOk8BqPcFPlBoqLOdQ3Zpi+8DB/5fym2GCZmyiC9Qy8QFfjgbBlsMH2iLunSlnqHyiA/SllKZQwSteJlwkC+HbFuOe992CoA70v2ltHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707783718; c=relaxed/simple;
-	bh=7qZhNTtqRlrI+0MTl24AYtu48Ljc7ZKtqhdVHQQopGo=;
+	s=arc-20240116; t=1707783789; c=relaxed/simple;
+	bh=h2R2cYRyDIUhPm+TMUvSPSOvLAZTtewgg5O8+FSt1JI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xwc2Ur/Hf7NyWMjth6LXE2fl42RdEL5msuIc8Vu6O/d+ADPd6KCn44XaQofE8qWfqAm+38M66LA4JVQl4+giz5wAHWytM+shbeW1M9umyZUTUwHsce6JrYXyaEYwPQul/kmQqWj6HSNnnnflNLFgQYiZFQNsLoEUH0sm8llWckw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaFB/0mK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE68C43394;
-	Tue, 13 Feb 2024 00:21:56 +0000 (UTC)
+	 MIME-Version:Content-Type; b=AdXEQA6oBLgsiKZkDux+tQk+DErpiUP604MYIQaRPDjZIBcuy4emqmgjsmYHj7qnkNN4DHZd0S5UgIbsmNnJDhv3a4bS5G/XZ8/0VGzP0voxUeYI7xs7XxKrePlo3225SfMuNj9Bv1FuDLA72x1t5E8/WyrVRwzbRh/Fo/ef66c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3N7p0nV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2EA7C433B2;
+	Tue, 13 Feb 2024 00:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707783718;
-	bh=7qZhNTtqRlrI+0MTl24AYtu48Ljc7ZKtqhdVHQQopGo=;
+	s=k20201202; t=1707783789;
+	bh=h2R2cYRyDIUhPm+TMUvSPSOvLAZTtewgg5O8+FSt1JI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aaFB/0mK71jpVYwUArbPD2X4KmMCUYrYIhTnK5Z5L0TIdUWimQ1LtEU2Q1FQhTAXn
-	 8Whc1Vtx3PdAxftyKQUQq99nHEPRCZ2zoyuZqNJU4B2u8nTVLo8P6MFNMbF5iwF3bM
-	 aSLDtq6ElCAlyZpeoFMcO10ri+Uq/I8NSJFYGFadVN4qziTFEajfcO9w6qZc7+Ooj4
-	 pfv3Dj/Jx8NWsQ9vUDVbJGdTFeO/r48zzULTgB8KPitA6P/IsEgiK8k0v00Tha+NOO
-	 TuVcdaWeAAgWyvfNRZOQipKAm6QaqWsMEV7P2tpAqtdp+VCs5LFCNmZqSgnm11D4de
-	 cO8IYcKZuQ69Q==
+	b=O3N7p0nVRlKdQT3pBF2V6j4c4YATLvYuSFD6Dh3wGKx7N+9nVLIbXqStGsAb8Jpls
+	 UAG3WQunfY3K15gsZxu3FzU/IUUG7w9S0SybdrL6GdOF8DTrZzNVAM9qEYrghOCV2I
+	 HxOhkKIZzWAz3z6SLDzUMaPtmbFFn+1aV0z+ohNcvjvo668XM29QGQNmQSDKIQdwM3
+	 mQa1O3qiX9/iGnzRk+WAWktZmKVRQZ7Ho9tnl/WzolnaAL0eYnha1rIGRNklpVy0oD
+	 exaf+vjROj/SDj03Vz/BmYVVtitzF6tXVRe1sQSpWBhkfp/L6Sbilli9/dqQ82GvQf
+	 nbzPRpF0B1Lrg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -55,12 +55,12 @@ Cc: Dan Carpenter <dan.carpenter@linaro.org>,
 	lpieralisi@kernel.org,
 	kw@linux.com,
 	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 42/51] PCI: dwc: Clean up dw_pcie_ep_raise_msi_irq() alignment
-Date: Mon, 12 Feb 2024 19:20:19 -0500
-Message-ID: <20240213002052.670571-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 23/28] PCI: dwc: Clean up dw_pcie_ep_raise_msi_irq() alignment
+Date: Mon, 12 Feb 2024 19:22:21 -0500
+Message-ID: <20240213002235.671934-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240213002052.670571-1-sashal@kernel.org>
-References: <20240213002052.670571-1-sashal@kernel.org>
+In-Reply-To: <20240213002235.671934-1-sashal@kernel.org>
+References: <20240213002235.671934-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,7 +70,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.16
+X-stable-base: Linux 6.1.77
 Content-Transfer-Encoding: 8bit
 
 From: Dan Carpenter <dan.carpenter@linaro.org>
@@ -93,10 +93,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 8d79dd0e1d60..51f340663260 100644
+index 59c164b5c64a..cfdeb1e2935c 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -526,9 +526,10 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+@@ -528,9 +528,10 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
  		reg = ep_func->msi_cap + func_offset + PCI_MSI_DATA_32;
  		msg_data = dw_pcie_readw_dbi(pci, reg);
  	}
