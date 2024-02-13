@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-3410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3411-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA23C853B73
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 20:46:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7042E853BE4
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 21:06:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F7F21F26D9B
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 19:46:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CD5128278C
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Feb 2024 20:06:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACF3608F1;
-	Tue, 13 Feb 2024 19:45:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98CD66089E;
+	Tue, 13 Feb 2024 20:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Joyk1+7c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzOuvNFC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2686089E;
-	Tue, 13 Feb 2024 19:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC8C60B80;
+	Tue, 13 Feb 2024 20:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707853558; cv=none; b=qhvPKtrjyDu5ksMUqs9BXZFBM5JD2HaHcX6UqXFQ5csBMb7JEz8Zkoj0lGPvuIzlY2IicGEeEWGzkdxRNnU1ktVhhDnYMsqVs9OjcNL8JgW/OZSNcy7eZ3AbjtRL1WptXdpobGxUfH7V2WzXNXCmbBlz/X8Vfd4ry20Os5ZjW1A=
+	t=1707854810; cv=none; b=G1BAwd+jAsqhjQWJ4CD6wZS9r4bhjvmEeJCO4DXOEbMcM1WLVZp1yJFvoRg/b+4WZorzhhdg7QEMP7v5yr+ljrSTKUEsaHYsstbCwmhEVnfRfhzxyNo0zppdpmKJGrS2L9tcfpqrdLOdQ7YXlkIik9rNVVvy6IQUeJZzorisqEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707853558; c=relaxed/simple;
-	bh=WqPW2wosKK+QvQBbaPKSnDNPFyjxQDlHQS+8p1UqimA=;
+	s=arc-20240116; t=1707854810; c=relaxed/simple;
+	bh=RzFf6vbxBZCp7I/zmIIZfylRvNPWVW5m73wNUuf/KTg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZTP6Ff1RFzpPZKFmgslmRzQDAm8SiyyXUVcoftI3X86vV/8hHc3um1j8wdlOBiu/0OMreR2dg55HL60iSJOAL/XChbAjKgQTHxmKGMzZI2NY1KIS54ldP8r0zxienwhr7i+OilVP9ZJ5GUEZjXgqbS+QwBIRnCD+d6ILqlSV9e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Joyk1+7c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D1C6C43394;
-	Tue, 13 Feb 2024 19:45:57 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=d3KMCNvwsSE0MxQFvdXPjdX8nnsUzGDIA40ztjCz+03ZuE8YKSXy8mAV91tS/nv0hoQI1ASAl46loo4A7l8qMvMfxtQKr7VRGpYg6Il74qYhYEILQVgMyxhDGANYjJEd78Gj43WyhWzBEBOp9HGC+cIxAexOuE/D38KnXqAfZ9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzOuvNFC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A698DC433F1;
+	Tue, 13 Feb 2024 20:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707853557;
-	bh=WqPW2wosKK+QvQBbaPKSnDNPFyjxQDlHQS+8p1UqimA=;
+	s=k20201202; t=1707854810;
+	bh=RzFf6vbxBZCp7I/zmIIZfylRvNPWVW5m73wNUuf/KTg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Joyk1+7cLubMET3MgM9ZGOQIKH4vVDJAn/+pfdOm8wTA26Xx1skYGHM7tYt+UVKxk
-	 OG4RzVv9+xZgqq0rhwrffVr3GJvoDE8JSyV24DcoCDWjJ3m9o8wocdd0yq0Kw477MU
-	 naAXhqU5rrlrjSNWa67lCiGrinFrkakctSZfZEEVAGSHRTEeMTKbgiqOD9Np3wEwqE
-	 Q+DXyEq8kIcqYzZd4LcLXLtkFeFbFAjpwFqNuBpI14GwEtaBqiv9RNoZtydcLlGSmh
-	 ISY5LXqnwcZ15oJgF1IBh2S8uAyoBXFkkFes6QgNoqb5U9AsheurPGa0Ok2Ai1PHJs
-	 xi4gdZBIPdLig==
-Date: Tue, 13 Feb 2024 13:45:56 -0600
+	b=YzOuvNFCgNTVxBos7zSGMPQvUzsw6Yv3J3Sg9RgEpq6nzmFjdZXt41tSNXKofGJJP
+	 l51fvJDjrLZmRveZZi53xDZ360E9ZPL5+kcrXOT0g7ca5VMrbqN2uRQ9zYN/fdypsh
+	 ApM62ix+PjJHq29YU0P15tzNLa4doqXtZxnILUuO7qAmIlnm2YpkAC6lOzcT3hDgcv
+	 psDsTv6zjf6Y4E1x3njmPo3t2D5WAN4/5XUM+jgQkLGqA28RlcJw8vWa1wHvudnvik
+	 w1st1rjo2oyZihNQ7g4ggUPY43U8ZU+gPwQlULn8qXTCSlXJjB7+p1PJ0FXJzR8QXH
+	 XiQ0Z6H8NRArA==
+Date: Tue, 13 Feb 2024 14:06:48 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Leon Romanovsky <leonro@nvidia.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Jim Harris <jim.harris@samsung.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Pierre =?utf-8?Q?Cr=C3=A9gut?= <pierre.cregut@orange.com>
-Subject: Re: [PATCH v2 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
- sriov_numvfs reads vs writes"
-Message-ID: <20240213194556.GA1219770@bhelgaas>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: bhelgaas@google.com, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	stanislaw.gruszka@linux.intel.com, lukas@wunner.de,
+	rafael@kernel.org, ilpo.jarvinen@linux.intel.com,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	sashal@kernel.org
+Subject: Re: [PATCH v1] PCI / PM: Really allow runtime PM without callback
+ functions
+Message-ID: <20240213200648.GA1219964@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,39 +62,76 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240213174602.GD52640@unreal>
+In-Reply-To: <20240212063233.5599-1-raag.jadav@intel.com>
 
-On Tue, Feb 13, 2024 at 07:46:02PM +0200, Leon Romanovsky wrote:
-> On Tue, Feb 13, 2024 at 09:59:54AM -0600, Bjorn Helgaas wrote:
-> ...
-
-> > I guess that means that if we apply this revert, the problem Pierre
-> > reported will return.  Obviously the deadlock is more important than
-> > the inconsistency Pierre observed, but from the user's point of view
-> > this will look like a regression.
-> > 
-> > Maybe listening to netlink and then looking at sysfs isn't the
-> > "correct" way to do this, but I don't want to just casually break
-> > existing user code.  If we do contemplate doing the revert, at the
-> > very least we should include specific details about what the user code
-> > *should* do instead, at the level of the actual commands to use
-> > instead of "ip monitor dev; cat ${path}/device/sriov_numvfs".
+On Mon, Feb 12, 2024 at 12:02:33PM +0530, Raag Jadav wrote:
+> Commit c5eb1190074c ("PCI / PM: Allow runtime PM without callback
+> functions") tried to eliminate the need for runtime PM callbacks
+> by modifying pci_pm_runtime_suspend() and pci_pm_runtime_resume(),
+> but didn't modify pci_pm_runtime_idle() with relevant changes, which
+> still returns -ENOSYS if the driver supplies no runtime PM callbacks.
 > 
-> udevadm monitor will do the trick.
+> Fix this by modifying pci_pm_runtime_idle() such that it allows PCI
+> device power state transitions without runtime PM callbacks.
 > 
-> Another possible solution is to refactor the code to make sure that
-> .probe on VFs happens only after sriov_numvfs is updated.
+>  0)               |  pm_runtime_work() {
+>  0)               |    rpm_idle() {
+>  0)               |      rpm_check_suspend_allowed() {
+>  0)   1.500 us    |        __dev_pm_qos_resume_latency(); /* = 0x7fffffff */
+>  0)   4.840 us    |      } /* rpm_check_suspend_allowed = 0x0 */
+>  0)   1.550 us    |      __rpm_get_callback(); /* = 0xffffffffb4bc84f0 */
+>  0)   1.800 us    |      pci_pm_runtime_idle(); /* = -38 */
+>  0) + 17.070 us   |    } /* rpm_idle = -38 */
+>  0) + 22.450 us   |  } /* pm_runtime_work = -38 */
 
-I like the idea of refactoring it so as to preserve the existing
-ordering while also fixing the deadlock.
+What is this timing information telling me?
 
-If, in addition, we want to update the sriov_numvfs documentation to
-recommend "udevadm monitor" + /sys/.../sriov_numvfs, that's fine, too,
-but I don't really like the idea of merging a patch and forcing users
-to update their code.
+> Debugged-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-So I'll table the v2 series for now and watch for a v3 with the
-refactoring.
+Sounds like this resolves a problem report?  Is there a URL we can
+cite?  If not, at least a mention of what the user-visible problem is?
 
-Bjorn
+From the c5eb1190074c commit log, it sounds like maybe this allows
+devices to be autosuspended when they previously could not be?
+
+Possibly this should have "Fixes: c5eb1190074c ("PCI / PM: Allow
+runtime PM without callback functions")" since it sounds like it goes
+with it?
+
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+> ---
+> 
+> This is not marked for linux-stable for the need of extensive testing
+> and can be backported after a few releases if no issues are reported.
+
+If you think this should not get backported to stable, you'll have to
+watch the backports to prevent it.  Lots of stuff gets auto-backported
+even though not explicitly marked for stable.  This comment won't
+prevent it (and won't even appear in the commit log).
+
+>  drivers/pci/pci-driver.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 51ec9e7e784f..bb7f6775b350 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -1382,10 +1382,7 @@ static int pci_pm_runtime_idle(struct device *dev)
+>  	if (!pci_dev->driver)
+>  		return 0;
+>  
+> -	if (!pm)
+> -		return -ENOSYS;
+> -
+> -	if (pm->runtime_idle)
+> +	if (pm && pm->runtime_idle)
+>  		return pm->runtime_idle(dev);
+>  
+>  	return 0;
+> -- 
+> 2.35.3
+> 
 
