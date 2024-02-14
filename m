@@ -1,147 +1,119 @@
-Return-Path: <linux-pci+bounces-3450-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3451-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13059854AAD
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 14:43:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DF73854B3C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 233001C262B0
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 13:43:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C84DD1C225D7
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 14:19:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6704054BCC;
-	Wed, 14 Feb 2024 13:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D72355778;
+	Wed, 14 Feb 2024 14:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCBclJNn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ev1Inafa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CDE54BC7
-	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 13:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3D455E4A;
+	Wed, 14 Feb 2024 14:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707918222; cv=none; b=mHXIwQNYuIySuo8Ee+D+nDW3+7Dqvo7Us7ZQiMIOgIQZ5BdicvbZPrJPdIS2P95UVXS2d66YRWqJPtYq8l9cQpw4uTwNy92SXtlEVdXKzZZG13toT9ooyXXhIi7HHfNw+5slrs1K9kleHpnnRu6JCrN5Wd0nK7mvlNwU2vCQuNQ=
+	t=1707920338; cv=none; b=oM1P4cUyMV6tzSnIqmYeh/23kbfYiwkO49sTd5w+ILbSjtVDSUfju7wwJ/7tRThbzP61qmodm+JlwWlIprikfTW+VKuIvL7Pj22dfla8A5Bkq7QwReqaykH5G9CU/e/A6CjmSavKNooXjEdVBuGh6pZw7LQBtghSjYsorMAfaIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707918222; c=relaxed/simple;
-	bh=q/4QZ2V1eqI6T4xLT5bZiBw6I/jIz+YkmXkwl6nhlWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NcOGVHLe7dmoyOMoDsMjJuFobJxJ24Y1v//tcCbgnCCwYDQYIx/MhvEMe7sz7tQhYpIiiGfxj1bvEzzsSJ50JixPj7kxwKIX3o6Ih+IqQzUEpozGmsEOeEEu79JY7Y14Vbcr5MvHGkukJknvvUMZD78vBX0p3GH8VLnrNkSEnMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCBclJNn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2685C433F1;
-	Wed, 14 Feb 2024 13:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707918221;
-	bh=q/4QZ2V1eqI6T4xLT5bZiBw6I/jIz+YkmXkwl6nhlWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CCBclJNnMAiHPFAAb9EdsYAVGug1YTEF/3wPMGtxvBLyBGGbtr+mqN3yHVjs+PH2U
-	 QHJFZH60c8K6tBgAsVjhFYVKqiTvGTR4/ZI+h6Z63sQbKQIFXj9l5RxN/Tq04g1bsP
-	 CmSOphoJln3mjmm17eYFO6vAEyaTZ98lsUGf7/N97j+kHSpLHUbklEgIW1RGCypdPK
-	 z7ELTGHTzFBKpQ/wUqFge7lZy0Jzyrrx7JM9uKUOFEmqIPHTBpKvafd93OSHvYmwPz
-	 bKJqAYixaaRFzRG+dIUq6hbmc7cT8Pe7lTRSyFC2gHn/rt9ZDh9PbSZZpNXdW4q9Gb
-	 BheMcmRc1BsYQ==
-Date: Wed, 14 Feb 2024 14:43:38 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <ZczDiu84/n8qJgSp@lpieralisi>
-References: <20231202000704.GA529403@bhelgaas>
- <2728ad9d38442510c5e0c8174d0f7aae6ff247ac.camel@linux.intel.com>
+	s=arc-20240116; t=1707920338; c=relaxed/simple;
+	bh=HiiTvNUDYA1r/R0rq42qY+EHfh4dR8d3IE1TQ/xRp88=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jbwRPAT9rDCfhV39WC2L/+u/xKiAgWiXWbh0yxHC+wlSZeDwUnR/UgpsEePVt7W9lImR7yQdNsthNnavNRGHpQpN1HQTFm/qyLNdwfH7etUS1fb3q8nrjxQynTOKs3Yvf8IXcmBjhWMj7a9Z3F13i6kfa2oboDEYpX4lmz6PrT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ev1Inafa; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707920337; x=1739456337;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HiiTvNUDYA1r/R0rq42qY+EHfh4dR8d3IE1TQ/xRp88=;
+  b=ev1InafafGcw1IoUFWp5P44nnt3mqde2UkFbw1Fujh0ooIDnaBPahn6W
+   h55Th1Pl0exbqO9WlJGz5m+5C0yU6aIaK9LbXsGA7PaM4KqmkFPmUnbQf
+   MEcqwQOuh3ZLjemWMQvTj/xGqymNxiAnXz5CD7WLdgplJ7fwBXwAKYOa3
+   E5Xd4aFr8LmEuz6W3DRV16xsY6OkBSGZUEbm2EXryNqF1v8i25l7ZT4pw
+   xDNaHRTZG6dMiwUw5449VrMmoJUFezoUSfXdgJOWJ7h8Lcm4f6CQQPrZw
+   EcNCkNr6lJX+7VcILwbGXJdSMMX+NhekrQlGij4zvDbbYbPp+CSmE+naq
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13058909"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="13058909"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 06:18:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="7830830"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.33.229])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 06:18:52 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 14 Feb 2024 16:18:38 +0200 (EET)
+To: mhklinux@outlook.com
+cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+    lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: hv: Fix ring buffer size calculation
+In-Reply-To: <20240213061910.782060-1-mhklinux@outlook.com>
+Message-ID: <73f6e93d-bbb3-cf3a-1311-d80b7b6512c1@linux.intel.com>
+References: <20240213061910.782060-1-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2728ad9d38442510c5e0c8174d0f7aae6ff247ac.camel@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Dec 05, 2023 at 03:20:27PM -0700, Nirmal Patel wrote:
+On Mon, 12 Feb 2024, mhkelley58@gmail.com wrote:
 
-[...]
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> For a physical PCI device that is passed through to a Hyper-V guest VM,
+> current code specifies the VMBus ring buffer size as 4 pages.  But this
+> is an inappropriate dependency, since the amount of ring buffer space
+> needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
+> size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ring
+> size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
+> is used for only a few messages during device setup and removal, so any
+> space above a few Kbytes is wasted.
+> 
+> Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
+> Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
+> header is properly accounted for, and so the size is rounded up to a
+> page boundary, using the page size for which the kernel is built. While
+> w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
+> 64 Kbyte ring buffer, that's the smallest possible with that page size.
+> It's still 128 Kbytes better than the current code.
+> 
+> Cc: <stable@vger.kernel.org> # 5.15.x
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 1eaffff40b8d..5f22ad38bb98 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -465,7 +465,7 @@ struct pci_eject_response {
+>  	u32 status;
+>  } __packed;
+>  
+> -static int pci_ring_size = (4 * PAGE_SIZE);
+> +static int pci_ring_size = VMBUS_RING_SIZE(16 * 1024);
 
-> > In the host OS, this overrides whatever was negotiated via _OSC, I
-> > guess on the principle that _OSC doesn't apply because the host BIOS
-> > doesn't know about the Root Ports below the VMD.  (I'm not sure it's
-> > 100% resolved that _OSC doesn't apply to them, so we should mention
-> > that assumption here.)
-> _OSC still controls every flag including Hotplug. I have observed that
-> slot capabilities register has hotplug enabled only when platform has
-> enabled the hotplug. So technically not overriding it in the host.
-> It overrides in guest because _OSC is passing wrong/different
-> information than the _OSC information in Host.
-> Also like I mentioned, slot capabilities registers are not changed in
-> Guest because vmd is passthrough.
-> > 
-> > In the guest OS, this still overrides whatever was negotiated via
-> > _OSC, but presumably the guest BIOS *does* know about the Root Ports,
-> > so I don't think the same principle about overriding _OSC applies
-> > there.
-> > 
-> > I think it's still a problem that we handle
-> > host_bridge->native_pcie_hotplug differently than all the other
-> > features negotiated via _OSC.  We should at least explain this
-> > somehow.
-> Right now this is the only way to know in Guest OS if platform has
-> enabled Hotplug or not. We have many customers complaining about
-> Hotplug being broken in Guest. So just trying to honor _OSC but also
-> fixing its limitation in Guest.
+SZ_16K (and add the relevant #include if needed).
 
-The question is: should _OSC settings apply to the VMD hierarchy ?
+-- 
+ i.
 
-Yes or no (not maybe) ?
-
-If yes, the guest firmware is buggy (and I appreciate it is hard to
-fix). If no this patch should also change vmd_copy_host_bridge_flags()
-and remove the native_pcie_hotplug initialization from the root bridge.
-
-As a matter of fact this patch overrides the _OSC settings in host and
-guest and it is not acceptable because it is not based on any documented
-policy (if there is a policy please describe it).
-
-> > I suspect part of the reason for doing it differently is to avoid the
-> > interrupt storm that we avoid via 04b12ef163d1 ("PCI: vmd: Honor ACPI
-> > _OSC on PCIe features").  If so, I think 04b12ef163d1 should be
-> > mentioned here because it's an important piece of the picture.
-> I can add a note about this patch as well. Let me know if you want me
-> to add something specific.
-
-At the very least you need to explain the problem you are solving in the
-commit log - sentences like:
-
-"This patch will make sure that Hotplug is enabled properly in Host
-as well as in VM while honoring _OSC settings as well as VMD hotplug
-setting."
-
-aren't useful to someone who will look into this in the future.
-
-If _OSC does not grant the host kernel HP handling and *any* (that's
-another choice that should be explained) slot
-capability reports that the VMD root port is HP capable we do
-override _OSC, we are not honouring it, AFAICS.
-
-Then we can say that in your user experience the stars always align and
-what I mention above is not a problem because it can't happen but it is hard
-to grok by just reading the code and more importantly, it is not based
-on any standard documentation.
- 
-> Thank you for taking the time. This is a very critical issue for us and
-> we have many customers complaining about it, I would appreciate to get
-> it resolved as soon as possible.
-
-Sure but we need to solve it in a way that does not break tomorrow
-otherwise we will keep applying plasters on top of plasters.
-
-Ignoring _OSC hotplug settings for VMD bridges in *both* host and guests
-may be an acceptable - though a tad controversial - policy (if based on
-software/hardware guidelines).
-
-A mixture thereof in my opinion is not acceptable.
-
-Thanks,
-Lorenzo
 
