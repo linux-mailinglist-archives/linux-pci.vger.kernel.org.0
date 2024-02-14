@@ -1,58 +1,71 @@
-Return-Path: <linux-pci+bounces-3444-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3445-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBD7E854911
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 13:20:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 490BE8549BA
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 13:55:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 752D31F29EA9
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 12:20:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDD0228B43D
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 12:55:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACA11B959;
-	Wed, 14 Feb 2024 12:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7C653393;
+	Wed, 14 Feb 2024 12:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lz26F2Iq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04D1B952;
-	Wed, 14 Feb 2024 12:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE65F52F81;
+	Wed, 14 Feb 2024 12:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707913198; cv=none; b=EG2sr8mUFxUtGggJx13grO+mnxC7ZjYfOyvDXDabeoTD2+9Bo/z5Gqs/wA6sLTXhvI4Nzdd39WEE5RLmdCv2Zu2rsPGXAsLfuZsvbbL8YTHlv6dqQ8DrTTh8y3mwtNC0xfaWEuTVWK8ZknvehaUao88pG0auZwSPhezpFNn/0ws=
+	t=1707915248; cv=none; b=AHxQFi4E1Dj5HZ2r9YIngRy6kqJBAhE40+yPFch5stzKFhoEdZezGe+skRMmCca4bcwxaJiAeuS7CqlASRw6uEOcoy9mJpeQ+Sq4fvd26seI6u96VyjCZOxQCxt7snID4pFut64bTOskrayPs6aBzEv5RUARmVX5GHLi5wFOWXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707913198; c=relaxed/simple;
-	bh=SyRbVdRxwgUBVwTZvXCHUbYB1IO48tqnUpjgw16QHoo=;
+	s=arc-20240116; t=1707915248; c=relaxed/simple;
+	bh=Jra6v3PLuIdfTUMCLPbuHtEJrWWs298/umdqjKiHzfg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDw+kIb69ux5PeyL0MCHdWEjfqhJ32gl2rNv6K0md5oHTPI/OzHU1QBrO1IR81EoOidbv3YdDmMG61lqEDPUEVdh4vUvszJXMtKAJzYgTB3SFhHbP43k3g4TcYRGv+/SI4mr7xb3S+u4Ia5n/ou8WxOC5ikjz4EnqljNHv0YyEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id BA2DE101C062C;
-	Wed, 14 Feb 2024 13:19:46 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 88DA14EE672; Wed, 14 Feb 2024 13:19:46 +0100 (CET)
-Date: Wed, 14 Feb 2024 13:19:46 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Twut/MN4dAa5BQwbdXzWJR6FzxUpw9T+MGkHwwI1Qga47iS3v/OgVIdq7mhF9tE7Meso5Onhan/NgHmzvxdNR75o5x3p344Njy/O5z/Oacf9nYiTqC6SCkXB5SyrvaJHDL37n3mMLm8wzVqTbroQqs9/DoMEhPKPpSWKAEv5x0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lz26F2Iq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49CA9C433F1;
+	Wed, 14 Feb 2024 12:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707915248;
+	bh=Jra6v3PLuIdfTUMCLPbuHtEJrWWs298/umdqjKiHzfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lz26F2IqlJ/5YiIBXs3eQoGhiILAbJAbFe0tmJbbCql8OHSUkDsZ6D4G5DljflMgn
+	 swWwAjpgkM/Rnb1FUzmq9FWeZtXDjVHPz30TRZjgyUPZuqxj3MPeWV0pvTAfz1Ar+R
+	 ZiKBvgcQwtPSFme842EZE3BkesKCb+b1yLSpZE/y7tgDPPS/1R8NYOkFa2sB9A8KhX
+	 +uFPu625QKMKaDf0YKYDObARIK6u4f8hnk6Tk8PYfJzhCYDU0Cp59PfwwNr8HJMkaI
+	 m63+0x6X1UPNhvLkehCQt9eMr1KEbngXEzrCiL/OSrTQ/NvUpXUZcDAJb6PAFOeAfF
+	 KWBc6fb/Yobsw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1raEmQ-000000004oS-1O2K;
+	Wed, 14 Feb 2024 13:54:27 +0100
+Date: Wed, 14 Feb 2024 13:54:26 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
 	Bjorn Andersson <andersson@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
- platforms
-Message-ID: <20240214121946.GA6838@wunner.de>
-References: <20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org>
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] dt-bindings: PCI: qcom: Do not require
+ 'msi-map-mask'
+Message-ID: <Zcy4Atjmb6-wofCL@hovoldconsulting.com>
+References: <20240212165043.26961-1-johan+linaro@kernel.org>
+ <20240212165043.26961-3-johan+linaro@kernel.org>
+ <e396cf20-8598-4437-b635-09a4a737a772@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,26 +74,25 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e396cf20-8598-4437-b635-09a4a737a772@linaro.org>
 
-On Wed, Feb 14, 2024 at 05:16:09PM +0530, Manivannan Sadhasivam wrote:
-> Currently, PCI core will enable D3 support for PCI bridges only when the
-> following conditions are met:
+On Wed, Feb 14, 2024 at 01:01:20PM +0100, Krzysztof Kozlowski wrote:
+> On 12/02/2024 17:50, Johan Hovold wrote:
+> > Whether the 'msi-map-mask' property is needed or not depends on how the
+> > MSI interrupts are mapped and it should therefore not be described as
+> > required.
 > 
-> 1. Platform is ACPI based
-> 2. Thunderbolt controller is used
-> 3. pcie_port_pm=force passed in cmdline
-> 
-> While options 1 and 2 do not apply to most of the DT based platforms,
-> option 3 will make the life harder for distro maintainers. Due to this,
-> runtime PM is also not getting enabled for the bridges.
-> 
-> To fix this, let's make use of the "supports-d3" property [1] in the bridge
-> DT nodes to enable D3 support for the capable bridges. This will also allow
-> the capable bridges to support runtime PM, thereby conserving power.
-[...]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> I could imagine that on all devices the interrupts are mapped in a way
+> you need to provide msi-map-mask. IOW, can there be a Qualcomm platform
+> without msi-map-mask?
 
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
+I don't have access to the documentation so I'll leave that for you guys
+to determine. I do note that the downstream DT does not use it and that
+we have a new devicetree in linux-next which also does not have it:
+
+	https://lore.kernel.org/r/20240125-topic-sm8650-upstream-pcie-its-v1-1-cb506deeb43e@linaro.org
+
+But at least the latter looks like an omission that should be fixed.
+
+Johan
 
