@@ -1,145 +1,180 @@
-Return-Path: <linux-pci+bounces-3453-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3454-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32BE9854C94
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 16:24:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFD88854CED
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 16:34:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3982281087
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:24:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44FA91F219DA
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:34:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5A45BAC2;
-	Wed, 14 Feb 2024 15:24:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD64A5D75E;
+	Wed, 14 Feb 2024 15:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="icQpm+WR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F265380F;
-	Wed, 14 Feb 2024 15:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677E95C911;
+	Wed, 14 Feb 2024 15:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924256; cv=none; b=RQFBMAuiKR4bxkuMkbpCUegbPR/cwQwSQQaRP8DLg/acpdDGFzKIEMSv1Vu4CB5bWnMOG1EQve4P9mo4u8waDiXQSW1fiFsK42UrGwwxNonlQxcKvlz+CTwXULi0Wu1/nrJ6jA6M7U2mnJd8/epYmMX6797pT7XBOnig2XSxjqw=
+	t=1707924861; cv=none; b=l5dbOGSG6VkEyU/Qlst8WBfMdlavVZeDDn8NpQ9VjTTX7r1inSoOEWST5NX9Kdlyy1jG6ZcHv2WjZPqBN8YRczvr9X7/eEJ9Hv/zA22aEwJpr5rYO98EbJFtMiZaUs//5S0Xhukt6kCRZW6EWJ0q1rKLf4MyMU8nwTGtAyeBloM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924256; c=relaxed/simple;
-	bh=z22C5eDDUTTe9szBWz3omteky29rE85KJIvfgtvFM8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OaXLynvqviClMhmGOhIYcN7CIcvBvHrDv4H/FhA2Etm/ajv8de0e+OCDR28F88MGxGpRdiRQF5A1f1A73mCLwLm+2Nn8RLkqZeLtmELEZiqPTv7J4n3HsqNlGRqaXMVp0ph5iUM6FF/RedKpj48HGTp2cRf3RV+iKTf0uMlvzhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so5369935276.0;
-        Wed, 14 Feb 2024 07:24:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707924253; x=1708529053;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b4LBEo7R0hSPIqQp/A3corERzBFJ1CJEW7Ujl6/XLAg=;
-        b=X1WcoWWLOyRkZz3Zw85mC4n7BNl9PHbku+MzBCAlzXFLe43mPvn/ylvHaXS/1Umfc6
-         T+wdAhWZ3SiqcRj0VZt4oiddKjFHf6JDGR23tc9TziSXe1zzmCQiZ2IMhKhN2hsQM17i
-         7OtTfRQLCa0WxfkZN7SlMHfxukm0L3OdrCQIJkwJ9gJsM2lA3D7QNknudEkBnKylJSNJ
-         a1g6x00O4vVmqx6sK7Q9FEBmKIgixPyv7q3c9sgam31xAJfpRcmCeRMftxAJABXBrcJb
-         YteOKX+LLDu/8f04MdQbmXTH5l5HOJ/FcKS2qPrkn3UbmlyKiFGZAflO40GDeoo7GRXB
-         C4TA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0zpgyW9rDJiw8IU4u2NEMYMEbmVa7wf6esWzAml3EdTsPab52mycZNo5c7ULPEPxvvMfQ/mNWOdu1ij455/kp96x7LK+K2kw9WAQX7JBv79nAgJnES3AP4F2JqDou5cgUPCyFWxoEjJePvLM=
-X-Gm-Message-State: AOJu0YwANJWRF8AI/1r0DINgvWOhOAcn3k7orDCfxCwR8g2qb2Qf0iNx
-	1zucasT2ed7nl9F7OhspVWdSHqhUuLeWf4L0gpqSrmqSrkjUdfFJ01ms0f/OZwI=
-X-Google-Smtp-Source: AGHT+IEoadSLdEc/PIGiaHIS7TbjN3O5MPLjcEDFc6TScPymW1rofaB0zaCuAzdBwTc63Wh0hoYF4g==
-X-Received: by 2002:a0d:db83:0:b0:604:93a9:386a with SMTP id d125-20020a0ddb83000000b0060493a9386amr2598751ywe.39.1707924253145;
-        Wed, 14 Feb 2024 07:24:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVWMPhaT/ihWaDMu5B/NIwPtdwFaxUhwTvK26FU758NQNzG041dON8sDQ3KIZf9uKvDHnul5Dxn6+Sl4IuC9NAuaskWVtsGjskLzLAnzntgSjAEO9E7hMTCG8Cxl981SQMJMRGwZ0SjszLlYv4=
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id h84-20020a815357000000b00607b5cb115bsm133185ywb.51.2024.02.14.07.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 07:24:13 -0800 (PST)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so5369906276.0;
-        Wed, 14 Feb 2024 07:24:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUTnFEBeFKrylLBIMWGyEvLa87YgYh/LhI6Rg8zxziHHl2x0r95H580jTkbo9MP6g5VdN+cACgeSIZ5qThNwYnXqYrQfIXUS97+o1bK1RH8asPWL7H2wzLtErk2mPSX4JBCdw4ga8vv89/lYKM=
-X-Received: by 2002:a25:2183:0:b0:dc7:32ae:f0a with SMTP id
- h125-20020a252183000000b00dc732ae0f0amr2428175ybh.65.1707924252702; Wed, 14
- Feb 2024 07:24:12 -0800 (PST)
+	s=arc-20240116; t=1707924861; c=relaxed/simple;
+	bh=RKBYgy5uDM/vBCiN9tBiPR2VpHrXnY5fjxo9XKnCKHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPpBQIPzdhETCMZWjvAcYR/1GtygqJBmxmgMNPy5VjB8Sm5Q5pc6CGT6xiVr3pbgJr12y4gTL7tHVoeNeet6U6ukd0LZSlwreNDOyjAwxxHwjiMvWVArzlFmwOp6ZYrd8Rt2hudaYOTQfrAaoPArWQPVPFtigeVhP/ZrvNRMSkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=icQpm+WR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB29C433C7;
+	Wed, 14 Feb 2024 15:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1707924860;
+	bh=RKBYgy5uDM/vBCiN9tBiPR2VpHrXnY5fjxo9XKnCKHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=icQpm+WRIBCwFmc6GMZyzD7hfrgvougrzlFkQQkENhX2hhFv4tKvrybec2LZPF0p2
+	 g4w+i5vJ2cylBctHyW7nrVqW6KPr/tAxRaWjizo57DBTGi3DOfHaFJKv8GA3osWQx5
+	 zkW+b+wjJITdz0ojCZY2Ccjx1teFWK8MymvaLyFA=
+Date: Wed, 14 Feb 2024 16:34:17 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>, linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: Re: Re: [PATCH 4/9] PCI: create platform devices for child OF
+ nodes of the port node
+Message-ID: <2024021413-grumbling-unlivable-c145@gregkh>
+References: <20240117160748.37682-1-brgl@bgdev.pl>
+ <20240117160748.37682-5-brgl@bgdev.pl>
+ <2024011707-alibi-pregnancy-a64b@gregkh>
+ <CAMRc=Mef7wxRccnfQ=EDLckpb1YN4DNLoC=AYL8v1LLJ=uFH2Q@mail.gmail.com>
+ <2024011836-wok-treadmill-c517@gregkh>
+ <d2he3ufg6m46zos4swww4t3peyq55blxhirsx37ou37rwqxmz2@5khumvic62je>
+ <CAMRc=MeXJjpJhDjyn_P-SGo4rDnEuT9kGN5jAbRcuM_c7_aDzQ@mail.gmail.com>
+ <oiwvcvu6wdmpvhss3t7uaqkl5q73mki5pz6liuv66bap4dr2mp@jtjjwzlvt6za>
+ <CAMRc=McT8wt6UbKtyofkJo3WcyJ-S4d2MPp8oZmjWbX6LGbETQ@mail.gmail.com>
+ <CAMRc=MeWgp27YcS=-dbYdN1is1MEuZ2ar=pW_p9oY0Nf1EbFHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214052122.1966506-1-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <20240214052122.1966506-1-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 14 Feb 2024 16:24:01 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVBCEV_MhqU8CHBSdMecYAgktwOaxwn_KmZjsf0y8rhHw@mail.gmail.com>
-Message-ID: <CAMuHMdVBCEV_MhqU8CHBSdMecYAgktwOaxwn_KmZjsf0y8rhHw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar-gen4: Add vendor-specific registers' setting
- for MSI-X
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeWgp27YcS=-dbYdN1is1MEuZ2ar=pW_p9oY0Nf1EbFHA@mail.gmail.com>
 
-Hi Shimoda-san,
+On Wed, Feb 07, 2024 at 05:32:38PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Feb 2, 2024 at 11:02 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Fri, Feb 2, 2024 at 1:03 AM Bjorn Andersson <andersson@kernel.org> wrote:
+> > >
+> >
+> > [snip]
+> >
+> > > > >
+> > > > > I believe I missed this part of the discussion, why does this need to be
+> > > > > a platform_device? What does the platform_bus bring that can't be
+> > > > > provided by some other bus?
+> > > > >
+> > > >
+> > > > Does it need to be a platform_device? No, of course not. Does it make
+> > > > sense for it to be one? Yes, for two reasons:
+> > > >
+> > > > 1. The ATH11K WLAN module is represented on the device tree like a
+> > > > platform device, we know it's always there and it consumes regulators
+> > > > from another platform device. The fact it uses PCIe doesn't change the
+> > > > fact that it is logically a platform device.
+> > >
+> > > Are you referring to the ath11k SNOC (firmware running on co-processor
+> > > in the SoC) variant?
+> > >
+> > > Afaict the PCIe-attached ath11k is not represented as a platform_device
+> > > in DeviceTree.
+> > >
+> >
+> > My bad. In RB5 it isn't (yet - I want to add it in the power
+> > sequencing series). It is in X13s though[1].
+> >
+> > > Said platform_device is also not a child under the PCIe bus, so this
+> > > would be a different platform_device...
+> > >
+> >
+> > It's the child of the PCIe port node but there's a reason for it to
+> > have the `compatible` property. It's because it's an entity of whose
+> > existence we are aware before the system boots.
+> >
+> > > > 2. The platform bus already provides us with the entire infrastructure
+> > > > that we'd now need to duplicate (possibly adding bugs) in order to
+> > > > introduce a "power sequencing bus".
+> > > >
+> > >
+> > > This is a perfectly reasonable desire. Look at our PMICs, they are full
+> > > of platform_devices. But through the years it's been said many times,
+> > > that this is not a valid or good reason for using platform_devices, and
+> > > as a result we have e.g. auxiliary bus.
+> > >
+> >
+> > Ok, so I cannot find this information anywhere (nor any example). Do
+> > you happen to know if the auxiliary bus offers any software node
+> > integration so that the `compatible` property from DT can get
+> > seamlessly mapped to auxiliary device IDs?
+> >
+> 
+> So I was just trying to port this to using the auxiliary bus, only to
+> find myself literally reimplementing functions from
+> drivers/of/device.c. I have a feeling that this is simply wrong. If
+> we're instantiating devices well defined on the device-tree then IMO
+> we *should* make them platform devices. Anything else and we'll be
+> reimplementing drivers/of/ because we will need to parse the device
+> nodes, check the compatible, match it against drivers etc. Things that
+> are already implemented for the platform bus and of_* APIs.
+> 
+> Greg: Could you chime in and confirm that it's alright to use the
+> platform bus here? Or maybe there is some infrastructure to create
+> auxiliary devices from software nodes?
 
-On Wed, Feb 14, 2024 at 6:22=E2=80=AFAM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This controller with GICv3 ITS can handle MSI-X, but it needs
-> to set vendor-specific registers by using the MSI address value.
-> To get the address, add .post_init() for it.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Note, I HATE the use of the platform bus here, but I don't have a better
+suggestion.
 
-Thanks for your patch!
+I'd love for the auxbus to work, and if you can create that from
+software nodes, all the better!  But I don't think that's possible just
+yet, and you would end up implementing all the same stuff that the
+platform bus has today for this functionality, so I doubt it would be
+worth it.
 
-> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+thanks,
 
-> @@ -297,6 +304,25 @@ static int rcar_gen4_pcie_host_init(struct dw_pcie_r=
-p *pp)
->         return 0;
->  }
->
-> +static void rcar_gen4_pcie_host_post_init(struct dw_pcie_rp *pp)
-> +{
-> +       struct dw_pcie *dw =3D to_dw_pcie_from_pp(pp);
-> +       struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
-> +       struct irq_data *data;
-> +       struct pci_dev *dev;
-> +       struct msi_msg msg;
-> +
-> +       if (pp->has_msi_ctrl)
-> +               return;
-> +
-> +       list_for_each_entry(dev, &pp->bridge->bus->devices, bus_list) {
-> +               data =3D irq_get_irq_data(dev->irq);
-
-If CONFIG_PCIEPORTBUS is disabled, data is NULL, causing a crash below.
-
-I haven't found where exactly the irq data is filled in, and don't know
-where/how the dependency on CONFIG_PCIEPORTBUS should be expressed.
-
-> +               __pci_read_msi_msg(irq_data_get_msi_desc(data), &msg);
-> +               writel(msg.address_lo, rcar->base + AXIINTCADDR);
-> +               writel(AXIINTCCONT_VAL, rcar->base + AXIINTCCONT);
-> +       }
-> +}
-> +
->  static void rcar_gen4_pcie_host_deinit(struct dw_pcie_rp *pp)
->  {
->         struct dw_pcie *dw =3D to_dw_pcie_from_pp(pp);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+greg k-h
 
