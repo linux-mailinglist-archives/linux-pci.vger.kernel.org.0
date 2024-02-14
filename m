@@ -1,75 +1,40 @@
-Return-Path: <linux-pci+bounces-3442-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3443-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0C5D8548DB
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 13:01:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 183D48548F1
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 13:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 57264B27680
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 12:01:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C347128D817
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 12:10:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C6E1B59B;
-	Wed, 14 Feb 2024 12:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DZHvnTAt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C134436;
+	Wed, 14 Feb 2024 12:10:37 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34B11AAD7
-	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 12:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2C9C1BC53
+	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 12:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707912086; cv=none; b=JBScXQKuL+usOf77MIDY9yQDOfmUkgSRI/EkRdXhyAzRL+zbG5zSRBIwQrcfC9gPXRvhGEfZbRxLOMHSAQH/3CHEgR8a6QrXiG/hwCm15Cw/y5sUD/mhXmz0OeHq0qNEqum4LmXFltQjnGtmn0av+0sAfxEBwkPKYsITe14UWWI=
+	t=1707912637; cv=none; b=VGYGDwp4nMnYHxSM4Qf0pr1RUqHmNzzvY5Sye6tzZ5wym2cLS8ysLR/FHNurWje/VFnCSyIz5p7A4feprVCGerhKyRvls5Gc032LSjrRNr6N4oCrarGZ01vkrErNNrKoWXiTnIqDHAW3xCKP5Y2d2WWSaZUMSWSvRjdaeJ4R1ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707912086; c=relaxed/simple;
-	bh=ze2xk/yum4xXS/FawI02oCYNDp+kaute6dF+KU6LR0o=;
+	s=arc-20240116; t=1707912637; c=relaxed/simple;
+	bh=en7VH3Gg1Da+eSoBLN68E61V5DhnB89BQyuibKRY/Zg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=klv+GmZFx1c3//u4hjKx4jNSOQIaMPKBHg9QSXp9zwDQrLWkYDqYA1t0ZZNlj+lGSi50WY1ecP7xESsl+MzshapMF7jcip3ML4Nf2PkK4Vxw2xjJ8FkyihRAu8tjhIK49xYwiwU1x5DsoJ2Fw1VyAeWooknJ8i//YBfRLJBlyy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DZHvnTAt; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51186925925so4365098e87.0
-        for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 04:01:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707912083; x=1708516883; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ze2xk/yum4xXS/FawI02oCYNDp+kaute6dF+KU6LR0o=;
-        b=DZHvnTAt3sqcHRkBX6evyJTd+373zUM1F5WyZ0n3OEHHvj9ldvSDkuoKQ3wjLYtLTP
-         TbRfxZTHSsYY0IDSBL50V28eJIZ9XhyntjJze41lLy67GyqyjncX5b8eiTFH6jnIsGPR
-         DaITyTKJkaFmf4SlMroBaMYKHS7Au0vTIJkpnjjmDKq8UaR9NYgtvfGhR5t+luO80XWQ
-         poqHtpCwKv/ZMcGkf3+7sC7DmvhdB00HNfrZs6n8f28EbDFAz9tPe67t622Y4Ne6KW52
-         xEfRvzFG9LNpPpiPs2Fwf+Knzn/6XHq43SeDedHflJGBezpZ/FBEGKlKDtT11h3b7drm
-         /X7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707912083; x=1708516883;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ze2xk/yum4xXS/FawI02oCYNDp+kaute6dF+KU6LR0o=;
-        b=KIy5yc4DQAG8v8KNdY7NANlIon7Q7MzYvorvaRVNQvMnZfwx+MD0IcBtW7ax5S0POz
-         DtCEOfhiF87hqYmu8pIYE93huh/4DwVNNB1KDTH9MpspX8DkDv+YnAejGB7M0rw/7R11
-         cejbpYX/Kd517ojbliLy9H/qNU1WDoOFLyPlREEVisEzuFXhjRyghZq2U9Ju9cuaVvMV
-         1Pwr7featl+/DUExn1exmCncYIPsNTwJyiQGCCe2Ke/YeSGTWB+/Zj2mIhuA9TQcpWVX
-         TlWcwLoXtNwJlAtYY5Vp/2lWGrcx5PMw2P3CUeYj3KiwqVCrojYgjIEz7Upu91MgI6Pt
-         9g8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXSqoMuf9sOVQhI0kRLvFizVijEwjpHfXwoIyA1U+aYEooZnIPW3UIvxUZ08KBJby4h+EPuf08sAeVLBg8w6nLgIp+pHisjneEw
-X-Gm-Message-State: AOJu0YydYOOiHDpdJ9Wk1xuwjZW8iPotWumf5DXxK38ClGCdw6RWdiOa
-	y5SOXR1aFK10WnfiMkNb7HFL8ya1g0bnTxIZBAXpN/k2N0FqddlzZH7UAg7LXz8=
-X-Google-Smtp-Source: AGHT+IH06lyRqlycbULytAA/0ErCkieBhMtRKUOos3/3HuTlCUtx9xqU2S7suOsuyaIfLLG6rRNrKw==
-X-Received: by 2002:ac2:58e9:0:b0:511:4ab0:8ddc with SMTP id v9-20020ac258e9000000b005114ab08ddcmr1615743lfo.57.1707912082942;
-        Wed, 14 Feb 2024 04:01:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVLXuFjwB3lPbyK9oncZnBCuHgU59qSdRT8Gxspoq8pYpIeRVgel2rjQ50UA6Z/62fYIsatulLI3xUEyAq86mtIaGSDfkMxdr1TsFAvWe25SuwoGwtFbX4TcQFy3OWGNhUImUozpX/K5mgklAZWLGeO2ebTnt6xTbs1ZpHuDro+qdcNN9ItjTzvEFWZ1sQ8ayd/p/YUgDvOhd0IQ8jo4CJ0CqtUB5NhkI6ptuHwiB7uNUaqmEGKvD8+FGAM3ieD57LhvTi3j3AlX3eUD10tVhT+lUXhPvGdrPf1sP55saFlK56DM8h2ap1UPKEE60itEq7AS+1Ibpx7njhlhqR+NFs8xuIpMPa4ZD6pGSf3vzLC54+tA8kLE4B8lHFjv0tmQeM3O7u711rB0EXCL2A5C+nvoU6M5Xmzd+aaVulWmj/m3Ah7oxKQrTmRUGNamIm0xHKGhyeuSaIMLxD3Ox+7
-Received: from [192.168.0.22] ([78.10.207.130])
-        by smtp.gmail.com with ESMTPSA id d6-20020aa7d5c6000000b00563819d224esm380051eds.21.2024.02.14.04.01.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Feb 2024 04:01:22 -0800 (PST)
-Message-ID: <e396cf20-8598-4437-b635-09a4a737a772@linaro.org>
-Date: Wed, 14 Feb 2024 13:01:20 +0100
+	 In-Reply-To:Content-Type; b=MR2qq/wYb1wlci5Yz4oT+6RrdB85oeZBlJkXSw8OrthYJ0HL7B4JHsiOGekrHopBNV6ilPJAZx8HZW+JemXC62U3IVdDabkHPqUDedSJYX3SKqSw6u4p6W4auk8k5KpIvyfojVcuM8ItpSPW5aNfBx7F8WldQP1VNBanPNYwNCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2896B1FB;
+	Wed, 14 Feb 2024 04:11:15 -0800 (PST)
+Received: from [10.57.47.86] (unknown [10.57.47.86])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECFC23F5A1;
+	Wed, 14 Feb 2024 04:10:31 -0800 (PST)
+Message-ID: <6fe88c2e-6061-4436-a1ac-9feb3fccfe47@arm.com>
+Date: Wed, 14 Feb 2024 12:10:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,81 +42,208 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] dt-bindings: PCI: qcom: Do not require
- 'msi-map-mask'
-Content-Language: en-US
-To: Johan Hovold <johan+linaro@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+Subject: Re: [PATCH v3] PCI: dwc: Strengthen the MSI address allocation logic
+Content-Language: en-GB
+To: Manivannan Sadhasivam <mani@kernel.org>,
+ Ajay Agarwal <ajayagarwal@google.com>
+Cc: Serge Semin <fancer.lancer@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240212165043.26961-1-johan+linaro@kernel.org>
- <20240212165043.26961-3-johan+linaro@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240212165043.26961-3-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+ Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
+ Sajid Dalvi <sdalvi@google.com>, William McVicker <willmcvicker@google.com>,
+ linux-pci@vger.kernel.org
+References: <20240204112425.125627-1-ajayagarwal@google.com>
+ <2kvgqhaitacl7atqf775vr2z3ty5qeqxuv5g3wflkmhgj4yk76@fsmrosfwobfx>
+ <ZcJhhHK6eQOUfVKf@google.com>
+ <rjhceek7fjr6qglqewzrojc2nooewmhxq5ifzpqhpzuvc5deqa@l4u7kgzn2vo7>
+ <ZcrZdhay6YvBzvWt@google.com> <20240214065509.GD4618@thinkpad>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20240214065509.GD4618@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 12/02/2024 17:50, Johan Hovold wrote:
-> Whether the 'msi-map-mask' property is needed or not depends on how the
-> MSI interrupts are mapped and it should therefore not be described as
-> required.
+On 2024-02-14 6:55 am, Manivannan Sadhasivam wrote:
+> On Tue, Feb 13, 2024 at 08:22:38AM +0530, Ajay Agarwal wrote:
+>> On Tue, Feb 06, 2024 at 07:53:19PM +0300, Serge Semin wrote:
+>>> On Tue, Feb 06, 2024 at 10:12:44PM +0530, Ajay Agarwal wrote:
+>>>> On Mon, Feb 05, 2024 at 12:52:45AM +0300, Serge Semin wrote:
+>>>>> On Sun, Feb 04, 2024 at 04:54:25PM +0530, Ajay Agarwal wrote:
+>>>>>> There can be platforms that do not use/have 32-bit DMA addresses
+>>>>>> but want to enumerate endpoints which support only 32-bit MSI
+>>>>>> address. The current implementation of 32-bit IOVA allocation can
+>>>>>> fail for such platforms, eventually leading to the probe failure.
+>>>>>>
+>>>>>> If there vendor driver has already setup the MSI address using
+>>>>>> some mechanism, use the same. This method can be used by the
+>>>>>> platforms described above to support EPs they wish to.
+>>>>>>
+>>>>>> Else, if the memory region is not reserved, try to allocate a
+>>>>>> 32-bit IOVA. Additionally, if this allocation also fails, attempt
+>>>>>> a 64-bit allocation for probe to be successful. If the 64-bit MSI
+>>>>>> address is allocated, then the EPs supporting 32-bit MSI address
+>>>>>> will not work.
+>>>>>>
+>>>>>> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+>>>>>> ---
+>>>>>> Changelog since v2:
+>>>>>>   - If the vendor driver has setup the msi_data, use the same
+>>>>>>
+>>>>>> Changelog since v1:
+>>>>>>   - Use reserved memory, if it exists, to setup the MSI data
+>>>>>>   - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+>>>>>>
+>>>>>>   .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++++-----
+>>>>>>   1 file changed, 20 insertions(+), 6 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>> index d5fc31f8345f..512eb2d6591f 100644
+>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>> @@ -374,10 +374,18 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>>>>>>   	 * order not to miss MSI TLPs from those devices the MSI target
+>>>>>>   	 * address has to be within the lowest 4GB.
+>>>>>>   	 *
+>>>>>
+>>>>>> -	 * Note until there is a better alternative found the reservation is
+>>>>>> -	 * done by allocating from the artificially limited DMA-coherent
+>>>>>> -	 * memory.
+>>>>>
+>>>>> Why do you keep deleting this statement? The driver still uses the
+>>>>> DMA-coherent memory as a workaround. Your solution doesn't solve the
+>>>>> problem completely. This is another workaround. One more time: the
+>>>>> correct solution would be to allocate a 32-bit address or some range
+>>>>> within the 4GB PCIe bus memory with no _RAM_ or some other IO behind.
+>>>>> Your solution relies on the platform firmware/glue-driver doing that,
+>>>>> which isn't universally applicable. So please don't drop the comment.
+>>>>>
+>>>> ACK.
+>>>>
+>>>>>> +	 * Check if the vendor driver has setup the MSI address already. If yes,
+>>>>>> +	 * pick up the same.
+>>>>>
+>>>>> This is inferred from the code below. So drop it.
+>>>>>
+>>>> ACK.
+>>>>
+>>>>>> This will be helpful for platforms that do not
+>>>>>> +	 * use/have 32-bit DMA addresses but want to use endpoints which support
+>>>>>> +	 * only 32-bit MSI address.
+>>>>>
+>>>>> Please merge it into the first part of the comment as like: "Permit
+>>>>> the platforms to override the MSI target address if they have a free
+>>>>> PCIe-bus memory specifically reserved for that."
+>>>>>
+>>>> ACK.
+>>>>
+>>>>>> +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
+>>>>>> +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
+>>>>>> +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
+>>>>>> +	 * supporting 32-bit MSI address will not work.
+>>>>>
+>>>>> This is easily inferred from the code below. So drop it.
+>>>>>
+>>>> ACK.
+>>>>
+>>>>>>   	 */
+>>>>>
+>>>>>> +	if (pp->msi_data)
+>>>>>
+>>>>> Note this is a physical address for which even zero value might be
+>>>>> valid. In this case it's the address of the PCIe bus space for which
+>>>>> AFAICS zero isn't reserved for something special.
+>>>>>
+>>>
+>>>> That is a fair point. What do you suggest we do? Shall we define another
+>>>> op `set_msi_data` (like init/msi_init/start_link) and if it is defined
+>>>> by the vendor, then call it? Then vendor has to set the pp->msi_data
+>>>> there? Let me know.
+>>>
+>>> You can define a new capability flag here
+>>> drivers/pci/controller/dwc/pcie-designware.h (see DW_PCIE_CAP_* macros)
+>>> , set it in the glue driver by means of the dw_pcie_cap_set() macro
+>>> function and instead of checking msi_data value test the flag for
+>>> being set by dw_pcie_cap_is().
+>>>
+>> Sure, good suggestion. ACK.
+>>
+>>>>
+>>>>>> +		return 0;
+>>>>>> +
+>>>>>>   	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+>>>>>>   	if (ret)
+>>>>>>   		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+>>>>>> @@ -385,9 +393,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+>>>>>>   	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+>>>>>>   					GFP_KERNEL);
+>>>>>>   	if (!msi_vaddr) {
+>>>>>> -		dev_err(dev, "Failed to alloc and map MSI data\n");
+>>>>>> -		dw_pcie_free_msi(pp);
+>>>>>> -		return -ENOMEM;
+>>>>>> +		dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
+>>>>>> +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+>>>>>> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+>>>>>> +						GFP_KERNEL);
+>>>>>> +		if (!msi_vaddr) {
+>>>>>> +			dev_err(dev, "Failed to alloc and map MSI data\n");
+>>>>>> +			dw_pcie_free_msi(pp);
+>>>>>> +			return -ENOMEM;
+>>>>>> +		}
+>>>>>
+>>>>> On Tue, Jan 30, 2024 at 08:40:48PM +0000, Robin Murphy wrote:
+>>>>>> Yeah, something like that. Personally I'd still be tempted to try some
+>>>>>> mildly more involved logic to just have a single dev_warn(), but I think
+>>>>>> that's less important than just having something which clearly works.
+>>>>>
+>>>>> I guess this can be done but in a bit clumsy way. Like this:
+>>>>>
+>>>>> 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) ||
+>>>>> 	      !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
+>>>>> 	if (ret) {
+>>>>> 		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
+>>>>>
+>>>>> 		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+>>>>> 		ret = !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
+>>>>> 		if (ret) {
+>>>>> 			dev_err(dev, "Failed to allocate MSI target address\n");
+>>>>> 			return -ENOMEM;
+>>>>
+>>>> As you pointed out already, this looks pretty clumsy. I think we should
+>>>> stick to the more descriptive and readable code that I suggested.
+>>>
+>>> I do not know which solution is better really. Both have pros and
+>>> cons. Let's wait for Bjorn, Mani or Robin opinion about this.
+>>>
+>>> -Serge(y)
+>>>
+>> Bjorn/Mani/Robin,
+>> Can you please provide your comment?
+>>
+> 
+> Sergey's suggestion masks out the error coming from "dma_set_coherent_mask()" by
+> using the same error log. This is equivalent to printing the same error log for
+> both API failures:
+> 
+> 	ret = dma_set_coherent_mask()
+> 	if (ret)
+> 		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
+> 
+> 	ret = dmam_alloc_coherent()
+> 	if (ret)
+> 		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
+> 
+> Which doesn't look correct to me. So let's stick to what Ajay had initially.
 
-I could imagine that on all devices the interrupts are mapped in a way
-you need to provide msi-map-mask. IOW, can there be a Qualcomm platform
-without msi-map-mask?
+My approach did the same, and it was intentional - the significant 
+information for the user is that some devices may go wrong because we 
+couldn't support 32-bit MSIs; the intimate details of exactly *why* we 
+couldn't support 32-bit MSIs don't really matter, and are unlikely to be 
+actionable. Furthermore, setting a 32-bit DMA mask should never fail on 
+any reasonable platform where this driver would actually run, so 
+there's no practical value in anticipating it - handling that particular 
+return value is really just a matter of logical correctness.
 
-Best regards,
-Krzysztof
-
+Thanks,
+Robin.
 
