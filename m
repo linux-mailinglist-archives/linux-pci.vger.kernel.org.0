@@ -1,173 +1,272 @@
-Return-Path: <linux-pci+bounces-3425-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3426-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B42A85426C
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 06:34:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EC9F8542B3
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 07:14:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A9F89B21FBE
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 05:34:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7854A1F26229
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 06:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB41C147;
-	Wed, 14 Feb 2024 05:34:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E9C10A34;
+	Wed, 14 Feb 2024 06:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eDFlpHty"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xw7/W+tV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656F210A01
-	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 05:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C2C10A2B
+	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 06:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707888864; cv=none; b=Y5Th1PqRJ4whv93ZAZ36OXQGCFXQpfnRgH3zD/I2cranIhBB0gHn0kezB4j3H9IQq0Ch2Gq1YcYY2zPxpGqd7OeHJDhSmPuCaYuis3tNDsECWve2PFup+aUp1d778EgYal/nu3b4If2aK5JpED+DdtGrY7gWwCVpTHUe5m4UBcI=
+	t=1707891261; cv=none; b=K7nIakwKCHNs7U6ysP5RupxPP4Ng3TCAHLo5AZNjLKJlWzM/Tg3yCEziD5IZKlrny9N9xttN/cjDFIKK3QuYYnyIa8GwoEAQ/GlONJGWUbS8M2DXzB/ecPelVWGzSpykxsBlyI82DTF0NVWtvdDPrFAZ2cDfIeSfo8DXyPPmb3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707888864; c=relaxed/simple;
-	bh=QvNhXevnsYLYqhSc4x/m93Wh/CJ+53ykTBU4bA5HKvU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=RJcLArGFli1MYQhxgoUdyr6HoicYpNPdEr87dVn5YUPaObYT97LpqO+kQqRXxLhLgHW9KuyoU62UMjdrstM2GFSyTD+FPnm0tNfP+UYoLTj2XeNAcZLsi7pGfOQpOFCbyU4Ei39NVAF3H829plfnz6lAZvsJcHAvg6a9h6zFACo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eDFlpHty; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ajayagarwal.bounces.google.com
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b267bf11so6238271276.2
-        for <linux-pci@vger.kernel.org>; Tue, 13 Feb 2024 21:34:23 -0800 (PST)
+	s=arc-20240116; t=1707891261; c=relaxed/simple;
+	bh=wzr+kLlknr1luythVXCJluevwdFGrIq8/RzBWxobG6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qts/m88xsaSYnB/OW+o/DEEjk2SzeohF+9OO4156WPgbE64BmT6/j5918TKd1xZ4k+sVrQgVk88NLFKEF3jXO+e0/9g2hF0buxAnsFeG2isIinDVV5S8+BVEotty0T6ss+i/Rndcxl8jWeQbkZMuaqaID1XFw4It0mUYqdUEaGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xw7/W+tV; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e10ac45684so194565b3a.3
+        for <linux-pci@vger.kernel.org>; Tue, 13 Feb 2024 22:14:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1707888862; x=1708493662; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lCnacIYl08RIQ41EwyyjjTmpEuM5p3yKr0bpiQ9jAhI=;
-        b=eDFlpHtyKk4R7WeTlpLwjZG5WUK8gN1xVUgJYU/qvT4RvE/NvUJIF1g2WjEN82Ez4n
-         oEzovnnEB1jUYJufy7q04gD0Oi4NUHyBPwc18W8klYRR+IqG8BRXYdOWczFI1XHDrY1v
-         640UWSKqQBmozH+YSlHkH8rHD2ODyY3IDynUvG9u7+KOidRl+dZwZlojfny4LHgL0+tg
-         Nu8CliKaX5aT5RZWDww6ncMqhTrDRBXg0zURFPbtPuzzOhBptvukonZIv0LtzCT78n1N
-         lXjHZiBsCXLroXXttXcKBvQdnF9qZYxkHPvlTzXtCZML3VsYLgPS4KO3rroXa/nndpOZ
-         V7ew==
+        d=linaro.org; s=google; t=1707891258; x=1708496058; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rEAtaGDufDWhtM/apq9lA9fVfmRBlWSvuuyTiSpPBN8=;
+        b=Xw7/W+tVn8tz15TyiDSxyuzY4yirc23V07bRiZp+cXe/AjFkdy0RNggkAWlZQV1hy6
+         E5qkwPt54YMs7jNZBZcn3sAXCinEFMJkcHOhFCMPRayTQhHMELXmwJh7SX0w7kVKrcv1
+         qdwFVZiuxMVUgfcJTd1fuSq7t3KATMqlZjmRAPKRirOCWcxNBCovdUmP00l8CUKcIg/0
+         T+/8JZmIcg+knHVHgQBSEazqsnpqiPuhL+eIhIzu9dXudJ1u728qeM0d2m3WHI5roje3
+         TmkcmZbJsBQPorJNVMy2PruO/A3whSHoXyeL1cxVi2N4whYEbaHpHLoPnm4wHeuwmwA4
+         YpIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707888862; x=1708493662;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lCnacIYl08RIQ41EwyyjjTmpEuM5p3yKr0bpiQ9jAhI=;
-        b=hKsvYt+78ylkKrjbAm2HeiNkOYwlpTrh8S3+mYpD8862bMcShtg//sRyX0MA7c5v7N
-         YO7qIjSW7JOOSpxR4dxx6oInu8IEh52lhjJCyEo03hxJ0Lkm0r684CkUpfDNtDAoKnTC
-         Yln7F619UtikvmE2lsVSUTDfVs8bFKwDMNKrwiIXvrBOx9KqmtDoRIH9lANlyXmJ0J0q
-         87TlQY5yG1L4uAELPjphvos0FkDjOvGeCvRAMU7iLSRDh93CT8p9+AeY3sZ60EHhiyWF
-         CQ65zxjvABjoArtLwB6DjuX7uIiAKO4yh4uMgMDuI/tTXGsHpco958XmcGBvPoDhb07H
-         c0pg==
-X-Gm-Message-State: AOJu0YzUO2S25OBHVwbpKpCZdFXW0sN0bHbNmLLaSO5RzGXkxpGm3pD5
-	nCP3I0aD7l6eZuNiBXdloXrfLQcZJVRwkJou2hXVv88KQ/FODVoatM5yFKSelAOAe3wPqXk3PUz
-	cqJ4FcKUNPY8Ah2J+BHrh7w==
-X-Google-Smtp-Source: AGHT+IHKjTg8F+ZH0TpEUPoA4+mjiRXp1iD2feDOGD03QyvlQwc9qSV0yEQVFtfS1QELGP2GsVSUAcNcyNbxVQaUrw==
-X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a25:b28d:0:b0:dcc:8927:7496 with SMTP
- id k13-20020a25b28d000000b00dcc89277496mr45936ybj.5.1707888862309; Tue, 13
- Feb 2024 21:34:22 -0800 (PST)
-Date: Wed, 14 Feb 2024 11:04:15 +0530
+        d=1e100.net; s=20230601; t=1707891258; x=1708496058;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rEAtaGDufDWhtM/apq9lA9fVfmRBlWSvuuyTiSpPBN8=;
+        b=eDF6uCgjf8S0UJ1ZK1UO4U5akc9f5LGQofkGJar5ORcYBBFkSzgogJ2kskpZuUR2vA
+         3IfyEP0/S7RI0zbqGLxrfu9skjpmTIC0FSak2am+9gtAWLnCDgErAstCJCtdPlrv9tmm
+         MswLY0gyxRAaccpguDeIKlyGsU+YSeOTv6SnXDlNK4hLkiw5LpYHzCyAZR14zm6kJHpD
+         tVNBZCuIzQmnpDK7z0eiicYI9a629QceXNkmJfzpqe1XGlq/wc+ViMipXsWUFhc9IlqJ
+         o9oCsypEPnoJ5hKdCSeHg1h/IdZzuHR291b8jIZc2CZazxgJJzmaKh38x/4w+sQV6vRB
+         LdRw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFT51Q+bPKVupoDpE3FNey92sYdiJMkFHsMW60f6tq3YNLMWJVtHbQ+ObI2zuISAiu6yyI5zEbpbWFiJTMwnR5A1uOJrQ06WK4
+X-Gm-Message-State: AOJu0Ywe689bTJ6UTuVVG++0HFxIdVBX4xtHqc938y5XTiZMHHT3gkTO
+	zQSJJHRhXyGJjZx2R0JDAuEKv/HaBoq82xQvS+3ctvSG1JQqTafp/97vd2eQVw==
+X-Google-Smtp-Source: AGHT+IHH8BKMmvWEAPzi0hPOk/HvNEBJyCiOUf4JLgbW6hCkwVsGkA/J5ewFI76o82rIsRzpH229/A==
+X-Received: by 2002:a05:6a00:4588:b0:6e0:4e85:54f0 with SMTP id it8-20020a056a00458800b006e04e8554f0mr1429326pfb.28.1707891258180;
+        Tue, 13 Feb 2024 22:14:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWVw7tJYklSfjZdOK6xrlMPX/1pq0rFvKiLd5xqumFKql4taN9YfYfNDhokaiWsduAa/gKNFasJjotO82HBEWszENDUapy3J7KUH26QCAdtyrzwCV4itAMMLDHRu1FkYxYrN8RuUeRxCy5ENCKBaLFuoT6IRO46KlcObp1M8rhY9/2XgZ6qGIXhbLscBbzQrRN4qOFUVSEJuJ/JumDqLECGBuMrds4DjIJrjXfiDP3sI1B0OE8GW6V02kjaUh9P0M9ylsT9jkBfETYVcfsWuh0RwHhXNf3UsyGgsni+SnG4D7hlJjMgAMh3HBkHiZVFz53cTqfJ1IDezavyOkYqwPuTTFNwFUUtfSS5o2y8mdNeh4t3cDrsNflJEk9QBObslHK6u5k6ZMt3QZSjGd78SRWsn5B0BFdOqvnYq5k2FlTsP2GV98ZC74GqYYIwU2sIWq0=
+Received: from thinkpad ([103.28.246.149])
+        by smtp.gmail.com with ESMTPSA id ko19-20020a056a00461300b006ddc75edd55sm8314448pfb.152.2024.02.13.22.14.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 22:14:17 -0800 (PST)
+Date: Wed, 14 Feb 2024 11:44:12 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Frank Li <Frank.li@nxp.com>, Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] dt-bindings: PCI: dwc: Add 'msg' register region
+Message-ID: <20240214061412.GB4618@thinkpad>
+References: <20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com>
+ <20240202-pme_msg-v3-5-ff2af57a02ad@nxp.com>
+ <eg7wrjp5ebz43g37fvebr44nwkoh4rptbtyu76nalbmgbbnqke@4zugpgwesyqd>
+ <20240205183048.GA3818249-robh@kernel.org>
+ <ZcEzYdZKotBJlR5i@lizhi-Precision-Tower-5810>
+ <ZcK2/tmLG9O7CBEH@lizhi-Precision-Tower-5810>
+ <luk5hswq4wnk5p7axml73qih35hio3y3pfnklctbn6rwres62s@mumnvygjh5ch>
+ <ZcOpehO3rzCfAwXf@lizhi-Precision-Tower-5810>
+ <gl7zmzkezr6k4txrrgqyikspfah3vmgwwz2e3j5kwb2iarpkxv@3ofwrhtxl2sz>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
-Message-ID: <20240214053415.3360897-1-ajayagarwal@google.com>
-Subject: [PATCH v4] PCI: dwc: Strengthen the MSI address allocation logic
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	"=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Manu Gautam <manugautam@google.com>, Sajid Dalvi <sdalvi@google.com>, 
-	William McVicker <willmcvicker@google.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Robin Murphy <robin.murphy@arm.com>
-Cc: linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <gl7zmzkezr6k4txrrgqyikspfah3vmgwwz2e3j5kwb2iarpkxv@3ofwrhtxl2sz>
 
-There can be platforms that do not use/have 32-bit DMA addresses
-but want to enumerate endpoints which support only 32-bit MSI
-address. The current implementation of 32-bit IOVA allocation can
-fail for such platforms, eventually leading to the probe failure.
+On Fri, Feb 09, 2024 at 12:52:52PM +0300, Serge Semin wrote:
+> On Wed, Feb 07, 2024 at 11:02:02AM -0500, Frank Li wrote:
+> > On Wed, Feb 07, 2024 at 03:37:30PM +0300, Serge Semin wrote:
+> > > On Tue, Feb 06, 2024 at 05:47:26PM -0500, Frank Li wrote:
+> > > > On Mon, Feb 05, 2024 at 02:13:37PM -0500, Frank Li wrote:
+> > > > > On Mon, Feb 05, 2024 at 06:30:48PM +0000, Rob Herring wrote:
+> > > > > > On Sat, Feb 03, 2024 at 01:44:31AM +0300, Serge Semin wrote:
+> > > > > > > On Fri, Feb 02, 2024 at 10:11:27AM -0500, Frank Li wrote:
+> > > > > > > > Add an outbound iATU-capable memory-region which will be used to send PCIe
+> > > > > > > > message (such as PME_Turn_Off) to peripheral. So all platforms can use
+> > > > > > > > common method to send out PME_Turn_Off message by using one outbound iATU.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > > > > > ---
+> > > > > > > >  Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 4 ++++
+> > > > > > > >  1 file changed, 4 insertions(+)
+> > > > > > > > 
+> > > > > > > > diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > > > > > > index 022055edbf9e6..25a5420a9ce1e 100644
+> > > > > > > > --- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > > > > > > +++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+> > > > > > > > @@ -101,6 +101,10 @@ properties:
+> > > > > > > 
+> > > > > > > >              Outbound iATU-capable memory-region which will be used to access
+> > > > > > > >              the peripheral PCIe devices configuration space.
+> > > > > > > >            const: config
+> > > > > > > > +        - description:
+> > > > > > > > +            Outbound iATU-capable memory-region which will be used to send
+> > > > > > > > +            PCIe message (such as PME_Turn_Off) to peripheral.
+> > > > > > > > +          const: msg
+> > > > > > > 
+> > > > > > > Note there is a good chance Rob won't like this change. AFAIR he
+> > > > > > > already expressed a concern regarding having the "config" reg-name
+> > > > > > > describing a memory space within the outbound iATU memory which is
+> > > > > > > normally defined by the "ranges" property. Adding a new reg-entry with
+> > > > > > > similar semantics I guess won't receive warm welcome.
+> > > > > > 
+> > > > > > I do think it is a bit questionable. Ideally, the driver could 
+> > > > > > just configure this on its own. However, since we don't describe all of 
+> > > > > > the CPU address space (that's input to the iATU) already, that's not 
+> > > > > > going to be possible. I suppose we could fix that, but then config space 
+> > > > > > would have to be handled differently too.
+> > > > > 
+> > > > > Sorry, I have not understand what your means. Do you means, you want
+> > > > > a "cpu-space", for example, 0x8000000 - 0x9000000 for all ATU. 
+> > > > > 
+> > > > > Then allocated some space to 'config', 'io', 'memory' and this 'msg'.
+> > > > 
+> > > > @rob:
+> > > > 
+> > > >     So far, I think "msg" is feasilbe solution. Or give me some little
+> > > > detail direction?
+> > > 
+> > > Found the Rob' note about the iATU-space chunks utilized in the reg
+> > > property:
+> > > https://lore.kernel.org/linux-pci/CAL_JsqLp7QVgxrAZkW=z38iB7SV5VeWH1O6s+DVCm9p338Czdw@mail.gmail.com/
+> > > 
+> > > So basically Rob meant back then that
+> > > either originally we should have defined a new reg-name like "atu-out"
+> > > with the entire outbound iATU CPU-space specified and unpin the
+> > > regions like "config"/"ecam"/"msg"/etc from there in the driver
+> > > or, well, stick to the chunking further. The later path was chosen
+> > > after the patch with the "ecam" reg-name was accepted (see the link
+> > > above).
+> > > 
+> > > Really ECAM/config space access, custom TLP messages, legacy interrupt
+> > > TLPs, etc are all application-specific features. Each of them is
+> > > implemented based on a bit specific but basically the same outbound
+> > > iATU engine setup. Thus from the "DT is a hardware description" point
+> > > of view it would have been enough to describe the entire outbound iATU
+> > > CPU address space and then let the software do the space
+> > > reconfiguration in runtime based on it' application needs.
+> > 
+> > There are "addr_space" in EP mode, which useful map out outbound iatu
+> > region. We can reuse this name.
+> > 
+> > To keep compatiblity, cut hole from 'config' and 'ranges'. If there are
+> > not 'config', we can alloc a 1M(default) from top for 'config', then, 4K
+> > (default) for msg, 64K( for IO if not IO region in 'ranges'), left is
+> > mem region. We can config each region size by module parameter or drvdata.
+> > 
+> > So we can deprecate 'config', even 'ranges'
+> 
+> Not sure I fully understand what you mean. In anyway the "config" reg
+> name is highly utilized by the DW PCIe IP-core instances. We can't
+> deprecate it that easily. At least the backwards compatibility must be
+> preserved. Moreover "addr_space" is also just a single value reg which
+> won't solve a problem with the disjoint DW PCIe outbound iATU memory
+> regions.
+> 
+> The "ranges" property is a part of the DT specification.  The
+> PCI-specific way of the property-based mapping is de-facto a standard
+> too. So this can't be deprecated.
+> 
+> > 
+> > > 
+> > > * Rob, correct me if am wrong.
+> > > 
+> > > On the other hand it's possible to have more than one disjoint CPU
+> > > address region handled by the outbound iATU (especially if there is no
+> > > AXI-bridge enabled, see XALI - application transmit client interfaces
+> > > in HW manual). Thus having a single reg-property might get to be
+> > > inapplicable in some cases. Thinking about that got me to an idea.
+> > > What about just extending the PCIe "ranges" property flags
+> > > (IORESOURCE_TYPE_BITS) with the new ones in this case indicating the
+> > > TLP Msg mapping? Thus we can avoid creating app-specific reg-names and
+> > > use the flag to define a custom memory range for the TLP messages
+> > > generation. At some point it can be also utilized for the config-space
+> > > mapping. What do you think?
+> > 
+> 
+> > IORESOURCE_TYPE_BITS is 1f, Only 5bit. If extend IORESOURCE_TYPE_BITS, 
+> > all IORESOURCE_* bit need move. And it is actual MEMORY regain. 
+> 
+> No. The lowest four bits aren't flags but the actual value. They are
+> retrieved from the PCI-specific memory ranges mapping:
+> https://elinux.org/Device_Tree_Usage#PCI_Address_Translation
+> https://elixir.bootlin.com/linux/latest/source/arch/sparc/kernel/of_device_64.c#L141
+> https://elixir.bootlin.com/linux/latest/source/arch/sparc/kernel/of_device_32.c#L78
+> Currently only first four out of _sixteen_ values have been defined so
+> far. So we can freely use some of the free values for custom TLPs,
+> etc. Note the config-space is already defined by the ranges property
+> having the 0x0 space code (see the first link above), but it isn't
+> currently supported by the PCI subsystem. So at least that option can
+> be considered as a ready-to-implement replacement for the "config"
+> reg-name.
+> 
 
-If the vendor driver has already setup the MSI address using
-some mechanism, use the same. This method can be used by the
-platforms described above to support EPs they wish to. Such
-drivers should set the DW_PCIE_CAP_MSI_DATA_SET flag.
+Agree. But still, the driver has to support both options: "config" reg name and
+"ranges", since ammending the binding would be an ABI break.
 
-Else, try to allocate a 32-bit IOVA. Additionally, if this
-allocation also fails, attempt a 64-bit allocation for probe to
-be successful. If the 64-bit MSI address is allocated, then the
-EPs supporting 32-bit MSI address will not work.
+> > 
+> > Or we can use IORESOURCE_BITS (0xff)
+> > 
+> > /* PCI ROM control bits (IORESOURCE_BITS) */
+> > #define IORESOURCE_ROM_ENABLE		(1<<0)	/* ROM is enabled, same as PCI_ROM_ADDRESS_ENABLE */
+> > #define IORESOURCE_ROM_SHADOW		(1<<1)	/* Use RAM image, not ROM BAR */
+> > 
+> > /* PCI control bits.  Shares IORESOURCE_BITS with above PCI ROM.  */
+> > #define IORESOURCE_PCI_FIXED		(1<<4)	/* Do not move resource */
+> > #define IORESOURCE_PCI_EA_BEI		(1<<5)	/* BAR Equivalent Indicator */
+> > 
+> > we can add
+> > 
+> > IORESOURCE_PRIV_WINDOWS			(1<<6)
+> > 
+> > I think previous method was more extendable. How do you think?
+> 
+> IMO extending the PCIe "ranges" property semantics looks more
+> promising, more flexible and more portable across various PCIe
+> controllers. But the most importantly is what Rob and Bjorn think
+> about that, not me.
+> 
 
-Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
----
-Changelog since v3:
- - Add a new controller cap flag 'DW_PCIE_CAP_MSI_DATA_SET'
- - Refactor the comments and print statements
+IMO, using the "ranges" property to allocate arbitrary memory region should be
+the way forward, since it has almost all the info needed by the drivers to
+allocate the memory regions.
 
-Changelog since v2:
- - If the vendor driver has setup the msi_data, use the same
+But for the sake of DT backwards compatiblity, we have to keep supporting the
+existing reg entries (addr_space, et al.), because "ranges" is not a required
+property for EP controllers.
 
-Changelog since v1:
- - Use reserved memory, if it exists, to setup the MSI data
- - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+- Mani
 
- .../pci/controller/dwc/pcie-designware-host.c  | 18 +++++++++++++++---
- drivers/pci/controller/dwc/pcie-designware.h   |  1 +
- 2 files changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d5fc31f8345f..06ee2e5deebc 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -373,11 +373,17 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 	 * peripheral PCIe devices may lack 64-bit message support. In
- 	 * order not to miss MSI TLPs from those devices the MSI target
- 	 * address has to be within the lowest 4GB.
-+	 * Permit the platforms to override the MSI target address if they
-+	 * have a free PCIe-bus memory specifically reserved for that. Such
-+	 * platforms should set the 'DW_PCIE_CAP_MSI_DATA_SET' cap flag.
- 	 *
- 	 * Note until there is a better alternative found the reservation is
- 	 * done by allocating from the artificially limited DMA-coherent
- 	 * memory.
- 	 */
-+	if (dw_pcie_cap_is(pci, MSI_DATA_SET))
-+		return 0;
-+
- 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
- 	if (ret)
- 		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-@@ -385,9 +391,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
- 	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
- 					GFP_KERNEL);
- 	if (!msi_vaddr) {
--		dev_err(dev, "Failed to alloc and map MSI data\n");
--		dw_pcie_free_msi(pp);
--		return -ENOMEM;
-+		dev_warn(dev, "Failed to configure 32-bit MSI address. Devices with only 32-bit MSI support may not work properly\n");
-+		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-+		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-+						GFP_KERNEL);
-+		if (!msi_vaddr) {
-+			dev_err(dev, "Failed to configure MSI address\n");
-+			dw_pcie_free_msi(pp);
-+			return -ENOMEM;
-+		}
- 	}
- 
- 	return 0;
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 26dae4837462..feb19c5edd4a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -54,6 +54,7 @@
- #define DW_PCIE_CAP_EDMA_UNROLL		1
- #define DW_PCIE_CAP_IATU_UNROLL		2
- #define DW_PCIE_CAP_CDM_CHECK		3
-+#define DW_PCIE_CAP_MSI_DATA_SET	4
- 
- #define dw_pcie_cap_is(_pci, _cap) \
- 	test_bit(DW_PCIE_CAP_ ## _cap, &(_pci)->caps)
 -- 
-2.43.0.687.g38aa6559b0-goog
-
+மணிவண்ணன் சதாசிவம்
 
