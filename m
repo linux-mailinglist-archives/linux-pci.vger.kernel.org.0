@@ -1,216 +1,431 @@
-Return-Path: <linux-pci+bounces-3458-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3459-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A461854F75
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 18:09:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 577B0855055
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 18:31:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 37472B22CD8
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 17:04:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D5AAE1F22201
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 17:31:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420D35DF0D;
-	Wed, 14 Feb 2024 17:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08C2686625;
+	Wed, 14 Feb 2024 17:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aGmdNHw2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3PYMsdV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE6460864;
-	Wed, 14 Feb 2024 17:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.189.100.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26957C0BF;
+	Wed, 14 Feb 2024 17:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707930261; cv=none; b=RE+sdtV7InIJK4E7Nu1m2WkOgRavC5EAcB3CicKj5p5FybXrtHoulOfJXM9wMBV0GfO4jQ4CK5iC77cIHyn0/BvdfJIid1TMksfe3Bzgx/Fb8aWHk2CyBHFz0Ytks6fQwzD1bWoMIv1zGSwXy8WtkzLFCLIFfGNrkSTf4r/E+5o=
+	t=1707931733; cv=none; b=V9W83z5EFU1tx0HHxe1uGsW0Eq6Lk/0r4Pp0LgXHgrQAlYFU2O2R2ItGgjHmJzrWeIfiWO5fCVYRXdWBJsnr07lKDIzbgu57dmVolUhTNdEKIudjDiSQLzasrcO/LRtybyuU5ujUDrwl8o5skP7anAy5k8Quw0N7C5aCLSYoCcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707930261; c=relaxed/simple;
-	bh=1cXJYhjHiLin0wIW2fMe06uKIO+gJp9378M26epkUjQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=BNjJ6NSWspP77+TaGzunImirUUkyeMTA6TuLdBARP/EUO2I4DhCfZDwjEhzxSFIX8nhManG02QeeRzbEs9iPF24a390ftAs/34GfiEptmopM0imNqMQWoVesFf/KP1H9E5ZQCvdqJfyPe9a0TUSWAWqnH4Q/mJoeEs+X814yPAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=aGmdNHw2; arc=none smtp.client-ip=211.189.100.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-	by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20240214170410usoutp01769c6e25ffd864139ad722c70a48a050~zyYOOvomP0041900419usoutp01j;
-	Wed, 14 Feb 2024 17:04:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20240214170410usoutp01769c6e25ffd864139ad722c70a48a050~zyYOOvomP0041900419usoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1707930250;
-	bh=YtoIcxIjVpT8BnnPLrnzK0hvALjZLW8dvHfgRts0Qjc=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=aGmdNHw2hbdocL2bf2YtZmO1dkVtSOXnbbXPpmr3iPQ8mcf0RQhG6ZU91FsTY8GIo
-	 uVLv3FSvzgozq2sKt1rcZ5hRB68qhwhF5l01k8L8a2MiAHWEvGDRZu6JNa1ODrq3Ph
-	 +udkPA0HtpyX8muWrgOMyyL3HVVRPDO6hbVfGm4c=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-	[203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240214170410uscas1p2f00f19d678ad15d7d0ad77fcc337d6c0~zyYN2ognw1117011170uscas1p2R;
-	Wed, 14 Feb 2024 17:04:10 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-	ussmges1new.samsung.com (USCPEMTA) with SMTP id F4.62.09678.A82FCC56; Wed,
-	14 Feb 2024 12:04:10 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-	[203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240214170409uscas1p1e04d5916cb91670ea7f6413f0347d9ca~zyYNiK1Oa1217212172uscas1p1v;
-	Wed, 14 Feb 2024 17:04:09 +0000 (GMT)
-X-AuditID: cbfec36d-acdff700000025ce-ce-65ccf28a4046
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.3.67]) by
-	ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id F7.3F.50167.982FCC56; Wed,
-	14 Feb 2024 12:04:09 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-	SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-	(version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-	15.1.2375.24; Wed, 14 Feb 2024 09:04:08 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-	SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-	14 Feb 2024 09:04:08 -0800
-From: Jim Harris <jim.harris@samsung.com>
-To: Leon Romanovsky <leonro@nvidia.com>
-CC: Bjorn Helgaas <helgaas@kernel.org>, Kuppuswamy Sathyanarayanan
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, "Alex
- Williamson" <alex.williamson@redhat.com>, =?iso-8859-1?Q?Pierre_Cr=E9gut?=
-	<pierre.cregut@orange.com>
-Subject: Re: [PATCH v2 1/2] PCI/IOV: Revert
- "PCI/IOV: Serialize sysfs sriov_numvfs reads vs writes"
-Thread-Topic: [PATCH v2 1/2] PCI/IOV: Revert "PCI/IOV: Serialize sysfs
- sriov_numvfs reads vs writes"
-Thread-Index: AQHaW7MAtwi2xwjfZkaUZDAOVEJQA7EDbuYAgAHuDQCAAlV9AIAAuocAgACNHQCAAB2nAIAAIYAAgADA4wCAAKQ8gA==
-Date: Wed, 14 Feb 2024 17:04:08 +0000
-Message-ID: <Zczyhya/+454IaQM@ubuntu>
-In-Reply-To: <20240214071618.GE52640@unreal>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <29CAD9892A45E6448C9198E23903385E@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1707931733; c=relaxed/simple;
+	bh=z/Z3tUAhkNPM1isKp5PxN2lNkWklpFN1TdodOMmS8Fo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=XP4rYTXdGhVtsIwNGVsa6jVXhnY9VM21gtsIXTOt/NEbS+TYsM8I2CKjqYWcXztBmtFF6zL7dW3imLsn4b2J9EEtDJKUbDZA/jO0tqgOCUEFDzV1eaRVu7zBeh80CqLe7iRkgN/RoqC9np+NhyrX9JfK5PLVwwUehlLl78zGKkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3PYMsdV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28C8FC433F1;
+	Wed, 14 Feb 2024 17:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707931733;
+	bh=z/Z3tUAhkNPM1isKp5PxN2lNkWklpFN1TdodOMmS8Fo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Z3PYMsdVlDSq8wn9D611pcLUcO29LG0YdLKdDPDkPLb0wGbxZ8Iql6JKonfStLOZm
+	 mysp/+4SEys+bCmXCBrujjpUbzu3NvPg+G8H282PtGTamEIsr9oqx8pVkFqWU2XANS
+	 Tm2uP7GybEG09qzknssirkrAT6oJgEBAOaPtPK7HCiUOC6Si23j1BQnw5qhvQM4ZGp
+	 B3vsLjF+UfhIDECpBeZCdpH4oXGbaDOdqU08bodZwaGMKjjl+s9L6xcgA52mbl5Wap
+	 vhyzXFHHS4rFXoCzFMaqYq7gYYEEvUif/xAhJXnDs25IEhomFqKgRB52dPabeF9ALv
+	 oE4ZY/2Q2lvKg==
+Date: Wed, 14 Feb 2024 11:28:51 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sai Krishna <saikrishnag@marvell.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	richardcochran@gmail.com, horms@kernel.org,
+	vinicius.gomes@intel.com, vadim.fedorenko@linux.dev,
+	davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, sgoutham@marvell.com,
+	gakula@marvell.com, lcherian@marvell.com, hkelam@marvell.com,
+	sbhatta@marvell.com, Naveen Mamindlapalli <naveenm@marvell.com>
+Subject: Re: [net-next PATCH v2] octeontx2: Add PTP clock driver for Octeon
+ PTM clock.
+Message-ID: <20240214172851.GA1258497@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djX87pdn86kGjy6wGbx7X8Pm8WSpgyL
-	V2fWsllc+beH0WLThicsFpd3zWGzODvvOJvF+q/v2SzaV15hdeD0WLCp1GPTqk42j3knAz16
-	m9+xebQ8O8nm8X7fVTaPz5vkAtijuGxSUnMyy1KL9O0SuDI6fp9kLNglUbH2XSN7A+Ns4S5G
-	Tg4JAROJNU3LGLsYuTiEBFYySrzbcpINwmllkri38RsjTNXsvomsEIk1jBK7pvQwQzifGCV6
-	1n1hgXCWMUocn3CcFaSFTUBT4teVNUwgtoiAusSHVRfB2pkFljNLtMz7CpYQFkiV+NS/HKoo
-	TeLa6UuMEHaWxLcl68HiLAKqEnNWn2cGsXmB7Hn/28BsTgEdiakTz4PVMAqISXw/BbGMWUBc
-	4taT+UwQdwtKLJq9hxnCFpP4t+shG4StKHH/+0t2iHo9iRtTp7BB2HYSzY+nQc3Rlli28DXU
-	XkGJkzOfsED0SkocXHED7GMJgRccEhPXLYAGkovErndfoWxpiavXp0ItzpZYub4DaCgHkF0g
-	0XAkCCJsLbHwz3qmCYwqs5CcPQvJSbOQnDQLyUmzkJy0gJF1FaN4aXFxbnpqsWFearlecWJu
-	cWleul5yfu4mRmASO/3vcO4Oxh23PuodYmTiYDzEKMHBrCTCO6n3TKoQb0piZVVqUX58UWlO
-	avEhRmkOFiVxXkPbk8lCAumJJanZqakFqUUwWSYOTqkGprYsT1v9WB222Z3POl+Z+fupbXHI
-	nLCub/tWiRcrLU+//tf6KqKk++RhhYQdqbvM5lce/ZEdJ5yUURgqJ7O2OmDuZr+QoqJL11SP
-	rMjfvbFhstPcm013Fp652vV3H3N9U+fvDfwnFs2uT/3poNKSrJ7xXXFVx7cc+ScdbaKHJzNX
-	Zh0t//NkXnVQIy9rf/+Uzo7d7XzJOVWfjh1+cEw7ZtYauZ8My39alUhGeTUuKjmfY2e04Wd1
-	rL7Z7V1Tst9YH/PWtZaft4N55k2hzs+N5bIbwt36fVXNPj7WiU3UuOv+N89FVlbxd42T2/pF
-	bp95dylMsjo0i/eyeaCBVkdx+vqgXB3GiXEFLb7dUzyUWIozEg21mIuKEwFFvK2A0QMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDIsWRmVeSWpSXmKPExsWS2cDsrNv56UyqwczvWhbf/vewWSxpyrB4
-	dWYtm8WVf3sYLTZteMJicXnXHDaLs/OOs1ms//qezaJ95RVWB06PBZtKPTat6mTzmHcy0KO3
-	+R2bR8uzk2we7/ddZfP4vEkugD2KyyYlNSezLLVI3y6BK6Pj90nGgl0SFWvfNbI3MM4W7mLk
-	5JAQMJGY3TeRtYuRi0NIYBWjxLPza5khnE+MEmcO7GeHcJYxSnx8cpcJpIVNQFPi15U1YLaI
-	gLrEh1UXwdqZBZYzS7TM+wqWEBZIleh5toMFoihN4trpS4wQdpbEtyXrwWpYBFQl5qw+zwxi
-	8wLZ8/63gdlCAoUS3650soHYnAI6ElMnngerZxQQk/h+CmIxs4C4xK0n85kgfhCQWLIHYo6E
-	gKjEy8f/WCFsRYn731+yQ9TrSdyYOoUNwraTaH48DWqOtsSyha+hbhCUODnzCQtEr6TEwRU3
-	WCYwSsxCsm4WklGzkIyahWTULCSjFjCyrmIULy0uzk2vKDbMSy3XK07MLS7NS9dLzs/dxAhM
-	AKf/HY7cwXj01ke9Q4xMHIyHGCU4mJVEeCf1nkkV4k1JrKxKLcqPLyrNSS0+xCjNwaIkznv3
-	gUaqkEB6YklqdmpqQWoRTJaJg1OqgYnbbYsC30zz4N7okiXvjV6IX7ubpyxpyya8qcZ80Xtu
-	kfTHdzgMHS0d3359f6vIabvSu0MnDjYfnvaVfaL53wvvLn2YKB5W/+6I/5WsX9xJx7+/cLt1
-	wP5nXDTH3LJVcie/8ondu51/M3Gmjvpv28Jd6v9W7D6943bO8loT3eVpWZtnt6VV7lXwcIrR
-	MXtfdZzVRSjwpVncRY1fJo4qB0Qtv0qGt6d8PuEfWPmCRffhJ2meMH0nph01xVtrjL5kH3O8
-	7rXErs7hpV+MV78My4MHtnol3mm+rhoHnVNWWZ10/VbAeFHlw6LEQ4a5n32WmX6acL/33NVp
-	H933xQhuSpWSPuJVLnc/6XOuk4zAUiWW4oxEQy3mouJEAK+E41hvAwAA
-X-CMS-MailID: 20240214170409uscas1p1e04d5916cb91670ea7f6413f0347d9ca
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20240214170409uscas1p1e04d5916cb91670ea7f6413f0347d9ca
-References: <20240213174602.GD52640@unreal>
-	<20240213194556.GA1219770@bhelgaas> <20240214071618.GE52640@unreal>
-	<CGME20240214170409uscas1p1e04d5916cb91670ea7f6413f0347d9ca@uscas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214130853.1321836-1-saikrishnag@marvell.com>
 
-On Wed, Feb 14, 2024 at 09:16:18AM +0200, Leon Romanovsky wrote:
-> On Tue, Feb 13, 2024 at 01:45:56PM -0600, Bjorn Helgaas wrote:
-> > On Tue, Feb 13, 2024 at 07:46:02PM +0200, Leon Romanovsky wrote:
-> > > On Tue, Feb 13, 2024 at 09:59:54AM -0600, Bjorn Helgaas wrote:
-> > > ...
-> >=20
-> > > > I guess that means that if we apply this revert, the problem Pierre
-> > > > reported will return.  Obviously the deadlock is more important tha=
-n
-> > > > the inconsistency Pierre observed, but from the user's point of vie=
-w
-> > > > this will look like a regression.
-> > > >=20
-> > > > Maybe listening to netlink and then looking at sysfs isn't the
-> > > > "correct" way to do this, but I don't want to just casually break
-> > > > existing user code.  If we do contemplate doing the revert, at the
-> > > > very least we should include specific details about what the user c=
-ode
-> > > > *should* do instead, at the level of the actual commands to use
-> > > > instead of "ip monitor dev; cat ${path}/device/sriov_numvfs".
-> > >=20
-> > > udevadm monitor will do the trick.
-> > >=20
-> > > Another possible solution is to refactor the code to make sure that
-> > > .probe on VFs happens only after sriov_numvfs is updated.
-> >=20
-> > I like the idea of refactoring it so as to preserve the existing
-> > ordering while also fixing the deadlock.
->=20
-> I think something like this will be enough (not tested). It will et the n=
-umber of VFs
-> before we make VFs visible to probe:
+On Wed, Feb 14, 2024 at 06:38:53PM +0530, Sai Krishna wrote:
+> The PCIe PTM(Precision time measurement) protocol provides precise
+> coordination of events across multiple components like PCIe host
+> clock, PCIe EP PHC local clocks of PCIe devices. This patch adds
+> support for ptp clock based PTM clock. We can use this PTP device
+> to sync the PTM time with CLOCK_REALTIME or other PTP PHC
+> devices using phc2sys.
 
-I'll push a v3, replacing the second patch with this one instead. Although
-based on this discussion it seems we're moving towards squashing the revert
-with Leon's suggested patch. Bjorn, I'll assume you're still OK with just
-squashing these on your end.
+s/PTM(/PTM (/   # space before open paren is conventional as in file comment
+s/ptp/PTP/      # not sure if you intend "ptp" to be different from "PTP"?
 
-I would like some input on how to actually test this though. Presumably we =
-see
-some event on device PF and we want to make sure if we read PF/device/sriov=
-_numvfs
-that we see the updated value. But the only type of event I think we can
-expect is the PF's sriov_numvfs CHANGE event.
+Perhaps expand "PTP"?  I guess it must be "Precision Time Protocol",
+which obviously would be well-known to all clock people since it's in
+"drivers/ptp/" :)
 
-Is there any way for VFs to be created outside of writing to the
-sriov_numvfs sysfs file? My understanding is some older devices/drivers wil=
-l
-auto-create VFs when the PF is initialized, but it wasn't clear from the bu=
-g
-report whether that was part of the configuration here. Pierre, do you have
-any recollection on this?
+> Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
+> Signed-off-by: Naveen Mamindlapalli <naveenm@marvell.com>
+> Signed-off-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
 
-Or maybe testing for this case just means compile and verify with udevadm
-monitor that we see the CHANGE event before any of the VFs are actually
-created...
+Strictly speaking, I think the sender's Signed-off-by should be last
+here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.6#n396
 
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index aaa33e8dc4c9..0cdfaae80594 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -679,12 +679,14 @@ static int sriov_enable(struct pci_dev *dev, int nr=
-_virtfn)
->  	msleep(100);
->  	pci_cfg_access_unlock(dev);
-> =20
-> +	iov->num_VFs =3D nr_virtfn;
->  	rc =3D sriov_add_vfs(dev, initial);
-> -	if (rc)
-> +	if (rc) {
-> +		iov->num_VFs =3D 0;
->  		goto err_pcibios;
+> ---
+> v2:
+>     - Addressed review comments given by Vadim Fedorenko, Vinicius, Simon Horman
+> 	1. Driver build restricted to ARM64 and COMPILE_TEST+64BIT
+>         2. Fixed Sparse complaints by using readq/writeq like else where
+>         3. Modified error conditions, clode cleanup
+>         4. Forwarding to linux-pci maintainers as suggested by Jakub 
+> 
+>  drivers/ptp/Kconfig          |  11 ++
+>  drivers/ptp/Makefile         |   1 +
+>  drivers/ptp/ptp_octeon_ptm.c | 243 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 255 insertions(+)
+>  create mode 100644 drivers/ptp/ptp_octeon_ptm.c
+> 
+> diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+> index 604541dcb320..3256b12842a6 100644
+> --- a/drivers/ptp/Kconfig
+> +++ b/drivers/ptp/Kconfig
+> @@ -224,4 +224,15 @@ config PTP_DFL_TOD
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called ptp_dfl_tod.
+>  
+> +config PTP_CLOCK_OCTEON
+> +	tristate "OCTEON PTM PTP clock"
+> +	depends on PTP_1588_CLOCK
+
+I guess this can't even be compile-tested without PTP_1588_CLOCK?
+Some subsystems supply stubs to allow compile testing even when the
+subsystem is not enabled, but maybe ptp does not.
+
+> +	depends on (64BIT && COMPILE_TEST) || ARM64
+
+Why the 64BIT dependency?  Is it not even compile-testable without it?
+
+> +	default n
+> +	help
+> +	  This driver adds support for using Octeon PTM device clock as
+> +	  a PTP clock.
+
+Another possible place to expand PTM and/or PTP.
+
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called ptp_octeon_ptm.
+>  endmenu
+> diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
+> index 68bf02078053..19e2ab4c7f1b 100644
+> --- a/drivers/ptp/Makefile
+> +++ b/drivers/ptp/Makefile
+> @@ -21,3 +21,4 @@ obj-$(CONFIG_PTP_1588_CLOCK_MOCK)	+= ptp_mock.o
+>  obj-$(CONFIG_PTP_1588_CLOCK_VMW)	+= ptp_vmw.o
+>  obj-$(CONFIG_PTP_1588_CLOCK_OCP)	+= ptp_ocp.o
+>  obj-$(CONFIG_PTP_DFL_TOD)		+= ptp_dfl_tod.o
+> +obj-$(CONFIG_PTP_CLOCK_OCTEON)		+= ptp_octeon_ptm.o
+> diff --git a/drivers/ptp/ptp_octeon_ptm.c b/drivers/ptp/ptp_octeon_ptm.c
+> new file mode 100644
+> index 000000000000..6867c1d28f17
+> --- /dev/null
+> +++ b/drivers/ptp/ptp_octeon_ptm.c
+> @@ -0,0 +1,243 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Marvell PTP PHC clock driver for PCIe PTM (Precision Time Measurement) EP
+> + *
+> + * Copyright (c) 2024 Marvell.
+> + *
+
+Spurious blank line.
+
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/pci.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +
+> +#include <linux/ptp_clock_kernel.h>
+> +
+> +#include "ptp_private.h"
+> +
+> +#define PEMX_PFX_CSX_PFCFGX(pem, pf, _offset)	({typeof(_offset) (offset) = (_offset); \
+> +						((0x8e0000008000 | (u64)(pem) << 36 \
+> +						| (pf) << 18 \
+> +						| (((offset) >> 16) & 1) << 16 \
+> +						| ((offset) >> 3) << 3) \
+> +						+ ((((offset) >> 2) & 1) << 2)); })
+> +
+> +#define PEMX_CFG_WR(a)			(0x8E0000000018ull | (u64)(a) << 36)
+> +#define PEMX_CFG_RD(a)			(0x8E0000000020ull | (u64)(a) << 36)
+> +
+> +/* Octeon CSRs   */
+> +#define PEMX_CFG                        0x8e00000000d8ULL
+> +#define PEMX_PTM_CTL			0x8e0000000098ULL
+> +#define PEMX_PTM_CTL_CAP		BIT_ULL(10)
+> +#define PEMX_PTM_LCL_TIME		0x8e00000000a0ULL /* PTM time */
+> +#define PEMX_PTM_MAS_TIME		0x8e00000000a8ULL /* PTP time */
+> +
+> +struct oct_ptp_clock {
+> +	struct ptp_clock *ptp_clock;
+> +	struct ptp_clock_info caps;
+> +	bool cn10k_variant;
+> +};
+> +
+> +static struct oct_ptp_clock oct_ptp_clock;
+> +static void __iomem *ptm_ctl_addr;
+> +static void __iomem *ptm_lcl_addr;
+> +
+> +/* Config space registers   */
+
+Spurious spaces at end of comment.
+
+> +#define PCIEEPX_PTM_REQ_STAT		(oct_ptp_clock.cn10k_variant ? 0x3a8 : 0x474)
+> +#define PCIEEPX_PTM_REQ_T1L		(oct_ptp_clock.cn10k_variant ? 0x3b4 : 0x480)
+> +#define PCIEEPX_PTM_REQ_T1M		(oct_ptp_clock.cn10k_variant ? 0x3b8 : 0x484)
+> +#define PCIEEPX_PTM_REQ_T4L		(oct_ptp_clock.cn10k_variant ? 0x3c4 : 0x490)
+> +#define PCIEEPX_PTM_REQ_T4M		(oct_ptp_clock.cn10k_variant ? 0x3c8 : 0x494)
+> +
+> +#define PCI_VENDOR_ID_CAVIUM			0x177d
+> +#define PCI_DEVID_OCTEONTX2_PTP			0xA00C
+> +#define PCI_SUBSYS_DEVID_95XX			0xB300
+> +#define PCI_SUBSYS_DEVID_95XXN			0xB400
+> +#define PCI_SUBSYS_DEVID_95XXMM			0xB500
+> +#define PCI_SUBSYS_DEVID_96XX			0xB200
+> +#define PCI_SUBSYS_DEVID_98XX			0xB100
+> +#define PCI_SUBSYS_DEVID_CN10K_A		0xB900
+> +#define PCI_SUBSYS_DEVID_CN10K_B		0xBD00
+> +#define PCI_SUBSYS_DEVID_CNF10K_A		0xBA00
+> +#define PCI_SUBSYS_DEVID_CNF10K_B		0xBC00
+
+Random mixture of upper-case and lower-case hex above.  Also random
+usage of "ull" vs "ULL".
+
+> +static bool is_otx2_support_ptm(struct pci_dev *pdev)
+> +{
+> +	return (pdev->subsystem_device == PCI_SUBSYS_DEVID_96XX ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_95XX ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_95XXN ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_98XX ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_95XXMM);
+> +}
+> +
+> +static bool is_cn10k_support_ptm(struct pci_dev *pdev)
+> +{
+> +	return (pdev->subsystem_device == PCI_SUBSYS_DEVID_CN10K_A ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_CNF10K_A ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_CN10K_B ||
+> +		pdev->subsystem_device == PCI_SUBSYS_DEVID_CNF10K_B);
+> +}
+> +
+> +static int ptp_oct_ptm_adjtime(struct ptp_clock_info *ptp, s64 delta)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int ptp_oct_ptm_settime(struct ptp_clock_info *ptp,
+> +			       const struct timespec64 *ts)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static u32 read_pcie_config32(int ep_pem, int cfg_addr)
+> +{
+> +	void __iomem *addr;
+> +	u64 val;
+> +
+> +	if (oct_ptp_clock.cn10k_variant) {
+> +		addr = ioremap(PEMX_PFX_CSX_PFCFGX(ep_pem, 0, cfg_addr), 8);
+
+These ioremap()s look like things that should be done at probe-time
+and retained for the life of the module since (I assume) this will be
+called many times.
+
+> +		if (!addr) {
+> +			pr_err("PTM_EP: Failed to ioremap Octeon CSR space\n");
+> +			return -1U;
+> +		}
+> +		val = readl(addr);
+> +		iounmap(addr);
+> +	} else {
+> +		addr = ioremap(PEMX_CFG_RD(ep_pem), 8);
+> +		if (!addr) {
+> +			pr_err("PTM_EP: Failed to ioremap Octeon CSR space\n");
+> +			return -1U;
+> +		}
+> +		val = ((1 << 15) | (cfg_addr & 0xfff));
+> +		writeq(val, addr);
+> +		val = readq(addr) >> 32;
+> +		iounmap(addr);
 > +	}
-> =20
->  	kobject_uevent(&dev->dev.kobj, KOBJ_CHANGE);
-> -	iov->num_VFs =3D nr_virtfn;
-> =20
->  	return 0;
->  =
+> +	return (val & 0xffffffff);
+> +}
+> +
+> +static uint64_t octeon_csr_read(u64 csr_addr)
+> +{
+> +	void __iomem *addr;
+> +	u64 val;
+> +
+> +	addr = ioremap(csr_addr, 8);
+> +	if (!addr) {
+> +		pr_err("PTM_EP: Failed to ioremap CSR space\n");
+> +		return -1UL;
+> +	}
+> +	val = readq(addr);
+> +	iounmap(addr);
+> +	return val;
+> +}
+> +
+> +static int ptp_oct_ptm_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
+> +{
+> +	u64 ptp_time, val64;
+> +	u32 val32;
+> +
+> +	/* Check for valid PTM context */
+> +	val32 = read_pcie_config32(0, PCIEEPX_PTM_REQ_STAT);
+> +	if (!(val32 & 0x1)) {
+> +		pr_err("PTM_EP: ERROR: PTM context not valid: 0x%x\n", val32);
+> +
+> +		ts->tv_sec = 0;
+> +		ts->tv_nsec = 0;
+> +
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Trigger PTM/PTP capture */
+> +	val64 = readq(ptm_ctl_addr);
+> +	val64 |= PEMX_PTM_CTL_CAP;
+> +	writeq(val64, ptm_ctl_addr);
+> +	/* Read PTM/PTP clocks  */
+> +	ptp_time = readq(ptm_lcl_addr);
+> +
+> +	*ts = ns_to_timespec64(ptp_time);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ptp_oct_ptm_enable(struct ptp_clock_info *ptp,
+> +			      struct ptp_clock_request *rq, int on)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static const struct ptp_clock_info ptp_oct_caps = {
+> +	.owner		= THIS_MODULE,
+> +	.name		= "OCTEON PTM PHC",
+> +	.max_adj	= 0,
+> +	.n_ext_ts	= 0,
+> +	.n_pins		= 0,
+> +	.pps		= 0,
+
+Initialization to zero is unnecessary, but maybe it's the local
+drivers/ptp/ style.
+
+> +	.adjtime	= ptp_oct_ptm_adjtime,
+> +	.gettime64	= ptp_oct_ptm_gettime,
+> +	.settime64	= ptp_oct_ptm_settime,
+> +	.enable		= ptp_oct_ptm_enable,
+> +};
+> +
+> +static void __exit ptp_oct_ptm_exit(void)
+> +{
+> +	iounmap(ptm_ctl_addr);
+> +	iounmap(ptm_lcl_addr);
+> +	ptp_clock_unregister(oct_ptp_clock.ptp_clock);
+> +}
+> +
+> +static int __init ptp_oct_ptm_init(void)
+> +{
+> +	struct pci_dev *pdev = NULL;
+> +
+> +	pdev = pci_get_device(PCI_VENDOR_ID_CAVIUM,
+> +			      PCI_DEVID_OCTEONTX2_PTP, pdev);
+
+pci_get_device() is a sub-optimal method for a driver to claim a
+device.  pci_register_driver() is the preferred method.  If you can't
+use that, a comment here explaining why not would be helpful.
+
+> +	if (!pdev)
+> +		return 0;
+> +
+> +	if (octeon_csr_read(PEMX_CFG) & 0x1ULL) {
+> +		pr_err("PEM0 is configured as RC\n");
+
+pci_err() or dev_err() etc. when possible.  Maybe #define dev_fmt or
+pr_fmt as appropriate.
+
+> +		return 0;
+> +	}
+> +
+> +	if (is_otx2_support_ptm(pdev)) {
+> +		oct_ptp_clock.cn10k_variant = 0;
+> +	} else if (is_cn10k_support_ptm(pdev)) {
+> +		oct_ptp_clock.cn10k_variant = 1;
+> +	} else {
+> +		/* PTM_EP: unsupported processor */
+> +		return 0;
+> +	}
+> +
+> +	ptm_ctl_addr = ioremap(PEMX_PTM_CTL, 8);
+
+Hard-coded register addresses?  That can't be right.  Shouldn't this
+be discoverable either as a PCI BAR or via DT or similar firmware
+interface?
+
+> +	if (!ptm_ctl_addr) {
+> +		pr_err("PTM_EP: Failed to ioremap CSR space\n");
+> +		return 0;
+> +	}
+> +
+> +	ptm_lcl_addr = ioremap(PEMX_PTM_LCL_TIME, 8);
+> +	if (!ptm_lcl_addr) {
+> +		pr_err("PTM_EP: Failed to ioremap CSR space\n");
+> +		return 0;
+> +	}
+> +
+> +	oct_ptp_clock.caps = ptp_oct_caps;
+> +
+> +	oct_ptp_clock.ptp_clock = ptp_clock_register(&oct_ptp_clock.caps, NULL);
+> +	if (IS_ERR(oct_ptp_clock.ptp_clock))
+> +		return PTR_ERR(oct_ptp_clock.ptp_clock);
+> +
+> +	pr_info("PTP device index for PTM clock:%d\n", oct_ptp_clock.ptp_clock->index);
+> +	pr_info("cn10k_variant %d\n", oct_ptp_clock.cn10k_variant);
+
+Combine into single line; otherwise there's no hint in the dmesg log
+of what "cn10k_variant" is connected to (though dev_fmt/pr_fmt would
+also help with this).
+
+> +	return 0;
+> +}
+> +
+> +module_init(ptp_oct_ptm_init);
+> +module_exit(ptp_oct_ptm_exit);
+> +
+> +MODULE_AUTHOR("Marvell Inc.");
+> +MODULE_DESCRIPTION("PTP PHC clock using PTM");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.25.1
+> 
 
