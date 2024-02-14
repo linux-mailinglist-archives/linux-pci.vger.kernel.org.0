@@ -1,180 +1,133 @@
-Return-Path: <linux-pci+bounces-3454-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3455-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFD88854CED
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 16:34:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25866854D36
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 16:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44FA91F219DA
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:34:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A966CB249D9
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:46:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD64A5D75E;
-	Wed, 14 Feb 2024 15:34:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3E5D5D8F2;
+	Wed, 14 Feb 2024 15:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="icQpm+WR"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CB5dhkms"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677E95C911;
-	Wed, 14 Feb 2024 15:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FDF5D742
+	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 15:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707924861; cv=none; b=l5dbOGSG6VkEyU/Qlst8WBfMdlavVZeDDn8NpQ9VjTTX7r1inSoOEWST5NX9Kdlyy1jG6ZcHv2WjZPqBN8YRczvr9X7/eEJ9Hv/zA22aEwJpr5rYO98EbJFtMiZaUs//5S0Xhukt6kCRZW6EWJ0q1rKLf4MyMU8nwTGtAyeBloM=
+	t=1707925598; cv=none; b=n9i/ECmjQc7c6vYLYlkVL8fSHfju+ZMszCdMJ39mrjZOMKhVdRt+wL2sc8ybME3uNFO74BvlVAQUW6d1/q+L3pkl0/KNlzcpR7J+bzK5TpI8PXiHkugS4knLPKLt5CEkalAYblpw8aYkHsdlZY6rS4a3CHLiyCiyurlT5qxuSGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707924861; c=relaxed/simple;
-	bh=RKBYgy5uDM/vBCiN9tBiPR2VpHrXnY5fjxo9XKnCKHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPpBQIPzdhETCMZWjvAcYR/1GtygqJBmxmgMNPy5VjB8Sm5Q5pc6CGT6xiVr3pbgJr12y4gTL7tHVoeNeet6U6ukd0LZSlwreNDOyjAwxxHwjiMvWVArzlFmwOp6ZYrd8Rt2hudaYOTQfrAaoPArWQPVPFtigeVhP/ZrvNRMSkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=icQpm+WR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB29C433C7;
-	Wed, 14 Feb 2024 15:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707924860;
-	bh=RKBYgy5uDM/vBCiN9tBiPR2VpHrXnY5fjxo9XKnCKHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=icQpm+WRIBCwFmc6GMZyzD7hfrgvougrzlFkQQkENhX2hhFv4tKvrybec2LZPF0p2
-	 g4w+i5vJ2cylBctHyW7nrVqW6KPr/tAxRaWjizo57DBTGi3DOfHaFJKv8GA3osWQx5
-	 zkW+b+wjJITdz0ojCZY2Ccjx1teFWK8MymvaLyFA=
-Date: Wed, 14 Feb 2024 16:34:17 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Andersson <andersson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	=?iso-8859-1?Q?N=EDcolas_F_=2E_R_=2E_A_=2E?= Prado <nfraprado@collabora.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Peng Fan <peng.fan@nxp.com>, Robert Richter <rrichter@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Terry Bowman <terry.bowman@amd.com>, Lukas Wunner <lukas@wunner.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Abel Vesa <abel.vesa@linaro.org>, linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: Re: Re: [PATCH 4/9] PCI: create platform devices for child OF
- nodes of the port node
-Message-ID: <2024021413-grumbling-unlivable-c145@gregkh>
-References: <20240117160748.37682-1-brgl@bgdev.pl>
- <20240117160748.37682-5-brgl@bgdev.pl>
- <2024011707-alibi-pregnancy-a64b@gregkh>
- <CAMRc=Mef7wxRccnfQ=EDLckpb1YN4DNLoC=AYL8v1LLJ=uFH2Q@mail.gmail.com>
- <2024011836-wok-treadmill-c517@gregkh>
- <d2he3ufg6m46zos4swww4t3peyq55blxhirsx37ou37rwqxmz2@5khumvic62je>
- <CAMRc=MeXJjpJhDjyn_P-SGo4rDnEuT9kGN5jAbRcuM_c7_aDzQ@mail.gmail.com>
- <oiwvcvu6wdmpvhss3t7uaqkl5q73mki5pz6liuv66bap4dr2mp@jtjjwzlvt6za>
- <CAMRc=McT8wt6UbKtyofkJo3WcyJ-S4d2MPp8oZmjWbX6LGbETQ@mail.gmail.com>
- <CAMRc=MeWgp27YcS=-dbYdN1is1MEuZ2ar=pW_p9oY0Nf1EbFHA@mail.gmail.com>
+	s=arc-20240116; t=1707925598; c=relaxed/simple;
+	bh=nXt2NydxVPyI52wKlorJbsmqB3Y1sW0XBLcflaBdxWI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RkQGD35oGVr5W2IrFYysURyshNQYWs1claSrr3AnXADEq360t71MtLLCP3zi4lyHBfsS/7pT/kWH9NOsPN0neDAWe2/M0m0BtSpWFg36J0oR+pIGA7sXcesKRhb87v4WI06UGVC1XBAe6AVOk7V0BhIyW8ivNARDjebJngl66qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CB5dhkms; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-218e3197784so3407370fac.0
+        for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 07:46:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707925596; x=1708530396; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=43U0prLBEviHcCJ3pSlb1u8y9sUlYBpSR6dl+zr/IL8=;
+        b=CB5dhkms/IoQIZ0SSZkK9qtAUj1aDMxKzE8xM4f9PrWezhuGOsacgz4YP2KGzuisXO
+         Yypudkqr2k/5n1+E6iTB/wf13I60X7EiEeAI9wGRgBQAZPlD/uCwJbX1D0iDVI3HsFku
+         WHDw1EOiOjFemrSSQqb1dYtDtyaYwhNkkM3EC5LG7g7BwmT6wg0ca8BoQ4iY7PpUL8SN
+         GQM6o8+LDI/wjkx0bLASEhFzVRujNmkyye7gHLbAzAL6saIlLtv6sjYsrwK/mWKDh+NA
+         CqQtQWYZQLEis8ERh3yCubqJPDzxDkdSrwt2WwlXUdnisDvZxgYMMoIS+ZFsMk7wOnKS
+         ScUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707925596; x=1708530396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=43U0prLBEviHcCJ3pSlb1u8y9sUlYBpSR6dl+zr/IL8=;
+        b=IL6X3BFYL3ZOVsY2w2HZGFG5gzJ6v4fHdr2s/Mp8xVxVsBFfkeB9++Tw149zb7NOrX
+         dAc3zmhpF1LPY4mRtG+E8AUTlYEKBAyEO59m8HbQhYUAGdJEu01TWVeeGnI+wpRllsrZ
+         +daSCDJw8uTzZbau+/XPcjf3peGTHRxwbY3MzmKeUzBiNJYrJEThe7AFKRhv6QZYIVI9
+         KwwdDMFf4XMizcgsmxYTgr2HkSJ7nsxsBtyiUu0oTxM3vbtZuCqxNUfCNN5N3q8a6nOL
+         oxa9jZru1auguvP8mPjuO6Z1N0KErXGTypF4U6Yxq85JAbXUKgsUMgXVbuiqt3YxbRbQ
+         KNGw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7C3jWMzu3UPSlNhw8YlBza5msRjHKuLFGWqGOkjs/1okWodWwZqPBBykhSCltS5aEA7nZPeZPWTUCBnn/Z1PTLzzIad6zgdC8
+X-Gm-Message-State: AOJu0YylY2gI5nr3PjgedjBoKbIhZpEe75J2I/bFr+UNf0f6WN4QDQkq
+	cSzPQ4Wwd6KWKQd6WHUHB6ZAKtqc9JQryvbJXTdqdMh13itCaZVDsAGa5eOv78Cxq7nyCuAqAWT
+	0p7rrrmrB+vCCv+4XFj+qlNPReinw5vF/TR1kwQ==
+X-Google-Smtp-Source: AGHT+IGq/FPDHURxZuXkT8EEMfyOBxQIWZRGOM045VqtAvTD1CETCELK38VG/mvuBgw8UVUij5Aehjzrk5JxYSrtPyI=
+X-Received: by 2002:a05:6871:551:b0:218:55c9:bb20 with SMTP id
+ t17-20020a056871055100b0021855c9bb20mr3419259oal.21.1707925596168; Wed, 14
+ Feb 2024 07:46:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeWgp27YcS=-dbYdN1is1MEuZ2ar=pW_p9oY0Nf1EbFHA@mail.gmail.com>
+References: <20240201155532.49707-1-brgl@bgdev.pl> <20240201155532.49707-9-brgl@bgdev.pl>
+ <7tbhdkqpl4iuaxmc73pje2nbbkarxxpgmabc7j4q26d2rhzrv5@ltu6niel5eb4>
+In-Reply-To: <7tbhdkqpl4iuaxmc73pje2nbbkarxxpgmabc7j4q26d2rhzrv5@ltu6niel5eb4>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 14 Feb 2024 16:46:25 +0100
+Message-ID: <CAMRc=MeM_ys7_Rk2=yhEVL6pe1bWQXqS8r_Y7P-SMQ_cTCMebA@mail.gmail.com>
+Subject: Re: [RFC 8/9] PCI/pwrctl: add PCI power control core code
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Abel Vesa <abel.vesa@linaro.org>, Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 07, 2024 at 05:32:38PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Feb 2, 2024 at 11:02 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Fri, Feb 2, 2024 at 1:03 AM Bjorn Andersson <andersson@kernel.org> wrote:
-> > >
-> >
-> > [snip]
-> >
-> > > > >
-> > > > > I believe I missed this part of the discussion, why does this need to be
-> > > > > a platform_device? What does the platform_bus bring that can't be
-> > > > > provided by some other bus?
-> > > > >
-> > > >
-> > > > Does it need to be a platform_device? No, of course not. Does it make
-> > > > sense for it to be one? Yes, for two reasons:
-> > > >
-> > > > 1. The ATH11K WLAN module is represented on the device tree like a
-> > > > platform device, we know it's always there and it consumes regulators
-> > > > from another platform device. The fact it uses PCIe doesn't change the
-> > > > fact that it is logically a platform device.
-> > >
-> > > Are you referring to the ath11k SNOC (firmware running on co-processor
-> > > in the SoC) variant?
-> > >
-> > > Afaict the PCIe-attached ath11k is not represented as a platform_device
-> > > in DeviceTree.
-> > >
-> >
-> > My bad. In RB5 it isn't (yet - I want to add it in the power
-> > sequencing series). It is in X13s though[1].
-> >
-> > > Said platform_device is also not a child under the PCIe bus, so this
-> > > would be a different platform_device...
-> > >
-> >
-> > It's the child of the PCIe port node but there's a reason for it to
-> > have the `compatible` property. It's because it's an entity of whose
-> > existence we are aware before the system boots.
-> >
-> > > > 2. The platform bus already provides us with the entire infrastructure
-> > > > that we'd now need to duplicate (possibly adding bugs) in order to
-> > > > introduce a "power sequencing bus".
-> > > >
-> > >
-> > > This is a perfectly reasonable desire. Look at our PMICs, they are full
-> > > of platform_devices. But through the years it's been said many times,
-> > > that this is not a valid or good reason for using platform_devices, and
-> > > as a result we have e.g. auxiliary bus.
-> > >
-> >
-> > Ok, so I cannot find this information anywhere (nor any example). Do
-> > you happen to know if the auxiliary bus offers any software node
-> > integration so that the `compatible` property from DT can get
-> > seamlessly mapped to auxiliary device IDs?
-> >
-> 
-> So I was just trying to port this to using the auxiliary bus, only to
-> find myself literally reimplementing functions from
-> drivers/of/device.c. I have a feeling that this is simply wrong. If
-> we're instantiating devices well defined on the device-tree then IMO
-> we *should* make them platform devices. Anything else and we'll be
-> reimplementing drivers/of/ because we will need to parse the device
-> nodes, check the compatible, match it against drivers etc. Things that
-> are already implemented for the platform bus and of_* APIs.
-> 
-> Greg: Could you chime in and confirm that it's alright to use the
-> platform bus here? Or maybe there is some infrastructure to create
-> auxiliary devices from software nodes?
+On Fri, Feb 2, 2024 at 4:53=E2=80=AFAM Bjorn Andersson <andersson@kernel.or=
+g> wrote:
+>
 
-Note, I HATE the use of the platform bus here, but I don't have a better
-suggestion.
+[snip]
 
-I'd love for the auxbus to work, and if you can create that from
-software nodes, all the better!  But I don't think that's possible just
-yet, and you would end up implementing all the same stuff that the
-platform bus has today for this functionality, so I doubt it would be
-worth it.
+>
+> > +             break;
+> > +     case BUS_NOTIFY_BOUND_DRIVER:
+> > +             pwrctl->link =3D device_link_add(dev, pwrctl->dev,
+> > +                                            DL_FLAG_AUTOREMOVE_CONSUME=
+R);
+> > +             if (!pwrctl->link)
+> > +                     dev_err(pwrctl->dev, "Failed to add device link\n=
+");
+> > +             break;
+> > +     case BUS_NOTIFY_UNBOUND_DRIVER:
+> > +             device_link_del(pwrctl->link);
+>
+> This might however become a NULL-pointer dereference, if dev was bound
+> to its driver before the pci_pwrctl_notify() was registered for the
+> pwrctl and then the PCI device is unbound.
+>
 
-thanks,
+Right. And it also makes me think that right after registering with
+the notifier, we should iterate over the PCI bus devices and see if
+the relevant one is already there.
 
-greg k-h
+> This would also happen if device_link_add() failed when the PCI device
+> was bound...
+>
+
+Right.
+
+Bart
+
+[snip]
 
