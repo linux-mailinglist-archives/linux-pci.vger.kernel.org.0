@@ -1,90 +1,68 @@
-Return-Path: <linux-pci+bounces-3427-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3428-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DD638542D9
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 07:36:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8920485431C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 07:55:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09F97B252A7
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 06:36:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E59C1F215A1
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 06:55:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C86211193;
-	Wed, 14 Feb 2024 06:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5DDE79E4;
+	Wed, 14 Feb 2024 06:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eq6AOaj9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSoAnG7n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAD2C153
-	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 06:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A240B11193
+	for <linux-pci@vger.kernel.org>; Wed, 14 Feb 2024 06:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707892563; cv=none; b=KEiacFDMlZizxmw6BlIglUhps6PWU5FYaDvibm+gTBswpPk+IUGS2sLivZfRCeHnqdqJYyd2Bx2A8Sk2pcOIP9Ps4Sc13QVPEvsPo9M26sDolgkVi7X4s9cLMkKZ2ZNgu3ouYJTy6PPR9Sca+Y5VRX9NzKOL5+gFuDrZH5+bFWc=
+	t=1707893718; cv=none; b=CmOs4HZgn7G/5zU1+6Vs1jEgur2ZrIWSV27sNGj9vGzJZ7mXLDKJGykYzmXc2MzL8Ff1uvRnbM+GnnuzwZzCwJLEbEP/iJ1FZzJeAMKrWe1ymdHmuhhuLfeG1n354YWGWvLi2y1uJX8I7kVHinH2ZVwyWM3zqYCtRqNkQrI+hRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707892563; c=relaxed/simple;
-	bh=S0n0jL6+mRYRMYvMwHnUkELzPpbyDPaR1URF6rkE1lQ=;
+	s=arc-20240116; t=1707893718; c=relaxed/simple;
+	bh=FnMTsGlB+S1pSgB1frz6lz54ywQWNkFc3hnp+HAmVsY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/n2/DKHpi26l7ag1en+pzShuXd68B/SpfV7tdso1/rIdRr5pyT5JweCU37DcreXJFsKBzaG4c+UyQ7nIcyQKg6w0D7Eu9WrfzI1gzXq/+M1rUTyPUorf7y9kX4peJ0+FnbunEywzCUeF8th0kFAXfFbhts1+G6EzZWZ0U/Af5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eq6AOaj9; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-298c1751c3dso342167a91.0
-        for <linux-pci@vger.kernel.org>; Tue, 13 Feb 2024 22:36:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707892561; x=1708497361; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QGcxOyI3gqRHqjaeGgz6cLsEEU9nKKLG3Qcn8Q9LRis=;
-        b=eq6AOaj9OPoWEtHfaR+s6/ZYiKHPPsLCOMfZsKHuupE2/tFbjaE71L4zUq3e3o+bT6
-         MCfflegwlpOXAMMGYTFaRZNxOMIxxVVPt5qanA2uIsxZlwUV0X0Ju8E17zpZug/+a79H
-         1xY9EIPQ291ms549zlTN0z6bfQiLXAWxlMN6Lx78g+GXUcRrNGgLVRIIxlkJntEC6Ymt
-         OGKaFrgof2GLlATs94EjhU0uPydQZCXQ92obUS/FVVpwBDDu/PWfWHeuFPmrnFN5ZUyX
-         YTW3HmJH1lBfkBSPor/YP7SG5XggbWldg1l4FZGXD+lihR2q1kU4JIdbXN3ZoIXtd/iJ
-         5e0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707892561; x=1708497361;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QGcxOyI3gqRHqjaeGgz6cLsEEU9nKKLG3Qcn8Q9LRis=;
-        b=GOzVULQAiccxC0ERsiL6rYMCZ7NZcWLiIMfaiNIzyeO8jIsnwLltgvG64pSJjv72r4
-         9Oe3Rcb4m49lOGpbfgK9miYqpUTva/JONQ+3AFwlHrhOWUDz42ycuGP4ThlFa65dgcH9
-         U7/y25BR+l+J03b9Q/r/SxfEFeOV7obidYX5ZiHJdGtjl/VACuaoWPHY2N5VRotnKhrk
-         gyC5Q/dTrgYWw6s6EiVCvoPwHv3SflwheSoZJsxOB8tWqzDQG0CyKnaYbdK7Ik7iC08X
-         k1p9wD+NO1UNvs+zP0N2mDHGB4KWaBzR6z9TCYTxdu2JIXzihdR5nLXGwaPy1/QyGu7O
-         9ygg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgWQxVhdg/+5GybR8Wfbm0Z1rlebLHSihD6jKcGxBlmOiqWEylCjl3ep307e5w+XLvGiFbLTxRuSwqt8U2yyDZYjihgePRuwg9
-X-Gm-Message-State: AOJu0YxPsGsN63ezH/eiotR4KyWI2c1LBgQ3W+NHRS8Rl/hZ0LRLhVJ/
-	oIWHO6/lrniVYdnEsiOxB2d9k7MAJfs69hbwTB0NVhmDo5nIdy6nAU9ddCd8P6A919v6NO4vlYY
-	=
-X-Google-Smtp-Source: AGHT+IEaCZgvXP49NlvjV+Z1BkxQbusXcCEQreHzCFLxhaXcni5m5Fu/GlhKKaqiQHs2Wc0a1/f5Fg==
-X-Received: by 2002:a17:90a:df86:b0:296:66a4:2e6c with SMTP id p6-20020a17090adf8600b0029666a42e6cmr1576120pjv.23.1707892560535;
-        Tue, 13 Feb 2024 22:36:00 -0800 (PST)
-Received: from thinkpad ([103.28.246.124])
-        by smtp.gmail.com with ESMTPSA id d30-20020a17090a6f2100b0029899165611sm643285pjk.35.2024.02.13.22.35.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Feb 2024 22:36:00 -0800 (PST)
-Date: Wed, 14 Feb 2024 12:05:54 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=IuaWRP4c5I8MsDNCVrsIeIFgF/ZIscftOpeiLtXTAGdN5lk9nYvMBbGrp/VXe2vv/cTch6KQH5CP99N/fOshm74SHUsFJllaiPPVogABsbGA6Ohi+kMz2eqtr4Gz1mYROVYYeJ2VCKLM/8tSeRaGGNDxOtI7Loue7rMqioExi+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSoAnG7n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBD58C433F1;
+	Wed, 14 Feb 2024 06:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707893718;
+	bh=FnMTsGlB+S1pSgB1frz6lz54ywQWNkFc3hnp+HAmVsY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XSoAnG7nzHtBdVHH2A+/lteb2VtzEn6qfMhimH/4MaK1g4LQSR4DHgrEHa/vXXNJ7
+	 QOCKhaMjGm3y/cHLUXzvDbpu3gcw4PeVsHcsaErcL3EpJd2JH/tkR+If6anFth5bgc
+	 9l+dP/cNjSnJHLpjDMliPyTToN/GJDbM3N1v06gZegARLFuiKlaFB5KCf0O0ZOdInp
+	 8e9uKMbIm2BplFtRfuwhCKAguAWIUO3QZtoBKJUEfkJ5OELedEnfKQhnAj7jdhD8V5
+	 7jceq9L//O/Sb9YrQI60f2u1lRiXlzHAs1lqq7VAPyHBvoFq1/Gi6SqPgC+4mop/jD
+	 UOxsebzZGsltA==
+Date: Wed, 14 Feb 2024 12:25:09 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Ajay Agarwal <ajayagarwal@google.com>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] arm64: dts: qcom: sc8280xp: enable GICv3 ITS for
- PCIe
-Message-ID: <20240214063554.GC4618@thinkpad>
-References: <20240212165043.26961-1-johan+linaro@kernel.org>
+	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
+	Sajid Dalvi <sdalvi@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: dwc: Strengthen the MSI address allocation logic
+Message-ID: <20240214065509.GD4618@thinkpad>
+References: <20240204112425.125627-1-ajayagarwal@google.com>
+ <2kvgqhaitacl7atqf775vr2z3ty5qeqxuv5g3wflkmhgj4yk76@fsmrosfwobfx>
+ <ZcJhhHK6eQOUfVKf@google.com>
+ <rjhceek7fjr6qglqewzrojc2nooewmhxq5ifzpqhpzuvc5deqa@l4u7kgzn2vo7>
+ <ZcrZdhay6YvBzvWt@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,116 +72,179 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240212165043.26961-1-johan+linaro@kernel.org>
+In-Reply-To: <ZcrZdhay6YvBzvWt@google.com>
 
-On Mon, Feb 12, 2024 at 05:50:33PM +0100, Johan Hovold wrote:
-> This series addresses a few problems with the sc8280xp PCIe
-> implementation.
+On Tue, Feb 13, 2024 at 08:22:38AM +0530, Ajay Agarwal wrote:
+> On Tue, Feb 06, 2024 at 07:53:19PM +0300, Serge Semin wrote:
+> > On Tue, Feb 06, 2024 at 10:12:44PM +0530, Ajay Agarwal wrote:
+> > > On Mon, Feb 05, 2024 at 12:52:45AM +0300, Serge Semin wrote:
+> > > > On Sun, Feb 04, 2024 at 04:54:25PM +0530, Ajay Agarwal wrote:
+> > > > > There can be platforms that do not use/have 32-bit DMA addresses
+> > > > > but want to enumerate endpoints which support only 32-bit MSI
+> > > > > address. The current implementation of 32-bit IOVA allocation can
+> > > > > fail for such platforms, eventually leading to the probe failure.
+> > > > > 
+> > > > > If there vendor driver has already setup the MSI address using
+> > > > > some mechanism, use the same. This method can be used by the
+> > > > > platforms described above to support EPs they wish to.
+> > > > > 
+> > > > > Else, if the memory region is not reserved, try to allocate a
+> > > > > 32-bit IOVA. Additionally, if this allocation also fails, attempt
+> > > > > a 64-bit allocation for probe to be successful. If the 64-bit MSI
+> > > > > address is allocated, then the EPs supporting 32-bit MSI address
+> > > > > will not work.
+> > > > > 
+> > > > > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> > > > > ---
+> > > > > Changelog since v2:
+> > > > >  - If the vendor driver has setup the msi_data, use the same
+> > > > > 
+> > > > > Changelog since v1:
+> > > > >  - Use reserved memory, if it exists, to setup the MSI data
+> > > > >  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
+> > > > > 
+> > > > >  .../pci/controller/dwc/pcie-designware-host.c | 26 ++++++++++++++-----
+> > > > >  1 file changed, 20 insertions(+), 6 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > index d5fc31f8345f..512eb2d6591f 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > @@ -374,10 +374,18 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+> > > > >  	 * order not to miss MSI TLPs from those devices the MSI target
+> > > > >  	 * address has to be within the lowest 4GB.
+> > > > >  	 *
+> > > > 
+> > > > > -	 * Note until there is a better alternative found the reservation is
+> > > > > -	 * done by allocating from the artificially limited DMA-coherent
+> > > > > -	 * memory.
+> > > > 
+> > > > Why do you keep deleting this statement? The driver still uses the
+> > > > DMA-coherent memory as a workaround. Your solution doesn't solve the
+> > > > problem completely. This is another workaround. One more time: the
+> > > > correct solution would be to allocate a 32-bit address or some range
+> > > > within the 4GB PCIe bus memory with no _RAM_ or some other IO behind.
+> > > > Your solution relies on the platform firmware/glue-driver doing that,
+> > > > which isn't universally applicable. So please don't drop the comment.
+> > > >
+> > > ACK.
+> > > 
+> > > > > +	 * Check if the vendor driver has setup the MSI address already. If yes,
+> > > > > +	 * pick up the same.
+> > > > 
+> > > > This is inferred from the code below. So drop it.
+> > > > 
+> > > ACK.
+> > > 
+> > > > > This will be helpful for platforms that do not
+> > > > > +	 * use/have 32-bit DMA addresses but want to use endpoints which support
+> > > > > +	 * only 32-bit MSI address.
+> > > > 
+> > > > Please merge it into the first part of the comment as like: "Permit
+> > > > the platforms to override the MSI target address if they have a free
+> > > > PCIe-bus memory specifically reserved for that."
+> > > > 
+> > > ACK.
+> > > 
+> > > > > +	 * Else, if the memory region is not reserved, try to allocate a 32-bit
+> > > > > +	 * IOVA. Additionally, if this allocation also fails, attempt a 64-bit
+> > > > > +	 * allocation. If the 64-bit MSI address is allocated, then the EPs
+> > > > > +	 * supporting 32-bit MSI address will not work.
+> > > > 
+> > > > This is easily inferred from the code below. So drop it.
+> > > > 
+> > > ACK.
+> > > 
+> > > > >  	 */
+> > > > 
+> > > > > +	if (pp->msi_data)
+> > > > 
+> > > > Note this is a physical address for which even zero value might be
+> > > > valid. In this case it's the address of the PCIe bus space for which
+> > > > AFAICS zero isn't reserved for something special.
+> > > >
+> > 
+> > > That is a fair point. What do you suggest we do? Shall we define another
+> > > op `set_msi_data` (like init/msi_init/start_link) and if it is defined
+> > > by the vendor, then call it? Then vendor has to set the pp->msi_data
+> > > there? Let me know.
+> > 
+> > You can define a new capability flag here
+> > drivers/pci/controller/dwc/pcie-designware.h (see DW_PCIE_CAP_* macros)
+> > , set it in the glue driver by means of the dw_pcie_cap_set() macro
+> > function and instead of checking msi_data value test the flag for
+> > being set by dw_pcie_cap_is().
+> >
+> Sure, good suggestion. ACK.
 > 
-> The DWC PCIe controller can either use its internal MSI controller or an
-> external one such as the GICv3 ITS. Enabling the latter allows for
-> assigning affinity to individual interrupts, but results in a large
-> amount of Correctable Errors being logged on both the Lenovo ThinkPad
-> X13s and the sc8280xp-crd reference design.
-> 
-> It turns out that these errors are always generated,
-
-How did you confirm this?
-
-> but for some yet to
-> be determined reason, the AER interrupts are never received when using
-> the internal MSI controller, which makes the link errors harder to
-> notice.
-> 
-
-If you manually inject the errors using "aer-inject", are you not seeing the AER
-errors with internal MSI controller as well?
-
-> On the X13s, there is a large number of errors generated when bringing
-> up the link on boot. This is related to the fact that UEFI firmware has
-> already enabled the Wi-Fi PCIe link at Gen2 speed and restarting the
-> link at Gen3 generates a massive amount of errors until the Wi-Fi
-> firmware is restarted.
-> 
-> A recent commit enabling ASPM on certain Qualcomm platforms introduced
-> further errors when using the Wi-Fi on the X13s as well as when
-> accessing the NVMe on the CRD. The exact reason for this has not yet
-> been identified, but disabling ASPM L0s makes the errors go away. This
-> could suggest that either the current ASPM implementation is incomplete
-> or that L0s is not supported with these devices.
-> 
-
-What are those "further errors" you are seeing with ASPM enabled? Are those
-errors appear with GIC ITS or with internal MSI controller as well?
-
-> Note that the X13s and CRD use the same Wi-Fi controller, but the errors
-> are only generated on the X13s. The NVMe controller on my X13s does not
-> support L0s so there are no issues there, unlike on the CRD which uses a
-> different controller. The modem on the CRD does not generate any errors,
-> but both the NVMe and modem keeps bouncing in and out of L0s/L1 also
-> when not used, which could indicate that there are bigger problems with
-> the ASPM implementation. I don't have a modem on my X13s so I have not
-> been able to test whether L0s causes an trouble there.
-> 
-> Enabling AER error reporting on sc8280xp could similarly also reveal
-> existing problems with the related sa8295p and sa8540p platforms as they
-> share the base dtsi.
-> 
-> The last four patches, marked as RFC, adds support for disabling ASPM
-> L0s in the devicetree and disables it selectively for the X13s Wi-Fi
-> and CRD NVMe. If it turns out that the Qualcomm PCIe implementation is
-> incomplete, we may need to disable ASPM (L0s) completely in the driver
-> instead.
+> > > 
+> > > > > +		return 0;
+> > > > > +
+> > > > >  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> > > > >  	if (ret)
+> > > > >  		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
+> > > > > @@ -385,9 +393,15 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+> > > > >  	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> > > > >  					GFP_KERNEL);
+> > > > >  	if (!msi_vaddr) {
+> > > > > -		dev_err(dev, "Failed to alloc and map MSI data\n");
+> > > > > -		dw_pcie_free_msi(pp);
+> > > > > -		return -ENOMEM;
+> > > > > +		dev_warn(dev, "Failed to alloc 32-bit MSI data. Attempting 64-bit now\n");
+> > > > > +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+> > > > > +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
+> > > > > +						GFP_KERNEL);
+> > > > > +		if (!msi_vaddr) {
+> > > > > +			dev_err(dev, "Failed to alloc and map MSI data\n");
+> > > > > +			dw_pcie_free_msi(pp);
+> > > > > +			return -ENOMEM;
+> > > > > +		}
+> > > > 
+> > > > On Tue, Jan 30, 2024 at 08:40:48PM +0000, Robin Murphy wrote:
+> > > > > Yeah, something like that. Personally I'd still be tempted to try some
+> > > > > mildly more involved logic to just have a single dev_warn(), but I think
+> > > > > that's less important than just having something which clearly works.
+> > > > 
+> > > > I guess this can be done but in a bit clumsy way. Like this:
+> > > > 
+> > > > 	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32)) ||
+> > > > 	      !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
+> > > > 	if (ret) {
+> > > > 		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
+> > > > 
+> > > > 		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
+> > > > 		ret = !dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data, GFP_KERNEL);
+> > > > 		if (ret) {
+> > > > 			dev_err(dev, "Failed to allocate MSI target address\n");
+> > > > 			return -ENOMEM;
+> > > 
+> > > As you pointed out already, this looks pretty clumsy. I think we should
+> > > stick to the more descriptive and readable code that I suggested.
+> > 
+> > I do not know which solution is better really. Both have pros and
+> > cons. Let's wait for Bjorn, Mani or Robin opinion about this.
+> > 
+> > -Serge(y)
+> > 
+> Bjorn/Mani/Robin,
+> Can you please provide your comment?
 > 
 
-If the device is not supporting L0s, then it as to be disabled in the device,
-not in the PCIe controller, no?
+Sergey's suggestion masks out the error coming from "dma_set_coherent_mask()" by
+using the same error log. This is equivalent to printing the same error log for
+both API failures:
 
-> Note that disabling ASPM L0s for the X13s Wi-Fi does not seem to have a
-> significant impact on the power consumption 
-> 
-> The DT bindings and PCI patch are expected to go through the PCI tree,
-> while Bjorn A takes the devicetree updates through the Qualcomm tree.
-> 
+	ret = dma_set_coherent_mask()
+	if (ret)
+		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
 
-Since I took a stab at enabling the GIC ITS previously, I noticed that the NVMe
-performance got a slight dip. And that was one of the reasons (apart from AER
-errors) that I never submitted the patch.
+	ret = dmam_alloc_coherent()
+	if (ret)
+		dev_warn(dev, "Failed to allocate 32-bit MSI target address\n");
 
-Could you share the NVMe benchmark (fio) with this series?
-
-> Johan
-> 
-> 
-> Johan Hovold (10):
->   dt-bindings: PCI: qcom: Allow 'required-opps'
->   dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
->   arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
->   arm64: dts: qcom: sc8280xp-crd: limit pcie4 link speed
->   arm64: dts: qcom: sc8280xp-x13s: limit pcie4 link speed
->   arm64: dts: qcom: sc8280xp: enable GICv3 ITS for PCIe
-
-Is this patch based on the version I shared with you long back? If so, I'd
-expect to have some credit. If you came up with your own version, then ignore
-this comment.
+Which doesn't look correct to me. So let's stick to what Ajay had initially.
 
 - Mani
-
->   dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
->   PCI: qcom: Add support for disabling ASPM L0s in devicetree
->   arm64: dts: qcom: sc8280xp-crd: disable ASPM L0s for NVMe
->   arm64: dts: qcom: sc8280xp-x13s: disable ASPM L0s for Wi-Fi
-> 
->  .../devicetree/bindings/pci/qcom,pcie.yaml    |  6 +++++-
->  arch/arm64/boot/dts/qcom/sc8280xp-crd.dts     |  4 ++++
->  .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |  3 +++
->  arch/arm64/boot/dts/qcom/sc8280xp.dtsi        | 17 +++++++++++++++-
->  drivers/pci/controller/dwc/pcie-qcom.c        | 20 +++++++++++++++++++
->  5 files changed, 48 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
