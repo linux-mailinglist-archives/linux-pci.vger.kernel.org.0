@@ -1,152 +1,145 @@
-Return-Path: <linux-pci+bounces-3452-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3453-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DEB9854B66
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:29:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32BE9854C94
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 16:24:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38B9028581A
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 14:29:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3982281087
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Feb 2024 15:24:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84AE557304;
-	Wed, 14 Feb 2024 14:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVXjPJU0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F5A45BAC2;
+	Wed, 14 Feb 2024 15:24:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE5454BC9;
-	Wed, 14 Feb 2024 14:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F265380F;
+	Wed, 14 Feb 2024 15:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707920947; cv=none; b=YlaVR1nH4Qm95VwD6+FKyRHA1w+XgDOpdYgL7MpnDeSaHmdIHw+baT+Svfv/qlyBQFJB/rSLLawkGeOK9fA5XK98a91+Tvdr+RrCkT5IhJNfFd2Cqrkfx/tGkqKeh1Y1qjXutuLPpHuwKqY04Xro8XiTV6dnH/oR2R38HxmKkVM=
+	t=1707924256; cv=none; b=RQFBMAuiKR4bxkuMkbpCUegbPR/cwQwSQQaRP8DLg/acpdDGFzKIEMSv1Vu4CB5bWnMOG1EQve4P9mo4u8waDiXQSW1fiFsK42UrGwwxNonlQxcKvlz+CTwXULi0Wu1/nrJ6jA6M7U2mnJd8/epYmMX6797pT7XBOnig2XSxjqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707920947; c=relaxed/simple;
-	bh=4PZnpdOC7nL7iSy6IqRjbXbXnr5kNh4hCRe0YlxfpbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dU92+VZOvKtbCHFw0r5NGCotM3lDH86kNrB/hosjUQAE6DiRwMbQ6i2vsLoErlHEadD335JhCE7FECWA7+hVRzOyK/4xv0PvlwtoIDpNtqU+Wec5op+P8Nc6ZYyj0/6TW/E0gBXEwXdExjBKboK8iAmLt1dl0Ih9bw2Y91RVaUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVXjPJU0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7AA6C433F1;
-	Wed, 14 Feb 2024 14:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707920946;
-	bh=4PZnpdOC7nL7iSy6IqRjbXbXnr5kNh4hCRe0YlxfpbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hVXjPJU0NBcOWMTf39vw8+II4IjZ6ZS1xuxWZCaEPpMRtVrcpjvdSZ5pbQbrzfyl5
-	 5p+9MWOmLWaPsr7LOgqJVuXpNEGu9HP5o6oHpfYm48mw/cwuZA2rOiL0TSqwgjNwtz
-	 Te7GoztDlKGI1AjilnKM5j4xJ++Ihif+bCcL80YZs2PpixddZDzKfANZjpMNrMTAKA
-	 m1PIhUC8uWSafZPkoiTw++ALnHkJPvW96yiRupPJsd6ECJAQnxwBqtTMY8b5ucoUh3
-	 icNpqgGguQ5ARz4ENnmS+uuUsuFTn88qiMgy7Lk72p/ca5ZczM4VSsbR95m3vy8ro5
-	 PVL/t1eKkJnZQ==
-Date: Wed, 14 Feb 2024 19:58:56 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@linaro.org>,
-	Lukas Wunner <lukas@wunner.de>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-pci@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: Re: Re: [RFC 8/9] PCI/pwrctl: add PCI power control core code
-Message-ID: <20240214142856.GG4618@thinkpad>
-References: <20240201155532.49707-1-brgl@bgdev.pl>
- <20240201155532.49707-9-brgl@bgdev.pl>
- <7tbhdkqpl4iuaxmc73pje2nbbkarxxpgmabc7j4q26d2rhzrv5@ltu6niel5eb4>
- <CAMRc=Md1oTrVMjZRH+Ux3JJKYeficKMYh+8V7ZA=Xz_X1hNd1g@mail.gmail.com>
- <2q5vwm7tgmpgbrm4dxfhypbs5pdggprxouvzfcherqeevpjhrj@6wtkv4za2gg5>
- <20240208113201.GA17587@thinkpad>
- <ycorratd3jxzg5nijbpgk6hrlgq5rl66cttfg7wv4oyyxivfm4@kfbhrlytiafe>
+	s=arc-20240116; t=1707924256; c=relaxed/simple;
+	bh=z22C5eDDUTTe9szBWz3omteky29rE85KJIvfgtvFM8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OaXLynvqviClMhmGOhIYcN7CIcvBvHrDv4H/FhA2Etm/ajv8de0e+OCDR28F88MGxGpRdiRQF5A1f1A73mCLwLm+2Nn8RLkqZeLtmELEZiqPTv7J4n3HsqNlGRqaXMVp0ph5iUM6FF/RedKpj48HGTp2cRf3RV+iKTf0uMlvzhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so5369935276.0;
+        Wed, 14 Feb 2024 07:24:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707924253; x=1708529053;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b4LBEo7R0hSPIqQp/A3corERzBFJ1CJEW7Ujl6/XLAg=;
+        b=X1WcoWWLOyRkZz3Zw85mC4n7BNl9PHbku+MzBCAlzXFLe43mPvn/ylvHaXS/1Umfc6
+         T+wdAhWZ3SiqcRj0VZt4oiddKjFHf6JDGR23tc9TziSXe1zzmCQiZ2IMhKhN2hsQM17i
+         7OtTfRQLCa0WxfkZN7SlMHfxukm0L3OdrCQIJkwJ9gJsM2lA3D7QNknudEkBnKylJSNJ
+         a1g6x00O4vVmqx6sK7Q9FEBmKIgixPyv7q3c9sgam31xAJfpRcmCeRMftxAJABXBrcJb
+         YteOKX+LLDu/8f04MdQbmXTH5l5HOJ/FcKS2qPrkn3UbmlyKiFGZAflO40GDeoo7GRXB
+         C4TA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0zpgyW9rDJiw8IU4u2NEMYMEbmVa7wf6esWzAml3EdTsPab52mycZNo5c7ULPEPxvvMfQ/mNWOdu1ij455/kp96x7LK+K2kw9WAQX7JBv79nAgJnES3AP4F2JqDou5cgUPCyFWxoEjJePvLM=
+X-Gm-Message-State: AOJu0YwANJWRF8AI/1r0DINgvWOhOAcn3k7orDCfxCwR8g2qb2Qf0iNx
+	1zucasT2ed7nl9F7OhspVWdSHqhUuLeWf4L0gpqSrmqSrkjUdfFJ01ms0f/OZwI=
+X-Google-Smtp-Source: AGHT+IEoadSLdEc/PIGiaHIS7TbjN3O5MPLjcEDFc6TScPymW1rofaB0zaCuAzdBwTc63Wh0hoYF4g==
+X-Received: by 2002:a0d:db83:0:b0:604:93a9:386a with SMTP id d125-20020a0ddb83000000b0060493a9386amr2598751ywe.39.1707924253145;
+        Wed, 14 Feb 2024 07:24:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVWMPhaT/ihWaDMu5B/NIwPtdwFaxUhwTvK26FU758NQNzG041dON8sDQ3KIZf9uKvDHnul5Dxn6+Sl4IuC9NAuaskWVtsGjskLzLAnzntgSjAEO9E7hMTCG8Cxl981SQMJMRGwZ0SjszLlYv4=
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id h84-20020a815357000000b00607b5cb115bsm133185ywb.51.2024.02.14.07.24.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Feb 2024 07:24:13 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so5369906276.0;
+        Wed, 14 Feb 2024 07:24:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUTnFEBeFKrylLBIMWGyEvLa87YgYh/LhI6Rg8zxziHHl2x0r95H580jTkbo9MP6g5VdN+cACgeSIZ5qThNwYnXqYrQfIXUS97+o1bK1RH8asPWL7H2wzLtErk2mPSX4JBCdw4ga8vv89/lYKM=
+X-Received: by 2002:a25:2183:0:b0:dc7:32ae:f0a with SMTP id
+ h125-20020a252183000000b00dc732ae0f0amr2428175ybh.65.1707924252702; Wed, 14
+ Feb 2024 07:24:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ycorratd3jxzg5nijbpgk6hrlgq5rl66cttfg7wv4oyyxivfm4@kfbhrlytiafe>
+References: <20240214052122.1966506-1-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240214052122.1966506-1-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 14 Feb 2024 16:24:01 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVBCEV_MhqU8CHBSdMecYAgktwOaxwn_KmZjsf0y8rhHw@mail.gmail.com>
+Message-ID: <CAMuHMdVBCEV_MhqU8CHBSdMecYAgktwOaxwn_KmZjsf0y8rhHw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: rcar-gen4: Add vendor-specific registers' setting
+ for MSI-X
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 09, 2024 at 05:43:56PM -0600, Bjorn Andersson wrote:
-> On Thu, Feb 08, 2024 at 05:02:01PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Feb 02, 2024 at 10:52:11AM -0600, Bjorn Andersson wrote:
-> > > On Fri, Feb 02, 2024 at 10:11:42AM +0100, Bartosz Golaszewski wrote:
-> > > > On Fri, Feb 2, 2024 at 4:53 AM Bjorn Andersson <andersson@kernel.org> wrote:
-> > > [..]
-> > > > > > +             break;
-> > > > > > +     }
-> > > > > > +
-> > > > > > +     return NOTIFY_DONE;
-> > > > > > +}
-> > > > > > +
-> > > > > > +int pci_pwrctl_device_enable(struct pci_pwrctl *pwrctl)
-> > > > >
-> > > > > This function doesn't really "enable the device", looking at the example
-> > > > > driver it's rather "device_enabled" than "device_enable"...
-> > > > >
-> > > > 
-> > > > I was also thinking about pci_pwrctl_device_ready() or
-> > > > pci_pwrctl_device_prepared().
-> > > 
-> > > I like both of these.
-> > > 
-> > > I guess the bigger question is how the flow would look like in the event
-> > > that we need to power-cycle the attached PCIe device, e.g. because
-> > > firmware has gotten into a really bad state.
-> > > 
-> > > Will we need an operation that removes the device first, and then cut
-> > > the power, or do we cut the power and then call unprepared()?
-> > > 
-> > 
-> > Currently, we don't power cycle while resetting the devices. Most of the drivers
-> > just do a software reset using some register writes. Part of the reason for
-> > that is, the drivers themselves don't control the power to the devices and there
-> > would be no way to let the parent know about the firmware crash.
-> > 
-> 
-> I don't know what the appropriate design for this is, but we do have a
-> need for being able to recover from this state by the means of
-> power-cycling the device.
-> 
-> If it's not possible to let the device do it (in any fashion), then
-> perhaps a user-space-assisted model is needed?
-> 
-> Turning on power is an important first step, but please do consider the
-> full scope of the known problem space.
-> 
+Hi Shimoda-san,
 
-Agree. I'm not ignoring this issue, but this is a separate topic IMO (or an
-incremental change). Because, power cycling the device in the event of a
-firmware crash or even upon receiving AER Fatal errors is valid for platforms
-not making use of this driver and an existing issue.
+On Wed, Feb 14, 2024 at 6:22=E2=80=AFAM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This controller with GICv3 ITS can handle MSI-X, but it needs
+> to set vendor-specific registers by using the MSI address value.
+> To get the address, add .post_init() for it.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-For sure we can accomodate that functionality in this series itself, but that's
-going to drag this series to many releases (you already know how long it took
-for us to get to the current state). Instead, I'd recommend to merge it in its
-current form and have Bartosz or someone work on incremental features such as:
+Thanks for your patch!
 
-1. Runtime/System PM
-2. Resetting the device in the event of fw crash etc...
+> --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
 
-Wdyt?
+> @@ -297,6 +304,25 @@ static int rcar_gen4_pcie_host_init(struct dw_pcie_r=
+p *pp)
+>         return 0;
+>  }
+>
+> +static void rcar_gen4_pcie_host_post_init(struct dw_pcie_rp *pp)
+> +{
+> +       struct dw_pcie *dw =3D to_dw_pcie_from_pp(pp);
+> +       struct rcar_gen4_pcie *rcar =3D to_rcar_gen4_pcie(dw);
+> +       struct irq_data *data;
+> +       struct pci_dev *dev;
+> +       struct msi_msg msg;
+> +
+> +       if (pp->has_msi_ctrl)
+> +               return;
+> +
+> +       list_for_each_entry(dev, &pp->bridge->bus->devices, bus_list) {
+> +               data =3D irq_get_irq_data(dev->irq);
 
-- Mani
+If CONFIG_PCIEPORTBUS is disabled, data is NULL, causing a crash below.
 
--- 
-மணிவண்ணன் சதாசிவம்
+I haven't found where exactly the irq data is filled in, and don't know
+where/how the dependency on CONFIG_PCIEPORTBUS should be expressed.
+
+> +               __pci_read_msi_msg(irq_data_get_msi_desc(data), &msg);
+> +               writel(msg.address_lo, rcar->base + AXIINTCADDR);
+> +               writel(AXIINTCCONT_VAL, rcar->base + AXIINTCCONT);
+> +       }
+> +}
+> +
+>  static void rcar_gen4_pcie_host_deinit(struct dw_pcie_rp *pp)
+>  {
+>         struct dw_pcie *dw =3D to_dw_pcie_from_pp(pp);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
