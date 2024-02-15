@@ -1,60 +1,61 @@
-Return-Path: <linux-pci+bounces-3532-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3533-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C468485694B
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:16:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAD39856A7A
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:04:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 624311F265B4
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 16:16:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98FECB27648
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:03:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE92134730;
-	Thu, 15 Feb 2024 16:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE8013248C;
+	Thu, 15 Feb 2024 17:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWbFqy/D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7HEMHyI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E686D134726;
-	Thu, 15 Feb 2024 16:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642AD1754B;
+	Thu, 15 Feb 2024 17:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013477; cv=none; b=d802kP1J25BQfiDMyoX4MVFtCvdqBh6jf5Zmj0Mj9SaQWVsJu8E1BF5ofxFuOOi4xyM4bjE/Zity8Kd5qJ4OYB7soB7BUQ2XMf1Emixo4V77i+g3mBTjEeZtnuDuWaw5BpTCr7i4TgMhZqSIpLqlsC4832vMHt/i/hd0wjAdjr4=
+	t=1708016580; cv=none; b=kUdKSkZTEWHQJUCoa+Ua2xQdkmXsaDI+6zWKFLUArJWm/obB5AqznJsFcEu/bpLwCZOgXhyehRmaes7qtjJiDKUTOmweDMb3leYSmeGj9/ilZG0zJ5MuvVGiHFvlk7gYCdBRL++irHxMpWTXMxW9Kve/LrFqfFjddJPkWCkf5Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013477; c=relaxed/simple;
-	bh=Vyz7IOzA7aW6XCnyElzhzRzZbzPNLX4vzNsg70hxADU=;
+	s=arc-20240116; t=1708016580; c=relaxed/simple;
+	bh=N1m0kPjc7D24yEHh5GCbtG5RxZ9QtaO4otDQYDmi8rE=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mHGG3iimXpbx9nOg5Eze/dMyEWaPw2w+RVtUipCaEndVZv2M8cY9k5CoOim+23EwHGPg2Yxj3+4tQZ2Lwr05BreDBtSjdVTAxo/yjOPGj4NC7zwlR28vw++RM6p5yfuZLWCXEup8zvOnjMrrqXLvjg4NbYTDeXE5hds28x9yp1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWbFqy/D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78264C433F1;
-	Thu, 15 Feb 2024 16:11:16 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=d1ofM9+Zn/7QqDpBYBCY1qGMEG4rQV4SXmyyLroZpsre6MDCY/44vd2rMIYO6305vsbN+5ByzVHNxWnL1MHsqA3+dy4Op/fuOEMEF4NwQK40mlronK+8+NWJWAQnd5q3SmSb3ugfhnOBUDpF2VkE50GTTGd+ESwLwh5z9oMihiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7HEMHyI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2BDC433F1;
+	Thu, 15 Feb 2024 17:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708013476;
-	bh=Vyz7IOzA7aW6XCnyElzhzRzZbzPNLX4vzNsg70hxADU=;
+	s=k20201202; t=1708016579;
+	bh=N1m0kPjc7D24yEHh5GCbtG5RxZ9QtaO4otDQYDmi8rE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aWbFqy/D3RnbyH3500/cXNNqMzmiwGjw6LQ3lpdWgGZveLcZg11qlfPRX7VOV1yBP
-	 14MlTw0KxRzs3A5nXExZ6o40P5c3h6l1d8SCyoFGyXFFmdf1EEllel0mtQ8j6UNmn0
-	 JoJgR8bMzfGw+x5dP7/Xk9WvzTEfgp5jtpu4LoX3HMnSJvcAJWkDtES+slim97yBz7
-	 d0BZAaCQLFAQhb/WLhSba04eJt+2XcI/4Erj7S/fe4E0eqEqs/rpIAPeLukD3cK9d0
-	 i6n+LT+4c/2EU+in3WuGbrVzML2aKr53Pk5gXF66yBClAiBuLffgHORIUoda2TMP9e
-	 86GWeyU3KKHPg==
-Date: Thu, 15 Feb 2024 10:11:14 -0600
+	b=J7HEMHyICW+lND9f9nL4zGh4EuhNKxyu1pocmvfWJJJ41LXKdStLT7I4cpsU/oGGf
+	 U1XYFWSwlYncng5/yRVzAS3VJy/k3BkLT2u75gOwk5lRhOx7r/9ezkKYPe+bLTtsJy
+	 juTBxqB3UvitOk2fmthh37dWaznvCbCKomD5X1QqoZsntIaWIjm9jgBlou1aGXLUhc
+	 uosFTdmdeekyQbJiTMg7hbChm1ZIxN0L3hiJRAH38bK2Fl5rCS8c8LUjmElxC6dQc1
+	 nKoBWHBddKeTd6zfad9lxr0YUytYEmJ3ZbyAR2+20SyK2sPGfpewTvoyX6/ybb9dSh
+	 8fluJ185PiChw==
+Date: Thu, 15 Feb 2024 11:02:58 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
-Message-ID: <20240215161114.GA1292081@bhelgaas>
+Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
+Message-ID: <20240215170258.GA1292702@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,59 +64,69 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3a040d65-4843-4e7d-818e-2523d112c74a@linaro.org>
+In-Reply-To: <7611f6f9-a021-4bbd-bc71-5363af3d9391@intel.com>
 
-On Thu, Feb 15, 2024 at 11:21:45AM +0100, Konrad Dybcio wrote:
-> On 14.02.2024 23:28, Bjorn Helgaas wrote:
-> > On Wed, Feb 14, 2024 at 10:35:16PM +0100, Konrad Dybcio wrote:
-> >> On 12.02.2024 22:17, Bjorn Helgaas wrote:
-> >>> Maybe include the reason in the subject?  "Read back" is literally
-> >>> what the diff says.
-> >>>
-> >>> On Sat, Feb 10, 2024 at 06:10:06PM +0100, Konrad Dybcio wrote:
-> >>>> To ensure write completion, read the PARF_LTSSM register after setting
-> >>>> the LTSSM enable bit before polling for "link up".
-> >>>
-> >>> The write will obviously complete *some* time; I assume the point is
-> >>> that it's important for it to complete before some other event, and it
-> >>> would be nice to know why that's important.
-> >>
-> >> Right, that's very much meaningful on non-total-store-ordering
-> >> architectures, like arm64, where the CPU receives a store instruction,
-> >> but that does not necessarily impact the memory/MMIO state immediately.
+On Thu, Feb 15, 2024 at 02:35:13PM +0100, Alexander Lobakin wrote:
+> From: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Date: Thu, 15 Feb 2024 11:39:31 +0100
+> 
+> > According to [1], msleep should be used for large sleeps, such as the
+> > 100-ish ms one in this function. Comply with the guide and use it.
 > > 
-> > I was hinting that maybe we could say what the other event is, or what
-> > problem this solves?  E.g., maybe it's as simple as "there's no point
-> > in polling for link up until after the PARF_LTSSM store completes."
+> > [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
 > > 
-> > But while the read of PARF_LTSSM might reduce the number of "is the
-> > link up" polls, it probably wouldn't speed anything up otherwise, so I
-> > suspect there's an actual functional reason for this patch, and that's
-> > what I'm getting at.
+> > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> > ---
+> > Tested on Qualcomm SC8280XP CRD
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+> >  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
+> >  2 files changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 250cf7f40b85..abce6afceb91 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> >  		if (dw_pcie_link_up(pci))
+> >  			break;
+> >  
+> > -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> > +		msleep(LINK_WAIT_MSLEEP_MAX);
 > 
-> So, the register containing the "enable switch" (PARF_LTSSM) can (due
-> to the armv8 memory model) be "written" but not "change the value of
-> memory/mmio from the perspective of other (non-CPU) memory-readers
-> (such as the MMIO-mapped PCI controller itself)".
-> 
-> In that case, the CPU will happily continue calling qcom_pcie_link_up()
-> in a loop, waiting for the PCIe controller to bring the link up, however
-> the PCIE controller may have never received the PARF_LTSSM "enable link"
-> write by the time we decide to time out on checking the link status.
-> 
-> It may also never happen for you, but that's exactly like a classic race
-> condition, where it may simply not manifest due to the code around the
-> problematic lines hiding it. It may also only manifest on certain CPU
-> cores that try to be smarter than you and keep reordering/delaying
-> instructions if they don't seem immediately necessary.
+> Just use fsleep(LINK_WAIT_USLEEP_MAX) and let the kernel decide which
+> function to pick.
 
-Does this mean the register is mapped incorrectly, e.g., I see arm64
-has many different kinds of mappings for cacheability,
-write-buffering, etc?
+Odd.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/timers/timers-howto.rst?id=v6.7#n114
+mentions fsleep() (with no real guidance about when to use it), but
+https://www.kernel.org/doc/Documentation/timers/timers-howto.txt 
+seems to be a stale copy from 2017, before fsleep() was added.  I
+emailed helpdesk@kernel.org to see if the stale content can be
+removed.
 
-Or, if it is already mapped correctly, are we confident that none of
-the *other* register writes need similar treatment?  Is there a rule
-we can apply to know when the read-after-write is needed?
+I do think fsleep() should be more widely used.
+
+> >  /* Parameters for the waiting for link up routine */
+> >  #define LINK_WAIT_MAX_RETRIES		10
+> > -#define LINK_WAIT_USLEEP_MIN		90000
+> > -#define LINK_WAIT_USLEEP_MAX		100000
+> > +#define LINK_WAIT_MSLEEP_MAX		100
+
+Since you're touching this anyway, it would be helpful to include the
+units on the timeout.
+
+USLEEP/MSLEEP is definitely a hint, but I think the "SLEEP" part
+suggests something about atomic/non-atomic context and isn't relevant
+to the time interval itself, and something like "TIMEOUT" would be
+better.
+
+I think an explicit "_US" or "_MS" would better indicate the units.
+
+This is turning into a long tangent, but I'm not a huge fan of the
+LINK_WAIT_* pattern where I have to look up the code that uses
+LINK_WAIT_MAX_RETRIES and LINK_WAIT_USLEEP_MAX and do the math to see
+what the actual timeout is.  Obviously not fodder for *this* patch.
 
 Bjorn
 
