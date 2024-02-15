@@ -1,40 +1,40 @@
-Return-Path: <linux-pci+bounces-3490-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3488-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B33D856209
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 12:47:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74817856211
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 12:48:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27DCD288286
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 11:47:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55F00B2ABB5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 11:47:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2550312BEB9;
-	Thu, 15 Feb 2024 11:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFB5112B171;
+	Thu, 15 Feb 2024 11:47:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD0312AAF0;
-	Thu, 15 Feb 2024 11:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A77269DFE;
+	Thu, 15 Feb 2024 11:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707997636; cv=none; b=noxaQzdVJmGify0zbUVzI6bh5YrouvR7wq34DbGHGhK+d9l8cOMaU4nlcr6vcTpOLaBvQjl05cdIblHSA2cmV4PgvAmdUh5xaHvE1w8L3ndtSMw5y+b3G/S9J50/KJgNSFRXfzcGfX/gkM6uub9SbES8IhVdnAc9l2dUdeIeiQU=
+	t=1707997634; cv=none; b=qIY+uOhc9wZEA7NKjxf+0JxcLSUPFuVxL0Fi5A+avrqRLWL6AV4w10E4cGDhHcQOYeJAt0Vaxav5ZbQpcR/QwMGt+LYo36btc613uUPPi53n3TXOCmCuRtaoosjM+OLp3B9eRUk3CtHfze/5iRuopYCFdQG9FufA57dATqyLiyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707997636; c=relaxed/simple;
-	bh=lP9mG+q31w+0eBk1IgbWBdBggPCn8pZT5QzEIkttmUI=;
+	s=arc-20240116; t=1707997634; c=relaxed/simple;
+	bh=qmEIDhh+bnqXC1NcVizQoxS1/hB36pLfas5EtEagmNs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s8kagY51HZyzMk5ecxoLM8DV0aXdxI6zxgCc8Bg33ZfZxyVy4xpgMPJcshpO8MA1sT7uqb2uo1FlaPG/Cbf42SrpEimCELyZL1G9vlNOl6IknD7UtrTN7oDcblHNqjnux/H3sC9p3e89RgMkpI42UeAB5nrad/R11kFpurdAYfg=
+	 MIME-Version:Content-Type; b=uDQzR42smnVrwt7yfzzx0UICiH0RGYah0+Ty3zvSXj/YgU+q9d1e8P6q+MTRORgO4OKg0ykJ9/SjqTh2YvT0WY2eAxoGJlZyQIA8Eks4HsGq+dkWdrR523L2oGm0WIX3KYIUiinn9JMgTgzyi+ZdoRnr7wl1u7NZJK4hHWBi2b4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbCrF2pKJz67Lqc;
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TbCrF6tczz6K7F5;
 	Thu, 15 Feb 2024 19:43:41 +0800 (CST)
 Received: from lhrpeml500006.china.huawei.com (unknown [7.191.161.198])
-	by mail.maildlp.com (Postfix) with ESMTPS id F22231400D3;
-	Thu, 15 Feb 2024 19:47:08 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8B17D140D26;
+	Thu, 15 Feb 2024 19:47:09 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -45,9 +45,9 @@ To: <linux-edac@vger.kernel.org>, <linux-pci@vger.kernel.org>,
 CC: <qingshun.wang@linux.intel.com>, <jonathan.cameron@huawei.com>,
 	<tanxiaofei@huawei.com>, <prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
 	<shiju.jose@huawei.com>
-Subject: [RFC PATCH 1/2] rasdaemon: Add handling of new fields in aer_event for advisory non-fatal and other errors
-Date: Thu, 15 Feb 2024 19:46:58 +0800
-Message-ID: <20240215114659.1513-2-shiju.jose@huawei.com>
+Subject: [RFC PATCH 2/2] rasdaemon: ras-mc-ctl: Add support for new fields in aer_event for  advisory non-fatal and other errors
+Date: Thu, 15 Feb 2024 19:46:59 +0800
+Message-ID: <20240215114659.1513-3-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
 In-Reply-To: <20240215114659.1513-1-shiju.jose@huawei.com>
 References: <20240215114659.1513-1-shiju.jose@huawei.com>
@@ -64,7 +64,7 @@ X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add handling of following new fields in trace aer_event
+Add support for following new fields added in trace aer_event
 for advisory non-fatal and other errors.
 
   - cor_status		(Correctable Error Status)
@@ -79,199 +79,57 @@ for advisory non-fatal and other errors.
 
 https://lore.kernel.org/lkml/20240125062802.50819-5-qingshun.wang@linux.intel.com/
 
-Question: Does "aer_event" table in SQLite DB  to be rename,
-for example "aer_event_v2" because new fields are added?
-
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- ras-aer-handler.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++
- ras-record.c      | 20 ++++++++++++++++
- ras-record.h      | 10 ++++++++
- ras-report.c      | 24 +++++++++++++++++--
- 4 files changed, 112 insertions(+), 2 deletions(-)
+ util/ras-mc-ctl.in | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/ras-aer-handler.c b/ras-aer-handler.c
-index bb1a6f6..9a732e7 100644
---- a/ras-aer-handler.c
-+++ b/ras-aer-handler.c
-@@ -54,6 +54,30 @@ static const char *aer_uncor_errors[32] = {
+diff --git a/util/ras-mc-ctl.in b/util/ras-mc-ctl.in
+index a7ece13..e5ee040 100755
+--- a/util/ras-mc-ctl.in
++++ b/util/ras-mc-ctl.in
+@@ -1750,12 +1750,13 @@ sub errors
+     my ($dev, $sector, $nr_sector, $error, $rwbs, $cmd);
+     my ($error_count, $affinity, $mpidr, $r_state, $psci_state);
+     my ($pfn, $page_type, $action_result);
++    my ($cor_status, $cor_mask, $uncor_status, $uncor_mask, $uncor_severity, $cap_control, $first_err_pointer, $link_status, $device_status, $device_control_2);
+     my ($memdev, $host, $serial, $error_status, $first_error, $header_log);
+     my ($log_type, $first_ts, $last_ts);
+     my ($trace_type, $region, $region_uuid, $hpa, $dpa, $dpa_length, $source, $flags, $overflow_ts);
+     my ($hdr_uuid, $hdr_flags, $hdr_handle, $hdr_related_handle, $hdr_ts, $hdr_length, $hdr_maint_op_class, $data);
+     my ($dpa_flags, $descriptor, $mem_event_type, $transaction_type, $channel, $rank, $device, $comp_id);
+-    my ($nibble_mask, $bank_group, $row, $column, $cor_mask);
++    my ($nibble_mask, $bank_group, $row, $column);
+     my ($event_type, $health_status, $media_status, $life_used, $dirty_shutdown_cnt, $cor_vol_err_cnt, $cor_per_err_cnt, $device_temp, $add_status);
  
- #define BUF_LEN	1024
+     my $dbh = DBI->connect("dbi:SQLite:dbname=$dbname", "", "", {});
+@@ -1782,13 +1783,23 @@ sub errors
  
-+struct aer_header_log_regs {
-+	uint32_t dw0;
-+	uint32_t dw1;
-+	uint32_t dw2;
-+	uint32_t dw3;
-+};
-+
-+struct aer_capability_regs {
-+	uint32_t header;
-+	uint32_t uncor_status;
-+	uint32_t uncor_mask;
-+	uint32_t uncor_severity;
-+	uint32_t cor_status;
-+	uint32_t cor_mask;
-+	uint32_t cap_control;
-+	struct aer_header_log_regs header_log;
-+	uint32_t root_command;
-+	uint32_t root_status;
-+	uint16_t cor_err_source;
-+	uint16_t uncor_err_source;
-+};
-+
-+#define  PCI_ERR_CAP_FEP(x)     ((x) & 0x1f)    /* First Error Pointer */
-+
- int ras_aer_event_handler(struct trace_seq *s,
- 			  struct tep_record *record,
- 			  struct tep_event *event, void *context)
-@@ -70,6 +94,7 @@ int ras_aer_event_handler(struct trace_seq *s,
- 	char ipmi_add_sel[105];
- 	uint8_t sel_data[5];
- 	int seg, bus, dev, fn;
-+	struct aer_capability_regs *aer_caps = NULL;
- 
- 	/*
- 	 * Newer kernels (3.10-rc1 or upper) provide an uptime clock.
-@@ -148,6 +173,41 @@ int ras_aer_event_handler(struct trace_seq *s,
- 	}
- 	trace_seq_puts(s, ev.error_type);
- 
-+	aer_caps = tep_get_field_raw(s, event, "aer_caps",
-+				     record, &len, 1);
-+	if (aer_caps) {
-+		ev.cor_status = aer_caps->cor_status;
-+		ev.cor_mask = aer_caps->cor_mask;
-+		ev.uncor_status = aer_caps->uncor_status;
-+		ev.uncor_mask = aer_caps->uncor_mask;
-+		ev.uncor_severity = aer_caps->uncor_severity;
-+		ev.cap_control = aer_caps->cap_control;
-+		ev.first_err_ptr = PCI_ERR_CAP_FEP(aer_caps->cap_control);
-+
-+		trace_seq_printf(s, " cor_status: 0x%08x", ev.cor_status);
-+		trace_seq_printf(s, " cor_mask: 0x%08x", ev.cor_mask);
-+		trace_seq_printf(s, " uncor_status: 0x%08x", ev.uncor_status);
-+		trace_seq_printf(s, " uncor_mask: 0x%08x", ev.uncor_mask);
-+		trace_seq_printf(s, " uncor_severity: 0x%08x", ev.uncor_severity);
-+		trace_seq_printf(s, " cap_control: 0x%08x", ev.cap_control);
-+		trace_seq_printf(s, " first_error_pointer: 0x%x",
-+				 ev.first_err_ptr);
-+	}
-+	if (tep_get_field_val(s,  event, "link_status", record, &val, 1) >= 0) {
-+		ev.link_status = val;
-+		trace_seq_printf(s, " link_status: 0x%04x ", ev.link_status);
-+	}
-+
-+	if (tep_get_field_val(s,  event, "device_status", record, &val, 1) >= 0) {
-+		ev.device_status = val;
-+		trace_seq_printf(s, " device_status: 0x%04x ", ev.device_status);
-+	}
-+
-+	if (tep_get_field_val(s,  event, "device_control_2", record, &val, 1) >= 0) {
-+		ev.device_control_2 = val;
-+		trace_seq_printf(s, " device_control_2: 0x%04x ", ev.device_control_2);
-+	}
-+
- 	/* Insert data into the SGBD */
- #ifdef HAVE_SQLITE3
- 	ras_store_aer_event(ras, &ev);
-diff --git a/ras-record.c b/ras-record.c
-index f3ffafb..889e96f 100644
---- a/ras-record.c
-+++ b/ras-record.c
-@@ -111,6 +111,16 @@ static const struct db_fields aer_event_fields[] = {
- 		{ .name = "dev_name",		.type = "TEXT" },
- 		{ .name = "err_type",		.type = "TEXT" },
- 		{ .name = "err_msg",		.type = "TEXT" },
-+		{ .name = "cor_status",		.type = "INTEGER" },
-+		{ .name = "cor_mask",		.type = "INTEGER" },
-+		{ .name = "uncor_status",	.type = "INTEGER" },
-+		{ .name = "uncor_mask",		.type = "INTEGER" },
-+		{ .name = "uncor_severity",	.type = "INTEGER" },
-+		{ .name = "cap_control",	.type = "INTEGER" },
-+		{ .name = "first_err_pointer",  .type = "INTEGER" },
-+		{ .name = "link_status",	.type = "INTEGER" },
-+		{ .name = "device_status",	.type = "INTEGER" },
-+		{ .name = "device_control_2",	.type = "INTEGER" },
- };
- 
- static const struct db_table_descriptor aer_event_tab = {
-@@ -132,6 +142,16 @@ int ras_store_aer_event(struct ras_events *ras, struct ras_aer_event *ev)
- 	sqlite3_bind_text(priv->stmt_aer_event,  2, ev->dev_name, -1, NULL);
- 	sqlite3_bind_text(priv->stmt_aer_event,  3, ev->error_type, -1, NULL);
- 	sqlite3_bind_text(priv->stmt_aer_event,  4, ev->msg, -1, NULL);
-+	sqlite3_bind_int(priv->stmt_aer_event,  5, ev->cor_status);
-+	sqlite3_bind_int(priv->stmt_aer_event,  6, ev->cor_mask);
-+	sqlite3_bind_int(priv->stmt_aer_event,  7, ev->uncor_status);
-+	sqlite3_bind_int(priv->stmt_aer_event,  8, ev->uncor_mask);
-+	sqlite3_bind_int(priv->stmt_aer_event,  9, ev->uncor_severity);
-+	sqlite3_bind_int(priv->stmt_aer_event,  10, ev->cap_control);
-+	sqlite3_bind_int(priv->stmt_aer_event,  11, ev->first_err_ptr);
-+	sqlite3_bind_int(priv->stmt_aer_event,  12, ev->link_status);
-+	sqlite3_bind_int(priv->stmt_aer_event,  13, ev->device_status);
-+	sqlite3_bind_int(priv->stmt_aer_event,  14, ev->device_control_2);
- 
- 	rc = sqlite3_step(priv->stmt_aer_event);
- 	if (rc != SQLITE_OK && rc != SQLITE_DONE)
-diff --git a/ras-record.h b/ras-record.h
-index 2b2231c..ecab219 100644
---- a/ras-record.h
-+++ b/ras-record.h
-@@ -59,6 +59,16 @@ struct ras_aer_event {
- 	uint8_t tlp_header_valid;
- 	uint32_t *tlp_header;
- 	const char *msg;
-+	uint32_t cor_status;
-+	uint32_t cor_mask;
-+	uint32_t uncor_status;
-+	uint32_t uncor_mask;
-+	uint32_t uncor_severity;
-+	uint32_t cap_control;
-+	uint32_t first_err_ptr;
-+	uint16_t link_status;
-+	uint16_t device_status;
-+	uint16_t device_control_2;
- };
- 
- struct ras_extlog_event {
-diff --git a/ras-report.c b/ras-report.c
-index 5cc55b6..5e659ce 100644
---- a/ras-report.c
-+++ b/ras-report.c
-@@ -205,11 +205,31 @@ static int set_aer_event_backtrace(char *buf, struct ras_aer_event *ev)
- 						"timestamp=%s\n"	\
- 						"error_type=%s\n"	\
- 						"dev_name=%s\n"	\
--						"msg=%s\n",	\
-+						"msg=%s\n"	\
-+						"cor_status=0x%08x\n"	\
-+						"cor_mask=0x%08x\n"	\
-+						"uncor_status=0x%08x\n"	\
-+						"uncor_mask=0x%08x\n"	\
-+						"uncor_severity=0x%08x\n"	\
-+						"cap_control=0x%08x\n"	\
-+						"first_error_pointer=0x%x\n"	\
-+						"link_status=0x%04x\n"	\
-+						"device_status=0x%04x\n"	\
-+						"device_control_2=0x%04x\n",	\
- 						ev->timestamp,	\
- 						ev->error_type,	\
- 						ev->dev_name,	\
--						ev->msg);
-+						ev->msg,	\
-+						ev->cor_status,	\
-+						ev->cor_mask,	\
-+						ev->uncor_status,	\
-+						ev->uncor_mask,	\
-+						ev->uncor_severity,	\
-+						ev->cap_control,	\
-+						ev->first_err_ptr,	\
-+						ev->link_status,	\
-+						ev->device_status,	\
-+						ev->device_control_2);
- 
- 	strcat(buf, bt_buf);
- 
+     # PCIe AER aer_event errors
+     if ($has_aer == 1) {
+-        $query = "select id, timestamp, dev_name, err_type, err_msg from aer_event$conf{opt}{since} order by id";
++        $query = "select id, timestamp, dev_name, err_type, err_msg, cor_status, cor_mask, uncor_status, uncor_mask, uncor_severity, cap_control, first_err_pointer, link_status, device_status, device_control_2 from aer_event$conf{opt}{since} order by id";
+         $query_handle = $dbh->prepare($query);
+         $query_handle->execute();
+-        $query_handle->bind_columns(\($id, $time, $devname, $type, $msg));
++        $query_handle->bind_columns(\($id, $time, $devname, $type, $msg, $cor_status, $cor_mask, $uncor_status, $uncor_mask, $uncor_severity, $cap_control, $first_err_pointer, $link_status, $device_status, $device_control_2));
+         $out = "";
+         while($query_handle->fetch()) {
+-            $out .= "$id $time $devname $type error: $msg\n";
++            $out .= "$id $time $devname $type error: $msg ";
++            $out .= sprintf "cor_status=0x%08x ", $cor_status if (defined $cor_status && length $cor_status);
++            $out .= sprintf "cor_mask=0x%08x ", $cor_mask if (defined $cor_mask && length $cor_mask);
++            $out .= sprintf "uncor_status=0x%08x ", $uncor_status if (defined $uncor_status && length $uncor_status);
++            $out .= sprintf "uncor_mask=0x%08x ", $uncor_mask if (defined $uncor_mask && length $uncor_mask);
++            $out .= sprintf "uncor_severity=0x%08x ", $uncor_severity if (defined $uncor_severity && length $uncor_severity);
++            $out .= sprintf "cap_control=0x%08x ", $cap_control if (defined $cap_control && length $cap_control);
++            $out .= sprintf "first_error_pointer=0x%x ", $first_err_pointer if (defined $first_err_pointer && length $first_err_pointer);
++            $out .= sprintf "link_status=0x%04x ", $link_status if (defined $link_status && length $link_status);
++            $out .= sprintf "device_status=0x%04x ", $device_status if (defined $device_status && length $device_status);
++            $out .= sprintf "device_control_2=0x%04x", $device_control_2 if (defined $device_control_2 && length $device_control_2);
+         }
+         if ($out ne "") {
+             print "PCIe AER events:\n$out\n";
 -- 
 2.34.1
 
