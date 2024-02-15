@@ -1,203 +1,164 @@
-Return-Path: <linux-pci+bounces-3539-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3540-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36982856D5F
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 20:09:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3DC8856DE9
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 20:41:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E7116281DD6
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 19:09:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84538B23F9A
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 19:41:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 095DA134744;
-	Thu, 15 Feb 2024 19:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0AA913A247;
+	Thu, 15 Feb 2024 19:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qZlgAKXz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AwVSK7Ir"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A79A3D6D;
-	Thu, 15 Feb 2024 19:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF97613A266;
+	Thu, 15 Feb 2024 19:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708024179; cv=fail; b=l3ikbXi7SIEWS2PujrJoIjKa3RCnPxvxHYXJFPCY66WYgu4HTtH5V8DW4K5EZ+IrjAxEp4CL5OSNmkZBg5i60b/9BGubObNtINqkeOEdDT6Fu0QnIympxv+LH22VltaUPTXYDR9n3wwsJIAhsCk7OC0PujYNXAIi0Sco2SiryQQ=
+	t=1708026065; cv=fail; b=gcaLAcVfU/ZKdnqhD76WJUsu5yjxf844BBIl0AAYM/aINg194OxaejYdTFmX18HFuFmZgGEhnmewzl267LUECuDB3FkJSRaUjJskfU7QLQxRPkaGoe8IXjQszMCdp8erPubX2SVh0bbbTcSncx/tXcIHiNVLO4mM9OqL4OpTfRU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708024179; c=relaxed/simple;
-	bh=KBgkGLl0jmtJvG3QC8sF2XQOjCNjsF1eBNgFfM/2Ht4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Eetm5Tq1I97+I/tpKhEjI1nVMFpeJExUJqR4H8daOFZLeVWYxFYIghf2PewMTpB8Lb0WIral6NnpWzf4IGBWDch6a6C+odWTadQswNoTCanAdk5UMfETUisrz2nFCcUwqkhYpm0Ixsf+E0+1WYGT4f71h22VwWB+boCAPj+rZUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qZlgAKXz; arc=fail smtp.client-ip=40.107.223.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1708026065; c=relaxed/simple;
+	bh=ErFeK0ZQ7Xij3015VnXJdx02/oazNb+gl/rOzDHh8rg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=begYLNkZ383F/SmOkWoMnYkU2fNuHOOA9dRC0enNn+XifEaXVgPiGTDsCUSrm2gh1uGRZ21y2Z6CWN6DNTAJgZH1ldZ0egcx1MT1TTTtmu5XrbFoawc2LlelhIi6HYAya9HMSopjaVZY4L80+KYT3J9VR+nSEw3Got/JfZ1Ni6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AwVSK7Ir; arc=fail smtp.client-ip=40.107.94.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U505/2x2pMjykhiQauxyC5+AKb+HkrWk5P/hliWV9Kw2ectARFDFketBz0zUB9y9l3r2F0uK8l8Vo1q2tEkhXGwM5UGLeY9qUvE0BtD5C3JSF6y5kECTQxZnc+XnDGssvPaUgZ1r5I5JwKeOYz6qtW5kF/Krab9tP6iTKqD6aRI1GHgWPoUXjEQf8KL0apSkfDJkUdCcvCLOwyDFxXr57b4qTvbbEAsQOwLozHp/r5ZvZ2K1Lait+wCl+xpUasugU3AYqghrwF28WHC83Cf3U/0S/V0ZadN/RgzB898qi2kWWVwsTeE/RSaYIbSPURmBbJFB+J3fjL9iWCpqnilnQA==
+ b=JuoQNaimh2KUMmIP1c9ubH9QTIM2mH546jRG5qVh8vmFthpJp80pFKXrx+K2pJ9DTdr5QhRDpjkep95pqI6Ye6/sR/vnbIzQOog84IYtXYqZtH+hAgsEVoqG6i5SzQcBTrzRQLWKEbT15Yrcp64g3R4nQHO8eHHlMjZ2YfV2kOyLG7xzDiziXKGDObFuyqftK0lr2qVNuZT3fBd2dKuY6/pM7WjsrrI/wIyjfI+1YYlOTGTGHDOmKDiObPESsI1qFF6Ju6b+uAFP2Vt3zcf1xGgW2Lyw4SLXxy3Cin1atgA+nlf0RlMeB9ER4hwikgG8g0LA5QERVrWeYWvEhDVSjA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K83ALH1RqKUuPGPpBsUP4reB9oQULlWERr0oxvNxVRg=;
- b=SWGNYmutonBUo+za49y7oRYdWi0nXA5sHb2AzMs556s/oCU8lmos3Z3XJqDzzpYo4dcRX3gdMU/FwpoU+rzeruE1hg1aOTRZ8Nt6d3UZH9L0K2Wxe7orG5lyTu98U0/hXHhcyloKUKIWgGx2xJaSQhokrvNuRPnCevjyZDAfB4KW8YMCawN3XraJevqTw4rHagaGRbzkk+xy5icY7NT/8u2csQPbkiO4HlQqKOLlhuVR5wGzIXY7xMqUyXNIZ+xNr4aEgbCYftAoCBEzPkepMo/eSFqeX+95y+E5RMH1Bf2RygynsM9KUjN5+WGc57h+OshWQ2eHwZJbi5K6K7/aSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=JuqahSwnlRv6kCMUVZESVsUa1kQ7D7dRMWauWlFkE9Q=;
+ b=kul135O/gAbsUoEkC2RR4qGj3o7ET/A3fad790wKXFqAqa7pSXPURcljA1NcjROFAIjJIYjfWK5XtPaSsvTnf0jWRqX8NsE8X26hyhBO4UAfpaEtud8dGfV24FaFfN74b0YzFi902NoPu+qj4moK5jMvpyEq2BYrZbWn1f9cq7SwG/4BY5ANXDXYVexmrW/WpqFlU66EZ8fG0fun9NrJU4WmfQJsNq1l/0KN1oCXgmsIpqeC1k4e5JGkCN1MMcLoAToNBl4L1A7S68J3w+xzaa7/8vWb2ZqVZOR3WOSvhLbq+S6Xm/6+0qWpdc5/i+kqBd66bvU7XFZ4nlQgvfNj1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K83ALH1RqKUuPGPpBsUP4reB9oQULlWERr0oxvNxVRg=;
- b=qZlgAKXz5JNnmGFhnLw65UTtXuZ9JKhGSrX//GBn0zzHV8RBnEqG4q6P6KVTsFJ4Dhg5GFhzzsDbQK16jaRnSatoUOfBeyfxmMgm4/h0IQRx2srGVDDEkyphtSNUhmuz3SV+Ed7QcOx+5eRXqmRL0frZjza5tuHmNQMy+oMl1KC1b5OlYOAl1Kpwn1t+mkSycQdKCZO6RLGyvGhHiy9Qjobh7PoNLbZrWDk8wVg/d3/TpkbT//zVYZBPOf8SN6RrV3oAAPgdutvYW0YESH/jgVM+5erKiNvUvVEktVo3Go+tUKgj/6EeYf+FRqH8NhAeDCiO9ilm008U+tUA4Ha/hA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
- by BY5PR12MB4259.namprd12.prod.outlook.com (2603:10b6:a03:202::17) with
+ bh=JuqahSwnlRv6kCMUVZESVsUa1kQ7D7dRMWauWlFkE9Q=;
+ b=AwVSK7IrGmLkE+BYuJH0aUAzTVYzLfJubhki5O7Tatli87RY613C5VbbZP5dSEmmDlNjO5XLWQloBScR05J9v2cDBk4znwPdKYgGMv1b3fY9hyCvXcqur1AijJvXzJYX9mpUcv9DvOAKeziQomAsPKt4xgd8wbE5aj4q8Xrf8eQ=
+Received: from BN9PR03CA0192.namprd03.prod.outlook.com (2603:10b6:408:f9::17)
+ by SA3PR12MB8024.namprd12.prod.outlook.com (2603:10b6:806:312::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26; Thu, 15 Feb
- 2024 19:09:35 +0000
-Received: from PH8PR12MB6674.namprd12.prod.outlook.com
- ([fe80::ad63:96df:9a9a:83e4]) by PH8PR12MB6674.namprd12.prod.outlook.com
- ([fe80::ad63:96df:9a9a:83e4%5]) with mapi id 15.20.7292.022; Thu, 15 Feb 2024
- 19:09:35 +0000
-Message-ID: <77b41973-e021-471c-89ad-f8cb8752e278@nvidia.com>
-Date: Fri, 16 Feb 2024 00:39:23 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V16 13/13] PCI: tegra: Add Tegra194 PCIe support
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, bhelgaas@google.com,
- robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
- jonathanh@nvidia.com, Kishon Vijay Abraham I <kishon@kernel.org>,
- catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
- jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, digetx@gmail.com,
- mperttunen@nvidia.com, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20240215160157.GA1291755@bhelgaas>
-From: Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <20240215160157.GA1291755@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MAXPR01CA0109.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::27) To PH8PR12MB6674.namprd12.prod.outlook.com
- (2603:10b6:510:1c1::18)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.25; Thu, 15 Feb
+ 2024 19:41:02 +0000
+Received: from BN1PEPF0000468D.namprd05.prod.outlook.com
+ (2603:10b6:408:f9:cafe::29) by BN9PR03CA0192.outlook.office365.com
+ (2603:10b6:408:f9::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.26 via Frontend
+ Transport; Thu, 15 Feb 2024 19:41:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF0000468D.mail.protection.outlook.com (10.167.243.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Thu, 15 Feb 2024 19:41:01 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 15 Feb 2024 13:41:01 -0600
+From: Ben Cheatham <Benjamin.Cheatham@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <bhelgaas@google.com>,
+	<benjamin.cheatham@amd.com>
+Subject: [RFC PATCH 0/6] Implement initial CXL Timeout & Isolation support
+Date: Thu, 15 Feb 2024 13:40:42 -0600
+Message-ID: <20240215194048.141411-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6674:EE_|BY5PR12MB4259:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf71be81-adf7-4b10-c0ea-08dc2e59a594
+X-MS-TrafficTypeDiagnostic: BN1PEPF0000468D:EE_|SA3PR12MB8024:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85bc5288-6558-4a85-e6f6-08dc2e5e0ab2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	xRZL4GgaxNmF+CYrjJ4xIjUhLZ3WLkhBSuAp8w8EoSDuP8j5Y2tRfDKcwnxSUc3R1AfW4kHnETIZYMAqZnA2/CebmtRrHC3Y9ZGf3X697VDH6cyxmwMjpkUjMNTKL8iVHT/PUWt7FfHXPTc7N8BN/89G/u0uUaaOw5EGBuNNURksdqYpJkQP+ohNCbHfKhUl0l618fNAVBT+sB6jvvcRcWBqPMtlK+7YKMhHDp+PLMK5JVa9qMcITSpIdI1+0tpANTcm//3W3OzQ6ExyKn3W4J65sRPSiww/3vK3bcrRm+nX8EGgOCrrRrkljRs1ma7qrYXQr5ZD4J1UVJfNd4w1dHcAl8sRT9jTME2myS+nUgd3InQCF4bs4sIm6UisZS9R6zaDRPJSQa4QesLYWauG17L3QdKaJiB1b2+EzVnGciW5NQWhuIY3d5y3sW19DGL33fCkLpVE/7qB37P3mwtm00rB8G1TX45/AGsZH8nIoxI9zRoXNi5Vhrf8c9lLSB75QGjcFxCgwkBGmTkrWUOpy757g4VmastJ97J6E8PUY7pwGUYQCaAb6J0f4ZW1WqJZ
+	DDmtU4TcxXs5vp+REklP/D1YvkBeq6nts8B0jelVe69ObU10i9duaTGa+qb4GbW92ZNFkEDpz7PnNAgHT4bmRgwgZpcfFXOSG9X3ZeT9vqChXt/DZYWIag74AxNmVJ8BAr73Mm6Ukds19w91FTjNMRw3+z3mO2TP9cm01nUB9zBmVavQcWyJmLwmztzg2u3mQtBcF/TlAaPU8e8hBVDAlM8apUQBMqC9vjk+UNTCeW8nHVRfSJVJodDMsXi5jznUi3/g0l/vFzfw6Ce05bAxxU/kwmJTjl1cq97WKJx6fSloXgPGpoM5nI/y1atPVLcvEvr5FDWRhDb2/L8FGcRqt6DlGE+HzKt04qJ3wZezDwjTydzUBSNVQc4jAOAdRQY+j9Jt1iZbpC1HlewGxOqHZN6wxeVWjQNrvAzxfeOpt654BUPcJbEgabylLCpgrq10rs86OwDCX89NwRdyvZdix5wj5K59Q1nxCLdXChzG0/xgdJl0sRkWxo4iuR+tKEVW8Cg3ee2P8VxPdHmavvnWy9H++dO+lHKxfu1xKJ0y9K1cZOOD0uM9Tk9HoRcrz0TJ44KIFyXEIz1Inve0G5qOBvmm3FlNLk7rMbnKsFklKMPBfIVW6AV6JJrvw3SdwNuHEb1koP82xB2e60GE+bZVAUXPOkWeAMggBLqs597rmgU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(376002)(39860400002)(366004)(396003)(230922051799003)(230273577357003)(186009)(1800799012)(64100799003)(451199024)(36756003)(86362001)(31686004)(66556008)(2906002)(7416002)(66476007)(4326008)(6916009)(31696002)(8936002)(83380400001)(66946007)(5660300002)(8676002)(38100700002)(41300700001)(6506007)(316002)(6512007)(478600001)(26005)(6666004)(2616005)(53546011)(54906003)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VFpiNmFmTSsyNXNxOVYrUXJuWjVqQ0xpL1JGMkFZS3F1T0FXc2paUk80Yjdk?=
- =?utf-8?B?K1gwdEZtVS9aeUoyRXJYL20xalE0UUZyQzZWdGpLUE9CVTdoWXQzR2Fwb1Rq?=
- =?utf-8?B?dGtTR2c5UlhBcVVjeTF2Rm4zR2tNVTJxUkZjK1ZnSWUyQkpNTFBkaWhacXlS?=
- =?utf-8?B?SzE2aU5OSkhhblhQbTlUV1RQQUp2dHBTT3htSFlaeitGY2ZHVmFDcVVrQ3Yz?=
- =?utf-8?B?eEFodC95N2pKSG9pRlNwSVhnRGxtek84cVJxSzVZOCs2RmNYdWlnb3NaN2pQ?=
- =?utf-8?B?WTNFbXFJR01Ec015V3dIdE55QTd1OXZEUlg3dFZTeGJ3TExKQ3Q3WG5VZ3Zr?=
- =?utf-8?B?MTdSbEtSeXhDZlEwRDNwZUwwcTZWc1ZHQjBhYjZrVnZ0QUlsNHgxK0dhQmxK?=
- =?utf-8?B?Q3pxaC9sTnNwZktLRHcvQzhkbktLdnhPRFYydGN4RDhpYnYxSVpZcWsrZ2pV?=
- =?utf-8?B?bkxKYi8vMG9NcWNsV0k2am1BVXFOQnE4S1VVMkFHelpSbFRJZG9LdEtpRU92?=
- =?utf-8?B?VlhxNnlaRS9zTzQ2cnZBVC9WUk1ZOFZMQTBZYU1jUWUvOTN2QjJ0VEpZV0J4?=
- =?utf-8?B?aUNTOEViM3hBZ0NjeFZqalNsZDErYktzdkRnRkhSQVV0cDdxZG1ucGRIM0Ix?=
- =?utf-8?B?a3JBVDRvMDFML1dVeVkxVWpCMWhYYUtNcnVLeUszTTJWb0NiNmx4N0VyK3R1?=
- =?utf-8?B?RHVFT3RPZUk5ZkxwbVQ5ZDJsNm12UjBOZ1Y4bGVNdStUMVJqekgwSVU3N2ht?=
- =?utf-8?B?QUtMbFhCUVRoOGVLQlloRkxMdmU2NEwwR3pLaVdxUDl6d1BVT290allXRHZT?=
- =?utf-8?B?NG5BVkRyY3Q5Nzd5VXZMamVjcDMvU210VTJvakZXUldYZEtBdXJ6Q2lhTGp0?=
- =?utf-8?B?K2xNQ1B6UXQ4T1JiSEJwaGNwajBER1RMdGRUZDlZcGVKclNINk1VRWoyZEM3?=
- =?utf-8?B?dENOdk1zZjJTVnBBdCtsWUZwZWxMTDFUY1k3ZmVWc2J1UEx5dnpVN1BQUm5u?=
- =?utf-8?B?UW5weTBrbXMwZEhxRUZtdW9sSllsb2UvSG1kM1YvQmJ2cnJaaTRNUHNqWTYz?=
- =?utf-8?B?SzE0UE1zc245UGRYNkRrS3dkY0pFSlRFT3NQdDRObTdrdVJ1ZzF6MnNZWDhs?=
- =?utf-8?B?aTNmbExOYVJDYjVqUkplcmJtL1lNQVFHMjlOL21PakFzOGd1aExCOGltd3Y5?=
- =?utf-8?B?NjNVczNKQktSY3p3bWtGcGFSaFplVEtmSnNyWWhrRlhXNGlvcjBXTFBQVmtF?=
- =?utf-8?B?Q0Y5NlpBNnoyaUYvUVBHN09IMkF2Tm0wRTlob0Yzclh6YXkyR0FQVlBrR0k1?=
- =?utf-8?B?bkNSMnUwem9aaU1yeTVRVHRlTDkzRjF5bSsrVXA3Z0ZsVGxrNHBIckwvQVln?=
- =?utf-8?B?b002NVVVZkYvVStTd2E1TlFiN1FOY1hUT1Nra2lUL1A0azJ1UWlyclU4OXN5?=
- =?utf-8?B?U25nUXZ0VHFsNGxPZTYveVgrVkdFZ0pYQWNYWWl5dVQ0QUhMbERDSHlQTkVD?=
- =?utf-8?B?em94cVBCeVZzd28yNjRuRkJMaTFnZUwrMTNPWithWm9OdUtrQ3VrdU9WNWt3?=
- =?utf-8?B?YlZIcjVpT01BMXR5OEZxbWNCN08rcVVaNllEMGlnamh6cXJyRVR1RXVYMER0?=
- =?utf-8?B?TDk1M2R4THNoK3ZWVTcwMUNySEtrbUpCZ21NWk5aZ3k3MUpNRi92eUtRVXQv?=
- =?utf-8?B?N0doalBkMVNBcDZHOHBOeHRIWGFXSnJHVmUxM0swQ1BnWkNQNy81NnY5MEds?=
- =?utf-8?B?WTE4cW14cU8yMk1sRDRjWDVHNFNoQXd6cGZUdkVRT0JwbzYrUFlvQ0NzbHhu?=
- =?utf-8?B?Rng0azNlVmJZQmRXTDlzT1pLeWEvL3g5dUNOMTVrbFVrZEszQjh4TndET3Aw?=
- =?utf-8?B?VDNYRSsxOXBkUEp3YlhrUm1oRGM3c1p6QUJtWmJDYlFqNEtYMVBHTDBUdGlK?=
- =?utf-8?B?Rm5RdjkrZUVRQjczZ0NEdkdlQy9lVUlXN1d4bUgvd2wwemhDRnRyMHZGZ3hU?=
- =?utf-8?B?MDY0UFd0UjIrdXk4aUhYM3RjRm54M0ZLc3h3RzNsR0hHYkVEOURCSHlmQ2FG?=
- =?utf-8?B?R203eHdzcmtXSVg5dzlQbko1MitobS90cERLd2U1YmJJUnhZUHZlL0J0ZzUz?=
- =?utf-8?Q?eXsyM8U39Wn8N5VXNFUEymspH?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf71be81-adf7-4b10-c0ea-08dc2e59a594
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 19:09:35.0251
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(346002)(376002)(230922051799003)(186009)(82310400011)(36860700004)(1800799012)(64100799003)(451199024)(46966006)(40470700004)(26005)(336012)(41300700001)(426003)(2616005)(1076003)(2906002)(4326008)(478600001)(70206006)(8676002)(8936002)(70586007)(7416002)(5660300002)(54906003)(6666004)(83380400001)(316002)(7696005)(16526019)(356005)(86362001)(82740400003)(36756003)(81166007)(110136005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2024 19:41:01.9818
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /2HUjzGuoVu9sCshRNP/nHOO0d1oX6xuec/IjGFGpQLQngB6KEphSuagLdbbFLEGXvx0reOCIVYhTbO1cOajJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4259
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85bc5288-6558-4a85-e6f6-08dc2e5e0ab2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF0000468D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8024
 
+Implement initial support for CXL.mem Timeout & Isolation (CXL 3.0
+12.3.2). This series implements support for CXL.mem enabling and
+programming CXL.mem transaction timeout, CXL.mem error isolation,
+and error isolation interrupts for CXL-enabled PCIe root ports that
+implement the CXL Timeout & Isolation capability.
 
-On 15-02-2024 21:31, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Thu, Feb 15, 2024 at 04:55:47PM +0530, Vidya Sagar wrote:
->> On 15-02-2024 00:42, Bjorn Helgaas wrote:
->>> Hi Vidya, question about ancient history:
->>>
->>> On Tue, Aug 13, 2019 at 05:06:27PM +0530, Vidya Sagar wrote:
->>>> Add support for Synopsys DesignWare core IP based PCIe host controller
->>>> present in Tegra194 SoC.
->>>> ...
->>>> +static int tegra_pcie_dw_host_init(struct pcie_port *pp)
->>>> +{
->>>> +     struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>> +     struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
->>>> +     u32 val, tmp, offset, speed;
->>>> +
->>>> +     tegra_pcie_prepare_host(pp);
->>>> +
->>>> +     if (dw_pcie_wait_for_link(pci)) {
->>>> +             /*
->>>> +              * There are some endpoints which can't get the link up if
->>>> +              * root port has Data Link Feature (DLF) enabled.
->>>> +              * Refer Spec rev 4.0 ver 1.0 sec 3.4.2 & 7.7.4 for more info
->>>> +              * on Scaled Flow Control and DLF.
->>>> +              * So, need to confirm that is indeed the case here and attempt
->>>> +              * link up once again with DLF disabled.
->>> This comment suggests that there's an issue with *Endpoints*, not an
->>> issue with the Root Port.  If so, it seems like this problem could
->>> occur with all Root Ports, not just Tegra194.  Do you remember any
->>> details about this?
->>>
->>> I don't remember hearing about any similar issues, and this driver is
->>> the only place PCI_EXT_CAP_ID_DLF is referenced, so maybe it is
->>> actually something related to Tegra194?
->> We noticed PCIe link-up issues with some endpoints. link-up at the physical
->> layer level but NOT at the Data link layer level precisely. We further
->> figured out that it is the DLFE DLLPs that the root port sends during the
->> link up process which are causing the endpoints get confused and preventing
->> them from sending the InitFC DLLPs leading to the link not being up at
->> Data Link Layer level.
-> Do you happen to remember any of the endpoints that have issues?
-We observed this issue with an ASMedia USB controller card. Unfortunately,
-I didn't keep a record of the Vendor-ID and Device-ID of that card.
->
-> Could save some painful debugging if we trip over this issue on other
-> systems.  We have seen a few cases where links wouldn't train at full
-> speed unless they trained at a lower speed first, e.g.,
-> imx6_pcie_start_link(), fu740_pcie_start_link().  I guess there are
-> probably lots of edge cases that can cause link failures.
->
-> Bjorn
+I am operating under the assumption that recovery from error isolation
+will be more involved than just resetting the port and turning off
+isolation, so that flow is not implemented here. There is also no
+support for CXL.cache, but I plan to eventually implement both.
+
+The series also introduces a PCIe port bus driver dependency on the CXL
+core. I expect to be able to remove that when when my team submits
+patches for a future rework of the PCIe port bus driver.
+
+I have done some testing using QEMU by adding the isolation registers
+and a hacked-up QMP command to test the interrupt flow, but I *DID NOT*
+implement the actual isolation feature and the subsequent device
+behavior. I'd be willing to share these changes (and my config) if
+anyone is interested in testing this.
+
+Any thoughts/comments would be greatly appreciated!
+
+Ben Cheatham (6):
+  cxl/core: Add CXL Timeout & Isolation capability parsing
+  pcie/cxl_timeout: Add CXL Timeout & Isolation service driver
+  pcie/cxl_timeout: Add CXL.mem timeout range programming
+  pcie/cxl_timeout: Add CXL.mem error isolation support
+  pcie/portdrv: Add CXL MSI/-X allocation
+  pcie/cxl_timeout: Add CXL.mem Timeout & Isolation interrupt support
+
+ drivers/cxl/core/pci.c         |   5 +
+ drivers/cxl/core/port.c        |  80 +++++
+ drivers/cxl/core/region.c      |   9 +
+ drivers/cxl/core/regs.c        |   7 +
+ drivers/cxl/cxl.h              |  37 +++
+ drivers/cxl/cxlpci.h           |   9 +
+ drivers/pci/pcie/Kconfig       |  10 +
+ drivers/pci/pcie/Makefile      |   1 +
+ drivers/pci/pcie/cxl_timeout.c | 592 +++++++++++++++++++++++++++++++++
+ drivers/pci/pcie/portdrv.c     |  36 +-
+ drivers/pci/pcie/portdrv.h     |  17 +-
+ 11 files changed, 799 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/pci/pcie/cxl_timeout.c
+
+-- 
+2.34.1
+
 
