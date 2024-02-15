@@ -1,75 +1,69 @@
-Return-Path: <linux-pci+bounces-3498-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3499-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE40C8565E2
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 15:24:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F5C58565E6
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 15:25:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E06B21C21842
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 14:24:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D849B1F21DE0
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 14:25:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A48312FB33;
-	Thu, 15 Feb 2024 14:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7351131E31;
+	Thu, 15 Feb 2024 14:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1j4nByU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfW4Z3Ha"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4112131E2B;
-	Thu, 15 Feb 2024 14:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26D3131E22;
+	Thu, 15 Feb 2024 14:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708007080; cv=none; b=kNLbPsY4g4EMMVza3kTwwYwcAHQY3Y6lp6/8f3d6SktQXdEOW1LrJMovUKJmekVdFWsAHZFn74YaJGRIWFa3QK8rxfSJz1pRRL7h1QVKB6P5PKYWOsAfqpuAbfhSYxWaROxov+Kaa1Cx6/EcK+HIuhrQfCfJfFUEbSoHl+QL4zk=
+	t=1708007102; cv=none; b=qhnA2/SS6iJc+X939+iEkHIWvgB/BU7wGR3/oEAttkgC5Bb1I0CGFqXx/0yUifzRnkeDsPJkYwaP72bS3pIDMKBzY3x/ssTignmJq4m1JomPXUqn39+sBiFbeV5597XuHLpTzF+HgN3bZAZ9IdRel+KeP93ye89r7VKZjphAHzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708007080; c=relaxed/simple;
-	bh=zYTCS8MpuiOCc+WScUKApIvP5bK8xDhtqdGf8yM6aZc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dXxIZKaeIspAfY7ZEvcRpv2LOANqwP27Z7oifH3rKYu5rm1ej9kMrvs7MOApqS108akC8nNZThSGv6GoeAdDT9SKUawFkZGxlpvzFCbQqvu9Gw43aI8d+AT5qQrnBw2I1fh4KHjs8Cljs9Vs4zErVNuOaNNI74irXThkbNpfGiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m1j4nByU; arc=none smtp.client-ip=198.175.65.10
+	s=arc-20240116; t=1708007102; c=relaxed/simple;
+	bh=en47z54b1gIFPBqMEd6jYCsoqfnsaNMM97obpZLm+Rg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nDwWAho8/s0T6V0NiCmhOOjMUCruYo25bCFFr8xyDSSiVRxd1/up4T5jsKfzejUN4Wj8nNpMlWgmR6VAuLVJNZ5x2a8WZlndwMZ7nHa1rr93p/7UYjYWxnU703Mok289GdT/KZPed67o7mx7sobAw4bYeHNDcXOyNAR9NzCSZ3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lfW4Z3Ha; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708007077; x=1739543077;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zYTCS8MpuiOCc+WScUKApIvP5bK8xDhtqdGf8yM6aZc=;
-  b=m1j4nByU+o8IyodoDzFtBqXxe6uKczMPF1BpT4N1I93NCmdMHQ/PlKy2
-   WzzpoehuQmZKRoREczcuzjvqAMcxpipPyRrKn3XA4ff6NynrSfcuL67Kq
-   n4Z7v7EQQXtpf/8kyoCbUbo3W9zCHfeMccvlNoUPLF95jNCB7iE+7eXp6
-   mtx4gbPVAXs9y+IO9oyJ9INBZkgpSqCJO7tXl9oNXP/+HCbgvUgAWPO7R
-   UMgrwMlcWXdINVZBLMPoVW6sAvAUYJyZqcrHaZMViRjdOFuzflZe1iGZI
-   qxHfwF63QNvc2Ujt4z8aHajUVrEcdAG2DrslpwBSKNirwdktiyf0BBjUP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="19514363"
+  t=1708007100; x=1739543100;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=en47z54b1gIFPBqMEd6jYCsoqfnsaNMM97obpZLm+Rg=;
+  b=lfW4Z3Ha4jGsO5ulEK3gDNOfVXC8AE/51iUDA9Qv0fPUd6vE3+WTGL1E
+   QGbGnKe3U6hBlLN7ORM5AAiUn0K9X3ozR06aiA+g6/L5Ela83/pSRd6Tz
+   0HN70r5I/qgtSVpYVHNhDNGIGB5Wz1QZUYa8o7MXBp1YcqdNOCmnneE3L
+   TWrrPqtzj7MSl9BeUyQQWuTxiQxH0S4qJU7dqKef6InnRygnlYibpquvz
+   c8F4cTqXNiKU7Iye7eFUvnUz7vrfJSTEqMT+1YpTIDoGAVT9DfadQ0Pvc
+   oXUcQdzDLK+qLylO01olY7WUv6OwtRtkbBfGa39OKX7pQ6dhfRPS9pc8q
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="19514414"
 X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="19514363"
+   d="scan'208";a="19514414"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:24:37 -0800
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:25:00 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="3701584"
+   d="scan'208";a="3701822"
 Received: from unknown (HELO mtkaczyk-devel.igk.intel.com) ([10.102.108.91])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:24:33 -0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:24:59 -0800
 From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
 To: linux-pci@vger.kernel.org,
 	linux-leds@vger.kernel.org
-Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
-	Marek Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>,
-	Randy Dunlap <rdunlap@infradead.org>, Shevchenko@web.codeaurora.org,
-	Andriy <andriy.shevchenko@intel.com>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH 0/2] Native PCIe Enclosure Management
-Date: Thu, 15 Feb 2024 15:23:43 +0100
-Message-Id: <20240215142345.6073-1-mariusz.tkaczyk@linux.intel.com>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Subject: [PATCH 1/2] leds: Init leds class earlier
+Date: Thu, 15 Feb 2024 15:23:44 +0100
+Message-Id: <20240215142345.6073-2-mariusz.tkaczyk@linux.intel.com>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20240215142345.6073-1-mariusz.tkaczyk@linux.intel.com>
+References: <20240215142345.6073-1-mariusz.tkaczyk@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,69 +72,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In this patchset support of Native PCIe Enclosure Management is proposed.
-Stuart Hayes was working on this earlier. It is a new serie because it
-is NPEM only.
+PCI subsystem is registered on subsys_initcall() same as leds class.
+NPEM driver will require leds class, there is race possibility.
 
-NPEM is pattern oriented standard, it tells which "pattern" should blink.
-It doesn't control physical LED or pattern visualization. It is described
-better in second patch.
+Register led class on arch_initcall() to avoid it.
 
-Overall, driver is simple but it was not simple to fit it into interfaces
-we have in kernel (We considered leds and enclosure interfaces). It reuses
-leds interface, this approach seems to be the best because:
-- leds are actively maintained, no new interface added.
-- leds do not require any extensions, enclosure needs to be adjusted first.
+Signed-off-by: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+---
+ drivers/leds/led-class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-There are trade-offs:
-- "brightness" is the name of sysfs file to control led. It is not
-  natural to use brightness to set patterns, that is why multiple led
-  devices are created (one per pattern);
-- Update of one led may affect other leds, led triggers may not work
-  as expected.
-
-It doesn't provide ACPI _DSM support, it requires separate implementation
-outside drives/pci/ but NPEM is not registered if _DSM is available.
-
-This patchset was made in close collaboration with Lucas Wunner.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Marek Behun <marek.behun@nic.cz>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Link: https://lore.kernel.org/linux-pci/20201106194221.59353-1-stuart.w.hayes@gmail.com/
-Link: https://lore.kernel.org/linux-pci/20201110153735.58587-1-stuart.w.hayes@gmail.com/
-Link: https://lore.kernel.org/linux-pci/20210416192010.3197-1-stuart.w.hayes@gmail.com/
-Link: https://lore.kernel.org/linux-pci/20210601203820.3647-1-stuart.w.hayes@gmail.com/
-Link: https://lore.kernel.org/linux-pci/20210813213653.3760-1-stuart.w.hayes@gmail.com/
-Link: https://lore.kernel.org/linux-pci/cover.1642460765.git.stuart.w.hayes@gmail.com/
-Link: https://lore.kernel.org/linux-pci/cover.1643822289.git.stuart.w.hayes@gmail.com/
-
-
-Mariusz Tkaczyk (2):
-  leds: Init leds class earlier
-  PCI/NPEM: Add Native PCIe Enclosure Management support
-
- drivers/leds/led-class.c      |   2 +-
- drivers/pci/Kconfig           |   7 +
- drivers/pci/Makefile          |   1 +
- drivers/pci/bus.c             |   1 +
- drivers/pci/npem.c            | 339 ++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h             |   8 +
- drivers/pci/remove.c          |   1 +
- include/linux/pci.h           |   4 +
- include/uapi/linux/pci_regs.h |  34 ++++
- 9 files changed, 396 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pci/npem.c
-
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index ba1be15cfd8e..4cf99d64958e 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -675,7 +675,7 @@ static void __exit leds_exit(void)
+ 	class_unregister(&leds_class);
+ }
+ 
+-subsys_initcall(leds_init);
++arch_initcall(leds_init);
+ module_exit(leds_exit);
+ 
+ MODULE_AUTHOR("John Lenz, Richard Purdie");
 -- 
 2.35.3
 
