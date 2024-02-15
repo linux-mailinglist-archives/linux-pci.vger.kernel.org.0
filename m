@@ -1,76 +1,74 @@
-Return-Path: <linux-pci+bounces-3535-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BAEB856B7C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:47:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 606D3856B80
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:48:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 706701C22B0F
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:47:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 187912862E5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:48:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF2D137C54;
-	Thu, 15 Feb 2024 17:47:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EBCB1386C5;
+	Thu, 15 Feb 2024 17:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w30JlcnJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D4FOpQuM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3264E137C3D
-	for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 17:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B62F13956A
+	for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 17:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708019224; cv=none; b=E0oh5penM8LPD5Vs+JteplFe0jvkZvz3C5+WkQBIFocl0u7wJJ/7FZzJWCDVPWNdTuN/IBAO5sREks6OTCKVxCDv+qEdyKgnelRLHliYw3FglnRqjWhXl7zYXpGplcfdrWtljlee7ds+1bNHJqYnicgCTaGAJlHtWtLzIdUdKp4=
+	t=1708019246; cv=none; b=TRJYl+XfAIe2vhpkz2AUIHLP7/u1eIiNEsWbIbZUVXl5wgBum5k2D1+5V+ALhx9KCz26iZyjJxZ081jm15kNaEBi+GuQ+uM7A1HzSm6hlhWD3Ggx4+poy1DRjeKXzfuJ0hT5dNmPqpdFnzOeQeMnVRDFU9j5JFabqHVi8CTmoqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708019224; c=relaxed/simple;
-	bh=6iHjAnqtb6WKmS553f33Msu3R11CMKdhBEB4L24+Blg=;
+	s=arc-20240116; t=1708019246; c=relaxed/simple;
+	bh=ajmUHFUBbOZfizj8pnDDtY5izZYI3pCtjemyKv14bKA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cImEppJLg0wglZG61CSZAWSF/lvsDJTCVxiuG8xDyCVIGXt+DXTtnmNpgp7NDXA+4ZYbxFyBShVXqIRXWPVzt/GxxMLcQBhQK1ZcD6/tkiRKD/Fi+ZqtRLkzDYiZulOqF8cevQgBLNMuybmEWndUSP7h/WKnRczUgI8ZlP2ZZfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w30JlcnJ; arc=none smtp.client-ip=209.85.208.43
+	 In-Reply-To:Content-Type; b=aExm8Qy+CBXU86TECMxurSdwdBc26alX9nQjYbUxHvKPluBfpRpwHz/3Vn+syR9f9Afnov4F92rkWd58fjvUZmej0kwPDgcThALYyVW1kVwLEjyIUU9kehf2LE1bSfGpSVGJGKXaP8o54TKC+rAFDBXpb6HJBswnCCmVfdF3bX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D4FOpQuM; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso545830a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 09:47:00 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d0a4e8444dso12314041fa.2
+        for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 09:47:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708019219; x=1708624019; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qGFi4nYhTSGzwEyDxOa4rN/Cn5B1c0Et6UQeZJ6o04k=;
-        b=w30JlcnJCYta1W/T7gBC1rd4XdIHQVh6h53ZftOKenD+xEGkFhdFPL1f9Z/4VaTvB9
-         wkZEAon7YdXQWa26HzgQagx18E09v1MZvQ5KFz402+ew0g40DhR6hkav2/j3pP44+RZA
-         IiNcQU+K/fXUs5s9LZh9fCPalrzLOhvcRjhfmKIstPach83jXUaIMWoKBWJWSl+4cpq8
-         8EArTaeOoxh620zP0vRs0MXo9tVztVrWPtYrYYOvecc/7A/a5FL4LkfTkxzlo16Y8Um0
-         UiQOyutmLcnGiX1dTHBYIW26HJdgFG3PR0jpbIqAwfGHrulIsLEV0y7eo8bHTJ9+oDx7
-         Skqg==
+        d=linaro.org; s=google; t=1708019242; x=1708624042; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HquKZRHBV00ju6jdGp8jpiRgiVO9YKBQxry6Lkp4DJM=;
+        b=D4FOpQuMXbykR8B1nhzpDcPZLu9pj2zkbC+ImSXezWoEepcGuWf8P7CH7hMfOewZxU
+         3k5RtWEAFuS7EItUJZNZQvnKbp2V+mO+Z8EUM9XDk+42WJi4QF/ey8JJJuuMPS+olpSH
+         peHgppBU6BP5Ox5iK3gDSaOPtqgqmTu+ABvvGvTb1PJlD3JBBn7bwKU6UtfPvgqF+sL4
+         sHCTvxiDYBHIOEgG9wdqH1L+nVhQF2MrdPg4f0sZEz70BiLYuGWZ+pLy1ZQe6lXajmpQ
+         stFhKESkfSA0wP5t87qiL+GKF5pn2FNJQJeobnQokna1mqtR9ctJ6i0J5xgnuqYZlJmp
+         frBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708019219; x=1708624019;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qGFi4nYhTSGzwEyDxOa4rN/Cn5B1c0Et6UQeZJ6o04k=;
-        b=ZFwVk8Ft5qROn48pZ+0oMBK+jG7YxN8YOCXPSIEa4zR2RMqNEkwHMfxSA09aJkiqfR
-         30AyPwawaei+omFbFV144R4I6G8F2HcT+Z8qEU7URSmahs58cGynKdYuJCFGMadxOGnx
-         uAxQD2IronAiydl6stazPBfB3u4Kz06MQhBFwqS/5Zn7BpCqGx2KSNOBnx1G5nGxR+od
-         YhBLoUCmGVFltCFj/fYnUlXFqXdaBrmzABPsCoKIttcmfgm1uM9q48XqnqQ4qmrkWRUc
-         OCgv2U+/D2ZzFvrVNauh9yFMOFWgeT201zJvxG3XmbtkTMYSepnPcwESKi5NaQ0E+OC7
-         pBHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUR7xqAldKCm27t+Pl7wArF6mydmzeSP3FZbOwCRQ1JGYhP1nGYeYbaRusTSnY4F3MVY7vHhy/DmIpnl5w2EJCWDHJ7KKH1fnq/
-X-Gm-Message-State: AOJu0Yx/1yRP2wluTIPNXO9Bp7NfPH6b3GzOODPOIOnATbOjNJQ7tlNC
-	7+RsgxNBQouKMu9MV9YpkZ0UNY8V7bWAIseR8WZZEHNBkmzvvfw3NGkVynU8LYdeNQvFfbWRkqZ
-	G
-X-Google-Smtp-Source: AGHT+IH6K2lKLxFkkaMzYt3eVZiWsV5RtSerOOoiiTmDmLRvoHacljVqFxweD8HfL/T5NauJN/AcWg==
-X-Received: by 2002:aa7:d594:0:b0:562:d88:adca with SMTP id r20-20020aa7d594000000b005620d88adcamr2205053edq.17.1708019219334;
-        Thu, 15 Feb 2024 09:46:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708019242; x=1708624042;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HquKZRHBV00ju6jdGp8jpiRgiVO9YKBQxry6Lkp4DJM=;
+        b=h+TO6VantiaWYI07aZZxLxJbddWvWY/eZrvUsTGscHnQ7SDxQxXJmbBvSR8DZ55fYR
+         XHghd3z9CWazaze9+/02ipT4fMDIIWf3a6uyDHpual+P6LyN5GPK1lxJq3NuhWXjmb7z
+         J/vAYKW4JnGzlnweJGgLHYjBcTZMx96rzy5b7pTOVk56NZlEBoZKqfF+H07T2hOSkscH
+         oxI3tZjydz8sD/xg1ZNb7YJZYd691BQH8BbFBrnVS8G5B5GZN5jX5DJBS3lcHWQtAr1K
+         BD4FkJVZb2AYtT8a7Bj4DuU4ntjxiB8wneIFZ/Qk4NGbJJ4G/0h1bZSKLNCSYSibC8uu
+         Z73g==
+X-Forwarded-Encrypted: i=1; AJvYcCW+SLUT58rD+nef2uSHEvHjU6+NfEJcpSqmXg3bVoG9QJ6OH73f8QQ3n1tCKvD/xz6I6rVDU9B/QnWXdU9PJhw7kTZd9eAte2Yk
+X-Gm-Message-State: AOJu0YywM9qhy40WaUf5lHlt+TfPwyg1/cA6a5K2ZZyVS+bIt6yzqZo1
+	FWYuS/TrsfvwR98byELKcoDQpXvd9t2vW2goGHySTNNegDZqnHeF9osoR7cO2a8=
+X-Google-Smtp-Source: AGHT+IFERZ44xaYPBBfUXSJJdhg24mt6A8dr16jL8jz3RGIC4bJ3AndEqdZvHfG8Fdqg+vZuaJcrsA==
+X-Received: by 2002:a05:6512:1152:b0:511:7ebe:b160 with SMTP id m18-20020a056512115200b005117ebeb160mr2306326lfg.45.1708019242290;
+        Thu, 15 Feb 2024 09:47:22 -0800 (PST)
 Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id r1-20020a50d681000000b005638f04c122sm790193edi.14.2024.02.15.09.46.57
+        by smtp.gmail.com with ESMTPSA id r1-20020a50d681000000b005638f04c122sm790193edi.14.2024.02.15.09.47.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 09:46:58 -0800 (PST)
-Message-ID: <a12217ec-ce63-4312-a412-9a5c8d1d92fe@linaro.org>
-Date: Thu, 15 Feb 2024 18:46:55 +0100
+        Thu, 15 Feb 2024 09:47:21 -0800 (PST)
+Message-ID: <cbc0606c-604b-4236-a063-77e081f01250@linaro.org>
+Date: Thu, 15 Feb 2024 18:47:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,8 +77,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+To: Serge Semin <fancer.lancer@gmail.com>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
  Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -89,8 +87,8 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
  Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
  Marijn Suijten <marijn.suijten@somainline.org>, linux-pci@vger.kernel.org,
  linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-References: <20240215170258.GA1292702@bhelgaas>
-Content-Language: en-US
+References: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
+ <buqxbxlsngec2iz4oag7mfgva5cozk66ljfa6aatao6liepnzu@zlmtq2v2ib3m>
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -127,78 +125,60 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20240215170258.GA1292702@bhelgaas>
+In-Reply-To: <buqxbxlsngec2iz4oag7mfgva5cozk66ljfa6aatao6liepnzu@zlmtq2v2ib3m>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15.02.2024 18:02, Bjorn Helgaas wrote:
-> On Thu, Feb 15, 2024 at 02:35:13PM +0100, Alexander Lobakin wrote:
->> From: Konrad Dybcio <konrad.dybcio@linaro.org>
->> Date: Thu, 15 Feb 2024 11:39:31 +0100
+On 15.02.2024 15:17, Serge Semin wrote:
+> On Thu, Feb 15, 2024 at 11:39:31AM +0100, Konrad Dybcio wrote:
+>> According to [1], msleep should be used for large sleeps, such as the
+>> 100-ish ms one in this function. Comply with the guide and use it.
 >>
->>> According to [1], msleep should be used for large sleeps, such as the
->>> 100-ish ms one in this function. Comply with the guide and use it.
->>>
->>> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
->>>
->>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>> ---
->>> Tested on Qualcomm SC8280XP CRD
->>> ---
->>>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->>>  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
->>>  2 files changed, 2 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->>> index 250cf7f40b85..abce6afceb91 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>> @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->>>  		if (dw_pcie_link_up(pci))
->>>  			break;
->>>  
->>> -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
->>> +		msleep(LINK_WAIT_MSLEEP_MAX);
+>> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
 >>
->> Just use fsleep(LINK_WAIT_USLEEP_MAX) and let the kernel decide which
->> function to pick.
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
+>> Tested on Qualcomm SC8280XP CRD
+>> ---
+>>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+>>  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
+>>  2 files changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index 250cf7f40b85..abce6afceb91 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>>  		if (dw_pcie_link_up(pci))
+>>  			break;
+>>  
+>> -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+>> +		msleep(LINK_WAIT_MSLEEP_MAX);
+>>  	}
+>>  
+>>  	if (retries >= LINK_WAIT_MAX_RETRIES) {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 26dae4837462..3f145d6a8a31 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -63,8 +63,7 @@
+>>  
+>>  /* Parameters for the waiting for link up routine */
+>>  #define LINK_WAIT_MAX_RETRIES		10
+>> -#define LINK_WAIT_USLEEP_MIN		90000
+>> -#define LINK_WAIT_USLEEP_MAX		100000
+> 
+>> +#define LINK_WAIT_MSLEEP_MAX		100
+> 
+> Why do you use the _MAX suffix here? AFAICS any the timers normally
+> ensures the lower boundary value of the wait-duration, not the upper
+> one. So the more correct suffix would be _MIN. On the other hand, as
+> Alexander correctly noted, using fsleep() would be more suitable at
+> least from the maintainability point of view. Thus having a macro name
+> like LINK_WAIT_USLEEP_MIN or just LINK_WAIT_SLEEP_US would be more
+> appropriate. The later version is more preferable IMO.
 
-IMO, fsleep only makes sense when the argument is variable.. This way, we
-can save on bothering the compiler or adding an unnecessary branch
-
-> 
-> Odd.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/timers/timers-howto.rst?id=v6.7#n114
-> mentions fsleep() (with no real guidance about when to use it), but
-> https://www.kernel.org/doc/Documentation/timers/timers-howto.txt 
-> seems to be a stale copy from 2017, before fsleep() was added.  I
-> emailed helpdesk@kernel.org to see if the stale content can be
-> removed.
-> 
-> I do think fsleep() should be more widely used.
-> 
->>>  /* Parameters for the waiting for link up routine */
->>>  #define LINK_WAIT_MAX_RETRIES		10
->>> -#define LINK_WAIT_USLEEP_MIN		90000
->>> -#define LINK_WAIT_USLEEP_MAX		100000
->>> +#define LINK_WAIT_MSLEEP_MAX		100
-> 
-> Since you're touching this anyway, it would be helpful to include the
-> units on the timeout.
-> 
-> USLEEP/MSLEEP is definitely a hint, but I think the "SLEEP" part
-> suggests something about atomic/non-atomic context and isn't relevant
-> to the time interval itself, and something like "TIMEOUT" would be
-> better.
-> 
-> I think an explicit "_US" or "_MS" would better indicate the units.
-> 
-> This is turning into a long tangent, but I'm not a huge fan of the
-> LINK_WAIT_* pattern where I have to look up the code that uses
-> LINK_WAIT_MAX_RETRIES and LINK_WAIT_USLEEP_MAX and do the math to see
-> what the actual timeout is.  Obviously not fodder for *this* patch.
-
-Might as well do that indeed
+Agree with SLEEP_US
 
 Konrad
 
