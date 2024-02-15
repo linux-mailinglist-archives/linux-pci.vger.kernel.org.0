@@ -1,55 +1,56 @@
-Return-Path: <linux-pci+bounces-3553-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3554-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 471AA856F97
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 22:51:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BD03856FA4
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 22:57:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E974E282089
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 21:51:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51C591F22F6C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 21:57:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3785313DBA4;
-	Thu, 15 Feb 2024 21:51:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A041419A2;
+	Thu, 15 Feb 2024 21:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FiFsYFRf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOvlQEKK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37DF1420CA;
-	Thu, 15 Feb 2024 21:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CA86A349;
+	Thu, 15 Feb 2024 21:57:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708033886; cv=none; b=nt9BfuPjZHACT4vI5ZAqIXK9cq7VHQdrzYBBBvkKqY28OoOfJtOkv0w1qtUJcSHASJCOO88YjFQXydsosUZ3M/zgs8I98odrI8Muf2bWRMYBVl4iQfrdw4jq1TswOaK/n5HEcfmYYIehsHlCWawAkzmD3YGU4wbJrsm8n2DJCks=
+	t=1708034257; cv=none; b=bJf53mMO2P0J7PzX1eQVsTIIag/h8NnShIBFphohBU8z5dXmazxveXFkugqpBr8uK+GuTE3oI1fEMcXVnnFCfNU9ZMfUUo/tIddj/AceJu8M4YyywGj742SIxY1CRils9r0oWYVpJZ/PnrWJIPnt5sasVhggsKUqtm+2toyzdgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708033886; c=relaxed/simple;
-	bh=FQpn500JHv51WzKlC0dgUWu4e2OmVblZmPGVoliTIkQ=;
+	s=arc-20240116; t=1708034257; c=relaxed/simple;
+	bh=aQbRS9eEXJfe/7NR9s+OgBYKqHJuauwbiDJcjNinAYY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HRYJ57x2AJOcmFodzyugZc3dkJwyaN88lcyUNPOlkGbEoTkSSKqcUeP32ofQul1dMnTfwU206z8w0tIAEumF0cDA1qCp8jKKNiWUyZdO5WjEuWHE6ZeiIHF3pN7gYpZDaOABTeFdfQcWByizQVu7ruhYuPj4nE5saQGyraskylc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FiFsYFRf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43FB7C433F1;
-	Thu, 15 Feb 2024 21:51:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=ab6ZSJKbdi6BngRQMvif5wlXDxnirg1ea4h6MRq0HQkd5YUNDRiXsuknoDH1YH3CFnXU+t/h06B3kBhQ4ZzXRz/sEU7dCwSfTMwAV6BJwYpH/8lipJ+nSMrHgb61wJVEEb80L6SQ+0i8ZdIzpmih/awo5yAig5BaMa2PIVv9wkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOvlQEKK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC96C433F1;
+	Thu, 15 Feb 2024 21:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708033885;
-	bh=FQpn500JHv51WzKlC0dgUWu4e2OmVblZmPGVoliTIkQ=;
+	s=k20201202; t=1708034256;
+	bh=aQbRS9eEXJfe/7NR9s+OgBYKqHJuauwbiDJcjNinAYY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FiFsYFRfZc4Rejsej4pFUMpr9Iu4gUR0SpIlPJI/UaFp0oRS624YGj72tKctsbebb
-	 dtq8zjHR0UtL88hlpf+W0Fm6ebFh3YZJn+5n2JbDh8Jv8Hb+j0per5cQlpw5uz8LSt
-	 7IZDbcp1x62itOpNG3XMaJX50v+s4KtLouRxAENSusmns/TBZuRS2m/1rKppo5L1AZ
-	 l4Uho9/6ccCor46U+nhXka9yzAgE8K7GtBCQiJqQVxa+fKBsKk4OWuZ3V+5E8R8hGf
-	 NbjmgOoONHkzIwblFQMyFBBvm2G2E0GfuZfg9/aC7qyocAElRlljIZChKq20jmSFoa
-	 Nk1qk8OyIrQfA==
-Date: Thu, 15 Feb 2024 15:51:23 -0600
+	b=OOvlQEKKr2uxLE6A7cgTnmRWDG3ksyKZkcSdfqIgUIsbExdWe9R59CTXmVJ6MH1q+
+	 JEzdJDQU2hcIKR5qeCiQ2HUMukZGv6cn6RTC+/tKc2q0CD1Bz/kqglJbfky4aKz2Ng
+	 E4b3vUMtSs+EjB3v+liJSMbMaAhNDk21Dhu9740LEwMgY01qICPXzAxlULLa3rB6cF
+	 uc8652Cb+un3andr4HlQZYBSoHSkN+QqxG4wYA+/nzvRDsUE+7EtRqY/H+ljW+Uwmh
+	 /xqPnoFwqBeDiaQ6Wox3N1Tf7lLP4OGBkuPuMNzfhTWLf82cKbNtNvKwVog3d8+TuS
+	 VCXWl18X8UCsw==
+Date: Thu, 15 Feb 2024 15:57:35 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Ben Cheatham <Benjamin.Cheatham@amd.com>
 Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, dave@stgolabs.net,
 	jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	alison.schofield@intel.com, vishal.l.verma@intel.com,
 	ira.weiny@intel.com, dan.j.williams@intel.com, bhelgaas@google.com
-Subject: Re: [RFC PATCH 5/6] pcie/portdrv: Add CXL MSI/-X allocation
-Message-ID: <20240215215123.GA1311182@bhelgaas>
+Subject: Re: [RFC PATCH 6/6] pcie/cxl_timeout: Add CXL.mem Timeout &
+ Isolation interrupt support
+Message-ID: <20240215215735.GA1311372@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,14 +59,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240215194048.141411-6-Benjamin.Cheatham@amd.com>
+In-Reply-To: <20240215194048.141411-7-Benjamin.Cheatham@amd.com>
 
-On Thu, Feb 15, 2024 at 01:40:47PM -0600, Ben Cheatham wrote:
-> Allocate an MSI/-X for CXL-enabled PCIe root ports that support
-> timeout & isolation interrupts. This vector will be used by the
-> CXL timeout & isolation service driver to disable the root port
-> in the CXL port hierarchy and any associated memory if the port
-> enters isolation.
+On Thu, Feb 15, 2024 at 01:40:48PM -0600, Ben Cheatham wrote:
+> Add support for CXL.mem Timeout & Isolation interrupts. A CXL root port
+> under isolation will not complete writes and will return an exception
+> response (i.e. poison) on reads (CXL 3.0 12.3.2). Therefore, when a
+> CXL-enabled PCIe root port enters isolation, we assume that the memory
+> under the port is unreachable and will need to be unmapped.
 
-Wrap to fill 75 columns.
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -10,6 +10,7 @@
+>  #define _PORTDRV_H_
+>  
+>  #include <linux/compiler.h>
+> +#include <linux/errno.h>
+
+This doesn't look required by portdrv.h.  If it's only needed by
+something that *includes* portdrv.h, I think errno.h should be
+included by that .c file instead.
 
