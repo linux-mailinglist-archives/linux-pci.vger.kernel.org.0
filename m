@@ -1,141 +1,184 @@
-Return-Path: <linux-pci+bounces-3501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DBB985668C
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 15:51:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B607385670B
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 16:18:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 424AC1C22873
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 14:51:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3581B1F22A7C
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 15:18:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80E7132470;
-	Thu, 15 Feb 2024 14:51:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0D7E132C0F;
+	Thu, 15 Feb 2024 15:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JeQXA7zR"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o9DbmqpX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B07130ADA;
-	Thu, 15 Feb 2024 14:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5CD1EEE7;
+	Thu, 15 Feb 2024 15:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708008681; cv=none; b=j2Gl8S4xglwV8OWJmp3iy/Z7FHpFCQ3sCsmSM/TfTy7wIvmD12G+XeYSpglaotvT/Mxwyks2DX8W3KL/b/JsyICO57Nl9ph0LSPYU5o4W2hB/br5flhcO7frkOWHTErCgH56j3/egtCtLp97+/OF2qHaI7kUOfxrr6dhzRfTPHQ=
+	t=1708010287; cv=none; b=oUVYDEmvJpzXN4lZjeuXJgb6pgms4AcWrC6GvE/PUQgovyEqsBPoTLBNMZ5n5beKfq1sDN2xgoUYYYlkYTLcBhcOYsggRHxUF02cvhig4kvUjx8JDslaRp60SmXzMxDR1W8+tQQKto2Pb0INXfnDVM8id4EmkyUAA0oKCR1H+PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708008681; c=relaxed/simple;
-	bh=B8mmg75WeEttw7pPxYccdGAOyO7FWsoSc/5kLKpImqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PSypx8M3gvgoxah2fCSEIjyKMnpef2/jiYPcR4vvyIR/YeMGKeGWeJRs8WfedkNP0Id4IQfUVejVvgwsl/dcIGF7NQwKtiEhIIc2uoG8oSM0M2Qoygy9Lhl1HaLdsgxb3I0KmlZFT2mtB6Kyetf5YlXutDo0554Qh29DZkxykTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JeQXA7zR; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708008680; x=1739544680;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=B8mmg75WeEttw7pPxYccdGAOyO7FWsoSc/5kLKpImqQ=;
-  b=JeQXA7zRp5CZ/JqxQh3BOssC3S/onpxMXXb8i3Aewq0/IjkXylCmLO6p
-   te+MJDhkd1+rt0AzUg3vUjQHZETaLQMy7xjoVmlZaXWXnXyyuPU3Nm3FQ
-   GzIeJS2S5kSmqOr2tu+G93NmyBzlNqBYUvahBWRG6N77rTKCGtP8GjC+R
-   wXvKI1Rm5Nni/z2bqctCgpxfC47QxWeQUx4p1rC/3WT+lAYYeECEvpWdH
-   JRy90jXxp6mIYipntWJGyOWaEClwmarWHq6Wm6gNSgz6KpnXOeO3A59n6
-   WRL8mH4KrzuEMCY4NkNwPgHMJ7BwwSBObmmcPcntBZuI5d8fFvN6P8Lio
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="1968915"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="1968915"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:51:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="935676974"
-X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
-   d="scan'208";a="935676974"
-Received: from wilesamy-mobl.amr.corp.intel.com (HELO [10.251.3.206]) ([10.251.3.206])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:51:18 -0800
-Message-ID: <361f7ae0-6de1-423c-bb64-82a5acccb502@linux.intel.com>
-Date: Thu, 15 Feb 2024 06:51:16 -0800
+	s=arc-20240116; t=1708010287; c=relaxed/simple;
+	bh=/5RuGo1BUth2SZ1jzxAgP1hnBYBVss31ksnOXl9XJrA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eVAJCDK+IjAScr3EPL+TCqH/XftZyzNAAxAdCRSWH6IOFgwP/4++rPKu4nkE5j14eE9Fa5MtMUpeCtGFdYlNTUVyypVuRHlRAD3a3EjRx1DJ2DZWNczHUUpL7T9c/7OSNwc+AsA4rHE5EOAusMRgQEUzwd2R3uM9Te+C8j5oU/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o9DbmqpX; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8270C240002;
+	Thu, 15 Feb 2024 15:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708010279;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mFwF74WYG389eTgoCBYbyxfkr+BMGReUM+V29ejlH/U=;
+	b=o9DbmqpX4/9BdCNE5XP79nCuaHvPL3RSwYXLefC9AJr49SuqVn3XKDXDtej/ID9DyQRboT
+	6u1yn7jIStwyGAhYzO5ATu7pptNaohDS2ZrCLPXskvm+Nm3iEdf1G0YYl3siW7qgw/OKUn
+	zVHPSIdue3Jq+cDPL6NNW7NVvY1eAJbQDJNlGBCU0CGcPMgnW97E0O0o+8omOjAcaQj4FC
+	40hZf8UBmaWOUGGFL3CM0LoU4uXpj8wvxUFt8c2rym1n5LpMz6gtBEMGlW+c4Mc4qHMZjx
+	xcbwmKpDSpz/78ukf6JT1G3dRc9WJnGouHmAeGu5fYJPzIASeTCac6dOGjC/wA==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v3 00/18] Add suspend to ram support for PCIe on J7200
+Date: Thu, 15 Feb 2024 16:17:45 +0100
+Message-Id: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Jingoo Han <jingoohan1@gmail.com>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIABkrzmUC/32NQQ7CIBBFr9KwdgxMS2hdeQ/jAujUYrQ00BBN0
+ 7sL3bnQ5Z/5/72VRQqOIjtVKwuUXHR+yqE+VMyOeroRuD5nhhwbLjjCXSHnMFtHEDEAWSN0pzq
+ qpWJ5ZHQkMEFPdiyzp44LhfKYAw3utZsu15xHFxcf3rs4iXL96UgCOLQNSdlrmSv8bLxfHm46W
+ v9kBZbwPwALgJpB9YgtWfwGbNv2Adp2j00IAQAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
  Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Johan Hovold <johan+linaro@kernel.org>
-References: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
+This add suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-On 2/15/24 2:39 AM, Konrad Dybcio wrote:
-> According to [1], msleep should be used for large sleeps, such as the
-> 100-ish ms one in this function. Comply with the guide and use it.
->
-> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
-> Tested on Qualcomm SC8280XP CRD
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 250cf7f40b85..abce6afceb91 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->  		if (dw_pcie_link_up(pci))
->  			break;
->  
-> -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> +		msleep(LINK_WAIT_MSLEEP_MAX);
->  	}
->  
->  	if (retries >= LINK_WAIT_MAX_RETRIES) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 26dae4837462..3f145d6a8a31 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -63,8 +63,7 @@
->  
->  /* Parameters for the waiting for link up routine */
->  #define LINK_WAIT_MAX_RETRIES		10
-> -#define LINK_WAIT_USLEEP_MIN		90000
-> -#define LINK_WAIT_USLEEP_MAX		100000
-> +#define LINK_WAIT_MSLEEP_MAX		100
+In RC mode, the reset pin for endpoints is managed by a gpio expander on a
+i2c bus. This pin shall be managed in suspend_noirq() and resume_noirq().
+The suspend/resume has been moved to suspend_noirq()/resume_noirq() for
+pca953x (expander) and pinctrl-single.
 
-Since 90 ms is an acceptable value, why not use it?
+To do i2c accesses during suspend_noirq/resume_noirq, we need to force the
+wakeup of the i2c controller (which is autosuspended) during suspend
+callback. 
+It's the only way to wakeup the controller if it's autosuspended, as
+runtime pm is disabled in suspend_noirq and resume_noirq.
 
->  
->  /* Parameters for the waiting for iATU enabled routine */
->  #define LINK_WAIT_MAX_IATU_RETRIES	5
->
-> ---
-> base-commit: 26d7d52b6253574d5b6fec16a93e1110d1489cef
-> change-id: 20240215-topic-pci_sleep-368108a1fb6f
->
-> Best regards,
+The main change in this v3 is the removal of the probe boolean for the
+functions wiz_clock_probe() and cdns_pcie_host_setup().
+Their contents were split in multiple functions which are called in the
+resume_noirq() callbacks.
 
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v3:
+- pinctrl-single: split patch in two parts, a first patch to remove the
+  dead code, a second to move suspend()/resume() callbacks to noirq.
+- i2c-omap: add a comments above the suspend_noirq() callback.
+- mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+  all is ok or the first failure.
+- mmio: fix commit message.
+- phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() in
+  the wiz_clock_init() function.
+- phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+  function to wiz_clock_probe(), extract hardware configuration part in a
+  new function wiz_clock_init().
+- phy-cadence-torrent: use dev_err_probe() and fix commit messages
+- pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+  function and extract the link setup part in a new function
+  cdns_pcie_host_link_setup().
+- pcie-cadence-host: make cdns_pcie_host_init() global.
+- pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+  functions in the resume_noirq() callback.
+- Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com
+
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+
+---
+Thomas Richard (15):
+      gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+      pinctrl: pinctrl-single: remove dead code in suspend() and resume() callbacks
+      pinctrl: pinctrl-single: move suspend()/resume() callbacks to noirq
+      i2c: omap: wakeup the controller during suspend() callback
+      mux: add mux_chip_resume() function
+      phy: ti: phy-j721e-wiz: use dev_err_probe() instead of dev_err()
+      phy: ti: phy-j721e-wiz: split wiz_clock_init() function
+      phy: ti: phy-j721e-wiz: add resume support
+      phy: cadence-torrent: extract calls to clk_get from cdns_torrent_clk
+      phy: cadence-torrent: register resets even if the phy is already configured
+      phy: cadence-torrent: add already_configured to struct cdns_torrent_phy
+      phy: cadence-torrent: remove noop_ops phy operations
+      phy: cadence-torrent: add suspend and resume support
+      PCI: cadence: extract link setup sequence from cdns_pcie_host_setup()
+      PCI: cadence: set cdns_pcie_host_init() global
+
+Théo Lebrun (3):
+      mux: mmio: add resume support
+      PCI: j721e: add reset GPIO to struct j721e_pcie
+      PCI: j721e: add suspend and resume support
+
+ drivers/gpio/gpio-pca953x.c                        |   7 +-
+ drivers/i2c/busses/i2c-omap.c                      |  22 ++++
+ drivers/mux/core.c                                 |  30 +++++
+ drivers/mux/mmio.c                                 |  12 ++
+ drivers/pci/controller/cadence/pci-j721e.c         | 102 ++++++++++++++++-
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  44 +++++---
+ drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+ drivers/phy/cadence/phy-cadence-torrent.c          | 121 +++++++++++++++------
+ drivers/phy/ti/phy-j721e-wiz.c                     | 119 +++++++++++++-------
+ drivers/pinctrl/pinctrl-single.c                   |  28 ++---
+ include/linux/mux/driver.h                         |   1 +
+ 11 files changed, 380 insertions(+), 118 deletions(-)
+---
+base-commit: 00ff0f9ce40db8e64fe16c424a965fd7ab769c42
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Thomas Richard <thomas.richard@bootlin.com>
 
 
