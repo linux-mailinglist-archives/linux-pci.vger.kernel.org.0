@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-3536-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3537-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 606D3856B80
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BA583856B82
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:48:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 187912862E5
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:48:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71D712862FD
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:48:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EBCB1386C5;
-	Thu, 15 Feb 2024 17:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEDA137C3A;
+	Thu, 15 Feb 2024 17:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D4FOpQuM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mqpx96TB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B62F13956A
-	for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 17:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D695137C32
+	for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 17:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708019246; cv=none; b=TRJYl+XfAIe2vhpkz2AUIHLP7/u1eIiNEsWbIbZUVXl5wgBum5k2D1+5V+ALhx9KCz26iZyjJxZ081jm15kNaEBi+GuQ+uM7A1HzSm6hlhWD3Ggx4+poy1DRjeKXzfuJ0hT5dNmPqpdFnzOeQeMnVRDFU9j5JFabqHVi8CTmoqc=
+	t=1708019299; cv=none; b=TeD6j05M2fUnkHRyj1W7IfEu3jHyDlYlH6mTu6m9DjPt5mNIbQifFJrlXCeikoH4qwi3LAX1poew6FjFtWhF4upmJl330KpRqKKIeDGnegsOXyr0CYtRq2m315032qVaDkNDKke6o0+4S3OgsialQRRoi6RPraKBOaJLfLREPeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708019246; c=relaxed/simple;
-	bh=ajmUHFUBbOZfizj8pnDDtY5izZYI3pCtjemyKv14bKA=;
+	s=arc-20240116; t=1708019299; c=relaxed/simple;
+	bh=Dt8Dfhv0KYo07qrCHA5x1pJBOjl5sHRZCS/sDgBwHEM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aExm8Qy+CBXU86TECMxurSdwdBc26alX9nQjYbUxHvKPluBfpRpwHz/3Vn+syR9f9Afnov4F92rkWd58fjvUZmej0kwPDgcThALYyVW1kVwLEjyIUU9kehf2LE1bSfGpSVGJGKXaP8o54TKC+rAFDBXpb6HJBswnCCmVfdF3bX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D4FOpQuM; arc=none smtp.client-ip=209.85.208.172
+	 In-Reply-To:Content-Type; b=NiT4Ao35e0saT1m+vzUWjJtELeB5hKZA4cRDm/KkLGflaGPJFbH+k0bBWFyUT6xugQL48ha/HZIo+XbNhMuD6FSIoB7RNvn6KPGOBzb94DJf+hEd+tQJnEaES2yExMBHvcgEkflDtQN0Pa+wuLG8/VPGVq+nwL3p7tJUNdaWjYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mqpx96TB; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d0a4e8444dso12314041fa.2
-        for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 09:47:23 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-511a04c837bso1321970e87.0
+        for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 09:48:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708019242; x=1708624042; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708019295; x=1708624095; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HquKZRHBV00ju6jdGp8jpiRgiVO9YKBQxry6Lkp4DJM=;
-        b=D4FOpQuMXbykR8B1nhzpDcPZLu9pj2zkbC+ImSXezWoEepcGuWf8P7CH7hMfOewZxU
-         3k5RtWEAFuS7EItUJZNZQvnKbp2V+mO+Z8EUM9XDk+42WJi4QF/ey8JJJuuMPS+olpSH
-         peHgppBU6BP5Ox5iK3gDSaOPtqgqmTu+ABvvGvTb1PJlD3JBBn7bwKU6UtfPvgqF+sL4
-         sHCTvxiDYBHIOEgG9wdqH1L+nVhQF2MrdPg4f0sZEz70BiLYuGWZ+pLy1ZQe6lXajmpQ
-         stFhKESkfSA0wP5t87qiL+GKF5pn2FNJQJeobnQokna1mqtR9ctJ6i0J5xgnuqYZlJmp
-         frBg==
+        bh=DDRPEsVl18wfCmnlXfXdVDXZZ1/0kETp5RT+YO4+BJw=;
+        b=Mqpx96TB3I78McgxJSV9m6BObXAxXSe8GBB+QaYAtCDEkNdAmJpkqY7winN86LjK4S
+         0OYXZkxISG90zg9nsoO/uP7kS11bpLhT+X+jIDKy5jTWom5FY4p1XhkrrfJ4vq0N0eSX
+         BsNnHuvaU7n7XH+DxuCbTZnIIUmGO4bSO3G3LrCCjvHf6xQgLT2MO7jdsMEOckYn/Bql
+         hblYPHEeoJoE2yEkwOvlEnRrQkupjwoZ9sJHPkuNc2zOLLuTlcupGqaqBlf28xvo1744
+         bYC8eja0J6hTRiFHFyvrbowc6OdzcNq8DAx8zKVFLy2nfoHfDd3TllgMTlKJruI8ALRj
+         LBrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708019242; x=1708624042;
+        d=1e100.net; s=20230601; t=1708019295; x=1708624095;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HquKZRHBV00ju6jdGp8jpiRgiVO9YKBQxry6Lkp4DJM=;
-        b=h+TO6VantiaWYI07aZZxLxJbddWvWY/eZrvUsTGscHnQ7SDxQxXJmbBvSR8DZ55fYR
-         XHghd3z9CWazaze9+/02ipT4fMDIIWf3a6uyDHpual+P6LyN5GPK1lxJq3NuhWXjmb7z
-         J/vAYKW4JnGzlnweJGgLHYjBcTZMx96rzy5b7pTOVk56NZlEBoZKqfF+H07T2hOSkscH
-         oxI3tZjydz8sD/xg1ZNb7YJZYd691BQH8BbFBrnVS8G5B5GZN5jX5DJBS3lcHWQtAr1K
-         BD4FkJVZb2AYtT8a7Bj4DuU4ntjxiB8wneIFZ/Qk4NGbJJ4G/0h1bZSKLNCSYSibC8uu
-         Z73g==
-X-Forwarded-Encrypted: i=1; AJvYcCW+SLUT58rD+nef2uSHEvHjU6+NfEJcpSqmXg3bVoG9QJ6OH73f8QQ3n1tCKvD/xz6I6rVDU9B/QnWXdU9PJhw7kTZd9eAte2Yk
-X-Gm-Message-State: AOJu0YywM9qhy40WaUf5lHlt+TfPwyg1/cA6a5K2ZZyVS+bIt6yzqZo1
-	FWYuS/TrsfvwR98byELKcoDQpXvd9t2vW2goGHySTNNegDZqnHeF9osoR7cO2a8=
-X-Google-Smtp-Source: AGHT+IFERZ44xaYPBBfUXSJJdhg24mt6A8dr16jL8jz3RGIC4bJ3AndEqdZvHfG8Fdqg+vZuaJcrsA==
-X-Received: by 2002:a05:6512:1152:b0:511:7ebe:b160 with SMTP id m18-20020a056512115200b005117ebeb160mr2306326lfg.45.1708019242290;
-        Thu, 15 Feb 2024 09:47:22 -0800 (PST)
+        bh=DDRPEsVl18wfCmnlXfXdVDXZZ1/0kETp5RT+YO4+BJw=;
+        b=E/d94gmCMha+zn02J4N/m2IdZcWHfxjZ+b0hupBIfVNeiTS8ksnarVpxljQ0VQF6uJ
+         767mFxnHzCHGFZQ1nMo9wiH3qe7jU3TzDEGLZKBA+jw80WLU/dEfafrePSggqIxy1rRX
+         Y0zshrqvbrdvYah//jPi8BzTjVpwKng64qL3/09FXKK8jzGiPf9YhA56SxNp1TO3lmN8
+         VE26sRGpMSxmqhRteoSCzE9+O8UPAC1gais1TSiwunp5R8a4/YcE3Qytn0s171CXJtVa
+         gJL1esdOsG6XOG8XDE5gfxiz/pfu1l8KAoXtcD+WOEh2VHs9KX4x/bIO4vYFb3PNraMu
+         /JCg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9CzlN3zqFppCdxp0TmqgsYfaOEMKXrZ5tETu/Nm4u+YuEQWRRtyQrrlKb0pcK8JJuOdBMo3dDhEgVKmodrW+dHtznTpUe/oSA
+X-Gm-Message-State: AOJu0YyVsfnyi7a8HohYTl/10kvaYs/c6qxX1w6pobyo9rJ7zrqdybG+
+	BAtwX9A2ZQ7EqiYMSIu0LodcWFwh2lvZiAmJBhiINCvTO0wB3Dk1zslzR2ldPWY=
+X-Google-Smtp-Source: AGHT+IH+DDidS/qWlWAnaKHYhVQ4/oQQG5fntEcyum7K8rd28y88HERLLrjZsuTYMPNK3nFmDHDUAw==
+X-Received: by 2002:a19:ca53:0:b0:511:acd9:c10d with SMTP id h19-20020a19ca53000000b00511acd9c10dmr1652514lfj.40.1708019295073;
+        Thu, 15 Feb 2024 09:48:15 -0800 (PST)
 Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id r1-20020a50d681000000b005638f04c122sm790193edi.14.2024.02.15.09.47.20
+        by smtp.gmail.com with ESMTPSA id r1-20020a50d681000000b005638f04c122sm790193edi.14.2024.02.15.09.48.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 09:47:21 -0800 (PST)
-Message-ID: <cbc0606c-604b-4236-a063-77e081f01250@linaro.org>
-Date: Thu, 15 Feb 2024 18:47:20 +0100
+        Thu, 15 Feb 2024 09:48:14 -0800 (PST)
+Message-ID: <a09e5b69-7938-4da3-861a-4b2fbf827552@linaro.org>
+Date: Thu, 15 Feb 2024 18:48:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,17 +78,18 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
 Content-Language: en-US
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Jingoo Han <jingoohan1@gmail.com>,
  Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Marijn Suijten <marijn.suijten@somainline.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>
 References: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
- <buqxbxlsngec2iz4oag7mfgva5cozk66ljfa6aatao6liepnzu@zlmtq2v2ib3m>
+ <361f7ae0-6de1-423c-bb64-82a5acccb502@linux.intel.com>
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -125,12 +126,13 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <buqxbxlsngec2iz4oag7mfgva5cozk66ljfa6aatao6liepnzu@zlmtq2v2ib3m>
+In-Reply-To: <361f7ae0-6de1-423c-bb64-82a5acccb502@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15.02.2024 15:17, Serge Semin wrote:
-> On Thu, Feb 15, 2024 at 11:39:31AM +0100, Konrad Dybcio wrote:
+On 15.02.2024 15:51, Kuppuswamy Sathyanarayanan wrote:
+> 
+> On 2/15/24 2:39 AM, Konrad Dybcio wrote:
 >> According to [1], msleep should be used for large sleeps, such as the
 >> 100-ish ms one in this function. Comply with the guide and use it.
 >>
@@ -167,18 +169,14 @@ On 15.02.2024 15:17, Serge Semin wrote:
 >>  #define LINK_WAIT_MAX_RETRIES		10
 >> -#define LINK_WAIT_USLEEP_MIN		90000
 >> -#define LINK_WAIT_USLEEP_MAX		100000
-> 
 >> +#define LINK_WAIT_MSLEEP_MAX		100
 > 
-> Why do you use the _MAX suffix here? AFAICS any the timers normally
-> ensures the lower boundary value of the wait-duration, not the upper
-> one. So the more correct suffix would be _MIN. On the other hand, as
-> Alexander correctly noted, using fsleep() would be more suitable at
-> least from the maintainability point of view. Thus having a macro name
-> like LINK_WAIT_USLEEP_MIN or just LINK_WAIT_SLEEP_US would be more
-> appropriate. The later version is more preferable IMO.
+> Since 90 ms is an acceptable value, why not use it?
 
-Agree with SLEEP_US
+I suppose I can do that indeed.. Usually I go for the safer option
+when cleaning up old code, but you're right, 90 should be ok
+
+(unless somebody has some documentation stating otherwise)
 
 Konrad
 
