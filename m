@@ -1,124 +1,121 @@
-Return-Path: <linux-pci+bounces-3531-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3532-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8116C856911
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:11:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C468485694B
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:16:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F1B51F27412
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 16:11:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 624311F265B4
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 16:16:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 242D91339A3;
-	Thu, 15 Feb 2024 16:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE92134730;
+	Thu, 15 Feb 2024 16:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWbFqy/D"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7628A129A9D;
-	Thu, 15 Feb 2024 16:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E686D134726;
+	Thu, 15 Feb 2024 16:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708013115; cv=none; b=mIYaimpWEX9LkwiJN9k6qpmvwGHAv45J9ihnO+m6z7CDakfK49/Vf2V3RWjcE4JrOFMEKQ2/Qkiod7WQFtQ+L4pSUBRaDaGl3TymS5mWFeRVbZ2N2mbTGtLZ3GrGuNLBLmbg2cYm7fBxUI2X5JZKgyeh+UOmO4nJLG7LsrVaPyA=
+	t=1708013477; cv=none; b=d802kP1J25BQfiDMyoX4MVFtCvdqBh6jf5Zmj0Mj9SaQWVsJu8E1BF5ofxFuOOi4xyM4bjE/Zity8Kd5qJ4OYB7soB7BUQ2XMf1Emixo4V77i+g3mBTjEeZtnuDuWaw5BpTCr7i4TgMhZqSIpLqlsC4832vMHt/i/hd0wjAdjr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708013115; c=relaxed/simple;
-	bh=HyvS+k8X59AuZUHlUgEzyqcX7h3epessADbli2UvsfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g0alAVGmI2/0bXf9jQgw8TOjIADq22xsP0Fshlm+cd32q62bLR8taeNSLYdDR+CMWiWij8fFwNzZ3YagwfHaMbiaKEH6Tb3h1liG4FV1azd16SOmUMgZMCE76uabi0/hlRcUChTxY9Vn3W+M5VRrHoKPHlyV9cMcmX6RnkC2aAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2222938"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="2222938"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:04:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912185118"
-X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
-   d="scan'208";a="912185118"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:04:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1raeE9-00000004prW-0Y4C;
-	Thu, 15 Feb 2024 18:04:45 +0200
-Date: Thu, 15 Feb 2024 18:04:44 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
+	s=arc-20240116; t=1708013477; c=relaxed/simple;
+	bh=Vyz7IOzA7aW6XCnyElzhzRzZbzPNLX4vzNsg70hxADU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mHGG3iimXpbx9nOg5Eze/dMyEWaPw2w+RVtUipCaEndVZv2M8cY9k5CoOim+23EwHGPg2Yxj3+4tQZ2Lwr05BreDBtSjdVTAxo/yjOPGj4NC7zwlR28vw++RM6p5yfuZLWCXEup8zvOnjMrrqXLvjg4NbYTDeXE5hds28x9yp1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWbFqy/D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78264C433F1;
+	Thu, 15 Feb 2024 16:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708013476;
+	bh=Vyz7IOzA7aW6XCnyElzhzRzZbzPNLX4vzNsg70hxADU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aWbFqy/D3RnbyH3500/cXNNqMzmiwGjw6LQ3lpdWgGZveLcZg11qlfPRX7VOV1yBP
+	 14MlTw0KxRzs3A5nXExZ6o40P5c3h6l1d8SCyoFGyXFFmdf1EEllel0mtQ8j6UNmn0
+	 JoJgR8bMzfGw+x5dP7/Xk9WvzTEfgp5jtpu4LoX3HMnSJvcAJWkDtES+slim97yBz7
+	 d0BZAaCQLFAQhb/WLhSba04eJt+2XcI/4Erj7S/fe4E0eqEqs/rpIAPeLukD3cK9d0
+	 i6n+LT+4c/2EU+in3WuGbrVzML2aKr53Pk5gXF66yBClAiBuLffgHORIUoda2TMP9e
+	 86GWeyU3KKHPg==
+Date: Thu, 15 Feb 2024 10:11:14 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v3 17/18] PCI: j721e: add reset GPIO to struct j721e_pcie
-Message-ID: <Zc42HIibtoXqLyEA@smile.fi.intel.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-17-5c2e4a3fac1f@bootlin.com>
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
+Message-ID: <20240215161114.GA1292081@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-17-5c2e4a3fac1f@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <3a040d65-4843-4e7d-818e-2523d112c74a@linaro.org>
 
-On Thu, Feb 15, 2024 at 04:18:02PM +0100, Thomas Richard wrote:
-> From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Thu, Feb 15, 2024 at 11:21:45AM +0100, Konrad Dybcio wrote:
+> On 14.02.2024 23:28, Bjorn Helgaas wrote:
+> > On Wed, Feb 14, 2024 at 10:35:16PM +0100, Konrad Dybcio wrote:
+> >> On 12.02.2024 22:17, Bjorn Helgaas wrote:
+> >>> Maybe include the reason in the subject?  "Read back" is literally
+> >>> what the diff says.
+> >>>
+> >>> On Sat, Feb 10, 2024 at 06:10:06PM +0100, Konrad Dybcio wrote:
+> >>>> To ensure write completion, read the PARF_LTSSM register after setting
+> >>>> the LTSSM enable bit before polling for "link up".
+> >>>
+> >>> The write will obviously complete *some* time; I assume the point is
+> >>> that it's important for it to complete before some other event, and it
+> >>> would be nice to know why that's important.
+> >>
+> >> Right, that's very much meaningful on non-total-store-ordering
+> >> architectures, like arm64, where the CPU receives a store instruction,
+> >> but that does not necessarily impact the memory/MMIO state immediately.
+> > 
+> > I was hinting that maybe we could say what the other event is, or what
+> > problem this solves?  E.g., maybe it's as simple as "there's no point
+> > in polling for link up until after the PARF_LTSSM store completes."
+> > 
+> > But while the read of PARF_LTSSM might reduce the number of "is the
+> > link up" polls, it probably wouldn't speed anything up otherwise, so I
+> > suspect there's an actual functional reason for this patch, and that's
+> > what I'm getting at.
 > 
-> Add reset GPIO to struct j721e_pcie, so it can be used at suspend and
-> resume stages.
+> So, the register containing the "enable switch" (PARF_LTSSM) can (due
+> to the armv8 memory model) be "written" but not "change the value of
+> memory/mmio from the perspective of other (non-CPU) memory-readers
+> (such as the MMIO-mapped PCI controller itself)".
+> 
+> In that case, the CPU will happily continue calling qcom_pcie_link_up()
+> in a loop, waiting for the PCIe controller to bring the link up, however
+> the PCIE controller may have never received the PARF_LTSSM "enable link"
+> write by the time we decide to time out on checking the link status.
+> 
+> It may also never happen for you, but that's exactly like a classic race
+> condition, where it may simply not manifest due to the code around the
+> problematic lines hiding it. It may also only manifest on certain CPU
+> cores that try to be smarter than you and keep reordering/delaying
+> instructions if they don't seem immediately necessary.
 
-...
+Does this mean the register is mapped incorrectly, e.g., I see arm64
+has many different kinds of mappings for cacheability,
+write-buffering, etc?
 
->  	case PCI_MODE_RC:
-> -		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> -		if (IS_ERR(gpiod)) {
-> -			ret = PTR_ERR(gpiod);
-> +		pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> +		if (IS_ERR(pcie->reset_gpio)) {
-> +			ret = PTR_ERR(pcie->reset_gpio);
->  			if (ret != -EPROBE_DEFER)
->  				dev_err(dev, "Failed to get reset GPIO\n");
->  			goto err_get_sync;
-> @@ -504,9 +504,9 @@ static int j721e_pcie_probe(struct platform_device *pdev)
->  		 * mode is selected while enabling the PHY. So deassert PERST#
->  		 * after 100 us.
->  		 */
-> -		if (gpiod) {
-> +		if (pcie->reset_gpio) {
->  			usleep_range(100, 200);
-> -			gpiod_set_value_cansleep(gpiod, 1);
-> +			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
->  		}
+Or, if it is already mapped correctly, are we confident that none of
+the *other* register writes need similar treatment?  Is there a rule
+we can apply to know when the read-after-write is needed?
 
-Instead of all this, just add one line assignment. Moreover, before or after
-this patch refactor the code to use ret = dev_err_probe(...); pattern that
-eliminates those deferral probe checks.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bjorn
 
