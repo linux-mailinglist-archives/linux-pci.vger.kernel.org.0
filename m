@@ -1,118 +1,124 @@
-Return-Path: <linux-pci+bounces-3530-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3531-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41BFF8568B1
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:03:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8116C856911
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:11:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1890290E97
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 16:03:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F1B51F27412
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 16:11:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21481133993;
-	Thu, 15 Feb 2024 16:02:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaUOWjhk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 242D91339A3;
+	Thu, 15 Feb 2024 16:05:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AFC1350F6;
-	Thu, 15 Feb 2024 16:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7628A129A9D;
+	Thu, 15 Feb 2024 16:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708012920; cv=none; b=MJ8MU6M0n5Wxlmt6UUvUTABPvgCi/F1Bcp3OOFYlgvPniA4zBPJwNqEnJDcW6XWnGdsQM7KJL+vh3myyLonowEB4PpxReRXwY7/BIFDRxrKPW7W++uLe7Xnv3R4cJGzOyuQIe1yvMZyAP+7apuLFhOH09caz3ZvNRMhD36Da65o=
+	t=1708013115; cv=none; b=mIYaimpWEX9LkwiJN9k6qpmvwGHAv45J9ihnO+m6z7CDakfK49/Vf2V3RWjcE4JrOFMEKQ2/Qkiod7WQFtQ+L4pSUBRaDaGl3TymS5mWFeRVbZ2N2mbTGtLZ3GrGuNLBLmbg2cYm7fBxUI2X5JZKgyeh+UOmO4nJLG7LsrVaPyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708012920; c=relaxed/simple;
-	bh=pWw8ohlMdJOBYl5mwsS+UEZnUOAY6rOv2BrZBdYFroE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=USUcjXD+WiDPJzbUNOzxK45vLe0Y7YhW/Kbf71ZrX6tu9j9x6GLtrJsj45z2suFZxT4rr+HEL7/eThEyVJa+1+SfBLxKZc+Vwv7k9dE4Vg6cp2K4kxuwVbPnM4/Go6V5ZKo2nqpOAd476wibCQ95Ls/4hQM3hDE4iB417CjS3Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaUOWjhk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26DF5C433C7;
-	Thu, 15 Feb 2024 16:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708012919;
-	bh=pWw8ohlMdJOBYl5mwsS+UEZnUOAY6rOv2BrZBdYFroE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TaUOWjhkb5mM0/BsHOScRRcw1Loz1te9kYIoI82lkP56F49Uzy9oG+HgmRR2cD0S0
-	 jYP3vTctJ84N23BibErGY4gMhi7ULXq3jshaOuJdvl13WzszMz9M3spY8VwUwSG1DP
-	 ATEIWlZ/hwegkwSNt3tPKxboCw5MkCRORCdUtTlPr/Na6ow4v2f0fvJbJPNKLAvjwu
-	 x3ouW88CaQfG/+ghH2q+QBA0mN37y77UO6x0DzXFu3kDWWKS9aiQpeIzbHjtU2raFk
-	 9J19JecmfXkwoKtOcoUcqHEYV5WF4iwo9vxzepup41U18GaLxltBu//PsWHna/zubC
-	 0tEepQWrESd4Q==
-Date: Thu, 15 Feb 2024 10:01:57 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, bhelgaas@google.com,
-	robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
-	jonathanh@nvidia.com, Kishon Vijay Abraham I <kishon@kernel.org>,
-	catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
-	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-	digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V16 13/13] PCI: tegra: Add Tegra194 PCIe support
-Message-ID: <20240215160157.GA1291755@bhelgaas>
+	s=arc-20240116; t=1708013115; c=relaxed/simple;
+	bh=HyvS+k8X59AuZUHlUgEzyqcX7h3epessADbli2UvsfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0alAVGmI2/0bXf9jQgw8TOjIADq22xsP0Fshlm+cd32q62bLR8taeNSLYdDR+CMWiWij8fFwNzZ3YagwfHaMbiaKEH6Tb3h1liG4FV1azd16SOmUMgZMCE76uabi0/hlRcUChTxY9Vn3W+M5VRrHoKPHlyV9cMcmX6RnkC2aAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="2222938"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="2222938"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:04:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="912185118"
+X-IronPort-AV: E=Sophos;i="6.06,162,1705392000"; 
+   d="scan'208";a="912185118"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 08:04:49 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1raeE9-00000004prW-0Y4C;
+	Thu, 15 Feb 2024 18:04:45 +0200
+Date: Thu, 15 Feb 2024 18:04:44 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v3 17/18] PCI: j721e: add reset GPIO to struct j721e_pcie
+Message-ID: <Zc42HIibtoXqLyEA@smile.fi.intel.com>
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-17-5c2e4a3fac1f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <17dadf66-055c-4796-a905-44e37b6fcfe3@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240102-j7200-pcie-s2r-v3-17-5c2e4a3fac1f@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 15, 2024 at 04:55:47PM +0530, Vidya Sagar wrote:
-> On 15-02-2024 00:42, Bjorn Helgaas wrote:
-> > Hi Vidya, question about ancient history:
-> > 
-> > On Tue, Aug 13, 2019 at 05:06:27PM +0530, Vidya Sagar wrote:
-> > > Add support for Synopsys DesignWare core IP based PCIe host controller
-> > > present in Tegra194 SoC.
-> > > ...
-> > > +static int tegra_pcie_dw_host_init(struct pcie_port *pp)
-> > > +{
-> > > +     struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > > +     struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-> > > +     u32 val, tmp, offset, speed;
-> > > +
-> > > +     tegra_pcie_prepare_host(pp);
-> > > +
-> > > +     if (dw_pcie_wait_for_link(pci)) {
-> > > +             /*
-> > > +              * There are some endpoints which can't get the link up if
-> > > +              * root port has Data Link Feature (DLF) enabled.
-> > > +              * Refer Spec rev 4.0 ver 1.0 sec 3.4.2 & 7.7.4 for more info
-> > > +              * on Scaled Flow Control and DLF.
-> > > +              * So, need to confirm that is indeed the case here and attempt
-> > > +              * link up once again with DLF disabled.
-> >
-> > This comment suggests that there's an issue with *Endpoints*, not an
-> > issue with the Root Port.  If so, it seems like this problem could
-> > occur with all Root Ports, not just Tegra194.  Do you remember any
-> > details about this?
-> > 
-> > I don't remember hearing about any similar issues, and this driver is
-> > the only place PCI_EXT_CAP_ID_DLF is referenced, so maybe it is
-> > actually something related to Tegra194?
->
-> We noticed PCIe link-up issues with some endpoints. link-up at the physical
-> layer level but NOT at the Data link layer level precisely. We further
-> figured out that it is the DLFE DLLPs that the root port sends during the
-> link up process which are causing the endpoints get confused and preventing
-> them from sending the InitFC DLLPs leading to the link not being up at
-> Data Link Layer level.
+On Thu, Feb 15, 2024 at 04:18:02PM +0100, Thomas Richard wrote:
+> From: Théo Lebrun <theo.lebrun@bootlin.com>
+> 
+> Add reset GPIO to struct j721e_pcie, so it can be used at suspend and
+> resume stages.
 
-Do you happen to remember any of the endpoints that have issues?
+...
 
-Could save some painful debugging if we trip over this issue on other
-systems.  We have seen a few cases where links wouldn't train at full
-speed unless they trained at a lower speed first, e.g.,
-imx6_pcie_start_link(), fu740_pcie_start_link().  I guess there are
-probably lots of edge cases that can cause link failures.
+>  	case PCI_MODE_RC:
+> -		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> -		if (IS_ERR(gpiod)) {
+> -			ret = PTR_ERR(gpiod);
+> +		pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> +		if (IS_ERR(pcie->reset_gpio)) {
+> +			ret = PTR_ERR(pcie->reset_gpio);
+>  			if (ret != -EPROBE_DEFER)
+>  				dev_err(dev, "Failed to get reset GPIO\n");
+>  			goto err_get_sync;
+> @@ -504,9 +504,9 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  		 * mode is selected while enabling the PHY. So deassert PERST#
+>  		 * after 100 us.
+>  		 */
+> -		if (gpiod) {
+> +		if (pcie->reset_gpio) {
+>  			usleep_range(100, 200);
+> -			gpiod_set_value_cansleep(gpiod, 1);
+> +			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+>  		}
 
-Bjorn
+Instead of all this, just add one line assignment. Moreover, before or after
+this patch refactor the code to use ret = dev_err_probe(...); pattern that
+eliminates those deferral probe checks.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
