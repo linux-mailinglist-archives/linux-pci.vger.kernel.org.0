@@ -1,154 +1,147 @@
-Return-Path: <linux-pci+bounces-3497-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3498-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F48F8565BA
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 15:17:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE40C8565E2
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 15:24:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E21941F24696
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 14:17:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E06B21C21842
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 14:24:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C36912D74D;
-	Thu, 15 Feb 2024 14:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A48312FB33;
+	Thu, 15 Feb 2024 14:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPZ7w0Yh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1j4nByU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723EA129A73;
-	Thu, 15 Feb 2024 14:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4112131E2B;
+	Thu, 15 Feb 2024 14:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708006639; cv=none; b=RiJYA2eKFS8bDAo271NA0YeoICOj/tOWhWuNOAa+TFcaxWaKer8H3zPhSwKNUX4hCUcTkWt5x/dJ0a1bR1dIbu1j7S3W5eP0zlSgsK9w2Tz57hvaWGO6y33RxHr080Yhh64WnwWMHu+MpoRjx2K1SIHbZrPvLnc26LXCfVy0MpY=
+	t=1708007080; cv=none; b=kNLbPsY4g4EMMVza3kTwwYwcAHQY3Y6lp6/8f3d6SktQXdEOW1LrJMovUKJmekVdFWsAHZFn74YaJGRIWFa3QK8rxfSJz1pRRL7h1QVKB6P5PKYWOsAfqpuAbfhSYxWaROxov+Kaa1Cx6/EcK+HIuhrQfCfJfFUEbSoHl+QL4zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708006639; c=relaxed/simple;
-	bh=4H+iR8aGxxFCoMFHwf2l19pGGIJ92Ffk8H4vV2vpgOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IVh3qsH8Qyl1+iD6bFpemnJgORvJ/rAAQI++p2rF9IRojBU3aGkxikAVJDd4ZehgyMGYOoshmn+ItEwbqm6K2B2G55IM9OHH8oit0BjBxjcg2jBiBXXadLARzRsqa1s+C3OyF9zk1sML25XuB4a+KAyFVJ07rOQuS0cCsyWaqdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BPZ7w0Yh; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d0bc402c8eso8967351fa.1;
-        Thu, 15 Feb 2024 06:17:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708006635; x=1708611435; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HT54JnEJDGAg08CMMVH/+M305jfI2/9H3G2UVROz1uY=;
-        b=BPZ7w0YhQz6C61dr+/8A9VqEfVVBCi6nn1ABmYgy0FnngET4+9ufp8lIqT2TmHu6MI
-         3UgJkhFZja4GfPK2kOX7lXNSfojA61S8RgMjude30cbWPKbGeA7pY0DERyW1Nu2e6R6d
-         XRXkqcp5L2B9ruVP6aqbfC0snq/hg+Qs3Y76H079YMKUNnPfrp7eGb8j5+KnmM0CO+QS
-         VGmqeig+bL0keZ97QqwdNlidnSXBrSRrLy5EzlNQgzHHAXLB6c0nv3JTiwrnqJ7gw+YO
-         vEbWo2ivuJ4WDzC/5TdAKiuzqtIkuBoevKQF/r5oMDyYolwtTE5/oNhRdvXxpZONNwvJ
-         5iNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708006635; x=1708611435;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HT54JnEJDGAg08CMMVH/+M305jfI2/9H3G2UVROz1uY=;
-        b=vfvlYasVIkHcKeFt9R0Z+jullCnwGfog0rOQibpKwaFJNM9pa1jYZJJriIDSeP1Pre
-         Jll2TzaBIGwuMQL4x8HtGHI155H/K/3P6n1+AfgrxQlYwei+lWXhIP+h7vjSWSdMSmhA
-         sAmk/NwvU9yS2WPCgxecsF4FvNgtW2tx2h8Lt6CvCnQPTSjdAd8TnYKMpONnGLc609QJ
-         EJDCRtJMb9sx+W8fw02YRSrlBBH2r/Y7r1QaFx43lUDTwTOTKjs1UUGkryZ+uDTeg+go
-         cPeqbqG/ZNTcFs58nJ0FNEKloE79bYJZkiTHn5BMNN1k4FSzI6dO7vRDta9sE1sv2QqR
-         31mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUkBqZ1yDmxnnJNJBLRVY2dKRaBwE3Zv9PCq1LH+LyOIxt3zPvpFZ3kfY/ax2CMSzijrWhsIEyYmtyGZeG37tkOZre3TuW+PS/5XbYP0KMDUTYV0iPsDcfE8N/r3CY78K9UbpPABDH
-X-Gm-Message-State: AOJu0YzM5uYhdYZ0cEDHIevIiei0EU8AT5PU5yJUlFkPbEhJSRgRWbyR
-	2/QZElyUlP4ZfF1rDPgc1LYBvEMKkNux8GmBNaqemcmiuQAJV8QN
-X-Google-Smtp-Source: AGHT+IFy9AWKohqG+mIYkRHT7tZFmVtKV2bSHsT9yAz4d87mMpIAlFu0SJlWxeIGFp+RN+lqme1G4A==
-X-Received: by 2002:a2e:9d10:0:b0:2d0:af40:7058 with SMTP id t16-20020a2e9d10000000b002d0af407058mr621746lji.14.1708006635324;
-        Thu, 15 Feb 2024 06:17:15 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id t17-20020a2e7811000000b002d0d0d06fcfsm290350ljc.103.2024.02.15.06.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 06:17:14 -0800 (PST)
-Date: Thu, 15 Feb 2024 17:17:12 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
-Message-ID: <buqxbxlsngec2iz4oag7mfgva5cozk66ljfa6aatao6liepnzu@zlmtq2v2ib3m>
-References: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
+	s=arc-20240116; t=1708007080; c=relaxed/simple;
+	bh=zYTCS8MpuiOCc+WScUKApIvP5bK8xDhtqdGf8yM6aZc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dXxIZKaeIspAfY7ZEvcRpv2LOANqwP27Z7oifH3rKYu5rm1ej9kMrvs7MOApqS108akC8nNZThSGv6GoeAdDT9SKUawFkZGxlpvzFCbQqvu9Gw43aI8d+AT5qQrnBw2I1fh4KHjs8Cljs9Vs4zErVNuOaNNI74irXThkbNpfGiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m1j4nByU; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708007077; x=1739543077;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zYTCS8MpuiOCc+WScUKApIvP5bK8xDhtqdGf8yM6aZc=;
+  b=m1j4nByU+o8IyodoDzFtBqXxe6uKczMPF1BpT4N1I93NCmdMHQ/PlKy2
+   WzzpoehuQmZKRoREczcuzjvqAMcxpipPyRrKn3XA4ff6NynrSfcuL67Kq
+   n4Z7v7EQQXtpf/8kyoCbUbo3W9zCHfeMccvlNoUPLF95jNCB7iE+7eXp6
+   mtx4gbPVAXs9y+IO9oyJ9INBZkgpSqCJO7tXl9oNXP/+HCbgvUgAWPO7R
+   UMgrwMlcWXdINVZBLMPoVW6sAvAUYJyZqcrHaZMViRjdOFuzflZe1iGZI
+   qxHfwF63QNvc2Ujt4z8aHajUVrEcdAG2DrslpwBSKNirwdktiyf0BBjUP
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10984"; a="19514363"
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="19514363"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:24:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,161,1705392000"; 
+   d="scan'208";a="3701584"
+Received: from unknown (HELO mtkaczyk-devel.igk.intel.com) ([10.102.108.91])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2024 06:24:33 -0800
+From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	linux-leds@vger.kernel.org
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
+	Marek Behun <marek.behun@nic.cz>, Pavel Machek <pavel@ucw.cz>,
+	Randy Dunlap <rdunlap@infradead.org>, Shevchenko@web.codeaurora.org,
+	Andriy <andriy.shevchenko@intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH 0/2] Native PCIe Enclosure Management
+Date: Thu, 15 Feb 2024 15:23:43 +0100
+Message-Id: <20240215142345.6073-1-mariusz.tkaczyk@linux.intel.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 15, 2024 at 11:39:31AM +0100, Konrad Dybcio wrote:
-> According to [1], msleep should be used for large sleeps, such as the
-> 100-ish ms one in this function. Comply with the guide and use it.
-> 
-> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
-> Tested on Qualcomm SC8280XP CRD
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 250cf7f40b85..abce6afceb91 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->  		if (dw_pcie_link_up(pci))
->  			break;
->  
-> -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> +		msleep(LINK_WAIT_MSLEEP_MAX);
->  	}
->  
->  	if (retries >= LINK_WAIT_MAX_RETRIES) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 26dae4837462..3f145d6a8a31 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -63,8 +63,7 @@
->  
->  /* Parameters for the waiting for link up routine */
->  #define LINK_WAIT_MAX_RETRIES		10
-> -#define LINK_WAIT_USLEEP_MIN		90000
-> -#define LINK_WAIT_USLEEP_MAX		100000
+In this patchset support of Native PCIe Enclosure Management is proposed.
+Stuart Hayes was working on this earlier. It is a new serie because it
+is NPEM only.
 
-> +#define LINK_WAIT_MSLEEP_MAX		100
+NPEM is pattern oriented standard, it tells which "pattern" should blink.
+It doesn't control physical LED or pattern visualization. It is described
+better in second patch.
 
-Why do you use the _MAX suffix here? AFAICS any the timers normally
-ensures the lower boundary value of the wait-duration, not the upper
-one. So the more correct suffix would be _MIN. On the other hand, as
-Alexander correctly noted, using fsleep() would be more suitable at
-least from the maintainability point of view. Thus having a macro name
-like LINK_WAIT_USLEEP_MIN or just LINK_WAIT_SLEEP_US would be more
-appropriate. The later version is more preferable IMO.
+Overall, driver is simple but it was not simple to fit it into interfaces
+we have in kernel (We considered leds and enclosure interfaces). It reuses
+leds interface, this approach seems to be the best because:
+- leds are actively maintained, no new interface added.
+- leds do not require any extensions, enclosure needs to be adjusted first.
 
--Serge(y)
+There are trade-offs:
+- "brightness" is the name of sysfs file to control led. It is not
+  natural to use brightness to set patterns, that is why multiple led
+  devices are created (one per pattern);
+- Update of one led may affect other leds, led triggers may not work
+  as expected.
 
->  
->  /* Parameters for the waiting for iATU enabled routine */
->  #define LINK_WAIT_MAX_IATU_RETRIES	5
-> 
-> ---
-> base-commit: 26d7d52b6253574d5b6fec16a93e1110d1489cef
-> change-id: 20240215-topic-pci_sleep-368108a1fb6f
-> 
-> Best regards,
-> -- 
-> Konrad Dybcio <konrad.dybcio@linaro.org>
-> 
-> 
+It doesn't provide ACPI _DSM support, it requires separate implementation
+outside drives/pci/ but NPEM is not registered if _DSM is available.
+
+This patchset was made in close collaboration with Lucas Wunner.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Marek Behun <marek.behun@nic.cz>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
+Link: https://lore.kernel.org/linux-pci/20201106194221.59353-1-stuart.w.hayes@gmail.com/
+Link: https://lore.kernel.org/linux-pci/20201110153735.58587-1-stuart.w.hayes@gmail.com/
+Link: https://lore.kernel.org/linux-pci/20210416192010.3197-1-stuart.w.hayes@gmail.com/
+Link: https://lore.kernel.org/linux-pci/20210601203820.3647-1-stuart.w.hayes@gmail.com/
+Link: https://lore.kernel.org/linux-pci/20210813213653.3760-1-stuart.w.hayes@gmail.com/
+Link: https://lore.kernel.org/linux-pci/cover.1642460765.git.stuart.w.hayes@gmail.com/
+Link: https://lore.kernel.org/linux-pci/cover.1643822289.git.stuart.w.hayes@gmail.com/
+
+
+Mariusz Tkaczyk (2):
+  leds: Init leds class earlier
+  PCI/NPEM: Add Native PCIe Enclosure Management support
+
+ drivers/leds/led-class.c      |   2 +-
+ drivers/pci/Kconfig           |   7 +
+ drivers/pci/Makefile          |   1 +
+ drivers/pci/bus.c             |   1 +
+ drivers/pci/npem.c            | 339 ++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |   8 +
+ drivers/pci/remove.c          |   1 +
+ include/linux/pci.h           |   4 +
+ include/uapi/linux/pci_regs.h |  34 ++++
+ 9 files changed, 396 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/npem.c
+
+-- 
+2.35.3
+
 
