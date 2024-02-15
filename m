@@ -1,74 +1,74 @@
-Return-Path: <linux-pci+bounces-3537-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3538-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA583856B82
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:48:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87FEF856D25
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 19:53:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71D712862FD
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 17:48:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 627EAB2648E
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Feb 2024 18:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEDA137C3A;
-	Thu, 15 Feb 2024 17:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C5BA13849B;
+	Thu, 15 Feb 2024 18:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mqpx96TB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WG5tRvTJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D695137C32
-	for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 17:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBBA1369AC
+	for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 18:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708019299; cv=none; b=TeD6j05M2fUnkHRyj1W7IfEu3jHyDlYlH6mTu6m9DjPt5mNIbQifFJrlXCeikoH4qwi3LAX1poew6FjFtWhF4upmJl330KpRqKKIeDGnegsOXyr0CYtRq2m315032qVaDkNDKke6o0+4S3OgsialQRRoi6RPraKBOaJLfLREPeU=
+	t=1708022675; cv=none; b=LiCU0YwkbEGs9Edj/kfqVXr+tcl830W2L/5Vw7vJYdOG5LZIOvxD3U4E8/qFC1kZONOBQu4D7rAhLRMiJAnYFI1I+YA6FUdQAvxfg5GwaJR1kvCTg602SKeefSgQYHxxAbIgRBoUykguuEGW3BvV7e67GnFF560fdmqdir4RJQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708019299; c=relaxed/simple;
-	bh=Dt8Dfhv0KYo07qrCHA5x1pJBOjl5sHRZCS/sDgBwHEM=;
+	s=arc-20240116; t=1708022675; c=relaxed/simple;
+	bh=Ov3h6NmCfWVCrQRPZcBAGDu7dD9jbUeBaBXLPNApxYg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NiT4Ao35e0saT1m+vzUWjJtELeB5hKZA4cRDm/KkLGflaGPJFbH+k0bBWFyUT6xugQL48ha/HZIo+XbNhMuD6FSIoB7RNvn6KPGOBzb94DJf+hEd+tQJnEaES2yExMBHvcgEkflDtQN0Pa+wuLG8/VPGVq+nwL3p7tJUNdaWjYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mqpx96TB; arc=none smtp.client-ip=209.85.167.43
+	 In-Reply-To:Content-Type; b=rFwxcqcQQ+U/khDmq6Kju/pT4gWxBJtmfDCtoXX7tkgjU3aBJX/OPNTx+xTqFlIwac+h+jEy/ao8EQoZCxviMv/HORHomLL+zPabusPH431a2zu+KscishsE5FVuXk1EmJNUkK8CqjCQ3ZewQ6CD4czg+SrNuT3XQ5p9ceder+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WG5tRvTJ; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-511a04c837bso1321970e87.0
-        for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 09:48:16 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d10d2da73dso16169431fa.1
+        for <linux-pci@vger.kernel.org>; Thu, 15 Feb 2024 10:44:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708019295; x=1708624095; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708022671; x=1708627471; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DDRPEsVl18wfCmnlXfXdVDXZZ1/0kETp5RT+YO4+BJw=;
-        b=Mqpx96TB3I78McgxJSV9m6BObXAxXSe8GBB+QaYAtCDEkNdAmJpkqY7winN86LjK4S
-         0OYXZkxISG90zg9nsoO/uP7kS11bpLhT+X+jIDKy5jTWom5FY4p1XhkrrfJ4vq0N0eSX
-         BsNnHuvaU7n7XH+DxuCbTZnIIUmGO4bSO3G3LrCCjvHf6xQgLT2MO7jdsMEOckYn/Bql
-         hblYPHEeoJoE2yEkwOvlEnRrQkupjwoZ9sJHPkuNc2zOLLuTlcupGqaqBlf28xvo1744
-         bYC8eja0J6hTRiFHFyvrbowc6OdzcNq8DAx8zKVFLy2nfoHfDd3TllgMTlKJruI8ALRj
-         LBrw==
+        bh=/1q2t5THAXaIQHLTF3wmnuNYqSVcOhZJZA6IWBoe7FA=;
+        b=WG5tRvTJ1rdHfIHXlYPaO0CM7ZXYcZCypeRc6bGXR/Zs23BLfe/Slp5NPYbVR0/UMc
+         CN/nKy5+yZlhAoFrBZVY616VDSdy3FGGcTjODyZWg6JKpw+Q2FMfpxW+zBkX1B/+x0Kl
+         J2Q68R0xsy9p7EesHzQM1fszC447pm1rTAyXEcVqQqCqeC0Z+ZG9csY/BY2LR4CH4CAF
+         gEo1uKOVSxwMW3yGF1F4dYD3IVf6vJVOa7gRsLGkC1nz+29/HsxsO3sqVsgptWbmFEDx
+         NdaHnr0vL9SOc6Whe922s6fXDm8wUUV0u/re/fBQiX3Nn+Z/Q8SdxOK7rREgf+7eAKQ/
+         LIXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708019295; x=1708624095;
+        d=1e100.net; s=20230601; t=1708022671; x=1708627471;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DDRPEsVl18wfCmnlXfXdVDXZZ1/0kETp5RT+YO4+BJw=;
-        b=E/d94gmCMha+zn02J4N/m2IdZcWHfxjZ+b0hupBIfVNeiTS8ksnarVpxljQ0VQF6uJ
-         767mFxnHzCHGFZQ1nMo9wiH3qe7jU3TzDEGLZKBA+jw80WLU/dEfafrePSggqIxy1rRX
-         Y0zshrqvbrdvYah//jPi8BzTjVpwKng64qL3/09FXKK8jzGiPf9YhA56SxNp1TO3lmN8
-         VE26sRGpMSxmqhRteoSCzE9+O8UPAC1gais1TSiwunp5R8a4/YcE3Qytn0s171CXJtVa
-         gJL1esdOsG6XOG8XDE5gfxiz/pfu1l8KAoXtcD+WOEh2VHs9KX4x/bIO4vYFb3PNraMu
-         /JCg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9CzlN3zqFppCdxp0TmqgsYfaOEMKXrZ5tETu/Nm4u+YuEQWRRtyQrrlKb0pcK8JJuOdBMo3dDhEgVKmodrW+dHtznTpUe/oSA
-X-Gm-Message-State: AOJu0YyVsfnyi7a8HohYTl/10kvaYs/c6qxX1w6pobyo9rJ7zrqdybG+
-	BAtwX9A2ZQ7EqiYMSIu0LodcWFwh2lvZiAmJBhiINCvTO0wB3Dk1zslzR2ldPWY=
-X-Google-Smtp-Source: AGHT+IH+DDidS/qWlWAnaKHYhVQ4/oQQG5fntEcyum7K8rd28y88HERLLrjZsuTYMPNK3nFmDHDUAw==
-X-Received: by 2002:a19:ca53:0:b0:511:acd9:c10d with SMTP id h19-20020a19ca53000000b00511acd9c10dmr1652514lfj.40.1708019295073;
-        Thu, 15 Feb 2024 09:48:15 -0800 (PST)
+        bh=/1q2t5THAXaIQHLTF3wmnuNYqSVcOhZJZA6IWBoe7FA=;
+        b=KXEg+LsoKxC1HIzpzZy+LO31mYvpXbBhezXMUDdkhFrgFi/Wl8GDnfrQfnsnVumM+Z
+         BT1BL5yhtoXZhrZqPQBkfh4Qgo2OI8bAFVll+5ttynZ9o6fknfZbKyNKDe/kYNKaOdQX
+         tl3EyvYBObbKhs9u9EYat3jhJ37bdD24Lm1oKMogEaVrWkvi0x3d9Mu9xVw0vHd/dtXe
+         25Sg7Wq84Q+50a3AEHYwbIWyDSEJ49509knGOw4jQzc+8dYfkS286M+X/fflOIMol5LU
+         3YaHqt2NExph4YZCEB3fbYNBmZEm7w3R3q0Xto055WZKjetV0xN/MYHFVgnkjx+7brgp
+         hmUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBh0dilu0HEmGV2WX1/a4p+1gZ5ATz31VCnkXRYGb5/01RijIl5RhcCjrwGF4IewiWWMPWhJEl4E1XAa+S8U2JOHZEz68/81AB
+X-Gm-Message-State: AOJu0YxvLIjAl5U5R+peGQ0FcgCTl++k0oSfsxJ+wF8IBhooZk/IckBj
+	V38aWCtNFEtow5XKz7gWOtLJ9/YSydz8THwFIKPgp/XA4q5OlDTIMu+3BH6PLO0=
+X-Google-Smtp-Source: AGHT+IHBrUEPEGVeK0vtIcVNlx2ltmsJu5vHeHHZz0wFy9l8DbCDpMTbmDuhROJn4UpG+ml/N/UStA==
+X-Received: by 2002:a2e:a483:0:b0:2d1:33a:6c85 with SMTP id h3-20020a2ea483000000b002d1033a6c85mr1959604lji.8.1708022671457;
+        Thu, 15 Feb 2024 10:44:31 -0800 (PST)
 Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id r1-20020a50d681000000b005638f04c122sm790193edi.14.2024.02.15.09.48.13
+        by smtp.gmail.com with ESMTPSA id t20-20020a2e9d14000000b002d0b4fdf3a2sm383976lji.46.2024.02.15.10.44.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Feb 2024 09:48:14 -0800 (PST)
-Message-ID: <a09e5b69-7938-4da3-861a-4b2fbf827552@linaro.org>
-Date: Thu, 15 Feb 2024 18:48:13 +0100
+        Thu, 15 Feb 2024 10:44:30 -0800 (PST)
+Message-ID: <bc7d9859-f7ec-41c5-8a9e-170ccdfff46a@linaro.org>
+Date: Thu, 15 Feb 2024 19:44:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,20 +76,18 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: Use the correct sleep function in wait_for_link
+Subject: Re: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
 Content-Language: en-US
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Jingoo Han <jingoohan1@gmail.com>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
  =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
  linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  Johan Hovold <johan+linaro@kernel.org>
-References: <20240215-topic-pci_sleep-v1-1-7ac79ac9739a@linaro.org>
- <361f7ae0-6de1-423c-bb64-82a5acccb502@linux.intel.com>
+References: <20240215161114.GA1292081@bhelgaas>
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -126,57 +124,71 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <361f7ae0-6de1-423c-bb64-82a5acccb502@linux.intel.com>
+In-Reply-To: <20240215161114.GA1292081@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 15.02.2024 15:51, Kuppuswamy Sathyanarayanan wrote:
+On 15.02.2024 17:11, Bjorn Helgaas wrote:
+> On Thu, Feb 15, 2024 at 11:21:45AM +0100, Konrad Dybcio wrote:
+>> On 14.02.2024 23:28, Bjorn Helgaas wrote:
+>>> On Wed, Feb 14, 2024 at 10:35:16PM +0100, Konrad Dybcio wrote:
+>>>> On 12.02.2024 22:17, Bjorn Helgaas wrote:
+>>>>> Maybe include the reason in the subject?  "Read back" is literally
+>>>>> what the diff says.
+>>>>>
+>>>>> On Sat, Feb 10, 2024 at 06:10:06PM +0100, Konrad Dybcio wrote:
+>>>>>> To ensure write completion, read the PARF_LTSSM register after setting
+>>>>>> the LTSSM enable bit before polling for "link up".
+>>>>>
+>>>>> The write will obviously complete *some* time; I assume the point is
+>>>>> that it's important for it to complete before some other event, and it
+>>>>> would be nice to know why that's important.
+>>>>
+>>>> Right, that's very much meaningful on non-total-store-ordering
+>>>> architectures, like arm64, where the CPU receives a store instruction,
+>>>> but that does not necessarily impact the memory/MMIO state immediately.
+>>>
+>>> I was hinting that maybe we could say what the other event is, or what
+>>> problem this solves?  E.g., maybe it's as simple as "there's no point
+>>> in polling for link up until after the PARF_LTSSM store completes."
+>>>
+>>> But while the read of PARF_LTSSM might reduce the number of "is the
+>>> link up" polls, it probably wouldn't speed anything up otherwise, so I
+>>> suspect there's an actual functional reason for this patch, and that's
+>>> what I'm getting at.
+>>
+>> So, the register containing the "enable switch" (PARF_LTSSM) can (due
+>> to the armv8 memory model) be "written" but not "change the value of
+>> memory/mmio from the perspective of other (non-CPU) memory-readers
+>> (such as the MMIO-mapped PCI controller itself)".
+>>
+>> In that case, the CPU will happily continue calling qcom_pcie_link_up()
+>> in a loop, waiting for the PCIe controller to bring the link up, however
+>> the PCIE controller may have never received the PARF_LTSSM "enable link"
+>> write by the time we decide to time out on checking the link status.
+>>
+>> It may also never happen for you, but that's exactly like a classic race
+>> condition, where it may simply not manifest due to the code around the
+>> problematic lines hiding it. It may also only manifest on certain CPU
+>> cores that try to be smarter than you and keep reordering/delaying
+>> instructions if they don't seem immediately necessary.
 > 
-> On 2/15/24 2:39 AM, Konrad Dybcio wrote:
->> According to [1], msleep should be used for large sleeps, such as the
->> 100-ish ms one in this function. Comply with the guide and use it.
->>
->> [1] https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->> ---
->> Tested on Qualcomm SC8280XP CRD
->> ---
->>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->>  drivers/pci/controller/dwc/pcie-designware.h | 3 +--
->>  2 files changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 250cf7f40b85..abce6afceb91 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -655,7 +655,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->>  		if (dw_pcie_link_up(pci))
->>  			break;
->>  
->> -		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
->> +		msleep(LINK_WAIT_MSLEEP_MAX);
->>  	}
->>  
->>  	if (retries >= LINK_WAIT_MAX_RETRIES) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 26dae4837462..3f145d6a8a31 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -63,8 +63,7 @@
->>  
->>  /* Parameters for the waiting for link up routine */
->>  #define LINK_WAIT_MAX_RETRIES		10
->> -#define LINK_WAIT_USLEEP_MIN		90000
->> -#define LINK_WAIT_USLEEP_MAX		100000
->> +#define LINK_WAIT_MSLEEP_MAX		100
+> Does this mean the register is mapped incorrectly, e.g., I see arm64
+> has many different kinds of mappings for cacheability,
+> write-buffering, etc?
+
+No, it's correctly mapped as "device" memory, but even that gives no
+guarantees about when the writes are "flushed" out of the CPU/cluster
+
 > 
-> Since 90 ms is an acceptable value, why not use it?
+> Or, if it is already mapped correctly, are we confident that none of
+> the *other* register writes need similar treatment?  Is there a rule
+> we can apply to know when the read-after-write is needed?
 
-I suppose I can do that indeed.. Usually I go for the safer option
-when cleaning up old code, but you're right, 90 should be ok
-
-(unless somebody has some documentation stating otherwise)
+Generally, it's a good idea to add such readbacks after all timing-
+critical writes, especially when they concern asserting reset,
+enabling/disabling power, etc., to make sure we're not assuming the
+hardware state of a peripheral has changed before we ask it to do so. 
 
 Konrad
 
