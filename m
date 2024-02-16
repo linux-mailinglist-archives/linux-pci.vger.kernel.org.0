@@ -1,108 +1,85 @@
-Return-Path: <linux-pci+bounces-3575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0AAD85772E
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 09:05:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A491857810
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 09:53:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7894DB2155F
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 08:05:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D05111F2263F
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 08:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353701A5BA;
-	Fri, 16 Feb 2024 08:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3F41CA9A;
+	Fri, 16 Feb 2024 08:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lo+p/qBQ"
+	dkim=pass (2048-bit key) header.d=vexlyvector.com header.i=@vexlyvector.com header.b="XSFk+wHT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mail.vexlyvector.com (mail.vexlyvector.com [141.95.160.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3117A182AE;
-	Fri, 16 Feb 2024 08:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5841C6A5
+	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 08:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.95.160.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708070410; cv=none; b=X2xiMyEw/ugFBIvE8yL8FsrrP62fSVE0bt5R55p9b2vHmFL/YA+aIuJaYGGdk2oSqkI6wLChe8wryODy8on3bWJT7OW6Qro/b5Q+z7cHGsFN9mdrUrzdWuEg+IF2AJ2nUqxkkmqITv4PIQ4+nfzROqShsHqJNC9mno7+TAtimMs=
+	t=1708073450; cv=none; b=sVO+IqvQOfgS3Gxs82qIIuhTrhvw9wTxNQ8bsjMHQOnBJ6GiRAhSKPW5va12JPU7NqTsN4HO/OxZUDbmRLbmXZa2P6AT6mwaP8sl35VF7NvZck/PVWavDOb7+tWGnff2uVBDI2KoDTcqzpSIrpPaETfo0nV09tGBvEr+PVVj4I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708070410; c=relaxed/simple;
-	bh=tKUNylC32zArc0JFh4DUwtl2sZsdK9U9bsqxjAHmfTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oeLXMYm8U850jxsQAZ2nRuixig0PbRm130ZeXWDJmUd1Zw5xdc4/MaX2jQseNw5J0aC2U/ZSLke70M6D1GbRskQyG2CWPMKdRFd8xTSmfBQNNzarisuWBtnfVoZdHWizcmcp3GWQ6nmKAA+PD4kIotBXovdN4EChnIMbFI9fHxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lo+p/qBQ; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F28A5C0006;
-	Fri, 16 Feb 2024 07:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708070391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hUYFR1qvUKlxyuPUPNfEnuK9T+rqDJlWXvdCBwvEVg=;
-	b=lo+p/qBQMhPwepXZCYApgvlfDkOGsNpT+Pg8es5xwAOU+wWyXLhmUg5dZfc6wF7Q6H/ek8
-	aAGXOM2eE2CfgBAWb5ap2l6fvCLgUgAqH+OkpY3GFhgJWqXAbBgLeZsj2YVNU8tVzeuweY
-	wcNY+uaQu3esHlFqNhwVcl8RzO/E9LGl6WVA6d/I7NwXnITuv3757IoMjcUsatikA7D2kD
-	WnmVYAnPXvem+lm5GHe3eQS549Bx1IOzsk/CXIfyt1xl5Hu3NzoFQQxHzLRuw9PHIsZqzE
-	UCy2/ADPKQj9DTCvWyq7WDQGOQSkABK4Q18akdWYKrZirdqYJoyCA+KC+p47lg==
-Message-ID: <78add459-a96a-46c6-83ff-e2657d4d3db4@bootlin.com>
-Date: Fri, 16 Feb 2024 08:59:47 +0100
+	s=arc-20240116; t=1708073450; c=relaxed/simple;
+	bh=waaYxUsyRtmB2zEBuWcqRuRHSoYd8sJFCtgHO/3AHKE=;
+	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=mSK9NVVYpoua/UwAOiwPdRAQAXQ6aMlvRoQMK3434bzABKWK2tMpIPPCu4QWVW+2qL6B0i0lNPsz1MwgESBb0+801In8FZsdlZyGjpdjqx+wMxvMGC//de01nQFirOdU4uyxSZJbi09ukqD11UplvOKwm2CVe7rmsmsYZoEPSTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vexlyvector.com; spf=pass smtp.mailfrom=vexlyvector.com; dkim=pass (2048-bit key) header.d=vexlyvector.com header.i=@vexlyvector.com header.b=XSFk+wHT; arc=none smtp.client-ip=141.95.160.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vexlyvector.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vexlyvector.com
+Received: by mail.vexlyvector.com (Postfix, from userid 1002)
+	id 36BE1A306C; Fri, 16 Feb 2024 08:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=vexlyvector.com;
+	s=mail; t=1708073445;
+	bh=waaYxUsyRtmB2zEBuWcqRuRHSoYd8sJFCtgHO/3AHKE=;
+	h=Date:From:To:Subject:From;
+	b=XSFk+wHT13SI12OjzLSX3+Qsz3Noa14BO2+vIdZq9iLlhuKhrV6PqmMGXA270JzWX
+	 4CAVDGjkxbk4ypmjrD4vN6VOah6nvD1+Ax1tZV01bylF4tQIuZmMOdUo09mpNhp2wy
+	 CBbWQf7oj3GBcJvjSw65pWlyzbLcaHsL/n2A8pYK+6yNh8GOIf5oEaqN98LWmkROuE
+	 wZkukWPCA4M6177xCxjpYMlGDlTtzvJULKqdaJZoolcwkD22YVEJ6q39iweMilhQOg
+	 d5R/JhZk8hucT+rrMR7cVpc9vFi0GDhN5qpUb/PTLNPbIKMFHiIk1uLty855uV5SQJ
+	 UsDGNrcpS2oDw==
+Received: by mail.vexlyvector.com for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 08:50:36 GMT
+Message-ID: <20240216074500-0.1.c2.q7o4.0.xe0jjujare@vexlyvector.com>
+Date: Fri, 16 Feb 2024 08:50:36 GMT
+From: "Ray Galt" <ray.galt@vexlyvector.com>
+To: <linux-pci@vger.kernel.org>
+Subject: Meeting with the Development Team
+X-Mailer: mail.vexlyvector.com
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] pinctrl: pinctrl-single: remove dead code in
- suspend() and resume() callbacks
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-2-5c2e4a3fac1f@bootlin.com>
- <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/15/24 16:27, Andy Shevchenko wrote:
-> On Thu, Feb 15, 2024 at 04:17:47PM +0100, Thomas Richard wrote:
->> No need to check the pointer returned by platform_get_drvdata(), as
->> platform_set_drvdata() is called during the probe.
-> 
-> This patch should go _after_ the next one, otherwise the commit message doesn't
-> tell full story and the code change bring a potential regression.
-> 
+Hello,
 
-Hello Andy,
+I would like to reach out to the decision-maker in the IT environment wit=
+hin your company.
 
-I'm ok to move this patch after the next one.
-But for my understanding, could you explain me why changing the order is
-important in this case ?
+We are a well-established digital agency in the European market. Our solu=
+tions eliminate the need to build and maintain in-house IT and programmin=
+g departments, hire interface designers, or employ user experience specia=
+lists.
 
-Regards,
+We take responsibility for IT functions while simultaneously reducing the=
+ costs of maintenance. We provide support that ensures access to high-qua=
+lity specialists and continuous maintenance of efficient hardware and sof=
+tware infrastructure.
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Companies that thrive are those that leverage market opportunities faster=
+ than their competitors. Guided by this principle, we support gaining a c=
+ompetitive advantage by providing comprehensive IT support.
 
+May I present what we can do for you?
+
+
+Best regards
+Ray Galt
 
