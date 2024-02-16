@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-3574-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3575-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1023B857700
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 08:52:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0AAD85772E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 09:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 413E81C21F0C
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 07:52:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7894DB2155F
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 08:05:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E747017591;
-	Fri, 16 Feb 2024 07:52:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353701A5BA;
+	Fri, 16 Feb 2024 08:00:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="psvjRJ16"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lo+p/qBQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529A514AA7;
-	Fri, 16 Feb 2024 07:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3117A182AE;
+	Fri, 16 Feb 2024 08:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708069947; cv=none; b=EWWBYoO03aSTFW5eGQl/t1bPV7dLn3ua0RgAaUjD0xca3Q5UDOnnGShvOA/C0WVLUMYQVvdg+PkGhlAyr/HYS+PbkiSRK3YCQcw8y/lPmyRZBrqK7uDjTzqA1luJVyxV61ZwVHWsQHmlh7vWYHOKgZGy/gp5wHCQt3187hjj5cI=
+	t=1708070410; cv=none; b=X2xiMyEw/ugFBIvE8yL8FsrrP62fSVE0bt5R55p9b2vHmFL/YA+aIuJaYGGdk2oSqkI6wLChe8wryODy8on3bWJT7OW6Qro/b5Q+z7cHGsFN9mdrUrzdWuEg+IF2AJ2nUqxkkmqITv4PIQ4+nfzROqShsHqJNC9mno7+TAtimMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708069947; c=relaxed/simple;
-	bh=Vynf5DoweuXHHLSE4lGddXqNt/Xoy7UcJ0TOB9VRc/E=;
+	s=arc-20240116; t=1708070410; c=relaxed/simple;
+	bh=tKUNylC32zArc0JFh4DUwtl2sZsdK9U9bsqxjAHmfTg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CzOS56j0mTVZbS5Fas+NbBIaKHFFXv5XOzMqxWoE75vLho3eX/tZnLoGlFog4nUw/w9tVdIiiVslLcX5wrvZeh452YXxl3D6nNYxx3JLIrVzXb/YxwzGk5xtx6upoV+4z41d7XsEmsWAiK0P3kos9d75EO1ZBCEtR5iijHcMXNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=psvjRJ16; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:Content-Type; b=oeLXMYm8U850jxsQAZ2nRuixig0PbRm130ZeXWDJmUd1Zw5xdc4/MaX2jQseNw5J0aC2U/ZSLke70M6D1GbRskQyG2CWPMKdRFd8xTSmfBQNNzarisuWBtnfVoZdHWizcmcp3GWQ6nmKAA+PD4kIotBXovdN4EChnIMbFI9fHxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lo+p/qBQ; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6DA131C0005;
-	Fri, 16 Feb 2024 07:52:18 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F28A5C0006;
+	Fri, 16 Feb 2024 07:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708069942;
+	t=1708070391;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VVeiECxEmwSLffzbtwy2YG4CyEm4W66/wRiP637DW7E=;
-	b=psvjRJ16HrEu/GqFLLL7wMMfKBPT08MCl4ar0FAhJ0EKI6MP0fdlU9/TMRf2aJcPbYuHTT
-	Y/XaWJ5OWcn2Ggc41n+8jK67j9PIuW99NYEcgM6cqWyWbdDssXoZ47Z7/Z2Iy53x05h9Eb
-	B3p8wByuOej2VhFVfrmVTvV/uJNYxSvZtxPhi08Uq7ysqNY/mn4KsAxzwT0Vnpk33SKyAH
-	9YgXPL9T+KdVxh3hEjjdo9kwWrADnu9szuZSYl+ofMyLx2D0BOytKOrgIrdNHN1q9n9t2b
-	+MsYZsZV4HOyhZnFWK6rQfV+wPw8aelkKg/RHraSCGZQOpQOZcJmL1zXzqpfMA==
-Message-ID: <f1d2c9b0-238d-4b09-8212-62e00a2192b2@bootlin.com>
-Date: Fri, 16 Feb 2024 08:52:17 +0100
+	bh=1hUYFR1qvUKlxyuPUPNfEnuK9T+rqDJlWXvdCBwvEVg=;
+	b=lo+p/qBQMhPwepXZCYApgvlfDkOGsNpT+Pg8es5xwAOU+wWyXLhmUg5dZfc6wF7Q6H/ek8
+	aAGXOM2eE2CfgBAWb5ap2l6fvCLgUgAqH+OkpY3GFhgJWqXAbBgLeZsj2YVNU8tVzeuweY
+	wcNY+uaQu3esHlFqNhwVcl8RzO/E9LGl6WVA6d/I7NwXnITuv3757IoMjcUsatikA7D2kD
+	WnmVYAnPXvem+lm5GHe3eQS549Bx1IOzsk/CXIfyt1xl5Hu3NzoFQQxHzLRuw9PHIsZqzE
+	UCy2/ADPKQj9DTCvWyq7WDQGOQSkABK4Q18akdWYKrZirdqYJoyCA+KC+p47lg==
+Message-ID: <78add459-a96a-46c6-83ff-e2657d4d3db4@bootlin.com>
+Date: Fri, 16 Feb 2024 08:59:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,7 +54,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/18] mux: add mux_chip_resume() function
+Subject: Re: [PATCH v3 02/18] pinctrl: pinctrl-single: remove dead code in
+ suspend() and resume() callbacks
 To: Andy Shevchenko <andy@kernel.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
  Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
@@ -73,61 +74,32 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
  linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
  theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
 References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-5-5c2e4a3fac1f@bootlin.com>
- <Zc4t82V9czlEqamL@smile.fi.intel.com>
+ <20240102-j7200-pcie-s2r-v3-2-5c2e4a3fac1f@bootlin.com>
+ <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
+Content-Language: en-US
 From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <Zc4t82V9czlEqamL@smile.fi.intel.com>
+In-Reply-To: <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-GND-Sasl: thomas.richard@bootlin.com
 
-On 2/15/24 16:29, Andy Shevchenko wrote:
-> On Thu, Feb 15, 2024 at 04:17:50PM +0100, Thomas Richard wrote:
->> The mux_chip_resume() function restores a mux_chip using the cached state
->> of each mux.
+On 2/15/24 16:27, Andy Shevchenko wrote:
+> On Thu, Feb 15, 2024 at 04:17:47PM +0100, Thomas Richard wrote:
+>> No need to check the pointer returned by platform_get_drvdata(), as
+>> platform_set_drvdata() is called during the probe.
 > 
-> ...
+> This patch should go _after_ the next one, otherwise the commit message doesn't
+> tell full story and the code change bring a potential regression.
 > 
->> +int mux_chip_resume(struct mux_chip *mux_chip)
->> +{
->> +	int global_ret = 0;
->> +	int ret, i;
->> +
->> +	for (i = 0; i < mux_chip->controllers; ++i) {
->> +		struct mux_control *mux = &mux_chip->mux[i];
->> +
->> +		if (mux->cached_state == MUX_CACHE_UNKNOWN)
->> +			continue;
->> +
->> +		ret = mux_control_set(mux, mux->cached_state);
->> +		if (ret < 0) {
->> +			dev_err(&mux_chip->dev, "unable to restore state\n");
->> +			if (!global_ret)
->> +				global_ret = ret;
-> 
-> Hmm... This will record the first error and continue.
 
-In the v2 we talked about this with Peter Rosin.
+Hello Andy,
 
-In fact, in the v1 (mux_chip_resume() didn't exists yet, everything was
-done in the mmio driver) I had the same behavior: try to restore all
-muxes and in case of error restore the first one.
+I'm ok to move this patch after the next one.
+But for my understanding, could you explain me why changing the order is
+important in this case ?
 
-I don't know what is the right solution. I just restored the behavior I
-had in v1.
+Regards,
 
-> 
->> +		}
->> +	}
->> +	return global_ret;
-> 
-> So here, we actually will get stale data in case there are > 1 failures.
-
-Yes, indeed. But we will have an error message for each failure.
-
-> 
->> +}
-> 
 -- 
 Thomas Richard, Bootlin
 Embedded Linux and Kernel engineering
