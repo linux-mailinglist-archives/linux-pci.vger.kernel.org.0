@@ -1,164 +1,103 @@
-Return-Path: <linux-pci+bounces-3592-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3593-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 563C1857BC5
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 12:34:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B579E857C46
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 13:04:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AB261C220BB
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 11:34:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71EEA2845DA
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 12:04:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186F477F14;
-	Fri, 16 Feb 2024 11:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62CD78672;
+	Fri, 16 Feb 2024 12:04:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v/MSlNoC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENf1xW2O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55937690B
-	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 11:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25EE2CCB4;
+	Fri, 16 Feb 2024 12:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708083238; cv=none; b=VX9/EbcYNTFKB1dQNm6Nb40L6diw/bcsTQjdNKhKldX6uCUDS8QDb4beAYmgL+m5OLAfw58gfnMjZ+pZy3AUNIqQcCve47zFRWOoT5a5J73rYxvlw/s+IDtLW8ClDo478jvjSaem0dO5JQ4ASVz9ZasEL1FlKekju34ZP1v39FU=
+	t=1708085041; cv=none; b=gjbLX4VnieR6SoCMYCLkxLnd/56eB9Dutc3lsXE6yl5VlrtafCRAhV9bspOyonFrR+NySuV5aHQqEt2t9Expr6/6Gcx6LQYARHVLwSY1AesxiMNNq6GGtJZbQF4d107pJ+dr0075QQaE+Q/TFqLNF/aupVmxvLoFeR5CqFqNyQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708083238; c=relaxed/simple;
-	bh=SPISHpn2Wk7XuuDW0mygRbL3qdnVVMzYr7AU982JFYA=;
+	s=arc-20240116; t=1708085041; c=relaxed/simple;
+	bh=PTQ7drOCFYR2XmjE20PfxIFEdOUFSjak+DYt3wb3o9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1U4zQ3Xh0v0dk7iTXeb5nnZlls9Uus0TRfV/uyQfPYLUAcOOE3pvbieiwv/WRgQfb+0Eb/9nEv0GBaFFjkJb4tBvBejkP2BKtq2UCAnPplrkI8OQAbu3w1UXHIEcA9xNntDuWmU7YTlML5oDWjj3mIaVkRMaZ/VcQGB5Gh9aqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v/MSlNoC; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2992d7530f8so636600a91.0
-        for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 03:33:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708083235; x=1708688035; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DbUuxH8+eQt+V5fPVQ90ScLeG/5OvbXcVZwS4s/Sjn8=;
-        b=v/MSlNoCsibm1VaZDwVCkvYI8EjDjZsFjxnlmCNkHRNnG1fXdKCn2K1AwKY+qzUDmc
-         kyEQrVLfMziBsJHXxs5mgF4TPKjsXyKkqdcT/HkM6SAdIlUd4HL2b+GJ5ABj3IR7LCbk
-         2QsefJnLAq12gC/3NsSMvx4DcDzjn5xVW9gxWKbJZmHReZ3nlVeJXTtr/8BcYz9GySyp
-         I+1fOM7FRATwZzeWxDBXW3eZ88Qbwrc4vOfYf2KrKVivvZB+fJ2NML1gZXzNyJT/bG+8
-         ao5SFa+J/2vXZp/y7+r8b4RKVk/fLa2xhAI5ogbq585eV2oeA5jyOTBpqNHZR2t1SnUK
-         1ZaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708083235; x=1708688035;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DbUuxH8+eQt+V5fPVQ90ScLeG/5OvbXcVZwS4s/Sjn8=;
-        b=MEGtxcPa6Ajaf81FU5nYYtXtgABcIy0FfVpOfOl8Oa3V9JIR/6D973LmCJP5AV/Ih7
-         nxAqTD33R9EyWlG2EpQVSxZUbBs6N7pmuDZY1BdIUJ6FtKQ71XHFic9C+qwe3imXjc1r
-         J5lwXHL3iGlW48Xl3hk3z31U2NuSdsIjynDevVYMoqRaFFzPGL29arybf9Sbgn2X4QFe
-         /VmRj+1t5hm7XefnC6IvZ0f7ncMOF26X4qDWWu7wapNa0deK35Sjkzre8ZTOdCXragOM
-         c12o832zong0YLgdLj40ovQ4XJMJOf9TemucjQKTqotmCczCRnsW4bwCIKqTBVkW+VRg
-         HWuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZgTenaGB6Oqr6qF84NQ2MDYlVm6FuDXeN3A4qFaQgPV3sQHHajYQPP1VW256qWseAVrPiWH7dgSAtZlguw1ZQlypPX3UcQ/XF
-X-Gm-Message-State: AOJu0Yxb3xKj9gnEW+umah+/4aYzVe9+YogYibEgBk9G2uQCO/lsfpns
-	khrDuiGcCq3iGyYVa7HK2yMwoovKXHXnDimobbYzuqjOcjXNX65Iym6fTZ2uhw==
-X-Google-Smtp-Source: AGHT+IETesKAnay2AGJDq2QBceer8wDdIUIjpemHsRLi2VEq0GJGVXaiWQgru4PSBzIAejutTuKmnw==
-X-Received: by 2002:a17:90a:b385:b0:299:2b9a:88c4 with SMTP id e5-20020a17090ab38500b002992b9a88c4mr3787311pjr.1.1708083234940;
-        Fri, 16 Feb 2024 03:33:54 -0800 (PST)
-Received: from thinkpad ([120.138.12.48])
-        by smtp.gmail.com with ESMTPSA id o8-20020a17090ac08800b00299268defb9sm1946408pjs.41.2024.02.16.03.33.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 03:33:54 -0800 (PST)
-Date: Fri, 16 Feb 2024 17:03:47 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
-	linux@armlinux.org.uk, m.szyprowski@samsung.com,
-	pankaj.dubey@samsung.com, gost.dev@samsung.com
-Subject: Re: [PATCH v5 1/2] clk: Provide managed helper to get and enable
- bulk clocks
-Message-ID: <20240216113347.GG2559@thinkpad>
-References: <20240213132751.46813-1-shradha.t@samsung.com>
- <CGME20240213132806epcas5p43e394aea91c61797a8cc3a901e0cf574@epcas5p4.samsung.com>
- <20240213132751.46813-2-shradha.t@samsung.com>
- <20240216113147.GF2559@thinkpad>
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4+Ihq5bS9Gm8U5fD/F5HRAn+7ibUzpT3uH+44J58FlbPdPfNstP8WchQ2OY5BzO/LJ5fi91Ib/N7RxF4yUNQwV01l4Z5dbLGVQwgOU5aPDuskhXfk1sD2EThHMlggLJ8z2lbKcTZ08hzFZcp8C1baJQAC6R2fSspvXww8CsSJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENf1xW2O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330F1C433F1;
+	Fri, 16 Feb 2024 12:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708085041;
+	bh=PTQ7drOCFYR2XmjE20PfxIFEdOUFSjak+DYt3wb3o9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ENf1xW2OgcNbljzsuHsPEhYwTKzsVzgBg4eRNA3QwsyDwto/DoeOhthzC5hFd3YcY
+	 bSDRt/wq2OUVgMwczv9bee0uGYiSKvimudWKE1/FbjNMSaAP2z/tZ/Iu2dxA19+0Kq
+	 peHCuMpufuc9pKv//UsD70WTtzO4rty9jb31/QINryu4P6UJCZp+YjITx3aProa3GH
+	 sXn/uadLXP3c1o3klh9kZovcG5324aDuvmT84F6M4BHxU8wnTt4RAJmIACH9dJHm7I
+	 S7L7tSQ/WyWM8Sa0QE7wMbG2aPItW1h+en9oiRVrLzRG2PXjBtAQsH1e+ui/LI4Xci
+	 JBMybJlrD+nPg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rawx7-000000007JX-2OIU;
+	Fri, 16 Feb 2024 13:04:25 +0100
+Date: Fri, 16 Feb 2024 13:04:25 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/10] arm64: dts: qcom: sc8280xp-crd: limit pcie4 link
+ speed
+Message-ID: <Zc9PSfah4ACuMYVm@hovoldconsulting.com>
+References: <20240212165043.26961-1-johan+linaro@kernel.org>
+ <20240212165043.26961-5-johan+linaro@kernel.org>
+ <a2323580-6515-4380-a7d8-fd25818e9092@linaro.org>
+ <Zc8K7iiK4YbnadtQ@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240216113147.GF2559@thinkpad>
+In-Reply-To: <Zc8K7iiK4YbnadtQ@hovoldconsulting.com>
 
-On Fri, Feb 16, 2024 at 05:01:47PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Feb 13, 2024 at 06:57:50PM +0530, Shradha Todi wrote:
-> > Provide a managed devm_clk_bulk* wrapper to get and enable all
-> > bulk clocks in order to simplify drivers that keeps all clocks
-> > enabled for the time of driver operation.
+On Fri, Feb 16, 2024 at 08:12:46AM +0100, Johan Hovold wrote:
+> On Thu, Feb 15, 2024 at 09:47:01PM +0100, Konrad Dybcio wrote:
+> > On 12.02.2024 17:50, Johan Hovold wrote:
+> > > Limit the WiFi PCIe link speed to Gen2 speed (500 GB/s), which is the
 > > 
-> > Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-> > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> > MB/s
 > 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Indeed, thanks for spotting that.
 > 
-> - Mani
-> 
-> > ---
-> >  drivers/clk/clk-devres.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/clk.h      | 23 +++++++++++++++++++++++
-> >  2 files changed, 63 insertions(+)
-> > 
+> > > speed that Windows uses.
 
-[...]
+> > Hm.. I'dve assumed it ships with a WLAN card that supports moving
+> > more bandwidth.. Is it always at gen2?
 
-> > diff --git a/include/linux/clk.h b/include/linux/clk.h
-> > index 1ef013324237..85a9330d5a5a 100644
-> > --- a/include/linux/clk.h
-> > +++ b/include/linux/clk.h
-> > @@ -438,6 +438,22 @@ int __must_check devm_clk_bulk_get_optional(struct device *dev, int num_clks,
-> >  int __must_check devm_clk_bulk_get_all(struct device *dev,
-> >  				       struct clk_bulk_data **clks);
-> >  
-> > +/**
-> > + * devm_clk_bulk_get_all_enable - Get and enable all clocks of the consumer (managed)
-> > + * @dev: device for clock "consumer"
-> > + * @clks: pointer to the clk_bulk_data table of consumer
-> > + *
-> > + * Returns success (0) or negative errno.
-> > + *
-> > + * This helper function allows drivers to get all clocks of the
-> > + * consumer and enables them in one operation with management.
-> > + * The clks will automatically be disabled and freed when the device
-> > + * is unbound.
-> > + */
-> > +
-> > +int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
-> > +					      struct clk_bulk_data **clks);
-> > +
-> >  /**
-> >   * devm_clk_get - lookup and obtain a managed reference to a clock producer.
-> >   * @dev: device for clock "consumer"
-> > @@ -960,6 +976,13 @@ static inline int __must_check devm_clk_bulk_get_all(struct device *dev,
-> >  	return 0;
-> >  }
-> >  
-> > +static inline int __must_check devm_clk_bulk_get_all_enable(struct device *dev,
-> > +						struct clk_bulk_data **clks)
-> > +{
-> > +
+> But yes, it seems we may be limiting the theoretical maximum data rate
+> for the wifi this way.
 
-Just noticed this extra newline after sending my r-b tag. Please remove it in
-next iteration.
+It looks like the peak wifi speed for these chips is 3.6 Gbps, and it
+may be lower for the X13s (and in practice). So 500 MB/s should be more
+than enough.
 
-- Mani
+	https://www.qualcomm.com/products/technology/wi-fi/fastconnect/fastconnect-6900
 
--- 
-மணிவண்ணன் சதாசிவம்
+Johan
 
