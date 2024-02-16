@@ -1,262 +1,255 @@
-Return-Path: <linux-pci+bounces-3646-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3647-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A14AB858756
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 21:42:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 955EC85877B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 21:51:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C66A11C260C8
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 20:42:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DC8528AFBA
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 20:51:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2BF154BE0;
-	Fri, 16 Feb 2024 20:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AbkrsG4h"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522F812EBEA;
+	Fri, 16 Feb 2024 20:51:31 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD3A1552F9
-	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 20:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D697E104;
+	Fri, 16 Feb 2024 20:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708115625; cv=none; b=MsWtFYe+7GJDOaxtAs+u6cMk6gbACPweXnUBc6NNGY6pGLRYc3RqVKyM16mU7mX4l146PaGoWScZD+gG3Y4f7rqRVyrM0iM1Aa4+tpEBOt/NP4ari59Y6dH2tb4Hrg3KHIY/0fjcM0gZ6Cims970drdLHtWJPekaJwE5DyBdTn4=
+	t=1708116691; cv=none; b=DQk0/bvFt+k3Oa+FMTO2JXep1IwPqJCTOoZAcPU/nI6ll+OLa5o8QKOKwaRTqMhLf1ET22boS18mzcc8y7BKienXBhhvOaKGzTFMNg7dsqXI6V29g3/v6PGp7XFhxuTShYEIw+lBklvpFrKH/pU67dJzxpuT3aYUKmcHcZCCv8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708115625; c=relaxed/simple;
-	bh=l7BCMdtK460/NfNyVFkhn6WxPhHDN9NJk1dX5OE3xb4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YINu9WBoFv3lvIuxJMpTpnmR57tnLEA77gdsfcVHzJCqW9z7+XFzTnvY27hHHn4A8feYm7JBq3NW2G7ob42xRU+/jtIai3hY68jAsbNYzQ5HCePty+T2z5lnFlfmpyi63qcmNJZFq9Q9bN/HMZ+LRQAp9ol2oBDL50bF5hRP3yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AbkrsG4h; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41258904302so175445e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 12:33:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708115620; x=1708720420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H+W//dfF0n/wy1LXmbmCGBv/0bG6tpfv/t9YAFDF8dg=;
-        b=AbkrsG4hQozdqZIAuPuUwi6rboShfc+IbD8ZzU38JoHYU54EYvu5+IRAI/AZBtmGjF
-         SNyCVX/wbfv8KwFnh8dOXq2QGD/byWIq5EppoOcTAwrDUh08EJhd9k4mY32qdpRG1iz7
-         5AQDmIaLXQhGVN6SBIdVseU09vRy9eC+p6+jhBkIh1HdEVKi88hs2PtCWDwsiitjqqoi
-         0BDFFaGoteZUSskckF+knIUgD68zDIH1lx7Cv0E1OkBocylB2h9+ojBklqMqLbacBIPS
-         PCEoyccHC2UFBLUaMm6qRdnmijMTz1b4r0zzDudQD+P2fs9+BsV7letxEFv+BSlarZxE
-         /3mQ==
+	s=arc-20240116; t=1708116691; c=relaxed/simple;
+	bh=4JuZDsRRXL+wfYcQ0Z+9Quu+0CjQK1IWFJJenLEWVH8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h1JLsTmua2WY5Bmep51V0q15Hxcns9bXOJLbFlcAgTd1venzHcTQnlIYRIzEqCj3iYpnoMAIsE1DFS6GtZGbTHmLChYhDcrwpqnMb6yW1LMTpbtf+eAGT0px38KXo0o+OSN5wO2WjVC98rbcv2eSaWjl0owq1QuLxrJLCv3VDr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-59584f41f1eso875355eaf.1;
+        Fri, 16 Feb 2024 12:51:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708115620; x=1708720420;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1708116688; x=1708721488;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H+W//dfF0n/wy1LXmbmCGBv/0bG6tpfv/t9YAFDF8dg=;
-        b=CwzIW4Zf10dn1pnCVdD6DF5+x8eoaLxeHgYq/kSFMlwbGHiHk3gDnamzJ5nhxgQoyh
-         O0V17NDtjlPDD8HUy10DyM8MQw3acoPA53MBVocMOfWbaBonOLgawltGkefKGqU9Kp+U
-         EdwP/AJrjKXcik9nLglFm6FtJrH/aLSfFXbA0Wj29P40D3L3vlbXXCZ9zxCcIwgTNj7O
-         8hPpercE/ydJVdWq5h+4DOfgit2gcHzTkVXe4q0NsprzBrpy7XhpiW7jT9/CzIjgkxdu
-         kyGjNei2E4GqTq0rdLkSk0An8yXaaDGiblqNhmppv1AJQhhVf7NW+HdxUAYufxLRTM2t
-         rsVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWu96Bli7PIc1sZW2RtdHyPKYmh/nb16gjFqEkGwkSJMEdpVDjbX4wvtwJ/2CwWI5yRuuXB7JmkVwbjlwIa+v8EweVM/woIuF+v
-X-Gm-Message-State: AOJu0YzesTEAnIc50Vm7EvBrCj5jJS2kuVd9J+ImPe/AIyz4Tk4AvkYU
-	TMsqW8dLdIrseuZ/C6FpWR8uLgwxaR8Obmg9X1cCSpM+1o6LGMfdFw4qK+UBBB0=
-X-Google-Smtp-Source: AGHT+IGBibCllNh8ll1Vx+GOheKaOUkavu0vOY90FybjEbw07Iwz+LAx2+7vA1a+b5lW/0606M1yCA==
-X-Received: by 2002:a05:600c:444b:b0:40f:e806:2f26 with SMTP id v11-20020a05600c444b00b0040fe8062f26mr4798554wmn.12.1708115619950;
-        Fri, 16 Feb 2024 12:33:39 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7758:12d:16:5f19])
-        by smtp.gmail.com with ESMTPSA id m5-20020a05600c4f4500b0041253d0acd6sm1420528wmq.47.2024.02.16.12.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 12:33:39 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Saravana Kannan <saravanak@google.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Alex Elder <elder@linaro.org>,
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v5 18/18] PCI/pwrctl: add a PCI power control driver for power sequenced devices
-Date: Fri, 16 Feb 2024 21:32:15 +0100
-Message-Id: <20240216203215.40870-19-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240216203215.40870-1-brgl@bgdev.pl>
-References: <20240216203215.40870-1-brgl@bgdev.pl>
+        bh=yOyIUEJRVmIRVaMa7fnpLyYEUKlpLUSieFgb1iam7y0=;
+        b=GPo8zryPHNn5lxDK1Lqy0UtdC8ZvzD36KrlHZFTIFN/j0EmgF841jrd7AekNk67QyT
+         MaCF5e0ODnsHHuky103/EYfdy4KJ88P8cbfUQnhfEsgH051ZNO/9lqyB6ZpWo03Ed3+m
+         IV/JXXdKm7y4AiC1Tuz3o6z07jJwLQce25IRYMS9uVIhv5PIz+rtJ1uAP+xswrg2TYbk
+         jrFLvSQHfbml1K+wovWrFtVDayxt90dIkvd4hzBbiurHGkc/pwnGEHQENSIHzWYJt8++
+         CJ40hrRU/YgAzhpKpvphyddyuTm9gI0Z8P1OVGPlwj65YeMYj+8eEd2v8lH0eF9vzo6Z
+         mdfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjGIU76J/ar8+3ENqmpMm/8UgHEGRE7mIQQ0/Az9YW/eALYqItSa0UHFFitR9E9ZdhUilNtqbduHMHZgHTF9n+kB29QeD0/B1HtGmYEoDwxoLel+WT41H1Z51kFfasygblSoghNHJoDxAfdL2hCyWwwj/UzqkCewLJQhtPE19VAiQbDO8Wf3+Rnh4fgCbRDbWBx7EApeHoCrnhqtfGdg==
+X-Gm-Message-State: AOJu0YyQDLZ0/UcTYEiN/SKEGhso6NMsgeBbDTpUrtyZJ6RfYwoQ5AVx
+	wdSaVOSVfwT4U7svUMtJPApbLwcITmNorW5Z/pKK4N0FhJK8BF2jxVpt6BG4ShktHhpJhzOcq9e
+	Az+unM6VdMfdnuxm+G4LYU2WM5ruUR6oC
+X-Google-Smtp-Source: AGHT+IGl1Lhi+zkRka1k0bkOo5jc8tqjXNNfqKZTtjqWj+bkWHdkNO/1K+Spdo6X8medMtgAmK6dq8PdZoIC27EClio=
+X-Received: by 2002:a05:6820:134d:b0:59f:881f:9318 with SMTP id
+ b13-20020a056820134d00b0059f881f9318mr7425058oow.0.1708116688597; Fri, 16 Feb
+ 2024 12:51:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240216184946.GA1349514@bhelgaas> <520eaafc-e723-49d4-8a6b-375fc64dd511@o2.pl>
+In-Reply-To: <520eaafc-e723-49d4-8a6b-375fc64dd511@o2.pl>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 Feb 2024 21:51:15 +0100
+Message-ID: <CAJZ5v0iVTAg+tmuVQJwN0pv77arUsF5fGF2CYaug7xgqiYC_vA@mail.gmail.com>
+Subject: Re: [PATCH v4] acpi,pci: warn about duplicate IRQ routing entries
+ returned from _PRT
+To: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	Len Brown <lenb@kernel.org>, Jean Delvare <jdelvare@suse.de>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Feb 16, 2024 at 9:20=E2=80=AFPM Mateusz Jo=C5=84czyk <mat.jonczyk@o=
+2.pl> wrote:
+>
+> W dniu 16.02.2024 o 19:49, Bjorn Helgaas pisze:
+> > On Fri, Feb 16, 2024 at 07:26:06PM +0100, Rafael J. Wysocki wrote:
+> >> On Tue, Dec 26, 2023 at 1:50=E2=80=AFPM Mateusz Jo=C5=84czyk <mat.jonc=
+zyk@o2.pl> wrote:
+> >>> On some platforms, the ACPI _PRT function returns duplicate interrupt
+> >>> routing entries. Linux uses the first matching entry, but sometimes t=
+he
+> >>> second matching entry contains the correct interrupt vector.
+> >>>
+> >>> As a debugging aid, print a warning to dmesg if duplicate interrupt
+> >>> routing entries are present. This way, we could check how many models
+> >>> are affected.
+> >>>
+> >>> This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
+> >>> SMBus controller. This controller is nonfunctional unless its interru=
+pt
+> >>> usage is disabled (using the "disable_features=3D0x10" module paramet=
+er).
+> >>>
+> >>> After investigation, it turned out that the driver was using an
+> >>> incorrect interrupt vector: in lspci output for this device there was=
+:
+> >>>         Interrupt: pin B routed to IRQ 19
+> >>> but after running i2cdetect (without using any i2c-i801 module
+> >>> parameters) the following was logged to dmesg:
+> >>>
+> >>>         [...]
+> >>>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+> >>>         i801_smbus 0000:00:1f.3: Transaction timeout
+> >>>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+> >>>         i801_smbus 0000:00:1f.3: Transaction timeout
+> >>>         irq 17: nobody cared (try booting with the "irqpoll" option)
+> >>>
+> >>> Existence of duplicate entries in a table returned by the _PRT method
+> >>> was confirmed by disassembling the ACPI DSDT table.
+> >>>
+> >>> Windows XP is using IRQ3 (as reported by HWiNFO32 and in the Device
+> >>> Manager), which is neither of the two vectors returned by _PRT.
+> >>> As HWiNFO32 decoded contents of the SPD EEPROMs, the i2c-i801 device =
+is
+> >>> working under Windows. It appears that Windows has reconfigured the
+> >>> chipset independently to use another interrupt vector for the device.
+> >>> This is possible, according to the chipset datasheet [1], page 436 fo=
+r
+> >>> example (PIRQ[n]_ROUT=E2=80=94PIRQ[A,B,C,D] Routing Control Register)=
+.
+> >>>
+> >>> [1] https://www.intel.com/content/dam/doc/datasheet/io-controller-hub=
+-9-datasheet.pdf
+> >>>
+> >>> Signed-off-by: Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
+> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> >>> Cc: Len Brown <lenb@kernel.org>
+> >>> Cc: Borislav Petkov <bp@suse.de>
+> >>> Cc: Jean Delvare <jdelvare@suse.de>
+> >>> Previously-reviewed-by: Jean Delvare <jdelvare@suse.de>
+> >>> Previously-tested-by: Jean Delvare <jdelvare@suse.de>
+> >>>
+> >>> ---
+> >>> Hello,
+> >>>
+> >>> I'm resurrecting an older patch that was discussed back in January:
+> >>>
+> >>> https://lore.kernel.org/lkml/20230121153314.6109-1-mat.jonczyk@o2.pl/=
+T/#u
+> >>>
+> >>> To consider: should we print a warning or an error in case of duplica=
+te
+> >>> entries? This may not be serious enough to disturb the user with an
+> >>> error message at boot.
+> >>>
+> >>> I'm also looking into modifying the i2c-i801 driver to disable its us=
+age
+> >>> of interrupts if one did not fire.
+> >>>
+> >>> v2: - add a newline at the end of the kernel log message,
+> >>>     - replace: "if (match =3D=3D NULL)" -> "if (!match)"
+> >>>     - patch description tweaks.
+> >>> v3: - fix C style issues pointed by Jean Delvare,
+> >>>     - switch severity from warning to error.
+> >>> v3 RESEND: retested on top of v6.2-rc4
+> >>> v4: - rebase and retest on top of v6.7-rc7
+> >>>     - switch severity back to warning,
+> >>>     - change pr_err() to dev_warn() and simplify the code,
+> >>>     - modify patch description (describe Windows behaviour etc.)
+> >>> ---
+> >>>  drivers/acpi/pci_irq.c | 25 ++++++++++++++++++++++---
+> >>>  1 file changed, 22 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> >>> index ff30ceca2203..1fcf72e335b0 100644
+> >>> --- a/drivers/acpi/pci_irq.c
+> >>> +++ b/drivers/acpi/pci_irq.c
+> >>> @@ -203,6 +203,8 @@ static int acpi_pci_irq_find_prt_entry(struct pci=
+_dev *dev,
+> >>>         struct acpi_buffer buffer =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> >>>         struct acpi_pci_routing_table *entry;
+> >>>         acpi_handle handle =3D NULL;
+> >>> +       struct acpi_prt_entry *match =3D NULL;
+> >>> +       const char *match_int_source =3D NULL;
+> >>>
+> >>>         if (dev->bus->bridge)
+> >>>                 handle =3D ACPI_HANDLE(dev->bus->bridge);
+> >>> @@ -219,13 +221,30 @@ static int acpi_pci_irq_find_prt_entry(struct p=
+ci_dev *dev,
+> >>>
+> >>>         entry =3D buffer.pointer;
+> >>>         while (entry && (entry->length > 0)) {
+> >>> -               if (!acpi_pci_irq_check_entry(handle, dev, pin,
+> >>> -                                                entry, entry_ptr))
+> >>> -                       break;
+> >>> +               struct acpi_prt_entry *curr;
+> >>> +
+> >>> +               if (!acpi_pci_irq_check_entry(handle, dev, pin, entry=
+, &curr)) {
+> >>> +                       if (!match) {
+> >>> +                               match =3D curr;
+> >>> +                               match_int_source =3D entry->source;
+> >>> +                        } else {
+> >>> +                               dev_warn(&dev->dev, FW_BUG
+> >> dev_info() would be sufficient here IMV.
+> >>
+> >>> +                                      "ACPI _PRT returned duplicate =
+IRQ routing entries for INT%c: %s[%d] and %s[%d]\n",
+> >>> +                                      pin_name(curr->pin),
+> >>> +                                      match_int_source, match->index=
+,
+> >>> +                                      entry->source, curr->index);
+> >>> +                               /* We use the first matching entry no=
+netheless,
+> >>> +                                * for compatibility with older kerne=
+ls.
+> > The usual comment style in this file is:
+> >
+> >   /*
+> >    * We use ...
+> >    */
+> >
+> >>> +                                */
+> >>> +                       }
+> >>> +               }
+> >>> +
+> >>>                 entry =3D (struct acpi_pci_routing_table *)
+> >>>                     ((unsigned long)entry + entry->length);
+> >>>         }
+> >>>
+> >>> +       *entry_ptr =3D match;
+> >>> +
+> >>>         kfree(buffer.pointer);
+> >>>         return 0;
+> >>>  }
+> >>>
+> >>> base-commit: 861deac3b092f37b2c5e6871732f3e11486f7082
+> >>> --
+> >> Bjorn, any concerns regarding this one?
+> > No concerns from me.
+> >
+> > I guess this only adds a message, right?  It doesn't actually fix
+> > anything or change any behavior?
+> Exactly.
+> > This talks about "duplicate" entries, which suggests to me that they
+> > are identical, but I don't think they are.  It sounds like it's two
+> > "matching" entries, i.e., two entries for the same (device, pin)?
+>
+> Right.
+>
+> > And neither of the two _PRT entries yields a working i801 device?
+>
+> Unpatched Linux uses the first matching entry, but the second one gives
+> a working i801 device. The point is to print a warning message to see
+> how many devices are affected and whether it is safe to switch the code
+> to use the last matching entry in all instances.
+>
+> Therefore I used dev_warn().
 
-Add a PCI power control driver that's capable of correctly powering up
-devices using the power sequencing subsystem. The first user of this
-driver is the ath11k module on QCA6390.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pci/pwrctl/Kconfig             |  9 +++
- drivers/pci/pwrctl/Makefile            |  1 +
- drivers/pci/pwrctl/pci-pwrctl-pwrseq.c | 84 ++++++++++++++++++++++++++
- 3 files changed, 94 insertions(+)
- create mode 100644 drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-
-diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
-index b91170ebfb49..3880a88aa73b 100644
---- a/drivers/pci/pwrctl/Kconfig
-+++ b/drivers/pci/pwrctl/Kconfig
-@@ -5,6 +5,15 @@ menu "PCI Power control drivers"
- config PCI_PWRCTL
- 	tristate
- 
-+config PCI_PWRCTL_PWRSEQ
-+	tristate "PCI Power Control driver using the Power Sequencing subsystem"
-+	select POWER_SEQUENCING
-+	select PCI_PWRCTL
-+	default m if (ATH11K_PCI && ARCH_QCOM)
-+	help
-+	  Enable support for the PCI power control driver for device
-+	  drivers using the Power Sequencing subsystem.
-+
- config PCI_PWRCTL_WCN7850
- 	tristate "PCI Power Control driver for WCN7850"
- 	select PCI_PWRCTL
-diff --git a/drivers/pci/pwrctl/Makefile b/drivers/pci/pwrctl/Makefile
-index de20c3af1b78..47ab9db1fb42 100644
---- a/drivers/pci/pwrctl/Makefile
-+++ b/drivers/pci/pwrctl/Makefile
-@@ -3,4 +3,5 @@
- obj-$(CONFIG_PCI_PWRCTL)		+= pci-pwrctl-core.o
- pci-pwrctl-core-y			:= core.o
- 
-+obj-$(CONFIG_PCI_PWRCTL_PWRSEQ)		+= pci-pwrctl-pwrseq.o
- obj-$(CONFIG_PCI_PWRCTL_WCN7850)	+= pci-pwrctl-wcn7850.o
-diff --git a/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-new file mode 100644
-index 000000000000..43820a727b3f
---- /dev/null
-+++ b/drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/pci-pwrctl.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwrseq/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+struct pci_pwrctl_pwrseq_data {
-+	struct pci_pwrctl ctx;
-+	struct pwrseq_desc *pwrseq;
-+};
-+
-+static void devm_pci_pwrctl_pwrseq_power_off(void *data)
-+{
-+	struct pwrseq_desc *pwrseq = data;
-+
-+	pwrseq_power_off(pwrseq);
-+}
-+
-+static int pci_pwrctl_pwrseq_probe(struct platform_device *pdev)
-+{
-+	struct pci_pwrctl_pwrseq_data *data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->pwrseq = devm_pwrseq_get(dev, of_device_get_match_data(dev));
-+	if (IS_ERR(data->pwrseq))
-+		return dev_err_probe(dev, PTR_ERR(data->pwrseq),
-+				     "Failed to get the power sequencer\n");
-+
-+	ret = pwrseq_power_on(data->pwrseq);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to power-on the device\n");
-+
-+	ret = devm_add_action_or_reset(dev, devm_pci_pwrctl_pwrseq_power_off,
-+				       data->pwrseq);
-+	if (ret)
-+		return ret;
-+
-+	data->ctx.dev = dev;
-+
-+	ret = devm_pci_pwrctl_device_set_ready(dev, &data->ctx);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to register the pwrctl wrapper\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id pci_pwrctl_pwrseq_of_match[] = {
-+	{
-+		/* ATH11K in QCA6390 package. */
-+		.compatible = "pci17cb,1101",
-+		.data = "wlan",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pci_pwrctl_pwrseq_of_match);
-+
-+static struct platform_driver pci_pwrctl_pwrseq_driver = {
-+	.driver = {
-+		.name = "pci-pwrctl-pwrseq",
-+		.of_match_table = pci_pwrctl_pwrseq_of_match,
-+	},
-+	.probe = pci_pwrctl_pwrseq_probe,
-+};
-+module_platform_driver(pci_pwrctl_pwrseq_driver);
-+
-+MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_DESCRIPTION("Generic PCI Power Control module for power sequenced devices");
-+MODULE_LICENSE("GPL");
--- 
-2.40.1
-
+I don't quite see a connection between the above and the log level.
 
