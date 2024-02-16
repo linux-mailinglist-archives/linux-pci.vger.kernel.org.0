@@ -1,101 +1,112 @@
-Return-Path: <linux-pci+bounces-3571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B739857658
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 07:59:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37D8885769A
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 08:12:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56BD3282184
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 06:59:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD3BF1F22E11
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 07:12:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADDE14292;
-	Fri, 16 Feb 2024 06:59:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A940914A9D;
+	Fri, 16 Feb 2024 07:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vy7uMHxn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="alHXaPCN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6C2FC01;
-	Fri, 16 Feb 2024 06:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7596114A8D;
+	Fri, 16 Feb 2024 07:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708066781; cv=none; b=UHMOPmp3+rxx20C+aRxK9DI8wfwIKLD/ynhHhmdMEO9pPZPl2LPWTm+tkQF1Kq1T19UDyhgVs11MBOUAHAcwW3Aq2i9oQ6U6CyhHQM6wGQAllyqw86tAtXn+e7YlIxj8nD1pkbPrUzEmpTnwoSoU0bIwRJ0eoEquzTojGWnCNVU=
+	t=1708067543; cv=none; b=A9n51kLEy5N8PvcfjSl7ngi3iLJbyVZoCAIrVTLJ/5FX1mf9dx31lha/xU+O2YhtBtD3q4pweFbkgLj6ZLtzk5Rz/kldoT5QCQQgBhJZTCevLkju29qqGzt/b4KuxJszn4jHkekO46AMybk+doxuAeB+IQVyj7akx5wj8tLr2ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708066781; c=relaxed/simple;
-	bh=9Bdp+1r/OqcKTlUqSz41twCITHzsqK6lYijcbC3Zeig=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QE5qJnddVBi3Y8teQgtpPRTcS8Td2j9JS3i1ZCgGNLfbr1aGcWuQ9oktA/Wy2VCWL1/Z8apcyhtgq5fRqit44DkG5K+hxCQYDcev4ohFSqiPP0W7lUVGR0ARiaS8OUzI8eWOgGOmTy6Bz0Bt6CjCUWrxunKpOJCY9jlwE0hTLkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vy7uMHxn; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41G6xVFr009824;
-	Fri, 16 Feb 2024 00:59:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708066771;
-	bh=9488Fqw/4A/CrgJLyaVNYxs+5hfqdJMVXU+J6xLUSfY=;
-	h=From:To:CC:Subject:Date;
-	b=vy7uMHxnyE3PRcLr3P3yrvzrrg8myTVq+/L0JxNBcxUrcqLDY3pS4qPCBhZ6W4Iq6
-	 +N1IxCepbTUfPGdj0jJEDvQ+at24PILdZv3YT0oswc9QUmHX9qWJp4UmzBr2IdunJV
-	 XTAclO1DcsuyriLbYEB9vWstocGCJ8JcevR3nOBg=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41G6xVaf113613
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 16 Feb 2024 00:59:31 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- Feb 2024 00:59:30 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 Feb 2024 00:59:30 -0600
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41G6xR4f016551;
-	Fri, 16 Feb 2024 00:59:27 -0600
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <kishon@kernel.org>, <vigneshr@ti.com>
-CC: <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH] MAINTAINERS: PCI: TI DRA7XX/J721E: Add Siddharth Vadapalli as a reviewer
-Date: Fri, 16 Feb 2024 12:29:26 +0530
-Message-ID: <20240216065926.473805-1-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1708067543; c=relaxed/simple;
+	bh=HtwgK76BJgzohi2w2UJNqP9aZjmgBVag21pZ2hU95YM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPDjDk/y5MKvY7R3ZhrJwbz6gKzZR3Q6k8bvUeqj9QAcQn54dVe5IBfaHdQgHOmgt+fSCvmfXUSH5LkhXRer2aBXV6ugL6nnyKrQ9gMYoP7qikmdswwv6WhSdRBsJZxx7WpRhFGZdnq2PdSdPHJXc6Wx0hmvatS+PNjOLOZVndg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=alHXaPCN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDBA7C433C7;
+	Fri, 16 Feb 2024 07:12:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708067543;
+	bh=HtwgK76BJgzohi2w2UJNqP9aZjmgBVag21pZ2hU95YM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=alHXaPCNsxUoOuKXujDeBdvf8UA1rowS1obpBU3eG71FeQ1/d7OWohJI7PEonR4Gt
+	 oZSo4iq5D+yZiN/OMjirm7jHf2cnD8H+8BJOaISbD0fuCowvqUQENGWTXagnkXaV/O
+	 r+Q5Tk1gCj6w4mFUQ1vBccpeA6m065snRq+inzFHS0rA26F6Dkzx7mOIGGp9/4mbJZ
+	 9bF5nOUGMcApbbx6Oe0YbvcsvSvKYUvBctd5Zzfo+XfIE342vn5o/6x9n7creP0oXj
+	 +8KqwLrAfpHlZXmN6R47xj87svi84n6NHqby8FscoHfpXVGf/XqOQjL5oNI9cg1dUK
+	 igyMgPYzFiQ7Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rasOs-000000004Ug-1LYi;
+	Fri, 16 Feb 2024 08:12:47 +0100
+Date: Fri, 16 Feb 2024 08:12:46 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/10] arm64: dts: qcom: sc8280xp-crd: limit pcie4 link
+ speed
+Message-ID: <Zc8K7iiK4YbnadtQ@hovoldconsulting.com>
+References: <20240212165043.26961-1-johan+linaro@kernel.org>
+ <20240212165043.26961-5-johan+linaro@kernel.org>
+ <a2323580-6515-4380-a7d8-fd25818e9092@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2323580-6515-4380-a7d8-fd25818e9092@linaro.org>
 
-Since I have been contributing to the driver for a while and wish to help
-with the review process, add myself as a reviewer.
+On Thu, Feb 15, 2024 at 09:47:01PM +0100, Konrad Dybcio wrote:
+> On 12.02.2024 17:50, Johan Hovold wrote:
+> > Limit the WiFi PCIe link speed to Gen2 speed (500 GB/s), which is the
+> 
+> MB/s
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Indeed, thanks for spotting that.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cd7980e5b1ad..7d6a60002fc1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16976,6 +16976,7 @@ F:	drivers/pci/controller/dwc/*designware*
- 
- PCI DRIVER FOR TI DRA7XX/J721E
- M:	Vignesh Raghavendra <vigneshr@ti.com>
-+R:	Siddharth Vadapalli <s-vadapalli@ti.com>
- L:	linux-omap@vger.kernel.org
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--- 
-2.34.1
+> > speed that Windows uses.
+> > 
+> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > ---
+> 
+> Hm.. I'dve assumed it ships with a WLAN card that supports moving
+> more bandwidth.. Is it always at gen2?
 
+I don't know how the Windows driver works, but the UEFI firmware has
+brought the link up at Gen2 and that's also what Windows reported when I
+checked. But I was not actually using the wifi when I did so.
+
+But yes, it seems we may be limiting the theoretical maximum data rate
+for the wifi this way.
+
+As this appears to fix wifi startup issue reported by one user, and
+allows us to enable ITS and AER reporting, perhaps that's acceptable
+until the Linux driver can manage to scale the link speed (or we figure
+out a more elaborate way of restarting the link at boot).
+
+The PCIe link errors could also indicate that the wifi can not be run
+any faster than this on these machines even if my guess is something is
+wrong with ASPM implementation. Hopefully Qualcomm will be able to shed
+some light on that.
+
+Johan
 
