@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-3644-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3643-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 846F285874D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 21:41:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8DCA85874C
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 21:41:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3151828B3B7
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 20:41:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDCCD1C2534E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 20:41:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34920155A37;
-	Fri, 16 Feb 2024 20:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B129D155A25;
+	Fri, 16 Feb 2024 20:33:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pjlvdI/s"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ima8Razl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3AF154442
-	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 20:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2527154BE0
+	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 20:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708115623; cv=none; b=q2geiquvTLf0593c5d/i9s4E94MPPr1PIk2M8c5lkAUkpwjijRTpOEEmmD418TsPngJtuuh5q8ekAJO8b6fq6sQduIJYmhMy8guF98aTXxU8xGcbBuWxwZj8/4z2wvzhQfVCfU790b79uGiQ2Eq18J2377ZYOUOvYqFqhSDTIhY=
+	t=1708115623; cv=none; b=OM//K8lO9v7cDS2lTTnGQN0jc3tgHLQDcI9FKzfdc7dL+oQ4vx2oMxzlnp+9zDfecNpjy/snEBE0woCXO9FBHjJ9ADtRrgRaC+ceQXisnls5m5QAKSQVOuvrEHsGyG4ZuPtAfJshqm4D9WY2P5xal1kYVO7s7nXE6tblvtG4bjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1708115623; c=relaxed/simple;
-	bh=X4ZHvrwqZEyBeAi01/H9KK4yq2KrD2I61w6lZdlucm8=;
+	bh=uxQvnPI8/bGrVMuVI5gjeJIZtyIinJjoJ9no/gq7xoY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RoF01VP8KQHxh2FOFBdG6fvc+gbYhmfdQ5O84LO1X9GfgmKMTjQDaeEw8AC3TYd1BFBEQT0H+B5sZDCME5ItvtnXaxBoYTpzMosFpEu/EF/PRyR0P9pKyQ+a1rO2nqTGjBCPz8Gl5bEr5GgDzmydHt8017mys7eEn7gZT5VRla0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pjlvdI/s; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=U8OaD0tfjEfrz8NbgGKGV9fiU6SncUiooBlvEEVc2pShZ/eMEdzam2O2izjMFi2xhyoVwFqSRf8qtoLGhFYxBoNrPeM+iyDYY1xrF0mZzuJT8R+U56rnIwd/CiBsJcDlC5gYb4+28Q6iGAU9Q8M33MLk+YhjdoqwCDm1AFvUXk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ima8Razl; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-412191ed8aaso16371275e9.2
-        for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 12:33:37 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33d2710f3acso269464f8f.0
+        for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 12:33:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708115615; x=1708720415; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708115617; x=1708720417; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GuKEVUfMPtlst7kCN+rX1Jrkz0IJ3Rvo08UBdK/Kj2o=;
-        b=pjlvdI/sxQ1gFz5TMLL66V0LLiJgQvBTtyXuouQZHff9UHlgn2uORC/wYhKzNlDM3i
-         EnhSwxY8acZllak0pUw3nLOZV9CkKRXP1ElKd2nOJH9kA8zZnFgSxP541NCkg9bE1IBf
-         GjGgKMqjuskv/m5Fm3uEhSY3rD1U59W6DdljXEIKHksHayJFZ0Vm3nQg5Nw2IhSccgj1
-         9w+Fv2WqDWlDdtJ1vQE8PUR+BEO/f9+1duO+Ffl2LbX30ZPNNT87kfAAI2H9brncOnuO
-         Rqxbc6VF2dNY3KHI56iQgD58kFjVeTVkLW3oxF0M3o8yclyHVXk2Mg5XFSgrECFv+odr
-         iU9w==
+        bh=EQHWuFoizOSDk7qTx/YRGg03f0p2QHBA18E+Wk2phRk=;
+        b=ima8RazlHxQgrhYUtLazcByVb/KfgI7dsyQqZ0aIfBHwMqW4I47iJlZk4IGfnGQJIA
+         ehB9c1mG0+kpBC3Gx7/qr2Ne9bqIYra099A7WMajVzhs/X1HXDh9B0NYLV+wLDEynaAa
+         bPagwOVue6iYIKRXn5Ev8bxDzBB8nLvEboYDbA5H7Z3o3H2rrCGICZohoSNXyTjUIp5u
+         sYMq2ozIzJhwNF5yQdcZiAdekbVfJ58LS8RhLe2jcjjFfcREpZcWtZ8lkttQFror3h/X
+         sphpIQ4AUHc1FmNebvywyEuZGp5qC9kRg8/N/VrtY5Zobvcc7ENnnhSkF0v2i+j7vXrp
+         qCZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708115615; x=1708720415;
+        d=1e100.net; s=20230601; t=1708115617; x=1708720417;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GuKEVUfMPtlst7kCN+rX1Jrkz0IJ3Rvo08UBdK/Kj2o=;
-        b=uDzEpwT37I20DdjbOI7oTWc961x12XkSkckry97Sd2AFk4kgOx8OYEoU+9PPyh5SSI
-         FchFMr8JuWS0Ihf/A1lnZmAJ/rhLXKPxRCcFk9XS1kfNJQPZ1p3/INloFSnoogifAwm9
-         3mVhS1w/6k+sEH755JLtaFZ+fXldw9Jw8FgLkVeoNyIAbdlLXUp4L5F4ZhE2Y3FoXLCu
-         JGydcW4QbxCwGxIBMETpg7pAXoVia+7SFLAhsjmwAqBBXoSBs8NtfSBEBFtMD5lJm7Lz
-         eeSndtGuBSnJhk9YcJdrGv0q9D5pj0f/RYNyvJU/NXGuoGIXscXWluDdEmOgqquQg4Tq
-         uoBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsfa1kjfV4ju34rYWz8oPEYS+KJJZofS23y761E7clVUobT17bMs/ajsmCTzq21vcf1ir44SG7z87p/uMBODkk2Ahq60gyKREq
-X-Gm-Message-State: AOJu0YwTdt1O0LAWxOAhzFvnpCAwyfKVTLGQL4vLhhe98ZoAYN/SCXC0
-	1T+6B3hCQS6FqD7JXyqmqnx+0E1fi8uO5wVpj2F4p2JTDSoSoCoEaGisNBs4oeE=
-X-Google-Smtp-Source: AGHT+IHb8SpXqlCOaYZS0/LtKlaiDT1Th7jjQPV0KlR4ZbBnZeojtxBKYA7yzzVwfWdcIv+Ln3zIjQ==
-X-Received: by 2002:a05:600c:3d9a:b0:411:e009:f3c7 with SMTP id bi26-20020a05600c3d9a00b00411e009f3c7mr4161252wmb.4.1708115615191;
-        Fri, 16 Feb 2024 12:33:35 -0800 (PST)
+        bh=EQHWuFoizOSDk7qTx/YRGg03f0p2QHBA18E+Wk2phRk=;
+        b=c913lntfGBhxWYZQL31kkUTAfHcRdz41QXsxNjnbRZvTUpOZ70WzdhAJWCkcIaV9IG
+         YTEl7FEFUsyv4/qmtl696ukH3mKs8DQMm0getxN2kObn+Hz2spLE71keyFqJj6Qz/sAL
+         XjsV9NPw4OpvNj9xBoTwQsV59PV/Caq/wTctRc9Z3zsK29YJwbiUxhhd1Vw9nVlQPR6h
+         v4t2mwbnaRJGUeTeDjR9BWEWstRyuX933hHfCcziRHAARH+5G26X8ebS30RGe7Y7tRjk
+         JaYY+ZblA/hhN3oqBptszqcDRhu8PamKbioinnDPUbMj+g1PCWLjqZN6DYThamRxB6Wg
+         bpiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKTfKc6GhQAIvdje5Mw6J/7tWHIi/zG+ZhKh/W7HAuGExHFdo8HFQCR3gmnNxKpZOd5675x9hWnA8TXUroKyjMaGXpRI+gW98Q
+X-Gm-Message-State: AOJu0YwcNihHHNeDt09nZufePRje3WRey99SttQDtGQjVbEoKDWe2Z1z
+	cmgYZig7PxBlpM5ogShS1hxEnn5ecQslEad8taEpfDZCJiodwt/QhsjpDvdrp+U=
+X-Google-Smtp-Source: AGHT+IGinJo+FpgyRjl2kJ/ySAi2AYljBCrn99NoRGeBpUSzr8brtEvQeJbO+Rn9M6cn5QFIJHX91A==
+X-Received: by 2002:adf:fd0b:0:b0:33d:119e:2ca1 with SMTP id e11-20020adffd0b000000b0033d119e2ca1mr3839965wrr.5.1708115616769;
+        Fri, 16 Feb 2024 12:33:36 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7758:12d:16:5f19])
-        by smtp.gmail.com with ESMTPSA id m5-20020a05600c4f4500b0041253d0acd6sm1420528wmq.47.2024.02.16.12.33.33
+        by smtp.gmail.com with ESMTPSA id m5-20020a05600c4f4500b0041253d0acd6sm1420528wmq.47.2024.02.16.12.33.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 12:33:34 -0800 (PST)
+        Fri, 16 Feb 2024 12:33:36 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Marcel Holtmann <marcel@holtmann.org>,
 	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
@@ -108,9 +108,9 @@ Cc: linux-bluetooth@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v5 15/18] power: sequencing: implement the pwrseq core
-Date: Fri, 16 Feb 2024 21:32:12 +0100
-Message-Id: <20240216203215.40870-16-brgl@bgdev.pl>
+Subject: [PATCH v5 16/18] power: pwrseq: add a driver for the QCA6390 PMU module
+Date: Fri, 16 Feb 2024 21:32:13 +0100
+Message-Id: <20240216203215.40870-17-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240216203215.40870-1-brgl@bgdev.pl>
 References: <20240216203215.40870-1-brgl@bgdev.pl>
@@ -124,1307 +124,411 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Implement the power sequencing subsystem allowing devices to share
-complex powering-up and down procedures. It's split into the consumer
-and provider parts but does not implement any new DT bindings so that
-the actual power sequencing is never revealed in the DT representation.
+This adds the power sequencing driver for the QCA6390's PMU module. It
+uses the pwrseq subsystem and knows how to match the sequencer to the
+consumer device by verifying the relevant properties and DT layout.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- MAINTAINERS                       |    8 +
- drivers/power/Kconfig             |    1 +
- drivers/power/Makefile            |    1 +
- drivers/power/sequencing/Kconfig  |   12 +
- drivers/power/sequencing/Makefile |    4 +
- drivers/power/sequencing/core.c   | 1065 +++++++++++++++++++++++++++++
- include/linux/pwrseq/consumer.h   |   56 ++
- include/linux/pwrseq/provider.h   |   75 ++
- 8 files changed, 1222 insertions(+)
- create mode 100644 drivers/power/sequencing/Kconfig
- create mode 100644 drivers/power/sequencing/Makefile
- create mode 100644 drivers/power/sequencing/core.c
- create mode 100644 include/linux/pwrseq/consumer.h
- create mode 100644 include/linux/pwrseq/provider.h
+ drivers/power/sequencing/Kconfig          |  16 +
+ drivers/power/sequencing/Makefile         |   2 +
+ drivers/power/sequencing/pwrseq-qca6390.c | 353 ++++++++++++++++++++++
+ 3 files changed, 371 insertions(+)
+ create mode 100644 drivers/power/sequencing/pwrseq-qca6390.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cd7980e5b1ad..5187a30952e4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17647,6 +17647,14 @@ F:	include/linux/pm_*
- F:	include/linux/powercap.h
- F:	kernel/configs/nopm.config
- 
-+POWER SEQUENCING
-+M:	Bartosz Golaszewski <brgl@bgdev.pl>
-+L:	linux-pm@vger.kernel.org
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-+F:	drivers/power/sequencing/
-+F:	include/linux/pwrseq/
-+
- POWER STATE COORDINATION INTERFACE (PSCI)
- M:	Mark Rutland <mark.rutland@arm.com>
- M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 696bf77a7042..9a8e44ca9ae4 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- source "drivers/power/reset/Kconfig"
-+source "drivers/power/sequencing/Kconfig"
- source "drivers/power/supply/Kconfig"
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index effbf0377f32..962a2cd30a51 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_POWER_RESET)	+= reset/
-+obj-$(CONFIG_POWER_SEQUENCING)	+= sequencing/
- obj-$(CONFIG_POWER_SUPPLY)	+= supply/
 diff --git a/drivers/power/sequencing/Kconfig b/drivers/power/sequencing/Kconfig
-new file mode 100644
-index 000000000000..ba5732b1dbf8
---- /dev/null
+index ba5732b1dbf8..84ddf3b4ae56 100644
+--- a/drivers/power/sequencing/Kconfig
 +++ b/drivers/power/sequencing/Kconfig
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0-only
+@@ -10,3 +10,19 @@ menuconfig POWER_SEQUENCING
+ 	  during power-up.
+ 
+ 	  If unsure, say no.
 +
-+menuconfig POWER_SEQUENCING
-+	tristate "Power Sequencing support"
++if POWER_SEQUENCING
++
++config POWER_SEQUENCING_QCA6390
++	tristate "QCA6390 PMU driver"
++	default m if ARCH_QCOM
 +	help
-+	  Say Y here to enable the Power Sequencing subsystem.
++	  Say U here to enable the power sequencing driver for Qualcomm
++	  QCA6390.
 +
-+	  This subsystem is designed to control power to devices that share
-+	  complex resources and/or require specific power sequences to be run
-+	  during power-up.
++	  The QCA6390 package contains the BT and WLAN modules whose power
++	  is controlled by the PMU module. As the former two share the power-up
++	  sequence which is executed by the PMU, this driver is needed for
++	  correct power control.
 +
-+	  If unsure, say no.
++endif
 diff --git a/drivers/power/sequencing/Makefile b/drivers/power/sequencing/Makefile
-new file mode 100644
-index 000000000000..dcdf8c0c159e
---- /dev/null
+index dcdf8c0c159e..628345c4e7ae 100644
+--- a/drivers/power/sequencing/Makefile
 +++ b/drivers/power/sequencing/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
+@@ -2,3 +2,5 @@
+ 
+ obj-$(CONFIG_POWER_SEQUENCING)		+= pwrseq-core.o
+ pwrseq-core-y				:= core.o
 +
-+obj-$(CONFIG_POWER_SEQUENCING)		+= pwrseq-core.o
-+pwrseq-core-y				:= core.o
-diff --git a/drivers/power/sequencing/core.c b/drivers/power/sequencing/core.c
++obj-$(CONFIG_POWER_SEQUENCING_QCA6390)	+= pwrseq-qca6390.o
+diff --git a/drivers/power/sequencing/pwrseq-qca6390.c b/drivers/power/sequencing/pwrseq-qca6390.c
 new file mode 100644
-index 000000000000..00ad7964a0b6
+index 000000000000..5f254f9c71d7
 --- /dev/null
-+++ b/drivers/power/sequencing/core.c
-@@ -0,0 +1,1065 @@
++++ b/drivers/power/sequencing/pwrseq-qca6390.c
+@@ -0,0 +1,353 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (C) 2024 Linaro Ltd.
 + */
 +
-+#include <linux/bug.h>
-+#include <linux/cleanup.h>
-+#include <linux/debugfs.h>
++#include <linux/delay.h>
 +#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/export.h>
-+#include <linux/idr.h>
-+#include <linux/kernel.h>
-+#include <linux/kref.h>
-+#include <linux/list.h>
++#include <linux/gpio/consumer.h>
++#include <linux/jiffies.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/property.h>
-+#include <linux/pwrseq/consumer.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
 +#include <linux/pwrseq/provider.h>
-+#include <linux/radix-tree.h>
-+#include <linux/rwsem.h>
-+#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/types.h>
 +
-+/*
-+ * Power-sequencing framework for linux.
-+ *
-+ * This subsystem allows power sequence providers to register a set of targets
-+ * that consumers may request and power-up/down.
-+ *
-+ * Glossary:
-+ *
-+ * Unit - a unit is a discreet chunk of a power sequence. For instance one unit
-+ * may enable a set of regulators, another may enable a specific GPIO. Units
-+ * can define dependencies in the form of other units that must be enabled
-+ * before it itself can be.
-+ *
-+ * Target - a target is a set of units (composed of the "final" unit and its
-+ * dependencies) that a consumer selects by its name when requesting a handle
-+ * to the power sequencer. Via the dependency system, multiple targets may
-+ * share the same parts of a power sequence but ignore parts that are
-+ * irrelevant.
-+ *
-+ * Descriptor - a handle passed by the pwrseq core to every consumer that
-+ * serves as the entry point to the provider layer. It ensures coherence
-+ * between different users and keeps reference counting consistent.
-+ *
-+ * Each provider must define a .match() callback whose role is to determine
-+ * whether a potential consumer is in fact associated with this sequencer.
-+ * This allows creating abstraction layers on top of regular device-tree
-+ * resources like regulators, clocks and other nodes connected to the consumer
-+ * via phandle.
-+ */
-+
-+static DEFINE_IDA(pwrseq_ida);
-+
-+/*
-+ * Protects the device list on the pwrseq bus from concurrent modifications
-+ * but allows simultaneous read-only access.
-+ */
-+static DECLARE_RWSEM(pwrseq_sem);
-+
-+/**
-+ * struct pwrseq_unit - Private power-sequence unit data.
-+ * @ref: Reference count for this object. When it goes to 0, the object is
-+ *       destroyed.
-+ * @name: Name of this target.
-+ * @list: Link to siblings on the list of all units of a single sequencer.
-+ * @deps: List of units on which this unit depends.
-+ * @enable: Callback running the part of the power-on sequence provided by
-+ *          this unit.
-+ * @disable: Callback running the part of the power-off sequence provided
-+ *           by this unit.
-+ * @enable_count: Current number of users that enabled this unit. May be the
-+ *                consumer of the power sequencer or other units that depend
-+ *                on this one.
-+ */
-+struct pwrseq_unit {
-+	struct kref ref;
++struct pwrseq_qca6390_vreg {
 +	const char *name;
-+	struct list_head list;
-+	struct list_head deps;
-+	pwrseq_power_state_func enable;
-+	pwrseq_power_state_func disable;
-+	unsigned int enable_count;
++	unsigned int load_uA;
 +};
 +
-+static struct pwrseq_unit *pwrseq_unit_new(const struct pwrseq_unit_data *data)
-+{
-+	struct pwrseq_unit *unit;
-+
-+	unit = kzalloc(sizeof(*unit), GFP_KERNEL);
-+	if (!unit)
-+		return NULL;
-+
-+	unit->name = kstrdup_const(data->name, GFP_KERNEL);
-+	if (!unit->name) {
-+		kfree(unit);
-+		return NULL;
-+	}
-+
-+	kref_init(&unit->ref);
-+	INIT_LIST_HEAD(&unit->deps);
-+	unit->enable = data->enable;
-+	unit->disable = data->disable;
-+
-+	return unit;
-+}
-+
-+static struct pwrseq_unit *pwrseq_unit_incref(struct pwrseq_unit *unit)
-+{
-+	kref_get(&unit->ref);
-+
-+	return unit;
-+}
-+
-+static void pwrseq_unit_release(struct kref *ref);
-+
-+static void pwrseq_unit_decref(struct pwrseq_unit *unit)
-+{
-+	kref_put(&unit->ref, pwrseq_unit_release);
-+}
-+
-+/**
-+ * struct pwrseq_unit_dep - Wrapper around a reference to the unit structure
-+ *                          allowing to keep it on multiple dependency lists
-+ *                          in different units.
-+ * @list: Siblings on the list.
-+ * @unit: Address of the referenced unit.
-+ */
-+struct pwrseq_unit_dep {
-+	struct list_head list;
-+	struct pwrseq_unit *unit;
++struct pwrseq_qca6390_pdata {
++	const struct pwrseq_qca6390_vreg *vregs_common;
++	size_t num_vregs_common;
++	const struct pwrseq_qca6390_vreg *vregs_wlan;
++	size_t num_vregs_wlan;
++	unsigned int pwup_delay_msec;
 +};
 +
-+static struct pwrseq_unit_dep *pwrseq_unit_dep_new(struct pwrseq_unit *unit)
-+{
-+	struct pwrseq_unit_dep *dep;
-+
-+	dep = kzalloc(sizeof(*dep), GFP_KERNEL);
-+	if (!dep)
-+		return NULL;
-+
-+	dep->unit = unit;
-+
-+	return dep;
-+}
-+
-+static void pwrseq_unit_dep_free(struct pwrseq_unit_dep *ref)
-+{
-+	pwrseq_unit_decref(ref->unit);
-+	kfree(ref);
-+}
-+
-+static void pwrseq_unit_free_deps(struct list_head *list)
-+{
-+	struct pwrseq_unit_dep *dep, *next;
-+
-+	list_for_each_entry_safe(dep, next, list, list) {
-+		list_del(&dep->list);
-+		pwrseq_unit_dep_free(dep);
-+	}
-+}
-+
-+static void pwrseq_unit_release(struct kref *ref)
-+{
-+	struct pwrseq_unit *unit = container_of(ref, struct pwrseq_unit, ref);
-+
-+	pwrseq_unit_free_deps(&unit->deps);
-+	list_del(&unit->list);
-+	kfree_const(unit->name);
-+	kfree(unit);
-+}
-+
-+/**
-+ * struct pwrseq_target - Private power-sequence target data.
-+ * @list: Siblings on the list of all targets exposed by a power sequencer.
-+ * @name: Name of the target.
-+ * @unit: Final unit for this target.
-+ * @post_enable: Callback run after the target unit has been enabled, *after*
-+ *               the state lock has been released. It's useful for implementing
-+ *               boot-up delays without blocking other users from powering up
-+ *               using the same power sequencer.
-+ */
-+struct pwrseq_target {
-+	struct list_head list;
-+	const char *name;
-+	struct pwrseq_unit *unit;
-+	pwrseq_power_state_func post_enable;
-+};
-+
-+static struct pwrseq_target *
-+pwrseq_target_new(const struct pwrseq_target_data *data)
-+{
-+	struct pwrseq_target *target;
-+
-+	target = kzalloc(sizeof(*target), GFP_KERNEL);
-+	if (!target)
-+		return NULL;
-+
-+	target->name = kstrdup_const(data->name, GFP_KERNEL);
-+	if (!target->name) {
-+		kfree(target);
-+		return NULL;
-+	}
-+
-+	target->post_enable = data->post_enable;
-+
-+	return target;
-+}
-+
-+static void pwrseq_target_free(struct pwrseq_target *target)
-+{
-+	pwrseq_unit_decref(target->unit);
-+	kfree_const(target->name);
-+	kfree(target);
-+}
-+
-+/**
-+ * struct pwrseq_device - Private power sequencing data.
-+ * @dev: Device struct associated with this sequencer.
-+ * @id: Device ID.
-+ * @owner: Prevents removal of active power sequencing providers.
-+ * @rw_lock: Protects the device from being unregistered while in use.
-+ * @state_lock: Prevents multiple users running the power sequence at the same
-+ *              time.
-+ * @match: Power sequencer matching callback.
-+ * @targets: List of targets exposed by this sequencer.
-+ * @units: List of all units supported by this sequencer.
-+ */
-+struct pwrseq_device {
-+	struct device dev;
-+	int id;
-+	struct module *owner;
-+	struct rw_semaphore rw_lock;
-+	struct mutex state_lock;
-+	pwrseq_match_func match;
-+	struct list_head targets;
-+	struct list_head units;
-+};
-+
-+static struct pwrseq_device *to_pwrseq_device(struct device *dev)
-+{
-+	return container_of(dev, struct pwrseq_device, dev);
-+}
-+
-+static struct pwrseq_device *pwrseq_device_get(struct pwrseq_device *pwrseq)
-+{
-+	get_device(&pwrseq->dev);
-+
-+	return pwrseq;
-+}
-+
-+static void pwrseq_device_put(struct pwrseq_device *pwrseq)
-+{
-+	put_device(&pwrseq->dev);
-+}
-+
-+/**
-+ * struct pwrseq_desc - Wraps access to the pwrseq_device and ensures that one
-+ *                      user cannot break the reference counting for others.
-+ * @pwrseq: Reference to the power sequencing device.
-+ * @target: Reference to the target this descriptor allows to control.
-+ * @powered_on: Power state set by the holder of the descriptor (not necessarily
-+ * corresponding to the actual power state of the device).
-+ */
-+struct pwrseq_desc {
++struct pwrseq_qca6390_ctx {
 +	struct pwrseq_device *pwrseq;
-+	struct pwrseq_target *target;
-+	bool powered_on;
++	struct device_node *of_node;
++	const struct pwrseq_qca6390_pdata *pdata;
++	struct regulator_bulk_data *regs_common;
++	struct regulator_bulk_data *regs_wlan;
++	struct gpio_desc *bt_gpio;
++	struct gpio_desc *wlan_gpio;
++	unsigned long last_gpio_enable;
 +};
 +
-+static const struct bus_type pwrseq_bus = {
-+	.name = "pwrseq",
++static const struct pwrseq_qca6390_vreg pwrseq_qca6390_vregs_common[] = {
++	{
++		.name = "vddio",
++		.load_uA = 20000,
++	},
++	{
++		.name = "vddaon",
++		.load_uA = 100000,
++	},
++	{
++		.name = "vddpmu",
++		.load_uA = 1250000,
++	},
++	{
++		.name = "vddrfa0p95",
++		.load_uA = 200000,
++	},
++	{
++		.name = "vddrfa1p3",
++		.load_uA = 400000,
++	},
++	{
++		.name = "vddrfa1p9",
++		.load_uA = 400000,
++	},
 +};
 +
-+static void pwrseq_release(struct device *dev)
++static const struct pwrseq_qca6390_vreg pwrseq_qca6390_vregs_wlan[] = {
++	{
++		.name = "vddpcie1p3",
++		.load_uA = 35000,
++	},
++	{
++		.name = "vddpcie1p9",
++		.load_uA = 15000,
++	},
++};
++
++static void pwrseq_qca6390_ensure_gpio_delay(struct pwrseq_qca6390_ctx *ctx)
 +{
-+	struct pwrseq_device *pwrseq = to_pwrseq_device(dev);
-+	struct pwrseq_target *target;
++	unsigned long diff_jiffies = jiffies - ctx->last_gpio_enable;
++	unsigned int diff_msecs = jiffies_to_msecs(diff_jiffies);
 +
-+	list_for_each_entry(target, &pwrseq->targets, list)
-+		pwrseq_target_free(target);
-+
-+	mutex_destroy(&pwrseq->state_lock);
-+	ida_free(&pwrseq_ida, pwrseq->id);
-+	kfree(pwrseq);
++	if (diff_msecs < 100)
++		msleep(100 - diff_msecs);
 +}
 +
-+static const struct device_type pwrseq_device_type = {
-+	.name = "power_sequencer",
-+	.release = pwrseq_release,
++static const struct pwrseq_qca6390_pdata pwrseq_qca6390_of_data = {
++	.vregs_common = pwrseq_qca6390_vregs_common,
++	.num_vregs_common = ARRAY_SIZE(pwrseq_qca6390_vregs_common),
++	.vregs_wlan = pwrseq_qca6390_vregs_wlan,
++	.num_vregs_wlan = ARRAY_SIZE(pwrseq_qca6390_vregs_wlan),
++	.pwup_delay_msec = 16,
 +};
 +
-+static int pwrseq_unit_setup_deps(const struct pwrseq_unit_data **data,
-+				  struct list_head *dep_list,
-+				  struct list_head *unit_list,
-+				  struct radix_tree_root *processed_units)
++static int pwrseq_qca6390_vregs_enable(struct pwrseq_device *pwrseq)
 +{
-+	const struct pwrseq_unit_data *pos;
-+	struct pwrseq_unit_dep *dep;
-+	struct pwrseq_unit *unit;
-+	int ret, i;
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
 +
-+	for (i = 0; data[i]; i++) {
-+		pos = data[i];
++	return regulator_bulk_enable(ctx->pdata->num_vregs_common,
++				     ctx->regs_common);
++}
 +
-+		unit = radix_tree_lookup(processed_units, (unsigned long)data);
-+		if (unit) {
-+			pwrseq_unit_incref(unit);
-+		} else {
-+			unit = pwrseq_unit_new(pos);
-+			if (!unit)
-+				return -ENOMEM;
++static int pwrseq_qca6390_vregs_disable(struct pwrseq_device *pwrseq)
++{
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
 +
-+			if (pos->deps) {
-+				ret = pwrseq_unit_setup_deps(pos->deps,
-+							     &unit->deps,
-+							     unit_list,
-+							     processed_units);
-+				if (ret) {
-+					pwrseq_unit_decref(unit);
-+					return ret;
-+				}
-+			}
++	return regulator_bulk_disable(ctx->pdata->num_vregs_common,
++				      ctx->regs_common);
++}
 +
-+			ret = radix_tree_insert(processed_units,
-+						(unsigned long)data, unit);
-+			if (ret) {
-+				pwrseq_unit_decref(unit);
-+				return ret;
-+			}
++static const struct pwrseq_unit_data pwrseq_qca6390_vregs_unit_data = {
++	.name = "regulators-enable",
++	.enable = pwrseq_qca6390_vregs_enable,
++	.disable = pwrseq_qca6390_vregs_disable,
++};
 +
-+			list_add_tail(&unit->list, unit_list);
-+		}
++static const struct pwrseq_unit_data *pwrseq_qca6390_unit_deps[] = {
++	&pwrseq_qca6390_vregs_unit_data,
++	NULL
++};
 +
-+		dep = pwrseq_unit_dep_new(unit);
-+		if (!dep) {
-+			pwrseq_unit_decref(unit);
-+			return -ENOMEM;
-+		}
++static int pwrseq_qca6390_bt_enable(struct pwrseq_device *pwrseq)
++{
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
 +
-+		list_add_tail(&dep->list, dep_list);
-+	}
++	pwrseq_qca6390_ensure_gpio_delay(ctx);
++	gpiod_set_value_cansleep(ctx->bt_gpio, 1);
++	ctx->last_gpio_enable = jiffies;
 +
 +	return 0;
 +}
 +
-+static int pwrseq_target_setup_unit(struct pwrseq_target *target,
-+				    const struct pwrseq_unit_data *data,
-+				    struct list_head *unit_list,
-+				    struct radix_tree_root *processed_units)
++static int pwrseq_qca6390_bt_disable(struct pwrseq_device *pwrseq)
 +{
-+	struct pwrseq_unit *unit;
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
++
++	gpiod_set_value_cansleep(ctx->bt_gpio, 0);
++
++	return 0;
++}
++
++static const struct pwrseq_unit_data pwrseq_qca6390_bt_unit_data = {
++	.name = "bluetooth-enable",
++	.deps = pwrseq_qca6390_unit_deps,
++	.enable = pwrseq_qca6390_bt_enable,
++	.disable = pwrseq_qca6390_bt_disable,
++};
++
++static int pwrseq_qca6390_wlan_enable(struct pwrseq_device *pwrseq)
++{
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
 +	int ret;
 +
-+	unit = radix_tree_lookup(processed_units, (unsigned long)data);
-+	if (unit) {
-+		target->unit = pwrseq_unit_incref(unit);
-+		return 0;
-+	}
-+
-+	unit = pwrseq_unit_new(data);
-+	if (!unit)
-+		return -ENOMEM;
-+
-+	ret = pwrseq_unit_setup_deps(data->deps, &unit->deps, unit_list,
-+				     processed_units);
-+	if (ret) {
-+		pwrseq_unit_decref(unit);
++	ret = regulator_bulk_enable(ctx->pdata->num_vregs_wlan, ctx->regs_wlan);
++	if (ret)
 +		return ret;
-+	}
 +
-+	ret = radix_tree_insert(processed_units, (unsigned long)data, unit);
-+	if (ret) {
-+		pwrseq_unit_decref(unit);
-+		return ret;
-+	}
-+
-+	target->unit = unit;
-+	list_add_tail(&unit->list, unit_list);
++	pwrseq_qca6390_ensure_gpio_delay(ctx);
++	gpiod_set_value_cansleep(ctx->wlan_gpio, 1);
++	ctx->last_gpio_enable = jiffies;
 +
 +	return 0;
 +}
 +
-+static int pwrseq_do_setup_targets(const struct pwrseq_target_data **data,
-+				   struct pwrseq_device *pwrseq,
-+				   struct radix_tree_root *processed_units)
++static int pwrseq_qca6390_wlan_disable(struct pwrseq_device *pwrseq)
 +{
-+	const struct pwrseq_target_data *pos;
-+	struct pwrseq_target *target;
-+	int ret, i;
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
 +
-+	for (i = 0; data[i]; i++) {
-+		pos = data[i];
++	gpiod_set_value_cansleep(ctx->wlan_gpio, 0);
 +
-+		target = pwrseq_target_new(pos);
-+		if (!target)
-+			return -ENOMEM;
++	return regulator_bulk_disable(ctx->pdata->num_vregs_wlan,
++				      ctx->regs_wlan);
++}
 +
-+		ret = pwrseq_target_setup_unit(target, pos->unit,
-+					       &pwrseq->units,
-+					       processed_units);
-+		if (ret) {
-+			pwrseq_target_free(target);
-+			return ret;
-+		}
++static const struct pwrseq_unit_data pwrseq_qca6390_wlan_unit_data = {
++	.name = "wlan-enable",
++	.deps = pwrseq_qca6390_unit_deps,
++	.enable = pwrseq_qca6390_wlan_enable,
++	.disable = pwrseq_qca6390_wlan_disable,
++};
 +
-+		list_add_tail(&target->list, &pwrseq->targets);
-+	}
++static int pwrseq_qca6390_pwup_delay(struct pwrseq_device *pwrseq)
++{
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
++
++	if (ctx->pdata->pwup_delay_msec)
++		msleep(ctx->pdata->pwup_delay_msec);
 +
 +	return 0;
 +}
 +
-+static int pwrseq_setup_targets(const struct pwrseq_target_data **targets,
-+				struct pwrseq_device *pwrseq)
++static const struct pwrseq_target_data pwrseq_qca6390_bt_target_data = {
++	.name = "bluetooth",
++	.unit = &pwrseq_qca6390_bt_unit_data,
++	.post_enable = pwrseq_qca6390_pwup_delay,
++};
++
++static const struct pwrseq_target_data pwrseq_qca6390_wlan_target_data = {
++	.name = "wlan",
++	.unit = &pwrseq_qca6390_wlan_unit_data,
++	.post_enable = pwrseq_qca6390_pwup_delay,
++};
++
++static const struct pwrseq_target_data *pwrseq_qca6390_targets[] = {
++	&pwrseq_qca6390_bt_target_data,
++	&pwrseq_qca6390_wlan_target_data,
++	NULL
++};
++
++static int pwrseq_qca6390_match(struct pwrseq_device *pwrseq,
++				struct device *dev)
 +{
-+	struct radix_tree_root processed_units;
-+	struct radix_tree_iter iter;
-+	void __rcu **slot;
-+	int ret;
-+
-+	INIT_RADIX_TREE(&processed_units, GFP_KERNEL);
-+	ret = pwrseq_do_setup_targets(targets, pwrseq, &processed_units);
-+	radix_tree_for_each_slot(slot, &processed_units, &iter, 0)
-+		radix_tree_delete(&processed_units, iter.index);
-+
-+	return ret;
-+}
-+
-+/**
-+ * pwrseq_device_register() - Register a new power sequencer.
-+ * @config: Configuration of the new power sequencing device.
-+ *
-+ * The config structure is only used during the call and can be freed after
-+ * the function returns. The config structure *must* have the parent device
-+ * as well as the match() callback and at least one target set.
-+ *
-+ * Returns:
-+ * Returns the address of the new pwrseq device or ERR_PTR() on failure.
-+ */
-+struct pwrseq_device *
-+pwrseq_device_register(const struct pwrseq_config *config)
-+{
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	if (!config->parent || !config->match || !config->targets ||
-+	    !config->targets[0])
-+		return ERR_PTR(-EINVAL);
-+
-+	pwrseq = kzalloc(sizeof(*pwrseq), GFP_KERNEL);
-+	if (!pwrseq)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pwrseq->dev.type = &pwrseq_device_type;
-+	pwrseq->dev.bus = &pwrseq_bus;
-+	pwrseq->dev.parent = config->parent;
-+	device_set_node(&pwrseq->dev, dev_fwnode(config->parent));
-+	dev_set_drvdata(&pwrseq->dev, config->drvdata);
-+
-+	pwrseq->id = ida_alloc(&pwrseq_ida, GFP_KERNEL);
-+	if (pwrseq->id < 0) {
-+		kfree(pwrseq);
-+		return ERR_PTR(pwrseq->id);
-+	}
++	struct pwrseq_qca6390_ctx *ctx = pwrseq_device_get_drvdata(pwrseq);
++	struct device_node *dev_node = dev->of_node;
 +
 +	/*
-+	 * From this point onwards the device's release() callback is
-+	 * responsible for freeing resources.
++	 * The PMU supplies power to the Bluetooth and WLAN modules. both
++	 * consume the PMU AON output so check the presence of the
++	 * 'vddaon-supply' property and whether it leads us to the right
++	 * device.
 +	 */
-+	device_initialize(&pwrseq->dev);
-+
-+	ret = dev_set_name(&pwrseq->dev, "pwrseq.%d", pwrseq->id);
-+	if (ret)
-+		goto err_put_pwrseq;
-+
-+	pwrseq->owner = config->owner ?: THIS_MODULE;
-+	pwrseq->match = config->match;
-+
-+	init_rwsem(&pwrseq->rw_lock);
-+	mutex_init(&pwrseq->state_lock);
-+	INIT_LIST_HEAD(&pwrseq->targets);
-+	INIT_LIST_HEAD(&pwrseq->units);
-+
-+	ret = pwrseq_setup_targets(config->targets, pwrseq);
-+	if (ret)
-+		goto err_put_pwrseq;
-+
-+	scoped_guard(rwsem_write, &pwrseq_sem) {
-+		ret = device_add(&pwrseq->dev);
-+		if (ret)
-+			goto err_put_pwrseq;
-+	}
-+
-+	return pwrseq;
-+
-+err_put_pwrseq:
-+	pwrseq_device_put(pwrseq);
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_device_register);
-+
-+/**
-+ * pwrseq_device_unregister() - Unregister the power sequencer.
-+ * @pwrseq: Power sequencer to unregister.
-+ */
-+void pwrseq_device_unregister(struct pwrseq_device *pwrseq)
-+{
-+	struct device *dev = &pwrseq->dev;
-+	struct pwrseq_target *target;
-+
-+	scoped_guard(mutex, &pwrseq->state_lock) {
-+		guard(rwsem_write)(&pwrseq->rw_lock);
-+
-+		list_for_each_entry(target, &pwrseq->targets, list)
-+			WARN_ONCE(target->unit->enable_count,
-+				  "REMOVING POWER SEQUENCER WITH ACTIVE USERS\n");
-+
-+		guard(rwsem_write)(&pwrseq_sem);
-+
-+		device_del(dev);
-+	}
-+
-+	pwrseq_device_put(pwrseq);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_device_unregister);
-+
-+static void devm_pwrseq_device_unregister(void *data)
-+{
-+	struct pwrseq_device *pwrseq = data;
-+
-+	pwrseq_device_unregister(pwrseq);
-+}
-+
-+/**
-+ * devm_pwrseq_device_register() - Managed variant of pwrseq_device_register().
-+ * @dev: Managing device.
-+ * @config: Configuration of the new power sequencing device.
-+ *
-+ * Returns:
-+ * Returns the address of the new pwrseq device or ERR_PTR() on failure.
-+ */
-+struct pwrseq_device *
-+devm_pwrseq_device_register(struct device *dev,
-+			    const struct pwrseq_config *config)
-+{
-+	struct pwrseq_device *pwrseq;
-+	int ret;
-+
-+	pwrseq = pwrseq_device_register(config);
-+	if (IS_ERR(pwrseq))
-+		return pwrseq;
-+
-+	ret = devm_add_action_or_reset(dev, devm_pwrseq_device_unregister,
-+				       pwrseq);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return pwrseq;
-+}
-+EXPORT_SYMBOL_GPL(devm_pwrseq_device_register);
-+
-+/**
-+ * pwrseq_device_get_data() - Get the driver private data associated with this
-+ *                            sequencer.
-+ * @pwrseq: Power sequencer object.
-+ *
-+ * Returns:
-+ * Address of the private driver data.
-+ */
-+void *pwrseq_device_get_drvdata(struct pwrseq_device *pwrseq)
-+{
-+	return dev_get_drvdata(&pwrseq->dev);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_device_get_drvdata);
-+
-+struct pwrseq_match_data {
-+	struct pwrseq_desc *desc;
-+	struct device *dev;
-+	const char *target;
-+};
-+
-+static int pwrseq_match_device(struct device *pwrseq_dev, void *data)
-+{
-+	struct pwrseq_device *pwrseq = to_pwrseq_device(pwrseq_dev);
-+	struct pwrseq_match_data *match_data = data;
-+	struct pwrseq_target *target;
-+	int ret;
-+
-+	guard(rwsem_read)(&pwrseq->rw_lock);
-+	if (!device_is_registered(&pwrseq->dev))
++	if (!of_property_present(dev_node, "vddaon-supply"))
 +		return 0;
 +
-+	ret = pwrseq->match(pwrseq, match_data->dev);
-+	if (ret <= 0)
-+		return ret;
-+
-+	/* We got the matching device, let's find the right target. */
-+	list_for_each_entry(target, &pwrseq->targets, list) {
-+		if (strcmp(target->name, match_data->target))
-+			continue;
-+
-+		match_data->desc->target = target;
-+	}
++	struct device_node *reg_node __free(device_node) =
++			of_parse_phandle(dev_node, "vddaon-supply", 0);
++	if (!reg_node)
++		return 0;
 +
 +	/*
-+	 * This device does not have this target. No point in deferring as it
-+	 * will not get a new target dynamically later.
++	 * `reg_node` is the PMU AON regulator, its parent is the `regulators`
++	 * node and finally its grandparent is the PMU device node that we're
++	 * looking for.
 +	 */
-+	if (!match_data->desc->target)
-+		return -ENOENT;
-+
-+	if (!try_module_get(pwrseq->owner))
-+		return -EPROBE_DEFER;
-+
-+	match_data->desc->pwrseq = pwrseq_device_get(pwrseq);
++	if (!reg_node->parent || !reg_node->parent->parent ||
++	    reg_node->parent->parent != ctx->of_node)
++		return 0;
 +
 +	return 1;
 +}
 +
-+/**
-+ * pwrseq_get() - Get the power sequencer associated with this device.
-+ * @dev: Device for which to get the sequencer.
-+ * @target: Name of the target exposed by the sequencer this device wants to
-+ *          reach.
-+ *
-+ * Returns:
-+ * New power sequencer descriptor for use by the consumer driver or ERR_PTR()
-+ * on failure.
-+ */
-+struct pwrseq_desc *pwrseq_get(struct device *dev, const char *target)
++static struct regulator_bulk_data *
++pwrseq_qca6390_get_regs(struct device *dev, size_t num_regs,
++			const struct pwrseq_qca6390_vreg *pdata)
 +{
-+	struct pwrseq_match_data match_data;
-+	int ret;
++	struct regulator_bulk_data *regs;
++	int ret, i;
 +
-+	struct pwrseq_desc *desc __free(kfree) = kzalloc(sizeof(*desc),
-+							 GFP_KERNEL);
-+	if (!desc)
++	regs = devm_kcalloc(dev, num_regs, sizeof(*regs), GFP_KERNEL);
++	if (!regs)
 +		return ERR_PTR(-ENOMEM);
 +
-+	match_data.desc = desc;
-+	match_data.dev = dev;
-+	match_data.target = target;
++	for (i = 0; i < num_regs; i++)
++		regs[i].supply = pdata[i].name;
 +
-+	guard(rwsem_read)(&pwrseq_sem);
-+
-+	ret = bus_for_each_dev(&pwrseq_bus, NULL, &match_data,
-+			       pwrseq_match_device);
++	ret = devm_regulator_bulk_get(dev, num_regs, regs);
 +	if (ret < 0)
 +		return ERR_PTR(ret);
-+	if (ret == 0)
-+		/* No device matched. */
-+		return ERR_PTR(-EPROBE_DEFER);
 +
-+	return no_free_ptr(desc);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_get);
++	for (i = 0; i < num_regs; i++) {
++		if (!pdata[i].load_uA)
++			continue;
 +
-+/**
-+ * pwrseq_put() - Release the power sequencer descriptor.
-+ * @desc: Descriptor to release.
-+ */
-+void pwrseq_put(struct pwrseq_desc *desc)
-+{
-+	struct pwrseq_device *pwrseq;
-+
-+	if (!desc)
-+		return;
-+
-+	pwrseq = desc->pwrseq;
-+
-+	if (desc->powered_on)
-+		pwrseq_power_off(desc);
-+
-+	kfree(desc);
-+	module_put(pwrseq->owner);
-+	pwrseq_device_put(pwrseq);
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_put);
-+
-+static void devm_pwrseq_put(void *data)
-+{
-+	struct pwrseq_desc *desc = data;
-+
-+	pwrseq_put(desc);
-+}
-+
-+/**
-+ * devm_pwrseq_get() - Managed variant of pwrseq_get().
-+ * @dev: Device for which to get the sequencer and which also manages its
-+ *       lifetime.
-+ * @target: Name of the target exposed by the sequencer this device wants to
-+ *          reach.
-+ *
-+ * Returns:
-+ * New power sequencer descriptor for use by the consumer driver or ERR_PTR()
-+ * on failure.
-+ */
-+struct pwrseq_desc *devm_pwrseq_get(struct device *dev, const char *target)
-+{
-+	struct pwrseq_desc *desc;
-+	int ret;
-+
-+	desc = pwrseq_get(dev, target);
-+	if (IS_ERR(desc))
-+		return desc;
-+
-+	ret = devm_add_action_or_reset(dev, devm_pwrseq_put, desc);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return desc;
-+}
-+EXPORT_SYMBOL_GPL(devm_pwrseq_get);
-+
-+static int pwrseq_unit_enable(struct pwrseq_device *pwrseq,
-+			      struct pwrseq_unit *target);
-+static int pwrseq_unit_disable(struct pwrseq_device *pwrseq,
-+			       struct pwrseq_unit *target);
-+
-+static int pwrseq_unit_enable_deps(struct pwrseq_device *pwrseq,
-+				   struct list_head *list)
-+{
-+	struct pwrseq_unit_dep *pos;
-+	int ret = 0;
-+
-+	list_for_each_entry(pos, list, list) {
-+		ret = pwrseq_unit_enable(pwrseq, pos->unit);
-+		if (ret) {
-+			list_for_each_entry_continue_reverse(pos, list, list)
-+				pwrseq_unit_disable(pwrseq, pos->unit);
-+			break;
-+		}
++		ret = regulator_set_load(regs[i].consumer, pdata[i].load_uA);
++		if (ret)
++			return ERR_PTR(ret);
 +	}
 +
-+	return ret;
++	return regs;
 +}
 +
-+static int pwrseq_unit_disable_deps(struct pwrseq_device *pwrseq,
-+				    struct list_head *list)
++static int pwrseq_qca6390_probe(struct platform_device *pdev)
 +{
-+	struct pwrseq_unit_dep *pos;
-+	int ret = 0;
++	struct device *dev = &pdev->dev;
++	struct pwrseq_qca6390_ctx *ctx;
++	struct pwrseq_config config;
 +
-+	list_for_each_entry_reverse(pos, list, list) {
-+		ret = pwrseq_unit_disable(pwrseq, pos->unit);
-+		if (ret) {
-+			list_for_each_entry_continue(pos, list, list)
-+				pwrseq_unit_enable(pwrseq, pos->unit);
-+			break;
-+		}
-+	}
++	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
 +
-+	return ret;
-+}
++	ctx->of_node = dev->of_node;
 +
-+static int pwrseq_unit_enable(struct pwrseq_device *pwrseq,
-+			      struct pwrseq_unit *unit)
-+{
-+	int ret;
++	ctx->pdata = of_device_get_match_data(dev);
++	if (!ctx->pdata)
++		return dev_err_probe(dev, -ENODEV,
++				     "Failed to obtain platform data\n");
 +
-+	if (unit->enable_count != 0) {
-+		unit->enable_count++;
-+		return 0;
-+	}
++	ctx->regs_common = pwrseq_qca6390_get_regs(dev,
++						   ctx->pdata->num_vregs_common,
++						   ctx->pdata->vregs_common);
++	if (IS_ERR(ctx->regs_common))
++		return dev_err_probe(dev, PTR_ERR(ctx->regs_common),
++				     "Failed to get all regulators\n");
 +
-+	ret = pwrseq_unit_enable_deps(pwrseq, &unit->deps);
-+	if (ret) {
-+		dev_err(&pwrseq->dev,
-+			"Failed to enable dependencies before power-on for target '%s': %d\n",
-+			unit->name, ret);
-+		return ret;
-+	}
++	ctx->regs_wlan = pwrseq_qca6390_get_regs(dev,
++						 ctx->pdata->num_vregs_wlan,
++						 ctx->pdata->vregs_wlan);
++	if (IS_ERR(ctx->regs_wlan))
++		return dev_err_probe(dev, PTR_ERR(ctx->regs_wlan),
++				     "Failed to get all regulators\n");
 +
-+	if (unit->enable) {
-+		ret = unit->enable(pwrseq);
-+		if (ret) {
-+			dev_err(&pwrseq->dev,
-+				"Failed to enable target '%s': %d\n",
-+				unit->name, ret);
-+			pwrseq_unit_disable_deps(pwrseq, &unit->deps);
-+			return ret;
-+		}
-+	}
++	ctx->bt_gpio = devm_gpiod_get_optional(dev, "bt-enable", GPIOD_OUT_LOW);
++	if (IS_ERR(ctx->bt_gpio))
++		return dev_err_probe(dev, PTR_ERR(ctx->bt_gpio),
++				     "Failed to get the Bluetooth enable GPIO\n");
 +
-+	unit->enable_count++;
++	ctx->wlan_gpio = devm_gpiod_get_optional(dev, "wlan-enable",
++						 GPIOD_OUT_LOW);
++	if (IS_ERR(ctx->wlan_gpio))
++		return dev_err_probe(dev, PTR_ERR(ctx->wlan_gpio),
++				     "Failed to get the WLAN enable GPIO\n");
++
++	memset(&config, 0, sizeof(config));
++
++	config.parent = dev;
++	config.owner = THIS_MODULE;
++	config.drvdata = ctx;
++	config.match = pwrseq_qca6390_match;
++	config.targets = pwrseq_qca6390_targets;
++
++	ctx->pwrseq = devm_pwrseq_device_register(dev, &config);
++	if (IS_ERR(ctx->pwrseq))
++		return dev_err_probe(dev, PTR_ERR(ctx->pwrseq),
++				     "Failed to register the power sequencer\n");
 +
 +	return 0;
 +}
 +
-+static int pwrseq_unit_disable(struct pwrseq_device *pwrseq,
-+			       struct pwrseq_unit *unit)
-+{
-+	int ret;
-+
-+	if (unit->enable_count == 0) {
-+		WARN_ONCE(1, "Unmatched power-off for target '%s'\n",
-+			  unit->name);
-+		return -EBUSY;
-+	}
-+
-+	if (unit->enable_count != 1) {
-+		unit->enable_count--;
-+		return 0;
-+	}
-+
-+	if (unit->disable) {
-+		ret = unit->disable(pwrseq);
-+		if (ret) {
-+			dev_err(&pwrseq->dev,
-+				"Failed to disable target '%s': %d\n",
-+				unit->name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	ret = pwrseq_unit_disable_deps(pwrseq, &unit->deps);
-+	if (ret) {
-+		dev_err(&pwrseq->dev,
-+			"Failed to disable dependencies after power-off for target '%s': %d\n",
-+			unit->name, ret);
-+		if (unit->enable)
-+			unit->enable(pwrseq);
-+		return ret;
-+	}
-+
-+	unit->enable_count--;
-+
-+	return 0;
-+}
-+
-+/**
-+ * pwrseq_power_on() - Issue a power-on request on behalf of the consumer
-+ *                     device.
-+ * @desc: Descriptor referencing the power sequencer.
-+ *
-+ * This function tells the power sequencer that the consumer wants to be
-+ * powered-up. The sequencer may already have powered-up the device in which
-+ * case the function returns 0. If the power-up sequence is already in
-+ * progress, the function will block until it's done and return 0. If this is
-+ * the first request, the device will be powered up.
-+ *
-+ * Returns:
-+ * 0 on success, negative error number on failure.
-+ */
-+int pwrseq_power_on(struct pwrseq_desc *desc)
-+{
-+	struct pwrseq_device *pwrseq;
-+	struct pwrseq_target *target;
-+	struct pwrseq_unit *unit;
-+	int ret;
-+
-+	might_sleep();
-+
-+	if (!desc || desc->powered_on)
-+		return 0;
-+
-+	pwrseq = desc->pwrseq;
-+	target = desc->target;
-+	unit = target->unit;
-+
-+	guard(rwsem_read)(&pwrseq->rw_lock);
-+	if (!device_is_registered(&pwrseq->dev))
-+		return -ENODEV;
-+
-+	scoped_guard(mutex, &pwrseq->state_lock) {
-+		ret = pwrseq_unit_enable(pwrseq, unit);
-+		if (!ret)
-+			desc->powered_on = true;
-+	}
-+
-+	if (target->post_enable) {
-+		ret = target->post_enable(pwrseq);
-+		if (ret) {
-+			pwrseq_unit_disable(pwrseq, unit);
-+			desc->powered_on = false;
-+		}
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_power_on);
-+
-+/**
-+ * pwrseq_power_off() - Issue a power-off request on behalf of the consumer
-+ *                      device.
-+ * @desc: Descriptor referencing the power sequencer.
-+ *
-+ * This undoes the effects of pwrseq_power_on(). It issues a power-off request
-+ * on behalf of the consumer and when the last remaining user does so, the
-+ * power-down sequence will be started. If one is in progress, the function
-+ * will block until it's complete and then return.
-+ *
-+ * Returns:
-+ * 0 on success, negative error number on failure.
-+ */
-+int pwrseq_power_off(struct pwrseq_desc *desc)
-+{
-+	struct pwrseq_device *pwrseq;
-+	struct pwrseq_unit *unit;
-+	int ret;
-+
-+	might_sleep();
-+
-+	if (!desc || !desc->powered_on)
-+		return 0;
-+
-+	pwrseq = desc->pwrseq;
-+	unit = desc->target->unit;
-+
-+	guard(rwsem_read)(&pwrseq->rw_lock);
-+	if (!device_is_registered(&pwrseq->dev))
-+		return -ENODEV;
-+
-+	guard(mutex)(&pwrseq->state_lock);
-+
-+	ret = pwrseq_unit_disable(pwrseq, unit);
-+	if (!ret)
-+		desc->powered_on = false;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pwrseq_power_off);
-+
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+
-+struct pwrseq_debugfs_count_ctx {
-+	struct device *dev;
-+	loff_t index;
++static const struct of_device_id pwrseq_qca6390_of_match[] = {
++	{
++		.compatible = "qcom,qca6390-pmu",
++		.data = &pwrseq_qca6390_of_data,
++	},
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, pwrseq_qca6390_of_match);
 +
-+static int pwrseq_debugfs_seq_count(struct device *dev, void *data)
-+{
-+	struct pwrseq_debugfs_count_ctx *ctx = data;
-+
-+	ctx->dev = dev;
-+
-+	return ctx->index-- ? 0 : 1;
-+}
-+
-+static void *pwrseq_debugfs_seq_start(struct seq_file *seq, loff_t *pos)
-+{
-+	struct pwrseq_debugfs_count_ctx ctx;
-+
-+	ctx.dev = NULL;
-+	ctx.index = *pos;
-+
-+	/*
-+	 * We're holding the lock for the entire printout so no need to fiddle
-+	 * with device reference count.
-+	 */
-+	down_read(&pwrseq_sem);
-+
-+	bus_for_each_dev(&pwrseq_bus, NULL, &ctx, pwrseq_debugfs_seq_count);
-+	if (!ctx.index)
-+		return NULL;
-+
-+	return ctx.dev;
-+}
-+
-+static void *pwrseq_debugfs_seq_next(struct seq_file *seq, void *data,
-+				     loff_t *pos)
-+{
-+	struct device *curr = data;
-+
-+	++*pos;
-+
-+	struct device *next __free(put_device) =
-+			bus_find_next_device(&pwrseq_bus, curr);
-+	return next;
-+}
-+
-+static void pwrseq_debugfs_seq_show_target(struct seq_file *seq,
-+					   struct pwrseq_target *target)
-+{
-+	seq_printf(seq, "    target: [%s] (target unit: [%s])\n",
-+		   target->name, target->unit->name);
-+}
-+
-+static void pwrseq_debugfs_seq_show_unit(struct seq_file *seq,
-+					 struct pwrseq_unit *unit)
-+{
-+	struct pwrseq_unit_dep *ref;
-+
-+	seq_printf(seq, "    unit: [%s] - enable count: %u\n",
-+		   unit->name, unit->enable_count);
-+
-+	if (list_empty(&unit->deps))
-+		return;
-+
-+	seq_puts(seq, "      dependencies:\n");
-+	list_for_each_entry(ref, &unit->deps, list)
-+		seq_printf(seq, "        [%s]\n", ref->unit->name);
-+}
-+
-+static int pwrseq_debugfs_seq_show(struct seq_file *seq, void *data)
-+{
-+	struct device *dev = data;
-+	struct pwrseq_device *pwrseq = to_pwrseq_device(dev);
-+	struct pwrseq_target *target;
-+	struct pwrseq_unit *unit;
-+
-+	seq_printf(seq, "%s:\n", dev_name(dev));
-+
-+	seq_puts(seq, "  targets:\n");
-+	list_for_each_entry(target, &pwrseq->targets, list)
-+		pwrseq_debugfs_seq_show_target(seq, target);
-+
-+	seq_puts(seq, "  units:\n");
-+	list_for_each_entry(unit, &pwrseq->units, list)
-+		pwrseq_debugfs_seq_show_unit(seq, unit);
-+
-+	return 0;
-+}
-+
-+static void pwrseq_debugfs_seq_stop(struct seq_file *seq, void *data)
-+{
-+	up_read(&pwrseq_sem);
-+}
-+
-+static const struct seq_operations pwrseq_debugfs_sops = {
-+	.start = pwrseq_debugfs_seq_start,
-+	.next = pwrseq_debugfs_seq_next,
-+	.show = pwrseq_debugfs_seq_show,
-+	.stop = pwrseq_debugfs_seq_stop,
++static struct platform_driver pwrseq_qca6390_driver = {
++	.driver = {
++		.name = "pwrseq-qca6390",
++		.of_match_table = pwrseq_qca6390_of_match,
++	},
++	.probe = pwrseq_qca6390_probe,
 +};
-+DEFINE_SEQ_ATTRIBUTE(pwrseq_debugfs);
-+
-+static struct dentry *pwrseq_debugfs_dentry;
-+
-+#endif /* CONFIG_DEBUG_FS */
-+
-+static int __init pwrseq_init(void)
-+{
-+	int ret;
-+
-+	ret = bus_register(&pwrseq_bus);
-+	if (ret) {
-+		pr_err("Failed to register the power sequencer bus\n");
-+		return ret;
-+	}
-+
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+	pwrseq_debugfs_dentry = debugfs_create_file("pwrseq", 0444, NULL, NULL,
-+						    &pwrseq_debugfs_fops);
-+#endif  /* CONFIG_DEBUG_FS */
-+
-+	return 0;
-+}
-+subsys_initcall(pwrseq_init);
-+
-+static void __exit pwrseq_exit(void)
-+{
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+	debugfs_remove_recursive(pwrseq_debugfs_dentry);
-+#endif  /* CONFIG_DEBUG_FS */
-+
-+	bus_unregister(&pwrseq_bus);
-+}
-+module_exit(pwrseq_exit);
++module_platform_driver(pwrseq_qca6390_driver);
 +
 +MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_DESCRIPTION("Power Sequencing subsystem core");
++MODULE_DESCRIPTION("QCA6390 PMU power sequencing driver");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/pwrseq/consumer.h b/include/linux/pwrseq/consumer.h
-new file mode 100644
-index 000000000000..7d583b4f266e
---- /dev/null
-+++ b/include/linux/pwrseq/consumer.h
-@@ -0,0 +1,56 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#ifndef __POWER_SEQUENCING_CONSUMER_H__
-+#define __POWER_SEQUENCING_CONSUMER_H__
-+
-+#include <linux/err.h>
-+
-+struct device;
-+struct pwrseq_desc;
-+
-+#if IS_ENABLED(CONFIG_POWER_SEQUENCING)
-+
-+struct pwrseq_desc * __must_check
-+pwrseq_get(struct device *dev, const char *target);
-+void pwrseq_put(struct pwrseq_desc *desc);
-+
-+struct pwrseq_desc * __must_check
-+devm_pwrseq_get(struct device *dev, const char *target);
-+
-+int pwrseq_power_on(struct pwrseq_desc *desc);
-+int pwrseq_power_off(struct pwrseq_desc *desc);
-+
-+#else /* CONFIG_POWER_SEQUENCING */
-+
-+static inline struct pwrseq_desc * __must_check
-+pwrseq_get(struct device *dev, const char *target)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
-+static inline void pwrseq_put(struct pwrseq_desc *desc)
-+{
-+}
-+
-+static inline struct pwrseq_desc * __must_check
-+devm_pwrseq_get(struct device *dev, const char *target)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+
-+static inline int pwrseq_power_on(struct pwrseq_desc *desc)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int pwrseq_power_off(struct pwrseq_desc *desc)
-+{
-+	return -ENOSYS;
-+}
-+
-+#endif /* CONFIG_POWER_SEQUENCING */
-+
-+#endif /* __POWER_SEQUENCING_CONSUMER_H__ */
-diff --git a/include/linux/pwrseq/provider.h b/include/linux/pwrseq/provider.h
-new file mode 100644
-index 000000000000..e627ed2f4d91
---- /dev/null
-+++ b/include/linux/pwrseq/provider.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#ifndef __POWER_SEQUENCING_PROVIDER_H__
-+#define __POWER_SEQUENCING_PROVIDER_H__
-+
-+struct device;
-+struct module;
-+struct pwrseq_device;
-+
-+typedef int (*pwrseq_power_state_func)(struct pwrseq_device *);
-+typedef int (*pwrseq_match_func)(struct pwrseq_device *, struct device *);
-+
-+/**
-+ * struct pwrseq_unit_data - Configuration of a single power sequencing
-+ *                           unit.
-+ * @name: Name of the unit.
-+ * @deps: Units that must be enabled before this one and disabled after it
-+ *        in the order they come in this array.
-+ * @enable: Callback running the part of the power-on sequence provided by
-+ *          this unit.
-+ * @disable: Callback running the part of the power-off sequence provided
-+ *           by this unit.
-+ */
-+struct pwrseq_unit_data {
-+	const char *name;
-+	const struct pwrseq_unit_data **deps;
-+	pwrseq_power_state_func enable;
-+	pwrseq_power_state_func disable;
-+};
-+
-+/**
-+ * struct pwrseq_target_data - Configuration of a power sequencing target.
-+ * @name: Name of the target.
-+ * @unit: Final unit that this target must reach in order to be considered
-+ *        enabled.
-+ * @post_enable: Callback run after the target unit has been enabled, *after*
-+ *               the state lock has been released. It's useful for implementing
-+ *               boot-up delays without blocking other users from powering up
-+ *               using the same power sequencer.
-+ */
-+struct pwrseq_target_data {
-+	const char *name;
-+	const struct pwrseq_unit_data *unit;
-+	pwrseq_power_state_func post_enable;
-+};
-+
-+/**
-+ * struct pwrseq_config - Configuration used for registering a new provider.
-+ * @parent: Parent device for the sequencer. Must be set.
-+ * @owner: Module providing this device.
-+ * @drvdata: Private driver data.
-+ * @match: Provider callback used to match the consumer device to the sequencer.
-+ * @targets: Array of targets for this power sequencer. Must be NULL-terminated.
-+ */
-+struct pwrseq_config {
-+	struct device *parent;
-+	struct module *owner;
-+	void *drvdata;
-+	pwrseq_match_func match;
-+	const struct pwrseq_target_data **targets;
-+};
-+
-+struct pwrseq_device *
-+pwrseq_device_register(const struct pwrseq_config *config);
-+void pwrseq_device_unregister(struct pwrseq_device *pwrseq);
-+struct pwrseq_device *
-+devm_pwrseq_device_register(struct device *dev,
-+			    const struct pwrseq_config *config);
-+
-+void *pwrseq_device_get_drvdata(struct pwrseq_device *pwrseq);
-+
-+#endif /* __POWER_SEQUENCING_PROVIDER_H__ */
 -- 
 2.40.1
 
