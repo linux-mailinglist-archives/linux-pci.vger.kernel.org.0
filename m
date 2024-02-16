@@ -1,140 +1,126 @@
-Return-Path: <linux-pci+bounces-3617-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3618-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0E5B858438
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 18:36:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C84BD85849B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 18:53:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B53B285C20
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 17:36:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 690A01F221DF
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 17:53:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5600C13473D;
-	Fri, 16 Feb 2024 17:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 511C3133401;
+	Fri, 16 Feb 2024 17:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KPrPgQZM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cfQGC+s2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEB2134750
-	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 17:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B14A1332A0;
+	Fri, 16 Feb 2024 17:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708104926; cv=none; b=u3ZPy+D6+enAz7g7CAz36K+wl2v59kdqkpSKTFhcNfARPm8m7ei0ojXbMZHOzinm4jH8kFcLg2eQXqxxQ+bN7/QCU7BLhkLT0apJ6RExUvB0vkYfKr5EmRvpFdZ3Ku1EvEq7Lp6LRo2mMW7ovrQEsok/siwWWTP738L2D0nwHvA=
+	t=1708106023; cv=none; b=NneeMsP7oVQED+T6yzhJedQgcPaAx+XJ3vwesWMqRFi7zY1mQ2G4MWTihWJcu5jIu+MNqe45olUvtpVG2DvUtAu48xng9Nw8cwujttc8q9E61JY1VNMvKpdiNwFguBkmBozgrk4Ax+mX2KDucWgRZfFQgYgZ9a5B301IQ2qKPaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708104926; c=relaxed/simple;
-	bh=R1GLPwlYfMEGgtPbyaSg7QFWg/JNBX3HH10DnKKcCK4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gvwPDV/jp5Sdqapww8ws1Km6HkIsYXt4OJue8AkrGYDpN9+ld/9CZwwdGfI45CuTzn+o+FlkaM+DWuB5zICMJ2/ApGy6WloDGldBK2z38m4XSqTHiqzPOyQlZqQU7qH6Uxxfqf+ymWwBPOVqplLzoZJhiNv6+L5+CQ+NWZ41QBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KPrPgQZM; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d91397bd22so19944275ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 09:35:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708104923; x=1708709723; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kWuu4IaCb+ecu+2X4FcUxgf2SPat8siMwG6Oun2YK2w=;
-        b=KPrPgQZMwL1HCPXC7wBU5oYFvj++78+R55108VsQBi9jWS3x1PBHwgZBUJwMGjt/Xv
-         WVjSaOp7tOYhLOP8O6I0ZLqJ4/Wu4fg/CkBFN8IyfO5ycTtacmT9czYIuhMMhjPKJVia
-         4h95pCe9D530v3bQIKJ+XaL0xamOufrpXZUtpbssjW+t8I1RHatNGdiudZkqkMjtW9q6
-         VfT7l2oCkFqsAJEa9U1KrPRxjlj+O9vPKqtcpRA58/2JEf5wlDoF0ry+Opw7fH6EmOin
-         32bAYoR8TAcbdnquUDA6xZeNuJnknd9ZgmUAebdqOR29ir+Rdega9Q9mrcqdCcXQatGd
-         QPVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708104923; x=1708709723;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kWuu4IaCb+ecu+2X4FcUxgf2SPat8siMwG6Oun2YK2w=;
-        b=eDnFRWcI8Cnn83Sz0uLXuDxlnFuekMS31fjqNvPWEAxjX2365dTCl7q2+Ed+l1eUci
-         ls0EWLqQYEIzQB71/g8UbGAfI5omS4ZbawZGsLWark8bOOO0WmqTKgIKsstBO9HvdhSt
-         FOIc11byaj/dRLt4Ho8z0fE5IKNZ5mNpx2nqXYr6eATplP1aiA7ckEqKVOmOfs66r0HK
-         SKsFYI7+8RAyAQMLt6EVXlROt0HCINpHcy8Gfw1d6U2G07hx+XSq3JE3k+JJlnN26y0c
-         oB6ZB8G+3VCHMxLYTlqT2RYFL7BgxV1q7LC796rUiWCzlDG8HQtCsEwhrwL0febwD+Py
-         VLLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHSgKcT9L5pILo1RCoXigyGX/coK6yB728G1WUn83Bq8+emdyoxsQZy7CSpKfMaZbadK2UyXkqpDSDjtPjj81ok6UGsSmPxbR+
-X-Gm-Message-State: AOJu0YwV2fakZjyyLkvxSCObp9NCIoVXNG9Dr2ceF0UPPVVxSqqVkq6l
-	G4Duy6N048/yiunf7hMm/WKKITR2pi9UVC8a6ien7NYWjsCNovZoPmyQ3IvQZg==
-X-Google-Smtp-Source: AGHT+IGdCXZredO/BC7qQxhRij/KCAb3j/MIg4DPBT6lo3YCmbYRREkXZE3AZg1N6MirSxETbxerBw==
-X-Received: by 2002:a17:902:ea12:b0:1db:ae5f:a38d with SMTP id s18-20020a170902ea1200b001dbae5fa38dmr2114924plg.5.1708104923231;
-        Fri, 16 Feb 2024 09:35:23 -0800 (PST)
-Received: from [127.0.1.1] ([120.138.12.48])
-        by smtp.gmail.com with ESMTPSA id v9-20020a170902b7c900b001db5241100fsm118592plz.183.2024.02.16.09.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 09:35:22 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Fri, 16 Feb 2024 23:04:44 +0530
-Subject: [PATCH v2 5/5] PCI: epf-mhi: Enable HDMA for SA8775P SoC
+	s=arc-20240116; t=1708106023; c=relaxed/simple;
+	bh=JPbrPrP1ijVSXKNmyURydafvZaHC6pe91ZQgbIkuRYc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eyXyfDiKRunjfMw/gYuFaVDB4HX3258WwCdwnp/xlHnU25rgwxiTKusG7n7QMs/cKltKGNqo4BR3jyrywe02bnDXPSsghIu4ALlmk8nTNrFB5U59tmwJmfIgeSB4s4VucwJv0fTGqfK6PRh3IJHCdrs81C26bhOUqheNcvxBMYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cfQGC+s2; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708106022; x=1739642022;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JPbrPrP1ijVSXKNmyURydafvZaHC6pe91ZQgbIkuRYc=;
+  b=cfQGC+s2whq7zOLn+SMUOtrmFy7nn9LZb4H0T3laC5F/x/WtTZKtUK7X
+   uGIeXnmtNRYclVQiX6jxW8iKD4Nhmb5HlBskLdvGqI/0l6gwz8BjFr8WM
+   ZmRAem2sRAK19oy+zW+mbQaRl9aN5XlEGrIdcmtAwX2ZHAUSzHRfY0Ocz
+   pxBpQvYKwJfKtIr9chZp0kexg2HOjVyBj9Q+Q4rIr8H0mwnY/NelFhRHc
+   WA3EEKaQl0es+jtjPQ2wWwLPt38EfqLppXefIwILZiJrBL6H3A1UBBmLv
+   PoeKF0rI1u3Wl5L3dXVDJefohW15ritt3OTNNXfNBmEBcgnRiWLRvpW0V
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="6018250"
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="6018250"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 09:53:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
+   d="scan'208";a="4180210"
+Received: from bfraley-mobl.amr.corp.intel.com (HELO [10.209.109.53]) ([10.209.109.53])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 09:53:40 -0800
+Message-ID: <93c91582-ae3b-47a6-98f8-d3a7cf74313e@linux.intel.com>
+Date: Fri, 16 Feb 2024 09:53:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] PCI: Increase maximum PCIe physical function number to
+ 7 for non-ARI devices
+Content-Language: en-US
+To: Bean Huo <beanhuo@iokpp.de>, bhelgaas@google.com, schnelle@linux.ibm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bean Huo <beanhuo@micron.com>
+References: <20240216172449.8052-1-beanhuo@iokpp.de>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240216172449.8052-1-beanhuo@iokpp.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240216-dw-hdma-v2-5-b42329003f43@linaro.org>
-References: <20240216-dw-hdma-v2-0-b42329003f43@linaro.org>
-In-Reply-To: <20240216-dw-hdma-v2-0-b42329003f43@linaro.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Mrinmay Sarkar <quic_msarkar@quicinc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=919;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=l9TZl5f3ruMfAhDvync60x+vuqThCg8E95q3H1HbSYw=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBlz5y+NwBcDBvMsgLY/9ArhUeU4RtpAOkSNOPA0
- cL+6HT1tTCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZc+cvgAKCRBVnxHm/pHO
- 9YdiB/9TA+DKLXxIZYpi/4hnMyIkUsM2WJIWyQ6w7vRVyPe9xkvRVouAEDo3kakdlZprxiUhdRE
- RVaU7JFkgelmHQuyS7am0hGDZJpDmEmPrmuGigJlrygDliRLE85n5WP2vnnN7WKQuYN+W8HQnv0
- l0f9zuR0+G+HEp9D1og10j/2BOueS6fmgssxK8rtfpi2VW+6FgY0KiiqpsWdUq7od5/Ucw2nR1F
- NbjzPj1POiJNg12Bi3HrhcTLZjvb0KwfS/lV5Mj1NKvbtl2anyrbqaqqbejjAuqCSzx91cCovSW
- ddbe/L2NDfdpqcgHjOuBkoP+92IIH3SP4KN6C52nTmQjmNqV
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-SA8775P SoC supports Hyper DMA (HDMA) DMA Engine present in the DWC IP. So,
-let's enable it in the EPF driver so that the DMA Engine APIs can be used
-for data transfer.
+On 2/16/24 9:24 AM, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
+>
+> The PCIe specification allows up to 8 Physical Functions (PFs) per endpoint
+> when ARI (Alternative Routing-ID Interpretation) is not supported. Previously,
+> our implementation erroneously limited the maximum number of PFs to 7 for
+> endpoints without ARI support.
+Can you include the spec section and revision details?
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-[mani: reworded commit message]
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 1 +
- 1 file changed, 1 insertion(+)
+I assume it is section "Alternative Routing-ID Interpretation"
+>
+> This patch corrects the maximum PF count to adhere to the PCIe specification
+> by allowing up to 8 PFs on non-ARI endpoints. This change ensures better
+> compliance with the standard and improves compatibility with devices relying
+> on this specification.
+>
+> This adjustment was verified against the PCIe spec (reference specific
+> sections if applicable) and tested with a range of PCIe devices not supporting
+> ARI to ensure no regressions in functionality.
+>
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index 2c54d80107cf..570c1d1fb12e 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -137,6 +137,7 @@ static const struct pci_epf_mhi_ep_info sa8775p_info = {
- 	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
- 	.msi_count = 32,
- 	.mru = 0x8000,
-+	.flags = MHI_EPF_USE_DMA,
- };
- 
- struct pci_epf_mhi {
+Since it is a bug fix, I think you need a Fixes: tag as well.
+
+>  drivers/pci/probe.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index ed6b7f48736a..8c3d0f63bc13 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2630,7 +2630,8 @@ static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
+>  	if (pci_ari_enabled(bus))
+>  		return next_ari_fn(bus, dev, fn);
+>  
+> -	if (fn >= 7)
+> +	/* If EP does not support ARI, the maximum number of functions should be 7 */
+> +	if (fn > 7)
+>  		return -ENODEV;
+>  	/* only multifunction devices may have more functions */
+>  	if (dev && !dev->multifunction)
 
 -- 
-2.25.1
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
