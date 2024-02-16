@@ -1,88 +1,109 @@
-Return-Path: <linux-pci+bounces-3589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3583-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14C1E857BA3
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 12:29:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBF2F857B2E
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 12:09:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 478E81C23C91
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 11:29:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EB2C2877A7
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Feb 2024 11:09:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B4D853E24;
-	Fri, 16 Feb 2024 11:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3CB5813B;
+	Fri, 16 Feb 2024 11:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wedekind.de header.i=@wedekind.de header.b="pTVl6j3+"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pu19fIin"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.wedekind.de (mail.karten-team.de [80.153.46.124])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A6C77642
-	for <linux-pci@vger.kernel.org>; Fri, 16 Feb 2024 11:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.153.46.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37501535DD;
+	Fri, 16 Feb 2024 11:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708082984; cv=none; b=HN7yvhChW641W9nFS1B4R81fhrTCkAeIILj4tu9Dl5X9a6uPH1z7ivzN6vPqqzZOfhp7q4+mgwCLK7tf5f/20F76HSQZ6qrfXVGQegSHUgOquw+fEBhLj8KJ/vvhGb3cup+rwQT5u0cpPJwdbeySTAqlzsTQ9/MGaG/wSx5oZnI=
+	t=1708081764; cv=none; b=mIOrDdBt3xsLQaj31Rksv0VA1uBRpUnnR1gvlbNGVLjOE1wz2Olyykb5qoyHvzrqTyp+4JWPdGm/AP1FHJpGhthkruZu37x9PfK4njsTpnUn5+QSPuVKTvj0f3mcEmG0Pvx+SPR+LWqT8MHrw8l257LO8VpzDuOgdo7aTLfmffw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708082984; c=relaxed/simple;
-	bh=M31Lww9iMMUck2dNB0oMid/OzfSBeWz5agwnwgJqvww=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BLIcvNouOlCwl1ypQHfQhkC3CL/bdbCrhpI/oGSM2wEtkUAoBAwJp66BTWgiJKazmPcgBwVGO9Dbj24mmqvNpkbuxENKlWUNmWEjhFSVFeOlMmooF2MdggmMiy7BIr+cexr1Oti2QyIJoUzVEeTv5dVY4cQKF1lSiRf7YV8JY+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wedekind.de; spf=pass smtp.mailfrom=joerg.wedekind.de; dkim=pass (1024-bit key) header.d=wedekind.de header.i=@wedekind.de header.b=pTVl6j3+; arc=none smtp.client-ip=80.153.46.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wedekind.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joerg.wedekind.de
-X-Virus-Scanned: amavisd-new at wedekind.de
-Received: from 127.0.0.1 (helo=authenticated.user-IP.removed)
-	(authenticated bits=0)
-	by wedekind.de (8.17.1/8.17.1/SUSE Linux 0.8) with ESMTPSA id 41GAq3ek014223
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO); Fri, 16 Feb 2024 11:52:04 +0100
-	(envelope-from joerg@joerg.wedekind.de)
-DKIM-Filter: OpenDKIM Filter v2.11.0 wedekind.de 41GAq3ek014223
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wedekind.de;
-	s=mail201912; t=1708080724;
-	bh=M31Lww9iMMUck2dNB0oMid/OzfSBeWz5agwnwgJqvww=;
-	h=From:To:Cc:Subject:Date;
-	b=pTVl6j3+sfopDBo3OF46nl2/a8JmXvtW4nBvAezjaxT/x7BdlTvW8axEm/6+sMkyh
-	 ZrCZgqUY2mxMP8CMg/qr06kASxWpel5ExdwQVc8MwkEqwQhLJJQQgcfWB+sqIPx4Gt
-	 NZFw8XSxKsPj7Q57musVNlMdIG2Nt7gpeKRUa9Fo=
-Received: by joerg.wedekind.de (Postfix, from userid 1000)
-	id 8208F4176F; Fri, 16 Feb 2024 11:52:03 +0100 (CET)
-From: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>
-To: linux-pci@vger.kernel.org
-Cc: aradford@gmail.com, linux@3ware.com,
-        =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>
-Subject: [PATCH] drivers/pci: disable extension-tags on 3w-9xxx controller
-Date: Fri, 16 Feb 2024 11:51:41 +0100
-Message-Id: <20240216105141.9607-1-joerg@wedekind.de>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1708081764; c=relaxed/simple;
+	bh=VoIm7bG7xdxeX1Ve84YA5mgH1w68YbeyVDn/kcEb2Ns=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=L1KetItU0In3bjJ9P56MH/J+Eljapb8yABLYD7ebsKJFXLfwJHKu2s4diUeum693Erq/0arlDlgN7lxBub/TpZ0dLSBpfyd3uXt0Faml8Copqbg+4b0zdXf6vK+QpdAVFbiNNgiOhdiBbtn3+fFZmlxjwCin5ytUrt9rp6cyo0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pu19fIin; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C1D3EFF807;
+	Fri, 16 Feb 2024 11:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708081759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VoIm7bG7xdxeX1Ve84YA5mgH1w68YbeyVDn/kcEb2Ns=;
+	b=pu19fIindWoyvl+UGjcMcq0t+6LJjVczMtqO7ZZb4KGzFo4HYYZa89THhOrO2/5B+ftg7b
+	YjSeimNZDgnx7EQscGzkSBZcYAS6+CezQS8UgDZiuHuaOnObzJBP20rocAZNF8IomgpHA2
+	Av5ymPoGLmO4ztX+HCX1kn3h9Bkg26z1b6omSa6oJlDiQafr7OX2mSBONtWifEX8frY17p
+	yHiYMKESalbmWEcskaoL+yv2hXLk6GWqU3RsrzopcgLnCFiBa/mEPgJD5GaD1mHTQtatb7
+	VRK1dcwRCRGRgUVjrrMGy7jr3GNvaLoGb1imMlWSxUCstw1pmHELoBGOiNulnA==
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=202425
-Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (wedekind.de [192.168.17.251]); Fri, 16 Feb 2024 11:52:04 +0100 (CET)
+Date: Fri, 16 Feb 2024 12:09:17 +0100
+Message-Id: <CZ6GG6OQUJTX.2OM5TC9YLOAXV@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 18/18] PCI: j721e: add suspend and resume support
+Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski"
+ <brgl@bgdev.pl>, "Andy Shevchenko" <andy@kernel.org>, "Tony Lindgren"
+ <tony@atomide.com>, "Haojian Zhuang" <haojian.zhuang@linaro.org>, "Vignesh
+ R" <vigneshr@ti.com>, "Aaro Koskinen" <aaro.koskinen@iki.fi>, "Janusz
+ Krzysztofik" <jmkrzyszt@gmail.com>, "Andi Shyti" <andi.shyti@kernel.org>,
+ "Peter Rosin" <peda@axentia.se>, "Vinod Koul" <vkoul@kernel.org>, "Kishon
+ Vijay Abraham I" <kishon@kernel.org>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, "Rob Herring"
+ <robh@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+ <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+ <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
+ <thomas.petazzoni@bootlin.com>, <u-kumar1@ti.com>
+To: "Siddharth Vadapalli" <s-vadapalli@ti.com>, "Thomas Richard"
+ <thomas.richard@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
+ <aa791703-81d8-420c-ba35-c8fd08bc3f07@ti.com>
+In-Reply-To: <aa791703-81d8-420c-ba35-c8fd08bc3f07@ti.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
----
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+Hello,
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d797df6e5f3e..2ebbe51a7efe 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5527,6 +5527,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
- 
- 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
- }
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
--- 
-2.35.3
+On Fri Feb 16, 2024 at 11:48 AM CET, Siddharth Vadapalli wrote:
+> On 24/02/15 04:18PM, Thomas Richard wrote:
+> > From: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> >=20
+> > Add suspend and resume support. Only the rc mode is supported.
+> >=20
+> > During the suspend stage PERST# is asserted, then deasserted during the
+> > resume stage.
+>
+> Wouldn't this imply that the Endpoint device will be reset and therefore
+> lose context? Or is it expected that the driver corresponding to the
+> Endpoint Function in Linux will restore the state on resume, post reset?
 
+This does imply exactly that. Endpoint driver must be able to restore
+context anyway, as system-wide suspend could mean lost power to PCI RC
+controller (eg suspend-to-RAM) or PCI rails (dependent on hardware).
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
