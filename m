@@ -1,128 +1,120 @@
-Return-Path: <linux-pci+bounces-3658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8DD3858D84
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 07:35:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E31E9858FB4
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 14:38:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CA34282B8E
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 06:35:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2697F1C21117
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 13:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 872CD1BDD8;
-	Sat, 17 Feb 2024 06:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88AEE7AE58;
+	Sat, 17 Feb 2024 13:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUalBi4V"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="EX95BqER"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3974ADF44;
-	Sat, 17 Feb 2024 06:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010A94E1D2
+	for <linux-pci@vger.kernel.org>; Sat, 17 Feb 2024 13:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708151702; cv=none; b=KhS9/UYcTPgsyQsttcZeflvpZRfMTc7XhzqnTdsM4ud5G2DEKJYnjX6x2g+UCc5qfRGGZLaVHLqtiZqBoXY9Y6lKpsLqskKcKK/bFVMaMINdMJD7UEjfyjz/77uX6FRTXxg58RLqsM4W/odxt0eTl+rKwLz247lHJ5bWAyKdObQ=
+	t=1708177105; cv=none; b=FaJvSr0CjevcYYLULEUWUurl0Ksa9b7nyeCGZ7ANaiHvgwScNstxvwGtF16caW3F3f5WY3MlxjeOVuk+6lSii1DBxTOXuwUKT3Kq5T5RAUokA7hMi2BXFMEhelE5WZwhiDYK9kSiMk8XiMw2ucz1nNPebmSyTJktBe1qRjE9Xis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708151702; c=relaxed/simple;
-	bh=P9v5bwlS7CEx0RGF6l5RaEMQEbJkoeMSl0AVCOm8vZY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=HLWqx8eysvc2DJCFXMh1MoLJeAm5dMzVZ2GkAzp4wFfPs5c9177WWC3khY2GDHtWZAYnKk6NpDNLcYDJEwE9SK9gpq3ZyFgczqC4yEHKMlLw1dkuDrcavW8nHdojWzNuqJD1p/KQLLcaM8icd+Scg85RvRSurzAXCbW+VcTesDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUalBi4V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3882C433C7;
-	Sat, 17 Feb 2024 06:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708151701;
-	bh=P9v5bwlS7CEx0RGF6l5RaEMQEbJkoeMSl0AVCOm8vZY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=PUalBi4VP+acTF5G4CtuSGC3cR8sQbK3vDeWzN46QQLixXZLxuyUXwthX0sl9EHUf
-	 LpsdqZzpsOwOxRH2yD+qTppUTUgQpSLvZFiQFDr+s/glNQTDza4ujEzNd4pCrodZnh
-	 yDMnaOJgndboanGlyO53uXPVLI/apL+vO6VZAnbNkF1rgdngRR9+5zYFltwnFPJQAr
-	 crS5pF1cQ52gePqMPhy9D5jtr4rXQGmB7vDXDyA3i8lj11G0eOdB1QkcvahmudtwA9
-	 eJwEXWM05Jxj6HaI3LZpt0woUQjXrhmDdLHa9fJ+XBHqCuiiBz2v5n4PeZbD9mpVXq
-	 F7OZs8l+23rhA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-    Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,  Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>,  "David S . Miller" <davem@davemloft.net>,  Eric
- Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
- Abeni <pabeni@redhat.com>,  Rob Herring <robh@kernel.org>,  Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
- <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
- Dybcio <konrad.dybcio@linaro.org>,  Liam Girdwood <lgirdwood@gmail.com>,
-  Mark Brown <broonie@kernel.org>,  Catalin Marinas
- <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,  Saravana Kannan <saravanak@google.com>,  Geert
- Uytterhoeven <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,
-  Neil Armstrong <neil.armstrong@linaro.org>,  Marek Szyprowski
- <m.szyprowski@samsung.com>,  Alex Elder <elder@linaro.org>,  Srini
- Kandagatla <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Abel Vesa <abel.vesa@linaro.org>,
-  Manivannan Sadhasivam <mani@kernel.org>,  Lukas Wunner <lukas@wunner.de>,
-  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-  linux-bluetooth@vger.kernel.org,  netdev@vger.kernel.org,
-  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-wireless@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
-  linux-pm@vger.kernel.org,  Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v5 06/18] dt-bindings: new: wireless: describe the
- ath12k PCI module
-References: <20240216203215.40870-1-brgl@bgdev.pl>
-	<20240216203215.40870-7-brgl@bgdev.pl>
-Date: Sat, 17 Feb 2024 08:34:52 +0200
-In-Reply-To: <20240216203215.40870-7-brgl@bgdev.pl> (Bartosz Golaszewski's
-	message of "Fri, 16 Feb 2024 21:32:03 +0100")
-Message-ID: <87cysvd2er.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1708177105; c=relaxed/simple;
+	bh=w0ROUewTInuPq2j3gG9LCyrZgq9TO2ZUFdX4bS+6Okw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FuANqq8EwqFWtKl3+KC9VLb4EkgwaLGKQDEqAQq73J+9Mxi+tm0YAi9vALs1iRIqxoTrG9ENRKSzyfR/9ASBt0EDyLJAbIOwmT8xt7Kj8tKGL3P2HZtTm04Vq0ld8ds71Vb0G/w6lw1b+qqETJzmMXRk7dzbz8WzmP6MtltdRqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=EX95BqER; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1708177080; x=1708781880; i=wahrenst@gmx.net;
+	bh=w0ROUewTInuPq2j3gG9LCyrZgq9TO2ZUFdX4bS+6Okw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=EX95BqER6kYpS4iS4P9ZvtTUxzyp8oWAwmQLr1UE2fGFe49xGtJQUIxH3CZGzWUK
+	 GqjuJsamwrVFtdFIwNdolU6XQbCche6VuFSmMCGo+4QA9EaLSh1TCWyn34chXHUvI
+	 JiHXiNSK7ew+U19dx8VAbE1pMk55IaOsB77+O7Q/VA1B3moy6z6XuRBnMbcOKCPP7
+	 Pc2g7PxzlVz/9zZ0D+1A55R3scVNabM8wfv3GC+U/U/1zskESsXtui+zDg7yz18SS
+	 V+OTLOUlfG8mK5YHUEo9w4nJYH7Wdxt4WNa2mq+r7LE/lXaCNm6Oe4qkuP7QQgOKc
+	 zUIKDfZQsBhLglcQUA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MuUnA-1ql1BV3Lpi-00rZvT; Sat, 17
+ Feb 2024 14:37:59 +0100
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Cyril Brulebois <kibi@debian.org>
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH] PCI: brcmstb: fix broken brcm_pcie_mdio_write() polling
+Date: Sat, 17 Feb 2024 14:37:22 +0100
+Message-Id: <20240217133722.14391-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:EHf/q8SnQPVn+fd4Vo8CKB7ejhFUeksvGPbL6tmaNjskgaLD70v
+ xoVF1iHwLO4+es3jQ6GZZGmPrSlHsPbeFg/6Xyo/j0jVCweERcJDOF4YkfbfjBandh5DBY8
+ R+urFL+w8pIZNjMrjXAp98eRfHYQBlcn1swXhqiSRz3qLAqMURrYhcJbkCuA0qouucWrVW0
+ F0K0cPbBAW3BI77Jl+FXw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:coubLfRrff8=;PSWUJ83oT5Ld+OKGgZWHcUZ3mFw
+ VuEKJGw2KnExuGoWenHmNpOk1UZFactZERT+ythp25wtNeET6AMB34aK8Lq4wFPzfVKoEWVsx
+ fNoDbQsG8DZTRYXWiGBXMB69YP5HjJCx7naT5LOzxiLnY0WU5fgWZUrhKr7NL200EkLJulmb9
+ /ReFI8LfbBtQw5vzcgELKXAn69AyJqKsTbqCmvtVZ1hOoug3MbgQFagsdcg59kFsHZubGR0h4
+ 4WpuQoS+ywCdLUPQXi3M0ihcWM1Rim38msBV8qBjVtwb52O2cYnX4xQXz1qqZEdS68B1ROHQK
+ EXMjjl9KWD91Kvla6aCsbDLbLMkJrtHnDLt/lvGnEDFNIHbj+xwEDciN0nmcNBfq202iJjmkQ
+ DnBA0OIzSSuTK9wLssG9zXtPQOeJbdjnLwbIV7JO1g13mB5KXB2F7n/TLdUowc0UJC7HtNccE
+ gVZcZ/uiRUOTohioKnz0fRTebShw4R/sJ8Nmu3cMPk6BHz3eyfT+40jiUgwSEiv7gn00qZkpD
+ TADBLQPa2wSq3WiOmcU/aDPR3dPx0ZddwnRY3sVMEYuGsH800obUArgN58CAwl3AuHBBhxVbv
+ k74jelzxteEknu+JLucguuzVoeuhm2ERm6Z1l6mvQ45Xhyxt4wcK7Q83enlCP+xJElxtPEvUv
+ zjNUCAooijWHhj3cNbmjd4gkhEAjbunbiNflRvVSZWlo9GkOwcJ1I6fmdghnPTd2ust/ncp9W
+ Yv1tp/yAdD8087cIPY+fi41uPkHfJ+d0KhH2xWPIvpKMZk6XHXM4wm4/DtYvU+pH3ItQ+0aT6
+ y5jfDB8+jtaCDkrZhDrgVIvyFgZ1t3wF2PL0AZNHesBK4=
 
-Bartosz Golaszewski <brgl@bgdev.pl> writes:
+From: Jonathan Bell <jonathan@raspberrypi.com>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Add device-tree bindings for the ATH12K module found in the WCN7850
-> package.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  .../net/wireless/qcom,ath12k-pci.yaml         | 103 ++++++++++++++++++
->  1 file changed, 103 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
-> new file mode 100644
-> index 000000000000..063c576b99a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (c) 2024 Linaro Limited
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/wireless/qcom,ath12k-pci.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies ath12k wireless devices (PCIe)
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+MDIO_WR_DONE() tests bit 31, which is always 0 (=3D=3Ddone) as
+readw_poll_timeout_atomic does a 16-bit read. Replace with the readl
+variant.
 
-Jeff and me are the ath12k driver maintainers so shouldn't we listed
-here as well?
+Fixes: ca5dcc76314d ("PCI: brcmstb: Replace status loops with read_poll_ti=
+meout_atomic()")
+Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/pci/controller/pcie-brcmstb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jeff, this reminds me that we should add you to qcom,ath10k.yaml,
-qcom,ath11k-pci.yaml and qcom,ath11k.yaml as maintainer.
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controlle=
+r/pcie-brcmstb.c
+index 618e84402eb50..a7f05e0c4ac51 100644
+=2D-- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -420,7 +420,7 @@ static int brcm_pcie_mdio_write(void __iomem *base, u8=
+ port,
+ 	readl(base + PCIE_RC_DL_MDIO_ADDR);
+ 	writel(MDIO_DATA_DONE_MASK | wrdata, base + PCIE_RC_DL_MDIO_WR_DATA);
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+-	err =3D readw_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
++	err =3D readl_poll_timeout_atomic(base + PCIE_RC_DL_MDIO_WR_DATA, data,
+ 					MDIO_WT_DONE(data), 10, 100);
+ 	return err;
+ }
 
