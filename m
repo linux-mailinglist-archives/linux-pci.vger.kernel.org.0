@@ -1,119 +1,128 @@
-Return-Path: <linux-pci+bounces-3657-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3658-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 727BA858A82
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 01:07:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8DD3858D84
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 07:35:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A53F61C202F1
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 00:07:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CA34282B8E
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 06:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 917FA2594;
-	Sat, 17 Feb 2024 00:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 872CD1BDD8;
+	Sat, 17 Feb 2024 06:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjdYzigu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUalBi4V"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C80A1FA6
-	for <linux-pci@vger.kernel.org>; Sat, 17 Feb 2024 00:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3974ADF44;
+	Sat, 17 Feb 2024 06:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708128446; cv=none; b=Vs2cSxPL8oqWvv12XCfiTX150396tEzCXMVvCvCls3JUoxXAd5WtXCHDCwn9XTflNPgr1b5D9vcj4Ue8RzgLopLke+26MdF+ObrhCMZDefoUfpRd1MG4mVwDm61XLNZMhHMjAK4nih09S/7A586MkNniyHBNFd0A9ONgZ9P+1qs=
+	t=1708151702; cv=none; b=KhS9/UYcTPgsyQsttcZeflvpZRfMTc7XhzqnTdsM4ud5G2DEKJYnjX6x2g+UCc5qfRGGZLaVHLqtiZqBoXY9Y6lKpsLqskKcKK/bFVMaMINdMJD7UEjfyjz/77uX6FRTXxg58RLqsM4W/odxt0eTl+rKwLz247lHJ5bWAyKdObQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708128446; c=relaxed/simple;
-	bh=L5UMDtvf1riAPjgsS68Lb4/wKwZ3yEfzaSwXNSGUVx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rxGh2M+9k/rhyrx0EDDYE9AHsncHw70luXgry6ABGsqcVlXCVbgJJaQw6ZhNAN484PkT8jfAdR2ksc8koAI2twnIKE/S/RZxfG9FuJswYrgYuA/e+MES04MmoyCOZeIRGM8eVSg+VdE5lJZt2pSiEUAKrLAUh407GbUhIVH1aWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjdYzigu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E54C433C7;
-	Sat, 17 Feb 2024 00:07:25 +0000 (UTC)
+	s=arc-20240116; t=1708151702; c=relaxed/simple;
+	bh=P9v5bwlS7CEx0RGF6l5RaEMQEbJkoeMSl0AVCOm8vZY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=HLWqx8eysvc2DJCFXMh1MoLJeAm5dMzVZ2GkAzp4wFfPs5c9177WWC3khY2GDHtWZAYnKk6NpDNLcYDJEwE9SK9gpq3ZyFgczqC4yEHKMlLw1dkuDrcavW8nHdojWzNuqJD1p/KQLLcaM8icd+Scg85RvRSurzAXCbW+VcTesDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUalBi4V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3882C433C7;
+	Sat, 17 Feb 2024 06:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708128445;
-	bh=L5UMDtvf1riAPjgsS68Lb4/wKwZ3yEfzaSwXNSGUVx8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=CjdYzigupKCzPSwut1HXBPpPkvYqgs3ZWoxM2/YVurXAXZG2t3oZcF+t7L0zULkjk
-	 YUClxelBM5k2nwSKLRrzND3OzuDgbhsPiiojMXUMow31BXxptQTv/WayyaTxR6wLu3
-	 KIpW6ODDA5485VFbxJv2K64e1HkSFlRcCxMa3UdEVjFWaXeCZjsVBTQAW4uOjxOiLQ
-	 VP+DURnoBqt4zkfn9xUctyIAKooM8f6apIwNBJ8tf+yp637Zl+uMrPen0wAEYhhjv1
-	 V7xA5Btoi7v7dP/dS2miV1Jg9fy+o5fB/aDyYxLKObqOMOE622kKZOuHawdyPxaBxK
-	 LktTA8Ge0kC8A==
-Date: Fri, 16 Feb 2024 18:07:23 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Ajay Agarwal <ajayagarwal@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20240217000723.GA1294711@bhelgaas>
+	s=k20201202; t=1708151701;
+	bh=P9v5bwlS7CEx0RGF6l5RaEMQEbJkoeMSl0AVCOm8vZY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=PUalBi4VP+acTF5G4CtuSGC3cR8sQbK3vDeWzN46QQLixXZLxuyUXwthX0sl9EHUf
+	 LpsdqZzpsOwOxRH2yD+qTppUTUgQpSLvZFiQFDr+s/glNQTDza4ujEzNd4pCrodZnh
+	 yDMnaOJgndboanGlyO53uXPVLI/apL+vO6VZAnbNkF1rgdngRR9+5zYFltwnFPJQAr
+	 crS5pF1cQ52gePqMPhy9D5jtr4rXQGmB7vDXDyA3i8lj11G0eOdB1QkcvahmudtwA9
+	 eJwEXWM05Jxj6HaI3LZpt0woUQjXrhmDdLHa9fJ+XBHqCuiiBz2v5n4PeZbD9mpVXq
+	 F7OZs8l+23rhA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+    Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,  Luiz Augusto von Dentz
+ <luiz.dentz@gmail.com>,  "David S . Miller" <davem@davemloft.net>,  Eric
+ Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
+ Abeni <pabeni@redhat.com>,  Rob Herring <robh@kernel.org>,  Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
+ Dybcio <konrad.dybcio@linaro.org>,  Liam Girdwood <lgirdwood@gmail.com>,
+  Mark Brown <broonie@kernel.org>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  Saravana Kannan <saravanak@google.com>,  Geert
+ Uytterhoeven <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,
+  Neil Armstrong <neil.armstrong@linaro.org>,  Marek Szyprowski
+ <m.szyprowski@samsung.com>,  Alex Elder <elder@linaro.org>,  Srini
+ Kandagatla <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  Abel Vesa <abel.vesa@linaro.org>,
+  Manivannan Sadhasivam <mani@kernel.org>,  Lukas Wunner <lukas@wunner.de>,
+  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+  linux-bluetooth@vger.kernel.org,  netdev@vger.kernel.org,
+  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-wireless@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
+  linux-pm@vger.kernel.org,  Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 06/18] dt-bindings: new: wireless: describe the
+ ath12k PCI module
+References: <20240216203215.40870-1-brgl@bgdev.pl>
+	<20240216203215.40870-7-brgl@bgdev.pl>
+Date: Sat, 17 Feb 2024 08:34:52 +0200
+In-Reply-To: <20240216203215.40870-7-brgl@bgdev.pl> (Bartosz Golaszewski's
+	message of "Fri, 16 Feb 2024 21:32:03 +0100")
+Message-ID: <87cysvd2er.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240215140908.GA3619@thinkpad>
+Content-Type: text/plain
 
-On Thu, Feb 15, 2024 at 07:39:08PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Feb 14, 2024 at 04:02:28PM -0600, Bjorn Helgaas wrote:
-> > On Tue, Feb 06, 2024 at 10:40:43PM +0530, Manivannan Sadhasivam wrote:
-> > > ...
-> > 
-> > > ... And for your usecase, allowing the controller driver to
-> > > start the link post boot just because a device on your Pixel
-> > > phone comes up later is not a good argument. You _should_not_
-> > > define the behavior of a controller driver based on one
-> > > platform, it is really a bad design.
-> > 
-> > I haven't followed the entire discussion, and I don't know much
-> > about the specifics of Ajay's situation, but from the controller
-> > driver's point of view, shouldn't a device coming up later look
-> > like a normal hot-add?
-> 
-> Yes, but most of the form factors that these drivers work with do
-> not support native hotplug. So users have to rescan the bus through
-> sysfs.
-> 
-> > I think most drivers are designed with the assumption that
-> > Endpoints are present and powered up at the time of host
-> > controller probe, which seems a little stronger than necessary.
-> 
-> Most of the drivers work with endpoints that are fixed in the board
-> design (like M.2), so the endpoints would be up when the controller
-> probes.
+Bartosz Golaszewski <brgl@bgdev.pl> writes:
+
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> > I think the host controller probe should initialize the Root Port
-> > such that its LTSSM enters the Detect state, and that much should
-> > be basically straight-line code with no waiting.  If no Endpoint
-> > is attached, i.e., "the slot is empty", it would be nice if the
-> > probe could then complete immediately without waiting at all.
-> 
-> Atleast on Qcom platforms, the LTSSM would be in "Detect" state even
-> if no endpoints are found during probe. Then once an endpoint comes
-> up later, link training happens and user can rescan the bus through
-> sysfs.
+> Add device-tree bindings for the ATH12K module found in the WCN7850
+> package.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  .../net/wireless/qcom,ath12k-pci.yaml         | 103 ++++++++++++++++++
+>  1 file changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
+> new file mode 100644
+> index 000000000000..063c576b99a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.yaml
+> @@ -0,0 +1,103 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (c) 2024 Linaro Limited
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/wireless/qcom,ath12k-pci.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies ath12k wireless devices (PCIe)
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Can the hardware tell us when the link state changes?  If so, we
-should be able to scan the bus automatically without the need for
-sysfs.  For example, if the Root Port advertised PCI_EXP_FLAGS_SLOT, 
-we might be able to use a Data Link Layer State Changed interrupt to
-scan the bus via pciehp when the Endpoint is powered up, even if the
-Endpoint is actually soldered down and not physically hot-pluggable.
+Jeff and me are the ath12k driver maintainers so shouldn't we listed
+here as well?
 
-Bjorn
+Jeff, this reminds me that we should add you to qcom,ath10k.yaml,
+qcom,ath11k-pci.yaml and qcom,ath11k.yaml as maintainer.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
