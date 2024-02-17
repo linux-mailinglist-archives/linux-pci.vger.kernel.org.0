@@ -1,97 +1,96 @@
-Return-Path: <linux-pci+bounces-3664-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3665-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D33D8591B8
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 19:31:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65DCA8591C0
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 19:32:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51BD81C20DA6
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 18:31:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 066011F22B10
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Feb 2024 18:32:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530E61E4AE;
-	Sat, 17 Feb 2024 18:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF60E7E105;
+	Sat, 17 Feb 2024 18:32:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="q+ZTbwOW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Z+fPtnzm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9F01E4AA
-	for <linux-pci@vger.kernel.org>; Sat, 17 Feb 2024 18:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FCC7CF2C
+	for <linux-pci@vger.kernel.org>; Sat, 17 Feb 2024 18:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708194659; cv=none; b=L5NSjvkZ9STOE19oi1Ofe0yLK8KPHhtTkd9ds2I2+fxnoEkC2UlL04vRMn05stMtVcfBfhNhUO/IC8skwOuL/OyG+zbQfkN9Q2UyIZIvHEdZRW4IloAc1j3AXGj1UAsCKZ4Ryul72/rv4Kyt7id2L3YvFefXb+6h3HRy/v9r7J4=
+	t=1708194749; cv=none; b=kIrJZ3tl6T7Hev1uDSeSeH2gkd7t2j8KwI2zecNM6O6U004tJCTxKhyj5M4pLoAS+6IBgGZnyYRnaR7a5gCv4OxmJXriNt+wiFYTlpsm9FwNXlGj8CUYOuJTh3JVYTprRcfWjXdvLWV5A1Dp6iFjBiivynW0ePNPl1SLEk1Q65s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708194659; c=relaxed/simple;
-	bh=xTu4CwC01bOUIpKw1wk4DHay8JL9daGjNYWi0BvJoFk=;
+	s=arc-20240116; t=1708194749; c=relaxed/simple;
+	bh=L2GmIXaDMjW+EsDusq1kZEY2dBNutsr8EonFQw0X7ws=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mxk++7TDYC7Jv3nydukh4foHehORTAMtleSVw+VObAVszHCQs2JrATiP4vuROW/eFB9hQayDqdjAZyY0c8Be6VUBDhwVHa/e8nM8PUr/pQuM7F/kVM1H5eMKHhGtStl3qi8oEOGfeS54rk45TxUjNsYy4j+7j2W+FNFRsV5lqXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=q+ZTbwOW; arc=none smtp.client-ip=209.85.222.46
+	 To:Cc:Content-Type; b=St7ZJ7IrvEV5vRwl5JztC6kfADQtG9zEi9u/gcpeO86W4FQRVAwFwwUwmpclYKd8VweyltOMaCc7kUXGEmDtUcH6XB/5gkwnORD2F7qNMpmlr9v4UOZoiqfJkHlhlwsvhnl3aRJ/hS64jnt5ttc6r03JhGyJYavdpIy2eHpeJnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Z+fPtnzm; arc=none smtp.client-ip=209.85.222.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7ce603b9051so937908241.2
-        for <linux-pci@vger.kernel.org>; Sat, 17 Feb 2024 10:30:56 -0800 (PST)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7cedcea89a0so1931043241.1
+        for <linux-pci@vger.kernel.org>; Sat, 17 Feb 2024 10:32:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708194655; x=1708799455; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708194747; x=1708799547; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JeWu4dlZldb0QpDIIyWPdxjS/RZoRXziwmFM0VAD7xY=;
-        b=q+ZTbwOWLrtB7LLK3P+2bWMpv7DfIvhgi/2egNQ4e52dlt56kAs4JbMUWCIypEPg3u
-         jaPViUylF4qtQbcTBTyT70G9+UdrSLhxKL21A/9s6yJsxSRyq8xTATGcF88R6HEN/kSI
-         FEcX1CQfyK4WEt+SUb+cFk+6mPzCSgU0ZIWA/kkH614YOW0bApp+lbnisuRUJID+UlaS
-         oOt0Z2o/J2lyYUVPrLC0B6EbShI40Z+7a/Fx8TFCEz+8kcxXF+2Zmg6PaMWL2HnIyTdI
-         P5Fq871GtTT8Z3hp9dz0flsuvXqyvv2rjvK5Pq1zsVljnHdz9MUClSO7sH1Y4x9CWtmk
-         ubmA==
+        bh=L2GmIXaDMjW+EsDusq1kZEY2dBNutsr8EonFQw0X7ws=;
+        b=Z+fPtnzm85GoxFE32FQBUME5ZUSR/B4P1OWO4L1t7E3sqVZetWZ/72KdOfwtipiWk5
+         L7IL5WriHIXVFjpLzRkqwRnr40KE9nz1pDYPt1iMp/DMN6tnPBuDAqv4ErOeszP2Haae
+         vrQg61iaJjQt0OjTt7jUde5bvzeLZy8aQI3AbLDJEj+vYEGq7F06elox3Fa38mDRPCDP
+         nogoVaSVwWsZcHH72Yh39cJKO4z4MXz3KyKH9pS4ssR/wQHwuSrcDfMDzWqbUALgJmf7
+         UoQ4FCIDcP1Ox0OViAJzl+ZEQZT8MyVEUJGyPSz1CkYipW/7FOPhmsrcHz6yq9IH7F/i
+         OZaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708194655; x=1708799455;
+        d=1e100.net; s=20230601; t=1708194747; x=1708799547;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JeWu4dlZldb0QpDIIyWPdxjS/RZoRXziwmFM0VAD7xY=;
-        b=XuIV8al2b5coycuJM8FUFSxLjhFJETqWPuzYh52487tI3QzLZCpgspPvJF1rs+Ta22
-         bVG2zZcLOgaCTLvO6Nt1UmfUNaJLWDeHDYxAOPJbxqmvINr+45XcxSii4NODqbpjbNUK
-         ubxoIIc0107UF8xX/7+jX1WjDoPWpb1doaEXwIH3qFugx7y8GvWFxPbzvODgi/ZYu6YT
-         uCRdSXiZIqItv1G9S4orVi9xclC9NnqlDth+EjMKN24NozKzmx8YrcqD62Hn1tM/lSWB
-         MlLGF79mS9MZCsnv2QIZQO5Bot2Q55J5IS7EVXs9cP0knkniPqo2edzSJ0dWH60p781Q
-         Y4Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+ZaUk+/uhyMgUSreB36mOUrWKBj1z9HjbRKMzLUafXUZ0Y+3v8NBcABXvZSkYpQoxLxnm42TmljzFbc1gVjnYGNUEZSUOMMyF
-X-Gm-Message-State: AOJu0YwbAvVXstzlDwNmo9Sy39aTyriVTDgIkF3/uT7Y0Aj0hm6JNYh3
-	o/yfO1C8t0Ic2vpuOa8e98QjnEat1g1hQBsPw80HCdM5SkivD4Yr8j6FivpRGTioOwlkPLkAV4i
-	+DiwmgARXP2mn7Kx7odi+jj3lOcvebWoL1XlW6w==
-X-Google-Smtp-Source: AGHT+IEGwogzVe3juwTbP5wzSPlB4FZp7n7jPtu9uTl+n1AS2iy9ckNua2af79j+lFRcSQmRv5yllrZrWuBKxrsF4JY=
-X-Received: by 2002:a05:6102:3a08:b0:46e:c752:16e7 with SMTP id
- b8-20020a0561023a0800b0046ec75216e7mr8759486vsu.24.1708194655651; Sat, 17 Feb
- 2024 10:30:55 -0800 (PST)
+        bh=L2GmIXaDMjW+EsDusq1kZEY2dBNutsr8EonFQw0X7ws=;
+        b=QbINw9ElMoJtXT0l2SRQjUJIwYUZs2iYBFtIYVdC1sL34LCbLauBPakQSRvaO6AP9t
+         cffxLyxCnDNF7oMItUUQKm1Dj5Dj2zIuKKSbM0/Mhc1pZaIyJP/qlbXU3xrWVcgbvtRj
+         3dUoZOD4SBh1XZrg/yuVFqrWyG5swD1SOsdXXPyd8dvSly0PY1WEE63uQDNS27tjREOa
+         92zTP83IQwrjqkBUNiitXPaKGS4BcWoyAAJAcoPodqiXfdH/3urGtMjnaUJDOJ/L4ikr
+         1NaQh+HDnB71G3X28Cht9qLSHCvzwyOcJIFJTTyAPBBmbW6LekiAgZxQ9xIRW/uCnWtL
+         CIoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6MNUO+foM79Ufjeu0zd2v4YfWhIOQ/R4ngWxbNKs9BMw/FXfs14Tn7TEZ4B4yARP6PabkzdmIb4hXBKYlcU95Sk0X5OOEwBSN
+X-Gm-Message-State: AOJu0YwZOfZYa8Oku1KpbV06nOCnFizjd8xHyKpiORLa8KYxOU9tWa7y
+	S3pI18bK9vF1/ZbF3NaruiIUf8vWoLbyVoPtjEqmK6va/9ls6URgcK4EeaQEG8DlKqppZID3lzQ
+	MxUmOfWUQoxhkGBIvMsO5SRvtiufluu1JY6sntw==
+X-Google-Smtp-Source: AGHT+IFEjgGW7fKzH9O8aPqylmVeeWs1rMw3O59IYiYOUkypD1mxg7ZgMbhhHM34XumhsF+9CITrBlLVb+C2zYLhdF0=
+X-Received: by 2002:a67:fdc9:0:b0:470:419f:d42e with SMTP id
+ l9-20020a67fdc9000000b00470419fd42emr1433176vsq.10.1708194747045; Sat, 17 Feb
+ 2024 10:32:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-7-brgl@bgdev.pl>
- <87cysvd2er.fsf@kernel.org>
-In-Reply-To: <87cysvd2er.fsf@kernel.org>
+References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-4-brgl@bgdev.pl>
+ <ZdDVNbjv60G9YUNy@finisterre.sirena.org.uk>
+In-Reply-To: <ZdDVNbjv60G9YUNy@finisterre.sirena.org.uk>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Sat, 17 Feb 2024 19:30:44 +0100
-Message-ID: <CAMRc=Md10bNPswsLqdCmqzEmD+QmyZ+Eb4SUWknH-j5kK-speQ@mail.gmail.com>
-Subject: Re: [PATCH v5 06/18] dt-bindings: new: wireless: describe the ath12k
- PCI module
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+Date: Sat, 17 Feb 2024 19:32:16 +0100
+Message-ID: <CAMRc=Mf9Sro4kM_Jn8_v=cyO5PxCp6AnBdeS9XspqVDGKdA_Dg@mail.gmail.com>
+Subject: Re: [PATCH v5 03/18] dt-bindings: regulator: describe the PMU module
+ of the QCA6390 package
+To: Mark Brown <broonie@kernel.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Valo <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
 	Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Saravana Kannan <saravanak@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
 	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
 	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
@@ -103,62 +102,28 @@ Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, Marcel Holtmann <marcel@holtmann.o
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 17, 2024 at 7:35=E2=80=AFAM Kalle Valo <kvalo@kernel.org> wrote=
-:
+On Sat, Feb 17, 2024 at 4:48=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
 >
-> Bartosz Golaszewski <brgl@bgdev.pl> writes:
->
+> On Fri, Feb 16, 2024 at 09:32:00PM +0100, Bartosz Golaszewski wrote:
 > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > Add device-tree bindings for the ATH12K module found in the WCN7850
-> > package.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  .../net/wireless/qcom,ath12k-pci.yaml         | 103 ++++++++++++++++++
-> >  1 file changed, 103 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom=
-,ath12k-pci.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k=
--pci.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.=
-yaml
-> > new file mode 100644
-> > index 000000000000..063c576b99a0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k-pci.ya=
-ml
-> > @@ -0,0 +1,103 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +# Copyright (c) 2024 Linaro Limited
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/wireless/qcom,ath12k-pci.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Technologies ath12k wireless devices (PCIe)
-> > +
-> > +maintainers:
-> > +  - Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > The QCA6390 package contains discreet modules for WLAN and Bluetooth. T=
+hey
+> > are powered by the Power Management Unit (PMU) that takes inputs from t=
+he
+> > host and provides LDO outputs. This document describes this module.
 >
-> Jeff and me are the ath12k driver maintainers so shouldn't we listed
-> here as well?
->
+> Please submit patches using subject lines reflecting the style for the
+> subsystem, this makes it easier for people to identify relevant patches.
+> Look at what existing commits in the area you're changing are doing and
+> make sure your subject lines visually resemble what they're doing.
+> There's no need to resubmit to fix this alone.
 
-Sure will do. I also noticed the subject is wrong, should have been
-"net" not "new".
+Mark,
 
-Also, Jeff is not showing up for ath12k bindings in get_maintainer.pl.
-You could consider adding an N: ath12k entry to MAINTAINERS.
+This is quite vague, could you elaborate? I have no idea what is wrong
+with this patch.
 
 Bartosz
-
-> Jeff, this reminds me that we should add you to qcom,ath10k.yaml,
-> qcom,ath11k-pci.yaml and qcom,ath11k.yaml as maintainer.
->
-> --
-> https://patchwork.kernel.org/project/linux-wireless/list/
->
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpa=
-tches
 
