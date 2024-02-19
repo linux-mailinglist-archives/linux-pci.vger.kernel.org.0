@@ -1,154 +1,157 @@
-Return-Path: <linux-pci+bounces-3727-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3728-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E79B485A3E7
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:54:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2B7B85A48B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 14:21:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C00A284832
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 12:54:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0118C1C22188
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:21:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE9F431A9D;
-	Mon, 19 Feb 2024 12:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B392836125;
+	Mon, 19 Feb 2024 13:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="udQ3cv9J"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B5QVJHKv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28E731A79
-	for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 12:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BFF2E834;
+	Mon, 19 Feb 2024 13:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708347251; cv=none; b=c20kMmUf+ZkQNvvsGQciudj/JhzSlzgnNMm2PxnI0MsyWOkjKXnuBXaWVfZ7e1Lhl/ZOD0pdAOfzSVEydzTAH/y7LPIzX/4vTTfqAdrzzzermOMHg1i9jh6re1X9FnzkJDUEg8y/bfcbeod8qVpIDkkQLzDpaFecv70Gwb+cnPA=
+	t=1708348900; cv=none; b=Lzbd3c9OHoyROggHBBH/aBSm71o4Z6QB01snM+rjWsktQZ3tpfWYIz37Up2kTNIjrDeuREe7FSdhN43BiJjpFZHwoh9/Cmxl7A5ug5jSvDkWQAl55MtddjG8Tpv5z8JSItFcHFYycsPkqb6L7HZ7iC4SaIvYSr7t98IW1ZF29s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708347251; c=relaxed/simple;
-	bh=sVsdNaxDrQaT+5xLkuNNBvQ4+mZpUehI+ER8LAoDUdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fTWo7w6r01pF9wJUMHymwOwYByzKqgOTFdVBIMxPZVbNgA+/6ggl0BvL2YvmTCkfi5Fi6vzlxR12Buk8veZKD/SzcgbAzArId+d/PcDoIHA7itV30pZC8Pzhg1Lej1k7AICQRusqkUbwLkSlEbHDnJ99aoBUtFZmWr63xlWj+Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=udQ3cv9J; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57bbso1423097241.1
-        for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 04:54:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708347249; x=1708952049; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sVsdNaxDrQaT+5xLkuNNBvQ4+mZpUehI+ER8LAoDUdY=;
-        b=udQ3cv9JtqKeraoYuLqdfWfwCCI8IqdYdtHNz3famgOyfzEASJbnUbi9Ip4iBFsEfQ
-         Kl8HsjfC+7SkcF9V5ISgTbGDqgyoHJRrjgR0/PfVtTCIysmhpDAH+oe378A755J6JlXM
-         1r94W6myxOuaOuRiIVphSmifjG0c6dN6Ppy0iQ1WbUj5I9pPZilN2tTRygjbg9MKHk3d
-         pnM2uYsVw244oGzm9Y/8g4n35ljis+R+dRxgOYJIEg4XNhXjTDndDIcQhpEsUBMx+Bzb
-         /xqB9GlsDT2n1v4h5B+LoZr03fuAttuy4C4vf+rBZrpUOCRTZoFDTdRI05jcpekZ90R1
-         U54A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708347249; x=1708952049;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sVsdNaxDrQaT+5xLkuNNBvQ4+mZpUehI+ER8LAoDUdY=;
-        b=mu2wvEYX6k+tfh1nG6MqbhhVAarkZWOjYe7sSpeUHGpdW6vl4NVzhnVoufFT1GaSWs
-         JTfxACEjrpw1RBC1/+eSQZvuGT8umADlvgItIvYK+MXWr6cTf8MaBKYHM0EhPs7z4YpL
-         yYZK6wUA+vTvVqC4XBhJ8vkn0HZ89mrZD4n0/46zRnvA6OdipnHLpNYrTBl+j1j1IryS
-         TIlVmtVZDolTFlvMkEzrzVQqg3hKSTZwT/fuX3DMnoY+uwaYd2kHcr6cDavRLzyRF4Y4
-         X2OLKH6niMjHwMiiqSet1CHEVhO59RUT1o1b8jYnjA03iVI6vmY3Xqw8VVO6Dpa5NJbJ
-         RsFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlJcKaHzgxyIXFi9ccWMLJcNRhX6sj+RKlsi0x83BZCL23ZRPVc24Gj9+MMVEgHSQ+p8LJ5g0kxdGgepLR3/xWCwvS2+gMEKjC
-X-Gm-Message-State: AOJu0YzOJ1ag/Em43Jud4eTKixM2n9Jwu6W1sPZjuADQmGnOKs6D3NbB
-	NKedjLBjAiYJwkwu26skJpVJ3oJCq6k0l+w3RDcN45GU11a468AR0EHOyu4rDGOHyECnL5KoeJW
-	AUr94BGFaEbW8rcrwMdXWDHIR8DAwhd8otFA2lQ==
-X-Google-Smtp-Source: AGHT+IHxyvxbs8UNV+RvesaBK90xtZZfu2Xu6HFPB14T7Tm6G1AVsPn3zgxyvNAFZBNi1d1T6kkfRUxMA6fnOOW6aBY=
-X-Received: by 2002:a67:c902:0:b0:46d:2b65:aa16 with SMTP id
- w2-20020a67c902000000b0046d2b65aa16mr6787860vsk.34.1708347248824; Mon, 19 Feb
- 2024 04:54:08 -0800 (PST)
+	s=arc-20240116; t=1708348900; c=relaxed/simple;
+	bh=lC+Va8VKJJRnjPL1NP5hZ/mWgsIad/xDcJU8KKEla+E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=JFFpnWpwyhOYvMcBpiBFf+VQw/ZnZBxw+G15eQY1RTWWMwYJ+O07A0Tfn+u/iTuI/4CLu2kTLkWfEigIj0IwI+4dGITBjSFqOXhvYoAD1w1mJrQRuossB4n021itcTI2jbsRzLVJqqsK+ofqxAv9DL8HNPqgKU/4rVmaDuYQa60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B5QVJHKv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41JCiNFU018209;
+	Mon, 19 Feb 2024 13:21:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=F7i
+	D/VqgEIiLKlYBQdbtCp2S7O7L8FqKjuOYcPetuLs=; b=B5QVJHKv8YU0U2gA/Dr
+	Ek18Kx8ENx8SUHM8/c3QrlzhXlWF2baE5BpvaDCQwOGaKSUz31EFTaY5SUb9cb2V
+	ALNkGi1BWXNNyy+cDdJYKjXCElDRNKJ0tQ4HJYm5frBBtyfa/5BXByIOtn5A+pVn
+	pCYjQEhnrxPD0MswXlRQf+R9+wHtB/xloHz35IfNLQzLWgfZhhEatGUx3odu1316
+	xWbgYh9enM/VXhPHF7ZPurgf7xEU5kw/3ps23fK0P3GUtdbtjoOSeXGjmL+jOPVh
+	dzNxZTEsNh/XTH3T9Wrkxs7MPFS/n2bLaCx7LEiSmGZW7gbRNd0WXLZDx0MosMM/
+	muQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wc78qr24j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 13:21:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41JDLRWW015729
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Feb 2024 13:21:27 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 19 Feb 2024 05:21:23 -0800
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Date: Mon, 19 Feb 2024 18:51:10 +0530
+Subject: [PATCH] PCI: dwc: Enable runtime pm of the host bridge
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-4-brgl@bgdev.pl>
- <ZdDVNbjv60G9YUNy@finisterre.sirena.org.uk> <CAMRc=Mf9Sro4kM_Jn8_v=cyO5PxCp6AnBdeS9XspqVDGKdA_Dg@mail.gmail.com>
- <7c1327c0-d0ea-4797-a5fa-5844ba46bf53@linaro.org>
-In-Reply-To: <7c1327c0-d0ea-4797-a5fa-5844ba46bf53@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 19 Feb 2024 13:53:57 +0100
-Message-ID: <CAMRc=Me=3HhGc_yZuaEo1TsLbF2R=g+072185_PAh5GmAQ-M7w@mail.gmail.com>
-Subject: Re: [PATCH v5 03/18] dt-bindings: regulator: describe the PMU module
- of the QCA6390 package
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Saravana Kannan <saravanak@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAMZV02UC/x3MQQqAIBBA0avIrBNUiqirRITmVANpohWBdPek5
+ Vv8nyFhJEzQswwRb0p0+AJZMZg37VfkZItBCVULJTseL3+Swym4Cb02O3JjZ9l2sja2EVC6EHG
+ h538O4/t+PxSkQWMAAAA=
+To: Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel
+	<gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_parass@quicinc.com>,
+        Krishna chaitanya chundru
+	<quic_krichai@quicinc.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1708348882; l=1466;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=lC+Va8VKJJRnjPL1NP5hZ/mWgsIad/xDcJU8KKEla+E=;
+ b=uItbQ0PRyWCOqJ4GM6tXMhioNvyuGlpf0qLZwqb0FVXGXoQYKMkFJHVBAc37WwDCbpYKHRX7x
+ UJ461EQdg1YDr+nAnerFDyH+ncy8TJhTaA+qCHcnls78GuO+vvzG6FQ
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: rIGyQEr32HOD5ThTKYpcNVhD5kBNqavq
+X-Proofpoint-ORIG-GUID: rIGyQEr32HOD5ThTKYpcNVhD5kBNqavq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-19_09,2024-02-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 adultscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ mlxlogscore=785 phishscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402190099
 
-On Mon, Feb 19, 2024 at 8:32=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 17/02/2024 19:32, Bartosz Golaszewski wrote:
-> > On Sat, Feb 17, 2024 at 4:48=E2=80=AFPM Mark Brown <broonie@kernel.org>=
- wrote:
-> >>
-> >> On Fri, Feb 16, 2024 at 09:32:00PM +0100, Bartosz Golaszewski wrote:
-> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>>
-> >>> The QCA6390 package contains discreet modules for WLAN and Bluetooth.=
- They
-> >>> are powered by the Power Management Unit (PMU) that takes inputs from=
- the
-> >>> host and provides LDO outputs. This document describes this module.
-> >>
-> >> Please submit patches using subject lines reflecting the style for the
-> >> subsystem, this makes it easier for people to identify relevant patche=
-s.
-> >> Look at what existing commits in the area you're changing are doing an=
-d
-> >> make sure your subject lines visually resemble what they're doing.
-> >> There's no need to resubmit to fix this alone.
-> >
-> > Mark,
-> >
-> > This is quite vague, could you elaborate? I have no idea what is wrong
-> > with this patch.
->
-> Use subject prefixes matching the subsystem. You can get them for
-> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-> your patch is touching.
->
-> Best regards,
-> Krzysztof
->
+Currently controller driver goes to runtime suspend irrespective
+of the child(pci-pci bridge & endpoint driver) runtime state.
+This is because the runtime pm is not being enabled for the host
+bridge dev which maintains parent child relationship.
 
-Yes, I always do. And for Documentation/devicetree/bindings/regulator/
-the subjects are split 50:50 between "dt-bindings: regulator: ..." and
-"regulator: dt-bindings: ...". For Documentation/devicetree/bindings/
-it's overwhelmingly "dt-bindings: <subsystem>: ...". It's the first
-time someone wants me to send a DT bindings patch without
-"dt-bindings" coming first in the subject.
+So enable pm runtime for the host bridge, so that controller driver
+goes to suspend only when all child devices goes to runtime suspend.
 
-I mean: I can do it alright but it's not stated anywhere explicitly.
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Bartosz
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d5fc31f8345f..57756a73df30 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -16,6 +16,7 @@
+ #include <linux/of_pci.h>
+ #include <linux/pci_regs.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ 
+ #include "../../pci.h"
+ #include "pcie-designware.h"
+@@ -505,6 +506,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (pp->ops->post_init)
+ 		pp->ops->post_init(pp);
+ 
++	pm_runtime_set_active(&bridge->dev);
++	pm_runtime_enable(&bridge->dev);
++
+ 	return 0;
+ 
+ err_stop_link:
+
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240219-runtime_pm_enable-bdc17914bd50
+
+Best regards,
+-- 
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
+
 
