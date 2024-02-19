@@ -1,130 +1,163 @@
-Return-Path: <linux-pci+bounces-3722-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3723-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 165D585A2DF
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:09:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAE5F85A316
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:23:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0B33283A68
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 12:09:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71B2A1F246A5
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 12:23:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1132D05A;
-	Mon, 19 Feb 2024 12:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15EA12D79D;
+	Mon, 19 Feb 2024 12:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="SpodSi7z";
-	dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="l3tiWElU"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y9NlYGWh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D484C2DF9C;
-	Mon, 19 Feb 2024 12:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708344566; cv=pass; b=g0y2IxYXAe7qSub1lW/NXsCADapRRvZqbPrZJjMbESRkxSuPcc1bD/cMa8PZjfnvpWsthAhR7mlWTCgHhDaOGY/EumpbZ1tlV+WrxItPLkx3Zf8ZK49pE1GSubi4P7WH0LxbrLRIeV7wkB8U44yXocYO7JUS3QYPcK49dD+9Aec=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708344566; c=relaxed/simple;
-	bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PKZgYT/JkUOBQPK7u63GwepypgIV0VrVYzR02A7J2CpoBjLFZNjPN8EAR/O+B4F+MHVjRRH4GIziAA9un2oqf9/YVEyEtZ6rKRLqDP5OFVZVEs5tFuq4xI+Lh+uV/mcjeN6XcAXlbH+HF1GNLxk7YOQOjQs9nuteCScZj/AncHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de; spf=none smtp.mailfrom=iokpp.de; dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=SpodSi7z; dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=l3tiWElU; arc=pass smtp.client-ip=85.215.255.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=iokpp.de
-ARC-Seal: i=1; a=rsa-sha256; t=1708344556; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=qcCuu30vrT9ipND9ROtbvG+H753q3gyJ4pvPZo0p0jDe+PLmdxKqiNoBkXgGL01um0
-    u2bcJDBrLzNNgSCIix/D3bnfcjN3N0ty1Pi59XGnEAbLeXLZFrP44yxHlt6DgYxBfE5c
-    SIgPu6DnEmDG35wCtY0VZ8kT9bzFAPGQQ1njmAlNQyo+1IzON7vu1pY+K/LRirg62VG/
-    GSEkQwTEpfUW6aysGnhd+ClmofgBDF4DfaoELM2hKyS/ichqAcVvqmNMqSyD4JIRjS34
-    e067damlRfMPf85/1ZvtCvy347kvJrwRfk8+Urwo2hYnryJC+5KfYRiwv9wIOFLNczSF
-    X6sA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708344556;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-    b=U/N6tOSurMwh9euZTjLenRadLMg+TvdrX9Yc8jqydZQbj0hHTY9mgt0iEdRHuRxtyX
-    acTrYx4/slsIXmPtHL1qW7wSlJDb/k1tu6FG1fYlNZO6jyJ6ClYjexmrHJpKKYhWG2EM
-    /UHIRUMC0b8qCMKLBEq9QNZrt4NzUXaHrlmpxJBXC5MrupGfh4gy2UQj5g+MMECYawLB
-    omdr+Y8pf+t09JUB5tg/wJAqr0UST1433TnS2OCIU6ReO9iwR5o8C4B37kdPvNMQUk2R
-    /QHqYlXZ08K1+UYYl66fzMvUxHwfxY2CAS0MoGYot0M9z21VyijkjkAMtkeetAYSC3rw
-    EtMQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708344555;
-    s=strato-dkim-0002; d=iokpp.de;
-    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-    b=SpodSi7z0nOve6xepgf+5NIJ3W/dFpmsvbfyQ2CNNGRTaGc1iSgPkZLcdFLMmh4r5N
-    lZZ4Mi4aGk+m9r2jLQft4nL+IW6MxE1Y29VLZubaq2JaI+g1SxPOIYsKNuzRVkDQ5Zim
-    qX+sJVtbt40Bq+bulrWE/KCEMEEr3aS9uqi7z/+0glwYNHa3ws9tOouNh2ngJM615cZ6
-    GgRu2w6k91okdtZbX+2laOjcYmouHqn1mr/4fnC6E7+XYevKJHz/cMnEM6Y8R4xJQrqj
-    +nAc/vwDa9zMbXzjvyNLplcRBro2bJwCveksLLayZlYZFucQvvPGwWmZRLEc0Gm1cdrp
-    10jQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708344555;
-    s=strato-dkim-0003; d=iokpp.de;
-    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
-    b=l3tiWElUoTRAGkwsTxJHK4fOZt2M2ZKN/F4JiVqegz2UlxKYdDF26KL89t/pAAl/SO
-    hFfuhpMCYWdlsK9qkbAQ==
-X-RZG-AUTH: ":LmkFe0i9dN8c2t4QQyGBB/NDXvjDB6pBSeBwhhSxarlUcu05JCAPyj3VPAceccYJs0uz"
-Received: from [10.176.235.119]
-    by smtp.strato.de (RZmta 49.11.2 AUTH)
-    with ESMTPSA id z34ed901JC9EFwE
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 19 Feb 2024 13:09:14 +0100 (CET)
-Message-ID: <fe5d0d5c3cdebc8d637c348f3759330166604bb0.camel@iokpp.de>
-Subject: Re: [PATCH v3] PCI: Increase maximum PCIe physical function number
- to 7 for non-ARI devices
-From: Bean Huo <beanhuo@iokpp.de>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: bhelgaas@google.com, helgaas@kernel.org, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bean Huo <beanhuo@micron.com>, 
-	stable@vger.kernel.org
-Date: Mon, 19 Feb 2024 13:09:14 +0100
-In-Reply-To: <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
-References: <20240219112422.54657-1-beanhuo@iokpp.de>
-	 <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5487F2D604
+	for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 12:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708345406; cv=none; b=L+0Eu3gysNQ+6KqXr+1CPEX5qKzDrkt+9Ai1EvWGuMGjUgPjYcO9qwE8imfOix40skbTMDNh3qkNYCvyf0spTMcAnI2SPOCyj4wuqSk1UpMkLSsaF5Dp9uwwe7+MrAy1U+/1ydk74Qolt15+n5R8oZl91tUz/HRCRhv/WaPj1+A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708345406; c=relaxed/simple;
+	bh=JCaGChRGUNtrESJTd6AhgRt3rpjjekNlziPebDsi98o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XlKeTH+cN9AvRTYamjkJQc2is+YoUkxsKYesLCePlb3JvZCl0s+HpW2ktQVaGBVGQacphlAExH8K7WEMfyfuWobBBq8qgnZTnx4fDnrw4Hisz/b5DApYswaFv3scciMgfhOx0o9fmLDAZ3Xz9KHtU2UYaov5ys57CMe3s53uFWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y9NlYGWh; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7d698a8d93cso2793293241.3
+        for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 04:23:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708345403; x=1708950203; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JCaGChRGUNtrESJTd6AhgRt3rpjjekNlziPebDsi98o=;
+        b=Y9NlYGWhWXkn0m0UTUk43shbgdS0/so9hJzHIpupXqdzTz+Xmpnd/lMlQ5V/72NxJj
+         hmye7oYrHu+8uYbVw8xeaTMnGHu1fMF0ECSFvG21TlGjTsTE5qt8cDdfb4t3wsuYDdvm
+         mBmyjQUDltAfhwFVKD3szLn3HAJmwxAa2ezYFgP7OaANFLxUZGQTZ/gNH+02HKGQRlsc
+         YWNcuan5Ok2mF7fYx7B1tYDgEVm/Y8gW9yxUtTMCLD+ygZpfNkpkd8tRMr0AtjqTthx7
+         2bt3Fyv79se0/xjXCgYB4oak2AORYv8e9hq56azN1/nneY5J2XEFL1VkPWshqDoD8wDM
+         8OFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708345403; x=1708950203;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JCaGChRGUNtrESJTd6AhgRt3rpjjekNlziPebDsi98o=;
+        b=aRImwv/edTKXI8DqbOLnKaqv1W2j1lwIjgbGwHLIFYVWR6GHgl+OlybFQSbdqtTSn0
+         3qPp8s3YKIyGCotsVW/XyT0bLfpz3IpwN33l8mkOkCb7aoNc8J4ATJ2Lh6U17M22Ar7n
+         yGSZVWF1StryXYYGxY5kjvQijs7zcgFnagDx1pGohDP4l36WyTyX1G3qMjeE7qupjEAG
+         kxN7mak5ukCTsUql8NAkLnntbKRE3gc95NvRWpiyda2o+7umt7dcSjrFvCKsnAl0dt4u
+         xkNcsJLYzaSh2FUzk1L3SXnE7Bq83m9Dr47IfKUEodm+4lmjJI2YQlmt7WVo9s+3qgPm
+         uSHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeymUMTB6ysNm+G4LOIUBRR3DfwTR4ydFzC+41XZm3DpOCSMdGUXcXEp2YlOGIUhjrqd2we/uqVJSlAW3ZK171ixrFFW2aQctN
+X-Gm-Message-State: AOJu0YyAUpPZWGJkAE2Bp8RDWUjhNPP/2J5PS8bO+07JhVtlmoMJtbmT
+	aXVta0eN1zKv7HSPettcOCY7gYLQmrUwJ6Tm7foCRXbazI6vcUJepucCYumkRc6PwUgU0vy6EE9
+	0aRg7PY0P+TAryW1euMT2609XINTTedxliMlCYA==
+X-Google-Smtp-Source: AGHT+IF8QcDgkljiNMmo2vfxi+b1NQ85UHBOseDQ8gS3vMihHH6Kd8r7v4M2Q6MY2/Fw/swZFGL2ynq5zcQX6aZeYGo=
+X-Received: by 2002:a05:6102:1142:b0:470:54fa:b37b with SMTP id
+ j2-20020a056102114200b0047054fab37bmr1527000vsg.35.1708345403354; Mon, 19 Feb
+ 2024 04:23:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240216203215.40870-1-brgl@bgdev.pl> <CAA8EJppt4-L1RyDeG=1SbbzkTDhLkGcmAbZQeY0S6wGnBbFbvw@mail.gmail.com>
+ <e4cddd9f-9d76-43b7-9091-413f923d27f2@linaro.org> <CAA8EJpp6+2w65o2Bfcr44tE_ircMoON6hvGgyWfvFuh3HamoSQ@mail.gmail.com>
+ <4d2a6f16-bb48-4d4e-b8fd-7e4b14563ffa@linaro.org> <CAA8EJpq=iyOfYzNATRbpqfBaYSdJV1Ao5t2ewLK+wY+vEaFYAQ@mail.gmail.com>
+In-Reply-To: <CAA8EJpq=iyOfYzNATRbpqfBaYSdJV1Ao5t2ewLK+wY+vEaFYAQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 19 Feb 2024 13:23:12 +0100
+Message-ID: <CAMRc=Mfnpusf+mb-CB5S8_p7QwVW6owekC5KcQF0qrR=iOQ=oA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] power: sequencing: implement the subsystem and
+ add first users
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: neil.armstrong@linaro.org, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-02-19 at 17:30 +0530, Siddharth Vadapalli wrote:
-> The function "next_fn()" seems to provide the next valid function.
-> Therefore, if the current function is 0 (fn =3D 0), then the next valid
-> function will be 1 which is returned by next_fn(). It extends
-> similarly
-> until the case where current function is 6 (fn =3D 6) which shall
-> return
-> the next valid function as 7. So all 8 PFs are still treated as valid
-> and there doesn't seem to be any limitation. Only in the case where
-> the
-> EP doesn't support ARI (there is no function 8 (fn =3D 8)), the call to
-> next_fn() with the fn parameter set to 7, will return -ENODEV which
-> seems to be the expected behavior.
->=20
-> Regards,
-> Siddharth.
+On Mon, Feb 19, 2024 at 11:26=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
 
-yes, you are right, the fn 7 has no next_fn, hence should return -
-ENODEV.=20
+[snip]
 
-ignore this patch!
+> > >>>>
+> > >>>> For WCN7850 we hide the existence of the PMU as modeling it is sim=
+ply not
+> > >>>> necessary. The BT and WLAN devices on the device-tree are represen=
+ted as
+> > >>>> consuming the inputs (relevant to the functionality of each) of th=
+e PMU
+> > >>>> directly.
+> > >>>
+> > >>> We are describing the hardware. From the hardware point of view, th=
+ere
+> > >>> is a PMU. I think at some point we would really like to describe al=
+l
+> > >>> Qualcomm/Atheros WiFI+BT units using this PMU approach, including t=
+he
+> > >>> older ath10k units present on RB3 (WCN3990) and db820c (QCA6174).
+> > >>
+> > >> While I agree with older WiFi+BT units, I don't think it's needed fo=
+r
+> > >> WCN7850 since BT+WiFi are now designed to be fully independent and P=
+MU is
+> > >> transparent.
+> > >
+> > > I don't see any significant difference between WCN6750/WCN6855 and
+> > > WCN7850 from the PMU / power up point of view. Could you please point
+> > > me to the difference?
+> > >
+> >
+> > The WCN7850 datasheet clearly states there's not contraint on the WLAN_=
+EN
+> > and BT_EN ordering and the only requirement is to have all input regula=
+tors
+> > up before pulling up WLAN_EN and/or BT_EN.
+> >
+> > This makes the PMU transparent and BT and WLAN can be described as inde=
+pendent.
+>
+> From the hardware perspective, there is a PMU. It has several LDOs. So
+> the device tree should have the same style as the previous
+> generations.
+>
 
-kind regards,
-Bean
+My thinking was this: yes, there is a PMU but describing it has no
+benefit (unlike QCA6x90). If we do describe, then we'll end up having
+to use pwrseq here despite it not being needed because now we won't be
+able to just get regulators from WLAN/BT drivers directly.
+
+So I also vote for keeping it this way. Let's go into the package
+detail only if it's required.
+
+Bartosz
 
