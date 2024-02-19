@@ -1,176 +1,126 @@
-Return-Path: <linux-pci+bounces-3717-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3718-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4783985A14A
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 11:48:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C745185A15B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 11:50:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A0C11C219A0
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 10:48:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75315281E41
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 10:50:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E96C2C19C;
-	Mon, 19 Feb 2024 10:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0410228DD0;
+	Mon, 19 Feb 2024 10:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHjMUYLu"
+	dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="Bnd6OGNV";
+	dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="NQaWg/1U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7D228E39;
-	Mon, 19 Feb 2024 10:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708339669; cv=none; b=nEwqS5X96ucPNlUJuotvBr7XvooyfmUQ3fmEHz7t1vh82SzaJlO890bPCTJvNPjutRkUfocvoPTOy6ezIhneMCs3GrTYk10oqz0PnYJwoS3HTIpJww4NlVj+6m+dcL4GGBa7+saxtc/Feo6TXJcl6K8154xefTBfjVwxLW2Oz6o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708339669; c=relaxed/simple;
-	bh=J76nWNpLPlCdb2/zC3wLiltJ7TgkL/vEOtz2wj3rw5Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=diHbzu54Dgdec3MIY5A+O0UoTCt71o/nVNiJUKqEGnbUsSFA8yH0+OpWlNVzMfIB2p2yf5d7qz6gZ7QSSj2naBA4uEGaWmg8ru1rUqJkg+E/6Er4oGCIq+banKO3y+AjfaoCUq2vlFn/HquGGV4amW+r2nBcy6jJ7wMrgDGV4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHjMUYLu; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708339667; x=1739875667;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=J76nWNpLPlCdb2/zC3wLiltJ7TgkL/vEOtz2wj3rw5Q=;
-  b=HHjMUYLueXl0HAW/+4iX45N5/PKfwIHniT2imWutWgAm14y9B2qadsJ/
-   bM/wWa1YmGuAHDjXnmTnVfZNp/NvDU9nRBEVuUjeLm2jd98gGS89eZ9Xb
-   Wm0fq2z6qLnJREXXp2SS+k+YF0DoeSMIo1ru3HLC8lUVQy5N+JiB6HhT4
-   gntvENNgxOARBEsgY8ZY1zI5c6mxUagDbDr9C2KsLN5sEOBDF1kYgn3Kb
-   uGnCLDeox3OjFLEliFUAsfMN8MlUxCFVOAgoou8dxcwKDSacfdjRrPqdH
-   4W0ob3NIY4qpSz2t4KB39zKcup0R1T17LBAp6hde2ZKAD9nUIfJe/h4Bu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2850781"
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="2850781"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:47:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
-   d="scan'208";a="4817735"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.18])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:47:42 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 19 Feb 2024 12:47:33 +0200 (EET)
-To: Michael Kelley <mhklinux@outlook.com>
-cc: "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-    "wei.liu@kernel.org" <wei.liu@kernel.org>, 
-    "decui@microsoft.com" <decui@microsoft.com>, 
-    "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-    "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-    "bhelgaas@google.com" <bhelgaas@google.com>, 
-    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v2 1/1] PCI: hv: Fix ring buffer size calculation
-In-Reply-To: <SN6PR02MB415749788D7DEA3D1D792913D44C2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Message-ID: <0a680c72-0c30-d3e7-5c67-a0aefe752be2@linux.intel.com>
-References: <20240215074823.51014-1-mhklinux@outlook.com> <0802ce88-c86d-3a74-501f-28393d6112f3@linux.intel.com> <SN6PR02MB415749788D7DEA3D1D792913D44C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96B824B5B;
+	Mon, 19 Feb 2024 10:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708339836; cv=pass; b=ZY6RqLUDlUXr+/OjtnGzmgFsXdVej6XTPJ1XJdSHTE48gE4Vtbdd8Ok5x3zjE1PtRmXFisCyPyk92ePgEjiE6mGcXphn1VnZKkxJRncPma5RPB6lpYZ1VK98FDK5RuTgLYATqf8isGKwITvOX7yD2N5vi5L0GcMR6LnBJncWhUc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708339836; c=relaxed/simple;
+	bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Qctses95VAV+nd3IBqOqR1bS+1yJBp9NHoOxdRBNt9ADF3o86fBcLz6KGEqFmC1ovf+wZ4JAvRMy3XaKKBi80wfn+AOS0p6+55YYPffCM79hmo9+14RHakuTjJ1BscmoETJEu6yDIM8FCgOuPafBoS/dRvnHXAVLQlegB37PH/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de; spf=none smtp.mailfrom=iokpp.de; dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=Bnd6OGNV; dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=NQaWg/1U; arc=pass smtp.client-ip=85.215.255.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=iokpp.de
+ARC-Seal: i=1; a=rsa-sha256; t=1708339824; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=BMI5Dcd7lcX9n50gnClE3URkLcs3Fh7HCv3kD9wPYeIjxMz5ZEJAu/wp48SXGADaDC
+    cgk3lNWKCnryk54tHs/45YCSy3WIE3SIzOP/tHui/np5BoL3nYdUgqpwhmZSIbnrrM53
+    VwbBg6CUSvI/xspLuVzSlXWBMa4THqRPbIKfTbosHVQtRwLwxrCrFxoDF7hFoGwb3RNy
+    LpFS6rTUlRP50NwvBGpIf4T3Et5iSLdI4nqMRGHR6QvMa9Hfa9dTZHI8+lMOo1mRaisR
+    inHmzPnC1D9Nahs0h60vwT7sna2mpupg/AoZWrPMvYpjTCZ1AeobbDFzNbqqho1Jik98
+    bp8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708339824;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+    b=WKbwsWu2RFq/QkpkmT5pzpq5pqQqoLwwqypiwqvbWknvxUNNEouIrgih0Nn2682vT/
+    boW/+aw8Z9sFmLsCKT3O3w1i4irUAaTolEWdrAUd2daI81KM766lHJMDem5LmUlEtwzH
+    BqSKIaaIfqJnr1fJf1fea7MMNX0O/omEFZu9gyj8xbqJ7uVVMnVwVhK0FJ4oeB92pGBo
+    nmI3qsRu8CZiJcpixmT+k72BvDlpoc1AfhFhxUoM+INN7bhtNS1ajfwDSjLLuCnWw/FB
+    /rTxChcLXItJtRC+O9LcBffqxNncNBEGYbbyQ8/3ZaElw9P6MmkHRvUikAAhPaOFvO34
+    pq3g==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708339824;
+    s=strato-dkim-0002; d=iokpp.de;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+    b=Bnd6OGNVt7k3i/G1+hAPvA4VxQLJsFrSlN9mwXC6k3nf481JnAp75UUjVw0jt5AGRe
+    yyd4ar8vMusSR+T7asAhhEEaGIc9MSitBxlMWmGFtEO5VCYkHfXbR+JVqEaXUYny+Er1
+    4a93HNdykCJ5ToeJRNnedTZzff7YLSGy52RJoTZvvJd/RvjiWuU/yrlBjx1Tv7FqtX8M
+    UMADqOK3c1/+YRteMSIUzax0iM0IEel7C+b7FciRAYA3hfdq7y13+vnuj1D/FI0Apy8E
+    LFftUkFBv7Um87zLsSeQhSXMDR+WJQzHulkzWVRZwyl8+R4QQ7meQWtdRkooZSgyye3v
+    rWAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708339824;
+    s=strato-dkim-0003; d=iokpp.de;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=yI07zQ+jWsPFC3ueFt2YVm4gmvJXrfaBGf9cUxIYjfg=;
+    b=NQaWg/1UvEG3YDkp0pKCWcClEHAk6xqOKCxUy/DybByDlZhsXkAroKHwrn5dLSXLVx
+    +IuIwBMo663TWyDbwaAQ==
+X-RZG-AUTH: ":LmkFe0i9dN8c2t4QQyGBB/NDXvjDB6pBSeBwhhSxarlUcu05JCAPyj3VPAceccYJs0uz"
+Received: from [10.176.235.119]
+    by smtp.strato.de (RZmta 49.11.2 AUTH)
+    with ESMTPSA id z34ed901JAoOFUk
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 19 Feb 2024 11:50:24 +0100 (CET)
+Message-ID: <82320769f502c5fadad90f1ec8d782c6ef423f56.camel@iokpp.de>
+Subject: Re: [PATCH v2] PCI: Increase maximum PCIe physical function number
+ to 7 for non-ARI devices
+From: Bean Huo <beanhuo@iokpp.de>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+  bhelgaas@google.com, schnelle@linux.ibm.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bean Huo
+	 <beanhuo@micron.com>, stable@vger.kernel.org
+Date: Mon, 19 Feb 2024 11:50:23 +0100
+In-Reply-To: <4858e202-6097-493a-8405-86d3e8e17c83@linux.intel.com>
+References: <20240216190113.20341-1-beanhuo@iokpp.de>
+	 <4858e202-6097-493a-8405-86d3e8e17c83@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1499309722-1708339653=:1174"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 2024-02-16 at 14:26 -0800, Kuppuswamy Sathyanarayanan wrote:
+> It looks like for an ARI capable device the limit is 256. Why not add
+> that
+> check as well?
 
---8323328-1499309722-1708339653=:1174
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+" With ARI, the 16-bit field is interpreted as two fields
+instead of three: an 8-bit Bus Number and an 8-bit Function Number -
+the Device Number field is eliminated. This new
+interpretation enables an ARI Device to support up to 256 Functions
+[0..255] instead of 8 Functions [0..7]."
 
-On Fri, 16 Feb 2024, Michael Kelley wrote:
+the above statement on PCIe Spec highlights that since the Function
+Number field in an ARI-enabled device is 8 bits, it inherently supports
+numbering from 0 to 255. Thus, there's no need for additional checks to
+limit the function number to this range; the 8-bit size of the field
+naturally imposes this limit. This efficient use of the available
+address space aligns with the goals of ARI to enhance device
+functionality within the PCIe specification.
 
-> From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> Sent: Friday, Febru=
-ary 16, 2024 6:46 AM
-> >=20
-> > On Wed, 14 Feb 2024, mhkelley58@gmail.com wrote:
-> > >
-> > > For a physical PCI device that is passed through to a Hyper-V guest V=
-M,
-> > > current code specifies the VMBus ring buffer size as 4 pages.  But th=
-is
-> > > is an inappropriate dependency, since the amount of ring buffer space
-> > > needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
-> > > size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ri=
-ng
-> > > size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
-> > > is used for only a few messages during device setup and removal, so a=
-ny
-> > > space above a few Kbytes is wasted.
-> > >
-> > > Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
-> > > Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
-> > > header is properly accounted for, and so the size is rounded up to a
-> > > page boundary, using the page size for which the kernel is built. Whi=
-le
-> > > w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
-> > > 64 Kbyte ring buffer, that's the smallest possible with that page siz=
-e.
-> > > It's still 128 Kbytes better than the current code.
-> > >
-> > > Cc: <stable@vger.kernel.org> # 5.15.x
-> > > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-> > > Reviewed-by: Kuppuswamy Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > > ---
-> > > Changes in v2:
-> > > * Use SZ_16K instead of 16 * 1024
-> > > ---
-> > >  drivers/pci/controller/pci-hyperv.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/contro=
-ller/pci-
-> > hyperv.c
-> > > index 1eaffff40b8d..baadc1e5090e 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -465,7 +465,7 @@ struct pci_eject_response {
-> > >  =09u32 status;
-> > >  } __packed;
-> > >
-> > > -static int pci_ring_size =3D (4 * PAGE_SIZE);
-> > > +static int pci_ring_size =3D VMBUS_RING_SIZE(SZ_16K);
-> > >
-> > >  /*
-> > >   * Driver specific state.
-> > >
-> >=20
-> > Hi,
-> >=20
-> > You forgot to add #include <linux/sizes.h> for it.
-> >=20
-> > With that fixed:
-> >=20
-> > Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> >=20
->=20
-> Fixed in v3.  I mis-interpreted your previous comment about
-> adding the #include "if needed".  It's not needed to compile
-> correctly, as sizes.h is indirectly included through some other
-> #include.  But it's better to directly #include what's needed
-> lest some unrelated change cause a failure.
-
-Yes, we try include the headers we use in the .c file. I used "if needed"=
-=20
-because I didn't check if it was already among the #includes in the file.
-
-Our tools are lacking to enforce/check a file has correct set of #includes=
-=20
-so it's currently based mostly on reviewers noticing something is wrong=20
-with #includes, hopefully some time in the future, the tools also catch=20
-up.
-
-
---=20
- i.
-
---8323328-1499309722-1708339653=:1174--
+Kind regards,
+Bean
 
