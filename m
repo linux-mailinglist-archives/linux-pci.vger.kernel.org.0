@@ -1,141 +1,130 @@
-Return-Path: <linux-pci+bounces-3721-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3722-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24EA785A2BB
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:01:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 165D585A2DF
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:09:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5062285066
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 12:01:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0B33283A68
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 12:09:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420392D60A;
-	Mon, 19 Feb 2024 12:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1132D05A;
+	Mon, 19 Feb 2024 12:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jgGZxJ2d"
+	dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="SpodSi7z";
+	dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b="l3tiWElU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD4B2C842;
-	Mon, 19 Feb 2024 12:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708344021; cv=none; b=PY1XPn0wR6WHA5NP0bcwHA5uXkiYAtqbD86/pWnvDj50jSDL0GBIbldzs5XbpGsj4GZ++R7p+vhoG5eTVhElLWo/osMUlcuP9aYunp1UN41XvNXMkHnfJ7xpZDSRuQRuE33tEAL788j24mtNwd8Zy2URCwB9N3ACh8FiVPwlZdY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708344021; c=relaxed/simple;
-	bh=KPJGEyp+8mjgucHi5TVoshHn75rjK/8wWiERVy3coCI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owRRda4q+n8R86P+JKDrenU0Kz2WhDY+AvMbRVQp6o43ASoXiWctslArS/1Mle6K2mjzXHLeAOylRTLP6ydZaTmeB/jIZDdNQ4nX1XHUiwuFFTPq93Y4ISK1qMruivmuSI7RipU2n23otSnvAbrcno7AGSH9RLZ/YN97yNWfzEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jgGZxJ2d; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41JC07U3118394;
-	Mon, 19 Feb 2024 06:00:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708344007;
-	bh=cU8f6d3RpKc/TTtGEPnr+Al9HkYAPF1QNsCxZf4C8gA=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=jgGZxJ2dvkrIPjoRF3Q46cnAErwClWjeY2my0tjcjVC/ZsRl+jI2rh5UG+biWmsz+
-	 UNrDYzW/6HExJ1h3V3rmjI/kkkN6ux41SmEJ17wywxqk/VvJ+5RUSbIMDjcUKv3XQD
-	 zPXpDdCTfFonqmyX6xOPRiqfzhgxPF8yBXpw64tQ=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41JC029x003366
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 19 Feb 2024 06:00:06 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 19
- Feb 2024 06:00:03 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 19 Feb 2024 06:00:03 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41JC021g003913;
-	Mon, 19 Feb 2024 06:00:03 -0600
-Date: Mon, 19 Feb 2024 17:30:02 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Bean Huo <beanhuo@iokpp.de>
-CC: <bhelgaas@google.com>, <helgaas@kernel.org>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bean Huo <beanhuo@micron.com>, <stable@vger.kernel.org>,
-        <s-vadapalli@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D484C2DF9C;
+	Mon, 19 Feb 2024 12:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708344566; cv=pass; b=g0y2IxYXAe7qSub1lW/NXsCADapRRvZqbPrZJjMbESRkxSuPcc1bD/cMa8PZjfnvpWsthAhR7mlWTCgHhDaOGY/EumpbZ1tlV+WrxItPLkx3Zf8ZK49pE1GSubi4P7WH0LxbrLRIeV7wkB8U44yXocYO7JUS3QYPcK49dD+9Aec=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708344566; c=relaxed/simple;
+	bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PKZgYT/JkUOBQPK7u63GwepypgIV0VrVYzR02A7J2CpoBjLFZNjPN8EAR/O+B4F+MHVjRRH4GIziAA9un2oqf9/YVEyEtZ6rKRLqDP5OFVZVEs5tFuq4xI+Lh+uV/mcjeN6XcAXlbH+HF1GNLxk7YOQOjQs9nuteCScZj/AncHI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de; spf=none smtp.mailfrom=iokpp.de; dkim=pass (2048-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=SpodSi7z; dkim=permerror (0-bit key) header.d=iokpp.de header.i=@iokpp.de header.b=l3tiWElU; arc=pass smtp.client-ip=85.215.255.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iokpp.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=iokpp.de
+ARC-Seal: i=1; a=rsa-sha256; t=1708344556; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=qcCuu30vrT9ipND9ROtbvG+H753q3gyJ4pvPZo0p0jDe+PLmdxKqiNoBkXgGL01um0
+    u2bcJDBrLzNNgSCIix/D3bnfcjN3N0ty1Pi59XGnEAbLeXLZFrP44yxHlt6DgYxBfE5c
+    SIgPu6DnEmDG35wCtY0VZ8kT9bzFAPGQQ1njmAlNQyo+1IzON7vu1pY+K/LRirg62VG/
+    GSEkQwTEpfUW6aysGnhd+ClmofgBDF4DfaoELM2hKyS/ichqAcVvqmNMqSyD4JIRjS34
+    e067damlRfMPf85/1ZvtCvy347kvJrwRfk8+Urwo2hYnryJC+5KfYRiwv9wIOFLNczSF
+    X6sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1708344556;
+    s=strato-dkim-0002; d=strato.com;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
+    b=U/N6tOSurMwh9euZTjLenRadLMg+TvdrX9Yc8jqydZQbj0hHTY9mgt0iEdRHuRxtyX
+    acTrYx4/slsIXmPtHL1qW7wSlJDb/k1tu6FG1fYlNZO6jyJ6ClYjexmrHJpKKYhWG2EM
+    /UHIRUMC0b8qCMKLBEq9QNZrt4NzUXaHrlmpxJBXC5MrupGfh4gy2UQj5g+MMECYawLB
+    omdr+Y8pf+t09JUB5tg/wJAqr0UST1433TnS2OCIU6ReO9iwR5o8C4B37kdPvNMQUk2R
+    /QHqYlXZ08K1+UYYl66fzMvUxHwfxY2CAS0MoGYot0M9z21VyijkjkAMtkeetAYSC3rw
+    EtMQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1708344555;
+    s=strato-dkim-0002; d=iokpp.de;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
+    b=SpodSi7z0nOve6xepgf+5NIJ3W/dFpmsvbfyQ2CNNGRTaGc1iSgPkZLcdFLMmh4r5N
+    lZZ4Mi4aGk+m9r2jLQft4nL+IW6MxE1Y29VLZubaq2JaI+g1SxPOIYsKNuzRVkDQ5Zim
+    qX+sJVtbt40Bq+bulrWE/KCEMEEr3aS9uqi7z/+0glwYNHa3ws9tOouNh2ngJM615cZ6
+    GgRu2w6k91okdtZbX+2laOjcYmouHqn1mr/4fnC6E7+XYevKJHz/cMnEM6Y8R4xJQrqj
+    +nAc/vwDa9zMbXzjvyNLplcRBro2bJwCveksLLayZlYZFucQvvPGwWmZRLEc0Gm1cdrp
+    10jQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1708344555;
+    s=strato-dkim-0003; d=iokpp.de;
+    h=References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=AjrVEp3fpkZRCO/o25RmtJVX3tFJ8i0+SruCDOkqxVc=;
+    b=l3tiWElUoTRAGkwsTxJHK4fOZt2M2ZKN/F4JiVqegz2UlxKYdDF26KL89t/pAAl/SO
+    hFfuhpMCYWdlsK9qkbAQ==
+X-RZG-AUTH: ":LmkFe0i9dN8c2t4QQyGBB/NDXvjDB6pBSeBwhhSxarlUcu05JCAPyj3VPAceccYJs0uz"
+Received: from [10.176.235.119]
+    by smtp.strato.de (RZmta 49.11.2 AUTH)
+    with ESMTPSA id z34ed901JC9EFwE
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Mon, 19 Feb 2024 13:09:14 +0100 (CET)
+Message-ID: <fe5d0d5c3cdebc8d637c348f3759330166604bb0.camel@iokpp.de>
 Subject: Re: [PATCH v3] PCI: Increase maximum PCIe physical function number
  to 7 for non-ARI devices
-Message-ID: <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
+From: Bean Huo <beanhuo@iokpp.de>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, helgaas@kernel.org, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bean Huo <beanhuo@micron.com>, 
+	stable@vger.kernel.org
+Date: Mon, 19 Feb 2024 13:09:14 +0100
+In-Reply-To: <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
 References: <20240219112422.54657-1-beanhuo@iokpp.de>
+	 <37d21806-d964-40e0-a5a5-3173996e601f@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240219112422.54657-1-beanhuo@iokpp.de>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 24/02/19 12:24PM, Bean Huo wrote:
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> As per PCIe r6.2, sec 6.13 titled "Alternative Routing-ID Interpretation
-> (ARI)", up to 8 [fn # 0..7] Physical Functions(PFs) are allowed in an
-> non-ARI capable device. Previously, our implementation erroneously limited
-> the maximum number of PFs to 7 for endpoints without ARI support.
-> 
-> This patch corrects the maximum PF count to adhere to the PCIe specification
-> by allowing up to 8 PFs on non-ARI capable devices. This change ensures better
-> compliance with the standard and improves compatibility with devices relying
-> on this specification.
+On Mon, 2024-02-19 at 17:30 +0530, Siddharth Vadapalli wrote:
+> The function "next_fn()" seems to provide the next valid function.
+> Therefore, if the current function is 0 (fn =3D 0), then the next valid
+> function will be 1 which is returned by next_fn(). It extends
+> similarly
+> until the case where current function is 6 (fn =3D 6) which shall
+> return
+> the next valid function as 7. So all 8 PFs are still treated as valid
+> and there doesn't seem to be any limitation. Only in the case where
+> the
+> EP doesn't support ARI (there is no function 8 (fn =3D 8)), the call to
+> next_fn() with the fn parameter set to 7, will return -ENODEV which
+> seems to be the expected behavior.
+>=20
+> Regards,
+> Siddharth.
 
-The function "next_fn()" seems to provide the next valid function.
-Therefore, if the current function is 0 (fn = 0), then the next valid
-function will be 1 which is returned by next_fn(). It extends similarly
-until the case where current function is 6 (fn = 6) which shall return
-the next valid function as 7. So all 8 PFs are still treated as valid
-and there doesn't seem to be any limitation. Only in the case where the
-EP doesn't support ARI (there is no function 8 (fn = 8)), the call to
-next_fn() with the fn parameter set to 7, will return -ENODEV which
-seems to be the expected behavior.
+yes, you are right, the fn 7 has no next_fn, hence should return -
+ENODEV.=20
 
-Regards,
-Siddharth.
+ignore this patch!
 
-> 
-> Fixes: c3df83e01a96 ("PCI: Clean up pci_scan_slot()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
-> Changelog:
-> 	v2--v3:
-> 		1. Update commit messag 
-> 	v1--v2:
-> 		1. Add Fixes tag
-> 		2. Modify commit message
-> ---
->  drivers/pci/probe.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index ed6b7f48736a..8c3d0f63bc13 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2630,7 +2630,8 @@ static int next_fn(struct pci_bus *bus, struct pci_dev *dev, int fn)
->  	if (pci_ari_enabled(bus))
->  		return next_ari_fn(bus, dev, fn);
->  
-> -	if (fn >= 7)
-> +	/* If EP does not support ARI, the maximum number of functions should be 7 */
-> +	if (fn > 7)
->  		return -ENODEV;
->  	/* only multifunction devices may have more functions */
->  	if (dev && !dev->multifunction)
-> -- 
-> 2.34.1
-> 
-> 
+kind regards,
+Bean
 
