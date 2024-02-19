@@ -1,107 +1,169 @@
-Return-Path: <linux-pci+bounces-3729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3730-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E0B185A4A2
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 14:29:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA83485A58B
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 15:13:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC8921C21331
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 13:29:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FB362857C4
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Feb 2024 14:13:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CA3B3612D;
-	Mon, 19 Feb 2024 13:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7699364AD;
+	Mon, 19 Feb 2024 14:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wedekind.de header.i=@wedekind.de header.b="iGo0wxxi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GjaQAxSe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.wedekind.de (mail.wedekind.de [80.153.46.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB88282E2
-	for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 13:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.153.46.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218B62E419
+	for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 14:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708349341; cv=none; b=BSBorBOluoyVN9Llyf77YOnK1SJsEfrUGPTtJ/8RKd8ReM899hZN+REts5smZD4/gdowxhmNHRcBAQuiOH2KwRhqVekVwnXzrB0NXgg0eKHdHMDIkxPjt70yJMpk9zjqihhC+MRxNCFD4BATNWSNouCnk+K/5l4+8BrUk5MU8zg=
+	t=1708352032; cv=none; b=IGC+geGx27A/14V6KBbNhx4+1gYCdmode63zutbAt6XN0u2J8oHK6j9Cvn+oWiEX5m4OLG1Ry/l52Ges4+9yF+hWKNIdDQUXKnW+an5jK7qirDO7+Xruuw9VjfedR82TYdcMEW1sqhbvSiu5lifnpfZ3nkKRyYCZtfome5YH2gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708349341; c=relaxed/simple;
-	bh=PrXs2vMGMNLDI5CiR/0jCDAiOIzGIJBEIEV9cS9pEaE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=im8n4Fu85n5fow/5XflXRcLyV2GfS1Yc87CX+YZ9zXTS+EZ1Z8P38HSr1qi6Rfb+G2YCOy32XU+zrhfdhfvPbglgTx/fCaMOHo5w/teHL7Z7UJO0Sf5UQ0OE45t9rORh8gk9O/Tydc7F94DYIZm+dQnvZm87xFrRyBcYXQNIFUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wedekind.de; spf=pass smtp.mailfrom=joerg.wedekind.de; dkim=pass (1024-bit key) header.d=wedekind.de header.i=@wedekind.de header.b=iGo0wxxi; arc=none smtp.client-ip=80.153.46.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wedekind.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joerg.wedekind.de
-X-Virus-Scanned: amavisd-new at wedekind.de
-Received: from 127.0.0.1 (helo=authenticated.user-IP.removed)
-	(authenticated bits=0)
-	by wedekind.de (8.17.1/8.17.1/SUSE Linux 0.8) with ESMTPSA id 41JDSjZx011054
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO); Mon, 19 Feb 2024 14:28:48 +0100
-	(envelope-from joerg@joerg.wedekind.de)
-DKIM-Filter: OpenDKIM Filter v2.11.0 wedekind.de 41JDSjZx011054
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wedekind.de;
-	s=mail201912; t=1708349328;
-	bh=PrXs2vMGMNLDI5CiR/0jCDAiOIzGIJBEIEV9cS9pEaE=;
-	h=From:To:Cc:Subject:Date;
-	b=iGo0wxxi4TSaPW5uAcwf4zE3UPhyffXI8EnGrgEk44yc4+Ey0wSxG3Wg5/Htc927d
-	 juF78Qs4+bJp363GmLfN90IpTIhSSVZERTBO9/PlNAycP7T6iWhl5k2ajQ3n181J7m
-	 Xfhtz9b+VYauxaAejx0e1HMlnwygRa+gW2f60kew=
-Received: by joerg.wedekind.de (Postfix, from userid 1000)
-	id 2EBDA41436; Mon, 19 Feb 2024 14:28:45 +0100 (CET)
-From: =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>
-To: linux-pci@vger.kernel.org
-Cc: aradford@gmail.com, =?UTF-8?q?J=C3=B6rg=20Wedekind?= <joerg@wedekind.de>
-Subject: PCI: Mark 3ware-9650SE Root Port Extended Tags as broken
-Date: Mon, 19 Feb 2024 14:28:11 +0100
-Message-Id: <20240219132811.8351-1-joerg@wedekind.de>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1708352032; c=relaxed/simple;
+	bh=x3XahZP2P6sjAaGseOhzbGD88QCyeoY8Zjanu0Fy6gE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MzZiymqfQrGIYlDXqDdWOd6mlONx9I6Tcm6bMJZUV/UauYDpdUsOJsYrRg6CCnpJqVsZjm6AJKSq/tjDqkDoeI3hUZfDtguqaxFoH5JVbSGscLFaZvopBSJxekBLQLcx5OwxWTnkpHMwCBoK0XkiHTwJ8FzWbmYQwL0bLy+F4cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GjaQAxSe; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-42a31b90edcso31482451cf.0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Feb 2024 06:13:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708352030; x=1708956830; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dqaONtfofwIyhOcUouHJ9XwD5btDKUHsUP+4nmTWuKc=;
+        b=GjaQAxSehXiBqls4tPZtVy+yMl+O+spar/41jvnBegabQzm5Eb8XkL2y7YojuIFvBM
+         3x5Y1U4ftA7UtoSMN0MY3ILCGzW3Q+T/DTs2RuFrcrlpZdpLKdKGVf81IzMBoGDhzevL
+         kCXUpOAQnvQiT0Asu/WrCSDgxf7q1HA4+MvIWMNuOsPiMoPx09N+kR0ksukLfI7KVAlY
+         O6qgrLVLO03aNJIJNNPaherWFBPD3wmueglU3+Hmh7l9hc08CaTjQKUOIESictEs0N5H
+         0EzrVPJSBWxrmAPKaT5fAbBNPS5uaUeNvENtv1YHSegoYan7cY0RSZMI/N1o7ImS/jga
+         j5DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708352030; x=1708956830;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dqaONtfofwIyhOcUouHJ9XwD5btDKUHsUP+4nmTWuKc=;
+        b=SIr2X5DYO/czDhm/zajUAKR+vU4km+QV3nSz7dPOW33oGVT8KKQAcsA1fD9XRbu3dG
+         f7rHC0+y0+JDkrO3rSmfLcnI2tzYl3OWCosfZoSwZKOJ4zxO3IsCfpXkJojcVvhTi2UG
+         VlLB3geO0qvRcJ5QFPFM1/Fm+B7n0xN31MP6cWHrvEIAEV1tA0v7XxCtgq3cjFWv47MU
+         7yStEhqzypyLvOqr+9vK6ezSlPL412tV5o9KoHGskMfgEIVysl74AvCo+nO936oqABn/
+         A5sj/zSk1dEJKk1K2zkdeIumwfY73YQ3fmKLPy8G3+WdTt8dkuzbc1o+iPizPem7p3S+
+         +b/w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Lr2D8X9zBw8V9yX32mp1KIdVWvttBbdZCllFm0pp67+KqsyYk8uBW1dZuLKyPma2xIvAw0FSuDuX8oGG66z5/cbf3iosbeo6
+X-Gm-Message-State: AOJu0YzSaBTbrvZdsJggFBSNGGaKCkR3iIsf3gGd/DnERHUjpSYX/cF9
+	INkQ1a8E9OlL21CnhNC39oWdzxqXspzr+YQ4/WbeO5Id176OGtvvYBZNgMrT0A==
+X-Google-Smtp-Source: AGHT+IGBAkDL+Pu6U5GTS4s671FesCWaebH0kXYGs308nbIqu3TReIpd8RYvcfJib18AnTSFapwMjA==
+X-Received: by 2002:ac8:59c9:0:b0:42e:696:2016 with SMTP id f9-20020ac859c9000000b0042e06962016mr5030194qtf.17.1708352030004;
+        Mon, 19 Feb 2024 06:13:50 -0800 (PST)
+Received: from thinkpad ([117.248.7.166])
+        by smtp.gmail.com with ESMTPSA id ka1-20020a05622a440100b0042dd9164ec4sm2588243qtb.54.2024.02.19.06.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Feb 2024 06:13:49 -0800 (PST)
+Date: Mon, 19 Feb 2024 19:43:41 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Ajay Agarwal <ajayagarwal@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
+	Doug Zobel <zobel@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+	Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
+Message-ID: <20240219141341.GD3281@thinkpad>
+References: <20240215140908.GA3619@thinkpad>
+ <20240217000723.GA1294711@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (wedekind.de [192.168.17.251]); Mon, 19 Feb 2024 14:28:48 +0100 (CET)
+In-Reply-To: <20240217000723.GA1294711@bhelgaas>
 
-Per PCIe r3.1, sec 2.2.6.2 and 7.8.4, a Requester may not use 8-bit Tags
-unless its Extended Tag Field Enable is set, but all Receivers/Completers
-must handle 8-bit Tags correctly regardless of their Extended Tag Field
-Enable.
+On Fri, Feb 16, 2024 at 06:07:23PM -0600, Bjorn Helgaas wrote:
+> On Thu, Feb 15, 2024 at 07:39:08PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Feb 14, 2024 at 04:02:28PM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Feb 06, 2024 at 10:40:43PM +0530, Manivannan Sadhasivam wrote:
+> > > > ...
+> > > 
+> > > > ... And for your usecase, allowing the controller driver to
+> > > > start the link post boot just because a device on your Pixel
+> > > > phone comes up later is not a good argument. You _should_not_
+> > > > define the behavior of a controller driver based on one
+> > > > platform, it is really a bad design.
+> > > 
+> > > I haven't followed the entire discussion, and I don't know much
+> > > about the specifics of Ajay's situation, but from the controller
+> > > driver's point of view, shouldn't a device coming up later look
+> > > like a normal hot-add?
+> > 
+> > Yes, but most of the form factors that these drivers work with do
+> > not support native hotplug. So users have to rescan the bus through
+> > sysfs.
+> > 
+> > > I think most drivers are designed with the assumption that
+> > > Endpoints are present and powered up at the time of host
+> > > controller probe, which seems a little stronger than necessary.
+> > 
+> > Most of the drivers work with endpoints that are fixed in the board
+> > design (like M.2), so the endpoints would be up when the controller
+> > probes.
+> >
+> > > I think the host controller probe should initialize the Root Port
+> > > such that its LTSSM enters the Detect state, and that much should
+> > > be basically straight-line code with no waiting.  If no Endpoint
+> > > is attached, i.e., "the slot is empty", it would be nice if the
+> > > probe could then complete immediately without waiting at all.
+> > 
+> > Atleast on Qcom platforms, the LTSSM would be in "Detect" state even
+> > if no endpoints are found during probe. Then once an endpoint comes
+> > up later, link training happens and user can rescan the bus through
+> > sysfs.
+> 
+> Can the hardware tell us when the link state changes?  If so, we
+> should be able to scan the bus automatically without the need for
+> sysfs.  For example, if the Root Port advertised PCI_EXP_FLAGS_SLOT, 
+> we might be able to use a Data Link Layer State Changed interrupt to
+> scan the bus via pciehp when the Endpoint is powered up, even if the
+> Endpoint is actually soldered down and not physically hot-pluggable.
+> 
 
-Some devices do not handle 8-bit Tags as Completers, so add a quirk for
-them.  If we find such a device, we disable Extended Tags for the entire
-hierarchy to make peer-to-peer DMA possible.
+I don't think the state change interrupt is generated on Qcom platforms. I will
+check with the hw team and reply back.
 
-The 3ware 9650SE  seems to have issues with handling 8-bit tags. Mark it
-as broken.
+As a reply to my earlier question on requiring 1s delay for waiting for the link
+to come up during boot:
 
-This fixes PCI Partiy Errors like :
+PCIe spec r5, sec 6.6.1 says:
 
-  3w-9xxx: scsi0: ERROR: (0x06:0x000C): PCI Parity Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000D): PCI Abort: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x000E): Controller Queue Error: clearing.
-  3w-9xxx: scsi0: ERROR: (0x06:0x0010): Microcontroller Error: clearing.
+"Unless Readiness Notifications mechanisms are used, the Root Complex and/or
+system software must allow at least 1.0 s after a Conventional Reset of a
+device, before determining that the device is broken if it fails to return
+a Successful Completion status for a valid Configuration Request. This period is
+independent of how quickly Link training completes."
 
-Fixes: 60db3a4d8cc9 ("PCI: Enable PCIe Extended Tags if supported")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202425
-Signed-off-by: Jörg Wedekind <joerg@wedekind.de>
----
- drivers/pci/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+So this might be the reason. If so, I don't see a way to avoid the delay.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d797df6e5f3e..2ebbe51a7efe 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5527,6 +5527,7 @@ static void quirk_no_ext_tags(struct pci_dev *pdev)
- 
- 	pci_walk_bus(bridge->bus, pci_configure_extended_tags, NULL);
- }
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_3WARE, 0x1004, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0132, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0140, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0141, quirk_no_ext_tags);
+- Mani
+
 -- 
-2.35.3
-
+மணிவண்ணன் சதாசிவம்
 
