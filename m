@@ -1,130 +1,146 @@
-Return-Path: <linux-pci+bounces-3764-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3765-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8CB385BC56
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 13:39:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 231D885BC91
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 13:48:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85CE52855B3
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 12:39:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8EC30B2574C
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 12:48:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3572B69D07;
-	Tue, 20 Feb 2024 12:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7A269D1D;
+	Tue, 20 Feb 2024 12:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XXzNh132"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+70rKxC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6BD5674E;
-	Tue, 20 Feb 2024 12:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D89482FA;
+	Tue, 20 Feb 2024 12:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708432750; cv=none; b=hGSAM5hcmsYc6h9Dlq7YiY/obw3wZYbpQ75ddYRSMS+TdwQHXzJwf3BONGm+VHGFBQ62Jfjv5OmHHcm6TP+iyW7eEZAXa8KTo1UW0nFq5nHGcVvsEm4ITVcRcVRfm9YwXkZ/WPuyFv2Ma6XJvl8FoX6OGMtxd+sNRByd2lcZgPc=
+	t=1708433279; cv=none; b=SgiSZnYTQFrCgJUet+d/Td4HLRll7FM3Q8+TF0DeENcrUOQgO/p/8B3EIZzBJ9o5VPzYnoBrP9mHgCp37p4437xOzJuml7tFTw+NtiPct8mwuejDpr/NZeCmRigzIdpAWcGf3ufM3GqhF1BU34girSZuWAs8aK3YxMcfeoX9Bas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708432750; c=relaxed/simple;
-	bh=rmJz9L1aMyqe1TFVpwpkVJML0wDploXGJH+3/bcrmRQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jaSgSTNDAl+J1H0NBX92nLlqDQ39vepKE859E1gsvSNaCtxAzWr50RSRSuJ02Ci3g1UeOVPoP3CYAYwcv3Qv3kaKkP1UnNGl77dEvBOTG40fRMPHj060XCw5nw93rTHOxWASW1khoy/Fk4Rl174YLbVOA7VeEATYbY3JWVQNgh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XXzNh132; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41KCcr6G094669;
-	Tue, 20 Feb 2024 06:38:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708432733;
-	bh=M6ic/FwxrMoRrJ1uWSsIK77gJf/9b0I4Y/5sr5Kv/2I=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=XXzNh132GM3SRdfTkpnaXbNN/tgfNSXrozN4nTokIbnSta+2LT8Mdbw+wSKTdRsag
-	 Ru15iE390Et01q6reUUZNkmbr8b0T5NNEGI5WZwJRFalaIfqyAFeCacj+wNsGy1krK
-	 kSzzN7gKSkH7N4xmgTAkzpmMggnq95hLyTg77ccY=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41KCcrbv128215
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 20 Feb 2024 06:38:53 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 20
- Feb 2024 06:38:51 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 20 Feb 2024 06:38:51 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41KCco9F108974;
-	Tue, 20 Feb 2024 06:38:51 -0600
-Date: Tue, 20 Feb 2024 18:08:50 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel
-	<gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Vasut
-	<marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
-        Mrinmay Sarkar <quic_msarkar@quicinc.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v2 5/5] PCI: epf-mhi: Enable HDMA for SA8775P SoC
-Message-ID: <3fccfa32-9bc8-4817-8115-b805206f5d3b@ti.com>
-References: <20240216-dw-hdma-v2-0-b42329003f43@linaro.org>
- <20240216-dw-hdma-v2-5-b42329003f43@linaro.org>
+	s=arc-20240116; t=1708433279; c=relaxed/simple;
+	bh=ViefJugypi9Weib1Uaokne/i9seCAk+ZC9k+nnoVcWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=enLCj+eUSP5TOx+bEoLMQG+hF3q7+nNHGkL/E1BCT54YYJ0ANFxY7FNOl4nub2lO5mtpoxSH9+X+PZIW/CAyB5kIPm3f7N6y+MeEwpq2QVYnNb03CZ/f8JFI7xGJ8KYTWEEsPQtqirIlkpFGRA+8dym6LVL+hyMvnlHO83vMQlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+70rKxC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF8AC433C7;
+	Tue, 20 Feb 2024 12:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708433278;
+	bh=ViefJugypi9Weib1Uaokne/i9seCAk+ZC9k+nnoVcWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O+70rKxC/6pwXD95cIIDMA1V+jnd/1+CGcXC46So93DH3Xkfgy1cC8BWRR3qI4542
+	 kCHuo10Mnf3HQionPq2GoeJHytdnySZN+AtXrVQy7+ULywO7SE8Z3CUfiJ8NRj1Ywd
+	 z7mhQpiMcCcX40rL7NcE6M0QXbOPdV03WEInkMea6IY5d/oCerFF4v6U7n7ekmm2u2
+	 QpqT8/H1cFo+jxS7xEUsTnd2m+nfD2Tamm1ILj4nnQhRbMCeNhB4jl4Y2W3k5YORzJ
+	 UTeGrLpyNukJdQCdQuzVaR5Vu6MU4U2KSZ2E7pwDn9cfOhwfnPepW50PFYspCXupGX
+	 9bF65zzZydcSA==
+Date: Tue, 20 Feb 2024 12:47:48 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 14/18] PCI/pwrctl: add a power control driver for
+ WCN7850
+Message-ID: <ea08a286-ff53-4d58-ae41-38cca151508c@sirena.org.uk>
+References: <20240216203215.40870-1-brgl@bgdev.pl>
+ <20240216203215.40870-15-brgl@bgdev.pl>
+ <d5d603dc-ec66-4e21-aa41-3b25557f1fb7@sirena.org.uk>
+ <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="g16doyZ3qKVdSFBl"
 Content-Disposition: inline
-In-Reply-To: <20240216-dw-hdma-v2-5-b42329003f43@linaro.org>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
+X-Cookie: E = MC ** 2 +- 3db
 
-On 24/02/16 11:04PM, Manivannan Sadhasivam wrote:
-> From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> 
-> SA8775P SoC supports Hyper DMA (HDMA) DMA Engine present in the DWC IP. So,
-> let's enable it in the EPF driver so that the DMA Engine APIs can be used
-> for data transfer.
-> 
-> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-> [mani: reworded commit message]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+--g16doyZ3qKVdSFBl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Siddharth.
-> ---
->  drivers/pci/endpoint/functions/pci-epf-mhi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index 2c54d80107cf..570c1d1fb12e 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -137,6 +137,7 @@ static const struct pci_epf_mhi_ep_info sa8775p_info = {
->  	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
->  	.msi_count = 32,
->  	.mru = 0x8000,
-> +	.flags = MHI_EPF_USE_DMA,
->  };
->  
->  struct pci_epf_mhi {
-> 
-> -- 
-> 2.25.1
-> 
-> 
+On Tue, Feb 20, 2024 at 12:22:42PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Feb 19, 2024 at 6:50=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> > On Fri, Feb 16, 2024 at 09:32:11PM +0100, Bartosz Golaszewski wrote:
+
+> > > +static struct pci_pwrctl_wcn7850_vreg pci_pwrctl_wcn7850_vregs[] =3D=
+ {
+> > > +     {
+> > > +             .name =3D "vdd",
+> > > +             .load_uA =3D 16000,
+> > > +     },
+
+> > I know a bunch of the QC stuff includes these load numbers but are they
+> > actually doing anything constructive?  It keeps coming up that they're
+> > causing a bunch of work and it's not clear that they have any great
+> > effect on modern systems.
+
+> Yes, we have what is called a high-power mode and a low-power mode in
+> regulators and these values are used to determine which one to use.
+
+Are you *sure* this actually happens (and that the regulators don't
+figure it out by themselves), especially given that the consumers are
+just specifying the load once rather than varying it dynamically at
+runtime which is supposed to be the use case for this API?  This API is
+intended to be used dynamically, if the regulator always needs to be in
+a particular mode just configure that statically.
+
+--g16doyZ3qKVdSFBl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXUn3MACgkQJNaLcl1U
+h9Coegf/cTLhALjTXQxrUSAhLhbbWi2aaHJ5OUWXQhSYshGlFNvzP1TpP2FeROeb
+YSX+KygQ7NlKk/LLQsU/f6IKcmlMVTO2M+gFe02zg3SiufZoJDPEmx9sqGAjE1gu
+9MlGnfmzhg1wv2nFAsqol7OpYRmGiFWwItzkh+0gcGzM1Z0dofVRz+b7iJ/D1l8k
+BmsnAqWMd6ePiTeyyZD1b2vwbIPLNYLDq0T3iL3ubP8H0tf1HkDXZCLW26RgabHJ
+uNqpcRzG+kxblNPuDu8G3w7SfLPcOQ8YjLJhiKm9ADl7Wktqh+Lx/Z0EWJBwYi+2
+gt31H+Otddbe7zUMgos8YlMmD1oumQ==
+=gJLX
+-----END PGP SIGNATURE-----
+
+--g16doyZ3qKVdSFBl--
 
