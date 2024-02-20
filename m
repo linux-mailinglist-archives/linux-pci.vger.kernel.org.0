@@ -1,322 +1,169 @@
-Return-Path: <linux-pci+bounces-3753-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3755-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0040985B9CF
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 12:00:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFB8F85BA40
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 12:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2F8F1B25CFC
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 11:00:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AEF61F25260
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 11:21:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29498664AB;
-	Tue, 20 Feb 2024 11:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FF5A664C8;
+	Tue, 20 Feb 2024 11:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DRAYm8BL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2095.outbound.protection.partner.outlook.cn [139.219.17.95])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36616604A9;
-	Tue, 20 Feb 2024 11:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.95
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708426829; cv=fail; b=TUIjDtptd4iT99oX0UemH4KUecTMoDN3uEuM4QUvibDuY6uJXIHMOxGk/2CyLj9b6Djt6zwaMVkBVNkZZ7gDhvT+8W3XwqAYsISGnEa9uzVu0x/IDP5yTFj8iDECiAIoUDHNaa3gOvfg9KqIlmo0KEmVW1Q/uZINnUgaaAM8muw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708426829; c=relaxed/simple;
-	bh=7x6twa1IH+tYVH9rw4QvYwkHw3lu8RJWXW+wzzrYBxY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=quhGwNBNSq5tcz5c5goDh1farR8O7QD4AOtuI5/MBBYg4Iajla8wlBcAATJ9HUSn6Wl6eKaEC5HvC80w3TXB8c9lSQgAipq1/wDdKfBt+gtU/jTNUNLIZDZSnYxyfYwwiREmyZgeifaNWVoBJmDJSF8b6rUfTBXqWblKYf+EVRU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ASaVZ1LyOHy4h8aA6EK3KY646tEIf7FS/PzgA1HKAlQ5GJnraaMVj3+EcB997v08tiwKGhBhASguPeEENATwBbagOawmPsf/Opy1DCxIr9zZUNkHHJ4C7H5mNVUESl5FcJd1DK/khG/M7iWmPPNq2XM3LVMGdGBqjXMcShbG/rs5ciqpzS2WP2gQl9qMAUdKaLU4ozl7W6QmN+oAZEtkwaMNr/qbcdrqz7wipL3CmL0q0pC7w8oc50fyIogzbyAO3GlMUaA+9fTQBNO4OyvpbM9G1KntWZFFNiDOiL6jUYAgUZ6eCDMjpTQIugUn41mnN4flpdUk5LxEq+MS0K0S4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8u+zLms5P02Il8Xvgpg3bAA/7ABQ34rJQEwEYQH9bVs=;
- b=WYf0hG3fhemihfCQKPm7gTjPYmBa6HoX8Hy3HhJRSOGRV/1SN2AMZ4v0hcxWgqbdCyfrDJlHmDPKcjjJAr85Fo81jiQVxkfYY30B2nSOnGfIwe3dERSH5mFU5+0drROQaM2wg0X2jHFWsVdgbnIJ0PXph52DyOFdae0gNv+dnkm2ZpWqGMGIk0gQtAJcQHT7K37NQzW46n/hWP40DXpJM4S9788K1KvJZV0s/ZsXVL0oedbPRAcETIjXK/jfN6Z7st5beAx4orEVz3JiLftrexHkJPK3Lbbw1pr4QMuH0gBYtKcFR5qpd+KgCCyamL2KGEqVYRAQboN4ITUI7X/L1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn (10.43.107.79) by
- SHXPR01MB0783.CHNPR01.prod.partner.outlook.cn (10.43.107.21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.27; Tue, 20 Feb 2024 11:00:13 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::5a5a:fa59:15fd:63dc]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7249.051; Tue, 20 Feb 2024 11:00:13 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Mason Huo
-	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-Subject: Re: [PATCH v15 15/23] PCI: microchip: Add event irqchip field to host
- port and add PLDA irqchip
-Thread-Topic: [PATCH v15 15/23] PCI: microchip: Add event irqchip field to
- host port and add PLDA irqchip
-Thread-Index: AQHaYlPYD6wUc0NM7EGAypJO2so9u7ETE0sg
-Date: Tue, 20 Feb 2024 11:00:12 +0000
-Message-ID:
- <SHXPR01MB0863FCE82CA2155E52A3EB6FE650A@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
-References: <20240218101831.113469-1-minda.chen@starfivetech.com>
- <20240218101831.113469-2-minda.chen@starfivetech.com>
-In-Reply-To: <20240218101831.113469-2-minda.chen@starfivetech.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0783:EE_
-x-ms-office365-filtering-correlation-id: d8bc096b-5f1a-4ecd-4bb2-08dc32031cd9
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- x6Qh1ne/zLagT3fIXs4sEzRldkOaDKAPrf7GM3S/vu9CiaI9gxWqSp0OZz+J7lzHjXMr6aQAb6ZB031NGKXpxzMiFOfn2fqsjuwl+TuRP5xswYQcJNPR4u+cPVIFhchIsncusMqK8viIB3rDJhZvkCVTZjJxvshxjLxq6L2ca+WRT7KG/o6xNF2Kui27l17lQaCnGaFucUhhfMHTm+o6v2Apt1qDdKk2QMu/+Fz/f6203xAo589FXyc7gZBHjtkD8EUSdXwmI7fgkwvKZn+5eikvVR79aF1b10fA65KPXChVapD69Lky1rbwYTTaS7uPeEzhx/ZTEX9yN+spHp/7BmpWA+xhoKrhVgf8zkRZFTh2IEP8Zh57lmGiBHXrbBNaGWuaDhXxth4dBMUMVif0hr2W4JzfYHsnt85FqZIqXSMbyPe2AHQsx6byN8v0c/gWXQ91tLAAfvveZuQCih9SFhDFb5QBCX+12go4gigPKW6385N7D6qjCyHa5y6CXz39NbYdCGf5IHMMcYF9LR+QUwY95U/1WT4w+L2HOcJ0Zl677gm/GgNMfyzE+k6rShQg
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?prn2hXtv+g9Xl/xzEVHAsb3w+XpeqRSklrpFg7+oklSUEjvOxf9tqglmp+?=
- =?iso-8859-2?Q?+UjcWaIgJvFdmi3pAkV1mIQ/fALo+zAEZIMa2efbTZ5z8rjZR/TA3MgglA?=
- =?iso-8859-2?Q?xFQE+Mt6S302oWwmrp/1QjNANS+UmvXFgs4PqJH7E6r80VejrimBTiCIto?=
- =?iso-8859-2?Q?6Hd8VEL9Pxv1/TVKrER3CUpaNTruEbhIH98/vx8zPhfLe7AA+1YgBuR+j7?=
- =?iso-8859-2?Q?oFx+nx41ncjPeajlg6ofDZTRuZmGt5PcQB7Gb922fjbZYSHn0iOkCNgVCW?=
- =?iso-8859-2?Q?OwBVBUO+1gHZaHrN3jcf0E6qiwf0skXFpwSZ1Xm5uegwQ/dMjszwA3l7sP?=
- =?iso-8859-2?Q?6BhiNKBzgsLaUAXOSzxZWjMnfokR7S8uEk2+cnsk6gq+nWdoMQfcB+bKTL?=
- =?iso-8859-2?Q?mI+oQGqFwx9TWeN/u4EddJnONXkW66VXb1Ad8r6JDmwAr40G6pxXab6fg6?=
- =?iso-8859-2?Q?WbB1hY5KTZGnVcFWt41+RkVwG1jYqAVoUrr+2aCy3P+T1r/ZZz+701WZ0d?=
- =?iso-8859-2?Q?ADSNZX5+xAtoxP7b6cmqKqyh8ymzcq4MQY8O/8bJ8qHNzIkEvB/8VcwusD?=
- =?iso-8859-2?Q?AuEKeUtdrMp7lOw8xJ05KQrfmoaT1mRRQ3PKnBUmG2CxvBpLpTCSKoUo1p?=
- =?iso-8859-2?Q?7VAtUUuAFESf5ZmdxXVfs31HsdvNotAxWeMONFeUjYz31N/VaQwVQT8nWb?=
- =?iso-8859-2?Q?7E1YZZbn3lpG8VQaWKvm2eXjAEFlbAaaaBXE7mbUmKYZSrLy3BApfTjmkw?=
- =?iso-8859-2?Q?72b1sUE25ZWk3er3dE1/twYrVMcPEJ2NTbcf8VAk7Y+p0AtePt1ipbYmWB?=
- =?iso-8859-2?Q?UAikWI1PQMboCXv+o84QMrZb83dhvRX3TAjpWiq5R/3KNpuh3u+5UaySqn?=
- =?iso-8859-2?Q?gnoMMI/e6M5FTcKu4LFEa7ruP6PCkQvC4k+iL84aKeYsaKOPuKfRcREkN2?=
- =?iso-8859-2?Q?R0z880GdW4BRhF0rvpdfBBQpey9hyXGfiXnyIkJNDMt5YKjYr9cHIxS6Wd?=
- =?iso-8859-2?Q?gVFYZ6BaNYRLPRorjC85F54MsR/qkSRDZNRt3VJE3umViHQZiwAHSOhxB7?=
- =?iso-8859-2?Q?qU8YGMbrCrNae6Rlo4qo3ETqLY9VNmFHyBnEplWAGjMtpbfhyq+gmwG/s6?=
- =?iso-8859-2?Q?k4fqANeWMr3KzoT7jYRTGeIdolt77FGCAN2UE7Aj7DRgfXnsFlWRfARGst?=
- =?iso-8859-2?Q?IJgKzpd6/0Rb+Y7wZzrQKUnLkMi6iFU7UMoO4R76a2MvDHVQT7EMzY/xJ/?=
- =?iso-8859-2?Q?XSXA4BVjQ3vUTV08kQTtXU4fSy461IUgoghNdhTEDNCbBKfU8sTeZu6GY6?=
- =?iso-8859-2?Q?VylphJ65yjWE/Wu88zfRgBiQRjA7VTImwAZATbjjsxDdfUKUqTy+nHmVP8?=
- =?iso-8859-2?Q?8mQfwsDcEqkIuGIWW3+JuX3JLSJBqpFVj2h13MgvhCKygKRWQYdgjlFKHS?=
- =?iso-8859-2?Q?eOejIGPZRdiFPOFukUBL2dOfwzrp1ktlk2WYONCyFke4o0Zmdilii+gR4C?=
- =?iso-8859-2?Q?x178YSZL+baXDLOItr97PBeck2uOu/oWGVd2iqTecc2fQ7ieMh3eQCgKah?=
- =?iso-8859-2?Q?jnhxgGY05mOcvJmGrglDXfnEtljM4PHa+el2lMJMgOHnVmkLRSB1Mv3JmP?=
- =?iso-8859-2?Q?9+yB57lDnH7aVUk7YQiCPTtV1CxiJox/4m?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6661664AD
+	for <linux-pci@vger.kernel.org>; Tue, 20 Feb 2024 11:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708428089; cv=none; b=o0JOAW4/iNQ1+zbP6BFvgIXK10/jbTpvk1a/U3xfHSXdPsXXFJfXF5Hf6fhN/L7fe7W23TIzUckF/cRZe7YgtbOdwpZxYct7bf51+0hxove0B+EPo7/YqBEbEPE6Az+AqJqT+CGrDAqXDCUfhYN9kKJuX4v883elVWuiUKW0+lo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708428089; c=relaxed/simple;
+	bh=tMJxfwCSSr3p+ijPgpOexopN0A0/RTNz2LXt/jouBIg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=PRgUw7H0AVsIHAFpgY/7cadzpHsgUwz7/t7OIQoN8mG+idyrEVWz9ZhNx1oXv0YRQorko2QL2M6/Y0d1JN0/8ceKmt5hSd8ZTetcXzVJSr1z1cNsC/PmBjVAIOaww3bHQ1bBeSrAGK/FdSRb9zUco6xSymgNyiXA9L3KCsalhcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=DRAYm8BL; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240220112118epoutp03053968929d435be9084fbc12019070b1~1jkkzVa552856528565epoutp03E
+	for <linux-pci@vger.kernel.org>; Tue, 20 Feb 2024 11:21:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240220112118epoutp03053968929d435be9084fbc12019070b1~1jkkzVa552856528565epoutp03E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1708428078;
+	bh=1cWhqeulLVD72A386JFQUZWJu92N4UiwYI/DcEzmtt8=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=DRAYm8BLEzlPkmljiLn6/vofVK2QFZ79msvhsf/8DJ1zztz4oeM6JfWsCOwYpmU4n
+	 +iTFpeXMCFiwsTUZMGtbgs+np4t8WudnLCDXOVyjyGcJ8z/LXlziaB2Bd+B3VlJgL4
+	 x62MbxmFVmIdrUXlXkjf4Mrh+DPghgZ2Q+245sBc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240220112118epcas5p20e5f933caf48ebe9fd389527410327b9~1jkkQo-0i3136231362epcas5p2z;
+	Tue, 20 Feb 2024 11:21:18 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TfH6430w6z4x9Q0; Tue, 20 Feb
+	2024 11:21:16 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3E.E3.09672.C2B84D56; Tue, 20 Feb 2024 20:21:16 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240220084109epcas5p3dc6b95a0ed69b63e93f4aa0a6fc919fe~1hYvSgQxt0823808238epcas5p33;
+	Tue, 20 Feb 2024 08:41:09 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240220084109epsmtrp2dfee0aa01819adbc0797640442582a6b~1hYvRlQBS1186311863epsmtrp2X;
+	Tue, 20 Feb 2024 08:41:09 +0000 (GMT)
+X-AuditID: b6c32a4b-60bfd700000025c8-e2-65d48b2ccbca
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0F.7B.07368.5A564D56; Tue, 20 Feb 2024 17:41:09 +0900 (KST)
+Received: from cheetah.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.53]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240220084106epsmtip194af0d0ce4318e40dae18b6a06aa7df0~1hYsoDfGI2979629796epsmtip1j;
+	Tue, 20 Feb 2024 08:41:06 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, jingoohan1@gmail.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+	linux@armlinux.org.uk, m.szyprowski@samsung.com,
+	manivannan.sadhasivam@linaro.org, pankaj.dubey@samsung.com,
+	gost.dev@samsung.com, Shradha Todi <shradha.t@samsung.com>
+Subject: [PATCH v6 0/2] Add helper function to get and enable all bulk
+ clocks
+Date: Tue, 20 Feb 2024 14:10:44 +0530
+Message-Id: <20240220084046.23786-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFJsWRmVeSWpSXmKPExsWy7bCmlq5O95VUg7d/BC0ezNvGZrGkKcPi
+	5oGdTBYrvsxkt9j7eiu7RUPPb1aLTY+vsVp87LnHanF51xw2i7PzjrNZzDi/j8ni0NS9jBYt
+	f1pYLNYeuctucbelk9Xi4ilXi0Vbv7Bb/N+zg93i37WNLBa9h2sdRDwuX7vI7PH+Riu7x85Z
+	d9k9Fmwq9di0qpPN4861PWweT65MZ/LYvKTeo2/LKkaPz5vkAriism0yUhNTUosUUvOS81My
+	89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgH5TUihLzCkFCgUkFhcr6dvZFOWX
+	lqQqZOQXl9gqpRak5BSYFOgVJ+YWl+al6+WlllgZGhgYmQIVJmRn/H94gqXgAnfF3RvbWRoY
+	j3B2MXJySAiYSDx70MHcxcjFISSwm1Hi28V2KOcTo8S6fTNZIJxvjBKHrr5ghWk51LiVHSKx
+	l1Hi3eOljBBOK5PEtCln2ECq2AS0JBq/doHNEhFYzChxa8dmVhCHWeAXk8S+xk1MIFXCAv4S
+	HbevAlVxcLAIqEqsOZgGEuYVsJKYM3EPC8Q6eYnVGw6ADZIQWMkh8ezHQUaIhItE/+Ql7BC2
+	sMSr41ugbCmJz+/2skHY6RIrN89ghrBzJL5tXsIEYdtLHLgyhwVkL7OApsT6XfoQYVmJqafW
+	gZUwC/BJ9P5+AlXOK7FjHoytLPHlL8xtkhLzjl2GBouHxMlpN8BOEBKIlfh86T/LBEbZWQgb
+	FjAyrmKUTC0ozk1PLTYtMM5LLYdHVXJ+7iZGcKLV8t7B+OjBB71DjEwcjIcYJTiYlUR4Wcqv
+	pArxpiRWVqUW5ccXleakFh9iNAUG2URmKdHkfGCqzyuJNzSxNDAxMzMzsTQ2M1QS533dOjdF
+	SCA9sSQ1OzW1ILUIpo+Jg1OqgWlazLZahROGkwofcT7Y8H7rxR08SnuuVixJWtFs/X71Pqu5
+	u25pLTwSczrKr37DpBrLfr/67edmr+hZl3lezpPxpurq95qfpu9T1lnx9kn9J4ZrD7/tklrX
+	27LDPiblhejqr8kLpqxriDh6UO2l+Ep+l7pLUx1erjhx/WChmOVN/avZipd1+Pa6cOilbbtx
+	+kmhbDFLSjxnwOq4m6FO0fWV5woyFlz9fykz4c1zp/zPVXEV3IYPRN95tfi5cf9b+ulI/orf
+	TFMeRHCu4bNJXHBT80k786u+bVsnLWP6GJ73/nCnyRqedxV3RFkevP+UU3bg1Suj78c+K27u
+	25+gr52ZUNfqHGN3NJe3841EWvU9JZbijERDLeai4kQA2YvRST0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSnO7S1CupBkeOs1k8mLeNzWJJU4bF
+	zQM7mSxWfJnJbrH39VZ2i4ae36wWmx5fY7X42HOP1eLyrjlsFmfnATXMOL+PyeLQ1L2MFi1/
+	Wlgs1h65y25xt6WT1eLiKVeLRVu/sFv837OD3eLftY0sFr2Hax1EPC5fu8js8f5GK7vHzll3
+	2T0WbCr12LSqk83jzrU9bB5Prkxn8ti8pN6jb8sqRo/Pm+QCuKK4bFJSczLLUov07RK4Mv4/
+	PMFScIG74u6N7SwNjEc4uxg5OSQETCQONW5l72Lk4hAS2M0o8X/WbVaIhKTE54vrmCBsYYmV
+	/55DFTUzScw9fJ4FJMEmoCXR+LWLGSQhIrCcUeLnyadgHcwCPcwSB1pDQGxhAV+J92fXAjVw
+	cLAIqEqsOZgGEuYVsJKYM3EPC8QCeYnVGw4wT2DkWcDIsIpRMrWgODc9N9mwwDAvtVyvODG3
+	uDQvXS85P3cTIzjgtTR2MN6b/0/vECMTB+MhRgkOZiURXvemC6lCvCmJlVWpRfnxRaU5qcWH
+	GKU5WJTEeQ1nzE4REkhPLEnNTk0tSC2CyTJxcEo1MKXrBS2Qmz2t8cAB34Cpq0xuljGIyX9t
+	8/u8/eS8rK7JC16VrXkR3fWEb51AQSsLL4O/RV6QpsGJjf2sRpIalqxsxW4bAk8xa7Q9Y0v7
+	Leq88gmPnbme3q/Zz9adDql1+nrtpnyFtOOhZ91iSirN/xLuON9TZbT8zf/CaloDq8Gfpq3z
+	myLvSApuzAziuXhqqdBHOUXOLdf2sJR80vHZ3W+yvkFvr03W5USOq2xTs5wflWf5z3KvFvl6
+	z/PGdMXPVYvXtCzfwDWTc5UWz6fahyp1m8otd2qpegTH/XpZsj5glf+UO1f+GhZdEL6fN6tZ
+	0MQxq9OQd7OrsWrFdPUr85qmfj90LC4qhuHIkQhmJZbijERDLeai4kQASN4U4OcCAAA=
+X-CMS-MailID: 20240220084109epcas5p3dc6b95a0ed69b63e93f4aa0a6fc919fe
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240220084109epcas5p3dc6b95a0ed69b63e93f4aa0a6fc919fe
+References: <CGME20240220084109epcas5p3dc6b95a0ed69b63e93f4aa0a6fc919fe@epcas5p3.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8bc096b-5f1a-4ecd-4bb2-08dc32031cd9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2024 11:00:12.9933
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WF36AW0k+7d6C/HWaHG1FTe5gZ3xs7CJrcyZAnm3lVfD4GT676aBNLtd/LLk4qYraGg6XSb63NlnJoD+KyQgf7O6X8AyHF7A4Tmp/p2LoAE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0783
 
+Create a managed API wrapper to get all the bulk clocks and enable them
+as it is a very common practice in many drivers. The second patch uses
+this API to adapt to clk_bulk_* APIs in the exynos driver.
+v1:
+ - https://lore.kernel.org/lkml/20231009062216.6729-1-shradha.t@samsung.com/
+v2:
+ - https://lore.kernel.org/lkml/20231115065621.27014-1-shradha.t@samsung.com/
+ - Addressed Manivannan's comments to improve patch
+v3:
+ - https://lore.kernel.org/all/20240110110115.56270-1-shradha.t@samsung.com/
+ - Took Marek's suggestion to make a common bulk clk wrapper and use it in
+   the exynos driver
+v4:
+ - https://lore.kernel.org/all/20240124103838.32478-1-shradha.t@samsung.com/
+ - Addressed Alim and Manivannan's comments
+ - Changed enabled->enable and disabled->disable in function name
+ - Remove num_clks out parameter as it is not required by user
+ - Removed exit callback and used function name directly in release
+v5:
+ - https://lore.kernel.org/lkml/20240213132751.46813-1-shradha.t@samsung.com/
+ - Rephrased comments for better readability
+v6:
+ - Removed extra new line
 
->=20
-> As PLDA dts binding doc(Documentation/devicetree/bindings/pci/
-> plda,xpressrich3-axi-common.yaml) showed, PLDA PCIe contains an interrupt
-> controller.
->=20
-> Microchip PolarFire PCIE event IRQs includes PLDA interrupts and Polarfir=
-e their
-> own interrupts. The interrupt irqchip ops includes ack/mask/unmask interr=
-upt
-> ops, which will write correct registers.
-> Microchip Polarfire PCIe additional interrupts require to write Polarfire=
- SoC
-> self-defined registers. So Microchip PCIe event irqchip ops can not be re=
--used.
->=20
-> To support PLDA its own event IRQ process, implements PLDA irqchip ops an=
-d
-> add event irqchip field to struct pcie_plda_rp.
->=20
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../pci/controller/plda/pcie-microchip-host.c | 66 ++++++++++++++++++-
->  drivers/pci/controller/plda/pcie-plda.h       |  3 +
->  2 files changed, 68 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c
-> b/drivers/pci/controller/plda/pcie-microchip-host.c
-> index b3df373a2141..beaf5c27da84 100644
-> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
-> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-> @@ -770,6 +770,64 @@ static struct irq_chip mc_event_irq_chip =3D {
->  	.irq_unmask =3D mc_unmask_event_irq,
->  };
->=20
-Hi Thomas
-  I think this patch code it is easy to review. If you busy, Could you let =
-other
-IRQ maintainer review? Thanks.
+Shradha Todi (2):
+  clk: Provide managed helper to get and enable bulk clocks
+  PCI: exynos: Adapt to clk_bulk_* APIs
 
-Hi Lorenzo, Bjorn and Krzysztof
-  Now the code is pending several weeks. Maybe this patch is blocking.
-Actually I write irqchip ops(ack/mask/unmask) like microchip irqchip ops.=20
-They looks very simple that write PLDA mask or status register. They all ca=
-ll the=20
-same function plda_hwirq_to_mask(). Now you can see this function below.=20
-Except INTx interrupt, one irqnum mapping to one register bit. The PLDA reg=
-ister
-graph can be seen 14th patch, which can show all the PLDA interrupts and ea=
-sy to
- get PLDA codes logic.
+ drivers/clk/clk-devres.c                | 40 ++++++++++++++++++
+ drivers/pci/controller/dwc/pci-exynos.c | 54 ++-----------------------
+ include/linux/clk.h                     | 22 ++++++++++
+ 3 files changed, 66 insertions(+), 50 deletions(-)
 
-  Now the 6.9-next will be closed less than 20 days. I still hope the refac=
-toring patches
-(patch 1 - 16) can be accepted to 6.9. (Starfive and PLDA patches have to b=
-e delayed=20
-to 6.10 or later). I will try my best to achieve it because this series pat=
-ches reviewed lasts=20
-a long period and Conor have reviewed all the refactoring patches.
-
-I have no experience in refactoring code before this series patches. I try =
-my best to do this.
-Maybe I did something wrong in this. Please forgive me.
-
-> +static u32 plda_hwirq_to_mask(int hwirq) {
-> +	u32 mask;
-> +
-> +	/* hwirq 23 - 0 are the same with register */
-> +	if (hwirq < EVENT_PM_MSI_INT_INTX)
-> +		mask =3D BIT(hwirq);
-> +	else if (hwirq =3D=3D EVENT_PM_MSI_INT_INTX)
-> +		mask =3D PM_MSI_INT_INTX_MASK;
-> +	else
-> +		mask =3D BIT(hwirq + PCI_NUM_INTX - 1);
-> +
-> +	return mask;
-> +}
-> +
-> +static void plda_ack_event_irq(struct irq_data *data) {
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +
-> +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
-> +		       port->bridge_addr + ISTATUS_LOCAL); }
-> +
-> +static void plda_mask_event_irq(struct irq_data *data) {
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +	u32 mask, val;
-> +
-> +	mask =3D plda_hwirq_to_mask(data->hwirq);
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> +	val &=3D ~mask;
-> +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static void plda_unmask_event_irq(struct irq_data *data) {
-> +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
-> +	u32 mask, val;
-> +
-> +	mask =3D plda_hwirq_to_mask(data->hwirq);
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
-> +	val |=3D mask;
-> +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static struct irq_chip plda_event_irq_chip =3D {
-> +	.name =3D "PLDA PCIe EVENT",
-> +	.irq_ack =3D plda_ack_event_irq,
-> +	.irq_mask =3D plda_mask_event_irq,
-> +	.irq_unmask =3D plda_unmask_event_irq,
-> +};
-> +
->  static const struct plda_event_ops plda_event_ops =3D {
->  	.get_events =3D plda_get_events,
->  };
-> @@ -777,7 +835,9 @@ static const struct plda_event_ops plda_event_ops =3D
-> {  static int plda_pcie_event_map(struct irq_domain *domain, unsigned int=
- irq,
->  			       irq_hw_number_t hwirq)
->  {
-> -	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq);
-> +	struct plda_pcie_rp *port =3D (void *)domain->host_data;
-> +
-> +	irq_set_chip_and_handler(irq, port->event_irq_chip, handle_level_irq);
->  	irq_set_chip_data(irq, domain->host_data);
->=20
->  	return 0;
-> @@ -962,6 +1022,9 @@ static int plda_init_interrupts(struct platform_devi=
-ce
-> *pdev,
->  	if (!port->event_ops)
->  		port->event_ops =3D &plda_event_ops;
->=20
-> +	if (!port->event_irq_chip)
-> +		port->event_irq_chip =3D &plda_event_irq_chip;
-> +
->  	ret =3D plda_pcie_init_irq_domains(port);
->  	if (ret) {
->  		dev_err(dev, "failed creating IRQ domains\n"); @@ -1039,6 +1102,7
-> @@ static int mc_platform_init(struct pci_config_window *cfg)
->  		return ret;
->=20
->  	port->plda.event_ops =3D &mc_event_ops;
-> +	port->plda.event_irq_chip =3D &mc_event_irq_chip;
->=20
->  	/* Address translation is up; safe to enable interrupts */
->  	ret =3D plda_init_interrupts(pdev, &port->plda, &mc_event); diff --git
-> a/drivers/pci/controller/plda/pcie-plda.h
-> b/drivers/pci/controller/plda/pcie-plda.h
-> index e0e5e7cc8434..a3ce01735bea 100644
-> --- a/drivers/pci/controller/plda/pcie-plda.h
-> +++ b/drivers/pci/controller/plda/pcie-plda.h
-> @@ -107,6 +107,8 @@ enum plda_int_event {
->=20
->  #define PLDA_NUM_DMA_EVENTS			16
->=20
-> +#define EVENT_PM_MSI_INT_INTX			(PLDA_NUM_DMA_EVENTS +
-> PLDA_INTX)
-> +#define EVENT_PM_MSI_INT_MSI			(PLDA_NUM_DMA_EVENTS +
-> PLDA_MSI)
->  #define PLDA_MAX_EVENT_NUM			(PLDA_NUM_DMA_EVENTS +
-> PLDA_INT_EVENT_NUM)
->=20
->  /*
-> @@ -155,6 +157,7 @@ struct plda_pcie_rp {
->  	raw_spinlock_t lock;
->  	struct plda_msi msi;
->  	const struct plda_event_ops *event_ops;
-> +	const struct irq_chip *event_irq_chip;
->  	void __iomem *bridge_addr;
->  	int num_events;
->  };
-> --
-> 2.17.1
+-- 
+2.17.1
 
 
