@@ -1,204 +1,193 @@
-Return-Path: <linux-pci+bounces-3787-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3788-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D83AF85C13A
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 17:25:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D21DE85C16C
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 17:30:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E3F5282BEB
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 16:25:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BE0C1F252F8
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 16:30:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46CEE763F9;
-	Tue, 20 Feb 2024 16:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D867640E;
+	Tue, 20 Feb 2024 16:30:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jUxzYI4v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Frt2OeGC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2079.outbound.protection.outlook.com [40.107.249.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4DC76414;
-	Tue, 20 Feb 2024 16:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708446102; cv=fail; b=MMi2qdf86LGJNUr+cvuEo/J0WW6ZNbbyw+JX2DBPL5g4wOvGbZVlL3TgqnUQv4k7Nh3KWgBfGwOsi6rY/cgad8AatzdwKS1MLK+EueUkmyyboyP5Np1/2Ra0aphNQKNugagD7f6X9r2GPHkEoGcWAG5r3vuFa0AFisOrCyJa41M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708446102; c=relaxed/simple;
-	bh=jlpxR3c0uFnpuSs4Ti7ah8uLgDw4Zlt5sLYdmbQaRSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Jge+hjBK5YhNZCAcmGvOjFCaeEi6u6db+6cQYB4bCtAic/jW+4jQjImQ7XBhlFx7V8IL9TDiltpsMfVOZTcu6xdlPd9ZpgwfeFshpUV10xo2QIuh8OAhlwhVUAGyn2WYISEHklMudSD6IOwuzb2NF27uSzIy4PwxQ9qc7p/HH6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=jUxzYI4v; arc=fail smtp.client-ip=40.107.249.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fK1GnFb5pwWvdGOJKlcppEfuNuMUZ69FUEz2scvNVHXGjWH9wjsiTJtFfKMQNpSYSwqNnDf2FYwv1lJ7JcdjKmyUmOP3mj3zP7Ba5d45yhngwOZZYcWMx3usrHfMGxEl0xjJTzB7UcxPdp89yRaugUC0jeut0rMCX2I5WD4Rv3AzAZJgK4baAAHgW9sRqDLWC6XB2Kcb5NCM1QcjWnELAqcULUCD4aNfPLCVJx2OEDLoqOaYkhzrHBnceYFKiTbxlHkPfJjJF8ZXN6sCX5AAoxghuEUBg0B1ehcyOz3CEaulW0X+DLVCq5Woza3rluRdoCLLz3TuVrJO5iGyKk4Rsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9GM3Duel1ZjHQynd8B9Di0Xz7JBg7rYa4e01eZVKTwU=;
- b=HtSAzMkPYW1AdNo8Nvr9FeDmXT6D4NthnM4hQS0ZMa1OFcb2YkiuwwhKZLADGa00BA48tZShNOEmj6VhK6oFwxfTp9Xptf7ypTMwXT8YgmdtlOL3AQSJ8BJV8+yqxxpil/qSNuCGzFjJmCbd9N4mc8unTdj8G7WovYLdcDz/XfhlBPdG5STlnF2pYq03Wa+/tB9tkWvIZa77gJdoLQSzEwJyflYHNsYu/AV1hxRmp1KBb6FOOG02MDHU/5SUUU1WE/bsRkTqunohNFRmbp0lB98NXwInVgJ7FN8BKmJvudLr3uefn2adlQeSuYMT2YDNQpp2KfChWROoH/rEqud1kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9GM3Duel1ZjHQynd8B9Di0Xz7JBg7rYa4e01eZVKTwU=;
- b=jUxzYI4vP723Ej7TR/eF0uTTgNO8wlnsq7YgwFcvaQ89mySDnWRgZrP9FXc8t6uB1DGrTUghd66Kpn49RwL8AR3aPKFZhtbubyxSCqRW+Hub4tzhvTDrOWMkLLPAdyP7O8ZZNA2dKmNfl23SOKfgqCEjK6W3DOjPY41Cxrtg8N4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VE1PR04MB7295.eurprd04.prod.outlook.com (2603:10a6:800:1ac::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.38; Tue, 20 Feb
- 2024 16:21:37 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7292.036; Tue, 20 Feb 2024
- 16:21:37 +0000
-Date: Tue, 20 Feb 2024 11:21:28 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	bhelgaas@google.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, festevam@gmail.com, helgaas@kernel.org,
-	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
-	kw@linux.com, l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	robh@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v10 00/14] PCI: imx6: Clean up and add imx95 pci support
-Message-ID: <ZdTRiB9JdQSvBwKn@lizhi-Precision-Tower-5810>
-References: <20240205173335.1120469-1-Frank.Li@nxp.com>
- <ZdNvsdao8jbB/52L@lizhi-Precision-Tower-5810>
- <20240219161208.GE3281@thinkpad>
- <ZdN/OyNpw0Xa7qXG@lizhi-Precision-Tower-5810>
- <ZdR2FRQ9Fe8hhK9I@x1-carbon>
- <ZdR6EUOv6hzLEmUa@lpieralisi>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZdR6EUOv6hzLEmUa@lpieralisi>
-X-ClientProxiedBy: SJ0PR13CA0099.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5EE76411
+	for <linux-pci@vger.kernel.org>; Tue, 20 Feb 2024 16:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708446634; cv=none; b=PrLUN6Mloa35f0cksr7JMOa9Cd5DM6m/ejRKpf9L/HxIKLEYsNwTemcm0IGgBMswV9Js4zsV+F9YNuqIJ4qQwpAs+0vKu0/RUpybdRDCksmFl9f4WUcJKtXrGByI4sf7WLMEdpqNYP5hYiGLEFeFJ2Gevm7mwjo91ayjyl0pvU8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708446634; c=relaxed/simple;
+	bh=1fXyq6cAuoEnamSFWTgvyvNEMlThUpp3Kff1Mcr9tDc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aApoQxlpUXWAAnj8cmCJPri5mLCFhCOFjKoxcTI4qhcy5VOuNO5RyxJEJA5jPsBZUUyZ/s5VaNMhB0XEyRXAUrSZUle/g5m8QtiprfqddBUO7yzUMnUwUCvNZvjBusnos/MsSi0XizZ0AVf4bAHhyfYAvSiKgyxYH60JJyeBnhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Frt2OeGC; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-607dec82853so51523837b3.3
+        for <linux-pci@vger.kernel.org>; Tue, 20 Feb 2024 08:30:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708446631; x=1709051431; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6+xYMPVEaZiTF2DZys9U3HRcGSv7XVsfb8mgJa/NGLI=;
+        b=Frt2OeGCPYMZZuQPQyFE68yD+YIxzvZdQ3pZBp5iJav5PPOREnbCJnQulZlmFllt0h
+         ACi9chRg+BWeOXJI7DV+N39NWDsBjk76obVbGx0iaP66LVx/+9l4fPfRSJxbU/l4sPWM
+         8ZwqDmO81618wM6IHemuEuV6QaEyxlypN7FtS2Y0kdDYcboXIq6AXRFeEjUVOk+XSbML
+         7izskhU1GJrAVbQJgqgEIIP5wAO0Zh4qIhydzdK0kLBx83/K8OLcCJ0SPcxbfWy/SuUI
+         aHYIvwMPKuRKjlO5c8FRezwk9ckNDr/2AD1Vk7BLdIU/fPQcs+6lfYH54M2nEMSvox2G
+         LkbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708446631; x=1709051431;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6+xYMPVEaZiTF2DZys9U3HRcGSv7XVsfb8mgJa/NGLI=;
+        b=dCCYCh6M2QUq1n9DusJMkFdMfQ+qbqyBDTHJqENQnMxCBeO8Oov7ZvA3mzdoPanbNN
+         psIMvAC734A6eoiPPhwrMyNxyta5/7ASMUT1h9mnJE3cwitfimUO2+k6jkhlwJ92/KM+
+         OJe8HUnsPYQlG8lJd88EwegeJyQgxwCCxhzyQ2qzPPeCE0IWVm9Hm8y25qeUNG2JGg/f
+         87nig1vqiRBO1+vV/Nw8k0zr9ox2tbcvm24o/Mqt7Boyq9oFRz/ApL0bK2gQblY8xGsm
+         +46yLWO6c9WLMusxgeBaZiUlcr1DOMfv/2/51af0uQFbH303aABCR0R6n5bfSmlLP5Tm
+         OGkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnzn9arY9RY+22sndpmPqt5wtw5IPUjkqdDnTaVEc5C0gOpmTJ2imvWSLcsc+XXQKsV+hVc6aA9ZicpJYe9oTwuSn9/9OmUYTA
+X-Gm-Message-State: AOJu0YzZbt2mjD3AUe7KMP532qvRjCSH11J/N8uu0rFfEDFagy40J9k5
+	0k/Z0ozsCZfFlGK1ElA9f1rcRpc0caAFngGRpd6k9JzrtTUs1RVhEdLmDfOoMRK5UhhncppJWXi
+	QT+h4VWBL2nnOf9x8XjaqfQ4MLdEses8OzgWcqQ==
+X-Google-Smtp-Source: AGHT+IFDa01ZVzEZiS8s0O26WczezIZBh59zgBpRUtt9QCMKZfbnmrqIUOMg6EBt7uBSs9R0KGrlYwTH8vjmTDt3sAU=
+X-Received: by 2002:a81:490e:0:b0:608:ba5:729d with SMTP id
+ w14-20020a81490e000000b006080ba5729dmr9159540ywa.19.1708446630739; Tue, 20
+ Feb 2024 08:30:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VE1PR04MB7295:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04878f5f-9911-4f61-3c43-08dc32300346
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HMl4Ksj+OuJL7wB7MGayak3oclqRKxPQmm2iiH87LKAispUO3ZzR1bSjdoe0KYKogD1hv4KN8f3eNwkWZ27HUbRAyw09VCjVu0RwgJvwugJHtm01TySVCQiPwFQ6S6Uk1GxJ/LAw3BSvE5web/mczymlHSYvHmpl9VEl6nE9ZotyoCx+Spvkc/b2eu4B/JoQ5dmsyyGryV+EV8yN845+Irzcv2cHm+7AZrKlVDGAZMavi+o3wZmH+lRzozOQvDz/nvM5RlQ4QvPYEeM4DLpQoT+ZRl90D79Cl6IbqDOpXQR0FVnGiFJZVAhShHCiuxNdSLwMPPrnNyPrkacQy9Gz/QZFOZytbfibdgdfBLDXW6XWG3NArj5dkXOwXcuDpyu0eXyOupzvItsgS/BJK0GNcWIcZOf4Aq4Mq45S6VpBWlQ3mAbgv7DIpkhy6M7ZyWcvtHXaAzbUc6FxFMu/Hvq9RIcqPHDX/b8dSyO0wOiACFxGqUZ9TiHW9npsn6V4TY2y/SkiQcxaN94td6kMxRn1vBTmcMm17KEH0f9sk/vyCgL2w77SY2fhz3F/iJNT0F21L2OlntwJ6OV34RD1syv0SWvOCMSFllq2suaFS66aB/g=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?aQQuFkXLJ/AALZfVRwkLE0swZVhRNqJ8g/DlIqvfJA+zJxes9Z4bNoX57GH9?=
- =?us-ascii?Q?z8FHUcK6OYA/TrdXTryxpAsioli75+3rG7ZCUD68Rt9UN7Mo2lIjSYYjNrFx?=
- =?us-ascii?Q?LfecQbNsbutWYBE+Ta9q6LQvv3x/jNuZAWSjvqwB0GqzAuFBwKeEAe8gUxYR?=
- =?us-ascii?Q?ztiGA0/BDvq89zx8+1CTYix2MPi9ZV6+pIX2QTG3CGf6co7z9f+gRZQFSAsH?=
- =?us-ascii?Q?pGctvVeiuFEQ1jUpZa+59E/eU0RmzN5EnT5UwBYH8Frm0U3HB5HklBHdbILi?=
- =?us-ascii?Q?8Ds7HXTYlFqwCR5nIekaPe9n8KtraBz90p5D0sQfuNArRiK13ful9fsERz3Z?=
- =?us-ascii?Q?tQdFvzIcnHpxmfdXGYT1g0+SBEx9sIK3LuvryTSVCtKqRbKh6fKJsDPoBdMT?=
- =?us-ascii?Q?VPz3sFXKHBMraf8dpws4EmXoGocn6Dbfjwr2iR0xSRGcKUMD8iHlfmYFFwiw?=
- =?us-ascii?Q?82FdZC5iXj+0J2pFZaIU7NQEMXB16nN0EBnhD/8MsgOJxPHZe1w8uNxBJUV0?=
- =?us-ascii?Q?tKpPC5Ww0WB3w8u6D3uPJjd3+J2g31S9qOJTxNrZfzYuNXPEbgAAUDYflWCx?=
- =?us-ascii?Q?GRsVS1aMXmtDJm81+gKruczPmmT/WQNWdICwcFhw2ZPzGEIed8MDNmRcZTJf?=
- =?us-ascii?Q?1AKrx/u7FvBsVmp0H2yJvO+96ZsFwaHJ8J5EcXWDmSdhOwlOaNxdINj84FD9?=
- =?us-ascii?Q?rbTtsjhSFPYc84OjPUob/IP31aoY6qN1oqtbbX/l0t4ehrrDQdb5pQF1nU1M?=
- =?us-ascii?Q?W88sLub6AlWoUw/pIvbxoO5WKeP452n64LznOHU3YU8Yg5VdsZaBnFf4oRk5?=
- =?us-ascii?Q?jTTWrQxcCWmsbwVHmcvG8vxUe8wcA09MXZdj52YNVPxJbOv6wTDYP0TfYUo4?=
- =?us-ascii?Q?y27V17czfIqCSKLg3oZFFJ9wSgXVLC9MTEU6TY19/C9AdVWPFTA50E3NhkdQ?=
- =?us-ascii?Q?nIge19MeWMyokBPJHFBdeeafVeDCY6gCD+Hpgenr6OZ7ykBX0F4Ke0evI/WL?=
- =?us-ascii?Q?qH46GRzqxYY9XMvQ0ZZBZel3weDXdGhM8d2vw/8/Y1DJubHku15ZvYHFjoKn?=
- =?us-ascii?Q?W+OuwdxNuQgUODeAHm3THPZ1RTbDHhQaE7gXPJhoZTQdmJ+I99t4TbArn8c1?=
- =?us-ascii?Q?KS1IrAMmYZqOcUaH/Y7go3Gy3igLDpaWPh12Wq7oBiCl7sKibMkkvYekKKn0?=
- =?us-ascii?Q?rKZxmdBiBmARLelkD6VRPszyMpHxJ6g6b309gm2XcxNbbGZI3XRu+Clu+r8F?=
- =?us-ascii?Q?w4vsqHkEpI7oYSlQbK5O23+E9rajs9eUnTuORW/Zs/YN6ylCDY7rggXTzsdP?=
- =?us-ascii?Q?QoDhC9RnQ1Vi9+1bld6isfBDGGL892wZ+UziNZd6n37felHrT0J2TXFVZ1jl?=
- =?us-ascii?Q?76FGfb6t2Zyh1VxOQMu+u3V5gs/6N4HAKHk4PDn6dmPufy/zASzYEK0kjIzg?=
- =?us-ascii?Q?YTQ4bG96F+mc3XkqKtgTZbZvhMikrvv50Hl1/JOLLDdjLkBqEUHQP41JoxA4?=
- =?us-ascii?Q?2v6a9w0thXA53QR3Vu41g8eSjVs4zY0OjCSnBU5e0+n/0mmA0ZnyMPDLlsHl?=
- =?us-ascii?Q?sW3zAFPfet+U0eBjX+qubT5IDioMDXJUY9vO+KPo?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04878f5f-9911-4f61-3c43-08dc32300346
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 16:21:37.6049
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ghOKRiVT477Q5GhazuFfjOzgfDYv7kteRh6sYEeueqB1FqQoIr1LQcYs8Q84yh4ZiypYJmbkrla8d0kSXcsMFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7295
+References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-10-brgl@bgdev.pl>
+ <48164f18-34d0-4053-a416-2bb63aaae74b@sirena.org.uk> <CAMRc=Md7ymMTmF1OkydewF5C32jDNy0V+su7pcJPHKto6VLjLg@mail.gmail.com>
+ <8e392aed-b5f7-486b-b5c0-5568e13796ec@sirena.org.uk> <CAMRc=MeAXEyV47nDO_WPQqEQxSYFWTrwVPAtLghkfONj56FGVA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeAXEyV47nDO_WPQqEQxSYFWTrwVPAtLghkfONj56FGVA@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 20 Feb 2024 18:30:19 +0200
+Message-ID: <CAA8EJppzkuH=YTAHuJ3Og2RLHB93PSas004UDvpqepYbGepVPg@mail.gmail.com>
+Subject: Re: [PATCH v5 09/18] arm64: dts: qcom: qrb5165-rb5: model the PMU of
+ the QCA6391
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Brown <broonie@kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Saravana Kannan <saravanak@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 20, 2024 at 11:08:17AM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Feb 20, 2024 at 10:51:17AM +0100, Niklas Cassel wrote:
-> > On Mon, Feb 19, 2024 at 11:18:03AM -0500, Frank Li wrote:
-> > > On Mon, Feb 19, 2024 at 09:42:08PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Feb 19, 2024 at 10:11:45AM -0500, Frank Li wrote:
-> > > > > On Mon, Feb 05, 2024 at 12:33:21PM -0500, Frank Li wrote:
-> > > > > > first 6 patches use drvdata: flags to simplify some switch-case code.
-> > > > > > Improve maintaince and easy to read code.
-> > > > > > 
-> > > > > 
-> > > > > @Lorenzo Pieralisi:
-> > > > > 
-> > > > > 	Do you have chance to look other patches?
-> > > > > 	Mani's apply EP side change. 
-> > > > 
-> > > > Even though the controller is for the endpoint, it is still a controller
-> > > > driver. So all the patches should go through Lorenzo.
-> > > > 
-> > > > I only merge patches under drivers/pci/endpoint. Hope this clarifies.
-> > > 
-> > > Sorry. It confused everyone. My means was that Mani applied Niklas Cassel's
-> > > patches, which cause my 14th patch build failure.
-> > 
-> > Hello Frank,
-> > 
-> > Patch 14, which adds this:
-> > 
-> > +static const struct pci_epc_features imx95_pcie_epc_features = {
-> > +       .msi_capable = true,
-> > +       .bar_fixed_size[1] = SZ_64K,
-> > +       .align = SZ_4K,
-> > +};
-> > 
-> > 
-> > Should, after rebasing on Mani's pci/endpoint branch, instead look like this:
-> > 
-> > +static const struct pci_epc_features imx95_pcie_epc_features = {
-> > +       .msi_capable = true,
-> > +       .bar[BAR_1] = { .type = BAR_FIXED, .fixed_size = SZ_64K, },
-> > +       .align = SZ_4K,
-> > +};
-> > 
-> > 
-> > > 
-> > > I asked if I need update my 14th patch or applied 1-13 only. 
-> > 
-> > I see, you want the maintainers to apply 1-13, and simply drop patch 14
-> > instead of you sending out a rebased series.
-> > 
-> > I assume that the maintainers will be fine with your suggested approach.
-> 
-> If patch 14 has no dependencies on 1-13 yes; if it does we need to
-> coordinate the merge between branches in the PCI tree.
+On Tue, 20 Feb 2024 at 13:16, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Mon, Feb 19, 2024 at 8:59=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> >
+> > On Mon, Feb 19, 2024 at 07:48:20PM +0100, Bartosz Golaszewski wrote:
+> > > On Mon, Feb 19, 2024 at 7:03=E2=80=AFPM Mark Brown <broonie@kernel.or=
+g> wrote:
+> > > > On Fri, Feb 16, 2024 at 09:32:06PM +0100, Bartosz Golaszewski wrote=
+:
+> >
+> > > > > +                     vreg_pmu_aon_0p59: ldo1 {
+> > > > > +                             regulator-name =3D "vreg_pmu_aon_0p=
+59";
+> > > > > +                             regulator-min-microvolt =3D <540000=
+>;
+> > > > > +                             regulator-max-microvolt =3D <840000=
+>;
+> > > > > +                     };
+> >
+> > > > That's a *very* wide voltage range for a supply that's got a name e=
+nding
+>
+> Because it's an error, it should have been 640000. Thanks for spotting it=
+.
 
-Keep it easy. I rebase to linux-pci/endpoint and v11 patch sent out.
-https://lore.kernel.org/imx/20240220161924.3871774-1-Frank.Li@nxp.com/T/#t
+According to the datasheet, VDD08_PMU_AON_O goes up to 0.85V then down
+to 0.59V, which is the working voltage.
 
-Frank
+VDD08_PMU_RFA_CMN is normally at 0.8V, but goes to 0.4V during sleep.
 
-> 
-> Lorenzo
+>
+> > > > in _0_p59 which sounds a lot like it should be fixed at 0.59V.
+> > > > Similarly for a bunch of the other supplies, and I'm not seeing any
+> > > > evidence that the consumers do any voltage changes here?  There doe=
+sn't
+> > > > appear to be any logic here, I'm not convinced these are validated =
+or
+> > > > safe constraints.
+> >
+> > > No, the users don't request any regulators (or rather: software
+> > > representations thereof) because - as per the cover letter - no
+> > > regulators are created by the PMU driver. This is what is physically
+> > > on the board - as the schematics and the datasheet define it. I took
+> >
+> > The above makes no sense.  How can constraints be "what is physically o=
+n
+> > the board", particularly variable constrants when there isn't even a
+> > consumer?  What values are you taking from which documentation?
+> >
+>
+> The operating conditions for PMU outputs. I took them from a
+> confidential datasheet. There's a table for input constraints and
+> possible output values.
+>
+> And what do you mean by there not being any consumers? The WLAN and BT
+> *are* the consumers.
+>
+> > The cover letter and binding both claimed (buried after large amounts o=
+f
+> > changelog) that these PMUs were exposing regulators to consumers and th=
+e
+> > DTS puports to do exactly that...
+> >
+>
+> Yes, but I'm not sure what the question is.
+>
+> > > the values from the docs verbatim. In C, we create a power sequencing
+> > > provider which doesn't use the regulator framework at all.
+> >
+> > For something that doesn't use the regulator framework at all what
+> > appears to be a provider in patch 16 ("power: pwrseq: add a driver for
+> > the QCA6390 PMU module") seems to have a lot of regualtor API calls?
+>
+> This driver is a power sequencing *provider* but also a regulator
+> *consumer*. It gets regulators from the host and exposes a power
+> sequencer to *its* consumers (WLAN and BT). On DT it exposes
+> regulators (LDO outputs of the PMU) but we don't instantiate them in
+> C.
+>
+> Bart
+
+
+
+--=20
+With best wishes
+Dmitry
 
