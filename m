@@ -1,201 +1,164 @@
-Return-Path: <linux-pci+bounces-3797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E0285CA4E
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 23:02:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B58D585CA7E
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 23:12:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28AB71C21014
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 22:02:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2BEB4B22B20
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Feb 2024 22:12:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E840D152E04;
-	Tue, 20 Feb 2024 22:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TebnZ0Od"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 609F01534EC;
+	Tue, 20 Feb 2024 22:12:24 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6307152DFF;
-	Tue, 20 Feb 2024 22:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66380152E05
+	for <linux-pci@vger.kernel.org>; Tue, 20 Feb 2024 22:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708466562; cv=none; b=KEToXokXdkq5l9JiCmqG/d6VeCyj0uOKBjSTC9Jx/cW6Ptd10z84Wv3zbuD0ZIyiKCp6UBtLGJBZNtzP05Zr0n9+f1ZoFUpqLaVhMdzSORK24yU/ZW6elpk3+2Hf3Sr3CAYhwZd48oFwvAofQx2aE/TH3l21I3VeOT91/8xn+pU=
+	t=1708467144; cv=none; b=MEAErkVRGBr+fHKm5LSOHI38PG27cr4IWs18tu4YFe6DIc6uOcr78clG0gL9V6utbeQQ9Fuj8hX4xJ8/y/7GXlE/tBOqp4f5DAPX/9b68JA9SThKx0ZVCK30yer4RIo3aRVWGCvALKzAzh2x3HEh7D8SW+zRVr5sJcT80g0UO0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708466562; c=relaxed/simple;
-	bh=oJby7EduJlcAAHFPkg3SVRpnuGfP2qzVNHnuUtdsF7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=l6iqHz3A3c2P6e2zLet80hwBDsbne1g+wGhhR0BXIj8f9O8Kg4bkf6L/gPJ++1c1GVvhCadRkxyeMNfzToi4FXCicovOrk4IZT5StQBr3dOI9lUFaYAUQFQFMNaIEY75kqNM6Y1vQvy+Tj7ouUFF8axAeDVpYlL+6I7tBNKnVLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TebnZ0Od; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8454C43390;
-	Tue, 20 Feb 2024 22:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708466562;
-	bh=oJby7EduJlcAAHFPkg3SVRpnuGfP2qzVNHnuUtdsF7k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TebnZ0OdLnRIHR9anB+uo/sSFYhpPL09Ix4MZBBBbuKbHoWF300KlOgVLXvm9yUi8
-	 ojZZxxzAYO+Bkb3YGky8d7wDQsuzAU08t3SlvVdoKzlUEjOsgU2/25odXLaQTvr5ap
-	 h6D+jQtr0K4AkK/lgmx6cw5xqGYbGI6GixqbTBk0pgIkWDEYezegzdI/ktF9WWcOwK
-	 QAlbarZIIbc3x4riY0tan0fcCTe/TOzKiJGUziEgZCvmewFL6tDvbJ6wnbzY1i7D2G
-	 qkukkzfMfPS4DSD43MYdX/Y7Wf/eNb+kijNlOj0BWG2IX95DcMPURdgjBv90lwWwxT
-	 CEaX2hKQ43+4g==
-Date: Tue, 20 Feb 2024 16:02:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
- platforms
-Message-ID: <20240220220240.GA1507934@bhelgaas>
+	s=arc-20240116; t=1708467144; c=relaxed/simple;
+	bh=jhOQFc9APgBspPIxG9I1BX/ftsAh5rGUbYwZn98o1VQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EAFv0jQ0MP+QZoA970szKapddU/AvtyfVr/jwRxr4kaMsPP+R4xVCPAFO/9hC7K+WTqcSpJkTqgkFcSkuoH5/RxN9rmgiNiTqTIttX2KK9gM1ivT22m7rDi9qtdzxsElZLBYJ4RkE107dOHYMX24MXjg78q4mCSKtsoFTBPf0MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 19a140a6-d03d-11ee-b3cf-005056bd6ce9;
+	Wed, 21 Feb 2024 00:12:14 +0200 (EET)
+From: andy.shevchenko@gmail.com
+Date: Wed, 21 Feb 2024 00:12:13 +0200
+To: Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Borislav Petkov <bp@suse.de>,
+	Jean Delvare <jdelvare@suse.de>
+Subject: Re: [PATCH v4] acpi,pci: warn about duplicate IRQ routing entries
+ returned from _PRT
+Message-ID: <ZdUjvUG3aUgGCwBs@surfacebook.localdomain>
+References: <20231226124254.66102-1-mat.jonczyk@o2.pl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231226124254.66102-1-mat.jonczyk@o2.pl>
 
-On Wed, Feb 14, 2024 at 05:16:09PM +0530, Manivannan Sadhasivam wrote:
-> Currently, PCI core will enable D3 support for PCI bridges only when the
-> following conditions are met:
-
-Whenever I read "D3", I first have to figure out whether we're talking
-about D3hot or D3cold.  Please save me the effort :)
-
-> 1. Platform is ACPI based
-> 2. Thunderbolt controller is used
-> 3. pcie_port_pm=force passed in cmdline
-
-Are these joined by "AND" or "OR"?  I guess probably "OR"?
-
-"... all the following conditions are met" or "... one of the
-following conditions is met" would clarify this.
-
-> While options 1 and 2 do not apply to most of the DT based platforms,
-> option 3 will make the life harder for distro maintainers. Due to this,
-> runtime PM is also not getting enabled for the bridges.
+Tue, Dec 26, 2023 at 01:42:54PM +0100, Mateusz Jończyk kirjoitti:
+> On some platforms, the ACPI _PRT function returns duplicate interrupt
+> routing entries. Linux uses the first matching entry, but sometimes the
+> second matching entry contains the correct interrupt vector.
 > 
-> To fix this, let's make use of the "supports-d3" property [1] in the bridge
-> DT nodes to enable D3 support for the capable bridges. This will also allow
-> the capable bridges to support runtime PM, thereby conserving power.
-
-Looks like "supports-d3" was added by
-https://github.com/devicetree-org/dt-schema/commit/4548397d7522.
-The commit log mentions "platform specific ways", which suggests maybe
-this is D3cold, since D3hot should be supported via PMCSR without any
-help from the platform.
-
-So I *guess* this really means "platform provides some non-architected
-way to put devices in D3cold and bring them back to D0"?
-
-> Ideally, D3 support should be enabled by default for the more recent PCI
-> bridges, but we do not have a sane way to detect them.
+> As a debugging aid, print a warning to dmesg if duplicate interrupt
+> routing entries are present. This way, we could check how many models
+> are affected.
 > 
-> [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-pci-bridge.yaml#L31
+> This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
+> SMBus controller. This controller is nonfunctional unless its interrupt
+> usage is disabled (using the "disable_features=0x10" module parameter).
+> 
+> After investigation, it turned out that the driver was using an
+> incorrect interrupt vector: in lspci output for this device there was:
+>         Interrupt: pin B routed to IRQ 19
+> but after running i2cdetect (without using any i2c-i801 module
+> parameters) the following was logged to dmesg:
+> 
+>         [...]
+>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+>         i801_smbus 0000:00:1f.3: Transaction timeout
+>         i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+>         i801_smbus 0000:00:1f.3: Transaction timeout
+>         irq 17: nobody cared (try booting with the "irqpoll" option)
+> 
+> Existence of duplicate entries in a table returned by the _PRT method
+> was confirmed by disassembling the ACPI DSDT table.
+> 
+> Windows XP is using IRQ3 (as reported by HWiNFO32 and in the Device
+> Manager), which is neither of the two vectors returned by _PRT.
+> As HWiNFO32 decoded contents of the SPD EEPROMs, the i2c-i801 device is
+> working under Windows. It appears that Windows has reconfigured the
+> chipset independently to use another interrupt vector for the device.
+> This is possible, according to the chipset datasheet [1], page 436 for
+> example (PIRQ[n]_ROUT—PIRQ[A,B,C,D] Routing Control Register).
 
-This link won't remain accurate as lines are added/removed.  The
-kernel.org cgit allows specific commits
-(https://git.kernel.org/linus/0dd3ee311255) or line references at
-specific commits or tags
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.0#n94)
+> [1] https://www.intel.com/content/dam/doc/datasheet/io-controller-hub-9-datasheet.pdf
+> 
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> This patch is tested on Qcom SM8450 based development board with an out-of-tree
-> DT patch.
-> 
-> NOTE: I will submit the DT patches adding this property for applicable bridges
-> in Qcom SoCs separately.
-> 
-> Changes in v3:
-> - Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
-> - Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
-> 
-> Changes in v2:
-> - Switched to DT based approach as suggested by Lukas.
-> - Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
-> ---
->  drivers/pci/of.c  | 12 ++++++++++++
->  drivers/pci/pci.c |  3 +++
->  drivers/pci/pci.h |  6 ++++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 51e3dd0ea5ab..24b0107802af 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -786,3 +786,15 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->  	return slot_power_limit_mw;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+Can you convert this to be a Link tag?
+
+Link: ...URL... # [1]
+Signed-off-by: ...
+
+> Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
+
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Jean Delvare <jdelvare@suse.de>
+
+Please, move these (Cc lines) down after --- cutter line.
+
+> Previously-reviewed-by: Jean Delvare <jdelvare@suse.de>
+> Previously-tested-by: Jean Delvare <jdelvare@suse.de>
+
+This shouldn't be in the commit message, just use the comment block
+(after --- line) for this.
+
+...
+
+>  	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>  	struct acpi_pci_routing_table *entry;
+>  	acpi_handle handle = NULL;
+> +	struct acpi_prt_entry *match = NULL;
+> +	const char *match_int_source = NULL;
+
+Can you preserve reversed xmas tree ordering?
+
+...
+
+>  	while (entry && (entry->length > 0)) {
+> -		if (!acpi_pci_irq_check_entry(handle, dev, pin,
+> -						 entry, entry_ptr))
+> -			break;
+> +		struct acpi_prt_entry *curr;
 > +
-> +/**
-> + * of_pci_bridge_d3 - Check if the bridge is supporting D3 states or not
-> + *
-> + * @node: device tree node of the bridge
-> + *
-> + * Return: %true if the bridge is supporting D3 states, %false otherwise.
-> + */
-> +bool of_pci_bridge_d3(struct device_node *node)
-> +{
-> +	return of_property_present(node, "supports-d3");
-> +}
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d8f11a078924..8678fba092bb 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1142,6 +1142,9 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
->  	if (pci_use_mid_pm())
->  		return false;
->  
-> +	if (dev_of_node(&dev->dev))
-> +		return of_pci_bridge_d3(dev->dev.of_node);
-> +
->  	return acpi_pci_bridge_d3(dev);
->  }
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2336a8d1edab..10387461b1fe 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -635,6 +635,7 @@ int of_pci_get_max_link_speed(struct device_node *node);
->  u32 of_pci_get_slot_power_limit(struct device_node *node,
->  				u8 *slot_power_limit_value,
->  				u8 *slot_power_limit_scale);
-> +bool of_pci_bridge_d3(struct device_node *node);
->  int pci_set_of_node(struct pci_dev *dev);
->  void pci_release_of_node(struct pci_dev *dev);
->  void pci_set_bus_of_node(struct pci_bus *bus);
-> @@ -673,6 +674,11 @@ of_pci_get_slot_power_limit(struct device_node *node,
->  	return 0;
->  }
->  
-> +static inline bool of_pci_bridge_d3(struct device_node *node)
-> +{
-> +	return false;
-> +}
-> +
->  static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
->  static inline void pci_release_of_node(struct pci_dev *dev) { }
->  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
-> 
-> ---
-> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-> change-id: 20240131-pcie-qcom-bridge-b6802a9770a3
-> 
-> Best regards,
-> -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
+> +		if (!acpi_pci_irq_check_entry(handle, dev, pin, entry, &curr)) {
+
+> +			if (!match) {
+
+Why not positive condition?
+
+> +				match = curr;
+> +				match_int_source = entry->source;
+> +			} else {
+> +				dev_warn(&dev->dev, FW_BUG
+> +				       "ACPI _PRT returned duplicate IRQ routing entries for INT%c: %s[%d] and %s[%d]\n",
+> +				       pin_name(curr->pin),
+> +				       match_int_source, match->index,
+> +				       entry->source, curr->index);
+> +				/* We use the first matching entry nonetheless,
+> +				 * for compatibility with older kernels.
+> +				 */
+> +			}
+> +		}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
