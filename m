@@ -1,76 +1,62 @@
-Return-Path: <linux-pci+bounces-3811-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3812-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5631A85D591
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 11:31:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A2AB85D5E7
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 11:42:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 052391F23D0F
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 10:31:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB7341C21090
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 10:42:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C73C5228;
-	Wed, 21 Feb 2024 10:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3AEB2E3EB;
+	Wed, 21 Feb 2024 10:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Prj9SD/T"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTtTTzAk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFB736118;
-	Wed, 21 Feb 2024 10:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B273F1EB45;
+	Wed, 21 Feb 2024 10:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708511457; cv=none; b=l9nwjO5f63Motv1+UYPFAvNsQQKVmzEWG8Hg/yQZC/1tYm/k+ymPzQCHgO4w8znNV9xARzzwwXqkjoxlFrJdGMOlNcCyg7VYAfyORbVS+GtgjfzmDMocCv94v4kLAzb6yggrqEX6ZJogsQePQ7R8K6zJpjgXytI+z7rskF1bDj8=
+	t=1708512169; cv=none; b=Ay4zEJyh9L08f7LD8/Z3w1Wql9ZiZYUcRyZ8dXlhuHfR5n5hS/WBe4fE3zScJwbHdsBEhnU8vm15N6UNKYvarwshJkHNT/g6wjt/5QOf236R83FtGBbhmqTdHhYbcV+cX5DesvmIEi+153ENhxF18wZzb2tV9deL9Dj91aDRfNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708511457; c=relaxed/simple;
-	bh=AyULnxl8eWca9ATWEvMi4RxoJIAaos1kfRJm+tdT0fA=;
+	s=arc-20240116; t=1708512169; c=relaxed/simple;
+	bh=KLZBJdcF9biH0WRi4jGDqDVkVcZbbFEdykM15vAw0ow=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PwAmnPPsaGV2Xjd217lxFfLZv+JVxposwEgoWT6TEyYhHIiiGDrNDazPUo9JGXg9v9m3Mb46zFmjtgMHkLmC9nivDMpyq0XJCJUq92FXkp5rQG424vqZKdMX8FUwQUq3VejISdZHeztzFh6jv+Q4tcMty+8l39eCBjt2eqHO40A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Prj9SD/T; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBD2C433F1;
-	Wed, 21 Feb 2024 10:30:56 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=W8ed18Y46SzOOie5YhxwvYj3j7TSd94XZFCRYd90LtT29zIiU/jJutJIZDj0EryRecvU3911HwPra8F2qBIcOZ4shr3LoRB2qoFbz3DLGjequTuYjj1f+T7qVBkVNRijPlTSzCAeBs4k0teuFb+UQhtEI4r3aMiltrMLTZ72opA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTtTTzAk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FF08C433F1;
+	Wed, 21 Feb 2024 10:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708511456;
-	bh=AyULnxl8eWca9ATWEvMi4RxoJIAaos1kfRJm+tdT0fA=;
+	s=k20201202; t=1708512169;
+	bh=KLZBJdcF9biH0WRi4jGDqDVkVcZbbFEdykM15vAw0ow=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Prj9SD/TT3thrMU98jXSo6RtM1nbzBbYJawWoAMeejKQvddmS8PmNUtqzfTM9NgLm
-	 +KECwCrcXSHSLjvVupbrzepUotTmpb8/fsE6BK3RhXHmJySuwmY8nX8k2AgVqPUNNn
-	 stkaZz9VPX9tvSfgBp/nX8eZarCPsZDqGgS70ixFktf4j71rAr6MXrANw7Wfzrah+S
-	 MlhmLp2CbpzOJDpAyBwnSNmPE7LSSmMKsxU8ZrPEYsNKwE2jW+OCoYqQXkseMuONhM
-	 hYLpfjAOnfunhFfava9qqfHGF/ATdLDbYTeqMblmaFQE9YiQ/ZJ5yJs9lqFMPlm26F
-	 scmkNBNjnsGOA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rcjsQ-000000007Sk-2gBd;
-	Wed, 21 Feb 2024 11:30:58 +0100
-Date: Wed, 21 Feb 2024 11:30:58 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/10] dt-bindings: PCI: qcom: Do not require
- 'msi-map-mask'
-Message-ID: <ZdXQ4h03J9pi81Vq@hovoldconsulting.com>
-References: <20240212165043.26961-1-johan+linaro@kernel.org>
- <20240212165043.26961-3-johan+linaro@kernel.org>
- <e396cf20-8598-4437-b635-09a4a737a772@linaro.org>
- <Zcy4Atjmb6-wofCL@hovoldconsulting.com>
- <59bd6e54-0d5d-4e1a-818a-475a96c223ff@linaro.org>
- <20240216165406.GD39963@thinkpad>
- <ZdRXpQnbDbojlMkV@hovoldconsulting.com>
- <20240221052607.GB11693@thinkpad>
+	b=LTtTTzAkMSa2q/Vc+OjCcXFqE4L9WJz2bThCwT+fk21o1v4vf/B+1KFplaev8LRe1
+	 WdvUndqCrQx0Rty+xNQqFrvyF2xaQbNlFFxt/qFrZ1cVbjWxeRjYEFr6AImKmvWEU4
+	 VH4K8pxz+PZEf0NS4+cJl2L8u7mDdxl0lmaA9VlHaiYKljjn1vYUNivQWYlPEPownn
+	 Et71oiAKwrTMOUiJenHE9eKzaHulfju5ROFMpNPANNPCgg4xSUKn1VHefeiI9tSYuB
+	 ilMNM7+6mQ4RMQeNmO8Uojg5XJiJ6jB9t9Nwpg8DJwtCRT1pdPYUmXIfndT0aXS116
+	 cajVx8qP+banA==
+Date: Wed, 21 Feb 2024 11:42:41 +0100
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: bhelgaas@google.com, cassel@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, festevam@gmail.com, helgaas@kernel.org,
+	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
+	kw@linux.com, l.stach@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	s.hauer@pengutronix.de, shawnguo@kernel.org
+Subject: Re: [PATCH v11 10/14] PCI: imx6: Add iMX95 PCIe Root Complex support
+Message-ID: <ZdXTof/fSOuBw4MW@lpieralisi>
+References: <20240220161924.3871774-1-Frank.Li@nxp.com>
+ <20240220161924.3871774-11-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,57 +65,181 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240221052607.GB11693@thinkpad>
+In-Reply-To: <20240220161924.3871774-11-Frank.Li@nxp.com>
 
-On Wed, Feb 21, 2024 at 10:56:07AM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Feb 20, 2024 at 08:41:25AM +0100, Johan Hovold wrote:
-> > On Fri, Feb 16, 2024 at 10:24:06PM +0530, Manivannan Sadhasivam wrote:
-
-> > > msi-map-mask is definitely needed as it would allow all the devices under the
-> > > same bus to reuse the MSI identifier. Currently, excluding this property will
-> > > not cause any issue since there is a single device under each bus. But we cannot
-> > > assume that is going to be the case on all boards.
-> > 
-> > Are you saying that there is never a use case for an identity mapping?
-> > Just on Qualcomm hardware or in general?
-> > 
-> > It looks like we have a fairly large number of mainline devicetrees that
-> > do use an identity mapping here (i.e. do not specify 'msi-map-mask') and
-> > the binding document also has an explicit example of this.
-> > 
-> > 	Documentation/devicetree/bindings/pci/pci-msi.txt
+On Tue, Feb 20, 2024 at 11:19:20AM -0500, Frank Li wrote:
+> Add iMX95 PCIe Root Complex support.
 > 
-> I don't know how other platforms supposed to work without this property for more
-> than one devices. Maybe they were not tested enough?
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Change from v8 to v9
+>     - Add mani's review tag
+>     
+>     Change from v7 to v8
+>     - Update commit subject
+>     - add const from regmap
+>     - remove unnessary logic in imx6_pcie_deassert_core_reset()
+>     
+>     Change from v4 to v7
+>     - none
+>     Change from v1 to v3
+>     - none
+> 
+>  drivers/pci/controller/dwc/pci-imx6.c | 82 +++++++++++++++++++++++++--
+>  1 file changed, 77 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 71ce6b7ac1de0..582ba00d628a1 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -42,6 +42,25 @@
+>  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
+>  #define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
+>  
+> +#define IMX95_PCIE_PHY_GEN_CTRL			0x0
+> +#define IMX95_PCIE_REF_USE_PAD			BIT(17)
+> +
+> +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
+> +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
 
-Seems a bit far fetched since it's also an example in the binding.
+These two defines are unused, I will remove them.
 
-In fact, only the two Qualcomm platforms that you added 'msi-map-mask'
-for use it.
+> +#define IMX95_PCIE_SS_RW_REG_0			0xf0
+> +#define IMX95_PCIE_REF_CLKEN			BIT(23)
+> +#define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
+> +
+> +#define IMX95_PE0_GEN_CTRL_1			0x1050
+> +#define IMX95_PCIE_DEVICE_TYPE			GENMASK(3, 0)
+> +
+> +#define IMX95_PE0_GEN_CTRL_3			0x1058
+> +#define IMX95_PCIE_LTSSM_EN			BIT(0)
+> +
+> +#define IMX95_PE0_PM_STS			0x1064
+> +#define IMX95_PCIE_PM_LINKST_IN_L2		BIT(14)
 
-> But for sure, Qcom SoCs require either per device MSI identifier or
-> msi-map-mask.
+These two defines are unused. I will remove them.
 
-But isn't the mapping set up by the boot firmware and can differ between
-platforms?
-
-The mapping on sc8280xp looks quite different from sm8450/sm8650:
-
-	msi-map = <0x0 &gic_its 0x5981 0x1>,
-		  <0x100 &gic_its 0x5980 0x1>;
-	msi-map-mask = <0xff00>;
-
-Here it's obvious that the mask is needed, whereas for sc8280xp:
-
-	msi-map = <0x0 &its 0xa0000 0x10000>;
-
-it's not obvious what the mask should be. In fact, it looks like
-Qualcomm intended a linear mapping here as the length is 0x10000 and
-they left out the mask.
-
-And after digging through the X13s ACPI tables, this is indeed how the
-hardware is configured, which means that we should not use a
-'msi-map-mask' property for sc8280xp and that this patch is correct.
-
-Johan
+> +
+>  #define to_imx6_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  enum imx6_pcie_variants {
+> @@ -52,6 +71,7 @@ enum imx6_pcie_variants {
+>  	IMX8MQ,
+>  	IMX8MM,
+>  	IMX8MP,
+> +	IMX95,
+>  	IMX8MQ_EP,
+>  	IMX8MM_EP,
+>  	IMX8MP_EP,
+> @@ -63,6 +83,7 @@ enum imx6_pcie_variants {
+>  #define IMX6_PCIE_FLAG_HAS_PHYDRV			BIT(3)
+>  #define IMX6_PCIE_FLAG_HAS_APP_RESET		BIT(4)
+>  #define IMX6_PCIE_FLAG_HAS_PHY_RESET		BIT(5)
+> +#define IMX6_PCIE_FLAG_HAS_SERDES		BIT(6)
+>  
+>  #define imx6_check_flag(pci, val)     (pci->drvdata->flags & val)
+>  
+> @@ -179,6 +200,24 @@ static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+>  	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
+>  }
+>  
+> +static int imx95_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+> +{
+> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> +			IMX95_PCIE_SS_RW_REG_0,
+> +			IMX95_PCIE_PHY_CR_PARA_SEL,
+> +			IMX95_PCIE_PHY_CR_PARA_SEL);
+> +
+> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> +			   IMX95_PCIE_PHY_GEN_CTRL,
+> +			   IMX95_PCIE_REF_USE_PAD, 0);
+> +	regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> +			   IMX95_PCIE_SS_RW_REG_0,
+> +			   IMX95_PCIE_REF_CLKEN,
+> +			   IMX95_PCIE_REF_CLKEN);
+> +
+> +	return 0;
+> +}
+> +
+>  static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
+>  {
+>  	const struct imx6_pcie_drvdata *drvdata = imx6_pcie->drvdata;
+> @@ -575,6 +614,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+>  		break;
+>  	case IMX7D:
+> +	case IMX95:
+>  		break;
+>  	case IMX8MM:
+>  	case IMX8MM_EP:
+> @@ -1279,12 +1319,32 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(imx6_pcie->turnoff_reset);
+>  	}
+>  
+> +	if (imx6_pcie->drvdata->gpr) {
+>  	/* Grab GPR config register range */
+> -	imx6_pcie->iomuxc_gpr =
+> -		 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
+> -	if (IS_ERR(imx6_pcie->iomuxc_gpr)) {
+> -		dev_err(dev, "unable to find iomuxc registers\n");
+> -		return PTR_ERR(imx6_pcie->iomuxc_gpr);
+> +		imx6_pcie->iomuxc_gpr =
+> +			 syscon_regmap_lookup_by_compatible(imx6_pcie->drvdata->gpr);
+> +		if (IS_ERR(imx6_pcie->iomuxc_gpr))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->iomuxc_gpr),
+> +					     "unable to find iomuxc registers\n");
+> +	}
+> +
+> +	if (imx6_check_flag(imx6_pcie, IMX6_PCIE_FLAG_HAS_SERDES)) {
+> +		void __iomem *off = devm_platform_ioremap_resource_byname(pdev, "app");
+> +
+> +		if (IS_ERR(off))
+> +			return dev_err_probe(dev, PTR_ERR(off),
+> +					     "unable to find serdes registers\n");
+> +
+> +		static const struct regmap_config regmap_config = {
+> +			.reg_bits = 32,
+> +			.val_bits = 32,
+> +			.reg_stride = 4,
+> +		};
+> +
+> +		imx6_pcie->iomuxc_gpr = devm_regmap_init_mmio(dev, off, &regmap_config);
+> +		if (IS_ERR(imx6_pcie->iomuxc_gpr))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->iomuxc_gpr),
+> +					     "unable to find iomuxc registers\n");
+>  	}
+>  
+>  	/* Grab PCIe PHY Tx Settings */
+> @@ -1457,6 +1517,17 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+>  		.mode_off[0] = IOMUXC_GPR12,
+>  		.mode_mask[0] = IMX6Q_GPR12_DEVICE_TYPE,
+>  	},
+> +	[IMX95] = {
+> +		.variant = IMX95,
+> +		.flags = IMX6_PCIE_FLAG_HAS_SERDES,
+> +		.clk_names = imx8mq_clks,
+> +		.clks_cnt = ARRAY_SIZE(imx8mq_clks),
+> +		.ltssm_off = IMX95_PE0_GEN_CTRL_3,
+> +		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
+> +		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
+> +		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
+> +		.init_phy = imx95_pcie_init_phy,
+> +	},
+>  	[IMX8MQ_EP] = {
+>  		.variant = IMX8MQ_EP,
+>  		.flags = IMX6_PCIE_FLAG_HAS_APP_RESET |
+> @@ -1501,6 +1572,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+>  	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], },
+>  	{ .compatible = "fsl,imx8mm-pcie", .data = &drvdata[IMX8MM], },
+>  	{ .compatible = "fsl,imx8mp-pcie", .data = &drvdata[IMX8MP], },
+> +	{ .compatible = "fsl,imx95-pcie", .data = &drvdata[IMX95], },
+>  	{ .compatible = "fsl,imx8mq-pcie-ep", .data = &drvdata[IMX8MQ_EP], },
+>  	{ .compatible = "fsl,imx8mm-pcie-ep", .data = &drvdata[IMX8MM_EP], },
+>  	{ .compatible = "fsl,imx8mp-pcie-ep", .data = &drvdata[IMX8MP_EP], },
+> -- 
+> 2.34.1
+> 
 
