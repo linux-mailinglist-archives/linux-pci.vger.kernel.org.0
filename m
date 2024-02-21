@@ -1,192 +1,207 @@
-Return-Path: <linux-pci+bounces-3831-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3832-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9033E85E118
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 16:29:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9301F85E144
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 16:33:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42C47285DDA
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 15:29:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AB0B1F253E4
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 15:33:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F6967FBC3;
-	Wed, 21 Feb 2024 15:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56F9580639;
+	Wed, 21 Feb 2024 15:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kTr+ZjQq"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TayG6iuA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2065.outbound.protection.outlook.com [40.107.104.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77367F7FD
-	for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 15:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708529342; cv=none; b=XVmWXGI0fLmibjW+EtCGuDHQ32d0wDZxp3WeZ//gyXLN4IhK1lB8Wc1lrLGPPcp04jcl/WcOT5XQinO70of6Pa3YsaDzVr1CXdHc9mRVTKGEfPw7AYioiyfecFhwPoTUNJdEQi5knsZH9DDmdre5rWNLqmVwwJLauNWX+RzaGYA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708529342; c=relaxed/simple;
-	bh=7lc3/qNnC7r1ZaTxVwxtEXiP8tM431u7YzOgbKbiR9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JVRvrDzxlqvwGAlwqfhSmrVaMfYQwy0ZG75K8l5InFKW/wyjN3xQ0LVNDnuHcc9rWtsI4JHe9qnHqTZsdNYVKdPC0y0Uvz2GOKjO05+oU3FPctmV/0Z5LYmYZE8jS13MZDHjVeMKCmahLVxNS1FgRJSkqp2Q+inkDAM9v3phD9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kTr+ZjQq; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e45d0c9676so2420241b3a.0
-        for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 07:29:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708529340; x=1709134140; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qiQPIBOu4Gs/I308UF7B7RX18pmBLVdtstHOqkEYGys=;
-        b=kTr+ZjQq83To8XHG2b61xhu0R8Wl77wxJRn2eQBS2AU4dZh7RWCEEjKbIBid36E5Vv
-         CzsBIk04Yy4DQLcWSMVET+f/3BXnC4n1cV5CDCqurXYBuTYpoVNNTlpSg/q9jixZiTZC
-         ZuSsAWvBIs9P2wMcQ0BlHvWslg0h6lcXPUWlA/eHyJlEglgQSYeTjfIHjWYAh13GrOXV
-         Ewtiw3xZxraKP8Xc0+vZV6F1/oeIy4W2mSh3JmZPQcXYiyXcdfyA17qMGWm8EXnvjZ/W
-         ANz3SZyYLwAVN5+Qx6crtXZpQ5DCxj0Oshn964ODAODdShKVn7ISwvUoXDmhdSsH9+qW
-         HtRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708529340; x=1709134140;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qiQPIBOu4Gs/I308UF7B7RX18pmBLVdtstHOqkEYGys=;
-        b=Xn/59FjJL1i2yctivsypVQSgWQ75kil7cqW2lddGjbdF5XYVLZEtyObd5406xPPt+L
-         Vjg78AmZ1c+maC2X1tJXHZh4EdV9ALC0kJGZQ5e7k/0nLChgdEhcdxOtMqbj6yDeuBcY
-         nR+4wYbAFp2J7PtnZT93ZVvTKA/bO2+olg5VKGP+aCtlnZsKcYYXNaFIDMj1oULu3zyT
-         7quSova3TGU2wwz1n+zcHvCLCZZ6Ln5DfXvTzYhZ0VnfwQFE4+M+J526svKj47EY43r9
-         QdHt2hSu7C89oMa5/lbAS2crOyjVkS8b6Pb3sgS4R7gopnUkMEHGqqKRu2FS92GT+J5V
-         WFVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBfFa9RmdfJVRbLlYIXpABd9T/X0JZ4IAUR83ibca73yWhyIYOzDi9S/7ynw6s7HuJuGWj8KodmQv9fvyoq3H6mBpx03c7nuga
-X-Gm-Message-State: AOJu0Yxdoec/lbX6g8ytuEG8umw2YHszawyV4Pd+MUEtyqSQiCWVHjL5
-	UFWbB+KCYtSjwrh6o4s3UynEDZUkp4XWgH9GZXjkcjBp4EVTU9YrIBQVTm1OUg==
-X-Google-Smtp-Source: AGHT+IHvnng52SZ6b21T2opuLYZFMcT878NhB59bam9D4zlsLtJ54qrFXZ5mtV6dd+to4BUH+RsWKw==
-X-Received: by 2002:a05:6a21:3405:b0:19f:c0d3:42c3 with SMTP id yn5-20020a056a21340500b0019fc0d342c3mr22440084pzb.4.1708529339757;
-        Wed, 21 Feb 2024 07:28:59 -0800 (PST)
-Received: from google.com (223.253.124.34.bc.googleusercontent.com. [34.124.253.223])
-        by smtp.gmail.com with ESMTPSA id z16-20020aa791d0000000b006e141794208sm9051548pfa.165.2024.02.21.07.28.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 07:28:59 -0800 (PST)
-Date: Wed, 21 Feb 2024 20:58:51 +0530
-From: Ajay Agarwal <ajayagarwal@google.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	Sajid Dalvi <sdalvi@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <ZdYWs3aGSfzVQp4B@google.com>
-References: <20240221064846.3798047-1-ajayagarwal@google.com>
- <aje3eeeey7v4jafcad6beeee4xxev6pbnsdqbpv3f4fmn2zi4k@7qv6vvngxs53>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C0E7F7DB;
+	Wed, 21 Feb 2024 15:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708529609; cv=fail; b=N8T1JioNbKdCVx0cjg9oVA7trdXPoTedCQ3NASBXTtPa49AnQVSeZMClQhBmpxlChufL8Er6DqPvQcczqGqqy2Lz+6jYLU1AjitHPmXvh7u/X8g0/0F914CkcqEhMn7QmQygPCSXYfMQX4FyKPDF7rOdZynGZX1YPWJ+wsbC0NA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708529609; c=relaxed/simple;
+	bh=HNdZ8yKkmipkjppjTC2sBddxCjBR+g8bzr2EZTAjplw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Xnp6I8MfuaN/d9kuANjOZzfXV9oM4m2maXZrC0xUzOsg1dLx0LEq9d8BeI2Ebl1tn0xCgK7lulNCwhpFnZVGS52D/eqPP2VtRJy0MtT6Ecz48Bw6z2/THYMaALXAEGW6Rtm2OsH2YUOMiWMUpImv12d9CNDX91cEUfbvNtOh3qM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=TayG6iuA; arc=fail smtp.client-ip=40.107.104.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l5Sy9Mv2G9BOGIDwikFIde3/LAlOMps39GZjDG4HDdmdKPWzHh/7q66JdylmF7zzC6u4QRmYEhMTU8tmg2w7BHaNdaNU3CoiOruwmMT1PCf6fmOWjaNw34ik5m2Me6BAgj6wSnBLAWoFy17M0+H1x0fw2X/v4ouYtsH3zHVOswQ3X1Au9mf/rsRHYSOcPwrv6eJdDW+yYVz/tnNFWIx9dsEqbYI1U9YE5r/VK0JQPK8S/gdtGmj4KS+MXZfKQI+dRT4MLnEEAulmQ9Ru9qRlzt6+g2R53hel2wE/j3Iqqpp6hJIpDtkcwN86L5i+GDMSPqinFJvxh3+XzM9hQ47OKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DmfNpiqcUCnckaX3gpGwYeD+d25j6AJ/z4s2PBR0sGM=;
+ b=gQhBi0KIvvmbNJIruh37JmGO6JsWbbs9u5nS8gx0BEOKAxjb/37t0txmN6kH+aPRcTIf9GqXG2/6r7Y/9mY8XzvZ2oRKePMYA+7B0cHuTaCyQByW/jK7dtqEapvFfAzAx9YuKjoOZeGizuVEgQCjP9qeyzf2fN8j+AGz5grnyfMBePrmKLhTk5iAIEO2NRp6jrWQaY4OWJXHW6ApOr1c8C8HTlwAKERoazIU83mLSEIcRuZfdsPATOSvB6fxDrjE7c7BuZXOVW8qQzEZgsL6JHjY8paF7f4NCFZZ17+/+od62gtVXfGNONNGWEvf4ZdIoz2i2oz44gNVlUL78ZFQPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DmfNpiqcUCnckaX3gpGwYeD+d25j6AJ/z4s2PBR0sGM=;
+ b=TayG6iuABsGNlKOtAa1mMkRRmsSklCtpOA5qrSIx1H95SxQn9FHGtDZ7tzFdkzJnhStRVuZhb6KsxnCHjdqBwT2f3GtWmkc3LfP/Aj0Cv8Z2QF7eVpIDK4PmymueC/RWbN5MUkjYo+vQspbtkrJW5lcgTRHOejIb+pXbka/XZy8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
+ by DB9PR04MB8187.eurprd04.prod.outlook.com (2603:10a6:10:24a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37; Wed, 21 Feb
+ 2024 15:33:21 +0000
+Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::9b0f:a9d8:1523:5759]) by DB9PR04MB9626.eurprd04.prod.outlook.com
+ ([fe80::9b0f:a9d8:1523:5759%4]) with mapi id 15.20.7292.036; Wed, 21 Feb 2024
+ 15:33:21 +0000
+Date: Wed, 21 Feb 2024 10:33:10 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: bhelgaas@google.com, cassel@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, festevam@gmail.com, helgaas@kernel.org,
+	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
+	kw@linux.com, l.stach@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	s.hauer@pengutronix.de, shawnguo@kernel.org
+Subject: Re: [PATCH v11 07/14] dt-bindings: imx6q-pcie: Clean up
+ irrationality clocks check
+Message-ID: <ZdYXtmJgTQ63jq+C@lizhi-Precision-Tower-5810>
+References: <20240220161924.3871774-1-Frank.Li@nxp.com>
+ <20240220161924.3871774-8-Frank.Li@nxp.com>
+ <ZdXVN17SogJG1RgZ@lpieralisi>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZdXVN17SogJG1RgZ@lpieralisi>
+X-ClientProxiedBy: SJ0PR05CA0181.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::6) To DB9PR04MB9626.eurprd04.prod.outlook.com
+ (2603:10a6:10:309::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aje3eeeey7v4jafcad6beeee4xxev6pbnsdqbpv3f4fmn2zi4k@7qv6vvngxs53>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DB9PR04MB8187:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a721eb4-ee1f-44ad-ce5a-08dc32f26f60
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Rh+Oa4e8Fv4S/OBXgCi5oO9DuaGnyDWyWnINKX7YVcH81aEUAgGVgN/gHIgqigpt1pF/yv3vRoBmJ15Ki3P1YqeJs1NnH0JzbXCB9djqyd/GjdLadcBFrSQqaqP9y6S2rfr3ISOuQkRMEo3OAh2HyVWydLZ9Ao2hXyhZDG/tQ+pPNBdNpc3iRraGa3DADD+10tB44hL2+uy6TqFXymAO896sEJ2t4Oz9hdHBCe4NPf1fzvWdbBRUJF8SWA5bu9xSgJgFth4IvymlCo8sKNL8oPHyItJY+Yjsgo5Up43lOsGSdwI5nTpVFjRcAB/oLxFLduUmFZLl4qTRPyb5kqU/gtao4K7RoeiRp34qR/lwPQZ+9xJhci9YE6WlSUzCtIyNRuoWNYCJnEQNLWxnuweqaERHYMxXpVqA3N4U3DoyyQd51ul532q4f204zf1eKeS4yjAwbKYUcVJ81QGnFFAfbWqPEcvH9wPMCOxHT23GFbyJ3TPdYdzBbKxAr2dFtPlSYI9vJ6OY+L2tQkFfoQH77/KCTUzMNXfdgChgON4G9TQBKPwt3PrzFmNqOH4BCHwAitWLwqWIjqSLeM4323KPf27Lju795gaNgXm4NvF7iCzDJ+sjfTk7/P3kXh9Dd3cg
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?01F6XAH0wvX7H5Y9Gewq3+845LDFenZ/A7ZVf3DLEEyXIxjFxRuKmaIZ7H8+?=
+ =?us-ascii?Q?DGjbLMNfo4vh5LBUPTNucOxBIR2VWvatIDBntsB6uNnMFQQH5Lh5ed4o0gxc?=
+ =?us-ascii?Q?7WESfR9fxE9cfv5AOYJ5n0uS6nJBYkW472oMgGTtd97HK9utg0TAwOOUpeW0?=
+ =?us-ascii?Q?wKkbdAgQfR1aZUswAGSZ/sQNEP8LWJlijQeP8zxxKH2mj6WK67o7jSuhSQOg?=
+ =?us-ascii?Q?itOuASXJta6cPtgm+CnJGYnUlwPm2zdyaONc5Y4Ea8lIXvYYDy5iiYr4Ef08?=
+ =?us-ascii?Q?IVJEGiH7Dx8jdNg2DcIRwr6vtXzTnF4i56usDZJp5Wi1bS302ppm72WIBxdR?=
+ =?us-ascii?Q?EMY6flds7MevQjW7aHaW+yG+vcmBpWPkPx+DAQ9QHnQWB5AAAFMsAhZCzdkr?=
+ =?us-ascii?Q?meZuS2f7nYe4C75Ok6LDO0lyfIJF4c8A7Ldt4DxKIDAewBSdaTJ5XkdJSiYc?=
+ =?us-ascii?Q?d66YPGh25+mwGq3UCzjPuPq8BhZSuyusc2nAx4r3HKDrvanF4Av9LExJyhpq?=
+ =?us-ascii?Q?agP+5w38GCR1s0Grn5QD5B/ZKjB3POWVST1jx8CHDHftJjkchEIwZ1Q8ewLX?=
+ =?us-ascii?Q?t6h/ZFYXgKRN7mBAh3GU1z2Q+t6Z2LX/I22Z/WG9JE1Z+hkVcGJr7XujjUVb?=
+ =?us-ascii?Q?O+vSAYGwMgUoR+8Zv+Cd/z7SHGII7YiUSc3NJ1DCc7D0kouehooWmzaFwrBI?=
+ =?us-ascii?Q?HaRtEkkC7D1Htt4cJwi7LknqBxwYNQL0Tobmt4rseYMXjaqkEjaFlcZmYpVB?=
+ =?us-ascii?Q?DnGRANo9RxRZfNU//5shJQ8Sh42iK74Eks1hHqRrIhpk3qGU9vT9HbInLGu8?=
+ =?us-ascii?Q?woXv3RPn75fPB10i2lru8q3tjzowsfgbJDkbJ0VktL2NhKGr8eEAmqXFF+73?=
+ =?us-ascii?Q?9A1nEul60wSTCbZqmGV6RrUpxhdByRp6Ney5KSJg3ljayBbB20wWyvmMuzKc?=
+ =?us-ascii?Q?PGlG3hYyRGYsPyQey6UcOjNp442hfapua09htjgNOH71Qykg8r2Wy1sv1OFh?=
+ =?us-ascii?Q?fSpvzt17rfPZj8pIBoueB8Rs6rCmlhVbFfZi6F1pE/G+lBJK/qY9EfKUUn1I?=
+ =?us-ascii?Q?nuyevQh2EG9XcEHVd35ysIGm9RuLVSSaon89YTDRuVZEzvgFlOu79rAnOPz7?=
+ =?us-ascii?Q?tx8L2uTeXuuauwGk5W2sKG42uithcfb8KpS6dxnIkCQgVGtHxiXYzBUn1Wdq?=
+ =?us-ascii?Q?cUDE8rHGfyaBMe0nmVO5DgAhclo/w6Y5IGmeBO79YrP7jWbdHVbmn+yg85NV?=
+ =?us-ascii?Q?Pvrlig9jzOmydT6eR58C6+0LJRVFN788qTo7Ko09XZgwyMsTw4Ecxlas18SA?=
+ =?us-ascii?Q?DPodIHona6pvOMKyYqyqN/xyrk7qoT5GrAXeogu3masOuDF0b2D86ulcfkA2?=
+ =?us-ascii?Q?tiafiCRRswCRGynKy41gTUu7a4Dcve8WrUQbe2dP4DvvZuG5m9RUI7ETRyIW?=
+ =?us-ascii?Q?CVDWu1/vL0MtFRbZJDFbU2FeBhbBBylvOyjq4URP0AEJ2qbW5N0vjPAWUSP/?=
+ =?us-ascii?Q?1rmi/zC82h5Q0ZdVUiRzZXkSXBLc7d+Y4836C3+rzD62q86bVDtoUMcal6dT?=
+ =?us-ascii?Q?IatKc9bbY7mkZjoeOBm6SugPeNJz+vl+grzcCLHF?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a721eb4-ee1f-44ad-ce5a-08dc32f26f60
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2024 15:33:21.3149
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OzwDL/4CrUoRwaA7g9XC3oXqmMGWH6X3UpScno0xCI9zRHXt52KfLZ+7AvCy2c8yc9QCqKh+YG+ZXYMomWumQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8187
 
-On Wed, Feb 21, 2024 at 03:52:43PM +0300, Serge Semin wrote:
-> On Wed, Feb 21, 2024 at 12:18:46PM +0530, Ajay Agarwal wrote:
-> > There can be platforms that do not use/have 32-bit DMA addresses.
-> > The current implementation of 32-bit IOVA allocation can fail for
-> > such platforms, eventually leading to the probe failure.
+On Wed, Feb 21, 2024 at 11:49:27AM +0100, Lorenzo Pieralisi wrote:
+> Irrationality ? I think you mean "duplicate" or "redundant" ?
+
+I initially emphasized the negation logic code (*not*) below. I may have
+used the wrong term.
+
+I am okay simple said
+"Clean up redundant clocks check"
+
+Frank 
+
+> 
+> Lorenzo
+> 
+> On Tue, Feb 20, 2024 at 11:19:17AM -0500, Frank Li wrote:
+> > The bindings referencing this file already define these constraints for
+> > each of the variants, so the if not: then: is redundant.
 > > 
-> > Try to allocate a 32-bit msi_data. If this allocation fails,
-> > attempt a 64-bit address allocation. Please note that if the
-> > 64-bit MSI address is allocated, then the EPs supporting 32-bit
-> > MSI address only will not work.
-> > 
-> > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > > ---
-> > Changelog since v4:
-> >  - Remove the 'DW_PCIE_CAP_MSI_DATA_SET' flag
-> >  - Refactor the comments and msi_data allocation logic
 > > 
-> > Changelog since v3:
-> >  - Add a new controller cap flag 'DW_PCIE_CAP_MSI_DATA_SET'
-> >  - Refactor the comments and print statements
+> > Notes:
+> >     Change from v7 to v8
+> >     - add Manivannan Sadhasiva's Ack tag
+> >     Change from v6 to v7
+> >     - rewrite git commit message by using simple words
+> >     Change from v5 to v6
+> >     - rewrite git commit message and explain why remove it safely.
+> >     - Add Rob's Ack
+> >     Change from v1 to v4
+> >     - new patch at v4
 > > 
-> > Changelog since v2:
-> >  - If the vendor driver has setup the msi_data, use the same
+> >  .../bindings/pci/fsl,imx6q-pcie-common.yaml      | 16 ----------------
+> >  1 file changed, 16 deletions(-)
 > > 
-> > Changelog since v1:
-> >  - Use reserved memory, if it exists, to setup the MSI data
-> >  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
-> > 
-> > ---
-> >  .../pci/controller/dwc/pcie-designware-host.c | 21 ++++++++++++-------
-> >  1 file changed, 14 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index d5fc31f8345f..9c905e5c4904 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -379,15 +379,22 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >  	 * memory.
-> >  	 */
-> >  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> > -	if (ret)
-> > -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> 
-> > +	if (!ret)
-> > +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > +						GFP_KERNEL);
-> 
-> msi_vaddr will be left uninitialized if the mask setting fails. Robin
-> had it initialized in v2 discussion:
-> https://lore.kernel.org/linux-pci/7cd42851-37cc-49d6-b9ad-74a256a73904@arm.com/
-> 
-ACK. Will initialize to NULL in the next version.
-
-> 
+> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
+> > index d91b639ae7ae7..0c50487a3866d 100644
+> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
+> > @@ -150,22 +150,6 @@ allOf:
+> >              - {}
+> >              - const: pcie_phy
+> >              - const: pcie_aux
+> > -  - if:
+> > -      properties:
+> > -        compatible:
+> > -          not:
+> > -            contains:
+> > -              enum:
+> > -                - fsl,imx6sx-pcie
+> > -                - fsl,imx8mq-pcie
+> > -                - fsl,imx6sx-pcie-ep
+> > -                - fsl,imx8mq-pcie-ep
+> > -    then:
+> > -      properties:
+> > -        clocks:
+> > -          maxItems: 3
+> > -        clock-names:
+> > -          maxItems: 3
 > >  
-> > -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > -					GFP_KERNEL);
-> >  	if (!msi_vaddr) {
-> > -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> > -		dw_pcie_free_msi(pp);
-> > -		return -ENOMEM;
-> 
-> > +		dev_warn(dev, "Failed to configure 32-bit MSI address. Devices with only 32-bit MSI support may not work properly\n");
-> 
-> Can we short it up already? I suggested something like "Failed to
-> allocate 32-bit MSI target address" in v2. It means the problem with
-> 32-bit MSIs which can be perceived as the possible reason of the
-> respective peripheral devices not working correctly.
->
-ACK. Will shorten the message in the next version.
-
-> > +		ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> > +		if (!ret)
-> 
-> Redundant check. It was discussed some time ago. See the comment from
-> Robin:
-> https://lore.kernel.org/linux-pci/335d730d-529e-7ce0-8bac-008a4daa6e3c@arm.com/
-> 
-ACK. Will remove the check in the next version.
-
-> -Serge(y)
-> 
-> > +			msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> > +							GFP_KERNEL);
-> > +
-> > +		if (!msi_vaddr) {
-> > +			dev_err(dev, "Failed to configure MSI address\n");
-> > +			dw_pcie_free_msi(pp);
-> > +			return -ENOMEM;
-> > +		}
-> >  	}
-> >  
-> >  	return 0;
+> >    - if:
+> >        properties:
 > > -- 
-> > 2.44.0.rc0.258.g7320e95886-goog
+> > 2.34.1
 > > 
 
