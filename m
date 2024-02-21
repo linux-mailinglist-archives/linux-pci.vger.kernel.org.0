@@ -1,190 +1,158 @@
-Return-Path: <linux-pci+bounces-3843-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3844-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97A5185EC98
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 00:14:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C13085ECDD
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 00:25:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10FFB1F230A5
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 23:14:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96E0C1C21EC0
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 23:25:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0694F85290;
-	Wed, 21 Feb 2024 23:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D23256456;
+	Wed, 21 Feb 2024 23:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BboIDRIY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enu4yqBB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779B93EA8E
-	for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 23:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027D1A35;
+	Wed, 21 Feb 2024 23:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708557238; cv=none; b=UrENEgzM8xDsdWu8lVBFGIySrbGQ/zFFOcDTB3Ji2eRwjzoGPVSTObPHMnV7UK/SUjD4qeOQwB7Pwe5lWOX6hvnllJDSHffav3OMzedEfiuMlES6zo4TfQIyMid9YFGx5+wa125Gj7pZGl8F5HL4RchnEFYstgA7GEroNzXs9E4=
+	t=1708557928; cv=none; b=Y3oV3WjpQPKnmsmYsPqxLTI7KHTD5s31fY5epGOBSmqG4pZZUxhVnsGOmX1bp3QQoX8qwF9TbUl50x9W8BRQby9PM0hH+u9J6bM0ebEPE3tf7ac7YmN74ZfH24YyUolfCPmOFUP25g9EfJPxLvoXeQxe9LTgaM/7CNxy2DEbVpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708557238; c=relaxed/simple;
-	bh=vzKvZINe962Zjudqy358JK2X2+MTqkxR/Yj7DAgEZDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OQflA0SilnkWqY2qJiF7zRDZ2AWmdHKafCPZFN+f26DapGop6B8qvWROw7z/iSnJcBSqX64foSd1Zz0KlBL9absiHnu1AE2FQQMd83IErsO3juUBomhZq6M4Q0+v5IT2uBtsSEF8NPQDPJt88M5CaFna/O8vaMPL/4ry9I+uY8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BboIDRIY; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d89f0ab02bso20305ad.1
-        for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 15:13:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1708557237; x=1709162037; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=55JIFvKqCwK94dHrCaX/HsKENxqUMB89KHII77rnXgY=;
-        b=BboIDRIYU//Ra23fWHkzyVlYNrnJPsafBOvxUEsBM4/Cdw7jZ+2YE4/9cZHEcG7/WZ
-         jQZ2OOAmt6YNuSWgl96ieZn5pQMpxlnCCLoB2C3eReqyxMffgHFKt2tvq+X2uh+CXzt+
-         O2Le15tCAV4cAyhdhNQhOX9WNvuO8WJ2CYpDdvUmizfAs1TtGMMRJ5sAbdm9etke6vH4
-         XNHESjixlJd/5ViW/eRie2Vh9xOHPjCB4VUDzN99+9HjxI7KO2DgBczMMIGyqCOKjixQ
-         kRPn4sMekTL5ZZJXGKQUWc+vd5mEQ71TC6MLbZkxHFbFaozA4q9N40VrMr9A7jkRJ1DE
-         NgRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708557237; x=1709162037;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=55JIFvKqCwK94dHrCaX/HsKENxqUMB89KHII77rnXgY=;
-        b=iSMH6FhX8MROcJS4Ca3s/hmHdUjoUFSMCH6g/BxiGGRwM5pWTIgWydHZVirprw3qWL
-         toA5lisXruDSRMH5Xn9hmnvT+Y0K7Y4/OgObIqPG0uyqlDpOxx6XWZKgsuY1F+3Y2wau
-         1Ia8BuO4Bea0m7zRROp0Hzd+4xM2Y9P0L0NM+DQyFt9EZWnuWXUHAxsGBzqtcexS9Trm
-         LnaQW8vm3ZrrR0ySyBn89UrZOjIdKSvLO4YPh8VasffmTun4ZEbudQk/WThIORHvAywA
-         XDUCRCUbzEzHNsjt/SudX8tCMQUx80xq7VRFkJjic6js6HRNDHojOcMf1xh+vEVztDWL
-         9oQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWM6Z/f7hWsE8Slu78jdk/8CTXDEkpRDsxJhEL6srJSp8iVJa78bPiIUlXZHSudI+FZjY/8UaP/Yu1xvtUw+bQ55Pn/1fkcutrF
-X-Gm-Message-State: AOJu0YwZZkzROw9AXdcstFJVaVNO3848X+rw9Nya6lAYPjF9wABN3Wff
-	2rCqRLUDG1Vw5o0pPy2r0Yl4icsm7K7h1vrJv2zgLQyfYwIfS0U0u/ycFoF49w==
-X-Google-Smtp-Source: AGHT+IEBs7JrnZVS+NYGuA8Ni+NlvcB5pRiH7hZtukzJO7gm059L+nE0FCzi7zGpChm5YCVJxurojg==
-X-Received: by 2002:a17:902:c703:b0:1d9:310c:73be with SMTP id p3-20020a170902c70300b001d9310c73bemr305251plp.13.1708557236388;
-        Wed, 21 Feb 2024 15:13:56 -0800 (PST)
-Received: from google.com (69.8.247.35.bc.googleusercontent.com. [35.247.8.69])
-        by smtp.gmail.com with ESMTPSA id 6-20020a170902e9c600b001d706e373a9sm8580938plk.292.2024.02.21.15.13.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 15:13:55 -0800 (PST)
-Date: Wed, 21 Feb 2024 15:13:52 -0800
-From: William McVicker <willmcvicker@google.com>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	Sajid Dalvi <sdalvi@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v6] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <ZdaDsN675hiS6zhY@google.com>
-References: <20240221153840.1789979-1-ajayagarwal@google.com>
+	s=arc-20240116; t=1708557928; c=relaxed/simple;
+	bh=cm0rXHuYpdUHHEiy4MG/nHpcI2fGOqCABwVVztVbBUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=D2WAWxpVXmcxP22dPL/aLsIyuaXwJARdbPoW+JxYktpv0wK3N4qHzqs5zdfJmeCtBOV5+JVktqPXYZ9cLRCFjs+6/TlWik0VoXL2y7F5LN5lkT5HpgvlEquujDkfBZ1ydP9EsYUm2qX5sTRXrQbr11LDvUvYQcqw9ugKkYYNZgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enu4yqBB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6CEC433C7;
+	Wed, 21 Feb 2024 23:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708557927;
+	bh=cm0rXHuYpdUHHEiy4MG/nHpcI2fGOqCABwVVztVbBUA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=enu4yqBBb/AYies9CfHBzeZEXCn6XnamsV5WkPgFOTTIcWY47IDWEmHA8bHBhcYew
+	 AJpLO1EARhcu+Quv0pwf5hx78d5KRcIQD7N6x5wbqxxdFc7Nnn7l19gcU1M+JULo55
+	 iv9mNLg4BvCXr+7DgAbh0nWL4BDkc8ciRNSbnMR0LfnS7t9DUEBuOCwMSb/LbMC8cv
+	 ZTN1wWwCMQ/UXAeQ+6G44z2C4KiWKmwQLEoCVCxDULQ7fpDVed9ad6dQbGJrwtEJG+
+	 aAqYIFKnHd2UytSpCUCINY1bmW5Sck71AX2iu3FeA8DxyD0ru7Jh8/8l4U6YOJpqh8
+	 DdZhkeWuFIvSw==
+Date: Wed, 21 Feb 2024 17:25:23 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+	Matthew W Carlis <mattc@purestorage.com>,
+	Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>
+Subject: Re: [PATCH] PCI/DPC: Request DPC only if also requesting AER
+Message-ID: <20240221232523.GA1533169@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221153840.1789979-1-ajayagarwal@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <39ef1387-609c-45ca-9bfa-e01b72cacaaa@linux.intel.com>
 
-On 02/21/2024, Ajay Agarwal wrote:
-> There can be platforms that do not use/have 32-bit DMA addresses.
-> The current implementation of 32-bit IOVA allocation can fail for
-> such platforms, eventually leading to the probe failure.
+On Tue, Feb 20, 2024 at 06:45:32PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> On 2/20/24 3:55 PM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > When booting with "pci=noaer", we don't request control of AER, but we
+> > previously *did* request control of DPC, as in the dmesg log attached at
+> > the bugzilla below:
+> >
+> >   Command line: ... pci=noaer
+> >   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+> >   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
+> >
+> > That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
+> > says:
+> >
+> >   If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
+> >   must also set bit 7 of the Support field (indicating support for Error
+> >   Disconnect Recover notifications) and bits 3 and 4 of the Control field
+> >   (requesting control of PCI Express Advanced Error Reporting and the PCI
+> >   Express Capability Structure).
+> >
+> > Request DPC control only if we have also requested AER control.
 > 
-> Try to allocate a 32-bit msi_data. If this allocation fails,
-> attempt a 64-bit address allocation. Please note that if the
-> 64-bit MSI address is allocated, then the EPs supporting 32-bit
-> MSI address only will not work.
+> Can you also add similar check in calculate_support call?
 > 
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
-> Changelog since v5:
->  - Initialize temp variable 'msi_vaddr' to NULL
->  - Remove redundant print and check
-> 
-> Changelog since v4:
->  - Remove the 'DW_PCIE_CAP_MSI_DATA_SET' flag
->  - Refactor the comments and msi_data allocation logic
-> 
-> Changelog since v3:
->  - Add a new controller cap flag 'DW_PCIE_CAP_MSI_DATA_SET'
->  - Refactor the comments and print statements
-> 
-> Changelog since v2:
->  - If the vendor driver has setup the msi_data, use the same
-> 
-> Changelog since v1:
->  - Use reserved memory, if it exists, to setup the MSI data
->  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
-> 
->  .../pci/controller/dwc/pcie-designware-host.c | 21 ++++++++++++-------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d5fc31f8345f..d15a5c2d5b48 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -328,7 +328,7 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct device *dev = pci->dev;
->  	struct platform_device *pdev = to_platform_device(dev);
-> -	u64 *msi_vaddr;
-> +	u64 *msi_vaddr = NULL;
->  	int ret;
->  	u32 ctrl, num_ctrls;
->  
-> @@ -379,15 +379,20 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	 * memory.
->  	 */
->  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> -	if (ret)
-> -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> +	if (!ret)
-> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +						GFP_KERNEL);
->  
-> -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> -					GFP_KERNEL);
->  	if (!msi_vaddr) {
-> -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> -		dw_pcie_free_msi(pp);
-> -		return -ENOMEM;
-> +		dev_warn(dev, "Failed to allocate 32-bit MSI address\n");
-> +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +						GFP_KERNEL);
-> +		if (!msi_vaddr) {
-> +			dev_err(dev, "Failed to allocate MSI address\n");
-> +			dw_pcie_free_msi(pp);
-> +			return -ENOMEM;
-> +		}
->  	}
->  
->  	return 0;
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
-> 
+>         if (pci_aer_available() && IS_ENABLED(CONFIG_PCIE_EDR))
+>                 support |= OSC_PCI_EDR_SUPPORT;
 
-Thanks for working through all the kinks, Ajay! The patch looks good to me.
-I tested it on my Pixel 8 with ZONE_DMA32 disabled. I wasn't able to reproduce
-the case where there was no 32-bit addresses available on boot, but I did
-artificially test it by commenting out the first call to dmam_alloc_coherent()
-to exercise the fallback case where msi_vaddr is NULL and the 64-bit coherent
-mask is set. In both cases, I verified the PCIe device probes successfully with
-this change and wifi works.
+That doesn't seem right to me.  The implementation note in sec 4.6.12
+suggests that EDR Notifications may be used even when the firmware
+maintains control of AER and DPC.  Maybe that note is wrong or
+misleading, but as written, I interpret that as meaning that it may be
+useful for the platform to know that the OS supports EDR even if it
+AER control isn't requested or granted.
 
-Feel free to include,
+> > Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218491#c12
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: <stable@vger.kernel.org>	# v5.7+
+> > Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > Cc: Matthew W Carlis <mattc@purestorage.com>
+> > Cc: Keith Busch <kbusch@kernel.org>
+> > Cc: Lukas Wunner <lukas@wunner.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> > ---
+> >  drivers/acpi/pci_root.c | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > index 58b89b8d950e..1c16965427b3 100644
+> > --- a/drivers/acpi/pci_root.c
+> > +++ b/drivers/acpi/pci_root.c
+> > @@ -518,17 +518,19 @@ static u32 calculate_control(void)
+> >  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+> >  		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+> >  
+> > -	if (pci_aer_available())
+> > +	if (pci_aer_available()) {
+> >  		control |= OSC_PCI_EXPRESS_AER_CONTROL;
+> >  
+> > -	/*
+> > -	 * Per the Downstream Port Containment Related Enhancements ECN to
+> > -	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
+> > -	 * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
+> > -	 * and EDR.
+> > -	 */
+> > -	if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+> > -		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+> > +		/*
+> > +		 * Per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, the
+> > +		 * OS can request DPC control only if it has advertised
+> > +		 * OSC_PCI_EDR_SUPPORT and requested both
+> > +		 * OSC_PCI_EXPRESS_CAPABILITY_CONTROL and
+>
+> I think you mean OSC_PCI_EXPRESS_DPC_CONTROL.
 
-Reviewed-by: Will McVicker <willmcvicker@google.com>
-Tested-by: Will McVicker <willmcvicker@google.com>
+No, I just tried to rephrase the text for _OSC Control, bit 7 (quoted
+in the commit log), so I think requesting control of bits 3 and 4 (AER
+and PCIe Capability) is right.
 
-Thanks,
-Will
+> > +		 * OSC_PCI_EXPRESS_AER_CONTROL.
+> > +		 */
+> > +		if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+> > +			control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+> 
+> Since you are cleaning up this part, why not add a patch to remove
+> CONFIG_PCIE_EDR?
+
+Good idea, I'll do that, too.
+
+Bjorn
 
