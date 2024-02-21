@@ -1,128 +1,138 @@
-Return-Path: <linux-pci+bounces-3813-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3814-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DBB785D606
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 11:49:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED82385D632
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 11:59:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2827328357C
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 10:49:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 826051F23E7D
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 10:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CA743A1C1;
-	Wed, 21 Feb 2024 10:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A173F8F7;
+	Wed, 21 Feb 2024 10:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYsFWyE/"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O2cnQkRk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B413DB8C;
-	Wed, 21 Feb 2024 10:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACA53EA77;
+	Wed, 21 Feb 2024 10:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708512576; cv=none; b=o8qMdGpomAuHCeWw7wvq7hsbz25YUPaDHdHI+N8CX8G65KRifHq4cLD9/xTR83QIlnOi6cMQfGPdCZr5U7eXLtyVQoOggVAQ+NEkf56tYvHGGdDRRiNkDdzNgnIoHDsQdv+EQ1Te7IwaIppVoGYXIje+o2zlQmVt0PZzDSEHiFY=
+	t=1708513159; cv=none; b=IZZ6VoNxOoCq6nkhw3CjBHBM1qqvnUsxfd+2cY+6KjK6sQCmic8acRIN++u0DzxApQxrQ6ioZolRQJl6RbDr3Rd7HmTovB9CEudTZshKds25JN7w9B6kQP0Q6N8Ls8ZaAYmql8ONaohNfplP513ROODq+LAScpYgwqn42PwMIiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708512576; c=relaxed/simple;
-	bh=arxOax1Fal/10bdeaxUbFAhv0i0ETEjU7HQwbaIn75g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqVKbwCtgFtz/g+2yFKPkGri/StPjoJDqe7qf3j4GEyeg5dyff0K0wF1fxTNjpoGcQEaDP6xT8sX8zhyBazHmKwdnVRTJtCNDi8dh4QxVe48zhaNbL1kUz8ptECqTx2EFNHuJVuQ6Qr6MZaKGebskU/gaSnktehrk2AviwRFmMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYsFWyE/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89CD3C43390;
-	Wed, 21 Feb 2024 10:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708512575;
-	bh=arxOax1Fal/10bdeaxUbFAhv0i0ETEjU7HQwbaIn75g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OYsFWyE/axhIQyem8BlEb5Ux6m0afNO6l13t/w6dbXBZgrmIJqP9sVdkEdmxr4B0U
-	 avzMjmA1I49P+Bpx3W+kUjbSUdRo5iZG79GKt9wN6PZ9D7g44BTG1tVu6lBMGqgP/g
-	 r/cup2peMrEjBECspg5qHvQNbViQ7EgesHMR39ONcLFExoMUsZ65ZeLAAnVpbcVUSh
-	 ZOysjfBS4YmYCkGJalQnzgDnxLlJ88OjTB4ub9w9NYCEBG45erbSvQJ/r7pvNj/s5+
-	 qbYMLvcrR++Ytd5md6atdT0c903u1FXjCbl8tymwS1+dI3205R2la9I4XhlGFgBL7G
-	 M8abO1W7lgXsw==
-Date: Wed, 21 Feb 2024 11:49:27 +0100
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: bhelgaas@google.com, cassel@kernel.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, festevam@gmail.com, helgaas@kernel.org,
-	hongxing.zhu@nxp.com, imx@lists.linux.dev, kernel@pengutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, krzysztof.kozlowski@linaro.org,
-	kw@linux.com, l.stach@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	s.hauer@pengutronix.de, shawnguo@kernel.org
-Subject: Re: [PATCH v11 07/14] dt-bindings: imx6q-pcie: Clean up
- irrationality clocks check
-Message-ID: <ZdXVN17SogJG1RgZ@lpieralisi>
-References: <20240220161924.3871774-1-Frank.Li@nxp.com>
- <20240220161924.3871774-8-Frank.Li@nxp.com>
+	s=arc-20240116; t=1708513159; c=relaxed/simple;
+	bh=SbWS8TbjpElVutllvsK+jzUCsU87COPD50ePr889fXs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=To4oFnKBWvcWFK8F6ETQq7aszNxlQvqVRiiNCzXClWuv7fR+NnzkeVlV954nqgjRqJGIdFDbI9dI+sDmJoQb565hhgib+kynqAZ3GAEc+9KwFpIRtJ/aU1npwF9BlmmLJmZ8bsq31iAssmUFQ+BXO4MNDDXhZ/TM8QLY1Axs+tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O2cnQkRk; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 23106FF809;
+	Wed, 21 Feb 2024 10:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708513149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zEHFQ0b81cDkLGXCwktGr5yACT9BYmzY2jUziR5kBWE=;
+	b=O2cnQkRkGWcS8AeId+uKeW5crrGFVmgagH9G9AFsXOgr9cYdITOV3qZ7FuVoN8k7d+WuvJ
+	pnRsOIxo3yVXZWVIPTLiQNSR171q9h3D/FPpeBY6FCJzbDnihnWWNLnyB6+baU2WvkqGeT
+	4XvgzNBTPWtDPBYnc3/VWIzpl59yjELncXzktjt7ydKr5n5QdxeiSwUJWWsqM/y3WIqBOi
+	2xdQHYgYfEQNZ7XFePjr4zjIVsMaDmDn3fdPbBd3ewJXLjizpaWX6cxbcvb+DoqGwnO6p2
+	RXM1ok5jXdYesnUqM/tetsnKP8xZezDXM3pVm/6OinnHjN+1N6V7oryM6Mrh9g==
+Message-ID: <eb37a117-74bd-44fe-b677-89dc7c2aced8@bootlin.com>
+Date: Wed, 21 Feb 2024 11:59:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240220161924.3871774-8-Frank.Li@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/18] mux: add mux_chip_resume() function
+Content-Language: en-US
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-5-5c2e4a3fac1f@bootlin.com>
+ <Zc4t82V9czlEqamL@smile.fi.intel.com>
+ <f1d2c9b0-238d-4b09-8212-62e00a2192b2@bootlin.com>
+ <Zc96Ke_iG_bHIvkP@smile.fi.intel.com>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <Zc96Ke_iG_bHIvkP@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Irrationality ? I think you mean "duplicate" or "redundant" ?
+On 2/16/24 16:07, Andy Shevchenko wrote:
+> On Fri, Feb 16, 2024 at 08:52:17AM +0100, Thomas Richard wrote:
+>> On 2/15/24 16:29, Andy Shevchenko wrote:
+>>> On Thu, Feb 15, 2024 at 04:17:50PM +0100, Thomas Richard wrote:
+> 
+> ...
+> 
+>>>> +int mux_chip_resume(struct mux_chip *mux_chip)
+>>>> +{
+>>>> +	int global_ret = 0;
+>>>> +	int ret, i;
+>>>> +
+>>>> +	for (i = 0; i < mux_chip->controllers; ++i) {
+>>>> +		struct mux_control *mux = &mux_chip->mux[i];
+>>>> +
+>>>> +		if (mux->cached_state == MUX_CACHE_UNKNOWN)
+>>>> +			continue;
+>>>> +
+>>>> +		ret = mux_control_set(mux, mux->cached_state);
+>>>> +		if (ret < 0) {
+>>>> +			dev_err(&mux_chip->dev, "unable to restore state\n");
+>>>> +			if (!global_ret)
+>>>> +				global_ret = ret;
+>>>
+>>> Hmm... This will record the first error and continue.
+>>
+>> In the v2 we talked about this with Peter Rosin.
+>>
+>> In fact, in the v1 (mux_chip_resume() didn't exists yet, everything was
+>> done in the mmio driver) I had the same behavior: try to restore all
+>> muxes and in case of error restore the first one.
+>>
+>> I don't know what is the right solution. I just restored the behavior I
+>> had in v1.
+> 
+> Okay, I believe you know what you are doing, folks. But to me this approach
+> sounds at bare minimum "unusual". Because the failures here are not fatal
+> and recording the first one may or may not make sense and it's so fragile
+> as it completely implementation-dependent.
 
-Lorenzo
+I guess if there is an error, the resume is completely dead so no need
+to continue.
+If it's okay for Peter I can return on first failure.
 
-On Tue, Feb 20, 2024 at 11:19:17AM -0500, Frank Li wrote:
-> The bindings referencing this file already define these constraints for
-> each of the variants, so the if not: then: is redundant.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Notes:
->     Change from v7 to v8
->     - add Manivannan Sadhasiva's Ack tag
->     Change from v6 to v7
->     - rewrite git commit message by using simple words
->     Change from v5 to v6
->     - rewrite git commit message and explain why remove it safely.
->     - Add Rob's Ack
->     Change from v1 to v4
->     - new patch at v4
-> 
->  .../bindings/pci/fsl,imx6q-pcie-common.yaml      | 16 ----------------
->  1 file changed, 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
-> index d91b639ae7ae7..0c50487a3866d 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-common.yaml
-> @@ -150,22 +150,6 @@ allOf:
->              - {}
->              - const: pcie_phy
->              - const: pcie_aux
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          not:
-> -            contains:
-> -              enum:
-> -                - fsl,imx6sx-pcie
-> -                - fsl,imx8mq-pcie
-> -                - fsl,imx6sx-pcie-ep
-> -                - fsl,imx8mq-pcie-ep
-> -    then:
-> -      properties:
-> -        clocks:
-> -          maxItems: 3
-> -        clock-names:
-> -          maxItems: 3
->  
->    - if:
->        properties:
-> -- 
-> 2.34.1
-> 
+Regards,
+
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
