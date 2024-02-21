@@ -1,184 +1,130 @@
-Return-Path: <linux-pci+bounces-3821-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41C8485DCEC
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 14:59:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48A1785DD66
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 15:05:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BECCEB28591
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 13:59:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F364E1F21C08
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 14:05:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF76479DBF;
-	Wed, 21 Feb 2024 13:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7B467D413;
+	Wed, 21 Feb 2024 14:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fiUyo0CB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F2876C99
-	for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 13:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EF17C09A;
+	Wed, 21 Feb 2024 14:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708523957; cv=none; b=P37MBy/IWKXIlseVUMtLocm2wEoS2hGXFrX4FzaAsFl4o/prejDlmdhM5wXF348Jc1/+I9kqzp57mCql2xw8KgcbgdNbt7i8Nmu5Vt0F0ZNSDuvcJyCPGq8Fud9nfKvbaIbUFOmbLSpECwyo1mRO5hI0mQDVMYj9zrohS5xs7iI=
+	t=1708524275; cv=none; b=Say+d2Gw5tK+s/BOdjJUYYwaunlSrAgumcsOP9N2EJsAv+AEyclmJiESSYBxtDNF4N/kyO8nOvsfQ1AmUq5B1VM9Of6Q1x9niel842dcObVcRVzOzvBnBQOql0TOp/OaLoKheO/toN+H4qSwW8L5Gc3FWrSxrfGT/Sc7gg+2f3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708523957; c=relaxed/simple;
-	bh=SPoiOVe9t7+lJy32KOx/8m4/OcgmeATJO9xiMhnNQl8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MvhTN4O6n2sXdnZpeIcTxwFoVdNx3BRatqW8iPjRcnYRvbT8W1vQN3yD8N/5WQ0YsHOU9iOUMrk3mVIiI15obxx6TAMkUBmBXWpQ4nAUgJg8ft7q4Ltf7inP6wog4uiAnTVgzktzZ5Zf/cTpHj2STozJ+NfD7b3GU0t9cgHjXH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rcn7W-0000Lo-VY; Wed, 21 Feb 2024 14:58:46 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rcn7U-0023E5-1L; Wed, 21 Feb 2024 14:58:44 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rcn7T-000AN8-35;
-	Wed, 21 Feb 2024 14:58:43 +0100
-Message-ID: <338419fd10ffcc62b135d924f766d66af8186346.camel@pengutronix.de>
-Subject: Re: [PATCH v3 14/18] phy: cadence-torrent: add suspend and resume
- support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
- Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, Haojian
- Zhuang <haojian.zhuang@linaro.org>,  Vignesh R <vigneshr@ti.com>, Aaro
- Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
- =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com,  thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-Date: Wed, 21 Feb 2024 14:58:43 +0100
-In-Reply-To: <113b7f2e-1313-4ebf-a403-e5fcae8f01ca@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
-	 <20240102-j7200-pcie-s2r-v3-14-5c2e4a3fac1f@bootlin.com>
-	 <c105bfa8567f9e76731f2b018f4ca3176357204d.camel@pengutronix.de>
-	 <113b7f2e-1313-4ebf-a403-e5fcae8f01ca@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1708524275; c=relaxed/simple;
+	bh=BKrPxKcNueFBfyqfTI+yCXKdSZ6PsLI13qpU7crpEYA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gOMA6qcvPNSTOepzWADAMvolEnovh4vLwQiNlQz/h3m+gKXlrzNqc5lgh6zyk67rbUEK3kauG9P5mqDpZ+aRn7XIv0JQsykRuhQM/djNIvbImPHdyMKXlZCV8bUoXuJBRytpmUI4IRZY27XImOSsFYpHjTsCjHCBMjfe6ouHuRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hu-msarkar-hyd.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fiUyo0CB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hu-msarkar-hyd.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41LDxSpe002944;
+	Wed, 21 Feb 2024 14:04:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=qcppdkim1; bh=D/XNoT3LVPg+OC19k7J9
+	BFPd0mH4TA8Vu07Ukic7bnY=; b=fiUyo0CBEkUM8JKD4Qi8H67a11fejD7I6E2o
+	O16MmHx29ezTcis0LaWzEqXVE2d00+ry3MUgW1hy6YJp4WwfXCtv45aOD7Sa7uCD
+	2Du3zdBNpxaneHlcZtnDqNzko7OKfB+V/7eMD94Z+hzL0JbDA1GjUnb/3EkfurA/
+	hE+wUo5lPFcuahsgsQ68cKa/t/mqzekjW9lzp1mwGcHj1mi1aHcJxXjbHEo4y49b
+	jqqCxs7Usz4Z+W31YjxG3Yt317S5PxkKsO62JGZVSmnLDclyrLEVj9C9Gzvp9IKV
+	shtFJFTH9EkaH0gzQssnfblb6YAUnW7ibZHaqNeM6Ns8D7FpOA==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wdcrs0u77-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 14:04:15 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 41LE4AUb013235;
+	Wed, 21 Feb 2024 14:04:10 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3wanvkycen-1;
+	Wed, 21 Feb 2024 14:04:10 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41LE4Aar013227;
+	Wed, 21 Feb 2024 14:04:10 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 41LE4AKF013215;
+	Wed, 21 Feb 2024 14:04:10 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 0)
+	id 7965C39B8; Wed, 21 Feb 2024 19:34:09 +0530 (+0530)
+From: root <root@hu-msarkar-hyd.qualcomm.com>
+To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org,
+        conor+dt@kernel.org, quic_nitegupt@quicinc.com
+Cc: quic_shazhuss@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Add support for detecting Controller Level PCIe Errors
+Date: Wed, 21 Feb 2024 19:34:01 +0530
+Message-Id: <20240221140405.28532-1-root@hu-msarkar-hyd.qualcomm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dAK7buY6I60OWndzdRr5nyyKJdwWyjCk
+X-Proofpoint-GUID: dAK7buY6I60OWndzdRr5nyyKJdwWyjCk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ mlxscore=0 adultscore=0 mlxlogscore=851 bulkscore=0 clxscore=1034
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2402210109
 
-On Mi, 2024-02-21 at 14:41 +0100, Thomas Richard wrote:
-> On 2/21/24 14:09, Philipp Zabel wrote:
-> > On Do, 2024-02-15 at 16:17 +0100, Thomas Richard wrote:
-> > > Add suspend and resume support.
-> > >=20
-> > > The already_configured flag is cleared during the suspend stage to fo=
-rce
-> > > the PHY initialization during the resume stage.
-> > >=20
-> > > Based on the work of Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > >=20
-> > > Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> > > ---
-> > >  drivers/phy/cadence/phy-cadence-torrent.c | 54 +++++++++++++++++++++=
-++++++++++
-> > >  1 file changed, 54 insertions(+)
-> > >=20
-> > > diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/=
-cadence/phy-cadence-torrent.c
-> > > index 52cadca4c07b..f8945a11e7ca 100644
-> > > --- a/drivers/phy/cadence/phy-cadence-torrent.c
-> > > +++ b/drivers/phy/cadence/phy-cadence-torrent.c
-> > > @@ -3005,6 +3005,59 @@ static void cdns_torrent_phy_remove(struct pla=
-tform_device *pdev)
-> > >  	cdns_torrent_clk_cleanup(cdns_phy);
-> > >  }
-> > > =20
-> > > +static int cdns_torrent_phy_suspend_noirq(struct device *dev)
-> > > +{
-> > > +	struct cdns_torrent_phy *cdns_phy =3D dev_get_drvdata(dev);
-> > > +	int i;
-> > > +
-> > > +	reset_control_assert(cdns_phy->phy_rst);
-> > > +	reset_control_assert(cdns_phy->apb_rst);
-> > > +	for (i =3D 0; i < cdns_phy->nsubnodes; i++)
-> > > +		reset_control_assert(cdns_phy->phys[i].lnk_rst);
-> > > +
-> > > +	if (cdns_phy->already_configured)
-> > > +		cdns_phy->already_configured =3D 0;
-> > > +	else
-> > > +		clk_disable_unprepare(cdns_phy->clk);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int cdns_torrent_phy_resume_noirq(struct device *dev)
-> > > +{
-> > > +	struct cdns_torrent_phy *cdns_phy =3D dev_get_drvdata(dev);
-> > > +	int node =3D cdns_phy->nsubnodes;
-> > > +	int ret, i;
-> > > +
-> > > +	ret =3D cdns_torrent_clk(cdns_phy);
-> > > +	if (ret)
-> > > +		goto clk_cleanup;
-> > > +
-> > > +	/* Enable APB */
-> > > +	reset_control_deassert(cdns_phy->apb_rst);
-> > > +
-> > > +	if (cdns_phy->nsubnodes > 1) {
-> > > +		ret =3D cdns_torrent_phy_configure_multilink(cdns_phy);
-> > > +		if (ret)
-> > > +			goto put_lnk_rst;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +
-> > > +put_lnk_rst:
-> > > +	for (i =3D 0; i < node; i++)
-> > > +		reset_control_assert(cdns_phy->phys[i].lnk_rst);
-> >=20
-> > The same cleanup is found in probe. Would it be cleaner to move this
-> > into cdns_torrent_phy_configure_multilink() instead of duplicating it
-> > here?
->=20
-> Hello Philipp,
->=20
-> Yes I could, but from my point of view, it would not be cleaner.
-> This cleanup is called from many places in the probe:
-> -
-> https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/phy/cadence/phy-=
-cadence-torrent.c#L2948
-> -
-> https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/phy/cadence/phy-=
-cadence-torrent.c#L2954
-> -
-> https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/phy/cadence/phy-=
-cadence-torrent.c#L2960
->
-> If I add this cleanup in cdns_torrent_phy_configure_multilink(), yes I
-> could remove it from cdns_torrent_phy_resume_noirq(), but I should keep
-> it in the probe. And I should modify the probe to jump to clk_cleanup if
-> cdns_torrent_phy_configure_multilink() fails.
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-I see it now. If it can't be consolidated, it's not useful to move it
-around.
+Synopsys Controllers provide capabilities to detect various controller
+level errors. These can range from controller interface error to random
+PCIe configuration errors. This patch intends to add support to detect
+these errors and report it to userspace entity via sysfs, which can take
+appropriate actions to mitigate the errors.
 
->=20
-regards
-Philipp
+Also adding global irq support for PCIe RC and add corresponding change
+in PCIe dt-bindings.
+
+Mrinmay Sarkar (2):
+  dt-bindings: PCI: qcom: Add global irq support for SA8775p
+  arm64: dts: qcom: sa8775p: Enable global irq support for SA8775p
+
+Nitesh Gupta (1):
+  PCI: qcom: Add support for detecting Controller Level PCIe Errors
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  26 +-
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         |  12 +-
+ drivers/pci/controller/dwc/pcie-designware.h  |  26 ++
+ drivers/pci/controller/dwc/pcie-qcom.c        | 350 ++++++++++++++++++
+ 4 files changed, 408 insertions(+), 6 deletions(-)
+
+-- 
+2.40.1
+
 
