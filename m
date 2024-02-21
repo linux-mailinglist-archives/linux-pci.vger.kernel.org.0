@@ -1,158 +1,163 @@
-Return-Path: <linux-pci+bounces-3844-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3845-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C13085ECDD
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 00:25:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41D5F85ED0C
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 00:33:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96E0C1C21EC0
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 23:25:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C60D7B20ECE
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 23:33:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D23256456;
-	Wed, 21 Feb 2024 23:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 430D685290;
+	Wed, 21 Feb 2024 23:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enu4yqBB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnHNLGYi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027D1A35;
-	Wed, 21 Feb 2024 23:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD963E470
+	for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 23:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708557928; cv=none; b=Y3oV3WjpQPKnmsmYsPqxLTI7KHTD5s31fY5epGOBSmqG4pZZUxhVnsGOmX1bp3QQoX8qwF9TbUl50x9W8BRQby9PM0hH+u9J6bM0ebEPE3tf7ac7YmN74ZfH24YyUolfCPmOFUP25g9EfJPxLvoXeQxe9LTgaM/7CNxy2DEbVpE=
+	t=1708558408; cv=none; b=sjsD5AauxLLij1aAdk7mrfenX5UsZz5WCkRnDfxdvikbDeNUGkWlBz27/q/XNGsjlLrpeFCWdvo2Dq7Ai1eMz2WWTpm2qWJc7W/ENFzlS4cifzt+UuvSiIQ+Px6zFGfVwqKieYTOqXQaPItcBriyS53Ifl8ikz3pWkxbcgIZ+z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708557928; c=relaxed/simple;
-	bh=cm0rXHuYpdUHHEiy4MG/nHpcI2fGOqCABwVVztVbBUA=;
+	s=arc-20240116; t=1708558408; c=relaxed/simple;
+	bh=oek7yMxAZVYzST3tZKKbzp+4bnsbv669D9ZZTh7z9Nk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=D2WAWxpVXmcxP22dPL/aLsIyuaXwJARdbPoW+JxYktpv0wK3N4qHzqs5zdfJmeCtBOV5+JVktqPXYZ9cLRCFjs+6/TlWik0VoXL2y7F5LN5lkT5HpgvlEquujDkfBZ1ydP9EsYUm2qX5sTRXrQbr11LDvUvYQcqw9ugKkYYNZgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enu4yqBB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E6CEC433C7;
-	Wed, 21 Feb 2024 23:25:27 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=BjjCv8XrV9GrpBVjHHIHbr4rGnYic+TFHGoyYP4T9fygnOs3NHt63IBPqzS7xONZe3RPY7HU7y6JvwXNkEid/jKyIHCejHCDrUk7Zo+xgwWfrly2RSgWjOJHF6yXzq1Nw9YZU5Ji+48l2rde6OZUuRlNCNO8YA9GCvvuEne4DX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnHNLGYi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 799B6C433F1;
+	Wed, 21 Feb 2024 23:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708557927;
-	bh=cm0rXHuYpdUHHEiy4MG/nHpcI2fGOqCABwVVztVbBUA=;
+	s=k20201202; t=1708558407;
+	bh=oek7yMxAZVYzST3tZKKbzp+4bnsbv669D9ZZTh7z9Nk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=enu4yqBBb/AYies9CfHBzeZEXCn6XnamsV5WkPgFOTTIcWY47IDWEmHA8bHBhcYew
-	 AJpLO1EARhcu+Quv0pwf5hx78d5KRcIQD7N6x5wbqxxdFc7Nnn7l19gcU1M+JULo55
-	 iv9mNLg4BvCXr+7DgAbh0nWL4BDkc8ciRNSbnMR0LfnS7t9DUEBuOCwMSb/LbMC8cv
-	 ZTN1wWwCMQ/UXAeQ+6G44z2C4KiWKmwQLEoCVCxDULQ7fpDVed9ad6dQbGJrwtEJG+
-	 aAqYIFKnHd2UytSpCUCINY1bmW5Sck71AX2iu3FeA8DxyD0ru7Jh8/8l4U6YOJpqh8
-	 DdZhkeWuFIvSw==
-Date: Wed, 21 Feb 2024 17:25:23 -0600
+	b=bnHNLGYihBqBfQLCEfd3GjCg/Qa1C8D3xFhquSzSeBzw/lhnDDcAG6VSzIerwfMTO
+	 HA17D0lKg73tkJJm9ohoD1+vra3S0DuJsXZgtyCQ56WfkLh0CjXd1WJq5Bl5wCdUjV
+	 PZDhHyK1UJ7kYjOssyZ4A79x9q7GF4xq2YFBNw6sQtSK/j4rGyCbZDpfCj2BAEh8tj
+	 KzqpeY+7Y9Ds743TtbPPAmyd67oCEkGtyDv35jy6S3oSDEu1JPJc6ljd9dSug+ueWA
+	 8yoY1wosHzOW9ZJ+oauZMW0fnuS41MnUHpQyLyUQSYw0fjH5BxodgNkSrspQwkagC8
+	 yrWW3rj6m6UGQ==
+Date: Wed, 21 Feb 2024 17:33:25 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-	Matthew W Carlis <mattc@purestorage.com>,
-	Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>
-Subject: Re: [PATCH] PCI/DPC: Request DPC only if also requesting AER
-Message-ID: <20240221232523.GA1533169@bhelgaas>
+Cc: Matthew W Carlis <mattc@purestorage.com>, bhelgaas@google.com,
+	kbusch@kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de,
+	mika.westerberg@linux.intel.com,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER
+ natively.
+Message-ID: <20240221233325.GA1595083@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <39ef1387-609c-45ca-9bfa-e01b72cacaaa@linux.intel.com>
+In-Reply-To: <20240221231102.GA1547668@bhelgaas>
 
-On Tue, Feb 20, 2024 at 06:45:32PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 2/20/24 3:55 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > When booting with "pci=noaer", we don't request control of AER, but we
-> > previously *did* request control of DPC, as in the dmesg log attached at
-> > the bugzilla below:
-> >
-> >   Command line: ... pci=noaer
-> >   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
-> >   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
-> >
-> > That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
-> > says:
-> >
-> >   If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
-> >   must also set bit 7 of the Support field (indicating support for Error
-> >   Disconnect Recover notifications) and bits 3 and 4 of the Control field
-> >   (requesting control of PCI Express Advanced Error Reporting and the PCI
-> >   Express Capability Structure).
-> >
-> > Request DPC control only if we have also requested AER control.
+[+cc Mahesh, Oliver, linuxppc-dev, since I mentioned powerpc below.
+Probably not of interest since this is about the ACPI EDR feature, but
+just FYI]
+
+On Wed, Feb 21, 2024 at 05:11:04PM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 23, 2024 at 09:59:21AM -0600, Bjorn Helgaas wrote:
+> > On Mon, Jan 22, 2024 at 06:37:48PM -0800, Kuppuswamy Sathyanarayanan wrote:
+> > > On 1/22/24 11:32 AM, Bjorn Helgaas wrote:
+> > > > On Mon, Jan 08, 2024 at 05:15:08PM -0700, Matthew W Carlis wrote:
+> > > >> A small part is probably historical; we've been using DPC on PCIe
+> > > >> switches since before there was any EDR support in the kernel. It
+> > > >> looks like there was a PCIe DPC ECN as early as Feb 2012, but this
+> > > >> EDR/DPC fw ECN didn't come in till Jan 2019 & kernel support for ECN
+> > > >> was even later. Its not immediately clear I would want to use EDR in
+> > > >> my newer architecures & then there are also the older architecures
+> > > >> still requiring support. When I submitted this patch I came at it
+> > > >> with the approach of trying to keep the old behavior & still support
+> > > >> the newer EDR behavior. Bjorns patch from Dec 28 2023 would seem to
+> > > >> change the behavior for both root ports & switch ports, requiring
+> > > >> them to set _OSC Control Field bit 7 (DPC) and _OSC Support Field
+> > > >> bit 7 (EDR) or a kernel command line value. I think no matter what,
+> > > >> we want to ensure that PCIe Root Ports and PCIe switches arrive at
+> > > >> the same policy here.
+> > > > Is there an approved DPC ECN to the PCI Firmware spec that adds DPC
+> > > > control negotiation, but does *not* add the EDR requirement?
+> > > >
+> > > > I'm looking at
+> > > > https://members.pcisig.com/wg/PCI-SIG/document/previewpdf/12888, which
+> > > > seems to be the final "Downstream Port Containment Related
+> > > > Enhancements" ECN, which is dated 1/28/2019 and applies to the PCI
+> > > > Firmware spec r3.2.
+> > > >
+> > > > It adds bit 7, "PCI Express Downstream Port Containment Configuration
+> > > > control", to the passed-in _OSC Control field, which indicates that
+> > > > the OS supports both "native OS control and firmware ownership models
+> > > > (i.e. Error Disconnect Recover notification) of Downstream Port
+> > > > Containment."
+> > > >
+> > > > It also adds the dependency that "If the OS sets bit 7 of the Control
+> > > > field, it must set bit 7 of the Support field, indicating support for
+> > > > the Error Disconnect Recover event."
+> > > >
+> > > > So I'm trying to figure out if the "support DPC but not EDR" situation
+> > > > was ever a valid place to be.  Maybe it's a mistake to have separate
+> > > > CONFIG_PCIE_DPC and CONFIG_PCIE_EDR options.
+> > > 
+> > > My understanding is also similar. I have raised the same point in
+> > > https://lore.kernel.org/all/3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com/
+> > 
+> > Ah, sorry, I missed that.
+> > 
+> > > IMO, we don't need a separate config for EDR. I don't think user can
+> > > gain anything with disabling EDR and enabling DPC. As long as
+> > > firmware does not user EDR support, just compiling the code should
+> > > be harmless.
+> > > 
+> > > So we can either remove it, or select it by default if user selects
+> > > DPC config.
+> > > 
+> > > > CONFIG_PCIE_EDR depends on CONFIG_ACPI, so the situation is a little
+> > > > bit murky on non-ACPI systems that support DPC.
+> > > 
+> > > If we are going to remove the EDR config, it might need #ifdef
+> > > CONFIG_ACPI changes in edr.c to not compile ACPI specific code.
+> > > Alternative choice is to compile edr.c with CONFIG_ACPI.
+> > 
+> > Right.  I think we should probably remove CONFIG_PCIE_EDR completely
+> > and make everything controlled by CONFIG_PCIE_DPC.
 > 
-> Can you also add similar check in calculate_support call?
+> In the PCI Firmware spec, r3.3, sec 4.5.1, table 4-4, the description
+> of "Error Disconnect Recover Supported" hints at the possibility for
+> an OS to support EDR but not DPC:
 > 
->         if (pci_aer_available() && IS_ENABLED(CONFIG_PCIE_EDR))
->                 support |= OSC_PCI_EDR_SUPPORT;
-
-That doesn't seem right to me.  The implementation note in sec 4.6.12
-suggests that EDR Notifications may be used even when the firmware
-maintains control of AER and DPC.  Maybe that note is wrong or
-misleading, but as written, I interpret that as meaning that it may be
-useful for the platform to know that the OS supports EDR even if it
-AER control isn't requested or granted.
-
-> > Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=218491#c12
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: <stable@vger.kernel.org>	# v5.7+
-> > Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > Cc: Matthew W Carlis <mattc@purestorage.com>
-> > Cc: Keith Busch <kbusch@kernel.org>
-> > Cc: Lukas Wunner <lukas@wunner.de>
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> > ---
-> >  drivers/acpi/pci_root.c | 20 +++++++++++---------
-> >  1 file changed, 11 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> > index 58b89b8d950e..1c16965427b3 100644
-> > --- a/drivers/acpi/pci_root.c
-> > +++ b/drivers/acpi/pci_root.c
-> > @@ -518,17 +518,19 @@ static u32 calculate_control(void)
-> >  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
-> >  		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
-> >  
-> > -	if (pci_aer_available())
-> > +	if (pci_aer_available()) {
-> >  		control |= OSC_PCI_EXPRESS_AER_CONTROL;
-> >  
-> > -	/*
-> > -	 * Per the Downstream Port Containment Related Enhancements ECN to
-> > -	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
-> > -	 * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
-> > -	 * and EDR.
-> > -	 */
-> > -	if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
-> > -		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-> > +		/*
-> > +		 * Per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, the
-> > +		 * OS can request DPC control only if it has advertised
-> > +		 * OSC_PCI_EDR_SUPPORT and requested both
-> > +		 * OSC_PCI_EXPRESS_CAPABILITY_CONTROL and
->
-> I think you mean OSC_PCI_EXPRESS_DPC_CONTROL.
-
-No, I just tried to rephrase the text for _OSC Control, bit 7 (quoted
-in the commit log), so I think requesting control of bits 3 and 4 (AER
-and PCIe Capability) is right.
-
-> > +		 * OSC_PCI_EXPRESS_AER_CONTROL.
-> > +		 */
-> > +		if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
-> > +			control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+>   In the context of PCIe, support for Error Disconnect Recover implies
+>   that the operating system will invalidate the software state
+>   associated with child devices of the port without attempting to
+>   access the child device hardware. *If* the operating system supports
+>   Downstream Port Containment (DPC), ..., the operating system shall
+>   attempt to recover the child devices if the port implements the
+>   Downstream Port Containment Extended Capability.
 > 
-> Since you are cleaning up this part, why not add a patch to remove
-> CONFIG_PCIE_EDR?
-
-Good idea, I'll do that, too.
-
-Bjorn
+> On the other hand, sec 4.6.12 and the implementation note there with
+> the EDR flow seem to assume the OS *does* support DPC and can clear
+> error status and bring ports out of DPC even if the OS hasn't been
+> granted control of DPC.
+> 
+> EDR is an ACPI feature, and I guess it might be theoretically possible
+> to use EDR on an ACPI system with some non-DPC error containment
+> feature like powerpc EEH.  But obviously powerpc doesn't use ACPI, and
+> a hypothetical ACPI system with non-DPC error containment would have
+> to add support for that containment in edr_handle_event().
+> 
+> So while I'm not 100% sure that making CONFIG_PCIE_DPC control both
+> DPC and EDR is completely correct, I guess for now I still think using
+> CONFIG_PCIE_DPC for both DPC and EDR seems like a reasonable plan
+> because we have no support for EDR *without* DPC.
+> 
+> Bjorn
 
