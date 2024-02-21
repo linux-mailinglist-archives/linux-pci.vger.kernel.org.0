@@ -1,243 +1,168 @@
-Return-Path: <linux-pci+bounces-3836-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3837-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0994185E562
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 19:20:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 299DA85E6A4
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 19:50:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B01C128342C
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 18:20:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A76CCB2399C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 18:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1583585264;
-	Wed, 21 Feb 2024 18:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B32985923;
+	Wed, 21 Feb 2024 18:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEnlp1Od"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kAxQtPEU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECC384FC5;
-	Wed, 21 Feb 2024 18:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A21D82D97;
+	Wed, 21 Feb 2024 18:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708539606; cv=none; b=fE5nB6pK2N+xPZTxbI30hw090ijgvWbnpmHGLc2cVtJedfqx52vUzfsQ/uYWaH1Yxflj5Dqkx0f9eQDW1rIQIsqSR8tNPcxkOkfV9B+1TS3osqMBzhRcxEIGs1m8JkoEoZadwgja/B1F4WrohIo+Re32ZsAMp+/vwxBTXvKhUtQ=
+	t=1708541419; cv=none; b=dw1Aox30q75X91HwGKm+5vk4STv/oAW+iaSejtBphQjfC6Qc2bdZwBr+ys1bBnmGeADZo0SkTKbuntCE1w1iALD8NVoJRBTxO6flO/M/OK4XsKO+GxJ4euPK7i+Z/uLmPjjsK8JniUsSLsmUS9YLILvtDeOXXIBTxpZ6wGqGW8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708539606; c=relaxed/simple;
-	bh=li3AAvdCGDOSuLorXbpdLhAoR1v3aT31mkw+qfafJus=;
+	s=arc-20240116; t=1708541419; c=relaxed/simple;
+	bh=berq+dLx79W8QR0JZxbmG5z5E9hVyr2TYj6ftH2W+DU=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Zd0ltvsM6DiUzpshSbTD1eIAoomMuXD5xAeHtm/bscTSjmQYj21R6ywpr5IcdICl78c4+FGy+g+1Wv+Am/hX1J1ummCBxplxFBxoc1pwYMBATAoLY8RYxfUlFtWft4etyXkzTf9DfLvZ0IBeqAMynTjZzLgXoRF0wcGhTw1ApYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEnlp1Od; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19280C433F1;
-	Wed, 21 Feb 2024 18:20:04 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=i2xN8LqpPXCrfJ8GvRd0euugK9PlPAhTUFmpkwdoM3Fep5BPO36/zuDByFfF3P7NkvzWuaOSt+D3hq5g9PccBOdqqB62kt7TEOQoEPKPXfGNiVyzjA0jo2Oy4+KCYaWlPKx8a8LOhmMveCMMJYs4f9vFtSjL8GM0gCSNUtCMC4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kAxQtPEU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D4A9C433F1;
+	Wed, 21 Feb 2024 18:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708539605;
-	bh=li3AAvdCGDOSuLorXbpdLhAoR1v3aT31mkw+qfafJus=;
+	s=k20201202; t=1708541418;
+	bh=berq+dLx79W8QR0JZxbmG5z5E9hVyr2TYj6ftH2W+DU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=WEnlp1OdwtWAiM2QTFeWAdKrsgH2tq1eKMBZ4OythNTbeJUqcd+SU0fXodxrznLjH
-	 O7U3ceHcN93Cg2Asa64KuHQz9rAIMrN38z3CYT5eEaZDLi1xxF7WtQyFLwWYRi7Gc9
-	 lNoBgE70VNl7ZJWdMM2sJu4LEGDdj32i6aQs2j1LGDWp0UfkJDvogZnS+N34jWlB+E
-	 j9BXTsbyzlYUhdKar98mQ2XVvVlZIsQ+M6yPr7TqwJ777lbp4p1eEFOUSDslnuLa0C
-	 xnHdSTTs/QJUaJPqJRYSTWWJH+mEAlaoJQtTqtbssQPuWw7qY+WAbMcf5k+cexGvhO
-	 HO4XozNa8PFRg==
-Date: Wed, 21 Feb 2024 12:20:00 -0600
+	b=kAxQtPEUYCxY9bKxoBer0CmYny/X0JyU63M+Zl/i/VzgkRePbL+RgKth1AS9f84aJ
+	 pipANzIjhKdTzS7DuhOhXkPkSD1YzBrGIemEDirSKyujLbCuin7x1iPed2ztjiZTWa
+	 JI7kRYnpbDTzV6EcGMrHY90bQVK49to7toCJ8LwEHG+RKisqOzK4VVyTukMxcs7w8V
+	 k4rUkFsTBKcM9LW6Z2t4h/YyQTVwNvTSFBNDN9hQe4WvmguAgsUV6FUbJdjqnqpS+Y
+	 xMYCW7OQMmNIkzxu56Iu6qvGRr60fbvqSGuTpAX2zMjhfgfy0DYN0deFfYqeUuuYIP
+	 nY/uFVgop4ysQ==
+Date: Wed, 21 Feb 2024 12:50:17 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+To: root <root@hu-msarkar-hyd.qualcomm.com>
+Cc: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+	konrad.dybcio@linaro.org, manivannan.sadhasivam@linaro.org,
+	conor+dt@kernel.org, quic_nitegupt@quicinc.com,
+	quic_shazhuss@quicinc.com, quic_ramkri@quicinc.com,
+	quic_nayiluri@quicinc.com, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, Nitesh Gupta <nitegupt@quicinc.com>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
- platforms
-Message-ID: <20240221182000.GA1533634@bhelgaas>
+	Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] PCI: qcom: Add support for detecting controller
+ level PCIe errors
+Message-ID: <20240221185017.GA1536431@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221051958.GA11693@thinkpad>
+In-Reply-To: <20240221140405.28532-4-root@hu-msarkar-hyd.qualcomm.com>
 
-On Wed, Feb 21, 2024 at 10:49:58AM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Feb 20, 2024 at 04:02:40PM -0600, Bjorn Helgaas wrote:
-> > On Wed, Feb 14, 2024 at 05:16:09PM +0530, Manivannan Sadhasivam wrote:
-> > > Currently, PCI core will enable D3 support for PCI bridges only when the
-> > > following conditions are met:
-> > 
-> > Whenever I read "D3", I first have to figure out whether we're talking
-> > about D3hot or D3cold.  Please save me the effort :)
+On Wed, Feb 21, 2024 at 07:34:04PM +0530, root wrote:
+> From: Nitesh Gupta <nitegupt@quicinc.com>
 > 
-> Both actually, that's why I used "D3" as in the spec. I should've explicitly
-> mentioned that in the commit message.
-> 
-> > > 1. Platform is ACPI based
-> > > 2. Thunderbolt controller is used
-> > > 3. pcie_port_pm=force passed in cmdline
-> > 
-> > Are these joined by "AND" or "OR"?  I guess probably "OR"?
-> > 
-> > "... all the following conditions are met" or "... one of the
-> > following conditions is met" would clarify this.
-> 
-> Will use "one of the..."
-> 
-> > > While options 1 and 2 do not apply to most of the DT based
-> > > platforms, option 3 will make the life harder for distro
-> > > maintainers. Due to this, runtime PM is also not getting enabled
-> > > for the bridges.
-> > > 
-> > > To fix this, let's make use of the "supports-d3" property [1] in
-> > > the bridge DT nodes to enable D3 support for the capable
-> > > bridges. This will also allow the capable bridges to support
-> > > runtime PM, thereby conserving power.
-> > 
-> > Looks like "supports-d3" was added by
-> > https://github.com/devicetree-org/dt-schema/commit/4548397d7522.
-> > The commit log mentions "platform specific ways", which suggests maybe
-> > this is D3cold, since D3hot should be supported via PMCSR without any
-> > help from the platform.
-> > 
-> > So I *guess* this really means "platform provides some non-architected
-> > way to put devices in D3cold and bring them back to D0"?
-> 
-> By reading the comments and git log of the pci_bridge_d3_possible()
-> function in drivers/pci/pci.c, we can understand that some of the
-> old bridges do not support both D3hot and D3cold. And to
-> differentiate such bridges, platforms have to notify the OS using
-> some ways.
-> 
-> ACPI has its own implementation [1] and DT uses "supports-d3"
-> property.
-> 
-> And yes, in an ideal world PMCSR should be sufficient for D3hot, but
-> you know the PCI vendors more than me ;)
+> Synopsys Controllers provide capabilities to detect various controller
 
-So it sounds like this is supposed to cover two cases:
+"Synopsys controllers"?  "Synopsys" refers to the DesignWare core, but
+most of this code is in the qcom driver.  If it's qcom-specific, this
+should say "Qualcomm controllers".
 
-  1) D3hot doesn't work per spec.  This sounds like a hardware
-     defect in the device that should be a quirk based on
-     Vendor/Device ID, not something in DT.  I don't actually know if
-     this is common, although there are several existing quirks that
-     mention issues with D3.
+> level errors. These can range from controller interface error to random
+> PCIe configuration errors. This patch intends to add support to detect
+> these errors and report it to userspace entity via sysfs, which can take
+> appropriate actions to mitigate the errors.
 
-  2) The platform doesn't support putting the bridge in D3cold and
-     back to D0.  I don't understand this either because I assumed DT
-     would describe *hardware*, and "supports-d3" might imply the
-     presence of hardware power control, but doesn't tell us how to
-     operate it, and it must be up to a native driver to know how to
-     do it.
+s/This patch intends to add/Add/, so the commit log says what the
+patch *does*, not "what it intends to do".
 
-These are two vastly different scenarios, and I would really like to
-untangle them so they aren't conflated.  I see that you're extending
-platform_pci_bridge_d3(), which apparently has that conflation baked
-into it already, but my personal experience is that this is really
-hard to maintain.
+> +
+> +/*
+> + * Error Reporting DBI register
+> + */
 
-> > > Ideally, D3 support should be enabled by default for the more recent PCI
-> > > bridges, but we do not have a sane way to detect them.
-> > > 
-> > > [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-pci-bridge.yaml#L31
+Typical style in this file (granted, it's not 100% consistent) is to
+make these single-line comments, i.e.,
 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pci-acpi.c#n976
-> 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > > This patch is tested on Qcom SM8450 based development board with an out-of-tree
-> > > DT patch.
-> > > 
-> > > NOTE: I will submit the DT patches adding this property for applicable bridges
-> > > in Qcom SoCs separately.
-> > > 
-> > > Changes in v3:
-> > > - Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
-> > > - Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
-> > > 
-> > > Changes in v2:
-> > > - Switched to DT based approach as suggested by Lukas.
-> > > - Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
-> > > ---
-> > >  drivers/pci/of.c  | 12 ++++++++++++
-> > >  drivers/pci/pci.c |  3 +++
-> > >  drivers/pci/pci.h |  6 ++++++
-> > >  3 files changed, 21 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > index 51e3dd0ea5ab..24b0107802af 100644
-> > > --- a/drivers/pci/of.c
-> > > +++ b/drivers/pci/of.c
-> > > @@ -786,3 +786,15 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
-> > >  	return slot_power_limit_mw;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> > > +
-> > > +/**
-> > > + * of_pci_bridge_d3 - Check if the bridge is supporting D3 states or not
-> > > + *
-> > > + * @node: device tree node of the bridge
-> > > + *
-> > > + * Return: %true if the bridge is supporting D3 states, %false otherwise.
-> > > + */
-> > > +bool of_pci_bridge_d3(struct device_node *node)
-> > > +{
-> > > +	return of_property_present(node, "supports-d3");
-> > > +}
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index d8f11a078924..8678fba092bb 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -1142,6 +1142,9 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
-> > >  	if (pci_use_mid_pm())
-> > >  		return false;
-> > >  
-> > > +	if (dev_of_node(&dev->dev))
-> > > +		return of_pci_bridge_d3(dev->dev.of_node);
-> > > +
-> > >  	return acpi_pci_bridge_d3(dev);
-> > >  }
-> > >  
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 2336a8d1edab..10387461b1fe 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -635,6 +635,7 @@ int of_pci_get_max_link_speed(struct device_node *node);
-> > >  u32 of_pci_get_slot_power_limit(struct device_node *node,
-> > >  				u8 *slot_power_limit_value,
-> > >  				u8 *slot_power_limit_scale);
-> > > +bool of_pci_bridge_d3(struct device_node *node);
-> > >  int pci_set_of_node(struct pci_dev *dev);
-> > >  void pci_release_of_node(struct pci_dev *dev);
-> > >  void pci_set_bus_of_node(struct pci_bus *bus);
-> > > @@ -673,6 +674,11 @@ of_pci_get_slot_power_limit(struct device_node *node,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static inline bool of_pci_bridge_d3(struct device_node *node)
-> > > +{
-> > > +	return false;
-> > > +}
-> > > +
-> > >  static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
-> > >  static inline void pci_release_of_node(struct pci_dev *dev) { }
-> > >  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
-> > > 
-> > > ---
-> > > base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-> > > change-id: 20240131-pcie-qcom-bridge-b6802a9770a3
-> > > 
-> > > Best regards,
-> > > -- 
-> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+  /* Error Reporting DBI register */
+
+> +#define DBI_DEVICE_CONTROL_DEVICE_STATUS	0x78
+> +#define DBI_ROOT_CONTROL_ROOT_CAPABILITIES_REG	0x8c
+
+Most other #defines in this file use upper-case hex.
+
+> +#define PCIE_AER_EXT_CAP_ID			0x01
+
+Why not the existing PCI_EXT_CAP_ID_ERR?  If this is the standard PCIe
+AER stuff, we shouldn't make it needlessly device-specific.
+
+> +#define PCI_EXT_CAP_RASDP_ID			0x0b
+
+Looks like possibly PCI_EXT_CAP_ID_VNDR?  Capability IDs are
+definitely not device-specific.  The fact that a PCI_EXT_CAP_ID_VNDR
+capability in a device with Vendor ID PCI_VENDOR_ID_QCOM has a
+qcom-specific meaning is obviously specific to qcom, but the
+Capability ID itself is not.
+
+> +/* DBI_ROOT_CONTROL_ROOT_CAPABILITIES_REG register fields */
+> +#define PCIE_CAP_SYS_ERR_ON_CORR_ERR_EN		BIT(0)
+> +#define PCIE_CAP_SYS_ERR_ON_NON_FATAL_ERR_EN	BIT(1)
+> +#define PCIE_CAP_SYS_ERR_ON_FATAL_ERR_EN	BIT(2)
+> +
+> +/* DBI_DEVICE_CONTROL_DEVICE_STATUS register fields */
+> +#define PCIE_CAP_UNSUPPORT_REQ_REP_EN		BIT(3)
+> +#define PCIE_CAP_FATAL_ERR_REPORT_EN		BIT(2)
+> +#define PCIE_CAP_NON_FATAL_ERR_REPORT_EN	BIT(1)
+> +#define PCIE_CAP_CORR_ERR_REPORT_EN		BIT(0)
+
+These look like alternate ways to access the generic PCIe Capability.
+If that's the case, either use the existing PCI_EXP_RTCTL_SECEE,
+PCI_EXP_DEVCTL_CERE, etc., or at least match the "RTCTL_SECEE" parts
+of the names so we can see the connection.
+
+> +/* DBI_ADV_ERR_CAP_CTRL_OFF register fields */
+> +#define ECRC_GEN_EN				BIT(6)
+> +#define ECRC_CHECK_EN				BIT(8)
+
+Do these correspond to PCI_ERR_CAP_ECRC_GENE, PCI_ERR_CAP_ECRC_CHKE?
+
+> +/* DBI_ROOT_ERR_CMD_OFF register fields */
+> +#define CORR_ERR_REPORTING_EN			BIT(0)
+> +#define NON_FATAL_ERR_REPORTING_EN		BIT(1)
+> +#define FATAL_ERR_REPORTING_EN			BIT(2)
+
+PCI_ERR_ROOT_CMD_COR_EN, etc?
+
+> +static void qcom_pcie_enable_error_reporting_2_7_0(struct qcom_pcie *pcie)
+> +{
+> + ...
+
+> +	val = readl(pci->dbi_base + DBI_DEVICE_CONTROL_DEVICE_STATUS);
+> +	val |= (PCIE_CAP_CORR_ERR_REPORT_EN | PCIE_CAP_NON_FATAL_ERR_REPORT_EN |
+> +			PCIE_CAP_FATAL_ERR_REPORT_EN | PCIE_CAP_UNSUPPORT_REQ_REP_EN);
+> +	writel(val, pci->dbi_base + DBI_DEVICE_CONTROL_DEVICE_STATUS);
+
+Is there any way to split the AER part (specified by the PCIe spec)
+from the qcom-specific (or dwc-specific) part?  This looks an awful
+lot like pci_enable_pcie_error_reporting(), and we should do this in
+the PCI core in a generic way if possible.
+
+> +	val = readl(pci->dbi_base + DBI_ROOT_CONTROL_ROOT_CAPABILITIES_REG);
+> +	val |= (PCIE_CAP_SYS_ERR_ON_CORR_ERR_EN | PCIE_CAP_SYS_ERR_ON_NON_FATAL_ERR_EN |
+> +			PCIE_CAP_SYS_ERR_ON_FATAL_ERR_EN);
+> +	writel(val, pci->dbi_base + DBI_ROOT_CONTROL_ROOT_CAPABILITIES_REG);
+
+Bjorn
 
