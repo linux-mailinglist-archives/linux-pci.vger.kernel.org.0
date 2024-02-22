@@ -1,123 +1,144 @@
-Return-Path: <linux-pci+bounces-3871-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7773685F8E7
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 13:55:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94DC185F968
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 14:16:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 275AB1F266B5
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 12:55:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AFDE1F26E78
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 13:16:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94A1E12E1D3;
-	Thu, 22 Feb 2024 12:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 078B11468ED;
+	Thu, 22 Feb 2024 13:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VGdiXxTn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VAXC9Rtr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2A760B90;
-	Thu, 22 Feb 2024 12:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9B3133983;
+	Thu, 22 Feb 2024 13:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708606502; cv=none; b=B33UlLxPdDI/+x9V1ykFfrV7mM5GL+iIDLfYho/MDwR3esR4DqHhGeLDvMp5JVG+8CHljfRiNPAzOSwsuyQq4D89C00Ljfj3nhnByykNVblH1ihS0k28GIRMviq4a014XBr9lyd6ELvnJZobZ+4E4JomZaLcm/0NXr3kIif3L94=
+	t=1708607724; cv=none; b=Gs1aXxe6VauxSnUVCSWHS8S/lpKsyWOpHD1WK87suC9MkPq0aaa6ci/gqjLxmEehTmADGp5CJ0pD9lyNnFGwXOihyy8Q/+279auTzKxLA7b0/1uRiIx6dO500CqensJRKVMribzOlbV8u1T0B9fY8HBxNQou9k3tItx/5uuEavo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708606502; c=relaxed/simple;
-	bh=cVfB0yeCoQ1d3ZYvhoeMYL94HZ5I4I0dl5HnrRLOySE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YCs7DTvv53BFh3ave0Qj76p6zjSV/Qmq5uvH4pmqjNrs4IFpfe7ga1XrscMOpVsnaxOZQFkICxW4WL2aeRMV+grBbNeJ/mM4mmrGooSdrEIMGXlmfNregNqoeJiiFeWXMm88cPh9BqLVoWnVKJmOTv/Nj7ZFFLI6Ng2zvopH9bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VGdiXxTn; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708606501; x=1740142501;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cVfB0yeCoQ1d3ZYvhoeMYL94HZ5I4I0dl5HnrRLOySE=;
-  b=VGdiXxTn6I6vgnNbzzpMG0q/OYAbWf9qTb0sJwQrzXPB/ZJFuSHXlS8Y
-   N9QpQJ1+30n8pmlgVCSPxVuZ6LSZM+qS/tIco8fvkbVXxW2JJXTCaFH9J
-   k5QJyX0xVJnrK7rOzJWZ/UuwgJh6dxzNVU2kVdJ90komTU1nRTB9En8pQ
-   n9FDzPe6khrlCUlUIRO2w5MyA65DC4ymB0/HE7wMCgUGqxnA5Ea3fVCr7
-   3G72892XXsL9K9g0oO4O74OCMYUt0WIaNIe2v3iszFA9SvJ4XDrLIA1jq
-   uJWJaOsGZE8NMgO8F0xk7wdEicU6M+pDjVnoMd3PAjS2dFd4/+GUWMptR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="14243689"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="14243689"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:55:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="913518859"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="913518859"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.171.222]) ([10.249.171.222])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 04:54:56 -0800
-Message-ID: <9c4637d5-6496-4c68-b2db-4be1e56ca746@linux.intel.com>
-Date: Thu, 22 Feb 2024 20:54:54 +0800
+	s=arc-20240116; t=1708607724; c=relaxed/simple;
+	bh=aB8RgiNf0b3kbIk2EGDRYvCms7pKp1j8q6BKO6yIq/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhP4qkfpFfozg0MqGrXYT/ZTvG2y3MsXjFM7fx0ciymRRhZieSPM5ideE/X+zs2BRCG2M0HFUFXva8cTYLALb4sE0HyU1pUbGWynTI37Rx2RAH1sy7NoArnC3oFClBryxRuxgtX00pvu3NAnzizegxEgt6Gbws6anSSGJdO1xWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VAXC9Rtr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DB5C433F1;
+	Thu, 22 Feb 2024 13:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708607724;
+	bh=aB8RgiNf0b3kbIk2EGDRYvCms7pKp1j8q6BKO6yIq/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VAXC9RtrQiqpyOnfoqyu0u+2vXpVzPFJ3ndzmwkc9guJrM2Z4wTrrVPKnVjsM8CRI
+	 W4AXe+DEgOQA9Whp7t1wsytVkVsTDh4uevn5WtQO0SOlFtn+qXuU7Tnssm7MJUxvAx
+	 TBWGMhti93fSfj0GuGbKuXNCf1rwM6aNChG+D1TEE7OKuiLkb0bdpYM49p/DIDMsey
+	 0toi475K7XKQVtSF8ochYNgc4oDv7EYcBoQKFVThZlJ/AQuQCJdpE2Bi23Kc4X3ka7
+	 TCj0PCTsIrg0DClyDT+zwBxfW42sT+Mj776Mq1THBjH1zfrM/7oujYr8Daus67dJD7
+	 +poFkuMnxjP5Q==
+Date: Thu, 22 Feb 2024 13:15:13 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 14/18] PCI/pwrctl: add a power control driver for
+ WCN7850
+Message-ID: <68e401c6-6e59-4c35-8f05-40f6c5eb6849@sirena.org.uk>
+References: <20240216203215.40870-1-brgl@bgdev.pl>
+ <20240216203215.40870-15-brgl@bgdev.pl>
+ <d5d603dc-ec66-4e21-aa41-3b25557f1fb7@sirena.org.uk>
+ <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
+ <ea08a286-ff53-4d58-ae41-38cca151508c@sirena.org.uk>
+ <17bbd9ae-0282-430e-947b-e6fb08c53af7@linaro.org>
+ <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
+ <CAMRc=MedCX_TGGawMhr39oXtJPF4pOQF=Jh2z4uXkOxwhfJWRw@mail.gmail.com>
+ <52fba837-989b-4213-8af7-f02cd8cb48c8@sirena.org.uk>
+ <CAMRc=MeF7xVjRKetg1A3MNO4yMasPA2GC7MLCBrOiwO5UBv6LA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, kevin.tian@intel.com, dwmw2@infradead.org,
- will@kernel.org, lukas@wunner.de, yi.l.liu@intel.com,
- dan.carpenter@linaro.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- Haorong Ye <yehaorong@bytedance.com>
-Subject: Re: [PATCH v13 1/3] PCI: make pci_dev_is_disconnected() helper public
- for other drivers
-Content-Language: en-US
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>, bhelgaas@google.com,
- robin.murphy@arm.com, jgg@ziepe.ca
-References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
- <20240222090251.2849702-2-haifeng.zhao@linux.intel.com>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240222090251.2849702-2-haifeng.zhao@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s6adMmEGd2zLJf/T"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeF7xVjRKetg1A3MNO4yMasPA2GC7MLCBrOiwO5UBv6LA@mail.gmail.com>
+X-Cookie: I have accepted Provolone into my life!
 
-On 2024/2/22 17:02, Ethan Zhao wrote:
-> Make pci_dev_is_disconnected() public so that it can be called from
-> Intel VT-d driver to quickly fix/workaround the surprise removal
-> unplug hang issue for those ATS capable devices on PCIe switch downstream
-> hotplug capable ports.
-> 
-> Beside pci_device_is_present() function, this one has no config space
-> space access, so is light enough to optimize the normal pure surprise
-> removal and safe removal flow.
-> 
-> Tested-by: Haorong Ye<yehaorong@bytedance.com>
-> Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
-> ---
->   drivers/pci/pci.h   | 5 -----
->   include/linux/pci.h | 5 +++++
->   2 files changed, 5 insertions(+), 5 deletions(-)
 
-Hi PCI subsystem maintainers,
+--s6adMmEGd2zLJf/T
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The iommu drivers (including, but not limited to, the Intel VT-d driver)
-require a helper to check the physical presence of a PCI device in two
-scenarios:
+On Thu, Feb 22, 2024 at 01:26:59PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Feb 22, 2024 at 1:21=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> > On Thu, Feb 22, 2024 at 10:22:50AM +0100, Bartosz Golaszewski wrote:
 
-- During the iommu_release_device() path: This ensures the device is
-   physically present before sending device TLB invalidation to device.
+> > > Removing it would be out of scope for this series and I don't really
+> > > want to introduce any undefined behavior when doing a big development
+> > > like that. I'll think about it separately.
 
-- During the device driver lifecycle when a device TLB invalidation
-   timeout event is generated by the IOMMU hardware: This helps handle
-   situations where the device might have been hot-removed.
+> > This is new code?
 
-While there may be some adjustments needed in patch 3/3, I'd like to
-confirm with you whether it's feasible to expose this helper for general
-use within the iommu subsystem.
+> It's a new driver but Qualcomm standard has been to provide the load
+> values. If it's really unnecessary then maybe let's consider it
+> separately and possibly rework globally?
 
-If you agree with this change, I can route this patch to Linus through
-the iommu tree with an "acked-by" or "reviewed-by" tag from you.
+That doesn't seem a great reason to add more instances of this - it's
+more instances that need to be removed later, and somewhere else people
+can cut'n'paste from to introduce new usage.
 
-Best regards,
-baolu
+--s6adMmEGd2zLJf/T
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXXSOAACgkQJNaLcl1U
+h9CO+Af/UBAXsJGE9NN3tPz9CpviI1Xv3S28cWiubEXVJ+NzA4+IAt4j+1Y5bKls
+HytSvkTYjWKuVt+/QPMjUDjahFueK0iMxyfNIv9YmcADzKx4NV4kqoV9vA2lSe3b
+EvLpCG3N8rmHABUkHyTNAsUYDzAmia49miT9t3G0KFNzsPvbNTYzRosMRndYzd4S
+dBlL/MthOmihCZmaRB4F+41mNCzmvz9FyDcwqzavI9CX2fM7oOviI1wmSla2dxrh
+kyAn7uj2Tve+uBidpIiVZb7QKxHC/JSQR88IkKjhjXnAVlzhPIeuuuXCWXCOzlEE
+nHjsO+Kzdq6sXue+dcbfP+GMhe7IEQ==
+=2jGd
+-----END PGP SIGNATURE-----
+
+--s6adMmEGd2zLJf/T--
 
