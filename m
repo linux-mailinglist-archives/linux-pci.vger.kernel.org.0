@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-3897-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3898-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 203B7860581
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 23:15:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EEC2860584
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 23:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51A211C249EF
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 22:15:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDEB5289B63
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 22:16:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FEC513791F;
-	Thu, 22 Feb 2024 22:15:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D19313BAC0;
+	Thu, 22 Feb 2024 22:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BO0vpnTK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8fcGj40"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BEC137919;
-	Thu, 22 Feb 2024 22:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95F113793B;
+	Thu, 22 Feb 2024 22:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708640137; cv=none; b=T5w/R/Z0xd5fPfUrbj2ouwz/me18GYbO7QZevjCylOqrbzsFMEmZdi5EFuDx7AimlfsU/2CeNebDFRwoGk4HH3vU/IDs20U9iqhX5/O8F/S3EAqA8mevXUzTrkhcKPO300zi6flIE8FWucYRdkAd3AkL1kWnmxzv/mu1m7Xdfok=
+	t=1708640138; cv=none; b=J9F6L94Bvl9tLu61ZRBGAe57cYvHZX9ZQE9RWhPunMxlioZMSsbe016UzQqR0SO6lyvNFIXmMey+k/MtAx0K/w5xfeG8Xye6lgf3JhqVqg2x4g3/4g1SEjegr0OLW2YziisWY/bKm+fGm3/JZ06HEtP8bFkg423KYCF/xuOs4ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708640137; c=relaxed/simple;
-	bh=+MPNAv4j9xziDIGU7n8YhnwXjcPBGJ3afHmStckr/LM=;
+	s=arc-20240116; t=1708640138; c=relaxed/simple;
+	bh=bARB3bwPnJD/Pqaol3M2Is4aqKt219+07FwF7t0zqkE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jeHsm1bR0zfrZTkipX1aIhYAAVgpFHY5pVqGv0LXXnpUQVZnYxZzbTw28dBvb4FVu7ywGH1ThcFvQxf+czIc/mBtVVhVoCTht3bCI3g5vuHGV2nhlKnrJ7DiHdWbw61qay42in6wNxMHqfjtgBlbEZbpDAkcLF1y+tuZAkvyt8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BO0vpnTK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F2F7C433F1;
-	Thu, 22 Feb 2024 22:15:36 +0000 (UTC)
+	 MIME-Version; b=HLwTJVMfEbDpCKX3PyMgTYKdUEtzssmCj48l++eq0nopl7vn2DTOHhwHYD9G7rDm7EzLqgSL/1PmWyKiVs2ENFPCGJXpLIhwj1KM5jJbaxE56vTRmJeTXG6LXwawdNtWFbWf+dBL7Wi6MZtitcSlpmP7vVBlkOG0ymcJBgRgb/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8fcGj40; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26217C433B1;
+	Thu, 22 Feb 2024 22:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708640136;
-	bh=+MPNAv4j9xziDIGU7n8YhnwXjcPBGJ3afHmStckr/LM=;
+	s=k20201202; t=1708640138;
+	bh=bARB3bwPnJD/Pqaol3M2Is4aqKt219+07FwF7t0zqkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BO0vpnTKrzJhRRACJU7/OJ5jHMKV5z75nlY+Rah3m83VgXiuVB9mkpOwxSFkvnS8o
-	 PRSKfTHqDsRTtVNMEtwz+H21sqTRKJxb/D9k4yyomoZbpJhezoGQFy0BE6Z3u5ZYXS
-	 wfkhlijVmz/HWdizhD3TJ11pdllQFvUwQl51bQUsPpC41tc813FwFp0/DXO1/F3Mce
-	 db/MJ+Rf1NqC8Mz7wcywry7tr3JMy5Ymc1Xe0kKEcOb4K+z/yg8o0KEpM6FYf8ecN0
-	 wVQqPB8//tlLyzj/9x86EKYSOZBx1/LHfgnpjsNx3kyFgPSmp4L0nN6njos+xnHLtz
-	 S6qL/NTMWlNuw==
+	b=l8fcGj40frsSckf5Xo0GsLs4xGBMv+oFspZxlghnHZh1eM6b3P9yqYcMPyV2+wCTN
+	 0gGRxN78h0ZzR5Ev55k+KMIVH7A/BikbbbMQDwoN8kinCgdqjaFJeWLI224VB/eH4l
+	 mfnAflIuRg/faX1BCQBr1JphCOToVPbWN7recDGBkGMEtaDPHM6jaDSJRHIRa6KSVa
+	 tX8LxxAUgc5xX1IiuxazxF0dG2OWePOlinRbYDAKm6iw4V3vWTFncT9pRmOsSaBgLN
+	 8TS83udzgl9caj08MlLeRDxez97KInXaAyKvcEg2FhJKELcj/xEo+52tR5pknKf3/z
+	 NO4M7Wuscbz9g==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: linux-pci@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -50,11 +50,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Lukas Wunner <lukas@wunner.de>,
 	Mika Westerberg <mika.westerberg@linux.intel.com>,
 	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/3] PCI/DPC: Request DPC only if also requesting AER
-Date: Thu, 22 Feb 2024 16:15:19 -0600
-Message-Id: <20240222221521.32159-2-helgaas@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 2/3] PCI/DPC: Remove CONFIG_PCIE_EDR
+Date: Thu, 22 Feb 2024 16:15:20 -0600
+Message-Id: <20240222221521.32159-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240222221521.32159-1-helgaas@kernel.org>
 References: <20240222221521.32159-1-helgaas@kernel.org>
@@ -68,72 +67,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-When booting with "pci=noaer", we don't request control of AER, but we
-previously *did* request control of DPC, as in the dmesg log attached at
-the bugzilla below:
+Previous Kconfig allowed the possibility of enabling CONFIG_PCIE_DPC
+without CONFIG_PCIE_EDR.  The PCI Firmware Spec, r3.3, sec 4.5.1,
+table 4-5, says an ACPI OS that requests control of DPC must also
+advertise support for EDR.
 
-  Command line: ... pci=noaer
-  acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
-  acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
+Remove CONFIG_PCIE_EDR and enable the EDR code with CONFIG_PCIE_DPC so that
+enabling DPC also enables EDR for ACPI systems.  Since EDR is an ACPI
+feature, build edr.o only when CONFIG_ACPI is enabled.  Stubs cover the
+case when DPC is enabled without ACPI.
 
-That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
-says:
-
-  If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
-  must also set bit 7 of the Support field (indicating support for Error
-  Disconnect Recover notifications) and bits 3 and 4 of the Control field
-  (requesting control of PCI Express Advanced Error Reporting and the PCI
-  Express Capability Structure).
-
-Request DPC control only if we have also requested AER control.
-
-Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=218491#c12
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <stable@vger.kernel.org>	# v5.7+
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Matthew W Carlis <mattc@purestorage.com>
-Cc: Keith Busch <kbusch@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
 ---
- drivers/acpi/pci_root.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/acpi/pci_root.c   |  2 +-
+ drivers/pci/pcie/Kconfig  | 14 ++++----------
+ drivers/pci/pcie/Makefile |  5 ++++-
+ drivers/pci/pcie/dpc.c    | 10 ----------
+ include/linux/pci-acpi.h  |  4 ++--
+ 5 files changed, 11 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 58b89b8d950e..efc292b6214e 100644
+index efc292b6214e..bcaf3d3a5e05 100644
 --- a/drivers/acpi/pci_root.c
 +++ b/drivers/acpi/pci_root.c
-@@ -518,17 +518,19 @@ static u32 calculate_control(void)
- 	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
- 		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+@@ -448,7 +448,7 @@ static u32 calculate_support(void)
+ 		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+ 	if (pci_msi_enabled())
+ 		support |= OSC_PCI_MSI_SUPPORT;
+-	if (IS_ENABLED(CONFIG_PCIE_EDR))
++	if (IS_ENABLED(CONFIG_PCIE_DPC))	/* DPC => EDR support */
+ 		support |= OSC_PCI_EDR_SUPPORT;
  
--	if (pci_aer_available())
-+	if (pci_aer_available()) {
- 		control |= OSC_PCI_EXPRESS_AER_CONTROL;
+ 	return support;
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 8999fcebde6a..21e98289fbe9 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -137,6 +137,10 @@ config PCIE_DPC
+ 	  have this capability or you do not want to use this feature,
+ 	  it is safe to answer N.
+ 
++	  On ACPI systems, this includes Error Disconnect Recover support,
++	  the hybrid model that uses both firmware and OS to implement DPC,
++	  as specified in the PCI Firmware Specification r3.3.
++
+ config PCIE_PTM
+ 	bool "PCI Express Precision Time Measurement support"
+ 	help
+@@ -145,13 +149,3 @@ config PCIE_PTM
+ 
+ 	  This is only useful if you have devices that support PTM, but it
+ 	  is safe to enable even if you don't.
+-
+-config PCIE_EDR
+-	bool "PCI Express Error Disconnect Recover support"
+-	depends on PCIE_DPC && ACPI
+-	help
+-	  This option adds Error Disconnect Recover support as specified
+-	  in the Downstream Port Containment Related Enhancements ECN to
+-	  the PCI Firmware Specification r3.2.  Enable this if you want to
+-	  support hybrid DPC model which uses both firmware and OS to
+-	  implement DPC.
+diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+index 8de4ed5f98f1..72657f780c33 100644
+--- a/drivers/pci/pcie/Makefile
++++ b/drivers/pci/pcie/Makefile
+@@ -12,4 +12,7 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
+ obj-$(CONFIG_PCIE_PME)		+= pme.o
+ obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+ obj-$(CONFIG_PCIE_PTM)		+= ptm.o
+-obj-$(CONFIG_PCIE_EDR)		+= edr.o
++
++ifdef CONFIG_ACPI
++obj-$(CONFIG_PCIE_DPC)		+= edr.o
++endif
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 94111e438241..0aa79581250b 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -102,19 +102,9 @@ static bool dpc_completed(struct pci_dev *pdev)
+  */
+ bool pci_dpc_recovered(struct pci_dev *pdev)
+ {
+-	struct pci_host_bridge *host;
+-
+ 	if (!pdev->dpc_cap)
+ 		return false;
  
 -	/*
--	 * Per the Downstream Port Containment Related Enhancements ECN to
--	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
--	 * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
--	 * and EDR.
+-	 * Synchronization between hotplug and DPC is not supported
+-	 * if DPC is owned by firmware and EDR is not enabled.
 -	 */
--	if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
--		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-+		/*
-+		 * Per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, the
-+		 * OS can request DPC control only if it has advertised
-+		 * OSC_PCI_EDR_SUPPORT and requested both
-+		 * OSC_PCI_EXPRESS_CAPABILITY_CONTROL and
-+		 * OSC_PCI_EXPRESS_AER_CONTROL.
-+		 */
-+		if (IS_ENABLED(CONFIG_PCIE_DPC))
-+			control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-+	}
+-	host = pci_find_host_bridge(pdev->bus);
+-	if (!host->native_dpc && !IS_ENABLED(CONFIG_PCIE_EDR))
+-		return false;
+-
+ 	/*
+ 	 * Need a timeout in case DPC never completes due to failure of
+ 	 * dpc_wait_rp_inactive().  The spec doesn't mandate a time limit,
+diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
+index 078225b514d4..92e196ba0249 100644
+--- a/include/linux/pci-acpi.h
++++ b/include/linux/pci-acpi.h
+@@ -122,13 +122,13 @@ extern const guid_t pci_acpi_dsm_guid;
+ #define DSM_PCI_POWER_ON_RESET_DELAY		0x08
+ #define DSM_PCI_DEVICE_READINESS_DURATIONS	0x09
  
- 	return control;
- }
+-#ifdef CONFIG_PCIE_EDR
++#ifdef CONFIG_PCIE_DPC
+ void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
+ void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
+ #else
+ static inline void pci_acpi_add_edr_notifier(struct pci_dev *pdev) { }
+ static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
+-#endif /* CONFIG_PCIE_EDR */
++#endif /* CONFIG_PCIE_DPC */
+ 
+ int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_dev *));
+ void pci_acpi_clear_companion_lookup_hook(void);
 -- 
 2.34.1
 
