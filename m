@@ -1,163 +1,174 @@
-Return-Path: <linux-pci+bounces-3845-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3846-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41D5F85ED0C
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 00:33:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F53485F039
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 04:53:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C60D7B20ECE
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Feb 2024 23:33:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 335F11C22BE5
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 03:53:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 430D685290;
-	Wed, 21 Feb 2024 23:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1291617577;
+	Thu, 22 Feb 2024 03:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnHNLGYi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6zlQWiM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD963E470
-	for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 23:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EA8101EC
+	for <linux-pci@vger.kernel.org>; Thu, 22 Feb 2024 03:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708558408; cv=none; b=sjsD5AauxLLij1aAdk7mrfenX5UsZz5WCkRnDfxdvikbDeNUGkWlBz27/q/XNGsjlLrpeFCWdvo2Dq7Ai1eMz2WWTpm2qWJc7W/ENFzlS4cifzt+UuvSiIQ+Px6zFGfVwqKieYTOqXQaPItcBriyS53Ifl8ikz3pWkxbcgIZ+z0=
+	t=1708574003; cv=none; b=LtnBouw/ztT1eWZRnk8BggZ1UGL/CUfn9YcK2WulHDnYugZW4BGLJVbqiAxwceE4y+H2RQgU7HtLtdSPkvsDxLgP1KC39htatHlJPkdY0Cfb8pTVi2ZCXMGvG/HjKlA9tLj13PEYccnVw46OUEMnqo1DI7Ehi9xjfUxD4+og6UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708558408; c=relaxed/simple;
-	bh=oek7yMxAZVYzST3tZKKbzp+4bnsbv669D9ZZTh7z9Nk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BjjCv8XrV9GrpBVjHHIHbr4rGnYic+TFHGoyYP4T9fygnOs3NHt63IBPqzS7xONZe3RPY7HU7y6JvwXNkEid/jKyIHCejHCDrUk7Zo+xgwWfrly2RSgWjOJHF6yXzq1Nw9YZU5Ji+48l2rde6OZUuRlNCNO8YA9GCvvuEne4DX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnHNLGYi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 799B6C433F1;
-	Wed, 21 Feb 2024 23:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708558407;
-	bh=oek7yMxAZVYzST3tZKKbzp+4bnsbv669D9ZZTh7z9Nk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bnHNLGYihBqBfQLCEfd3GjCg/Qa1C8D3xFhquSzSeBzw/lhnDDcAG6VSzIerwfMTO
-	 HA17D0lKg73tkJJm9ohoD1+vra3S0DuJsXZgtyCQ56WfkLh0CjXd1WJq5Bl5wCdUjV
-	 PZDhHyK1UJ7kYjOssyZ4A79x9q7GF4xq2YFBNw6sQtSK/j4rGyCbZDpfCj2BAEh8tj
-	 KzqpeY+7Y9Ds743TtbPPAmyd67oCEkGtyDv35jy6S3oSDEu1JPJc6ljd9dSug+ueWA
-	 8yoY1wosHzOW9ZJ+oauZMW0fnuS41MnUHpQyLyUQSYw0fjH5BxodgNkSrspQwkagC8
-	 yrWW3rj6m6UGQ==
-Date: Wed, 21 Feb 2024 17:33:25 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Matthew W Carlis <mattc@purestorage.com>, bhelgaas@google.com,
-	kbusch@kernel.org, linux-pci@vger.kernel.org, lukas@wunner.de,
-	mika.westerberg@linux.intel.com,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 1/1] PCI/portdrv: Allow DPC if the OS controls AER
- natively.
-Message-ID: <20240221233325.GA1595083@bhelgaas>
+	s=arc-20240116; t=1708574003; c=relaxed/simple;
+	bh=tZSUF+07IUAnAMW8uKD39BXTVkVqbfNvcpIp6GexzPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EgTG2R6QEM3CCJBYNSoI+xlDA73J2lfX4C5Ke44GNGEWT46ksCdJmMsb5Vd49uM7IB6/On1JTuZOy6+A6mU9yPdS4MSn8aFUrWAELpxvWWp5ULL8lm28ziHwI6/LlD+KCXA+ovvpAvb2ls5Tx2meqV3MYtOHt/h0mUy01cAuA98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n6zlQWiM; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e459b39e2cso358089b3a.1
+        for <linux-pci@vger.kernel.org>; Wed, 21 Feb 2024 19:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708574001; x=1709178801; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OLPExIgj7iCP20OJfok9slllim21o6Wl4PPsBW1kw1Q=;
+        b=n6zlQWiMXMj03mCZFl3jhTB/TmN5O1XCkaQLi1KBKPsc+rpnxqKuLtfwEPIphhuDMP
+         VSv9jJbICsLibjIdbmszWg2FLyEJRvBM3dSEe8KhynipE+RbEZlUiSOvBevQM/ckrhAD
+         dm0NFYQWXRfRaSFlWEpbvNYQIT/Hd6kAdJHi3NFNQqOkkXXT2j5SnA0wsmBBMjlJBqMA
+         vRGUBsI7scAuhv1hkQPHCB+RC6hadmdAb3uosuqBK5Ck0agzbyAhWdJkE12SEryZoMaw
+         Fa97CnHwTH/H+mH2ZGTCXlCxQFYKRPZ0FvPWyH1/jUGkkCMjAQ2wNeaJXdndVdVUbI1G
+         YE8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708574001; x=1709178801;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OLPExIgj7iCP20OJfok9slllim21o6Wl4PPsBW1kw1Q=;
+        b=IPvBXYN3lQ7VoD6oU9t/8oMuaAT93YPvP8doqu3yXW4p7Q0yESGCASiIZEOVCYeo7Z
+         5NZy2JCtxu/IbhQ1bz+EkmY4DJe4mour3i8hTHneg8Jfoezq3TTCteEToxaSHRwFDfVo
+         JoVMxnZYcV51ooEfKzIFDekNmpPRqumueYleK6ACzRFwx3MtgJ0URVH9ikthWelB05zv
+         BWBoIqv5mw/L6e8CAjEQsfHL6uFGB/m1eyKHbn2FiEomOZ64cBlMua2uB/SxvL2tRSQz
+         oBqj58aIk6O2gSP1cOLJLAoizDMn7CZ9D5ndGgh8Yyh9kKx+ui08Wme8MAJoHMWVsGNX
+         0RZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcZnMGmQFAGOIt2uljU5yv8BWgsbBLEB86yF+zrqhY8pKE3/lPpBpH6DIviz5OXD+E3qyK9x8bAtsUZue+YeSSD5OIQWQB9eYP
+X-Gm-Message-State: AOJu0Yzlw0S4+Lk9gotBTPidQSj9PpDmj8E6cS6I5M7Uc/umpcNWaUvN
+	ONSuBxXxjKc2gj448I7sf6Kai5MKrxsrZLnsNCgS1kNKM7J0MONzCw2CObQtQVUWlPoTcDGyRGo
+	=
+X-Google-Smtp-Source: AGHT+IGPdc5oeMDvakyByul0H+HAc4a+oalJcnes6Zq18SNWiS4uQ6DEtIJa0l0Ew5uFaIh4UTPyUA==
+X-Received: by 2002:a05:6a20:9f86:b0:19e:6ea7:dfb with SMTP id mm6-20020a056a209f8600b0019e6ea70dfbmr2314079pzb.28.1708574000786;
+        Wed, 21 Feb 2024 19:53:20 -0800 (PST)
+Received: from thinkpad ([117.193.212.166])
+        by smtp.gmail.com with ESMTPSA id z2-20020a634c02000000b005dc816b2369sm9549117pga.28.2024.02.21.19.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Feb 2024 19:53:20 -0800 (PST)
+Date: Thu, 22 Feb 2024 09:23:12 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] dt-bindings: PCI: qcom: Do not require
+ 'msi-map-mask'
+Message-ID: <20240222035312.GA3374@thinkpad>
+References: <20240212165043.26961-1-johan+linaro@kernel.org>
+ <20240212165043.26961-3-johan+linaro@kernel.org>
+ <e396cf20-8598-4437-b635-09a4a737a772@linaro.org>
+ <Zcy4Atjmb6-wofCL@hovoldconsulting.com>
+ <59bd6e54-0d5d-4e1a-818a-475a96c223ff@linaro.org>
+ <20240216165406.GD39963@thinkpad>
+ <ZdRXpQnbDbojlMkV@hovoldconsulting.com>
+ <20240221052607.GB11693@thinkpad>
+ <ZdXQ4h03J9pi81Vq@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240221231102.GA1547668@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZdXQ4h03J9pi81Vq@hovoldconsulting.com>
 
-[+cc Mahesh, Oliver, linuxppc-dev, since I mentioned powerpc below.
-Probably not of interest since this is about the ACPI EDR feature, but
-just FYI]
+On Wed, Feb 21, 2024 at 11:30:58AM +0100, Johan Hovold wrote:
+> On Wed, Feb 21, 2024 at 10:56:07AM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Feb 20, 2024 at 08:41:25AM +0100, Johan Hovold wrote:
+> > > On Fri, Feb 16, 2024 at 10:24:06PM +0530, Manivannan Sadhasivam wrote:
+> 
+> > > > msi-map-mask is definitely needed as it would allow all the devices under the
+> > > > same bus to reuse the MSI identifier. Currently, excluding this property will
+> > > > not cause any issue since there is a single device under each bus. But we cannot
+> > > > assume that is going to be the case on all boards.
+> > > 
+> > > Are you saying that there is never a use case for an identity mapping?
+> > > Just on Qualcomm hardware or in general?
+> > > 
+> > > It looks like we have a fairly large number of mainline devicetrees that
+> > > do use an identity mapping here (i.e. do not specify 'msi-map-mask') and
+> > > the binding document also has an explicit example of this.
+> > > 
+> > > 	Documentation/devicetree/bindings/pci/pci-msi.txt
+> > 
+> > I don't know how other platforms supposed to work without this property for more
+> > than one devices. Maybe they were not tested enough?
+> 
+> Seems a bit far fetched since it's also an example in the binding.
+> 
+> In fact, only the two Qualcomm platforms that you added 'msi-map-mask'
+> for use it.
+> 
+> > But for sure, Qcom SoCs require either per device MSI identifier or
+> > msi-map-mask.
+> 
+> But isn't the mapping set up by the boot firmware and can differ between
+> platforms?
+> 
+> The mapping on sc8280xp looks quite different from sm8450/sm8650:
+> 
+> 	msi-map = <0x0 &gic_its 0x5981 0x1>,
+> 		  <0x100 &gic_its 0x5980 0x1>;
+> 	msi-map-mask = <0xff00>;
+> 
+> Here it's obvious that the mask is needed, whereas for sc8280xp:
+> 
+> 	msi-map = <0x0 &its 0xa0000 0x10000>;
+> 
+> it's not obvious what the mask should be. In fact, it looks like
+> Qualcomm intended a linear mapping here as the length is 0x10000 and
+> they left out the mask.
+> 
+> And after digging through the X13s ACPI tables, this is indeed how the
+> hardware is configured, which means that we should not use a
+> 'msi-map-mask' property for sc8280xp and that this patch is correct.
+> 
 
-On Wed, Feb 21, 2024 at 05:11:04PM -0600, Bjorn Helgaas wrote:
-> On Tue, Jan 23, 2024 at 09:59:21AM -0600, Bjorn Helgaas wrote:
-> > On Mon, Jan 22, 2024 at 06:37:48PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> > > On 1/22/24 11:32 AM, Bjorn Helgaas wrote:
-> > > > On Mon, Jan 08, 2024 at 05:15:08PM -0700, Matthew W Carlis wrote:
-> > > >> A small part is probably historical; we've been using DPC on PCIe
-> > > >> switches since before there was any EDR support in the kernel. It
-> > > >> looks like there was a PCIe DPC ECN as early as Feb 2012, but this
-> > > >> EDR/DPC fw ECN didn't come in till Jan 2019 & kernel support for ECN
-> > > >> was even later. Its not immediately clear I would want to use EDR in
-> > > >> my newer architecures & then there are also the older architecures
-> > > >> still requiring support. When I submitted this patch I came at it
-> > > >> with the approach of trying to keep the old behavior & still support
-> > > >> the newer EDR behavior. Bjorns patch from Dec 28 2023 would seem to
-> > > >> change the behavior for both root ports & switch ports, requiring
-> > > >> them to set _OSC Control Field bit 7 (DPC) and _OSC Support Field
-> > > >> bit 7 (EDR) or a kernel command line value. I think no matter what,
-> > > >> we want to ensure that PCIe Root Ports and PCIe switches arrive at
-> > > >> the same policy here.
-> > > > Is there an approved DPC ECN to the PCI Firmware spec that adds DPC
-> > > > control negotiation, but does *not* add the EDR requirement?
-> > > >
-> > > > I'm looking at
-> > > > https://members.pcisig.com/wg/PCI-SIG/document/previewpdf/12888, which
-> > > > seems to be the final "Downstream Port Containment Related
-> > > > Enhancements" ECN, which is dated 1/28/2019 and applies to the PCI
-> > > > Firmware spec r3.2.
-> > > >
-> > > > It adds bit 7, "PCI Express Downstream Port Containment Configuration
-> > > > control", to the passed-in _OSC Control field, which indicates that
-> > > > the OS supports both "native OS control and firmware ownership models
-> > > > (i.e. Error Disconnect Recover notification) of Downstream Port
-> > > > Containment."
-> > > >
-> > > > It also adds the dependency that "If the OS sets bit 7 of the Control
-> > > > field, it must set bit 7 of the Support field, indicating support for
-> > > > the Error Disconnect Recover event."
-> > > >
-> > > > So I'm trying to figure out if the "support DPC but not EDR" situation
-> > > > was ever a valid place to be.  Maybe it's a mistake to have separate
-> > > > CONFIG_PCIE_DPC and CONFIG_PCIE_EDR options.
-> > > 
-> > > My understanding is also similar. I have raised the same point in
-> > > https://lore.kernel.org/all/3c02a6d6-917e-486c-ad41-bdf176639ff2@linux.intel.com/
-> > 
-> > Ah, sorry, I missed that.
-> > 
-> > > IMO, we don't need a separate config for EDR. I don't think user can
-> > > gain anything with disabling EDR and enabling DPC. As long as
-> > > firmware does not user EDR support, just compiling the code should
-> > > be harmless.
-> > > 
-> > > So we can either remove it, or select it by default if user selects
-> > > DPC config.
-> > > 
-> > > > CONFIG_PCIE_EDR depends on CONFIG_ACPI, so the situation is a little
-> > > > bit murky on non-ACPI systems that support DPC.
-> > > 
-> > > If we are going to remove the EDR config, it might need #ifdef
-> > > CONFIG_ACPI changes in edr.c to not compile ACPI specific code.
-> > > Alternative choice is to compile edr.c with CONFIG_ACPI.
-> > 
-> > Right.  I think we should probably remove CONFIG_PCIE_EDR completely
-> > and make everything controlled by CONFIG_PCIE_DPC.
-> 
-> In the PCI Firmware spec, r3.3, sec 4.5.1, table 4-4, the description
-> of "Error Disconnect Recover Supported" hints at the possibility for
-> an OS to support EDR but not DPC:
-> 
->   In the context of PCIe, support for Error Disconnect Recover implies
->   that the operating system will invalidate the software state
->   associated with child devices of the port without attempting to
->   access the child device hardware. *If* the operating system supports
->   Downstream Port Containment (DPC), ..., the operating system shall
->   attempt to recover the child devices if the port implements the
->   Downstream Port Containment Extended Capability.
-> 
-> On the other hand, sec 4.6.12 and the implementation note there with
-> the EDR flow seem to assume the OS *does* support DPC and can clear
-> error status and bring ports out of DPC even if the OS hasn't been
-> granted control of DPC.
-> 
-> EDR is an ACPI feature, and I guess it might be theoretically possible
-> to use EDR on an ACPI system with some non-DPC error containment
-> feature like powerpc EEH.  But obviously powerpc doesn't use ACPI, and
-> a hypothetical ACPI system with non-DPC error containment would have
-> to add support for that containment in edr_handle_event().
-> 
-> So while I'm not 100% sure that making CONFIG_PCIE_DPC control both
-> DPC and EDR is completely correct, I guess for now I still think using
-> CONFIG_PCIE_DPC for both DPC and EDR seems like a reasonable plan
-> because we have no support for EDR *without* DPC.
-> 
-> Bjorn
+Right. Confirmed the same with the hw team. On Qcom SoCs ITS mapping is
+relatively similar to SMMU stream IDs. So on SM8450 and other mobile targets
+making use of SMMUv2, only 128 SIDs are available, hence only 128 MSI
+identifiers. But on SC8280XP and other similar ones, SMMUv3 is used, so there
+are 65536 SIDs available and also the MSI identifiers. So yes, this SoC indeed
+supports linear mapping of MSI identifiers and so the mask is not required.
+
+Thanks!
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
