@@ -1,142 +1,106 @@
-Return-Path: <linux-pci+bounces-3855-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3856-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9658E85F43A
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 10:23:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2B3485F4B2
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 10:42:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A11A283BF5
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 09:23:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7716028705A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 09:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A4C39FDA;
-	Thu, 22 Feb 2024 09:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IzH1QElB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA91374E6;
+	Thu, 22 Feb 2024 09:41:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC6D39ADE
-	for <linux-pci@vger.kernel.org>; Thu, 22 Feb 2024 09:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277EB38F88;
+	Thu, 22 Feb 2024 09:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708593784; cv=none; b=j8i1ujKY2oxoBRvIU7fN0LswCvZb2M0HaFCIx2tXVnnnqBFcwvhuhSFtY/b5wGx+Oi0Nm/Thv7DrWUkS7uhJDx6sDb04Ajny1YybpcuLXGTlJ4Gi7f7izAnk/FZ4SaPawJ9z3O2AMrYN3qPapPjPJf+NP4w6gVC+VOt3nnSMBgk=
+	t=1708594864; cv=none; b=igT+ptz4Szek3FSkHL3ngfu2lot0aEIrYt7Dokmz/mVYC/jCgCwcTDynINjbSrGlE0tVhhKiCzBAY+oPjBLsD+8Os2Zo9DG63EEuG/KI4eSOtlQmmGRm4V7jsFocJdKiD+lBahXRtHT8T3iKkotdnk9ULaflxc14qJbj6YsKj5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708593784; c=relaxed/simple;
-	bh=/tDPneuMgzTuY2K3OXDEpnOGw+5YStE/jBmbrb9oImM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dtmEPBf3W4MOzC4UKYnZgGxUqehnyeXr4pDYku3gx1O89cxqvtcR5zGF7fQ4v8DaRdTvPxlVoK0VWHd26fRxGB67x1U5dI8yuUwAPIl6+YwTJfHrV4F1XXV+1I02JpJHtYNs3VgN8DeaM1zVYXFMbiCtrIG0TluY4vAe+hXicoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IzH1QElB; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4cf641a0b0cso732401e0c.0
-        for <linux-pci@vger.kernel.org>; Thu, 22 Feb 2024 01:23:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708593781; x=1709198581; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PRvybTIn6s9bKBT4LwtVbJu6PGSSM9veYTX1phbPcgI=;
-        b=IzH1QElBUekrUFyJ+6N4K+w3N8BWTvMkMMsAh5UJC/zmjehcTsJTZwFmcZS/J0BuLx
-         P0VuXGgvAGFl02tDKH9nKviiqcPScZYK9w1/NalTTW8l9cczXFbTtrKdqD/GWLRkwd5B
-         evZhbsRMAKbxonq+9IRNXzCYpFDcVQSw8gfW3aDfDe0s7Bay8V9VymCFKXfevhHT6yyu
-         AOQtHTmN6ZKmBl5OdqmQO/DTIUHEAMHdSNpMvjJ3xzcwpw2dzSfpF+5joCRy6mDPQ/8P
-         pJkSWByFaNRwn1pCkJi+pxXIySx9Rte5LbuaMuH0N09K3QLmWAYhRHsCBsbinsQ67j27
-         bYoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708593781; x=1709198581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PRvybTIn6s9bKBT4LwtVbJu6PGSSM9veYTX1phbPcgI=;
-        b=oz62g+LO2zHCv6YMAeYhC5dwXQQDgaEqXsfKEjQXLzysJPsc3owolWjx4UizcPVNme
-         oubHV+FQ0GhMaIZkJy45682DBrB0Xn5TDQsA+Q4gDWAfoGEvJjFXgN0fCBbp3KnhrCNt
-         0Sd5slwJg1PumgtZJMtq487t5IgzrAfXLxyBgurk0daNH8P+9csV2RqGKEdkIvImj3q2
-         QqtqnyXNC6HvXZLJTtbmjjZu5dmpBJr/k65ntBrpuWCdtJl1rKQXohPjEybnfz/GTVEn
-         Sg3gSFoWL1w8eA3rLLW9bN0ohVnbjfLt3tj491jn8V+LAVzh6X6lv4UirbOI+t+cMbeD
-         BhwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9NTzTD2eY572Yrjoz3sex1DhiOgzoIfdR01djwn2YzUMpkRU1ACbBKpe0yIcQM5FEE7Dm334z6PPLlpBic6KVOSnXIWLk1t71
-X-Gm-Message-State: AOJu0Yw+eNqq7iCv1CGjS1wTk1IYgQsBQpQKPVEUHrNylKpdK6bspTR5
-	lqkhRBG0lEDk2jS7wCxggbrFx5f/4Ja9bJ28LHM8OFdX1oZ4odUqaK2CGKde97BNbqfW5vjlOBq
-	qoR29LPvMiG+88h3v6jD07+QinqsKm1/X5ivZkA==
-X-Google-Smtp-Source: AGHT+IE7l9v3T8HR1qDkBbHnqiBR7hU5VAldnjvx7qUsE3wswYkR7sU9TWZWgrMsSrKpcb4F7U9NnKwVd53zre/w3u4=
-X-Received: by 2002:a1f:6681:0:b0:4c9:907e:30bc with SMTP id
- a123-20020a1f6681000000b004c9907e30bcmr10268617vkc.2.1708593781184; Thu, 22
- Feb 2024 01:23:01 -0800 (PST)
+	s=arc-20240116; t=1708594864; c=relaxed/simple;
+	bh=izL9Oq4UHurOw7CRpcyqlGslqY6aPINI+2U4okB5bTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VC726LSgCorZvBJ2nw/nOuMqBvPyBoCQzTS1WCv3P17tnZ/+qnPks/w4bSdbtagWwq0/3QwQY3W/zakON9AfGt8W/CLtOcxc0yah5ZVBnutP2sJNaxTIHu7E+UYq8Ri28G1Pk8AdT5SG18toyzjQ5c/ydVG45nHcfzS4tJ/BO40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 55813100DE9CD;
+	Thu, 22 Feb 2024 10:40:52 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2F84A3210D; Thu, 22 Feb 2024 10:40:52 +0100 (CET)
+Date: Thu, 22 Feb 2024 10:40:52 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
+ platforms
+Message-ID: <20240222094052.GA25101@wunner.de>
+References: <20240221051958.GA11693@thinkpad>
+ <20240221182000.GA1533634@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-15-brgl@bgdev.pl>
- <d5d603dc-ec66-4e21-aa41-3b25557f1fb7@sirena.org.uk> <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
- <ea08a286-ff53-4d58-ae41-38cca151508c@sirena.org.uk> <17bbd9ae-0282-430e-947b-e6fb08c53af7@linaro.org>
- <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
-In-Reply-To: <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 22 Feb 2024 10:22:50 +0100
-Message-ID: <CAMRc=MedCX_TGGawMhr39oXtJPF4pOQF=Jh2z4uXkOxwhfJWRw@mail.gmail.com>
-Subject: Re: [PATCH v5 14/18] PCI/pwrctl: add a power control driver for WCN7850
-To: Mark Brown <broonie@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221182000.GA1533634@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Feb 21, 2024 at 12:44=E2=80=AFAM Mark Brown <broonie@kernel.org> wr=
-ote:
->
-> On Tue, Feb 20, 2024 at 10:21:04PM +0100, Konrad Dybcio wrote:
-> > On 20.02.2024 13:47, Mark Brown wrote:
->
-> > > Are you *sure* this actually happens (and that the regulators don't
-> > > figure it out by themselves), especially given that the consumers are
-> > > just specifying the load once rather than varying it dynamically at
-> > > runtime which is supposed to be the use case for this API?  This API =
-is
-> > > intended to be used dynamically, if the regulator always needs to be =
-in
-> > > a particular mode just configure that statically.
->
-> > *AFAIU*
->
-> > The regulators aggregate the requested current (there may be
-> > multiple consumers) and then it's decided if it's high enough
-> > to jump into HPM.
->
-> Yes, that's the theory - I just question if it actually does something
-> useful in practice.  Between regulators getting more and more able to
-> figure out mode switching autonomously based on load monitoring and them
-> getting more efficient it's become very unclear if this actually
-> accomplishes anything, the only usage is the Qualcomm stuff and that's
-> all really unsophisticated and has an air of something that's being
-> cut'n'pasted forwards rather than delivering practical results.  There
-> is some value at ultra low loads, but that's more for suspend modes than
-> for actual use.
+On Wed, Feb 21, 2024 at 12:20:00PM -0600, Bjorn Helgaas wrote:
+>   1) D3hot doesn't work per spec.  This sounds like a hardware
+>      defect in the device that should be a quirk based on
+>      Vendor/Device ID, not something in DT.  I don't actually know if
+>      this is common, although there are several existing quirks that
+>      mention issues with D3.
 
-Removing it would be out of scope for this series and I don't really
-want to introduce any undefined behavior when doing a big development
-like that. I'll think about it separately.
+My recollection is that putting Root Ports into D3hot on older x86
+systems would raise MCEs, which is why pci_bridge_d3_possible() only
+allows D3hot in cases which are known to work (e.g. Thunderbolt
+controllers, machines with a recent BIOS).  It was a conservative
+policy chosen to avoid regressions.
 
-Bart
+I don't know if similar issues exist on non-ACPI systems.  If they
+don't exist, platform_pci_bridge_d3() could just return true for
+all devicetree-based systems.  Might be worth testing if any systems
+can be found which exhibit issues with such a policy.  That would
+obviate the need to specify "supports-d3" in the devicetree.
+Quite the opposite, ports which are known not to work could be
+blacklisted.  Of course if it turns out that's the majority then
+whitelisting via "supports-d3" is a better option.
+
+
+>   2) The platform doesn't support putting the bridge in D3cold and
+>      back to D0.  I don't understand this either because I assumed DT
+>      would describe *hardware*, and "supports-d3" might imply the
+>      presence of hardware power control, but doesn't tell us how to
+>      operate it, and it must be up to a native driver to know how to
+>      do it.
+
+I think we're putting devices into D3hot first before cutting power
+(i.e. putting them into D3cold), so knowing that D3hot is safe is
+basically a prerequisite for D3cold.
+
+Thanks,
+
+Lukas
 
