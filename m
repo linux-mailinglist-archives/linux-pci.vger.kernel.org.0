@@ -1,156 +1,142 @@
-Return-Path: <linux-pci+bounces-3854-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3855-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18D4E85F3D5
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 10:04:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9658E85F43A
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 10:23:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C16CC1F24DF3
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 09:04:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A11A283BF5
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 09:23:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABEA374FD;
-	Thu, 22 Feb 2024 09:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45A4C39FDA;
+	Thu, 22 Feb 2024 09:23:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="An46a9oW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IzH1QElB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C2C374E6;
-	Thu, 22 Feb 2024 09:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC6D39ADE
+	for <linux-pci@vger.kernel.org>; Thu, 22 Feb 2024 09:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592612; cv=none; b=DaS8AV9PdNlFIVAH7HWKcdxoAhKy3/dC1EyVX8d/ez4XMNQPo031iiAxquPOer2S99BXEF+8kmg0yoZ7CerC6SQh68uUFYjRZckNDwmM5sU2L0flZAk0qry836mXjAVlS/I6XVwprmdbrlCW1oX9Kr+IPI9JJBTEpM60Pr488+0=
+	t=1708593784; cv=none; b=j8i1ujKY2oxoBRvIU7fN0LswCvZb2M0HaFCIx2tXVnnnqBFcwvhuhSFtY/b5wGx+Oi0Nm/Thv7DrWUkS7uhJDx6sDb04Ajny1YybpcuLXGTlJ4Gi7f7izAnk/FZ4SaPawJ9z3O2AMrYN3qPapPjPJf+NP4w6gVC+VOt3nnSMBgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592612; c=relaxed/simple;
-	bh=Ufbfc9qGqnc9GmviuGU5ACXNF84S20F4WyXi3i5SB2A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aKos6oZ/fgEePtEhTTiZBi8czhxej1HUK9epkaq48jSVE0Viv9hMXFaw0DOYqaoTcu7AUkvcONJEHBDwKQHYWIoduwoilQoGdEyj6FosEOGg1nmFZ60o7I7nU6+jx66BH5y7dHLcp/wHGy2yJojjJmkTsTN/K6/O+DJjVhC/nOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=An46a9oW; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708592612; x=1740128612;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ufbfc9qGqnc9GmviuGU5ACXNF84S20F4WyXi3i5SB2A=;
-  b=An46a9oWu7+08JXZGZIDKX428jFFteAKwCuhJuUnQTlRKL8uZKKXLAR1
-   SGmAl4qwqkm4XFYI0jBEXRM/+G7fHZmEGSSkQ85P9gfBfEo2GvdM54Are
-   MPXXoSVpdC1wk7cRd95j2noF8mvbRmkFuR28KxiT50V+Xmvz3J/ATA+tJ
-   AtvJQ3myqfeLEOGccmadheoOfvLtzrzHE60zU8PpOMzqcUw/kNMIEPEpK
-   5z2E1evEB4g/sqES/E5Snd3CcIWjfMwgo3Xr7o+gwQxGqfo/COdCeQjax
-   BZW55863HAKWhGsXyt5uVS+BzSp3NXVgpYLUBWYhDNLbH4h84cr63HXdg
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25264497"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="25264497"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 01:03:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="10122703"
-Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
-  by orviesa003.jf.intel.com with ESMTP; 22 Feb 2024 01:03:27 -0800
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: baolu.lu@linux.intel.com,
-	bhelgaas@google.com,
-	robin.murphy@arm.com,
-	jgg@ziepe.ca
-Cc: kevin.tian@intel.com,
-	dwmw2@infradead.org,
-	will@kernel.org,
-	lukas@wunner.de,
-	yi.l.liu@intel.com,
-	dan.carpenter@linaro.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target device isn't valid
-Date: Thu, 22 Feb 2024 04:02:51 -0500
-Message-Id: <20240222090251.2849702-4-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
-References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
+	s=arc-20240116; t=1708593784; c=relaxed/simple;
+	bh=/tDPneuMgzTuY2K3OXDEpnOGw+5YStE/jBmbrb9oImM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dtmEPBf3W4MOzC4UKYnZgGxUqehnyeXr4pDYku3gx1O89cxqvtcR5zGF7fQ4v8DaRdTvPxlVoK0VWHd26fRxGB67x1U5dI8yuUwAPIl6+YwTJfHrV4F1XXV+1I02JpJHtYNs3VgN8DeaM1zVYXFMbiCtrIG0TluY4vAe+hXicoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IzH1QElB; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4cf641a0b0cso732401e0c.0
+        for <linux-pci@vger.kernel.org>; Thu, 22 Feb 2024 01:23:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708593781; x=1709198581; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRvybTIn6s9bKBT4LwtVbJu6PGSSM9veYTX1phbPcgI=;
+        b=IzH1QElBUekrUFyJ+6N4K+w3N8BWTvMkMMsAh5UJC/zmjehcTsJTZwFmcZS/J0BuLx
+         P0VuXGgvAGFl02tDKH9nKviiqcPScZYK9w1/NalTTW8l9cczXFbTtrKdqD/GWLRkwd5B
+         evZhbsRMAKbxonq+9IRNXzCYpFDcVQSw8gfW3aDfDe0s7Bay8V9VymCFKXfevhHT6yyu
+         AOQtHTmN6ZKmBl5OdqmQO/DTIUHEAMHdSNpMvjJ3xzcwpw2dzSfpF+5joCRy6mDPQ/8P
+         pJkSWByFaNRwn1pCkJi+pxXIySx9Rte5LbuaMuH0N09K3QLmWAYhRHsCBsbinsQ67j27
+         bYoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708593781; x=1709198581;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PRvybTIn6s9bKBT4LwtVbJu6PGSSM9veYTX1phbPcgI=;
+        b=oz62g+LO2zHCv6YMAeYhC5dwXQQDgaEqXsfKEjQXLzysJPsc3owolWjx4UizcPVNme
+         oubHV+FQ0GhMaIZkJy45682DBrB0Xn5TDQsA+Q4gDWAfoGEvJjFXgN0fCBbp3KnhrCNt
+         0Sd5slwJg1PumgtZJMtq487t5IgzrAfXLxyBgurk0daNH8P+9csV2RqGKEdkIvImj3q2
+         QqtqnyXNC6HvXZLJTtbmjjZu5dmpBJr/k65ntBrpuWCdtJl1rKQXohPjEybnfz/GTVEn
+         Sg3gSFoWL1w8eA3rLLW9bN0ohVnbjfLt3tj491jn8V+LAVzh6X6lv4UirbOI+t+cMbeD
+         BhwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9NTzTD2eY572Yrjoz3sex1DhiOgzoIfdR01djwn2YzUMpkRU1ACbBKpe0yIcQM5FEE7Dm334z6PPLlpBic6KVOSnXIWLk1t71
+X-Gm-Message-State: AOJu0Yw+eNqq7iCv1CGjS1wTk1IYgQsBQpQKPVEUHrNylKpdK6bspTR5
+	lqkhRBG0lEDk2jS7wCxggbrFx5f/4Ja9bJ28LHM8OFdX1oZ4odUqaK2CGKde97BNbqfW5vjlOBq
+	qoR29LPvMiG+88h3v6jD07+QinqsKm1/X5ivZkA==
+X-Google-Smtp-Source: AGHT+IE7l9v3T8HR1qDkBbHnqiBR7hU5VAldnjvx7qUsE3wswYkR7sU9TWZWgrMsSrKpcb4F7U9NnKwVd53zre/w3u4=
+X-Received: by 2002:a1f:6681:0:b0:4c9:907e:30bc with SMTP id
+ a123-20020a1f6681000000b004c9907e30bcmr10268617vkc.2.1708593781184; Thu, 22
+ Feb 2024 01:23:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240216203215.40870-1-brgl@bgdev.pl> <20240216203215.40870-15-brgl@bgdev.pl>
+ <d5d603dc-ec66-4e21-aa41-3b25557f1fb7@sirena.org.uk> <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
+ <ea08a286-ff53-4d58-ae41-38cca151508c@sirena.org.uk> <17bbd9ae-0282-430e-947b-e6fb08c53af7@linaro.org>
+ <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
+In-Reply-To: <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 22 Feb 2024 10:22:50 +0100
+Message-ID: <CAMRc=MedCX_TGGawMhr39oXtJPF4pOQF=Jh2z4uXkOxwhfJWRw@mail.gmail.com>
+Subject: Re: [PATCH v5 14/18] PCI/pwrctl: add a power control driver for WCN7850
+To: Mark Brown <broonie@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Because surprise removal could happen anytime, e.g. user could request safe
-removal to EP(endpoint device) via sysfs and brings its link down to do
-surprise removal cocurrently. such aggressive cases would cause ATS
-invalidation request issued to non-existence target device, then deadly
-loop to retry that request after ITE fault triggered in interrupt context.
-this patch aims to optimize the ITE handling by checking the target device
-presence state to avoid retrying the timeout request blindly, thus avoid
-hard lockup or system hang.
+On Wed, Feb 21, 2024 at 12:44=E2=80=AFAM Mark Brown <broonie@kernel.org> wr=
+ote:
+>
+> On Tue, Feb 20, 2024 at 10:21:04PM +0100, Konrad Dybcio wrote:
+> > On 20.02.2024 13:47, Mark Brown wrote:
+>
+> > > Are you *sure* this actually happens (and that the regulators don't
+> > > figure it out by themselves), especially given that the consumers are
+> > > just specifying the load once rather than varying it dynamically at
+> > > runtime which is supposed to be the use case for this API?  This API =
+is
+> > > intended to be used dynamically, if the regulator always needs to be =
+in
+> > > a particular mode just configure that statically.
+>
+> > *AFAIU*
+>
+> > The regulators aggregate the requested current (there may be
+> > multiple consumers) and then it's decided if it's high enough
+> > to jump into HPM.
+>
+> Yes, that's the theory - I just question if it actually does something
+> useful in practice.  Between regulators getting more and more able to
+> figure out mode switching autonomously based on load monitoring and them
+> getting more efficient it's become very unclear if this actually
+> accomplishes anything, the only usage is the Qualcomm stuff and that's
+> all really unsophisticated and has an air of something that's being
+> cut'n'pasted forwards rather than delivering practical results.  There
+> is some value at ultra low loads, but that's more for suspend modes than
+> for actual use.
 
-Devices are valid ATS invalidation request target only when they reside
-in the iommu->device_rbtre (probed, not released) and present.
+Removing it would be out of scope for this series and I don't really
+want to introduce any undefined behavior when doing a big development
+like that. I'll think about it separately.
 
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
----
- drivers/iommu/intel/dmar.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index d14797aabb7a..d01d68205557 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
- {
- 	u32 fault;
- 	int head, tail;
-+	u64 iqe_err, ite_sid;
-+	struct device *dev = NULL;
-+	struct pci_dev *pdev = NULL;
- 	struct q_inval *qi = iommu->qi;
- 	int shift = qi_shift(iommu);
- 
-@@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
- 		tail = readl(iommu->reg + DMAR_IQT_REG);
- 		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
- 
-+		/*
-+		 * SID field is valid only when the ITE field is Set in FSTS_REG
-+		 * see Intel VT-d spec r4.1, section 11.4.9.9
-+		 */
-+		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
-+		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
-+
- 		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
- 		pr_info("Invalidation Time-out Error (ITE) cleared\n");
- 
-@@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
- 			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
- 		} while (head != tail);
- 
-+		/*
-+		 * If got ITE, we need to check if the sid of ITE is one of the
-+		 * current valid ATS invalidation target devices, if no, or the
-+		 * target device isn't presnet, don't try this request anymore.
-+		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
-+		 */
-+		if (ite_sid) {
-+			dev = device_rbtree_find(iommu, ite_sid);
-+			if (!dev || !dev_is_pci(dev))
-+				return -ETIMEDOUT;
-+			pdev = to_pci_dev(dev);
-+			if (!pci_device_is_present(pdev) &&
-+				ite_sid == pci_dev_id(pci_physfn(pdev)))
-+				return -ETIMEDOUT;
-+		}
- 		if (qi->desc_status[wait_index] == QI_ABORT)
- 			return -EAGAIN;
- 	}
--- 
-2.31.1
-
+Bart
 
