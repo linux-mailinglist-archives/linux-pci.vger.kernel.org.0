@@ -1,210 +1,436 @@
-Return-Path: <linux-pci+bounces-3880-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3881-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A18886017E
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 19:35:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC37D8601A6
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 19:40:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 192561F233E9
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 18:35:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44040285491
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 18:40:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABEF815E5B9;
-	Thu, 22 Feb 2024 18:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3274914263B;
+	Thu, 22 Feb 2024 18:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RHBw1l36"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5mJCdFR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0329415E5C1;
-	Thu, 22 Feb 2024 18:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FCA1EB3A;
+	Thu, 22 Feb 2024 18:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708626009; cv=none; b=YVF5PzATnktkm6jtYQHMBB067ONbI3IO/5SS5fMWEzttz70IoyCH5GB0Qvq/b2Ydc3htM2oJzioKKzvfF4JrHZ9Cc5A3qSGY9t2l3h7P+9qY5bOi0BIMmbrN1twb1Bqij5cUubsIo20Qbto9JH6qjdll7Q3soTx4VrJKYeHwARY=
+	t=1708626676; cv=none; b=NXhCotJOl9Bpp82iYQ229hE+2ONyhQy8h8hwhc19UkKTQRV+UEjp21tE0ltEcLDtAX1N6VgQpsFb9Xb49b3ckBTPHeuOK704Blsnd9zmZ3rWy13c/qSrzw0nXpX0NQv5JKewXEwLVflJIyPdAA31Vc3TMIwlw1jufgMG25BvH1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708626009; c=relaxed/simple;
-	bh=G2HcIEgeyj0zzkIAObPGJCNbc6FFcutORUYAPK63Hzs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GkD0z28sRnQU4MGdzvo1v7QmmB5JJGIC8ucBIHYjPxR+PF+Xiv2fwDOvvAoLM/n2BCwCvXGt7keutBbkUMGxStagIYStmnqOFdCQ63gu7FKsOABDskF3NDZv2EOZBwy1vztrMjJKzDx3LuT/cs5vxmzPDVuWDqnXRRiHPmXN/HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RHBw1l36; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708626009; x=1740162009;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=G2HcIEgeyj0zzkIAObPGJCNbc6FFcutORUYAPK63Hzs=;
-  b=RHBw1l36hP1KnMTB5lhuXQ7FsUSBO+W70DXO/mD7QSwlQCIEyecn5x8B
-   kZnWO47KZSSIX+mVEzhnCcaCSBphhxf8AVjEJMftTMS9x4xW3llJKaOAm
-   EjO5VjydzXDsU5yRfDQjJLenVQOraatCAUEB9KuAg7PJwpX7VoJLWCdI3
-   wiIovn2LPp961EpGuTbibeODuV2dnlHmKH/TvjA5Dj5mJB75ee+9Qw8iJ
-   ixSqouwkqsdGQ7S7vgaKrZLCBia+siO+hhhK5BDIPzBZg63bEiSj9nKeu
-   3acKSExhPm/XzzYUNL6p+4/2yja2TwdWCgafm9aYLQqjZVQqSmpqKr0/S
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="13435014"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="13435014"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:20:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="10264722"
-Received: from rdegger-desk1.amr.corp.intel.com (HELO [10.209.74.18]) ([10.209.74.18])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:20:07 -0800
-Message-ID: <83f0d77b-8ea4-4443-8077-6139bc905952@linux.intel.com>
-Date: Thu, 22 Feb 2024 10:20:06 -0800
+	s=arc-20240116; t=1708626676; c=relaxed/simple;
+	bh=zSwQ+29IemVAKsJR/QppCLHoxlyDpZ3/5G5UcwkHZ9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S5EERpoXSnu6WH/0t/5cILyXA9LWnqIUW3sCK/kZQqStzJ7iDK3v6QmWUfiJN6VFdjkJd/+Vhx3wSmwqrD+fo2/3/kv7qx6jygK0azaVo7tI1TxzBNhZ5Nb74i2PHtUVNbQNSNIK3IpTHIqWS09H2OS0f+YnxoSG4QeWyGEl5IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5mJCdFR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 217C8C433F1;
+	Thu, 22 Feb 2024 18:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708626675;
+	bh=zSwQ+29IemVAKsJR/QppCLHoxlyDpZ3/5G5UcwkHZ9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E5mJCdFRarCvwy2IdOpt8oKhCoNcJU6+NxrAr098IA9x0H1YS/hyHxGAJdfAUzVGl
+	 lWAZjQy9ortegc+W3weeRlrky15kfRe/B9oks65Pld3RIHeWTeywjg24LpRHvC3nVh
+	 eBvV1quVZX0Aq3tes6jTO3Nw6ztMXdEtIjhPd0pWAiiht2jOMc1bl4fmihOveKQhbT
+	 NNTIKf/YD+VQswufCEHRC9RDUfQE1xc2nbz92py0VSYeQsPhnYzDEb6yQtdE1xbMSi
+	 aU/xVu+7FJhfTW4zUobEv13BOM+k7j8gc3v2sg/jSujXtaFJkPHb2VX5Qi58cV6FQd
+	 XIA5nvee7DJ0A==
+Date: Thu, 22 Feb 2024 12:30:48 -0600
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH v3 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml
+ format
+Message-ID: <20240222183048.GA3652979-robh@kernel.org>
+References: <20240214194145.2669744-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4] PCI/ASPM: Update saved buffers with latest ASPM
-Content-Language: en-US
-To: Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com, macro@orcam.me.uk,
- ajayagarwal@google.com, ilpo.jarvinen@linux.intel.com,
- david.e.box@linux.intel.com, hkallweit1@gmail.com, johan+linaro@kernel.org,
- xueshuai@linux.alibaba.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
- mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20240108124248.1552420-1-vidyas@nvidia.com>
- <20240222174436.3565146-1-vidyas@nvidia.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240222174436.3565146-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214194145.2669744-1-Frank.Li@nxp.com>
 
-
-On 2/22/24 9:44 AM, Vidya Sagar wrote:
-> Many PCIe device drivers save the configuration state of their respective
-> devices during probe and restore the same when their 'slot_reset' hook
-> is called through PCIe Error Recovery Handler.
->
-> If the system has a change in ASPM policy after the driver's probe is
-> called and before error event occurred, 'slot_reset' hook restores the
-> PCIe configuration state to what it was at the time of probe but not to
-> what it was just before the occurrence of the error event.
-> This effectively leads to a mismatch in the ASPM configuration between
-> the device and its upstream parent device.
->
-> Update the saved configuration state of the device with the latest info
-> whenever there is a change w.r.t ASPM policy.
->
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+On Wed, Feb 14, 2024 at 02:41:44PM -0500, Frank Li wrote:
+> Convert the layerscape-pci PCIe binding document to yaml format.
+> 
+> Additionally, changes for the layerscape-pci endpoint part:
+> - Add interrupt name 'pme' restriction for fsl,ls1028a-pcie-ep,
+> fsl,ls1046a-pcie-ep, and fsl,ls1088a-pcie-ep.
+> - Add register name restrictions: 'reg' and 'addr_space'. 'addr_space' is
+> required by snps,dw-pcie-ep.
+> - Add an example.
+> 
+> Changes for the layerscape-pci root complex part:
+> - Add required property: 'reg-names', "#address-cells", "#size-cells",
+> 'device_type', 'bus-range', 'ranges', "#interrupt-cells",
+> 'interrupt-map-mask' and 'interrupt-map'.
+> - Interrupt-names requirement split to each compatible string.
+> - Add register name restrictions: 'reg' and 'config'. 'config' is required
+> by snps,dw-pcie.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> V4:
-> * Rebased on top of pci/aspm branch
->
-> V3:
-> * Addressed sathyanarayanan.kuppuswamy's review comments
->
-> V2:
-> * Rebased on top of the tree code
-> * Addressed Bjorn's review comments
->
->  drivers/pci/pcie/aspm.c | 28 ++++++++++++++++++++++++++--
->  3 files changed, 28 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index cfc5b84dc9c9..3db606ba9344 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1648,7 +1648,7 @@ static int pci_save_pcie_state(struct pci_dev *dev)
->  	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &cap[i++]);
->  	pcie_capability_read_word(dev, PCI_EXP_SLTCTL2, &cap[i++]);
->  
-> -	pci_save_aspm_state(dev);
-> +	pci_save_aspm_l1ss_state(dev);
->  	pci_save_ltr_state(dev);
->  
->  	return 0;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index b217e74966eb..9fe78eb8b07d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -95,7 +95,7 @@ void pci_msix_init(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
->  void pci_aspm_get_l1ss(struct pci_dev *pdev);
-> -void pci_save_aspm_state(struct pci_dev *pdev);
-> +void pci_save_aspm_l1ss_state(struct pci_dev *pdev);
+> 
+> Notes:
+>     There are log discuss at v1. If I missed something, let me know.
+>     
+>     Change from v2 to v3
+>     - update commit message, show change compare txt file
+>     - add failback compatible fsl,ls-pcie-ep.
+>     - add commit message about 'addr_space' and 'config'.
+>     
+>     Change from v1 to v2
+>     - remove '|-'
+>     - dma-coherent: true
+>     - add interrupts and interrupt-names at before Allof
+>     - remove ref to snps,pcie*.yaml, some reg-names are not aligned with in
+>     drivers
+>     - Add an example for pcie-ep
+> 
+>  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  | 110 +++++++++++
+>  .../bindings/pci/fsl,layerscape-pcie.yaml     | 182 ++++++++++++++++++
+>  .../bindings/pci/layerscape-pci.txt           |  79 --------
+>  3 files changed, 292 insertions(+), 79 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
+> new file mode 100644
+> index 0000000000000..b384a0b2fe22e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Layerscape PCIe Endpoint(EP) controller
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +description:
+> +  This PCIe EP controller is based on the Synopsys DesignWare PCIe IP.
 
-is this rename a review request? It is not clear from the commit log
-why you are doing it?
+Where's the reference to the DWC schema?
 
->  void pci_restore_aspm_state(struct pci_dev *pdev);
->  void pci_save_ltr_state(struct pci_dev *dev);
->  void pci_restore_ltr_state(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 7f1d674ff171..a62648dd52bc 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -24,13 +24,29 @@
->  
->  #include "../pci.h"
->  
-> +static void pci_save_aspm_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state;
-> +	u16 *cap;
 > +
-> +	if (!pci_is_pcie(dev))
-> +		return;
+> +  This controller derives its clocks from the Reset Configuration Word (RCW)
+> +  which is used to describe the PLL settings at the time of chip-reset.
 > +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> +	if (!save_state)
-> +		return;
+> +  Also as per the available Reference Manuals, there is no specific 'version'
+> +  register available in the Freescale PCIe controller register set,
+> +  which can allow determining the underlying DesignWare PCIe controller version
+> +  information.
 > +
-> +	cap = (u16 *)&save_state->cap.data[0];
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &cap[1]);
-> +}
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - fsl,ls2088a-pcie-ep
+> +          - fsl,ls1088a-pcie-ep
+> +          - fsl,ls1046a-pcie-ep
+> +          - fsl,ls1028a-pcie-ep
+> +          - fsl,lx2160ar2-pcie-ep
+> +      - const: fsl,ls-pcie-ep
 > +
->  void pci_aspm_get_l1ss(struct pci_dev *pdev)
->  {
->  	/* Read L1 PM substate capabilities */
->  	pdev->l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
->  }
->  
-> -void pci_save_aspm_state(struct pci_dev *pdev)
-> +void pci_save_aspm_l1ss_state(struct pci_dev *pdev)
->  {
->  	struct pci_cap_saved_state *save_state;
->  	u16 l1ss = pdev->l1ss;
-> @@ -309,10 +325,12 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
->  	struct pci_bus *linkbus = link->pdev->subordinate;
->  	u32 val = enable ? PCI_EXP_LNKCTL_CLKREQ_EN : 0;
->  
-> -	list_for_each_entry(child, &linkbus->devices, bus_list)
-> +	list_for_each_entry(child, &linkbus->devices, bus_list) {
->  		pcie_capability_clear_and_set_word(child, PCI_EXP_LNKCTL,
->  						   PCI_EXP_LNKCTL_CLKREQ_EN,
->  						   val);
-> +		pci_save_aspm_state(child);
-> +	}
->  	link->clkpm_enabled = !!enable;
->  }
->  
-> @@ -931,6 +949,12 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
->  		pcie_config_aspm_dev(parent, upstream);
->  
->  	link->aspm_enabled = state;
+> +  reg:
+> +    maxItems: 2
 > +
-> +	/* Update latest ASPM configuration in saved context */
-> +	pci_save_aspm_state(link->downstream);
-> +	pci_save_aspm_l1ss_state(link->downstream);
-> +	pci_save_aspm_state(parent);
-> +	pci_save_aspm_l1ss_state(parent);
->  }
->  
->  static void pcie_config_aspm_path(struct pcie_link_state *link)
+> +  reg-names:
+> +    items:
+> +      - const: regs
+> +      - const: addr_space
+> +
+> +  fsl,pcie-scfg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: A phandle to the SCFG device node. The second entry is the
+> +      physical PCIe controller index starting from '0'. This is used to get
+> +      SCFG PEXN registers.
+> +
+> +  big-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: If the PEX_LUT and PF register block is in big-endian, specify
+> +      this property.
+> +
+> +  dma-coherent: true
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    oneOf:
+> +      - anyOf:
+> +          - const: pme
+> +          - const: aer
+> +      - const: intr
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - fsl,ls1028a-pcie-ep
+> +            - fsl,ls1046a-pcie-ep
+> +            - fsl,ls1088a-pcie-ep
+> +    then:
+> +      properties:
+> +        interrupt-names:
+> +          items:
+> +            - const: pme
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      pcie_ep1: pcie-ep@3400000 {
+> +        compatible = "fsl,ls1028a-pcie-ep", "fsl,ls-pcie-ep";
+> +        reg = <0x00 0x03400000 0x0 0x00100000
+> +              0x80 0x00000000 0x8 0x00000000>;
+> +        reg-names = "regs", "addr_space";
+> +        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
+> +        interrupt-names = "pme";
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+> +        num-ib-windows = <6>;
+> +        num-ob-windows = <8>;
 
+Not documented and deprecated.
+
+> +        status = "disabled";
+
+Examples should be enabled.
+
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
+> new file mode 100644
+> index 0000000000000..988929729580a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
+> @@ -0,0 +1,182 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Layerscape PCIe Root Complex(RC) controller
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +description:
+> +  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP
+> +
+> +  This controller derives its clocks from the Reset Configuration Word (RCW)
+> +  which is used to describe the PLL settings at the time of chip-reset.
+> +
+> +  Also as per the available Reference Manuals, there is no specific 'version'
+> +  register available in the Freescale PCIe controller register set,
+> +  which can allow determining the underlying DesignWare PCIe controller version
+> +  information.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,ls1021a-pcie
+> +      - fsl,ls2080a-pcie
+> +      - fsl,ls2085a-pcie
+> +      - fsl,ls2088a-pcie
+> +      - fsl,ls1088a-pcie
+> +      - fsl,ls1046a-pcie
+> +      - fsl,ls1043a-pcie
+> +      - fsl,ls1012a-pcie
+> +      - fsl,ls1028a-pcie
+> +      - fsl,lx2160a-pcie
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    items:
+> +      - const: regs
+> +      - const: config
+> +
+> +  fsl,pcie-scfg:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: A phandle to the SCFG device node. The second entry is the
+> +      physical PCIe controller index starting from '0'. This is used to get
+> +      SCFG PEXN registers.
+> +
+> +  big-endian:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: If the PEX_LUT and PF register block is in big-endian, specify
+> +      this property.
+> +
+> +  dma-coherent: true
+> +
+> +  msi-parent: true
+> +
+> +  iommu-map: true
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - device_type
+> +  - bus-range
+
+This should never be required unless you have some restriction in the 
+h/w. DWC generally doesn't.
+
+> +  - ranges
+> +  - interrupts
+> +  - interrupt-names
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+
+The common PCI and DWC schemas already make most of these required, so 
+you don't need to here.
+
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - fsl,lx2160a-pcie
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 2
+> +        interrupt-names:
+> +          items:
+> +            - const: pme
+> +            - const: aer
+> +            - const: intr
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - fsl,ls1028a-pcie
+> +            - fsl,ls1046a-pcie
+> +            - fsl,ls1043a-pcie
+> +            - fsl,ls1012a-pcie
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 2
+> +        interrupt-names:
+> +          items:
+> +            - const: pme
+> +            - const: aer
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - fsl,ls2080a-pcie
+> +            - fsl,ls2085a-pcie
+> +            - fsl,ls2088a-pcie
+> +            - fsl,ls1021a-pcie
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 1
+> +        interrupt-names:
+> +          items:
+> +            - const: intr
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - fsl,ls1088a-pcie
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 1
+> +        interrupt-names:
+> +          items:
+> +            - const: aer
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      pcie@3400000 {
+> +        compatible = "fsl,ls1088a-pcie";
+> +        reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
+> +            <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
+> +        reg-names = "regs", "config";
+> +        interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +        interrupt-names = "aer";
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        dma-coherent;
+> +        device_type = "pci";
+> +        bus-range = <0x0 0xff>;
+> +        ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +                 0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+> +        msi-parent = <&its>;
+> +        #interrupt-cells = <1>;
+> +        interrupt-map-mask = <0 0 0 7>;
+> +        interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
+> +        iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
+> +      };
+> +    };
+> +...
 
