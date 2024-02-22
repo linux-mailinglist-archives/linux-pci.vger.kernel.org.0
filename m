@@ -1,264 +1,143 @@
-Return-Path: <linux-pci+bounces-3862-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3863-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5157E85F766
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 12:46:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B30785F7FE
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 13:21:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A3927B236D2
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 11:46:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B57A61F21CAB
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Feb 2024 12:21:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CA3D3F9ED;
-	Thu, 22 Feb 2024 11:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 826B6605B8;
+	Thu, 22 Feb 2024 12:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i8KFdnaf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vais+w7d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A891C208A2;
-	Thu, 22 Feb 2024 11:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4075355C28;
+	Thu, 22 Feb 2024 12:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708602393; cv=none; b=AcrbAckKtc6W3Ma28JRncoWAIZhrrnt3USZohsVC0+vLraxhsYJYFO2xq9/eyj4I4QeLjzRvGvhldFTOEzR/vauwA5SvrQtMQFKL+pCf+aEvR9lU2H8ftyGWGbS2pgEwc8gncRyNaNCNw3W7cB8kKFKT6P19c29m55g+F4sUfs4=
+	t=1708604507; cv=none; b=Z8xJ3xZsVFNTHO/YjKKJzrpI6I9tzF6C7tuoZDhAe6lzSZrXpsLN4nI+fVZWJlhR25OY08R6zTg0uhsjBKDZUY3U2aQ3JfqHhOmThqn3wqCXsYljwak89oYSqDoXk9Y/gh1e7iCC4+UpYUUMeYR9NEbyadX218spl5A9DgFtqNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708602393; c=relaxed/simple;
-	bh=U/ODfnHwPi5+9NrV+Ux+CV06sA5Ml+gF11lFUa0pFdY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BME4IREv/Ap2gGCZQCw2pte4G6rXZqg3H2M2gojNFvqYOfTMyMN1lNs7ZebghPYvA9BOvoNgQQXgVn7dBsFIk2GfB/UMJTv6Z83ximOLfqpYhIwKExlEifYZaQV5amHXkKLxU83K4VbBk5y10QrVM5JJa2bLkppkbPVFWVmFdGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i8KFdnaf; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708602391; x=1740138391;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=U/ODfnHwPi5+9NrV+Ux+CV06sA5Ml+gF11lFUa0pFdY=;
-  b=i8KFdnafKk0s0KRkmi87a2vigx642+bWfIXYLcUj3wl8Ue6ahv+ND/8y
-   CO+qZtdAXyofUkr8bXMZPJoeBmh8Tq22p2rgY34ZuM73W201luFNQsS0e
-   6iZpoOgnCOfFAsGms64L6NmgEGwzN5xAZLUoQ+Za3/syh+RfiGKmqOHuS
-   NLujUsrzpKxalbAOjalQw4bQGKp+AfSzcky9zlpMTsvZ6jDCku3YZjb8e
-   hQA1NkT8AUH5VW1bcryO1n9PzTt0ytkDEk4Dn3sKDTi3KyJfjHbxFbaJ2
-   3dv2SgzL07RqMEZvgZPHkps6ZsKtIZhhx3uqLWroU4QyUNlNXyuPI51LW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="13522191"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="13522191"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 03:46:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="5436460"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.249.55])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 03:46:29 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI/sysfs: Demacrofy pci_dev_resource_resize_attr(n) functions
-Date: Thu, 22 Feb 2024 13:46:06 +0200
-Message-Id: <20240222114607.1837-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1708604507; c=relaxed/simple;
+	bh=EqZbzaH/qaB7a7IKc6JYTdatq4CHgvMWc4c4mJHW2hE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IVjtJUg6NUJ5CM35VO8VXbepV/5gVRPM799nC637htVLwp30Vkr29y/MxlWFwdiSyuCIcyUTmm5daNeBhwbSODwh+31ZU6djOzVTj1djWdL/445r0Pdcb6xfvt069m5WRnr/qTz2ihDF0JX0b434506R7vM0Iwz7SQsrMo9lsK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vais+w7d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E0DC433C7;
+	Thu, 22 Feb 2024 12:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708604506;
+	bh=EqZbzaH/qaB7a7IKc6JYTdatq4CHgvMWc4c4mJHW2hE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vais+w7dVBc+Xk4EvckzPmvM6a/2KjvGzm2VDrn7oZd6lT1sMCuOcX1qDb2PMDCEW
+	 IZALOUfq5R7czopyD6Q8n/kouh0W3vDg13fw2wPev+9aOxAzv5iSFTj01WlgeRtm8q
+	 rfrlSSvGHi8dMfB4nzhaZ81mQagcgNVTDsSzCfY3Yk76RiQvI4C+1mW9qVZN85sa5q
+	 Uz3u+hqODk6ps05MFS1CAhRh/TkO/5AAWb5UNCazW0O8MTp8aD1OJpRyMUiaGn3Rcm
+	 lv9vU3NJ1hmnoVZQ4RN+226xKHklRHGaTs1CBXAw5vmIXparkNzLdJs/W+pgHBWnYG
+	 hT7MEcGskAyYw==
+Date: Thu, 22 Feb 2024 12:21:36 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 14/18] PCI/pwrctl: add a power control driver for
+ WCN7850
+Message-ID: <52fba837-989b-4213-8af7-f02cd8cb48c8@sirena.org.uk>
+References: <20240216203215.40870-1-brgl@bgdev.pl>
+ <20240216203215.40870-15-brgl@bgdev.pl>
+ <d5d603dc-ec66-4e21-aa41-3b25557f1fb7@sirena.org.uk>
+ <CAMRc=MeUjKPS3ANE6=7WZ3kbbGAdyE8HeXFN=75Jp-pVyBaWrQ@mail.gmail.com>
+ <ea08a286-ff53-4d58-ae41-38cca151508c@sirena.org.uk>
+ <17bbd9ae-0282-430e-947b-e6fb08c53af7@linaro.org>
+ <53f0956f-ee64-4bd6-b44f-cbebafd42e46@sirena.org.uk>
+ <CAMRc=MedCX_TGGawMhr39oXtJPF4pOQF=Jh2z4uXkOxwhfJWRw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="M/jaeVyfzRnxNsGp"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MedCX_TGGawMhr39oXtJPF4pOQF=Jh2z4uXkOxwhfJWRw@mail.gmail.com>
+X-Cookie: I have accepted Provolone into my life!
 
-pci_dev_resource_resize_attr(n) macro is invoked for six resources,
-creating a large footprint function for each resource.
 
-Rework the macro to only create a function that calls a helper function
-so the compiler can decide if it warrants to inline the function or
-not.
+--M/jaeVyfzRnxNsGp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With x86_64 defconfig, this saves roughly 2.5kB:
+On Thu, Feb 22, 2024 at 10:22:50AM +0100, Bartosz Golaszewski wrote:
+> On Wed, Feb 21, 2024 at 12:44=E2=80=AFAM Mark Brown <broonie@kernel.org> =
+wrote:
 
-$ scripts/bloat-o-meter drivers/pci/pci-sysfs.o{.old,.new}
-add/remove: 1/0 grow/shrink: 0/6 up/down: 512/-2934 (-2422)
-Function                                     old     new   delta
-__resource_resize_store                        -     512    +512
-resource5_resize_store                       503      14    -489
-resource4_resize_store                       503      14    -489
-resource3_resize_store                       503      14    -489
-resource2_resize_store                       503      14    -489
-resource1_resize_store                       503      14    -489
-resource0_resize_store                       500      11    -489
-Total: Before=13399, After=10977, chg -18.08%
+> > Yes, that's the theory - I just question if it actually does something
+> > useful in practice.  Between regulators getting more and more able to
+> > figure out mode switching autonomously based on load monitoring and them
+> > getting more efficient it's become very unclear if this actually
+> > accomplishes anything, the only usage is the Qualcomm stuff and that's
+> > all really unsophisticated and has an air of something that's being
+> > cut'n'pasted forwards rather than delivering practical results.  There
+> > is some value at ultra low loads, but that's more for suspend modes than
+> > for actual use.
 
-(The compiler seemingly chose to still inline __resource_resize_show()
-which is fine, those functions are not very complex/large.)
+> Removing it would be out of scope for this series and I don't really
+> want to introduce any undefined behavior when doing a big development
+> like that. I'll think about it separately.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/pci-sysfs.c | 138 +++++++++++++++++++++-------------------
- 1 file changed, 74 insertions(+), 64 deletions(-)
+This is new code?
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 2321fdfefd7d..613c5fc4f0a2 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1410,79 +1410,89 @@ static const struct attribute_group pci_dev_reset_attr_group = {
- 	.is_visible = pci_dev_reset_attr_is_visible,
- };
- 
-+static ssize_t __resource_resize_show(struct device *dev, int n, char *buf)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t ret;
-+
-+	pci_config_pm_runtime_get(pdev);
-+
-+	ret = sysfs_emit(buf, "%016llx\n",
-+			 (u64)pci_rebar_get_possible_sizes(pdev, n));
-+
-+	pci_config_pm_runtime_put(pdev);
-+
-+	return ret;
-+}
-+
-+static ssize_t __resource_resize_store(struct device *dev, int n,
-+				       const char *buf, size_t count)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	unsigned long size, flags;
-+	int ret, i;
-+	u16 cmd;
-+
-+	if (kstrtoul(buf, 0, &size) < 0)
-+		return -EINVAL;
-+
-+	device_lock(dev);
-+	if (dev->driver) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	pci_config_pm_runtime_get(pdev);
-+
-+	if ((pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA) {
-+		ret = aperture_remove_conflicting_pci_devices(pdev,
-+						"resourceN_resize");
-+		if (ret)
-+			goto pm_put;
-+	}
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &cmd);
-+	pci_write_config_word(pdev, PCI_COMMAND,
-+			      cmd & ~PCI_COMMAND_MEMORY);
-+
-+	flags = pci_resource_flags(pdev, n);
-+
-+	pci_remove_resource_files(pdev);
-+
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		if (pci_resource_len(pdev, i) &&
-+		    pci_resource_flags(pdev, i) == flags)
-+			pci_release_resource(pdev, i);
-+	}
-+
-+	ret = pci_resize_resource(pdev, n, size);
-+
-+	pci_assign_unassigned_bus_resources(pdev->bus);
-+
-+	if (pci_create_resource_files(pdev))
-+		pci_warn(pdev, "Failed to recreate resource files after BAR resizing\n");
-+
-+	pci_write_config_word(pdev, PCI_COMMAND, cmd);
-+pm_put:
-+	pci_config_pm_runtime_put(pdev);
-+unlock:
-+	device_unlock(dev);
-+
-+	return ret ? ret : count;
-+}
-+
- #define pci_dev_resource_resize_attr(n)					\
- static ssize_t resource##n##_resize_show(struct device *dev,		\
- 					 struct device_attribute *attr,	\
--					 char * buf)			\
-+					 char *buf)			\
- {									\
--	struct pci_dev *pdev = to_pci_dev(dev);				\
--	ssize_t ret;							\
--									\
--	pci_config_pm_runtime_get(pdev);				\
--									\
--	ret = sysfs_emit(buf, "%016llx\n",				\
--			 (u64)pci_rebar_get_possible_sizes(pdev, n));	\
--									\
--	pci_config_pm_runtime_put(pdev);				\
--									\
--	return ret;							\
-+	return __resource_resize_show(dev, n, buf);			\
- }									\
--									\
- static ssize_t resource##n##_resize_store(struct device *dev,		\
- 					  struct device_attribute *attr,\
- 					  const char *buf, size_t count)\
- {									\
--	struct pci_dev *pdev = to_pci_dev(dev);				\
--	unsigned long size, flags;					\
--	int ret, i;							\
--	u16 cmd;							\
--									\
--	if (kstrtoul(buf, 0, &size) < 0)				\
--		return -EINVAL;						\
--									\
--	device_lock(dev);						\
--	if (dev->driver) {						\
--		ret = -EBUSY;						\
--		goto unlock;						\
--	}								\
--									\
--	pci_config_pm_runtime_get(pdev);				\
--									\
--	if ((pdev->class >> 8) == PCI_CLASS_DISPLAY_VGA) {		\
--		ret = aperture_remove_conflicting_pci_devices(pdev,	\
--						"resourceN_resize");	\
--		if (ret)						\
--			goto pm_put;					\
--	}								\
--									\
--	pci_read_config_word(pdev, PCI_COMMAND, &cmd);			\
--	pci_write_config_word(pdev, PCI_COMMAND,			\
--			      cmd & ~PCI_COMMAND_MEMORY);		\
--									\
--	flags = pci_resource_flags(pdev, n);				\
--									\
--	pci_remove_resource_files(pdev);				\
--									\
--	for (i = 0; i < PCI_STD_NUM_BARS; i++) {			\
--		if (pci_resource_len(pdev, i) &&			\
--		    pci_resource_flags(pdev, i) == flags)		\
--			pci_release_resource(pdev, i);			\
--	}								\
--									\
--	ret = pci_resize_resource(pdev, n, size);			\
--									\
--	pci_assign_unassigned_bus_resources(pdev->bus);			\
--									\
--	if (pci_create_resource_files(pdev))				\
--		pci_warn(pdev, "Failed to recreate resource files after BAR resizing\n");\
--									\
--	pci_write_config_word(pdev, PCI_COMMAND, cmd);			\
--pm_put:									\
--	pci_config_pm_runtime_put(pdev);				\
--unlock:									\
--	device_unlock(dev);						\
--									\
--	return ret ? ret : count;					\
-+	return __resource_resize_store(dev, n, buf, count);		\
- }									\
- static DEVICE_ATTR_RW(resource##n##_resize)
- 
--- 
-2.39.2
+--M/jaeVyfzRnxNsGp
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXXPE8ACgkQJNaLcl1U
+h9CIHwf/XP89jkt/tlGa4jICwu1iztzFqaiTJkTcvJjUXga/U61RNmUVRGfMlGTs
+NbXYJFbdHP6Rz6ClY+/Ws+p1AsrvAOj18ufykhqOSOf5OBAsi8Lzeex5WSN0LZKs
+iT7v2mfE45b+lM8yTNapT0z3KoAKh9QWJHmohYHG+cJadqgoYuv8zZfPVWIBJhFD
+I6jZ37EHzRJ5t9CgmJBA84tQojwDT3sie2EuZQ+wTGvaPloUU3LJuAv+ZF5LMsIi
+o+kwTHP7xgkb5VD9I6EcO70CHkzvwSKLXzuhvEB4jGlrWNXjL7ZYjPyoruUMbtrS
+LRRnFjVnLkvTL1/Jg1GArsnIQd7Xow==
+=UdGL
+-----END PGP SIGNATURE-----
+
+--M/jaeVyfzRnxNsGp--
 
