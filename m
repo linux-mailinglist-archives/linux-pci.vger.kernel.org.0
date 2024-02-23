@@ -1,286 +1,229 @@
-Return-Path: <linux-pci+bounces-3904-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3905-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 556AB86079B
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 01:24:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1E3E8608D7
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 03:29:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC5DE2865D0
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 00:24:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C53F1F23474
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 02:29:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC9F37C;
-	Fri, 23 Feb 2024 00:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB785BE4E;
+	Fri, 23 Feb 2024 02:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jl+0Mx5F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UA//yCiM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D344019B;
-	Fri, 23 Feb 2024 00:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96430BE48;
+	Fri, 23 Feb 2024 02:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708647833; cv=none; b=lQc1N2aUTw3mlTfOZ9XyTHJ81zK8REyewzSyUeqrD0FDz8QzGn5nqT+QROXKBnZr6cyzbzaBoVPm+JWvVd/WphY29mi8cfk3iF/z3r8gOKlv47OF+mIJ92EsFMPy91eWZFdPeqI94vK9cXvvB4VBR14DN6v89quHzOkZfLOyAhY=
+	t=1708655380; cv=none; b=gPHsiw6l07Xju8oqG61stK7XCjrWc/Ifmaq7gOCxivGgxSsRu9yuuw71vpJkE+ix1dG157sgrlp6lIlShD93vMqaMWIRFyeAImbDq3ollOY/QOZaVTVwv8i/VjHI92+lt/HCM9R/Qlh+BhrfHSiWLpvmCCMSvqpwzgfQaNH1rGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708647833; c=relaxed/simple;
-	bh=N50MF0FEA09+JdWWeSvMMaGLUQyg9qJDly4KxW/WH/E=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Fy2tiK7QBxbzeTBNOQdXSKyFiwhjIX9B2Vzt6dzFS8w0k6ikCIC9KXRcfOWoPS36RYxMaL8jIKnlnaTkwSnETOpThaLNnB6OGFajidKVnSa68N4Jn12oSJ8vKwRIC/NRqVcB2J8LryC3OBUN12uSfRX8GVA3u2KLTnLdfNFJZRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jl+0Mx5F; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C99C433C7;
-	Fri, 23 Feb 2024 00:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708647833;
-	bh=N50MF0FEA09+JdWWeSvMMaGLUQyg9qJDly4KxW/WH/E=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Jl+0Mx5FR+/lTfq3bBupa6egNmH/ZvbEnlWJLi7B0LT49a8HDDkw9VRnwuer3NtUz
-	 G7fdAwswNBE4Mak1W1T/wp1OUGuxg3UMITwset0GoLfaZblcN8lMQKR3eDyqLrT2Ac
-	 rhGhgjJsCXOnHrPAOvz75j36TkWXbr70dezzFDhMOvEAxwMAu3iwraUHU6O3Rs9B8X
-	 jamAjUL6RXaFCPCnLZPWJIfJMLcDN9qQbXIcW64fpMgF/wIFTlOLZ6fqP9OppflKQO
-	 aDQkrepAuXioLa2VBKcgNjeXUNBYnUDLF71P4pQBhaXth2/TsjVNAwv/lmFOd7mzhO
-	 rp4ZNAOSWcQrg==
-Date: Thu, 22 Feb 2024 16:23:49 -0800 (PST)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: Jiqian Chen <Jiqian.Chen@amd.com>
-cc: Juergen Gross <jgross@suse.com>, 
-    Stefano Stabellini <sstabellini@kernel.org>, 
-    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
-    Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>, 
-    xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-    Stewart Hildebrand <Stewart.Hildebrand@amd.com>, 
-    Huang Rui <Ray.Huang@amd.com>, Huang Rui <ray.huang@amd.com>
-Subject: Re: [RFC KERNEL PATCH v4 2/3] xen/pvh: Setup gsi for passthrough
- device
-In-Reply-To: <20240105062217.349645-3-Jiqian.Chen@amd.com>
-Message-ID: <alpine.DEB.2.22.394.2402221622000.754277@ubuntu-linux-20-04-desktop>
-References: <20240105062217.349645-1-Jiqian.Chen@amd.com> <20240105062217.349645-3-Jiqian.Chen@amd.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	s=arc-20240116; t=1708655380; c=relaxed/simple;
+	bh=PonAp4P0aFtIcd+rOQ5XyV76Ss3r/bbPSNZvKReTEb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eNnDsvn11UgBwbp9jOl5ssNGD1q4Cm1PXiRXS9VyaYSAtaUMEOUt/Fn2NJxeQE9Fex6QyUobHVEgvND6Hg6HTkrNKigfiFkP/v6fdXuN5kUsO91m2SJ7oR2AeUE9fMd3gIHQpUblhitCprrYyngOvqf8zq9Py45K6H8qiHe3QZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UA//yCiM; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708655379; x=1740191379;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PonAp4P0aFtIcd+rOQ5XyV76Ss3r/bbPSNZvKReTEb4=;
+  b=UA//yCiMBciyyFDeOhKkTyVk8cWAcRzTOmrnU9AvdkZMqqEf6+L6oa+t
+   ssOJ6JPW+6txmZ/xRAM+1LXi8ZTuseDTz4QMq8XHMUJ9C2A5qeBoOLAUK
+   FDBZM33/BdfxGjL0dBT/zKybXb8Abbe/U7G1Q8eX2I0VmqfybFEosHPI/
+   1edqiVWLZhVjmWK+tKDxW8gOPUDkxu/UmWpTTnn901OwIwrE89rA9/1rY
+   Vtfx3a8mxz/N7UgQswUEdvye7CdJ6LFR1EQnlPS7ccHs3o0jFLRoaREN9
+   ikE+1/svfbTgJb9ZczLjYjnKL2JBLMYmRoc27vcNASl0Su0gjPx2LDf98
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="3110258"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="3110258"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:29:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="6171175"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.255.30.59]) ([10.255.30.59])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 18:29:32 -0800
+Message-ID: <2d1788da-521c-4531-a159-81d2fb801d6c@linux.intel.com>
+Date: Fri, 23 Feb 2024 10:29:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
+ device isn't valid
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
+ jgg@ziepe.ca, kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
+ lukas@wunner.de, yi.l.liu@intel.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
+ <20240222090251.2849702-4-haifeng.zhao@linux.intel.com>
+ <c655cd15-c883-483b-b698-b1b7ae360388@moroto.mountain>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <c655cd15-c883-483b-b698-b1b7ae360388@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 5 Jan 2024, Jiqian Chen wrote:
-> In PVH dom0, the gsis don't get registered, but the gsi of
-> a passthrough device must be configured for it to be able to be
-> mapped into a domU.
-> 
-> When assign a device to passthrough, proactively setup the gsi
-> of the device during that process.
-> 
-> Co-developed-by: Huang Rui <ray.huang@amd.com>
-> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
-> ---
->  arch/x86/xen/enlighten_pvh.c       | 90 ++++++++++++++++++++++++++++++
->  drivers/acpi/pci_irq.c             |  2 +-
->  drivers/xen/xen-pciback/pci_stub.c |  8 +++
->  include/linux/acpi.h               |  1 +
->  include/xen/acpi.h                 |  6 ++
->  5 files changed, 106 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-> index ada3868c02c2..ecadd966c684 100644
-> --- a/arch/x86/xen/enlighten_pvh.c
-> +++ b/arch/x86/xen/enlighten_pvh.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/acpi.h>
->  #include <linux/export.h>
-> +#include <linux/pci.h>
->  
->  #include <xen/hvc-console.h>
->  
-> @@ -25,6 +26,95 @@
->  bool __ro_after_init xen_pvh;
->  EXPORT_SYMBOL_GPL(xen_pvh);
->  
-> +typedef struct gsi_info {
-> +	int gsi;
-> +	int trigger;
-> +	int polarity;
-> +} gsi_info_t;
-> +
-> +struct acpi_prt_entry {
-> +	struct acpi_pci_id	id;
-> +	u8			pin;
-> +	acpi_handle		link;
-> +	u32			index;		/* GSI, or link _CRS index */
-> +};
-> +
-> +static int xen_pvh_get_gsi_info(struct pci_dev *dev,
-> +								gsi_info_t *gsi_info)
-> +{
-> +	int gsi;
-> +	u8 pin = 0;
-> +	struct acpi_prt_entry *entry;
-> +	int trigger = ACPI_LEVEL_SENSITIVE;
-> +	int polarity = acpi_irq_model == ACPI_IRQ_MODEL_GIC ?
-> +				      ACPI_ACTIVE_HIGH : ACPI_ACTIVE_LOW;
-> +
-> +	if (dev)
-> +		pin = dev->pin;
+On 2/22/2024 7:24 PM, Dan Carpenter wrote:
+> I'm sorry, I'm coming into this late and this is the first time I have
+> reviewed this patch.  I see that we are at v13, and I hate to come in
+> with picky comments when a patch has already gone through 13
+> revisions...
 
-This is minor, but you can just move the pin = dev->pin after the !dev
-check below.
+Never mind that. some are totally new.
 
-With that change, and assuming the Xen-side and QEMU-side patches are
-accepted:
+> On Thu, Feb 22, 2024 at 04:02:51AM -0500, Ethan Zhao wrote:
+>> Because surprise removal could happen anytime, e.g. user could request safe
+>> removal to EP(endpoint device) via sysfs and brings its link down to do
+>> surprise removal cocurrently. such aggressive cases would cause ATS
+>> invalidation request issued to non-existence target device, then deadly
+>> loop to retry that request after ITE fault triggered in interrupt context.
+>> this patch aims to optimize the ITE handling by checking the target device
+>> presence state to avoid retrying the timeout request blindly, thus avoid
+>> hard lockup or system hang.
+>>
+>> Devices are valid ATS invalidation request target only when they reside
+> "valid invalidation" is awkward wording.  Can we instead say:
 
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+If you read them together, sounds like tongue twister. but here "ATS
+invalidation request target" is one term in PCIe spec.
 
+>
+> Devices should only be invalidated when they are in the
+> iommu->device_rbtree (probed, not released) and present.
+>
+>> in the iommu->device_rbtre (probed, not released) and present.
+>                              ^
+> Missing e in _rbtree.
 
+Yup.
 
+>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+> This patch should have a Fixes tags and be backported to stable kernels.
+> I think it goes back all the way...
+>
+> Fixes: 704126ad81b8 ("VT-d: handle Invalidation Queue Error to avoid system hang")
 
-> +	if (!dev || !pin || !gsi_info)
-> +		return -EINVAL;
-> +
-> +	entry = acpi_pci_irq_lookup(dev, pin);
-> +	if (entry) {
-> +		if (entry->link)
-> +			gsi = acpi_pci_link_allocate_irq(entry->link,
-> +							 entry->index,
-> +							 &trigger, &polarity,
-> +							 NULL);
-> +		else
-> +			gsi = entry->index;
-> +	} else
-> +		gsi = -1;
-> +
-> +	if (gsi < 0)
-> +		return -EINVAL;
-> +
-> +	gsi_info->gsi = gsi;
-> +	gsi_info->trigger = trigger;
-> +	gsi_info->polarity = polarity;
-> +
-> +	return 0;
-> +}
-> +
-> +static int xen_pvh_setup_gsi(gsi_info_t *gsi_info)
-> +{
-> +	struct physdev_setup_gsi setup_gsi;
-> +
-> +	if (!gsi_info)
-> +		return -EINVAL;
-> +
-> +	setup_gsi.gsi = gsi_info->gsi;
-> +	setup_gsi.triggering = (gsi_info->trigger == ACPI_EDGE_SENSITIVE ? 0 : 1);
-> +	setup_gsi.polarity = (gsi_info->polarity == ACPI_ACTIVE_HIGH ? 0 : 1);
-> +
-> +	return HYPERVISOR_physdev_op(PHYSDEVOP_setup_gsi, &setup_gsi);
-> +}
-> +
-> +int xen_pvh_passthrough_gsi(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +	gsi_info_t gsi_info;
-> +
-> +	if (!dev)
-> +		return -EINVAL;
-> +
-> +	ret = xen_pvh_get_gsi_info(dev, &gsi_info);
-> +	if (ret) {
-> +		xen_raw_printk("Fail to get gsi info!\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = xen_pvh_setup_gsi(&gsi_info);
-> +	if (ret == -EEXIST) {
-> +		xen_raw_printk("Already setup the GSI :%d\n", gsi_info.gsi);
-> +		ret = 0;
-> +	} else if (ret)
-> +		xen_raw_printk("Fail to setup GSI (%d)!\n", gsi_info.gsi);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(xen_pvh_passthrough_gsi);
-> +
->  void __init xen_pvh_init(struct boot_params *boot_params)
->  {
->  	u32 msr;
-> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-> index ff30ceca2203..630fe0a34bc6 100644
-> --- a/drivers/acpi/pci_irq.c
-> +++ b/drivers/acpi/pci_irq.c
-> @@ -288,7 +288,7 @@ static int acpi_reroute_boot_interrupt(struct pci_dev *dev,
->  }
->  #endif /* CONFIG_X86_IO_APIC */
->  
-> -static struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
-> +struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
->  {
->  	struct acpi_prt_entry *entry = NULL;
->  	struct pci_dev *bridge;
-> diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
-> index 46c40ec8a18e..22d4380d2b04 100644
-> --- a/drivers/xen/xen-pciback/pci_stub.c
-> +++ b/drivers/xen/xen-pciback/pci_stub.c
-> @@ -20,6 +20,7 @@
->  #include <linux/atomic.h>
->  #include <xen/events.h>
->  #include <xen/pci.h>
-> +#include <xen/acpi.h>
->  #include <xen/xen.h>
->  #include <asm/xen/hypervisor.h>
->  #include <xen/interface/physdev.h>
-> @@ -435,6 +436,13 @@ static int pcistub_init_device(struct pci_dev *dev)
->  			goto config_release;
->  		pci_restore_state(dev);
->  	}
-> +
-> +	if (xen_initial_domain() && xen_pvh_domain()) {
-> +		err = xen_pvh_passthrough_gsi(dev);
-> +		if (err)
-> +			goto config_release;
-> +	}
-> +
->  	/* Now disable the device (this also ensures some private device
->  	 * data is setup before we export)
->  	 */
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 4db54e928b36..7ea3be981cc3 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -360,6 +360,7 @@ void acpi_unregister_gsi (u32 gsi);
->  
->  struct pci_dev;
->  
-> +struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin);
->  int acpi_pci_irq_enable (struct pci_dev *dev);
->  void acpi_penalize_isa_irq(int irq, int active);
->  bool acpi_isa_irq_available(int irq);
-> diff --git a/include/xen/acpi.h b/include/xen/acpi.h
-> index b1e11863144d..17c4d37f1e60 100644
-> --- a/include/xen/acpi.h
-> +++ b/include/xen/acpi.h
-> @@ -67,10 +67,16 @@ static inline void xen_acpi_sleep_register(void)
->  		acpi_suspend_lowlevel = xen_acpi_suspend_lowlevel;
->  	}
->  }
-> +int xen_pvh_passthrough_gsi(struct pci_dev *dev);
->  #else
->  static inline void xen_acpi_sleep_register(void)
->  {
->  }
-> +
-> +static inline int xen_pvh_passthrough_gsi(struct pci_dev *dev)
-> +{
-> +	return -1;
-> +}
->  #endif
->  
->  #endif	/* _XEN_ACPI_H */
-> -- 
-> 2.34.1
-> 
+Sounds reasonable.
+
+>
+>> ---
+>>   drivers/iommu/intel/dmar.c | 25 +++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+>> index d14797aabb7a..d01d68205557 100644
+>> --- a/drivers/iommu/intel/dmar.c
+>> +++ b/drivers/iommu/intel/dmar.c
+>> @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>   {
+>>   	u32 fault;
+>>   	int head, tail;
+>> +	u64 iqe_err, ite_sid;
+>> +	struct device *dev = NULL;
+>> +	struct pci_dev *pdev = NULL;
+>>   	struct q_inval *qi = iommu->qi;
+>>   	int shift = qi_shift(iommu);
+>>   
+>> @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>   		tail = readl(iommu->reg + DMAR_IQT_REG);
+>>   		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+>>   
+>> +		/*
+>> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
+>> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
+>> +		 */
+>> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+>> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
+>> +
+>>   		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>>   		pr_info("Invalidation Time-out Error (ITE) cleared\n");
+>>   
+>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>   			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>>   		} while (head != tail);
+>>   
+>> +		/*
+>> +		 * If got ITE, we need to check if the sid of ITE is one of the
+>> +		 * current valid ATS invalidation target devices, if no, or the
+>> +		 * target device isn't presnet, don't try this request anymore.
+>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+>> +		 */
+> This comment is kind of confusing.
+
+Really confusing ? this is typo there, resnet-> "present"
+
+>
+> /*
+>   * If we have an ITE, then we need to check whether the sid of the ITE
+>   * is in the rbtree (meaning it is probed and not released), and that
+>   * the PCI device is present.
+>   */
+>
+> My comment is slightly shorter but I think it has the necessary
+> information.
+>
+>> +		if (ite_sid) {
+>> +			dev = device_rbtree_find(iommu, ite_sid);
+>> +			if (!dev || !dev_is_pci(dev))
+>> +				return -ETIMEDOUT;
+> -ETIMEDOUT is weird.  The callers don't care which error code we return.
+> Change this to -ENODEV or something
+
+-ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
+caller really cares about the returned value.
+
+>
+>> +			pdev = to_pci_dev(dev);
+>> +			if (!pci_device_is_present(pdev) &&
+>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
+> The && confused me, but then I realized that probably "ite_sid ==
+> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
+
+Here is the fault handling, just double confirm nothing else goes wrong --
+beyond the assumption.
+
+>
+> 		pdev = to_pci_dev(dev);
+> 		if (!pci_device_is_present(pdev))
+> 			return -ENODEV;
+>
+>
+>> +				return -ETIMEDOUT;
+> -ENODEV.
+
+The ATS invalidation request could be sent from userland in later code,
+the userland code will care about the returned value,  -ENODEV is one aspect
+of the fact (target device not present), while -ETIMEDOUT is another
+(timeout happened). we couldn't return them both.
+
+>
+>> +		}
+>>   		if (qi->desc_status[wait_index] == QI_ABORT)
+>>   			return -EAGAIN;
+>>   	}
+> Sorry, again for nit picking a v13 patch.  I'm not a domain expert but
+> this patchset seems reasonable to me.
+
+Though this is the v13, it is based on new rbtree code, you are welcome.
+
+Thanks,
+Ethan
+
+> regards,
+> dan carpenter
 
