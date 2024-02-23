@@ -1,49 +1,49 @@
-Return-Path: <linux-pci+bounces-3927-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C60A9861571
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 16:23:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 645F08615A0
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 16:24:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 033601C23F5C
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 15:23:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 964091C23FB7
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 15:24:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BA9583A13;
-	Fri, 23 Feb 2024 15:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7866482C7E;
+	Fri, 23 Feb 2024 15:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ydyu1SR8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOTuRidG"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C376839E8;
-	Fri, 23 Feb 2024 15:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE2583A03;
+	Fri, 23 Feb 2024 15:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708701787; cv=none; b=Ub73KDJ21QZLFBwYOaRGjQvHk/jz+GvlqaTtGucMJH6LlHn3+lTOIFeIgUYaloDak8CcWmZerIAlxcSAUk3YVoo01S/bye9Lz7NPSLj1duEqe3EhrxH1i9mlIXCKUqabmvhKgOb2f9n8X9fW861Njf+RkH/ZMbDHq8L11iuk27g=
+	t=1708701788; cv=none; b=hbec8dflC5S7s91RBP6pVaAgDhMczjQ7wEyy5Yo9ZrJVGcfFchxQWiTTQKq1z2Zz4IqMIHmJnXiNB2vcLevcdsIrjBSuXWhrGF5xjPX6GjmKkomLRgByRkJFR8vQjS2zWQTsfCNmYvgnXbcw/WOTDK2cmURmfcXVqv4NTWYkkps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708701787; c=relaxed/simple;
-	bh=nc4MqV6YaWXP4nv2pZ90dCQqT4i4GYj2D270C7X4X5g=;
+	s=arc-20240116; t=1708701788; c=relaxed/simple;
+	bh=+MZNQen3wcYHTNycJniWNvbay9tcVWDXKsVdslC0djE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a4CzU0GsxcXmxm/2NZ+4R4KHJFnSL2cwVdcYPvC/DdkjsTTCwpgovrOz6QLq8/kcxUESCtwpbQjyMw+2bwsyrCVpm3nijhg3dws6baxuHS3pU13V1lasHBQsXr52UErcYzZzWhxPHn4RdizpDlI3s/QteuoOOAVLdsGfZ0GPQeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ydyu1SR8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 908B0C433A6;
+	 MIME-Version; b=IBtIAcMEr1r2cRjLnROtygymYwemCt1EbYte3qNRWSONDkGq4D0j7ivfV3cvZyzdirUfdnnLjDdg3GJB7soglysIxE7hUU3e22+jKrCH1OpVWK8oc+59VcLCD+hJA6Nq8HL6JZ5231nBHgn2YXp8JYts7bJ4rTsGK7TERsfoHG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOTuRidG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98205C433B1;
 	Fri, 23 Feb 2024 15:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1708701786;
-	bh=nc4MqV6YaWXP4nv2pZ90dCQqT4i4GYj2D270C7X4X5g=;
+	bh=+MZNQen3wcYHTNycJniWNvbay9tcVWDXKsVdslC0djE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ydyu1SR8lpLQzpzB3X2h06K49YWtAISIGICtzLov1pVdvuuemjHzdi9XuRSexfKQX
-	 pkbziFhPoPSLqSSNiwrauPsgZEdLgfCdE2e6YilkGMttkMFmVl2Q9ODhe9whw1TGoj
-	 Nn9JmQP3RuhduIjAYJ5qs9F9kRZ+SCc3hdRPRHUa1Pxl5kJWSAqi7KyG9+ZMjYRpCu
-	 Y+4DVIeAAdX0kIE2m9dejvSbZnzMjRd/Z4lXUF8Ce9Bd8+BLeOUyxEkhuMvDUNealQ
-	 0K2Ijlnp02ifK9PXNXURp+Epo3KWY/AI4lkS1Gv5XklYEToE258SMsdtWnM20Cc1ov
-	 iwRAu1VX9xIvQ==
+	b=fOTuRidGnMQVuYfe+pILwzBb1KejZ6SdNH5TybZzzp0ZE51C+sdgTDdjy3KDp19HJ
+	 zmvwwGLN7Z/gL9Kd2jBapVUZ/AN9825OlvtsFegQ+AWLMPq9uML2LKUj+sYKgMAgqf
+	 M7O+Qm0MHlzYf9FiHAZFV48eJEE3VGan9R9QP09tapmCPAiOU5WqeLwP5GFd4gV+6C
+	 +3PWB/iSV/+mEhlUoOts/CCQI584PNxJCPq4+T7zyE6GEePehLNTKfZAkNtzp9yHZG
+	 Dq53LJql+qwxam9g4WJU3cHTjIMqdtiODX+x4leBpT2cYWjsZBvQ6DXNlANPeCcgk/
+	 fjkNuQfBDW8GA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1rdXOJ-000000005FZ-0BSl;
+	id 1rdXOJ-000000005Fb-0VmY;
 	Fri, 23 Feb 2024 16:23:11 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Helgaas <bhelgaas@google.com>,
@@ -59,10 +59,11 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 03/12] dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
-Date: Fri, 23 Feb 2024 16:21:15 +0100
-Message-ID: <20240223152124.20042-4-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 04/12] PCI: qcom: Add support for disabling ASPM L0s in devicetree
+Date: Fri, 23 Feb 2024 16:21:16 +0100
+Message-ID: <20240223152124.20042-5-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240223152124.20042-1-johan+linaro@kernel.org>
 References: <20240223152124.20042-1-johan+linaro@kernel.org>
@@ -74,27 +75,63 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add 'aspm-no-l0s', which can be used to indicate that ASPM L0s is not
-supported, to the binding.
+Commit 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting
+1.9.0 ops") started enabling ASPM unconditionally when the hardware
+claims to support it. This triggers Correctable Errors for some PCIe
+devices on machines like the Lenovo ThinkPad X13s, which could indicate
+an incomplete driver ASPM implementation or that the hardware does in
+fact not support L0s.
 
+Add support for disabling ASPM L0s in the devicetree when it is not
+supported on a particular machine and controller.
+
+Note that only the 1.9.0 ops enable ASPM currently.
+
+Fixes: 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops")
+Cc: stable@vger.kernel.org      # 6.7
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index b28517047db2..4d1060b52592 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -130,6 +130,8 @@ properties:
-     description: GPIO controlled connection to WAKE# signal
-     maxItems: 1
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 09d485df34b9..0fb5dc06d2ef 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -273,6 +273,25 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+ 	return 0;
+ }
  
-+  aspm-no-l0s: true
++static void qcom_pcie_clear_aspm_l0s(struct dw_pcie *pci)
++{
++	u16 offset;
++	u32 val;
 +
- required:
-   - compatible
-   - reg
++	if (!of_property_read_bool(pci->dev->of_node, "aspm-no-l0s"))
++		return;
++
++	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
++
++	dw_pcie_dbi_ro_wr_en(pci);
++
++	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
++	val &= ~PCI_EXP_LNKCAP_ASPM_L0S;
++	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
++
++	dw_pcie_dbi_ro_wr_dis(pci);
++}
++
+ static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
+ {
+ 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+@@ -962,6 +981,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 
+ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+ {
++	qcom_pcie_clear_aspm_l0s(pcie->pci);
+ 	qcom_pcie_clear_hpc(pcie->pci);
+ 
+ 	return 0;
 -- 
 2.43.0
 
