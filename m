@@ -1,310 +1,182 @@
-Return-Path: <linux-pci+bounces-3926-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B58F38614AD
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 15:51:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE1868615A2
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 16:24:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D37D81C22E00
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 14:51:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 42CA6B2483A
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 15:24:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC644823D7;
-	Fri, 23 Feb 2024 14:49:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7325986151;
+	Fri, 23 Feb 2024 15:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VJ1AqxM7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwTHzWzs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1EF8288E;
-	Fri, 23 Feb 2024 14:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6EC83A0D;
+	Fri, 23 Feb 2024 15:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699755; cv=none; b=gKpOcYzSyVKKeJMoUJF//09VttIBL4t1HQl6jF+zPZqdFSPig4a8GOrv84N1/rBX/Zm9KzzfcfjJoH+IVOGcZUpIei8EuOW4GHss268i9ovJWr3ZtbuHl50mhpTphbfewwznTEvuSIYKRgeQO+4NIk8mgoLWQionnOB2QEgH+9s=
+	t=1708701788; cv=none; b=KrpR8ER9dWc1xcw4ynpZ2+Pzekv6t77dOxm1UfSFxYxO6KALrvi4Ya+Lodn6hhEeV4qQaTdr1Uand3bEq58wg8UTcG1tSTULkIvbVNm53aqm9kNLVWjr+QQrfEB/2VMrSGcxyWhPkHFNt7Oblh4u0CEdtKsluhs/UHPnYPRjkyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699755; c=relaxed/simple;
-	bh=htYpAfVMJfmMQf2P/nWz0eI+h8ja8l42Yw3ds3OE4gY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=jLpxYRmS8yk10y+vEIqeetFd43gMlQQK244X0RvVvz61wZSM8icw6lNIFJH1S01aezIPTo0lA371+sAZWdOApD5zV48rd6gS1ZIHLxJ91vu3f7p+f03svJg0OFbdVbH/2m9phkrx+UbX+YUSbxf05pXqHamTITn3YICkOu70boQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VJ1AqxM7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41NCrBfm019756;
-	Fri, 23 Feb 2024 14:49:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=bIFvd5a7Gq+s8Ic6RoQhPi68JfGBADm7tLEEN1LBupU
-	=; b=VJ1AqxM7OzBjEdvu2+I5mOjHUThtdLiZKQb7f4FmKNgKXfBZwLIsY2rlNib
-	EHVAMPmoivrAgQ3f2tn++zmfoRDiz00PTgLwAatyyeuMpfIhnpjp27keTYkRA4V5
-	P992qcSo5ISzhlpp6ge50+f57FN42DrtjxREtHO2TgKNdHoi58u3oVq36KQo9E5i
-	5ZMhHCMo26QLNd9bKwev7aaC70cgcI1OaMAfTY16kmEzpc2WHzBoVI6u1Dr4T1AJ
-	9T4QnUXshaWh+mxfOVKgc1lCIHXWCeyg8drofrNngUMTPzqmH4u9PJx+0Str6yDg
-	1NgTJW95awMoZj7bV9keHliUZgQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3weqxd0smt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 14:49:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41NEn56g028193
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 23 Feb 2024 14:49:05 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 23 Feb 2024 06:48:58 -0800
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Fri, 23 Feb 2024 20:18:04 +0530
-Subject: [PATCH v7 7/7] PCI: qcom: Add OPP support to scale performance
- state of power domain
+	s=arc-20240116; t=1708701788; c=relaxed/simple;
+	bh=9shxrV37X/hKYhC7+xafRBxXkbpYRJ8dJYB3wBS8aq0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BLOL9n7tF5+le8pZTh8ROqBCKTFXlXowQNGZNIwNz/fxBdIk5uEy+9BPJBi8JObhNuXAaDNKrmdtSw8TLb5Jr6/+ZuZPooX/4ZMTk8+/sU2v+DndfIzVAfwYWtUzjod83UyUShpJ5SOuGxXq3AGoXaiNRhzXHxnY3iQWesc0f5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwTHzWzs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F0DFC433B2;
+	Fri, 23 Feb 2024 15:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708701786;
+	bh=9shxrV37X/hKYhC7+xafRBxXkbpYRJ8dJYB3wBS8aq0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BwTHzWzsu/Zd0FkgYEt+VHXbuKOy5OgClB6+XaV77LhCiG9PBCZEJSKEHkrmIK+Wf
+	 BYa+b8S/A4inKzgNzR6f8Q58lkxDXjPL60D1qxqVFHC8raTHfuiPBwzhIIWw6RJzl1
+	 Vc3DrZWsRQseLG/eRus7+GfMAQbdeHRR9gHwhxx2V1euwi0wrVDRwp1ZzRDepbvcj3
+	 84k8dfFLc/xbsPA9emz04nCyG/95jqxWDRj5LHy2yfqXhwWJIavpBhIlWJj9ewSvlq
+	 wgvtR3xw0ssPqYPpQZWnnez0cCIwStZ/r8bZZQ1eJlDu7ngNu6XiBpQxf+ZEM9bw+1
+	 IXsRPM0H507SA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1rdXOI-000000005FT-0JA2;
+	Fri, 23 Feb 2024 16:23:10 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and GICv3 ITS enable
+Date: Fri, 23 Feb 2024 16:21:12 +0100
+Message-ID: <20240223152124.20042-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240223-opp_support-v7-7-10b4363d7e71@quicinc.com>
-References: <20240223-opp_support-v7-0-10b4363d7e71@quicinc.com>
-In-Reply-To: <20240223-opp_support-v7-0-10b4363d7e71@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Brian Masney
-	<bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>,
-        Krishna chaitanya chundru
-	<quic_krichai@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1708699693; l=5956;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=htYpAfVMJfmMQf2P/nWz0eI+h8ja8l42Yw3ds3OE4gY=;
- b=lIvHrnTXWPXJJsZF+CsA/dI+cTiR0qbxRI6mJdzSmOXc1qwHl3GfBIs66kDtdAFz+bItYVZkn
- O1qkfQtZ05UBInrjF/b+Mwd57YyKvcCQyB8S/OtyNOXYSWAMCuv8YGP
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YIg7-vSIXYn_5QVSpP1e4QxxXsRHnGE2
-X-Proofpoint-ORIG-GUID: YIg7-vSIXYn_5QVSpP1e4QxxXsRHnGE2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 phishscore=0 spamscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402230108
+Content-Transfer-Encoding: 8bit
 
-QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-maintains hardware state of a regulator by performing max aggregation of
-the requests made by all of the clients.
+This series addresses a few problems with the sc8280xp PCIe
+implementation.
 
-PCIe controller can operate on different RPMh performance state of power
-domain based up on the speed of the link. And this performance state varies
-from target to target.
+The DWC PCIe controller can either use its internal MSI controller or an
+external one such as the GICv3 ITS. Enabling the latter allows for
+assigning affinity to individual interrupts, but results in a large
+amount of Correctable Errors being logged on both the Lenovo ThinkPad
+X13s and the sc8280xp-crd reference design.
 
-It is manadate to scale the performance state based up on the PCIe speed
-link operates so that SoC can run under optimum power conditions.
+It turns out that these errors are always generated, but for some yet to
+be determined reason, the AER interrupts are never received when using
+the internal MSI controller, which makes the link errors harder to
+notice.
 
-Add Operating Performance Points(OPP) support to vote for RPMh state based
-upon the speed link is operating.
+On the X13s, there is a large number of errors generated when bringing
+up the link on boot. This is related to the fact that UEFI firmware has
+already enabled the Wi-Fi PCIe link at Gen2 speed and restarting the
+link at Gen3 generates a massive amount of errors until the Wi-Fi
+firmware is restarted. This has now also been shown to cause the Wi-Fi
+to sometimes not start at all on boot for some users.
 
-OPP can handle ICC bw voting also, so move ICC bw voting through OPP
-framework if OPP entries are present.
+A recent commit enabling ASPM on certain Qualcomm platforms introduced
+further errors when using the Wi-Fi on the X13s as well as when
+accessing the NVMe on the CRD. The exact reason for this has not yet
+been identified, but disabling ASPM L0s makes the errors go away. This
+could suggest that either the current ASPM implementation is incomplete
+or that L0s is not supported with these devices.
 
-In PCIe certain speeds like GEN1x2 & GEN2x1 or GEN3x2 & GEN4x1 use
-same bw and frequency and thus the OPP entry, so use frequency based
-search to reduce number of entries in the OPP table.
+Note that the X13s and CRD use the same Wi-Fi controller, but the errors
+are only generated on the X13s. The NVMe controller on my X13s does not
+support L0s so there are no issues there, unlike on the CRD which uses a
+different controller. The modem on the CRD does not generate any errors,
+but both the NVMe and modem keeps bouncing in and out of L0s/L1 also
+when not used, which could indicate that there are bigger problems with
+the ASPM implementation. I don't have a modem on my X13s so I have not
+been able to test whether L0s causes any trouble there.
 
-Don't initialize ICC if OPP is supported.
+Enabling AER error reporting on sc8280xp could similarly also reveal
+existing problems with the related sa8295p and sa8540p platforms as they
+share the base dtsi.
 
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 75 +++++++++++++++++++++++++++-------
- 1 file changed, 61 insertions(+), 14 deletions(-)
+After discussing this with Bjorn Andersson at Qualcomm we have decided
+to go ahead and disable L0s for all controllers on the CRD and the
+X13s.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 088ebd2e5865..c608bec8b9cb 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -22,6 +22,7 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/pci.h>
-+#include <linux/pm_opp.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_device.h>
- #include <linux/phy/pcie.h>
-@@ -244,6 +245,7 @@ struct qcom_pcie {
- 	const struct qcom_pcie_cfg *cfg;
- 	struct dentry *debugfs;
- 	bool suspended;
-+	bool opp_supported;
- };
- 
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-@@ -1404,16 +1406,14 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
--static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
-+static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
--	u32 offset, status;
-+	u32 offset, status, freq;
-+	struct dev_pm_opp *opp;
- 	int speed, width;
- 	int ret;
- 
--	if (!pcie->icc_mem)
--		return;
--
- 	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
- 
-@@ -1424,11 +1424,26 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
- 	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
- 	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
- 
--	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
--	if (ret) {
--		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
--			ret);
-+	if (pcie->opp_supported) {
-+		freq = PCIE_MBS2FREQ(pcie_link_speed[speed]);
-+
-+		opp = dev_pm_opp_find_freq_exact(pci->dev, freq * width, true);
-+		if (!IS_ERR(opp)) {
-+			ret = dev_pm_opp_set_opp(pci->dev, opp);
-+			if (ret)
-+				dev_err(pci->dev, "Failed to set opp: freq %ld ret %d\n",
-+					dev_pm_opp_get_freq(opp), ret);
-+			dev_pm_opp_put(opp);
-+		}
-+	} else {
-+		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-+		if (ret) {
-+			dev_err(pci->dev, "failed to set interconnect bandwidth for pcie-mem: %d\n",
-+				ret);
-+		}
- 	}
-+
-+	return;
- }
- 
- static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-@@ -1471,8 +1486,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
- static int qcom_pcie_probe(struct platform_device *pdev)
- {
- 	const struct qcom_pcie_cfg *pcie_cfg;
-+	unsigned long max_freq = INT_MAX;
- 	struct device *dev = &pdev->dev;
- 	struct qcom_pcie *pcie;
-+	struct dev_pm_opp *opp;
- 	struct dw_pcie_rp *pp;
- 	struct resource *res;
- 	struct dw_pcie *pci;
-@@ -1539,9 +1556,36 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
- 	}
- 
--	ret = qcom_pcie_icc_init(pcie);
--	if (ret)
-+	 /* OPP table is optional */
-+	ret = devm_pm_opp_of_add_table(dev);
-+	if (ret && ret != -ENODEV) {
-+		dev_err_probe(dev, ret, "Failed to add OPP table\n");
- 		goto err_pm_runtime_put;
-+	}
-+
-+	/*
-+	 * Use highest OPP here if the OPP table is present. At the end of the probe(),
-+	 * OPP will be updated using qcom_pcie_icc_opp_update().
-+	 */
-+	if (ret != -ENODEV) {
-+		opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
-+		if (!IS_ERR(opp)) {
-+			ret = dev_pm_opp_set_opp(dev, opp);
-+			if (ret)
-+				dev_err_probe(pci->dev, ret,
-+					      "Failed to set opp: freq %ld\n",
-+					      dev_pm_opp_get_freq(opp));
-+			dev_pm_opp_put(opp);
-+		}
-+		pcie->opp_supported = true;
-+	}
-+
-+	/* Skip ICC init if OPP is supported as ICC bw vote is handled by OPP framework */
-+	if (!pcie->opp_supported) {
-+		ret = qcom_pcie_icc_init(pcie);
-+		if (ret)
-+			goto err_pm_runtime_put;
-+	}
- 
- 	ret = pcie->cfg->ops->get_resources(pcie);
- 	if (ret)
-@@ -1561,7 +1605,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_phy_exit;
- 	}
- 
--	qcom_pcie_icc_update(pcie);
-+	qcom_pcie_icc_opp_update(pcie);
- 
- 	if (pcie->mhi)
- 		qcom_pcie_init_debugfs(pcie);
-@@ -1612,7 +1656,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
- 		pcie->suspended = true;
- 	}
- 
--	/* Remove cpu path vote after all the register access is done */
-+	/* Remove CPU path vote after all the register access is done */
- 	ret = icc_disable(pcie->icc_cpu);
- 	if (ret) {
- 		dev_err(dev, "failed to disable icc path of cpu-pcie: %d\n", ret);
-@@ -1624,6 +1668,9 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (pcie->opp_supported)
-+		dev_pm_opp_set_opp(pcie->pci->dev, NULL);
-+
- 	return 0;
- }
- 
-@@ -1646,7 +1693,7 @@ static int qcom_pcie_resume_noirq(struct device *dev)
- 		pcie->suspended = false;
- 	}
- 
--	qcom_pcie_icc_update(pcie);
-+	qcom_pcie_icc_opp_update(pcie);
- 
- 	return 0;
- }
+Note that disabling ASPM L0s for the X13s Wi-Fi does not seem to have a
+significant impact on the power consumption (and there are indications
+that this applies generally for L0s on these platforms).
+
+***
+
+As this series fixes a regression in 6.7 (which enabled ASPM) and fixes
+a user-reported problem with the Wi-Fi often not starting at boot, I
+think we should merge this series for the 6.8 cycle. The final patch
+enabling the GIC ITS should wait for 6.9.
+
+The DT bindings and PCI patch are expected to go through the PCI tree,
+while Bjorn A takes the devicetree updates through the Qualcomm tree.
+
+Note that the devicetree binding updates will conflict with the
+following series which was just merged for 6.9 today:
+
+	https://lore.kernel.org/lkml/513dfb69-aea1-4848-8755-613e03c65843@linaro.org/
+
+The resolution is simply to add 'required-opps' and 'aspm-no-l0s' to the
+new 'qcom,pcie-common.yaml' schema file instead of 'qcom,pcie.yaml',
+while removing 'msi-map-mask'.
+
+***
+
+Johan
+
+
+Changes in v2
+ - drop RFC from ASPM patches and add stable tags
+ - reorder patches and move ITS patch last
+ - fix s/GB/MB/ typo in Gen2 speed commit messages
+ - fix an incorrect Fixes tag
+ - amend commit message X13 wifi link speed patch after user
+   confirmation that this fixes the wifi startup issue
+ - disable L0s also for modem and wifi on CRD
+ - disable L0s also for nvme and modem on X13s
+
+
+Johan Hovold (12):
+  dt-bindings: PCI: qcom: Allow 'required-opps'
+  dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
+  dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
+  PCI: qcom: Add support for disabling ASPM L0s in devicetree
+  arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
+  arm64: dts: qcom: sc8280xp-crd: limit pcie4 link speed
+  arm64: dts: qcom: sc8280xp-x13s: limit pcie4 link speed
+  arm64: dts: qcom: sc8280xp-crd: disable ASPM L0s for NVMe
+  arm64: dts: qcom: sc8280xp-crd: disable ASPM L0s for modem and Wi-Fi
+  arm64: dts: qcom: sc8280xp-x13s: disable ASPM L0s for Wi-Fi
+  arm64: dts: qcom: sc8280xp-x13s: disable ASPM L0s for NVMe and modem
+  arm64: dts: qcom: sc8280xp: enable GICv3 ITS for PCIe
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  6 +++++-
+ arch/arm64/boot/dts/qcom/sc8280xp-crd.dts     |  7 +++++++
+ .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |  7 +++++++
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi        | 17 +++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 20 +++++++++++++++++++
+ 5 files changed, 55 insertions(+), 2 deletions(-)
 
 -- 
-2.42.0
+2.43.0
 
 
