@@ -1,143 +1,161 @@
-Return-Path: <linux-pci+bounces-3914-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3915-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16F12861048
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 12:25:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 230D286137E
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 15:04:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 536A7B21968
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 11:25:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 504311C219D7
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 14:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50932633E9;
-	Fri, 23 Feb 2024 11:25:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF7CF7FBCA;
+	Fri, 23 Feb 2024 14:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VM8g6I7J"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aF7w5mQZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CCF627FC;
-	Fri, 23 Feb 2024 11:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3053B7E798;
+	Fri, 23 Feb 2024 14:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708687509; cv=none; b=l/pBwv8YD1hhh59SiX3Hh/m8tKADfExOfCw6hfzTwk8bQFrFKbLbc8lCgpxTWS8OqiPqec9uVVC4UjTFx1NPBmGDy+Fip5PnscQmqDzrGlzP54kOqxF2aug+K5oD53pL4US/7TRcpT2wJkAv7Hde4QmIreLUbeMpFdLyXv6vfFE=
+	t=1708697047; cv=none; b=SFYVq91ZRRYQzi9kV10elso7VcOnilkkzsW8jmG1ZWzebH7hgSbYj+BWITt8mrT/GYXcR6cip9ewM2506I4SHA65ClDos+bdZ8TvAp6T+hTA1fk6DLj3gcPkCbUqh/fjTBkCIqe9RBsIFEFsxweWF/su5iv88YNjhLyPZbLd+DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708687509; c=relaxed/simple;
-	bh=kwlnWMKwqe/VZS7s01t/VjKri9FYL6WtJGJRcybmxJI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kT/CPXZS+eWg56sxb4Njg8L3F+tncLI18llNVhB7p7JU+fQ/a/Nyc0qil3qRvkpXbBZXD+KooHG5bhKWK6F0+dOQoQ43ccO9ZtQxz94/F+k9Pl1vCBSKsGS8Z3FZDhEbaXBfIKwnPAFXq9W4y69gFvUC9XMzXAvpESCKndgIwH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VM8g6I7J; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-21eea6aab5eso100679fac.0;
-        Fri, 23 Feb 2024 03:25:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708687506; x=1709292306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HXq9gtaixlPPlxeYNVBBekla+96XUpC/xgFnv8Gi6Og=;
-        b=VM8g6I7JvJzg5W34BdjQ2DAxwWdBkPoKqP+uPbr+sajjJr3jIEcdonTGxCuPldPjN6
-         Hs41rfWQUpl15eUpMdj6i4rW2BA4LGEKScO8+beEqhFQSamHY1X/8MjRVPhx76OXrLvF
-         lBaW+5++zXproFXyURxePF4v3OVcid0t9MqMoNvV71jGzA7bAVW5OKmdLx78MM1uddLZ
-         RD9bKATIznKYgKjQSKG7CIvOJ/Cx7ZyvRGS1/N479XQPAcH7c7FmKlhruLkVXjk0VxOZ
-         MvNwGjPfnw1UiIjXcnjvvV5KIqhQJGwL5Mg8WxZWsb0x0WCW7CgJ4Omn8d8hqh5aPFKE
-         zMhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708687506; x=1709292306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HXq9gtaixlPPlxeYNVBBekla+96XUpC/xgFnv8Gi6Og=;
-        b=CZtmoHlr+v4R7zcQtEQaheDC/qsQSVIIiewHnx+VynFEd9MZdkPUsrgHXyvM90kQO5
-         KFFSW4Ztb91quQbk7LDE5BzMfOPQ494jhtDUDUwB52h+s93r/jM52iKmKp0aN/v80R+2
-         2ephtJvxzBiMZvsX5WbwAwdw2QTUxlHDdldh/IsohQ96UWAiB6rJGP2cub18/n1sZ9Bg
-         1ccBscTBoFFeL9v0uU5RMVGZQwnxySRxJLu+6r3l17kUZIOsIVkyLsGwebqw1COkiUwG
-         rIQwK7iW7S/D9Gg8yIS7CNhKG8pkyTT3ECnoYJaqR3lC6/rUaMvmJI3kXksEHia2XOw/
-         kJYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXG3eUZrqFKXsx1gyC1kXVvJNTjlbTasa87inmUp+3QJJ1Or+GduXb/pPG8CzQGCTcvcazbpAbBQJpCYFFSTidvya6QK6lSKJIg1qZ5
-X-Gm-Message-State: AOJu0YzyRq3bMqNqRHDud3UmBBtORyHqmyJPHGyeV+bZnOWjkMlhu2X2
-	l3wdHrTbk9SySQrnEwieKA0w7Xe4TatHFJmuBr4SXmzaxFAVeCiL1cr0aMeoAToEg99gwyQdveh
-	RuLiMP55s4RKjJ4G4GXzD4BFyaSfyBEL7
-X-Google-Smtp-Source: AGHT+IELKXL4lOnAECyKeuiwWmv2laqK/6mYRv/GITMbekabCwned9k99ADdDnL7P79u0FjEkWClvyPmjwEwJSjFZJc=
-X-Received: by 2002:a05:6870:8087:b0:21e:673f:96cc with SMTP id
- q7-20020a056870808700b0021e673f96ccmr1747204oab.51.1708687506353; Fri, 23 Feb
- 2024 03:25:06 -0800 (PST)
+	s=arc-20240116; t=1708697047; c=relaxed/simple;
+	bh=nM40QHzYL1kwG2zb35krcUIqERe+VLJRE/J43CVPmVw=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=t0+/I33O8iC1vEMl4u0DB4XkK9oNlxcwrqmF4V3ijEO3xNdZB9I1BHcM51MxGy3S3zN8qOpc6A3wft4bpzZT99gBgcBdH7fmKGzsuAre8x1TXJ1D0Z6iHEi9BkZrWtul5lc9iR8hPuUVf8ZNcvoQylXALk+gQBOL57uooo74O/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aF7w5mQZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41NDvndw018420;
+	Fri, 23 Feb 2024 14:03:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=1mgJOW5SMwFM
+	2S8R8LzsDNYwGCjSr8J/HH+/75aLe24=; b=aF7w5mQZXV05NkBroo2HHMmUTgtD
+	mEZJKnZeVB7APNG0SDY3+ecddv2T5JgIQSaS7etgP9sUSIZE1blHDPUU2IvREkxg
+	Z1wNFn4Rqvpvl+bKedTIod69gdMlF+4CPqwuyMsGPY4KbHvK8/6dIIKde8Vw2q9A
+	wBoeaB6a2c+U23KJfh8MyoGN4yNfRPFr7IX4xwEHxEEW3eZt8nWCB2ug/rTn4z6Q
+	vfXqoqPq/cSAx699PKq1eLk2QqDFpmnXwMot+ff3JpUtiVK56TuzeDXaLkX8XpoB
+	+6gDzlp6zgNtN1RaWha/6quDUYl/OdVK8dGAB2KyepL0P3uyQpP2TgH+Pw==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wesgg0hsg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 23 Feb 2024 14:03:55 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 41NE2Yr2026559;
+	Fri, 23 Feb 2024 14:03:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3wanvme27t-1;
+	Fri, 23 Feb 2024 14:03:52 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41NE3qBo027350;
+	Fri, 23 Feb 2024 14:03:52 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-msarkar-hyd.qualcomm.com [10.213.111.194])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 41NE3qSF027347;
+	Fri, 23 Feb 2024 14:03:52 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3891782)
+	id 718DA14C5; Fri, 23 Feb 2024 19:33:51 +0530 (+0530)
+From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, konrad.dybcio@linaro.org,
+        manivannan.sadhasivam@linaro.org, robh@kernel.org
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+        dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_schintav@quicinc.com,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v5 0/3] arm64: qcom: sa8775p: add cache coherency support for SA8775P
+Date: Fri, 23 Feb 2024 19:33:37 +0530
+Message-Id: <1708697021-16877-1-git-send-email-quic_msarkar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vpn7AjzS49pQmA8aqIQKDmgZ30uYzrJb
+X-Proofpoint-ORIG-GUID: vpn7AjzS49pQmA8aqIQKDmgZ30uYzrJb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_15,2024-02-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
+ definitions=main-2402230102
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240111082704.2259450-1-sergio.paracuellos@gmail.com>
-In-Reply-To: <20240111082704.2259450-1-sergio.paracuellos@gmail.com>
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Fri, 23 Feb 2024 12:24:54 +0100
-Message-ID: <CAMhs-H-Nab+NAcdZ4+VoiikzXgDH55USREhYA6=6xd6ac_OCww@mail.gmail.com>
-Subject: Re: [PATCH] PCI: mt7621: Fix possible string truncation in snprintf
-To: linux-pci@vger.kernel.org
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
+in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
+the requester is indicating that there no cache coherency issues exit
+for the addressed memory on the host i.e., memory is not cached. But
+in reality, requester cannot assume this unless there is a complete
+control/visibility over the addressed memory on the host.
 
-On Thu, Jan 11, 2024 at 9:27=E2=80=AFAM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> The following warning appears when driver is compiled with W=3D1.
->
-> CC      drivers/pci/controller/pcie-mt7621.o
-> drivers/pci/controller/pcie-mt7621.c: In function =E2=80=98mt7621_pcie_pr=
-obe=E2=80=99:
-> drivers/pci/controller/pcie-mt7621.c:228:49: error: =E2=80=98snprintf=E2=
-=80=99 output may
-> be truncated before the last format character [-Werror=3Dformat-truncatio=
-n=3D]
-> 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
->     |                                                 ^
-> drivers/pci/controller/pcie-mt7621.c:228:9: note: =E2=80=98snprintf=E2=80=
-=99 output between
-> 10 and 11 bytes into a destination of size 10
-> 228 |         snprintf(name, sizeof(name), "pcie-phy%d", slot);
->     |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> Clean this up increasing destination buffer one byte.
->
-> Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-> Closes: https://lore.kernel.org/linux-pci/20240110212302.GA2123146@bhelga=
-as/T/#t
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->  drivers/pci/controller/pcie-mt7621.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controlle=
-r/pcie-mt7621.c
-> index 79e225edb42a..d97b956e6e57 100644
-> --- a/drivers/pci/controller/pcie-mt7621.c
-> +++ b/drivers/pci/controller/pcie-mt7621.c
-> @@ -202,7 +202,7 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie =
-*pcie,
->         struct mt7621_pcie_port *port;
->         struct device *dev =3D pcie->dev;
->         struct platform_device *pdev =3D to_platform_device(dev);
-> -       char name[10];
-> +       char name[11];
->         int err;
->
->         port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> --
-> 2.25.1
->
+And worst case, if the memory is cached on the host, it may lead to
+memory corruption issues. It should be noted that the caching of memory
+on the host is not solely dependent on the NO_SNOOP attribute in TLP.
 
-Gentle ping on this patch :)
+So to avoid the corruption, this patch overrides the NO_SNOOP attribute
+by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
+needed for other upstream supported platforms since they do not set
+NO_SNOOP attribute by default.
 
-Thanks,
-    Sergio Paracuellos
+This series is to enable cache snooping logic in both RC and EP driver
+and add the "dma-coherent" property in dtsi to support cache coherency
+in SA8775P platform.
+
+Dependency
+----------
+
+Depends on:
+https://lore.kernel.org/all/1701432377-16899-1-git-send-email-quic_msarkar@quicinc.com/
+https://lore.kernel.org/all/20240216-dw-hdma-v2-4-b42329003f43@linaro.org/ [1]
+
+V4 -> V5:
+- Updated commit message in both Patch1 and patch2
+- change variable name from no_snoop_override to
+  enable_cache_snoop
+- rebased patch2 on top of [1]
+
+v3 -> v4:
+- added new cfg(cfg_1_34_0) for SA8775P in both RC and EP driver.
+- populated a flag in the data structures instead of doing
+  of_device_is_compatible() in both RC and EP patch.
+- update commit mesaage and added reveiwed-by tag in commit message
+  in dtsi patch.
+
+v2 -> v3:
+- update commit message(8755 -> 8775).
+
+v1 -> v2:
+- update cover letter with explanation.
+- define each of these bits and ORing at usage time rather than
+  directly writing value in register.
+
+Mrinmay Sarkar (3):
+  PCI: qcom: Enable cache coherency for SA8775P RC
+  PCI: qcom-ep: Enable cache coherency for SA8775P EP
+  arm64: dts: qcom: sa8775p: Mark PCIe EP controller as cache coherent
+
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi     |  1 +
+ drivers/pci/controller/dwc/pcie-qcom-ep.c | 20 +++++++++++++++++---
+ drivers/pci/controller/dwc/pcie-qcom.c    | 20 +++++++++++++++++++-
+ 3 files changed, 37 insertions(+), 4 deletions(-)
+
+-- 
+2.40.1
+
 
