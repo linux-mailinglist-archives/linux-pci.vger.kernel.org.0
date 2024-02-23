@@ -1,54 +1,86 @@
-Return-Path: <linux-pci+bounces-3908-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3909-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF0F860AD2
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 07:33:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B299F860AF2
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 07:47:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F7291F2483A
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 06:33:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3CC61C218C9
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 06:47:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0CE12B68;
-	Fri, 23 Feb 2024 06:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0FC112B98;
+	Fri, 23 Feb 2024 06:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bbGXLkDp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IYuc23ZA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35CD125B3;
-	Fri, 23 Feb 2024 06:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB4012B8F
+	for <linux-pci@vger.kernel.org>; Fri, 23 Feb 2024 06:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708670006; cv=none; b=Fd3TtKzSUqJWhvsFB9ZCTiNivlUB40wwk6+ZBAlOOUSC/EfTxBD/0AjNRE8JOmUj923w1gNzOMwpkCxMm0LqOF90XuFWetPBf3iQXB5Bam9vNoIaeTfrD80sU/GKOTyxqUGJtSKHXXef4ANHMK3mCVSQNuXU/KZvIkvXZnF+DrQ=
+	t=1708670836; cv=none; b=QlwM6feT9FiaLFk9U5JemvOJPuiC4moxuyYDTREoZxSZWjHbyabveGfVThz5cVXf5qJglVqfY/yrpzB2+aH2VzpS0cUI6n9qX5LPhBloy0crnqONfN6omao0Du4e1loKTvyV0N4mqkc5e6jGUmNMTpbJ/4QKo7woGMHUUyuE//0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708670006; c=relaxed/simple;
-	bh=dThcPl3XK7RY5dgaObaEGYKBmy4AdP7HURVc8OjMtqM=;
+	s=arc-20240116; t=1708670836; c=relaxed/simple;
+	bh=XaikJ0Vqxv5/owJt8g9Lm4uWIq8JbSQckm1iXMFhiCA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Unuu5gq1S/Uoo2/spxIpBsd0tqqarw+ntxtzcQ/yYvDwvIB8wxEYUSyaI9AZYd3RAdRjdfsxwYMgBxNon8JpZEwcy/homQSnmfkA1F7xUXsdZ5vMRpoKXe67STrdSdysAfq4B/GpXwHqRWEP4WGVbx1t2CWO1y8i3nvwi1xEq0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bbGXLkDp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D37C433C7;
-	Fri, 23 Feb 2024 06:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1708670006;
-	bh=dThcPl3XK7RY5dgaObaEGYKBmy4AdP7HURVc8OjMtqM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bbGXLkDp5iFFUzcPFhjNZZZda8EkIIp350je1FEuGhT5XE9PiyT3g+NZVCSI4OQlr
-	 BXX4mdQwq6AsXhyKzVQIGo1aw0RDEUt2j1Y+Kla2HPDX1pizKfWy/4sdcbYlIIBe3+
-	 4dkOcnvQXydNa9kd53NyHNIzLFoUnBVnHjU20F2c=
-Date: Fri, 23 Feb 2024 07:33:22 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Marc Herbert <marc.herbert@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=nRRUIumsSGIskvR8vTgpGDZ6mZ9npOITfL3XKqst9prCf56g1hmW9Gr5rOyEXl3/6LUypF7MNUK7dpK0dfds4kdJ1kQtR03HMrpmi6Qm9bk9Hh2X58+3ge2poNvFE0EVTDEFrPNvJAzeKkvDYhbv3hDJn847rRovL2nEQqiPB2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IYuc23ZA; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4129038a3deso3284245e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 22 Feb 2024 22:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708670833; x=1709275633; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kyd09IvSF7omogU+h/zyCJafYe8OOZZRjtS0nOars3k=;
+        b=IYuc23ZARILW5/tjz24Q7ZgV3ioxyVwmOk7nkZtO2lTIgxBC2dmmGkVswGM5iksCu4
+         f/LEQh06dQTRUB3cgh/pCUJndVMSlcrgXQkumHUTiE/umpjgevsfb7z6Y+0USqSdUawe
+         VIrbMH09DbT9HHS0qFXYuSjbZcegV0S9ONNoG4fQNK3sr7FrQiJkjtTFArmfbnL9etvG
+         b8e3M5dyWhxZ7zywnUmQrf0Sjj3ywELZYzf7WW43wBbarwfpSrHRDSj4pIZ/6ZrW6xyl
+         RkLA1WZK909brIfVav3dbkfDJr4YLtDkPjScFPreq2MnSipM3y6zKvoh43/2etauIjX9
+         XMqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708670833; x=1709275633;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kyd09IvSF7omogU+h/zyCJafYe8OOZZRjtS0nOars3k=;
+        b=LDZIJULfca7spLs7gqsavk1ZAHu63FaIu3zGgcQVVDDR1qkzrTTohAWdNr/bD07qm8
+         u1IqVXxZCa+P+ITYBFrNUl9a6xBeY8CHfkdnr0v2PqpdwDT9fALhyqpsc8bojd8H1ZZh
+         B9rXBaFtuKswO8YWQnSmlWzTTLMvpq0N2Q2HQOOK+Q0CVO0oCEfi2VffQ6zz8bjnL5cY
+         Aa7wc90pTpX1SHgL4zftZct8hoW2FQaN45W7677yVACI8aCkEybrUkskFZxijYfNRyZ9
+         j2QnUDzcPfhV8Vbc0WHJBo3Uc3+/sEFQSHlSImfCZskvKzjyOf4Yn5M87yfFGtNrHOwy
+         kAlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlSLyRW0dSAlJpYwkMOWaUYnzmbybjA0hG6jIaTNK92Fjzyl3y1/3WNM5ODFCYbmtM4OjqND3JT2lz2SzWE89KwC5/Vs0GzLaw
+X-Gm-Message-State: AOJu0YyfvocJAjMec4IRdgyUD2FL6NXRCtrZV5of4xth0kgnPx+72TS7
+	/OGzkjfKfN4IkuREroG+btg72trCunMnf6LdX7JsFRwuyeu68oSjcN3o9c4Blwk=
+X-Google-Smtp-Source: AGHT+IFa4F7JCo816qd08qJytnkaOEApdM3plMi+keu68PlvjipxHkYq76LVVneFPr/ZB9QKYJYcvQ==
+X-Received: by 2002:a05:600c:1f10:b0:412:5a3a:7ff4 with SMTP id bd16-20020a05600c1f1000b004125a3a7ff4mr643537wmb.38.1708670833141;
+        Thu, 22 Feb 2024 22:47:13 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id t6-20020a05600c450600b0040fdf5e6d40sm1162858wmo.20.2024.02.22.22.47.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Feb 2024 22:47:12 -0800 (PST)
+Date: Fri, 23 Feb 2024 09:47:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>, bhelgaas@google.com,
+	robin.murphy@arm.com, jgg@ziepe.ca, kevin.tian@intel.com,
+	dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
+	yi.l.liu@intel.com, iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-coco@lists.linux.dev, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 0/3] sysfs: Group visibility fixups
-Message-ID: <2024022342-unbroken-september-e58d@gregkh>
-References: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
+	Haorong Ye <yehaorong@bytedance.com>
+Subject: Re: [PATCH v13 1/3] PCI: make pci_dev_is_disconnected() helper
+ public for other drivers
+Message-ID: <88915639-b6cc-43f7-9ac7-8e2dde982757@moroto.mountain>
+References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
+ <20240222090251.2849702-2-haifeng.zhao@linux.intel.com>
+ <9c4637d5-6496-4c68-b2db-4be1e56ca746@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,28 +89,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170863444851.1479840.10249410842428140526.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <9c4637d5-6496-4c68-b2db-4be1e56ca746@linux.intel.com>
 
-On Thu, Feb 22, 2024 at 12:40:48PM -0800, Dan Williams wrote:
-> Hey Greg,
-> 
-> Marc was able to get me a backtrace for that bootup hang scenario that
-> Pierre noted here [1]. A Tested-by is still pending, but I am certain
-> this is the issue, and it may impact more than just the one platform if
-> that "empty_attrs" pattern has been repeated anywhere else in the
-> kernel.
-> 
-> I also took some time to document how to use the helpers a bit better,
-> and introduce DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() for cases where all
-> that matters is group visibility and not per attribute visibility.
-> 
-> [1]: http://lore.kernel.org/r/b93ec9c2-23f5-486b-a3dc-ed9b960df359@linux.intel.com
+I'm not a PCI maintainer, but first two patches seem good to me.  For
+the third patch, my complaints were really minor.  Let's just add a
+Fixes tag for sure, the rest is okay.
 
-I'll just queue these up now on my normal driver-core-next branch, and
-not worry about a stable tag as I doubt anyone wants that now.  But if
-they do, please let me know and I can provide one.
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-thanks for the quick fixes!
+regards,
+dan carpenter
 
-greg k-h
 
