@@ -1,64 +1,63 @@
-Return-Path: <linux-pci+bounces-3955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97864861F61
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 23:10:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B1C186201A
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 23:54:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52CD3285E31
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 22:10:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1501A287514
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Feb 2024 22:54:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D9B14CAC3;
-	Fri, 23 Feb 2024 22:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA90B146E6D;
+	Fri, 23 Feb 2024 22:54:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpLO6XnX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsZPHsz5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF49214CAAB;
-	Fri, 23 Feb 2024 22:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C491419B3;
+	Fri, 23 Feb 2024 22:54:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708726203; cv=none; b=WU+1S+MaXACWlXCvnJcaE29u0kZC7dImyhy6Xh++a9D7MlwFnnVyg+rcrymiYhvYY8VPQ/35p7AxPhX6xIb+QkQ3rjnzsFfvFz/aktXcg0yrP7hFwCo0XQM73hpyqExnm2t6ALPZObeZdlBC9Cl9REOiRj7hdBZO/S7VfyrAJG8=
+	t=1708728867; cv=none; b=LNp27+1yk39CtK8YfBtfDiaoiUtXXKc7yFGxyy/Zl9PMxwZ4pYxDhns932T4Tcwd5PEh6id9lN6hsMwoihiiUYKNOn26+49Zs2dVbikKKIHeSL9fp8gBVYHJMC2dW+H+QUNyZtrf0Km2bX4R9uMivot0beWUa40VwS/JBDsSs9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708726203; c=relaxed/simple;
-	bh=ddVApPNuf6tVk4Tbz93m9z7lMVLzrLppfynOoPkXXNM=;
+	s=arc-20240116; t=1708728867; c=relaxed/simple;
+	bh=0NSUedbjyUk5R7hCcVkUZdvNMS/jzvFh6DRYgWh6R8c=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=G9SYZfa5RIKWuWHKWEJLUeZ3e6nSeIn/cJhUzc1khzMBLY7jMx3NWuDQBxYzHg6txhpfKOumy4RQIymRLOS9I1tHqQyiP7WghD+icH4hxJxo5bLRL70ud0aNzU9bCteAAVjKpaU1+GPL6MUt/xsqL8MpWwIcT7gAUwOMVqIrnnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpLO6XnX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC52FC433F1;
-	Fri, 23 Feb 2024 22:10:01 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=sWLpSJihS8iibk9jpLNm7bSXecBhq2jioPyTzYD5E4UoY26hGHFHAC8905A2940t8HIbHimZmHKdj+80LFSMD65A7+CCvzO7bchFpdT8hEAIXbOAJ8jnwGDV0R1pUiJxOArAyolhVXbnQcoLCI7U5QsUqHAbeebw10QgH6844Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsZPHsz5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9C20C433C7;
+	Fri, 23 Feb 2024 22:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708726202;
-	bh=ddVApPNuf6tVk4Tbz93m9z7lMVLzrLppfynOoPkXXNM=;
+	s=k20201202; t=1708728867;
+	bh=0NSUedbjyUk5R7hCcVkUZdvNMS/jzvFh6DRYgWh6R8c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZpLO6XnX/konsdIIp8e+tRfeWzOtu1/s2BVvcXtk8MmrAw/V47QQD7APMk6oe8F6s
-	 2S5+EXTzP3qucJYpskwL3rvw8khnQoURsGphXbEOWwGFfi9J6ktiBJ/r3ebyNm1YJ7
-	 PPZbolW144cK7L7xtgvEXl3ibrEcAXOWtqxccI2fSIOgLZhODAdGzKFsi1uJPKi/4o
-	 XZADSyNx0OIdw/mlI+DSv/Yz/wgHF5JOv+/fEq7jtLluOmgbX7rlcFsPB2ozmA/5nQ
-	 +7xUfBuoUrh7yJWFwnLS92ZqOpxsjclNAgRnCB0alW1DzDpZH36+POAG+n051sZg/m
-	 I+uV4hjCDB1SA==
-Date: Fri, 23 Feb 2024 16:10:00 -0600
+	b=YsZPHsz5raerQE80c8dON9WhwjgnZnIGP/CdqHiR1h6RPx/Hkh44I+f91o0jhk7YG
+	 BrGNkJ9pKYgdC1yhLs9XycYQUqdZsKvjMuRDJP6Q31eySEYOGTZ1Fqz2ppsjHcmrbc
+	 UokZK/Ozi4TcwTfHV12hPMreJD5ha5pVFPGW9AtbseYWUrzmVwaX4wiJldsbPpiDbK
+	 HkGt/ointiIK+uT9jhDrVZ5kPeJn0fC19ztaqVy0IqfA4gFk0+H51IwRCvvvWJ756+
+	 yAVZItBMOnxXTUreSGnyOn+vY9PBRhiwL2ircyGdIoihcqcpGtwF2Elrkv1e8iQInp
+	 8pTiumOHJUagA==
+Date: Fri, 23 Feb 2024 16:54:25 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, konrad.dybcio@linaro.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+	dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_schintav@quicinc.com,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 04/12] PCI: qcom: Add support for disabling ASPM L0s
- in devicetree
-Message-ID: <20240223221000.GA118088@bhelgaas>
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
+Message-ID: <20240223225425.GA103870@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,86 +66,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240223152124.20042-5-johan+linaro@kernel.org>
+In-Reply-To: <1708697021-16877-2-git-send-email-quic_msarkar@quicinc.com>
 
-On Fri, Feb 23, 2024 at 04:21:16PM +0100, Johan Hovold wrote:
-> Commit 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting
-> 1.9.0 ops") started enabling ASPM unconditionally when the hardware
-> claims to support it. This triggers Correctable Errors for some PCIe
-> devices on machines like the Lenovo ThinkPad X13s, which could indicate
-> an incomplete driver ASPM implementation or that the hardware does in
-> fact not support L0s.
+On Fri, Feb 23, 2024 at 07:33:38PM +0530, Mrinmay Sarkar wrote:
+> Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
+> in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
+> the requester is indicating that there no cache coherency issues exit
+> for the addressed memory on the host i.e., memory is not cached. But
+> in reality, requester cannot assume this unless there is a complete
+> control/visibility over the addressed memory on the host.
 
-Are there any more details about this?  Do the errors occur around
-suspend/resume, a power state transition, or some other event?  Might
-other DWC-based devices be susceptible?  Is there a specific driver
-you suspect might be incomplete?
+s/that there no/that no/
+s/exit/exist/
 
-Do you want the DT approach because the problem is believed to be
-platform-specific?  Otherwise, maybe we should consider reverting
-9f4f3dfad8cf until the problem is understood?
+Forgive my ignorance here.  It sounds like the cache coherency issue
+would refer to system memory, so the relevant No Snoop attribute would
+be in DMA transactions, i.e., Memory Reads or Writes initiated by PCIe
+Endpoints.  But it looks like this patch would affect TLPs initiated
+by the Root Complex, not those from Endpoints, so I'm confused about 
+how this works.
 
-Could this be done via a quirk like quirk_disable_aspm_l0s()?  That
-currently uses pci_disable_link_state(), which I don't think is
-completely safe because it leaves the possibility that drivers or
-users could re-enable L0s, e.g., via sysfs.
+If this were in the qcom-ep driver, it would make sense that setting
+No Snoop in the TLPs initiated by the Endpoint could be a problem, but
+that doesn't seem to be what this patch is concerned with.
 
-This patch is nice because IIUC it directly changes PCI_EXP_LNKCAP,
-which avoids that issue, but quirk_disable_aspm_l0s() could
-conceivably be reimplemented to cache PCI_EXP_LNKCAP in struct pci_dev
-so quirks could override it, as we do with struct pci_dev.devcap.
-
-> Add support for disabling ASPM L0s in the devicetree when it is not
-> supported on a particular machine and controller.
+> And worst case, if the memory is cached on the host, it may lead to
+> memory corruption issues. It should be noted that the caching of memory
+> on the host is not solely dependent on the NO_SNOOP attribute in TLP.
 > 
-> Note that only the 1.9.0 ops enable ASPM currently.
+> So to avoid the corruption, this patch overrides the NO_SNOOP attribute
+> by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
+> needed for other upstream supported platforms since they do not set
+> NO_SNOOP attribute by default.
 > 
-> Fixes: 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops")
-> Cc: stable@vger.kernel.org      # 6.7
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 09d485df34b9..0fb5dc06d2ef 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -273,6 +273,25 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
->  	return 0;
->  }
->  
-> +static void qcom_pcie_clear_aspm_l0s(struct dw_pcie *pci)
-> +{
-> +	u16 offset;
-> +	u32 val;
-> +
-> +	if (!of_property_read_bool(pci->dev->of_node, "aspm-no-l0s"))
-> +		return;
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
-> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
-> +	val &= ~PCI_EXP_LNKCAP_ASPM_L0S;
-> +	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
-> +
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +}
-> +
->  static void qcom_pcie_clear_hpc(struct dw_pcie *pci)
->  {
->  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> @@ -962,6 +981,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
->  
->  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
->  {
-> +	qcom_pcie_clear_aspm_l0s(pcie->pci);
->  	qcom_pcie_clear_hpc(pcie->pci);
->  
->  	return 0;
-> -- 
-> 2.43.0
-> 
+> 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
+> platform. Assign enable_cache_snoop flag into struct qcom_pcie_cfg and
+> set it true in cfg_1_34_0 and enable cache snooping if this particular
+> flag is true.
+
+s/intruduce/introduce/
+
+Bjorn
 
