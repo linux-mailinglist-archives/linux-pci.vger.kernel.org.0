@@ -1,74 +1,75 @@
-Return-Path: <linux-pci+bounces-3960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85A3A8622F6
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 07:54:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13E9D8622FC
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 07:54:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18D011F2320D
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 06:54:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38C191C21C24
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 06:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291CB611A;
-	Sat, 24 Feb 2024 06:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B57B4C64;
+	Sat, 24 Feb 2024 06:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GnYXEgOO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QLxxhM9r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404DD522D
-	for <linux-pci@vger.kernel.org>; Sat, 24 Feb 2024 06:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1917592
+	for <linux-pci@vger.kernel.org>; Sat, 24 Feb 2024 06:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708757668; cv=none; b=N0CSyimd0zFhoW+JQBhmUVmtUiWbgXMQlJD7Gbyjst3aIJfOo0xXXNcOHNE/W53y2AS1l+YxyfYgTZGOT3m21NIHVpqCt/0EwFlCmSS+eEk9krkTdx4BkTgTy+v0GGlA2PR5kt7d82ZgcCcEZuW1PbiIMtM6O95xQbNlJgmF0aw=
+	t=1708757676; cv=none; b=CPNO/fOErj+LN/PQ4U39msLUHzV2O85IiJDmO34ByZciXmm6q6WxBn+HwWmolRmWxPbmDsfHb6Zi8z3p8Y5t/7gJRaI4ILuRR36OJckWTJqkfSa+Epc97qwuIzFir5kVR0hCIuIxSMMJT7vYG5R0MUTO4MA7EEk7RVG1bmQZSk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708757668; c=relaxed/simple;
-	bh=x754MZuCG5B4tIf+C0S5CY+BH4+h4u4WEZxh/Gpxfvg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jPNIX8gvXKXEekIlqwu9yo1J8V8V7La7AhpbjrjzHoua9X4hypMU457PhOMMwFd74jE1wa6091AxO0yTdlwUA2a7v7bCXG3VrLCziSvnVVTUuuZp8swQWorHmXDdqT/7EiAFfGPkvJ2/vFb56hb960qjzUFnoG72jA1v4mPoW/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GnYXEgOO; arc=none smtp.client-ip=209.85.161.43
+	s=arc-20240116; t=1708757676; c=relaxed/simple;
+	bh=brw5OQuV/Ik2l5C2ECpfbHlK/lWJv4K6yC6zoE4TG1w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qFBtrRJjaX63eYYW0+JZzqgavp8//8eYvL1QTNR/8VvI+IUKb4dXMeXQMrvaQloirRXLbspuyLLN5OgwWuDtJ/GL8dEjgYicF7I/rcgV16xHeWa+N7BObKUZIf3Batuj/AhPEpJtXX+MjWYY3k9gwOGzsX6qZ5O9L7Y9y/HIxHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QLxxhM9r; arc=none smtp.client-ip=209.85.167.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59927972125so1014882eaf.3
-        for <linux-pci@vger.kernel.org>; Fri, 23 Feb 2024 22:54:26 -0800 (PST)
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c1884c33a9so972392b6e.2
+        for <linux-pci@vger.kernel.org>; Fri, 23 Feb 2024 22:54:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708757665; x=1709362465; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GWgl52BYCJ4PwBk/V86UifQusawgYoQTONtG8UzIO9M=;
-        b=GnYXEgOOc5xlZKy0UQfJUzDot5toSA1U5mYw/ANbhN0qnQAU27mF61lg2tgR5XH1ZA
-         rcbb/lflS8VrBmGhuBIdvIOzBO4iq1qfQBLzJYNRzMVS9bSC6XhxLkV7d/BFa12zPD9n
-         ygAFWD1QwNVLPCzeUrSpB6sHB0GvhT9a+MIC0DE6HZo4RIDu5u5msrJKUZpsq6m5OzIq
-         P8o37Ki2S4CBGB2wyWtmWNnvR6JtdV52tuI2eUtrt0DUH8e7KtFGt1qflg9wfjHFfERu
-         dXPTyWDlIBZszXY9AjUeF9K4ObZGIWkpg2UxxGTDgAOGeu9454cMrTtNPUDhMVGI7Laq
-         4JTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708757665; x=1709362465;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1708757673; x=1709362473; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GWgl52BYCJ4PwBk/V86UifQusawgYoQTONtG8UzIO9M=;
-        b=wPlkIWd9BnYEM65sSfO5ewzI3sgRl2tmCWqrgGsWVjxS1eznEUhG4xO/QNaM28K4Yy
-         MfNgp1LtGoAbWJvtB7YkV9r5RGCHou4AyHQNR0dSfzNZ0qj3S3o9jT0NloEb7kQMw4gG
-         0MGhnjZzV0yWD0PoGkTAicJA5LfNKTPY1d9guN7EKJUQcBo5ocWovO05XahV5GruLchE
-         y9irgymfN2bXYUkShX/VBZGZ3/4ZQusx+xox0j+3jlaQHAmtiFw8cJu2rhfrHUMa6+z1
-         sucdyr8WD7+3vVJKdW+lpO2WoIfcW722uOl0juMdpViWGejUWWhLDpZlvOEO+Z70YLWl
-         dSpw==
-X-Gm-Message-State: AOJu0YxZmv1SlObIJNoCOU8N4rFkVjS6hVmTdznbJ+5FG0C4gXEmsM67
-	5OtWcphwrbDlUlRC50T4m00l598UaGdEdQPOaOhJd6I08QPvZQ5gNDjOjOfxKQ==
-X-Google-Smtp-Source: AGHT+IF06E9v7eucC47KNmijoQVmhjzoq9rivDk5iXaa+yfwLA6gzHHWi6ef9Qq7OZDo1ytULmGgdQ==
-X-Received: by 2002:a05:6358:7618:b0:17b:304f:b3d with SMTP id r24-20020a056358761800b0017b304f0b3dmr2293513rwg.23.1708757665005;
-        Fri, 23 Feb 2024 22:54:25 -0800 (PST)
+        bh=Mn2ASIeu7r3EoULMeRoBQbh1Psop/1NIFKdgQYb7+D4=;
+        b=QLxxhM9rMteUACjDKu9BlJjqTrm1C72ndJysY6ylG0vzXFMKUw0Tw+8qfIwugh8hK+
+         xA9dQOTNFhDn3COkawo9nJSGTxKOqp/gyIaOWRq7L/Tuk0bPYmdah1+x1OtM5ejp6JYh
+         G9sQZLyP/jMJgLXaUkXg90CrUVxNOz4NF8/dIcwAGmdFHpE4Wm13YwKuz9ZrJzYsLhxt
+         +CaKinPDeCeByzBsz3Gj9yldpbGxZCLn955CJUzBLFxaywIH19bmf87PJKBHOv6CdqVg
+         ahG7oQWHzQUOArj6B856xdMRkaY5ds8hWv8Qh0xIdgObBtWFUJ9kohyoa34ICiAg2lxe
+         0fuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708757673; x=1709362473;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mn2ASIeu7r3EoULMeRoBQbh1Psop/1NIFKdgQYb7+D4=;
+        b=da45xT+GscuJ8ohEX13nRwTlyLKHNZn7OfZyXr48ItrEVI2GanDq0jfuQHT/jRtM42
+         9BWXPq7ykkKxdE9Af174isQOinipFe1pKUzNwqZ4dKss5tqK+OLfTavhF8E0Q/M762QC
+         GbVCe+To4GkFqs1HpT5rPx2uAB0aa44bhwiifD2ngoWcko3Pu5Fub16S7DenSLg7uQPn
+         dmrmITtw/+8c8uev3py34Y/iK9ql1gpTSZi2puEH3Z7gf6F29wNqmtuxuMcAmmEqusl1
+         dNh112YxhIx3D2kpthxKuF7TX7A9dtg52su/Nxi13P7rvFHeqwN1aArI+hXlllmJFcyE
+         QfeA==
+X-Gm-Message-State: AOJu0YydopXWnkue+y8VtIl49397DSCIJYkoBxdqQva4zWuYMv0awGF4
+	dZO9RwGKC6Em5/r6Z1b97U10BvsyeWZI18eq5Wo6Qc06u+VvZotSaGE+UaIDSg==
+X-Google-Smtp-Source: AGHT+IGBAxKLgMSrx3D0p6tMCl/7cXKMsLNJciUQtg+3nr50O3OgHpw5mzYSGzkWC4yMYzxEhISWFw==
+X-Received: by 2002:a05:6808:3010:b0:3c1:36ac:2fea with SMTP id ay16-20020a056808301000b003c136ac2feamr2036396oib.10.1708757673610;
+        Fri, 23 Feb 2024 22:54:33 -0800 (PST)
 Received: from [127.0.1.1] ([120.138.12.46])
-        by smtp.gmail.com with ESMTPSA id r5-20020aa78b85000000b006e4cb7f4393sm502932pfd.165.2024.02.23.22.54.16
+        by smtp.gmail.com with ESMTPSA id r5-20020aa78b85000000b006e4cb7f4393sm502932pfd.165.2024.02.23.22.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Feb 2024 22:54:24 -0800 (PST)
+        Fri, 23 Feb 2024 22:54:33 -0800 (PST)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v8 00/10] PCI: dwc: ep: Fix DBI access failure for drivers
- requiring refclk from host
-Date: Sat, 24 Feb 2024 12:24:06 +0530
-Message-Id: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
+Date: Sat, 24 Feb 2024 12:24:07 +0530
+Subject: [PATCH v8 01/10] PCI: dwc: ep: Remove deinit() callback from
+ struct dw_pcie_ep_ops
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,9 +78,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAI6S2WUC/x3MMQqAMAxA0auUzAZKFLFeRRxsjRoELSmoULy7x
- fEN/2dIrMIJepNB+ZIk51HQVQbCNh0ro8zFQJYaS9RgDIKzF1S+T93REzs3teRqG6BEUXmR5x8
- O4/t+RAjzGGAAAAA=
+Message-Id: <20240224-pci-dbi-rework-v8-1-64c7fd0cfe64@linaro.org>
+References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
+In-Reply-To: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
 To: Jingoo Han <jingoohan1@gmail.com>, 
  Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -107,121 +108,136 @@ Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  Niklas Cassel <cassel@kernel.org>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4532;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4240;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=x754MZuCG5B4tIf+C0S5CY+BH4+h4u4WEZxh/Gpxfvg=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl2ZKQE8Qt4hWcXaLPZGKeHcZfe3X7OduUiUiV0
- oFeVosxH6eJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZdmSkAAKCRBVnxHm/pHO
- 9Tg+B/9h+50d00vh+TLHKGgy9bamVqprezEgWpVebuQtbPLH+0qaZ/yinkzuIHcFOSIYsepmyoF
- oxctWzI4aBO+ljYpcYNwRyR0U9rV/u4BaiB/PSHZyb/rV2K80Rnhwpg1H9T0rgaW5J9euOgIDYs
- QG2g/9pkqHm/o6enI9UHI1m4SNbYFo+qJGtSy8sWX0kPlfITYqKbKoMsJiT13Uo8mJIK9m32aLx
- XUeyXu7WaeT6766mCCWMuM04zRG+wA8qsTIEdw/DgXK0GfQa3HctlA/x04RvKdeIIqqzW+y6Vz3
- ys9mXnb7Q06Mk0kRPmzAWj3CCFOqVHo4+1bh2WFBOiVr7dkh
+ bh=brw5OQuV/Ik2l5C2ECpfbHlK/lWJv4K6yC6zoE4TG1w=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl2ZKV8PrPVZSd5HRR7G2F741l8Icm2yNIq7UQJ
+ qc+mL6yJuuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZdmSlQAKCRBVnxHm/pHO
+ 9YmPB/9X5Ta4E/Hhy7FsJgoBRr1RtBvMl2Lc7bKYhL7xUequSQ5WKmQiR6HE4VWQTM8CuGoxsmy
+ 5SyASkRwP3AXWWOfANkwRkUSzJZB+AFJHqNILrljTKPqLk30a9iVmPg7kUg5MiqHUsEHmjdcJdg
+ 9je0nna40J98Rs3EvE1Onr0L2ucC2O9lflmaquexdy3tcFMDgiIh3d/Qu4lbfYZAMN2+dB7Sv6u
+ lEB62w5XOBHeQ5ctN/+211oRIs91KzCE3IgHmquYjjEsySHHVvuvry141nyYK+GtyYPaFLZZbXc
+ c2PoIlx/WgOB4M0lwpVpD//ud0N20aIJp3n6eVplMuu6pSwm
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-Hello,
+deinit() callback was solely introduced for the pcie-rcar-gen4 driver where
+it is used to do platform specific resource deallocation. And this callback
+is called right at the end of the dw_pcie_ep_exit() API. So it doesn't
+matter whether it is called within or outside of dw_pcie_ep_exit() API.
 
-This series is the continuation of previous work by Vidya Sagar [1] to fix the
-issues related to accessing DBI register space before completing the core
-initialization in some EP platforms like Tegra194/234 and Qcom EP.
+So let's remove this callback and directly call rcar_gen4_pcie_ep_deinit()
+in pcie-rcar-gen4 driver to do resource deallocation after the completion
+of dw_pcie_ep_exit() API in rcar_gen4_remove_dw_pcie_ep().
 
-Since Vidya is busy, I took over the series based on his consent (off-list
-discussion).
-
-NOTE
-====
-
-Based on the comments received in v7 [2], I've heavily modified the series
-to fix several other issues reported by Bjorn and Niklas. One noticeable
-change is getting rid of the 'core_init_notifer' flag added to differentiate
-between glue drivers requiring refclk from host and drivers getting refclk
-locally.
-
-By getting rid of this flag, now both the DWC EP driver and the EPF drivers
-can use a single flow and need not distinguish between the glue drivers.
-
-We can also get rid of the 'link_up_notifier' flag in the future by following
-the same convention.
-
-Testing
-=======
-
-I've tested the series on Qcom SM8450 based dev board that depends on refclk
-from host with EPF_MHI driver. It'd be good to test this series on platforms
-that generate refclk locally and also with EPF_TEST driver.
-
-- Mani
-
-[1] https://lore.kernel.org/linux-pci/20221013175712.7539-1-vidyas@nvidia.com/
-[2] https://lore.kernel.org/linux-pci/20231120084014.108274-1-manivannan.sadhasivam@linaro.org/
-
-Changes in v8:
-
-- Rebased on top of v6.8-rc1
-- Removed the deinit callback from struct dw_pcie_ep_ops
-- Renamed dw_pcie_ep_exit() to dw_pcie_ep_deinit()
-- Introduced dw_pcie_ep_cleanup() API for drivers supporting PERST#
-- Renamed dw_pcie_ep_init_complete() to dw_pcie_ep_init_registers()
-- Called dw_pcie_ep_init_registers() API directly from all glue drivers
-- Removed "core_init_notifier" flag
-- Added a generic dw_pcie_ep_linkdown() API to handle LINK_DOWN event and used
-  it in qcom driver
-- Added Kernel-doc comments for DWC EP APIs
-
-Changes in v7:
-
-- Rebased on top of v6.7-rc1
-- Kept the current dw_pcie_ep_init_complete() API instead of renaming it to
-  dw_pcie_ep_init_late(), since changing the name causes a slight ambiguity.
-- Splitted the change that moves pci_epc_init_notify() inside
-  dw_pcie_ep_init_notify() to help bisecting and also to avoid build issue.
-- Added a new patch that moves pci_epc_init_notify() inside
-  dw_pcie_ep_init_notify().
-- Took over the authorship and dropped the previous Ack as the patches are
-  heavily modified.
-
-Changes in v6:
-
-- Rebased on top of pci/next (6e2fca71e187)
-- removed ep_init_late() callback as it is no longer necessary
-
-For previous changelog, please refer [1].
+This simplifies the DWC layer.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
-Manivannan Sadhasivam (10):
-      PCI: dwc: ep: Remove deinit() callback from struct dw_pcie_ep_ops
-      PCI: dwc: ep: Rename dw_pcie_ep_exit() to dw_pcie_ep_deinit()
-      PCI: dwc: ep: Introduce dw_pcie_ep_cleanup() API for drivers supporting PERST#
-      PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host
-      PCI: dwc: ep: Rename dw_pcie_ep_init_complete() to dw_pcie_ep_init_registers()
-      PCI: dwc: ep: Call dw_pcie_ep_init_registers() API directly from all glue drivers
-      PCI: dwc: ep: Remove "core_init_notifier" flag
-      PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle LINK_DOWN event
-      PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle LINK_DOWN event
-      PCI: dwc: ep: Add Kernel-doc comments for APIs
+ drivers/pci/controller/dwc/pcie-designware-ep.c |  9 +--------
+ drivers/pci/controller/dwc/pcie-designware.h    |  1 -
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c     | 14 ++++++++------
+ 3 files changed, 9 insertions(+), 15 deletions(-)
 
- drivers/pci/controller/dwc/pci-dra7xx.c           |   9 +
- drivers/pci/controller/dwc/pci-imx6.c             |  10 +
- drivers/pci/controller/dwc/pci-keystone.c         |  11 +
- drivers/pci/controller/dwc/pci-layerscape-ep.c    |   9 +
- drivers/pci/controller/dwc/pcie-designware-ep.c   | 307 +++++++++++++++-------
- drivers/pci/controller/dwc/pcie-designware-plat.c |  11 +
- drivers/pci/controller/dwc/pcie-designware.h      |  19 +-
- drivers/pci/controller/dwc/pcie-qcom-ep.c         |   6 +-
- drivers/pci/controller/dwc/pcie-rcar-gen4.c       |  28 +-
- drivers/pci/controller/dwc/pcie-tegra194.c        |   5 +-
- drivers/pci/controller/dwc/pcie-uniphier-ep.c     |  15 +-
- drivers/pci/endpoint/functions/pci-epf-test.c     |  18 +-
- include/linux/pci-epc.h                           |   3 -
- 13 files changed, 321 insertions(+), 130 deletions(-)
----
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20240224-pci-dbi-rework-b2e99a62930c
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 5befed2dc02b..d305f9b4cdfe 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -575,9 +575,6 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+ 			      epc->mem->window.page_size);
+ 
+ 	pci_epc_mem_exit(epc);
+-
+-	if (ep->ops->deinit)
+-		ep->ops->deinit(ep);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_exit);
+ 
+@@ -738,7 +735,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 			       ep->page_size);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to initialize address space\n");
+-		goto err_ep_deinit;
++		return ret;
+ 	}
+ 
+ 	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+@@ -775,10 +772,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ err_exit_epc_mem:
+ 	pci_epc_mem_exit(epc);
+ 
+-err_ep_deinit:
+-	if (ep->ops->deinit)
+-		ep->ops->deinit(ep);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 26dae4837462..ab7431a37209 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -333,7 +333,6 @@ struct dw_pcie_rp {
+ struct dw_pcie_ep_ops {
+ 	void	(*pre_init)(struct dw_pcie_ep *ep);
+ 	void	(*init)(struct dw_pcie_ep *ep);
+-	void	(*deinit)(struct dw_pcie_ep *ep);
+ 	int	(*raise_irq)(struct dw_pcie_ep *ep, u8 func_no,
+ 			     unsigned int type, u16 interrupt_num);
+ 	const struct pci_epc_features* (*get_features)(struct dw_pcie_ep *ep);
+diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+index e9166619b1f9..ac97d594ea47 100644
+--- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
++++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+@@ -352,11 +352,8 @@ static void rcar_gen4_pcie_ep_init(struct dw_pcie_ep *ep)
+ 		dw_pcie_ep_reset_bar(pci, bar);
+ }
+ 
+-static void rcar_gen4_pcie_ep_deinit(struct dw_pcie_ep *ep)
++static void rcar_gen4_pcie_ep_deinit(struct rcar_gen4_pcie *rcar)
+ {
+-	struct dw_pcie *dw = to_dw_pcie_from_ep(ep);
+-	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+-
+ 	writel(0, rcar->base + PCIEDMAINTSTSEN);
+ 	rcar_gen4_pcie_common_deinit(rcar);
+ }
+@@ -408,7 +405,6 @@ static unsigned int rcar_gen4_pcie_ep_get_dbi2_offset(struct dw_pcie_ep *ep,
+ static const struct dw_pcie_ep_ops pcie_ep_ops = {
+ 	.pre_init = rcar_gen4_pcie_ep_pre_init,
+ 	.init = rcar_gen4_pcie_ep_init,
+-	.deinit = rcar_gen4_pcie_ep_deinit,
+ 	.raise_irq = rcar_gen4_pcie_ep_raise_irq,
+ 	.get_features = rcar_gen4_pcie_ep_get_features,
+ 	.get_dbi_offset = rcar_gen4_pcie_ep_get_dbi_offset,
+@@ -418,18 +414,24 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
+ static int rcar_gen4_add_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
+ {
+ 	struct dw_pcie_ep *ep = &rcar->dw.ep;
++	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_PCIE_RCAR_GEN4_EP))
+ 		return -ENODEV;
+ 
+ 	ep->ops = &pcie_ep_ops;
+ 
+-	return dw_pcie_ep_init(ep);
++	ret = dw_pcie_ep_init(ep);
++	if (ret)
++		rcar_gen4_pcie_ep_deinit(rcar);
++
++	return ret;
+ }
+ 
+ static void rcar_gen4_remove_dw_pcie_ep(struct rcar_gen4_pcie *rcar)
+ {
+ 	dw_pcie_ep_exit(&rcar->dw.ep);
++	rcar_gen4_pcie_ep_deinit(rcar);
+ }
+ 
+ /* Common */
 
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.25.1
 
 
