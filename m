@@ -1,241 +1,182 @@
-Return-Path: <linux-pci+bounces-3974-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3975-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75CB486264E
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 18:27:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 326D98627A9
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 22:05:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 105231F21BA1
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 17:27:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D120828231C
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Feb 2024 21:05:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00A041238;
-	Sat, 24 Feb 2024 17:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAF033F9DE;
+	Sat, 24 Feb 2024 21:05:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jtxdE8T4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcCnlgX0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8953E493
-	for <linux-pci@vger.kernel.org>; Sat, 24 Feb 2024 17:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A6913FEE;
+	Sat, 24 Feb 2024 21:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708795662; cv=none; b=hLvgPdJOJmxjqsY6WBWDJT2IGLzksqoeFn+y9Bk59JZI85j8R9PQGD6AklbCwkLdFl9RIlixW8eFfRHPaw4N9FWWrp3C8UM4dpss8NFg07ix6QBSkrbyFtLSyio36FgfB1meH24dMsxiwJLlqFubQN1LLuxfLdfsPFi4lHEtATU=
+	t=1708808709; cv=none; b=SiTq0QHe/UYjEf6lUTsJXLwoNynHXdCw57OuZAaAmRkFwsNibDC+kULqWkFWRibLBxkU2SdQfP/KvQmFnIFGVL0WdN3BzoyDZRNFOWxA8hvd8lyAY/dRe24REr1zX8A4U/lpE5pmeXJ2gYDUCBDKX46XC1/vzyXl2GVWBNyvNso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708795662; c=relaxed/simple;
-	bh=3DejVgMHZt9Ub5GJb4tJuaex9BtcToBBfGoS7bwEBp8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=I+gs+8v0mpPDREww6o98vav46rPg6lwPqaok873fT/gp/vzlXe+wQ9u7Zj1YaZ6MAt29GvdbkPEhR247LRf2rpmYZ3EXYe0w/W4clYynjwnS2bpbXYdbe3mjxdRnubnIS9kSLTsHvRUClq93e8adZrHxXBJkSpoJv2Sacwxg/rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jtxdE8T4; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708795660; x=1740331660;
-  h=date:from:to:cc:subject:message-id;
-  bh=3DejVgMHZt9Ub5GJb4tJuaex9BtcToBBfGoS7bwEBp8=;
-  b=jtxdE8T4C7ORbGtysk98RU9bR8Jr5dAHx0lQSKiwKOpGrhY3jHgwkQ9F
-   plGFOFwryIGCG0ussi4PjBRyh1UnRShnralnN7hQZcHLvT2tPQekvHVI7
-   4ccvZ2o1B3zEOU8KTqj5t19iciAeiCFwQxZzDNVANFPKMCVncFV9XQhbJ
-   JaA2YPYzY4/NxH47vppPYxgGvbZlHlo8aNNphjxGC+f9cy5eyO21Z4ehJ
-   KsqPDdG1/5O+VNsZsW5Ywf1xogU7JWE6iJWrV5JFtIayp9GZX59VagFMR
-   l+fAFsfLAlQCHgE7/9I4QrW+5zyeFr7j4twcfFR0AUa8fl08u6oJPcNON
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10994"; a="2991773"
-X-IronPort-AV: E=Sophos;i="6.06,182,1705392000"; 
-   d="scan'208";a="2991773"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2024 09:27:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,182,1705392000"; 
-   d="scan'208";a="43687381"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 24 Feb 2024 09:27:37 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rdvnl-0008lC-0A;
-	Sat, 24 Feb 2024 17:27:14 +0000
-Date: Sun, 25 Feb 2024 01:23:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:aspm-rework] BUILD SUCCESS
- cbb3acdb8e2ff4594bb3fd4c77c202bdf6c2b9b9
-Message-ID: <202402250140.VePKjgVX-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1708808709; c=relaxed/simple;
+	bh=/iLUFu2cyMFc+xcXmYpXe4j9gnUijS+nCA/RXDBwlRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dJBAbKkQI3tb2Ig7lzJcYlrYBXyhOGxn3hrzVyBAO4RQ+MubX2lFITaygv8sMr5EQuAYtyiwc6q81DVssVTZ2MkdpyflPI77/YppY8gcGEPhW5R7MUNpLhdG3wLLFRjFCMYhAthdg0Fyns1JT79RBCorQ+YDpy7iuAIZAtUSYrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JcCnlgX0; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d228a132acso21017181fa.0;
+        Sat, 24 Feb 2024 13:05:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708808706; x=1709413506; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W0zJcQ8ouGTUzzD7+nYmZbHgKeywOxwfz2KNwg9sLWI=;
+        b=JcCnlgX0d0SLQCRd+WWMDHcAms9G9MkvTEThxJv29UzIUE3DE/AlT36KR88S1XmHgH
+         xVhEq1sksIcuxDVvKrNDcDK7o/6Chq7OGNukbZ5Xkj0XaOUKkHaqHOZ1/7fenit/ktOD
+         SSRWKCb/Jxpfgcw6EM2aBhZ1U4bOWaNoC/WDqznvJCW9ObfkpotqQ+Ya2IG8J9fw+VhL
+         0J6zuVTn2mz7LLth6R/EoXakDUeOxmtXDxV/tHnMWmRbdil3jIytSosKKFfvKqtBktt2
+         HPkbxHQ/CspeThUH/OaAJJLiex63uPWqhz3fIT+Vl55OW5iS2y3Ai0XhNp/HwxIQ07WZ
+         CXNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708808706; x=1709413506;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W0zJcQ8ouGTUzzD7+nYmZbHgKeywOxwfz2KNwg9sLWI=;
+        b=I3Qy8pgFqJ+hOIM01BKm/H87JsiX/ssx8evCfkeSelMVioGxW6xGgoEWfy35/NzltV
+         yYlCzMFsle6bXAzo23z7bO3Z/Wztk9+Uecw7HnL86RI6AXmwvEoVRNQ0XT2BqCOk5pBM
+         GRwCiszqinwDKrkrT+7bU4JAYjEgM66WBU1Xaam0pF5IRtg6TLDdlqK57dXdXii9QrON
+         NOlk0nKobijA5r5fodVLyf3eutSvIFfz+s05HaACHdcQaC5aUiG4m+qWyXK5YdIDf+qG
+         2rfrPgF2P2rrDQ32xA+OLsKufN18t2AEvUaLXSORCXwP6iaOL47VnecdRy0sQnAim/g+
+         sulw==
+X-Forwarded-Encrypted: i=1; AJvYcCWXTpDjw26/j8G71erx2bLMS3pm2gVTYXpqcdn6wsUkkJEe8Mprkvzfu+44DuiIjH7BWtmYA6KGFpVwsSGyMOKAd8XMIb1uSpK6kpL7IcWGL/9VsoyQWOXipKBDKzvs4ER+IYSyfC16gNiuUkNy0CwNv9GUKyxSY4VLKvTfETtkhPOBN8AVIVjAdggv1wJLZR6L0VFFK8a4b/aFwIBFUMo=
+X-Gm-Message-State: AOJu0YyhloYJT9FFBMLDxMHGjhdXI2LrtIlnrbIeI13psEoUJHMz3hd7
+	RVvjCkgBXtdjAWraG+e+hxxny1Sy5XCJhCKAFTMclUTpoahUGZm7vh+Ptl+GQ8Q=
+X-Google-Smtp-Source: AGHT+IHXz+Y7vjO2Rc8Lh/ENnMh94PusIcnBbgtoLaalbI1TNJ7fJQ5N0MPyiI5B1QX7vnyZs206YA==
+X-Received: by 2002:ac2:5d24:0:b0:512:e4f4:b562 with SMTP id i4-20020ac25d24000000b00512e4f4b562mr1754607lfb.31.1708808705778;
+        Sat, 24 Feb 2024 13:05:05 -0800 (PST)
+Received: from bhlegrsu.conti.de ([2a02:908:2525:6ea0:2bc0:19d3:9979:8e10])
+        by smtp.googlemail.com with ESMTPSA id c22-20020a170906171600b00a3e4efbfdacsm891148eje.225.2024.02.24.13.05.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Feb 2024 13:05:05 -0800 (PST)
+From: Wadim Mueller <wafgo01@gmail.com>
+To: 
+Cc: Wadim Mueller <wafgo01@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Shunsuke Mie <mie@igel.co.jp>,
+	linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: [PATCH 0/3] Add support for Block Passthrough Endpoint function driver
+Date: Sat, 24 Feb 2024 22:03:59 +0100
+Message-Id: <20240224210409.112333-1-wafgo01@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aspm-rework
-branch HEAD: cbb3acdb8e2ff4594bb3fd4c77c202bdf6c2b9b9  PCI/ASPM: Update save_state when configuration changes
+Hello,
 
-elapsed time: 1199m
+This series adds support for the Block Passthrough PCI(e) Endpoint functionality.
+PCI Block Device Passthrough allows one Linux Device running in EP mode to expose its Block devices to the PCI(e) host (RC). The device can export either the full disk or just certain partitions.
+Also an export in readonly mode is possible. This is useful if you want to share the same blockdevice between different SoCs, providing each SoC its own partition(s).
 
-configs tested: 152
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Block Passthrough
+==================
+The PCI Block Passthrough can be a useful feature if you have multiple SoCs in your system connected
+through a PCI(e) link, one running in RC mode, the other in EP mode.
+If the block devices are connected to one SoC (SoC2 in EP Mode from the diagramm below) and you want to access
+those from the other SoC (SoC1 in RC mode below), without having any direct connection to
+those block devices (e.g. if you want to share an NVMe between two SoCs). An simple example of such a configurationis is shown below:
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240224   gcc  
-arc                   randconfig-002-20240224   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
-arm                                 defconfig   clang
-arm                             pxa_defconfig   gcc  
-arm                   randconfig-001-20240224   gcc  
-arm                   randconfig-002-20240224   gcc  
-arm                   randconfig-003-20240224   gcc  
-arm                   randconfig-004-20240224   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240224   gcc  
-arm64                 randconfig-002-20240224   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240224   gcc  
-csky                  randconfig-002-20240224   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-002-20240224   clang
-i386         buildonly-randconfig-005-20240224   clang
-i386         buildonly-randconfig-006-20240224   clang
-i386                                defconfig   clang
-i386                  randconfig-002-20240224   clang
-i386                  randconfig-003-20240224   clang
-i386                  randconfig-013-20240224   clang
-i386                  randconfig-014-20240224   clang
-i386                  randconfig-015-20240224   clang
-i386                  randconfig-016-20240224   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240224   gcc  
-loongarch             randconfig-002-20240224   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   gcc  
-mips                      maltasmvp_defconfig   gcc  
-mips                          rm200_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240224   gcc  
-nios2                 randconfig-002-20240224   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                       virt_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc                randconfig-001-20240224   gcc  
-parisc                randconfig-002-20240224   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                    mvme5100_defconfig   gcc  
-powerpc64             randconfig-001-20240224   gcc  
-powerpc64             randconfig-003-20240224   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240224   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240224   gcc  
-s390                  randconfig-002-20240224   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                     magicpanelr2_defconfig   gcc  
-sh                    randconfig-001-20240224   gcc  
-sh                    randconfig-002-20240224   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240224   gcc  
-sparc64               randconfig-002-20240224   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240224   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240224   clang
-x86_64       buildonly-randconfig-002-20240224   clang
-x86_64       buildonly-randconfig-003-20240224   clang
-x86_64       buildonly-randconfig-004-20240224   clang
-x86_64       buildonly-randconfig-005-20240224   clang
-x86_64       buildonly-randconfig-006-20240224   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240224   clang
-x86_64                randconfig-003-20240224   clang
-x86_64                randconfig-006-20240224   clang
-x86_64                randconfig-014-20240224   clang
-x86_64                randconfig-015-20240224   clang
-x86_64                randconfig-016-20240224   clang
-x86_64                randconfig-072-20240224   clang
-x86_64                randconfig-073-20240224   clang
-x86_64                randconfig-076-20240224   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240224   gcc  
-xtensa                randconfig-002-20240224   gcc  
+
+                                                           +-------------+
+                                                           |             |
+                                                           |   SD Card   |
+                                                           |             |
+                                                           +------^------+
+                                                                  |
+                                                                  |
+    +--------------------------+                +-----------------v----------------+
+    |                          |      PCI(e)    |                                  |
+    |         SoC1 (RC)        |<-------------->|            SoC2 (EP)             |
+    | (CONFIG_PCI_REMOTE_DISK) |                |(CONFIG_PCI_EPF_BLOCK_PASSTHROUGH)|
+    |                          |                |                                  |
+    +--------------------------+                +-----------------^----------------+
+                                                                  |
+                                                                  |
+                                                           +------v------+
+                                                           |             |
+                                                           |    NVMe     |
+                                                           |             |
+                                                           +-------------+
+
+
+This is to a certain extent a similar functionality which NBD exposes over Network, but on the PCI(e) bus utilizing the EPC/EPF Kernel Framework.
+
+The Endpoint Function driver creates parallel Queues which run on seperate CPU Cores using percpu structures. The number of parallel queues is limited
+by the number of CPUs on the EP device. The actual number of queues is configurable (as all other features of the driver) through CONFIGFS.
+
+A documentation about the functional description as well as a user guide showing how both drivers can be configured is part of this series.
+
+Test setup
+==========
+
+This series has been tested on an NXP S32G2 SoC running in Endpoint mode with a direct connection to an ARM64 host machine.
+
+A performance measurement on the described setup shows good performance metrics. The S32G2 SoC has a 2xGen3 link which has a maximum Bandwidth of ~2GiB/s.
+With the explained setup a Read Datarate of 1.3GiB/s (with DMA ... without DMA the speed saturated at ~200MiB/s) was achieved using an 512GiB Kingston NVMe
+when accessing the NVMe from the ARM64 (SoC1) Host. The local Read Datarate accessing the NVMe dirctly from the S32G2 (SoC2) was around 1.5GiB.
+
+The measurement was done through the FIO tool [1] with 4kiB Blocks.
+
+[1] https://linux.die.net/man/1/fio
+
+Wadim Mueller (3):
+  PCI: Add PCI Endpoint function driver for Block-device passthrough
+  PCI: Add PCI driver for a PCI EP remote Blockdevice
+  Documentation: PCI: Add documentation for the PCI Block Passthrough
+
+ .../function/binding/pci-block-passthru.rst   |   24 +
+ Documentation/PCI/endpoint/index.rst          |    3 +
+ .../pci-endpoint-block-passthru-function.rst  |  331 ++++
+ .../pci-endpoint-block-passthru-howto.rst     |  158 ++
+ MAINTAINERS                                   |    8 +
+ drivers/block/Kconfig                         |   14 +
+ drivers/block/Makefile                        |    1 +
+ drivers/block/pci-remote-disk.c               | 1047 +++++++++++++
+ drivers/pci/endpoint/functions/Kconfig        |   12 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ .../functions/pci-epf-block-passthru.c        | 1393 +++++++++++++++++
+ include/linux/pci-epf-block-passthru.h        |   77 +
+ 12 files changed, 3069 insertions(+)
+ create mode 100644 Documentation/PCI/endpoint/function/binding/pci-block-passthru.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-passthru-function.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-passthru-howto.rst
+ create mode 100644 drivers/block/pci-remote-disk.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-block-passthru.c
+ create mode 100644 include/linux/pci-epf-block-passthru.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
 
