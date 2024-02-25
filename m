@@ -1,194 +1,182 @@
-Return-Path: <linux-pci+bounces-3980-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3981-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39098862B72
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Feb 2024 17:09:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77924862C94
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Feb 2024 20:33:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89B58B211A9
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Feb 2024 16:09:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 035E11F21450
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Feb 2024 19:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8947C12E70;
-	Sun, 25 Feb 2024 16:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70C3318645;
+	Sun, 25 Feb 2024 19:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="asg93LvR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JkxpH8do"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADE71773A
-	for <linux-pci@vger.kernel.org>; Sun, 25 Feb 2024 16:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29F717997;
+	Sun, 25 Feb 2024 19:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708877376; cv=none; b=ceJB1AQTmOmGpgCgwnR3apSr+/nIRHDOLXU0YAQWLSYKC0I/9c0Gbii2gQFZh1glQAEuN6qOX8mZO4B6LNtMzoYTeZd1NkQa4um1qISBpjPUk2qwyu1hMQTalar6A7VQdeg+G5+4eoHI3h8+XJjS50IJzpkSsStsPil527OYGEk=
+	t=1708889629; cv=none; b=bmEvl3FO1mlvIJ1Ikbq8lLOl9STk7dgqtZOdLP197nT8xsJCt3DopsvTemfaVpwpM0bNDdTmz91mhDRwwLmYWdIydtxqI4BeiV1ZhDEFfqu/GezXsqNzKns32Mr0gkaJAOof3OUMMhxtGlguVOcLuq5gKYOuwIlD0rg7krVBVGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708877376; c=relaxed/simple;
-	bh=CXVFzfxGpn9qFW0iQ3fUvAoQ4Dnr+o7skXfAk4DfHeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bAC7/zczQYkmKbCS4qOGPFfeDyBLEKmLsoYsRPTiqFIr6xPhnCwAzKOW5TVu3E9vRN489akfaI12eW2Xp0FJ6ezVzytpimSODTyI9MSNpnCBdj+YUbfVX9DqNkQY6aiEePaSD/YD80cQtmjBzFkgJYwGRXigJb9O0Qfdbw1ZmKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=asg93LvR; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5dbf7b74402so1941410a12.0
-        for <linux-pci@vger.kernel.org>; Sun, 25 Feb 2024 08:09:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708877373; x=1709482173; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2cB6oxKBDQvRDzfa7GxlQ1uXrMwFDIwByZ0N4Dfmmns=;
-        b=asg93LvRQqCxfd8oyh9AGARiAEXBHex8qNukHySCUNnHXpSy3WiVeU3i/nOy5O3Q5H
-         ShSKa+bJ7ZNmfyGcAarfCfnDrtr+9PGtNgTbQoBJAYUKO+1o4DoUf9z5WiqiYlCpicm6
-         OMYGmFjf9gIXkvsPxy4xMXyhk0/tNJFVk5EQ7sOZT0z4eIz10KHPnT7xBEGf/1X+o5Y1
-         aN+YjgzlBIjZl4jcrNW2W2ewY/YaY2/h6HI6UDa7wRw7YHJDarPn/FgiZn7EjgiXjO/Y
-         49Ozi1GnFdAUd+eMqMiz7cfoVi5UuHQl40qOoKWad2dL9Sz53xBJssCDbkhexsvF8tXk
-         Yrkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708877373; x=1709482173;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2cB6oxKBDQvRDzfa7GxlQ1uXrMwFDIwByZ0N4Dfmmns=;
-        b=SkkWQAv8m4+EsfhU9YdQ03kr0Bwtub0ROxBfF0GIADcNohP8JLOlGNAykxBlTW75bv
-         blV1CmFAL/uzbKiOjzxAhPNg8tWs9OeLyHcJjvQ6ZkaPI8RuIRTteGtEkl7JjwUbYsaX
-         ZMSoSGUM+KutbsYhJH+eea3mRizLcCk+yRxQc38ZlJ69ixGzAFjKeK/AmJ0X21ZBrsBl
-         2c6tYeC3Iu0sNHMqeDPEpdmytNcZZv7UI7BMaLu6VJFsWrG1ET09l3vff9lGeVKNQqqh
-         +gHvsdCuR+rEugSkN7z8kXItpfkaME6euiXNJm5DMcgDaiz/UxdvA3w1pWFGwlLL/i+w
-         BAYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkQssmU6t1vQeAcgv5ArC4Xo+9PiNat+umoblW1W8VjHDa8zlEUQHQqGGap9+raZdc10e6i/vqWi8jHDBrPXybNBxIwsEKQxwO
-X-Gm-Message-State: AOJu0Yys6b2B9aSQNFLRPOEV5/yemX4EkiSo4uUF5wvi9ECpJXBDA8dh
-	ilPfO7myaXBOEk222VIpMJVmLl6J/D+9+gxb6sDHMBXvViw4rrGiLlzu/bVKmg==
-X-Google-Smtp-Source: AGHT+IGQbcNzjmDRKIKLEdITzXTWaRNodmOp/SEhRlcPD3qZCwGAjUzjwC35n9gDwnqOyp00/kTIEA==
-X-Received: by 2002:a05:6a20:9f03:b0:1a0:a61d:1230 with SMTP id mk3-20020a056a209f0300b001a0a61d1230mr4242673pzb.23.1708877373021;
-        Sun, 25 Feb 2024 08:09:33 -0800 (PST)
-Received: from thinkpad ([103.246.195.16])
-        by smtp.gmail.com with ESMTPSA id f26-20020aa79d9a000000b006e4f0e2cc52sm2470639pfq.168.2024.02.25.08.09.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Feb 2024 08:09:32 -0800 (PST)
-Date: Sun, 25 Feb 2024 21:39:26 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Wadim Mueller <wafgo01@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>, Shunsuke Mie <mie@igel.co.jp>,
-	linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: Re: [PATCH 0/3] Add support for Block Passthrough Endpoint function
- driver
-Message-ID: <20240225160926.GA58532@thinkpad>
-References: <20240224210409.112333-1-wafgo01@gmail.com>
+	s=arc-20240116; t=1708889629; c=relaxed/simple;
+	bh=ii9IDhIV83iifwH6mIMhAiwVq+0wGwlwsd70iKz9Gfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MDHTZ2aMuttMP8dWZTdAB54IfrDK+6sZJuqvCaKXVl3RW357CfyPeAs3d13C17t89bSrynnijgvgNMhD6pAkha1/iHL2BAMtON+FB2nCQ04+UgClL9aEdGkPHUv9y6quWaToqyCei0hw/NMU5iWaxxyB91LQFuJ1LIutG4B8gxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JkxpH8do; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708889627; x=1740425627;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ii9IDhIV83iifwH6mIMhAiwVq+0wGwlwsd70iKz9Gfo=;
+  b=JkxpH8doJJpzxxmtZkGIOmd9dhbesXPaTGdekrxR49gstm1orYfIZQZo
+   IG7V5hOQMzWNYZgBaDdoNUvIcrdL3EB5Qur2vIRTPfS8/8x0ERT1jNRY3
+   Ab8mhVfjC7uB3FARvCFOpqyEpZ6Tdo/VAWx7NyrLK9wSmRgkrHKxw6Ion
+   6w87/LGKeguNnNcoRHPOPaT5FOYZjB9UVnZ5INVExDtckqCzRQ3Cs9LS1
+   Pwdz/pjShI802diNcxcHNORUATyNc7uIhrm3WIV6FC1hgwcw5TFGOTVbT
+   OZgItQhq6TCoeo3b4E6X2kQSjwq26TlDmFKACGSa+IqaG1wGHL3Rois+q
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="3082799"
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="3082799"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 11:33:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
+   d="scan'208";a="6585485"
+Received: from gcsargen-mobl1.amr.corp.intel.com (HELO [10.255.228.214]) ([10.255.228.214])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 11:33:45 -0800
+Message-ID: <935f15e5-1d2b-4aaf-880d-00d9ba16eaaa@linux.intel.com>
+Date: Sun, 25 Feb 2024 11:33:44 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI/DPC: Request DPC only if also requesting AER
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+ Matthew W Carlis <mattc@purestorage.com>, Keith Busch <kbusch@kernel.org>,
+ Lukas Wunner <lukas@wunner.de>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>
+References: <20240221232523.GA1533169@bhelgaas>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240221232523.GA1533169@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240224210409.112333-1-wafgo01@gmail.com>
 
-On Sat, Feb 24, 2024 at 10:03:59PM +0100, Wadim Mueller wrote:
-> Hello,
-> 
-> This series adds support for the Block Passthrough PCI(e) Endpoint functionality.
-> PCI Block Device Passthrough allows one Linux Device running in EP mode to expose its Block devices to the PCI(e) host (RC). The device can export either the full disk or just certain partitions.
-> Also an export in readonly mode is possible. This is useful if you want to share the same blockdevice between different SoCs, providing each SoC its own partition(s).
-> 
-> 
-> Block Passthrough
-> ==================
-> The PCI Block Passthrough can be a useful feature if you have multiple SoCs in your system connected
-> through a PCI(e) link, one running in RC mode, the other in EP mode.
-> If the block devices are connected to one SoC (SoC2 in EP Mode from the diagramm below) and you want to access
-> those from the other SoC (SoC1 in RC mode below), without having any direct connection to
-> those block devices (e.g. if you want to share an NVMe between two SoCs). An simple example of such a configurationis is shown below:
-> 
-> 
->                                                            +-------------+
->                                                            |             |
->                                                            |   SD Card   |
->                                                            |             |
->                                                            +------^------+
->                                                                   |
->                                                                   |
->     +--------------------------+                +-----------------v----------------+
->     |                          |      PCI(e)    |                                  |
->     |         SoC1 (RC)        |<-------------->|            SoC2 (EP)             |
->     | (CONFIG_PCI_REMOTE_DISK) |                |(CONFIG_PCI_EPF_BLOCK_PASSTHROUGH)|
->     |                          |                |                                  |
->     +--------------------------+                +-----------------^----------------+
->                                                                   |
->                                                                   |
->                                                            +------v------+
->                                                            |             |
->                                                            |    NVMe     |
->                                                            |             |
->                                                            +-------------+
-> 
-> 
-> This is to a certain extent a similar functionality which NBD exposes over Network, but on the PCI(e) bus utilizing the EPC/EPF Kernel Framework.
-> 
-> The Endpoint Function driver creates parallel Queues which run on seperate CPU Cores using percpu structures. The number of parallel queues is limited
-> by the number of CPUs on the EP device. The actual number of queues is configurable (as all other features of the driver) through CONFIGFS.
-> 
-> A documentation about the functional description as well as a user guide showing how both drivers can be configured is part of this series.
-> 
-> Test setup
-> ==========
-> 
-> This series has been tested on an NXP S32G2 SoC running in Endpoint mode with a direct connection to an ARM64 host machine.
-> 
-> A performance measurement on the described setup shows good performance metrics. The S32G2 SoC has a 2xGen3 link which has a maximum Bandwidth of ~2GiB/s.
-> With the explained setup a Read Datarate of 1.3GiB/s (with DMA ... without DMA the speed saturated at ~200MiB/s) was achieved using an 512GiB Kingston NVMe
-> when accessing the NVMe from the ARM64 (SoC1) Host. The local Read Datarate accessing the NVMe dirctly from the S32G2 (SoC2) was around 1.5GiB.
-> 
-> The measurement was done through the FIO tool [1] with 4kiB Blocks.
-> 
-> [1] https://linux.die.net/man/1/fio
-> 
 
-Thanks for the proposal! We are planning to add virtio function support to
-endpoint subsystem to cover usecases like this. I think your usecase can be
-satisfied using vitio-blk. Maybe you can add the virtio-blk endpoint function
-support once we have the infra in place. Thoughts?
+On 2/21/24 3:25 PM, Bjorn Helgaas wrote:
+> On Tue, Feb 20, 2024 at 06:45:32PM -0800, Kuppuswamy Sathyanarayanan wrote:
+>> On 2/20/24 3:55 PM, Bjorn Helgaas wrote:
+>>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>>
+>>> When booting with "pci=noaer", we don't request control of AER, but we
+>>> previously *did* request control of DPC, as in the dmesg log attached at
+>>> the bugzilla below:
+>>>
+>>>   Command line: ... pci=noaer
+>>>   acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+>>>   acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME PCIeCapability LTR DPC]
+>>>
+>>> That's illegal per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, which
+>>> says:
+>>>
+>>>   If the operating system sets this bit [OSC_PCI_EXPRESS_DPC_CONTROL], it
+>>>   must also set bit 7 of the Support field (indicating support for Error
+>>>   Disconnect Recover notifications) and bits 3 and 4 of the Control field
+>>>   (requesting control of PCI Express Advanced Error Reporting and the PCI
+>>>   Express Capability Structure).
+>>>
+>>> Request DPC control only if we have also requested AER control.
+>> Can you also add similar check in calculate_support call?
+>>
+>>         if (pci_aer_available() && IS_ENABLED(CONFIG_PCIE_EDR))
+>>                 support |= OSC_PCI_EDR_SUPPORT;
+> That doesn't seem right to me.  The implementation note in sec 4.6.12
+> suggests that EDR Notifications may be used even when the firmware
+> maintains control of AER and DPC.  Maybe that note is wrong or
 
-- Mani
+It is correct. EDR notification is used when firmware retains control
+of AER and DPC, but wants OS to handle the recovery action. But,
+since EDR (like DPC) also touches the AER registers and depends
+on OS supporting AER capability. For example, EDR driver internally
+calls pci_aer_raw_clear_status(). So we need at-least ensure that AER
+driver code is enabled when exposing support for EDR.
 
-> Wadim Mueller (3):
->   PCI: Add PCI Endpoint function driver for Block-device passthrough
->   PCI: Add PCI driver for a PCI EP remote Blockdevice
->   Documentation: PCI: Add documentation for the PCI Block Passthrough
-> 
->  .../function/binding/pci-block-passthru.rst   |   24 +
->  Documentation/PCI/endpoint/index.rst          |    3 +
->  .../pci-endpoint-block-passthru-function.rst  |  331 ++++
->  .../pci-endpoint-block-passthru-howto.rst     |  158 ++
->  MAINTAINERS                                   |    8 +
->  drivers/block/Kconfig                         |   14 +
->  drivers/block/Makefile                        |    1 +
->  drivers/block/pci-remote-disk.c               | 1047 +++++++++++++
->  drivers/pci/endpoint/functions/Kconfig        |   12 +
->  drivers/pci/endpoint/functions/Makefile       |    1 +
->  .../functions/pci-epf-block-passthru.c        | 1393 +++++++++++++++++
->  include/linux/pci-epf-block-passthru.h        |   77 +
->  12 files changed, 3069 insertions(+)
->  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-block-passthru.rst
->  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-passthru-function.rst
->  create mode 100644 Documentation/PCI/endpoint/pci-endpoint-block-passthru-howto.rst
->  create mode 100644 drivers/block/pci-remote-disk.c
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-block-passthru.c
->  create mode 100644 include/linux/pci-epf-block-passthru.h
-> 
-> -- 
-> 2.25.1
-> 
-
+> misleading, but as written, I interpret that as meaning that it may be
+> useful for the platform to know that the OS supports EDR even if it
+> AER control isn't requested or granted.
+>
+>>> Fixes: ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR) support")
+>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218491#c12
+>>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>>> Cc: <stable@vger.kernel.org>	# v5.7+
+>>> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>> Cc: Matthew W Carlis <mattc@purestorage.com>
+>>> Cc: Keith Busch <kbusch@kernel.org>
+>>> Cc: Lukas Wunner <lukas@wunner.de>
+>>> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+>>> ---
+>>>  drivers/acpi/pci_root.c | 20 +++++++++++---------
+>>>  1 file changed, 11 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+>>> index 58b89b8d950e..1c16965427b3 100644
+>>> --- a/drivers/acpi/pci_root.c
+>>> +++ b/drivers/acpi/pci_root.c
+>>> @@ -518,17 +518,19 @@ static u32 calculate_control(void)
+>>>  	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_SHPC))
+>>>  		control |= OSC_PCI_SHPC_NATIVE_HP_CONTROL;
+>>>  
+>>> -	if (pci_aer_available())
+>>> +	if (pci_aer_available()) {
+>>>  		control |= OSC_PCI_EXPRESS_AER_CONTROL;
+>>>  
+>>> -	/*
+>>> -	 * Per the Downstream Port Containment Related Enhancements ECN to
+>>> -	 * the PCI Firmware Spec, r3.2, sec 4.5.1, table 4-5,
+>>> -	 * OSC_PCI_EXPRESS_DPC_CONTROL indicates the OS supports both DPC
+>>> -	 * and EDR.
+>>> -	 */
+>>> -	if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+>>> -		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+>>> +		/*
+>>> +		 * Per PCI Firmware Spec, r3.3, sec 4.5.1, table 4-5, the
+>>> +		 * OS can request DPC control only if it has advertised
+>>> +		 * OSC_PCI_EDR_SUPPORT and requested both
+>>> +		 * OSC_PCI_EXPRESS_CAPABILITY_CONTROL and
+>> I think you mean OSC_PCI_EXPRESS_DPC_CONTROL.
+> No, I just tried to rephrase the text for _OSC Control, bit 7 (quoted
+> in the commit log), so I think requesting control of bits 3 and 4 (AER
+> and PCIe Capability) is right.
+>
+>>> +		 * OSC_PCI_EXPRESS_AER_CONTROL.
+>>> +		 */
+>>> +		if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+>>> +			control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+>> Since you are cleaning up this part, why not add a patch to remove
+>> CONFIG_PCIE_EDR?
+> Good idea, I'll do that, too.
+>
+> Bjorn
+>
 -- 
-மணிவண்ணன் சதாசிவம்
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
