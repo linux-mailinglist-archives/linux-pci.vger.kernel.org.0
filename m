@@ -1,137 +1,151 @@
-Return-Path: <linux-pci+bounces-4017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4013-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B84AB8675D8
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 13:59:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF7668675FD
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 14:06:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E944D1C26D9A
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 12:59:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CFC56B229C3
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 12:53:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E4080C05;
-	Mon, 26 Feb 2024 12:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9937F7F9;
+	Mon, 26 Feb 2024 12:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OinfDMTt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrkB64L+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA44680BFB;
-	Mon, 26 Feb 2024 12:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505B3604CC;
+	Mon, 26 Feb 2024 12:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952306; cv=none; b=PghnLJZplLtILAr2inzcJes6AkwxXChZVYI7nVbzLHn5mDmMIbUekS1vjk2S5onrsaYDguB4nmS5KFz1qGNhWDLLbRqqqGlBv2fv6tZomsn9x57br3BO6PdEH0K9dent6HpH0DhmC0N7uPAtf6LWJibnGq4tusgnus8IMReO4JY=
+	t=1708952007; cv=none; b=CsYBEFJk4xbzlzHpNqdqlOb2z2kiyNUra+H+t6Av/iWM81SbnViIkagxxxGgYfD2HJUPskLanX6UV/0kd8h/z/mHQJ8VCrx0L70iWEHCwy8G6OREQe4xSkEHBGJfbVRlocD98DgYcIaisjruuwIX3GfkzL2NmCBVWtBq6dxdfeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952306; c=relaxed/simple;
-	bh=TYd1QFQIy3LiHRMTeLxXNhm+koA9OdQaPyZaAGwwoHo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZXzB32A2kxZMbY8mQeF7clG+sG36eFfOasMbQgVngBTAgOB/PoswcyIHkMcXWDFs50X4e+1oKphKq3kQOau6EkHC2tWswp/BDiu32ILEB0OR93f/+nL6l1IvH4hp4lbEXZTRg/Tg5n/DvJsLL16A9xnOblD4qdpreIeQnSiDoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OinfDMTt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60066C433C7;
-	Mon, 26 Feb 2024 12:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708952306;
-	bh=TYd1QFQIy3LiHRMTeLxXNhm+koA9OdQaPyZaAGwwoHo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OinfDMTtujWwkAT2ORY5BuKW9Zbeh0Itlatgty/p3WZ6TmZHBaXOnRzUMqAdXyowD
-	 KfiWYXtFSfzhZRAJtUSIxwhX4jZmf0viWfHS/ATHSRclMe6t4406K/cQcOl+9e0gjs
-	 O/8wtIMqPgYbFG1tP0EgHIrL7GoWUV3nA+aIhJfy5FwjLt5bovjVtQ9JoSifzKR5Fg
-	 JNVF5ndOKcLUUJNrxNNbN2lpNmttu9URhvCW27z5ff4kXGUtYSuEejAL5RKuyT/Efv
-	 IhNXCaZcDhdPdg8Xn3pzEJoJHIRQ6vvqYtDMa5rmXHIxRUnWjP6r6ynRa/MVuDY4lc
-	 UmwKK26X656YQ==
-Message-ID: <2f0f67d3-6a69-400b-b653-9353a3ddff02@kernel.org>
-Date: Mon, 26 Feb 2024 04:58:24 -0800
+	s=arc-20240116; t=1708952007; c=relaxed/simple;
+	bh=+9bFTdaZN0sNxaXlHrqrWk5lnAZUUQT7AZ/mmZL7Fvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rx7Ke1loZomMfAXInZ6rVxsBC3bxMe/afqPX7UOnBhoR/tru5bqr+iQW03Hu1YagMjYlrf25GoTBT0AZbOS0bXlKf0Uj5Elt0HP+4hDq/20vNrqZ5hZG8YdqoUPV9mFLwSNtL4HdBD2IjP2IPJolbaNS5DyNoqJW16wyr3IkdX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BrkB64L+; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512f54c81d2so1498205e87.2;
+        Mon, 26 Feb 2024 04:53:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708952003; x=1709556803; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=96ZM0BBE+jJXYNw871lXR/5rqt8HxgCfbVdQRkOIEUw=;
+        b=BrkB64L++in9BOacviKlLevM33vrMPefKfGX9ZLGTI7JpauIp9moikwcdpFXnfZ++G
+         uYW+C7xPO5961LiQDGUZ9r8X5nRcqftuX/y/CGUr2aUEuNH44vI4aNxU7tChXINQ6DEs
+         1EdMyW3BsJE7sHs0oiGISORbl7OpMaeycWKyMxaImMG/Bm53BfVSWjr32V1fADGksasb
+         xf4Il7ulFVKGaeGKBWft1uMxzblOq0z8NVhkzrn+ITkQI/DBSacY4AF1FX8ZCKm7U71X
+         faJpJaCLPcTnMDOnfHxXYvo8KtCCst9GCQv7CrGScZWOity/3Kvc0s8vnpWTfBvysf57
+         D/pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708952003; x=1709556803;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=96ZM0BBE+jJXYNw871lXR/5rqt8HxgCfbVdQRkOIEUw=;
+        b=GTqnuOi3QFD9JTF48Uv7VppLYog23BPnNADaoSaT/8lkx1R/o3KZftagiAAiMrbvA+
+         nZ31FiRiDJeO9m3xy0+RZMf8M8zvEH6FgVrgnQvv1+foVw2M+7r5quCVt9SuDF6fdVQa
+         9gqSP4VwG8pOY2NXc0Oc0px/aJLdUpEDd6INA1MMjWJaT3+iK8mGJTT2It5SIeHGT+1U
+         bL/R9cBLbI4RJaqyQqvzutwnGhiVXFAOwln5bs1jX6GAwa5NtuWIaIh17FuTyDjt2jgl
+         0B7fBumCi3eW92T8ZeAfW0zoPNS5h77BfT2vIgh+JQY6nuCG5BfrXcegr7S6Q7fQ05iH
+         yTyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlslbRbvbc8Ad0dtVr0iLfFgQG50CFA3gQwgzeJweXyK/rgYhLiqhUyWMsgv2lkS2Xb0k5Yx32n9AItz/QuYLqQJCtJIgZyM+usyE10gZTzvxmDQAX774SCeupId2aKY8/bGCsoQUusgBGvWJH11NlnxnnoE/C9cWjOfj9+iKGfBhMJMioCU/XbQRku0sux77dquIOqUxjE8/7tKZKqE4+SwLi8XU9sAgy
+X-Gm-Message-State: AOJu0YyY5ih6JBmOEYWNBACASj0uLHwb+pCaNNkdHHmUoWKspoYyxhUz
+	ccTqikZ6uTym/ADzaOcQTqMCmXjSKHJshrdMrmBNQEHA8YswbkfpGvoWZae2
+X-Google-Smtp-Source: AGHT+IHUsdLyYMK/hor/+DIL9NkSQYxUsgFEj+2JqEvtgKE+O4rfAVV95OSAVAFGN0KoyPIWi302lw==
+X-Received: by 2002:a05:6512:224b:b0:512:f7e3:2ca0 with SMTP id i11-20020a056512224b00b00512f7e32ca0mr3369529lfu.61.1708952003264;
+        Mon, 26 Feb 2024 04:53:23 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id e21-20020a196915000000b00512ffb9bae9sm222505lfc.143.2024.02.26.04.53.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 04:53:22 -0800 (PST)
+Date: Mon, 26 Feb 2024 15:53:20 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, Siddharth Vadapalli <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3 2/5] PCI: dwc: Skip finding eDMA channels count if
+ glue drivers have passed them
+Message-ID: <5gzkxdpx6u3jhw5twbncjhtozgekmlzxrpj3m6is3ijadm2svb@f6ng4owyakup>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-2-cfcb8171fc24@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Add support for Block Passthrough Endpoint function
- driver
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Wadim Mueller <wafgo01@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Shunsuke Mie <mie@igel.co.jp>,
- linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-References: <20240224210409.112333-1-wafgo01@gmail.com>
- <20240225160926.GA58532@thinkpad> <20240225203917.GA4678@bhlegrsu.conti.de>
- <20240226094530.GA2778@thinkpad>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20240226094530.GA2778@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226-dw-hdma-v3-2-cfcb8171fc24@linaro.org>
 
-On 2024/02/26 1:45, Manivannan Sadhasivam wrote:
-
-[...]
-
->> As virtio is made mainly for Hypervisor <->
->> Guest communication I was afraid that a Hypersisor is able to Trap every
->> Register access from the Guest and act accordingly, which I would not be
->> able to do. I hope this make sense to you.
->>
+On Mon, Feb 26, 2024 at 05:07:27PM +0530, Manivannan Sadhasivam wrote:
+> In the case of Hyper DMA (HDMA) present in DWC controllers, there is no way
+> the drivers can auto detect the number of read/write channels as like its
+> predecessor embedded DMA (eDMA). So the glue drivers making use of HDMA
+> have to pass the channels count during probe.
 > 
-> I'm not worrying about the hypervisor right now. Here the endpoint is exposing
-> the virtio devices and host is consuming it. There is no virtualization play
-> here. I talked about this in the last plumbers [2].
-
-FYI, we are still working on our NVMe PCI EPF function driver. It is working OK
-using either a rockpro64 (PCI Gen2) board and a Radxa Rock 5B board (PCI Gen3,
-rk3588 SoC/DWC EPF driver). Just been super busy recently with the block layer &
-ATA stuff so I have not been able to rebase/cleanup and send stuff. This driver
-also depends on many cleanup/improvement patches (see below).
-
+> To accommodate that, let's skip finding the channels if the channels count
+> were already passed by glue drivers. If the channels count passed were
+> wrong in any form, then the existing sanity check will catch it.
 > 
->> But to make a long story short, yes I agree with you that virtio-blk
->> would satisfy my usecase, and I generally think it would be a better
->> solution, I just did not know that you are working on some
->> infrastructure for that. And yes I would like to implement the endpoint
->> function driver for virtio-blk. Is there already an development tree you
->> use to work on the infrastructre I could have a look at?
->>
+> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
 > 
-> Shunsuke has a WIP branch [3], that I plan to co-work in the coming days.
-> You can use it as a reference in the meantime.
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 193fcd86cf93..ce273c3c5421 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -927,13 +927,15 @@ static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+>  
+> -	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> -		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> -	else
+> -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> -
+> -	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+> -	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
 
-This one is very similar to what I did in my series:
+> +	if (!pci->edma.ll_wr_cnt || !pci->edma.ll_rd_cnt) {
 
-https://github.com/torvalds/linux/commit/05e21d458b1eaa8c22697f12a1ae42dcb04ff377
+Are you sure that the partly initialized case should be considered as
+a request for the auto-detection? IMO &&-ing here and letting the
+sanity check to fail further would be more correct since thus the
+developer would know about improper initialized data.
 
-My series is here:
+-Serge(y)
 
-https://github.com/damien-lemoal/linux/tree/rock5b_ep_v8
-
-It is a bit of a mess but what's there is:
-1) Add the "map_info" EPF method to get mapping that are not dependent on the
-host address alignment. That is similar to the align_mem method Shunsuke
-introduced, but with more info to make it generic and allow EPF to deal with any
-host DMA address.
-2) Fixes for the rockpro64 DMA mapping as it is broken
-3) Adds rk2588 EPF driver
-4) Adds the NVMe EPF function driver. That is implemented as a PCI EPF frontend
-to an NVMe-of controller so that any NMVe-Of supported device can be exposed
-over PCI (block device, file, real NVMe controller).
-
-There are also a bunch of API changes and cleanups to make the EPF code (core
-and driver) more compact/easier to read.
-
-Once I am done with my current work on the block layer side, I intend to come
-back to this for the next cycle. I still need to complete the IRQ lehacy -> intx
-renaming as well...
-
-Cheers.
-
--- 
-Damien Le Moal
-Western Digital Research
-
+> +		if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> +			val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> +		else
+> +			val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> +
+> +		pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+> +		pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+> +	}
+>  
+>  	/* Sanity check the channels count if the mapping was incorrect */
+>  	if (!pci->edma.ll_wr_cnt || pci->edma.ll_wr_cnt > EDMA_MAX_WR_CH ||
+> 
+> -- 
+> 2.25.1
+> 
 
