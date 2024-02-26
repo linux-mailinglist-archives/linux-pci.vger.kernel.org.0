@@ -1,58 +1,61 @@
-Return-Path: <linux-pci+bounces-4064-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4065-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A075868474
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 00:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1044A86848D
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 00:17:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14BD11C212AA
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 23:05:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B2B91C2214C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 23:17:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7936135A76;
-	Mon, 26 Feb 2024 23:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E78B13541B;
+	Mon, 26 Feb 2024 23:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEPafC+t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5A/gIhM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C3313540A;
-	Mon, 26 Feb 2024 23:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40867133285;
+	Mon, 26 Feb 2024 23:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708988739; cv=none; b=uyVQHVxLZLpsDUKe13l6JSbtmAIc1+7gto+VUYOPhw5VbrrCB6BtP0IFpNq5bAI8kI1cHrorVS/lbvx86kupBr63SbD0OIRQyFpTehwc9q92p7Rw4hzYZEP82O9JtHFn2xPkUPTOUPlgSlhE/5rAugHsGdG/dt+PguBARGXbFiA=
+	t=1708989469; cv=none; b=CBWCDZMzLRmxxAOqmCay2wWHPZgg9Gzn2gfA1Pn6z6tX4uh0XTfWV4OjjPgs7J/h4vnu7/UlmNoBQFActfqMPqgKCDnDdUzSGbXEC4msKisEgls7MTixy1QbSXJPaNvi1rcR8wyezRXmjPvH/kSMmW53yfaEX+ID1uJXpO+HBW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708988739; c=relaxed/simple;
-	bh=8wwmBH1m4ZSTAQXnR7kRtjV2xxJFOcBKklt2hP0Ls5k=;
+	s=arc-20240116; t=1708989469; c=relaxed/simple;
+	bh=Hzq6apXKj5DIdTzjgbZTgXIDZA74qt6GSY3DsNCSG4g=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eJVEsA6BGxtj2s94AHZfgTqrmt8WSa6a6sNUDqF2ViK0MvKXf+/Hmd5jRVX1f5SEAQqRaQ6WWGQa4wtBKHTxXWXMwQnVo4onf+Npp0dDZsAWG+XvhSOPiPm6Rpx8x355Lll1PGob+U3HewJmo5s+K9uxJfo44nvVqwvd8+SstSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEPafC+t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37C9C433C7;
-	Mon, 26 Feb 2024 23:05:38 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=IJGohXGocfgqtaqvU+JAL+9d/HTHuK6XKyLjz1SicQvwmdGnOtfyP++GkoBhpfljmNVfilRTQGAJ9QYdIOijAeCfiREvJX2JeFB082r3/b0ehoPy412yR6Mg2+VRdwKyTb+6xOoMLMaiufVHRvfXH8HOASVXYZyqO5a5rkbYjKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5A/gIhM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B119C433C7;
+	Mon, 26 Feb 2024 23:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708988739;
-	bh=8wwmBH1m4ZSTAQXnR7kRtjV2xxJFOcBKklt2hP0Ls5k=;
+	s=k20201202; t=1708989468;
+	bh=Hzq6apXKj5DIdTzjgbZTgXIDZA74qt6GSY3DsNCSG4g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ZEPafC+t/EDIu9/YZQ97UcneVJZkdEGYM8Eo9rXxSIvnC9CK7fhRSgqOaTOnfF9nH
-	 zXmWZIbuJDHjTab5mzDgXFZT7X8utRaRVv8o9F7C0WGm9WMEXcNXhF1PRISIWd5cWw
-	 277K9TwSR+0HxBIn3yq3npm7laVEiIiTcYC3uPVYYd9YeEe5C+hCxN7EDy9Cdt0XIa
-	 Xo+bcsyM1fxEijO34r9tLjBa6zZc06Ee4fAljbWR7iLxNFtJCbuplY5M7xPNJjJN1C
-	 PpoNTZ9zmjxT/W6usux9GJ9DL8JoVe+hCXX23saRj3PfGPBpKIfhQ67hdL8MzJ8DFK
-	 /wIuB8AmHXWnQ==
-Date: Mon, 26 Feb 2024 17:05:37 -0600
+	b=H5A/gIhMGfbmX3Fwq8YWujjG9/EfRXs3bSZiP7Rt/d2weRrEDE7CZQ5zJ68tehTJV
+	 kATeVSAA6sYplIuNv7gDyYxbVgT7hTMspX8rMI8kAhItxb6FBMtP790CjKfN7m8na4
+	 khdfHzNoAEWHd7K9NvifvaAPFQLoLMkVgowtHvAj4sl5MX5Gfofi2aqfRhBWQm6Lqi
+	 fbt8zn7J/AQ91zE+dBsKnOV/uru/z1Nbvjg2R16TFP5ZOi2Z6qgy45VdM5SrNouyzv
+	 BDmnRtQ3h5WWONdEcL6Dni+S3wpMEJafm2Rvoj+pvVtGZHRa0QXcDl7OE4VBLZyXAn
+	 47WXN6pMeAEvg==
+Date: Mon, 26 Feb 2024 17:17:47 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>, bhelgaas@google.com,
-	robin.murphy@arm.com, jgg@ziepe.ca, kevin.tian@intel.com,
-	dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
-	yi.l.liu@intel.com, dan.carpenter@linaro.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	Haorong Ye <yehaorong@bytedance.com>
-Subject: Re: [PATCH v13 1/3] PCI: make pci_dev_is_disconnected() helper
- public for other drivers
-Message-ID: <20240226230537.GA10383@bhelgaas>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
+ platforms
+Message-ID: <20240226231747.GA215353@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,76 +64,51 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c4637d5-6496-4c68-b2db-4be1e56ca746@linux.intel.com>
+In-Reply-To: <20240222094052.GA25101@wunner.de>
 
-On Thu, Feb 22, 2024 at 08:54:54PM +0800, Baolu Lu wrote:
-> On 2024/2/22 17:02, Ethan Zhao wrote:
-> > Make pci_dev_is_disconnected() public so that it can be called from
-> > Intel VT-d driver to quickly fix/workaround the surprise removal
-> > unplug hang issue for those ATS capable devices on PCIe switch downstream
-> > hotplug capable ports.
-> > 
-> > Beside pci_device_is_present() function, this one has no config space
-> > space access, so is light enough to optimize the normal pure surprise
-> > removal and safe removal flow.
-> > 
-> > Tested-by: Haorong Ye<yehaorong@bytedance.com>
-> > Signed-off-by: Ethan Zhao<haifeng.zhao@linux.intel.com>
-> > ---
-> >   drivers/pci/pci.h   | 5 -----
-> >   include/linux/pci.h | 5 +++++
-> >   2 files changed, 5 insertions(+), 5 deletions(-)
+On Thu, Feb 22, 2024 at 10:40:52AM +0100, Lukas Wunner wrote:
+> On Wed, Feb 21, 2024 at 12:20:00PM -0600, Bjorn Helgaas wrote:
+> >   1) D3hot doesn't work per spec.  This sounds like a hardware
+> >      defect in the device that should be a quirk based on
+> >      Vendor/Device ID, not something in DT.  I don't actually know if
+> >      this is common, although there are several existing quirks that
+> >      mention issues with D3.
 > 
-> Hi PCI subsystem maintainers,
+> My recollection is that putting Root Ports into D3hot on older x86
+> systems would raise MCEs,
+
+Color me dubious.  I don't know why an MCE should happen unless we
+tried to access MMIO space on the Root Port or we tried to access
+downstream devices, and the UR or whatever got turned into MCE.
+Avoiding D3hot seems like papering over something that we don't fully
+understand.
+
+> which is why pci_bridge_d3_possible() only
+> allows D3hot in cases which are known to work (e.g. Thunderbolt
+> controllers, machines with a recent BIOS).  It was a conservative
+> policy chosen to avoid regressions.
 > 
-> The iommu drivers (including, but not limited to, the Intel VT-d driver)
-> require a helper to check the physical presence of a PCI device in two
-> scenarios:
+> I don't know if similar issues exist on non-ACPI systems.  If they
+> don't exist, platform_pci_bridge_d3() could just return true for
+> all devicetree-based systems.  Might be worth testing if any systems
+> can be found which exhibit issues with such a policy.  That would
+> obviate the need to specify "supports-d3" in the devicetree.
+> Quite the opposite, ports which are known not to work could be
+> blacklisted.  Of course if it turns out that's the majority then
+> whitelisting via "supports-d3" is a better option.
 > 
-> - During the iommu_release_device() path: This ensures the device is
->   physically present before sending device TLB invalidation to device.
-
-This wording is fundamentally wrong.  Testing
-pci_dev_is_disconnected() can never ensure the device will still be
-present by the time a TLB invalidation is sent.
-
-The device may be removed after the pci_dev_is_disconnected() test and
-before a TLB invalidate is sent.
-
-This is why I hesitate to expose pci_dev_is_disconnected() (and
-pci_device_is_present(), which we already export) outside
-drivers/pci/.  They both lead to terrible mistakes like relying on the
-false assumption that the result will remain valid after the functions
-return, without any recognition that we MUST be able to deal with the
-cases where that assumption is broken.
-
-This series claims to avoid "continuous hard lockup warnings and
-system hangs".  It may reduce the likelihood, but I don't think it can
-completely avoid them.  
-
-I don't see any acknowledgement of that in the commit logs of this
-series.  E.g., it doesn't say "we can recover from ATS Invalidate
-Completion Timeouts, but the timeouts are on the order of minutes, so
-we want to avoid them when possible."
-
-And given the "system hangs" language, I am not convinced that we
-actually *can* recover from those timeouts.
-
-Using pci_dev_is_disconnected() may make those timeouts less frequent
-and give the illusion that the problem is "solved", but it just means
-the problem is still there and harder to reproduce.
-
-> - During the device driver lifecycle when a device TLB invalidation
->   timeout event is generated by the IOMMU hardware: This helps handle
->   situations where the device might have been hot-removed.
+> >   2) The platform doesn't support putting the bridge in D3cold and
+> >      back to D0.  I don't understand this either because I assumed DT
+> >      would describe *hardware*, and "supports-d3" might imply the
+> >      presence of hardware power control, but doesn't tell us how to
+> >      operate it, and it must be up to a native driver to know how to
+> >      do it.
 > 
-> While there may be some adjustments needed in patch 3/3, I'd like to
-> confirm with you whether it's feasible to expose this helper for general
-> use within the iommu subsystem.
+> I think we're putting devices into D3hot first before cutting power
+> (i.e. putting them into D3cold), so knowing that D3hot is safe is
+> basically a prerequisite for D3cold.
 > 
-> If you agree with this change, I can route this patch to Linus through
-> the iommu tree with an "acked-by" or "reviewed-by" tag from you.
+> Thanks,
 > 
-> Best regards,
-> baolu
+> Lukas
 
