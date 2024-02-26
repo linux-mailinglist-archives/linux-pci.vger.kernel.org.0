@@ -1,427 +1,395 @@
-Return-Path: <linux-pci+bounces-4037-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4038-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 128F4867D6D
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 18:06:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24ABB867D92
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 18:10:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9558E28D2F9
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 17:06:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48B531C282C2
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 17:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C9012F389;
-	Mon, 26 Feb 2024 16:55:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C91B131E59;
+	Mon, 26 Feb 2024 16:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UZznTSeL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2088.outbound.protection.outlook.com [40.107.105.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7771212B166;
-	Mon, 26 Feb 2024 16:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708966503; cv=none; b=SaBe/+Wid7itx5M1RO42JH1gZA7dVP7F3lNffJljw3ADiThEm1azGkVK3eOvxuuJdQI3Nxg9VzF+e+pKE5uvJ99rsaqP9Rg48KYRjSv/HZfsyVe+/3r9GJKxGVgtgGocfBDE/hliFXl1e15QGaSQpP7tLafA4/geOj+qt02naMU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708966503; c=relaxed/simple;
-	bh=QGcRLTEri+GL4LDVdXNHiMq2PMr0H3LVHWba/SRnYx4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fin284iXrKy2czy+Oaw1xqYPf6diJyNHBJqmi5Qxwv/BjXUiYqe8WFe/CU+Q7R4LxULJ6KcH1xSD2wO3EZIWLcDCXKnfOM6sidrYZHo99Nx21hUCUjuFBhyJoV1TRCufzJfyUJ+0MEVWhABBvK8JvfYLNOKZOBh24zpj1nT3IRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-60921c4dc27so134697b3.3;
-        Mon, 26 Feb 2024 08:55:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708966497; x=1709571297;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W+9BchcdAdA5Rmse93Wm2Y92LoxElKC7hpYEsTuUwfs=;
-        b=bdVE8vslNwapHdlYkfkyS/B9S/cydPiA7MYtvSaUBeFEVdS0mTIIDJa0696a9ADHa5
-         ozWIjrbLxnJtdG297rsFXU46o2gM8AyG2dp0xnXzL5EH9nkEUFic52tbg0VgciLeJnb1
-         oGN7W/sNN1VJMOaksz/kBTMjyFTpYiQRsgkeRAswCDBDq6sEjsoZC4irTcWxwkMuAcAM
-         u48PCEX5FnJgxWq5GrBNJDrWIDDz61aXGGXZJaRW2N7EeWxTlicdqk57v1bmB3r3ZXYr
-         UgB2UBjkuVBKhqiwtdWJfyZ2NtF2T5qMLIMEMusHS1aWMj+ly8P2ZdSus0qwGLrpOavw
-         qPrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVS/J/I5mBV5iE2nmAcXR1VRcxsiuj7/0bOMfHYxZ62vZ4GtwC+vOngQ0jnI+zrXYZPW6EIOl+sLvIs+WunrXFMTE8UG1tocciMEigKcACES150oa7Um7bwBLxi6NZzJf8SupqxujTEPmMtM6NB6tX5uiNxMrshjID/4D/filOHIaEm12VftonoWyOjMs+HVjxqpgusIVB/TNy8+et3SjjdkFfdOHXWaAWeyMP/6Hfotr+v8VAl0GsVpLvdteQk4hWxXjY63d7GsgItGef5CsNjejiGLOBb3VvgNk0t+EhZHWlo2yrGq6nmSBuLYVfuWu1Fj2Ucn/Izwn6b68rc0/am9mjGZNqcW7BOluSroKUQxDZOU4ttl3g=
-X-Gm-Message-State: AOJu0YwUK8CbtoZfPCJujzglx7aXTgXegSZYsdDk5Vmg5t13qU0YZ6lT
-	dabYm8j9pkmzAuf0hMZSU2YHpV0X75Fzc5wwaos2hqocNZZPTONW6Vgn3EClHaw=
-X-Google-Smtp-Source: AGHT+IHR73T8g+pH1z/OZAzR6/uguNJQiIbExpK1JFKQKd+Z0Hl91C+S3h9Le/ajC2vYDJ9YhOVA6A==
-X-Received: by 2002:a81:af17:0:b0:608:d160:f9aa with SMTP id n23-20020a81af17000000b00608d160f9aamr5926196ywh.46.1708966497424;
-        Mon, 26 Feb 2024 08:54:57 -0800 (PST)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id w10-20020a0dd40a000000b006077c89b001sm1269523ywd.83.2024.02.26.08.54.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 08:54:56 -0800 (PST)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso3372772276.1;
-        Mon, 26 Feb 2024 08:54:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWQm2yJ1I0NE5/zVVgr2R45VuJyjU0bQtTgZi3QzVm5f5MPMLSZjEowY6iXyzGThwIdfG7vWKn0dQog43zDwn2FCaPa3eNy8UxrfKymtw9dERyzPDX1/Nf2Mq12Nr6XcMXyJ+D1lkWXrGO5s0ZYeL2O1ZTYgyynJzttwv0Fyl0A7Q5y1R2ReSOcdJZGKbXK5GpTBf6Yp22BGFLv18bqm0cMXaeyscTGb2ao/XPh2IE0VabEpHzh120ojHbjMar119fxVAbvqb8gANB8/MusVSyEUI6lLhnv5EddiQOcSMHgcFDVXE5dKz0dE/kiIn8LZ5st/oCChPm1OKklK6keeAMM/LnVjJr+XjkSuJMwX2Mh4INUqKqFZoo=
-X-Received: by 2002:a25:9346:0:b0:dcd:98bd:7cc8 with SMTP id
- g6-20020a259346000000b00dcd98bd7cc8mr5030611ybo.48.1708966495877; Mon, 26 Feb
- 2024 08:54:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0411E12C522;
+	Mon, 26 Feb 2024 16:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708966683; cv=fail; b=qXtGvVOtiiQCLWe17GZ9Bf+mq96k8KYXNuzoOzZMABjtDOyQDHqGEenkoZxgk8t96mGwLAL4QRC4BfBUSfvWk5gkJYZ9XpitDKDoYeZptF+ytd+r+qWBF35uJLw6woTuG5g8YzRl2klPoe8uyPXbRrhYCHn/QlzlwBhBcLGYby0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708966683; c=relaxed/simple;
+	bh=utzaDFlWC6AN6muyAP2gLePvEh7dDvwi+u2/QQQNgS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MoCvVKM+RgzHmkycgBOQ6HGiu0mKuGqX4gUF1YR6oAVEsJzER8+lBDxlLjrzFLNou0mRDdSsE9PI3hxRY7XVbsf+CGGgBOiKA1MJSG4cpeH6kVmY6YrbukwPK7UkxqbawRISSI6SHY2/sJMvgHgUcpFFjhULaB9gobkr40Npch8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=UZznTSeL; arc=fail smtp.client-ip=40.107.105.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ODrLcScQRTcKU69FQeE4nbIChygtD6tTMSDYfRjO2xKmKMcg9Dn1Oc6lIYRJgnIcvdMjBxSPJE87BqttPz+y+wTHaxc68WLqz7wgotTRKp1vEMy8Ddoc7q00haO3NwVM6K8GFIEV1M5K+/+84qPZt6aFXHSQXmg/CuhddeQVjmznceds95924uviQ0qE1yFBIN40lwRIS6OORuIU+rS+4itpcINA8kcTJdTedAsVX7RR7cDlsruFcfR6XdoZBxy+ie8q0EGxshgaSczOg+/iIs2Vl2+S+lpC3HDaDYzMtAe9AVYusgGjeGh468edyMUJjmdc2/uyKs0pzVMt7ug8qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XQkBszI2ikK0l+QFT5JOx10najA9lDtroWNOu5NtF0w=;
+ b=hFtY0ChDxnO0Freq52+k7IUlkSUu9q+NdjoUYLnKdG+Scdt4NxMqeq8ZnwEljHfPhGnw72IGDLS8DCCY6sfCdcSbo6OiDkt7WqcsnW2R0MMVrrFAjtFAF5zY4ebV5L2Fn7gPkHiU0BF5lXJEzfYIb5hQKLTYizO60t2L3vViZt7T0t/CaftaYd2dhlPC+Zs4fyuERcQS+5p95bT0sS92ZzAphJ8bT8kvqgrFvH0LTiKnbkvVBfYfm1Rj/opQYg7uUXbXLKzHWoqIsG7w8tJKsQc1kMbtCz0imuZLIl63b6FQdARt13FPE8ZutuNmEK1eoWwtRbFXZZGupkN71DTh8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XQkBszI2ikK0l+QFT5JOx10najA9lDtroWNOu5NtF0w=;
+ b=UZznTSeL9sduGJAaPzgKeBJn0I4iNnaOzfQSPxn+6V+/E/SpREPH4mUhPAlRc8ONCQNwGQRWjUFNfUl9ABa6bWfy9ZJQo9lqlRb/gGSpmKV0K+JYNZeZDA4nQPBrspF2lzYwE9NuDnd2JA8/6WX7PQoZu4lYGJrelM4qcYrsTxw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7867.eurprd04.prod.outlook.com (2603:10a6:10:1e5::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.31; Mon, 26 Feb
+ 2024 16:57:58 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.032; Mon, 26 Feb 2024
+ 16:57:58 +0000
+Date: Mon, 26 Feb 2024 11:57:45 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v8 04/10] PCI: dwc: ep: Fix DBI access failure for
+ drivers requiring refclk from host
+Message-ID: <ZdzDCcMjrNVFHg8S@lizhi-Precision-Tower-5810>
+References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
+ <20240224-pci-dbi-rework-v8-4-64c7fd0cfe64@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240224-pci-dbi-rework-v8-4-64c7fd0cfe64@linaro.org>
+X-ClientProxiedBy: SJ0PR13CA0164.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::19) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704788539.git.ysato@users.sourceforge.jp> <f7a504fc42486f4f3f75ca7ac8cd57c084407da0.1704788539.git.ysato@users.sourceforge.jp>
-In-Reply-To: <f7a504fc42486f4f3f75ca7ac8cd57c084407da0.1704788539.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 26 Feb 2024 17:54:43 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXOaasX9Dv-Kv=VOO0dhnp8ObQC6-YqsFZT0Q-VeqPg+Q@mail.gmail.com>
-Message-ID: <CAMuHMdXOaasX9Dv-Kv=VOO0dhnp8ObQC6-YqsFZT0Q-VeqPg+Q@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v6 08/37] clocksource: sh_tmu: CLOCKSOURCE support.
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7867:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15cfa343-e722-4ed3-4370-08dc36ec156a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oYDxwvYIVbMCP5UP9QvEgguRitmD6JnblbZ+H9lJ/y5W4zuQzwyI0nnTk9cyM+FftFujMBtJgpGtS7F4un5bEPWJDks5MdZ06uXqML7VQXpWJMQitHUdpZ7Zf+w3Snxg9/ftBG4oMZD4OH75TGJw4BUfvdHa97hYUUUFq9DCmgcA3dVY3Oj4VJ+By2glBX1D2ZT/6w15IUqhlWvEQQKG6hGDnNMPXQjqtiLXpYZZDsGt+KrB3uz2AIPE+wR8jvJZi04YjDjLSxHncFzPj0ZbU8CA/zV+3s1a5PBmorQ393wRHZutNWi8iEzqXPgHVSHyvB+UHwByIFqx5JMmle1WVQ8oiqd3rZB7xTn08ESRvL21pbSX6FAlRJwTe5GCpg+mbpAmDU0ULl6vbyK1P01Aijgi2s099vTtnle/B2bjjp9AWybWr81Z5yXuU+gUVrz6hYvAvOyvNMbdhN5SlBJ+HghEuEUx+bALXMMpf6ApoCp+ong1xKI+sESnxthoBQeIVk4a1RPhqymtvKVJNqm5FOianfGMT+6YejusyiUYYdpEFjGKoawju3thxGEbceFPkSO3NFpGTgYz+PpizD2oFMlg8gFXwogl4QkTu7akCx3oyGWlMMMzZTmLRr7VlI+Qfz7MEcmpwV/rg0spyM0yDzrNjrAFLHJYgdnB1lMx/SZfQRdfuhUKtpxTO8b4yRXnVrmMpLhxGZm1Vc+CMiYr19XeDOOw5jYY3AI7joQ7Xds=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sosAojay8Pl/UkzYaIi7Up108DIL0XKHS1dK8g+HO6CpQBEVyT+D5QzyAFNI?=
+ =?us-ascii?Q?fdY6WCiYSCoOQDQtSNR2Eo2E+6DuCrRNp1MFEN2wMk2uJIuu9MYxb9ZbsfD0?=
+ =?us-ascii?Q?3qVYIShKppzW3eHL+mBkZTGa6jMuakdKnHiGXSJ2iR0MxRBwwGL9nbBAxZkG?=
+ =?us-ascii?Q?vICYYrmXJlsOy9f0wzs799pQZ6GYrl5BdBYMwsnuf/dc/EHt8iGAABp8/BSI?=
+ =?us-ascii?Q?/NNuvwSZGqAW4w4mSGDCFawC4+yznZaEo1gaSItGrX4lszlT6z3oFuo5/nI1?=
+ =?us-ascii?Q?5F8M85rpsa5QxiLA+xweHfn/82DZEeuikRO5gSlxjKFRXb2nTiqyl3EII9hc?=
+ =?us-ascii?Q?HhwfXM0TEt4LJBHvdBPDk+k0IcyobbXylW9Dlel1h8+dipS3P0WId59dDrez?=
+ =?us-ascii?Q?mcxFgdNrLK1whLODgqIFY1uAJn974IE8s9FB6iyRlct4mGFYpjci0edwYsba?=
+ =?us-ascii?Q?UWcFm9X3n0AXLPU+f3hde0Dos97JZYMZaecAN8u1NT3tprgS+3qpDGwQBBfo?=
+ =?us-ascii?Q?YTmoRV4lUUrsCke+g6+ngtGSJGEKU2akDV5QMcQVXVc8med4KK9zlM2+C1fm?=
+ =?us-ascii?Q?CuReECPpGBKZnK81TKL/vZ+EFQCQ4qS/NGyr+gACk7NRUICNgXSOAHuK7NWE?=
+ =?us-ascii?Q?0KQtxy7EfqxadNUMimBt0uSAr4hBnSkyZzjXlEc0JyqktsNWoMO0cXT0CXIv?=
+ =?us-ascii?Q?dt+x+agwnWvS2LreeWMJY0mLe1a8uxT+VU3+A4JPSxCV/1flHG2+qglIqXDW?=
+ =?us-ascii?Q?dJvy86C++G2/I6kyIcDoltXf0ae58svRo9k9xdsYHA2tm1DaeFmnBzRlsZhh?=
+ =?us-ascii?Q?4ZEhRHzGSq/CZSg8nR/72NdpJP1jLcuuWP6bFxO/shYX7zflfKGiL4EjY7d9?=
+ =?us-ascii?Q?ZwdHzJ/58qtlAgDbvFyP/wASHPJnVRcA0upYAx6orm7V1wPPZgj7OhlB1hHS?=
+ =?us-ascii?Q?897dzsx889etzO1RD2Lu/OtRxHbAKzYWzibBr8Oe24cOgP2Qw8dn7nbqSCFp?=
+ =?us-ascii?Q?s3bvWQxPhfvBmibzrH1he5aRfzzYYbmjUmZudm8c2hbsWnLlo3oSJQO2Uu8e?=
+ =?us-ascii?Q?O+ioZbEPgkTkWMAJP08qYsanoj65iDG3RZyxJzc+nN43j6XwEK05kOVxoMwv?=
+ =?us-ascii?Q?tek/rowVMwG2VX0KGS/ClRGfNaQhuqt+0nagAlZuF+bOhh4crEl2T0urZo+O?=
+ =?us-ascii?Q?l1oOHNiqw2Kr045VtmY1vc9Y9XU2hA6Vmy+cJkCcY2r9ngW11l/5dOF8oQVQ?=
+ =?us-ascii?Q?78K2H/MGya4Fw3bQ+qaQX/cVdyw9Mh1GVD//BkSU76aOw6iSqItO4WIxTzXE?=
+ =?us-ascii?Q?rNnYXF9FH3/04GviVqU1efShFqcuI4hNQoUc2ZOoJgI43wOPN+/e2BlFkGtg?=
+ =?us-ascii?Q?HjmronURTb9H5V6oq5bvi5KNF/E8VGORlJONL7Xv0ZYL9zp7BLrqA6sLKQUy?=
+ =?us-ascii?Q?aQ5SLiRI4RaIlevdpV8Qk8Rkwkp/dBhiYR4aMuaQt728b9U5GSzwnWhyu39M?=
+ =?us-ascii?Q?oruS+LjsFqLtAb7vNP1mCHyuTI4cj58Y2to7rtzPJQsD5oLmfgLipHsK4yc+?=
+ =?us-ascii?Q?1g+EtN6raIU31eUECtaDpQ/ZYg9lgJK/7aoy3RgF?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15cfa343-e722-4ed3-4370-08dc36ec156a
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 16:57:58.1767
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YktT+QhBbpNeBuDy4PRyTu+wrMrTywip6wolBau+hZLp9rSbuRSA9KoNXKtXfOFIWLnY9xQIJac0Vw481dJ85A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7867
 
-Hi Saton-san,
+On Sat, Feb 24, 2024 at 12:24:10PM +0530, Manivannan Sadhasivam wrote:
+> The DWC glue drivers requiring an active reference clock from the PCIe host
+> for initializing their PCIe EP core, set a flag called 'core_init_notifier'
+> to let DWC driver know that these drivers need a special attention during
+> initialization. In these drivers, access to the hw registers (like DBI)
+> before receiving the active refclk from host will result in access failure
+> and also could cause a whole system hang.
+> 
+> But the current DWC EP driver doesn't honor the requirements of the drivers
+> setting 'core_init_notifier' flag and tries to access the DBI registers
+> during dw_pcie_ep_init(). This causes the system hang for glue drivers such
+> as Tegra194 and Qcom EP as they depend on refclk from host and have set the
+> above mentioned flag.
+> 
+> To workaround this issue, users of the affected platforms have to maintain
+> the dependency with the PCIe host by booting the PCIe EP after host boot.
+> But this won't provide a good user experience, since PCIe EP is _one_ of
+> the features of those platforms and it doesn't make sense to delay the
+> whole platform booting due to PCIe requiring active refclk.
+> 
+> So to fix this issue, let's move all the DBI access from
+> dw_pcie_ep_init() in the DWC EP driver to the dw_pcie_ep_init_complete()
+> API. This API will only be called by the drivers setting
+> 'core_init_notifier' flag once refclk is received from host. For the rest
+> of the drivers that gets the refclk locally, this API will be called
+> within dw_pcie_ep_init().
+> 
+> Fixes: e966f7390da9 ("PCI: dwc: Refactor core initialization code for EP mode")
+> Co-developed-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Thanks for your patch!
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Please drop the period at the end of the one-line summary.
-
-On Tue, Jan 9, 2024 at 9:23=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Allows initialization as CLOCKSOURCE.
-
-Please explain why this is needed. E.g.
-
-    Add support for early registration using TIMER_OF_DECLARE(),
-    so the timer can be used as a clocksource on SoCs that do not
-    have any other suitable timer.
-
->
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
-
-> --- a/drivers/clocksource/sh_tmu.c
-> +++ b/drivers/clocksource/sh_tmu.c
-
-> @@ -148,8 +151,8 @@ static int __sh_tmu_enable(struct sh_tmu_channel *ch)
->         /* enable clock */
->         ret =3D clk_enable(ch->tmu->clk);
->         if (ret) {
-> -               dev_err(&ch->tmu->pdev->dev, "ch%u: cannot enable clock\n=
-",
-> -                       ch->index);
-> +               pr_err("%s ch%u: cannot enable clock\n",
-> +                      ch->tmu->name, ch->index);
-
-Please wrap the line after, not before, "ch->tmu->name,".
-
->                 return ret;
->         }
->
-
-> @@ -324,14 +332,14 @@ static int sh_tmu_register_clocksource(struct sh_tm=
-u_channel *ch,
->         cs->mask =3D CLOCKSOURCE_MASK(32);
->         cs->flags =3D CLOCK_SOURCE_IS_CONTINUOUS;
->
-> -       dev_info(&ch->tmu->pdev->dev, "ch%u: used as clock source\n",
-> -                ch->index);
-> +       pr_info("%s ch%u: used as clock source\n",
-> +               ch->tmu->name, ch->index);
-
-No need to wrap this line at all.
-
->
->         clocksource_register_hz(cs, ch->tmu->rate);
->         return 0;
->  }
->
-> -static struct sh_tmu_channel *ced_to_sh_tmu(struct clock_event_device *c=
-ed)
-> +static inline struct sh_tmu_channel *ced_to_sh_tmu(struct clock_event_de=
-vice *ced)
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 120 ++++++++++++++----------
+>  1 file changed, 71 insertions(+), 49 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 1205bfba8310..99d66b0fa59b 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -606,11 +606,16 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+>  int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
 >  {
->         return container_of(ced, struct sh_tmu_channel, ced);
->  }
-> @@ -364,8 +372,8 @@ static int sh_tmu_clock_event_set_state(struct clock_=
-event_device *ced,
->         if (clockevent_state_oneshot(ced) || clockevent_state_periodic(ce=
-d))
->                 sh_tmu_disable(ch);
->
-> -       dev_info(&ch->tmu->pdev->dev, "ch%u: used for %s clock events\n",
-> -                ch->index, periodic ? "periodic" : "oneshot");
-> +       pr_info("%s ch%u: used for %s clock events\n",
-> +               ch->tmu->name, ch->index, periodic ? "periodic" : "onesho=
-t");
-
-Please wrap the line after, not before, "ch->tmu->name,".
-
->         sh_tmu_clock_event_start(ch, periodic);
->         return 0;
->  }
-> @@ -403,7 +411,8 @@ static void sh_tmu_clock_event_resume(struct clock_ev=
-ent_device *ced)
->  }
->
->  static void sh_tmu_register_clockevent(struct sh_tmu_channel *ch,
-> -                                      const char *name)
-> +                                      const char *name,
-> +                                      struct device_node *np)
-
-"np" is unused in this function, hence this change is unneeded.
-(Hey, I already said that in my review of v3)
-
->  {
->         struct clock_event_device *ced =3D &ch->ced;
->         int ret;
-> @@ -417,30 +426,32 @@ static void sh_tmu_register_clockevent(struct sh_tm=
-u_channel *ch,
->         ced->set_state_shutdown =3D sh_tmu_clock_event_shutdown;
->         ced->set_state_periodic =3D sh_tmu_clock_event_set_periodic;
->         ced->set_state_oneshot =3D sh_tmu_clock_event_set_oneshot;
-> -       ced->suspend =3D sh_tmu_clock_event_suspend;
-> -       ced->resume =3D sh_tmu_clock_event_resume;
-> -
-> -       dev_info(&ch->tmu->pdev->dev, "ch%u: used for clock events\n",
-> -                ch->index);
-> +       if (ch->tmu->pdev) {
-> +               ced->suspend =3D sh_tmu_clock_event_suspend;
-> +               ced->resume =3D sh_tmu_clock_event_resume;
-> +       }
-> +       pr_info("%s ch%u: used for clock events\n",
-> +               ch->tmu->name, ch->index);
-
-No need to wrap this line at all.
-
->
->         clockevents_config_and_register(ced, ch->tmu->rate, 0x300, 0xffff=
-ffff);
->
->         ret =3D request_irq(ch->irq, sh_tmu_interrupt,
->                           IRQF_TIMER | IRQF_IRQPOLL | IRQF_NOBALANCING,
-> -                         dev_name(&ch->tmu->pdev->dev), ch);
-> +                         ch->tmu->name, ch);
->         if (ret) {
-> -               dev_err(&ch->tmu->pdev->dev, "ch%u: failed to request irq=
- %d\n",
-> -                       ch->index, ch->irq);
-> +               pr_err("%s ch%u: failed to request irq %d\n",
-> +                      ch->tmu->name, ch->index, ch->irq);
-
-Please wrap the line after, not before, "ch->tmu->name,".
-
->                 return;
->         }
->  }
->
->  static int sh_tmu_register(struct sh_tmu_channel *ch, const char *name,
-> +                          struct device_node *np,
-
-np is unneeded.
-
->                            bool clockevent, bool clocksource)
->  {
->         if (clockevent) {
->                 ch->tmu->has_clockevent =3D true;
-> -               sh_tmu_register_clockevent(ch, name);
-> +               sh_tmu_register_clockevent(ch, name, np);
->         } else if (clocksource) {
->                 ch->tmu->has_clocksource =3D true;
->                 sh_tmu_register_clocksource(ch, name);
-
-> @@ -465,53 +477,59 @@ static int sh_tmu_channel_setup(struct sh_tmu_chann=
-el *ch, unsigned int index,
->         else
->                 ch->base =3D tmu->mapbase + 8 + ch->index * 12;
->
-> -       ch->irq =3D platform_get_irq(tmu->pdev, index);
-> +       if (tmu->pdev)
-> +               ch->irq =3D platform_get_irq(tmu->pdev, index);
-> +       else
-> +               ch->irq =3D of_irq_get(np, index);
-
-You can use of_irq_get() unconditionally.
-
->         if (ch->irq < 0)
->                 return ch->irq;
->
->         ch->cs_enabled =3D false;
->         ch->enable_count =3D 0;
->
-> -       return sh_tmu_register(ch, dev_name(&tmu->pdev->dev),
-> +       return sh_tmu_register(ch, tmu->name, np,
-
-No need to pass np.
-
->                                clockevent, clocksource);
->  }
->
-> -static int sh_tmu_map_memory(struct sh_tmu_device *tmu)
-> +static int sh_tmu_map_memory(struct sh_tmu_device *tmu, struct device_no=
-de *np)
->  {
->         struct resource *res;
->
-> -       res =3D platform_get_resource(tmu->pdev, IORESOURCE_MEM, 0);
-> -       if (!res) {
-> -               dev_err(&tmu->pdev->dev, "failed to get I/O memory\n");
-> -               return -ENXIO;
-> -       }
-> +       if (tmu->pdev) {
-> +               res =3D platform_get_resource(tmu->pdev, IORESOURCE_MEM, =
-0);
-> +               if (!res) {
-> +                       pr_err("sh_tmu failed to get I/O memory\n");
-> +                       return -ENXIO;
-> +               }
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct dw_pcie_ep_func *ep_func;
+> +	struct device *dev = pci->dev;
+> +	struct pci_epc *epc = ep->epc;
+>  	unsigned int offset, ptm_cap_base;
+>  	unsigned int nbars;
+>  	u8 hdr_type;
+> +	u8 func_no;
+> +	int i, ret;
+> +	void *addr;
+>  	u32 reg;
+> -	int i;
+>  
+>  	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
+>  		   PCI_HEADER_TYPE_MASK;
+> @@ -621,6 +626,58 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>  		return -EIO;
+>  	}
+>  
+> +	dw_pcie_version_detect(pci);
 > +
-> +               tmu->mapbase =3D ioremap(res->start, resource_size(res));
-> +       } else
-> +               tmu->mapbase =3D of_iomap(np, 0);
-
-You can use of_iomap() unconditionally.
-
->
-> -       tmu->mapbase =3D ioremap(res->start, resource_size(res));
->         if (tmu->mapbase =3D=3D NULL)
->                 return -ENXIO;
->
->         return 0;
->  }
->
-> -static int sh_tmu_parse_dt(struct sh_tmu_device *tmu)
-> +static int sh_tmu_parse_dt(struct sh_tmu_device *tmu, struct device_node=
- *np)
->  {
-> -       struct device_node *np =3D tmu->pdev->dev.of_node;
-> -
->         tmu->model =3D SH_TMU;
->         tmu->num_channels =3D 3;
->
->         of_property_read_u32(np, "#renesas,channels", &tmu->num_channels)=
-;
->
->         if (tmu->num_channels !=3D 2 && tmu->num_channels !=3D 3) {
-> -               dev_err(&tmu->pdev->dev, "invalid number of channels %u\n=
-",
-> -                       tmu->num_channels);
-> +               pr_err("%s: invalid number of channels %u\n",
-> +                      tmu->name, tmu->num_channels);
-
-Please wrap the line after, not before, "ch->tmu->name,".
-
->                 return -EINVAL;
->         }
->
->         return 0;
->  }
->
-> -static int sh_tmu_setup(struct sh_tmu_device *tmu, struct platform_devic=
-e *pdev)
-> +static int sh_tmu_setup(struct sh_tmu_device *tmu,
-> +                       struct platform_device *pdev, struct device_node =
-*np)
->  {
->         unsigned int i;
->         int ret;
-
-> @@ -531,14 +554,17 @@ static int sh_tmu_setup(struct sh_tmu_device *tmu, =
-struct platform_device *pdev)
->                 tmu->model =3D id->driver_data;
->                 tmu->num_channels =3D hweight8(cfg->channels_mask);
->         } else {
-> -               dev_err(&tmu->pdev->dev, "missing platform data\n");
-> +               pr_err("%s missing platform data\n", tmu->name);
->                 return -ENXIO;
->         }
->
->         /* Get hold of clock. */
-> -       tmu->clk =3D clk_get(&tmu->pdev->dev, "fck");
-> +       if (pdev)
-> +               tmu->clk =3D clk_get(&tmu->pdev->dev, "fck");
-> +       else
-> +               tmu->clk =3D of_clk_get(np, 0);
-
-You can use of_clk_get() unconditionally.
-
->         if (IS_ERR(tmu->clk)) {
-> -               dev_err(&tmu->pdev->dev, "cannot get clock\n");
-> +               pr_err("%s: cannot get clock\n", tmu->name);
->                 return PTR_ERR(tmu->clk);
->         }
->
-
-> @@ -665,12 +711,17 @@ static void __exit sh_tmu_exit(void)
->         platform_driver_unregister(&sh_tmu_device_driver);
->  }
->
-> +subsys_initcall(sh_tmu_init);
-> +module_exit(sh_tmu_exit);
-> +#endif
+> +	dw_pcie_iatu_detect(pci);
 > +
->  #ifdef CONFIG_SUPERH
-> +#ifdef CONFIG_SH_DEVICE_TREE
-> +TIMER_OF_DECLARE(sh_tmu, "renesas,tmu", sh_tmu_of_register);
-
-Probably this TIMER_OF_DECLARE() should be done unconditionally,
-like is done in drivers/clocksource/renesas-ostm.c.
-
-I gave that a try on R-Mobile A1, which also has TMU, but it didn't
-seem to work (timer not firing?). So I suspect there are some missing
-clk_enable() calls.  In the case of the platform driver, these are
-handled using pm_runtime_get_sync().
-
-> +#else
->  sh_early_platform_init("earlytimer", &sh_tmu_device_driver);
->  #endif
+> +	ret = dw_pcie_edma_detect(pci);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!ep->ib_window_map) {
+> +		ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
+> +						       GFP_KERNEL);
+> +		if (!ep->ib_window_map)
+> +			goto err_remove_edma;
+> +	}
+> +
+> +	if (!ep->ob_window_map) {
+> +		ep->ob_window_map = devm_bitmap_zalloc(dev, pci->num_ob_windows,
+> +						       GFP_KERNEL);
+> +		if (!ep->ob_window_map)
+> +			goto err_remove_edma;
+> +	}
+> +
+> +	if (!ep->outbound_addr) {
+> +		addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+> +				    GFP_KERNEL);
+> +		if (!addr)
+> +			goto err_remove_edma;
+> +		ep->outbound_addr = addr;
+> +	}
+> +
+> +	for (func_no = 0; func_no < epc->max_functions; func_no++) {
+> +
+> +		ep_func = dw_pcie_ep_get_func_from_ep(ep, func_no);
+> +		if (ep_func)
+> +			continue;
+> +
+> +		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+> +		if (!ep_func)
+> +			goto err_remove_edma;
+> +
+> +		ep_func->func_no = func_no;
+> +		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+> +							      PCI_CAP_ID_MSI);
+> +		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+> +							       PCI_CAP_ID_MSIX);
+> +
+> +		list_add_tail(&ep_func->list, &ep->func_list);
+> +	}
+> +
+> +	if (ep->ops->init)
+> +		ep->ops->init(ep);
+> +
+>  	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
+>  	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
+>  
+> @@ -655,14 +712,17 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>  	dw_pcie_dbi_ro_wr_dis(pci);
+>  
+>  	return 0;
+> +
+> +err_remove_edma:
+> +	dw_pcie_edma_remove(pci);
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+>  
+>  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  {
+>  	int ret;
+> -	void *addr;
+> -	u8 func_no;
+>  	struct resource *res;
+>  	struct pci_epc *epc;
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> @@ -670,7 +730,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct device_node *np = dev->of_node;
+>  	const struct pci_epc_features *epc_features;
+> -	struct dw_pcie_ep_func *ep_func;
+>  
+>  	INIT_LIST_HEAD(&ep->func_list);
+>  
+> @@ -688,26 +747,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ep->ops->pre_init)
+>  		ep->ops->pre_init(ep);
+>  
+> -	dw_pcie_version_detect(pci);
 > -
-> -subsys_initcall(sh_tmu_init);
-> -module_exit(sh_tmu_exit);
-> +#endif
->
->  MODULE_AUTHOR("Magnus Damm");
->  MODULE_DESCRIPTION("SuperH TMU Timer Driver");
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> -	dw_pcie_iatu_detect(pci);
+> -
+> -	ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
+> -					       GFP_KERNEL);
+> -	if (!ep->ib_window_map)
+> -		return -ENOMEM;
+> -
+> -	ep->ob_window_map = devm_bitmap_zalloc(dev, pci->num_ob_windows,
+> -					       GFP_KERNEL);
+> -	if (!ep->ob_window_map)
+> -		return -ENOMEM;
+> -
+> -	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+> -			    GFP_KERNEL);
+> -	if (!addr)
+> -		return -ENOMEM;
+> -	ep->outbound_addr = addr;
+> -
+>  	epc = devm_pci_epc_create(dev, &epc_ops);
+>  	if (IS_ERR(epc)) {
+>  		dev_err(dev, "Failed to create epc device\n");
+> @@ -721,23 +760,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	if (ret < 0)
+>  		epc->max_functions = 1;
+>  
+> -	for (func_no = 0; func_no < epc->max_functions; func_no++) {
+> -		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
+> -		if (!ep_func)
+> -			return -ENOMEM;
+> -
+> -		ep_func->func_no = func_no;
+> -		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
+> -							      PCI_CAP_ID_MSI);
+> -		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
+> -							       PCI_CAP_ID_MSIX);
+> -
+> -		list_add_tail(&ep_func->list, &ep->func_list);
+> -	}
+> -
+> -	if (ep->ops->init)
+> -		ep->ops->init(ep);
+> -
+>  	ret = pci_epc_mem_init(epc, ep->phys_base, ep->addr_size,
+>  			       ep->page_size);
+>  	if (ret < 0) {
+> @@ -753,25 +775,25 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		goto err_exit_epc_mem;
+>  	}
+>  
+> -	ret = dw_pcie_edma_detect(pci);
+> -	if (ret)
+> -		goto err_free_epc_mem;
+> -
+>  	if (ep->ops->get_features) {
+>  		epc_features = ep->ops->get_features(ep);
+>  		if (epc_features->core_init_notifier)
+>  			return 0;
+>  	}
+>  
+> +	/*
+> +	 * NOTE:- Avoid accessing the hardware (Ex:- DBI space) before this
+> +	 * step as platforms that implement 'core_init_notifier' feature may
+> +	 * not have the hardware ready (i.e. core initialized) for access
+> +	 * (Ex: tegra194). Any hardware access on such platforms result
+> +	 * in system hang.
+> +	 */
+>  	ret = dw_pcie_ep_init_complete(ep);
+>  	if (ret)
+> -		goto err_remove_edma;
+> +		goto err_free_epc_mem;
+>  
+>  	return 0;
+>  
+> -err_remove_edma:
+> -	dw_pcie_edma_remove(pci);
+> -
+>  err_free_epc_mem:
+>  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+>  			      epc->mem->window.page_size);
+> 
+> -- 
+> 2.25.1
+> 
 
