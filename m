@@ -1,278 +1,136 @@
-Return-Path: <linux-pci+bounces-4056-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4057-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AEB8868254
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 22:00:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A018868257
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 22:02:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA0E328619F
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 21:00:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4474F286847
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 21:02:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E623130E5E;
-	Mon, 26 Feb 2024 21:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C14130E55;
+	Mon, 26 Feb 2024 21:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGZNP0aB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKUHuEZM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F1212F388;
-	Mon, 26 Feb 2024 21:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3F312F394;
+	Mon, 26 Feb 2024 21:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708981248; cv=none; b=C7bfsT81AEA01indV9GgH9nTrTPlpRUpBLHqzZ3hullBFpgf6ONMVbjGV/7M+zDCXPb8WE+vvaPlAY4b8dATxsnmD+ssoRsWpwV3seNcMf373/j/a88ACbowravkHdgSIGyt/g/StFuUeIUL9x5+5Zg+wOhjXwPcYmoLOL06x5k=
+	t=1708981351; cv=none; b=otqNS2wpLFDBvAoA9sJ3jhZ9eK631jSwRmEagPsaRgZmdLMxch/Cf2NCdEMfKPV1V2AnDkRmv1u2TknKnCqllxmGZy31l+9azsbLUrVWqgR2/zJiIIe3l3rkpwjolgZtk8Mz/HZk9FEs0MijVC3Q4XsT0cWG9C1PQJJxtuxwpgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708981248; c=relaxed/simple;
-	bh=+W/0O7WuVT+UyHpzMl4HcX6s22lBLQB0RYLJNwkggJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OiZgCnKgChSx/dE6A52B95sApNDLiTZUCp5HoSYSta0wNDPjbLIKLbg4lj68a30MxtzL+V9JylmLeAEo/Ou/kAWoxUCcctjOjDuhaIquyPFX157j1M3auaGWe4j/ITkZAUP4VncoN6g51anN/UKsWSZBADM4eQU4ct1+3zPLjYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGZNP0aB; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-512fd840142so1764476e87.2;
-        Mon, 26 Feb 2024 13:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708981244; x=1709586044; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A0nKmbQkUe18dfPF3HGk5d2W421zTO2IH69qRYWbZuQ=;
-        b=kGZNP0aBn2oDjjBP6e4kOSQaaSiaTSvSfrqMJGly/5S/I2BWsC5nugiY5/qtn2Tuwg
-         Va8PidHyeOCcNt1OKlk/JHnNTvB4rmM/9pMAKaWa1G3//+8qUQS2d4DnryDVdRrgdyMf
-         iWukPbGmiGnvHBO2SB3DM8m56c5qGaD0EOSBFPJoDRVssD10QU8AUYIXYdpeBu2Aq/v3
-         uqxwwm4VHYPjxv7vGDuUrRtkKkqwe6uBs23hGvTwwHozSsjtvAJSOWWSRkDx7EMyGUmX
-         NLYk1BdXEV68x9wxnd03Hu7wE9AJ1dHJMCPWHMJecQvxQjBc71bDAdQvadb2/kuH0m//
-         Qilw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708981244; x=1709586044;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0nKmbQkUe18dfPF3HGk5d2W421zTO2IH69qRYWbZuQ=;
-        b=oKX0ltQRWYtME9ODblWqavHpFJV7wK85UFAH+dKwBS2wU8RPNnqPpvW6dB7JWeQHkR
-         jLgJ6ihw0Dh0riyYDwWcsbM5i2F6iY6mgWFCjblP7I1ldwh7YfVaK9NdczJ5Jj8bhkX0
-         Z1a8VnonerC1pfANJHLRxHglp+6LYU5YYd1ZDC19k3bFssZ17sWiZvV3CRDpJycaf7MS
-         V4czSy71MMOtkZZQHWAHjg0OuEy/0DMidplOCK/nbqaueAYReduSg54asNhWQ0X4r8S6
-         le1NhBprln86E6rojAkHd1dGqWOLyxctrmZkk8GQGCST2UGsKTQvF252k0HmsEi6MywR
-         0yqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbue28cFi3NpHkTEf1SaIQSjG6cINB4yoQ28NQWT68xYLKCWgEBlEq3MoEFu9vB59XNTAIgwjLTZw9E83AarR2BllM5J6VgjoJaeijndsDKOQOLpbHmSnfLMYj4ISeukDgCbBBZcM9tBsmxd8UsfGSOK8ErtpD00RcV3vpUVL4/JKnH4pCYm6ooyVUrL9lhPKbt2Cz46tgBS1eMWCMMbHLCKm/v7WG7e5U
-X-Gm-Message-State: AOJu0YxmK/mL5t5DzlJ7WIDJS/rOSxk2wBnh1qnwtnnJsUkJ84lE9KN9
-	yePpovvfewjmdHIeyIvgEZsmipVjHz3qIjXKZQDsr6IUYxwwW5RX
-X-Google-Smtp-Source: AGHT+IG2CImQkqVQxd6ssoaZRcwh+i9k2qjnbEW465k4VFAlfiuJmCJysPvX5Urg5QLGl0NPz44FlQ==
-X-Received: by 2002:a05:6512:a95:b0:513:a6:2f4 with SMTP id m21-20020a0565120a9500b0051300a602f4mr2236792lfu.13.1708981244044;
-        Mon, 26 Feb 2024 13:00:44 -0800 (PST)
-Received: from mobilestation ([95.79.226.168])
-        by smtp.gmail.com with ESMTPSA id br35-20020a056512402300b0051186a82fc1sm953312lfb.171.2024.02.26.13.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 13:00:43 -0800 (PST)
-Date: Tue, 27 Feb 2024 00:00:41 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Marek Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
-Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
-Message-ID: <6r7kquumuaga5j2hosyi6fla6frdzm5e4iobt7dtftjuwm7wku@7wij7dfhneob>
-References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
- <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
- <fielxplkgrvz5qmqrrq5ahmah5yqx7anjylrlcqyev2z2cl2wo@3ltyl242vkba>
- <20240226152757.GF8422@thinkpad>
+	s=arc-20240116; t=1708981351; c=relaxed/simple;
+	bh=TOLX+LMPbcI2ajxr5u705EUNPqYivRst2CHEJGGDcJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Z046+s47H5kb6hbrp+pLNyhh+Rg6ZXtq8NEyYVCpEBQanOZGdAIqV+3SiH6mQxvsAD0DRZN8xtDjRseACpgLSliMjMX4P/eIdtwMmwfkKgjRYd2WQwVAd3lDNqtozj/GesjKw/HvWy6IA8/BcMUGDNnfF0FW1O8OqKYZ1rDeR3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKUHuEZM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21EBDC433F1;
+	Mon, 26 Feb 2024 21:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708981350;
+	bh=TOLX+LMPbcI2ajxr5u705EUNPqYivRst2CHEJGGDcJM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sKUHuEZMGvk9Vl1IfC73A4HhjBFaLYvP/ahlPRXWDSWb6J+SzmNK7xlAh0c7LKTCZ
+	 Kzu8R27JQdbW5X7AowimOxH7ogwGp6NULU7eO6nMKYe/fA7+v8ouu9ilCW+CTr992G
+	 GTzY2bKhfy1qjK1TzQSIGBIkYDjE3YJwTzLfhs89WjWKZWSTDXP/USJOJ37tInFTGq
+	 K7ZATwRFRPSdegNeDbkSL7FDOnZcPIhxv/Qwi2dH4QQoLQKUqcRI019MM+qLAu+V2/
+	 kpZKrn5iWIb1rHk/zf3cuMvU29VHYQZeSxLkOP2TwvzzlAklF++78uM2lBBmcqLUcS
+	 7FnE1HHvrtICA==
+Date: Mon, 26 Feb 2024 15:02:28 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Edmund Raile <edmund.raile@proton.me>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Mark LSI FW643 to avoid bus reset
+Message-ID: <20240226210228.GA199890@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240226152757.GF8422@thinkpad>
+In-Reply-To: <20240226102354.86757-1-edmund.raile@proton.me>
 
-On Mon, Feb 26, 2024 at 08:57:57PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Feb 26, 2024 at 03:45:16PM +0300, Serge Semin wrote:
-> > Hi Manivannan
-> > 
-> > On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
-> > > In order to add support for Hyper DMA (HDMA), let's refactor the existing
-> > > dw_pcie_edma_find_chip() API by moving the common code to separate
-> > > functions.
-> > > 
-> > > No functional change.
-> > > 
-> > > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
-> > >  1 file changed, 39 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index 250cf7f40b85..193fcd86cf93 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
-> > >  	.irq_vector = dw_pcie_edma_irq_vector,
-> > >  };
-> > >  
-> > > -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> > > +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
-> > > +{
-> > > +	pci->edma.dev = pci->dev;
-> > > +
-> > > +	if (!pci->edma.ops)
-> > > +		pci->edma.ops = &dw_pcie_edma_ops;
-> > > +
-> > > +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
-> > > +}
-> > > +
-> > > +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
-> > >  {
-> > >  	u32 val;
-> > >  
-> > > @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> > >  	else
-> > >  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> > > 
-> > 
-> > > -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
-> > > -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> > > -
-> > > -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> > > -	} else if (val != 0xFFFFFFFF) {
-> > > -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
-> > > +	/* Set default mapping format here and update it below if needed */
-> > > +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
-> > >  
-> > > +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
-> > > +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> > > +	else if (val != 0xFFFFFFFF)
-> > >  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
-> > > -	} else {
-> > > +	else
-> > >  		return -ENODEV;
-> > > -	}
-> > 
-> > Sorry for not posting my opinion about this earlier, but IMO v2 code
-> > was more correct than this one. This version makes the code being not
-> > linear as it was in v2, thus harder to comprehend:
-> > 
-> > 1. Setting up a default value and then overriding it or not makes the
-> > reader to keep in mind the initialized value which is harder than to
-> > just read what is done in the respective branch.
-> > 
-> 
-> No, I disagree. Whether we set the default value or not, EDMA_MF_EDMA_LEGACY is
-> indeed the default mapping format (this is one of the reasons why the enums
-> should start from 1 instead of 0). So initializing it to legacy is not changing
-> anything, rather making it explicit.
-> 
-> > 2. Splitting up the case clause with respective inits and the mapping
-> > format setting up also makes it harder to comprehend what's going on.
-> > In the legacy case the reg-base address and the mapping format init are
-> > split up while they should have been done simultaneously only if (val
-> > != 0xFFFFFFFF).
-> > 
-> 
-> Well again, this doesn't matter since the default mapping format is legacy. But
-> somewhat agree that the two clauses are setting different fields, but even if
-> the legacy mapping format is set inside the second clause, it still differs from
-> the first one since we are not setting reg_base.
-> 
-> > 3. The most of the current devices has the unrolled mapping (available
-> > since v4.9 IP-core), thus having the mf field pre-initialized produces
-> > a redundant store operation for the most of the modern devices.
-> > 
-> 
-> Ok, this one I agree. We could avoid the extra assignment.
-> 
-> > 4. Getting rid from the curly braces isn't something what should be
-> > avoided at any cost and doesn't give any optimization really. It
-> > doesn't cause having less C-lines of the source code and doesn't
-> > improve the code readability.
-> > 
-> 
-> Yeah, there is no benefit other than a simple view of the code. But for point
-> (3), I agree to roll back to v2 version.
-> 
-> > So to speak, I'd suggest to get back the v2 implementation here.
-> > 
-> > >  
-> > > -	pci->edma.dev = pci->dev;
-> > > +	return 0;
-> > > +}
-> > >  
-> > > -	if (!pci->edma.ops)
-> > > -		pci->edma.ops = &dw_pcie_edma_ops;
-> > > +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
-> > > +{
-> > > +	u32 val;
-> > >  
-> > > -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
-> > 
-> > > +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
-> > > +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> > > +	else
-> > > +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> > 
-> > Just dw_pcie_readl_dma(pci, PCIE_DMA_CTRL)
-> > 
-> 
-> 'val' is uninitialized. Why should the assignment be skipped?
+[+cc Alex]
 
-The entire
+On Mon, Feb 26, 2024 at 10:25:12AM +0000, Edmund Raile wrote:
+> Using LSI / Agere FW643 with vfio-pci will issue an FLreset, causing
+> a broken link only recoverable by removing power (power-off /
+> suspend + rescan). Prevent this bus reset.
+> With this change, the device can be assigned to VMs with VFIO.
 
-+	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
-+		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-+	else
-+		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+I don't quite understand the commit log.  It says Function Level
+Resets cause a problem, but the patch sets PCI_DEV_FLAGS_NO_BUS_RESET,
+which prevents Secondary Bus Resets, not Function Level Resets.
 
-can be replaced with a single line
+By default, I think we try reset methods in order of
+pci_reset_fn_methods[], so the fact that we get to the end and 
+try pci_reset_bus_function() (where PCI_DEV_FLAGS_NO_BUS_RESET is
+tested) suggests that we weren't able to use FLR or PM resets.
 
-+	val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+IIUC, vfio-pci resets devices to prevent leaking state from one VM to
+another.  We might be willing to accept the downside of allowing that
+leakage, but I think it's worth mentioning that in the commit log.
 
-since in the legacy case (reg_base = PCIE_DMA_VIEWPORT_BASE) and the
-reg_base has been initialized by now.
+Add blank lines between paragraphs (also in the comment below), or
+rewrap into a single paragraph.
 
--Serge(y)
-
+> Signed-off-by: Edmund Raile <edmund.raile@proton.me>
+> ---
+> Usefulness:
+> The LSI FW643 PCIe->FireWire 800 interface may be EOL but it is
+> the only one that does not use a PCIe->PCI bridge.
+> It was used in the following Apple machines:
+> MacBookPro10,1
+> MacBookPro9,2
+> MacBookPro6,2
+> MacBookPro5,1
+> Macmini6,1
+> Macmini3,1
+> iMac12,2
+> iMac9,1
+> iMac8,1
+> It is reliable and enables FireWire audio interfaces to be used
+> on modern machines.
+> Virtualization allows for flexible access to professional audio
+> software.
 > 
-> - Mani
+> Implementation:
+> PCI_VENDOR_ID_ATT was reused as they are identical and I am
+> uncertain it is correct to add another ID for LSI to pci_ids.h.
+>  drivers/pci/quirks.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> > -Serge(y)
-> > 
-> > >  
-> > >  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-> > >  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-> > > @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	dw_pcie_edma_init_data(pci);
-> > > +
-> > > +	ret = dw_pcie_edma_find_mf(pci);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return dw_pcie_edma_find_channels(pci);
-> > > +}
-> > > +
-> > >  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
-> > >  {
-> > >  	struct platform_device *pdev = to_platform_device(pci->dev);
-> > > 
-> > > -- 
-> > > 2.25.1
-> > > 
-> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d797df6e5f3e..a6747e1b86da 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3765,6 +3765,15 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
+>   */
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
+>  
+> +/*
+> + * Using LSI / Agere FW643 with vfio-pci will issue an FLreset, causing
+> + * a broken link only recoverable by removing power (power-off /
+> + * suspend + rescan). Prevent this bus reset.
+> + * With this change, the device can be assigned to VMs with VFIO.
+> + */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5900, quirk_no_bus_reset);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5901, quirk_no_bus_reset);
+> +
+>  /*
+>   * Some TI KeyStone C667X devices do not support bus/hot reset.  The PCIESS
+>   * automatically disables LTSSM when Secondary Bus Reset is received and
 > -- 
-> மணிவண்ணன் சதாசிவம்
+> 2.43.0
+> 
+> 
 
