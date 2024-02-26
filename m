@@ -1,206 +1,243 @@
-Return-Path: <linux-pci+bounces-4025-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4026-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BA6D867BA6
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 17:21:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D42C9867C11
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 17:32:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EC881C2A0C1
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 16:21:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 613731F2E8AE
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 16:32:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 695E212CDAE;
-	Mon, 26 Feb 2024 16:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C15F12D75E;
+	Mon, 26 Feb 2024 16:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LomV6Oc+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2048.outbound.protection.outlook.com [40.107.247.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B85812CD8F;
-	Mon, 26 Feb 2024 16:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708964494; cv=none; b=GxiKgcysqFOkPLUZ1IuqCrnetpUoELtOWW0CA2OaDWNihd5GNpCPX7ykqw+HBJAEqvsp1Mu3JGsSwOdJj/pJ8/WmRqWgSgJjJHf7L54HCe9KAOZMd4aVznNAB4TwPKZwJ7DPEE8x7orlX9qNeluKcXtHbhIbPozpl06u501Zwbo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708964494; c=relaxed/simple;
-	bh=K8Zp0ZPKDcwcP3G/KRjzFIjbZsJkztFYeVAPVMu3ls8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jaU+dAw9IG0T/+RjLslPCJ7CMFdSiuBrrhI72cj3fpSklsy21NYfI+fvGZlOvcGF68NsUMTzQpXLYKREu/FFRm2xD7HsAA8QZh6locuNSWUuiBlup6DertHPu6G7c5BnAMmRtE+uHQfYUQnA+aniDLr2OjAVlCSnxACdAS8qLNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso3012295276.3;
-        Mon, 26 Feb 2024 08:21:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708964488; x=1709569288;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AnNfNm5GP8AlHR3LpO3OZDALnBwQPt1VpdE5YdvyhHU=;
-        b=FVnpkMWODbp4c5fW2UFshr2DOS6ND2QSWBJ96wrSUsYfNeHmiEw68PeRPLajn1WFVJ
-         3A4auSk7dBLYT9PHhzXsQN3UvDp6ciDmKi+gpjZuVoypDpQLbPOdFxB3n8QjBl0k1ttZ
-         4ibqSJPlm4m0oqQ4vJQLJJtJyblmBFtXOIkuXsYjKmLDsZDlZ6sD0CZrqQJg/XiI9Qrr
-         XIrxk/xfYEnGoOG3yEbOQj/6XAA9Ed8zaWXYAQap8o/4yd8PLAsYJyasNfssnhMckVYb
-         2ujHhjbPlrnu2jESuNXNyiPZmDgE4mWnxLZJ/HE/ZF0H6fjb1XshkNcf3wAGPjRjBjLF
-         54Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCXShRe8maavP53tYStEtKgKz8neu6AFmiEHZbDSs9yJtoXLB4o7X9SClhCyoRJ8rBHsWoIqbytyflsmm4zqC3O0ODnLbpceL4cufCRJHxcc85/B7dGm7yTnfiOYgmLadxLBw16O1S7b9eGVGPAtD+1cR2iEN7455fW2gxdoEbfmqy8cYw06Fys01Uyhp/G+SYxO2rNJ3XfZLWe6oXVn5qdl9ip4VrfHfUWSBMlx+W+SE7wObjWdP4ze1KdB9FFzu6/0YsoFQQEqJAyVq9jmiZyU8/TjnyBlqKDhSfz51+jBIEyqQM3aw11XR5w+cRlrnXqzg9vWD+A4KDSB25a5KVOMQBxQn5vN4ZqwPW/YX6qouFgWPMgMWeA=
-X-Gm-Message-State: AOJu0Yy81+JK7ge34eIBYzpFD03VtP5Vd5q6Ycx9FBePAsB5SV3AzXcP
-	JmiSQ6cvCelDrJLZTBOV3YYbvkTB8kwmYhi7qKICdWVAa00tLrnIoK5OVq5T42w=
-X-Google-Smtp-Source: AGHT+IEJFJN64SqcZMHnkcdm3I6piTKl+/O4wLy59UNIzTaX9D/pCnztcN4qJmRcfE8aCJx/sq4G5Q==
-X-Received: by 2002:a25:ae4f:0:b0:dcd:6722:c728 with SMTP id g15-20020a25ae4f000000b00dcd6722c728mr5196743ybe.14.1708964487740;
-        Mon, 26 Feb 2024 08:21:27 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id t13-20020a25aa8d000000b00dcc620f4139sm1019289ybi.14.2024.02.26.08.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 08:21:27 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso3149877276.0;
-        Mon, 26 Feb 2024 08:21:26 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVqq+jjHfFEPR//OoVVvagRJjk2vjYlnHtyaHvCkOTs+ZFsF6i2R9w6bPoez1blin2aatCtHOQT9jQYIElkQ9XMjM9QNds8HM8FC3tlEEH9+Yi9Xgmrd9nwPw+GjrHL2P2liAGPfbKQf/35XswvsVHxtSDT/8iWz6gCPatMAF/8swgyF+Kaf15fxCjtMXc+SyGjkj04rv8XYMbPZk1keuKBa2brkuHCjSCpJvOpJhsuRu8RsF4ZbZ/3+GUzSpybSWmZSiHFZ8PUn2uIWKWeG7SID418BORxF8mxGgfXlukUXRHQRIJjgqiJWTjI5W7tkkmEpMZICjZRFqfhifFTZag09MAiRGnJus0GfeYjxe+V5h7j3PNIttU=
-X-Received: by 2002:a25:360b:0:b0:dcc:35ca:aac4 with SMTP id
- d11-20020a25360b000000b00dcc35caaac4mr5201494yba.51.1708964485283; Mon, 26
- Feb 2024 08:21:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A0E12C814;
+	Mon, 26 Feb 2024 16:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708964686; cv=fail; b=OSrn+uSlGyK73Ytt2NZGQZgbYg05eyXiYklz47gUm8pCJwGTwYH/IS2HESFuS5Rb+xMwmePKOdmeWbXhGrDglDEUjP6BNsZX0811L0/42G1cInCIV2BsnNS5erABNb78zuRYgXxE3Trms1z1DcyL3KM3aEx9/imsDfCAdgBJZgU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708964686; c=relaxed/simple;
+	bh=SVhZXmQHJ0A6n5mHBw7I63zBrfaBOGPtz/gJKkBwJ2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uNdQOCks6TraLDxSPW2gdSp3ZRH7k/HX9CgXWQ3AXirjbfOhKkgEmk3ilR5EM3JxXqntd19CQ/00n3L+LXgQc0Yy8zlzQa2in8Ntf+KEqHigN3e3DSXO1yshOAnkSl5CVNTAJZmygQlcMKATDQFsVFzlH2xDblpYjtzk9et83Ds=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LomV6Oc+; arc=fail smtp.client-ip=40.107.247.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OvoRxvN4pHQW7+5aIDCthd1DE9KXKA6G4caVyoX5qMT6gGfrPguQ/xGLGx6LHZ9cfocryS73aGgoerm2OGir6lTarQl37zEWvkEEOehU2meOCrbbhyh3K9FYdXMAqLfalWdgrbgmvitxZ86T1xh1RNyt1EtJa3sysxuR6ZHQLPI9h+FM+4O/VSdmh8zhKhfUBtn2KnzB13nTI6Ai0zjjxUtGiSiMQ0fSizvdakbvXhVfmhGV4iRl37un+fWoSIV97lwkb5c7u//ZZKVoQyKaPlu4Bp+dsDrqc9HGTzBYDMv9OR9ndumNJNnz/FjL6oshgR/N+aMpgk6GHMtuHppgYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cVmpDvJZetSr2KLfB9OMWey29guyLBOI/SueWA0eRB0=;
+ b=WXtiD4iUA25ySV8pUof14HZ+isCHVG7ExvBfhmFVZOeZ84gOvWzmx0yumr81LZM1+9d2Zh/+3wVi9HZ7nQhgMHVRdwJgTYpFwaZIfTx0atW+RqgmKCRQULJEbsX81yPf6zuRPkZRnaSVzSzK+iWDfTxS2ZncBg27VkxFyMYmgP4EgHIXpMxNFoJ+ODRgKr58IMECR2/YpEUpuNRRuFoxdyXgO+CwCcv9DsxTK0BVnaTce4hEfA21M4KHJDTdDYV3lCv4VObpfQ2jsYZxEirpvR0HliK7SnkUm/u6V0Sdd+m4YFg5oV4kC48iEa2SVDxBkPidOHrwnh3t7Fq8ltlgKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cVmpDvJZetSr2KLfB9OMWey29guyLBOI/SueWA0eRB0=;
+ b=LomV6Oc+bc5amA3XqiJ2zTXSIFvvvSXV2L6xrCBuwfVGUUS86Nk3D3A8SjUQElkyq01AO1pFUHDcFJ+HrB9ezRfjCSdhMGdo4RffvqCbB5Ouci7Gj2x8jv4wkhyIu5pdEmomod7vVA7BcJjytOcAJ9FowOhFl9zJEkPf6myYC70=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB9866.eurprd04.prod.outlook.com (2603:10a6:10:4ef::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.33; Mon, 26 Feb
+ 2024 16:24:41 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.032; Mon, 26 Feb 2024
+ 16:24:41 +0000
+Date: Mon, 26 Feb 2024 11:24:31 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
+Message-ID: <Zdy7PxDO7d8YIKG2@lizhi-Precision-Tower-5810>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
+X-ClientProxiedBy: SJ0PR13CA0112.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c5::27) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704788539.git.ysato@users.sourceforge.jp> <e5d965a1ba1447466c4a70c95b1e3aa8c1aebe4b.1704788539.git.ysato@users.sourceforge.jp>
-In-Reply-To: <e5d965a1ba1447466c4a70c95b1e3aa8c1aebe4b.1704788539.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 26 Feb 2024 17:21:13 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVyz4mbExe8ZzPkVxEujYBhCBBrh88n8D6ykcZyy3=SEA@mail.gmail.com>
-Message-ID: <CAMuHMdVyz4mbExe8ZzPkVxEujYBhCBBrh88n8D6ykcZyy3=SEA@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v6 02/37] sh: Kconfig unified OF supported targets.
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9866:EE_
+X-MS-Office365-Filtering-Correlation-Id: d5661e94-98c7-4ba0-0b1a-08dc36e76f4e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	DoUNNKXKmI0KKvm8rCQBI711A+WK3FYYj8KWxwojTOjg/JXbcIWqaOLuPB5ouzzvPVe+uv5yNQhDi3XvWDcHuQdF3JlBgKUT2MHLo9iAw0JrKKz6mfhdC/hhbjVi6FIkF5uiat7SXvUDLgX34HnX84x8esZCbayZpctY9bYaIeu54gpoX+KMrEZdemzdFioewuof5d43Zj6g3IOSiQdoH4qVSHfUWWEyjt0Lc9XdXR+PpHKa9ex13sBN1kONg2czG2gWQ+n4+hJCvOaXPs+tOldClXtzKCcFwjIwl7ceKbuCiylzG+l1KQjdPiundwGmn1nkrGwx41IpqcNYUFAWDAScvb2eHK3v149iGYj2jMah0Wt/v+KFYLulP+C9QLMiYdkUhp7Hz8WwMsIec3I2Pja7weAX9hNlM/XNI2pXQqJ657QObsV+fjiOZrRkbVZ5N4PEvfOifeRGVSs7vdidr5PD9OAYibiQrJs0GsF68Ejg6Cy0rxhoAge5+tVFXNlyKy88aHaWlIBfuzr37Rs1zfeQNIyf0agoR3WjQD+DGAgVh2aJtwmhmkWF9AoLGoL2xicnp2zdzRgLmUxDVdnRrUS6UQtX/RwwWvep5MYQbNkJbBLzqbGtyvC02AD1HM/0lLAES1rJdewkO9aVrMs5sZnRIqEaABJ7p+JVWfLlorrM2LYHhz+AG72aSRajn4jKuupNdkeqDlqJm8N0ePKBSMuL3Q2l16klDZZASVcKaYI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?qinck6f5h/1eJeDar/X32IMyzHgib+2FYBd85rQaQNW0olUVstVh5XmYg6ym?=
+ =?us-ascii?Q?xet0TMU0ep/d281sPJLQv1BQIywJCJMtjWUVB1Fskpl2H03lDilJghGQcDso?=
+ =?us-ascii?Q?orvrB8dNKoR8rsf9s3/xHIAjFYCETloDi2/CsizY05EMBcVq2Mq20G+h31G8?=
+ =?us-ascii?Q?GGKsONYnqveuGimxaS/QrusP8d20oGPjb5W+YPEqIHw0BCtVHRkvawCIdOxY?=
+ =?us-ascii?Q?1C6T+oVRxqQcYjHawqv1HIBE98U03F75y/jIReTutLl62n1xeui3hla78G5/?=
+ =?us-ascii?Q?KxrDQZ8SdHpPgVG3WKGor1yaA3+C91hAzw02Ia2rUZDekKGiPeXY+ZJeBHr6?=
+ =?us-ascii?Q?/TjYOFGmSrWvigTXqjkkGOc8DF0dy4w5YdUkEY14OS2gQSISv/hP2rYy0nYN?=
+ =?us-ascii?Q?1VS+a0r3Ovmcgvx+l59hb3jAJDruyS2SWaajP+1PNvcAZZrXiq9iLuK9fPui?=
+ =?us-ascii?Q?89kqIxMa6NuFlBJFpHNnzFykPzY++BI0WhbqLZduTZtyuJ5E3zwBi6OfQpvo?=
+ =?us-ascii?Q?6V4+EgIjdBc+R3hM9kUi7FMcpZxqgrgkkwMbs48OJO4TmIXJ193zNEEdaQk+?=
+ =?us-ascii?Q?pcf1hYc7XL98q3AVgTSPq8IoJjZwcEaRTZjfI7DlQwuYmWae/nB4tunaWDrg?=
+ =?us-ascii?Q?FB86r/h9uoegt/jVtVs/FWAWpwVfracs2fLa3IdL2dinMdzMXvzJOrH2J1KC?=
+ =?us-ascii?Q?mKSH4nfj1zsQblDQYeLzesWngVCR0piBMcOvr6WMyiKA4ReqIv/ipSU8N6gm?=
+ =?us-ascii?Q?180ESLBLOlFEekWPnycSjpGK3dK6HLzUJSy88tRMcLd2UPpycAmUVoNhAbZ5?=
+ =?us-ascii?Q?bznH4VoeRwTr7BnXI+gZ9ku9Vx5RqP7uW2TNcYI6WuYkMwDJx+lRcd81S1QM?=
+ =?us-ascii?Q?/hZcIx2vr6EkLXFvEYiO2wv+JRR4m0QVVlxdNr6aWC6LktI5yg/bBQpqcGkm?=
+ =?us-ascii?Q?AOafnUj4proPKsQ6x24n+AR/RAFkuZswdk64UNkNX94Qxs4TpfvDsxREV2ar?=
+ =?us-ascii?Q?6WnX/p0qbR9bpCz0z2YKnNdKTcW30Y/18IQghByG4JjnMfWJphvpXSZegAn1?=
+ =?us-ascii?Q?QYphz596uZuVbTj3cuP+HIGc4mRRM2+eEhyP7LYYayLEeLBR2Hy8SD/kVPgY?=
+ =?us-ascii?Q?om+z3s+LAqMXEhE6CzQgS3ACZEOr9IOgim5sSFtJUguDyFsDRIlv7DSMHg65?=
+ =?us-ascii?Q?Er3IjbyCz7nu7jSe8rJTiVB6cF+kclq4fnAmByq3OqJO+Luf0NuJJifAETny?=
+ =?us-ascii?Q?4efBaHu5r9nSJsW+8PqsvEweQUvg9/cVO6o4lenvdbKuOBW/aWuBqPHiA/z2?=
+ =?us-ascii?Q?i2LhC8k4+6VieHQAvBuYZ8aQil4Kf5tShZ4RhkTCjBNUjdKnwciXvKfl8RBI?=
+ =?us-ascii?Q?66TcBL2/2QyCza4ueTnPcOUGp+esz2bzcMyzn/5ibsBze8u15jSA4KXHvuPR?=
+ =?us-ascii?Q?mo3qaPDHZXeoNd0/5cV1qKCB7oXADhQZ9iN0bmBTFPpReubkgv1QaqeU4pqF?=
+ =?us-ascii?Q?KoVL8cdnU8sCKUP7OJI/6LXvvbpw3AVUGmz1qLwjtMZdKJuIfRx37O5bQH9t?=
+ =?us-ascii?Q?3qNrHazTdZbKfiAlJdv/Mj+944U8oT9Tufb961s6?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5661e94-98c7-4ba0-0b1a-08dc36e76f4e
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 16:24:41.3918
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3UKRAIeI++ncYlDtYxm/4Iz7qR8R8VbmQQM111sk6XzX7VA0+W+cHsRVLeeOLYQdajpGVp9W3fPc8gbyPHSTnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9866
 
-Hi Sato-san,
+On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
+> In order to add support for Hyper DMA (HDMA), let's refactor the existing
+> dw_pcie_edma_find_chip() API by moving the common code to separate
+> functions.
+> 
+> No functional change.
+> 
+> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Tue, Jan 9, 2024 at 9:23=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Targets that support OF should be treated as one board.
->
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Thanks for your patch!
-
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -710,6 +710,7 @@ choice
->         prompt "Kernel command line"
->         optional
->         default CMDLINE_OVERWRITE
-> +       depends on !OF || USE_BUILTIN_DTB
-
-This is still useful in the generic OF case.
-
-I think it would be good to model this similar to what arm/arm64/riscv
-are using (from bootloader / extend / force).
-
->         help
->           Setting this option allows the kernel command line arguments
->           to be set.
-> diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
-> index 109bec4dad94..e7e52779ef62 100644
-> --- a/arch/sh/boards/Kconfig
-> +++ b/arch/sh/boards/Kconfig
-> @@ -19,16 +19,9 @@ config SH_DEVICE_TREE
->         select TIMER_OF
->         select COMMON_CLK
->         select GENERIC_CALIBRATE_DELAY
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
+>  1 file changed, 39 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 250cf7f40b85..193fcd86cf93 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+>  	.irq_vector = dw_pcie_edma_irq_vector,
+>  };
+>  
+> -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
+> +{
+> +	pci->edma.dev = pci->dev;
+> +
+> +	if (!pci->edma.ops)
+> +		pci->edma.ops = &dw_pcie_edma_ops;
+> +
+> +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> +}
+> +
+> +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+>  
+> @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	else
+>  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+>  
+> -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
 > -
-> -config SH_JCORE_SOC
-> -       bool "J-Core SoC"
-> -       select SH_DEVICE_TREE
-> -       select CLKSRC_JCORE_PIT
-> -       select JCORE_AIC
-> -       depends on CPU_J2
-> -       help
-> -         Select this option to include drivers core components of the
-> -         J-Core SoC, including interrupt controllers and timers.
-> +       select GENERIC_IRQ_CHIP
-> +       select SYS_SUPPORTS_PCI
-> +       select GENERIC_PCI_IOMAP if PCI
->
->  config SH_SOLUTION_ENGINE
->         bool "SolutionEngine"
-> @@ -293,6 +286,7 @@ config SH_LANDISK
->         bool "LANDISK"
->         depends on CPU_SUBTYPE_SH7751R
->         select HAVE_PCI
-> +       select SYS_SUPPORTS_PCI
->         help
->           I-O DATA DEVICE, INC. "LANDISK Series" support.
->
-> @@ -369,6 +363,16 @@ config SH_APSH4AD0A
->         help
->           Select AP-SH4AD-0A if configuring for an ALPHAPROJECT AP-SH4AD-=
-0A.
->
-> +config SH_OF_BOARD
-> +       bool "General Open Firmware boards"
-> +       select SH_DEVICE_TREE
-> +       select CLKSRC_JCORE_PIT if CPU_J2
-> +       select JCORE_AIC if CPU_J2
-
-Please move these selects to CPU_J2 instead...
-
-> +       select HAVE_PCI if CPU_SUBTYPE_SH7751R
-
-... and this to CPU_SUBTYPE_SH7751R, else it will become
-a long unmaintainable list soon...
-
-> +       help
-> +         This board means general OF supported targets.
+> -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> -	} else if (val != 0xFFFFFFFF) {
+> -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> +	/* Set default mapping format here and update it below if needed */
+> +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+>  
+> +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
+> +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> +	else if (val != 0xFFFFFFFF)
+>  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> -	} else {
+> +	else
+>  		return -ENODEV;
+> -	}
+>  
+> -	pci->edma.dev = pci->dev;
+> +	return 0;
+> +}
+>  
+> -	if (!pci->edma.ops)
+> -		pci->edma.ops = &dw_pcie_edma_ops;
+> +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+>  
+> -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> +	else
+> +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+>  
+>  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+>  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+> @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	return 0;
+>  }
+>  
+> +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +{
+> +	int ret;
 > +
+> +	dw_pcie_edma_init_data(pci);
 > +
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> +	ret = dw_pcie_edma_find_mf(pci);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return dw_pcie_edma_find_channels(pci);
+> +}
+> +
+>  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+>  {
+>  	struct platform_device *pdev = to_platform_device(pci->dev);
+> 
+> -- 
+> 2.25.1
+> 
 
