@@ -1,116 +1,264 @@
-Return-Path: <linux-pci+bounces-4019-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4020-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A3FD867A24
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 16:25:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86D7C867B88
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 17:16:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D75262925F7
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 15:25:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D38DB3A186
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 15:28:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43AAF12BE82;
-	Mon, 26 Feb 2024 15:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030FE129A7B;
+	Mon, 26 Feb 2024 15:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5/VrA94"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldJt/rwH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA5712B17B;
-	Mon, 26 Feb 2024 15:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBDD12B15F
+	for <linux-pci@vger.kernel.org>; Mon, 26 Feb 2024 15:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708961118; cv=none; b=OVXMo1BqPvDdy/Dnvp70etn8G9v0IKsJoS4s+p0kj0o44ds0XK+5grxoI1MVhjmWCcK/FQ9qoD/8hqbOc86V+Mu++FoRyikJKqPeiylXBypI1pTtYY/vIP1PtT6ERlhRQ+rGnM/onLYXX87CtuuZicK7lnmrOfdeijiwjhWSd14=
+	t=1708961285; cv=none; b=EB6gOw1LE+6NGFDdqBCYQt/uY3EJ95PtE0jNp050TyUdqPLKYl+wbwi3EhRRbZfysEbIaEssFsF0w6mRZPkITDNA3ocusiKFkTlsqBhoqTh0GsuN+34f1EkSMBluGCkvmzrUBmdqM8/TF5epq5lu1o9UVSEl0KlclIr3St/VToQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708961118; c=relaxed/simple;
-	bh=s9gx1o+QjyB553WhrB297l0j+CWUXlWb+nWk985SnPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=P7QjbxZJPkwwyaV+eQ6cVQByWeVl7fwY8PGIIPLBYOPBfXVcfKXPQjW9vbwklv/+hLQgVlZb9AnvFDZ67hD+EAhnrC6Mldygh8GWgfPnlxGFlcZKjvkkq2g2GQyDZYkmzzm6c9WJKi//QhGLeY0S8Qq6vQ1iZj3/idUZKeJIWY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5/VrA94; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73858C433C7;
-	Mon, 26 Feb 2024 15:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708961117;
-	bh=s9gx1o+QjyB553WhrB297l0j+CWUXlWb+nWk985SnPY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=E5/VrA94F/JpdG4VGLPk5+BEDHREYe7aCVPn2mNFndnl7NLweX7tdXGFB2fb3vMKw
-	 coYtZpjdUblewcYnqWwWiM3Z77BjLl16e5717ghdQAN3Eb5/VCbg9SzdwJQh8Halvz
-	 jh8sZv9zpibV3ura+Ci6BbBt4VFsGDCk8ruIu6iKWn7re+PgC9y/VcKNfNSLhE5iTz
-	 6/kfAx/rtuGjt60Co9F7EXzHXzZb4XJRScewGcrPkvjmXd1FfD28xWAMlPu+TSdA4Z
-	 KjEp8VvUL9/SWPxIvbo9ug4GOsiNiVcgMG53NdSWdLU9QVmSphVvvV7PUqHYATVx/r
-	 18xfIVM9/8RQQ==
-Date: Mon, 26 Feb 2024 09:25:16 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Matthew W Carlis <mattc@purestorage.com>,
-	Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 3/3] PCI/DPC: Encapsulate pci_acpi_add_edr_notifier()
-Message-ID: <20240226152516.GA200426@bhelgaas>
+	s=arc-20240116; t=1708961285; c=relaxed/simple;
+	bh=/zIqNEIiZgqgESqdwwv84VSZjlqukKlOFeK313xRY+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PP7H49sG8EhtUlBfWiMh5GsNakyaVxdXjKQqahaj+pxi1gtM0IsMgNqGd468+XO1fDHXRQiFxSTn5hOHwSMDvCSF82QzgNtBd03jPzkcog5aP4cO1UEXfZ0mLptBJIHtgpBUXs0EmT8r4xvfDupCX43xOeLWDON+iavaNkBp2DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ldJt/rwH; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d8ddbac4fbso2650089a12.0
+        for <linux-pci@vger.kernel.org>; Mon, 26 Feb 2024 07:28:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708961283; x=1709566083; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zUk/ORfZNSqc9ZCObPtK2ZClf11ZenkgiuTQii/H4vM=;
+        b=ldJt/rwHc2iFKZEc+XMfvB/rDW0WTfyv5fjj5BjJGp64hKkXg1A3cYu63AV6e3g0rE
+         HmsGE3a9jgslNlTgHNd3W7ekWkHflzi2rnCzrqNpvyUPw0D65AtLF1m+v+IgCc5WVeJX
+         T8ZAyf4dw6fb4b1l57RRpWe3x00SfUonSA2hoeqOT6ZWIsmaC8mBuiOZWm8Umy4CvFrL
+         hymUKCimhyZLqdIWUjbcLfLRSXXTUjep5P/HZnOJTkfGmAlHBrlTzq4CduVmpy89wP9V
+         /qGoZpke7L4FvRipxUU5vc5QWLLAK5fJfl42RRycRDLYp817sninRTYYnCor1ni51r/U
+         HAQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708961283; x=1709566083;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zUk/ORfZNSqc9ZCObPtK2ZClf11ZenkgiuTQii/H4vM=;
+        b=YJ+gwbcBfKlnTgld6wln4C2ALKyM3XPEjK+rJDPwQdr954wyHvHZUD8HJ4s4ISet4u
+         tXdCZEFR/e8L+/AQWwwEXPd1mwqFMllaTkjQV+GsVRoJBmRIg4seDSHoKI+hGOhXSHxF
+         xv6HXlEPi8x8R68VflUkk/2gW4jNzucTqvQ7OlhWz1fSXyoTHeUrH2uoXUGOs3M6WRGJ
+         iw7TeOK2C5SZRpvx6Jk2im9F0MjdC5UAz4tExkK9DDZqd0xOOHjjcy4TWMYTLVo85n6s
+         vIZUH1wIzLa6oqQydGEhfKHtcNdiw03GajYEj8Fd/J5h2CuasmZWYaV2IAgRfgIr7cKu
+         NIRg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7OASn6kSZxwKQ478isG33h7zdfUafBrJ+xsDZEOjsKrhxzlLSjEwq+h9dakYBnaR8ehEoWd8BrqsTG5I4I0rS5n3uBukTREjA
+X-Gm-Message-State: AOJu0YxKs75pHGcECxzqu+Q/GDbXus6hAJ9z6c/ZaD2CtPYkREOVufGp
+	ZkZt92E0UcHa90PVyRk1JU8I7F/Kuq63YElSVFUgbyDG+wqKDQrXFxX+MJbd/g==
+X-Google-Smtp-Source: AGHT+IFASf7wo/ZepyNEJ40sBxrik6uh3CI0+HCHyKlm+3jmHjdxgtw9uL5jNgpl+vxlzT6sDHAIBw==
+X-Received: by 2002:a17:90a:fe0d:b0:29a:7f4f:c55a with SMTP id ck13-20020a17090afe0d00b0029a7f4fc55amr5377972pjb.7.1708961283129;
+        Mon, 26 Feb 2024 07:28:03 -0800 (PST)
+Received: from thinkpad ([117.202.184.81])
+        by smtp.gmail.com with ESMTPSA id c13-20020a63da0d000000b005dcaa45d87esm4110876pgh.42.2024.02.26.07.27.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 07:28:02 -0800 (PST)
+Date: Mon, 26 Feb 2024 20:57:57 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	mhi@lists.linux.dev
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
+Message-ID: <20240226152757.GF8422@thinkpad>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
+ <fielxplkgrvz5qmqrrq5ahmah5yqx7anjylrlcqyev2z2cl2wo@3ltyl242vkba>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <572af7f6-2544-4708-a90d-e18c58eb2762@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fielxplkgrvz5qmqrrq5ahmah5yqx7anjylrlcqyev2z2cl2wo@3ltyl242vkba>
 
-On Sun, Feb 25, 2024 at 12:06:52PM -0800, Kuppuswamy Sathyanarayanan wrote:
+On Mon, Feb 26, 2024 at 03:45:16PM +0300, Serge Semin wrote:
+> Hi Manivannan
 > 
-> On 2/22/24 2:15 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > pci_acpi_add_edr_notifier() and pci_acpi_remove_edr_notifier() are only
-> > referenced inside drivers/pci/.  Move their declarations from
-> > include/linux/pci-acpi.h to drivers/pci/pci.h so they're not visible
-> > outside drivers/pci/.
-> >
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
+> > In order to add support for Hyper DMA (HDMA), let's refactor the existing
+> > dw_pcie_edma_find_chip() API by moving the common code to separate
+> > functions.
+> > 
+> > No functional change.
+> > 
+> > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > ---
-> >  drivers/pci/pci.h        | 4 ++++
-> >  include/linux/pci-acpi.h | 8 --------
-> >  2 files changed, 4 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 2336a8d1edab..03bf2776d73b 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -432,11 +432,15 @@ void pci_dpc_init(struct pci_dev *pdev);
-> >  void dpc_process_error(struct pci_dev *pdev);
-> >  pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
-> >  bool pci_dpc_recovered(struct pci_dev *pdev);
-> > +void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-> > +void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
+> >  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
+> >  1 file changed, 39 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 250cf7f40b85..193fcd86cf93 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+> >  	.irq_vector = dw_pcie_edma_irq_vector,
+> >  };
+> >  
+> > -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> > +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
+> > +{
+> > +	pci->edma.dev = pci->dev;
+> > +
+> > +	if (!pci->edma.ops)
+> > +		pci->edma.ops = &dw_pcie_edma_ops;
+> > +
+> > +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> > +}
+> > +
+> > +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
+> >  {
+> >  	u32 val;
+> >  
+> > @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> >  	else
+> >  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> > 
 > 
-> Protect them with CONFIG_ACPI?
+> > -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> > -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> > -
+> > -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> > -	} else if (val != 0xFFFFFFFF) {
+> > -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> > +	/* Set default mapping format here and update it below if needed */
+> > +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> >  
+> > +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
+> > +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> > +	else if (val != 0xFFFFFFFF)
+> >  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> > -	} else {
+> > +	else
+> >  		return -ENODEV;
+> > -	}
+> 
+> Sorry for not posting my opinion about this earlier, but IMO v2 code
+> was more correct than this one. This version makes the code being not
+> linear as it was in v2, thus harder to comprehend:
+> 
+> 1. Setting up a default value and then overriding it or not makes the
+> reader to keep in mind the initialized value which is harder than to
+> just read what is done in the respective branch.
+> 
 
-Good idea, thanks!  They're called only from pci-acpi.c, so I moved
-them inside the #ifdef CONFIG_ACPI above:
+No, I disagree. Whether we set the default value or not, EDMA_MF_EDMA_LEGACY is
+indeed the default mapping format (this is one of the reasons why the enums
+should start from 1 instead of 0). So initializing it to legacy is not changing
+anything, rather making it explicit.
 
-  #ifdef CONFIG_ACPI
-  int pci_acpi_program_hp_params(struct pci_dev *dev);
-  ...
-  #ifdef CONFIG_PCIE_DPC
-  void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
-  void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
-  #endif
-  #else
-  static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
-  {
-          return -ENODEV;
-  }
-  #ifdef CONFIG_PCIE_DPC
-  static inline void pci_acpi_add_edr_notifier(struct pci_dev *pdev) { }
-  static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
-  #endif
-  #endif
+> 2. Splitting up the case clause with respective inits and the mapping
+> format setting up also makes it harder to comprehend what's going on.
+> In the legacy case the reg-base address and the mapping format init are
+> split up while they should have been done simultaneously only if (val
+> != 0xFFFFFFFF).
+> 
 
-Bjorn
+Well again, this doesn't matter since the default mapping format is legacy. But
+somewhat agree that the two clauses are setting different fields, but even if
+the legacy mapping format is set inside the second clause, it still differs from
+the first one since we are not setting reg_base.
+
+> 3. The most of the current devices has the unrolled mapping (available
+> since v4.9 IP-core), thus having the mf field pre-initialized produces
+> a redundant store operation for the most of the modern devices.
+> 
+
+Ok, this one I agree. We could avoid the extra assignment.
+
+> 4. Getting rid from the curly braces isn't something what should be
+> avoided at any cost and doesn't give any optimization really. It
+> doesn't cause having less C-lines of the source code and doesn't
+> improve the code readability.
+> 
+
+Yeah, there is no benefit other than a simple view of the code. But for point
+(3), I agree to roll back to v2 version.
+
+> So to speak, I'd suggest to get back the v2 implementation here.
+> 
+> >  
+> > -	pci->edma.dev = pci->dev;
+> > +	return 0;
+> > +}
+> >  
+> > -	if (!pci->edma.ops)
+> > -		pci->edma.ops = &dw_pcie_edma_ops;
+> > +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
+> > +{
+> > +	u32 val;
+> >  
+> > -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> 
+> > +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> > +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> > +	else
+> > +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> 
+> Just dw_pcie_readl_dma(pci, PCIE_DMA_CTRL)
+> 
+
+'val' is uninitialized. Why should the assignment be skipped?
+
+- Mani
+
+> -Serge(y)
+> 
+> >  
+> >  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+> >  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+> > @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> >  	return 0;
+> >  }
+> >  
+> > +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> > +{
+> > +	int ret;
+> > +
+> > +	dw_pcie_edma_init_data(pci);
+> > +
+> > +	ret = dw_pcie_edma_find_mf(pci);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return dw_pcie_edma_find_channels(pci);
+> > +}
+> > +
+> >  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+> >  {
+> >  	struct platform_device *pdev = to_platform_device(pci->dev);
+> > 
+> > -- 
+> > 2.25.1
+> > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
