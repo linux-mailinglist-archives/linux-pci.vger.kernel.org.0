@@ -1,143 +1,201 @@
-Return-Path: <linux-pci+bounces-4008-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4010-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC3E88673D4
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 12:49:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDDD2867439
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 13:03:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB8181C25C83
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 11:49:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7852129085C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 12:03:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0F01D54B;
-	Mon, 26 Feb 2024 11:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F291EB27;
+	Mon, 26 Feb 2024 12:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FIYdPJD8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kzG7Z1CL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA0B1DA37;
-	Mon, 26 Feb 2024 11:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E01B1CD08;
+	Mon, 26 Feb 2024 12:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708948184; cv=none; b=fRLDPGmEwOQ7Z764LR12ehD941heY9eOmfN/7aQbZMkIRCJpAmkuu+GKDTh8G2gthv6crPh0m3349yFhCm6jrEt+nj5q/z4yGUtz9cc1B5KdIm1vCb15WOfha0Y+QCqxJe5rA9wkonJ+pA4XkWYQvhAc0skjXGq9xUqSjwK12lc=
+	t=1708949001; cv=none; b=TTP+P2o2JyXccecj73Vysk2Xg3QmeXK00iByZJYH1+zV0ym4bygLLiE9RvlddcsRWPKFq6G7EqzH+NTew/g+q/A+IphGKvCzBHb1wlpRXiVDKZb5GWyYsuUfwnWGJZT4kil9TGvb8FZF4mq/8VIQqSHsr0WndrMdg/3cNup/PqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708948184; c=relaxed/simple;
-	bh=XDVR6cUnSSDPnKY5yPTZWPfRyY9FP26xvfynU2Sa91A=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=seaWdjGHeqvn0LesYda3ZWQxcFkjRivmtuAbhCXNVlpSWTdwXb6H6P5+v5V9a1Qo43iTjnKgOq6ohSVFsqJ2AS/WryUyMI4XfwslG8TCaJXvdsmA3GaVlas5ozKIvL7cqthtiCpqG+8Qc3xdctAnRr0Y36bAhS+cjqKfwxlHBvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FIYdPJD8; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708948183; x=1740484183;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=XDVR6cUnSSDPnKY5yPTZWPfRyY9FP26xvfynU2Sa91A=;
-  b=FIYdPJD8xgpDHi8jNyFTM13HGtcC37xUoTJMe/o7L4MnMf7TIvnj7pTo
-   /hz3kG7CtyTP6egioOUb6sUPEEwujf3Nw5IJpC5wY5f9bi3DgxROxzvZv
-   EOhCpZqkGM7awIxqA6bND1zor7cH/L40s/FsWRoaZ9JgRQCopzuajja8S
-   0hO5Pgn8dIksEjRQhq76hiSjDocRgrRvu2dR2iyg6sveQKd62XAcSTWvZ
-   4bAdFgCPD8CNWn+zKPhWBKI8q9hDGMGTBz/q+2xuVSHFHhtTfZwAvzzsH
-   G9aQh/7DC5MxOnjn7TGjl7UODQ2rdBRGKoHjxgWE8py//CsKO/JPhdVQ4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="7032128"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="7032128"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 03:49:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="6634988"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.12])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 03:49:40 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 Feb 2024 13:49:34 +0200 (EET)
-To: Mathias De Weerdt <mathias.de.weerdt@gmail.com>
-cc: Bjorn Helgaas <helgaas@kernel.org>, ben.chuang@genesyslogic.com.tw, 
-    johnsonm@danlj.org, linux-pci@vger.kernel.org, linux-mmc@vger.kernel.org, 
-    linux-pm@vger.kernel.org, "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: Bug Report: Delayed Wake from Suspend with Genesys Logic GL9755
- SD Host Controller
-In-Reply-To: <CAKfmkPK+T0887-uQORxOzbcz-ZxBY+wKLYPRoiQiUfNhffQBEg@mail.gmail.com>
-Message-ID: <0aa430ff-c60d-b2c6-bb1c-e352ae7be020@linux.intel.com>
-References: <CAKfmkPKW=cD88D-cYJUaoN0A6i91C5ukiy6AYYWpNbW8VBQaGA@mail.gmail.com> <20240225233117.GA182018@bhelgaas> <CAKfmkPK+T0887-uQORxOzbcz-ZxBY+wKLYPRoiQiUfNhffQBEg@mail.gmail.com>
+	s=arc-20240116; t=1708949001; c=relaxed/simple;
+	bh=vRIEb/+D7M4j/nHK9fDGfbH9sUW39k0q7B5ZbffZKjw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3SR1IwpVW92Q6/gL3hpTzceTc0LovI+8JtYSwXv5zBMSD5hL8z5Vgy8II86+ULvJY3F5mN+Tf8sXjcnvON4t3MJV5eH8zkwA9txO5WbGgSJHwXMV8v4qIAWq0ZjAiWaawtSdGG+UPTUd4SNUQfxodWaF6dZVZaCcb898sUX9J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kzG7Z1CL; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41QC2mR0099398;
+	Mon, 26 Feb 2024 06:02:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708948968;
+	bh=+3AsQsaBHuAdklDpGOnvvIB16uuAzF8tgDh7ffFqkhY=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=kzG7Z1CL27dDBNkYo2tw7iZjIJPFaNvIU847qw0GQo0uVwMo1MBKX5cMH/pORS2V4
+	 H4t1PkdKa7j5T1kXRQH+nJFQc9l9KTioni/0nyQWp/DlrIYRmzNB0SPQ4CTbzy580C
+	 FV04F/xi3LJYmMN8WiwyuXf90xfPaRTq7klgspuE=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41QC2m0t104041
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 26 Feb 2024 06:02:48 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
+ Feb 2024 06:02:48 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 26 Feb 2024 06:02:48 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41QC2lnH056462;
+	Mon, 26 Feb 2024 06:02:47 -0600
+Date: Mon, 26 Feb 2024 17:32:46 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel
+	<gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Marek Vasut
+	<marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>,
+        Kishon Vijay Abraham I
+	<kishon@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
+        <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
+Message-ID: <a3e4f9f9-e3c0-428c-913c-d777f3386556@ti.com>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, 26 Feb 2024, Mathias De Weerdt wrote:
-
-> Hi Bjorn
+On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
+> In order to add support for Hyper DMA (HDMA), let's refactor the existing
+> dw_pcie_edma_find_chip() API by moving the common code to separate
+> functions.
 > 
-> This has indeed never worked. I have even tried plenty of older
-> kernels and now also the latest mainline.
+> No functional change.
 > 
-> I collected the data you requested on the following kernel (Latest
-> mainline as of yesterday)
-> Linux core-arch 6.8.0-rc5-1-mainline #1 SMP PREEMPT_DYNAMIC Sun, 25
-> Feb 2024 21:59:28 +0000 x86_64 GNU/Linux
+> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+Regards,
+Siddharth.
+
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
+>  1 file changed, 39 insertions(+), 13 deletions(-)
 > 
-> After booting the laptop I put it to sleep and woke it up and
-> collected the dmesg and lspci logs. (They have been attached)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 250cf7f40b85..193fcd86cf93 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+>  	.irq_vector = dw_pcie_edma_irq_vector,
+>  };
+>  
+> -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
+> +{
+> +	pci->edma.dev = pci->dev;
+> +
+> +	if (!pci->edma.ops)
+> +		pci->edma.ops = &dw_pcie_edma_ops;
+> +
+> +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> +}
+> +
+> +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
+>  {
+>  	u32 val;
+>  
+> @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	else
+>  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+>  
+> -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> -
+> -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> -	} else if (val != 0xFFFFFFFF) {
+> -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> +	/* Set default mapping format here and update it below if needed */
+> +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+>  
+> +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
+> +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> +	else if (val != 0xFFFFFFFF)
+>  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> -	} else {
+> +	else
+>  		return -ENODEV;
+> -	}
+>  
+> -	pci->edma.dev = pci->dev;
+> +	return 0;
+> +}
+>  
+> -	if (!pci->edma.ops)
+> -		pci->edma.ops = &dw_pcie_edma_ops;
+> +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+>  
+> -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> +	else
+> +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+>  
+>  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+>  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+> @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+>  	return 0;
+>  }
+>  
+> +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +{
+> +	int ret;
+> +
+> +	dw_pcie_edma_init_data(pci);
+> +
+> +	ret = dw_pcie_edma_find_mf(pci);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return dw_pcie_edma_find_channels(pci);
+> +}
+> +
+>  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+>  {
+>  	struct platform_device *pdev = to_platform_device(pci->dev);
 > 
-> Thanks for your quick response.
-> If you need anything else please let me know.
+> -- 
+> 2.25.1
 > 
-> Kinds regards
-> Mathias
 > 
-> On Mon, 26 Feb 2024 at 00:31, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Sun, Feb 25, 2024 at 11:38:35PM +0100, Mathias De Weerdt wrote:
-> > > Hi
-> > >
-> > > I am writing to report a potential bug in the Linux kernel related to
-> > > waking from suspend on a system(Laptop) with a Genesys Logic GL9755 SD
-> > > Host Controller. Below are the details of the issue:
-> >
-> > Hi Mathias, thanks very much for this report.  A few questions below.
-> >
-> > > Issue Description:
-> > > After suspending the system, waking it up takes an extended amount of
-> > > time, typically 1 to 2 minutes. The delay occurs consistently and is
-> > > observed in the dmesg logs.
-> > >
-> > >
-> > > System Information:
-> > > - OS: Arch Linux x86_64
-> > > - Kernel: 6.7.5-arch1-1 and 6.7.6-arch1-1
-> > > - SD Host Controller: Genesys Logic GL9755 SD Host Controller (PCI ID:
-> > > 17a0:9755)
-> > >
-> > > Observed Logs (dmesg):
-> > > [ 642.483972] sdhci-pci 0000:2f:00.0: not ready 1023ms after resume; waiting
-> > > [ 643.537370] sdhci-pci 0000:2f:00.0: not ready 2047ms after resume; waiting
-> > > [ 645.724028] sdhci-pci 0000:2f:00.0: not ready 4095ms after resume; waiting
-> > > [ 649.990655] sdhci-pci 0000:2f:00.0: not ready 8191ms after resume; waiting
-> > > [ 658.310658] sdhci-pci 0000:2f:00.0: not ready 16383ms after resume; waiting
-> > > [ 675.590673] sdhci-pci 0000:2f:00.0: not ready 32767ms after resume; waiting
-> > > [ 709.723965] sdhci-pci 0000:2f:00.0: not ready 65535ms after resume; giving up
-> > > [ 709.724183] sdhci-pci 0000:2f:00.0: Unable to change power state
-> > > from D3cold to D0, device inaccessible
-
-Hi Mathias,
-
-In your dmesg, there's the Target Speed quirk triggering. Please try these 
-two patches, they should fix the logic bug that causes the long delay you 
-see:
-
-https://lore.kernel.org/linux-pci/alpine.DEB.2.21.2402092125070.2376@angie.orcam.me.uk/T/#t
-
-(They won't help to the link not coming up issue though).
-
--- 
- i.
 
