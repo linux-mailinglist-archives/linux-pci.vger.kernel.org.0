@@ -1,239 +1,278 @@
-Return-Path: <linux-pci+bounces-4055-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C3A98681A3
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 21:00:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AEB8868254
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 22:00:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82E27B231A6
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 20:00:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA0E328619F
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 21:00:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13925130AF1;
-	Mon, 26 Feb 2024 20:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E623130E5E;
+	Mon, 26 Feb 2024 21:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mgk5/BMS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGZNP0aB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311CB130AFE;
-	Mon, 26 Feb 2024 20:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F1212F388;
+	Mon, 26 Feb 2024 21:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708977643; cv=none; b=TagPC5wTcJSFT2AdoZGqE22iHcCN1DHLxj/ZMIXbx9twWEOQB7QnAM9HpHIAGP0mTqASlGzQgbZK+e8aVbuLXZpaE4MsSRHM/2RefPh6LiUeDmVBjLYYwQMin299ONM8hz0NZj7H6IyNDJkHWVMRKIV78NleNQ5haR7aQjqyWG0=
+	t=1708981248; cv=none; b=C7bfsT81AEA01indV9GgH9nTrTPlpRUpBLHqzZ3hullBFpgf6ONMVbjGV/7M+zDCXPb8WE+vvaPlAY4b8dATxsnmD+ssoRsWpwV3seNcMf373/j/a88ACbowravkHdgSIGyt/g/StFuUeIUL9x5+5Zg+wOhjXwPcYmoLOL06x5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708977643; c=relaxed/simple;
-	bh=s9SBE+3/1NhK9cfyqIIFTjRmoWxhSNiFxCbfOOR0Zxo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lLlVUOSDghlG5/F5A+mamG/rYXJGBNU8aMt7A8vzGKQnGBuJdXGwcbtc5625bQU2N9+l3yfjGqxAYrDT7U+GhalMQ6zZCUSARLinvbbIKwFxVkMxCaOWFhJnfpSEMA528eRnRCTDXlY3XwiSpv+YahoVnkzf2fFwXEnbRgwIYfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mgk5/BMS; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708977640; x=1740513640;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=s9SBE+3/1NhK9cfyqIIFTjRmoWxhSNiFxCbfOOR0Zxo=;
-  b=Mgk5/BMSyLBgxuF3i57I7EbV1fMWqri/dLOaSTCK8frdDuj6KBtRVGpV
-   eGdGwPThymE8jQrFAm5UKe2dhsCahCCwHFm537FnHRiNc8HDiv89hgSaG
-   Lw0erLp5eNh7nVN5ZZkPaF547fabe0YGwarz/N0plMtMZE/2MPZxQYje7
-   KBc41IFvqejVgVoaGZjaHsXMk3QDQNwecpIae+5LsHZuIMAtbD6Y/hhvC
-   3laatqzBxJ1VGpdt51vT8bSFkGfXLZnHSZSe2LWLNMhbkh44KCR6O3dEH
-   VknkSM/luX0kUnkdXGp8XaEWgrUNJW/AXuFp5gTlTTp5xduVghn4L/e1D
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3136238"
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="3136238"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 12:00:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
-   d="scan'208";a="37809154"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 12:00:36 -0800
-Message-ID: <623ce65f-da43-4493-8a21-4fd6dfe86dbb@linux.intel.com>
-Date: Tue, 27 Feb 2024 04:00:33 +0800
+	s=arc-20240116; t=1708981248; c=relaxed/simple;
+	bh=+W/0O7WuVT+UyHpzMl4HcX6s22lBLQB0RYLJNwkggJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OiZgCnKgChSx/dE6A52B95sApNDLiTZUCp5HoSYSta0wNDPjbLIKLbg4lj68a30MxtzL+V9JylmLeAEo/Ou/kAWoxUCcctjOjDuhaIquyPFX157j1M3auaGWe4j/ITkZAUP4VncoN6g51anN/UKsWSZBADM4eQU4ct1+3zPLjYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGZNP0aB; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-512fd840142so1764476e87.2;
+        Mon, 26 Feb 2024 13:00:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708981244; x=1709586044; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A0nKmbQkUe18dfPF3HGk5d2W421zTO2IH69qRYWbZuQ=;
+        b=kGZNP0aBn2oDjjBP6e4kOSQaaSiaTSvSfrqMJGly/5S/I2BWsC5nugiY5/qtn2Tuwg
+         Va8PidHyeOCcNt1OKlk/JHnNTvB4rmM/9pMAKaWa1G3//+8qUQS2d4DnryDVdRrgdyMf
+         iWukPbGmiGnvHBO2SB3DM8m56c5qGaD0EOSBFPJoDRVssD10QU8AUYIXYdpeBu2Aq/v3
+         uqxwwm4VHYPjxv7vGDuUrRtkKkqwe6uBs23hGvTwwHozSsjtvAJSOWWSRkDx7EMyGUmX
+         NLYk1BdXEV68x9wxnd03Hu7wE9AJ1dHJMCPWHMJecQvxQjBc71bDAdQvadb2/kuH0m//
+         Qilw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708981244; x=1709586044;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A0nKmbQkUe18dfPF3HGk5d2W421zTO2IH69qRYWbZuQ=;
+        b=oKX0ltQRWYtME9ODblWqavHpFJV7wK85UFAH+dKwBS2wU8RPNnqPpvW6dB7JWeQHkR
+         jLgJ6ihw0Dh0riyYDwWcsbM5i2F6iY6mgWFCjblP7I1ldwh7YfVaK9NdczJ5Jj8bhkX0
+         Z1a8VnonerC1pfANJHLRxHglp+6LYU5YYd1ZDC19k3bFssZ17sWiZvV3CRDpJycaf7MS
+         V4czSy71MMOtkZZQHWAHjg0OuEy/0DMidplOCK/nbqaueAYReduSg54asNhWQ0X4r8S6
+         le1NhBprln86E6rojAkHd1dGqWOLyxctrmZkk8GQGCST2UGsKTQvF252k0HmsEi6MywR
+         0yqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbue28cFi3NpHkTEf1SaIQSjG6cINB4yoQ28NQWT68xYLKCWgEBlEq3MoEFu9vB59XNTAIgwjLTZw9E83AarR2BllM5J6VgjoJaeijndsDKOQOLpbHmSnfLMYj4ISeukDgCbBBZcM9tBsmxd8UsfGSOK8ErtpD00RcV3vpUVL4/JKnH4pCYm6ooyVUrL9lhPKbt2Cz46tgBS1eMWCMMbHLCKm/v7WG7e5U
+X-Gm-Message-State: AOJu0YxmK/mL5t5DzlJ7WIDJS/rOSxk2wBnh1qnwtnnJsUkJ84lE9KN9
+	yePpovvfewjmdHIeyIvgEZsmipVjHz3qIjXKZQDsr6IUYxwwW5RX
+X-Google-Smtp-Source: AGHT+IG2CImQkqVQxd6ssoaZRcwh+i9k2qjnbEW465k4VFAlfiuJmCJysPvX5Urg5QLGl0NPz44FlQ==
+X-Received: by 2002:a05:6512:a95:b0:513:a6:2f4 with SMTP id m21-20020a0565120a9500b0051300a602f4mr2236792lfu.13.1708981244044;
+        Mon, 26 Feb 2024 13:00:44 -0800 (PST)
+Received: from mobilestation ([95.79.226.168])
+        by smtp.gmail.com with ESMTPSA id br35-20020a056512402300b0051186a82fc1sm953312lfb.171.2024.02.26.13.00.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 13:00:43 -0800 (PST)
+Date: Tue, 27 Feb 2024 00:00:41 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Marek Vasut <marek.vasut+renesas@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev
+Subject: Re: [PATCH v3 1/5] PCI: dwc: Refactor dw_pcie_edma_find_chip() API
+Message-ID: <6r7kquumuaga5j2hosyi6fla6frdzm5e4iobt7dtftjuwm7wku@7wij7dfhneob>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-1-cfcb8171fc24@linaro.org>
+ <fielxplkgrvz5qmqrrq5ahmah5yqx7anjylrlcqyev2z2cl2wo@3ltyl242vkba>
+ <20240226152757.GF8422@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
- device isn't valid
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
- jgg@ziepe.ca, kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
- lukas@wunner.de, yi.l.liu@intel.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
- <20240222090251.2849702-4-haifeng.zhao@linux.intel.com>
- <c655cd15-c883-483b-b698-b1b7ae360388@moroto.mountain>
- <2d1788da-521c-4531-a159-81d2fb801d6c@linux.intel.com>
- <039a19e5-d1ff-47ae-aa35-3347c08acc13@moroto.mountain>
- <31ee6660-ad4a-40b8-8503-ebc3ed06dd16@linux.intel.com>
- <f779be97-66c2-4520-91f2-a9a54e84017c@moroto.mountain>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <f779be97-66c2-4520-91f2-a9a54e84017c@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240226152757.GF8422@thinkpad>
 
+On Mon, Feb 26, 2024 at 08:57:57PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Feb 26, 2024 at 03:45:16PM +0300, Serge Semin wrote:
+> > Hi Manivannan
+> > 
+> > On Mon, Feb 26, 2024 at 05:07:26PM +0530, Manivannan Sadhasivam wrote:
+> > > In order to add support for Hyper DMA (HDMA), let's refactor the existing
+> > > dw_pcie_edma_find_chip() API by moving the common code to separate
+> > > functions.
+> > > 
+> > > No functional change.
+> > > 
+> > > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware.c | 52 +++++++++++++++++++++-------
+> > >  1 file changed, 39 insertions(+), 13 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > index 250cf7f40b85..193fcd86cf93 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > @@ -880,7 +880,17 @@ static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+> > >  	.irq_vector = dw_pcie_edma_irq_vector,
+> > >  };
+> > >  
+> > > -static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> > > +static void dw_pcie_edma_init_data(struct dw_pcie *pci)
+> > > +{
+> > > +	pci->edma.dev = pci->dev;
+> > > +
+> > > +	if (!pci->edma.ops)
+> > > +		pci->edma.ops = &dw_pcie_edma_ops;
+> > > +
+> > > +	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> > > +}
+> > > +
+> > > +static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
+> > >  {
+> > >  	u32 val;
+> > >  
+> > > @@ -900,24 +910,27 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> > >  	else
+> > >  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> > > 
+> > 
+> > > -	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> > > -		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> > > -
+> > > -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> > > -	} else if (val != 0xFFFFFFFF) {
+> > > -		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> > > +	/* Set default mapping format here and update it below if needed */
+> > > +	pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> > >  
+> > > +	if (val == 0xFFFFFFFF && pci->edma.reg_base)
+> > > +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> > > +	else if (val != 0xFFFFFFFF)
+> > >  		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> > > -	} else {
+> > > +	else
+> > >  		return -ENODEV;
+> > > -	}
+> > 
+> > Sorry for not posting my opinion about this earlier, but IMO v2 code
+> > was more correct than this one. This version makes the code being not
+> > linear as it was in v2, thus harder to comprehend:
+> > 
+> > 1. Setting up a default value and then overriding it or not makes the
+> > reader to keep in mind the initialized value which is harder than to
+> > just read what is done in the respective branch.
+> > 
+> 
+> No, I disagree. Whether we set the default value or not, EDMA_MF_EDMA_LEGACY is
+> indeed the default mapping format (this is one of the reasons why the enums
+> should start from 1 instead of 0). So initializing it to legacy is not changing
+> anything, rather making it explicit.
+> 
+> > 2. Splitting up the case clause with respective inits and the mapping
+> > format setting up also makes it harder to comprehend what's going on.
+> > In the legacy case the reg-base address and the mapping format init are
+> > split up while they should have been done simultaneously only if (val
+> > != 0xFFFFFFFF).
+> > 
+> 
+> Well again, this doesn't matter since the default mapping format is legacy. But
+> somewhat agree that the two clauses are setting different fields, but even if
+> the legacy mapping format is set inside the second clause, it still differs from
+> the first one since we are not setting reg_base.
+> 
+> > 3. The most of the current devices has the unrolled mapping (available
+> > since v4.9 IP-core), thus having the mf field pre-initialized produces
+> > a redundant store operation for the most of the modern devices.
+> > 
+> 
+> Ok, this one I agree. We could avoid the extra assignment.
+> 
+> > 4. Getting rid from the curly braces isn't something what should be
+> > avoided at any cost and doesn't give any optimization really. It
+> > doesn't cause having less C-lines of the source code and doesn't
+> > improve the code readability.
+> > 
+> 
+> Yeah, there is no benefit other than a simple view of the code. But for point
+> (3), I agree to roll back to v2 version.
+> 
+> > So to speak, I'd suggest to get back the v2 implementation here.
+> > 
+> > >  
+> > > -	pci->edma.dev = pci->dev;
+> > > +	return 0;
+> > > +}
+> > >  
+> > > -	if (!pci->edma.ops)
+> > > -		pci->edma.ops = &dw_pcie_edma_ops;
+> > > +static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
+> > > +{
+> > > +	u32 val;
+> > >  
+> > > -	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
+> > 
+> > > +	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
+> > > +		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> > > +	else
+> > > +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> > 
+> > Just dw_pcie_readl_dma(pci, PCIE_DMA_CTRL)
+> > 
+> 
+> 'val' is uninitialized. Why should the assignment be skipped?
 
-On 2/23/2024 4:19 PM, Dan Carpenter wrote:
-> On Fri, Feb 23, 2024 at 03:32:52PM +0800, Ethan Zhao wrote:
->> On 2/23/2024 2:08 PM, Dan Carpenter wrote:
->>> On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
->>>>>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
->>>>>>     			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
->>>>>>     		} while (head != tail);
->>>>>> +		/*
->>>>>> +		 * If got ITE, we need to check if the sid of ITE is one of the
->>>>>> +		 * current valid ATS invalidation target devices, if no, or the
->>>>>> +		 * target device isn't presnet, don't try this request anymore.
->>>>>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
->>>>>> +		 */
->>>>> This comment is kind of confusing.
->>>> Really confusing ? this is typo there, resnet-> "present"
->>>>
->>> Reading this comment again, the part about zero ite_sid values is
->>> actually useful, but what does "old" mean in "old VT-d device".  How old
->>> is it?  One year old?
->> I recite the description from Intel VT-d spec here
->>
->> "A value of 0 in this field indicates that this is an older version of DMA
->> remapping hardware which does not provide additional details about
->> the Invalidation Time-out Error"
->>
-> This is good.  Put that in the comment.  Otherwise it's not clear.  I
-> assumed "old" meant released or something.
->
->
->> At least, the Intel VT-d spec 4.0 released 2022 June says the same thing.
->> as to how old, I didn't find docs older than that, really out of my radar.
->>
->>>>> /*
->>>>>     * If we have an ITE, then we need to check whether the sid of the ITE
->>>>>     * is in the rbtree (meaning it is probed and not released), and that
->>>>>     * the PCI device is present.
->>>>>     */
->>>>>
->>>>> My comment is slightly shorter but I think it has the necessary
->>>>> information.
->>>>>
->>>>>> +		if (ite_sid) {
->>>>>> +			dev = device_rbtree_find(iommu, ite_sid);
->>>>>> +			if (!dev || !dev_is_pci(dev))
->>>>>> +				return -ETIMEDOUT;
->>>>> -ETIMEDOUT is weird.  The callers don't care which error code we return.
->>>>> Change this to -ENODEV or something
->>>> -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
->>>> caller really cares about the returned value.
->>>>
->>> I don't really care about the return value and if you say it should be
->>> -ETIMEDOUT, then you're the expert.  However, I don't see anything in
->>> linux-next which cares about the return values except -EAGAIN.
->>> This function is only called from qi_submit_sync() which checks for
->>> -EAGAIN.  Then I did a git grep.
->>>
->>> $ git grep qi_submit_sync
->>> drivers/iommu/intel/dmar.c:int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/iommu.h:int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->>> drivers/iommu/intel/iommu.h: * Options used in qi_submit_sync:
->>> drivers/iommu/intel/irq_remapping.c:    return qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/pasid.c:    qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/svm.c:      qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
->>> drivers/iommu/intel/svm.c:      qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/svm.c:              qi_submit_sync(iommu, &desc, 1, 0);
->>>
->>> Only qi_flush_iec() in irq_remapping.c cares about the return.  Then I
->>> traced those callers back and nothing cares about -ETIMEOUT.
->>>
->>> Are you refering to patches that haven't ben merged yet?
->> Yes, patches under working, not the code running on your boxes.
->>
->> -ETIMEOUT & -ENODEV, they both describe the error that is happenning, someone
->> prefers -ETIMEOUT, they would like to know the request was timeout, and someone
->> perfers -ENODEV, they know the target device is gone, ever existed.
-> Okay.  I obviously can't comment on patches that I haven't seen but,
-> sure, it sounds reasonable.
->
->>>>>> +			pdev = to_pci_dev(dev);
->>>>>> +			if (!pci_device_is_present(pdev) &&
->>>>>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
->>>>> The && confused me, but then I realized that probably "ite_sid ==
->>>>> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
->>>> Here is the fault handling, just double confirm nothing else goes wrong --
->>>> beyond the assumption.
->>>>
->>> Basically for that to ever be != it would need some kind of memory
->>> corruption?  I feel like in that situation, the more conservative thing
->>> is to give up.  If the PCI device is not present then just give up.
->> memory corruption, buggy BIOS tables, faked request ...something out
->> of imagination, after confirmed the device is what it claimed to be, if
->> not present, then give up to retry the request.
-> This is not correct.  We looked up the device based on the ite_sid so
-> we know what the device id is, unless we experience catastrophic memory
-> corruption.
->
-> +                       dev = device_rbtree_find(iommu, ite_sid);
->                                                          ^^^^^^^
-> We looked it up here.
->
-> +                       if (!dev || !dev_is_pci(dev))
-> +                               return -ETIMEDOUT;
-> +                       pdev = to_pci_dev(dev);
-> +                       if (!pci_device_is_present(pdev) &&
-> +                               ite_sid == pci_dev_id(pci_physfn(pdev)))
->                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Unless the device_rbtree_find() is returning garbage then these things
-> must be true.
->
-> +                               return -ETIMEDOUT;
->
-> I tried to double check how we were storing devices into the rbtree,
-> but then I discovered that the device_rbtree_find() doesn't exist in
-> linux-next and this patch breaks the build.
->
-> This is very frustrating thing.  But let's say a buggy BIOS could mess
-> up the rbtree.  In that situation, we would still want to change the &&
-> to an ||.  If the divice is not present and^W or the rbtree is corrupted
+The entire
 
-Maybe you meant
-+                       if (!pci_device_is_present(pdev) ||
-+                               ite_sid != pci_dev_id(pci_physfn(pdev)))
++	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
++		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
++	else
++		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
 
-Unfortunately, the ite_sid we got from the "Invalidation Queue Error Record Register" is the *PCI Requester-id* of faulty device, that could be different
-BDF as the sid in the ATS invalidation request for devices:
+can be replaced with a single line
 
-1. behind the PCIe to PCI bridges.
-2. behindConventional PCI Bridges  
-3.PCI Express* Devices Using Phantom Functions  
-4.Intel® Scalable I/O Virtualization Capable Devices  (e.g. ADI)
-5. devices with ARI function.
-6. behind root port without ACS enabled.
-... ...
++	val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
 
+since in the legacy case (reg_base = PCIE_DMA_VIEWPORT_BASE) and the
+reg_base has been initialized by now.
 
-Thanks,
-Ethan
+-Serge(y)
 
-> then return an error.  But don't do this.  If the memory is corrupted we
-> are already screwed and there is no way the system can really recover
-> in any reasonable way.
->
-> regards,
-> dan carpenter
->
->
+> 
+> - Mani
+> 
+> > -Serge(y)
+> > 
+> > >  
+> > >  	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
+> > >  	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
+> > > @@ -930,6 +943,19 @@ static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	dw_pcie_edma_init_data(pci);
+> > > +
+> > > +	ret = dw_pcie_edma_find_mf(pci);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	return dw_pcie_edma_find_channels(pci);
+> > > +}
+> > > +
+> > >  static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
+> > >  {
+> > >  	struct platform_device *pdev = to_platform_device(pci->dev);
+> > > 
+> > > -- 
+> > > 2.25.1
+> > > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
