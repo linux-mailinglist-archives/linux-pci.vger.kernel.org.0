@@ -1,243 +1,191 @@
-Return-Path: <linux-pci+bounces-3988-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-3989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9289866851
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 03:48:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B4878668C7
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 04:31:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B3A52817FC
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 02:48:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B63FFB20F5C
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 03:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6320F4E2;
-	Mon, 26 Feb 2024 02:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DFED134B2;
+	Mon, 26 Feb 2024 03:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RhBdFQfF"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EwMvYrEi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472C6FC18;
-	Mon, 26 Feb 2024 02:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708915712; cv=none; b=R5Ma5nfToBnaIhcN8eNaH+9XEbd9PGoAeOZwEP/aDs/4y7mmag1ia8l4HQNC3ITRvj9O0uQEmfEcrLM8CKX7bnjPsW9Ao1Iae5bxnRQ5QPfswVhHFh9lH65sxzBmaHwCRzs/zSQIh8ERBjvxwrUOA31uL2Bb4J3seQkJ2Tf2mjo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708915712; c=relaxed/simple;
-	bh=m13GnJ6jRnxtBNzF5syjVlJjm5bbUfD6PW5EC6Oq4CU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GW2ZE78+8l22IbdDeJ0lC0h0K94oQZGTFqdrChg/V+ri91Cu7GLOHTp1+OVqExmciyHsCyqyZKEOKyIP1sssUtn7XxcDnhTo8rIpWCZBnKURvIujaq9/uaw1JdbTvDLaFYVhZPeOnmtXbNTPwGuyueurgY1wqKPCSRyXS6VydKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RhBdFQfF; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708915710; x=1740451710;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=m13GnJ6jRnxtBNzF5syjVlJjm5bbUfD6PW5EC6Oq4CU=;
-  b=RhBdFQfFpMPX0W41z+1NMJso7i+AFCit6+1FBUV0Ou0N7uJiGvm01r6B
-   XNEiR2yeeWWvsukTcqLqolAB7b9GSFMRWus9lPj9erlljxn3wJmphDbdG
-   Ct3tUhj7Y3PZp2CdJ5n8aic4zleFtaSZ9mYAS9lla3dorhmmdlQamoF5a
-   YFN2tIOS5Bj5cmwaqCWjmvZxEQ5RmhrCiGwJKKyprVRoWKYze+ilgnmfO
-   Y+TxzLimAfJJB/08AkTYbVcJsaWamt0yRtaUn7l1q4peeQ9ucnKp02Dgg
-   3XmUHVShn+rgUJu9TYllObxek+8N131vznA6U/UBQ96Lz90IJFhPnumqk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10995"; a="14615945"
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="14615945"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 18:48:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,185,1705392000"; 
-   d="scan'208";a="43994065"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2024 18:48:26 -0800
-Message-ID: <9b31ef51-51c9-42e4-b113-4d5e422b5173@linux.intel.com>
-Date: Mon, 26 Feb 2024 10:48:23 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485E4C8C7;
+	Mon, 26 Feb 2024 03:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708918290; cv=fail; b=ILe/vNjIyqql06PAmVnFKRFq1eINZoYfsx8MuOJAJyOw6IV1QMFSErtD+pgt2Dr7lsWjs/Sml8HTvUmH4qbxVdYb6Mxz7GSUYp7vvhmOBKZpRceRST+8qcMfJB6GNXF7hX2xwql/N9wa2NVnvZ1B9ILacTDXh8vpZR+6vymbuQY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708918290; c=relaxed/simple;
+	bh=Sj0ZivCRL2oqi48w+6tkFj3grP2WYOy9T5gE0qTUHxg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WsXuqTmiB1FTn7tSOrLEs81WoYXu6IqBrBpj+jRfj5eFBGUaD5dUXugYhs3RC2o32UCXJeGuIMs6Niyox/V1DdWDdTgb/PFnQW42qe0XHxfmSB3dbJHeZTgKhmsHojw7Q3xD86juTJMjdpm9QcRo0O/patN63YVakykMwCKSlak=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EwMvYrEi; arc=fail smtp.client-ip=40.107.94.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TAcimurMFv2t9Jjkh3RBtDAM9kv2mMT1aI01TeZUnUnrrbD7MxSXFxEu6PqlH6C0A5/L01xFJ7QHD7LSipTMkq/tlY3ISL0VX3sCpPytI3+tHaJrZVfuBIZp+C+A5gMOE/DuKG/C7QpJ8ReChJEAUvO+nu/bqBdSil9CUiWKoaRTqkZpu1JeyVTvCAx3c/n5tPkKL6LkJfd5q07Nr+ruyEy/yD6di3/whhAadS6st+Qs/XXsfpZC/guA5ClOaHFXIuKUDraueR5cdyBEUDaUbbBBK+P2wyHzy1M4x1giqN3EIKAJ2/J4N87Yn03SVyTtn496c//pi9JuzyOuuCQNaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QFE7soO2Wosk1H8u9LU9hbw/dNpeK468h8N8GEpRttw=;
+ b=cbrORB3Z46GL/4bTR2tgND/5Drux+Cz4VhMoDjPHsQcV0MsLypxwPJ2xFiPERS8YetCiXbnP3sUb6YNA8ETt/3LJsXPSWdfjY4Pi5I5xPUN8C9pj4NFm6SnWanaiCEmxgEHXvKnJ8sE0fBlafd4jOZ2sDLkZaWH8acjl58veqOuRSv9mrXx6SwEOXu6yfkI75BEVSbCPqyJa4VFzqNNOplZWetGjc5WffUqEdFqPUsgDaUYMSsdAGwn6tzeXXZEjfLEGU6ptZMNw6dXQXrzi6MS1bEWzBS/oKZaw7w7hNrcFbWAexCUbcQYy3tUa0kCVS6lyICt/dxd1EhsXXXzFbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QFE7soO2Wosk1H8u9LU9hbw/dNpeK468h8N8GEpRttw=;
+ b=EwMvYrEih7w6ZVxBl9PilB/QZy+yPrHd3WSRZjwpGE+/+bI+tbaUW4wzdwLyS8DZJLaaPh051GPg7RVChHf8L6sfbVqpuuXGeE2lBjScGCVby6libADQINobp2IgiFHMAZ/JEwP7avs9MJrTOUpA86V+XmpBFyziQEbNyCwz3xY=
+Received: from DM6PR02CA0109.namprd02.prod.outlook.com (2603:10b6:5:1b4::11)
+ by CY5PR12MB6153.namprd12.prod.outlook.com (2603:10b6:930:27::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Mon, 26 Feb
+ 2024 03:31:26 +0000
+Received: from DS1PEPF00017096.namprd05.prod.outlook.com
+ (2603:10b6:5:1b4:cafe::98) by DM6PR02CA0109.outlook.office365.com
+ (2603:10b6:5:1b4::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
+ Transport; Mon, 26 Feb 2024 03:31:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017096.mail.protection.outlook.com (10.167.18.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7292.25 via Frontend Transport; Mon, 26 Feb 2024 03:31:26 +0000
+Received: from aiemdee.2.ozlabs.ru (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Sun, 25 Feb
+ 2024 21:31:24 -0600
+From: Alexey Kardashevskiy <aik@amd.com>
+To: <linux-pci@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Alexey Kardashevskiy <aik@amd.com>
+Subject: [PATCH kernel v2] pci/doe: Support discovery version
+Date: Mon, 26 Feb 2024 14:31:14 +1100
+Message-ID: <20240226033114.3100118-1-aik@amd.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
- device isn't valid
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
- jgg@ziepe.ca, kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
- lukas@wunner.de, yi.l.liu@intel.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
- <20240222090251.2849702-4-haifeng.zhao@linux.intel.com>
- <c655cd15-c883-483b-b698-b1b7ae360388@moroto.mountain>
- <2d1788da-521c-4531-a159-81d2fb801d6c@linux.intel.com>
- <039a19e5-d1ff-47ae-aa35-3347c08acc13@moroto.mountain>
- <31ee6660-ad4a-40b8-8503-ebc3ed06dd16@linux.intel.com>
- <f779be97-66c2-4520-91f2-a9a54e84017c@moroto.mountain>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <f779be97-66c2-4520-91f2-a9a54e84017c@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017096:EE_|CY5PR12MB6153:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6497197-15ff-44ac-20ca-08dc367b6a15
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	kBEqHDnhMfv64bbfHp23UV9DJD3SsXcGTExOuDL8FpxPTvMtbIVqGZ6g5pV+cfwIRATKOq4Spi5xI9QOzVusI5g3kbaaHDL3XrPfsInYhIkXthNl1wlrpcKW8IVz/nJhuGBlb7QEyxr/yLm1WtiCNDDFNO7vHvpRtjWK8DWOENlUGVCgS82bnaMwaWDFXaThytrOXF7+L3dfR0U935rZtlAOAS82pLfIw+P9UFoy6BDJ41uwgr+Ejjm6IShUrXDApgAeBWbRQKR/di9DNQMUq2EqS2j+XfrsBGzgbH2Y177gye0/9ACUgYmdWhXeactkcHcycKGIvEF4iRHU6jxO0ygE37vqVG23ZNJh+gS4Wm5c13o4ibs36PPr3vouYnPzcq4mTZYXuJKle7jEwK9NYcAdjKJ1v7sn429XsQbre44BFz50scIp2XT2CbLreVrWcEh4xveDxe720KGP7dmPwyqr54brOVafMK276NgR3ju99QwSjneotMzvteWvWqmT8zbDNtVJZmSll8u5x2KmF//PdHtcTPCSJVQUCmySXPTK+zmzht063TMElwd5x2ZHSsI8GASdp2SNAn9ONfhSmPvIxe6hjD9PPoIqqZHZJWSmoyoz/awgyAz7ESP8EtAUAIrDDJcPu73AnRKCUrdfSn1KW2DtuazCmiKJQMSw9x1+R8IoYM2iyJXrGuVtDWGrlZpKWt+yIJPxZLaVTI1lb7ZeKPPdshTu+YeVAQPFlKjCgcDNi+JkZqqMbGzhcJJr
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 03:31:26.7633
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6497197-15ff-44ac-20ca-08dc367b6a15
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017096.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6153
 
+PCIe r6.1, sec 6.30.1.1 defines a "DOE Discovery Version" field in
+the DOE Discovery Request Data Object Contents (3rd DW) as:
 
-On 2/23/2024 4:19 PM, Dan Carpenter wrote:
-> On Fri, Feb 23, 2024 at 03:32:52PM +0800, Ethan Zhao wrote:
->> On 2/23/2024 2:08 PM, Dan Carpenter wrote:
->>> On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
->>>>>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
->>>>>>     			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
->>>>>>     		} while (head != tail);
->>>>>> +		/*
->>>>>> +		 * If got ITE, we need to check if the sid of ITE is one of the
->>>>>> +		 * current valid ATS invalidation target devices, if no, or the
->>>>>> +		 * target device isn't presnet, don't try this request anymore.
->>>>>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
->>>>>> +		 */
->>>>> This comment is kind of confusing.
->>>> Really confusing ? this is typo there, resnet-> "present"
->>>>
->>> Reading this comment again, the part about zero ite_sid values is
->>> actually useful, but what does "old" mean in "old VT-d device".  How old
->>> is it?  One year old?
->> I recite the description from Intel VT-d spec here
->>
->> "A value of 0 in this field indicates that this is an older version of DMA
->> remapping hardware which does not provide additional details about
->> the Invalidation Time-out Error"
->>
-> This is good.  Put that in the comment.  Otherwise it's not clear.  I
+15:8 DOE Discovery Version – must be 02h if the Capability Version in
+the Data Object Exchange Extended Capability is 02h or greater.
 
-Sure.
+Add support for the version on devices with the DOE v2 capability.
 
-> assumed "old" meant released or something.
->
->
->> At least, the Intel VT-d spec 4.0 released 2022 June says the same thing.
->> as to how old, I didn't find docs older than that, really out of my radar.
->>
->>>>> /*
->>>>>     * If we have an ITE, then we need to check whether the sid of the ITE
->>>>>     * is in the rbtree (meaning it is probed and not released), and that
->>>>>     * the PCI device is present.
->>>>>     */
->>>>>
->>>>> My comment is slightly shorter but I think it has the necessary
->>>>> information.
->>>>>
->>>>>> +		if (ite_sid) {
->>>>>> +			dev = device_rbtree_find(iommu, ite_sid);
->>>>>> +			if (!dev || !dev_is_pci(dev))
->>>>>> +				return -ETIMEDOUT;
->>>>> -ETIMEDOUT is weird.  The callers don't care which error code we return.
->>>>> Change this to -ENODEV or something
->>>> -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
->>>> caller really cares about the returned value.
->>>>
->>> I don't really care about the return value and if you say it should be
->>> -ETIMEDOUT, then you're the expert.  However, I don't see anything in
->>> linux-next which cares about the return values except -EAGAIN.
->>> This function is only called from qi_submit_sync() which checks for
->>> -EAGAIN.  Then I did a git grep.
->>>
->>> $ git grep qi_submit_sync
->>> drivers/iommu/intel/dmar.c:int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/iommu.h:int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->>> drivers/iommu/intel/iommu.h: * Options used in qi_submit_sync:
->>> drivers/iommu/intel/irq_remapping.c:    return qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/pasid.c:    qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/svm.c:      qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
->>> drivers/iommu/intel/svm.c:      qi_submit_sync(iommu, &desc, 1, 0);
->>> drivers/iommu/intel/svm.c:              qi_submit_sync(iommu, &desc, 1, 0);
->>>
->>> Only qi_flush_iec() in irq_remapping.c cares about the return.  Then I
->>> traced those callers back and nothing cares about -ETIMEOUT.
->>>
->>> Are you refering to patches that haven't ben merged yet?
->> Yes, patches under working, not the code running on your boxes.
->>
->> -ETIMEOUT & -ENODEV, they both describe the error that is happenning, someone
->> prefers -ETIMEOUT, they would like to know the request was timeout, and someone
->> perfers -ENODEV, they know the target device is gone, ever existed.
-> Okay.  I obviously can't comment on patches that I haven't seen but,
-> sure, it sounds reasonable.
->
->>>>>> +			pdev = to_pci_dev(dev);
->>>>>> +			if (!pci_device_is_present(pdev) &&
->>>>>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
->>>>> The && confused me, but then I realized that probably "ite_sid ==
->>>>> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
->>>> Here is the fault handling, just double confirm nothing else goes wrong --
->>>> beyond the assumption.
->>>>
->>> Basically for that to ever be != it would need some kind of memory
->>> corruption?  I feel like in that situation, the more conservative thing
->>> is to give up.  If the PCI device is not present then just give up.
->> memory corruption, buggy BIOS tables, faked request ...something out
->> of imagination, after confirmed the device is what it claimed to be, if
->> not present, then give up to retry the request.
-> This is not correct.  We looked up the device based on the ite_sid so
-> we know what the device id is, unless we experience catastrophic memory
-> corruption.
->
-> +                       dev = device_rbtree_find(iommu, ite_sid);
->                                                          ^^^^^^^
-> We looked it up here.
->
-> +                       if (!dev || !dev_is_pci(dev))
-> +                               return -ETIMEDOUT;
-> +                       pdev = to_pci_dev(dev);
-> +                       if (!pci_device_is_present(pdev) &&
-> +                               ite_sid == pci_dev_id(pci_physfn(pdev)))
->                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> Unless the device_rbtree_find() is returning garbage then these things
-> must be true.
->
-> +                               return -ETIMEDOUT;
->
-> I tried to double check how we were storing devices into the rbtree,
-> but then I discovered that the device_rbtree_find() doesn't exist in
-> linux-next and this patch breaks the build.
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+---
+Changes:
+v2:
+* added the section number to the commit log
 
-This patchset is based on Baolu's rbtree patchset,
-https://lkml.org/lkml/2024/2/15/147
-I mentioned that in the cover-letter (and the base commit tag).
+---
+Does PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER need to be in pci-regs.h?
+It is only going to be used by doe.c and yet a bunch of
+PCI_DOE_DATA_OBJECT_DISC_REQ_3_xxx is already in doe.c.
+I am asking as I have been told not to expose PCI_DOE_PROTOCOL_xxx guys
+which is somehow different (?). Thanks,
+---
+ include/uapi/linux/pci_regs.h |  1 +
+ drivers/pci/doe.c             | 11 ++++++++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
->
-> This is very frustrating thing.  But let's say a buggy BIOS could mess
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index a39193213ff2..b9c681f14181 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1144,6 +1144,7 @@
+ #define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
+ 
+ #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
++#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER	0x0000ff00
+ #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
+ #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
+ #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 61f0531d2b1d..f57def002175 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -381,11 +381,13 @@ static void pci_doe_task_complete(struct pci_doe_task *task)
+ 	complete(task->private);
+ }
+ 
+-static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
++static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
+ 			     u8 *protocol)
+ {
++	u32 disver = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
++				(capver >= 2) ? 2 : 0);
+ 	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+-				    *index);
++				    *index) | disver;
+ 	__le32 request_pl_le = cpu_to_le32(request_pl);
+ 	__le32 response_pl_le;
+ 	u32 response_pl;
+@@ -419,13 +421,16 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
+ {
+ 	u8 index = 0;
+ 	u8 xa_idx = 0;
++	u32 hdr = 0;
++
++	pci_read_config_dword(doe_mb->pdev, doe_mb->cap_offset, &hdr);
+ 
+ 	do {
+ 		int rc;
+ 		u16 vid;
+ 		u8 prot;
+ 
+-		rc = pci_doe_discovery(doe_mb, &index, &vid, &prot);
++		rc = pci_doe_discovery(doe_mb, PCI_EXT_CAP_VER(hdr), &index, &vid, &prot);
+ 		if (rc)
+ 			return rc;
+ 
+-- 
+2.41.0
 
-Buggy BIOS dmar table etc doesn't corrupt the rbtree, but might feed rbtree
-with inconsistent info about iommu and pci device.
-
-e.g. the device exists, present, but in fact, the device doesn't belong to the
-iommu the BIOS table claimed, if devTLB invalidation sent to such target, we
-will get ITE too, but here it isn't be handled. we will deal with that case in
-other patches.
-
-The key used to index rbtree is device_domain_info->bus, device_domain_info->
-devfn, see intel_iommu_probe_device(), these values not always be the same
-as pdev, such as the device is vmd/VF etc, here we only handle the case we intend
-to handle ---the hot removal of physical device.
-
-Thanks,
-Ethan
-
-> up the rbtree.  In that situation, we would still want to change the &&
-> to an ||.  If the divice is not present and^W or the rbtree is corrupted
-> then return an error.  But don't do this.  If the memory is corrupted we
-> are already screwed and there is no way the system can really recover
-> in any reasonable way.
->
-> regards,
-> dan carpenter
->
 
