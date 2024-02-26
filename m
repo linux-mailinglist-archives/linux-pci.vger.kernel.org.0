@@ -1,571 +1,239 @@
-Return-Path: <linux-pci+bounces-4054-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4055-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9B2986818B
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 20:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C3A98681A3
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 21:00:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B872B214FE
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 19:57:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82E27B231A6
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Feb 2024 20:00:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412BB130AE4;
-	Mon, 26 Feb 2024 19:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13925130AF1;
+	Mon, 26 Feb 2024 20:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="r+kctEEA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mgk5/BMS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2084.outbound.protection.outlook.com [40.107.241.84])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CC312FF76;
-	Mon, 26 Feb 2024 19:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708977454; cv=fail; b=CtxI0g3uSfpGGzt6oE5E+0NpZbvif+dZy2SPq5Hqxi76o7LGLyA6xJ+rqJMMSPV59AOdK1nKP9Ycm4HpyuRmVIoNrvHEQLs0QJulEOwoECWnwkyk3vLCjZOyk61bueM4sA7F8ms8Rt+RhHeZROp/t9zh6nDexi+hq0icKjvhlsU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708977454; c=relaxed/simple;
-	bh=POj9WB2QdSBbKwYzg0CjdGw1DM/8vmghN2llpTeCy08=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=VOX2d1ZWfwaFrWltB7Ak6f+UrGYKG9GLCAId7rkFtKrjJg5uUdbehNhQ0M1M3RfhYI9pTelv0FBLvVJuroeRXFhMcIx++FyNlV4n749UwYMPhcpVvYVx42zBLz5wlaB1CayGnGufjqGYNLaXHMMj362FpvIwYUjMoWElbQA07V0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=r+kctEEA; arc=fail smtp.client-ip=40.107.241.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OtPngpMgvdtj642cELYhtDHZ/Zn+TTkZbXBTRc43ZEFtUs0PlTI+mXyv3B/nZy6rq9FzZCxoVNwYd3lBwJiNm22YwsyIHBCCs2oOMiij7u7HF7G0bPDLmU7DvGCj64DDSYZN7g6ZQxhsgnugy4aCqj+Na9u24tAX1z+x2syJCQacIlyoWK4NxbVxKZSp9fKMFZhf4nzUr4Th64HdMX4IetfI1iQ4AxanYJmFyHGxGHZ8aZ/tazi5hpwmL5xSoIlBwXlJXIN8RXUESuHy//U70eTkrxfUwVgSk9XbnZFpJm+ck4dqzvReKeytn8GAOuECKGEoPKxEbdAw2bYgiHdJYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WEBTQ1JmLhq51B0Xn3AtPN/RfPfyhM0PaReuE2sCyrA=;
- b=Ghoor8Lp3+8BpugdJDlrxxJYpmOctG3d/qeQdB3Aquu2AuTNIXrEWYf+EtP336eA3aL6A+IXE/b3COr+o6sadt4Z3Kfv3QbA8VKojG7kD7rK+yEMED+aW7Fx+wpBt6Ve+AmS0PzFMUuqZCqR36jRvo4FH0Q6m3WsxyB85zrOyc5fL1su5OKaFTZ7KJM3etwd0BML1NPS/Qk8vZsyk0JY268zfWdQWYcYKHf7CsV2ZAAgfytEZA6ni5Gcz2HwvYQYe+elEwlfWGzYCxAHwl+40sU693lHM9m9JU7GjhthFYpoklPhMq1RZzoWWyHFDQqYSlGOBmawA70IJwZJJ2NgTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WEBTQ1JmLhq51B0Xn3AtPN/RfPfyhM0PaReuE2sCyrA=;
- b=r+kctEEAb+kTyaF5qvOgVyFt1+VyESwyyZIxVKBmZoAg5yv+s5YxnyqO8N0CcJT5MIddUlLF3XtwhQsyZnGf3bOPtqfeoxs5GlKsQzU+/SMcr6Y8WyWSat9kojMWBRv8N7cEqkKUVI1h3CUXUsmw68Ze1FgF82Gcqw+o6eMI+Wg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA2PR04MB10278.eurprd04.prod.outlook.com (2603:10a6:102:408::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Mon, 26 Feb
- 2024 19:57:27 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.032; Mon, 26 Feb 2024
- 19:57:27 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: conor@kernel.org
-Cc: Frank.li@nxp.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	krzysztof.kozlowski+dt@linaro.org,
-	kw@linux.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	robh@kernel.org
-Subject: [PATCH 1/1] dt-bindings: pci: layerscape-pci: Convert to yaml format
-Date: Mon, 26 Feb 2024 14:57:11 -0500
-Message-Id: <20240226195711.270153-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR03CA0011.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311CB130AFE;
+	Mon, 26 Feb 2024 20:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708977643; cv=none; b=TagPC5wTcJSFT2AdoZGqE22iHcCN1DHLxj/ZMIXbx9twWEOQB7QnAM9HpHIAGP0mTqASlGzQgbZK+e8aVbuLXZpaE4MsSRHM/2RefPh6LiUeDmVBjLYYwQMin299ONM8hz0NZj7H6IyNDJkHWVMRKIV78NleNQ5haR7aQjqyWG0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708977643; c=relaxed/simple;
+	bh=s9SBE+3/1NhK9cfyqIIFTjRmoWxhSNiFxCbfOOR0Zxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lLlVUOSDghlG5/F5A+mamG/rYXJGBNU8aMt7A8vzGKQnGBuJdXGwcbtc5625bQU2N9+l3yfjGqxAYrDT7U+GhalMQ6zZCUSARLinvbbIKwFxVkMxCaOWFhJnfpSEMA528eRnRCTDXlY3XwiSpv+YahoVnkzf2fFwXEnbRgwIYfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mgk5/BMS; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708977640; x=1740513640;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s9SBE+3/1NhK9cfyqIIFTjRmoWxhSNiFxCbfOOR0Zxo=;
+  b=Mgk5/BMSyLBgxuF3i57I7EbV1fMWqri/dLOaSTCK8frdDuj6KBtRVGpV
+   eGdGwPThymE8jQrFAm5UKe2dhsCahCCwHFm537FnHRiNc8HDiv89hgSaG
+   Lw0erLp5eNh7nVN5ZZkPaF547fabe0YGwarz/N0plMtMZE/2MPZxQYje7
+   KBc41IFvqejVgVoaGZjaHsXMk3QDQNwecpIae+5LsHZuIMAtbD6Y/hhvC
+   3laatqzBxJ1VGpdt51vT8bSFkGfXLZnHSZSe2LWLNMhbkh44KCR6O3dEH
+   VknkSM/luX0kUnkdXGp8XaEWgrUNJW/AXuFp5gTlTTp5xduVghn4L/e1D
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3136238"
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="3136238"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 12:00:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,186,1705392000"; 
+   d="scan'208";a="37809154"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 12:00:36 -0800
+Message-ID: <623ce65f-da43-4493-8a21-4fd6dfe86dbb@linux.intel.com>
+Date: Tue, 27 Feb 2024 04:00:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA2PR04MB10278:EE_
-X-MS-Office365-Filtering-Correlation-Id: 853050d5-e5c7-4669-9508-08dc3705287e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4s9yN3oLotwM9JqdpazZySeDDqF3XQWz2Mbi/o+OUmgziZQnWPgxtExksKEPtYelG4ci1xkMh8mVAtLbR+06qXqeW50jQC6o1XbEdyCdienwP9DqapFoT4AmXpXKjVmSScT/kArEtcHbdYfzjQulC2mobCiy9E4auOLm9pojsM21iDoGpd3eR+OBrWwO0P29q9RGeRubKNx/7hibRCOlTjS8PAHK8WJi/1NVmCpBJY/uSjJUs/mzqJBTgeF0Z+1ze9BGLXkrshHE/mRXVDL897G+el1K6MevEbqQrgoTnqPe6pCgSJuFe93SvO3yXU5BAP7wuI817i/aGKzIlmgYUGpRcRulzh3nyGmBY+QWYtAnXon1B/Owsz4YpvA+b/H9DfeviO6K7SFJAigrh44Sgcaew5UOzH0DKku46iI96vU0DKLqnGkUoOfHuymjWyaZSPL+Jd5Ip6BOF7Y7WN8pkMTqWkL9ywFIrsfARHJ1f8dsf6IbMw9Uyv31kwTAQIz1qayd7TOJLWNmiHnqLthtRd3K+bRRlN2F2FbzcPoSrPNw4PiaIHIhXkMvs49TQjkRADLYBroUTMY/ncX3dhztvrYCJxLG6Uveh4eBmNli17Sywz9O+lWevemW7ze3EWuiVkjJepAVm8jrgEvQhYGkNPvrYxIjZevbTA9IJiF5FqvqG50b+sQZMKZ/zvdraT3i0iWPwWUsBOIMGFmNDQgKpg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(230273577357003)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?X7P8hEza356TukcE0gvokV7hSCNwFJmOfGiWA/a+rnRWYQDwQGrFfgqcFuQr?=
- =?us-ascii?Q?G/QQ/ho0RBwTmWPPYrsNJHBTVOL+EQV9hNwLw4ntLwdTam/lZJblIY0Fl2CM?=
- =?us-ascii?Q?jv5AlxRg25ueWZ2MJBcB66iYAgBe3ZxQVm2wT3am+/638JO6VeClsLDT6Wuc?=
- =?us-ascii?Q?H2lzRtKNVHa+4UjB8KeMSiEa+9X2DPINLxjGvSa6q7qfGhBw9YwokLt3onnC?=
- =?us-ascii?Q?rSaPRJArbp1RtyM7oOmJpg914MFx+qeUdEEN/XvsvENx2ijghmTaqVD9nYAe?=
- =?us-ascii?Q?P5cK1CF7+gud1qjORXSFvN5QSPo40kRuF2ycPyD5YeTTWeg0pGWrUJfrJ5L5?=
- =?us-ascii?Q?EaoTYVj/1gQq0dmcqJB8R8wBLX9P3a6LTiZyqM9Aq5Ca1uy2/rbdO+cjcCnn?=
- =?us-ascii?Q?5Xt0GI22jTMgHXcqV1RfC0bQKcTKVaYNk6YILj8wtpqgVEszZ7CVHe6nPFNd?=
- =?us-ascii?Q?GV94jG2tiH3vRyiADuC1H8qIh26eiuRGKRb3wLr/Ra9wNPpmk5gD4t6g1R9i?=
- =?us-ascii?Q?zzldPKdxa7UzqOhCYZhzx46FfH3ejN7i/iFYCJn7rPsjy4iIxFzqWFa/PT7P?=
- =?us-ascii?Q?PumHSFj2X5rMa1yIJC2LKLo5x/+RMwYviQQ2VXS67xiDaeP9NarBO2yjLsJ6?=
- =?us-ascii?Q?uh6UC8JfJj4KFs7XJy0Tny/ZB62aQHtlgTOuqiF6aKQZQMwDB2SccvHjJYcN?=
- =?us-ascii?Q?d7/Lr9m1a526bQfR9HD+mzTjQjwvlFF5Lf+kf4jRU3vtP0huZRpNnkdtSppv?=
- =?us-ascii?Q?I7a9h59UWPPCAU5HBX80ldGmliPU8gFr0HD9yRt7UawMtzTX0Tlmp6QC9I15?=
- =?us-ascii?Q?X7H3TFoHB/tkBN+v6y4xSR65UQwOyuqCYAs6A9T4r8DFPog8pe9F0qMc3s5k?=
- =?us-ascii?Q?+uvvBUttf1bGk5cY2StDfb0jrIfmrn32YznAdk2Z8K9xkTrSCULoXJCVMWvR?=
- =?us-ascii?Q?JdglJE6kGv/tbIjB3OjCeNiq/Xi4EBiBpbXzNcwINtbnsmfmWpfYxNa6T+Nf?=
- =?us-ascii?Q?U0CeDKmdbI85vNZvJS5rdp3wwS5HxOw9QiF7VSgmtdVBu+cPbwgxD9xkd78t?=
- =?us-ascii?Q?rzsANMFbyY8wPmKAbNCsFdB3Nmluf581NJ9Ib1qdZtkXO2Tn2W30ozDR33XY?=
- =?us-ascii?Q?oaWkGj1Huw4Z0E6xjBgAosF8kXdY0U44JwHusn2nhEA4qwjjXmrcMKzK/npv?=
- =?us-ascii?Q?gSySQKrqGxsdPJgb+dP6X/VMgHVgcCiqh4beLoO9+tQ5cwhdGo2iLgydB+kv?=
- =?us-ascii?Q?YEnVYgfUyVtYKEHgGX/kZfIwJSwpOrkJnj0V6K5V/KnZM8yKlz8PxDsAvyjv?=
- =?us-ascii?Q?K4aS1dyZav+YYCMHCvJ1B0PS/mBzMrF73souOeQnJbfyci7NBoXMN8AipqMW?=
- =?us-ascii?Q?6QcOTHWwIHYqbP5jXcE4xU7FB4na+Wjtb8h/L2QGsxxy8hW6us2tBA51Ehjv?=
- =?us-ascii?Q?P8jBlQNAO3ZOVtPy7+C+/h57wtG4Kl87gddDwLSqpdeEIjrOdkdgXDgk+Rb/?=
- =?us-ascii?Q?LF1rgoUlN9oWPJG4XOfaPAuU2bjgG95vMn0pE+H51VEKO0j+IR+JvVjp8+Pk?=
- =?us-ascii?Q?A99VR2gESYEumM4jVIM=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 853050d5-e5c7-4669-9508-08dc3705287e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2024 19:57:27.5325
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NbsBRnCI/hb4s7etLoyGDKuEhx3BfWcl+qyRsEHOCKg8zZZLwLSyIzVQMCI6iYvCDZ9astLcvQUhUnMCmmBAPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10278
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
+ device isn't valid
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, robin.murphy@arm.com,
+ jgg@ziepe.ca, kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
+ lukas@wunner.de, yi.l.liu@intel.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20240222090251.2849702-1-haifeng.zhao@linux.intel.com>
+ <20240222090251.2849702-4-haifeng.zhao@linux.intel.com>
+ <c655cd15-c883-483b-b698-b1b7ae360388@moroto.mountain>
+ <2d1788da-521c-4531-a159-81d2fb801d6c@linux.intel.com>
+ <039a19e5-d1ff-47ae-aa35-3347c08acc13@moroto.mountain>
+ <31ee6660-ad4a-40b8-8503-ebc3ed06dd16@linux.intel.com>
+ <f779be97-66c2-4520-91f2-a9a54e84017c@moroto.mountain>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <f779be97-66c2-4520-91f2-a9a54e84017c@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Convert the layerscape-pci PCIe binding document to yaml format.
 
-Additionally, changes for the layerscape-pci endpoint part:
-- Add interrupt name 'pme' restriction for fsl,ls1028a-pcie-ep,
-fsl,ls1046a-pcie-ep, and fsl,ls1088a-pcie-ep.
-- Add register name restrictions: 'reg' and 'addr_space'. 'addr_space' is
-required by snps,dw-pcie-ep.
-- Add an example.
+On 2/23/2024 4:19 PM, Dan Carpenter wrote:
+> On Fri, Feb 23, 2024 at 03:32:52PM +0800, Ethan Zhao wrote:
+>> On 2/23/2024 2:08 PM, Dan Carpenter wrote:
+>>> On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
+>>>>>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>>>     			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>>>>>>     		} while (head != tail);
+>>>>>> +		/*
+>>>>>> +		 * If got ITE, we need to check if the sid of ITE is one of the
+>>>>>> +		 * current valid ATS invalidation target devices, if no, or the
+>>>>>> +		 * target device isn't presnet, don't try this request anymore.
+>>>>>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+>>>>>> +		 */
+>>>>> This comment is kind of confusing.
+>>>> Really confusing ? this is typo there, resnet-> "present"
+>>>>
+>>> Reading this comment again, the part about zero ite_sid values is
+>>> actually useful, but what does "old" mean in "old VT-d device".  How old
+>>> is it?  One year old?
+>> I recite the description from Intel VT-d spec here
+>>
+>> "A value of 0 in this field indicates that this is an older version of DMA
+>> remapping hardware which does not provide additional details about
+>> the Invalidation Time-out Error"
+>>
+> This is good.  Put that in the comment.  Otherwise it's not clear.  I
+> assumed "old" meant released or something.
+>
+>
+>> At least, the Intel VT-d spec 4.0 released 2022 June says the same thing.
+>> as to how old, I didn't find docs older than that, really out of my radar.
+>>
+>>>>> /*
+>>>>>     * If we have an ITE, then we need to check whether the sid of the ITE
+>>>>>     * is in the rbtree (meaning it is probed and not released), and that
+>>>>>     * the PCI device is present.
+>>>>>     */
+>>>>>
+>>>>> My comment is slightly shorter but I think it has the necessary
+>>>>> information.
+>>>>>
+>>>>>> +		if (ite_sid) {
+>>>>>> +			dev = device_rbtree_find(iommu, ite_sid);
+>>>>>> +			if (!dev || !dev_is_pci(dev))
+>>>>>> +				return -ETIMEDOUT;
+>>>>> -ETIMEDOUT is weird.  The callers don't care which error code we return.
+>>>>> Change this to -ENODEV or something
+>>>> -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
+>>>> caller really cares about the returned value.
+>>>>
+>>> I don't really care about the return value and if you say it should be
+>>> -ETIMEDOUT, then you're the expert.  However, I don't see anything in
+>>> linux-next which cares about the return values except -EAGAIN.
+>>> This function is only called from qi_submit_sync() which checks for
+>>> -EAGAIN.  Then I did a git grep.
+>>>
+>>> $ git grep qi_submit_sync
+>>> drivers/iommu/intel/dmar.c:int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/dmar.c:     qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/iommu.h:int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
+>>> drivers/iommu/intel/iommu.h: * Options used in qi_submit_sync:
+>>> drivers/iommu/intel/irq_remapping.c:    return qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/pasid.c:    qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/svm.c:      qi_submit_sync(iommu, desc, 3, QI_OPT_WAIT_DRAIN);
+>>> drivers/iommu/intel/svm.c:      qi_submit_sync(iommu, &desc, 1, 0);
+>>> drivers/iommu/intel/svm.c:              qi_submit_sync(iommu, &desc, 1, 0);
+>>>
+>>> Only qi_flush_iec() in irq_remapping.c cares about the return.  Then I
+>>> traced those callers back and nothing cares about -ETIMEOUT.
+>>>
+>>> Are you refering to patches that haven't ben merged yet?
+>> Yes, patches under working, not the code running on your boxes.
+>>
+>> -ETIMEOUT & -ENODEV, they both describe the error that is happenning, someone
+>> prefers -ETIMEOUT, they would like to know the request was timeout, and someone
+>> perfers -ENODEV, they know the target device is gone, ever existed.
+> Okay.  I obviously can't comment on patches that I haven't seen but,
+> sure, it sounds reasonable.
+>
+>>>>>> +			pdev = to_pci_dev(dev);
+>>>>>> +			if (!pci_device_is_present(pdev) &&
+>>>>>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
+>>>>> The && confused me, but then I realized that probably "ite_sid ==
+>>>>> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
+>>>> Here is the fault handling, just double confirm nothing else goes wrong --
+>>>> beyond the assumption.
+>>>>
+>>> Basically for that to ever be != it would need some kind of memory
+>>> corruption?  I feel like in that situation, the more conservative thing
+>>> is to give up.  If the PCI device is not present then just give up.
+>> memory corruption, buggy BIOS tables, faked request ...something out
+>> of imagination, after confirmed the device is what it claimed to be, if
+>> not present, then give up to retry the request.
+> This is not correct.  We looked up the device based on the ite_sid so
+> we know what the device id is, unless we experience catastrophic memory
+> corruption.
+>
+> +                       dev = device_rbtree_find(iommu, ite_sid);
+>                                                          ^^^^^^^
+> We looked it up here.
+>
+> +                       if (!dev || !dev_is_pci(dev))
+> +                               return -ETIMEDOUT;
+> +                       pdev = to_pci_dev(dev);
+> +                       if (!pci_device_is_present(pdev) &&
+> +                               ite_sid == pci_dev_id(pci_physfn(pdev)))
+>                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Unless the device_rbtree_find() is returning garbage then these things
+> must be true.
+>
+> +                               return -ETIMEDOUT;
+>
+> I tried to double check how we were storing devices into the rbtree,
+> but then I discovered that the device_rbtree_find() doesn't exist in
+> linux-next and this patch breaks the build.
+>
+> This is very frustrating thing.  But let's say a buggy BIOS could mess
+> up the rbtree.  In that situation, we would still want to change the &&
+> to an ||.  If the divice is not present and^W or the rbtree is corrupted
 
-Changes for the layerscape-pci root complex part:
-- Add required property: 'reg-names', "#address-cells", "#size-cells",
-'device_type', 'bus-range', 'ranges', "#interrupt-cells",
-'interrupt-map-mask' and 'interrupt-map'.
-- Interrupt-names requirement split to each compatible string.
-- Add register name restrictions: 'reg' and 'config'. 'config' is required
-by snps,dw-pcie.
+Maybe you meant
++                       if (!pci_device_is_present(pdev) ||
++                               ite_sid != pci_dev_id(pci_physfn(pdev)))
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+Unfortunately, the ite_sid we got from the "Invalidation Queue Error Record Register" is the *PCI Requester-id* of faulty device, that could be different
+BDF as the sid in the ATS invalidation request for devices:
 
-Notes:
-    There are log discuss at v1. If I missed something, let me know.
-    
-    Change from v3 to v4
-    - remove ep label
-    - remove status="disabled"
-    - remove deprecated property
-    - fixed irq max-numbers
-    - because dts still use "reg" instead "dbi", to avoid dtb check warning,
-    not referernece to snps,dwc-pcie yet.
-    
-    Change from v2 to v3
-    - update commit message, show change compare txt file
-    - add failback compatible fsl,ls-pcie-ep.
-    - add commit message about 'addr_space' and 'config'.
-    
-    Change from v1 to v2
-    - remove '|-'
-    - dma-coherent: true
-    - add interrupts and interrupt-names at before Allof
-    - remove ref to snps,pcie*.yaml, some reg-names are not aligned with in
-    drivers
-    - Add an example for pcie-ep
+1. behind the PCIe to PCI bridges.
+2. behindConventional PCI Bridges  
+3.PCI Express* Devices Using Phantom Functions  
+4.Intel® Scalable I/O Virtualization Capable Devices  (e.g. ADI)
+5. devices with ARI function.
+6. behind root port without ACS enabled.
+... ...
 
- .../bindings/pci/fsl,layerscape-pcie-ep.yaml  | 107 +++++++++++
- .../bindings/pci/fsl,layerscape-pcie.yaml     | 175 ++++++++++++++++++
- .../bindings/pci/layerscape-pci.txt           |  79 --------
- 3 files changed, 282 insertions(+), 79 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-new file mode 100644
-index 0000000000000..c230446bbab1d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-@@ -0,0 +1,107 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Layerscape PCIe Endpoint(EP) controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+description:
-+  This PCIe EP controller is based on the Synopsys DesignWare PCIe IP.
-+
-+  This controller derives its clocks from the Reset Configuration Word (RCW)
-+  which is used to describe the PLL settings at the time of chip-reset.
-+
-+  Also as per the available Reference Manuals, there is no specific 'version'
-+  register available in the Freescale PCIe controller register set,
-+  which can allow determining the underlying DesignWare PCIe controller version
-+  information.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - fsl,ls2088a-pcie-ep
-+          - fsl,ls1088a-pcie-ep
-+          - fsl,ls1046a-pcie-ep
-+          - fsl,ls1028a-pcie-ep
-+          - fsl,lx2160ar2-pcie-ep
-+      - const: fsl,ls-pcie-ep
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: regs
-+      - const: addr_space
-+
-+  fsl,pcie-scfg:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: A phandle to the SCFG device node. The second entry is the
-+      physical PCIe controller index starting from '0'. This is used to get
-+      SCFG PEXN registers.
-+
-+  big-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: If the PEX_LUT and PF register block is in big-endian, specify
-+      this property.
-+
-+  dma-coherent: true
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    oneOf:
-+      - anyOf:
-+          - const: pme
-+          - const: aer
-+      - const: intr
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls1028a-pcie-ep
-+            - fsl,ls1046a-pcie-ep
-+            - fsl,ls1088a-pcie-ep
-+    then:
-+      properties:
-+        interrupt-names:
-+          items:
-+            - const: pme
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pcie-ep@3400000 {
-+        compatible = "fsl,ls1028a-pcie-ep", "fsl,ls-pcie-ep";
-+        reg = <0x00 0x03400000 0x0 0x00100000
-+              0x80 0x00000000 0x8 0x00000000>;
-+        reg-names = "regs", "addr_space";
-+        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
-+        interrupt-names = "pme";
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-new file mode 100644
-index 0000000000000..a2bfdcf818eec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-@@ -0,0 +1,175 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Layerscape PCIe Root Complex(RC) controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+description:
-+  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP
-+
-+  This controller derives its clocks from the Reset Configuration Word (RCW)
-+  which is used to describe the PLL settings at the time of chip-reset.
-+
-+  Also as per the available Reference Manuals, there is no specific 'version'
-+  register available in the Freescale PCIe controller register set,
-+  which can allow determining the underlying DesignWare PCIe controller version
-+  information.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,ls1021a-pcie
-+      - fsl,ls2080a-pcie
-+      - fsl,ls2085a-pcie
-+      - fsl,ls2088a-pcie
-+      - fsl,ls1088a-pcie
-+      - fsl,ls1046a-pcie
-+      - fsl,ls1043a-pcie
-+      - fsl,ls1012a-pcie
-+      - fsl,ls1028a-pcie
-+      - fsl,lx2160a-pcie
-+
-+  reg:
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: regs
-+      - const: config
-+
-+  fsl,pcie-scfg:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: A phandle to the SCFG device node. The second entry is the
-+      physical PCIe controller index starting from '0'. This is used to get
-+      SCFG PEXN registers.
-+
-+  big-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: If the PEX_LUT and PF register block is in big-endian, specify
-+      this property.
-+
-+  dma-coherent: true
-+
-+  msi-parent: true
-+
-+  iommu-map: true
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 3
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - device_type
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,lx2160a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 3
-+        interrupt-names:
-+          items:
-+            - const: pme
-+            - const: aer
-+            - const: intr
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls1028a-pcie
-+            - fsl,ls1046a-pcie
-+            - fsl,ls1043a-pcie
-+            - fsl,ls1012a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 2
-+        interrupt-names:
-+          items:
-+            - const: pme
-+            - const: aer
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls2080a-pcie
-+            - fsl,ls2085a-pcie
-+            - fsl,ls2088a-pcie
-+            - fsl,ls1021a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        interrupt-names:
-+          items:
-+            - const: intr
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - fsl,ls1088a-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        interrupt-names:
-+          items:
-+            - const: aer
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pcie@3400000 {
-+        compatible = "fsl,ls1088a-pcie";
-+        reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
-+            <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
-+        reg-names = "regs", "config";
-+        interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+        interrupt-names = "aer";
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        dma-coherent;
-+        device_type = "pci";
-+        bus-range = <0x0 0xff>;
-+        ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
-+                 0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-+        msi-parent = <&its>;
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0 0 0 7>;
-+        interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
-+                        <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
-+        iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-deleted file mode 100644
-index ee8a4791a78b4..0000000000000
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ /dev/null
-@@ -1,79 +0,0 @@
--Freescale Layerscape PCIe controller
--
--This PCIe host controller is based on the Synopsys DesignWare PCIe IP
--and thus inherits all the common properties defined in snps,dw-pcie.yaml.
--
--This controller derives its clocks from the Reset Configuration Word (RCW)
--which is used to describe the PLL settings at the time of chip-reset.
--
--Also as per the available Reference Manuals, there is no specific 'version'
--register available in the Freescale PCIe controller register set,
--which can allow determining the underlying DesignWare PCIe controller version
--information.
--
--Required properties:
--- compatible: should contain the platform identifier such as:
--  RC mode:
--        "fsl,ls1021a-pcie"
--        "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
--        "fsl,ls2088a-pcie"
--        "fsl,ls1088a-pcie"
--        "fsl,ls1046a-pcie"
--        "fsl,ls1043a-pcie"
--        "fsl,ls1012a-pcie"
--        "fsl,ls1028a-pcie"
--  EP mode:
--	"fsl,ls1028a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
--	"fsl,lx2160ar2-pcie-ep", "fsl,ls-pcie-ep"
--- reg: base addresses and lengths of the PCIe controller register blocks.
--- interrupts: A list of interrupt outputs of the controller. Must contain an
--  entry for each entry in the interrupt-names property.
--- interrupt-names: It could include the following entries:
--  "aer": Used for interrupt line which reports AER events when
--	 non MSI/MSI-X/INTx mode is used
--  "pme": Used for interrupt line which reports PME events when
--	 non MSI/MSI-X/INTx mode is used
--  "intr": Used for SoCs(like ls2080a, lx2160a, ls2080a, ls2088a, ls1088a)
--	  which has a single interrupt line for miscellaneous controller
--	  events(could include AER and PME events).
--- fsl,pcie-scfg: Must include two entries.
--  The first entry must be a link to the SCFG device node
--  The second entry is the physical PCIe controller index starting from '0'.
--  This is used to get SCFG PEXN registers
--- dma-coherent: Indicates that the hardware IP block can ensure the coherency
--  of the data transferred from/to the IP block. This can avoid the software
--  cache flush/invalid actions, and improve the performance significantly.
--
--Optional properties:
--- big-endian: If the PEX_LUT and PF register block is in big-endian, specify
--  this property.
--
--Example:
--
--        pcie@3400000 {
--                compatible = "fsl,ls1088a-pcie";
--                reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
--                      <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
--                reg-names = "regs", "config";
--                interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
--                interrupt-names = "aer";
--                #address-cells = <3>;
--                #size-cells = <2>;
--                device_type = "pci";
--                dma-coherent;
--                num-viewport = <256>;
--                bus-range = <0x0 0xff>;
--                ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
--                          0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
--                msi-parent = <&its>;
--                #interrupt-cells = <1>;
--                interrupt-map-mask = <0 0 0 7>;
--                interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
--                                <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
--                                <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
--                                <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
--                iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
--        };
--- 
-2.34.1
+Thanks,
+Ethan
 
+> then return an error.  But don't do this.  If the memory is corrupted we
+> are already screwed and there is no way the system can really recover
+> in any reasonable way.
+>
+> regards,
+> dan carpenter
+>
+>
 
