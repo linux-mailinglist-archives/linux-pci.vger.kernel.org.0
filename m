@@ -1,91 +1,110 @@
-Return-Path: <linux-pci+bounces-4122-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4123-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A434869052
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 13:23:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06C9E869058
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 13:24:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE8751C20E33
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 12:23:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1EA72824B7
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 12:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A049C13AA58;
-	Tue, 27 Feb 2024 12:21:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0710E1419A9;
+	Tue, 27 Feb 2024 12:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtdiwcU9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GewXukva"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D15113AA51;
-	Tue, 27 Feb 2024 12:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0CD1419AA
+	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 12:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709036468; cv=none; b=tgTfDmuS2j8jFVJSDevtWa9KbMd12bNQ3IeafzuPCFsvn76ZeBC08v1PvxIu+tMaKQAN5xz3eFkCBtp/nzuk503I/CuOOJZwFfhg9ypNB+npRBb4LK8LwoqZCkTykr51TefxIi3Sfarkp5wx1/vLhkB8pH47zuNQLQZDKJTLUjM=
+	t=1709036517; cv=none; b=fEAdmiKfc8R/v1iTCY1Fy4roYmF9wfPhp3yORMyMMxGHM7E5WLP1nHt0eB3TH7AVRr6A5DqD3QNwRvlBUJZZqatzwkTVAoI+ZIb2wluWDvvIvGH8flXUxNgMXy2NJoTu0DC3eNEwMglyBpJ5AK3CbnnMbGY/fcVpX+KQt1KhDXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709036468; c=relaxed/simple;
-	bh=oyWFbEvn5bNpJPoUUha+0MQeB/JABm8GUNDl/KEdi0E=;
+	s=arc-20240116; t=1709036517; c=relaxed/simple;
+	bh=OS7E+/QQezCuwcjLO9iExKTfqPQ2LbBPhoHoghWs9UE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ST69otNNJFzB52XLLZGRPE8O2WELgYzkEdi7KVgmX3hRUWVMuvH/qnuBbylSQ33D1xdy7y4L0kzRoH08wKAH5qVYw5plsru5/EMxZ/RKXsgGImsU21Q8IzaJQyRSLEkyfI3li/rNaQapnxxonjGptPvOF15AXZ5/DNXpJ53X/jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtdiwcU9; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-512f5484a37so3749516e87.3;
-        Tue, 27 Feb 2024 04:21:06 -0800 (PST)
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfyXT0ts7rISe59D+W2MQKgimRHBrLGEwQX6YjHTk9aJxrNs+2dDD9i9cOeJZJKjvlVFCGOBNBQ2dGu5barPlgyIuqE3vNRICcVaD6io7QoQMJP0YT/IB0nw3RMJ8cCTkCF6i8+eHh5rILb8c8or93F1YrXo4vnFzyITOuhtNw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GewXukva; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1dc1ff58fe4so37396855ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 04:21:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709036465; x=1709641265; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709036515; x=1709641315; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=+UiG2wqcRS1Sx3jAk7tguEpouMFpI1yilLUIM0yjSvo=;
-        b=DtdiwcU97pjfdG9hVOufNkKl54QZKrUYYDBsF+D1Ww2tpgBH92JQVTTvQUW20Igy7T
-         xuQR3xzRLacxzW2USQJANMs9S6X64zaDIxRVc3nAEjm6KXPw5Jf0+u9E11RFGXS0cVK8
-         oZVTT05J8JwngksePiYY3DC3cxZlHBDR1WNQs/VAFXBAB1b3laxHpYvE1FAUM0+FNpfA
-         UtMn65MWJrl+iH8ZwE2LEA4oLE1CJNhfDTvOXYM6kQLbzDl0R2LK5BBpSqzgDBzOZkZs
-         8UXWJNxRWk/nuve4nc0aKJJCIiVcUOjHhn4Iy8kpEt7Jb7AJgbFXHCaHCNJyOws2k+Xt
-         QwPQ==
+        bh=Fox2FOTrnn7H7ARtUpilsDQjBFro1sbb1UtQfPOSFHk=;
+        b=GewXukvadPyjq8mmPdVrgdexPxxyZVm5taQLw4UE8uzO1qUZywn25e1hJOamHZRCwn
+         yY+fYRQ8cx2oj0K3Cn0m0LlooL1bgs+2XFfZJwLd2QmFcpgqANpbYHXxKYXJRTtr/IY5
+         54ykV2o0Lwwn2FjqEAhg5xUQj9vmNHZ24yruwhr6w7w6Nw/fz8WwRIg/HvWqz6JmzNTK
+         NGvIyAFIELJm2LZ539C/VM+BNa1k9PKPHXKVhOxVPtyXRJBTFys9lI3XaxtMM3MXeo/N
+         as6NuVHKMzRAOzFJ9NXZBZFLeLvQptX86wJ0CeHmULxbgBk9ACo8WuXLMj05/Bnsad29
+         hBMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709036465; x=1709641265;
+        d=1e100.net; s=20230601; t=1709036515; x=1709641315;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+UiG2wqcRS1Sx3jAk7tguEpouMFpI1yilLUIM0yjSvo=;
-        b=h4pojhkIRqiRLsJxCILBFjMwAFPdsjHeWVFKI99Br1f21LVLFhcK4nBAZjgrvp6x+T
-         YzL+dvEDTNDWUwym6BJMQsyp84Xcdng9JWkNMEwQ+mc+H6V3cOUJH7YgXwm7iHPR21DL
-         EyELh869nFPEmTtdZG72knjs4KloKVydL7+xV8e/zjLtRYD78p+Bf34hc3re1WiTUE/J
-         TGYFAhCDDVgn9nT+i4QyYOiGmOoRc2GYoZzeNwC6JPfw/q4867cHBWEBi51glHbkgio1
-         M+dxhDcvBOd0JZg7AUihlDo3bdiMX+qLwSO3SbSdek8OV1RxZlpX7zc7C2Sy/SrPNPPr
-         tw1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXDhD35+RCVnHTf2fxfXuOWQRClLrLDpa5O9dC8Q2/eJe1+t0gpM45il0qx37A/5NxBWj2DoyeozXVJwVouTCYwpddpq/rMh30KvOvpS34iNfTHuP0cT21cPXX3hR3sb2rjKMN9fhVlqjBVEQ94tla6bUng/o2Bk4tXPfNbwQwbYSXzr4IRL6cQSEEw63pyQDkHVRWmUdKM5MaDEnpWpnIXREhYfm1NhdCJ
-X-Gm-Message-State: AOJu0Yy/5S/AQ8QUKTwboZsT0G7M/nMxjAcF6aX2DnrARRqj8mw7OXHy
-	bkEaPP9eV8WtjsG+pWkLs8mBuBxt0Oi7NCSDCg1L3klO3N/3KaG7
-X-Google-Smtp-Source: AGHT+IHki1IzFC7bJGQf318FsyvwZ0oLFKtMs8eHrcJanJqzvjrP+qWMSLbA/vhzS3pwzR3oyy89ow==
-X-Received: by 2002:a05:6512:33d5:b0:512:fe39:5d0e with SMTP id d21-20020a05651233d500b00512fe395d0emr4598773lfg.9.1709036464384;
-        Tue, 27 Feb 2024 04:21:04 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id o13-20020ac25b8d000000b0051315216363sm25361lfn.238.2024.02.27.04.21.03
+        bh=Fox2FOTrnn7H7ARtUpilsDQjBFro1sbb1UtQfPOSFHk=;
+        b=ASLaOlTOLaHrpc/mHYkDGihXJawCoZ3lRrENpCoBKtAYxlB88z24+OAQgiDijdV/3C
+         lLZMMMPrdU/brYnOfgbHRgp2Z0R41BX5kIuKHJNdRQHlrC2KWp/y3+X3ZZdidznQsGmw
+         eXH1XQhM6vsJmoChfwWYO+x1MZ3QRowP3U33MN49N/JHvR4RYLcFSbrkyCo+mXjFbnKj
+         dYxSf2G5bUZPm+aB7t0xGJHJY0+4zJidfrCmUztH7oTcwoVdEco1NMCBe0KO7O+ppdUD
+         EQjIvB0BRkJ7yDLw5wQOv9L+G5BcT7lcTa/78Uf/1FB78vWcbG7BPDs3r0hnAIJ3svto
+         b1gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCobga2GhF2R8FoTTM10RabVHE/Kn/1bu4g5oUtSbcHgkr3kcW8/eiYa53Wet5oDaB/CUh+7Nw4fnsdWwU1LAFYLJYEQ3repL1
+X-Gm-Message-State: AOJu0YylZHo7MDFOoJTYvrJZhDcIOM0QhFSsws8vUQygN/PHUkxOYtzO
+	R1v+Kh6zJLa7vfMqvznPqnUC7LeEeG+rQunu4nriskoDnZtkHD8ebcueIc0PJg==
+X-Google-Smtp-Source: AGHT+IHOZyIvtu9udPjddxeRBkjckef05G60ZrgUBTNS/Hn/UgLmDOmQzD5ShaYiOTnnINlgtxpJEw==
+X-Received: by 2002:a17:903:181:b0:1dc:b173:f27b with SMTP id z1-20020a170903018100b001dcb173f27bmr4528891plg.32.1709036515334;
+        Tue, 27 Feb 2024 04:21:55 -0800 (PST)
+Received: from thinkpad ([117.213.97.177])
+        by smtp.gmail.com with ESMTPSA id h8-20020a170902b94800b001dba356b96esm1406270pls.306.2024.02.27.04.21.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 04:21:03 -0800 (PST)
-Date: Tue, 27 Feb 2024 15:21:00 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, Siddharth Vadapalli <s-vadapalli@ti.com>
-Subject: Re: [PATCH v3 2/5] PCI: dwc: Skip finding eDMA channels count if
- glue drivers have passed them
-Message-ID: <nl4byqs3boe3zke6yvnxmwpgw5oi63ubo36rgzejzg2c4ymwm5@utad76n57gr5>
-References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
- <20240226-dw-hdma-v3-2-cfcb8171fc24@linaro.org>
- <5gzkxdpx6u3jhw5twbncjhtozgekmlzxrpj3m6is3ijadm2svb@f6ng4owyakup>
- <20240226153014.GG8422@thinkpad>
- <4p4z5eyhpdhxzi36drhrmz6z7krupszddudg6c2baypkbnnj7t@nqcmk2wdntts>
- <20240227084204.GI2587@thinkpad>
+        Tue, 27 Feb 2024 04:21:54 -0800 (PST)
+Date: Tue, 27 Feb 2024 17:51:41 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v8 06/10] PCI: dwc: ep: Call dw_pcie_ep_init_registers()
+ API directly from all glue drivers
+Message-ID: <20240227122141.GN2587@thinkpad>
+References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
+ <20240224-pci-dbi-rework-v8-6-64c7fd0cfe64@linaro.org>
+ <ZdzEoXwU42rFCF/W@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,196 +114,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240227084204.GI2587@thinkpad>
+In-Reply-To: <ZdzEoXwU42rFCF/W@lizhi-Precision-Tower-5810>
 
-On Tue, Feb 27, 2024 at 02:12:04PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Feb 27, 2024 at 12:32:44AM +0300, Serge Semin wrote:
-> > On Mon, Feb 26, 2024 at 09:00:14PM +0530, Manivannan Sadhasivam wrote:
-> > > On Mon, Feb 26, 2024 at 03:53:20PM +0300, Serge Semin wrote:
-> > > > On Mon, Feb 26, 2024 at 05:07:27PM +0530, Manivannan Sadhasivam wrote:
-> > > > > In the case of Hyper DMA (HDMA) present in DWC controllers, there is no way
-> > > > > the drivers can auto detect the number of read/write channels as like its
-> > > > > predecessor embedded DMA (eDMA). So the glue drivers making use of HDMA
-> > > > > have to pass the channels count during probe.
-> > > > > 
-> > > > > To accommodate that, let's skip finding the channels if the channels count
-> > > > > were already passed by glue drivers. If the channels count passed were
-> > > > > wrong in any form, then the existing sanity check will catch it.
-> > > > > 
-> > > > > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
-> > > > > Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/dwc/pcie-designware.c | 16 +++++++++-------
-> > > > >  1 file changed, 9 insertions(+), 7 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > index 193fcd86cf93..ce273c3c5421 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > @@ -927,13 +927,15 @@ static int dw_pcie_edma_find_channels(struct dw_pcie *pci)
-> > > > >  {
-> > > > >  	u32 val;
-> > > > >  
-> > > > > -	if (pci->edma.mf == EDMA_MF_EDMA_LEGACY)
-> > > > > -		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> > > > > -	else
-> > > > > -		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> > > > > -
-> > > > > -	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-> > > > > -	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-> > > > 
-> > > > > +	if (!pci->edma.ll_wr_cnt || !pci->edma.ll_rd_cnt) {
-> > > > 
-> > > > Are you sure that the partly initialized case should be considered as
-> > > > a request for the auto-detection? IMO &&-ing here and letting the
-> > > > sanity check to fail further would be more correct since thus the
-> > > > developer would know about improper initialized data.
-> > > > 
-> > > 
-> > > We already have the check below. So the partly initialized case will fail
-> > > anyway.
+On Mon, Feb 26, 2024 at 12:04:33PM -0500, Frank Li wrote:
+> On Sat, Feb 24, 2024 at 12:24:12PM +0530, Manivannan Sadhasivam wrote:
+> > Currently, dw_pcie_ep_init_registers() API is directly called by the glue
+> > drivers requiring active refclk from host. But for the other drivers, it is
+> > getting called implicitly by dw_pcie_ep_init(). This is due to the fact
+> > that this API initializes DWC EP specific registers and that requires an
+> > active refclk (either from host or generated locally by endpoint itsef).
 > > 
-> > Not really. If the partly initialized case activates the
-> > auto-detection procedure it will override both non-initialized and
-> > _initialized_ number of channels with the values retrieved from the
-> > hardware, which the glue driver has been willing not to use. This
-> > prone to undefined behavior depending on the reasons of skipping the
-> > auto-detection procedure. For instance, assume the DMA_CTRL register
-> > reports an invalid number of read channels. A glue driver by mistake
-> > or willingly overwrites the pci->edma.ll_rd_cnt field only. This won't
-> > solve the problem since the auto-detection will be proceeded due to
-> > the pci->edma.ll_wr_cnt field being left uninitialized.
+> > But, this causes a discrepancy among the glue drivers. So to avoid this
+> > confusion, let's call this API directly from all glue drivers irrespective
+> > of refclk dependency. Only difference here is that the drivers requiring
+> > refclk from host will call this API only after the refclk is received and
+> > other drivers without refclk dependency will call this API right after
+> > dw_pcie_ep_init().
 > > 
-> > So to speak it would be better to implement a strictly determined case
-> > for activating the auto-detection procedure: both number of channels
-> > aren't initialized; if only one field is initialized then report an
-> > error.
+> > This change will also allow us to remove the "core_init_notifier" flag in
+> > the later commits.
 > > 
-> > Alternatively we can have the auto-detection executed on the
-> > per-channel basis:
-> > 
-> > +	if (pci->edma.mf != EDMA_MF_HDMA_NATIVE) {
-> > +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> > +
-> > +		if (!pci->edma.ll_wr_cnt)
-> > +			pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-> > +
-> > +		if (!pci->edma.ll_rd_cnt)
-> > +			pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-> > +	}
-> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pci-dra7xx.c           |  7 +++++++
+> >  drivers/pci/controller/dwc/pci-imx6.c             |  8 ++++++++
+> >  drivers/pci/controller/dwc/pci-keystone.c         |  9 +++++++++
+> >  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  7 +++++++
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c   | 22 ----------------------
+> >  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 +++++++++
+> >  drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 12 +++++++++++-
+> >  drivers/pci/controller/dwc/pcie-uniphier-ep.c     | 13 ++++++++++++-
+> >  8 files changed, 63 insertions(+), 24 deletions(-)
+
+[...]
+
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index ed1f2afd830a..278bdc9b2269 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -729,7 +729,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	struct device *dev = pci->dev;
+> >  	struct platform_device *pdev = to_platform_device(dev);
+> >  	struct device_node *np = dev->of_node;
+> > -	const struct pci_epc_features *epc_features;
+> >  
+> >  	INIT_LIST_HEAD(&ep->func_list);
+> >  
+> > @@ -775,29 +774,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  		goto err_exit_epc_mem;
+> >  	}
+> >  
+> > -	if (ep->ops->get_features) {
+> > -		epc_features = ep->ops->get_features(ep);
+> > -		if (epc_features->core_init_notifier)
+> > -			return 0;
+> > -	}
 > 
-> Hmm, in this case there is no need to check for uninitialized channels count:
+> why remove this check?
 > 
-> 	/*
-> 	 * Autodetect the read/write channels count only for non-HDMA platforms.
-> 	 * HDMA platforms doesn't support autodetect, so the glue drivers should've
-> 	 * passed the valid count already. If not, the below sanity check will
-> 	 * catch it.
-> 	 */
-> 	if (pci->edma.mf != EDMA_MF_HDMA_NATIVE) {
-> 		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> 
-> 		pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-> 		pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-> 	}
-> 
-> 	/* Sanity check */
 
-That is another possible implementation. Let's sum all of them up:
+There is no point in keeping this check since we are removing the call to
+dw_pcie_ep_init_registers() below. But I should've described this change in the
+commit message.
 
-1. Channel fields-base conditional statement:
-+	if (!pci->edma.ll_wr_cnt && !pci->edma.ll_rd_cnt) {
-+		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+
-+		pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+		pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-+	}
-pros: NoF channels override support for all IP-cores; simple.
-cons: incompatible with HDMA, but can be taken by mistake/bug; no
-partial NoF channels pre-initialization.
+- Mani
 
-2. Channel fields-base conditional statement with logical OR operator #1:
-+	if (!pci->edma.ll_wr_cnt || !pci->edma.ll_rd_cnt) {
-+		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+
-+		pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+		pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-+	}
-pros: NoF channels override support for all IP-cores; simple.
-cons: incompatible with HDMA, but can be taken by mistake/bug; no
-partial NoF channels pre-initialization; silently overrides the
-partial NoF channels case.
-
-3. Channel fields-base conditional statement with logical OR operator #2:
-+	if (!pci->edma.ll_wr_cnt || !pci->edma.ll_rd_cnt) {
-+		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+
-+		if (!pci->edma.ll_wr_cnt)
-+			pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+
-+		if (!pci->edma.ll_rd_cnt)
-+			pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-+	}
-pros: NoF channels override support for all IP-cores; partial NoF
-channels pre-initialization support.
-cons: incompatible with HDMA, but can be taken by mistake/bug; more
-complex (and actually looking a bit clumsy due to two conditional
-statements over the same fields).
-
-4. Unconditional auto-detection:
-+	val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+
-+	if (!pci->edma.ll_wr_cnt)
-+		pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+
-+	if (!pci->edma.ll_rd_cnt)
-+		pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-pros: NoF channels override support for all IP-cores; partial NoF
-channels pre-initialization support; simple.
-cons: incompatible with HDMA, but will be executed for it anyway so
-the NoF channels fields will be overridden with the Channel#0.prefetch
-CSR data if haven't been pre-initialized;
-
-5. Mapping format-based conditional statement:
-+	if (pci->edma.mf != EDMA_MF_HDMA_NATIVE) {
-+		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+
-+		pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+		pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-+	}
-pros: free of being executed for HDMA IP-core, simple
-cons: no NoF channels override support for non-HDMA IP-cores.
-
-6. Mapping format-based conditional statement with partial NoF channels override:
-+	if (pci->edma.mf != EDMA_MF_HDMA_NATIVE) {
-+		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+
-+		if (!pci->edma.ll_wr_cnt)
-+			pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+
-+		if (!pci->edma.ll_rd_cnt)
-+			pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-+	}
-pros: free of being executed for HDMA IP-core; NoF channels override
-support for all IP-cores.
-cons: more complex.
-
-
-Looking at all of that I'd say that options 5 and 6 seems better to me
-now since they prohibit the auto-detection for HDMA IP-cores which
-have the Channel#0.prefetch CSR at the 0x8 offset. I don't have strong
-opinion which of those two to choose. If you think simplicity is
-preferable, then option 2 will be enough. If you wish to have the NoF
-channels override supported for all IP-cores, then option 3 will work
-for it.
-
--Serge(y)
-
-> 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+-- 
+மணிவண்ணன் சதாசிவம்
 
