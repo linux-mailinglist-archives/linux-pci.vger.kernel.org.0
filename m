@@ -1,146 +1,350 @@
-Return-Path: <linux-pci+bounces-4079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4081-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B3C88689A6
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:12:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA1A68689DC
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:31:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8AC441C218EE
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 07:12:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90060286BC4
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 07:31:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D70553E2D;
-	Tue, 27 Feb 2024 07:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03AF85465C;
+	Tue, 27 Feb 2024 07:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P5RWbdMm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dsIiSInm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F8954746;
-	Tue, 27 Feb 2024 07:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD8C54BC7
+	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 07:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709017958; cv=none; b=hGEezwmqOPJaRfo2C1Qzb2xAoNXtzri3XntAUF6XTP87u8U1STY5IJJ9o0W9EkHKOgwJ2y/cvw99HIO3e9h9divWyueD1boSiWx9XEa/4OQMYrXX8Wn2IB8K0AZflApJmOqog8V6o5jrO2LCQKvaQDrlnJUrKBRlW3wD8YkF0m4=
+	t=1709019066; cv=none; b=ZZkC6dass4b1VfemmwVLbIkY6TLnbJ9F9b8F5puhRkZRN92dgqznY+i02o9HcPFKWSloB+pzKIpncbbbZobTcbgGRMX1K+wESRZ/91oo8MXOHdk2jIOtH1x87fah6iZxdwmaL9nR9SSG03RanekibXtTpsJlVSejPjhjIq/XKQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709017958; c=relaxed/simple;
-	bh=JYd1+gvQmxdWC7GENXNwKzhJ4WIfgamBg/U20rCMJ0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hI7QYvz4wE5CSmeJub7Ls+N1kT8/kbE8o56iOZYAW2wWTLcYUrCPIT0L0LYbsUVzZ2mDNHWc1kpoXUFvwPwbjU5Xsd2f6f9RcTZvQLZdILwHdiMs9vpsFaF5iEojZxojyeSLHbjVFc23AwmkKzIhyLA0FR0MKD9oZNoSZfFW+4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P5RWbdMm; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709017957; x=1740553957;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JYd1+gvQmxdWC7GENXNwKzhJ4WIfgamBg/U20rCMJ0E=;
-  b=P5RWbdMmyl3hBhuFclX5fQ7mTNirGw3ViI3Y9TiTJPPw/BFQoPCoRRDe
-   7sSHnDdvNJ0IjcGIWVyTvAUu7lKV9W9P2FYdwEwp+qec8mr7eIIz8aV8z
-   G//DU2/+WSr1em/dn8Pfwfqr8j1ePAOADGyer7ldw0OQxPs1EadL7Z5aA
-   7pY8xuh3z3FMunsomoaZfVwnBwzwtb2fwJKsDO1gHSCNMVAiiblMdIAkl
-   htCPAMt21Y7ROPwgZMQ8eRZfz+0PjB8m91+m5yZylB/P+n7KQtV+8OdPX
-   V5THV4vt3kulfuEoNu07zCcxQpDlI0B01hezoas0gx76w6r9wBNWGWkNs
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3503098"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3503098"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 23:12:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6909305"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 23:12:33 -0800
-Message-ID: <81f2dfa4-14c6-423c-96ee-b11b8a4670ed@linux.intel.com>
-Date: Tue, 27 Feb 2024 15:12:31 +0800
+	s=arc-20240116; t=1709019066; c=relaxed/simple;
+	bh=8hTm1e4DO3B+HFmKMCy0K5Gm6U/GBdM1sitK6NR5BhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i0SMX/fvfJ4K9g+C3mnA2OI10cErXCUdHlQQuQ125kSPM00E4PHGBBFHqEXxblXo8c+7uB0CQUZsmwqn0jxfV6B7MoiRyQ9DtghLxgqLX3bvMI2LDOH1KUgKhOCnD/cr3WsbUEYS/hsokvCaSSCq+OB4brkpnJoe2e/+b2qPzg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dsIiSInm; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e4e7e2594cso2137658b3a.2
+        for <linux-pci@vger.kernel.org>; Mon, 26 Feb 2024 23:31:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709019064; x=1709623864; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g+3fVWuCL3ljJ78bEEHq6LmM/Y1cfdKgtrCzN5F26e0=;
+        b=dsIiSInm1eRYjRmE3R+cs6adJUxUQ5HhGlq2Ly3ihbyOXqjig7TaUkY0iyxubtHOLD
+         6jFdp52M5IyQkOy2gipajJgsidpIoH3LI45/tI9ORH9SX+I9rSFN1wynvtG6tfEbGOZN
+         EixeHUW0+vFT7BUMBL6gJHLUx0+O/PIbXwYzZ0uFH6VnYorYyMXCkyhurs3pidW+yYLc
+         kckiQOnn2BobHc7YLpfrC6eZJdKFmuYbjXVbLkzVBVMh7uK/U8SgEkXGnDRDx8jpGpfJ
+         u3pleacP8DZRlT8x3Z5hI7MFlfxGm5FpVCy4sXhXJsumlYh+pQxvO3AwWkKmKXpniunf
+         zkzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709019064; x=1709623864;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g+3fVWuCL3ljJ78bEEHq6LmM/Y1cfdKgtrCzN5F26e0=;
+        b=pfPoVCzdjLjpeO7BzGDCAuQxN82TZOySVp/cRIGj6Sb3GTy6f7GWXOSHjXFNuUJBzV
+         yCTsvAsboHfGdbp4ARiSr7OoiokUI2MW51Uv5CchYpyJXtq9CzbXIr5hsBPq7Rz8CQKl
+         dCxE1E9qcVgx2wdpV+drt7msB3qk7Xa9BMULEbhqAICNcGQAOD0/PhOgOLKasSi/x2BM
+         +W1oXRxFxahGoxLSjOiRc+mu03lb3VzPv44DzY74B7lhw/vSzSCrxZszi/x18MsJx0ZH
+         dn8QHqfyfLVFFaAzYnOb7cTtRvOZP9VrKZ/3dsVbKGdomw974jMHRGqIBlpCeoN7Z8N7
+         aYcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXScfFBE1yWY7FqaNCO5KBDGrS3E5fOH4Njxq41XeBl3QrnSn/0E45mCEo1r7o2otZf+aC7SFR1ym9JCPPZ7d014ediAV3dvf0C
+X-Gm-Message-State: AOJu0YxcbAw4ivAnOS+iSFZOpCMOdA67Dn4+Q+5iVvSd6f9xfGGnCh4y
+	p+M6IRkaDysoqxAwHwJ/zFKu40Vq7X1zTsRHa0OchjBMh//OuFCgCRYyx02Iyg==
+X-Google-Smtp-Source: AGHT+IGsiEj/LOmY9J+SHSBDy/ugJbIp1TEHoUhukzvmCy97nYqQmJjP0j05uKAyQJzUBlgHzrTfJQ==
+X-Received: by 2002:a05:6a20:c6cb:b0:19e:a23d:b507 with SMTP id gw11-20020a056a20c6cb00b0019ea23db507mr1305173pzb.58.1709019064283;
+        Mon, 26 Feb 2024 23:31:04 -0800 (PST)
+Received: from thinkpad ([117.213.97.177])
+        by smtp.gmail.com with ESMTPSA id bx33-20020a056a02052100b005dc507e8d13sm4311175pgb.91.2024.02.26.23.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 23:31:03 -0800 (PST)
+Date: Tue, 27 Feb 2024 13:00:57 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
+ platforms
+Message-ID: <20240227073057.GF2587@thinkpad>
+References: <20240222040629.GB3374@thinkpad>
+ <20240226233930.GA215487@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] PCI/DPC: Clean up DPC vs AER/EDR ownership and
- Kconfig
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Matthew W Carlis <mattc@purestorage.com>,
- Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <20240222221521.32159-1-helgaas@kernel.org>
- <89984f11-b84e-4da0-ab5b-f2048461aae0@linux.intel.com>
- <52245cb8-879e-4997-a1b5-cdfbd702dee7@linux.intel.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <52245cb8-879e-4997-a1b5-cdfbd702dee7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240226233930.GA215487@bhelgaas>
 
-On 2/27/2024 2:35 PM, Kuppuswamy Sathyanarayanan wrote:
-> Hi,
->
-> On 2/26/24 10:18 PM, Ethan Zhao wrote:
->> On 2/23/2024 6:15 AM, Bjorn Helgaas wrote:
->>> From: Bjorn Helgaas <bhelgaas@google.com>
->>>
->>> Previously we could request control of DPC without AER, which is illegal
->>> per spec.  Also, we could enable CONFIG_PCIE_DPC without CONFIG_PCIE_EDR,
->>> which is also illegal.  This series addresses both.
->> I have a question here, how to understand the relationship EDR & AER ?
->> somewhere EDR touches AER status without checking _OSC granted bits,
->> such as
->>     pci_aer_raw_clear_status(edev);
->
-> Which_OSC bits?
->
-> EDR code will only get triggered if OS advertises the EDR support (which
-> also means OS supports AER and DPC), and both AER and DPC is owned by
-> the firmware. During the EDR notification, the OS is allowed to touch AER
+On Mon, Feb 26, 2024 at 05:39:30PM -0600, Bjorn Helgaas wrote:
+> On Thu, Feb 22, 2024 at 09:36:29AM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Feb 21, 2024 at 12:20:00PM -0600, Bjorn Helgaas wrote:
+> > > On Wed, Feb 21, 2024 at 10:49:58AM +0530, Manivannan Sadhasivam wrote:
+> > > > On Tue, Feb 20, 2024 at 04:02:40PM -0600, Bjorn Helgaas wrote:
+> > > > > On Wed, Feb 14, 2024 at 05:16:09PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > Currently, PCI core will enable D3 support for PCI bridges only when the
+> > > > > > following conditions are met:
+> > > > > 
+> > > > > Whenever I read "D3", I first have to figure out whether we're talking
+> > > > > about D3hot or D3cold.  Please save me the effort :)
+> > > > 
+> > > > Both actually, that's why I used "D3" as in the spec. I should've explicitly
+> > > > mentioned that in the commit message.
+> > > > 
+> > > > > > 1. Platform is ACPI based
+> > > > > > 2. Thunderbolt controller is used
+> > > > > > 3. pcie_port_pm=force passed in cmdline
+> > > > > 
+> > > > > Are these joined by "AND" or "OR"?  I guess probably "OR"?
+> > > > > 
+> > > > > "... all the following conditions are met" or "... one of the
+> > > > > following conditions is met" would clarify this.
+> > > > 
+> > > > Will use "one of the..."
+> > > > 
+> > > > > > While options 1 and 2 do not apply to most of the DT based
+> > > > > > platforms, option 3 will make the life harder for distro
+> > > > > > maintainers. Due to this, runtime PM is also not getting enabled
+> > > > > > for the bridges.
+> > > > > > 
+> > > > > > To fix this, let's make use of the "supports-d3" property [1] in
+> > > > > > the bridge DT nodes to enable D3 support for the capable
+> > > > > > bridges. This will also allow the capable bridges to support
+> > > > > > runtime PM, thereby conserving power.
+> > > > > 
+> > > > > Looks like "supports-d3" was added by
+> > > > > https://github.com/devicetree-org/dt-schema/commit/4548397d7522.
+> > > > > The commit log mentions "platform specific ways", which suggests maybe
+> > > > > this is D3cold, since D3hot should be supported via PMCSR without any
+> > > > > help from the platform.
+> > > > > 
+> > > > > So I *guess* this really means "platform provides some non-architected
+> > > > > way to put devices in D3cold and bring them back to D0"?
+> > > > 
+> > > > By reading the comments and git log of the pci_bridge_d3_possible()
+> > > > function in drivers/pci/pci.c, we can understand that some of the
+> > > > old bridges do not support both D3hot and D3cold. And to
+> > > > differentiate such bridges, platforms have to notify the OS using
+> > > > some ways.
+> > > > 
+> > > > ACPI has its own implementation [1] and DT uses "supports-d3"
+> > > > property.
+> > > > 
+> > > > And yes, in an ideal world PMCSR should be sufficient for D3hot, but
+> > > > you know the PCI vendors more than me ;)
+> > > 
+> > > So it sounds like this is supposed to cover two cases:
+> > > 
+> > >   1) D3hot doesn't work per spec.  This sounds like a hardware
+> > >      defect in the device that should be a quirk based on
+> > >      Vendor/Device ID, not something in DT.  I don't actually know if
+> > >      this is common, although there are several existing quirks that
+> > >      mention issues with D3.
+> > > 
+> > 
+> > I'd love to use quirks if we started from that. But right now, quirks are not
+> > used and there are multiple checks based on various factors [1], including
+> > relying on ACPI. So that's the reason I went with DT based approach.
+> > 
+> > If quirks has to be used now, then it has to be used for both ACPI and DT based
+> > platforms. For DT it won't be an issue since nobody bothered until now, but for
+> > ACPI, we need to add quirks for all the bridges in the wild which is not
+> > feasible.
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pci.c#n3116
+> > 
+> > >   2) The platform doesn't support putting the bridge in D3cold and
+> > >      back to D0.  I don't understand this either because I assumed DT
+> > >      would describe *hardware*, and "supports-d3" might imply the
+> > >      presence of hardware power control, but doesn't tell us how to
+> > >      operate it, and it must be up to a native driver to know how to
+> > >      do it.
+> > 
+> > "supports-d3" implies that both D3hot and D3cold works as in the
+> > spec and the OS can handle it appropriately. If this is absent, then
+> > OS should not transition the bridge to any of the D3 states. I don't
+> > understand what is the confusion here. This is similar to what we
+> > already have for ACPI (whether or not it is correct is another
+> > topic).
+> 
+> What does "the OS can handle it appropriately" mean?  Whatever it
+> means, it sounds like a property of the OS, not a property of the
+> device.
+> 
 
-Means no need to check if host->native_aer ? why checked in
-pcie_do_recovery() ?
+"appropiately" means as per the PCIe spec.
 
-Thanks,
-Ethan
+> I don't know what "D3cold works as in the spec" means, either.  The
+> spec says how D3cold affects internal device state, but it doesn't say
+> anything about how to put devices in D3cold or back in D0.
+> 
+> > > These are two vastly different scenarios, and I would really like to
+> > > untangle them so they aren't conflated.  I see that you're extending
+> > > platform_pci_bridge_d3(), which apparently has that conflation baked
+> > > into it already, but my personal experience is that this is really
+> > > hard to maintain.
+> > 
+> > I do agree that it is not in a good shape, but there is no better
+> > solution other than making use of the DT property. If you have any
+> > better idea, please suggest.
+> 
+> The longer this goes on the worse shape we are in because we're always
+> adding new special cases.
+> 
+> The fundamental problem I have is that "supports-d3" doesn't say
+> anything specific other than "current Linux can put the device in
+> D3hot or D3cold and get it back out again".  I think DT should tell us
+> characteristics of the device or the platform, e.g., "PMCSR doesn't
+> work to enter/leave D3hot on this device" or "regulator X controls
+> main power to the device to enter/leave D3cold".
+> 
+> But right now it sounds like a mixture of "PMCSR works correctly to
+> enter/leave D3hot" and "some unspecified software can control main
+> power to this device".
+> 
+> Putting devices in D3cold and back in D0 needs some kind of platform
+> support like ACPI methods or a native power management driver that
+> knows how to control power on a specific platform.  That's completely
+> different from D3hot, where the PCI spec tells us all we need to know.
+> 
 
-> and DPC registers. So there is no problem with EDR code using AER routines.
->
->
->> sometimes EDR calling AER with host->native_aer checked, like
->>
->> pcie_do_recovery()
->> {
->>   ...
->>   if (host->native_aer || pcie_ports_native) {
->>          pcie_clear_device_status(dev);
->>          pci_aer_clear_nonfatal_status(dev);
->>      }
->>   ...
->> }
->>
->> That is really confusing. could we do some cleanup to eliminate it ?
->> such as seperate AER code into common code and runtime part.
->>
->>
->> Thanks,
->> Ethan
->>   
->>
->>> Bjorn Helgaas (3):
->>>     PCI/DPC: Request DPC only if also requesting AER
->>>     PCI/DPC: Remove CONFIG_PCIE_EDR
->>>     PCI/DPC: Encapsulate pci_acpi_add_edr_notifier()
->>>
->>>    drivers/acpi/pci_root.c   | 22 ++++++++++++----------
->>>    drivers/pci/pci.h         |  4 ++++
->>>    drivers/pci/pcie/Kconfig  | 14 ++++----------
->>>    drivers/pci/pcie/Makefile |  5 ++++-
->>>    drivers/pci/pcie/dpc.c    | 10 ----------
->>>    include/linux/pci-acpi.h  |  8 --------
->>>    6 files changed, 24 insertions(+), 39 deletions(-)
->>>
+Ok, I got the issue. TBH, I added the device tree property based on the existing
+quirks for the ACPI devices. But none of the DT based platforms I'm aware of
+(even the legacy Qcom MSM8996 chipset released in early 2016) doesn't have any
+issue with D3hot. But I'm just nervous to assume it is the case for all the DT
+based platforms in the wild.
+
+But to proceed further, what is your preference? Should we ammend the DT
+property to make it explicit that the propery only focuses on the D3hot
+capability of the bridge and it works as per the spec (PMCSR) or bite the bullet
+and enable D3hot for all the non-ACPI platforms?
+
+We can add quirks for the bridges later on if we happen to receive any bug
+report.
+
+- Mani
+
+> > > > > > Ideally, D3 support should be enabled by default for the more recent PCI
+> > > > > > bridges, but we do not have a sane way to detect them.
+> > > > > > 
+> > > > > > [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-pci-bridge.yaml#L31
+> > > 
+> > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pci-acpi.c#n976
+> > > > 
+> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > ---
+> > > > > > This patch is tested on Qcom SM8450 based development board with an out-of-tree
+> > > > > > DT patch.
+> > > > > > 
+> > > > > > NOTE: I will submit the DT patches adding this property for applicable bridges
+> > > > > > in Qcom SoCs separately.
+> > > > > > 
+> > > > > > Changes in v3:
+> > > > > > - Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
+> > > > > > - Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
+> > > > > > 
+> > > > > > Changes in v2:
+> > > > > > - Switched to DT based approach as suggested by Lukas.
+> > > > > > - Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
+> > > > > > ---
+> > > > > >  drivers/pci/of.c  | 12 ++++++++++++
+> > > > > >  drivers/pci/pci.c |  3 +++
+> > > > > >  drivers/pci/pci.h |  6 ++++++
+> > > > > >  3 files changed, 21 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > > > > index 51e3dd0ea5ab..24b0107802af 100644
+> > > > > > --- a/drivers/pci/of.c
+> > > > > > +++ b/drivers/pci/of.c
+> > > > > > @@ -786,3 +786,15 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > > > > >  	return slot_power_limit_mw;
+> > > > > >  }
+> > > > > >  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * of_pci_bridge_d3 - Check if the bridge is supporting D3 states or not
+> > > > > > + *
+> > > > > > + * @node: device tree node of the bridge
+> > > > > > + *
+> > > > > > + * Return: %true if the bridge is supporting D3 states, %false otherwise.
+> > > > > > + */
+> > > > > > +bool of_pci_bridge_d3(struct device_node *node)
+> > > > > > +{
+> > > > > > +	return of_property_present(node, "supports-d3");
+> > > > > > +}
+> > > > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > > > index d8f11a078924..8678fba092bb 100644
+> > > > > > --- a/drivers/pci/pci.c
+> > > > > > +++ b/drivers/pci/pci.c
+> > > > > > @@ -1142,6 +1142,9 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+> > > > > >  	if (pci_use_mid_pm())
+> > > > > >  		return false;
+> > > > > >  
+> > > > > > +	if (dev_of_node(&dev->dev))
+> > > > > > +		return of_pci_bridge_d3(dev->dev.of_node);
+> > > > > > +
+> > > > > >  	return acpi_pci_bridge_d3(dev);
+> > > > > >  }
+> > > > > >  
+> > > > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > > > > index 2336a8d1edab..10387461b1fe 100644
+> > > > > > --- a/drivers/pci/pci.h
+> > > > > > +++ b/drivers/pci/pci.h
+> > > > > > @@ -635,6 +635,7 @@ int of_pci_get_max_link_speed(struct device_node *node);
+> > > > > >  u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > > > > >  				u8 *slot_power_limit_value,
+> > > > > >  				u8 *slot_power_limit_scale);
+> > > > > > +bool of_pci_bridge_d3(struct device_node *node);
+> > > > > >  int pci_set_of_node(struct pci_dev *dev);
+> > > > > >  void pci_release_of_node(struct pci_dev *dev);
+> > > > > >  void pci_set_bus_of_node(struct pci_bus *bus);
+> > > > > > @@ -673,6 +674,11 @@ of_pci_get_slot_power_limit(struct device_node *node,
+> > > > > >  	return 0;
+> > > > > >  }
+> > > > > >  
+> > > > > > +static inline bool of_pci_bridge_d3(struct device_node *node)
+> > > > > > +{
+> > > > > > +	return false;
+> > > > > > +}
+> > > > > > +
+> > > > > >  static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
+> > > > > >  static inline void pci_release_of_node(struct pci_dev *dev) { }
+> > > > > >  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+> > > > > > 
+> > > > > > ---
+> > > > > > base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+> > > > > > change-id: 20240131-pcie-qcom-bridge-b6802a9770a3
+> > > > > > 
+> > > > > > Best regards,
+> > > > > > -- 
+> > > > > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > 
+> > > > 
+> > > > -- 
+> > > > மணிவண்ணன் சதாசிவம்
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
