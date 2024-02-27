@@ -1,276 +1,115 @@
-Return-Path: <linux-pci+bounces-4093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9EC5868CD7
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:02:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8818A868D06
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:11:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 606852840E4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 10:02:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42339286D6D
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 10:11:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6417456458;
-	Tue, 27 Feb 2024 10:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA26137C47;
+	Tue, 27 Feb 2024 10:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJaudAhu"
+	dkim=pass (2048-bit key) header.d=radomirpolach.cz header.i=@radomirpolach.cz header.b="G/+9o/ow"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mail-4323.proton.ch (mail-4323.proton.ch [185.70.43.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1E013849E
-	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 10:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E201384B1
+	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 10:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709028145; cv=none; b=bekRYOWdRmn+7YygaVuLo2jQ512ZRQcsQwAi6yKPOHXSxl2F2TXLMA4QMa4RzPksXYNYuwny2J1/blQMQAPOaX5NqRvZufkTzLVT5dMpg6vJkxoADxs5bAeUspq2IvzIfJ+phHuC5epI8qvj8LH0aQnS0sr7o8kmAnZV3F1BSt0=
+	t=1709028649; cv=none; b=ZEpMjrCC45zp+E6QoY55gf199yBIEBvDnzTlGPGcdk1+8QQZ9HIuJ0PrbbDfeM7QHEjIn4ApeRTdeah2gWbNPxWH2g+bzeexTf3JuZtRNAUqMYnWtKxa810HtEaYHxetwV2WTc0cWQjkpxG/ldDXquILZFsEvMleI1swzn5WUGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709028145; c=relaxed/simple;
-	bh=YJ5emTLtSNhtr0NO1gtqgQuMmf30v5YYw6L2I5MlAco=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=o9Ao7tUQqQGyZgSExjZOR0qU552P1U0c58FJF+5Io2y4Y59dNiOpGOF0QET25hBybtJjyViEi9WpAdEv0cKjrrp4UhVeD49ZqXOn/u3O/glntQ7/nlqKZjQAM3nqZekjbrwZpkXtbJUgni2q254q2xnK8nH0/dzQBqlmh8+nouw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJaudAhu; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709028143; x=1740564143;
-  h=date:from:to:cc:subject:message-id;
-  bh=YJ5emTLtSNhtr0NO1gtqgQuMmf30v5YYw6L2I5MlAco=;
-  b=AJaudAhu0Be65myF36JEKr5X3TtOGt3r1rvp5Xf2zrTsWGZUHyOEDMPP
-   uqfpyF4Fphg8Je1GZHiGfAIzLi9u4+8obfyXOAEjYw829M9DaQxgAa+MD
-   She4k1Jvmha9UaJWJiZU2YoeQNECXpsesjoODBa7X6BkHYjOMjqFX/aZ+
-   d6sOoR8o5rmav4DRM9TDPdXpm7Ca9WWby1aUT3FKR6ezgOqjR4ta2C981
-   n73+YB4Ghm06doWo20XHXLyatrDeg+Y0Ejwkhvc8xvTW/gBAi5+XzPppJ
-   6vYMaU2GQPdZb5WI69yT+zvRVwVCEsV1pAhYr8cECXY024GSBDZUxV6Ff
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3477595"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3477595"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 02:02:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="6923659"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 27 Feb 2024 02:02:21 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1reuHz-000B7X-2S;
-	Tue, 27 Feb 2024 10:02:19 +0000
-Date: Tue, 27 Feb 2024 18:02:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
+	s=arc-20240116; t=1709028649; c=relaxed/simple;
+	bh=AZIftr687pvw2dFr26PjLoD7IgKtGiMncNZH/STpj1Q=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q4zXvSPD8fjo72ss8L/EA/FWYcmArlhoU7xdtPsCzyVCayyFsZ1C0+GJmkD4l+pK88vLD07oYT7F2iYp+O/OsF4sNhxKSQn0vVd1fsHKwXinerJoKrMzXkTgCcxQi4gHnOegweF2aP9WEoAe3JpwxuS6HRTQ/EaSRvuBzLbuOvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radomirpolach.cz; spf=pass smtp.mailfrom=radomirpolach.cz; dkim=pass (2048-bit key) header.d=radomirpolach.cz header.i=@radomirpolach.cz header.b=G/+9o/ow; arc=none smtp.client-ip=185.70.43.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radomirpolach.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radomirpolach.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=radomirpolach.cz;
+	s=protonmail2; t=1709028635; x=1709287835;
+	bh=AZIftr687pvw2dFr26PjLoD7IgKtGiMncNZH/STpj1Q=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=G/+9o/owVOhONbd2eDi3h+ZtKID4t6GsiC2obzUi0IYpC5aeOjKJIi4AuL5yf4ToF
+	 H/MYxiBKghDiAXSXdIAtkC4nsrwPV+enpkVdGBkOL5ThMlCiU3Uwx2UBoRMavcrvSF
+	 zuCo34nyBT7ZFU1F7KxM0j4NHVqk1I69HYNoG9eahDHMf1TgvxXdOW+rYJi2FsbXys
+	 MrviYvwdoFjoYZuaICFzTX95EtOoz9e3L1RQpxggqi1VBFs0DEu/H/Ul5DsG9R9B2i
+	 o1HOLMSCotRJENNdWrNO6JpXZEoaCFYAkfUGDW9v+XuFmeyMp27+xEWgSa51tKlwMF
+	 h/nuiak9aKBZQ==
+Date: Tue, 27 Feb 2024 10:10:14 +0000
+To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+From: =?utf-8?Q?Ing=2E_Radom=C3=ADr_Pol=C3=A1ch?= <mail@radomirpolach.cz>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:wip/2402-bjorn-osc-dpc] BUILD REGRESSION
- f76758eebe9e2f81b37e41d2bdc70825cdb879d7
-Message-ID: <202402271808.1Kg5NqNb-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Subject: Re: PCI-e endpoint GPU implementation
+Message-ID: <uiFd-b5bqi83xbkdfe9z92Fv4Fka4CA5akSVl6QDQ6W94Y5oq2OsucJgcPuFxnPitVf2dncFS03iXqSIjYByKMdEqaMcrtG2XgH8bbv6PNs=@radomirpolach.cz>
+In-Reply-To: <20240227093957.GJ2587@thinkpad>
+References: <11bRGBmeRj22pJZUyP2a-6-cKdYhSVPGtHAdWNpCQ--bqhWb4d0n81xlSQtDdQc21UD1zKAvqVwH45gcemleu8bk2aJtcBZ9ElPqkfvVsxQ=@radomirpolach.cz> <20240227093957.GJ2587@thinkpad>
+Feedback-ID: 20506470:user:proton
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2402-bjorn-osc-dpc
-branch HEAD: f76758eebe9e2f81b37e41d2bdc70825cdb879d7  PCI/DPC: Encapsulate pci_acpi_add_edr_notifier()
+Thank you for the response!
 
-Error/Warning reports:
+Virtio endpoint support would solve this entirely for me. Will look into vi=
+rtio-gpu in the meantime.
 
-https://lore.kernel.org/oe-kbuild-all/202402271755.7yCmolZa-lkp@intel.com
+Ing. Radom=C3=ADr Pol=C3=A1ch
 
-Error/Warning: (recently discovered and may have been fixed)
+On Tuesday, February 27th, 2024 at 10:39, manivannan.sadhasivam@linaro.org =
+<manivannan.sadhasivam@linaro.org> wrote:
 
-drivers/pci/pci-acpi.c:1424:2: error: call to undeclared function 'pci_acpi_add_edr_notifier'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-drivers/pci/pci-acpi.c:1451:2: error: call to undeclared function 'pci_acpi_remove_edr_notifier'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-
-Error/Warning ids grouped by kconfigs:
-
-clang_recent_errors
-|-- i386-defconfig
-|   |-- drivers-pci-pci-acpi.c:error:call-to-undeclared-function-pci_acpi_add_edr_notifier-ISO-C99-and-later-do-not-support-implicit-function-declarations
-|   `-- drivers-pci-pci-acpi.c:error:call-to-undeclared-function-pci_acpi_remove_edr_notifier-ISO-C99-and-later-do-not-support-implicit-function-declarations
-`-- x86_64-kexec
-    |-- drivers-pci-pci-acpi.c:error:call-to-undeclared-function-pci_acpi_add_edr_notifier-ISO-C99-and-later-do-not-support-implicit-function-declarations
-    `-- drivers-pci-pci-acpi.c:error:call-to-undeclared-function-pci_acpi_remove_edr_notifier-ISO-C99-and-later-do-not-support-implicit-function-declarations
-
-elapsed time: 945m
-
-configs tested: 171
-configs skipped: 3
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240227   gcc  
-arc                   randconfig-002-20240227   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
-arm                                 defconfig   clang
-arm                        keystone_defconfig   gcc  
-arm                          pxa910_defconfig   gcc  
-arm                   randconfig-001-20240227   gcc  
-arm                   randconfig-002-20240227   gcc  
-arm                   randconfig-003-20240227   gcc  
-arm                   randconfig-004-20240227   gcc  
-arm                         socfpga_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-002-20240227   gcc  
-arm64                 randconfig-003-20240227   gcc  
-arm64                 randconfig-004-20240227   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240227   gcc  
-csky                  randconfig-002-20240227   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240227   gcc  
-i386         buildonly-randconfig-002-20240227   gcc  
-i386         buildonly-randconfig-003-20240227   clang
-i386         buildonly-randconfig-004-20240227   gcc  
-i386         buildonly-randconfig-005-20240227   gcc  
-i386         buildonly-randconfig-006-20240227   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240227   gcc  
-i386                  randconfig-002-20240227   gcc  
-i386                  randconfig-003-20240227   clang
-i386                  randconfig-004-20240227   clang
-i386                  randconfig-005-20240227   clang
-i386                  randconfig-006-20240227   gcc  
-i386                  randconfig-011-20240227   clang
-i386                  randconfig-012-20240227   clang
-i386                  randconfig-013-20240227   clang
-i386                  randconfig-014-20240227   clang
-i386                  randconfig-015-20240227   clang
-i386                  randconfig-016-20240227   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240227   gcc  
-loongarch             randconfig-002-20240227   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          atari_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-m68k                           sun3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         cobalt_defconfig   gcc  
-mips                 decstation_r4k_defconfig   gcc  
-mips                    maltaup_xpa_defconfig   gcc  
-mips                           rs90_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240227   gcc  
-nios2                 randconfig-002-20240227   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                    or1ksim_defconfig   gcc  
-parisc                           alldefconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240227   gcc  
-parisc                randconfig-002-20240227   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                        cell_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                 mpc837x_rdb_defconfig   gcc  
-powerpc               randconfig-002-20240227   gcc  
-powerpc64             randconfig-002-20240227   gcc  
-powerpc64             randconfig-003-20240227   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240227   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240227   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                    randconfig-001-20240227   gcc  
-sh                    randconfig-002-20240227   gcc  
-sh                           se7343_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                             sh03_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240227   gcc  
-sparc64               randconfig-002-20240227   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240227   clang
-x86_64       buildonly-randconfig-003-20240227   clang
-x86_64       buildonly-randconfig-004-20240227   clang
-x86_64       buildonly-randconfig-005-20240227   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240227   clang
-x86_64                randconfig-002-20240227   clang
-x86_64                randconfig-013-20240227   clang
-x86_64                randconfig-072-20240227   clang
-x86_64                randconfig-074-20240227   clang
-x86_64                randconfig-075-20240227   clang
-x86_64                randconfig-076-20240227   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa                          iss_defconfig   gcc  
-xtensa                randconfig-001-20240227   gcc  
-xtensa                randconfig-002-20240227   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> + linux-pci
+>=20
+> On Mon, Feb 26, 2024 at 08:05:06PM +0000,
+>=20
+> Ing. Radom=C3=ADr Pol=C3=A1ch
+>=20
+> wrote:
+>=20
+> > Hello,
+> >=20
+> > I have seen your presentation on kernel PCI-e endpoint drivers:
+> > https://www.youtube.com/watch?v=3DL0HktbuTX5o
+> >=20
+> > And I would like to ask if you know of any PCI-e endpoint GPU implement=
+ation or related source.
+> >=20
+> > What I would like to do is to emulate GPU by writing endpoint driver an=
+d offload the GPU rendering to GPU integrated in the SoC. Basically take SB=
+C that has SoC with PCI-e endpoint support and use it as GPU.
+> >=20
+> > I have found several sources for PCI-e endpoint NVMe drivers, but I hav=
+e not found anything about GPUs.
+>=20
+>=20
+> Please look into virtio-gpu implementation. We are planning to implement =
+the
+> virtio support for the endpoint subsystem in the coming days, so adding t=
+he
+> virtio-gpu driver on top of that would be the way to go.
+>=20
+> - Mani
+>=20
+> > Sincerely,
+> >=20
+> > Ing. Radom=C3=ADr Pol=C3=A1ch
+>=20
+>=20
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
+=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=
+=E0=AE=AE=E0=AF=8D
 
