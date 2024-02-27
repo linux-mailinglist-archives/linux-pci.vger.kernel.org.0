@@ -1,178 +1,233 @@
-Return-Path: <linux-pci+bounces-4070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31B1D86870B
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 03:27:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C99686871E
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 03:30:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5558B1C223C9
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 02:27:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 522C0284326
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 02:30:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB5E9D304;
-	Tue, 27 Feb 2024 02:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF8356FC6;
+	Tue, 27 Feb 2024 02:30:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nTsxfTMc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mPDv4pFx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2072.outbound.protection.outlook.com [40.107.223.72])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A3C4A29
-	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 02:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709000856; cv=fail; b=Y6mvSSfSJv2X9csIJL0XEfjLfeXJZnNIHcZ03Mc74rNOnBRqTPr1/gzuDcca20o9XhTH3LCZDZq4WD0puEj//6iC+qU7KzJvD5DfZI5cJVpcYKqF/AUKuOUvRwhTsRgf1ZAFnu0fGfbeOv05YoPZfKQUShQofc74F8jR2NrTn/Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709000856; c=relaxed/simple;
-	bh=fG+4QsVaPhslzM6847KkOcEGgTMrvdnMku8fxVVXo/s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eLRpkOTauzrDxSRY1u+TDPOU1rRf6UcgFnGA0vIxH6aJ5IaPgtbH+9XHlEtyIPupWMp8Qsw3G+ypH7Seiweg+5SX/IFNu3w1AHlhR+zTb55pMlSwkTprGrvPUxYff2ImbQR+bd7RCQ9d0NYO9sR/hAg0DJwsfzCYIdhjQlbl1Y0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nTsxfTMc; arc=fail smtp.client-ip=40.107.223.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PebpLk02UmaEjr+KkvMl2UOpUKnomSzfYo/+pnZalVNYkko4Ae5yi3zKU68paR/M6zgEsjKtl9lvBcaZIG7zkJghnhNdG9ADWTbOHki3Vn9UoEinfsgirFXpN2YZAttqfMmjIhLjp+a0l0S07E8d96paLA1JEwbXTnD7VmbtlBBoV1CDLtCX8FYsnIiKAdThNuMdehkR2ZNfv6zqYdnCZ4pmdVagF40KY6Tl/8g1koBn/B9UPN3fR1MgF0aA8P1XjUjkKISofNeL+H8IVQICqn7h1BE2qmnbp8CJOM9c+OUYGAbRPUkckSgNfBrOR2g/oCw9WlupkiQf/CQWWjEcYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0TMw7k48qporTqlN98AsMNxEl/hEIpmxGMBM1KqUV3E=;
- b=Twc5VSM9MfNhDznsQLB1wcZcmrdCTkdHl+8vtEzsLdTV2vkJVE2HSAdgrcRzcaKXLYf1o2wMBJD0X2WU4JubU+cxYoEMUt2K1dU4gNC2V40RIyMq8NIoCwfni/qWuNrZIb1rjWAbfw/7AWGnt2uoOpQu+mur1aOam3fz2gCyJtne/geemVRxcYQWTHIsHI0rWWgylzoTij574+dnirD8LoTVyNa7Qf4iq0lAZuf2KlhGZcq9w+Hp4GC0Y5eJDKnhqSvlKqXJID5rykfXBWvsxkZACcaS6ALu4JmYNNMhxmrSCnIERzmigi3XQ5N3+Fr/75C0RZMrLTIdL5RRGM+1nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0TMw7k48qporTqlN98AsMNxEl/hEIpmxGMBM1KqUV3E=;
- b=nTsxfTMcM7WoCiFIL9vppoAfMQJoA7T2lciyX/vUCdPFwN5EMQL68TUNx5S+r9dc5sxttyPOCi7whbTa42HJZVRAtUiLkc7WfAhC4orI0sW40L3x4G0VrX0vpPfbDlT/gC5Ulg6ow0TFBsMRwj/FL51eDraC9RMAOL+WdVDIunQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by SA1PR12MB7294.namprd12.prod.outlook.com (2603:10b6:806:2b8::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Tue, 27 Feb
- 2024 02:27:31 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::ed15:6173:2f14:f539]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::ed15:6173:2f14:f539%4]) with mapi id 15.20.7316.032; Tue, 27 Feb 2024
- 02:27:31 +0000
-Message-ID: <382cdd08-c447-4e4f-abdf-0d5b55e37959@amd.com>
-Date: Tue, 27 Feb 2024 13:27:23 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH pciutils v2 1/2] ls-ecaps: Add decode support for IDE
- Extended Capability
-Content-Language: en-US
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, =?UTF-8?Q?Martin_Mare=C5=A1?= <mj@ucw.cz>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20240226060135.3252162-1-aik@amd.com>
- <20240226060135.3252162-2-aik@amd.com> <20240226192444.GA22489@wunner.de>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20240226192444.GA22489@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR02CA0046.apcprd02.prod.outlook.com
- (2603:1096:4:196::15) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D7436C;
+	Tue, 27 Feb 2024 02:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709001044; cv=none; b=RofESql2fFFUPz4GQMzWTT37fzk1gCWAxWizw8XjmQOMnJuEK+6Biz2JSZ+s1CMeD7aTl3TpCqGYWDkzkuysCpfAjzATekglXLIGOLeU9BPGNedSfWnXWC6Ntra6uoKitxiMy2stDlrxJ2/rdBvGjEVxMTofQRQ4y332hxqw72g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709001044; c=relaxed/simple;
+	bh=UagGQq26fo7AnvfpzpWjnBmT9Vl5hqO1p5x4gvxbh/I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N7fd+7ygdBryZhSm4AuBa6S+B1sw3OVDUTKTrj5wxMU2kJRpNdT0ZCrYCcr/gNE1D3Na+OJRexyaxlQ/L3JHWexN9v6CNlbpOgxYThiFgCL2svGnVFHo0VQDUG9W6xlMVO8iUQokyyuN4cl3grqYt8PE1UaA2jEXglirY1zpTIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mPDv4pFx; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709001043; x=1740537043;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UagGQq26fo7AnvfpzpWjnBmT9Vl5hqO1p5x4gvxbh/I=;
+  b=mPDv4pFxVEzNf77M1/B6ApNjlzuFfXZSaPkYc2JAhVlizQJNPfmJ4e7Y
+   A/uu2T5P0cq7ORn+hqQ38LAGLJZSVJVh3l6Csp27cO05IP5ox9gtVDjXo
+   9A4WqQvA1voLhUrjEEvZFkcDfqPj8qoK3sJFDYJMiCJJ1iMGJa3zf4YNm
+   ZxXw+X8HPL2w+zbRdqG79bN1R1htby6fd4Ra18+9A33p95lDukzc96ZOy
+   jcBIKJNGY21MmDNU6NqX6SZ1pRv23w8Te8QhpRxt+W88K+tGVBGK8gyJR
+   nMLECP8/TSQz7cULqXHIQI/wTe5TN3assvk2Ie9F4QW0yrkX1pho00ddB
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="13964226"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="13964226"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 18:30:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="7020310"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 18:30:38 -0800
+Message-ID: <ae9137f1-3e9b-4d84-956f-4e8c31d2e1bb@linux.intel.com>
+Date: Tue, 27 Feb 2024 10:30:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|SA1PR12MB7294:EE_
-X-MS-Office365-Filtering-Correlation-Id: 454f6eb7-3cf4-4eb8-56be-08dc373ba62b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	SB97aIdz+LHKju11AT8VMbpVrcaq3UyFMGabhcQV5u33q1zcm0vaJQWLCDww8x1E4zjSVVj6otRGf1AqgGXR98xvcvwUeqx6BWYUmBdGoF4EEv/vHjv5fSDUHLFn0zbEm6oA55stBUYuBiY94y1oQBC9wSr/m+cA0LeFaH4+QOb7cmVDN12kRaBn7MYZ+mMsqb6O4AfDX5EOXvitICjMNZ/LNJpQ/ShkNMUBNuhsvasQJXg39aBXlH0rcynADWtbsw4DkHT5VOoaXfWCN5mw4UW0Vx84G/oaIxPQs7DGyVAo7h4YczxdDwgLt50930DhasqdVWsUxydHdbzGqrsy8sqjh39jC9khd/uov7nuagM1nWmNzPrXnTHesn7YSI8YEPf1Im7Rr2F/GOEL6+L7CSm4tfSX/do+En5sUAJEYxVArPAfduDs3t+0B2eBdgACaEWkNIByVXCfbGmWwlIxUtiDoqoEIKbJZLzzlLGXk9oD3+5q1P5Mh/wRA5LEheZOF6IkKULi7BnDVgKAo4VNSJEjf8YjQ4g5pmgzdEJC73e7mEjnGVqTjc1sB0lP+fZ3DQY+W6sRNKq1OIm/KYABRX6LTySeCEnzURHNvh37wm6HkfiqSR2OSQvDmjbM1hD6vDRrNBbyder4KS2P4a+mVA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L3BvaTRkbHhYRjkwUEc1dTJHYmVuYlJkcGFJQWlkdE1DbXkya1NPQTZoUWFy?=
- =?utf-8?B?QmFBTWlZVTZ3aGNFcXFQczlZeG1xc3JhdFE2UHBSeCtKMklYVlZuMmpNdjFv?=
- =?utf-8?B?VExEeVZWM2N5QllmUDM2b1dlRXRkOVFsazU0QmNNdkV4ME1rNDdMSUNzL0hB?=
- =?utf-8?B?TkJZZnpmQThwZHpmZjNkSUVaNVhpRzZsRDdDUms5WGxiNjlLQmNXQUUrVEsx?=
- =?utf-8?B?VzZOWEtuQ3c1UlRvMS9jNnRJZ1QzMEh6eXhQaU1ET1ZqeVIzSUNBZXlDVldW?=
- =?utf-8?B?MFg1eTJrSFI2QytBRkZwcTJtVmpsK3JESzZGcVNNenR6QkJGNm8rZDZCdU5s?=
- =?utf-8?B?bis4YUtGeGdYREdxdU0vbU1rN0NmcFZ0MXlBRjVYOCt2YXpHcFZqb29OdDFT?=
- =?utf-8?B?SUYxUmpZMGc1TXNBUzlUaXc3ZDRwblp6anZ4UHlOSUtMbll3eGRFSzY5SEVn?=
- =?utf-8?B?bHRTeWxtSEE2dm40RStlRmVmdC81b2JSQXNpQkFWeTNtTTF1WlpqakpKZGFH?=
- =?utf-8?B?OVp6OG80OE5vU2hQUDY2b2JHMnJ3VU9DTlYrNjBhbWc1aTZrYzlOamd0dmNq?=
- =?utf-8?B?UEc2amo4aytZWkZnZk5WZ0ZqbG03cWpqQ29laHdxaEkrUXRXZWR6VXovRXhj?=
- =?utf-8?B?N3d5YTlCbGRTY0wxaGZHNlg1aWFYb0Ira29rTVBIRHRlMU1qbVFRQmRaN1Bo?=
- =?utf-8?B?Ky9ab0R3SjVDZGo1U1R0SVA4QlNVSDQ2ZisweXplWm1iZXVJV01qZFRWNzEx?=
- =?utf-8?B?QnE3SmFlUmxYNk8yUHdYTGI3SkNNVDBDcEprRHp2Z3Z5eHVSeWp5QjNYeTZU?=
- =?utf-8?B?dFVKUGhnSzdOS285YitlVnRUaDhBUENIWjNTSytyMTJ2MVlYMlY5OHEvMHI2?=
- =?utf-8?B?Rkd3a0F3ZHFFd3RlUmFlU2QrZHpSZ1dwRW5tZ2kxWUdOUGVCTFk3cTB4Ynpq?=
- =?utf-8?B?cVpFZi9nQlZ1TnVLelloSm5HVUNRTjhuaUtJOERTdFo4WEt2dzQvRWxqc3ZI?=
- =?utf-8?B?ZUpVUENSV0pkbmI4SVA1d0MrVEhhOVlrcXJOTm8zbHhEc2RuVzE4MnRmcHl4?=
- =?utf-8?B?Nngxbmpsc1k3V3Mycm5xemFzUzR0Qjk5ZjZOUzh4aTBGREZwcnJjVGh3MUVy?=
- =?utf-8?B?OFlZeFpFcGg2cXNUempQZWhaTzFDK0dKaWdsOSt2TTJkWGFja1h4U3BVK25V?=
- =?utf-8?B?OStjZlZEL2hORVRLNzVsMk1qbDkrUzBRcGIvaEVQeGx5RXV1alZWNjU1bFRV?=
- =?utf-8?B?bWtTQ3JsVktiWnhUdC8raXZHZUpIOTc5OGJZWm1MK3A2SUdFWC9VQXFIZUF1?=
- =?utf-8?B?NFJiR3N6ZzRsQXZGNjNtZnpiYnNaNzE0MDh3L3hSMWFzcWFPNWpMRDNldVVz?=
- =?utf-8?B?dURmUytITVQ4eGtxang5UEEwRVNOWjhYaTF4ajFaM2d6V0o0U3M5ejU4Zkt4?=
- =?utf-8?B?ZC9ZOFlrZFB1cVV4TkhIeGxHb1M4ejRhcEVpSnNsY0txK1RMcVdJeUszcXNB?=
- =?utf-8?B?NmVSWDZOZUNHOG1maHFHaVNEL2ZMNytKZUF1S0trTzhDQlRxNnFlekdDK1c4?=
- =?utf-8?B?cUxsdCtFdGtEL3U3MzhzZUYvbEw4RTNRa016NVEycGRnY1JmKzF0Zncra1Y2?=
- =?utf-8?B?NnJ3M252UXVIY0I5OE90STlUUjE1UTJrUU95eXdhbUhtMmkvWmhlZUxkS0t0?=
- =?utf-8?B?WDgxSUVrclJEQTZOT2VSRmxYWVRmVERuM3h2OFNIaHprRmdMWXJqUXg3dE9x?=
- =?utf-8?B?MHlQa0xxV1B2K3RhU0h0MUtpeGpUaDlkV3I2a2VHRmxsZzZCVVptd3BDQWJt?=
- =?utf-8?B?MW45ZittS3RXM2lyMHE5NUlkdGQyNytoVUgydnB6bWZtUC9KOXBYSlpYaU8r?=
- =?utf-8?B?eHpKVW90cVlUbzQvbGpRdjlBd2FnYVFTUjVrY3Z2cm5kWUV1cEFHL3lXWDFM?=
- =?utf-8?B?b1JtcFBsUmVpVVkrZUwwU2o0dC9YbHpYNDlvVWNyMHU4UTNVclNSdVR3VnVR?=
- =?utf-8?B?eW1TalNoSkpPenJlT3FwSVpORTFWeEo5NGVVd2tJT2U4N3g2OVcxWU5ET3VY?=
- =?utf-8?B?c0RpRXJLcG9rZzBtMktheTJuY2l6V2FNeTg1dzVCMncyVjlWQmFSNHhhU0dP?=
- =?utf-8?Q?e9UxOgE3CNggVd5XQRzcWqKif?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 454f6eb7-3cf4-4eb8-56be-08dc373ba62b
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 02:27:31.3494
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o2AOuQyBl10KYcKScGIg/EcPfuW8XD6HqkKUC60lbTS7ihwyLDzSX4/bP0TPe0w63E5HrDWYp9NkGz/l/drz7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7294
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
+ device isn't valid
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, baolu.lu@linux.intel.com,
+ bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca,
+ kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
+ yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20240226225234.GA211745@bhelgaas>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20240226225234.GA211745@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2/27/2024 6:52 AM, Bjorn Helgaas wrote:
+> On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
+>> On 2/22/2024 7:24 PM, Dan Carpenter wrote:
+>>> On Thu, Feb 22, 2024 at 04:02:51AM -0500, Ethan Zhao wrote:
+>>>> Because surprise removal could happen anytime, e.g. user could request safe
+>>>> removal to EP(endpoint device) via sysfs and brings its link down to do
+>>>> surprise removal cocurrently. such aggressive cases would cause ATS
+>>>> invalidation request issued to non-existence target device, then deadly
+>>>> loop to retry that request after ITE fault triggered in interrupt context.
+>>>> this patch aims to optimize the ITE handling by checking the target device
+>>>> presence state to avoid retrying the timeout request blindly, thus avoid
+>>>> hard lockup or system hang.
+>>>>
+>>>> Devices are valid ATS invalidation request target only when they reside
+>>>> in the iommu->device_rbtree (probed, not released) and present.
+>>> "valid invalidation" is awkward wording.  Can we instead say:
+>> If you read them together, sounds like tongue twister. but here "ATS
+>> invalidation request target" is one term in PCIe spec.
+> "ATS invalidation request target" does not appear in the PCIe spec.  I
+> think you're trying to avoid sending ATS Invalidate Requests when you
+> know they will not be completed.
 
+I meant "ATS Invalidation Request" here is one term in PCIe spec, 'valid'
+is used to describe the word 'target'.
 
-On 27/2/24 06:24, Lukas Wunner wrote:
-> On Mon, Feb 26, 2024 at 05:01:34PM +1100, Alexey Kardashevskiy wrote:
->> IDE (Integrity & Data Encryption) Extended Capability defined in [1]
->> implements control of the PCI link encryption. The verbose level > 2 prints
->> offsets of the fields to make running setpci easier.
+This patch isn't intended to work as the same logic as patch [2/3], this
+aims to break the blindly dead loop not to retry the timeout request after
+ITE fault happened.
+
+>
+> It is impossible to reliably determine whether a device will be
+> present and able to complete an Invalidate Request.  No matter what
+> you check to determine that a device is present *now*, it may be
+> removed before an Invalidate Request reaches it.
+
+Here we check to see if the ITE fault was caused by device is not present.
+The opposite logic, not predict the future, but find the cause of the fault
+already happened, if pci_device_is_present() tells us the device isn't
+there, it is reliable I think.
+
+>
+> If an Invalidate Request to a non-existent device causes a "deadly
+> loop" (I'm not sure what that means) or a hard lockup or a system
+
+There is a dead loop here to blindly retry to timeout request if
+ITE happened, we want to break that loop if the target device was
+gone.
+
+> hang, something is wrong with the hardware.  There should be a
+> mechanism to recover from a timeout in that situation.
+>
+> You can avoid sending Invalidate Requests to devices that have been
+
+That logic works for simple safe /surprise removal as described in
+patch[2/3], no race there that case at all.
+
+> removed, and that will reduce the number of timeout cases.  But if you
+> rely on a check like pci_device_is_present() or
+> pci_dev_is_disconnected(), there is *always* an unavoidable race
+
+We are not relying on pci_device_is_present() here in this patch to close
+the race window between aggressive surprise removal and ATS invalidation
+Request, we are doing post-fault handling here.
+
+Thanks,
+Ethan
+
+> between a device removal and the Invalidate Request.
+>
+>>>> @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    {
+>>>>    	u32 fault;
+>>>>    	int head, tail;
+>>>> +	u64 iqe_err, ite_sid;
+>>>> +	struct device *dev = NULL;
+>>>> +	struct pci_dev *pdev = NULL;
+>>>>    	struct q_inval *qi = iommu->qi;
+>>>>    	int shift = qi_shift(iommu);
+>>>> @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    		tail = readl(iommu->reg + DMAR_IQT_REG);
+>>>>    		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+>>>> +		/*
+>>>> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
+>>>> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
+>>>> +		 */
+>>>> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+>>>> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
+>>>> +
+>>>>    		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>>>>    		pr_info("Invalidation Time-out Error (ITE) cleared\n");
+>>>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>>>>    		} while (head != tail);
+>>>> +		/*
+>>>> +		 * If got ITE, we need to check if the sid of ITE is one of the
+>>>> +		 * current valid ATS invalidation target devices, if no, or the
+>>>> +		 * target device isn't presnet, don't try this request anymore.
+>>>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+>>>> +		 */
+>>> This comment is kind of confusing.
+>> Really confusing ? this is typo there, resnet-> "present"
 >>
->> The example output is:
+>>> /*
+>>>    * If we have an ITE, then we need to check whether the sid of the ITE
+>>>    * is in the rbtree (meaning it is probed and not released), and that
+>>>    * the PCI device is present.
+>>>    */
+>>>
+>>> My comment is slightly shorter but I think it has the necessary
+>>> information.
+>>>
+>>>> +		if (ite_sid) {
+>>>> +			dev = device_rbtree_find(iommu, ite_sid);
+>>>> +			if (!dev || !dev_is_pci(dev))
+>>>> +				return -ETIMEDOUT;
+>>> -ETIMEDOUT is weird.  The callers don't care which error code we return.
+>>> Change this to -ENODEV or something
+>> -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
+>> caller really cares about the returned value.
 >>
->> Capabilities: [830 v1] Integrity & Data Encryption
->> 	IDECap: Lnk=0 Sel=1 FlowThru- PartHdr- Aggr- PCPC- IDE_KM+ Alg='AES-GCM-256-96b' TCs=8 TeeLim+
-> 
-> Hm, I'm wondering if the Supported Algorithms should be listed on a
-> line by themselves, each enumerated with a '+' or '-' indicator?
-> Maybe that's easier to parse?
-
-I'd leave this for later when PCIe defines another one (or more). And I 
-was hoping someone suggested better (==shorter) acronym for the 
-algorithm, may be just call it "AES256"?
-
-> In general, I'd prefer it if the output was linewrapped at 80 chars,
-> (i.e. begin a new line and indent as appropriate).
-
-Well, too late, there are examples in "tests" 114 chars long. It is 2024 
-after all, everyone got a big screen, even Linus :) Thanks,
-
-> 
-> Thanks,
-> 
-> Lukas
-
--- 
-Alexey
-
+>>>> +			pdev = to_pci_dev(dev);
+>>>> +			if (!pci_device_is_present(pdev) &&
+>>>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
+>>> The && confused me, but then I realized that probably "ite_sid ==
+>>> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
+>> Here is the fault handling, just double confirm nothing else goes wrong --
+>> beyond the assumption.
+>>
+>>> 		pdev = to_pci_dev(dev);
+>>> 		if (!pci_device_is_present(pdev))
+>>> 			return -ENODEV;
+>>>
+>>>
+>>>> +				return -ETIMEDOUT;
+>>> -ENODEV.
+>> The ATS invalidation request could be sent from userland in later code,
+>> the userland code will care about the returned value,  -ENODEV is one aspect
+>> of the fact (target device not present), while -ETIMEDOUT is another
+>> (timeout happened). we couldn't return them both.
+>>
+>>>> +		}
+>>>>    		if (qi->desc_status[wait_index] == QI_ABORT)
+>>>>    			return -EAGAIN;
+>>>>    	}
+>>> Sorry, again for nit picking a v13 patch.  I'm not a domain expert but
+>>> this patchset seems reasonable to me.
+>> Though this is the v13, it is based on new rbtree code, you are welcome.
+>>
+>> Thanks,
+>> Ethan
+>>
+>>> regards,
+>>> dan carpenter
 
