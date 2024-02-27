@@ -1,41 +1,41 @@
-Return-Path: <linux-pci+bounces-4105-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4107-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F533868E00
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:51:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F6A6868E05
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:51:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E962B28F46
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 10:51:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB40A1F25458
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 10:51:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97245139583;
-	Tue, 27 Feb 2024 10:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1B81386D6;
+	Tue, 27 Feb 2024 10:51:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2103.outbound.protection.partner.outlook.cn [139.219.17.103])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2095.outbound.protection.partner.outlook.cn [139.219.17.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C199613957E;
-	Tue, 27 Feb 2024 10:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F13E1386C1;
+	Tue, 27 Feb 2024 10:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.95
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709031052; cv=fail; b=DQK8/d4geENukmCAkHymNo7HRsHZRn/Lsj9pJ3NAiM4wyRk328XT/mCKJj6G4rSYfozrQN4LcCLLhmvSWMMAtcOLLopg1jWrrdKxJxdR/LCmdKGolX2iE1j75XCc2wSJIYiMApd5Ntjcvr0a9FYGZXyBEE1YXSQYnpVYfV8qPIo=
+	t=1709031100; cv=fail; b=l+NAeBYZPSMvc8jMpMPdTKFAFTDzPUhcTTlpW4IHbS+0iQmRpN99svPLg/VWDyFFD3BX5ev5w9JUGFk1GOsEvVi1lKS8ZMwjBvEzCGOdrYqjyH9lItMJN+3Jx358pCwRVAeviYwUw4i18TqrB4xhVu+WoFm9d59xa6MXKbWQnKI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709031052; c=relaxed/simple;
-	bh=Zr4mWUFXYvtyxcrmFpVmK+dYKLWMemI9hE1iMc5NAH8=;
+	s=arc-20240116; t=1709031100; c=relaxed/simple;
+	bh=Wq4Z/mmbsWDKhaXfuZB64deZXyVlxQgOmWnGhLzld0w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oVCgazKampJylgIbeERlsM3E41gW6KrNY7gBfSFYIc9fxCPRDIQofc/PSqXOPt1M9NycEZwPdXZHr9/HvA87mLJvmffZLHIc+w+sF56+dq1EnXtlDczPohz+gN+YBL+rqDU+nO4q8NA8PYoKNNqPtg52UqQIoTuUnbAiMONWI7I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.103
+	 Content-Type:MIME-Version; b=h7VYnoAUy8DJ+93XdIqgmzglcLQckpoobzW6wOY+I1LgStmMO//1aMBR4HIMlHz8EgOLwTeEEelM+d+I8K/4xMy7jDzhWucm0piy+km74sv/qUYY5no7FyeKul/p9FvVkjKNaRYOSKU1j9tI2y5YGzfFwYz9O9ckBTqwwE5B368=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i+V0FbOrTOZhPIWb/tehuoZUyNGK3u4NeudB+iq/a2BxqGbO/aYaE0DtzyjVe8SpLfXgS3DS5mmrysBn0lVB//m1qD2zXJok+FsRNTs8wNBONQk5fxKiN/NWN0M/cDInIbdTAsqdU5mL4foQW9/GFyO/Gtc+SJ16QlldA/9ZZBmy0cH8fYSepcP3rtQxG+qy/lEn7sKb5BoNBdn4PDJpwT672oYSHx+IwEjGu0vuxsW1moAYNncHOyDeAXCmE7nlg3B/ZCMPSxdFCAyJXw+oi6joj7sOUOwTzqBpz7mYQIQiWf9GBdwDbg0MRTzDjy4sXA3AbhDYC5Ld7coPnP7cOg==
+ b=XRSydzml7PWfEjpxMpP3RVZ6sZy/DS8rmqjmgNtQazRaY93FRJ8T8Y3t9fFHU/BK1RSPRBvOsNbvNqfCopv6JByIslaYzjxX1GrBXg2F4BMOPC3HZJg+SaQS0unPuk32cbEcxhS7Gnk6HpS/QCha/nGwS7V62XfBKQ2PH+Q2KGwVbEin4Clh9QRgjyrH5m/6miWwBA6J3XWuOW2rzN/ZVhyeZGf3GMz2QDggsFRAgOvinDp+BB//CqG7oSF/ysRcePANQvQpoEHRCiF0QDpunoG2FMMnaXE6sCGP0KgQGSs6Zv9jUWLqpCZib8ycDeuwwLeGbz6VwGg67rgKdmPopw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vTje0ALVDFVTLXaFJ/d5aQDDyaSpWhyjgAzo6CfB/Hs=;
- b=FYiZecIPEZkbc0G3gGCKdSxkjbPVQxGDKrHPO9BMOZTxC+6xeC6+NJfZ17+T9CuD3HkHCXIWu2lRt06yVPEw6Ep0/dhM/ksQfB4MW8VTApZjyMz42z5eM1siMx7GtV9y8ofBeuF/4jnv7MuYUon/FOVrEsPs/TlsXlfu00ozzHqdb8izxUkLpIsrjAjjkEBhfWhHPRKhG3cVj3G7mp82QzaQJQTK4wQQaWGZoieBwaohbgEHDhYD59ECp4AHn0LqqCawRW8yGLUbJunwL8WG/Rm81DWo20/v17eQpzVQxt+iF1XNpx1VSHw2mi/LTp0BxTvwkVfpBMpiwxqDy5yTXQ==
+ bh=Pc2T6SbVvFNGAc7jANlqkHZ/EYw1YXpAsFWAuojjcfk=;
+ b=jA/hkyxMQ+lRW+YmqO2nfvazBQP59AQiIAvo7+voTHuP8R8EWC1X6aGRxPh3zKaAuiUWoPOkBo45UBYGcuJ/3aj9OgSPwXDFJ+uHKplLRK2OhoJk64MyyRoVVjPmmpYdQwjEPBrBi0RSVertPF9yuUzxy1Za69YnXYgw3BsSd1/yU9iYUdSra2rFWjQMr/uSJZ5DwrZj875R6+bbVtPuNEDXozytBY+waBF8Y1B6gBvCAKKpHak4o2/UOIe/L214Eedno/q7MohY76h46yZViRlFmDNRPZPu70HGPUaIPc9G+n3SJbXBiEH1qvyyBuOr62uPbLL6WgkLxE5WyMAsNw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -45,11 +45,11 @@ Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:25::15) by SHXPR01MB0496.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:1f::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 27 Feb
- 2024 10:35:35 +0000
+ 2024 10:35:36 +0000
 Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  ([fe80::5a5a:fa59:15fd:63dc]) by
  SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7270.047; Tue, 27 Feb 2024 10:35:35 +0000
+ with mapi id 15.20.7270.047; Tue, 27 Feb 2024 10:35:36 +0000
 From: Minda Chen <minda.chen@starfivetech.com>
 To: Conor Dooley <conor@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -72,9 +72,9 @@ Cc: devicetree@vger.kernel.org,
 	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
 	Kevin Xie <kevin.xie@starfivetech.com>,
 	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v15,RESEND 06/23] PCI: microchip: Move PCIe host data structures to plda-pcie.h
-Date: Tue, 27 Feb 2024 18:35:05 +0800
-Message-Id: <20240227103522.80915-7-minda.chen@starfivetech.com>
+Subject: [PATCH v15,RESEND 07/23] PCI: microchip: Rename two setup functions
+Date: Tue, 27 Feb 2024 18:35:06 +0800
+Message-Id: <20240227103522.80915-8-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240227103522.80915-1-minda.chen@starfivetech.com>
 References: <20240227103522.80915-1-minda.chen@starfivetech.com>
@@ -90,140 +90,128 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0496:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14884185-adf6-431d-7ddb-08dc377fd53b
+X-MS-Office365-Filtering-Correlation-Id: bd46fcfe-bee5-4f2e-738b-08dc377fd5d6
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Fp4iZGgjWARwEqtCUnKrQhIkPRNqBsB3LcDaGkr60WkARXgYu6IXLMr5ouyuv+NrF5FOspOcr1pyBE6E0Pa/ZZANUdbe5JUlt7VxL79wn4xC5hBGtoyOQxF8z9rHkik2L9WqfDw7qH8+XG8FWiqKWd7VJ1ccHKrWUDfDODZm+Faf17lTE7pjthanxagK5+L7FJXXONiUfw/aGJyrWfR3btEmdneXm2H0JI+UA6BiNSDMG3g9/4707sGSVq03TuMKJLhatuOW1dPVKOk9bcluOkRW9eXccn91Ss1u4/Os1PAo8YhtkhrQtdP82fg3HGQ3SNwk/Sf9GVKTltLN1i+k0L/tI8TfZArz5dTn4+IGpyjTWMST3jmJ0H9kvsZn+cn46ZWpkZQay00gj2Yj44ts3YqnYjA6mWcl63EHs3SW3+mEpGOCVrE1u+ECRNIlfe3DNywIg6Cj+jMLKh5r1C2pwpH/pBVlhbVj+uZlqOuUmh5scURoRNJblY1L6SFurZJbWfxYaG2mBvYq/ueyuwxYltfvOhtnmA8K+jeSouxQRcT4fZSx7Y+ldz9E+Nc6VsfXliuIwFwDYZNAPPZHuL+zv3t/nvBh5ivXnc5JaQq/clnNavDBmIbbRmJXLJBZ2uVz
+	zi6rnaXtmRZn/bUwzcxhyVmejHeE/nxK/JqjUCunaB7aIcCMDNmOKtmYzGKM76GxuKPiQMddUIDyDYRi+kCwC9gMhwkOknLd1IpynQazS06RlEUpCBCT8Za/WZKo5YGVo6sPt1cyDR/L1W1TdjVrI/0eKzzuXerIdNrtLnhLDLRAtCgbsIXJJF9zRK1ENQXjDpg7Znh278GV8cjBaGfzNfBfTTUhyMqpAlyMil4Tmy8teFJWEOZeOhQ5VnlDM73GE64rtKjsEOre31vtZTzxHTgDtQM/XCcNvGCrfcBAXHw2niwAZ/6lplU6+2nBKZusV5FOpu9NAUj/SVI2PJLYxi0BtpdJDNcU3rObSuAJydmYMdWU25ietl+dafl2X12osXH+k0yAKTQIyYunpcdfpTimeziBC/TqtlclvkRrSjknLLXkeENBCSTmy7rVQylj2WL2nWCkqjPIcNBhoNavrlAhggfZMLXOl+2Sbk2VEO9LWLMqWubYILc2ZXlKIYGarYLUTh9uLXhzdnwNnG4YCkkpLW4tN1vqk2b8mFwpIwQ4WXK70QTFXiUwWSipnUfNaRCQ+Wv6dgi009yoHuiXIeS33+cNH8im3xl600HgcWyLjXNGlk9vpI/5sVEE8/oc
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JLFevc/ODYjiPm9aASThGrENi38gMdTn2Aqrk1HiO0w22WJddsgKq6A2RPzM?=
- =?us-ascii?Q?Jz0T1tgdITDO0mlKcw0npRqEtxLoz6VQ4uRC9FvCMQex3gu6hg/wyT8E+iza?=
- =?us-ascii?Q?qtM9NA9XNLBEfEEJsiQG1CZels44jetNtpIephItQ1TyH5tmPCAZmOMLyJBI?=
- =?us-ascii?Q?MVqT2VEzS+/kga6tga9SidWtvWCJlTmwSh6gdZj0C240I8OEt9+XUiU5BC9Y?=
- =?us-ascii?Q?R1/dJCffH/h32DLhnXegWzUW6Spwiv3db2bv2xTO67hEFhaL9lIUlDl8U2hN?=
- =?us-ascii?Q?QU0E1+2CCUh4dyH8ltwticlDFNbusPePuT9WOjZBUHIqQEiPWiRuXmj7taiv?=
- =?us-ascii?Q?GjrAE3md/RV03GaTjAzd5b9DU+EOKgqhXmbBx4OnLy1/vBPGqcpdtFN6Sk6Q?=
- =?us-ascii?Q?+E7Q+eVAfxhFnuO13sMiobarmA2kxJdPoxGU19Lij/A94JiXhbm7Pa8Kg3ZL?=
- =?us-ascii?Q?yD/WorNdn+r2bb8THpVDNapj1AP87HeiM7CoShS+PiMWGdGyONdONpMBUIz9?=
- =?us-ascii?Q?XKhZ1F8+TqzXO2zim8RKRqEMfwJm3v+3WE4TXy530OZTOb/cBcNBm94GvpP1?=
- =?us-ascii?Q?xwHhrqrrf2CxsC9zQN2ZPiLRFdp0g9v32nPm/ReIVWmzUOyvq5UWzDqkJ1u0?=
- =?us-ascii?Q?3A+HUwV2Z+rhCovOJ9GY9QPfQMgBCg/bK+4Sn1sB+fkVgmT2SSyR6RzqP2HF?=
- =?us-ascii?Q?i2SekQkwvjHUpHMDgkxHDpdQwbO2IF81kVOvr84lOS9daHYD1HhHNjeiZPBc?=
- =?us-ascii?Q?1+ghW9aBp+GKRPScJWx8OQEYzNoyHrDJrLOJvZ+TWG6ID+pLcTujOypBRHnb?=
- =?us-ascii?Q?bGkHjUhp5N7STHkRRFq1GRHzBxkZUMIOqWswXBs6IUBsyz3uev+syxRy6i6E?=
- =?us-ascii?Q?/ljmwvIp2udVUedeDPV4kJeoaTAe1NvVwEtlBqpMhTjbSJXZAhjFc+6FE+LL?=
- =?us-ascii?Q?Q/t0tdfalIg7AvMhrcrpm/ANq9iWioz10G8j6fMbdODF/yBsC9M4rvwc/HZl?=
- =?us-ascii?Q?Ays7szQQgDvxRF3Qhvz4nyEzZ7j6zhx7kb9fpCIdL9VxFm0vPJKeMZywpv8W?=
- =?us-ascii?Q?+OOiBd8yVp7hVvZnPfMDYCGNsSpqRmol71QAeIy8npIMESc91pgGMLcyi8Dr?=
- =?us-ascii?Q?LnBlIxASjWwtNEW3mkwamDLnd33GwRJfmi3ieIawQ4IRFwdqTcd5Ss6/5tFc?=
- =?us-ascii?Q?Rdh0nkHR9PbGLxc41JP2Y5vDfbnXK5sX7l0vJsDt4dMOyE9gfWgcVBshjwOv?=
- =?us-ascii?Q?s1kXrHz3dtoweHgiUVv4IypbeVdQZFLAx14xTaAZD7HvSZS1h+zZLyOL4RE7?=
- =?us-ascii?Q?B7BOxCsOYfwVKze0T2+We/WfHFse7AmI9UioXuqPe+oz3JdhS2WO+t/MmGjq?=
- =?us-ascii?Q?q1PbmNc0B2kFXxYdnLopz7dYr5v5H1sPQ2b0QIxgrspbqrj/2/nNvkAr22Jq?=
- =?us-ascii?Q?h+thB98dHdjzFXwqbdkj2lv5xAX83J1TvlaX+VYuk4G/w4XlDfygn/P59eUg?=
- =?us-ascii?Q?Pi9632f06QBXY9cv8+ZQ2vtRbvuiMwH/Epdaqrj2IZglMkVw2N9WCEUsMTzo?=
- =?us-ascii?Q?NF6MF3Tf2U20+JphacUam6uebICK1XYv7nB/Uj3CIVsnjgLMwQGrLp7rGBEO?=
- =?us-ascii?Q?ZQ=3D=3D?=
+	=?us-ascii?Q?ojHRq+fYKQpKbt+ldQi3ER3mpnMwjeJCxiV/wezm7uhpwPVMR4OkZ3GzAU3w?=
+ =?us-ascii?Q?WTugtehvmwUNmqld0AVgjAe7waLf7phx0wKzML6BSmByTEkXSJAQZQ92wxzG?=
+ =?us-ascii?Q?zTGtU5QV1fgu5n6e7x0shd1LnGm93F1y7quXPilHWInjltn57z2dlKcgQpTR?=
+ =?us-ascii?Q?Tu9Sdq/c0jTSkTLmHMXlXIoewYEuTNx2CJNcuqSrLjhaBoBmyUHxng9M+L5v?=
+ =?us-ascii?Q?msuTYS/SvsmN6+Va1MPemdp+JMRtIpGwY/ShlGFqluUmjvWNpSAqNUrN+2l4?=
+ =?us-ascii?Q?DBZxWeSIA/OtGg/jldPmgL3syBcYTf1vPgYWnY7BmoxIMog9QYT1Bl5Kv55/?=
+ =?us-ascii?Q?AwNpHqZrjHMeITAt/QltqcV0+3i2snBM7Bdd8yruDOBtet16qVCd35J7zw3x?=
+ =?us-ascii?Q?FHS/Qfpk01wFjXgf4PD4IHP6v8gWDZkDIzTggXtKXUwoPzcew5ZynEqnuKBV?=
+ =?us-ascii?Q?3qtalSQkvCmoOPAQHd8sVHVTI7NbXMxz9zj3fJPRarehT888tUvFbznfAWrx?=
+ =?us-ascii?Q?ZKpnGRKVii9AvhDx935um8gq1OOM1jLv6Gr7T8I773VgTw3rtyKk+g6qqfW1?=
+ =?us-ascii?Q?ePo7GpCbjbC913yMCy9W7AMVyeYiuSU9gbpNjguoYNK2315cxDj0UHxfx+kq?=
+ =?us-ascii?Q?IQLYlr0VsvBtESIHq+KXy7HXG4gGHtM1R4rnQGz36nyOfAKBoxylxdpL4erV?=
+ =?us-ascii?Q?5bTmwBhNc6DZGhpBEJbRGhZdMd2/bOXsf4sIjk7OyZ/mjGBf9BtUpUNQxbAN?=
+ =?us-ascii?Q?Ref+YSG/5l2YBSPywF86AXO5gc1rvAhmE0A3Be9ORXIaNB6RnWvf5h6CcIdf?=
+ =?us-ascii?Q?AWYRfbxg5+xUt4ua28ZzSJDXJcWa+LEQHH+3pUBtlrEvzYCjUNkExSSTV40T?=
+ =?us-ascii?Q?1d8aI2qOa3KfKTQIC6orOeGQ6C4/KkmEbm5J+PDtyb0BnKoL8GaBv7luMuj4?=
+ =?us-ascii?Q?JjFtsZG97F6e80P4lv/rEY+BABloTj6rOzqLrsWYprlVPWUe6rJ1k+r4AeZO?=
+ =?us-ascii?Q?BxWIkgnmIfiYdRfXOr0DN0IsmSD5j7btCXJqTdWgT77Gi7Yjo/IbJEyXRvTh?=
+ =?us-ascii?Q?jMQz5B/VVSFlpQyp/s+fgmaz4JfF1K+7s9roEdObvTAZa/7SShUxtHigivRC?=
+ =?us-ascii?Q?tjN27bduTIuoHuxKmPRYC55G9lNBcxlk+xq1TQA5W0C8j73GpGE5QZ6totZP?=
+ =?us-ascii?Q?ctNVXmm19LZzzt0WnC3NbrK1i4Kv3qFMwzpwfbnHBDTEzet4uHWJqSluCAfp?=
+ =?us-ascii?Q?2k98gTfIszP7YiVmjs1u3wq4HYDKU7LSkoQqNmpGTSycKDB9+or8mPUKFfeO?=
+ =?us-ascii?Q?1Db1Mlgn5KZwLSbYMNPE2WIPQXSkTOJRVoVplJSBueYJHwTXdJaDhbySozBY?=
+ =?us-ascii?Q?7HCgeqLwtdUOGNK0ToKO6x1WgD/JzVf9IctpZHjgnJZGluoJT5DQ5JUGpv/G?=
+ =?us-ascii?Q?vqvf9N/QmeUnUcdzWUxMKaJ55kNeUgq56ltrPUfhRWOvtKOScbf3pZN2odeJ?=
+ =?us-ascii?Q?Xv0tB5y5PfHsBOPbKuzT9NGsORtOPUJy6Z8RAnkfhArvidkLa5naXTgmkMKj?=
+ =?us-ascii?Q?aBmkbet1FbJ6566OWIMmbW+Sj1AgDZ6sz4w+QiEOWaq4hSccEd6hdgzGLF2r?=
+ =?us-ascii?Q?OQ=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14884185-adf6-431d-7ddb-08dc377fd53b
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd46fcfe-bee5-4f2e-738b-08dc377fd5d6
 X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 10:35:35.9008
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 10:35:36.9075
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jcVTx4KxVwIV5XvS+XV4OeYPYpH7vyU5hzmbcq2lig4bPW/TI7D4zL0eBTAUAefqFEMidvZS07rFYKxqV90whNvsva8RsMimcKfvs+QFBa8=
+X-MS-Exchange-CrossTenant-UserPrincipalName: Mf7aF14yOlw4CaQG/wKu1wK0uC7YMgAeCk86xhJsn3rykKmnOgfta5KLX3Vy9dGUQ8LSGiSboNIR/bszC804b5vN7rq9e1kulZQCGahPMtw=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0496
 
-Move the common data structures definition to head file for these two data
-structures can be re-used.
+Rename two setup functions to plda prefix. Prepare to re-use these two
+setup function.
+
+For two setup functions names are similar, rename mc_pcie_setup_windows()
+to plda_pcie_setup_iomems().
 
 Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
 Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../pci/controller/plda/pcie-microchip-host.c | 20 ------------------
- drivers/pci/controller/plda/pcie-plda.h       | 21 +++++++++++++++++++
- 2 files changed, 21 insertions(+), 20 deletions(-)
+ .../pci/controller/plda/pcie-microchip-host.c | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index df0736f688ce..a554a56cc0e8 100644
+index a554a56cc0e8..9b367927cd32 100644
 --- a/drivers/pci/controller/plda/pcie-microchip-host.c
 +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -21,9 +21,6 @@
- #include "../../pci.h"
- #include "pcie-plda.h"
+@@ -838,9 +838,9 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
+ 	return mc_allocate_msi_domains(port);
+ }
  
--/* Number of MSI IRQs */
--#define PLDA_MAX_NUM_MSI_IRQS			32
--
- /* PCIe Bridge Phy and Controller Phy offsets */
- #define MC_PCIE1_BRIDGE_ADDR			0x00008000u
- #define MC_PCIE1_CTRL_ADDR			0x0000a000u
-@@ -179,23 +176,6 @@ struct event_map {
- 	u32 event_bit;
- };
+-static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+-				 phys_addr_t axi_addr, phys_addr_t pci_addr,
+-				 size_t size)
++static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
++				   phys_addr_t axi_addr, phys_addr_t pci_addr,
++				   size_t size)
+ {
+ 	u32 atr_sz = ilog2(size) - 1;
+ 	u32 val;
+@@ -876,8 +876,8 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+ }
  
--struct plda_msi {
--	struct mutex lock;		/* Protect used bitmap */
--	struct irq_domain *msi_domain;
--	struct irq_domain *dev_domain;
--	u32 num_vectors;
--	u64 vector_phy;
--	DECLARE_BITMAP(used, PLDA_MAX_NUM_MSI_IRQS);
--};
--
--struct plda_pcie_rp {
--	struct device *dev;
--	struct irq_domain *intx_domain;
--	struct irq_domain *event_domain;
--	raw_spinlock_t lock;
--	struct plda_msi msi;
--	void __iomem *bridge_addr;
--};
+-static int mc_pcie_setup_windows(struct platform_device *pdev,
+-				 struct plda_pcie_rp *port)
++static int plda_pcie_setup_iomems(struct platform_device *pdev,
++				  struct plda_pcie_rp *port)
+ {
+ 	void __iomem *bridge_base_addr = port->bridge_addr;
+ 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
+@@ -888,9 +888,9 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
+ 	resource_list_for_each_entry(entry, &bridge->windows) {
+ 		if (resource_type(entry->res) == IORESOURCE_MEM) {
+ 			pci_addr = entry->res->start - entry->offset;
+-			mc_pcie_setup_window(bridge_base_addr, index,
+-					     entry->res->start, pci_addr,
+-					     resource_size(entry->res));
++			plda_pcie_setup_window(bridge_base_addr, index,
++					       entry->res->start, pci_addr,
++					       resource_size(entry->res));
+ 			index++;
+ 		}
+ 	}
+@@ -1023,15 +1023,15 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	int ret;
  
- struct mc_pcie {
- 	struct plda_pcie_rp plda;
-diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index 65e0f3b72184..9ca66916c609 100644
---- a/drivers/pci/controller/plda/pcie-plda.h
-+++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -6,6 +6,9 @@
- #ifndef _PCIE_PLDA_H
- #define _PCIE_PLDA_H
+ 	/* Configure address translation table 0 for PCIe config space */
+-	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
+-			     cfg->res.start,
+-			     resource_size(&cfg->res));
++	plda_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
++			       cfg->res.start,
++			       resource_size(&cfg->res));
  
-+/* Number of MSI IRQs */
-+#define PLDA_MAX_NUM_MSI_IRQS			32
-+
- /* PCIe Bridge Phy Regs */
- #define PCIE_PCI_IRQ_DW0			0xa8
- #define  MSIX_CAP_MASK				BIT(31)
-@@ -105,4 +108,22 @@ enum plda_int_event {
+ 	/* Need some fixups in config space */
+ 	mc_pcie_enable_msi(port, cfg->win);
  
- #define PLDA_MAX_EVENT_NUM			(PLDA_NUM_DMA_EVENTS + PLDA_INT_EVENT_NUM)
+ 	/* Configure non-config space outbound ranges */
+-	ret = mc_pcie_setup_windows(pdev, &port->plda);
++	ret = plda_pcie_setup_iomems(pdev, &port->plda);
+ 	if (ret)
+ 		return ret;
  
-+struct plda_msi {
-+	struct mutex lock;		/* Protect used bitmap */
-+	struct irq_domain *msi_domain;
-+	struct irq_domain *dev_domain;
-+	u32 num_vectors;
-+	u64 vector_phy;
-+	DECLARE_BITMAP(used, PLDA_MAX_NUM_MSI_IRQS);
-+};
-+
-+struct plda_pcie_rp {
-+	struct device *dev;
-+	struct irq_domain *intx_domain;
-+	struct irq_domain *event_domain;
-+	raw_spinlock_t lock;
-+	struct plda_msi msi;
-+	void __iomem *bridge_addr;
-+};
-+
- #endif
 -- 
 2.17.1
 
