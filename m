@@ -1,62 +1,63 @@
-Return-Path: <linux-pci+bounces-4087-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4088-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22B89868AC9
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 09:31:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10DBF868ACA
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 09:32:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D1B22282602
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:31:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAD87282B12
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653737A706;
-	Tue, 27 Feb 2024 08:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 371567A73A;
+	Tue, 27 Feb 2024 08:32:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="LVyWEkdV"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="guTBRE1Z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from esa6.hc1455-7.c3s2.iphmx.com (esa6.hc1455-7.c3s2.iphmx.com [68.232.139.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9061978B63;
-	Tue, 27 Feb 2024 08:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A8C7A723;
+	Tue, 27 Feb 2024 08:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022717; cv=none; b=otR1IlIpIICWEqlzfpm7QXu36J0i2S3r3N7jm/7TTTALDk3BnhIg9+CNbxoc2ly7ACURSQjkNnN+amZG+HDjTG/UwpD/GOAzykH62DzFth6EpqPlfPEEsssidXtHYdWNzuLbSnzNTcTxrda8M/OfZy7iuzv8O72JdTESXLl2Fyo=
+	t=1709022720; cv=none; b=BF4Ci/FwzzJPotUrenVoiBBDCDqyeRS1cSaTpMtW+/wNyhzuevXgHUAY68VhImFnluo2gfZjueqY7QLuzFjSfeg2p+oUTDSCINJGzG8Y3Y4bf6UjV8r2AYHCF13Hh8uKqhKY3odHEGx7ridBMZWi7nRAtwGJqHj1c+S8htrzfJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022717; c=relaxed/simple;
-	bh=QaU6xtLanhVm/lVZZdQ2W7V9TciWhdO0uo1lqexjJvg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JqiU14MX03ZjAadmELnjf0wXQua/wdGhnq/XEKpret+otNYdQzI3bbGa9WhfAuvhvPwo2uQfaIsloXjMuPZL/B0lzi5upPFX1vMRmD7En1uhixT3El90Yigqm6zvndJBR0Jm9bki2j/M/c/gimT/BGRNUgvLSyYAh6q1DaU6otE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=LVyWEkdV; arc=none smtp.client-ip=68.232.139.139
+	s=arc-20240116; t=1709022720; c=relaxed/simple;
+	bh=MdImde67V1+KeHYJRF9wIvQoZwXcoa6xLwBzOuoI9Cw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H40Tyd4Jkm7pU/eFEKfvI2BL/CXN09GMKqvy2sP+tqpi9zIXvjalBdmTjy4sRTNVPYWx/VMTiCnGCoVA56+qT3niJhwyyKI1NHGkwGx+S9CC25tD0LX6ONhUyU035CzbVZ/uJG/UkMW8Lc9HVzQ3lNFg5IgfDsz0VYIS6LdQV4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=guTBRE1Z; arc=none smtp.client-ip=68.232.139.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709022713; x=1740558713;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QaU6xtLanhVm/lVZZdQ2W7V9TciWhdO0uo1lqexjJvg=;
-  b=LVyWEkdVBANfjiwN9p1oT1TcaR5UjJ3M+qw1VD1vLpCqnvcN8Aa4yEF0
-   ULfxPdGphccIio3/VcAo4EUAvSxBnNnd2wRunNngBnxdBS5Gk+cZDXcvP
-   PZ7L506bwYAyE8K+0IVuiNwDGcL6WgGld8BHzB6TW7jDDIrKDR7sYJw3y
-   tysmcv4zvFw3iUMoM5hmOWSMBKXw9vSbqbSaeUeLHrIBQUS7Ec0JR29CM
-   D5LZWCx1IcPggGITZfEubZdHJvHXyGhUftFfE8Psztn69CW6htYnpo/ox
-   IGYnybWpokICZT/ZpzBwq+hkEBtYPE4WlJuV4FlxpNj20zwq/QLMTC6Qz
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="152321650"
+  t=1709022716; x=1740558716;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MdImde67V1+KeHYJRF9wIvQoZwXcoa6xLwBzOuoI9Cw=;
+  b=guTBRE1ZdtQZukir9J9DBY3puCno7UcBr6wHn29IoczdlGZKLgwo+VXZ
+   iQewiybMu/DAHJyvUaQIfSZ6NrXF860kkxXewskvFO+CCAZ3X2CX73+cR
+   eWi1XiOKRggaA+81xojifGVlesWQOdBli4ShwkOq2tZQf7f4V57rRU0oA
+   i+U35+Tx4knaZ7/SmFG6pSmmBbXZ/oMnE8y3yJDARu9KwOb6HEuUUINgv
+   dPrqy0zuA0twBEU7MJDPcDPdXhIg13srPSvVRVBCtTpCm9MbjWRbETuLw
+   7qIHkxi1PCpYqVS8KuHGWQeyjDRCe1Fn70xdvs269KZ/M4CHeJIklAxgz
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="152321666"
 X-IronPort-AV: E=Sophos;i="6.06,187,1705330800"; 
-   d="scan'208";a="152321650"
-Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
-  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 17:30:40 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 2D104D9F01;
-	Tue, 27 Feb 2024 17:30:40 +0900 (JST)
+   d="scan'208";a="152321666"
+Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
+  by esa6.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 17:30:45 +0900
+Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
+	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 9DF6D1590F3;
+	Tue, 27 Feb 2024 17:30:44 +0900 (JST)
 Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 71890CF7E5;
-	Tue, 27 Feb 2024 17:30:39 +0900 (JST)
+	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id C5E2E6E01A;
+	Tue, 27 Feb 2024 17:30:43 +0900 (JST)
 Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 429FA20C19DC;
-	Tue, 27 Feb 2024 17:30:39 +0900 (JST)
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 8BBFD20C19DC;
+	Tue, 27 Feb 2024 17:30:43 +0900 (JST)
 From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 To: kobayashi.da-06@jp.fujitsu.com,
 	linux-cxl@vger.kernel.org
@@ -65,10 +66,12 @@ Cc: y-goto@fujitsu.com,
 	mj@ucw.cz,
 	dan.j.williams@intel.com,
 	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [RFC PATCH v2 0/3] Display cxl1.1 device link status
-Date: Tue, 27 Feb 2024 17:33:10 +0900
-Message-ID: <20240227083313.87699-1-kobayashi.da-06@fujitsu.com>
+Subject: [RFC PATCH v2 1/3] Add sysfs attribute for CXL 1.1 device link status
+Date: Tue, 27 Feb 2024 17:33:11 +0900
+Message-ID: <20240227083313.87699-2-kobayashi.da-06@fujitsu.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240227083313.87699-1-kobayashi.da-06@fujitsu.com>
+References: <20240227083313.87699-1-kobayashi.da-06@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,54 +81,245 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 
-Hello.
+This patch implements a process to output the link status information 
+of the CXL1.1 device to sysfs. The values of the registers related to 
+the link status are outputted into three separate files.
 
-This patch series adds a feature that displays the link status
-of the CXL1.1 device.
+In CXL1.1, the link status of the device is included in the RCRB mapped to
+the memory mapped register area. This function accesses the address where
+the device's RCRB is mapped.
 
-CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
-the link status can be output in the same way as traditional PCIe.
-However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
-different method to obtain the link status from traditional PCIe.
-This is because the link status of the CXL1.1 device is not mapped
-in the configuration space (as per cxl3.0 specification 8.1).
-Instead, the configuration space containing the link status is mapped
-to the memory mapped register region (as per cxl3.0 specification 8.2,
-Table 8-18). Therefore, the current lspci has a problem where it does
-not display the link status of the CXL1.1 device. 
-This patch solves these issues.
+Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+---
+ drivers/cxl/pci.c | 201 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 201 insertions(+)
 
-The procedure is as follows:
-First, obtain the RCRB address within the cxl driver, then access 
-the configuration space. Next, output the link status information from
-the configuration space to sysfs. Finally, read sysfs within lspci to 
-display the link status information.
-
-Changes
-v1[1] -> v2:
-The following are the main changes made based on the feedback from Dan Williams.
-- Modified to perform rcrb access within the CXL driver.
-- Added new attributes to the sysfs of the PCI device.
-- Output the link status information to the sysfs of the PCI device.
-- Retrieve information from sysfs as the source when displaying information in lspci.
-
-
-[1]
-https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06@fujitsu.com/
-
-
-Kobayashi,Daisuke (3):
-  Add sysfs attribute for CXL 1.1 device link status
-  Removed conditional branches that are not suitable for cxl1.1 devices
-
- drivers/cxl/acpi.c |   4 -
- drivers/cxl/pci.c  | 206 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 206 insertions(+), 4 deletions(-)
-  
-  Add function to display cxl1.1 device link status
-
- ls-caps.c | 96 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4fd1f207c84e..8302249819d0 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -780,6 +780,203 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 
+ 	return 0;
+ }
++static u32 cxl_rcrb_to_linkcap(struct device *dev, resource_size_t rcrb)
++{
++	void __iomem *addr;
++	u8 offset = 0;
++	u32 cap_hdr;
++	u32 linkcap = 0;
++
++	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
++		return 0;
++
++	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
++		return 0;
++
++	addr = ioremap(rcrb, SZ_4K);
++	if (!addr)
++		goto out;
++
++	offset = readw(addr + PCI_CAPABILITY_LIST);
++	offset = offset & 0x00ff;
++	cap_hdr = readl(addr + offset);
++	while ((cap_hdr & 0x000000ff) != PCI_CAP_ID_EXP) {
++		offset = (cap_hdr >> 8) & 0x000000ff;
++		if (!offset)
++			break;
++		cap_hdr = readl(addr + offset);
++	}
++
++	if (offset)
++		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
++
++	linkcap = readl(addr + offset + PCI_EXP_LNKCAP);
++	iounmap(addr);
++out:
++	release_mem_region(rcrb, SZ_4K);
++
++	return linkcap;
++}
++
++static ssize_t rcd_link_cap_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct cxl_port *port;
++	struct cxl_dport *dport;
++	struct device *parent = dev->parent;
++	struct pci_dev *parent_pdev = to_pci_dev(parent);
++	u32 linkcap;
++
++	port = cxl_pci_find_port(parent_pdev, &dport);
++	if (!port)
++		return -EINVAL;
++
++	linkcap = cxl_rcrb_to_linkcap(dev, dport->rcrb.base + SZ_4K);
++	return sysfs_emit(buf, "%x\n", linkcap);
++}
++static DEVICE_ATTR_RO(rcd_link_cap);
++
++static u16 cxl_rcrb_to_linkctr(struct device *dev, resource_size_t rcrb)
++{
++	void __iomem *addr;
++	u8 offset = 0;
++	u16 linkctrl = 0;
++	u32 cap_hdr;
++
++	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
++		return 0;
++
++	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
++		return 0;
++
++	addr = ioremap(rcrb, SZ_4K);
++	if (!addr)
++		goto out;
++
++	offset = readw(addr + PCI_CAPABILITY_LIST);
++	offset = offset & 0x00ff;
++	cap_hdr = readl(addr + offset);
++	while ((cap_hdr & 0x000000ff) != PCI_CAP_ID_EXP) {
++		offset = (cap_hdr >> 8) & 0x000000ff;
++		if (!offset)
++			break;
++		cap_hdr = readl(addr + offset);
++	}
++
++	if (offset)
++		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
++	linkctrl = readw(addr + offset + PCI_EXP_LNKCTL);
++
++	iounmap(addr);
++out:
++	release_mem_region(rcrb, SZ_4K);
++
++	return linkctrl;
++}
++
++static ssize_t rcd_link_ctrl_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct cxl_port *port;
++	struct cxl_dport *dport;
++	struct device *parent = dev->parent;
++	struct pci_dev *parent_pdev = to_pci_dev(parent);
++	u16 linkctrl;
++
++	port = cxl_pci_find_port(parent_pdev, &dport);
++	if (!port)
++		return -EINVAL;
++
++
++	linkctrl = cxl_rcrb_to_linkctr(dev, dport->rcrb.base + SZ_4K);
++
++	return sysfs_emit(buf, "%x\n", linkctrl);
++}
++static DEVICE_ATTR_RO(rcd_link_ctrl);
++
++static u16 cxl_rcrb_to_linkstatus(struct device *dev, resource_size_t rcrb)
++{
++	void __iomem *addr;
++	u8 offset = 0;
++	u16 linksta = 0;
++	u32 cap_hdr;
++
++	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
++		return 0;
++
++	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
++		return 0;
++
++	addr = ioremap(rcrb, SZ_4K);
++	if (!addr)
++		goto out;
++
++	offset = readw(addr + PCI_CAPABILITY_LIST);
++	offset = offset & 0x00ff;
++	cap_hdr = readl(addr + offset);
++	while ((cap_hdr & 0x000000ff) != PCI_CAP_ID_EXP) {
++		offset = (cap_hdr >> 8) & 0x000000ff;
++		if (!offset)
++			break;
++		cap_hdr = readl(addr + offset);
++	}
++
++	if (offset)
++		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
++
++	linksta = readw(addr + offset + PCI_EXP_LNKSTA);
++	iounmap(addr);
++out:
++	release_mem_region(rcrb, SZ_4K);
++
++	return linksta;
++}
++
++static ssize_t rcd_link_status_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct cxl_port *port;
++	struct cxl_dport *dport;
++	struct device *parent = dev->parent;
++	struct pci_dev *parent_pdev = to_pci_dev(parent);
++	u16 linkstatus;
++
++	port = cxl_pci_find_port(parent_pdev, &dport);
++	if (!port)
++		return -EINVAL;
++
++
++	linkstatus = cxl_rcrb_to_linkstatus(dev, dport->rcrb.base + SZ_4K);
++
++	return sysfs_emit(buf, "%x\n", linkstatus);
++}
++static DEVICE_ATTR_RO(rcd_link_status);
++
++static struct attribute *cxl_rcd_attrs[] = {
++		&dev_attr_rcd_link_cap.attr,
++		&dev_attr_rcd_link_ctrl.attr,
++		&dev_attr_rcd_link_status.attr,
++		NULL
++};
++
++static umode_t cxl_rcd_visible(struct kobject *kobj,
++					  struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	if (is_cxl_restricted(pdev))
++		return a->mode;
++
++	return 0;
++}
++
++static struct attribute_group cxl_rcd_group = {
++		.attrs = cxl_rcd_attrs,
++		.is_visible = cxl_rcd_visible,
++};
++
++__ATTRIBUTE_GROUPS(cxl_rcd);
+ 
+ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+@@ -806,6 +1003,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (IS_ERR(mds))
+ 		return PTR_ERR(mds);
+ 	cxlds = &mds->cxlds;
++	device_create_file(&pdev->dev, &dev_attr_rcd_link_cap);
++	device_create_file(&pdev->dev, &dev_attr_rcd_link_ctrl);
++	device_create_file(&pdev->dev, &dev_attr_rcd_link_status);
+ 	pci_set_drvdata(pdev, cxlds);
+ 
+ 	cxlds->rcd = is_cxl_restricted(pdev);
+@@ -967,6 +1167,7 @@ static struct pci_driver cxl_pci_driver = {
+ 	.err_handler		= &cxl_error_handlers,
+ 	.driver	= {
+ 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
++		.dev_groups	= cxl_rcd_groups,
+ 	},
+ };
+ 
 -- 
 2.43.0
 
