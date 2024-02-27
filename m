@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-4086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4089-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30A0B868AC6
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 09:30:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79227868ACB
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 09:32:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 606E11C21B80
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:30:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FC97B2285E
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C843C6BB36;
-	Tue, 27 Feb 2024 08:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07A567B3C0;
+	Tue, 27 Feb 2024 08:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="OWbolQ+t"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="jWPV1Hsg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from esa2.hc1455-7.c3s2.iphmx.com (esa2.hc1455-7.c3s2.iphmx.com [207.54.90.48])
+Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DEE6A351;
-	Tue, 27 Feb 2024 08:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852DD7AE63;
+	Tue, 27 Feb 2024 08:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.36.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709022655; cv=none; b=ItePaQrYqyuGP5vsA3G7zCgY01bf6EnBUYY2K8r7RjMCTcftwQBMd8NeZRToPjtgYfvlB05byqaTsMt7ZnIQhO0exTKkaMzC6R4tGhqO8f5KbmeIz7duVEIc9XnyEYOWM3DjOwDrDjBwNiI5REtw4lt9dfI+zRp58nnS9myn2Cw=
+	t=1709022724; cv=none; b=U/JXJ/RO4xKcNYq0PXogUYxtqhnXhqEk162ePMGVlJxgXybbzNLaMhAyzzGLSooeAAcIXNNVuIpLYh6Pj62SFFypjkjAJVtjFdR4RgDDUULj7XT4/TOSc3mLsmqtN7wb8KQssY8hFkhrIzmfqWWIFCWQlDR1QV7XCuZOmaJyKnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709022655; c=relaxed/simple;
-	bh=bPSnlvhM/EbpGy25SiekuNdcEivAYfCgLjkCyRbM4L0=;
+	s=arc-20240116; t=1709022724; c=relaxed/simple;
+	bh=zPEJAftUnJywsTWFXG9H+ANBuz9ByKBrf21PEmeG1vk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gc6wxDvks8oy/ag0Q13HXX709hl9bT9XayO8HlvVKsX5PEEtS6N+Xw4qPix5yfVlLGG8BNTFZQWAB8M+KIpEXW8tdeT6boBQrf+Rdl7rwjVdnAdUPNJ3p3QLxDzeKOgktiN7g0xFjJ381/LRJnrbw0o26ugTwQapxi4rP8WG2+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=OWbolQ+t; arc=none smtp.client-ip=207.54.90.48
+	 MIME-Version; b=n4DeVrPbJ3QeTSADbjbzgXrHaQO1/lIencS+WaZrli7aReRNO7U1orj1NKGB+TKXuPowIYsL9CXAMCo8nHxIxzn/LpIXArfwAToaNqQDAKwvpeYvoivpcXAlMKBqL0GoUbyCQE89r6Go3aJgXEu/7+6hnoBRDGrOsM1w1m2wwYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=jWPV1Hsg; arc=none smtp.client-ip=139.138.36.223
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1709022654; x=1740558654;
+  t=1709022722; x=1740558722;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bPSnlvhM/EbpGy25SiekuNdcEivAYfCgLjkCyRbM4L0=;
-  b=OWbolQ+t7u+b26T4rACTD+0y6ISZMpvhNwCfcZq9+9hEEEPGOspB6Z/p
-   dgPMSEWoF9XKVx7uDlwsNO1WDeEIQSPEzJkSW8YDCGBqIEMWuSASYSyKx
-   TO0BRCfLRDWdiduehQhFinUTYyM+UmBuY6PJ/y6aBeKnGXQUiBjhQOXFE
-   3s41Yrwg7sjiV1aCBYYTx7TnQN50S7TDZ3DTmqKsq5fRf2GVYJMQOY4Hh
-   u2wdr/v1RAymvWrukmH/FSmYUJkgPoTUUeCtjXCbiBAkbmi77E+V/6Ebj
-   ePODYawuO+w/2I6xK9rdlhv4yxG3l2R2nsHs5/baOOqy9fEDO9vGJMC15
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="150557150"
+  bh=zPEJAftUnJywsTWFXG9H+ANBuz9ByKBrf21PEmeG1vk=;
+  b=jWPV1Hsg5w3T72BfHFeQrgzpuPdnGAqvIr2iR5ekP6yNQLbI9ubmN5JC
+   atZ1KzIG5xZ+mLxhOVfkqP90dIeO2sqUGDnbp5dp35TxYHoxBsl2PT32v
+   5CuBu1ywG/hLp9XO8Jdj0SiH/NI1Zo2u3PT1ZyFB5b5psFtuM2n9X+aHi
+   2UhfVwaKhBjxT/Sz/KCmcI/vi9SA1fD0Vc7vbdkyqFx6+RNh94s6RWEAG
+   PNhMLLIHpl4y+KJN0hpi6cfE1rC08MHBLc63oeLSw5o4N0pcq5xGKqg7e
+   C0q9uUytf2FTCX0zLkjzkGne+o40zIOv3TIhLJ8PNj9P4E+YpY3Ho5eUA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="139007771"
 X-IronPort-AV: E=Sophos;i="6.06,187,1705330800"; 
-   d="scan'208";a="150557150"
-Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 17:30:49 +0900
-Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
-	by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id D1267E8CDE;
-	Tue, 27 Feb 2024 17:30:46 +0900 (JST)
+   d="scan'208";a="139007771"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 17:30:50 +0900
+Received: from yto-m2.gw.nic.fujitsu.com (yto-nat-yto-m2.gw.nic.fujitsu.com [192.168.83.65])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 4CB6A5DDE7;
+	Tue, 27 Feb 2024 17:30:48 +0900 (JST)
 Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 180F0E6300;
-	Tue, 27 Feb 2024 17:30:46 +0900 (JST)
+	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8B199D65D9;
+	Tue, 27 Feb 2024 17:30:47 +0900 (JST)
 Received: from cxl-test.. (unknown [10.118.236.45])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id E76192020A50;
-	Tue, 27 Feb 2024 17:30:45 +0900 (JST)
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id 60E612020A50;
+	Tue, 27 Feb 2024 17:30:47 +0900 (JST)
 From: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 To: kobayashi.da-06@jp.fujitsu.com,
 	linux-cxl@vger.kernel.org
@@ -66,9 +66,9 @@ Cc: y-goto@fujitsu.com,
 	mj@ucw.cz,
 	dan.j.williams@intel.com,
 	"Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: [RFC PATCH v2 2/3] Remove conditional branch that is not suitable for cxl1.1 devices
-Date: Tue, 27 Feb 2024 17:33:12 +0900
-Message-ID: <20240227083313.87699-3-kobayashi.da-06@fujitsu.com>
+Subject: [RFC PATCH v2 3/3] lspci: Add function to display cxl1.1 device link status
+Date: Tue, 27 Feb 2024 17:33:13 +0900
+Message-ID: <20240227083313.87699-4-kobayashi.da-06@fujitsu.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240227083313.87699-1-kobayashi.da-06@fujitsu.com>
 References: <20240227083313.87699-1-kobayashi.da-06@fujitsu.com>
@@ -81,34 +81,140 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 
-This patch removes conditional branching that does not comply with the specifications.
+This patch adds a function to output the link status of the CXL1.1 device
+when it is connected.
 
-In the existing code, there is a conditional branch that compares "chbs->length" 
-with "CXL_RCRB_SIZE". However, according to the specifications, "chbs->length" 
-indicates the length of the CHBS structure in the cedt, not the size of the 
-configuration space. Therefore, since this condition does not comply with
-the specifications(cxl3.0 specification 9.17.1), remove it.
+In CXL1.1, the link status of the device is included in the RCRB mapped to
+the memory mapped register area. The value of that register is outputted
+to sysfs, and based on that, displays the link status information.
+
 
 Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
 ---
- drivers/cxl/acpi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ ls-caps.c | 96 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index dcf2b39e1048..cf15c5130428 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -477,10 +477,6 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
- 	if (!chbs->base)
- 		return 0;
+diff --git a/ls-caps.c b/ls-caps.c
+index 1b63262..5c60321 100644
+--- a/ls-caps.c
++++ b/ls-caps.c
+@@ -10,6 +10,8 @@
  
--	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
--	    chbs->length != CXL_RCRB_SIZE)
--		return 0;
--
- 	ctx->base = chbs->base;
+ #include <stdio.h>
+ #include <string.h>
++#include <fcntl.h>
++#include <stdlib.h>
  
- 	return 0;
+ #include "lspci.h"
+ 
+@@ -1381,6 +1383,97 @@ static void cap_express_slot2(struct device *d UNUSED, int where UNUSED)
+   /* No capabilities that require this field in PCIe rev2.0 spec. */
+ }
+ 
++#define OBJNAMELEN 1024
++#define OBJBUFSIZE 64
++static int
++get_rcd_sysfs_obj_file(struct pci_dev *d, char *object, char *result)
++{
++  char namebuf[OBJNAMELEN];
++  int n = snprintf(namebuf, OBJNAMELEN, "%s/devices/%04x:%02x:%02x.%d/%s",
++		   pci_get_param(d->access, "sysfs.path"),
++       d->domain, d->bus, d->dev, d->func, object);
++  if (n < 0 || n >= OBJNAMELEN){
++    d->access->error("Failed to get filename");
++    return -1;
++    }
++  int fd = open(namebuf, O_RDONLY);
++  if(fd < 0)
++    return -1;
++  n = read(fd, result, OBJBUFSIZE);
++  if (n < 0 || n >= OBJBUFSIZE){
++    d->access->error("Failed to read the file");
++    return -1;
++  }
++  return 0;
++}
++
++static void cap_express_link_rcd(struct device *d){
++  u32 t, aspm, cap_speed, cap_width, sta_speed, sta_width;
++  u16 w;
++  struct pci_dev *pdev = d->dev;
++  char buf[OBJBUFSIZE];
++
++  if(get_rcd_sysfs_obj_file(pdev, "rcd_link_cap", buf))
++    return;
++  t = (u32)strtoul(buf, NULL, 16);
++
++  aspm = (t & PCI_EXP_LNKCAP_ASPM) >> 10;
++  cap_speed = t & PCI_EXP_LNKCAP_SPEED;
++  cap_width = (t & PCI_EXP_LNKCAP_WIDTH) >> 4;
++  printf("\t\tLnkCap:\tPort #%d, Speed %s, Width x%d, ASPM %s",
++	t >> 24,
++	link_speed(cap_speed), cap_width,
++	aspm_support(aspm));
++  if (aspm)
++    {
++      printf(", Exit Latency ");
++      if (aspm & 1)
++	printf("L0s %s", latency_l0s((t & PCI_EXP_LNKCAP_L0S) >> 12));
++      if (aspm & 2)
++	printf("%sL1 %s", (aspm & 1) ? ", " : "",
++	    latency_l1((t & PCI_EXP_LNKCAP_L1) >> 15));
++    }
++  printf("\n");
++  printf("\t\t\tClockPM%c Surprise%c LLActRep%c BwNot%c ASPMOptComp%c\n",
++	FLAG(t, PCI_EXP_LNKCAP_CLOCKPM),
++	FLAG(t, PCI_EXP_LNKCAP_SURPRISE),
++	FLAG(t, PCI_EXP_LNKCAP_DLLA),
++	FLAG(t, PCI_EXP_LNKCAP_LBNC),
++	FLAG(t, PCI_EXP_LNKCAP_AOC));
++
++  if(!get_rcd_sysfs_obj_file(pdev, "rcd_link_ctrl", buf)){
++    w = (u16)strtoul(buf, NULL, 16);    
++    printf("\t\tLnkCtl:\tASPM %s;", aspm_enabled(w & PCI_EXP_LNKCTL_ASPM));
++    printf(" Disabled%c CommClk%c\n\t\t\tExtSynch%c ClockPM%c AutWidDis%c BWInt%c AutBWInt%c\n",
++    FLAG(w, PCI_EXP_LNKCTL_DISABLE),
++    FLAG(w, PCI_EXP_LNKCTL_CLOCK),
++    FLAG(w, PCI_EXP_LNKCTL_XSYNCH),
++    FLAG(w, PCI_EXP_LNKCTL_CLOCKPM),
++    FLAG(w, PCI_EXP_LNKCTL_HWAUTWD),
++    FLAG(w, PCI_EXP_LNKCTL_BWMIE),
++    FLAG(w, PCI_EXP_LNKCTL_AUTBWIE));
++  }
++
++  if(!get_rcd_sysfs_obj_file(pdev, "rcd_link_status", buf)){
++    w = (u16)strtoul(buf, NULL, 16);    
++    sta_speed = w & PCI_EXP_LNKSTA_SPEED;
++    sta_width = (w & PCI_EXP_LNKSTA_WIDTH) >> 4;
++    printf("\t\tLnkSta:\tSpeed %s%s, Width x%d%s\n",
++    link_speed(sta_speed),
++    link_compare(PCI_EXP_TYPE_ROOT_INT_EP, sta_speed, cap_speed),
++    sta_width,
++    link_compare(PCI_EXP_TYPE_ROOT_INT_EP, sta_width, cap_width));
++    printf("\t\t\tTrErr%c Train%c SlotClk%c DLActive%c BWMgmt%c ABWMgmt%c\n",
++    FLAG(w, PCI_EXP_LNKSTA_TR_ERR),
++    FLAG(w, PCI_EXP_LNKSTA_TRAIN),
++    FLAG(w, PCI_EXP_LNKSTA_SL_CLK),
++    FLAG(w, PCI_EXP_LNKSTA_DL_ACT),
++    FLAG(w, PCI_EXP_LNKSTA_BWMGMT),
++    FLAG(w, PCI_EXP_LNKSTA_AUTBW));
++  }
++  return;
++}
++
+ static int
+ cap_express(struct device *d, int where, int cap)
+ {
+@@ -1445,6 +1538,9 @@ cap_express(struct device *d, int where, int cap)
+   cap_express_dev(d, where, type);
+   if (link)
+     cap_express_link(d, where, type);
++  else if (type == PCI_EXP_TYPE_ROOT_INT_EP)
++    cap_express_link_rcd(d);
++   
+   if (slot)
+     cap_express_slot(d, where);
+   if (type == PCI_EXP_TYPE_ROOT_PORT || type == PCI_EXP_TYPE_ROOT_EC)
 -- 
 2.43.0
 
