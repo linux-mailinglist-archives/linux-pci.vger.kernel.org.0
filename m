@@ -1,177 +1,198 @@
-Return-Path: <linux-pci+bounces-4083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4085-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93ACD8689F9
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:38:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F1E6868A17
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 08:45:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A146289972
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 07:38:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3E271F231F7
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 07:45:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F0CA54BC8;
-	Tue, 27 Feb 2024 07:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E257E54F8F;
+	Tue, 27 Feb 2024 07:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ldapwmYw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uAzeuhSk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48D61E89A;
-	Tue, 27 Feb 2024 07:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1F15467C
+	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 07:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709019509; cv=none; b=k7Na8KIttF0dU8i6fe8ENl6K7x+8lQamL4YfMszh7fYMoVpvWmxy/7FtdVP9TvPda4QBUtZAf+E+Ta8m+PZ1b2AHxvyWFll6iIWcjCg/8iNyP2wklWcOaeS3OTUCwJbZGn/y2ju4IUUH5nidrJafZF3N4ENXcZ9LL9khONzSzNQ=
+	t=1709019943; cv=none; b=id7zb5nYvXzKgOOKGUoMgSCVS+JQ7AIsjXhm7dy+8vUG7bGd4UTP7azVNKeqyMHFVqkmzDk2JPejs2wqBrczPcUZdajl2fIDOwgM+pCJu8Pn4MCcoQOFhhrc7Zwb2HA62nN1aJYH9WaxayTiuE4aBkFT1XEYYi2GwVG1fisBns0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709019509; c=relaxed/simple;
-	bh=8P7wEXB4wTBPTemmiBXHngBFEUVYIia1gN+EfoUB+0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G8nIrzoMEmg/AVSPXD6ENsMnlqiUwfIyqIlQpQqU5SySb4iZBEtAV1RFqzYS+xBMEG7gLQ3iNgA7sLA0Lu/ufrpbc8NlaE5VLNGj4ZKHJ/md3KLNytzzzC4KbhDuo69hzBUkB8sVgVcJE8tJ836FfdWfxEai1B9I/qP3XVjdxBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ldapwmYw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41R7Mca8027755;
-	Tue, 27 Feb 2024 07:38:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=nU88DR30Nj5YQI+Bz1I/p5HrTkiLJwjFVYR+uGcIayg=; b=ld
-	apwmYw6vIj/SUgJJAvqkoqhIe3atBGsY1mbECLE7WkoLf19ON2oEJPofQj6qjJ/r
-	O9+RMQc2wUzb7fgRaG/3K5JNRuQ1DQmhp9V4mxs9CQg8o/gcAH6oBdgZEDacAJzs
-	414yLN8tvfP4rzzMdx1bRHcjddy9C/+UWDYuoA+qoISniq0cINFEj+lRVlzoxFI2
-	gD04UZtuwtT7qvfqaylIqHbYOd32EHO2wccB/Y5GdQ+EgGFqijaJV+4iomhTPYei
-	PkjdkTiJFs9ZIdanoLJKixSWll39tO3ReacTonQ/U6nYLKy6/9Sp94JmK85Xarg7
-	VYZX0r5o418BxTPkVoyw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wh232s4xt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 07:38:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41R7cFK9019448
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 07:38:15 GMT
-Received: from [10.216.14.152] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 26 Feb
- 2024 23:38:10 -0800
-Message-ID: <3b4d553c-401e-da56-4554-47c4cf040e8c@quicinc.com>
-Date: Tue, 27 Feb 2024 13:08:05 +0530
+	s=arc-20240116; t=1709019943; c=relaxed/simple;
+	bh=LHY1soh3TSDneqtCq2eVyxDXi8p5oUsCqKFJ1MDn28Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OiO5hTY6HqWhPFeWxcZjcshCOxf6BrXusNUFzHp9p6MOACOzx0uZTnQEkaj8DhNJ6uY4DvDpTL+vr17qwrW65icUnhC5urc3OED/sthqG/tUn7U/L16puj/pv7Rw+y0PGfsdLs+jPNmTgYArlrTR+IGHJG+Sb1ckn/UjkCVvga4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uAzeuhSk; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d94b222a3aso40444505ad.2
+        for <linux-pci@vger.kernel.org>; Mon, 26 Feb 2024 23:45:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709019942; x=1709624742; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vz+b24keEy8SKVGT/zsCqIzqYg8F8QonmdaHU6M1RMQ=;
+        b=uAzeuhSkOi5XC1Q0+LXKPKFqfcxiFqsB8qz0ePNLB5Ake664f9qZtlJr11kjCjTM3k
+         5XSJOvLPth+sySUqR76VsavJ38Ce2Wb77YyOw++TwqOkGmAs7n24lYUwfJPMOZfeTjUB
+         jbVH1AKHaV/NlTPoPUnC5inlX0LGqhmIQao1TdsAoSoFrYF1D6OHK5cT+kflJzY5VdkJ
+         /148x+GZ5g6WmLtcOPQVkpuEZRgH6EIiR1Tg1NZAnz03+ZWZ9YdUq+isPrk9d2fUVReK
+         yHYMfKVXQ1qSFTdYD0MPAK8JaWLFrK6ceXpTVMJtVYCHdqTAVCf9ImO5iIRxAkjnUJH5
+         gvxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709019942; x=1709624742;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vz+b24keEy8SKVGT/zsCqIzqYg8F8QonmdaHU6M1RMQ=;
+        b=uI5UTZ5tA+DXUK55kcVxTa+tatj/fglUqtt8Ey5c6ae6K4BC6KExpBp3tyXowoDR8N
+         5HTZLKAspJLU0nfkUtwsossFQM45365H3cmnf1zaA4/KVj+Xd+RZPlykHLirLvhfv03a
+         v8ULPCjTa+9r6LwCE3mJ+u1wVqsPgC7jamVu5UuLQyZV2KhojgObAFe8mHTlQwxCmOIO
+         x79W/5Cf9rFenCCs2dA6NoCvZUcyULALH+w/6Z2ZNmI/yyGoLEhLZd5qLxTNrjkxuMNM
+         YhHueNWBBaamraDvIPEofjdjxpiwn7sUzbHJ9I5YBdhj205XklBxvHcAwyYpVl5QetEA
+         MteQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWspFXG8nMU8tDU3ReIyir4I1Ieu8TJRt6LQgSNrJa+9t0uy96TUz3JAHYXFBxmnH0lD/80d1ZRrSTLU2+/f0I5ToH4r2qwE8in
+X-Gm-Message-State: AOJu0YxgWpX2i4ZCbVrZsHOyDts16uSGWAxB9BNo5r6z19NaCdox+35H
+	sjYlPz+AaeRbajmYyaZ2zzAJqsbm2zwvtc34N7joudfQe1bfC33U3kXBvk7RLA==
+X-Google-Smtp-Source: AGHT+IGoPWkNE6JIjVJz1XqdnjAP9lGvBAm0VujbexvNFkLOg4OzNepoOaOycaMqUlL+eVesMoK8lA==
+X-Received: by 2002:a17:902:db0e:b0:1dc:b77e:1973 with SMTP id m14-20020a170902db0e00b001dcb77e1973mr1593245plx.53.1709019941652;
+        Mon, 26 Feb 2024 23:45:41 -0800 (PST)
+Received: from thinkpad ([117.213.97.177])
+        by smtp.gmail.com with ESMTPSA id l20-20020a170902e2d400b001d71729ec9csm884589plc.188.2024.02.26.23.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 23:45:41 -0800 (PST)
+Date: Tue, 27 Feb 2024 13:15:33 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+	Siddharth Vadapalli <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3 3/5] PCI: dwc: Pass the eDMA mapping format flag
+ directly from glue drivers
+Message-ID: <20240227074533.GH2587@thinkpad>
+References: <20240226-dw-hdma-v3-0-cfcb8171fc24@linaro.org>
+ <20240226-dw-hdma-v3-3-cfcb8171fc24@linaro.org>
+ <Zdy8lVU6r+JO6OSJ@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] PCI: dwc: Enable runtime pm of the host bridge
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel
-	<gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
-        <quic_parass@quicinc.com>
-References: <20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com>
- <20240226155305.GJ8422@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240226155305.GJ8422@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: oGDMTX3oJ701THTMqleJNtchrlA0al0W
-X-Proofpoint-GUID: oGDMTX3oJ701THTMqleJNtchrlA0al0W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-26_11,2024-02-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- mlxlogscore=970 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402270060
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zdy8lVU6r+JO6OSJ@lizhi-Precision-Tower-5810>
 
+On Mon, Feb 26, 2024 at 11:30:13AM -0500, Frank Li wrote:
+> On Mon, Feb 26, 2024 at 05:07:28PM +0530, Manivannan Sadhasivam wrote:
+> > Instead of maintaining a separate capability for glue drivers that cannot
+> > support auto detection of the eDMA mapping format, let's pass the mapping
+> > format directly from them.
+> 
+> Sorry, what's mapping? is it register address layout?
+> 
 
+Memory map containing the register layout for iATU, DMA etc...
 
-On 2/26/2024 9:23 PM, Manivannan Sadhasivam wrote:
-> On Mon, Feb 19, 2024 at 06:51:10PM +0530, Krishna chaitanya chundru wrote:
->> Currently controller driver goes to runtime suspend irrespective
->> of the child(pci-pci bridge & endpoint driver) runtime state.
->> This is because the runtime pm is not being enabled for the host
->> bridge dev which maintains parent child relationship.
->>
-> 
-> You should describe the parent-child topology first. Maybe a simple flow like
-> below will help:
-> 
-> 	PCIe Controller
-> 	      |
-> 	PCIe Host bridge
-> 	      |
-> 	PCI-PCI bridge
-> 	      |
-> 	PCIe endpoint
-> 
-> Also explain the fact that since runtime PM is disabled for host bridge, the
-> state of the child devices under the host bridge is not taken into account by
-> PM framework for the top level parent, PCIe controller. So PM framework, allows
-> the controller driver to enter runtime PM irrespective of the state of the
-> devices under the host bridge. And this causes the topology breakage and also
-> possible PM issues.
-> 
-> - Mani
->
-ACK.
+- Mani
 
-- Krishna Chaitanya.
->> So enable pm runtime for the host bridge, so that controller driver
->> goes to suspend only when all child devices goes to runtime suspend.
->>
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->> index d5fc31f8345f..57756a73df30 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->> @@ -16,6 +16,7 @@
->>   #include <linux/of_pci.h>
->>   #include <linux/pci_regs.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->>   
->>   #include "../../pci.h"
->>   #include "pcie-designware.h"
->> @@ -505,6 +506,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>   	if (pp->ops->post_init)
->>   		pp->ops->post_init(pp);
->>   
->> +	pm_runtime_set_active(&bridge->dev);
->> +	pm_runtime_enable(&bridge->dev);
->> +
->>   	return 0;
->>   
->>   err_stop_link:
->>
->> ---
->> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
->> change-id: 20240219-runtime_pm_enable-bdc17914bd50
->>
->> Best regards,
->> -- 
->> Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>
+> Frank
 > 
+> > 
+> > This will simplify the code and also allow adding HDMA support that also
+> > doesn't support auto detection of mapping format.
+> > 
+> > Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> > Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware.c | 16 +++++++++-------
+> >  drivers/pci/controller/dwc/pcie-designware.h |  5 ++---
+> >  drivers/pci/controller/dwc/pcie-rcar-gen4.c  |  2 +-
+> >  3 files changed, 12 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index ce273c3c5421..3e90b9947a13 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -894,18 +894,20 @@ static int dw_pcie_edma_find_mf(struct dw_pcie *pci)
+> >  {
+> >  	u32 val;
+> >  
+> > +	/*
+> > +	 * Bail out finding the mapping format if it is already set by the glue
+> > +	 * driver. Also ensure that the edma.reg_base is pointing to a valid
+> > +	 * memory region.
+> > +	 */
+> > +	if (pci->edma.mf != EDMA_MF_EDMA_LEGACY)
+> > +		return pci->edma.reg_base ? 0 : -ENODEV;
+> > +
+> >  	/*
+> >  	 * Indirect eDMA CSRs access has been completely removed since v5.40a
+> >  	 * thus no space is now reserved for the eDMA channels viewport and
+> >  	 * former DMA CTRL register is no longer fixed to FFs.
+> > -	 *
+> > -	 * Note that Renesas R-Car S4-8's PCIe controllers for unknown reason
+> > -	 * have zeros in the eDMA CTRL register even though the HW-manual
+> > -	 * explicitly states there must FFs if the unrolled mapping is enabled.
+> > -	 * For such cases the low-level drivers are supposed to manually
+> > -	 * activate the unrolled mapping to bypass the auto-detection procedure.
+> >  	 */
+> > -	if (dw_pcie_ver_is_ge(pci, 540A) || dw_pcie_cap_is(pci, EDMA_UNROLL))
+> > +	if (dw_pcie_ver_is_ge(pci, 540A))
+> >  		val = 0xFFFFFFFF;
+> >  	else
+> >  		val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 26dae4837462..995805279021 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -51,9 +51,8 @@
+> >  
+> >  /* DWC PCIe controller capabilities */
+> >  #define DW_PCIE_CAP_REQ_RES		0
+> > -#define DW_PCIE_CAP_EDMA_UNROLL		1
+> > -#define DW_PCIE_CAP_IATU_UNROLL		2
+> > -#define DW_PCIE_CAP_CDM_CHECK		3
+> > +#define DW_PCIE_CAP_IATU_UNROLL		1
+> > +#define DW_PCIE_CAP_CDM_CHECK		2
+> >  
+> >  #define dw_pcie_cap_is(_pci, _cap) \
+> >  	test_bit(DW_PCIE_CAP_ ## _cap, &(_pci)->caps)
+> > diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > index e9166619b1f9..3c535ef5ea91 100644
+> > --- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+> > @@ -255,7 +255,7 @@ static struct rcar_gen4_pcie *rcar_gen4_pcie_alloc(struct platform_device *pdev)
+> >  	rcar->dw.ops = &dw_pcie_ops;
+> >  	rcar->dw.dev = dev;
+> >  	rcar->pdev = pdev;
+> > -	dw_pcie_cap_set(&rcar->dw, EDMA_UNROLL);
+> > +	rcar->dw.edma.mf = EDMA_MF_EDMA_UNROLL;
+> >  	dw_pcie_cap_set(&rcar->dw, REQ_RES);
+> >  	platform_set_drvdata(pdev, rcar);
+> >  
+> > 
+> > -- 
+> > 2.25.1
+> > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
