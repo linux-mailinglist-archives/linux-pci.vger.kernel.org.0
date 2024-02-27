@@ -1,41 +1,41 @@
-Return-Path: <linux-pci+bounces-4116-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4115-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CD22868E79
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 12:11:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4975E868E77
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 12:11:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4927280FB6
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:11:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F4561C26036
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7AD11386D3;
-	Tue, 27 Feb 2024 11:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A69801386DC;
+	Tue, 27 Feb 2024 11:11:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2135.outbound.protection.partner.outlook.cn [139.219.17.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CE91386CB;
-	Tue, 27 Feb 2024 11:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94537139579;
+	Tue, 27 Feb 2024 11:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.135
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709032297; cv=fail; b=J07XLMvuReEoJvxoa2cje5VcdcCvDa5hsFlAzxlzxa7oGnvAnUinPOx9Pzs0GRH2gJrfuEt5z9gHljB5untYSFg9BRwfQ2UnaGmH/q03at2jKUYExgpkZ2GnqylRmf//3h0D84AkOOvoQf0IzSp8LpTIHZ6f5MIhmdF6+daANf8=
+	t=1709032275; cv=fail; b=s9nV/rt/Ex8Z5/LYusFRed4Lx8KAeR69MPH+3rOkXA+oFAkCJuJT9qikvbKQhbNB5G+gk1eWqxjTdruUEKfC2jj/tS2O8FTnUvWmioqByEynspoUBI8026yKas8N3jmDhQHlAf0CtWkNouhKHaHkMoiLuhv6ryXjuyzv8j6Dzu0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709032297; c=relaxed/simple;
-	bh=E4MuPUYzusFcv5qxoAvR7HYbKqITw/fcPp0xXIyjL3A=;
+	s=arc-20240116; t=1709032275; c=relaxed/simple;
+	bh=b4OZOSD25+5sI02YP7Nrkijs+dPDSqP3Lz3dA2/96Pc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KQXo50LsNnQCP7E9pn1QDU7rY/SkpDQxcrUcp+bTnRVACh3QAGCgAvuuw5oCPKnKRiqqyhJ3fUmQgPSGcfk8hHlFz9JVa3x4cM/r3Y1MUQzgyIHKM9aZtDET7hCnELjuNbbY6/pllU+yDgQyv6s3F4VGMEPobcaUPgbrnvk+i94=
+	 Content-Type:MIME-Version; b=fcCvRPer2WJW/4e0j85LSqwFoh4pdve/d29PwzrzjQ6MDmEj9QZ0H9IdFqr/N6Z25NKaRTLRGkHkwj2gTqdgSGGJJJpSnJ92DMZSOlSU9sfIzndoMru4QYYAaZNW/OkGl3S2wY6JdPGUg8zQH3lX/4Vf5t9CSUydwmfDdAxfC9s=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.135
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ENiuSpH4BWrg7goIZYXXyVp5EV/11AkUNWJ/4jmEwgttefsvnXF3YHZloB50IeZI6HjOz2cViTxt4rH3xZkjMxrrTNqNpf1shctpJiHlwDUFrkz0eFDcoUjMQkv8+kHhS3wQOM8kmTJWmznl6yMCInsoqq5tq31B/NUOblVy+qeKL7vKkNPEyBIEWuRjSGF6Ko4QhUSz1A0lsIkqCu2rWsdDudnkkMskeREgayA8Ddq8Qm86e6qAGRO8humpBQhmZDbcMvF6BYhjtaoHPegfcRKixb6sgSlNEtm6xtMbuDZBzSc2IXsf0ixXMLNIglAk3YrcusTMiNUThoOKzr2qcw==
+ b=WHsuYgLPP+/qmA/+R6jGjAIUjzPw4opqEOV18DzmFF/O1SeUtAO8L9x9rxZY6eF0zCMirOoVsKuGwv+ttVvuj+iX6qrr4G3YxXhnnkEo8onkJh+aPlY1IYVAoExIG5tEfbV2NfN1QQQsy9g4re8CvwTjuUW62BSWV3HMbTAVR3Vxav17GZAwvwlIbyVfK11QLd1Hc2Xlp14dxAMsFT4n7CRG11fccbzUf6CQKJREikDykE64KQ9B/OssgBOwsVgoyVV6VYXrf8hP6YR3r1wwQdV/vmyD3BWGl45tYc/fmmyzawK5x/yep2rfN1EhRYLodMTil07vsC015edac/hqeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hEeNglHCepgfRZUSLqLswWHDPSV+ixokl0sZx6amgvk=;
- b=EV4G20UvYCY6QK6BR42VGSXc4GeL3K3TVsyQvoEw0uo362OhDGPrvpuSoiZUsr6JtW21gBZdef3/HtUzOBPtWBMjAoY6ZzIqCLots+Jhxfiyz2Zq9WiRdWyk+2w+XbjiQeBFGaSknYHMJ9J1wL8H9YvhFpCX5PRrXVwkfkeKpg7IJRzY730gZ3n1aBPUIGPWeJ6vOepk7mN3fsYsjjGZ3A9hgHL+ePsErW53ijfUbYsRZUWG3dgqPYq7hCngLVcJQKfZLuytG3cVb7ruHoJhQE6p/E3VwGWIdScHQULj0XQ4xOCYppR3lnGAvkL/JYczhxdKRpC0891vXbk7sS3I+g==
+ bh=yGwEVnjesGyg+IGj8N8t8tCwaLr08GpiDbq+vLxRUQ8=;
+ b=FRMMsmSvy9C27Z87It+gwkCZ+p5TaWW20KFaDRAnLyLJwHkegabL07o/b52039QzG/wiqT7YOKZOBMDarQqV5o9a29CpoybdHVYPlAEfusmje+Fr1pOBKsMuwnTXAOy1NzVsF3PhYFuEKpa+LDYMAPgbxfk/wM3Ad6sEdJ46mM8uPxEmOG2mW+1SOJGM/AalKX7IPVrfc7ugXiURNaQa4PgpHLwgX0ul9zMDyx9+byAcsskQDoO/wKfmsrGRKCMT6Dq8QhLoP+NV6j9Y0siK/tDBP4urJg7DcUH8LwWLHqYIld4DQvegD7WWd9VagDhwsbjZLNx2aYljudol8ow0vg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -45,11 +45,11 @@ Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:25::15) by SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c311:25::15) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 27 Feb
- 2024 10:35:51 +0000
+ 2024 10:35:52 +0000
 Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
  ([fe80::5a5a:fa59:15fd:63dc]) by
  SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
- with mapi id 15.20.7270.047; Tue, 27 Feb 2024 10:35:51 +0000
+ with mapi id 15.20.7270.047; Tue, 27 Feb 2024 10:35:52 +0000
 From: Minda Chen <minda.chen@starfivetech.com>
 To: Conor Dooley <conor@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -72,9 +72,9 @@ Cc: devicetree@vger.kernel.org,
 	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
 	Kevin Xie <kevin.xie@starfivetech.com>,
 	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v15,RESEND 21/23] PCI: starfive: Add JH7110 PCIe controller
-Date: Tue, 27 Feb 2024 18:35:20 +0800
-Message-Id: <20240227103522.80915-22-minda.chen@starfivetech.com>
+Subject: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout workaround to host drivers.
+Date: Tue, 27 Feb 2024 18:35:21 +0800
+Message-Id: <20240227103522.80915-23-minda.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240227103522.80915-1-minda.chen@starfivetech.com>
 References: <20240227103522.80915-1-minda.chen@starfivetech.com>
@@ -90,701 +90,129 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8381a3b7-0b8b-459f-d062-08dc377fde5b
+X-MS-Office365-Filtering-Correlation-Id: e8c49661-21f3-486e-017e-08dc377fdef2
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	UGh3ToDm63ozUQrBFMMIeisr97dF9Ri0RMs/H8gbro1UlhoMezWvCeVub4WHl+NOep3iLU747t/mQZvNf01b06CNkjpdZW4ELHLLughuW3ZhcYhOhvzK1WGBV0geJ+79H1iIxKgfS63MO9ycg4aDOJpiJdyFV+WEadwumD/qJfT21bJd+HzAKyiM5lNcSzGwvHnY7txNgAn12Zk+4VNyZz4pyU2o1eBXsEWhZ0UN6O3FAS/0cpjSjgnfE4WcEAaYpas1FFTrheflLasS5axMD5ogFpYdJWxwYJcDvP+Z4S+4xSrUnf5SWQrqIRF6dy1h4ea5srFrQc8/iJGkUyiJMHdB//Wd/nf90YNMGqhNobBLE8mnvNMOvDQAhCaodTxxEXGWJ5YXcIjMA+AB3Dleknusp/DJwrUcTMDfktt/ESDIaaEc7MOrnTRNKeAcAcvQtgLMGeRJyu4L3K42xGXCZ5MkDAidaLgjEV1F97Pw+dgBvLdJa+dlnCz/q5olMEEo8YZVj8ycAIgQ+7wNTJdnNfydy8zOokfGoR8W9s4k4VEfB9FFmfTv9pAMkpaNERN6bxRkQJlSJ6/uFO3TaFsPypjp/Go/HQRLNh3KK2dqPieZu2qnpbYBMK+3jLS6Bd3o
+	q7fbERTA0VzLvOUyVBYR8WMrAvU5OPQJhex/7IRjoZ/m4LRkrnFVldLkFLcaEhobgmaNNieen7pxHtr7kGg7+YpOrknHTv/iKPW9o+MISBFRJddw+f24fKZXzKH81uTtQ2MtNGuCz8Ca3TUtZa77ykXAp2dmkuRrMg/M7LwL/ZhS+AQZRSgCG1Jh0td3ugenjsScykca3hnfAFGsOP0puVvr34nicphWG3yJOAa67pTm7wG+7vluD1B6ATsvWvp6DQF/3yviJSUTptE5bdrNXRqEAbEtY0EL2+to+WUOLa2beUZCGW0+Gd8aQsfnc79w4nHKqxMN7H2E6WWOH8WbzY8rMY27w4weZu33fo2ezENc1RM1C6p4HXwPAy3FnvXd/E2F9tZg0f6HI+ds2hCbAbnGMVjUk9WR+XknPbnup+pfuLZEgA92X7doVYx0M2UUkbjRdkNUQimTkj5f0+izHfJrCVyuZ3a6wN3DAb0RhT0MEv3Zpm8erjZ6VxtHDddZTXHvs4p+1Q1SYA01SMrtS+SUAhBh8rD9O6n/RN+3umGfuDnUjmZuggtWtxUcyxi3fMyPgd3SAj8LqkYhvmnU77BSISIUYwzbQXJLr1KaXH74ivV+PQVLlCg8iR5mvBdL
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vRULJwIq94iNvwAbV8YCdcpcGrwH8DERJtMHmR901ZbrHUw5Vq0gx8XuAPfy?=
- =?us-ascii?Q?TqlUivVHeeANdV4NXv7yopTenK65d9sFjPeYo7MZbddaIr46idCIiOgN+UMC?=
- =?us-ascii?Q?sE5JyVllA9lldg9dDopAoE1vxZt5JEU7THgNATvUabi3U0Z3AA9GhEXHvx2f?=
- =?us-ascii?Q?/GvOeObeJkQrz9gFCM2V4V6f+PAtiOqsVllG9A5/txHaD91t1TJikLOLqJ5n?=
- =?us-ascii?Q?3OHpsTXMC+lqyMQb5lwfGrVGc+jYbeHZ87NWkx2yo4DSz0qIIdEzRp2AN+WC?=
- =?us-ascii?Q?IKn/ofjjrd7aXZsSNRxWWygWNocBqgIV5mzPvqPwUbZcv8vgmqF42yJoMuYu?=
- =?us-ascii?Q?P3rbXT1870AZxKTp5hZJAyGkrwz/GGZuE3bWly8DxYrUZ0IvBt6U+htXgKvB?=
- =?us-ascii?Q?UdeOZBHMmbBlZDJHA9KvHBYskcPfEDaHRzZClUkn/oXkBw+WTk/DoA9QjgWa?=
- =?us-ascii?Q?2XFn8FBX7y0+RfVekBXeaU5pqPMFUl3CY7bJg+06MKJaj+OnMP72+pMi6Gda?=
- =?us-ascii?Q?Xfq+LGuNnVP1KuCtyI89L7jYyVveY4Bf+GPHj8s3bhqsjDu+YLuPWOOUODOx?=
- =?us-ascii?Q?XcyOhsXDt9Ln0QJ7FjHy8ryh1baMO4mTYZPWaM3OIQ2y2/iLfV0GKS/Mdnle?=
- =?us-ascii?Q?pPS1dQFlF18HJidcVWw4J54eLMLjyvGpSYRe1IRGVenjcUPKL39rV8N21wXy?=
- =?us-ascii?Q?lMcn6p8hFRMgpG2oQYFGOPJxm+fUICkxYhjpJkze8KmEx6HZmNvN4IQqA1to?=
- =?us-ascii?Q?sHX4vwaBumsEXTPzSee/SloA/lPbNx4MJU6MThX/AAh+XHV4jTAGymrEpBsl?=
- =?us-ascii?Q?4Y0F/iUDArAQLbYS/T9fZa0nJc/2RqcUXqn69wbOhFgRdGjdI4JJpQZnryub?=
- =?us-ascii?Q?h5DTGttc5uB3ll+lxylECj1kwax9tXP+YfHRjqEdYcrRYZLXv8YtseKulJia?=
- =?us-ascii?Q?1ZyOwfHPICdfYaOQpmSEYoHJjenwCaRL4AUBVbXVKKJBNiED1NKj0r+WXnjw?=
- =?us-ascii?Q?+AhMhJTTeScBXLtywQ30IukDQ9Iv3hpJOi/QQRRHWRCKDRjsmRw3Rbn1qty2?=
- =?us-ascii?Q?L+/8cL3ghQaduVMyMCDqCEcE3fV4d2JaK//35hPQtm5m74APJEd/jYsChfEq?=
- =?us-ascii?Q?CcTpJ5BHUmxN1TzGCQ//FukrCty15Q80xphQg3R5zbNQf3N/XqUOd6U30mIp?=
- =?us-ascii?Q?I0UC5mFmeFg7NS5UpQY9hsWXZ3kjCfvCB0o28EUwk48GEQDFMPMvvuv5G6EB?=
- =?us-ascii?Q?oOb8ybBS0hj80K1dAtYqwD2HmnBTkE1JoFocanuUNW8MUNqiLQ2aK0ybODWW?=
- =?us-ascii?Q?ar1u/GYWY2KotcnX4zZ09wPj/sfIf9ud0RUuMvi1YynX4wsU6nVNYi+OT0Vp?=
- =?us-ascii?Q?fqjOUBCXI1hoD333/of8y4DmqwbrJO45+0cDJxw4M1AJoi24RGSnp3N2R4j5?=
- =?us-ascii?Q?25H2bAg/iIXGBIx8hzZQJl9Z7ixoBkRKkNaSlrkDrxSLFH1oqFs7vUQbzq+f?=
- =?us-ascii?Q?Nl6D3ykHfy6YEBba4vUYLroNeDeteb8N+hRJTpvs4XkbDNxZdGmUv4rvyw19?=
- =?us-ascii?Q?Cvpb9SeXtpuf64vcSxnqnRQ8mgbkzqHoaMLA9JBI5OyUmxJXn7KXyhEZgspP?=
- =?us-ascii?Q?6Q=3D=3D?=
+	=?us-ascii?Q?Pyf7fz9uvlxgVqrAzGu/DOkJUoQlVZ757BfMvr+fC26AtWQ59XNAOlmvHZ5U?=
+ =?us-ascii?Q?1V6WkeB0nZYch4GH1dJim0mi1ClvaBhC3g5Y1k1MwpG+xnYcMubZv08GZ9Ri?=
+ =?us-ascii?Q?QoY1q0WMMzIxL7Vv2g2F+mOzv4kk5UZGhJCjGKb7LBT9MAmNVsgaYR8m/e8/?=
+ =?us-ascii?Q?CvQ4LSLy3eIY16ZWzPeUSYe29TD/wGYUSe95q94C1gBeCoUD3EzUbPkRRxU8?=
+ =?us-ascii?Q?i1fvzgVnp5nXQUbMdIuPQ2DfZjO0OD42bg8q0w6m0VU31s2FT6P3z7hbLfVk?=
+ =?us-ascii?Q?Ak2MVSOCsZlphi7FL/vpe4rlUs0IBZxAVyVXH5a6EbINX6jJzmGwDXn/Uv3a?=
+ =?us-ascii?Q?GoYR4EabkUUQqyaDDEITt+YNn+ajxMvrKqb92Xmr1/khDrhSXRJ7qo/kUon0?=
+ =?us-ascii?Q?KSqWgVDHW5cm/svfJ5/I9jddW0eQoGJDovxbuRncA3EpGTMP298MwYvsEdL2?=
+ =?us-ascii?Q?/n1aU/DlZKbQi7ytsl9SyHs8J+Hqc4Ybmg1I40agN8mopZu19Clqrp95nhXT?=
+ =?us-ascii?Q?hVRQfvV4iWwxnHwGSWNdlU7tJl7ZgJNRKDCxfXRchefsFsleCXhhstKnY5Cw?=
+ =?us-ascii?Q?bUMr6M1kBMb66EfmIhqLo611R6EFi+jucmQxyt3tIi4fn3l/b6q26c60sRIj?=
+ =?us-ascii?Q?9yZmPwPScKOzTi1BvHBSuo4EBDaUgNOD9HmasqJYG8DTiD6wiaUTUbz/IzCv?=
+ =?us-ascii?Q?FDNMHIyacPeWt6E8P56Gh2MzSJBYGS6/8bsX4gA7Tp+SLXBmzmHpzQubw1XU?=
+ =?us-ascii?Q?jQCSFOrE1lMA5HfrVhQOmIB4hi05MWSlvqKP+2ZxVva4NnqQ3H44RgwQe5/p?=
+ =?us-ascii?Q?sySmD0QBug3P1qg8qUUgc7XWoCzn8rkH6da0FqgzKfM8Fpm35hHpWQhgmsVg?=
+ =?us-ascii?Q?qmxwOFivYSENAs/qfmu3f1rqFQBiBbwKkMCKv0Fu6QkrCJ+eoJcQVlCEkN97?=
+ =?us-ascii?Q?/ZrtW7et2mmqF+ze1ujrLagiFBhME+x8T9Ogxz4axoWml8LuP/LRjqO/i/Vo?=
+ =?us-ascii?Q?xvaCKIBhSdg/mDzQaMeqV24s8yKJsgQ33e9fEVjiwbDz5aBt1L5kxAuBtWYP?=
+ =?us-ascii?Q?f4+YlT3GkYI53ds81AdmPuYMvr8X/QJKyzC548+DtAIGcQm2DoGWDevz1yQa?=
+ =?us-ascii?Q?DvB7eUsEm63y87oaZ3CN8O6m+y+bTB81xjt3gJMUNuXN0TFBX9geym7wFq6U?=
+ =?us-ascii?Q?KIk0FgKmfrR8aVYfP2GFM5K2LrqR4gR6pNYEGNvchd0YyOpdPsAv8BVa5lCt?=
+ =?us-ascii?Q?l32PdNuze5tKM9o3WRv9VovBTfs4NTRjzUE+mX4KHmjZqCvMwayu8kTSgAEy?=
+ =?us-ascii?Q?o2hvGWRH7xN64G1OIFNGsGMq2fb3oImSANgDw4fCyrKs2NLjHAK+4I4JT1rP?=
+ =?us-ascii?Q?GYS8SMErMTrKs+7Qb4gm5NwmrNQbpaUPBGgmcyL8q2znFBSHj7LzgPcv3rPK?=
+ =?us-ascii?Q?PMs73QJIkpWgJgfW3o8o+PYTnyP6hb25/zEeht5hVkOBQoyHTQc1GIF3UvLv?=
+ =?us-ascii?Q?ahzgXb7ffcxB1nQG5KIZKKNUKY9vFFRjblZr/l00uJo722YDSKr43Z20UjAR?=
+ =?us-ascii?Q?bHS55N78J17reNO1P2E6lvA9/2M5CEwHj0kr9si7zlR+NcyYX3vPHlMp/aGq?=
+ =?us-ascii?Q?Sw=3D=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8381a3b7-0b8b-459f-d062-08dc377fde5b
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8c49661-21f3-486e-017e-08dc377fdef2
 X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 10:35:51.2058
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 10:35:52.1693
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o8vZKrIjHRMI2rpS19WrUqalsWRCp27u4di4w3hwaLTZz8tPOiaf3zGoN/2MJQs9UwcXs5cffcGzY/6UYi4U6CADjzNQrl43uodFuk5SODo=
+X-MS-Exchange-CrossTenant-UserPrincipalName: CsbLUkwtaPPwweU0AhqQRx7T5ln6i76bpcn+jZGsjyKdpcKb3PTeC+cqMTMwueuC8ha9f253SCIiggjdjZGHJY3f8CKLTx5uUTGWqKRMy7g=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0863
 
-Add StarFive JH7110 SoC PCIe controller platform driver codes, JH7110
-with PLDA host PCIe core.
+From: Kevin Xie <kevin.xie@starfivetech.com>
 
+As the Starfive JH7110 hardware can't keep two inbound post write in
+order all the time, such as MSI messages and NVMe completions. If the
+NVMe completion update later than the MSI, an NVMe IRQ handle will miss.
+
+As a workaround, we will wait a while before going to the generic
+handle here.
+
+Verified with NVMe SSD, USB SSD, R8169 NIC.
+The performance are stable and even higher after this patch.
+
+Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
 Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Co-developed-by: Kevin Xie <kevin.xie@starfivetech.com>
-Reviewed-by: Mason Huo <mason.huo@starfivetech.com>
 ---
- MAINTAINERS                                 |   7 +
- drivers/pci/controller/plda/Kconfig         |  12 +
- drivers/pci/controller/plda/Makefile        |   1 +
- drivers/pci/controller/plda/pcie-plda.h     |  71 ++-
- drivers/pci/controller/plda/pcie-starfive.c | 473 ++++++++++++++++++++
- 5 files changed, 563 insertions(+), 1 deletion(-)
- create mode 100644 drivers/pci/controller/plda/pcie-starfive.c
+ drivers/pci/controller/plda/pcie-plda-host.c | 12 ++++++++++++
+ drivers/pci/controller/plda/pcie-plda.h      |  1 +
+ drivers/pci/controller/plda/pcie-starfive.c  |  1 +
+ 3 files changed, 14 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fc9576e69a71..d3b0a0fb754f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17078,6 +17078,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/socionext,uniphier-pcie*
- F:	drivers/pci/controller/dwc/pcie-uniphier*
+diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
+index a18923d7cea6..9e077ddf45c0 100644
+--- a/drivers/pci/controller/plda/pcie-plda-host.c
++++ b/drivers/pci/controller/plda/pcie-plda-host.c
+@@ -13,6 +13,7 @@
+ #include <linux/msi.h>
+ #include <linux/pci_regs.h>
+ #include <linux/pci-ecam.h>
++#include <linux/delay.h>
  
-+PCIE DRIVER FOR STARFIVE JH71x0
-+M:	Kevin Xie <kevin.xie@starfivetech.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pci/starfive*
-+F:	drivers/pci/controller/plda/pcie-starfive.c
-+
- PCIE DRIVER FOR ST SPEAR13XX
- M:	Pratyush Anand <pratyush.anand@gmail.com>
- L:	linux-pci@vger.kernel.org
-diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
-index e54a82ee94f5..c0e14146d7e4 100644
---- a/drivers/pci/controller/plda/Kconfig
-+++ b/drivers/pci/controller/plda/Kconfig
-@@ -15,4 +15,16 @@ config PCIE_MICROCHIP_HOST
- 	  Say Y here if you want kernel to support the Microchip AXI PCIe
- 	  Host Bridge driver.
+ #include "pcie-plda.h"
  
-+config PCIE_STARFIVE_HOST
-+	tristate "StarFive PCIe host controller"
-+	depends on PCI_MSI && OF
-+	depends on ARCH_STARFIVE || COMPILE_TEST
-+	select PCIE_PLDA_HOST
-+	help
-+	  Say Y here if you want to support the StarFive PCIe controller in
-+	  host mode. StarFive PCIe controller uses PLDA PCIe core.
-+
-+	  If you choose to build this driver as module it will be dynamically
-+	  linked and module will be called pcie-starfive.ko.
-+
- endmenu
-diff --git a/drivers/pci/controller/plda/Makefile b/drivers/pci/controller/plda/Makefile
-index 4340ab007f44..0ac6851bed48 100644
---- a/drivers/pci/controller/plda/Makefile
-+++ b/drivers/pci/controller/plda/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PCIE_PLDA_HOST) += pcie-plda-host.o
- obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
-+obj-$(CONFIG_PCIE_STARFIVE_HOST) += pcie-starfive.o
+@@ -44,6 +45,17 @@ static void plda_handle_msi(struct irq_desc *desc)
+ 			       bridge_base_addr + ISTATUS_LOCAL);
+ 		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+ 		for_each_set_bit(bit, &status, msi->num_vectors) {
++			/*
++			 * As the Starfive JH7110 hardware can't keep two
++			 * inbound post write in order all the time, such as
++			 * MSI messages and NVMe completions.
++			 * If the NVMe completion update later than the MSI,
++			 * an NVMe IRQ handle will miss.
++			 * As a workaround, we will wait a while before
++			 * going to the generic handle here.
++			 */
++			if (port->msi_quirk_delay_us)
++				udelay(port->msi_quirk_delay_us);
+ 			ret = generic_handle_domain_irq(msi->dev_domain, bit);
+ 			if (ret)
+ 				dev_err_ratelimited(dev, "bad MSI IRQ %d\n",
 diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
-index 7b69891700a4..04e385758a2f 100644
+index 04e385758a2f..feccf285dfe8 100644
 --- a/drivers/pci/controller/plda/pcie-plda.h
 +++ b/drivers/pci/controller/plda/pcie-plda.h
-@@ -10,10 +10,20 @@
- #define PLDA_MAX_NUM_MSI_IRQS			32
+@@ -186,6 +186,7 @@ struct plda_pcie_rp {
+ 	int msi_irq;
+ 	int intx_irq;
+ 	int num_events;
++	u16 msi_quirk_delay_us;
+ };
  
- /* PCIe Bridge Phy Regs */
-+#define GEN_SETTINGS				0x80
-+#define  RP_ENABLE				1
-+#define PCIE_PCI_IDS_DW1			0x9c
-+#define  IDS_CLASS_CODE_SHIFT			16
-+#define  REVISION_ID_MASK			GENMASK(7, 0)
-+#define  CLASS_CODE_ID_MASK			GENMASK(31, 8)
- #define PCIE_PCI_IRQ_DW0			0xa8
- #define  MSIX_CAP_MASK				BIT(31)
- #define  NUM_MSI_MSGS_MASK			GENMASK(6, 4)
- #define  NUM_MSI_MSGS_SHIFT			4
-+#define PCI_MISC				0xb4
-+#define  PHY_FUNCTION_DIS			BIT(15)
-+#define PCIE_WINROM				0xfc
-+#define  PREF_MEM_WIN_64_SUPPORT		BIT(3)
- 
- #define IMASK_LOCAL				0x180
- #define  DMA_END_ENGINE_0_MASK			0x00000000u
-@@ -65,6 +75,8 @@
- #define ISTATUS_HOST				0x18c
- #define IMSI_ADDR				0x190
- #define ISTATUS_MSI				0x194
-+#define PMSG_SUPPORT_RX				0x3f0
-+#define  PMSG_LTR_SUPPORT			BIT(2)
- 
- /* PCIe Master table init defines */
- #define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
-@@ -86,6 +98,8 @@
- #define  PCIE_TX_RX_INTERFACE			0x00000000u
- #define  PCIE_CONFIG_INTERFACE			0x00000001u
- 
-+#define CONFIG_SPACE_ADDR_OFFSET		0x1000u
-+
- #define ATR_ENTRY_SIZE				32
- 
- enum plda_int_event {
-@@ -200,4 +214,59 @@ static inline void plda_set_default_msi(struct plda_msi *msi)
- 	msi->vector_phy = IMSI_ADDR;
- 	msi->num_vectors = PLDA_MAX_NUM_MSI_IRQS;
- }
--#endif
-+
-+static inline void plda_pcie_enable_root_port(struct plda_pcie_rp *plda)
-+{
-+	u32 value;
-+
-+	value = readl_relaxed(plda->bridge_addr + GEN_SETTINGS);
-+	value |= RP_ENABLE;
-+	writel_relaxed(value, plda->bridge_addr + GEN_SETTINGS);
-+}
-+
-+static inline void plda_pcie_set_standard_class(struct plda_pcie_rp *plda)
-+{
-+	u32 value;
-+
-+	/* set class code and reserve revision id */
-+	value = readl_relaxed(plda->bridge_addr + PCIE_PCI_IDS_DW1);
-+	value &= REVISION_ID_MASK;
-+	value |= (PCI_CLASS_BRIDGE_PCI << IDS_CLASS_CODE_SHIFT);
-+	writel_relaxed(value, plda->bridge_addr + PCIE_PCI_IDS_DW1);
-+}
-+
-+static inline void plda_pcie_set_pref_win_64bit(struct plda_pcie_rp *plda)
-+{
-+	u32 value;
-+
-+	value = readl_relaxed(plda->bridge_addr + PCIE_WINROM);
-+	value |= PREF_MEM_WIN_64_SUPPORT;
-+	writel_relaxed(value, plda->bridge_addr + PCIE_WINROM);
-+}
-+
-+static inline void plda_pcie_disable_ltr(struct plda_pcie_rp *plda)
-+{
-+	u32 value;
-+
-+	value = readl_relaxed(plda->bridge_addr + PMSG_SUPPORT_RX);
-+	value &= ~PMSG_LTR_SUPPORT;
-+	writel_relaxed(value, plda->bridge_addr + PMSG_SUPPORT_RX);
-+}
-+
-+static inline void plda_pcie_disable_func(struct plda_pcie_rp *plda)
-+{
-+	u32 value;
-+
-+	value = readl_relaxed(plda->bridge_addr + PCI_MISC);
-+	value |= PHY_FUNCTION_DIS;
-+	writel_relaxed(value, plda->bridge_addr + PCI_MISC);
-+}
-+
-+static inline void plda_pcie_write_rc_bar(struct plda_pcie_rp *plda, u64 val)
-+{
-+	void __iomem *addr = plda->bridge_addr + CONFIG_SPACE_ADDR_OFFSET;
-+
-+	writel_relaxed(lower_32_bits(val), addr + PCI_BASE_ADDRESS_0);
-+	writel_relaxed(upper_32_bits(val), addr + PCI_BASE_ADDRESS_1);
-+}
-+#endif /* _PCIE_PLDA_H */
+ struct plda_event {
 diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
-new file mode 100644
-index 000000000000..9bb9f0e29565
---- /dev/null
+index 9bb9f0e29565..5cfc30572b7f 100644
+--- a/drivers/pci/controller/plda/pcie-starfive.c
 +++ b/drivers/pci/controller/plda/pcie-starfive.c
-@@ -0,0 +1,473 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * PCIe host controller driver for StarFive JH7110 Soc.
-+ *
-+ * Copyright (C) 2023 StarFive Technology Co., Ltd.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include "../../pci.h"
-+
-+#include "pcie-plda.h"
-+
-+#define PCIE_FUNC_NUM			4
-+
-+/* system control */
-+#define STG_SYSCON_PCIE0_BASE			0x48
-+#define STG_SYSCON_PCIE1_BASE			0x1f8
-+
-+#define STG_SYSCON_AR_OFFSET			0x78
-+#define STG_SYSCON_AXI4_SLVL_AR_MASK		GENMASK(22, 8)
-+#define STG_SYSCON_AXI4_SLVL_PHY_AR(x)		FIELD_PREP(GENMASK(20, 17), x)
-+#define STG_SYSCON_AW_OFFSET			0x7c
-+#define STG_SYSCON_AXI4_SLVL_AW_MASK		GENMASK(14, 0)
-+#define STG_SYSCON_AXI4_SLVL_PHY_AW(x)		FIELD_PREP(GENMASK(12, 9), x)
-+#define STG_SYSCON_CLKREQ			BIT(22)
-+#define STG_SYSCON_CKREF_SRC_MASK		GENMASK(19, 18)
-+#define STG_SYSCON_RP_NEP_OFFSET		0xe8
-+#define STG_SYSCON_K_RP_NEP			BIT(8)
-+#define STG_SYSCON_LNKSTA_OFFSET		0x170
-+#define DATA_LINK_ACTIVE			BIT(5)
-+
-+/* Parameters for the waiting for link up routine */
-+#define LINK_WAIT_MAX_RETRIES	10
-+#define LINK_WAIT_USLEEP_MIN	90000
-+#define LINK_WAIT_USLEEP_MAX	100000
-+
-+struct starfive_jh7110_pcie {
-+	struct plda_pcie_rp plda;
-+	struct reset_control *resets;
-+	struct clk_bulk_data *clks;
-+	struct regmap *reg_syscon;
-+	struct gpio_desc *power_gpio;
-+	struct gpio_desc *reset_gpio;
-+	struct phy *phy;
-+
-+	unsigned int stg_pcie_base;
-+	int num_clks;
-+};
-+
-+/*
-+ * The BAR0/1 of bridge should be hidden during enumeration to
-+ * avoid the sizing and resource allocation by PCIe core.
-+ */
-+static bool starfive_pcie_hide_rc_bar(struct pci_bus *bus, unsigned int devfn,
-+				      int offset)
-+{
-+	if (pci_is_root_bus(bus) && !devfn &&
-+	    (offset == PCI_BASE_ADDRESS_0 || offset == PCI_BASE_ADDRESS_1))
-+		return true;
-+
-+	return false;
-+}
-+
-+static int starfive_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
-+				      int where, int size, u32 value)
-+{
-+	if (starfive_pcie_hide_rc_bar(bus, devfn, where))
-+		return PCIBIOS_SUCCESSFUL;
-+
-+	return pci_generic_config_write(bus, devfn, where, size, value);
-+}
-+
-+static int starfive_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
-+				     int where, int size, u32 *value)
-+{
-+	if (starfive_pcie_hide_rc_bar(bus, devfn, where)) {
-+		*value = 0;
-+		return PCIBIOS_SUCCESSFUL;
-+	}
-+
-+	return pci_generic_config_read(bus, devfn, where, size, value);
-+}
-+
-+static int starfive_pcie_parse_dt(struct starfive_jh7110_pcie *pcie,
-+				  struct device *dev)
-+{
-+	int domain_nr;
-+
-+	pcie->num_clks = devm_clk_bulk_get_all(dev, &pcie->clks);
-+	if (pcie->num_clks < 0)
-+		return dev_err_probe(dev, pcie->num_clks,
-+				     "failed to get pcie clocks\n");
-+
-+	pcie->resets = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(pcie->resets))
-+		return dev_err_probe(dev, PTR_ERR(pcie->resets),
-+				     "failed to get pcie resets");
-+
-+	pcie->reg_syscon =
-+		syscon_regmap_lookup_by_phandle(dev->of_node,
-+						"starfive,stg-syscon");
-+
-+	if (IS_ERR(pcie->reg_syscon))
-+		return dev_err_probe(dev, PTR_ERR(pcie->reg_syscon),
-+				     "failed to parse starfive,stg-syscon\n");
-+
-+	pcie->phy = devm_phy_optional_get(dev, NULL);
-+	if (IS_ERR(pcie->phy))
-+		return dev_err_probe(dev, PTR_ERR(pcie->phy),
-+				     "failed to get pcie phy\n");
-+
-+	domain_nr = of_get_pci_domain_nr(dev->of_node);
-+
-+	if (domain_nr < 0 || domain_nr > 1)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "failed to get valid pcie domain\n");
-+
-+	if (domain_nr == 0)
-+		pcie->stg_pcie_base = STG_SYSCON_PCIE0_BASE;
-+	else
-+		pcie->stg_pcie_base = STG_SYSCON_PCIE1_BASE;
-+
-+	pcie->reset_gpio = devm_gpiod_get_optional(dev, "perst",
-+						   GPIOD_OUT_HIGH);
-+	if (IS_ERR(pcie->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(pcie->reset_gpio),
-+				     "failed to get perst-gpio\n");
-+
-+	pcie->power_gpio = devm_gpiod_get_optional(dev, "enable",
-+						   GPIOD_OUT_LOW);
-+	if (IS_ERR(pcie->power_gpio))
-+		return dev_err_probe(dev, PTR_ERR(pcie->power_gpio),
-+				     "failed to get power-gpio\n");
-+
-+	return 0;
-+}
-+
-+static struct pci_ops starfive_pcie_ops = {
-+	.map_bus	= plda_pcie_map_bus,
-+	.read           = starfive_pcie_config_read,
-+	.write          = starfive_pcie_config_write,
-+};
-+
-+static int starfive_pcie_clk_rst_init(struct starfive_jh7110_pcie *pcie)
-+{
-+	struct device *dev = pcie->plda.dev;
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to enable clocks\n");
-+
-+	ret = reset_control_deassert(pcie->resets);
-+	if (ret) {
-+		clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-+		dev_err_probe(dev, ret, "failed to deassert resets\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static void starfive_pcie_clk_rst_deinit(struct starfive_jh7110_pcie *pcie)
-+{
-+	reset_control_assert(pcie->resets);
-+	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-+}
-+
-+static bool starfive_pcie_link_up(struct plda_pcie_rp *plda)
-+{
-+	struct starfive_jh7110_pcie *pcie =
-+		container_of(plda, struct starfive_jh7110_pcie, plda);
-+	int ret;
-+	u32 stg_reg_val;
-+
-+	ret = regmap_read(pcie->reg_syscon,
-+			  pcie->stg_pcie_base + STG_SYSCON_LNKSTA_OFFSET,
-+			  &stg_reg_val);
-+	if (ret) {
-+		dev_err(pcie->plda.dev, "failed to read link status\n");
-+		return false;
-+	}
-+
-+	return !!(stg_reg_val & DATA_LINK_ACTIVE);
-+}
-+
-+static int starfive_pcie_host_wait_for_link(struct starfive_jh7110_pcie *pcie)
-+{
-+	int retries;
-+
-+	/* Check if the link is up or not */
-+	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-+		if (starfive_pcie_link_up(&pcie->plda)) {
-+			dev_info(pcie->plda.dev, "port link up\n");
-+			return 0;
-+		}
-+		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static int starfive_pcie_enable_phy(struct device *dev,
-+				    struct starfive_jh7110_pcie *pcie)
-+{
-+	int ret;
-+
-+	if (!pcie->phy)
-+		return 0;
-+
-+	ret = phy_init(pcie->phy);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to initialize pcie phy\n");
-+
-+	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to set pcie mode\n");
-+		goto err_phy_on;
-+	}
-+
-+	ret = phy_power_on(pcie->phy);
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to power on pcie phy\n");
-+		goto err_phy_on;
-+	}
-+
-+	return 0;
-+
-+err_phy_on:
-+	phy_exit(pcie->phy);
-+	return ret;
-+}
-+
-+static void starfive_pcie_disable_phy(struct starfive_jh7110_pcie *pcie)
-+{
-+	phy_power_off(pcie->phy);
-+	phy_exit(pcie->phy);
-+}
-+
-+static void starfive_pcie_host_deinit(struct plda_pcie_rp *plda)
-+{
-+	struct starfive_jh7110_pcie *pcie =
-+		container_of(plda, struct starfive_jh7110_pcie, plda);
-+
-+	starfive_pcie_clk_rst_deinit(pcie);
-+	if (pcie->power_gpio)
-+		gpiod_set_value_cansleep(pcie->power_gpio, 0);
-+	starfive_pcie_disable_phy(pcie);
-+}
-+
-+static int starfive_pcie_host_init(struct plda_pcie_rp *plda)
-+{
-+	struct starfive_jh7110_pcie *pcie =
-+		container_of(plda, struct starfive_jh7110_pcie, plda);
-+	struct device *dev = plda->dev;
-+	int ret;
-+	int i;
-+
-+	ret = starfive_pcie_enable_phy(dev, pcie);
-+	if (ret)
-+		return ret;
-+
-+	regmap_update_bits(pcie->reg_syscon,
-+			   pcie->stg_pcie_base + STG_SYSCON_RP_NEP_OFFSET,
-+			   STG_SYSCON_K_RP_NEP, STG_SYSCON_K_RP_NEP);
-+
-+	regmap_update_bits(pcie->reg_syscon,
-+			   pcie->stg_pcie_base + STG_SYSCON_AW_OFFSET,
-+			   STG_SYSCON_CKREF_SRC_MASK,
-+			   FIELD_PREP(STG_SYSCON_CKREF_SRC_MASK, 2));
-+
-+	regmap_update_bits(pcie->reg_syscon,
-+			   pcie->stg_pcie_base + STG_SYSCON_AW_OFFSET,
-+			   STG_SYSCON_CLKREQ, STG_SYSCON_CLKREQ);
-+
-+	ret = starfive_pcie_clk_rst_init(pcie);
-+	if (ret)
-+		return ret;
-+
-+	if (pcie->power_gpio)
-+		gpiod_set_value_cansleep(pcie->power_gpio, 1);
-+
-+	if (pcie->reset_gpio)
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+
-+	/* Disable physical functions except #0 */
-+	for (i = 1; i < PCIE_FUNC_NUM; i++) {
-+		regmap_update_bits(pcie->reg_syscon,
-+				   pcie->stg_pcie_base + STG_SYSCON_AR_OFFSET,
-+				   STG_SYSCON_AXI4_SLVL_AR_MASK,
-+				   STG_SYSCON_AXI4_SLVL_PHY_AR(i));
-+
-+		regmap_update_bits(pcie->reg_syscon,
-+				   pcie->stg_pcie_base + STG_SYSCON_AW_OFFSET,
-+				   STG_SYSCON_AXI4_SLVL_AW_MASK,
-+				   STG_SYSCON_AXI4_SLVL_PHY_AW(i));
-+
-+		plda_pcie_disable_func(plda);
-+	}
-+
-+	regmap_update_bits(pcie->reg_syscon,
-+			   pcie->stg_pcie_base + STG_SYSCON_AR_OFFSET,
-+			   STG_SYSCON_AXI4_SLVL_AR_MASK, 0);
-+	regmap_update_bits(pcie->reg_syscon,
-+			   pcie->stg_pcie_base + STG_SYSCON_AW_OFFSET,
-+			   STG_SYSCON_AXI4_SLVL_AW_MASK, 0);
-+
-+	plda_pcie_enable_root_port(plda);
-+	plda_pcie_write_rc_bar(plda, 0);
-+
-+	/* PCIe PCI Standard Configuration Identification Settings. */
-+	plda_pcie_set_standard_class(plda);
-+
-+	/*
-+	 * The LTR message forwarding of PCIe Message Reception was set by core
-+	 * as default, but the forward id & addr are also need to be reset.
-+	 * If we do not disable LTR message forwarding here, or set a legal
-+	 * forwarding address, the kernel will get stuck after the driver probe.
-+	 * To workaround, disable the LTR message forwarding support on
-+	 * PCIe Message Reception.
-+	 */
-+	plda_pcie_disable_ltr(plda);
-+
-+	/* Prefetchable memory window 64-bit addressing support */
-+	plda_pcie_set_pref_win_64bit(plda);
-+
-+	/*
-+	 * Ensure that PERST has been asserted for at least 100 ms,
-+	 * the sleep value is T_PVPERL from PCIe CEM spec r2.0 (Table 2-4)
-+	 */
-+	msleep(100);
-+	if (pcie->reset_gpio)
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+
-+	/*
-+	 * With a Downstream Port (<=5GT/s), software must wait a minimum
-+	 * of 100ms following exit from a conventional reset before
-+	 * sending a configuration request to the device.
-+	 */
-+	msleep(PCIE_RESET_CONFIG_DEVICE_WAIT_MS);
-+
-+	if (starfive_pcie_host_wait_for_link(pcie))
-+		dev_info(dev, "port link down\n");
-+
-+	return 0;
-+}
-+
-+static const struct plda_pcie_host_ops sf_host_ops = {
-+	.host_init = starfive_pcie_host_init,
-+	.host_deinit = starfive_pcie_host_deinit,
-+};
-+
-+static const struct plda_event stf_pcie_event = {
-+	.intx_event = EVENT_PM_MSI_INT_INTX,
-+	.msi_event  = EVENT_PM_MSI_INT_MSI
-+};
-+
-+static int starfive_pcie_probe(struct platform_device *pdev)
-+{
-+	struct starfive_jh7110_pcie *pcie;
-+	struct device *dev = &pdev->dev;
-+	struct plda_pcie_rp *plda;
-+	int ret;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	plda = &pcie->plda;
-+	plda->dev = dev;
-+
-+	ret = starfive_pcie_parse_dt(pcie, dev);
-+	if (ret)
-+		return ret;
-+
-+	plda->host_ops = &sf_host_ops;
-+	plda->num_events = PLDA_MAX_EVENT_NUM;
-+	/* mask doorbell event */
-+	plda->events_bitmap = GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
-+			     & ~BIT(PLDA_AXI_DOORBELL)
-+			     & ~BIT(PLDA_PCIE_DOORBELL);
-+	plda->events_bitmap <<= PLDA_NUM_DMA_EVENTS;
-+	ret = plda_pcie_host_init(&pcie->plda, &starfive_pcie_ops,
-+				  &stf_pcie_event);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_get_sync(&pdev->dev);
-+	platform_set_drvdata(pdev, pcie);
-+
-+	return 0;
-+}
-+
-+static void starfive_pcie_remove(struct platform_device *pdev)
-+{
-+	struct starfive_jh7110_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	plda_pcie_host_deinit(&pcie->plda);
-+	platform_set_drvdata(pdev, NULL);
-+}
-+
-+static int starfive_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
-+
-+	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
-+	starfive_pcie_disable_phy(pcie);
-+
-+	return 0;
-+}
-+
-+static int starfive_pcie_resume_noirq(struct device *dev)
-+{
-+	struct starfive_jh7110_pcie *pcie = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = starfive_pcie_enable_phy(dev, pcie);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_bulk_prepare_enable(pcie->num_clks, pcie->clks);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clocks\n");
-+		starfive_pcie_disable_phy(pcie);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops starfive_pcie_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(starfive_pcie_suspend_noirq,
-+				  starfive_pcie_resume_noirq)
-+};
-+
-+static const struct of_device_id starfive_pcie_of_match[] = {
-+	{ .compatible = "starfive,jh7110-pcie", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, starfive_pcie_of_match);
-+
-+static struct platform_driver starfive_pcie_driver = {
-+	.driver = {
-+		.name = "pcie-starfive",
-+		.of_match_table = of_match_ptr(starfive_pcie_of_match),
-+		.pm = pm_sleep_ptr(&starfive_pcie_pm_ops),
-+	},
-+	.probe = starfive_pcie_probe,
-+	.remove_new = starfive_pcie_remove,
-+};
-+module_platform_driver(starfive_pcie_driver);
-+
-+MODULE_DESCRIPTION("StarFive JH7110 PCIe host driver");
-+MODULE_LICENSE("GPL v2");
+@@ -391,6 +391,7 @@ static int starfive_pcie_probe(struct platform_device *pdev)
+ 
+ 	plda->host_ops = &sf_host_ops;
+ 	plda->num_events = PLDA_MAX_EVENT_NUM;
++	plda->msi_quirk_delay_us = 1;
+ 	/* mask doorbell event */
+ 	plda->events_bitmap = GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
+ 			     & ~BIT(PLDA_AXI_DOORBELL)
 -- 
 2.17.1
 
