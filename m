@@ -1,140 +1,224 @@
-Return-Path: <linux-pci+bounces-4133-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83B63869B99
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 17:07:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27723869C00
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 17:25:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3197528324F
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 16:07:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 925461F22535
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 16:25:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CD514690A;
-	Tue, 27 Feb 2024 16:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9BBB148316;
+	Tue, 27 Feb 2024 16:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DtgT52/W"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E571468FF;
-	Tue, 27 Feb 2024 16:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B404C14830C;
+	Tue, 27 Feb 2024 16:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709050040; cv=none; b=QgF8TxbakqucrjTLtrqXQdW4g75Q3iWsEv3g5I3a55cifhQ11F9f9i+UBXjosWHArxQ7+1SREIzxmlLfdC2vEom2O3QgmHgcFVtUuyf9nYy+GtQ9wosbIR5OH82PrD1RzbmTkNArPmGhgJOr3p7ZoRPxh2JHVT+QT7OLJCxMZIk=
+	t=1709051137; cv=none; b=TkJsc/uimjj1YousJFqkIL1aQjdV9MVH0/Z0gByJ52D8yvNF93/hg0CYbYkoSitgI6G5tA3hRjd+YPXAbxnEYw6epy9EDBoDewJcFYxj++K34YJ8xmta3/ZDbgq9ZeNvYIp9krmelLmkQwfubNOZJA6pLubyUz9edPexehpqFWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709050040; c=relaxed/simple;
-	bh=0eMZGYC3Obzp7NPifMc1wZQmW1MjzPdlblY+FimfEZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ElDxVw8oKpnCzoa91nZVCxFeR6P6HSErUQQkEGQbEPmJ5DaYzlx9M2LXc4u1Q5EpGu/2tjih8M4qzbB3g4mw8RkFpy2NebOihlL6dRcKVJQ9ywpbAPxsvgTzeTY/1pRdtw4NjUiYLyhqv80DWpZBa8DWVCFPe4+ZvIjleyGtDDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-607e54b6cf5so30881707b3.0;
-        Tue, 27 Feb 2024 08:07:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709050036; x=1709654836;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LHoeDfHGuL96HTfNJMCJ2+Eu2KeeOnl/Onf9zZl0DK4=;
-        b=Ry6Xn8rOh85MZTr34gAT8nTAsEDBUSbUBiiNY82yOWDL3KCLz1mrsamKK1bacHqt8o
-         /o6H/uT6hOZbTR3gvkAT9VOqRIzCw/VASdIH7YaPToczsDqODtUH0/N9ydm05GfXYuku
-         oTb7DDKLshxBmFKkDOUx27spNjEjeAfAgR2S2Z8BgU7FEAvqJ3zieioXSE7LrMiTbuH3
-         XEBncJ39duya1c45cwVg/V0DZGivXTIqhOGw5OHyI/7XsWF8yLzLsh6VeO0LvL+w4Xjl
-         NnQq88gtN7lVXpIewgdlke+WfBkSKXKvCIQ5ZwISKeMhx5YecJwNFXgCpS12GXzqO/2r
-         qW8A==
-X-Forwarded-Encrypted: i=1; AJvYcCWx/XNft0W/4F/6UjqiG9O0mdvBMVieZKz+cYsjO9plbNdLQQy1KUoOYGX3rfiHcma/BSXx2lWwjbKVll86xdMi+szAOzQ8CI2jdxha1lNcMGWf358q5o6rHnOEQfx1FKEG7ZlAC+PVk9gJdzil97k9SLy7hy0KquW4CoLbN9FTGz2PEj0s5IID0AX6KuMDBanDRMocDJicHz6fEkqgGfxYL18fDF3bTL9bmWRVlid1Gy9dm5nt30E/Dr+Yefg7Zy+s2GeU+1gvbb+0Ep9tP2CjRp7tUR/7JWC9Hrz1rkSHZF9QNp+tTVUmk0sK/JpP8wLn4tVZNPyXdold1qIwZv9mGZ0+iYFZ1kKLyWRPgDyT3/r5zC9MTXI=
-X-Gm-Message-State: AOJu0YwlQqnez9RI5JvFumeLV6TrEsgi+q7+8PehBHVua2BmGptBab6x
-	nvV208MvLUVGE3/LRnfG9WbvK5DmpqayRIk7iF9jrberGea3wtVV7ZNbEukuewEpPw==
-X-Google-Smtp-Source: AGHT+IGhZl/N4STVFVAAaDLTG1/F+S0zR94f1PsVA0f9mmC1AZfChV3CA8f756jwCAgg85Mhd6VcLQ==
-X-Received: by 2002:a81:5749:0:b0:609:2fbb:96fb with SMTP id l70-20020a815749000000b006092fbb96fbmr785251ywb.8.1709050036308;
-        Tue, 27 Feb 2024 08:07:16 -0800 (PST)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
-        by smtp.gmail.com with ESMTPSA id p2-20020a815b02000000b006079f55766bsm1831057ywb.68.2024.02.27.08.07.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Feb 2024 08:07:15 -0800 (PST)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbed179f0faso2696644276.1;
-        Tue, 27 Feb 2024 08:07:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW1V6P1cQSqqc/sR+3StMok/gHJFsd4v4Fue08kfyBON/a79tgRnI7A6UpgSRoB3QdlUjsfTaazFtmjc6foS7jCjEa+tILuEO9qs4gS1Fk4/Sn7oi4F1yZ3yAK2a5MzBSPoWqrtm+dHeU+h0NtPzYMDcJHIXJdF+mbVrUvZbEZosBgfA1DFtWCWBoEloQBOiPPdwz9N3anwleIeiHR+euX59hF9Oh94a6fpacda1PCMh3Yr0oQ27g4MfLUzie6JCg4uB4Gtz8yH0Nq2L1Gfp1LUKLh7OU+ZSHlI4YUnBlI9wrYrcwLXhUWuHQD5TCaRlIKfLHCGMrP4pcV4rXcLnqrxWtQm91dD1BVyoqB5MJcuH6psHoxIk44=
-X-Received: by 2002:a25:d6d6:0:b0:dc6:daa4:e808 with SMTP id
- n205-20020a25d6d6000000b00dc6daa4e808mr1755203ybg.12.1709050035153; Tue, 27
- Feb 2024 08:07:15 -0800 (PST)
+	s=arc-20240116; t=1709051137; c=relaxed/simple;
+	bh=WnstNj4Jv5JxlwttlFifLGWHHhMSIWFpalhF/qq+++w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AIM5xzSVhUQZkXNSG+78wTsi+uM4+hT4t9ZiYl2xA4mxXCeaH8PYOKBg2nQkO7YcIUHPZ0xenlqxu2QOmeBUGPCQPlVrFGD6TvEboKKgJgNtYHpEQA3wmnGHycLsxTRLN+8okmxys9ra8A5zaZbC9cLaEbdZzQ/4h/KvnhrqsW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DtgT52/W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02C07C433C7;
+	Tue, 27 Feb 2024 16:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709051137;
+	bh=WnstNj4Jv5JxlwttlFifLGWHHhMSIWFpalhF/qq+++w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DtgT52/W11i/a5EpXTJ/+VW1EfcZXMgMxIvoQd7vrb4F9TghmBpErfVTy8HnGSz+f
+	 sPznOXkr9n/u2FQiAP603cYRhclxqAkYRCntbPf6wxb7KAdpBh+hwwrFNvN4yyvwoI
+	 ZytSnE32mi/CkIV5DqJtc5GrOWc38JEvX3joXkihtm/aXEkE5rppks+qZTD2ao9f46
+	 UjQhJzA75A1pj0HiTe5T3HaYaV7DjtFlttsz6AlogLWKgL+eX20GtIIHGPNGtEEBT4
+	 M9JAmkrcbj729ByAe3wAzzDAbAy4vM/lfmD0uNEsUN/7A0oTY9lE2kk1xI5Xt54DvH
+	 jdebnNFB0T0mA==
+Date: Tue, 27 Feb 2024 10:25:35 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	quic_krichai@quicinc.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Add D3 support for PCI bridges in DT based
+ platforms
+Message-ID: <20240227162535.GA239073@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1704788539.git.ysato@users.sourceforge.jp> <22c41c392762f282752b2f31deeaf8f1f2254061.1704788539.git.ysato@users.sourceforge.jp>
-In-Reply-To: <22c41c392762f282752b2f31deeaf8f1f2254061.1704788539.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 27 Feb 2024 17:07:03 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUK6fKZuFN2kqrnzfvxcnJZS=YQm3oeQRczAjRG66ebMg@mail.gmail.com>
-Message-ID: <CAMuHMdUK6fKZuFN2kqrnzfvxcnJZS=YQm3oeQRczAjRG66ebMg@mail.gmail.com>
-Subject: Re: [DO NOT MERGE v6 33/37] sh: j2_mimas_v2.dts update
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
-	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240227073057.GF2587@thinkpad>
 
-Hi Sato-san,
+On Tue, Feb 27, 2024 at 01:00:57PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Feb 26, 2024 at 05:39:30PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Feb 22, 2024 at 09:36:29AM +0530, Manivannan Sadhasivam wrote:
+> > > On Wed, Feb 21, 2024 at 12:20:00PM -0600, Bjorn Helgaas wrote:
+> > > > On Wed, Feb 21, 2024 at 10:49:58AM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Tue, Feb 20, 2024 at 04:02:40PM -0600, Bjorn Helgaas wrote:
+> > > > > > On Wed, Feb 14, 2024 at 05:16:09PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > Currently, PCI core will enable D3 support for PCI bridges only when the
+> > > > > > > following conditions are met:
+> > > > > > 
+> > > > > > Whenever I read "D3", I first have to figure out whether we're talking
+> > > > > > about D3hot or D3cold.  Please save me the effort :)
+> > > > > 
+> > > > > Both actually, that's why I used "D3" as in the spec. I should've explicitly
+> > > > > mentioned that in the commit message.
+> > > > > 
+> > > > > > > 1. Platform is ACPI based
+> > > > > > > 2. Thunderbolt controller is used
+> > > > > > > 3. pcie_port_pm=force passed in cmdline
+> > > > > > 
+> > > > > > Are these joined by "AND" or "OR"?  I guess probably "OR"?
+> > > > > > 
+> > > > > > "... all the following conditions are met" or "... one of the
+> > > > > > following conditions is met" would clarify this.
+> > > > > 
+> > > > > Will use "one of the..."
+> > > > > 
+> > > > > > > While options 1 and 2 do not apply to most of the DT based
+> > > > > > > platforms, option 3 will make the life harder for distro
+> > > > > > > maintainers. Due to this, runtime PM is also not getting enabled
+> > > > > > > for the bridges.
+> > > > > > > 
+> > > > > > > To fix this, let's make use of the "supports-d3" property [1] in
+> > > > > > > the bridge DT nodes to enable D3 support for the capable
+> > > > > > > bridges. This will also allow the capable bridges to support
+> > > > > > > runtime PM, thereby conserving power.
+> > > > > > 
+> > > > > > Looks like "supports-d3" was added by
+> > > > > > https://github.com/devicetree-org/dt-schema/commit/4548397d7522.
+> > > > > > The commit log mentions "platform specific ways", which suggests maybe
+> > > > > > this is D3cold, since D3hot should be supported via PMCSR without any
+> > > > > > help from the platform.
+> > > > > > 
+> > > > > > So I *guess* this really means "platform provides some non-architected
+> > > > > > way to put devices in D3cold and bring them back to D0"?
+> > > > > 
+> > > > > By reading the comments and git log of the pci_bridge_d3_possible()
+> > > > > function in drivers/pci/pci.c, we can understand that some of the
+> > > > > old bridges do not support both D3hot and D3cold. And to
+> > > > > differentiate such bridges, platforms have to notify the OS using
+> > > > > some ways.
+> > > > > 
+> > > > > ACPI has its own implementation [1] and DT uses "supports-d3"
+> > > > > property.
+> > > > > 
+> > > > > And yes, in an ideal world PMCSR should be sufficient for D3hot, but
+> > > > > you know the PCI vendors more than me ;)
+> > > > 
+> > > > So it sounds like this is supposed to cover two cases:
+> > > > 
+> > > >   1) D3hot doesn't work per spec.  This sounds like a hardware
+> > > >      defect in the device that should be a quirk based on
+> > > >      Vendor/Device ID, not something in DT.  I don't actually know if
+> > > >      this is common, although there are several existing quirks that
+> > > >      mention issues with D3.
+> > > > 
+> > > 
+> > > I'd love to use quirks if we started from that. But right now, quirks are not
+> > > used and there are multiple checks based on various factors [1], including
+> > > relying on ACPI. So that's the reason I went with DT based approach.
+> > > 
+> > > If quirks has to be used now, then it has to be used for both ACPI and DT based
+> > > platforms. For DT it won't be an issue since nobody bothered until now, but for
+> > > ACPI, we need to add quirks for all the bridges in the wild which is not
+> > > feasible.
+> > > 
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pci.c#n3116
+> > > 
+> > > >   2) The platform doesn't support putting the bridge in D3cold and
+> > > >      back to D0.  I don't understand this either because I assumed DT
+> > > >      would describe *hardware*, and "supports-d3" might imply the
+> > > >      presence of hardware power control, but doesn't tell us how to
+> > > >      operate it, and it must be up to a native driver to know how to
+> > > >      do it.
+> > > 
+> > > "supports-d3" implies that both D3hot and D3cold works as in the
+> > > spec and the OS can handle it appropriately. If this is absent, then
+> > > OS should not transition the bridge to any of the D3 states. I don't
+> > > understand what is the confusion here. This is similar to what we
+> > > already have for ACPI (whether or not it is correct is another
+> > > topic).
+> > 
+> > What does "the OS can handle it appropriately" mean?  Whatever it
+> > means, it sounds like a property of the OS, not a property of the
+> > device.
+> 
+> "appropiately" means as per the PCIe spec.
+>
+> > I don't know what "D3cold works as in the spec" means, either.  The
+> > spec says how D3cold affects internal device state, but it doesn't say
+> > anything about how to put devices in D3cold or back in D0.
+> > 
+> > > > These are two vastly different scenarios, and I would really like to
+> > > > untangle them so they aren't conflated.  I see that you're extending
+> > > > platform_pci_bridge_d3(), which apparently has that conflation baked
+> > > > into it already, but my personal experience is that this is really
+> > > > hard to maintain.
+> > > 
+> > > I do agree that it is not in a good shape, but there is no better
+> > > solution other than making use of the DT property. If you have any
+> > > better idea, please suggest.
+> > 
+> > The longer this goes on the worse shape we are in because we're always
+> > adding new special cases.
+> > 
+> > The fundamental problem I have is that "supports-d3" doesn't say
+> > anything specific other than "current Linux can put the device in
+> > D3hot or D3cold and get it back out again".  I think DT should tell us
+> > characteristics of the device or the platform, e.g., "PMCSR doesn't
+> > work to enter/leave D3hot on this device" or "regulator X controls
+> > main power to the device to enter/leave D3cold".
+> > 
+> > But right now it sounds like a mixture of "PMCSR works correctly to
+> > enter/leave D3hot" and "some unspecified software can control main
+> > power to this device".
+> > 
+> > Putting devices in D3cold and back in D0 needs some kind of platform
+> > support like ACPI methods or a native power management driver that
+> > knows how to control power on a specific platform.  That's completely
+> > different from D3hot, where the PCI spec tells us all we need to know.
+> 
+> Ok, I got the issue. TBH, I added the device tree property based on
+> the existing quirks for the ACPI devices. But none of the DT based
+> platforms I'm aware of (even the legacy Qcom MSM8996 chipset
+> released in early 2016) doesn't have any issue with D3hot. But I'm
+> just nervous to assume it is the case for all the DT based platforms
+> in the wild.
+> 
+> But to proceed further, what is your preference? Should we ammend
+> the DT property to make it explicit that the propery only focuses on
+> the D3hot capability of the bridge and it works as per the spec
+> (PMCSR) or bite the bullet and enable D3hot for all the non-ACPI
+> platforms?
+> 
+> We can add quirks for the bridges later on if we happen to receive
+> any bug report.
 
-On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+I would assume all devices support D3hot via PMCSR per spec.  We can
+add quirks if we discover something that doesn't.
 
-Thanks for your patch!
+If we add annotations that "this device works correctly", we're
+digging a hole for ourselves because it's impossible to remove those
+annotations and they complicate all future maintenance.
 
-Please enhance the one-line summary, e.g.
-
-    sh: j2_mimas_v2: Update CPU compatible value
-
-For the actual changes:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Bjorn
 
