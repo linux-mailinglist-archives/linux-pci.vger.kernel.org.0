@@ -1,365 +1,247 @@
-Return-Path: <linux-pci+bounces-4151-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4152-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 047C0869F84
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 19:51:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C57CE86A090
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 20:53:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 229A01C22351
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 18:51:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D1DA1F2193E
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 19:53:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9474851C33;
-	Tue, 27 Feb 2024 18:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043A0149E1D;
+	Tue, 27 Feb 2024 19:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rE2q19TX"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uiQUs9IL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2074.outbound.protection.outlook.com [40.107.95.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8438451C34
-	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 18:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709059873; cv=none; b=iJ329OaP0VNQQxAgIiGkk93WG+4y+y2iHRQwP1pxFMkN16CQPjHvYbBUMQtN+EbRZucY/AfzoIHTAOCcWgpgNpvR5EoCHTgOxvGutNoMARrIsbNlrF+d1jSkVz/QgrkxTEEZASqnLFKjKn39ryMAYRqDMvXoTrosIVcN7RyPzaA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709059873; c=relaxed/simple;
-	bh=m8BCJCDCVjUu1aX9u8678gH0B9TMigZhFp4TpDpGOtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qF1Pyos9/K1tCRXvMLYnuZYkZNFvk5k2mkwCDiOoKgZGoNvpuhDj+oVxlrrADlwxDIxH+iLKDZjVnYY4aabdiNOSIflXhSeF7AiHlm3b7qyY14uMS0hkSOWcscGLlkdBB68TcHs7mV1EpSQv351QuYI7ndsReaZE2rLbZNlClyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rE2q19TX; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc75972f25so39399075ad.1
-        for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 10:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709059870; x=1709664670; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZzsUzPaeQV0xVaYYOa5fkl+D3bB3KmqWtFdIBMocqZs=;
-        b=rE2q19TXF19nFEFo162gIW2eIUbGHpXw3tXaHA4YI4gHEjLslGklZXmA8MZ6sXioWs
-         CWT6yQxpjR7nLjbSDZrTtWRbNzJfjuwssWl3V7xhG16yk0ClN7YBrq1DS0MqTBqQHuYV
-         9veaVXZykqxeaymfPrMLZk26deeHC+AZVHzQcFq7hnzmztHWuHsn1z2OAEkMnb0D2zex
-         P8ALrEboDuyAU7HD49sxq3RIIcOZo6RNDg2WRQAT4d4YX8frXNZCeYRwKUHYJxCuU3hc
-         WI2vLjV6KwZYiO9FKo9rXT+Hd6Mr5pQIQH8JWIqR4QELIeLWPTDU7ihrAJ3Udqgz0eTl
-         S5iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709059870; x=1709664670;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZzsUzPaeQV0xVaYYOa5fkl+D3bB3KmqWtFdIBMocqZs=;
-        b=i1VjR564KXoMXKb3SHCxAgxaC275UwKXWzm+eJ/eqSSzzEpQEL+kNSsxETO9S20itc
-         p9q96E+3R02aceKmEGmCaIagf8AHQUttbm7gawEKfjKuLkFjGvB6nwf54pVLkQxXx2Sp
-         +1vqErxAJjzKu5LKPUFlMLdRRh/aLvNJ8lGHF3L2qDhADaLtISm3mP3UdpEslpXb9JAp
-         8xlCdvr4CIcY2O5ZO3cfD9LZUsRq+1Ycaxzm5GQrgcATlvBo90T/LCFOJ12VZOIlALFR
-         72INt2Y0AxJMTgusDshARrPbkRbTUlVyPXR8SDyv2IzpOf2u++yjLKOVYYphjDswJpTM
-         0qNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWGTplhtm7J7P/v27IDnV5FKdUV74uH1OxOB7a1LClRrgsuE/AAmQZrB9AvPzZBLIQIkQ/4QKtT6kfnXobnrZAW18Z0sdIp3YW
-X-Gm-Message-State: AOJu0YzzwyYFzepb6fsIB/Tu40w6zYh8q0aWcnH6S64qfjYjXwdqkxTF
-	4jTWhW4e7z5nbpMR+XF+V/vFOU4AhQBVVRuGJXSEofbaAkuekiDTkSRHp1Kugw==
-X-Google-Smtp-Source: AGHT+IFMrquxHELSuk64r8EzaLnPYxdhtlQPf9g7u2EtEZHnTxtPf52KDLuAlSX+ap+F1qbMBmUq7w==
-X-Received: by 2002:a17:903:449:b0:1da:2c01:fef5 with SMTP id iw9-20020a170903044900b001da2c01fef5mr10095757plb.56.1709059869792;
-        Tue, 27 Feb 2024 10:51:09 -0800 (PST)
-Received: from thinkpad ([117.213.97.177])
-        by smtp.gmail.com with ESMTPSA id c3-20020a170902d90300b001db93340f9bsm1828147plz.205.2024.02.27.10.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Feb 2024 10:51:09 -0800 (PST)
-Date: Wed, 28 Feb 2024 00:20:50 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v8 08/10] PCI: dwc: ep: Add a generic
- dw_pcie_ep_linkdown() API to handle LINK_DOWN event
-Message-ID: <20240227185050.GV2587@thinkpad>
-References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
- <20240224-pci-dbi-rework-v8-8-64c7fd0cfe64@linaro.org>
- <ZdzH2lOSwBsIp/Jc@lizhi-Precision-Tower-5810>
- <20240227123024.GO2587@thinkpad>
- <Zd4bLZb2z4TEoR1a@lizhi-Precision-Tower-5810>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EFA149E13
+	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 19:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709063630; cv=fail; b=PaCqMM1B+YI0913btnQt772nYJ863B0un5PXiIM3CxEKGfwAEM8Maws4YoER6yRa6rs5jXdI2L3BuqYkW3otOOtJvQ0Nn19XVpf80MY+hPf9VdQ/iZV/QjTnNkAmEOLevi+Rm/hvVPzd2vT8lzoHiVBPc6VjnhC5FoHD5XsK/dU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709063630; c=relaxed/simple;
+	bh=4jIUCQexiU64zLWWTkbYwelazNpNinAxl8dQQKNXyHM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bx4qy/udGlcC+ZH4FRocXJB3Rc/KD4TCsIfcZ+T4E+8oc1WfNyKK3dsGaAvFDJVbI/fkSb1g8gvLxo0SFTY2fUE8VfWiiDmcJt80BLunx54KZnCxSStUZJOxK7iXbJSbhxYdPzdWMBFjiJ7rQZuMdICVB2HCW7XMd5lEIsAxTNg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uiQUs9IL; arc=fail smtp.client-ip=40.107.95.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eUbS4l6nrdzH92VuzXWz5nuUvUji4d8bUB3wIuIKHToO3C5hFOim30QLRch14F87wJGz2WcBv0Ba+5nj6p1YmitLbEER1uGy0uNJYRYeAgY7iaWYpyBPgZ9fbE7C7xFO8Y96FQkfgaoEwrwa+ZRD6LrsVRcCfiTWcbQEF40kAnfICYRqoVwkN4k0ATTuc7N4mMfFZcuXvZFWW93FwvOkWTYwWrtl21NA+THj/ULDqDmJEBXmB7r7fcCnbJUR+RfNlB/xHnWmlo9l2kxQ77LLHs6T5RSJcxJEy6tv5OgsnU3tjnwPps8W0vJ4acVdqbuLe8H0lyAnX867Uj1oxn3FTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G0BhK26vu7YbhX7MyJ9OslCgO0qD5qzzPGTwVuFkgwY=;
+ b=oGu7g9TfzvIDTFcB/0pY/LjUeFZzVUt9WKa5er6oMq9eNldFz6xwOEaTQSs+ywmN26nh4gHEKytHPydsWWXV30dAjMhbCO97EE8nOnDRgFyNXurpMTlqi/EvMQsiyYGuk9x9P5h3sQeXDalKu6MDN4DmobsWvEKbU2C3hYbP3BcGtn5tge9UpDBHsZselAw4Frz3rxlgRNjYvZuTTCd8HOcPTh4EnRpu6Afad851ytJxWWLuvXS67G20NcIQRGaar8VMdIbFlPHPJEJ3GAjKQsXeTOaeAO5jjyV8yW2zLN7BDTd4Tf3csyyNFgZiEPHY2OmKbqmuA+MYs5Mrs0DqMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G0BhK26vu7YbhX7MyJ9OslCgO0qD5qzzPGTwVuFkgwY=;
+ b=uiQUs9ILH13/U+eq+ZLaQ4IWrdmTolaMqNqp+Fwh9C6GOr8kZ53eLaGW+0GvfeOxPE5hgf4tKlg5l3+3g15I7lHRGhUoQs7Wit5YrEpR/XF/n3CWmQpAGuLBCUpt4YgzGXS/h2zhqFy6WKcdOf042MRJeyzMcGkwWYcwgf01nkFq4GIf+Puol/cXE0O/NcDMsHA3a7bfmv7hJmSQXGrgzv5V+Ipdh/xHvWtEn+4zWwC28RE3K7CY/65aKEeOpZH0AKFHw+eePs/A9MCm+AC/G9cHdsiqzy1CuozI7z3Qs6Ubgtejlui8xUTnGtUtw8HZ5j/f1GyYAg3/P+Cn3nYIvg==
+Received: from BYAPR04CA0014.namprd04.prod.outlook.com (2603:10b6:a03:40::27)
+ by LV3PR12MB9257.namprd12.prod.outlook.com (2603:10b6:408:1b7::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Tue, 27 Feb
+ 2024 19:53:42 +0000
+Received: from SJ5PEPF000001D3.namprd05.prod.outlook.com
+ (2603:10b6:a03:40:cafe::26) by BYAPR04CA0014.outlook.office365.com
+ (2603:10b6:a03:40::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.49 via Frontend
+ Transport; Tue, 27 Feb 2024 19:53:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SJ5PEPF000001D3.mail.protection.outlook.com (10.167.242.55) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7292.25 via Frontend Transport; Tue, 27 Feb 2024 19:53:41 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 27 Feb
+ 2024 11:53:26 -0800
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Tue, 27 Feb
+ 2024 11:53:25 -0800
+Received: from localhost (10.127.8.13) by mail.nvidia.com (10.129.68.9) with
+ Microsoft SMTP Server id 15.2.1258.12 via Frontend Transport; Tue, 27 Feb
+ 2024 11:53:22 -0800
+Date: Tue, 27 Feb 2024 21:53:22 +0200
+From: Zhi Wang <zhiw@nvidia.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: <linux-coco@lists.linux.dev>, Wu Hao <hao.wu@intel.com>, Yilun Xu
+	<yilun.xu@intel.com>, Lukas Wunner <lukas@wunner.de>, Samuel Ortiz
+	<sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<gregkh@linuxfoundation.org>, <zhiwang@kernel.org>, <gdhanuskodi@nvidia.com>,
+	<cjia@nvidia.com>, <acurrid@nvidia.com>
+Subject: Re: [RFC PATCH 5/5] PCI/TSM: Authenticate devices via platform TSM
+Message-ID: <20240227215322.00001f46.zhiw@nvidia.com>
+In-Reply-To: <65dd828e928d5_1138c7294b2@dwillia2-xfh.jf.intel.com.notmuch>
+References: <170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com>
+	<170660665391.224441.13963835575448844460.stgit@dwillia2-xfh.jf.intel.com>
+	<20240226133708.00005e8e.zhiw@nvidia.com>
+	<65dd828e928d5_1138c7294b2@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: NVIDIA
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zd4bLZb2z4TEoR1a@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D3:EE_|LV3PR12MB9257:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b23e4d0-440d-4ca8-7b82-08dc37cdcc97
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	cD1R4t3dj9u60cUJAjLQcW3ZzKL8Wv+aKThy1TwJN4MFAfv1h3ckWtFP1FhRjBQc5vkGnR7IOqoc2xnghGO+azep0Cfowgk6TG+UeVbjcZGr97N7rZKIskRtr3gjLYk6apA2+0kwrghbv25CQgNBbNzU9BlkYBymGvDyewojnR285nsM62n8fB6sY1HmmO+sd8mgL0BL7Gvbe1OuajflTEsquuXrL36v75woJPdSIqzycEWQ5nI9D/xb++gb9xLEJHpfgvTa3rLmI7BuCDauI9TyiV/umT+GQfisDVZIAuc8lEzfwr4NIrlIjEVZJ7VrDbRRQRcib3RyQQz1uwHIoQTaB2thnEZuEK4xJiI7ucTlW1EbNMC2kC3uMi3ymi+KVAQMUltx8jAEOi3jWLk5CQMr+iwAnd0e27PETg61b0SXaJmq2xWhXEiF/HlpC+ERBBrPGp+6dkFBI9NRjOPRZWbYGht2JwbkfPbaCwuqUZJByAiGTiEC08h1hH4BIjNDbXiXxMIcMjiVtw0IW28OBvCAKBWJR4ifvS87Qiqd9ZRe6F3ysdRLjf/wudSKcy+q+YnhnMOvwiK4Ia07yWKwfF1+cwLgVVOaBoNluQUhAjfe0QlRfmn00yqXTQXOmkEWPXMaWfsWD6CD2c/39nwplA3Zj/fq1ccnipbc/Z71alD+sATU/EP0im3BAkTrA0ElUt7PpSVJ8v+GMclDmMxh1z2tBEUmKq1g2spZj/pvpHUzpntMBJsyPKkRPolOc9Yj
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(82310400014)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 19:53:41.8351
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b23e4d0-440d-4ca8-7b82-08dc37cdcc97
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D3.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9257
 
-On Tue, Feb 27, 2024 at 12:26:05PM -0500, Frank Li wrote:
-> On Tue, Feb 27, 2024 at 06:00:24PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Feb 26, 2024 at 12:18:18PM -0500, Frank Li wrote:
-> > > On Sat, Feb 24, 2024 at 12:24:14PM +0530, Manivannan Sadhasivam wrote:
-> > > > The PCIe link can go to LINK_DOWN state in one of the following scenarios:
-> > > > 
-> > > > 1. Fundamental (PERST#)/hot/warm reset
-> > > > 2. Link transition from L2/L3 to L0
-> > > 
-> > > From L0 to L2/l3
-> > > 
+On Mon, 26 Feb 2024 22:34:54 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> Zhi Wang wrote:
+> [..]
+> > Hey Dan,
 > > 
-> > I don't understand what you mean here. Link down won't happen while moving from
-> > L0 to L2/L3, it is the opposite.
+> > 1) What is the expectation of using the device connect and
+> > disconnect in the guest-driven secure I/O enlightenment?
 > 
-> Strange, why there are not linkdown from L0 to L2/l3. But have linkdown
-> from L2/l3 to L0? when linkup happen? Any document show these?
+> "Connect" is state of the link that can be automatically maintained
+> over events like reset and error recovery. The guest is responsible
+> for Bind / Unbind.
 > 
-
-Refer PCIe Spec 5.0, Figure 5-1 Link Power Management State Flow Diagram.
-
-- Mani
-
-> Frank
+> Now, the host can optionally "Connect" in response to a "Bind" event,
+> but it is not clear that such a mechanism is needed. It likely is
+> going to depend on how error handling is implemented, and whether an
+> event that causes disconnect can be recovered. We may get there, but
+> likely not in the initial phases of the implementation.
 > 
-> > 
-> > > > 
-> > > > In those cases, LINK_DOWN causes some non-sticky DWC registers to loose the
-> > > > state (like REBAR, PTM_CAP etc...). So the drivers need to reinitialize
-> > > > them to function properly once the link comes back again.
-> > > > 
-> > > > This is not a problem for drivers supporting PERST# IRQ, since they can
-> > > > reinitialize the registers in the PERST# IRQ callback. But for the drivers
-> > > > not supporting PERST#, there is no way they can reinitialize the registers
-> > > > other than relying on LINK_DOWN IRQ received when the link goes down. So
-> > > > let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
-> > > > non-sticky registers and also notifies the EPF drivers about link going
-> > > > down.
-> > > > 
-> > > > This API can also be used by the drivers supporting PERST# to handle the
-> > > > scenario (2) mentioned above.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 111 ++++++++++++++----------
-> > > >  drivers/pci/controller/dwc/pcie-designware.h    |   5 ++
-> > > >  2 files changed, 72 insertions(+), 44 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > index 278bdc9b2269..fed4c2936c78 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > @@ -14,14 +14,6 @@
-> > > >  #include <linux/pci-epc.h>
-> > > >  #include <linux/pci-epf.h>
-> > > >  
-> > > > -void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > > > -{
-> > > > -	struct pci_epc *epc = ep->epc;
-> > > > -
-> > > > -	pci_epc_linkup(epc);
-> > > > -}
-> > > > -EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
-> > > > -
-> > > 
-> > > No sure why git remove this block and add these back.
-> > > 
-> > 
-> > Because, we are adding dw_pcie_ep_linkdown() API way below and it makes sense to
-> > move this API also to keep it ordered. Maybe I should've described it in commit
-> > message.
-> > 
-> > - Mani
-> > 
-> > > 
-> > > >  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  	struct pci_epc *epc = ep->epc;
-> > > > @@ -603,19 +595,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
-> > > > +{
-> > > > +	unsigned int offset, ptm_cap_base;
-> > > > +	unsigned int nbars;
-> > > > +	u32 reg, i;
-> > > > +
-> > > > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > > > +	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
-> > > > +
-> > > > +	dw_pcie_dbi_ro_wr_en(pci);
-> > > > +
-> > > > +	if (offset) {
-> > > > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> > > > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> > > > +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> > > > +
-> > > > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> > > > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> > > > +	}
-> > > > +
-> > > > +	/*
-> > > > +	 * PTM responder capability can be disabled only after disabling
-> > > > +	 * PTM root capability.
-> > > > +	 */
-> > > > +	if (ptm_cap_base) {
-> > > > +		dw_pcie_dbi_ro_wr_en(pci);
-> > > > +		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
-> > > > +		reg &= ~PCI_PTM_CAP_ROOT;
-> > > > +		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
-> > > > +
-> > > > +		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
-> > > > +		reg &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
-> > > > +		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
-> > > > +		dw_pcie_dbi_ro_wr_dis(pci);
-> > > > +	}
-> > > > +
-> > > > +	dw_pcie_setup(pci);
-> > > > +	dw_pcie_dbi_ro_wr_dis(pci);
-> > > > +}
-> > > > +
-> > > >  int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > >  	struct dw_pcie_ep_func *ep_func;
-> > > >  	struct device *dev = pci->dev;
-> > > >  	struct pci_epc *epc = ep->epc;
-> > > > -	unsigned int offset, ptm_cap_base;
-> > > > -	unsigned int nbars;
-> > > >  	u8 hdr_type;
-> > > >  	u8 func_no;
-> > > > -	int i, ret;
-> > > >  	void *addr;
-> > > > -	u32 reg;
-> > > > +	int ret;
-> > > >  
-> > > >  	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
-> > > >  		   PCI_HEADER_TYPE_MASK;
-> > > > @@ -678,38 +707,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
-> > > >  	if (ep->ops->init)
-> > > >  		ep->ops->init(ep);
-> > > >  
-> > > > -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > > > -	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
-> > > > -
-> > > > -	dw_pcie_dbi_ro_wr_en(pci);
-> > > > -
-> > > > -	if (offset) {
-> > > > -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> > > > -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> > > > -			PCI_REBAR_CTRL_NBAR_SHIFT;
-> > > > -
-> > > > -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> > > > -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> > > > -	}
-> > > > -
-> > > > -	/*
-> > > > -	 * PTM responder capability can be disabled only after disabling
-> > > > -	 * PTM root capability.
-> > > > -	 */
-> > > > -	if (ptm_cap_base) {
-> > > > -		dw_pcie_dbi_ro_wr_en(pci);
-> > > > -		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
-> > > > -		reg &= ~PCI_PTM_CAP_ROOT;
-> > > > -		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
-> > > > -
-> > > > -		reg = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
-> > > > -		reg &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
-> > > > -		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, reg);
-> > > > -		dw_pcie_dbi_ro_wr_dis(pci);
-> > > > -	}
-> > > > -
-> > > > -	dw_pcie_setup(pci);
-> > > > -	dw_pcie_dbi_ro_wr_dis(pci);
-> > > > +	dw_pcie_ep_init_non_sticky_registers(pci);
-> > > >  
-> > > >  	return 0;
-> > > >  
-> > > > @@ -720,6 +718,31 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(dw_pcie_ep_init_registers);
-> > > >  
-> > > > +void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > > > +{
-> > > > +	struct pci_epc *epc = ep->epc;
-> > > > +
-> > > > +	pci_epc_linkup(epc);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
-> > > > +
-> > > > +void dw_pcie_ep_linkdown(struct dw_pcie_ep *ep)
-> > > > +{
-> > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > > +	struct pci_epc *epc = ep->epc;
-> > > > +
-> > > > +	/*
-> > > > +	 * Initialize the non-sticky DWC registers as they would've reset post
-> > > > +	 * LINK_DOWN. This is specifically needed for drivers not supporting
-> > > > +	 * PERST# as they have no way to reinitialize the registers before the
-> > > > +	 * link comes back again.
-> > > > +	 */
-> > > > +	dw_pcie_ep_init_non_sticky_registers(pci);
-> > > > +
-> > > > +	pci_epc_linkdown(epc);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkdown);
-> > > > +
-> > > >  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  	int ret;
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > index f8e5431a207b..152969545b0a 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > @@ -668,6 +668,7 @@ static inline void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus,
-> > > >  
-> > > >  #ifdef CONFIG_PCIE_DW_EP
-> > > >  void dw_pcie_ep_linkup(struct dw_pcie_ep *ep);
-> > > > +void dw_pcie_ep_linkdown(struct dw_pcie_ep *ep);
-> > > >  int dw_pcie_ep_init(struct dw_pcie_ep *ep);
-> > > >  int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep);
-> > > >  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
-> > > > @@ -688,6 +689,10 @@ static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  }
-> > > >  
-> > > > +static inline void dw_pcie_ep_linkdown(struct dw_pcie_ep *ep)
-> > > > +{
-> > > > +}
-> > > > +
-> > > >  static inline int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  	return 0;
-> > > > 
-> > > > -- 
-> > > > 2.25.1
-> > > > 
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
+> > In the last device security meeting, you said the sysfs interface
+> > was mostly for higher level software stacks, like virt-manager. I
+> > was wondering what would be the picture looks like when coping these
+> > statement with the guest-driven model. Are we expecting the device
+> > connect triggered by QEMU when extracting the guest request from the
+> > secure channel in this case?
+> 
+> I think it is simplest for now if "Connect" is a pre-requisite for
+> guest-triggered "Bind".
+>
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks so much for the reply. 
+
+IIUC, it means a guest assumes the device is in "connect" state when
+noticing a TDI, and it has the awareness that the "connect" state will
+be taken care by host until it needs to step in error recovery?
+
+I am more thinking of how device driver talks with the PCI core.
+
++static int pci_tsm_connect(struct pci_dev *pdev)
++{
++	struct pci_tsm_req *req __free(req_free) = NULL;
++
++	/* opportunistic state checks to skip allocating a request */
++	if (pdev->tsm->state >= PCI_TSM_CONNECT)
++		return 0;
++
+
+As this patch is triggered by userspace through sysfs, I am wondering
+would it be a good idea to let the device driver step in around the
+device connect/disconnect flow in the future? as a device might needs to
+be switched to different states before it is ready to handle SPDM and
+IDE.
+
+Maybe the PCI core (pci_tsm_{connect, disconnect, error_handling}())
+should broadcast the event through a notifier when checking the connect
+state. An example kernel user of that notifier can forward the event to
+the userspace as udev events via PF_NETLINK.
+
++	req = tsm_ops->req_alloc(pdev, PCI_TSM_OP_CONNECT);
++	if (!req)
++		return -ENOMEM;
++
++	scoped_cond_guard(mutex_intr, return -EINTR, tsm_ops->lock) {
++		enum pci_tsm_op_status status;
++
++		/* revalidate state */
++		if (pdev->tsm->state >= PCI_TSM_CONNECT)
++			return 0;
++		if (pdev->tsm->state < PCI_TSM_INIT)
++			return -ENXIO;
++
++		do {
++			status = tsm_ops->exec(pdev, req);
++			req->seq++;
++		} while (status == PCI_TSM_SPDM_REQ);
++
++		if (status == PCI_TSM_FAIL)
++			return -EIO;
++		pdev->tsm->state = PCI_TSM_CONNECT;
++	}
++	return 0;
++}
+ 
+> > 2) How does the device-specific logic fit into the new TSM
+> > services? E.g. when the TDISP connect is triggered by userspace, a
+> > device needs to perform quirks before/after/inside the verbs, or a
+> > device needs an interface to tell TSM service when it is able to
+> > response to some verbs. Do you think we needs to have a set of
+> > callbacks from the device side for the PCI TSM service to call?
+> 
+> True "quirks" would be driven by bug reports. Outside of that likely
+
+Yup, I was just thinking another approach for the device specific code
+to step in for pci_tsm_{connect,disconnect}() without a driver and
+pci-quirks just popped up. :)
+
+> the attestation information needs to have multiple validation entry
+> points for userspace, PCI core, and endpoint drivers to each have a
+> chance to deploy some attestation policy. Some of these questions
+> will need have common answers developed between the native CMA
+> implementation and the TSM implementation since CMA needs to solve
+> some of ABI issues of making measurements available to attestation
+> agents.
+> 
+> At Plumbers I had been thinking "golden measurements" injected into
+> the kernel ahead of interface validation gives the kernel the most
+> autonomy, but questions about measurement nonce and other concerns
+> tempered my thinking there. Plenty to still talk about and navigate.
+
+Yes. We had been discussing that a lot. :) I also carefully watched the
+playback of LPC Confidential MC, quite a lot nice discussions. Out
+of curiosity, were folks think eBPF a good fit or an overkill here? :)
+
+Thanks,
+Zhi.
 
