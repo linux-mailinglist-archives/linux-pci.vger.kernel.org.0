@@ -1,159 +1,150 @@
-Return-Path: <linux-pci+bounces-4129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7030F8698F7
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 15:49:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40057869A62
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 16:31:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23C3E28525F
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 14:49:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8EC5FB24DCF
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 15:29:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB2C11419A1;
-	Tue, 27 Feb 2024 14:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EAFA14534C;
+	Tue, 27 Feb 2024 15:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bd5j8wCR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLuKolCh"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8666213F016
-	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 14:45:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C927B145321;
+	Tue, 27 Feb 2024 15:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045130; cv=none; b=sP0XzQgMlJYITbFEa2ijXUQm5KKsXr3Kx6L00H5o+4M1r1o+uLzCTRjlmQQJZEId8Com4c2LcvmPel71NAraXRdWD4ksAd9wrPpMgCesvwMWGrgpqeWuFrPbGsVyfvqvMX/1lHG1f/bq+469CDc9/yTjPQegw2qoJJ6YFuc5DJI=
+	t=1709047753; cv=none; b=S6Tx3Sxi+fBuJRBrA8VkvKSLAhM4bbe91k4n4Ck+ZXPjsy0Y6YWfiQgE87wkzPrxrqsdsIQN95JQQmgLLo24CZN+apRSzuK1jX+OFOzGTGZWny48JOHtjP3XrPw4QcXEqHNVwkWb46x+i1R5+G2pu53SnqlDbEoxa5MLhlvpIfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045130; c=relaxed/simple;
-	bh=DVoVH51u4LdxcXpNHtTvCJPGeJIeHqnFROiXTf1R5aU=;
+	s=arc-20240116; t=1709047753; c=relaxed/simple;
+	bh=E0gTt77Arvd3jGeuhDVnF4mo9Sz+d/Hd/YFtqg7PMYQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fP1Kgl1uyTZZa+uSjjz40VroHGQpxbeAda4xP18adLx90DqcsOFU4hfmOXxXhgxV0dpDqGPQMKLSZuFHxojziTuZ1VT6gQdRijRzbRqAdgknqi3LPf8qnzp9SJqE1lnAWvDaKt11YP0Zt6lQtTK6NVpk6Yb5WsqqzKzPQKyBMU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bd5j8wCR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6A6EC433F1;
-	Tue, 27 Feb 2024 14:45:25 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=KYCpj1J65jqbx/ORIA2LWWxIKvsm1Ksvvpnlmy9v286y9rB/P4Sr46ZOITaeufOrf0NfCOjsEYscROdnruxQO94R/Y/9AUfH+aDyCTveTJtSxkeU/BFDd50TouOPcs4rFSc5FeRqXEYz95x0J2F4tdoaidRHvlGEIBMFAVyFP9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLuKolCh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B8FC433F1;
+	Tue, 27 Feb 2024 15:29:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709045130;
-	bh=DVoVH51u4LdxcXpNHtTvCJPGeJIeHqnFROiXTf1R5aU=;
+	s=k20201202; t=1709047753;
+	bh=E0gTt77Arvd3jGeuhDVnF4mo9Sz+d/Hd/YFtqg7PMYQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bd5j8wCRCgOumbrK06Woc/l/1o8kWoA0s/jhzNfBH7NNeE2LOcM5xyTcXQguyomYD
-	 7wirPmhpiJaD+okIMLTKW88HK4En3bVAhMfjOADmgTYSKraySQ/QaTQ+nRIlIyCguP
-	 rsaPdcZiokx+N4f94Kwos8ywKTmaeVi6M3cRAbhUChIZfT8OCzZ3uGl+rkSrLCauwp
-	 boaAbC94RGPxLpHu7j10S4x//HZl/VuTfK7Fwh/ob98ssceP6DCTYXzBa5tHSqZnRu
-	 Sl55cWNFJNMSfeCuHVZK85Merq+eJM0hE4RUHNchJR5hYUlUusu000v7in/4EE5UQw
-	 7YAiLtTjfsVLQ==
-Date: Tue, 27 Feb 2024 20:15:15 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
+	b=VLuKolChPI4nvOdUEe8ZTYiQUSBG+vISHe3Q181dvF8yuKLFcRxfHG4RnuxFIyola
+	 Xk7Yja/mkLyAOQBaextUP3MmYrRzLhedBsf13ZBeBfJU28L5JSdzt+2zY2PvYd2S5a
+	 5KfHLallGnjJ/tJb0iV52agyyQnhEpDzE80D5nX2fUVA3wgutQfCkcmGgOYs8Sc9KN
+	 bU+Ag0sqguTYF+NmCxPzW3Bh5xmB+uivuWqlLbfwucwlJAJav0HloKzoXrff3k924U
+	 8ewgO34jWB2UYov7tH0BAGp5+23p0bg7mB6+3CrXuIqJA3pyWlIoBr2Z2OWlP/mC9t
+	 skQ2I5L+GBOlg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rezON-000000000wZ-0kHB;
+	Tue, 27 Feb 2024 16:29:15 +0100
+Date: Tue, 27 Feb 2024 16:29:15 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Manu Gautam <manugautam@google.com>,
-	Sajid Dalvi <sdalvi@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6] PCI: dwc: Strengthen the MSI address allocation logic
-Message-ID: <20240227144515.GQ2587@thinkpad>
-References: <20240221153840.1789979-1-ajayagarwal@google.com>
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 04/12] PCI: qcom: Add support for disabling ASPM L0s
+ in devicetree
+Message-ID: <Zd3_y_jbY8Ic2F0Y@hovoldconsulting.com>
+References: <20240223152124.20042-5-johan+linaro@kernel.org>
+ <20240223221000.GA118088@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221153840.1789979-1-ajayagarwal@google.com>
+In-Reply-To: <20240223221000.GA118088@bhelgaas>
 
-On Wed, Feb 21, 2024 at 09:08:40PM +0530, Ajay Agarwal wrote:
-> There can be platforms that do not use/have 32-bit DMA addresses.
-> The current implementation of 32-bit IOVA allocation can fail for
-> such platforms, eventually leading to the probe failure.
+On Fri, Feb 23, 2024 at 04:10:00PM -0600, Bjorn Helgaas wrote:
+> On Fri, Feb 23, 2024 at 04:21:16PM +0100, Johan Hovold wrote:
+> > Commit 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting
+> > 1.9.0 ops") started enabling ASPM unconditionally when the hardware
+> > claims to support it. This triggers Correctable Errors for some PCIe
+> > devices on machines like the Lenovo ThinkPad X13s, which could indicate
+> > an incomplete driver ASPM implementation or that the hardware does in
+> > fact not support L0s.
 > 
-> Try to allocate a 32-bit msi_data. If this allocation fails,
-> attempt a 64-bit address allocation. Please note that if the
-> 64-bit MSI address is allocated, then the EPs supporting 32-bit
-> MSI address only will not work.
-> 
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> Are there any more details about this?  Do the errors occur around
+> suspend/resume, a power state transition, or some other event?  Might
+> other DWC-based devices be susceptible?  Is there a specific driver
+> you suspect might be incomplete?
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I see these errors when the devices in question are active as well as
+idle (not during suspend/resume). For example, when running iperf3 or
+fio to test the wifi and nvme, but I also see this occasionally for a
+wifi device which is (supposedly) not active (e.g. a handful errors over
+night).
 
-- Mani
+I skimmed Qualcomm's driver and noted that there are some registers
+related to ASPM which that driver updates, while the mainline driver
+leaves them at their default settings, but I essentially only mentioned
+that the ASPM implementation may be incomplete as a theoretical
+possibility. The somewhat erratic ASPM behaviour for one of the modems
+also suggests that some further tweak/quirk may be needed, and I was
+hoping to catch Mani's interest by reporting it.
 
-> ---
-> Changelog since v5:
->  - Initialize temp variable 'msi_vaddr' to NULL
->  - Remove redundant print and check
-> 
-> Changelog since v4:
->  - Remove the 'DW_PCIE_CAP_MSI_DATA_SET' flag
->  - Refactor the comments and msi_data allocation logic
-> 
-> Changelog since v3:
->  - Add a new controller cap flag 'DW_PCIE_CAP_MSI_DATA_SET'
->  - Refactor the comments and print statements
-> 
-> Changelog since v2:
->  - If the vendor driver has setup the msi_data, use the same
-> 
-> Changelog since v1:
->  - Use reserved memory, if it exists, to setup the MSI data
->  - Fallback to 64-bit IOVA allocation if 32-bit allocation fails
-> 
->  .../pci/controller/dwc/pcie-designware-host.c | 21 ++++++++++++-------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d5fc31f8345f..d15a5c2d5b48 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -328,7 +328,7 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->  	struct device *dev = pci->dev;
->  	struct platform_device *pdev = to_platform_device(dev);
-> -	u64 *msi_vaddr;
-> +	u64 *msi_vaddr = NULL;
->  	int ret;
->  	u32 ctrl, num_ctrls;
->  
-> @@ -379,15 +379,20 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
->  	 * memory.
->  	 */
->  	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> -	if (ret)
-> -		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> +	if (!ret)
-> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +						GFP_KERNEL);
->  
-> -	msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> -					GFP_KERNEL);
->  	if (!msi_vaddr) {
-> -		dev_err(dev, "Failed to alloc and map MSI data\n");
-> -		dw_pcie_free_msi(pp);
-> -		return -ENOMEM;
-> +		dev_warn(dev, "Failed to allocate 32-bit MSI address\n");
-> +		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-> +		msi_vaddr = dmam_alloc_coherent(dev, sizeof(u64), &pp->msi_data,
-> +						GFP_KERNEL);
-> +		if (!msi_vaddr) {
-> +			dev_err(dev, "Failed to allocate MSI address\n");
-> +			dw_pcie_free_msi(pp);
-> +			return -ENOMEM;
-> +		}
->  	}
->  
->  	return 0;
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
-> 
-> 
+But based on what I've since heard from Qualcomm, it seems like these
+correctable error may be a known issue with the hardware (e.g. seen
+also with Windows), which is also why we decided to disable it for all
+controllers on these two platforms where I've seen this in v2.
+ 
+> Do you want the DT approach because the problem is believed to be
+> platform-specific?  Otherwise, maybe we should consider reverting
+> 9f4f3dfad8cf until the problem is understood?
 
--- 
-மணிவண்ணன் சதாசிவம்
+Enabling ASPM gave a very significant improvement in battery life on the
+Lenovo ThinkPad X13s, from 10.5 h to 15 h, so reverting is not really an
+option there.
+
+And with L0s disabled, the AER error reports about correctable errors
+(that prevent enabling the GIC ITS and possibly degrades performance
+somewhat) are gone.
+
+I don't know for sure if there are further Qualcomm platform that are
+affected by this so I also don't want to use a too big of a hammer. The
+devicetree property allows us to disable L0s only after confirming that
+it's needed, and we can always extend this to broader classes of device
+when/if we learn more.
+
+> Could this be done via a quirk like quirk_disable_aspm_l0s()?  That
+> currently uses pci_disable_link_state(), which I don't think is
+> completely safe because it leaves the possibility that drivers or
+> users could re-enable L0s, e.g., via sysfs.
+
+That was my first approach, thinking that it was the endpoint devices
+which did not really support L0s. But initially it seemed like the wifi
+controller on the CRD was not affected by this, while the same
+controller on the X13s was. That made me conclude that this is not just
+a property of the device but (also) of the controller and/or machine.
+
+I then noticed that we already had some controller drivers implementing
+'aspm-no-l0s' and decided to go with that.
+
+> This patch is nice because IIUC it directly changes PCI_EXP_LNKCAP,
+> which avoids that issue, but quirk_disable_aspm_l0s() could
+> conceivably be reimplemented to cache PCI_EXP_LNKCAP in struct pci_dev
+> so quirks could override it, as we do with struct pci_dev.devcap.
+
+Johan
 
