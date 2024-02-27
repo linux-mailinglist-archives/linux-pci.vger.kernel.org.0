@@ -1,219 +1,404 @@
-Return-Path: <linux-pci+bounces-4135-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4136-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34ED1869C20
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 17:30:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71AAE869C37
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 17:35:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D49132901BD
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 16:30:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2B6B1F24124
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 16:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9331487D5;
-	Tue, 27 Feb 2024 16:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Og+jJ9Fz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EB13219ED;
+	Tue, 27 Feb 2024 16:34:39 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82272148319;
-	Tue, 27 Feb 2024 16:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404E6208A3;
+	Tue, 27 Feb 2024 16:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051396; cv=none; b=QqSfOx2romSkzbynIk17itYarIa845DRcCO82tdXdAML6PTztXY6MQhcTfI9aQ8elqXsXX7byazAoYGWDGhmOb3cdFEIScDuhcnc+NlTHQAYVjX+b0HloknSXcu894a/FRRu5w0jmoK6D5sW/kUwQFDOHI76qT8Nk0c1UTt1Qak=
+	t=1709051679; cv=none; b=h1BVEiFPc/1gWBTLorDwt/O8fdSv/IRnEqBFVNt/zg3WI4OJztMl4UvuVIk1NbzVYiHw3nmrsoew/B7uMDxXCM7jEwOTyYIxYpG1boSxlx/Miras+P9VapO2eMcrbeJ5ZsaKZdhNbJja6KHSOaD8+Y3REOncDPGMoIdQLf4Fa3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051396; c=relaxed/simple;
-	bh=L4Iaf2rjfKAUw/E8OMNL91VnY4mSAs6/+XLXKz8Lbt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=uRpvfHzV9nf/arVS9uQzU0IwlySvMobNrDU9s0bgatMFJQN0UGVBLCjn47s+90cCU5+jyoqFqpG7VRqne10beKg5NSom5NiY/WDLEwJMCmavJ4xo1OLwXoEBFkERlDeF1Y/M7wfHpokVNLoSAlrz3Z3+u3loygARCU/lEUwkdYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Og+jJ9Fz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF944C433C7;
-	Tue, 27 Feb 2024 16:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709051396;
-	bh=L4Iaf2rjfKAUw/E8OMNL91VnY4mSAs6/+XLXKz8Lbt0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Og+jJ9Fz9Aastq1pF2qD65jvJOuHWsyVXlbyG1HMk4ZBzdz3YqCMfffW2pI/+efVE
-	 SJB2ds1NsYo97/QsEKVgR1haaZuyfeyKwzJesssP32H8yFABNJOUorALufDfYWnKy8
-	 pqE7JBt3RaISAYNCkfAMh2E1Kv5Pis6xjSlw4kHUmKvkw5fR7iY7TYheCodRQEju6c
-	 xrpf3lthgPn7qzxjB/a/sXt7G5pbsKpUOgztdMGZg13AD8X7/m8YXt+hvWV7DLLNJu
-	 D2ucFSxCBRdlxivfwphIHcHrKkPdWLQXNNWAG6VuHn8zel1zD/QnAKonIn+MO2dFUr
-	 CqMdndlJBtsYA==
-Date: Tue, 27 Feb 2024 10:29:54 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, baolu.lu@linux.intel.com,
-	bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca,
-	kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org,
-	lukas@wunner.de, yi.l.liu@intel.com, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
- device isn't valid
-Message-ID: <20240227162954.GA239330@bhelgaas>
+	s=arc-20240116; t=1709051679; c=relaxed/simple;
+	bh=/i9MJCMqa/FgvoVRdOY5xFk2B/DagcY8PG/48I9wa8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NmznGcWmj7TRQuE2IfNVjQfrsrTCdRVwUduJFJBtg6gikQoHZErdv9TldKESVvlveXzDJlC5S8Qqal5Erk3oRjz9BEk+IrmBWlpG0cwIKtTwYZ4NY8GZZpz3AV20eHKHysJ2NOW+3178iDqKpkN/mQzwi8fdpXlJ1SSJ930/98k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-608ed07bdc5so25917397b3.3;
+        Tue, 27 Feb 2024 08:34:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709051675; x=1709656475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BFhsBrNB0ZxotPvr7uksusf/c5UzUanJ2CNxp9l9FzM=;
+        b=XKM3ED51zRayKO2o4PgUFf5Wrm5x3MoavVxc7uFW9enljGPpzaUQIF589zr+DsSmat
+         dVbCKDcKjoq+7+gm8AESku9J1uniG0q2zp4LjE/yfmLgLmOSOXtWJCgvET/6CzN+d3p7
+         MoknN5oQ3rvLx/wwWznt5mXyAlv1jFG1Jb5M4dulLwTWQIMgQE84oiwN/FjhqZ9hl/sf
+         GiI1ZONWQ/ZzixAqivcZQJ806ioj97VIQr9/i5RXNW9daX8tEcQQW6oQ6QMOKzQnFNbu
+         IhUFSwCEEqYaLXpcEG9UuCkF52h5O19FbFfpcxlIvnYyMfZtIGp7yKwf3fvBtwqJrNYf
+         tt0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXlJ2ikc+7Fz0VwLIISkK8YNs6Rg2E+v2rA8NmgmjR4TzdU+TiRr74SBl4BOLnXj8h6GjLXmwyuMkf8jQ/h8Vb6yv+LtMpqar4yiZLzWF68eBL3lnw54NlexN5QGzjs9x3RUMEqIysIeifv1LAxJED2aLsRsPGGVl0mPnnLrv7TQOWKNC2KG48KRRHT0u66tZOEjJEVeJDkp7ugNZCyezRL2G6S6fMDgQfJFfsKek9J9QkhifzqvDFoSM/RL/I0HtPhledQ8W3OlIBcNrVMKPKpdL1LBzjtU0vUFT8ind/9mt3kqfFH1cK+83eYIfi8hb1BCpqHGPOxKHFmq1OT41AhldOHohLGxoyXl7bLiKrxfbl4toverL0=
+X-Gm-Message-State: AOJu0YwDMrlI06s05jp4xPtx+GdcUnZbuybT6BSjGMU2LWWbhHPvekay
+	MsT9WHZXbD7NDONnilrVWh9e5DnwVosH8+9JRdmUIMo2J8PdWJpU0mE08Kt4ysqi/Q==
+X-Google-Smtp-Source: AGHT+IG/+lq49W5+DZmfo4BbEzDWtQqgWdhMf1/CYwEzfkOCQEIxMO4LHmjQJpE6Y0sNQ63PuX0kVQ==
+X-Received: by 2002:a25:3d41:0:b0:dcf:afe3:11bf with SMTP id k62-20020a253d41000000b00dcfafe311bfmr46802yba.0.1709051675212;
+        Tue, 27 Feb 2024 08:34:35 -0800 (PST)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id i18-20020a259d12000000b00dcd512855d4sm1452496ybp.58.2024.02.27.08.34.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Feb 2024 08:34:34 -0800 (PST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-608ccac1899so40440007b3.1;
+        Tue, 27 Feb 2024 08:34:34 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVRfSAaYeki1tJMlnVSrB1iOBc+LJfvNgErV+m7Z/l8BUaVyuP5+aTrARF/blVrkk6rLhl5v0UPPG0U92mqiv0UPfbRVS7gPN35ZiGs/pmu3htJdwEN8CJAQQV1xR5T3xTYx3mcFzch1LGoi89/eMPbnFE5JUvx9vit72pA/v0p98zWwxBfmUvSDyUoueLZlU6kBEBcOKMssN7ORmT+70Gkwa3DJBAP54Q0xvsN438UUMFuzTR7Z+ZhONs42W9mFar45sKQQF45cFtVUk9xpm2Tu2tPuL2SyxLbC7ISVatfiBvte0/+X1q1Ia+CB4rtB+qWkaQ/qbCP8Cp6nmgWgDwirEdIzXxrTO5Yl+vYDaVywNMzvideldk=
+X-Received: by 2002:a25:dc07:0:b0:dcf:9019:a2fe with SMTP id
+ y7-20020a25dc07000000b00dcf9019a2femr2483100ybe.64.1709051673849; Tue, 27 Feb
+ 2024 08:34:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae9137f1-3e9b-4d84-956f-4e8c31d2e1bb@linux.intel.com>
+References: <cover.1704788539.git.ysato@users.sourceforge.jp> <28b339d21fa7b74c75f181d3dc710f667da5f228.1704788539.git.ysato@users.sourceforge.jp>
+In-Reply-To: <28b339d21fa7b74c75f181d3dc710f667da5f228.1704788539.git.ysato@users.sourceforge.jp>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 27 Feb 2024 17:34:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVPSDdjGa=AF_9g_RMSv2iv862WVcrmAgvPay+ceNrzgQ@mail.gmail.com>
+Message-ID: <CAMuHMdVPSDdjGa=AF_9g_RMSv2iv862WVcrmAgvPay+ceNrzgQ@mail.gmail.com>
+Subject: Re: [DO NOT MERGE v6 15/37] clk: renesas: Add SH7750/7751 CPG Driver
+To: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Lee Jones <lee@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Yang Xiwen <forbidden405@foxmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Vlastimil Babka <vbabka@suse.cz>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	David Rientjes <rientjes@google.com>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Bin Meng <bmeng@tinylab.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 27, 2024 at 10:30:36AM +0800, Ethan Zhao wrote:
-> On 2/27/2024 6:52 AM, Bjorn Helgaas wrote:
-> > On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
-> > > On 2/22/2024 7:24 PM, Dan Carpenter wrote:
-> > > > On Thu, Feb 22, 2024 at 04:02:51AM -0500, Ethan Zhao wrote:
-> > > > > Because surprise removal could happen anytime, e.g. user could request safe
-> > > > > removal to EP(endpoint device) via sysfs and brings its link down to do
-> > > > > surprise removal cocurrently. such aggressive cases would cause ATS
-> > > > > invalidation request issued to non-existence target device, then deadly
-> > > > > loop to retry that request after ITE fault triggered in interrupt context.
-> > > > > this patch aims to optimize the ITE handling by checking the target device
-> > > > > presence state to avoid retrying the timeout request blindly, thus avoid
-> > > > > hard lockup or system hang.
-> > > > > 
-> > > > > Devices are valid ATS invalidation request target only when they reside
-> > > > > in the iommu->device_rbtree (probed, not released) and present.
-> > > > "valid invalidation" is awkward wording.  Can we instead say:
-> > > If you read them together, sounds like tongue twister. but here "ATS
-> > > invalidation request target" is one term in PCIe spec.
-> > "ATS invalidation request target" does not appear in the PCIe spec.  I
-> > think you're trying to avoid sending ATS Invalidate Requests when you
-> > know they will not be completed.
-> 
-> I meant "ATS Invalidation Request" here is one term in PCIe spec, 'valid'
-> is used to describe the word 'target'.
-> 
-> This patch isn't intended to work as the same logic as patch [2/3], this
-> aims to break the blindly dead loop not to retry the timeout request after
-> ITE fault happened.
-> 
-> > 
-> > It is impossible to reliably determine whether a device will be
-> > present and able to complete an Invalidate Request.  No matter what
-> > you check to determine that a device is present *now*, it may be
-> > removed before an Invalidate Request reaches it.
-> 
-> Here we check to see if the ITE fault was caused by device is not present.
-> The opposite logic, not predict the future, but find the cause of the fault
-> already happened, if pci_device_is_present() tells us the device isn't
-> there, it is reliable I think.
-> 
-> > 
-> > If an Invalidate Request to a non-existent device causes a "deadly
-> > loop" (I'm not sure what that means) or a hard lockup or a system
-> 
-> There is a dead loop here to blindly retry to timeout request if
-> ITE happened, we want to break that loop if the target device was
-> gone.
-> 
-> > hang, something is wrong with the hardware.  There should be a
-> > mechanism to recover from a timeout in that situation.
-> > 
-> > You can avoid sending Invalidate Requests to devices that have been
-> 
-> That logic works for simple safe /surprise removal as described in
-> patch[2/3], no race there that case at all.
-> 
-> > removed, and that will reduce the number of timeout cases.  But if you
-> > rely on a check like pci_device_is_present() or
-> > pci_dev_is_disconnected(), there is *always* an unavoidable race
-> 
-> We are not relying on pci_device_is_present() here in this patch to close
-> the race window between aggressive surprise removal and ATS invalidation
-> Request, we are doing post-fault handling here.
+Hi Sato-san,
 
-OK, sorry, I guess I missed that this fixes the code that handles the
-Completion Timeouts.
+On Tue, Jan 9, 2024 at 9:24=E2=80=AFAM Yoshinori Sato
+<ysato@users.sourceforge.jp> wrote:
+> Renesas SH7750 and SH7751 series CPG driver.
+> This driver supported frequency control and clock gating.
+>
+> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 
-> > between a device removal and the Invalidate Request.
-> > 
-> > > > > @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
-> > > > >    {
-> > > > >    	u32 fault;
-> > > > >    	int head, tail;
-> > > > > +	u64 iqe_err, ite_sid;
-> > > > > +	struct device *dev = NULL;
-> > > > > +	struct pci_dev *pdev = NULL;
-> > > > >    	struct q_inval *qi = iommu->qi;
-> > > > >    	int shift = qi_shift(iommu);
-> > > > > @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
-> > > > >    		tail = readl(iommu->reg + DMAR_IQT_REG);
-> > > > >    		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
-> > > > > +		/*
-> > > > > +		 * SID field is valid only when the ITE field is Set in FSTS_REG
-> > > > > +		 * see Intel VT-d spec r4.1, section 11.4.9.9
-> > > > > +		 */
-> > > > > +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
-> > > > > +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
-> > > > > +
-> > > > >    		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
-> > > > >    		pr_info("Invalidation Time-out Error (ITE) cleared\n");
-> > > > > @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
-> > > > >    			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
-> > > > >    		} while (head != tail);
-> > > > > +		/*
-> > > > > +		 * If got ITE, we need to check if the sid of ITE is one of the
-> > > > > +		 * current valid ATS invalidation target devices, if no, or the
-> > > > > +		 * target device isn't presnet, don't try this request anymore.
-> > > > > +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
-> > > > > +		 */
-> > > > This comment is kind of confusing.
-> > > Really confusing ? this is typo there, resnet-> "present"
-> > > 
-> > > > /*
-> > > >    * If we have an ITE, then we need to check whether the sid of the ITE
-> > > >    * is in the rbtree (meaning it is probed and not released), and that
-> > > >    * the PCI device is present.
-> > > >    */
-> > > > 
-> > > > My comment is slightly shorter but I think it has the necessary
-> > > > information.
-> > > > 
-> > > > > +		if (ite_sid) {
-> > > > > +			dev = device_rbtree_find(iommu, ite_sid);
-> > > > > +			if (!dev || !dev_is_pci(dev))
-> > > > > +				return -ETIMEDOUT;
-> > > > -ETIMEDOUT is weird.  The callers don't care which error code we return.
-> > > > Change this to -ENODEV or something
-> > > -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
-> > > caller really cares about the returned value.
-> > > 
-> > > > > +			pdev = to_pci_dev(dev);
-> > > > > +			if (!pci_device_is_present(pdev) &&
-> > > > > +				ite_sid == pci_dev_id(pci_physfn(pdev)))
-> > > > The && confused me, but then I realized that probably "ite_sid ==
-> > > > pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
-> > > Here is the fault handling, just double confirm nothing else goes wrong --
-> > > beyond the assumption.
-> > > 
-> > > > 		pdev = to_pci_dev(dev);
-> > > > 		if (!pci_device_is_present(pdev))
-> > > > 			return -ENODEV;
-> > > > 
-> > > > 
-> > > > > +				return -ETIMEDOUT;
-> > > > -ENODEV.
-> > > The ATS invalidation request could be sent from userland in later code,
-> > > the userland code will care about the returned value,  -ENODEV is one aspect
-> > > of the fact (target device not present), while -ETIMEDOUT is another
-> > > (timeout happened). we couldn't return them both.
-> > > 
-> > > > > +		}
-> > > > >    		if (qi->desc_status[wait_index] == QI_ABORT)
-> > > > >    			return -EAGAIN;
-> > > > >    	}
-> > > > Sorry, again for nit picking a v13 patch.  I'm not a domain expert but
-> > > > this patchset seems reasonable to me.
-> > > Though this is the v13, it is based on new rbtree code, you are welcome.
-> > > 
-> > > Thanks,
-> > > Ethan
-> > > 
-> > > > regards,
-> > > > dan carpenter
+Thanks for your patch!
+
+> --- a/drivers/clk/renesas/Kconfig
+> +++ b/drivers/clk/renesas/Kconfig
+> @@ -193,6 +196,10 @@ config CLK_SH73A0
+>         select CLK_RENESAS_CPG_MSTP
+>         select CLK_RENESAS_DIV6
+>
+> +config CLK_SH7750
+> +       bool "SH7750/7751 family clock support" if COMPILE_TEST
+> +       help
+> +         This is a driver for SH7750 / SH7751 CPG.
+
+This is a duplicate of the below. Please drop it.
+
+>
+>  # Family
+>  config CLK_RCAR_CPG_LIB
+> @@ -223,6 +230,11 @@ config CLK_RZG2L
+>         bool "Renesas RZ/{G2L,G2UL,G3S,V2L} family clock support" if COMP=
+ILE_TEST
+>         select RESET_CONTROLLER
+>
+> +config CLK_SH7750
+> +       bool "Renesas SH7750/7751 family clock support" if COMPILE_TEST
+> +       help
+> +         This is a driver for SH7750 / SH7751 CPG.
+> +
+>  # Generic
+>  config CLK_RENESAS_CPG_MSSR
+>         bool "CPG/MSSR clock support" if COMPILE_TEST
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/clk-sh7750.c
+
+> +static int register_pll(struct device_node *node, struct cpg_priv *cpg)
+> +{
+> +       const char *clk_name =3D node->name;
+> +       const char *parent_name;
+> +       struct clk_init_data init =3D {
+> +               .name =3D PLLOUT,
+> +               .ops =3D &pll_ops,
+> +               .flags =3D 0,
+> +               .num_parents =3D 1,
+> +       };
+> +       int ret;
+> +
+> +       parent_name =3D of_clk_get_parent_name(node, 0);
+> +       init.parent_names =3D &parent_name;
+> +       cpg->hw.init =3D &init;
+> +
+> +       ret =3D of_clk_hw_register(node, &cpg->hw);
+> +       if (ret < 0) {
+> +               pr_err("%s: failed to register %s pll clock (%d)\n",
+> +                      __func__, clk_name, ret);
+> +               return ret;
+> +       }
+> +       if (ret < 0)
+> +               pr_err("%s: failed to add provider %s (%d)\n",
+> +                      __func__, clk_name, ret);
+
+Bogus check and error message.
+
+> +       return ret;
+> +}
+
+> +static int register_div(struct device_node *node, struct cpg_priv *cpg)
+> +{
+> +       static const char * const divout[] =3D {
+> +               "fck", "bck", "ick",
+> +       };
+> +       static const char * const stbcrout[] =3D {
+> +               "sci_clk", "rtc_clk", "tmu012_clk",     /* STBCR */
+> +               "scif_clk", "dmac_clk",                 /* STBCR */
+> +               "ubc_clk", "sq_clk",                    /* STBCR2 */
+> +       };
+> +       static const char * const clkstpout[] =3D {
+> +               "intc_clk", "tmu34_clk", "pcic_clk",    /* CLKSTP00 */
+> +       };
+> +
+> +       unsigned int i;
+> +       int ret;
+> +       struct clk_hw_onecell_data *data;
+> +       struct clk_hw *reg_hw;
+> +       int num_clk =3D ARRAY_SIZE(divout) + ARRAY_SIZE(stbcrout) + ARRAY=
+_SIZE(clkstpout);
+> +
+> +       data =3D kzalloc(struct_size(data, hws, num_clk + 1), GFP_KERNEL)=
+;
+> +       if (!data)
+> +               return -ENOMEM;
+> +
+> +       num_clk =3D 0;
+> +       for (i =3D 0; i < ARRAY_SIZE(divout); i++) {
+> +               reg_hw =3D __clk_hw_register_divider(NULL, node, divout[i=
+],
+> +                                                  PLLOUT, NULL, NULL,
+> +                                                  0, cpg->frqcr, i * 3, =
+3,
+> +                                                  CLK_DIVIDER_REG_16BIT,
+> +                                                  (i =3D=3D 0) ? pdiv_ta=
+ble : div_table,
+> +                                                  &cpg->clklock);
+> +               if (IS_ERR(reg_hw)) {
+> +                       ret =3D PTR_ERR(reg_hw);
+> +                       goto error;
+> +               }
+> +               data->hws[num_clk++] =3D reg_hw;
+> +       }
+> +       for (i =3D 0; i < ARRAY_SIZE(stbcrout); i++) {
+> +               u32 off =3D  (i < 5) ? STBCR : STBCR2;
+> +
+> +               if (i >=3D 5 && !(cpg->feat & MSTP_CR2))
+> +                       break;
+
+Alternatively, you could set the maximum loop counter upfront
+
+    n =3D cpg->feat & MSTP_CR2 ? ARRAY_SIZE(stbcrout) : 5;
+    for (i =3D 0; i < n; i++) ...
+
+> +               reg_hw =3D __clk_hw_register_gate(NULL, node, stbcrout[i]=
+,
+> +                                               divout[0], NULL, NULL,
+> +                                               0, cpg->frqcr + off, i % =
+5,
+> +                                               CLK_GATE_REG_8BIT | CLK_G=
+ATE_SET_TO_DISABLE,
+> +                                               &cpg->clklock);
+> +               if (IS_ERR(reg_hw)) {
+> +                       ret =3D PTR_ERR(reg_hw);
+> +                       goto error;
+> +               }
+> +               data->hws[num_clk++] =3D reg_hw;
+> +       }
+> +       if (cpg->feat & MSTP_CLKSTP) {
+> +               for (i =3D 0; i < ARRAY_SIZE(clkstpout); i++) {
+> +                       if (i =3D=3D 2 && !(cpg->feat & MSTP_CSTP2))
+> +                               continue;
+
+Set maximum loop counter upfront?
+
+> +                       reg_hw =3D clk_hw_register_clkstp(node, clkstpout=
+[i],
+> +                                                       divout[0], cpg->c=
+lkstp00,
+> +                                                       i, &cpg->clklock)=
+;
+> +                       if (IS_ERR(reg_hw)) {
+> +                               ret =3D PTR_ERR(reg_hw);
+> +                               goto error;
+> +                       }
+> +                       data->hws[num_clk++] =3D reg_hw;
+> +               }
+> +       }
+> +       data->num =3D num_clk;
+> +       ret =3D of_clk_add_hw_provider(node, of_clk_hw_onecell_get, data)=
+;
+> +       if (ret < 0)
+> +               goto error;
+> +       return 0;
+> +
+> +error:
+> +       pr_err("%pOF: failed to register clock (%d)\n",
+> +                      node, ret);
+> +       for (num_clk--; num_clk >=3D 0; num_clk--)
+> +               kfree(data->hws[num_clk]);
+> +       kfree(data);
+> +       return ret;
+> +}
+> +
+> +static struct cpg_priv *sh7750_cpg_setup(struct device_node *node, u32 f=
+eat)
+> +{
+> +       unsigned int num_parents;
+> +       u32 mode;
+> +       struct cpg_priv *cpg;
+> +       int ret =3D 0;
+> +
+> +       num_parents =3D of_clk_get_parent_count(node);
+> +       if (num_parents < 1) {
+> +               pr_err("%s: no parent found", node->name);
+> +               return ERR_PTR(-ENODEV);
+> +       }
+
+Do you need num_parents?
+
+> +
+> +       of_property_read_u32_index(node, "renesas,mode", 0, &mode);
+
+mode may be used uninitialized, if "renesas,mode" is missing.
+
+> +       if (mode >=3D 7) {
+> +               pr_err("%s: Invalid clock mode setting (%u)\n",
+> +                      node->name, mode);
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       cpg =3D kzalloc(sizeof(struct cpg_priv), GFP_KERNEL);
+> +       if (!cpg)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       cpg->frqcr =3D of_iomap(node, 0);
+> +       if (cpg->frqcr =3D=3D NULL) {
+> +               pr_err("%pOF: failed to map divide register", node);
+> +               ret =3D -ENODEV;
+> +               goto cpg_free;
+> +       }
+> +
+> +       if (feat & MSTP_CLKSTP) {
+> +               cpg->clkstp00 =3D of_iomap(node, 1);
+> +               if (cpg->clkstp00 =3D=3D NULL) {
+> +                       pr_err("%pOF: failed to map clkstp00 register", n=
+ode);
+> +                       ret =3D -ENODEV;
+> +                       goto unmap_frqcr;
+> +               }
+> +       }
+> +       cpg->feat =3D feat;
+> +       cpg->mode =3D mode;
+> +
+> +       ret =3D register_pll(node, cpg);
+> +       if (ret < 0)
+> +               goto unmap_clkstp00;
+> +
+> +       ret =3D register_div(node, cpg);
+> +       if (ret < 0)
+> +               goto unmap_clkstp00;
+> +
+
+Perhaps "cpg_data =3D cpg;" here, and return an error code instead? ...
+
+> +       return cpg;
+> +
+> +unmap_clkstp00:
+> +       iounmap(cpg->clkstp00);
+> +unmap_frqcr:
+> +       iounmap(cpg->frqcr);
+> +cpg_free:
+> +       kfree(cpg);
+> +       return ERR_PTR(ret);
+> +}
+> +
+> +static void __init sh7750_cpg_init(struct device_node *node)
+> +{
+> +       cpg_data =3D sh7750_cpg_setup(node, cpg_feature[CPG_SH7750]);
+> +       if (IS_ERR(cpg_data))
+> +               cpg_data =3D NULL;
+
+... then all cpg_data handling can be removed here...
+
+> +}
+
+> +static int sh7750_cpg_probe(struct platform_device *pdev)
+> +{
+> +       u32 feature;
+> +
+> +       if (cpg_data)
+> +               return 0;
+> +       feature =3D *(u32 *)of_device_get_match_data(&pdev->dev);
+> +       cpg_data =3D sh7750_cpg_setup(pdev->dev.of_node, feature);
+> +       if (IS_ERR(cpg_data))
+> +               return PTR_ERR(cpg_data);
+> +       return 0;
+
+... and this can be simplified to
+
+    return sh7750_cpg_setup(...);
+
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
