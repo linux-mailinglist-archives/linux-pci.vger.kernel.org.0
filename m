@@ -1,161 +1,327 @@
-Return-Path: <linux-pci+bounces-4095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 622BB868DA4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:31:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FEE0868DF3
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 11:50:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8696F1C20A27
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 10:31:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 430AB1C22D9E
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 10:50:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C70152F91;
-	Tue, 27 Feb 2024 10:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LEdQ7GWG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D261386B3;
+	Tue, 27 Feb 2024 10:50:21 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2128.outbound.protection.partner.outlook.cn [139.219.17.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3684B12A14B
-	for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 10:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709029887; cv=none; b=HkoV438SErLs4nd+8NwiW8ndC2mbtJhNJmYQHaSrnGyNudF4BGR5UJopOsm0QBe4ufFYqlbKlCZabIONuFR2u23EJtubKHYBBBKpsopZbmWp3UDFR2bZSwQCIitDLkXsY5As6O75R+6DywHJvmyzioiHkqL7ZFRS+id2z+6jGfQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709029887; c=relaxed/simple;
-	bh=oYsliGiRTJiRs4Lxx7SIcNlCK2XdURe1cZNFGAXUyDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pBx+J2fHz2pWgsN7kxwSaQDSko5e5k8TBvE/WhfCK6LiB4YoLIKxY6FyQEyOrlWCfCGPcO3R9XllsLaR8ZaXeAUwmBFyN2GxlgEhxNU6w77pMP2a0FWiY6V0pfa3ROGI8idH8jP+OW2i3ZLuLlUt33/+G8Vz0qNBhzwtWcoB2Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LEdQ7GWG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709029886; x=1740565886;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=oYsliGiRTJiRs4Lxx7SIcNlCK2XdURe1cZNFGAXUyDw=;
-  b=LEdQ7GWGcuvLyuXeb1vnQL7y0UpvwvzOU/h6PoryLCpUZHUnZ4nkrHxX
-   r2+ynBcU/rpFNZLIsNEAxlx7aFyhdYoTRXi9P5cTzSXDfMtqUes/sY2PE
-   OHXsIMHTZD7szNmOSJopw6Mi3MzYLvUmJfg5NA3jRCCd8vBLme4xLWHaR
-   5F/u5SGbUDGWT/n8O1xRGL5mC7k9RFC3I+feCdlJgZRTAbG6rJbcPp4Kr
-   m9iwWJIr2xL0dLxFMfdfTutxtaK1jQbKLtT43Qk9q1rVBc5An7B4hvg5Z
-   Vm9gJAk/RJ1WvONUtP2Woti3vWqak/TNmpJOExICU2WnkG7gIOsYtIvYL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3521744"
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="3521744"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 02:31:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
-   d="scan'208";a="7409137"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 27 Feb 2024 02:31:24 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1reuk4-000B9D-2b;
-	Tue, 27 Feb 2024 10:31:20 +0000
-Date: Tue, 27 Feb 2024 18:31:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org
-Subject: [pci:wip/2402-bjorn-osc-dpc 3/3] drivers/pci/pci-acpi.c:1424:9:
- error: implicit declaration of function 'pci_acpi_add_edr_notifier'; did you
- mean 'pci_acpi_add_pm_notifier'?
-Message-ID: <202402271824.MzpOujLC-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1E11386B2;
+	Tue, 27 Feb 2024 10:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709031021; cv=fail; b=E+7xN5ISni3ijBI+uAHoZo6acMqdBIa9qhh2VUPNCYIKlxeBl9qB8rihvuZPsg0CiqHnEG4AyNAxWkSeZ9/n2vXfros39qRoKpThx5htOjj9Wra3RhrGNYyWZP9LmjPS06gg1udeVAFOjFbMHi1E1mtv/UwbYJdsTnthCjyeM3o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709031021; c=relaxed/simple;
+	bh=153z9nphCTtjtmLY0yRQaHO9ivj+TovGeZp8rlL4AZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NawbfMz82GNuqHuy5ukjNoYbUzvtrmOQZldOiUwA87WvhJtJ1CWdMi7DvGWfx3ETakPPsv19pbQ0ZEJeKrQxRcu9O+MhMix3UU2iRJ2MvyRFPb9D++Q/LtiBuHCT+Opp5GZcWtC63qWW6c3lf07IQpaLetOzUwBdpxmUFhhJNrs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i+2aArqtsixf7CXhuvC597uy0nx9trPL4mIILkz4/DPRgTzUt7VtbSzTUWTI/OtbJoQIOYHOCqyLcJSbFh6orhNNy4SLVaVJ6l5AP/OAV41lkTVMO7AT+EcQT/wN4yYVMHL/i7bdf/MbcA2LUcQLQkmxrzDnY+WMiNjbCrBdp4JDme1gwXPi5RXRKrpMs7lg2MYcjPSZ9NuUS+2+5y3Mta331qHt0hV+Vl5yqr7k/NFKpvCW/DG2ugDQNoSUv0awn8tiDkTsStOAQecXkgMRf9haU+2qe1SvDS3kBr7JA5ru2K0VfjnmJfo35SYIUfBw6kf8ECI2G6+focfxVsCWEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K7UZdmdyYz24tezUgGACcYCmJKOSO6Q04qEPwmoKWvY=;
+ b=O87UWnSpskxPx6Nc/5xkcGW1fHZ5+LpFk7QLm6VGB1B1PdyiK90MQyqq56ydNGC0iVkyuGVgggZwxlgdaacTD7QnctS/WEAGfkDdoAzhYlEOwpnz6zhP+NkV92bIUwuTJT6YMdIawPIQPf7ipcRw/PsYswsKpiKoGpZLhmg+17P8I/6KFodb66J097KzBOo1thjheyPxhXL80EzYLm/qmLHaaZz0Ku8DrMlWhC685buYkvRa/tIjE9EJEmKCRCZhiRfOw6ljnRPJeAjGMqVx/HydYYdmKkyhrOaN4AMCdHFxH9rlyFCaY4aETFeDKDZU/AJ1Sg9NLzxU8uu5jnRV6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 27 Feb
+ 2024 10:35:31 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::5a5a:fa59:15fd:63dc]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::5a5a:fa59:15fd:63dc%3])
+ with mapi id 15.20.7270.047; Tue, 27 Feb 2024 10:35:31 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Minda Chen <minda.chen@starfivetech.com>
+Subject: [PATCH v15,RESEND 01/23] dt-bindings: PCI: Add PLDA XpressRICH PCIe host common properties
+Date: Tue, 27 Feb 2024 18:35:00 +0800
+Message-Id: <20240227103522.80915-2-minda.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240227103522.80915-1-minda.chen@starfivetech.com>
+References: <20240227103522.80915-1-minda.chen@starfivetech.com>
+Content-Type: text/plain
+X-ClientProxiedBy: NT0PR01CA0003.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510::15) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c790bfb-294b-4208-39f0-08dc377fd23e
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	rovi3hNTH13hMtc3Te6Id6bqpzGyl5GbBMgdyij6odqYjO2WOijfKZ1QU0aDxdSrDtJF4F2zVAnYmec8nh4GkNLxWPM+/36eBjMjrYGBPBWGCkQ7WNOKAkisZIAehmKsBYTSThmkuLMHxV/BodUZyJqP1tgfg52lEcGTsr6GQleMDR/0RWk+tfyGoFqWsDajp8tyvRlJReVQjZRWlC0WnR9sLoKac75qQGFywmskDKyPNDBQ5FSMOGnBQwbphbPIlNCtosEFxQxuFwFXmD0d8Iqp7a3E83mc5d8uxyuP14HWRAMriem3lb0SWitfaG/dfwRG2OUjWgddXx5RA6ScxgJUXSkktT8nLDP605yR86XHEUnNDn2Gfs5v9uhklSLIAUwV3XEO0ktv/mxWDbY6V1ObKXJdWChTAk7se2/F0GS1wrAG3KfKIIXP2ZiZT8dA8ZVGhgAim285wdGv0hFPAHYtKwoyCO/KD3Uyw3NNYlTKpl3NPqM2liZCBaUhRJ8mHGGfSdq+lmBCdhxCUWDTmnEK8lAYoteeINkKrOUkIQRBCZc3HwEwoZdZIwgeNcRVadkL+kE3hgEoBrvCRXtXrwXmd/xmP06Z8glNamP8ZuWLcDCFvIzAjZj77SWY+Mps
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xcoMY1KqiL91ax3kGKHJJ1kqLgJdDEfiSN7zoYMbFcyG1Nz4DZo28O1vRovG?=
+ =?us-ascii?Q?NF6Mn2/4l5Msbvmw7mFiVdzSXXUuhKnQoi2mFgwgNjqFuP/uZWaYmZYPcVNx?=
+ =?us-ascii?Q?2tkwj2eMCvc/f/ZF8E1Iv7/AurNfbwla5qIsfM5SZ9pwyUkCk5sBa5tR/cf2?=
+ =?us-ascii?Q?GGusZ4/b5ss6oxm3o6gVGOCOjDYuUMTSv4QfWvqYiLsac+3PlbRj0ela2jWJ?=
+ =?us-ascii?Q?cTQFRMLuJLRSHEe45VNrjNtCGFBnNA6bsjU0nASml2hCqstN1BhpTaQyWSXj?=
+ =?us-ascii?Q?UCywoYBM+cJKVIE2PZgUYb+wkDvETkQggXcjG2AazwN/Ea7wdy77ph4N7869?=
+ =?us-ascii?Q?QrVIhhfId+qjKmE4lVcYYGyW85oeejrr+oMFSSVzlQIUs4TgbyujyD3k6m0L?=
+ =?us-ascii?Q?t+AruyYaBnaC+24vALjlNoIJVUDl7FXb+OvNU39fId0WBXskiLzORMlJpArY?=
+ =?us-ascii?Q?DlazuPjjcfgXbJjPtE7YoBeq4jWX+RE3u42WDNv5bsIhJKlTyVQSC2kghm9f?=
+ =?us-ascii?Q?fuAhlw0Yw+7SpHaZojWwaVXFoslrJ3d30C7aaC0cXkJkfxwKScq7DQvkbHBI?=
+ =?us-ascii?Q?L/dnOh/VM06stPTIjdgMiHbd2YQ+lu2jaRkVoH/5EJ0Z1AilrVIuHq1MXnG9?=
+ =?us-ascii?Q?Ei0PhPxr+OsxiuuXmiDcwBdB1IMbJh1HnhG7S1JZjZzxVPj1pBLHGjkCNc+B?=
+ =?us-ascii?Q?w3ujTqPrsvbv/DeJ23ry3cgC48q43tjzCRs5oNeIBmw6kd3gkoliqMdFJXVW?=
+ =?us-ascii?Q?OLHQwVEaGmguLMwI2oKYENytgasBcE989bDIoqvveCfwlai4g+0UTlys8t/C?=
+ =?us-ascii?Q?wSXD/d3bnLTBcB2fdzSWVd/5CW6suyNt7DABKb5jQUgxKILyNDkGyObFCUbw?=
+ =?us-ascii?Q?ag8LjsCv/9JYo6uu3Sc6YbNAU/fNoUMItktoW6W5dXWx5pUCYLuXx0knZZLK?=
+ =?us-ascii?Q?s0CesJFWTOYw+RJZl3tFtIvELZgn7ZSRAUsZ+xz8OAIdSMJZjzGt2ySUAmr2?=
+ =?us-ascii?Q?g60Xw1LX7DwQNlk7rI9PlNahJ4gcb1bm1VDp5FM6FPlEWW8VJeSy384i8GbD?=
+ =?us-ascii?Q?2QvZgeZNF+SqcLY/AcQFydZK/ipYbb9QxLUDcFYv4pWweEb+rJE2oFaJVlcI?=
+ =?us-ascii?Q?C322owbgM+1hGOXM288aEZdDVXRq1xnqq+FJEz4f5ucG4WGwITZQtkBAHKIC?=
+ =?us-ascii?Q?q/1wxBQyeLLcztEmX8DXRfttevs2q/RwQ5+ztjveM4e2FlB4OPaBmtAkEGCY?=
+ =?us-ascii?Q?nIIrbb+yNtzbCttGjYZQ9q56EFc4kyYH3hDdcWRL9wvZ3WiWUDglu5QOhG4i?=
+ =?us-ascii?Q?1Jo0MvaBqkmZdvOYGTBkLKFEv1LmFI2uDDDXFYecOOLlAEPTDfhPr1VqI31n?=
+ =?us-ascii?Q?ERaqR8Y5Th0mNIh3IU9q1akXG0rRGP/uTKKWyAFrpLPmuHahDBKZV6GxosrP?=
+ =?us-ascii?Q?AbLZxhy6P9jaocckYYpbWzB6563domBsJOI8Hhhe0osKw63s1b+tyM1TDucS?=
+ =?us-ascii?Q?FbMfrtfOB3KtM9MkWmhwHUNNi5As3d17m6ILSuWr+PwnwwVa2W2efIMezeX4?=
+ =?us-ascii?Q?l/Xk2mXs7+wFmSu6GR9Kgr2vg6f97Y/nh3NaXo/kYBYIv7SKKikoz+edFK/X?=
+ =?us-ascii?Q?Vw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c790bfb-294b-4208-39f0-08dc377fd23e
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2024 10:35:30.9094
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bMSsNfyBes5AsDh3gKn55KytL/y1vnLoi6FlMgr8A9E5ZGcahvZmjWcfSCloiXB61lbbXlZKffKWQ58SMgP0AhXyq5z0ZfJwt8go8lMqzQE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0863
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git wip/2402-bjorn-osc-dpc
-head:   f76758eebe9e2f81b37e41d2bdc70825cdb879d7
-commit: f76758eebe9e2f81b37e41d2bdc70825cdb879d7 [3/3] PCI/DPC: Encapsulate pci_acpi_add_edr_notifier()
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20240227/202402271824.MzpOujLC-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240227/202402271824.MzpOujLC-lkp@intel.com/reproduce)
+Add PLDA XpressRICH PCIe host common properties dt-binding doc.
+PolarFire PCIe host using PLDA IP. Move common properties from Microchip
+PolarFire PCIe host to PLDA files.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402271824.MzpOujLC-lkp@intel.com/
+Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: John Clark <inindev@gmail.com>
+---
+ .../bindings/pci/microchip,pcie-host.yaml     | 55 +-------------
+ .../pci/plda,xpressrich3-axi-common.yaml      | 75 +++++++++++++++++++
+ 2 files changed, 76 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml
 
-All errors (new ones prefixed by >>):
-
-   drivers/pci/pci-acpi.c: In function 'pci_acpi_setup':
->> drivers/pci/pci-acpi.c:1424:9: error: implicit declaration of function 'pci_acpi_add_edr_notifier'; did you mean 'pci_acpi_add_pm_notifier'? [-Werror=implicit-function-declaration]
-    1424 |         pci_acpi_add_edr_notifier(pci_dev);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-         |         pci_acpi_add_pm_notifier
-   drivers/pci/pci-acpi.c: In function 'pci_acpi_cleanup':
->> drivers/pci/pci-acpi.c:1451:9: error: implicit declaration of function 'pci_acpi_remove_edr_notifier'; did you mean 'pci_acpi_remove_pm_notifier'? [-Werror=implicit-function-declaration]
-    1451 |         pci_acpi_remove_edr_notifier(pci_dev);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |         pci_acpi_remove_pm_notifier
-   cc1: some warnings being treated as errors
-
-
-vim +1424 drivers/pci/pci-acpi.c
-
-617654aae50eb5 Mika Westerberg            2018-08-16  1417  
-4795448117824c Rafael J. Wysocki          2021-09-18  1418  void pci_acpi_setup(struct device *dev, struct acpi_device *adev)
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1419  {
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1420  	struct pci_dev *pci_dev = to_pci_dev(dev);
-f084280cd34e37 Rafael J. Wysocki          2013-12-29  1421  
-e33caa82e221b0 Aaron Lu                   2015-03-25  1422  	pci_acpi_optimize_delay(pci_dev, adev->handle);
-99b50be9d8ec9e Rajat Jain                 2020-07-07  1423  	pci_acpi_set_external_facing(pci_dev);
-ac1c8e35a3262d Kuppuswamy Sathyanarayanan 2020-03-23 @1424  	pci_acpi_add_edr_notifier(pci_dev);
-e33caa82e221b0 Aaron Lu                   2015-03-25  1425  
-f084280cd34e37 Rafael J. Wysocki          2013-12-29  1426  	pci_acpi_add_pm_notifier(adev, pci_dev);
-f084280cd34e37 Rafael J. Wysocki          2013-12-29  1427  	if (!adev->wakeup.flags.valid)
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1428  		return;
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1429  
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1430  	device_set_wakeup_capable(dev, true);
-6299cf9ec3985c Mika Westerberg            2018-09-27  1431  	/*
-6299cf9ec3985c Mika Westerberg            2018-09-27  1432  	 * For bridges that can do D3 we enable wake automatically (as
-6299cf9ec3985c Mika Westerberg            2018-09-27  1433  	 * we do for the power management itself in that case). The
-6299cf9ec3985c Mika Westerberg            2018-09-27  1434  	 * reason is that the bridge may have additional methods such as
-6299cf9ec3985c Mika Westerberg            2018-09-27  1435  	 * _DSW that need to be called.
-6299cf9ec3985c Mika Westerberg            2018-09-27  1436  	 */
-6299cf9ec3985c Mika Westerberg            2018-09-27  1437  	if (pci_dev->bridge_d3)
-6299cf9ec3985c Mika Westerberg            2018-09-27  1438  		device_wakeup_enable(dev);
-6299cf9ec3985c Mika Westerberg            2018-09-27  1439  
-8370c2dc4c7b91 Rafael J. Wysocki          2017-06-24  1440  	acpi_pci_wakeup(pci_dev, false);
-53b22f900c2d28 Mika Westerberg            2019-06-25  1441  	acpi_device_power_add_dependent(adev, dev);
-62d528712c1db6 Rafael J. Wysocki          2022-04-04  1442  
-62d528712c1db6 Rafael J. Wysocki          2022-04-04  1443  	if (pci_is_bridge(pci_dev))
-62d528712c1db6 Rafael J. Wysocki          2022-04-04  1444  		acpi_dev_power_up_children_with_adr(adev);
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1445  }
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1446  
-4795448117824c Rafael J. Wysocki          2021-09-18  1447  void pci_acpi_cleanup(struct device *dev, struct acpi_device *adev)
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1448  {
-6299cf9ec3985c Mika Westerberg            2018-09-27  1449  	struct pci_dev *pci_dev = to_pci_dev(dev);
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1450  
-ac1c8e35a3262d Kuppuswamy Sathyanarayanan 2020-03-23 @1451  	pci_acpi_remove_edr_notifier(pci_dev);
-f084280cd34e37 Rafael J. Wysocki          2013-12-29  1452  	pci_acpi_remove_pm_notifier(adev);
-6299cf9ec3985c Mika Westerberg            2018-09-27  1453  	if (adev->wakeup.flags.valid) {
-53b22f900c2d28 Mika Westerberg            2019-06-25  1454  		acpi_device_power_remove_dependent(adev, dev);
-6299cf9ec3985c Mika Westerberg            2018-09-27  1455  		if (pci_dev->bridge_d3)
-6299cf9ec3985c Mika Westerberg            2018-09-27  1456  			device_wakeup_disable(dev);
-6299cf9ec3985c Mika Westerberg            2018-09-27  1457  
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1458  		device_set_wakeup_capable(dev, false);
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1459  	}
-6299cf9ec3985c Mika Westerberg            2018-09-27  1460  }
-d2e5f0c16ad60a Rafael J. Wysocki          2012-12-23  1461  
-
-:::::: The code at line 1424 was first introduced by commit
-:::::: ac1c8e35a3262d04cc81b07fac6480a3539e3b0f PCI/DPC: Add Error Disconnect Recover (EDR) support
-
-:::::: TO: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-:::::: CC: Bjorn Helgaas <bhelgaas@google.com>
-
+diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+index f7a3c2636355..7c2d51221f65 100644
+--- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+@@ -10,21 +10,13 @@ maintainers:
+   - Daire McNamara <daire.mcnamara@microchip.com>
+ 
+ allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
++  - $ref: plda,xpressrich3-axi-common.yaml#
+   - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+ 
+ properties:
+   compatible:
+     const: microchip,pcie-host-1.0 # PolarFire
+ 
+-  reg:
+-    maxItems: 2
+-
+-  reg-names:
+-    items:
+-      - const: cfg
+-      - const: apb
+-
+   clocks:
+     description:
+       Fabric Interface Controllers, FICs, are the interface between the FPGA
+@@ -52,18 +44,6 @@ properties:
+     items:
+       pattern: '^fic[0-3]$'
+ 
+-  interrupts:
+-    minItems: 1
+-    items:
+-      - description: PCIe host controller
+-      - description: builtin MSI controller
+-
+-  interrupt-names:
+-    minItems: 1
+-    items:
+-      - const: pcie
+-      - const: msi
+-
+   ranges:
+     maxItems: 1
+ 
+@@ -71,39 +51,6 @@ properties:
+     minItems: 1
+     maxItems: 6
+ 
+-  msi-controller:
+-    description: Identifies the node as an MSI controller.
+-
+-  msi-parent:
+-    description: MSI controller the device is capable of using.
+-
+-  interrupt-controller:
+-    type: object
+-    properties:
+-      '#address-cells':
+-        const: 0
+-
+-      '#interrupt-cells':
+-        const: 1
+-
+-      interrupt-controller: true
+-
+-    required:
+-      - '#address-cells'
+-      - '#interrupt-cells'
+-      - interrupt-controller
+-
+-    additionalProperties: false
+-
+-required:
+-  - reg
+-  - reg-names
+-  - "#interrupt-cells"
+-  - interrupts
+-  - interrupt-map-mask
+-  - interrupt-map
+-  - msi-controller
+-
+ unevaluatedProperties: false
+ 
+ examples:
+diff --git a/Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml b/Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml
+new file mode 100644
+index 000000000000..31bb17b11e58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/plda,xpressrich3-axi-common.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/plda,xpressrich3-axi-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PLDA XpressRICH PCIe host common properties
++
++maintainers:
++  - Daire McNamara <daire.mcnamara@microchip.com>
++  - Kevin Xie <kevin.xie@starfivetech.com>
++
++description:
++  Generic PLDA XpressRICH PCIe host common properties.
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++
++properties:
++  reg:
++    maxItems: 2
++
++  reg-names:
++    items:
++      - const: cfg
++      - const: apb
++
++  interrupts:
++    minItems: 1
++    items:
++      - description: PCIe host controller
++      - description: builtin MSI controller
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - const: pcie
++      - const: msi
++
++  msi-controller:
++    description: Identifies the node as an MSI controller.
++
++  msi-parent:
++    description: MSI controller the device is capable of using.
++
++  interrupt-controller:
++    type: object
++    properties:
++      '#address-cells':
++        const: 0
++
++      '#interrupt-cells':
++        const: 1
++
++      interrupt-controller: true
++
++    required:
++      - '#address-cells'
++      - '#interrupt-cells'
++      - interrupt-controller
++
++    additionalProperties: false
++
++required:
++  - reg
++  - reg-names
++  - interrupts
++  - msi-controller
++  - "#interrupt-cells"
++  - interrupt-map-mask
++  - interrupt-map
++
++additionalProperties: true
++
++...
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
 
