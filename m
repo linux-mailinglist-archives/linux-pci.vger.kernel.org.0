@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4164-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4165-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09FB886A3D0
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 00:36:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5CD786A3ED
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 00:47:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B95F9283358
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 23:36:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 25D32B23303
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Feb 2024 23:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5102256460;
-	Tue, 27 Feb 2024 23:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A09075645C;
+	Tue, 27 Feb 2024 23:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="InXp1LE2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="greyH+L3"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CA855E48;
-	Tue, 27 Feb 2024 23:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69EB155E4E;
+	Tue, 27 Feb 2024 23:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709076999; cv=none; b=Q0/cdxHNN6zFS9nuvGSuNmsH8a0+Pj9egVB1hISb/XsdQzdnqYR4oleVoGA97xnQOhyxrItQdRF2daxjXzNtlszr0vJzfS82cxShX6xtMuIlEHKcBNDr16pb9BV7D3IJahzCf2QMSPTG6YSFMEdS7cXXimaI8JtYjfH0yoHSL1E=
+	t=1709077551; cv=none; b=YGSaXvAN3FNRS+m/3TcFC25fOXBddDQ+J0GW0JC6ugd71S5iqPH+Y6OXsKQOwF4TJ8t9IDFxwIS9y/TmKN9P3Zim0zWeECKj0+D593peWh0KYpp0bAMupN30yHVIPnkkER8Ntk7IwBMSn2flNgFu+qIY28WhXR51zYrS/1MDUeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709076999; c=relaxed/simple;
-	bh=/VRb4MzHv0+QTH7GnhhfKoUNkiWk+9BsaZq59IGyA5M=;
+	s=arc-20240116; t=1709077551; c=relaxed/simple;
+	bh=O6+UnS3bLsjL5pNyUXDCbAPl4xMpk0nA+TMKK4jaoXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=FnTkZc1B3HyKbtlfITSxRmz5dei1Q3krUygj7ApE/ZFRTRao0XVfBPDB2nZl03rrzk3YOvQWGvY0l7FvCPH35jkrDOpOO4KrfEljjUE2VSazdl/7usUUb7OMrdPFZ6W+S91QlxIi7KSKMFVAhIqCgsHO8r3HWYWu6pSTaq5qLzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=InXp1LE2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0F5C433C7;
-	Tue, 27 Feb 2024 23:36:37 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Y01InDy5bkBZ0YfClsRNYSPcnAVYhRfIcrNfkKxsLnSD8RHaDE8fL3JnV8hxonLOMAu9V1lCR+dAgrNszVJGLVkcQZupDH+BfOPzcTCU/KN4Qnj8ebqmAyV19aow5OGQScr+jU7Np3zDSIHfed+9weTbAS+pWL3ffN4bGDxM5tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=greyH+L3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A75E3C433F1;
+	Tue, 27 Feb 2024 23:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709076998;
-	bh=/VRb4MzHv0+QTH7GnhhfKoUNkiWk+9BsaZq59IGyA5M=;
+	s=k20201202; t=1709077550;
+	bh=O6+UnS3bLsjL5pNyUXDCbAPl4xMpk0nA+TMKK4jaoXQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=InXp1LE2ZQE4DIutfgEWvLKJ1q/QXKsCzvoLz5Sb8i7MsnequWVpZkW5heGmHn/rg
-	 vGWFHT87IHzlXUfF9/VZ1jFjnYf7FCbABCnU4fWZ+y/up/O6b18GslbL5wLVm/6tb6
-	 vuLLE7YELsaHU82jfvBkXUtFOl1OuA6mrSaHbnGvU8AwqjHzLbJ6bkVUfebNXqxnc2
-	 aDmuc05+egn0HoxKyQM0nBNyonBqIC5JeTeOioABy5POiMeMlzU6pU7/yNmEvsfkmk
-	 P5f+DqNMGGQlE52BnipoK1QWEYfhbHVNk1lcKtyBj85moaWQjauhEe7NGpgo6zaWWv
-	 pqqAqCRMU6Niw==
-Date: Tue, 27 Feb 2024 17:36:36 -0600
+	b=greyH+L3qEHDnxOvXzxOqlLwjNxO8sz+qQNeGm6LcfgprGm9wR7XlbhZczCNJWH2i
+	 sjyLtQlGG3d9pWEd5ZHiqukMZT2y32JxG2RKSmUW0+Bft77noi8CtxlAyCn1VYiZD7
+	 WL00CpH9xvjBX+ZPu9W9m1pTys9fO4Y3Vcapn7Ivy/+awVkYZfJyTFq0OGaD6h8Yhs
+	 4ENeMWu68UJyHqrpbcJTonkzNRy8bhqfsuH1FEzXKJdRfGihX/hTB1E9fbegqx6LQa
+	 reiC+2w+oA52agmLwL/bx2bJwK4W1cQ61Mrtw0vM63Pt34Q9l7gjl1Byp+NUei9jlo
+	 Fn1EK8wiqxjwA==
+Date: Tue, 27 Feb 2024 17:45:49 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
@@ -62,7 +62,7 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	quic_nitegupt@quicinc.com, quic_parass@quicinc.com
 Subject: Re: [PATCH v7 7/7] PCI: qcom: Add OPP support to scale performance
  state of power domain
-Message-ID: <20240227233636.GA250826@bhelgaas>
+Message-ID: <20240227234549.GA251722@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,68 +71,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240223-opp_support-v7-7-10b4363d7e71@quicinc.com>
+In-Reply-To: <20240227233636.GA250826@bhelgaas>
 
-On Fri, Feb 23, 2024 at 08:18:04PM +0530, Krishna chaitanya chundru wrote:
-> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> maintains hardware state of a regulator by performing max aggregation of
-> the requests made by all of the clients.
+On Tue, Feb 27, 2024 at 05:36:38PM -0600, Bjorn Helgaas wrote:
+> On Fri, Feb 23, 2024 at 08:18:04PM +0530, Krishna chaitanya chundru wrote:
+> > QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
+> > maintains hardware state of a regulator by performing max aggregation of
+> > the requests made by all of the clients.
+
+> > It is manadate to scale the performance state based up on the PCIe speed
+> > link operates so that SoC can run under optimum power conditions.
 > 
-> PCIe controller can operate on different RPMh performance state of power
-> domain based up on the speed of the link. And this performance state varies
-> from target to target.
-
-s/up on/on/ (or "upon" if you prefer) (also below)
-
-I understand changing the performance state based on the link speed,
-but I don't understand the variation from target to target.  Do you
-mean just that the link speed may vary based on the rates supported by
-the downstream device?
-
-> It is manadate to scale the performance state based up on the PCIe speed
-> link operates so that SoC can run under optimum power conditions.
-
-It sounds like it's more power efficient, but not actually
-*mandatory*.  Maybe something like this?
-
-  The SoC can be more power efficient if we scale the performance
-  state based on the aggregate PCIe link speed.
-
-> Add Operating Performance Points(OPP) support to vote for RPMh state based
-> upon the speed link is operating.
-
-Space before open paren, e.g., "Points (OPP)".
-
-"... based on the link speed."
-
-> OPP can handle ICC bw voting also, so move ICC bw voting through OPP
-> framework if OPP entries are present.
+> It sounds like it's more power efficient, but not actually
+> *mandatory*.  Maybe something like this?
 > 
-> In PCIe certain speeds like GEN1x2 & GEN2x1 or GEN3x2 & GEN4x1 use
-> same bw and frequency and thus the OPP entry, so use frequency based
-> search to reduce number of entries in the OPP table.
+>   The SoC can be more power efficient if we scale the performance
+>   state based on the aggregate PCIe link speed.
 
-GEN1x2, GEN2x1, etc are not "speeds".  I would say:
+Actually, maybe it would be better to say "aggregate PCIe link
+bandwidth", because we use "speed" elsewhere (PCIE_SPEED2MBS_ENC(),
+etc) to refer specifically to the data rate independent of the width.
 
-  Different link configurations may share the same aggregate speed,
-  e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same speed
-  and share the same OPP entry.
+> > Add Operating Performance Points(OPP) support to vote for RPMh state based
+> > upon the speed link is operating.
+> 
+> "... based on the link speed."
 
-> Don't initialize ICC if OPP is supported.
+"... based on the aggregate link bandwidth."
 
-Because?  Maybe this should say something about OPP including the ICC
-voting?
+> > In PCIe certain speeds like GEN1x2 & GEN2x1 or GEN3x2 & GEN4x1 use
+> > same bw and frequency and thus the OPP entry, so use frequency based
+> > search to reduce number of entries in the OPP table.
+> 
+> GEN1x2, GEN2x1, etc are not "speeds".  I would say:
+> 
+>   Different link configurations may share the same aggregate speed,
+>   e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same speed
+>   and share the same OPP entry.
 
-> +		ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-
-Wrap to fit in 80 columns.
-
-> +	 * Use highest OPP here if the OPP table is present. At the end of the probe(),
-> +	 * OPP will be updated using qcom_pcie_icc_opp_update().
-
-Wrap to fit in 80 columns.
-
-> +	/* Skip ICC init if OPP is supported as ICC bw vote is handled by OPP framework */
-
-Wrap to fit in 80 columns.
+  Different link configurations may share the same aggregate
+  bandwidth, e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link
+  have the same bandwidth and share the same OPP entry.
 
