@@ -1,99 +1,63 @@
-Return-Path: <linux-pci+bounces-4196-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4197-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D23C86B5FF
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 18:30:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E03EE86B62F
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 18:39:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1224E282DB4
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 17:30:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B2C41C23A28
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 17:39:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AEE23FBA2;
-	Wed, 28 Feb 2024 17:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B00A115A4A2;
+	Wed, 28 Feb 2024 17:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HPc0uNWj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dm422GDV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CEE3FBB5
-	for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 17:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE8E3FBA3;
+	Wed, 28 Feb 2024 17:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709141401; cv=none; b=udD36lCrHrlJV18ICS63e6y7bDQ5TXAB+uMXSHw9IIlW3f7EhGBWmzKI91Xs0S+2EPF89EtJyccsGJrImcz85jyBOdcZRDpHVDiWS9WPmTOmItTLctEYKTOqP0QGmmjtz6qotae9MX8LvYnoE9XD5xN4L5qCjfJsBAFxNkpzkr0=
+	t=1709141949; cv=none; b=uQsYuJDPl4urvJ9xEw+FdhanKRZqnZG1hSykuUEF9mgtAVyZKl9u7//YtOeN9sTpohJe6/zebVlg6HkAeNaQkkKzTneed2vUg354Vp0pIvvzWcippLCnW4TI+RB1mzG4ZNuQlbLck5hqbSNfacP/KL8eeUMRvj9xPaOcVZRdmJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709141401; c=relaxed/simple;
-	bh=tvQ9+tb+YpWfBwRrMRVCmHJxdkq5vLBUNKv17OXiS/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d89NBiZWJqi5MWQzMybpAIVpX1edXkp88lYgc8qy6xoutNXmWeoPNh0/wgZ6m8B+Ipx5OJQeRWFUYO2p6AMAXBxh5mOgfqONJXzV61/aw7anQclmrlcwa8b+i0k35u1u/XeXExONlqHJQ/qy8QJdDbrqWjRMV8fAG8CgcHGjJgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HPc0uNWj; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dc1ff697f9so475635ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 09:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709141399; x=1709746199; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dyM0UhAWssIxwMtD5nFa16+tuS8Yh/JlUs2FPS/Vsy0=;
-        b=HPc0uNWjV+yeDhLuTUkx8/E3wArx14PyK1eD13OvGgKWIBtKiTuh4RIzrYn3onpbqY
-         JPVyEP+hVcSFscNw8GCEJGWSv84aNrht4BPv9fWFRJS5E4ClAQ2fHFNmTsY8I6cg893R
-         JoPzJsGBwmp1OMXS2+uY/efgqI/mtuli1Wdqph541QwSaPSEVQB18dvl9PrfsRsdBB0s
-         CsSMht7zultQdsuBjGvXpWgjuB96rVrvh/6+nkqrx5I3JUSL8ec5UtSDG8KV0O60bq0R
-         XZUt1A1FTAEXKnLXvrEvkkrlHf2zEHh1ebkPk4swbrvVOqzo7Be7E+L9o9zqp38GFs4H
-         +3mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709141399; x=1709746199;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dyM0UhAWssIxwMtD5nFa16+tuS8Yh/JlUs2FPS/Vsy0=;
-        b=KuoJ49OeViXlELnrnOEX6vW/e95b6Xl3d7OevaCgRwI9I+4LhWRUlLt0NV3Hszv7Xx
-         jBqB5zaVnWOmWP78vG0IbqZdAjUNiHpW4yB0+8JrQeOc2OI6NbcuRBF+/1ysPyIhKlof
-         z3Ba5L7ZnwO3Hcf2azJS7y8Ts/Ld1RCPdrgP8ro/mFJuUEAKcwKcqeLlvGJXT4boSOmK
-         ENuQ1q497w3250fEipoI0gXe+mp9RlTH8qzk2WEOi/5L+2tZxzZDikzQkpUE0HJHAFtQ
-         72Oz0h2F9ezU5TPDVrNFFpOoScilqxhHHWWku4Q0DQAFryG+i24eZGqlZeLSH3FmMzPT
-         mkRg==
-X-Forwarded-Encrypted: i=1; AJvYcCW22NRtLniTZnIL4B2KLYyrv0dbPMTJsh7tvM+u+XN6NXXag3XJyB/N1QiIoqlxO3YDmGx2hsXwY6mUkii+D2tk3A/l4zbhlm1K
-X-Gm-Message-State: AOJu0YyPLhMPNaLSHCNVJsDmqmIKsMJagGuLUp2P8fP4bmi5aYCyYuCu
-	R54DCeaQ+SkbBuw9LcZRIq6pqIBiWClpy/f1PJW3UscAaay3XNj1rMBMsYC97Q==
-X-Google-Smtp-Source: AGHT+IH41rK1p0JIHwOw8PHLa4vennMZAHKoBzhFcLq9LILJQmDqNIq6PeeIx9DNZyCwf1jX4ZkMZA==
-X-Received: by 2002:a17:902:700b:b0:1dc:7fb4:20cb with SMTP id y11-20020a170902700b00b001dc7fb420cbmr34749plk.62.1709141398647;
-        Wed, 28 Feb 2024 09:29:58 -0800 (PST)
-Received: from thinkpad ([117.217.185.109])
-        by smtp.gmail.com with ESMTPSA id ja13-20020a170902efcd00b001dc8db3150asm3554140plb.199.2024.02.28.09.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Feb 2024 09:29:58 -0800 (PST)
-Date: Wed, 28 Feb 2024 22:59:51 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
+	s=arc-20240116; t=1709141949; c=relaxed/simple;
+	bh=7fU5GKZkXLjsMF7iCwTfyoGD1e80FpJuY7UfLCMmwHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EM587JCAjxlXSUCM0eAtkdy5XaN0V5OycnXddeKq3VMnpOSBY+eTGzD3Iacrseo7vnhNmhvQiaRDgIsCbdazt53i6vPM4KiwCUfTq2mzbnUOrHwxjMBxf/dBS3TuihGKiyb3pQZpUXD1pY39N8LVujKX4NCeCkxfirr/lH2fsro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dm422GDV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4FEC433F1;
+	Wed, 28 Feb 2024 17:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709141949;
+	bh=7fU5GKZkXLjsMF7iCwTfyoGD1e80FpJuY7UfLCMmwHQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dm422GDVIduboqpaczCtFOvGNI6zBSqkjQh6NqA45iSnYKrrZr+9wKaBM+2bOhR/G
+	 hdvJwRKkXvN5CKkTGyPiYZLHx+bRt8PMow2Oh5bAyUIMR9RnqdHLNchMh9/P/lRSC8
+	 27C7L6ucLeJM3FJonQH3fCCfLp4jkBGd5h48whSKr3zschtSItx9svDyxfogeeUmOf
+	 z5zPw4NFmEPrBlGFWV1TS6oPWE3AZn+9ODl1Chspc8p8StifZRsXLb7xo4FHyz32rV
+	 e3b+OLjWN4FUBsJtksgVqmitA905G5UBHNwPoCgg2ruOpUIIS3/BvEfKxjdUP5az5s
+	 pF/LbAzWN9BhQ==
+Date: Wed, 28 Feb 2024 11:39:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mrinmay Sarkar <quic_msarkar@quicinc.com>, andersson@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	konrad.dybcio@linaro.org, robh@kernel.org,
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+	dmitry.baryshkov@linaro.org, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_schintav@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20240228172951.GB21858@thinkpad>
-References: <20240129081254.GF2971@thinkpad>
- <ZbengMb5zrigs_2Z@google.com>
- <20240130064555.GC32821@thinkpad>
- <Zbi6q1aigV35yy9b@google.com>
- <20240130122906.GE83288@thinkpad>
- <Zbkvg92pb-bqEwy2@google.com>
- <20240130183626.GE4218@thinkpad>
- <ZcC_xMhKdpK2G_AS@google.com>
- <20240206171043.GE8333@thinkpad>
- <ZdTikV__wg67dtn5@google.com>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] PCI: qcom: Enable cache coherency for SA8775P RC
+Message-ID: <20240228173907.GA278736@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -103,184 +67,83 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZdTikV__wg67dtn5@google.com>
+In-Reply-To: <20240228171412.GA21858@thinkpad>
 
-On Tue, Feb 20, 2024 at 11:04:09PM +0530, Ajay Agarwal wrote:
-> On Tue, Feb 06, 2024 at 10:40:43PM +0530, Manivannan Sadhasivam wrote:
-> > + Joao
-> > 
-> > On Mon, Feb 05, 2024 at 04:30:20PM +0530, Ajay Agarwal wrote:
-> > > On Wed, Jan 31, 2024 at 12:06:26AM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Jan 30, 2024 at 10:48:59PM +0530, Ajay Agarwal wrote:
-> > > > > On Tue, Jan 30, 2024 at 05:59:06PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
-> > > > > > 
-> > > > > > [...]
-> > > > > > 
-> > > > > > > > > > > > If that's the case with your driver, when are you starting the link training?
-> > > > > > > > > > > > 
-> > > > > > > > > > > The link training starts later based on a userspace/debugfs trigger.
-> > > > > > > > > > > 
-> > > > > > > > > > 
-> > > > > > > > > > Why does it happen as such? What's the problem in starting the link during
-> > > > > > > > > > probe? Keep it in mind that if you rely on the userspace for starting the link
-> > > > > > > > > > based on a platform (like Android), then if the same SoC or peripheral instance
-> > > > > > > > > > get reused in other platform (non-android), the it won't be a seamless user
-> > > > > > > > > > experience.
-> > > > > > > > > > 
-> > > > > > > > > > If there are any other usecases, please state them.
-> > > > > > > > > > 
-> > > > > > > > > > - Mani
-> > > > > > > > > >
-> > > > > > > > > This SoC is targeted for an android phone usecase and the endpoints
-> > > > > > > > > being enumerated need to go through an appropriate and device specific
-> > > > > > > > > power sequence which gets triggered only when the userspace is up. The
-> > > > > > > > > PCIe probe cannot assume that the EPs have been powered up already and
-> > > > > > > > > hence the link-up is not attempted.
-> > > > > > > > 
-> > > > > > > > Still, I do not see the necessity to not call start_link() during probe. If you
-> > > > > > > I am not adding any logic/condition around calling the start_link()
-> > > > > > > itself. I am only avoiding the wait for the link to be up if the
-> > > > > > > controller driver has not defined start_link().
-> > > > > > > 
-> > > > > > 
-> > > > > > I'm saying that not defining the start_link() callback itself is wrong.
-> > > > > > 
-> > > > > Whether the start_link() should be defined or not, is a different
-> > > > > design discussion. We currently have 2 drivers in upstream (intel-gw and
-> > > > > dw-plat) which do not have start_link() defined. Waiting for the link to
-> > > > > come up for the platforms using those drivers is not a good idea. And
-> > > > > that is what we are trying to avoid.
-> > > > > 
+On Wed, Feb 28, 2024 at 10:44:12PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Feb 28, 2024 at 09:02:11AM -0600, Bjorn Helgaas wrote:
+> > On Wed, Feb 28, 2024 at 06:34:11PM +0530, Mrinmay Sarkar wrote:
+> > > On 2/24/2024 4:24 AM, Bjorn Helgaas wrote:
+> > > > On Fri, Feb 23, 2024 at 07:33:38PM +0530, Mrinmay Sarkar wrote:
+> > > > > Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
+> > > > > in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
+> > > > > the requester is indicating that there no cache coherency issues exit
+> > > > > for the addressed memory on the host i.e., memory is not cached. But
+> > > > > in reality, requester cannot assume this unless there is a complete
+> > > > > control/visibility over the addressed memory on the host.
 > > > > 
-> > > > NO. The sole intention of this patch is to fix the delay observed with _your_
-> > > > out-of-tree controller driver as you explicitly said before. Impact for the
-> > > > existing 2 drivers are just a side effect.
-> > > >
-> > > Hi Mani,
-> > > What is the expectation from the pcie-designware-host driver? If the
-> > > .start_link() has to be defined by the vendor driver, then shouldn't the
-> > > probe be failed if the vendor has not defined it? Thereby failing the
-> > > probe for intel-gw and pcie-dw-plat drivers?
-> > > 
+> > > > Forgive my ignorance here.  It sounds like the cache coherency issue
+> > > > would refer to system memory, so the relevant No Snoop attribute would
+> > > > be in DMA transactions, i.e., Memory Reads or Writes initiated by PCIe
+> > > > Endpoints.  But it looks like this patch would affect TLPs initiated
+> > > > by the Root Complex, not those from Endpoints, so I'm confused about
+> > > > how this works.
+> > > > 
+> > > > If this were in the qcom-ep driver, it would make sense that setting
+> > > > No Snoop in the TLPs initiated by the Endpoint could be a problem, but
+> > > > that doesn't seem to be what this patch is concerned with.
+> > >
+> > > I think in multiprocessor system cache coherency issue might occur.
+> > > and RC as well needs to snoop cache to avoid coherency as it is not
+> > > enable by default.
 > > 
-> > intel-gw maintainer agreed to fix the driver [1], but I cannot really comment on
-> > the other one. It is not starting the link at all, so don't know how it works.
-> > I've CCed the driver author to get some idea.
-> > 
-> > [1] https://lore.kernel.org/linux-pci/BY3PR19MB50764E90F107B3256189804CBD432@BY3PR19MB5076.namprd19.prod.outlook.com/
-> > 
-> > > Additionally, if the link fails to come up even after 1 sec of wait
-> > > time, shouldn't the probe be failed in that case too?
-> > > 
-> > 
-> > Why? The device can be attached at any point of time. What I'm stressing is, the
-> > driver should check for the link to be up during probe and if there is no
-> > device, then it should just continue and hope for the device to show up later.
-> My change is still checking whether the link is up during probe.
-> If yes, print the link status (negotiated speed and width).
-> If no, and the .start_link() exists, then call the same and wait for 1
-> second for the link to be up.
+> > My mental picture isn't detailed enough, so I'm still confused.  We're
+> > talking about TLPs initiated by the RC.  Normally these would be
+> > because a driver did a CPU load or store to a PCIe device MMIO space,
+> > not to system memory.
 > 
+> Endpoint can expose its system memory as a BAR to the host. In that case, the
+> cache coherency issue would apply for TLPs originating from RC as well.
 
-There is a reason why we are wating for 1s for the device to show up during
-probe. Please look at my earlier reply to Bjorn.
+What PCIe transactions are involved here?  So far I know about:
 
-> > This way, the driver can detect the powered up devices during boot and also
-> > detect the hotplug devices.
-> >
-> If the .start_link() is not defined, how will the link come up? Are you
-> assuming that the bootloader might have enabled link training?
-> 
+  RC initiates Memory Read Request (or Write) with NO_SNOOP==0
+  ...
+  EP responds with Completion with Data (for Read) 
 
-Yes, something like that. But that assumption is moot in the first place.
+But I guess you're saying the EP would initiate other transactions in
+the middle related to snooping?  I don't know what those are.
 
-> > > My understanding of these drivers is that the .start_link() is an
-> > > OPTIONAL callback and that the dw_pcie_host_init should help setup the
-> > > SW structures regardless of whether the .start_link() has been defined
-> > > or not, and whether the link is up or not. The vendor should be allowed
-> > > to train the link at a later point of time as well.
+> > But I guess you're suggesting the RC can initiate a TLP with a system
+> > memory address?  And this TLP would be routed not to a Root Port or to
+> > downstream devices, but it would instead be kind of a loopback and be
+> > routed back up through the RC and maybe IOMMU, to system memory?
+> > 
+> > I would have expected accesses like this to be routed directly to
+> > system memory without ever reaching the PCIe RC.
+> > 
+> > > and we are enabling this feature for qcom-ep driver as well.
+> > > it is in patch2.
 > > > 
-> > 
-> > What do you mean by later point of time? Bringing the link through debugfs? NO.
-> > We cannot let each driver behave differently, unless there is a really valid
-> > reason.
-> > 
-> pci_rescan_bus() is an exported API. I am assuming that this means that
-> it is supposed to be used by modules when they know that the link is up.
-> If a module wishes to bring the link up using debugfs or some other HW
-> trigger, why is that a bad design? In my opinion, this is providing more
-> options to the HW/product designer and the module author, in addition to
-> the already existing .start_link() callback.
-> 
-
-If the driver _knows_ that the device is up, then rescanning the bus makes
-sense. But here we are checking for the existence of the device.
-
-> > > Please let me know your thoughts.
-> > > > > > > > add PROBE_PREFER_ASYNCHRONOUS to your controller driver, this delay would become
-> > > > > > > > negligible. The reason why I'm against not calling start_link() is due to below
-> > > > > > > > reasons:
-> > > > > > > > 
-> > > > > > > > 1. If the same SoC gets reused for other platforms, even other android phones
-> > > > > > > > that powers up the endpoints during boot, then it creates a dependency with
-> > > > > > > > userspace to always start the link even though the devices were available.
-> > > > > > > > That's why we should never fix the behavior of the controller drivers based on a
-> > > > > > > > single platform.
-> > > > > > > I wonder how the behavior is changing with this patch. Do you have an
-> > > > > > > example of a platform which does not have start_link() defined but would
-> > > > > > > like to still wait for a second for the link to come up?
-> > > > > > > 
-> > > > > > 
-> > > > > > Did you went through my reply completely? I mentioned that the 1s delay would be
-> > > > > > gone if you add the async flag to your driver and you are ignoring that.
-> > > > > > 
-> > > The async probe might not help in all the cases. Consider a situation
-> > > where the PCIe is probed after the boot is already completed. The user
-> > > will face the delay then. Do you agree?
+> > > Thanks
+> > > Mrinmay
 > > > 
-> > 
-> > You mean loading the driver module post boot? If the link is still not up, yes
-> > the users will see the 1sec delay.
-> >
-> > But again, the point I'm trying to make here is, all the drivers have to follow
-> > one flow. We cannot let each driver do its way of starting the link. There could
-> > be exceptions if we get a valid reason for a driver to not do so, but so far I
-> > haven't come across such reason. (the existing drivers, intel-gw and
-> > designware-plat are not exceptions, but they need fixing).
-> > 
-> > For your driver, you said that the userspace brings up the link, post boot when
-> > the devices are powered on. So starting the link during probe incurs 1s delay,
-> > as there would be no devices. But I suggested you to enable async probe to
-> > nullify the 1s delay during probe and you confirmed that it fixes the issue for
-> > you.
-> > 
-> There are emulation/simulation platforms in which 1 second of runtime
-> can correspond to ~1 hour of real-world time. Even if PCIe is probed
-> asyncronously, it will still block the next set of processes.
->
-
-Which simulation/emulation platform? The one during pre-production stage? If
-there is no endpoint connected, why would you enable the controller first place?
-And how can the endpoint show up later during simulation? Why can't it be up
-earlier?
- 
-> > Then you are again debating about not defining the start_link() callback :(
-> > 
-> I am not sure why you think I am debating against defining the
-> .start_link() callback. It is clearly an optional pointer and I am
-> choosing to not use it because of the usecase. And if it is optional and
-> I am not using it, why waste 1 sec of runtime waiting for the link? Do
-> we have an example in upstream of platforms where this 1 sec could prove
-> useful where link training is not being started by the platform driver
-> but EPs have to be detected because they are present and powered-up?
+> > > > > And worst case, if the memory is cached on the host, it may lead to
+> > > > > memory corruption issues. It should be noted that the caching of memory
+> > > > > on the host is not solely dependent on the NO_SNOOP attribute in TLP.
+> > > > > 
+> > > > > So to avoid the corruption, this patch overrides the NO_SNOOP attribute
+> > > > > by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
+> > > > > needed for other upstream supported platforms since they do not set
+> > > > > NO_SNOOP attribute by default.
+> > > > > 
+> > > > > 8775 has IP version 1.34.0 so intruduce a new cfg(cfg_1_34_0) for this
+> > > > > platform. Assign enable_cache_snoop flag into struct qcom_pcie_cfg and
+> > > > > set it true in cfg_1_34_0 and enable cache snooping if this particular
+> > > > > flag is true.
+> > > > s/intruduce/introduce/
+> > > > 
+> > > > Bjorn
 > 
-
-Please tell me how the link is started in your case without start_link()
-callback.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
