@@ -1,159 +1,196 @@
-Return-Path: <linux-pci+bounces-4170-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4171-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94D2186A887
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 07:48:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9A4686A94C
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 08:53:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30B9E1F244F6
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 06:48:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E85728A1F6
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 07:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A46A22EF4;
-	Wed, 28 Feb 2024 06:48:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91F0C25614;
+	Wed, 28 Feb 2024 07:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IJMkKHja"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="tM4WWze4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7BF2263E;
-	Wed, 28 Feb 2024 06:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CADD2262B
+	for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 07:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709102915; cv=none; b=MH4REagKpJ2i+UXC3se/+s5pMsdgj1MEkzzYq+SO9PrTigdmRATVlZkrrQl+z8WWpiaBTmMkU0K/wlR9DLnK3AdnYUQ4v3ywIAyQ7wMyGYhk/tGWegdxnQndviUv2fQoJwO31buOKJ8m5VbuGirgNYBkqzUXPjjZ25+Xfo3LpOA=
+	t=1709106804; cv=none; b=la/pbt2Ts/vUJnc2qozY9adPorWUhmd6LL6SLW6t1WPkQCo5TAqjQJ6IPr3TZBgJsex5nuJ8DW57qiV/cGe3aEf5ggCTgAZznuHAuVk3UfDJxuyXVdPp61g/7Z4B7KM0tQ//i2OCMbCP3eh0SvD5uvorEXxJCIBojXYr0jrywIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709102915; c=relaxed/simple;
-	bh=K/V7UDqd9oyCfGoEQjqNayC7luvGAUZSwuSQSnnpafI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=T+UgLj7k/DvCCwt/11BXTiwh2FVzso4N90Rw4U8xOSDOAhKRjCsbIHisSXqrVM6uvaWeq4Cs2A+YE6uDjaQv57HGpYOYh6nKV7urSVCqLQnvHPBUMS/yCErJqshIPQzlJUCyBizw2cuFARdumd6kEM35g8DLng3wrShEIQkmGs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IJMkKHja; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41S5e1lx030528;
-	Wed, 28 Feb 2024 06:48:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=PXjQPQzxzzwGnFRp68FJYBNtPt7qoVZVZBr8tHSF5MY=; b=IJ
-	MkKHjakoctDI6wGkWcSP/IyXYXZufauKgG1ED+wGNmiT5emGEVmmSG0TxKWBPYjc
-	5Lkm2vyhzvJJt7MDD+UxzvXvlV0/ypgI2PinlF29RxSwacBTl2Gb80k7MHyHGt7k
-	uE8BhuZm0iZ5Dn0/HOvlA2dGPb/Ea1QXJ9DLCKD3W93XjsKvZ8Li/+JWLBxy3xkp
-	vp4GgbPZkoVRNDa0mRFEZ3nqFNdARne5T5GB5FitkYfZvDXUSG5ezOpGuE83x7G4
-	wplQKtSDWJ66McXqFJxQDc+/lQlIJq2mxH1INK7MClLMxEGsHNgcexbjzuiI2J2c
-	h2LmRI2M41AECv5YpZVw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whv1frcrc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 06:48:18 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41S6mH8x017390
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 06:48:17 GMT
-Received: from [10.216.14.152] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 27 Feb
- 2024 22:48:09 -0800
-Message-ID: <c9369d12-c31c-50cd-7b2c-974839388d72@quicinc.com>
-Date: Wed, 28 Feb 2024 12:18:06 +0530
+	s=arc-20240116; t=1709106804; c=relaxed/simple;
+	bh=A4ahDC3K/7VxYDp1KcCi8IyKxrIOOQY26srrHVeCdhk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YteRUfy0//bGVtj3SHQrSqorGNiIzzAIURcWBTYaiv5IDM/EICYDmz5LLMHTdxyCJ94G9M3Gkz2Gc1WO0XoUWjso09eOWe7G6e3jMBLUXltqQWMqIMcWOz9PhoEiQF2ncMfRd5b4quVfS91LADYvJ/h7PZEshfCJyiv6C68UAQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=tM4WWze4; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3f6aed454dso143458466b.1
+        for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 23:53:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1709106799; x=1709711599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BwZREp7Ok6on7duMSE+fGHGMVh8R/XQyRm504JpLDwM=;
+        b=tM4WWze44F4UnC7DuIHIGPdg4aXWZvQD21aS8FZ5CMspMiB/nxJrJv5NaxXnrs3lgi
+         OriQerQ7ECHtCq+gRAD2DYv+br28UiXM/7MeCcnnp8fJNEspHzmlYf3LpOL/BciHbGfH
+         Boe91TLkE7F1QbiUtGdMGi7hkvxYwLL9YscMZqsNgQ/I7+NQR9FIaMvpPjaVxHHx1eQ6
+         DSPJ+rQnLUtSG94UbVsHqtKyy/lbfzCzGcxtZHfGp+u0yAsE7IRdbbKjIPb2P1XI001f
+         ytaIlK/z+l0MCy0fzyk41TTs29EEj2sgzppbxMBEMDIACK/vEVCjuBJhlFHekcRtnueY
+         XIZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709106799; x=1709711599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BwZREp7Ok6on7duMSE+fGHGMVh8R/XQyRm504JpLDwM=;
+        b=klTlBfXgzXKO27Y3m+6kQVJKwukAkfsymweXhRArWorv7rhYR76KVxAUfBEuirsndC
+         11Fsa2KP9NSK7kUQbmBQJwCWGl3X/vcEfbXXMlnYp25s6AecXfuLpFA04X0hsPKpgE1l
+         gtPRxYyXbgs6FmDKltrOK0NO58wxV5kHMgfe2RltC2OJYUO61YbngxH4F3SAgFFXq0Jt
+         kasUHt8g8WoSIJfEcs3BdfFWbO6PSNETJm1Kg5nHZpG7lMIXGjXv+KTuVXXPlntG3hn3
+         /QryBUf36z7JKL52ZAPCUebss2erUp0f9Su0zFkPT8VUyBYyYcVCPgWyI2WKrVQrhQoo
+         wCMw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+6fGgx+z/7wKKPWLvQKNHuaf4DCVTcxzvl34J5CHFAmbab4cgp1qXlo83oyCGeJcYKNWkmauFt0/0Bise+ncX2bj1On//kbZy
+X-Gm-Message-State: AOJu0Yxyr20eTBBsrNojQhVgjZuZeT66IWmDiMXIXtD0TIuDW8khth89
+	kc6hbXbDVpsWLQi7QNeqGM00C7krDRKBaW6W16htkBcc0LvDztkfr5V+O361lqE=
+X-Google-Smtp-Source: AGHT+IEU1AQ9oBom/2JlJ30ca16bCJQGIQC+tTO7c+8eORuCVnWfa2ZS4TotZGGzAS3huEsQi9uf7g==
+X-Received: by 2002:a17:906:3caa:b0:a3f:161b:cc13 with SMTP id b10-20020a1709063caa00b00a3f161bcc13mr6082057ejh.7.1709106799382;
+        Tue, 27 Feb 2024 23:53:19 -0800 (PST)
+Received: from limbo.local ([2a00:1bb8:11f:a33a:d002:9fcd:70bf:4f2a])
+        by smtp.gmail.com with ESMTPSA id o14-20020a17090608ce00b00a4396e930bdsm1561581eje.79.2024.02.27.23.53.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 23:53:18 -0800 (PST)
+From: Daniel Drake <drake@endlessos.org>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org
+Cc: hpa@zytor.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bhelgaas@google.com,
+	david.e.box@linux.intel.com,
+	mario.limonciello@amd.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux@endlessos.org,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: [PATCH v3 1/2] PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge
+Date: Wed, 28 Feb 2024 08:53:15 +0100
+Message-ID: <20240228075316.7404-1-drake@endlessos.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v7 7/7] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Brian Masney
-	<bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>
-References: <20240227234549.GA251722@bhelgaas>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240227234549.GA251722@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: XTAq6dwlcIf-let6VF0nOWobX5a97s3y
-X-Proofpoint-ORIG-GUID: XTAq6dwlcIf-let6VF0nOWobX5a97s3y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_04,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2402280051
+Content-Transfer-Encoding: 8bit
 
+The Asus B1400 with original shipped firmware versions and VMD disabled
+cannot resume from suspend: the NVMe device becomes unresponsive and
+inaccessible.
 
+This appears to be an untested D3cold transition by the vendor; Intel
+socwatch shows that Windows leaves the NVMe device and parent bridge in D0
+during suspend, even though these firmware versions have StorageD3Enable=1.
 
-On 2/28/2024 5:15 AM, Bjorn Helgaas wrote:
-> On Tue, Feb 27, 2024 at 05:36:38PM -0600, Bjorn Helgaas wrote:
->> On Fri, Feb 23, 2024 at 08:18:04PM +0530, Krishna chaitanya chundru wrote:
->>> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
->>> maintains hardware state of a regulator by performing max aggregation of
->>> the requests made by all of the clients.
-> 
->>> It is manadate to scale the performance state based up on the PCIe speed
->>> link operates so that SoC can run under optimum power conditions.
->>
->> It sounds like it's more power efficient, but not actually
->> *mandatory*.  Maybe something like this?
->>
->>    The SoC can be more power efficient if we scale the performance
->>    state based on the aggregate PCIe link speed.
-> 
-> Actually, maybe it would be better to say "aggregate PCIe link
-> bandwidth", because we use "speed" elsewhere (PCIE_SPEED2MBS_ENC(),
-> etc) to refer specifically to the data rate independent of the width.
-> 
->>> Add Operating Performance Points(OPP) support to vote for RPMh state based
->>> upon the speed link is operating.
->>
->> "... based on the link speed."
-> 
-> "... based on the aggregate link bandwidth."
-> 
->>> In PCIe certain speeds like GEN1x2 & GEN2x1 or GEN3x2 & GEN4x1 use
->>> same bw and frequency and thus the OPP entry, so use frequency based
->>> search to reduce number of entries in the OPP table.
->>
->> GEN1x2, GEN2x1, etc are not "speeds".  I would say:
->>
->>    Different link configurations may share the same aggregate speed,
->>    e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same speed
->>    and share the same OPP entry.
-> 
->    Different link configurations may share the same aggregate
->    bandwidth, e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link
->    have the same bandwidth and share the same OPP entry.
-- I will update the commit message as suggested in my next series.
+The NVMe device and parent PCI bridge both share the same "PXP" ACPI power
+resource, which gets turned off as both devices are put into D3cold
+during suspend. The _OFF() method calls DL23() which sets a L23E
+bit at offset 0xe2 into the PCI configuration space for this root port.
+This is the specific write that the _ON() routine is unable to recover
+from. This register is not documented in the public chipset datasheet.
 
-- Krishna Chaitanya.
+Disallow D3cold on the PCI bridge to enable successful suspend/resume.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215742
+Acked-by: Jian-Hong Pan <jhp@endlessos.org>
+Signed-off-by: Daniel Drake <drake@endlessos.org>
+---
+ arch/x86/pci/fixup.c | 48 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+v3:
+Adjust comment and commit message based on feedback, and more detailed
+investigation (on bugzilla) which indicates the problem may be more
+attributable to the (lack of?) power management on the NVMe device port
+rather than the parent bridge. There's no difference practically though
+- both ACPI devices share the same power resource which is the one powered
+down in D3cold...
+
+v2:
+Match only specific BIOS versions where this quirk is required.
+Add subsequent patch to this series to revert the original S3 workaround
+now that s2idle is usable again.
+
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index f347c20247d30..859a32fba8a96 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -907,6 +907,54 @@ static void chromeos_fixup_apl_pci_l1ss_capability(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_save_apl_pci_l1ss_capability);
+ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL, 0x5ad6, chromeos_fixup_apl_pci_l1ss_capability);
+ 
++/*
++ * Disable D3cold on Asus B1400 NVMe-NCIe bridge
++ *
++ * On this platform with VMD off, the NVMe device cannot successfully power
++ * back on from D3cold. This appears to be an untested transition by the
++ * vendor: Windows leaves the NVMe and parent bridge in D0 during suspend.
++ *
++ * We disable D3cold on the parent bridge for simplicity, and the fact that
++ * both parent bridge and NVMe device share the same power resource.
++ *
++ * This is only needed on BIOS versions before 308; the newer versions flip
++ * StorageD3Enable from 1 to 0.
++ */
++static const struct dmi_system_id asus_nvme_broken_d3cold_table[] = {
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.304"),
++		},
++	},
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.305"),
++		},
++	},
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.306"),
++		},
++	},
++	{
++		.matches = {
++				DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++				DMI_MATCH(DMI_BIOS_VERSION, "B1400CEAE.307"),
++		},
++	},
++	{}
++};
++
++static void asus_disable_nvme_d3cold(struct pci_dev *pdev)
++{
++	if (dmi_check_system(asus_nvme_broken_d3cold_table) > 0)
++		pci_d3cold_disable(pdev);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x9a09, asus_disable_nvme_d3cold);
++
+ #ifdef CONFIG_SUSPEND
+ /*
+  * Root Ports on some AMD SoCs advertise PME_Support for D3hot and D3cold, but
+-- 
+2.39.2
+
 
