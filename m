@@ -1,114 +1,149 @@
-Return-Path: <linux-pci+bounces-4215-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4216-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE74886BC03
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 00:14:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 587E586BC33
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 00:30:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82CD81F27BBD
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 23:14:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A0EE1C228E9
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 23:30:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9E113D300;
-	Wed, 28 Feb 2024 23:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E36B2261D;
+	Wed, 28 Feb 2024 23:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJIb+q5x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JJJ8B4wR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB02B72903;
-	Wed, 28 Feb 2024 23:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC2313D318
+	for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 23:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709162071; cv=none; b=uhhmqHD44RhFwAmk1swwntA8NAClgFtTLBySTgYwNR6HBVKZsORmQBjcZeUUWLK89OoyyXc63Kw3iGNy6rvBtDrKaLbKsLNhGcLvaTKFYxtu20egS17JDD/cKEDYCKDPuBdjgahPVbG3hjvFYLQksBVoAUwr8LlY4HYKNoTygBc=
+	t=1709163010; cv=none; b=TU42MfI85vqL7Oq75KPJ4+bM7a0LqAm2Q9HTmHjwBSq7ArRZ0ZjbgmrMVYF4R40iFp0AY28eI8vh8Ll9JvEUfyk/S6KeRt10voC/6QA8iBISWi+1cqnMhDYSLUcAhlQUx5ktwduKNxAqMX/GRQXOpvcVWRsDrYo3/ob1pyamodM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709162071; c=relaxed/simple;
-	bh=8fdh3uYGMPOXqvAOHOoKQAaXXudO0fmxMPdCZHjqsRw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lEQzWeurHXBMvV0P9vt/z3Kk/96B/u5JpxLhH6Z8hn6iOVr9+EWpia3ZGoZUxh0Utu5lFzQT2adg0TcJp5Oog7nnngZk0e1yZ5sn/3v28HDqls3e4ft5z7hqVk6IQ0J1ERMS9RGVajDosxZ8JF75Q+o02h4fDCe6qHjsTVJ8NS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJIb+q5x; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1dbd81000b6so162415ad.0;
-        Wed, 28 Feb 2024 15:14:29 -0800 (PST)
+	s=arc-20240116; t=1709163010; c=relaxed/simple;
+	bh=Hi5lXTKu+1HKxIAwbHrUov2fvmwM59X4+ZnajCYZ0XM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YUuy78D5yzHTIXq02xNrVQMO79otQvgcuuSrYV/m9Z5YsgKM5EQFLhIYsOahM+5gJrXvE77pXRJvqN5YbQBHISb4ZUG5fEZeEk1mH/8sgKtrsXyppaKvV/moQg86PozFE0wX5ocYUPlUsZAWAXz9XfcbQMJYhqssVoXsOQeJoU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JJJ8B4wR; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-512ed314881so195285e87.2
+        for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 15:30:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709162069; x=1709766869; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ot4CmQ/hhG4zUoY7ofq6ZiMV1G5BUrp00rn44kQoMs0=;
-        b=NJIb+q5xoF2uxAjdOR6wY23tcLSWhDLzroxqtpNts/LgfeSirmGu6lVov+gZvDz20X
-         SfPy6xiNRCU5MolZ39zsMR7KGlsZyKYaO3dOiixpNrm0VYaMIcW+qnJvzETU63cgzGx0
-         /AYLrpQVpo0vo0eELGTD422Apkv97Tbyr58zAEy7ikQy5cwJA66QbHNQEteUnuMGZZY4
-         iHaB9s7PybVCs/GszZaAq97DG2E0qHeXDBGEyXihXrrHJ0p41LSfDlxSut4au56yp9NE
-         ERfXTGBGRHUTTvRZXNh9gYgV7Hoy5HS+T3iOLkqyVm33YE8mlg62PEsPIoLsdu913G+p
-         4sGA==
+        d=linaro.org; s=google; t=1709163007; x=1709767807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQxHKLVMe9zF7KdVnR20XeSPbfRoANWPrPTTMde3MT4=;
+        b=JJJ8B4wR9tzAbhePgQo1lqhpTW2JDs0wRGAqhH6iioELdzzpfbCXCFGpfg8t9DZXrG
+         8fTs7nBc27x9PG0RUzJIz4kPzyX8IXDG1VtcFZ7syW8VeAjAdCjwbG2ijZlWe27rGIrQ
+         QxXG7BzlA/qpa28OPg0c9PcD+N8wrxz/AxLL6HJDw1CzZFNgmUe2bfOZGh+Lu9inFh/K
+         2h5DXyECjSj7MiI+WDjRNPecce6elbA/oCnPzJP/ikmwsOur5tmHjpq/ckN4P1nmNFnz
+         Hy0LiscMuqvmQ1W6axO8eHj/L84B+IBAnGb0bV6qhD1t47Equt4ozJ7GsEZKlqJcF/LF
+         K1+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709162069; x=1709766869;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ot4CmQ/hhG4zUoY7ofq6ZiMV1G5BUrp00rn44kQoMs0=;
-        b=KeNoHQ4oFwUEgdtx2sM8uYFaVI1lSEryXHFKhM7m3gSLSkpOkt4VByCaTJN7hlMST/
-         IhWvUT6GfM9tk0rwVIEDaE7qlEI8vb9VvX5M5jiOT2U2As1XiOn/AJIooQj4XTzkPTDv
-         Ku9yEWVbGsHoGLYTMgLonTY39HOR59xBpXf3npD3ZefijRqS3T72uU1JvpP9NQnXBJ3L
-         F0hyPCSeLWjB+De/dlVJ7PbfvII3HbkGtG4WVtPPSeP4Fmo8q//SpxDi4ZSk5ZVVKrxe
-         Ge62/3esdG9zADV5mxHmq77FAwHV/dm92CWD4JZ4lznJn65RthBDLJValQ3VI/QYhPgu
-         pIJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkl1o5cn5HtoauDwjyUpcjdm+IsVShd2gBIGNQIZSHxQcRv7In4Bbt/ABe7rvp+YbJYvj190H7WHoTNmBHZTmLv5iKIdd05P+NN7C39tRw/mi/gPnADJbyE+2mbgSmIJ4a83dtVpKGmvMlYhz/r9ZhFSoJ5NZskfofaoAS
-X-Gm-Message-State: AOJu0Ywa2DhgO411xyaYf2T73o56/MNPHVrSlGQS4n66TSpQgEz0GpbX
-	iYznWb1WhFbfPK3zEUsLdiORMnRvxmP4qoteBiUEGRVtqxOtMsK9ccPHPhMY+um/AIQ+rU4lm7q
-	f8Wq93nhxGFarE9KjcwJXtAy8HZs=
-X-Google-Smtp-Source: AGHT+IGdgZmlOD3uGWnVHJMjyJeA37xtSoParRksvcba8xX7FIeNpPx7PfxE6W9DLFTPkUvcu1cBQtxqPixljO3Quq4=
-X-Received: by 2002:a17:90a:3d45:b0:298:b736:ecf7 with SMTP id
- o5-20020a17090a3d4500b00298b736ecf7mr667831pjf.0.1709162069188; Wed, 28 Feb
- 2024 15:14:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709163007; x=1709767807;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQxHKLVMe9zF7KdVnR20XeSPbfRoANWPrPTTMde3MT4=;
+        b=j/tJVgettuqJ0+Z5bGLMqrXrH3LLfkEzukKND55VnS0Xj0emZjXmKdJ00OteMMAnja
+         P7sc/0gCENDOIN77iKq++D/RucSw2DNtkOAjZUcQKtwNTywRxw04skAluSQF0X4ida/N
+         9Q43iXccWsOacsvSOBWNnFsytC4ihhjqdfV3K13diuwzjBZysFxTXswvF8jl0ykGSz7f
+         YeyzPsyA6v9nzOapuZBq1ApJPcvgUDpNv9io0FdeGw1UhnCIaV4aa52/Ztigu5wpP6Nb
+         j0JPHgUOqdgz8s4v0R6akNpaJsHtxLcI+JWpBKpJcVaP/YS9qbBgDO7Qya0AfG+Z17n5
+         R/Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzv8DxSpS0riq1K+wB5G8VIG89hmmMuFoviQNRLlYHEN+D2s4W+vrJoaV/H5rLt03tbYfTvaBscvUFzVTErTCVZAN8L1fYKZpT
+X-Gm-Message-State: AOJu0Yzo4qeW8pa0P/UJ1WtDvlI+5AFbjgrtiCyCXo8C0WZzwwYtivYx
+	0MYEa3HI1WsbXUioWQjN8t9AiOldvJLq/lkpb4d/R8cGErRSwD4XhxfnxooyaCE=
+X-Google-Smtp-Source: AGHT+IHN5YjuBZlnrntaLoy+ZQsiiJ3wrqjcW6gl3lzyPot3QNyWDQDxLDeELDUVHC67EUW9JmTOmg==
+X-Received: by 2002:ac2:488d:0:b0:513:1561:af08 with SMTP id x13-20020ac2488d000000b005131561af08mr226006lfc.60.1709163007343;
+        Wed, 28 Feb 2024 15:30:07 -0800 (PST)
+Received: from [172.30.205.146] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id c2-20020ac244a2000000b0051321393cbasm29610lfm.115.2024.02.28.15.30.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Feb 2024 15:30:06 -0800 (PST)
+Message-ID: <ada6c2ac-06ad-44bc-8d1e-e59ccf8ac551@linaro.org>
+Date: Thu, 29 Feb 2024 00:30:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227-pci2_upstream-v1-0-b952f8333606@nxp.com> <20240227-pci2_upstream-v1-1-b952f8333606@nxp.com>
-In-Reply-To: <20240227-pci2_upstream-v1-1-b952f8333606@nxp.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 28 Feb 2024 20:14:16 -0300
-Message-ID: <CAOMZO5C-01=jYbJTgQucfD8+pT-chy4xvQMckUee1O+gtE-0pQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] PCI: imx6: Rename imx6_* with imx_*
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	NXP Linux Team <linux-imx@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-pci@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and GICv3
+ ITS enable
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>, Johan Hovold
+ <johan+linaro@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240228220843.GA309344@bhelgaas>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240228220843.GA309344@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 27, 2024 at 6:47=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
->
-> imx6_* actually mean for all imx chips (imx6x, imx7x, imx8x and imx9x).
 
-That's OK. In the kernel, we have lots of examples where the names of
-files and functions follow the first chip model.
 
-If this same IP gets used by another SoC in the future that is not
-named i.MX, will this driver get renamed again?
+On 2/28/24 23:08, Bjorn Helgaas wrote:
+> [+to Mani]
+> 
+> On Fri, Feb 23, 2024 at 04:21:12PM +0100, Johan Hovold wrote:
+>> This series addresses a few problems with the sc8280xp PCIe
+>> implementation.
+>> ...
+> 
+>> A recent commit enabling ASPM on certain Qualcomm platforms introduced
+>> further errors when using the Wi-Fi on the X13s as well as when
+>> accessing the NVMe on the CRD. The exact reason for this has not yet
+>> been identified, but disabling ASPM L0s makes the errors go away. This
+>> could suggest that either the current ASPM implementation is incomplete
+>> or that L0s is not supported with these devices.
+>> ...
+> 
+>> As this series fixes a regression in 6.7 (which enabled ASPM) and fixes
+>> a user-reported problem with the Wi-Fi often not starting at boot, I
+>> think we should merge this series for the 6.8 cycle. The final patch
+>> enabling the GIC ITS should wait for 6.9.
+>>
+>> The DT bindings and PCI patch are expected to go through the PCI tree,
+>> while Bjorn A takes the devicetree updates through the Qualcomm tree.
+>> ...
+> 
+>> Johan Hovold (12):
+>>    dt-bindings: PCI: qcom: Allow 'required-opps'
+>>    dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
+>>    dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
+>>    PCI: qcom: Add support for disabling ASPM L0s in devicetree
+> 
+> The ASPM patches fix a v6.7 regression, so it would be good to fix
+> that in v6.8.
+> 
+> Mani, if you are OK with them, I can add them to for-linus for v6.8.
+> 
+> What about the 'required-opps' and 'msi-map-mask' patches?  If they're
+> important, I can merge them for v6.8, too, but it's late in the cycle
+> and it's not clear from the commit logs why they shouldn't wait for
+> v6.9.
 
-> Rename imx6_* with imx_* to avoid confuse.
+Either way, I believe they should go through the qcom tree, as it's
+a very hot one with lots of different changes to a given file.
 
-I don't find it confusing.
+Unless the soc-late window is already closed... Bjorn A will know.
 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 754 +++++++++++++++++-----------=
-------
->  1 file changed, 377 insertions(+), 377 deletions(-)
-
-I think this pure churn and we should not do the rename as it brings
-no benefits.
+Konrad
 
