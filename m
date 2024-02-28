@@ -1,198 +1,183 @@
-Return-Path: <linux-pci+bounces-4166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4167-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A31F86A461
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 01:25:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB88686A6F0
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 03:56:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07036288247
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 00:25:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B8DB1F2A53A
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 02:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E47A136F;
-	Wed, 28 Feb 2024 00:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0D271CD13;
+	Wed, 28 Feb 2024 02:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lO8GM/Py"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D/puvzcM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCE5363;
-	Wed, 28 Feb 2024 00:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DADD1CD0F
+	for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 02:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709079932; cv=none; b=sOSAhzTuN32yKuIQ3oVYiL9ITpJ8HaBI2SKqnoFRpQN+J6XQpZQoOQNPxhKuJp296IDTcQ1JNoITaJOFOPdBceC3pqG+Gbo5v762hlXyggGFsT27O319eo+lIkMFdEs5kPyk2DgKVN8cDJClellM8JqjPPGFful4rSTSgPUXTlg=
+	t=1709088970; cv=none; b=RrVXQt5K01wfzeTYmKq1GnxdHkeJAcSDeXQFuPggVr6zmZ2YzvM/WR2lvGHg+bR2Xn/wElDSwy5BPI90SQTxWW5iEyW6lABGqSUY0OGpMGZVoWB3WVkDHnbaIqxbcg05Klobx21N7PRs4u+ZPAD6M6c/uGuoKzrT1sDG8D9/4Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709079932; c=relaxed/simple;
-	bh=RfHADThP6ohdZVQWYVOk7Sb8DwO11tqy+hiODNSiMEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=u5Ltyi1ohCQ9E0ZwhWiJ8m8oVH6PUAMLoA08eka7OpeLKidDvmZ2OEqVmnz68iAC2ilYXvNR/tG5JD+X3JHipzfzdYwEgShKCKVsiRVtGEa8lWhJ9h9P1jL+uNSpon3aEF5bZuXeMhg3ApHq85GKu4l4WzIZBq4d8AomlCGzxzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lO8GM/Py; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 076F5C433F1;
-	Wed, 28 Feb 2024 00:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709079932;
-	bh=RfHADThP6ohdZVQWYVOk7Sb8DwO11tqy+hiODNSiMEk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lO8GM/PyiLXhVmhZ17H2eIOKR2dm9RTQw9wUpBcOzUzlkmp0mzqFcZXTM/cZ0KR75
-	 h7Ehn0DUKKxrQ14U+HQdrhZgR/BpP9Ur053WHhPqy11WCHlVRKY2JbI4EONxKGaXrg
-	 HOt4Aq3bcyarvUP0qQy2NkN9B7XGvnk6Xq4XDlJ3GwNmZHTTBI7+e1zk8uL/KhtK6C
-	 jrc5X6a5ai6gxWu1fzlA7U/zNGOikAMied4VFHotbukbnNr1oMxBO0kOpbYF0iac6y
-	 NOWxCGno1KjE1NHguS8/9Lt9+npN0wLsdJvRYwxn3xThRCtTN34SkHS1ZWq8IX1OYv
-	 KNRVkbNpgp2MQ==
-Date: Tue, 27 Feb 2024 18:25:30 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	s=arc-20240116; t=1709088970; c=relaxed/simple;
+	bh=FH96oV7a38f0agXJlxc8Uq/wx355YA+Wc9LQAqH3UVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WcWavC4AXlV+w6tzk+ugqgoF29T7GspuchtfJykdocN9aqobJBcvV/HunmRBrNk8gXwcYI3ATEgrD8WuT6GaBDe0JV7wsiW6C4NaODzCTDzODwlAtG2RhSV4BdlmvYjhXbTueHv+m4XyqeZiCTl9p8jHOS00dlY7yygdl0drxDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D/puvzcM; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29a378040daso3702126a91.1
+        for <linux-pci@vger.kernel.org>; Tue, 27 Feb 2024 18:56:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1709088969; x=1709693769; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CnlPmE7MlVaSQ5beDat/xllh7q+4+hw8oXcKD+TOUsE=;
+        b=D/puvzcM7kF4RQ9Yeixm08+SIyTeXV9OEZ8KJymUcQabUSr43M+nBwlSBaMkG6PcwQ
+         g2Kf/RSCPBx22FwHVzPa3HYjHmJXkctoJeUYHyPozWzFw+g1rex8Q5FrG6GuFB+neitQ
+         rcWDJfdhaAlJHhKZ43W1GQ505s1hb+NlhFAfigvgNi/5dR0fae67TnhlrktqXPnkHKGF
+         ImCIpdILmE4fDn0q6w6HZESP3R0PMn9NpnGpaa5Y0li1CoNzoe8GUivo8jX/SuJLslaK
+         Gj95bX3EZjcZEAjKV+1cFHl/bzPdTmUJ8RPHjkDaM3ta2bQavYSC/lJrvomn48LCNDll
+         yidA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709088969; x=1709693769;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CnlPmE7MlVaSQ5beDat/xllh7q+4+hw8oXcKD+TOUsE=;
+        b=JBe9NCrLITb7KOmtLGCGSeBE1X6F9hcJZWURd0rq7UO6BTl6Zdi3d81nrCOvJJHq2S
+         jMJmVKVmBlNd8UtO3qM5McFjIz+td9AB/Ez7d6nGciZoLblBEdN/hlE0AlVeUVy8ve7x
+         MdaTwpeRN7ieskyTPLkefKoaW5ko+N/wsL1qs4RJ+Yc5/rwDGIEG69D45RfHsPdEhb7p
+         beu67ZIY/LBNZGSqQvP8hwj1K6jDb7SarZnV7J8I1rGKsG8z1adx1cZlCTUYDzVwx/0X
+         n87nJSe7/+5rSTIbNVjSJkUSvP4NupDt8AZ7atpTO1VrxASRFYOH4Mf66dV9C1VqgEj2
+         7Vcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTewXFaIv59oZm5pAsCjsxyOsea1YLgbn76fMJzFV7f3IZrwGXUZ3lPoFtEBNArtVoyyrUuQryB1+PeBH1J4nxYC7gXhk5iBH6
+X-Gm-Message-State: AOJu0YwCoaS8w44613v4nxFSFh88MV5+6Sp+/czYdhsO0699NOs/iZpL
+	V+Bn4Ibqw8B5ZuOHIsO5z49yguTWHXoDNDaBXOzubxBsKqqHt4TQzS2LQm7UAw==
+X-Google-Smtp-Source: AGHT+IGQZ5j99lgiSRB1jG+y4gWBcRAA/GMwC3m8TdaJ2EWi3KC6O7qmrkBjmOAk6BB+/yEfPRxT6Q==
+X-Received: by 2002:a17:90b:1050:b0:29a:9ba0:8a5b with SMTP id gq16-20020a17090b105000b0029a9ba08a5bmr9193495pjb.5.1709088968477;
+        Tue, 27 Feb 2024 18:56:08 -0800 (PST)
+Received: from google.com (122.235.124.34.bc.googleusercontent.com. [34.124.235.122])
+        by smtp.gmail.com with ESMTPSA id p15-20020a17090adf8f00b0029a8a599584sm300263pjv.13.2024.02.27.18.56.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Feb 2024 18:56:08 -0800 (PST)
+Date: Wed, 28 Feb 2024 08:25:58 +0530
+From: Ajay Agarwal <ajayagarwal@google.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
 	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vireshk@kernel.org,
-	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v7 6/7] PCI: Bring out the pcie link speed to MBps logic
- to new function
-Message-ID: <20240228002530.GA250175@bhelgaas>
+	Jon Hunter <jonathanh@nvidia.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
+	Doug Zobel <zobel@google.com>,
+	William McVicker <willmcvicker@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+	Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
+Message-ID: <Zd6gvkvHozWk2Pqj@google.com>
+References: <20240206171043.GE8333@thinkpad>
+ <20240214220228.GA1266356@bhelgaas>
+ <20240215140908.GA3619@thinkpad>
+ <ZdbN0b_pEqoFPP3s@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240223-opp_support-v7-6-10b4363d7e71@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZdbN0b_pEqoFPP3s@google.com>
 
-Mention the new interface name in the subject and in the commit log.
-
-s/pcie/PCIe/
-
-The subject says "to MBps", but the commit log says "to frequency".
-
-On Fri, Feb 23, 2024 at 08:18:03PM +0530, Krishna chaitanya chundru wrote:
-> Bring the switch case in pcie_link_speed_mbps to new function to
-> the header file so that it can be used in other places like
-> in controller driver.
-
-s/pcie_link_speed_mbps/pcie_link_speed_mbps()/ to identify it as a
-function.
-
-> Create a new macro to convert from MBps to frequency.
-
-Include the new macro name here.
-
-I think pcie_link_speed_mbps() returns Mb/s (mega*bits* per second),
-not MB/s (mega*bytes* per second).
-
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/pci.c | 19 +------------------
->  drivers/pci/pci.h | 24 ++++++++++++++++++++++++
->  2 files changed, 25 insertions(+), 18 deletions(-)
+On Thu, Feb 22, 2024 at 10:00:09AM +0530, Ajay Agarwal wrote:
+> On Thu, Feb 15, 2024 at 07:39:08PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Feb 14, 2024 at 04:02:28PM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Feb 06, 2024 at 10:40:43PM +0530, Manivannan Sadhasivam wrote:
+> > > > ...
+> > > 
+> > > > ... And for your usecase, allowing the controller driver to start
+> > > > the link post boot just because a device on your Pixel phone comes
+> > > > up later is not a good argument. You _should_not_ define the
+> > > > behavior of a controller driver based on one platform, it is really
+> > > > a bad design.
+> > > 
+> > > I haven't followed the entire discussion, and I don't know much about
+> > > the specifics of Ajay's situation, but from the controller driver's
+> > > point of view, shouldn't a device coming up later look like a normal
+> > > hot-add?
+> > > 
+> > 
+> > Yes, but most of the form factors that these drivers work with do not support
+> > native hotplug. So users have to rescan the bus through sysfs.
+> > 
+> > > I think most drivers are designed with the assumption that Endpoints
+> > > are present and powered up at the time of host controller probe, which
+> > > seems a little stronger than necessary.
+> > > 
+> > 
+> > Most of the drivers work with endpoints that are fixed in the board design (like
+> > M.2), so the endpoints would be up when the controller probes.
+> > 
+> > > I think the host controller probe should initialize the Root Port such
+> > > that its LTSSM enters the Detect state, and that much should be
+> > > basically straight-line code with no waiting.  If no Endpoint is
+> > > attached, i.e., "the slot is empty", it would be nice if the probe
+> > > could then complete immediately without waiting at all.
+> > > 
+> > 
+> > Atleast on Qcom platforms, the LTSSM would be in "Detect" state even if no
+> > endpoints are found during probe. Then once an endpoint comes up later, link
+> > training happens and user can rescan the bus through sysfs.
+> > 
+> > But, I don't know the real need of 1s loop to wait for the link. It predates my
+> > work on DWC drivers. Maybe Lorenzo could shed some light. I could not find the
+> > reference in both DWC and PCIe specs (maybe my grep was bad).
+> > 
+> > > If the link comes up later, could we handle it as a hot-add?  This
+> > > might be an actual hot-add, or it might be that an Endpoint was
+> > > present at boot but link training didn't complete until later.
+> > > 
+> > > I admit it doesn't look trivial to actually implement this.  We would
+> > > need to be able to detect link-up events, e.g., via hotplug or other
+> > > link management interrupts.  Lacking that hardware functionality, we
+> > > might need driver-specific code to wait for the link to come up
+> > > (possibly drivers could skip the wait if they can detect the "slot
+> > > empty" case).
+> > > 
+> > > Also, the hotplug functionality (pciehp or acpiphp) is currently
+> > > initialized later and there's probably a race with enabling and
+> > > detecting hot-add events in the "slot occupied" case.
+> > > 
+> > 
+> > As I mentioned above, hotplug is not possible in all the cases. There is a
+> > series floating to add GPIO based hotplug, but still that requires board
+> > designers to route a dedicated GPIO to the endpoint.
+> > 
+> > To conclude, we do need to check for the existence of the endpoints during
+> > probe. But whether the driver should wait for 1s for the link to come up,
+> > should be clarified by Lorenzo.
+> > 
+> Lorenzo himself applied my patch [1] which had caused the regression on
+> QCOM platforms. So I am assuming that he is okay with removing this 1s
+> delay.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index d8f11a078924..b441ab862a8d 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -6309,24 +6309,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
->  	if (err)
->  		return err;
->  
-> -	switch (to_pcie_link_speed(lnksta)) {
-> -	case PCIE_SPEED_2_5GT:
-> -		return 2500;
-> -	case PCIE_SPEED_5_0GT:
-> -		return 5000;
-> -	case PCIE_SPEED_8_0GT:
-> -		return 8000;
-> -	case PCIE_SPEED_16_0GT:
-> -		return 16000;
-> -	case PCIE_SPEED_32_0GT:
-> -		return 32000;
-> -	case PCIE_SPEED_64_0GT:
-> -		return 64000;
-> -	default:
-> -		break;
-> -	}
-> -
-> -	return -EINVAL;
-> +	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
->  }
->  EXPORT_SYMBOL(pcie_link_speed_mbps);
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2336a8d1edab..82e715ebe383 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -282,6 +282,30 @@ void pci_bus_put(struct pci_bus *bus);
->  	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
->  	 0)
->  
-> +static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
-> +{
-> +	switch (speed) {
-> +	case PCIE_SPEED_2_5GT:
-> +		return 2500;
-> +	case PCIE_SPEED_5_0GT:
-> +		return 5000;
-> +	case PCIE_SPEED_8_0GT:
-> +		return 8000;
-> +	case PCIE_SPEED_16_0GT:
-> +		return 16000;
-> +	case PCIE_SPEED_32_0GT:
-> +		return 32000;
-> +	case PCIE_SPEED_64_0GT:
-> +		return 64000;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +#define PCIE_MBS2FREQ(speed) (pcie_link_speed_to_mbps(speed) * 1000)
+>  [1] https://lore.kernel.org/all/168509076553.135117.7288121992217982937.b4-ty@kernel.org/
+>
+Hi Mani, I am wondering if you have any thoughts on the above comment?
 
-I feel like I might have asked some of this before; if so, my
-apologies and maybe a comment would be useful here to save answering
-again.
-
-The MBS2FREQ name suggests that "speed" is Mb/s, but it's not; it's an
-enum pci_bus_speed just like PCIE_SPEED2MBS_ENC() takes.
-
-When PCI SIG defines a new data rate, PCIE_MBS2FREQ() will do
-something completely wrong when pcie_link_speed_to_mbps() returns
--EINVAL.  I think it would be better to do this in a way that we can
-warn about the unknown speed and fall back to some reasonable default
-instead of whatever (-EINVAL * 1000) works out to.
-
-PCIE_MBS2FREQ() looks an awful lot like PCIE_SPEED2MBS_ENC(), except
-that it doesn't adjust for the encoding overhead and it multiplies by
-1000.  I don't know what that result means.  The name suggests a
-frequency?
-
-  pcie_link_speed_to_mbps(PCIE_SPEED_2_5GT) == 2500 Mbit/s (raw data rate)
-  PCIE_SPEED2MBS_ENC(PCIE_SPEED_2_5GT) == 2000 Mbit/s or 2 Gbit/s (effective data rate)
-  PCIE_MBS2FREQ(PCIE_SPEED_2_5GT) == 2500000 (? 2.5M of something)
-
-I don't really know how OPP works, but it looks like maybe
-PCIE_MBS2FREQ() is a shim that depends on how the OPP tables in DT are
-encoded?  I'm surprised that the DT OPP tables aren't encoded with
-either the raw data rate or the effective data rate directly instead
-of what looks like the raw data rate / 1000.
-
-Is this a standard OPP encoding that will apply to other drivers?  If
-so, it would be helpful to point to where that encoding is defined.
-If not, PCIE_MBS2FREQ() should probably be defined in pcie-qcom.c.
-
-Bjorn
+> > - Mani
+> > 
+> > -- 
+> > மணிவண்ணன் சதாசிவம்
 
