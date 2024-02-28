@@ -1,86 +1,218 @@
-Return-Path: <linux-pci+bounces-4174-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4175-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E770386AA2D
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 09:37:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 286E386AAA2
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 10:00:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D32228A0DA
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 08:37:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 483201C253CE
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Feb 2024 09:00:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF113613E;
-	Wed, 28 Feb 2024 08:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A20A2E84F;
+	Wed, 28 Feb 2024 09:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="GNrYvLqP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LaSmTbZ9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99C8339A1
-	for <linux-pci@vger.kernel.org>; Wed, 28 Feb 2024 08:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FD92E419;
+	Wed, 28 Feb 2024 09:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709109298; cv=none; b=kSW4IYJnGarQyB3tVP7u88sF4nTn8nQX0tYXLAf2ltNcBxZdYT9VsKbHVNcU0KNAUT4+tWYxihQIjLlYBY9/f5VJIL0Ba6l46ckv1IC9jyiI3p0Mza9GBCju7lhpKDPfBrYl+rSYWh/lRnRKgjhqBZo8h+DJd1Kz9eL7OVbbTKk=
+	t=1709110818; cv=none; b=D7p6bkxxqeX9gPdhxwNm929XdZHc59CZjDs9QHTe3KI778iM8TN/p2j67x33vyz/aT2scMXhRnnS0iXplNxqsuho8aw3wntF1bOELPuv5KqJgLA2rlaNnJSPLoCIfov7VqCKtLDoIgs/PQA+BpdYZxfpI3ZgESiWPSO4t8LMrW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709109298; c=relaxed/simple;
-	bh=n295qIbpvY/+rh8OUlBCkpxsEe7pzRcpAtG/jiUFWR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KKYpzsGo71KRde8ZRVq49xYMdO1Oaqhpi3xaFNNlD5c6OuPhAXHeMZR1GrmZjyz37JWyntdzpN6lmDyhQFOrlZ/ZtnksVvgjM4cjH5r+d3lM/MXv13O/zLYrW0FfDKglhuLRrK3lEmMaIlDfHQHk62UL3w3MTNvlbZmioHCyrlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=GNrYvLqP; arc=none smtp.client-ip=195.113.20.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
-Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
-	id BA903283E3E; Wed, 28 Feb 2024 09:34:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1709109287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TO0KebetWmsyxUqbipCxflfdiZDixsVMk/BoIhk4EsI=;
-	b=GNrYvLqPFtP41wuLo4daPme0xY5DLnDpz2F2krNQh1PZPgAVtZAplR4xJOps7J6tUfqocG
-	KZ4RX/8nImWx97i9PMuK25tcGolZiSsFw7Tv1KLGr7OCc1GUsqtY0opuCIfSdZhHgMJ5IA
-	HziBXf4lrkK9+DB87AVPeDQeKt7cShs=
-Date: Wed, 28 Feb 2024 09:34:47 +0100
-From: Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Cc: kobayashi.da-06@jp.fujitsu.com, linux-cxl@vger.kernel.org,
-	y-goto@fujitsu.com, linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com
-Subject: Re: [RFC PATCH v2 3/3] lspci: Add function to display cxl1.1 device
- link status
-Message-ID: <mj+md-20240228.082836.19016.nikam@ucw.cz>
-References: <20240227083313.87699-1-kobayashi.da-06@fujitsu.com>
- <20240227083313.87699-4-kobayashi.da-06@fujitsu.com>
+	s=arc-20240116; t=1709110818; c=relaxed/simple;
+	bh=vsh9jGxQjjvBWK3B4oQcW0pqzFbEoSreLHkQicRRkn8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XqbSYHmtI/d4Tys9la7W1jF2p00xaxPm/3Ghvge9UjKiYIquv1WL4nZ5A4lNH/Gq5w572AY5g3JAmaIEVRB34DoLCwS3IxN0p7Ohz0HbpAvTbXQj1g3ewYTchezQyiiI6+v9JE0n/0il1sYKDirisU5wGLzoKHhSAt+zMYlt44Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LaSmTbZ9; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709110816; x=1740646816;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vsh9jGxQjjvBWK3B4oQcW0pqzFbEoSreLHkQicRRkn8=;
+  b=LaSmTbZ9SBV3mflqI845r+3zLA8QyMSxE4v3mNpFY3IYyc6cTcI7+BJu
+   el755Ws326R1VlwsOWV+MaS+nxSt2SadeL/hnsY21gF3Kbdhpxy4DJ3OR
+   8aD6b8S9bsV3K9raqG6mfRzMCqmsp2DOZDf/W0zwaue+o5JfljG2M1P/L
+   gkI1cSVjgIG+kjPPG2vD8hgq7YaS/Iq2d4L4+Z0salhDesgE8F0GZiRAC
+   HXLExSWG1cwHLKBIMrDkoIN5qi8i1aL34gLVRS7DWWGL7h0tevYa4Enzk
+   +wfiogOPgTtSNSNx7PaloJAKFGIxARHqNC1+cORh5vwbKzNCILIVu1bh0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3421075"
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="3421075"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 01:00:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,190,1705392000"; 
+   d="scan'208";a="7396998"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2024 01:00:12 -0800
+Message-ID: <eac3e9e7-657f-4de2-b9ed-878ffc2b93cb@linux.intel.com>
+Date: Wed, 28 Feb 2024 17:00:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240227083313.87699-4-kobayashi.da-06@fujitsu.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 3/3] iommu/vt-d: improve ITE fault handling if target
+ device isn't valid
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, baolu.lu@linux.intel.com,
+ bhelgaas@google.com, robin.murphy@arm.com, jgg@ziepe.ca,
+ kevin.tian@intel.com, dwmw2@infradead.org, will@kernel.org, lukas@wunner.de,
+ yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20240226225234.GA211745@bhelgaas>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20240226225234.GA211745@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello!
+On 2/27/2024 6:52 AM, Bjorn Helgaas wrote:
+> On Fri, Feb 23, 2024 at 10:29:28AM +0800, Ethan Zhao wrote:
+>> On 2/22/2024 7:24 PM, Dan Carpenter wrote:
+>>> On Thu, Feb 22, 2024 at 04:02:51AM -0500, Ethan Zhao wrote:
+>>>> Because surprise removal could happen anytime, e.g. user could request safe
+>>>> removal to EP(endpoint device) via sysfs and brings its link down to do
+>>>> surprise removal cocurrently. such aggressive cases would cause ATS
+>>>> invalidation request issued to non-existence target device, then deadly
+>>>> loop to retry that request after ITE fault triggered in interrupt context.
+>>>> this patch aims to optimize the ITE handling by checking the target device
+>>>> presence state to avoid retrying the timeout request blindly, thus avoid
+>>>> hard lockup or system hang.
+>>>>
+>>>> Devices are valid ATS invalidation request target only when they reside
+>>>> in the iommu->device_rbtree (probed, not released) and present.
+>>> "valid invalidation" is awkward wording.  Can we instead say:
+>> If you read them together, sounds like tongue twister. but here "ATS
+>> invalidation request target" is one term in PCIe spec.
+> "ATS invalidation request target" does not appear in the PCIe spec.  I
+> think you're trying to avoid sending ATS Invalidate Requests when you
+> know they will not be completed.
+>
+> It is impossible to reliably determine whether a device will be
+> present and able to complete an Invalidate Request.  No matter what
+> you check to determine that a device is present *now*, it may be
+> removed before an Invalidate Request reaches it.
+>
+> If an Invalidate Request to a non-existent device causes a "deadly
+> loop" (I'm not sure what that means) or a hard lockup or a system
+> hang, something is wrong with the hardware.  There should be a
 
-> This patch adds a function to output the link status of the CXL1.1 device
-> when it is connected.
-> 
-> In CXL1.1, the link status of the device is included in the RCRB mapped to
-> the memory mapped register area. The value of that register is outputted
-> to sysfs, and based on that, displays the link status information.
+The hardware might be innocent, here in the qi_submit_sync() &
+qi_check_fault() will retry the timeout request forever if the
+target device is gone or the target device always takes too much
+time to reponse. there is dead loop here.
 
-I like using sysfs to access the RCRB, but since it is specific to Linux,
-you cannot do it in ls-caps.c (everything in this file is platform-independent).
+This patch aims to break the dead loop for case device is not
+present anymore.
 
-The right way is to extend libpci and its interface to platform-specific
-back-ends to provide this functionality. However, I am not sure that we should
-add special functions just for this purpose. I will think of something more
-general and let you know soon.
+But for those devices takes too much time to complete. I am
+working on other patches, not in this patchset.
 
-Otherwise, please follow the coding style of the rest of the file.
 
-				Martin
+Thanks,
+Ethan
+
+> mechanism to recover from a timeout in that situation.
+>
+> You can avoid sending Invalidate Requests to devices that have been
+> removed, and that will reduce the number of timeout cases.  But if you
+> rely on a check like pci_device_is_present() or
+> pci_dev_is_disconnected(), there is *always* an unavoidable race
+> between a device removal and the Invalidate Request.
+>
+>>>> @@ -1273,6 +1273,9 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    {
+>>>>    	u32 fault;
+>>>>    	int head, tail;
+>>>> +	u64 iqe_err, ite_sid;
+>>>> +	struct device *dev = NULL;
+>>>> +	struct pci_dev *pdev = NULL;
+>>>>    	struct q_inval *qi = iommu->qi;
+>>>>    	int shift = qi_shift(iommu);
+>>>> @@ -1317,6 +1320,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    		tail = readl(iommu->reg + DMAR_IQT_REG);
+>>>>    		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
+>>>> +		/*
+>>>> +		 * SID field is valid only when the ITE field is Set in FSTS_REG
+>>>> +		 * see Intel VT-d spec r4.1, section 11.4.9.9
+>>>> +		 */
+>>>> +		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
+>>>> +		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
+>>>> +
+>>>>    		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
+>>>>    		pr_info("Invalidation Time-out Error (ITE) cleared\n");
+>>>> @@ -1326,6 +1336,21 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index)
+>>>>    			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
+>>>>    		} while (head != tail);
+>>>> +		/*
+>>>> +		 * If got ITE, we need to check if the sid of ITE is one of the
+>>>> +		 * current valid ATS invalidation target devices, if no, or the
+>>>> +		 * target device isn't presnet, don't try this request anymore.
+>>>> +		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
+>>>> +		 */
+>>> This comment is kind of confusing.
+>> Really confusing ? this is typo there, resnet-> "present"
+>>
+>>> /*
+>>>    * If we have an ITE, then we need to check whether the sid of the ITE
+>>>    * is in the rbtree (meaning it is probed and not released), and that
+>>>    * the PCI device is present.
+>>>    */
+>>>
+>>> My comment is slightly shorter but I think it has the necessary
+>>> information.
+>>>
+>>>> +		if (ite_sid) {
+>>>> +			dev = device_rbtree_find(iommu, ite_sid);
+>>>> +			if (!dev || !dev_is_pci(dev))
+>>>> +				return -ETIMEDOUT;
+>>> -ETIMEDOUT is weird.  The callers don't care which error code we return.
+>>> Change this to -ENODEV or something
+>> -ETIMEDOUT means prior ATS invalidation request hit timeout fault, and the
+>> caller really cares about the returned value.
+>>
+>>>> +			pdev = to_pci_dev(dev);
+>>>> +			if (!pci_device_is_present(pdev) &&
+>>>> +				ite_sid == pci_dev_id(pci_physfn(pdev)))
+>>> The && confused me, but then I realized that probably "ite_sid ==
+>>> pci_dev_id(pci_physfn(pdev))" is always true.  Can we delete that part?
+>> Here is the fault handling, just double confirm nothing else goes wrong --
+>> beyond the assumption.
+>>
+>>> 		pdev = to_pci_dev(dev);
+>>> 		if (!pci_device_is_present(pdev))
+>>> 			return -ENODEV;
+>>>
+>>>
+>>>> +				return -ETIMEDOUT;
+>>> -ENODEV.
+>> The ATS invalidation request could be sent from userland in later code,
+>> the userland code will care about the returned value,  -ENODEV is one aspect
+>> of the fact (target device not present), while -ETIMEDOUT is another
+>> (timeout happened). we couldn't return them both.
+>>
+>>>> +		}
+>>>>    		if (qi->desc_status[wait_index] == QI_ABORT)
+>>>>    			return -EAGAIN;
+>>>>    	}
+>>> Sorry, again for nit picking a v13 patch.  I'm not a domain expert but
+>>> this patchset seems reasonable to me.
+>> Though this is the v13, it is based on new rbtree code, you are welcome.
+>>
+>> Thanks,
+>> Ethan
+>>
+>>> regards,
+>>> dan carpenter
 
