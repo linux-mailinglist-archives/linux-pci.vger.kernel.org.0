@@ -1,185 +1,147 @@
-Return-Path: <linux-pci+bounces-4231-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4232-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CA7C86C4FA
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 10:25:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D64A886C630
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 10:57:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C0B31F26DE5
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 09:25:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D963B1C24705
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 09:57:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEB25CDF3;
-	Thu, 29 Feb 2024 09:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF0A629F9;
+	Thu, 29 Feb 2024 09:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FE6Hx8J8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjTTNoaO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D245CDEC;
-	Thu, 29 Feb 2024 09:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85BC629F8;
+	Thu, 29 Feb 2024 09:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198698; cv=none; b=uJo8FpM/wi01vJP0nCdslIBEFwfuFsjFr+nSX6RrA2VwRJTGmXLDVZjlYNiuvRnv3QcNTesq3tMXX7q8nEqkzR0jDcArq+/XwUBxdlVMv9zlngb5uV4Z8vWbvaeESQvd89cfyzRpnuTgeubIjLfx5UKB92EsFPCyaE0n3rugMM0=
+	t=1709200610; cv=none; b=hCkbOWr6WePGidmeBWh6YwScWyCB2+OF+4RlZcjpzh5hTaCbdRto+afo7PsjzrViKF78e4YbR8idOwofsK31kb54h85+sWEmOfXn8ovY+zOKxw9MuoxLUhYpvFUDBxEjW+Xr93vYC8nBHYp5axFWCNSvFOfLhcFNzr//FvOEwxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198698; c=relaxed/simple;
-	bh=XZJdntqJVNSHehc3tw3MJZhLBZVBynJltmGB3n7U+yE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BNF7p88p4ui09DlQU81zBzPYKK5lRwukBnLyfqNuG1bqolKA00LPV86y1D9dtAfZVDj/c92xLGSxYDJ8nJDGdDBHF4ijmHvENUe73fhCd9PLJLM2vWVEB/quAHgA3eaksjRRlb2KvkU2GT+GzmbB/iofCpu3mCDz9Vj+70gkTv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FE6Hx8J8; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709198695;
-	bh=XZJdntqJVNSHehc3tw3MJZhLBZVBynJltmGB3n7U+yE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FE6Hx8J82488o8NSMy1bbp1JLM8R52Ko3p7GNni4bCB77xmEPIgk44wLbS6SwVxv6
-	 8+Y0yrSKNWONxg70YavAoO2hCvpM7HBGnwl0pr9RuwWu5uP7Eu/a5ivZsWLDvHgNRQ
-	 X+5GQYWRjzAfEoax51YxfNJIjfe7GIo6ZF5fS3GnGLiLvTKpwE2HeI2kyVP2oGdT2a
-	 yGJolz2Uy13th8ImVnm+qQOSaWBthYiwdIN1UbC34CFltTH9AQnYMS/PboDgb5q3TN
-	 HDruuLr+Uwrgl46Da1blP6ukhCQojMinmmKGstfNDEtc32ddVV21KO19xHMSsbJX3f
-	 7lvPlVLP7Iw/w==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 53A923781FE3;
-	Thu, 29 Feb 2024 09:24:54 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-pci@vger.kernel.org
-Cc: ryder.lee@mediatek.com,
-	jianjun.wang@mediatek.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	p.zabel@pengutronix.de,
-	matthias.bgg@gmail.com,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com,
-	wenst@chromium.org,
-	nfraprado@collabora.com,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset also present
-Date: Thu, 29 Feb 2024 10:24:49 +0100
-Message-ID: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1709200610; c=relaxed/simple;
+	bh=ppq03LkPVFT8XGFcgYLvalWjL2zQMQQTUsLWOIlltzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S1MffAvpuajQqUJzRWQZIe/6qt0saY8Ris96BA1BHFBlwFE29agct4mUmRz5qasnbtRhQQVvdhdRnHgX+br+362rFNRgytPdiBxdwOfiKh/TO+NtOFpqJhyXOCH1DJ7G6dCK1nhI2zUJLXf/S8xIZ5JASI15c5S+dqk+h3D5e8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjTTNoaO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB882C433F1;
+	Thu, 29 Feb 2024 09:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709200609;
+	bh=ppq03LkPVFT8XGFcgYLvalWjL2zQMQQTUsLWOIlltzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OjTTNoaOwiRMz2sATCPHbdOKjqdn0+wWijzm4YwxmK5L0PkqCC/22BJIimXzPb3TD
+	 1t2UDEjHuaO7Ak4UeB9jQfGSDkdIXufhjgG8TW16UqEdcy1bhFvyFaUwUJzkgTVz1K
+	 s5i3XH59aUJtC1OSQ/dMyoOgh5hNbZmdMhx7wttTwr10rgK5YNp5clPJkH01UhPFjN
+	 dN5VXYC5ewB5HCv/DZkZff7D8Kz6o9Uvq5ON4HlTW0LYvvu6DR2PBJeNtI4HotGacD
+	 sqJAgNDC7EVlVBuV0B3Tp88FW41U6Q2B4Q1oOFMTs9n1My8WL85RV1kYY0gY81ZAu+
+	 J0+ePrx+1PslA==
+Date: Thu, 29 Feb 2024 10:56:43 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: lchen.firstlove@zohomail.com, lpieralisi@kernel.org, kw@linux.com,
+	mani@kernel.org, kishon@kernel.org, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	pankaj.dubey@samsung.com
+Subject: Re: [PATCH v4] PCI: endpoint: Add prefetch BAR support
+Message-ID: <ZeBU23Ccvv8WqFx_@fedora>
+References: <17e7ad65ff5.d9de88b4962.1109678039880040918@zohomail.com>
+ <CGME20240228134451epcas5p1b974d61fcab67fb5f52a7b291cf85966@epcas5p1.samsung.com>
+ <20240228134448.56372-1-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240228134448.56372-1-shradha.t@samsung.com>
 
-Some SoCs have two PCI-Express controllers: in the case of MT8195,
-one of them is using a dedicated PHY, but the other uses a combo PHY
-that is shared with USB and in that case the PHY cannot be reset
-from the PCIe driver, or USB functionality will be unable to resume.
+On Wed, Feb 28, 2024 at 07:14:48PM +0530, Shradha Todi wrote:
+> Reviewed-by: Shradha Todi <shradha.t@samsung.com>
+> 
+> This patch looks useful. Can we revisit this and get it merged?
 
-Resetting the PCIe MAC without also resetting the PHY will result in
-a full system lockup at PCIe resume time and the only option to
-resume operation is to hard reboot the system (with a PMIC cut-off).
+Hello Shradha,
 
-To resolve this issue, check if we've got both a PHY and a MAC reset
-and, if not, never assert resets at PM suspend time: in that case,
-the link is still getting powered down as both the clocks and the
-power domains will go down anyway.
+This patch is two years old, and no longer applies to pci-next.
 
-Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
 
-Changes in v2:
- - Rebased over next-20240229
+However:
+Usually, fixed hardware requirements are specified in
+struct pci_epc_features (more specifically struct pci_epc_bar_desc).
 
- drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+A requested BAR configuration by an EPF is specified in struct epf_bar.
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 975b3024fb08..99b5d7a49be1 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
- 	return err;
+
+I don't think that Prefetch is a fixed hardware requirement,
+so I do not think that we should put it in struct pci_epc_features.
+
+It seems more like something that an endpoint function driver can
+chose to request (or not to request), just like MEM_TYPE_64.
+
+From the PCIe base spec:
+"Generally only 64-bit BARs are good candidates, since only Legacy
+Endpoints are permitted to set the Prefetchable bit in 32-bit BARs,
+and most scalable platforms map all 32-bit Memory BARs into
+non-prefetchable Memory Space regardless of the Prefetchable bit value."
+
+"For a PCI Express Endpoint, 64-bit addressing must be supported for all BARs
+that have the Prefetchable bit Set. 32-bit addressing is permitted for all BARs
+that do not have the Prefetchable bit Set."
+
+"Any device that has a range that behaves like normal memory should mark the
+range as prefetchable. A linear frame buffer in a graphics device is an example
+of a range that should be marked prefetchable."
+
+We are not a legacy endpoint, so we should never set Prefetch for 32-bit BARs.
+For 64-bit BARs, we should always set it, if the EPF-core allocated the memory
+(regular memory) for that BAR.
+
+
+Thus, I think the best solution is to do:
+
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index cd4ffb39dcdc..186c8cd87bb3 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -879,7 +879,8 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
+        for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+                epf_bar = &epf->bar[i];
+                if (epc_features->bar[i].only_64bit)
+-                       epf_bar->flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
++                       epf_bar->flags |= (PCI_BASE_ADDRESS_MEM_TYPE_64 |
++                                          PCI_BASE_ADDRESS_MEM_PREFETCH);
+        }
  }
  
--static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
-+static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool is_suspend)
- {
-+	bool suspend_reset_supported = pcie->mac_reset && pcie->phy_reset;
-+
- 	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 0a28a0b0911b..acb93055181b 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -305,7 +305,8 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
+        epf_bar[bar].size = size;
+        epf_bar[bar].barno = bar;
+        epf_bar[bar].flags |= upper_32_bits(size) ?
+-                               PCI_BASE_ADDRESS_MEM_TYPE_64 :
++                               (PCI_BASE_ADDRESS_MEM_TYPE_64 |
++                                PCI_BASE_ADDRESS_MEM_PREFETCH) :
+                                PCI_BASE_ADDRESS_MEM_TYPE_32;
  
- 	pm_runtime_put_sync(pcie->dev);
- 	pm_runtime_disable(pcie->dev);
--	reset_control_assert(pcie->mac_reset);
-+
-+	/*
-+	 * Assert MAC reset only if we also got a PHY reset, otherwise
-+	 * the system will lockup at PM resume time.
-+	 */
-+	if (is_suspend && suspend_reset_supported)
-+		reset_control_assert(pcie->mac_reset);
- 
- 	phy_power_off(pcie->phy);
- 	phy_exit(pcie->phy);
--	reset_control_assert(pcie->phy_reset);
-+	if (is_suspend && suspend_reset_supported)
-+		reset_control_assert(pcie->phy_reset);
- }
- 
- static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
-@@ -920,7 +929,7 @@ static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
- 	return 0;
- 
- err_setup:
--	mtk_pcie_power_down(pcie);
-+	mtk_pcie_power_down(pcie, false);
- 
- 	return err;
- }
-@@ -951,7 +960,7 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	err = pci_host_probe(host);
- 	if (err) {
- 		mtk_pcie_irq_teardown(pcie);
--		mtk_pcie_power_down(pcie);
-+		mtk_pcie_power_down(pcie, false);
- 		return err;
- 	}
- 
-@@ -969,7 +978,7 @@ static void mtk_pcie_remove(struct platform_device *pdev)
- 	pci_unlock_rescan_remove();
- 
- 	mtk_pcie_irq_teardown(pcie);
--	mtk_pcie_power_down(pcie);
-+	mtk_pcie_power_down(pcie, false);
- }
- 
- static void mtk_pcie_irq_save(struct mtk_gen3_pcie *pcie)
-@@ -1044,7 +1053,7 @@ static int mtk_pcie_suspend_noirq(struct device *dev)
- 	dev_dbg(pcie->dev, "entered L2 states successfully");
- 
- 	mtk_pcie_irq_save(pcie);
--	mtk_pcie_power_down(pcie);
-+	mtk_pcie_power_down(pcie, true);
- 
- 	return 0;
- }
-@@ -1060,7 +1069,7 @@ static int mtk_pcie_resume_noirq(struct device *dev)
- 
- 	err = mtk_pcie_startup_port(pcie);
- 	if (err) {
--		mtk_pcie_power_down(pcie);
-+		mtk_pcie_power_down(pcie, false);
- 		return err;
- 	}
- 
--- 
-2.44.0
+        return space;
 
+
+Now when I look at it, the whole "if (epc_features->bar[i].only_64bit)"
+should move to pci_epf_alloc_space() IMO, so that not all EPF drivers need to
+duplicate this code.
+
+
+Kind regards,
+Niklas
 
