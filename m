@@ -1,58 +1,58 @@
-Return-Path: <linux-pci+bounces-4227-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4228-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71C7C86C2BC
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 08:46:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8C2786C2D2
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 08:49:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 283621F22E21
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 07:46:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E34041C213CC
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 07:49:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04A8C481BF;
-	Thu, 29 Feb 2024 07:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB84545BE0;
+	Thu, 29 Feb 2024 07:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AsNxAJty"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf5XhxhY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C318C481AC;
-	Thu, 29 Feb 2024 07:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5CA374DE;
+	Thu, 29 Feb 2024 07:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709192749; cv=none; b=hg+ZrQDSI3jwImj0uKoD+eCHLP0UsfrwRBVH3qAQvGLDCVUJEhGDeQ7wKdwmS4THdb2dl2GG28XceCGFMkmg7D16QGhRZov7+FcKhirdvjE/8YumjFekvJGsVStfIo6c+Au2XZm56rgrMX9s+rPDmidD9HnQtyZopfmvgP7mFAE=
+	t=1709192965; cv=none; b=Xxgt2NkX4njbZAbRxEObezw62zatRjaFGjrhg16LDQUvE1sNBSaPIevT6Kgz2KHAwx1z43B6r79KeaGlV+yBiNX4qaPbqvIepooBW/q/3xjbEMhbgyOxKMfPiuvk1N4sE70k1JwW6R6DOtx6klrcNwyYjoaWxofNZnpcP1Fo4m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709192749; c=relaxed/simple;
-	bh=tGUb8YeZCicyaOmqG4cHZt1wx0OYpFDkswI/paIY66o=;
+	s=arc-20240116; t=1709192965; c=relaxed/simple;
+	bh=F8eU8cHhjsUAtRELm+mWX1heSH8PNdlNQAqErkovoHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQwRWWnmC9BsU75Nw+Iu9kFmei1A4IUGj1l0DS5bZHfAHqfWD+exzc0TemXQAzEQ0J9ud97+fe8To7UCsajfTii3DZeymVFc19lcqzZ4fjWxcBEEoawATaBZEP9d9zL85Fe0fzYJD6rrzKt37Ef3MSc0MZHvNRRPR8B9lxwvCc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AsNxAJty; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E3BAC433C7;
-	Thu, 29 Feb 2024 07:45:49 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADKz/zDQK8ZJfHpqy26aRlcmuXgNQPT4edXznG/kULnWKugZbosUcLMkgntVte+MvRvdNz8otvnmn2ICf57VWxM8ILT2vctmRWRRAyC6D20BckBa+8KgE+sbOr0K33eYep5MX+nd/wOY/6RD12+mqLdEfUUgEZHMMcIH2zk/MRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf5XhxhY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9DAC433C7;
+	Thu, 29 Feb 2024 07:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709192749;
-	bh=tGUb8YeZCicyaOmqG4cHZt1wx0OYpFDkswI/paIY66o=;
+	s=k20201202; t=1709192965;
+	bh=F8eU8cHhjsUAtRELm+mWX1heSH8PNdlNQAqErkovoHY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AsNxAJtyH3ANwuXRI6Ki6gN5B2eIhKZ6ioHhtSKen9bmsuOyCK+oPtvTkb5Uoc+1Y
-	 hivcJy3J817Egdcx9ZqZjVbStG2fDMvZel2wjK04czWv6BumVZjH9vOVMHocGlno//
-	 /m3ADrT4kvyP8qVGe3NEFiYXGltmgMKyJvls2QXJVebUIBoq1SemtE2fNgAGPeTX56
-	 wJ5ONbaXNKdbRxRXTnNQp0KwAQMHjVD+ONi4W6HJ3rS/dvKD7n70E26lwfSFqlIIwl
-	 Q5aAtPbW+WsoAmEUEKjRIxRdk1XXpkOz+9Y2ztMP7TUSoGuAFZEYNiLSUV287MJQyZ
-	 Im9lTOCuAd3qg==
+	b=Vf5XhxhYz9YpFTrbU37IJdMaJ1xchdd4txf1f6hterOYD6AxGDTWo5lJrRfbkh9/x
+	 rcaW19PqxI8fTvga+YvsVyTTP8sd8zn1pcGB0cQDsH48BXXLR/t67qQuPM+5rznLnE
+	 kp4/ydnf4T8hqGIumaRJaKMjrVQy17osLwEIESCr/jxGCGaBPaLsWfdi3WA0Jha2jp
+	 ixtI+aqyZx4FrF1z0bc1r+9viY9oohOJZGazVy9bhml3EooAF3ahEOK7JZusB3iOrh
+	 Fs48NRZdhazI6kNdbBjrizWD131uf4JWJcMXHBgn1qLb4qU1lEQ1vuD2Iv9DLrX5KH
+	 InZxas9djusiw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan@kernel.org>)
-	id 1rfb76-000000000Gz-2yaj;
-	Thu, 29 Feb 2024 08:45:56 +0100
-Date: Thu, 29 Feb 2024 08:45:56 +0100
+	id 1rfbAb-000000000Hu-161H;
+	Thu, 29 Feb 2024 08:49:33 +0100
+Date: Thu, 29 Feb 2024 08:49:33 +0100
 From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
@@ -62,9 +62,9 @@ Cc: Johan Hovold <johan+linaro@kernel.org>,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
  GICv3 ITS enable
-Message-ID: <ZeA2NPsn3ncgW6KE@hovoldconsulting.com>
-References: <20240223152124.20042-1-johan+linaro@kernel.org>
- <20240228220843.GA309344@bhelgaas>
+Message-ID: <ZeA3Dbyd9SPfwdPU@hovoldconsulting.com>
+References: <20240228220843.GA309344@bhelgaas>
+ <ada6c2ac-06ad-44bc-8d1e-e59ccf8ac551@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,58 +73,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240228220843.GA309344@bhelgaas>
+In-Reply-To: <ada6c2ac-06ad-44bc-8d1e-e59ccf8ac551@linaro.org>
 
-On Wed, Feb 28, 2024 at 04:08:43PM -0600, Bjorn Helgaas wrote:
-> [+to Mani]
-> 
-> On Fri, Feb 23, 2024 at 04:21:12PM +0100, Johan Hovold wrote:
-> > This series addresses a few problems with the sc8280xp PCIe
-> > implementation.
-> > ...
-> 
-> > A recent commit enabling ASPM on certain Qualcomm platforms introduced
-> > further errors when using the Wi-Fi on the X13s as well as when
-> > accessing the NVMe on the CRD. The exact reason for this has not yet
-> > been identified, but disabling ASPM L0s makes the errors go away. This
-> > could suggest that either the current ASPM implementation is incomplete
-> > or that L0s is not supported with these devices.
-> > ...
-> 
-> > As this series fixes a regression in 6.7 (which enabled ASPM) and fixes
-> > a user-reported problem with the Wi-Fi often not starting at boot, I
-> > think we should merge this series for the 6.8 cycle. The final patch
-> > enabling the GIC ITS should wait for 6.9.
-> > 
-> > The DT bindings and PCI patch are expected to go through the PCI tree,
-> > while Bjorn A takes the devicetree updates through the Qualcomm tree.
-> > ...
-> 
-> > Johan Hovold (12):
-> >   dt-bindings: PCI: qcom: Allow 'required-opps'
-> >   dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
-> >   dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
-> >   PCI: qcom: Add support for disabling ASPM L0s in devicetree
-> 
-> The ASPM patches fix a v6.7 regression, so it would be good to fix
-> that in v6.8.
-> 
-> Mani, if you are OK with them, I can add them to for-linus for v6.8.  
-> 
-> What about the 'required-opps' and 'msi-map-mask' patches?  If they're
-> important, I can merge them for v6.8, too, but it's late in the cycle
-> and it's not clear from the commit logs why they shouldn't wait for
-> v6.9.
+On Thu, Feb 29, 2024 at 12:30:03AM +0100, Konrad Dybcio wrote:
+> On 2/28/24 23:08, Bjorn Helgaas wrote:
+> > On Fri, Feb 23, 2024 at 04:21:12PM +0100, Johan Hovold wrote:
 
-The 'required-opps' binding patch is a prerequisite for the
-corresponding DT fix, which is tagged for stable and that should go in
-6.8.
+> >> Johan Hovold (12):
+> >>    dt-bindings: PCI: qcom: Allow 'required-opps'
+> >>    dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
+> >>    dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
+> >>    PCI: qcom: Add support for disabling ASPM L0s in devicetree
 
-The 'msi-map-mask' binding update is strictly only needed for enabling
-the ITS, which is 6.9 material, even if it's arguably also a fix for the
-current binding. So this one could possibly wait for 6.9 even if it may
-make sense to just take all three now for 6.8 to only have to deal with
-the mentioned binding conflict once.
+> > What about the 'required-opps' and 'msi-map-mask' patches?  If they're
+> > important, I can merge them for v6.8, too, but it's late in the cycle
+> > and it's not clear from the commit logs why they shouldn't wait for
+> > v6.9.
+> 
+> Either way, I believe they should go through the qcom tree, as it's
+> a very hot one with lots of different changes to a given file.
+
+I think Bjorn was just referring to the three binding patches listed
+above and which should go through the PCI tree (unlike the later DT
+fixes which will go through the Qualcomm SoC tree).
 
 Johan
 
