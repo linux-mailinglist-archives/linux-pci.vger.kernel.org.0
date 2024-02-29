@@ -1,109 +1,121 @@
-Return-Path: <linux-pci+bounces-4268-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4269-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C68086D0DE
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 18:38:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0A9E86D0E2
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 18:39:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 325791F22262
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 17:38:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82006B216A0
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 17:39:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 339EE757E0;
-	Thu, 29 Feb 2024 17:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 104A870AC4;
+	Thu, 29 Feb 2024 17:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnNk5ArJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0BE71EC5;
-	Thu, 29 Feb 2024 17:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B4C6CBF3;
+	Thu, 29 Feb 2024 17:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709228295; cv=none; b=GUYhU+kx6rAO9G1K+ClXGTrDQwHz8wq13P3pd2YfWqUb40eljxKoZxH9+Bzd7NoCXAY3vXC4dwxEt8m7bGXMYDLO9avVdxEh6oG3BpI9vBNi8bdoF65a69DrD2eDzhE9s0nJKz/gz8K2640S6aQz/5Nk3y8L2BHlcGZ7pMmchyo=
+	t=1709228342; cv=none; b=MjaCgoEKHXpxmXcKOT1JPdKlG/7kORdYFStgKM6qzil7i5cy9V1e/U9rfWjHpdsnh8JcO1CYOQgPvxKmYGJJzFw8W4zbfrABi5ouSP7Ak2DgXKZ7FdqAbi+3u7VdY4xHlLNMqFuAU9PWzGxLFePPHbb7GZPrzJ8vC2g/5T0SO6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709228295; c=relaxed/simple;
-	bh=RPLYWTcaQbJLg3/Mn7gCZvlZCikgCSBWo0sfH7/OGMA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pKr7+5WT7cpdNvyPhlLz9QVBByNjEywuHguDJ556QBB78f+hse7NyI9cS+o7MXp/VEzVC8CfCFAa+qcyxb0mE0o6k2WI9oQUMBtkf2x33/eqjGV++wxW8WFuMteald+1CHOgELvKPj3wqZzRX2lAinNDl9+eQTNbZXiaXEB8anA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5a0918d6d83so31650eaf.0;
-        Thu, 29 Feb 2024 09:38:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709228293; x=1709833093;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RPLYWTcaQbJLg3/Mn7gCZvlZCikgCSBWo0sfH7/OGMA=;
-        b=XDlmyTDKkZyYQMYthiTwLkitYhqwY1vX23X/69ru99QDbuVQTj/6Jq62lhT8xDJBMH
-         timljTEgn/s99J9xHAQLQ2yRJYpynrGk+pLw49JLLTLjFu79yGL1RvnYL0Whfr3MAKvp
-         cUfJL6raIJ74HDpjFn5ooWEm+8Cvoewsl38UHPAcvy48XB6E5q3XalMQTCWoyyj0TUxk
-         9mA+26D4hXBc9PsI9qz0NG12LzZrgWzZttTDh60RdR0qclR41agpqcSI+B7EG5E7Y9Em
-         DHjZbnSvjEDH3i2/fxKeXAANfU3QUb8GqjbepUTZ59j4mvqh8cooh7eBXNHk3WBqL29K
-         U/Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVe3IfuhNQIHYnB0gniaJmDefORBReTiznQUygAIY52B8g4ACRebptlVHiGMSZQVoP2efNCVzFsKvA4RMZQIA+itnD2KFzKpryJ6V65H4HsQFwJ0y/uuwrrsPY/0PwqY/Schzhu0OWx3H+ZHYfGrH2N4sRWzNm5uBRib3O9gElOxIabAw==
-X-Gm-Message-State: AOJu0YzOE7EYFtRSjfTaBfT4ryu33Fnx9sPrwl6ipd6WAYnPhxfJxxJK
-	EwJFMqybQO9eduqonJDW5IlxTunyWxNVcsWIXDB5vv3d16A4U0RuGWrxm7Y4Czqy7W+hq37LXEZ
-	caJ/UTIi+xXTj402SwQHkSGqHNqyE42D+
-X-Google-Smtp-Source: AGHT+IFfeSSKxdwwNHdcoNT6xng8dvSLbg3Q+8NYSMk43wKsex6j1IG5wW0csQkTApAFIFjMdQWlZ35cRKw0/Uq51VM=
-X-Received: by 2002:a4a:b902:0:b0:5a0:c62a:72b3 with SMTP id
- x2-20020a4ab902000000b005a0c62a72b3mr2770335ooo.0.1709228292739; Thu, 29 Feb
- 2024 09:38:12 -0800 (PST)
+	s=arc-20240116; t=1709228342; c=relaxed/simple;
+	bh=ZwUvt/f+7G+OeisKaMdN5s3i0cHecbiW7F+SUpW6wIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWBPINgyUBZ4DdKCALttZq0CHUuCL1x0ITPNCzXOmrbu2WSsm2x2vEvRA/Mou+xFhn0PNaDUd+9Ku87lOTRnlEZZMWd44EN3L6s377FGDZnAwrAYXnQIXCODgLPkw4UjgR081Sw7Qos6Lb5QIiXC6MiFHfqUX6vOxxjy+KGsz9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnNk5ArJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1079C433C7;
+	Thu, 29 Feb 2024 17:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709228341;
+	bh=ZwUvt/f+7G+OeisKaMdN5s3i0cHecbiW7F+SUpW6wIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EnNk5ArJJwicNvpwkRa1xw66zPXxFWr0CZrX0og7T4f1e+Wiv91aXLseg+/pANM0o
+	 /wBLckVsX12A6gsag/Qz3p335Jtd+1KKjzuC7VUTN0dxcHmhUA390b4P2JZCkY5E6b
+	 F+n9DphUOg6BwzPSyuaT9bhDh0LCKM23j2tKRfnWX5Y0KGn7goQuy4CrED/jQdEKc+
+	 nexyNVxe1fvgenmS7A8+Szgo0aSrbBJQ5jzJV6Iyp+vLvk3mZe15qdMVzmQVjezEGk
+	 TL+uYBI4iLhrO3u6Dzlzoke9YSYJlYLl5YqEjpEp/2T/b3jfn8sK+BeGMEw2npUK39
+	 FncbJ65e4kzbw==
+Date: Thu, 29 Feb 2024 17:38:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, mani@kernel.org,
+	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H
+ compatible
+Message-ID: <20240229-lion-overdrawn-b84dad3f19eb@spud>
+References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
+ <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228075316.7404-2-drake@endlessos.org> <20240228222601.GA310596@bhelgaas>
-In-Reply-To: <20240228222601.GA310596@bhelgaas>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 29 Feb 2024 18:38:01 +0100
-Message-ID: <CAJZ5v0jhEE9X50TGaXpwFA89wfQb8HYK9qNRnhhuYjU6oM84eg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] Revert "ACPI: PM: Block ASUS B1400CEAE from
- suspend to idle by default"
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Daniel Drake <drake@endlessos.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bhelgaas@google.com, david.e.box@linux.intel.com, mario.limonciello@amd.com, 
-	rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux@endlessos.org, Jian-Hong Pan <jhp@endlessos.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="TuhhfISF/dk6oxmB"
+Content-Disposition: inline
+In-Reply-To: <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
+
+
+--TuhhfISF/dk6oxmB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 28, 2024 at 11:26=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> [+to Rafael]
->
-> On Wed, Feb 28, 2024 at 08:53:16AM +0100, Daniel Drake wrote:
-> > This reverts commit d52848620de00cde4a3a5df908e231b8c8868250, which
-> > was originally put in place to work around a s2idle failure on this
-> > platform where the NVMe device was inaccessible upon resume.
-> >
-> > After extended testing, we found that the firmware's implementation of
-> > S3 is buggy and intermittently fails to wake up the system. We need
-> > to revert to s2idle mode.
-> >
-> > The NVMe issue has now been solved more precisely in the commit titled
-> > "PCI: Disable D3cold on Asus B1400 PCI-NVMe bridge"
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215742
-> > Acked-by: Jian-Hong Pan <jhp@endlessos.org>
-> > Signed-off-by: Daniel Drake <drake@endlessos.org>
->
-> Rafael, if you're OK with this, I can queue both patches for v6.9.
+On Thu, Feb 29, 2024 at 09:07:14PM +0900, Yoshihiro Shimoda wrote:
+> Document bindings for R-Car V4H (R8A779G0) PCIe host module.
+>=20
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Yes, please!
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Feel free to add
+Cheers,
+Conor.
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yam=
+l b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> index ffb34339b637..955c664f1fbb 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> @@ -16,7 +16,9 @@ allOf:
+>  properties:
+>    compatible:
+>      items:
+> -      - const: renesas,r8a779f0-pcie   # R-Car S4-8
+> +      - enum:
+> +          - renesas,r8a779f0-pcie      # R-Car S4-8
+> +          - renesas,r8a779g0-pcie      # R-Car V4H
+>        - const: renesas,rcar-gen4-pcie  # R-Car Gen4
+> =20
+>    reg:
+> --=20
+> 2.25.1
+>=20
 
-to both.
+--TuhhfISF/dk6oxmB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks!
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeDBMAAKCRB4tDGHoIJi
+0h5NAPwI4jpJxo9OSZ1pyAqXIs1P3G6I14AKZ717ubGuIS5p/gEA7HckjFaH/vTr
+vN7PErR3oyfARU+3Roe4P79TWYj8xg4=
+=WFP1
+-----END PGP SIGNATURE-----
+
+--TuhhfISF/dk6oxmB--
 
