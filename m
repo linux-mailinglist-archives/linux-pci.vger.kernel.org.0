@@ -1,233 +1,186 @@
-Return-Path: <linux-pci+bounces-4277-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4278-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE9B486D32C
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 20:29:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36C6786D398
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 20:46:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F25991C218F1
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 19:29:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC52328496A
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 19:46:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A4C136994;
-	Thu, 29 Feb 2024 19:29:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E57E013F427;
+	Thu, 29 Feb 2024 19:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ifinzG2/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2076.outbound.protection.outlook.com [40.107.249.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8EC12FB0B;
-	Thu, 29 Feb 2024 19:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709234969; cv=none; b=erHn7tS2ZFt93cMmWEz90B2mkVUFgskC7Yl70RTvmZoKAh3GFStSbdxO4GALTU+5nPlDg795MVHabO7zhPuQD6NT0br4cEtPTNOLA0XqSLtlcbYHi9pVmPsnvRpgxGZTT/fia2HjjxnUeamzg3+FxbSV8cPzGQdoH+5Q9AkQYoA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709234969; c=relaxed/simple;
-	bh=ER8jFkTX8fHxUe0ER9VhE+YF/WbM+QuUTTWQrzqyZ1A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L9h1kVawz2QcXXI1n6ppivHm/rPxRNnFfntxurXcJsbxUrbuA1Rplw20f1FAuOdhwStFPbmDNeKpvTAsr5libi5ClIgmmbbSF1Y+3QY/1QrF8oyY2gTYcC3860hIALIQrO5UJJEn6r12V0dtaNNb3Orjjbrb8SbUPD3wCamGuns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6e495e7d697so286041a34.1;
-        Thu, 29 Feb 2024 11:29:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709234966; x=1709839766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vSo0N+coBNcRok/KrBy9V2vlVmSI+dcsaCeZh4GtHeQ=;
-        b=DK9fsy326QKRN2WrozV7u3zxeg07LUac7Ph5cY/XoCeyJrd6TdAhKsfcF7OlgEiNNq
-         5y/KdFusqVR0EtO2rf9Xhl2osGKc6nvpZEOFFCVXVBQe1CcC5ptsbrjZkNZo1QS3Da23
-         6I59zmFMAcWSo0x1yEXnF28Y8lnvCNyi8H2dyTSx5AM0ocAuUU9NpwcMYp5riJNIAjME
-         Dq5CGHPyGiLSi7RbVY2afMNUxlmhn2zhR9ItqJQ13XLJBlhnNo5wfgzDLOHEcDspO8we
-         xw2Cqll4na+8dJ3+R09DUnVnnZ+jUxSEwOW6+OzakCxS323VGWYRnviwLXZIoLtoRs+7
-         7ASg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNk396YZjm776DP3tpZFwoUDhIIFvwVpiMcIIqYwBL4xYdHhTC9KpmuG0duyJNxkm/aEttoSfr2q/VBmJS6F8xb9BXSllct+EfiKHcEuVvXxM1Ks7vQvwpjyomeHG3sWHn9uF6Yik7qC+SM98JOHOI1lA6XB7Hvsd1NunIP0fHirE5J3vFBPjDExql6ja1ZFdpxgo28DE3qzFKT/yg
-X-Gm-Message-State: AOJu0YwsnoMGJ3fs3HUCKnn2TC4LXt151BE6Tlm7JzYav8rpdXMpRSsQ
-	s5vrXY87zTzRvc3TOfWS8aWndK75aW/3rzyrM12ZVUDJbsW5aczQSqxtC54ElcjFbWNDWYenn4w
-	mQMNP0KjDv90j21xeF8ZX7i/BRzg=
-X-Google-Smtp-Source: AGHT+IEEzU4wkhZS54XDatEAIQZw9n2MvS0+AjIaHP6d+h7+WzJ6I8hgIA+9f8MJGlKVk+aVIzv0DN31yBoy7aXBXm0=
-X-Received: by 2002:a4a:b902:0:b0:5a0:c62a:72b3 with SMTP id
- x2-20020a4ab902000000b005a0c62a72b3mr3040562ooo.0.1709234966026; Thu, 29 Feb
- 2024 11:29:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAC9134411;
+	Thu, 29 Feb 2024 19:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709235980; cv=fail; b=koh2uPd468zj5DmVSRuRDgOhMVw0rjhTXHyHprCho+tpKqGVTZ6qAXuM1zdO0T1jEUWhBq/aoFLubktyN6wuUPZ2kwEEsxJiIFw6SKE9AfRGUqoIYZdP0KkuR94/iXpXRk7Ovxpn0noLtrJzfR3ar6KP/1EIXH4WovBeXVGn8os=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709235980; c=relaxed/simple;
+	bh=xcIPY6M2Sdn5SiPQKSOJ+bp+N8Wbftor6QM7jEuLcOU=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=XevDAwn32ylt6OB2zTfdWST6SOsr9KQGlFerBr+BybhfDptKB5WNYKVlpoIJA5JZe8l7hue+5gLvVP7zau4ChK5Fha7Jj4Fa6L2gWpMrA1SysCoZxYHwNf07D1i707xV5IM37dKCUvoZccK8Jhgy2ikBBMDFTK/TA5g7fB7QIvU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ifinzG2/; arc=fail smtp.client-ip=40.107.249.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G5JKIo9shbzjK6jnyUiOE0WmiDgn9JF9ii3IsGgxNBTwTxAO/fexldn5cYz/OO2uLrHOHZ+9v6yYbPqNGdAZREAZP3qfGSqENeTer8YLZopn3NKwgnuUsYutJE0LQ9Py4NfkoGPLorKDNtiQtv4vSTnl5cssG08lPlJ76jTysSZxehOCYG0gUT6hP3Zh+MARsYpS7Wqzjd7XdKG8+LYticm2kXWEhj6h7OSKPkMP79JbFwRCiW245T3PzBJ3pqyesd8vxMZx2+bRJu/5X/lTzk+17SSCOgMaKSQtHZeF2Mq06JKmmDt3ARh1uymWgzdFNxdVkUB56Ef+/rfeLj0+SQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=94Wsnbn3IwR5EvAEYoBxd7PI9/IApQorut/MNb1tbYk=;
+ b=L+9u3ju0stqZFVzrXocyrrlwn8PGhVgimoLFzfL0l/+rF21Zx+y9JNNLt0PaKFbXQXHn7TTN+ATR3O0Ay28WEVWQCqXanjdr3P7yBfmDuwliL0w5oYijQ5RMSkUzAz4EkkUULcEWXrLL9d5fhv/ZGyf1oBVBYua0Y0dTQT9sWBJvX7mRf3XTVAvrhLlpaDtH3jp95gfFKXA+Y6Nu1k97hRd8Wk9qzN5+HoYmdCZ+yByhQK9mgX/O0kAWfQCC+sSZfhnD+aeUSP5y7+EeXh5NG8AEftkd73HrLncpf7zCWEPo/38amFaRLFXbTxzGQ6tcom3CxxCe24f97ly2xwMFWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=94Wsnbn3IwR5EvAEYoBxd7PI9/IApQorut/MNb1tbYk=;
+ b=ifinzG2/m32pO75G4PPh0ybV4EzaKc7NjXQ8TK531Qqf5T0Hpp+0K9/ef3VbeT7erA2WSUnv6gfaU/nMkn6TefLV2UgSlzxTS8zdv7pdMF4z/icABTVogCw2EaNB1wAyZzi2lZmMchEQspHopa4dhOYEP/3NQy5LPBrXKGGc8bY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM8PR04MB7985.eurprd04.prod.outlook.com (2603:10a6:20b:234::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32; Thu, 29 Feb
+ 2024 19:46:14 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9af4:87e:d74:94aa%7]) with mapi id 15.20.7316.035; Thu, 29 Feb 2024
+ 19:46:14 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>,
+	Roy Zang <roy.zang@nxp.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linuxppc-dev@lists.ozlabs.org (open list:PCI DRIVER FOR FREESCALE LAYERSCAPE),
+	linux-pci@vger.kernel.org (open list:PCI DRIVER FOR FREESCALE LAYERSCAPE),
+	linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/1] PCI: layerscape(ep): Implement common 'dbi' reg-names for dbi_base
+Date: Thu, 29 Feb 2024 14:45:58 -0500
+Message-Id: <20240229194559.709182-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229062201.49500-1-kai.heng.feng@canonical.com> <20240229192141.GA342851@bhelgaas>
-In-Reply-To: <20240229192141.GA342851@bhelgaas>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 29 Feb 2024 20:29:14 +0100
-Message-ID: <CAJZ5v0if-g-pPQEWdSq_vOXsp=rheSBzk-hnyOv5oJwGzMPxPw@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7985:EE_
+X-MS-Office365-Filtering-Correlation-Id: 218ce07a-419d-47ca-b9f3-08dc395f1673
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	zR2fueHXiEdTV8ylaQ+fOYbm8ydSQ3UgLYONCzoz4MbvgAMaF3e3u5fXMFMdxn9jG2WnaBgDts/kI2J/btdq5enj7RMQCrTJATSqtpGQG5NzwSQUEPlXNX6yHMXPDh5cDc6A9F17eshDpsn9lfYy6feoOF1lnswcj1L365x4wNDAxWXldVvoDKh2xDx8zPS+8EOeWrdPlCpD9qtI2nkwGqq2bxlyfWme3a9+LZqBOhBUrp4gb5Tb1/kfZBLre023gVYnSeDCtAKepA4z+ITHIoujWA5AJK+Dock0LVqARtNWsWtglNsWzdPjuII8Xg8kdVcLlA4wBB2b3s6bbtYegt9HXlysCbTaXSTe3EXSAko4KrKTXvvAZ5rO1CuVVpuNGyA4p1SqbdR6JCQBebiM9ikecqU5IGp5W/XpbKQZ2Tya5Q5WB5pbyx5iP/DZ487aXEc/qZXtM2F4ua2RJ6IIn4EFpTfQfMBSHotCSgGhVzXQ9YyU8lmzADpQvqPk30yhEdkjZpTrQdoMrFUjz3kDpWIMQbDrqvOv6CbTsXeMXoUQ/FESz2VLH8ePnH0hyzlQTPLfxneNkZLCD1dR6b97w6s7NblVXknGf2mmYN68ZtE+XXzjgDiDimSeD6z7vZHUdkN2xPgksBINEhn7Qc87EMBD/sSfKkyF2NbJh7aQyeDnyrnFVD/xl5b9/A3EYYD2jEKtBdlUg2RYcwOIQgPJtUfedDsp+MfHMyFFT1+AlsU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?whxdZmaV9b23zNuavIpkYjOVNKZa4tpW1jaqnsj88pgxjYtP2VfEElSFn8Ho?=
+ =?us-ascii?Q?afuBMlnXx7lazb/yxCQT1NhGXlliyH0UuqxGEnlBPi+ivNokWNTpbdzuZ+pb?=
+ =?us-ascii?Q?g+wqxg7yTgxIASyrrVi24wrbGiwBVgqC0kPOer9FhmOX/Kp0U6P/ttITCElO?=
+ =?us-ascii?Q?FeRnrO/zX1W67CPCTwXp9MW7JdvGMHlk62WW1C2nFbcD/+z5FeA8qTZPNxLH?=
+ =?us-ascii?Q?e6k+QfQhJ6Zd8ZVcGYUJkyb4Hd8REbY4m/vH/NFNrS7NzNxlg/x3vU0Sw+Dx?=
+ =?us-ascii?Q?05H46LqwMXTEogSAJcKZ0+Zy2l/LLxT7sWKPHYWfnNn0CeJpJf1muEca44N+?=
+ =?us-ascii?Q?0+Ly3UKQYJ6txkwF+k4aQnytLF+vkd7BFPAlmssiXwHlyf2+nREnmfKWiljm?=
+ =?us-ascii?Q?d1Hyd22w6uuGnuosv9aMmm7gFrXwQrDXwy+PFJ+wOFwyl7u0v0btiBEmcFZF?=
+ =?us-ascii?Q?C5R2PujGdO3RoSGEy/951CYOs4YR74JWu2nbhSbxq6trSr7chcN+FMb3XOyy?=
+ =?us-ascii?Q?TStfwk5txAfX2xm611nHapVaYDj4j4kAsh1XL8JYbDWyvMg+8BqOeEiSqQsv?=
+ =?us-ascii?Q?bcof5FYL2wu+DD4MnpHXQtA/1uz0Zo4/4n2FTFxMn80DOIg9e86cTDYetK7a?=
+ =?us-ascii?Q?clcOXwBBG1+OMsfEemcnMyn5pmOdY6ZbpSu0L+uqQsDTn45ok7dbOyRtQFRC?=
+ =?us-ascii?Q?n9Tbl934xCO8jg/fIN6ywGmDPNtUPDWQf+2PI9puC1thIZ4eoEYS5uu95KgY?=
+ =?us-ascii?Q?gm1WpWCL12lJFFu7XN/AEMDFBqbyaEHisTTMMbu7k7GuCHS+znw1k6fOuc4+?=
+ =?us-ascii?Q?QS6OhgGbJwUsf5cLhh4zNGUr7Tm1CfFjP53mE2W+7FEb3McxCNRJ0l9x4c3G?=
+ =?us-ascii?Q?Kd6rhgQQgA/RzCAZ/OwRh8MzJJCi7kKzGMOyCCutFckHLvAR/uoi0OrhoqCE?=
+ =?us-ascii?Q?OysCeX9/+uwKpxEyIN831UcAODxfl/hCMdMiChNTuN/HJ45nBWfVBdz8A15a?=
+ =?us-ascii?Q?tEnAoppT/3+gM02ZhuroDE0fL7lwKB42KtSwjlP7ErohBdCgi6OA/0fMIGa2?=
+ =?us-ascii?Q?c1usaBdwmdVAFTTO91DHiVpAvxbkgeZblYjnNcFbD7II8T3A4T0D0gxUlrFt?=
+ =?us-ascii?Q?F78SMKVkPJw4zjGa/d9iUis+dt34kAWP/A9wjbBkHgbBXbioTMB0AHPcxtfr?=
+ =?us-ascii?Q?qmcosB4wexBvB7SvPC2raaxd83ArDH4SeTSPcTIykbgjc6w4hl2KUv3TBGOY?=
+ =?us-ascii?Q?8B4bFlonsL2ybJAL5BK7awE4vwl1/8gns4HBH9HnzhxgRFT5FaRHPK2MsM7W?=
+ =?us-ascii?Q?BU8X33VrVlVHwKwpuqHyy9JiJePOsHVKkNcNu/elCVul3qe6YHxKCavmCMSy?=
+ =?us-ascii?Q?5NRck68F8AiMJXtNlZbsrXlWGtjyUUD2DQhdooyOgi4hhj5rLxJ+W1D2nPfa?=
+ =?us-ascii?Q?uozitMxD8zpSN2oarLeUb1FifjMSkPu3Yt3rw33z7z1geKcRAyA2Ua4wcSZ+?=
+ =?us-ascii?Q?XfvtqduC8sRxNZq+N1Bmn0xPHz/qWMmF2tVN++ghSnwdImj6FW6slMcT2hIB?=
+ =?us-ascii?Q?subgBEruWHpQAuQtoBsAWtUIRtwMD7z4nZFKL+rA?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 218ce07a-419d-47ca-b9f3-08dc395f1673
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Feb 2024 19:46:14.2570
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a/6NUmowVVpfrLT7Dx+uU7Bt/4hYCyu4nzlJ3zLxPPapma4HPKMmBZ3A9X8Mh5wIWATVYVLBdUanXgkE6ADUeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7985
 
-On Thu, Feb 29, 2024 at 8:21=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> [+to Rafael, can you comment on whether this is the right fix for the
-> .remove() vs .runtime_idle() race?]
+Apply 'dbi' as the primary name for dbi_base register space in line with
+Designware common binding. Attempt resource acquisition using 'dbi' first
+via platform_get_resource_byname(). If encountering older device tree
+files, gracefully fallback to 'regs', issuing a warning message.
 
-It doesn't seem so.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 7 ++++++-
+ drivers/pci/controller/dwc/pci-layerscape.c    | 7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-pm_runtime_get_sync() is expected to cancel pending pm_runtime_idle()
-in all cases, so this looks like PM-runtime core issue.
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index 1f6ee1460ec2a..92d4750611d07 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -259,7 +259,12 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 	pcie->pci = pci;
+ 	pcie->ls_epc = ls_epc;
+ 
+-	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
++	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
++	if (!dbi_base) {
++		dev_warn(dev, "Please update your dtb, reg-names 'regs' should be 'dbi'");
++		dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
++	}
++
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+ 	if (IS_ERR(pci->dbi_base))
+ 		return PTR_ERR(pci->dbi_base);
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index ee6f525681337..1985086f6a1f3 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -345,7 +345,12 @@ static int ls_pcie_probe(struct platform_device *pdev)
+ 	pcie->pci = pci;
+ 	pci->pp.ops = pcie->drvdata->ops;
+ 
+-	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
++	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
++	if (!dbi_base) {
++		dev_err(dev, "Please update your dtb, reg-names 'regs' should be 'dbi'");
++		dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
++	}
++
+ 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+ 	if (IS_ERR(pci->dbi_base))
+ 		return PTR_ERR(pci->dbi_base);
+-- 
+2.34.1
 
-Let me have a look at it.
-
-> On Thu, Feb 29, 2024 at 02:22:00PM +0800, Kai-Heng Feng wrote:
-> > When inserting an SD7.0 card to Realtek card reader, the card reader
-> > unplugs itself and morph into a NVMe device. The slot Link down on hot
-> > unplugged can cause the following error:
-> >
-> > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > BUG: unable to handle page fault for address: ffffb24d403e5010
-> > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-> > Oops: 0000 [#1] PREEMPT SMP PTI
-> > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4=
-, BIOS P3.40 10/25/2018
-> > Workqueue: pm pm_runtime_work
-> > RIP: 0010:ioread32+0x2e/0x70
-> > Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 54 01 b8 ff=
- ff ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b> 07 c3 cc =
-cc cc cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
-> > RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
-> > RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000000007f
-> > RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403e5010
-> > RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 0000000000000000
-> > R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000000007f
-> > R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 0000000000009003
-> > FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003706e0
-> > Call Trace:
-> >  <TASK>
-> >  ? show_regs+0x68/0x70
-> >  ? __die_body+0x20/0x70
-> >  ? __die+0x2b/0x40
-> >  ? page_fault_oops+0x160/0x480
-> >  ? search_bpf_extables+0x63/0x90
-> >  ? ioread32+0x2e/0x70
-> >  ? search_exception_tables+0x5f/0x70
-> >  ? kernelmode_fixup_or_oops+0xa2/0x120
-> >  ? __bad_area_nosemaphore+0x179/0x230
-> >  ? bad_area_nosemaphore+0x16/0x20
-> >  ? do_kern_addr_fault+0x8b/0xa0
-> >  ? exc_page_fault+0xe5/0x180
-> >  ? asm_exc_page_fault+0x27/0x30
-> >  ? ioread32+0x2e/0x70
-> >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> >  pci_pm_runtime_idle+0x34/0x70
-> >  rpm_idle+0xc4/0x2b0
-> >  pm_runtime_work+0x93/0xc0
-> >  process_one_work+0x21a/0x430
-> >  worker_thread+0x4a/0x3c0
-> >  ? __pfx_worker_thread+0x10/0x10
-> >  kthread+0x106/0x140
-> >  ? __pfx_kthread+0x10/0x10
-> >  ret_from_fork+0x29/0x50
-> >  </TASK>
-> > Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_sof_pci_intel_=
-cnl snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_codec_generic sn=
-d_soc_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 soundwire_generi=
-c_allocation soundwire_cadence snd_sof_intel_hda_mlink snd_sof_intel_hda sn=
-d_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext_core snd_soc=
-_acpi_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_compress ac97=
-_bus snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_intel_sdw_ac=
-pi intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core x86_pkg_temp=
-_thermal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel drm_buddy tt=
-m mei_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_event cec crct1=
-0dif_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypto_simd rc_cor=
-e cryptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cstate i2c_algo_=
-bit joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_timer sysfillrec=
-t input_leds snd ee1004 sysimgblt mei_me soundcore
-> >  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_codel msr parpo=
-rt_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_tables x_tabl=
-es autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ahci e1000e i=
-2c_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas video wmi
->
-> The module list is a big distraction and isn't relevant to this issue.
->
-> > CR2: ffffb24d403e5010
-> > ---[ end trace 0000000000000000 ]---
-> >
-> > This happens because scheduled pm_runtime_idle() is not cancelled.
->
-> I think it would be useful to include a little more background about
-> how we got here.  In particular, I think we got here because
-> .runtime_idle() raced with .remove():
->
->   - rtsx_pci_runtime_idle() did iowrite32(pcr->remap_addr + RTSX_HAIMR)
->     in rtsx_pci_write_register() successfully
->
->   - rtsx_pci_remove() iounmapped pcr->remap_addr
->
->   - rtsx_pci_runtime_idle() did ioread32(pcr->remap_addr + RTSX_HAIMR)
->     in rtsx_pci_write_register(), which faulted
->
-> The write and the read access the same register, but the write was
-> successful and we faulted on the *read* (see [1]), which means
-> rtsx_pci_runtime_idle() started execution first, and rtsx_pci_remove()
-> raced with it and happened to unmap pcr->remap_addr (see [2]) between
-> the write and the read.
->
-> It looks like this kind of race between .runtime_idle() and .remove()
-> could happen with any driver.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/drivers/misc/cardreader/rtsx_pcr.c?id=3Dv6.7#n164
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/drivers/misc/cardreader/rtsx_pcr.c?id=3Dv6.7#n1633
->
-> > So before releasing the device, stop all runtime power managements by
-> > using pm_runtime_barrier() to fix the issue.
-> >
-> > Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@real=
-tek.com/
-> > Cc: Ricky Wu <ricky_wu@realtek.com>
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> > v3:
-> >   Move the change the device driver core.
-> >
-> > v2:
-> >   Cover more cases than just pciehp.
-> >
-> >  drivers/base/dd.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > index 85152537dbf1..38c815e2b3a2 100644
-> > --- a/drivers/base/dd.c
-> > +++ b/drivers/base/dd.c
-> > @@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device=
- *dev, struct device *parent)
-> >
-> >       drv =3D dev->driver;
-> >       if (drv) {
-> > +             pm_runtime_barrier(dev);
-> >               pm_runtime_get_sync(dev);
-> >
-> >               while (device_links_busy(dev)) {
-> > --
-> > 2.34.1
-> >
 
