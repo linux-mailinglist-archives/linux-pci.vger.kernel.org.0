@@ -1,137 +1,110 @@
-Return-Path: <linux-pci+bounces-4257-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4258-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD1CA86C9D0
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 14:10:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE6BC86C9ED
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 14:14:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B9B31C20D58
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 13:10:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78831282EAC
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 13:14:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CAB77E0F3;
-	Thu, 29 Feb 2024 13:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29D927E0F0;
+	Thu, 29 Feb 2024 13:14:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHB+43P8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fh8thTD8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11C37E0E7;
-	Thu, 29 Feb 2024 13:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061CB7E0EC
+	for <linux-pci@vger.kernel.org>; Thu, 29 Feb 2024 13:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709212214; cv=none; b=eQ0rZmEbosWnOq9pNnNqHfR+9CfrfDD8gLPTf01jVHS3EipFcEOp3OYJzQkir5Ag9+xOg9UgGiVQbCgJKMTaMZooX2CDjlQ+kOW8C0q+VEJuYslpkYQIMYvxN85JrAmDs1Vpcb7mNh6Ip5r3mg11ZnAefJ/frCIpHerf2IGbcFg=
+	t=1709212442; cv=none; b=d78UzBZRpnir4xZ6rk2RKDgl6EtyxAel5CgsFkjBJZJusX8+hIT6fUOxMrGIjwgPd86rTpB5GLndzXDMtFqgAzRYn+dzyv668iRMCTrvrjHf79NBuvXyBWKGe9SMl4IgZGwhm+lowjV6M5LDhMTmAfvuKU9Au0VrD/BgXx3+GnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709212214; c=relaxed/simple;
-	bh=Vk41IkkyBM5ve0CG9q29yRlZai/dCooOSBeD513BM9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H70nT//RFduMFxG4TDUk+bIVfN9vk9FDfrNlv1WLzqOPAEm8yzNRqYCmaP6pvY/2LD6VLYH0jpxxM0CeBV14xoiadne39YdNvBuncVpAVOcS4P5m/MvD2taxJsfnX9Cw+ziEmULCHEhRNLesJW3sUNVWGLAMerIC35erSXQzHTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHB+43P8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 822B1C433F1;
-	Thu, 29 Feb 2024 13:10:13 +0000 (UTC)
+	s=arc-20240116; t=1709212442; c=relaxed/simple;
+	bh=FOhbF4m9VCW85h3lBEJZPwXxnXu4DigXHek5s2kXYvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EQG8GmWGWPgt5mocGs7YpEB8FDKYVALW1N1g4yRrcqzKWsYMzN+Zciq/le1crRiSepzm+HNAwkBuatzDKJLG92mbaQpLzyyPOKZBPi+2wan6wxIZXQcNQ151ryOK0M2VQkzFOhu734XQXSlEzp6Ajw48+tsPeyZjtc8kFOiXvsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fh8thTD8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11AB7C433C7;
+	Thu, 29 Feb 2024 13:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709212213;
-	bh=Vk41IkkyBM5ve0CG9q29yRlZai/dCooOSBeD513BM9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bHB+43P814TAK3jEMSFuGvrrQ9mMbI1NTpKf1jUaSHWFxqcVRDRDXofkmExidYquS
-	 Yc2PlHkxvyLm5QuwZRkqFpwmFueATLl5XrsOWSy4Oz2NnxEvCe/Qxe+eKi6NQ+9P1X
-	 B3xRI0VVhMvG96/gFvTeun7UNl/z2TIB0J6qiT1JPhCUd96075FgHeJxRM3egIFyO7
-	 kOwWxrNMNfUS6va2AZPVDOk9KGKZkOt8G6nJ/zJLeLmwmvFghT11VCqhj01Bbnfmtt
-	 INic3qZlhIDARJ8v8wwB6d/DKsCey2FDZ2LUKFrWay+VoRdlvqXKW3Z8rq4PQBK5ln
-	 kDoGELHB+qRWQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rfgB3-000000003Mr-0AvT;
-	Thu, 29 Feb 2024 14:10:21 +0100
-Date: Thu, 29 Feb 2024 14:10:21 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	s=k20201202; t=1709212441;
+	bh=FOhbF4m9VCW85h3lBEJZPwXxnXu4DigXHek5s2kXYvs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Fh8thTD8CKNM7UFaRVVx89U1ax60Ch2RqYh1hgvo2dXmmP2XN9H2HpC/KmyfP7kAl
+	 sDUl7lIb9h1nB0q3Y0A4tkBLjLvKd20dcUn/Hspf46tW38eTJubcK/UpyDc4BW3fdz
+	 xXjC5+Gv0/fczJgKqL/rCkDjY/1JBFtv9CRDILOhK2uZfI2+1VSriXusl2X/hgDyzH
+	 lFoNpwTQh186WKny3UgJF1CUbpVzqZEs4FLFzRuv1bnWhnP2+g/kRF9XaYQTaU/u2R
+	 gszSB1+i7tDzs6LuNq5QXgC00qTWizLhaeGNFW7053DEnWxMZ21AkEsFW3mQ9SOEdZ
+	 VRrsSRey+4wOw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
- GICv3 ITS enable
-Message-ID: <ZeCCPRVvYCNfMYnd@hovoldconsulting.com>
-References: <20240223152124.20042-1-johan+linaro@kernel.org>
- <20240228220843.GA309344@bhelgaas>
- <20240229100853.GA2999@thinkpad>
- <ZeBbrJhks46XByMD@hovoldconsulting.com>
- <20240229122416.GD2999@thinkpad>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: dwc: endpoint: Fix advertized resizable BAR size
+Date: Thu, 29 Feb 2024 14:13:13 +0100
+Message-ID: <20240229131313.1199101-1-cassel@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229122416.GD2999@thinkpad>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 29, 2024 at 05:54:16PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Feb 29, 2024 at 11:25:48AM +0100, Johan Hovold wrote:
+The commit message in commit fc9a77040b04 ("PCI: designware-ep: Configure
+Resizable BAR cap to advertise the smallest size") claims that it modifies
+the Resizable BAR capability to only advertize support for 1 MB size BARs.
 
-> > As I mentioned, the 'required-opps' binding update is needed to fix the
-> > missing OPP vote so blocking the binding patch would block merging the
-> > DT fix which could otherwise go into 6.8.
+However, the commit writes all zeroes to PCI_REBAR_CAP (the register which
+contains the possible BAR sizes that a BAR be resized to).
 
-> I agree that the fix gets the priority. But some maintainers perfer to merge fix
-> patches _only_ if they are fixing the issue introduced in the ongoing release.
-> But if Bjorn has no issues in merging these for 6.8, then it is fine.
+According to the spec, it is illegal to not have a bit set in
+PCI_REBAR_CAP, and 1 MB is the smallest size allowed.
 
-It also depends on the severity of the issue and to some extent the
-complexity of the fix. These binding fixes are certainly low risk. :)
+Set bit 4 in PCI_REBAR_CAP, so that we actually advertize support for a
+1 MB BAR size.
 
-> > The 'msi-map-mask' is arguably a fix of the binding which should never
-> > have had that property, but sure, it's strictly only needed for 6.9.
-> > 
-> > And Bjorn A has already checked with the Qualcomm PCI team regarding
-> > ASPM. It's also been two weeks since you said you were going to check
-> > with your contacts. Is it really worth waiting more for an answer from
-> > that part of the team? We can always amend the ASPM fixes later when/if
-> > we learn more.
-> > 
-> > Note that this is also a blocker for merging ITS support for 6.9.
+Fixes: fc9a77040b04 ("PCI: designware-ep: Configure Resizable BAR cap to advertise the smallest size")
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+I'm working on a series that adds proper Resizable BAR support, but it is
+taking longer than expected, so I'm sending this fix first.
 
-> I got it, but we cannot just merge the patches without finding the rootcause. I
-> heard from Qcom that this AER error could also be due to PHY init sequence as
-> spotted on some other platforms, so if that is the case then the DT property is
-> not correct.
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-I've verified the PHY sequences both against what the UEFI firmware (and
-hence Windows) uses as well as against the internal Qualcomm
-documentation (with the help of Bjorn A). And Qualcomm did say that such
-errors are also seen under Windows on these platforms.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 5befed2dc02b..bb759a7b5fc7 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -627,8 +627,13 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+ 			PCI_REBAR_CTRL_NBAR_SHIFT;
+ 
++		/*
++		 * The PCI Express Base Specification require us to support at
++		 * least one size in the range from 1 MB to 512 GB. Advertize
++		 * support for 1 MB BAR size only.
++		 */
+ 		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+-			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
++			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, BIT(4));
+ 	}
+ 
+ 	/*
+-- 
+2.44.0
 
-But the fact that the symptoms differ between the CRD and X13s, which
-use the same Atheros Wi-Fi controller (and the same PHY initialisation)
-also suggests that this may to some extent be due to some property of
-the machine.
-
-Notably, on the X13s there are lot of errors when pushing data
-(e.g. using iperf3), whereas on the CRD the are no errors when running
-such tests.
-
-When leaving the CRD on for long periods of time with the Wi-Fi
-disconnected, I do however see occasional correctable errors.
-
-> Since this is not the hot target now (for Qcom), it takes time to
-> check things.
-
-I think that based on the available data it's reasonable to go ahead and
-merge these patches. In the event that this turns out to be a
-configuration issue, we can just drop the 'aspm-no-l0s' properties
-again.
-
-Johan
 
