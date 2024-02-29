@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4269-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4270-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0A9E86D0E2
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 18:39:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40BEE86D0E5
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 18:39:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82006B216A0
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 17:39:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA0D2287E47
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 17:39:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 104A870AC4;
-	Thu, 29 Feb 2024 17:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D49570AD1;
+	Thu, 29 Feb 2024 17:39:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EnNk5ArJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C7SoFrJX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B4C6CBF3;
-	Thu, 29 Feb 2024 17:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39DD16062E;
+	Thu, 29 Feb 2024 17:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709228342; cv=none; b=MjaCgoEKHXpxmXcKOT1JPdKlG/7kORdYFStgKM6qzil7i5cy9V1e/U9rfWjHpdsnh8JcO1CYOQgPvxKmYGJJzFw8W4zbfrABi5ouSP7Ak2DgXKZ7FdqAbi+3u7VdY4xHlLNMqFuAU9PWzGxLFePPHbb7GZPrzJ8vC2g/5T0SO6Y=
+	t=1709228368; cv=none; b=NPT8DFTmzqtpq7pksMQEiqzZetPymp4fxjgLImgktR61mi5Zy7hQC9c+9Gjmb9mrC/th5xFWWC1HPxAWQpsmxrwp+UQ9gbWpPTGmT2nUYHWMA24fbQx8mDKr0cGiix/hhUV8J9ma2wrCkO8pjftXF/D67UOX/FH54L6wO+3srFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709228342; c=relaxed/simple;
-	bh=ZwUvt/f+7G+OeisKaMdN5s3i0cHecbiW7F+SUpW6wIc=;
+	s=arc-20240116; t=1709228368; c=relaxed/simple;
+	bh=TAEnBSFHa8fjG7s2cfv/6tS2N2lEryTRWh/Q2k7wsF0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWBPINgyUBZ4DdKCALttZq0CHUuCL1x0ITPNCzXOmrbu2WSsm2x2vEvRA/Mou+xFhn0PNaDUd+9Ku87lOTRnlEZZMWd44EN3L6s377FGDZnAwrAYXnQIXCODgLPkw4UjgR081Sw7Qos6Lb5QIiXC6MiFHfqUX6vOxxjy+KGsz9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EnNk5ArJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1079C433C7;
-	Thu, 29 Feb 2024 17:38:58 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ruZNx8DIu229fekn4y4xcvsTTtCnK47jBamHxnFd9pwnqXpXxEpEjei5AzK+bFaZWdygajUxh2hI10QbQ95UQvtuWWBuMNYdOF6wbjXHg1N9gAlwpbbkPmZENazynKs15c3W/R9d4kOvKz6zQkYJji/+3kC27sy5PZBoAWSl7Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C7SoFrJX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9CF5C433F1;
+	Thu, 29 Feb 2024 17:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709228341;
-	bh=ZwUvt/f+7G+OeisKaMdN5s3i0cHecbiW7F+SUpW6wIc=;
+	s=k20201202; t=1709228367;
+	bh=TAEnBSFHa8fjG7s2cfv/6tS2N2lEryTRWh/Q2k7wsF0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EnNk5ArJJwicNvpwkRa1xw66zPXxFWr0CZrX0og7T4f1e+Wiv91aXLseg+/pANM0o
-	 /wBLckVsX12A6gsag/Qz3p335Jtd+1KKjzuC7VUTN0dxcHmhUA390b4P2JZCkY5E6b
-	 F+n9DphUOg6BwzPSyuaT9bhDh0LCKM23j2tKRfnWX5Y0KGn7goQuy4CrED/jQdEKc+
-	 nexyNVxe1fvgenmS7A8+Szgo0aSrbBJQ5jzJV6Iyp+vLvk3mZe15qdMVzmQVjezEGk
-	 TL+uYBI4iLhrO3u6Dzlzoke9YSYJlYLl5YqEjpEp/2T/b3jfn8sK+BeGMEw2npUK39
-	 FncbJ65e4kzbw==
-Date: Thu, 29 Feb 2024 17:38:56 +0000
+	b=C7SoFrJXIjnJNRrQr2M0Yt0uVblIjivn6pgqMF9sH8K9r4NPI1J1aWm41KJoT9flS
+	 /bjMtJnBRbznYdaXPA+1GWvXL/MO1K3d3BoLEtRD84+nMh9u0uyrQGaLxs079WbFwz
+	 4NKZeLxpxwO2vHboWvtLmTHRtU3vFClE3UQ2C1tTbi7BCw7n3bVhgJAVlFSd1ScU56
+	 P4g7ELUlnjJA+ZOEI9qqT6Q81ujeXWdNw7wY3rcg4h/QLhNYQosLuufcm7oUqX8U3i
+	 6zYhUP4zNGfripSY/Gz1NwMhCENAGT9jj7RphHK8bszy5FaZs0F6z0WeLDaatRKAFA
+	 PRqTdwRCE+4Hw==
+Date: Thu, 29 Feb 2024 17:39:22 +0000
 From: Conor Dooley <conor@kernel.org>
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
@@ -50,11 +50,11 @@ Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
 	gustavo.pimentel@synopsys.com, mani@kernel.org,
 	marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H
+Subject: Re: [PATCH 2/6] dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H
  compatible
-Message-ID: <20240229-lion-overdrawn-b84dad3f19eb@spud>
+Message-ID: <20240229-stabilize-handwrite-09d474911bf0@spud>
 References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
- <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
+ <20240229120719.2553638-3-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,18 +62,18 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TuhhfISF/dk6oxmB"
+	protocol="application/pgp-signature"; boundary="Xzp+i1KS10iXyq8k"
 Content-Disposition: inline
-In-Reply-To: <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240229120719.2553638-3-yoshihiro.shimoda.uh@renesas.com>
 
 
---TuhhfISF/dk6oxmB
+--Xzp+i1KS10iXyq8k
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 09:07:14PM +0900, Yoshihiro Shimoda wrote:
-> Document bindings for R-Car V4H (R8A779G0) PCIe host module.
+On Thu, Feb 29, 2024 at 09:07:15PM +0900, Yoshihiro Shimoda wrote:
+> Document bindings for R-Car V4H (R8A779G0) PCIe endpoint module.
 >=20
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
@@ -83,39 +83,39 @@ Cheers,
 Conor.
 
 > ---
->  Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml | 4 +++-
+>  Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml | 4 +++-
 >  1 file changed, 3 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yam=
-l b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-> index ffb34339b637..955c664f1fbb 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml =
+b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> index fe38f62da066..91b81ac75592 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
 > @@ -16,7 +16,9 @@ allOf:
 >  properties:
 >    compatible:
 >      items:
-> -      - const: renesas,r8a779f0-pcie   # R-Car S4-8
+> -      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
 > +      - enum:
-> +          - renesas,r8a779f0-pcie      # R-Car S4-8
-> +          - renesas,r8a779g0-pcie      # R-Car V4H
->        - const: renesas,rcar-gen4-pcie  # R-Car Gen4
+> +          - renesas,r8a779f0-pcie-ep      # R-Car S4-8
+> +          - renesas,r8a779g0-pcie-ep      # R-Car V4H
+>        - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
 > =20
 >    reg:
 > --=20
 > 2.25.1
 >=20
 
---TuhhfISF/dk6oxmB
+--Xzp+i1KS10iXyq8k
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeDBMAAKCRB4tDGHoIJi
-0h5NAPwI4jpJxo9OSZ1pyAqXIs1P3G6I14AKZ717ubGuIS5p/gEA7HckjFaH/vTr
-vN7PErR3oyfARU+3Roe4P79TWYj8xg4=
-=WFP1
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeDBSgAKCRB4tDGHoIJi
+0mfHAQDGvwZbPhZy3mD3lvgbJGlnIkN329BoGyVIjEia+kY3oAEAwoylQqiATgvu
+dlfxFEi9xd2TetJveiY4xUkEIewkdQk=
+=P/9A
 -----END PGP SIGNATURE-----
 
---TuhhfISF/dk6oxmB--
+--Xzp+i1KS10iXyq8k--
 
