@@ -1,99 +1,161 @@
-Return-Path: <linux-pci+bounces-4250-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4253-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC3D286C8D2
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 13:07:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAA5286C929
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 13:24:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64CCA1F239A6
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 12:07:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F5C71F23D57
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 12:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 058B57D073;
-	Thu, 29 Feb 2024 12:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B9187D07D;
+	Thu, 29 Feb 2024 12:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUeuY6m5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14DA17CF05;
-	Thu, 29 Feb 2024 12:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DD47D076
+	for <linux-pci@vger.kernel.org>; Thu, 29 Feb 2024 12:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709208456; cv=none; b=ltId1aaJEz+V6Nm3kMfb8rkVE5f0mA9aF9qpJnhyVN3u1FWpoa+vdFY6YSkcpISWIgkAHBtbu7nnpH6bBmLRSPlIv2udSXiWLKQrQjCaX0HptmD18GVr6u3pfY5hEY99ceVv8YJdaYLlRdHag6+aRXRvWPUYdTViiDvPh2olxJ0=
+	t=1709209466; cv=none; b=V8u1KRZkajTvwqCdl3RYohCV6mN1P0IF2Ehsa9TF32tjARE9qfcDdx4EA1bFvUZ4NhJhfgzFHKFn2Rx11ODCQjatK8g5tK9BtTHpZhoBi1omP1to607FmW9l72l50QVpqIpgFZ/vz3ZGqDQE4CkHsgWTal6D+7q09sV+bwhJYF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709208456; c=relaxed/simple;
-	bh=nEj89xyZoFBvp66Y8Lw8tPcJShRZGoiU+lWaoLYqHpo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ebNda7prKlX5YsMfhG2zeHxa+++iVjh3sadb571Q5SxBgkehuAynrEgkkqzXdF9liVecdGHb6ARqnghbmyUoSIO9af0v3wDybXIyiH3PcBE8Z3LcFs1qVDI2nNJnLzwNUUkegBUN/YXRpJF3I3RNdPrOdFII1+3p2ayVLN+Dko4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-IronPort-AV: E=Sophos;i="6.06,194,1705330800"; 
-   d="scan'208";a="199768939"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 29 Feb 2024 21:07:25 +0900
-Received: from localhost.localdomain (unknown [10.166.13.99])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id E589A400857D;
-	Thu, 29 Feb 2024 21:07:24 +0900 (JST)
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com,
-	mani@kernel.org
-Cc: marek.vasut+renesas@gmail.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 6/6] misc: pci_endpoint_test: Add Device ID for R-Car V4H PCIe controller
-Date: Thu, 29 Feb 2024 21:07:19 +0900
-Message-Id: <20240229120719.2553638-7-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
-References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
+	s=arc-20240116; t=1709209466; c=relaxed/simple;
+	bh=UVFj3luf/OuM91FWElqtuQGNABlen1dm7mEO60GN/Ck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S6uFqzwKLo8MubL2+IDKQYSMAStOUBaRYyhJx3wTOcez+P3Tl1gC9qKbl4FCxBB46krHGZDjzMEG30k5nc7jYF56dhXT74TNrPb4pb0j7bvsR+kW/7NjSRAaK+PJik3xGsW/qO6ZGmhvFruiekA++6WjnB6N7/ZUgUjXJB52RBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vUeuY6m5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc75972f25so7592125ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 29 Feb 2024 04:24:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709209463; x=1709814263; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=z/nBppKZ3Dwmy8fY3Oq9whnruT6TOvjmy9666RwwKe0=;
+        b=vUeuY6m54i2RXwqNUpa3DRH9yf2SGJ1QsgZGKwt901bYIxqhDFvWajcxzzl9BaiCOp
+         N5r1lq4dZPQkO8e5QbgYfEePBy07meISMpPwkTz56WXaMCrvJ2Ndl5C17ttQmRJwB0HT
+         wt4gXP7zyIEW7u5gprwBJmAz+/Y1Y1nqxDKQVx9opqGrg9xK1cxTE/LGcxPIpuQBOwfW
+         iNzyhxYZo5+rb91/ridfsXOdGZeQ2XJ0MmGZUSZprcq/xJnO9l0TvaZ1QWtQhZ5tDa1R
+         iyzah07ay0IR0MeKSWNYoecN8yYvjBvVVKg9McvZT1StV016D5/B2dCnFx+gxDqq5eob
+         FLRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709209463; x=1709814263;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z/nBppKZ3Dwmy8fY3Oq9whnruT6TOvjmy9666RwwKe0=;
+        b=ii+3fJdwdpbhcaCJBBrfXZbx6QUS8QtRv6wT6dWUGdnIOkrHCUqRT4IAxcBigzdrj/
+         CoEtW92az3/N9n1sBXJmzUBItU+6B1QN9eEbR0S9ED+zlSabs3r930YYJQ+hzcFS0Hjy
+         9GGLGMUJCrBQrB4NIoTbTPFiAKhRQI33kuyFlGZayZdnWZnycTFGjSlQsAlrNRxB0Rtc
+         0muFI1ZU9+T9E8U8bfGh9Ji4hsz3lmQ7de2bnz9kKgt/S6m9WWzAhWXXL0UsyiZ2Xtcm
+         LISISGDdmJOytWM0pTzr26sKzpX8O6YaaOjCVjSwcR4i0l5+DCef7/uC+FjCh/EichoF
+         IYsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFgSsiDew7Xj5vXxMsJnwzyS2pxmJOhrGxT30baOxiqbK31ct7LXF4VptW6+gy6yijSIrBQ2fTODAQG+zwhTBOg4KMHo/+D2zt
+X-Gm-Message-State: AOJu0YxN9ksnmLAira7WlSHMv40lLMhxNKzkBAok2L/kZRDTxeicQGAX
+	kfmzTEe70k/Tp/FH21vu42eFlAjGWXC69cyHvQj2McehFRrwM17vF7gsTHlrRQ==
+X-Google-Smtp-Source: AGHT+IFEVW7Kzc/Sh0a1jwwbAk+Ml43zuYzKP023Jb88MYhJZ9kS3njjyEQ94jUlpEOmUZuJeABesQ==
+X-Received: by 2002:a17:902:db0e:b0:1dc:c9a8:f164 with SMTP id m14-20020a170902db0e00b001dcc9a8f164mr2074075plx.2.1709209463511;
+        Thu, 29 Feb 2024 04:24:23 -0800 (PST)
+Received: from thinkpad ([120.138.12.68])
+        by smtp.gmail.com with ESMTPSA id u16-20020a170902e81000b001dcc1a4631bsm1331627plg.2.2024.02.29.04.24.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 04:24:23 -0800 (PST)
+Date: Thu, 29 Feb 2024 17:54:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
+ GICv3 ITS enable
+Message-ID: <20240229122416.GD2999@thinkpad>
+References: <20240223152124.20042-1-johan+linaro@kernel.org>
+ <20240228220843.GA309344@bhelgaas>
+ <20240229100853.GA2999@thinkpad>
+ <ZeBbrJhks46XByMD@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZeBbrJhks46XByMD@hovoldconsulting.com>
 
-Add Renesas R8A779G0 in pci_device_id table so that pci-epf-test
-can be used for testing PCIe EP on R-Car V4H.
+On Thu, Feb 29, 2024 at 11:25:48AM +0100, Johan Hovold wrote:
+> On Thu, Feb 29, 2024 at 03:38:53PM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Feb 28, 2024 at 04:08:43PM -0600, Bjorn Helgaas wrote:
+> > > On Fri, Feb 23, 2024 at 04:21:12PM +0100, Johan Hovold wrote:
+> 
+> > > > Johan Hovold (12):
+> > > >   dt-bindings: PCI: qcom: Allow 'required-opps'
+> > > >   dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
+> > > >   dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
+> > > >   PCI: qcom: Add support for disabling ASPM L0s in devicetree
+> > > 
+> > > The ASPM patches fix a v6.7 regression, so it would be good to fix
+> > > that in v6.8.
+> > > 
+> > > Mani, if you are OK with them, I can add them to for-linus for v6.8.  
+> > > 
+> > > What about the 'required-opps' and 'msi-map-mask' patches?  If they're
+> > > important, I can merge them for v6.8, too, but it's late in the cycle
+> > > and it's not clear from the commit logs why they shouldn't wait for
+> > > v6.9.
+> > > 
+> > 
+> > I'm checking with Qcom HW team on the ASPM behavior. So please hold off the ASPM
+> > related patches until I get an answer. But 'required-opps' and 'msi-map-mask'
+> > patches can be applied for 6.9 (not strictly fixing anything in 6.8).
+> 
+> As I mentioned, the 'required-opps' binding update is needed to fix the
+> missing OPP vote so blocking the binding patch would block merging the
+> DT fix which could otherwise go into 6.8.
+> 
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/misc/pci_endpoint_test.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I agree that the fix gets the priority. But some maintainers perfer to merge fix
+patches _only_ if they are fixing the issue introduced in the ongoing release.
+But if Bjorn has no issues in merging these for 6.8, then it is fine.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index c38a6083f0a7..2fa3c6473c7d 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -83,6 +83,7 @@
- #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
- #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
- #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
-+#define PCI_DEVICE_ID_RENESAS_R8A779G0		0x0030
- 
- static DEFINE_IDA(pci_endpoint_test_ida);
- 
-@@ -1005,6 +1006,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A779F0),
- 	  .driver_data = (kernel_ulong_t)&default_data,
- 	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A779G0),
-+	  .driver_data = (kernel_ulong_t)&default_data,
-+	},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
- 	  .driver_data = (kernel_ulong_t)&j721e_data,
- 	},
+> The 'msi-map-mask' is arguably a fix of the binding which should never
+> have had that property, but sure, it's strictly only needed for 6.9.
+> 
+> And Bjorn A has already checked with the Qualcomm PCI team regarding
+> ASPM. It's also been two weeks since you said you were going to check
+> with your contacts. Is it really worth waiting more for an answer from
+> that part of the team? We can always amend the ASPM fixes later when/if
+> we learn more.
+> 
+> Note that this is also a blocker for merging ITS support for 6.9.
+> 
+
+I got it, but we cannot just merge the patches without finding the rootcause. I
+heard from Qcom that this AER error could also be due to PHY init sequence as
+spotted on some other platforms, so if that is the case then the DT property is
+not correct.
+
+Since this is not the hot target now (for Qcom), it takes time to check things.
+
+- Mani
+
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
 
