@@ -1,263 +1,186 @@
-Return-Path: <linux-pci+bounces-4222-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4223-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EB4C86C00A
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 05:57:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6914986C0A8
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 07:30:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C9DA7B24704
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 04:57:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 953B91C20D61
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 06:30:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA50F39840;
-	Thu, 29 Feb 2024 04:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997A31096F;
+	Thu, 29 Feb 2024 06:30:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="SsBVlLBp"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Py5BOV+C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C6738DED;
-	Thu, 29 Feb 2024 04:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709182666; cv=fail; b=dlQRkwbJqwwi2VgAvHz9HUypsAvUDirqewg18XaO9guzfB1pJpXzTKiCCR1jgpIS1hD1GmSzojt10/DK8XJQCZ6n3457eTJL0FgXwJD6Llkb1NREZbyAH/AM54V5vY9QwV5tGmoFW735LJUN6TpWcmNAvZl2Ba0BY3K/lY1f0mg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709182666; c=relaxed/simple;
-	bh=lDgTrsdHaTWMSwm/E0fQ8We9nVhQY5nz++pb8D483F4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HhXgIlZXKK2y+mqjOHVjMevj/J6AFiMlKxJ3CtNvVYQ02Fr5dGYfKUaks4cey0Lo5cu130qCWeHT9RZIRDqInSYqXFpaYF0fuKCet4yDIoxESrNsFFiJ0TT9t50yY526CvKwRdYtfQyxHVWewuqegyY3qbKoTIqZ+NDDbZW2CQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b=SsBVlLBp; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41T42Y0H007323;
-	Wed, 28 Feb 2024 20:57:30 -0800
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3wj8e8tqhw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Feb 2024 20:57:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxonM4SV6bn6PcQvpGFwj/qu7Ciq0yyhNSPsfpwsCCiinbQUmrBJMRt51ne7beO4eXo3a0v/W/3A/y812B980zHqiHWRgufYsRKrbksooshHDbQeFOCJHUn/vEVM4yrIdGJbJitDjFQytFiXHwcro/wRNo+0/WElzIlmuI3OJdfFUNHXd68zHGG7cWqKBWVw+HVHS3xOV5dwenwX5nEViOWfKwny6p3Q9nPMxa+4lwmIpZUe0UbWtCOb7MII9ePagGglwSNvcsIBfXjADdaoneMJRUqt+6m0pXLnTS6aMDNe2kil50FUjUVDSPLykWg9MMMmAdZbP0ci84ErrA9E3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D9Ut48Nk9cIfP0vsaV3gMDf8Y9NEFRUrndwrauQidxg=;
- b=SuH5WHL2GlUxHmJ+iNVM/hf5/F2QzMtWFTFWRQ37m3pc/hqFnKg6NsfYBdyL4exuYYXoxSJfJmyBYXcvev5VoOAAx6qEF7wzkRER+IOPLcngRthqOegij2UdFOa+8txDb4zuFA+XVUNh19kapywc7qfUMV4ZqcY32YEfyDhpFJrqrMiVhhxROyLSBdJdJOyIRuwmVdxrYGPoe1l2VatC7gLt1ZaCaTo96warJykWX5uHdF95jcje3+EgffVUHo4QN41WsZWZYeb5RfVYtSZuBe4zx3wql2kT5o9XwjyUpoA+UK+/O6/lPunlOgfd1F/uE/at0XWfEL5xUT3qZRpVIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D9Ut48Nk9cIfP0vsaV3gMDf8Y9NEFRUrndwrauQidxg=;
- b=SsBVlLBpLTKsPSU2OHs8ZkgbC9gmHCvFWnBSunixHkHBMqibdC2l1ldf34p17oFessAN0xVe1wJmJOva1OeSG+sKIqe9MByTQQZZYK7a8rAbyUfaOUKOIFkEEy5A0UzONwBE3Zh5YqeBaZShvFWqF9hPJeN7nBSQ2HqcXRgFzHM=
-Received: from BY3PR18MB4707.namprd18.prod.outlook.com (2603:10b6:a03:3ca::23)
- by LV3PR18MB5801.namprd18.prod.outlook.com (2603:10b6:408:1b7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Thu, 29 Feb
- 2024 04:57:27 +0000
-Received: from BY3PR18MB4707.namprd18.prod.outlook.com
- ([fe80::493a:b05c:8118:9dd4]) by BY3PR18MB4707.namprd18.prod.outlook.com
- ([fe80::493a:b05c:8118:9dd4%4]) with mapi id 15.20.7316.039; Thu, 29 Feb 2024
- 04:57:26 +0000
-From: Sai Krishna Gajula <saikrishnag@marvell.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "richardcochran@gmail.com"
-	<richardcochran@gmail.com>,
-        "horms@kernel.org" <horms@kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org"
-	<kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sunil Kovvuri
- Goutham <sgoutham@marvell.com>,
-        Geethasowjanya Akula <gakula@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Hariprasad Kelam <hkelam@marvell.com>,
-        Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-        Naveen Mamindlapalli
-	<naveenm@marvell.com>
-Subject: Re: [net-next PATCH v2] octeontx2: Add PTP clock driver for Octeon
- PTM clock.
-Thread-Topic: [net-next PATCH v2] octeontx2: Add PTP clock driver for Octeon
- PTM clock.
-Thread-Index: AQHaasvK86DrYSiqL06CYCDK0W5VDA==
-Date: Thu, 29 Feb 2024 04:57:26 +0000
-Message-ID: 
- <BY3PR18MB4707E7764D59DF25C57CCB58A05F2@BY3PR18MB4707.namprd18.prod.outlook.com>
-References: 
- <BY3PR18MB4707DBB80B5949EA26F7ABECA0582@BY3PR18MB4707.namprd18.prod.outlook.com>
- <20240228160857.GA272997@bhelgaas>
-In-Reply-To: <20240228160857.GA272997@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY3PR18MB4707:EE_|LV3PR18MB5801:EE_
-x-ms-office365-filtering-correlation-id: fd67817f-c281-4d63-5565-08dc38e2ecbf
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- 9+9vLN8+wQGJBBfhPRW0CLGco93foKCRaKSTL0FJ3kmwgJwZNUqDdgAep6ExmL4aDYt+6yoE2up0z6zVo1J9a02KOQgDv4WDfokxFqrs0eueP/6tj1PEB5fCX7zvD8194WMi3I377GGCnvtqLCqOG8cQzjh3px8dCdRC6f1QiBHqEfJ5qh1AwAUOtVmvTcRY7nDZPu3x50Z7Q+nnKlgtx3xoNNFfi1JE16t6saDxDh118RT3i/J94h9zM7MHYm2M8ZysQMNuwS/QpIRiQtlxdUMh8VV1JZdANv9iKhUmMVNWThecnM89d5y9dsbQmUgm7nke28ZL2qZ6SXOnSsQCVqxZpvEA1nSNFIQWRwedWjnzbPR0dgxPy7yVU0QRSuEWZPr2K/veNGrxE/8C5yDiPXke5us/R/maLYlBs0CVPIZ2mHRXyITZ9rNlIROBnDQKm4azDlnTo0yOC6NLuR+PkN82kLTrQzDLNlVHp4HhSiVwyDMWrfLHwa7mGZT+hS9adrS94cya6CzTC31RrdOGoXs3cklAWoJ9S0jYyxurEZKcmnKGImoJE4NacImXeZR/1OiR2iSzIN8NVopxSYpKa8kmh5cHdcgh0nYgeDvCNDx/ZnHXJOY1bOq8b7ZmwuXYw75RIohTWb3c2v7KYv0ID3eoZHIQ2b7pr01oHk5a9DKXaXxa195R5fwyhadquYWHibAmOgp4T0HtVbaGLRrFItcT8p8m2rtfjV4J237VzF4=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR18MB4707.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?4sQkFrovQ1/VfYyhj+wrADGUQz10C26lwn1/oH05pTocD5B/ji54nH6dytaN?=
- =?us-ascii?Q?1lrA0/VM8FAYc/0XsA+8COVsnMh7DaAwSl3wcU3SfeBowgbNyrbJkCreB+Qq?=
- =?us-ascii?Q?hDBcZayuWtslL+xYxfg5W51Y8Wb66I2rkI4qEv0Gcgq1ZqMc1TvskDIEVnRQ?=
- =?us-ascii?Q?VnAHQ/bVn720CfCQ2OwPtEgZ2busfQwZbXLJHLcGyxZrLLqrUp7/IGG3xhKl?=
- =?us-ascii?Q?esaCFb3oGOsBP0zdZ7sakS2QOpoHPp152ZVTbmtLlMLVTZfIBvnFRRukjCAt?=
- =?us-ascii?Q?x1jQmehdkTjs3iw1H8HFxS5vqbaiXVEXtOI4JOnnEj2RQH6OkIKq+JwSVvCH?=
- =?us-ascii?Q?FEUBQN+pPeHkEu//scsy5cHo9fh6nC6xUzLEdo0GNdAzpf2SSQIn0R6rhAfx?=
- =?us-ascii?Q?hq8k5pejPnoooa70s0gdPNKUzqOMJfCZVrkkjBA8fqKLhpEIvGatRNb7rWxe?=
- =?us-ascii?Q?DEbH/Q9JeiKllMObRtNeibCMt9CvYQ/Cex26buKmWsxq0iyaVtJdwGNJl00T?=
- =?us-ascii?Q?4UC3dGwOwFSatW84h1DsPlAHHqXBz8XPUQGpSTnUg3Ea8Ffzd3w/k9FvZNW9?=
- =?us-ascii?Q?synmr09TyenyYsgIeJVySDm3MCz32dCjGpCDhwACrRbbLvjfL/d4SEeyqPx2?=
- =?us-ascii?Q?gTkouZdpChD93Vzfo40GFj4YyeU2Q4UOh/vevFS0bktXn/MHgUEbjktC1Yfq?=
- =?us-ascii?Q?JJFZGwHNIlJEL9HhV6orUR7MTvNz9EH9Iu6xYvrzsUEKNwpAkAUG47MG55gI?=
- =?us-ascii?Q?IpBVPOkUMca8Xj+lEPIfE+vqnEaFNs5/yGIBlRKXt7js4zu0p/9Y8K7qSuVr?=
- =?us-ascii?Q?6Oca+ET/KYJ1pouKnnSi2II9i5DFN/Y4UrJCGWoMRcjTGvNlqlfihK5Sktkv?=
- =?us-ascii?Q?TDr5DXeiVR4ze6Ci4z8U9COxhvwxrQP/Ze7U38T8GevdJUPq4gWjnCLrZG0m?=
- =?us-ascii?Q?GqeoWOfkLXl/y7fLPaGtz4eg6tyPTvQ5qASu9Xv6BiJvLw5jYs7OQzf0w5DT?=
- =?us-ascii?Q?qRU8Gher+Iy2e+nPmCGPKbDGkUXdIiFOT2akpkzM1UfeNMtWAMNwbclXM6WO?=
- =?us-ascii?Q?PsLqYqZPuJMAPQEIHi5WMiiUb7ADn9y77yX8KU4dCqFdL/6V26hujUic9/We?=
- =?us-ascii?Q?JG3KVLHqy7pDQtYdrn2Rs3ddicMCjcxKgJ5vFgQpik8rOmRbaLxOkpPGuHaa?=
- =?us-ascii?Q?7dyDnKXb/4WN3OPY4oxENNMh0qaHHqkvgFT9h8lJujMyuTvNORaHv/28ev7S?=
- =?us-ascii?Q?YCDCQnwPEJYUclw4yMhrzBHmEA3WFIXCCQBH3Jy/gyeGs+ngyu52/WOr4OPE?=
- =?us-ascii?Q?noy2B3Zxj0cjuXTKwqNPb+p4QDgME6DCejYdkobZ6AYAaPiB1fBXcjsC3iJS?=
- =?us-ascii?Q?nR2ue9OmFZmGFh731BywZIw/mFEpCilM58eErW0ASCWTS4+DQO7qN4fgKAPw?=
- =?us-ascii?Q?mPw87863x7gZ2767KMGzakG2NwmEIFZnYYqQpsNfAwLaseI65+lBqg5F0BC5?=
- =?us-ascii?Q?5GFSb77oAJizs6Y/ZKcoD2xZMTQTflLtyOQQTyCsifyNWAUEwRUIFqkmrmzK?=
- =?us-ascii?Q?Y3szxDJBxqIMd8BuUpHdkG1Z0M6NL6Ro1/IA/AZV?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DF93C482;
+	Thu, 29 Feb 2024 06:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709188206; cv=none; b=fAVLJ0299qXp/0oc4zecb7hrsuYSDD9zjQ/HaOgckXXgdNcTh3DSxO9v+kGyWlYOzj+Go2/p9oiAyg8rqLDiNFzaJbE619bhEVl0OONYrLC5J8/6f5DhNXcSmEdQp2m2ztS4PYn3fBePVP/PwHxj4uMMxJZsyLvTBmiVZloBNrw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709188206; c=relaxed/simple;
+	bh=WVuqvTOEQ6pYEpNxVPfaI9ms3Fa4vc/Kgpc6dbIhRII=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HqyDUlQplu3DY/KcZJDCDiu/1H5Vbg/MeDttkXLK6lZDWHzGiBeIWHN2Al7iKosBZNjSe4tfQQxguKbh1811Sl3+RcY7+3dNjcxkcQSU9uHaCx0b0Wh45G9J6qtnR08TdEMC6dSW8mueFwrrfjx4sAlME5MFlAptw2jHOAijO0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Py5BOV+C; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from localhost.localdomain (unknown [10.101.196.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id A73813F201;
+	Thu, 29 Feb 2024 06:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1709187772;
+	bh=UHhKDh3X5z3R9YB/4OvFCQo1lCDQTCu4OguuN5U9shg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=Py5BOV+Cq38XtZYzUo9GvgcmuwMisj8LnXjIDD/i5vu+/U4zcLKZpoOtcjTnZipRn
+	 ZlieYODemFTDxUMBkRKsTnJnHLTQTTrphiAoQV9uRsJsrWob5s6IrUML326iJOX310
+	 bsmO0FgYHDtlCVdHaEvZOy0Oqn7f29RNBCTnHMF0ahpPZkJKnSz/GV0+0ZgytzGjei
+	 sMjZya6ufrcSB+dwanpo+DMs8+9US8DJ8OFGHEhKyMObkWNFEJjMLi14DmteL5mWeA
+	 qAkrbB8wyAB5YWH8oUrDxGShDTQ1W6Vbzpo8MersXgQg5yDzk6m8fTsp7a/5C2hpVO
+	 QHvgj+LP3rpOg==
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Ricky Wu <ricky_wu@realtek.com>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on device removal
+Date: Thu, 29 Feb 2024 14:22:00 +0800
+Message-Id: <20240229062201.49500-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4707.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd67817f-c281-4d63-5565-08dc38e2ecbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Feb 2024 04:57:26.5431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7Fah/SBUHE9z+M1nCrs4CeXVpojMEZlMvVYn7p6b+rxbtZBU4f0Mo5DqRnBx57o3EflXFiRa3hR/rJRYw8PAeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR18MB5801
-X-Proofpoint-GUID: uD_YDwKbmSZDHXlTIVA-psUEioezzHBN
-X-Proofpoint-ORIG-GUID: uD_YDwKbmSZDHXlTIVA-psUEioezzHBN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-28_08,2024-02-27_01,2023-05-22_02
+Content-Transfer-Encoding: quoted-printable
 
+When inserting an SD7.0 card to Realtek card reader, the card reader
+unplugs itself and morph into a NVMe device. The slot Link down on hot
+unplugged can cause the following error:
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Wednesday, February 28, 2024 9:39 PM
-> To: Sai Krishna Gajula <saikrishnag@marvell.com>
-> Cc: bhelgaas@google.com; linux-pci@vger.kernel.org;
-> richardcochran@gmail.com; horms@kernel.org; vinicius.gomes@intel.com;
-> vadim.fedorenko@linux.dev; davem@davemloft.net; kuba@kernel.org;
-> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Sunil Kovvuri
-> Goutham <sgoutham@marvell.com>; Geethasowjanya Akula
-> <gakula@marvell.com>; Linu Cherian <lcherian@marvell.com>; Hariprasad
-> Kelam <hkelam@marvell.com>; Subbaraya Sundeep Bhatta
-> <sbhatta@marvell.com>; Naveen Mamindlapalli <naveenm@marvell.com>
-> Subject: Re: [net-next PATCH v2] octeontx2: Add PTP clock driver for
-> Octeon PTM clock.
->=20
-> On Wed, Feb 28, 2024 at 12:37:02PM +0000, Sai Krishna Gajula wrote:
-> > > -----Original Message-----
-> > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > Sent: Monday, February 26, 2024 10:31 PM
-> > ...
-> > > On Mon, Feb 26, 2024 at 03:40:25PM +0000, Sai Krishna Gajula wrote:
-> > > > > -----Original Message-----
-> > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > Sent: Wednesday, February 14, 2024 10:59 PM ...
-> > > > > On Wed, Feb 14, 2024 at 06:38:53PM +0530, Sai Krishna wrote:
-> > > > > > The PCIe PTM(Precision time measurement) protocol provides
-> > > > > > precise coordination of events across multiple components like
-> > > > > > PCIe host clock, PCIe EP PHC local clocks of PCIe devices.
-> > > > > > This patch adds support for ptp clock based PTM clock. We can
-> > > > > > use this PTP device to sync the PTM time with CLOCK_REALTIME
-> > > > > > or other PTP PHC devices using phc2sys.
->=20
-> > > > > > +static int __init ptp_oct_ptm_init(void) {
-> > > > > > +	struct pci_dev *pdev =3D NULL;
-> > > > > > +
-> > > > > > +	pdev =3D pci_get_device(PCI_VENDOR_ID_CAVIUM,
-> > > > > > +			      PCI_DEVID_OCTEONTX2_PTP, pdev);
-> > > > >
-> > > > > pci_get_device() is a sub-optimal method for a driver to claim a
-> device.
-> > > > > pci_register_driver() is the preferred method.  If you can't use
-> > > > > that, a comment here explaining why not would be helpful.
-> > > >
-> > > > We just want to check the PTP device availability in the system as
-> > > > one of the use case is to sync PTM time to PTP.
-> > >
-> > > This doesn't explain why you can't use pci_register_driver().  Can
-> > > you clarify that?
-> >
-> > This is not a PCI endpoint driver.  This piece of code is used to
-> > identify the silicon version.  We will update the code by reading the
-> > silicon version from Endpoint internal BAR register offsets.
->=20
-> > > I assume the PCI_DEVID_OCTEONTX2_PTP device is a PCIe Endpoint, and
-> > > this driver runs on the host?  I.e., this driver does not run as
-> > > firmware on the Endpoint itself?  So if you run lspci on the host,
-> > > you would see this device as one of the PCI devices?
-> > >
-> > > If that's the case, a driver would normally operate the device via
-> > > MMIO accesses to regions described by PCI BARs.  "lspci -v" would
-> > > show those addresses.
-> >
-> > This driver don't run on Host but runs on the EP firmware itself.
->=20
-> The "endpoint driver" terminology is a bit confusing here.  See
-> Documentation/PCI/endpoint/pci-endpoint.rst for details.
->=20
-> If this driver actually runs as part of the Endpoint firmware, it would n=
-ot
-> normally see a hierarchy of pci_devs, and I don't think
-> pci_get_device() would work.
->=20
-> So I suspect this driver actually runs on the host, and it looks like it =
-wants to
-> use the same device (0x177d:0xa00c) as these two drivers:
->=20
->   drivers/net/ethernet/cavium/common/cavium_ptp.c:#define
-> PCI_DEVICE_ID_CAVIUM_PTP        0xA00C
->   drivers/net/ethernet/marvell/octeontx2/af/ptp.c:#define
-> PCI_DEVID_OCTEONTX2_PTP                 0xA00C
->=20
-> It seems like maybe it should be integrated into them?  Otherwise you hav=
-e
-> multiple drivers thinking they are controlling a single device.
+pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+BUG: unable to handle page fault for address: ffffb24d403e5010
+PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP PTI
+CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4, BI=
+OS P3.40 10/25/2018
+Workqueue: pm pm_runtime_work
+RIP: 0010:ioread32+0x2e/0x70
+Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 54 01 b8 ff ff =
+ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b> 07 c3 cc cc c=
+c cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
+RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
+RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000000007f
+RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403e5010
+RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 0000000000000000
+R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000000007f
+R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 0000000000009003
+FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003706e0
+Call Trace:
+ <TASK>
+ ? show_regs+0x68/0x70
+ ? __die_body+0x20/0x70
+ ? __die+0x2b/0x40
+ ? page_fault_oops+0x160/0x480
+ ? search_bpf_extables+0x63/0x90
+ ? ioread32+0x2e/0x70
+ ? search_exception_tables+0x5f/0x70
+ ? kernelmode_fixup_or_oops+0xa2/0x120
+ ? __bad_area_nosemaphore+0x179/0x230
+ ? bad_area_nosemaphore+0x16/0x20
+ ? do_kern_addr_fault+0x8b/0xa0
+ ? exc_page_fault+0xe5/0x180
+ ? asm_exc_page_fault+0x27/0x30
+ ? ioread32+0x2e/0x70
+ ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+ rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+ rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+ rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+ ? __pfx_pci_pm_runtime_idle+0x10/0x10
+ pci_pm_runtime_idle+0x34/0x70
+ rpm_idle+0xc4/0x2b0
+ pm_runtime_work+0x93/0xc0
+ process_one_work+0x21a/0x430
+ worker_thread+0x4a/0x3c0
+ ? __pfx_worker_thread+0x10/0x10
+ kthread+0x106/0x140
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x29/0x50
+ </TASK>
+Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_sof_pci_intel_cnl =
+snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_codec_generic snd_so=
+c_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 soundwire_generic_al=
+location soundwire_cadence snd_sof_intel_hda_mlink snd_sof_intel_hda snd_so=
+f_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext_core snd_soc_acp=
+i_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_compress ac97_bus=
+ snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_intel_sdw_acpi i=
+ntel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core x86_pkg_temp_the=
+rmal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel drm_buddy ttm me=
+i_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_event cec crct10dif=
+_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypto_simd rc_core cr=
+yptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cstate i2c_algo_bit =
+joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_timer sysfillrect in=
+put_leds snd ee1004 sysimgblt mei_me soundcore
+ mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_codel msr parport_p=
+c ppdev lp ramoops drm parport reed_solomon efi_pstore ip_tables x_tables a=
+utofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ahci e1000e i2c_i=
+801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas video wmi
+CR2: ffffb24d403e5010
+---[ end trace 0000000000000000 ]---
 
-Though this device does not appear as a PCI device on EP firmware, but ther=
-e are some other internal PCI devices that will be enumerated.=20
-We will remove the dependency of reading the PTP device to check the SoC ve=
-rsions, instead we will read the config space of this PCI device itself.
-I hope this clears your doubt whether this driver is running on Host or EP =
-device.
+This happens because scheduled pm_runtime_idle() is not cancelled.
 
->=20
-> Bjorn
+So before releasing the device, stop all runtime power managements by
+using pm_runtime_barrier() to fix the issue.
+
+Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realtek.=
+com/
+Cc: Ricky Wu <ricky_wu@realtek.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+  Move the change the device driver core.
+=20
+v2:
+  Cover more cases than just pciehp.
+
+ drivers/base/dd.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 85152537dbf1..38c815e2b3a2 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device *de=
+v, struct device *parent)
+=20
+ 	drv =3D dev->driver;
+ 	if (drv) {
++		pm_runtime_barrier(dev);
+ 		pm_runtime_get_sync(dev);
+=20
+ 		while (device_links_busy(dev)) {
+--=20
+2.34.1
+
 
