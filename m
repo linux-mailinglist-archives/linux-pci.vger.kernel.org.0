@@ -1,37 +1,38 @@
-Return-Path: <linux-pci+bounces-4247-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC9E986C8C8
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 13:07:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 543A586C8C5
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 13:07:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D2521F2418F
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 12:07:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 055391F23A0C
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 12:07:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486B07CF1C;
-	Thu, 29 Feb 2024 12:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A6D77C6CA;
+	Thu, 29 Feb 2024 12:07:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 028A27CF05;
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DFC17C6EB;
 	Thu, 29 Feb 2024 12:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709208454; cv=none; b=YORHhdbEYQP8oqAh36USskeZtKkZUhz/Fa+6MZxu//uWX/ppEIl/kSsSAMePnO+e5QnVZnIiBU6tjfxrpGbxS9F2yiPW3H96z6KYgtpvwGW3DJfV74eqe7lo7nf+0LaHpP434HE+JEA5WNfu685nJHabdMjevYLqhMikMRgfXZU=
+	t=1709208453; cv=none; b=BhSgyoXS+yu6B9pClQtr36RlxKCUF3rfXj8qkrAehrv2+W9JhlS75mRuLnmgp/jeciAGG95CC0VCkmutNbAGY5F8zLXcuNIj6IzEGqsw4bdydW0lziP18mwAz+e9y7sWsxhoi1XPljQBV/kP6XzuBvklb0vFdxh4z7W6Nd9y/wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709208454; c=relaxed/simple;
-	bh=n7APBsPsInPrwEJdT1KvDSGQ+AFtmzx/CXPF1TCL1Lk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oHgaXZrbRpDTps0CTM3VtKzQEfNRRWe4IwLgO00V3vFbdPCjzWGzPMfccDy0C9orx/O5GGxN5NOnEX+XIfo1TRa8m8bxJAWnCER8RGQ5VGD+J+u+8tzt3iMGzPc/48ttFrDhkou9WxELV1IfkEAWWeyb5SJaBCM75LmDDdFT7ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1709208453; c=relaxed/simple;
+	bh=zg7n6UwlMs+MTL+PWXm95KJxhyUcIhP/3a5D1Z+u+O4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=i+TJj3I4iurO6LzAgC69rSO7nYuzouSqLlnhZ3RH+JJkyUcqPDJMNqeCgceu9ZnNdJds0ooVi7ZaeprotIvI3U5NSthq23mRKiHkKsnKMiMTAwuQqvl5TejFShnipozsuG7v+hExl8QFMJjmdX+TTOAyka3AGrHaLMO+2VMPT9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 X-IronPort-AV: E=Sophos;i="6.06,194,1705330800"; 
-   d="scan'208";a="195830391"
+   d="scan'208";a="199768931"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 29 Feb 2024 21:07:24 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 29 Feb 2024 21:07:24 +0900
 Received: from localhost.localdomain (unknown [10.166.13.99])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0CDBA40031D4;
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 330EA400857D;
 	Thu, 29 Feb 2024 21:07:24 +0900 (JST)
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To: lpieralisi@kernel.org,
@@ -48,10 +49,12 @@ Cc: marek.vasut+renesas@gmail.com,
 	devicetree@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/6] PCI: dwc: rcar-gen4: Add R-Car V4H support
-Date: Thu, 29 Feb 2024 21:07:13 +0900
-Message-Id: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 1/6] dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
+Date: Thu, 29 Feb 2024 21:07:14 +0900
+Message-Id: <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
+References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,29 +63,28 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The pcie-rcar-gen4 driver can reuse other R-Car Gen4 support. However,
-some initializing settings differs between R-Car S4-8 (r8a779f0) and
-others. The R-Car S4-8 will be minority about the setting way. So,
-R-Car V4H will be majority and this is generic initialization way
-as "renesas,rcar-gen4-pcie{-ep}" compatible. For now, I tested
-both R-Car S4-8 and R-Car V4H on this driver. I'll support one more
-other SoC (R-Car V4M) in the future.
+Document bindings for R-Car V4H (R8A779G0) PCIe host module.
 
-Yoshihiro Shimoda (6):
-  dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
-  dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H compatible
-  PCI: dwc: Add PCIE_PORT_{FORCE,LANE_SKEW} macros
-  PCI: dwc: rcar-gen4: Add a new function pointer for other SoC support
-  PCI: dwc: rcar-gen4: Add support for other R-Car Gen4 PCIe controller
-  misc: pci_endpoint_test: Add Device ID for R-Car V4H PCIe controller
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- .../bindings/pci/rcar-gen4-pci-ep.yaml        |   4 +-
- .../bindings/pci/rcar-gen4-pci-host.yaml      |   4 +-
- drivers/misc/pci_endpoint_test.c              |   4 +
- drivers/pci/controller/dwc/pcie-designware.h  |   6 +
- drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 245 +++++++++++++++++-
- 5 files changed, 255 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+index ffb34339b637..955c664f1fbb 100644
+--- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+@@ -16,7 +16,9 @@ allOf:
+ properties:
+   compatible:
+     items:
+-      - const: renesas,r8a779f0-pcie   # R-Car S4-8
++      - enum:
++          - renesas,r8a779f0-pcie      # R-Car S4-8
++          - renesas,r8a779g0-pcie      # R-Car V4H
+       - const: renesas,rcar-gen4-pcie  # R-Car Gen4
+ 
+   reg:
 -- 
 2.25.1
 
