@@ -1,78 +1,94 @@
-Return-Path: <linux-pci+bounces-4229-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4230-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AB3686C2DF
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 08:55:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3372886C381
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 09:31:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C81A28A5A5
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 07:55:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 523741C21E9E
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Feb 2024 08:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7047A45BE0;
-	Thu, 29 Feb 2024 07:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FD811DDFF;
+	Thu, 29 Feb 2024 08:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FsF5V3F3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4352446AD;
-	Thu, 29 Feb 2024 07:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB9A1EA7D
+	for <linux-pci@vger.kernel.org>; Thu, 29 Feb 2024 08:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709193330; cv=none; b=IJE7IYWsCQULcU13fNBXOXGqF9Hu1zVb/aTR5E/h1RE5VE8TZFi5kk7HtKaHhpJfaU86Rl+atGskWEzirkOpeqPuNG0cdRcGJt++HU6r5X39cARgb0d/bY6fLqqGj961waVcj6ZdKdZ+/0DS+XvFP5qgSEF+9Co31bp1FSgIaWA=
+	t=1709195488; cv=none; b=brU7673l7Fx5S8c1jPPgsxRIinCYqkutCwIMD9xdfMgnYYggN22MU1Sb27dWvp9BppYCIJVXw0yhvjbPU+M+R3IoEh47V/mrkvQCSa4jZ8AQz5xr65mI0iVSDJTK2PYcSSAHQFF9S3+7Tv1j4wijyMGJGPMqEqw5ESnu6o0WpbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709193330; c=relaxed/simple;
-	bh=IVtuPS1lBPaj/zxrsGhLxqcDNjuzZOdLuezGWMB8DKo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GyD24lYX9e4MTTL76ZnOEY65p4X4SeHCMULcshLUcCbDEADpHFigCSOkP1CMxOCIHJ36Kl3561Lbew/9TqDeKURSnUwXsSu+Ytv6VI1xAxDmUAXy+X5XnZB2vlRXq1fK0wkQyfO3TIkxj2xFfkhST8fxEqFpxEGWTLLkA5KfgPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 41T7skWyB1231943, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 41T7skWyB1231943
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 Feb 2024 15:54:46 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.17; Thu, 29 Feb 2024 15:54:47 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 29 Feb 2024 15:54:47 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::48bb:4f38:369c:d153]) by
- RTEXMBS01.realtek.com.tw ([fe80::48bb:4f38:369c:d153%9]) with mapi id
- 15.01.2507.035; Thu, 29 Feb 2024 15:54:47 +0800
-From: Ricky WU <ricky_wu@realtek.com>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook
-	<keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-        "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>,
-        "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>,
-        "bpf@vger.kernel.org"
-	<bpf@vger.kernel.org>
-Subject: RE: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on device removal
-Thread-Topic: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
- device removal
-Thread-Index: AQHaate/5A+a/3dg+UCIxr7elsRj3rEg7uxQ
-Date: Thu, 29 Feb 2024 07:54:46 +0000
-Message-ID: <ac998dfd10074f77a66d59bcc0ca2213@realtek.com>
-References: <20240229062201.49500-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20240229062201.49500-1-kai.heng.feng@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
+	s=arc-20240116; t=1709195488; c=relaxed/simple;
+	bh=F96VMGY/1+ny0v3zBI/FmNuBoJ9l2wiLijc1Bjt3peM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ud9LZmGpKbFqVlWbxDnH9NaHfSAmVSJcAJ8J3x4UbDJIMuVTk3zxoDXj45wZ+8kqXf0bc6ct9r3yMX5N/yRbPuHuWAOiR9IkrsTF3AXIlzOPrKUXU2/noVCXCEG8lccoZkG585UJnI+L6Lt9x7t1PJ+jFzYidcDz1i+yx0uIPBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FsF5V3F3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709195485;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F96VMGY/1+ny0v3zBI/FmNuBoJ9l2wiLijc1Bjt3peM=;
+	b=FsF5V3F3Ltg2n0kXYtgCndXTD2alMQbwFoFmWAki72H3jHS5+Wk6ofxrryrdK68VF7slfY
+	5Kly8ghC+ngyF5lVzbmycQGTN+0JTlMt4XfGyrqvZm2NfgtbR76Xw7evwXkb1k4AVi+hiy
+	OwOT6IPgdyVQaVIOuYR/8MU5KFgOxaQ=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-kl6bBOGnPMaFI4EC8dh5Uw-1; Thu, 29 Feb 2024 03:31:24 -0500
+X-MC-Unique: kl6bBOGnPMaFI4EC8dh5Uw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-564d7d54023so35921a12.0
+        for <linux-pci@vger.kernel.org>; Thu, 29 Feb 2024 00:31:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709195483; x=1709800283;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F96VMGY/1+ny0v3zBI/FmNuBoJ9l2wiLijc1Bjt3peM=;
+        b=u4C00TEmb8EqgHmq1SK/m4FeoCXCpPLCkzqrawpzx+gvcsFuQHVnimzQ/xFZYsNzOc
+         AMVtYwdbH8xXbNZG6y3hLZu+32R5C8vKJZB8I0U86tCzT+I0+LsKLYwF3R/oFV8/JtxT
+         Z10v+X8nHC10i+awGhHMKhwmdUHde3BxyJqhNQy5xfY97cZ659l1KPi4+Q3Ka41y61MP
+         DWL0apd3Nw5FHkQPJkpEKzIgxPjOyurYqC4l4BvGjRcK7w9zZTr+MH4u8cFimjiFejxo
+         mUBGYAaEW0Q6qYe2+0QEUQyJQUeHlDZHdNzbgCi7nFn8nKLeEP4jIlnjdUHvCTbZwHUg
+         3Ttg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkMLVNnAn9QUO3SHgX1lPaA2AxaX688bnT4wPBT/IZBNw/idhKDKsVFx5Pb0tWLA569MpOzDv74ShHdvSscsHuPVPXCf9dvTDR
+X-Gm-Message-State: AOJu0YxUMJ3EU+eMgInwx7V07UiyiThb6LysvWEGjUtrmEhO68B/Tk1O
+	/eDo8SkQuBObrIRU/d8QwwEA4zo/5gZHVAJwxTzyTC0faLArY+I9LDb5iS+fd4Xg8LD+SFsug4s
+	s3NXwTI4NCR/gzr9N2w6QVA0ZlknSQZzeO7AeRbPOPkSbJrILPBnBFrKb1g==
+X-Received: by 2002:a05:6402:348a:b0:565:4b6e:7f71 with SMTP id v10-20020a056402348a00b005654b6e7f71mr1021687edc.3.1709195482920;
+        Thu, 29 Feb 2024 00:31:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEJyLgQTYvjx+Awxx6Pkh5a+KQTrqM3/9iyg3u8Appxys0BavMevcua4mg/ZxWXcAt9yVscxA==
+X-Received: by 2002:a05:6402:348a:b0:565:4b6e:7f71 with SMTP id v10-20020a056402348a00b005654b6e7f71mr1021663edc.3.1709195482544;
+        Thu, 29 Feb 2024 00:31:22 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.remote.csb ([2001:9e8:32e0:8800:227b:d2ff:fe26:2a7a])
+        by smtp.gmail.com with ESMTPSA id en12-20020a056402528c00b005667bcc44b4sm395856edb.9.2024.02.29.00.31.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 00:31:21 -0800 (PST)
+Message-ID: <2057fd477ad404c9adf603eac1ad933c04ecf293.camel@redhat.com>
+Subject: Re: [PATCH v3 00/10] Make PCI's devres API more consistent
+From: Philipp Stanner <pstanner@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
+ Ravnborg <sam@ravnborg.org>, dakr@redhat.com
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Date: Thu, 29 Feb 2024 09:31:20 +0100
+In-Reply-To: <20240206134000.23561-2-pstanner@redhat.com>
+References: <20240206134000.23561-2-pstanner@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -80,130 +96,146 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-> When inserting an SD7.0 card to Realtek card reader, the card reader
-> unplugs itself and morph into a NVMe device. The slot Link down on hot
-> unplugged can cause the following error:
->=20
-> pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> BUG: unable to handle page fault for address: ffffb24d403e5010
-> PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
-> Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4,
-> BIOS P3.40 10/25/2018
-> Workqueue: pm pm_runtime_work
-> RIP: 0010:ioread32+0x2e/0x70
-> Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d9 54 01 b8 ff f=
-f ff ff
-> 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <8b> 07 c3 cc cc cc cc=
- 55 83
-> ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
-> RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
-> RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000000007f
-> RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d403e5010
-> RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 0000000000000000
-> R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000000007f
-> R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 0000000000009003
-> FS:  0000000000000000(0000) GS:ffff90752a180000(0000)
-> knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 00000000003706e0
-> Call Trace:
->  <TASK>
->  ? show_regs+0x68/0x70
->  ? __die_body+0x20/0x70
->  ? __die+0x2b/0x40
->  ? page_fault_oops+0x160/0x480
->  ? search_bpf_extables+0x63/0x90
->  ? ioread32+0x2e/0x70
->  ? search_exception_tables+0x5f/0x70
->  ? kernelmode_fixup_or_oops+0xa2/0x120
->  ? __bad_area_nosemaphore+0x179/0x230
->  ? bad_area_nosemaphore+0x16/0x20
->  ? do_kern_addr_fault+0x8b/0xa0
->  ? exc_page_fault+0xe5/0x180
->  ? asm_exc_page_fault+0x27/0x30
->  ? ioread32+0x2e/0x70
->  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
->  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
->  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
->  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
->  ? __pfx_pci_pm_runtime_idle+0x10/0x10
->  pci_pm_runtime_idle+0x34/0x70
->  rpm_idle+0xc4/0x2b0
->  pm_runtime_work+0x93/0xc0
->  process_one_work+0x21a/0x430
->  worker_thread+0x4a/0x3c0
->  ? __pfx_worker_thread+0x10/0x10
->  kthread+0x106/0x140
->  ? __pfx_kthread+0x10/0x10
->  ret_from_fork+0x29/0x50
->  </TASK>
-> Modules linked in: nvme nvme_core snd_hda_codec_hdmi
-> snd_sof_pci_intel_cnl snd_sof_intel_hda_common snd_hda_codec_realtek
-> snd_hda_codec_generic snd_soc_hdac_hda soundwire_intel ledtrig_audio
-> nls_iso8859_1 soundwire_generic_allocation soundwire_cadence
-> snd_sof_intel_hda_mlink snd_sof_intel_hda snd_sof_pci snd_sof_xtensa_dsp
-> snd_sof snd_sof_utils snd_hda_ext_core snd_soc_acpi_intel_match
-> snd_soc_acpi soundwire_bus snd_soc_core snd_compress ac97_bus
-> snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd_intel_sdw_acpi
-> intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core
-> x86_pkg_temp_thermal intel_powerclamp snd_hwdep coretemp snd_pcm
-> kvm_intel drm_buddy ttm mei_hdcp kvm drm_display_helper snd_seq_midi
-> snd_seq_midi_event cec crct10dif_pclmul ghash_clmulni_intel sha512_ssse3
-> aesni_intel crypto_simd rc_core cryptd rapl snd_rawmidi drm_kms_helper
-> binfmt_misc intel_cstate i2c_algo_bit joydev snd_seq snd_seq_device
-> syscopyarea wmi_bmof snd_timer sysfillrect input_leds snd ee1004 sysimgbl=
-t
-> mei_me soundcore
->  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_codel msr
-> parport_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_tables
-> x_tables autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul ahci
-> e1000e i2c_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas vide=
-o
-> wmi
-> CR2: ffffb24d403e5010
-> ---[ end trace 0000000000000000 ]---
->=20
-> This happens because scheduled pm_runtime_idle() is not cancelled.
->=20
-> So before releasing the device, stop all runtime power managements by
-> using pm_runtime_barrier() to fix the issue.
->=20
-> Link:
-> https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realtek.com
-> /
-> Cc: Ricky Wu <ricky_wu@realtek.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Ricky Wu <ricky_wu@realtek.com>
+@Bjorn:
+Hey Bjorn, are we good with this series? Any more wishes or
+suggestions?
 
-I tested this patch, the result is GOOD.=20
-This issue is not happening with multiple plugging and unplugging
+P.
 
-> ---
-> v3:
->   Move the change the device driver core.
+
+On Tue, 2024-02-06 at 14:39 +0100, Philipp Stanner wrote:
+> Changes in v3:
+> =C2=A0 - Use the term "PCI devres API" in some forgotten places.
+> =C2=A0 - Fix more grammar errors in patch #3.
+> =C2=A0 - Remove the comment advising to call (the outdated) pcim_intx() i=
+n
+> pci.c
+> =C2=A0 - Rename __pcim_request_region_range() flags-field "exclusive" to
+> =C2=A0=C2=A0=C2=A0 "req_flags", since this is what the int actually repre=
+sents.
+> =C2=A0 - Remove the call to pcim_region_request() from patch #10. (Hans)
 >=20
-> v2:
->   Cover more cases than just pciehp.
+> Changes in v2:
+> =C2=A0 - Make commit head lines congruent with PCI's style (Bjorn)
+> =C2=A0 - Add missing error checks for devm_add_action(). (Andy)
+> =C2=A0 - Repair the "Returns: " marks for docu generation (Andy)
+> =C2=A0 - Initialize the addr_devres struct with memset(). (Andy)
+> =C2=A0 - Make pcim_intx() a PCI-internal function so that new drivers
+> won't
+> =C2=A0=C2=A0=C2=A0 be encouraged to use the outdated pci_intx() mechanism=
+.
+> =C2=A0=C2=A0=C2=A0 (Andy / Philipp)
+> =C2=A0 - Fix grammar and spelling (Bjorn)
+> =C2=A0 - Be more precise on why pcim_iomap_table() is problematic (Bjorn)
+> =C2=A0 - Provide the actual structs' and functions' names in the commit
+> =C2=A0=C2=A0=C2=A0 messages (Bjorn)
+> =C2=A0 - Remove redundant variable initializers (Andy)
+> =C2=A0 - Regroup PM bitfield members in struct pci_dev (Andy)
+> =C2=A0 - Make pcim_intx() visible only for the PCI subsystem so that
+> new=C2=A0=C2=A0=C2=A0=20
+> =C2=A0=C2=A0=C2=A0 drivers won't use this outdated API (Andy, Myself)
+> =C2=A0 - Add a NOTE to pcim_iomap() to warn about this function being
+> the=C2=A0=C2=A0=C2=A0 onee
+> =C2=A0=C2=A0=C2=A0 xception that does just return NULL.
+> =C2=A0 - Consistently use the term "PCI devres API"; also in Patch #10
+> (Bjorn)
 >=20
->  drivers/base/dd.c | 1 +
->  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 85152537dbf1..38c815e2b3a2 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device
-> *dev, struct device *parent)
+> =C2=A1Hola!
 >=20
->         drv =3D dev->driver;
->         if (drv) {
-> +               pm_runtime_barrier(dev);
->                 pm_runtime_get_sync(dev);
+> PCI's devres API suffers several weaknesses:
 >=20
->                 while (device_links_busy(dev)) {
+> 1. There are functions prefixed with pcim_. Those are always managed
+> =C2=A0=C2=A0 counterparts to never-managed functions prefixed with pci_ =
+=E2=80=93 or so
+> one
+> =C2=A0=C2=A0 would like to think. There are some apparently unmanaged fun=
+ctions
+> =C2=A0=C2=A0 (all region-request / release functions, and pci_intx()) whi=
+ch
+> =C2=A0=C2=A0 suddenly become managed once the user has initialized the de=
+vice
+> with
+> =C2=A0=C2=A0 pcim_enable_device() instead of pci_enable_device(). This
+> "sometimes
+> =C2=A0=C2=A0 yes, sometimes no" nature of those functions is confusing an=
+d
+> =C2=A0=C2=A0 therefore bug-provoking. In fact, it has already caused a bu=
+g in
+> DRM.
+> =C2=A0=C2=A0 The last patch in this series fixes that bug.
+> 2. iomappings: Instead of giving each mapping its own callback, the
+> =C2=A0=C2=A0 existing API uses a statically allocated struct tracking one
+> mapping
+> =C2=A0=C2=A0 per bar. This is not extensible. Especially, you can't creat=
+e
+> =C2=A0=C2=A0 _ranged_ managed mappings that way, which many drivers want.
+> 3. Managed request functions only exist as "plural versions" with a
+> =C2=A0=C2=A0 bit-mask as a parameter. That's quite over-engineered consid=
+ering
+> =C2=A0=C2=A0 that each user only ever mapps one, maybe two bars.
+>=20
+> This series:
+> - add a set of new "singular" devres functions that use devres the
+> way
+> =C2=A0 its intended, with one callback per resource.
+> - deprecates the existing iomap-table mechanism.
+> - deprecates the hybrid nature of pci_ functions.
+> - preserves backwards compatibility so that drivers using the
+> existing
+> =C2=A0 API won't notice any changes.
+> - adds documentation, especially some warning users about the
+> =C2=A0 complicated nature of PCI's devres.
+>=20
+>=20
+> Note that this series is based on my "unify pci_iounmap"-series from
+> a
+> few weeks ago. [1]
+>=20
+> I tested this on a x86 VM with a simple pci test-device with two
+> regions. Operates and reserves resources as intended on my system.
+> Kasan and kmemleak didn't find any problems.
+>=20
+> I believe this series cleans the API up as much as possible without
+> having to port all existing drivers to the new API. Especially, I
+> think
+> that this implementation is easy to extend if the need for new
+> managed
+> functions arises :)
+>=20
+> Greetings,
+> P.
+>=20
+> Philipp Stanner (10):
+> =C2=A0 PCI: Add new set of devres functions
+> =C2=A0 PCI: Deprecate iomap-table functions
+> =C2=A0 PCI: Warn users about complicated devres nature
+> =C2=A0 PCI: Make devres region requests consistent
+> =C2=A0 PCI: Move dev-enabled status bit to struct pci_dev
+> =C2=A0 PCI: Move pinned status bit to struct pci_dev
+> =C2=A0 PCI: Give pcim_set_mwi() its own devres callback
+> =C2=A0 PCI: Give pci(m)_intx its own devres callback
+> =C2=A0 PCI: Remove legacy pcim_release()
+> =C2=A0 drm/vboxvideo: fix mapping leaks
+>=20
+> =C2=A0drivers/gpu/drm/vboxvideo/vbox_main.c |=C2=A0=C2=A0 20 +-
+> =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1015 ++++++++++=
++++++++++++--
 > --
-> 2.34.1
+> =C2=A0drivers/pci/iomap.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+18 +
+> =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 123 ++-
+> =C2=A0drivers/pci/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 25 +-
+> =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+18 +-
+> =C2=A06 files changed, 1004 insertions(+), 215 deletions(-)
+>=20
 
 
