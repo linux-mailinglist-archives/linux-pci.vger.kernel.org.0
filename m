@@ -1,165 +1,164 @@
-Return-Path: <linux-pci+bounces-4319-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4320-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D94586E064
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 12:32:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A86C386E067
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 12:33:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E955B28AD15
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 11:32:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FC4C1F2129C
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 11:33:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 961F770AE5;
-	Fri,  1 Mar 2024 11:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZYKV9D0h"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC4C6CDA1;
+	Fri,  1 Mar 2024 11:32:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4C67004D
-	for <linux-pci@vger.kernel.org>; Fri,  1 Mar 2024 11:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935B56CBF7;
+	Fri,  1 Mar 2024 11:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709292635; cv=none; b=nwjkIKU1gsGm0dtt4nyj4SRfg+yk2FOh8nNzz07lkLbeLZzKsardESW/pU4SIgggDmeCqrg2rQr85qIj6/rvrjXvL+KNZ7YKTdnPKA85b+D5MeI96ipP3U7CXoE0QqEFQjBQ5GSNF/dTKtGIecYgnLNUPXEJ6GyDHcmRPqBHn7Q=
+	t=1709292743; cv=none; b=SrGMsgz1VV9WQUPAixNgN27xhQD9OfMb4fiUuNAx6cAHPK+Puwq6o7ggR93b/jGVIPgeBH5BNuhzYgBvLBuZHpVatxdmocvDUb/lA9zB31l7A3Tbij0q5mi4kHFcnw9oZpSZpLHRs9v0IqZ08awuax1iP6rZic3KrITTczSVPH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709292635; c=relaxed/simple;
-	bh=DqC1146Gw+gtEXd1U6evjshsYPG+7+z9wKN5tAwt5no=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sSNZgLjeM6HicHVZTT26crHfrKHDBnzSYdvm00J7UhA+UrdLAadtQhZ6ruYDVKVBsh8g2m6a/GKhJyQjKX35GHvXyiEACdeb113Q1spu5X/LmwT6ZrRhmJ+s3OIp3DrcAdgwg9F/zU8Z4HPwkfCE6fzfDxaz31902s6fo21ViRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZYKV9D0h; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709292633;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wFTRxYvZ76dhFqAdPDH/a2zkO7llSf+/xEzdCoge4iY=;
-	b=ZYKV9D0hvVvacwx8yiJs+UW+XgeQ5ae1YFfaOl+yD+doMUTyju39GTB7OrCbMebSgTU8yQ
-	UO1XjeKM5FI/nheGuk2DuVJ+yid/6aQ6YmtLuCC005RTmXi3HNb6ljcmMUFHmPJLFqAHE5
-	xL9O6t2vRpISMt3y711MYsTiOxwMRv0=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-329-zh34YMYBP1m8R-_RneXGwA-1; Fri, 01 Mar 2024 06:30:31 -0500
-X-MC-Unique: zh34YMYBP1m8R-_RneXGwA-1
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-5a0c318c056so154567eaf.1
-        for <linux-pci@vger.kernel.org>; Fri, 01 Mar 2024 03:30:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709292631; x=1709897431;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wFTRxYvZ76dhFqAdPDH/a2zkO7llSf+/xEzdCoge4iY=;
-        b=i0W1I0VzRo9fFxU/9/FR2xyMmtlsnPVDMcqiSXMCr8qvQUlk/TqFcPYvvEy5aAzmOM
-         0FIPacHT8Rd75u9fVCtRYOohPsy7DoQBDoVu9ngLX2eSgQM9NgeV+obRfKSPOVblihKZ
-         7mnIvMUFROJmONaUhnTDQmnFgKzMqbBzrK3Ie2sOeF3STQo/3EJ6ESOOPZWCbvB0AdCv
-         ZJafGKpSwVerOrrfkrBnnyGsl6aNMTOcx4ajPtDpsI3xVBLt1W2HwGQi1ukxEF/RB55d
-         kzGGY3WaC18LPQm7HRZYhaiP+bsS/wdGGKqp8CxuScYT0sN/VZtD702zk+5fggovfOAH
-         OGrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsAywSe7/RTK5XxuRAbWq3tLTb0kA7G788GCa7TGCwz3uDWMsw3CfeBQiYazeRLyemiWKBSPYNlXmHpDaXa4VdM68fO00srgq4
-X-Gm-Message-State: AOJu0Ywcedq0gtsQBv6A8fjefAwSz04oNi7QuwnGsgfsdtamidjaNlu2
-	JPbdE4tzRHyhFogpxXxPF1lBNwOROk68aFxxaMhIUSK4xMFc6URsF+LUFPyH3fHOwwdHpDqba3j
-	zNnLui/TMpdkmvyebe81IE13Ps7yRnBcmM+wPfqtv4A0ov6SEYerRHiaw9Q==
-X-Received: by 2002:a05:6358:5923:b0:178:9f1d:65e4 with SMTP id g35-20020a056358592300b001789f1d65e4mr1147483rwf.3.1709292631161;
-        Fri, 01 Mar 2024 03:30:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE/dYBpHA/2LZIcNaPDDpZ49F70JHds10e81JbU90eBR8pmO8IjXPGhx9tXuvUpPM6IQ4Mw1Q==
-X-Received: by 2002:a05:6358:5923:b0:178:9f1d:65e4 with SMTP id g35-20020a056358592300b001789f1d65e4mr1147459rwf.3.1709292630853;
-        Fri, 01 Mar 2024 03:30:30 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id b1-20020ac86781000000b0042eb46d15bbsm1596239qtp.88.2024.03.01.03.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Mar 2024 03:30:30 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>,
-	stable@kernel.vger.org
-Subject: [PATCH v4 10/10] drm/vboxvideo: fix mapping leaks
-Date: Fri,  1 Mar 2024 12:29:58 +0100
-Message-ID: <20240301112959.21947-11-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240301112959.21947-1-pstanner@redhat.com>
-References: <20240301112959.21947-1-pstanner@redhat.com>
+	s=arc-20240116; t=1709292743; c=relaxed/simple;
+	bh=iZdqJT7yzjPyqMq3e//XkuxgJ/kzJaVl78/U6Um52dA=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=WQ5mlmdEQtuVZG8bSQQz70UbnGQaQ0RcDjenWusJM007vadzwPYEmJwTMVXn/tOymWNOyfrpy5spp+jYryeTNZmlST4W4yWiqmhrTbYSwto5JTCasG97RGcLlEifyuYd0SizvJZyC7S1P59cWLXOR8AAStfTgUZIO60pNRgcsgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 704B861E5FE01;
+	Fri,  1 Mar 2024 12:32:12 +0100 (CET)
+Message-ID: <b1861a8e-27a4-4493-9f4c-2a6cf3575c4b@molgen.mpg.de>
+Date: Fri, 1 Mar 2024 12:32:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Dell XPS 13 9360: Two PCI devices with disabled power management by
+ default
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When the PCI devres API was introduced to this driver, it was wrongly
-assumed that initializing the device with pcim_enable_device() instead
-of pci_enable_device() will make all PCI functions managed.
+Dear Linux folks,
 
-This is wrong and was caused by the quite confusing PCI devres API in
-which some, but not all, functions become managed that way.
 
-The function pci_iomap_range() is never managed.
+I noticed on the Dell XPS 13 9360 some devices do not have power 
+management enabled by default. From PowerTOP:
 
-Replace pci_iomap_range() with the actually managed function
-pcim_iomap_range().
+        Bad           Runtime PM for PCI Device Intel Corporation 
+Sunrise Point-LP PCI Express Root Port #1
+        Bad          Runtime PM for PCI Device Intel Corporation Sunrise 
+Point-LP LPC Controller
 
-CC: <stable@kernel.vger.org> # v5.10+
-Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+These are the two devices below:
 
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index 42c2d8a99509..d4ade9325401 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
- 	/* Take a command buffer for each screen from the end of usable VRAM. */
- 	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
- 
--	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
--					     vbox->available_vram_size,
--					     vbox->num_crtcs *
--					     VBVA_MIN_BUFFER_SIZE);
--	if (!vbox->vbva_buffers)
--		return -ENOMEM;
-+	vbox->vbva_buffers = pcim_iomap_range(
-+			pdev, 0, vbox->available_vram_size,
-+			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
-+	if (IS_ERR(vbox->vbva_buffers))
-+		return PTR_ERR(vbox->vbva_buffers);
- 
- 	for (i = 0; i < vbox->num_crtcs; ++i) {
- 		vbva_setup_buffer_context(&vbox->vbva_info[i],
-@@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
- 	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
- 
- 	/* Map guest-heap at end of vram */
--	vbox->guest_heap =
--	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
--			    GUEST_HEAP_SIZE);
--	if (!vbox->guest_heap)
--		return -ENOMEM;
-+	vbox->guest_heap = pcim_iomap_range(pdev, 0,
-+			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
-+	if (IS_ERR(vbox->guest_heap))
-+		return PTR_ERR(vbox->guest_heap);
- 
- 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
- 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
--- 
-2.43.0
+1.    00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #1 [8086:9d10] (rev f1)
+2.    00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC 
+Controller [8086:9d58] (rev 21)
 
+     $ sudo dmesg | grep -e 9d10 -e 9d58
+     [    0.200876] pci 0000:00:1c.0: [8086:9d10] type 01 class 0x060400 
+PCIe Root Port
+     [    0.202637] pci 0000:00:1f.0: [8086:9d58] type 00 class 0x060100 
+conventional PCI endpoi
+
+Is that a decision made by the system manufacturer or should the Linux 
+kernel enable power management by default?
+
+
+Kind regards,
+
+Paul
+
+
+$ lspci -tvnn
+-[0000:00]-+-00.0  Intel Corporation Xeon E3-1200 v6/7th Gen Core 
+Processor Host Bridge/DRAM Registers [8086:5904]
+            +-02.0  Intel Corporation HD Graphics 620 [8086:5916]
+            +-04.0  Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen 
+Core Processor Thermal Subsystem [8086:1903]
+            +-14.0  Intel Corporation Sunrise Point-LP USB 3.0 xHCI 
+Controller [8086:9d2f]
+            +-14.2  Intel Corporation Sunrise Point-LP Thermal subsystem 
+[8086:9d31]
+            +-15.0  Intel Corporation Sunrise Point-LP Serial IO I2C 
+Controller #0 [8086:9d60]
+            +-15.1  Intel Corporation Sunrise Point-LP Serial IO I2C 
+Controller #1 [8086:9d61]
+            +-16.0  Intel Corporation Sunrise Point-LP CSME HECI #1 
+[8086:9d3a]
+            +-1c.0-[01-39]----00.0-[02-39]--+-00.0-[03]--
+            |                               +-01.0-[04-38]--
+            |                               \-02.0-[39]----00.0  Intel 
+Corporation DSL6340 USB 3.1 Controller [Alpine Ridge] [8086:15b5]
+            +-1c.4-[3a]----00.0  Qualcomm Atheros QCA6174 802.11ac 
+Wireless Network Adapter [168c:003e]
+            +-1d.0-[3b]----00.0  SK hynix PC300 NVMe Solid State Drive 
+512GB [1c5c:1284]
+            +-1f.0  Intel Corporation Sunrise Point-LP LPC Controller 
+[8086:9d58]
+            +-1f.2  Intel Corporation Sunrise Point-LP PMC [8086:9d21]
+            +-1f.3  Intel Corporation Sunrise Point-LP HD Audio [8086:9d71]
+            \-1f.4  Intel Corporation Sunrise Point-LP SMBus [8086:9d23]
+$ lspci -nn
+00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th Gen 
+Core Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
+00:02.0 VGA compatible controller [0300]: Intel Corporation HD Graphics 
+620 [8086:5916] (rev 02)
+00:04.0 Signal processing controller [1180]: Intel Corporation Xeon 
+E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem 
+[8086:1903] (rev 02)
+00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 
+3.0 xHCI Controller [8086:9d2f] (rev 21)
+00:14.2 Signal processing controller [1180]: Intel Corporation Sunrise 
+Point-LP Thermal subsystem [8086:9d31] (rev 21)
+00:15.0 Signal processing controller [1180]: Intel Corporation Sunrise 
+Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
+00:15.1 Signal processing controller [1180]: Intel Corporation Sunrise 
+Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
+00:16.0 Communication controller [0780]: Intel Corporation Sunrise 
+Point-LP CSME HECI #1 [8086:9d3a] (rev 21)
+00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #1 [8086:9d10] (rev f1)
+00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #5 [8086:9d14] (rev f1)
+00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI 
+Express Root Port #9 [8086:9d18] (rev f1)
+00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC 
+Controller [8086:9d58] (rev 21)
+00:1f.2 Memory controller [0580]: Intel Corporation Sunrise Point-LP PMC 
+[8086:9d21] (rev 21)
+00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-LP HD Audio 
+[8086:9d71] (rev 21)
+00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus 
+[8086:9d23] (rev 21)
+01:00.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3 
+Bridge [Alpine Ridge 2C 2015] [8086:1576]
+02:00.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3 
+Bridge [Alpine Ridge 2C 2015] [8086:1576]
+02:01.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3 
+Bridge [Alpine Ridge 2C 2015] [8086:1576]
+02:02.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3 
+Bridge [Alpine Ridge 2C 2015] [8086:1576]
+39:00.0 USB controller [0c03]: Intel Corporation DSL6340 USB 3.1 
+Controller [Alpine Ridge] [8086:15b5]
+3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174 802.11ac 
+Wireless Network Adapter [168c:003e] (rev 32)
+3b:00.0 Non-Volatile memory controller [0108]: SK hynix PC300 NVMe Solid 
+State Drive 512GB [1c5c:1284]
 
