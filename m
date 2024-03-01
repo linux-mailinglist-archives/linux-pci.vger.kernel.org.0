@@ -1,339 +1,324 @@
-Return-Path: <linux-pci+bounces-4298-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4299-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAED986DBF8
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 08:17:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E84F86DC82
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 08:57:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9F1628AA4F
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 07:17:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1E801C20E6B
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 07:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421C769949;
-	Fri,  1 Mar 2024 07:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC78D524B7;
+	Fri,  1 Mar 2024 07:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F1rKb5Mj"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IKV1jl16"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2036F69313;
-	Fri,  1 Mar 2024 07:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709277426; cv=none; b=eJ/FxitLMkpC4lXNqUyqruhEICwDyQuYIuyLkZC4j2buqNRo1gH+WbZuys/WKcoe0AfNo2yGJJpqpvqvLwyoH+YwlrkIaNeHJhy8BjOZj67Ijm15+qZ3tRi53Ifelszm02ib9NpOeJ0aalnTXUcOrpAk4rdsJ/OmsQexT8hQO/A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709277426; c=relaxed/simple;
-	bh=mD7rmkR8pGFhQrhTJFYfZSZ0ykqU+bqCxiZeop4TUTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JEJAk8AJpHZGxPyCXTXx+IN4m+Z1zrTBeLi1MR5rkm32ZKwysxQNQMdODdw+BwR+n551hZafPGTN88bd5oTYafC3xzMkIUcMQ3nELtBDWwTr9DuoIWDx58g+LEqGfH/+GztzieuoBeKRy2RvPMWbThu3K7gMksu3DH5nlm9bEoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F1rKb5Mj; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709277422; x=1740813422;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=mD7rmkR8pGFhQrhTJFYfZSZ0ykqU+bqCxiZeop4TUTU=;
-  b=F1rKb5MjCrRqH9EypLUjBAUHyls3ZtpgAPWL5//RxbPLnPsc8RGGyzR2
-   +HyjDtokO6qCIC7V08LALiZDXwaUD6lZBYiyQMM158IlBbgd1fY1O8P7z
-   ZuMitZBbe5/7tvO6gow/xWtNBgXi0eEEopzu29Q7MWdro81ZQAuA/H20u
-   O4VjQyWEhfx4UzKI2TmQmx/XeGcbH3ItdUquCRQWtT0IoV2ZAq1LVxxiS
-   tAjRPUdHTBnfwgivljzFKV5v8V9RNMTDGHCCjMjyCHKSa7Z7CGMEJzwuf
-   9lxFx07ha2/YHiWYdZFwpZgxzlTGdXhgLbZbcSdcfDQ9SRgLDUUj4+rf9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="15211006"
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="15211006"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:17:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="39127582"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 29 Feb 2024 23:16:56 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfx8X-000DcR-23;
-	Fri, 01 Mar 2024 07:16:53 +0000
-Date: Fri, 1 Mar 2024 15:16:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-pci@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 2/6] PCI: imx6: Rename pci-imx6.c and PCI_IMX6 config
-Message-ID: <202403011431.vIVOdwob-lkp@intel.com>
-References: <20240227-pci2_upstream-v1-2-b952f8333606@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33081E879;
+	Fri,  1 Mar 2024 07:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709279830; cv=fail; b=HGp5Wc9FJQmwItEX3Q4sdXMbVazOwrBsZwt88lOKIF2YlRkMWjvuE8NsJ+XHd0I5kj/NrgjvUJ3HHIvKY5sEiD32VBRmhwGQL8Xx+VCATH0C76IZs9TrAoCbQZV980ZiHSIj8iem2ELeozgdbkMcvQNYCMS/wC1SqmfI2YQHiQw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709279830; c=relaxed/simple;
+	bh=M7fIs2L+73nk4IzuloKkcWwVd5SRX1Wtu54FX+9pUBo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AFF3D6WC12KiLTN/rhUzCNeU651XW8ZqzV0APOwYvRt0znPdg6Bc2RlLgrJw6qrKFBSy3SKXroJOK8iHdqAqRs9TrVt3f0xhJQbakgkfUiZaQb7vsg3vqf2OnCO4f2QaXh8d9ksGDWAvMPhJW8uvyM8xrppY93SrLZKzX+fevUY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IKV1jl16; arc=fail smtp.client-ip=40.107.212.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aa99U4KW51WlpvtYsWbhu85L79ykG6MMQsX5gdPQfqezShx8VvqmDzvD7zlv4O/9/iHF6dROj+3X8y33xrDiRJOzLG2R9VgPDUVc6XtUPJq4DSLQE+UggThpWo70ngxEqoqZuHO25Aj6aX7ezpsrXqp3JOOgFakp5jYEhlRhgBW7ad2Syo0lqZzo6cMyeJUAD7w3mMk5ZX3K5Wn0un/XLuIf6fYddWxU3QQbrjlfXPZhds8wHxk2hnWFqL/0U6tX+EKYguaiEgkyFkVIhCkrEMKdRNa0Q0zPCkk+5HJyMsVWz9YSFjL8RbD/6Zi3vftSZOWVzMqDnG5YiGIyN3vwqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M7fIs2L+73nk4IzuloKkcWwVd5SRX1Wtu54FX+9pUBo=;
+ b=NMECgJ1F87IF2EsSWLXBhkDNpFV9qu9rvuOlQjcENFC8lHPUfPfxkxgtdeaeOU9owVwqFfjHSw38IqyafDmCdrch5wtsnhjchN0RW6Mr29tuZ99UlI3ACaTKi6cfsVsf/vrg6iuCAn8fjk9UWmC2jz/AKVMXsCqVFEKbQ2ppcFXwUZ2CRnlGSVly92bqjRo9xxBE2Y2E0+YOJheJnR4AIbmzQEaDWOODvvILttZTODTSsjBPPTi+EX+Hcd4XelFLzsZzRdj9P4JtNEsEbcWFt27hN/034ZLB4P8aDD0y6fsBN2emZLSkuo9Oca8c5tnqKTgQi0XRgCmpv9x2zm1JxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M7fIs2L+73nk4IzuloKkcWwVd5SRX1Wtu54FX+9pUBo=;
+ b=IKV1jl16XbADwe+BzRWAXIJ1bf9O5PPGLUUifh6s+JL0lvD6M13Wtq5BKUgur9SVPI4wQZ/vCgWBCKWkTBEBLrSNbOBl1CPlCJIxOj2ZPwHfcfczxnofUazKqKybP3vE0zKyTBO9MdloTYN2LATes9RJLXJJMcxxhGlNa+y/u/Y=
+Received: from BL1PR12MB5849.namprd12.prod.outlook.com (2603:10b6:208:384::18)
+ by MW4PR12MB7310.namprd12.prod.outlook.com (2603:10b6:303:22c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.32; Fri, 1 Mar
+ 2024 07:57:05 +0000
+Received: from BL1PR12MB5849.namprd12.prod.outlook.com
+ ([fe80::debf:178c:f5df:5efa]) by BL1PR12MB5849.namprd12.prod.outlook.com
+ ([fe80::debf:178c:f5df:5efa%5]) with mapi id 15.20.7316.037; Fri, 1 Mar 2024
+ 07:57:05 +0000
+From: "Chen, Jiqian" <Jiqian.Chen@amd.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?=
+	<roger.pau@citrix.com>
+CC: "Chen, Jiqian" <Jiqian.Chen@amd.com>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, Juergen Gross
+	<jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, Oleksandr
+ Tyshchenko <oleksandr_tyshchenko@epam.com>, Boris Ostrovsky
+	<boris.ostrovsky@oracle.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "Hildebrand,
+ Stewart" <Stewart.Hildebrand@amd.com>, "Huang, Ray" <Ray.Huang@amd.com>,
+	"Ragiadakou, Xenia" <Xenia.Ragiadakou@amd.com>
+Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Thread-Topic: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Thread-Index:
+ AQHaP5+doYjSbLzTtkiUcLxinuNXV7DmmK+AgAEHcQCAAAvdAIABnLmAgAg1Y4CAALowAIAAwpaAgADNJ4CAAKgsAIAA5P2AgA1jFYCAA+/3AIAAqS0AgAQDqwCAF+s/gA==
+Date: Fri, 1 Mar 2024 07:57:05 +0000
+Message-ID:
+ <BL1PR12MB5849CD6642E50A491206BC9BE75E2@BL1PR12MB5849.namprd12.prod.outlook.com>
+References: <ZcnhOEjnTgbYFPVl@macbook> <20240212191858.GA1137351@bhelgaas>
+ <Zc3NNOEN-NPR9jjI@macbook>
+In-Reply-To: <Zc3NNOEN-NPR9jjI@macbook>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: BL3PR12MB6548.namprd12.prod.outlook.com
+ (15.20.7292.000)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR12MB5849:EE_|MW4PR12MB7310:EE_
+x-ms-office365-filtering-correlation-id: d1cf0698-0991-41c7-0ea8-08dc39c52fb1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ ESEkGR9tDC2o/cfIoIErfeMOWVhAxQELcmN8mqznYCnwbDEw/gJ49xmrNjK55rCKCdLOV1qeyV13j4MYqbLhMZ+DhG5uasCg7rY+qGG7sXpXEmJD9tQaZob/cB83VEf/7S/jbkNsR64KzfxDsm93Peditz0nPg/dDGuS3g/HWlyHhGho2S5k7vm0DYOBqPJJpiYQg+p6N4Uz82AfGJoLo1sEEBQ3zs8Dpy0ubeNqgi5AOr1OhhyaMRJ7caq+DAiVMYLnNCyMj4cnZWRLchFlJL4hhK7c9L2qAHrbG8e26NmqIK9VHLOAOaMoIMClfpnu7Zc6JXf0lXg/nPBMKV81Nh3SLFFm9vO5/aFoB5F24QY+RuJu7MR9Cjh1QgsP582s3g4/KGbSP/aYQfcQ3QfA1qiZehvxBUt1H8lYrpzQ67cd2LUm0Qku8jSbzt+mF6iz561Xq7Pq9LxEXp9bS+S4ufvkkgBn7JMcgbDKvzVSLf5Evnj/oFqUu7Ypq1sSwjTukbSEQpQPm7xH4USrT5cvPgDf5/CFNkZD/pZ27I3/GQ1JKi3OSeBA1vjxUes48GVNN1d1uZHOIgH6nPsOOA8XeTF63zNd7yNldqbmJLDpqXmI8x8sA+iETprSXohbjavoMvfJA57cZBTm2P+FINSE+5+BaroZyiam/NUEyfB0+fmkc8pHoTPO2cJHjJyEmR7y4Yjx6yH3vWONlHbNhqo9Ij7BF7M+eP4wxgOX6XAM18g=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?MHBBVnpQdUJwdzVTK2VyNVBZbklKZ2lwMUIrT0xGd1JyNlovUXBINHg3TjNr?=
+ =?utf-8?B?dDJjZXFNQk9xbUtoQU5YVEVkbmJxaUsvZ050OTRpTUI0Ynp0R2tZZGs2NEIx?=
+ =?utf-8?B?MENyZHRHQzhLdjdkaXpVVldnVHoxSjlXOGhPNkpUZE9lRGNIVXNUTC9Fb0d0?=
+ =?utf-8?B?OEZqWWh4dEc1S1picVdINit5c0NnS1pEbEticzg4ZEFqVFdQcWdLMThBVmFD?=
+ =?utf-8?B?Rzc5Z1Z6Z2ZUUkczckdRK1lDb2Q2ejAxMnBUd0hqZFZWcEcxMVRiL1pTL1ZS?=
+ =?utf-8?B?RzNhbTRvOFdLcUNzUEp0RG5pRzgzNVJTeUo4WWtPTzJGbUN1WnRKWnlBVXlx?=
+ =?utf-8?B?dEdkbUtuR1VPdmpuUnVSeGhJZ084aXBvZndoVUdSNUlOL1VmYUZqVFBpWmtE?=
+ =?utf-8?B?YlNXQnhKd0NacWNEZDNDQ1dQMzVVNWtsdU5mWktGS2UzU1hqMjRwYzhZTTZ0?=
+ =?utf-8?B?ZGVkODJXQjdGVmRyQTYycUNCSk9qMGJRQVJPRjdTeFBkNlJqSFdZa3lySWFM?=
+ =?utf-8?B?VGw0d1o0VUxwcHJ6TjRPYjU0WTJRRVVRcDZIeVNjNnVOdXI3RlBPVEZ6SXBS?=
+ =?utf-8?B?akZtTXdmbjUrZlBPbVp4SnIzaDkzZmxxQmxybmNNZVZXa3VMY1JZTzNESGUx?=
+ =?utf-8?B?TmdET3YvM1RHbUdVRzRFSTh5Skp0bVVaWEhCRHNUTnltNFRTRWgxUFo0NUVj?=
+ =?utf-8?B?VUJnazcrQmRjVGhXUVZrOXJ3ckJhR0Z6N2liUnVpNlRjVUwvT21qZngvTVB6?=
+ =?utf-8?B?V1ZSb0o5N0lkYzd0SldNYk5qQ1dlZ3J0K3luWFhvSVBhZVcwUU8ySDlqZ1Ax?=
+ =?utf-8?B?TEhEMmF3eDVNYnkwaFBwOFJBWlRXOXlqdXZXempQYjJwc0lDUE9IdC9YbjMz?=
+ =?utf-8?B?MFVYTlErWlB2djAvRmtTaHY3VmRicDR2NFVIeG9VY1dWMnF0c1k5YVVaNGM0?=
+ =?utf-8?B?akVDLzhERjBZOFliKzRKRXE1cXFCUmlZMDdTQW40L3BvKzlDN3QxK1BLM0R1?=
+ =?utf-8?B?LzZCcFg1MHpkakVJcklpUVR2UCtkSlVhSkpjbzZ6V2RtSmpzbkRUTzVCajc5?=
+ =?utf-8?B?eEdRcGVJOXRDZTJ1OElsMlF5bm8zSGk3c0tFcU1NbVh6THdJWDRuM2xlaVFr?=
+ =?utf-8?B?Z201N1lUaVFFK3dmS2trSDE0TXludzRyaEptcXplN1lVK0tEYXMxeFlRVS94?=
+ =?utf-8?B?TnRZeWE0Wmg2NVBTcUNPR0IzaldJL2I4RWI4OXFFdHV2VjJrcTQrQzE0YU9U?=
+ =?utf-8?B?ZkhWQXJVQk1NdFZuTUVibk1UUWVUYVBhWUJjMGpyWFdZN3hxelhLMHVacms1?=
+ =?utf-8?B?OW5XY1NqVUtVdFJ2bzYrM0ZVdmZKbzNkVkcxRDJwWXArcFdqZkpoS3pYV0sw?=
+ =?utf-8?B?ejZOSjN0ZkhtUlM3Q01oOUNES2tqVENtSzVaZ1pLRnByNXRsUEV1RHV6K2ll?=
+ =?utf-8?B?Y0VGU1hMQnNFRkRIL0lnSkc3RHZnakxYa1FMdmFveG9oWUlwamRlM0Q2ZGJX?=
+ =?utf-8?B?OVFkR3dvU0VLSHBQVGpLS3JUWHFDSlZEOTRoVVVPczB5bmc4OGYzbThRYXlO?=
+ =?utf-8?B?dFBLTSt2YmdMUjU0TUJ0ZXpyRGFGNDNBdGwrNmMvLzk5dThVRUtUeXJiU2Ft?=
+ =?utf-8?B?Q0duOTlsSDhMdzJ0SitiWlZXUzIvdE5SZDVwSTFaeWFlUnZITWo0YVdoeUwx?=
+ =?utf-8?B?Ly9zRndRa1l1VVFZOGxYWHZUdjkvbFBqeHViNVVENnhZSDRFcEJvQnE0ZHVT?=
+ =?utf-8?B?YWZKYS9tT0xjVHpHcmEzQllaTGU2NEdsWHlBam0xM1N3R3pFdkE2cjhLY0NY?=
+ =?utf-8?B?b1ZkWDR5akxVblNFd3J5TXRnc1BmQW1qaEJTTFJKcDBxQ0pybzNGNkFqSzZj?=
+ =?utf-8?B?cHdPWWdnNTJRajY0UmhZOWtDRFhBK3g1RUZkOHE1WFpqdFRaa2tVYXpVQXRK?=
+ =?utf-8?B?alA2M2JXdzl4RTRHa1ZTVnNkS0gyMStkNUlqNjJmd1hhck1WUHBxZmViQ29t?=
+ =?utf-8?B?a3h2Mk8rUHJBaDdFMWt5L0RRMWhrNTdiQUdSZ2JDMjFhVEZYdjk5c1F1V2dD?=
+ =?utf-8?B?d0JXTXM0Qys4czFrY1BLdzk4TmcxYW1iTEFQZ1VqZXM3c1RIUjZVTnpoOE45?=
+ =?utf-8?Q?VlK0=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1323876CA143694D9BB4B42E950B541D@amdcloud.onmicrosoft.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240227-pci2_upstream-v1-2-b952f8333606@nxp.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5849.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1cf0698-0991-41c7-0ea8-08dc39c52fb1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2024 07:57:05.0687
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OFVL9LNPdZ0PptxNOcz6nqjOjBnxu2hak21NHa1Yly7DhUxGdODjBGJbJJDJfd3wb6R1XgETpGd5byy6EqOmiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7310
 
-Hi Frank,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on b73259dcd67094e883104a0390852695caf3f999]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/PCI-imx6-Rename-imx6_-with-imx_/20240228-055254
-base:   b73259dcd67094e883104a0390852695caf3f999
-patch link:    https://lore.kernel.org/r/20240227-pci2_upstream-v1-2-b952f8333606%40nxp.com
-patch subject: [PATCH 2/6] PCI: imx6: Rename pci-imx6.c and PCI_IMX6 config
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20240301/202403011431.vIVOdwob-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240301/202403011431.vIVOdwob-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403011431.vIVOdwob-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pci/controller/dwc/pci-imx.c:1333:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-    1333 |         default:
-         |         ^
-   drivers/pci/controller/dwc/pci-imx.c:1333:2: note: insert 'break;' to avoid fall-through
-    1333 |         default:
-         |         ^
-         |         break; 
-   1 warning generated.
-
-
-vim +1333 drivers/pci/controller/dwc/pci-imx.c
-
-0ee2c1f2429f74 drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-08-27  1230  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1231  static int imx_pcie_probe(struct platform_device *pdev)
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1232  {
-13957652f7242a drivers/pci/host/pci-imx6.c           Bjorn Helgaas          2016-10-06  1233  	struct device *dev = &pdev->dev;
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1234  	struct dw_pcie *pci;
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1235  	struct imx_pcie *imx_pcie;
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1236  	struct device_node *np;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1237  	struct resource *dbi_base;
-13957652f7242a drivers/pci/host/pci-imx6.c           Bjorn Helgaas          2016-10-06  1238  	struct device_node *node = dev->of_node;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1239  	int ret;
-75cb8d20c112ab drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2018-12-21  1240  	u16 val;
-6a40185838759c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1241  	int i;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1242  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1243  	imx_pcie = devm_kzalloc(dev, sizeof(*imx_pcie), GFP_KERNEL);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1244  	if (!imx_pcie)
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1245  		return -ENOMEM;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1246  
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1247  	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1248  	if (!pci)
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1249  		return -ENOMEM;
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1250  
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1251  	pci->dev = dev;
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1252  	pci->ops = &dw_pcie_ops;
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1253  	pci->pp.ops = &imx_pcie_host_ops;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1254  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1255  	imx_pcie->pci = pci;
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1256  	imx_pcie->drvdata = of_device_get_match_data(dev);
-e3c06cd063d69d drivers/pci/host/pci-imx6.c           Christoph Fritz        2016-04-05  1257  
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1258  	/* Find the PHY if one is defined, only imx7d uses it */
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1259  	np = of_parse_phandle(node, "fsl,imx7d-pcie-phy", 0);
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1260  	if (np) {
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1261  		struct resource res;
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1262  
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1263  		ret = of_address_to_resource(np, 0, &res);
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1264  		if (ret) {
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1265  			dev_err(dev, "Unable to map PCIe PHY\n");
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1266  			return ret;
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1267  		}
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1268  		imx_pcie->phy_base = devm_ioremap_resource(dev, &res);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1269  		if (IS_ERR(imx_pcie->phy_base))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1270  			return PTR_ERR(imx_pcie->phy_base);
-1df82ec4660099 drivers/pci/controller/dwc/pci-imx6.c Trent Piepho           2019-02-05  1271  	}
-e3c06cd063d69d drivers/pci/host/pci-imx6.c           Christoph Fritz        2016-04-05  1272  
-188f46cac267b9 drivers/pci/controller/dwc/pci-imx6.c Yang Li                2023-03-23  1273  	pci->dbi_base = devm_platform_get_and_ioremap_resource(pdev, 0, &dbi_base);
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1274  	if (IS_ERR(pci->dbi_base))
-442ec4c04d1235 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1275  		return PTR_ERR(pci->dbi_base);
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1276  
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1277  	/* Fetch GPIOs */
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1278  	imx_pcie->reset_gpio = of_get_named_gpio(node, "reset-gpio", 0);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1279  	imx_pcie->gpio_active_high = of_property_read_bool(node,
-3ea8529acc3046 drivers/pci/host/pci-imx6.c           Petr Štetiar           2016-04-19  1280  						"reset-gpio-active-high");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1281  	if (gpio_is_valid(imx_pcie->reset_gpio)) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1282  		ret = devm_gpio_request_one(dev, imx_pcie->reset_gpio,
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1283  				imx_pcie->gpio_active_high ?
-3ea8529acc3046 drivers/pci/host/pci-imx6.c           Petr Štetiar           2016-04-19  1284  					GPIOF_OUT_INIT_HIGH :
-3ea8529acc3046 drivers/pci/host/pci-imx6.c           Petr Štetiar           2016-04-19  1285  					GPIOF_OUT_INIT_LOW,
-3ea8529acc3046 drivers/pci/host/pci-imx6.c           Petr Štetiar           2016-04-19  1286  				"PCIe reset");
-b2d7a9cd3ff8ec drivers/pci/host/pci-imx6.c           Fabio Estevam          2016-03-28  1287  		if (ret) {
-13957652f7242a drivers/pci/host/pci-imx6.c           Bjorn Helgaas          2016-10-06  1288  			dev_err(dev, "unable to get reset gpio\n");
-b2d7a9cd3ff8ec drivers/pci/host/pci-imx6.c           Fabio Estevam          2016-03-28  1289  			return ret;
-b2d7a9cd3ff8ec drivers/pci/host/pci-imx6.c           Fabio Estevam          2016-03-28  1290  		}
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1291  	} else if (imx_pcie->reset_gpio == -EPROBE_DEFER) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1292  		return imx_pcie->reset_gpio;
-b2d7a9cd3ff8ec drivers/pci/host/pci-imx6.c           Fabio Estevam          2016-03-28  1293  	}
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1294  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1295  	if (imx_pcie->drvdata->clks_cnt >= IMX_PCIE_MAX_CLKS)
-6a40185838759c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1296  		return dev_err_probe(dev, -ENOMEM, "clks_cnt is too big\n");
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1297  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1298  	for (i = 0; i < imx_pcie->drvdata->clks_cnt; i++)
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1299  		imx_pcie->clks[i].id = imx_pcie->drvdata->clk_names[i];
-6a40185838759c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1300  
-6a40185838759c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1301  	/* Fetch clocks */
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1302  	ret = devm_clk_bulk_get(dev, imx_pcie->drvdata->clks_cnt, imx_pcie->clks);
-6a40185838759c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1303  	if (ret)
-6a40185838759c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1304  		return ret;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1305  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1306  	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_PHYDRV)) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1307  		imx_pcie->phy = devm_phy_get(dev, "pcie-phy");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1308  		if (IS_ERR(imx_pcie->phy))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1309  			return dev_err_probe(dev, PTR_ERR(imx_pcie->phy),
-4e37c2f48712d5 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1310  					     "failed to get pcie phy\n");
-4e37c2f48712d5 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1311  	}
-4e37c2f48712d5 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1312  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1313  	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_APP_RESET)) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1314  		imx_pcie->apps_reset = devm_reset_control_get_exclusive(dev, "apps");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1315  		if (IS_ERR(imx_pcie->apps_reset))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1316  			return dev_err_probe(dev, PTR_ERR(imx_pcie->apps_reset),
-666a7beb942cc6 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1317  					     "failed to get pcie apps reset control\n");
-666a7beb942cc6 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1318  	}
-666a7beb942cc6 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1319  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1320  	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_PHY_RESET)) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1321  		imx_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev, "pciephy");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1322  		if (IS_ERR(imx_pcie->pciephy_reset))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1323  			return dev_err_probe(dev, PTR_ERR(imx_pcie->pciephy_reset),
-666a7beb942cc6 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1324  					     "Failed to get PCIEPHY reset control\n");
-666a7beb942cc6 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1325  	}
-666a7beb942cc6 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1326  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1327  	switch (imx_pcie->drvdata->variant) {
-2d8ed461dbc9bc drivers/pci/controller/dwc/pci-imx6.c Andrey Smirnov         2019-02-01  1328  	case IMX8MQ:
-530ba41250b69d drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2023-01-16  1329  	case IMX8MQ_EP:
-9b3fe6796d7c0e drivers/pci/dwc/pci-imx6.c            Andrey Smirnov         2017-03-28  1330  	case IMX7D:
-2d8ed461dbc9bc drivers/pci/controller/dwc/pci-imx6.c Andrey Smirnov         2019-02-01  1331  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1332  			imx_pcie->controller_id = 1;
-9b3fe6796d7c0e drivers/pci/dwc/pci-imx6.c            Andrey Smirnov         2017-03-28 @1333  	default:
-9b3fe6796d7c0e drivers/pci/dwc/pci-imx6.c            Andrey Smirnov         2017-03-28  1334  		break;
-e3c06cd063d69d drivers/pci/host/pci-imx6.c           Christoph Fritz        2016-04-05  1335  	}
-e3c06cd063d69d drivers/pci/host/pci-imx6.c           Christoph Fritz        2016-04-05  1336  
-f4e833ba2a955b drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-07-19  1337  	/* Grab turnoff reset */
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1338  	imx_pcie->turnoff_reset = devm_reset_control_get_optional_exclusive(dev, "turnoff");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1339  	if (IS_ERR(imx_pcie->turnoff_reset)) {
-f4e833ba2a955b drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-07-19  1340  		dev_err(dev, "Failed to get TURNOFF reset control\n");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1341  		return PTR_ERR(imx_pcie->turnoff_reset);
-f4e833ba2a955b drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-07-19  1342  	}
-f4e833ba2a955b drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-07-19  1343  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1344  	if (imx_pcie->drvdata->gpr) {
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1345  	/* Grab GPR config register range */
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1346  		imx_pcie->iomuxc_gpr =
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1347  			 syscon_regmap_lookup_by_compatible(imx_pcie->drvdata->gpr);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1348  		if (IS_ERR(imx_pcie->iomuxc_gpr))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1349  			return dev_err_probe(dev, PTR_ERR(imx_pcie->iomuxc_gpr),
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1350  					     "unable to find iomuxc registers\n");
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1351  	}
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1352  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1353  	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_SERDES)) {
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1354  		void __iomem *off = devm_platform_ioremap_resource_byname(pdev, "app");
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1355  
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1356  		if (IS_ERR(off))
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1357  			return dev_err_probe(dev, PTR_ERR(off),
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1358  					     "unable to find serdes registers\n");
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1359  
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1360  		static const struct regmap_config regmap_config = {
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1361  			.reg_bits = 32,
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1362  			.val_bits = 32,
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1363  			.reg_stride = 4,
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1364  		};
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1365  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1366  		imx_pcie->iomuxc_gpr = devm_regmap_init_mmio(dev, off, &regmap_config);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1367  		if (IS_ERR(imx_pcie->iomuxc_gpr))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1368  			return dev_err_probe(dev, PTR_ERR(imx_pcie->iomuxc_gpr),
-98e97fb574b112 drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-20  1369  					     "unable to find iomuxc registers\n");
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1370  	}
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1371  
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1372  	/* Grab PCIe PHY Tx Settings */
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1373  	if (of_property_read_u32(node, "fsl,tx-deemph-gen1",
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1374  				 &imx_pcie->tx_deemph_gen1))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1375  		imx_pcie->tx_deemph_gen1 = 0;
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1376  
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1377  	if (of_property_read_u32(node, "fsl,tx-deemph-gen2-3p5db",
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1378  				 &imx_pcie->tx_deemph_gen2_3p5db))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1379  		imx_pcie->tx_deemph_gen2_3p5db = 0;
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1380  
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1381  	if (of_property_read_u32(node, "fsl,tx-deemph-gen2-6db",
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1382  				 &imx_pcie->tx_deemph_gen2_6db))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1383  		imx_pcie->tx_deemph_gen2_6db = 20;
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1384  
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1385  	if (of_property_read_u32(node, "fsl,tx-swing-full",
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1386  				 &imx_pcie->tx_swing_full))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1387  		imx_pcie->tx_swing_full = 127;
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1388  
-28e3abe591e227 drivers/pci/host/pci-imx6.c           Justin Waters          2016-01-15  1389  	if (of_property_read_u32(node, "fsl,tx-swing-low",
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1390  				 &imx_pcie->tx_swing_low))
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1391  		imx_pcie->tx_swing_low = 127;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1392  
-a5fcec480f25eb drivers/pci/host/pci-imx6.c           Tim Harvey             2016-04-19  1393  	/* Limit link speed */
-39bc5006501cc3 drivers/pci/controller/dwc/pci-imx6.c Rob Herring            2020-08-20  1394  	pci->link_gen = 1;
-65315ec52c9bd5 drivers/pci/controller/dwc/pci-imx6.c Krzysztof Wilczyński   2021-10-03  1395  	of_property_read_u32(node, "fsl,max-link-speed", &pci->link_gen);
-a5fcec480f25eb drivers/pci/host/pci-imx6.c           Tim Harvey             2016-04-19  1396  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1397  	imx_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1398  	if (IS_ERR(imx_pcie->vpcie)) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1399  		if (PTR_ERR(imx_pcie->vpcie) != -ENODEV)
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1400  			return PTR_ERR(imx_pcie->vpcie);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1401  		imx_pcie->vpcie = NULL;
-c26ebe98a10347 drivers/pci/dwc/pci-imx6.c            Quentin Schulz         2017-06-08  1402  	}
-c26ebe98a10347 drivers/pci/dwc/pci-imx6.c            Quentin Schulz         2017-06-08  1403  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1404  	imx_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1405  	if (IS_ERR(imx_pcie->vph)) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1406  		if (PTR_ERR(imx_pcie->vph) != -ENODEV)
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1407  			return PTR_ERR(imx_pcie->vph);
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1408  		imx_pcie->vph = NULL;
-d2ce69ca251690 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2021-06-04  1409  	}
-d2ce69ca251690 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2021-06-04  1410  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1411  	platform_set_drvdata(pdev, imx_pcie);
-9bcf0a6fdc5062 drivers/pci/dwc/pci-imx6.c            Kishon Vijay Abraham I 2017-02-15  1412  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1413  	ret = imx_pcie_attach_pd(dev);
-3f7cceeab895fc drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-10-08  1414  	if (ret)
-3f7cceeab895fc drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-10-08  1415  		return ret;
-3f7cceeab895fc drivers/pci/controller/dwc/pci-imx6.c Leonard Crestez        2018-10-08  1416  
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1417  	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
-f988153d367a9c drivers/pci/controller/dwc/pci-imx6.c Frank Li               2024-02-27  1418  		ret = imx_add_pcie_ep(imx_pcie, pdev);
-75c2f26da03f93 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2023-01-16  1419  		if (ret < 0)
-75c2f26da03f93 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2023-01-16  1420  			return ret;
-75c2f26da03f93 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2023-01-16  1421  	} else {
-60f5b73fa0f298 drivers/pci/controller/dwc/pci-imx6.c Rob Herring            2020-11-05  1422  		ret = dw_pcie_host_init(&pci->pp);
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1423  		if (ret < 0)
-b391bf31584d87 drivers/pci/host/pci-imx6.c           Fabio Estevam          2013-12-02  1424  			return ret;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1425  
-75cb8d20c112ab drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2018-12-21  1426  		if (pci_msi_enabled()) {
-201a8df899525b drivers/pci/controller/dwc/pci-imx6.c Rob Herring            2020-08-20  1427  			u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-75c2f26da03f93 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2023-01-16  1428  
-201a8df899525b drivers/pci/controller/dwc/pci-imx6.c Rob Herring            2020-08-20  1429  			val = dw_pcie_readw_dbi(pci, offset + PCI_MSI_FLAGS);
-75cb8d20c112ab drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2018-12-21  1430  			val |= PCI_MSI_FLAGS_ENABLE;
-201a8df899525b drivers/pci/controller/dwc/pci-imx6.c Rob Herring            2020-08-20  1431  			dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS, val);
-75cb8d20c112ab drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2018-12-21  1432  		}
-75c2f26da03f93 drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2023-01-16  1433  	}
-75cb8d20c112ab drivers/pci/controller/dwc/pci-imx6.c Richard Zhu            2018-12-21  1434  
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1435  	return 0;
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1436  }
-bb38919ec56e07 drivers/pci/host/pci-imx6.c           Sean Cross             2013-09-26  1437  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+SGkgQmpvcm4sDQpMb29raW5nIGZvcndhcmQgdG8gZ2V0dGluZyB5b3VyIG1vcmUgaW5wdXRzIGFu
+ZCBzdWdnZXN0aW9ucy4NCkl0IHNlZW1zIC9zeXMvYnVzL2FjcGkvZGV2aWNlcy9QTlAwQTAzOjAw
+LyBpcyBub3QgYSBnb29kIHBsYWNlIHRvIGNyZWF0ZSBnc2kgc3lzZnMuDQoNCk9uIDIwMjQvMi8x
+NSAxNjozNywgUm9nZXIgUGF1IE1vbm7DqSB3cm90ZToNCj4gT24gTW9uLCBGZWIgMTIsIDIwMjQg
+YXQgMDE6MTg6NThQTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4+IE9uIE1vbiwgRmVi
+IDEyLCAyMDI0IGF0IDEwOjEzOjI4QU0gKzAxMDAsIFJvZ2VyIFBhdSBNb25uw6kgd3JvdGU6DQo+
+Pj4gT24gRnJpLCBGZWIgMDksIDIwMjQgYXQgMDM6MDU6NDlQTSAtMDYwMCwgQmpvcm4gSGVsZ2Fh
+cyB3cm90ZToNCj4+Pj4gT24gVGh1LCBGZWIgMDEsIDIwMjQgYXQgMDk6Mzk6NDlBTSArMDEwMCwg
+Um9nZXIgUGF1IE1vbm7DqSB3cm90ZToNCj4+Pj4+IE9uIFdlZCwgSmFuIDMxLCAyMDI0IGF0IDAx
+OjAwOjE0UE0gLTA2MDAsIEJqb3JuIEhlbGdhYXMgd3JvdGU6DQo+Pj4+Pj4gT24gV2VkLCBKYW4g
+MzEsIDIwMjQgYXQgMDk6NTg6MTlBTSArMDEwMCwgUm9nZXIgUGF1IE1vbm7DqSB3cm90ZToNCj4+
+Pj4+Pj4gT24gVHVlLCBKYW4gMzAsIDIwMjQgYXQgMDI6NDQ6MDNQTSAtMDYwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4+Pj4+Pj4+IE9uIFR1ZSwgSmFuIDMwLCAyMDI0IGF0IDEwOjA3OjM2QU0g
+KzAxMDAsIFJvZ2VyIFBhdSBNb25uw6kgd3JvdGU6DQo+Pj4+Pj4+Pj4gT24gTW9uLCBKYW4gMjks
+IDIwMjQgYXQgMDQ6MDE6MTNQTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4+Pj4+Pj4+
+Pj4gT24gVGh1LCBKYW4gMjUsIDIwMjQgYXQgMDc6MTc6MjRBTSArMDAwMCwgQ2hlbiwgSmlxaWFu
+IHdyb3RlOg0KPj4+Pj4+Pj4+Pj4gT24gMjAyNC8xLzI0IDAwOjAyLCBCam9ybiBIZWxnYWFzIHdy
+b3RlOg0KPj4+Pj4+Pj4+Pj4+IE9uIFR1ZSwgSmFuIDIzLCAyMDI0IGF0IDEwOjEzOjUyQU0gKzAw
+MDAsIENoZW4sIEppcWlhbiB3cm90ZToNCj4+Pj4+Pj4+Pj4+Pj4gT24gMjAyNC8xLzIzIDA3OjM3
+LCBCam9ybiBIZWxnYWFzIHdyb3RlOg0KPj4+Pj4+Pj4+Pj4+Pj4gT24gRnJpLCBKYW4gMDUsIDIw
+MjQgYXQgMDI6MjI6MTdQTSArMDgwMCwgSmlxaWFuIENoZW4gd3JvdGU6DQo+Pj4+Pj4+Pj4+Pj4+
+Pj4gVGhlcmUgaXMgYSBuZWVkIGZvciBzb21lIHNjZW5hcmlvcyB0byB1c2UgZ3NpIHN5c2ZzLg0K
+Pj4+Pj4+Pj4+Pj4+Pj4+IEZvciBleGFtcGxlLCB3aGVuIHhlbiBwYXNzdGhyb3VnaCBhIGRldmlj
+ZSB0byBkdW1VLCBpdCB3aWxsDQo+Pj4+Pj4+Pj4+Pj4+Pj4gdXNlIGdzaSB0byBtYXAgcGlycSwg
+YnV0IGN1cnJlbnRseSB1c2Vyc3BhY2UgY2FuJ3QgZ2V0IGdzaQ0KPj4+Pj4+Pj4+Pj4+Pj4+IG51
+bWJlci4NCj4+Pj4+Pj4+Pj4+Pj4+PiBTbywgYWRkIGdzaSBzeXNmcyBmb3IgdGhhdCBhbmQgZm9y
+IG90aGVyIHBvdGVudGlhbCBzY2VuYXJpb3MuDQo+Pj4+Pj4+Pj4+Pj4+IC4uLg0KPj4+Pj4+Pj4+
+Pj4+DQo+Pj4+Pj4+Pj4+Pj4+PiBJIGRvbid0IGtub3cgZW5vdWdoIGFib3V0IFhlbiB0byBrbm93
+IHdoeSBpdCBuZWVkcyB0aGUgR1NJIGluDQo+Pj4+Pj4+Pj4+Pj4+PiB1c2Vyc3BhY2UuICBJcyB0
+aGlzIHBhc3N0aHJvdWdoIGJyYW5kIG5ldyBmdW5jdGlvbmFsaXR5IHRoYXQgY2FuJ3QgYmUNCj4+
+Pj4+Pj4+Pj4+Pj4+IGRvbmUgdG9kYXkgYmVjYXVzZSB3ZSBkb24ndCBleHBvc2UgdGhlIEdTSSB5
+ZXQ/DQo+Pj4+Pj4+Pj4+DQo+Pj4+Pj4+Pj4+IEkgYXNzdW1lIHRoaXMgbXVzdCBiZSBuZXcgZnVu
+Y3Rpb25hbGl0eSwgaS5lLiwgdGhpcyBraW5kIG9mDQo+Pj4+Pj4+Pj4+IHBhc3N0aHJvdWdoIGRv
+ZXMgbm90IHdvcmsgdG9kYXksIHJpZ2h0Pw0KPj4+Pj4+Pj4+Pg0KPj4+Pj4+Pj4+Pj4+PiBoYXMg
+QUNQSSBzdXBwb3J0IGFuZCBpcyByZXNwb25zaWJsZSBmb3IgZGV0ZWN0aW5nIGFuZCBjb250cm9s
+bGluZw0KPj4+Pj4+Pj4+Pj4+PiB0aGUgaGFyZHdhcmUsIGFsc28gaXQgcGVyZm9ybXMgcHJpdmls
+ZWdlZCBvcGVyYXRpb25zIHN1Y2ggYXMgdGhlDQo+Pj4+Pj4+Pj4+Pj4+IGNyZWF0aW9uIG9mIG5v
+cm1hbCAodW5wcml2aWxlZ2VkKSBkb21haW5zIERvbVVzLiBXaGVuIHdlIGdpdmUgdG8gYQ0KPj4+
+Pj4+Pj4+Pj4+PiBEb21VIGRpcmVjdCBhY2Nlc3MgdG8gYSBkZXZpY2UsIHdlIG5lZWQgYWxzbyB0
+byByb3V0ZSB0aGUgcGh5c2ljYWwNCj4+Pj4+Pj4+Pj4+Pj4gaW50ZXJydXB0cyB0byB0aGUgRG9t
+VS4gSW4gb3JkZXIgdG8gZG8gc28gWGVuIG5lZWRzIHRvIHNldHVwIGFuZCBtYXANCj4+Pj4+Pj4+
+Pj4+Pj4gdGhlIGludGVycnVwdHMgYXBwcm9wcmlhdGVseS4NCj4+Pj4+Pj4+Pj4+Pg0KPj4+Pj4+
+Pj4+Pj4+IFdoYXQga2VybmVsIGludGVyZmFjZXMgYXJlIHVzZWQgZm9yIHRoaXMgc2V0dXAgYW5k
+IG1hcHBpbmc/DQo+Pj4+Pj4+Pj4+Pg0KPj4+Pj4+Pj4+Pj4gRm9yIHBhc3N0aHJvdWdoIGRldmlj
+ZXMsIHRoZSBzZXR1cCBhbmQgbWFwcGluZyBvZiByb3V0aW5nIHBoeXNpY2FsDQo+Pj4+Pj4+Pj4+
+PiBpbnRlcnJ1cHRzIHRvIERvbVUgYXJlIGRvbmUgb24gWGVuIGh5cGVydmlzb3Igc2lkZSwgaHlw
+ZXJ2aXNvciBvbmx5DQo+Pj4+Pj4+Pj4+PiBuZWVkIHVzZXJzcGFjZSB0byBwcm92aWRlIHRoZSBH
+U0kgaW5mbywgc2VlIFhlbiBjb2RlOg0KPj4+Pj4+Pj4+Pj4geGNfcGh5c2Rldl9tYXBfcGlycSBy
+ZXF1aXJlIEdTSSBhbmQgdGhlbiB3aWxsIGNhbGwgaHlwZXJjYWxsIHRvIHBhc3MNCj4+Pj4+Pj4+
+Pj4+IEdTSSBpbnRvIGh5cGVydmlzb3IgYW5kIHRoZW4gaHlwZXJ2aXNvciB3aWxsIGRvIHRoZSBt
+YXBwaW5nIGFuZA0KPj4+Pj4+Pj4+Pj4gcm91dGluZywga2VybmVsIGRvZXNuJ3QgZG8gdGhlIHNl
+dHVwIGFuZCBtYXBwaW5nLg0KPj4+Pj4+Pj4+Pg0KPj4+Pj4+Pj4+PiBTbyB3ZSBoYXZlIHRvIGV4
+cG9zZSB0aGUgR1NJIHRvIHVzZXJzcGFjZSBub3QgYmVjYXVzZSB1c2Vyc3BhY2UgaXRzZWxmDQo+
+Pj4+Pj4+Pj4+IHVzZXMgaXQsIGJ1dCBzbyB1c2Vyc3BhY2UgY2FuIHR1cm4gYXJvdW5kIGFuZCBw
+YXNzIGl0IGJhY2sgaW50byB0aGUNCj4+Pj4+Pj4+Pj4ga2VybmVsPw0KPj4+Pj4+Pj4+DQo+Pj4+
+Pj4+Pj4gTm8sIHRoZSBwb2ludCBpcyB0byBwYXNzIGl0IGJhY2sgdG8gWGVuLCB3aGljaCBkb2Vz
+bid0IGtub3cgdGhlDQo+Pj4+Pj4+Pj4gbWFwcGluZyBiZXR3ZWVuIEdTSXMgYW5kIFBDSSBkZXZp
+Y2VzIGJlY2F1c2UgaXQgY2FuJ3QgZXhlY3V0ZSB0aGUgQUNQSQ0KPj4+Pj4+Pj4+IEFNTCByZXNv
+dXJjZSBtZXRob2RzIHRoYXQgcHJvdmlkZSBzdWNoIGluZm9ybWF0aW9uLg0KPj4+Pj4+Pj4+DQo+
+Pj4+Pj4+Pj4gVGhlIChMaW51eCkga2VybmVsIGlzIGp1c3QgYSBwcm94eSB0aGF0IGZvcndhcmRz
+IHRoZSBoeXBlcmNhbGxzIGZyb20NCj4+Pj4+Pj4+PiB1c2VyLXNwYWNlIHRvb2xzIGludG8gWGVu
+Lg0KPj4+Pj4+Pj4NCj4+Pj4+Pj4+IEJ1dCBJIGd1ZXNzIFhlbiBrbm93cyBob3cgdG8gaW50ZXJw
+cmV0IGEgR1NJIGV2ZW4gdGhvdWdoIGl0IGRvZXNuJ3QNCj4+Pj4+Pj4+IGhhdmUgYWNjZXNzIHRv
+IEFNTD8NCj4+Pj4+Pj4NCj4+Pj4+Pj4gT24geDg2IFhlbiBkb2VzIGtub3cgaG93IHRvIG1hcCBh
+IEdTSSBpbnRvIGFuIElPLUFQSUMgcGluLCBpbiBvcmRlcg0KPj4+Pj4+PiBjb25maWd1cmUgdGhl
+IFJURSBhcyByZXF1ZXN0ZWQuDQo+Pj4+Pj4NCj4+Pj4+PiBJSVVDLCBtYXBwaW5nIGEgR1NJIHRv
+IGFuIElPLUFQSUMgcGluIHJlcXVpcmVzIGluZm9ybWF0aW9uIGZyb20gdGhlDQo+Pj4+Pj4gTUFE
+VC4gIFNvIEkgZ3Vlc3MgWGVuIGRvZXMgdXNlIHRoZSBzdGF0aWMgQUNQSSB0YWJsZXMsIGJ1dCBu
+b3QgdGhlIEFNTA0KPj4+Pj4+IF9QUlQgbWV0aG9kcyB0aGF0IHdvdWxkIGNvbm5lY3QgYSBHU0kg
+d2l0aCBhIFBDSSBkZXZpY2U/DQo+Pj4+Pg0KPj4+Pj4gWWVzLCBYZW4gY2FuIHBhcnNlIHRoZSBz
+dGF0aWMgdGFibGVzLCBhbmQga25vd3MgdGhlIGJhc2UgR1NJIG9mDQo+Pj4+PiBJTy1BUElDcyBm
+cm9tIHRoZSBNQURULg0KPj4+Pj4NCj4+Pj4+PiBJIGd1ZXNzIHRoaXMgbWVhbnMgWGVuIHdvdWxk
+IG5vdCBiZSBhYmxlIHRvIGRlYWwgd2l0aCBfTUFUIG1ldGhvZHMsDQo+Pj4+Pj4gd2hpY2ggYWxz
+byBjb250YWlucyBNQURUIGVudHJpZXM/ICBJIGRvbid0IGtub3cgdGhlIGltcGxpY2F0aW9ucyBv
+Zg0KPj4+Pj4+IHRoaXMgLS0gbWF5YmUgaXQgbWVhbnMgWGVuIG1pZ2h0IG5vdCBiZSBhYmxlIHRv
+IHVzZSB3aXRoIGhvdC1hZGRlZA0KPj4+Pj4+IGRldmljZXM/DQo+Pj4+Pg0KPj4+Pj4gSXQncyBt
+eSB1bmRlcnN0YW5kaW5nIF9NQVQgd2lsbCBvbmx5IGJlIHByZXNlbnQgb24gc29tZSB2ZXJ5IHNw
+ZWNpZmljDQo+Pj4+PiBkZXZpY2VzIChJTy1BUElDIG9yIENQVSBvYmplY3RzKS4gIFhlbiBkb2Vz
+bid0IHN1cHBvcnQgaG90cGx1ZyBvZg0KPj4+Pj4gSU8tQVBJQ3MsIGJ1dCBob3RwbHVnIG9mIENQ
+VXMgc2hvdWxkIGluIHByaW5jaXBsZSBiZSBzdXBwb3J0ZWQgd2l0aA0KPj4+Pj4gY29vcGVyYXRp
+b24gZnJvbSB0aGUgY29udHJvbCBkb21haW4gT1MgKGFsYmVpdCBpdCdzIG5vdCBzb21ldGhpbmcg
+dGhhdA0KPj4+Pj4gd2UgdGVzdHMgb24gb3VyIENJKS4gIEkgZG9uJ3QgZXhwZWN0IGhvd2V2ZXIg
+dGhhdCBhIENQVSBvYmplY3QgX01BVA0KPj4+Pj4gbWV0aG9kIHdpbGwgcmV0dXJuIElPIEFQSUMg
+ZW50cmllcy4NCj4+Pj4+DQo+Pj4+Pj4gVGhlIHRhYmxlcyAoaW5jbHVkaW5nIERTRFQgYW5kIFNT
+RFRTIHRoYXQgY29udGFpbiB0aGUgQU1MKSBhcmUgZXhwb3NlZA0KPj4+Pj4+IHRvIHVzZXJzcGFj
+ZSB2aWEgL3N5cy9maXJtd2FyZS9hY3BpL3RhYmxlcy8sIGJ1dCBvZiBjb3Vyc2UgdGhhdA0KPj4+
+Pj4+IGRvZXNuJ3QgbWVhbiBYZW4ga25vd3MgaG93IHRvIGludGVycHJldCB0aGUgQU1MLCBhbmQg
+ZXZlbiBpZiBpdCBkaWQsDQo+Pj4+Pj4gWGVuIHByb2JhYmx5IHdvdWxkbid0IGJlIGFibGUgdG8g
+KmV2YWx1YXRlKiBpdCBzaW5jZSB0aGF0IGNvdWxkDQo+Pj4+Pj4gY29uZmxpY3Qgd2l0aCB0aGUg
+aG9zdCBrZXJuZWwncyB1c2Ugb2YgQU1MLg0KPj4+Pj4NCj4+Pj4+IEluZGVlZCwgdGhlcmUgY2Fu
+IG9ubHkgYmUgYSBzaW5nbGUgT1NQTSwgYW5kIHRoYXQncyB0aGUgZG9tMCBPUyAoTGludXgNCj4+
+Pj4+IGluIG91ciBjb250ZXh0KS4NCj4+Pj4+DQo+Pj4+PiBHZXR0aW5nIGJhY2sgdG8gb3VyIGNv
+bnRleHQgdGhvdWdoLCB3aGF0IHdvdWxkIGJlIGEgc3VpdGFibGUgcGxhY2UgZm9yDQo+Pj4+PiBl
+eHBvc2luZyB0aGUgR1NJIGFzc2lnbmVkIHRvIGVhY2ggZGV2aWNlPw0KPj4+Pg0KPj4+PiBJSVVD
+LCB0aGUgWGVuIGh5cGVydmlzb3I6DQo+Pj4+DQo+Pj4+ICAgLSBJbnRlcnByZXRzIC9zeXMvZmly
+bXdhcmUvYWNwaS90YWJsZXMvQVBJQyAob3IgZ2V0cyB0aGlzIHZpYQ0KPj4+PiAgICAgc29tZXRo
+aW5nIHJ1bm5pbmcgb24gdGhlIERvbTAga2VybmVsKSB0byBmaW5kIHRoZSBwaHlzaWNhbCBiYXNl
+DQo+Pj4+ICAgICBhZGRyZXNzIGFuZCBHU0kgYmFzZSwgZS5nLiwgZnJvbSBJL08gQVBJQywgSS9P
+IFNBUElDLg0KPj4+DQo+Pj4gTm8sIFhlbiBwYXJzZXMgdGhlIE1BRFQgZGlyZWN0bHkgZnJvbSBt
+ZW1vcnksIGJlZm9yZSBzdGF0aW5nIGRvbTAuDQo+Pj4gVGhhdCdzIGEgc3RhdGljIHRhYmxlIHNv
+IGl0J3MgZmluZSBmb3IgWGVuIHRvIHBhcnNlIGl0IGFuZCBvYnRhaW4gdGhlDQo+Pj4gSS9PIEFQ
+SUMgR1NJIGJhc2UuDQo+Pg0KPj4gSXQncyBhbiBpbnRlcmVzdGluZyBzcGxpdCB0byBjb25zdW1l
+IEFDUEkgc3RhdGljIHRhYmxlcyBkaXJlY3RseSBidXQNCj4+IHB1dCB0aGUgQU1MIGludGVycHJl
+dGVyIGVsc2V3aGVyZS4NCj4gDQo+IFdlbGwsIHN0YXRpYyB0YWJsZXMgY2FuIGJlIGNvbnN1bWVk
+IGJ5IFhlbiwgYmVjYXVzZSB0aHllIGRvbid0IHJlcXVpcmUNCj4gYW4gQU1MIHBhcnNlciAob2J2
+aW91c2x5KSwgYW5kIHBhcnNpbmcgdGhlbSBkb2Vzbid0IGhhdmUgYW55DQo+IHNpZGUtZWZmZWN0
+cyB0aGF0IHdvdWxkIHByZXZlbnQgZG9tMCBmcm9tIGJlaW5nIHRoZSBPU1BNIChubyBtZXRob2Rz
+DQo+IG9yIHNpbWlsYXIgYXJlIGV2YWx1YXRlZCkuDQo+IA0KPj4gSSBkb3VidCB0aGUgQUNQSSBz
+cGVjIGVudmlzaW9uZWQNCj4+IHRoYXQsIHdoaWNoIG1ha2VzIG1lIHdvbmRlciB3aGF0IG90aGVy
+IHRoaW5ncyB3ZSBjb3VsZCB0cmlwIG92ZXIsIGJ1dA0KPj4gdGhhdCdzIGp1c3QgYSB0YW5nZW50
+Lg0KPiANCj4gSW5kZWVkLCBBQ1BJIGlzIG5vdCBiZSBiZXN0IGludGVyZmFjZSBmb3IgdGhlIFhl
+bi9kb20wIHNwbGl0IG1vZGVsLg0KPiANCj4+Pj4gICAtIE5lZWRzIHRoZSBHU0kgdG8gbG9jYXRl
+IHRoZSBBUElDIGFuZCBwaW4gd2l0aGluIHRoZSBBUElDLiAgVGhlDQo+Pj4+ICAgICBEb20wIGtl
+cm5lbCBpcyB0aGUgT1NQTSwgc28gb25seSBpdCBjYW4gZXZhbHVhdGUgdGhlIEFNTCBfUFJUIHRv
+DQo+Pj4+ICAgICBsZWFybiB0aGUgUENJIGRldmljZSAtPiBHU0kgbWFwcGluZy4NCj4+Pg0KPj4+
+IFllcywgWGVuIGRvZXNuJ3Qga25vdyB0aGUgUENJIGRldmljZSAtPiBHU0kgbWFwcGluZy4gIERv
+bTAgbmVlZHMgdG8NCj4+PiBwYXJzZSB0aGUgQUNQSSBtZXRob2RzIGFuZCBzaWduYWwgWGVuIHRv
+IGNvbmZpZ3VyZSBhIEdTSSB3aXRoIGENCj4+PiBnaXZlbiB0cmlnZ2VyIGFuZCBwb2xhcml0eS4N
+Cj4+Pg0KPj4+PiAgIC0gSGFzIGRpcmVjdCBhY2Nlc3MgdG8gdGhlIEFQSUMgcGh5c2ljYWwgYmFz
+ZSBhZGRyZXNzIHRvIHByb2dyYW0gdGhlDQo+Pj4+ICAgICBSZWRpcmVjdGlvbiBUYWJsZS4NCj4+
+Pg0KPj4+IFllcywgdGhlIGhhcmR3YXJlIChuYXRpdmUpIEkvTyBBUElDIGlzIG93bmVkIGJ5IFhl
+biwgYW5kIG5vdCBkaXJlY3RseQ0KPj4+IGFjY2Vzc2libGUgYnkgZG9tMC4NCj4+Pg0KPj4+PiBU
+aGUgcGF0Y2ggc2VlbXMgYSBsaXR0bGUgbWVzc3kgdG8gbWUgYmVjYXVzZSB0aGUgUENJIGNvcmUg
+aGFzIHRvIGtlZXANCj4+Pj4gdHJhY2sgb2YgdGhlIEdTSSBldmVuIHRob3VnaCBpdCBkb2Vzbid0
+IG5lZWQgaXQgaXRzZWxmLiAgQW5kIHRoZQ0KPj4+PiBjdXJyZW50IHBhdGNoIGV4cG9zZXMgaXQg
+b24gYWxsIGFyY2hlcywgZXZlbiBub24tQUNQSSBvbmVzIG9yIHdoZW4NCj4+Pj4gQUNQSSBpcyBk
+aXNhYmxlZCAoZWFzaWx5IGZpeGFibGUpLg0KPj4+Pg0KPj4+PiBXZSBvbmx5IGNhbGwgYWNwaV9w
+Y2lfaXJxX2VuYWJsZSgpIGluIHRoZSBwY2lfZW5hYmxlX2RldmljZSgpIHBhdGgsIHNvDQo+Pj4+
+IHdlIGRvbid0IGtub3cgdGhlIEdTSSB1bmxlc3MgYSBEb20wIGRyaXZlciBoYXMgY2xhaW1lZCB0
+aGUgZGV2aWNlIGFuZA0KPj4+PiBjYWxsZWQgcGNpX2VuYWJsZV9kZXZpY2UoKSBmb3IgaXQsIHdo
+aWNoIHNlZW1zIGxpa2UgaXQgbWlnaHQgbm90IGJlDQo+Pj4+IGRlc2lyYWJsZS4NCj4+Pg0KPj4+
+IEkgdGhpbmsgdGhhdCdzIGFsd2F5cyB0aGUgY2FzZSwgYXMgb24gZG9tMCBkZXZpY2VzIHRvIGJl
+IHBhc3NlZA0KPj4+IHRocm91Z2ggYXJlIGhhbmRsZWQgYnkgcGNpYmFjayB3aGljaCBkb2VzIGVu
+YWJsZSB0aGVtLg0KPj4NCj4+IHBjaXN0dWJfaW5pdF9kZXZpY2UoKSBsYWJlbHMgdGhlIHBjaV9l
+bmFibGVfZGV2aWNlKCkgYXMgYSAiSEFDSyINCj4+IHJlbGF0ZWQgdG8gZGV0ZXJtaW5pbmcgdGhl
+IElSUSwgd2hpY2ggbWFrZXMgbWUgdGhpbmsgdGhlcmUncyBub3QNCj4+IHJlYWxseSBhIHJlcXVp
+cmVtZW50IGZvciB0aGUgZGV2aWNlIHRvIGJlICplbmFibGVkKiAoQkFSIGRlY29kaW5nDQo+PiBl
+bmFibGVkKSBieSBkb20wLg0KPiANCj4gTm8sIHRoZXJlJ3Mgbm8gbmVlZCBmb3IgbWVtb3J5IGRl
+Y29kaW5nIHRvIGJlIGVuYWJsZWQgZm9yIGdldHRpbmcgdGhlDQo+IEdTSSBmcm9tIHRoZSBBQ1BJ
+IG1ldGhvZCBJIHdvdWxkIGFzc3VtZS4gIEknbSBjb25mdXNlZCBieSB0aGF0DQo+IHBjaV9lbmFi
+bGVfZGV2aWNlKCkgY2FsbC4gIElzIG1heWJlIHRoZSBwdXJwb3NlIHRvIG1ha2Ugc3VyZSB0aGUN
+Cj4gZGV2aWNlIGlzIHBvd2VyZWQgdXAgc28gdGhhdCByZWFkaW5nIHRoZSBQQ0kgaGVhZGVyIElu
+dGVycnVwdCBMaW5lIGFuZA0KPiBQaW4gZmllbGRzIHJldHVybnMgdmFsaWQgdmFsdWVzPyAgTm8g
+aWRlYSB3aGV0aGVyIHJlYWRpbmcgdGhvc2UgZmllbGRzDQo+IHJlcXVpcmVzIHRoZSBkZXZpY2Ug
+dG8gYmUgaW4gY2VydGFpbiAoYWN0aXZlKSBwb3dlciBzdGF0ZXMuDQo+IA0KPj4+IEkgYWdyZWUg
+aXQgbWlnaHQgYmUgYmVzdCB0byBub3QgdGllIGV4cG9zaW5nIHRoZSBub2RlIHRvDQo+Pj4gcGNp
+X2VuYWJsZV9kZXZpY2UoKSBoYXZpbmcgYmVlbiBjYWxsZWQuICBJcyBfUFJUIG9ubHkgZXZhbHVh
+dGVkIGFzDQo+Pj4gcGFydCBvZiBhY3BpX3BjaV9pcnFfZW5hYmxlKCk/IChvciBwY2lfZW5hYmxl
+X2RldmljZSgpKS4NCj4+DQo+PiBZZXMuICBBRkFJQ1QsIGFjcGlfcGNpX2lycV9lbmFibGUoKSBp
+cyB0aGUgb25seSBwYXRoIHRoYXQgZXZhbHVhdGVzDQo+PiBfUFJUIChleGNlcHQgZm9yIGEgZGVi
+dWdnZXIgaW50ZXJmYWNlKS4gIEkgZG9uJ3QgdGhpbmsgaXQgKm5lZWRzKiB0bw0KPj4gYmUgdGhh
+dCB3YXksIGFuZCB0aGUgZmFjdCB0aGF0IHdlIGRvIGl0IHBlci1kZXZpY2UgbGlrZSB0aGF0IG1l
+YW5zIHdlDQo+PiBldmFsdWF0ZSBfUFJUIG1hbnkgdGltZXMgZXZlbiB0aG91Z2ggSSB0aGluayB0
+aGUgcmVzdWx0cyBuZXZlciBjaGFuZ2UuDQo+Pg0KPj4gSSBjb3VsZCBpbWFnaW5lIGV2YWx1YXRp
+bmcgX1BSVCBvbmNlIGFzIHBhcnQgb2YgZW51bWVyYXRpbmcgYSBQQ0kgaG9zdA0KPj4gYnJpZGdl
+IChhbmQgbWF5YmUgUENJLVBDSSBicmlkZ2UsIHBlciBhY3BpX3BjaV9pcnFfZmluZF9wcnRfZW50
+cnkoKQ0KPj4gY29tbWVudCksIGJ1dCB0aGF0IGxvb2tzIGxpa2UgYSBmYWlyIGJpdCBvZiB3b3Jr
+IHRvIGltcGxlbWVudC4gIEFuZCBvZg0KPj4gY291cnNlIGl0IGRvZXNuJ3QgcmVhbGx5IGFmZmVj
+dCB0aGUgcXVlc3Rpb24gb2YgaG93IHRvIGV4cG9zZSB0aGUNCj4+IHJlc3VsdCwgYWx0aG91Z2gg
+aXQgZG9lcyBzdWdnZXN0IC9zeXMvYnVzL2FjcGkvZGV2aWNlcy9QTlAwQTAzOjAwLyBhcw0KPj4g
+YSBwb3NzaWJsZSBsb2NhdGlvbi4NCj4gDQo+IFNvIHlvdSBzdWdnZXN0IGV4cG9zaW5nIHRoZSBH
+U0kgYXMgcGFydCBvZiB0aGUgUENJIGhvc3QgYnJpZGdlPyAgSSdtDQo+IGFmcmFpZCBJJ20gbm90
+IGZvbGxvd2luZyBob3cgd2UgY291bGQgdGhlbiBtYXAgUENJIFNCREZzIGZyb20gZGV2aWNlcw0K
+PiB0byB0aGVpciBhc3NpZ25lZCBHU0kuDQo+IA0KPiBUaGFua3MsIFJvZ2VyLg0KDQotLSANCkJl
+c3QgcmVnYXJkcywNCkppcWlhbiBDaGVuLg0K
 
