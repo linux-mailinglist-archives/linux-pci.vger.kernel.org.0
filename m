@@ -1,123 +1,172 @@
-Return-Path: <linux-pci+bounces-4300-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4301-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BAEE86DCB8
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 09:09:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87B4E86DDD4
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 10:06:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E254A1F26B7A
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 08:09:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68F801C22F82
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 09:06:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62F5669D1D;
-	Fri,  1 Mar 2024 08:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 672706A03E;
+	Fri,  1 Mar 2024 09:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V4ZroOJY"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uwBnz4EB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E379200C3;
-	Fri,  1 Mar 2024 08:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83466A329;
+	Fri,  1 Mar 2024 09:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709280576; cv=none; b=t02ASlfVUqN32RFdT5n7ifKxAu9UsFGfJHDBmw8pSejPJhgjRU6TXfV/8fJ9H023hmzPtRTqXOaMh7DHdw5Y0pej9iDmBE5vh/y9sG0n3I6Ffau0/TLtYTDz62sam3hH+eGdh8RpnTwxmaUmemG4Vtn+LfFlTFztdZwP3mdzAwM=
+	t=1709283998; cv=none; b=FsjnqxoDtW6xVIDH4U3N1bykjT3c9XQuEKmhNwOZteXV3n4/k944+ANTtRnzHBB8fpetG/HLySJzpouYNf69xcZAP1hUHEvgJlOm0N1JGHNFjJkpavCST7D9QY433Apf+QipSe3VPYqal2L/xwJ8rG5JclSyjynbfKl4ZagWVV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709280576; c=relaxed/simple;
-	bh=SDOpostQbxSaHQbVT+H3u8LtntR385azXDotbcIDeEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DWsoCnIJqu4wbCIXcWgxMV7+cqN2EY357NIYfVM8QAL+K/kDzqsSnz2cn1VTVLhWpg9KtDY58NcRWlD1FfVc3wdJxZPJb8Gqwx5VCmES5E4Ugi1xGR/5VrQrQI/Kukbt3OVieawn3iEp3To/6jmiPpyCfMofTKsIl96eDoSMCd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V4ZroOJY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF45C433C7;
-	Fri,  1 Mar 2024 08:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709280575;
-	bh=SDOpostQbxSaHQbVT+H3u8LtntR385azXDotbcIDeEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V4ZroOJYkhMhHrVl1Ap4ozy2FeV7TA0/Efnc93tTYUHxflBLZOl8k1ljZ70MuD6HI
-	 +KD5jrkApO4SgulrrTz5XoH6+JBz96ZO+j12YNr/jBjAhY1fsZdaZfA7IYMvkqtl0K
-	 5772p83G7hOiJXoTVe+CclZocIbEFK7fI4jGNhBW8q9hBK1A01WUDvHoVdsHUClY7i
-	 iM9aXaWeD7z8XehuHy0JmAn/Nb8JcBjw9Usv22n+UfguUVaECBXPYVg+9/E09tOAAm
-	 qv6YDkjIgVmvSR3cku0DRHQewuOaXxltaz9f7jAYWeeD6xtcgfpmUjeih9lO6Ge2KT
-	 uExrktrOerLuA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1rfxxh-000000006eC-2A9v;
-	Fri, 01 Mar 2024 09:09:46 +0100
-Date: Fri, 1 Mar 2024 09:09:45 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and
- GICv3 ITS enable
-Message-ID: <ZeGNSbPjxELBklbx@hovoldconsulting.com>
-References: <ZeCCPRVvYCNfMYnd@hovoldconsulting.com>
- <20240229205240.GA361626@bhelgaas>
+	s=arc-20240116; t=1709283998; c=relaxed/simple;
+	bh=t77D3hvYZjR15Q549ojSRDIMkv4v3gVrHr+1V9N+rL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V+67/PvHV8FaBmUnvwIIxxvJ9Va3NQkkupKZezrCTThIJWrSxAtD+0X/B3WKppdrTnd3wrzLqzJs5U85qksT5HZHWYruro2/YigLgXwwLJ3+Sb4IKG0GiM0vaakIPiG3YKzjOogK4m4yPZ67a1zTFwmECY1zXAC1uUE6Kp+qxo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uwBnz4EB; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1709283994;
+	bh=t77D3hvYZjR15Q549ojSRDIMkv4v3gVrHr+1V9N+rL8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uwBnz4EBydDQpkGmpplf+4b/eYMciswh5zSoUmYvkIdces6Ahwl1mXDgcCyxMsVDJ
+	 yGKRWPhhP8oURbxsVglpDWzv0xU4x+gIf/MPc+k+NzfQfqwomPsgvn5z1LY0mzqx2U
+	 LlUBgbXCutq2ej76v9MoDWGxfFaelHwoDoUZXsCUV79yIQstIhpSnE/P9KCxqAFW5z
+	 uuyP1nUn27QGiQAPK+8pxn7RXLQgxFy0oMzdJQ5J1XS032saweZIM9VwPwbet/aShX
+	 QyhagQzGQnlxWm5UElT1hpU7rP4Fy36pXbqH+uh8B6k7yxkD0TcLwoLWNum/Vvt26w
+	 5b9UA+X7Ib9dQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0454E37814A4;
+	Fri,  1 Mar 2024 09:06:33 +0000 (UTC)
+Message-ID: <2b2effdd-0b9d-40fd-a88d-ab364f2b0668@collabora.com>
+Date: Fri, 1 Mar 2024 10:06:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240229205240.GA361626@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset
+ also present
+Content-Language: en-US
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: linux-pci@vger.kernel.org, ryder.lee@mediatek.com,
+ jianjun.wang@mediatek.com, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, p.zabel@pengutronix.de,
+ matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com, wenst@chromium.org, nfraprado@collabora.com
+References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
+ <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <a55428b8-27b3-42f7-8154-ccc7dde469df@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 29, 2024 at 02:52:40PM -0600, Bjorn Helgaas wrote:
-> On Thu, Feb 29, 2024 at 02:10:21PM +0100, Johan Hovold wrote:
-
-> > It also depends on the severity of the issue and to some extent the
-> > complexity of the fix. These binding fixes are certainly low risk.
-> > :)
+Il 01/03/24 07:42, Siddharth Vadapalli ha scritto:
+> On Thu, Feb 29, 2024 at 10:24:49AM +0100, AngeloGioacchino Del Regno wrote:
+>> Some SoCs have two PCI-Express controllers: in the case of MT8195,
+>> one of them is using a dedicated PHY, but the other uses a combo PHY
+>> that is shared with USB and in that case the PHY cannot be reset
+>> from the PCIe driver, or USB functionality will be unable to resume.
+>>
+>> Resetting the PCIe MAC without also resetting the PHY will result in
+>> a full system lockup at PCIe resume time and the only option to
+>> resume operation is to hard reboot the system (with a PMIC cut-off).
+>>
+>> To resolve this issue, check if we've got both a PHY and a MAC reset
+>> and, if not, never assert resets at PM suspend time: in that case,
+>> the link is still getting powered down as both the clocks and the
+>> power domains will go down anyway.
+>>
+>> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>
+>> Changes in v2:
+>>   - Rebased over next-20240229
+>>
+>>   drivers/pci/controller/pcie-mediatek-gen3.c | 25 ++++++++++++++-------
+>>   1 file changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> index 975b3024fb08..99b5d7a49be1 100644
+>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+>> @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
+>>   	return err;
+>>   }
+>>   
+>> -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
+>> +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool is_suspend)
+>>   {
+>> +	bool suspend_reset_supported = pcie->mac_reset && pcie->phy_reset;
+>> +
+>>   	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+>>   
+>>   	pm_runtime_put_sync(pcie->dev);
+>>   	pm_runtime_disable(pcie->dev);
+>> -	reset_control_assert(pcie->mac_reset);
+>> +
+>> +	/*
+>> +	 * Assert MAC reset only if we also got a PHY reset, otherwise
+>> +	 * the system will lockup at PM resume time.
+>> +	 */
+>> +	if (is_suspend && suspend_reset_supported)
+>> +		reset_control_assert(pcie->mac_reset);
+>>   
+>>   	phy_power_off(pcie->phy);
+>>   	phy_exit(pcie->phy);
 > 
-> IIUC we're talking about:
+> Wouldn't this power off the shared PHY? Or will the PHY driver make this
+> NO-OP if the PHY is shared, in which case the above two statements could
+> be combined with the other statements in the:
+> if (is_suspend && suspend_reset_supported)
+> condition to get a single block of code that also combines the
+> reset_control_assert(pcie->phy_reset)
+> present below.
 > 
->   arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
->   dt-bindings: PCI: qcom: Allow 'required-opps'
 
-Right.
+No, that'd be fine:
 
-> These don't look like a regression fix (correct me if I'm wrong), and
-> I can't tell whether they fix a user-visible problem, since
-> sc8280xp.dtsi does already contain 'required-opps' for ufs_mem_hc,
-> usb_0, and usb_1, which are mentioned in the commit log as covering up
-> the issue.
+static int mtk_phy_power_off(struct phy *phy)
+{
+	struct mtk_phy_instance *instance = phy_get_drvdata(phy);
+	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
 
-The issue has been there since PCIe support was added for this platform
-and does not cause any issues until the USB and UFS controllers are
-runtime suspended.
+	if (instance->type == PHY_TYPE_USB2)
+		u2_phy_instance_power_off(tphy, instance);
+	else if (instance->type == PHY_TYPE_PCIE)
+		pcie_phy_instance_power_off(tphy, instance);
 
-When that happens nothing is currently making sure that we have enough
-power to run PCIe at gen3 speeds, something which can potentially result
-in system instability (e.g. resets).
+	return 0;
+}
 
-> If these patches wait until v6.9, what badness ensues?
+...it's two different PHY instances that we're dealing with, here :-)
 
-We'd have a few more weeks where users enabling runtime PM for USB on
-the X13s could hit this before we can get the fix backported to stable.
+Cheers,
+Angelo
 
-I could have put some more details in the commit message for the DT
-patch, but I did not think that amending the PCIe binding would be
-controversial. (I guess we can also take the DT fix without waiting for
-the binding update as it has been acked by a DT maintainer even if that
-would result in some DT checker warnings until things are aligned
-again.)
+>> -	reset_control_assert(pcie->phy_reset);
+>> +	if (is_suspend && suspend_reset_supported)
+>> +		reset_control_assert(pcie->phy_reset);
+>>   }
+>>   
+> ...
+> 
+> Regards,
+> Siddharth.
 
-Let me know what you decide regarding getting the whole series into 6.8,
-and then I can spend some more time on rewording, splitting and rebasing
-this series if needed.
 
-Johan
 
