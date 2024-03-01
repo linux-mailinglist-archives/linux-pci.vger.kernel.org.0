@@ -1,155 +1,149 @@
-Return-Path: <linux-pci+bounces-4354-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4355-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D192E86ECA3
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Mar 2024 00:06:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D085186ECF3
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Mar 2024 00:31:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBF801C21DB7
-	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 23:06:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3287B24479
+	for <lists+linux-pci@lfdr.de>; Fri,  1 Mar 2024 23:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3555E5EE7A;
-	Fri,  1 Mar 2024 23:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B8B5EE97;
+	Fri,  1 Mar 2024 23:30:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ct7mAuHN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XeMzM+rv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4A35916A;
-	Fri,  1 Mar 2024 23:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD645EE85
+	for <linux-pci@vger.kernel.org>; Fri,  1 Mar 2024 23:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709334367; cv=none; b=iR2AsbR+aAhTRJlw1BDcRcCBQGbAP8g6FMbxoRb4tfno0ecbrpKpiPGiiqCY78lVeG8VfspY84Sqc0fUMSPcwxHOUOTJaECiQ/JeKMBY1EAJX6KnrEbZ/UCiXSj+ihwJ/zCQMQL5MQ2/NgxEgZQx0AtEqSb4DFe81guoKsVImQM=
+	t=1709335856; cv=none; b=gzwLtl9yBZzlwjGrorCKZUyzZF0RdCrd01Aym6Tt2Plz7uD7veUpRYT1v7e7z4Gp5jzqEFRMrSegW86ECzKMeDfAQaKWT0bS2c2VLD8uLw5e1wux2lPBtAIdpkPVe+Kwr4OtjOOXlUIM7ee0kEY/Y2cgcHAFYFPZ21Ugd6Q++SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709334367; c=relaxed/simple;
-	bh=rKuOkTbxIaJ7x3JYEDBqBkcVG0yonSQhx1eYOaWzU84=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Z6dGaxZiLeMOvSh6hL7sN1xFcQnYhUI0Dr0zslnzNxQc0PnqjSjbYmJbasWLwudOn/uixniL4srcCz/mNHiNCpu7jmo747Hniz8pFQee2qTLBac+g9tV6YKMmS5nzc5yXwA7HrGOLfDjq64bn6ndi163oXISanZERfw7zkEwync=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ct7mAuHN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 646F6C433C7;
-	Fri,  1 Mar 2024 23:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709334366;
-	bh=rKuOkTbxIaJ7x3JYEDBqBkcVG0yonSQhx1eYOaWzU84=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Ct7mAuHN/gO0UJqnRxXYiGbHvIMLwL2elf9hDKrI/f2F4rVp3P+D93s72WDrEKIVA
-	 pH05pek4dTERDqYHll0UwZ2U4Duvuq3ETcGk9IRT7hB4kBWTuwrp/Y9xAmcjc9by95
-	 FvXsF7YlblTr8W5Tz6drpvximdNJIZKwZUm8LzKEQKcwlJfhZBQvHZ9iH09uyfQI7/
-	 s3cYoARcRmNH+yN50aqEh9JtB+M6mXd+ZB5r779Eqy1FldeK2XdVy4h/GKWySeoX59
-	 Ss593U5B7m4iw9LKOcmAgbtfongQI77HPN7s9e7ii5AzJpy08pWhVN+h5zA61qn/rd
-	 FegUt4gOa08Yw==
-Date: Fri, 1 Mar 2024 17:06:04 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Matthew W Carlis <mattc@purestorage.com>,
-	Keith Busch <kbusch@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/3] PCI/DPC: Remove CONFIG_PCIE_EDR
-Message-ID: <20240301230604.GA368825@bhelgaas>
+	s=arc-20240116; t=1709335856; c=relaxed/simple;
+	bh=oTsgYtX6Gj6AhaTLdGdnpkbEZbL/21pDgLzc4k6zfiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=odUJ29Cw6kzFUtN7SeDbc6muCJ2UvpJc6VlGGL2wavHUwLHk3L+OG8DKOwimRTfBabMh1vXWduLCU+TBGpTudjbiPHhDvPtAmbt8cizGN1BY3ByF8fR4lmDw6eCXv0zGba4LGYFDd7UXs+3nZc9jBxXQ9MFoN+qkFKItfpRsMeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XeMzM+rv; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-565ef8af2f5so3884124a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 01 Mar 2024 15:30:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709335853; x=1709940653; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q0+xGO5lvcaJBILqVTCrQfSCz+TNmrxj1N9SZBn9ddo=;
+        b=XeMzM+rvepU5E2D2JgTwo1kOurrSQ+z+Hi4Ce86cBgWiEGOi1mBZCCrMqQkxlGcW4E
+         Qxs7bV9gFIPUSMuyGR19XuLGjC9u7hK9gRMVZSTHtbgvkve7NtnBAHlG8QF+DLm8IaYh
+         CMZllTi4x+TgNfWkqC+6LLOnTodcuGckIXZkdHThDW6rFDJnBbIhUDa7nq1cm8VTzbl+
+         8jp6OciMeeRlDfLZp0a4/cdmn9EOjd6YY6sj0AJG8W4JO1QDqJ6S+KTGFM1wDl32k4jS
+         kMfysVH7UR3UgjrLhtkRvhbYtXmHlm5KWnajXXoHskBfRHneU9VuXohE2LWV6GFEtjGn
+         McOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709335853; x=1709940653;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q0+xGO5lvcaJBILqVTCrQfSCz+TNmrxj1N9SZBn9ddo=;
+        b=RSzuDv24AvB4Q4nErLE/3CWvxFwtoNLPQkKeX4wTrQCw78eT9xB6nDNhufsjoejGFc
+         LScMHW46WDTKZFxBEqHzWrJPEwBtrqHTLxXayEhovm6YJIRVv5ciZv5qJknAwzBJ+rtM
+         wBlcFxAy7bCNerFl26enCzO5SC3YBZvFE1gtaOZeolvLMVJ9xUg2G2g0N1c75z8tSTrU
+         +dI3Cdu3eerImmWLb6O4wtXbxRGO+fbY1w8CLn+NyfDhUArTi+6WN5wAkVSMzsLey281
+         20nXSJ2bSbnYsscGzfVz6naLCaBK3wi0JNTvMoqpX/1XvSi3liXDd4FQSocN79SxdbzA
+         LZJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiVacPt0wrVg2bzEeDcyeJw5+qZtWEeGw5SOdYPM+CnYyqco4kaEwwGQvtGoaEwDXfaMMq7ESMli3cqQVjlrPN6I8+/jWHSJm6
+X-Gm-Message-State: AOJu0Yxmzwoi788f/kICAu4qRC3gk1QRTR/nC8jtzKRV9HvVTW3wU/H8
+	b+Ix6+PmlhSdq7B6sJZIdM9Z4wTiZ1lrtzI/jXlVnNNbydxe4vk+JbkF9IlDQ+g=
+X-Google-Smtp-Source: AGHT+IExL+5hOMeIbqveJaAAJ57Xl60U2dXp/DpxIsvmvzGELA0l6Eqydv4PvM0FA09j4SusZSjAiA==
+X-Received: by 2002:a05:6402:1848:b0:566:a7c0:c8e8 with SMTP id v8-20020a056402184800b00566a7c0c8e8mr2537923edy.12.1709335853144;
+        Fri, 01 Mar 2024 15:30:53 -0800 (PST)
+Received: from [192.168.216.32] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id d18-20020a056402001200b00566d43ed4dasm916955edu.68.2024.03.01.15.30.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Mar 2024 15:30:52 -0800 (PST)
+Message-ID: <7e573e8f-a311-4d72-a0f9-1e6f0ce94b4b@linaro.org>
+Date: Sat, 2 Mar 2024 00:30:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35cafc72-89d2-48d3-ab73-0af4ed2bcac1@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] PCI: dwc: refactor common code
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
+ agross@kernel.org, andersson@kernel.org, mani@kernel.org
+Cc: quic_msarkar@quicinc.com, quic_kraravin@quicinc.com,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Serge Semin <fancer.lancer@gmail.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Josh Triplett <josh@joshtriplett.org>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20240301051220.20917-1-quic_schintav@quicinc.com>
+ <20240301051220.20917-2-quic_schintav@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240301051220.20917-2-quic_schintav@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Feb 25, 2024 at 12:05:12PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 2/22/24 2:15 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > Previous Kconfig allowed the possibility of enabling CONFIG_PCIE_DPC
-> > without CONFIG_PCIE_EDR.  The PCI Firmware Spec, r3.3, sec 4.5.1,
-> > table 4-5, says an ACPI OS that requests control of DPC must also
-> > advertise support for EDR.
-> >
-> > Remove CONFIG_PCIE_EDR and enable the EDR code with CONFIG_PCIE_DPC so that
-> > enabling DPC also enables EDR for ACPI systems.  Since EDR is an ACPI
-> > feature, build edr.o only when CONFIG_ACPI is enabled.  Stubs cover the
-> > case when DPC is enabled without ACPI.
-> >
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/acpi/pci_root.c   |  2 +-
-> >  drivers/pci/pcie/Kconfig  | 14 ++++----------
-> >  drivers/pci/pcie/Makefile |  5 ++++-
-> >  drivers/pci/pcie/dpc.c    | 10 ----------
-> >  include/linux/pci-acpi.h  |  4 ++--
-> >  5 files changed, 11 insertions(+), 24 deletions(-)
-> >
-> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> > index efc292b6214e..bcaf3d3a5e05 100644
-> > --- a/drivers/acpi/pci_root.c
-> > +++ b/drivers/acpi/pci_root.c
-> > @@ -448,7 +448,7 @@ static u32 calculate_support(void)
-> >  		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
-> >  	if (pci_msi_enabled())
-> >  		support |= OSC_PCI_MSI_SUPPORT;
-> > -	if (IS_ENABLED(CONFIG_PCIE_EDR))
-> > +	if (IS_ENABLED(CONFIG_PCIE_DPC))	/* DPC => EDR support */
-> >  		support |= OSC_PCI_EDR_SUPPORT;
+On 1.03.2024 06:11, Shashank Babu Chinta Venkata wrote:
+> Refactor common code from RC(Root Complex) and EP(End Point)
+> drivers and move them to a common repository. This acts as placeholder
+> for common source code for both drivers avoiding duplication.
 > 
-> Since EDR internally touches AER registers, I still think we should
-> make sure OS enables AER support before advertising the EDR support.
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+> ---
 
-I guess you're suggesting that we should make it look like this?
+This "conveniently" conflicts with your colleague's patches..
 
-  if (host_bridge->native_aer && IS_ENABLED(CONFIG_PCIE_DPC))
+https://lore.kernel.org/linux-arm-msm/20240223-opp_support-v7-3-10b4363d7e71@quicinc.com/
 
-That doesn't seem right to me because the implementation note in PCI
-Firmware r3.3, sec 4.6.12, shows the EDR flow when firmware maintains
-control of AER and DPC, i.e., "host_bridge->native_aer" would be
-false.
-
-> >  	return support;
-> > diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> > index 8999fcebde6a..21e98289fbe9 100644
-> > --- a/drivers/pci/pcie/Kconfig
-> > +++ b/drivers/pci/pcie/Kconfig
-> > @@ -137,6 +137,10 @@ config PCIE_DPC
-> >  	  have this capability or you do not want to use this feature,
-> >  	  it is safe to answer N.
-> >  
-> > +	  On ACPI systems, this includes Error Disconnect Recover support,
-> > +	  the hybrid model that uses both firmware and OS to implement DPC,
-> > +	  as specified in the PCI Firmware Specification r3.3.
-> 
-> Nit: Include some section reference?
-
-I basically copied this from the PCIE_EDR help and updated the
-revision number.  But I don't think the firmware spec is a very good
-reference because EDR is defined by ACPI.  There's very little text in
-the ACPI spec about EDR, but the firmware spec does assume you know
-what *is* there.  And the ACPI spec is available to anybody, unlike
-the PCI firmware spec.
-
-+         On ACPI systems, this includes Error Disconnect Recover support,
-+         the hybrid model that uses both firmware and OS to implement DPC,
-+         as specified in ACPI r6.5, sec 5.6.6.
-
-> >  config PCIE_PTM
-> >  	bool "PCI Express Precision Time Measurement support"
-> >  	help
-> > @@ -145,13 +149,3 @@ config PCIE_PTM
-> >  
-> >  	  This is only useful if you have devices that support PTM, but it
-> >  	  is safe to enable even if you don't.
-> > -
-> > -config PCIE_EDR
-> > -	bool "PCI Express Error Disconnect Recover support"
-> > -	depends on PCIE_DPC && ACPI
-> > -	help
-> > -	  This option adds Error Disconnect Recover support as specified
-> > -	  in the Downstream Port Containment Related Enhancements ECN to
-> > -	  the PCI Firmware Specification r3.2.  Enable this if you want to
-> > -	  support hybrid DPC model which uses both firmware and OS to
-> > -	  implement DPC.
+Konrad
 
