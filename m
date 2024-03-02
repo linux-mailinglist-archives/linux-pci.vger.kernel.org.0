@@ -1,53 +1,80 @@
-Return-Path: <linux-pci+bounces-4371-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4372-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 853A286EFE4
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Mar 2024 10:45:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9F4C86F04D
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Mar 2024 12:43:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CD8E284732
-	for <lists+linux-pci@lfdr.de>; Sat,  2 Mar 2024 09:45:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19AE71C218E6
+	for <lists+linux-pci@lfdr.de>; Sat,  2 Mar 2024 11:43:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42E6125B2;
-	Sat,  2 Mar 2024 09:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC7715EA2;
+	Sat,  2 Mar 2024 11:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ta9ctijo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NTlcRcbc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A118B661
-	for <linux-pci@vger.kernel.org>; Sat,  2 Mar 2024 09:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98FE0171A5
+	for <linux-pci@vger.kernel.org>; Sat,  2 Mar 2024 11:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709372752; cv=none; b=Pn/PRbknhVGH36Wt1crmybL+9v0YgZRQMjkykZM1mc12y8lMIl7n6nAdVJCxyEfM2rfzbFi6lo0kfjFyug8PKOoK/V6RYm6CoB4hoXGLLPhajqNcGPRHPY1pQQOVRk3Uaiin02gvMJZ4Ov/lSs3Yb+9fBEj9038li/9UbDO1p/c=
+	t=1709379813; cv=none; b=H/8YkkhFjwW3owssn4lXIAOI4/qZHtyGtCBFv0/XJZ6HVPbeeiMF+4ws0gWfRLL9X9evPMXeF/mWa1FtRKUoflzx2vao1dpC8Q+oTcBRS2z+flAhHClkHsFykJrxoLQH4kN4Hr1oc6HpJst+NmRJmAikk4DSjr+lrPagZWAEpxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709372752; c=relaxed/simple;
-	bh=jlSEwxjnbBmPD2uPin4R7CHQCbkpchaamNZ1uWo55qM=;
+	s=arc-20240116; t=1709379813; c=relaxed/simple;
+	bh=nK66dEg8/qsSkEbp7aoagGukh4FtVJ1oiodaEknFkKI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OvsAcrIz7dSvFq5fqGac19oHTyDTv5bQ8u4ucxAbI4C/A1yhFw0Ze6sj1qS51XjIzZvpUOUsoyMNdBKXMBSyPpTZKOivWw5MCPRNyLKaJnQuFkrF9jxKZrevV3PezMaJFxk5uzH59obHkCyAqQQeAAjjSwjRvQ1WCSInh9ydQsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=ta9ctijo; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1709372721; x=1709977521; i=wahrenst@gmx.net;
-	bh=jlSEwxjnbBmPD2uPin4R7CHQCbkpchaamNZ1uWo55qM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=ta9ctijoNGkXvRC7t5W1pIccIlnq6MOgisUBWopyVeuP9+Jb1oGepzmDF1glVkFt
-	 JirmzcKXktt3ZHAIjdozEYBXf12gppxJKXfhfcJHOvmkNONv/+HKa1DOUT75fICTQ
-	 kyTtk8cwQ5vNmLyNdglohXlBxBzBdpIkR+RwWKVZQ9ge4Llr7I9KF+jPxHKe/WYYk
-	 zqHNvwYRvxgqNIa4OOlGOZkEEbLWqpyaoHVJiBuCnnBqksxyxLVTfsmTzEbN1TtrK
-	 u/o8ZJioKmwbgw7d6Xp8drTkdq2qqee91h1oVRUNIWvksIrRbPZxepGxDoY4Lkww5
-	 STf+Brb9JWCIwE2uUQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mo6ux-1r4V8F3QpH-00pfV4; Sat, 02
- Mar 2024 10:45:20 +0100
-Message-ID: <0553c39b-4f64-4761-9e56-a991333f7fb3@gmx.net>
-Date: Sat, 2 Mar 2024 10:45:19 +0100
+	 In-Reply-To:Content-Type; b=c+rdIOr5uVLGxu6+W0wQAQgP+Bjk/6CGVpmJ7wY/oCxAx2V07gnKCJ0bDj7fCYyk0zqd+w7or7IoFfIs1VnyvAF4tSKu6HnrPNg/aDN7bcLbwJGS0y/UKaJcAoFYB5MDSYSULn6xdubvDRE/ddtz1VtYdpc9ImpLeLvMU9ReEoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NTlcRcbc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709379809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mX0O9HcYO/TJDyoxXlv2pDaG8MJ2VAiV/QfLiCRgihA=;
+	b=NTlcRcbcqdGnMI9n+eT3jhoAOEYt6IPCfEMRQ76fyohloROmySdLDfF50izVGFgsCoN0tA
+	yEvVBxTUrpF0TPXCaZCuXLtjQajGEaNkaOUr4mF8ktWqZkQDl3lqX/oUE4dO0XFG7NjHmT
+	tXJKOmYpK5ngIWUgIeZpu97p7yP5M1g=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-575-7jnzwtL7Ntum250vrPgXcQ-1; Sat, 02 Mar 2024 06:43:28 -0500
+X-MC-Unique: 7jnzwtL7Ntum250vrPgXcQ-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a443f00e9a7so172344866b.1
+        for <linux-pci@vger.kernel.org>; Sat, 02 Mar 2024 03:43:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709379807; x=1709984607;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mX0O9HcYO/TJDyoxXlv2pDaG8MJ2VAiV/QfLiCRgihA=;
+        b=l9Lrwv2rG2O55hCLlvVGA7F7sz8lDWibUiYr0umqEWcj4FXY9JTJg1sxQ4lV6rZLwe
+         J5R0DQqK5G5rbzApt5Ae7wkC5QtYXhRK+XYqeb7V0NP68vk2mghC29z744aQhCmBtxY2
+         VeliSfsxh+kzGLKDTyhXghurHcGT5gLKhSYWPk4mfvtIz49r412Q+jfXgQg5qjL/7uLV
+         9K730bZBEl1SLcy4H42RiyDSBz1WnUuKl4kKw2mek1miaHHU3rRVHMsig/mtjPD0o4UQ
+         cAZuvK4om6La8i5zfzPpT9CVI2dwuMzsWuikbA4RSDznPROYXhnoJ1Gmv8yb+Zy8tiqx
+         Sgmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUt0OoxsI5GrvKaumy6KwPIUQhoFggmsZAV9cTpjLFxqcD9UCxeG/QEzN8AOyXUslJ2YlLElJj9uLqdrPtIcIDzTJPh+AvpiClQ
+X-Gm-Message-State: AOJu0Yzbx9BACZ28dc1SCKc2ljgTLYUe8kQR3MBWniXdYnkf4A10MYhE
+	lIyAcX89thxBe9/LleisZxuTY9P9aXz07p6YkSRi2UyeU8ZKKDlvu6HeFnBHCn498tGONUpEXB8
+	E4HQgfv8mc19oawHE7UxoQcyc4cBrH5dTvkKwLZCCeopTGHKEucUU0dIWTA==
+X-Received: by 2002:a17:907:367:b0:a44:47e3:839b with SMTP id rs7-20020a170907036700b00a4447e3839bmr3238222ejb.10.1709379807229;
+        Sat, 02 Mar 2024 03:43:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEcJEDn78QQxADf3gvnBmKYFcsxzPY4RxxbrxjDbLfZmarbU91oWIlSbafR5x3o6QZpClbdzw==
+X-Received: by 2002:a17:907:367:b0:a44:47e3:839b with SMTP id rs7-20020a170907036700b00a4447e3839bmr3238213ejb.10.1709379806942;
+        Sat, 02 Mar 2024 03:43:26 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id hu17-20020a170907a09100b00a3e881b4b25sm2600283ejc.164.2024.03.02.03.43.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Mar 2024 03:43:26 -0800 (PST)
+Message-ID: <a26554d3-bee9-4030-a06c-f886ba2fffb0@redhat.com>
+Date: Sat, 2 Mar 2024 12:43:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,62 +82,68 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: brcmstb: fix broken brcm_pcie_mdio_write() polling
-Content-Language: en-US
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Cyril Brulebois <kibi@debian.org>
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Jonathan Bell <jonathan@raspberrypi.com>
-References: <20240217133722.14391-1-wahrenst@gmx.net>
- <ba9fa05c-0a3d-4d68-bdb1-d9e6e2c59c78@broadcom.com>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <ba9fa05c-0a3d-4d68-bdb1-d9e6e2c59c78@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6cfeNmMt0s2qU3FciHnuJtjFll/SA4fSLQ3/SWxPoIwL8/AE1jw
- QDMbAnauLUYT/r3PVZPx9VtYnPNDzzsFdpxAwAkJil4DbM9AZSgzazOw6S2MoTqITBKnEgd
- MzgGqicl8V3rQxPz/cYccuOyBwJ+drcqJErE0JkWPb+EDlMef8bsdyG+hwGYvR7s+8w5WUe
- 94QzOItM58uDo73fusNBA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:z5WawOtq8wI=;1Zlll7xou/fxm0abmDPbUD0FTMT
- nbUJR7LIXA0Or2VjsdLW6Zp+fT5IWUZP0tJs86DVf6De7JMgpiFVI9BGaWtj0JR8KKYnPq5Tk
- +HoOwdx+mmU4VfPnx9NmxL2syNLVx8X/E5qE01DpshrAKHGzZCujfF3M6AH2PuMuU1s82RKGY
- ZplEOr31L39pgsae6v5HlmmLWgahktDqwA9qruNEkf+P4L57+rv2eE9x1VW3Ti5w0ffQwFjc+
- fb4FYTXeQXdARKjutvYkbytEHw2ASu8DmEffeHujK9DEap0sFzNpRradLkvWyAVybiInoYHXl
- Y2vYloP9edR7HqR1fznyr3M1mh2a1/kyF7nA07naV9PQToroqxcuJh5PUqMs9B6VWSFwl1c0p
- 3PA9NqF9qYB89bybLIJXQht6m4dDxt0TwoJyh/l7OVvI3VNEbk8GMI2sgNxR/yCbwV3w4eVmv
- zpdHy2OgXNC/NTqP1U4kG09eDYp6eBIe83p+HtH3jS7wL3U+BgchHsu3YtMykpRKh9L/z+Eb1
- /GiDqYkNKuDIzFYX5vAn0XlcYPBcvLh+KW1JHp9RZELF9WxnUfHNyG0IeCt8kJsaoTNQGeTg+
- ZWZs43FjBfBfE4h7vmPG/dYhu5XUaxyidjL17Fnh1nUzmIHIAhcfD2+IMwVm0fNZ/Zi7DQQ/p
- Sk5yRRnep9MxHecCrE0Ou90ldWkuMX7r3AXGAdX3226cB92oXeaw+i9DzhJu5czl/H3iG1Oib
- 01LnNK2iuBr4XwZeY1g81bWsFeGVwfGPWH1aQdIwzgpCjvTJt+i9NHh2B3QaMYuw8gLBkje6g
- i9ev6GaQiL3eeMQCpYOojcEKBUBHRv6kbwXbKgK1Bdzjo=
+Subject: Re: [PATCH v2] platform/x86: p2sb: Defer P2SB device scan when P2SB
+ device has func 0
+Content-Language: en-US, nl
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "danilrybakov249@gmail.com" <danilrybakov249@gmail.com>,
+ Lukas Wunner <lukas@wunner.de>, Klara Modin <klarasmodin@gmail.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240302012813.2011111-1-shinichiro.kawasaki@wdc.com>
+ <gl7rsalwdwdo4rdes6akcnd7llrz75jjje2hchy5cdvzse6vei@367ddi3u6n2e>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <gl7rsalwdwdo4rdes6akcnd7llrz75jjje2hchy5cdvzse6vei@367ddi3u6n2e>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Shinichiro,
 
-Am 17.02.24 um 18:27 schrieb Florian Fainelli:
->
->
-> On 2/17/2024 5:37 AM, Stefan Wahren wrote:
->> From: Jonathan Bell <jonathan@raspberrypi.com>
+Thank you for your work on this.
+
+On 3/2/24 08:28, Shinichiro Kawasaki wrote:
+> On Mar 02, 2024 / 10:28, Shin'ichiro Kawasaki wrote:
+>> The commit 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls
+>> during PCI device probe") triggered repeated ACPI errors on ASUS
+>> VivoBook D540NV-GQ065T [1]. It was confirmed that the P2SB device scan
+>> and remove at the fs_initcall stage triggered the errors.
 >>
->> MDIO_WR_DONE() tests bit 31, which is always 0 (=3D=3Ddone) as
->> readw_poll_timeout_atomic does a 16-bit read. Replace with the readl
->> variant.
+>> To avoid the error, defer the P2SB device scan on the concerned device.
+>> The error was observed on the system with Pentium N4200 in Goldmont micro-
+>> architecture, and on which P2SB has function 0. Then refer to the P2SB
+>> function to decide whether to defer or not.
 >>
->> Fixes: ca5dcc76314d ("PCI: brcmstb: Replace status loops with
->> read_poll_timeout_atomic()")
->> Signed-off-by: Jonathan Bell <jonathan@raspberrypi.com>
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->
-> Excellent catch! Not sure what the real world impact was.
->
-> Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
-is there anything what prevents this patch from being applied?
+>> When the device scan is deferred, do the scan later when p2sb_bar() is
+>> called for the first time. If this first scan is triggered by sysfs
+>> pci bus rescan, deadlock happens. In most cases, the scan happens during
+>> system boot process, then there is no chance of deadlock.
+>>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218531 [1]
+>> Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
+>> Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> 
+> Let me drop this patch. danilrybakov found that the ACPI errors are still
+> reported even with this patch. Will try another fix approach.
+
+Can we not simply just skip scanning function 0 all together when
+on Goldmont? I don't think any drivers actually ask for the bar
+of function 0 on Goldmont ?
+
+This is likely also why we never had the issue with the old p2sb_bar()
+code, because that never touched function 0.
+
+I think this is actually what you did in one of your first test
+patches in the bugzilla, right ?
+
+So maybe audit all the callers of p2sb_bar() and see if any
+caller asks for function 0 on goldmont ?
+
+Let me know if you need help with this audit.
+
+Regards,
+
+Hans
+
 
