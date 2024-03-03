@@ -1,178 +1,96 @@
-Return-Path: <linux-pci+bounces-4380-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4381-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A77F86F6DC
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 20:41:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F9F086F6EA
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 20:50:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 009BA1F212CF
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 19:41:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 233FE282764
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 19:50:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F70979DC1;
-	Sun,  3 Mar 2024 19:41:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA4E7A14A;
+	Sun,  3 Mar 2024 19:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFlGJsi2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAGNpe4v"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6CE79DA8
-	for <linux-pci@vger.kernel.org>; Sun,  3 Mar 2024 19:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA227A12E;
+	Sun,  3 Mar 2024 19:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709494901; cv=none; b=RptC80EvId7+/+iQ6VOwHOC6fu6/d6QZwJpqS7Dis6UHycBhQNCKEikPtCuRQM/aOdfPw3DAmeZXfs7/iBI0HiJIUcZW3CiUr03MngrlPBZQWDQyQ//aHY8npSJcSZOtoqMVKSHUsXvlwViEqHnAvrnWLJhl0vvx1RH8pe9kMjE=
+	t=1709495426; cv=none; b=TJv++ktxGfRj22Eu198VvIDaugT1H219v024FIIFcfuvaUrW5O2poIwrrT4ZXWNrbusCMiRratt8sNXXKXx/FdpHSKNqqiK6EnSh314VWkWbUcxD3ARCjlD+m0jKH1kAIcu5qGe1m8UdvjbMlInhGx7GuTNVFljvAW6o5jrfU0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709494901; c=relaxed/simple;
-	bh=+E5ggpM/hP5EXhzqfsuNKFSQ5CtjgjuoKpGUYJW27cQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dGaYE625zSDjUtDfYo3O88EPtuBccv/bBWW37DThQkXi/DHDetEEruvjNubfyYJaZ021q7QCFOni4bcVyLwaywE2XAirGYYVbbxgEGR9PB76QCaGFx303WKPPAfzNezM792MAcEWTFX4NaF2HLVRNr6gRNFjy2bJDt+YhoxTG/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TFlGJsi2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709494898;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CrZqCaxS9s67B9eUeOozSgFserucqgwctSw84bcfIM8=;
-	b=TFlGJsi2blITaf/kl5Or1BSclqAhmidWOKr7hpeMQuMqpLVV1bslhpsuk7F4qq3lBnV7r8
-	NUVu+5P71z4APD9hcC0rsRds+zpPudZB+2op+722U8e69euShIdVkb1oAR7aWb1EJD1AuW
-	i1mEUi9HTbUiYCno/GmXuEc1Qfk4FsY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-468-YonSfsiiMzSdOHjz8yLP-g-1; Sun, 03 Mar 2024 14:41:36 -0500
-X-MC-Unique: YonSfsiiMzSdOHjz8yLP-g-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a44508b6b22so201899666b.2
-        for <linux-pci@vger.kernel.org>; Sun, 03 Mar 2024 11:41:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709494895; x=1710099695;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CrZqCaxS9s67B9eUeOozSgFserucqgwctSw84bcfIM8=;
-        b=ZvffJcuPSlZC1ZwkggNOkGAGLImF5PBEoFHHSKpvV4oQTvXsE7UEoYIiIMM/2ovMMb
-         bG0oebztRKmXOzelhNvk76mssjoyhhBbkKOCVULwUTPAU8aEQzGSoFZM3tZGxTkgpBCu
-         N1w5ScziWNqUyXsXSv9GGQ6YSght1mgOwnVGO3jMWHXHQ1PvCtfO6ud3DgMIWENGQdmh
-         j6pvM1+Rqj9//3u8+ARgGuu8had1MSYWKoEnSQ1Gzuafr6hRUzAzlDiaZr4yGzoCpK2P
-         C2oHkqyMjgZ60bdAILEAGTP6gHSoyACq56OssdpQSGx0FFbldG/03OsMydXJ5c6blevf
-         M4LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7fFfkrnyxmt2P0SwsrFdUgS6GH+SITv/yjXLnjEuFmN/GrRQPNYhiwzGAqzIxCmFM0Z1YYH46NkHo6r+pNs5bm+UUY6od46GN
-X-Gm-Message-State: AOJu0YzOUjk0U4esm2kyNbrqDAUhzoKkBgYaYH3G17lcy2UGh/GgqGub
-	VeNnCdg7Y9yXJX8R/n6ItPTW15ttTBCQAbfZ8UyfZc1ndO8qTqVGWTUNQ3abCvPTjR+mn7XEaMQ
-	GWFNk8ymj2F/PgKOlg7Yr/qCy5HNEcy+Aa0S3/9V5uyS5H6cHO0KUJD7OJA==
-X-Received: by 2002:a17:906:bc48:b0:a44:958:c3a4 with SMTP id s8-20020a170906bc4800b00a440958c3a4mr4451496ejv.32.1709494895270;
-        Sun, 03 Mar 2024 11:41:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFu1jxPV7cPS+/fsucBMIlB97ZiWQ90zg1WuMlonpMMThfwE6bnawsbVY/blo0sj3F2RYlgDg==
-X-Received: by 2002:a17:906:bc48:b0:a44:958:c3a4 with SMTP id s8-20020a170906bc4800b00a440958c3a4mr4451489ejv.32.1709494894956;
-        Sun, 03 Mar 2024 11:41:34 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id tk2-20020a170907c28200b00a43ab3e38d6sm3933441ejc.114.2024.03.03.11.41.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Mar 2024 11:41:34 -0800 (PST)
-Message-ID: <0f6180b5-92ef-4fb5-8df9-734ec4105c68@redhat.com>
-Date: Sun, 3 Mar 2024 20:41:33 +0100
+	s=arc-20240116; t=1709495426; c=relaxed/simple;
+	bh=NqOpHNUkPpcXOLnh/QWRufn/Ytxmtgs9sizhlMM6yUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rmHHnoHpJdiPaRRKuKDDsVS58YqV9eU+0geFtz4CW6hMPfmbg1rJKX/vBIQvrlcpQ36eDM3H9TEV07RqphxFkbjNJf/I5oFmuP8CkinNqn8bz1L4WUxGtO245QdHeSS+V2B1uLa6LujoG/q9WW0xc7D4Vq99ojluWDnUzHbsyVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAGNpe4v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849B9C433B1;
+	Sun,  3 Mar 2024 19:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709495426;
+	bh=NqOpHNUkPpcXOLnh/QWRufn/Ytxmtgs9sizhlMM6yUU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HAGNpe4vbmCT1lk0B4Ggv5UAZaXI/dje2Dg2hpGp03ESpBowujBmH4jQDaxPIFdZW
+	 mV05WggJJz+JLN4/eE47tWNX2sMbmi9aaHsFkBZocU6jWRx8nA4GVE1fJCdr+SlDTa
+	 f7OA5ay7cvWttsVjGxAYh+iu5b8XvAZBLGqJoE7Lo3wGMmsqIBOe9DEcCoZ9PpRukN
+	 8Y4S+DIVqhZQZXsbnm2VGDljEhN2eYjlTjokfamd/9qbyky71NjEN50Pe8VKtwehao
+	 NCYpbfv8DO9sz6ZdvWylP9Olyde5H4JBXB64ooYa7uBJF9HRIV01kM0mh896st8caw
+	 i7W7iqbID8UJg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Johan Hovold <johan+linaro@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 00/12] arm64: dts: qcom: sc8280xp: PCIe fixes and GICv3 ITS enable
+Date: Sun,  3 Mar 2024 13:50:20 -0600
+Message-ID: <170949540962.78121.423418904639454445.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240223152124.20042-1-johan+linaro@kernel.org>
+References: <20240223152124.20042-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/10] drm/vboxvideo: fix mapping leaks
-Content-Language: en-US, nl
-To: Philipp Stanner <pstanner@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Bjorn Helgaas <bhelgaas@google.com>, Sam Ravnborg <sam@ravnborg.org>,
- dakr@redhat.com
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, stable@kernel.vger.org
-References: <20240301112959.21947-1-pstanner@redhat.com>
- <20240301112959.21947-11-pstanner@redhat.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240301112959.21947-11-pstanner@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-On 3/1/24 12:29, Philipp Stanner wrote:
-> When the PCI devres API was introduced to this driver, it was wrongly
-> assumed that initializing the device with pcim_enable_device() instead
-> of pci_enable_device() will make all PCI functions managed.
+On Fri, 23 Feb 2024 16:21:12 +0100, Johan Hovold wrote:
+> This series addresses a few problems with the sc8280xp PCIe
+> implementation.
 > 
-> This is wrong and was caused by the quite confusing PCI devres API in
-> which some, but not all, functions become managed that way.
+> The DWC PCIe controller can either use its internal MSI controller or an
+> external one such as the GICv3 ITS. Enabling the latter allows for
+> assigning affinity to individual interrupts, but results in a large
+> amount of Correctable Errors being logged on both the Lenovo ThinkPad
+> X13s and the sc8280xp-crd reference design.
 > 
-> The function pci_iomap_range() is never managed.
-> 
-> Replace pci_iomap_range() with the actually managed function
-> pcim_iomap_range().
-> 
-> CC: <stable@kernel.vger.org> # v5.10+
-> Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
-> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> [...]
 
-Thanks, patch looks good to me:
+Applied, thanks!
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+[06/12] arm64: dts: qcom: sc8280xp-crd: limit pcie4 link speed
+        commit: db8138845cebcdd0c709570b8217bd052757b8df
+[07/12] arm64: dts: qcom: sc8280xp-x13s: limit pcie4 link speed
+        commit: 7a1c6a8bf47b0b290c79b9cc3ba6ee68be5522e8
 
-Since this depends on the pcim_iomap_range() function which is new
-in this series and since the vboxvideo code does not see a lot
-of changes I think that it would be best for this patch to be
-merged through the PCI tree together with the rest of the series.
-
-Regards,
-
-Hans
-
-
-> ---
->  drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
->  1 file changed, 9 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-> index 42c2d8a99509..d4ade9325401 100644
-> --- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-> +++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-> @@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
->  	/* Take a command buffer for each screen from the end of usable VRAM. */
->  	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
->  
-> -	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
-> -					     vbox->available_vram_size,
-> -					     vbox->num_crtcs *
-> -					     VBVA_MIN_BUFFER_SIZE);
-> -	if (!vbox->vbva_buffers)
-> -		return -ENOMEM;
-> +	vbox->vbva_buffers = pcim_iomap_range(
-> +			pdev, 0, vbox->available_vram_size,
-> +			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
-> +	if (IS_ERR(vbox->vbva_buffers))
-> +		return PTR_ERR(vbox->vbva_buffers);
->  
->  	for (i = 0; i < vbox->num_crtcs; ++i) {
->  		vbva_setup_buffer_context(&vbox->vbva_info[i],
-> @@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
->  	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
->  
->  	/* Map guest-heap at end of vram */
-> -	vbox->guest_heap =
-> -	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
-> -			    GUEST_HEAP_SIZE);
-> -	if (!vbox->guest_heap)
-> -		return -ENOMEM;
-> +	vbox->guest_heap = pcim_iomap_range(pdev, 0,
-> +			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
-> +	if (IS_ERR(vbox->guest_heap))
-> +		return PTR_ERR(vbox->guest_heap);
->  
->  	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
->  	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
-
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
