@@ -1,206 +1,94 @@
-Return-Path: <linux-pci+bounces-4377-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4378-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD0C986F379
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 04:13:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28DCC86F489
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 11:58:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26A011F218F8
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 03:13:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 356D9B2242B
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 10:58:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1C029AF;
-	Sun,  3 Mar 2024 03:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="g56thN9y";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JZdoEKmB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD6DB664;
+	Sun,  3 Mar 2024 10:57:56 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wfout5-smtp.messagingengine.com (wfout5-smtp.messagingengine.com [64.147.123.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0DA7F;
-	Sun,  3 Mar 2024 03:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.148
+Received: from zg8tmtu5ljg5lje1ms4xmtka.icoremail.net (zg8tmtu5ljg5lje1ms4xmtka.icoremail.net [159.89.151.119])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA190947B;
+	Sun,  3 Mar 2024 10:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.89.151.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709435614; cv=none; b=cxm0zed7rSmXP+iEQR8wMzFyhvcMFatv7OE0Ms4oVi8//EiMkXUFHr0O2WA4F+3u97PiqdlJ+y9lLGqS+DGwwiKuJsZxoreArXiKSUF0FHwSp1uxG9fuR4wFfRZ/o5I6o7D2cRv5voaeUFfeyxo6EZZiiS7fKUUAfAr5LDAyhww=
+	t=1709463475; cv=none; b=ikG6RWvpDe4JEgMrvlmReFKnXAn/wMSU6fnNxFcTxaEPC1WpT4H+dnS1XMOv9aiS0RShGTZRaBv0hd1yy53TtBhdBuGcULJ9OCCfNvkuhSFE22UuskSS0BqVL7alIxhEoU4jzeuiYmqgETQj5K+YsnDCziObPN1hbSziOVib9FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709435614; c=relaxed/simple;
-	bh=aXk/E1VC6Fs0OgESy453uujPe4S0IwfzXYvHOoboVBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ORC1UqFJMfNi83MTgCdZxctQfNwTUHq/inSfFMpJqolCtbfRsguJHSNdgEgUMYlEwYc6ZNKX8DEkoz1HPkAfIXVw2Z+dxPdC5c3BbQnCudHmXzTmsbYrRZfCGpnshqfzSgDHs7HELHC8iQq7dV4ATwA5UfPN811rGKZIODTU8pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=g56thN9y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JZdoEKmB; arc=none smtp.client-ip=64.147.123.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.west.internal (Postfix) with ESMTP id 5E39E1C00098;
-	Sat,  2 Mar 2024 22:13:29 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sat, 02 Mar 2024 22:13:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1709435608; x=
-	1709522008; bh=x/zIFvm0CQkbS31nHrROpDnZxIitaOxufuuqemOeeoA=; b=g
-	56thN9yMkrws8xGyDaGSKHwVuZ4kMUecPnU9XKzKRdUVT5HHdPo6MMHWQhwIl549
-	rfjsRKUOFSUCKHKjOLcYALf3EspIK68zveN/GQeIzeDZtws04UDe0wYh4cghDrkS
-	kb2pngkCtrpXb/NTEAzoXnDAqG5oFRbSSRMb8F6IKFE4jFKlHcEhqL0SmGLkui5w
-	vkalvzFuPFuC3AFxGo63CxfeBO0zzk1zDKVf7uAMsNet8NOdi19gnzOnTqYOipW7
-	lHXLYMVJS+iG9a0d7sDSccIVmXtqVOWaeDrjRhKtMrgT0OdoGHVVJdA+KbGGWadV
-	B/ecHVBZAuXGFrwH/gTXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1709435608; x=1709522008; bh=x/zIFvm0CQkbS31nHrROpDnZxIit
-	aOxufuuqemOeeoA=; b=JZdoEKmB78qtyOaP7kvcwVp6bLWPdKc9aK+tuHZomHw0
-	i4ZFp9QzPXGCbj6tq2xPHEwcxnv9REjmxXxwb6ieyqTXDxh+aIbCJHNt9+3N5vbq
-	uvhjalEPVQ7ZmuGm3cL/pObjQg2saOb94O1rC1e/8QB/4ukGMWFgO6gac4MQBteq
-	Rrl9bFcOI2DjdD4GWTo7bbqTTqDykpkFwuuYKzTx49wzpPaeXZ1s0oQaXZ/BpkYy
-	ehAG/+AKK5UXHxaW14JNdv1ml11i3L4EuOYGi5S9fyMbz+dilB668iZ8BPY/gJiu
-	FWVQFq+l9aA98RxvSyOTAvBmYuEk+E8a0XgJ/mvwFQ==
-X-ME-Sender: <xms:2OrjZXlwGxJF_8Z5amfKDFqZSNuOzTJ2dB6xRhkAbKHwpZGn1fby4A>
-    <xme:2OrjZa21PULy0HF1GaehZsaC94EKFG87JzlhhX55y3yxe2HKwEpfTuJhRwvwLIgKW
-    w73fWeW77d6oUl8D8s>
-X-ME-Received: <xmr:2OrjZdogXB6XBSzJHgSbq0qhfd-xYQAAT7MOuah2uxSlzw5RRx25i_2OefLJTqK-zZ8sTbAfsId0QoI650tUf4A0EA7Dje_nrqE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrheeggdehhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvrghkrghs
-    hhhiucfurghkrghmohhtohcuoehoqdhtrghkrghshhhisehsrghkrghmohgttghhihdrjh
-    hpqeenucggtffrrghtthgvrhhnpeevieelhfdukeffheekffduudevvdefudelleefgeei
-    leejheejuedvgefhteevvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
-    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgrshhh
-    ihesshgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:2OrjZflEmUzagsRxaRlUVzpGCObR0XckM0DrbTjw7Q75jzn3X2gs2A>
-    <xmx:2OrjZV3YCREY7mQnLSTab-FxMyRat9ZH9i2tQ-rBGpMhSIsTtZxB-g>
-    <xmx:2OrjZetJN7bqh_FmkurZoaHIvXSNFNgE_P0z5meYi8bOSsceHI9fSQ>
-    <xmx:2OrjZQTZBWIyxiXJsXwsyLeMVz-c-tbwfCJL4j80vDc2r8lqXJFn6yFEGHM>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 2 Mar 2024 22:13:27 -0500 (EST)
-Date: Sun, 3 Mar 2024 12:13:25 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Edmund Raile <edmund.raile@proton.me>
-Cc: linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] firewire: ohci: prevent leak of left-over IRQ on
- unbind
-Message-ID: <20240303031325.GA40441@workstation.local>
-Mail-Followup-To: Edmund Raile <edmund.raile@proton.me>,
-	linux-kernel@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-	linux-pci@vger.kernel.org
-References: <20240229101236.8074-1-edmund.raile@proton.me>
- <20240229144723.13047-2-edmund.raile@proton.me>
- <20240301044024.GA37429@workstation.local>
- <wrcvrmxqfy2zfpbcgoy4txqmzcoyptzvctzymztlp55gasu2fg@tyudozxoyvzo>
+	s=arc-20240116; t=1709463475; c=relaxed/simple;
+	bh=7I1M0XKAfIrhItJO/PERH8zWFQjuo/z2v7W4UV2ieXg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=jn3zir5SabL5uFK7VdpHSMKh6wSHj/hhJIdqkOi2X19QcxH+N4x2oeIM54fOrp5nC5RiKDj50P6BNHorRi+W84+RajKMUsRx6fDO8ahT4Dxi2QLeq75GgnYNsFsgDT6jbwe9i9unvnKeP8CUHyrFS2j9Cho5FDay8NBhOzERp/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=159.89.151.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [218.12.16.66])
+	by mail-app2 (Coremail) with SMTP id by_KCgD3OqqZV+RlIRuXAg--.47332S2;
+	Sun, 03 Mar 2024 18:57:38 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	bhelgaas@google.com,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH] PCI: of_property: handle int_map allocation failure
+Date: Sun,  3 Mar 2024 18:57:29 +0800
+Message-Id: <20240303105729.78624-1-duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:by_KCgD3OqqZV+RlIRuXAg--.47332S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWDJF1DKw1rZr47XFy8uFg_yoWDXwc_ur
+	ykZ3Z7Cr4UCrnagr1Utan3XrZ7C3W8ZFs3uFn3tFyfCry7ursYqrnrZ3s5JFs7G3yxAF95
+	ta4UArn5Cr1xWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gw1l
+	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+	6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoo7KDUUUU
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIIAWXjdVMBCAA0sV
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <wrcvrmxqfy2zfpbcgoy4txqmzcoyptzvctzymztlp55gasu2fg@tyudozxoyvzo>
 
-Hi,
+The kcalloc() in of_pci_prop_intr_map() will return null if
+the physical memory has run out. As a result, both int_map
+and mapp will point to the null area. If we dereference mapp,
+the null pointer dereference bugs will happen.
 
-(C.C.ed to the list of PCI SUBSYSTEM.)
+Return -ENOMEM from of_pci_prop_intr_map() if kcalloc() fails
+for int_map.
 
-On Sat, Mar 02, 2024 at 04:52:06PM +0000, Edmund Raile wrote:
-> > In my opinion, the devres mechanism releases the allocated memory when
-> > releasing the data of associated device structure.
-> > device_release_driver_internal()
-> > ->__device_release_driver()
-> >   ->device_unbind_cleanup()
-> >     (drivers/base/devres.c)
-> >     ->devres_release_all(dev);
-> >       ->release_nodes()
-> >         (kernel/irq/devres.c)
-> > 	->free_irq()
-> 
-> Looking at __device_release_driver() in drivers/base/dd.c,
-> device_remove() gets called, leading to dev->bus->remove(dev),
-> which likely calls our good old friend from the call trace:
-> pci_device_remove().
-> 
-> > > Call Trace:
-> > >  ? remove_proc_entry+0x19c/0x1c0
-> > >  ? __warn+0x81/0x130
-> > >  ? remove_proc_entry+0x19c/0x1c0
-> > >  ? report_bug+0x171/0x1a0
-> > >  ? console_unlock+0x78/0x120
-> > >  ? handle_bug+0x3c/0x80
-> > >  ? exc_invalid_op+0x17/0x70
-> > >  ? asm_exc_invalid_op+0x1a/0x20
-> > >  ? remove_proc_entry+0x19c/0x1c0
-> > >  unregister_irq_proc+0xf4/0x120
-> > >  free_desc+0x3d/0xe0
-> > >  ? kfree+0x29f/0x2f0
-> > >  irq_free_descs+0x47/0x70
-> > >  msi_domain_free_locked.part.0+0x19d/0x1d0
-> > >  msi_domain_free_irqs_all_locked+0x81/0xc0
-> > >  pci_free_msi_irqs+0x12/0x40
-> > >  pci_disable_msi+0x4c/0x60
-> > >  pci_remove+0x9d/0xc0 [firewire_ohci
-> > >      01b483699bebf9cb07a3d69df0aa2bee71db1b26]
-> > >  pci_device_remove+0x37/0xa0
-> > >  device_release_driver_internal+0x19f/0x200
-> > >  unbind_store+0xa1/0xb0
-> 
-> Then in ohci.c's pci_remove(), we kill the MSIs, which leads to
-> the removal of the IRQ, etc.
-> Back in __device_release_driver(), after device_remove(),
-> device_unbind_cleanup() is called, leading to free_irq(), but too late.
-> 
-> I think the order of these calls may be our issue but I doubt it
-> has been done like this without good reason.
-> That code is 8 years old, someone would have noticed if it had an error.
+Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+---
+ drivers/pci/of_property.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Now I got the point. Before optimizing to device managing resource, the
-1394 OHCI driver called `free_irq()` then `pci_disable_msi()` in the
-.remove() callback. So the issue did not occur. At present, the order is
-reversed, as you find.
+diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+index c2c7334152b..03539e50537 100644
+--- a/drivers/pci/of_property.c
++++ b/drivers/pci/of_property.c
+@@ -238,6 +238,8 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev, struct of_changeset *ocs,
+ 		return 0;
+ 
+ 	int_map = kcalloc(map_sz, sizeof(u32), GFP_KERNEL);
++	if (!int_map)
++		return -ENOMEM;
+ 	mapp = int_map;
+ 
+ 	list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+-- 
+2.17.1
 
-To be honestly, I have little knowledge about current implementation of
-PCIe MSI operation and the current best-practice in Linux PCI subsystem.
-I've just replaced the old implementation of the driver with the
-relevant APIs, so I need to consult someone about the issue.
-
-> I could be entirely wrong but the function description in
-> /kernel/irq/devres.c tells me that function is meant to be used:
-> 
-> > Except for the extra @dev argument, this function takes the
-> > same arguments and performs the same function as free_irq().
-> > This function instead of free_irq() should be used to manually
-> > free IRQs allocated with devm_request_irq().
-> 
-> And while devm_request_irq() has no function description of its own, its
-> sister devm_request_threaded_irq() mentions this:
-> 
-> > IRQs requested with this function will be
-> > automatically freed on driver detach.
-> > 
-> > If an IRQ allocated with this function needs to be freed
-> > separately, devm_free_irq() must be used.
-> 
-> Should we pull in the maintainers of dd.c for their opinion?
-> 
-> Thank you very much for all the very hard work you do Sakamoto-Sensei!
-
-Indeed. If the current implementation of PCIe MSI requires the call of
-`free_irq()` (or something) before calling `pci_disable_msi()`, it
-should be documented. But we can also see the `pci_disable_msi()` is
-legacy API in PCIe MSI implementation[1]. I guess that the extra care of
-order to call these two functions would be useless nowadays by some
-enhancement.
-
-
-[1] https://docs.kernel.org/PCI/msi-howto.html#legacy-apis
-
-Thanks
-
-Takashi Sakamoto
 
