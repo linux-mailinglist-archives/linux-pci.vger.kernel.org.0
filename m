@@ -1,80 +1,80 @@
-Return-Path: <linux-pci+bounces-4379-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4380-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6072786F6D6
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 20:35:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A77F86F6DC
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 20:41:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D8E391F211DB
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 19:35:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 009BA1F212CF
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Mar 2024 19:41:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C17C0768E5;
-	Sun,  3 Mar 2024 19:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F70979DC1;
+	Sun,  3 Mar 2024 19:41:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RP/SGSZM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFlGJsi2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F42276402
-	for <linux-pci@vger.kernel.org>; Sun,  3 Mar 2024 19:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6CE79DA8
+	for <linux-pci@vger.kernel.org>; Sun,  3 Mar 2024 19:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709494510; cv=none; b=BQwWdZClamlgvuL/wDSLSOBlHdACi8N07aw6N7e+5gKihS/CmzLPz70f/VNb91PzjYeEKsZNEsu1l7mNEwTgB3X6Z6wYRR+Gu2sgMxgQvd4WmWtiCmRJ7wjjNTgOVtbfIvgjOBAsNS2EUa7/8VzR4TxzSe5yL6q0eqfuFSrse3w=
+	t=1709494901; cv=none; b=RptC80EvId7+/+iQ6VOwHOC6fu6/d6QZwJpqS7Dis6UHycBhQNCKEikPtCuRQM/aOdfPw3DAmeZXfs7/iBI0HiJIUcZW3CiUr03MngrlPBZQWDQyQ//aHY8npSJcSZOtoqMVKSHUsXvlwViEqHnAvrnWLJhl0vvx1RH8pe9kMjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709494510; c=relaxed/simple;
-	bh=FOZMBhoQFjMTOzeAEwtDwCCnhFwPAXF22Ux8FV5GfcU=;
+	s=arc-20240116; t=1709494901; c=relaxed/simple;
+	bh=+E5ggpM/hP5EXhzqfsuNKFSQ5CtjgjuoKpGUYJW27cQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ENMy8vA3UsDYFW1NmMogoPH7siGRxNRdlwADjNNy6uR9QIEGjN5rY0rCcJrJWNNq0Sb//i6J1991QR+8KXDEuh35AUS9NzjHaqqN/sAl5mlmm//dP1gdTrFyQrXGapdhTMYrTNi/Zju/iAQAQmJfjVombV206V8cRNd6Hgb4WPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RP/SGSZM; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=dGaYE625zSDjUtDfYo3O88EPtuBccv/bBWW37DThQkXi/DHDetEEruvjNubfyYJaZ021q7QCFOni4bcVyLwaywE2XAirGYYVbbxgEGR9PB76QCaGFx303WKPPAfzNezM792MAcEWTFX4NaF2HLVRNr6gRNFjy2bJDt+YhoxTG/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TFlGJsi2; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709494507;
+	s=mimecast20190719; t=1709494898;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fmM6euBgk7sKjR9y+kZziDjsPjVPCkf2jEPQ1Pkeqb4=;
-	b=RP/SGSZMaYSO1z9ZCAOLA4GqYpDjHhYYHTLJedoH6H7mCWQ4F55GSTikCsR3fzfDbKsz28
-	oKVXVgSHCWROcCL9o1j5LwFP2k+mVF4qf9QfNYE+z0zbx1yRDHiMA/cukrZkzLNZ7GCBWJ
-	lO/igRot2K5tgcgtXDHeKpGfOIRZtHc=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=CrZqCaxS9s67B9eUeOozSgFserucqgwctSw84bcfIM8=;
+	b=TFlGJsi2blITaf/kl5Or1BSclqAhmidWOKr7hpeMQuMqpLVV1bslhpsuk7F4qq3lBnV7r8
+	NUVu+5P71z4APD9hcC0rsRds+zpPudZB+2op+722U8e69euShIdVkb1oAR7aWb1EJD1AuW
+	i1mEUi9HTbUiYCno/GmXuEc1Qfk4FsY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-350-D7fK9t1JP1aq8Vj6qzuYkA-1; Sun, 03 Mar 2024 14:35:03 -0500
-X-MC-Unique: D7fK9t1JP1aq8Vj6qzuYkA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a45447fec91so17215366b.1
-        for <linux-pci@vger.kernel.org>; Sun, 03 Mar 2024 11:35:03 -0800 (PST)
+ us-mta-468-YonSfsiiMzSdOHjz8yLP-g-1; Sun, 03 Mar 2024 14:41:36 -0500
+X-MC-Unique: YonSfsiiMzSdOHjz8yLP-g-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a44508b6b22so201899666b.2
+        for <linux-pci@vger.kernel.org>; Sun, 03 Mar 2024 11:41:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709494502; x=1710099302;
+        d=1e100.net; s=20230601; t=1709494895; x=1710099695;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fmM6euBgk7sKjR9y+kZziDjsPjVPCkf2jEPQ1Pkeqb4=;
-        b=DE3ZLEdW3CotK4mIn83+8OG+erLhnBWFkWs38aO79M9ewSGxiYKmkutj5K5Pb7Zll/
-         NexYGfPdEzGUc659WSHzu2mc935YVy/yGgdPSCqN5cnCtfKVOfGRA8zm0xgWKlu14X39
-         vcABgiarX2HHoNcjkueH3aBAeXM4jzqm4pTRUfDxHvHBJ5I8eQjRX5nj9PzvXj0Dp3UA
-         ySOuLCUdfpoL2W847CyvnYfkunJLrA2Ef4jGfZyqoO5uX0/HcSzoFY6y3M8NTWxrnkeZ
-         GIUeJOnc83+J54fUCH0nVeGKecmBTv3RagTq+NZeRGV4S2mp793WOjv4FqAthgLGRmDK
-         xROg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4XMhanVn6i0sU6v82icTnh9VTid+y4ctxdzh4UVHfIj22e4TyclgY8BG+r9lYA0HthxhQQl9qW7Qw6fe5Woa2h8x6CQswXV3I
-X-Gm-Message-State: AOJu0YzmarVaT1wRkWANRWXGT46LuZr9BYt/Ys/QQRlij3qG3KGUhLxe
-	o9GwX0TnuuqjU10eCPM5bYxIkIegDZbahMDVnJNaKcQFWqIw6fD3sUy7okQoxnY8HJMXQS2LPRZ
-	zU5us9mtMu9qjbkdvupnY2tDETu7SItayTgIqI99NPsxtBodGHcugJxvsJg==
-X-Received: by 2002:a17:906:24d7:b0:a45:fdf:1e68 with SMTP id f23-20020a17090624d700b00a450fdf1e68mr1634304ejb.33.1709494502391;
-        Sun, 03 Mar 2024 11:35:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGyyynbOGBqGy2HD/NUVB2yu4fKwyCdDbTA5Qbdil0nPmifaM3+/RbS12eUKpAxRG108Bye+A==
-X-Received: by 2002:a17:906:24d7:b0:a45:fdf:1e68 with SMTP id f23-20020a17090624d700b00a450fdf1e68mr1634293ejb.33.1709494502019;
-        Sun, 03 Mar 2024 11:35:02 -0800 (PST)
+        bh=CrZqCaxS9s67B9eUeOozSgFserucqgwctSw84bcfIM8=;
+        b=ZvffJcuPSlZC1ZwkggNOkGAGLImF5PBEoFHHSKpvV4oQTvXsE7UEoYIiIMM/2ovMMb
+         bG0oebztRKmXOzelhNvk76mssjoyhhBbkKOCVULwUTPAU8aEQzGSoFZM3tZGxTkgpBCu
+         N1w5ScziWNqUyXsXSv9GGQ6YSght1mgOwnVGO3jMWHXHQ1PvCtfO6ud3DgMIWENGQdmh
+         j6pvM1+Rqj9//3u8+ARgGuu8had1MSYWKoEnSQ1Gzuafr6hRUzAzlDiaZr4yGzoCpK2P
+         C2oHkqyMjgZ60bdAILEAGTP6gHSoyACq56OssdpQSGx0FFbldG/03OsMydXJ5c6blevf
+         M4LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7fFfkrnyxmt2P0SwsrFdUgS6GH+SITv/yjXLnjEuFmN/GrRQPNYhiwzGAqzIxCmFM0Z1YYH46NkHo6r+pNs5bm+UUY6od46GN
+X-Gm-Message-State: AOJu0YzOUjk0U4esm2kyNbrqDAUhzoKkBgYaYH3G17lcy2UGh/GgqGub
+	VeNnCdg7Y9yXJX8R/n6ItPTW15ttTBCQAbfZ8UyfZc1ndO8qTqVGWTUNQ3abCvPTjR+mn7XEaMQ
+	GWFNk8ymj2F/PgKOlg7Yr/qCy5HNEcy+Aa0S3/9V5uyS5H6cHO0KUJD7OJA==
+X-Received: by 2002:a17:906:bc48:b0:a44:958:c3a4 with SMTP id s8-20020a170906bc4800b00a440958c3a4mr4451496ejv.32.1709494895270;
+        Sun, 03 Mar 2024 11:41:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFu1jxPV7cPS+/fsucBMIlB97ZiWQ90zg1WuMlonpMMThfwE6bnawsbVY/blo0sj3F2RYlgDg==
+X-Received: by 2002:a17:906:bc48:b0:a44:958:c3a4 with SMTP id s8-20020a170906bc4800b00a440958c3a4mr4451489ejv.32.1709494894956;
+        Sun, 03 Mar 2024 11:41:34 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j22-20020a170906475600b00a449d6184dasm2642103ejs.6.2024.03.03.11.35.01
+        by smtp.gmail.com with ESMTPSA id tk2-20020a170907c28200b00a43ab3e38d6sm3933441ejc.114.2024.03.03.11.41.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Mar 2024 11:35:01 -0800 (PST)
-Message-ID: <7935add6-a643-43dd-82a8-b7bcfb94d297@redhat.com>
-Date: Sun, 3 Mar 2024 20:35:01 +0100
+        Sun, 03 Mar 2024 11:41:34 -0800 (PST)
+Message-ID: <0f6180b5-92ef-4fb5-8df9-734ec4105c68@redhat.com>
+Date: Sun, 3 Mar 2024 20:41:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,173 +82,97 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: p2sb: Defer P2SB device scan when P2SB
- device has func 0
+Subject: Re: [PATCH v4 10/10] drm/vboxvideo: fix mapping leaks
 Content-Language: en-US, nl
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "danilrybakov249@gmail.com" <danilrybakov249@gmail.com>,
- Lukas Wunner <lukas@wunner.de>, Klara Modin <klarasmodin@gmail.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20240302012813.2011111-1-shinichiro.kawasaki@wdc.com>
- <gl7rsalwdwdo4rdes6akcnd7llrz75jjje2hchy5cdvzse6vei@367ddi3u6n2e>
- <a26554d3-bee9-4030-a06c-f886ba2fffb0@redhat.com>
- <r6ezdjqb5hz5jvvaj2beyulr2adwht2sonxw3bhcjdvwduyt66@2hlsmnppfsk2>
+To: Philipp Stanner <pstanner@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Bjorn Helgaas <bhelgaas@google.com>, Sam Ravnborg <sam@ravnborg.org>,
+ dakr@redhat.com
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, stable@kernel.vger.org
+References: <20240301112959.21947-1-pstanner@redhat.com>
+ <20240301112959.21947-11-pstanner@redhat.com>
 From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <r6ezdjqb5hz5jvvaj2beyulr2adwht2sonxw3bhcjdvwduyt66@2hlsmnppfsk2>
+In-Reply-To: <20240301112959.21947-11-pstanner@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Shinichiro,
+Hi,
 
-On 3/3/24 00:37, Shinichiro Kawasaki wrote:
-> On Mar 02, 2024 / 12:43, Hans de Goede wrote:
-
-<snip>
-
->> Can we not simply just skip scanning function 0 all together when
->> on Goldmont? I don't think any drivers actually ask for the bar
->> of function 0 on Goldmont ?
+On 3/1/24 12:29, Philipp Stanner wrote:
+> When the PCI devres API was introduced to this driver, it was wrongly
+> assumed that initializing the device with pcim_enable_device() instead
+> of pci_enable_device() will make all PCI functions managed.
 > 
-> Hi Hans, thank you for the idea. If we can take this appraoch, the fix patch
-> will be simpler.
+> This is wrong and was caused by the quite confusing PCI devres API in
+> which some, but not all, functions become managed that way.
 > 
->>
->> This is likely also why we never had the issue with the old p2sb_bar()
->> code, because that never touched function 0.
->>
->> I think this is actually what you did in one of your first test
->> patches in the bugzilla, right ?
+> The function pci_iomap_range() is never managed.
 > 
-> To be precise, the first test patch did P2SB scan only for the function 2.
-> To make sure your idea works, it's the better to test to scan all the function
-> numbers except 0, from 1 to 7.
+> Replace pci_iomap_range() with the actually managed function
+> pcim_iomap_range().
 > 
->>
->> So maybe audit all the callers of p2sb_bar() and see if any
->> caller asks for function 0 on goldmont ?
->>
->> Let me know if you need help with this audit.
-> 
-> Help for the audit will be appreciated.
-> 
-> With the quick grep for p2sb_bar() [2], there are five p2sb_bar() callers:
+> CC: <stable@kernel.vger.org> # v5.10+
+> Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 
-Ack, I have found the same 5 callers, let go over them one by one:
+Thanks, patch looks good to me:
 
->  1) edac/pnd2_edac             devfn = 0
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Hmm, ok so this one binds based on CPU-ids:
-
-static const struct x86_cpu_id pnd2_cpuids[] = {
-        X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,       &apl_ops),
-        X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,     &dnv_ops),
-        { }
-};
-MODULE_DEVICE_TABLE(x86cpu, pnd2_cpuids);
-
-And the 0 passed here will get replaced by PCI_DEVFN(13, 0),
-so there goes my theory of p2sb() never being called for
-function 0.
-
-So I have taken a quick look at your latest patch from:
-https://bugzilla.kernel.org/show_bug.cgi?id=218531
-
-I think that skipping the caching at fs_initcall() on goldmont
-is a good idea.
-
-But you still cache *all* the bars for goldmont on the first
-p2sb_bar(bus, 0, &res) call .
-
-If we delay caching the bars till there first use, why not
-just do that for all the bars and also drop p2sb_scan_and_cache()
-which for non goldmont is equivalent to p2sb_scan_and_cache_devfn()
-but on goldmont caches all the functions.
-
-Since you now delay caching (on goldmont) to the first p2sb_bar()
-call I think that you can just drop p2sb_scan_and_cache()
-altogether and just directly call p2sb_scan_and_cache_devfn()
-in its place.
-
-This means that on goldmont where both the p2sb devfn
-PCI_DEVFN(13, 0) and the SPI controller PCI_DEVFN(13, 2)
-are used we end up going through p2sb_cache_resources()
-twice, assuming both are actually requested at least once.
-But with your current patch this will also happen when
-PCI_DEVFN(13, 2) gets requested first because then
-p2sb_scan_and_cache() will enter the "not function 0"
-path and only cache the one resource.
-
-So I think that it would make things more KISS if
-p2sb_bar() always only caches the requested devfn bar0
-instead of treating function0 special as it does now.
-
-Also talking about making things more KISS, how
-about completely dropping the fs_initcall and
-simply always delay the caching of a devfn until
-the first call of p2sb_bar() for that devfn ?
-
-That way fixing the issue will also actually reduce /
-simplify the code :)
+Since this depends on the pcim_iomap_range() function which is new
+in this series and since the vboxvideo code does not see a lot
+of changes I think that it would be best for this patch to be
+merged through the PCI tree together with the rest of the series.
 
 Regards,
 
 Hans
 
 
-p.s.
-
-FWIW here is a quick analysis of the other callers:
-
->  2) i2c/busses/i2c-i801        devfn = 0
-
-Goldmont platforms use PCI_DEVICE_ID_INTEL_BROXTON_SMBUS for the i801
-i2c adapter and that does not have FEATURE_TCO_* set in its
-feature flags so the p2sb_bar() call there is never made
-on broxton.
-
->  3) mfd/lpc_ich for pinctrl    devfn = 0
-
-This one is made on Apollo Lake devices, which use goldmont
-CPU cores, so this is another case where function 0 is
-actually queried through p2sb_bar()...
-
->  4) mfd/lpc_ich for spi        devfn = PCI_DEVFN(13, 2)
-
-Not function 0.
-
->  5) watchdog/simatic-ipc-wdt   devfn = 0
-
-This is actually a similar usage to the mfd/lpc_ich to get
-to the GPIO controller when its not exported through ACPI,
-but before the code switched to the p2sb_bar() helper it
-was looking at PCI_DEVFN(31, 1), so this does not run
-on goldmont.
-
-Regards,
-
-Hans
-
-
-
-
+> ---
+>  drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
 > 
-> [2]
-> 
-> $ git grep p2sb_bar
-> drivers/edac/pnd2_edac.c:                       ret = p2sb_bar(NULL, 0, &r);
-> drivers/i2c/busses/i2c-i801.c:  ret = p2sb_bar(pci_dev->bus, 0, res);
-> drivers/mfd/lpc_ich.c:  ret = p2sb_bar(dev->bus, 0, &base);
-> drivers/mfd/lpc_ich.c:          ret = p2sb_bar(dev->bus, PCI_DEVFN(13, 2), res);
-> drivers/platform/x86/p2sb.c: * p2sb_bar - Get Primary to Sideband (P2SB) bridge device BAR
-> drivers/platform/x86/p2sb.c:int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-> drivers/platform/x86/p2sb.c:EXPORT_SYMBOL_GPL(p2sb_bar);
-> drivers/watchdog/simatic-ipc-wdt.c:             ret = p2sb_bar(NULL, 0, res);
-> include/linux/platform_data/x86/p2sb.h:int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem);
-> include/linux/platform_data/x86/p2sb.h:static inline int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
-> 
+> diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
+> index 42c2d8a99509..d4ade9325401 100644
+> --- a/drivers/gpu/drm/vboxvideo/vbox_main.c
+> +++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
+> @@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
+>  	/* Take a command buffer for each screen from the end of usable VRAM. */
+>  	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
+>  
+> -	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
+> -					     vbox->available_vram_size,
+> -					     vbox->num_crtcs *
+> -					     VBVA_MIN_BUFFER_SIZE);
+> -	if (!vbox->vbva_buffers)
+> -		return -ENOMEM;
+> +	vbox->vbva_buffers = pcim_iomap_range(
+> +			pdev, 0, vbox->available_vram_size,
+> +			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
+> +	if (IS_ERR(vbox->vbva_buffers))
+> +		return PTR_ERR(vbox->vbva_buffers);
+>  
+>  	for (i = 0; i < vbox->num_crtcs; ++i) {
+>  		vbva_setup_buffer_context(&vbox->vbva_info[i],
+> @@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
+>  	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
+>  
+>  	/* Map guest-heap at end of vram */
+> -	vbox->guest_heap =
+> -	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
+> -			    GUEST_HEAP_SIZE);
+> -	if (!vbox->guest_heap)
+> -		return -ENOMEM;
+> +	vbox->guest_heap = pcim_iomap_range(pdev, 0,
+> +			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
+> +	if (IS_ERR(vbox->guest_heap))
+> +		return PTR_ERR(vbox->guest_heap);
+>  
+>  	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
+>  	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
 
 
