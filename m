@@ -1,218 +1,175 @@
-Return-Path: <linux-pci+bounces-4450-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4451-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0318E87063A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 16:52:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69C96870634
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 16:51:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86C90B2BB53
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 15:41:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24DF0281433
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 15:51:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACB85A793;
-	Mon,  4 Mar 2024 15:36:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DBD147A7A;
+	Mon,  4 Mar 2024 15:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DkCG7exs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kk42QveN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6095A10B;
-	Mon,  4 Mar 2024 15:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25C747793;
+	Mon,  4 Mar 2024 15:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709566606; cv=none; b=B/g/NQKrzL0i8u001ozC83Q2CHiEl/kqtJXPRN3uQX9IRcdhktZi5OdtYoWdGPGlCdK6S4Cob9knlUxdMC6WduAzDXPZwUgsUSl7u6kvJyVO1lkC+7mEworHup1ZJ4LeEJYSebye99laMbuVB8xuRMeh22PRy+MvaIRVViJ7yPY=
+	t=1709567501; cv=none; b=h2l8FoNhRhW7Jz81BtB09fUi7n+yve4YeJh3uoyjsYws5EFo/UfZygZgoDouMMiaR7EopdYL7Osh3mdtMO1WNh69Y8+eB6dWYVurCU0cV1TpgMW/ZdXa+ip5YcgGeVTvSkSdozXbJKDVlr/i4SK7JOEz+nakUzoBr+vVa26fPEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709566606; c=relaxed/simple;
-	bh=/JaCgmvn7UffcKtiKZ8KnVu2ThvlYf/H+nfsZaXvtrs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bEus+0azwGKvDxi7ocx/giV6akC/oPRsyRmxzCD6PiDkSGTar6wTX6KA/iDJ0h52WcMD4fvk2IMDaucu57dzAsfRapmCQL7uX7DM5d+hiTL2nqo9lB5bRW5y4Yl/7+UtQ8IK03GzvrGLiISKUWDLDqRL2yMqEv7y8sZFhvLK6EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DkCG7exs; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C85DC1BF20D;
-	Mon,  4 Mar 2024 15:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709566602;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s6E/Ne64c6+x0FpS9CVe8d7lEAGfcFSrGEubkDw5WnM=;
-	b=DkCG7exsY9UG0LnSnUH7x6xVnM2DPQ1Lj6I2RzBY+M7bkhHNhhakHh7CoGAHXYsXcvlGbq
-	A4ejNjPUVEZWsUjN2ioBLevD96g9DYAkOMpX7opwl8btRLw7jmFxXMP/bauJTQo844czGL
-	OSe/8J5KC3IpIFWpHreXS9ou4YhhpN0nCNBtkCj/ruw3mJOxuLyXilxeDtASBR76Qigb6K
-	B114owohauREEMF/fDdF5MUh0CSC+C5D2QJqkBiZCrO6hRngqjLDG85AFBezRdn59uE0IG
-	3Rwp0QtrYvsmiBlp+g4K7wa2jNHudKR/F5DFFBkYT9eyk43BYTXkAVvLynrQSw==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Mon, 04 Mar 2024 16:36:01 +0100
-Subject: [PATCH v4 18/18] PCI: j721e: Add suspend and resume support
+	s=arc-20240116; t=1709567501; c=relaxed/simple;
+	bh=c+8XYXTL4MNDkZflKTWBzR1Wk2Ypz56BlkcuwFEXZhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=F13VxvXhV7E9dx7PLYfP3VrG2UJmoMGEjsG9IdrG3yNOGO3yuLqjMEVq3vFHdDE3PbM/jmJ1w/gqo/J0tLBD9gV7HM8YUC84IV7BlNWV4VchkoeaawVr6GBXohnC9gYOB3MXxytuoNceQG28r1LRFmuiA/5cVFzzH4bmFxYwZco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kk42QveN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44784C433C7;
+	Mon,  4 Mar 2024 15:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709567500;
+	bh=c+8XYXTL4MNDkZflKTWBzR1Wk2Ypz56BlkcuwFEXZhc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kk42QveNYWswu6Cne4CcCQ3NKRd8OSuCmtYXC+2wpbtLZf4gPV1H/XXREaZ7AKlLF
+	 0uXBJhrkiNJjJnTQGMwP42tFVzNHRauOLuQryNkOgU1dkytxhyzOxGXKZ4LwyqIi6y
+	 Cx4qnPxwQVj7T2CeUZqQA/o4MD79tUopgx61rU5eouVPcDPA4/EZwyYdahLRPDFkOV
+	 wPA2BPOZWst75iRJrhZ8KSxINI5yI1L28rPcapdSaJys/ZzSM5ABgDiOj+3PTHfUdt
+	 QhSBd3EHrKAWIMf7w2Lyn37NLpMQI8Vf4U1jTAesqIfGtJG36hTFnPZF5NXtDFn7ih
+	 w9EQBxT4aKofw==
+Date: Mon, 4 Mar 2024 09:51:38 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, gregkh@linuxfoundation.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
+ device removal
+Message-ID: <20240304155138.GA482969@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v4-18-6f1f53390c85@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+In-Reply-To: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Feb 29, 2024 at 7:23 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com> wrote:
+> >
+> > When inserting an SD7.0 card to Realtek card reader, the card reader
+> > unplugs itself and morph into a NVMe device. The slot Link down on hot
+> > unplugged can cause the following error:
+> >
+> > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > BUG: unable to handle page fault for address: ffffb24d403e5010
+> > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+> > Oops: 0000 [#1] PREEMPT SMP PTI
+> > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+> > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M Pro4, BIOS P3.40 10/25/2018
+> > Workqueue: pm pm_runtime_work
+> > RIP: 0010:ioread32+0x2e/0x70
+> ...
+> > Call Trace:
+> >  <TASK>
+> >  ? show_regs+0x68/0x70
+> >  ? __die_body+0x20/0x70
+> >  ? __die+0x2b/0x40
+> >  ? page_fault_oops+0x160/0x480
+> >  ? search_bpf_extables+0x63/0x90
+> >  ? ioread32+0x2e/0x70
+> >  ? search_exception_tables+0x5f/0x70
+> >  ? kernelmode_fixup_or_oops+0xa2/0x120
+> >  ? __bad_area_nosemaphore+0x179/0x230
+> >  ? bad_area_nosemaphore+0x16/0x20
+> >  ? do_kern_addr_fault+0x8b/0xa0
+> >  ? exc_page_fault+0xe5/0x180
+> >  ? asm_exc_page_fault+0x27/0x30
+> >  ? ioread32+0x2e/0x70
+> >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+> >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+> >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+> >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+> >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+> >  pci_pm_runtime_idle+0x34/0x70
+> >  rpm_idle+0xc4/0x2b0
+> >  pm_runtime_work+0x93/0xc0
+> >  process_one_work+0x21a/0x430
+> >  worker_thread+0x4a/0x3c0
+> ...
 
-Add suspend and resume support. Only the rc mode is supported.
+> > This happens because scheduled pm_runtime_idle() is not cancelled.
+> 
+> But rpm_resume() changes dev->power.request to RPM_REQ_NONE and if
+> pm_runtime_work() sees this, it will not run rpm_idle().
+> 
+> However, rpm_resume() doesn't deactivate the autosuspend timer if it
+> is running (see the comment in rpm_resume() regarding this), so it may
+> queue up a runtime PM work later.
+> 
+> If this is not desirable, you need to stop the autosuspend timer
+> explicitly in addition to calling pm_runtime_get_sync().
 
-During the suspend stage PERST# is asserted, then deasserted during the
-resume stage.
+I don't quite follow all this.  I think the race is between
+rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 86 ++++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+  rtsx_pci_remove()
+  {
+    pm_runtime_get_sync()
+    pm_runtime_forbid()
+    ...
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 9af4fd64c1f9..a1f1232e8ee5 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/container_of.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -22,6 +24,8 @@
- #include "../../pci.h"
- #include "pcie-cadence.h"
- 
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- #define ENABLE_REG_SYS_2	0x108
- #define STATUS_REG_SYS_2	0x508
- #define STATUS_CLR_REG_SYS_2	0x708
-@@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy().
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * "Power Sequencing and Reset Signal Timings" table in
-+		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-+		 * indicates PERST# should be deasserted after minimum of 100us
-+		 * once REFCLK is stable. The REFCLK to the connector in RC
-+		 * mode is selected while enabling the PHY. So deassert PERST#
-+		 * after 100 us.
-+		 */
-+		if (pcie->reset_gpio) {
-+			fsleep(100);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_link_setup(rc);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+
-+		/*
-+		 * Reset internal status of BARs to force reinitialization in
-+		 * cdns_pcie_host_init().
-+		 */
-+		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-+			rc->avail_ib_bar[bar] = true;
-+
-+		ret = cdns_pcie_host_init(rc);
-+		if (ret) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-+			       j721e_pcie_suspend_noirq,
-+			       j721e_pcie_resume_noirq);
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
+If this is an rtsx bug, what exactly should be added to
+rtsx_pci_remove()?
 
--- 
-2.39.2
+Is there ever a case where we want any runtime PM work to happen
+during or after a driver .remove()?  If not, maybe the driver core
+should prevent that, which I think is basically what this patch does.
 
+If this is an rtsx driver bug, I'm concerned there may be many other
+drivers with a similar issue.  rtsx exercises this path more than most
+because the device switches between card reader and NVMe SSD using
+hotplug add/remove based on whether an SD card is inserted (see [1]).
+
+[1] https://lore.kernel.org/r/20231019143504.GA25140@wunner.de
+
+> > So before releasing the device, stop all runtime power managements by
+> > using pm_runtime_barrier() to fix the issue.
+> >
+> > Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realtek.com/
+> > Cc: Ricky Wu <ricky_wu@realtek.com>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> > v3:
+> >   Move the change the device driver core.
+> >
+> > v2:
+> >   Cover more cases than just pciehp.
+> >
+> >  drivers/base/dd.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > index 85152537dbf1..38c815e2b3a2 100644
+> > --- a/drivers/base/dd.c
+> > +++ b/drivers/base/dd.c
+> > @@ -1244,6 +1244,7 @@ static void __device_release_driver(struct device *dev, struct device *parent)
+> >
+> >         drv = dev->driver;
+> >         if (drv) {
+> > +               pm_runtime_barrier(dev);
+> 
+> This prevents the crash from occurring because pm_runtime_barrier()
+> calls pm_runtime_deactivate_timer() unconditionally AFAICS.
 
