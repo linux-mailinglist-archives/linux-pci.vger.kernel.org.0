@@ -1,91 +1,121 @@
-Return-Path: <linux-pci+bounces-4472-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4473-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19DC6870A73
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 20:15:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA236870A92
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 20:20:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2EDFFB23728
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 19:15:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04371B2130A
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 19:20:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6282F48CC7;
-	Mon,  4 Mar 2024 19:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 163C579946;
+	Mon,  4 Mar 2024 19:20:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kwESIvY6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RFitaaG7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2042.outbound.protection.outlook.com [40.107.241.42])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541C47992C;
-	Mon,  4 Mar 2024 19:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE0979924;
+	Mon,  4 Mar 2024 19:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709579620; cv=fail; b=T2HfTshAzV/q23VLgDIq/mTGfhSwE/2A3PsIgMW/LGrfS44bB7CIwAhZnlkmTCKxanZotIIzGvtu7xYbCxv3KqHtM1JNXAYfILA/AHyrAdhwtIKp601CqRVR0ngTJ45pglhq/uK7lx+j+8+P6jEHdBnU3i9SpqagY8RzWQrQDKs=
+	t=1709580020; cv=fail; b=mxUUrc5uQmHi2XBPrxK7JJZUqSg8CuoyRSpFnEWrCT1i13CkQdqQ8OQvxMjVhQYm+Tqrhmk2qFr09SHsCexk3ZzI/EVeQLFzCQw4zP/YP+i4Y8XSzQZnKe3dqR6nNNoIsSTV+jIdkRPStUCLSKm9sJJ+7c01OSgu2Ab95oV53aU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709579620; c=relaxed/simple;
-	bh=iQTJcfATuecCU0mqi3WCExzmZZDKa4emUFnBjXmHZQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=a7JXs1hkyK3PNpXmP5nCS1ynoI9OvDBqr9Izd/eObauvwcLPLeptza5c+R8bLcgXg+rCU+XsOPbwabqgNuURviKwZL2gbyV8L0JHnafbH8NKmuwox22NI2k8g1HdFQUYYGyLDk4q38lgvn6erU3XgUNo83HerLtaa4qE4+hwlAI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=kwESIvY6; arc=fail smtp.client-ip=40.107.241.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1709580020; c=relaxed/simple;
+	bh=EggEs5LslEx0ZtgmkFuTXH/3ohlxDU54V59sn4uvv30=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SHfiFDk7/6nCweCwnXJ9qKJilycJsFp+7d6vl31BS3++mNjKkm9LIMwgkGAAwfP2km9A6RnjG+v0/tPYVxFkn79D3AV9tlYAbtM/tUo6dgsyls9B5ROtU0Xn+HWE5fcd51ICrUIWIMSdQaKlFSlobqp/XB495gZ2EmgpYxw+NlQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RFitaaG7; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709580017; x=1741116017;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=EggEs5LslEx0ZtgmkFuTXH/3ohlxDU54V59sn4uvv30=;
+  b=RFitaaG7SH5AcpncD8EKByWfo9y6KWJW/ZADRN2DGMO69+OPd+wiCzbr
+   S0wMJQtweHIJs/b/0Sc/sTItB4GB64lRr0o0o732Jsvy3MlQkPhzSguZX
+   Gx229KJM3zGtm0TabHeLmsjB5drb57hgNhS3lbZlAV4Lmp20IEe1o743P
+   2wPVxSHOni5TQfSNXOWLmmnBdYqfkN9oN9rhwkvQ+J3KAGCk9ZGKLfQ7n
+   3g1X7jWSt3QmKhqT+IlE416xbhNVkXQD92cPdX9dJ++XBsmMqE7XHjSNx
+   BljPgtLoj6jBUVpVk1XU+cKZaWwwE26y7gaT3UqgztYLHDpje/1V9mlLY
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="21630266"
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="21630266"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 11:20:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,204,1705392000"; 
+   d="scan'208";a="32276717"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Mar 2024 11:20:16 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 4 Mar 2024 11:20:16 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 4 Mar 2024 11:20:16 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 4 Mar 2024 11:20:13 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fSeTwjUsN8s3+cUZ5xpSgydm7Jsqa6e7TejxJCdjIFfDrf86NQrUk5CtXGkrwos0dsqM5kHcyu/bnofodU+TJgk9PlzSY0PPiiI/+c/cLnI5o3CdHh+PliBc4cE73KanXVx6Lm562iqM4AfKAehjrkr/MmVSHio4QZfyQF91LqM0ussQbRwq7zPaFESZO+R0YB2DXKJY/Fy4imRupK75khxXK5f3iYfdIQCiIn/wVNSshLFhArPwE0p69wzPdy9gY+Y2qAegy9w6MQlCBQ2/Lqezp2JxBxrkdrX46zvz6uxjnmAyzeVn+6MLlcU5VSwRS2zzptETeHy+91GBYt30kg==
+ b=MnZ00DNmMCl+uad/pVTa8OIMwPAFEyKixdoyLNdvr2C/i2xFlb/wc4Do5YBkqQNsXiRUyCwGO1dzp42FZ+DsX9YJUdPbWgIx2VhMwMMX9MV0SV3ozMRfHSotrMMG5CEK+HTHNxcpWvoLoysGUCesGdRZ9ZrfZNphiWNbnbjPYw5cHGEPiTkEvRVbk5oHnpjLQ8OwM8/XzOpzHNs3CjumwOanPha+NtBoyAtv3bZK7TVNrg6DrpQ6a4EesqxPj64pj6pr2C8njakQ4hQPc3whi8i6DysM1LleUl/3her6DJ2HgDmsrCaFKd8vGacRS5jLxQ60CFG5kmZEB2Cp0tUjAA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ruo/okYZAc0FSiLgpkw6/N8IPxYuS2uUTBdHdDf3BoQ=;
- b=BkV1gJJVYNG+tQZHh0cRJzsrBnQex++YZhIVg0vKpPKzNhCnZtKONL6M62V9ij3W4IQqVPk2/b3jddw7LFw99N/8BFzUYY8Tgh+VCyeRYRzasSDgKhotvql2T+kzdtcQaPiVeo8vvljdEVEtkvQX/TpsKigyDyzkAcR64sij15fYqsAv0s5etEF5EqZGZY9syPRngBxQKfAuHafEy90xWzthOn8908YTL+t4EwE3PYPZvgueOPMZ2+lQeFw5+QWvji5CQRnc4LjIg5D7m02yt6Ycn3ETEwR4IfO13hHCLdAYonJ33EOdyLXKn0Lafs5sn3yR+Mw+bprydq50Te0QTQ==
+ bh=fj/x1JIcT3K6ZG1KP2B9e6xvXYVfpDyWdr2ivnc2UqY=;
+ b=iHbkCHQdlenqIV+CTlWKO/kAcE4C5xNGRjLazFenrSvpypnqNYQ26Zdp8p1wgR89c9lKgfWjjtHLIzU8hdApNYdGy6vRkR46ksH7bkGFWmzOPQ7sx6wfxX/7ye6Mu4vCG0v/1dCw2ZgYnIkf/Wo/TVGsRztcSq0bvMS31oodRsVTpH3bC82c8FhGp8hOwg56xAgNqJj5wT4qpRtsUH4FJuNX/TJxthnZ+LzSVSvnAdwuc02ExHA3crSp56678VulVajCHorS1klBbGUJav+Kfx6eLHUez2mOO//0mizp21y4TfAPcSRj7tFI/dhdItUs+YssSCFmAkIqMvo594RTig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ruo/okYZAc0FSiLgpkw6/N8IPxYuS2uUTBdHdDf3BoQ=;
- b=kwESIvY6BaTmYObtBjfVyOmsrxads8jenWXBxc3SjPe6ifrQat08wY5ShUjR8QeHO5pOd72DNIvSdbJUvyCiJnbk/vUZq0gH0O3WJqsxbZwHBRAKyftZJJoQ/XZisZaOfYEbGQP8UUqN6BWo8vmMHBeaniFTsh6Va/mouCaot48=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS1PR04MB9357.eurprd04.prod.outlook.com (2603:10a6:20b:4dd::12) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DM4PR11MB7183.namprd11.prod.outlook.com (2603:10b6:8:111::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.37; Mon, 4 Mar
- 2024 19:13:35 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7339.033; Mon, 4 Mar 2024
- 19:13:35 +0000
-Date: Mon, 4 Mar 2024 14:13:27 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Niklas Cassel <Niklas.Cassel@wdc.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	"open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Message-ID: <ZeYdV3xMWa0nbz3k@lizhi-Precision-Tower-5810>
-References: <20231219044844.1195294-1-Frank.Li@nxp.com>
- <ZYFrUWM7JXdv7rtb@x1-carbon>
- <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
- <ZYGq6RdCfdhXFF/9@x1-carbon>
- <20240304084841.GJ2647@thinkpad>
- <ZeX7KDuwLWxwb5Kw@lizhi-Precision-Tower-5810>
- <20240304181005.GF31079@thinkpad>
-Content-Type: text/plain; charset=utf-8
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.23; Mon, 4 Mar
+ 2024 19:20:00 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7362.019; Mon, 4 Mar 2024
+ 19:19:54 +0000
+Date: Mon, 4 Mar 2024 11:19:51 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Lukas Wunner <lukas@wunner.de>, Dan Williams <dan.j.williams@intel.com>
+CC: Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, "Alex
+ Williamson" <alex.williamson@redhat.com>, <linux-pci@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	<keyrings@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<kvm@vger.kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	<linuxarm@huawei.com>, David Box <david.e.box@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, "Li, Ming" <ming4.li@intel.com>, Zhi Wang
+	<zhi.a.wang@intel.com>, Alistair Francis <alistair.francis@wdc.com>, "Wilfred
+ Mallawa" <wilfred.mallawa@wdc.com>, Alexey Kardashevskiy <aik@amd.com>, "Tom
+ Lendacky" <thomas.lendacky@amd.com>, Sean Christopherson <seanjc@google.com>,
+	Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH 03/12] X.509: Move certificate length retrieval into new
+ helper
+Message-ID: <65e61ed753250_b62b29431@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <cover.1695921656.git.lukas@wunner.de>
+ <16c06528d13b2c0081229a45cacd4b1b9cdff738.1695921657.git.lukas@wunner.de>
+ <65205cc1c1f40_ae7e72949d@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240304065703.GA24373@wunner.de>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240304181005.GF31079@thinkpad>
-X-ClientProxiedBy: BYAPR21CA0018.namprd21.prod.outlook.com
- (2603:10b6:a03:114::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+In-Reply-To: <20240304065703.GA24373@wunner.de>
+X-ClientProxiedBy: MW4PR03CA0177.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::32) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,151 +123,87 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS1PR04MB9357:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8f33058-72ff-4ff6-11d3-08dc3c7f30a8
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB7183:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7c643ff-0057-433d-70d5-08dc3c8012a6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	pTvuqVv7GTGwJ6CyKpNVz/ARLsan2zS1MAgg7Wuqv7tAQD98SPRic894GjwGtiF60w0hKCQuoaTlvGJO2hRwHPYveaKlQV6VQN4wy8Qfd95twCfj82pfmSYeEn3O/wSfpYUiONvuoixsiFYUJ8JZ265D4IZWn6NPcxM9LapcnsWQ50A06VuMEJLjK55p9M61d8pesLmIl4Ser8JF1SI0w+9Uq9tCYiCHn1sMECL7hLYQHJN6J0f7XqbiOS1WRCD4uJEEy1Np7S/bM/RUqzvKcV4aDZ9TRqK2yrFIG0GcDhC5tlej4GCHzc31jOqzGtdtpKhNmFEXjPKp7Zo/A6CBb8zr1x+nuueCrrj2w6ZtwHwK1pySyvO3AWcW2y6+4K9BzoHFDawXiW5wi3CcRyGzNVHZgcvRblCIXj6Jjz04uCzNX1U9wl7b3pT5gd83X8IIJBTbAHdPeZ0lQ40+Cf8kyIPoUSiOZPRdsHGnLCwoaVT+ToF4h2MLCuPQUp41IY5uGGaj4ULCY7VXLMqr3C7z4kjW591jT+9sN/43q8/4bGLeuvMpUcwITeKYduJ/YkVYp9KZn76pMOlpvWjvmrV670vAKgGzBfeRIkLPUmUaoqaKceqf2rmt8SiwFdrLsSMtOPAT341H+2BLPep5f41qpw1+TmG0OHq8buQdE6+oqhk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Yh4WOHxIG4ynR5TNFVApwQ39dlgYjjSSsRs9Si6AYcyeFwz87RtxcYySqIN2nil7gicBn5pLgZziO1BP/b89YTfkJRHorEoZ41YwzRBAhcwGBirMi130+YEzK9BTsDIzX8mv2O8fDCk7YYtQSLur9yzUN4e2GdTEhjIYQ2pa+CaTW2+0vTwTaGWadR+6sNQ3h4KlcKS436OCffy2/JwVwPQTJgPVCeYgLM0B0UEgKpP54dBTKX1WLOKv8LFj0ON/sf0gS28M+9SK/pPQ9qgOu8T5Xk041vy8wpFcdtX1Lm8jn5rFQkoShbTBtWHBI8+2R9nAVMrb9+YEbIiwzF04xso+CT0ce8YQ7qgt8ZaumEsFnAFKMy95F6umW/bNIPzAqQ4wfKZ6GBaMJjKTAxvCAcFyFi0241HKLX4MzlrzuOxkuVyo8kEICYN6BJ2ZS+Qn74MGaCEY4ZwjHtClAOvn2EKVh95oYHM0Bp/zk9b3PEhWXwDB8ATmhfmx9JkC9Mo6DfYsZOMUqb+4npNzelv+JBn2VCtEKcaCQQ4ttwKGMu1CAmVvuCfcgAkQcuiCFMiuX1KsLJmjN4NnI90C/X6470M/XOIpT6KjR+/VU5pgBuw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cU9aVk50MG81eldyaTh2RENJNXV1RU83NStOeXVtcnJuNlN6cFV6Nm5kVFdy?=
- =?utf-8?B?eFpxYzFUYzVmbXk0b25lSHMxVTRzcU4rcVlOZzJ5b2dsTTF3WkRjWVlweW5m?=
- =?utf-8?B?dmZWU2VvM3FnVGRFTTFwV2ZlQ1FOSmdHS2pGSXZVd2dGMU4wZFBQTklXeXRn?=
- =?utf-8?B?MFQyeUNXcVVWb0dzZ0N5RGVsQVcrRFpJOVRyYzFhRkpkeUlwN1I4a2Foa1FT?=
- =?utf-8?B?VzEyRk13cS9uRHZYTHZ2WmJzT0lUdHpTNzZFZGZiTDZwSks0YnNKU3FZdEV2?=
- =?utf-8?B?R3AzK291RDM1bWJZTmxZbS9CckFJWnFEWlJpc1g3ZXcySnZmSXFxTFI1OFgx?=
- =?utf-8?B?ZXJ1ZkF0MURRK1Mvb0pVMXFRZ3lwZXh1dDhvWjRZUUw2ZXFxMGxETjJzUUlM?=
- =?utf-8?B?cFdMWXcyZGUyZkpqYVNtRk55MUdFVHF5MHFRbVF2Nm90Y01kdUNLSDlYSUlP?=
- =?utf-8?B?UFB2RVVPSUVxVmRGZk81bXAzT3kwTTI4WmhhWlR0K3V0N0lYUVVwN1dTblJ0?=
- =?utf-8?B?Q05UNjE4VFUxd2NqTXRmelROeGgxcGRUc0JzS0dBT1JMSU0vbDVha3RNWDU0?=
- =?utf-8?B?WFhzYWZRVlpQK1FjODhBM0Y0OFNpZmwvQmluOExCSDFhQVR0dDJQSWR6T1Qw?=
- =?utf-8?B?RjNZbEdHMWorYlpVZ2VZSkNFL09ER3dCT1dDSVd5WnZoR2kreXVVMy93UjNF?=
- =?utf-8?B?Wm94NGNPR1dFZGdpUkpRWDJEOHl0VnJhUzZ2bXBvNGR0Q0tVNGowS29BQm0r?=
- =?utf-8?B?cDJuNTRXOTh4aEhDSlBENDdLYzZ2QVVTVkNxb2xLN1Jqb2x3V1RRWXpKNEsy?=
- =?utf-8?B?TWt1TFI1clhUMVZtajk3NmpBTjhsR1ZMODZ5eE9nOTJmSVh0N3ZUbWpxeHgr?=
- =?utf-8?B?MTNRVEZDZmpaQmVxYzVpemhvTC9TVktLR2hpSXV2d1c5dEVCbWJRbGlyWlRU?=
- =?utf-8?B?VytCcjh0NWZxQ2ZlWVBnZm4rR2RQaHBpSnBrNWErVXVVQ2tFYk8vdXJlMGgr?=
- =?utf-8?B?WE1ZaGNlYmhIVE50TzN2eHlWREV0Ky9xYUtEb3RRalEyZmkzQURJMExUNjdP?=
- =?utf-8?B?a0RRSXhQaXNDc0pCNkZTUFJPMHQraGxUZGErUTZGZDAvOWpISXdRa3Qxc25y?=
- =?utf-8?B?ZWU3QUJ6SFN1Z3AyRjRnSXpHa1BOMDNyMnNrNWJ2MVByRkFteGdyLzJhMXJJ?=
- =?utf-8?B?Mm5tb2lRMlBYSHROWkJ3Q3VGVEpVcGgvVGxyYmtEcnVaSWVwVzNQZnZGbWlK?=
- =?utf-8?B?NlJPSDMwak1PSHVVNGxVR1dtemVQK1kwNFUzS1ZvMnNDVmd1VE9GM2JVazhx?=
- =?utf-8?B?bmdKcUViM0wvZnhUcnRmYm4xR0c1bjVIcVFud1A4aWcyTXNMVndGOFdpaGhh?=
- =?utf-8?B?c3RXYUVpTkNVZjJ3UGIyZnZGWjBTTm9ZTWpadHBHbzUvNHNwVjU4NXFLYjNI?=
- =?utf-8?B?Z0JjNnBXQnNFSTV1czRpaVI1aTQrNFllM3FoTVc2RThUcXpSODJ4V2gyZ2dz?=
- =?utf-8?B?VTZPWmg3aFovNGpTVDZvUDhUT0ZDRDlwajIveFZNRThjVUQ5bGw5dyt0SGsx?=
- =?utf-8?B?Z0xiZEVnMFAwQmVSNm43dnEwSVB5WngzUFVTeGdQZjhCbmYvcnJHdENJRmtD?=
- =?utf-8?B?aWNpd0NwZ0FkVHRQMkZIN21jUllmNjBLcVlDMlJHQnVHd3NuSi85TTM3ZG8w?=
- =?utf-8?B?UXQyVkJLZEsxZG5PUndGWEx6N21QTDd3WVExWng4Mi9uYWE1VUoxM04xZHNh?=
- =?utf-8?B?SEZweWVqVFlubVZYT2o2Z3ZVOUE0ZmVUUy9rd3daMGJxQW9KVndCYUxNMU9S?=
- =?utf-8?B?bVBSR2VQd3RjVDFTdW14NlVqRzZEVmhiUnc2bjNRSjNoTVhEUGFJalhaS1dr?=
- =?utf-8?B?c0RrQjY0UzdSUUc4dk1VcFA5bCtBKzN1MUh4czN5b005TzhoODdLN3FKbHZS?=
- =?utf-8?B?WVloNzFvT0tELzBGZnloTGNKSGZUYTc3aVdjbU5HTEJqOUdlWXZhRVF3d3NV?=
- =?utf-8?B?dXBOMHErWlVxc2JhbVZ1WEZZdGNkME5meTloTmUxbEZHSC9vKzRQVFNVMStI?=
- =?utf-8?B?UVFYQmg5RWNxME5xb0dqcGF5UUxuZTdhN3FRZ2J6SGVJd3lncTZZRGt0Ny9U?=
- =?utf-8?Q?1E2YcbDP6DyR8PJNPQoa7MyHZ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8f33058-72ff-4ff6-11d3-08dc3c7f30a8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sW5Wpu1lHzabUAkOGsppr6PYmJVmWoi5otZKYMCdXaWGZeLmw2IHq8ubEs5u?=
+ =?us-ascii?Q?+4VHAdjl49KjBw94+eLE2vVvgD4ms/y55OIJSMTbcsnKyDCuLTkFmszvX9I8?=
+ =?us-ascii?Q?VdGnFu+qFEfsyLEtJT8fJLzp/++xY3XYqy8Ahn0UdXOOubutdlRFJhPy5TlP?=
+ =?us-ascii?Q?4r3y5TFPpEno/478hFU5y8qp+bQ3iGU4m1He/86rQaQOYq8tPcX9Kt9faql+?=
+ =?us-ascii?Q?xWEKdmWpCx3dSn7qmcmWU6uiVQNgXrB925XPHr8zF550WNPckYSKb+N/mn0W?=
+ =?us-ascii?Q?8gi2TxwYBK1eKqyJ2yc8MO0rW3l0nNWJk5WeYwiZ84u7Q7YZx+U8eSDziwdq?=
+ =?us-ascii?Q?IwbSps65aravFP54Yf5/xUY88sunGccFrD1oc6RNN2T35MCCELE5r259pC7z?=
+ =?us-ascii?Q?84c0/k7DmdbhWXAqv1xeIB1aAhIrVeLCG747Un9/QR+nopwR4M77KgQdlsq/?=
+ =?us-ascii?Q?H8DyOjrXZYcE3hKd2LcV+0ihohfGQhaYUbD3VaNVuUp1fv8FP1yMvkj5QEaQ?=
+ =?us-ascii?Q?aozhEv8x+YAaDFqNOoF8p5AVtpClwdtjMByfDGDqLkK1gF55YkncydEHNT4I?=
+ =?us-ascii?Q?o5pgIM829KJ8kc3lDwujLmamWzvq6stO72cK/QanLOagoRf/LASf8iDLREwL?=
+ =?us-ascii?Q?JfjS6w3KGuSnGK/dgNrjVYmjDdteE/pP3L5c7kVFaUJspQb/oV01jEjo0ZBX?=
+ =?us-ascii?Q?V5S6/zoHz/g8Q4yGMNzZBYRA5yAXg7M05mGS+HJCoVJQSwvduFQ7HLp5XJgJ?=
+ =?us-ascii?Q?jYyxxgOfqPHzIpVqVDv67aGj/CCYkQyPLFG4UH9FjYtkQeRv9R3K/D2chfOE?=
+ =?us-ascii?Q?GEkQes3n22Q4ut7Hv5yK1Q0tDI+nnZUOC5hEA7qTSDZiK1ZMdj3y99gxdN7+?=
+ =?us-ascii?Q?6DEJfGJo8vXKzls9MHNlqLtRvZictMkcAOeK5h2EzpFdKi1ksPyPSIQLZ0bm?=
+ =?us-ascii?Q?iaFTaiguZNYtdCj/thb5lIR46+Gpe6Lyf6pHTjhuUmFcVIab69ADq2vUSaqB?=
+ =?us-ascii?Q?aQZNO4O+ukR5QK/g7ijH/qZAMnS/s8LA4WCe6t4GZiOqNRY4XDViOPMMdxWu?=
+ =?us-ascii?Q?od+FcARZ4JTMQ+qhBrRDcqcf2OPCJyYx+X22Ps0FHZaQ6QTnzmgG9c3X77iV?=
+ =?us-ascii?Q?PtnX3iisztoDzIp0chlJRxxMdgIhSm5TR8oLqsgMjKD2ha882v//UrB3SnWq?=
+ =?us-ascii?Q?p2dq/Dyf8eGD27MWOYc6bAFETLGHdcq3zPtjW8gbAPwhXiMfbXoCpgGWNx4t?=
+ =?us-ascii?Q?bsJjOatt6arqiFHX3Gn5cd/H9s1lC2k8M9u60WqxI6AyIy59o+c+nLsOjLxa?=
+ =?us-ascii?Q?viGEqZl9VvupFv2q7fqBs8hw3oN8r9eU0Ps7HsGbQRcExLo9T8dvhq/X6pu+?=
+ =?us-ascii?Q?PNdV28BuaBFLNHhhO77O/HSKaa6ISN7biuGidRtJvUXxaIPguhGP/stPRzcq?=
+ =?us-ascii?Q?vEelF/3J339w11uHM2pbKT/JeGqeHkjvrC4VUTyi1zkQxmvUVSFE8GB3elwL?=
+ =?us-ascii?Q?QEOISV0sPRj03S+R1Z3/HadWdBFARFJExo59AE9G/Lj+ArgxlzBxAe8LCGrc?=
+ =?us-ascii?Q?b+t8NiwFoOFkrPR1R38Dd/TNTDMrTuckYnN6MMFHzCE7aoRSzZCk0afESzBS?=
+ =?us-ascii?Q?JQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7c643ff-0057-433d-70d5-08dc3c8012a6
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 19:13:35.5314
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 19:19:54.8112
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sje5akqMisoBwwKoPM08vYiwpyD4H/SCLooyQeITtSgAEkvDF5tM3RZh9otT4e25RBNhyYqwXct5pz9lkMrcPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9357
+X-MS-Exchange-CrossTenant-UserPrincipalName: xU9nXzXh59JfcjGhkMXSc1qsIbi+KWxRU+geuGQvGiOWwW5B+zG6nrVx6SMepDcKhF7rn6xribb5Izm5kUzObcQx+tURVvchmJCbFUa4vCQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7183
+X-OriginatorOrg: intel.com
 
-On Mon, Mar 04, 2024 at 11:40:05PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 04, 2024 at 11:47:36AM -0500, Frank Li wrote:
-> > On Mon, Mar 04, 2024 at 02:18:41PM +0530, Manivannan Sadhasivam wrote:
-> > > On Tue, Dec 19, 2023 at 02:38:34PM +0000, Niklas Cassel wrote:
-> > > > On Tue, Dec 19, 2023 at 09:20:21AM -0500, Frank Li wrote:
-> > > > > On Tue, Dec 19, 2023 at 10:07:14AM +0000, Niklas Cassel wrote:
-> > > > > > On Mon, Dec 18, 2023 at 11:48:43PM -0500, Frank Li wrote:
-> > > > > > > dw_pcie_ep_inbound_atu()
-> > > > > > > {
-> > > > > > > 	...
-> > > > > > > 	if (!ep->bar_to_atu[bar])
-> > > > > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > > > > > 	else
-> > > > > > > 		free_win = ep->bar_to_atu[bar];
-> > > > > > > 	...
-> > > > > > > }
-> > > > > > > 
-> > > > > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > > > > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > > > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > > > > > 
-> > > > > > > Change 'bar_to_atu' to s8. Initialize bar_to_atu as -1 to indicate it have
-> > > > > > > not allocate atu to the bar.
-> > > > > > > 
-> > > > > > > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-> > > > > > > Close: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
-> > > > > > > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-> > > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > > ---
-> > > > > > > 
-> > > > > > > Notes:
-> > > > > > >     @Niklas:
-> > > > > > >     	I have not test your case. I should be equal to previous's fix in
-> > > > > > >     mail list.
-> > > > > > 
-> > > > > > Hello Frank,
-> > > > > > 
-> > > > > > Thank you for sending a proper fix for this!
-> > > > > > 
-> > > > > > Personally, I slightly prefer your fix that saves the iatu index + 1, and
-> > > > > > keeps 0 to mean unused. That way, you don't need the memset, and you don't
-> > > > > > need to change the type to signed, but either way is fine by me, so:
-> > > > > 
-> > > > > index + 1 don't match hardware iATU index. It will be confused because
-> > > > > other parts is 0 based.
-> > > > > 
-> > > > > So I choose "-1" as free iATU.
-> > > > 
-> > > > A s8 can hold a max value of 127.
-> > > > CX_ATU_NUM_OUTBOUND_REGIONS seems to be 0-255.
-> > > > 
-> > > > Since the DWC code can be synthesized with 256 iATUs,
-> > > > your code will not work on systems with 128 or more iATUs.
-> > > > 
-> > > > If we continue to use a u8, and offset the saved value by one,
-> > > > we will at least be able to support 255-1 == 254 iATUs.
-> > > > 
+Lukas Wunner wrote:
+> On Fri, Oct 06, 2023 at 12:15:13PM -0700, Dan Williams wrote:
+> > Lukas Wunner wrote:
+> > > The upcoming in-kernel SPDM library (Security Protocol and Data Model,
+> > > https://www.dmtf.org/dsp/DSP0274) needs to retrieve the length from
+> > > ASN.1 DER-encoded X.509 certificates.
 > > > 
-> > > Agree. I cannot suggest a better alternative. So let's go with this. But please
-> > > add a comment before bar_to_atu assignment to make it clear. Like,
-> > > 
-> > > 	/*
-> > > 	 * Always increment free_win before assignment, since value 0 is used to
-> > > 	 * identify unallocated mapping.
-> > > 	 */
-> > > 	ep->bar_to_atu[bar] = free_win + 1;
+> > > Such code already exists in x509_load_certificate_list(), so move it
+> > > into a new helper for reuse by SPDM.
+> [...]
+> > > +EXPORT_SYMBOL_GPL(x509_get_certificate_length);
 > > 
-> > This patch already change to use "-1" as free. Only issue for this patch is
-> > that use 's16' instead of 's8' becasue max ATU number is 255.
-> > 
+> > Given CONFIG_PCI is a bool, is the export needed? Maybe save this export
+> > until the modular consumer arrives, or identify the modular consumer in the
+> > changelog?
 > 
-> Niklas's initial suggestion of keeping u8 for the array and 0 as the unallocated
-> placeholder sounds good to me. Please use that instead.
+> The x509_get_certificate_length() helper introduced by this patch
+> isn't needed directly by the PCI core, but by the SPDM library.
 > 
+> The SPDM library is tristate and is selected by CONFIG_PCI_CMA,
+> which is indeed bool.
+> 
+> However SCSI and ATA (both tristate) have explicitly expressed an
+> interest to use the SPDM library.
+> 
+> If I drop the export, I'd have to declare the SPDM library bool.
+> 
+> I'm leaning towards keeping the SPDM library tristate (and keep the
+> export) to accommodate SCSI, ATA and possibly others.
+> 
+> Please let me know if you disagree.
 
-It is impossible to keep u8, because 255 + 1 will 0 for u8. Previously
-Niklas's initial suggestion have not consider this condition. If u8 have to
-change to u16 or s16 anyways, I prefer use -1 as free.
-
-Frank
-
-> Even though iATU window index starts from 0, the comment I suggested will
-> clarify what this bar_to_atu[] does.
-> 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+Oh, missed that the SPDM library is the first modular consumer. Looks
+good to me.
 
