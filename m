@@ -1,232 +1,226 @@
-Return-Path: <linux-pci+bounces-4453-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4455-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94A2A87077A
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 17:47:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A43DE8707D1
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:01:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C9911F21DA7
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 16:47:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 226481F217C2
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 17:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C84EC364CB;
-	Mon,  4 Mar 2024 16:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gyB9mNoQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92CA45FBA8;
+	Mon,  4 Mar 2024 17:00:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2077.outbound.protection.outlook.com [40.107.7.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E0C45BF6;
-	Mon,  4 Mar 2024 16:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570869; cv=fail; b=kq4a+GXO6ybbiW35g08f0yxDYo++W3+3eYy1ppk7P0aXnt6VaiJ/nCtZ/r32xy5SY/VaBf+xinkZc/cmOzB2yFT0sobGbHy6m45ziX5r88VIiyRYC192lO9acZsnn/bd+6IJwQKi5sWbSxU/PGpmITWc0fXhTsltCp5TMis0FTI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570869; c=relaxed/simple;
-	bh=mIL2WSe5kuBcpjskhi6jaCvIYCfNZI8D1GAllHYvieU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qo5YVZACxhvuApRINvlxMKJX1rZqWqiMoVX/CsAhTK/zDNy6ZMtEhB1WUC8ULuIpkGE8a3LmWF4mgCBfgYETAXdgmWi6Qiqw2us+j3H3+q/hpT0Ok6/oI3HYzpau6LshzZijSC+TIAKnG8RrsZ93RPDNDJPnZHCCa2uZCBLuK4Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=gyB9mNoQ; arc=fail smtp.client-ip=40.107.7.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I5iIykjCFuJ6oBNCQlVvkPhqdlQUpJFebHoFJu9HM8c/i1dsQhhRiNlza2/i4gQb48WeCb06/q0e30hZ/U1v2RGEWFSOUd/86xgoTU+DtNGw42cLLZzz+Jsq+QePwnqT6o5Z102IsdiQ0ax1tMIkfS4zJq/3d3wsydlRWJyrfrWzFQgHXrSJRtF2vomQpAJYv89Z/qPINuZB64iocYtxpy1S48dpdSZ0xJYQuK3wU7qcwERt7iOC79jsI14eNJuJMccg++dQHvdzAEDnmmdjPEQPK8qmVNoGtiNTs5rmcKwc+eXrVLMwWOXGQilxQmm4ibVpe/48nREAFBQIjBqHYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gV5C8IvFgRJZn6HH9s8GVvkD5PBiCpLzTS4yNCFXnaA=;
- b=adHkRLkDa0CQiwJPCtoY8v0Urn7ZGaZ0ZvhPvUa2SEGVdxQcVzMhhF71hVs+nF60rvae9yVF/UKbHQfrzlNChr8/fodxRIBHX/y0jPmmvgVlSDoK21NRF2rkIA3HwAEiRJhk5JIsPUSrKKiipN5I0qm2nz6uabHGmLKKUO1q0qkoEEeIszkIK6/6NS1KVpxvpPCTw1NkitEkYabxSiCN9MUoqJ2fpNzUizSuYMOW69k/0RlDds6B0CEkfWcJx9LFLroceYosfFtifuzA6EGneWyQq4y0PQ5wshhDfBJKO1kmfFX0IaoQ+B4G6s0Utk5CrplTiNsYdhx2kEQpCxu9wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gV5C8IvFgRJZn6HH9s8GVvkD5PBiCpLzTS4yNCFXnaA=;
- b=gyB9mNoQK6QMS30GNwS59LgOb/VmUrdWYNzKKcIBhPoncVaKTMw/cM1pLW9oxBRYsj67J3c2IG4Hxt/G991/hQSBm8/x8tqBybley1+3y8gIz3AC6yV/Gn80Ok7Uc6PdLbEkN28mYUkUrM0K0R84pX9ickvP7ly/htl+li9UiBA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU2PR04MB8520.eurprd04.prod.outlook.com (2603:10a6:10:2d3::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
- 2024 16:47:44 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7339.033; Mon, 4 Mar 2024
- 16:47:44 +0000
-Date: Mon, 4 Mar 2024 11:47:36 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Niklas Cassel <Niklas.Cassel@wdc.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	"open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Message-ID: <ZeX7KDuwLWxwb5Kw@lizhi-Precision-Tower-5810>
-References: <20231219044844.1195294-1-Frank.Li@nxp.com>
- <ZYFrUWM7JXdv7rtb@x1-carbon>
- <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
- <ZYGq6RdCfdhXFF/9@x1-carbon>
- <20240304084841.GJ2647@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240304084841.GJ2647@thinkpad>
-X-ClientProxiedBy: BY5PR13CA0003.namprd13.prod.outlook.com
- (2603:10b6:a03:180::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B075CDC8;
+	Mon,  4 Mar 2024 17:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709571655; cv=none; b=W/kQV+NjGenVAfqOZL1twVtP2HNAGiEfj8oifM/cf7em7pKIDoaO3m5GxjaFZmTCSDfpVnQgHyEbe4fsRyGc1SLV61PWakW5rfSUbta34kgPvZqTArWjfT+OX0miYoCXfvwYuYUwRC9KqVx+nRuNllsLLADKAnmNLpRpUK53Irw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709571655; c=relaxed/simple;
+	bh=Laz43/toJ+CkA+jWC7gzQOwmXAzKZT27uTX7HYmngHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IXmnpAXIV+tGt+uoP1SNBG8N8OnvkjfniutkmG4iefTKHUXc16RmiQepmqVgo3dYoGA1oTnDTI/QAgh6LcARPJBi2u8A3KIjsVp91fkWqOyhClPcuazJOMLpo/E1/7OP33z7jjnAyoZZk7AB5WgCDcJ/ZGPzUwswcIa74AmT474=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e447c39525so1139148a34.0;
+        Mon, 04 Mar 2024 09:00:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709571653; x=1710176453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a+zuvGq2BylT2luj+C31yYI14tYn4jtwnQpoH9GR+z0=;
+        b=NOhQftf0MWO2yLWUFPJO+HCoBdMkilyGnobiJ7bszvmd8vsSLssWQGaSvqzfLNs9vH
+         5WQo6stSSlKvzKikXVV4ptLMwS3c7eP2amdqe+FZmXj7oRtJcVUgw+YxKnNS5gIVRd1q
+         yH+xWidx1z1tsMrw/zuJlnZq1+pQQoNzntxZkNtQqs/LQE4lmoPg8BDY43wRuvuIGK6D
+         i1FdoaldivtODGeU3nWFs3LyactF+AZwQwjZTjb/wt2FbUxRgKre8ncf+rgBz6gaMISo
+         LfTlgdth5GL+WEKBdRkkT+fwPHS7UuvGJv++Sg6lJUJL6v5weX+TDCNw8E4Gi73golTf
+         h31w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPaY530fBMxgcKm5CYNw2ZSdqkK14+NHGhChvvS0fyjR6oaha1da/HgO2UhZayV+9pQEqIZ1AnVCWyY673Ifkj9INJGv4HjBlS/n39e/ObTCIA1m5C5xtMNhNf9LUWii3uLwefunAht44lc+SYbeyYLbpUpe6yEWbhU6kT6chtwNyw6r3sEJSvVzHboTgfPWbwjM5eHsHNQaABq9xY
+X-Gm-Message-State: AOJu0YxSvXNV4DrDYnn9vEa4C6VKgvsf+SWi4Y0m/chmZAoFMpF+t8xe
+	QfihEm9m06uwt/nFsYkvALqWMn5IFZPF1UuBave5umMD7+DDFwqOQJTnOUm8FLuLHg/5Z4s8NV+
+	Uvronl0/qgP15yh+z49WQNEuwpmE=
+X-Google-Smtp-Source: AGHT+IFe5CoLXdwTWZri+YmoaUAb2RrxHFWOYb+z81FLv8KNl6eWpiBkok49CDccKobp+XPkEfFzP7Vg9gzmNS+oABo=
+X-Received: by 2002:a05:6870:3913:b0:21e:c50a:5e91 with SMTP id
+ b19-20020a056870391300b0021ec50a5e91mr10750683oap.0.1709571652985; Mon, 04
+ Mar 2024 09:00:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB8520:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3d23100-8e1c-4b93-4fd4-08dc3c6ad072
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	TNY971hhx6SR34BvtAjxGT/YaeMz0r2KGVhJDGcTO1/rOZn5VKnMvK8Q/DWU6+qO3QpO+A7BPwHPzRbkxpRtVyUmtcz5gCYNRbgqqW8dhpBcY9a8mJI0E+Oy7ZMhjAsMQSEKOSWTd+9jH9eOgCz1yEqg0givSlqNLvDUmtRnLTfBkMaauneguOx+fJ7GfMkeH6zuCOgJDEu0V2R7cxuV3KyH2n+BvMXWcReVvUtcJH2IzG1e+Moc24G9JewQjJ+3k4HxqHldbTSPVe86ZT7BP9efhY3jT9GOjxdQ7QOl3VdpcpYlFk8eTESVK3iTjGI96aoc6XZHAOtGrTZfiovSL64ONkBKiI+ZM8ptXbm1VZSuT4R6+/U8LdH3gQFAg1pknCvQbm7MzbRV96wn92hwK4R2qIMANeprlLTPzt4SLmLe749yuI98jQNXg97FXN1fGbrzHLTS4ReivoBoNuQp1lBhHtgTsATLY2vpN9HwEPf5KoWsIhdn9egkwduq5Ks/jXBg41rRCH9jlpAwhJRAGkzLKHR6bCWTyV8NFpY7lVTWtzhS8lunbGoWnwCXAmwhEyVy7ll4vDo087DLcRspX4XxvjLpu/NkJFuITOY3I91zw5rSNNjTCCM97Mdi9yseKJe6E/1CIbDNeiAVSSOixMnUESLSiEvUbJU4mv3EthY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TlJtck9PK0hBYjlmWk9odDk4SDFETVBrbWExYUMza1gvdDJIZkxFOEdSWm9H?=
- =?utf-8?B?QzJoVGh2aFc2OURoS240Rm1OdktkTXA5b3BLTnovY085aGloY01MSWlYQmpu?=
- =?utf-8?B?NnVsSjMzSlZqV2s1NU1kK2s0QkYvRk5GTis1STVRRElJWVdJNVZYVWR3Tldt?=
- =?utf-8?B?dDBnLzVjTHR2cGVaNUhCMTR2TE1DbGxTN21ZQ0tKbEFkSkhaS2lBVDdlMmcw?=
- =?utf-8?B?OVdvQXZ4TXZlclFOK21oU2FwdnNPNGFDY2VKNndQd2VOMEpLUG9wQ3pqZzNY?=
- =?utf-8?B?b3QxUnRwUkVQYWpBQlBhV1pJRHNYcTlLMmFlaW5FVVZVOHduZEh1V2g5VWRU?=
- =?utf-8?B?WEFHeUs1a21CSDZkdWszd0wvNldRRTVIRGY1eUFwNE5CQ3NVckVLc0YzNVlv?=
- =?utf-8?B?ZGE3L0FBbXAvQjFFNjhyMElDaUFoNk44OW02bm5SdFNyL2dUem0yakxub2JP?=
- =?utf-8?B?UEhGaUlSZHJFNE42blMrMlU2UU1WdmJmb1JrZkozcTRYK0lBWFlhYmRHekJi?=
- =?utf-8?B?TmRYcCtNc2E5Nk0wNmNXdUNGTlpiZisxcGxEdzVHdDZCTVdyS0dYMDQ5SG1N?=
- =?utf-8?B?b0lHMUR0VjV6RmdOR0EzT25RUU1RNWRoWHFYRXM4WXE2NDVxaTRGYUlrQm1r?=
- =?utf-8?B?OE5EMDhpY1ZzVytYWExLdkxPcFpMZ2dlUXBoMnFOZmwvWFgwWXpucUFWUExQ?=
- =?utf-8?B?Q1FITktXVDBBZ281RjNMOEdSekd3azJrNi9PV0JGMlJsbWRGUUhoU044TDcv?=
- =?utf-8?B?c25ta0tlMzZOMHN0bGphM1BOV1lOcDZtZUhVSkdqZ3JzR1k5NkJRT3NlZzBu?=
- =?utf-8?B?QjlyVEl4Z3dlbWZhMkhCTmw1QWdZOEE5ZkdnWjV2K2xtQXVGRGFVOWtUSEY4?=
- =?utf-8?B?eGhLclUwUTB1UFQrMzM4K1ZuTGFSR0F2TE9IVEwyK1FxZHVCS1o2SW5mVmlC?=
- =?utf-8?B?dzIvbjd4VHF2aW9FT3lCNXhjSjVOUW1MSEl1ZmgxRHkvdjBNS1gwd3dMWHEx?=
- =?utf-8?B?cnRIWkdIZGZWTTYxYVVVK3NhaTlBU3FKRzVQTEpoUWw3aWxwQlRiVzBQVUZG?=
- =?utf-8?B?cGgzQWxQT3dFVWM3OE1PckQ0cFdBWTlzc0Y4WTFlUlNtUVZoZmtZRk41TXpN?=
- =?utf-8?B?L2NZdXF3MW9HTVIyZ3B1cEdka3o2UGFpQ0ZLZkV4RTNIVDNSd0traHdJVUU5?=
- =?utf-8?B?ZzkzcERmODJ2Y2d5Q1Z5SnpzLytWZzIzMFo1SzdBb0wxSFo2UVRjZEJ5RHJX?=
- =?utf-8?B?aS91MGsrNEVod0hxaFZMSGlFaUZTZFVqM0VPcVRGSEUzdzRndDVWbDFLRGxk?=
- =?utf-8?B?UXJ4WnRPZXNtaUVTSEpSVTljMkZ0UjN6QUZsT01jYU9yN3NNQkkycjVKV2Ja?=
- =?utf-8?B?TENGMlBPTG9pQnpzVWFyemNVcXkyRSs2anpTZ0NWc2FFWWppRHJjTUtXVlJm?=
- =?utf-8?B?cS9vemRxdHpiMVM4ZTE2QzQrVm11V0RhNWRkdDR6YldSeWEyeDFVbndvQlNa?=
- =?utf-8?B?TldmQ2RSUGZMT2RBV2JwaHpXb0NLOFMrRzV6VlBJcXBVc0RzS3RhUHRCcDdt?=
- =?utf-8?B?YmFlQVVrNlFLaVI4ZFZCTWsxeW5BekV1RnhKL1BMY2hmZ3QyMWV5NFluL1FW?=
- =?utf-8?B?YTRWTm5VbWlsOWhQRTFiZS9hVDVOSjQ4cHRyaUFrMmxoVXI1RWwyVVpJQnI5?=
- =?utf-8?B?cUNqcmxKVlZMRHJHdGN4TDM3Qm0zaWVPUmg0ZGVLTFU4OWZwYnNTUUZIMjRU?=
- =?utf-8?B?ZVgyVk9LQXp0OGxHVFZiNXpOUWwxQXlJK3hYazM5TmlDMjJpNWcvS2M3cnIw?=
- =?utf-8?B?QlZTdGM4T2RTVzN3cUtZTlY5dTB4Zm91dzNDNWJYc2NxQnIyVUZBcGhKcmty?=
- =?utf-8?B?VDRtblNZa29iS2JIUEZuMiszbFVRVDdNUHFYQzNUalhpTkQ2ZHIyT2liR05h?=
- =?utf-8?B?Ryt1VlkwQWY5alVhMmlONmRoSFRiRWdTYUt6dmEvZE52eW9QSUc5c1loZ25I?=
- =?utf-8?B?b3RNdmE3Q0k2UVVwWE5nRytRSVdBUTQ0b3VpeFQydjVvYi81a1p6ZUtkNmZm?=
- =?utf-8?B?STV5aTNCY1daek1INm1obCtKKzBmai84K0owMzlMYzlPMkFGb0FmeWdWRW1l?=
- =?utf-8?Q?CIBp49YsWkEyU0kQPqzOo6qLl?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3d23100-8e1c-4b93-4fd4-08dc3c6ad072
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 16:47:44.2534
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Wzxbe/cEjJF0knlP3RKm7ysM+QTWy7fliu5KPKBcFUWMEyVgzXKbUo0o4SN57KN0y3OEfT/YYRQD/av30NScpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8520
+References: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
+ <20240304155138.GA482969@bhelgaas> <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 4 Mar 2024 18:00:41 +0100
+Message-ID: <CAJZ5v0idOkeod9-RmnNGCwMGG+9nYi8eJSBpQYWJnv=N+eVoWg@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
+ device removal
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, gregkh@linuxfoundation.org, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>, 
+	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 04, 2024 at 02:18:41PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Dec 19, 2023 at 02:38:34PM +0000, Niklas Cassel wrote:
-> > On Tue, Dec 19, 2023 at 09:20:21AM -0500, Frank Li wrote:
-> > > On Tue, Dec 19, 2023 at 10:07:14AM +0000, Niklas Cassel wrote:
-> > > > On Mon, Dec 18, 2023 at 11:48:43PM -0500, Frank Li wrote:
-> > > > > dw_pcie_ep_inbound_atu()
-> > > > > {
-> > > > > 	...
-> > > > > 	if (!ep->bar_to_atu[bar])
-> > > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > > > 	else
-> > > > > 		free_win = ep->bar_to_atu[bar];
-> > > > > 	...
-> > > > > }
-> > > > > 
-> > > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > > > 
-> > > > > Change 'bar_to_atu' to s8. Initialize bar_to_atu as -1 to indicate it have
-> > > > > not allocate atu to the bar.
-> > > > > 
-> > > > > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-> > > > > Close: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
-> > > > > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > ---
-> > > > > 
-> > > > > Notes:
-> > > > >     @Niklas:
-> > > > >     	I have not test your case. I should be equal to previous's fix in
-> > > > >     mail list.
-> > > > 
-> > > > Hello Frank,
-> > > > 
-> > > > Thank you for sending a proper fix for this!
-> > > > 
-> > > > Personally, I slightly prefer your fix that saves the iatu index + 1, and
-> > > > keeps 0 to mean unused. That way, you don't need the memset, and you don't
-> > > > need to change the type to signed, but either way is fine by me, so:
-> > > 
-> > > index + 1 don't match hardware iATU index. It will be confused because
-> > > other parts is 0 based.
-> > > 
-> > > So I choose "-1" as free iATU.
-> > 
-> > A s8 can hold a max value of 127.
-> > CX_ATU_NUM_OUTBOUND_REGIONS seems to be 0-255.
-> > 
-> > Since the DWC code can be synthesized with 256 iATUs,
-> > your code will not work on systems with 128 or more iATUs.
-> > 
-> > If we continue to use a u8, and offset the saved value by one,
-> > we will at least be able to support 255-1 == 254 iATUs.
-> > 
-> 
-> Agree. I cannot suggest a better alternative. So let's go with this. But please
-> add a comment before bar_to_atu assignment to make it clear. Like,
-> 
-> 	/*
-> 	 * Always increment free_win before assignment, since value 0 is used to
-> 	 * identify unallocated mapping.
-> 	 */
-> 	ep->bar_to_atu[bar] = free_win + 1;
+On Mon, Mar 4, 2024 at 5:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
+> wrote:
+>
+> On Mon, Mar 4, 2024 at 4:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+> >
+> > On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wrote:
+> > > On Thu, Feb 29, 2024 at 7:23=E2=80=AFAM Kai-Heng Feng
+> > > <kai.heng.feng@canonical.com> wrote:
+> > > >
+> > > > When inserting an SD7.0 card to Realtek card reader, the card reade=
+r
+> > > > unplugs itself and morph into a NVMe device. The slot Link down on =
+hot
+> > > > unplugged can cause the following error:
+> > > >
+> > > > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > > > BUG: unable to handle page fault for address: ffffb24d403e5010
+> > > > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+> > > > Oops: 0000 [#1] PREEMPT SMP PTI
+> > > > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+> > > > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H370M =
+Pro4, BIOS P3.40 10/25/2018
+> > > > Workqueue: pm pm_runtime_work
+> > > > RIP: 0010:ioread32+0x2e/0x70
+> > > ...
+> > > > Call Trace:
+> > > >  <TASK>
+> > > >  ? show_regs+0x68/0x70
+> > > >  ? __die_body+0x20/0x70
+> > > >  ? __die+0x2b/0x40
+> > > >  ? page_fault_oops+0x160/0x480
+> > > >  ? search_bpf_extables+0x63/0x90
+> > > >  ? ioread32+0x2e/0x70
+> > > >  ? search_exception_tables+0x5f/0x70
+> > > >  ? kernelmode_fixup_or_oops+0xa2/0x120
+> > > >  ? __bad_area_nosemaphore+0x179/0x230
+> > > >  ? bad_area_nosemaphore+0x16/0x20
+> > > >  ? do_kern_addr_fault+0x8b/0xa0
+> > > >  ? exc_page_fault+0xe5/0x180
+> > > >  ? asm_exc_page_fault+0x27/0x30
+> > > >  ? ioread32+0x2e/0x70
+> > > >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+> > > >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+> > > >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+> > > >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+> > > >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+> > > >  pci_pm_runtime_idle+0x34/0x70
+> > > >  rpm_idle+0xc4/0x2b0
+> > > >  pm_runtime_work+0x93/0xc0
+> > > >  process_one_work+0x21a/0x430
+> > > >  worker_thread+0x4a/0x3c0
+> > > ...
+> >
+> > > > This happens because scheduled pm_runtime_idle() is not cancelled.
+> > >
+> > > But rpm_resume() changes dev->power.request to RPM_REQ_NONE and if
+> > > pm_runtime_work() sees this, it will not run rpm_idle().
+> > >
+> > > However, rpm_resume() doesn't deactivate the autosuspend timer if it
+> > > is running (see the comment in rpm_resume() regarding this), so it ma=
+y
+> > > queue up a runtime PM work later.
+> > >
+> > > If this is not desirable, you need to stop the autosuspend timer
+> > > explicitly in addition to calling pm_runtime_get_sync().
+> >
+> > I don't quite follow all this.  I think the race is between
+> > rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
+>
+> I think so too and the latter is not expected to run.
+>
+> >   rtsx_pci_remove()
+> >   {
+> >     pm_runtime_get_sync()
+> >     pm_runtime_forbid()
+> >     ...
+> >
+> > If this is an rtsx bug, what exactly should be added to
+> > rtsx_pci_remove()?
+> >
+> > Is there ever a case where we want any runtime PM work to happen
+> > during or after a driver .remove()?  If not, maybe the driver core
+> > should prevent that, which I think is basically what this patch does.
+>
+> No, it is not, because it doesn't actually prevent the race from
+> occurring, it just narrows the window quite a bit.
+>
+> It would be better to call pm_runtime_dont_use_autosuspend() instead
+> of pm_runtime_barrier().
+>
+> > If this is an rtsx driver bug, I'm concerned there may be many other
+> > drivers with a similar issue.  rtsx exercises this path more than most
+> > because the device switches between card reader and NVMe SSD using
+> > hotplug add/remove based on whether an SD card is inserted (see [1]).
+>
+> This is a valid concern, so it is mostly a matter of where to disable
+> autosuspend.
+>
+> It may be the driver core in principle, but note that it calls
+> ->remove() after invoking pm_runtime_put_sync(), so why would it
+> disable autosuspend when it allows runtime PM to race with device
+> removal in general?
+>
+> Another way might be to add a pm_runtime_dont_use_autosuspend() call
+> at the beginning of pci_device_remove().
+>
+> Or just remove the optimization in question from rpm_resume() which is
+> quite confusing and causes people to make assumptions that lead to
+> incorrect behavior in this particular case.
 
-This patch already change to use "-1" as free. Only issue for this patch is
-that use 's16' instead of 's8' becasue max ATU number is 255.
+Well, scratch this.
 
-Frank
+If rpm_idle() is already running at the time rpm_resume() is called,
+the latter may return right away without waiting, which is incorrect.
 
-> 
-> - Mani
-> 
-> > 
-> > Kind regards,
-> > Niklas
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+rpm_resume() needs to wait for the "idle" callback to complete, so
+this (again, modulo GMail-induced whitespace mangling) should help:
+
+---
+ drivers/base/power/runtime.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+Index: linux-pm/drivers/base/power/runtime.c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+--- linux-pm.orig/drivers/base/power/runtime.c
++++ linux-pm/drivers/base/power/runtime.c
+@@ -798,7 +798,8 @@ static int rpm_resume(struct device *dev
+     }
+
+     if (dev->power.runtime_status =3D=3D RPM_RESUMING ||
+-        dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
++        dev->power.runtime_status =3D=3D RPM_SUSPENDING ||
++        dev->power.idle_notification) {
+         DEFINE_WAIT(wait);
+
+         if (rpmflags & (RPM_ASYNC | RPM_NOWAIT)) {
+@@ -826,7 +827,8 @@ static int rpm_resume(struct device *dev
+             prepare_to_wait(&dev->power.wait_queue, &wait,
+                     TASK_UNINTERRUPTIBLE);
+             if (dev->power.runtime_status !=3D RPM_RESUMING &&
+-                dev->power.runtime_status !=3D RPM_SUSPENDING)
++                dev->power.runtime_status !=3D RPM_SUSPENDING &&
++                !dev->power.idle_notification)
+                 break;
+
+             spin_unlock_irq(&dev->power.lock);
 
