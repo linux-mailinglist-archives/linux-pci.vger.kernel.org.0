@@ -1,148 +1,162 @@
-Return-Path: <linux-pci+bounces-4396-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4397-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B33A86FC69
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 09:54:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF87F86FCBE
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 10:08:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 364DA2817E8
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 08:54:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 392D71F20F2C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 09:08:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD35A1B95C;
-	Mon,  4 Mar 2024 08:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4933A1B7F3;
+	Mon,  4 Mar 2024 09:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDsBMIbS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfJ+oBzf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A014C1B5BA;
-	Mon,  4 Mar 2024 08:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA451B5BB;
+	Mon,  4 Mar 2024 09:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709542130; cv=none; b=IC82Dn3ODu1VDc02qNXAbjhNHnj9Qemx/7acQE9fodJc3BE9pBsBeV9dEyYZjb5gv8sI1fYX/DVjt06y75dFTXyQoEouel/XricRwFEcq6GrgYbSiO9dSABWZtMwyRVIXzcswxZ7OLDBQlL+iofx3S/j66XFXoFBAQ8KI/HqAcc=
+	t=1709543314; cv=none; b=n2Fl60uPaBhIYmpqZ6yV3iBJDyFtdFyJN3C3d1PmPOqoH1NhlJbXi/ibPPACbW8V+UhldrmuIJrf+LhKG0JAJdIdBejATwIA0VJ31+O4EgJ1jsAhXBD1Oskkv8Hp7njKv096XFLDoHfOmCajbSvASP1qH1lkuoS+oprfHS03rso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709542130; c=relaxed/simple;
-	bh=xM0SMTD+lNXRX1yeq+OtVTj9buj+SNMGxG/OZeINqL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WLHMy9rtM5ZQNKQGXS+yIP8+OOVUX1N+8AzS2n7IvDwf39oR0Z61vJy50Hl2o0WHuF1mACcbEkj9bNNDk/cs5e95FYqMvNtloHrkSW+fxrRzoaBGneRD23ACVJfI/v6AW4SCNTegs40R+9gVq2B9Ih0dwB8JG8GhjY2IyEE+glI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDsBMIbS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD8B3C433C7;
-	Mon,  4 Mar 2024 08:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709542130;
-	bh=xM0SMTD+lNXRX1yeq+OtVTj9buj+SNMGxG/OZeINqL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qDsBMIbS48QPFf/BJ3sQUfNwRNC3X2KQDEQ3IXhcKNk46PbWHSBmKQ+49RslxZkIF
-	 VdTzyolTAxg7paefbqz9fauFkD2kZ3xXPCTJVFkHyVP+QdwTTix8GF9R4tv8D3P7z/
-	 bndd7tqw0oj3JnqA2DkwuxE74KblKrIwt4Y0rOBtaJix3wdBU+qBkqTFkm56Z0/bOA
-	 g7NHHAgUPWPgAjEB6Id9/M9hI5dWY1B7nUNrwoA1sBkVYp/CUEuat+BJMW+cauy8ef
-	 jqprnFplCkYMWerIpSZoWe8EoYzJm4RcBdmpCjXPTuxOTeOB0pKQzlw9SIBeIduTGL
-	 /iJHakRH5+0mA==
-Date: Mon, 4 Mar 2024 14:18:41 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Frank Li <Frank.li@nxp.com>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	"open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Message-ID: <20240304084841.GJ2647@thinkpad>
-References: <20231219044844.1195294-1-Frank.Li@nxp.com>
- <ZYFrUWM7JXdv7rtb@x1-carbon>
- <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
- <ZYGq6RdCfdhXFF/9@x1-carbon>
+	s=arc-20240116; t=1709543314; c=relaxed/simple;
+	bh=EA6ZR3Erkc94kHJhtNv8APoWSvKBml3K5BTGuia7NoM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gl4Qv1m2hWK0PHwer3kJkSIgSMOpk19o6M3sNHT5ADChTwO7TSUkw3SONpf/njV3eovOHLCv8TRCltTfaYWmwWyftAcrY395ksnoyBKihR5ou4MDxoMgoWCn4z40nklQB8OchGpxqWVAaYGmy93lI1C6lPofLnJcEoRYC2vz54s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfJ+oBzf; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709543313; x=1741079313;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EA6ZR3Erkc94kHJhtNv8APoWSvKBml3K5BTGuia7NoM=;
+  b=BfJ+oBzfv5oTzDpbOtO9Z9DDf3ymd/FnmZ73kiU5349Y8zSne3dQSgp3
+   NV/W5IRzenSiYAa+n6eGT/2epNdhvO666c+8MBgFOxbE4FzQ2mW+z4knq
+   gjbEXLz1b8S0JmWEYR9kaxEeSVXNHt4SgeT6bSn7iZMz6YVqe9KbCLgJH
+   EDFqOaPrT9/dS+A+regZgZObVuTKou837101/dPF8wONqv3vvqnbRPiqz
+   8vb7Xc+ZfQJXWWdAzZzk7Bh3WHHGCQd6+pvbkxTRLVX/KjLy+77PcTSQr
+   VCuVCrDlKRzLElChvZGM+dX58MiLUo0qp8JoD6/lV8OXnOfWsilexBnjr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="7840688"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="7840688"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 01:08:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="32092854"
+Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
+  by fmviesa002.fm.intel.com with ESMTP; 04 Mar 2024 01:08:27 -0800
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: bhelgaas@google.com,
+	lukas@wunner.de
+Cc: Smita.KoralahalliChannabasappa@amd.com,
+	ilpo.jarvinen@linux.intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kbusch@kernel.org,
+	Ethan Zhao <haifeng.zhao@linux.intel.com>
+Subject: [PATCH pci-next] pci/edr: Ignore Surprise Down error on hot removal
+Date: Mon,  4 Mar 2024 04:08:19 -0500
+Message-Id: <20240304090819.3812465-1-haifeng.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZYGq6RdCfdhXFF/9@x1-carbon>
 
-On Tue, Dec 19, 2023 at 02:38:34PM +0000, Niklas Cassel wrote:
-> On Tue, Dec 19, 2023 at 09:20:21AM -0500, Frank Li wrote:
-> > On Tue, Dec 19, 2023 at 10:07:14AM +0000, Niklas Cassel wrote:
-> > > On Mon, Dec 18, 2023 at 11:48:43PM -0500, Frank Li wrote:
-> > > > dw_pcie_ep_inbound_atu()
-> > > > {
-> > > > 	...
-> > > > 	if (!ep->bar_to_atu[bar])
-> > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > > 	else
-> > > > 		free_win = ep->bar_to_atu[bar];
-> > > > 	...
-> > > > }
-> > > > 
-> > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > > 
-> > > > Change 'bar_to_atu' to s8. Initialize bar_to_atu as -1 to indicate it have
-> > > > not allocate atu to the bar.
-> > > > 
-> > > > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-> > > > Close: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
-> > > > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > > 
-> > > > Notes:
-> > > >     @Niklas:
-> > > >     	I have not test your case. I should be equal to previous's fix in
-> > > >     mail list.
-> > > 
-> > > Hello Frank,
-> > > 
-> > > Thank you for sending a proper fix for this!
-> > > 
-> > > Personally, I slightly prefer your fix that saves the iatu index + 1, and
-> > > keeps 0 to mean unused. That way, you don't need the memset, and you don't
-> > > need to change the type to signed, but either way is fine by me, so:
-> > 
-> > index + 1 don't match hardware iATU index. It will be confused because
-> > other parts is 0 based.
-> > 
-> > So I choose "-1" as free iATU.
-> 
-> A s8 can hold a max value of 127.
-> CX_ATU_NUM_OUTBOUND_REGIONS seems to be 0-255.
-> 
-> Since the DWC code can be synthesized with 256 iATUs,
-> your code will not work on systems with 128 or more iATUs.
-> 
-> If we continue to use a u8, and offset the saved value by one,
-> we will at least be able to support 255-1 == 254 iATUs.
-> 
+Per PCI firmware spec r3.3 sec 4.6.12, for firmware first mode DPC
+handling path, FW should clear UC errors logged by port and bring link
+out of DPC, but because of ambiguity of wording in the spec, some BIOSes
+doesn't clear the surprise down error and the error bits in pci status,
+still notify OS to handle it. thus following trick is needed in EDR when
+double reporting (hot removal interrupt && dpc notification) is hit.
 
-Agree. I cannot suggest a better alternative. So let's go with this. But please
-add a comment before bar_to_atu assignment to make it clear. Like,
+https://patchwork.kernel.org/project/linux-pci/patch/20240207181854.
+121335-1-Smita.KoralahalliChannabasappa@amd.com/
 
-	/*
-	 * Always increment free_win before assignment, since value 0 is used to
-	 * identify unallocated mapping.
-	 */
-	ep->bar_to_atu[bar] = free_win + 1;
+Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+---
+ drivers/pci/pci.h      | 1 +
+ drivers/pci/pcie/dpc.c | 9 +++++----
+ drivers/pci/pcie/edr.c | 3 +++
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-- Mani
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 50134b5e3235..3787bb32e724 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -443,6 +443,7 @@ void pci_save_dpc_state(struct pci_dev *dev);
+ void pci_restore_dpc_state(struct pci_dev *dev);
+ void pci_dpc_init(struct pci_dev *pdev);
+ void dpc_process_error(struct pci_dev *pdev);
++bool dpc_handle_surprise_removal(struct pci_dev *pdev);
+ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
+ bool pci_dpc_recovered(struct pci_dev *pdev);
+ #else
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 98b42e425bb9..be79f205e04c 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -319,8 +319,10 @@ static void pci_clear_surpdn_errors(struct pci_dev *pdev)
+ 	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
+ }
+ 
+-static void dpc_handle_surprise_removal(struct pci_dev *pdev)
++bool  dpc_handle_surprise_removal(struct pci_dev *pdev)
+ {
++	if (!dpc_is_surprise_removal(pdev))
++		return false;
+ 	if (!pcie_wait_for_link(pdev, false)) {
+ 		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
+ 		goto out;
+@@ -338,6 +340,7 @@ static void dpc_handle_surprise_removal(struct pci_dev *pdev)
+ out:
+ 	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+ 	wake_up_all(&dpc_completed_waitqueue);
++	return true;
+ }
+ 
+ static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+@@ -362,10 +365,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ 	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
+ 	 * of async removal and should be ignored by software.
+ 	 */
+-	if (dpc_is_surprise_removal(pdev)) {
+-		dpc_handle_surprise_removal(pdev);
++	if (dpc_handle_surprise_removal(pdev))
+ 		return IRQ_HANDLED;
+-	}
+ 
+ 	dpc_process_error(pdev);
+ 
+diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+index 5f4914d313a1..556edfb2696a 100644
+--- a/drivers/pci/pcie/edr.c
++++ b/drivers/pci/pcie/edr.c
+@@ -184,6 +184,9 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+ 		goto send_ost;
+ 	}
+ 
++	if (dpc_handle_surprise_removal(edev))
++		goto send_ost;
++
+ 	dpc_process_error(edev);
+ 	pci_aer_raw_clear_status(edev);
+ 
 
-> 
-> Kind regards,
-> Niklas
-
+base-commit: a66f2b4a4d365dc4bac35576f3a9d4f5982f1d63
 -- 
-மணிவண்ணன் சதாசிவம்
+2.31.1
+
 
