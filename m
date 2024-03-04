@@ -1,298 +1,213 @@
-Return-Path: <linux-pci+bounces-4462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4463-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EE6487090E
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 19:05:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3F9287091A
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 19:08:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 48F67B2316B
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:05:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C81B41C239D5
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 191CB62154;
-	Mon,  4 Mar 2024 18:05:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF936214B;
+	Mon,  4 Mar 2024 18:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KBo3kTAa"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="e5cWzcyq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC18C6214C;
-	Mon,  4 Mar 2024 18:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1656169F
+	for <linux-pci@vger.kernel.org>; Mon,  4 Mar 2024 18:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709575519; cv=none; b=O0JtZFemzaMzAZlux+WdZRhL6jVjxfVdBU5trxMX4bFsle5jmxOrXtT2Ra286kn0wTqRDA/iv1SjrkcXq4nRhcAefJFYwOVC02F9AyyydHdUMylHAJc/dVSov/L5kQ/DhJ0hO2rYKGxHEyMWVzPwx2W3bVB+JDcWDy/z2NJSyX8=
+	t=1709575695; cv=none; b=C+IDJ1gNy9D44ya2x/jnkJZgkcPFNG7qV7esAjRT/N4jsupKm2AYwI9W51kbKmz5QTbPiWn1tJ15vhAa84W1AoLU7agLU8i6HyImhFDmDWxQMqT6G6lamBOxKKe3J0CYPDOxppV0SkI9t7mM6R0VrWgUXjZ3HZb3zv3elpd4wk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709575519; c=relaxed/simple;
-	bh=ITqX/m4LMI7f8HrdMK/9Khp0LrIi2sxZUpdGbycpoq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iwzIscmA19lg+7KNssadOMtsgNoO+cVlF6EzFQpJPbQwE9BhKPRQavwmqyvia1spQ4HyxQ4mRPFPZ7Sq5QUvFsMSe7tD7EGymy4EOKVdRZlEkMmWujmi5T3Mbr9XW7oK14IttUnFZoZ8x26NO6AQGRhQ5joAyXCXHtw5b6RarbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KBo3kTAa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31450C433F1;
-	Mon,  4 Mar 2024 18:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709575518;
-	bh=ITqX/m4LMI7f8HrdMK/9Khp0LrIi2sxZUpdGbycpoq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KBo3kTAatAZMO7zhDLDphgexXMPY6kMyyAMrZXeBasREtmhsiJ7INJNGU5LZycxkP
-	 PnSLRTis7zfRKpWD8C+upVt8GMgHwgx4SWF53h8xs6/fZ5XyDewiEFWyGPCrAeoHiT
-	 Hegbo+76XaT4Fnok4CEswLxJZ9ac2uJLvxliJh1GzisQTQIByxZfP/NcODa+F5O6Zt
-	 fixzstprzsw1vyx01Qb5qw6kGDndKAe6nS+74FCvLftrqaaeWUftjbTaF7cRoVaDYk
-	 3owDU8NFSPAsCLqT1FTgJzulOINYOjS2LB90VXq2+6Cqi/3bgG+d5FyU6l5naNYwW4
-	 IKKnmKAx6P/rA==
-Date: Mon, 4 Mar 2024 23:35:06 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vireshk@kernel.org,
-	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v8 7/7] PCI: qcom: Add OPP support to scale performance
- state of power domain
-Message-ID: <20240304180506.GE31079@thinkpad>
-References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
- <20240302-opp_support-v8-7-158285b86b10@quicinc.com>
+	s=arc-20240116; t=1709575695; c=relaxed/simple;
+	bh=SCCU9dbfZqUMw7g1ftHwe7lhiBrDP1IoW13xbyD472Q=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=B1eHHamxtuuGlZmhXhDXwKSjvrj3UTUUhesuXTZVoq7Tcd0LgJmLDzsS0IcdhF0aYljN+ioaEk0rRnztygpCheQQv0a+KaBl2y+llDc/vOKu0FJCrcdZvgK3SFD0IYtQKOhve3dnp/kXZhtlaHTsu4i2j8y2sdI1Utzm49kcQ/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=e5cWzcyq; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5d3907ff128so4775489a12.3
+        for <linux-pci@vger.kernel.org>; Mon, 04 Mar 2024 10:08:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1709575693; x=1710180493; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aizblNvc9Cf2btttMWelCC6kMijS1p5vy42920jDwTY=;
+        b=e5cWzcyqyDy+69v+oaErXiT4T6SwOmNPAowtEemMkU4mmWJ4T5hfleUs4acVf8v4PO
+         FFiRsFy6LVb6QRv6ydgK1vY59/vytWvEL7lbZt1jjc35GaEqJYxN0XXkKDdN8J0p91ey
+         lSbzRoCalAND2OhVnq0e36pM1NdKhfA6mzVtIMgDbaLGhdYMHK+2K+mQUTkIEvR08hmX
+         0NLOjA0lvjzFXETVgGw30WodRrfz3g567iEVDAYvaPW4tMpv+42fIaq9c/V638m/2FFV
+         F2c/zzjj+yXliFZgtk+UBRi+WaDH6sm/cTE36niNyTsbh+u7Vqiqo8YWi2gC4CUjyEjD
+         yYqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709575693; x=1710180493;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aizblNvc9Cf2btttMWelCC6kMijS1p5vy42920jDwTY=;
+        b=B0W7+qtSLnNxBtROybQiHrbOR/3YRZwJDbvb5aFQdYDiCJdlEY5kLzpwajkI6r/IlB
+         ysqgv1KhZzTLca5InWPFy/jaK6V6zjjkpvpzb7gbajL6LWtoCWA3xP+yNg6AURqPsZqM
+         vmpjhxA2085Fa/Sa2ae5SiSkkCACXRbizz4IY1STNango2lbxNV14sswZNT3VHeGSBLV
+         vrietl3ezChrl7Q9ZlkcjIcjqpSqll+X5yzzoolJyUDABVTyrYyMcrhVlZW9d/3yfU4F
+         A+EY3lWbqbif96M+3XJiB/Ctl3jG1n/pYQfJLY8pWuVv8nV0uwgK+w9TdKIAnD7JvqY7
+         vKCA==
+X-Forwarded-Encrypted: i=1; AJvYcCURLSgflkRRjTOn+kfvl/yMldp7zo3huRgA5i9q80gBpl3zgEPMalNMTfDqrpc+pWd4r0T9EOV+uPPyIMxfZp7vfAmCcmfYwz2N
+X-Gm-Message-State: AOJu0YzrmItW7SrCDEik5Lcnr9lUORMD7QyzARXasOcNCGJxYYmvH92p
+	n2Z7sBuTjLzk0PqsSoQczdd6OBP0WKg0LtdNylL/m2JLIGkNuWew6HJkY93NF2NsjkaLVDn29gU
+	o
+X-Google-Smtp-Source: AGHT+IFhlrCJ7z/RMUFxQQf2zMzCvbw2MLdNLsKVNf46b6Rg0IEtkQiqwfm6zGkZbeAOroe6+Tng3g==
+X-Received: by 2002:a17:90a:8a0e:b0:29a:a08d:4809 with SMTP id w14-20020a17090a8a0e00b0029aa08d4809mr7511710pjn.2.1709575693052;
+        Mon, 04 Mar 2024 10:08:13 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id l3-20020a17090ac58300b0029b2e00359esm5161382pjt.36.2024.03.04.10.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 10:08:06 -0800 (PST)
+Date: Mon, 04 Mar 2024 10:08:06 -0800 (PST)
+X-Google-Original-Date: Mon, 04 Mar 2024 10:08:04 PST (-0800)
+Subject:     Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout workaround to host drivers.
+In-Reply-To: <ZeCd+xqE6x2ZFtJN@lpieralisi>
+CC: minda.chen@starfivetech.com, Conor Dooley <conor@kernel.org>, kw@linux.com,
+  robh+dt@kernel.org, bhelgaas@google.com, tglx@linutronix.de, daire.mcnamara@microchip.com,
+  emil.renner.berthing@canonical.com, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, p.zabel@pengutronix.de, mason.huo@starfivetech.com,
+  leyfoon.tan@starfivetech.com, kevin.xie@starfivetech.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: lpieralisi@kernel.org
+Message-ID: <mhng-87e7ef5a-d60b-4057-960d-41bc901b6c7f@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240302-opp_support-v8-7-158285b86b10@quicinc.com>
 
-On Sat, Mar 02, 2024 at 09:30:01AM +0530, Krishna chaitanya chundru wrote:
-> QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-> maintains hardware state of a regulator by performing max aggregation of
-> the requests made by all of the clients.
-> 
-> PCIe controller can operate on different RPMh performance state of power
-> domain based on the speed of the link. And this performance state varies
-> from target to target, like some controllers support GEN3 in NOM (Nominal)
-> voltage corner, while some other supports GEN3 in low SVS (static voltage
-> scaling).
-> 
-> The SoC can be more power efficient if we scale the performance state
-> based on the aggregate PCIe link bandwidth.
-> 
-> Add Operating Performance Points (OPP) support to vote for RPMh state based
-> on the aggregate link bandwidth.
-> 
-> OPP can handle ICC bw voting also, so move ICC bw voting through OPP
-> framework if OPP entries are present.
-> 
-> Different link configurations may share the same aggregate bandwidth,
-> e.g., a 2.5 GT/s x2 link and a 5.0 GT/s x1 link have the same bandwidth
-> and share the same OPP entry.
-> 
-> As we are moving ICC voting as part of OPP, don't initialize ICC if OPP
-> is supported.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 81 +++++++++++++++++++++++++++-------
->  1 file changed, 66 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index a0266bfe71f1..2ec14bfafcfc 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/pci.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/pcie.h>
-> @@ -244,6 +245,7 @@ struct qcom_pcie {
->  	const struct qcom_pcie_cfg *cfg;
->  	struct dentry *debugfs;
->  	bool suspended;
-> +	bool opp_supported;
+On Thu, 29 Feb 2024 07:08:43 PST (-0800), lpieralisi@kernel.org wrote:
+> On Tue, Feb 27, 2024 at 06:35:21PM +0800, Minda Chen wrote:
+>> From: Kevin Xie <kevin.xie@starfivetech.com>
+>>
+>> As the Starfive JH7110 hardware can't keep two inbound post write in
+>> order all the time, such as MSI messages and NVMe completions. If the
+>> NVMe completion update later than the MSI, an NVMe IRQ handle will miss.
+>
+> Please explain what the problem is and what "NVMe completions" means
+> given that you are talking about posted writes.
+>
+> If you have a link to an erratum write-up it would certainly help.
 
-You can just use "pcie->icc_mem" to differentiate between OPP and ICC. No need
-of a new flag. 
+I think we really need to see that errata document.  Our formal memory 
+model doesn't account for device interactions so it's possible there's 
+just some arch fence we can make stronger in order to get things ordered 
+again -- we've had similar problems with some other RISC-V chips, and 
+while it ends up being slow at least it's correct.
 
->  };
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -1405,15 +1407,13 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
->  	return 0;
->  }
->  
-> -static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
-> +static void qcom_pcie_icc_opp_update(struct qcom_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
-> -	u32 offset, status;
-> +	u32 offset, status, freq;
-> +	struct dev_pm_opp *opp;
->  	int speed, width;
-> -	int ret;
-> -
-> -	if (!pcie->icc_mem)
-> -		return;
-> +	int ret, mbps;
->  
->  	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-> @@ -1425,11 +1425,30 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
->  	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
->  	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
->  
-> -	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> -	if (ret) {
-> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> -			ret);
-> +	if (pcie->opp_supported) {
-> +		mbps = pcie_link_speed_to_mbps(pcie_link_speed[speed]);
-> +		if (mbps < 0)
-> +			return;
-> +
-> +		freq = mbps * 1000;
-> +		opp = dev_pm_opp_find_freq_exact(pci->dev, freq * width, true);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
-> +			if (ret)
-> +				dev_err(pci->dev, "Failed to set opp: freq %ld ret %d\n",
-> +					dev_pm_opp_get_freq(opp), ret);
-> +			dev_pm_opp_put(opp);
-> +		}
-> +	} else {
-> +		ret = icc_set_bw(pcie->icc_mem, 0,
-> +				 width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> +		if (ret) {
-> +			dev_err(pci->dev,
-> +				"failed to set interconnect bandwidth for pcie-mem: %d\n", ret);
+> This looks completely broken to me, if the controller can't guarantee
+> PCIe transactions ordering it is toast, there is not even a point
+> considering mainline merging.
 
-"PCIe-MEM"
+I wouldn't be at all surprised if that's the case.  Without some 
+concrete ISA mechanisms here we're sort of just stuck hoping the SOC 
+vendors do the right thing, which is always terrifying.
 
-> +		}
->  	}
-> +
-> +	return;
->  }
->  
->  static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-> @@ -1472,8 +1491,10 @@ static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
->  static int qcom_pcie_probe(struct platform_device *pdev)
->  {
->  	const struct qcom_pcie_cfg *pcie_cfg;
-> +	unsigned long max_freq = INT_MAX;
->  	struct device *dev = &pdev->dev;
->  	struct qcom_pcie *pcie;
-> +	struct dev_pm_opp *opp;
->  	struct dw_pcie_rp *pp;
->  	struct resource *res;
->  	struct dw_pcie *pci;
-> @@ -1540,9 +1561,36 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_pm_runtime_put;
->  	}
->  
-> -	ret = qcom_pcie_icc_init(pcie);
-> -	if (ret)
-> +	 /* OPP table is optional */
-> +	ret = devm_pm_opp_of_add_table(dev);
-> +	if (ret && ret != -ENODEV) {
-> +		dev_err_probe(dev, ret, "Failed to add OPP table\n");
->  		goto err_pm_runtime_put;
-> +	}
-> +
-> +	/*
-> +	 * Use highest OPP here if the OPP table is present. At the end of
+I'm not really a PCIe person so this is all a bit vague, but IIRC we had 
+a bunch of possible PCIe ordering violations in the SiFive memory system 
+back when I was there and we never really got a scheme for making sure 
+things were correct.
 
-Why highest opp? For ICC, we set minimal bandwidth before.
+So I think we really do need to see that errata document to know what's 
+possible here.  Folks have been able to come up with clever solutions to 
+these problems before, maybe we'll get lucky again.
 
-> +	 * the probe(), OPP will be updated using qcom_pcie_icc_opp_update().
-> +	 */
-> +	if (ret != -ENODEV) {
+>> As a workaround, we will wait a while before going to the generic
+>> handle here.
+>>
+>> Verified with NVMe SSD, USB SSD, R8169 NIC.
+>> The performance are stable and even higher after this patch.
+>
+> I assume this is a joke even though it does not make me laugh.
 
-if (!ret)
+So you're new to RISC-V, then?  It gets way worse than this ;)
 
-> +		opp = dev_pm_opp_find_freq_floor(dev, &max_freq);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(dev, opp);
-> +			if (ret)
-> +				dev_err_probe(pci->dev, ret,
-> +					      "Failed to set opp: freq %ld\n",
-
-	"Failed to set OPP for freq: %ld\n"
-
-> +					      dev_pm_opp_get_freq(opp));
-> +			dev_pm_opp_put(opp);
-> +		}
-> +		pcie->opp_supported = true;
-> +	}
-> +
-> +	/* Skip ICC init if OPP is supported as ICC bw is handled by OPP */
-> +	if (!pcie->opp_supported) {
-> +		ret = qcom_pcie_icc_init(pcie);
-
-First check whether ICC is present or not and then check OPP as a fallback. This
-avoids an extra flag.
-
-- Mani
-
-> +		if (ret)
-> +			goto err_pm_runtime_put;
-> +	}
->  
->  	ret = pcie->cfg->ops->get_resources(pcie);
->  	if (ret)
-> @@ -1562,7 +1610,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  		goto err_phy_exit;
->  	}
->  
-> -	qcom_pcie_icc_update(pcie);
-> +	qcom_pcie_icc_opp_update(pcie);
->  
->  	if (pcie->mhi)
->  		qcom_pcie_init_debugfs(pcie);
-> @@ -1621,10 +1669,13 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
->  			qcom_pcie_host_init(&pcie->pci->pp);
->  			pcie->suspended = false;
->  		}
-> -		qcom_pcie_icc_update(pcie);
-> +		qcom_pcie_icc_opp_update(pcie);
->  		return ret;
->  	}
->  
-> +	if (pcie->opp_supported)
-> +		dev_pm_opp_set_opp(pcie->pci->dev, NULL);
-> +
->  	return 0;
->  }
->  
-> @@ -1647,7 +1698,7 @@ static int qcom_pcie_resume_noirq(struct device *dev)
->  		pcie->suspended = false;
->  	}
->  
-> -	qcom_pcie_icc_update(pcie);
-> +	qcom_pcie_icc_opp_update(pcie);
->  
->  	return 0;
->  }
-> 
-> -- 
-> 2.42.0
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> Thanks,
+> Lorenzo
+>
+>>
+>> Signed-off-by: Kevin Xie <kevin.xie@starfivetech.com>
+>> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> ---
+>>  drivers/pci/controller/plda/pcie-plda-host.c | 12 ++++++++++++
+>>  drivers/pci/controller/plda/pcie-plda.h      |  1 +
+>>  drivers/pci/controller/plda/pcie-starfive.c  |  1 +
+>>  3 files changed, 14 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
+>> index a18923d7cea6..9e077ddf45c0 100644
+>> --- a/drivers/pci/controller/plda/pcie-plda-host.c
+>> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+>> @@ -13,6 +13,7 @@
+>>  #include <linux/msi.h>
+>>  #include <linux/pci_regs.h>
+>>  #include <linux/pci-ecam.h>
+>> +#include <linux/delay.h>
+>>
+>>  #include "pcie-plda.h"
+>>
+>> @@ -44,6 +45,17 @@ static void plda_handle_msi(struct irq_desc *desc)
+>>  			       bridge_base_addr + ISTATUS_LOCAL);
+>>  		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+>>  		for_each_set_bit(bit, &status, msi->num_vectors) {
+>> +			/*
+>> +			 * As the Starfive JH7110 hardware can't keep two
+>> +			 * inbound post write in order all the time, such as
+>> +			 * MSI messages and NVMe completions.
+>> +			 * If the NVMe completion update later than the MSI,
+>> +			 * an NVMe IRQ handle will miss.
+>> +			 * As a workaround, we will wait a while before
+>> +			 * going to the generic handle here.
+>> +			 */
+>> +			if (port->msi_quirk_delay_us)
+>> +				udelay(port->msi_quirk_delay_us);
+>>  			ret = generic_handle_domain_irq(msi->dev_domain, bit);
+>>  			if (ret)
+>>  				dev_err_ratelimited(dev, "bad MSI IRQ %d\n",
+>> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
+>> index 04e385758a2f..feccf285dfe8 100644
+>> --- a/drivers/pci/controller/plda/pcie-plda.h
+>> +++ b/drivers/pci/controller/plda/pcie-plda.h
+>> @@ -186,6 +186,7 @@ struct plda_pcie_rp {
+>>  	int msi_irq;
+>>  	int intx_irq;
+>>  	int num_events;
+>> +	u16 msi_quirk_delay_us;
+>>  };
+>>
+>>  struct plda_event {
+>> diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
+>> index 9bb9f0e29565..5cfc30572b7f 100644
+>> --- a/drivers/pci/controller/plda/pcie-starfive.c
+>> +++ b/drivers/pci/controller/plda/pcie-starfive.c
+>> @@ -391,6 +391,7 @@ static int starfive_pcie_probe(struct platform_device *pdev)
+>>
+>>  	plda->host_ops = &sf_host_ops;
+>>  	plda->num_events = PLDA_MAX_EVENT_NUM;
+>> +	plda->msi_quirk_delay_us = 1;
+>>  	/* mask doorbell event */
+>>  	plda->events_bitmap = GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
+>>  			     & ~BIT(PLDA_AXI_DOORBELL)
+>> --
+>> 2.17.1
+>>
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
