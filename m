@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B358870893
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:49:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CDE08708A6
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:51:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C65B7283AFF
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 17:49:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EE791C20E0D
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 17:51:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F20CB61665;
-	Mon,  4 Mar 2024 17:49:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA556166C;
+	Mon,  4 Mar 2024 17:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uF52TUP0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XEq2h2Vj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF706612FF;
-	Mon,  4 Mar 2024 17:49:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECCF612F6;
+	Mon,  4 Mar 2024 17:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709574569; cv=none; b=msNI/5JUmq0dMi/+ZcOknckw7Kazj3CMWP6crcFwem6tAB/7SsykTOc8Oq9bjSHaNf0rp+xn29tIwtbY8uO6I9rqNOg3vq92OhVCn5APpb0T9dCOoyM5q07PovaVPEoRMLqTN1SUhwipC5xKvVIN3ncomlUtoaxAllUjkEEWH0A=
+	t=1709574709; cv=none; b=AYBbMq/u81Ht8r5ATOfPiQFL8YL9PoCE9Te+TFgFSCJZXPVT3aJ5mX8Zroe4+defwEAjueLtQr49WRzyEl01v9hjYGFknsOg2dGDaEaztT/pIvdx9UJjBbUaizk4imrwEDXGwdz9ySObbGbP7Zlu3dR7o3OptgYnPbOBgsqWhu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709574569; c=relaxed/simple;
-	bh=yd3DG/OWoHxPS1GFw4PLIDi3ucW798a2Y8kNvy9b8wk=;
+	s=arc-20240116; t=1709574709; c=relaxed/simple;
+	bh=Z52pfYinDoHJZm+lCg1dFpAvhbY2OsPTMdyq/V4PCn0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b5tEOPZSq/Iy1cXkFcPVa4ofS3JUozJUvrnYjKd/zCRodxcUXY5nZMq2OP0lkuxWCRHVvmqcrYn/ME0FmMHbGPImeyQBx9N/FAEUQRmE7dP8xsug2Tk+eHdGhuryIk/z0RWi+MwHqNgeeEoLtfhhb1ltgepTo/580XsHej8VGGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uF52TUP0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06876C43390;
-	Mon,  4 Mar 2024 17:49:21 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6aGHLvgLyMHXvPKbvunlv9PW7bUBlwJVN7PUUzVIH3A+ZmyeiYtiUKkHe/UUWLUF55ohpnSgYPppBon5k6zcmlILDiizDf01KMor8fgWojhJmbaTv56ulG1A96BdgHCq+ri1c03ugJ5qxzXS69m8oBfBM0nMh4fQ2ZQ1rvJUjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XEq2h2Vj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE7D4C433C7;
+	Mon,  4 Mar 2024 17:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709574569;
-	bh=yd3DG/OWoHxPS1GFw4PLIDi3ucW798a2Y8kNvy9b8wk=;
+	s=k20201202; t=1709574708;
+	bh=Z52pfYinDoHJZm+lCg1dFpAvhbY2OsPTMdyq/V4PCn0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uF52TUP0tpTMiUhBlzWL8cf+qju3fYNTFrzc8ikHGCPuqW33VmTL0e4XtuxizutKB
-	 sQLWSspT+OHrnjR2jXFPifQeE1EjuncmhFTM9IBrDxBA7nLz2P3MAmY7eBDb+Lwac7
-	 qFHADkYoMgg8ZxGOXo3MQ/Akt6h4NizrQzoIyS6IHIAbyXzvIWJpoN5EBfhGOn+ebg
-	 DM74vlR/O6OIl//4DjAPQFPhpWqOpSikD57muDEqtgNa43jeGKXmR/BgztQcjAJqhb
-	 Qo4lMMPoO9kLPIvMI3+DYuaGxiJO6CC3Z2XsRiZ3l0ZO92JQ1xxD0gG18kI4kbbIzi
-	 +OY1tojEhPf0A==
-Date: Mon, 4 Mar 2024 23:19:17 +0530
+	b=XEq2h2Vjg3QUuaSWCOG2DfuRmf/FeXU4kQbkQnZCf0mAPTcBRtM49DTLOZEWD5owB
+	 wJ/+ePZTYFZMRPs3oauD2X8jnwx3y5v/nyZSpMT2xsskGL4acIuRJoZsP3a0XglDBy
+	 FNKXHkg2OQYnwFUIQUCeHBQIRZud1hAJmsbRfitBicVAd3blAiN4XHdDdM8uF/zxd2
+	 jRzo95NU/XaY+lICYiLsWPObNRx3wsqIpNacsUaeKh+OealHGR/guHmFFDsTK7sNaP
+	 Nvrz7jtCwz7dUvM8AidVok0AS3voTPLbvLDoL41Lx4GSi06c1Do+lqebeylWsD+253
+	 Y5hRcjElDodNg==
+Date: Mon, 4 Mar 2024 23:21:36 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
 To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
@@ -60,11 +60,11 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	linux-kernel@vger.kernel.org, vireshk@kernel.org,
 	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
 	quic_nitegupt@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v8 5/7] arm64: dts: qcom: sm8450: Add opp table support
- to PCIe
-Message-ID: <20240304174917.GC31079@thinkpad>
+Subject: Re: [PATCH v8 6/7] PCI: Bring the PCIe speed to MBps logic to new
+ pcie_link_speed_to_mbps()
+Message-ID: <20240304175136.GD31079@thinkpad>
 References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
- <20240302-opp_support-v8-5-158285b86b10@quicinc.com>
+ <20240302-opp_support-v8-6-158285b86b10@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,123 +74,90 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240302-opp_support-v8-5-158285b86b10@quicinc.com>
+In-Reply-To: <20240302-opp_support-v8-6-158285b86b10@quicinc.com>
 
-On Sat, Mar 02, 2024 at 09:29:59AM +0530, Krishna chaitanya chundru wrote:
-> PCIe needs to choose the appropriate performance state of RPMH power
-> domain and interconnect bandwidth based up on the PCIe gen speed.
+On Sat, Mar 02, 2024 at 09:30:00AM +0530, Krishna chaitanya chundru wrote:
+> Bring the switch case in pcie_link_speed_mbps() to new function to
+> the header file so that it can be used in other places like
+> in controller driver.
 > 
-> Add the OPP table support to specify RPMH performance states and
-> interconnect peak bandwidth.
-> 
+
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sm8450.dtsi | 74 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> index 6b1d2e0d9d14..662f2129f20d 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> @@ -1827,7 +1827,32 @@ pcie0: pcie@1c00000 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pcie0_default_state>;
->  
-> +			operating-points-v2 = <&pcie0_opp_table>;
-> +
->  			status = "disabled";
-> +
-> +			pcie0_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-2500000 {
 
-Add the comments that you added below.
-
-> +					opp-hz = /bits/ 64 <2500000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <250000 1>;
-
-Isn't the peak bw should be greater that the avg bw? Atleast in upstream we
-follow that pattern.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> +				};
-> +
-> +				opp-5000000 {
-> +					opp-hz = /bits/ 64 <5000000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <500000 1>;
-> +				};
-> +
-> +				opp-8000000 {
-> +					opp-hz = /bits/ 64 <8000000>;
-> +					required-opps = <&rpmhpd_opp_nom>;
-> +					opp-peak-kBps = <984500 1>;
-> +				};
-> +			};
-> +
->  		};
+> ---
+>  drivers/pci/pci.c | 19 +------------------
+>  drivers/pci/pci.h | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d8f11a078924..b441ab862a8d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6309,24 +6309,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
+>  	if (err)
+>  		return err;
 >  
->  		pcie0_phy: phy@1c06000 {
-> @@ -1938,7 +1963,56 @@ pcie1: pcie@1c08000 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pcie1_default_state>;
+> -	switch (to_pcie_link_speed(lnksta)) {
+> -	case PCIE_SPEED_2_5GT:
+> -		return 2500;
+> -	case PCIE_SPEED_5_0GT:
+> -		return 5000;
+> -	case PCIE_SPEED_8_0GT:
+> -		return 8000;
+> -	case PCIE_SPEED_16_0GT:
+> -		return 16000;
+> -	case PCIE_SPEED_32_0GT:
+> -		return 32000;
+> -	case PCIE_SPEED_64_0GT:
+> -		return 64000;
+> -	default:
+> -		break;
+> -	}
+> -
+> -	return -EINVAL;
+> +	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
+>  }
+>  EXPORT_SYMBOL(pcie_link_speed_mbps);
 >  
-> +			operating-points-v2 = <&pcie1_opp_table>;
-> +
->  			status = "disabled";
-> +
-> +			pcie1_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				/* GEN 1x1 */
-> +				opp-2500000 {
-> +					opp-hz = /bits/ 64 <2500000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <250000 1>;
-> +				};
-> +
-> +				/* GEN 1x2 GEN 2x1 */
-> +				opp-5000000 {
-> +					opp-hz = /bits/ 64 <5000000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <500000 1>;
-> +				};
-> +
-> +				/* GEN 2x2 */
-> +				opp-10000000 {
-> +					opp-hz = /bits/ 64 <10000000>;
-> +					required-opps = <&rpmhpd_opp_low_svs>;
-> +					opp-peak-kBps = <1000000 1>;
-> +				};
-> +
-> +				/* GEN 3x1 */
-> +				opp-8000000 {
-> +					opp-hz = /bits/ 64 <8000000>;
-> +					required-opps = <&rpmhpd_opp_nom>;
-> +					opp-peak-kBps = <984500 1>;
-> +				};
-> +
-> +				/* GEN 3x2 GEN 4x1 */
-> +				opp-16000000 {
-> +					opp-hz = /bits/ 64 <16000000>;
-> +					required-opps = <&rpmhpd_opp_nom>;
-> +					opp-peak-kBps = <1969000 1>;
-> +				};
-> +
-> +				/* GEN 4x2 */
-> +				opp-32000000 {
-> +					opp-hz = /bits/ 64 <32000000>;
-> +					required-opps = <&rpmhpd_opp_nom>;
-> +					opp-peak-kBps = <3938000 1>;
-> +				};
-> +			};
-> +
->  		};
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 2336a8d1edab..40403783229f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -282,6 +282,28 @@ void pci_bus_put(struct pci_bus *bus);
+>  	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+>  	 0)
 >  
->  		pcie1_phy: phy@1c0e000 {
+> +static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
+> +{
+> +	switch (speed) {
+> +	case PCIE_SPEED_2_5GT:
+> +		return 2500;
+> +	case PCIE_SPEED_5_0GT:
+> +		return 5000;
+> +	case PCIE_SPEED_8_0GT:
+> +		return 8000;
+> +	case PCIE_SPEED_16_0GT:
+> +		return 16000;
+> +	case PCIE_SPEED_32_0GT:
+> +		return 32000;
+> +	case PCIE_SPEED_64_0GT:
+> +		return 64000;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  const char *pci_speed_string(enum pci_bus_speed speed);
+>  enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+>  enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
 > 
 > -- 
 > 2.42.0
