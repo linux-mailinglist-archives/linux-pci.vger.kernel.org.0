@@ -1,357 +1,209 @@
-Return-Path: <linux-pci+bounces-4457-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4458-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6613387084C
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:32:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F8DD870874
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 18:41:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB16CB2184C
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 17:32:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74D06B255EA
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 17:41:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C2B0612E3;
-	Mon,  4 Mar 2024 17:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32ED4612F3;
+	Mon,  4 Mar 2024 17:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gc1pVrP6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3cNLiH6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72C660263;
-	Mon,  4 Mar 2024 17:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC9612F0;
+	Mon,  4 Mar 2024 17:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709573527; cv=none; b=VG+0GpTEFCgWFRQbYrR3W+rLHwrbbcMSuQ93hUFvP/k7ms2V3oRkOQFUiL6t0M/WXzeyqSnJ8EgKToWCsGNPMWyT1+GjH1dGpalhsIO3roDtqeOjdycdneeqZlw5NBypv+6ZInjLp3fWEP5CXzGPsyhaTG3yc9l/hK51tTzG5k4=
+	t=1709574083; cv=none; b=ZIr1lsi0q0c8YyLDab8/1RKFZ/gjOtgrIHL8S+ZdPgBtN/+HJHiuxxnloY83cht1dXAOuhiBCFGxyd2CH8aJe3ronEJc0OtH6NXg9L12DKfvBqC2BwiKW3aJmnfk2e1Dq13KFYnz/pCPA7LdS0rlI1/qqfX6esQWAWx4PSXGBXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709573527; c=relaxed/simple;
-	bh=38e2oSmYkFdfqVimVr3SP98oCdN93ZviMVDXcyH3WtY=;
+	s=arc-20240116; t=1709574083; c=relaxed/simple;
+	bh=jhOZLqBkPD3zeVmeTDQUgpIO94j8OorF+PQ+rqZSOlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A3EiqVHUZiSj1+tfmaWqb8eey/F+TPa3fBJ/uUa4S5I9FoKuPhBEDj/zucgXogrbwV0RUTULe5oLRyHLrglWYye2mxyJr5X3MnbA+TDNtaRuyUdyDR32KpWwK1uwUjQqgBtMHIQNlgrcyx/WEo+PrpLhTGqFPNo57uz05LXGigQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gc1pVrP6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C43C433F1;
-	Mon,  4 Mar 2024 17:32:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZqIqX+AOjcm5THh4Bfgh82UGJX43RdI4H+aqkSPTCWCmOxF7iCGL+AY1szBNGKiyLRfN4OP+MXQ0F7v7uJxKqrwC5A/utBS50UEaeeOApZYvWa+gaJc1k72xQNVK2M3dvnfjoLF1HbjQ6b9d1uUfKM5t2bWPj2KZNveq/inYR/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3cNLiH6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9A1C433F1;
+	Mon,  4 Mar 2024 17:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709573527;
-	bh=38e2oSmYkFdfqVimVr3SP98oCdN93ZviMVDXcyH3WtY=;
+	s=k20201202; t=1709574082;
+	bh=jhOZLqBkPD3zeVmeTDQUgpIO94j8OorF+PQ+rqZSOlw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gc1pVrP6KQdsSgPjjpLrVbzKlT1v6Hz4ZgrBMyz6huI7e9rAewfHUO4Pcz8oi96j+
-	 OIBxQvQR7AesDOpCqJB9uaEsOhWDAtjFH7AUOmUsnaRUYff0AMXLOOxwZvKgho/fuv
-	 HTLoEwBaUJ5ltgHVbf9IZVNBowqrrCuQdmZu7sAdxL7YJprP82jxWnqqSiL1Wf4N/8
-	 EGVVTOAe7pwT0qDpx5jobMeU3F53WVE/UzcdlIJJNGQETdrxqm2syjP5xAN7fa4fLM
-	 J2p8E1DUuyx+DUVkiJ4Fy91Q8R93KAkq+NX8z3uSF03k5rBKoditoMajnPczP2n5HZ
-	 2aFd3e31vrG4w==
-Date: Mon, 4 Mar 2024 11:32:04 -0600
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: conor@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, helgaas@kernel.org, imx@lists.linux.dev,
-	krzysztof.kozlowski+dt@linaro.org, kw@linux.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: Convert to yaml
- format
-Message-ID: <20240304173204.GA777171-robh@kernel.org>
-References: <20240301162741.765524-1-Frank.Li@nxp.com>
- <20240301162741.765524-2-Frank.Li@nxp.com>
+	b=W3cNLiH6dm+MbhhR2gjsEO1M1MLbQJRV0E+ihS2eJeFUFn78AJ4Pvi3LFD8lYN9uj
+	 tL1LR5fKflqYF2cNQtkzF+S2l0jUo2bsn3fvY93v8266DCNsYl9ukxt57PR3xlCukP
+	 Wu8s5fAl2abOCYz2ergXBrizaMngC1tnMUN3GG//ZRCAS80t7vgyD1IuiLdjKDBgaJ
+	 F3Ug2FFmU38aO7AhMd3Xx77R1n7ziA9QP9Mx0alPO7XVArOmsp3dj0HdEJAH+AXgws
+	 belXPFXyRPvF+Z8oda97pshfIY44ck/LSfi+1Ehvr53e2aHjpqeZyemUqYnpDSy/7X
+	 QEgdv6lbiRX5Q==
+Date: Mon, 4 Mar 2024 23:11:11 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Brian Masney <bmasney@redhat.com>,
+	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, vireshk@kernel.org,
+	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
+	quic_nitegupt@quicinc.com, quic_parass@quicinc.com,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v8 3/7] PCI: qcom: Add ICC bandwidth vote for CPU to PCIe
+ path
+Message-ID: <20240304174111.GB31079@thinkpad>
+References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
+ <20240302-opp_support-v8-3-158285b86b10@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240301162741.765524-2-Frank.Li@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240302-opp_support-v8-3-158285b86b10@quicinc.com>
 
-On Fri, Mar 01, 2024 at 11:27:39AM -0500, Frank Li wrote:
-> Split layerscape-pci.txt into two yaml files: fsl,layerscape-pcie-ep.yaml
-> and fsl,layerscape-pcie.yaml.
-> yaml files contain the same content as the original txt file.
+On Sat, Mar 02, 2024 at 09:29:57AM +0530, Krishna chaitanya chundru wrote:
+> To access PCIe registers, PCIe BAR space, config space the CPU-PCIe
+> ICC (interconnect consumers) path should be voted otherwise it may
+> lead to NoC (Network on chip) timeout. We are surviving because of
+> other driver vote for this path.
 > 
-> Do below changes to pass dtb_binding check:
-> - Remove dma-coherent and fsl,pcie-scfg because not every SOC need it.
+> As there is less access on this path compared to PCIe to mem path
+> add minimum vote i.e 1KBps bandwidth always.
 
-You mean 'remove from required' right? Because they are still here.
-
-> - Set unevaluatedProperties to true in fsl,layerscape-pcie.yaml.
-
-Sorry, but that's not acceptable either. You need the $ref's in this 
-patch.
+Please add the info that 1KBps is what shared by the HW team.
 
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> When suspending, disable this path after register space access
+> is done.
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
->  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  |  87 +++++++++++++
->  .../bindings/pci/fsl,layerscape-pcie.yaml     | 121 ++++++++++++++++++
->  .../bindings/pci/layerscape-pci.txt           |  79 ------------
->  3 files changed, 208 insertions(+), 79 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/layerscape-pci.txt
+>  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> new file mode 100644
-> index 0000000000000..cf517e4e46a33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Layerscape PCIe Root Complex(RC) controller
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description:
-> +  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP
-> +  and thus inherits all the common properties defined in snps,dw-pcie.yaml.
-> +
-> +  This controller derives its clocks from the Reset Configuration Word (RCW)
-> +  which is used to describe the PLL settings at the time of chip-reset.
-> +
-> +  Also as per the available Reference Manuals, there is no specific 'version'
-> +  register available in the Freescale PCIe controller register set,
-> +  which can allow determining the underlying DesignWare PCIe controller version
-> +  information.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - fsl,ls1028a-pcie-ep
-> +          - fsl,ls2046a-pcie-ep
-> +          - fsl,ls2088a-pcie-ep
-> +          - fsl,ls1046a-pcie-ep
-> +          - fsl,ls1043a-pcie-ep
-> +          - fsl,ls1012a-pcie-ep
-> +          - fsl,lx2160ar2-pcie-ep
-> +      - const: fsl,ls-pcie-ep
-> +
-> +  reg:
-> +    description: base addresses and lengths of the PCIe controller register blocks.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 10f2d0bb86be..a0266bfe71f1 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -240,6 +240,7 @@ struct qcom_pcie {
+>  	struct phy *phy;
+>  	struct gpio_desc *reset;
+>  	struct icc_path *icc_mem;
+> +	struct icc_path *icc_cpu;
+>  	const struct qcom_pcie_cfg *cfg;
+>  	struct dentry *debugfs;
+>  	bool suspended;
+> @@ -1372,6 +1373,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>  	if (IS_ERR(pcie->icc_mem))
+>  		return PTR_ERR(pcie->icc_mem);
+>  
+> +	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
+> +	if (IS_ERR(pcie->icc_cpu))
+> +		return PTR_ERR(pcie->icc_cpu);
+>  	/*
+>  	 * Some Qualcomm platforms require interconnect bandwidth constraints
+>  	 * to be set before enabling interconnect clocks.
+> @@ -1381,7 +1385,19 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
+>  	 */
+>  	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
+>  	if (ret) {
+> -		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
+> +		dev_err(pci->dev, "failed to set interconnect bandwidth for pcie-mem: %d\n",
 
-You need to define how many entries and what they are.
+"PCIe-MEM"
 
-Missing 'reg-names'?
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * The config space, BAR space and registers goes through cpu-pcie path
+> +	 * Set peak bandwidth to 1KBps as recommended by HW team for this path
+> +	 * all the time.
 
-> +
-> +  interrupts:
-> +    description: A list of interrupt outputs of the controller. Must contain an
-> +      entry for each entry in the interrupt-names property.
+How about,
 
-You need to define how many entries and what they are.
+	"Since the CPU-PCIe path is only used for activities like register
+	access, Config/BAR space access, HW team has recommended to use a
+	minimal bandwidth of 1KBps just to keep the link active."
 
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +    description: It could include the following entries.
-> +    items:
-> +      oneOf:
-> +        - description:
-> +            Used for interrupt line which reports AER events when
-> +            non MSI/MSI-X/INTx mode is used.
-> +          const: aer
-> +        - description:
-> +            Used for interrupt line which reports PME events when
-> +            non MSI/MSI-X/INTx mode is used.
-> +          const: pme
-> +        - description:
-> +            Used for SoCs(like ls2080a, lx2160a, ls2080a, ls2088a, ls1088a)
-> +            which has a single interrupt line for miscellaneous controller
-> +            events(could include AER and PME events).
-> +          const: intr
+> +	 */
+> +	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
+> +	if (ret) {
+> +		dev_err(pci->dev, "failed to set interconnect bandwidth for cpu-pcie: %d\n",
+>  			ret);
+>  		return ret;
+>  	}
+> @@ -1573,7 +1589,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  	 */
+>  	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
+>  	if (ret) {
+> -		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> +		dev_err(dev, "Failed to set interconnect bandwidth for pcie-mem: %d\n", ret);
 
-The way this works is the common schema defines all possible names. This 
-schema needs to define how many entries, which names you use, and what 
-is the order. So you need to add 'pme' and 'aer' to 
-snps,dw-pcie-ep.yaml. 
+"PCIe-MEM"
 
-I imagine the order of entries is a mess here, and I don't expect 
-there's any new Layerscape platforms coming. So this binding can just 
-say:
+>  		return ret;
+>  	}
+>  
+> @@ -1597,6 +1613,18 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
+>  		pcie->suspended = true;
+>  	}
+>  
+> +	/* Remove CPU path vote after all the register access is done */
 
-minItems: 1
-maxItems: 3
-items:
-  enum: [ aer, pme, intr ]
+"Remove the vote for CPU-PCIe path now, since at this point onwards, no register
+access will be done."
 
-> +
-> +  fsl,pcie-scfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Must include two entries.
-> +      The first entry must be a link to the SCFG device node
-> +      The second entry is the physical PCIe controller index starting from '0'.
-> +      This is used to get SCFG PEXN registers
-> +
-> +  dma-coherent:
-> +    description: Indicates that the hardware IP block can ensure the coherency
-> +      of the data transferred from/to the IP block. This can avoid the software
-> +      cache flush/invalid actions, and improve the performance significantly
+> +	ret = icc_disable(pcie->icc_cpu);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable icc path of cpu-pcie: %d\n", ret);
 
-Already listed in the common schema, so you can drop.
+"CPU-PCIe"
 
-> +
-> +  big-endian:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: If the PEX_LUT and PF register block is in big-endian, specify
-> +      this property.
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-names
-> +
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> new file mode 100644
-> index 0000000000000..3f2d058701d22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie.yaml
-> @@ -0,0 +1,121 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/fsl,layerscape-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Layerscape PCIe Root Complex(RC) controller
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +description:
-> +  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP
-> +  and thus inherits all the common properties defined in snps,dw-pcie.yaml.
-> +
-> +  This controller derives its clocks from the Reset Configuration Word (RCW)
-> +  which is used to describe the PLL settings at the time of chip-reset.
-> +
-> +  Also as per the available Reference Manuals, there is no specific 'version'
-> +  register available in the Freescale PCIe controller register set,
-> +  which can allow determining the underlying DesignWare PCIe controller version
-> +  information.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,ls1021a-pcie
-> +      - fsl,ls2080a-pcie
-> +      - fsl,ls2085a-pcie
-> +      - fsl,ls2088a-pcie
-> +      - fsl,ls1088a-pcie
-> +      - fsl,ls1046a-pcie
-> +      - fsl,ls1043a-pcie
-> +      - fsl,ls1012a-pcie
-> +      - fsl,ls1028a-pcie
-> +      - fsl,lx2160a-pcie
-> +
-> +  reg:
-> +    description: base addresses and lengths of the PCIe controller register blocks.
+> +		if (pcie->suspended) {
+> +			qcom_pcie_host_init(&pcie->pci->pp);
 
-You need to define how many entries and what they are.
+Interesting. So if icc_disable() fails, can the IP continue to function?
 
-
+> +			pcie->suspended = false;
+> +		}
+> +		qcom_pcie_icc_update(pcie);
+> +		return ret;
+> +	}
 > +
-> +  interrupts:
-> +    description: A list of interrupt outputs of the controller. Must contain an
-> +      entry for each entry in the interrupt-names property.
+>  	return 0;
+>  }
+>  
+> @@ -1605,6 +1633,12 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+>  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+>  	int ret;
+>  
+> +	ret = icc_enable(pcie->icc_cpu);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable icc path of cpu-pcie: %d\n", ret);
 
-You need to define how many entries and what they are.
+"CPU-PCIe"
 
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +    description: It could include the following entries.
-> +    items:
-> +      oneOf:
-> +        - description:
-> +            Used for interrupt line which reports AER events when
-> +            non MSI/MSI-X/INTx mode is used.
-> +          const: aer
-> +        - description:
-> +            Used for interrupt line which reports PME events when
-> +            non MSI/MSI-X/INTx mode is used.
-> +          const: pme
-> +        - description:
-> +            Used for SoCs(like ls2080a, lx2160a, ls2080a, ls2088a, ls1088a)
-> +            which has a single interrupt line for miscellaneous controller
-> +            events(could include AER and PME events).
-> +          const: intr
+- Mani
 
-Similar comment here, but the names are already defined in 
-snps,dw-pcie.yaml.
-
-> +
-> +  fsl,pcie-scfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Must include two entries.
-> +      The first entry must be a link to the SCFG device node
-> +      The second entry is the physical PCIe controller index starting from '0'.
-> +      This is used to get SCFG PEXN registers
-> +
-> +  dma-coherent:
-> +    description: Indicates that the hardware IP block can ensure the coherency
-> +      of the data transferred from/to the IP block. This can avoid the software
-> +      cache flush/invalid actions, and improve the performance significantly
-
-Drop
-
-> +
-> +  big-endian:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: If the PEX_LUT and PF register block is in big-endian, specify
-> +      this property.
-> +
-> +unevaluatedProperties: true
-> +
-> +required:
-
-> +  - compatible
-> +  - reg
-
-Both required in common schema. Drop.
-
-> +  - interrupt-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pcie@3400000 {
-> +        compatible = "fsl,ls1088a-pcie";
-> +        reg = <0x00 0x03400000 0x0 0x00100000>, /* controller registers */
-> +            <0x20 0x00000000 0x0 0x00002000>; /* configuration space */
-> +        reg-names = "regs", "config";
-> +        interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-> +        interrupt-names = "aer";
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        dma-coherent;
-> +        device_type = "pci";
-> +        bus-range = <0x0 0xff>;
-> +        ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000   /* downstream I/O */
-> +                 0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-> +        msi-parent = <&its>;
-> +        #interrupt-cells = <1>;
-> +        interrupt-map-mask = <0 0 0 7>;
-> +        interrupt-map = <0000 0 0 1 &gic 0 0 0 109 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0000 0 0 2 &gic 0 0 0 110 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0000 0 0 3 &gic 0 0 0 111 IRQ_TYPE_LEVEL_HIGH>,
-> +                        <0000 0 0 4 &gic 0 0 0 112 IRQ_TYPE_LEVEL_HIGH>;
-> +        iommu-map = <0 &smmu 0 1>; /* Fixed-up by bootloader */
-> +      };
-> +    };
-> +...
+-- 
+மணிவண்ணன் சதாசிவம்
 
