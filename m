@@ -1,371 +1,236 @@
-Return-Path: <linux-pci+bounces-4482-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4483-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3C84870B93
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 21:27:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F28D870C0D
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 22:04:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 522911F24701
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 20:27:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B35321C208EF
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 21:04:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17A2A7D09C;
-	Mon,  4 Mar 2024 20:25:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9220A10A2B;
+	Mon,  4 Mar 2024 21:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="djbE8XSy"
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JGFtbeXq";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="GyTdzJcp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2076.outbound.protection.outlook.com [40.107.6.76])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5727CF37;
-	Mon,  4 Mar 2024 20:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC510A19;
+	Mon,  4 Mar 2024 21:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583959; cv=fail; b=coY26wFtwCjQLyY2nMCuW0oeKgfp50iG6ZPDtCDQbMIznKRJ4eRETGcMh4BphjJ5X+Mor8s37RySZdJGFKdD6Hgqyb1aXPHfOBrtmN+CLDo78sWetwtZ4dceOI1mcay57C+R3TFLW+xIN19QuxixW5YWnk35Gpuwrf4WiXRYRlY=
+	t=1709586277; cv=fail; b=Qt4o5ZmW4UFaZ1cqIfKjFWuivqiKDIYDnqukuFmLAhS1JJfM0jGGuwoGxxNGiLiznIwwVK0cpzDYA8VhL/DQZ4T5rHnrWvunmSfR7AUqUUgzq6+SJ4B+YiUTgTlWbsb9FAxcjCoVhb5LFFlG6bfj2+Q5PX31b9+u9O2mNCfSQuI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583959; c=relaxed/simple;
-	bh=GXfso8sA5qp7WQ2bfpwfigNswIhAFh8mC0bwdOHPDh0=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=pLI9y6BL35iwk67Wz/1Y3FyxbgL/3WELblOKknmX+WcZdZCJcNz2c2H0TX7FKLKra9Yl2SctGFUCrUEcQqdO6SjHf2dRgasE9yxY841j76pIc9CZafRsrc7ghJtN4CzFot7+CEdswIx2nOwE2Ovc3sXrZScFDzQkvdDiNq5A7f4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=djbE8XSy; arc=fail smtp.client-ip=40.107.6.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1709586277; c=relaxed/simple;
+	bh=ydMqWyA2Eoi6YVVxZ7RctrIQYu0VjMuAl0M+XVvvaww=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=POwMe57WxA5pjWV+/QjRtaRUY28K8aRGlxUaY+qWY6qft7Ku/11ZSUkwNBD8rI3fw7k7VpocMxuDydC6oY1ky1Z03+kl69TfTBbV513Tqxa/2N/mn3m5QjA3HmnmywPuiwjlfo9U3BSa/eXreevwVfhfmdbi5bq/DuxcgIQPjcA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=JGFtbeXq; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=GyTdzJcp; arc=fail smtp.client-ip=216.71.154.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1709586275; x=1741122275;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ydMqWyA2Eoi6YVVxZ7RctrIQYu0VjMuAl0M+XVvvaww=;
+  b=JGFtbeXq9o8Quv/SkiICGEMlTWuEVnXrErA3mPWPcJ01EducYSCsLTUv
+   Phv01Dotwzawz3WGNUbkK8jp72EKEtwRQ3eV+FX0WRSD6iWK/w+zaA55f
+   9fWXSQV0JBMPL9/ZINl6MVtYhCEJKK4Uw10XlqdrwzyhWJ/F1ZRrFSL1d
+   x/WiV84gqiRme/GjMPdV3z+MTYwgLZk0WYIefCiOs+/DpY82vi4E1ojl1
+   6t0T7u93EURCHEUZTuhhbzHY+fFDfV8+dk+6nU2AIP3XgrkX6vGIYKRwF
+   RgMyiF/ZGe7f8WFARVhDq8HSrzsLKSkZIil+d1iZHK6B4BvK14rtfTV4b
+   g==;
+X-CSE-ConnectionGUID: xfP7h+82StKo6Bb1xk5THA==
+X-CSE-MsgGUID: Nw7wXD1/TQGtkdrGEyc8Ww==
+X-IronPort-AV: E=Sophos;i="6.06,204,1705334400"; 
+   d="scan'208";a="10780089"
+Received: from mail-bn8nam12lp2168.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.168])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Mar 2024 05:04:32 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NBtnZ94t3VtfSfmPb+/a9s+oNEKYbd5tevxaJkKp13kBWUcIjepgXAjLtj+A26DzXFOasurICv1BKtuh8QkGQ51O+JbvGHFJVU5QCf4KkRRSNLaNInWfOGzZsTIoVw39CiZkxU1aK/nF1Lqg5HB8L7YteZw6LGXiWz68tsaahTixhV5vnjDBK1YC0n+BeFwYvbztJDw3g5jQt4BbKcEvM4yxWa6Dv8Nu2+pCJRA12nIXL4Xo6uRwrk5hZzz2MOls0Q7on9a1uvFywfNJjSOSqr6/TgIn5nGzlQAlgUJiS9h47lhU6QMxKYL0mX5FGdMXVHEYJYlCUc2phw/4MTo4Zg==
+ b=J/jkbPRd16ado1n1F8oAtRRTyPIGabVkNOs3RweNFejYTf3XQa3V5wm6XwE93ECN3d2AoWcxkWyIq3OzybIsZgJ17C9p/gtlNXgvpJenfTNk3i8JoU6+0R0BGfWYIGGC9MbEFU5f9GpeNKM+SfKFuPWURCFWM3GLxj+JAi9TrgEiYWIlJEUjDohnHrR88DC3koXlYq/RIKoI/Pp+MpMmX26Xmpwcq3BwiZPjsvSm2DBE3suz2iM3+9iU9UE/88YEUCxBujtgN9Wj6PsBJCvcf9LxDAgFjWoVY17wNQb04V/EQ970nRPcrgD7e0AMlWBORnMY2v4+dL9nn33Sz0Vyog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KFC612DWNogn7Jxn6vEo/HiXWDydVNWP/fr24H5+PKs=;
- b=aVPnqQ9i893UAqJEyIZLL40c5XnF53DODScXlDQGvb85XqaNsyTEh5okQjATt5voPFXZiEuidaoctMhWCGruSKVOOb7JXfSTvEDIlQD3MCjnTL2u7Xi2DuWI7noDW7ru3wjCynqjS6lmi/fOqjVtFG6fbN9gl4XyioV0heV4gqKJg0GR4znTD5X9iIio5v5YE5z91n6oVPuUSu0jWsps6zYSOPDAX8llJK5cHdPx4T2RWllV+DPpRurSZnU1mtfV9MYMRJsAC/PLUsf+g+Xl/ntncKNRnY8nNzqRz5i2TqJtrsJKNL5rUG7gMTDg6/kPbEcaxT8kZIa4PHUqFzDXhA==
+ bh=ioYDdcHR1pnwo2wGi42WtZtjBIMI+pu5Wf/P6/ezC48=;
+ b=G7zak/Wj4hv9E+bADyYBtq+LP0pAwdjj9DhH7CbczXUvziaPYQElBJ3aUcX4iiKT3OCPue3B+FsNwI4fpSJRvs/LFDmsm09l2GTxx+J3wy4262J0xTmm7Z/gja1W57bpO8nMGUvZLQ4VF/mybTQP5i5mxThhLVT+NSJPFg5mUwiy1y4nttE4bI5BoMYekDnRp5slBAPdQX6ffUYCwp04bwpzU7xAfFwYdrCWZguwP0AqLmW8Jk3LMiWG5yY9LlGEMRUxQdzXV/SuqNeBbB0TWSGIki5Vx+tfDxhqqIENPjVzNpi2QN9vzHF0E3lysOJt/NtPKCv/dFR+H3GVr4i5rA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KFC612DWNogn7Jxn6vEo/HiXWDydVNWP/fr24H5+PKs=;
- b=djbE8XSy40VuDlSqSACS39+KynmI5BNEI1RmckrXa8Wh8yBuoG1qjlY9yeR6VoHQ6n2qWw3GqN4iSGm0lW6owBXX+mUChkkz96XxvbpmdEOHbF9bre2zWHP5mszRgBQdMwCUlQT2K6mLeI1opM46wnOBrcIvK+TboV2RwKGh+5o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU2PR04MB9083.eurprd04.prod.outlook.com (2603:10a6:10:2f2::21) with
+ bh=ioYDdcHR1pnwo2wGi42WtZtjBIMI+pu5Wf/P6/ezC48=;
+ b=GyTdzJcphBCkveEjYURbNMr5xEzO4bRBtxoXFBqhSi1CbPYtpJQKxB9GkMdAQBX8nRED/GuE5/dypzZwWa3sUG3Hi7jepQLSivLHmHbDBlatdbo+OvkcGHTEAaNvqXvZmzFNQ3SUzM0hjMl1POiOkdVXVL8gEw0xoBYOycrHR7c=
+Received: from SJ0PR04MB8326.namprd04.prod.outlook.com (2603:10b6:a03:3db::16)
+ by MN2PR04MB6398.namprd04.prod.outlook.com (2603:10b6:208:1a9::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.39; Mon, 4 Mar
- 2024 20:25:54 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7339.033; Mon, 4 Mar 2024
- 20:25:54 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Mon, 04 Mar 2024 15:25:11 -0500
-Subject: [PATCH v2 6/6] PCI: imx: Config look up table(LUT) to support MSI
- ITS and IOMMU for i.MX95
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240304-pci2_upstream-v2-6-ad07c5eb6d67@nxp.com>
-References: <20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com>
-In-Reply-To: <20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>, 
- Lucas Stach <l.stach@pengutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>
-Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.13-dev-c87ef
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1709583933; l=5959;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=GXfso8sA5qp7WQ2bfpwfigNswIhAFh8mC0bwdOHPDh0=;
- b=/BODBiAWSltekFpoApfBqVCVfOyvMVODknBBkZE2LfnIoq2XL4uc3x4pvCOMXWd2Qg4zNNBg8
- RltNGi77heTBZf/D3HxaTODEZauteSs1LOoLUKAbXe7UhHWFjrZsZom
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: SN7PR04CA0118.namprd04.prod.outlook.com
- (2603:10b6:806:122::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
+ 2024 21:04:30 +0000
+Received: from SJ0PR04MB8326.namprd04.prod.outlook.com
+ ([fe80::a115:b72e:ac9:d144]) by SJ0PR04MB8326.namprd04.prod.outlook.com
+ ([fe80::a115:b72e:ac9:d144%7]) with mapi id 15.20.7339.035; Mon, 4 Mar 2024
+ 21:04:30 +0000
+From: Niklas Cassel <Niklas.Cassel@wdc.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: Manivannan Sadhasivam <mani@kernel.org>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel
+	<gustavo.pimentel@synopsys.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Jon Mason
+	<jdmason@kudzu.us>, "open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE"
+	<linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
+ complex reinit endpoint
+Thread-Topic: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
+ complex reinit endpoint
+Thread-Index:
+ AQHaMja1NResTHTkFE6//FhBs62b57CwYdiAgABGuYCAAAUWgIB3lVEXgAAW+ICAABG0gIAAHwcA
+Date: Mon, 4 Mar 2024 21:04:30 +0000
+Message-ID: <ZeY3XqgUf84qAMCL@fedora>
+References: <20231219044844.1195294-1-Frank.Li@nxp.com>
+ <ZYFrUWM7JXdv7rtb@x1-carbon> <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
+ <ZYGq6RdCfdhXFF/9@x1-carbon> <20240304084841.GJ2647@thinkpad>
+ <ZeX7KDuwLWxwb5Kw@lizhi-Precision-Tower-5810>
+ <20240304181005.GF31079@thinkpad>
+ <ZeYdV3xMWa0nbz3k@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZeYdV3xMWa0nbz3k@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR04MB8326:EE_|MN2PR04MB6398:EE_
+x-ms-office365-filtering-correlation-id: dace8d74-d200-4e18-a79d-08dc3c8eaf7e
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ KGZPA5SWrP1gIa3hg+1DDaidXzqRq92DOnZL0UpHK7/BPtMqLLNVdNKuQa/rCXc+xV4qFllIapNLZB0FFSkSxKrs/Z8YyuR4LRECQHo9CHp+RuqpjMrcZJ4FajstDKl/Ae6A7v8SEre7ilSADIQuZ63tvAW0utNvdsU5kzzeLlmgXJSAyyi7KVuJOv1fVjsvHnkubIDfr7vT17S5MqycWjbeWZXnlMGqa3OC+iUCAbbBayCHEbRp+UxCyZqjq1ck9pwyye11G+JrJ4T3uJdd1xROYMq6gJGZruUAnfkl05Kl+o2mthr3BwKO+MsTRk1spgWYQcwfBolkoGiNVttNYSbUpPoRHv52UmKCfJaT+boVvRXr4YqWH77Tx7GF7LEONjAxekPApTzmtsKGpH1iqbeLOw9WH3yk4RDwcOApWSiHCmYADp3ZaNv8GQPsffuRwyWyeK1Ezd/nbcQnK0COYPqw2x5EK6uV2aouahgz53QpSmhCAwyNMcFGZJjtlo523TwFMXx5sIfh58No0bxK3gC5fNaqLiJbPrH7v1zhqD/vM8PJRnPU3/eQoMNNAFJK0ozVHqbd6qIEkgurGT937ELfyPW+rOAOnNVLTgg0FrNEmX4xEYPgu9Ib2VIPosE+J2pn/mCnEix7SzkPSCT/hpoTO7uRE6S+q5eKYmw3cQV0x0qHU72j+XAMEFJSv2KMAz4MvmbO08PVZm6KX3vJXRUqcABa15bMt8EnWdxXChg=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR04MB8326.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?Yw5HEYzSYzfI65s8oLWgMbc2ooNZwVaLiCwaPQ5/Uqv3H7HyTOn2gxPKcG?=
+ =?iso-8859-2?Q?NkQP34xpRyFReXZwTrtCrCQDYLq67YxMJujldDjAsfBar8A4qhGLoIVFSD?=
+ =?iso-8859-2?Q?zEHkeaH3Zy4rOwkwsqh7TiVt8I9aE0y3eFHq9gEC2vHuMwRGcCnfZjZpPd?=
+ =?iso-8859-2?Q?pl55vU1eDi4vpJtvxnIZG0Eo5QvVWYYpX3bmyho7FhQ1PWM89VrKyPMfPQ?=
+ =?iso-8859-2?Q?r9SsYOlDCUgxi9Zljlzx0Ppf/tcUJQGoAGOQA6nBB0+s6ZPaUkQlOgRkyX?=
+ =?iso-8859-2?Q?XUh3SkRY+zSnIvG0vxaicT1m8EPg4Nz/5dC8oF29yfH5NausB6eQIPgrtO?=
+ =?iso-8859-2?Q?a917ZNzR1N+3OmAHcRYoK3tp4RY9s8q8VesbnE+mFKiAA9hzVZvBW5+7RV?=
+ =?iso-8859-2?Q?Wkuol+Z/nvffxVS2A0wQ6O1yG27bg76tIlHWHe5zET0MkYzqhx/OkCQwxR?=
+ =?iso-8859-2?Q?oEdu4/HNajW3ikg9fatIY1nfDAzcDY7046nfm0fJKB9USiNW+avK5w53MF?=
+ =?iso-8859-2?Q?pyyILr5yz4EjqYrWuosW3n0Q0f9VVkQvQwQff2JJmJEAQP6W/tOJOUelhc?=
+ =?iso-8859-2?Q?MbyALXbC22m1WeRCqQ5Qz0Z5W5lDN6B2ef1U3gcPYrl89DpJttBshIWBqd?=
+ =?iso-8859-2?Q?3RT+EYJbpMH7ABgoImbDXHEmHmuacRgpni4qGO8u0w/GNHWM2cEr8Sxv5h?=
+ =?iso-8859-2?Q?OHN5icIv9szUxoagvKAZ5AEzo7YvJLRiJMJVVBqXZxmC8k7h4X54ZyJRiG?=
+ =?iso-8859-2?Q?vrvYAX/HgXOI54uKmQii53UpJx+7OzZIkPPq1MRNLI/7FX1nWW9RoDC5mo?=
+ =?iso-8859-2?Q?qlLQLtL7qyCdUu1FM51Js8h9/EBq5uhxqXqrTu9AkOJemJIfRxeFcKroyz?=
+ =?iso-8859-2?Q?hjqekeVVcfMzlneUjsFVuwH4pQI1+X9eFF+jv3969LK850k+CZW7/7JFQJ?=
+ =?iso-8859-2?Q?T8N3KjT/1tWhib4DfNep+VDrc18ooTt4iKlhmJhBkHQMp3RT/rYbcp8IVz?=
+ =?iso-8859-2?Q?p2ODgekq72YvUH5ZxFdv4sWNJUlI6dqMetQH6VxNm/KSiz2PtfsVBCqjVB?=
+ =?iso-8859-2?Q?85bc/myQh7AjSBw4589rTkCXgoXynbWt53AP9cfYLANVI5JWIU7aroXwB6?=
+ =?iso-8859-2?Q?VLSycFWm6Tr6mul5CIf4VNvRIs7S/B3iLUR5PQBUKu+SwX+PT9ArVL25Uh?=
+ =?iso-8859-2?Q?tMWY//BG460PbpFtA5f+842oZInFml+xYwLahGCL5bGKc+Cv03Mjnh/s96?=
+ =?iso-8859-2?Q?9VozTTuveE0I32N7G+7EgHTfy6Opw4FHBOuIGRsdgIUW8uLQv8jz3J6yVA?=
+ =?iso-8859-2?Q?GE356lFG+iaP1bKWg9VY2X13YDj2/s+nSnSO9t6+we8vAhGygztKO3PcYd?=
+ =?iso-8859-2?Q?khEZjc3qEbcj+Rd1QDK0PNDCFuxBaddcFgRNGM9YD/+rmeGtmF+89CImAU?=
+ =?iso-8859-2?Q?YMJ74FS18joKFZK4VBExzfbMbakcI/kvdQdNBYbS3MCKWA3W+BC875h0Pm?=
+ =?iso-8859-2?Q?xodapHlU7aJnA8BO3HkVW+XOpxQnMVpcLWBk/wiCV/H9cvYQAOTs9Y6sBM?=
+ =?iso-8859-2?Q?MEK0+qTcJK51HCXMt4jzLeS3SvNH7+SQmYY1puF8aAYDSRSBZrp9PF5Nvc?=
+ =?iso-8859-2?Q?9FTRg9dgLymgO45k29wvkuJJVtQlzar02tsHf90GpJrKLVSnXfKficXw?=
+ =?iso-8859-2?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-ID: <5124D72B5B2CEE4F86F1CF50DAD77673@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB9083:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21d08db6-f48f-42ce-ca71-08dc3c894af8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Sve3JJI8SmnqG8wtlA4FrcwX8CTBGKIUSRL3uW+gBhvw19k5Gt9+1MW3UoIMsz7e8QTELyLqRYg2osl5OrjGHZHM1YGFCZ3AvwoCLy/VW7oqQcuNJ0+es4sjeqbrEMmXBlcOrdjYR1/g2JysH//q/xYUq+F1M9noE3Ny6TmI67o+nr0TdDYkZSRFP0iZ3Ra08rvebCX04gfYKAEv/R0fZy0D/N0cNW54edOf/IuVieIyrvl6w4dLC1qxpq3Vv2Bkgmmw1XWfRc8QCo/1v99rknGJmDW35ipxa8rCoWepctKBWhndR0QRgJH0JTSed/4f2Tl/B8lx/XlD63nWacnyf1aaR9DEByf7cWtCt7NCPjF0yByCr4xCWoaGo8uZtj9t10GOnbWtF0ATi4NAs4ScfYgsEZwA2QP+zC4rR7M1M2HtSTdkDKOWsbrOM6Lx1qZpY/4q22KceGU2GSSdvyQbbi50GNEXuHneUFzTnDZgujsLxyCA4jBgZxPlGPauOjZRIGIkUsGBzRB5Q2Nmz+Gr2GgPzviwYAiNt2UTM+7odLuNAVz6xH/MtYkEEH9wkjBQq8pgBRm+UUg1qEL9dXyKSoS0X80a0PZWubefivSxGGJgp7r8aiStPyeS50exEj+HcOyqq/aog4o4cmc6oiNYTvWDZezXJBq+0YunNoBbbCt5YjVXDqQVLdOBlvwyiQOPEGYN2uTkRleF1ZBHu1IOKvKhF9udl/AOJBiL/uJfslw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(921011)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cXBUa3NwTnU5bGdDenFvM1hVTkNGb0RrdDdOblFTcU5NYXJzdXdGK1U2MDkr?=
- =?utf-8?B?ZzVBdXYxbGJRTXplTzhtSXJneDZQY0I5T0hLNGM1dHl5OE5sYlYrY2NDc1po?=
- =?utf-8?B?MXhUbm1DaGRyRmZWWGlrNUtUTmdNWGtoU0MwNHgxbVRKaExid1drbzNKSTJn?=
- =?utf-8?B?NHVJNmlDUGFnZE5XcGlObUpFMGFxNEtpcnExc2ZyMGdQRm9ocnRyRzJ6QmpP?=
- =?utf-8?B?SFJQZFQ5blU1RzNrSDhBOVVTRHhocCs1ZGVlRDBBbS9CcEl0eFFOMXpnNEtQ?=
- =?utf-8?B?dUdaU3BsRGljSHdSeml6Sk9VNzBjS25peWIwOW44Z2hQUkN5NlBnQWE2WFoy?=
- =?utf-8?B?M3V0VzU3N21DZUYxMXB0WHVUa25YT2ZDbjZrWWFDQktMcjQxL3BwRExGaUYx?=
- =?utf-8?B?KytHdktQZEhRRDU2STJ1YlNnNW1RcGFXb0xaOVBNY2tvWVlKaWg1b1BqTko5?=
- =?utf-8?B?Wm5yWW9XMkNma09oSUFCc3QwamdtdkdNeGJyKzFRdDk1dXduM21mQjlRZ20r?=
- =?utf-8?B?VVBldnQxQjFNcVZCM0pHUm1KOUJJc3cyUHN1Wko4VnZBUTBJcU9GNENVZDBm?=
- =?utf-8?B?ZEJodDkrVmZoRDdSQVAwUmU0VXFocC95UnJOaHNsSDdWRnVObUkxNU9MOVRx?=
- =?utf-8?B?NUlpNnNFT1JaUmhJVHl5YjZ6OUtGQ2ltSmEwYkwzalhCM0g5ZmJDbnJmR05v?=
- =?utf-8?B?R2Q3dTFTbVN2Zzk0TXh5UTRvbW42QkZ3SnVwZUZRZUdmRm1TMHgwZERVRkha?=
- =?utf-8?B?SEZ2MTZQdXlkVE5FM2hITlZ5ZGdSOHU5ZTNtb1FxaUZDRFY2YXNuc20zS0Js?=
- =?utf-8?B?VE9kSDhXeHg3cFk1TXdxTTdKREgwaHlvVHFzbVlUVkRVYkNqalN6aXZiT2hx?=
- =?utf-8?B?S2UzcEJNUTA3bGN0R2loaDgvWnk0YUJyR1BPbkhha3A0MTJOVXRHSHg1OG44?=
- =?utf-8?B?TllxUGd1bVM0alJ2Uzk4OVZEdkozS253K2xBS1JUN2s0UjFpVktoT3dzdFhU?=
- =?utf-8?B?OHJ6U0hzc05tZXZzRjcrMUJzeVc0M1Q5NTdzM1VTWGFrOHVsTGd0ZS9nQzc0?=
- =?utf-8?B?aTVpVHlRNWZiUU1TRWJ1UTNrdnhJNzdERG1mQmFXRGkvak0yNjdnbW1tQkZT?=
- =?utf-8?B?cXlYL0hodWlLcDFocTJid3NtZFBpbUlab1U3VytscitXQVlpVStwNzZpVStF?=
- =?utf-8?B?ckU1bEJQT29Fa0lLcUFCSFB5SFd2YzFPRWY2WDNHbVFHaGJkSXFtY1llY2hK?=
- =?utf-8?B?UnRRL2ZDMFFBeTFMdExDazllOTdnRGpCTHR5TFlpSGgvaGxUK05lZGx5RnpG?=
- =?utf-8?B?OStzOEgzTjZtNjdPRFBPT2U2S2dab1B2c3Jha0xPd0Y5QkRsUU9vOWlkZlVJ?=
- =?utf-8?B?VUV6c09MeC93TjZFZHFTemErVFp3M3FaMU1tbWx4dzIza2wzWFhEUDNtUndv?=
- =?utf-8?B?VUJVYnd0RjVqdkJUWUhKcmQ0OHNoWVY1ZnNWcC9Ub0tLMS91VnFkbWpwYyty?=
- =?utf-8?B?MHhUdUM4Sml2dmpTQWRDTmxoK2Nma3JFVW5odkpuU0ovMGZvbDl5WU1ZZU1p?=
- =?utf-8?B?VkQ1TDdrNXJXTkRGN0Vra256Rys0dlVWSDl0Y0pmVllveTJlbEowakpDNkNH?=
- =?utf-8?B?enBNRkVyemF1K1lTQ2xYWGdhUkpJb1kwMGFsMnUvOHlzRExWMnFac2d6dW9B?=
- =?utf-8?B?dkpWdk5GcjhHMWhIbTRseGZxQjFsOGIwVSsxUHM5YURJTXg1Rm9CUlNqczht?=
- =?utf-8?B?YUwxWjYvY0dwaU5MTnI2dVBhOU42SVlsb25sMmJDNDNpNVBPZEh5MWVzSDdT?=
- =?utf-8?B?aVVRcUFzMkZvVzFlb2RDOUZ2S3pxaFptUW5UeXdQNjVYTWdPR1dzTHczQkRw?=
- =?utf-8?B?bFQvT0Zwd3ZmYUxYb2ZselJjVnIrcFV6UUFkRktkY1duVDhBQkFXYitWQksx?=
- =?utf-8?B?cHZ6K0JXTzI5aGptZmxNYjdpZ240UDdQWGVtYmZIMGptaXJ2cy9KM0pGQlln?=
- =?utf-8?B?T1BPL0c4OU85K2d3TVYycnplR2h0QjNuYjg1a1NJRENHMmRSMi9UYVZlWmhC?=
- =?utf-8?B?NDc2YUpBZzZadEkyYjYrVElyY0RrWEpGbDVhbVdvZEoxS056NFVwVXJiQllh?=
- =?utf-8?Q?MXQc7OkIyiuz5zHFkIRORKAv2?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21d08db6-f48f-42ce-ca71-08dc3c894af8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	dDike5KwL2GHiI//p4xjJKL0SuqAyI+0roW8LS9TwWAd4Mcf4eKdO7S66J+PopYB0iWh42o2yyBSQbLkr0OpKwVUBx60v4aHW8UWb1lvXkTpAeazp8q45j+hR12pMDn1xq+U3WzUGrSkZcoX3m8SUmOutoyt4oFSEWMXnwh22vMjC71kWUom50oshfH6W2YRipI2hvFFan5ZQNPmIcMJBfHhWXkCikFXgzxH39YXH34wu4hGBUDwd19sT8DXCAoUOb69bKcc2FqhNjCVeHrPfJWYPink8H3jupmXBGHmthBKt5hSPus/VU5FQ4UhRFODJGTS4oK1DbA2P6AWOSAxuLak+WHjENB9Ty4esobdfei64m9Z+mcy5+cCv+C5I0oax/CPIjpC8HmDhLXStzUhc85JVXSOra71v+1o/x8473RMg+yxKP4tTxhHJNGSpZjPjpm0xHIqUHNEK7iEUjCbH9r4dnUVwZ+xdiXShgVouNWTSlh2pvtkWnsXSx61KhJDwkfjUh/sGw2gK4muSJBZ8iZvPLpNFYXIL5rvrOcmvSOzF2F9qaDGYsUVixoi7JkAkjAh6DRE5rEIi8/fCN26S9I3j0UCiqEDqYtV35DKTJurjgIzhBPnDKCUgmthIvmU
+X-OriginatorOrg: wdc.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 20:25:54.6478
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR04MB8326.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dace8d74-d200-4e18-a79d-08dc3c8eaf7e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2024 21:04:30.6734
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lYTqjvqi3PiTgQ2qcZ6P93PGaAGAGRPiClz7bGKcNRyziTxKI3GsAYduOUlOxGT4zpXHJh2tLgEjJ7H8oznNvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9083
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0GPPovrwFJHQRY7JAvfSsVTrEAhyfpWlGls+HMUd3zyZ6fdUX4xh5oUoi0hN4DgQb6mR4Ei5N3217AX13nmNVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6398
 
-i.MX95 need config LUT to convert bpf to stream id. IOMMU and ITS use the
-same stream id. Check msi-map and smmu-map and make sure the same PCI bpf
-map to the same stream id. Then config LUT related registers.
+On Mon, Mar 04, 2024 at 02:13:27PM -0500, Frank Li wrote:
+> >=20
+> > Niklas's initial suggestion of keeping u8 for the array and 0 as the un=
+allocated
+> > placeholder sounds good to me. Please use that instead.
+> >=20
+>=20
+> It is impossible to keep u8, because 255 + 1 will 0 for u8. Previously
+> Niklas's initial suggestion have not consider this condition. If u8 have =
+to
+> change to u16 or s16 anyways, I prefer use -1 as free.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/pci/controller/dwc/pcie-imx.c | 175 ++++++++++++++++++++++++++++++++++
- 1 file changed, 175 insertions(+)
+Well, to be fair, my suggestion was:
+"If we continue to use a u8, and offset the saved value by one,
+we will at least be able to support 255-1 =3D=3D 254 iATUs."
 
-diff --git a/drivers/pci/controller/dwc/pcie-imx.c b/drivers/pci/controller/dwc/pcie-imx.c
-index 922bbc0bc1bcd..8b698e1ec3c9e 100644
---- a/drivers/pci/controller/dwc/pcie-imx.c
-+++ b/drivers/pci/controller/dwc/pcie-imx.c
-@@ -55,6 +55,22 @@
- #define IMX95_PE0_GEN_CTRL_3			0x1058
- #define IMX95_PCIE_LTSSM_EN			BIT(0)
- 
-+#define IMX95_PE0_LUT_ACSCTRL			0x1008
-+#define IMX95_PEO_LUT_RWA			BIT(16)
-+#define IMX95_PE0_LUT_ENLOC			GENMASK(4, 0)
-+
-+#define IMX95_PE0_LUT_DATA1			0x100c
-+#define IMX95_PE0_LUT_VLD			BIT(31)
-+#define IMX95_PE0_LUT_DAC_ID			GENMASK(10, 8)
-+#define IMX95_PE0_LUT_STREAM_ID			GENMASK(5, 0)
-+
-+#define IMX95_PE0_LUT_DATA2			0x1010
-+#define IMX95_PE0_LUT_REQID			GENMASK(31, 16)
-+#define IMX95_PE0_LUT_MASK			GENMASK(15, 0)
-+
-+#define IMX95_SID_MASK				GENMASK(5, 0)
-+#define IMX95_MAX_LUT				32
-+
- #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
- 
- enum imx_pcie_variants {
-@@ -217,6 +233,159 @@ static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
- 	return 0;
- }
- 
-+static int imx_pcie_update_lut(struct imx_pcie *imx_pcie, int index, u16 reqid, u16 mask, u8 sid)
-+{
-+	struct dw_pcie *pci = imx_pcie->pci;
-+	struct device *dev = pci->dev;
-+	u32 data1, data2;
-+
-+	if (sid >= 64) {
-+		dev_err(dev, "Too big stream id: %d\n", sid);
-+		return -EINVAL;
-+	}
-+
-+	data1 = FIELD_PREP(IMX95_PE0_LUT_DAC_ID, 0);
-+	data1 |= FIELD_PREP(IMX95_PE0_LUT_STREAM_ID, sid);
-+	data1 |= IMX95_PE0_LUT_VLD;
-+
-+	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, data1);
-+
-+	data2 = mask;
-+	data2 |= FIELD_PREP(IMX95_PE0_LUT_REQID, reqid);
-+
-+	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, data2);
-+
-+	regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, index);
-+
-+	return 0;
-+}
-+
-+struct imx_of_map {
-+	u32 bdf;
-+	u32 phandle;
-+	u32 sid;
-+	u32 sid_len;
-+};
-+
-+static int imx_check_msi_and_smmmu(struct imx_pcie *imx_pcie,
-+				   struct imx_of_map *msi_map, u32 msi_size, u32 msi_map_mask,
-+				   struct imx_of_map *smmu_map, u32 smmu_size, u32 smmu_map_mask)
-+{
-+	struct dw_pcie *pci = imx_pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i;
-+
-+	if (msi_map && smmu_map) {
-+		if (msi_size != smmu_size)
-+			return -EINVAL;
-+		if (msi_map_mask != smmu_map_mask)
-+			return -EINVAL;
-+
-+		for (i = 0; i < msi_size / sizeof(*msi_map); i++) {
-+			if (msi_map->bdf != smmu_map->bdf) {
-+				dev_err(dev, "bdf setting is not match\n");
-+				return -EINVAL;
-+			}
-+			if ((msi_map->sid & IMX95_SID_MASK) != smmu_map->sid) {
-+				dev_err(dev, "sid setting is not match\n");
-+				return -EINVAL;
-+			}
-+			if ((msi_map->sid_len & IMX95_SID_MASK) != smmu_map->sid_len) {
-+				dev_err(dev, "sid_len setting is not match\n");
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Simple static config lut according to dts settings DAC index and stream ID used as a match result
-+ * of LUT pre-allocated and used by PCIes.
-+ *
-+ * Currently stream ID from 32-64 for PCIe.
-+ * 32-40: first PCI bus.
-+ * 40-48: second PCI bus.
-+ *
-+ * DAC_ID is index of TRDC.DAC index, start from 2 at iMX95.
-+ * ITS [pci(2bit): streamid(6bits)]
-+ *	pci 0 is 0
-+ *	pci 1 is 3
-+ */
-+static int imx_pcie_config_sid(struct imx_pcie *imx_pcie)
-+{
-+	struct imx_of_map *msi_map = NULL, *smmu_map = NULL, *cur;
-+	int i, j, lut_index, nr_map, msi_size = 0, smmu_size = 0;
-+	u32 msi_map_mask = 0xffff, smmu_map_mask = 0xffff;
-+	struct dw_pcie *pci = imx_pcie->pci;
-+	struct device *dev = pci->dev;
-+	u32 mask;
-+	int size;
-+
-+	of_get_property(dev->of_node, "msi-map", &msi_size);
-+	if (msi_size) {
-+		msi_map = devm_kzalloc(dev, msi_size, GFP_KERNEL);
-+		if (!msi_map)
-+			return -ENOMEM;
-+
-+		if (of_property_read_u32_array(dev->of_node, "msi-map", (u32 *)msi_map,
-+					       msi_size / sizeof(u32)))
-+			return -EINVAL;
-+
-+		of_property_read_u32(dev->of_node, "msi-map-mask", &msi_map_mask);
-+	}
-+
-+	cur = msi_map;
-+	size = msi_size;
-+	mask = msi_map_mask;
-+
-+	of_get_property(dev->of_node, "iommu-map", &smmu_size);
-+	if (smmu_size) {
-+		smmu_map = devm_kzalloc(dev, smmu_size, GFP_KERNEL);
-+		if (!smmu_map)
-+			return -ENOMEM;
-+
-+		if (of_property_read_u32_array(dev->of_node, "iommu-map", (u32 *)smmu_map,
-+					       smmu_size / sizeof(u32)))
-+			return -EINVAL;
-+
-+		of_property_read_u32(dev->of_node, "smmu_map_mask", &smmu_map_mask);
-+	}
-+
-+	if (imx_check_msi_and_smmmu(imx_pcie, msi_map, msi_size, msi_map_mask,
-+				     smmu_map, smmu_size, smmu_map_mask))
-+		return -EINVAL;
-+
-+	if (!cur) {
-+		cur = smmu_map;
-+		size = smmu_size;
-+		mask = smmu_map_mask;
-+	}
-+
-+	nr_map = size / (sizeof(*cur));
-+
-+	lut_index = 0;
-+	for (i = 0; i < nr_map; i++) {
-+		for (j = 0; j < cur->sid_len; j++) {
-+			imx_pcie_update_lut(imx_pcie, lut_index, cur->bdf + j, mask,
-+					    (cur->sid + j) & IMX95_SID_MASK);
-+			lut_index++;
-+		}
-+		cur++;
-+
-+		if (lut_index >= IMX95_MAX_LUT) {
-+			dev_err(dev, "its-map/iommu-map exceed HW limiation\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	devm_kfree(dev, smmu_map);
-+	devm_kfree(dev, msi_map);
-+
-+	return 0;
-+}
-+
- static void imx_pcie_configure_type(struct imx_pcie *imx_pcie)
- {
- 	const struct imx_pcie_drvdata *drvdata = imx_pcie->drvdata;
-@@ -950,6 +1119,12 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
- 		goto err_phy_off;
- 	}
- 
-+	ret = imx_pcie_config_sid(imx_pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to config sid:%d\n", ret);
-+		goto err_phy_off;
-+	}
-+
- 	imx_setup_phy_mpll(imx_pcie);
- 
- 	return 0;
+But we have this define:
+drivers/pci/controller/dwc/pcie-designware.h:#define MAX_IATU_IN 256
+(Even if it isn't used anywhere.)
 
--- 
-2.34.1
+But as ridiculous as it may seem to support that many inbound ranges,
+that is the max number of windows supported by the hardware, so why
+not just let the driver support the max supported by the hardware?
 
+
+We are talking about:
+struct dw_pcie_ep {
+	...
+        u8                      bar_to_atu[PCI_STD_NUM_BARS];
+	...
+}
+
+where PCI_STD_NUM_BARS =3D=3D 6.
+
+And where struct dw_pcie_ep is kzalloced for what I assume is all drivers.
+
+So I'm actually for your idea of changing it to u16, or even unsigned int.
+
+If the code is simplified if we use a u16 or unsigned int (because we don't
+need any weird if (val < MAX_IATU_IN - 1) check), then I'm all for it.
+
+
+What I personally don't like with your patch in $subject,
+was that you changed both dw_pcie_ep_clear_bar() to set the "clear value"
+to -1, but you also need a
+memset(ep->bar_to_atu, -1, sizeof(ep->bar_to_atu)); in dw_pcie_ep_init().
+
+
+I much prefer to have 0 as the default/unused value, because it will
+automatically get set when you do kzalloc().
+Seeing a memset -1 just looks a bit hackish to be, but I realize that
+it is personal preference.
+
+
+If it is super important to save 8 bytes from the heap, then I would
+even prefer changing the MAX_IATU_IN 256 to something smaller, like
+127 or whatever, just as long as we don't need that extra memset -1 :)
+
+
+Kind regards,
+Niklas
 
