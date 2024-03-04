@@ -1,157 +1,172 @@
-Return-Path: <linux-pci+bounces-4421-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4422-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81C9E870341
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 14:49:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C71BF870384
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 15:00:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32DF9286DA2
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 13:49:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E057281DB7
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 14:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5D1C3EA73;
-	Mon,  4 Mar 2024 13:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94563EA9B;
+	Mon,  4 Mar 2024 14:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5CsINmC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gTqeIVUF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4453C3EA88
-	for <linux-pci@vger.kernel.org>; Mon,  4 Mar 2024 13:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458D43B795
+	for <linux-pci@vger.kernel.org>; Mon,  4 Mar 2024 14:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709560174; cv=none; b=GetGlYj1V08giTMmeqi0EMRNVKJsA0jCcVibhodGGAYkDbnhWGE609nqBYejFkEmFkCo64GRUoXXqpBMf4k6XRz6JKSaUO21Q6bwWmAuaHxsWyr9h/0YFkxWQPSA3SDe9a0xuP/CikQL89IaSVqhpMnu4wAGRaYE4/7IhOnK/og=
+	t=1709560803; cv=none; b=dKM6+0duZ3kzmHXQZ9v6/HJBJ7rOxw42N+EgKxoybi9HtLJ1l2qT7VtXBVU1vVJPukr/OT8hZsRiMMKlbab/EjZY34rzeK+1+Wak7gbPvwFuBvAkO5cQZ/jHlDd1N6531KryGuI8jwphhf1lZEmpayrIDLDRP/YNErMYWbNM2TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709560174; c=relaxed/simple;
-	bh=ab6NCkfs608hbc+RmM+x7S7Cf9KVhXHplzzitqSTm1w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=scoe13Y/QqQoXT5bumq6ZiKGxbkNIfOwjxL4BTU0L5Kyg0AM33e6R+E1vr4sQz+n5fgSbG39j8H46MFLwsfKlJ8elQ4eQ+H9xzJe1z63RxOR+BYEZYl/FQfGtFo0TFLFYI9Hr3wgpPKHpezebiJby3IBwJqIhMie+b+D9obEuZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U5CsINmC; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1709560803; c=relaxed/simple;
+	bh=D1B9K4baL3Z3nIptDv0YiDgE7Yl4mSEpWihDvUxyfbY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FbR8NdntiENd20ZlSOFZxI+7xjG8moDVcqTSEIKOxF7bSBhU4RXsmWrcPYevgcHj1UNrf/67uQ6MDFnp64gljXeETn/upWW1d4SDXDppHl8DLDmKSO9w1903B2/3JyWRYbwCGGFvvsCa7YTWOaFicIfMn0ZTNUPVy4w4qaBN52I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gTqeIVUF; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709560172;
+	s=mimecast20190719; t=1709560801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1j6QC9mKfo/Twv/PFscDn/m8Ct/THACvivrr0TsTMSU=;
-	b=U5CsINmCpv3cZKaqXW7OZPz8E2QjNbpeyrCS+0iDcuk7u5M1L9/kf0w0Z85mDrqX2oVB4X
-	EtBDzRSdX/iES1UHUOM6hmhAE70OpC4rtoFJwHmYyizpbhILRJriqBj7RSHa6yL4hYEJct
-	hGiqlY1JetxSZAE60gB5DS8/XqkeHYc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ZA9pD2ts9kSJAwQronp0JbzaWg2wTYP9YmYGFngBKjs=;
+	b=gTqeIVUFHgkirwHhCXCKhoo9jCGOzH8lznETHZkU+sdMO3sKUGzN+30pY30Xopioqr7aKL
+	b9O2jzKa+cavr1pV0Ja0QOmoHbsl4NyduPXEEtUADW96aBnCzZ21wavqTaNhZg2/ir3MhQ
+	oCdChPTRzwBThVJjMgPds10eDl3Q1do=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-572-Ht8lGBtcMCyvDbTZrbhjsA-1; Mon, 04 Mar 2024 08:49:26 -0500
-X-MC-Unique: Ht8lGBtcMCyvDbTZrbhjsA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C78C1064C67;
-	Mon,  4 Mar 2024 13:49:26 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.195.86])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1154A400D6C9;
-	Mon,  4 Mar 2024 13:49:24 +0000 (UTC)
-From: Hans de Goede <hdegoede@redhat.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	danilrybakov249@gmail.com,
-	Lukas Wunner <lukas@wunner.de>,
-	Klara Modin <klarasmodin@gmail.com>,
-	linux-pci@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [RFC 2/2] platform/x86: p2sb: Make p2sb_get_devfn() return void
-Date: Mon,  4 Mar 2024 14:49:21 +0100
-Message-ID: <20240304134921.305604-3-hdegoede@redhat.com>
-In-Reply-To: <20240304134921.305604-1-hdegoede@redhat.com>
-References: <20240304134921.305604-1-hdegoede@redhat.com>
+ us-mta-644-cvEvm5GUMi-j1oaAG68U1w-1; Mon, 04 Mar 2024 08:59:59 -0500
+X-MC-Unique: cvEvm5GUMi-j1oaAG68U1w-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-566aa1c194bso2552744a12.2
+        for <linux-pci@vger.kernel.org>; Mon, 04 Mar 2024 05:59:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709560798; x=1710165598;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZA9pD2ts9kSJAwQronp0JbzaWg2wTYP9YmYGFngBKjs=;
+        b=m7ucOOnjuSL5cYR1uxVJi3QJO+8ziECoBQK97cdZCUBVcOlr/PtxxEpWXA2G8LPRLy
+         qJw7n+Pi9pFIXg36xUlYcuovwNROhagntao3arpkCeycKWIdJMroKL2SdRIBecn/LX1A
+         1MXDtX4TxztvbcBB3iqaPFlgdi5hM+QHTOfLZtDu9/4UUtEEqEd732HPNCqiBhjZN8wk
+         CTQW5tk3Aqh4tv+gZv9hLxcf2TgFnQpBX2pPQ/W/dtt23n+c0olKSTsQobXIi2LfE7vD
+         2E+5o/9SwKrOfwy1MH3XI8xW9XQauetpzHCenJzvWj4GwH9H9wCA5PGKTsJIG3bBCxIl
+         /Sng==
+X-Forwarded-Encrypted: i=1; AJvYcCWPrjJBhWv++RF4D+AuRcB05sIiTOTKdNw+xlRtoRtilN/r9BeGRvHoK3bys2qFXzecSj1QQKNurxGfROzwBSashb2aykfBzjYM
+X-Gm-Message-State: AOJu0YzAkmDWxDr4oWTGB4tTWl2DdbUM7Bl81g2pbFTevLZfC/yNEMp/
+	TahaYZT+76aSvAYarcaVqGCGyHP5zz6g8sWK2IYP/Bc3QVvsIwgNf6zUzHQ1ft9YqxR+H9S/t5n
+	ypwsiBcQycHEkA1uwFk5DTkUxweHRZgj2ppPi/WUHeg6hq3Q0lP6AMOiNHg==
+X-Received: by 2002:a17:906:f74e:b0:a45:4771:e0de with SMTP id jp14-20020a170906f74e00b00a454771e0demr1796438ejb.15.1709560798355;
+        Mon, 04 Mar 2024 05:59:58 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFZ6MrdBFE8KE2OU0V81y8AHK24KI7VTl6lnoh4TN+KiuOWzfgxSw/+70+dSq4PNogDRRjlnQ==
+X-Received: by 2002:a17:906:f74e:b0:a45:4771:e0de with SMTP id jp14-20020a170906f74e00b00a454771e0demr1796427ejb.15.1709560798065;
+        Mon, 04 Mar 2024 05:59:58 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id i23-20020a170906265700b00a44dca5f9c1sm2698619ejc.100.2024.03.04.05.59.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Mar 2024 05:59:57 -0800 (PST)
+Message-ID: <8afa1f78-8b89-4bbc-95e5-35eea76356e4@redhat.com>
+Date: Mon, 4 Mar 2024 14:59:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: p2sb: Defer P2SB device scan when P2SB
+ device has func 0
+To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Cc: "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ "danilrybakov249@gmail.com" <danilrybakov249@gmail.com>,
+ Lukas Wunner <lukas@wunner.de>, Klara Modin <klarasmodin@gmail.com>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20240302012813.2011111-1-shinichiro.kawasaki@wdc.com>
+ <gl7rsalwdwdo4rdes6akcnd7llrz75jjje2hchy5cdvzse6vei@367ddi3u6n2e>
+ <a26554d3-bee9-4030-a06c-f886ba2fffb0@redhat.com>
+ <r6ezdjqb5hz5jvvaj2beyulr2adwht2sonxw3bhcjdvwduyt66@2hlsmnppfsk2>
+ <7935add6-a643-43dd-82a8-b7bcfb94d297@redhat.com>
+ <6sbllfapnclmu5sjdtjcs4tyzkkr76ipg3i3rtqyyj7syhtkwd@d2l6zq2co7zt>
+ <a5dac02b-c16a-45d1-8157-0dae1b034418@redhat.com>
+ <d6a95bd9-dac2-4464-af84-9394a36b7090@redhat.com>
+ <2c3gyhvwncqgfa6t3tb6fj3fk3nkbzpmlgfyzwjgwmmlnhxssu@d25ihdnpwado>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <2c3gyhvwncqgfa6t3tb6fj3fk3nkbzpmlgfyzwjgwmmlnhxssu@d25ihdnpwado>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-p2sb_get_devfn() always succeeds, make it return void and
-remove error checking from its callers.
+Hi,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/p2sb.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
+On 3/4/24 1:13 PM, Shinichiro Kawasaki wrote:
+> On Mar 04, 2024 / 12:04, Hans de Goede wrote:
+> ...
+>> So the p2sb_bar(devfn=0) call actually only happens on Goldmont from:
+>>
+>> 3) mfd/lpc_ich for pinctrl    devfn = 0
+>>
+>> and then only when the ACPI tables fail to properly describe the GPIO
+>> controllers as ACPI devices, if the GPIO controllers are described
+>> in ACPI, which they are on the ASUS VivoBook D540NV-GQ065T then that
+>> call gets skipped.
+>>
+>> So on the ASUS VivoBook D540NV-GQ065T p2sb_bar(devfn=0) gets never
+>> called. Which explains why not caching it fixes things. I assume that this
+>> laptop just seems not likes the P2SB is touched at all and by not caching
+>> the BAR for the P2SB it ends up not getting touched at all.
+> 
+> Thanks for sharing the insights.
 
-diff --git a/drivers/platform/x86/p2sb.c b/drivers/platform/x86/p2sb.c
-index caf037b44487..3293c2a4ed6c 100644
---- a/drivers/platform/x86/p2sb.c
-+++ b/drivers/platform/x86/p2sb.c
-@@ -43,7 +43,7 @@ struct p2sb_res_cache {
- 
- static struct p2sb_res_cache p2sb_resources[NR_P2SB_RES_CACHE];
- 
--static int p2sb_get_devfn(unsigned int *devfn)
-+static void p2sb_get_devfn(unsigned int *devfn)
- {
- 	unsigned int fn = P2SB_DEVFN_DEFAULT;
- 	const struct x86_cpu_id *id;
-@@ -53,7 +53,6 @@ static int p2sb_get_devfn(unsigned int *devfn)
- 		fn = (unsigned int)id->driver_data;
- 
- 	*devfn = fn;
--	return 0;
- }
- 
- static bool p2sb_valid_resource(struct resource *res)
-@@ -117,12 +116,9 @@ static int p2sb_cache_resources(unsigned int devfn_to_cache)
- 	u32 value = P2SBC_HIDE;
- 	struct pci_bus *bus;
- 	u16 class;
--	int ret;
- 
- 	/* Get devfn for P2SB device itself */
--	ret = p2sb_get_devfn(&devfn_p2sb);
--	if (ret)
--		return ret;
-+	p2sb_get_devfn(&devfn_p2sb);
- 
- 	bus = p2sb_get_bus(NULL);
- 	if (!bus)
-@@ -159,7 +155,7 @@ static int p2sb_cache_resources(unsigned int devfn_to_cache)
- 
- 	pci_unlock_rescan_remove();
- 
--	return ret;
-+	return 0;
- }
- 
- /**
-@@ -179,17 +175,13 @@ static int p2sb_cache_resources(unsigned int devfn_to_cache)
- int p2sb_bar(struct pci_bus *bus, unsigned int devfn, struct resource *mem)
- {
- 	struct p2sb_res_cache *cache;
--	int ret;
- 
- 	bus = p2sb_get_bus(bus);
- 	if (!bus)
- 		return -ENODEV;
- 
--	if (!devfn) {
--		ret = p2sb_get_devfn(&devfn);
--		if (ret)
--			return ret;
--	}
-+	if (!devfn)
-+		p2sb_get_devfn(&devfn);
- 
- 	cache = &p2sb_resources[PCI_FUNC(devfn)];
- 
--- 
-2.44.0
+Looking closer at the actual unhiding I don't think accessing func 0
+is the problem. The unhiding is always done on function 0 even when
+retreiving the bar for function 2 (the SPI function).
+
+So taking that into account, as mentioned in the bugzilla, I think
+the problem is probing the other functions (1, 3-7) by calling
+pci_scan_single_device() on them.
+
+I have prepared an alternative fix based on this and asked
+Danilrybakov to test that in the bugzilla.
+
+(and also posted it as a RFC to the list)
+
+>> This also means that likely the P2SB devfn itself generally speaking is
+>> often not touched on Goldmont platforms. So we can avoid the lockdep
+>> issue on PCI bus rescan there by caching the SPI controller
+>> PCI_DEVFN(13, 2) devfn from fs_initcall(), since that will be the only
+>> devfn for which p2sb_bar() will get called (except on hw with the
+>> GPIO controller missing from the ACPI tables which should be rare).
+> 
+> Oh, this sounds a great idea.
+> 
+>>
+>> I have prepared a follow up patch to your v3 to cache the
+>> SPI controller devfn instead of the P2SB devfn at fs_initcall()
+>> time. I'll post this shortly and I'll also ask the bug reporter
+>> to test the combination of our 2 patches.
+> 
+> Thanks a lot. Looking forward to the results.
+
+Since I already had the follow-up patch to your v3 implementing
+this ready I've also send this to the list as RFC.
+
+I hope the patch to only cache 13,0 + 13,2 at fs_initcall()
+time works. Then we still avoid all possible deadlock /
+lockdep scenarios which would be nice.
+
+Regards,
+
+Hans
 
 
