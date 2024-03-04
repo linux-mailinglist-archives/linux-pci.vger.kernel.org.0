@@ -1,91 +1,82 @@
-Return-Path: <linux-pci+bounces-4484-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4485-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 045B8870C41
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 22:17:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A280871048
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 23:46:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 361951C212E1
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 21:17:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 982F61F23E1C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 22:46:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA4D1C6AB;
-	Mon,  4 Mar 2024 21:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 403D47BAE3;
+	Mon,  4 Mar 2024 22:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kkVMDTcP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RWvYVtcO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2049.outbound.protection.outlook.com [40.107.8.49])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2060.outbound.protection.outlook.com [40.107.6.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F0F8F61;
-	Mon,  4 Mar 2024 21:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9321C6AB;
+	Mon,  4 Mar 2024 22:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709587059; cv=fail; b=VIsmiSwy5FfZvsd+7xD/yvnjBXGSPwWWlg6CfSwECxqNYeBsVfAmqz9Ck1BViWdqfBKvFQXk3IqdyojYaynjFbpZOskNFoES0ZOrdv/T0IEI2SBBevRZmlqeItP4yuBBtNWE6pL2bSMDC48kiPTNWauineI7aTCAxy28gbJJ5Tw=
+	t=1709592396; cv=fail; b=C6VvstiUHBJLtQ840UXrnX6vjSsTPl3QXyauHZ/l3cLQ3PxmxwVkvLh0/elbjeNa7j/cM8D6EIbzsS5owoEJJXTRcnandMZVRbe+377fyZJ9M2mZh5yu7XtoshIxopN8SWK9Hz9bQ3Ll03fCNvnUuDhKAeYyvRINMs7w7piyxUo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709587059; c=relaxed/simple;
-	bh=n8tjQtXZFbAqBQeuiiFbvFJJhj4NNThDD9CfjgnV2LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=amuWSR+DGDcUZ6Ako38sHL1lInNqtm9Z/hdi/npZczK8GWfR7cIKz+K668P5uQcOnfP9eNV9Q9AVj0mcCKHokSU4vZCVGfk0/K0nd0TrtyJ4k05FSji5ARKobyj+zpYZhaUWGYjGXZxF2xyak5yhzulVeWh/YUwjILSgq1kcAlQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=kkVMDTcP; arc=fail smtp.client-ip=40.107.8.49
+	s=arc-20240116; t=1709592396; c=relaxed/simple;
+	bh=sMTD7H3pkXtumX02kxfIYE6xXXR25O5SYFmfqYo/NmY=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=PuGS77jjRlt7butospBRvvcAPgV3cBgYSNmP+52ogpl92wnLrAHEwkVXEOEJ4qOyFUL50SEsmxpLe2uPg0IrurJOqjIRBP6fsGrWmD08eo0q/hKeLeN53KpsOFXPaXdoxtCXhqdUmPwhjT4hgqtLtccsCiIAXTboDZ2lfT9HypU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=RWvYVtcO; arc=fail smtp.client-ip=40.107.6.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bQ8FLh4XXLGIJ/Xdf2eKH3iVcdZyRchxEglpk+0x6eb5bVQA7I/o7dJkFVDOwxquTGmmXS98gzLYaLiTPTOqGSvdwrYwg1ugsp7Nisi8EQIiGLZ/MtZkyxoJBeLKCXNXaTJyqHRf72zhK5rlrUX3FgsPIZKGIcw0j893yI6joqA7YVYnpxNvfpSqHUN/3Cte8GXN2LXx1X0XQCtqvIF6d+Sdw66DbFq6zBQGqXeg4/K2iv21P7gifQ0IHK7SNCLfwJuSTNfre3tGCf0PRuCxOLKWm6XEDYn2KxGbcol+AvsbnGBchCUHKbEbn+8ENcZt7/fZbNH0Jz88VP3BHeF0sg==
+ b=eyXPdjfx3urm0zKDcayPtrnaip0wOIpygZ2gpRkxTRY1U9IXqJ+06MqYTaEQn9mV28mIgYAkbyAd5qCymDo6vF/H3nwnvBWZXtns9PLzOrkRCxqrHXNr+PHw3BWErAFaeFu81Ym8ja//hQ4+f7HB2WwuULT/uLWxclF9uYG/jwWuz2tvT/hniOIMUYf4e07MCPSGQe8fVv+rzJmrLT5Fq5ijTmC/7Wa+gnD8m3M2LMXlF+0+O6/hhz/8dx08TGHFrxODEzISIPVPjLQIwt6r9myDELy9fVuMyI2aynT6zr1DPxUe+JVH1bHMg4MxrJxPXD1PadGcc+DZiI/8nw1XLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r8gpnRq0gAh+LFIHZ65Jq6Qu9jDtDiw2TXlRVJ/rz44=;
- b=fky9iipS5QbrTO/rcxtjL9slYQIOdhrR8qSW3P+gh67+J6gTcE5RD+N3rtNeh1NOfGRGeIWddAzCwimwZin93zMBmN2rzBdwAnxCri4GFtRQqghOC/ypEKQp+1GQMJ9AhK+Q2IdOvQ9IwuCOm3/B34duWNS4aDyvC2jwPANMlZ1ZtKskdJFEiShmhaPQirxPyjW9WFlJ1yKN78R8Q+TJeqi+ADF6Q68OfWgZefrefq6lAlwekBhhCRZ8lAYRtXbUh0FLWEOaRdpFk4gfgCLiG06Hg99oGCgwJlb4RFwP4EljreRCqdcw6U/0tUD9gTixyQDNDIgrDT3y8u382Kpw+A==
+ bh=fUIkqXdRRiKSu4KArfKZ1xd5qDd8TVc+USYhMLrh0wA=;
+ b=X4QiL+SsAZ2d/nwrKD2xHqPMd056v/YvCwQlJgFXRwH1FMQuM1wg5xmS9F+9OHHx5OePGwtgoJAwOyO+mOmiSFCKZEFTSHYiKNwIsPoqQqlX7qnI0yqonrAg7JAqy136rnqu4wQk1u4rl6PrXp3yFE1xqE1Pfl18sEDGWhDH+K/GsxhKbempCZWam+Bx9ualUiaZuuvYA7YuhkQ/tu/nmKJKSCZFzgPJAUJ+R+hEIg4caDHGX2UGGv/3EEQaWzO0YI4SUl4kGEtoGPTRdAFZau18iO45wSCcloVqxU2Ug0c2HVZSKuQFgRdV24p/5sox9I/s668vAoKWTSDwjP8PXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r8gpnRq0gAh+LFIHZ65Jq6Qu9jDtDiw2TXlRVJ/rz44=;
- b=kkVMDTcPVKoGFQF52zCJTHjb1/tRKPSo1JhQJF27q4xFBb3/hDC5IGDbt+hjHJxEdWFFtAaVPCJ0oBP9bT2skCktRJEQtfzVUEsp31SFo4OIf4HNYezoesf2ippuLEQV9tkN9aENSs6V50aQgxWa1WrJn3Oe8jcjgMKnr7TSC14=
+ bh=fUIkqXdRRiKSu4KArfKZ1xd5qDd8TVc+USYhMLrh0wA=;
+ b=RWvYVtcOUHM/gh3pQ1VFiQAWbNLJ/deDqvJ7tInhlAbBxjiHoxEwM2wAhfdmEqT89UH15arqPh/eYh4N8ZnGuvAVyIh5NMgs9IN3Fn3G4JM99Q83qmXWtLgxjTtvPVge+togNjHau/LTtH7S3buGOqK7g9qiAEm/zcL9sflKD3Y=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM0PR04MB6898.eurprd04.prod.outlook.com (2603:10a6:208:185::11) with
+ by AS4PR04MB9314.eurprd04.prod.outlook.com (2603:10a6:20b:4e5::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Mon, 4 Mar
- 2024 21:17:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.41; Mon, 4 Mar
+ 2024 22:46:30 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7339.033; Mon, 4 Mar 2024
- 21:17:34 +0000
-Date: Mon, 4 Mar 2024 16:17:26 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	"open list:PCI DRIVER FOR SYNOPSYS DESIGNWARE" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: dwc: Fix BAR0 wrong map to iATU6 after root
- complex reinit endpoint
-Message-ID: <ZeY6Zvo5TZABhWvF@lizhi-Precision-Tower-5810>
-References: <20231219044844.1195294-1-Frank.Li@nxp.com>
- <ZYFrUWM7JXdv7rtb@x1-carbon>
- <ZYGmpaf18pJgM/qj@lizhi-Precision-Tower-5810>
- <ZYGq6RdCfdhXFF/9@x1-carbon>
- <20240304084841.GJ2647@thinkpad>
- <ZeX7KDuwLWxwb5Kw@lizhi-Precision-Tower-5810>
- <20240304181005.GF31079@thinkpad>
- <ZeYdV3xMWa0nbz3k@lizhi-Precision-Tower-5810>
- <ZeY3XqgUf84qAMCL@fedora>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZeY3XqgUf84qAMCL@fedora>
-X-ClientProxiedBy: BY3PR05CA0053.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ 22:46:30 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: niklas.cassel@wdc.com
+Cc: Frank.li@nxp.com,
+	bhelgaas@google.com,
+	gustavo.pimentel@synopsys.com,
+	imx@lists.linux.dev,
+	jdmason@kudzu.us,
+	jingoohan1@gmail.com,
+	kw@linux.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	mani@kernel.org,
+	robh@kernel.org
+Subject: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being interpreted as a free ATU slot
+Date: Mon,  4 Mar 2024 17:46:16 -0500
+Message-Id: <20240304224616.1238966-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SA1PR04CA0023.namprd04.prod.outlook.com
+ (2603:10b6:806:2ce::27) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -94,119 +85,130 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM0PR04MB6898:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a9e7b73-a6e4-4d77-8957-08dc3c9082a9
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS4PR04MB9314:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41340640-29fb-43e6-c7d3-08dc3c9ceeed
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	8YzyeykCq2iNSK8yKmktKY+dLaLG6boaaepU6kuVIP09loesHtZ4lHq7EhviG3C0bnKQZymlfLjSTS7Wu25A+hHRHk0wWSHZu32ZHdzXIaRbVAKlSwdHN3vDqp16B1Ekq346iuVvSEyYyJp9+yZTCOkHJ17+lXaWy50aRy7e8kLY6UU7K64WWVxCW3giM/gzy0m1nVpqC/L+k5C4gA1fZAlBOUqu44QC8wYes8Spl8Gmdc1jKuoHmgCQWGMQtsXtE9O7WjG9TCmIeaIF530cKfjOEC2kuzzBEGVvJlaWGXdB2vUVdbYU01IqSvqxYykyLYXRoxvWj3kWh8xKLYf3k2Ghum68HB0n0Fl33wOHfDhqJDakiBp4ad2e/kWQaVo6ECSH6YvEoC5dQv8AtIbtPXbfTMuB3pt8RDf9Tmxk1GaTFAUPvq3L132ki8WTHaopVqgkp9IVV2WoZXYmWiKOGtXAcwztR6LXwSycm+zjPVywT+5CN4EXib8dZyj2289yCDroqyCtURMyrFGDuyC8RwldD9k+hRqqWQE4Np+QrLCQKTwTTaxxxGboZq8fwNBleIPmHlr5nNFoSGG6mQV0YHqgXwbWRCmKtKNUxbZuDIdHpJR4smKQ3DDNTJgBm7S2m2/0Ye0yYYaDa3QIe4Lz4AtV3hzQWFgZK5UTwVLTxOyaPdRYolek/IVDckqj6mULxZNs+BKxb1VVwZkKRHlXwpIbGLD4e0mPT6DaVJkntag=
+	hzRBCUPQ2Vt9P0ObmrVOEWzY6sUV43X4tJYsmR7ALnEh8swpNMaAqHff0lNwgFGgxtNbQBeikHe4loMXlYFb+ct+R3aRpihP/5mIj+aBg9TWXb65qmS18SyCy3sx4yu8YQ2aVIYDjmxU/+nlTQNeid/tpLfLuYrKjLIyjWwXanFISra1VlbUgtA71IPcBH9vTtP4yBxz8ym2OXdDubD0zVFSVjGaYyzgmNtFxl91GGWWn31Eswilhlk1S+zU2bzpKcJYTDgz9rgjSB5Xs+xUI++cvoFlE08VndMMVyhFlA5ictJ8JlIdgkWs4LhSquVHmnZ76OUNQuNWEMzZ09KwgPJ2t7UFYmz7BTk6yAks9Nz/fBJ/LXw5X78Dhn+mdPLR+l90baI32XCfDxm99rpu8YDf+JUwH8IbNnaqVefeUHhu/EAsjeN3m024dgC3Tf01Zh8cX5xuw7XlfpF5JKlT5br3HExLFC17RCvOtPSk5HYGPN8VZ8Gtt2IHEr0wk7W9zMGQy2sJnSQ6pYIFzo2GKemxHDsCpV2t4Ti+ASQWOREkYqGtD9zlpk+NKU40Sirj/pnxTtclanaC1u5IYmkGMa37g7MBNy9YapxsvlRqyLwFPV4KA0y2C5VFqwxD/lTjplNFomZZycVd9Ff87pXkhllp7hGT68j2xN3o0hDqL4Q=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cpX3Xy7rMNOAIyr54SXfLMR9d0oo294nnOYOO/DZp2mdsCp01CVChxA5aZz4?=
- =?us-ascii?Q?OasU4TnPEFA0KIB49BwZM7WC8ckqiUNsl3d3/mwyZVEUzvQ5YReHgs7K4GCF?=
- =?us-ascii?Q?CDi5VIL1LGNaIiI06dQcMf9QCJojMcIqS+82EWgy29gbCA9ACskzJe8NLpO6?=
- =?us-ascii?Q?+4FVeGmSgUZmIX6AedJRicqrn7tpZqOjjJ+pYEZypNfKGbjL4swrDy9Jdv/e?=
- =?us-ascii?Q?6QBMk8avguCnisJpEON8yzvwOYTJKGUkUxTa4GlVg7B8/3XQ+7fjGo0S6lfW?=
- =?us-ascii?Q?U6dF8UbgOZGIVVB6WNQQ2N38ZSudB0JiraAopUeMYY47hpRRwHdYZ3ShGq1u?=
- =?us-ascii?Q?M1FsR/VLp6O2dUGi0+U5QN8+JZZm9Nen/bf/b+iQ2WAdBB2K30mJdl+kjyUV?=
- =?us-ascii?Q?AxKbv9bOb+fdMYt7bMoA+RT2DBXBEaC24y7kX/eXpJx0kii2PU5aEbWgeaM/?=
- =?us-ascii?Q?QRNM3FvgflcX50YAbr8XcaCGXZZS0xLH6945POVZAOj/SA1vniSidqCDrotI?=
- =?us-ascii?Q?XxwjQ8dSxfrsTo8Tgy/8R0H5glCLFmmMRQGcT2Ku10nt3QlHLr4DY0GU6gby?=
- =?us-ascii?Q?UeLBdTDaUrVzAPIJrPiSWveW+1WZ/updios6dLdDu5N0kqfUs5QZNONZTobS?=
- =?us-ascii?Q?Xpt4bW1ZEZXwKSSlKj3qq5tWIMAIj6Bf2WSXndm7y0w19yNZDXIgm9RzTpbH?=
- =?us-ascii?Q?12R3REx241UQF1GZES58Zxxj2NRfUpaHJVmyZwSi61fm3NKFUIT/bOhvrYkl?=
- =?us-ascii?Q?7AETZZsKbRhUcTZifvvuxhRpXzUoI4D/GFqucELfROAYLDB8Bhf0RRLtlpss?=
- =?us-ascii?Q?xCKIUcVF4Onmxx4AG3R951ltPSl1Tker33+tiSH4k305YWoGR2ZE8qKG6PCZ?=
- =?us-ascii?Q?ibmX29rWEnpkamqB6cK+eAzSzjQLjbGVhb3aXXVt8rv5HKxmNVOdqalTZtfJ?=
- =?us-ascii?Q?fw9eNQoVUxwiLfypcOt4k4sAYcraBMuw28VzGEHj68s1FAxhxhNPkotpBuWa?=
- =?us-ascii?Q?2wGq8d+y6eR/Zjv9ccEWRDtvN0FfMCkHxof1TeBOMEbj+eD8x8v7GfsAt5BA?=
- =?us-ascii?Q?W81yVHkTgvNu9TVy6cpOeju3ixjNYoo9HNcnzkPPi7wRkFaymmuc05aazZyZ?=
- =?us-ascii?Q?dojqzeDMt7qrzORxhYAG6VsIseefG6OZNplHlEAOF976uLK7aUo81cA/NqFz?=
- =?us-ascii?Q?hIMjI0AnJT07NqfVV9kCIL5u4RQql8A+Uzb/KjS5WHJeY73fyxECL/UuoU16?=
- =?us-ascii?Q?a1QSD43FMCTwEXItkOIaZNuzsnHooodkTHYA3BQuYVUyZFTzz8rL8RlAwMQ+?=
- =?us-ascii?Q?W7EqYmRkc5qprWm/wEddXT3pdtKUBZxUu+lI0Ie0l3opOP8kS/0MyUmVtSH6?=
- =?us-ascii?Q?DKsWiCCGf2Spw12y8/GzUZK+7P5DIQOBP2wmP3Gxf6i7oL0uh6I2mdrDQQLb?=
- =?us-ascii?Q?7Mb35diRk2dZn9ayfwmAhf6yDisOueVlWSqKBjHVopbtfjhdzgr+Fv75wH1j?=
- =?us-ascii?Q?uurRlcANorxNfVdDTklCoEfZFH7bJ9JvuJ8pMZkmIMRgPeTPVWZ548WDGC+I?=
- =?us-ascii?Q?AIBx5JcA0DuHIOCCnC0=3D?=
+	=?us-ascii?Q?zq6k4FSgenee1i1qh/34jFUy0MrT7+r1Lw+6eubCVhHFgE9RajkPJN6mfuia?=
+ =?us-ascii?Q?3r4tDBC6ZcPHO/g1lbullfOldN61XTyYeUHBTbZV0IBe538rsOq0zKECggmw?=
+ =?us-ascii?Q?7SfOv1/5i4f0kOW7ds5uuLP/B7enHLKDzshbU1lLXMof8xbJiI0XVt25WNBG?=
+ =?us-ascii?Q?ydSImtMGL3gjud/r202aZTN0UVpsmxrKFQKRzJiWPPHoodDKksGh6GNJ/1T8?=
+ =?us-ascii?Q?KMIQJzHzSjME6D/g81eidc15f0YSh/Fr2yj6Bw0ZpMtxRFBDdb2WpZuY/BAC?=
+ =?us-ascii?Q?A8iyxrZhxKD23tV7Y5Y5K31fYQ8d6eA35ez4e8bwTPlVVDCVZBQd9ivKga50?=
+ =?us-ascii?Q?mBJjaP3JjRFhBZ75Ygft+tEUhyxha5rmsxOPoFC20U1CswucNIkDGX7RS8No?=
+ =?us-ascii?Q?e+MoSgKpLevfHNUsNdBixaHxK9Laqs6CWzIBc/fjVcEY5sOIgSMIgXiPPSsj?=
+ =?us-ascii?Q?Lqi2JV1WAjTmnGDB7KHh2+vzsfjOOBcDvoS1btZUSbMwor4uvMXQZCOaITvN?=
+ =?us-ascii?Q?7yQBMXAD6SLw35Oxmh14HMEdKYMAgUS+jPpyYQrwFH1xS//MFFaS+E8caZH7?=
+ =?us-ascii?Q?vpefyvZAyd290OFg8HxhfakFSioCcODpRKOuCWd2sbUHJ0T2ofKuBpoXDCXV?=
+ =?us-ascii?Q?7zOOpfw3bYJ1OMxdULpSD8ImdIJ/IB8Yv4fI+XHf2udV9HA56cXk0qngVrdO?=
+ =?us-ascii?Q?LmVV/f+pXM8bnn43Cc4Ihzlsxp6yPUJcLDHGHxrcIDz5s5ybWEIOBkSaNoUi?=
+ =?us-ascii?Q?piwKMHOlho5lHDjmpoYMLBIOhJABuwzQ91lIk9zCFsUSrZcxyz0np1fjDRAx?=
+ =?us-ascii?Q?Am31FDgtqhG7mIEdQtV8TBDlb/6ZGNFMLoWK3GW+kCrXmhBhzDms3yvPHI4w?=
+ =?us-ascii?Q?Kjh+acM0CPZw6dASHxXxJakNmyDTsm7+/g8svaVkzZ+CH1RD6c8ScMhnGi0U?=
+ =?us-ascii?Q?yZJAuYcfcFLVZfvUQ4HsmFK4kphizM+pR6O7GbBVNAxNcLLBs+BMwn0yZnJ2?=
+ =?us-ascii?Q?jCai3vUcONihsdillcRkNj2FCG0kSRGzehGlABVpeI1ZpYDUzdb9Kpcgnhhw?=
+ =?us-ascii?Q?I3OJB4ltSQJ7JsAic6b7uIn/4FTaSoZY9jg2yX2AJrJVF6F+jNGWuCRceZ5z?=
+ =?us-ascii?Q?6KPxcYW6A2sFkMf76H4J5q69aS1S/DX9oUNckuIg+URGVxmEC1B9/fGOmsvI?=
+ =?us-ascii?Q?Oapu9O01TC4+1X9WgWNgcOZDMH6RlHQ217vza1IMU3nXhC50++XhZOkGG+ce?=
+ =?us-ascii?Q?3iOf+6Bra0cGBY15SG3kSvcmdDmUozeRebDC9BCHG6YlM0Q489oi9j05mFJT?=
+ =?us-ascii?Q?A84dgwY6FSygQO22E5zz51RuS/iBdyMCKP22leTmGkf/FWi8YmVxqsbuFBpE?=
+ =?us-ascii?Q?cQDocRgGTbAQeAtgxAovaihlHvtGkTqAu3yrDO/Z3d5IBGn0pkcqztnR3p2v?=
+ =?us-ascii?Q?f1YBLWXzsM1sHndMhNVlwry0SvZ+YY5glkg4EO/LxHyfF4dKJPeDMMUWdStD?=
+ =?us-ascii?Q?poaBtxdbqVcLgUPDbtAhn8X5GbIfK7bU7fkcsikzQd8jJjU1ft0da4Fxzt6t?=
+ =?us-ascii?Q?82F9y7/n5abe+YjwZPg=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a9e7b73-a6e4-4d77-8957-08dc3c9082a9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41340640-29fb-43e6-c7d3-08dc3c9ceeed
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 21:17:34.5685
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2024 22:46:30.1975
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5IIblpv90d3SOPwMrtVuOv/P5b0QlXrlJvAaH9gkP+O1CceDWLKzcMndITkCxsHsY7Hq/J1n0UyTzfebfSL+Fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6898
+X-MS-Exchange-CrossTenant-UserPrincipalName: uHk72aOwwLTQPjz9FwKpUEMDLWsILYAhzpjYW1UkajZtKuWfIfd1gowWCQSwaHkO47tUD3xm897xyVz+yhKmNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9314
 
-On Mon, Mar 04, 2024 at 09:04:30PM +0000, Niklas Cassel wrote:
-> On Mon, Mar 04, 2024 at 02:13:27PM -0500, Frank Li wrote:
-> > > 
-> > > Niklas's initial suggestion of keeping u8 for the array and 0 as the unallocated
-> > > placeholder sounds good to me. Please use that instead.
-> > > 
-> > 
-> > It is impossible to keep u8, because 255 + 1 will 0 for u8. Previously
-> > Niklas's initial suggestion have not consider this condition. If u8 have to
-> > change to u16 or s16 anyways, I prefer use -1 as free.
-> 
-> Well, to be fair, my suggestion was:
-> "If we continue to use a u8, and offset the saved value by one,
-> we will at least be able to support 255-1 == 254 iATUs."
-> 
-> But we have this define:
-> drivers/pci/controller/dwc/pcie-designware.h:#define MAX_IATU_IN 256
-> (Even if it isn't used anywhere.)
-> 
-> But as ridiculous as it may seem to support that many inbound ranges,
-> that is the max number of windows supported by the hardware, so why
-> not just let the driver support the max supported by the hardware?
-> 
-> 
-> We are talking about:
-> struct dw_pcie_ep {
-> 	...
->         u8                      bar_to_atu[PCI_STD_NUM_BARS];
-> 	...
-> }
-> 
-> where PCI_STD_NUM_BARS == 6.
-> 
-> And where struct dw_pcie_ep is kzalloced for what I assume is all drivers.
-> 
-> So I'm actually for your idea of changing it to u16, or even unsigned int.
-> 
-> If the code is simplified if we use a u16 or unsigned int (because we don't
-> need any weird if (val < MAX_IATU_IN - 1) check), then I'm all for it.
-> 
-> 
-> What I personally don't like with your patch in $subject,
-> was that you changed both dw_pcie_ep_clear_bar() to set the "clear value"
-> to -1, but you also need a
-> memset(ep->bar_to_atu, -1, sizeof(ep->bar_to_atu)); in dw_pcie_ep_init().
-> 
-> 
-> I much prefer to have 0 as the default/unused value, because it will
-> automatically get set when you do kzalloc().
-> Seeing a memset -1 just looks a bit hackish to be, but I realize that
-> it is personal preference.
-> 
-> 
-> If it is super important to save 8 bytes from the heap, then I would
-> even prefer changing the MAX_IATU_IN 256 to something smaller, like
-> 127 or whatever, just as long as we don't need that extra memset -1 :)
+dw_pcie_ep_inbound_atu()
+{
+	...
+	if (!ep->bar_to_atu[bar])
+		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+	else
+		free_win = ep->bar_to_atu[bar];
+	...
+}
 
-Okay, Let me work on '0' version.
+The atu index 0 is valid case for atu number. The find_first_zero_bit()
+will return 6 when second time call into this function if atu is 0. Suppose
+it should use branch 'free_win = ep->bar_to_atu[bar]'.
 
-Frank
+Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
+it have not allocate atu to the bar.
 
-> 
-> 
-> Kind regards,
-> Niklas
+Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+Closes: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
+Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
+Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+
+Notes:
+    Change from v1 to v2
+    - update subject
+    - use free_win + 1 solution
+    - still leave MAX_IATU_IN as 256. I am not sure if there are platfrom have
+    256 ATU. Suppose it only use max 6 in current EP framework.
+    - @Niklas, can you help test it. My platform become unstable today.
+
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 5befed2dc02b7..ba932bafdb230 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -139,7 +139,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 	if (!ep->bar_to_atu[bar])
+ 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+ 	else
+-		free_win = ep->bar_to_atu[bar];
++		free_win = ep->bar_to_atu[bar] - 1;
+ 
+ 	if (free_win >= pci->num_ib_windows) {
+ 		dev_err(pci->dev, "No free inbound window\n");
+@@ -153,7 +153,11 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 		return ret;
+ 	}
+ 
+-	ep->bar_to_atu[bar] = free_win;
++	/*
++	 * Always increment free_win before assignment, since value 0 is used to identify
++	 * unallocated mapping.
++	 */
++	ep->bar_to_atu[bar] = free_win + 1;
+ 	set_bit(free_win, ep->ib_window_map);
+ 
+ 	return 0;
+@@ -190,7 +194,10 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	enum pci_barno bar = epf_bar->barno;
+-	u32 atu_index = ep->bar_to_atu[bar];
++	u32 atu_index = ep->bar_to_atu[bar] - 1;
++
++	if (!ep->bar_to_atu[bar])
++		return;
+ 
+ 	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
+ 
+-- 
+2.34.1
+
 
