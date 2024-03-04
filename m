@@ -1,190 +1,209 @@
-Return-Path: <linux-pci+bounces-4431-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4432-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2B038704C7
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 16:04:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28AA48705AC
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 16:37:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F00FDB25168
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 15:04:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69138B21ABB
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Mar 2024 15:36:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552C34653A;
-	Mon,  4 Mar 2024 15:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D5647A74;
+	Mon,  4 Mar 2024 15:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KxfxPZyT"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g6OJS6Jc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EF345945;
-	Mon,  4 Mar 2024 15:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6D93B29A;
+	Mon,  4 Mar 2024 15:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709564674; cv=none; b=MyarseT0/NJWJ8Es/f4QhcWN2W3sptd667CvDPvHRXq7IruECMXRP3PMwBnssMFwlpilQ+wzaqQPg4Jts185f5SucGkgytyIVqt1ii62g/CmFdN5HG7JEM5dywpx0qA9/+/vYfzfJKmaIW3sEBapWM3k2lGxVmFARpC6514VQrw=
+	t=1709566573; cv=none; b=ZWHKD5QxHf8Yr8IbkgEc0aC3r8z2h2Elmbv4VFYzV8Z+DWfS8kPqSXUV3RzYk4Qq01KMaVxKd+04mIL3f0Z06rGU2Nlh6SgSOAdBth+pn3sBnlf//sObVU7GAU/ID4KqSNBhX1oOFl8geR/JKMPaNxzeb67YZMjzRD9R+dpR+Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709564674; c=relaxed/simple;
-	bh=JQ0+zqW2caSPP+fUJhGdRNpSWxMzAFd26SsP97GqJ5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mR1moOY0oYBeeXjlCVW+u9KRBSycn/7+bQijEVwIhHWLa+IUE5JlTSFIrgDS+1dIrxcdorg9hzfeS91qWVWusT++M+T1dhAlmO8KJ6SXBTjj5DNMY8Miagx25mE91Asv3/uW444ZYMSAiB5WV7YLku6uBA1lI6IbVoZSdx++HBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KxfxPZyT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC42C433F1;
-	Mon,  4 Mar 2024 15:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709564673;
-	bh=JQ0+zqW2caSPP+fUJhGdRNpSWxMzAFd26SsP97GqJ5M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KxfxPZyTJCmJ5mZxVgiJqCzXofUHAoQs7mRC4KDObSN4wZYzCp+or22QBaGGe5t9d
-	 pLbvJc3JLMFgeoU1w44VMTP8tAduMKv6D3daCt6OZvQd6ZtM5E/Z97noo5A7eDc0s2
-	 W+ig+U1dUuuB06z3B0xWfblUl4Qt+mYQ4jEyGRB7YwL+af8wnuI87t37LKaJhjrGoW
-	 ub8JQUD6sglgIwv+HwJS9neFZqPR7gHY6wjCaYatMgn1yMmWuoNgu/qGBQDEDJSnwJ
-	 1Wcb5mT3qEHKZKholtNHLHRLkFh6GvNDPtCqpZMBtwoYo84wi/8B185vMWK2kovBNR
-	 BuM6Fu1YvISvg==
-Date: Mon, 4 Mar 2024 20:34:17 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v8 03/10] PCI: dwc: ep: Introduce dw_pcie_ep_cleanup()
- API for drivers supporting PERST#
-Message-ID: <20240304150417.GK2647@thinkpad>
-References: <20240224-pci-dbi-rework-v8-0-64c7fd0cfe64@linaro.org>
- <20240224-pci-dbi-rework-v8-3-64c7fd0cfe64@linaro.org>
- <ZeB7PQtkDSoCzE1Z@fedora>
- <20240304081713.GH2647@thinkpad>
- <ZeWnmLjS0O8CYQYg@fedora>
+	s=arc-20240116; t=1709566573; c=relaxed/simple;
+	bh=ySdztOBYEF3jOLO27ENS3g67Z23SqhZ5bWmdZAqUDvE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oFJ0DuuQxuPOETYLomC1SEDrtmO+m8rVrQuQ1QcveU8rB1ouzDxAixzHsZL/qJjjb97ROcnFKmbtd3Kdyra70DZpdjzeb5l1r40gO9wueygruZJVAgHXiBeq9ehEgp8eK/BEvnNm3niHljeFLvZoxom1KkxTTva25CS1cssf90Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g6OJS6Jc; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A931A1BF208;
+	Mon,  4 Mar 2024 15:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709566569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+lEurNTi9qfX5Aes1xgUAal4TCh7q2x2RHJVUpm+ago=;
+	b=g6OJS6JcWBSuyXa2duBldoQwxnFxkLAjLb2nyWJ01g3sP0iT/twWMnjpd4Ale5OPqNpade
+	VN9c3epcrRf0GcA6VUQwEzLzmpv814Umny6bjsdNCxfBqHJtwWLFCteUIBXO1LUmJE2Xdk
+	+q3zvt42iJp0vcR7L+VQj6og4DhcA77MGz5SOxj9Ooin2+Xc5/mnjhrpJJBmGakMsbnJoE
+	EZ+z1A/zFgJPxBvFMuHI8PmmZWJ8lcpwHGcoDh1T8K/nHeBBrMAQfH1c+dTOTGrFmPCueo
+	hAgBIhAi3gHvSdmlznzIzQPCGIOlVwDkbwVDcfdSaikKRIZO9O2RNHhRWiHqIw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v4 00/18] Add suspend to ram support for PCIe on J7200
+Date: Mon, 04 Mar 2024 16:35:43 +0100
+Message-Id: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZeWnmLjS0O8CYQYg@fedora>
+X-B4-Tracking: v=1; b=H4sIAE/q5WUC/33NTQ7CIBAF4Ks0rMXAAGnrynsYF5QOFqOlgYZom
+ t5d6M4Yu3zz872FRAwOIzlVCwmYXHR+zEEeKmIGPd6Quj5nAgwk4wzovQbG6GQc0giBoum4bus
+ WhapJfup0RNoFPZqhvD11nDGUxRTQutfWdLnmPLg4+/DeihMv078diVNGG4lK9VrlE3buvJ8fb
+ jwa/yQFS7APQAFQ2roHaNDALyD2AZEBZQClFlYbbr+BdV0/jQXLw0kBAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>, 
+ Siddharth Vadapalli <s-vadapalli@ti.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Mar 04, 2024 at 11:51:04AM +0100, Niklas Cassel wrote:
-> On Mon, Mar 04, 2024 at 01:47:13PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Feb 29, 2024 at 01:40:29PM +0100, Niklas Cassel wrote:
-> > > On Sat, Feb 24, 2024 at 12:24:09PM +0530, Manivannan Sadhasivam wrote:
-> > > 
-> > > Since e.g. qcom-ep.c does a reset_control_assert() during perst
-> > > assert/deassert, which should clear sticky registers, I think that
-> > > you should let dw_pcie_ep_cleanup() clean up the BARs using
-> > > dw_pcie_ep_clear_bar().
-> > > 
-> > 
-> > As I mentioned earlier, it is the job of the EPF drivers to clear the BARs since
-> > they allocate them. I'm trying to reduce the implicit resetting wherever we
-> > could.
-> > 
-> > The proper fix is to add the LINK_DOWN callback to EPF drivers and do cleanup.
-> > I'm planning to submit a series for that after this one.
-> 
-> Currently, pci-epf-test allocates memory for the BARs in .bind().
-> Likewise it frees the memory for the BARs in .unbind().
-> 
-> AFAICT, most iATU registers, and most BAR registers are sticky registers,
-> so they will not get reset on link down.
-> (The currently selected BAR size, in case of Resizable BAR is an exception.)
-> 
-> That means that even on link down, we do not need to free the memory,
-> or change the iATU settings. (This applies to all drivers.)
-> 
-> 
-> 
-> However, on PERST (for the drivers call dw_pcie_ep_cleanup()), they call
-> reset_control_assert(), so they will clear sticky registers, which means
-> that they need to at least re-write the iATU and BAR registers.
-> (I guess they could free + allocate the memory for the BARs again,
-> but I don't think that is strictly necessary.)
-> That is why I suggested that you call dw_pcie_ep_clear_bar() from
-> dw_pcie_ep_cleanup().
-> 
+This add suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-Sorry, I keep assuming the flow w.r.t PERST# supported platforms :/
+In RC mode, the reset pin for endpoints is managed by a gpio expander on a
+i2c bus. This pin shall be managed in suspend_noirq() and resume_noirq().
+The suspend/resume has been moved to suspend_noirq()/resume_noirq() for
+pca953x (expander) and pinctrl-single.
 
-My bad!
+To do i2c accesses during suspend_noirq/resume_noirq, we need to force the
+wakeup of the i2c controller (which is autosuspended) during suspend
+callback. 
+It's the only way to wakeup the controller if it's autosuspended, as
+runtime pm is disabled in suspend_noirq and resume_noirq.
 
-> 
-> 
-> If you free the memory for the BARs in link_down() (this callback exists
-> for many drivers, even drivers without a PERST handler), where are you
-> supposted to alloc the memory for the BARs again?
-> 
-> Allocating them at link_up() is too late (because as soon as the link is
-> up, the host is allowed to enumerate the EP BARs.) The proper place is to
-> allocate them when receiving PERST, but not all drivers have a PERST handler.
-> 
-> (My understanding is that 1) PERST assert 2) PERST deassert 3) link is up.)
-> 
-> 
-> 
-> unbind() undos what was done in bind(), so shouldn't link_down() undo what was
-> done in link_up()? With that logic, if you move the alloc to .core_init(),
-> should we perhaps have a .core_deinit() callback for EPF drivers?
-> (I guess only drivers which perform a reset during PERST would call this.)
-> 
-> But considering that free+alloc is not strictly needed, why not just keep
-> the allocation + free in .bind()/.unbind() ?
-> (To avoid the need to create a .core_deinit()), and let dw_pcie_ep_cleanup()
-> call dw_pcie_ep_clear_bar() ?
-> 
-> I guess my point is that it seems a bit pointless for drivers that do not
-> clear sticky registers to free+alloc memory on link down, for no good
-> reason. (Memory might get fragmented over time, so it might not be possible
-> to perform a big allocation after the device has been running for a really
-> long time.)
-> 
-> 
-> 
-> So I'm thinking that we either
-> 1) Keep the alloc/free in bind/unbind, and let dw_pcie_ep_cleanup() call
-> dw_pcie_ep_clear_bar(),
-> or
-> 2) Introduce a .deinit_core() callback which will free the BARs.
-> (Because I don't see how you will (re-)allocate memory for all drivers
-> if you free the memory in link_down().)
-> 
+The main change in the v4 is that now mux_chip_resume() returns zero or on
+the first error.
+The 2 patches on the pinctrl-single driver were squashed.
+And the subject line for the PCI patches was fixed.
+Other changes are detailed below.
 
-I think option 2 is the better solution. In my view, calling
-dw_pcie_ep_clear_bar() from EPC drivers is a layering violation since the
-allocation happens from EPF drivers.
+Regards,
 
-So clearing the BARs during the deinit() callback that gets called when PERST#
-assert happens is the way to go.
+Thomas
 
-- Mani
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v4:
+- all: use SoB/Co-developed-by for patches initially developed by Théo
+  Lebrun.
+- pinctrl-single: squash the two commits.
+- i2c-omap: fix line lenghts of the comment in omap_i2c_suspend().
+- mux: mux_chip_resume() return 0 or at the first error.
+- phy-j721e-wiz: clean code around dev_err_probe().
+- phy-j721e-wiz: use REF_CLK_100MHZ macros.
+- pci: fix subject line for all PCI patches.
+- pci-cadence: use fsleep() instead of usleep_range().
+- pci-cadence: remove cdns_torrent_clk_cleanup() call in
+  cdns_torrent_phy_resume_noirq().
+- pci-j721e: add a patch to use dev_err_probe() instead of dev_err() in the probe().
+- pci-j721e: fix unordered header files.
+- pci-j721e: remove some log spammers.
+- pci-j721e: add a missing clock disable in j721e_pcie_resume_noirq().
+- pci-j721e: simplify the patch "Add reset GPIO to struct j721e_pcie"
+- Link to v3: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com
 
+Changes in v3:
+- pinctrl-single: split patch in two parts, a first patch to remove the
+  dead code, a second to move suspend()/resume() callbacks to noirq.
+- i2c-omap: add a comments above the suspend_noirq() callback.
+- mux: now mux_chip_resume() try to restores all muxes, then return 0 if
+  all is ok or the first failure.
+- mmio: fix commit message.
+- phy-j721e-wiz: add a patch to use dev_err_probe() instead of dev_err() in
+  the wiz_clock_init() function.
+- phy-j721e-wiz: remove probe boolean for the wiz_clock_init(), rename the
+  function to wiz_clock_probe(), extract hardware configuration part in a
+  new function wiz_clock_init().
+- phy-cadence-torrent: use dev_err_probe() and fix commit messages
+- pcie-cadence-host: remove probe boolean for the cdns_pcie_host_setup()
+  function and extract the link setup part in a new function
+  cdns_pcie_host_link_setup().
+- pcie-cadence-host: make cdns_pcie_host_init() global.
+- pci-j721e: use the cdns_pcie_host_link_setup() cdns_pcie_host_init()
+  functions in the resume_noirq() callback.
+- Link to v2: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com
+
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
+
+---
+Thomas Richard (15):
+      gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+      pinctrl: pinctrl-single: move suspend()/resume() callbacks to noirq
+      i2c: omap: wakeup the controller during suspend() callback
+      mux: add mux_chip_resume() function
+      phy: ti: phy-j721e-wiz: use dev_err_probe() instead of dev_err()
+      phy: ti: phy-j721e-wiz: split wiz_clock_init() function
+      phy: ti: phy-j721e-wiz: add resume support
+      phy: cadence-torrent: extract calls to clk_get from cdns_torrent_clk
+      phy: cadence-torrent: register resets even if the phy is already configured
+      phy: cadence-torrent: add already_configured to struct cdns_torrent_phy
+      phy: cadence-torrent: remove noop_ops phy operations
+      phy: cadence-torrent: add suspend and resume support
+      PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+      PCI: cadence: Set cdns_pcie_host_init() global
+      PCI: j721e: Use dev_err_probe() in the probe() function
+
+Théo Lebrun (3):
+      mux: mmio: add resume support
+      PCI: j721e: Add reset GPIO to struct j721e_pcie
+      PCI: j721e: Add suspend and resume support
+
+ drivers/gpio/gpio-pca953x.c                        |   7 +-
+ drivers/i2c/busses/i2c-omap.c                      |  22 ++++
+ drivers/mux/core.c                                 |  29 +++++
+ drivers/mux/mmio.c                                 |  12 ++
+ drivers/pci/controller/cadence/pci-j721e.c         | 107 +++++++++++++++--
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  44 ++++---
+ drivers/pci/controller/cadence/pcie-cadence.h      |  12 ++
+ drivers/phy/cadence/phy-cadence-torrent.c          | 120 ++++++++++++++-----
+ drivers/phy/ti/phy-j721e-wiz.c                     | 132 +++++++++++++--------
+ drivers/pinctrl/pinctrl-single.c                   |  28 ++---
+ include/linux/mux/driver.h                         |   1 +
+ 11 files changed, 384 insertions(+), 130 deletions(-)
+---
+base-commit: e76807cc177efce5bdb253de3c673b13c08be013
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
+
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Thomas Richard <thomas.richard@bootlin.com>
+
 
