@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4523-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4524-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82E938721AC
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 15:39:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 584748721DA
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 15:46:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B2E61C2163C
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 14:39:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DA8F1F23DC6
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 14:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0702126F04;
-	Tue,  5 Mar 2024 14:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE47186ACA;
+	Tue,  5 Mar 2024 14:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ob0xAPCX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b/B/UAeC"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C020786AF8;
-	Tue,  5 Mar 2024 14:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA905C609;
+	Tue,  5 Mar 2024 14:46:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709649441; cv=none; b=PMHx0I2P5Oure0BR8R3kxii82eokhbIzQf+1ZLDcyCtOv4aV6V+X1wsrZo9WQGG+3gAy16jKJFwT7uSL8l10bCUl7Lwf8CCvR/5yjwXh9Lesluvmvlfy5HnoMUTRvvGcKQOf38ShL1u6ixRBs/gE05EJef/uCaZlNNVJxIBHYsU=
+	t=1709649999; cv=none; b=HccajnIkRdDJr8oaC9dOGYCoYnd7EPoKWsI5hBMfC2UVeo7AREhPNZsN1TBPFvpJr/QoZb4m7sL7db4Lss85zxX0CfnywFEutcNEV94FLuOrfcT/WV+VHfp2xS08GUXljp0YIBnxzIDpi3UQEHc9GVU/TL9nHyid0ARE57o490M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709649441; c=relaxed/simple;
-	bh=PFDRnUb1JFhpVTNgo/H8v1Eg/rAvjUdBBtspdiP1xLo=;
+	s=arc-20240116; t=1709649999; c=relaxed/simple;
+	bh=WJiYuuI2+nv3lSds/JbSKGWH4EVNi2cWoaQGbieuCIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SuPzNUfaTNC6d6+gcqvKEypjeuB/SQTUkK/bqSluD+jC9rkMaMlSJcjDl02b7GQCjVRV5VGSZ2rW6VfIfB5dXe46b4xkBSkfQYE9FCW2ZSi+j6F6d4djXsDT/YYEq/4L5CokqWoQ5zUNLixVnAtgUpLzzeaWIosUSP2BiKFG51M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ob0xAPCX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 257D0C433F1;
-	Tue,  5 Mar 2024 14:37:21 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=PE74qAlHLws0Rd+ePbL48z9k/SNFpFR839EVoCd2QUA+apG+siJW/+ykgEJzwzSmmNjgwercRJ37lMqnqhr7Y7ZSBsn7skr81+utmaECGi9Rce9YHCwHP0INawggOPGj39Ou4hMqgx9yuS/2HzsSNrUqyemo7ylA0nWxvk1KcHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b/B/UAeC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9C6C433F1;
+	Tue,  5 Mar 2024 14:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709649441;
-	bh=PFDRnUb1JFhpVTNgo/H8v1Eg/rAvjUdBBtspdiP1xLo=;
+	s=k20201202; t=1709649999;
+	bh=WJiYuuI2+nv3lSds/JbSKGWH4EVNi2cWoaQGbieuCIo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ob0xAPCXLnUUvG6vKIvGCdR4QIkvh+6lVlInUZZELMJzX4TugqXHs37YyBlGLqW5u
-	 Fk83edGu2/KijwfNBfro6CowJf5oGyManQdZK28oysOXKanTgHEiEmX401SNeWBGhr
-	 pDemzy0oMPFA5+vvoY98BpTvXvGnGAGjQBbxGojMdHQ9c+q++Bm9WZLnLBAvAX0UW6
-	 Vv2HBfeO2R83LicOAvCsR5BFcA3ZyZR5VqrvHISwVMgS3v+14iixMzeET7L2ua1UdP
-	 9FDISNiQfWepv9aZz4Tjiqtw6qSQg4PH0A820UB2TF1pCD+MnEaTeE7lG/YcD1mLfE
-	 JIwZLdlxlUMhw==
-Date: Tue, 5 Mar 2024 08:37:19 -0600
+	b=b/B/UAeCzYTXgnmNHaKP17apwu86PKj497uhXC36u3SPUk6cpB2i3gzWla5Sd6WLl
+	 6YHkmiNg+8OjmSbvS5uQw04m3NANmbz1T/76Zi5ul+qUbbDrMRIyBTDR7vaIvCJv2g
+	 8HAWhGmlvbpxVQi9qmwSszVXMxuQBPueqjWFo8XHHdoVbIYgDk8CHX8QB/npij4TwB
+	 8j3Af7v/akufMBZ/jwJ7A695x9WnqBHorQAhchf4WQKGrMHDMZBN9NqGh+NbHG0eHs
+	 R1fhI4U69exRWogS4/doxg9EkjG/C7zC3LL4ystVtIQ02zGSKkZ/iBzjd3skUyD5A/
+	 Lr+JkW7gwAarg==
+Date: Tue, 5 Mar 2024 08:46:36 -0600
 From: Rob Herring <robh@kernel.org>
 To: Frank Li <Frank.li@nxp.com>
 Cc: conor@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
@@ -49,13 +49,13 @@ Cc: conor@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
 	krzysztof.kozlowski+dt@linaro.org, kw@linux.com,
 	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
 	lpieralisi@kernel.org
-Subject: Re: [PATCH v6 3/3] dt-bindings: pci: layerscape-pci-ep: Add
- snps,dw-pcie-ep.yaml reference
-Message-ID: <20240305143719.GA3310214-robh@kernel.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: Convert to yaml
+ format
+Message-ID: <20240305144636.GB3310214-robh@kernel.org>
 References: <20240301162741.765524-1-Frank.Li@nxp.com>
- <20240301162741.765524-4-Frank.Li@nxp.com>
- <20240304182049.GA851904-robh@kernel.org>
- <ZeYcOUAb7NWjTh9m@lizhi-Precision-Tower-5810>
+ <20240301162741.765524-2-Frank.Li@nxp.com>
+ <20240304173204.GA777171-robh@kernel.org>
+ <ZeYJHLpHb0UGv8S+@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,130 +64,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZeYcOUAb7NWjTh9m@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZeYJHLpHb0UGv8S+@lizhi-Precision-Tower-5810>
 
-On Mon, Mar 04, 2024 at 02:08:41PM -0500, Frank Li wrote:
-> On Mon, Mar 04, 2024 at 12:20:49PM -0600, Rob Herring wrote:
-> > On Fri, Mar 01, 2024 at 11:27:41AM -0500, Frank Li wrote:
-> > > Add snps,dw-pcie-ep.yaml.
+On Mon, Mar 04, 2024 at 12:47:08PM -0500, Frank Li wrote:
+> On Mon, Mar 04, 2024 at 11:32:04AM -0600, Rob Herring wrote:
+> > On Fri, Mar 01, 2024 at 11:27:39AM -0500, Frank Li wrote:
+> > > Split layerscape-pci.txt into two yaml files: fsl,layerscape-pcie-ep.yaml
+> > > and fsl,layerscape-pcie.yaml.
+> > > yaml files contain the same content as the original txt file.
 > > > 
-> > > Remove context that exist in snps,dw-pcie-ep.yaml.
-> > > 
-> > > Add an example for pcie-ep.
-> > > 
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  .../bindings/pci/fsl,layerscape-pcie-ep.yaml  | 54 ++++++++++---------
-> > >  1 file changed, 29 insertions(+), 25 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> > > index cf517e4e46a33..07965683beece 100644
-> > > --- a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-> > > @@ -10,8 +10,7 @@ maintainers:
-> > >    - Frank Li <Frank.Li@nxp.com>
-> > >  
-> > >  description:
-> > > -  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP
-> > > -  and thus inherits all the common properties defined in snps,dw-pcie.yaml.
-> > > +  This PCIe RC controller is based on the Synopsys DesignWare PCIe IP.
-> > >  
-> > >    This controller derives its clocks from the Reset Configuration Word (RCW)
-> > >    which is used to describe the PLL settings at the time of chip-reset.
-> > > @@ -35,31 +34,18 @@ properties:
-> > >        - const: fsl,ls-pcie-ep
-> > >  
-> > >    reg:
-> > > -    description: base addresses and lengths of the PCIe controller register blocks.
-> > > +    maxItems: 2
-> > > +
-> > > +  reg-names:
-> > > +    maxItems: 2
-> > >  
-> > >    interrupts:
-> > > -    description: A list of interrupt outputs of the controller. Must contain an
-> > > -      entry for each entry in the interrupt-names property.
-> > > +    minItems: 1
-> > > +    maxItems: 3
-> > >  
-> > >    interrupt-names:
-> > >      minItems: 1
-> > >      maxItems: 3
-> > > -    description: It could include the following entries.
-> > > -    items:
-> > > -      oneOf:
-> > > -        - description:
-> > > -            Used for interrupt line which reports AER events when
-> > > -            non MSI/MSI-X/INTx mode is used.
-> > > -          const: aer
-> > > -        - description:
-> > > -            Used for interrupt line which reports PME events when
-> > > -            non MSI/MSI-X/INTx mode is used.
-> > > -          const: pme
-> > > -        - description:
-> > > -            Used for SoCs(like ls2080a, lx2160a, ls2080a, ls2088a, ls1088a)
-> > > -            which has a single interrupt line for miscellaneous controller
-> > > -            events(could include AER and PME events).
-> > > -          const: intr
-> > >  
-> > >    fsl,pcie-scfg:
-> > >      $ref: /schemas/types.yaml#/definitions/phandle
-> > > @@ -68,10 +54,7 @@ properties:
-> > >        The second entry is the physical PCIe controller index starting from '0'.
-> > >        This is used to get SCFG PEXN registers
-> > >  
-> > > -  dma-coherent:
-> > > -    description: Indicates that the hardware IP block can ensure the coherency
-> > > -      of the data transferred from/to the IP block. This can avoid the software
-> > > -      cache flush/invalid actions, and improve the performance significantly
-> > > +  dma-coherent: true
-> > >  
-> > >    big-endian:
-> > >      $ref: /schemas/types.yaml#/definitions/flag
-> > > @@ -85,3 +68,24 @@ required:
-> > >    - reg
-> > >    - interrupt-names
-> > >  
-> > > +allOf:
-> > > +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +
-> > > +    soc {
-> > > +      #address-cells = <2>;
-> > > +      #size-cells = <2>;
-> > > +
-> > > +      pcie-ep@3400000 {
-> > > +        compatible = "fsl,ls1028a-pcie-ep", "fsl,ls-pcie-ep";
-> > > +        reg = <0x00 0x03400000 0x0 0x00100000
-> > > +              0x80 0x00000000 0x8 0x00000000>;
-> > > +        reg-names = "dbi", "addr_space";
-> > > +        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
+> > > Do below changes to pass dtb_binding check:
+> > > - Remove dma-coherent and fsl,pcie-scfg because not every SOC need it.
 > > 
-> > PME or...
+> > You mean 'remove from required' right? Because they are still here.
 > > 
-> > > +        interrupt-names = "app";
+> > > - Set unevaluatedProperties to true in fsl,layerscape-pcie.yaml.
 > > 
-> > app? You seem to just be changing the names to make the example happy. 
-> > What do the dts files have? You need to make those pass.
+> > Sorry, but that's not acceptable either. You need the $ref's in this 
+> > patch.
 > 
-> It's on my plan.
 > 
-> First need change 'regs' to 'dbi'. 
+> Rob:
 > 
-> https://lore.kernel.org/linux-pci/20240229194559.709182-1-Frank.Li@nxp.com/
-> 
-> After that, I can update all dts.
+> If I squash this 3 patches, it will match most your comments. And will back
+> to my previous v3's patches, 
+> https://lore.kernel.org/imx/20240214194145.2669744-1-Frank.Li@nxp.com/
 
-No! 
+Plus our review comments I hope...
 
-I'm saying you shouldn't be changing the dts files. That's an ABI 
-which you are likely breaking. You should adjust the binding so the dts 
-files pass. The exception is if you know the change is safe and not 
-going to break the ABI or the dts is just been wrong all along (e.g. 
-missing a compatible the OS doesn't rely on).
+> 
+> Bjorn Helgaas suggest split to patches:
+> https://lore.kernel.org/imx/20240226210842.GA211190@bhelgaas/
+> 
+> First one will be equal to origial txt, then add change base on that.
+> 
+> I need a clear direction before I continue on this.
+
+Bjorn's suggestion doesn't work. I think it was confused in that you 
+said you were 'adding' things. You aren't adding things, just fixing 
+things to make the validation pass.
+
+If you want to split things, you could add reg and/or interrupt names to 
+the common schema first. And then add Layerscape schemas. But don't add 
+things you turn around and remove in the very next patch. I think 
+Krzysztof told you the very same thing.
 
 Rob
 
