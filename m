@@ -1,152 +1,177 @@
-Return-Path: <linux-pci+bounces-4511-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 325208719D8
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 10:46:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE78E8719EB
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 10:49:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6319C1C20D1D
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 09:46:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D21FA1C20F84
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 09:49:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F327E10A1B;
-	Tue,  5 Mar 2024 09:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0796E535B9;
+	Tue,  5 Mar 2024 09:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="awfI6g0b"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hab/4V8O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F952F6F
-	for <linux-pci@vger.kernel.org>; Tue,  5 Mar 2024 09:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFC4535AB;
+	Tue,  5 Mar 2024 09:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709631959; cv=none; b=TZsFMMVbLNY4SvTn0qfif8k4xfoUAtH73zJ4tPdg7nlOpNC5Y9NUgQGyEtmy4mI0xwpcKdElfUMh2WaRAKbgWq8ZDLeGCCDZkRmeIfXd/gEV9wH3O5lzqslnAYyX8qm6QPOJCIhIwtlE/BRX1o/giw+V8TzRC75bdkwsAQUNnGs=
+	t=1709632165; cv=none; b=vDPM8pmJAXzsCfTmuxXpkvHXhjRak1z64OVgJW86lGl37LfSqpiHI+HlVcIfqlUKnnxW9MpjWxT9SZUtE9e6JXFdJZHsxpFbwWq+GYbT5BNpwE6PBGRDrtKyVLAuQ5+X/AAbu7iCFnhd+W6CmHSHc6UBpaHy4UmKCnTBeoWB1ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709631959; c=relaxed/simple;
-	bh=alx5vZWhVICl/ZFpuQPCzqgZbWSwvb1KNFLEtUSsUps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WELIkJGcQguU97aBL+GDzNkjHp5qkBxz6grfJhxAykNbSLvPOKxD43SgpAP49nWDxQCS1Q4/eVtPJVG1+jX4Ize9VNODAGzAbyEPuA9uiguX+NhxE9UNB1b/bCO7Xr96RpRWjKAlXzkqWfXjxil4WxXFI3180wBeu94lGdLGiT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=awfI6g0b; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709631956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s6JX6F3nXLvj1jwiNNTV/fr6BirH4Aq8WGV1ynyU4sI=;
-	b=awfI6g0bgolUWOEQiTyuN683/w8T2R1Wkf7/TvmHZUB68POqGSZ5TKa3Fe0BnlhAYo7ut8
-	LzCDKJ6gCrg2wJrDMHJjIyQHjxdLA8wO1y7VlapTPJc3JHxtvEs3MdJ2jg8qjvNMNlPIJe
-	WNfUKZf16+uwBQZVJo3qT1duR5lqS4E=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-288-HdSUg41ONX-MmE0ztf6Zbg-1; Tue, 05 Mar 2024 04:45:54 -0500
-X-MC-Unique: HdSUg41ONX-MmE0ztf6Zbg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a448b3a36eeso280272766b.3
-        for <linux-pci@vger.kernel.org>; Tue, 05 Mar 2024 01:45:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709631953; x=1710236753;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s6JX6F3nXLvj1jwiNNTV/fr6BirH4Aq8WGV1ynyU4sI=;
-        b=tMf8kIr/p+VU35zWgIZ96l3d160NKCpNilmAsUHhNG9lU632qpruo8UqZruFKlobfd
-         Nz5G6pbOwn3bdo5CnPtkzGRlnt6nwXDzC/WnzkDL+crkiMia+dZkFlhtiRwEUjqQLCef
-         6yClAPTcKAt32ltzozC4qS8ltxSc6TlVv9hc7GQxEPgiK9S71xfVF62rH3fGAMw3n2oA
-         1AauHx4URt2Si20Q3z3O7vYh10Jpy1nuCwxwGTlBX02jvng+YYLPfOccxVXZmUj/PPaR
-         KRJBmOBTZrFf+efTlJnhjIanCno0FTvTdOi4bCYha4LQ8ECwm6Ce/YLi7PvfnPtjyECN
-         oaRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaRxod0LC4XZLJ0acfl6vw/orfeMnapsEY0P3H/4EKbTXLV115+6RRvkpohEvPlEHR5MINPJW4asnSmr26JACqzkkc8oq5iCdV
-X-Gm-Message-State: AOJu0Yxq6PX6a8Nttq7jLN+5XOgRL4aamGMFBORfxR7xiujjyV86BBUr
-	s4PsT29KKyk32aEDMJeepq1f0AQCHhjYcGpgbUyGnUhWTIxiPq8Xyy6Sr2taEeIDUbP0z4iyrw0
-	LS4m+os2mm2w5gk9BzwuPaQ1ENmAvD+wkgn/qyDxQ2lfuaT6XWhRG68Dh4Q==
-X-Received: by 2002:a17:906:338d:b0:a45:40aa:b37a with SMTP id v13-20020a170906338d00b00a4540aab37amr3499651eja.13.1709631953181;
-        Tue, 05 Mar 2024 01:45:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEwn3WAHwsT+aYTdDF5QSnF24M87Z5FDHHkdsOZOBy/fgwLpb4L/OhiKGoXY8s3qCwMohrnTQ==
-X-Received: by 2002:a17:906:338d:b0:a45:40aa:b37a with SMTP id v13-20020a170906338d00b00a4540aab37amr3499636eja.13.1709631952837;
-        Tue, 05 Mar 2024 01:45:52 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id i27-20020a170906265b00b00a441c8c56d0sm5819398ejc.218.2024.03.05.01.45.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 01:45:52 -0800 (PST)
-Message-ID: <79967edb-cafa-4fbb-a551-2628b5b68098@redhat.com>
-Date: Tue, 5 Mar 2024 10:45:51 +0100
+	s=arc-20240116; t=1709632165; c=relaxed/simple;
+	bh=5E821RFhqqoYavc661H3Vby84CJMt3ugUPHZ0daBHkQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=J34ayuFnTShzCoNz2IzGUiRMq+Fub0F8RR7X+iyEZK5LutwANf0ntxkDFIIKUEMjjHAZk0l4xr0T4ZScr8PgMrULALhEc9/Rau0CxgxVer1s/aqmQ/SvFj/0AP0+itr2z+yTcxQdhaU0EBtj8ekpIEu5+5YXtio9QAWw/bGf91o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hab/4V8O; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42553t6u029981;
+	Tue, 5 Mar 2024 09:49:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=37x
+	Rd+lDnWXrIknF2wufL57eoqOYbhNwCDos2tpE4Ww=; b=Hab/4V8Ogipy1SXWbej
+	rMZBfN3pqRBAz3DiXVp4xm0NN+92fBoUapenjI+UKuiizakPcH+g57a0NRyhzF5w
+	6TJd5OffvbQgMx/c4CwQWes4JkfXmUcXWy3lJQXup7C4/PRS0aUtKQ7Rjpr2Dmbx
+	zpjlwrPrCHuyqARt5HlP/q4vYUeEPQL5HsCVHWCp1xq6PSh7TuD7vKcttIbSLCIK
+	CmNvCjUjReQJGhztLMlubHgP7Apl5a+sDS043N2TJ1TLfJ52xUAF1F7Rd8KXGlDF
+	BNVavQBL4krIDByDToWLAlrC/3DFmVwg7d+H/AGxHZdaW2tW7DoAG0ms+1lk9f3v
+	Eyw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wnucrrnxj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Mar 2024 09:49:14 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4259nDpM027674
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 5 Mar 2024 09:49:13 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 5 Mar 2024 01:49:09 -0800
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Date: Tue, 5 Mar 2024 15:19:01 +0530
+Subject: [PATCH v2] PCI: dwc: Enable runtime pm of the host bridge
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 1/1] platform/x86: p2sb: On Goldmont only cache P2SB and SPI
- devfn BAR
-Content-Language: en-US, nl
-To: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Andy Shevchenko <andy@kernel.org>,
- "danilrybakov249@gmail.com" <danilrybakov249@gmail.com>,
- Lukas Wunner <lukas@wunner.de>, Klara Modin <klarasmodin@gmail.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <20240304134356.305375-1-hdegoede@redhat.com>
- <20240304134356.305375-2-hdegoede@redhat.com>
- <be1c9329-1d24-4f49-b200-c8ac551b1fe2@redhat.com>
- <j4ezzqwp4lmgd3lx3utjebaeydacpvivq47xcmfolvz5ww4qyx@iz64qlexsxhy>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <j4ezzqwp4lmgd3lx3utjebaeydacpvivq47xcmfolvz5ww4qyx@iz64qlexsxhy>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240305-runtime_pm_enable-v2-1-a849b74091d1@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAI7q5mUC/32NWw6CMBBFt0Lm25pOeRj8Yh+GEGhHmUQKttBoS
+ PduZQF+npPcc3fw5Jg8XLMdHAX2PNsE6pSBHnv7IMEmMSipCqmwFm6zK0/ULVNHth+eJAaj8VJ
+ jMZhSQtotju78Ppq3NvHIfp3d57gI+LP/agEFCpPXVSVzlKUsmtfGmq0+63mCNsb4BdVSMm60A
+ AAA
+To: Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel
+	<gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
+        <quic_nitegupt@quicinc.com>, <quic_skananth@quicinc.com>,
+        <quic_parass@quicinc.com>,
+        Krishna chaitanya chundru
+	<quic_krichai@quicinc.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1709632149; l=2100;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=5E821RFhqqoYavc661H3Vby84CJMt3ugUPHZ0daBHkQ=;
+ b=G3dl0g0NBTsD6FjHqaBqA2TnM9x871FV2qppYqJMGXtQaJdm33pKXg7Ni/R7iYxTsnA96q7N+
+ 6SffEACZtmWBb2JTyyKrdpHHrJwKU5dwkObI0hkvKQHyB6LNZzDUhlr
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: bBbxfCd8AWUJgsQOvlJrv9AZuqxY1ORy
+X-Proofpoint-ORIG-GUID: bBbxfCd8AWUJgsQOvlJrv9AZuqxY1ORy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-05_07,2024-03-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ spamscore=0 adultscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403050078
 
-Hi,
+The Controller driver is the parent device of the PCIe host bridge,
+PCI-PCI bridge and PCIe endpoint as shown below.
+	PCIe controller(Top level parent & parent of host bridge)
+			|
+			v
+	PCIe Host bridge(Parent of PCI-PCI bridge)
+			|
+			v
+	PCI-PCI bridge(Parent of endpoint driver)
+			|
+			v
+		PCIe endpoint driver
 
-On 3/5/24 01:54, Shinichiro Kawasaki wrote:
-> On Mar 04, 2024 / 17:47, Hans de Goede wrote:
->> Hi All,
->>
->> On 3/4/24 14:43, Hans de Goede wrote:
->>> On Goldmont p2sb_bar() only ever gets called for 2 devices, the actual P2SB
->>> devfn 13,0 and the SPI controller which is part of the P2SB, devfn 13,2.
->>>
->>> But the current p2sb code tries to cache BAR0 info for all of
->>> devfn 13,0 to 13,7 . This involves calling pci_scan_single_device()
->>> for device 13 functions 0-7 and the hw does not seem to like
->>> pci_scan_single_device() getting called for some of the other hidden
->>> devices. E.g. on an ASUS VivoBook D540NV-GQ065T this leads to continuous
->>> ACPI errors leading to high CPU usage.
->>>
->>> Fix this by only caching BAR0 info and thus only calling
->>> pci_scan_single_device() for the P2SB and the SPI controller.
->>>
->>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218531 [1]
->>> Fixes: 5913320eb0b3 ("platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe")
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Good news Danil Rybakov has just confirmed in bugzilla
->> that simple patch fixes things. So IMHO this is the way
->> to move forward to fix this.
-> 
-> Agreed. This simpler fix is the better.
-> 
-> The functions other than 0 and 2 were totally in my blind spot.
-> Thank you very much for finding out the good solution.
-> 
->>
->> Shin'ichiro, any objections from you against this fix ?
-> 
-> No objection!
+Since runtime PM is disabled for host bridge, the state of the child
+devices under the host bridge is not taken into account by PM framework
+for the top level parent, PCIe controller. So PM framework, allows
+the controller driver to enter runtime PM irrespective of the state
+of the devices under the host bridge. And this causes the topology
+breakage and also possible PM issues.
 
-Great I have merged this now and send a pull-request to Linus
-with this fix:
+So enable pm runtime for the host bridge, so that controller driver
+goes to suspend only when all child devices goes to runtime suspend.
 
-https://lore.kernel.org/platform-driver-x86/cfc29d60-e11c-4d7f-9d9d-637ebde8f5fd@redhat.com/
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+Changes in v2:
+- Updated commit message as suggested by mani.
+- Link to v1: https://lore.kernel.org/r/20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Regards,
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d5fc31f8345f..57756a73df30 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -16,6 +16,7 @@
+ #include <linux/of_pci.h>
+ #include <linux/pci_regs.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
+ 
+ #include "../../pci.h"
+ #include "pcie-designware.h"
+@@ -505,6 +506,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (pp->ops->post_init)
+ 		pp->ops->post_init(pp);
+ 
++	pm_runtime_set_active(&bridge->dev);
++	pm_runtime_enable(&bridge->dev);
++
+ 	return 0;
+ 
+ err_stop_link:
 
-Hans
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240219-runtime_pm_enable-bdc17914bd50
 
+Best regards,
+-- 
+Krishna chaitanya chundru <quic_krichai@quicinc.com>
 
 
