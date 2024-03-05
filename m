@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-4488-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4489-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B427871380
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 03:19:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C86987139C
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 03:29:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5732F28762E
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 02:19:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08E751F22B97
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 02:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965D017C9E;
-	Tue,  5 Mar 2024 02:19:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE461803A;
+	Tue,  5 Mar 2024 02:29:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ULEtZplt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H39OHnKs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0620218030;
-	Tue,  5 Mar 2024 02:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D617511733;
+	Tue,  5 Mar 2024 02:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709605167; cv=none; b=ZddwWYn3UAgPPkXqh8dNy5goay3U6giLmimqtpMX2UC7tQFG+oNUm2pnBsvWA0r1qp1P8Bu0Hv+rl5rDMC3gKzdx/KEt1zhvsCriayyN7WiGiJcb2BnjeMOmvE0rPmk3dsIqWxUHdr1MnUmkBbfUDYndNtdKToCM/WxTiokyeBk=
+	t=1709605784; cv=none; b=Dc6MqvaQQ0u+RvsU6ftjpu0foDHdcvs1tVo4LrVfHwYk5VDxkj9seXy9x2fHcsdjRtO5FYybb9dEu+r8YswAfYhKbIWkX8gWs2t5gREtePDPVZkHNaJrnYXARb0/W/NJNxBGDRva62QKQJhLYFYayJV0CCwM1ztg3iQYyE8OFxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709605167; c=relaxed/simple;
-	bh=b1vg0e17e6fTT1a+wPfrKj9tx2VdWRx7fF7BtQL5Qfw=;
+	s=arc-20240116; t=1709605784; c=relaxed/simple;
+	bh=kMQiorKwHCKwnp4fFfajosrP8OJsS4etv+soto8RClg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R12+ByndsLWkuBMuA34/JYcjq1XEBX5BSnBMWTsyF8nDmnnGe8ASsqjsMGX+L4X5KWYsZfhffK83nR3QHjVSgBMhtJtV1XCTQ1kqQPrjrvA8zL40lf9AsIdk9sWMyKGTgDB7V3sSGl/RkDcK6DbIT6x/X9qQX11+OAMtjD5COl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ULEtZplt; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=g0FGGisybMsbTTRL3VFIzBzsF4mVJzTooORfU3i5tW+n+oXsQ7L1aXfCyW+oqOV4751Rv/VZPBpZjPhq1vwDHja2NGptGf//3ldaG/IZZ+4CQ4wq4oBl3tYBnRhQFJdhLXbPhNyBVjceytHfJ67GClOXcZdrMzVGcYd8TiffqiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H39OHnKs; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709605166; x=1741141166;
+  t=1709605783; x=1741141783;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=b1vg0e17e6fTT1a+wPfrKj9tx2VdWRx7fF7BtQL5Qfw=;
-  b=ULEtZpltGSwESuuAmbl8bWaGUVETpLXAT7FRnxXVawTvDWAYZPwV5mlW
-   gNNzo2BrNB6AbZbPs3TDpTk93wxuTD4vCCKiLKM6wX7nBFpcY1e1K9lAp
-   WfzApBgK9MM3sUTNfJRwnZgKORlDghKt0h6uqtvm36n/Zb3dv7mfs5fSw
-   ZrDo8v1Jfo8N1bDJv45BQKKwU9uPzRwXOaahY8HbGsdcJDWj3SfoY8rX3
-   WHx++q8D9u+zvRx67nVK9TOwj9U25PikOC5Tbw8y8ytUCXJY9WOVYSDpV
-   67Nr6IrKKf0BBLg7knwup7MSZPp4AS+XPG/W5rFydOTGJban6+9vhwfZY
+  bh=kMQiorKwHCKwnp4fFfajosrP8OJsS4etv+soto8RClg=;
+  b=H39OHnKsC6jLfrcMpTt8YBesmX8DIPSo6rhRRjJ7qpf6/l93YfX4qvLS
+   b1wXYZEU+izgJ/299y9dcB6QoterSbbuG+ySKgfohEHoawZB7W9/BRwMV
+   vNZ92gFuTTrJi/HPRfBEZMtfDmFJ4Gw5MTjTPzoVr0hrXPF2wjkxogNfh
+   jn4FIEsOWH10n8SpPKDI7XS3mIzLJ4/w6l/u4PWcFelhpS9LrjyLGlrId
+   eBJUuaqn0mee9hsOjPnIIg51K8tUlgpvSGx6XzxxcdaThDNo5q8BNJ69Q
+   h939P4PlO0sFIiWLNsYAdf6M9FwdESicywGb+GGc8ElQf0sK0WICv+vC5
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4014688"
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="14776924"
 X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="4014688"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:19:26 -0800
+   d="scan'208";a="14776924"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:29:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
-   d="scan'208";a="13876766"
+   d="scan'208";a="40088841"
 Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.229.115]) ([10.124.229.115])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:19:23 -0800
-Message-ID: <0c17c2d4-9834-4451-8c6b-8eaa0b66dabe@linux.intel.com>
-Date: Tue, 5 Mar 2024 10:19:20 +0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2024 18:29:39 -0800
+Message-ID: <f3eea050-53f9-4e4f-9694-06560a406db8@linux.intel.com>
+Date: Tue, 5 Mar 2024 10:29:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,89 +65,128 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH pci-next] pci/edr: Ignore Surprise Down error on hot
  removal
-To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, kbusch@kernel.org
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, lukas@wunner.de
+Cc: Smita.KoralahalliChannabasappa@amd.com, ilpo.jarvinen@linux.intel.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kbusch@kernel.org
 References: <20240304090819.3812465-1-haifeng.zhao@linux.intel.com>
- <20240304115844.GA3541@wunner.de>
- <ff3918bc-ebd2-60e2-971f-5b48ba929335@amd.com>
+ <71acbf58-a05d-4842-bc6b-c4e66e1a2b58@linux.intel.com>
 From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <ff3918bc-ebd2-60e2-971f-5b48ba929335@amd.com>
+In-Reply-To: <71acbf58-a05d-4842-bc6b-c4e66e1a2b58@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 3/5/2024 3:33 AM, Smita Koralahalli wrote:
-> Hi Ethan,
->
-> On 3/4/2024 3:58 AM, Lukas Wunner wrote:
->> On Mon, Mar 04, 2024 at 04:08:19AM -0500, Ethan Zhao wrote:
->>> Per PCI firmware spec r3.3 sec 4.6.12, for firmware first mode DPC
->>> handling path, FW should clear UC errors logged by port and bring link
->>> out of DPC, but because of ambiguity of wording in the spec, some 
->>> BIOSes
->>> doesn't clear the surprise down error and the error bits in pci status,
->>> still notify OS to handle it. thus following trick is needed in EDR 
->>> when
->>> double reporting (hot removal interrupt && dpc notification) is hit.
->
-> Please correct me if I'm wrong.
->
-> When there is double reporting (hot removal interrupt && dpc 
-> notification), won't the DPC handler be called always which takes care 
-> of clearing the surprise down errors? Do we need it again from EDR 
-> handler?
+On 3/5/2024 4:10 AM, Kuppuswamy Sathyanarayanan wrote:
+> On 3/4/24 1:08 AM, Ethan Zhao wrote:
+>> Per PCI firmware spec r3.3 sec 4.6.12, for firmware first mode DPC
+>> handling path, FW should clear UC errors logged by port and bring link
+>> out of DPC, but because of ambiguity of wording in the spec, some BIOSes
+>> doesn't clear the surprise down error and the error bits in pci status,
+> As Lukas mentioned, please include the hardware and BIOS version
+> where you see this issue.
 
-My understanding, if firmware first mode is enabled, DPC driver wouldn't
-be enabled, EDR is notified instead, though some of the common functions
-are used in EDR, such as dpc_process_error() is called in edr_handle_event(),
-but dpc_handler() isn't called, so does the dpc_handle_surprise_removal().
+Reproduced on "Hardware name: Intel Corporation ArcherCity/ArcherCity,
+  BIOS EGSDCRB1.86B.0107.D20.2310211929 10/21/2023"
+
+>
+>> still notify OS to handle it. thus following trick is needed in EDR when
+>> double reporting (hot removal interrupt && dpc notification) is hit.
+> EDR notification is generally used when a firmware wants OS to invalidate
+> or recover the error state of child devices when handling a containment event.
+> Since this DPC event is a side effect of async removal, there is no recovery
+> involved. So there is no value in firmware notifying the OS via an ACPI notification
+> and then OS ignoring it.
+>
+> If you check the PCIe firmware spec, sec 4.6.12, IMPLEMENTATION NOTE, it
+> recommends firmware to ignore the DPC due to hotplug surprise.
+
+My understanding is the same, let firmware to ignore the errors and bring
+it out of DPC.
+
+But due to the wording like:
+"FW should not issue Notify(0xF) to avoid doule reporting. FW should clear
+*other* UC errors logged by port(if any) and bring link out of DPC if it has
+entered DPC."
+
+Some BIOS writers have different understanding, wouldn't clear the surprise
+down error.
 
 Thanks,
 Ethan
 
 >
-> Thanks
-> Smita
->
+>> https://patchwork.kernel.org/project/linux-pci/patch/20240207181854.
+>> 121335-1-Smita.KoralahalliChannabasappa@amd.com/
 >>
->> Please provide more detailed information about the hardware and BIOS
->> affected by this.
+>> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
+>> ---
+>>   drivers/pci/pci.h      | 1 +
+>>   drivers/pci/pcie/dpc.c | 9 +++++----
+>>   drivers/pci/pcie/edr.c | 3 +++
+>>   3 files changed, 9 insertions(+), 4 deletions(-)
 >>
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 50134b5e3235..3787bb32e724 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -443,6 +443,7 @@ void pci_save_dpc_state(struct pci_dev *dev);
+>>   void pci_restore_dpc_state(struct pci_dev *dev);
+>>   void pci_dpc_init(struct pci_dev *pdev);
+>>   void dpc_process_error(struct pci_dev *pdev);
+>> +bool dpc_handle_surprise_removal(struct pci_dev *pdev);
+>>   pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
+>>   bool pci_dpc_recovered(struct pci_dev *pdev);
+>>   #else
+>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>> index 98b42e425bb9..be79f205e04c 100644
+>> --- a/drivers/pci/pcie/dpc.c
+>> +++ b/drivers/pci/pcie/dpc.c
+>> @@ -319,8 +319,10 @@ static void pci_clear_surpdn_errors(struct pci_dev *pdev)
+>>   	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, PCI_EXP_DEVSTA_FED);
+>>   }
+>>   
+>> -static void dpc_handle_surprise_removal(struct pci_dev *pdev)
+>> +bool  dpc_handle_surprise_removal(struct pci_dev *pdev)
+>>   {
+>> +	if (!dpc_is_surprise_removal(pdev))
+>> +		return false;
+>>   	if (!pcie_wait_for_link(pdev, false)) {
+>>   		pci_info(pdev, "Data Link Layer Link Active not cleared in 1000 msec\n");
+>>   		goto out;
+>> @@ -338,6 +340,7 @@ static void dpc_handle_surprise_removal(struct pci_dev *pdev)
+>>   out:
+>>   	clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+>>   	wake_up_all(&dpc_completed_waitqueue);
+>> +	return true;
+>>   }
+>>   
+>>   static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+>> @@ -362,10 +365,8 @@ static irqreturn_t dpc_handler(int irq, void *context)
+>>   	 * According to PCIe r6.0 sec 6.7.6, errors are an expected side effect
+>>   	 * of async removal and should be ignored by software.
+>>   	 */
+>> -	if (dpc_is_surprise_removal(pdev)) {
+>> -		dpc_handle_surprise_removal(pdev);
+>> +	if (dpc_handle_surprise_removal(pdev))
+>>   		return IRQ_HANDLED;
+>> -	}
+>>   
+>>   	dpc_process_error(pdev);
+>>   
+>> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+>> index 5f4914d313a1..556edfb2696a 100644
+>> --- a/drivers/pci/pcie/edr.c
+>> +++ b/drivers/pci/pcie/edr.c
+>> @@ -184,6 +184,9 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>>   		goto send_ost;
+>>   	}
+>>   
+>> +	if (dpc_handle_surprise_removal(edev))
+>> +		goto send_ost;
+>> +
+>>   	dpc_process_error(edev);
+>>   	pci_aer_raw_clear_status(edev);
+>>   
 >>
->>> -static void dpc_handle_surprise_removal(struct pci_dev *pdev)
->>> +bool  dpc_handle_surprise_removal(struct pci_dev *pdev)
->>>   {
->>> +    if (!dpc_is_surprise_removal(pdev))
->>> +        return false;
->>
->> This change of moving dpc_is_surprise_removal() into
->> dpc_handle_surprise_removal() seems unrelated to the problem at hand.
->>
->> Please drop it if it's unnecessary to fix the issue.
->>
->>
->>> --- a/drivers/pci/pcie/edr.c
->>> +++ b/drivers/pci/pcie/edr.c
->>> @@ -184,6 +184,9 @@ static void edr_handle_event(acpi_handle handle, 
->>> u32 event, void *data)
->>>           goto send_ost;
->>>       }
->>>   +    if (dpc_handle_surprise_removal(edev))
->>> +        goto send_ost;
->>> +
->>>       dpc_process_error(edev);
->>>       pci_aer_raw_clear_status(edev);
->>
->> This seems to be the only necessary change.  Please reduce the
->> patch to contain only it and no other refactoring.
->>
->> Please capitalize the "PCI/EDR: " prefix in the subject and add
->> a Fixes tag.
->>
->> Thanks,
->>
->> Lukas
->>
+>> base-commit: a66f2b4a4d365dc4bac35576f3a9d4f5982f1d63
 
