@@ -1,235 +1,328 @@
-Return-Path: <linux-pci+bounces-4492-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4493-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D0CD8715A0
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 07:02:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF7CB8716A6
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 08:20:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C898B20EDA
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 06:02:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59D891F21660
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Mar 2024 07:20:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F214CB54;
-	Tue,  5 Mar 2024 06:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E217D41D;
+	Tue,  5 Mar 2024 07:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GWX1X3jR"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="gUvpE67s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2073.outbound.protection.outlook.com [40.107.101.73])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285E43C087;
-	Tue,  5 Mar 2024 06:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709618558; cv=fail; b=uVv6J8pda7y5ZKalWend32/sqIPBbFwsPniPq+YpNRVens7ScTRw6Tu2czstOgVWbe3vMuB2yDi26q0aeNSkh5eDrpc7g1MQ5Nm9ano3IPNKxJCR4iTbcC29+L9GAFkzMsUFj8GV6VQZm7QWrRwNi5gNtP4HmZO3imGrioDVYZ4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709618558; c=relaxed/simple;
-	bh=vWB9HVJMcrrYTXwIPAgimPGlvlDjNSy8nLcf4A//mGE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dnTc/ecFIOktqFhLhpqHgHxBZ49qznWTN3snTaPtRjZhfDRPSgMAOAiTlUwjBE/Xu2NwQAODXwbi9WUnSQZsoW3Ob0pUUvoPyKaZ1x4nJ3gSBvj7pYR3J3aKC6sRnafb4HcaAzK/+bNF+XK+lyw2L5hq2xWB0ZCYBZ0G/LdLQ1c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GWX1X3jR; arc=fail smtp.client-ip=40.107.101.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X0wT/sD/RUvyznfT2bImWks+Ebekq7IzglKGRcsfPgBN0UgVEYsKakK2w6kaEDWGt161cly4/VBt+AJ6YVcHr2n5aAP9c3U4HKz4OQ9uTcDwNoEGpQ4ig5DEn7RYcvVvtmU9SI0s39BWr6jDUVAuIqH5HNzBKlOuO7zFkLg3iAOyzEylD4v6mMcnl4InA88WPAA3wZ69OHK7BcC7sjOwF07ye4qWSqYWGx3dgm4ErXMAHw+eJapQy8u/QL1Ns90LCSax5+ZAhA7RJwtHyGHia6uULDApP5yGyi9NtZ6ZOZNIonYWIS+u+R0kzaPW4LFg+9RxHOQDba8cPhEnmI0FcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r3fk4Wm4pObT/TFM3D+OWrGkSPZLmKlNM5aWiFND9t8=;
- b=IL51ULtVXJieqLroa4GIuSJutq3OFAEUWET3unNpbBGpY2MZVPXi7Q1CqqUjabgI/UlOaI17IfsR24UseRqgMxuMPWt6iGriYsv4EtQ2aoem9DVyY4fvP7q9akpI68RMphtbikHaiEC2syAvTVbeZG2UQk0g5M5Ih1gfxYed+mVBsAhMqfHnKcjX907Hya7R2mAooZQ23UC6FjZO36kvHYh36GRMHcl7/KHBZkRwQVnSU175nf5upSpXpfDc330qjbq9MoM5agf03t1sjGccfdHXRfaDpgpopr8ubBX/Yq6+elGdgBNAXCwp0r+p2E9a5QB/T4xOVVf4lickpdbUVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r3fk4Wm4pObT/TFM3D+OWrGkSPZLmKlNM5aWiFND9t8=;
- b=GWX1X3jRCJ6rrVwoeYVrPZvOutXSLqaVcyaDwObPTGTCUyT0ewhVx56lnIZkEFW/RdC2ibOgy91cnGHL0F3mgVf/csPsEb8XX1eSP9zAQ7A9hFxRqoGCIPiPEUfNwf6fT88BjncvKbfEAY+TLxK6Z2EpU6n6HO/FJshSyP2xu/I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DS0PR12MB7873.namprd12.prod.outlook.com (2603:10b6:8:142::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.38; Tue, 5 Mar
- 2024 06:02:35 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::ed15:6173:2f14:f539]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::ed15:6173:2f14:f539%5]) with mapi id 15.20.7339.035; Tue, 5 Mar 2024
- 06:02:35 +0000
-Message-ID: <089cddf1-3686-4403-a480-07fddd66ab4b@amd.com>
-Date: Tue, 5 Mar 2024 17:02:27 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH kernel v2] pci/doe: Support discovery version
-Content-Language: en-US
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Dan Williams
- <dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Ira Weiny <ira.weiny@intel.com>
-References: <20240226033114.3100118-1-aik@amd.com>
- <20240227204116.GA30259@wunner.de>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <20240227204116.GA30259@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SY0PR01CA0006.ausprd01.prod.outlook.com
- (2603:10c6:10:1bb::22) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316BE7E10D
+	for <linux-pci@vger.kernel.org>; Tue,  5 Mar 2024 07:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709623207; cv=none; b=ETDT1KUB8tH0ZPgrk1nbRx5dJazZvu31NSWLJVFBCzH/pcy7YcbRKT8C5impFQcb/fXa7+Me9JVmGqCni9aYMELuqF2Lg0Tev+U4kA1ucT4CybapT8rKu4XXH2bRW41KI+Y5pZWsvrd+SRLKdaxuD1CYOzvzNWZ758U00hghzHw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709623207; c=relaxed/simple;
+	bh=zjRVqQ3MKLC2BuD5Q1xI+k8vnbV92CXcW95Tg8GFIOU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Db0ABnE2eS+ENBxekKrWlqhwu8tOyTls5So8c8JOqZoEv4zdnzJcpEtFNn+rRnyL2EflbxPedT4QRwGsOjNFx0GJsN+1yMTgDL8XANyI5C3LoXxFV4AE2dNix2m409ZvUR1SLXJPEGHmyhi0eiMZcgmRUZzzy9UXuGpRI2rIkH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=gUvpE67s; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2B19B3F0F8
+	for <linux-pci@vger.kernel.org>; Tue,  5 Mar 2024 07:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1709623203;
+	bh=D6usFkdRzvkX3msLdSSaO/8gvWBvV/3rw0fRdwxUjj4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=gUvpE67sS4UKZu0xR3BaLeBaGIa6IBuVb5SjI+RtIM8XNcAz7PiTSM/agMTCWTMC8
+	 GKbIcja6ZcaPRszm+3UCIQy1yFZZPNlR1UsFv/Jovp/VtbK6QfDDcr/doZn06svQb3
+	 J13XVlbIHKaTQsRMLm2lnDDz4in+KRnq1TlfCyL12OUZaWx77JLXjEyO7nN/Y0t6ku
+	 xXrd/y/7jcvgIFHR96oqvXrvpY2MgfkxSXJemK7GDe3zQ8AK3oRSBBFW/aEE5Rm6yC
+	 UVyP3r9nt14c3DQNnwA57jnki/Xr+vns05/LvOUURVIvNt9ypcWOXI4ez6BNOilfoL
+	 Zfwgvbm0AQmig==
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1dcaf82d9cfso4130285ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 04 Mar 2024 23:20:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709623201; x=1710228001;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D6usFkdRzvkX3msLdSSaO/8gvWBvV/3rw0fRdwxUjj4=;
+        b=kizKLFo5yJhm/NHCBkm6knCEu1jN6vV/EVhoMGL2413rOy6alaNCySkkwv/JFJu7cW
+         3U7nH8YSjewL6tmxwyLXB4Le1baXM2vaRQnme3hDtlVXulTpNqcF2NRGgazKGIxZLGiz
+         Q9NQz+4MJ3mLS+dtXEYa9JBxz9V48yT8/LUsMFmyC2Rq/rL8aZ1MDlKDeNS6XYoIEUch
+         yKyRQ6UrGifukzsJPNFWLNd93P72pL5S0UsXM5DRyPRalQOzRv15eTMhi43yMdZivVyk
+         IbFrs6iCU9ae3ycRWdCH5g/e0SRejumT/844hNOqz/3heglvUZACW/AmNbwPqMZttDXs
+         IeSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVf2/iOiev1dkg8rz85CwYz/GoF9JfPmqGqR3kE78p2uzWphfEADsfjpvHxMznKYJNvEmj2dlIy+5Ecme61+Dwbw23JP07nS/ud
+X-Gm-Message-State: AOJu0YzFAFmGn8fNilAigLfljHqw98lo5WPM3/tk4n/Ru5TxIXR9Dq9y
+	vkCyPplsaRkpFHb17KH8aZJJ63yLMFSejqcCltkd5Q/+Kk0S377McQXP+yYx18BBEeB33zqAsFG
+	JhqZneXX8BUxaEJUnvKhStopdLWA7TJYSliZPbDF9HLLqFw0cBO2d1Qhl73b76xikyvPWbmVZms
+	BXiANhNdL6+fV1W6mGEI5KybetxZLmh3BIWSxGDiOKRMXrkyaM
+X-Received: by 2002:a17:903:4281:b0:1dc:db95:fd24 with SMTP id ju1-20020a170903428100b001dcdb95fd24mr829114plb.55.1709623201631;
+        Mon, 04 Mar 2024 23:20:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGxKgO1I9zqZ3sJIIcIT9prMwSV+RjXIc/zb4fI2VQ0+Uk6wMYaxqkHcDqF+MXjubPRbRMsXIG6WGTdsfpXw6M=
+X-Received: by 2002:a17:903:4281:b0:1dc:db95:fd24 with SMTP id
+ ju1-20020a170903428100b001dcdb95fd24mr829100plb.55.1709623201268; Mon, 04 Mar
+ 2024 23:20:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DS0PR12MB7873:EE_
-X-MS-Office365-Filtering-Correlation-Id: c66a4e87-4e22-4dc7-5788-08dc3cd9da50
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Zjn8KuN8i3yglyd5P4fDK+Q0eaB1NwMw1/lEfm7NRbNjiDlGr82jl9Npt/QLXSJjpMHpSD6PrRLWbXj/SrZ3PcUlcg9+VQMe9JdIbgxi/0Iing4PBItr+g4OOlYr3MJmSp5dpSxLst1DiGGdThHYq3smIVqfF7/q9tSqyek6OUE0rk6liNg8d+63hLcJV5ESwldZrGejwnDjnSKPcANkIp8F+2wQpshJ141AsfXIECMGRIbq5P1o0kG0N0Egc9Ng8SlXfQbwdRLiLujgkK/YCrcv3KD++dRLYkRheVYd6KPfryXSCDAEbVgNJwlk0D/uYqBGKw45Q6vuL3yLB8q3zUlEzaw10oypt4j5zLSaTQ/92BaCBzTM5ZFjT947X2Cj+yo+kbDMUEbAP9HwKk4i1Ugc555eckb5YUNFCB0ArJUBPyTYv4LoOYDbmdlnAAbe2TQ9YnQ+OQiZolrvkgYFsNOQUR0p/tXlrylNddxY1nuDS3+bXUTwlHJ2oKwBmuF666HB92Hx3zfYxc7zTr9oIgyBL63Tg8sWjUN/zingLT+w6N92xdCt/62mG/6B9kFuvNZpc1bktT7XMb/gv+kLJFZzxVWWcVB2/RyfGw6aR3nvqHCmOQeoJVBxbBvdC2gItu6PWp0Fj+oEXWZuMiTkzMMEKbYzY6ayAZTSb/ZbCj8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Rk4zL0dDTFBySGIvamY3bkpnNHlqL0VQNSsrbjR2QTBld29IM0dFaFJ0R1d0?=
- =?utf-8?B?eUk2SHBpd0RBa3BUSC8rNjY2b0lRbGtIb0s3VGUyZE5Qb0IvR1dMTyt6T29D?=
- =?utf-8?B?cGROQ1ZtK1V3WjNtNG01dWpSRlJkZ1MvUGhNVGE0K3hIdGtZSFlZVVRBWHhO?=
- =?utf-8?B?cUFrdzl4T08yRXZpSVV3Zkc0aGtsTkhoWmg3L0tzVjZHaVZWUHFqN29HZ3JU?=
- =?utf-8?B?bTNKMXIwN1UrK1hzK3dRenlMYkVHWUtBME00M0Z6QzVNNWVjc2VPUDVOVjFI?=
- =?utf-8?B?SVN5ajBvOHQ5SmRabDkxVERoeVVvQVpBbnhlSkRaRGY4UExwRzRzU1NORGF4?=
- =?utf-8?B?SmFaSlpQdERick1GNkhGYlRIMm42QnZJRFNPUkxhL1Z5UDhOb2F5Sy84VUNB?=
- =?utf-8?B?aFBHTUxQNUkxMDNUanVCbDQwTzdPeVgyVkRHSzE4U0E0KzNHVmhPeEVlNml2?=
- =?utf-8?B?Z21hNVI2Nm56NjRFcmE1NTZwbG1ROWFWUFRkWXovT0VBS3NQZ2NmNkxrYUxB?=
- =?utf-8?B?WGVQZ2VVZ0U2bmJEMm5pT0g2bUdjY0VvS2xONC9oTUpxQ3FQRDFxMVlNM0Fv?=
- =?utf-8?B?bmM2bHIxT1NxU05kWUZvSXlEWWZneGQrL01nQ1dqa214LzA2eHdDczNUOURi?=
- =?utf-8?B?RmR3eW40enErWnhwd1JCc0ZjRk5QK1hJeUVRWWxBMVRRcXg2anVoVnoxRlpH?=
- =?utf-8?B?TUZIRkl5TkJTRXFRTExQdHlBbWU0aUVnUXptM1VLL2kwS3FqcXpTZjZPVzhw?=
- =?utf-8?B?MjJjZFI5bmVHZ25IdnhmYjhDaFF5S2UwWG96L3RXbVR1ZXAxNE11VWtPbEh3?=
- =?utf-8?B?a3YybW41bUpMelBHZVNDakF4NjBpbzFnamg5WExkMGR6Wm44K3dqOE9rckQy?=
- =?utf-8?B?OW1kSlYwSElBK3hWSmJqN0xiVzZKcUN4cTdMUVE5TVdYV3A1RzUrRFlycE1K?=
- =?utf-8?B?dkx3MGdoazdadFVnS1lvamZXWW1HZS9oWE1ocmUwSXNzRzdQanJQWm95Ujgr?=
- =?utf-8?B?L1RQRVF3dERja3hxMTBPa0kwcFhGU2xoYjVJUjN2dmF6d0t2amd3UnpOWkhr?=
- =?utf-8?B?VEtlSHJYemtqQitnSmhCNHp5NlNHYVpxcnZocXFvVFA2NWM4VTlQdExPNCtl?=
- =?utf-8?B?NkVWdnJ4dGU3aHhlU0lYTU10L1BqdmZjVitycUFvd1pCbUdwRm5KMlBQbHlL?=
- =?utf-8?B?bG12T3hLbkUzbU53UmJuV0V6b25mdHc3YkFYbDZWZVUxTTBSbnF6bEdxUS94?=
- =?utf-8?B?QUN0cnEyMFlNRjIrM0JxYSt6S3JjbUtOTWs3ODc2R3JKNFhrcmttTExxYnV6?=
- =?utf-8?B?d0JFamMvcmdwNWtUc3VtYmF4MWtKQ0hPWEZrSGJoNytlNHB3OUJ1WXNZY0da?=
- =?utf-8?B?bVZUVElVRWgyREhBR2Ivd2svekJHdUNFQitiZUY5UmhCR0JhUnpkNDhSYlJ6?=
- =?utf-8?B?MGovZ3Z6WitCUDVhek15V1p2QUZrRTJOWW5vTEVaU1E2TGRkUjhQVVVJaVZ4?=
- =?utf-8?B?L2dsOWp5WUtiOXNlL3VPQkp6SFJVRm1zbndpNFlpYTNtZzJYYzQ3OEpUdGtN?=
- =?utf-8?B?T2lobzJEY3d1T05MZkNtVmF1WGVla3R4Y1RicG4rVWpMb3lyOG5JTnpidlNx?=
- =?utf-8?B?dDdEeS85UGRkSmREdEZ5SmNyQ1ZqeERsTlhMb0xpMGRjR3BoLy9VZVYzbFNR?=
- =?utf-8?B?YjdTU3BKbTAzaXAvS2t5MHl4aDEyaVViVHd2bHA5UG1qSTBNVTM1VHJMWE9n?=
- =?utf-8?B?YlRWdW9CNGpGUnFNb0NTcFpFSjFmcXRIRUFtbmM3dTd4U1RlTDRvdlIyZWZa?=
- =?utf-8?B?T0t6aTl1M042ZjNFeXhUTjdrTEhva3JpbjlGaU1PM1NNYTd6VkxkMGZkamNF?=
- =?utf-8?B?NE1VZ3cwUGw3Q3RMZGRGYlBUWDV4MFhvY2lSY2xXVVpaMzV6T3lZQ2FUQi9x?=
- =?utf-8?B?NjJFT1NIY0dtb21jZUhhK2RHdFRPS09WQWFrVHB5WXBock5sL0ZxS2tRK0Vh?=
- =?utf-8?B?VGptcEZGTG42OEJ0akRQUStZL2JqVTJVbGNSbHV5S0lleEFRWGNQM2xNSWhj?=
- =?utf-8?B?WjNOaklUVlZJaXlmVWdRbkI4VzFWNGZPcTlGTWtFUGpCT3NwT2ZlNzdzaHVl?=
- =?utf-8?Q?lBZYyf8lV/BRSTMxXQZnEWP/Q?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c66a4e87-4e22-4dc7-5788-08dc3cd9da50
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2024 06:02:35.1118
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WtRbTSVNnfAZ2VSuCtK5xq/E69AIUxqHPSZ3T4xQVFlrWmb5I1+kIOis5ase1qiTwCsAg/3ApwOKPylnyutmng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7873
+References: <CAJZ5v0grDNJkEcgw+34SBmNFL7qhSTz8ydC7BSkM7DiCatkKSA@mail.gmail.com>
+ <20240304155138.GA482969@bhelgaas> <CAJZ5v0jS_x7=joXkHuuqQhO-FqkhGi44o-Nq-1FGhPQ5-1VhnQ@mail.gmail.com>
+ <CAJZ5v0idOkeod9-RmnNGCwMGG+9nYi8eJSBpQYWJnv=N+eVoWg@mail.gmail.com> <CAJZ5v0jJEo5p4Wr_bZjHHOfQG4WomX9pFtBwFnU6eMJRoCctOA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jJEo5p4Wr_bZjHHOfQG4WomX9pFtBwFnU6eMJRoCctOA@mail.gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Tue, 5 Mar 2024 15:19:49 +0800
+Message-ID: <CAAd53p45R93wwK0BpX1c0j7gFH3puv8AJWCxK60-wQZ6SjNhcA@mail.gmail.com>
+Subject: Re: [PATCH v3] driver core: Cancel scheduled pm_runtime_idle() on
+ device removal
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, gregkh@linuxfoundation.org, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>, 
+	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 5, 2024 at 2:10=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.org=
+> wrote:
+>
+> On Mon, Mar 4, 2024 at 6:00=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
+> >
+> > On Mon, Mar 4, 2024 at 5:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel=
+.org> wrote:
+> > >
+> > > On Mon, Mar 4, 2024 at 4:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.=
+org> wrote:
+> > > >
+> > > > On Mon, Mar 04, 2024 at 03:38:38PM +0100, Rafael J. Wysocki wrote:
+> > > > > On Thu, Feb 29, 2024 at 7:23=E2=80=AFAM Kai-Heng Feng
+> > > > > <kai.heng.feng@canonical.com> wrote:
+> > > > > >
+> > > > > > When inserting an SD7.0 card to Realtek card reader, the card r=
+eader
+> > > > > > unplugs itself and morph into a NVMe device. The slot Link down=
+ on hot
+> > > > > > unplugged can cause the following error:
+> > > > > >
+> > > > > > pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > > > > > BUG: unable to handle page fault for address: ffffb24d403e5010
+> > > > > > PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PTE 0
+> > > > > > Oops: 0000 [#1] PREEMPT SMP PTI
+> > > > > > CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
+> > > > > > Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./H3=
+70M Pro4, BIOS P3.40 10/25/2018
+> > > > > > Workqueue: pm pm_runtime_work
+> > > > > > RIP: 0010:ioread32+0x2e/0x70
+> > > > > ...
+> > > > > > Call Trace:
+> > > > > >  <TASK>
+> > > > > >  ? show_regs+0x68/0x70
+> > > > > >  ? __die_body+0x20/0x70
+> > > > > >  ? __die+0x2b/0x40
+> > > > > >  ? page_fault_oops+0x160/0x480
+> > > > > >  ? search_bpf_extables+0x63/0x90
+> > > > > >  ? ioread32+0x2e/0x70
+> > > > > >  ? search_exception_tables+0x5f/0x70
+> > > > > >  ? kernelmode_fixup_or_oops+0xa2/0x120
+> > > > > >  ? __bad_area_nosemaphore+0x179/0x230
+> > > > > >  ? bad_area_nosemaphore+0x16/0x20
+> > > > > >  ? do_kern_addr_fault+0x8b/0xa0
+> > > > > >  ? exc_page_fault+0xe5/0x180
+> > > > > >  ? asm_exc_page_fault+0x27/0x30
+> > > > > >  ? ioread32+0x2e/0x70
+> > > > > >  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+> > > > > >  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+> > > > > >  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+> > > > > >  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+> > > > > >  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+> > > > > >  pci_pm_runtime_idle+0x34/0x70
+> > > > > >  rpm_idle+0xc4/0x2b0
+> > > > > >  pm_runtime_work+0x93/0xc0
+> > > > > >  process_one_work+0x21a/0x430
+> > > > > >  worker_thread+0x4a/0x3c0
+> > > > > ...
+> > > >
+> > > > > > This happens because scheduled pm_runtime_idle() is not cancell=
+ed.
+> > > > >
+> > > > > But rpm_resume() changes dev->power.request to RPM_REQ_NONE and i=
+f
+> > > > > pm_runtime_work() sees this, it will not run rpm_idle().
+> > > > >
+> > > > > However, rpm_resume() doesn't deactivate the autosuspend timer if=
+ it
+> > > > > is running (see the comment in rpm_resume() regarding this), so i=
+t may
+> > > > > queue up a runtime PM work later.
+> > > > >
+> > > > > If this is not desirable, you need to stop the autosuspend timer
+> > > > > explicitly in addition to calling pm_runtime_get_sync().
+> > > >
+> > > > I don't quite follow all this.  I think the race is between
+> > > > rtsx_pci_remove() (not resume) and rtsx_pci_runtime_idle().
+> > >
+> > > I think so too and the latter is not expected to run.
+> > >
+> > > >   rtsx_pci_remove()
+> > > >   {
+> > > >     pm_runtime_get_sync()
+> > > >     pm_runtime_forbid()
+> > > >     ...
+> > > >
+> > > > If this is an rtsx bug, what exactly should be added to
+> > > > rtsx_pci_remove()?
+> > > >
+> > > > Is there ever a case where we want any runtime PM work to happen
+> > > > during or after a driver .remove()?  If not, maybe the driver core
+> > > > should prevent that, which I think is basically what this patch doe=
+s.
+> > >
+> > > No, it is not, because it doesn't actually prevent the race from
+> > > occurring, it just narrows the window quite a bit.
+> > >
+> > > It would be better to call pm_runtime_dont_use_autosuspend() instead
+> > > of pm_runtime_barrier().
+> > >
+> > > > If this is an rtsx driver bug, I'm concerned there may be many othe=
+r
+> > > > drivers with a similar issue.  rtsx exercises this path more than m=
+ost
+> > > > because the device switches between card reader and NVMe SSD using
+> > > > hotplug add/remove based on whether an SD card is inserted (see [1]=
+).
+> > >
+> > > This is a valid concern, so it is mostly a matter of where to disable
+> > > autosuspend.
+> > >
+> > > It may be the driver core in principle, but note that it calls
+> > > ->remove() after invoking pm_runtime_put_sync(), so why would it
+> > > disable autosuspend when it allows runtime PM to race with device
+> > > removal in general?
+> > >
+> > > Another way might be to add a pm_runtime_dont_use_autosuspend() call
+> > > at the beginning of pci_device_remove().
+> > >
+> > > Or just remove the optimization in question from rpm_resume() which i=
+s
+> > > quite confusing and causes people to make assumptions that lead to
+> > > incorrect behavior in this particular case.
+> >
+> > Well, scratch this.
+> >
+> > If rpm_idle() is already running at the time rpm_resume() is called,
+> > the latter may return right away without waiting, which is incorrect.
+> >
+> > rpm_resume() needs to wait for the "idle" callback to complete, so
+> > this (again, modulo GMail-induced whitespace mangling) should help:
+> >
+> > ---
+> >  drivers/base/power/runtime.c |    6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > Index: linux-pm/drivers/base/power/runtime.c
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/drivers/base/power/runtime.c
+> > +++ linux-pm/drivers/base/power/runtime.c
+> > @@ -798,7 +798,8 @@ static int rpm_resume(struct device *dev
+> >      }
+> >
+> >      if (dev->power.runtime_status =3D=3D RPM_RESUMING ||
+> > -        dev->power.runtime_status =3D=3D RPM_SUSPENDING) {
+> > +        dev->power.runtime_status =3D=3D RPM_SUSPENDING ||
+> > +        dev->power.idle_notification) {
+> >          DEFINE_WAIT(wait);
+> >
+> >          if (rpmflags & (RPM_ASYNC | RPM_NOWAIT)) {
+> > @@ -826,7 +827,8 @@ static int rpm_resume(struct device *dev
+> >              prepare_to_wait(&dev->power.wait_queue, &wait,
+> >                      TASK_UNINTERRUPTIBLE);
+> >              if (dev->power.runtime_status !=3D RPM_RESUMING &&
+> > -                dev->power.runtime_status !=3D RPM_SUSPENDING)
+> > +                dev->power.runtime_status !=3D RPM_SUSPENDING &&
+> > +                !dev->power.idle_notification)
+> >                  break;
+> >
+> >              spin_unlock_irq(&dev->power.lock);
+>
+> Well, not really.
+>
+> The problem is that rtsx_pci_runtime_idle() is not expected to be
+> running after pm_runtime_get_sync(), but the latter doesn't really
+> guarantee that.  It only guarantees that the suspend/resume callbacks
+> will not be running after it returns.
+>
+> As I said above, if the ->runtime_idle() callback is already running
+> when pm_runtime_get_sync() runs, the latter will notice that the
+> status is RPM_ACTIVE and will return right away without waiting for
+> the former to complete.  In fact, it cannot wait for it to complete,
+> because it may be called from a ->runtime_idle() callback itself (it
+> arguably does not make much sense to do that, but it is not strictly
+> forbidden).
+>
+> So whoever is providing a ->runtime_idle() callback, they need to
+> protect it from running in parallel with whatever code runs after
+> pm_runtime_get_sync().  Note that ->runtime_idle() will not start
+> after pm_runtime_get_sync(), but it may continue running then if it
+> has started earlier already.
+>
+> Calling pm_runtime_barrier() after pm_runtime_get_sync() (not before
+> it) should suffice, but once the runtime PM usage counter is dropped,
+> rpm_idle() may run again, so this is only effective until the usage
+> counter is greater than 1.  This means that
+> __device_release_driver(() is not the right place to call it, because
+> the usage counter is dropped before calling device_remove() in that
+> case.
+>
+> The PCI bus type can prevent the race between driver-provided
+> ->runtime_idle() and ->remove() from occurring by adding a
+> pm_runtime_probe() call in the following way:
 
+Thanks for the detailed explanation. Does this mean only PCI bus needs
+this fix because other subsystems are not affected, or this needs to
+be implemented for each different bus types?
 
-On 28/2/24 07:41, Lukas Wunner wrote:
-> On Mon, Feb 26, 2024 at 02:31:14PM +1100, Alexey Kardashevskiy wrote:
->> Does PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER need to be in pci-regs.h?
-> 
-> Yes that's fine.
-> 
-> 
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -1144,6 +1144,7 @@
->>   #define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH		0x0003ffff
->>   
->>   #define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX		0x000000ff
->> +#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER	0x0000ff00
->>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID		0x0000ffff
->>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
->>   #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
-> 
-> "DISCOVER" duplicates the preceding "DISC", maybe just
-> "PCI_DOE_DATA_OBJECT_DISC_REQ_3_VERSION" for simplicity?
+Kai-Heng
 
-Well, mostly because the PCIe spec specifically says "discovery" in the 
-field description, not just "version", but ok, I'll drop it.
-
-btw "DISC" is just confusing, it has nothing to do with discs. _PROTOCOL 
-is not even correct anymore, now, in PCIe r6.1 it is called "type", 
-lovely :) s/PCI_DOE_DATA_OBJECT_DISC_/PCI_DOE_DISCOVERY_/ (because 
-DO==DATA_OBJECT) imho would do better but may be some other day.
-
-> 
-> 
->> -static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
->> +static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
->>   			     u8 *protocol)
->>   {
->> +	u32 disver = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
->> +				(capver >= 2) ? 2 : 0);
->>   	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
->> -				    *index);
->> +				    *index) | disver;
-> 
-> Hm, why use a separate "disver" variable?  This could be combined
-> into a single statement.
-
-
-Less ugly since we want to keep it 80 chars long (do we, still?). Like 
-this looks meh:
-
-
-{ 
-
-         u32 request_pl = 
-FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
-                                     *index) |
-FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_DISCOVER_VER,
-                                     (capver >= 2) ? 2 : 0); 
-
-         __le32 request_pl_le = cpu_to_le32(request_pl); 
-
-
-
-If we did 100 chars, I could do:
-
-{ 
-
-         u32 request_pl = 
-FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX, *index) |
-                          FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_VER, 
-(capver >= 2) ? 2 : 0);
-         __le32 request_pl_le = cpu_to_le32(request_pl); 
-
-
-
-
-> 
-> Subject should probably be "PCI/DOE: Support discovery version 2".
-
-> Otherwise LGTM.
-
-Thanks! I'll repost soon.
-
-> 
-> Thanks,
-> 
-> Lukas
-
--- 
-Alexey
-
+>
+> ---
+>  drivers/pci/pci-driver.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> Index: linux-pm/drivers/pci/pci-driver.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/pci/pci-driver.c
+> +++ linux-pm/drivers/pci/pci-driver.c
+> @@ -473,6 +473,13 @@ static void pci_device_remove(struct dev
+>
+>      if (drv->remove) {
+>          pm_runtime_get_sync(dev);
+> +        /*
+> +         * If the driver provides a .runtime_idle() callback and it has
+> +         * started to run already, it may continue to run in parallel
+> +         * with the code below, so wait until all of the runtime PM
+> +         * activity has completed.
+> +         */
+> +        pm_runtime_barrier(dev);
+>          drv->remove(pci_dev);
+>          pm_runtime_put_noidle(dev);
+>      }
 
