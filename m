@@ -1,212 +1,213 @@
-Return-Path: <linux-pci+bounces-4544-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2BC7872EE1
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Mar 2024 07:25:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF016872EEB
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Mar 2024 07:33:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6ECC1C21C73
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Mar 2024 06:25:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41B211F21F38
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Mar 2024 06:33:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D469D53397;
-	Wed,  6 Mar 2024 06:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C0375A4C7;
+	Wed,  6 Mar 2024 06:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+vTxwX8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1281CD06;
-	Wed,  6 Mar 2024 06:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04B1BDD3
+	for <linux-pci@vger.kernel.org>; Wed,  6 Mar 2024 06:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709706339; cv=none; b=uDKR2eTLUmoTm9woLIOH0oh36sVaB1zsQXTNhA2XXELx/o/9ZPfm9szJpMkHcLEHUnnIZPbc3cuRIfr93EuneY33FoR1Y6Zts2EKqGVxIIRGNUa2MVFnayMzECRA9d/TEqC24ZSQiTUW9OZJalmAkPU3uC5Kh0raYrqy9RPk4nU=
+	t=1709706793; cv=none; b=VZ5jRF52jo3NwULZgRKaZ8ThCZA2/vu3AXjMrcAPtIQvEQw4Ljj+NVj0XSEpBtWVaxjB9heJrj4vPWELHrE1OMLBif2cobZRZVM99HZ+SqEQkpVzhVFqnNmSU8sPLHo9by/bu7EEEBNXevRmTNA9TBbqvgCrw6p9fyb5gP4w7hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709706339; c=relaxed/simple;
-	bh=oAQxFw7raMlCmOSoiAwnzWz4ZCDu/2s6f08ZK/gsvu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EPoxpk/bN3X35oUZAcMMLIlS7+nMu+xm6+NJJqTpU97Ruq40FAeaeil2wACyhSWoljzkl7Pk1HXxJDseFV8OdfxLK6OSnVoMrKxJf1dlUg9ZvfE0exCQoD6xgf7C0ptf0rOdEJxmQhoSEE94BR8IWBbg1LJ36R+fCzEpaTuGSbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.224] (ip5f5aedd4.dynamic.kabel-deutschland.de [95.90.237.212])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8378A61E5FE06;
-	Wed,  6 Mar 2024 07:24:40 +0100 (CET)
-Message-ID: <788f0d6b-107b-4d7b-813d-89db82a78e59@molgen.mpg.de>
-Date: Wed, 6 Mar 2024 07:24:39 +0100
+	s=arc-20240116; t=1709706793; c=relaxed/simple;
+	bh=lnj04D8zBAmypP6j2POjy3y/xNsAC09Cm+3BIi+/VRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTx1Ns0sOCposa43DMlS3cLjC4CtikdE9YZa1oihEOMllDJNwjsk44245HGkmQzrlQfR5nGXtBqHim1XRgOlGKCci9snVfiy6g555eL8KyKUZprJrEeyxMvFhY20xY1QwvYmwb0NyDzBHxlEPC6KVdr5W11rbjgd0WKZnbY5TCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+vTxwX8; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78841026a65so3766185a.3
+        for <linux-pci@vger.kernel.org>; Tue, 05 Mar 2024 22:33:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709706790; x=1710311590; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PzzqnLQBHpN+9urj8XiH2dFm2U46R6xFzTYOnXW2Hvs=;
+        b=O+vTxwX8jPbg+fbjLrM2yUfgSznPFlGhGMSzaiwFimqk/+kGzC57CuV4OllfUxr/pk
+         fO15Y3K9PFb7EzF7zfjt/yfE68/yaPvccu06Vu1yyxviXrjtfvlSVeFKNvls9g2qT9Uf
+         bbGGIBbsWbvrDT6tJsPWuJGgcEIcf2XJkJDeqxMYrdubRdRrttik+Li8RnYVPkOYH4Oz
+         Kv0AHQ9oHBiZMPkAsvUOhNFfKRwj70IK/uU8xlgaR7XHcFcch2gEwxxBTxe2iLufIGSX
+         3iJFvXhSwmfAXYIS7hkcrUl8xX57izNy3vsrbNfyxlyjyhUZygV9R7V87HT4VkONPPG5
+         /reA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709706790; x=1710311590;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PzzqnLQBHpN+9urj8XiH2dFm2U46R6xFzTYOnXW2Hvs=;
+        b=c1YKqTu81uZJYmeqLo++zTelE9Tw+TC6SntunN//TgXGGW9RL9G4IbRKOMAChvEYOY
+         K8bIssbgYRbLvgTxyxz0N+dAlVw13Ke9earJojZTjb5UKbD4liTxNVbLEvGJ0DsvWjxH
+         e+uBIxFPglOkyDjJxehsw7hgi45wsARwaqXrwYHRNBsFJizCvNvkTHHHAgn1wuUzLZQg
+         cxX1+YjTK8sjfKYNLIWlpi3yFJn+CGhtJwatXQHueH9ue0JWKLQ0UfMNrX0wR0oV3B1p
+         bXMe2JI5zK4rGg7xAwF361/pHV7ensLH/s/TGlWzyOa0aIFkpbtSxVlLwil8S9P6xCz/
+         7TVg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9LVkfBcsHGTsA0NIyvsMYx1hTcbVdvTLj19jKekwsAP4u/1s+5UZaz8c7blxb5q1qklm5hs8kQXBXLd+AyeGATWtmwqLNVRHw
+X-Gm-Message-State: AOJu0YzGIF1L6SdsUWZFZc+NaxSUnrbbYa3j0DCfAgqSPdA70CSRfJLM
+	c2qJ4XIbR5DZFj1e+W8MYj2NMmDpiWQbZNBlC7uqCwpHQJ8QaOKLoaeLZAAX8g==
+X-Google-Smtp-Source: AGHT+IFLka1W5sBQpiugLgmQG2wEsLa+Bvr76ZGfB5U9MeSgecbtI+9k8NDXeMjSLd+eRIFfWofSjg==
+X-Received: by 2002:a05:620a:6120:b0:788:3c4e:b84f with SMTP id oq32-20020a05620a612000b007883c4eb84fmr1755223qkn.35.1709706790464;
+        Tue, 05 Mar 2024 22:33:10 -0800 (PST)
+Received: from thinkpad ([117.248.1.99])
+        by smtp.gmail.com with ESMTPSA id p14-20020ae9f30e000000b0078825e2c57dsm3109737qkg.76.2024.03.05.22.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 22:33:10 -0800 (PST)
+Date: Wed, 6 Mar 2024 12:03:02 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/10] arm64: dts: qcom: sc8280xp: PCIe fixes and
+ GICv3 ITS enable
+Message-ID: <20240306063302.GA4129@thinkpad>
+References: <20240305081105.11912-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-next v2 1/2] igb: simplify pci ops declaration
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- horms@kernel.org, Alan Brady <alan.brady@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-pci@vger.kernel.org
-References: <20240306025023.800029-1-jesse.brandeburg@intel.com>
- <20240306025023.800029-2-jesse.brandeburg@intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240306025023.800029-2-jesse.brandeburg@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240305081105.11912-1-johan+linaro@kernel.org>
 
-[Cc: +linux-pci@vger.kernel.org]
-
-
-Dear Jesse,
-
-
-Am 06.03.24 um 03:50 schrieb Jesse Brandeburg:
-> The igb driver was pre-declaring tons of functions just so that it could
-> have an early declaration of the pci_driver struct.
+On Tue, Mar 05, 2024 at 09:10:55AM +0100, Johan Hovold wrote:
+> This series addresses a few problems with the sc8280xp PCIe
+> implementation.
 > 
-> Delete a bunch of the declarations and move the struct to the bottom of the
-> file, after all the functions are declared.
+> The DWC PCIe controller can either use its internal MSI controller or an
+> external one such as the GICv3 ITS. Enabling the latter allows for
+> assigning affinity to individual interrupts, but results in a large
+> amount of Correctable Errors being logged on both the Lenovo ThinkPad
+> X13s and the sc8280xp-crd reference design.
 > 
-> Reviewed-by: Alan Brady <alan.brady@intel.com>
-> Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> ---
-> v2: address compilation failure when CONFIG_PM=n, which is then updated
->      in patch 2/2, fix alignment.
->      changes in v1 reviewed by Simon Horman
->      changes in v1 reviewed by Paul Menzel
-> v1: original net-next posting
-> ---
->   drivers/net/ethernet/intel/igb/igb_main.c | 53 ++++++++++-------------
->   1 file changed, 24 insertions(+), 29 deletions(-)
+> It turns out that these errors are always generated, but for some yet to
+> be determined reason, the AER interrupts are never received when using
+> the internal MSI controller, which makes the link errors harder to
+> notice.
 > 
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index 518298bbdadc..e749bf5164b8 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -106,8 +106,6 @@ static int igb_setup_all_rx_resources(struct igb_adapter *);
->   static void igb_free_all_tx_resources(struct igb_adapter *);
->   static void igb_free_all_rx_resources(struct igb_adapter *);
->   static void igb_setup_mrqc(struct igb_adapter *);
-> -static int igb_probe(struct pci_dev *, const struct pci_device_id *);
-> -static void igb_remove(struct pci_dev *pdev);
->   static void igb_init_queue_configuration(struct igb_adapter *adapter);
->   static int igb_sw_init(struct igb_adapter *);
->   int igb_open(struct net_device *);
-> @@ -178,20 +176,6 @@ static int igb_vf_configure(struct igb_adapter *adapter, int vf);
->   static int igb_disable_sriov(struct pci_dev *dev, bool reinit);
->   #endif
->   
-> -static int igb_suspend(struct device *);
-> -static int igb_resume(struct device *);
-> -static int igb_runtime_suspend(struct device *dev);
-> -static int igb_runtime_resume(struct device *dev);
-> -static int igb_runtime_idle(struct device *dev);
-> -#ifdef CONFIG_PM
-> -static const struct dev_pm_ops igb_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(igb_suspend, igb_resume)
-> -	SET_RUNTIME_PM_OPS(igb_runtime_suspend, igb_runtime_resume,
-> -			igb_runtime_idle)
-> -};
-> -#endif
-> -static void igb_shutdown(struct pci_dev *);
-> -static int igb_pci_sriov_configure(struct pci_dev *dev, int num_vfs);
->   #ifdef CONFIG_IGB_DCA
->   static int igb_notify_dca(struct notifier_block *, unsigned long, void *);
->   static struct notifier_block dca_notifier = {
-> @@ -219,19 +203,6 @@ static const struct pci_error_handlers igb_err_handler = {
->   
->   static void igb_init_dmac(struct igb_adapter *adapter, u32 pba);
->   
-> -static struct pci_driver igb_driver = {
-> -	.name     = igb_driver_name,
-> -	.id_table = igb_pci_tbl,
-> -	.probe    = igb_probe,
-> -	.remove   = igb_remove,
-> -#ifdef CONFIG_PM
-> -	.driver.pm = &igb_pm_ops,
-> -#endif
-> -	.shutdown = igb_shutdown,
-> -	.sriov_configure = igb_pci_sriov_configure,
-> -	.err_handler = &igb_err_handler
-> -};
-> -
->   MODULE_AUTHOR("Intel Corporation, <e1000-devel@lists.sourceforge.net>");
->   MODULE_DESCRIPTION("Intel(R) Gigabit Ethernet Network Driver");
->   MODULE_LICENSE("GPL v2");
+> On the X13s, there is a large number of errors generated when bringing
+> up the link on boot. This is related to the fact that UEFI firmware has
+> already enabled the Wi-Fi PCIe link at Gen2 speed and restarting the
+> link at Gen3 generates a massive amount of errors until the Wi-Fi
+> firmware is restarted. This has now also been shown to cause the Wi-Fi
+> to sometimes not start at all on boot for some users.
+> 
+> A recent commit enabling ASPM on certain Qualcomm platforms introduced
+> further errors when using the Wi-Fi on the X13s as well as when
+> accessing the NVMe on the CRD. The exact reason for this has not yet
+> been identified, but disabling ASPM L0s makes the errors go away. This
+> could suggest that either the current ASPM implementation is incomplete
+> or that L0s is not supported with these devices.
+> 
+> Note that the X13s and CRD use the same Wi-Fi controller, but the errors
+> are only generated on the X13s. The NVMe controller on my X13s does not
+> support L0s so there are no issues there, unlike on the CRD which uses a
+> different controller. The modem on the CRD does not generate any errors,
+> but both the NVMe and modem keeps bouncing in and out of L0s/L1 also
+> when not used, which could indicate that there are bigger problems with
+> the ASPM implementation. I don't have a modem on my X13s so I have not
+> been able to test whether L0s causes any trouble there.
+> 
+> Enabling AER error reporting on sc8280xp could similarly also reveal
+> existing problems with the related sa8295p and sa8540p platforms as they
+> share the base dtsi.
+> 
+> After discussing this with Bjorn Andersson at Qualcomm we have decided
+> to go ahead and disable L0s for all controllers on the CRD and the
+> X13s.
+> 
 
-A lot of other drivers also have this at the end.
+Just received confirmation from Qcom that L0s is not supported for any of the
+PCIe instances in sc8280xp (and its derivatives). Please move the property to
+SoC dtsi.
 
-> @@ -647,6 +618,8 @@ struct net_device *igb_get_hw_dev(struct e1000_hw *hw)
->   	return adapter->netdev;
->   }
->   
-> +static struct pci_driver igb_driver;
-> +
->   /**
->    *  igb_init_module - Driver Registration Routine
->    *
-> @@ -10170,4 +10143,26 @@ static void igb_nfc_filter_restore(struct igb_adapter *adapter)
->   
->   	spin_unlock(&adapter->nfc_lock);
->   }
-> +
-> +#ifdef CONFIG_PM
-> +static const struct dev_pm_ops igb_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(igb_suspend, igb_resume)
-> +	SET_RUNTIME_PM_OPS(igb_runtime_suspend, igb_runtime_resume,
-> +			   igb_runtime_idle)
-> +};
-> +#endif
-> +
-> +static struct pci_driver igb_driver = {
-> +	.name     = igb_driver_name,
-> +	.id_table = igb_pci_tbl,
-> +	.probe    = igb_probe,
-> +	.remove   = igb_remove,
-> +#ifdef CONFIG_PM
-> +	.driver.pm = &igb_pm_ops,
-> +#endif
-> +	.shutdown = igb_shutdown,
-> +	.sriov_configure = igb_pci_sriov_configure,
-> +	.err_handler = &igb_err_handler
-> +};
-> +
->   /* igb_main.c */
+- Mani
 
-I looked through `drivers/` and .driver.pm is unguarded there. Example 
-`drivers/video/fbdev/geode/gxfb_core.c`:
+> Note that disabling ASPM L0s for the X13s Wi-Fi does not seem to have a
+> significant impact on the power consumption (and there are indications
+> that this applies generally for L0s on these platforms).
+> 
+> ***
+> 
+> As we are now at 6.8-rc7, I've rebased this series on the Qualcomm PCIe
+> binding rework in linux-next so that the whole series can be merged for
+> 6.9 (the 'aspm-no-l0s' support and devicetree fixes are all marked for
+> stable backport anyway).
+> 
+> The DT bindings and PCI patch are expected to go through the PCI tree,
+> while Bjorn A takes the devicetree updates through the Qualcomm tree.
+> 
+> Johan
+> 
+> 
+> Changes in v3
+>  - drop the two wifi link speed patches which have been picked up for
+>    6.8
+>  - rebase on binding rework in linux-next and add the properties also to
+>    the new qcom,pcie-common.yaml
+>    - https://lore.kernel.org/linux-pci/20240126-dt-bindings-pci-qcom-split-v3-0-f23cda4d74c0@linaro.org/
+>  - fix an 'L0s' typo in one commit message
+> 
+> Changes in v2
+>  - drop RFC from ASPM patches and add stable tags
+>  - reorder patches and move ITS patch last
+>  - fix s/GB/MB/ typo in Gen2 speed commit messages
+>  - fix an incorrect Fixes tag
+>  - amend commit message X13 wifi link speed patch after user
+>    confirmation that this fixes the wifi startup issue
+>  - disable L0s also for modem and wifi on CRD
+>  - disable L0s also for nvme and modem on X13s
+> 
+> 
+> Johan Hovold (10):
+>   dt-bindings: PCI: qcom: Allow 'required-opps'
+>   dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
+>   dt-bindings: PCI: qcom: Allow 'aspm-no-l0s'
+>   PCI: qcom: Add support for disabling ASPM L0s in devicetree
+>   arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
+>   arm64: dts: qcom: sc8280xp-crd: disable ASPM L0s for NVMe
+>   arm64: dts: qcom: sc8280xp-crd: disable ASPM L0s for modem and Wi-Fi
+>   arm64: dts: qcom: sc8280xp-x13s: disable ASPM L0s for Wi-Fi
+>   arm64: dts: qcom: sc8280xp-x13s: disable ASPM L0s for NVMe and modem
+>   arm64: dts: qcom: sc8280xp: enable GICv3 ITS for PCIe
+> 
+>  .../bindings/pci/qcom,pcie-common.yaml        |  6 +++++-
+>  .../devicetree/bindings/pci/qcom,pcie.yaml    |  6 +++++-
+>  arch/arm64/boot/dts/qcom/sc8280xp-crd.dts     |  5 +++++
+>  .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    |  5 +++++
+>  arch/arm64/boot/dts/qcom/sc8280xp.dtsi        | 17 +++++++++++++++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 20 +++++++++++++++++++
+>  6 files changed, 56 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
 
-     static const struct dev_pm_ops gxfb_pm_ops = {
-     #ifdef CONFIG_PM_SLEEP
-             .suspend        = gxfb_suspend,
-             .resume         = gxfb_resume,
-             .freeze         = NULL,
-             .thaw           = gxfb_resume,
-             .poweroff       = NULL,
-             .restore        = gxfb_resume,
-     #endif
-     };
-
-     static struct pci_driver gxfb_driver = {
-             .name           = "gxfb",
-             .id_table       = gxfb_id_table,
-             .probe          = gxfb_probe,
-             .remove         = gxfb_remove,
-             .driver.pm      = &gxfb_pm_ops,
-     };
-
-No idea, what driver follows the best practices though, and if it would 
-belong into a separate commit.
-
-
-Kind regards,
-
-Paul
+-- 
+மணிவண்ணன் சதாசிவம்
 
