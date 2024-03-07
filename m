@@ -1,122 +1,122 @@
-Return-Path: <linux-pci+bounces-4629-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4630-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBDCC875A56
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 23:36:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E8A2875AEE
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 00:11:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A149A1F22AD3
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 22:36:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58BD5280993
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 23:11:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 864E93309C;
-	Thu,  7 Mar 2024 22:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 495413D3B9;
+	Thu,  7 Mar 2024 23:11:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLQs7YzG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7Qk9VWa"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6213E1E86E
-	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 22:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2538F3D393
+	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 23:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709850968; cv=none; b=nRXlSVLxq5x5pw775yvB0R/+2YjEFeVRCdpCwKrzNUFBL8PGUrOsoVdjI5m+nYPxm7G9zUY30tp3S/swNPPf4U0nUIzSdrlCIeWINcm59w1CeL7115GKUfS5YkbO1RVpdhc6fyKSl3AW9Aq07LbEMCLMDVJSw8PZewQWyfXFNvk=
+	t=1709853093; cv=none; b=c1WaJqE0wfuvNG6ZiugoyrTZCa1Bs8pN9TSAVXGrRH+YL2juEBrXmxyAc+fO3yRy2hf7/SuCBnMAAFP9jqmU5v2RfXejwFVIvPnso/0k8iR4nDW4PDA+dse5YvAUe8+39BNMBbFMnB6VBOJ70A2enflq2RDyCw+fnVu5buWjo2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709850968; c=relaxed/simple;
-	bh=8UvGOKqhQdFPexuRHbg+fjBKuw2ZvcBL5hJ+fKLjdEY=;
+	s=arc-20240116; t=1709853093; c=relaxed/simple;
+	bh=f9wMIca3lpXOezESlz4C1Knc8+JeOJxKGX5HZb03kv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MqCf1zB7SlJ1Y8xSD3mrhVZJeTZj7usnIkfhhAJjxLDZDGAyIUY4LDgFDwoL+Vel97PnyZwXb+7YwHr7pXYXAqZPbGOr1bkmTzT3JL1egjfHR7VUDoZ9cOOeEBHSoX27Imhdl+qhm9NIoCVKF5m5vENoqsGOhBlbED7WYirm17I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLQs7YzG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8E9C433C7;
-	Thu,  7 Mar 2024 22:36:07 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=pyeLP05/Jqk9kSvzIxRYo5fxkpCbT45qFUQUao3RgJu7o2i1gb2MIx3FkK1C2kGRm1NQwykrvNNBpRMqRDBUrtFiehdoYY9Ixl6nx0b1qtWblJi5+H5ZeeP2z8l/5wrKs2CXmjSG2yrve1R4+fXRNrYznqyvuGwD7g+mZtLpXbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7Qk9VWa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF8EC433F1;
+	Thu,  7 Mar 2024 23:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709850967;
-	bh=8UvGOKqhQdFPexuRHbg+fjBKuw2ZvcBL5hJ+fKLjdEY=;
+	s=k20201202; t=1709853092;
+	bh=f9wMIca3lpXOezESlz4C1Knc8+JeOJxKGX5HZb03kv0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kLQs7YzGhp1cRuQIwLz43bt/dlzVbT8GtDC7hcNQyBdNO+ZYT7QMqheEF2eGgHVWU
-	 wD36InsL8omImpJW7/VScrGS/X86eYaWRJuPUK/yQR8jf9Lrrvzx6BqLcQRWdbPm4Z
-	 8gN3QvIy9rk9O0d0RyQQLfAJdTHRcgFdpH5pwKwuJqhnirC6UbghoNgIPRgw1EoHH5
-	 vPrqFSW49WZ/7zYauNb4BbBHdFcMCFPCOoGCVruMQNNZq3GZRiMBr/wetizNfF5uIt
-	 1HLkKwQmd9fR00iITvWj07cw4+PKMv75p3/gHtYhuLvyPtRii6Q3u3IHRTOPUD9QOP
-	 6pvOpHaaHyP/Q==
-Date: Thu, 7 Mar 2024 16:36:06 -0600
+	b=o7Qk9VWaqW/zq8+FP8p1XqLPpF03W1A+/ZbtXJvc4q7xScpMehX9gNw9nwRSzTCNF
+	 bQfCU6y4wKj3MbEtrv1Bcy8HILrfuKve0Wonxx752XW/W+hOYf90osmG2JZ+bXhSkK
+	 QmKfjxYXiqppAKMofTT17UUrj1QtMWGsQERrNSW1hLFopWJ/2I74Eg+GW2UPE1ps1E
+	 2GsaED1i3tvFrZ/qtjic2E/EVzsQT4crv7Sgap9vkT+IQ0HOmREXGUiq+JqZk7FzHc
+	 6YAjFEKw0beuRbphrMCH8PYXY92x2iqtPbrUltRq1ApXzmohAxKP//p4TOS/0jWPf/
+	 JKOlO39nDFPFw==
+Date: Thu, 7 Mar 2024 17:11:31 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Josselin Mouette <josselin.mouette@exaion.com>
 Cc: linux-pci@vger.kernel.org, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 1/2] Revert "PCI/VPD: Allow access to valid parts of VPD
- if some is invalid"
-Message-ID: <20240307223606.GA658427@bhelgaas>
+Subject: Re: [Regression] [PCI/VPD] Possible memory corruption caused by
+ invalid VPD data (commit found)
+Message-ID: <20240307231131.GA658799@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0132edfec66a6bd413823d43ccdf1c4d6aae2b60.camel@exaion.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aaea0b30c35bb73b947727e4b3ec354d6b5c399c.camel@exaion.com>
 
-[+cc Hannes, who did a lot of related VPD work and reviewed the
-original posting at
-https://lore.kernel.org/r/20210715215959.2014576-6-helgaas@kernel.org/]
+[+cc Hannes]
 
-On Thu, Mar 07, 2024 at 05:09:27PM +0100, Josselin Mouette wrote:
-> When a device returns invalid VPD data, it can be misused by other
-> code paths in kernel space or user space, and there are instances
-> in which this seems to cause memory corruption.
+[BTW, the patches are whitespace damaged, so they don't apply.  Looks
+like tabs got converted to spaces]
 
-More of the background from Josselin at
-https://lore.kernel.org/r/aaea0b30c35bb73b947727e4b3ec354d6b5c399c.camel@exaion.com
+On Thu, Mar 07, 2024 at 05:07:50PM +0100, Josselin Mouette wrote:
+> We’ve been observing a subtle kernel bug on a few servers after kernel
+> upgrades (starting from 5.15 and persisting in 6.8-rc1). The bug arises
+> only on machines with Mellanox Connect-X 3 cards and the symptom is
+> RabbitMQ disconnections caused by packet loss on the system Ethernet
+> card (Intel I350). Replacing the I350 by a 82580 produced the exact
+> same symptoms.
 
-This is a regression, and obviously needs to be fixed somehow, but I'm
-a bit hesitant to revert this until we understand the problem better.
-If there's a memory corruption lurking and a revert hides the
-corruption so we never fix it, I'm not sure that's an improvement
-overall.
+It looks like both I350 and 82580 use the igb driver?
 
-> There is no sensible reason why the kernel would provide userspace
-> or drivers with invalid and potentially dangerous data.
+> A bisect led to this change:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=5fe204eab174fd474227f23fd47faee4e7a6c000
 > 
-> This reverts commit 5fe204eab174fd474227f23fd47faee4e7a6c000.
-> ---
->  drivers/pci/vpd.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Reverting the patch and adding more warnings (patch follows) allowed us
+> to identify that the VPD data in the Connect-X 3 firmware is missing
+> VPD_STIN_END, which makes it return at a 32k offset. But I presume the
+> VPD data is incorrect far before that 32k limit.
+> [   43.854869] mlx4_core 0000:16:00.0: missing VPD_STIN_END at offset 32769
 > 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 485a642b9304..daaa208c9d9c 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -68,7 +68,7 @@ static size_t pci_vpd_size(struct pci_dev *dev)
->                         if (pci_read_vpd_any(dev, off + 1, 2,
-> &header[1]) != 2) {
->                                 pci_warn(dev, "failed VPD read at
-> offset %zu\n",
->                                          off + 1);
-> -                               return off ?: PCI_VPD_SZ_INVALID;
-> +                               return PCI_VPD_SZ_INVALID;
->                         }
->                         size = pci_vpd_lrdt_size(header);
->                         if (off + size > PCI_VPD_MAX_SIZE)
-> @@ -87,13 +87,13 @@ static size_t pci_vpd_size(struct pci_dev *dev)
->                                 return off;
->                 }
->         }
-> -       return off;
-> +       return PCI_VPD_SZ_INVALID;
->  
->  error:
->         pci_info(dev, "invalid VPD tag %#04x (size %zu) at offset
-> %zu%s\n",
->                  header[0], size, off, off == 0 ?
->                  "; assume missing optional EEPROM" : "");
-> -       return off ?: PCI_VPD_SZ_INVALID;
-> +       return PCI_VPD_SZ_INVALID;
->  }
->  
->  static bool pci_vpd_available(struct pci_dev *dev, bool check_size)
+> Bjorn advised (thanks!) to look for what process is reading that VPD
+> data. In our case it is libvirtd, and enabling debugging in libvirtd
+> turned out a very interesting exercise, since it starts spewing
+> gabajillions of VPD errors, especially in the Intel 82580 data.
+
+Can we dig into these errors a bit?  I assume most of these come from
+libvirtd (not the kernel)?
+
+The VPD for different devices should be independent, so maybe an mlx4
+VPD buffer overflow corrupted an igb VPD buffer, probably more likely
+in libvirtd than in the kernel.
+
+> That igb data does not look corrupt when we revert the change mentioned
+> earlier, and we don’t see the packet loss either.
+
+When you revert 5fe204eab174 ("PCI/VPD: Allow access to valid
+parts of VPD if some is invalid"), you see no VPD errors either from
+the kernel or from libvirtd except this one?
+
+  mlx4_core 0000:16:00.0: missing VPD_STIN_END at offset 32769
+
+> I’m not proficient in Kernel nor PCI internals, but a plausible
+> explanation is that incorrect handling of the returned data causes out-
+> of-bounds memory write, so this would mean a bug somewhere else, still
+> to be found. 
+> 
+> If this hypothesis is correct, there are security implications, since a
+> specifically crafted PCI firmware could elevate privileges to kernel
+> level. In all cases, it does not look sensible to return data that is
+> known to be incorrect.
+> 
 > -- 
-> 2.39.2
+> Josselin MOUETTE
+> Infrastructure & Security architect
+> EXAION
 > 
 
