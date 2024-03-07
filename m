@@ -1,112 +1,111 @@
-Return-Path: <linux-pci+bounces-4613-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4614-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8FF487574C
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 20:34:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9926875793
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 20:53:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FCE01F21426
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 19:34:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 599A11F24618
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 19:53:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D12136666;
-	Thu,  7 Mar 2024 19:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65841384B9;
+	Thu,  7 Mar 2024 19:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T5b9LJjq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eqD9spqI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1914A136650
-	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 19:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528BF137C39
+	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 19:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709840050; cv=fail; b=Jb4oG+7iXEkkq6xHjcPRpPFr/QAZ1hcn4NcjomxN53t8jiqZsbqxLWbGKUNWGN9Sq5lbPGcbVkl1R0BuI6Iah+UY8AXbutnzKk1aV8pse26mmPfVSv/XJttjSrEK4NjYWffBDeuYEN/3sWhJCkpEc92CNl2IT1+SgWYe7693IAM=
+	t=1709841113; cv=fail; b=IhBNL8QFiHq1esCrVeNl7jpmZVwLlFxz2fccHSCA4sqdvYuWkGAHOXGlQW7Qi5i1Ysv4wbEFWBHVQnKM/Zb3DlYY+iIKga4C3dz+5iPi/9MbSzWJpFnzr96jweTLP06IWV4swGoGFAEOtUFA0MzZ4B33KVaobivVHOWGCtmqeaA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709840050; c=relaxed/simple;
-	bh=qfUwUzfXLu+dYDt18ecwBUp48e7FjtNnD60IQDBAU4s=;
+	s=arc-20240116; t=1709841113; c=relaxed/simple;
+	bh=uHdQDb3eG2eyHbXRfw/neQwJi9Hj3VCvicTUgRiw1n8=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MPsIwr2SuX9CXs8Sew0yOfjsGfKMAJvzfBpuI2VINyUxsLd843Nd7xPaLI9fXvDdGa4nrZA2lLgHPBu4uxM7kh07LQd0dYTmFVe1RODMoRtAquAMxQXg02BL+m1QYvbPUABfKVntCOeSkHbcxJULaPDAmoj/tMPBvEKE7IhwZ6k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T5b9LJjq; arc=fail smtp.client-ip=198.175.65.11
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PAzpqxXN9X2jcFf4DEWuDBg9aHo347hvRoinE/iNCQicjfMe3LWarGfC+y6T9McJP67TuxHLbl3FQYQ6SRZdxaZpQ/PHoUYt3eFoR03QV1YPMitO7PfcPgx/ufMe1e5KFLT74UGFZobp1prm3iSE2uMVQBkkTEo2UD7rf/wDZec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eqD9spqI; arc=fail smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709840047; x=1741376047;
+  t=1709841111; x=1741377111;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=qfUwUzfXLu+dYDt18ecwBUp48e7FjtNnD60IQDBAU4s=;
-  b=T5b9LJjqQF5kDUglXRfnlMSqGwbyoFTeE3RrE8AcFcJ/HiqinEPQS2q/
-   +bXy4SuBPoSYI6ukOGrcCAltNWj6ksOXaR5BE+ahhE3JRaBxodBzd1jWP
-   XbUEPIFU3Kz8tn5/jDTj4oZgm/0XX6jNkyU7gvEk5IUsNkmHLYa9YjYtq
-   0jMWEBwbLBrWFLwmljhCFruTrIYgyWxuj4vhr6wkxEBiOm9YAoQsBkvEZ
-   r67+jd9+gkpfXsW6cItNxvd2SD7N4TNdxghOSj+yjJcINRFy/Flo5WEGa
-   axREmREsoRatVUcM7FFXQOFPtKTi3p9WO2YbidzQAnvwNmJstwsrvKp7H
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="15102711"
+  bh=uHdQDb3eG2eyHbXRfw/neQwJi9Hj3VCvicTUgRiw1n8=;
+  b=eqD9spqIUUMeJpuklS8VWzrjhCRuMJYc1H+1MK09K0tZPHL1klhvAJjx
+   aTqUVDDtD8g0FiHsoCusvG1YfG1tIwl4KdE8zGfh/M84pwgorNj6AL5OG
+   XPummyqFaaLfuK8UXjqGN5bjojfsJB+KrqjHY1aD5RaWFm5hWxZgIvVQE
+   mAQfHHIHBe9Sbrh4NK5YVdRlFB8B/62vHoihgjglaG2YtLtufcuUtABN5
+   whsp7TdRHA84ie/9Z70ITffBFOofljl+CTM3ql7jx2UJTI2BizrfBi2TZ
+   rbBpg7Njw+eueZ0xQL+T3/la0WZSZmGh0hNykO7YlxJdaM6qZjQzUE53s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="4414233"
 X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="15102711"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 11:34:06 -0800
+   d="scan'208";a="4414233"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 11:51:50 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
-   d="scan'208";a="14718905"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Mar 2024 11:34:06 -0800
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="33366367"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Mar 2024 11:51:50 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 7 Mar 2024 11:34:05 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ 15.1.2507.35; Thu, 7 Mar 2024 11:51:49 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 11:34:05 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Thu, 7 Mar 2024 11:51:49 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 11:34:05 -0800
+ 15.1.2507.35; Thu, 7 Mar 2024 11:51:49 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EqR3YpZxfBVACudVXLWUWJgJowR6j40XT/d/NJaomDCzH5x/qWSlm65dNfBzUZiPiu2BjA/VVg025BU6Ja+wMHAZDjMzEVfiGSXcqkvrjFizUPd1OCHWiYuNbhPzglvA/13zu29fKtSySZ84LRRVKn+XF8V3KZEtlwHf/77Vpi0k8NL+vAtbrBctXmKnB0TqzTas+RAbOquw7a+fucxqiIuqc8vfyBry+5IPy+aY8AodHg8WDmRhrzzALaYbxfXwDxUX0CWxNLLgu2MMjKxWp821mXC4QE6PJcIxPXxZPHxmj//pKBMItwljBC0W1zIaF6RIdnRUpbgLFv7yl45zGg==
+ b=IsRXH9Ekb76l2E0v5Une6VaF4fMJH/s+H48VHMhNx4uyXuRNGS9F+8W24ggtHsnnsCxGo/S7hyyuSG4+3Z+l8Bawjki9lsIROb+0xNlZ+QKLpyqznD3Cql7WQohz+8rd8xqKh1LDRjDCpXJlMoINkLR2ovoT8canRZ1Ne5rCxTiow9MECnwL5Denoxox8EEuPmpju+ZqDtoMkM2SYqtORg76cgNwiYl7ZufSjN+w53CNEa+saBguZsUy8A9sJiX9CAUyJHNAaUNGzutibA6vYkhIIHL2y7OACMENIC9Xwc/4AQ/x2GyaYzo0mzlMXF6ogDErBlrvCZh4XUb+k9osRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w3CtQLPJdGjoZMG9Pz+SoxQJfkAo0WFmBy8MKm9LrpE=;
- b=VsFA5IqRUPiBaYsWE2Yp12w2oBzpfZ5FjJ/Ua2YYktyhnqXdtOin5TvXv8Z3iS+/yrizG46BwNNUqDW+7X1aVt5fI1b6fRotxCTQy8AHQ0M9FCqFRR6/LpWfvfJJZCO/wnJPiJUh2Ikl55y57OzTEpcgTeOzFO8VcNTdVueud+GZGvuxIvEX3BrLNs//v5P2L1abCvL4aABAadqagYeamhK4RNbgQk2LKC9fUBMUiNYspUP7UopC7g+aBcjK0o4wWjxNe95JcqzjXEg2h5N50KlOHDWVB1uwvdHQqmgALEJG1xwvEc/40aqcjfPY6i0PH8GUi+jAy+WxOQr1/DRsrQ==
+ bh=V3YzRg2znsct+TL0wE8IVDc8JTRC+2JuNbqXFh+oW+Y=;
+ b=HAE2f9DqffVdSLKPVl/f4vS9ADAmVC7Z1dcaikCG22IHmet0QKDNqzxuuyHCqZYWi/l3WaDgzNEjSsEGUCIiPf72rESKLUX+Vsx8FQjRX05bc+5yqC84ELFKwO3nEJ2D6VYWksDfu8MOM1Wz2yM8a+nP1jlFn+7LT6KKh4+rDg2IwT+B8l2hFNLCWKGeiz43iAx7255b4fGa7nJXMkY0tP7wOsoH8DC8BovqS6N82lCWTGr/dWOSV6OXaeebhPIiXW8QN9mpsxjRtyk+yL8NxtL/K21/mWJ+WbEIeH5y0vXJbps9+cOZJuKSMb/pm20CnlWq7ePfi9+ZNIInIjKeFw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB7664.namprd11.prod.outlook.com (2603:10b6:510:26a::20) with
+ by SA1PR11MB5874.namprd11.prod.outlook.com (2603:10b6:806:229::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.18; Thu, 7 Mar
- 2024 19:33:59 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.24; Thu, 7 Mar
+ 2024 19:51:47 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7362.019; Thu, 7 Mar 2024
- 19:33:59 +0000
-Date: Thu, 7 Mar 2024 11:33:57 -0800
+ 19:51:47 +0000
+Date: Thu, 7 Mar 2024 11:51:44 -0800
 From: Dan Williams <dan.j.williams@intel.com>
 To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams
 	<dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, Xiaoyao Li <xiaoyao.li@intel.com>, "Isaku
- Yamahata" <isaku.yamahata@intel.com>, Alexey Kardashevskiy <aik@amd.com>, "Wu
- Hao" <hao.wu@intel.com>, Yilun Xu <yilun.xu@intel.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
-	<linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH 3/5] coco/tsm: Introduce a shared class device for
- TSMs
-Message-ID: <65ea16a54fd74_1ecd2946e@dwillia2-xfh.jf.intel.com.notmuch>
+CC: <linux-coco@lists.linux.dev>, Wu Hao <hao.wu@intel.com>, Yilun Xu
+	<yilun.xu@intel.com>, Lukas Wunner <lukas@wunner.de>, Samuel Ortiz
+	<sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH 5/5] PCI/TSM: Authenticate devices via platform TSM
+Message-ID: <65ea1ad05216f_1ecd29444@dwillia2-xfh.jf.intel.com.notmuch>
 References: <170660662589.224441.11503798303914595072.stgit@dwillia2-xfh.jf.intel.com>
- <170660664287.224441.947018257307932138.stgit@dwillia2-xfh.jf.intel.com>
- <20240307164139.000049aa@Huawei.com>
+ <170660665391.224441.13963835575448844460.stgit@dwillia2-xfh.jf.intel.com>
+ <20240307171810.0000396c@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240307164139.000049aa@Huawei.com>
-X-ClientProxiedBy: MW2PR2101CA0024.namprd21.prod.outlook.com
- (2603:10b6:302:1::37) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20240307171810.0000396c@Huawei.com>
+X-ClientProxiedBy: MW4PR03CA0172.namprd03.prod.outlook.com
+ (2603:10b6:303:8d::27) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -115,274 +114,418 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB7664:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ede457b-806a-4b53-e92e-08dc3edd8978
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA1PR11MB5874:EE_
+X-MS-Office365-Filtering-Correlation-Id: 684b6867-e4d1-4c0c-cb02-08dc3ee005b4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uowqWPz2QS66nWqP9NWGbhUSHw8hlA5ytOyZSma0KiAkdnY1vqKPi6MSbeqzvfn8C0LK8XmzwUvVU8YG5t8M8gST9Kc/2sBNepnztawlg+ThkEy2N+qaXXc3BEOxbrAv10F2hB+3fK/hrNiHwX7EMyqEP1HgwSr+rv8CtUtRm8TmX0jrBaI23QqbKkeee+WDtvg6cDyToqdJRizH5by5zLCZXfuBoBZ4G7yMeKU+LIfA8N/SZveBOKHxWnxrmpVrQRyMHaXIoHxNbfMon+iy00ABU5Oec8/aGrYfjiHuFD/DjpqAP4ERPASe6HvdJgZjuJIi3rbZuF5r1DMWPKRoboGhXmkG9I/gFTxtKeauqnnQLnbjHe/tlFIE0KL+ebIQhU+Hg0a202q79nr/qH+Pt7E/5pEj/oi1jGaBTmQKHN5dxAO/Xz8GjTcoaU4MRA37nXtiEvRKXvk/wNMGISQaYdTCs3qc0kh0T+OTZez11MLMAZIUHoUj4jRueYR5egOzIAmaHUxNO2JEvn1okIeCaNNCPffbilfeCyIG5wA0gsoeAtfeQRvajDNG+fZLZRreMhIc6a9wbQvDKqQQRVEddpVPzHRRqbQ67TAjBoYPfEmH5VHuddWuhFDKLbN8KLq/6P32smhWRUzsHDFXErGQF2yyfKOGQKBbeq2wplSEocU=
+X-Microsoft-Antispam-Message-Info: b0qpUxbw5AFHXBZ5kNvoHWLBGpLaZHWA48Azq3YUBaqBSnPuN9UryEvVV5dZ/B9gNzQakcODGjebNEBk8l5RJ/qBL3/t50SU8UuxBwBazIwPsJ4zOSAEWPggqXdWTsZbD5TReMiq8OCRXsVr+VI+eW5UHZPoOxcZTDolxTaiBqGPw5KfBsi5IcDY2YHRR9edGSjZieqHwalYAkZ0XfybYY18lgrkmDPRu/ZHRU+o/JemL1DiVaIFqJjTNd4ul40NgfwN2fPIkQQvKWz7cAr+8dR4AcKZTtRBViS4x6LxaA5+Jvgk06/VSDHIGDGtNXAobrYRnjagLe33c6FS1WdXDndAjSac0olbUGMP8jDcos9jTUgfLbO0saBuHutiURNu9G7R15DxOK+zxi4/Mkm5FsCZt09J8g2W3bi7efIbUVvY0EhQQff8jjb6Mgs66J9x87ToyANxU0WtpMpjX6tOthtQw3ALVUNP9+oEDp250ste+JAVbO7rCgyF4iKAmLWpu99McHGjgPZh0LM1L1p1jnDyxmVMH6DAdLC1Karqk7MKZHUtAxpot2Xrqd5hK4rbdT+mtfkcld1XlwC5DlIGAFfHI+QCrth9QGsvmjiPawr/yVKokuLS6lxaaSOiXhqID9xZKP8XoGDt74GnBWT2umC3C9sf7H5Ds3xOPA4tJCk=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3vuBFWdqEpFGeY0rgDhTE9B6aeezIap4s6KVRdkf9wuqgzuHyeUk9/Jom7as?=
- =?us-ascii?Q?oXcRSwCJVZINHCKofthALZW2jCdC8nDUGpaHJxloaLeiDlHKwrNHcJHROMKZ?=
- =?us-ascii?Q?oX1L2ZIUEXEXD376HzY3rXdb4wF47kaLYvDENuFgXH7jTTHIEIetQCJdsWPl?=
- =?us-ascii?Q?2oQyheNd2KDPur+wCF0aCklc1L4Eexu2OhXZ19aU9pGvExCIA96cSsAT/iRQ?=
- =?us-ascii?Q?QGEU2RKWQh89AOPaYy/T1KBVXWr4nX5bidOrR2iLbip621z06ja+I72Ym/ok?=
- =?us-ascii?Q?L8Ylvdw4YaNqfVsQSARIAhPpDxcaaJSXI2xw7zo8I4duWAXE/9K2YPA7hNy1?=
- =?us-ascii?Q?0ZmT4prnEQUu3SLXCkQQPGQ98AZqm0625fUoR7qG8wrDHaHFUe6OPUiI5CF7?=
- =?us-ascii?Q?AgQfcKKQ9dYaQ/WL4h+N7Ixzve0TVR8Vj+aUaipbqLg7xBhSGGRqOfValD+C?=
- =?us-ascii?Q?z/4X5zvEQylVgoD3W/WwlXuSTA0of0PO1UzzIl+ptMmef+Cg4BYifZ4w5+B9?=
- =?us-ascii?Q?11JizpVVgd/os6iCOEMwEL/n1XibNpMsDi1CwJX0mOoOqlD7RMXVp0HdC6IN?=
- =?us-ascii?Q?htPO7AuQSRdNmiAqTaTdCyAeWEJ0nm9X2MXrs86/KSqbUMmDL5kyBRnoD6tA?=
- =?us-ascii?Q?W1gwCHEGYH7S52snRbLJRQakApta+L+9Dq2IPGIDB5QZeCefpZfcPqBjNXDI?=
- =?us-ascii?Q?UPsM7gqaSrDwp0viBa4myy7oPBWBK1OUpeZSj/az2e7BnUs8GHOMMUrdONmH?=
- =?us-ascii?Q?R80WiL/bltN0lUhiWoVGJBqWtWENeBBs1s0ZGv+Jz1KJ3eAewbfZHgyfLtIv?=
- =?us-ascii?Q?kPq53xcMM/8rLnEVrMjlUBPxmcMYh1/aW17pCrW0pDKB7U0ZuNILtgONu5/r?=
- =?us-ascii?Q?ILvQUcYkuftdfMHFZEjMrdtikScy3hGGZ9LdoxTIaRoy+FsXg6SXj/xjregu?=
- =?us-ascii?Q?BHyVWIpFp0/qckQrwkiZHV2tViwv2nyB5uCuUNjejldVHwl29mQbfXzBcAgs?=
- =?us-ascii?Q?Fj31mJjPqndFlcrMcFRvzQRVRo6344BOJyh6QBFhS07O6moGjSTUBRs8Bf7Z?=
- =?us-ascii?Q?8oC8e7xPoVX7B06N/Xw2mGk+5wZkgN3WwS8bthEd/SoqLHtV6zFWOOOjHMCI?=
- =?us-ascii?Q?4whyduYg2OoAjX38wfRg4WE9R2uYHIEwnn9aUfQMCnQhbOHymJJeePV6/Pqr?=
- =?us-ascii?Q?wy6adpHIbR4uPPjyWd/3R7r/QsLzTN/yMahsZUWCAj0NEhq2vW430cwVYqoz?=
- =?us-ascii?Q?f890CZWCMbvZcdVz1tkUKQJRWlvMUPE9FEyAY0fkk1pmMu00/3Z1jUvooj3m?=
- =?us-ascii?Q?GLyT/JPCnN7Jq0vYPHj33UMK++yGi+jGj2YH8d3it1FiPNlPKTuus57ju1Co?=
- =?us-ascii?Q?g0LherS7B/w2hAHfC5+x5xU3kraB+cs878wtj9jvmkCoDheSkelxQgKMn4b/?=
- =?us-ascii?Q?1CLE1tRJKXHukpDj+gQKm/989v3y7KaZU+9W0tcSE/abhqnEHFLvFG4SDB8Y?=
- =?us-ascii?Q?4P7VQlr8gCl/quyCocBd18qPFRnIRy1B70b/jjRDCrQrBC8kM8JHBdMhMj0H?=
- =?us-ascii?Q?hJWkq0Ub3Wt/75pqBkertU+kyDWAvanBDuySct9AoKUl94gb2ZxpiM0NSL+H?=
- =?us-ascii?Q?RA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ede457b-806a-4b53-e92e-08dc3edd8978
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?382NMxf4SfQ1JWkBT8moGO9eS6lDEmfTBgAa6y3vdlCces8lADuZX69aK7UL?=
+ =?us-ascii?Q?iPCFp/hlMNVSgS56eJYHZJNOApfyxmu0eUlMara+UTud5I5/ltxi3EpC8y+D?=
+ =?us-ascii?Q?cPFgQfOipZZSIlTSVXAir841OWyUvAveU2FxtNZEKIpJZT767hSMk7tgKtcq?=
+ =?us-ascii?Q?S5IboTh99i6zKmnMOVih72kfhNs/odz+ljz0nMJAJ9D2tSbai3pX+23JraL4?=
+ =?us-ascii?Q?Qi/WP22lpvGS7FYWv/DhTvRctiUyN4uH88t9aRwYRLHZF3JXMcGyo9DVIE+w?=
+ =?us-ascii?Q?wdGWC2RvO/QV1Sb6UYhgygVdGHw79TE3KPGkHKYg5sREU/NXeNPLuOa/SWRc?=
+ =?us-ascii?Q?UDlFgFWGf586qJQy4ay4rqIE5QXNyHpSrZWxkjMDs/4KP3vB18FfhX3I8R0a?=
+ =?us-ascii?Q?pmSkJgiyiDHqOEnXXwzuzUzETEpAJZ9jHD//1NFjcGJiQlFzZZ3dbae1Q+ct?=
+ =?us-ascii?Q?+ByzMgouvsyIbs3VT0NNGjFQh7RC0qSwmJLc6fcXgKHwMwj6MsZ1mS8U//HF?=
+ =?us-ascii?Q?OBJW824QW8m48z65gxYH1KdgHwnMHJTRne4SGdU7tH7TcwZuPQnDw37WEenH?=
+ =?us-ascii?Q?oHoFjYk5SXwrvalJaKVrGzkhEsdABa6OEBmYulPTqqr8b+jsTnz9o8HFFfO1?=
+ =?us-ascii?Q?V6pg3NtkuCE4BDTWpREF8ZS7m74PsHQlKeIoy/nAzlbszzEDetw7TCNgsd87?=
+ =?us-ascii?Q?Ef+0dViK2CREDx2uXqSRTNNjg1fzpF5/SPd6dX2qbzd3SAGHs4s2NhUKCXSo?=
+ =?us-ascii?Q?prLVJuJjOJpn1WmiIPAX9dpDVxCRDZtUr22Kz1sx6At+ofU+Su3JPLUUs0K0?=
+ =?us-ascii?Q?ccEC9U0uYAt6OlLHC1fqiru69li6HSXrvpEmFZob76gvHPPSEd0akfymeyiy?=
+ =?us-ascii?Q?YVzxfPttn3Rxn6KvWgab+3O7OXCIg0FCTKsGLsFaTnmk0ePpvoWX0mTB6N6J?=
+ =?us-ascii?Q?MKLI60Dd/f+S8NPtPoOtm9KA4BJe7ky0BNWdW+3hd55Lsa9wK3S0ullWLQ2R?=
+ =?us-ascii?Q?YOSMzYBNlFT8hD4zT0O21IsarDbhemz+nHOB9UFv97xxLN26RP0fpIzgtKSg?=
+ =?us-ascii?Q?i/+FGnChsIZQjFS15ySMypRrnyyA1NVNYY0sgpOftUxpJc2H/nce38rXZnlM?=
+ =?us-ascii?Q?JeEeDx1hkP74BIy2dOQGVGIFxXy3HTAtPfbgBpWPgzo1RXEYbv7sxXKMFOX0?=
+ =?us-ascii?Q?Dj1BpFHVQ424tQD5RvX6s4eRLXYhfvT/sX6Nb8DW5YWejjqa8cHcVAOGZFTT?=
+ =?us-ascii?Q?1HEZz66T1wehb9PlMjCISP/VpHujnGdhKLNpV9lcnqtG85C3z6bMQBzDN1w+?=
+ =?us-ascii?Q?hhkzPhP4pHxHT3qOZEsWu8QhrJBCeVln4GZ6Ar0Sc3KNmqO3my1YkAxiqs1e?=
+ =?us-ascii?Q?px4i4pUB0L+RKYXyMAos0iHSeZLOlXcVgWRoDmqaFEkEljPD5WZ8AgdopjrS?=
+ =?us-ascii?Q?qU4YzkAzGyRL+CYciWfoZH3c5Y55c/sJJ47EWJvZR2QVfXQixktbpwDi+JXW?=
+ =?us-ascii?Q?V50/YVw0EttWLw8VbDtrWSHiLIA9v3NMpV6N7DYtUXUCSIlfzy+l2IXHOZpB?=
+ =?us-ascii?Q?9RrDbCbPpiMNC9+vNg8fBYgK0csH7k3PHPcA8DkIeueG7cku5pUSY6sJ4Rh3?=
+ =?us-ascii?Q?Bg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 684b6867-e4d1-4c0c-cb02-08dc3ee005b4
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 19:33:59.6637
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2024 19:51:47.1657
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UzCBqLVMVYTzso0+ymhBOxFQI5FYYZ4ZAWEdjBWxqbfqynUTdKe6g5mPgfX7fbKVKK11FOG1WHUha6dnWJjHhCwhJ4k8eCpeJsXORVS/1xc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7664
+X-MS-Exchange-CrossTenant-UserPrincipalName: kdZQqy4O/DzD8/8mE77axujVGkopsoxN4dxMtwLGTx3NfFkCx9ZNnVYurzlL5+vED4QICTFHJ6Z2zGfukEDXckDmeHX/6uOvSg0yNsjPJkA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5874
 X-OriginatorOrg: intel.com
 
 Jonathan Cameron wrote:
-> On Tue, 30 Jan 2024 01:24:02 -0800
+> On Tue, 30 Jan 2024 01:24:14 -0800
 > Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> > A "tsm" is a platform component that provides an API for securely
-> > provisioning resources for a confidential guest (TVM) to consume. "TSM"
-> > also happens to be the acronym the PCI specification uses to define the
-> > platform agent that carries out device-security operations. That
-> > platform capability is commonly called TEE I/O. It is this arrival of
-> > TEE I/O platforms that requires the "tsm" concept to grow from a
-> > low-level arch-specific detail of TVM instantiation, to a frontend
-> > interface to mediate device setup and interact with general purpose
-> > kernel subsystems outside of arch/ like the PCI core.
+> > The PCIe 6.1 specification, section 11, introduces the Trusted
+> > Execution Environment (TEE) Device Interface Security Protocol (TDISP).
+> > This interface definition builds upon CMA, component measurement and
+> > authentication, and IDE, link integrity and data encryption. It adds
+> > support for establishing virtual functions within a device that can be
+> > assigned to a confidential VM such that the assigned device is enabled
+> > to access guest private memory protected by technologies like Intel TDX,
+> > AMD SEV-SNP, RISCV COVE, or ARM CCA.
 > > 
-> > Provide a virtual (as in /sys/devices/virtual) class device interface to
-> > front all of the aspects of a TSM and TEE I/O that are
-> > cross-architecture common. This includes mechanisms like enumerating
-> > available platform TEE I/O capabilities and provisioning connections
-> > between the platform TSM and device DSMs.
+> > The "TSM" (TEE Security Manager) is a concept in the TDISP specification
+> > of an agent that mediates between a device security manager (DSM) and
+> > system software in both a VMM and a VM. From a Linux perspective the TSM
+> > abstracts many of the details of TDISP, IDE, and CMA. Some of those
+> > details leak through at times, but for the most part TDISP is an
+> > internal implementation detail of the TSM.
 > > 
-> > It is expected to handle hardware TSMs, like AMD SEV-SNP and ARM CCA
-> > where there is a physical TEE coprocessor device running firmware, as
-> > well as software TSMs like Intel TDX and RISC-V COVE, where there is a
-> > privileged software module loaded at runtime.
+> > Similar to the PCI core extensions to support CONFIG_PCI_CMA,
+> > CONFIG_PCI_TSM builds upon that to reuse the "authenticated" sysfs
+> > attribute, and add more properties + controls in a tsm/ subdirectory of
+> > the PCI device sysfs interface. Unlike CMA that can depend on a local to
+> > the PCI core implementation, PCI_TSM needs to be prepared for late
+> > loading of the platform TSM driver. Consider that the TSM driver may
+> > itself be a PCI driver. Userspace can depend on the common TSM device
+> > uevent to know when the PCI core has TSM services enabled. The PCI
+> > device tsm/ subdirectory is supplemented by the TSM device pci/
+> > directory for platform global TSM properties + controls.
 > > 
-> > For now this is just the scaffolding for registering a TSM device and/or
-> > TSM-specific attribute groups.
+> > All vendor TSM implementations share the property of asking the VMM to
+> > perform DOE mailbox operations on behalf of the TSM. That common
+> > capability is centralized in PCI core code that invokes an ->exec()
+> > operation callback potentially multiple times to service a given request
+> > (struct pci_tsm_req). Future operations / verbs will be handled
+> > similarly with the "request + exec" model. For now, only "connect" and
+> > "disconnect" are implemented which at a minimum is expected to establish
+> > IDE for the link.
 > > 
-> > Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> > Cc: Isaku Yamahata <isaku.yamahata@intel.com>
-> > Cc: Alexey Kardashevskiy <aik@amd.com>
+> > In addition to requests the low-level TSM implementation is notified of
+> > device arrival and departure events so that it can filter devices that
+> > the TSM is not prepared to support, or otherwise setup and teardown
+> > per-device context.
+> > 
 > > Cc: Wu Hao <hao.wu@intel.com>
 > > Cc: Yilun Xu <yilun.xu@intel.com>
-> > Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> > Cc: John Allen <john.allen@amd.com>
+> > Cc: Lukas Wunner <lukas@wunner.de>
+> > Cc: Samuel Ortiz <sameo@rivosinc.com>
+> > Cc: Alexey Kardashevskiy <aik@amd.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > 
-> A few drive by comments because I was curious.
+> Superficial comments inline - noticed whilst getting my head
+> around the basic structure.
 > 
 > 
-> > diff --git a/drivers/virt/coco/tsm/class.c b/drivers/virt/coco/tsm/class.c
+> 
+> 
+> > diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
 > > new file mode 100644
-> > index 000000000000..a569fa6b09eb
+> > index 000000000000..f74de0ee49a0
 > > --- /dev/null
+> > +++ b/drivers/pci/tsm.c
+> > @@ -0,0 +1,346 @@
+> 
+> > +
+> > +DEFINE_FREE(req_free, struct pci_tsm_req *, if (_T) tsm_ops->req_free(_T))
+> > +
+> > +static int pci_tsm_disconnect(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_tsm_req *req __free(req_free) = NULL;
+> 
+> As below. I'll stop commenting on these.
+
+Hey, they are fair game, will find a way to rework this and not use the
+confusing pattern.
+
+> > +
+> > +	/* opportunistic state checks to skip allocating a request */
+> > +	if (pdev->tsm->state < PCI_TSM_CONNECT)
+> > +		return 0;
+> > +
+> > +	req = tsm_ops->req_alloc(pdev, PCI_TSM_OP_DISCONNECT);
+> > +	if (!req)
+> > +		return -ENOMEM;
+> > +
+> > +	scoped_cond_guard(mutex_intr, return -EINTR, tsm_ops->lock) {
+> > +		enum pci_tsm_op_status status;
+> > +
+> > +		/* revalidate state */
+> > +		if (pdev->tsm->state < PCI_TSM_CONNECT)
+> > +			return 0;
+> > +		if (pdev->tsm->state < PCI_TSM_INIT)
+> > +			return -ENXIO;
+> > +
+> > +		do {
+> > +			status = tsm_ops->exec(pdev, req);
+> > +			req->seq++;
+> > +			/* TODO: marshal SPDM request */
+> > +		} while (status == PCI_TSM_SPDM_REQ);
+> > +
+> > +		if (status == PCI_TSM_FAIL)
+> > +			return -EIO;
+> > +		pdev->tsm->state = PCI_TSM_INIT;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +static int pci_tsm_connect(struct pci_dev *pdev)
+> > +{
+> > +	struct pci_tsm_req *req __free(req_free) = NULL;
+> 
+> Push down a few lines to put it where the allocation happens.
+> 
+> > +
+> > +	/* opportunistic state checks to skip allocating a request */
+> > +	if (pdev->tsm->state >= PCI_TSM_CONNECT)
+> > +		return 0;
+> > +
+> > +	req = tsm_ops->req_alloc(pdev, PCI_TSM_OP_CONNECT);
+> > +	if (!req)
+> > +		return -ENOMEM;
+> > +
+> > +	scoped_cond_guard(mutex_intr, return -EINTR, tsm_ops->lock) {
+> 
+> What could possibly go wrong? Everyone loves scoped_cond_guard ;)
+
+Indeed.
+
+> 
+> > +		enum pci_tsm_op_status status;
+> > +
+> > +		/* revalidate state */
+> > +		if (pdev->tsm->state >= PCI_TSM_CONNECT)
+> > +			return 0;
+> > +		if (pdev->tsm->state < PCI_TSM_INIT)
+> > +			return -ENXIO;
+> > +
+> > +		do {
+> > +			status = tsm_ops->exec(pdev, req);
+> > +			req->seq++;
+> > +		} while (status == PCI_TSM_SPDM_REQ);
+> > +
+> > +		if (status == PCI_TSM_FAIL)
+> > +			return -EIO;
+> > +		pdev->tsm->state = PCI_TSM_CONNECT;
+> > +	}
+> > +	return 0;
+> > +}
+> 
+> ...
+> 
+> > + size_t connect_mode_store(struct device *dev,
+> > +				  struct device_attribute *attr,
+> > +				  const char *buf, size_t len)
+> > +{
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	int i;
+> > +
+> > +	guard(mutex)(tsm_ops->lock);
+> > +	if (pdev->tsm->state >= PCI_TSM_CONNECT)
+> > +		return -EBUSY;
+> > +	for (i = 0; i < ARRAY_SIZE(pci_tsm_modes); i++)
+> > +		if (sysfs_streq(buf, pci_tsm_modes[i]))
+> > +			break;
+> > +	if (i == PCI_TSM_MODE_LINK) {
+> > +		if (pdev->tsm->link_capable)
+> > +			pdev->tsm->mode = PCI_TSM_MODE_LINK;
+> 
+> Error in all real paths paths?
+
+Uh... yeah, did I mention that this untested. Will fix.
+
+> Also, maybe a switch will be more sensible here.
+
+Sure.
+
+> 
+> > +		return -EOPNOTSUPP;
+> > +	} else if (i == PCI_TSM_MODE_SELECTIVE) {
+> > +		if (pdev->tsm->selective_capable)
+> > +			pdev->tsm->mode = PCI_TSM_MODE_SELECTIVE;
+> > +		return -EOPNOTSUPP;
+> > +	} else
+> > +		return -EINVAL;
+> > +	return len;
+> > +}
+> 
+> 
+> > +
+> > +void pci_tsm_init(struct pci_dev *pdev)
+> > +{
+> > +	u16 ide_cap;
+> > +	int rc;
+> > +
+> > +	if (!pdev->cma_capable)
+> > +		return;
+> > +
+> > +	ide_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_IDE);
+> > +	if (!ide_cap)
+> > +		return;
+> > +
+> > +	struct pci_tsm *tsm __free(kfree) = kzalloc(sizeof(*tsm), GFP_KERNEL);
+> > +	if (!tsm)
+> > +		return;
+> > +
+> > +	tsm->ide_cap = ide_cap;
+> > +
+> > +	rc = xa_insert(&pci_tsm_devs, (unsigned long)pdev, pdev, GFP_KERNEL);
+> 
+> This is an unusual pattern with the key and the value matching.
+> Feels like xarray might for once not be the best choice of structure.
+
+This is the "use xarray instead of a linked list patterni". It would be
+useful to maybe make the key be the Segment+BDF, but I did not take the
+time to figure out if that can fit in an unsigned long. In the meantime
+this saves needing to embed a linked list node in 'struct pci_dev'.
+
+[..]
+> > diff --git a/drivers/virt/coco/tsm/class.c b/drivers/virt/coco/tsm/class.c
+> > index a569fa6b09eb..a459e51c0892 100644
+> > --- a/drivers/virt/coco/tsm/class.c
 > > +++ b/drivers/virt/coco/tsm/class.c
-> > @@ -0,0 +1,100 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+> 
+> > +static const struct attribute_group *tsm_attr_groups[] = {
+> > +#ifdef CONFIG_PCI_TSM
+> > +	&tsm_pci_attr_group,
+> > +#endif
+> > +	NULL,
+> Trivial but, no point in that comma as we will never chase it with anything.
+> > +};
 > > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >  static int __init tsm_init(void)
+> >  {
+> >  	tsm_class = class_create("tsm");
+> > @@ -86,6 +97,7 @@ static int __init tsm_init(void)
+> >  		return PTR_ERR(tsm_class);
+> >  
+> >  	tsm_class->dev_release = tsm_release;
+> > +	tsm_class->dev_groups = tsm_attr_groups;
+> >  	return 0;
+> >  }
+> >  module_init(tsm_init)
+> > diff --git a/drivers/virt/coco/tsm/pci.c b/drivers/virt/coco/tsm/pci.c
+> > new file mode 100644
+> > index 000000000000..b3684ad7114f
+> > --- /dev/null
+> > +++ b/drivers/virt/coco/tsm/pci.c
+> 
 > > +
-> > +#include <linux/tsm.h>
-> > +#include <linux/rwsem.h>
+> > +static bool tsm_pci_group_visible(struct kobject *kobj)
+> > +{
+> > +	struct device *dev = kobj_to_dev(kobj);
+> > +	struct tsm_subsys *subsys = container_of(dev, typeof(*subsys), dev);
+> Give this a macro probably.
+>  dev_to_tsm_subsys(kobj_to_dev(kobj));
+
+Sure.
+
+> 
+> > +
+> > +	if (subsys->info->pci_ops)
+> > +		return true;
+> 
+> 	return subsys->info->pci->ops;
+> maybe
+
+True, maybe with a !! for good measure.
+
+[..]
+> > diff --git a/drivers/virt/coco/tsm/tsm.h b/drivers/virt/coco/tsm/tsm.h
+> > new file mode 100644
+> > index 000000000000..407c388a109b
+> > --- /dev/null
+> > +++ b/drivers/virt/coco/tsm/tsm.h
+> > @@ -0,0 +1,28 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef __TSM_CORE_H
+> > +#define __TSM_CORE_H
+> > +
 > > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/cleanup.h>
 > > +
-> > +static DECLARE_RWSEM(tsm_core_rwsem);
-> > +struct class *tsm_class;
+> > +struct tsm_info;
 > > +struct tsm_subsys {
 > > +	struct device dev;
 > > +	const struct tsm_info *info;
-> > +} *tsm_subsys;
+> > +};
+> 
+> I know people like to build up patch sets, but I think defining this here
+> from patch 3 would just reduce noise.
+
+Ok.
+
+> 
 > > +
-> > +int tsm_register(const struct tsm_info *info)
+> > +#ifdef CONFIG_PCI_TSM
+> > +int tsm_pci_init(const struct tsm_info *info);
+> > +void tsm_pci_destroy(const struct tsm_info *info);
+> > +extern const struct attribute_group tsm_pci_attr_group;
+> > +#else
+> > +static inline int tsm_pci_init(const struct tsm_info *info)
 > > +{
-> > +	struct device *dev __free(put_device) = NULL;
-> 
-> I think it would be appropriate to move this down to where
-> you set dev so it is moderately obvious where it comes from.
-> This only becomes valid cleanup after the call to device_register()
-> with it's device_initialize - which is ugly. 
-> Maybe we should just use split device_initialize() / device_add()
-> when combining with __free(put_device);
-> 
-> The ideal would be something like.
-> 
-> 	struct device *dev __free(put_device) = device_initialize(&subsys->dev);
-> 
-> with device_initialize() returning the dev parameter.
-> 
-> For the really adventurous maybe even the overkill option of the following
-> (I know it's currently pointless complexity - given no error paths between
->  the kzalloc and device_initialize())
-> 
-> 	struct tsm_subsys *subsys __free(kfree) = kzalloc(sizeof(*subsys), GFP_KERNEL);
-> 
-> //Now safe to exit here.
-> 
-> 	struct device *dev __free(put_device) = device_initialize(&no_free_ptr(subsys)->dev);
-> 
-> // Also good to exit here with no double free etc though subsys is now inaccessible breaking
-> the one place it's used later ;)
-> 
-> Maybe I'm over thinking things and I doubt cleanup.h discussions
-> was really what you wanted from this RFC :)
-
-Heh, useful review is always welcome, and yeah, I think every instance
-of the "... __free(x) = NULL" pattern deserves to be scrutinized. Likely
-what I will do is add a helper function which was the main takeaway
-I got from the Linus review of cond_no_free_ptr(). Something like:
-
-diff --git a/drivers/virt/coco/tsm/class.c b/drivers/virt/coco/tsm/class.c
-index a569fa6b09eb..a60087905c72 100644
---- a/drivers/virt/coco/tsm/class.c
-+++ b/drivers/virt/coco/tsm/class.c
-@@ -16,10 +16,29 @@ struct tsm_subsys {
- 	const struct tsm_info *info;
- } *tsm_subsys;
- 
-+static struct tsm_subsys *tsm_subsys_alloc(const struct tsm_info *info)
-+{
-+	struct device *dev;
-+
-+	struct tsm_subsys *subsys __free(kfree) =
-+		kzalloc(sizeof(*subsys), GFP_KERNEL);
-+	if (!subsys)
-+		return NULL;
-+
-+	subsys->info = info;
-+	dev = &subsys->dev;
-+	dev->class = tsm_class;
-+	dev->groups = info->groups;
-+	if (dev_set_name(dev, "tsm0"))
-+		return NULL;
-+	device_initialize(dev);
-+
-+	return no_free_ptr(subsys);
-+}
-+DEFINE_FREE(tsm_subsys_put, struct tsm_subsys *, if (_T) put_device(&_T->dev))
-+
- int tsm_register(const struct tsm_info *info)
- {
--	struct device *dev __free(put_device) = NULL;
--	struct tsm_subsys *subsys;
- 	int rc;
- 
- 	guard(rwsem_write)(&tsm_core_rwsem);
-@@ -29,16 +48,11 @@ int tsm_register(const struct tsm_info *info)
- 		return -EBUSY;
- 	}
- 
--	subsys = kzalloc(sizeof(*subsys), GFP_KERNEL);
-+	struct tsm_subsys *subsys __free(tsm_subsys_put) = tsm_subsys_alloc(info);
- 	if (!subsys)
- 		return -ENOMEM;
- 
--	subsys->info = info;
--	dev = &subsys->dev;
--	dev->class = tsm_class;
--	dev->groups = info->groups;
--	dev_set_name(dev, "tsm0");
--	rc = device_register(dev);
-+	rc = device_add(&subsys->dev);
- 	if (rc)
- 		return rc;
- 
-@@ -48,9 +62,7 @@ int tsm_register(const struct tsm_info *info)
- 			return rc;
- 	}
- 
--	/* don't auto-free @dev */
--	dev = NULL;
--	tsm_subsys = subsys;
-+	tsm_subsys = no_free_ptr(subsys);
- 
- 	return 0;
- }
-
-> 
-> 
-> > +	struct tsm_subsys *subsys;
-> > +	int rc;
-> > +
-> > +	guard(rwsem_write)(&tsm_core_rwsem);
-> > +	if (tsm_subsys) {
-> > +		pr_warn("failed to register: \"%s\", \"%s\" already registered\n",
-> > +			info->name, tsm_subsys->info->name);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	subsys = kzalloc(sizeof(*subsys), GFP_KERNEL);
-> > +	if (!subsys)
-> > +		return -ENOMEM;
-> > +
-> > +	subsys->info = info;
-> > +	dev = &subsys->dev;
-> > +	dev->class = tsm_class;
-> > +	dev->groups = info->groups;
-> > +	dev_set_name(dev, "tsm0");
-> > +	rc = device_register(dev);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	if (info->host) {
-> > +		rc = sysfs_create_link(&dev->kobj, &info->host->kobj, "host");
-> 
-> Why not parent it from there?  If it has a logical parent, that would be
-> nicer than using a virtual device.
-
-Yeah at the time I was drafting this I was working around the lack of a
-ready device parent for Intel TDX which can not lean on a PCI device TSM
-like other archs. However, yes, that would be nice and it implies that
-Intel TDX just needs to build a virtual device abstraction to hang this
-interface.
-
-> 
-> > +		if (rc)
-> > +			return rc;
-> > +	}
-> > +
-> > +	/* don't auto-free @dev */
-> > +	dev = NULL;
-> > +	tsm_subsys = subsys;
-> > +
 > > +	return 0;
 > > +}
-> > +EXPORT_SYMBOL_GPL(tsm_register);
+> > +static inline void tsm_pci_destroy(const struct tsm_info *info)
+> > +{
+> > +}
+> > +#endif
+> > +
+> > +#endif /* TSM_CORE_H */
 > 
-> Seems appropriate to namespace these from the start.
+> > diff --git a/include/linux/tsm.h b/include/linux/tsm.h
+> > index 8cb8a661ba41..f5dbdfa65d8d 100644
+> > --- a/include/linux/tsm.h
+> > +++ b/include/linux/tsm.h
+> > @@ -4,11 +4,15 @@
+> >  
+> >  #include <linux/sizes.h>
+> >  #include <linux/types.h>
+> > +#include <linux/mutex.h>
+> 
+> struct mutex;
+> instead given you only have a pointer I think.
 
-Sure.
+True, but see below I expect this lock to move somewhere else in the
+next version.
+
+> 
+> 
+> >  
+> >  struct tsm_info {
+> >  	const char *name;
+> >  	struct device *host;
+> >  	const struct attribute_group **groups;
+> > +	const struct tsm_pci_ops *pci_ops;
+> > +	unsigned int nr_selective_streams;
+> > +	unsigned int link_stream_capable:1;
+> >  };
+> 
+> 
+> > +struct pci_dev;
+> > +/**
+> > + * struct tsm_pci_ops - Low-level TSM-exported interface to the PCI core
+> > + * @add: accept device for tsm operation, locked
+> > + * @del: teardown tsm context for @pdev, locked
+> > + * @req_alloc: setup context for given operation, unlocked
+> > + * @req_free: teardown context for given request, unlocked
+> > + * @exec: run @req, may be invoked multiple times per @req, locked
+> > + * @lock: tsm work is one device and one op at a time
+> > + */
+> > +struct tsm_pci_ops {
+> > +	int (*add)(struct pci_dev *pdev);
+> > +	void (*del)(struct pci_dev *pdev);
+> > +	struct pci_tsm_req *(*req_alloc)(struct pci_dev *pdev,
+> > +					 enum pci_tsm_op op);
+> > +	struct pci_tsm_req *(*req_free)(struct pci_tsm_req *req);
+> > +	enum pci_tsm_op_status (*exec)(struct pci_dev *pdev,
+> > +				       struct pci_tsm_req *req);
+> > +	struct mutex *lock;
+> 
+> Mixing data with what would otherwise be likely to be constant pointers
+> probably best avoided.  Maybe wrap the lock in another op instead?
+
+After chatting with Alexey this lock is too coarse and will move to a
+per device lock rather than locking the entire interface.
 
