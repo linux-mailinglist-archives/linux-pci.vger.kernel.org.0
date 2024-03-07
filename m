@@ -1,209 +1,168 @@
-Return-Path: <linux-pci+bounces-4593-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4594-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91A35874848
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 07:44:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4F80874858
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 07:51:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0915CB20A14
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 06:44:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E997D1C230CA
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 06:51:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8146E1CD09;
-	Thu,  7 Mar 2024 06:44:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A12541CD2D;
+	Thu,  7 Mar 2024 06:51:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="SBN5fwh3"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="sCUfvg8Z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2A3256A
-	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 06:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2C417BB5
+	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 06:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709793888; cv=none; b=VOGROA9nvMXz9lSf8/hZzkQMfa6a206VE8VRDTuoRBlCIp+0CSX7cI8gAk0xB6bjM2PPyZVSBjoxb2D/uK5wMcS5d8+igwdJHYT4i/1f+r7OBz6W2VNYcNuRowfFHWzNwT5iUXcgDg+0tJPQI/0F0H2h2AZyUUHfyHODVTywMSI=
+	t=1709794283; cv=none; b=j5MP1fdeYooF01jcq68T3J5n8X2r9x66QHVWrAUAR3gIaNP8h3XcBcQPqlOw8I6baXnVLt8NRWL0gt7kfHTYTJIUlXeGlbSXsRgavWUMm3qZqfauu+JPXaqSrNADU+3ZbtqLbIUjvsffc79VpPILrRhmdQSGQEUNKqV1ABDbCn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709793888; c=relaxed/simple;
-	bh=RvaQ/rqz0h0hGm7Ip9nUcdbSeubLqYN3nVLxvSCw0HE=;
+	s=arc-20240116; t=1709794283; c=relaxed/simple;
+	bh=3H/lvOapkzvFzelyzgbt32NSIz7kMrDaoswIBUoWId0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=syCGm753hEcBtQvWdpgYBOkvECy9bG0/D2ybaf4HOuMhoo33h2hTD3H7ISqcnXPHgMrx34qNaD/g4iUH0Nqn6x75mkXW0plOAw0hfuZ9xyJxhL/QFwcdUxqVma1DPAtKvR7UIGK6jh04ATxSUw4fnPHSHS0XXnCGlmg53+Kjfp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=SBN5fwh3; arc=none smtp.client-ip=185.125.188.122
+	 To:Cc:Content-Type; b=a48UjVKMD4exIJqaZcLrpsqH2+yGkECx9QlIxoxyQMoxwcIeUGBC7NsR9t2Sz0z08APpw4RcjE/D/z5ZBaEajk5BPeKjzYOcs9thHC9DmvjTA2kC9KuTXQdA9137VSbseNfCI5oICU/WdtxJhTUo2kftUJjn3ziB4RSFZXdVsXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=sCUfvg8Z; arc=none smtp.client-ip=185.125.188.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 84FA5411A1
-	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 06:44:38 +0000 (UTC)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 775374112D
+	for <linux-pci@vger.kernel.org>; Thu,  7 Mar 2024 06:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1709793878;
-	bh=55f1xLPrkCtLuH/FjoNWluAZNUICe/QcdEqP5aG3yUI=;
+	s=20210705; t=1709794279;
+	bh=1XHqEKGDEWpYWhhB4V3kQVznnM/0tQjfz0REQnBC9xs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
 	 To:Cc:Content-Type;
-	b=SBN5fwh3aEPJwCzpTFZFZLBwRpN3pVlUJxh5jQlhBLbzpMLahtqXgOhWx0Df7f3+i
-	 c6f/+dltXaL+doUc9TGdr0lXXEmuFmXnRV9BCZvNgU/IDe1GyvBPmji9R9axxO+G24
-	 pFsELoinISmXEmdunyc3Nc4Pg65/fikC7M2a8wvkSkSTppe6VEXTDQhOWQotOGWlPf
-	 WNVpOVav2b0P8yAujHedVOZ/dszTkoMGVAbcPuMQAYRA3nWu3x+VJxe5GDCjf++CK/
-	 PaLDYAipgtdkqFLuYmA+5sgpd6dCrMEbT0faJSftrDCOQ+zrj9x40t72+yHISe7uR6
-	 rZHjsE9fEHs+A==
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6e532ea6c51so463578b3a.3
-        for <linux-pci@vger.kernel.org>; Wed, 06 Mar 2024 22:44:38 -0800 (PST)
+	b=sCUfvg8ZRDyO4WCJSmgpvgv7dvQOB+SRjOau9wuBe44QYwYNUq/w/qgdzQnAJIQ+1
+	 e5ZaU7NtDftJ0CAQxnMSfehpwQ6rOgOT3VlW5zgnryV2StlTZBZWKeG4T9IdaORidU
+	 mKJkMNv8W8iYxzDUkrVYWIDT3sGh3IRBsbUKFwPRR8/lfnnDO+0iE85IB/01yfGYaI
+	 o3fqRuPIpmDBkBYu6F3zdTJy84cHiv50aJi2IhuwAeK4PeLCztjVCfBcLLDOgjfk5X
+	 VJv+qXuBeBlSYZAmuRDWAnRbBLIqX/dbk8e3XWQQnhZc2SIJmD67rSihDb1pVhduig
+	 Rwy3VGKwEUUUw==
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-299783294a6so379188a91.3
+        for <linux-pci@vger.kernel.org>; Wed, 06 Mar 2024 22:51:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709793877; x=1710398677;
+        d=1e100.net; s=20230601; t=1709794278; x=1710399078;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=55f1xLPrkCtLuH/FjoNWluAZNUICe/QcdEqP5aG3yUI=;
-        b=hRYtpoxTByGTLYCFTbODYTck2EfxjTrI0ZJXr7OYDmzzvQ2sZHflgARBEwrFMHZx4W
-         VVjqyezF4LqF1RWqB0Lp4irqMc8B8/evgJpESl3yzWkVHB1AR2GO4qpJ6ellFjmjS+Tg
-         yQlZDE94SBcJSbx1oC/ayuq3YV6DS4o5HpShDiBlSu1upGn9Cg4yb8ZzagDH4XXbRCsw
-         Bb7hyZEn+tjdcu80BJXnlrhyjr6NsrN32mRNsxElVXAKh9o3Y2mZsorsYsF2jl9UcToG
-         an2Q2Ee+4wPiClG+sCcr9STBRuGsPcRSWhxxuryykOIWlPle3++8keMDA+mzlF/lxN8F
-         0YrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaNHenAiaCQFMfct6r8EmrNqNdyAPWVZ1BRhCk+tbuiCj9kxcSTRESsqaWYWDWCnvD04Y5h1H86yJFh1Q/5PCxZzjIQpLOtTQF
-X-Gm-Message-State: AOJu0YzNeGIzOiCLlFDDWCSWYWTPhObrOeFvtT6SdBvR2WgqkrkpuwVc
-	Ct501lJQSKzg13R3EGmWLoKLHUC5jTSevs2l+YR1FXtB+noMG7bW0jvnF7GDBE01OyiZETtRyPi
-	QW8k1+/nEq74zRpSwLtO0yOL72l0WJHclCrvyssMCW9rnElOMLqJrpTYBc7obgibWfJeZqcUMKg
-	9Dvpk7jEClDELaTeNNXRQ88kOwUfHEOje2Yyjd5WwzDdpYRQXb
-X-Received: by 2002:a05:6a20:ae93:b0:1a1:44c8:e625 with SMTP id do19-20020a056a20ae9300b001a144c8e625mr5763111pzb.40.1709793877030;
-        Wed, 06 Mar 2024 22:44:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH13IqNVfWB5anXcBekUlbwbdHm1ZH7y7xOmxo5CKgmqvsAI0+LbVGJI5awyokbYrh9LvxFX5cdP4+UXsjL85k=
-X-Received: by 2002:a05:6a20:ae93:b0:1a1:44c8:e625 with SMTP id
- do19-20020a056a20ae9300b001a144c8e625mr5763105pzb.40.1709793876721; Wed, 06
- Mar 2024 22:44:36 -0800 (PST)
+        bh=1XHqEKGDEWpYWhhB4V3kQVznnM/0tQjfz0REQnBC9xs=;
+        b=X2CvqeDhc7/Cafu9qrzPhQyr70899bobLxVtp/W/QAjQP3wCuMgOGvaXmyJBnv23Gv
+         bRo7hkCS0SW5JNlc+99GlGjL/mmyyiKZaEGngNYB/sTwkNvcjckon5qAgdDfNADno5bL
+         Uy7cpuOSOcYtfmg3hiYzJzpW3wsibGH6ItXHKaRFRoJoMWgMHu50CEua7svdE3AXESuc
+         J4T18u69ss5FPK7+GOnGQGffJ/76jYtud2SzYuW//CAA/+8bnIVntDXLy13LJF05ynpm
+         IU6pqepWVHMdEFuAnr1ydgnJzbMn9SC8QUH9Q5LIxbe7/EJX0JfJCRltzYnvnt84VJdS
+         9SlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVivov+Oe4lNYN6Hs/JWYouaSaa8G+lFn1xwyanIEo7geu07WmdBnu72J4wUaWEVUq7O5E3UCtr4W0DfqwAedNZG1jAlokTEScF
+X-Gm-Message-State: AOJu0YzayHRlWxdO7aYBfSyD29YHLXYBuzjuYb+23ZUmF6uCjiF4CMcP
+	xaGDxKacbCp9o9u3fpKKXv5+omiKqSjiLVmOqSElgfzE+DNxiKYbNo8k7fLStNL18IaGChkyxHl
+	7hTJ85nwFsO54b/t5DTWi74JxlzZLAbQCJ28gU6UtUImHU/Cb/lPbmguiVUPwyPnRjgKpBEZHQK
+	Mkf1PrE0AZMxZ2gtEe5IJ3Xrh9GTpO8mP6Ba0R/dUnWi0tvQmQ
+X-Received: by 2002:a17:90b:1214:b0:29b:23bc:19a5 with SMTP id gl20-20020a17090b121400b0029b23bc19a5mr16294038pjb.26.1709794277964;
+        Wed, 06 Mar 2024 22:51:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF/lzIcUCqv0H8CBqPe30CqTsc2cPSeSmtT2lFHGN90fG85b/xxIUsgCM/tV1RPHe7TGAt8/gKh/V1tFsZ+8OE=
+X-Received: by 2002:a17:90b:1214:b0:29b:23bc:19a5 with SMTP id
+ gl20-20020a17090b121400b0029b23bc19a5mr16294025pjb.26.1709794277695; Wed, 06
+ Mar 2024 22:51:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240207185549.GA910460@bhelgaas> <af071f45513778a9392efb1a9f41f1e18d2670f0.camel@linux.intel.com>
- <46b737db266f08c6dc98c77044bab12491a4d971.camel@linux.intel.com>
-In-Reply-To: <46b737db266f08c6dc98c77044bab12491a4d971.camel@linux.intel.com>
+References: <954f0b86-dd9e-4d84-8d67-fba7e80bc94e@5challer.de>
+ <20240105155100.GA1861423@bhelgaas> <CAAd53p5Eg4J9bRtAHY+JZ11cy1D0TnKmAaLfzcRJzw15VRBxXw@mail.gmail.com>
+ <9f0f9de4-2d34-4ff3-a901-c3e4b48e4ab0@5challer.de>
+In-Reply-To: <9f0f9de4-2d34-4ff3-a901-c3e4b48e4ab0@5challer.de>
 From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Thu, 7 Mar 2024 14:44:23 +0800
-Message-ID: <CAAd53p4j3MwigsFXpftuDdSfhn7EH_-cOOjP2DqnqeAuD+Fb=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD rootports
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Date: Thu, 7 Mar 2024 14:51:05 +0800
+Message-ID: <CAAd53p6GEPJe3rNNrUAah5PdLXspKh5Gz9tFstR6SFCREs+9=Q@mail.gmail.com>
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
+To: Michael Schaller <michael@5challer.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, macro@orcam.me.uk, 
+	ajayagarwal@google.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
+	gregkh@linuxfoundation.org, hkallweit1@gmail.com, 
+	michael.a.bottini@linux.intel.com, johan+linaro@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Nirmal,
+Hi Michael,
 
-On Thu, Mar 7, 2024 at 6:20=E2=80=AFAM Nirmal Patel
-<nirmal.patel@linux.intel.com> wrote:
+Sorry for the belated response.
+
+On Wed, Jan 10, 2024 at 8:40=E2=80=AFPM Michael Schaller <michael@5challer.=
+de> wrote:
 >
-> On Tue, 2024-02-13 at 10:47 -0700, Nirmal Patel wrote:
-> > On Wed, 2024-02-07 at 12:55 -0600, Bjorn Helgaas wrote:
-> > > On Tue, Feb 06, 2024 at 05:27:29PM -0700, Nirmal Patel wrote:
-> > > > ...
-> > > > Did you have a chance to look at my response on January 16th to
-> > > > your
-> > > > questions? I tried to summarize all of the potential problems and
-> > > > issues with different fixes. Please let me know if it is easier
-> > > > if
-> > > > I
-> > > > resend the explanation. Thanks.
-> > >
-> > > I did see your Jan 16 response, thanks.
-> > >
-> > > I had more questions after reading it, but they're more about
-> > > understanding the topology seen by the host and the guest:
-> > >   Jan 16:
-> > > https://lore.kernel.org/r/20240117004933.GA108810@bhelgaas
-> > >   Feb  1:
-> > > https://lore.kernel.org/r/20240201211620.GA650432@bhelgaas
-> > >
-> > > As I mentioned in my second Feb 1 response
-> > > (https://lore.kernel.org/r/20240201222245.GA650725@bhelgaas), the
-> > > usual plan envisioned by the PCI Firmware spec is that an OS can
-> > > use
-> > > a
-> > > PCIe feature if the platform has granted the OS ownership via _OSC
-> > > and
-> > > a device advertises the feature via a Capability in config space.
-> > >
-> > > My main concern with the v2 patch
-> > > (
-> > > https://lore.kernel.org/r/20231127211729.42668-1-nirmal.patel@linux.i=
-ntel.com
-> > > )
-> > > is that it overrides _OSC for native_pcie_hotplug, but not for any
-> > > of
-> > > the other features (AER, PME, LTR, DPC, etc.)
-> > >
-> > > I think it's hard to read the specs and conclude that PCIe hotplug
-> > > is
-> > > a special case, and I think we're likely to have similar issues
-> > > with
-> > > other features in the future.
-> > >
-> > > But if you think this is the best solution, I'm OK with merging it.
-> Hi Bjorn,
 >
-> We tried some other ways to pass the information about all of the flags
-> but I couldn't retrieve it in guest OS and VMD hardware doesn't have
-> empty registers to write this information. So as of now we have this
-> solution which only overwrites Hotplug flag. If you can accept it that
-> would be great.
+> On 10.01.24 04:43, Kai-Heng Feng wrote:
+> > On Fri, Jan 5, 2024 at 11:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> >>
+> >> On Fri, Jan 05, 2024 at 12:18:32PM +0100, Michael Schaller wrote:
+> >>> On 05.01.24 04:25, Kai-Heng Feng wrote:
+> >>>> Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
+> >>>
+> >>> Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also result =
+in a
+> >>> working resume. I've tested this on kernel 6.6.9 (which still has com=
+mit
+> >>> 08d0cc5f3426). I've also attached the relevant dmesg output of the
+> >>> suspend/resume cycle in case this helps.
+> >>
+> >> Thanks for testing that!
+> >>
+> >>> Furthermore does this mean that commit 08d0cc5f3426 isn't at fault bu=
+t
+> >>> rather that we are dealing with a timing issue?
+> >>
+> >> PCI does have a few software timing requirements, mostly related to
+> >> reset and power state (D0/D3cold).  ASPM has some timing parameters,
+> >> too, but I think they're all requirements on the hardware, not on
+> >> software.
+> >>
+> >> Adding an arbitrary delay anywhere shouldn't break anything, and other
+> >> than those few required situations, it shouldn't fix anything either.
+> >
+> > At least it means 8d0cc5f3426 isn't the culprit?
+> >
+> > Michael, does the issue happen when iwlwifi module is not loaded? It
+> > can be related to iwlwifi firmware.
+> >
+> > Kai-Heng
+> >
+> The issue still happens if the iwlwifi module has been blacklisted and
+> after a reboot. This was again with vanilla kernel 6.6.9 and I've
+> confirmed via dmesg that iwlwifi wasn't loaded.
 
-My original commit "PCI: vmd: Honor ACPI _OSC on PCIe features" was a
-logically conclusion based on VMD ports are just apertures.
-Apparently there are more nuances than that, and people outside of
-Intel can't possibly know. And yes VMD creates lots of headaches
-during hardware enablement.
+Can you please give latest mainline kernel a try? With commit
+f93e71aea6c60ebff8adbd8941e678302d377869 (Revert "PCI/ASPM: Remove
+pcie_aspm_pm_state_change()") reverted.
 
-So is it possible to document the right way to use _OSC, as Bjorn suggested=
-?
+Also do you have efi-pstore enabled? Is there anything logged in
+/var/lib/systemd/pstore (assuming systemd is used)?
 
 Kai-Heng
 
-> > In the host OS, this overrides whatever was negotiated via _OSC, I
-> > guess on the principle that _OSC doesn't apply because the host BIOS
-> > doesn't know about the Root Ports below the VMD.  (I'm not sure it's
-> > 100% resolved that _OSC doesn't apply to them, so we should mention
-> > that assumption here.)
-> _OSC still controls every flag including Hotplug. I have observed that
-> slot capabilities register has hotplug enabled only when platform has
-> enabled the hotplug. So technically not overriding it in the host.
-> It overrides in guest because _OSC is passing wrong/different
-> information than the _OSC information in Host.
-> Also like I mentioned, slot capabilities registers are not changed in
-> Guest because vmd is passthrough.
-> >
-> > In the guest OS, this still overrides whatever was negotiated via
-> > _OSC, but presumably the guest BIOS *does* know about the Root Ports,
-> > so I don't think the same principle about overriding _OSC applies
-> > there.
-> >
-> > I think it's still a problem that we handle
-> > host_bridge->native_pcie_hotplug differently than all the other
-> > features negotiated via _OSC.  We should at least explain this
-> > somehow.
-> Right now this is the only way to know in Guest OS if platform has
-> enabled Hotplug or not. We have many customers complaining about
-> Hotplug being broken in Guest. So just trying to honor _OSC but also
-> fixing its limitation in Guest.
 >
-> Thanks
-> nirmal.
+> I've also checked if there is a newer firmware but Ubuntu 23.10 is
+> already using the newest firmware available from
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.g=
+it/log/iwlwifi-8265-36.ucode
+> (version 36.ca7b901d.0 according to dmesg).
 >
-> > I sincerely apologize for late responses. I just found out that my
-> > evolution mail client is automatically sending linux-pci emails to
-> > junk
-> > since January 2024.
-> >
-> > At the moment Hotplug is an exception for us, but I do share your
-> > concern about other flags. We have done lot of testing and so far
-> > patch
-> > v2 is the best solution we have.
-> >
-> > Thanks
-> > nirmal
-> > > Bjorn
+> Michael
 >
+> >>
+> >> Bjorn
 
