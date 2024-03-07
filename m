@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4615-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4616-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDA7C875798
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 20:53:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 479F88757A1
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 20:54:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B8B0B23DE0
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 19:53:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A7061C220DF
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 19:54:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D6E1386B9;
-	Thu,  7 Mar 2024 19:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3E7C139593;
+	Thu,  7 Mar 2024 19:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZm2YSwS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bp/jepb4"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCF6137C42;
-	Thu,  7 Mar 2024 19:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA22137C48;
+	Thu,  7 Mar 2024 19:53:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709841162; cv=none; b=hb8hODoA+whsFIAgnMGa4gGnyMWtTeqNoJIEu9g7XvM9OXqoyx5l9mdXcz+JyW7A830HjC8/gwKsU9b5i1rZ2xp1+/q6si+embIMj+seHKzyBNF0ruQBuBajkrX1Dk5DLnoE85Ir0OvwV6/7F3Tq8aZTCz+9nqEtPEKNRWI+fxA=
+	t=1709841184; cv=none; b=O4hClBO6J08FRLsMpHHd8Lfa9QGafo8Yxp+bmCHARq2Kj3wjfLTJxlUCfsQUiHOAT4tS1PBPtuWVlzcBTPFi8Od6UlgR2U9qX4Sy2CKD4BL6NkOXbO2nkpuRz1MYQ3Ee23kIt0O9IXp7GsR4FJ8jpJxdfYiSGcwXhDpYRYdMG38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709841162; c=relaxed/simple;
-	bh=abVM7Az8c+fwhJYNf8SjY0MPBlfozwtnuPRGUqiuFH0=;
+	s=arc-20240116; t=1709841184; c=relaxed/simple;
+	bh=zBtZ5IOpkL6qCfo2I5F6M8ftp0zLjynvpva1eSiBuSI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejbGhXuIsYrpA+6VzfyjocJNZUAKMGufA+5bdAEnnSm7W0aWbCFrVZBAkzTIqQGaVtl0aHJUOB0gAKl4KhYU4yugbUXtw2k/7AKIx8Kybsd5Tgei3VtlQylmEAxiTCujg9/gEn76mSIN9ZYu0QL4wivX6J1aqRXfyczFG8shlQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZm2YSwS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE4C0C433F1;
-	Thu,  7 Mar 2024 19:52:33 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=F++ZZtyO+UpNZhKZwoV2DphAoS1LCeLAikEya/gG7eG+X/ByhAqJKOShHamXZpO482dvAbIzKptjTLZod6ci5OAISTnKt0zAObpPb/20lVwG7TXiU76Tj8jzHds+eBgfYm84jdqAWnvhWx/M0vFnMyeFxdZI7RrhZeczNb+1X+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bp/jepb4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4ECC433C7;
+	Thu,  7 Mar 2024 19:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709841161;
-	bh=abVM7Az8c+fwhJYNf8SjY0MPBlfozwtnuPRGUqiuFH0=;
+	s=k20201202; t=1709841184;
+	bh=zBtZ5IOpkL6qCfo2I5F6M8ftp0zLjynvpva1eSiBuSI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kZm2YSwSeAjDl/IxeY39+GMpbM8g/8yLdpNPzBh9Kp9OI7lIHdGVkI0W/SiXGXlVY
-	 8Ye4MdEO3tCq/Rskx6KQb/6n0TYuz5hgFRUTqcPq5lMDRZ4e68xdlI+OtljF8BrAhW
-	 uU3G/XKfd2W+GAEpIvJOH8/VjiPRvy3xkmXqZ6ZJN16Jj5szHjOqM4WehX4qqAwgUo
-	 lK6yFgKRk4vAkGPgD4jvralrfWKvR87DyZ2a62ltCqD/q4ZXANAZfTOlh9cdeyaotn
-	 gMKzIMKEyAbzGgl9wgZHgDfKWgZnsBm8mLkobnvwBY2pLtH90c8M7zCL36b5O9cGzO
-	 9MQH5Xf1EoKww==
-Date: Thu, 7 Mar 2024 20:52:30 +0100
+	b=bp/jepb4PDvsNrjk56N3ijuTUlescXOvoEL1HEYCfWnGtSJ5C2lciuKIk9hA3sNLN
+	 bauPP3oAanTRILudB5QaMYsIwhDnQeJgMVYm1WQbwu2/T5yDhsjpnulrhAzJSyM0Um
+	 JSMNL1vDNLWZdY0h9jv3RuugiiMLH4eRc3RAY9fkP3uivAoUWyMJvQmEjckoo2KjtU
+	 9KqWTy+EFjPHoe8Cvm1gfS4PHZmArqpr84IwIWhs5aFsxn22g3DjPefBB8NHLkt1XW
+	 JZgtpaxHi5t367t6OiIreMnBe+pN+axheeVGhig2M9HfvhCTf3kvKSM1WGUAgl46qs
+	 N5f5iB1+2AGww==
+Date: Thu, 7 Mar 2024 20:52:53 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
@@ -75,11 +75,11 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
 	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
 	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v9 01/10] PCI: dwc: ep: Remove deinit() callback from
- struct dw_pcie_ep_ops
-Message-ID: <ZeoaOn2dekvBD8ae@ryzen>
+Subject: Re: [PATCH v9 02/10] PCI: dwc: ep: Rename dw_pcie_ep_exit() to
+ dw_pcie_ep_deinit()
+Message-ID: <ZeobFZ0gXsmQPFyV@ryzen>
 References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-1-29d433d99cda@linaro.org>
+ <20240304-pci-dbi-rework-v9-2-29d433d99cda@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,19 +88,13 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240304-pci-dbi-rework-v9-1-29d433d99cda@linaro.org>
+In-Reply-To: <20240304-pci-dbi-rework-v9-2-29d433d99cda@linaro.org>
 
-On Mon, Mar 04, 2024 at 02:52:13PM +0530, Manivannan Sadhasivam wrote:
-> deinit() callback was solely introduced for the pcie-rcar-gen4 driver where
-> it is used to do platform specific resource deallocation. And this callback
-> is called right at the end of the dw_pcie_ep_exit() API. So it doesn't
-> matter whether it is called within or outside of dw_pcie_ep_exit() API.
-> 
-> So let's remove this callback and directly call rcar_gen4_pcie_ep_deinit()
-> in pcie-rcar-gen4 driver to do resource deallocation after the completion
-> of dw_pcie_ep_exit() API in rcar_gen4_remove_dw_pcie_ep().
-> 
-> This simplifies the DWC layer.
+On Mon, Mar 04, 2024 at 02:52:14PM +0530, Manivannan Sadhasivam wrote:
+> dw_pcie_ep_exit() API is undoing what the dw_pcie_ep_init() API has done
+> already (at least partly). But the API name dw_pcie_ep_exit() is not quite
+> reflecting that. So let's rename it to dw_pcie_ep_deinit() to make the
+> purpose of this API clear. This also aligns with the DWC host driver.
 > 
 > Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
