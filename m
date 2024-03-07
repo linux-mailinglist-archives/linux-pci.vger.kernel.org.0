@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4620-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4621-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A28C287588A
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 21:37:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A67E287590B
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 22:09:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24F461F24BE9
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 20:37:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5D7651F250D5
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Mar 2024 21:09:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 351B464CDC;
-	Thu,  7 Mar 2024 20:37:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C621A13A27E;
+	Thu,  7 Mar 2024 21:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZH712JAe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uphpTuhl"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64281E865;
-	Thu,  7 Mar 2024 20:37:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D7D12BE9A;
+	Thu,  7 Mar 2024 21:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709843828; cv=none; b=eyoKX1RcufEMiP/EljlETKGKeTbdVLuPWoyjgX9r48oXduE+3x5K/BvXg/ZcEMeNRS901Ma/PH/ZQErWZckc9n8fcLeH+1HhFaEuhCglVbzTK9ckhmlF/S/Fjk2AijpVemfzaOLoNlIrqt4FJVV6jwEMfpDmmsaPvias7GMUZeA=
+	t=1709845758; cv=none; b=O28tHCZMVKxiyqqtFYUBcbYRWrg2YnWkylHodQ+GxreG+7PSy2H+LstzsETW0URSG9CEw2BdPj+33fmGL/XZOl3EI0OX4iQzNNbK3wvkMZxcwO1VhOxKHPPhDMxROHAepl0JoIGCVbJLIiJ+71wvByx3yfBytzHITAd0es1B92Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709843828; c=relaxed/simple;
-	bh=eGOAWjsud1Ck55pN1j35rMAJfavIagxkoPDo64qggSI=;
+	s=arc-20240116; t=1709845758; c=relaxed/simple;
+	bh=x7qhL0+safPdNgJNsRsxVMft7a6MYJn2kbDJJU6030c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QcEBRoMSBiWf0gKScrvYEzBWXy1g9JU9TdzzWHPaGDqIVEWX00FAq+jvYfZ90AXd5LyWGCsKb2bpF8lL4D3Y8U4MjDla4HoI5yY/xj2MNTIAExH+iQwcoW03gro7Bz4pp8Ucmjn+gKmFex1EC26QTZXjB+2owg8U1VJ0YFIhY9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZH712JAe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3FCEC43399;
-	Thu,  7 Mar 2024 20:36:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=pZ1o9mw0qYUio4D1El1vzaqzLAZBBrwkgSn8Hcrsu7znwAmTiB4lznAsiBZCYa2aDbkGJ+u+1wbBni9huYMzRHdBnXxf5KoMI0n271fyanuZLj+Mv84I8SbWyHBYl1pbjhYb2v8lFzEXgEYPYf31vbAc5MBmui7IIVIgA0ySLIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uphpTuhl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 125A9C433F1;
+	Thu,  7 Mar 2024 21:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709843827;
-	bh=eGOAWjsud1Ck55pN1j35rMAJfavIagxkoPDo64qggSI=;
+	s=k20201202; t=1709845757;
+	bh=x7qhL0+safPdNgJNsRsxVMft7a6MYJn2kbDJJU6030c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZH712JAesiA+VYRacjgjemvYuwNC+u2uBeBcbpeuc4RDzFUcSpwBReDql9vSCIg6d
-	 F93jh07hklNqj8HKW/f5tnNUFOiEOiJ/tjtfy9Tc/Jrw1hNHT6lF/+Qz8pkj9yoQ8y
-	 +VtpiY/Yqxlrgz22AK+AXoXf8eI8bexciwarO3P1BFhzEOdWvA7fQ6eek7GRC9soYk
-	 oL8S1zToSuXAd//ke4hVGX1dVjhSu+c6TgIhTuFy1FI9xpJGJ+iKB6Ljmnc+QfevSC
-	 pRKNjOCUkQmB51EtN7aQQYHMVP7F4yYBqYg+jVI86Rb2bJrAmukaFXBeAhGileYxkF
-	 Jx7SWbo+p/8Ow==
-Date: Thu, 7 Mar 2024 21:36:56 +0100
+	b=uphpTuhlD5OPOMRvy9lge5bafam+otT0YytPtZQK/FyriaS55FiTX6G7Nn2qGjvdc
+	 IIWvg5Oo3xznyGBP/6Nk1rgf7lPR0xR7CwV8v3JZq+seM6NIq4XCFwwu8rShA4KbsY
+	 97+Ieb66fBKAEoPbnmBNuY7+LL61FOjf68d1wPnYX8ZsxCxRaMrr4F95CiOfasMtte
+	 JtP0yamORfamOObBNlRnoza4jXckh3dQCjYDHU6zZTOql6um/J7Dgx+UhkxqvT5T1V
+	 IvDgDi2O3QnFnLrLLLSx4azOsqi+b/S7O/ntH6YDYLmskuJPnekIAkbbrWNGLoKD/u
+	 1loGhWdx7fEEw==
+Date: Thu, 7 Mar 2024 22:09:06 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
@@ -74,12 +74,11 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
 	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com
-Subject: Re: [PATCH v9 06/10] PCI: dwc: ep: Call dw_pcie_ep_init_registers()
- API directly from all glue drivers
-Message-ID: <ZeolaEIRYmKZjnvT@ryzen>
+	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v9 07/10] PCI: dwc: ep: Remove "core_init_notifier" flag
+Message-ID: <Zeos8kVxgchH9veF@ryzen>
 References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-6-29d433d99cda@linaro.org>
+ <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,95 +87,55 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240304-pci-dbi-rework-v9-6-29d433d99cda@linaro.org>
+In-Reply-To: <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
 
-On Mon, Mar 04, 2024 at 02:52:18PM +0530, Manivannan Sadhasivam wrote:
-> Currently, dw_pcie_ep_init_registers() API is directly called by the glue
-> drivers requiring active refclk from host. But for the other drivers, it is
-> getting called implicitly by dw_pcie_ep_init(). This is due to the fact
-> that this API initializes DWC EP specific registers and that requires an
-> active refclk (either from host or generated locally by endpoint itsef).
+On Mon, Mar 04, 2024 at 02:52:19PM +0530, Manivannan Sadhasivam wrote:
+> "core_init_notifier" flag is set by the glue drivers requiring refclk from
+> the host to complete the DWC core initialization. Also, those drivers will
+> send a notification to the EPF drivers once the initialization is fully
+> completed using the pci_epc_init_notify() API. Only then, the EPF drivers
+> will start functioning.
 > 
-> But, this causes a discrepancy among the glue drivers. So to avoid this
-> confusion, let's call this API directly from all glue drivers irrespective
-> of refclk dependency. Only difference here is that the drivers requiring
-> refclk from host will call this API only after the refclk is received and
-> other drivers without refclk dependency will call this API right after
-> dw_pcie_ep_init().
+> For the rest of the drivers generating refclk locally, EPF drivers will
+> start functioning post binding with them. EPF drivers rely on the
+> 'core_init_notifier' flag to differentiate between the drivers.
+> Unfortunately, this creates two different flows for the EPF drivers.
 > 
-> With this change, the check for 'core_init_notifier' flag can now be
-> dropped from dw_pcie_ep_init() API. This will also allow us to remove the
-> 'core_init_notifier' flag completely in the later commits.
+> So to avoid that, let's get rid of the "core_init_notifier" flag and follow
+> a single initialization flow for the EPF drivers. This is done by calling
+> the dw_pcie_ep_init_notify() from all glue drivers after the completion of
+> dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
+> send the notification to the EPF drivers once the initialization is fully
+> completed.
 > 
+> Only difference here is that, the drivers requiring refclk from host will
+> send the notification once refclk is received, while others will send it
+> during probe time itself.
+> 
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/pci/controller/dwc/pci-dra7xx.c           |  7 +++++++
->  drivers/pci/controller/dwc/pci-imx6.c             |  8 ++++++++
->  drivers/pci/controller/dwc/pci-keystone.c         |  9 +++++++++
->  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  7 +++++++
->  drivers/pci/controller/dwc/pcie-artpec6.c         | 13 ++++++++++++-
->  drivers/pci/controller/dwc/pcie-designware-ep.c   | 22 ----------------------
->  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 +++++++++
->  drivers/pci/controller/dwc/pcie-keembay.c         | 16 +++++++++++++++-
->  drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 12 +++++++++++-
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c     | 13 ++++++++++++-
->  10 files changed, 90 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 0e406677060d..395042b29ffc 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -467,6 +467,13 @@ static int dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
->  		return ret;
->  	}
->  
-> +	ret = dw_pcie_ep_init_registers(ep);
-> +	if (ret) {
 
-Here you are using if (ret) to error check the return from
-dw_pcie_ep_init_registers().
+You have removed the .core_init_notifier from EPC drivers,
+but the callback in EPF drivers is still called .core_init.
+
+Yes, this was a confusing name even before this patch, but
+after this patch, it is probably even worse :)
+
+The callback should be named from the perspective of EPF drivers IMO.
+.core_init sounds like a EPF driver should initialize the core.
+(But that is of course done by the EPC driver.)
+
+The .link_up() callback name is better, the EPF driver is informed
+that the link is up.
+
+Perhaps we could rename .core_init to .core_up ?
+
+It tells the EPF drivers that the core is now up.
+(And the EPF driver can configure the BARs.)
 
 
-> index c0c62533a3f1..8392894ed286 100644
-> --- a/drivers/pci/controller/dwc/pci-keystone.c
-> +++ b/drivers/pci/controller/dwc/pci-keystone.c
-> @@ -1286,6 +1286,13 @@ static int ks_pcie_probe(struct platform_device *pdev)
->  		ret = dw_pcie_ep_init(&pci->ep);
->  		if (ret < 0)
->  			goto err_get_sync;
-> +
-> +		ret = dw_pcie_ep_init_registers(&pci->ep);
-> +		if (ret < 0) {
-
-Here you are using if (ret < 0) to error check the return from
-dw_pcie_ep_init_registers(). Please be consistent.
-
-
-> diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-> index 9ed0a9ba7619..0edd9ab3f139 100644
-> --- a/drivers/pci/controller/dwc/pcie-artpec6.c
-> +++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-> @@ -441,7 +441,18 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
->  
->  		pci->ep.ops = &pcie_ep_ops;
->  
-> -		return dw_pcie_ep_init(&pci->ep);
-> +		ret = dw_pcie_ep_init(&pci->ep);
-> +		if (ret < 0)
-
-Here you are using if (ret < 0) to error check the return from
-dw_pcie_ep_init().
-
-
-> index 778588b4be70..ca9b22e654cd 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-> @@ -145,6 +145,15 @@ static int dw_plat_pcie_probe(struct platform_device *pdev)
->  
->  		pci->ep.ops = &pcie_ep_ops;
->  		ret = dw_pcie_ep_init(&pci->ep);
-> +		if (ret)
-
-Here you are using if (ret) to error check the return from
-dw_pcie_ep_init(). Please be consistent.
+Considering that you are not changing the name of the callback,
+and that it was already confusing before this patch:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
