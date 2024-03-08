@@ -1,106 +1,158 @@
-Return-Path: <linux-pci+bounces-4669-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4670-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19EE7876793
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 16:47:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC4888767AA
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 16:49:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BD261C21798
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 15:47:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 662112812BC
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 15:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68BD321104;
-	Fri,  8 Mar 2024 15:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7FSbwUG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF601EF1E;
+	Fri,  8 Mar 2024 15:49:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-of-o55.zoho.com (sender4-of-o55.zoho.com [136.143.188.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BDC24B21;
-	Fri,  8 Mar 2024 15:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709912826; cv=none; b=HV+TUhPIbJ9F+8ikYoSWtKMGqyQIEfUYR4UM/Ql6B1sKgf9qECofyk7EWnxIMT2hmpzD8BSp3bmNBc10nvHDJKrCU0JUJR4seSexqw99rgYEhnigNIPhobZZnodcyjnX45sPalR8h63ML6P5w664itaQaqK3Ssutgxerfwwtv5A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709912826; c=relaxed/simple;
-	bh=l2K9wiOr2tNH/BYguc0CqSDjwSjakfCUr6j37VreWNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpjOtJajWLA8nEGhiTumNQ5dosMlt4C32lPPB5Cq89XkJT1iOeYKIGKnndz+i38D0YrgYbRQ56N43Gt8Ycg0QJEViyv3ugjav+7wOzytDDIUawNJZfQj42caOYHAxaMl+CtEsmH0roVrgTP/OtSBPjB41gITiiQa7t3+K4SS/b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7FSbwUG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4EFC433C7;
-	Fri,  8 Mar 2024 15:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709912825;
-	bh=l2K9wiOr2tNH/BYguc0CqSDjwSjakfCUr6j37VreWNA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r7FSbwUGBtZ4Juut7DNOO3CBIzWhL+/PLRWLQ6rk+P++2zZP7zthPzZ6RLT74bPxe
-	 qYZeCzLguL88XTxQhE0rafX8WtIc8MxItQf4AOHynj11lZIy3hch1k7dFefhLYuMxW
-	 DYltJYLfi1nPWBulpbw5fWeSq4eHdjd6e9+mYZIhnsSOwS1CIb3mia7948yqXYaee7
-	 MLTSRUMdigKpxxh6BLWrr9sBfV1fxTzx5g9YjxTBYfj+IRh9pUEb7VPn9azzb0jt31
-	 bXQqWx694LGMT4ltZ7bTKhC5Nv/0IvqYbnaibA7ZZzFXEYfnNnE3JkGldxxsVBHjk4
-	 yl/YjKbN+s9Rw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1ricRF-000000004GK-1JII;
-	Fri, 08 Mar 2024 16:47:13 +0100
-Date: Fri, 8 Mar 2024 16:47:13 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] arm64: dts: qcom: sc8280xp: PCIe fixes and GICv3
- ITS enable
-Message-ID: <ZeszAWpz8KtuPI2a@hovoldconsulting.com>
-References: <20240306095651.4551-1-johan+linaro@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A89249EE;
+	Fri,  8 Mar 2024 15:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1709912991; cv=pass; b=dQBzGcuvQotOxyXTpw19JJuj9oZeKrQaMIZRKMZTmFBEQTRySwUwFwaV7mEWhDN7Mpm9p6ZRM/zGknNZ2INFJaDf7c/1H7QR58oeuh/sKNiaOTdI9JbYnreS6VGZNaRePMhYbsG5EImjH3cNe0nu23k2MiGTHUeDMqdvdD7tv2M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1709912991; c=relaxed/simple;
+	bh=A6rOa92ElDEwzMdoZFfPn9imL/LVoNUf7ePmW7mKcIo=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=AdBdErds8bs1TkYVxPj7UEOb7Oa8hGWcH7+zaZ2C49HKDQnaG84SqdZpAgjswuEIwYL0vDzEYBF7za9Z5df7ZZFGN3pO1gAZqJV3CJ3TdkwJeB87A0o4e48pnqfeVR9wif1mIUwdC56Gs+jzjQ4cZ+ryQvDJIilHgH7it7aIEew=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5challer.de; spf=none smtp.mailfrom=5challer.de; arc=pass smtp.client-ip=136.143.188.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=5challer.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=5challer.de
+ARC-Seal: i=1; a=rsa-sha256; t=1709912972; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=K9OrE1BAliFUVhEZbVOmYk+h2+KgNTPZwTxbZlwCdgIbBvV9hoCLEPTGzj7D/aSEkvrvEiCDEz/pm6wUjdfrVhWVZ+7h8aMbypII8Y+JkjPL3BHz5qgIhxg5erbYC/O7PAMKYzaieATR37YCDWo70axhjtsK/8Fjp7XWdLUTTxs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1709912972; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5YNPXuGQzikjhDPAoMwfNKrszjWl/dlfwI8/cu9vNBc=; 
+	b=OGxVRBZrMWNPzpvDS+2gUfvaj3x3PuTBeJKP+Z8QLGueJlaD2CUdOHaUCIPqmM9qeQqqeOyhq+KjLhq1DRzB3CGDHo/BefmtKaA6cLBXUYoZUGZvNZgKDGbIjCRv5gajJUdQEFDaXRU/AVUiTbClPv7m/S5qJt4gOWFJ8wjDj/c=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	spf=pass  smtp.mailfrom=michael@5challer.de;
+	dmarc=pass header.from=<michael@5challer.de>
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1709912969795903.1225612775684; Fri, 8 Mar 2024 07:49:29 -0800 (PST)
+Date: Fri, 08 Mar 2024 16:49:29 +0100
+From: michael <michael@5challer.de>
+To: "Kai-Heng Feng" <kai.heng.feng@canonical.com>
+Cc: "Bjorn Helgaas" <helgaas@kernel.org>, "bhelgaas" <bhelgaas@google.com>,
+	"linux-pci" <linux-pci@vger.kernel.org>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"regressions" <regressions@lists.linux.dev>,
+	"macro" <macro@orcam.me.uk>, "ajayagarwal" <ajayagarwal@google.com>,
+	"sathyanarayanan.kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"gregkh" <gregkh@linuxfoundation.org>,
+	"hkallweit1" <hkallweit1@gmail.com>,
+	"michael.a.bottini" <michael.a.bottini@linux.intel.com>,
+	"johan+linaro" <johan+linaro@kernel.org>
+Message-ID: <18e1ebf2b92.bedd9a071161871.3718292789549008231@5challer.de>
+In-Reply-To: <CAAd53p6GEPJe3rNNrUAah5PdLXspKh5Gz9tFstR6SFCREs+9=Q@mail.gmail.com>
+References: <954f0b86-dd9e-4d84-8d67-fba7e80bc94e@5challer.de>
+ <20240105155100.GA1861423@bhelgaas> <CAAd53p5Eg4J9bRtAHY+JZ11cy1D0TnKmAaLfzcRJzw15VRBxXw@mail.gmail.com>
+ <9f0f9de4-2d34-4ff3-a901-c3e4b48e4ab0@5challer.de> <CAAd53p6GEPJe3rNNrUAah5PdLXspKh5Gz9tFstR6SFCREs+9=Q@mail.gmail.com>
+Subject: Re: [Regression] [PCI/ASPM] [ASUS PN51] Reboot on resume attempt
+ (bisect done; commit found)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306095651.4551-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 
-On Wed, Mar 06, 2024 at 10:56:46AM +0100, Johan Hovold wrote:
-> This series addresses a few problems with the sc8280xp PCIe
-> implementation.
+Hi Kai-Heng,
 
-> Qualcomm has now confirmed that this is an issue on sc8280xp and its
-> derivate platforms. Specifically, the PHY configuration used on these
-> platforms is not correctly tuned for L0s and there is currently no
-> updated configuration available.
-> 
-> As we are now at 6.8-rc7, I've rebased this series on the Qualcomm PCIe
-> binding rework in linux-next so that the whole series can be merged for
-> 6.9 (the patch to disable l0s and the devicetree fix are both marked for
-> stable backport anyway).
-> 
-> The DT bindings and PCI patch are expected to go through the PCI tree,
-> while Bjorn A takes the devicetree updates through the Qualcomm tree.
+ ---- On Thu, 07 Mar 2024 07:51:05 +0100  Kai-Heng Feng  wrote ---=20
+ > Hi Michael,
+ >=20
+ > Sorry for the belated response.
+ >=20
+No worries.
 
-> Johan Hovold (5):
->   dt-bindings: PCI: qcom: Allow 'required-opps'
->   dt-bindings: PCI: qcom: Do not require 'msi-map-mask'
->   PCI: qcom: Disable ASPM L0s for sc8280xp, sa8540p and sa8295p
+ > On Wed, Jan 10, 2024 at 8:40=E2=80=AFPM Michael Schaller michael@5challe=
+r.de> wrote:
+ > >
+ > >
+ > > On 10.01.24 04:43, Kai-Heng Feng wrote:
+ > > > On Fri, Jan 5, 2024 at 11:51=E2=80=AFPM Bjorn Helgaas helgaas@kernel=
+.org> wrote:
+ > > >>
+ > > >> On Fri, Jan 05, 2024 at 12:18:32PM +0100, Michael Schaller wrote:
+ > > >>> On 05.01.24 04:25, Kai-Heng Feng wrote:
+ > > >>>> Just wondering, does `echo 0 > /sys/power/pm_asysnc` help?
+ > > >>>
+ > > >>> Yes, `echo 0 | sudo tee /sys/power/pm_async` does indeed also resu=
+lt in a
+ > > >>> working resume. I've tested this on kernel 6.6.9 (which still has =
+commit
+ > > >>> 08d0cc5f3426). I've also attached the relevant dmesg output of the
+ > > >>> suspend/resume cycle in case this helps.
+ > > >>
+ > > >> Thanks for testing that!
+ > > >>
+ > > >>> Furthermore does this mean that commit 08d0cc5f3426 isn't at fault=
+ but
+ > > >>> rather that we are dealing with a timing issue?
+ > > >>
+ > > >> PCI does have a few software timing requirements, mostly related to
+ > > >> reset and power state (D0/D3cold).  ASPM has some timing parameters=
+,
+ > > >> too, but I think they're all requirements on the hardware, not on
+ > > >> software.
+ > > >>
+ > > >> Adding an arbitrary delay anywhere shouldn't break anything, and ot=
+her
+ > > >> than those few required situations, it shouldn't fix anything eithe=
+r.
+ > > >
+ > > > At least it means 8d0cc5f3426 isn't the culprit?
+ > > >
+ > > > Michael, does the issue happen when iwlwifi module is not loaded? It
+ > > > can be related to iwlwifi firmware.
+ > > >
+ > > > Kai-Heng
+ > > >
+ > > The issue still happens if the iwlwifi module has been blacklisted and
+ > > after a reboot. This was again with vanilla kernel 6.6.9 and I've
+ > > confirmed via dmesg that iwlwifi wasn't loaded.
+ >=20
+ > Can you please give latest mainline kernel a try? With commit
+ > f93e71aea6c60ebff8adbd8941e678302d377869 (Revert "PCI/ASPM: Remove
+ > pcie_aspm_pm_state_change()") reverted.
+ >=20
+ > Also do you have efi-pstore enabled? Is there anything logged in
+ > /var/lib/systemd/pstore (assuming systemd is used)?
+ >=20
+I'm happy to test once I'm out of the hospital (long COVID). I should be ba=
+ck home in 5 weeks.
 
-Bjorn H, could you pick up these three for 6.9-rc1?
+Michael
 
->   arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
->   arm64: dts: qcom: sc8280xp: enable GICv3 ITS for PCIe
-
-That way there's a small chance that Bjorn A can be able to squeeze in
-the patch to enable ITS in 6.9 too (e.g. if there's an rc8).
-
-Johan
+ > Kai-Heng
+ >=20
+ > >
+ > > I've also checked if there is a newer firmware but Ubuntu 23.10 is
+ > > already using the newest firmware available from
+ > > https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmwar=
+e.git/log/iwlwifi-8265-36.ucode
+ > > (version 36.ca7b901d.0 according to dmesg).
+ > >
+ > > Michael
+ > >
+ > > >>
+ > > >> Bjorn
+ >=20
 
