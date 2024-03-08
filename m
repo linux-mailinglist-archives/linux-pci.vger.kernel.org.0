@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-4651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64638876138
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 10:46:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17293876141
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 10:50:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC8F5B21555
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 09:46:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2D552829B1
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 09:50:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F6D537EF;
-	Fri,  8 Mar 2024 09:46:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 624D5535BA;
+	Fri,  8 Mar 2024 09:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1+FQYG1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HDUwHABd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24DD225CF
-	for <linux-pci@vger.kernel.org>; Fri,  8 Mar 2024 09:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F280153385
+	for <linux-pci@vger.kernel.org>; Fri,  8 Mar 2024 09:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709891183; cv=none; b=I52sVMpsPTc57ONJ/+5mgzXHakbD0cLRxOV9Q358HWeP8FCOHiFr3sITC0jdYmSiFukMdgwAlDsWR5tPSJn6Qm0L5fGi/8AfC/bfGELUq9ko5rY3ULRdwvOdSilq11TeEJTU573JXvRQPB/aHKFA/1htjEKWQa73yRePVv9Q/Sg=
+	t=1709891408; cv=none; b=Cp8hl9vZ+eO27oFNZlColEc7mY00trB6K5U/gFoEp2lRRuE77Hhq01I6w7ojVkAbQ+kG2NY0gZbBcwSORyATT6aBUthZfe3Nxsg/YBCyxuWhbxNZC1H2Dn0Kgj+zPc3MwohWNKtAUx46rxsx2z58xb0RZU3SUN1GJtKEIRpk9II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709891183; c=relaxed/simple;
-	bh=Clqd8haJQgsPibeWAC6UKITH48izdvnBqHGXQt+95+w=;
+	s=arc-20240116; t=1709891408; c=relaxed/simple;
+	bh=N+FnD75U9P5fcQ38HlMO4pcD/DzIJlqTaauzTbsehwI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UZmVfB3kS/xz/MtFWeZQNtQSc8ESjCNhysAjV0DGRy/L+S8Pig+OKiO3fTou1FNSUL8RSWxAgtmglAyjHrZ+LGhFxJ5Mb50fjK3iplPAFsndMaAMp3kqfgDC3CifgjFBev0Gn5laV8s0skbxVV4Odj8zAkE3wi1JnnKnf172OIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K1+FQYG1; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=B22+f5Ujk4Um9FhYSDaZM28QN19w2Kb230RrWdNnlyAiyaOGDgmidNXG0D0PuAHbyaYQVxN0qZfU5SEXaZ/9ziGszNKE9loN/b+VZiDu5GaO5PH05jruLwVNm61p1yBpC4NxEa+vbN9kYm9vwxv2fRcdpNrHIEq8ghFPXy0jCKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HDUwHABd; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e57a3bf411so451137b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 08 Mar 2024 01:46:20 -0800 (PST)
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so1532553a12.1
+        for <linux-pci@vger.kernel.org>; Fri, 08 Mar 2024 01:50:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709891180; x=1710495980; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709891405; x=1710496205; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=kb10RNHzo2wWSlL+Eq4xCbaoA0z2rfpZzBo11/jnm6s=;
-        b=K1+FQYG104NukSoFzZrIyWD9zmVz6yHjKl9boXxFMXquC1P8UJc1PpCuXVmeBAhJ1j
-         jD4X8of89aJwqHpwM1+M4XrCMKfG3y95AvAr0ffctQQJpJPHtepfWLq7/55jZghMZdoX
-         KeFmyCT4SThmdKGuZLhkNqqbzp7MCCwkcx4dg6R47D69yHBnmsZqnqnUtXWPl65/S0cK
-         Y3wGOcH4k7mAIwCw7FozKJKwNIr9eznITx4McSR78HQtqsUey9kLfZoUnUt9MJzPIOs2
-         vrwEBf8s6L9K9uCCgD7YwfB+JiYJNJoP17EGIKgwOIzM/w1dboc2bq1hChjlOgqIijHq
-         EB3Q==
+        bh=+dKXhomeB6Ij6pEZAsrhigScw7Imo0KcKY8tqU3ajKw=;
+        b=HDUwHABdT92cmTAErIymd71gIzFwxlngdnjYnnJDu5wUhDIg1nJK4RHjEo4BS0jKuB
+         G99mFpPQfLPiXRRmEYZJDp2kreUmiWDm9R94GfowCB8JSfRVXY/vnKddRLtk8N67lqxu
+         fePNWztxa8g5MNRwH2cxR97zdVlikMFyNII48E6VE6zZr0xkdfANfTA5y+GPT+QZVVDr
+         ScS4ME+JQyD1CYdFB31P8uecrdFfh/L4t2a6g+sw/vUJxDXIYuvM3OUXmE1K47WLZvY6
+         1ibvW+/j9gbUHU4aPBtNNaTmQxXVENs4Mt4GwBC1zu5fQyAMM1uYwDlX/8GvgnNIU2f4
+         Gq2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709891180; x=1710495980;
+        d=1e100.net; s=20230601; t=1709891405; x=1710496205;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kb10RNHzo2wWSlL+Eq4xCbaoA0z2rfpZzBo11/jnm6s=;
-        b=P28v3zzGI2kQr8UwesqRhT4hwWHWU+FuELnIm8xwS88CY9igolEvqc9QNX59RKXj6G
-         ah6T7H0Dx9plNwOcQ+xYqjVApUCWmHDCikSJwIi7u3yB1M7PG1ukvDct3PQdNngzBj9/
-         5CNPptoW0WZF0RthOEsDcQ7C3McNao6aP0cUukgKxxVjmDIr/qNrAUM5YUS0QY8B2RHW
-         PNWRCBIS4Z2PGCNQ5+HWuFDc8VSi5+FhELZSWsICxQVCqSAGaQk1BcC1fGXkykVGUbu6
-         eCweol4xFX23uZsTfKNT12jW2gYvSFY6RKFYfSvofGM0wSAw8ECrFFhowwbY+N4hZHiC
-         SGqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZFCs98xKzgqd7SpHw5zec0ZXUZnGVyeiR/9ch4PsuXtSPaPFxbCPkQjXmCUmIA61pxSgDoX6r5UUqEe/5iOofWu8viqr3MYFA
-X-Gm-Message-State: AOJu0Yzl9PwU7ffZt5xcIQBHxQoMtUYduubiI/qXi9dR5Pm9ZmsNMVFw
-	N5wMYxM0sdPYCpkTcJKhohmWyJ2qO7s6M5KLheyAt4L9WpgHoMsVkJJSXOnnlg==
-X-Google-Smtp-Source: AGHT+IGXPjNBSO3LeLRdTU/J0WCodruRNnBcnx9KyvKHRlBNLyysXxdMvyc+ZcZRv6FpAgOfc5/pVw==
-X-Received: by 2002:a05:6a00:1301:b0:6e6:2dfd:602d with SMTP id j1-20020a056a00130100b006e62dfd602dmr15455121pfu.25.1709891180143;
-        Fri, 08 Mar 2024 01:46:20 -0800 (PST)
+        bh=+dKXhomeB6Ij6pEZAsrhigScw7Imo0KcKY8tqU3ajKw=;
+        b=RdoYpHKtqxpjcEm/X0m9jLnjwW58Wfg9uWe/nUD6u8IU1GhxMs8uDO/ObNJ6DyjiSO
+         1BxUA7tlWfrh15IMNvEl/dg1uO6ismKW54ktWwh1irlMenNsOtZ6u5E5NnoHCWibVG/k
+         6aWziz38muIdLbgN70ADcQ0iNRyQdRz99+UGEGrXjsnmOZK5q++DpCSfRd+0WQZFiZyL
+         8QmFzodIeL75Gjw6nXCHbzNYqiA21QwZHtFiJA1SmpZgtYuuLWHAmAuhVvszvsBkjmZD
+         pNpBWAGCrOIz9ZOGJ/Bn/H8cPmkd3aiLRP30yv2a/eGTzZnzoBMq588U8pKhm/tOX+R2
+         uJ+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUryZjx+VCAo4+Muwv/e7CPtBrTOg/nRI+HsjR4q8uGn8Wqu1yyUNTZlpi3NYTgcsAnhik7quz0/Wd7yEVJAOF31iYG1I6nziMt
+X-Gm-Message-State: AOJu0YzulzjFlFW0B4opjt4bw+jUUM6nDRi1S9z03KVb0hSpqHBz2oLW
+	KkSgkhA5KfKrZnSgWB79ZDOnf42ov8em3ye2g5jxIMdhqfHNB78icg1+sGbTCQ==
+X-Google-Smtp-Source: AGHT+IEMW10NsMpl6QbbrMpGgV+z8bvUPkiIHa5C3nopapJCs9aJNBuwrvqex+LlxA53iZxgm5hkkg==
+X-Received: by 2002:a05:6a20:160a:b0:1a1:4a45:c05f with SMTP id l10-20020a056a20160a00b001a14a45c05fmr12756809pzj.25.1709891405150;
+        Fri, 08 Mar 2024 01:50:05 -0800 (PST)
 Received: from thinkpad ([117.217.183.232])
-        by smtp.gmail.com with ESMTPSA id x7-20020a056a00188700b006e64fdc6e69sm717499pfh.147.2024.03.08.01.46.11
+        by smtp.gmail.com with ESMTPSA id w8-20020a17090aea0800b0029bb8ebdc23sm374544pjy.37.2024.03.08.01.49.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Mar 2024 01:46:19 -0800 (PST)
-Date: Fri, 8 Mar 2024 15:16:06 +0530
+        Fri, 08 Mar 2024 01:50:04 -0800 (PST)
+Date: Fri, 8 Mar 2024 15:19:47 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
@@ -101,14 +101,14 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
 	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
 	linux-arm-kernel@axis.com
-Subject: Re: [PATCH v9 08/10] PCI: dwc: ep: Add a generic
- dw_pcie_ep_linkdown() API to handle LINK_DOWN event
-Message-ID: <20240308094606.GG3789@thinkpad>
+Subject: Re: [PATCH v9 06/10] PCI: dwc: ep: Call dw_pcie_ep_init_registers()
+ API directly from all glue drivers
+Message-ID: <20240308094947.GH3789@thinkpad>
 References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-8-29d433d99cda@linaro.org>
- <Zeo0996FscpDSnjL@ryzen>
- <20240308054152.GD3789@thinkpad>
- <ZerSwdxAnN2mUxf0@ryzen>
+ <20240304-pci-dbi-rework-v9-6-29d433d99cda@linaro.org>
+ <ZeolaEIRYmKZjnvT@ryzen>
+ <20240308053624.GB3789@thinkpad>
+ <ZerUx9Vw_W997LZk@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -118,110 +118,112 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZerSwdxAnN2mUxf0@ryzen>
+In-Reply-To: <ZerUx9Vw_W997LZk@ryzen>
 
-On Fri, Mar 08, 2024 at 09:56:33AM +0100, Niklas Cassel wrote:
-> On Fri, Mar 08, 2024 at 11:11:52AM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 07, 2024 at 10:43:19PM +0100, Niklas Cassel wrote:
-> > > On Mon, Mar 04, 2024 at 02:52:20PM +0530, Manivannan Sadhasivam wrote:
-> > > > The PCIe link can go to LINK_DOWN state in one of the following scenarios:
+On Fri, Mar 08, 2024 at 10:05:11AM +0100, Niklas Cassel wrote:
+> On Fri, Mar 08, 2024 at 11:06:24AM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Mar 07, 2024 at 09:36:56PM +0100, Niklas Cassel wrote:
+> > > On Mon, Mar 04, 2024 at 02:52:18PM +0530, Manivannan Sadhasivam wrote:
+> > > > Currently, dw_pcie_ep_init_registers() API is directly called by the glue
+> > > > drivers requiring active refclk from host. But for the other drivers, it is
+> > > > getting called implicitly by dw_pcie_ep_init(). This is due to the fact
+> > > > that this API initializes DWC EP specific registers and that requires an
+> > > > active refclk (either from host or generated locally by endpoint itsef).
 > > > > 
-> > > > 1. Fundamental (PERST#)/hot/warm reset
-> > > > 2. Link transition from L2/L3 to L0
+> > > > But, this causes a discrepancy among the glue drivers. So to avoid this
+> > > > confusion, let's call this API directly from all glue drivers irrespective
+> > > > of refclk dependency. Only difference here is that the drivers requiring
+> > > > refclk from host will call this API only after the refclk is received and
+> > > > other drivers without refclk dependency will call this API right after
+> > > > dw_pcie_ep_init().
 > > > > 
-> > > > In those cases, LINK_DOWN causes some non-sticky DWC registers to loose the
-> > > > state (like REBAR, PTM_CAP etc...). So the drivers need to reinitialize
-> > > > them to function properly once the link comes back again.
-> > > > 
-> > > > This is not a problem for drivers supporting PERST# IRQ, since they can
-> > > > reinitialize the registers in the PERST# IRQ callback. But for the drivers
-> > > > not supporting PERST#, there is no way they can reinitialize the registers
-> > > > other than relying on LINK_DOWN IRQ received when the link goes down. So
-> > > > let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
-> > > > non-sticky registers and also notifies the EPF drivers about link going
-> > > > down.
-> > > > 
-> > > > This API can also be used by the drivers supporting PERST# to handle the
-> > > > scenario (2) mentioned above.
+> > > > With this change, the check for 'core_init_notifier' flag can now be
+> > > > dropped from dw_pcie_ep_init() API. This will also allow us to remove the
+> > > > 'core_init_notifier' flag completely in the later commits.
 > > > > 
 > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 111 ++++++++++++++----------
-> > > >  drivers/pci/controller/dwc/pcie-designware.h    |   5 ++
-> > > >  2 files changed, 72 insertions(+), 44 deletions(-)
+> > > >  drivers/pci/controller/dwc/pci-dra7xx.c           |  7 +++++++
+> > > >  drivers/pci/controller/dwc/pci-imx6.c             |  8 ++++++++
+> > > >  drivers/pci/controller/dwc/pci-keystone.c         |  9 +++++++++
+> > > >  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  7 +++++++
+> > > >  drivers/pci/controller/dwc/pcie-artpec6.c         | 13 ++++++++++++-
+> > > >  drivers/pci/controller/dwc/pcie-designware-ep.c   | 22 ----------------------
+> > > >  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 +++++++++
+> > > >  drivers/pci/controller/dwc/pcie-keembay.c         | 16 +++++++++++++++-
+> > > >  drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 12 +++++++++++-
+> > > >  drivers/pci/controller/dwc/pcie-uniphier-ep.c     | 13 ++++++++++++-
+> > > >  10 files changed, 90 insertions(+), 26 deletions(-)
 > > > > 
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > index 278bdc9b2269..fed4c2936c78 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > > @@ -14,14 +14,6 @@
-> > > >  #include <linux/pci-epc.h>
-> > > >  #include <linux/pci-epf.h>
+> > > > diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > > index 0e406677060d..395042b29ffc 100644
+> > > > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > > @@ -467,6 +467,13 @@ static int dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
+> > > >  		return ret;
+> > > >  	}
 > > > >  
-> > > > -void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > > > -{
-> > > > -	struct pci_epc *epc = ep->epc;
-> > > > -
-> > > > -	pci_epc_linkup(epc);
-> > > > -}
-> > > > -EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
-> > > > -
-> > > >  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> > > >  {
-> > > >  	struct pci_epc *epc = ep->epc;
-> > > > @@ -603,19 +595,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
-> > > > +{
-> > > > +	unsigned int offset, ptm_cap_base;
-> > > > +	unsigned int nbars;
-> > > > +	u32 reg, i;
-> > > > +
-> > > > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > > > +	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
-> > > > +
-> > > > +	dw_pcie_dbi_ro_wr_en(pci);
-> > > > +
-> > > > +	if (offset) {
-> > > > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> > > > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> > > > +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> > > > +
-> > > > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> > > > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> > > > +	ret = dw_pcie_ep_init_registers(ep);
+> > > > +	if (ret) {
 > > > 
-> > > If you look at PCI_REBAR_CAP, you will see that it is sticky,
-> > > but you have to actually read the databook to see that:
+> > > Here you are using if (ret) to error check the return from
+> > > dw_pcie_ep_init_registers().
 > > > 
-> > > "The RESBAR_CTRL_REG_BAR_SIZE field is automatically updated
-> > > when you write to RESBAR_CAP_REG_0_REG through the DBI."
 > > > 
-> > > So the reason why we need to write this register, even though
-> > > it is sticky, is to update the RESBAR_CTRL_REG_BAR_SIZE register,
-> > > which is not sticky :)
+> > > > index c0c62533a3f1..8392894ed286 100644
+> > > > --- a/drivers/pci/controller/dwc/pci-keystone.c
+> > > > +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> > > > @@ -1286,6 +1286,13 @@ static int ks_pcie_probe(struct platform_device *pdev)
+> > > >  		ret = dw_pcie_ep_init(&pci->ep);
+> > > >  		if (ret < 0)
+> > > >  			goto err_get_sync;
+> > > > +
+> > > > +		ret = dw_pcie_ep_init_registers(&pci->ep);
+> > > > +		if (ret < 0) {
 > > > 
-> > > (Perhaps we should add that as a comment?)
+> > > Here you are using if (ret < 0) to error check the return from
+> > > dw_pcie_ep_init_registers(). Please be consistent.
 > > > 
 > > 
-> > Yeah, makes sense.
+> > I maintained the consistency w.r.t individual drivers. Please check them
+> > individually.
+> > 
+> > If I maintain consistency w.r.t this patch, then the style will change within
+> > the drivers.
 > 
-> Note that I add a (unrelated) comment related to REBAR_CAP in this patch:
-> https://lore.kernel.org/linux-pci/20240307111520.3303774-1-cassel@kernel.org/T/#u
+> Personally, I disagree with that.
 > 
-> But once we move/add code to dw_pcie_ep_init_non_sticky_registers(), I think
-> that it might be a good "rule" to have a small comment for each write in
-> dw_pcie_ep_init_non_sticky_registers() which explains why the code should be
-> in dw_pcie_ep_init_non_sticky_registers() instead of dw_pcie_ep_init_registers(),
-> even if it just a small:
+> All glue drivers should use the same way of checking dw_pcie_ep_init(),
+> depending on the kdoc of dw_pcie_ep_init().
 > 
-> /* Field PCI_XXX_YYY.ZZZ is non-sticky */
-> writel_dbi(pci, offset + PCI_XXX_YYY, 0);
+> If the kdoc for dw_pcie_ep_init() says returns 0 on success,
+> then I think that it is strictly more correct to do:
+> 
+> ret = dw_pcie_ep_init()
+> if (ret) {
+> 	<error handling>
+> }
+> 
+> And if a glue driver doesn't look like that, then I think we should change
+> them. (Same reasoning for dw_pcie_ep_init_registers().)
+> 
+> 
+> If you read code that looks like:
+> ret = dw_pcie_ep_init()
+> if (ret < 0) {
+> 	<error handling>
+> }
+> 
+> then you assume that is is a function with a kdoc that says it can return 0
+> or a positive value on success, e.g. a function that returns an index in an
+> array.
 > 
 
-Why? The function name itself suggests that we are reinitializing non-sticky
-registers. So a comment for each write is overkill.
+But if you read the same function from the individual drivers, it could present
+a different opinion because the samantics is different than others.
+
+I'm not opposed to keeping the API semantics consistent, but we have to take
+account of the drivers style as well.
 
 - Mani
 
