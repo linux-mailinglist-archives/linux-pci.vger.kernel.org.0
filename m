@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-4647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4648-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85104876064
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 09:56:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 834C087609C
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 10:05:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 086081F24525
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 08:56:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7D201C21F39
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 09:05:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8076553376;
-	Fri,  8 Mar 2024 08:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E297D52F79;
+	Fri,  8 Mar 2024 09:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkUnjNkP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWkI4xtH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE1952F8F;
-	Fri,  8 Mar 2024 08:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DDC52F73;
+	Fri,  8 Mar 2024 09:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709888204; cv=none; b=lU+2X2InWneGYzKsWCO9E4lHLH7RRcVdOUen6wMujmui+NGQ8nooUbcbi04LYSXU/ni9skWMbjhrbW3qLpXpQ5poNVQAdKyoOxSG6Ct31wPJgZjw0GEthncvrxt00i/l6siGkceRRrGwUnB0u4zJfat+nVGpoJnda83uDzlrSWY=
+	t=1709888722; cv=none; b=KxXBXuB7RiBc4G0zoCHZkeG56zGIfO9Zaa860Rbf7O4irCJ9nWfD2zOlkLgrXS6XvCaillEPulLAQ6VMBymNUWVNImbQFuGRD2e3o28dS8dQlRx381lMcFzJWRrpOEOezWxUtsKPC022uy+w/0iYCmN4ucLqhKOAvDDFAEJrk1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709888204; c=relaxed/simple;
-	bh=J4bX5OiJi6RfDlV1yRXpVjfgTtrgKXI42Kvd2JlHSRU=;
+	s=arc-20240116; t=1709888722; c=relaxed/simple;
+	bh=bZE3lLlkuJ7PvYUKEQqczGXk3MirQvfYGrIhBNhV2+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jjg3L1rJ41QaSeMOukU87W3j9kAD+dz8/yZLzEhna38qj7zETEzKqFD2zSS0pm48pS8qcwjPFoJbw8VqnD4KBJlUeFEbpLXxtAV7tiG/IWLvgUQcV38qhBvhyCwz3G2auFTl1Ew1YdcLRDotUCj2+r5muPKWA6uAn1f6CLiYHU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkUnjNkP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECFDC433C7;
-	Fri,  8 Mar 2024 08:56:36 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUFCxXQO43SrTBEbxbYv52/D6XiRKIXvWJcNjDyvDLQey9kw3hP83L2mh1sGmxja2V4jVv/XHDtL5s91D6djtauA/XmzgJ6i9470AoHSBdKY/ANEtqkpbVuMceSPuzrUW9n92Z/emU2IkftCVOTVU7h7Fi53tqJZuh7Odu7I6TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWkI4xtH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6806C433B1;
+	Fri,  8 Mar 2024 09:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709888203;
-	bh=J4bX5OiJi6RfDlV1yRXpVjfgTtrgKXI42Kvd2JlHSRU=;
+	s=k20201202; t=1709888722;
+	bh=bZE3lLlkuJ7PvYUKEQqczGXk3MirQvfYGrIhBNhV2+0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nkUnjNkPxbAeCR9BEcZdVU5y2Y2jG5YUv4q2H1r7SjG3mghGjn+XC9AN7gH6FqaA7
-	 TIAOCsfx1ycqbxcnRTnfsSFxLWsXqAq3Mh2UWACRb9SmQujBgQM2XjEYLLIM7uzUUu
-	 NA8AsN5qkpkjhRG4JAJqADVEkImK0SGtiNgc6ymi8oV9FMfWltBvpVlEhm+O+tp3ys
-	 ZmyrIghXMDm8hYekfaLefzniEYfpgD/P1hj/8pRZCNrJA0GIUpI9EkgQVDl6Bkfe/s
-	 9h+0jBN8Jr0tx2Hk2jMbBMZWvENSJaqH8f6E2psy1h3zw84eC14i08yXHyJt4BysAL
-	 /2bp3BQQ30dEw==
-Date: Fri, 8 Mar 2024 09:56:33 +0100
+	b=MWkI4xtHh0q/rku6OXru8Y5F0uyRm3OagmGFpmUyIc2rYcZiMSPOiATfm4KcSiUkW
+	 IA/wiVN/IG7POxQlNaaz79LCo+ocHGUmXgYP6x6UEr/8a5tlpJo5msNuAtAERLfowz
+	 OydyRBOmxFQHHf4+urZfZqiXS8SHOFOoGxXqRrutLHKA76PqWRFuhnOKTTspI+kuci
+	 BQ28JitosqrxLAk3FoKKSH0YNWL74SOgWXdv6mXlpxLAHHLBY1yr79+O6wbAgLS4s4
+	 B4A1F/m+kSB0tUh7hiHLnsNWlFj4wbjuW+NQlJBLF+NrcRpNktQGGd61YzrHsCJ5xm
+	 y+8eyn0zKZ4sA==
+Date: Fri, 8 Mar 2024 10:05:11 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>,
@@ -75,13 +75,13 @@ Cc: Jingoo Han <jingoohan1@gmail.com>,
 	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
 	linux-arm-kernel@axis.com
-Subject: Re: [PATCH v9 08/10] PCI: dwc: ep: Add a generic
- dw_pcie_ep_linkdown() API to handle LINK_DOWN event
-Message-ID: <ZerSwdxAnN2mUxf0@ryzen>
+Subject: Re: [PATCH v9 06/10] PCI: dwc: ep: Call dw_pcie_ep_init_registers()
+ API directly from all glue drivers
+Message-ID: <ZerUx9Vw_W997LZk@ryzen>
 References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-8-29d433d99cda@linaro.org>
- <Zeo0996FscpDSnjL@ryzen>
- <20240308054152.GD3789@thinkpad>
+ <20240304-pci-dbi-rework-v9-6-29d433d99cda@linaro.org>
+ <ZeolaEIRYmKZjnvT@ryzen>
+ <20240308053624.GB3789@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,105 +90,104 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240308054152.GD3789@thinkpad>
+In-Reply-To: <20240308053624.GB3789@thinkpad>
 
-On Fri, Mar 08, 2024 at 11:11:52AM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Mar 07, 2024 at 10:43:19PM +0100, Niklas Cassel wrote:
-> > On Mon, Mar 04, 2024 at 02:52:20PM +0530, Manivannan Sadhasivam wrote:
-> > > The PCIe link can go to LINK_DOWN state in one of the following scenarios:
+On Fri, Mar 08, 2024 at 11:06:24AM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 07, 2024 at 09:36:56PM +0100, Niklas Cassel wrote:
+> > On Mon, Mar 04, 2024 at 02:52:18PM +0530, Manivannan Sadhasivam wrote:
+> > > Currently, dw_pcie_ep_init_registers() API is directly called by the glue
+> > > drivers requiring active refclk from host. But for the other drivers, it is
+> > > getting called implicitly by dw_pcie_ep_init(). This is due to the fact
+> > > that this API initializes DWC EP specific registers and that requires an
+> > > active refclk (either from host or generated locally by endpoint itsef).
 > > > 
-> > > 1. Fundamental (PERST#)/hot/warm reset
-> > > 2. Link transition from L2/L3 to L0
+> > > But, this causes a discrepancy among the glue drivers. So to avoid this
+> > > confusion, let's call this API directly from all glue drivers irrespective
+> > > of refclk dependency. Only difference here is that the drivers requiring
+> > > refclk from host will call this API only after the refclk is received and
+> > > other drivers without refclk dependency will call this API right after
+> > > dw_pcie_ep_init().
 > > > 
-> > > In those cases, LINK_DOWN causes some non-sticky DWC registers to loose the
-> > > state (like REBAR, PTM_CAP etc...). So the drivers need to reinitialize
-> > > them to function properly once the link comes back again.
-> > > 
-> > > This is not a problem for drivers supporting PERST# IRQ, since they can
-> > > reinitialize the registers in the PERST# IRQ callback. But for the drivers
-> > > not supporting PERST#, there is no way they can reinitialize the registers
-> > > other than relying on LINK_DOWN IRQ received when the link goes down. So
-> > > let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
-> > > non-sticky registers and also notifies the EPF drivers about link going
-> > > down.
-> > > 
-> > > This API can also be used by the drivers supporting PERST# to handle the
-> > > scenario (2) mentioned above.
+> > > With this change, the check for 'core_init_notifier' flag can now be
+> > > dropped from dw_pcie_ep_init() API. This will also allow us to remove the
+> > > 'core_init_notifier' flag completely in the later commits.
 > > > 
 > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-ep.c | 111 ++++++++++++++----------
-> > >  drivers/pci/controller/dwc/pcie-designware.h    |   5 ++
-> > >  2 files changed, 72 insertions(+), 44 deletions(-)
+> > >  drivers/pci/controller/dwc/pci-dra7xx.c           |  7 +++++++
+> > >  drivers/pci/controller/dwc/pci-imx6.c             |  8 ++++++++
+> > >  drivers/pci/controller/dwc/pci-keystone.c         |  9 +++++++++
+> > >  drivers/pci/controller/dwc/pci-layerscape-ep.c    |  7 +++++++
+> > >  drivers/pci/controller/dwc/pcie-artpec6.c         | 13 ++++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-designware-ep.c   | 22 ----------------------
+> > >  drivers/pci/controller/dwc/pcie-designware-plat.c |  9 +++++++++
+> > >  drivers/pci/controller/dwc/pcie-keembay.c         | 16 +++++++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-rcar-gen4.c       | 12 +++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-uniphier-ep.c     | 13 ++++++++++++-
+> > >  10 files changed, 90 insertions(+), 26 deletions(-)
 > > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > index 278bdc9b2269..fed4c2936c78 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > > @@ -14,14 +14,6 @@
-> > >  #include <linux/pci-epc.h>
-> > >  #include <linux/pci-epf.h>
+> > > diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > index 0e406677060d..395042b29ffc 100644
+> > > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> > > @@ -467,6 +467,13 @@ static int dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
+> > >  		return ret;
+> > >  	}
 > > >  
-> > > -void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> > > -{
-> > > -	struct pci_epc *epc = ep->epc;
-> > > -
-> > > -	pci_epc_linkup(epc);
-> > > -}
-> > > -EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
-> > > -
-> > >  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
-> > >  {
-> > >  	struct pci_epc *epc = ep->epc;
-> > > @@ -603,19 +595,56 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
-> > > +{
-> > > +	unsigned int offset, ptm_cap_base;
-> > > +	unsigned int nbars;
-> > > +	u32 reg, i;
-> > > +
-> > > +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> > > +	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
-> > > +
-> > > +	dw_pcie_dbi_ro_wr_en(pci);
-> > > +
-> > > +	if (offset) {
-> > > +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> > > +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> > > +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> > > +
-> > > +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> > > +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
+> > > +	ret = dw_pcie_ep_init_registers(ep);
+> > > +	if (ret) {
 > > 
-> > If you look at PCI_REBAR_CAP, you will see that it is sticky,
-> > but you have to actually read the databook to see that:
+> > Here you are using if (ret) to error check the return from
+> > dw_pcie_ep_init_registers().
 > > 
-> > "The RESBAR_CTRL_REG_BAR_SIZE field is automatically updated
-> > when you write to RESBAR_CAP_REG_0_REG through the DBI."
 > > 
-> > So the reason why we need to write this register, even though
-> > it is sticky, is to update the RESBAR_CTRL_REG_BAR_SIZE register,
-> > which is not sticky :)
+> > > index c0c62533a3f1..8392894ed286 100644
+> > > --- a/drivers/pci/controller/dwc/pci-keystone.c
+> > > +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> > > @@ -1286,6 +1286,13 @@ static int ks_pcie_probe(struct platform_device *pdev)
+> > >  		ret = dw_pcie_ep_init(&pci->ep);
+> > >  		if (ret < 0)
+> > >  			goto err_get_sync;
+> > > +
+> > > +		ret = dw_pcie_ep_init_registers(&pci->ep);
+> > > +		if (ret < 0) {
 > > 
-> > (Perhaps we should add that as a comment?)
+> > Here you are using if (ret < 0) to error check the return from
+> > dw_pcie_ep_init_registers(). Please be consistent.
 > > 
 > 
-> Yeah, makes sense.
+> I maintained the consistency w.r.t individual drivers. Please check them
+> individually.
+> 
+> If I maintain consistency w.r.t this patch, then the style will change within
+> the drivers.
 
-Note that I add a (unrelated) comment related to REBAR_CAP in this patch:
-https://lore.kernel.org/linux-pci/20240307111520.3303774-1-cassel@kernel.org/T/#u
+Personally, I disagree with that.
 
-But once we move/add code to dw_pcie_ep_init_non_sticky_registers(), I think
-that it might be a good "rule" to have a small comment for each write in
-dw_pcie_ep_init_non_sticky_registers() which explains why the code should be
-in dw_pcie_ep_init_non_sticky_registers() instead of dw_pcie_ep_init_registers(),
-even if it just a small:
+All glue drivers should use the same way of checking dw_pcie_ep_init(),
+depending on the kdoc of dw_pcie_ep_init().
 
-/* Field PCI_XXX_YYY.ZZZ is non-sticky */
-writel_dbi(pci, offset + PCI_XXX_YYY, 0);
+If the kdoc for dw_pcie_ep_init() says returns 0 on success,
+then I think that it is strictly more correct to do:
+
+ret = dw_pcie_ep_init()
+if (ret) {
+	<error handling>
+}
+
+And if a glue driver doesn't look like that, then I think we should change
+them. (Same reasoning for dw_pcie_ep_init_registers().)
+
+
+If you read code that looks like:
+ret = dw_pcie_ep_init()
+if (ret < 0) {
+	<error handling>
+}
+
+then you assume that is is a function with a kdoc that says it can return 0
+or a positive value on success, e.g. a function that returns an index in an
+array.
 
 
 Kind regards,
