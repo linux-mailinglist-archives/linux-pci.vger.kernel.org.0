@@ -1,238 +1,85 @@
-Return-Path: <linux-pci+bounces-4667-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4668-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84E88876621
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 15:17:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98E198766F6
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 16:04:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E95D5B21F45
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 14:16:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51E28285F67
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 15:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 791EC3FB8D;
-	Fri,  8 Mar 2024 14:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8AE8539C;
+	Fri,  8 Mar 2024 15:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aeGN84QZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WmdmwaPZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44490381C1
-	for <linux-pci@vger.kernel.org>; Fri,  8 Mar 2024 14:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFD44400;
+	Fri,  8 Mar 2024 15:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709907415; cv=none; b=f7/3LtC1WukNcg3xoSDWcV69c6oucFISez+NyICUGQbgAZcTC3jttMIzz/jkVGCnLVWrH9LnAozwPtEc12k4tm6IctSwVXYTn9rfc/H1TD93itEo7VTq5jprGxl/qhQ9alFtYyV0rjLSrkWIdEICwmbO+c6EqciYvzhAv57wqfI=
+	t=1709910259; cv=none; b=GBxdf8cpP17EkymPYKUrHzNJv3OktYU8ew+CGcgxKWhjhKM5ETcxNiFkQRd8yLEzvJzGMwLRmULk4nkTYKuZkAzllDWsPJByDyyS+su09XfEZBgXHeD4N2mb3932gxtIYMGEe19xqq88rWqQnuFJNPOeegNRjYrvOOBcSrKquX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709907415; c=relaxed/simple;
-	bh=P5R//DVoNU0Wwsx9OpwzxfOE6VJtfNNt5q/fNY+hwCo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=EM9ERmhJf14QtdZxU3oI4CO/b5nDEPB5V0IAV3EhtEfF+m8UNAyQxXnCBTx0vHv03s18CgYD3yaZUZYY8Kjd7vSOhYFO8GaFf3QzVP73ikJJpMl4/IG9vw8XGll8D5B5opdH1XL8I1h0WDK6eYde+mhOCS5EYCMzCEp0BaJvofc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aeGN84QZ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709907414; x=1741443414;
-  h=date:from:to:cc:subject:message-id;
-  bh=P5R//DVoNU0Wwsx9OpwzxfOE6VJtfNNt5q/fNY+hwCo=;
-  b=aeGN84QZ9NnYgKADwAI1A0+hokfPFY5/IDCOFXfx6FaNZgnX5lr1oru1
-   6xT11y63+ImGl59LAnu3WlBnegctW+OFG2SPSKYzPszqYVR6RhTnk/vPS
-   CZ7ngM0te/7zmAJdTn031xOwRQxE0nNebyDcfq0TxVOB7oNm5yzJOLUG+
-   wo/xfceAJv4ptD6SITOfutuSZl1mGkfIzFyY7AEJThRODF29gJh7GA6OM
-   GAuu5R1PkP8UmlDy0QcWgxt2xxwdBsUcDagM51rMq6U/3L26L6R6kIUN6
-   hMTKBu0p7qszwJx9N1mEIzM3yXBJ+hJPI8xCImsXycs6IftpVo20I7sbC
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="8446373"
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="8446373"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2024 06:16:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,109,1708416000"; 
-   d="scan'208";a="11022263"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 08 Mar 2024 06:16:51 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rib1l-0006Qp-1Q;
-	Fri, 08 Mar 2024 14:16:49 +0000
-Date: Fri, 08 Mar 2024 22:16:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:aer] BUILD SUCCESS
- 002bf2fbc00e5c4b95fb167287e2ae7d1973281e
-Message-ID: <202403082217.GfCqynzj-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1709910259; c=relaxed/simple;
+	bh=amIJ43frdp4LdXvpQ67ZzTeH+8PRRAvAbZgeIDVVaBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEYGaFiWES+O/P+NgCZA9qnUVbvLezwdn8+B6vfIfpMJ+Nu2hDQe+btc/4lfmaUHdHjns1wlz6L602tpFewtifAFiSQDx/JcKCMJHX+EEuS7icCH3fQEptWxfJPFV3JcbTaf9Kl2Ie09P5UfNDZDb8c6hkignCfEcAhYM2jnjVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WmdmwaPZ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pt9Vyv0hcTbTYMdOV2K1n/4yTaHmt/kpyjOZmBFIygA=; b=WmdmwaPZwwGNHbN9Mdm0fInXWg
+	/38/AKUe+SqOhBSgny47q8Bln2IH0TAhlEeLXUOhQTzWEa1bpNSOcaXqRaAFez7eOXEskbuhE98kX
+	iRE+3wrBkuVfSgA3g7sjP7fRClApebGV4ftmX3gFqpfAMOd6R4uTKvmfq7aRYPPzy0LhP/mF95wMI
+	xOOIXJlud1/jcKPhRmlII6Z/RuHTA9md3ErqD2Y/Y2MX5PhjPI/h7cgO40v5gYXEd2nboW6EXHjI/
+	j++TdKQn/1bUJ1flcfUNVYxWr9JhN9YkSn7+mGji96XZkdr5Z42NV/TtHXKXutPgfMKtOcENGQ/BO
+	y565Zzmg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ribld-00000009jst-2sof;
+	Fri, 08 Mar 2024 15:04:13 +0000
+Date: Fri, 8 Mar 2024 07:04:13 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-mm <linux-mm@kvack.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: vm_area at addr ffffffffc0800000 is not marked as VM_IOREMAP
+Message-ID: <Zeso7eNj1sBhH5zY@infradead.org>
+References: <CANiq72ka4rir+RTN2FQoT=Vvprp_Ao-CvoYEkSNqtSY+RZj+AA@mail.gmail.com>
+ <CAADnVQL1Zt5dwFv9HPDKDuPEKa6V7gb5j-D-LPWv47hC6mtwgw@mail.gmail.com>
+ <CAADnVQLP=dxBb+RiMGXoaCEuRrbK387J6B+pfzWKF_F=aRgCPQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQLP=dxBb+RiMGXoaCEuRrbK387J6B+pfzWKF_F=aRgCPQ@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aer
-branch HEAD: 002bf2fbc00e5c4b95fb167287e2ae7d1973281e  PCI/AER: Block runtime suspend when handling errors
+On Thu, Mar 07, 2024 at 07:49:16PM -0800, Alexei Starovoitov wrote:
+> Ok. I think I figured it out.
+> Please try the attached patch.
 
-elapsed time: 845m
-
-configs tested: 149
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240308   gcc  
-arc                   randconfig-002-20240308   gcc  
-arm                              alldefconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   gcc  
-arm                                 defconfig   clang
-arm                        neponset_defconfig   gcc  
-arm                           omap1_defconfig   gcc  
-arm                          pxa910_defconfig   gcc  
-arm                   randconfig-001-20240308   gcc  
-arm                        shmobile_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-004-20240308   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240308   gcc  
-csky                  randconfig-002-20240308   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-003-20240308   gcc  
-i386         buildonly-randconfig-004-20240308   gcc  
-i386         buildonly-randconfig-005-20240308   gcc  
-i386                                defconfig   clang
-i386                  randconfig-004-20240308   gcc  
-i386                  randconfig-011-20240308   gcc  
-i386                  randconfig-015-20240308   gcc  
-i386                  randconfig-016-20240308   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240308   gcc  
-loongarch             randconfig-002-20240308   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5272c3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     loongson1c_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240308   gcc  
-nios2                 randconfig-002-20240308   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240308   gcc  
-parisc                randconfig-002-20240308   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                         ps3_defconfig   gcc  
-powerpc               randconfig-001-20240308   gcc  
-powerpc                  storcenter_defconfig   gcc  
-powerpc64             randconfig-001-20240308   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240308   gcc  
-s390                  randconfig-002-20240308   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                    randconfig-001-20240308   gcc  
-sh                    randconfig-002-20240308   gcc  
-sh                           se7724_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240308   gcc  
-sparc64               randconfig-002-20240308   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-002-20240308   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-002-20240308   gcc  
-x86_64       buildonly-randconfig-003-20240308   gcc  
-x86_64       buildonly-randconfig-005-20240308   gcc  
-x86_64       buildonly-randconfig-006-20240308   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240308   gcc  
-x86_64                randconfig-005-20240308   gcc  
-x86_64                randconfig-006-20240308   gcc  
-x86_64                randconfig-012-20240308   gcc  
-x86_64                randconfig-015-20240308   gcc  
-x86_64                randconfig-016-20240308   gcc  
-x86_64                randconfig-072-20240308   gcc  
-x86_64                randconfig-073-20240308   gcc  
-x86_64                randconfig-074-20240308   gcc  
-x86_64                randconfig-075-20240308   gcc  
-x86_64                randconfig-076-20240308   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                       common_defconfig   gcc  
-xtensa                randconfig-001-20240308   gcc  
-xtensa                randconfig-002-20240308   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I don't think this is the right thing.  The probem is that
+the PCI code shouldn't really be using ioremap_page_range if it is
+not an ioremap area, but instead directly call into
+vmap_range_noflush (or an added back vmap_range to avoid all the
+duplication) similar to the vunmap case in vunmap_range.
 
