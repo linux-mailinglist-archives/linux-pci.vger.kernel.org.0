@@ -1,269 +1,168 @@
-Return-Path: <linux-pci+bounces-4665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18CE487649F
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 14:02:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58A63876534
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 14:25:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9917E1F22362
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 13:02:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB5DAB239F7
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 13:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 199871BC30;
-	Fri,  8 Mar 2024 13:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E678D3FBAF;
+	Fri,  8 Mar 2024 13:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="r9xrE2na"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCQZriwB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CF0EEA9;
-	Fri,  8 Mar 2024 13:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E5B3BBF9;
+	Fri,  8 Mar 2024 13:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709902962; cv=none; b=F+LvqQ2IYg4wc1dVaKr92LkBgWhSMpBAWKACQ8obITmHzMWm/mwZw6BN1ti8XFv9MpFaAvP+sZ5/siMBpJlMYcCe7Prge58pgd/Zu2z/HpbHq06q+MzX1OMLCsNieFqX7PtcXsluOOVesqgzhC5r8LXvDG5fDhsuHvwf8j1n7qk=
+	t=1709904288; cv=none; b=X/Lu017eGdC9XYBpKsGMI9YzpMvhjmawd0erC4SMDuiqhr6G5jXK/fPd7X+0qRKipDEgGMA55qhYeYQejlQYtwN5PO7v0nURQ0ivaOT3sUp85KGRRZ8MY/BS126wtzGnDSk0t5f4ApVcT8mxrVE3eKnpAR6hPH8rC800kw3hTps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709902962; c=relaxed/simple;
-	bh=I5YqwpsiX0KclggNHlj9WYV+KI4BcMpB3JvbIPa7aE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cbmj0TbF/CVdz66wWcx7mDKaE+8o7Y4TQVI4Vw37TnNoGtiI16Xfq1rHhaRw+sCauJPpGXACkCCIoAXaAjpqPUUkBUZg7ftIDzCNZFNA3HOrKyNzoiE3F3AtfxkO1VCIZ8FfxJ9xIfgMWm/Xpt+G/gowgOgMNOBLFN27ISZf+wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=r9xrE2na; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709902958;
-	bh=I5YqwpsiX0KclggNHlj9WYV+KI4BcMpB3JvbIPa7aE8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r9xrE2nabgTtZAH/PPwUSYXsCuq1IRkOzlpGXqpMVx5LSMT05p6H/i88jyvzyB6Wh
-	 PE7EdHwWohUfzABm8rD5N1ghF0/MjwxqPN5aBBOW5dIlUm/F/aLWGOqEWqnGQHLVo7
-	 ULBh85CVs3dXCZOxihT5QadU54uug8BnLDGprKySAr3NvgO6ztAGYi7BOkRqk1HyC4
-	 adRXIcKRw8ZvpLpWhciUs+rAi8kUB1HAcULzUrZmcXbKi6Lgu3bxdd9LzKRF6LQ6m/
-	 BarzvfjjTD9u4Vxk1afjkPHnrdodV0RKzhsNAv0HvQQNbuHE2iZb29zOiNgR2v9BsX
-	 fbYrdehduz7vQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 50CC937813CA;
-	Fri,  8 Mar 2024 13:02:37 +0000 (UTC)
-Message-ID: <fb9d4791-73e2-491a-8117-e8e5f811fe7a@collabora.com>
-Date: Fri, 8 Mar 2024 14:02:36 +0100
+	s=arc-20240116; t=1709904288; c=relaxed/simple;
+	bh=LAdBrFiiqpPIYb+1fEVGEmGjUltxM7IwFgH3jq/rJDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWs1gBpQrDmPZFRvQmcKlXTRtphwNVhkUZmWn1VEmANWLVfMIEGYCkDCyShiJ9BibxBhDQuTGsHmzFP2VaJrhprP0zZ8TO61cf4OhzllvWSdefDb7GseAO1nfLFpWSiu5X0GeeAylulGMUl8tQnQMyfGIidhIe4Cf+PibHFFf64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCQZriwB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7CB0C433F1;
+	Fri,  8 Mar 2024 13:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709904288;
+	bh=LAdBrFiiqpPIYb+1fEVGEmGjUltxM7IwFgH3jq/rJDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kCQZriwBir8HdF7tMJnCbXC/StQ5ZubtkrurJ/hNH5ABeLm3oUkbkLT4RFyY2E8eO
+	 WhEOBptb0FP//rwCm3NEOkHagnEj5gf5qMnmPMe/qNH0seeYsh4AqBQsrYd+RbrnH6
+	 pDRLKSmQdbkECwUTmu2Qx8EiSpSPwjGi1C/wfhV39qWSt9mOUDcyucPUwdWxl7RKKL
+	 r8to3P6b356iIL9jCR8K8bfo8pwwI6jmqw7KiebRFq4G0i2mjya0l5XV7KTfiYE85w
+	 umqtSbSKWbmwfLY0nu5JqX3tCAiDkKwWTsmoxH+sE6t5e8phFPQm6vRX5Q9girR6xc
+	 MZOTZB3+scaNQ==
+Date: Fri, 8 Mar 2024 14:24:35 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kishon Vijay Abraham I <kishon@ti.com>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v9 07/10] PCI: dwc: ep: Remove "core_init_notifier" flag
+Message-ID: <ZesRk5Dg4KEASD3U@ryzen>
+References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
+ <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: mediatek-gen3: Assert MAC reset only if PHY reset
- also present
-Content-Language: en-US
-To: =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= <Jianjun.Wang@mediatek.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "wenst@chromium.org" <wenst@chromium.org>,
- "kernel@collabora.com" <kernel@collabora.com>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- Ryder Lee <Ryder.Lee@mediatek.com>,
- "nfraprado@collabora.com" <nfraprado@collabora.com>
-References: <20240229092449.580971-1-angelogioacchino.delregno@collabora.com>
- <30824df32636dec25b9a5972b1ee8de76b295feb.camel@mediatek.com>
- <c55f2c6e-1de8-4248-a52a-d6c9e49b565a@collabora.com>
- <8a5a695ccbc4401954f7df5a9690af726fc59173.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <8a5a695ccbc4401954f7df5a9690af726fc59173.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
 
-Il 08/03/24 10:44, Jianjun Wang (王建军) ha scritto:
-> On Wed, 2024-03-06 at 09:50 +0100, AngeloGioacchino Del Regno wrote:
->> Il 01/03/24 03:48, Jianjun Wang (王建军) ha scritto:
->>> Hi Angelo,
->>>
->>> Thanks for your patch.
->>>
->>> On Thu, 2024-02-29 at 10:24 +0100, AngeloGioacchino Del Regno
->>> wrote:
->>>> Some SoCs have two PCI-Express controllers: in the case of
->>>> MT8195,
->>>> one of them is using a dedicated PHY, but the other uses a combo
->>>> PHY
->>>> that is shared with USB and in that case the PHY cannot be reset
->>>> from the PCIe driver, or USB functionality will be unable to
->>>> resume.
->>>>
->>>> Resetting the PCIe MAC without also resetting the PHY will result
->>>> in
->>>> a full system lockup at PCIe resume time and the only option to
->>>> resume operation is to hard reboot the system (with a PMIC cut-
->>>> off).
->>>>
->>>> To resolve this issue, check if we've got both a PHY and a MAC
->>>> reset
->>>> and, if not, never assert resets at PM suspend time: in that
->>>> case,
->>>> the link is still getting powered down as both the clocks and the
->>>> power domains will go down anyway.
->>>>
->>>> Fixes: d537dc125f07 ("PCI: mediatek-gen3: Add system PM support")
->>>> Signed-off-by: AngeloGioacchino Del Regno <
->>>> angelogioacchino.delregno@collabora.com>
->>>> ---
->>>>
->>>> Changes in v2:
->>>>    - Rebased over next-20240229
->>>>
->>>>    drivers/pci/controller/pcie-mediatek-gen3.c | 25
->>>> ++++++++++++++-----
->>>> --
->>>>    1 file changed, 17 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
->>>> b/drivers/pci/controller/pcie-mediatek-gen3.c
->>>> index 975b3024fb08..99b5d7a49be1 100644
->>>> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
->>>> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
->>>> @@ -874,17 +874,26 @@ static int mtk_pcie_power_up(struct
->>>> mtk_gen3_pcie *pcie)
->>>>    	return err;
->>>>    }
->>>>    
->>>> -static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
->>>> +static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie, bool
->>>> is_suspend)
->>>>    {
->>>> +	bool suspend_reset_supported = pcie->mac_reset && pcie-
->>>>> phy_reset;
->>>>
->>>> +
->>>>    	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
->>>>    
->>>>    	pm_runtime_put_sync(pcie->dev);
->>>>    	pm_runtime_disable(pcie->dev);
->>>> -	reset_control_assert(pcie->mac_reset);
->>>> +
->>>> +	/*
->>>> +	 * Assert MAC reset only if we also got a PHY reset, otherwise
->>>> +	 * the system will lockup at PM resume time.
->>>> +	 */
->>>> +	if (is_suspend && suspend_reset_supported)
->>>> +		reset_control_assert(pcie->mac_reset);
->>>>    
->>>>    	phy_power_off(pcie->phy);
->>>>    	phy_exit(pcie->phy);
->>>> -	reset_control_assert(pcie->phy_reset);
->>>> +	if (is_suspend && suspend_reset_supported)
->>>> +		reset_control_assert(pcie->phy_reset);
->>>>    }
->>>>    
->>>>    static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
->>>> @@ -920,7 +929,7 @@ static int mtk_pcie_setup(struct
->>>> mtk_gen3_pcie
->>>> *pcie)
->>>>    	return 0;
->>>>    
->>>>    err_setup:
->>>> -	mtk_pcie_power_down(pcie);
->>>> +	mtk_pcie_power_down(pcie, false);
->>>>    
->>>>    	return err;
->>>>    }
->>>> @@ -951,7 +960,7 @@ static int mtk_pcie_probe(struct
->>>> platform_device
->>>> *pdev)
->>>>    	err = pci_host_probe(host);
->>>>    	if (err) {
->>>>    		mtk_pcie_irq_teardown(pcie);
->>>> -		mtk_pcie_power_down(pcie);
->>>> +		mtk_pcie_power_down(pcie, false);
->>>>    		return err;
->>>>    	}
->>>>    
->>>> @@ -969,7 +978,7 @@ static void mtk_pcie_remove(struct
->>>> platform_device *pdev)
->>>>    	pci_unlock_rescan_remove();
->>>>    
->>>>    	mtk_pcie_irq_teardown(pcie);
->>>> -	mtk_pcie_power_down(pcie);
->>>> +	mtk_pcie_power_down(pcie, false);
->>>
->>> Is there any reason not to reset the MAC and PHY when probe fails
->>> and
->>> driver removing? Some SoCs may not have MTCMOS to cut off their
->>> power,
->>> we need to assert the reset signal to save power in that case.
->>>
->>
->> Sorry for the late reply - yes, there is a reason.
->>
->> On platforms needing this quirk, resetting at .remove() time will
->> hang the
->> machine if the module is reinserted later (hence, .probe() called at
->> a later
->> time).
+On Mon, Mar 04, 2024 at 02:52:19PM +0530, Manivannan Sadhasivam wrote:
+> "core_init_notifier" flag is set by the glue drivers requiring refclk from
+> the host to complete the DWC core initialization. Also, those drivers will
+> send a notification to the EPF drivers once the initialization is fully
+> completed using the pci_epc_init_notify() API. Only then, the EPF drivers
+> will start functioning.
 > 
-> Does this only happen when the PCIe MAC is reset without resetting the
-> PHY? Is it related to the reset framework?
+> For the rest of the drivers generating refclk locally, EPF drivers will
+> start functioning post binding with them. EPF drivers rely on the
+> 'core_init_notifier' flag to differentiate between the drivers.
+> Unfortunately, this creates two different flows for the EPF drivers.
 > 
+> So to avoid that, let's get rid of the "core_init_notifier" flag and follow
+> a single initialization flow for the EPF drivers. This is done by calling
+> the dw_pcie_ep_init_notify() from all glue drivers after the completion of
+> dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
+> send the notification to the EPF drivers once the initialization is fully
+> completed.
+> 
+> Only difference here is that, the drivers requiring refclk from host will
+> send the notification once refclk is received, while others will send it
+> during probe time itself.
+> 
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 18c80002d3bd..fc0282b0d626 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -927,21 +928,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	if (ret)
+>  		return ret;
+>
 
-Happens only when MAC is reset without resetting the PHY after calling
-phy_power_off(); phy_exit();
+Hello Mani,
 
-It's not a reset framework issue, that's for sure.
+Since you asked for testing, I gave your series a spin
+(with a driver without .core_init_notifier).
 
-Angelo
 
-> Thanks.
->>
->> Regards,
->> Angelo
->>
->>> Thanks.
->>>
->>>>    }
->>>>    
->>>>    static void mtk_pcie_irq_save(struct mtk_gen3_pcie *pcie)
->>>> @@ -1044,7 +1053,7 @@ static int mtk_pcie_suspend_noirq(struct
->>>> device
->>>> *dev)
->>>>    	dev_dbg(pcie->dev, "entered L2 states successfully");
->>>>    
->>>>    	mtk_pcie_irq_save(pcie);
->>>> -	mtk_pcie_power_down(pcie);
->>>> +	mtk_pcie_power_down(pcie, true);
->>>>    
->>>>    	return 0;
->>>>    }
->>>> @@ -1060,7 +1069,7 @@ static int mtk_pcie_resume_noirq(struct
->>>> device
->>>> *dev)
->>>>    
->>>>    	err = mtk_pcie_startup_port(pcie);
->>>>    	if (err) {
->>>> -		mtk_pcie_power_down(pcie);
->>>> +		mtk_pcie_power_down(pcie, false);
->>>>    		return err;
->>>>    	}
->>>>    
->>
->>
->>
+There seems to be a problem that pci_epc_write_header() is never called.
 
--- 
-AngeloGioacchino Del Regno
-Senior Software Engineer
+Debugging this, it seems that .core_init in pci-epf-test is never called.
 
-Collabora Ltd.
-Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK
-Registered in England & Wales, no. 5513718
+If I add debug prints in pci_epc_init_notify(), I see that it does not
+notify a single EPF driver.
 
+It appears that the patch in $subject will call pci_epc_init_notify()
+at EPC driver .probe() time, and at that point in time, there are no
+EPF drivers registered.
+
+They get registered later, when doing the configfs write.
+
+
+I would say that it is the following change that breaks things:
+
+> -	if (!core_init_notifier) {
+> -		ret = pci_epf_test_core_init(epf);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+
+Since without this code, pci_epf_test_core_init() will no longer be called,
+as there is currently no one that calls epf->core_init() for a EPF driver
+after it has been bound. (For drivers that call dw_pcie_ep_init_notify() in
+.probe())
+
+I guess one way to solve this would be for the EPC core to keep track of
+the current EPC "core state" (up/down). If the core is "up" at EPF .bind()
+time, notify the EPF driver directly after .bind()?
+
+
+Kind regards,
+Niklas
 
