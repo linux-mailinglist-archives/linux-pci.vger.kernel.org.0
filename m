@@ -1,166 +1,221 @@
-Return-Path: <linux-pci+bounces-4631-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4632-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 009AF875B5C
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 01:00:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C14D8875B66
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 01:09:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2B381F228B8
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 00:00:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3A0A1C20D27
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 00:09:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8316E4C65;
-	Fri,  8 Mar 2024 00:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3EB5364;
+	Fri,  8 Mar 2024 00:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u76TEF7q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwaLkYNp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59838A2A;
-	Fri,  8 Mar 2024 00:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C709D363
+	for <linux-pci@vger.kernel.org>; Fri,  8 Mar 2024 00:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709856047; cv=none; b=nEfK0rE1TSX53eG7c8ImmdtAcd917+U+/yOuL2y/uCoWrAJGrelMQSofYxzg+NOmVju37nlXneowCQ3TNl2sEr5NDLOmukUYlkVBglAf00EBoT8KoXFSWtF8EeH/kLaVdXznxFSSDOEiKVNdQU7frTC5mypTL0AMwxj8/nQ7+1c=
+	t=1709856550; cv=none; b=BXYdPAnLYNfKZmrF0BslxVBp8yja5/UBa2bqseAKQ7/ozQ45RaaoIW+p+A2uw2ANvG19nmGXwUaDOWPfZXNRH/fBdXAUcTnf/SGVoCvE7FGLnUpVa8QiitGz1ra6Cy7a63kAIhMSgRHlFnydkcLnh2OztRUv73v0GG/sNghh8C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709856047; c=relaxed/simple;
-	bh=yR/e48Pc+suYhx1b+nutwrcjLsHghjjeWmizES3kOJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lUwXN4+xip6yH4Vg7VRP6u12rd+B8lRZE8aFwj0pBF/G7aLcaL2kIL4w42WPXCbrLgcERrcaoY8SlWdNZ/mW62t8XVFnr5czMCIthMh6BXj0qScEtyuba0P7wkZQH8eYVQFe+Run228mYQOdIse5wfWycyv97Uxb6fwo9N+aXAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u76TEF7q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACFBC433F1;
-	Fri,  8 Mar 2024 00:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709856045;
-	bh=yR/e48Pc+suYhx1b+nutwrcjLsHghjjeWmizES3kOJc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=u76TEF7qloryJyegAGaXSgrQVz+arxecm/2CuYk8k/pu9oBl6Ww7oEbRGsD/dZdVN
-	 rMM0hZrmruNRR6zdCLQvqRcNRTPFBAPoNyChysNPTb2PF+VeqVHx2Bqa2bJPPAX5EZ
-	 zjU6+au2xC2AC2sRo9vNgViMzOpgciH1XujysJ4BBC5VeMr7w2N51CJs4KrTF/8Dx5
-	 RtU9RHwC59JpTHB5t+9vis5yt1IP0nTXy3hx6dhYS5H98Tohgx9s2L6JlKXh0XmdRj
-	 aJ5U+EX0PO7LP3Tunk5tEP4HQuKGyjNwxN3IQ7XdM8irNLDloSRaRGykpj11I9Ojxm
-	 Cqh6SHocXEbrg==
-Date: Thu, 7 Mar 2024 18:00:43 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v3] PCI/AER: Block runtime suspend when handling errors
-Message-ID: <20240308000043.GA662251@bhelgaas>
+	s=arc-20240116; t=1709856550; c=relaxed/simple;
+	bh=+Y+SbyeqOpFc3t61CFa1k5+chE55VhoQIqbxmBG0N0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L8oU+Ybdx430OvFiXwcLdvDW3KD8eGdtsG1pganE4v0Dz6+qEhIZN3qF9MAHW9RucjWljb9Z6QSXIcEj29khaoGXuTVSXNBQr1ZYtQXal3Xrf8IJynKb6kNe/PjwfUtUcIDWNvFKouCmr2sTJ2dfLXePBlMxvhP8g6J+d+JNMqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwaLkYNp; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709856548; x=1741392548;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=+Y+SbyeqOpFc3t61CFa1k5+chE55VhoQIqbxmBG0N0A=;
+  b=jwaLkYNpP63DlkZeFgz/MGQJdKuVFxxcyRM23lYrQZOMMqq2exsz6Xwz
+   UW0kCF2JFqOLP7DA3s0a02YgJWFclzRUKzosere77nEycrrmtaNTjHLf8
+   0RW+RHP8bAESe0B0MWyCxytGE0jG4cTVZh1jvF9Di1bI5cBaOAs07rnaX
+   QA7+sLHkt9RZXDBLPFYatK0cP2A3L/KqgpuMJHgBBe3kqW0PD5D/hUDVk
+   0H6UqIpfcVugofum+BuxSHMfxBqpzQjy7IDGapJdpSq8INROFos6l7MLA
+   M3ryJQB2JjfT1yX9eiXssEP4m7CzoA1xbHlfOlk9IRc+p2Ow7c+OBDAZQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11006"; a="30004478"
+X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
+   d="scan'208";a="30004478"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 16:09:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,107,1708416000"; 
+   d="scan'208";a="10339401"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO localhost) ([10.213.184.40])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 16:09:07 -0800
+Date: Thu, 7 Mar 2024 17:09:04 -0700
+From: Nirmal Patel <nirmal.patel@linux.intel.com>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, linux-pci@vger.kernel.org, "Rafael J. Wysocki"
+ <rjw@rjwysocki.net>, paul.m.stillwell.jr@intel.com
+Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on
+ VMD rootports
+Message-ID: <20240307170904.00001cd4@linux.intel.com>
+In-Reply-To: <CAAd53p4j3MwigsFXpftuDdSfhn7EH_-cOOjP2DqnqeAuD+Fb=Q@mail.gmail.com>
+References: <20240207185549.GA910460@bhelgaas>
+	<af071f45513778a9392efb1a9f41f1e18d2670f0.camel@linux.intel.com>
+	<46b737db266f08c6dc98c77044bab12491a4d971.camel@linux.intel.com>
+	<CAAd53p4j3MwigsFXpftuDdSfhn7EH_-cOOjP2DqnqeAuD+Fb=Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212120135.146068-1-stanislaw.gruszka@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 01:01:35PM +0100, Stanislaw Gruszka wrote:
-> PM runtime can be done simultaneously with AER error handling.
-> Avoid that by using pm_runtime_get_sync() before and pm_runtime_put()
-> after reset in pcie_do_recovery() for all recovering devices.
-> 
-> pm_runtime_get_sync() will increase dev->power.usage_count counter
-> to prevent any possible future request to runtime suspend a device.
-> It will also resume a device, if it was previously in D3hot state.
-> 
-> I tested with igc device by doing simultaneous aer_inject and
-> rpm suspend/resume via /sys/bus/pci/devices/PCI_ID/power/control
-> and can reproduce:
-> 
-> igc 0000:02:00.0: not ready 65535ms after bus reset; giving up
-> pcieport 0000:00:1c.2: AER: Root Port link has been reset (-25)
-> pcieport 0000:00:1c.2: AER: subordinate device reset failed
-> pcieport 0000:00:1c.2: AER: device recovery failed
-> igc 0000:02:00.0: Unable to change power state from D3hot to D0, device inaccessible
-> 
-> The problem disappears when applied this patch.
-> 
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+On Thu, 7 Mar 2024 14:44:23 +0800
+Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-Applied to pci/aer for v6.9, thanks!
+> Hi Nirmal,
+>=20
+> On Thu, Mar 7, 2024 at 6:20=E2=80=AFAM Nirmal Patel
+> <nirmal.patel@linux.intel.com> wrote:
+> >
+> > On Tue, 2024-02-13 at 10:47 -0700, Nirmal Patel wrote: =20
+> > > On Wed, 2024-02-07 at 12:55 -0600, Bjorn Helgaas wrote: =20
+> > > > On Tue, Feb 06, 2024 at 05:27:29PM -0700, Nirmal Patel wrote: =20
+> > > > > ...
+> > > > > Did you have a chance to look at my response on January 16th
+> > > > > to your
+> > > > > questions? I tried to summarize all of the potential problems
+> > > > > and issues with different fixes. Please let me know if it is
+> > > > > easier if
+> > > > > I
+> > > > > resend the explanation. Thanks. =20
+> > > >
+> > > > I did see your Jan 16 response, thanks.
+> > > >
+> > > > I had more questions after reading it, but they're more about
+> > > > understanding the topology seen by the host and the guest:
+> > > >   Jan 16:
+> > > > https://lore.kernel.org/r/20240117004933.GA108810@bhelgaas
+> > > >   Feb  1:
+> > > > https://lore.kernel.org/r/20240201211620.GA650432@bhelgaas
+> > > >
+> > > > As I mentioned in my second Feb 1 response
+> > > > (https://lore.kernel.org/r/20240201222245.GA650725@bhelgaas),
+> > > > the usual plan envisioned by the PCI Firmware spec is that an
+> > > > OS can use
+> > > > a
+> > > > PCIe feature if the platform has granted the OS ownership via
+> > > > _OSC and
+> > > > a device advertises the feature via a Capability in config
+> > > > space.
+> > > >
+> > > > My main concern with the v2 patch
+> > > > (
+> > > > https://lore.kernel.org/r/20231127211729.42668-1-nirmal.patel@linux=
+.intel.com
+> > > > )
+> > > > is that it overrides _OSC for native_pcie_hotplug, but not for
+> > > > any of
+> > > > the other features (AER, PME, LTR, DPC, etc.)
+> > > >
+> > > > I think it's hard to read the specs and conclude that PCIe
+> > > > hotplug is
+> > > > a special case, and I think we're likely to have similar issues
+> > > > with
+> > > > other features in the future.
+> > > >
+> > > > But if you think this is the best solution, I'm OK with merging
+> > > > it. =20
+> > Hi Bjorn,
+> >
+> > We tried some other ways to pass the information about all of the
+> > flags but I couldn't retrieve it in guest OS and VMD hardware
+> > doesn't have empty registers to write this information. So as of
+> > now we have this solution which only overwrites Hotplug flag. If
+> > you can accept it that would be great. =20
+>=20
+> My original commit "PCI: vmd: Honor ACPI _OSC on PCIe features" was a
+> logically conclusion based on VMD ports are just apertures.
+> Apparently there are more nuances than that, and people outside of
+> Intel can't possibly know. And yes VMD creates lots of headaches
+> during hardware enablement.
+>=20
+> So is it possible to document the right way to use _OSC, as Bjorn
+> suggested?
+>=20
+> Kai-Heng
+Well we are stuck here with two issues which are kind of chicken and egg
+problem.
+1) VMD respects _OSC; which works excellent in Host but _OSC gives
+wrong information in Guest OS which ends up disabling Hotplug, AER,
+DPC, etc. We can live with AER, DPC disabled in VM but not the Hotplug.
 
-> ---
->  drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> RFC -> v1:
->  add runtime callbacks to pcie_do_recovery(), this covers DPC case
->  as well as case of recovering multiple devices under same port.
-> 
-> v1 -> v2:
->  - add R-b, A-b, cc-stable tags
->  - tweak commit message
-> 
-> v2 -> v3:
->  - fix mangled commit message
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 59c90d04a609..705893b5f7b0 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -13,6 +13,7 @@
->  #define dev_fmt(fmt) "AER: " fmt
->  
->  #include <linux/pci.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/module.h>
->  #include <linux/kernel.h>
->  #include <linux/errno.h>
-> @@ -85,6 +86,18 @@ static int report_error_detected(struct pci_dev *dev,
->  	return 0;
->  }
->  
-> +static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
-> +{
-> +	pm_runtime_get_sync(&pdev->dev);
-> +	return 0;
-> +}
-> +
-> +static int pci_pm_runtime_put(struct pci_dev *pdev, void *data)
-> +{
-> +	pm_runtime_put(&pdev->dev);
-> +	return 0;
-> +}
-> +
->  static int report_frozen_detected(struct pci_dev *dev, void *data)
->  {
->  	return report_error_detected(dev, pci_channel_io_frozen, data);
-> @@ -207,6 +220,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	else
->  		bridge = pci_upstream_bridge(dev);
->  
-> +	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
-> +
->  	pci_dbg(bridge, "broadcast error_detected message\n");
->  	if (state == pci_channel_io_frozen) {
->  		pci_walk_bridge(bridge, report_frozen_detected, &status);
-> @@ -251,10 +266,15 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pcie_clear_device_status(dev);
->  		pci_aer_clear_nonfatal_status(dev);
->  	}
-> +
-> +	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> +
->  	pci_info(bridge, "device recovery successful\n");
->  	return status;
->  
->  failed:
-> +	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-> +
->  	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
->  
->  	/* TODO: Should kernel panic here? */
-> -- 
-> 2.34.1
-> 
+2) VMD takes ownership of all the flags. For this to work VMD needs to
+know these settings from BIOS. VMD hardware doesn't have empty register
+where VMD UEFI driver can write this information. So honoring user
+settings for AER, Hotplug, etc from BIOS is not possible.
+
+Where do you want me to add documentation? Will more information in
+the comment section of the Sltcap code change help?
+
+Architecture wise VMD must own all of these flags but we have a
+hardware limitation to successfully pass the necessary information to
+the Host OS and the Guest OS.
+
+Thanks
+nirmal
+>=20
+> > > In the host OS, this overrides whatever was negotiated via _OSC, I
+> > > guess on the principle that _OSC doesn't apply because the host
+> > > BIOS doesn't know about the Root Ports below the VMD.  (I'm not
+> > > sure it's 100% resolved that _OSC doesn't apply to them, so we
+> > > should mention that assumption here.) =20
+> > _OSC still controls every flag including Hotplug. I have observed
+> > that slot capabilities register has hotplug enabled only when
+> > platform has enabled the hotplug. So technically not overriding it
+> > in the host. It overrides in guest because _OSC is passing
+> > wrong/different information than the _OSC information in Host.
+> > Also like I mentioned, slot capabilities registers are not changed
+> > in Guest because vmd is passthrough. =20
+> > >
+> > > In the guest OS, this still overrides whatever was negotiated via
+> > > _OSC, but presumably the guest BIOS *does* know about the Root
+> > > Ports, so I don't think the same principle about overriding _OSC
+> > > applies there.
+> > >
+> > > I think it's still a problem that we handle
+> > > host_bridge->native_pcie_hotplug differently than all the other
+> > > features negotiated via _OSC.  We should at least explain this
+> > > somehow. =20
+> > Right now this is the only way to know in Guest OS if platform has
+> > enabled Hotplug or not. We have many customers complaining about
+> > Hotplug being broken in Guest. So just trying to honor _OSC but also
+> > fixing its limitation in Guest.
+> >
+> > Thanks
+> > nirmal.
+> > =20
+> > > I sincerely apologize for late responses. I just found out that my
+> > > evolution mail client is automatically sending linux-pci emails to
+> > > junk
+> > > since January 2024.
+> > >
+> > > At the moment Hotplug is an exception for us, but I do share your
+> > > concern about other flags. We have done lot of testing and so far
+> > > patch
+> > > v2 is the best solution we have.
+> > >
+> > > Thanks
+> > > nirmal =20
+> > > > Bjorn =20
+> > =20
+
 
