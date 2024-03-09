@@ -1,123 +1,80 @@
-Return-Path: <linux-pci+bounces-4685-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4686-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A3FE876D4A
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 23:44:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 24D17876E45
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Mar 2024 01:51:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA5C92823BD
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Mar 2024 22:44:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C62F02820C6
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Mar 2024 00:50:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA0A62C1BA;
-	Fri,  8 Mar 2024 22:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53027A29;
+	Sat,  9 Mar 2024 00:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtcCMkSr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlYQNAi/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D47F15AF;
-	Fri,  8 Mar 2024 22:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB39EA4;
+	Sat,  9 Mar 2024 00:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709937856; cv=none; b=BQG/41e3u7aGdvmGO49g4GAA8EkcT5VJ76tl6uVEaiA7WVtYm/w4dH+gzs2R/Tfa18ZFXDZhjQXq6G4soaNGR9fMS7h9NGllaqpBrfmzclDo7ICyWqyUAG/c/ostWsKQTr/caSDyTTJsNKOLdW6yXtUCIrfcEzcEh70a3rXMXoc=
+	t=1709945455; cv=none; b=mor5tXienrzC8lkcyIgNxam+sOuYMTrL0nNmSCvSbHabkw//cJNuvzLFVjXpZZJBMC4TFIa0Rba3hfhnfs+Zk/I3gSItRwKZ8xm5YQmDhVcUeiktHIeKr8kqv5ULNiyvmxeQ7E3NlLi14blREQYN73IE2lovUA5FBS3ym5NZTKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709937856; c=relaxed/simple;
-	bh=D3aJXRvY9D9HCzFxB6bg6tdOOq0PzsTOhGjNlR0CgaI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OHoGGBdDh3E+VO3IURuKrNDJ1HljDg3yJqGQy/N8Nn0j6YkPn/0nHLj3XlO7cjqO2CkhJZhrpHvnx0D5Fg8l8//2lExc28gg7V7547fweNBEW0+98szVnaikca8AHVhNFRB9oVnIWZiTHdhgFQylbMvvWxUD3N1Qi7iAyaxUZDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtcCMkSr; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-412fc5f5152so18985525e9.0;
-        Fri, 08 Mar 2024 14:44:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709937854; x=1710542654; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D3aJXRvY9D9HCzFxB6bg6tdOOq0PzsTOhGjNlR0CgaI=;
-        b=EtcCMkSrJOOeadMo41KtdLmZdRP2kCk7Z//IYYGFXTlbCZrNTR8SCTGvUvsZloDsFQ
-         Gr8T8jBsKvFew5Zpqp/hSvg7rW0Pr0kM/sbtBN1g7h83AZEUm2AjxExDu/jGeyI7en2u
-         MYDkTZ8qR5WuANMm3VHSlHS5jDtCxlKQ3qKP8JuGwJOx12NYDgBlqOSvDHx+noAKiZmr
-         R+Eu7r0h17DGurqnLnS2tDLLf9ss0JQ8ijh7Xzi0kFv1x5JTOTe4SDVP2GZXKNj6YSvj
-         cJcuDitmHwLGm5iW9FwU5dflP02KA+JfJpuQ/2c89603QkxecXShKG35moyX52+Xaktp
-         l2lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709937854; x=1710542654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D3aJXRvY9D9HCzFxB6bg6tdOOq0PzsTOhGjNlR0CgaI=;
-        b=c/08NC1ZH4hTm4oBFuoKmiL6aZpK4QXyqhqAc1SIMNCYGL3gnAkNlxXZglu3BCcSE+
-         bhxtjsTFCbPL0cjizWuwmYe014Tj2qxGZlsUbZqk/dy87iJL+qzclKJ6T7aeN9UHhbn8
-         P26Lo60jk2PsrOtTak1LNhtYqkfB7Fy6bMWcAD6VwPc8YXjFiPYAa2q0sX9ErKqqehxr
-         glqVm0o9R2qk6tau4OHV9NpzM0rytdOxRBXXyoy12UAhlt4TZ5G+BvVdE/9OAuP9ZkFb
-         AnagcpFoKRZYFaOsdP2nwr27lNdux2MGPIoPQt6cPUI2nkj0J4omMRzIbrqf+H7VyPM8
-         k9qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFNpQtxU4CFMjVsvJdDYHilkIinpRRXXatMqPkeqztVC/U3DZj+Zc9R8yzCD03OzQpOrRQA1pp3pco7XqEO9FXZGFlSbgS9jgCQYRekeemOLiAaI8vM4+li1QSOPEs
-X-Gm-Message-State: AOJu0Yw/gbQ6oPnMpc9mDXP/5KPeo5140SZkdQc1cfvQidYcqF7mr7Yd
-	S+BgocgPYzChaRyttzaOkg/huJ5cLw56e7uneEc41oZIvaXBdtyvrtK+PevOJsCJPyV7rhFu6Nr
-	+UPMaOMZ9m7h/Q0Ruh5FzfRhisYE=
-X-Google-Smtp-Source: AGHT+IF29hP1nUphTx29aJJzjLnvSZ7w2MXv31LF0HDDrSpcFvBtG4aiKykokpKDa4jenS3QWggi3HNaLt+3GSV1b8w=
-X-Received: by 2002:a05:600c:b96:b0:412:ef25:aa91 with SMTP id
- fl22-20020a05600c0b9600b00412ef25aa91mr418338wmb.18.1709937853551; Fri, 08
- Mar 2024 14:44:13 -0800 (PST)
+	s=arc-20240116; t=1709945455; c=relaxed/simple;
+	bh=lya7UhJlIblLkow5pi+zWUxuCvJx0mWepCjyI5q74Hw=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=IrqxUpvxfQiEaq+T9GMWutIjBEtOQNILCaRvAGbeUoAEvk3Qf9AtgyMQqMKfuxGesdUcQRT9l8y2PDZYKXeqVWfHbMKp9zpawuCWONtVdecjqh0WkzLuJU2yu58AlsPprIAutjHbgGmzMM+tZNndjKlak2Z8Xl4A1YMTD1J4nlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlYQNAi/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 883E4C433C7;
+	Sat,  9 Mar 2024 00:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709945454;
+	bh=lya7UhJlIblLkow5pi+zWUxuCvJx0mWepCjyI5q74Hw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=AlYQNAi/w+AqpTz7UMH96zryBdO4Ut6giOEm5bqpeG4djkFZMNssmyPhzGzgWYyHl
+	 AqcIsihdf2byK4CIHEI2xRmtqB2ry66/N20TaX1Tvq1i5RbIGtcDF3NbcMcCViompc
+	 94Sgf5jSkIz768wtCVsoh4I7eUdZpOaJ5/afdxHn5o04ghQhtO0ZNd40eMbnKOSw/8
+	 BG9HIUx8JC9T4uI/GVpAwGfM7PsMzNE3JrRLiln9ThXUgjdCuRzJYcYaomgi5OePtj
+	 uu85M6C55SmLdFWrlHkVfjD1pqr5k3YWYd32Xw4oTqOZXtBWqlBHEOrnqQ+cdECQli
+	 TJnbP80exRjEA==
+Message-ID: <9927a3356ce54c626ab4733844a4385b.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANiq72ka4rir+RTN2FQoT=Vvprp_Ao-CvoYEkSNqtSY+RZj+AA@mail.gmail.com>
- <CAADnVQL1Zt5dwFv9HPDKDuPEKa6V7gb5j-D-LPWv47hC6mtwgw@mail.gmail.com>
- <CAADnVQLP=dxBb+RiMGXoaCEuRrbK387J6B+pfzWKF_F=aRgCPQ@mail.gmail.com>
- <Zeso7eNj1sBhH5zY@infradead.org> <CAADnVQKQumV-0AxGLKX0jQEfa8Z2Bxx2yW8k_1OqGBnD-RqrbA@mail.gmail.com>
- <ZetEkyW1QgIKwfFz@infradead.org> <CAADnVQL4JAUz-p-X9aEggeKNpYUqJZrzQKO7N0dnohE0r7mdpg@mail.gmail.com>
- <ZetJ4xfopatYstPs@infradead.org> <CAADnVQJKPa+JUUKpW7gZehbFBYj3GPrbpd0NCj4xwkU2puObEw@mail.gmail.com>
-In-Reply-To: <CAADnVQJKPa+JUUKpW7gZehbFBYj3GPrbpd0NCj4xwkU2puObEw@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 8 Mar 2024 14:44:02 -0800
-Message-ID: <CAADnVQJeOc9Muki+-PUYc20-=1vRgkprbNL0zTc=Cz-T_iYkNQ@mail.gmail.com>
-Subject: Re: vm_area at addr ffffffffc0800000 is not marked as VM_IOREMAP
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm <linux-mm@kvack.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <022301da6fbf$aae4f7e0$00aee7a0$@samsung.com>
+References: <20240220084046.23786-1-shradha.t@samsung.com> <CGME20240220084120epcas5p1e8980539667c3d9da20f49fc645d8f4c@epcas5p1.samsung.com> <20240220084046.23786-2-shradha.t@samsung.com> <f00eed31-4baf-4d5c-934d-8223d1ab554d@moroto.mountain> <022301da6fbf$aae4f7e0$00aee7a0$@samsung.com>
+Subject: RE: [PATCH v6 1/2] clk: Provide managed helper to get and enable bulk clocks
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, mturquette@baylibre.com, jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, linux@armlinux.org.uk, m.szyprowski@samsung.com, manivannan.sadhasivam@linaro.org, pankaj.dubey@samsung.com, gost.dev@samsung.com
+To: 'Dan Carpenter' <dan.carpenter@linaro.org>, Shradha Todi <shradha.t@samsung.com>
+Date: Fri, 08 Mar 2024 16:50:52 -0800
+User-Agent: alot/0.10
 
-On Fri, Mar 8, 2024 at 9:53=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Fri, Mar 8, 2024 at 9:24=E2=80=AFAM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
-> >
-> > On Fri, Mar 08, 2024 at 09:20:24AM -0800, Alexei Starovoitov wrote:
-> > > ok. Like the attached patch?
-> >
-> > Looks sensibe, but I think the powerpc callers of ioremap_page_range
-> > will need the same treatment.
->
-> Good point. Only one of the callers in arch/powerpc needs adjusting.
-> Found few other similar arch users.
-> See attached patch.
->
-> ioremap_page() in arch/arm/mm/ioremap.c is an interesting case.
-> It is EXPORT_SYMBOL, but there are no in-tree users.
-> I think we shouldn't apply checks to it,
-> since some out-of-tree module may fail.
-> I have no arm boards to test, I suggest we play safe than sorry.
+Quoting Shradha Todi (2024-03-06 04:13:03)
+> >=20
+> > When clk_bulk_get_all() returns zero then we return success here.
+> >=20
+>=20
+> Yes, we are returning success in case there are no clocks as well. In cas=
+e there
+> are no
+> clocks defined in the DT-node, then it is assumed that the driver does no=
+t need
+> any
+> clock manipulation for driver operation. So the intention here is to cont=
+inue
+> without
+> throwing error.
 
-I double checked on my newly setup arm64 VM that the fix works.
-I believe the regression needs to be fixed today, but
-looks like Chritoph is out for today.
-So I can either revert the offending commit or
-apply the proposed fix to bpf-next.
-I'm going to do the latter soon if no one objects.
+Maybe we shouldn't even return the clks to the caller. Do you have any
+use for the clk pointers?
 
