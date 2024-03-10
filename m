@@ -1,235 +1,119 @@
-Return-Path: <linux-pci+bounces-4706-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4707-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E0E9877731
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 14:51:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B3D98777CD
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 18:45:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C002B281426
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 13:51:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E7DD01F210A9
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 17:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43512C6AA;
-	Sun, 10 Mar 2024 13:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNvXKKh8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB59A25605;
+	Sun, 10 Mar 2024 17:45:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01391E504
-	for <linux-pci@vger.kernel.org>; Sun, 10 Mar 2024 13:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C71B21115;
+	Sun, 10 Mar 2024 17:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710078711; cv=none; b=ZPRyN0L6VPc9PnxYGx/grc9YAX45zwlqWj/xYbE9l3e1WlYZPfafA8jesE6DmauFhRF6BM/1vc/DpuffXxX3EBaAMFGIdihMhRdDZv5UAMjDHlfLZixFIKRcjroeCb/C6ggFqASl04rHTbYfR5S6NcB7Po0wMdEizdkdfFv4Q7Q=
+	t=1710092746; cv=none; b=e8/I4fv+sjYdR4hx3q0bPAor2djXiIx4cpSO/3ogMHHOSIoDzGitY8ZhSqwilq9fF9nyHTFF3dZSZeyDdlZrpfqF9X8mQ+qDfBsG8RsXZQqjh0xcUrZXepyrgotHUUXeuGoUWjiNxc2oVjLine2OeGHjrBu7OMnCcDQpuUkj9Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710078711; c=relaxed/simple;
-	bh=v69+LofoUSXOGRyXkN61WsY7w8MHGFdxdxcvC3D7c+M=;
+	s=arc-20240116; t=1710092746; c=relaxed/simple;
+	bh=hrQnUxJLirdyrN46Viu7HBOjLYptBIcrVHgHTEz5FvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5gv7jxnN3YcXpgSv/0gwlG20HfEsKZluTySAqG6CeLDF8Tc010NkaSscoquuXgsssd9W3yFkwKZHb3oFUda1ycW9vhXgxbcgZr5IqTeBsXjlvbWO2RmSWnpDDJ42gt384Y3Mw/J8rxv+GJiTei1On4dSaymFB1eIQ5+ICRy44U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNvXKKh8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528B0C433C7;
-	Sun, 10 Mar 2024 13:51:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710078711;
-	bh=v69+LofoUSXOGRyXkN61WsY7w8MHGFdxdxcvC3D7c+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cNvXKKh8TbJH8hsIgw8ESxq85WZtWCiFPadDf+PofV14TOwX7GDFIdNHacwtJMFKS
-	 N+NsZag4YkTcq106t9ndRlpXIeqF7LTaLTG6PUjAfkPk0Pyn+25aXsZwu4Uw0TlMqb
-	 eqgT5IPNM8L4wqt5CtZFBDn7J3GY+OICfXfVWH4d2pcf0oV+fu9+AvSYTKUOsmzRzd
-	 6fIEoaB3DdNwKbuT+thyz5i2sUh4FEi/BWXkRnV9i4rSMpl3C39UFc3MJcsQ17+Z8O
-	 Z3iS/Y51CvtYBa0xEmKyMJXxaD5to6kQTBlaurhJnlgexs86SXKIs0+Eu5bCieElAG
-	 xM1g4kU5pspXA==
-Date: Sun, 10 Mar 2024 19:21:40 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=LBWaLukqt2onftfdiVIkmb4hiMpV1AJbbdFWtNHFBo7+E8jTBe8dXRwyq9Xf8yGT9oMkGO8mBzqsMVBlG4LW/jlBt5sv7+4cLO1Nn9fEjcMG958iTsHsX59j70118KWeBWefw429hR8vgrBR/wfWaSuxxAI2uM8P2L0+0vE1fCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6ddf26eba3cso2824790a34.0;
+        Sun, 10 Mar 2024 10:45:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710092744; x=1710697544;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S7iPTCl8r4EkA4EfZ5hPRJf4v1rg1K2hUgK6qm67XQU=;
+        b=pq65PE40YWaeoc1lsDTD4P9ekbP5WOqEdGE8FYI8IvfCSjHU2wYEXirtpw2tqK+fkl
+         ZPMU2Bu8e3yKBhabnM9/aCtJYsthTk4t0+snwJlASXm8Nwi7a3/tzN6TeH77CoUlENBn
+         ywIrpX9fu+eAo5CbppmCghyGR2r5n+dfqiDXwdazI7+8DEdbGLOGiK7To1u69VixBWMl
+         srR1XGMQiKMWrYs/MEge+AHYtyndUJDobo3eaQQAZ8XDbAsvYwpXMJyBskx/GcRqk36w
+         uRcVh1Lu+1I15X5iT0Fu6FqdCf0rVF/7F+eZJiI8KcDuNCrC+gC17H3vmBfSAlpVxl8R
+         kEog==
+X-Forwarded-Encrypted: i=1; AJvYcCXmSVxQBQAL1uJRKncLR8/nNRJxwUnZEiarhTklSzyWk9x/rdAIpYqpB7Jc25wnrZRek8mwdeQr/nlxyKIEip6LwWcH27xIDoaaRn5OZzXHyEcKeoP0I2xw26OB+yapOxbRg/5vyXsBzGrFLrGqL+9dlJlUp6R+4ZxQ5Lx7DIm7Kg+95F4fhLI2Chq+FATyrfZyztIQq2S7grtWk76znA==
+X-Gm-Message-State: AOJu0Ywvd0OS3NIHgRf+tuYM8Ur7QQ7WZDNx8m9BH1US33Ux7Nu/cvMa
+	NKHb4YNZSkQfeGdNmVVDMD8++f4IArEPLbfYFVe687ipKCdlqyV5I/oC7W+xWLYw+A==
+X-Google-Smtp-Source: AGHT+IEcfNjhsv73rREw3FDt64vqTpH5i74RFUwWehwR6mOMV0r1WNXFeD8Aop5kBWRwiJ04EI+nvg==
+X-Received: by 2002:a9d:69cc:0:b0:6e5:5cd:6b08 with SMTP id v12-20020a9d69cc000000b006e505cd6b08mr6147920oto.32.1710092744079;
+        Sun, 10 Mar 2024 10:45:44 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id c13-20020a63350d000000b0059b2316be86sm2733363pga.46.2024.03.10.10.45.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Mar 2024 10:45:43 -0700 (PDT)
+Date: Mon, 11 Mar 2024 02:45:41 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20240310135140.GF3390@thinkpad>
-References: <20240130064555.GC32821@thinkpad>
- <Zbi6q1aigV35yy9b@google.com>
- <20240130122906.GE83288@thinkpad>
- <Zbkvg92pb-bqEwy2@google.com>
- <20240130183626.GE4218@thinkpad>
- <ZcC_xMhKdpK2G_AS@google.com>
- <20240206171043.GE8333@thinkpad>
- <ZdTikV__wg67dtn5@google.com>
- <20240228172951.GB21858@thinkpad>
- <Zeha9dCwyXH7C35j@google.com>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Enable BDF to SID translation properly
+Message-ID: <20240310174541.GA2765217@rocinante>
+References: <20240307-pci-bdf-sid-fix-v1-1-9423a7e2d63c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zeha9dCwyXH7C35j@google.com>
+In-Reply-To: <20240307-pci-bdf-sid-fix-v1-1-9423a7e2d63c@linaro.org>
 
-On Wed, Mar 06, 2024 at 05:30:53PM +0530, Ajay Agarwal wrote:
-> On Wed, Feb 28, 2024 at 10:59:51PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Feb 20, 2024 at 11:04:09PM +0530, Ajay Agarwal wrote:
-> > > On Tue, Feb 06, 2024 at 10:40:43PM +0530, Manivannan Sadhasivam wrote:
-> > > > + Joao
-> > > > 
-> > > > On Mon, Feb 05, 2024 at 04:30:20PM +0530, Ajay Agarwal wrote:
-> > > > > On Wed, Jan 31, 2024 at 12:06:26AM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Tue, Jan 30, 2024 at 10:48:59PM +0530, Ajay Agarwal wrote:
-> > > > > > > On Tue, Jan 30, 2024 at 05:59:06PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > > > On Tue, Jan 30, 2024 at 02:30:27PM +0530, Ajay Agarwal wrote:
-> > > > > > > > 
-> > > > > > > > [...]
-> > > > > > > > 
-> > > > > > > > > > > > > > If that's the case with your driver, when are you starting the link training?
-> > > > > > > > > > > > > > 
-> > > > > > > > > > > > > The link training starts later based on a userspace/debugfs trigger.
-> > > > > > > > > > > > > 
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Why does it happen as such? What's the problem in starting the link during
-> > > > > > > > > > > > probe? Keep it in mind that if you rely on the userspace for starting the link
-> > > > > > > > > > > > based on a platform (like Android), then if the same SoC or peripheral instance
-> > > > > > > > > > > > get reused in other platform (non-android), the it won't be a seamless user
-> > > > > > > > > > > > experience.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > If there are any other usecases, please state them.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > - Mani
-> > > > > > > > > > > >
-> > > > > > > > > > > This SoC is targeted for an android phone usecase and the endpoints
-> > > > > > > > > > > being enumerated need to go through an appropriate and device specific
-> > > > > > > > > > > power sequence which gets triggered only when the userspace is up. The
-> > > > > > > > > > > PCIe probe cannot assume that the EPs have been powered up already and
-> > > > > > > > > > > hence the link-up is not attempted.
-> > > > > > > > > > 
-> > > > > > > > > > Still, I do not see the necessity to not call start_link() during probe. If you
-> > > > > > > > > I am not adding any logic/condition around calling the start_link()
-> > > > > > > > > itself. I am only avoiding the wait for the link to be up if the
-> > > > > > > > > controller driver has not defined start_link().
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > I'm saying that not defining the start_link() callback itself is wrong.
-> > > > > > > > 
-> > > > > > > Whether the start_link() should be defined or not, is a different
-> > > > > > > design discussion. We currently have 2 drivers in upstream (intel-gw and
-> > > > > > > dw-plat) which do not have start_link() defined. Waiting for the link to
-> > > > > > > come up for the platforms using those drivers is not a good idea. And
-> > > > > > > that is what we are trying to avoid.
-> > > > > > > 
-> > > > > > 
-> > > > > > NO. The sole intention of this patch is to fix the delay observed with _your_
-> > > > > > out-of-tree controller driver as you explicitly said before. Impact for the
-> > > > > > existing 2 drivers are just a side effect.
-> > > > > >
-> > > > > Hi Mani,
-> > > > > What is the expectation from the pcie-designware-host driver? If the
-> > > > > .start_link() has to be defined by the vendor driver, then shouldn't the
-> > > > > probe be failed if the vendor has not defined it? Thereby failing the
-> > > > > probe for intel-gw and pcie-dw-plat drivers?
-> > > > > 
-> > > > 
-> > > > intel-gw maintainer agreed to fix the driver [1], but I cannot really comment on
-> > > > the other one. It is not starting the link at all, so don't know how it works.
-> > > > I've CCed the driver author to get some idea.
-> > > > 
-> > > > [1] https://lore.kernel.org/linux-pci/BY3PR19MB50764E90F107B3256189804CBD432@BY3PR19MB5076.namprd19.prod.outlook.com/
-> > > > 
-> > > > > Additionally, if the link fails to come up even after 1 sec of wait
-> > > > > time, shouldn't the probe be failed in that case too?
-> > > > > 
-> > > > 
-> > > > Why? The device can be attached at any point of time. What I'm stressing is, the
-> > > > driver should check for the link to be up during probe and if there is no
-> > > > device, then it should just continue and hope for the device to show up later.
-> > > My change is still checking whether the link is up during probe.
-> > > If yes, print the link status (negotiated speed and width).
-> > > If no, and the .start_link() exists, then call the same and wait for 1
-> > > second for the link to be up.
-> > > 
-> > 
-> > There is a reason why we are wating for 1s for the device to show up during
-> > probe. Please look at my earlier reply to Bjorn.
-> >
-> Yes, I looked at that. I am not sure if that is the real reason behind
-> this delay. The explanation that you quoted from the spec talks about
-> allowing 1s delay for the EP to return a completion. Whereas the delay
-> here is to wait for the link training itself to be completed.
+Hello,
+
+> Qcom SoCs making use of ARM SMMU require BDF to SID translation table in
+> the driver to properly map the SID for the PCIe devices based on their BDF
+> identifier. This is currently achieved with the help of
+> qcom_pcie_config_sid_1_9_0() function for SoCs supporting the 1_9_0 config.
 > 
-
-It is implied, afaiu. But the best person to comment here is Lorenzo.
-
-> We could surely wait for Lorenzo to explain the reason behind this
-> delay, but he himself approved the earlier patch [1] (which caused the
-> regression and had to be reverted):
+> But With newer Qcom SoCs starting from SM8450, BDF to SID translation is
+> set to bypass mode by default in hardware. Due to this, the translation
+> table that is set in the qcom_pcie_config_sid_1_9_0() is essentially
+> unused and the default SID is used for all endpoints in SoCs starting from
+> SM8450.
 > 
-
-This is not a valid argument.
- 
->  [1] https://lore.kernel.org/all/168509076553.135117.7288121992217982937.b4-ty@kernel.org/
+> This is a security concern and also warrants swapping the DeviceID in DT
+> while using the GIC ITS to handle MSIs from endpoints. The swapping is
+> currently done like below in DT when using GIC ITS:
 > 
-> > > > This way, the driver can detect the powered up devices during boot and also
-> > > > detect the hotplug devices.
-> > > >
-> > > If the .start_link() is not defined, how will the link come up? Are you
-> > > assuming that the bootloader might have enabled link training?
-> > > 
-> > 
-> > Yes, something like that. But that assumption is moot in the first place.
-> > 
-> Isnt it weird that a PCIe driver, which will most likely initialize all
-> the resources like power, resets, clocks etc., relies on the bootloader
-> to have enabled the link training?
+> 			/*
+> 			 * MSIs for BDF (1:0.0) only works with Device ID 0x5980.
+> 			 * Hence, the IDs are swapped.
+> 			 */
+> 			msi-map = <0x0 &gic_its 0x5981 0x1>,
+> 				  <0x100 &gic_its 0x5980 0x1>;
 > 
-
-That's why I said that assumption is 'moot'.
-
-> I think it is safe to assume that a driver should have the start_link()
-> defined if it wishes to bring the link up during probe.
+> Here, swapping of the DeviceIDs ensure that the endpoint with BDF (1:0.0)
+> gets the DeviceID 0x5980 which is associated with the default SID as per
+> the iommu mapping in DT. So MSIs were delivered with IDs swapped so far.
+> But this also means the Root Port (0:0.0) won't receive any MSIs (for PME,
+> AER etc...)
 > 
+> So let's fix these issues by clearing the BDF to SID bypass mode for all
+> SoCs making use of the 1_9_0 config. This allows the PCIe devices to use
+> the correct SID, thus avoiding the DeviceID swapping hack in DT and also
+> achieving the isolation between devices.
 
-I keep repeating this. But let me do one more time.
+Applied to controller/qcom, thank you!
 
-There should be a valid reason for a driver to defer the start_link(). In your
-case, the problem is you are tying the driver with the Android usecase which is
-not going to work on other platforms. What is worse is, you are forcing the
-users to enable the link training post boot. It may work for you currently, as
-you need to bring up the endpoint manually for various reasons, but what if some
-other OEM has connected an endpoint that gets powered on during the controller
-probe? Still the user has to start the link manually. Will that provide a nice
-user experience? NO. Then the developers will start complaining that they cannot
-see the endpoint during boot even though it got powered up properly.
+[1/1] PCI: qcom: Enable BDF to SID translation properly
+      https://git.kernel.org/pci/pci/c/b9bc750e1193
 
-Second, we cannot have different policies for different drivers to start the
-link unless there is a valid reason. This will become a maintenance burden. For
-sure, there are differences in the current drivers, but those should be fixed
-instead of extended.
-
-So to address your issue, I can suggest two things:
-
-1. Wait for Lorenzo to clarify the 1s loop while waiting for link up. If that
-seem to be required, then keep this patch out-of-tree. Btw, your driver is still
-out-of-tree...
-
-2. Try to bringup the endpoint during boot itself. We already have a series to
-achieve that [1].
-
-- Mani
-
-[1] https://lore.kernel.org/linux-pci/20240216203215.40870-1-brgl@bgdev.pl/
-
--- 
-மணிவண்ணன் சதாசிவம்
+	Krzysztof
 
