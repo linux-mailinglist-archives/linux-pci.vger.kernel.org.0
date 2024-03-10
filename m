@@ -1,274 +1,216 @@
-Return-Path: <linux-pci+bounces-4700-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4701-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 345C9877569
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 06:29:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 855E68776DA
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 13:54:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8D261C20888
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 05:29:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A554281C39
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 12:54:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96BFB6AC2;
-	Sun, 10 Mar 2024 05:28:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9389E1FA3;
+	Sun, 10 Mar 2024 12:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RcIcQy0j"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zkgdkt70"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6D416FF47
-	for <linux-pci@vger.kernel.org>; Sun, 10 Mar 2024 05:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C983A2C1BC
+	for <linux-pci@vger.kernel.org>; Sun, 10 Mar 2024 12:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710048538; cv=none; b=ZcaSdxTP4TI0eA+hWfhYxPgAwt2R8g06naGJU9L/9paZnDYEzwLRTFDX179jHdFY4f5WcjrgGXTWWoSe//ae/JrZuCR4+5jMWiQv9V06EYi6tiify52Y9yw5U6j467sAxAxiIsJxbh9e72eLGzyySUAqb6IEc0rLh3+cc9wbg8A=
+	t=1710075265; cv=none; b=aBt7X1sKNKzPmp18Hyhh7TgRUD0ZIfpEC7WWxRsnTu4s2/tE7hKXFB0Lfukier5rvAwWsqx2Ef7AN+u9PCP7/2251GzMUbsmPTeBovJo91ZoHmOracyx1lTxNk7qNZSOHnT2V7yFX2rz7abc291CRZ1iv4Lo24rq/vE+y/iLxvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710048538; c=relaxed/simple;
-	bh=2X5giRSIHebq5INRWl3qcOaRqC5PMuZx47S3zR1KWk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TnAwP8wEbq3bjqwj4eCt1MC7IDw08OqVHv1UHWhH/j7m5ZTI6VFvHi1rnoXxFVlQQPTzFnv3gXICpM6IRUyYF09fZf+/3f44QJZ+x5L86D6F7B+b5DjXNgBIqzKbXaol/PWEpCSjG5AJgxuxQCjugEbBaEDQREtCKQUyxzg/ak8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RcIcQy0j; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710048536; x=1741584536;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=2X5giRSIHebq5INRWl3qcOaRqC5PMuZx47S3zR1KWk4=;
-  b=RcIcQy0j+DFh5p9/rgblVYLNrhyg6mav9Nqya1qZUAhspboNx3Jff5Dq
-   3jRt2sX2Ooo544QXSxKihdNjKKH9jKsUoj689uiWJWw9EPqSzUc5w5kee
-   o1WpeoACWVe6f8qGaQHHN8JdVzVtUxqTbALnkvMkexK3Cu49CWsGov4Lf
-   VNjuw3RqHmJ+dcp20zMviDfjZ40WYF+sUzOffYmdzH/0Lyi5BjaLZwsxU
-   oV4zfsGoTLHh1dspz3Xyqyhj33hLK4GyHXVcMobh029cndHQi2s3dnovQ
-   RfPiBt7zLEMOEaMv9m1HOHpcxv7UOdCG/m3WG32p5PG0Mk/PtgKZ9PAMz
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11008"; a="15461828"
-X-IronPort-AV: E=Sophos;i="6.07,114,1708416000"; 
-   d="scan'208";a="15461828"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2024 21:28:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,114,1708416000"; 
-   d="scan'208";a="48303151"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 09 Mar 2024 21:28:54 -0800
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rjBjv-0007xS-2T;
-	Sun, 10 Mar 2024 05:28:51 +0000
-Date: Sun, 10 Mar 2024 13:28:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/broadcom] BUILD SUCCESS
- 48389d98433241c81c576860ac38f43a73bbf544
-Message-ID: <202403101312.jLEhAaFM-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1710075265; c=relaxed/simple;
+	bh=KNKrikJqZISr2kYrc5CDd+izWHNtbd02L7Iv6YDOW5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LCt2v59EE/wlOzakJzi6P/fkpk1yFtVXu6jU5MVi5lPkjQezPkmI2Te6L+iLl2vBdEVJ2xQN2bdwRMhk/KltE4t4u1jRP0yML6qrpyOiNMBLWTz3SKppgke0dQhLLPqOqTp9+qMho0IU1TeDGpzzy7kkdt4NHwDrQUblgeriYI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zkgdkt70; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dd10a37d68so29494165ad.2
+        for <linux-pci@vger.kernel.org>; Sun, 10 Mar 2024 05:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710075263; x=1710680063; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/OwG24vRkQy9wB5IPBp4dArvNgRlN9XugeDOLt3z9CU=;
+        b=Zkgdkt70k2Ic4Y4+uKsaapy/A/XTSXAYzaD7c0PXEDjcUAij26x3rtqqaWDgWG+cUk
+         WaVcaSk64sqtt8SRm4pIoKfnJYsN+LR9x3+POy0YJRQW8/fgpCBDbMfFfXNo2aYlqciF
+         8YdZhiQBP1RZgqSyNHboL9cuDGvxV0sdwD+Uwj4jbRo2mFiPWdu8sKC5br9Z8E6JPxak
+         EkfWFKBBF8q0GLBsJOrG7Q5szFJR6j5vnIXTT8TeQ3BLV4SgfnrNl//Lx2jfA1BFlG+O
+         tBYjp1D9Qf0vzzTx8XqMyG29jGnJqgR2VVbO64nDTbny/2su224WPd5xttGxwg44VN0J
+         tcHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710075263; x=1710680063;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/OwG24vRkQy9wB5IPBp4dArvNgRlN9XugeDOLt3z9CU=;
+        b=qo4DlUD3T169FPMljbE/ljy4H5SSqXmYSuFPmeWMtPP24vY7usEFQH3wN4UMEdmhpN
+         L0A38rNYifnHMzC4D2vuPCT7M+UidRwElr2orGPdaOtn9L0yhdOnjtCFOeq98nw0Sxv5
+         YAr3npJBk/TmoiQRa3wZ/ziSjsrEsj2/bfrSHT3B70gc0Uvr+hO9PbPgm5QkSveiw98q
+         mqaBko3HJG7Kd2WHP7Nd2wD2d57qI8Tr5HYYvkYQtdp/TvMGAME1OrBM5ASujqpIFi4z
+         H5gI3ba/oqyYXdn8Z9DfX1Xqpa/0nmovoC1erb9YNMA3vUYrbtb10GowfnrfvUd54jqp
+         7ACw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlvjov76hgJmdQmtwl/sbY/SS1/vkdLDJoLrcQdE3xpvEsFvZP7p7YCy9wxbE7V8K/qTW5mVSWL6Pbxh09cUVSVzS73Qwp0I2+
+X-Gm-Message-State: AOJu0YwtmDXiElJRW9hipdIg7KYtq8vLZ+TqwdxVVIIok+6pAKNLcfl3
+	Lqx7W658JQK58F4snx6vid78TX+lcBXYXYz4ydu4JnGlklkRqvpmJih+eRGk1w==
+X-Google-Smtp-Source: AGHT+IEVQ7GfOqMRCB1dIQ1AspY1rQeQnuOs3JnjOjR2lJDMiLLjo5FyQaHpOpQoHUZqjJU2W/dK5Q==
+X-Received: by 2002:a17:902:e74d:b0:1dc:e58:8ab4 with SMTP id p13-20020a170902e74d00b001dc0e588ab4mr3741393plf.9.1710075262835;
+        Sun, 10 Mar 2024 05:54:22 -0700 (PDT)
+Received: from thinkpad ([120.138.12.86])
+        by smtp.gmail.com with ESMTPSA id i8-20020a170902c94800b001dcf91da5c8sm2642373pla.95.2024.03.10.05.54.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Mar 2024 05:54:22 -0700 (PDT)
+Date: Sun, 10 Mar 2024 18:24:15 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
+	quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com,
+	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+	quic_schintav@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] PCI: qcom: Override NO_SNOOP attribute for
+ SA8775P RC
+Message-ID: <20240310125415.GA3390@thinkpad>
+References: <1709730673-6699-1-git-send-email-quic_msarkar@quicinc.com>
+ <1709730673-6699-2-git-send-email-quic_msarkar@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1709730673-6699-2-git-send-email-quic_msarkar@quicinc.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/broadcom
-branch HEAD: 48389d98433241c81c576860ac38f43a73bbf544  PCI: brcmstb: Fix broken brcm_pcie_mdio_write() polling
+On Wed, Mar 06, 2024 at 06:41:10PM +0530, Mrinmay Sarkar wrote:
+> Due to some hardware changes, SA8775P has set the NO_SNOOP attribute
+> in its TLP for all the PCIe controllers. NO_SNOOP attribute when set,
+> the requester is indicating that no cache coherency issue exist for
+> the addressed memory on the endpoint i.e., memory is not cached. But
+> in reality, requester cannot assume this unless there is a complete
+> control/visibility over the addressed memory on the endpoint.
+> 
+> And worst case, if the memory is cached on the endpoint, it may lead to
+> memory corruption issues. It should be noted that the caching of memory
+> on the endpoint is not solely dependent on the NO_SNOOP attribute in TLP.
+> 
+> So to avoid the corruption, this patch overrides the NO_SNOOP attribute
+> by setting the PCIE_PARF_NO_SNOOP_OVERIDE register. This patch is not
+> needed for other upstream supported platforms since they do not set
+> NO_SNOOP attribute by default.
+> 
+> 8775 has IP version 1.34.0 so introduce a new cfg(cfg_1_34_0) for this
+> platform. Assign override_no_snoop flag into struct qcom_pcie_cfg and
+> set it true in cfg_1_34_0 and enable cache snooping if this particular
+> flag is true.
+> 
+> Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
 
-elapsed time: 727m
+Minor nit below. With that addressed,
 
-configs tested: 183
-configs skipped: 3
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 2ce2a3b..d4c1e69 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -51,6 +51,7 @@
+>  #define PARF_SID_OFFSET				0x234
+>  #define PARF_BDF_TRANSLATE_CFG			0x24c
+>  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+> +#define PARF_NO_SNOOP_OVERIDE			0x3d4
+>  #define PARF_DEVICE_TYPE			0x1000
+>  #define PARF_BDF_TO_SID_TABLE_N			0x2000
+>  
+> @@ -117,6 +118,10 @@
+>  /* PARF_LTSSM register fields */
+>  #define LTSSM_EN				BIT(8)
+>  
+> +/* PARF_NO_SNOOP_OVERIDE register fields */
+> +#define WR_NO_SNOOP_OVERIDE_EN			BIT(1)
+> +#define RD_NO_SNOOP_OVERIDE_EN			BIT(3)
+> +
+>  /* PARF_DEVICE_TYPE register fields */
+>  #define DEVICE_TYPE_RC				0x4
+>  
+> @@ -227,8 +232,14 @@ struct qcom_pcie_ops {
+>  	int (*config_sid)(struct qcom_pcie *pcie);
+>  };
+>  
+> + /**
+> +  * struct qcom_pcie_cfg - Per SoC config struct
+> +  * @ops: qcom pcie ops structure
+> +  * @override_no_snoop: Override NO_SNOOP attribute in TLP to enable cache snooping
+> +  */
+>  struct qcom_pcie_cfg {
+>  	const struct qcom_pcie_ops *ops;
+> +	bool override_no_snoop;
+>  };
+>  
+>  struct qcom_pcie {
+> @@ -961,6 +972,13 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  
+>  static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+>  {
+> +	const struct qcom_pcie_cfg *pcie_cfg = pcie->cfg;
+> +
+> +	/* Override NO_SNOOP attribute in TLP to enable cache snooping */
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240310   gcc  
-arc                   randconfig-002-20240310   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240310   gcc  
-arm                   randconfig-002-20240310   gcc  
-arm                   randconfig-003-20240310   gcc  
-arm                   randconfig-004-20240310   gcc  
-arm                        shmobile_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   clang
-arm64                               defconfig   gcc  
-arm64                 randconfig-002-20240310   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240310   gcc  
-csky                  randconfig-002-20240310   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240310   clang
-i386         buildonly-randconfig-002-20240310   clang
-i386         buildonly-randconfig-003-20240310   clang
-i386         buildonly-randconfig-004-20240310   clang
-i386         buildonly-randconfig-005-20240310   gcc  
-i386         buildonly-randconfig-006-20240310   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240310   gcc  
-i386                  randconfig-002-20240310   gcc  
-i386                  randconfig-003-20240310   clang
-i386                  randconfig-004-20240310   gcc  
-i386                  randconfig-005-20240310   gcc  
-i386                  randconfig-006-20240310   gcc  
-i386                  randconfig-011-20240310   clang
-i386                  randconfig-012-20240310   clang
-i386                  randconfig-013-20240310   clang
-i386                  randconfig-014-20240310   clang
-i386                  randconfig-015-20240310   clang
-i386                  randconfig-016-20240310   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240310   gcc  
-loongarch             randconfig-002-20240310   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5208evb_defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-m68k                            q40_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     cu1000-neo_defconfig   gcc  
-mips                           ip22_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240310   gcc  
-nios2                 randconfig-002-20240310   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240310   gcc  
-parisc                randconfig-002-20240310   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     ksi8560_defconfig   gcc  
-powerpc                    mvme5100_defconfig   gcc  
-powerpc               randconfig-001-20240310   gcc  
-powerpc64             randconfig-001-20240310   gcc  
-powerpc64             randconfig-002-20240310   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                 randconfig-001-20240310   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                             espt_defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                    randconfig-001-20240310   gcc  
-sh                    randconfig-002-20240310   gcc  
-sh                          rsk7264_defconfig   gcc  
-sh                           se7750_defconfig   gcc  
-sh                             sh03_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            alldefconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240310   gcc  
-sparc64               randconfig-002-20240310   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240310   gcc  
-um                    randconfig-002-20240310   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240310   clang
-x86_64       buildonly-randconfig-002-20240310   gcc  
-x86_64       buildonly-randconfig-003-20240310   clang
-x86_64       buildonly-randconfig-004-20240310   gcc  
-x86_64       buildonly-randconfig-005-20240310   clang
-x86_64       buildonly-randconfig-006-20240310   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240310   clang
-x86_64                randconfig-002-20240310   gcc  
-x86_64                randconfig-003-20240310   gcc  
-x86_64                randconfig-004-20240310   gcc  
-x86_64                randconfig-005-20240310   clang
-x86_64                randconfig-006-20240310   gcc  
-x86_64                randconfig-011-20240310   gcc  
-x86_64                randconfig-012-20240310   clang
-x86_64                randconfig-013-20240310   clang
-x86_64                randconfig-014-20240310   gcc  
-x86_64                randconfig-015-20240310   clang
-x86_64                randconfig-016-20240310   gcc  
-x86_64                randconfig-071-20240310   gcc  
-x86_64                randconfig-072-20240310   gcc  
-x86_64                randconfig-073-20240310   gcc  
-x86_64                randconfig-074-20240310   gcc  
-x86_64                randconfig-075-20240310   clang
-x86_64                randconfig-076-20240310   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240310   gcc  
-xtensa                randconfig-002-20240310   gcc  
-xtensa                         virt_defconfig   gcc  
+This comment is now redundant due to Kdoc of override_no_snoop.
+
+- Mani
+
+> +	if (pcie_cfg->override_no_snoop)
+> +		writel(WR_NO_SNOOP_OVERIDE_EN | RD_NO_SNOOP_OVERIDE_EN,
+> +				pcie->parf + PARF_NO_SNOOP_OVERIDE);
+> +
+>  	qcom_pcie_clear_hpc(pcie->pci);
+>  
+>  	return 0;
+> @@ -1334,6 +1352,11 @@ static const struct qcom_pcie_cfg cfg_1_9_0 = {
+>  	.ops = &ops_1_9_0,
+>  };
+>  
+> +static const struct qcom_pcie_cfg cfg_1_34_0 = {
+> +	.ops = &ops_1_9_0,
+> +	.override_no_snoop = true,
+> +};
+> +
+>  static const struct qcom_pcie_cfg cfg_2_1_0 = {
+>  	.ops = &ops_2_1_0,
+>  };
+> @@ -1630,7 +1653,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
+>  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
+>  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
+> -	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_9_0},
+> +	{ .compatible = "qcom,pcie-sa8775p", .data = &cfg_1_34_0},
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sc8180x", .data = &cfg_1_9_0 },
+>  	{ .compatible = "qcom,pcie-sc8280xp", .data = &cfg_1_9_0 },
+> -- 
+> 2.7.4
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
 
