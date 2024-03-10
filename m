@@ -1,68 +1,69 @@
-Return-Path: <linux-pci+bounces-4710-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4711-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42DC88777F8
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 19:21:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1354877802
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 19:34:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 750171C208A7
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 18:21:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 49149B20D13
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 18:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 330CE39ADB;
-	Sun, 10 Mar 2024 18:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDBD11E863;
+	Sun, 10 Mar 2024 18:34:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7DE39AD5;
-	Sun, 10 Mar 2024 18:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD32EAD8;
+	Sun, 10 Mar 2024 18:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710094899; cv=none; b=bUef4LbkE4FSQBnXpw/1IkxN5BS9mAwXQspu79OXdYMmSoobc85ifazjNiQKWFQw+CKIa1CdxirBFUYjQZsTNEKwjUuTmRYxHV24dTvSSK/crUk5EhzsUVbOlmtiszzWKeqm5msf4OFRj80v7eJlCiNEBorwIGcRcYrRXuToCkU=
+	t=1710095660; cv=none; b=qYd8lPQ2X9FRkW2920EHNzH5UUHAb5fAgUYbpHqwvTJc/sJy33WxGzECP24EpDB2IK4jMuif64Y/TMxYs1pHbbEswhkgWs8+xwR8c8ppB5ffp9quMxqhZIVs2AWayf2lUYvB84gX7rlVn24xsAt0PqvJ0Hp4Sohf5bn0efZGD7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710094899; c=relaxed/simple;
-	bh=ogD7A+lU0Xk2nSwUUTddYqHAbSgLngzdB0Fj/vD7ihc=;
+	s=arc-20240116; t=1710095660; c=relaxed/simple;
+	bh=ujM31iBXHdBt4kaCQzBTvFa1bk670UqJUJyI7JLKO08=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XkYx8ikC76MTomCxwWqeHN1LnHJuGELNltSJdq/Ct2oT51Qa09IBenzRD0022YcEhFtheVWAMLo4NzlJ+YbQHz5hXOZIfyvqywKxw/f7K8T4rlM6sxL4bkojS36mcfH1uQ0BOIdQLkUKhD4tOsV3RJhVbkAacgaxkrDn7M5VLMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.51
+	 Content-Type:Content-Disposition:In-Reply-To; b=Up84nERJJMo4o0esb/iWTPE8uxvy26iBwjdwNTTYhBAZS1YrfdC43tT31tAsrGH1eowUFdd864i6SHJjETVku9+YYTOcPu7UHTsfZV9jHhaiMpEemeuytz3ux8nK10oV8JyDGl6Jg862R1pTyhuF34gLH961+OIlcmpeQhA3Fq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33e914cdc48so410738f8f.0;
-        Sun, 10 Mar 2024 11:21:37 -0700 (PDT)
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5a17a739935so2183345eaf.1;
+        Sun, 10 Mar 2024 11:34:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710094896; x=1710699696;
+        d=1e100.net; s=20230601; t=1710095658; x=1710700458;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QPPlKMk8tkR5xNIqfm5xQrFsFfknZDKVzl8e0aRQYAc=;
-        b=lxS6wvtpr1BFldpe/LEdkAEo3gz9T5FuDbkacSTBIa6NFx1CjCE4b5TJylAyi738zD
-         fflmLVOwzPcnH/sgsavJClCbHd9LvOIPfKINKwj1EGekb2GlqBoHRQc+eq2y+1C8oLFD
-         C2GxxDVkL6g7RWGR8XbXYWMS6Jdsiz+Z4amqmd6X7TCkoLUK+SydFn2bPFKgGSB9A5q/
-         9vfBkWlN9sgDn1riWsMPdQq897hrYjGhDbuF4zZZz6UIridDCV/qBcCIl4sM2NKjLUZb
-         Pg178nQ4Z3RyYKP+GDAzdJ6XEaY7y3mMuC3uvQOJGWmx1CxWL+Oc0gOsxuVei+YO9YwB
-         oP1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUSmc06n3rpRXKouvTUuUa9dfbez7ElX0y+F+W28MYt3c6ZVxYAoYr17hVamxYl5g7UdTpeyd3I5xQmxBnLP3sPfRrzgZkHvFJ4wM+DJGrXKJwqlgaVt2oIclySkq8LQ/UcmJm3rD1dS/EAmRbp4EhB8gS6nEpwj1QarEppp9sqIRcgoxii
-X-Gm-Message-State: AOJu0YzlAgy+qOz05/+F5SJYCnF3rpzkkWJRDFBSoUtCh2+8niRwkZSo
-	cp1eoNAkz+O91RV0KUdHRD+RyRRnuwFse+JnajSg+N7/PIpWtEGV
-X-Google-Smtp-Source: AGHT+IEjEu3yeVEK7O7LFsmAK7NVxXZRV4dcSMwmEOKxcahcuCmDp2xxjm5bJhoVyJdSQeAGOxZn8w==
-X-Received: by 2002:a5d:5245:0:b0:33e:7b3d:8efa with SMTP id k5-20020a5d5245000000b0033e7b3d8efamr3721969wrc.49.1710094895583;
-        Sun, 10 Mar 2024 11:21:35 -0700 (PDT)
+        bh=2HuVop9TXUF1sME+GPkklQ5nsaJvPNR91ikXjkm6UTI=;
+        b=qlriZGVQmc97gNa/X5ROd39tUjVkT/v9rD/7KwSaybug49+398CjMGBcsMFuKiHu4e
+         eSm25ZKOTiCLbXKI1HEpyxmkeDjoBLGwdOh3gsCsI7M4ReRZZXEa21AhK4exi46oYWul
+         Dy4F1Tc7RnCmleyFqvZ7XVNu+o9pWZwa+iDdJCV/w8MeQDq5664CFsqDLbPhUS9EsN1t
+         fj3WCMrJhfxc28J4WsImOHK2pZw5MXQON7+JjybXBvI4LXaLUyoEnLjq4fofO9UkZBwY
+         MHX0lJ1kFXRzYP6UsLd9FbsRkYO1LhFkGYtitKMQlkVsZq4osC/gt/aEFR8s0rkR9xdP
+         bpcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXx7LhlQ4pzVFSQgWZy/bPpyaqb7wGZX679hYYOp8yVHLAWGO9+Skzm9lo+AwJCxZzFHtzDTFbqoj1tAdFv07hNfE8Ii2VQHpxdKcDxcQ1CtGm8PkMION9qOgcT3kxyjWDNFsqs6vcY
+X-Gm-Message-State: AOJu0YzUrI39EF0p15y3je62by3Sm7yuGvRWlLN8G+2+kuUPTiXj6eQp
+	iMx3El7aDjThWgmqd4N2Nxggjxq8Bbr2c3PlEOItgkhuon0+KERF
+X-Google-Smtp-Source: AGHT+IGWq3sjWNRWUuFd3bI7tiabau54smSS71nPzPxgI7GAzPVLZZHKLv+xsV4LRq35eDIfp7/nfA==
+X-Received: by 2002:a05:6830:97:b0:6e5:2213:9619 with SMTP id a23-20020a056830009700b006e522139619mr3955706oto.12.1710095658286;
+        Sun, 10 Mar 2024 11:34:18 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id bs29-20020a056000071d00b0033e952273cfsm1044633wrb.62.2024.03.10.11.21.34
+        by smtp.gmail.com with ESMTPSA id k18-20020a6568d2000000b005dc491ccdcesm2349349pgt.14.2024.03.10.11.34.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 11:21:35 -0700 (PDT)
-Date: Mon, 11 Mar 2024 03:21:32 +0900
+        Sun, 10 Mar 2024 11:34:17 -0700 (PDT)
+Date: Mon, 11 Mar 2024 03:34:16 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: mhklinux@outlook.com
-Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
 	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] PCI: hv: Fix ring buffer size calculation
-Message-ID: <20240310182132.GD2765217@rocinante>
-References: <20240216202240.251818-1-mhklinux@outlook.com>
+	linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, srk@ti.com,
+	nm@ti.com
+Subject: Re: [PATCH v4] PCI: Cadence: Clear the ARI Capability Next Function
+ Number of the last function
+Message-ID: <20240310183416.GE2765217@rocinante>
+References: <20231202085015.3048516-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -71,31 +72,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240216202240.251818-1-mhklinux@outlook.com>
+In-Reply-To: <20231202085015.3048516-1-s-vadapalli@ti.com>
 
 Hello,
 
-> For a physical PCI device that is passed through to a Hyper-V guest VM,
-> current code specifies the VMBus ring buffer size as 4 pages.  But this
-> is an inappropriate dependency, since the amount of ring buffer space
-> needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
-> size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ring
-> size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
-> is used for only a few messages during device setup and removal, so any
-> space above a few Kbytes is wasted.
+> Next Function Number field in ARI Capability Register for last function
+> must be zero by default as per the PCIe specification, indicating there
+> is no next higher number function but that's not happening in our case,
+> so this patch clears the Next Function Number field for last function used.
 > 
-> Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
-> Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
-> header is properly accounted for, and so the size is rounded up to a
-> page boundary, using the page size for which the kernel is built. While
-> w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
-> 64 Kbyte ring buffer, that's the smallest possible with that page size.
-> It's still 128 Kbytes better than the current code.
+> Signed-off-by: Jasko-EXT Wojciech <wojciech.jasko-EXT@continental-corporation.com>
+> Signed-off-by: Achal Verma <a-verma1@ti.com>
+> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-Applied to controller/hyperv, thank you!
+Applied to controller/cadence, thank you!
 
-[1/1] PCI: hv: Fix ring buffer size calculation
-      https://git.kernel.org/pci/pci/c/192c0b72019f
+[1/1] PCI: cadence: Clear the ARI Capability Next Function Number of the last function
+      https://git.kernel.org/pci/pci/c/667a006d73fb
 
 	Krzysztof
 
