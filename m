@@ -1,69 +1,71 @@
-Return-Path: <linux-pci+bounces-4711-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4712-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1354877802
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 19:34:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0B77877810
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 19:51:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 49149B20D13
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 18:34:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C1471F202A3
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Mar 2024 18:51:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDBD11E863;
-	Sun, 10 Mar 2024 18:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF3A8200DD;
+	Sun, 10 Mar 2024 18:51:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD32EAD8;
-	Sun, 10 Mar 2024 18:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1834539AD5
+	for <linux-pci@vger.kernel.org>; Sun, 10 Mar 2024 18:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710095660; cv=none; b=qYd8lPQ2X9FRkW2920EHNzH5UUHAb5fAgUYbpHqwvTJc/sJy33WxGzECP24EpDB2IK4jMuif64Y/TMxYs1pHbbEswhkgWs8+xwR8c8ppB5ffp9quMxqhZIVs2AWayf2lUYvB84gX7rlVn24xsAt0PqvJ0Hp4Sohf5bn0efZGD7s=
+	t=1710096712; cv=none; b=E+vVoE/uFjYtTab9kMmYzbnfLRRuHc8Be/mUCDCJr3pBlBzMGORliln2ZkTUbFz7JUAVLw0JMMBT+zAHkNc3RkfQO4qyfwVkRl8yVO4V5yi/sxhyOpQ0w/LTlqJjJCb84EP70RBhvvhzKurbiAhqkoZ+zIKuT0q63GARCAuQsI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710095660; c=relaxed/simple;
-	bh=ujM31iBXHdBt4kaCQzBTvFa1bk670UqJUJyI7JLKO08=;
+	s=arc-20240116; t=1710096712; c=relaxed/simple;
+	bh=gpJYcZAqHZXYAL3xiwjeB0bCf8k/B0nLu80lgS4FraY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Up84nERJJMo4o0esb/iWTPE8uxvy26iBwjdwNTTYhBAZS1YrfdC43tT31tAsrGH1eowUFdd864i6SHJjETVku9+YYTOcPu7UHTsfZV9jHhaiMpEemeuytz3ux8nK10oV8JyDGl6Jg862R1pTyhuF34gLH961+OIlcmpeQhA3Fq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=cbFC9u0mpgYa86Q/fO7XXy6cKDFc6BgkOP7tgkSPDMpqK/W7ROdCosbL853GpV2wAtBVKVRh0tmh50AwjNKfOxYs3G7QcEPDVb6HqlMZ6sFQ8l8Fo8vE0d8UsJzHTtNVBul/vmsgXBGVXPPysixjMLLTa6ZjHYIJbm+v2yR4kMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5a17a739935so2183345eaf.1;
-        Sun, 10 Mar 2024 11:34:19 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4132b04d735so45025e9.1
+        for <linux-pci@vger.kernel.org>; Sun, 10 Mar 2024 11:51:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710095658; x=1710700458;
+        d=1e100.net; s=20230601; t=1710096709; x=1710701509;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2HuVop9TXUF1sME+GPkklQ5nsaJvPNR91ikXjkm6UTI=;
-        b=qlriZGVQmc97gNa/X5ROd39tUjVkT/v9rD/7KwSaybug49+398CjMGBcsMFuKiHu4e
-         eSm25ZKOTiCLbXKI1HEpyxmkeDjoBLGwdOh3gsCsI7M4ReRZZXEa21AhK4exi46oYWul
-         Dy4F1Tc7RnCmleyFqvZ7XVNu+o9pWZwa+iDdJCV/w8MeQDq5664CFsqDLbPhUS9EsN1t
-         fj3WCMrJhfxc28J4WsImOHK2pZw5MXQON7+JjybXBvI4LXaLUyoEnLjq4fofO9UkZBwY
-         MHX0lJ1kFXRzYP6UsLd9FbsRkYO1LhFkGYtitKMQlkVsZq4osC/gt/aEFR8s0rkR9xdP
-         bpcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXx7LhlQ4pzVFSQgWZy/bPpyaqb7wGZX679hYYOp8yVHLAWGO9+Skzm9lo+AwJCxZzFHtzDTFbqoj1tAdFv07hNfE8Ii2VQHpxdKcDxcQ1CtGm8PkMION9qOgcT3kxyjWDNFsqs6vcY
-X-Gm-Message-State: AOJu0YzUrI39EF0p15y3je62by3Sm7yuGvRWlLN8G+2+kuUPTiXj6eQp
-	iMx3El7aDjThWgmqd4N2Nxggjxq8Bbr2c3PlEOItgkhuon0+KERF
-X-Google-Smtp-Source: AGHT+IGWq3sjWNRWUuFd3bI7tiabau54smSS71nPzPxgI7GAzPVLZZHKLv+xsV4LRq35eDIfp7/nfA==
-X-Received: by 2002:a05:6830:97:b0:6e5:2213:9619 with SMTP id a23-20020a056830009700b006e522139619mr3955706oto.12.1710095658286;
-        Sun, 10 Mar 2024 11:34:18 -0700 (PDT)
+        bh=beW9h7nVpsHWDV+bR+YHIZbD3xhNNllIEvrndz0rE5Q=;
+        b=FBLg4FbiTeMiMt40bGba0ADd2ezgJx5BjilzvoKIcSQOGaT4rEdMb6pg4Sd2opLPKJ
+         ENaolwHQnceYx/+MWGhXdJarLjTS1I762h/nFPdXDhz4PHR0saAwO0+4Q44RsD2NNWRd
+         fj/g/a1lWNWvUg7dDw1BOmbV61xYanH8c9Q2ocXLjbMSpxSpGCiKaIyjqnRhy2vSn0kY
+         uinYbzEuHoiShtVGU9q5hMG9XLcCORCaO6S3RRp5m6vsc6ryiNbrqh5N4Kff58fq73bC
+         39xdODqEnXquASfTNFBzRwRZlIA8U2AiLdzRx6ZAGG6opdnJJWQSEg9fyXiXPGM95OX0
+         50Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeJBet8h46XE/x9ykQlTInslIFTcAT862BOW4Ir1OOX3tcEns/9ToRYRg0MSwKupF6z4JZDtRx7SGbj+xQ8BeR1Ysrz/06swsE
+X-Gm-Message-State: AOJu0YzhoohJxTxMDgHhCg0pRoWcmux1uVQDbVVOtskLUR+tNBx2y0MS
+	E5obXcF7JD+xzmMRJPQeX6z65sM6iy8FZ5FyzRheveK38d2p24ts
+X-Google-Smtp-Source: AGHT+IEKnDGlheH7eBS0Trm1bD3QBo6nvU1rMACl+WjMVbx3D+qaISwx1s6VC9Gqil1gAhnSnkJsJw==
+X-Received: by 2002:a05:600c:19cf:b0:412:b42c:8ff1 with SMTP id u15-20020a05600c19cf00b00412b42c8ff1mr3865761wmq.21.1710096709151;
+        Sun, 10 Mar 2024 11:51:49 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id k18-20020a6568d2000000b005dc491ccdcesm2349349pgt.14.2024.03.10.11.34.17
+        by smtp.gmail.com with ESMTPSA id hg6-20020a05600c538600b00412c8117a34sm6435067wmb.47.2024.03.10.11.51.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Mar 2024 11:34:17 -0700 (PDT)
-Date: Mon, 11 Mar 2024 03:34:16 +0900
+        Sun, 10 Mar 2024 11:51:48 -0700 (PDT)
+Date: Mon, 11 Mar 2024 03:51:45 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, srk@ti.com,
-	nm@ti.com
-Subject: Re: [PATCH v4] PCI: Cadence: Clear the ARI Capability Next Function
- Number of the last function
-Message-ID: <20240310183416.GE2765217@rocinante>
-References: <20231202085015.3048516-1-s-vadapalli@ti.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: endpoint: Fix advertised resizable BAR size
+Message-ID: <20240310185145.GF2765217@rocinante>
+References: <20240307111520.3303774-1-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,24 +74,44 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231202085015.3048516-1-s-vadapalli@ti.com>
+In-Reply-To: <20240307111520.3303774-1-cassel@kernel.org>
 
 Hello,
 
-> Next Function Number field in ARI Capability Register for last function
-> must be zero by default as per the PCIe specification, indicating there
-> is no next higher number function but that's not happening in our case,
-> so this patch clears the Next Function Number field for last function used.
+> The commit message in commit fc9a77040b04 ("PCI: designware-ep: Configure
+> Resizable BAR cap to advertise the smallest size") claims that it modifies
+> the Resizable BAR capability to only advertise support for 1 MB size BARs.
 > 
-> Signed-off-by: Jasko-EXT Wojciech <wojciech.jasko-EXT@continental-corporation.com>
-> Signed-off-by: Achal Verma <a-verma1@ti.com>
-> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> However, the commit writes all zeroes to PCI_REBAR_CAP (the register which
+> contains the possible BAR sizes that a BAR be resized to).
+> 
+> According to the spec, it is illegal to not have a bit set in
+> PCI_REBAR_CAP, and 1 MB is the smallest size allowed.
+> 
+> Set bit 4 in PCI_REBAR_CAP, so that we actually advertise support for a
+> 1 MB BAR size.
+> 
+> Before:
+>         Capabilities: [2e8 v1] Physical Resizable BAR
+>                 BAR 0: current size: 1MB
+>                 BAR 1: current size: 1MB
+>                 BAR 2: current size: 1MB
+>                 BAR 3: current size: 1MB
+>                 BAR 4: current size: 1MB
+>                 BAR 5: current size: 1MB
+> After:
+>         Capabilities: [2e8 v1] Physical Resizable BAR
+>                 BAR 0: current size: 1MB, supported: 1MB
+>                 BAR 1: current size: 1MB, supported: 1MB
+>                 BAR 2: current size: 1MB, supported: 1MB
+>                 BAR 3: current size: 1MB, supported: 1MB
+>                 BAR 4: current size: 1MB, supported: 1MB
+>                 BAR 5: current size: 1MB, supported: 1MB
 
-Applied to controller/cadence, thank you!
+Applied to controller/dwc, thank you!
 
-[1/1] PCI: cadence: Clear the ARI Capability Next Function Number of the last function
-      https://git.kernel.org/pci/pci/c/667a006d73fb
+[1/1] PCI: dwc: endpoint: Fix advertised resizable BAR size
+      https://git.kernel.org/pci/pci/c/72e34b8593e0
 
 	Krzysztof
 
