@@ -1,128 +1,197 @@
-Return-Path: <linux-pci+bounces-4735-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4736-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 700D3878A98
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 23:13:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21D6D878A9C
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 23:15:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EB301C20AEF
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 22:13:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A16811F21296
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 22:15:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE4B5730A;
-	Mon, 11 Mar 2024 22:13:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BEA95730A;
+	Mon, 11 Mar 2024 22:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EW6u1sT/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPek5Isx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D044206B;
-	Mon, 11 Mar 2024 22:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CCA56B9D;
+	Mon, 11 Mar 2024 22:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710195220; cv=none; b=Vuq7BwzB8KdE2hJqhzt2NfN+Ej0HwrZjHue5/vAX/WIiaJCrUJpuyjW8rdi03YwjJk8kE+ZXzfxfLdLmXqsAi603/WohgHWapMRmnsvk4+cQAFonZGH1yKPZC3ZI5YnUCoL76VwD3jdSxi4jeuyx1hX7HDlBui5P8u7v/YCfZwQ=
+	t=1710195313; cv=none; b=jz4hJSm5biqfVwjE3FPDAT2M3FqyMHAmYPg15LYl3SGT1pQX2RgWUtkme9sb9Yeiib/0xil3xu5Hiy3Lmvh8N1C5JF3ZxuDWhbxObSw9920XQeSbpQVHH8gh7EemniyI91Q4wHfach6grlEAlvpfwPFSimuMup/xHbTMHtGXjLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710195220; c=relaxed/simple;
-	bh=wyNMcjJsj+gtID9qrHH+Nva1VMmxIw4E18MjM2eWoOQ=;
+	s=arc-20240116; t=1710195313; c=relaxed/simple;
+	bh=bgdC0mJstQ1eno0f2EP+4ez6XIDUdcKeIs+d0Nm+Yz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IGxFohrdBnMfzSZvaUFGs4NLEZoO9a8v/1oTHunu5r2cnjJ8m2z/zlJRx7M4fT9SaDCFkaqG5pgjvXFbJ5HQSOTvoeW3OcQQfuo+G0B6yjgL6c1xaZ6bNKcqf3u9kyfdADjE64QaQa1owDJ+PqQSjBGjsAy/SnrKQ/pq6J85wDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EW6u1sT/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59979C433C7;
-	Mon, 11 Mar 2024 22:13:39 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=dYJpsZ+UUIbf/G3biTjSI05tmUf9Bxu7JKxPMCMR7uNrlwiXAr+S5geSIzlsepTbLVknzc8T3Zwh9isOh2o/7gJ1ARxVgbCu6hmhwLhctlJmekskFi4ifP63DlqlXX27f2dhSIn4lckhNeKDgcly7EnL2rn8qTCrn9x5+wqXsCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPek5Isx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237E0C433C7;
+	Mon, 11 Mar 2024 22:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710195219;
-	bh=wyNMcjJsj+gtID9qrHH+Nva1VMmxIw4E18MjM2eWoOQ=;
+	s=k20201202; t=1710195313;
+	bh=bgdC0mJstQ1eno0f2EP+4ez6XIDUdcKeIs+d0Nm+Yz0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EW6u1sT/Othn2NJqcELmkKbqXS7m5AyMi55MTNLBsU85Bs8LgKfT4zPPxGxlcQf3K
-	 4Y1vW0z/11Bu2ISrdWtdysTn/guoLZQzBPke3Z2tlbWCSQU5nnmAGhHq5qC5zqqs1c
-	 ueNO1ngGPcfOPgg+zVFyegRoO0D9t/EF74OAugN1s5uhQFk5yYaUQalTi/AkWLd3kJ
-	 MxnFQIorLx+1ka8BiikJ4CBs/k5D/CD0lkuOB2Yksvso7pwoQsLK3WYnvvbEzOdiCi
-	 8V3BS0OW5qEVToMWnM8866WPzKO3T44sGeITtsk4c3OGhjnUPITErcuiSJWbgsZ2Tb
-	 gFGz3g2NaloMg==
-Date: Mon, 11 Mar 2024 17:13:37 -0500
+	b=PPek5Isx03UQi4OcxnweJPdHuRntpxKlCwWZ+1iSRDZ4swl9x8aeTlCbK7J8C6GUg
+	 stKGJSbO/bY/TT6OTW53HHlF4uvI6BcGFnWjLQL9DhwqQcNCPbZ0F822OjNIXnjWUf
+	 81b1moEi66FT+ldpYGdFZazTQ66I0txaBnApYHK0dm3/+nXg3JBZrSCOHkWylP4YwU
+	 V9resfOfk9143rrXdAw8BGuaqKrcLelRagmxtt9nFH3GjfvbWoLGx1JRWHzWRFEOFx
+	 rKZ3vSd7IR3ges1/5NFg+jJeG80s8h1ps30EUOqPauOuOX88sYgHggTADATNtryxJD
+	 MFGdnS//mXQYA==
+Date: Mon, 11 Mar 2024 17:15:11 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, linux-leds@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: Re: [PATCH 2/2] PCI/NPEM: Add Native PCIe Enclosure Management
- support
-Message-ID: <20240311221337.GA819923@bhelgaas>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Make PCI's devres API more consistent
+Message-ID: <20240311221511.GA821021@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240311104750.00000c24@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e1e0044a364b218fea285b1c9e80d925ad4c9d90.camel@redhat.com>
 
-On Mon, Mar 11, 2024 at 10:47:50AM +0100, Mariusz Tkaczyk wrote:
-> On Wed, 6 Mar 2024 16:40:08 -0600
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
->  
-> > > +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_NPEM);
-> > > +	if (pos == 0)
-> > > +		return;
-> > > +
-> > > +	if (pci_read_config_dword(dev, pos + PCI_NPEM_CAP, &cap) != 0 ||
-> > > +	    (cap & PCI_NPEM_CAPABLE) == 0)
-> > > +		return;
-> > > +
-> > > +	/*
-> > > +	 * OS should use the DSM for LED control if it is available
-> > > +	 * PCI Firmware Spec r3.3 sec 4.7.
-> > > +	 */
-> > > +	if (npem_has_dsm(dev))
-> > > +		return;  
-> > 
-> > Does Linux have support for this _DSM?  I don't see any, and I guess
-> > this check means that if we have a device that supports NPEM on a
-> > platform that supplies this _DSM, we can't use NPEM.
-> 
-> No, Linux doesn't support _DSM. It was proposed in previous
-> iterations by Stuart but I dropped it. We decided that it need to be
-> strongly rebuild because "pci/pcie" is not right place for ACPI code
-> so we cannot register _DSM driver instead of NPEM as it was proposed
-> and I don't have _DSM capable hardware to test it.
-> 
-> > The stated intent of the _DSM (from the Feb 12, 2020 ECN at
-> > https://members.pcisig.com/wg/PCI-SIG/document/14025) is to provide
-> > NPEM-like functionality via an abstraction layer on top of NPEM, SES,
-> > or other implementations.
-> > 
-> > The _DSM also gives the platform a chance to intercept and change or
-> > reject indications requested by OSPM, although that isn't mentioned as
-> > part of the intent.
-> > 
-> > I'm interested in your thoughts about this.  One possibility would be
-> > to omit this check for now and add it back when the _DSM is supported,
-> > so we could use NPEM directly when advertised by a device.  Or we
-> > could keep this as-is and prohibit use of NPEM if the _DSM exists,
-> > even though we know how to operate it.
-> 
-> I decided to implement it 2nd way because I don't know if I can use
-> NPEM if _DSM is implemented, I mean that hardware may do not
-> response on NPEM requests.  I choose safer approach, I have no
-> opinion.
+On Mon, Mar 11, 2024 at 12:45:15PM +0100, Philipp Stanner wrote:
+> Gentle ping because the Merge Window opened 8-)
 
-I think your point is that if the _DSM is supported, the platform
-itself might be using NPEM internally, and maybe that would conflict
-with an OS that uses NPEM directly, which is a good question.
-
-There is no ownership negotiation, e.g., via _OSC, so my assumption is
-that the OS owns NPEM by default, and the platform should not touch a
-PCI device to operate NPEM after booting the OS.  I guess the platform
-must take ownership of the NPEM Capability if the OS uses the _DSM,
-although the spec isn't very explicit about this.
-
-One concern here is that if the OS avoids use of NPEM when the _DSM is
-present, NPEM will work on the OS we ship today (with NPEM but no _DSM
-support), but it will break as soon as a new platform or new firmware
-release adds the _DSM, and users will have no way to fix it.
+Thanks; I'll look at this for v6.10.  It's too late to add significant
+changes for the v6.9 merge window since it's already open.
 
 Bjorn
+
+> On Fri, 2024-03-01 at 12:29 +0100, Philipp Stanner wrote:
+> > This v4 now can (hopefully) be applied to linux-next, but not to
+> > mainline/master.
+> > 
+> > Changes in v4:
+> >   - Rebase against linux-next
+> > 
+> > Changes in v3:
+> >   - Use the term "PCI devres API" at some forgotten places.
+> >   - Fix more grammar errors in patch #3.
+> >   - Remove the comment advising to call (the outdated) pcim_intx() in
+> > pci.c
+> >   - Rename __pcim_request_region_range() flags-field "exclusive" to
+> >     "req_flags", since this is what the int actually represents.
+> >   - Remove the call to pcim_region_request() from patch #10. (Hans)
+> > 
+> > Changes in v2:
+> >   - Make commit head lines congruent with PCI's style (Bjorn)
+> >   - Add missing error checks for devm_add_action(). (Andy)
+> >   - Repair the "Returns: " marks for docu generation (Andy)
+> >   - Initialize the addr_devres struct with memset(). (Andy)
+> >   - Make pcim_intx() a PCI-internal function so that new drivers
+> > won't
+> >     be encouraged to use the outdated pci_intx() mechanism.
+> >     (Andy / Philipp)
+> >   - Fix grammar and spelling (Bjorn)
+> >   - Be more precise on why pcim_iomap_table() is problematic (Bjorn)
+> >   - Provide the actual structs' and functions' names in the commit
+> >     messages (Bjorn)
+> >   - Remove redundant variable initializers (Andy)
+> >   - Regroup PM bitfield members in struct pci_dev (Andy)
+> >   - Make pcim_intx() visible only for the PCI subsystem so that
+> > new    
+> >     drivers won't use this outdated API (Andy, Myself)
+> >   - Add a NOTE to pcim_iomap() to warn about this function being
+> > the    onee
+> >     xception that does just return NULL.
+> >   - Consistently use the term "PCI devres API"; also in Patch #10
+> > (Bjorn)
+> > 
+> > 
+> > ¡Hola!
+> > 
+> > PCI's devres API suffers several weaknesses:
+> > 
+> > 1. There are functions prefixed with pcim_. Those are always managed
+> >    counterparts to never-managed functions prefixed with pci_ – or so
+> > one
+> >    would like to think. There are some apparently unmanaged functions
+> >    (all region-request / release functions, and pci_intx()) which
+> >    suddenly become managed once the user has initialized the device
+> > with
+> >    pcim_enable_device() instead of pci_enable_device(). This
+> > "sometimes
+> >    yes, sometimes no" nature of those functions is confusing and
+> >    therefore bug-provoking. In fact, it has already caused a bug in
+> > DRM.
+> >    The last patch in this series fixes that bug.
+> > 2. iomappings: Instead of giving each mapping its own callback, the
+> >    existing API uses a statically allocated struct tracking one
+> > mapping
+> >    per bar. This is not extensible. Especially, you can't create
+> >    _ranged_ managed mappings that way, which many drivers want.
+> > 3. Managed request functions only exist as "plural versions" with a
+> >    bit-mask as a parameter. That's quite over-engineered considering
+> >    that each user only ever mapps one, maybe two bars.
+> > 
+> > This series:
+> > - add a set of new "singular" devres functions that use devres the
+> > way
+> >   its intended, with one callback per resource.
+> > - deprecates the existing iomap-table mechanism.
+> > - deprecates the hybrid nature of pci_ functions.
+> > - preserves backwards compatibility so that drivers using the
+> > existing
+> >   API won't notice any changes.
+> > - adds documentation, especially some warning users about the
+> >   complicated nature of PCI's devres.
+> > 
+> > 
+> > Note that this series is based on my "unify pci_iounmap"-series from
+> > a
+> > few weeks ago. [1]
+> > 
+> > I tested this on a x86 VM with a simple pci test-device with two
+> > regions. Operates and reserves resources as intended on my system.
+> > Kasan and kmemleak didn't find any problems.
+> > 
+> > I believe this series cleans the API up as much as possible without
+> > having to port all existing drivers to the new API. Especially, I
+> > think
+> > that this implementation is easy to extend if the need for new
+> > managed
+> > functions arises :)
+> > 
+> > Greetings,
+> > P.
+> > 
+> > Philipp Stanner (10):
+> >   PCI: Add new set of devres functions
+> >   PCI: Deprecate iomap-table functions
+> >   PCI: Warn users about complicated devres nature
+> >   PCI: Make devres region requests consistent
+> >   PCI: Move dev-enabled status bit to struct pci_dev
+> >   PCI: Move pinned status bit to struct pci_dev
+> >   PCI: Give pcim_set_mwi() its own devres callback
+> >   PCI: Give pci(m)_intx its own devres callback
+> >   PCI: Remove legacy pcim_release()
+> >   drm/vboxvideo: fix mapping leaks
+> > 
+> >  drivers/gpu/drm/vboxvideo/vbox_main.c |   20 +-
+> >  drivers/pci/devres.c                  | 1013 +++++++++++++++++++++--
+> > --
+> >  drivers/pci/iomap.c                   |   18 +
+> >  drivers/pci/pci.c                     |  123 ++-
+> >  drivers/pci/pci.h                     |   21 +-
+> >  include/linux/pci.h                   |   18 +-
+> >  6 files changed, 1001 insertions(+), 212 deletions(-)
+> > 
+> 
 
