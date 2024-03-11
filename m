@@ -1,86 +1,55 @@
-Return-Path: <linux-pci+bounces-4734-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4735-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DE1A878A40
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 22:54:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 700D3878A98
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 23:13:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4EFBE1C2118E
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 21:54:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9EB301C20AEF
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Mar 2024 22:13:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CFBB57323;
-	Mon, 11 Mar 2024 21:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AE4B5730A;
+	Mon, 11 Mar 2024 22:13:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eome4s09"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EW6u1sT/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D041057315;
-	Mon, 11 Mar 2024 21:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D044206B;
+	Mon, 11 Mar 2024 22:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710194080; cv=none; b=G8p1Ocv66i7eHkkYs5+7N4MJ2kZAW9g7j82s0dhVlbhmxKyWQVVWvJcV4xoLmqmhUslJrqjssp+YFlbYQg4zgkV0Qp+EzbqJPZ7r3xBbHY2J/FOJ6fpK2owClAypTXMG/ghsoofL1Y943qChWU23u1y3iJRbsDrwGzK0fg57gQU=
+	t=1710195220; cv=none; b=Vuq7BwzB8KdE2hJqhzt2NfN+Ej0HwrZjHue5/vAX/WIiaJCrUJpuyjW8rdi03YwjJk8kE+ZXzfxfLdLmXqsAi603/WohgHWapMRmnsvk4+cQAFonZGH1yKPZC3ZI5YnUCoL76VwD3jdSxi4jeuyx1hX7HDlBui5P8u7v/YCfZwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710194080; c=relaxed/simple;
-	bh=RWD53XQN8UsgouYUBF/rTClQBGz527mrHnHW07+LEvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rT/Ols7KRl1QUjpP3IxUjd+K8KwB8BEvoNQJoLttUKWFGVf880ZVfjSqfM6iB1cHF1CdjvDgDthQ8KfRZaAornNLZnHwT9ZLQDQawEhjUHEaqbn+q2aHKlHM+a6Ne/JntKSj4rwTcAk9p1g4ICxvNM8ZWlsBLEdJUh62GbzBFHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eome4s09; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4BBC433C7;
-	Mon, 11 Mar 2024 21:54:31 +0000 (UTC)
+	s=arc-20240116; t=1710195220; c=relaxed/simple;
+	bh=wyNMcjJsj+gtID9qrHH+Nva1VMmxIw4E18MjM2eWoOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IGxFohrdBnMfzSZvaUFGs4NLEZoO9a8v/1oTHunu5r2cnjJ8m2z/zlJRx7M4fT9SaDCFkaqG5pgjvXFbJ5HQSOTvoeW3OcQQfuo+G0B6yjgL6c1xaZ6bNKcqf3u9kyfdADjE64QaQa1owDJ+PqQSjBGjsAy/SnrKQ/pq6J85wDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EW6u1sT/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59979C433C7;
+	Mon, 11 Mar 2024 22:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710194079;
-	bh=RWD53XQN8UsgouYUBF/rTClQBGz527mrHnHW07+LEvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Eome4s09U0yv2YUiX7PkctOicSMRH/yZOh6gnNHwqz8AI3Od+MdGJEeamS0f7e/Rg
-	 EKv3GFwpTGiOOLiVWTZpMtwJHx1nzexz6euFNxlYZWJ+mz5wMTgZY+s7k5ZCuLXjlU
-	 Q+epQAXw6XXRuSGu4tO+RzCdoobL9znOdQ45I3dz+B6EpKd4zxdEjk7P6Oh4eNWsAc
-	 Lp4NPa4szCmQyVI2rLifPe+RyPkuYYJ5VxV5Y+UMqeicTFacCyxISQMAHTlc0bDHNG
-	 GFLAPM9kqVH055Ixhp4hp6Z+B+3XyEurelGgsFQYR8csLnIKr6fF0qQTyfN2WKjaGL
-	 QI56/3wgaZNXA==
-Date: Mon, 11 Mar 2024 22:54:28 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v9 07/10] PCI: dwc: ep: Remove "core_init_notifier" flag
-Message-ID: <Ze99lLhe2GqIqMgl@ryzen>
-References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
- <ZesRk5Dg4KEASD3U@ryzen>
- <20240311144559.GA2504@thinkpad>
+	s=k20201202; t=1710195219;
+	bh=wyNMcjJsj+gtID9qrHH+Nva1VMmxIw4E18MjM2eWoOQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=EW6u1sT/Othn2NJqcELmkKbqXS7m5AyMi55MTNLBsU85Bs8LgKfT4zPPxGxlcQf3K
+	 4Y1vW0z/11Bu2ISrdWtdysTn/guoLZQzBPke3Z2tlbWCSQU5nnmAGhHq5qC5zqqs1c
+	 ueNO1ngGPcfOPgg+zVFyegRoO0D9t/EF74OAugN1s5uhQFk5yYaUQalTi/AkWLd3kJ
+	 MxnFQIorLx+1ka8BiikJ4CBs/k5D/CD0lkuOB2Yksvso7pwoQsLK3WYnvvbEzOdiCi
+	 8V3BS0OW5qEVToMWnM8866WPzKO3T44sGeITtsk4c3OGhjnUPITErcuiSJWbgsZ2Tb
+	 gFGz3g2NaloMg==
+Date: Mon, 11 Mar 2024 17:13:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-leds@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: Re: [PATCH 2/2] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <20240311221337.GA819923@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -89,68 +58,71 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240311144559.GA2504@thinkpad>
+In-Reply-To: <20240311104750.00000c24@linux.intel.com>
 
-On Mon, Mar 11, 2024 at 08:15:59PM +0530, Manivannan Sadhasivam wrote:
+On Mon, Mar 11, 2024 at 10:47:50AM +0100, Mariusz Tkaczyk wrote:
+> On Wed, 6 Mar 2024 16:40:08 -0600
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>  
+> > > +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_NPEM);
+> > > +	if (pos == 0)
+> > > +		return;
+> > > +
+> > > +	if (pci_read_config_dword(dev, pos + PCI_NPEM_CAP, &cap) != 0 ||
+> > > +	    (cap & PCI_NPEM_CAPABLE) == 0)
+> > > +		return;
+> > > +
+> > > +	/*
+> > > +	 * OS should use the DSM for LED control if it is available
+> > > +	 * PCI Firmware Spec r3.3 sec 4.7.
+> > > +	 */
+> > > +	if (npem_has_dsm(dev))
+> > > +		return;  
 > > 
-> > I would say that it is the following change that breaks things:
-> > 
-> > > -	if (!core_init_notifier) {
-> > > -		ret = pci_epf_test_core_init(epf);
-> > > -		if (ret)
-> > > -			return ret;
-> > > -	}
-> > > -
-> > 
-> > Since without this code, pci_epf_test_core_init() will no longer be called,
-> > as there is currently no one that calls epf->core_init() for a EPF driver
-> > after it has been bound. (For drivers that call dw_pcie_ep_init_notify() in
-> > .probe())
-> > 
+> > Does Linux have support for this _DSM?  I don't see any, and I guess
+> > this check means that if we have a device that supports NPEM on a
+> > platform that supplies this _DSM, we can't use NPEM.
 > 
-> Thanks a lot for testing, Niklas!
+> No, Linux doesn't support _DSM. It was proposed in previous
+> iterations by Stuart but I dropped it. We decided that it need to be
+> strongly rebuild because "pci/pcie" is not right place for ACPI code
+> so we cannot register _DSM driver instead of NPEM as it was proposed
+> and I don't have _DSM capable hardware to test it.
 > 
-> > I guess one way to solve this would be for the EPC core to keep track of
-> > the current EPC "core state" (up/down). If the core is "up" at EPF .bind()
-> > time, notify the EPF driver directly after .bind()?
+> > The stated intent of the _DSM (from the Feb 12, 2020 ECN at
+> > https://members.pcisig.com/wg/PCI-SIG/document/14025) is to provide
+> > NPEM-like functionality via an abstraction layer on top of NPEM, SES,
+> > or other implementations.
 > > 
+> > The _DSM also gives the platform a chance to intercept and change or
+> > reject indications requested by OSPM, although that isn't mentioned as
+> > part of the intent.
+> > 
+> > I'm interested in your thoughts about this.  One possibility would be
+> > to omit this check for now and add it back when the _DSM is supported,
+> > so we could use NPEM directly when advertised by a device.  Or we
+> > could keep this as-is and prohibit use of NPEM if the _DSM exists,
+> > even though we know how to operate it.
 > 
-> Yeah, that's a good solution. But I think it would be better if the EPC caches
-> all events if the EPF drivers are not available and dispatch them once the bind
-> happens for each EPF driver. Even though INIT_COMPLETE is the only event that is
-> getting generated before bind() now, IMO it is better to add provision to catch
-> other events also.
-> 
-> Wdyt?
+> I decided to implement it 2nd way because I don't know if I can use
+> NPEM if _DSM is implemented, I mean that hardware may do not
+> response on NPEM requests.  I choose safer approach, I have no
+> opinion.
 
-I'm not sure.
-What if the EPF goes up/down/up, it seems a bit silly to send all those
-events to the EPF driver that will alloc+free+alloc.
+I think your point is that if the _DSM is supported, the platform
+itself might be using NPEM internally, and maybe that would conflict
+with an OS that uses NPEM directly, which is a good question.
 
-Do we know for sure that we will want to store + replay events other than
-INIT_COMPLETE?
+There is no ownership negotiation, e.g., via _OSC, so my assumption is
+that the OS owns NPEM by default, and the platform should not touch a
+PCI device to operate NPEM after booting the OS.  I guess the platform
+must take ownership of the NPEM Capability if the OS uses the _DSM,
+although the spec isn't very explicit about this.
 
-And how many events should we store?
+One concern here is that if the OS avoids use of NPEM when the _DSM is
+present, NPEM will work on the OS we ship today (with NPEM but no _DSM
+support), but it will break as soon as a new platform or new firmware
+release adds the _DSM, and users will have no way to fix it.
 
-
-Until we can think of a good reason which events other than UP/DOWN we
-can to store, I think that just storing the state as an integer in
-struct pci_epc seems simpler.
-
-
-Or I guess we could continue with a flag in struct pci_epc_features,
-like has_perst_notifier, which would then require the EPC driver to
-call both epc_notify_core_up() and epc_notify_core_down() when receiving
-the PERST deassert/assert.
-For a driver without the flag set, the EPC core would call
-.epc_notify_core_up() after bind. (And .epc_notify_core_down() would never
-be called, or it could call it before unbind().)
-That way an EPF driver itself would not need any different handling
-(all callbacks would always come, either triggered by an EPC driver that
-has PERST GPIO irq, or triggered by the EPC core for a driver that lacks
-a PERST GPIO).
-
-
-Kind regards,
-Niklas
+Bjorn
 
