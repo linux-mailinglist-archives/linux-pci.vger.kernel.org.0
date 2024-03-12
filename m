@@ -1,109 +1,72 @@
-Return-Path: <linux-pci+bounces-4738-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4739-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51546878F10
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Mar 2024 08:30:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B8C6878F19
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Mar 2024 08:35:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1B751F224C1
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Mar 2024 07:30:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2487CB214A0
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Mar 2024 07:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3CD69944;
-	Tue, 12 Mar 2024 07:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D377C2A1B8;
+	Tue, 12 Mar 2024 07:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b="E4aNegPF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mail.aixigo.de (mail.aixigo.de [5.145.142.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5844D5788F;
-	Tue, 12 Mar 2024 07:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26401B657
+	for <linux-pci@vger.kernel.org>; Tue, 12 Mar 2024 07:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.145.142.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710228652; cv=none; b=NCeB36N9Wzf3jN6J6FIeigM12R1cGDODQFZfIuWrnj6I0MEen2x6IFsxzZ0/e6Kvz8Lc8ntpqwnzhnMCRvmF/JGRlKYEi07oM3dgjEmqoFmDA8OakSIWaDH6IUqKsOVb7jeKuTyKhLnPJHQ6m0tKXfOve4efDZvH/JR75Wnxs0k=
+	t=1710228946; cv=none; b=VxtZ8PJm6ZfMG4cgTd7llY7tsTyxrF+ZnC01aZNJ3XnTk8VPHnJ+cKCrIM5BtOdN0wxU2T5IevKKio/7hDQilN1taX4zHVXaJtWyFTBow49PdqEnRPsSGYWYblf7QPG+yfiLzxAmj6EOwDvmvyOSvQfhS/5z0VXZ66td11EV8yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710228652; c=relaxed/simple;
-	bh=QCCZ1/d2wHZRB0KyWxVAhPBvaRMg+bl6T2DEAlkzQno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n6laf2gT984/mf9a82PvB1julpEbEJzo6pH8W5h17q6AuXT/w/7SggnoUmg3EHJ5s58JgGa00NQLsX/VKtuO0sx8kRCC8y/+Wke5sGGkbdd/0qba/hfPN6u7WcPaptRUFH4DqHLhfmNh47U/EP2FW21Kh/fgA/4P7kmU6fXMyoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id D000F300002CD;
-	Tue, 12 Mar 2024 08:30:37 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id C944C48470; Tue, 12 Mar 2024 08:30:37 +0100 (CET)
-Date: Tue, 12 Mar 2024 08:30:37 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com
-Subject: Re: [PATCH 1/3] PCI: Add check for CXL Secondary Bus Reset
-Message-ID: <ZfAEncKttj9qFQHw@wunner.de>
-References: <20240311204132.62757-1-dave.jiang@intel.com>
- <20240311204132.62757-2-dave.jiang@intel.com>
+	s=arc-20240116; t=1710228946; c=relaxed/simple;
+	bh=i8LxFDf1XaIdOe1QRMw/keLvlJBrPRFle3EnGoiU51o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ltuqHvgcfpIwCSjjFev72UNUKIuxJANiRgISNu5Mb/J8+nuG9D/pNLgVf59OCTNrIr94vQu+XIasV4VLsyLsf7Y4TGn8Tb/va+KxVG9+Ol8nnXA1U+0iNKtHRluXgLlGj57eZ7derSd40mbF4oAlsugrvfHB+h97laSXWp5kY/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com; spf=pass smtp.mailfrom=aixigo.com; dkim=pass (1024-bit key) header.d=aixigo.com header.i=@aixigo.com header.b=E4aNegPF; arc=none smtp.client-ip=5.145.142.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aixigo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aixigo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=default; bh=i8LxFDf1XaId
+	Oe1QRMw/keLvlJBrPRFle3EnGoiU51o=; h=in-reply-to:references:cc:to:from:
+	subject:date; d=aixigo.com; b=E4aNegPFx1/wbV5PnHqMUA2Gid1Jo1RLfRKsbxRm
+	xbB38ZBIOy0lX2AGACNL6aC/SnzA1KTI559XJo9gI2Mn5eZ2Fad/3CrH9gX9aloeAP3hM9
+	hQ3l+clgWFPjux04b9NNoB5UJ3K/amGmJApx3tbyBd/QBEoPY6WFT92gb8myw=
+Received: from mailhost.ac.aixigo.de (mailhost.ac.aixigo.de [172.19.96.11])
+	by mail.aixigo.de (OpenSMTPD) with ESMTPS id 96beadbf (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Tue, 12 Mar 2024 08:35:32 +0100 (CET)
+Received: from [172.19.97.128] (dpcl082.ac.aixigo.de [172.19.97.128])
+	by mailhost.ac.aixigo.de (8.17.1.9/8.17.1.9/Debian-2) with ESMTPS id 42C7ZVIf2611094
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT);
+	Tue, 12 Mar 2024 08:35:32 +0100
+Message-ID: <b2269edc-2928-426e-ae09-d555f239ea79@aixigo.com>
+Date: Tue, 12 Mar 2024 08:35:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240311204132.62757-2-dave.jiang@intel.com>
+User-Agent: Betterbird (Linux)
+Subject: Re: AER: Corrected error message received from 0000:00:06.0
+From: Harald Dunkel <harald.dunkel@aixigo.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+References: <20240229202652.GA361290@bhelgaas>
+ <02aecc45-0184-4aa5-94cd-4bdb4e8e9309@aixigo.com>
+Content-Language: en-US
+In-Reply-To: <02aecc45-0184-4aa5-94cd-4bdb4e8e9309@aixigo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 1.0.3 at srvvm01.ac.aixigo.de
+X-Virus-Status: Clean
 
-On Mon, Mar 11, 2024 at 01:39:53PM -0700, Dave Jiang wrote:
-> +static bool is_cxl_device(struct pci_dev *dev)
-> +{
-> +	return pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					 CXL_DVSEC_PCIE_DEVICE);
-> +}
+For the records: Booting with pcie_aspm=off seems to help.
 
-If this was my bikeshed, I'd call it pci_is_cxl() to match pci_is_pcie().
-
-
-> +static bool is_cxl_port_sbr_masked(struct pci_dev *dev)
-> +{
-> +	int dvsec;
-> +	int rc;
-> +	u16 reg;
-
-Nit: Inverse Christmas tree?
-
-
->  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->  {
->  	int rc;
->  
-> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
-> +	if (is_cxl_device(dev) && dev->bus->self &&
-> +	    is_cxl_port_sbr_masked(dev->bus->self)) {
-> +		if (probe)
-> +			return 0;
-> +
-> +		return -EPERM;
-> +	}
-> +
-
-Is this also necessary if CONFIG_CXL_PCI=n?
-
-Return code on non-availability of a reset method is generally -ENOTTY.
-Or is the choice deliberate to expose this reset method despite the bit
-being set and thus allow user space to unmask it in the first place?
-
-Also, we mostly use pci_upstream_bridge(dev) in lieu of dev->bus->self.
-Is the choice to use the latter deliberate because maybe is_virtfn is
-never set and the device can never be on the root bus?  (What about
-RCiEP CXL devices?)
-
-Thanks,
-
-Lukas
+Regards
+Harri
 
