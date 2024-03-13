@@ -1,146 +1,97 @@
-Return-Path: <linux-pci+bounces-4765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 207D0879D8B
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Mar 2024 22:35:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02B1F87A02D
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 01:37:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD6C11F219A3
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Mar 2024 21:35:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D7F61C218CF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 00:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C34914372E;
-	Tue, 12 Mar 2024 21:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BC274A06;
+	Wed, 13 Mar 2024 00:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PuSjw6TV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSsvmZeI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA6A142636;
-	Tue, 12 Mar 2024 21:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E0EA930;
+	Wed, 13 Mar 2024 00:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710279332; cv=none; b=fibHV/HaEDptUXX6G1y6Izj9fYmWl8Id+jCXVjkwvDKxWieIzzJCnk3w3ka8PfkQxwHMgtdYjiKkRmaIjedZxCedXAr2gaaKJnNJ4HICdNBDB2KJTDqfR1I4M4llwUcxlc5MiUgk+/7yvW6JAgTa2LQ0KMhG6N+xsiIcGFvbFS8=
+	t=1710290259; cv=none; b=A0adGFvon3pX2rLtNEHi+wH7IwykUW7P4PNpAePxRPZZ2tMv9BfLGbHMBnt0QBDyK1nJ1X+fieY3G5bae1j0oEjMFgRjuscXezJs01EaDNI04r98xTLL69rxewJcIq4GUK7vw0B3CsGnrlznMsR2SGpGLgLPkAaiW/U0tF+jVN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710279332; c=relaxed/simple;
-	bh=XML562LF1d6RHMdbpv9ahIlWmITBcDunaVyk6YWAcgA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AQZtNieAwmQ1uz4IH7wI8doeQPGYiYC7jPaAlrT/bslLwfoDsDKkryeOj44Pr6mpFhWOd1KvSA347JlS/C8uA509NcWFeS8cCMK0kPiodtfGPgdUYq1zTcIZAh/mC2LlLHzl3gRAsDN8YlAp0kF3k096CDOgu5bOknXT60KDrn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PuSjw6TV; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710279331; x=1741815331;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XML562LF1d6RHMdbpv9ahIlWmITBcDunaVyk6YWAcgA=;
-  b=PuSjw6TVQJrU3VSVwsyitisuMRDuE4tNeizPhWTMPKlKC3dc+1zU3ln9
-   uFf9KG7EXZ02YcXt58Kt8iPhrxAtj0nhat3A9L+NfIwJyHANoFeUAGUbt
-   3esytFyQrMvxvtHV+fu8Zdft9wIpT0a2z5BqLQMW9mrKXo/XCjxHRNdhc
-   y/mgjw5gUj2NwnpnIjyJ6RVZ+o6Ia+uDst+2dXL66tEqh7kQeSyN9idWb
-   MhzxBbG0LVFxpM6tHy40sjLEYaUs8RSTLWaXvx/SacR03Go+Bf76S9CkQ
-   kdN6yeNSLXV2U86TMk+Kg2T3pyhqj3KjsjiAV/6qaqmLWJ+Vw7fsV3N7g
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="4946873"
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="4946873"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:35:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,119,1708416000"; 
-   d="scan'208";a="16271532"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.101.145]) ([10.212.101.145])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2024 14:35:29 -0700
-Message-ID: <c50492a9-0fcc-47be-bce2-f5543587a5f2@intel.com>
-Date: Tue, 12 Mar 2024 14:35:28 -0700
+	s=arc-20240116; t=1710290259; c=relaxed/simple;
+	bh=1SnPGZWN0QXG/cj+HeG9fCWJ3nuxPvrSGvhQr+67xqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XyF2Za/rT92NcMcmmveXBsXPic9I0NhEV8PT2cLT8F5xevf/r9JgZMTU+h1iGZyltsgXiAR9kW6sg4LCVqgSphxL4zY876pldzBLRPXuQ2NazxQfKs0L6EB1U/s66svU0B8SzrgtaQCifoyewYxo3BmnC0obzeJIc5RivkllxZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSsvmZeI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897F2C43390;
+	Wed, 13 Mar 2024 00:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710290259;
+	bh=1SnPGZWN0QXG/cj+HeG9fCWJ3nuxPvrSGvhQr+67xqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PSsvmZeILe0xThjiru4Kga15JP/fW+1l8qlwVKVBHT8jT9Fp1TMJPjJ32D+rWpNIj
+	 TEfNf0niIVdNTsssrJJZMJqZf8sUTLRsX6u51ZZMJoDMTNsUST9sBGL46uF38dTZut
+	 yYIxBgR7iEq4/24utxzmBLoRYM5KeMkJVLnBGaqtVIvPhK2guawDaFjTtWIALzeaAf
+	 rXIu6KCkicc7CKZAgNLjMowqaFsPLAsMBOqOrxAipyIt1fBiVY56oixNsxO8dPEsgx
+	 8XdcXgzV2BnhKZCZhGEqybj98lgbIMYZ4KwDamk7r+eLzVrgfPk+qv16gyRo44kGSf
+	 vteE9PgDz5PnA==
+Date: Wed, 13 Mar 2024 01:37:35 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, 
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, 
+	u-kumar1@ti.com
+Subject: Re: [PATCH v4 03/18] i2c: omap: wakeup the controller during
+ suspend() callback
+Message-ID: <z5sitoz6iz34v6nlfzc3ao3yijbzbsw2xxulqee2yuxx7sfnmi@pajsdc473jy2>
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
+ <20240102-j7200-pcie-s2r-v4-3-6f1f53390c85@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] PCI: Add check for CXL Secondary Bus Reset
-Content-Language: en-US
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
- dan.j.williams@intel.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
- alison.schofield@intel.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
- bhelgaas@google.com
-References: <20240311204132.62757-1-dave.jiang@intel.com>
- <20240311204132.62757-2-dave.jiang@intel.com> <ZfAEncKttj9qFQHw@wunner.de>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ZfAEncKttj9qFQHw@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-3-6f1f53390c85@bootlin.com>
 
+Hi Thomas,
 
-
-On 3/12/24 12:30 AM, Lukas Wunner wrote:
-> On Mon, Mar 11, 2024 at 01:39:53PM -0700, Dave Jiang wrote:
->> +static bool is_cxl_device(struct pci_dev *dev)
->> +{
->> +	return pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
->> +					 CXL_DVSEC_PCIE_DEVICE);
->> +}
+On Mon, Mar 04, 2024 at 04:35:46PM +0100, Thomas Richard wrote:
+> A device may need the controller up during suspend_noirq() or
+> resume_noirq().
+> But if the controller is autosuspended, there is no way to wakeup it during
+> suspend_noirq() or resume_noirq() because runtime pm is disabled at this
+> time.
 > 
-> If this was my bikeshed, I'd call it pci_is_cxl() to match pci_is_pcie().
-
-Ok will change.
+> The suspend() callback wakes up the controller, so it is available until
+> its suspend_noirq() callback (pm_runtime_force_suspend()).
+> During the resume, it's restored by resume_noirq() callback
+> (pm_runtime_force_resume()). Then resume() callback enables autosuspend.
 > 
+> So the controller is up during a little time slot in suspend and resume
+> sequences even if it's not used.
 > 
->> +static bool is_cxl_port_sbr_masked(struct pci_dev *dev)
->> +{
->> +	int dvsec;
->> +	int rc;
->> +	u16 reg;
-> 
-> Nit: Inverse Christmas tree?
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Will change.
-> 
-> 
->>  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->>  {
->>  	int rc;
->>  
->> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
->> +	if (is_cxl_device(dev) && dev->bus->self &&
->> +	    is_cxl_port_sbr_masked(dev->bus->self)) {
->> +		if (probe)
->> +			return 0;
->> +
->> +		return -EPERM;
->> +	}
->> +
-> 
-> Is this also necessary if CONFIG_CXL_PCI=n?
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-Yes. As the kernel only loads type3 mem class CXL device driver. This is attempt to cover all CXL devices and not dependent on a loaded driver.
-
-> 
-> Return code on non-availability of a reset method is generally -ENOTTY.
-
-Ok I can change it to that.
-
-> Or is the choice deliberate to expose this reset method despite the bit
-> being set and thus allow user space to unmask it in the first place?
-
-Yes the idea is if user intentionally unmasks the bit via a user tool then reset can go through.
-
-> 
-> Also, we mostly use pci_upstream_bridge(dev) in lieu of dev->bus->self.
-> Is the choice to use the latter deliberate because maybe is_virtfn is
-> never set and the device can never be on the root bus?  (What about
-> RCiEP CXL devices?)
-
-I'll change to pci_upstream_bridge() call. I didn't realize that existed.
-
-> 
-> Thanks,
-> 
-> Lukas
+Thanks,
+Andi
 
