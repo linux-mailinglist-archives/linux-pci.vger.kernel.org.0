@@ -1,52 +1,64 @@
-Return-Path: <linux-pci+bounces-4773-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4774-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C93CA87A542
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 10:52:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EA3887A63C
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 11:58:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8529F2813D7
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 09:52:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38773282E49
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 10:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E704B28399;
-	Wed, 13 Mar 2024 09:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93E1A3D38F;
+	Wed, 13 Mar 2024 10:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="So0Emeg6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vm3.sequanux.org (static.68.236.76.144.clients.your-server.de [144.76.236.68])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7EB2E636;
-	Wed, 13 Mar 2024 09:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.236.68
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEEF3B798
+	for <linux-pci@vger.kernel.org>; Wed, 13 Mar 2024 10:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710323469; cv=none; b=ldq98eeyR87LjEigRx2Dbm2GxYIoqoOF4KteH8DwiOpfLk97j+AZkn9CXeBcBaxy1ANxM+snH2OgrPL7bO11v3JiOUKsx90FziqetU0wJGAeb8VKykYaCs4iPx8M7jU8R+ldwLhFeUTOTyXqtIyYhbMenWZiYgEKcbXjH30ewG4=
+	t=1710327501; cv=none; b=csxzBm11u5Si7OEXfYVSmS0gcJ4ppVkSh1lesWWMG2tAL54o2IuSX0rLLbFSeijASlISCBSsa+im+XjC0wep06c2M1mDG/UwX1zpri8hUc1I8zTaYKPbDBlkrkUJaxZQyzrDi8bsEXHim267myx/deIDHCpYlzRUI95L+75kMwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710323469; c=relaxed/simple;
-	bh=uXuPE3VKA7NxuaIY5UcFuFsMWM4D2G9o+mMSlbTcRfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WwcrbJvaPiSKGjaoSv1IYnb753WYTg+39sblaI5scDhN9m5YGkhSDq9yetEZMRqyEd7vj9kvt9TsGPzxMp2nZPzOY7fRS4vU90Qr0KY9yM+eje3ipZj5Yl9QJnke+f6fv4FN+GJOPkk3sCMcayMfhetEncBLewMS1YdlFq7eADA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=seagate.com; spf=pass smtp.mailfrom=sequanux.org; arc=none smtp.client-ip=144.76.236.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=seagate.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sequanux.org
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by vm3.sequanux.org (Postfix) with ESMTP id C4572108B3E;
-	Wed, 13 Mar 2024 10:50:41 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
-Received: from vm3.sequanux.org ([127.0.0.1])
-	by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lBvAo3xPwqFl; Wed, 13 Mar 2024 10:49:55 +0100 (CET)
-Received: from localhost (88-167-49-193.subs.proxad.net [88.167.49.193])
-	by vm3.sequanux.org (Postfix) with ESMTPSA id 45F3A108ADB;
-	Wed, 13 Mar 2024 10:49:55 +0100 (CET)
-From: Simon Guinot <simon.guinot@seagate.com>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Maciej W . Rozycki" <macro@orcam.me.uk>,
+	s=arc-20240116; t=1710327501; c=relaxed/simple;
+	bh=efgaR6TNaNFKA/8FNZRnotQOnzQaqJy11AVx/5XfNjM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tokyk+4Et9Fm1B+YYVJ2wHDPqBeWKYqeREzSgz4jtWgO17b5lKVmX7h9n2LYan0kO6KvaOprIC1vY/EBmLUK/nktE3nl1CF6tykmY/N2zKyCzbSrtOuYHXRm/F2rHSpfEQzO+QBHT2x/gh23eNAXm5I3WrfKtmg4TEn/mEltNGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=So0Emeg6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43DE3C433C7;
+	Wed, 13 Mar 2024 10:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710327501;
+	bh=efgaR6TNaNFKA/8FNZRnotQOnzQaqJy11AVx/5XfNjM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=So0Emeg6esGCvCNTWNaNGRtFW2MxuVmp0sn9jbg1DwUgWbAbnwPxe4Shj+b3Shk5q
+	 JNcxc5mbRuch61sqYA0qXBMv4Oas1taoMLafc29LlhOixGD93ohlR3DUwdYNP3d4IL
+	 dG7L4svrRcTXx89OHFM+TU9ftL127FLZnmNgZVawkVdWV5MZRJBbMQy8e8CDMCQdSW
+	 PfpFnB4/rGIz/XiL4OaHy7FOXHodsnJl5sT/MGYVQv55MBEpjikPSYAvHjKJF1orTL
+	 IAcasDbvQD7vAzh5lNMyC7LokZLdfsMlEB/rEtDOWsM0Mlq38xINoOCSMApmxlmUId
+	 xNuVPDPp3ZpSw==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Shradha Todi <shradha.t@samsung.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
 	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Simon Guinot <simon.guinot@seagate.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] PCI: fix link retrain status in pcie_wait_for_link_delay()
-Date: Wed, 13 Mar 2024 10:49:38 +0100
-Message-ID: <20240313094938.484113-1-simon.guinot@seagate.com>
-X-Mailer: git-send-email 2.43.0
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/9] PCI: endpoint: set prefetchable bit for 64-bit BARs
+Date: Wed, 13 Mar 2024 11:57:52 +0100
+Message-ID: <20240313105804.100168-1-cassel@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,43 +67,43 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current code in pcie_wait_for_link_delay() handles the value
-returned by pcie_failed_link_retrain() as an integer, expecting 0
-when the link has been successfully retrained. The issue is that
-pcie_failed_link_retrain() returns a boolean: "true" if the link
-has been successfully retrained and "false" otherwise. This leads
-pcie_wait_for_link_delay() to return an incorrect "active link"
-status when pcie_failed_link_retrain() is called.
+Shradha Todi wanted to add prefetchable BAR support by adding more things
+to epc_features:
+https://lore.kernel.org/linux-pci/20240228134448.56372-1-shradha.t@samsung.com/T/#t
 
-This patch fixes the check of the value returned by
-pcie_failed_link_retrain() in pcie_wait_for_link_delay().
+The series starts off with some generic cleanups and fixes which was needed
+to make the implementation of the actual feature easier.
 
-Note that this bug induces abnormal timeout delays when a PCI device
-is unplugged (around 60 seconds per bridge / secondary bus removed).
+The final patch in the series sets the prefetchable bit for all backing memory
+that the EPF core allocates for a 64-bit BAR.
 
-Cc: stable@vger.kernel.org
-Fixes: 1abb47390350 ("Merge branch 'pci/enumeration'")
-Signed-off-by: Simon Guinot <simon.guinot@seagate.com>
----
- drivers/pci/pci.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ccee56615f78..7ec91b4c5d03 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5101,9 +5101,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(20);
- 	rc = pcie_wait_for_link_status(pdev, false, active);
- 	if (active) {
--		if (rc)
--			rc = pcie_failed_link_retrain(pdev);
--		if (rc)
-+		if (rc && !pcie_failed_link_retrain(pdev))
- 			return false;
- 
- 		msleep(delay);
+Kind regards,
+Niklas
+
+
+Changes since V2:
+-Fixed warning when building with W=1 reported by kernel test robot.
+
+
+Niklas Cassel (9):
+  PCI: endpoint: pci-epf-test: Fix incorrect loop increment
+  PCI: endpoint: Allocate a 64-bit BAR if that is the only option
+  PCI: endpoint: pci-epf-test: Remove superfluous code
+  PCI: endpoint: pci-epf-test: Simplify pci_epf_test_alloc_space() loop
+  PCI: endpoint: pci-epf-test: Simplify pci_epf_test_set_bar() loop
+  PCI: endpoint: pci-epf-test: Clean up pci_epf_test_unbind()
+  PCI: cadence: Set a 64-bit BAR if requested
+  PCI: rockchip-ep: Set a 64-bit BAR if requested
+  PCI: endpoint: Set prefetch when allocating memory for 64-bit BARs
+
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  5 +-
+ drivers/pci/controller/pcie-rockchip-ep.c     |  2 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c | 70 +++++++------------
+ drivers/pci/endpoint/pci-epf-core.c           | 10 ++-
+ 4 files changed, 33 insertions(+), 54 deletions(-)
+
 -- 
-2.43.0
+2.44.0
 
 
