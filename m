@@ -1,132 +1,141 @@
-Return-Path: <linux-pci+bounces-4788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23EEB87A8CC
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 14:56:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B6E487A994
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 15:36:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F392B21EE2
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 13:56:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D680E1F23EAE
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 14:36:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9607A43AB2;
-	Wed, 13 Mar 2024 13:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AB2E1E524;
+	Wed, 13 Mar 2024 14:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEzqcJeG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from vm3.sequanux.org (static.68.236.76.144.clients.your-server.de [144.76.236.68])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F3BC39860;
-	Wed, 13 Mar 2024 13:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.236.68
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10166290A;
+	Wed, 13 Mar 2024 14:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710338176; cv=none; b=MPUHcOpCpxPQ6bFf9PdElOlxlj0yqMyFL7tDhlCsh9d9HGPzIlSe4mRGjehCxHKTSbetM0mBZmCgJPsZAVnWquNpqj5VAdFBgV86FBOjS5ugfp+VE3d2g60fGwPptM0Q6Ju01XFq+Q3sH5UuD3oXyNPpzuVtziNooS9HxwZ+VrQ=
+	t=1710340577; cv=none; b=lIM8F4iw7d6eomWf8lL9/dz7BW0X1dkHzh3g1zfWo7vTqqcLXCOEMPo/x9Pfx2rQNWTzVVdGhLn1HYjBgJ9Yr+/MBXRS7wvBVbgKT176zNdlYQ8jG4lhf98nOQRoYwrJ6rKbEcHj6Ho2xTYiDF0864eT8ZHpxpgKVde5KWNYdk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710338176; c=relaxed/simple;
-	bh=3xfXWowKXIUy7WOzMOjdDR46YrTwruVTW+DQSDGDdL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBNe6bjV5Xs1cz3JB55CKrTCPzpaPHk2dpT8Nyx2i0Jc9YtGYKHDoOasrpJgeD4ztLom+gJ55znnNP2eMT9agP4RkZM7LAnrCBc86pPvBZhoL4zfFDXu2MRbV1DJ62vtTm4htQr/Web4EaOMgnTsZ2hdDTxOGaI2S60U6EWDZCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sequanux.org; spf=pass smtp.mailfrom=sequanux.org; arc=none smtp.client-ip=144.76.236.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sequanux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sequanux.org
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by vm3.sequanux.org (Postfix) with ESMTP id 75860108ACB;
-	Wed, 13 Mar 2024 14:55:48 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at vm3.sequanux.org
-Received: from vm3.sequanux.org ([127.0.0.1])
-	by localhost (vm3.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8xtazUWw3KBV; Wed, 13 Mar 2024 14:55:20 +0100 (CET)
-Received: from localhost (ns3093303.ip-145-239-244.eu [145.239.244.120])
-	by vm3.sequanux.org (Postfix) with ESMTPSA id 1D9DE108A60;
-	Wed, 13 Mar 2024 14:55:20 +0100 (CET)
-Date: Wed, 13 Mar 2024 14:55:03 +0100
-From: simon.guinot@sequanux.org
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Simon Guinot <simon.guinot@seagate.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>, linux-pci@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] PCI: fix link retrain status in
- pcie_wait_for_link_delay()
-Message-ID: <ZfGwN0PWF6M9kp0v@localhost>
-References: <20240313094938.484113-1-simon.guinot@seagate.com>
- <53b2239b-4a23-a948-a422-4005cbf76148@linux.intel.com>
+	s=arc-20240116; t=1710340577; c=relaxed/simple;
+	bh=XFDXYmXdUS9RT2lDf6b0r0Sb31orMCrxt5jtIkbRWKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gtWU/utdAouDEUW/5g1K9SuiZgVbXbHlSlnSIyN6zebr8ufxZs7pxXaGluO0V1AIC9EWTSAiQrnlWBxF99cacrybZ+DQEzK9jE8PactcFXytzPPE1tkl4PpI5AIe8zxNL/Gug4ANuTI62uGBTxoMVX9NMbvMgRggKF0KcGC5Oc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEzqcJeG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A6CC433F1;
+	Wed, 13 Mar 2024 14:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710340576;
+	bh=XFDXYmXdUS9RT2lDf6b0r0Sb31orMCrxt5jtIkbRWKA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZEzqcJeGxPPNYFIZRysA/arw8xKmCsgFAtuJNh6CcaGinac4jHPx0j8sRkhwKjbeG
+	 2K66SzJFHUpMdstY/bqu5mF7jniMbPjEs6OsS2AO+4KMoqx9Z00vF4N243TSn7RK//
+	 LDGvlE//xarvy1U0wLhCPnEWUMDbs+ySoXgXfs6LNUEisMlEYFpeELOwDhChL49fJc
+	 66pD5Fz0GtUEGh11BON/V1DjMBIYNy7WUCvoEh7Zw75IJFqYCGfoirAOHQcZdUBZ+w
+	 g4eAR37hfXwlKzswREpP7UkjTykH6a7nFsIOnZeEFHUXkyrxX6XZpXzUMExEOFyY50
+	 v7uwsn4hsoyvA==
+Date: Wed, 13 Mar 2024 09:36:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback to properly
+ reset the endpoint devices
+Message-ID: <20240313143614.GA916555@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FV8bZ/8jnt890/Cz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <53b2239b-4a23-a948-a422-4005cbf76148@linux.intel.com>
+In-Reply-To: <20240313-pci-qcom-shutdown-v1-1-fb1515334bfa@linaro.org>
 
+On Wed, Mar 13, 2024 at 05:39:22PM +0530, Manivannan Sadhasivam wrote:
+> PCIe host controller drivers are supposed to properly reset the endpoint
+> devices during host shutdown/reboot. Currently, Qcom driver doesn't do
+> anything during host shutdown/reboot, resulting in both PERST# and refclk
+> getting disabled at the same time. This prevents the endpoint device
+> firmware to properly reset the state machine. Because, if the refclk is
+> cutoff immediately along with PERST#, access to device specific registers
+> within the endpoint will result in a firmware crash.
+> 
+> To address this issue, let's call qcom_pcie_host_deinit() inside the
+> shutdown callback, that asserts PERST# and then cuts off the refclk with a
+> delay of 1ms, thus allowing the endpoint device firmware to properly
+> cleanup the state machine.
 
---FV8bZ/8jnt890/Cz
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I guess this 1ms delay is the PERST_DELAY_US hidden inside
+qcom_ep_reset_assert()?  I assume the refclk disable is done by
+clk_bulk_disable_unprepare()?
 
-On Wed, Mar 13, 2024 at 02:00:21PM +0200, Ilpo J=C3=A4rvinen wrote:
-> On Wed, 13 Mar 2024, Simon Guinot wrote:
->=20
-> > The current code in pcie_wait_for_link_delay() handles the value
-> > returned by pcie_failed_link_retrain() as an integer, expecting 0
-> > when the link has been successfully retrained. The issue is that
-> > pcie_failed_link_retrain() returns a boolean: "true" if the link
-> > has been successfully retrained and "false" otherwise. This leads
-> > pcie_wait_for_link_delay() to return an incorrect "active link"
-> > status when pcie_failed_link_retrain() is called.
-> >=20
-> > This patch fixes the check of the value returned by
-> > pcie_failed_link_retrain() in pcie_wait_for_link_delay().
-> >=20
-> > Note that this bug induces abnormal timeout delays when a PCI device
-> > is unplugged (around 60 seconds per bridge / secondary bus removed).
-> >=20
-> > Cc: stable@vger.kernel.org
-> > Fixes: 1abb47390350 ("Merge branch 'pci/enumeration'")
-> > Signed-off-by: Simon Guinot <simon.guinot@seagate.com>
->=20
-> Hi Simon,
->=20
-> Thanks for your patch. There's, however, already a better series to fix=
-=20
-> this and other related issues. Bjorn just hasn't gotten into applying the=
-m=20
-> yet:
->=20
-> https://patchwork.kernel.org/project/linux-pci/list/?series=3D824858
->=20
-> (I proposed a patch very similar to yours month ago, but Maciej came up=
-=20
-> a better way to fix all the issues.)
+  #define PERST_DELAY_US 1000
 
-Hi Ilpo,
+  qcom_pcie_shutdown
+    qcom_pcie_host_deinit
+      qcom_ep_reset_assert
+        gpiod_set_value_cansleep(pcie->reset, 1);
+        usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);  <--
+      phy_power_off(pcie->phy)
+      pcie->cfg->ops->deinit()
+        qcom_pcie_deinit_...
+          clk_bulk_disable_unprepare                         <--
 
-Thanks for pointing this patch series. This indeed fixes the timeout delay
-issue I observed.
+Is there a spec citation for this delay requirement?  If not, how do
+we know 1ms is enough for whatever the firmware needs to do?
 
-Simon
+Do other drivers require similar changes?
 
---FV8bZ/8jnt890/Cz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAmXxsDQACgkQzyg/RDPm
-szpC7RAAz4J+6UCQTn9hQ6BWFzd6ZG5Zc/U4EngEO9f4l9qVqC/EyZW9Q3fm9rms
-oj5tuUPW5SlbX+ZwO9xL3Hqb4vtRZfeNSEam4Pt4CQnDEV1d0E9mmj+Qt36b1rTc
-xOROQ86VHgKZSXu8PrMqfVKaWBUeUr3tuwO1LjU/RsmAUWNJtwPuBtBrQlBG/UU9
-WpfvZ+W2XyudnTH3ItLkE/sz06i51659+zkjDSdeggoZQPG6AZ6DdKz7UH8KOqoZ
-xu4jFrwQuoGyHB/S1umY2ozxglCZNwMdg5QHVWjgwAjTZIwD+cfTsQ5AOmx4BK3J
-HOqeL2ZBL1/gSkgFsjqnP+0TMVNjeWu1AjADmtZaBPnBIH0G+Ig0wdt4IA1QUJ1Z
-Q21qLL6w2DltvPBP1X1DK8vm49zvEpo7ESbXKTeeTLvXkCeMg41jPAixJKlAGLIl
-gGodBF+vjDWgWoJmGbV2NAUcWTM39+TaaVSag81Y+binDxEttjxiHgPcxC34VQzU
-Xghq/Hrz8tBZflWsRtsxtohbkBrLeyF1Pw0MmNYkLPD4KPUB8uNsIU+ffKXZLrBh
-AACWGmo2BQCaRraQnTBCsP34sN2cjh88KgLGHHeJ4hFJ1Nu2Ma4Jvn6L29QcNoaT
-aleFsGK1RHgFjP/NN7dV7VXEzy601LOscZA7nJAYr4ldEbMl/40=
-=5eFO
------END PGP SIGNATURE-----
-
---FV8bZ/8jnt890/Cz--
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 2ce2a3bd932b..41434bc4761a 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+>  	return 0;
+>  }
+>  
+> +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> +{
+> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> +
+> +	qcom_pcie_host_deinit(&pcie->pci->pp);
+> +}
+> +
+>  static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> @@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
+>  		.pm = &qcom_pcie_pm_ops,
+>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+> +	.shutdown = qcom_pcie_shutdown,
+>  };
+>  builtin_platform_driver(qcom_pcie_driver);
+> 
+> ---
+> base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
+> change-id: 20240313-pci-qcom-shutdown-d86298186560
+> 
+> Best regards,
+> -- 
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
 
