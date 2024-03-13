@@ -1,113 +1,59 @@
-Return-Path: <linux-pci+bounces-4792-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4793-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B33887B07C
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 19:55:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A466287B1B4
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 20:24:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51FF228D1A2
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 18:55:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D7771F24C06
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 19:24:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABDFC13EFF6;
-	Wed, 13 Mar 2024 17:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228C054669;
+	Wed, 13 Mar 2024 19:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D8zvQJOD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKDQifyU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE9B13DB9B
-	for <linux-pci@vger.kernel.org>; Wed, 13 Mar 2024 17:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A2160EF3;
+	Wed, 13 Mar 2024 19:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710352431; cv=none; b=qrZaJZNYAJ66itj/BtLNIDY/yUbLjWKGN8zlMzcDKekm/pFTTOGQrxTgP/o3MxOWa0MAhdVaKS92O0CBGhZMC31/4SSjxxmuiqjpD0lg4z7HbwU48hUiQUXTq3ghpaPjmGdzuc7OrJY9HX7aWO69hBnXYf0Oc1v9cSpI0+AAcvc=
+	t=1710357419; cv=none; b=G2SWrqTg+xNMc/ln/ZhuoUTbFJg/VFRv/VTItB9P5kUF+/PyF5wh/6zs8LI/I8i08yAplbLk2SueGflstgXIu5Y/BVjBLVbfyas/+mXyD+1fIE1NmmZl/M7/w9BPxzj+XhvoI+xTF/snepBrbCNsYQNeVBWwrfSy4xgvRfrQHB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710352431; c=relaxed/simple;
-	bh=ikP1SQZvK81WwtXopq3dHhyUueLGCn0F9tCceqEbyeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ryF9tGxDcwfh5wdIe6n/dPmuRwMBEEGQKsH2Y6C0qs35938UPHICLdlXZDWitGGK2q+FtegIbUAl60GWv46CucFis5A6yx3ZE2MA8WMezMpfXCnFy1GCTfK1W81yQ0Uxrgodu2jfaHKO8UCMJnpcKn6ZFqAvYcTeAybWsy3SOEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D8zvQJOD; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e6ac58fceaso197938b3a.1
-        for <linux-pci@vger.kernel.org>; Wed, 13 Mar 2024 10:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710352429; x=1710957229; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=P42L0V1byhnm9xVh8nwf+gtaXnbnBXKB7y3o50DEnDg=;
-        b=D8zvQJODpgv7AIuJtS6cE34ZEwNLkubA98YOSqTLCzC69KQKzO2f3zGeK+Z5DUDzxi
-         o+MhH1fXsTzC5+MTFYVzZwM9TKWdDIfSl1AGH4LSzvVuBGbMD9jG+UhqXrHUxeFvsP3d
-         9TbKrEZk62XKsAq5v22pZCQ97JzVgSroarKzmG+MUpGNK6RQn37mVHRtnV5W2hzV27QY
-         PmCrm+BjGNdDurv7SBFLacgCV6vRcD2ofQILGoRLKueVEbpbDvkB323zb0PN2kMXj9gt
-         xqGrrJBdBocY31UygcoLPWUorr0DO9CcXcsP4/rt5f53tS9eMDhWoE2TfEfjPvuLDUo/
-         vIjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710352429; x=1710957229;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P42L0V1byhnm9xVh8nwf+gtaXnbnBXKB7y3o50DEnDg=;
-        b=pshVoFbkifUcvPQxqsNEgfsvpAMcQqT8fSm84j+X0BmOJMcUBOOlIS8MHMpy20jkNZ
-         ew1jzijf7Nh9Hw0zZer6qBLYxAVudZA3fXChbi+ZavEBvhv7ltEO5IBcdk6JPO04be5E
-         OjWKSrd7ksO+NusU0ZJSHdDmFJ6lmeBjPAG8AHT1nGlVP0aSazsh/1cohBXm+/uciy1A
-         bfxoZOLJyu642c4lt7SVkVSmt7DnLWqShn1KQfBRLXuhxcH69+OMRcMFsjuD+SMSDynK
-         RcwHbKV7AqfMm6MUkCa4rxs3OIFE/3SZXlRly9DRsuU4EEMkDreeFfwkZKve/U05VU7+
-         X6Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+2cZDzEpKv4kdKMaE393IRmUpMH2+wZR2jnabtrGay/e0BoyLQ9/JQ5jSXUXLT9y0tpbUM4wZH2yIADtI66Uq+OLDW0G5p+jM
-X-Gm-Message-State: AOJu0YzpE/rc1Xlp5NQWpf3c4SyzQYg+gb1FiQSzZeKvlu4DPU/PiGLe
-	RjRzGsQ0QvvCFz0b8njknoDOih8UbWlhXkuysR4RK90MoxCSpY607sje4M8hTQ==
-X-Google-Smtp-Source: AGHT+IFcf5q7ruVnxD8hAPCs04EkAgFwMtLJq7WsD337HPZnA1JczKQ1xXu4AYtawACMGMb2l439Qw==
-X-Received: by 2002:a05:6a20:12c9:b0:1a3:113a:bbd5 with SMTP id v9-20020a056a2012c900b001a3113abbd5mr5892663pzg.40.1710352428857;
-        Wed, 13 Mar 2024 10:53:48 -0700 (PDT)
-Received: from thinkpad ([117.213.99.94])
-        by smtp.gmail.com with ESMTPSA id r6-20020a63e506000000b005dbd0facb4dsm7803062pgh.61.2024.03.13.10.53.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Mar 2024 10:53:48 -0700 (PDT)
-Date: Wed, 13 Mar 2024 23:23:33 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	s=arc-20240116; t=1710357419; c=relaxed/simple;
+	bh=XVu5bJH8nPuKS6s5/fX++LS0JurTPSr9pVBxYJqu/jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=vAdbiRnusEQZy4mTejmexFJ+NxaK+eqEA8zTECO3C0pe5PuAzSYL8aXIYTxIdxFjG33/sBiitB5YvInov0naoFQIN41RZyVYg3C/DHvLa4ZPwlbkUgxH0OTUcZQNdKSYJZ3XIVtaxvRJOhP++/KEq7V3DXW3pKJlgddYq6qbRZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKDQifyU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36909C433F1;
+	Wed, 13 Mar 2024 19:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710357418;
+	bh=XVu5bJH8nPuKS6s5/fX++LS0JurTPSr9pVBxYJqu/jo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jKDQifyU0rvMEek2BTjl1rfmDHVhxbrZtxNt+R75OJbpwFngQosurN4NPqRe0ntre
+	 Ppg020gSZ7kp9o/qmRxK0UU7oU/ApwdgPCzUZVCpPpIItrpfaX1d2TojxiijfCjB96
+	 6olH/B/HSySQ+HMcm3t4//wY+N2CoAXpL+8GyyZ4DT8GkeLoAkjtclDTCxwlAh2FbS
+	 hZU+Z6ageWFTo9+3VTOTu0l+4vwMAlf5l/zPkpJ3AdDCSpgX9HapgcVhIEzQaXFA/N
+	 DM4f4HE99yWgsPdbKbxADncOypuYNjWzc544qiuZqw7EYGbhVP2TTo4uLYy7FhAskO
+	 RG7RYWYcpA3Rg==
+Date: Wed, 13 Mar 2024 14:16:56 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@axis.com, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v9 07/10] PCI: dwc: ep: Remove "core_init_notifier" flag
-Message-ID: <20240313175333.GA126027@thinkpad>
-References: <20240304-pci-dbi-rework-v9-0-29d433d99cda@linaro.org>
- <20240304-pci-dbi-rework-v9-7-29d433d99cda@linaro.org>
- <ZesRk5Dg4KEASD3U@ryzen>
- <20240311144559.GA2504@thinkpad>
- <Ze99lLhe2GqIqMgl@ryzen>
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback to properly
+ reset the endpoint devices
+Message-ID: <20240313191656.GA921158@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -117,81 +63,129 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ze99lLhe2GqIqMgl@ryzen>
+In-Reply-To: <20240313150242.GA2656@thinkpad>
 
-On Mon, Mar 11, 2024 at 10:54:28PM +0100, Niklas Cassel wrote:
-> On Mon, Mar 11, 2024 at 08:15:59PM +0530, Manivannan Sadhasivam wrote:
-> > > 
-> > > I would say that it is the following change that breaks things:
-> > > 
-> > > > -	if (!core_init_notifier) {
-> > > > -		ret = pci_epf_test_core_init(epf);
-> > > > -		if (ret)
-> > > > -			return ret;
-> > > > -	}
-> > > > -
-> > > 
-> > > Since without this code, pci_epf_test_core_init() will no longer be called,
-> > > as there is currently no one that calls epf->core_init() for a EPF driver
-> > > after it has been bound. (For drivers that call dw_pcie_ep_init_notify() in
-> > > .probe())
-> > > 
+On Wed, Mar 13, 2024 at 08:32:42PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 13, 2024 at 09:36:14AM -0500, Bjorn Helgaas wrote:
+> > On Wed, Mar 13, 2024 at 05:39:22PM +0530, Manivannan Sadhasivam wrote:
+> > > PCIe host controller drivers are supposed to properly reset the endpoint
+> > > devices during host shutdown/reboot.
+
+Where does this requirement to reset endpoints during host shutdown
+come from?  My working assumption is that .shutdown() needs to stop
+DMA and interrupts, based on this old thread:
+https://lore.kernel.org/all/61f70fd6-52fd-da07-ce73-303f95132131@codeaurora.org/
+
+> > > Currently, Qcom driver doesn't do
+> > > anything during host shutdown/reboot, resulting in both PERST# and refclk
+> > > getting disabled at the same time. This prevents the endpoint device
+> > > firmware to properly reset the state machine. Because, if the refclk is
+> > > cutoff immediately along with PERST#, access to device specific registers
+> > > within the endpoint will result in a firmware crash.
+
+Does "PERST# getting disabled" mean PERST# is asserted or deasserted?
+
+> > > To address this issue, let's call qcom_pcie_host_deinit() inside the
+> > > shutdown callback, that asserts PERST# and then cuts off the refclk with a
+> > > delay of 1ms, thus allowing the endpoint device firmware to properly
+> > > cleanup the state machine.
+
+This *adds* the qcom_pcie_shutdown() callback, right?
+
+> > I guess this 1ms delay is the PERST_DELAY_US hidden inside
+> > qcom_ep_reset_assert()?  I assume the refclk disable is done by
+> > clk_bulk_disable_unprepare()?
+> 
+> Yes to both.
+> 
+> >   #define PERST_DELAY_US 1000
 > > 
-> > Thanks a lot for testing, Niklas!
+> >   qcom_pcie_shutdown
+> >     qcom_pcie_host_deinit
+> >       qcom_ep_reset_assert
+> >         gpiod_set_value_cansleep(pcie->reset, 1);
+> >         usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);  <--
+> >       phy_power_off(pcie->phy)
+> >       pcie->cfg->ops->deinit()
+> >         qcom_pcie_deinit_...
+> >           clk_bulk_disable_unprepare                         <--
 > > 
-> > > I guess one way to solve this would be for the EPC core to keep track of
-> > > the current EPC "core state" (up/down). If the core is "up" at EPF .bind()
-> > > time, notify the EPF driver directly after .bind()?
+> > Is there a spec citation for this delay requirement?  If not, how do
+> > we know 1ms is enough for whatever the firmware needs to do?
+> 
+> Both PCIe base spec and Electromechanical spec only mentions Tperst,
+> which is the minimum time PERST# should remain asserted. But there
+> is no mention about the time, refclk should be active.
+
+I see Tperst mentioned in PCIe r6.0, sec 6.6.1, but AFAICS the value
+is only defined in PCIe CEM (r5.0, sec 2.9.2), which says 100us, and
+maybe other form factor specs.
+
+If PERST_DELAY_US is enforcing Tperst, why is it 1000us instead of
+100us?
+
+> So I used the existing delay post PERST# assert in the driver. I do
+> not know if that is enough for all the endpoints out in the wild,
+> but atleast satisfies the requirement of the endpoint I'm working on
+> (which is another Qcom SoC in EP mode).
+> 
+> We can change the delay if someone reports any issue with the
+> existing one.  Atleast, that's the best we could do in this
+> situation.
+
+I'm dubious about this.  If endpoints require a delay here to work
+properly, the spec should specify a minimum delay.  We can't make a
+reliable system based on "here's a guess and we'll update it if people
+report issues."  That makes me think this endpoint mode Qcom SoC
+dependency on a delay might itself be non spec-compliant.
+
+> > Do other drivers require similar changes?
+> 
+> Most likely yes, but that also depends on when the drivers are
+> cutting off the refclk. Not all drivers are implementing the
+> shutdown callback, and even few of the ones implementing, do not
+> assert PERST# since it is optional.
+
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
 > > > 
-> > 
-> > Yeah, that's a good solution. But I think it would be better if the EPC caches
-> > all events if the EPF drivers are not available and dispatch them once the bind
-> > happens for each EPF driver. Even though INIT_COMPLETE is the only event that is
-> > getting generated before bind() now, IMO it is better to add provision to catch
-> > other events also.
-> > 
-> > Wdyt?
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index 2ce2a3bd932b..41434bc4761a 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> > > +{
+> > > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> > > +
+> > > +	qcom_pcie_host_deinit(&pcie->pci->pp);
+> > > +}
+> > > +
+> > >  static const struct of_device_id qcom_pcie_match[] = {
+> > >  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> > >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> > > @@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
+> > >  		.pm = &qcom_pcie_pm_ops,
+> > >  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> > >  	},
+> > > +	.shutdown = qcom_pcie_shutdown,
+> > >  };
+> > >  builtin_platform_driver(qcom_pcie_driver);
+> > > 
+> > > ---
+> > > base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
+> > > change-id: 20240313-pci-qcom-shutdown-d86298186560
+> > > 
+> > > Best regards,
+> > > -- 
+> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
 > 
-> I'm not sure.
-> What if the EPF goes up/down/up, it seems a bit silly to send all those
-> events to the EPF driver that will alloc+free+alloc.
-> 
-> Do we know for sure that we will want to store + replay events other than
-> INIT_COMPLETE?
-> 
-> And how many events should we store?
-> 
-> 
-> Until we can think of a good reason which events other than UP/DOWN we
-> can to store, I think that just storing the state as an integer in
-> struct pci_epc seems simpler.
-> 
-
-Hmm, makes sense.
-
-> 
-> Or I guess we could continue with a flag in struct pci_epc_features,
-> like has_perst_notifier, which would then require the EPC driver to
-> call both epc_notify_core_up() and epc_notify_core_down() when receiving
-> the PERST deassert/assert.
-> For a driver without the flag set, the EPC core would call
-> .epc_notify_core_up() after bind. (And .epc_notify_core_down() would never
-> be called, or it could call it before unbind().)
-> That way an EPF driver itself would not need any different handling
-> (all callbacks would always come, either triggered by an EPC driver that
-> has PERST GPIO irq, or triggered by the EPC core for a driver that lacks
-> a PERST GPIO).
-> 
-
-For simplicity, I've just used a flag in 'struct pci_epc' to track the core_init
-and call the callback during bind().
-
-But the series has grown big, so I decided to split it into two. One to address
-the DBI access issue and also remove the 'core_init_notifier' flag and another
-one to make EPF drivers more robust to handle the host reboot scenario.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
