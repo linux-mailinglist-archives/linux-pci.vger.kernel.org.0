@@ -1,191 +1,143 @@
-Return-Path: <linux-pci+bounces-4793-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4794-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A466287B1B4
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 20:24:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73E6B87B306
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 21:49:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D7771F24C06
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 19:24:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5A6D1C23274
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Mar 2024 20:49:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228C054669;
-	Wed, 13 Mar 2024 19:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B4012E6C;
+	Wed, 13 Mar 2024 20:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKDQifyU"
+	dkim=pass (2048-bit key) header.d=deepwavedigital-com.20230601.gappssmtp.com header.i=@deepwavedigital-com.20230601.gappssmtp.com header.b="u0g0mA+m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A2160EF3;
-	Wed, 13 Mar 2024 19:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B4D1A38DB
+	for <linux-pci@vger.kernel.org>; Wed, 13 Mar 2024 20:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710357419; cv=none; b=G2SWrqTg+xNMc/ln/ZhuoUTbFJg/VFRv/VTItB9P5kUF+/PyF5wh/6zs8LI/I8i08yAplbLk2SueGflstgXIu5Y/BVjBLVbfyas/+mXyD+1fIE1NmmZl/M7/w9BPxzj+XhvoI+xTF/snepBrbCNsYQNeVBWwrfSy4xgvRfrQHB0=
+	t=1710362938; cv=none; b=cH2cPCU2II1o7kVtoGp5YwTDuQ4tP2WmEbZRVyfAlG1GsHTnvjmQY04S7hJ7X6MmU9MMrA0M0CJB/+iyd7a+Mm0fiQVs7LaeRVTxVfZlXdDKKs/qj4KJcczXy66aJtkRbeTURM7guy5oBnwXIuwdcP6tKwSmYYzi0P4lSCf+HUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710357419; c=relaxed/simple;
-	bh=XVu5bJH8nPuKS6s5/fX++LS0JurTPSr9pVBxYJqu/jo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=vAdbiRnusEQZy4mTejmexFJ+NxaK+eqEA8zTECO3C0pe5PuAzSYL8aXIYTxIdxFjG33/sBiitB5YvInov0naoFQIN41RZyVYg3C/DHvLa4ZPwlbkUgxH0OTUcZQNdKSYJZ3XIVtaxvRJOhP++/KEq7V3DXW3pKJlgddYq6qbRZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKDQifyU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36909C433F1;
-	Wed, 13 Mar 2024 19:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710357418;
-	bh=XVu5bJH8nPuKS6s5/fX++LS0JurTPSr9pVBxYJqu/jo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jKDQifyU0rvMEek2BTjl1rfmDHVhxbrZtxNt+R75OJbpwFngQosurN4NPqRe0ntre
-	 Ppg020gSZ7kp9o/qmRxK0UU7oU/ApwdgPCzUZVCpPpIItrpfaX1d2TojxiijfCjB96
-	 6olH/B/HSySQ+HMcm3t4//wY+N2CoAXpL+8GyyZ4DT8GkeLoAkjtclDTCxwlAh2FbS
-	 hZU+Z6ageWFTo9+3VTOTu0l+4vwMAlf5l/zPkpJ3AdDCSpgX9HapgcVhIEzQaXFA/N
-	 DM4f4HE99yWgsPdbKbxADncOypuYNjWzc544qiuZqw7EYGbhVP2TTo4uLYy7FhAskO
-	 RG7RYWYcpA3Rg==
-Date: Wed, 13 Mar 2024 14:16:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback to properly
- reset the endpoint devices
-Message-ID: <20240313191656.GA921158@bhelgaas>
+	s=arc-20240116; t=1710362938; c=relaxed/simple;
+	bh=g8LqX2ARWy0wqZE686Gw/0SDGSlqSjio0FqyPtwGq0k=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=l45SvzoiuHNeHJNXbEQayR0S1aVEZr9kvesafLL+AdEqwd92gFG5c/pCbsxgdOl1v0Utp8kD/svxen6uZ14J+AnXxT7Y+LeOXpDEIqkfhjSXqkWeo0rZh/abc5o80/J7WZcIy4+ntOVxdTJQ3uNVHK8wW26rN8ks31YRcCYdGTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deepwavedigital.com; spf=fail smtp.mailfrom=deepwavedigital.com; dkim=pass (2048-bit key) header.d=deepwavedigital-com.20230601.gappssmtp.com header.i=@deepwavedigital-com.20230601.gappssmtp.com header.b=u0g0mA+m; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deepwavedigital.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=deepwavedigital.com
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-690d7a8f904so11375646d6.1
+        for <linux-pci@vger.kernel.org>; Wed, 13 Mar 2024 13:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=deepwavedigital-com.20230601.gappssmtp.com; s=20230601; t=1710362935; x=1710967735; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QDDXz+HieILyoM7Fp7IqzIOhB/WAqGcPtWgNk4RLkzI=;
+        b=u0g0mA+mIWCzUvWMNCaFbVd7wgVPxz3rIqhiMUDWgVkh/8ki6NDYplIzUzEMN3Np3d
+         C4ABgV5QmJeLtWVIVmljOD9/tmj0PiCaLQv36Zlmw2F+tERjMQLSGscMKV8sTaK8Amip
+         2S01qSBkiZjZHFBhO1Qz8+F5vr6TIaISFKqxe/2iV68+Nn8GaTnDcFnhBPo74x0lUGtw
+         AP7e4gheKxPW4j6wi412SSAI3a20lOfcxsEI2jcVaL8c1xtMZU2GEeEoDush8godPFZL
+         1F4xpExURXufbQ0p/r3283jos6DpapRJuEuVTgbNlm8FiqlC2HMuxX/IP7DqXe6TYhq0
+         nqCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710362935; x=1710967735;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QDDXz+HieILyoM7Fp7IqzIOhB/WAqGcPtWgNk4RLkzI=;
+        b=kwUjdyr6gpDArZs/jM04u08MuD2zCc/IiT8bUMOeJnrVSiC054EWNCIwxTBrH0ukKQ
+         K0ra3f4Wf4wKG9Y2CLgm1MQ0ApmTHkgyGKudE5+fwnLcMJQdghCCM9jVMe47waHsEYBm
+         jwimcVqbuPRBQMObGu9+jJbKEQfwyAK+5txGuqCuCGHm4+IFY8jj0DSjyM9Zdbi5nEke
+         806DyBKqTTIB0iwsv5k+GHXm0i3ljWwH2xn4fmu0hn947LGrvcBLY9cr3cHZdpOQUlS+
+         vRbYdhJujnE+dNuW8hWZAO6QnJPrHa/OIOrt9oW5/A7SrXDvEAnae/yAxKLn7Q4hptrN
+         N6Pw==
+X-Gm-Message-State: AOJu0Yw2kV8TzcvpWsjcVZngJCM+qSXYvjEqSVJyNyRZ4cNgDkc+aP5E
+	Q2ZViFvDLgieeECEIb6RFhNcPqrPbxPdQdkLXmW3Ch80reyhnwaRbJk5R1q4y2kxH9y+cFa/j4v
+	FVmZN6B525ehQVLV9lNEI60avtz/LaopXvVdxUA==
+X-Google-Smtp-Source: AGHT+IEBbnYq0gGZavS1YtHOEiIcuhJv2Wf2O9AEl6TihiDr6DVf7l9Bqd1QwK8qvQSDxiYqBR0ogL3b244V1T+3f4g=
+X-Received: by 2002:a05:6214:2b0a:b0:68f:f859:ee06 with SMTP id
+ jx10-20020a0562142b0a00b0068ff859ee06mr1428645qvb.12.1710362935238; Wed, 13
+ Mar 2024 13:48:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240313150242.GA2656@thinkpad>
+From: Daniel Bryant <dan@deepwavedigital.com>
+Date: Wed, 13 Mar 2024 16:48:44 -0400
+Message-ID: <CAFgx5J181LSmRzrxsW1Mby2nSmAfepsdpzu6+BjHb=6DiiC_Lw@mail.gmail.com>
+Subject: [BUG] PCI: of: of_pci_make_dev_node() creates ranges that fail
+ address translation
+To: Lizhi Hou <lizhi.hou@amd.com>, Rob Herring <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 13, 2024 at 08:32:42PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Mar 13, 2024 at 09:36:14AM -0500, Bjorn Helgaas wrote:
-> > On Wed, Mar 13, 2024 at 05:39:22PM +0530, Manivannan Sadhasivam wrote:
-> > > PCIe host controller drivers are supposed to properly reset the endpoint
-> > > devices during host shutdown/reboot.
+I'm using the of_pci_make_dev_node() framework to dynamically create
+nodes for the host bridge and attached device, then applying an overlay to
+create a simple-bus and children on the endpoint device. The initial problem
+is that none of the children create any memory resources.  This is on
+a DT-based system, aarch64 hardware.
 
-Where does this requirement to reset endpoints during host shutdown
-come from?  My working assumption is that .shutdown() needs to stop
-DMA and interrupts, based on this old thread:
-https://lore.kernel.org/all/61f70fd6-52fd-da07-ce73-303f95132131@codeaurora.org/
+The overall bus hierarchy is this:
 
-> > > Currently, Qcom driver doesn't do
-> > > anything during host shutdown/reboot, resulting in both PERST# and refclk
-> > > getting disabled at the same time. This prevents the endpoint device
-> > > firmware to properly reset the state machine. Because, if the refclk is
-> > > cutoff immediately along with PERST#, access to device specific registers
-> > > within the endpoint will result in a firmware crash.
+PCIe root port controller -> host bridge -> device -> simple-bus ->
+[subdevices].
 
-Does "PERST# getting disabled" mean PERST# is asserted or deasserted?
+1. Root port controller is defined by static DT blob.
+2. bridge and device of_nodes are created by of_pci_make_dev_node()
+3. simple-bus and subdevices are added from a single overlay.
 
-> > > To address this issue, let's call qcom_pcie_host_deinit() inside the
-> > > shutdown callback, that asserts PERST# and then cuts off the refclk with a
-> > > delay of 1ms, thus allowing the endpoint device firmware to properly
-> > > cleanup the state machine.
+The end result is very similar to the test case in
+drivers/of/unittest-data/tests-address.dtsi. I've traced the failure
+for this hardware to of_translate_address() always returning
+OF_BAD_ADDR for any of the "reg" properties of a subdevice.The
+critical difference between the working unit test and the hardware DT
+is that the hardware PCIe root port controller has a ranges property
+that's not just an identity mapping.
 
-This *adds* the qcom_pcie_shutdown() callback, right?
+arch/arm64/boot/dts/nvidia/tegra234.dtsi contains the following
+definition, note specifically the second ranges entry:
 
-> > I guess this 1ms delay is the PERST_DELAY_US hidden inside
-> > qcom_ep_reset_assert()?  I assume the refclk disable is done by
-> > clk_bulk_disable_unprepare()?
-> 
-> Yes to both.
-> 
-> >   #define PERST_DELAY_US 1000
-> > 
-> >   qcom_pcie_shutdown
-> >     qcom_pcie_host_deinit
-> >       qcom_ep_reset_assert
-> >         gpiod_set_value_cansleep(pcie->reset, 1);
-> >         usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);  <--
-> >       phy_power_off(pcie->phy)
-> >       pcie->cfg->ops->deinit()
-> >         qcom_pcie_deinit_...
-> >           clk_bulk_disable_unprepare                         <--
-> > 
-> > Is there a spec citation for this delay requirement?  If not, how do
-> > we know 1ms is enough for whatever the firmware needs to do?
-> 
-> Both PCIe base spec and Electromechanical spec only mentions Tperst,
-> which is the minimum time PERST# should remain asserted. But there
-> is no mention about the time, refclk should be active.
+    pcie@14160000 {
+        compatible = "nvidia,tegra234-pcie";
+        device_type = "pci";
+        // ...
+        ranges = <0x43000000 0x21 0x40000000 0x21 0x40000000 0x2
+0xe8000000>, /* prefetchable memory (11904 MB) */
+                <0x02000000 0x0  0x40000000 0x24 0x28000000 0x0
+0x08000000>, /* non-prefetchable memory (128 MB) */
+                <0x01000000 0x0  0x36100000 0x00 0x36100000 0x0
+0x00100000>; /* downstream I/O (1 MB) */
+    };
 
-I see Tperst mentioned in PCIe r6.0, sec 6.6.1, but AFAICS the value
-is only defined in PCIe CEM (r5.0, sec 2.9.2), which says 100us, and
-maybe other form factor specs.
+Then when the child bridge is created, a of_node is created with the
+following properties:
 
-If PERST_DELAY_US is enforcing Tperst, why is it 1000us instead of
-100us?
+    pci@0,0 {
+            compatible = "pci10de,229c\0pciclass,060400\0pciclass,0604";
 
-> So I used the existing delay post PERST# assert in the driver. I do
-> not know if that is enough for all the endpoints out in the wild,
-> but atleast satisfies the requirement of the endpoint I'm working on
-> (which is another Qcom SoC in EP mode).
-> 
-> We can change the delay if someone reports any issue with the
-> existing one.  Atleast, that's the best we could do in this
-> situation.
+            #address-cells = <0x03>;
+            #size-cells = <0x02>;
+            bus-range = <0x01 0xff>;
+            device_type = "pci";
 
-I'm dubious about this.  If endpoints require a delay here to work
-properly, the spec should specify a minimum delay.  We can't make a
-reliable system based on "here's a guess and we'll update it if people
-report issues."  That makes me think this endpoint mode Qcom SoC
-dependency on a delay might itself be non spec-compliant.
+            ranges = <0x82000000 0x24 0x28000000 0x82000000 0x24
+0x28000000 0x00 0x200000>;
+    };
 
-> > Do other drivers require similar changes?
-> 
-> Most likely yes, but that also depends on when the drivers are
-> cutting off the refclk. Not all drivers are implementing the
-> shutdown callback, and even few of the ones implementing, do not
-> assert PERST# since it is optional.
+This ranges entry is a simple passthrough, but it's of the addresses
+already translated to the CPU address space, and not the bus address.
+This will cause of_translate_address() to fail when it reaches
+pcie@14160000 and doesn't match.
 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 2ce2a3bd932b..41434bc4761a 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -1618,6 +1618,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static void qcom_pcie_shutdown(struct platform_device *pdev)
-> > > +{
-> > > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> > > +
-> > > +	qcom_pcie_host_deinit(&pcie->pci->pp);
-> > > +}
-> > > +
-> > >  static const struct of_device_id qcom_pcie_match[] = {
-> > >  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
-> > >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
-> > > @@ -1670,5 +1677,6 @@ static struct platform_driver qcom_pcie_driver = {
-> > >  		.pm = &qcom_pcie_pm_ops,
-> > >  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> > >  	},
-> > > +	.shutdown = qcom_pcie_shutdown,
-> > >  };
-> > >  builtin_platform_driver(qcom_pcie_driver);
-> > > 
-> > > ---
-> > > base-commit: 51459eb30f88651d3688b9e95fed0f97767ececb
-> > > change-id: 20240313-pci-qcom-shutdown-d86298186560
-> > > 
-> > > Best regards,
-> > > -- 
-> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+As a caveat, I'm currently seeing this on hardware on a downstream
+vendor kernel. I'm still working to reproduce on mainline 6.8 (via
+qemu, probably?), but I don't yet see anything that would stop this
+from being any different there.
+
+Dan
 
