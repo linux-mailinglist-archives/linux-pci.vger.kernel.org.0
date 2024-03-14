@@ -1,165 +1,105 @@
-Return-Path: <linux-pci+bounces-4819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3504287BC0A
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 12:39:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC60B87BDDF
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 14:39:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E5C9C2869AE
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 11:39:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DC46B20E06
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 13:39:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 594B76E616;
-	Thu, 14 Mar 2024 11:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NUtuI5mx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C34F59168;
+	Thu, 14 Mar 2024 13:39:41 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AB56CDB5;
-	Thu, 14 Mar 2024 11:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48F94691;
+	Thu, 14 Mar 2024 13:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710416374; cv=none; b=gasD04ZUuIY/KEwpqF9JOfhPnpL99q714LxDimxuPSTyiMi0mW8rLlMacnHKHr+BGZGpIHvVQMRmNMPasOGu1urZT4hAPInPCJE+J4qPSkUaXITi4+xi73MIeWzr0RiISoUh6jKNd6eZlnITq+gZPaO/Q5PapPk91IZXawx/DMY=
+	t=1710423581; cv=none; b=kuYrZfmgnVtWYtoK6ZqPWxdHvlNx430gGLLncekB0/IvzrJw2jI4lEHOydGtZXXEy+42c/Dkexh+IrXBXCfYmt6UcKe9givSLpBLFLiv4iS9sbXjy0FQrlLEiYwzDYpjmI5/Hq4AKNjIdaesAH3fejOT+vaPNX6fWsMpQDOVwow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710416374; c=relaxed/simple;
-	bh=gFRSJcnPaE/PeJWZbowy+BixegV6p7D1UJq7221K7gE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nnTUAiKCxokwHySY/AxSXBLFs0CZRrP3fmZHt2bpHEzPz6eQJKDBJlEn6/icgjBjgrrLyxGihHqVRxcMKhLSXg+Db02F6vA2f3l0OxTyu+96RzNqqEGNc02f1SQDG2mm8UbgCad9FCRW6yfUWl4bU930yt5dMdCNJXViHcKj7D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NUtuI5mx; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710416373; x=1741952373;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gFRSJcnPaE/PeJWZbowy+BixegV6p7D1UJq7221K7gE=;
-  b=NUtuI5mxCpUPosQw59dobzfHE4BcQz0SrbQ3aHg0PFMQmZkKacNZVnQS
-   UloH4oAsMdzl/idAECu/598Ie4DoM7IylpTK8WqFxMzZBGym2ea4k/ZAG
-   fb8JBR34Y4wMuaxfyF6MwNZy2xonR9vaCRvgmfNWipOMCHqnerDyKF4OZ
-   VFgzKF2mjcBxfaml2yb7lxNsOesP4ixLhZyc08e9LcHieug5bl6/NaVql
-   g/zTAosl7ConWlliucxmaUneH90kuoheCsoU/ZSoV3CDOAW6l6PJ8Qp1Q
-   m1PYzWUOs6B+mIX9TKIgNQzTzkIucp9vZdL4Wr21Oe3IsrNS2keN1UsmJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="5352302"
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="5352302"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 04:39:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="12842860"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.8])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 04:39:30 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 14 Mar 2024 13:39:24 +0200 (EET)
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: Use the correct bit in Link Training not active
- check
-In-Reply-To: <01666075-504d-a434-d039-2e25db931f23@linux.intel.com>
-Message-ID: <c4fe9080-245f-7089-84c1-bb47dcf2cd83@linux.intel.com>
-References: <20240301150641.4037-1-ilpo.jarvinen@linux.intel.com> <alpine.DEB.2.21.2403011622560.42226@angie.orcam.me.uk> <c740c6e4-ca1a-33ad-8437-4a1219c16eb1@linux.intel.com> <alpine.DEB.2.21.2403060951310.43702@angie.orcam.me.uk>
- <01666075-504d-a434-d039-2e25db931f23@linux.intel.com>
+	s=arc-20240116; t=1710423581; c=relaxed/simple;
+	bh=62bZHF9vxKaZTjbLz1C228V+7eZtAI2IjBIOgTxAJ4Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y/P6PFk3VXGscfLJzV1B9K+63KfUwitW+aoruaYtoIPamZ/y47JLjXYp721zXUv/GTgH8xWj7Giwp7wx5qKZooov3JZmkKOgehw2is7S0Dmqij1vWft8apExiA7GaPYCvo+0tQ2MMBw8a3d+eX/YsftuIOxXFp2C5HZ2IVwVsPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60a0a1bd04eso10704537b3.1;
+        Thu, 14 Mar 2024 06:39:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710423577; x=1711028377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vnp7xMYV1yB90s/lAAUhIyi8Fm75SLbVfVCN35lpvaA=;
+        b=sOGI99KIRUA5LN7jH+gnSwYWiPzSeVT+9MMtekj9gqxFwVTv88nYGIp98u5nZQA16S
+         k9yjQCFRljIY6BZsuQ0fhlyowKhVqhpbRtRiDLmZdN3cS7A2YD9wo+9vdBKEbF/rr2SN
+         CiLQ8HPOW/9Lk7SRMegHK4wc143QwW0yE8yuRsvvuFn/C+6SpQ/6bvwwsfw3cn6q3xjX
+         7uq5Iz0CFMZxyjFEbfNf5K0cvkbsckLPlTEsI13Md6Th0Zx4iRuSP2HeCBvFXFAMHKbh
+         iY28jB2ejNVcW/nZNhgX20KKI3wFlhzA0x/CXVCPrVdO6usEgzEXBwZdiIm9YtrRYRF9
+         UV3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWC34y0xHtLMe9xTkeld7B1zueXS2QgFZmk4JK+L/uVICBBvQJgh66kLSJh2EX8FQrxStkQ0583gfk+oWgGZxvd/c/bhZSLYV5GZlTD6gqob5V6OlTRGFB2795UUpx8n7z70W/BveSXdzN0DwSI9mJ134YiH519Og6m7xS4d03LTCXVlJxC8/tC
+X-Gm-Message-State: AOJu0Yzppp7j7UAuNRm1Mw/uqpef7mds8XRipOOPbjRSgorq5We37EVS
+	n/NgENhiP4lVSU1uonS+1K3ijrokTdPFoKdCQllLzJnxjGQDXMPLzzF4rXneKRg=
+X-Google-Smtp-Source: AGHT+IGP4vhktbwcK3XVZSFip+D8iXku4IzBtZZVmrM00fNFDKflBVt66ep3HdeG6/jbwlZbgNHitQ==
+X-Received: by 2002:a0d:e8ca:0:b0:60c:bc77:9ba0 with SMTP id r193-20020a0de8ca000000b0060cbc779ba0mr823444ywe.40.1710423577246;
+        Thu, 14 Mar 2024 06:39:37 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id l5-20020a814005000000b0060784b3bba8sm269209ywn.35.2024.03.14.06.39.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 06:39:36 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so911997276.0;
+        Thu, 14 Mar 2024 06:39:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWjvHZCOyc2z8pJ8zIZCYlbN3fB0xaMByVkd3H1jKya2SuE8GOR2MOKqC/ZrxuN+OyFBH4Z30AnevozX5nxvEiTCtWp35k6j4kJrDBVQudwi/tTsM/3tZk/7nilcIitWOE966TyKhqHsnaaeHihrp2ptT7JBunu2njHMCN1D3gsLkce6cDkP3EC
+X-Received: by 2002:a25:aa29:0:b0:dcd:72f7:15b8 with SMTP id
+ s38-20020a25aa29000000b00dcd72f715b8mr1764734ybi.11.1710423575899; Thu, 14
+ Mar 2024 06:39:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-462866126-1710416364=:1017"
+References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com> <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 14 Mar 2024 14:39:24 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX4s8+4qaapci+FBwWfh8E4RkHadziV9HgWjGYoHCihFw@mail.gmail.com>
+Message-ID: <CAMuHMdX4s8+4qaapci+FBwWfh8E4RkHadziV9HgWjGYoHCihFw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jingoohan1@gmail.com, 
+	gustavo.pimentel@synopsys.com, mani@kernel.org, marek.vasut+renesas@gmail.com, 
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, Feb 29, 2024 at 1:08=E2=80=AFPM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Document bindings for R-Car V4H (R8A779G0) PCIe host module.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
---8323328-462866126-1710416364=:1017
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Wed, 6 Mar 2024, Ilpo J=E4rvinen wrote:
+Gr{oetje,eeting}s,
 
-> On Wed, 6 Mar 2024, Maciej W. Rozycki wrote:
-> > On Mon, 4 Mar 2024, Ilpo J=E4rvinen wrote:
-> >=20
-> > > > > Since waiting for Data Link Layer Link Active bit is only used fo=
-r the
-> > > > > Target Speed quirk, this only impacts the case when the quirk att=
-empts
-> > > > > to restore speed to higher than 2.5 GT/s (The link is Up at that =
-point
-> > > > > so pcie_retrain_link() will fail).
-> > > >=20
-> > > >  NAK.  It's used for both clamping and unclamping and it will break=
- the=20
-> > > > workaround, because the whole point there is to wait until DLLA has=
- been=20
-> > > > set.  Using LT is not reliable because it will oscillate in the fai=
-lure=20
-> > > > case and seeing the bit clear does not mean link has been establish=
-ed. =20
-> > >=20
-> > > In pcie_retrain_link(), there are two calls into=20
-> > > pcie_wait_for_link_status() and the second one of them is meant to=20
-> > > implement the link-has-been-established check.
-> > >=20
-> > > The first wait call comes from e7e39756363a ("PCI/ASPM: Avoid link=20
-> > > retraining race") and is just to ensure the link is not ongoing retra=
-ining=20
-> > > to make sure the latest configuration in captured as required by the=
-=20
-> > > implementation note. LT being cleared is exactly what is wanted for t=
-hat=20
-> > > check because it means that any earlier retraining has ended (a new o=
-ne=20
-> > > might be starting but that doesn't matter, we saw it cleared so the n=
-ew=20
-> > > configuration should be in effect for that instance of link retrainin=
-g).
-> > >=20
-> > > So my point is, the first check is not even meant to check that link =
-has=20
-> > > been established.
-> >=20
-> >  I see what you mean, and I now remember the note in the spec.  I had=
-=20
-> > concerns about it, but did not do anything about it at that point.
-> >=20
-> >  I think we still have no guarantee that LT will be clear at the point =
-we=20
-> > set RL, because LT could get reasserted by hardware between our read an=
-d=20
-> > the setting of RL.
-> >
-> > IIUC that doesn't matter really, because the new link=20
-> > parameters will be taken into account regardless of whether retraining =
-was
-> > initiated by hardware in an attempt to do link recovery or triggered by=
-=20
-> > software via RL.
->=20
-> I, too, was somewhat worried about having LT never clear for long enough=
-=20
-> to successfully sample it during the wait but it's like you say, any new=
-=20
-> link training should take account the new Target Speed which should=20
-> successfully bring the link up (assuming the quirk works in the first=20
-> place) and that should clear LT.
-
-Hi,
-
-One more point to add here, I started to wonder today why that use_lt=20
-parameter is needed at all for pcie_retrain_link()?
-
-Once the Target Speed has been changed to 2.5GT/s which is what the quirk=
-=20
-does before calling retraining, LT too should work "normally" after that.
+                        Geert
 
 --=20
- i.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
---8323328-462866126-1710416364=:1017--
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
