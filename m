@@ -1,122 +1,120 @@
-Return-Path: <linux-pci+bounces-4799-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4800-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D40A787B678
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 03:40:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A953B87B68A
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 03:51:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8E29C284B62
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 02:40:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6204628754C
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 02:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06A0E7E1;
-	Thu, 14 Mar 2024 02:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D28138A;
+	Thu, 14 Mar 2024 02:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R0W9/X3p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0HeexND"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7F48F55
-	for <linux-pci@vger.kernel.org>; Thu, 14 Mar 2024 02:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4338F55;
+	Thu, 14 Mar 2024 02:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710384012; cv=none; b=IHRI7hlQNMXJPq1E4IA0tUJKcrRVuK/2ZedK3LcZ4XtdLcsbB/Nyjai+AOIeuvey8KlxI1oWjiCfvYcBE5Ak5Jz01Opr4NXNUfIGgUgo7JiwvZ+zMGzRNpk87l5QmZ9FXooFbCGwgOf+ScTsARfpCuEqNuSuhsS/AMw4lhI7c2M=
+	t=1710384693; cv=none; b=mZgIgRfbrpSYACbXJjuSn0VY+QMZPVw5zZXrXGigVGBqOaRDLg2YjtQznf379y6rmYxtaK29dvbj/OQNgRE38R4NWEL/pVmARVIKe3So/6ozBigKJFVvaisX2MdHuPvf4l2PKPZCJ2ahxMRR629lxXJefc+fpLAYL+xQqVdMyHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710384012; c=relaxed/simple;
-	bh=EQ9kcIPVT0jRQjxYxP4rUtRFP72dl7XijGgSMqx97EI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kaXyJqvP6oP6NNv8vUNzwUHJjupF6x0x2tRT8it1UuzI2P0X63Y2eAUdt1CpERZJlk5SVD2pPPULaLbjip1F86OWybZ73ZKNNHjyqzvuAwn6VqnY9n2BRitudqiD9tzrT5fl26xz6RVqH+/RJuw3Dd7k+gZoE+mmxQmgg0OD6hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R0W9/X3p; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710384011; x=1741920011;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EQ9kcIPVT0jRQjxYxP4rUtRFP72dl7XijGgSMqx97EI=;
-  b=R0W9/X3pdrqVarEF3E/cdHtJQN0YT2O2FdXwLOgNAV3cl5hir+2sIgmC
-   TRiIuj3y+Lirsrd4RnOTWPhh7kKKsDlQ2MllIrHR4qaRLPueb15hCjOdg
-   CCV8r4fx0PJzsrPnPU65c8g05lsLOOvu88wDapIQ8a94n1O4de/I08Zif
-   Qh/pyDztMnbUwKwe4w24r8OwJqZMINj/y5BSDR8LmID8OHBJ6RH56Khc/
-   8SEYzgFSDjN8gcQ/VHxkxiST3zcgbE//KZkDarVBTq+ofbfg9KBJSaQRd
-   iVf9QMmlrOv20RWmY+8tF5qIqn4yiGi+6ZPsDLDx+ZTnP4jVTmqhE1szX
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="22642883"
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="22642883"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 19:40:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,124,1708416000"; 
-   d="scan'208";a="12057647"
-Received: from oozturk-mobl3.amr.corp.intel.com (HELO [10.209.75.221]) ([10.209.75.221])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 19:40:10 -0700
-Message-ID: <518813f8-294f-461c-b0dc-e980893a9ebf@linux.intel.com>
-Date: Wed, 13 Mar 2024 19:40:09 -0700
+	s=arc-20240116; t=1710384693; c=relaxed/simple;
+	bh=4odLktmp/nCGkS6wqpUh5pVSGO+4MNahhOcH2uJT5hM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RR9tQTJ09MBLR+yEjk8JcUg9Aj4V1/MEg46w44ZBhWsy1/Am70paGx8rDOFK8rwtEgUEC5WFB25ob0N3es723v9KTlRBJE30vBVhff19cHrp/e3uxYvJV1IKS7ROo9KlDIaJZlWIYA9nA1wpZCvgCLBC0eNGO6/x0rx/fLJekpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0HeexND; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD98CC433F1;
+	Thu, 14 Mar 2024 02:51:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710384693;
+	bh=4odLktmp/nCGkS6wqpUh5pVSGO+4MNahhOcH2uJT5hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A0HeexNDAgwbgoYMvpeTm+qMmCVWRL6Oe61CkNkbuyctGpXmd0P3bUZ4cy/0AEeZk
+	 Q2OWaDxG32trUQETBlNaPyXZmMapYFIwuJ3zbEUMk9lUTT39J3j0a93GSp4eM1np2A
+	 Y5vm+ElQFFqQSX7VLJ8Mhe5a/3dBAFf49UgZdMqwJTm6DOPCGNe8Wany3HfIEQMURy
+	 reDE7HNN5TjKJdy01Izl182GcmEWNc0BCR6LtFwjpcqWkQM4eyTh2YXw5lajNP+Kdl
+	 EQsFJWIJOObZo75cpLdgZb9rOR5sY1ZeQhytJXLDjssOF0TVtEmYhQy+d3mOiHZUQS
+	 BMvwbGqMwmgCQ==
+Date: Wed, 13 Mar 2024 20:51:29 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Kevin Xie <kevin.xie@starfivetech.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	Conor Dooley <conor@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"daire.mcnamara@microchip.com" <daire.mcnamara@microchip.com>,
+	"emil.renner.berthing@canonical.com" <emil.renner.berthing@canonical.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>
+Subject: Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout
+ workaround to host drivers.
+Message-ID: <ZfJmMcs2UThVSC4v@kbusch-mbp>
+References: <ZeCd+xqE6x2ZFtJN@lpieralisi>
+ <mhng-87e7ef5a-d60b-4057-960d-41bc901b6c7f@palmer-ri-x1c9>
+ <ZedAn8IC+Mpm4Sqz@lpieralisi>
+ <ZQ0PR01MB0981BC562E837B232B419AC28229A@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [drivers/pci] Possible memleak in pci_bus_set_aer_ops
-Content-Language: en-US
-To: zzjas98@gmail.com, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, chenyuan0y@gmail.com
-References: <ZfJe4GZGpEQq7WIa@zijie-lab>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <ZfJe4GZGpEQq7WIa@zijie-lab>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZQ0PR01MB0981BC562E837B232B419AC28229A@ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn>
 
+On Thu, Mar 14, 2024 at 02:18:38AM +0000, Kevin Xie wrote:
+> > Re: [PATCH v15,RESEND 22/23] PCI: starfive: Offload the NVMe timeout
+> > workaround to host drivers.
+> > 
+> > On Mon, Mar 04, 2024 at 10:08:06AM -0800, Palmer Dabbelt wrote:
+> > > On Thu, 29 Feb 2024 07:08:43 PST (-0800), lpieralisi@kernel.org wrote:
+> > > > On Tue, Feb 27, 2024 at 06:35:21PM +0800, Minda Chen wrote:
+> > > > > From: Kevin Xie <kevin.xie@starfivetech.com>
+> > > > >
+> > > > > As the Starfive JH7110 hardware can't keep two inbound post write
+> > > > > in order all the time, such as MSI messages and NVMe completions.
+> > > > > If the NVMe completion update later than the MSI, an NVMe IRQ handle
+> > will miss.
+> > > >
+> > > > Please explain what the problem is and what "NVMe completions" means
+> > > > given that you are talking about posted writes.
+> 
+> Sorry, we made a casual conclusion here.
+> Not any two of inbound post requests can`t be kept in order in JH7110 SoC, 
+> the only one case we found is NVMe completions with MSI interrupts.
+> To be more precise, they are the pending status in nvme_completion struct and
+> nvme_irq handler in nvme/host/pci.c.
+> 
+> We have shown the original workaround patch before:
+> https://lore.kernel.org/lkml/CAJM55Z9HtBSyCq7rDEDFdw644pOWCKJfPqhmi3SD1x6p3g2SLQ@mail.gmail.com/
+> We put it in our github branch and works fine for a long time.
+> Looking forward to better advices from someone familiar with NVMe drivers.
 
-On 3/13/24 7:20 PM, Zijie Zhao wrote:
-> Dear PCI Developers,
->
-> We are curious whether the function `pci_bus_set_aer_ops` might have a memory leak.
->
-> The function is https://elixir.bootlin.com/linux/v6.8/source/drivers/pci/pcie/aer_inject.c#L297
-> and the relevant code is
-> ```
-> static int pci_bus_set_aer_ops(struct pci_bus *bus)
-> {
-> 	struct pci_ops *ops;
-> 	struct pci_bus_ops *bus_ops;
-> 	unsigned long flags;
->
-> 	bus_ops = kmalloc(sizeof(*bus_ops), GFP_KERNEL);
-> 	if (!bus_ops)
-> 		return -ENOMEM;
-> 	ops = pci_bus_set_ops(bus, &aer_inj_pci_ops);
-> 	spin_lock_irqsave(&inject_lock, flags);
-> 	if (ops == &aer_inj_pci_ops)
-> 		goto out;
-> 	pci_bus_ops_init(bus_ops, bus, ops);
-> 	list_add(&bus_ops->list, &pci_bus_ops_list);
-> 	bus_ops = NULL;
-> out:
-> 	spin_unlock_irqrestore(&inject_lock, flags);
-> 	kfree(bus_ops);
-> 	return 0;
-> }
-> ```
->
-> Here if the goto statement does not jump to `out`, the `bus_ops` will be assigned with `NULL` and then `kfree(bus_ops)` will not free the allocated memory.
->
-> Please kindly correct us if we missed any key information. Looking forward to your response!
+So this platform treats strictly ordered writes the same as if relaxed
+ordering was enabled? I am not sure if we could reasonably work around
+such behavior. An arbitrary delay is likely too long for most cases, and
+too short for the worst case.
 
-I think it is a valid issue that needs to be fixed. If you would like, please send a patch to fix it.
-
->
-> Best,
-> Zijie
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+I suppose we could quirk a non-posted transaction in the interrupt
+handler to force flush pending memory updates, but that will noticeably
+harm your nvme performance. Maybe if you constrain such behavior to the
+spurious IRQ_NONE condition, then it might be okay? I don't know.
 
