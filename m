@@ -1,77 +1,77 @@
-Return-Path: <linux-pci+bounces-4820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC60B87BDDF
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 14:39:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDDC287BDE4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 14:40:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DC46B20E06
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 13:39:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A0D3B20FCB
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Mar 2024 13:40:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C34F59168;
-	Thu, 14 Mar 2024 13:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9314B1E874;
+	Thu, 14 Mar 2024 13:40:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48F94691;
-	Thu, 14 Mar 2024 13:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AF44691;
+	Thu, 14 Mar 2024 13:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710423581; cv=none; b=kuYrZfmgnVtWYtoK6ZqPWxdHvlNx430gGLLncekB0/IvzrJw2jI4lEHOydGtZXXEy+42c/Dkexh+IrXBXCfYmt6UcKe9givSLpBLFLiv4iS9sbXjy0FQrlLEiYwzDYpjmI5/Hq4AKNjIdaesAH3fejOT+vaPNX6fWsMpQDOVwow=
+	t=1710423603; cv=none; b=ZbCul4Lq4evGdV6ogyV97ob0DIOcnzzglkS6XyvsbZKEjFKicP8NpNX2MhjK4L25l6TF60rgoW6n8vZHhlx2mVs0x9LamasCMLmjJTCkEl6FNTkoSQVnFYSvB3QTtv7pLR5kgXOsUZWUp6bSJp/l1wXP6/mythFNKRkF/Xd2msI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710423581; c=relaxed/simple;
-	bh=62bZHF9vxKaZTjbLz1C228V+7eZtAI2IjBIOgTxAJ4Q=;
+	s=arc-20240116; t=1710423603; c=relaxed/simple;
+	bh=foU5bTr8/NI7LLEWH950dmktmJ4zIYJ5zCFNJwwzN6Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y/P6PFk3VXGscfLJzV1B9K+63KfUwitW+aoruaYtoIPamZ/y47JLjXYp721zXUv/GTgH8xWj7Giwp7wx5qKZooov3JZmkKOgehw2is7S0Dmqij1vWft8apExiA7GaPYCvo+0tQ2MMBw8a3d+eX/YsftuIOxXFp2C5HZ2IVwVsPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.177
+	 To:Cc:Content-Type; b=jKLWttTsh/Je5oyiwjYXmx0qpbUCR1ETwGlapeC0iz82aiVngQoGCZPV9GQq3y0/mzlF9qhyJtavYcXcZQpBDtYEV8XbhQmui8pD1rPwmvzWdWMvLaJiZJtR1H+vqjvo9AA2PydfYshMzPHzgIIJcxXJfGAFygOfog5Q1TbSNpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60a0a1bd04eso10704537b3.1;
-        Thu, 14 Mar 2024 06:39:39 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-60a046c5262so9797407b3.2;
+        Thu, 14 Mar 2024 06:40:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710423577; x=1711028377;
+        d=1e100.net; s=20230601; t=1710423600; x=1711028400;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vnp7xMYV1yB90s/lAAUhIyi8Fm75SLbVfVCN35lpvaA=;
-        b=sOGI99KIRUA5LN7jH+gnSwYWiPzSeVT+9MMtekj9gqxFwVTv88nYGIp98u5nZQA16S
-         k9yjQCFRljIY6BZsuQ0fhlyowKhVqhpbRtRiDLmZdN3cS7A2YD9wo+9vdBKEbF/rr2SN
-         CiLQ8HPOW/9Lk7SRMegHK4wc143QwW0yE8yuRsvvuFn/C+6SpQ/6bvwwsfw3cn6q3xjX
-         7uq5Iz0CFMZxyjFEbfNf5K0cvkbsckLPlTEsI13Md6Th0Zx4iRuSP2HeCBvFXFAMHKbh
-         iY28jB2ejNVcW/nZNhgX20KKI3wFlhzA0x/CXVCPrVdO6usEgzEXBwZdiIm9YtrRYRF9
-         UV3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWC34y0xHtLMe9xTkeld7B1zueXS2QgFZmk4JK+L/uVICBBvQJgh66kLSJh2EX8FQrxStkQ0583gfk+oWgGZxvd/c/bhZSLYV5GZlTD6gqob5V6OlTRGFB2795UUpx8n7z70W/BveSXdzN0DwSI9mJ134YiH519Og6m7xS4d03LTCXVlJxC8/tC
-X-Gm-Message-State: AOJu0Yzppp7j7UAuNRm1Mw/uqpef7mds8XRipOOPbjRSgorq5We37EVS
-	n/NgENhiP4lVSU1uonS+1K3ijrokTdPFoKdCQllLzJnxjGQDXMPLzzF4rXneKRg=
-X-Google-Smtp-Source: AGHT+IGP4vhktbwcK3XVZSFip+D8iXku4IzBtZZVmrM00fNFDKflBVt66ep3HdeG6/jbwlZbgNHitQ==
-X-Received: by 2002:a0d:e8ca:0:b0:60c:bc77:9ba0 with SMTP id r193-20020a0de8ca000000b0060cbc779ba0mr823444ywe.40.1710423577246;
-        Thu, 14 Mar 2024 06:39:37 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id l5-20020a814005000000b0060784b3bba8sm269209ywn.35.2024.03.14.06.39.36
+        bh=hEVCgzaLqtEAvJhOeUEvPpJvusYSfAszA4qwCizVmJY=;
+        b=b6iFstE4tAjavMswuaqveSZSxV/KKwQmGeo8lpO/9se+gZqPoK4/ksfXvj/nJTTdQy
+         MtTu/qEbMnYPtNHEhLdOR06tcTQPL48mIybVjb0TJKLOjJErRkGxD8hgzrrtXlzUr9iB
+         1i5waUe8r34N1c2HCgAkY4yr5lXToEBzf+hzSHa1pxqSMnXC0LFcC+TyyyTOXSFCHJT0
+         4ajaD1tCGK96sSrsSPa9Vf0Dfol5GFb6r4DMElAFEtp2Cs29UcKzl2dMc/w2Tc1FdHng
+         N/Repi9dpgRtrD1/BWcp4rlistTE9Pssqx6eagvQzEFvS9aVjJ4PdbNvzA4gQDm6eWMg
+         l70Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXGsdJiy496CeLBgTiqyqFVglFY31v9a94Ecti+5289x2/HK7oVCjmnWohVrkpnHeAhzRFlIxUoTFmdxUKddRnuQhMhafVA52oDRJpRY5mltMa62+kDzodAdqMFPBrkosIOVycHFN1DURqr0ENPaGNc+fz/+qatgQGDtBMfBUz4wKNylRbETb5q
+X-Gm-Message-State: AOJu0YwJuTcLLpQYf18BentIxzmLxupIk+0GKaYYkMIQisMPg7BBPpBE
+	EVLl4GyBNwiuicRx93yxwr28oQIgzo6qdGSITIQtoQfB/Dfoj/MeVomlgaYD3/8=
+X-Google-Smtp-Source: AGHT+IGU2g1g3MvDkWNyLd5qqXWq2i6aDsI5aAPhR8vpH0Jy3xul5n9yLzcZkj/gIb8LQbyyyc7jjA==
+X-Received: by 2002:a0d:c9c6:0:b0:604:eb7f:30f4 with SMTP id l189-20020a0dc9c6000000b00604eb7f30f4mr1945708ywd.31.1710423600432;
+        Thu, 14 Mar 2024 06:40:00 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id u65-20020a0deb44000000b0060cd58ad606sm33361ywe.70.2024.03.14.06.40.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 06:39:36 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so911997276.0;
-        Thu, 14 Mar 2024 06:39:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWjvHZCOyc2z8pJ8zIZCYlbN3fB0xaMByVkd3H1jKya2SuE8GOR2MOKqC/ZrxuN+OyFBH4Z30AnevozX5nxvEiTCtWp35k6j4kJrDBVQudwi/tTsM/3tZk/7nilcIitWOE966TyKhqHsnaaeHihrp2ptT7JBunu2njHMCN1D3gsLkce6cDkP3EC
-X-Received: by 2002:a25:aa29:0:b0:dcd:72f7:15b8 with SMTP id
- s38-20020a25aa29000000b00dcd72f715b8mr1764734ybi.11.1710423575899; Thu, 14
- Mar 2024 06:39:35 -0700 (PDT)
+        Thu, 14 Mar 2024 06:40:00 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc74e33fe1bso824883276.0;
+        Thu, 14 Mar 2024 06:40:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVn8xVNeULiTWzowgOQGUJoKzq11vC7k17mVg76JE2OD6Pk0RJqPz1Woi0+cC7kzo8HESa48wP+lwaTvIAFp5q4SUfZMc9RVcWlIerSvFVQI4Hsj6G6TZRVLOr5TMV50xDCMV4cux8hNEPFSusmugGXFwwhBbslu7vXrINZTPrmO/Hx6ly7eqAk
+X-Received: by 2002:a25:a264:0:b0:dcd:38f9:f78 with SMTP id
+ b91-20020a25a264000000b00dcd38f90f78mr1587621ybi.29.1710423599773; Thu, 14
+ Mar 2024 06:39:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com> <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <20240229120719.2553638-2-yoshihiro.shimoda.uh@renesas.com>
+References: <20240229120719.2553638-1-yoshihiro.shimoda.uh@renesas.com> <20240229120719.2553638-3-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20240229120719.2553638-3-yoshihiro.shimoda.uh@renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 14 Mar 2024 14:39:24 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX4s8+4qaapci+FBwWfh8E4RkHadziV9HgWjGYoHCihFw@mail.gmail.com>
-Message-ID: <CAMuHMdX4s8+4qaapci+FBwWfh8E4RkHadziV9HgWjGYoHCihFw@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: PCI: rcar-gen4-pci-host: Add R-Car V4H compatible
+Date: Thu, 14 Mar 2024 14:39:48 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXVm5SgAtKwHbiX5+wN2K61ntO87-tpGPbqj6HuAt=zcA@mail.gmail.com>
+Message-ID: <CAMuHMdXVm5SgAtKwHbiX5+wN2K61ntO87-tpGPbqj6HuAt=zcA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: PCI: rcar-gen4-pci-ep: Add R-Car V4H compatible
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
 	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jingoohan1@gmail.com, 
@@ -81,9 +81,9 @@ Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 1:08=E2=80=AFPM Yoshihiro Shimoda
+On Thu, Feb 29, 2024 at 1:07=E2=80=AFPM Yoshihiro Shimoda
 <yoshihiro.shimoda.uh@renesas.com> wrote:
-> Document bindings for R-Car V4H (R8A779G0) PCIe host module.
+> Document bindings for R-Car V4H (R8A779G0) PCIe endpoint module.
 >
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
