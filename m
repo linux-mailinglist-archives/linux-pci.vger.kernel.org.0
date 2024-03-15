@@ -1,159 +1,139 @@
-Return-Path: <linux-pci+bounces-4847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B97B87C8DE
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 07:50:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F02787CAFE
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 10:58:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9EF0F1F21A9C
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 06:50:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70C551C217A5
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 09:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EABF31A38CE;
-	Fri, 15 Mar 2024 06:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E92D182C3;
+	Fri, 15 Mar 2024 09:58:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XQopmXfS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TELJs5vG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3756914A85
-	for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 06:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD4F18041;
+	Fri, 15 Mar 2024 09:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710485057; cv=none; b=E4ZQxgWOd2eigBIs1Nw+rut2ZDbHBdKMy8kjk5Hfbj/l+h0Qz9/WoGw+FBpu//j/5ZU/sXhQdn/aT2yBaTGL7RyB+x9jacyPd3cwJXH9XVLKTSKzbf7tjxmHtr/w2YylRflxEh9tNnNgupEkda34iFeocagTLvm8Q7Je4zPSrFc=
+	t=1710496723; cv=none; b=bPvWLk4vxJWhq8c6F7DEa8oUuyrs9hgQBLj2z5a/Yd9vVeBATYSF3tvESIE1ud+hLNnS5s1v7283kACTPHsFdeuQhgTrXLgU5KOHXXI4Sdm7ro//33MAxxkcGcKhYFvXQZ1Qzuqp+ldclbZkpvFIH9Z8ZiKTFn3uPec2l8o4/ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710485057; c=relaxed/simple;
-	bh=nfPR5sokkMxZAkS4MaLUQwplV+xO+3UoIc4nSVpPiT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWy22qbIe7L8TuVp0RaLqdaeV4JvrfLttAlrOb+wq35uNMl8odt5SvPxMyd8KeOBHdQudlwJl1W67Fo3KxgCojoapYO/nK2VGbk68pjtJG+OO+sRUF8zRuP65oXdbb90AFimoMVJE2F58sC/0BUhPgd6/7Ie0r6TftfIhBYDZqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XQopmXfS; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6b729669bso1914501b3a.3
-        for <linux-pci@vger.kernel.org>; Thu, 14 Mar 2024 23:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710485055; x=1711089855; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OgGanv2N85Or9J/LIYR92UbwkyyQ353OlNbPFUfEBU8=;
-        b=XQopmXfSk1zcRreqp1UWsQPtPRlszFtLJ9m6X7kIMZRhcUdKHRpRDk8sDdmUgczRSX
-         8SRl9oL7QWxGAh7sZOcZMybcIrORwO6B8p6zfbeX6aXysv6t5ivHi3KD79IeXyodG9sD
-         D2cGwidQq8pSnAVCMDLn+bjd6H/1+GHnyz/bSg1AAx/D5Qy67FrVAPfVtrYLPg3AxdOq
-         4UgNGXN5Lie6J27ddr8WEErI1GDKQuxmkStIhNaj4pqeU12HIbMYd7WAh+rkuIJpc1Wj
-         HI9Rb1DHeCr6812njgLRakYu8MB5/X/uzu41HbM8uONXfioL6x+fcyPEJVPekS3fmO1S
-         Hc4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710485055; x=1711089855;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OgGanv2N85Or9J/LIYR92UbwkyyQ353OlNbPFUfEBU8=;
-        b=ih+dgldUl0oHkvvRnEOctQt6Cx8UnfGxhL0ica15KsWlJRB/OAFoH6P8ShGxWgEGEo
-         tml760lZJRO+0gXxYU19Kq61OgxEmIh1t9mN1NQYcIHG4vS4mHgGwIj4K3R8+ACbZrTK
-         Dv1igjh7Eqn1p5hQYAe6zBGUxXqhfx1DAKYhC2wUmG3TGAXZw83zdYpJltbN9yNHlL85
-         8dbH7/+kj8G13iOd5wfdrARcVBKzflEpz0JRKhKkxycUz2p8npM8aMLtYQLnWJ7kwRid
-         XqAlC02iZhm38jOxwhRfplI0phTznqA638tAnZ56WHpVELEkcQTHeXnpuH3AjE6KVD7a
-         WCRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOQkz8AyXENTl4F/gDEoXdUadhBsw/HtGbSXfIK8/5eA5L79mT5/7V8475HkbNo2iBzuqKjb5qUjdaE+ReW7f9QOAyZbVSwM47
-X-Gm-Message-State: AOJu0YxWPlQyIth74EKgrggtwZ2j7fN7WtvCxVzfkadWSN3bYxfpHt5a
-	GQAEMi5uBGXN4vzl2+KtSk1lD3v8we7bsPHCZSVsJnBdB1+ZiufLACVmzbVDAQ==
-X-Google-Smtp-Source: AGHT+IFF/NIlwq1MGho9Ky4bdjy6US11VSAZ789bSns8o7RQuZJB94+oPAQMhMMTfhme4aW21+M9bg==
-X-Received: by 2002:a05:6a00:1887:b0:6e6:c61d:114c with SMTP id x7-20020a056a00188700b006e6c61d114cmr5202335pfh.0.1710485055334;
-        Thu, 14 Mar 2024 23:44:15 -0700 (PDT)
-Received: from thinkpad ([117.207.30.211])
-        by smtp.gmail.com with ESMTPSA id y15-20020aa793cf000000b006e6b9a963a5sm2620363pff.131.2024.03.14.23.44.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 23:44:14 -0700 (PDT)
-Date: Fri, 15 Mar 2024 12:14:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shradha Todi <shradha.t@samsung.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
-	arnd@arndb.de
-Subject: Re: [PATCH v3 9/9] PCI: endpoint: Set prefetch when allocating
- memory for 64-bit BARs
-Message-ID: <20240315064408.GI3375@thinkpad>
-References: <20240313105804.100168-1-cassel@kernel.org>
- <20240313105804.100168-10-cassel@kernel.org>
+	s=arc-20240116; t=1710496723; c=relaxed/simple;
+	bh=UorXTGu+AcCu4hDCxmYjcKqMuP8YVTSZD/Jao3gQpVU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ui8rl2MXGKl4Ok/QrC09yLCuzQZtnv2PF64g/uEOl0Rj7mkyDkbvvoF5rzYEmV4zv4CkGynyybth1qHq+iYfi5T7nUaEZ3IRLZZDEYeym9IrdWo5m1Sz7msEbvxhMXc6s32o1vj/s1PNGbg9q4VyGbPYjqPXKHMuA9X+8bGdgRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TELJs5vG; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710496721; x=1742032721;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UorXTGu+AcCu4hDCxmYjcKqMuP8YVTSZD/Jao3gQpVU=;
+  b=TELJs5vGA51eQiripYBHr0ScNQm6t47JJPnA4ZLdZsFMcxX0jd0gXi9T
+   AGLDDDVMqpviztoWcO0hQV5T+mo6FUEhIR5zC48u8MA3AM//N438aOmn3
+   W7ta6XAoLUE5a4/W/at4lQ76ul+hqSdzd/oh8IS4BWXDCaGgnKFryMtcg
+   3GsuskFxlDrGdPM02NCpyHshZuZJ4ckC7Q9Ka3Za/eX6pKVMKhnYYuLud
+   knmYecjK3hMeWgDZW+R62cHtpVwhjXkUAsFUHHcDZ+XHFOHccw91sk8Of
+   SfIVLrKz0ErI5OohIO86qV82kpkYiesjqm3mYHKKEJIZLTGKhiwOe8BG8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="8296194"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="8296194"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 02:58:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="12523729"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.9])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 02:58:38 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 15 Mar 2024 11:58:31 +0200 (EET)
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI: Use the correct bit in Link Training not active
+ check
+In-Reply-To: <alpine.DEB.2.21.2403142145010.37739@angie.orcam.me.uk>
+Message-ID: <c81ecb2a-9365-dbb0-2207-ed692c8c7487@linux.intel.com>
+References: <20240301150641.4037-1-ilpo.jarvinen@linux.intel.com> <alpine.DEB.2.21.2403011622560.42226@angie.orcam.me.uk> <c740c6e4-ca1a-33ad-8437-4a1219c16eb1@linux.intel.com> <alpine.DEB.2.21.2403060951310.43702@angie.orcam.me.uk>
+ <01666075-504d-a434-d039-2e25db931f23@linux.intel.com> <c4fe9080-245f-7089-84c1-bb47dcf2cd83@linux.intel.com> <alpine.DEB.2.21.2403142145010.37739@angie.orcam.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240313105804.100168-10-cassel@kernel.org>
+Content-Type: multipart/mixed; boundary="8323328-1935341792-1710496711=:1018"
 
-+ Arnd
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Wed, Mar 13, 2024 at 11:58:01AM +0100, Niklas Cassel wrote:
-> From the PCIe 6.0 base spec:
+--8323328-1935341792-1710496711=:1018
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-It'd be good to mention the section also.
+On Thu, 14 Mar 2024, Maciej W. Rozycki wrote:
 
-> "Generally only 64-bit BARs are good candidates, since only Legacy
-> Endpoints are permitted to set the Prefetchable bit in 32-bit BARs,
-> and most scalable platforms map all 32-bit Memory BARs into
-> non-prefetchable Memory Space regardless of the Prefetchable bit value."
-> 
-> "For a PCI Express Endpoint, 64-bit addressing must be supported for all
-> BARs that have the Prefetchable bit Set. 32-bit addressing is permitted
-> for all BARs that do not have the Prefetchable bit Set."
-> 
-> "Any device that has a range that behaves like normal memory should mark
-> the range as prefetchable. A linear frame buffer in a graphics device is
-> an example of a range that should be marked prefetchable."
-> 
-> The PCIe spec tells us that we should have the prefetchable bit set for
-> 64-bit BARs backed by "normal memory". The backing memory that we allocate
-> for a 64-bit BAR using pci_epf_alloc_space() (which calls
-> dma_alloc_coherent()) is obviously "normal memory".
-> 
+> On Thu, 14 Mar 2024, Ilpo J=C3=A4rvinen wrote:
+>=20
+> > One more point to add here, I started to wonder today why that use_lt=
+=20
+> > parameter is needed at all for pcie_retrain_link()?
+> >=20
+> > Once the Target Speed has been changed to 2.5GT/s which is what the qui=
+rk=20
+> > does before calling retraining, LT too should work "normally" after tha=
+t.
+>=20
+>  We don't know if the link is going to become stable with the TLS update=
+=20
+> to 2.5GT/s and we want to ensure that the link has reached the active=20
+> state before claiming victory; LT clear does not mean the link is active,=
+=20
+> it only means what it means, that is that the link isn't being trained at=
+=20
+> the moment.
 
-I'm not sure this is correct. Memory returned by 'dma_alloc_coherent' is not the
-'normal memory' but rather 'consistent/coherent memory'. Here the question is,
-can the memory returned by dma_alloc_coherent() be prefetched or write-combined
-on all architectures.
+LT clear means retraining has ended which is the condition=20
+pcie_retrain_link() should terminate at. It tried and finished retraining=
+=20
+as proven by LT clear.
 
-I hope Arnd can answer this question.
+>  Also we don't want to reset the TLS to the maximum before the link has=
+=20
+> become active.
 
-- Mani
+I'm not suggesting to change the if DLLLA check that is within the quirk=20
+so it will remain the same even if pcie_retrain_link() would no longer=20
+have the use_lt parameter.
 
-> Thus, set the prefetchable bit when allocating backing memory for a 64-bit
-> BAR.
-> 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/pci/endpoint/pci-epf-core.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index e7dbbeb1f0de..20d2bde0747c 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -309,6 +309,9 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
->  	else
->  		epf_bar[bar].flags |= PCI_BASE_ADDRESS_MEM_TYPE_32;
->  
-> +	if (epf_bar[bar].flags & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> +		epf_bar[bar].flags |= PCI_BASE_ADDRESS_MEM_PREFETCH;
-> +
->  	return space;
->  }
->  EXPORT_SYMBOL_GPL(pci_epf_alloc_space);
-> -- 
-> 2.44.0
-> 
+If LT clear after retraining does not imply DLLLA set, then this again=20
+falls into the quirk territory and IMO the quirk itself should be what=20
+makes the additional call to wait for DLLLA, not pcie_retrain_link().
+I suspect though that DL clear does imply DLLLA set (after the target=20
+speed was lowered) so my expectation is that the extra wait wouldn't be=20
+necessary at that point.
 
--- 
-மணிவண்ணன் சதாசிவம்
+>  Does this answer your question?
+
+What I'm trying to achieve is having pcie_retrain_link() focus on=20
+retraining and quirk on steps required by the quirk. Currently they're=20
+kind of mixed if we assume the assumption that LT clear doesn't imply=20
+active link is true. That tells quirk would need additional step,=20
+that is, wait for DLLLA after the retraining has completed which is=20
+currently hidden into pcie_retrain_link() rather than explicitly=20
+called by the quirk.
+
+--=20
+ i.
+
+--8323328-1935341792-1710496711=:1018--
 
