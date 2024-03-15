@@ -1,171 +1,142 @@
-Return-Path: <linux-pci+bounces-4849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 990E587CB3D
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 11:17:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14F6A87CB84
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 11:34:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BDA52824AC
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 10:17:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75773B21B68
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 10:33:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 992051862A;
-	Fri, 15 Mar 2024 10:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25C6182D4;
+	Fri, 15 Mar 2024 10:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RPsowmXT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AI0M9V20"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A5C182D8
-	for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 10:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B05618B14;
+	Fri, 15 Mar 2024 10:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710497830; cv=none; b=i/e5hnfk5JprxUzOzwZ323yUeKqeLqa7mMrtxALzKSLvkSHPZSRK2iciCR3AiiulbxQJr+dNJUYPJt8oi/1CMbBwsDuod084TT1h01zrV1yTZGy7KxC18eX/x0/1gUIklJGkfB2OErVfwmrCvduYGAqQCu1A4acGMrsmgM1rg/A=
+	t=1710498835; cv=none; b=fCnNWNBalyteb3xX9He8EiZtAUDT6etkbYZfBtLaxyVtwcdO1YqC+OSV1LcEsYweJU1q+Tr8Fp89XnLnPeveIbbYCYDhaEb3Lmj5Ihi/JyiCeUKvy8oV1L4d9lYW4eYmnBgjYQzPYRjyTt2CYun6iqHhExUy4ybx8LVwg0RB6mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710497830; c=relaxed/simple;
-	bh=oHV5jyiNttfVN2XdElX7JwJmvr1YWBo1/0MlP/fboNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fX4zK+DgCj78xBwVyDNGy2U22eH/kUzWLLZhxfcqSRgqG9/SpMaciBE8NxL9NOw5bqyoAP8v66/5/AZiYAYA57JluPAn3ZnWJTuh+lesOnvy8xSpcawau4seTcF9cFPLV/5UCy9U/N2lNoLCwlZSWl5rfQCtkWsRBh3gXTH6KE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RPsowmXT; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-690db6edb2bso11356286d6.2
-        for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 03:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710497828; x=1711102628; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I6tT+NcwpCH1Pw07al3Z4O6Zj2OI59Neo7bH4uFpikU=;
-        b=RPsowmXT64dpl7oyDH7qsDikmJcWt4AYym6upL2gtxeRUg0bFelEcIhASeC37dZXna
-         UfdtTx+bcQTForK3l9/iaL1ykkacEgeDD1MlgjbRrSg7+RosZpo2vJE6V4lxGEOsX4PQ
-         7yq8RVSmX50P62J32wZJywl4lMbSJJkdDJencYsOXUeOd/yAzmyVkHkARmW8HgJYn//f
-         IbonwcDJcHtNomwNkUEgJx1W3XsyZFapBGQcdlHc4Ky8AtHvffghdhOGOELPeBe1B+Vk
-         pM+VBOe3M5usnBPPDd9/NaWwERPkfRKq9jQA0bSFksgOh4/Z+hUYqawUVFVL6CKnDBwV
-         yetg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710497828; x=1711102628;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I6tT+NcwpCH1Pw07al3Z4O6Zj2OI59Neo7bH4uFpikU=;
-        b=JLqDrZeASNjtCXzxp2L2nA/y9KTC0FW+Jf6oyURcNTVyg8ayEB4d1Jnh8JoN9UHe0B
-         DUhnr3Ohcyi2q5BnP59S8yVGrobs1Bxjj3CzTxDbj6MF+mLvq2CusySkW19ZmpA6NZAx
-         MHyIATrwHlrFVA1Su964jWnbcFuBiaKP5UG1XqTJCYb8JYg8eE1vxb3OqKFXPQCvZru6
-         TzMFm/Ilx7eN9T1g3RVbG9iEIXrAxeFfXhSxy89SKp87scF0IPnUymR2VvA2Ei38/w6/
-         XQoFgGZCatQ/ORru4A/Lfs2BroB/R+JL7kuWtwAbfPjCdYIjk9w6VlGW0szpHIg/UHqR
-         eCPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXeE4RYAk7Sx+HAFPZn5Ibk7/fBwBw1dZZPwVbrcpQ4KC4eVu7P0UGwha104p3f1TS7O1r13M1Alaxei97ih3UcB9oD7GewVic6
-X-Gm-Message-State: AOJu0Yx4JRA2FUcK+TEi/9kHk9zYMuUm5tnOFWWS8yeqtOBHU1Foe00t
-	zxZVrL+AYC7KCtiDXBQdby5S1goNtOk7kSWjCpDKwhBULath1u7YKsUpOH2t3hY=
-X-Google-Smtp-Source: AGHT+IHrhbiGVEjN1QgiRSnPRQQmIe+549icsYvrMinCkS0IAydYdE6xtIBvVfhrF3hMoV0M0FyHzQ==
-X-Received: by 2002:a0c:e8c6:0:b0:690:9a8a:855b with SMTP id m6-20020a0ce8c6000000b006909a8a855bmr4498037qvo.29.1710497827614;
-        Fri, 15 Mar 2024 03:17:07 -0700 (PDT)
-Received: from [87.246.221.229] (netpanel-87-246-221-229.pol.akademiki.lublin.pl. [87.246.221.229])
-        by smtp.gmail.com with ESMTPSA id p14-20020a05621421ee00b00691631154a2sm1472434qvj.43.2024.03.15.03.17.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Mar 2024 03:17:07 -0700 (PDT)
-Message-ID: <c1f85249-32b1-41e2-adc3-5aa4ad7609b9@linaro.org>
-Date: Fri, 15 Mar 2024 11:16:59 +0100
+	s=arc-20240116; t=1710498835; c=relaxed/simple;
+	bh=kcQQZ3fECg6d3AWK40O/TrWoNIgfDzKzhb3Lc7Cdme8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TwTdTVVubU2NqLfRGwLMQlDnq1L6LUPcWqjH7xxaYgRhnGdnSNGRwdmb8y9I83BsMR91ID0G6wNSH10b0pdy1D8sjERcIgwzOTf94GT1bY+Gm26CdJmIOFqU4e13//XrI88QQSPxWNlZi6JX0AxL5xW0hjHi7zy6ooi19DuURMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AI0M9V20; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710498834; x=1742034834;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=kcQQZ3fECg6d3AWK40O/TrWoNIgfDzKzhb3Lc7Cdme8=;
+  b=AI0M9V202ELcMmZczi+SY5XXxeiB45KSHCaQSW9O8VGRX+q40i0OPb5K
+   qdiF/BAXLOjNYaTb5Hz7UqFLxf9oleecMHbCSNwwNveKPKfz10fUFaiXY
+   hzqCYU00S8Ptj+uW19WNy+q2Z/kSstWMgBcSFwM8mmiyL/ceoDBi2Bbk2
+   sga4BkEW9wimkw0X9rMcAoB34OW0dlaAPo/rJNNYW4/3hH5cZkqfaxpbA
+   piuZOceXV/6A3ftxIeFgD9LDkO/sEjaRhFD/w3vk68nRLyKjhfyxaZF19
+   hVf2EpVREi1htAjxYPbbR1L6LQi79HviE4AYhd5wVYaW6XpKClZcusNE2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="5568580"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="5568580"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 03:33:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="12666277"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.9])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 03:33:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 15 Mar 2024 12:33:43 +0200 (EET)
+To: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+    Rob Herring <robh@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@intel.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+In-Reply-To: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+Message-ID: <453df04f-45ee-7619-1731-511b9cac26f4@linux.intel.com>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] PCI: qcom: Read back PARF_LTSSM register
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Andersson
- <andersson@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Johan Hovold <johan+linaro@kernel.org>
-References: <20240215161114.GA1292081@bhelgaas>
- <bc7d9859-f7ec-41c5-8a9e-170ccdfff46a@linaro.org>
- <Zc8GHrgdF7jJBgyu@hovoldconsulting.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <Zc8GHrgdF7jJBgyu@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1175014617-1710498250=:1018"
+Content-ID: <2eddac9a-f566-df32-562e-7745a5905cd6@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-1175014617-1710498250=:1018
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e277728e-9d66-fffa-40a7-15cfb1ce21e0@linux.intel.com>
 
-On 2/16/24 07:52, Johan Hovold wrote:
-> On Thu, Feb 15, 2024 at 07:44:27PM +0100, Konrad Dybcio wrote:
->> On 15.02.2024 17:11, Bjorn Helgaas wrote:
->>> On Thu, Feb 15, 2024 at 11:21:45AM +0100, Konrad Dybcio wrote:
->>>> On 14.02.2024 23:28, Bjorn Helgaas wrote:
->>>>> On Wed, Feb 14, 2024 at 10:35:16PM +0100, Konrad Dybcio wrote:
->>>>>> On 12.02.2024 22:17, Bjorn Helgaas wrote:
->>>>>>> Maybe include the reason in the subject?  "Read back" is literally
->>>>>>> what the diff says.
->>>>>>>
->>>>>>> On Sat, Feb 10, 2024 at 06:10:06PM +0100, Konrad Dybcio wrote:
->>>>>>>> To ensure write completion, read the PARF_LTSSM register after setting
->>>>>>>> the LTSSM enable bit before polling for "link up".
->>>>>>>
->>>>>>> The write will obviously complete *some* time; I assume the point is
->>>>>>> that it's important for it to complete before some other event, and it
->>>>>>> would be nice to know why that's important.
->>>>>>
->>>>>> Right, that's very much meaningful on non-total-store-ordering
->>>>>> architectures, like arm64, where the CPU receives a store instruction,
->>>>>> but that does not necessarily impact the memory/MMIO state immediately.
->>>>>
->>>>> I was hinting that maybe we could say what the other event is, or what
->>>>> problem this solves?  E.g., maybe it's as simple as "there's no point
->>>>> in polling for link up until after the PARF_LTSSM store completes."
->>>>>
->>>>> But while the read of PARF_LTSSM might reduce the number of "is the
->>>>> link up" polls, it probably wouldn't speed anything up otherwise, so I
->>>>> suspect there's an actual functional reason for this patch, and that's
->>>>> what I'm getting at.
->>>>
->>>> So, the register containing the "enable switch" (PARF_LTSSM) can (due
->>>> to the armv8 memory model) be "written" but not "change the value of
->>>> memory/mmio from the perspective of other (non-CPU) memory-readers
->>>> (such as the MMIO-mapped PCI controller itself)".
->>>>
->>>> In that case, the CPU will happily continue calling qcom_pcie_link_up()
->>>> in a loop, waiting for the PCIe controller to bring the link up, however
->>>> the PCIE controller may have never received the PARF_LTSSM "enable link"
->>>> write by the time we decide to time out on checking the link status.
-> 
-> This makes no sense. As Bjorn already said, you're just polling for the
-> link to come up (for a second). And unless you have something else that
-> depends on the write to have reached the device, there is no need to
-> read it back. It's not going to be cached indefinitely if that's what
-> you fear.
+On Thu, 28 Dec 2023, Ilpo J=E4rvinen wrote:
 
-The point is, if we know that the hardware is expected to return "done"
-within the polling timeout value of receiving the request to do so, we
-are actively taking away an unknown amount of time from that timeout.
+> Here's a series that contains two fixes to PCI bridge window sizing
+> algorithm. Together, they should enable remove & rescan cycle to work
+> for a PCI bus that has PCI devices with optional resources and/or
+> disparity in BAR sizes.
+>=20
+> For the second fix, I chose to expose find_empty_resource_slot() from
+> kernel/resource.c because it should increase accuracy of the cannot-fit
+> decision (currently that function is called find_resource()). In order
+> to do that sensibly, a few improvements seemed in order to make its
+> interface and name of the function sane before exposing it. Thus, the
+> few extra patches on resource side.
+>=20
+> Unfortunately I don't have a reason to suspect these would help with
+> the issues related to the currently ongoing resource regression
+> thread [1].
+>=20
+> [1] https://lore.kernel.org/linux-pci/ZXpaNCLiDM+Kv38H@marvin.atrad.com.a=
+u/
+>=20
+> v2:
+> - Add "typedef" to kerneldoc to get correct formatting
+> - Use RESOURCE_SIZE_MAX instead of literal
+> - Remove unnecessary checks for io{port/mem}_resource
+> - Apply a few style tweaks from Andy
+>=20
+> Ilpo J=E4rvinen (7):
+>   PCI: Fix resource double counting on remove & rescan
+>   resource: Rename find_resource() to find_empty_resource_slot()
+>   resource: Document find_empty_resource_slot() and resource_constraint
+>   resource: Use typedef for alignf callback
+>   resource: Handle simple alignment inside __find_empty_resource_slot()
+>   resource: Export find_empty_resource_slot()
+>   PCI: Relax bridge window tail sizing rules
 
-So, if the polling condition becomes true after 980ms, but due to write
-buffering the value reached the PCIe hardware after 21 ms, we're gonna
-hit a timeout. Or under truly extreme circumstances, the polling may
-time out before the write has even arrived at the PCIe hw.
+I finally managed to get the group of people who reported this initially=20
+here to go and test to confirm these did solve the issues they're seeing,=
+=20
+so for all the patches:
 
-> 
->> Generally, it's a good idea to add such readbacks after all timing-
->> critical writes, especially when they concern asserting reset,
->> enabling/disabling power, etc., to make sure we're not assuming the
->> hardware state of a peripheral has changed before we ask it to do so.
-> 
-> Again no, there is no general need to do that. It all depends on what
-> the code does and how the device works.
+Tested-by: Lidong Wang <lidong.wang@intel.com>=20
 
-Agreed it's not necessary *in general*, but as I pointed out, this is
-an operation that we expect to complete within a set time frame, which
-involves external hardware.
+(If needed, I can send v3 with that tag).
 
-Konrad
+--=20
+ i.
+
+ps. Bjorn, I realized I pointed you earlier to v1 of this patchset, not=20
+this v2 one. I'm sorry about that confusion (it was too far back I didn't=
+=20
+immediately even remember I did v2).
+--8323328-1175014617-1710498250=:1018--
 
