@@ -1,193 +1,105 @@
-Return-Path: <linux-pci+bounces-4852-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4853-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70D2987CC62
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 12:35:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 775C087CF21
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 15:39:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 947321C211A2
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 11:35:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF852283E40
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 14:39:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2575E1B5B2;
-	Fri, 15 Mar 2024 11:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E80F425750;
+	Fri, 15 Mar 2024 14:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rvN6rl9c"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e1fOkATB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5949F1B5B1
-	for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 11:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF2037155;
+	Fri, 15 Mar 2024 14:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710502546; cv=none; b=pKjVkSp6QISW7PmNqxUklwfmZjEWFjVPxEG5NPapvtsNhmtSj9kUW5U9MWc50+bJu5e3VLIJtTrBQ98MTwThXrRRfY6z22BxA+3XzJhI6TzP0zlBQRcsmecd0m7sVHPqMg0VJnRY5vq25+9AwVrkJNwdMmJI9yMHiuu8O933FpQ=
+	t=1710513580; cv=none; b=rzXbM0dZMDN3T0E1E2JyGLkvSmADEYgw3u66EYFwkxH7YHgsvPvM8ssG24gM/lY6UenYw24IysXCHIQRW77M5+78cVgyDWP/nfgZ1PFAIp1UtEjgpLVJR6OHR8SeiAhfIpZWjq9/ZqyUKRbYFH8k+3qjt2Z5/6SR2n4Fmh3MC1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710502546; c=relaxed/simple;
-	bh=ei6uKuFHNES6Tz2lkRZwuDlTAQukDr3qpC/ZyrUr5b8=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=NrBa+HRzZbdzuAq09iyWYaAjNpORomdTA8q4/JHP6bKY7RVPcVBQxQzT/s6+yGfBwvud7GFbhzE8F6PXlA3mW0TLI3nd1Eh5IubIoIlPsa50UY5ivuvHYo1E/z8cRy45fEKa7piquhPGuNDiL0VAEyV4HrC8evdxCb1w5MCWjPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rvN6rl9c; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240315113539epoutp0497646e2edadf67933a76977cfe49dac3~87P82S77K3162231622epoutp04S
-	for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 11:35:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240315113539epoutp0497646e2edadf67933a76977cfe49dac3~87P82S77K3162231622epoutp04S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1710502539;
-	bh=ei6uKuFHNES6Tz2lkRZwuDlTAQukDr3qpC/ZyrUr5b8=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=rvN6rl9czyOhuEqDQYokPV2FU6HbTky8MkvTWDm7xYyJyA344VgoX7tundiSihIFa
-	 E9F6APy0xyVfNKxlD5zUptWX/2URthuwihQrO/yKLOaiRidNIMQkRv9zAoj51Faws6
-	 w000B/Z8eZ4ew+EpGlYRqvKHyNLCxObaHRWwBKZo=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240315113538epcas5p435e6d22a7e21c7eb693a923dcefe8038~87P8Mnr102078120781epcas5p4j;
-	Fri, 15 Mar 2024 11:35:38 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Tx2HY0N7Lz4x9Pt; Fri, 15 Mar
-	2024 11:35:37 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	02.D1.08567.88234F56; Fri, 15 Mar 2024 20:35:36 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240315113454epcas5p3a5663e477e0da4b9a6237acb72ea8448~87PTB2AHh2680026800epcas5p3d;
-	Fri, 15 Mar 2024 11:34:54 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240315113454epsmtrp2ad74d84a85d8e88d650483e693a97a23~87PTA3H0h3050830508epsmtrp2q;
-	Fri, 15 Mar 2024 11:34:54 +0000 (GMT)
-X-AuditID: b6c32a44-3abff70000002177-ec-65f43288d5bd
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	2A.2F.08755.E5234F56; Fri, 15 Mar 2024 20:34:54 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240315113451epsmtip18aea286a6886ca9c902ce0c807f1000a~87PQOkNfX0872908729epsmtip1h;
-	Fri, 15 Mar 2024 11:34:51 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Stephen Boyd'" <sboyd@kernel.org>, "'Dan Carpenter'"
-	<dan.carpenter@linaro.org>
-Cc: <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <mturquette@baylibre.com>,
-	<jingoohan1@gmail.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <krzysztof.kozlowski@linaro.org>,
-	<alim.akhtar@samsung.com>, <linux@armlinux.org.uk>,
-	<m.szyprowski@samsung.com>, <manivannan.sadhasivam@linaro.org>,
-	<pankaj.dubey@samsung.com>, <gost.dev@samsung.com>
-In-Reply-To: <9927a3356ce54c626ab4733844a4385b.sboyd@kernel.org>
-Subject: RE: [PATCH v6 1/2] clk: Provide managed helper to get and enable
- bulk clocks
-Date: Fri, 15 Mar 2024 17:04:44 +0530
-Message-ID: <104401da76cc$ccc772c0$66565840$@samsung.com>
+	s=arc-20240116; t=1710513580; c=relaxed/simple;
+	bh=aiAi4ls92WaX60pEZcqvPwA308DhNMckx9sVb6cDSIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKSpuAlxSDdl2DTWA5XI4TbNvGz46JL+ihWGbBl2o/ilbl51gGSSR4YfCTLJXiNz+Md8RZb7qrLwaPMindnl8yUC/U3wrqZYhRvT0KQkQvugisbTnMrFaR8/I/sHTnbup2yGtjhav1FvmNbM7Db1VtTzLfCGsjhNT0fzsffEWHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e1fOkATB; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710513579; x=1742049579;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=aiAi4ls92WaX60pEZcqvPwA308DhNMckx9sVb6cDSIg=;
+  b=e1fOkATBgvJWmBx6YU7fw+1lTivfNgRcYEkftv7dVRvYSJSZtq5xnvVh
+   /DmBL9Q9qku5wc62qzSgj/L0Yqp5WaJPFFJ+4cVnSoLgyC3XAOw+/LSIH
+   PZBSwSdBnOsSz3K+cWUUknwEUKmayTeGntaI7GiqDibHNZ32HNBmoshBU
+   7n3drwONECDwRC9mPdp54AoeQ4GB+v3IjvjDHDj832B7a7O51WEgzHWJx
+   vPa3Sf4JIh/Zpnh8UoMKs9zPA3Q0GY3z2KJTAePcCvWSNdwjLinf27+dN
+   7hSlcEUycNsSu5phr5Pt+PPgcKVBc077dlLXeO/FwbABwPqPFFWMS4u+M
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="16031210"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="16031210"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 07:39:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="914498869"
+X-IronPort-AV: E=Sophos;i="6.07,128,1708416000"; 
+   d="scan'208";a="914498869"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2024 07:39:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rl8ia-0000000DBh3-3W43;
+	Fri, 15 Mar 2024 16:39:32 +0200
+Date: Fri, 15 Mar 2024 16:39:32 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+Message-ID: <ZfRdpHMZjiTnpgGn@smile.fi.intel.com>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+ <453df04f-45ee-7619-1731-511b9cac26f4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQH2hJCcwYDjJDqbclltz640cKP7jQL/AcmgAaOboDkDexFUCAD2UfeNAfilKBWwqCa/4A==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxTZxTHc9vb3paty12p44FlDqv7gBOkUrqnU14ymV42l7EZIDNTdmkv
-	BSlt7S2gZmHdBgENL26DAI1W3IAhGwzLO9JFKoNBoqyBNDCGokUkEGRIZYH6srYXN779znn+
-	55zn/7zw2MIlbhAvQ2Og9BpSLeb6oR3XQ0JCi/a4qPD1ZjmcNndwYe1X6fBvcwEGJ651s2CD
-	qxqD1oV2DBqL3RxocTo4cLn4FgeO9pznwhvmQS6sGvmVBW0VVgTmP85HYVP/FAan8s9woH34
-	Xfh9uwuDz3q7MPjUcQWNFRGjDjubWBovwIhu0xRG1FiyCUvjGS7xl6OXS8yMVbKI1toviNK2
-	RoRYsWxN8DuSuS+dIpWUPpjSKLTKDI0qSvz+4ZT9KZGycEmoRA7fEgdryCwqShx3KCH0QIba
-	Y04cnEOqsz2pBJKmxbuj9+m12QYqOF1LG6LElE6p1kl1YTSZRWdrVGEayvC2JDx8T6RH+Flm
-	+nBZMaqbFJxsmJhjGRHrC2cRHg/gUnD/xodnET+eEL+KAMtgJYsJHiLAOHNrI1hFQLtjzRPw
-	fRWli79zvSzErQj4skXDiOYQcLuvAvMucPFdYGbsMdvLIjwZjJ2bZHtFbLwQBT9c/9lXzcdj
-	wb2bQz7294gKlx76GMXfAOOdd30swOXAXeLkMPwyGKqeQb3Mxt8E9ZcW2MyOgsHavXqO148I
-	TwKj9TgjCQC/rRX75gK8kg8W/ihFGc9x4MpKPFPqD+YH2zCGg8DKAyuXYRW43Fq10V4NVltr
-	N8zHgGtj531t2HgI+KVnN5N+DVQMN7OYsS+BEvfMhlwAuszPeTtwPelFGQ4E5oFRzjlEbNpk
-	zLTJmGmTA9P/02oQtBEJpHR0lopSROokGir3v+tWaLMsiO/l74zrQsYvPg2zISweYkMAjy0W
-	CfK2LVNCgZI8dZrSa1P02WqKtiGRntP+hh20RaH1fB2NIUUilYdLZTKZVB4hk4gDBAsFF5RC
-	XEUaqEyK0lH653UsHj/IyIK7bNv5w9Hu7ncKE+sS83v8/4mP+EDlb+sDuaJTE9IOZ/V00qz9
-	68VqZf3xzHGuVZEaIBuKiVt93W7tvptsSZs2t96+r9DUXXryU3l8+1GCINeN/TEL/Pn+PFFu
-	ZfnhWHP5oy2Zrdi3rpatuJFsLizze3XkxLpoznDhZuTBkTsgrZS82PkJb6/wETXbeIS+PLi/
-	vfGVNMoZUdXUdPVgcuWJzqIH7pM7OgLrX5xLXa4B26I/t9sSS4pks32Lk8eMedWLB350fXcn
-	573jfzrj3BFR00lNx/aOzWd9Oij62DG5jjbDNlO5s6U/Fc1pGgB1ztiAoxFy+0cDQ6fpZ6sN
-	ZWKUTiclO9l6mvwXYDHaJYIEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsWy7bCSnG6c0ZdUgyuzRS0ezNvGZrGkKcPi
-	w7xWdoubB3YyWaz4MpPdYu/rrewWDT2/WS02Pb7GavGx5x6rxeVdc9gszs47zmYx4/w+JotD
-	U/cyWrT8aWGxWHvkLrvF3ZZOVouLp1wtFm39wm7xf88Odot/1zayOIh4XL52kdnj/Y1Wdo+d
-	s+6yeyzYVOqxaVUnm8eda3vYPJ5cmc7ksXlJvUffllWMHp83yQVwRXHZpKTmZJalFunbJXBl
-	HN1yia1gA2/F8xfv2RoYJ3B3MXJySAiYSPS9PcEGYgsJ7GaUuPvUHSIuKfH54jomCFtYYuW/
-	5+xdjFxANc8YJc43rGAESbAJ6Eg8ufKHGcQWEQiX2Nf0GqyIWWA2i8TfuQuZIaZeYZI4u0YF
-	xOYUcJB4eu4k2DZhgVCJrilb2EFsFgFViRvbH4HFeQUsJX73PmaFsAUlTs58wgJiMwtoS/Q+
-	bGWEsZctfM0McZ2CxM+ny4DqOYCOCJO4vEwAokRc4ujPHuYJjMKzkEyahWTSLCSTZiFpWcDI
-	sopRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzjytTR3MG5f9UHvECMTB+MhRgkOZiUR
-	3jrFj6lCvCmJlVWpRfnxRaU5qcWHGKU5WJTEecVf9KYICaQnlqRmp6YWpBbBZJk4OKUamCa6
-	6dq//iJZ3+3ouX9Je9GnvWc5ZBw2JM6X2DJLdu5nBYN/S7+7tE5/8yJVxGCl6f7fn6/z9M3+
-	W+CyzvByh6J71JUY9o5ZvSKFh+0rWHUMmCwvWvf+enPMW/tXYEpZxH+ZuW+/WD3vU+92jan5
-	Jebq2HOV89W7XU9mHGdZ9ENJ9Y3tth1FU96om9t6Jll4zV45Q6J07c4T3vEcqZHXpv+9yzDL
-	59a6SPFJpmkfO3ec7bs5efuEZz/mhXO5CGyeMd2XJX3tgu9hrxZ411ybffvn/Fjbp5LJFuqz
-	72qmud3fmvfSq3nVh85JBZvqP0s+rNYLdA3uiz709vFjE7HXS21uxzxnyzi7ZusSe4Vb0ZeU
-	WIozEg21mIuKEwEqsX+lawMAAA==
-X-CMS-MailID: 20240315113454epcas5p3a5663e477e0da4b9a6237acb72ea8448
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240220084120epcas5p1e8980539667c3d9da20f49fc645d8f4c
-References: <20240220084046.23786-1-shradha.t@samsung.com>
-	<CGME20240220084120epcas5p1e8980539667c3d9da20f49fc645d8f4c@epcas5p1.samsung.com>
-	<20240220084046.23786-2-shradha.t@samsung.com>
-	<f00eed31-4baf-4d5c-934d-8223d1ab554d@moroto.mountain>
-	<022301da6fbf$aae4f7e0$00aee7a0$@samsung.com>
-	<9927a3356ce54c626ab4733844a4385b.sboyd@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <453df04f-45ee-7619-1731-511b9cac26f4@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Fri, Mar 15, 2024 at 12:33:43PM +0200, Ilpo Järvinen wrote:
+> On Thu, 28 Dec 2023, Ilpo Järvinen wrote:
 
+...
 
-> -----Original Message-----
-> From: Stephen Boyd <sboyd=40kernel.org>
-> Sent: 09 March 2024 06:21
-> To: 'Dan Carpenter' <dan.carpenter=40linaro.org>; Shradha Todi
-> <shradha.t=40samsung.com>
-> Cc: linux-clk=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-
-> pci=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-sams=
-ung-
-> soc=40vger.kernel.org; mturquette=40baylibre.com; jingoohan1=40gmail.com;
-> lpieralisi=40kernel.org; kw=40linux.com; robh=40kernel.org; bhelgaas=40go=
-ogle.com;
-> krzysztof.kozlowski=40linaro.org; alim.akhtar=40samsung.com;
-> linux=40armlinux.org.uk; m.szyprowski=40samsung.com;
-> manivannan.sadhasivam=40linaro.org; pankaj.dubey=40samsung.com;
-> gost.dev=40samsung.com
-> Subject: RE: =5BPATCH v6 1/2=5D clk: Provide managed helper to get and en=
-able bulk
-> clocks
->=20
-> Quoting Shradha Todi (2024-03-06 04:13:03)
-> > >
-> > > When clk_bulk_get_all() returns zero then we return success here.
-> > >
-> >
-> > Yes, we are returning success in case there are no clocks as well. In
-> > case there are no clocks defined in the DT-node, then it is assumed
-> > that the driver does not need any clock manipulation for driver
-> > operation. So the intention here is to continue without throwing
-> > error.
->=20
-> Maybe we shouldn't even return the clks to the caller. Do you have any us=
-e for
-> the clk pointers?
+> (If needed, I can send v3 with that tag).
 
-The intention to return the clk pointers was in the case where caller wants=
- to
-manipulate a particular clock in certain conditions. They can obtain the cl=
-ock pointer
-and use clk_set_parent, clk_set_rate on those particular clocks.
-But I understand that in that case users can use existing clk_bulk_get_all(=
-) API.
-So, should I go ahead and send v7?
+Dunno what's Bjorn's workflow, but `b4 am` has parameter to accept tags given
+against a cover letter and propagate them to all patches in the series. I.o.w.
+no need to send a new version in such cases.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
