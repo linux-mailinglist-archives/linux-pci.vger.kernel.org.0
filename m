@@ -1,86 +1,84 @@
-Return-Path: <linux-pci+bounces-4844-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4845-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B74887C88F
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 06:43:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72F8487C895
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 06:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09EFA1F214C1
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 05:43:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3FE91C21CCB
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Mar 2024 05:46:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A49E63AC;
-	Fri, 15 Mar 2024 05:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 469E1DF51;
+	Fri, 15 Mar 2024 05:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="noAVl6J3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WO2KR7ji"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3309FBE8
-	for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 05:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98820846B
+	for <linux-pci@vger.kernel.org>; Fri, 15 Mar 2024 05:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710481384; cv=none; b=jwr0POlI3TecL4sEQzRza6SzmZ73fB+VwnoejM7IqGZs+fpaHMToilyitQUUFsnqXtS/9XJ7c+698hvndAZ+SNdc4gNlVWDmUZrLhSP+4DJQS1TWn/gzB67XCx3DnW0oF8A9c0JYkkKbizpqAodOnJU5XGxcw+Jzkr2N2clPD7k=
+	t=1710481586; cv=none; b=EXPCYhQ5NoRyREIXTPZoiPhBS9b/sQU7LuM/tN/Vm8LDn/1IgCBkR29f9VI1o8NxkvlFae9lic9wojRyteO9O0Gu/Swofthc0pOOQAC6Z+5A+grM1L20SZeAb9X3ixST1f0fjr+0gL19HgeBR6jfvGVB2Xm0r6WaumQOG87CFAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710481384; c=relaxed/simple;
-	bh=Lw0w9YL+gcPq7m+9O95Q1CqiW0HrkyaAKkxtSZOYHmQ=;
+	s=arc-20240116; t=1710481586; c=relaxed/simple;
+	bh=9Kl0OBKdDFjf8cMj5tCqsHzRx7LMNUy71bPZNRlfbjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WxcZYvyAGng57UInr7DvTLG9BMhEyjUYfGLv+tZ9GiL5D4Gr8HTppP616jVVcLWY+XgHBedxWzH6O0tUfxFfM8PA/8dI7SjFKTbo4u4i9raIwdYWukLs7EEB/Fw51KeU1Ji9cTZsKsY9KPD9Dr0TD1t/Qqndm+ZZQfnuLZXXSEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=noAVl6J3; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRNSopQD2ghTkmXg4T06CzMa1OSJxdCI9eqhmlBjZqGu/zeHQvk8cp+Tw53RIU/RM+ENtk/btZ/rIAnlnz5jy/394eVBmQBxRHD9pM7G01j21ZxHY0XUvDCitDnVfNmDKJuUY4Vj8BZy1zo7GycII12JY3O88TBG7jpTCBdo7Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WO2KR7ji; arc=none smtp.client-ip=209.85.167.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1def142ae7bso1615805ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 14 Mar 2024 22:43:02 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c3775ce48fso159380b6e.2
+        for <linux-pci@vger.kernel.org>; Thu, 14 Mar 2024 22:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710481382; x=1711086182; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710481583; x=1711086383; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=lXqRjfPzN28rJ81I5h/eedfdWh+lv2P+lThu5YMqBOI=;
-        b=noAVl6J3fY6aIreE0V/ldZBOpLuzwWiVFxvpgcRtoUVWPgsOAiPgQ2jZE5aD4jzl6+
-         Y0BRa48v/JqGAqj0v1hWqlfduxqCfF+qO4Io1LWAEJjmrgoHNDfiNWXg8VB5KmJOMGrk
-         ZZXb+D1XCI5AkBorSEu+BimJFcDgxODH5/TKPir6jJHkqmYYR4uuuo0/xiYwauj178bt
-         0bwMd2dd/CTDISeEdcHyxSbIFFso6dWw69WUEiURuVCtgHE10Q3hQ2Mv2F+fV74C7of8
-         8A8hbC0zGPnBIYXghuy4hFjZht4deANSiKyzjNkCgU5yco9VDdaHCdWk+2EoZf6Shvmn
-         n6RA==
+        bh=OXCcWDukCyisGQz4jXAQxZulmhpme8v455rQusBXZZk=;
+        b=WO2KR7jiqMu7aV0pd6BoS8ymbQX0SbhYhL/5dU/2DrzHsplImCxhygoSdzICJsWNzu
+         g8fz9PaHHPFW9v82KFRLYU7DfWgX6ZDxou76uR6dhiYqnz3wcFcZ6N69KXhUFUauCltd
+         EETtLgkbMLNCAtF3Nd/ygSC3i9qIhKMAoJXc3xhx3/qgelzBdSAW2rFCinBBW8BTGUHg
+         WK07DtbZZCJ32I5WN5o6ase7DP4BQy+/jGnNeG6fyMwN2Ypsrezvab7q+mI7YYrG5yoU
+         2w82D6tJoycnlQcNphDbbVm90QZLvSxFB0dPA9Sll0eDCWVmDynlBzQuC+MhL4KSiMtt
+         qr3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710481382; x=1711086182;
+        d=1e100.net; s=20230601; t=1710481583; x=1711086383;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lXqRjfPzN28rJ81I5h/eedfdWh+lv2P+lThu5YMqBOI=;
-        b=vTqNqGaGzZm56dof6JOCQiseKiYnsBS/SYSLI1HRE5chv2fBZ9T/JlnaWcMwnVINYI
-         fqLTUaYaH8mybQECiSjSuq9UP1dSPvAd7SGCPdTqbMXqqzRNk5++wogMlZw4jM/pvx0J
-         HKNxMnxakp4xg1tIa+as28QoNV22UZamn+Gw8OuTirRrE4UVStSK8mW+1eGyHJIXBG4p
-         e2jZYyfBhIxOeqXB7YLEvm8uz1zzxwU2AoLSRppE1XpnkgJ+kCR++t5okC0jJn2QAM/R
-         ypF1zQITxaqxC4DpOTFFaEidGPxVlpDkeytpzL1n+rdCQoeqHlHvVNBxOgnvUAk4Fg8o
-         wRpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnUpby9e28LJps0/w0yAIPC6B6SoFxjVWPaFBurcDpIGPTRIbt2ijeYhDlmMhLxhNNFJ11vmrKUpMWVhbG1NXmY7mb9GuNjnM6
-X-Gm-Message-State: AOJu0Yyc6dWK5miucZVWqTBhxJyYddU5e1+ZTHmJNQHUpU4g0oR0H3OR
-	Gdp4UZgjbhcgMYzkP/waX7v13XHLyvGx9WSDrXfOcn5/bsgg52x3qNAJGIZsFw==
-X-Google-Smtp-Source: AGHT+IHWIDuB79z2FmQZ4Xws+a7UpXOyFJjihkGYu4bHvxKBsTt0OlAOwdX5m8hU6RINFmphysDrzg==
-X-Received: by 2002:a17:903:230f:b0:1dd:b140:d010 with SMTP id d15-20020a170903230f00b001ddb140d010mr5115468plh.37.1710481381920;
-        Thu, 14 Mar 2024 22:43:01 -0700 (PDT)
+        bh=OXCcWDukCyisGQz4jXAQxZulmhpme8v455rQusBXZZk=;
+        b=FkhhdRtOjAxi2CqOMYuGVsEUdBHzXCnuxTR554fDV8bL+yKMAbBXVIeYhC/L1Oq8d4
+         HtTKtC01ivUA8YFKbqpqnXJU8hRrMzVMVm52w3miZpA6qPLzMG/Qlhr4zocqZOQBNigM
+         lWbMczrWT8caioeKC2L8wEedRqEJiZv2/5qM25IiKsCcvM8/z5rtsyliO1MAuOaFijCI
+         i3BdyrXLFap8qXd6XYeCcjSdqmRJFacFw5VroaVfAkBPPVg7V7LmJHt8rzzJLr4eZ6WY
+         R39A/7q8A3cP2mUTXQTDlEKuspxyU367ZmVykF8SUJofZRwcopU7tXlEQ+ESvDdRuhPw
+         PvNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEdMgnFJZ8mHcUDKYDZuCSt3u5Uk5w5dvfnxgoMkkehZVhuvs0L4zkigwJEvi+kSCsLewKyn1O6qXWT78LDfPAGifT06Rv8nFj
+X-Gm-Message-State: AOJu0Yzztglvly13EnNdtLFueoHHG5QUlVGIxAUHhGESUNKDPjuAA+7t
+	+ECyPKYtMu6NQWLBBjc6Q7qigcNlkpF006l1n3MH+YUZ/wv6Qv3dp48eCSCOjQ==
+X-Google-Smtp-Source: AGHT+IFLJKorf8NvnFZ6Rg8WVbrD72Q5OJAUZhFpKak51FC91Y4WxKgxktqTBlx5e4a58cHahvwf7g==
+X-Received: by 2002:a05:6808:4c8e:b0:3c2:39c8:435f with SMTP id lt14-20020a0568084c8e00b003c239c8435fmr2848130oib.51.1710481582799;
+        Thu, 14 Mar 2024 22:46:22 -0700 (PDT)
 Received: from thinkpad ([117.207.30.211])
-        by smtp.gmail.com with ESMTPSA id p8-20020a170902e74800b001db2ff16acasm2790502plf.128.2024.03.14.22.42.59
+        by smtp.gmail.com with ESMTPSA id o14-20020a63fb0e000000b005cfc1015befsm1688718pgh.89.2024.03.14.22.46.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 22:43:01 -0700 (PDT)
-Date: Fri, 15 Mar 2024 11:12:55 +0530
+        Thu, 14 Mar 2024 22:46:22 -0700 (PDT)
+Date: Fri, 15 Mar 2024 11:16:16 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Shradha Todi <shradha.t@samsung.com>,
 	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 6/9] PCI: endpoint: pci-epf-test: Clean up
- pci_epf_test_unbind()
-Message-ID: <20240315054255.GF3375@thinkpad>
+Subject: Re: [PATCH v3 7/9] PCI: cadence: Set a 64-bit BAR if requested
+Message-ID: <20240315054616.GG3375@thinkpad>
 References: <20240313105804.100168-1-cassel@kernel.org>
- <20240313105804.100168-7-cassel@kernel.org>
+ <20240313105804.100168-8-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,57 +88,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240313105804.100168-7-cassel@kernel.org>
+In-Reply-To: <20240313105804.100168-8-cassel@kernel.org>
 
-On Wed, Mar 13, 2024 at 11:57:58AM +0100, Niklas Cassel wrote:
-> Clean up pci_epf_test_unbind() by using a continue if we did not allocate
-> memory for the BAR index. This reduces the indentation level by one.
+On Wed, Mar 13, 2024 at 11:57:59AM +0100, Niklas Cassel wrote:
+> Ever since commit f25b5fae29d4 ("PCI: endpoint: Setting a BAR size > 4 GB
+> is invalid if 64-bit flag is not set") it has been impossible to get the
+> .set_bar() callback with a BAR size > 4 GB, if the BAR was also not
+> requested to be configured as a 64-bit BAR.
 > 
-> This makes pci_epf_test_unbind() more similar to pci_epf_test_set_bar().
-> 
+> Thus, forcing setting the 64-bit flag for BARs larger than 4 GB in the
 
-I've proposed to move the clear_bar and free_space code to separate helper
-functions in my series [1]. If this series gets merged first (it really makes
-sense), then this patch can be dropped now.
+2 GB
+
+> lower level driver is dead code and can be removed.
+> 
+> It is however possible that an EPF driver configures a BAR as 64-bit,
+> even if the requested size is < 4 GB.
+> 
+> Respect the requested BAR configuration, just like how it is already
+> repected with regards to the prefetchable bit.
+> 
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+
+Okay, here you are fixing this driver. But this should be moved before patch
+5/9. With that,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 91bbfcb1b3ed..fbe14c7232c7 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -690,20 +690,18 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->  	struct pci_epc *epc = epf->epc;
-> -	struct pci_epf_bar *epf_bar;
->  	int bar;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index 2d0a8d78bffb..de10e5edd1b0 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -99,14 +99,11 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
+>  		ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS;
+>  	} else {
+>  		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
+> -		bool is_64bits = sz > SZ_2G;
+> +		bool is_64bits = !!(flags & PCI_BASE_ADDRESS_MEM_TYPE_64);
 >  
->  	cancel_delayed_work(&epf_test->cmd_handler);
->  	pci_epf_test_clean_dma_chan(epf_test);
->  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> -		epf_bar = &epf->bar[bar];
-> +		if (!epf_test->reg[bar])
-> +			continue;
+>  		if (is_64bits && (bar & 1))
+>  			return -EINVAL;
 >  
-> -		if (epf_test->reg[bar]) {
-> -			pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
-> -					  epf_bar);
-> -			pci_epf_free_space(epf, epf_test->reg[bar], bar,
-> -					   PRIMARY_INTERFACE);
-> -		}
-> +		pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
-> +				  &epf->bar[bar]);
-> +		pci_epf_free_space(epf, epf_test->reg[bar], bar,
-> +				   PRIMARY_INTERFACE);
->  	}
->  }
->  
+> -		if (is_64bits && !(flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
+> -			epf_bar->flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
+> -
+>  		if (is_64bits && is_prefetch)
+>  			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
+>  		else if (is_prefetch)
 > -- 
 > 2.44.0
 > 
