@@ -1,111 +1,166 @@
-Return-Path: <linux-pci+bounces-4878-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4879-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44DB387EE6E
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 18:09:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E00AB87F06F
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 20:31:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2E5A284747
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 17:09:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25A671C20C83
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 19:31:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FE6055789;
-	Mon, 18 Mar 2024 17:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4A6556762;
+	Mon, 18 Mar 2024 19:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RDpVQYHC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsAZg1D9"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAAD254BE3;
-	Mon, 18 Mar 2024 17:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED7856755
+	for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 19:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710781726; cv=none; b=emnbO6d0ku7O8wBHPLXe6TvzvizhhHHbMLbWTqXGhSel6qJ1oGHKZ6SH0JS7c9n7aKWVRXIeAHXlk09zxitYe+SvVkY7LpxTvw+lef6hLoBO3cVtwemQ3aOUwbTDs5UU8wsJQch9tCW9Gt/K0NLsjEY5BwgXuXYuyMk4+LWHt0w=
+	t=1710790267; cv=none; b=OP+Ea1JRsPsAfEnVVqT8PpphJdxkJja4bJrqkUyJuasN7/AnImmutodPDJw9Ox2IAQT4EZhi1JSrjSVltfO5WeExj9sz/HpfRfhns7Kmc+iT7sIejMyoV0nXEbgGrGOhe2ew2mA6cu876THCw8Xt/lz1Wo4Fc4GdRkkwy0Tc6S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710781726; c=relaxed/simple;
-	bh=ZmPRdsYdvMk1O/gZ3oDc5Rz15l5IIb9Dtfx18VBfImc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rcFzkd9jb/bUIyrVUsEacQ7GOA00ArRcAGp1x+Q4uPmcx5UkdvpTLTYiN25skJrGRGW85g8tHR0GxGJd0PnKYAHQAtumLAs5KbjKyDCnz70fWsDYf5vsNDRsmhJS8Pzhn6yxMv7hTQt708NCSq1sZrccghM0FRhoqraIvVFmEig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RDpVQYHC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 285D8C433F1;
-	Mon, 18 Mar 2024 17:08:45 +0000 (UTC)
+	s=arc-20240116; t=1710790267; c=relaxed/simple;
+	bh=ZG/7sEgGrupE4SbTG9Fe3p1IzrWq03uchSVcZIyTygE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QPpKvHd50xJim7M6XmefkohbllUGrex2H9xcFbgnsv8QPPuG/MfHIJJ/ZXNbtF5ibN1AtiQ4ML5rM1rqHLgP6G6qDsxoJZQE2bwNa1I9SCPJo0akgz6HaCV+q6SzXvWK4p49gjrOg2aeUlxoEcNPoYm7NEGWX5JD+vcorxhjLh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsAZg1D9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473E1C433C7;
+	Mon, 18 Mar 2024 19:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710781725;
-	bh=ZmPRdsYdvMk1O/gZ3oDc5Rz15l5IIb9Dtfx18VBfImc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RDpVQYHC6k54NrE+3ukgLb7d+rvBUnUc/YcBo9tqpDO6oqsqnA47xfxyXnrm4Ae8x
-	 h/10876VNVpxJoDlMS1S+MeTAZ8w4KIf77AYMjQc9LhV84rHk++ie2o3T8PQn5DQYL
-	 wcaBeSpX5VLLU2PBS9gns/IlRQT1W94MhxtEn0XSkMbs+zVRpz2LrgkRsH5xojJ1j2
-	 vdH6oASz+BNvWuyI5Bz7L9rzuY7vgKc9vpegxxJYmC+fA7fCmzuMRyZka2S5V050Ak
-	 ZgZmNSn+LMOp3nMSjlqZE0iimYvBnN5V+khEEX+M7cauoSck4X1jr5xgWK8WXiesuL
-	 H/IzuwlkdSWIQ==
-Date: Mon, 18 Mar 2024 12:08:43 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	s=k20201202; t=1710790267;
+	bh=ZG/7sEgGrupE4SbTG9Fe3p1IzrWq03uchSVcZIyTygE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fsAZg1D9vZSDUb10uDMsmCJufEKSwZKbWKOe698BnrLe5KGCbAaRu8S1BQ5qFh30J
+	 lEQz4TsF8QmiNR7HixL1bA0CxV9G2MSxmKr+qzSLcaAYmZu+1FMmmp9jIGooEp9FuD
+	 AQ1oTKwstQ0g94q0QQkKjH2CMYpojRWM/9RG+H/QXtdoELsRsUlCZAl6DV7B6V9rxb
+	 jzmexU8PrISAt9t5Lb37uD6pF4zp6A+Z/8v1UHLjWorOZcPzTD6zUT/YUUD3hB6Vk8
+	 uuzlTGnuaGCIsFySbIQl/1+8r4vyjJ90JPiNmX9b3bRVyKee11WC7mn3Qt/YP2F+Vi
+	 48t+SUtsFEQ2A==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
- outbound window memory allocation
-Message-ID: <20240318170843.GA1187538@bhelgaas>
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] misc: pci_endpoint_test: Use memcpy_toio()/memcpy_fromio() for BAR tests
+Date: Mon, 18 Mar 2024 20:30:19 +0100
+Message-ID: <20240318193019.123795-1-cassel@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 17, 2024 at 11:39:17AM +0530, Manivannan Sadhasivam wrote:
-> As proposed during the last year 'PCI Endpoint Subsystem Open Items
-> Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
-> framework for managing the endpoint outbound window memory allocation.
-> 
-> PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
-> driver from the start for managing the memory required to map the host
-> address space (outbound) in endpoint. Even though it works well, it
-> completely defeats the purpose of the 'Genalloc framework', a general
-> purpose memory allocator framework created to avoid various custom memory
-> allocators in the kernel.
+The current code uses writel()/readl(), which has an implicit memory
+barrier for every single readl()/writel().
 
-Nice idea.  I wonder if something like this could be done for PCI BAR
-assignment, i.e., the stuff in setup-bus.c.  There are a lot of
-constraints there, so maybe it wouldn't be practical.
+Additionally, reading 4 bytes at a time over the PCI bus is not really
+optimal, considering that this code is running in an ioctl handler.
 
-> The migration to Genalloc framework is done is such a way that the existing
-> API semantics are preserved. So that the callers of the EPC mem APIs do not
-> need any modification (apart from the pcie-designware-epc driver that
-> queries page size).
-> 
-> Internally, the EPC mem driver now uses Genalloc framework's
-> 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
-> based on the requested size as like the previous allocator. And the
-> page size passed during pci_epc_mem_init() API is used as the minimum order
-> for the memory allocations.
+Use memcpy_toio()/memcpy_fromio() for BAR tests.
 
-/as like the previous allocator/as the previous allocator did/
+Before patch with a 4MB BAR:
+$ time /usr/bin/pcitest -b 1
+BAR1:           OKAY
+real    0m 1.56s
 
-> During the migration, 'struct pci_epc_mem' is removed as it is seems
-> redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
-> is now used to hold the address windows of the endpoint controller.
+After patch with a 4MB BAR:
+$ time /usr/bin/pcitest -b 1
+BAR1:           OKAY
+real    0m 0.54s
 
-s/as it is seems/as it seems/
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/misc/pci_endpoint_test.c | 52 ++++++++++++++++++++++++--------
+ 1 file changed, 40 insertions(+), 12 deletions(-)
 
-If this is not a logically required part of the conversion, could the
-pci_epc_mem removal be a separate patch?
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 705029ad8eb5..cb6c9ccf3a5f 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -272,31 +272,59 @@ static const u32 bar_test_pattern[] = {
+ 	0xA5A5A5A5,
+ };
+ 
++static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
++					enum pci_barno barno, int offset,
++					void *write_buf, void *read_buf,
++					int size)
++{
++	memset(write_buf, bar_test_pattern[barno], size);
++	memcpy_toio(test->bar[barno] + offset, write_buf, size);
++
++	/* Make sure that reads are performed after writes. */
++	mb();
++	memcpy_fromio(read_buf, test->bar[barno] + offset, size);
++
++	return memcmp(write_buf, read_buf, size);
++}
++
+ static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+ 				  enum pci_barno barno)
+ {
+-	int j;
+-	u32 val;
+-	int size;
++	int j, bar_size, buf_size, iters, remain;
++	void *write_buf;
++	void *read_buf;
+ 	struct pci_dev *pdev = test->pdev;
++	struct device *dev = &pdev->dev;
+ 
+ 	if (!test->bar[barno])
+ 		return false;
+ 
+-	size = pci_resource_len(pdev, barno);
++	bar_size = pci_resource_len(pdev, barno);
+ 
+ 	if (barno == test->test_reg_bar)
+-		size = 0x4;
++		bar_size = 0x4;
+ 
+-	for (j = 0; j < size; j += 4)
+-		pci_endpoint_test_bar_writel(test, barno, j,
+-					     bar_test_pattern[barno]);
++	buf_size = min(SZ_1M, bar_size);
+ 
+-	for (j = 0; j < size; j += 4) {
+-		val = pci_endpoint_test_bar_readl(test, barno, j);
+-		if (val != bar_test_pattern[barno])
++	write_buf = kmalloc(buf_size, GFP_KERNEL);
++	if (!write_buf)
++		return false;
++
++	read_buf = kmalloc(buf_size, GFP_KERNEL);
++	if (!read_buf)
++		return false;
++
++	iters = bar_size / buf_size;
++	for (j = 0; j < iters; j++)
++		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
++						 write_buf, read_buf, buf_size))
++			return false;
++
++	remain = bar_size % buf_size;
++	if (remain)
++		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
++						 write_buf, read_buf, remain))
+ 			return false;
+-	}
+ 
+ 	return true;
+ }
+-- 
+2.44.0
 
-The docs refer to it as "genalloc", i.e., not capitalized:
-https://docs.kernel.org/core-api/genalloc.html
-
-Thanks for working on this.
-
-Bjorn
 
