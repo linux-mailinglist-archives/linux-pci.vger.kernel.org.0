@@ -1,143 +1,159 @@
-Return-Path: <linux-pci+bounces-4873-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D6EC87E384
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 07:06:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3EC887E3CF
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 07:45:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DFB91C20DB9
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 06:06:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 290061F21462
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 06:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9375325761;
-	Mon, 18 Mar 2024 06:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E97491CA89;
+	Mon, 18 Mar 2024 06:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DaIqC3rt"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CvqwcEs3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XUSpkHQF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3D9286A2
-	for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 06:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B5C20313
+	for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 06:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710741912; cv=none; b=sNjxAcyWxcHpIsqrxFKtiGqk5D8Acu19wNwC7S2zC1h2oxudMGquZ2xjqRyAyFABQsqERRjmIIgp/2drgD6wvlJh0IdOzPpFtDmTscsImAAVCiI+kRXsqgiL3j3Sgpv3cPy8vWn3gemQbnk1UdV3V0zhJ76m/pym4IRTngXwMoU=
+	t=1710744303; cv=none; b=VmQi6vJkxvrFhDMWrU70tH+2ObJ3SynvWGRjZ8ctNw0j5y8esp2dB74EJH9HBpwR7JXMWVykEV0sck/hioeg+a5XX5IZ0v+wll5n8F07XzDD7mncog2dtGWv/FCjf4AfNp1Lq6O1PjzoJbe3J6xp5roeK+ZDP+th2hNrOeTP35w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710741912; c=relaxed/simple;
-	bh=U8+MilrlyQLMqCKs6OSXrDnQL6lG3tUvuqNkFusZTRE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O9YAs+wujU9cPUZKd4WRFDuro+sRD5aTDgK0UOJvyi1DO8c+IDkBcOHpLB2gQtRofZUtqgFu6MMWlzDzL7rI1nuhibiLdjZEwjmCu51TCXUah+KAdhPnTJmcJnOmsT0JCLggBjCSpTdQwfCrQAf2gbBDGpJVzAvNk4V6tYpwhY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DaIqC3rt; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e6aaa2f02cso3026613b3a.2
-        for <linux-pci@vger.kernel.org>; Sun, 17 Mar 2024 23:05:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710741910; x=1711346710; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mHEwlZG3mvwmMDQMT2HCEzxvwXSOeNme8F0oQ3C5z7U=;
-        b=DaIqC3rtDO7XqGfzQuuGiWqQZofKWFKH5r0zm50iYpgnnuUnqAWmrnjRohErCvSswN
-         NRLpR9+5pVz7a4+99Rvl8bAm5dVlTWPh+v+nCXcDXwrnV1b/blo6AMikD4uHfsDykemd
-         gaV78uKmrFrMnP5lxgV992CpIJ5Iwxhpf3k7YncEwFzFrq592+frWT2S+Wm4H+qSEsKz
-         RbaoH9nI5UvWnzBPL+en4BjO9Q4IRBcVm0I2BY3sdZeHOMSyLeAVhAo3d97K0FudtBai
-         9cnA98cSJvnSt9Yzun3AHBxPefVnNKfuUT80skior5P5A4NdpReBAPRW20bYGhpG4FZs
-         bhzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710741910; x=1711346710;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mHEwlZG3mvwmMDQMT2HCEzxvwXSOeNme8F0oQ3C5z7U=;
-        b=YnpgZQ2tbjmGUcrPSaK7A42NepdaP5pkXrcTcJlRWbt2ciKk2DjfROgP62yGTb9IPv
-         e5DhH40iRpn3cmcOVMYMQnNjw3ur7KvZOO+sNgPzNI1Jzus/E69GtWtiw98jVuV1ljCd
-         3yGHVjQDcILdhpy0dFVvDHMyy1QxhRx/e1lWXeTs02VNvqZxuRGP9Z97mJQ30USRLE6L
-         Z0PsV2lTxK67jFPKFB4NL3msqH+KEuirmf4P6poVnYu9W8gW87HppLgiuuq1/eTiC0Yh
-         MeYY/Fe96vPJMwOR9DBPLbeiy+T8lpUHGTPCDtv5GO5YuYrkci92BLliIAmy8GCDtc8R
-         EyyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/91ZGmUAmh5vpN9VqxCZhghvjRjCLK0d1oVhFy7Kgc5v9yZvdUe9n4pzrTipsIPB0tpk7P15Xw0Dt2bpXNctRlY5/51RoIllM
-X-Gm-Message-State: AOJu0YzSy6Impx7hc9AbG4tdpsPU9VyLnNVo5MDY/Cv2XZMv86P4HjM8
-	0e7+XgtEvZUPZoB7Bfe4TLXeNrFM3V6PDHMY8E+25dt45wPLKiA7Ef3dSUN4Kw==
-X-Google-Smtp-Source: AGHT+IHRiqTI3exT9aUXPbfzfVdObRz6enkM4iNtqTyeJuNf5FUoBWRaGXuUEOw6UXOxL9Yjxzhl7w==
-X-Received: by 2002:a05:6a00:22c3:b0:6e6:a8f5:6dc9 with SMTP id f3-20020a056a0022c300b006e6a8f56dc9mr12829827pfj.2.1710741910035;
-        Sun, 17 Mar 2024 23:05:10 -0700 (PDT)
-Received: from [127.0.1.1] ([103.246.195.160])
-        by smtp.gmail.com with ESMTPSA id p12-20020a62ab0c000000b006e6c5b065f5sm7064268pff.28.2024.03.17.23.05.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Mar 2024 23:05:09 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Mon, 18 Mar 2024 11:34:29 +0530
-Subject: [PATCH v5 5/5] PCI: epf-mhi: Enable HDMA for SA8775P SoC
+	s=arc-20240116; t=1710744303; c=relaxed/simple;
+	bh=JR4jUAUOr7WdVnumi0SyuWQnxtfUPAh61LkqxwojaSc=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=gn0REHY+LBp6z9z0PEPkxDT7DOSLVCYPxe5nfGj2Z3RHsfKWialbxpbn+buvaArvVlqXHoxrB9VtPDvUNDcdbHFt8lCOlfr1coMdhJ9JHxOu7JeMwgZzWwwDnt4T0Vtkag3DOk0egtDWhb7CGXGTSn8USagMtb7lRXoEFNU0jEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CvqwcEs3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XUSpkHQF; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 5EF8511400C8;
+	Mon, 18 Mar 2024 02:45:00 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Mon, 18 Mar 2024 02:45:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1710744300; x=1710830700; bh=LNIo9Nut2J
+	mDP8ZQV3UML1WPYh5IHSy0jvolq6BWASE=; b=CvqwcEs3LL5Bm68uQHZ35/1Av4
+	nArY/YWC+TjPJlPz/uNmeJQ9cElanYW/jGQQ8yBfYs8psSnbmutBVCjtIAkxfuEh
+	i28F5K+gaE+xa+V3WxsHoi4nzRDRyfngaoTVpgIDFkbQ2679fJXYzcKW3udIV/Rh
+	UHlJDJL/cCxPW0Qwt0QcOGUPzban41aWZtTrQwJuKITxpZ4vFUzmvW6aW+N+QKyG
+	80jyAVD6fh1TvarFz2HzVd1UvPCCgvp+zOTZ01DsQjrO3zb9vubWbfUq8w3bckBJ
+	DQryxdxjLd+T03U3/QlKZmbkgWKFvklO5A/R7sLzVvV0VFHMe159S8MmhTCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1710744300; x=1710830700; bh=LNIo9Nut2JmDP8ZQV3UML1WPYh5I
+	HSy0jvolq6BWASE=; b=XUSpkHQFd8S9zXl/rKjLYf03u6hYv39Pt50LPRyfQUH2
+	XEH4QLTh4dhpoYSQidPUIYR6l5/7ZsrjrgMIRAHcnJVXf6JQCpaI14SLtqPmcAfA
+	lKUUDY5dkfvsGFkDog1548PcBTuEk8O5hVZbg5bPzc9Mt+zu/xQ0hm4SFpcdCWdP
+	95qeyPCw7PT0oJ8YdgSUNgKEdbZQkbbcm+TvstaBXQTfvhYEO0xbVLrR6QdvKRGa
+	10Z5g9YJuqr+GmW7BAvNyMK5gIaS5uVlYDll/dz2LjJr/vQzL990FvZgtiEOye8s
+	AqDgtafae1TsRpyB9tYGkFIpfRE8T8LouzrdWkkscA==
+X-ME-Sender: <xms:6-L3ZQw_5ULCjhX1Fs_aDlj4LI-fZ3vP1uGw2TaPOIRy4eLV5_n4iQ>
+    <xme:6-L3ZUS8RkHu1TKQNDykKXcZczpU9gRD5K8FeI-3B8cIpkQyy5To5i0fUG3Esi_V7
+    fzvKQlTZ_JsM2-LwTs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeeigddutddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:6-L3ZSWZU9bsfvvCFX7gYDTjbTKK8ti0r6WjwPDrl-6ozwR7peDsPw>
+    <xmx:6-L3ZejeLuYX8V3m0F-r2jKH_fpp0gCBRtmVYOD6Uk9pbvdKuPWN3w>
+    <xmx:6-L3ZSAdXQiY4KqVe7y4oF5ArUmw214HtGAaRgn5fGN1Iz-g7bV3_A>
+    <xmx:6-L3ZfLCNlK4KFi4n5cLkmsDDSfcoKWiPy3LBpr1YacpHwZGDJ748w>
+    <xmx:7OL3ZauJ2e21vIKztmIcbBXa_rHXfiY1Qrvk9J4H7s-cX0ND7gabDQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A7855B6008D; Mon, 18 Mar 2024 02:44:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-300-gdee1775a43-fm-20240315.001-gdee1775a
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240318-dw-hdma-v5-5-f04c5cdde760@linaro.org>
-References: <20240318-dw-hdma-v5-0-f04c5cdde760@linaro.org>
-In-Reply-To: <20240318-dw-hdma-v5-0-f04c5cdde760@linaro.org>
-To: Jingoo Han <jingoohan1@gmail.com>, 
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Mrinmay Sarkar <quic_msarkar@quicinc.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>, Frank Li <Frank.Li@nxp.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1016;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=HBFaoOrEPY28OgpXbosd8HC8b9IU9rla4yFX01mozG0=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBl99l4wGU2gTqdlRV7ctpg1FXFpW0CfJu/Dmtgj
- KkLJ+xYBzSJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZffZeAAKCRBVnxHm/pHO
- 9Wo6B/9EvqeiSaP7MDStogYrCCg1qe5Iq3029Z58RjdUkm6zgDfGxvGM4fVgAjcgMOIjKu4eE4+
- tK1ebMbz2DjiEE/Xmcp9Y9cpb5f+R37U9Q98qD5uOuKVZbyy/0J7Yk5QK+bbJdGyrWkhMp7zqCf
- 3XCPBdvGLdxg507ZRXbp56Qtsn8T1e67Mvsc7pFDGNPkF8CQTTZOq8/juHBWjgIzM21XxQIliQJ
- TKsDPCrI9zKgQgyQ+BPFJVKPYU9kNaL8AANuGLza4TBm3DVtCsXllcdpK4qUycZeBlwtJRCaejm
- n2gzXu0iE2JSBtQ/iCbiGPW5cHOrnYq1ah5hjGfFlPBEeHrh
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Message-Id: <20798a83-b2e6-4ecd-8e83-e39514b685a8@app.fastmail.com>
+In-Reply-To: <20240318043058.GB2748@thinkpad>
+References: <20240313105804.100168-1-cassel@kernel.org>
+ <20240313105804.100168-10-cassel@kernel.org> <20240315064408.GI3375@thinkpad>
+ <9173aa22-4c15-40ec-bf70-39d25eebe4c2@app.fastmail.com>
+ <20240318043058.GB2748@thinkpad>
+Date: Mon, 18 Mar 2024 07:44:21 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+Cc: "Niklas Cassel" <cassel@kernel.org>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Kishon Vijay Abraham I" <kishon@kernel.org>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Shradha Todi" <shradha.t@samsung.com>,
+ "Damien Le Moal" <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] PCI: endpoint: Set prefetch when allocating memory for
+ 64-bit BARs
+Content-Type: text/plain
 
-From: Mrinmay Sarkar <quic_msarkar@quicinc.com>
+On Mon, Mar 18, 2024, at 05:30, Manivannan Sadhasivam wrote:
+> On Fri, Mar 15, 2024 at 06:29:52PM +0100, Arnd Bergmann wrote:
+>> On Fri, Mar 15, 2024, at 07:44, Manivannan Sadhasivam wrote:
+>> > On Wed, Mar 13, 2024 at 11:58:01AM +0100, Niklas Cassel wrote:
+>
+> But I'm not sure I got the answer I was looking for. So let me rephrase my
+> question a bit.
+>
+> For BAR memory, PCIe spec states that,
+>
+> 'A PCI Express Function requesting Memory Space through a BAR must set the BAR's
+> Prefetchable bit unless the range contains locations with read side effects or
+> locations in which the Function does not tolerate write merging'
+>
+> So here, spec refers the backing memory allocated on the endpoint side as the
+> 'range' i.e, the BAR memory allocated on the host that gets mapped on the
+> endpoint.
+>
+> Currently on the endpoint side, we use dma_alloc_coherent() to allocate the
+> memory for each BAR and map it using iATU.
+>
+> So I want to know if the memory range allocated in the endpoint through
+> dma_alloc_coherent() satisfies the above two conditions in PCIe spec on all
+> architectures:
+>
+> 1. No Read side effects
+> 2. Tolerates write merging
+>
+> I believe the reason why we are allocating the coherent memory on the endpoint
+> first up is not all PCIe controllers are DMA coherent as you said above.
 
-SA8775P SoC supports Hyper DMA (HDMA) DMA Engine present in the DWC IP. So,
-let's enable it in the EPF driver so that the DMA Engine APIs can be used
-for data transfer.
+As far as I can tell, we never have read side effects for memory
+backed BARs, but the write merging is something that depends on
+how the memory is used:
 
-Signed-off-by: Mrinmay Sarkar <quic_msarkar@quicinc.com>
-[mani: reworded commit message]
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 1 +
- 1 file changed, 1 insertion(+)
+If you have anything in that memory that relies on ordering,
+you probably want to map it as coherent on the endpoint side,
+and non-prefetchable on the host controller side, and then
+use the normal rmb()/wmb() barriers on both ends between
+serialized accesses. An example of this would be having blocks
+of data separate from metadata that says whether the data is
+valid.
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index 2c54d80107cf..570c1d1fb12e 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -137,6 +137,7 @@ static const struct pci_epf_mhi_ep_info sa8775p_info = {
- 	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
- 	.msi_count = 32,
- 	.mru = 0x8000,
-+	.flags = MHI_EPF_USE_DMA,
- };
- 
- struct pci_epf_mhi {
+If you don't care about ordering on that level, I would use
+dma_map_sg() on the endpoint side and prefetchable mapping on
+the host side, with the endpoint using dma_sync_*() to pass
+buffer ownership between the two sides, as controlled by some
+other communication method (non-prefetchable BAR, MSI, ...).
 
--- 
-2.25.1
-
+     Arnd
 
