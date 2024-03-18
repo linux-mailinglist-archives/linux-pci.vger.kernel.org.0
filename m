@@ -1,64 +1,60 @@
-Return-Path: <linux-pci+bounces-4862-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4863-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 500E087DD17
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Mar 2024 12:54:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304D987E199
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 02:24:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2CDB281011
-	for <lists+linux-pci@lfdr.de>; Sun, 17 Mar 2024 11:54:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B5B01C20D34
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 01:24:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52CE118EAD;
-	Sun, 17 Mar 2024 11:54:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF2017547;
+	Mon, 18 Mar 2024 01:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQPLrWqQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQozQc8g"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDA117BDC
-	for <linux-pci@vger.kernel.org>; Sun, 17 Mar 2024 11:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BC3179AE;
+	Mon, 18 Mar 2024 01:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710676457; cv=none; b=IvUdzmSMjp/J8xSYAsH5CwGd+o79Iha/ghSeaJkMHRDTu1mhKYF9TR9MpsmXJvi7Kct2E+LgExM023XVKRLcwktmljbCNt1tCPeWUwTH+KfcT7SMhjXl4qGAQ0FZdK699C4V6h91SAn8HxSRT2BSJ3LPOh92dXtv3KICJOzlcJQ=
+	t=1710725049; cv=none; b=nVePsXl3wu8lwJlTIk4royGm+CAma/7eha2UL9eqAvHKHTIhwMiaHh9JCSSbk7jUPqEVv628yOzN/LsnxQigIdvmmUcbZj4rflyHAvQBzs1dWDrl5WmCZLzGTGm/rQ0gkRGsSNRCmA7KM8AWDdP16NmC8wS9ygTGxdz+NAtHNpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710676457; c=relaxed/simple;
-	bh=nHSE4H5SQLJGvIIxNaV3DlS87Jl5fjkwcNA2TNQcwPE=;
+	s=arc-20240116; t=1710725049; c=relaxed/simple;
+	bh=+wfvHnwJWpfZDGn/7Sn97aBeOjz4tC3+nHOqRiSkpxk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l7RP7uEq3d9sYeGT4zWMwaEtL2gD18rczbnx9USPgO3VljhbVyzmJC3UGoNSHj+WbZi98M80+RTKqjheNEOrd2/wzVQdEmlQ7B8OmsAHnb8URaw3Nwh9p0pNTiDwMpWBdlaRTBtjS3YSzEu53jxdO9PV76SUwZgGx3opF3zJIhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQPLrWqQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD8FC433A6;
-	Sun, 17 Mar 2024 11:54:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=gW8cASwbPvCcWcit1LAXje6u3XfC1+EQapy8cLN6qJGUtVanhEfZZ87YxMmXLrbp10t3LNiQ/cZ9KimJTcK5qv0Br6hTJZlH8vb9AFHi1lzBh+CBUPhRiAIWgeejvjX8gqix5ubb1c8G2ugoN6slbEQmuFTMSE7YG52FNLUbf/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQozQc8g; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E21D1C433C7;
+	Mon, 18 Mar 2024 01:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710676456;
-	bh=nHSE4H5SQLJGvIIxNaV3DlS87Jl5fjkwcNA2TNQcwPE=;
+	s=k20201202; t=1710725048;
+	bh=+wfvHnwJWpfZDGn/7Sn97aBeOjz4tC3+nHOqRiSkpxk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TQPLrWqQdOIuXN5cOmkWBvLJEJtTcg/B8b25ltyLxo5kwHIuXFq6RtHFOc8fmfs96
-	 N+G8UZW0IakBJzuP0droDWoOopZIhofp41B7RRYVAnXfelpPiCxvn/aom7YtDH0TfH
-	 yajAm0QdIRRhECFur5Jx79akg2LFHHNbapzncxW4rWXWshuG2DLdx/bbWU7cbyVvDl
-	 v4F57NbDhrsbf539j/Tg3HxwOb8z6OlkP99lHa1a2SgJ8mLyY9YJY0jn3jDoa6fJtH
-	 ajk/EugAmUcF7/FEU0+jdTwBsnweZvPqup8wt2/Z09WnCZ9u5vNEmZQMnemQpZ2bsW
-	 WzbinoOlLwyHQ==
-Date: Sun, 17 Mar 2024 12:54:11 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shradha Todi <shradha.t@samsung.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 9/9] PCI: endpoint: Set prefetch when allocating
- memory for 64-bit BARs
-Message-ID: <ZfbZ45-ZWZG6Wkcv@ryzen>
-References: <20240313105804.100168-1-cassel@kernel.org>
- <20240313105804.100168-10-cassel@kernel.org>
- <20240315064408.GI3375@thinkpad>
- <9173aa22-4c15-40ec-bf70-39d25eebe4c2@app.fastmail.com>
+	b=uQozQc8gbodC6KvNGzCsF9tEaq1ZXPHr/ZCwmtz+4zNnZaaAeaolAH4IiW7BtsiXD
+	 A++0Do+rE427NeibdWKRcW2D+CoctBncoYacjXixE7QZ1J5U+LQo2ZJKd7yABOq1Fd
+	 KkP1sN39X2oA6G64NSbbWwYQk8Ds8HEbBzsF3CU9ls2nVmMYqWxU9nUINN4as1bE8Z
+	 PB/BvjjGbY2tgBT2S1lbaKPpB05s+Bpq/oytolz89AMYApRqnzs/KjaoDKjdR9Uh5B
+	 aUecHpRB2dQOOSZ4FYufrOgujp34GQ1c0j83eoX0TSXFKo9ebmyoF7jEespYlPz77G
+	 vB1tKj8wH3X5A==
+Date: Sun, 17 Mar 2024 20:24:06 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] PCI: qcom: Disable ASPM L0s for sc8280xp, sa8540p
+ and sa8295p
+Message-ID: <5o5vbnxfsiokjf2ahrppr26oyuqhwhdos3374r3zpexunhc5j7@yquaupvfywbz>
+References: <20240306095651.4551-1-johan+linaro@kernel.org>
+ <20240306095651.4551-4-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,107 +63,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9173aa22-4c15-40ec-bf70-39d25eebe4c2@app.fastmail.com>
+In-Reply-To: <20240306095651.4551-4-johan+linaro@kernel.org>
 
-Hello all,
-
-On Fri, Mar 15, 2024 at 06:29:52PM +0100, Arnd Bergmann wrote:
-> On Fri, Mar 15, 2024, at 07:44, Manivannan Sadhasivam wrote:
-> > On Wed, Mar 13, 2024 at 11:58:01AM +0100, Niklas Cassel wrote:
-> >> "Generally only 64-bit BARs are good candidates, since only Legacy
-> >> Endpoints are permitted to set the Prefetchable bit in 32-bit BARs,
-> >> and most scalable platforms map all 32-bit Memory BARs into
-> >> non-prefetchable Memory Space regardless of the Prefetchable bit value."
-> >> 
-> >> "For a PCI Express Endpoint, 64-bit addressing must be supported for all
-> >> BARs that have the Prefetchable bit Set. 32-bit addressing is permitted
-> >> for all BARs that do not have the Prefetchable bit Set."
-> >> 
-> >> "Any device that has a range that behaves like normal memory should mark
-> >> the range as prefetchable. A linear frame buffer in a graphics device is
-> >> an example of a range that should be marked prefetchable."
-> >> 
-> >> The PCIe spec tells us that we should have the prefetchable bit set for
-> >> 64-bit BARs backed by "normal memory". The backing memory that we allocate
-> >> for a 64-bit BAR using pci_epf_alloc_space() (which calls
-> >> dma_alloc_coherent()) is obviously "normal memory".
-> >> 
-> >
-> > I'm not sure this is correct. Memory returned by 'dma_alloc_coherent' is not the
-> > 'normal memory' but rather 'consistent/coherent memory'. Here the question is,
-> > can the memory returned by dma_alloc_coherent() be prefetched or write-combined
-> > on all architectures.
-> >
-> > I hope Arnd can answer this question.
+On Wed, Mar 06, 2024 at 10:56:49AM +0100, Johan Hovold wrote:
+> Commit 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting
+> 1.9.0 ops") started enabling ASPM unconditionally when the hardware
+> claims to support it. This triggers Correctable Errors for some PCIe
+> devices on machines like the Lenovo ThinkPad X13s when L0s is enabled,
+> which could indicate an incomplete driver ASPM implementation or that
+> the hardware does in fact not support L0s.
 > 
-> I think there are three separate questions here when talking about
-> a scenario where a PCI master accesses memory behind a PCI endpoint:
-
-I think the question is if the PCI epf-core, which runs on the endpoint
-side, and which calls dma_alloc_coherent() to allocate backing memory for
-a BAR, can set/mark the Prefetchable bit for the BAR (if we also set/mark
-the BAR as a 64-bit BAR).
-
-The PCIe 6.0 spec, 7.5.1.2.1 Base Address Registers (Offset 10h - 24h),
-states:
-"Any device that has a range that behaves like normal memory should mark
-the range as prefetchable. A linear frame buffer in a graphics device is
-an example of a range that should be marked prefetchable."
-
-Does not backing memory allocated for a specific BAR using
-dma_alloc_coherent() on the EP side behave like normal memory from the
-host's point of view?
-
-
-
-On the host side, this will mean that the host driver sees the
-Prefetchable bit, and as according to:
-https://docs.kernel.org/driver-api/device-io.html
-The host might map the BAR using ioremap_wc().
-
-Looking specifically at drivers/misc/pci_endpoint_test.c, it maps the
-BARs using pci_ioremap_bar():
-https://elixir.bootlin.com/linux/v6.8/source/drivers/pci/pci.c#L252
-which will not map it using ioremap_wc().
-(But the code we have in the PCI epf-core must of course work with host
-side drivers other than pci_endpoint_test.c as well.)
-
-
+> This has now been confirmed by Qualcomm to be the case for sc8280xp and
+> its derivate platforms (e.g. sa8540p and sa8295p). Specifically, the PHY
+> configuration used on these platforms is not correctly tuned for L0s and
+> there is currently no updated configuration available.
 > 
-> - The CPU on the host side ususally uses ioremap() for mapping
->   the PCI BAR of the device. If the BAR is marked as prefetchable,
->   we usually allow mapping it using ioremap_wc() for write-combining
->   or ioremap_wt() for a write-through mappings that allow both
->   write-combining and prefetching. On some architectures, these
->   all fall back to normal register mappings which do none of these.
->   If it uses write-combining or prefetching, the host side driver
->   will need to manually serialize against concurrent access from
->   the endpoint side.
+> Add a new flag to the driver configuration data and use it to disable
+> ASPM L0s on sc8280xp, sa8540p and sa8295p for now.
 > 
-> - The endpoint device accessing a buffer in memory is controlled
->   by the endpoint driver and may decide to prefetch data into a
->   local cache independent of the other two. I don't know if any
->   of the suppored endpoint devices actually do that. A prefetch
->   from the PCI host side would appear as a normal transaction here.
+> Note that only the 1.9.0 ops enable ASPM currently.
 > 
-> - The local CPU on the endpoint side may access the same buffer as
->   the endpoint device. On low-end SoCs the DMA from the PCI
->   endpoint is not coherent with the CPU caches, so the CPU may
+> Fixes: 9f4f3dfad8cf ("PCI: qcom: Enable ASPM for platforms supporting 1.9.0 ops")
+> Cc: stable@vger.kernel.org      # 6.7
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-I don't follow. When doing DMA *from* the endpoint, then the DMA HW
-on the EP side will read or write data to a buffer allocated on the
-host side (most likely using dma_alloc_coherent()), but what does
-that got to do with how the EP configures the BARs that it exposes?
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-
->   need to map it as uncacheable to allow data consistency with
->   a the CPU on the PCI host side. On higher-end SoCs (e.g. most
->   non-ARM ones) DMA is coherent with the caches, so the CPU
->   on the endpoint side may map the buffer as cached and
->   still be coherent with a CPU on the PCI host side that has
->   mapped it with ioremap().
-
-
-Kind regards,
-Niklas
+Regards,
+Bjorn
 
