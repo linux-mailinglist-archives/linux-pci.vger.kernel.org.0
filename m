@@ -1,184 +1,153 @@
-Return-Path: <linux-pci+bounces-4875-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4876-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D14C87E40C
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 08:26:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D4A887EBD2
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 16:13:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3C31281509
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 07:26:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1A7D1F2155B
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 15:13:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BB70224CC;
-	Mon, 18 Mar 2024 07:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A36F4E1C5;
+	Mon, 18 Mar 2024 15:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fOIN7cM/";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Dmc+5RJr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qesTpJ1U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fhigh3-smtp.messagingengine.com (fhigh3-smtp.messagingengine.com [103.168.172.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247C612B76
-	for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 07:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F6D4F1E0
+	for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 15:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710746762; cv=none; b=chy3grfpclqQ4Pmg76oC3zLc+PpE17B6Uq+iapCBGIB/eF9QEh9mttK3MEribTP20IQcV2ZYDXZ+/sfGUTPWSPKg6SffV7wVyPRNFj+MzDnzA8ZUsD7E2WLCdGr6PZ7fY/3G4BSTuBqaMQMymdzJjNBUtoOfR99fKqHg6HHqB6w=
+	t=1710774823; cv=none; b=TM0p7K7+rzU9ltWleEbpOgoc0sqAxJ8W0XJyrKEb0y+zkx2C2cSVGDynyJjWNq0ldEc5vXsHWtmGzmT8Mt82rFgXgBggrLClb1ZZ8pS2wFaZTK90zBJJ64yXrzxCrSmU9LWcbnWf5+rlOX7zIxZ0Xq9LFEk++H2axPUhXAd6wIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710746762; c=relaxed/simple;
-	bh=dslN9uL0e4grsl3emI/kjAZtvp0LEJcxh7soIQ4HJGw=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=IISF7HSK0oYDomZ9nhvLwjQkDgzI4c5tUYUS/kTR7dyPI9ue6UYpLDjRjYZwEuuQf4N2gLdmZGUCcOuWzNz9hoEkxjjkXG8NInntRGAGh1PZDQG6nk8KcTx2e2pU6MONaYicbOP1fj/d01B5HNhAFXOU8HfXUFVPwKjsC1F9X5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fOIN7cM/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Dmc+5RJr; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 31A1C11400C8;
-	Mon, 18 Mar 2024 03:25:59 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 18 Mar 2024 03:25:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1710746759; x=1710833159; bh=wfbyFOM/Vl
-	9fLSGHcpsdFs51qjBYAbVxcIeZsaEEB5U=; b=fOIN7cM/f5nN6gjomOSZAvY+Xk
-	ngGHAyFNSbosUt0/qj9j0TC//Z2WgnGe2Qg086BeQa684N48/KeOL0EK/XQ9nlkR
-	Gmxv+P1NdrV1XDaFgz+O/L1Qeng9TSAe7toFYXk4BOuM91gbJcCPyIUZeWsdiqHX
-	YwU692QhjTkHYHyjw+eCM4we+A109zlqPGRuGgcXj/U9Hxgbpi5z7n2ke/Z3vaXl
-	YVYj+xeQwK9169KXuRU16idg0JmEGVtr9NgV/z2g73FiyYjPXQ8C2nbLmX9Je9YB
-	/r3srs+tEA1Mj64W7BD9Yn58fFmbAEKMstbV5uiDaqypQqNpQ6GOO8qOfWmQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1710746759; x=1710833159; bh=wfbyFOM/Vl9fLSGHcpsdFs51qjBY
-	AbVxcIeZsaEEB5U=; b=Dmc+5RJrj7p0oZQK6j62bxEcCmeLzAs+8wdk1XD1FtbC
-	7zAFXiu4Pt2FYfqT082w2PzaBb1Kj0ubYH2D2Oh7X7IgQVg0Th5W71QikNP3aKug
-	ozk5NKnlKlkrJzNmsa4/wbnog3HVvIbWWt+Psx7p2MS+pXJz0oNAv/C+3XV4IiZK
-	aj7IlurzdhGY7VIJ1578oYNZj7bJZDU3wiuc6P+DM95fWzW1zKgvLbf0WRzqGScq
-	Qaog080pQkX3qevY+g5hV4rlGAN/y0teo+Y3R49qNHRJRR2aAChrjJnbVqC4VPDx
-	p7cHCuUiIxY4nIp2tkobKzE5LEIE6LPR4fuOL0EunA==
-X-ME-Sender: <xms:hez3ZaYRln8V5fe6qPnBdEDUsEDwAlSyhE6qCGiR0HXGQNlFo_3PeQ>
-    <xme:hez3ZdbDvqdQW_JG9FZ_rA3auEp2nhjywV2dqjyQq7bulTr0_oz5F0HgFx7s1c1Tf
-    KiHMHe3ZttyaaZySXg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeeigddutdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepiefhteffiedutdevhedutdelhfehkeehgeevteegudegtefghefhhfetudei
-    ieefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggv
-X-ME-Proxy: <xmx:huz3ZU_-0-RzxfDDCu1ZPgketAs942b10vO1Mjo8SmN7sPMCR2lLWQ>
-    <xmx:huz3ZcqtdRxDm6BCPARya7VSz0rbdJT9S2QIhAHG3g6yUtcFH4u-Kg>
-    <xmx:huz3ZVo_unZxFd0yL0DLCm34wRBh_Nrnc2Fb1JYE8icxcqDrK4RSKA>
-    <xmx:huz3ZaRxFtYQiEFg5Eiy2duoEJ5CdHMsmJJXsBel57WOYBn9wpOKLw>
-    <xmx:h-z3ZShc9553J47eSeJkS3mO9gQniYb9x8eP6afIxduzWe6XEMdMUw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D7B15B6008D; Mon, 18 Mar 2024 03:25:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-300-gdee1775a43-fm-20240315.001-gdee1775a
+	s=arc-20240116; t=1710774823; c=relaxed/simple;
+	bh=IlU/Kzwz4QV9EcZ9elStkgnRHAO/5o9xBH6Odcd9Qs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdnY5QA6u4K+I1BOwyrF9kR/sPPuToktWktB9AUM5pmJhEmm5BEL/IS8RVS7O4p4TVWDM3l3VFssD0hAfHiFZg+Pt6E0apl+Bw73Zr+jeIJG5fKgWd/kGoJfxGY+DgBzBNpE8ehu8SRvXLbxdhX47cxDR82dv5gaOkL/E0YG3aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qesTpJ1U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95856C433F1;
+	Mon, 18 Mar 2024 15:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710774822;
+	bh=IlU/Kzwz4QV9EcZ9elStkgnRHAO/5o9xBH6Odcd9Qs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qesTpJ1U0Nm3gvGiWoJ+GyLMWvJPLq7vr7hCTJLlf9NWhfJtsGZlL9oSnpFz0vjbT
+	 86kimMhK4nwJJG+ILpcaKJS5Ers9EY5PAuo3nagH2B7WyhvrBK1sVbI95zlM+kur8E
+	 2ftYMPh+BCeX2/bm52fu+nXr6EincFwYELeTbmaD2iawEoKWgQiJIbyh2e2grVyxc+
+	 NwNn+PY3zg6/38b+aKE+sSOzlliXfJBJDWFKrvu0/uKEJqobvedCVxP2juJSeFur2L
+	 3nw5ViNoQyEBzcHwVb5jDUZTTkYSUChSkoqoFLkg79HrHDawRRdbrLi+ciXqRgzu2z
+	 L+qtvOPNmIrHw==
+Date: Mon, 18 Mar 2024 16:13:37 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shradha Todi <shradha.t@samsung.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 9/9] PCI: endpoint: Set prefetch when allocating
+ memory for 64-bit BARs
+Message-ID: <ZfhaIbTcy0vgdT1A@ryzen>
+References: <20240313105804.100168-1-cassel@kernel.org>
+ <20240313105804.100168-10-cassel@kernel.org>
+ <20240315064408.GI3375@thinkpad>
+ <9173aa22-4c15-40ec-bf70-39d25eebe4c2@app.fastmail.com>
+ <ZfbZ45-ZWZG6Wkcv@ryzen>
+ <7003f4e3-fe3c-43d7-8562-efaacc3d65d3@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7003f4e3-fe3c-43d7-8562-efaacc3d65d3@app.fastmail.com>
-In-Reply-To: <ZfbZ45-ZWZG6Wkcv@ryzen>
-References: <20240313105804.100168-1-cassel@kernel.org>
- <20240313105804.100168-10-cassel@kernel.org> <20240315064408.GI3375@thinkpad>
- <9173aa22-4c15-40ec-bf70-39d25eebe4c2@app.fastmail.com>
- <ZfbZ45-ZWZG6Wkcv@ryzen>
-Date: Mon, 18 Mar 2024 08:25:36 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Niklas Cassel" <cassel@kernel.org>
-Cc: "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "Kishon Vijay Abraham I" <kishon@kernel.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Shradha Todi" <shradha.t@samsung.com>,
- "Damien Le Moal" <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
- "Christoph Hellwig" <hch@lst.de>
-Subject: Re: [PATCH v3 9/9] PCI: endpoint: Set prefetch when allocating memory for
- 64-bit BARs
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7003f4e3-fe3c-43d7-8562-efaacc3d65d3@app.fastmail.com>
 
-On Sun, Mar 17, 2024, at 12:54, Niklas Cassel wrote:
-> On Fri, Mar 15, 2024 at 06:29:52PM +0100, Arnd Bergmann wrote:
->> On Fri, Mar 15, 2024, at 07:44, Manivannan Sadhasivam wrote:
->> 
->> I think there are three separate questions here when talking about
->> a scenario where a PCI master accesses memory behind a PCI endpoint:
->
-> I think the question is if the PCI epf-core, which runs on the endpoint
-> side, and which calls dma_alloc_coherent() to allocate backing memory for
-> a BAR, can set/mark the Prefetchable bit for the BAR (if we also set/mark
-> the BAR as a 64-bit BAR).
->
-> The PCIe 6.0 spec, 7.5.1.2.1 Base Address Registers (Offset 10h - 24h),
-> states:
-> "Any device that has a range that behaves like normal memory should mark
-> the range as prefetchable. A linear frame buffer in a graphics device is
-> an example of a range that should be marked prefetchable."
->
-> Does not backing memory allocated for a specific BAR using
-> dma_alloc_coherent() on the EP side behave like normal memory from the
-> host's point of view?
+Hello Arnd,
 
-I'm not sure I follow this logic: If the device wants the
-buffer to act like "normal memory", then it can be marked
-as prefetchable and mapped into the host as write-combining,
-but I think in this case you *don't* want it to be coherent
-on the endpoint side either but use a streaming mapping with
-explicit cache management instead.
+On Mon, Mar 18, 2024 at 08:25:36AM +0100, Arnd Bergmann wrote:
+> 
+> I'm not sure I follow this logic: If the device wants the
+> buffer to act like "normal memory", then it can be marked
+> as prefetchable and mapped into the host as write-combining,
+> but I think in this case you *don't* want it to be coherent
+> on the endpoint side either but use a streaming mapping with
+> explicit cache management instead.
+> 
+> Conversely, if the endpoint side requires a coherent mapping,
+> then I think you will want a strictly ordered (non-wc,
+> non-frefetchable) mapping on the host side as well.
+> 
+> It would be helpful to have actual endpoint function drivers
+> in the kernel rather than just the test drivers to see what type
+> of serialization you actually want for best performance on
+> both sides.
 
-Conversely, if the endpoint side requires a coherent mapping,
-then I think you will want a strictly ordered (non-wc,
-non-frefetchable) mapping on the host side as well.
+Yes, that would be nice.
 
-It would be helpful to have actual endpoint function drivers
-in the kernel rather than just the test drivers to see what type
-of serialization you actually want for best performance on
-both sides.
+This specific API, pci_epf_alloc_space(), is only used by the
+following drivers:
+drivers/pci/endpoint/functions/pci-epf-test.c
+drivers/pci/endpoint/functions/pci-epf-ntb.c
+drivers/pci/endpoint/functions/pci-epf-vntb.c
 
-Can you give a specific example of an endpoint that you are
-actually interested in, maybe just one that we have a host-side
-device driver for in tree?
+pci_epf_alloc_space() is only used to allocate backing
+memory for the BARs.
 
-> On the host side, this will mean that the host driver sees the
-> Prefetchable bit, and as according to:
-> https://docs.kernel.org/driver-api/device-io.html
-> The host might map the BAR using ioremap_wc().
->
-> Looking specifically at drivers/misc/pci_endpoint_test.c, it maps the
-> BARs using pci_ioremap_bar():
-> https://elixir.bootlin.com/linux/v6.8/source/drivers/pci/pci.c#L252
-> which will not map it using ioremap_wc().
-> (But the code we have in the PCI epf-core must of course work with host
-> side drivers other than pci_endpoint_test.c as well.)
 
-It is to some degree architecture specific here. On powerpc
-and i386 with MTTRs, any prefetchable BAR will be mapped as
-write-combining IIRC, but on arm and arm64 it only depends on
-whether the host side driver uses ioremap() or ioremap_wc().
+> 
+> Can you give a specific example of an endpoint that you are
+> actually interested in, maybe just one that we have a host-side
+> device driver for in tree?
 
->> - The local CPU on the endpoint side may access the same buffer as
->>   the endpoint device. On low-end SoCs the DMA from the PCI
->>   endpoint is not coherent with the CPU caches, so the CPU may
->
-> I don't follow. When doing DMA *from* the endpoint, then the DMA HW
-> on the EP side will read or write data to a buffer allocated on the
-> host side (most likely using dma_alloc_coherent()), but what does
-> that got to do with how the EP configures the BARs that it exposes?
+I personally just care about pci-epf-test, but obviously I don't
+want to regress any other user of pci_epf_alloc_space().
 
-I meant doing DMA to the memory of the endpoint side, not the
-host side. DMA to the host side memory is completely separate
-from this question.
+Looking at the endpoint side driver:
+drivers/pci/endpoint/functions/pci-epf-test.c
+and the host side driver:
+drivers/misc/pci_endpoint_test.c
 
-     Arnd
+On the RC side, allocating buffers that the EP will DMA to is
+done using: kzalloc() + dma_map_single().
+
+On EP side:
+drivers/pci/endpoint/functions/pci-epf-test.c
+uses dma_map_single() when using DMA, and signals completion using MSI.
+
+On EP side:
+When reading/writing to the BARs, it simply does:
+READ_ONCE()/WRITE_ONCE():
+https://github.com/torvalds/linux/blob/v6.8/drivers/pci/endpoint/functions/pci-epf-test.c#L643-L648
+
+There is no dma_sync(), so the pci-test-epf driver currently seems to
+depend on the backing memory being allocated by dma_alloc_coherent().
+
+
+> If you don't care about ordering on that level, I would use
+> dma_map_sg() on the endpoint side and prefetchable mapping on
+> the host side, with the endpoint using dma_sync_*() to pass
+> buffer ownership between the two sides, as controlled by some
+> other communication method (non-prefetchable BAR, MSI, ...).
+
+I don't think that there is no big reason why pci-epf-test is
+implemented using dma_alloc_coherent() rather than dma_sync()
+for the memory backing the BARs, but that is the way it is.
+
+Since I don't feel like totally rewriting pci-epf-test, and since
+you say that we shouldn't use dma_alloc_coherent() for the memory
+backing the BARs together with exporting the BAR as prefetchable,
+I will drop this patch from the series in the next revision.
+
+
+Kind regards,
+Niklas
 
