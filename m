@@ -1,129 +1,96 @@
-Return-Path: <linux-pci+bounces-4881-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4882-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D2F287F0BF
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 21:03:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E00B87F5A0
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 03:50:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C87AF284309
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Mar 2024 20:03:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F34871F22108
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 02:50:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1986B56B6E;
-	Mon, 18 Mar 2024 20:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 103987D090;
+	Tue, 19 Mar 2024 02:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="MAeA5Eat";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fI2Jfaza"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgfzH/r9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wfhigh7-smtp.messagingengine.com (wfhigh7-smtp.messagingengine.com [64.147.123.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B84757872
-	for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 20:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EB07D084;
+	Tue, 19 Mar 2024 02:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710792167; cv=none; b=PxnlztXk7TDWY9iMszc+UyYcUYKNRBn5gDcAC8pm0Na2pU5lbj6QGJStVc0cRRu8SSp7ZU8e1PlMLlXPIrJq4KbiKQRVqygjA2F+tjFapoqyTolwfhJ5OLcqrHwRd1Cd3yqLpoQqwP0tj5nqXwAhR1N5XYbBCtCX99Eo5xxiJOg=
+	t=1710816539; cv=none; b=grwTB8rxf2c1INeTGVV511bd2GlAQhKqQFlEzGdmp8rAc4ptWq8C15XXW/9n3Ozraf0SXM/UzsSu9Fu5hKfV5GmHr56DlAVRsOOv9ELyPgQi3XK5furOyHOu7gLTVbciQJDwXtm/Ks6FBZS5AN9WqzWn2Z2hwEJO+ZmQ3Ce7HH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710792167; c=relaxed/simple;
-	bh=KB0z+MB36pKhw98PUj1Sy6kLbaGHdQsG1P7s8Zqk9UU=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=cvckiwMyGG6W6I/kSTIqaHiUlDnQHIbxS8bxA8TB/xHq37rAI5QpqGUpkwPq7kxaJRhMr/oylyQW0y0QJ9xc+kH2gJ7ikzLqJyb2CNJQQ2XxAvupD4BWnMlEt0l29s2H8TtNusfO7nAG0ihyCrhHgcszZsAbabbr6DaMDykj9yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=MAeA5Eat; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fI2Jfaza; arc=none smtp.client-ip=64.147.123.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 4CCF618000F5;
-	Mon, 18 Mar 2024 16:02:43 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 18 Mar 2024 16:02:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1710792162; x=1710878562; bh=7MZ5OI9z3E
-	Rgcq3ZmgPoCCuCu8EdJ05tOEH5pugSFM0=; b=MAeA5Eata4cAd+iv2qTLV0Cr8i
-	ak1BybMMUmXsJmy8AYDh49EmyrNLWXvsETAExJYNUTIJDHsqKtKEDQhe+Pj9J2Fn
-	n1LicvIjp+YT0+V/IG9lBbW0yKV693h0pknlpqNAUdXfT+1cL2R1WN+gdLFzIRjq
-	vZ+gfCpdbpX8BTrbF01l5FkNEa1JMd5LOhaii/MN5tLGcuGHwcRlbLC+PnE0teMj
-	dfT+xdCm9BmMnsemlHPylkpbZp+2KwbYehMTqGAYzBAcewMHNmjQIunoW4/Ux7Gb
-	dgekm8oN9IO9oYIEWqsrz09iIK7rRlaPyU6DVhRHna7ZHlB4PNZ/Cyx92BUA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1710792162; x=1710878562; bh=7MZ5OI9z3ERgcq3ZmgPoCCuCu8Ed
-	J05tOEH5pugSFM0=; b=fI2JfazaRa9iQFccCcvzBIJeoi2xp9NJ8G4f/KY+OZr9
-	hC45L7pmTqrAkCdjHTgdm1UwYJN+b0fdZHXzokS2/oKdPV0BuyNShx7voy7+DLIq
-	nilN4Lmu/ktMGtxtsdk489LKmqchEhZDzkLBXv42s0IgEa7SVOtvchWUkp9UmcK8
-	QkdAVsMQjMu/MyBcvHao7dmjnTTbqQw6s1mbLW+NtNHdPB3v8uOcgI6m7ResEAqV
-	nUNw5tZyOjfZeKFiwJLreApPwGs4bCtTbDUnhyL7zQ6wbZry+Q8SXNkaGfeOKpTV
-	Qn7FTblPExV+RP6cAk8rlmU2Vrobt5c3NK6Ki7L7ng==
-X-ME-Sender: <xms:4p34ZZzYZykYGIL3VPz1YQMQFXqvfrwpSTf8q9fCX6B5Mk1XTEdPRg>
-    <xme:4p34ZZR-mS3ulw60IpydKJW7lrUVXDYFrO5m1FBSoBqWWC11CT3KyoBeJIggprVOd
-    yhVDZQeacw6RzIoyvk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrkeejgddufedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:4p34ZTU15FFmYNXpGCD6-1voqXZep-61wRSolbjTdST2yCv8LsOE3A>
-    <xmx:4p34Zbixty3eASGxtN2Fu5HCHT4wuGKttF87YC9-H-S2J-lcQW-Sqw>
-    <xmx:4p34ZbC_xSLU_GGUgBuYwXkS79ryrZlpq-zBvWfqF4f-7WGBFw4y0Q>
-    <xmx:4p34ZUJakU-wJm5jgSrp5er9etD7pGJj_3RbwJeXKl4RvCVI9h0zoQ>
-    <xmx:4p34ZdDVb5QKaPwvh4hCaqp_ewAesiTiKuVVoDUXZRrN99zQKQ9JQxQcENc>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3133DB6008F; Mon, 18 Mar 2024 16:02:42 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-300-gdee1775a43-fm-20240315.001-gdee1775a
+	s=arc-20240116; t=1710816539; c=relaxed/simple;
+	bh=XYgXFl74q/2Yhrqf8zZY5j77OL/riLRi+IZAuY5h9yc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YwZd6i2MJyWPLzpqlZt94uM2OuZO4hCcrwY9AhX9dhmQVFlp/Z8avetFWVjtNg7aI72euvYUOLOHY2mO/WmLbSqk/ZTLyhVIt6Qpc6i6H3okdphw7H8tDs0HfpUXYNT5fIXxS8zGmK4bI2sx/sOiKrJupotkdj2Q/pcdEr0qO9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgfzH/r9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB48C41674;
+	Tue, 19 Mar 2024 02:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710816538;
+	bh=XYgXFl74q/2Yhrqf8zZY5j77OL/riLRi+IZAuY5h9yc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dgfzH/r9kC2uJUxHbn/OBZugdktyFXyN4Jlx465YBYhI0oeajpv+63K0ze/TNA6Dv
+	 Y4uFxQzIMFANhRoLB2RJmrEtuQtyLK24W1bOVlHDU1NAH2GJUnIGJjJcbCUm5pnmvT
+	 2SuCSuVSc51HQ8k3zR2d6diBHCEFNUZD5Eh/XW5JMbIzHsDCovDFInNespufcmvQol
+	 +FpwYXLz33BUK4mzH1/gnbMo5Dl1uVb5SVPKfkWQLqVzFBMwgdCwgNeCBNfGMiJnUe
+	 XleNKaOCiY+rkwe53womwGlbRTDfBcLW63qHI2AjOuJnCHGHbQCaja2U75hDImipLX
+	 ldD/rnyKGZFXA==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Johan Hovold <johan+linaro@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v4 0/5] arm64: dts: qcom: sc8280xp: PCIe fixes and GICv3 ITS enable
+Date: Mon, 18 Mar 2024 21:48:30 -0500
+Message-ID: <171081652637.198276.6219023769904423414.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240306095651.4551-1-johan+linaro@kernel.org>
+References: <20240306095651.4551-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <8194c85c-cdc8-431a-a2fc-50569475b160@app.fastmail.com>
-In-Reply-To: <20240318193019.123795-1-cassel@kernel.org>
-References: <20240318193019.123795-1-cassel@kernel.org>
-Date: Mon, 18 Mar 2024 21:02:21 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Niklas Cassel" <cassel@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "Kishon Vijay Abraham I" <kishon@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Damien Le Moal" <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] misc: pci_endpoint_test: Use memcpy_toio()/memcpy_fromio() for BAR
- tests
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 18, 2024, at 20:30, Niklas Cassel wrote:
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 705029ad8eb5..cb6c9ccf3a5f 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -272,31 +272,59 @@ static const u32 bar_test_pattern[] = {
->  	0xA5A5A5A5,
->  };
+
+On Wed, 06 Mar 2024 10:56:46 +0100, Johan Hovold wrote:
+> This series addresses a few problems with the sc8280xp PCIe
+> implementation.
 > 
-> +static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
-> +					enum pci_barno barno, int offset,
-> +					void *write_buf, void *read_buf,
-> +					int size)
-> +{
-> +	memset(write_buf, bar_test_pattern[barno], size);
-> +	memcpy_toio(test->bar[barno] + offset, write_buf, size);
-> +
-> +	/* Make sure that reads are performed after writes. */
-> +	mb();
-> +	memcpy_fromio(read_buf, test->bar[barno] + offset, size);
+> The DWC PCIe controller can either use its internal MSI controller or an
+> external one such as the GICv3 ITS. Enabling the latter allows for
+> assigning affinity to individual interrupts, but results in a large
+> amount of Correctable Errors being logged on both the Lenovo ThinkPad
+> X13s and the sc8280xp-crd reference design.
+> 
+> [...]
 
-Did you see actual bugs without the barrier? On normal PCI
-semantics, a read will always force a write to be flushed first.
+Applied, thanks!
 
-     Arnd
+[4/5] arm64: dts: qcom: sc8280xp: add missing PCIe minimum OPP
+      commit: 2b621971554a94094cf489314dc1c2b65401965c
+[5/5] arm64: dts: qcom: sc8280xp: enable GICv3 ITS for PCIe
+      commit: 81051f14a66c3913f1d219bd97e47002f1dc91de
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
 
