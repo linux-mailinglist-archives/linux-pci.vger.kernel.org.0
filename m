@@ -1,191 +1,270 @@
-Return-Path: <linux-pci+bounces-4908-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4909-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66334880236
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:27:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0847588023C
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:28:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0210B24EAD
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:27:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E098B24F34
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:28:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 882F68594D;
-	Tue, 19 Mar 2024 16:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0344657D1;
+	Tue, 19 Mar 2024 16:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KeohA///"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yb64n/pG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2082.outbound.protection.outlook.com [40.107.7.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3208287C;
-	Tue, 19 Mar 2024 16:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710865385; cv=fail; b=mMU3O5BZHPpwKPLJ7GYHfUk7WrTHh/W8ao253il0oaWI5gcki4JYh4NDCebSCczr2UsG2jw4Y/YeY2O+OrxRUwLDCQ+fiwYC1uyWvGiC7Nn9LoXrl1aWnSpcnlpUHePDgjuf8bwj1AwbG6udtcqSoLMfWe7uh06SfL1CnGreH+w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710865385; c=relaxed/simple;
-	bh=rpgsL+rID3pr44STmdJrAj1rGp2VEmwyFZlPt/lu/3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Uh1eSgtBgHjIv4AAJ9jWwr8PffU7lzFzK2zPLrVlPWH6p7MUPpN35QkbvwBCurHsc8jiO5e+lPs6NiCE0U8iEkZWS2JhmPcepKDvIxirRItFYDv4sfIESg2N8NBvWflzKEPr8xsAFSzR5BDjCWFhLRcHec7Dma2s85cYwNleCzY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=KeohA///; arc=fail smtp.client-ip=40.107.7.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=anD54fRmvNYpM6aHhVn4nl/pqTvECgOd+r+V/0CN1wHd2tH2famrEKH/0GXEcza8Cubw8hqAXGz3RLjbICudr2ovYvAhBjaj+gz5VngN6MX27lNz0faHtybq8bAV54yeg6D1EZPESOBwwlMz/Ui2QhTzuGdu1Z52dnvFINcW/m2CX+2EDnWOoDqDeBURZ03ZF2wbXfhncobBm3hSmWRaiJ1+pr7jgkC5ckfurJg7VqWUtLV4LNUM/+RoNY7KLkT8m+RpcTXmOgQuHFsPijDiQaHX0MuHNKO6a/s6IHV0jKeP0MBt4FA9HFjIOEKqWuuZ2YOkFOZPvdOLP+c/xMZGvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8qbIXjLq2Z91+0q2l2MmdMVF7cmMMhg12CLE9S7GmcQ=;
- b=FTGM44rj8NGGY5zuIL25J9ac8XeFEXi+VNuae4wrSfqL3hGAya+z7WJGYf+06pnykqded5r14uTXMsZFV/2xbrdFrtSKy+V3ACaJBlJi4cm+UhVcJP7jzLeAsONVSA4k2V1Rg9QiSOZrlkh5EZex6gadU2osCfBr9sgb1mQFxufsoi+7gLFICcPMe7nyDIr4Nu4qhAA2bk0CAYR12ELXo4P7Ue/5Zty+PaXfIEq1WZgH9bVjUGWgrtO09j3+g9DbXi5Vq/Zg60UCZ9BTieAL0NvZsqE0hYA3JWVU0Dxh4BineQmubBugBRtz7vF+H6oV+DIvUVXIzin1IqS5+IxqXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8qbIXjLq2Z91+0q2l2MmdMVF7cmMMhg12CLE9S7GmcQ=;
- b=KeohA///g5P8QvicvEWJKc9D0zjPuYxhJvVMISd2xgQmwt/qS/jqXBDWiGl/EZ9Lmi3N2Mq1AKUOxLRPGcFgRe7V/rKot6/hTx52REKAJUANyiWL4K/yO4HI59AI/hOIFtBpTbVH6CHrsMVba7P7S17QLvt/G+1vH7R5gFI5Mt0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM9PR04MB8097.eurprd04.prod.outlook.com (2603:10a6:20b:3e9::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Tue, 19 Mar
- 2024 16:23:00 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
- 16:23:00 +0000
-Date: Tue, 19 Mar 2024 12:22:51 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, manivannan.sadhasivam@linaro.org
-Cc: linux-pci@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] PCI: imx6: rename\clean up and add lut
- information for imx95
-Message-ID: <Zfm720fz9NE0fD/P@lizhi-Precision-Tower-5810>
-References: <20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240304-pci2_upstream-v2-0-ad07c5eb6d67@nxp.com>
-X-ClientProxiedBy: SJ0PR13CA0110.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACADD82890
+	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 16:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710865416; cv=none; b=qq+fZ2cWExOLEOhvBYANxSUqQBB/A/MYXV+WvJnrxhrlvFz5FW7U4Mxi5Q8oV7fZvu+bqiQ8eGdHHmJDr6kFqNGCg1TFEgozv905R4/WNcrWwsNQ3F9Z+M05jNmwvaJuTMCMbVKmLSRsyGKpkmaMwjriTHlqHoaLy6lU/GluaMs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710865416; c=relaxed/simple;
+	bh=TbVFXLuiB0reAAKeJXGmfOd0s6mNmic69PS/zzlugVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=HlUsFj4K9fvG9ce+8N5ZseUk36+bWlI9RrcZGNWGSBddCIuBYGIiJr4kHDuKWQPGrC2syiBL16O/DzJA9TlR1dcqM7WIdze7l41GV/rLPrbSr8EnZ/BxTKeWfc5LL7on9zjMp0+QBbhyBzKi5YVYQuV1ETINZZFp3fiXT7sTqps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yb64n/pG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8844C433C7;
+	Tue, 19 Mar 2024 16:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710865416;
+	bh=TbVFXLuiB0reAAKeJXGmfOd0s6mNmic69PS/zzlugVM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Yb64n/pGYFLnS2VRoE9dgKmDrZnNmSgcI6eSvDTUED9gxx4JAMYlcts16IMfGfO7y
+	 v/RbNR4bNw7FxZbVJKerHrGqaeX6Qh+mioF1XrV5RiGVyvOzROdbOSJu5xSJmF+RBZ
+	 Lq6+5P+xepuApe/8e2jf/3tRzRJ3oNDgAImkFSvZhG8dXDfWgwJjTRXsWpnK3UgJLk
+	 9gFnIrFKajBdcJ9zTDUvoB7ytzhIkmp8AiiiUPTj+95yVaAgoGFIdvg7TYLarmxuD9
+	 GGHGPPjxAV2vRFUxecOqXNc1O+d6EEUMGQc6tracKRIm/Hx6RRCPpXFG5cily1Aeoa
+	 uYaFC+qAg3fPA==
+Date: Tue, 19 Mar 2024 11:23:34 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Changhui Zhong <czhong@redhat.com>
+Cc: linux-pci@vger.kernel.org
+Subject: Re: [bug report] WARNING: CPU: 0 PID: 226 at drivers/pci/pci.c:2236
+ pci_disable_device+0xf4/0x100
+Message-ID: <20240319162334.GA1230451@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8097:EE_
-X-MS-Office365-Filtering-Correlation-Id: c08ee5b4-6872-4554-87df-08dc4830d83e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	CO5GYmVAQuSVa/AnfJwpV84AXWQMpzkbCpkx+OsSgk3c7D+mDOscUUPEt+vXoyE5HgZnIuyjd2brbc5NHw/93EgpnCf1Rl5zLWq9G4RIM/+uMfjVoeGA8jSsV/Cu+uTIznzzutbDPuXs/RXnH1vZkPskeVU+b/e0Gw7ZLuerNWXWbr69EHlihz93BehszUA7Rwpu6dDUHrTTOjrFK55Nj2EAjgUwr/tA1LpRJkMAtuS3CQ05tyMNTYFPqLjayL08ae6o37hJtDfryA5/e+YCzugmak7ejZCME4zt/u8U1DT8msTHP370szMBOvxw8RMx9lC+4mP1KWlgrJrVXus17TluiII/MBedk4EI6RmjZbH8e05E5t9av8ceS+wDB1UC0tUBJjaZGUebq/2vUv13eVbHqc+E/gSwts+X1u/+EbRnqnaC1ySNMG/jGdlygScvwhn+YTCGMDKiz5m/qfpXNKXYEC+ZP0Y3AEY8UIPW7on6+knHfbSxcKQOhoLi6OReVkPmWZjORJgcm9TbC+VcYRu2Jj1gmXTBX5BvkWc4hXjIFfsyrjtoZI+twBETIBjS+AjcJNljgZr3kQKETsr7TFRdbEtcQ1o4r5ndY+u16Sa26OdRvWglfgJb+2kvVJscM0pH5d5qgDnwgGk2e+FLocnMHHru26h2b60V9vkSAB+QcLIPz+Vr97/ZvmY0ISlv
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(52116005)(376005)(1800799015)(921011)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?EENKrxG7kfQpRBIjzPe2m8mTOODnIFlGdeQEVY2kNSFR+RgmExAGbdwxB+3B?=
- =?us-ascii?Q?pZb+GIz7yGIzXJC58GLv5GynTsXRwU/8g4fPH+XBpb9INn8c4Prqq5zJDUVP?=
- =?us-ascii?Q?z51BzSqko3owQo1NfoKSPFcuoo0wrC7V0NiWbNClKdje+m6a5RZWqFJw6ayW?=
- =?us-ascii?Q?5jq51ErlnxTlO9/e6dA8qRhMycx0nSnDEllY5vs5aI9I4i/BXi7d8erX4viY?=
- =?us-ascii?Q?NorqGWpq8BokFFIDEMe7yWZrgUD39nx6+99Zz/HcGKuuP7Q/jvazM8/gkSz9?=
- =?us-ascii?Q?inCWvZzy3VptJeVRt0kP2+xM8JLRyizzN2fEL4K8z4xP93JHzsWzZ21A5W7B?=
- =?us-ascii?Q?lh1wmFhwiHPe0g4N9diQfH4p3fsCLj5ug2IxV9GN+SKPan+TeZpxONkcmKJ6?=
- =?us-ascii?Q?BOA6r3p9tw+jFp8AcxUFr8ZdJR7VcjvVmlaA/vU8gF8uyz3/o+F7G99NpYPS?=
- =?us-ascii?Q?AQbEtQeCVnJtvaXEQLtC/xFVix+a3RrK6LCdr3gsYz3xcUWrwe0ejF/E+YX5?=
- =?us-ascii?Q?BRuVBq00FZZKdJvps7YmRYqhFa3CQFZdFCEbB79hO33BKw6yCmb7zBVo1Iih?=
- =?us-ascii?Q?qsELpOrrb+WWai5NwvJV8SzEg2I7SV+mBWeTaQwXbprCUfu02eRxKR//k58N?=
- =?us-ascii?Q?+izIlwTH+xYpuNlBakPX7Nu+cSBAP5PwQp8ubZg/ikbHu009ZLJngYWaR8Bm?=
- =?us-ascii?Q?jN05RCEjNRYmSEveStcqsAmNwRdW4TlIEngQy6acDqnJTsbNkg7mOt2yVplw?=
- =?us-ascii?Q?pFr0Fuz7wn8m+kVs1vlOBeDVzXnYuI+7gUzqMDQQXBComSnt7M0zaaKbAE7M?=
- =?us-ascii?Q?BluxCI8bTUd0ihl6SMwNg7x3wnmIjYxQXOjJjo+FP44Jt0xcj8O5S2xZZuYp?=
- =?us-ascii?Q?iMaw+FE6jZNTQQ3ZV368PBK7YsU1oqm09YgC0SUrIYWqFvpsTDRs6u917Twq?=
- =?us-ascii?Q?HjmJ682PrZm0DXCO0p+Ytj2RVOUu4JNCH4hfBJpZjJhAxtXNKiTFijXUNfVi?=
- =?us-ascii?Q?8qOd7PFOeyaX76JEsXYgKQC1IHN9nPtjtgAQ2Tejf10gkNaEmSDQkohlblor?=
- =?us-ascii?Q?PhQz15x443RfLvXo69kwNcP1grEF9cIyE0YcsRilwwywRhX8S6vIpyQW+Zh6?=
- =?us-ascii?Q?SowlaGh2VY8Z/tclU7tsaZkeLT7dvfozwlncfrcgxVdTdnPWCgOKiyZy885L?=
- =?us-ascii?Q?EK2W+dyM/bzl5tI+1Hp3KfCFYohmPq1ZNnJsQLbTlYsiEfDE3dMAbsohj8Qw?=
- =?us-ascii?Q?FfLFPZqxSlYl/agdo6JpMPMhxSJ6s/m9SVHXzw6+o/28FNKpcQnJyY27C+tl?=
- =?us-ascii?Q?/3Pn6mPGwoK2UJ43Q1oVaZkmWTc5eR5dppZ/IhdJam9kF8O11yrmfMQTvCVP?=
- =?us-ascii?Q?o1dmb+BpCDNSRaGPzaeIIGItj1RMFKC5Rn6WXxP0bI+pRJ448OxBYpfuuiIy?=
- =?us-ascii?Q?cIStG+/iarsqX0N41hKmii35VsGwG3iDLiFZ+fgORGBp+L4cizzwbTNrjX85?=
- =?us-ascii?Q?sRNKeILjqix/jDad+BbHkb7nmB0l4I0PovBI9IY6/xRcJvvbXNAr5b8NZ2r1?=
- =?us-ascii?Q?Ocn06FvO3T+OTYMZlKIzebs3vPL13U2jAqXj2FUw?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c08ee5b4-6872-4554-87df-08dc4830d83e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 16:23:00.4948
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TIEv5XfViNhuWlLwlMliytldMzzwMtW2pl0J1X7LkLa7kHOZBpE7vjh0w+WEtah2/L5DzeOvujH2KH3NpVOFDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8097
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGVVp+WyM-ce=c1L4p2EZfvLyxYZSHFkxKLad1TXXyNdVn1KYg@mail.gmail.com>
 
-On Mon, Mar 04, 2024 at 03:25:05PM -0500, Frank Li wrote:
-> imx6 actaully for all imx chips (imx6*, imx7*, imx8*, imx9*). To avoid     
-> confuse, rename all imx6_* to imx_*, IMX6_* to IMX_*. pci-imx6.c to        
-> pci-imx.c to avoid confuse.                                                
+On Tue, Mar 19, 2024 at 03:34:56PM +0800, Changhui Zhong wrote:
+> Hello,
 > 
-> Using callback to reduce switch case for core reset and refclk.            
-> 
-> Add imx95 iommux and its stream id information.                            
-> 
-> Base on linux-pci/controller/imx
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> branch: master
+> commit HEAD:b3603fcb79b1036acae10602bffc4855a4b9af80
 
-Add manivannan to TO list.
+Where's the rest of this?  I don't see "WARNING: CPU: 0 PID: 226 at
+drivers/pci/pci.c:2236" in the snippet below.  Please include or post
+the complete dmesg log.
 
-@mani:
-	Could you please help review these patches? 
+Is this reproducible?  If so, how?  And is it a regression?
 
-Frank
+> dmesg log:
+> Rebooting.
+> [  292.644951] {1}[Hardware Error]: Hardware error from APEI Generic
+> Hardware Error Source: 5
+> [  292.644955] {1}[Hardware Error]: event severity: fatal
+> [  292.644958] {1}[Hardware Error]:  Error 0, type: fatal
+> [  292.644959] {1}[Hardware Error]:   section_type: PCIe error
+> [  292.644960] {1}[Hardware Error]:   port_type: 0, PCIe end point
+> [  292.644962] {1}[Hardware Error]:   version: 3.0
+> [  292.644963] {1}[Hardware Error]:   command: 0x0002, status: 0x0010
+> [  292.644964] {1}[Hardware Error]:   device_id: 0000:01:00.1
+> [  292.644966] {1}[Hardware Error]:   slot: 0
+> [  292.644967] {1}[Hardware Error]:   secondary_bus: 0x00
+> [  292.644968] {1}[Hardware Error]:   vendor_id: 0x14e4, device_id: 0x165f
+> [  292.644969] {1}[Hardware Error]:   class_code: 020000
+> [  292.644971] {1}[Hardware Error]:   aer_uncor_status: 0x00100000,
+> aer_uncor_mask: 0x00010000
+> [  292.644972] {1}[Hardware Error]:   aer_uncor_severity: 0x000ef030
+> [  292.644973] {1}[Hardware Error]:   TLP Header: 40000001 0000020f
+> 90028090 00000000
 
-> ---
-> Changes in v2:
-> - remove file to 'pcie-imx.c'
-> - keep CONFIG unchange.
-> - Link to v1: https://lore.kernel.org/r/20240227-pci2_upstream-v1-0-b952f8333606@nxp.com
+aer_uncor_status 0x00100000 looks like bit 20, Unsupported Request.
+If I decoded it correctly, the TLP log says:
+
+  40000001: 0100 ... 0001
+    Fmt               010             3 DW header with data (PCIe r6.0, sec 2.2.1.1)
+    Type              0 0000          Memory Write
+    Length            1               1 DW
+
+  0000020f (sec 2.2.7.1)
+    Requester ID      0000
+    Tag               2
+    First DW BE       f               32-bit write
+
+  90028090
+    Address           90028090
+
+I don't see 0x90028090 as a BAR value in the lspci output below,
+although we don't have any information about possible address
+translation (this would be in the dmesg log or "lspci -b" output).
+
+But it *looks* like an MMIO write that got routed to 01:00.1 (the
+bridge window configuration that would be in the dmesg log would show
+this), and 01:00.1 said "I don't know about this address" (it doesn't
+match any of my BARs) and logged a UR error.
+
+> [  292.644976] Kernel panic - not syncing: Fatal hardware error!
+> [  292.644978] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0+ #1
+> [  292.644981] Hardware name: Dell Inc. PowerEdge R640/0X45NX, BIOS
+> 2.19.1 06/04/2023
+> [  292.644982] Call Trace:
+> [  292.644984]  <NMI>
+> [  292.644985]  panic+0x32b/0x350
+> [  292.644995]  __ghes_panic+0x69/0x70
+> [  292.645000]  ghes_in_nmi_queue_one_entry.constprop.0+0x1d9/0x2b0
+> [  292.645005]  ghes_notify_nmi+0x59/0xd0
+> [  292.645007]  nmi_handle+0x5b/0x150
+> [  292.645014]  default_do_nmi+0x40/0x100
+> [  292.645017]  exc_nmi+0x100/0x180
+> [  292.645019]  end_repeat_nmi+0xf/0x53
+> [  292.645023] RIP: 0010:intel_idle+0x59/0xa0
+> [  292.645028] Code: d2 48 89 d1 65 48 8b 05 55 21 73 70 0f 01 c8 48
+> 8b 00 a8 08 75 14 66 90 0f 00 2d 2e 00 43 00 b9 01 00 00 00 48 89 f0
+> 0f 01 c9 <65> 48 8b 05 2f 21 73 70 f0 80 60 02 df f0 83 44 24 fc 00 48
+> 8b 00
+> [  292.645030] RSP: 0018:ffffffff90403e48 EFLAGS: 00000046
+> [  292.645032] RAX: 0000000000000001 RBX: 0000000000000002 RCX: 0000000000000001
+> [  292.645034] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff93d22fa3ffa0
+> [  292.645035] RBP: ffff93d22fa3ffa0 R08: 0000000000000002 R09: 00000000fffffffd
+> [  292.645036] R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff908bbf60
+> [  292.645037] R13: ffffffff908bc048 R14: 0000000000000002 R15: 0000000000000000
+> [  292.645040]  ? intel_idle+0x59/0xa0
+> [  292.645043]  ? intel_idle+0x59/0xa0
+> [  292.645046]  </NMI>
+> [  292.645046]  <TASK>
+> [  292.645047]  cpuidle_enter_state+0x7d/0x410
+> [  292.645050]  cpuidle_enter+0x29/0x40
+> [  292.645054]  cpuidle_idle_call+0xf8/0x160
+> [  292.645060]  do_idle+0x7a/0xe0
+> [  292.645062]  cpu_startup_entry+0x25/0x30
+> [  292.645065]  rest_init+0xcc/0xd0
+> [  292.645068]  start_kernel+0x325/0x400
+> [  292.645072]  x86_64_start_reservations+0x14/0x30
+> [  292.645076]  x86_64_start_kernel+0xed/0xf0
+> [  292.645079]  common_startup_64+0x13e/0x141
+> [  292.645084]  </TASK>
+> [  292.645101] Kernel Offset: 0xdc00000 from 0xffffffff81000000
+> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 > 
-> ---
-> Frank Li (6):
->       PCI: imx6: Rename imx6_* with imx_*
->       PCI: imx6: Rename pci-imx6.c to pcie-imx.c
->       MAINTAINERS: pci: imx: update imx6* to imx* since rename driver file
->       PCI: imx: Simplify switch-case logic by involve set_ref_clk callback
->       PCI: imx: Simplify switch-case logic by involve core_reset callback
->       PCI: imx: Config look up table(LUT) to support MSI ITS and IOMMU for i.MX95
 > 
->  MAINTAINERS                                        |    4 +-
->  drivers/pci/controller/dwc/Makefile                |    2 +-
->  .../pci/controller/dwc/{pci-imx6.c => pcie-imx.c}  | 1115 +++++++++++---------
->  3 files changed, 647 insertions(+), 474 deletions(-)
-> ---
-> base-commit: 0a580c33494a7d293ff0d34cf4db4af107070ccf
-> change-id: 20240227-pci2_upstream-0cdd19a15163
+> # lspci -nn -s 01:00.1
+> 01:00.1 Ethernet controller [0200]: Broadcom Inc. and subsidiaries
+> NetXtreme BCM5720 Gigabit Ethernet PCIe [14e4:165f]
 > 
-> Best regards,
-> -- 
-> Frank Li <Frank.Li@nxp.com>
+> # lspci -vvv -s 01:00.1
+> 01:00.1 Ethernet controller: Broadcom Inc. and subsidiaries NetXtreme
+> BCM5720 Gigabit Ethernet PCIe
+>         DeviceName: NIC4
+>         Subsystem: Broadcom Inc. and subsidiaries Device 4160
+>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+> ParErr- Stepping- SERR- FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+> <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin B routed to IRQ 17
+>         NUMA node: 0
+>         Region 0: Memory at 92900000 (64-bit, prefetchable) [size=64K]
+>         Region 2: Memory at 92910000 (64-bit, prefetchable) [size=64K]
+>         Region 4: Memory at 92920000 (64-bit, prefetchable) [size=64K]
+>         Expansion ROM at 90040000 [disabled] [size=256K]
+>         Capabilities: [48] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
+> PME(D0+,D1-,D2-,D3hot+,D3cold+)
+>                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=1 PME-
+>         Capabilities: [50] Vital Product Data
+>                 Product Name: Broadcom NetXtreme Gigabit Ethernet
+>                 Read-only fields:
+>                         [PN] Part number: BCM95720
+>                         [MN] Manufacture ID: 1028
+>                         [V0] Vendor specific: FFV22.61.8
+>                         [V1] Vendor specific: DSV1028VPDR.VER1.0
+>                         [V2] Vendor specific: NPY2
+>                         [V3] Vendor specific: PMT1
+>                         [V4] Vendor specific: NMVBroadcom Corp
+>                         [V5] Vendor specific: DTINIC
+>                         [V6] Vendor specific: DCM3001008d454101008d45
+>                         [RV] Reserved: checksum good, 233 byte(s) reserved
+>                 End
+>         Capabilities: [58] MSI: Enable- Count=1/8 Maskable- 64bit+
+>                 Address: 0000000000000000  Data: 0000
+>         Capabilities: [a0] MSI-X: Enable+ Count=17 Masked-
+>                 Vector table: BAR=4 offset=00000000
+>                 PBA: BAR=4 offset=00001000
+>         Capabilities: [ac] Express (v2) Endpoint, MSI 00
+>                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
+> <4us, L1 <64us
+>                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+
+> FLReset+ SlotPowerLimit 25.000W
+>                 DevCtl: CorrErr- NonFatalErr+ FatalErr+ UnsupReq+
+>                         RlxdOrd- ExtTag- PhantFunc- AuxPwr+ NoSnoop- FLReset-
+>                         MaxPayload 128 bytes, MaxReadReq 512 bytes
+>                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> AuxPwr+ TransPend-
+>                 LnkCap: Port #0, Speed 5GT/s, Width x2, ASPM not supported
+>                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+>                         ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 5GT/s (ok), Width x2 (ok)
+>                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+>                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+
+> NROPrPrP- LTR-
+>                          10BitTagComp- 10BitTagReq- OBFF Not
+> Supported, ExtFmt- EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported,
+> EmergencyPowerReductionInit-
+>                          FRS- TPHComp- ExtTPHComp-
+>                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 65ms to 210ms,
+> TimeoutDis- LTR- OBFF Disabled,
+>                          AtomicOpsCtl: ReqEn-
+>                 LnkSta2: Current De-emphasis Level: -6dB,
+> EqualizationComplete- EqualizationPhase1-
+>                          EqualizationPhase2- EqualizationPhase3-
+> LinkEqualizationRequest-
+>                          Retimer- 2Retimers- CrosslinkRes: unsupported
+>         Capabilities: [100 v1] Advanced Error Reporting
+>                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+> UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
+> UnxCmplt+ RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UESvrt: DLP+ SDES+ TLP+ FCP+ CmpltTO+ CmpltAbrt+
+> UnxCmplt- RxOF+ MalfTLP+ ECRC+ UnsupReq- ACSViol-
+>                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
+> AdvNonFatalErr+
+>                 CEMsk:  RxErr- BadTLP+ BadDLLP+ Rollover+ Timeout+
+> AdvNonFatalErr+
+>                 AERCap: First Error Pointer: 00, ECRCGenCap+
+> ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+>                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+>                 HeaderLog: 40000001 0000020f 90028090 00000000
+>         Capabilities: [13c v1] Device Serial Number 00-00-e4-3d-1a-3c-8b-bb
+>         Capabilities: [150 v1] Power Budgeting <?>
+>         Capabilities: [160 v1] Virtual Channel
+>                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+>                 Arb:    Fixed- WRR32- WRR64- WRR128-
+>                 Ctrl:   ArbSelect=Fixed
+>                 Status: InProgress-
+>                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+>                         Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+>                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+>                         Status: NegoPending- InProgress-
+>         Kernel driver in use: tg3
+>         Kernel modules: tg3
+> 
+> Thanks,
 > 
 
