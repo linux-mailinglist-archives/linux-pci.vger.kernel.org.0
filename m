@@ -1,87 +1,94 @@
-Return-Path: <linux-pci+bounces-4910-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4911-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FC2A88024C
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:29:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB39D880262
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:33:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 432851C230FA
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:29:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 389091F24B62
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:33:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62F281ABB;
-	Tue, 19 Mar 2024 16:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3DF8539C;
+	Tue, 19 Mar 2024 16:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovFvrKSk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1INXCQ6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02CB8174F
-	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 16:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304B20B29
+	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 16:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710865716; cv=none; b=b5NTuE4rPj2Lgjy8T/kduFlL28j2/E0hQcUbJspeXIJ1hzIh2Ub4JrtcEmUPtk80KZuW9dp3btbItYONBHIvKB4T/AJCZ48my7uPftc2DXWPubBm2dxBjg52ClbzBgI01ncbi+pOxViCAJld5ctisJgN2QdeXduVUu51SvTkm8Y=
+	t=1710866008; cv=none; b=JVrNjAGiAegCrsOLvSR2dsQiYIDASRDdI+OYw6W1cDp87AC0d/jWCzWv6UJLGrSp/xb2samALR6QBmouK5aS6cleSygZwg5emgj8FByaiLNQYHRONpkz0B3NcQIVBR3dJNZoT9zfqCj/1FeOWyGapNkZpi0jRgm40I9Op8LAo4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710865716; c=relaxed/simple;
-	bh=HkiEPXUCTFfqbtJ8sf9ZvTeFC6es5DUbxVbgvDJiZ38=;
+	s=arc-20240116; t=1710866008; c=relaxed/simple;
+	bh=PeIAsruLzkLKeE08ndyRTXfNaTUHjpsUFBRVrP/igeQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRnSsmL/Ouk5DkKFfdxmwXl7iW/z43Llj3l+7s6s91aes+e7TNzWoo+fQyNxZ2GbnOFFC8V7XzmyhYVN/sMNLV8MJplawpy9nTs98ZbxujG0HPRkfxOM2r/ZtdDtDQ7ovT9gSxN4h2s6jv1RB/ks67uSgSCEjsgYJbDszwy176Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ovFvrKSk; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gqm2tRbUqaBvrLr5zHBIZMTvN0Y0Ge+Ny4g8pEofYDRtHXlefuHsnSmmhuGkRHiw0oREtZwM24g624j1ZVjg/nTCL5YkG79u9kb4b7YHPCsL+Uah2tOAjsuCeLNXkrNNIrE979DOfLjmxGvAB1o5nlhOzievBkdyny5ErRTNzGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P1INXCQ6; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1dd955753edso46395955ad.1
-        for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 09:28:34 -0700 (PDT)
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e6f6d782e4so3687247b3a.0
+        for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 09:33:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710865714; x=1711470514; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710866006; x=1711470806; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=1U47eqHpSlotIb5fQzy6o7Nf4MoN9+bE4ics2eYzUcY=;
-        b=ovFvrKSkXoFyZyrtSNbrXfnggRaMBrrTWrmd0dDz0PqpL3tkds6j2ByNj5MMn7OPKc
-         O+Il9x1Vv+EQsp8Y0Ekgp57gIQhmVAsJA1AIO7JPlbJgT2ndlTaw+b2HZBSgCoL1RMA7
-         OeOflezAbljQB/MtQzUaD1vZ8dQka5W5C9U8DXABb5EPKIjluteS3Pm/Bkxiqkc2666P
-         JBlmx62Ujq1mA2ZCQxdJeNqn/BQ2zF9JGI3TvcgcWIf8VbqJs1N2aI9X8c7iki1Np5oM
-         YD4b/51vx77P3qKaVtNX34EVbwgLZA0g7up3YKiYiiQBoSsOFeyAfxGFbXdDsHaKQOPM
-         tEaw==
+        bh=21zEQnfxcYpMdB2q3MtSkNSfUlYefH4UFBDqIUczato=;
+        b=P1INXCQ6Sj05vE1MDcr1mcdBElgam/U8b5vHWQuP4n1qRQi19d9KKAO7R8znZBLgnc
+         Fr72Shr6MmTXNZJFaMA3ddDfunj/q+6AJ+p/lpLdm+P5TX3UMBTMZd2nAO2W53dUuYCD
+         OJMEsWCYhj/sifr6jjJtZZK+IJOxWcgT+3HEffxzfMXE4BZfvMbKuBwN/FfWBQpVibjX
+         qEcAAKyR88g2rIOb1MtzjZ1WU2dAuNrTZpyr3rDMkIftgFyPXme86DlxJ4/90lg0IOKb
+         iUflrYDbv+ijBAAQ4w+vsR5Q2+IKiybz7ytx9ctS/9o00S1QlJ8xgM+CrXa7jx4UXLRS
+         UC4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710865714; x=1711470514;
+        d=1e100.net; s=20230601; t=1710866006; x=1711470806;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1U47eqHpSlotIb5fQzy6o7Nf4MoN9+bE4ics2eYzUcY=;
-        b=sMuLm5zs5jY6htV5IGaRHny6+FISWZaM4O9YTaleS1rBe+U4iz4UVlu4v6IwnlgPiF
-         viaOoaH1hF1A8YC1e2ICXY/H69WZ29T7pqMYgWiUQOGxa9ifn7y+sOOOa8FUG9vYKJSf
-         GKOoKVfwuJdFmtGSOM/Lw93xgCcfhO50eI9tE//KUIYr+9iaV/cLtOO2+4KKFzQIvyl4
-         IVX6WgWwL+WD4qpG4YIXjYmt49nsIqv6fHHbpXI2/beP8SpgHTETNqGZ2B1gjX9EELix
-         +DfydluBsoyFyVpExzZ8QpGNTPX908Atoc1ALrjSoBE0HPvPFPKcSl634EuoDunjuk5n
-         p82g==
-X-Forwarded-Encrypted: i=1; AJvYcCWNNJ0HLZ8ir8vUK/B37SOZi0rxeV6tFOc1asPiEZCS6xZEgvFk5TCj98s2BepMRcxNtRfU6oWQ/lZdMiuKRMteN2vvMtpUvjD/
-X-Gm-Message-State: AOJu0YwvbQZE3w3qZjz4aCS5QVz81NKRf+LiTA7lwTdBN4Pkgwo63MZy
-	0hU/a8ukqJUdTwZsQ5NwxNTa6nBIhvUZZ6FIDnfBDSU+OSpUy5MeWJZaHT397w==
-X-Google-Smtp-Source: AGHT+IF2xsZFQTxLkIAWYk6sOUNhPGPAbnn7VE8zl0zWINw6lhLGLkVenJENo35TIPeg+vlyw71Z+A==
-X-Received: by 2002:a17:903:2305:b0:1df:f91a:ba35 with SMTP id d5-20020a170903230500b001dff91aba35mr10905397plh.67.1710865713625;
-        Tue, 19 Mar 2024 09:28:33 -0700 (PDT)
+        bh=21zEQnfxcYpMdB2q3MtSkNSfUlYefH4UFBDqIUczato=;
+        b=PGoDUVmC19stVwHvMHUFLz0+Q5VMR2pqk0bGbnI2gt6Lhtm0CD2HM5Y57YOmsZthyz
+         vt43iojEXVfbdomIxzDQhWme8axHgJqDWU2LzBMOXyNG0eppJw3N6XukVUJuS/C6lC47
+         Yzh/fixiaTgdM5oyFLPsmtPFTGGl7HoymfoJMQ8pVx5SMmLCNMz8HmahjUvXTlxTST5i
+         dVHiLtrJoppVWAY++cxmVfbD7qCUTa2qSDJx4dY+S1f7hvcpP21vayUJaTYdDJe8t4rp
+         EJQZeehxyJf00sd1RTnRnwpY8gt+bLFtGsA1s8dve528Tr6MZyvLyIaoyGTm/pU9u8f7
+         00Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjKv3b88OIyaEwM6F0OTxOHHAWOyKX3JV12dFUpy3pWBqIqKAJBzJk4KMpiBu1c0WTP4ZaQBZjF8yIHW110MPNKwseyrmRJ1I7
+X-Gm-Message-State: AOJu0Yyno4PiYO3sdNKcV2vCgqUxCRHII8DFiXoRf/nQi0aoN9r1y/Xl
+	qGwnnKZBEUdk9HtG12l7pqcjXK5rMObVAmF2mk4v5gW5NlBwZID4XkfXn2xDuQ==
+X-Google-Smtp-Source: AGHT+IGdOZw8YS4SHpor1EHU9P51zW05feF5360p5IkyjhPjT10QsmUSI91PX9X2UnQj0tJ6FnFOuQ==
+X-Received: by 2002:aa7:8883:0:b0:6e6:b32c:501d with SMTP id z3-20020aa78883000000b006e6b32c501dmr17160677pfe.19.1710866005021;
+        Tue, 19 Mar 2024 09:33:25 -0700 (PDT)
 Received: from thinkpad ([120.56.201.52])
-        by smtp.gmail.com with ESMTPSA id kw11-20020a170902f90b00b001dcc18e1c10sm11587869plb.174.2024.03.19.09.28.30
+        by smtp.gmail.com with ESMTPSA id lb3-20020a056a004f0300b006e664031f10sm10042675pfb.51.2024.03.19.09.33.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 09:28:33 -0700 (PDT)
-Date: Tue, 19 Mar 2024 21:58:29 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
- outbound window memory allocation
-Message-ID: <20240319162829.GC3297@thinkpad>
-References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
- <Zfm0Ws/Zg1W2UVZt@lizhi-Precision-Tower-5810>
+        Tue, 19 Mar 2024 09:33:24 -0700 (PDT)
+Date: Tue, 19 Mar 2024 22:03:15 +0530
+From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
+	mchehab@kernel.org, rric@kernel.org, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+	josh@joshtriplett.org, lukas.bulwahn@gmail.com,
+	hongxing.zhu@nxp.com, pankaj.dubey@samsung.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	vidyas@nvidia.com, gost.dev@samsung.com, alim.akhtar@samsung.com
+Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+ controller
+Message-ID: <20240319163315.GD3297@thinkpad>
+References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
+ <20231130115044.53512-1-shradha.t@samsung.com>
+ <20231130165514.GW3043@thinkpad>
+ <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+ <20240104055030.GA3031@thinkpad>
+ <0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
+ <20240216134921.GH2559@thinkpad>
+ <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,506 +98,160 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zfm0Ws/Zg1W2UVZt@lizhi-Precision-Tower-5810>
+In-Reply-To: <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
 
-On Tue, Mar 19, 2024 at 11:50:50AM -0400, Frank Li wrote:
-> On Sun, Mar 17, 2024 at 11:39:17AM +0530, Manivannan Sadhasivam wrote:
-> > As proposed during the last year 'PCI Endpoint Subsystem Open Items
-> > Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
-> > framework for managing the endpoint outbound window memory allocation.
-> > 
-> > PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
-> > driver from the start for managing the memory required to map the host
-> > address space (outbound) in endpoint. Even though it works well, it
-> > completely defeats the purpose of the 'Genalloc framework', a general
-> > purpose memory allocator framework created to avoid various custom memory
-> > allocators in the kernel.
-> > 
-> > The migration to Genalloc framework is done is such a way that the existing
-> > API semantics are preserved. So that the callers of the EPC mem APIs do not
-> > need any modification (apart from the pcie-designware-epc driver that
-> > queries page size).
-> > 
-> > Internally, the EPC mem driver now uses Genalloc framework's
-> > 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
-> > based on the requested size as like the previous allocator. And the
-> > page size passed during pci_epc_mem_init() API is used as the minimum order
-> > for the memory allocations.
-> > 
-> > During the migration, 'struct pci_epc_mem' is removed as it is seems
-> > redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
-> > is now used to hold the address windows of the endpoint controller.
-> > 
-> > [1] https://lpc.events/event/17/contributions/1419/
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
-> >  drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
-> >  include/linux/pci-epc.h                         |  25 +---
-> >  3 files changed, 81 insertions(+), 140 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > index 5befed2dc02b..37c612282eb6 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > @@ -482,11 +482,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> >  		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
-> >  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
-> >  	}
-> > -	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
-> > +	aligned_offset = msg_addr_lower & (epc->windows[0]->page_size - 1);
-> >  	msg_addr = ((u64)msg_addr_upper) << 32 |
-> >  			(msg_addr_lower & ~aligned_offset);
-> >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> > -				  epc->mem->window.page_size);
-> > +				  epc->windows[0]->page_size);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > @@ -550,10 +550,10 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> >  		return -EPERM;
-> >  	}
-> >  
-> > -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
-> > +	aligned_offset = msg_addr & (epc->windows[0]->page_size - 1);
-> >  	msg_addr &= ~aligned_offset;
-> >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> > -				  epc->mem->window.page_size);
-> > +				  epc->windows[0]->page_size);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > @@ -572,7 +572,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
-> >  	dw_pcie_edma_remove(pci);
-> >  
-> >  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> > -			      epc->mem->window.page_size);
-> > +			      epc->windows[0]->page_size);
-> >  
-> >  	pci_epc_mem_exit(epc);
-> >  
-> > @@ -742,7 +742,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  	}
-> >  
-> >  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
-> > -					     epc->mem->window.page_size);
-> > +					     epc->windows[0]->page_size);
-> >  	if (!ep->msi_mem) {
-> >  		ret = -ENOMEM;
-> >  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
-> > @@ -770,7 +770,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
-> >  
-> >  err_free_epc_mem:
-> >  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> > -			      epc->mem->window.page_size);
-> > +			      epc->windows[0]->page_size);
-> >  
-> >  err_exit_epc_mem:
-> >  	pci_epc_mem_exit(epc);
-> > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> > index a9c028f58da1..f9e6e1a6aeaa 100644
-> > --- a/drivers/pci/endpoint/pci-epc-mem.c
-> > +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> > @@ -4,37 +4,18 @@
-> >   *
-> >   * Copyright (C) 2017 Texas Instruments
-> >   * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> > + *
-> > + * Copyright (C) 2024 Linaro Ltd.
-> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >   */
-> >  
-> > +#include <linux/genalloc.h>
-> >  #include <linux/io.h>
-> >  #include <linux/module.h>
-> >  #include <linux/slab.h>
-> >  
-> >  #include <linux/pci-epc.h>
-> >  
-> > -/**
-> > - * pci_epc_mem_get_order() - determine the allocation order of a memory size
-> > - * @mem: address space of the endpoint controller
-> > - * @size: the size for which to get the order
-> > - *
-> > - * Reimplement get_order() for mem->page_size since the generic get_order
-> > - * always gets order with a constant PAGE_SIZE.
-> > - */
-> > -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
-> > -{
-> > -	int order;
-> > -	unsigned int page_shift = ilog2(mem->window.page_size);
-> > -
-> > -	size--;
-> > -	size >>= page_shift;
-> > -#if BITS_PER_LONG == 32
-> > -	order = fls(size);
-> > -#else
-> > -	order = fls64(size);
-> > -#endif
-> > -	return order;
-> > -}
-> > -
-> >  /**
-> >   * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
-> >   * @epc: the EPC device that invoked pci_epc_mem_init
-> > @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
-> >  			   struct pci_epc_mem_window *windows,
-> >  			   unsigned int num_windows)
-> >  {
-> > -	struct pci_epc_mem *mem = NULL;
-> > -	unsigned long *bitmap = NULL;
-> > -	unsigned int page_shift;
-> > +	struct pci_epc_mem_window *window = NULL;
-> >  	size_t page_size;
-> > -	int bitmap_size;
-> > -	int pages;
-> >  	int ret;
-> >  	int i;
-> >  
-> > -	epc->num_windows = 0;
-> > -
-> >  	if (!windows || !num_windows)
-> >  		return -EINVAL;
-> >  
-> > @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
-> >  		page_size = windows[i].page_size;
-> >  		if (page_size < PAGE_SIZE)
-> >  			page_size = PAGE_SIZE;
-> > -		page_shift = ilog2(page_size);
-> > -		pages = windows[i].size >> page_shift;
-> > -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
-> >  
-> > -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> > -		if (!mem) {
-> > +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
+On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:
+> + Borislav, Tony, James, Mauro, Robert
 > 
-> I think it is not good to modify caller's memory. This funciton suppose
-> pass down read-only information. And set to epc->windows[i]. I think it'd
-> better to use epc->windows[i].pool/windows.
+> Hi All,
+> 
+> Synopsys DesignWare PCIe controllers have a vendor specific capability (which
+> means that this set of registers are only present in DesignWare controllers)
+> to perform debug operations called "RASDES".
+> The functionalities provided by this extended capability are:
+> 
+> 1. Debug: This has some debug related diagnostic features like holding LTSSM
+> in certain states, reading the status of lane detection, checking if any PCIe
+> lanes are broken (RX Valid) and so on. It's a debug only feature used for diagnostic
+> use-cases.
+> 
+> 2. Error Injection: This is a way to inject certain errors in PCIe like LCRC, ECRC,
+> Bad TLPs and so on. Again, this is a debug feature and generally not used in
+> functional use-case.
+> 
+> 3. Statistical counters: This has 3 parts
+>  - Error counters
+>  - Non error counters (covered as part of perf [1])
+>  - Time based analysis counters (covered as part of perf [1])
+> 
+> Selective features of  the above functionality has been implemented
+> by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
+> Synopsys DesignWare PCIe controllers.
+> In order to make it useful to all vendors using DWC controller, we had
+> proposed a common implementation in DWC PCIe controller directory
+> (drivers/pci/controller/dwc/) and our original idea was based on debugfs
+> filesystem. v1 and v2 are mentioned in [2] and [3].
+> 
+> We got a suggestion to implement this as part of EDAC framework [3] and
+> we looked into the same. But as far as I understood, what I am trying to
+> implement is a very specific feature (only valid for Synopsys DWC PCIe controllers).
+> This doesn't seem to fit in very well with the EDAC framework and we can 
+> hardly use any of the EDAC framework APIs. We tried implementing a
+> "pci_driver" but since a function driver will already be running on the EP and
+> portdrv on the root-complex, we will not be able to bind 2 drivers to a single
+> PCI device (root-complex or endpoint). Ultimately, what I will be doing is
+> writing a platform driver with debugfs entries which will be present in EDAC
+> directory instead of DWC directory.
+> 
+> Can  you please help us out by going through this thread [3] and letting us
+> know if our understanding is wrong at any point. If you think it is a better
+> idea to integrate this in the EDAC framework, can you guide me as
+> to how I can utilize the framework better?
+> Please let me know if you need any other information to conclude.
+> 
+> [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@linux.alibaba.com/
+> [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
+> [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsung.com/
 > 
 
-What do you mean by modifying caller's memory? Here, the memory for epc->windows
-is being allocated and the pool is created for each window.
-
-> > +		if (!windows[i].pool) {
-> >  			ret = -ENOMEM;
-> > -			i--;
-> > -			goto err_mem;
-> > +			goto err_free_mem;
-> > +		}
-> > +
-> > +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
-> > +				  NULL);
-> > +
-> > +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
-> > +		ret = gen_pool_add_virt(windows[i].pool, (unsigned long)windows[i].virt_base,
-> > +					windows[i].phys_base, windows[i].size, -1);
-> > +		if (ret) {
-> > +			iounmap(windows[i].virt_base);
-> > +			gen_pool_destroy(epc->windows[i]->pool);
-> 
-> I think move all free to err path will be easy to understand.
-> 
-
-It is not straightforward. First we need to free the memory for current
-iteration and then all previous iterations, that too from different places.
-Moving the code to free current iteration to the error label will look messy.
-
-> > +			goto err_free_mem;
-> >  		}
-> >  
-> > -		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> > -		if (!bitmap) {
-> > +		window = kzalloc(sizeof(*window), GFP_KERNEL);
-> 
-> According to below code                                                    
->                                                                            
->         epc->windows = kcalloc(num_windows, sizeof(*epc->windows), GFP_KERNEL);
->         if (!epc->windows)                                                 
->                 return -ENOMEM;                                            
->                                                                            
-> epc->windows already allocate whole num_windows * "struct pci_epc_mem_window".
-> I think you can direct use 'window = epc->windows + i', so needn't alloc      
-> additional memory for epc->windows[i].
-> 
-
-First we are allocating the memory for 'struct pci_epc_mem_window' _pointers_ in
-epc->windows. Then we need to allocate memory for each pointer in epc->windows
-to actually store data. Otherwise, we will be referencing the nulll pointer.
+Gentle ping for the EDAC maintainers.
 
 - Mani
 
+> Thanks,
+> Shradha
 > 
-> > +		if (!window) {
-> >  			ret = -ENOMEM;
-> > -			kfree(mem);
-> > -			i--;
-> > -			goto err_mem;
-> > +			iounmap(windows[i].virt_base);
-> > +			gen_pool_destroy(epc->windows[i]->pool);
-> > +			goto err_free_mem;
-> >  		}
-> >  
-> > -		mem->window.phys_base = windows[i].phys_base;
-> > -		mem->window.size = windows[i].size;
-> > -		mem->window.page_size = page_size;
-> > -		mem->bitmap = bitmap;
-> > -		mem->pages = pages;
-> > -		mutex_init(&mem->lock);
-> > -		epc->windows[i] = mem;
-> > +		window->phys_base = windows[i].phys_base;
-> > +		window->size = windows[i].size;
-> > +		window->page_size = page_size;
-> > +		window->pool = windows[i].pool;
-> > +		epc->windows[i] = window;
-> >  	}
-> >  
-> > -	epc->mem = epc->windows[0];
-> >  	epc->num_windows = num_windows;
-> >  
-> >  	return 0;
-> >  
-> > -err_mem:
-> > -	for (; i >= 0; i--) {
-> > -		mem = epc->windows[i];
-> > -		kfree(mem->bitmap);
-> > -		kfree(mem);
-> > +err_free_mem:
-> > +	for (--i; i >= 0; i--) {
-> > +		iounmap(windows[i].virt_base);
-> > +		gen_pool_destroy(epc->windows[i]->pool);
-> > +		kfree(epc->windows[i]);
-> >  	}
-> > +
-> >  	kfree(epc->windows);
-> >  
-> >  	return ret;
-> > @@ -128,14 +109,15 @@ EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
-> >  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
-> >  		     size_t size, size_t page_size)
-> >  {
-> > -	struct pci_epc_mem_window mem_window;
-> > +	struct pci_epc_mem_window window;
-> >  
-> > -	mem_window.phys_base = base;
-> > -	mem_window.size = size;
-> > -	mem_window.page_size = page_size;
-> > +	window.phys_base = base;
-> > +	window.size = size;
-> > +	window.page_size = page_size;
-> >  
-> > -	return pci_epc_multi_mem_init(epc, &mem_window, 1);
-> > +	return pci_epc_multi_mem_init(epc, &window, 1);
-> >  }
-> > +
+> > -----Original Message-----
+> > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+> > Sent: 16 February 2024 19:19
+> > To: Shradha Todi <shradha.t@samsung.com>
+> > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > bhelgaas@google.com; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
+> > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
+> > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
+> > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
+> > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+> > controller
+> > 
+> > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:
+> > >
+> > >
+> > 
+> > [...]
+> > 
+> > > > For the error injection and counters, we already have the EDAC
+> > > > framework. So adding them in the DWC driver doesn't make sense to me.
+> > > >
+> > >
+> > > Sorry for late response, was going through the EDAC framework to understand
+> > better how we can fit RAS DES support in it. Below are some technical challenges
+> > found so far:
+> > > 1: This debugfs framework proposed [1] can run on both side of the link i.e. RC
+> > and EP as it will be a part of the link controller platform driver. Here for the EP
+> > side the assumption is that it has Linux running, which is primarily a use case for
+> > chip-to-chip communication.  After your suggestion to migrate to EDAC
+> > framework we studied and here are the findings:
+> > > - If we move to EDAC framework, we need to have RAS DES as a
+> > > pci_driver which will be binded based on vendor_id and device_id. Our
+> > > observation is that on EP side system we are unable to bind two
+> > > function driver (pci_driver), as pci_endpoint_test function driver or
+> > > some other chip-to-chip function driver will already be bound. On the
+> > > other hand, on RC side we observed that if we have portdrv enabled in
+> > > Linux running on RC system, it gets bound to RC controller and then it
+> > > does not allow EDAC pci_driver to bind. So basically we see a problem
+> > > here, that we can't have two pci_driver binding to same PCI device
+> > > 2: Another point is even though we use EDAC driver framework, we may not be
+> > able to use any of EDAC framework APIs as they are mostly suitable for memory
+> > controller devices sitting on PCI BUS. We will end up using debugfs entries just via
+> > a pci_driver placed inside EDAC framework.
+> > 
+> > Please wrap your replies to 80 characters.
+> > 
+> > There is no need to bind the edac driver to VID:PID of the device. The edac driver
+> > can be a platform driver and you can instantiate the platform device from the
+> > DWC driver. This way, the PCI device can be assocaited with whatever driver, but
+> > still there can be a separate edac driver for handling errors.
+> > 
+> > Regarding API limitation, you should ask the maintainer about the possibility of
+> > extending them.
+> > 
+> > >
+> > > Please let me know if my understanding is wrong.
+> > >
+> > > > But first check with the perf driver author if they have any plans
+> > > > on adding the proposed functionality. If they do not have any plan
+> > > > or not working on it, then look into EDAC.
+> > > >
+> > > > - Mani
+> > > >
+> > >
+> > > Since we already worked and posted patches [1], [2], we will continue to work
+> > on this and based on consent from community we will adopt to most suitable
+> > framework.
+> > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs files that
+> > give information about the current status of the running system and as of now
+> > based on our findings, we still feel there is no harm in having debugfs entry based
+> > support in DesignWare controller driver itself.
+> > 
+> > There is no issue in exposing the debug information through debugfs, that's the
+> > sole purpose of the interface. But here, you are trying to add support for DWC
+> > RAS feature for which a dedicated framework already exists.
+> > 
+> > And there will be more similar requests coming for vendor specific error protocols
+> > as well. So your investigation could benefit everyone.
+> > 
+> > From your above investigation, looks like there are some shortcomings of the
+> > EDAC framework. So let's get that clarified by writing to the EDAC maintainers
+> > (keep us in CC). If the EDAC maintainer suggests you to add support for this
+> > feature in DWC driver itself citing some reasons, then no issues with me.
+> > 
+> > - Mani
+> > 
+> > --
+> > மணிவண்ணன் சதாசிவம்
 > 
-> Remove extra empty line change
 > 
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
-> >  
-> >  /**
-> > @@ -147,21 +129,20 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
-> >   */
-> >  void pci_epc_mem_exit(struct pci_epc *epc)
-> >  {
-> > -	struct pci_epc_mem *mem;
-> >  	int i;
-> >  
-> >  	if (!epc->num_windows)
-> >  		return;
-> >  
-> >  	for (i = 0; i < epc->num_windows; i++) {
-> > -		mem = epc->windows[i];
-> > -		kfree(mem->bitmap);
-> > -		kfree(mem);
-> > +		iounmap(epc->windows[i]->virt_base);
-> > +		gen_pool_destroy(epc->windows[i]->pool);
-> > +		kfree(epc->windows[i]);
-> >  	}
-> > +
-> >  	kfree(epc->windows);
-> >  
-> >  	epc->windows = NULL;
-> > -	epc->mem = NULL;
-> >  	epc->num_windows = 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> > @@ -178,55 +159,42 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> >  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
-> >  				     phys_addr_t *phys_addr, size_t size)
-> >  {
-> > +	struct pci_epc_mem_window *window;
-> >  	void __iomem *virt_addr = NULL;
-> > -	struct pci_epc_mem *mem;
-> > -	unsigned int page_shift;
-> > +	struct gen_pool *genpool;
-> >  	size_t align_size;
-> > -	int pageno;
-> > -	int order;
-> >  	int i;
-> >  
-> >  	for (i = 0; i < epc->num_windows; i++) {
-> > -		mem = epc->windows[i];
-> > -		mutex_lock(&mem->lock);
-> > -		align_size = ALIGN(size, mem->window.page_size);
-> > -		order = pci_epc_mem_get_order(mem, align_size);
-> > -
-> > -		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
-> > -						 order);
-> > -		if (pageno >= 0) {
-> > -			page_shift = ilog2(mem->window.page_size);
-> > -			*phys_addr = mem->window.phys_base +
-> > -				((phys_addr_t)pageno << page_shift);
-> > -			virt_addr = ioremap(*phys_addr, align_size);
-> > -			if (!virt_addr) {
-> > -				bitmap_release_region(mem->bitmap,
-> > -						      pageno, order);
-> > -				mutex_unlock(&mem->lock);
-> > -				continue;
-> > -			}
-> > -			mutex_unlock(&mem->lock);
-> > -			return virt_addr;
-> > -		}
-> > -		mutex_unlock(&mem->lock);
-> > +		window = epc->windows[i];
-> > +		genpool = window->pool;
-> > +		align_size = ALIGN(size, window->page_size);
-> > +
-> > +		virt_addr = (void __iomem *)gen_pool_alloc(genpool, align_size);
-> > +		if (!virt_addr)
-> > +			continue;
-> > +
-> > +		*phys_addr = gen_pool_virt_to_phys(genpool, (unsigned long)virt_addr);
-> > +
-> > +		break;
-> >  	}
-> >  
-> >  	return virt_addr;
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
-> >  
-> > -static struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
-> > +static struct pci_epc_mem_window *pci_epc_get_matching_window(struct pci_epc *epc,
-> >  						       phys_addr_t phys_addr)
-> >  {
-> > -	struct pci_epc_mem *mem;
-> > +	struct pci_epc_mem_window *window;
-> >  	int i;
-> >  
-> >  	for (i = 0; i < epc->num_windows; i++) {
-> > -		mem = epc->windows[i];
-> > +		window = epc->windows[i];
-> >  
-> > -		if (phys_addr >= mem->window.phys_base &&
-> > -		    phys_addr < (mem->window.phys_base + mem->window.size))
-> > -			return mem;
-> > +		if (phys_addr >= window->phys_base &&
-> > +		    phys_addr < (window->phys_base + window->size))
-> > +			return window;
-> >  	}
-> >  
-> >  	return NULL;
-> > @@ -244,27 +212,15 @@ static struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
-> >  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
-> >  			   void __iomem *virt_addr, size_t size)
-> >  {
-> > -	struct pci_epc_mem *mem;
-> > -	unsigned int page_shift;
-> > -	size_t page_size;
-> > -	int pageno;
-> > -	int order;
-> > +	struct pci_epc_mem_window *window;
-> >  
-> > -	mem = pci_epc_get_matching_window(epc, phys_addr);
-> > -	if (!mem) {
-> > +	window = pci_epc_get_matching_window(epc, phys_addr);
-> > +	if (!window) {
-> >  		pr_err("failed to get matching window\n");
-> >  		return;
-> >  	}
-> >  
-> > -	page_size = mem->window.page_size;
-> > -	page_shift = ilog2(page_size);
-> > -	iounmap(virt_addr);
-> > -	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
-> > -	size = ALIGN(size, page_size);
-> > -	order = pci_epc_mem_get_order(mem, size);
-> > -	mutex_lock(&mem->lock);
-> > -	bitmap_release_region(mem->bitmap, pageno, order);
-> > -	mutex_unlock(&mem->lock);
-> > +	gen_pool_free(window->pool, (unsigned long)virt_addr, size);
-> >  }
-> >  EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
-> >  
-> > diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> > index 40ea18f5aa02..37ea96ed3432 100644
-> > --- a/include/linux/pci-epc.h
-> > +++ b/include/linux/pci-epc.h
-> > @@ -87,30 +87,19 @@ struct pci_epc_ops {
-> >  /**
-> >   * struct pci_epc_mem_window - address window of the endpoint controller
-> >   * @phys_base: physical base address of the PCI address window
-> > + * @virt_base: virtual base address of the PCI address window
-> > + * @pool: memory pool descriptor
-> >   * @size: the size of the PCI address window
-> >   * @page_size: size of each page
-> >   */
-> >  struct pci_epc_mem_window {
-> >  	phys_addr_t	phys_base;
-> > +	void __iomem	*virt_base;
-> > +	struct gen_pool *pool;
-> >  	size_t		size;
-> >  	size_t		page_size;
-> >  };
-> >  
-> > -/**
-> > - * struct pci_epc_mem - address space of the endpoint controller
-> > - * @window: address window of the endpoint controller
-> > - * @bitmap: bitmap to manage the PCI address space
-> > - * @pages: number of bits representing the address region
-> > - * @lock: mutex to protect bitmap
-> > - */
-> > -struct pci_epc_mem {
-> > -	struct pci_epc_mem_window window;
-> > -	unsigned long	*bitmap;
-> > -	int		pages;
-> > -	/* mutex to protect against concurrent access for memory allocation*/
-> > -	struct mutex	lock;
-> > -};
-> > -
-> >  /**
-> >   * struct pci_epc - represents the PCI EPC device
-> >   * @dev: PCI EPC device
-> > @@ -118,9 +107,6 @@ struct pci_epc_mem {
-> >   * @list_lock: Mutex for protecting pci_epf list
-> >   * @ops: function pointers for performing endpoint operations
-> >   * @windows: array of address space of the endpoint controller
-> > - * @mem: first window of the endpoint controller, which corresponds to
-> > - *       default address space of the endpoint controller supporting
-> > - *       single window.
-> >   * @num_windows: number of windows supported by device
-> >   * @max_functions: max number of functions that can be configured in this EPC
-> >   * @max_vfs: Array indicating the maximum number of virtual functions that can
-> > @@ -134,8 +120,7 @@ struct pci_epc {
-> >  	struct list_head		pci_epf;
-> >  	struct mutex			list_lock;
-> >  	const struct pci_epc_ops	*ops;
-> > -	struct pci_epc_mem		**windows;
-> > -	struct pci_epc_mem		*mem;
-> > +	struct pci_epc_mem_window	**windows;
-> >  	unsigned int			num_windows;
-> >  	u8				max_functions;
-> >  	u8				*max_vfs;
-> > 
-> > ---
-> > base-commit: 256833a66670ff28b7c1bddbd17973619e5281fd
-> > change-id: 20240317-pci-ep-genalloc-fa89f5e487e3
-> > 
-> > Best regards,
-> > -- 
-> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > 
 
 -- 
 மணிவண்ணன் சதாசிவம்
