@@ -1,270 +1,597 @@
-Return-Path: <linux-pci+bounces-4909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0847588023C
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:28:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FC2A88024C
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:29:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E098B24F34
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:28:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 432851C230FA
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:29:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0344657D1;
-	Tue, 19 Mar 2024 16:23:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62F281ABB;
+	Tue, 19 Mar 2024 16:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yb64n/pG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovFvrKSk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACADD82890
-	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 16:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02CB8174F
+	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 16:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710865416; cv=none; b=qq+fZ2cWExOLEOhvBYANxSUqQBB/A/MYXV+WvJnrxhrlvFz5FW7U4Mxi5Q8oV7fZvu+bqiQ8eGdHHmJDr6kFqNGCg1TFEgozv905R4/WNcrWwsNQ3F9Z+M05jNmwvaJuTMCMbVKmLSRsyGKpkmaMwjriTHlqHoaLy6lU/GluaMs=
+	t=1710865716; cv=none; b=b5NTuE4rPj2Lgjy8T/kduFlL28j2/E0hQcUbJspeXIJ1hzIh2Ub4JrtcEmUPtk80KZuW9dp3btbItYONBHIvKB4T/AJCZ48my7uPftc2DXWPubBm2dxBjg52ClbzBgI01ncbi+pOxViCAJld5ctisJgN2QdeXduVUu51SvTkm8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710865416; c=relaxed/simple;
-	bh=TbVFXLuiB0reAAKeJXGmfOd0s6mNmic69PS/zzlugVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HlUsFj4K9fvG9ce+8N5ZseUk36+bWlI9RrcZGNWGSBddCIuBYGIiJr4kHDuKWQPGrC2syiBL16O/DzJA9TlR1dcqM7WIdze7l41GV/rLPrbSr8EnZ/BxTKeWfc5LL7on9zjMp0+QBbhyBzKi5YVYQuV1ETINZZFp3fiXT7sTqps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yb64n/pG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8844C433C7;
-	Tue, 19 Mar 2024 16:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710865416;
-	bh=TbVFXLuiB0reAAKeJXGmfOd0s6mNmic69PS/zzlugVM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Yb64n/pGYFLnS2VRoE9dgKmDrZnNmSgcI6eSvDTUED9gxx4JAMYlcts16IMfGfO7y
-	 v/RbNR4bNw7FxZbVJKerHrGqaeX6Qh+mioF1XrV5RiGVyvOzROdbOSJu5xSJmF+RBZ
-	 Lq6+5P+xepuApe/8e2jf/3tRzRJ3oNDgAImkFSvZhG8dXDfWgwJjTRXsWpnK3UgJLk
-	 9gFnIrFKajBdcJ9zTDUvoB7ytzhIkmp8AiiiUPTj+95yVaAgoGFIdvg7TYLarmxuD9
-	 GGHGPPjxAV2vRFUxecOqXNc1O+d6EEUMGQc6tracKRIm/Hx6RRCPpXFG5cily1Aeoa
-	 uYaFC+qAg3fPA==
-Date: Tue, 19 Mar 2024 11:23:34 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Changhui Zhong <czhong@redhat.com>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [bug report] WARNING: CPU: 0 PID: 226 at drivers/pci/pci.c:2236
- pci_disable_device+0xf4/0x100
-Message-ID: <20240319162334.GA1230451@bhelgaas>
+	s=arc-20240116; t=1710865716; c=relaxed/simple;
+	bh=HkiEPXUCTFfqbtJ8sf9ZvTeFC6es5DUbxVbgvDJiZ38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BRnSsmL/Ouk5DkKFfdxmwXl7iW/z43Llj3l+7s6s91aes+e7TNzWoo+fQyNxZ2GbnOFFC8V7XzmyhYVN/sMNLV8MJplawpy9nTs98ZbxujG0HPRkfxOM2r/ZtdDtDQ7ovT9gSxN4h2s6jv1RB/ks67uSgSCEjsgYJbDszwy176Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ovFvrKSk; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1dd955753edso46395955ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 09:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710865714; x=1711470514; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1U47eqHpSlotIb5fQzy6o7Nf4MoN9+bE4ics2eYzUcY=;
+        b=ovFvrKSkXoFyZyrtSNbrXfnggRaMBrrTWrmd0dDz0PqpL3tkds6j2ByNj5MMn7OPKc
+         O+Il9x1Vv+EQsp8Y0Ekgp57gIQhmVAsJA1AIO7JPlbJgT2ndlTaw+b2HZBSgCoL1RMA7
+         OeOflezAbljQB/MtQzUaD1vZ8dQka5W5C9U8DXABb5EPKIjluteS3Pm/Bkxiqkc2666P
+         JBlmx62Ujq1mA2ZCQxdJeNqn/BQ2zF9JGI3TvcgcWIf8VbqJs1N2aI9X8c7iki1Np5oM
+         YD4b/51vx77P3qKaVtNX34EVbwgLZA0g7up3YKiYiiQBoSsOFeyAfxGFbXdDsHaKQOPM
+         tEaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710865714; x=1711470514;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1U47eqHpSlotIb5fQzy6o7Nf4MoN9+bE4ics2eYzUcY=;
+        b=sMuLm5zs5jY6htV5IGaRHny6+FISWZaM4O9YTaleS1rBe+U4iz4UVlu4v6IwnlgPiF
+         viaOoaH1hF1A8YC1e2ICXY/H69WZ29T7pqMYgWiUQOGxa9ifn7y+sOOOa8FUG9vYKJSf
+         GKOoKVfwuJdFmtGSOM/Lw93xgCcfhO50eI9tE//KUIYr+9iaV/cLtOO2+4KKFzQIvyl4
+         IVX6WgWwL+WD4qpG4YIXjYmt49nsIqv6fHHbpXI2/beP8SpgHTETNqGZ2B1gjX9EELix
+         +DfydluBsoyFyVpExzZ8QpGNTPX908Atoc1ALrjSoBE0HPvPFPKcSl634EuoDunjuk5n
+         p82g==
+X-Forwarded-Encrypted: i=1; AJvYcCWNNJ0HLZ8ir8vUK/B37SOZi0rxeV6tFOc1asPiEZCS6xZEgvFk5TCj98s2BepMRcxNtRfU6oWQ/lZdMiuKRMteN2vvMtpUvjD/
+X-Gm-Message-State: AOJu0YwvbQZE3w3qZjz4aCS5QVz81NKRf+LiTA7lwTdBN4Pkgwo63MZy
+	0hU/a8ukqJUdTwZsQ5NwxNTa6nBIhvUZZ6FIDnfBDSU+OSpUy5MeWJZaHT397w==
+X-Google-Smtp-Source: AGHT+IF2xsZFQTxLkIAWYk6sOUNhPGPAbnn7VE8zl0zWINw6lhLGLkVenJENo35TIPeg+vlyw71Z+A==
+X-Received: by 2002:a17:903:2305:b0:1df:f91a:ba35 with SMTP id d5-20020a170903230500b001dff91aba35mr10905397plh.67.1710865713625;
+        Tue, 19 Mar 2024 09:28:33 -0700 (PDT)
+Received: from thinkpad ([120.56.201.52])
+        by smtp.gmail.com with ESMTPSA id kw11-20020a170902f90b00b001dcc18e1c10sm11587869plb.174.2024.03.19.09.28.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 09:28:33 -0700 (PDT)
+Date: Tue, 19 Mar 2024 21:58:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
+ outbound window memory allocation
+Message-ID: <20240319162829.GC3297@thinkpad>
+References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
+ <Zfm0Ws/Zg1W2UVZt@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAGVVp+WyM-ce=c1L4p2EZfvLyxYZSHFkxKLad1TXXyNdVn1KYg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zfm0Ws/Zg1W2UVZt@lizhi-Precision-Tower-5810>
 
-On Tue, Mar 19, 2024 at 03:34:56PM +0800, Changhui Zhong wrote:
-> Hello,
+On Tue, Mar 19, 2024 at 11:50:50AM -0400, Frank Li wrote:
+> On Sun, Mar 17, 2024 at 11:39:17AM +0530, Manivannan Sadhasivam wrote:
+> > As proposed during the last year 'PCI Endpoint Subsystem Open Items
+> > Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
+> > framework for managing the endpoint outbound window memory allocation.
+> > 
+> > PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
+> > driver from the start for managing the memory required to map the host
+> > address space (outbound) in endpoint. Even though it works well, it
+> > completely defeats the purpose of the 'Genalloc framework', a general
+> > purpose memory allocator framework created to avoid various custom memory
+> > allocators in the kernel.
+> > 
+> > The migration to Genalloc framework is done is such a way that the existing
+> > API semantics are preserved. So that the callers of the EPC mem APIs do not
+> > need any modification (apart from the pcie-designware-epc driver that
+> > queries page size).
+> > 
+> > Internally, the EPC mem driver now uses Genalloc framework's
+> > 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
+> > based on the requested size as like the previous allocator. And the
+> > page size passed during pci_epc_mem_init() API is used as the minimum order
+> > for the memory allocations.
+> > 
+> > During the migration, 'struct pci_epc_mem' is removed as it is seems
+> > redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
+> > is now used to hold the address windows of the endpoint controller.
+> > 
+> > [1] https://lpc.events/event/17/contributions/1419/
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
+> >  drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
+> >  include/linux/pci-epc.h                         |  25 +---
+> >  3 files changed, 81 insertions(+), 140 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > index 5befed2dc02b..37c612282eb6 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -482,11 +482,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >  		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
+> >  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+> >  	}
+> > -	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+> > +	aligned_offset = msg_addr_lower & (epc->windows[0]->page_size - 1);
+> >  	msg_addr = ((u64)msg_addr_upper) << 32 |
+> >  			(msg_addr_lower & ~aligned_offset);
+> >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> > -				  epc->mem->window.page_size);
+> > +				  epc->windows[0]->page_size);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -550,10 +550,10 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+> >  		return -EPERM;
+> >  	}
+> >  
+> > -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> > +	aligned_offset = msg_addr & (epc->windows[0]->page_size - 1);
+> >  	msg_addr &= ~aligned_offset;
+> >  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+> > -				  epc->mem->window.page_size);
+> > +				  epc->windows[0]->page_size);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -572,7 +572,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
+> >  	dw_pcie_edma_remove(pci);
+> >  
+> >  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> > -			      epc->mem->window.page_size);
+> > +			      epc->windows[0]->page_size);
+> >  
+> >  	pci_epc_mem_exit(epc);
+> >  
+> > @@ -742,7 +742,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  	}
+> >  
+> >  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
+> > -					     epc->mem->window.page_size);
+> > +					     epc->windows[0]->page_size);
+> >  	if (!ep->msi_mem) {
+> >  		ret = -ENOMEM;
+> >  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
+> > @@ -770,7 +770,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+> >  
+> >  err_free_epc_mem:
+> >  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
+> > -			      epc->mem->window.page_size);
+> > +			      epc->windows[0]->page_size);
+> >  
+> >  err_exit_epc_mem:
+> >  	pci_epc_mem_exit(epc);
+> > diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> > index a9c028f58da1..f9e6e1a6aeaa 100644
+> > --- a/drivers/pci/endpoint/pci-epc-mem.c
+> > +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> > @@ -4,37 +4,18 @@
+> >   *
+> >   * Copyright (C) 2017 Texas Instruments
+> >   * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> > + *
+> > + * Copyright (C) 2024 Linaro Ltd.
+> > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >   */
+> >  
+> > +#include <linux/genalloc.h>
+> >  #include <linux/io.h>
+> >  #include <linux/module.h>
+> >  #include <linux/slab.h>
+> >  
+> >  #include <linux/pci-epc.h>
+> >  
+> > -/**
+> > - * pci_epc_mem_get_order() - determine the allocation order of a memory size
+> > - * @mem: address space of the endpoint controller
+> > - * @size: the size for which to get the order
+> > - *
+> > - * Reimplement get_order() for mem->page_size since the generic get_order
+> > - * always gets order with a constant PAGE_SIZE.
+> > - */
+> > -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+> > -{
+> > -	int order;
+> > -	unsigned int page_shift = ilog2(mem->window.page_size);
+> > -
+> > -	size--;
+> > -	size >>= page_shift;
+> > -#if BITS_PER_LONG == 32
+> > -	order = fls(size);
+> > -#else
+> > -	order = fls64(size);
+> > -#endif
+> > -	return order;
+> > -}
+> > -
+> >  /**
+> >   * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
+> >   * @epc: the EPC device that invoked pci_epc_mem_init
+> > @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+> >  			   struct pci_epc_mem_window *windows,
+> >  			   unsigned int num_windows)
+> >  {
+> > -	struct pci_epc_mem *mem = NULL;
+> > -	unsigned long *bitmap = NULL;
+> > -	unsigned int page_shift;
+> > +	struct pci_epc_mem_window *window = NULL;
+> >  	size_t page_size;
+> > -	int bitmap_size;
+> > -	int pages;
+> >  	int ret;
+> >  	int i;
+> >  
+> > -	epc->num_windows = 0;
+> > -
+> >  	if (!windows || !num_windows)
+> >  		return -EINVAL;
+> >  
+> > @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+> >  		page_size = windows[i].page_size;
+> >  		if (page_size < PAGE_SIZE)
+> >  			page_size = PAGE_SIZE;
+> > -		page_shift = ilog2(page_size);
+> > -		pages = windows[i].size >> page_shift;
+> > -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >  
+> > -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> > -		if (!mem) {
+> > +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
 > 
-> repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> branch: master
-> commit HEAD:b3603fcb79b1036acae10602bffc4855a4b9af80
-
-Where's the rest of this?  I don't see "WARNING: CPU: 0 PID: 226 at
-drivers/pci/pci.c:2236" in the snippet below.  Please include or post
-the complete dmesg log.
-
-Is this reproducible?  If so, how?  And is it a regression?
-
-> dmesg log:
-> Rebooting.
-> [  292.644951] {1}[Hardware Error]: Hardware error from APEI Generic
-> Hardware Error Source: 5
-> [  292.644955] {1}[Hardware Error]: event severity: fatal
-> [  292.644958] {1}[Hardware Error]:  Error 0, type: fatal
-> [  292.644959] {1}[Hardware Error]:   section_type: PCIe error
-> [  292.644960] {1}[Hardware Error]:   port_type: 0, PCIe end point
-> [  292.644962] {1}[Hardware Error]:   version: 3.0
-> [  292.644963] {1}[Hardware Error]:   command: 0x0002, status: 0x0010
-> [  292.644964] {1}[Hardware Error]:   device_id: 0000:01:00.1
-> [  292.644966] {1}[Hardware Error]:   slot: 0
-> [  292.644967] {1}[Hardware Error]:   secondary_bus: 0x00
-> [  292.644968] {1}[Hardware Error]:   vendor_id: 0x14e4, device_id: 0x165f
-> [  292.644969] {1}[Hardware Error]:   class_code: 020000
-> [  292.644971] {1}[Hardware Error]:   aer_uncor_status: 0x00100000,
-> aer_uncor_mask: 0x00010000
-> [  292.644972] {1}[Hardware Error]:   aer_uncor_severity: 0x000ef030
-> [  292.644973] {1}[Hardware Error]:   TLP Header: 40000001 0000020f
-> 90028090 00000000
-
-aer_uncor_status 0x00100000 looks like bit 20, Unsupported Request.
-If I decoded it correctly, the TLP log says:
-
-  40000001: 0100 ... 0001
-    Fmt               010             3 DW header with data (PCIe r6.0, sec 2.2.1.1)
-    Type              0 0000          Memory Write
-    Length            1               1 DW
-
-  0000020f (sec 2.2.7.1)
-    Requester ID      0000
-    Tag               2
-    First DW BE       f               32-bit write
-
-  90028090
-    Address           90028090
-
-I don't see 0x90028090 as a BAR value in the lspci output below,
-although we don't have any information about possible address
-translation (this would be in the dmesg log or "lspci -b" output).
-
-But it *looks* like an MMIO write that got routed to 01:00.1 (the
-bridge window configuration that would be in the dmesg log would show
-this), and 01:00.1 said "I don't know about this address" (it doesn't
-match any of my BARs) and logged a UR error.
-
-> [  292.644976] Kernel panic - not syncing: Fatal hardware error!
-> [  292.644978] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0+ #1
-> [  292.644981] Hardware name: Dell Inc. PowerEdge R640/0X45NX, BIOS
-> 2.19.1 06/04/2023
-> [  292.644982] Call Trace:
-> [  292.644984]  <NMI>
-> [  292.644985]  panic+0x32b/0x350
-> [  292.644995]  __ghes_panic+0x69/0x70
-> [  292.645000]  ghes_in_nmi_queue_one_entry.constprop.0+0x1d9/0x2b0
-> [  292.645005]  ghes_notify_nmi+0x59/0xd0
-> [  292.645007]  nmi_handle+0x5b/0x150
-> [  292.645014]  default_do_nmi+0x40/0x100
-> [  292.645017]  exc_nmi+0x100/0x180
-> [  292.645019]  end_repeat_nmi+0xf/0x53
-> [  292.645023] RIP: 0010:intel_idle+0x59/0xa0
-> [  292.645028] Code: d2 48 89 d1 65 48 8b 05 55 21 73 70 0f 01 c8 48
-> 8b 00 a8 08 75 14 66 90 0f 00 2d 2e 00 43 00 b9 01 00 00 00 48 89 f0
-> 0f 01 c9 <65> 48 8b 05 2f 21 73 70 f0 80 60 02 df f0 83 44 24 fc 00 48
-> 8b 00
-> [  292.645030] RSP: 0018:ffffffff90403e48 EFLAGS: 00000046
-> [  292.645032] RAX: 0000000000000001 RBX: 0000000000000002 RCX: 0000000000000001
-> [  292.645034] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff93d22fa3ffa0
-> [  292.645035] RBP: ffff93d22fa3ffa0 R08: 0000000000000002 R09: 00000000fffffffd
-> [  292.645036] R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff908bbf60
-> [  292.645037] R13: ffffffff908bc048 R14: 0000000000000002 R15: 0000000000000000
-> [  292.645040]  ? intel_idle+0x59/0xa0
-> [  292.645043]  ? intel_idle+0x59/0xa0
-> [  292.645046]  </NMI>
-> [  292.645046]  <TASK>
-> [  292.645047]  cpuidle_enter_state+0x7d/0x410
-> [  292.645050]  cpuidle_enter+0x29/0x40
-> [  292.645054]  cpuidle_idle_call+0xf8/0x160
-> [  292.645060]  do_idle+0x7a/0xe0
-> [  292.645062]  cpu_startup_entry+0x25/0x30
-> [  292.645065]  rest_init+0xcc/0xd0
-> [  292.645068]  start_kernel+0x325/0x400
-> [  292.645072]  x86_64_start_reservations+0x14/0x30
-> [  292.645076]  x86_64_start_kernel+0xed/0xf0
-> [  292.645079]  common_startup_64+0x13e/0x141
-> [  292.645084]  </TASK>
-> [  292.645101] Kernel Offset: 0xdc00000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> I think it is not good to modify caller's memory. This funciton suppose
+> pass down read-only information. And set to epc->windows[i]. I think it'd
+> better to use epc->windows[i].pool/windows.
 > 
+
+What do you mean by modifying caller's memory? Here, the memory for epc->windows
+is being allocated and the pool is created for each window.
+
+> > +		if (!windows[i].pool) {
+> >  			ret = -ENOMEM;
+> > -			i--;
+> > -			goto err_mem;
+> > +			goto err_free_mem;
+> > +		}
+> > +
+> > +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
+> > +				  NULL);
+> > +
+> > +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
+> > +		ret = gen_pool_add_virt(windows[i].pool, (unsigned long)windows[i].virt_base,
+> > +					windows[i].phys_base, windows[i].size, -1);
+> > +		if (ret) {
+> > +			iounmap(windows[i].virt_base);
+> > +			gen_pool_destroy(epc->windows[i]->pool);
 > 
-> # lspci -nn -s 01:00.1
-> 01:00.1 Ethernet controller [0200]: Broadcom Inc. and subsidiaries
-> NetXtreme BCM5720 Gigabit Ethernet PCIe [14e4:165f]
+> I think move all free to err path will be easy to understand.
 > 
-> # lspci -vvv -s 01:00.1
-> 01:00.1 Ethernet controller: Broadcom Inc. and subsidiaries NetXtreme
-> BCM5720 Gigabit Ethernet PCIe
->         DeviceName: NIC4
->         Subsystem: Broadcom Inc. and subsidiaries Device 4160
->         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-> ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0
->         Interrupt: pin B routed to IRQ 17
->         NUMA node: 0
->         Region 0: Memory at 92900000 (64-bit, prefetchable) [size=64K]
->         Region 2: Memory at 92910000 (64-bit, prefetchable) [size=64K]
->         Region 4: Memory at 92920000 (64-bit, prefetchable) [size=64K]
->         Expansion ROM at 90040000 [disabled] [size=256K]
->         Capabilities: [48] Power Management version 3
->                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-> PME(D0+,D1-,D2-,D3hot+,D3cold+)
->                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=1 PME-
->         Capabilities: [50] Vital Product Data
->                 Product Name: Broadcom NetXtreme Gigabit Ethernet
->                 Read-only fields:
->                         [PN] Part number: BCM95720
->                         [MN] Manufacture ID: 1028
->                         [V0] Vendor specific: FFV22.61.8
->                         [V1] Vendor specific: DSV1028VPDR.VER1.0
->                         [V2] Vendor specific: NPY2
->                         [V3] Vendor specific: PMT1
->                         [V4] Vendor specific: NMVBroadcom Corp
->                         [V5] Vendor specific: DTINIC
->                         [V6] Vendor specific: DCM3001008d454101008d45
->                         [RV] Reserved: checksum good, 233 byte(s) reserved
->                 End
->         Capabilities: [58] MSI: Enable- Count=1/8 Maskable- 64bit+
->                 Address: 0000000000000000  Data: 0000
->         Capabilities: [a0] MSI-X: Enable+ Count=17 Masked-
->                 Vector table: BAR=4 offset=00000000
->                 PBA: BAR=4 offset=00001000
->         Capabilities: [ac] Express (v2) Endpoint, MSI 00
->                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-> <4us, L1 <64us
->                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+
-> FLReset+ SlotPowerLimit 25.000W
->                 DevCtl: CorrErr- NonFatalErr+ FatalErr+ UnsupReq+
->                         RlxdOrd- ExtTag- PhantFunc- AuxPwr+ NoSnoop- FLReset-
->                         MaxPayload 128 bytes, MaxReadReq 512 bytes
->                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> AuxPwr+ TransPend-
->                 LnkCap: Port #0, Speed 5GT/s, Width x2, ASPM not supported
->                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
->                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
->                         ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
->                 LnkSta: Speed 5GT/s (ok), Width x2 (ok)
->                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
->                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+
-> NROPrPrP- LTR-
->                          10BitTagComp- 10BitTagReq- OBFF Not
-> Supported, ExtFmt- EETLPPrefix-
->                          EmergencyPowerReduction Not Supported,
-> EmergencyPowerReductionInit-
->                          FRS- TPHComp- ExtTPHComp-
->                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
->                 DevCtl2: Completion Timeout: 65ms to 210ms,
-> TimeoutDis- LTR- OBFF Disabled,
->                          AtomicOpsCtl: ReqEn-
->                 LnkSta2: Current De-emphasis Level: -6dB,
-> EqualizationComplete- EqualizationPhase1-
->                          EqualizationPhase2- EqualizationPhase3-
-> LinkEqualizationRequest-
->                          Retimer- 2Retimers- CrosslinkRes: unsupported
->         Capabilities: [100 v1] Advanced Error Reporting
->                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-> UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
->                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-> UnxCmplt+ RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
->                 UESvrt: DLP+ SDES+ TLP+ FCP+ CmpltTO+ CmpltAbrt+
-> UnxCmplt- RxOF+ MalfTLP+ ECRC+ UnsupReq- ACSViol-
->                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
-> AdvNonFatalErr+
->                 CEMsk:  RxErr- BadTLP+ BadDLLP+ Rollover+ Timeout+
-> AdvNonFatalErr+
->                 AERCap: First Error Pointer: 00, ECRCGenCap+
-> ECRCGenEn- ECRCChkCap+ ECRCChkEn-
->                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
->                 HeaderLog: 40000001 0000020f 90028090 00000000
->         Capabilities: [13c v1] Device Serial Number 00-00-e4-3d-1a-3c-8b-bb
->         Capabilities: [150 v1] Power Budgeting <?>
->         Capabilities: [160 v1] Virtual Channel
->                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
->                 Arb:    Fixed- WRR32- WRR64- WRR128-
->                 Ctrl:   ArbSelect=Fixed
->                 Status: InProgress-
->                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
->                         Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
->                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
->                         Status: NegoPending- InProgress-
->         Kernel driver in use: tg3
->         Kernel modules: tg3
+
+It is not straightforward. First we need to free the memory for current
+iteration and then all previous iterations, that too from different places.
+Moving the code to free current iteration to the error label will look messy.
+
+> > +			goto err_free_mem;
+> >  		}
+> >  
+> > -		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> > -		if (!bitmap) {
+> > +		window = kzalloc(sizeof(*window), GFP_KERNEL);
 > 
-> Thanks,
+> According to below code                                                    
+>                                                                            
+>         epc->windows = kcalloc(num_windows, sizeof(*epc->windows), GFP_KERNEL);
+>         if (!epc->windows)                                                 
+>                 return -ENOMEM;                                            
+>                                                                            
+> epc->windows already allocate whole num_windows * "struct pci_epc_mem_window".
+> I think you can direct use 'window = epc->windows + i', so needn't alloc      
+> additional memory for epc->windows[i].
 > 
+
+First we are allocating the memory for 'struct pci_epc_mem_window' _pointers_ in
+epc->windows. Then we need to allocate memory for each pointer in epc->windows
+to actually store data. Otherwise, we will be referencing the nulll pointer.
+
+- Mani
+
+> 
+> > +		if (!window) {
+> >  			ret = -ENOMEM;
+> > -			kfree(mem);
+> > -			i--;
+> > -			goto err_mem;
+> > +			iounmap(windows[i].virt_base);
+> > +			gen_pool_destroy(epc->windows[i]->pool);
+> > +			goto err_free_mem;
+> >  		}
+> >  
+> > -		mem->window.phys_base = windows[i].phys_base;
+> > -		mem->window.size = windows[i].size;
+> > -		mem->window.page_size = page_size;
+> > -		mem->bitmap = bitmap;
+> > -		mem->pages = pages;
+> > -		mutex_init(&mem->lock);
+> > -		epc->windows[i] = mem;
+> > +		window->phys_base = windows[i].phys_base;
+> > +		window->size = windows[i].size;
+> > +		window->page_size = page_size;
+> > +		window->pool = windows[i].pool;
+> > +		epc->windows[i] = window;
+> >  	}
+> >  
+> > -	epc->mem = epc->windows[0];
+> >  	epc->num_windows = num_windows;
+> >  
+> >  	return 0;
+> >  
+> > -err_mem:
+> > -	for (; i >= 0; i--) {
+> > -		mem = epc->windows[i];
+> > -		kfree(mem->bitmap);
+> > -		kfree(mem);
+> > +err_free_mem:
+> > +	for (--i; i >= 0; i--) {
+> > +		iounmap(windows[i].virt_base);
+> > +		gen_pool_destroy(epc->windows[i]->pool);
+> > +		kfree(epc->windows[i]);
+> >  	}
+> > +
+> >  	kfree(epc->windows);
+> >  
+> >  	return ret;
+> > @@ -128,14 +109,15 @@ EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
+> >  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+> >  		     size_t size, size_t page_size)
+> >  {
+> > -	struct pci_epc_mem_window mem_window;
+> > +	struct pci_epc_mem_window window;
+> >  
+> > -	mem_window.phys_base = base;
+> > -	mem_window.size = size;
+> > -	mem_window.page_size = page_size;
+> > +	window.phys_base = base;
+> > +	window.size = size;
+> > +	window.page_size = page_size;
+> >  
+> > -	return pci_epc_multi_mem_init(epc, &mem_window, 1);
+> > +	return pci_epc_multi_mem_init(epc, &window, 1);
+> >  }
+> > +
+> 
+> Remove extra empty line change
+> 
+> >  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+> >  
+> >  /**
+> > @@ -147,21 +129,20 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
+> >   */
+> >  void pci_epc_mem_exit(struct pci_epc *epc)
+> >  {
+> > -	struct pci_epc_mem *mem;
+> >  	int i;
+> >  
+> >  	if (!epc->num_windows)
+> >  		return;
+> >  
+> >  	for (i = 0; i < epc->num_windows; i++) {
+> > -		mem = epc->windows[i];
+> > -		kfree(mem->bitmap);
+> > -		kfree(mem);
+> > +		iounmap(epc->windows[i]->virt_base);
+> > +		gen_pool_destroy(epc->windows[i]->pool);
+> > +		kfree(epc->windows[i]);
+> >  	}
+> > +
+> >  	kfree(epc->windows);
+> >  
+> >  	epc->windows = NULL;
+> > -	epc->mem = NULL;
+> >  	epc->num_windows = 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+> > @@ -178,55 +159,42 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
+> >  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
+> >  				     phys_addr_t *phys_addr, size_t size)
+> >  {
+> > +	struct pci_epc_mem_window *window;
+> >  	void __iomem *virt_addr = NULL;
+> > -	struct pci_epc_mem *mem;
+> > -	unsigned int page_shift;
+> > +	struct gen_pool *genpool;
+> >  	size_t align_size;
+> > -	int pageno;
+> > -	int order;
+> >  	int i;
+> >  
+> >  	for (i = 0; i < epc->num_windows; i++) {
+> > -		mem = epc->windows[i];
+> > -		mutex_lock(&mem->lock);
+> > -		align_size = ALIGN(size, mem->window.page_size);
+> > -		order = pci_epc_mem_get_order(mem, align_size);
+> > -
+> > -		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
+> > -						 order);
+> > -		if (pageno >= 0) {
+> > -			page_shift = ilog2(mem->window.page_size);
+> > -			*phys_addr = mem->window.phys_base +
+> > -				((phys_addr_t)pageno << page_shift);
+> > -			virt_addr = ioremap(*phys_addr, align_size);
+> > -			if (!virt_addr) {
+> > -				bitmap_release_region(mem->bitmap,
+> > -						      pageno, order);
+> > -				mutex_unlock(&mem->lock);
+> > -				continue;
+> > -			}
+> > -			mutex_unlock(&mem->lock);
+> > -			return virt_addr;
+> > -		}
+> > -		mutex_unlock(&mem->lock);
+> > +		window = epc->windows[i];
+> > +		genpool = window->pool;
+> > +		align_size = ALIGN(size, window->page_size);
+> > +
+> > +		virt_addr = (void __iomem *)gen_pool_alloc(genpool, align_size);
+> > +		if (!virt_addr)
+> > +			continue;
+> > +
+> > +		*phys_addr = gen_pool_virt_to_phys(genpool, (unsigned long)virt_addr);
+> > +
+> > +		break;
+> >  	}
+> >  
+> >  	return virt_addr;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
+> >  
+> > -static struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
+> > +static struct pci_epc_mem_window *pci_epc_get_matching_window(struct pci_epc *epc,
+> >  						       phys_addr_t phys_addr)
+> >  {
+> > -	struct pci_epc_mem *mem;
+> > +	struct pci_epc_mem_window *window;
+> >  	int i;
+> >  
+> >  	for (i = 0; i < epc->num_windows; i++) {
+> > -		mem = epc->windows[i];
+> > +		window = epc->windows[i];
+> >  
+> > -		if (phys_addr >= mem->window.phys_base &&
+> > -		    phys_addr < (mem->window.phys_base + mem->window.size))
+> > -			return mem;
+> > +		if (phys_addr >= window->phys_base &&
+> > +		    phys_addr < (window->phys_base + window->size))
+> > +			return window;
+> >  	}
+> >  
+> >  	return NULL;
+> > @@ -244,27 +212,15 @@ static struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
+> >  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
+> >  			   void __iomem *virt_addr, size_t size)
+> >  {
+> > -	struct pci_epc_mem *mem;
+> > -	unsigned int page_shift;
+> > -	size_t page_size;
+> > -	int pageno;
+> > -	int order;
+> > +	struct pci_epc_mem_window *window;
+> >  
+> > -	mem = pci_epc_get_matching_window(epc, phys_addr);
+> > -	if (!mem) {
+> > +	window = pci_epc_get_matching_window(epc, phys_addr);
+> > +	if (!window) {
+> >  		pr_err("failed to get matching window\n");
+> >  		return;
+> >  	}
+> >  
+> > -	page_size = mem->window.page_size;
+> > -	page_shift = ilog2(page_size);
+> > -	iounmap(virt_addr);
+> > -	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
+> > -	size = ALIGN(size, page_size);
+> > -	order = pci_epc_mem_get_order(mem, size);
+> > -	mutex_lock(&mem->lock);
+> > -	bitmap_release_region(mem->bitmap, pageno, order);
+> > -	mutex_unlock(&mem->lock);
+> > +	gen_pool_free(window->pool, (unsigned long)virt_addr, size);
+> >  }
+> >  EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
+> >  
+> > diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> > index 40ea18f5aa02..37ea96ed3432 100644
+> > --- a/include/linux/pci-epc.h
+> > +++ b/include/linux/pci-epc.h
+> > @@ -87,30 +87,19 @@ struct pci_epc_ops {
+> >  /**
+> >   * struct pci_epc_mem_window - address window of the endpoint controller
+> >   * @phys_base: physical base address of the PCI address window
+> > + * @virt_base: virtual base address of the PCI address window
+> > + * @pool: memory pool descriptor
+> >   * @size: the size of the PCI address window
+> >   * @page_size: size of each page
+> >   */
+> >  struct pci_epc_mem_window {
+> >  	phys_addr_t	phys_base;
+> > +	void __iomem	*virt_base;
+> > +	struct gen_pool *pool;
+> >  	size_t		size;
+> >  	size_t		page_size;
+> >  };
+> >  
+> > -/**
+> > - * struct pci_epc_mem - address space of the endpoint controller
+> > - * @window: address window of the endpoint controller
+> > - * @bitmap: bitmap to manage the PCI address space
+> > - * @pages: number of bits representing the address region
+> > - * @lock: mutex to protect bitmap
+> > - */
+> > -struct pci_epc_mem {
+> > -	struct pci_epc_mem_window window;
+> > -	unsigned long	*bitmap;
+> > -	int		pages;
+> > -	/* mutex to protect against concurrent access for memory allocation*/
+> > -	struct mutex	lock;
+> > -};
+> > -
+> >  /**
+> >   * struct pci_epc - represents the PCI EPC device
+> >   * @dev: PCI EPC device
+> > @@ -118,9 +107,6 @@ struct pci_epc_mem {
+> >   * @list_lock: Mutex for protecting pci_epf list
+> >   * @ops: function pointers for performing endpoint operations
+> >   * @windows: array of address space of the endpoint controller
+> > - * @mem: first window of the endpoint controller, which corresponds to
+> > - *       default address space of the endpoint controller supporting
+> > - *       single window.
+> >   * @num_windows: number of windows supported by device
+> >   * @max_functions: max number of functions that can be configured in this EPC
+> >   * @max_vfs: Array indicating the maximum number of virtual functions that can
+> > @@ -134,8 +120,7 @@ struct pci_epc {
+> >  	struct list_head		pci_epf;
+> >  	struct mutex			list_lock;
+> >  	const struct pci_epc_ops	*ops;
+> > -	struct pci_epc_mem		**windows;
+> > -	struct pci_epc_mem		*mem;
+> > +	struct pci_epc_mem_window	**windows;
+> >  	unsigned int			num_windows;
+> >  	u8				max_functions;
+> >  	u8				*max_vfs;
+> > 
+> > ---
+> > base-commit: 256833a66670ff28b7c1bddbd17973619e5281fd
+> > change-id: 20240317-pci-ep-genalloc-fa89f5e487e3
+> > 
+> > Best regards,
+> > -- 
+> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
