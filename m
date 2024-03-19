@@ -1,258 +1,178 @@
-Return-Path: <linux-pci+bounces-4911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB39D880262
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:33:37 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEA9B880265
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:34:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 389091F24B62
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:33:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 656E1B24317
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:34:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3DF8539C;
-	Tue, 19 Mar 2024 16:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2EF6AC0;
+	Tue, 19 Mar 2024 16:34:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1INXCQ6"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pj9QGjAT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304B20B29
-	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 16:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6948489;
+	Tue, 19 Mar 2024 16:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710866008; cv=none; b=JVrNjAGiAegCrsOLvSR2dsQiYIDASRDdI+OYw6W1cDp87AC0d/jWCzWv6UJLGrSp/xb2samALR6QBmouK5aS6cleSygZwg5emgj8FByaiLNQYHRONpkz0B3NcQIVBR3dJNZoT9zfqCj/1FeOWyGapNkZpi0jRgm40I9Op8LAo4I=
+	t=1710866054; cv=none; b=C6iUU9LZgSr7uz19G0EmFA2xixd9VOx57QTLtNKOGV5KVWMwL00ioJ7SReBhEgBU5mQhIfq/3r2F46z50mUhrSz3k4Iqnw2jfy5QLYpLi3TED5ki2paQxbEuJtLGjd2Q6NDxMznEedk5l3EO9X4EQd0NEFxhbJhFFlNOQCqRpi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710866008; c=relaxed/simple;
-	bh=PeIAsruLzkLKeE08ndyRTXfNaTUHjpsUFBRVrP/igeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gqm2tRbUqaBvrLr5zHBIZMTvN0Y0Ge+Ny4g8pEofYDRtHXlefuHsnSmmhuGkRHiw0oREtZwM24g624j1ZVjg/nTCL5YkG79u9kb4b7YHPCsL+Uah2tOAjsuCeLNXkrNNIrE979DOfLjmxGvAB1o5nlhOzievBkdyny5ErRTNzGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P1INXCQ6; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e6f6d782e4so3687247b3a.0
-        for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 09:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710866006; x=1711470806; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=21zEQnfxcYpMdB2q3MtSkNSfUlYefH4UFBDqIUczato=;
-        b=P1INXCQ6Sj05vE1MDcr1mcdBElgam/U8b5vHWQuP4n1qRQi19d9KKAO7R8znZBLgnc
-         Fr72Shr6MmTXNZJFaMA3ddDfunj/q+6AJ+p/lpLdm+P5TX3UMBTMZd2nAO2W53dUuYCD
-         OJMEsWCYhj/sifr6jjJtZZK+IJOxWcgT+3HEffxzfMXE4BZfvMbKuBwN/FfWBQpVibjX
-         qEcAAKyR88g2rIOb1MtzjZ1WU2dAuNrTZpyr3rDMkIftgFyPXme86DlxJ4/90lg0IOKb
-         iUflrYDbv+ijBAAQ4w+vsR5Q2+IKiybz7ytx9ctS/9o00S1QlJ8xgM+CrXa7jx4UXLRS
-         UC4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710866006; x=1711470806;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=21zEQnfxcYpMdB2q3MtSkNSfUlYefH4UFBDqIUczato=;
-        b=PGoDUVmC19stVwHvMHUFLz0+Q5VMR2pqk0bGbnI2gt6Lhtm0CD2HM5Y57YOmsZthyz
-         vt43iojEXVfbdomIxzDQhWme8axHgJqDWU2LzBMOXyNG0eppJw3N6XukVUJuS/C6lC47
-         Yzh/fixiaTgdM5oyFLPsmtPFTGGl7HoymfoJMQ8pVx5SMmLCNMz8HmahjUvXTlxTST5i
-         dVHiLtrJoppVWAY++cxmVfbD7qCUTa2qSDJx4dY+S1f7hvcpP21vayUJaTYdDJe8t4rp
-         EJQZeehxyJf00sd1RTnRnwpY8gt+bLFtGsA1s8dve528Tr6MZyvLyIaoyGTm/pU9u8f7
-         00Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjKv3b88OIyaEwM6F0OTxOHHAWOyKX3JV12dFUpy3pWBqIqKAJBzJk4KMpiBu1c0WTP4ZaQBZjF8yIHW110MPNKwseyrmRJ1I7
-X-Gm-Message-State: AOJu0Yyno4PiYO3sdNKcV2vCgqUxCRHII8DFiXoRf/nQi0aoN9r1y/Xl
-	qGwnnKZBEUdk9HtG12l7pqcjXK5rMObVAmF2mk4v5gW5NlBwZID4XkfXn2xDuQ==
-X-Google-Smtp-Source: AGHT+IGdOZw8YS4SHpor1EHU9P51zW05feF5360p5IkyjhPjT10QsmUSI91PX9X2UnQj0tJ6FnFOuQ==
-X-Received: by 2002:aa7:8883:0:b0:6e6:b32c:501d with SMTP id z3-20020aa78883000000b006e6b32c501dmr17160677pfe.19.1710866005021;
-        Tue, 19 Mar 2024 09:33:25 -0700 (PDT)
-Received: from thinkpad ([120.56.201.52])
-        by smtp.gmail.com with ESMTPSA id lb3-20020a056a004f0300b006e664031f10sm10042675pfb.51.2024.03.19.09.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Mar 2024 09:33:24 -0700 (PDT)
-Date: Tue, 19 Mar 2024 22:03:15 +0530
-From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-	mchehab@kernel.org, rric@kernel.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-	josh@joshtriplett.org, lukas.bulwahn@gmail.com,
-	hongxing.zhu@nxp.com, pankaj.dubey@samsung.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	vidyas@nvidia.com, gost.dev@samsung.com, alim.akhtar@samsung.com
-Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Message-ID: <20240319163315.GD3297@thinkpad>
-References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
- <20231130115044.53512-1-shradha.t@samsung.com>
- <20231130165514.GW3043@thinkpad>
- <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
- <20240104055030.GA3031@thinkpad>
- <0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
- <20240216134921.GH2559@thinkpad>
- <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
+	s=arc-20240116; t=1710866054; c=relaxed/simple;
+	bh=YlAPJJDgoDVZ9sazmRhBUOaRf5OWOWpXawB/hpsB/qI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RtnmAkycay5Mnbnu2pSfZwOMkuQ5a3Ti0BNUNR0c/wImiV4CsOHC321h9jAbz/fSQOa2acOcLXk3m8q+xJm8O6ie9SksZZUpiaWTbZN6M6mbgKCsG83v0lCxSzTmC5QN3hQxZpeBN26vctM2WjVqhJo6NkgOgaV6bNjIzTzMBaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pj9QGjAT; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7C1171BF208;
+	Tue, 19 Mar 2024 16:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1710866048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oYIimeHKwBqqC6DKuj5E7MDRAp7vlcQ07WCRWyQmkBA=;
+	b=pj9QGjATc1a0H5dialB43VBvVSKpAUdAGAbcNJmUivGu3/45f0JBnQklJhy26AxveZhfsD
+	NzjZudfp6zuWrMW3Uvy2cRbQ80GsLLjRHp46mGzWbD0LkH09L3Awtj1pmKcwHVNVieULO0
+	4Nk4ZmgiCOMY8hUJp9RTM8ErwdVdo/opIrcJ9tBwzl7ntXYGl7uD1Yp0emCUd9uMTAYnlW
+	D0GiVrXJ16XsRT9lqrigkoh+xvxEcMW+dKZ8hdlbXFT9prZIt/F6MBr6QP/OYO6H1k1/Jn
+	kyAlMFeWGqux+z3dYUmLwZPOvaQS8eFXMzcN80Ytl9qjJ3IvRPNkRhCbwdMN2A==
+Date: Tue, 19 Mar 2024 17:34:04 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
+ Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano
+ Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, Allan
+ Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
+Message-ID: <20240319173404.019b424a@bootlin.com>
+In-Reply-To: <20240319152513.GA1227721@bhelgaas>
+References: <20231215145207.0cf098e5@bootlin.com>
+	<20240319152513.GA1227721@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <120d01da657e$66b9d3b0$342d7b10$@samsung.com>
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:
-> + Borislav, Tony, James, Mauro, Robert
-> 
-> Hi All,
-> 
-> Synopsys DesignWare PCIe controllers have a vendor specific capability (which
-> means that this set of registers are only present in DesignWare controllers)
-> to perform debug operations called "RASDES".
-> The functionalities provided by this extended capability are:
-> 
-> 1. Debug: This has some debug related diagnostic features like holding LTSSM
-> in certain states, reading the status of lane detection, checking if any PCIe
-> lanes are broken (RX Valid) and so on. It's a debug only feature used for diagnostic
-> use-cases.
-> 
-> 2. Error Injection: This is a way to inject certain errors in PCIe like LCRC, ECRC,
-> Bad TLPs and so on. Again, this is a debug feature and generally not used in
-> functional use-case.
-> 
-> 3. Statistical counters: This has 3 parts
->  - Error counters
->  - Non error counters (covered as part of perf [1])
->  - Time based analysis counters (covered as part of perf [1])
-> 
-> Selective features of  the above functionality has been implemented
-> by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
-> Synopsys DesignWare PCIe controllers.
-> In order to make it useful to all vendors using DWC controller, we had
-> proposed a common implementation in DWC PCIe controller directory
-> (drivers/pci/controller/dwc/) and our original idea was based on debugfs
-> filesystem. v1 and v2 are mentioned in [2] and [3].
-> 
-> We got a suggestion to implement this as part of EDAC framework [3] and
-> we looked into the same. But as far as I understood, what I am trying to
-> implement is a very specific feature (only valid for Synopsys DWC PCIe controllers).
-> This doesn't seem to fit in very well with the EDAC framework and we can 
-> hardly use any of the EDAC framework APIs. We tried implementing a
-> "pci_driver" but since a function driver will already be running on the EP and
-> portdrv on the root-complex, we will not be able to bind 2 drivers to a single
-> PCI device (root-complex or endpoint). Ultimately, what I will be doing is
-> writing a platform driver with debugfs entries which will be present in EDAC
-> directory instead of DWC directory.
-> 
-> Can  you please help us out by going through this thread [3] and letting us
-> know if our understanding is wrong at any point. If you think it is a better
-> idea to integrate this in the EDAC framework, can you guide me as
-> to how I can utilize the framework better?
-> Please let me know if you need any other information to conclude.
-> 
-> [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@linux.alibaba.com/
-> [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
-> [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsung.com/
-> 
+Hi Bjorn,
 
-Gentle ping for the EDAC maintainers.
+On Tue, 19 Mar 2024 10:25:13 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-- Mani
-
-> Thanks,
-> Shradha
+> [+cc Krzysztof]
 > 
-> > -----Original Message-----
-> > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-> > Sent: 16 February 2024 19:19
-> > To: Shradha Todi <shradha.t@samsung.com>
-> > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; jingoohan1@gmail.com;
-> > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
-> > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
-> > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
-> > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
-> > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > controller
-> > 
-> > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote:
-> > >
-> > >
-> > 
-> > [...]
-> > 
-> > > > For the error injection and counters, we already have the EDAC
-> > > > framework. So adding them in the DWC driver doesn't make sense to me.
+> On Fri, Dec 15, 2023 at 02:52:07PM +0100, Herve Codina wrote:
+> > On Mon, 4 Dec 2023 07:59:09 -0600
+> > Rob Herring <robh@kernel.org> wrote:  
+> > > On Mon, Dec 4, 2023 at 6:43 AM Herve Codina <herve.codina@bootlin.com> wrote:  
+> > > > On Fri, 1 Dec 2023 16:26:45 -0600
+> > > > Rob Herring <robh@kernel.org> wrote:  
+> > > > > On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:  
+> > > > > ...  
+> 
+> > > > > --- a/drivers/pci/of.c
+> > > > > +++ b/drivers/pci/of.c
+> > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
+> > > > >                 return 0;
+> > > > >
+> > > > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
+> > > > > +       if (!node && pci_is_bridge(dev))
+> > > > > +               of_pci_make_dev_node(dev);
+> > > > >         if (!node)
+> > > > >                 return 0;    
 > > > >
-> > >
-> > > Sorry for late response, was going through the EDAC framework to understand
-> > better how we can fit RAS DES support in it. Below are some technical challenges
-> > found so far:
-> > > 1: This debugfs framework proposed [1] can run on both side of the link i.e. RC
-> > and EP as it will be a part of the link controller platform driver. Here for the EP
-> > side the assumption is that it has Linux running, which is primarily a use case for
-> > chip-to-chip communication.  After your suggestion to migrate to EDAC
-> > framework we studied and here are the findings:
-> > > - If we move to EDAC framework, we need to have RAS DES as a
-> > > pci_driver which will be binded based on vendor_id and device_id. Our
-> > > observation is that on EP side system we are unable to bind two
-> > > function driver (pci_driver), as pci_endpoint_test function driver or
-> > > some other chip-to-chip function driver will already be bound. On the
-> > > other hand, on RC side we observed that if we have portdrv enabled in
-> > > Linux running on RC system, it gets bound to RC controller and then it
-> > > does not allow EDAC pci_driver to bind. So basically we see a problem
-> > > here, that we can't have two pci_driver binding to same PCI device
-> > > 2: Another point is even though we use EDAC driver framework, we may not be
-> > able to use any of EDAC framework APIs as they are mostly suitable for memory
-> > controller devices sitting on PCI BUS. We will end up using debugfs entries just via
-> > a pci_driver placed inside EDAC framework.
+> > > > Maybe it is too early.
+> > > > of_pci_make_dev_node() creates a node and fills some properties based on
+> > > > some already set values available in the PCI device such as its struct resource
+> > > > values.
+> > > > We need to have some values set by the PCI infra in order to create our DT node
+> > > > with correct values.    
+> > > 
+> > > Indeed, that's probably the issue I'm having. In that case,
+> > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
+> > > device_add().
+> > > 
+> > > I think modifying sysfs after device_add() is going to race with
+> > > userspace. Userspace is notified of a new device, and then the of_node
+> > > link may or may not be there when it reads sysfs. Also, not sure if
+> > > we'll need DT modaliases with PCI devices, but they won't work if the
+> > > DT node is not set before device_add().  
 > > 
-> > Please wrap your replies to 80 characters.
-> > 
-> > There is no need to bind the edac driver to VID:PID of the device. The edac driver
-> > can be a platform driver and you can instantiate the platform device from the
-> > DWC driver. This way, the PCI device can be assocaited with whatever driver, but
-> > still there can be a separate edac driver for handling errors.
-> > 
-> > Regarding API limitation, you should ask the maintainer about the possibility of
-> > extending them.
-> > 
-> > >
-> > > Please let me know if my understanding is wrong.
-> > >
-> > > > But first check with the perf driver author if they have any plans
-> > > > on adding the proposed functionality. If they do not have any plan
-> > > > or not working on it, then look into EDAC.
-> > > >
-> > > > - Mani
-> > > >
-> > >
-> > > Since we already worked and posted patches [1], [2], we will continue to work
-> > on this and based on consent from community we will adopt to most suitable
-> > framework.
-> > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs files that
-> > give information about the current status of the running system and as of now
-> > based on our findings, we still feel there is no harm in having debugfs entry based
-> > support in DesignWare controller driver itself.
-> > 
-> > There is no issue in exposing the debug information through debugfs, that's the
-> > sole purpose of the interface. But here, you are trying to add support for DWC
-> > RAS feature for which a dedicated framework already exists.
-> > 
-> > And there will be more similar requests coming for vendor specific error protocols
-> > as well. So your investigation could benefit everyone.
-> > 
-> > From your above investigation, looks like there are some shortcomings of the
-> > EDAC framework. So let's get that clarified by writing to the EDAC maintainers
-> > (keep us in CC). If the EDAC maintainer suggests you to add support for this
-> > feature in DWC driver itself citing some reasons, then no issues with me.
-> > 
-> > - Mani
-> > 
-> > --
-> > மணிவண்ணன் சதாசிவம்
+> > DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node creation
+> > just before the device_add() call.
+> > Indeed, in order to fill the DT properties, resources need to be assigned
+> > (needed for the 'ranges' property used for addresses translation).
+> > The resources assignment is done after the call to device_add().  
 > 
+> Do we need to know the actual address *value* before creating the
+> sysfs file, or is it enough to know that the file should *exist*, even
+> if the value may be changed later?
+
+I think, the problematic file is 'of_node'.
+This file is a symlink present in the device directory pointing to the
+node in a device-tree subdir.
+
+How can we create this of_node symlink without having the device-tree
+subdir available ?
+
+> 
+> > Some PCI sysfs files are already created after adding the device by the
+> > pci_create_sysfs_dev_files() call:
+> >   https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
+> > 
+> > Is it really an issue to add the of_node link to sysfs on an already
+> > present device ?  
+> 
+> Yes, I think this would be an issue.  We've been trying to get rid of
+> pci_create_sysfs_dev_files() altogether because there's a long history
+> of race issues related to it:
+> 
+>   https://lore.kernel.org/r/1271099285.9831.13.camel@localhost/ WARNING: at fs/sysfs/dir.c:451 sysfs_add_one: sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:01.0/slot'
+>   https://lore.kernel.org/r/19461.26166.427857.612983@pilspetsen.it.uu.se/ [2.6.35-rc1 regression] sysfs: cannot create duplicate filename ... XVR-600 related?
+>   https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali/ PCI: Race condition in pci_create_sysfs_dev_files
+>   https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl/ PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
+>   https://bugzilla.kernel.org/show_bug.cgi?id=215515 sysfs: cannot create duplicate filename '.../0000:e0'
+> 
+> And several previous attempts to fix them:
+> 
+>   https://lore.kernel.org/r/4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com/ Guard pci_create_sysfs_dev_files with atomic value
+>   https://lore.kernel.org/r/20230316103036.1837869-1-alexander.stein@ew.tq-group.com PCI/sysfs: get rid of pci_sysfs_init late_initcall
+>   https://lore.kernel.org/r/1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com/ PCI/sysfs: Fix race in pci sysfs creation
 > 
 
+I am not sure we are facing in the same kind of issues.
+The ones you mentioned are related to some sysfs duplication.
+In the of_node case, the issue (if any) is that the symlink will be created
+after the other device's file. Not sure that it can lead to some file
+duplication.
+
+Best regards,
+Hervé
 -- 
-மணிவண்ணன் சதாசிவம்
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
