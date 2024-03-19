@@ -1,141 +1,338 @@
-Return-Path: <linux-pci+bounces-4883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4884-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9550587F621
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 04:43:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90DA387F661
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 05:25:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F3551F22825
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 03:43:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DC751F22FF5
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 04:25:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A2C7BAF3;
-	Tue, 19 Mar 2024 03:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CD21EB4A;
+	Tue, 19 Mar 2024 04:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dP83CJga"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YXFZAbBP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A137BAF0
-	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 03:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F6E7C08B
+	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 04:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710819795; cv=none; b=RxipN1+kzvQOuvZVww/7NlaPVSPQiRlpoIOtnvRJyDg8QElJ16s47pYLLcC1zgVi9LkOBH1Bo4pX5wqvFRIvJr8/PgkgpMcuSpu89HDHia5fc5wLjqU8/sEr0IQIkdFaqdVIhXoW+rGIxkRsZUrkbaUZgLo0rmX2rjZB7rOgZyI=
+	t=1710822329; cv=none; b=GJq8UcLw/DWauuxY3VjkF13ny2dGkLI7if7tKbTxuSR4AZ2aH9qTvCRBy0y7dhYX8qocqk8AxZe1a8jT5CZLtMYq/tNDceV3mIA6xPerVajve+9aNg+qOhc98AGt7JIFIoBR0sy5YUNMBaR8gRugJrUT538S59gTCNi01kah0lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710819795; c=relaxed/simple;
-	bh=CD1/1bx1d+TCuzdjE9iD5vdGj7PVRGdrxserarbTZ4A=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qSriPcPNwhCsRgcJx5fpC2KZunlx2vPxI6ZXwnC+VNnIlPW3gbneqCEDXCGY62hLeB7h8Um2BJS1Cd7fel82K0MtPDZHxz87mTqOA90N/aIw6bH/oju13XuQV+7Imix+jMw64sdCITz5mSshVru91YliD0oUdAq7l2TsZK2iyFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dP83CJga; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710819792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=u38Nh3pjPy9Y9iwMv9MFkRdHFhaI4/PvTKYwXfaYKOk=;
-	b=dP83CJgaMNr2gIhMO5wPT5sC7YbFCtSoC8Y89dTd17qwVcCh+LEpeO0WQlnAs/hufnsy7u
-	yB5PZjTcVcSy2fbZhyeSmv2MAG/mL7m1AUL5FbWLm1NlDl0Byu4MPtK3DOLQjlqX1HmXOr
-	dPkiY7VnDPGZN6wLcDCMLA1qmgWYdmA=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-584-S5CyNhGXPuWOZbNoBOmdgA-1; Mon, 18 Mar 2024 23:43:09 -0400
-X-MC-Unique: S5CyNhGXPuWOZbNoBOmdgA-1
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-29bad31f920so4329203a91.0
-        for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 20:43:09 -0700 (PDT)
+	s=arc-20240116; t=1710822329; c=relaxed/simple;
+	bh=VN66wk4pd+pbC7x5g7MDH8Bc+xnl/oVvzoDN1k4m+1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bsAhvPshrKVKAWI6zHJLqQoY58LRKSZ4UBwdy9mY83MJVB35cC4wkxa71itcxYsBVt11OkwHteNrMZcT78PbzLqNNASgL17DKmKJkvgsQwfVxYmjS2x+N90G+xYcoTkFP41xhhkSShD2OZNVISc8rBJCRNch8idgZO69grM8m7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YXFZAbBP; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5a47abe2ff7so1977808eaf.0
+        for <linux-pci@vger.kernel.org>; Mon, 18 Mar 2024 21:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710822325; x=1711427125; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DYSxwXFW2D08mopaFSybkujbNsqvikyUbk9X8WRnuB0=;
+        b=YXFZAbBP/ClYcy6nVgT+QRFwD35JJFg08WKy+/rOSoisBqYWdOPez1cQ0thz6Z7wDC
+         P64AQOvJfzC6bFnnGod99e0nRDtxhRRlH+v5viiZuxSUDw5ihL9TJKnoUOBp1VF2tIck
+         0CbcZJW71XaiznUGs8zTXN1KF9CqBcSoMbIP1/XV5ZwWGc1m5rXe9lmOTcNmWc9e473O
+         yvL9hye+CF72amnbbopmoBEe4gSNtsmIM17a+G20TViwP/CDpZSBG8L7iBIwdZZ+Spqu
+         lOAMub5WitfEZFrhAyEUf+9FqfmRWrRdaetxS7ROS6IHIPDicMCjtUHPbYPp7etGjGst
+         vJpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710819788; x=1711424588;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u38Nh3pjPy9Y9iwMv9MFkRdHFhaI4/PvTKYwXfaYKOk=;
-        b=Bo4rdmlqIdPk73uNvELwhCo6D91G2qRynvRo9l10wCX8xUwjUhUJhMqyZT6imnmQDg
-         R+b8TI/M81E4ULwiY/E3+7lHMXbROWAAFyNf02WE4TFRHeo/7yspN/3cPtoBLRj9PPN3
-         /Mg/IaibQTQoDqd2TL7jaDCu584IXa2IabSehIIR1ZJ9wdEa9IpBKsVVaOMa7nDDtZWt
-         QehHpzUX51PLZ7LNdmsuDc6Ek/BgWfmTGraPi9ehlvUwnNwg91Lv/fIOZ97ckXPWmPUs
-         wA0f9D9SuG0hhytOV9KnfvVDyGTf2DZf9lP4hXPVsnaf/qFViRuiDVZzT84as8kho/fJ
-         kjAA==
-X-Gm-Message-State: AOJu0Yx3pfU4q9qEhrZv3DPBgoAWQGIHUSr2MRniOBN9j/fHUpeD9ZU9
-	kP+2lvwIo2EGeI1K9VeQW/cAhbbfbybNLYqt1DjvUikx3Bf1tESwjYm03c/MvFywqVOfQp5Ajdc
-	HZdGtq1+lmtBN7UmyrMqxI7V8wv0EQjri1NPbPbD1vs3QOYC1c0VC+oWHyIXnvBE7BGc8rzfVXr
-	suvyl9JkFO+Qm63DGmRlbC9R79/e/1ePPCrNswaUghTUtglA==
-X-Received: by 2002:a05:6a21:318b:b0:1a3:6a71:8282 with SMTP id za11-20020a056a21318b00b001a36a718282mr3175278pzb.0.1710819788739;
-        Mon, 18 Mar 2024 20:43:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHO5j7+YDTAtkLNqOIKQWwpCEGsGU/O5fjDQl6kwbNKyt7qamRN0EJdqF96gK2qEFWcA2guwOvr1ke519WhNag=
-X-Received: by 2002:a05:6a21:318b:b0:1a3:6a71:8282 with SMTP id
- za11-20020a056a21318b00b001a36a718282mr3175268pzb.0.1710819788354; Mon, 18
- Mar 2024 20:43:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710822325; x=1711427125;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DYSxwXFW2D08mopaFSybkujbNsqvikyUbk9X8WRnuB0=;
+        b=gSOyNbY4PONFl9fLAS0BN92ncCXNjMDMLJ+PBPlbMOynsaDRryxk2fQ3p/PibNiQqq
+         eizfangR4UQP5m286DXix5XrhAqY7Z+3IGsKO3Jcw5bxraRfo2KEpN+hkZvVRwBbfYIv
+         TKsk3S/xnMDwDrqG8muw+CVarICcaR/xjiQfXy8Al93sYvbBtfVD/LXA9CoXzKT9ZQUK
+         +buRmVP5ctjSpur09aPJXMXmoxTx7eFOMI+YRm4vDpRclc11SHZQSBURGOhZ1uNZDT7t
+         0Xaw07h0UTMhmCiKr15CYIimUyTcM3+panbOLuEpCv7eVh/KHdt608Y5ezNvZ2YmzyAU
+         MqkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkcoqNZHA8CxzJEeDvdiynENvZB+HyrC+Zihkaepg1pAllttJ2r/5TdhjAE7FdJQcdB9b/ufwEQ4ypcvtguF5y8cGsHYRaw2rN
+X-Gm-Message-State: AOJu0YxAOa++KoTmFS9UgxQ3OeyojuEGpiAPgp4vkzNhGw6cX3th4bu8
+	MPOvLw3OGzaImCgBNFlQbXg2BJIeLiYBoU3HTalNGxJWAR+j/+sdCeZ9eszL7A==
+X-Google-Smtp-Source: AGHT+IH/pO37rgSPaTlNhZttxco3gB1vIzcYxEvQOMB+Zx/OQop+kfGcfEZfksBnuYl+SkTSpUmqqQ==
+X-Received: by 2002:a05:6359:4c85:b0:17c:23c2:98e4 with SMTP id kk5-20020a0563594c8500b0017c23c298e4mr10136124rwc.3.1710822325286;
+        Mon, 18 Mar 2024 21:25:25 -0700 (PDT)
+Received: from thinkpad ([120.138.12.142])
+        by smtp.gmail.com with ESMTPSA id r68-20020a632b47000000b005e43cce33f8sm8062781pgr.88.2024.03.18.21.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 21:25:24 -0700 (PDT)
+Date: Tue, 19 Mar 2024 09:55:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] PCI: dwc: Add common send PME_Turn_Off message
+ method
+Message-ID: <20240319042519.GA52500@thinkpad>
+References: <20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com>
+ <20240213-pme_msg-v4-5-e2acd4d7a292@nxp.com>
+ <erja6zkhstoaverqtadnqj3nsyluh3sealibpujqmea4pndiuv@icihj7cby2l7>
+ <Zd0UERil+A2LgSot@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Changhui Zhong <czhong@redhat.com>
-Date: Tue, 19 Mar 2024 11:42:56 +0800
-Message-ID: <CAGVVp+U+s692sC8-ioGQ7aP2shhQ6qyGOThVk=L6P4_XovDo5Q@mail.gmail.com>
-Subject: [bug report] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834 __insert_resource+0x84/0x110
-To: linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zd0UERil+A2LgSot@lizhi-Precision-Tower-5810>
 
-Hello,
+On Mon, Feb 26, 2024 at 05:43:29PM -0500, Frank Li wrote:
+> On Tue, Feb 27, 2024 at 12:52:45AM +0300, Serge Semin wrote:
+> > On Tue, Feb 13, 2024 at 04:50:26PM -0500, Frank Li wrote:
+> > > Reserve space at end of first IORESOURCE_MEM window as message TLP MMIO
+> > > window. This space's size is 'region_align'.
+> > > 
+> > > Set outbound ATU map memory write to send PCI message. So one MMIO write
+> > > can trigger a PCI message, such as PME_Turn_Off.
+> > > 
+> > > Add common dwc_pme_turn_off() function.
+> > > 
+> > > Call dwc_pme_turn_off() to send out PME_Turn_Off message in general
+> > > dw_pcie_suspend_noirq() if there are not platform callback pme_turn_off()
+> > > exist.
+> > > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 93 ++++++++++++++++++++++-
+> > >  drivers/pci/controller/dwc/pcie-designware.h      |  2 +
+> > >  2 files changed, 91 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index 267687ab33cbc..5e83756492462 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -393,6 +393,31 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
+> > > +{
+> > > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	struct resource_entry *win;
+> > > +	struct resource *res;
+> > > +
+> > > +	win = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> > > +	if (win) {
+> > > +		res = devm_kzalloc(pci->dev, sizeof(*res), GFP_KERNEL);
+> > > +		if (!res)
+> > > +			return;
+> > > +
+> > > +		/* Reserve last region_align block as message TLP space */
+> > > +		res->start = win->res->end - pci->region_align + 1;
+> > > +		res->end = win->res->end;
+> > > +		res->name = "msg";
+> > > +		res->flags = win->res->flags | IORESOURCE_BUSY;
+> > > +
+> > > +		if (!request_resource(win->res, res))
+> > > +			pp->msg_res = res;
+> > > +		else
+> > > +			devm_kfree(pci->dev, res);
+> > > +	}
+> > > +}
+> > > +
+> > >  int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> > >  {
+> > >  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > @@ -479,6 +504,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> > >  
+> > >  	dw_pcie_iatu_detect(pci);
+> > >  
+> > 
+> > > +	/* Need call after dw_pcie_iatu_detect() before dw_pcie_setup_rc() */
+> > > +	dw_pcie_host_request_msg_tlp_res(pp);
+> > 
+> > This may cause regressions for instance if the outbound memory window
+> > is small and is fully dedicated for some device like VGA/GPU/etc.
+> 
+> There are host memory map windows, which are quite big. It will be too
+> small if only because one page size windows less.
+> 
+> Look like it is impossible to dedicated to one device, all pcie devices
+> (VGA/GPU) should go through standard pcie probe flow, the bar will be
+> allocated from bridge windows space.
+> 
 
-found a kernel warning issue at "kernel/resource.c:834
-__insert_resource+0x84/0x110" ,please help check,
+No, Sergey's concern is still valid. You are allocating the memory for TLPs at
+the end of the existing MEM range. But there is a chance that it could cause
+memory hungry devices like GPU to run out of memory in an existing setup.
 
-repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-branch: master
-commit HEAD:f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
+That being said, I also do not want to hold off merging this series. So let's
+make this region opt-in for drivers making use of this feature. This way, if we
+migrate to a dedicated 'ranges' region in the future, we can remove the
+conditional check and base the check on the existence of the new region.
 
- [    0.130164] ------------[ cut here ]------------
-[    0.130370] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834
-__insert_resource+0x84/0x110
-[    0.131364] Modules linked in:
-[    0.132364] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0+ #1
-[    0.133365] Hardware name: Dell Inc. PowerEdge R640/06DKY5, BIOS
-2.15.1 06/15/2022
-[    0.134364] RIP: 0010:__insert_resource+0x84/0x110
-[    0.135364] Code: d0 4c 39 c1 76 b1 c3 cc cc cc cc 4c 8d 4a 30 48
-8b 52 30 48 85 d2 75 b7 48 89 56 30 49 89 31 48 89 46 28 31 c0 c3 cc
-cc cc cc <0f> 0b 48 89 d0 c3 cc cc cc cc 49 89 d2 eb 1a 4d 39 42 08 77
-19 4d
-[    0.136363] RSP: 0000:ffffb257400dfe08 EFLAGS: 00010246
-[    0.137363] RAX: ffff9e147ffca640 RBX: 0000000000000000 RCX: 0000000026000000
-[    0.138363] RDX: ffffffff86c45ee0 RSI: ffffffff86c45ee0 RDI: 0000000026000000
-[    0.139363] RBP: ffffffff8684d120 R08: 0000000035ffffff R09: 0000000035ffffff
-[    0.140363] R10: 000000002f31646f R11: 0000000059a7ffee R12: ffffffff86c45ee0
-[    0.141363] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    0.142363] FS:  0000000000000000(0000) GS:ffff9e1277800000(0000)
-knlGS:0000000000000000
-[    0.143363] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.144363] CR2: ffff9e1333601000 CR3: 0000000332220001 CR4: 00000000007706f0
-[    0.145363] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    0.146363] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    0.147363] PKRU: 55555554
-[    0.148363] Call Trace:
-[    0.149364]  <TASK>
-[    0.150365]  ? __warn+0x7f/0x130
-[    0.151363]  ? __insert_resource+0x84/0x110
-[    0.152364]  ? report_bug+0x18a/0x1a0
-[    0.153364]  ? handle_bug+0x3c/0x70
-[    0.154363]  ? exc_invalid_op+0x14/0x70
-[    0.155363]  ? asm_exc_invalid_op+0x16/0x20
-[    0.156364]  ? __insert_resource+0x84/0x110
-[    0.157364]  ? add_device_randomness+0x75/0xa0
-[    0.158363]  insert_resource+0x26/0x50
-[    0.159364]  ? __pfx_insert_crashkernel_resources+0x10/0x10
-[    0.160363]  insert_crashkernel_resources+0x62/0x70
-[    0.161365]  do_one_initcall+0x41/0x300
-[    0.162364]  kernel_init_freeable+0x21e/0x320
-[    0.163365]  ? __pfx_kernel_init+0x10/0x10
-[    0.164364]  kernel_init+0x16/0x1c0
-[    0.165364]  ret_from_fork+0x2d/0x50
-[    0.166364]  ? __pfx_kernel_init+0x10/0x10
-[    0.167363]  ret_from_fork_asm+0x1a/0x30
-[    0.168365]  </TASK>
-[    0.169363] ---[ end trace 0000000000000000 ]---
+- Mani
 
-Thanks,
+> > 
+> > Why not to use a new ranges-based mapping as we discussed earlier:
+> > https://lore.kernel.org/linux-pci/20240214061412.GB4618@thinkpad/
+> > ?
+> 
+> If driver can auto alloc from known range, why need static defined in dts
+> files.
+> 
+> static alloc can't resolve small outbound memory windows problem. It may
+> disable this feature. 
+> 
+> > 
+> > I know it might be troublesome but still it would be much better
+> > and more portable across various platforms.
+> > 
+> > Bjorn, Lorenzo, Krzysztofm Rob could you please follow the link above
+> > and give your opinion about the solution suggested there?
+> > 
+> > -Serge(y)
+> > 
+> > > +
+> > >  	ret = dw_pcie_edma_detect(pci);
+> > >  	if (ret)
+> > >  		goto err_free_msi;
+> > > @@ -536,6 +564,11 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
+> > >  
+> > >  	dw_pcie_edma_remove(pci);
+> > >  
+> > > +	if (pp->msg_res) {
+> > > +		release_resource(pp->msg_res);
+> > > +		devm_kfree(pci->dev, pp->msg_res);
+> > > +	}
+> > > +
+> > >  	if (pp->has_msi_ctrl)
+> > >  		dw_pcie_free_msi(pp);
+> > >  
+> > > @@ -697,6 +730,10 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> > >  		atu.pci_addr = entry->res->start - entry->offset;
+> > >  		atu.size = resource_size(entry->res);
+> > >  
+> > > +		/* MSG TLB window resource reserve at one of end of IORESOURCE_MEM resource */
+> > > +		if (pp->msg_res && pp->msg_res->parent == entry->res)
+> > > +			atu.size -= resource_size(pp->msg_res);
+> > > +
+> > >  		ret = dw_pcie_prog_outbound_atu(pci, &atu);
+> > >  		if (ret) {
+> > >  			dev_err(pci->dev, "Failed to set MEM range %pr\n",
+> > > @@ -728,6 +765,8 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+> > >  		dev_warn(pci->dev, "Ranges exceed outbound iATU size (%d)\n",
+> > >  			 pci->num_ob_windows);
+> > >  
+> > > +	pp->msg_atu_index = i;
+> > > +
+> > >  	i = 0;
+> > >  	resource_list_for_each_entry(entry, &pp->bridge->dma_ranges) {
+> > >  		if (resource_type(entry->res) != IORESOURCE_MEM)
+> > > @@ -833,11 +872,54 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+> > >  
+> > > +/* Using message outbound ATU to send out PME_Turn_Off message for dwc PCIe controller */
+> > > +static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
+> > > +{
+> > > +	struct dw_pcie_ob_atu_cfg atu = { 0 };
+> > > +	void __iomem *m;
+> > > +	int ret;
+> > > +
+> > > +	if (pci->num_ob_windows <= pci->pp.msg_atu_index)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (!pci->pp.msg_res)
+> > > +		return -EINVAL;
+> > > +
+> > > +	atu.code = PCIE_MSG_CODE_PME_TURN_OFF;
+> > > +	atu.routing = PCIE_MSG_TYPE_R_BC;
+> > > +	atu.type = PCIE_ATU_TYPE_MSG;
+> > > +	atu.size = resource_size(pci->pp.msg_res);
+> > > +	atu.index = pci->pp.msg_atu_index;
+> > > +
+> > > +	if (!atu.size) {
+> > > +		dev_dbg(pci->dev,
+> > > +			"atu memory map windows is zero, please check 'msg' reg in dts\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > > +	atu.cpu_addr = pci->pp.msg_res->start;
+> > > +
+> > > +	ret = dw_pcie_prog_outbound_atu(pci, &atu);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	m = ioremap(atu.cpu_addr, pci->region_align);
+> > > +	if (!m)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	/* A dummy write is converted to a Msg TLP */
+> > > +	writel(0, m);
+> > > +
+> > > +	iounmap(m);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+> > >  {
+> > >  	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > >  	u32 val;
+> > > -	int ret;
+> > > +	int ret = 0;
+> > >  
+> > >  	/*
+> > >  	 * If L1SS is supported, then do not put the link into L2 as some
+> > > @@ -849,10 +931,13 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+> > >  	if (dw_pcie_get_ltssm(pci) <= DW_PCIE_LTSSM_DETECT_ACT)
+> > >  		return 0;
+> > >  
+> > > -	if (!pci->pp.ops->pme_turn_off)
+> > > -		return 0;
+> > > +	if (pci->pp.ops->pme_turn_off)
+> > > +		pci->pp.ops->pme_turn_off(&pci->pp);
+> > > +	else
+> > > +		ret = dw_pcie_pme_turn_off(pci);
+> > >  
+> > > -	pci->pp.ops->pme_turn_off(&pci->pp);
+> > > +	if (ret)
+> > > +		return ret;
+> > >  
+> > >  	ret = read_poll_timeout(dw_pcie_get_ltssm, val, val == DW_PCIE_LTSSM_L2_IDLE,
+> > >  				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > index 703b50bc5e0f1..9e6076aa4c850 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > @@ -341,6 +341,8 @@ struct dw_pcie_rp {
+> > >  	struct pci_host_bridge  *bridge;
+> > >  	raw_spinlock_t		lock;
+> > >  	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+> > > +	int			msg_atu_index;
+> > > +	struct resource		*msg_res;
+> > >  };
+> > >  
+> > >  struct dw_pcie_ep_ops {
+> > > 
+> > > -- 
+> > > 2.34.1
+> > > 
+> > > 
 
+-- 
+மணிவண்ணன் சதாசிவம்
 
