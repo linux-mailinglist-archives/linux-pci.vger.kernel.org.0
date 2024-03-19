@@ -1,80 +1,93 @@
-Return-Path: <linux-pci+bounces-4900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61BEB88011B
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:51:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1BF288016A
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 17:07:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CC968B212A6
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 15:51:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6913E282E35
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 16:07:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39342657AD;
-	Tue, 19 Mar 2024 15:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD3D080611;
+	Tue, 19 Mar 2024 16:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JrSWhNWq"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fsjWrBdP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2041.outbound.protection.outlook.com [40.107.20.41])
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2078.outbound.protection.outlook.com [40.107.15.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2BD651BB;
-	Tue, 19 Mar 2024 15:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695AD657D2;
+	Tue, 19 Mar 2024 16:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710863464; cv=fail; b=tcSjJjj50eOKEc+L/F9BK8pAbIGum4IePGiLGcFOQcdmg0Y0GycfYBaSZYMMKTwaXouXFVNf4NHvKqOTl8OPP9qaA0FmbKB8AtGZTauxcrcH87daKxZ0qqlOQUqqqbUpZ6eNvNEyRF3ZuLHKNMPe3BXmaL8w1r8KY6BqNwwmuk4=
+	t=1710864446; cv=fail; b=mldzodwl5y8SMOWktR74s00tvXTHu9NX22S6UlZ0phWaLeW8LzDec02uBbvTe3MC0LTvf5vRBOABB/LmMNBmiUg7/ltXB/H6Y8K/q7oUuQC4R+hovo/rTN6v2IiU0OBW97g5CNbQuFEQ1LrZ/s+nCgUiN9sfezVzM+WuwGfFxBI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710863464; c=relaxed/simple;
-	bh=mIFVDXQWfqjK9WLWc+mjtcEwKQCZN7OrBndBhMD3QxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AOy8Vj5+CfkeOKObkQakW3IZ8Ahtt3NSTva7ajsIZEA5r4iS2DTLeNZrH+WhUuJdsGkohKRPC3ECzKWgz3TRCfKdIrMub03SeN6vEuoK3mKs+cx/oRslPh8i3qfMufOGGS5rvEidcFRngS3Ynf+0ii0sxOJUyntpVzOcK+Wa9AQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=JrSWhNWq; arc=fail smtp.client-ip=40.107.20.41
+	s=arc-20240116; t=1710864446; c=relaxed/simple;
+	bh=JJXqx52t4SOPohvMnQLx1kp/6SCXWc6KO44Qih5BpVc=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=sqmsOVuwf0OPrajuLwHmVPdKB+ruO4am32tUj5vPaXqBZ+l7SujdBCLZ+Id4v94KNQC6kR4WoYnobZ+JNn0Y7ZKU25Qy+ZQHWJ+ubKNlENKeRNjLOtCTIx7GwnzGpOrt2PUEh8SPu/+pRee9IIORPcS9EIsVG+GG+Z4pyW4Kt2U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=fsjWrBdP; arc=fail smtp.client-ip=40.107.15.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BajugwwsSqcQW9IUkU/Vh20y1ztY6IaMYmJe1HjGUDeYsdXQCIpVLBu/3Q+Ar0F6wY46l9HCD5gurN0ACqiTISkZ9zAW6ZafXgFJxNIA6ox/8kqBF6YnXUEP7x836DAsdepxkfyUlRdz/e/7o9+Hi80M0KhJ8ynyPsZcvN0fNdVsIAT6tU31vks6UrUQlSnPSWyLwr7UIL4sAddOT1NTO4XAbt6MYsKSIqqqeaboeMBGtzjmbsNW3G4orf3p/J9NSAo3j4cPTClaIg7kswo4xSkFXvPBeIq1Gnei1Xg5+GAl4FmUgHs8QJPaWtEqFkEnry+y99Gdz91Q9yxxe6YkWA==
+ b=kBVyIJ4zfycHNqu4jKNxjs6I4+c9EwTzfgutl8e7U0BniYKEPNtG68WG3S6CUhAhuHov5u/8f1Oy0ZTeQ6JkJB3crQAJdCsUaX6I1nNkxxlTSyc5nCh59EGakSX/q83/w6+uWQ4QtFQRLmHVuG/JGLKPQzOz0VvleBmPGXb9tJYft/ojE6B4e2g6jMIXjE/vVIwp2i/FnLF7KdID0KBCDv5HrJBN6SbYUQjHVJeTE6nRWdO/sxYI8DKpsTMlyiKMuZcPQ5WSsmBNEYIk4Y/KJO8mKZR12eEHPbNrjGwupRo5ZmNZUTzVPdyk3rc9ueLji5svSgXuTAqWJypNQkyjMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sVgCEen0YQOVudTpz76RD2pNt6wXB4XW/h0p7cl/TeQ=;
- b=e+ugBLsPY+jhvnsp0aPvDLPCWSd+rExMYhtSCtqpoz5wC50xoYBxtpsaGhMFDXyU4yc6MliGVM8/fT85urv0JxCHHO1xnYCGf9kbk+5IZdtr+Y4/ibFhoxUltVuYibHMY6GUunfrXYRslRGJA9cDes26csDqff5ZJMjpXPh4ImrmYkgHfiv9LbRPOFH0OZXmyj5dpwjscxxFP9rJDscpxd3E4ocuYYTKSvMLrGJ0fkcrfx2NV0HHQiGrIG0alsLAmGPXqhrRr5mzx8CHUOv4DtTl/pNzlrr/24/n/GnUmaF8gAXEblCXE/ltdOFTUUU3ixFPGKg9R8sleYvm8bTGig==
+ bh=7qQZVZ5gYrJyv7FJDP/9J8gx3SfXbvVi+WtgFvAg8J4=;
+ b=ejaCvVPSVdHBMzIyC/i4fp++7Lu0WMa7cwc55zgZPFzItJ7TRyQDaH9MXp/+OZI2H79BofjvX4McVMLzzCihsHIlWMxa7M6gY+dCGgiyBF8LMF3ucjOX865CsJx0B16EdgsJVjYo+TKtutXIzinSragBjFjZx9X7x7GWI/AyJhHKEdJQZOnGBU0GaYxyrNnz+HD869g3ID0HXN2eYaviczbdbVkG9cSD9Wy8aYG328hBJYIu6K2FappS9SzVeJTpSzk/39MtWsP+x0vzoqie/RewMZYaECMSFg9Yx1BK8SlYQTMCZS42oeyovDrAuhfO+nlxqDxKhxmVWRLzdCm0Tg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sVgCEen0YQOVudTpz76RD2pNt6wXB4XW/h0p7cl/TeQ=;
- b=JrSWhNWqUFBfRbeGrN9AnKXlOVScAz5wnQxgJh22ty0AymGY0Konnp7L4xSq0DoRMjzszVLA2du1xlz21o1FSXCvA/92VaHQ/a8Ubu9hDJr1IUnIx3OUqYuPpum+5ReBNeQPuTMqhwWcBshsFF4V8PPfexTt2a1/7wn3+aVmJPY=
+ bh=7qQZVZ5gYrJyv7FJDP/9J8gx3SfXbvVi+WtgFvAg8J4=;
+ b=fsjWrBdP7DZhfdljPulmFWAh0XPcK9b3b0vBYq49FtaTvheb5gXNLqgNmbzbl/Yihw9FlKV7fAkJW9mw41sDBf6dpto6g0Bizx9gerpw7Kx90Gpygnuo61neWrvl0/ruaL3QsX5EfYa3QUiP8DnbAu6n5N4FYg6hqJQOaV3DLLs=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GVXPR04MB9927.eurprd04.prod.outlook.com (2603:10a6:150:118::22) with
+ by DBBPR04MB7772.eurprd04.prod.outlook.com (2603:10a6:10:1e3::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Tue, 19 Mar
- 2024 15:50:58 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27; Tue, 19 Mar
+ 2024 16:07:20 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7386.025; Tue, 19 Mar 2024
- 15:50:58 +0000
-Date: Tue, 19 Mar 2024 11:50:50 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for
- outbound window memory allocation
-Message-ID: <Zfm0Ws/Zg1W2UVZt@lizhi-Precision-Tower-5810>
-References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
-X-ClientProxiedBy: BYAPR02CA0026.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::39) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ 16:07:19 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v5 0/5] PCI: dwc: Add common pme_turn_off message by using
+ outbound iATU
+Date: Tue, 19 Mar 2024 12:07:10 -0400
+Message-Id: <20240319-pme_msg-v5-0-af9ffe57f432@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC64+WUC/2XMTQ7CIBCG4asY1mJgCqV15T2MMcgMlkV/UkyjM
+ b27tBvauPwm87xfFmkMFNn58GUjTSGGvktDHw/MNbZ7Eg+YNgMBSshC8KGlexufHBGwkkR1VZU
+ sfQ8j+fBeS9db2k2Ir378rOFJLtf/xiS54KjhISyidsZduvdwcn3LlsIEWYGQWUFSpSmN0OCpt
+ Gqviq2CrIqkvAfrtbECLO6V2ihZZKWSIrAOFRoLNWQ1z/MPRcq7JD4BAAA=
+To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Serge Semin <fancer.lancer@gmail.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710864436; l=3771;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=JJXqx52t4SOPohvMnQLx1kp/6SCXWc6KO44Qih5BpVc=;
+ b=8uWI/GZZl7hhPi4OnAU+pdv3eQw27dcAK6DV6LvVDie/fY6agWJPQBVtK+stV4l9sCFYfqmmg
+ cOyAI39v3n0A8OI8tfR8e7nxnKr2AlHvWxUxuk3BmlE0yrLlIkU8bzB
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BYAPR07CA0104.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::45) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -83,535 +96,144 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GVXPR04MB9927:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7e3e60b-655b-4cfd-9242-08dc482c5e44
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7772:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44714148-45c1-480f-4b78-08dc482ea7a9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	kRLIoCduUzoSZr4N1t2zDfDV98Ch8dS+uXLsmD8vFpjCl28WCEazbvqJsrvz8wlIDagUVEjPHqHLLIwbepcrsaSPe5PkWW1yJzFU4cljxAj6d8jPFZ8dIZPpfKAWTzfjpymPgeNNv4XpgPC3BCk5bnVnSTjIXG2MVJhsyf4auxpaQL/OtmB9j1Zp1447PgyZJ104XAwhNIz46vzTu9IfQntByVP7xLARPgkU6HPSDZg12NHta21AFB6mvY4lKM9g+R2C2PGAr9m8ScNNLD4CrBhNv33zNNs8H1ey11PCyPzNxtJ8Do/DItWwoC0bEu6mkseg9GfH0i6/e91EpRAIQiRUeH7PvD+X0X0sRaPxR0GGIfHwV7Yo4GVSuzoBt9Uln0Xj22M4cQ/GqTlPWKdtDwsnHk3VdhwPQgKJmZZ1S3eH5fIvR+JIxWcUYxidWNwlZdwbUbd4eadBwH5bDpTm1jQ4lYDbFvHtIJDwXLnGEHXrQRWmpYDgimgkc0OHOD43psrzgdpKpvhzBc8R+TA26QzUJc2V+yDOzxQaq7j7aTmPUs30LTs1OhhdEd0TiX/nWeIXoDWi/qJCcRWYpnVcvGblxfpXfZiMAX9Liu3gz1fD17NZieb/kWj9SC2otzveJVS3wSr3iH6I8dWqWVzNXMXH64sh99wmg9rWouPYy/8=
+	omnXsOMUqnP9KbQ3mlLEP/oneDxM/VoGF8pqRsOBW++VZXsn4AHRsdMldq386VHz4sMohwYkdg9sjonuqIMRsuUec/4tvoRUQoDhSOENqWsT+mOicHj8xwtkKqQyvHyiEFMRi6UfdkT4wpNiy65dCM0HqSCbtbUpmesHPO/1vN6vC8ZBpBm0K6mdXQmoU8d4LzZd8ZJYI3kMRBma1ByzgzlKhwUIQ6cQINTF/DfXQ7a7oa/H8/CPCkArQI5/2aPjKrgVj7sGftjbNh7aWgvd3qvSOoD2TSoU9c9nmAryexnRMQOrlQ8Yh5Co1yRP6AW/Oja9XQw8a/1EvBLTB9Yv+Wg8LzTRMQQz/lhHBJ2lhsxGBfNne0kiMSkNUTzp5z9SawsPUYjtDMg287vUDE4t4HBLo4DRxaZ5s31u/QDZUScFLPWflodismWA3i67RvuZyn/Q8CwvTsAXkSSCMzwgqMI9UoLJPKPWsjislEr2wWZOVcK7RYN6z5tktACfC69tHDeVq0tbWS+G6ns/BCw6OwpuPWJFVgvBkg3nQybA9Lj1egy+fv1r8Z+I2OTTgVmuyrR4Y3X439xORplQuZKb1dQRWp9WbyN+GXQ3P6PrKIgwaCXDZN/KuL52LUwDZSX/DS+dBo6pC9o4f3ll5bm5XLEx5HeYkQ9elQoHKJsFHjhtdwidRUM5TOe/Q0LFMl9u
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(52116005)(376005)(1800799015)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(366007)(1800799015)(7416005)(376005)(38350700005)(921011);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nHdH/7+hUnrvqu5iOKfUWYi5IEIgmIUDA8lhx1L6beVIcb2VD83rKDTMsfQP?=
- =?us-ascii?Q?opVLntcSOaFs+FVTkot8IIW5OAIb80auJNgBC+zsUF3HGNa332GlEKkp2RLk?=
- =?us-ascii?Q?VK9D5cA26OKD9Gn/G2x8l6LHs4cosvaEnbLmZRCbWAW6J+bwh4UGhDpMvPT+?=
- =?us-ascii?Q?QNZX4+Ssf8TDfcl90WQdULU3ecuR6Fwc9NGmIIhHV/gDOn0rCbn0W16m92/8?=
- =?us-ascii?Q?+dszvE+tKoHvfEC/EBSZu2+6VsuZ+ervjOXmaVezlVhx3F54BOxwd1fimHL8?=
- =?us-ascii?Q?QdI3PROH6AMOnKxCQp1AylnthD5iwlJ5qX6sGhKYSO2UTSPSjB6q/m6N3Xi6?=
- =?us-ascii?Q?qWBPT+hP9JDHEpYM1XkTlIZXi9NLZe4T+S4XOcHyhbMIDPH6y0Ap6T6YDK1h?=
- =?us-ascii?Q?LPog9Bs0sBLTFnFPWj3DyANa6Z56Y4FHY7jNv+UrxGnjtk/E+J2e85xpp/66?=
- =?us-ascii?Q?W2ykc/9QXuwXYpMI3FVXrQVN9ij7+K5U6tfkLREAdL9PWBrOORq62UpbR3ux?=
- =?us-ascii?Q?TsqVgccD1TphsCJrHQtMXflMRnHU+HJTgaHNJbsyatedcR/v97z0b/4UP9yG?=
- =?us-ascii?Q?7xvEHidNMIUg9SzNnKsamgbH66HmekgLWVCRlwVuxSEmqKmzo0zsifmKe3rv?=
- =?us-ascii?Q?ZmHu0SIwTu1ychamkma/rnNF9/kVFpSl1GV/z5EMBO09BC1ELWWrR13xIsbo?=
- =?us-ascii?Q?JKzFC5ZaFLLQATBneeWV4MQ+iCqRTeupv+vfpocR2/Px3gT447mDa+4yMglG?=
- =?us-ascii?Q?oBEOeN6bjfAzxLPPs3GpdwmR5T8pmPlFkdd5IOOIVSHwIVTNYnAV8Nws84id?=
- =?us-ascii?Q?Pva4BWQpNh0ZgZXj7jWcEDJxzozahFoVDYJGiggF57eg9TBy6I/FsN35jPbw?=
- =?us-ascii?Q?+aUxTwVcYgyc6cUiAW3S7NjCrJRvn5jA2wv3tD9ufla3bGH/veCfkStVkvGm?=
- =?us-ascii?Q?uq//9xev97rwe6ns30urCjEgEdn3wJKJCn9RJikdm4NAKgl/9RAH39fkMuno?=
- =?us-ascii?Q?A4CRBTUrk1uik11Or6v0IydBWdKB/todNoyhX1itnRogZSNPqsdhJdObf8Fo?=
- =?us-ascii?Q?mS6G3T1hXhWxM8KXd4CMQeDx2so2EQdcy32kWn8KII/3LRsIBIj7XF6EMoUj?=
- =?us-ascii?Q?n34YW9gyYAl+kPGrMhd2+505tcCwTM/bP+pJch9VwhmmqvNg8fWByBlZrkSr?=
- =?us-ascii?Q?iXhf+TPeiULFPFm00AbBRK3Ync/551URkLXUn+IkWytfoj0G6lnmiv02baiX?=
- =?us-ascii?Q?2vRs3FAErDA+VJN8Bixr5qopZkWorfvGmQH4bf9cd/vR+s/j6k6hWsW6ejvD?=
- =?us-ascii?Q?OJ/Ef8PvKlfe3aYT0/JtPrryxBniLlJyWBYi4fawgy7datgJoWyCK+bjqh56?=
- =?us-ascii?Q?pVNJK7d2epeOBrQX/jFnL5uYlLO74O29RZ7FOJXalqittpAeZrEs4lU6hROb?=
- =?us-ascii?Q?W3jFtD4TlZNxsQklKtb1DRV4QwpontklzL79xEpBqiHedrQm0YgzyyN3/2gF?=
- =?us-ascii?Q?C0G23aojJFl/LiGbUSBDRTE2r+IFOrcVmP+TlODLiH3iDIP2h6ZPKPDWoQYa?=
- =?us-ascii?Q?e+k9rGb0/XHC8kA/Wcs=3D?=
+	=?utf-8?B?alZ6bFkvUWMrTk02N3c0b0cvM0Z2NmQ3SGFDVldZZkpWbktaUjNtQUdoNlM1?=
+ =?utf-8?B?d1kwRVpwTmVQSE9ZSFVGTTdORTNBMFIwRG1HeWVzbGxLSmQ5MFdzYXpkMW1O?=
+ =?utf-8?B?bDJzMnpJeUZ6UWpvYTdsWEd6MTN5dmdhSm4xdWRqZnZVVDdJWThOUlJBdGp1?=
+ =?utf-8?B?d3p2S2VzSS9Vd01wd1A4ZmdOZmkxMHdPcCt0c3ByTmVudGdIRDFGQkJrKytQ?=
+ =?utf-8?B?cXJFcGNoVnlzVXRqT3kxeVpCYWhLaTZxQXZGRGRqT3UzcWFNNmVONzRkN1RT?=
+ =?utf-8?B?UzBvVlRlYVZqaVJCU1lqclFDaUZYWlJ5MW0rMXZ2S290d08yWSs5N1l1WXlM?=
+ =?utf-8?B?blg1U3g4YTJQN0dnY2V0Yk40SWZpcGNtVUh1MUxqRzlUZS8xOWN0VTlsYlp4?=
+ =?utf-8?B?aThKWnFpNngyUXA4STFJd1pGNUNWbk1rREk5WXkxWSt3RzZpYVl4Umh4WHlR?=
+ =?utf-8?B?eE1mWnVwanVjeWJVMXVIRFhXd20ySm1KTlJrdi9TZmRTT3p1cnh4RzEvWnV4?=
+ =?utf-8?B?bDdkTC9BYmlCMGFjVW1uQzVEOXM4L1JwNUowTzUwMFFTRXFSb3hlWk1qcnBJ?=
+ =?utf-8?B?aVp4V2RRWU1vQzMzejhJNzQwd01ERjdTeS94MElkYndETWpqUDVNNmRxOVZs?=
+ =?utf-8?B?RDIxeTB0SDhoaUlwc0svT3YwbklmekJzdGkzWWdPRVVMYXpLQW1jQnpuMFhQ?=
+ =?utf-8?B?VzNvRUdTbnA0d1ZsemRlZzhNVTBBQkhUd1hHS2NVQm00Y2NOZjUxV0ZteG9I?=
+ =?utf-8?B?a3RNaUhad3FGb2Y3OFNpbVYxUU1MV2gzUnFlOS9JR1VpMDQrMXVmeDNYSi9h?=
+ =?utf-8?B?cmpkeHZObFBuL1MrT21zUFFCSXhFM3dUaVUwVkM3aGlIbUd5amJNSk9XUUdC?=
+ =?utf-8?B?VHdlbHRVN3VxSHRlR2NRNTdDQ1NiMEdUUGNST05ldXZ4MzNnaGp6L3dVNlBU?=
+ =?utf-8?B?cXZCdHFrVEpobkxVWDhpOW5BZ204OXlTMnp2WDIxNkM4eTFuMnhEd0lHSnht?=
+ =?utf-8?B?d1ExaWpHTnNtbVN6S01WNFdJc1JNS3dtOWFNMGdKMFZuVkVFblRpOUg1Ukdj?=
+ =?utf-8?B?RWZCZnNQRnNJL1hqQWlqdnFJTS9Cd3k5TUYybFhmeHdEU1RrczJRMCtrazFh?=
+ =?utf-8?B?NVliTGRlODBVWjFRczVRZW9GUTBsZ0hpdjhWNmg2YVZQQndHN3BTQ0huckxL?=
+ =?utf-8?B?ZmlZYS9ZbHY2N1FBOFFLTFh5SHBGWVptWktsZ1diVGMwSWxaSGJkZmpEWEJ0?=
+ =?utf-8?B?RmxZOFRXeVo2Tm90dDlvZGJXc1AxR3YwbVQ2UnVQOHU4ZnRzRnFDZGJaSUlE?=
+ =?utf-8?B?YVZoZGk1Z0VBdGZIdDJIRUd4cFViVjZHQWt4UTkvc0VOaWZFemxEclNLdjdF?=
+ =?utf-8?B?dklkc0xCcVFIc01HVUJmaXpBeVhKd0JSLzlJdytRV0VEUjBxbmZzeVpzRzVL?=
+ =?utf-8?B?alRYSGV2amw5ODErSUVlbnAvTnlJUXE1aFZIQXgxbUlMSHFYdFVyeGVIOEIr?=
+ =?utf-8?B?TEtlWU1IeXJEbFhFYkthUklSdUttem16UytORk1yMldYMmxpbWp4N3ZBMEZq?=
+ =?utf-8?B?bnB6bGo4NWt6Z2s0dXRBcEpXMWkzckg1NjBuelRtMUsrbjZaWFA1S0FzYjFG?=
+ =?utf-8?B?aStTUlJnT3lXamc0Ty8wdGJ1WjdVUzZJdW9OUmJEYWtCSXVoa0RFckNTL1dW?=
+ =?utf-8?B?TkRqS1VLaWpCYmtiQW9uZ3AyK2Eyd2FvWHdlV0docWRxYWZ0RTA0TFBYTnpE?=
+ =?utf-8?B?RFpSeEN5ekp2Y2NGUFNid0xtdm5XUzBMWEJVdUxwSTgybkVtS0RoK29Gc2lX?=
+ =?utf-8?B?ZWlGTjlhUGJEdk1TOWxKYlBiYmg3cGxVK3k1TitjNTcwOU9MWDNZd1l2YnlQ?=
+ =?utf-8?B?clZTb0o5YVBUeEZ4R2laaE1oOENkdTkyY3AxanlvQzZ0MW85MU13T2x2c1pp?=
+ =?utf-8?B?QUV2ZmE1SVc4K043RnpDZmVLMkk4MlVQVHZPeHNteCtRSlFQVWlYUlZjdkdy?=
+ =?utf-8?B?ZjF6RTN2bm5YclRvbW9NWXdlREZaZWY4KzNaZGVwNmNaK1FMcTBPa05sRlQy?=
+ =?utf-8?B?U21NSzZzUnVRVmV1d2pKenlTd3RmZEZ4Rit6ZEh4RXlLUkc0Skh5ZHh4Z2lG?=
+ =?utf-8?Q?cSwUvdSKOFMSnugCuDN9Ujtya?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7e3e60b-655b-4cfd-9242-08dc482c5e44
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44714148-45c1-480f-4b78-08dc482ea7a9
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 15:50:57.9514
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2024 16:07:19.9138
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pxFidQxhAXy804SQD23tGVBmk8PYdKykDyqaFr4sKWRXPltLp7I/BKsesAbJA1wxgmW7JoG8Omhl5XyydOE0pQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9927
+X-MS-Exchange-CrossTenant-UserPrincipalName: naI46od6/sUEIGaFpu7fr5J740eAq0wmxA8yuflUW2aoLu2+yT4MWiU8vvogV7uxT17Fr7rtt5OIAsA/Yifofg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7772
 
-On Sun, Mar 17, 2024 at 11:39:17AM +0530, Manivannan Sadhasivam wrote:
-> As proposed during the last year 'PCI Endpoint Subsystem Open Items
-> Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
-> framework for managing the endpoint outbound window memory allocation.
-> 
-> PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
-> driver from the start for managing the memory required to map the host
-> address space (outbound) in endpoint. Even though it works well, it
-> completely defeats the purpose of the 'Genalloc framework', a general
-> purpose memory allocator framework created to avoid various custom memory
-> allocators in the kernel.
-> 
-> The migration to Genalloc framework is done is such a way that the existing
-> API semantics are preserved. So that the callers of the EPC mem APIs do not
-> need any modification (apart from the pcie-designware-epc driver that
-> queries page size).
-> 
-> Internally, the EPC mem driver now uses Genalloc framework's
-> 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
-> based on the requested size as like the previous allocator. And the
-> page size passed during pci_epc_mem_init() API is used as the minimum order
-> for the memory allocations.
-> 
-> During the migration, 'struct pci_epc_mem' is removed as it is seems
-> redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
-> is now used to hold the address windows of the endpoint controller.
-> 
-> [1] https://lpc.events/event/17/contributions/1419/
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
->  drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
->  include/linux/pci-epc.h                         |  25 +---
->  3 files changed, 81 insertions(+), 140 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 5befed2dc02b..37c612282eb6 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -482,11 +482,11 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
->  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
->  	}
-> -	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
-> +	aligned_offset = msg_addr_lower & (epc->windows[0]->page_size - 1);
->  	msg_addr = ((u64)msg_addr_upper) << 32 |
->  			(msg_addr_lower & ~aligned_offset);
->  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> -				  epc->mem->window.page_size);
-> +				  epc->windows[0]->page_size);
->  	if (ret)
->  		return ret;
->  
-> @@ -550,10 +550,10 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
->  		return -EPERM;
->  	}
->  
-> -	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
-> +	aligned_offset = msg_addr & (epc->windows[0]->page_size - 1);
->  	msg_addr &= ~aligned_offset;
->  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
-> -				  epc->mem->window.page_size);
-> +				  epc->windows[0]->page_size);
->  	if (ret)
->  		return ret;
->  
-> @@ -572,7 +572,7 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  	dw_pcie_edma_remove(pci);
->  
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> -			      epc->mem->window.page_size);
-> +			      epc->windows[0]->page_size);
->  
->  	pci_epc_mem_exit(epc);
->  
-> @@ -742,7 +742,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	}
->  
->  	ep->msi_mem = pci_epc_mem_alloc_addr(epc, &ep->msi_mem_phys,
-> -					     epc->mem->window.page_size);
-> +					     epc->windows[0]->page_size);
->  	if (!ep->msi_mem) {
->  		ret = -ENOMEM;
->  		dev_err(dev, "Failed to reserve memory for MSI/MSI-X\n");
-> @@ -770,7 +770,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  
->  err_free_epc_mem:
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
-> -			      epc->mem->window.page_size);
-> +			      epc->windows[0]->page_size);
->  
->  err_exit_epc_mem:
->  	pci_epc_mem_exit(epc);
-> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> index a9c028f58da1..f9e6e1a6aeaa 100644
-> --- a/drivers/pci/endpoint/pci-epc-mem.c
-> +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> @@ -4,37 +4,18 @@
->   *
->   * Copyright (C) 2017 Texas Instruments
->   * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * Copyright (C) 2024 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->   */
->  
-> +#include <linux/genalloc.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  
->  #include <linux/pci-epc.h>
->  
-> -/**
-> - * pci_epc_mem_get_order() - determine the allocation order of a memory size
-> - * @mem: address space of the endpoint controller
-> - * @size: the size for which to get the order
-> - *
-> - * Reimplement get_order() for mem->page_size since the generic get_order
-> - * always gets order with a constant PAGE_SIZE.
-> - */
-> -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
-> -{
-> -	int order;
-> -	unsigned int page_shift = ilog2(mem->window.page_size);
-> -
-> -	size--;
-> -	size >>= page_shift;
-> -#if BITS_PER_LONG == 32
-> -	order = fls(size);
-> -#else
-> -	order = fls64(size);
-> -#endif
-> -	return order;
-> -}
-> -
->  /**
->   * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
->   * @epc: the EPC device that invoked pci_epc_mem_init
-> @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
->  			   struct pci_epc_mem_window *windows,
->  			   unsigned int num_windows)
->  {
-> -	struct pci_epc_mem *mem = NULL;
-> -	unsigned long *bitmap = NULL;
-> -	unsigned int page_shift;
-> +	struct pci_epc_mem_window *window = NULL;
->  	size_t page_size;
-> -	int bitmap_size;
-> -	int pages;
->  	int ret;
->  	int i;
->  
-> -	epc->num_windows = 0;
-> -
->  	if (!windows || !num_windows)
->  		return -EINVAL;
->  
-> @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
->  		page_size = windows[i].page_size;
->  		if (page_size < PAGE_SIZE)
->  			page_size = PAGE_SIZE;
-> -		page_shift = ilog2(page_size);
-> -		pages = windows[i].size >> page_shift;
-> -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->  
-> -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> -		if (!mem) {
-> +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
-
-I think it is not good to modify caller's memory. This funciton suppose
-pass down read-only information. And set to epc->windows[i]. I think it'd
-better to use epc->windows[i].pool/windows.
-
-> +		if (!windows[i].pool) {
->  			ret = -ENOMEM;
-> -			i--;
-> -			goto err_mem;
-> +			goto err_free_mem;
-> +		}
-> +
-> +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
-> +				  NULL);
-> +
-> +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
-> +		ret = gen_pool_add_virt(windows[i].pool, (unsigned long)windows[i].virt_base,
-> +					windows[i].phys_base, windows[i].size, -1);
-> +		if (ret) {
-> +			iounmap(windows[i].virt_base);
-> +			gen_pool_destroy(epc->windows[i]->pool);
-
-I think move all free to err path will be easy to understand.
-
-> +			goto err_free_mem;
->  		}
->  
-> -		bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> -		if (!bitmap) {
-> +		window = kzalloc(sizeof(*window), GFP_KERNEL);
-
-According to below code                                                    
+Involve an new and common mathod to send pme_turn_off() message. Previously
+pme_turn_off() implement by platform related special register to trigge    
+it.                                                                        
                                                                            
-        epc->windows = kcalloc(num_windows, sizeof(*epc->windows), GFP_KERNEL);
-        if (!epc->windows)                                                 
-                return -ENOMEM;                                            
+But Yoshihiro give good idea by using iATU to send out message. Previously 
+Yoshihiro provide patches to raise INTx message by dummy write to outbound 
+iATU.                                                                      
                                                                            
-epc->windows already allocate whole num_windows * "struct pci_epc_mem_window".
-I think you can direct use 'window = epc->windows + i', so needn't alloc      
-additional memory for epc->windows[i].
+Use similar mathod to send out pme_turn_off message.                       
+                                                                           
+Previous two patches is picked from Yoshihiro' big patch serialise.        
+ PCI: dwc: Change arguments of dw_pcie_prog_outbound_atu()                 
+ PCI: Add INTx Mechanism Messages macros                                   
+                                                                           
+PCI: Add PME_TURN_OFF message macro                                        
+dt-bindings: PCI: dwc: Add 'msg" register region, Add "msg" region to use  
+to map PCI msg.                                                            
+                                                                           
+PCI: dwc: Add common pme_turn_off message method                           
+Using common pme_turn_off() message if platform have not define their.
 
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Changes in v5:
+- Default disable allocate TLP message memory windows. If driver need use
+this feature, need set use_atu_msg = true before call dw_host_init().
 
-> +		if (!window) {
->  			ret = -ENOMEM;
-> -			kfree(mem);
-> -			i--;
-> -			goto err_mem;
-> +			iounmap(windows[i].virt_base);
-> +			gen_pool_destroy(epc->windows[i]->pool);
-> +			goto err_free_mem;
->  		}
->  
-> -		mem->window.phys_base = windows[i].phys_base;
-> -		mem->window.size = windows[i].size;
-> -		mem->window.page_size = page_size;
-> -		mem->bitmap = bitmap;
-> -		mem->pages = pages;
-> -		mutex_init(&mem->lock);
-> -		epc->windows[i] = mem;
-> +		window->phys_base = windows[i].phys_base;
-> +		window->size = windows[i].size;
-> +		window->page_size = page_size;
-> +		window->pool = windows[i].pool;
-> +		epc->windows[i] = window;
->  	}
->  
-> -	epc->mem = epc->windows[0];
->  	epc->num_windows = num_windows;
->  
->  	return 0;
->  
-> -err_mem:
-> -	for (; i >= 0; i--) {
-> -		mem = epc->windows[i];
-> -		kfree(mem->bitmap);
-> -		kfree(mem);
-> +err_free_mem:
-> +	for (--i; i >= 0; i--) {
-> +		iounmap(windows[i].virt_base);
-> +		gen_pool_destroy(epc->windows[i]->pool);
-> +		kfree(epc->windows[i]);
->  	}
-> +
->  	kfree(epc->windows);
->  
->  	return ret;
-> @@ -128,14 +109,15 @@ EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
->  int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
->  		     size_t size, size_t page_size)
->  {
-> -	struct pci_epc_mem_window mem_window;
-> +	struct pci_epc_mem_window window;
->  
-> -	mem_window.phys_base = base;
-> -	mem_window.size = size;
-> -	mem_window.page_size = page_size;
-> +	window.phys_base = base;
-> +	window.size = size;
-> +	window.page_size = page_size;
->  
-> -	return pci_epc_multi_mem_init(epc, &mem_window, 1);
-> +	return pci_epc_multi_mem_init(epc, &window, 1);
->  }
-> +
+- Link to v4: https://lore.kernel.org/r/20240213-pme_msg-v4-0-e2acd4d7a292@nxp.com
 
-Remove extra empty line change
+Changes in v4:
+- Remove dt-binding patch. Needn't change any dts file and binding doc.
+  Reserve a region at end of first IORESOURCE_MEM window by call
+  request_resource(). So PCIe stack will not use this reserve region to any
+PCIe devices.
+  I tested it by reserve at begin of IORESOURCE_MEM window. PCIe stack
+will skip it as expection.
 
->  EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->  
->  /**
-> @@ -147,21 +129,20 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_init);
->   */
->  void pci_epc_mem_exit(struct pci_epc *epc)
->  {
-> -	struct pci_epc_mem *mem;
->  	int i;
->  
->  	if (!epc->num_windows)
->  		return;
->  
->  	for (i = 0; i < epc->num_windows; i++) {
-> -		mem = epc->windows[i];
-> -		kfree(mem->bitmap);
-> -		kfree(mem);
-> +		iounmap(epc->windows[i]->virt_base);
-> +		gen_pool_destroy(epc->windows[i]->pool);
-> +		kfree(epc->windows[i]);
->  	}
-> +
->  	kfree(epc->windows);
->  
->  	epc->windows = NULL;
-> -	epc->mem = NULL;
->  	epc->num_windows = 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
-> @@ -178,55 +159,42 @@ EXPORT_SYMBOL_GPL(pci_epc_mem_exit);
->  void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
->  				     phys_addr_t *phys_addr, size_t size)
->  {
-> +	struct pci_epc_mem_window *window;
->  	void __iomem *virt_addr = NULL;
-> -	struct pci_epc_mem *mem;
-> -	unsigned int page_shift;
-> +	struct gen_pool *genpool;
->  	size_t align_size;
-> -	int pageno;
-> -	int order;
->  	int i;
->  
->  	for (i = 0; i < epc->num_windows; i++) {
-> -		mem = epc->windows[i];
-> -		mutex_lock(&mem->lock);
-> -		align_size = ALIGN(size, mem->window.page_size);
-> -		order = pci_epc_mem_get_order(mem, align_size);
-> -
-> -		pageno = bitmap_find_free_region(mem->bitmap, mem->pages,
-> -						 order);
-> -		if (pageno >= 0) {
-> -			page_shift = ilog2(mem->window.page_size);
-> -			*phys_addr = mem->window.phys_base +
-> -				((phys_addr_t)pageno << page_shift);
-> -			virt_addr = ioremap(*phys_addr, align_size);
-> -			if (!virt_addr) {
-> -				bitmap_release_region(mem->bitmap,
-> -						      pageno, order);
-> -				mutex_unlock(&mem->lock);
-> -				continue;
-> -			}
-> -			mutex_unlock(&mem->lock);
-> -			return virt_addr;
-> -		}
-> -		mutex_unlock(&mem->lock);
-> +		window = epc->windows[i];
-> +		genpool = window->pool;
-> +		align_size = ALIGN(size, window->page_size);
-> +
-> +		virt_addr = (void __iomem *)gen_pool_alloc(genpool, align_size);
-> +		if (!virt_addr)
-> +			continue;
-> +
-> +		*phys_addr = gen_pool_virt_to_phys(genpool, (unsigned long)virt_addr);
-> +
-> +		break;
->  	}
->  
->  	return virt_addr;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_alloc_addr);
->  
-> -static struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
-> +static struct pci_epc_mem_window *pci_epc_get_matching_window(struct pci_epc *epc,
->  						       phys_addr_t phys_addr)
->  {
-> -	struct pci_epc_mem *mem;
-> +	struct pci_epc_mem_window *window;
->  	int i;
->  
->  	for (i = 0; i < epc->num_windows; i++) {
-> -		mem = epc->windows[i];
-> +		window = epc->windows[i];
->  
-> -		if (phys_addr >= mem->window.phys_base &&
-> -		    phys_addr < (mem->window.phys_base + mem->window.size))
-> -			return mem;
-> +		if (phys_addr >= window->phys_base &&
-> +		    phys_addr < (window->phys_base + window->size))
-> +			return window;
->  	}
->  
->  	return NULL;
-> @@ -244,27 +212,15 @@ static struct pci_epc_mem *pci_epc_get_matching_window(struct pci_epc *epc,
->  void pci_epc_mem_free_addr(struct pci_epc *epc, phys_addr_t phys_addr,
->  			   void __iomem *virt_addr, size_t size)
->  {
-> -	struct pci_epc_mem *mem;
-> -	unsigned int page_shift;
-> -	size_t page_size;
-> -	int pageno;
-> -	int order;
-> +	struct pci_epc_mem_window *window;
->  
-> -	mem = pci_epc_get_matching_window(epc, phys_addr);
-> -	if (!mem) {
-> +	window = pci_epc_get_matching_window(epc, phys_addr);
-> +	if (!window) {
->  		pr_err("failed to get matching window\n");
->  		return;
->  	}
->  
-> -	page_size = mem->window.page_size;
-> -	page_shift = ilog2(page_size);
-> -	iounmap(virt_addr);
-> -	pageno = (phys_addr - mem->window.phys_base) >> page_shift;
-> -	size = ALIGN(size, page_size);
-> -	order = pci_epc_mem_get_order(mem, size);
-> -	mutex_lock(&mem->lock);
-> -	bitmap_release_region(mem->bitmap, pageno, order);
-> -	mutex_unlock(&mem->lock);
-> +	gen_pool_free(window->pool, (unsigned long)virt_addr, size);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_mem_free_addr);
->  
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index 40ea18f5aa02..37ea96ed3432 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -87,30 +87,19 @@ struct pci_epc_ops {
->  /**
->   * struct pci_epc_mem_window - address window of the endpoint controller
->   * @phys_base: physical base address of the PCI address window
-> + * @virt_base: virtual base address of the PCI address window
-> + * @pool: memory pool descriptor
->   * @size: the size of the PCI address window
->   * @page_size: size of each page
->   */
->  struct pci_epc_mem_window {
->  	phys_addr_t	phys_base;
-> +	void __iomem	*virt_base;
-> +	struct gen_pool *pool;
->  	size_t		size;
->  	size_t		page_size;
->  };
->  
-> -/**
-> - * struct pci_epc_mem - address space of the endpoint controller
-> - * @window: address window of the endpoint controller
-> - * @bitmap: bitmap to manage the PCI address space
-> - * @pages: number of bits representing the address region
-> - * @lock: mutex to protect bitmap
-> - */
-> -struct pci_epc_mem {
-> -	struct pci_epc_mem_window window;
-> -	unsigned long	*bitmap;
-> -	int		pages;
-> -	/* mutex to protect against concurrent access for memory allocation*/
-> -	struct mutex	lock;
-> -};
-> -
->  /**
->   * struct pci_epc - represents the PCI EPC device
->   * @dev: PCI EPC device
-> @@ -118,9 +107,6 @@ struct pci_epc_mem {
->   * @list_lock: Mutex for protecting pci_epf list
->   * @ops: function pointers for performing endpoint operations
->   * @windows: array of address space of the endpoint controller
-> - * @mem: first window of the endpoint controller, which corresponds to
-> - *       default address space of the endpoint controller supporting
-> - *       single window.
->   * @num_windows: number of windows supported by device
->   * @max_functions: max number of functions that can be configured in this EPC
->   * @max_vfs: Array indicating the maximum number of virtual functions that can
-> @@ -134,8 +120,7 @@ struct pci_epc {
->  	struct list_head		pci_epf;
->  	struct mutex			list_lock;
->  	const struct pci_epc_ops	*ops;
-> -	struct pci_epc_mem		**windows;
-> -	struct pci_epc_mem		*mem;
-> +	struct pci_epc_mem_window	**windows;
->  	unsigned int			num_windows;
->  	u8				max_functions;
->  	u8				*max_vfs;
-> 
-> ---
-> base-commit: 256833a66670ff28b7c1bddbd17973619e5281fd
-> change-id: 20240317-pci-ep-genalloc-fa89f5e487e3
-> 
-> Best regards,
-> -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
+  Fixed a issue, forget set iATU index when sent PME_turn_off.
+
+- Link to v3: https://lore.kernel.org/r/20240202-pme_msg-v3-0-ff2af57a02ad@nxp.com
+
+Changes in v3:
+- fix 'MSG"
+- Add pcie spec ref in head file
+- using function name dw_pci_pme_turn_off()
+- Using PCIE_ prefix macro
+- Link to v2: https://lore.kernel.org/r/20240201-pme_msg-v2-0-6767052fe6a4@nxp.com
+
+Changes in v2:
+  - Add my sign off at PCI: dwc: Add outbound MSG TLPs support
+  - Add Bjorn review tag at  Add INTx Mechanism Messages macros
+  - using PME_Turn_Off match PCIe spec
+  - ref to pcie spec v6.1
+  - using section number.
+
+- Link to v1: https://lore.kernel.org/r/20240130-pme_msg-v1-0-d52b0add5c7c@nxp.com
+
+---
+Frank Li (2):
+      PCI: Add PCIE_MSG_CODE_PME_TURN_OFF message macro
+      PCI: dwc: Add common send PME_Turn_Off message method
+
+Yoshihiro Shimoda (3):
+      PCI: Add INTx Mechanism Messages macros
+      PCI: dwc: Consolidate args of dw_pcie_prog_outbound_atu() into a structure
+      PCI: dwc: Add outbound MSG TLPs support
+
+ drivers/pci/controller/dwc/pcie-designware-ep.c   |  21 ++--
+ drivers/pci/controller/dwc/pcie-designware-host.c | 146 +++++++++++++++++++---
+ drivers/pci/controller/dwc/pcie-designware.c      |  54 ++++----
+ drivers/pci/controller/dwc/pcie-designware.h      |  22 +++-
+ drivers/pci/pci.h                                 |  20 +++
+ 5 files changed, 199 insertions(+), 64 deletions(-)
+---
+base-commit: e08fc59eee9991afa467d406d684d46d543299a9
+change-id: 20240130-pme_msg-dd2d81ee9886
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+
 
