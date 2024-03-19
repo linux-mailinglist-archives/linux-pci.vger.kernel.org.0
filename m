@@ -1,258 +1,206 @@
-Return-Path: <linux-pci+bounces-4890-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4891-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6743087F873
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 08:35:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF3B287FC84
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 12:07:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 808A61C21AF6
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 07:35:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2812A1F22DC6
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Mar 2024 11:07:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D12B2535A3;
-	Tue, 19 Mar 2024 07:35:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1916D64CEF;
+	Tue, 19 Mar 2024 11:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hd5c3IRj"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dmInOBrl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FF952F95
-	for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 07:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1864CE8;
+	Tue, 19 Mar 2024 11:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710833714; cv=none; b=VeDJopq2krRjVIbREsloNunZO98f9ISnXVETgzqyWEx3D7MHwzM9grgqsIt5ZYoL1ya1QUguFgb7jV51pf+zEwYisCvujXF3WeDcb50DkEhkPPpR/fEcVuJKarVTLNN9nrzrA5q68neI3QDSSuQ2hdEjkCqNqfF16cPiM0gtcbo=
+	t=1710846454; cv=none; b=BN1NlCTeL7mYGnOL5vTeZ4Pz1lUlpTScM4130+TNMsILQ03Hd+ujqJsrZfen+t4S1qEWkV/AED2r2i6MCjrCTKAdXNspcRGAnrws65y3brqVJDbHwSRaqbdNBA5MOPFC3gHrEH4TDAiqMcJGzXkvuaSxNz+slTpR5J9esWO1QRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710833714; c=relaxed/simple;
-	bh=AEHt6DNVmDMM/VlnumtZ/9fQPumVBgKRRPOTqiSfvK8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=XMB+At5pg4dGf3tgralPN4BCUix3qGaS277r5QzDPH4GWzd+eateRj6RFgQqliYZXmdUyfHUl3tDWQXEExWPbdHrgw8z+a5TdOJrmMNrhc6UMLQVC7LPATlBkvimqnG4E9y9cnbLYBH1hKpfFMPlU/bwJ86iRx70W6/EPJttDts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hd5c3IRj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710833711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=jmgQ3u9vQfk+4SqS0vchYJd/LFseBm0YbDSuWQrSN5A=;
-	b=hd5c3IRjvshbEq12QSeVhq3VprHxR6ZlYXH6nVhVl+a5lDYMobk7NKQwYqM1BaNJJ09fD0
-	RMT0gMunG+/vjOylxrlfw1vzITGnOBKTMeUKQVL/Moj2u1Q2a4qEIvrxx5Ak0qIguodejG
-	jqh4sMjWPwodqd+aRoqxmRNHk4P9MO0=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-fW56Q98GPoSSqA230tI7Ow-1; Tue, 19 Mar 2024 03:35:09 -0400
-X-MC-Unique: fW56Q98GPoSSqA230tI7Ow-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-29e09df31d0so2357291a91.0
-        for <linux-pci@vger.kernel.org>; Tue, 19 Mar 2024 00:35:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710833708; x=1711438508;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jmgQ3u9vQfk+4SqS0vchYJd/LFseBm0YbDSuWQrSN5A=;
-        b=vw5FqWJMS6NJUGLQLyHZV5TLayUaGhw2PisztChG98z2N/CYXj0sm1cOlLf/0IVA8x
-         ndXVopmYbosWdn2DQ4EXvburSWTL6sFMiGyeLykUMpf18ygMLOVu4nWW46waTGSalFzJ
-         P+uqrQ5WyR6if6Ota4PcpFWFdmAjuS5WhnkgXEtS1Glwy49+6/27kiXum3auCWwzbIak
-         vo/qQYL8m318dftZALBuEXwIbBg1z8vbfXZp66AnN9oSl1RdjUxv1chrZMmiCAcVrW1K
-         mFRBPjuIerL1Dx667XA7GCXy3tN4Sr40qCzxBfpYgHbPoCGvuEyHx7Ae8BZhHXq2DzsJ
-         IB9g==
-X-Gm-Message-State: AOJu0YyThbw7qEt0EbLZKKlIU/rLtUsHPAN6V9dSL8MEscCrVLvTunWq
-	g/bBIQd4lZEpER2XCBZp1VkrKxGEbArTU6mlg1EehSAF8eDis0tzNkc9sjwrk+oQavVwrKl4I3C
-	LVE0aVNGcFHn1bmCcV4qmFl6pXOKBTofpSkhkjwFfLUI6qJTATXULoSkM5N/fXzED2BZhi7H9lq
-	Z7nrXrnvhur8LVaF43qc2foOU5rF3akhUYltmYQBC/8ADcdg==
-X-Received: by 2002:a17:90a:c78c:b0:29d:df16:1b2e with SMTP id gn12-20020a17090ac78c00b0029ddf161b2emr2774556pjb.9.1710833708497;
-        Tue, 19 Mar 2024 00:35:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFYza1ZeIHJDT2P6ocJscHx4PFf2ruYoF5xnPllboE9ETH+lB8kClMdVFS04gfYhsKNcp7EiX4PMqi03ip1rI=
-X-Received: by 2002:a17:90a:c78c:b0:29d:df16:1b2e with SMTP id
- gn12-20020a17090ac78c00b0029ddf161b2emr2774516pjb.9.1710833707572; Tue, 19
- Mar 2024 00:35:07 -0700 (PDT)
+	s=arc-20240116; t=1710846454; c=relaxed/simple;
+	bh=pWUlgTn6nHX3bdnZ9hOiOeopJLOgtZrnwrOe1BUeat4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZahHNIC1pXmHNQe7AgSvQnbpAOOVT3LxCKct39xhKkrhFPPOA0pETbtzwX/9K7otpcoJsTgv399yplolwt2/JdOi94w3fyZDxaTJq9TNTN7v6adZuH8FfQUROoOAJGrBUq6DSqb+4tS/SEXEgGOP1FjLBI2lSVk55sj84/8bneA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dmInOBrl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42J3JXQf016132;
+	Tue, 19 Mar 2024 11:07:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=s6prlzbdg7THi44K6pB0anmZEUrHlNA21RkUbYyl6f4=; b=dm
+	InOBrlljudKxx9rKF5chn5g6OXVkZKW6syeItdrC1nQPWW3NDtuv0cyUr5M8ZuLB
+	MNAKlvmaZjG3LQ263IO/RicYLnKI0WV8wpKiQuGYb6mropYkKf3DoDl+n95sdvcy
+	l2HYs8OpwJezEAHcbi9fG+I10I4vWr1q1VAie9r9ooPLMgfDWvKgAcqkpx+d6tAx
+	yY9XixjPMTQhD5P56VJ5WlwrvwvSInLoZ112ThMzMN+pZ9f2sMgp2CC/Cxsgyuyb
+	51AE8uBvxA3WFzkt7e5gepOKyWRrqOHIsbRM3UdiY6BX8eO+qLfMUOjJ7O1HY5Uy
+	40E/9NyeAYlSLcFka8bg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wy2e9gyb7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 11:07:16 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42JB7E9g011442
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 11:07:14 GMT
+Received: from [10.81.25.230] (10.49.16.6) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
+ 2024 04:07:14 -0700
+Message-ID: <6eafdda1-76e1-49af-ae4b-ffe7b26097ca@quicinc.com>
+Date: Tue, 19 Mar 2024 04:07:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Changhui Zhong <czhong@redhat.com>
-Date: Tue, 19 Mar 2024 15:34:56 +0800
-Message-ID: <CAGVVp+WyM-ce=c1L4p2EZfvLyxYZSHFkxKLad1TXXyNdVn1KYg@mail.gmail.com>
-Subject: [bug report] WARNING: CPU: 0 PID: 226 at drivers/pci/pci.c:2236 pci_disable_device+0xf4/0x100
-To: linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-branch: master
-commit HEAD:b3603fcb79b1036acae10602bffc4855a4b9af80
-
-dmesg log:
-Rebooting.
-[  292.644951] {1}[Hardware Error]: Hardware error from APEI Generic
-Hardware Error Source: 5
-[  292.644955] {1}[Hardware Error]: event severity: fatal
-[  292.644958] {1}[Hardware Error]:  Error 0, type: fatal
-[  292.644959] {1}[Hardware Error]:   section_type: PCIe error
-[  292.644960] {1}[Hardware Error]:   port_type: 0, PCIe end point
-[  292.644962] {1}[Hardware Error]:   version: 3.0
-[  292.644963] {1}[Hardware Error]:   command: 0x0002, status: 0x0010
-[  292.644964] {1}[Hardware Error]:   device_id: 0000:01:00.1
-[  292.644966] {1}[Hardware Error]:   slot: 0
-[  292.644967] {1}[Hardware Error]:   secondary_bus: 0x00
-[  292.644968] {1}[Hardware Error]:   vendor_id: 0x14e4, device_id: 0x165f
-[  292.644969] {1}[Hardware Error]:   class_code: 020000
-[  292.644971] {1}[Hardware Error]:   aer_uncor_status: 0x00100000,
-aer_uncor_mask: 0x00010000
-[  292.644972] {1}[Hardware Error]:   aer_uncor_severity: 0x000ef030
-[  292.644973] {1}[Hardware Error]:   TLP Header: 40000001 0000020f
-90028090 00000000
-[  292.644976] Kernel panic - not syncing: Fatal hardware error!
-[  292.644978] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.8.0+ #1
-[  292.644981] Hardware name: Dell Inc. PowerEdge R640/0X45NX, BIOS
-2.19.1 06/04/2023
-[  292.644982] Call Trace:
-[  292.644984]  <NMI>
-[  292.644985]  panic+0x32b/0x350
-[  292.644995]  __ghes_panic+0x69/0x70
-[  292.645000]  ghes_in_nmi_queue_one_entry.constprop.0+0x1d9/0x2b0
-[  292.645005]  ghes_notify_nmi+0x59/0xd0
-[  292.645007]  nmi_handle+0x5b/0x150
-[  292.645014]  default_do_nmi+0x40/0x100
-[  292.645017]  exc_nmi+0x100/0x180
-[  292.645019]  end_repeat_nmi+0xf/0x53
-[  292.645023] RIP: 0010:intel_idle+0x59/0xa0
-[  292.645028] Code: d2 48 89 d1 65 48 8b 05 55 21 73 70 0f 01 c8 48
-8b 00 a8 08 75 14 66 90 0f 00 2d 2e 00 43 00 b9 01 00 00 00 48 89 f0
-0f 01 c9 <65> 48 8b 05 2f 21 73 70 f0 80 60 02 df f0 83 44 24 fc 00 48
-8b 00
-[  292.645030] RSP: 0018:ffffffff90403e48 EFLAGS: 00000046
-[  292.645032] RAX: 0000000000000001 RBX: 0000000000000002 RCX: 0000000000000001
-[  292.645034] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff93d22fa3ffa0
-[  292.645035] RBP: ffff93d22fa3ffa0 R08: 0000000000000002 R09: 00000000fffffffd
-[  292.645036] R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff908bbf60
-[  292.645037] R13: ffffffff908bc048 R14: 0000000000000002 R15: 0000000000000000
-[  292.645040]  ? intel_idle+0x59/0xa0
-[  292.645043]  ? intel_idle+0x59/0xa0
-[  292.645046]  </NMI>
-[  292.645046]  <TASK>
-[  292.645047]  cpuidle_enter_state+0x7d/0x410
-[  292.645050]  cpuidle_enter+0x29/0x40
-[  292.645054]  cpuidle_idle_call+0xf8/0x160
-[  292.645060]  do_idle+0x7a/0xe0
-[  292.645062]  cpu_startup_entry+0x25/0x30
-[  292.645065]  rest_init+0xcc/0xd0
-[  292.645068]  start_kernel+0x325/0x400
-[  292.645072]  x86_64_start_reservations+0x14/0x30
-[  292.645076]  x86_64_start_kernel+0xed/0xf0
-[  292.645079]  common_startup_64+0x13e/0x141
-[  292.645084]  </TASK>
-[  292.645101] Kernel Offset: 0xdc00000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v1 2/3] PCI: dwc: add equalization settings for gen4
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "agross@kernel.org" <agross@kernel.org>,
+        "andersson@kernel.org"
+	<andersson@kernel.org>,
+        "konrad.dybcio@linaro.org"
+	<konrad.dybcio@linaro.org>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "Mrinmay
+ Sarkar (QUIC)" <quic_msarkar@quicinc.com>,
+        "Aravind Ramakrishnaiah (QUIC)"
+	<quic_kraravin@quicinc.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "Serge
+ Semin" <fancer.lancer@gmail.com>,
+        Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>
+References: <20240301200041.GA405674@bhelgaas>
+From: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+In-Reply-To: <20240301200041.GA405674@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: CkVqNtX-GBpxlL74-lxp7Gfa2UQ6sN5W
+X-Proofpoint-ORIG-GUID: CkVqNtX-GBpxlL74-lxp7Gfa2UQ6sN5W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
+ mlxlogscore=999 suspectscore=0 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403190085
 
 
-# lspci -nn -s 01:00.1
-01:00.1 Ethernet controller [0200]: Broadcom Inc. and subsidiaries
-NetXtreme BCM5720 Gigabit Ethernet PCIe [14e4:165f]
+On 3/1/24 12:00, Bjorn Helgaas wrote:
+> On Thu, Feb 29, 2024 at 09:11:35PM -0800, Shashank Babu Chinta Venkata wrote:
+>> GEN3_RELATED_OFFSET is being used as shadow register for generation4 and
+>> generation5 data rates based on rate select mask settings on this register.
+>> Select relevant mask and equalization settings for generation4 operation.
+> 
+> Please capitalize subject lines to match history ("PCI: qcom: Add ...")
+> 
+> s/GEN3_RELATED_OFFSET/GEN3_RELATED_OFF/ (I think?)
+> 
+> I wish these "GEN3_RELATED" things were named with the data rate
+> instead of "GEN3".  The PCIe spec defines these things based on the
+> data rate (8GT/s, 16GT/s, etc), not the revision of the spec they
+> appeared in (gen3/gen4/etc).
+I have kept it consistent with nomenclature followed in pcie designware
+documentation for these registers. For function names and constraint to 
+apply these, I will fall back to data rates rather than generation.
 
-# lspci -vvv -s 01:00.1
-01:00.1 Ethernet controller: Broadcom Inc. and subsidiaries NetXtreme
-BCM5720 Gigabit Ethernet PCIe
-        DeviceName: NIC4
-        Subsystem: Broadcom Inc. and subsidiaries Device 4160
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0
-        Interrupt: pin B routed to IRQ 17
-        NUMA node: 0
-        Region 0: Memory at 92900000 (64-bit, prefetchable) [size=64K]
-        Region 2: Memory at 92910000 (64-bit, prefetchable) [size=64K]
-        Region 4: Memory at 92920000 (64-bit, prefetchable) [size=64K]
-        Expansion ROM at 90040000 [disabled] [size=256K]
-        Capabilities: [48] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-PME(D0+,D1-,D2-,D3hot+,D3cold+)
-                Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=1 PME-
-        Capabilities: [50] Vital Product Data
-                Product Name: Broadcom NetXtreme Gigabit Ethernet
-                Read-only fields:
-                        [PN] Part number: BCM95720
-                        [MN] Manufacture ID: 1028
-                        [V0] Vendor specific: FFV22.61.8
-                        [V1] Vendor specific: DSV1028VPDR.VER1.0
-                        [V2] Vendor specific: NPY2
-                        [V3] Vendor specific: PMT1
-                        [V4] Vendor specific: NMVBroadcom Corp
-                        [V5] Vendor specific: DTINIC
-                        [V6] Vendor specific: DCM3001008d454101008d45
-                        [RV] Reserved: checksum good, 233 byte(s) reserved
-                End
-        Capabilities: [58] MSI: Enable- Count=1/8 Maskable- 64bit+
-                Address: 0000000000000000  Data: 0000
-        Capabilities: [a0] MSI-X: Enable+ Count=17 Masked-
-                Vector table: BAR=4 offset=00000000
-                PBA: BAR=4 offset=00001000
-        Capabilities: [ac] Express (v2) Endpoint, MSI 00
-                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s
-<4us, L1 <64us
-                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+
-FLReset+ SlotPowerLimit 25.000W
-                DevCtl: CorrErr- NonFatalErr+ FatalErr+ UnsupReq+
-                        RlxdOrd- ExtTag- PhantFunc- AuxPwr+ NoSnoop- FLReset-
-                        MaxPayload 128 bytes, MaxReadReq 512 bytes
-                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-AuxPwr+ TransPend-
-                LnkCap: Port #0, Speed 5GT/s, Width x2, ASPM not supported
-                        ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
-                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
-                        ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 5GT/s (ok), Width x2 (ok)
-                        TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-                DevCap2: Completion Timeout: Range ABCD, TimeoutDis+
-NROPrPrP- LTR-
-                         10BitTagComp- 10BitTagReq- OBFF Not
-Supported, ExtFmt- EETLPPrefix-
-                         EmergencyPowerReduction Not Supported,
-EmergencyPowerReductionInit-
-                         FRS- TPHComp- ExtTPHComp-
-                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-                DevCtl2: Completion Timeout: 65ms to 210ms,
-TimeoutDis- LTR- OBFF Disabled,
-                         AtomicOpsCtl: ReqEn-
-                LnkSta2: Current De-emphasis Level: -6dB,
-EqualizationComplete- EqualizationPhase1-
-                         EqualizationPhase2- EqualizationPhase3-
-LinkEqualizationRequest-
-                         Retimer- 2Retimers- CrosslinkRes: unsupported
-        Capabilities: [100 v1] Advanced Error Reporting
-                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt-
-UnxCmplt+ RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-                UESvrt: DLP+ SDES+ TLP+ FCP+ CmpltTO+ CmpltAbrt+
-UnxCmplt- RxOF+ MalfTLP+ ECRC+ UnsupReq- ACSViol-
-                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout-
-AdvNonFatalErr+
-                CEMsk:  RxErr- BadTLP+ BadDLLP+ Rollover+ Timeout+
-AdvNonFatalErr+
-                AERCap: First Error Pointer: 00, ECRCGenCap+
-ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-                HeaderLog: 40000001 0000020f 90028090 00000000
-        Capabilities: [13c v1] Device Serial Number 00-00-e4-3d-1a-3c-8b-bb
-        Capabilities: [150 v1] Power Budgeting <?>
-        Capabilities: [160 v1] Virtual Channel
-                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
-                Arb:    Fixed- WRR32- WRR64- WRR128-
-                Ctrl:   ArbSelect=Fixed
-                Status: InProgress-
-                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-                        Status: NegoPending- InProgress-
-        Kernel driver in use: tg3
-        Kernel modules: tg3
-
-Thanks,
-
+> Using "GEN3" means we have to first look up the "gen -> rate" mapping
+> before finding the relevant spec info.
+> 
+> Applies to the subject line, commit log, #defines, function names,
+> etc.
+> 
+>> +void qcom_pcie_cmn_set_gen4_eq_settings(struct dw_pcie *pci)
+>> +{
+>> +	u32 reg;
+>> +
+>> +	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+> 
+> Warrants a one-line comment about using "GEN3_..." in a function named
+> "..._gen4_..."  (But ideally both would be renamed based on the data
+> rate instead.)
+> 
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom-cmn.h
+>> @@ -9,10 +9,29 @@
+>>   #include "../../pci.h"
+>>   #include "pcie-designware.h"
+>>   
+>> +#define GEN3_EQ_CONTROL_OFF			0x8a8
+>> +#define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK        GENMASK(3, 0)
+>> +#define GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE   BIT(4)
+>> +#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
+>> +#define GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL	BIT(24)
+> 
+> Are these qcom-specific registers, or should they be added alongside
+> GEN3_RELATED_OFF in pcie-designware.h?
+yes, these are designware register offsets. Will move them to designware 
+header file. However, the settings are vendor specific.I will park
+settings for these in QCOM specific files.
+> 
+>> +#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
+>> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_VAL   0x5
+>> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_VAL  0x5
+>> +#define GEN3_EQ_FMDC_N_EVALS_VAL          0xD
+>> +#define GEN3_EQ_FMDC_T_MIN_PHASE23_MASK         GENMASK(4, 0)
+>> +#define GEN3_EQ_FMDC_N_EVALS_MASK               GENMASK(9, 5)
+>> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_MASK  GENMASK(13, 10)
+>> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_MASK	GENMASK(17, 14)
+>> +#define GEN3_EQ_FMDC_N_EVALS_SHIFT			5
+>> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_SHIFT		10
+>> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_SHIFT	14
+> 
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+>> @@ -438,6 +438,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+>>   		goto err_disable_resources;
+>>   	}
+>>   
+>> +	/* set Gen4 equalization settings */
+> 
+> Pointless comment.
+> 
+>> +	if (pci->link_gen == 4)
+>> +		qcom_pcie_cmn_set_gen4_eq_settings(pci);
+> 
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -263,6 +263,10 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+>>   {
+>>   	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+>>   
+>> +	/* set Gen4 equalization settings */
+> 
+> Pointless comment.
+> 
+>> +	if (pci->link_gen == 4)
+>> +		qcom_pcie_cmn_set_gen4_eq_settings(pci);
 
