@@ -1,136 +1,84 @@
-Return-Path: <linux-pci+bounces-4932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C985F880C49
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 08:45:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F7CB880CB7
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 09:08:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 600DBB21A25
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 07:45:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 255D31F22E66
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 08:08:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757AC224D1;
-	Wed, 20 Mar 2024 07:45:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C0452BB19;
+	Wed, 20 Mar 2024 08:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zR4dYbbI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Btg6uxI+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934F9224C6;
-	Wed, 20 Mar 2024 07:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683E91642B
+	for <linux-pci@vger.kernel.org>; Wed, 20 Mar 2024 08:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710920720; cv=none; b=EtHMpNuqFvYUo3BVo+9uN55jiPSQae7zl9PcHk0YBHYVPfWCdkrZSyPQEI6XmOSAkrv5mW6jzYzJREmo+3GllQcnK/r2MMXMWepBqBP/06KjHWt52UPAPz+Bjg8PtxmCQ78bITE1rlul3KWMCfiDGgliqnd05BU/fmLJCVIbadk=
+	t=1710922110; cv=none; b=c3TWAslQnqEFAnzMFDmiMTlqs+eqMU643F8G5P2eWNwhIQZLwfi8Ui5J6kVyNamATv9dttYIhQC+2wzJdlEP/NfL4zs12iysAquAEn+ellfBymDnEqNpt+to/R3LAKm3c1VE4sOTiUJH0lmTHQPVatZKvbcOObhxDYaYxUkfd00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710920720; c=relaxed/simple;
-	bh=7qSpsLonZkPp6n1sVROjtTe4FhN1SzwKxxvPmVPaxvo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LdE6ZBBTLoKowvVRu+3NA5VyfNjnGbzesAbAtB6ydURvxyQYWKGExaEFvBCSRSuQxCT4yHb9q5/IO1P75yXRfaBTyyKb+JXVjByTYbA3Zgnr74ypiVvOofJKkJbUrBjHVQ3fLwzSJKgjydnznJMg+2xRCOtXOju8Jwqf+2nJP1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=zR4dYbbI; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42K7iXW8064345;
-	Wed, 20 Mar 2024 02:44:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710920673;
-	bh=G30qDNGsYpoAs9e2Fev9q4x3U8X+mKvech/LuR0V5SM=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=zR4dYbbIOU0T9kSt2VAkyYXxgXqFflmKQJcJc+YRexUebfWrIRTYWDW/9HdGCRAH2
-	 2KUlZh22RTmTpHqsFOz+C2TVKTzBC+DoK9AZodPH7VJPCFH79hW1rqqmURZtTPHqsv
-	 OyhxsW9BCi0nXXAUXKmJx4XlNhwYmsvj5qI2UeJE=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42K7iX2x116495
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 20 Mar 2024 02:44:33 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 20
- Mar 2024 02:44:32 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 20 Mar 2024 02:44:32 -0500
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42K7iVIb016176;
-	Wed, 20 Mar 2024 02:44:32 -0500
-Date: Wed, 20 Mar 2024 13:14:31 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
-	<tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Vignesh R
-	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik
-	<jmkrzyszt@gmail.com>,
-        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
-	<peda@axentia.se>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
-        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
-        <u-kumar1@ti.com>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 02/18] pinctrl: pinctrl-single: move
- suspend()/resume() callbacks to noirq
-Message-ID: <20240320074431.6yzao3jlyaxuii7c@dhruva>
-References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
- <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+	s=arc-20240116; t=1710922110; c=relaxed/simple;
+	bh=LHWh3GBT5RZiiGHVEinVHWSHnQ2jUSdOJgIsKgjNFdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SnnhiNSYXWXq1u8r1eR9ifQOhP1JskvB2+Oedt4EeqWgVb6T2X36xlDvfboB59iK+WDt+m9mmVi34JBfv2YoJ4E51E1Q0qGGgfgOiH/QKozKMmsjehhDnkCAt5cxSOSRybf083LV0+Wv/y8KPSG9grqOV83tanJbcCj8taQrMko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Btg6uxI+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A5F8C433F1;
+	Wed, 20 Mar 2024 08:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710922109;
+	bh=LHWh3GBT5RZiiGHVEinVHWSHnQ2jUSdOJgIsKgjNFdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Btg6uxI+ZSqrrsCzywyrD5WeEnVxUlhRtMaD2Rl+lAeMRTcojewRcnaiL8GMVBqSc
+	 pLVc95w53XqNLEdcipQcpjQXAh7Gto+kPS3lFBWzsT04UV+NVyBY3O9vSHQjmYZn46
+	 s91r/qjRN+g2+RTGPeodzyq+HsZSbl2UN1AHkqv+WCgWYYUgyXV1qvOvs5rkgkF3U/
+	 qA3yWBbHd/MdUA7Pt6o9abKfU1uGmJ8LkSb8fyM3HbQEV0jZ3pIO6AyivilfZLZ5tc
+	 QO7Zo3vCu/gm7iSHUlw1e60wMLdVNKavmWqcKsaUZkrsizvzNRi0z6uEzXZTvY1R2g
+	 Ao8zt/0NQ46Tw==
+Date: Wed, 20 Mar 2024 09:08:25 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] misc: pci_endpoint_test: Use
+ memcpy_toio()/memcpy_fromio() for BAR tests
+Message-ID: <ZfqZeQ_Spx0FzH6o@ryzen>
+References: <20240319213807.288550-1-cassel@kernel.org>
+ <49cb292a-fc84-4f5f-a1cd-8650341c4517@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <49cb292a-fc84-4f5f-a1cd-8650341c4517@linux.intel.com>
 
-Hi,
-
-On Mar 04, 2024 at 16:35:45 +0100, Thomas Richard wrote:
-> The goal is to extend the active period of pinctrl.
-> Some devices may need active pinctrl after suspend() and/or before
-> resume().
-> So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
-> have active pinctrl until suspend_noirq() (included), and from
-> resume_noirq() (included).
+On Tue, Mar 19, 2024 at 03:39:09PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> > +
+> > +	read_buf = kmalloc(buf_size, GFP_KERNEL);
+> > +	if (!read_buf)
+> > +		return false;
 > 
-> The deprecated API has been removed to use the new one (dev_pm_ops struct).
-> 
-> No need to check the pointer returned by dev_get_drvdata(), as
-> platform_set_drvdata() is called during the probe.
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
-> ---
+> Not freeing the read_buf/write_buf in return path?
 
-I was planning to do this but didn't see particular benefit to it. Do
-you see the benefit on your specific device? Can you help me understand
-how? Not against the patch, just curious.
+That is quite embarrassing...
 
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Thank you Kuppuswamy!
 
--- 
-Best regards,
-Dhruva
+
+Kind regards,
+Niklas
+
 
