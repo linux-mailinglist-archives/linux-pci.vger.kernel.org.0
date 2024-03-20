@@ -1,286 +1,318 @@
-Return-Path: <linux-pci+bounces-4946-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4947-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9157D880F26
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 10:57:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6292880F34
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 11:02:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06D75B21F2F
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 09:57:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D13428427F
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 10:02:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 262B63BB50;
-	Wed, 20 Mar 2024 09:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hFOXSEW4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8112E3BBDF;
+	Wed, 20 Mar 2024 10:01:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2051.outbound.protection.outlook.com [40.107.92.51])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A60B3BBC2;
-	Wed, 20 Mar 2024 09:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710928618; cv=fail; b=rFo1gtQ9uMDRTqHbsa2VFzbqyQgESDNc7aacGyyf00zC1m3TfhN7PBox0lFBqVCI4E8vj1lDKOaOfFmn9S5Ca+lX6nGpeMAovGE/atokEBh1zqycYyo05Yh1rOVC51i9gCtovBt+zzLBnWMZMqe9syLRn4yarnsLTpc+zcIFkjs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710928618; c=relaxed/simple;
-	bh=MsMWrjAGhoRe8DQQ/NNMuPc49p+PEXrqaXU0R312zrw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=K8PvWfKTXvU2+NDYUroaH9WiGKvbd0Aw1Q856kGMhpZd0jFdmqoUIZ37ddt28aZUSVlc+m3W9//bXI6MrYojkel2Ve/iLiHRquIxBbkMxogqND1LVJ7cJXc7XraYIeLk5sUYCOYMyQhCwimXB/Jo1Iu2PIYrvHxeaEvHqzr7i4E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hFOXSEW4; arc=fail smtp.client-ip=40.107.92.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vm2aMNS2LMdumH143by0Su1hQ4QVALP8qYObEa8V29nna29Kmz7o1HAifvzTaHj2pHcGsyYUvrp2IGOJNV1GfNxPMSGrzVEEfHb8orBZWpefPvsmAIl7Xe1/qNXZhvnnoPDjWhFlkQ5/KrchuOGXiTh6JdbQnMYjfHexmedW6ok0UorrnY6PzunxSHR/RibwV+Ropbxdrew0QmfhX/x78bhUqIRz1X79987L/tPKSXwCSFbEjPoQ+QdZt0Pp6JaocmKNRqRq53kbWnEcyOu9uhgIbgIjHvUYFKODkbRLexIX5urk4ghtF0PZVP0NiyJMCPzA7/xYP5YkKntDV5uSlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/UmoKZna9t9WQqNjLr9qivrOBw+yTKvX+i/QqLeWP0M=;
- b=gu8Pfbr+ipSiLhgOU/vlciDtNmvuVpymWhQLqA+mmDB3Mlm2wCTSbs5J21UMMGgM9UgC9vPHSsv06pxUXhsOmCTFtz8A9sQAw2JZt/duYnen/KOvAEY1roMZAYxO/BLcOAUwp5kJej8v9cDRqvmOux7CmrxdtIzowvf3C2at7mws0/IXTsJuSxee+HA3yZis353z97MykTEFneuDBd73DcTohfYfmIxqkaz8sCaHMOaNVMONgj5P5OJiWIkZljDHUSSfbzyh6yH4Q1q8JjPcto4IlAyIqFZduoAINTh++iPz1SWiebYJ9L9bQECmx5ayn3d7mS6lP91btWW4rGH6Vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/UmoKZna9t9WQqNjLr9qivrOBw+yTKvX+i/QqLeWP0M=;
- b=hFOXSEW49WU9oeNmeQHR0COe1u88R7vvZPnX/FLBHvzJxxXcb9FSDelSsKRfhG3SHtsOUWnsA7NIiKx8OUSvjA36lv4+QPmp/EqwgppJmYQORNd4pBvfgXZZTdwYXtjc7QwoHDg4vjDL6cnRUMHEda/a/U7MhfZRXulCnwF+4Ew=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5827.namprd12.prod.outlook.com (2603:10b6:208:396::19)
- by IA0PR12MB8693.namprd12.prod.outlook.com (2603:10b6:208:48e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.34; Wed, 20 Mar
- 2024 09:56:50 +0000
-Received: from BL1PR12MB5827.namprd12.prod.outlook.com
- ([fe80::ad43:48cb:df1c:c72f]) by BL1PR12MB5827.namprd12.prod.outlook.com
- ([fe80::ad43:48cb:df1c:c72f%6]) with mapi id 15.20.7386.023; Wed, 20 Mar 2024
- 09:56:50 +0000
-Message-ID: <37cfa724-f9ed-41ef-bad4-f00246a4ee8a@amd.com>
-Date: Wed, 20 Mar 2024 15:26:41 +0530
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] PCI: endpoint: Migrate to Genalloc framework for outbound
- window memory allocation
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jingoo Han <jingoohan1@gmail.com>,
- Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
-Content-Language: en-US
-From: Kishon Vijay Abraham I <kvijayab@amd.com>
-In-Reply-To: <20240317-pci-ep-genalloc-v1-1-70fe52a3b9be@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0090.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9a::9) To BL1PR12MB5827.namprd12.prod.outlook.com
- (2603:10b6:208:396::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7841A3BB35;
+	Wed, 20 Mar 2024 10:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710928917; cv=none; b=DHTb496axEGGMzumU4tAtlq3zbLBXebwmBOm3cN7MYZH7+aQ7mQFW60Bo4sT7wTN02Bf2xzsPgmNhS3PkOMl+rm2/MHpaKQzxSmdxo8sN4I55+C6bhZCkjSqmNV97m/YQajBeqdb7CTysPzaWZiGyssKpoivZ/wVzSA32vztvw4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710928917; c=relaxed/simple;
+	bh=5tEz/6rWjOymYkie4hlvcP8h52XbYzxHTb9B+0fX4rc=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ggIsCchDAHFQ0kUsSJS9egbl6aB/aKyEJYkW+F9kt+cJ+vVaCewXYhK0Vs4WTf8LK9sHVDzum/DlYmZn7cCbygRl/dW3uP+7ffAI5L82nnyUv2fOEdYn410g6ZWdk7MVTBt+bgsfd2YWJQbDYdPIEoY09Kwq6SJpOATuKI/t7UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V03yL3r2bz6K5Zq;
+	Wed, 20 Mar 2024 18:01:14 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 97D2B140D26;
+	Wed, 20 Mar 2024 18:01:46 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 20 Mar
+ 2024 10:01:45 +0000
+Date: Wed, 20 Mar 2024 10:01:44 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+CC: Shradha Todi <shradha.t@samsung.com>, <bp@alien8.de>,
+	<tony.luck@intel.com>, <james.morse@arm.com>, <mchehab@kernel.org>,
+	<rric@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
+	<gustavo.pimentel@synopsys.com>, <josh@joshtriplett.org>,
+	<lukas.bulwahn@gmail.com>, <hongxing.zhu@nxp.com>,
+	<pankaj.dubey@samsung.com>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <vidyas@nvidia.com>, <gost.dev@samsung.com>,
+	<alim.akhtar@samsung.com>, <shiju.jose@huawei.com>, "Terry Bowman"
+	<Terry.Bowman@amd.com>
+Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+ controller
+Message-ID: <20240320100144.0000056c@Huawei.com>
+In-Reply-To: <20240319163315.GD3297@thinkpad>
+References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
+	<20231130115044.53512-1-shradha.t@samsung.com>
+	<20231130165514.GW3043@thinkpad>
+	<000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+	<20240104055030.GA3031@thinkpad>
+	<0df701da5ff0$df1165a0$9d3430e0$@samsung.com>
+	<20240216134921.GH2559@thinkpad>
+	<120d01da657e$66b9d3b0$342d7b10$@samsung.com>
+	<20240319163315.GD3297@thinkpad>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5827:EE_|IA0PR12MB8693:EE_
-X-MS-Office365-Filtering-Correlation-Id: a23c8377-20a2-488e-7c0b-08dc48c4105d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4WKZIPJMCAZieGjAnlrWDEvoDaTPncoMf+gtEih4MQH7M4RPlSUfh3SCMIpDN7RAtMOJGn7rmzkO4bTyS319oBkWi3gsJjtTPwpbFyTAtYiqWDCGoxKZS/n8icGRJdj/W+sLrS9OzOcED0SJHYqMUgAykieih4cTA59UXt7/vVstE4FG/xM2K0Vlld8QkTeSAclYsyQCtmKRHpXzeeYrX0wxFaz0OqsxVhYyfypmpPZ+vzMjOzrVP/KDVH2K4FMnVQ7Ig3v00/WoPH9ZNp4c4GFr8LE3MAV6GtIx6SL/9xF3Ai8k3lbo/vdMzTciZMNMgstSC8rQgXfF+WwFWLfIcvfp6ZmDkznZRK9upRx/36v4MuXCIRODrsw2V6jUVOPlFZmWZFcbk2exlse8Cq3xv7DNhdRqGlEvCB9KQcB7Kp+fqKyO2W9FbRF34xJ0bahpAs+Nof1uGjra9x0MPJ/Qz5hlvVmT8hYQbHlEBuA6+3Tubocod4SLP0ThGlZHCmn5iXjsC1qDdqqvYGhKr207RNFBRykvWo++P9B2oPbiu2HsMqwPjx3ijxWsuH4wqx5dOxxWVchJjNVu1Ww5LOzyCqj2pRIjxQ24z5R3xbmX750=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5827.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(7416005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bzUrUGlxY0kydkhYZ3U5b3NrWit5S2RZc3lVd0VOa1p6Qytqb2hDVldvM3pT?=
- =?utf-8?B?ZjdMcXNEMG5TRG9WOVVsODdsUXRDS2k4ZkFhTHRPNWpXQkZtUDJkaXBpNXRC?=
- =?utf-8?B?WDdSSVNIZEVKaHI3VnRUWU1yRjhIanZIYWx3RWJhSm1HTXdkNnI2MUlseHI3?=
- =?utf-8?B?MUk1WTJUQTVGYnp5SGlBdHVNSTh2NzNCdDVqaDMyQit2OFJUN00ydFEzaTNK?=
- =?utf-8?B?RTZ6cTJkSXRXMyt1M1UzODN6VmdaZXc3TGNIU21xaHl2Q2N5Nm94RE5PRnhq?=
- =?utf-8?B?blZUUlVsZ2gwM0JpRDBmaklEM09LdFdaWlIzQVQvUFUzWWFYM3F1LzZnanRZ?=
- =?utf-8?B?TnBscm4xc2VUci94bzBvU0JUZjVXY0xRNXcxUThQNDhKYjZneGxMaHJzNURW?=
- =?utf-8?B?eTk0eGo3K0hTZjR5bEFvMDVOV2tzamUySitwQ2NSM2FlK2tDR2YybktpYzNh?=
- =?utf-8?B?Wkp6SjNRaHh1NGdjMXk1YnpYbzgwUllZUlJrV1ZnYWJkMXhJVlNCOTJpNkxM?=
- =?utf-8?B?elRyeGNCc3RPOE4xR3lwaFgyczZzRjFYcWUzclJQbXdCUUpUdUJVTU93V0lj?=
- =?utf-8?B?RGxOMXdORkFKRVZqKzVWN0FKMzl3MFlockhvOXlvM2FLdTIwVVRLUENDUVFW?=
- =?utf-8?B?cFFZdDhKUkJpRU5pNVQ0WTQwRXJIVjgrVTRRdm9vOHYwaVhwM2JLbjdJeXNy?=
- =?utf-8?B?MmlTUkNldVlpaWk4WUg2ajBJRU9KS1ZWOWpZTm1yY25nRnA3S1d1NHRtTk5T?=
- =?utf-8?B?c1B2R2l0RmpOamtqQ0ErU1BvSVlFcVBaY3MyVnJIU0h2eC83NUdVOUtWTERs?=
- =?utf-8?B?UjF1T3RmV1YrUmQ1aWluYVp5czMwd1FBc3NnNE8yUmU2ZW5RakY5ZmZ2cWRL?=
- =?utf-8?B?Z1d2UXdEaVk2UlRvY2ZudXJhYzZRTjdtU0c4RGI5SVR1OEZVREFzeElzOGZh?=
- =?utf-8?B?WlZkRHNUQmlsYUgvdFFpT3hURDJZZlRlaThZYVArL2tOVXRGS0JxWUVVRzdm?=
- =?utf-8?B?L1ZXcWIvRmQ2Q3ZvWkphaHVOMXNUOW5JZTNodmJmbUl1QklLRVk1S09GVG9S?=
- =?utf-8?B?cDdlQms2MUJmQmhhOG9kVmZrNk83RjhMMmY5dUk1NlFWampIanYzK1RyL0NO?=
- =?utf-8?B?cDBpcFJmTzNveDlyQTZVcmNJYW1ZNnk2S0RnblVTM0JLOGltV1hXSkUzYTI5?=
- =?utf-8?B?clpQTnVVMWZhZlozMnNIL25raVZOZlRJZDYyaWFTVUtQbWM3TGVLU2NISE9z?=
- =?utf-8?B?dXBKcytDUXJvdDA2UmxBVFFLckNmd0dXZnVDR3JMMHlERXAyaVZTRlIwRTlC?=
- =?utf-8?B?ZCtha3BjZ0ZtQnhWcnRTVk9iNjcvQnd1RlpzdzRaN0dnVjdUUWZwczllNW5B?=
- =?utf-8?B?ekhaOW5vZTh0UmJMV1lHMW5ETnhVOVV0dXhWelVibkhhZVU0TFdad0MxSDBx?=
- =?utf-8?B?NkxDUnVWSEoyUVVkcmxtenhhUTF3blBDTlNiZ2hOTVVoTmhmRFdvb3lldFF4?=
- =?utf-8?B?eGYwcXR0Z1JzNTluenN2c3lRVzNqNkZlRGlJVEp1VmRNa3p4Skl4TEJXT29G?=
- =?utf-8?B?WXdIVVcxcEpsSUNYMXVqYlVieTBaYjJiUHc4bFBoa1c2djJ3TzZlUC9yYndJ?=
- =?utf-8?B?NzdjYldNV3BUd2EvK20wOGdlQTB2UFg1a1NvcThBcWR2M1NGQjBXeGRsdVJq?=
- =?utf-8?B?MWUydEQ4L3c1L2xqYmxyN0xzVGhJY0dFRjJ2eWpwNjhGYW9PczhRb2JPbUZx?=
- =?utf-8?B?UUYwcGh0NDhGait4ejBGZithMUpHQ1BIaGpNajVCbGRaMHI0K044V2pTSmho?=
- =?utf-8?B?NDRQcEJwK3k1MitIc0hESW40dkJhend1ekdzQU1CWGxvR1hLOU4vU0ZtWDFV?=
- =?utf-8?B?QjhpRVY1VzJ4LzlqRnU5dE5zSUJLdjFRUzVZNGJnSWdaSDBHVHlMNXdQWGZ5?=
- =?utf-8?B?L0FORTRSVWVDUmNnN0ZYMHpPcUtOYzNlVytxT3RJUGVOcGIxRU1EN21wRFQ2?=
- =?utf-8?B?aHJVbHl5RDdJUE9BKy9sZDQzUEdzWFBUc0g4NGF3WEZSNkRVblR3aThhVGNM?=
- =?utf-8?B?VkU3OHFxSS9BL0lWQURydWRoaXlQdUpPNDhJTVhZYnFIRWx2bkhiaXJEUjhN?=
- =?utf-8?Q?qIivlKBmFgrJ09Ci4Nr5KGez8?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a23c8377-20a2-488e-7c0b-08dc48c4105d
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5827.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 09:56:50.8321
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6gKdDsp2fp7qFKFXadna2oYN4dF92nqy7JjGPkmENj13xutTYm+hFfrhwycqrvnQd5auHS4q386SKNv9bl9gKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8693
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Mani,
+On Tue, 19 Mar 2024 22:03:15 +0530
+'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org> wrote:
 
-On 3/17/2024 11:39 AM, Manivannan Sadhasivam wrote:
-> As proposed during the last year 'PCI Endpoint Subsystem Open Items
-> Discussion' of Linux Plumbers conference [1], let's migrate to Genalloc
-> framework for managing the endpoint outbound window memory allocation.
-> 
-> PCI Endpoint subsystem is using a custom memory allocator in pci-epc-mem
-> driver from the start for managing the memory required to map the host
-> address space (outbound) in endpoint. Even though it works well, it
-> completely defeats the purpose of the 'Genalloc framework', a general
-> purpose memory allocator framework created to avoid various custom memory
-> allocators in the kernel.
-> 
-> The migration to Genalloc framework is done is such a way that the existing
-> API semantics are preserved. So that the callers of the EPC mem APIs do not
-> need any modification (apart from the pcie-designware-epc driver that
-> queries page size).
-> 
-> Internally, the EPC mem driver now uses Genalloc framework's
-> 'gen_pool_first_fit_order_align' algorithm that aligns the allocated memory
-> based on the requested size as like the previous allocator. And the
-> page size passed during pci_epc_mem_init() API is used as the minimum order
-> for the memory allocations.
-> 
-> During the migration, 'struct pci_epc_mem' is removed as it is seems
-> redundant and the existing 'struct pci_epc_mem_window' in 'struct pci_epc'
-> is now used to hold the address windows of the endpoint controller.
-> 
-> [1] https://lpc.events/event/17/contributions/1419/
+> On Thu, Feb 22, 2024 at 04:30:47PM +0530, Shradha Todi wrote:
+> > + Borislav, Tony, James, Mauro, Robert
+> >=20
+> > Hi All,
+> >=20
+> > Synopsys DesignWare PCIe controllers have a vendor specific capability =
+(which
+> > means that this set of registers are only present in DesignWare control=
+lers)
+> > to perform debug operations called "RASDES".
+> > The functionalities provided by this extended capability are:
+> >=20
+> > 1. Debug: This has some debug related diagnostic features like holding =
+LTSSM
+> > in certain states, reading the status of lane detection, checking if an=
+y PCIe
+> > lanes are broken (RX Valid) and so on. It's a debug only feature used f=
+or diagnostic
+> > use-cases.
+> >=20
+> > 2. Error Injection: This is a way to inject certain errors in PCIe like=
+ LCRC, ECRC,
+> > Bad TLPs and so on. Again, this is a debug feature and generally not us=
+ed in
+> > functional use-case.
+> >=20
+> > 3. Statistical counters: This has 3 parts
+> >  - Error counters
+> >  - Non error counters (covered as part of perf [1])
+> >  - Time based analysis counters (covered as part of perf [1])
+> >=20
+> > Selective features of  the above functionality has been implemented
+> > by vendor specific PCIe controller drivers (pcie-tegra194.c) that use
+> > Synopsys DesignWare PCIe controllers.
+> > In order to make it useful to all vendors using DWC controller, we had
+> > proposed a common implementation in DWC PCIe controller directory
+> > (drivers/pci/controller/dwc/) and our original idea was based on debugfs
+> > filesystem. v1 and v2 are mentioned in [2] and [3].
+> >=20
+> > We got a suggestion to implement this as part of EDAC framework [3] and
+> > we looked into the same. But as far as I understood, what I am trying to
+> > implement is a very specific feature (only valid for Synopsys DWC PCIe =
+controllers).
 
-Thank you for working on this!
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   drivers/pci/controller/dwc/pcie-designware-ep.c |  14 +-
->   drivers/pci/endpoint/pci-epc-mem.c              | 182 +++++++++---------------
->   include/linux/pci-epc.h                         |  25 +---
->   3 files changed, 81 insertions(+), 140 deletions(-)
-> 
-.
-.
-> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-> index a9c028f58da1..f9e6e1a6aeaa 100644
-> --- a/drivers/pci/endpoint/pci-epc-mem.c
-> +++ b/drivers/pci/endpoint/pci-epc-mem.c
-> @@ -4,37 +4,18 @@
->    *
->    * Copyright (C) 2017 Texas Instruments
->    * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * Copyright (C) 2024 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->    */
->   
-> +#include <linux/genalloc.h>
->   #include <linux/io.h>
->   #include <linux/module.h>
->   #include <linux/slab.h>
->   
->   #include <linux/pci-epc.h>
->   
-> -/**
-> - * pci_epc_mem_get_order() - determine the allocation order of a memory size
-> - * @mem: address space of the endpoint controller
-> - * @size: the size for which to get the order
-> - *
-> - * Reimplement get_order() for mem->page_size since the generic get_order
-> - * always gets order with a constant PAGE_SIZE.
-> - */
-> -static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
-> -{
-> -	int order;
-> -	unsigned int page_shift = ilog2(mem->window.page_size);
-> -
-> -	size--;
-> -	size >>= page_shift;
-> -#if BITS_PER_LONG == 32
-> -	order = fls(size);
-> -#else
-> -	order = fls64(size);
-> -#endif
-> -	return order;
-> -}
-> -
->   /**
->    * pci_epc_multi_mem_init() - initialize the pci_epc_mem structure
->    * @epc: the EPC device that invoked pci_epc_mem_init
-> @@ -48,17 +29,11 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
->   			   struct pci_epc_mem_window *windows,
->   			   unsigned int num_windows)
->   {
-> -	struct pci_epc_mem *mem = NULL;
-> -	unsigned long *bitmap = NULL;
-> -	unsigned int page_shift;
-> +	struct pci_epc_mem_window *window = NULL;
->   	size_t page_size;
-> -	int bitmap_size;
-> -	int pages;
->   	int ret;
->   	int i;
->   
-> -	epc->num_windows = 0;
-> -
->   	if (!windows || !num_windows)
->   		return -EINVAL;
->   
-> @@ -70,45 +45,51 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
->   		page_size = windows[i].page_size;
->   		if (page_size < PAGE_SIZE)
->   			page_size = PAGE_SIZE;
-> -		page_shift = ilog2(page_size);
-> -		pages = windows[i].size >> page_shift;
-> -		bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->   
-> -		mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> -		if (!mem) {
-> +		windows[i].pool = gen_pool_create(ilog2(page_size), -1);
-> +		if (!windows[i].pool) {
->   			ret = -ENOMEM;
-> -			i--;
-> -			goto err_mem;
-> +			goto err_free_mem;
-> +		}
-> +
-> +		gen_pool_set_algo(windows[i].pool, gen_pool_first_fit_order_align,
-> +				  NULL);
-> +
-> +		windows[i].virt_base = ioremap(windows[i].phys_base, windows[i].size);
+For error part there are (at least superficially) similar features in the P=
+CIe
+standard that we've started thinking about how to support.
 
-Do you have to ioremap upfront the entire window? This could be a 
-problem in 32-bit systems which has limited vmalloc space. I have faced 
-issues before when trying to map the entire memory window and had to 
-manipulate vmalloc boot parameter.
+See Flit Logging Extended capablity (7.7.8 in PCIe Base Spec rev6.
+That has the benefit that they are part of the standard so we can
+support them directly in portdrv / EP drivers using some library code in the
+PCI core.
 
-I'd prefer we find a way to do ioremap per allocation as before.
+There are other interconnect and PCI PMU drivers that log retries etc which=
+ are also basically error
+counts. At least some of that is done through perf today.=20
 
-Thanks,
-Kishon
+
+> > This doesn't seem to fit in very well with the EDAC framework and we ca=
+n=20
+> > hardly use any of the EDAC framework APIs. We tried implementing a
+> > "pci_driver" but since a function driver will already be running on the=
+ EP and
+> > portdrv on the root-complex, we will not be able to bind 2 drivers to a=
+ single
+> > PCI device (root-complex or endpoint). Ultimately, what I will be doing=
+ is
+> > writing a platform driver with debugfs entries which will be present in=
+ EDAC
+> > directory instead of DWC directory.
+
+The addition of this type of functionality to pordrv is a long running ques=
+tion.
+Everyone wants a solution, I believe some people are looking at it (+CC Ter=
+ry)
+
+Terry, another case for your long list.
+
+For the EP end, this should be fired up by the EP driver, whilst it might be
+infrastructure used on a bunch of devices,  it is a feature of that particu=
+lar
+EP - so you'd want to provide any functionality in a form that could be used
+by both the EP driver and a nice shiny new portdrv replacement.
+
+> >=20
+> > Can  you please help us out by going through this thread [3] and lettin=
+g us
+> > know if our understanding is wrong at any point. If you think it is a b=
+etter
+> > idea to integrate this in the EDAC framework, can you guide me as
+> > to how I can utilize the framework better?
+> > Please let me know if you need any other information to conclude.
+> >=20
+> > [1] https://lore.kernel.org/linux-pci/20231121013400.18367-1-xueshuai@l=
+inux.alibaba.com/
+> > [2] https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsun=
+g.com/T/
+> > [3] https://lore.kernel.org/all/20231130115044.53512-1-shradha.t@samsun=
+g.com/
+> >  =20
+>=20
+> Gentle ping for the EDAC maintainers.
+>=20
+> - Mani
+>=20
+> > Thanks,
+> > Shradha
+> >  =20
+> > > -----Original Message-----
+> > > From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+> > > Sent: 16 February 2024 19:19
+> > > To: Shradha Todi <shradha.t@samsung.com>
+> > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > bhelgaas@google.com; jingoohan1@gmail.com;
+> > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
+> > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
+> > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
+> > > pci@vger.kernel.org; vidyas@nvidia.com; gost.dev@samsung.com
+> > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+> > > controller
+> > >=20
+> > > On Thu, Feb 15, 2024 at 02:55:06PM +0530, Shradha Todi wrote: =20
+> > > >
+> > > > =20
+> > >=20
+> > > [...]
+> > >  =20
+> > > > > For the error injection and counters, we already have the EDAC
+> > > > > framework. So adding them in the DWC driver doesn't make sense to=
+ me.
+> > > > > =20
+> > > >
+> > > > Sorry for late response, was going through the EDAC framework to un=
+derstand =20
+> > > better how we can fit RAS DES support in it. Below are some technical=
+ challenges
+> > > found so far: =20
+> > > > 1: This debugfs framework proposed [1] can run on both side of the =
+link i.e. RC =20
+> > > and EP as it will be a part of the link controller platform driver. H=
+ere for the EP
+> > > side the assumption is that it has Linux running, which is primarily =
+a use case for
+> > > chip-to-chip communication.  After your suggestion to migrate to EDAC
+> > > framework we studied and here are the findings: =20
+> > > > - If we move to EDAC framework, we need to have RAS DES as a
+> > > > pci_driver which will be binded based on vendor_id and device_id. O=
+ur
+> > > > observation is that on EP side system we are unable to bind two
+> > > > function driver (pci_driver), as pci_endpoint_test function driver =
+or
+> > > > some other chip-to-chip function driver will already be bound. On t=
+he
+> > > > other hand, on RC side we observed that if we have portdrv enabled =
+in
+> > > > Linux running on RC system, it gets bound to RC controller and then=
+ it
+> > > > does not allow EDAC pci_driver to bind. So basically we see a probl=
+em
+> > > > here, that we can't have two pci_driver binding to same PCI device
+> > > > 2: Another point is even though we use EDAC driver framework, we ma=
+y not be =20
+> > > able to use any of EDAC framework APIs as they are mostly suitable fo=
+r memory
+> > > controller devices sitting on PCI BUS. We will end up using debugfs e=
+ntries just via
+> > > a pci_driver placed inside EDAC framework.
+> > >=20
+> > > Please wrap your replies to 80 characters.
+> > >=20
+> > > There is no need to bind the edac driver to VID:PID of the device. Th=
+e edac driver
+> > > can be a platform driver and you can instantiate the platform device =
+from the
+> > > DWC driver. This way, the PCI device can be assocaited with whatever =
+driver, but
+> > > still there can be a separate edac driver for handling errors.
+> > >=20
+> > > Regarding API limitation, you should ask the maintainer about the pos=
+sibility of
+> > > extending them.
+> > >  =20
+> > > >
+> > > > Please let me know if my understanding is wrong.
+> > > > =20
+> > > > > But first check with the perf driver author if they have any plans
+> > > > > on adding the proposed functionality. If they do not have any plan
+> > > > > or not working on it, then look into EDAC.
+> > > > >
+> > > > > - Mani
+> > > > > =20
+> > > >
+> > > > Since we already worked and posted patches [1], [2], we will contin=
+ue to work =20
+> > > on this and based on consent from community we will adopt to most sui=
+table
+> > > framework. =20
+> > > > We see many subsystems like ethernet, usb, gpu, cxl having debugfs =
+files that =20
+> > > give information about the current status of the running system and a=
+s of now
+> > > based on our findings, we still feel there is no harm in having debug=
+fs entry based
+> > > support in DesignWare controller driver itself.
+> > >=20
+> > > There is no issue in exposing the debug information through debugfs, =
+that's the
+> > > sole purpose of the interface. But here, you are trying to add suppor=
+t for DWC
+> > > RAS feature for which a dedicated framework already exists.
+> > >=20
+> > > And there will be more similar requests coming for vendor specific er=
+ror protocols
+> > > as well. So your investigation could benefit everyone.
+> > >=20
+> > > From your above investigation, looks like there are some shortcomings=
+ of the
+> > > EDAC framework. So let's get that clarified by writing to the EDAC ma=
+intainers
+> > > (keep us in CC). If the EDAC maintainer suggests you to add support f=
+or this
+> > > feature in DWC driver itself citing some reasons, then no issues with=
+ me.
+> > >=20
+> > > - Mani
+> > >=20
+> > > --
+> > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
+=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
+=AE=E0=AF=8D =20
+> >=20
+> >  =20
+>=20
+
 
