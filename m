@@ -1,212 +1,196 @@
-Return-Path: <linux-pci+bounces-4943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F01CC880E46
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 10:07:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF4DC880E66
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 10:16:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7ACE1283189
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 09:07:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A7CC1C20C6D
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Mar 2024 09:16:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7EC538DF1;
-	Wed, 20 Mar 2024 09:07:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF31639FEB;
+	Wed, 20 Mar 2024 09:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CzSAVwbi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v4FY7UXQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3613B78B
-	for <linux-pci@vger.kernel.org>; Wed, 20 Mar 2024 09:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14610171C2
+	for <linux-pci@vger.kernel.org>; Wed, 20 Mar 2024 09:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710925623; cv=none; b=a5n3yNgncmo2d1QUPJKCRyvddD3gtvjV7t9CDQ5i7ilhJlDVoEsAgthAdns3UJCV9fCZVPsOnzxS+5mvpXsMyvB1gkWHygf0+sLQBwJ0Nl6znak7Uj6Gqz+TKmAt6073HYZxQARXE/tAl0wz5fy0A6MEvPrLAQCfjnotT1yvkjs=
+	t=1710926184; cv=none; b=oNOgg0Zn9eQFayCVlyataBZNG8Yy5LrNwVcW20YjaMo5GiCx1ilf7w7Ujjf11yKzIgztIqz2lAqTkxrJSxEfnYGi8TX42NyCSHktgRbDrggsxvYJmv+3LtdRBzjN71Fenae3diDfKT8D6+zQOEhNzhQUYgwGxzx39y4U1aSQtG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710925623; c=relaxed/simple;
-	bh=FWXFO7/wS53yYa9Fy+ULB64gn+3u96bjtgKeOTY5lJQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KpNxDLeBq5g2EkF5TQjr/S0px+TPOPs/OhkeT1JYCzV4bhMvJT6+2qS2s86UIwNZqvnJ60gRFHEuLaih28hLmveUDE/BtmV1Yd6vXjAVDH76rcyR12milyn1YypC0mLJP9fOUv748+/z+VvgTxhVdJIiVSyZigDysmdknHmE6Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CzSAVwbi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710925620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vvyZY9d5V8ZsKy/ls//fNaM+qioeXtlJCNTY18ukJjE=;
-	b=CzSAVwbim7OXipLgXQcYKG+ocUJvDLs2sqWXr1sFjs2+ItOXDPL8mEPHX3NpSMC3r8dFI1
-	eyfbESSM/thlORylV0d6qpggTLJ+5VrMc0pF2bK01urLDTobOF2WFr7D0yBMaEkb8XllgE
-	mZSQIo/bJ685bTgPdQyii7APAOpwCuM=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-114-lCc1Twd3N1KJIbjwbtI7_A-1; Wed, 20 Mar 2024 05:06:58 -0400
-X-MC-Unique: lCc1Twd3N1KJIbjwbtI7_A-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5dc4ffda13fso496998a12.0
-        for <linux-pci@vger.kernel.org>; Wed, 20 Mar 2024 02:06:58 -0700 (PDT)
+	s=arc-20240116; t=1710926184; c=relaxed/simple;
+	bh=7qiN7s71pLRDxczBVXccvkevewv+cyZPsC3vo51G3Wc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=arsy+s3jacHAXjW+hl1ADOooetb4wN3GLlyArMHoVDUtX+di0IjvTwDvWflrxRIX3fsVHO3/Ff78wYVXYc+1CzTfrSCPp1klDoKbFlbfyoj+0Y2nCDe5alQtZVg3Ilpv8kI2MljCatmTCA0zZDLvBLS/zhtzXxJG/L2grlDDfxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v4FY7UXQ; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-78a13117a3dso57271485a.1
+        for <linux-pci@vger.kernel.org>; Wed, 20 Mar 2024 02:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710926182; x=1711530982; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZdemdKKmkbE2PfEGOheslqykPqKEOarSKu2X847Hkx8=;
+        b=v4FY7UXQW3Mtc9KyH6RrZpUNB9nwSfCQPoOuxYGr8A5l+tD2bHiwypW9Xw5h4sBDTn
+         +ZLgDDD9RbELlc2s2RXVIrwB3AS/ZEDSAKFCWuArJBv7K9TB+6xGQgpUzdCOa9jDppuy
+         Y0A6cjG6hm/43/4wgKNFmPygckjfxjN9KJvhMLaKhbsJxQOWa/Hhy6YLm7CrU1VubI6U
+         5g3teykGAfbNRA186AbUK3xj6WG9V8qFHJ23NkfZcyc5tXiQy7urq24V3B9VNn2aHWKt
+         25AmqdXS7BuLJi+2TSYTgm6VnyUhwlZeQRkAi+O7bX8wnprKYi2jFyG1ibYqi4xO6hJO
+         Z1Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710925618; x=1711530418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vvyZY9d5V8ZsKy/ls//fNaM+qioeXtlJCNTY18ukJjE=;
-        b=FUptuDxZRa2/ZASZB9x9KC6hG59wuONF/CJZmV0g7M+/TMKeccqRPGWQShvo8UqBi2
-         fNYtEU+wLRjJ95VPZ8CRrJgoV2Ymkn5GtaRohh5EqY+r8nfYpLcbhjHhR1gHQwSGaG94
-         36s76GpZhbrJciXVfhRehLZwKop26KryvbGDKTKKGREjhJzZZU0MBq2xMKntF3lzSknZ
-         ARh4yM+iVJFiWMuz0KPl7e1KA2RJluyHZJyEiN9x/rRgnm4BwbKBf6nOSugmo04edmZw
-         MrgnlNycpXKsvhMF8P1D1lAmc6iNSOGi9iF8ZyiBW3OKTb3sHk/3oq5CYPQxBGlGaFSm
-         IQSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNPmsuqxF1MbpgggvNjuDGzWWrSD6XR5PSHQhvbNRLf8uSlNpIifCFd+gJKcp7RPeb8x75NT8zVG38yiD+JibQF2Dbm8J+9JXt
-X-Gm-Message-State: AOJu0YxORO9ICFF1/AZ7XqqwjcOzsl5B61uRZjZ7LWtl9+RjLR4sd3KD
-	LiQ0jCk9z3MjDKnRL8tTqpwUwyBz8ACS2GwWXw/5KNh0RjdvTO/HRZ2+7oS1TIxQmpUVAq5FPEU
-	yhhU437TSUZ/d6hSGd1G7NoLr26eoVbbWNGEfYTKzw5ms3PQVP1ASPMygRAbxlXIC84w3x6sgnU
-	iS9t/eH6c30MpiehqMTrAJsdEWZvuC3zN4
-X-Received: by 2002:a17:90b:3d0f:b0:29b:af80:7395 with SMTP id pt15-20020a17090b3d0f00b0029baf807395mr2572881pjb.4.1710925617719;
-        Wed, 20 Mar 2024 02:06:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGDTQV3guyGFQdvFa9MBBMMBqbczimXHCzsrX4mVkxjAgaMaF+JPWIUwRdCZRnXPN+4R1cI0P1kfFEkjG3wfzM=
-X-Received: by 2002:a17:90b:3d0f:b0:29b:af80:7395 with SMTP id
- pt15-20020a17090b3d0f00b0029baf807395mr2572866pjb.4.1710925617370; Wed, 20
- Mar 2024 02:06:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710926182; x=1711530982;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZdemdKKmkbE2PfEGOheslqykPqKEOarSKu2X847Hkx8=;
+        b=TiGJb5/aVExyKRB8GvS1WyKUvNXEhw/VOgd54wbwgonAi22Qhcg25xAR7Oe7Pk0hoK
+         H3+Th9fdqOYX2Qa17gaEzz3VE2G+YmQ5JTUvCxx8mrFUPud3D9FlQuVSvOOqnLQvq42Q
+         FCvmEItVh+urCBpSOXN1A0t4IO2BLfEImb+jI/oJENsYT4aYkRGBMBdCeexkchQNXQ/8
+         tvB5cR438gtsBzGXiM/xVQUvmRbTKmt9dGXCOQbOkK4jzfhMvJMaAw6ei0UnDkjIrGTJ
+         ptqz+xLO9+NRBDAoC0VMR17yDs2AlM8LiSBWh9TkTiiXgrsZuu9OSCsQEmcySM8kbk3+
+         sAvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/WBUBLSGrDvQNIgG9zgfb1GpqUxHiAXC0kM1Ts85Q6cuqtj61XZxRA8MBLHYiZKHJQNUsoC75CrF1KdAZBLBc5prEFWJFO8rQ
+X-Gm-Message-State: AOJu0YwjcKupPl4MLSV4BaKBPWsiI5g1qRCb8D59ChQUpS1D8BJYDnmj
+	X8WGNLYoMIYpzcgmSgNUcZEaP9NQ29fU7tx6vCqS7Nt5+oqDSO+BFTqf00SXJew=
+X-Google-Smtp-Source: AGHT+IFH/DGAuG6UpXir+MFQEX93ggRvpCtCWJKypFfAYtegcd5mPZkmVf5EdY3Ii1gsDK1y5VGKng==
+X-Received: by 2002:a05:620a:2402:b0:789:f0c6:a938 with SMTP id d2-20020a05620a240200b00789f0c6a938mr3353352qkn.15.1710926181995;
+        Wed, 20 Mar 2024 02:16:21 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id wh12-20020a05620a56cc00b00789f2660e88sm3706262qkn.68.2024.03.20.02.16.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Mar 2024 02:16:21 -0700 (PDT)
+Message-ID: <cc5d4fc1-14e7-4a73-80bf-6375e44162a3@linaro.org>
+Date: Wed, 20 Mar 2024 10:16:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGVVp+U+s692sC8-ioGQ7aP2shhQ6qyGOThVk=L6P4_XovDo5Q@mail.gmail.com>
- <73a510c8-51a0-4a4a-1aa8-7bdcd4cdde22@linux.intel.com> <ZfmkXw6pEBP73Txt@MiWiFi-R3L-srv>
-In-Reply-To: <ZfmkXw6pEBP73Txt@MiWiFi-R3L-srv>
-From: Changhui Zhong <czhong@redhat.com>
-Date: Wed, 20 Mar 2024 17:06:46 +0800
-Message-ID: <CAGVVp+W2eHM5znGhMFb6xWWWUF4FYJ9FrEGVqKm0jWW+YO1cjg@mail.gmail.com>
-Subject: Re: [bug report] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834 __insert_resource+0x84/0x110
-To: Baoquan He <bhe@redhat.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-pci@vger.kernel.org, kexec@lists.infradead.org, 
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, chenhuacai@kernel.org, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [PATCH v4 0/5] arm64: dts: qcom: sc8280xp: PCIe fixes
+ and GICv3 ITS enable
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Johan Hovold <johan+linaro@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240306095651.4551-1-johan+linaro@kernel.org>
+ <171081652637.198276.6219023769904423414.b4-ty@kernel.org>
+ <Zfk98hYPn7kiFGkt@hovoldconsulting.com>
+ <9b475e13-96b9-4bce-8041-e0d8e5a332a1@linaro.org>
+ <Zfqb8jPK50vlqu5Q@hovoldconsulting.com>
+ <baf9c1bd-84ef-4ecb-b229-51a83fe82c3f@linaro.org>
+ <ZfqhCKoEL4XGRs7T@hovoldconsulting.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZfqhCKoEL4XGRs7T@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 19, 2024 at 10:43=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
->
-> On 03/19/24 at 01:59pm, Ilpo J=C3=A4rvinen wrote:
-> > On Tue, 19 Mar 2024, Changhui Zhong wrote:
-> >
-> > > Hello,
-> > >
-> > > found a kernel warning issue at "kernel/resource.c:834
-> > > __insert_resource+0x84/0x110" ,please help check,
-> > >
-> > > repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
-it
-> > > branch: master
-> > > commit HEAD:f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
-> > >
-> > >  [    0.130164] ------------[ cut here ]------------
-> > > [    0.130370] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834
-> > > __insert_resource+0x84/0x110
-> > > [    0.131364] Modules linked in:
-> > > [    0.132364] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0+ #1
-> > > [    0.133365] Hardware name: Dell Inc. PowerEdge R640/06DKY5, BIOS
-> > > 2.15.1 06/15/2022
-> > > [    0.134364] RIP: 0010:__insert_resource+0x84/0x110
-> > > [    0.135364] Code: d0 4c 39 c1 76 b1 c3 cc cc cc cc 4c 8d 4a 30 48
-> > > 8b 52 30 48 85 d2 75 b7 48 89 56 30 49 89 31 48 89 46 28 31 c0 c3 cc
-> > > cc cc cc <0f> 0b 48 89 d0 c3 cc cc cc cc 49 89 d2 eb 1a 4d 39 42 08 7=
-7
-> > > 19 4d
-> > > [    0.136363] RSP: 0000:ffffb257400dfe08 EFLAGS: 00010246
-> > > [    0.137363] RAX: ffff9e147ffca640 RBX: 0000000000000000 RCX: 00000=
-00026000000
-> > > [    0.138363] RDX: ffffffff86c45ee0 RSI: ffffffff86c45ee0 RDI: 00000=
-00026000000
-> > > [    0.139363] RBP: ffffffff8684d120 R08: 0000000035ffffff R09: 00000=
-00035ffffff
-> > > [    0.140363] R10: 000000002f31646f R11: 0000000059a7ffee R12: fffff=
-fff86c45ee0
-> > > [    0.141363] R13: 0000000000000000 R14: 0000000000000000 R15: 00000=
-00000000000
-> > > [    0.142363] FS:  0000000000000000(0000) GS:ffff9e1277800000(0000)
-> > > knlGS:0000000000000000
-> > > [    0.143363] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [    0.144363] CR2: ffff9e1333601000 CR3: 0000000332220001 CR4: 00000=
-000007706f0
-> > > [    0.145363] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000=
-00000000000
-> > > [    0.146363] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000=
-00000000400
-> > > [    0.147363] PKRU: 55555554
-> > > [    0.148363] Call Trace:
-> > > [    0.149364]  <TASK>
-> > > [    0.150365]  ? __warn+0x7f/0x130
-> > > [    0.151363]  ? __insert_resource+0x84/0x110
-> > > [    0.152364]  ? report_bug+0x18a/0x1a0
-> > > [    0.153364]  ? handle_bug+0x3c/0x70
-> > > [    0.154363]  ? exc_invalid_op+0x14/0x70
-> > > [    0.155363]  ? asm_exc_invalid_op+0x16/0x20
-> > > [    0.156364]  ? __insert_resource+0x84/0x110
-> > > [    0.157364]  ? add_device_randomness+0x75/0xa0
-> > > [    0.158363]  insert_resource+0x26/0x50
-> > > [    0.159364]  ? __pfx_insert_crashkernel_resources+0x10/0x10
-> > > [    0.160363]  insert_crashkernel_resources+0x62/0x70
-> >
-> > Hi,
-> >
-> > This seems related to crashkernel stuff, I added a few Ccs related to
-> > it.
-> >
-> > I don't know why you sent this only to linux-pci list as it seems likel=
-y
-> > to be entirely unrelated to PCI.
->
-> Too few info is provided. I guess this is happening on x86_64. Do you
-> have the kernel config, and what kernel you are testing? What operation
-> are you taking to trigger this?
+On 20/03/2024 09:40, Johan Hovold wrote:
+> On Wed, Mar 20, 2024 at 09:24:54AM +0100, Krzysztof Kozlowski wrote:
+>> On 20/03/2024 09:18, Johan Hovold wrote:
+> 
+>>> Perhaps you should not comment before reading up on the history of this
+>>> series.
+>>>
+>>> This was all intended for 6.9, but merging was stalled for a number of
+>>> reasons so here we are. The patches were also going in through different
+>>> trees, so patch 4/5 is the first Qualcomm SoC patch.
+>>
+>> Again, well, you sent it at few days before merge window, so how do you
+>> imagine this being applied for v6.9 and still fulfilling "few linux-next
+>> cycles before merge window" requirement? Especially that arm-soc cut off
+>> is much earlier :/. I talk about patch 5, of course, because that is not
+>> a fix (at least not marked as one). Don't expect in general a arms-co
+>> patch to be applied four days before merge window, thus the actual fix -
+>> patch #4 - should be split.
+> 
+> At the time there was still hope that there may be an rc8, and the patch
+> in question had been used by a large number of X13s users for several
+> weeks, which is a lot more testing than the average Qualcomm patch
+> receives, whether it's in linux-next or not.
 
-yes=EF=BC=8Cmy server is x86_64 platform=EF=BC=8Cbase OS is RHEL9.5=EF=BC=
-=8Cthe default kernel
-is  5.14.0-428.el9.x86_64=EF=BC=8C
-and this issue is triggered after compile and installed the upstream
-kernel=EF=BC=886.8.0+=EF=BC=89then reboot the machine.
-I don't have the kernel config file now, if needed I can reinstall and
-collect it=EF=BC=8C
+OK, it does solve some parts of our discussion but does not solve my
+earlier comment: Fixes should be separate series. Certain folks have
+quite strict requirement on this. Try sending a fix with non-fix
+(depending on fix somehow like here) to Mark Brown. He has even template
+for such case...
 
->
-> Below commit could be suspect, but not sure if it's the real criminal.
->
-> commit 4a693ce65b186fddc1a73621bd6f941e6e3eca21
-> Author: Huacai Chen <chenhuacai@kernel.org>
-> Date:   Fri Dec 29 16:02:13 2023 +0800
->
->     kdump: defer the insertion of crashkernel resources
->
-> Dave reported a similar one, he did kexec reboot firstly, then in 2nd
-> kernel crashkernel reservation will trigger the iomem inserting error.
->
-> [PATCH] x86/kexec: do not update E820 kexec table for setup_data
-> https://lore.kernel.org/all/ZeZ2Kos-OOZNSrmO@darkstar.users.ipa.redhat.co=
-m/T/#u
->
-> Can you try Dave's patch firstly? If it doesn't work, try reverting
-> above Huacai's patch? it may need manual editing.
->
+> 
+> And patch 5 depends on the earlier patches in the series so it belongs
+> in the series, which was also initially posted long before the merge
+> window.
 
-I don't know how to revert Huacai's patch, I don't know much about it,
-so=EF=BC=8CI try to apply Dave=E2=80=98s patch=EF=BC=8Cbut it failed=EF=BC=
-=9A
-```
-patching file arch/x86/kernel/e820.c
-Hunk #1 FAILED at 1015.
-Hunk #2 succeeded at 1038 (offset 2 lines).
-Hunk #3 succeeded at 1048 (offset 2 lines).
-1 out of 3 hunks FAILED -- saving rejects to file arch/x86/kernel/e820.c.re=
-j
-```
-maybe Dave need to write a new version to fix it,
+The dependency is might not be good enough reason to combine fixes and
+non-fixes into one series. Dependency should be explained (in 5th
+patch), but it's maintainer's judgement and job to handle this.
+
+And in all this, fact that Bjorn missed certain aspects and applied this
+differently than you wanted, is another argument that this should be split.
+
+Best regards,
+Krzysztof
 
 
