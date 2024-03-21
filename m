@@ -1,51 +1,49 @@
-Return-Path: <linux-pci+bounces-4973-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4974-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E2D5885EBB
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 17:54:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED000885F61
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 18:14:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18A59281AB3
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 16:54:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2A4BC1C2268E
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 17:14:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1CC13398E;
-	Thu, 21 Mar 2024 16:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7FDF3984D;
+	Thu, 21 Mar 2024 17:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8sbbHfY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOHJ6eqp"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A93E12B7E;
-	Thu, 21 Mar 2024 16:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB90D24A11;
+	Thu, 21 Mar 2024 17:14:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711039286; cv=none; b=bfQ1fUvGR4vBNcjQVP+vRwMUA/yXIrR9iFHma5OwFfhmbj0vnnjAsXIXVouFqRsGoAATHNHuxX0vMesnY7zwW8XXscQYfCZF0/Pfpfs10bYQo68pYqrtORMWU8+C9VAnIGkkoYjO743iM9//zpGZKMF0HlRWyh7ROgMpsQNYa14=
+	t=1711041240; cv=none; b=CWAHznqugVE2dHcCNjjHflJ+KiBwDG/q2Ncm1ha0VvT0foYgwzbp0E2z4AQaSdJemGbVYhMVWyglVl8tlnxzEJakDPktzjAz7rWjQH/fsL3UrzhFYsPNfVpmEdfjpy5FzN4/axw+5EJBntQTuI4XRYkx1I1yXHt+hlr064kKBtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711039286; c=relaxed/simple;
-	bh=8bV00x7Pzvtk3NQyt5ix3BHWHoDGeDZ7GuVakht0b30=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=V6Rmo4k2Rovj4jb6mDOHf6gjzhFLCy6fsnIuECoMk8bh/TR2WYe3KPgPu+uiI/3gBQjeiZ+qNxfIkWoGBdV0oOscSZZ2XIEl3435BXnQ3I+VbLJ34F0UoyooBibtwukYPL0m1fCT5KD79jyoFvrvkhwz+Jt3ZzW0VbARuQKw7YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8sbbHfY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946D3C433C7;
-	Thu, 21 Mar 2024 16:41:25 +0000 (UTC)
+	s=arc-20240116; t=1711041240; c=relaxed/simple;
+	bh=ucmj0N8ydcrtXPBqqF7rrSK+p1kuNlHoPN4+ab+AFR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V1YJs7tl4T+9BzOnnfOVPXjBcaPySpw6Pn9tUaQI7PsTcuDR4vQk/Zvv73vao0icA5yBZBAuoIaJ3AmVb7nljc0UvjNsM723Mk3otCqibZIi0HFb0Zoi/DZsm8zzqF76WLzdFLEIhBnd7w7BMsCGApRqggQI+0tLQGYCjbN0jyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOHJ6eqp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B3EC433F1;
+	Thu, 21 Mar 2024 17:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711039285;
-	bh=8bV00x7Pzvtk3NQyt5ix3BHWHoDGeDZ7GuVakht0b30=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=s8sbbHfYgexIMqUZNv5hMXCl/ji/E79vlFazre57BmyAJZrjwdC8Of/v4ZhupqiSc
-	 YR27wGhywp+Cgz+Ye5k1S8ZGq+TQ/rDGyqHx94vk2MTQ37aipL5fvhzYmyw9kdz+4Q
-	 RRi8R2B/U14benzOGBk+bI1Ep5xkWozomidVyeSdf7kGeKrC0m1hzvxtWFLtcstgRv
-	 Hx0OvmL9J8ab1vP+KS/6vI7nYwPUB5BDOeghfeZBktSyyBexDFlPQeGsa4AOwCq83A
-	 DqlY5ILDs2zYXbORIGN6/3tvJpwH2Z49/eFIUo3RhuYwqJIpcD7gCwmsEcETAMasWI
-	 WX55OtOpNd5Tw==
-Date: Thu, 21 Mar 2024 11:41:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+	s=k20201202; t=1711041240;
+	bh=ucmj0N8ydcrtXPBqqF7rrSK+p1kuNlHoPN4+ab+AFR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MOHJ6eqpPmSNlhLDJYZ4D0y3z8HF49nQVODZQ02VcgSQHV0iiKi/dZa6gENutaLwL
+	 gw6fCVg2q3S0HzfmVWAOhYks+eRxl+E/9EHhtdpxQbt4BTx/J2Z0KWc4td1W8TuGGX
+	 WIIEFtn0/ZvmX54mB2Mpz77rmj0QIBCGX+9Nz8ASWk8z8PzGZQ+HXCK8gD0Im78OG6
+	 aJlkRwjUAL+pypk06qsxtT/2xvgHXMz2zgY52s6+aHgB2427KiHUIM4e4d34ELIkf8
+	 vtb9lRlKAxAOXnFQ5s6i5zBsCsMuNAOQhGOLPZJBFojk8cjGlUHTv3XWZysxRH4HhG
+	 2WydyZ4zXqQ0A==
+Date: Thu, 21 Mar 2024 22:43:45 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
 Cc: niklas.cassel@wdc.com, bhelgaas@google.com,
 	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
 	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
@@ -53,15 +51,17 @@ Cc: niklas.cassel@wdc.com, bhelgaas@google.com,
 	lpieralisi@kernel.org, mani@kernel.org, robh@kernel.org
 Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
  interpreted as a free ATU slot
-Message-ID: <20240321164123.GA1325373@bhelgaas>
+Message-ID: <20240321171345.GA2385@thinkpad>
+References: <20240304224616.1238966-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20240304224616.1238966-1-Frank.Li@nxp.com>
 
 On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
@@ -81,20 +81,47 @@ On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
 > 
 > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
 > it have not allocate atu to the bar.
+> 
 
-Lorenzo, Krzysztof, Manivannan: any thoughts on this?  I don't want to
-ask Linus to pull it during the merge window since this hasn't even
-been in -next yet.  But we could consider it as a fix for v6.9 if it's
-urgent.
+I'd rewrite the commit message as below:
 
-IMO the commit log does need to say something about what the actual
-user-visible problem is.  I can't tell what breakage this fixes.
+"The mapping between PCI BAR and iATU inbound window are maintained in the
+dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
+BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
+existing mapping in the array and if it is not found (i.e., value in the array
+indexed by the BAR is found to be 0), then it will allocate a new map value
+using find_first_zero_bit().
+
+The issue here is, the existing logic failed to consider the fact that the map
+value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
+'0' as the map value for BAR0 (note that it returns the first zero bit
+position).
+
+Due to this, when PERST# assert + deassert happens on the PERST# supported
+platforms, the inbound window allocation restarts from BAR0 and the existing
+logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
+fact that it considers '0' as an invalid map value.
+
+So fix this issue by always incrementing the map value before assigning to
+bar_to_atu[] array and then decrementing it while fetching. This will make sure
+that the map value '0' always represents the invalid mapping."
 
 > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
 > Closes: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
+
+This is not the correct link that reported the issue. This one is:
+https://lore.kernel.org/linux-pci/ZXsRp+Lzg3x%2Fnhk3@x1-carbon/
+
 > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
 > Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+With above mentioned changes,
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
 > ---
 > 
 > Notes:
@@ -149,4 +176,7 @@ user-visible problem is.  I can't tell what breakage this fixes.
 > -- 
 > 2.34.1
 > 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
