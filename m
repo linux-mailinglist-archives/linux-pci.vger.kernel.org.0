@@ -1,119 +1,256 @@
-Return-Path: <linux-pci+bounces-4975-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4976-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05F85886050
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 19:07:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0E0A886068
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 19:16:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9AD6DB22A00
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 18:07:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3C691C21F22
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 18:16:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05E351332B8;
-	Thu, 21 Mar 2024 18:07:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E43D85639;
+	Thu, 21 Mar 2024 18:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZwHZa4D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fhkV0cZp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5CC1332A6;
-	Thu, 21 Mar 2024 18:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54BA84A28
+	for <linux-pci@vger.kernel.org>; Thu, 21 Mar 2024 18:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711044454; cv=none; b=UNPWmesNqp+gpAmZ1LCVzNd8w9x/u/FaHuxhiArQtiejVzR63YdHuRWC3SNCqMZyJQXODgHXLI9frfLMhz2kBT6gO8E0C1s6q6YTQZNqB8Wj9q81HkbRgs/N/Rg3fDF2yWBfI55PV4yzv1M/MXmLYjdk0Er1cI3BH1BUKFONCWg=
+	t=1711044983; cv=none; b=I/Asl7g1r0zVwz9HkHlF32h3Na/CoxWTq5WCUleCZ/ThfeNYxmMtu01wE8oMTP/Bqd57mo04GURqFFXsIRZUgfzIOjeorI0xY+pR9vby7+WtJAVVV21Eo/wXWc6nzJklKtSYc5yl50VG4bGMcwrYYXeGVzBRPv9K2CQg+KLKpmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711044454; c=relaxed/simple;
-	bh=Vre0bbpj/RHcM0b8xIt3T8ZHT/uKOL2/xho9jNKOy7I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=qZ+yyuSn4m/hcoORSrvY7QiXwtfiZh+25PavHOxZN1Bc9BrjUHK7o51X2kKXx6oGg39MDly7lzUuiR1/x0S/J5Ed5EO4+F2NIpMx7k8U4sscbSqSjQAGds8Q6IF7fv/BbudPCM4KbxBwjkNIHAGkOlu83L0UZ0keKJJzB+xhQYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZwHZa4D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 600ECC433F1;
-	Thu, 21 Mar 2024 18:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711044454;
-	bh=Vre0bbpj/RHcM0b8xIt3T8ZHT/uKOL2/xho9jNKOy7I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bZwHZa4DGdc1+POLrg1fU5cxYlcVXhNYn2Q8g7wr0BHoyw7DlTGMU9Si9QxGJrezN
-	 0N1NXNbHW7h19po3hbpHk5A9b66DFGlyRzCh84lo/BLGpIO0AiwD2ETbAMvhV8pK2s
-	 T1ZSXNGLmLdKt9Qz+YsiI+yrgOogPxYs/L0wdJ8FZ4jFl4+9paHHZMFfgPyDjQqkqn
-	 D3LWXMWloKiEwsU8yx8OjQr6PEUI9XHHgkvLh3u3DrDg8GrMmu2u5innfjvE+3sDQQ
-	 MsqzEVTEN0gLMrQOW+jVKjOrfUkgfruSZLqK2WTwLnuLNTGbOcTtO54Hifq7eV0FJI
-	 9OFEWmR2jJXvw==
-Date: Thu, 21 Mar 2024 13:07:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>, niklas.cassel@wdc.com, bhelgaas@google.com,
-	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
-	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
- interpreted as a free ATU slot
-Message-ID: <20240321180732.GA1329092@bhelgaas>
+	s=arc-20240116; t=1711044983; c=relaxed/simple;
+	bh=zG9idT+cMeUy10qRDJXiQ3ab9wGT0w4QTT5kW8l3bmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pcJXve9ix9ycvACmlycZU4tSEqeRWK+e3F0Su2XlI3yQCuMNMIc9srqUlfZZtBZpiOTTvk+FkSmpFXGdmIIJWcqJo5FE01C7yGwUQkOlLNbL6efjJBPi1VVu3PsHsHYyXolqve0ukGIoU/dqXKJ+3Cldb09uxli6Di52mb8KG5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fhkV0cZp; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711044982; x=1742580982;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zG9idT+cMeUy10qRDJXiQ3ab9wGT0w4QTT5kW8l3bmM=;
+  b=fhkV0cZpc1IFBBYVUoPGCVv3tOCeLpxnjjwVsXJy6B29ijoRcCIi5JYz
+   fCF3nCYZI/oQ3tJFGSAuYFCQtqrWfN8DpWekWQkdJc7wKhzA9H9NqdHxJ
+   MiczZQzC0lAH2lgBYXjLK0XbYN/oJWXJvEgtA9yOfu6UyrljZ2Hrz87V/
+   g+UI943ZYYt4A1UFlmhPHt6bUehO1t6qpcf1NkCLasSxvLPkHLflkeFB3
+   2bj4LxpGWG9gZ7QP50lt+ZxA3kbZWRNj1r8VbYwUdpsfUynZR0NwRzud2
+   sLjlXkpPqGdildXzjatGKRsu/A/LJd4UvnXzr7VAT85pEdek6STk4PSKb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="5953406"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="5953406"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 11:16:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="14686630"
+Received: from sanchits-mobl2.amr.corp.intel.com (HELO [10.209.87.191]) ([10.209.87.191])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 11:16:20 -0700
+Message-ID: <97bb6407-cc14-4bdb-85d8-6c77b6cc3bcf@linux.intel.com>
+Date: Thu, 21 Mar 2024 11:16:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321171345.GA2385@thinkpad>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] misc: pci_endpoint_test: Use
+ memcpy_toio()/memcpy_fromio() for BAR tests
+Content-Language: en-US
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
+References: <20240320090106.310955-1-cassel@kernel.org>
+ <4cb86057-f252-4f48-8b76-6cb0d8de2ec4@linux.intel.com>
+ <Zfvzq5eQs90n1IUz@ryzen>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <Zfvzq5eQs90n1IUz@ryzen>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 21, 2024 at 10:43:45PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
-> > dw_pcie_ep_inbound_atu()
-> > {
-> > 	...
-> > 	if (!ep->bar_to_atu[bar])
-> > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > 	else
-> > 		free_win = ep->bar_to_atu[bar];
-> > 	...
-> > }
-> > 
-> > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > will return 6 when second time call into this function if atu is 0. Suppose
-> > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > 
-> > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
-> > it have not allocate atu to the bar.
-> 
-> I'd rewrite the commit message as below:
-> 
-> "The mapping between PCI BAR and iATU inbound window are maintained in the
-> dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
-> BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
-> existing mapping in the array and if it is not found (i.e., value in the array
-> indexed by the BAR is found to be 0), then it will allocate a new map value
-> using find_first_zero_bit().
-> 
-> The issue here is, the existing logic failed to consider the fact that the map
-> value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
-> '0' as the map value for BAR0 (note that it returns the first zero bit
-> position).
-> 
-> Due to this, when PERST# assert + deassert happens on the PERST# supported
-> platforms, the inbound window allocation restarts from BAR0 and the existing
-> logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
-> fact that it considers '0' as an invalid map value.
-> 
-> So fix this issue by always incrementing the map value before assigning to
-> bar_to_atu[] array and then decrementing it while fetching. This will make sure
-> that the map value '0' always represents the invalid mapping."
 
-This translates C code to English in great detail, but still doesn't
-tell me what's broken from a user's point of view, how urgent the fix
-is, or how it should be handled.
+On 3/21/24 1:45 AM, Niklas Cassel wrote:
+> Hello Kuppuswamy,
+>
+> On Wed, Mar 20, 2024 at 08:53:12AM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> Hi,
+>>
+>> On 3/20/24 2:01 AM, Niklas Cassel wrote:
+>>> The current code uses writel()/readl(), which has an implicit memory
+>>> barrier for every single readl()/writel().
+>>>
+>>> Additionally, reading 4 bytes at a time over the PCI bus is not really
+>>> optimal, considering that this code is running in an ioctl handler.
+>>>
+>>> Use memcpy_toio()/memcpy_fromio() for BAR tests.
+>>>
+>>> Before patch with a 4MB BAR:
+>>> $ time /usr/bin/pcitest -b 1
+>>> BAR1:           OKAY
+>>> real    0m 1.56s
+>>>
+>>> After patch with a 4MB BAR:
+>>> $ time /usr/bin/pcitest -b 1
+>>> BAR1:           OKAY
+>>> real    0m 0.54s
+>>>
+>>> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+>>> ---
+>>> Changes since v2:
+>>> -Actually free the allocated memory... (thank you Kuppuswamy)
+>>>
+>>>  drivers/misc/pci_endpoint_test.c | 68 ++++++++++++++++++++++++++------
+>>>  1 file changed, 55 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+>>> index 705029ad8eb5..1d361589fb61 100644
+>>> --- a/drivers/misc/pci_endpoint_test.c
+>>> +++ b/drivers/misc/pci_endpoint_test.c
+>>> @@ -272,33 +272,75 @@ static const u32 bar_test_pattern[] = {
+>>>  	0xA5A5A5A5,
+>>>  };
+>>>  
+>>> +static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
+>>> +					enum pci_barno barno, int offset,
+>>> +					void *write_buf, void *read_buf,
+>>> +					int size)
+>>> +{
+>>> +	memset(write_buf, bar_test_pattern[barno], size);
+>>> +	memcpy_toio(test->bar[barno] + offset, write_buf, size);
+>>> +
+>>> +	memcpy_fromio(read_buf, test->bar[barno] + offset, size);
+>>> +
+>>> +	return memcmp(write_buf, read_buf, size);
+>>> +}
+>>> +
+>>>  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
+>>>  				  enum pci_barno barno)
+>>>  {
+>>> -	int j;
+>>> -	u32 val;
+>>> -	int size;
+>>> +	int j, bar_size, buf_size, iters, remain;
+>>> +	void *write_buf;
+>>> +	void *read_buf;
+>>>  	struct pci_dev *pdev = test->pdev;
+>>> +	bool ret;
+>>>  
+>>>  	if (!test->bar[barno])
+>>>  		return false;
+>>>  
+>>> -	size = pci_resource_len(pdev, barno);
+>>> +	bar_size = pci_resource_len(pdev, barno);
+>>>  
+>>>  	if (barno == test->test_reg_bar)
+>>> -		size = 0x4;
+>>> +		bar_size = 0x4;
+>>>  
+>>> -	for (j = 0; j < size; j += 4)
+>>> -		pci_endpoint_test_bar_writel(test, barno, j,
+>>> -					     bar_test_pattern[barno]);
+>>> +	buf_size = min(SZ_1M, bar_size);
+>> Why 1MB  limit?
+> Could you please clarify your concern?
 
-DMA doesn't work because ATU setup is wrong?  Driver MMIO access to
-the device doesn't work?  OS crashes?  How?  Incorrectly routed access
-causes UR response?  Happens on every boot?  Only after a reboot or
-controller reset?  What platforms are affected?  "PERST# supported
-platforms" is not actionable without a lot of research or pre-existing
-knowledge.  Should this be backported to -stable?
+Since you are trying to optimize the number of read/write calls, I
+was just wondering why you chose maximum limit of 1MB per
+read/write call.  But your following explanation makes sense to
+me. I recommend adding some comments about it in commit log
+or code.
 
-Bjorn
+Code wise, your change looks fine to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+>
+> A BAR could be several GB, so it does not make sense to always kmalloc()
+> a buffer that is of the same size of the BAR.
+> (Therefore we copy in to a smaller buffer, iterating over the whole BAR.)
+>
+> So we have to chose a max limit that we think is likely to succeed even
+> when the memory is fragmented, and something that will work on embedded
+> systems, etc.
+>
+> The highest BAR size used by pci-epf-test is by default 1MB, so 1MB
+> seemed like a reasonable max limit. (Since we use min(), if the BAR is
+> smaller than 1MB, the buffer we allocate will also be smaller than 1MB.
+>
+> Since we allocate two buffers, we are in the worst case allocating 2x 1MB,
+> so I don't think that it is reasonable to have a higher max limit.
+>
+> If you are using a _very_ resource contained system as RC (and EP) to test
+> the pci-epf-test driver, you have probably reduced the default BAR sizes
+> defined in pci-epf-test to something smaller already, so 1MB seemed like
+> a reasonable max limit.
+>
+>
+> Kind regards,
+> Niklas
+>
+>>>  
+>>> -	for (j = 0; j < size; j += 4) {
+>>> -		val = pci_endpoint_test_bar_readl(test, barno, j);
+>>> -		if (val != bar_test_pattern[barno])
+>>> -			return false;
+>>> +	write_buf = kmalloc(buf_size, GFP_KERNEL);
+>>> +	if (!write_buf)
+>>> +		return false;
+>>> +
+>>> +	read_buf = kmalloc(buf_size, GFP_KERNEL);
+>>> +	if (!read_buf) {
+>>> +		ret = false;
+>>> +		goto err;
+>>>  	}
+>>>  
+>>> -	return true;
+>>> +	iters = bar_size / buf_size;
+>>> +	for (j = 0; j < iters; j++) {
+>>> +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
+>>> +						 write_buf, read_buf,
+>>> +						 buf_size)) {
+>>> +			ret = false;
+>>> +			goto err;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	remain = bar_size % buf_size;
+>>> +	if (remain) {
+>>> +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
+>>> +						 write_buf, read_buf,
+>>> +						 remain)) {
+>>> +			ret = false;
+>>> +			goto err;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	ret = true;
+>>> +
+>>> +err:
+>>> +	kfree(write_buf);
+>>> +	kfree(read_buf);
+>>> +
+>>> +	return ret;
+>>>  }
+>>>  
+>>>  static bool pci_endpoint_test_intx_irq(struct pci_endpoint_test *test)
+>> -- 
+>> Sathyanarayanan Kuppuswamy
+>> Linux Kernel Developer
+>>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
