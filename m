@@ -1,123 +1,121 @@
-Return-Path: <linux-pci+bounces-4967-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4968-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9AE9881C81
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 07:32:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4697188558E
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 09:18:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05E971C2099C
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 06:32:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0842B281C5D
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Mar 2024 08:18:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F343C460;
-	Thu, 21 Mar 2024 06:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB2F77828F;
+	Thu, 21 Mar 2024 08:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqL19OBu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5fMpg58"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE63BB4F
-	for <linux-pci@vger.kernel.org>; Thu, 21 Mar 2024 06:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4167828E;
+	Thu, 21 Mar 2024 08:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711002751; cv=none; b=JmTcJPajZRgqJDWc8NwH67XDBX2Vk7WVSK0o7TIvsSiYVuZaXxsxwpJwRTI0waOgWiFGNkjusr9w3sptl7epbdGCPiVuLn2u5BoROa55WFr+1El5HNKTb54lJzWVaS177/cH+AkelLcBGS94+x/L4bzHyvmCtRDKLZfj8nJ99Fo=
+	t=1711009022; cv=none; b=sZELHzswReUNPPZkVJVMDMqNSjTPV00uxVDUGPYQWniUWgfdBz2fSO6/vgDXF9KI+Gbt4ubFPptl1WJhab4W4Niq0Ff0SH0bbpgyqC+aOB+E9IX3yfcXOkrkXpy0GueucOYKP4ywzZz42jPEyiBXQ3oBQGL0GOdveEljeC3Fh2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711002751; c=relaxed/simple;
-	bh=IWzoRyiIq34RmhOn0iDV7qym3hPufd8Mn7S0DjBmBYA=;
-	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=CD0o9uOQ1FNIi1R4FAWAt6IXUau6i5CiJWF3R4gOFz5z+mKL45YnmatBeeG+egBX3AeZw1NSHltVOOckCLqxhZftwOQnFC4V4t0SYYpuvaGkWevhd2Yu+33ufEyeqFxA0qVPm3LCxCyOx4Jv7cVBSvhiDUvef4hyHTV3jGye7ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cqL19OBu; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e74aa08d15so484295b3a.1
-        for <linux-pci@vger.kernel.org>; Wed, 20 Mar 2024 23:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711002749; x=1711607549; darn=vger.kernel.org;
-        h=content-language:content-transfer-encoding:mime-version:user-agent
-         :date:message-id:subject:to:from:reply-to:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pUEt2Z97b8lEWwJktqHAAwXS3vj2uI9IohvvSbiYwx0=;
-        b=cqL19OBu4XfvJOVHnWVyFiK6G+UNWEaDWLr0KR5GJNO7vY/5kNcqbSFj2ILU2lmo8s
-         P40ZlnqUkMZonVX0SpC88NkgjxQx26gWxx84DuhUauvZBuzde95eyMMe7QCdClTg4FNa
-         fAqD2fqzgkksgnc/cv+Gds55GLeoRz3c8P53ORigEj55L3/ZmYLSe+IYWxbS9CtXexIc
-         i/rA6/e6j/AMQGowgK/u8DBAOdVWcW6l4E3FVlJZ+TtJ21d67uK860SSLoFFXMa4PD9D
-         IJqYQL9Sq8+3c0nEvRM/uH08vO0V/DE/dCmyDu97sldq1Jo785/oEFi7NAyjYsDVTGpX
-         L/eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711002749; x=1711607549;
-        h=content-language:content-transfer-encoding:mime-version:user-agent
-         :date:message-id:subject:to:from:reply-to:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pUEt2Z97b8lEWwJktqHAAwXS3vj2uI9IohvvSbiYwx0=;
-        b=qJo/+DXFGybAcALuPxcBQNVt8/rXveJ0A1CajZAtvdBm2hC3kzCzvRfuDNZ4G7giPi
-         Sjbj+4ChVheO0fNLegylDjW+9GVItnZo6zalafom5+wtVK8wyxjpTt6w8Y1Iqn86gn4P
-         tweedPAaucHAQqxz0pz5fej7zD/xPAmIoqJGJnXhl3y/muhEfN15JRXNgmWjlZ09/5rk
-         yq3pcGjC22O2BuCxko0jc0SGekrbv8lWkWjFi2nePiNB/hw/UBgrchj2xZ0lxovs2uVi
-         MeqQDeRBAvV3vjALfRMMIVsGRrwETDHANeoQ8Br/USYNEkcOoglhDgGWR4H0+1aSp7t7
-         CAyQ==
-X-Gm-Message-State: AOJu0YzaKZmEg+0UGeg2977cleSEd8iSBidzVJmz1v5zywYNtSUAA9yh
-	ldcotFio6z2/9GsPqeyoP8hhrvGd/Crfvv+VFaHS6MOZwyWOF6fW/qxjspwq
-X-Google-Smtp-Source: AGHT+IFFh0B7rRQW/YlGkt+nY/1iGfqTPKfLqWWVZK97B1ocNOxSXfwDtwugkA9lhF2LqUnAwwhPqw==
-X-Received: by 2002:a17:903:447:b0:1e0:1a69:b000 with SMTP id iw7-20020a170903044700b001e01a69b000mr6526606plb.46.1711002749067;
-        Wed, 20 Mar 2024 23:32:29 -0700 (PDT)
-Received: from ?IPv6:2409:4063:6c85:f395:d58f:6b15:5165:7028? ([2409:4063:6c85:f395:d58f:6b15:5165:7028])
-        by smtp.gmail.com with ESMTPSA id u16-20020a1709026e1000b001e0410bfccasm5392951plk.126.2024.03.20.23.32.27
-        for <linux-pci@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 23:32:28 -0700 (PDT)
-Reply-To: businesssolutionsrocks23@gmail.com
-From: Raju Kumar <rajukumarkorav@gmail.com>
-To: linux-pci@vger.kernel.org
-Subject: RE:Mobile App Development || Web App Development
-Message-ID: <d06803c5-6c5a-fa50-4584-292308cde4c6@gmail.com>
-Date: Thu, 21 Mar 2024 12:02:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	s=arc-20240116; t=1711009022; c=relaxed/simple;
+	bh=r2RHfmTbLsPpzlNVzT0ZkM0H54j0pEjMtGKDo+gCUyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OELpbBDB515AYPD2nJP1C/+RFAvPyrjVo+8RrWCaDvX1lr9D/QdHVsJze/TNoFlynRdTTd8IoidHhUbnAbmbCIXAMQbe8IIlaUWnSJppXrFUGt4ZyUO5lEAWNHDoTiBYGV4ZQ3YQaVxVxJhvFgO8w26xouBiXWSafcDS495z0EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5fMpg58; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45234C43390;
+	Thu, 21 Mar 2024 08:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711009022;
+	bh=r2RHfmTbLsPpzlNVzT0ZkM0H54j0pEjMtGKDo+gCUyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A5fMpg5882WSDUeIpySO5LC8lfYNHNnZLE4DR81NT70whYVhEuoys1M9w5F/nhX/w
+	 7d7m2Wwgk2BXTqoyHD2ljzoVQj939S53AwdhhKsEy7u9xmn6T3XtQtK6SZVyWL2CDU
+	 uwqj3BPnTXgIsSDyYVPrNlZ7KD+3VWHuvL7brc6BKQEPUzSBZBnpsoqqDdFkHhzjtX
+	 avhkE5lU/D88T6PsdKvfAjka+SCs+ghEJs5DAUv7+BuDIds76Go5GcDtZVGPpDy9n0
+	 XOyLtCmBFrAVsvxYpF6gVnU3RAr8CGZJJi62X/osuhgfg7dlU99kxAse2LFOORBgk4
+	 bkwGIma+N+KgQ==
+Date: Thu, 21 Mar 2024 09:16:56 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: mani@kernel.org, kw@linux.com, niklas.cassel@wdc.com,
+	bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+	imx@lists.linux.dev, jdmason@kudzu.us, jingoohan1@gmail.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, robh@kernel.org
+Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
+ interpreted as a free ATU slot
+Message-ID: <Zfvs-AHcuH2k9x7w@ryzen>
+References: <20240304224616.1238966-1-Frank.Li@nxp.com>
+ <ZfGJUDoGnFXKBoG0@ryzen>
+ <Zfqj-mvpG442eyt2@ryzen>
+ <Zfry1kaYgg2OBvQL@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zfry1kaYgg2OBvQL@lizhi-Precision-Tower-5810>
 
-Hi,
+On Wed, Mar 20, 2024 at 10:29:42AM -0400, Frank Li wrote:
+> On Wed, Mar 20, 2024 at 09:53:14AM +0100, Niklas Cassel wrote:
+> > On Wed, Mar 13, 2024 at 12:09:04PM +0100, Niklas Cassel wrote:
+> > > On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
+> > > > dw_pcie_ep_inbound_atu()
+> > > > {
+> > > > 	...
+> > > > 	if (!ep->bar_to_atu[bar])
+> > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+> > > > 	else
+> > > > 		free_win = ep->bar_to_atu[bar];
+> > > > 	...
+> > > > }
+> > > > 
+> > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
+> > > > will return 6 when second time call into this function if atu is 0. Suppose
+> > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
+> > > > 
+> > > > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
+> > > > it have not allocate atu to the bar.
+> > > > 
+> > > > Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+> > > > Closes: https://lore.kernel.org/linux-pci/ZXt2A+Fusfz3luQV@x1-carbon/T/#u
+> > > > Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
+> > > > Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
+> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > ---
+> > > 
+> > > Any chance of this fix being picked up?
+> > 
+> > Gentle ping.
+> 
+> Now it is v6.9 merge windows. You'd better ping two weeks after linus
+> create v6.9-rc1 tag.
 
-Just checking with you if you got a chance to see my previous email.
+I don't follow this logic.
+Two weeks after v6.9-rc1 is v6.9-rc3.
+Why wait that long to merge a fix?
 
-Please let us know if you have MOBILE APP or WEB APP DEVELOPMENT 
-requirements; we can schedule a quick call to discuss further in detail.
+The PCI pull request for v6.9-rc1 has already been merged.
 
-Kindly suggest a good time to connect also best number to reach you.
+Merging new features (to a submaintainer tree) might temporarily be put
+on hold in relation to the merge window, but for fixes, it is quite
+possible to both queue things (in a submaintainer tree), and to send
+accumulated fixes to Linus during the merge window.
 
-Thank you
-Raju Kumar
-
-  On Tuesday 28 November 2023 5:43 PM, Raju Kumar wrote:
+I did it myself just a few days ago, and Linus pulled it already:
+https://lore.kernel.org/linux-ide/171087658094.21820.15365015832308818327.pr-tracker-bot@kernel.org/T/#t
 
 
-Hi,
-
-We are a leading IT & Non-IT Staffing services company.
-We design and develop web and mobile applications for our clients 
-worldwide, focusing on outstanding user experience.
-
-We help companies leverage technological capabilities by developing 
-cutting-edge mobile applications with excellent UX (User Experience) 
-across multiple platforms.
-
-iOS App Development
-Android App Development
-Cross-platform App Development
-Web App Development
-
-Can we schedule a quick call with one of senior consultants so we can 
-discuss this further in detail?
-Please suggest a day and time and also share the best number to reach you.
-
-Thank you
-Raju Kumar
+Kind regards,
+Niklas
 
