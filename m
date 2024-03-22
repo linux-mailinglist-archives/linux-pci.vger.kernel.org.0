@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-4986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEAA6886A5C
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 11:31:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19015886A5D
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 11:32:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1CAB1C23230
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 10:31:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C5201C20BA6
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 10:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC3717575;
-	Fri, 22 Mar 2024 10:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD7CA26AE8;
+	Fri, 22 Mar 2024 10:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZtK7vSK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rm8RYO6k"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445E2335B5
-	for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 10:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D51017575
+	for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 10:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711103499; cv=none; b=p/L0o3E8ulPkB04N2ovgJXyimxuVQbSkF2Xv04p9Qx6x4Qs2201XUvK1L9BBr1odmTAA+lC97nHcFSJfZbw19ivKBTEd7bDFVe6rirNkAgXuUl7pC5vp8/Q8Tivio49l8R8wszvJgnb3LCRqQf73jzNlvMMs77X8UYWChgXaeRs=
+	t=1711103523; cv=none; b=D6w26b6n0Xrr6EsKoMmxTW385qDhNYQoJsyq1v7OwofjQ0WPqEBfOQ7KxyIM7mR+FK3IA7tECOvb4WcpeHO+Bnuu/r+0niQcD6LKoDWL+g+Q7uyXwQPP2bizR5aSj4lGZOafnqDfbakwqJDGJny2Y3tU5Ndrx0hI4RX5vCCeX6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711103499; c=relaxed/simple;
-	bh=Mqj9/+3E3FLOifl3UfUfKrhKbcCrWvZO2XToaERc6Hs=;
+	s=arc-20240116; t=1711103523; c=relaxed/simple;
+	bh=mGwvEu8saiMnA2nThHL7kOdUPsbhBwWyqALeXK+fcw8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTQ37EUBDiAaahkdyWug9CD3P4OKL2eqzfMre93I8E/S9YfZfn2RO58ITvUD+PeQYdsKg/8vXlQCjkzpIFLcBIZvaG1BKKh54FsXTOEyImMPEl8i1v9d+aDywvrk9aFCNsJA5mCp7gdY1S1oRWC7T54yWwx0PlmNJf1wJd3+SIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jZtK7vSK; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=AuSmQ7tcwfytdJHWjcBAP3BURjlPFMaBrqKgHrfouIjwc8UkY0ws5UYwD+6nhyO+kf/jNcCGJ+oPbHXgHpLSv8cZgeZrv+aP3v75dHyley7W0SWVLWbTzNjeXMQjT4yajHis1se3xi56rbPgQr/wSmzoy1qFqeB6Ktb/nPvkBE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rm8RYO6k; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e04ac200a6so14453235ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 03:31:38 -0700 (PDT)
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e6afb754fcso1658885b3a.3
+        for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 03:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711103497; x=1711708297; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711103522; x=1711708322; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=+Y7afBn+/cVaRxjFXtefiC0oc3q+xjwKNQnPq34zFF8=;
-        b=jZtK7vSK44tsDdFbYWeFAvQrm9RRfld8IpomVqnT+A5a3CSwWdxOyo01eaZjJ3q8L6
-         QelyLG4NeKIZqj76cLoQbNae/UEXSm4xLqZ+TdP1zbfJ5fokc1Cm+IDjlusg+fhUAcG3
-         OxX/hM0b8xzw2QjhvENuqZ1qCcnWF/P46jXpBr66rZLqnLZrwXFM9XFGBD6TEwrQT/Fi
-         81desP2BAU74oq/pSv+I52xsKzfSCtjxrDYVXH6lUSFuTmJ9n0RPBwcnz/slIvT1XbR1
-         Zz8fgSloi5+qaSpbs7a12r/LCnSF5Tkg+8GEgzY+D0qMvZZZPpUcqVYzbGKbLrrCX/iW
-         gjbA==
+        bh=6eUFmEdp40liDMXjMWuvMqXebyHq2fGLWmgIYE5E6EI=;
+        b=Rm8RYO6khBTT5kqt+s68GRgIf9+YGAs0Da13+tGhYVSIHu9Gp/BOMxO6jB0vAMVlBW
+         cz7dT2sTdPkAq2YwvKX7RQVdLKeMwikwpHv7TzhuqFjTJHiJCqkOx5LOqaZ5qAhHpiaJ
+         09e1u1uVYaZmW9t/OfLF9VpVChvsrrq7hCxnKfEyFjNiUaS9yvDt/YgScr5gKsk8ydFw
+         b0diGFWGJoRH1w1bwMGMzyNCDMZkZNn8fqjXURpr4BkYUUog3glKZJwBLFiKWJfwWIdx
+         4Kg5IsIUI8ju5sQVbMoCsC9xuQ9ISc50pmnAx4OFPh9tkoUQJXZpOEw80T7MZZkxNX0f
+         dfuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711103497; x=1711708297;
+        d=1e100.net; s=20230601; t=1711103522; x=1711708322;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Y7afBn+/cVaRxjFXtefiC0oc3q+xjwKNQnPq34zFF8=;
-        b=GDUTSCHc4r+2FkkYFmd4lWCZ0iBm3EZgA5+uEbUYnYxNWvfrr2c3eMcXV6qSCs1w29
-         DtaWnqXjGw4WpafVKCyaXc0wIgeFcGnFc+ROu+TokWk9rpUY5rYeE95t0NAqE/3YOXQw
-         k9VPjFD197ezJxruqJKTY5LaBcpwx+P4Pvru719xmS+9T9Kw9NHt3swCbptimQZLqUOI
-         0IS8B3wbh3kXNA0Xjg30yZsNeYAtiC3lSvcFeYin8lOMj8Fv2xQcmqf6w9C1qoaJnXZd
-         LKcfXj+bj0Goq+SehLskkv4FcD7Sg8i+x9fWTfseuqz36NwbA7NOFKhtAGxFLo5HWPqO
-         RaHA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7gVozDs/BkpGpbqDSlNKh+9SP1gxWJOzcfXZPaOf1U3cHhw9TlKKDcHDSCtXYmSJWH1U2ZUK9Q+nicYbuESO/nDkkjm+W5CJf
-X-Gm-Message-State: AOJu0YxVkEgCcFiYc6VCUewV+CKMfQyHL9Mfi8Lwhgu69JiREhNR0YNl
-	Wu6nqRowVs4sSzJp8BeCZrzyr/F+2ZbrYexM/dqRb3AXtoyCflsCf6Z8Z/Z6Bg==
-X-Google-Smtp-Source: AGHT+IEAv1kn1k6exee+vbSuie6h8vKiYmoip4yOGQrTucKT/kUKd/irvSAIIC8u6L4lksMcO/Gq5Q==
-X-Received: by 2002:a17:902:f691:b0:1df:fff5:b61c with SMTP id l17-20020a170902f69100b001dffff5b61cmr2777836plg.14.1711103497263;
-        Fri, 22 Mar 2024 03:31:37 -0700 (PDT)
+        bh=6eUFmEdp40liDMXjMWuvMqXebyHq2fGLWmgIYE5E6EI=;
+        b=C9UInqYcdBzfZo1PZbN9S+53FaTZiAHWBfDPcuJ7BPBds0IzeVMXDM9QHxkhvYhI/b
+         UMQctFO0tMqdU6fPTbhKS989uH4zxzxH91cQbloDh/KQ+G3PLCgQctXccp++9wscx1mx
+         rUzq1c56WDrDrLGhkFoFDXCCglydqgXZ1gAY4tBbvjI90M+DEdjh44Yqa5z5PS/vJEub
+         6q/dIgtZA0QklkkIy1zL3T2WYEBpUloz55Z7L6EbHP5sW/v6EZoaUlW+YGreEB+y0omM
+         sJm7bXC81qn6lmyv+AiCSWOQK1mO7YGCDy2GHGnyxCKtfgHGj3qVGrBQDzKPmFYhE665
+         a/iA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKEGGu4C3q3T/r2Ufgd7NLfbOFFJp6ZSlWN4zhRw0q3S5bASjvcUgdxY+oLc43uwHQ5HyfcfOf9szqDdfV5w/zAivNpNVuBu1f
+X-Gm-Message-State: AOJu0YypkyKOOgVJnxqWFjhUR+X0LGd3FBspt4xZ0bD32ByGOJ8W81Wr
+	hwNoLCXGqucA08ZKVf2lz2eexEIsZxe7eWfCf6kqG2MQJHKDWqd0nQ/kDUUUWA==
+X-Google-Smtp-Source: AGHT+IFOHHAdPeibxLTQZsTWN5nfhB9MtVfx9JxIWNg1uRi+5S53iNhZaeP+oYxGN9sUUwBBeYFwjA==
+X-Received: by 2002:a05:6a00:2384:b0:6e3:c568:47aa with SMTP id f4-20020a056a00238400b006e3c56847aamr2409864pfc.24.1711103521652;
+        Fri, 22 Mar 2024 03:32:01 -0700 (PDT)
 Received: from thinkpad ([2409:40f4:101a:4667:2dab:fb9d:47a0:28fe])
-        by smtp.gmail.com with ESMTPSA id l19-20020a170902d05300b001dcf91da5c8sm1557049pll.95.2024.03.22.03.31.33
+        by smtp.gmail.com with ESMTPSA id e23-20020aa78c57000000b006e6686effd7sm1348636pfd.76.2024.03.22.03.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 03:31:36 -0700 (PDT)
-Date: Fri, 22 Mar 2024 16:01:32 +0530
+        Fri, 22 Mar 2024 03:32:01 -0700 (PDT)
+Date: Fri, 22 Mar 2024 16:01:56 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -76,11 +76,11 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Shradha Todi <shradha.t@samsung.com>,
 	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 4/7] PCI: endpoint: pci-epf-test: Simplify
- pci_epf_test_set_bar() loop
-Message-ID: <20240322103132.GB3638@thinkpad>
+Subject: Re: [PATCH v4 5/7] PCI: endpoint: pci-epf-test: Clean up
+ pci_epf_test_unbind()
+Message-ID: <20240322103156.GC3638@thinkpad>
 References: <20240320113157.322695-1-cassel@kernel.org>
- <20240320113157.322695-5-cassel@kernel.org>
+ <20240320113157.322695-6-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,30 +90,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240320113157.322695-5-cassel@kernel.org>
+In-Reply-To: <20240320113157.322695-6-cassel@kernel.org>
 
-On Wed, Mar 20, 2024 at 12:31:51PM +0100, Niklas Cassel wrote:
-> Simplify the loop in pci_epf_test_set_bar().
-> If we allocated memory for the BAR, we need to call set_bar() for that
-> BAR, if we did not allocated memory for that BAR, we need to skip.
-> It is as simple as that. This also matches the logic in
-> pci_epf_test_unbind().
+On Wed, Mar 20, 2024 at 12:31:52PM +0100, Niklas Cassel wrote:
+> Clean up pci_epf_test_unbind() by using a continue if we did not allocate
+> memory for the BAR index. This reduces the indentation level by one.
 > 
-> A 64-bit BAR will still only be one allocation, with the BAR succeeding
-> the 64-bit BAR being null.
-> 
-> While at it, remove the misleading comment.
-> A EPC .set_bar() callback should never change the epf_bar->flags.
-> (E.g. to set a 64-bit BAR if we requested a 32-bit BAR.)
-> 
-> A .set_bar() callback should do what we request it to do.
-> If it can't satisfy the request, it should return an error.
-> 
-> If platform has a specific requirement, e.g. that a certain BAR has to
-> be a 64-bit BAR, then it should specify that by setting the .only_64bit
-> flag for that specific BAR in epc_features->bar[], such that
-> pci_epf_alloc_space() will return a epf_bar with the 64-bit flag set.
-> (Such that .set_bar() will receive a request to set a 64-bit BAR.)
+> This makes pci_epf_test_unbind() more similar to pci_epf_test_set_bar().
 > 
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
@@ -122,49 +105,40 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 21 ++++---------------
->  1 file changed, 4 insertions(+), 17 deletions(-)
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
 > 
 > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 0a83a1901bb7..faf347216b6b 100644
+> index faf347216b6b..d244a5083d04 100644
 > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -709,31 +709,18 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->  
->  static int pci_epf_test_set_bar(struct pci_epf *epf)
+> @@ -690,20 +690,18 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
 >  {
-> -	int bar, add;
-> -	int ret;
-> -	struct pci_epf_bar *epf_bar;
-> +	int bar, ret;
->  	struct pci_epc *epc = epf->epc;
->  	struct device *dev = &epf->dev;
 >  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> -	const struct pci_epc_features *epc_features;
+>  	struct pci_epc *epc = epf->epc;
+> -	struct pci_epf_bar *epf_bar;
+>  	int bar;
 >  
-> -	epc_features = epf_test->epc_features;
-> -
-> -	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
+>  	cancel_delayed_work(&epf_test->cmd_handler);
+>  	pci_epf_test_clean_dma_chan(epf_test);
+>  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
 > -		epf_bar = &epf->bar[bar];
-> -		/*
-> -		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
-> -		 * if the specific implementation required a 64-bit BAR,
-> -		 * even if we only requested a 32-bit BAR.
-> -		 */
-> -		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
-> -
-> -		if (epc_features->bar[bar].type == BAR_RESERVED)
-> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
 > +		if (!epf_test->reg[bar])
->  			continue;
+> +			continue;
 >  
->  		ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no,
-> -				      epf_bar);
-> +				      &epf->bar[bar]);
->  		if (ret) {
->  			pci_epf_free_space(epf, epf_test->reg[bar], bar,
->  					   PRIMARY_INTERFACE);
+> -		if (epf_test->reg[bar]) {
+> -			pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
+> -					  epf_bar);
+> -			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+> -					   PRIMARY_INTERFACE);
+> -		}
+> +		pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
+> +				  &epf->bar[bar]);
+> +		pci_epf_free_space(epf, epf_test->reg[bar], bar,
+> +				   PRIMARY_INTERFACE);
+>  	}
+>  }
+>  
 > -- 
 > 2.44.0
 > 
