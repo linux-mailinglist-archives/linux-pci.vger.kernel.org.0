@@ -1,60 +1,86 @@
-Return-Path: <linux-pci+bounces-4985-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-4986-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EDAC886A44
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 11:29:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEAA6886A5C
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 11:31:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A5409B2124A
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 10:29:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1CAB1C23230
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 10:31:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B22338DDD;
-	Fri, 22 Mar 2024 10:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC3717575;
+	Fri, 22 Mar 2024 10:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9RK6UfB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZtK7vSK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB294383B4
-	for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 10:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445E2335B5
+	for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 10:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711103355; cv=none; b=Ob55xvp60qNXE1X5d5hO1OR7YdSLPBWXd3cltUUTs1x//JTOvoTTSj2MxLjAGFO9A8FacEhgwHqhRQuBfFbt+J9FFLRa1Pz8LU6MFRey+10KR5XpMU42I+gjGbtyIznv7+3Vd0NLBOL04h8hdErcH9odG53sD3m2AMjR2If/urE=
+	t=1711103499; cv=none; b=p/L0o3E8ulPkB04N2ovgJXyimxuVQbSkF2Xv04p9Qx6x4Qs2201XUvK1L9BBr1odmTAA+lC97nHcFSJfZbw19ivKBTEd7bDFVe6rirNkAgXuUl7pC5vp8/Q8Tivio49l8R8wszvJgnb3LCRqQf73jzNlvMMs77X8UYWChgXaeRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711103355; c=relaxed/simple;
-	bh=p71xayBqlEgukbvsyJHytzKGhoKcKr2khcxhmtYu9co=;
+	s=arc-20240116; t=1711103499; c=relaxed/simple;
+	bh=Mqj9/+3E3FLOifl3UfUfKrhKbcCrWvZO2XToaERc6Hs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSiwXXwUI8Syg2DBCBZ9eLZ+Oqft1OWfdyweUfnt3cU+glMFXvsL6jLrFoX2sI94PNKI0rZKOnXmUynpYIRy4FPGG/z+ResIFICaFaMlZFiyWZetoVgIkzqwQ6zSvtg/YaDr9I7LgIdkcxcxxxJNQ6Z6L6ZsgSPFdwuTmsYSYFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9RK6UfB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2B7C43390;
-	Fri, 22 Mar 2024 10:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711103355;
-	bh=p71xayBqlEgukbvsyJHytzKGhoKcKr2khcxhmtYu9co=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T9RK6UfBwSe95SgTE/YaKPw+K7JCtF8NdS0mTtPFpHEFwBP3WvLms78cqbt8Oyycu
-	 8LrtdfUKxkMLtAPwAJ+timlJpw9FvEivwet1NKpe7J3g7RqZqPorGhKK3tAZ0uimEt
-	 fduJKzTOpJDBnTSDxWVdPHDza6RigfsaJHft8mXiysyQW5q3KykMldZr2URpq8fjcR
-	 IEo7KkJsvpIt2IJ9ZV1RQRN1+FRUfhJdSTTMepHsOxX9WEA+56xSIM6rowr9pfYtrz
-	 y6fO8IFdxWeWtrpXzFP/kzIGz1kjYBoF8CLna01x8UHgKOXtd8Yo1o0rI2Ha9JR3bc
-	 BdKlcWluTfB7A==
-Date: Fri, 22 Mar 2024 11:29:10 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTQ37EUBDiAaahkdyWug9CD3P4OKL2eqzfMre93I8E/S9YfZfn2RO58ITvUD+PeQYdsKg/8vXlQCjkzpIFLcBIZvaG1BKKh54FsXTOEyImMPEl8i1v9d+aDywvrk9aFCNsJA5mCp7gdY1S1oRWC7T54yWwx0PlmNJf1wJd3+SIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jZtK7vSK; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e04ac200a6so14453235ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 03:31:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711103497; x=1711708297; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+Y7afBn+/cVaRxjFXtefiC0oc3q+xjwKNQnPq34zFF8=;
+        b=jZtK7vSK44tsDdFbYWeFAvQrm9RRfld8IpomVqnT+A5a3CSwWdxOyo01eaZjJ3q8L6
+         QelyLG4NeKIZqj76cLoQbNae/UEXSm4xLqZ+TdP1zbfJ5fokc1Cm+IDjlusg+fhUAcG3
+         OxX/hM0b8xzw2QjhvENuqZ1qCcnWF/P46jXpBr66rZLqnLZrwXFM9XFGBD6TEwrQT/Fi
+         81desP2BAU74oq/pSv+I52xsKzfSCtjxrDYVXH6lUSFuTmJ9n0RPBwcnz/slIvT1XbR1
+         Zz8fgSloi5+qaSpbs7a12r/LCnSF5Tkg+8GEgzY+D0qMvZZZPpUcqVYzbGKbLrrCX/iW
+         gjbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711103497; x=1711708297;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Y7afBn+/cVaRxjFXtefiC0oc3q+xjwKNQnPq34zFF8=;
+        b=GDUTSCHc4r+2FkkYFmd4lWCZ0iBm3EZgA5+uEbUYnYxNWvfrr2c3eMcXV6qSCs1w29
+         DtaWnqXjGw4WpafVKCyaXc0wIgeFcGnFc+ROu+TokWk9rpUY5rYeE95t0NAqE/3YOXQw
+         k9VPjFD197ezJxruqJKTY5LaBcpwx+P4Pvru719xmS+9T9Kw9NHt3swCbptimQZLqUOI
+         0IS8B3wbh3kXNA0Xjg30yZsNeYAtiC3lSvcFeYin8lOMj8Fv2xQcmqf6w9C1qoaJnXZd
+         LKcfXj+bj0Goq+SehLskkv4FcD7Sg8i+x9fWTfseuqz36NwbA7NOFKhtAGxFLo5HWPqO
+         RaHA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7gVozDs/BkpGpbqDSlNKh+9SP1gxWJOzcfXZPaOf1U3cHhw9TlKKDcHDSCtXYmSJWH1U2ZUK9Q+nicYbuESO/nDkkjm+W5CJf
+X-Gm-Message-State: AOJu0YxVkEgCcFiYc6VCUewV+CKMfQyHL9Mfi8Lwhgu69JiREhNR0YNl
+	Wu6nqRowVs4sSzJp8BeCZrzyr/F+2ZbrYexM/dqRb3AXtoyCflsCf6Z8Z/Z6Bg==
+X-Google-Smtp-Source: AGHT+IEAv1kn1k6exee+vbSuie6h8vKiYmoip4yOGQrTucKT/kUKd/irvSAIIC8u6L4lksMcO/Gq5Q==
+X-Received: by 2002:a17:902:f691:b0:1df:fff5:b61c with SMTP id l17-20020a170902f69100b001dffff5b61cmr2777836plg.14.1711103497263;
+        Fri, 22 Mar 2024 03:31:37 -0700 (PDT)
+Received: from thinkpad ([2409:40f4:101a:4667:2dab:fb9d:47a0:28fe])
+        by smtp.gmail.com with ESMTPSA id l19-20020a170902d05300b001dcf91da5c8sm1557049pll.95.2024.03.22.03.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Mar 2024 03:31:36 -0700 (PDT)
+Date: Fri, 22 Mar 2024 16:01:32 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shradha Todi <shradha.t@samsung.com>,
 	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] misc: pci_endpoint_test: Use
- memcpy_toio()/memcpy_fromio() for BAR tests
-Message-ID: <Zf1ddoNBPCb-0bJI@ryzen>
-References: <20240320090106.310955-1-cassel@kernel.org>
- <20240322102025.GA3638@thinkpad>
+Subject: Re: [PATCH v4 4/7] PCI: endpoint: pci-epf-test: Simplify
+ pci_epf_test_set_bar() loop
+Message-ID: <20240322103132.GB3638@thinkpad>
+References: <20240320113157.322695-1-cassel@kernel.org>
+ <20240320113157.322695-5-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,153 +90,85 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240322102025.GA3638@thinkpad>
+In-Reply-To: <20240320113157.322695-5-cassel@kernel.org>
 
-Hello Mani,
-
-On Fri, Mar 22, 2024 at 03:50:58PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Mar 20, 2024 at 10:01:05AM +0100, Niklas Cassel wrote:
-> > The current code uses writel()/readl(), which has an implicit memory
-> > barrier for every single readl()/writel().
-> > 
-> > Additionally, reading 4 bytes at a time over the PCI bus is not really
-> > optimal, considering that this code is running in an ioctl handler.
-> > 
-> > Use memcpy_toio()/memcpy_fromio() for BAR tests.
-> > 
-> > Before patch with a 4MB BAR:
-> > $ time /usr/bin/pcitest -b 1
-> > BAR1:           OKAY
-> > real    0m 1.56s
-> > 
-> > After patch with a 4MB BAR:
-> > $ time /usr/bin/pcitest -b 1
-> > BAR1:           OKAY
-> > real    0m 0.54s
-> > 
-> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> > ---
-> > Changes since v2:
-> > -Actually free the allocated memory... (thank you Kuppuswamy)
-> > 
-> >  drivers/misc/pci_endpoint_test.c | 68 ++++++++++++++++++++++++++------
-> >  1 file changed, 55 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> > index 705029ad8eb5..1d361589fb61 100644
-> > --- a/drivers/misc/pci_endpoint_test.c
-> > +++ b/drivers/misc/pci_endpoint_test.c
-> > @@ -272,33 +272,75 @@ static const u32 bar_test_pattern[] = {
-> >  	0xA5A5A5A5,
-> >  };
-> >  
-> > +static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
-> > +					enum pci_barno barno, int offset,
-> > +					void *write_buf, void *read_buf,
-> > +					int size)
-> > +{
-> > +	memset(write_buf, bar_test_pattern[barno], size);
-> > +	memcpy_toio(test->bar[barno] + offset, write_buf, size);
-> > +
-> > +	memcpy_fromio(read_buf, test->bar[barno] + offset, size);
-> > +
-> > +	return memcmp(write_buf, read_buf, size);
-> > +}
-> > +
-> >  static bool pci_endpoint_test_bar(struct pci_endpoint_test *test,
-> >  				  enum pci_barno barno)
-> >  {
-> > -	int j;
-> > -	u32 val;
-> > -	int size;
-> > +	int j, bar_size, buf_size, iters, remain;
-> > +	void *write_buf;
-> > +	void *read_buf;
-> >  	struct pci_dev *pdev = test->pdev;
-> > +	bool ret;
-> >  
-> >  	if (!test->bar[barno])
-> >  		return false;
-> >  
-> > -	size = pci_resource_len(pdev, barno);
-> > +	bar_size = pci_resource_len(pdev, barno);
-> >  
-> >  	if (barno == test->test_reg_bar)
-> > -		size = 0x4;
-> > +		bar_size = 0x4;
-> >  
-> > -	for (j = 0; j < size; j += 4)
-> > -		pci_endpoint_test_bar_writel(test, barno, j,
-> > -					     bar_test_pattern[barno]);
-> > +	buf_size = min(SZ_1M, bar_size);
-> >  
-> > -	for (j = 0; j < size; j += 4) {
-> > -		val = pci_endpoint_test_bar_readl(test, barno, j);
-> > -		if (val != bar_test_pattern[barno])
-> > -			return false;
-> > +	write_buf = kmalloc(buf_size, GFP_KERNEL);
-> > +	if (!write_buf)
-> > +		return false;
-> > +
-> > +	read_buf = kmalloc(buf_size, GFP_KERNEL);
-> > +	if (!read_buf) {
-> > +		ret = false;
-> > +		goto err;
+On Wed, Mar 20, 2024 at 12:31:51PM +0100, Niklas Cassel wrote:
+> Simplify the loop in pci_epf_test_set_bar().
+> If we allocated memory for the BAR, we need to call set_bar() for that
+> BAR, if we did not allocated memory for that BAR, we need to skip.
+> It is as simple as that. This also matches the logic in
+> pci_epf_test_unbind().
 > 
-> This frees read_buf also. Please fix that and also rename the labels to:
+> A 64-bit BAR will still only be one allocation, with the BAR succeeding
+> the 64-bit BAR being null.
 > 
-> err_free_write_buf
-> err_free_read_buf
-
-This was intentional since kfree() handles NULL perfectly fine.
-(I was thinking that it would just add extra lines for no good reason.)
-
-Do you think that there is any point in having two labels in this case?
-
-
-Kind regards,
-Niklas
-
+> While at it, remove the misleading comment.
+> A EPC .set_bar() callback should never change the epf_bar->flags.
+> (E.g. to set a 64-bit BAR if we requested a 32-bit BAR.)
 > 
-> - Mani
+> A .set_bar() callback should do what we request it to do.
+> If it can't satisfy the request, it should return an error.
 > 
-> >  	}
-> >  
-> > -	return true;
-> > +	iters = bar_size / buf_size;
-> > +	for (j = 0; j < iters; j++) {
-> > +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
-> > +						 write_buf, read_buf,
-> > +						 buf_size)) {
-> > +			ret = false;
-> > +			goto err;
-> > +		}
-> > +	}
-> > +
-> > +	remain = bar_size % buf_size;
-> > +	if (remain) {
-> > +		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * iters,
-> > +						 write_buf, read_buf,
-> > +						 remain)) {
-> > +			ret = false;
-> > +			goto err;
-> > +		}
-> > +	}
-> > +
-> > +	ret = true;
-> > +
-> > +err:
-> > +	kfree(write_buf);
-> > +	kfree(read_buf);
-> > +
-> > +	return ret;
-> >  }
-> >  
-> >  static bool pci_endpoint_test_intx_irq(struct pci_endpoint_test *test)
-> > -- 
-> > 2.44.0
-> > 
+> If platform has a specific requirement, e.g. that a certain BAR has to
+> be a 64-bit BAR, then it should specify that by setting the .only_64bit
+> flag for that specific BAR in epc_features->bar[], such that
+> pci_epf_alloc_space() will return a epf_bar with the 64-bit flag set.
+> (Such that .set_bar() will receive a request to set a 64-bit BAR.)
 > 
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 21 ++++---------------
+>  1 file changed, 4 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 0a83a1901bb7..faf347216b6b 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -709,31 +709,18 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>  
+>  static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  {
+> -	int bar, add;
+> -	int ret;
+> -	struct pci_epf_bar *epf_bar;
+> +	int bar, ret;
+>  	struct pci_epc *epc = epf->epc;
+>  	struct device *dev = &epf->dev;
+>  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+> -	const struct pci_epc_features *epc_features;
+>  
+> -	epc_features = epf_test->epc_features;
+> -
+> -	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
+> -		epf_bar = &epf->bar[bar];
+> -		/*
+> -		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
+> -		 * if the specific implementation required a 64-bit BAR,
+> -		 * even if we only requested a 32-bit BAR.
+> -		 */
+> -		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
+> -
+> -		if (epc_features->bar[bar].type == BAR_RESERVED)
+> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> +		if (!epf_test->reg[bar])
+>  			continue;
+>  
+>  		ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no,
+> -				      epf_bar);
+> +				      &epf->bar[bar]);
+>  		if (ret) {
+>  			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+>  					   PRIMARY_INTERFACE);
 > -- 
-> மணிவண்ணன் சதாசிவம்
+> 2.44.0
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
