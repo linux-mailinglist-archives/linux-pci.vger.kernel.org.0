@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-5010-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5011-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7C55887088
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 17:11:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE1288708E
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 17:11:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E8561F241A2
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 16:11:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D2261F24189
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 16:11:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395FE5820D;
-	Fri, 22 Mar 2024 16:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7861A5A4D5;
+	Fri, 22 Mar 2024 16:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srrNW3NJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzzeQePB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097A25820C;
-	Fri, 22 Mar 2024 16:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464D056B7A;
+	Fri, 22 Mar 2024 16:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711123838; cv=none; b=dWBNRNGFXuIDkASoSFX/XVTVAcnqfkLJ84X27LbbF2q48fFJ3KCd9q8Dh0yyi0eY0BvbrrapdYCucXoa6LzIIvghbFTosGOgfp3RhJ14q6D9B/ZLUpGGATUkhA33sTqzbcrcddiE4z94k8+bX5r5zjJxxxJNcmv2Gr+4n/GbRlI=
+	t=1711123849; cv=none; b=ahO/lHpaxWrDvcz5ht07U8Nbziy9+J02DBpYrDLs5is7jnYFGC/hq8zywbkotkC2HzPnHpzbOcHCADmJpY6W+udt1DVaAJ7KdceJKYZe7sRLq3D6qFWiCHMgphRfO70m4BIJ3hBpHnG06QxMDk7H290AbQYBtIP0VOQPI+cUxwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711123838; c=relaxed/simple;
-	bh=JoSFEolLXCBXv+vKZOe9Vw6+myyFGlxuio2JgUbS600=;
+	s=arc-20240116; t=1711123849; c=relaxed/simple;
+	bh=wnXnzIzMjqIeOSx2R+ckSe9WQAcO+DmN0P5bRnwI08Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e29wUfHqTSqg+na5FRUjmejx/IK4lNntL1HPrytGiK3n0/OmVxIjBDOYrcouj4RNFpO2+lupFv2pUEHsWLJpznn1EAsqT154k8RyVnQhN3dfm5G7S0Q0zU5zYPGM8DbdoAFm4t35V6luLANUDE+9kzD8aB73gtohhSqnbCoQVNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srrNW3NJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0E2FC433F1;
-	Fri, 22 Mar 2024 16:10:34 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=HAP2F7D65xSmGNzna5/5AhnQbHK3+OzQ67q7yGYpY6IsiFQsLW+16lWzDhOpGtrU1g8lDdU/d1kZKn5+XBIo8zed4I5CyqLw7BKK2fhZimeTEH+CQSIRN45CiBZ+7YFsTcXdIk4i/Lho2b8nzQOUYN0r1sxSts1YEZntWnmX1/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzzeQePB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED6C5C43390;
+	Fri, 22 Mar 2024 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711123837;
-	bh=JoSFEolLXCBXv+vKZOe9Vw6+myyFGlxuio2JgUbS600=;
+	s=k20201202; t=1711123849;
+	bh=wnXnzIzMjqIeOSx2R+ckSe9WQAcO+DmN0P5bRnwI08Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=srrNW3NJI//G7KulUkxk0eLjgKOaFMqQadxF9OcYUI49g93tqIwy92qZX9ZuUyZcP
-	 an8LdGNd6X+G/VkxpfuUSpPPFmxI587PJi9WTRZj/IR+79DJWefS3dia6SXKmR4zIg
-	 Peh9OkcOj4gDJ2MbWgUhMl/3T/3fvsrz2h9Y2O7OHTLa0yHIL3GfeeZnB+2EsXTY4A
-	 O+hg1qIKNnkeZekhJR477jqjHNFwdn1rRvCQnCPMpQNIPFi6WP9b66RmbHW+TghiD0
-	 qsJLB3RjlG3DyU/N+7peK4xPuU1Yyqd8IRLlfvcStUgy/9YyiJb30RkUU+3E75Pvcv
-	 DRssZEse9TVNw==
-Date: Fri, 22 Mar 2024 17:10:31 +0100
+	b=NzzeQePBQ5WorR+piyK1EUN1fQPTi4wGf+hss+zKlVWLr+TCyYKrL286biy/wewVJ
+	 XOBnIt3VVer6985KDVCRpEMy9onAVVqHPYW5HgBdGbRBnMjEF9KIcR8gs25IGqPOBa
+	 YmTdj2kg7zmk8De/tNLoBsTbiE8Cuzw7jzMxxq3975TflkJCzzTvMpCJeXnhKTEy7R
+	 t/AsNMUNBkS87/PQjCySHfJyWYaYR8RYMharpU1HthE6HH9sqWp0GRMurccC5GElF/
+	 N+fFdo5xlTvul7wELAiOkd0xwZX37PzrDTkNM/8W02C9r5g7yPxKOmKYfY3tsFCgYX
+	 9vRLcUMhYpFgg==
+Date: Fri, 22 Mar 2024 17:10:43 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -55,11 +55,10 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
 	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 07/11] PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown()
- API to handle Link Down event
-Message-ID: <Zf2td2CJtaOwAj-x@ryzen>
+Subject: Re: [PATCH 09/11] PCI: epf-test: Handle Link Down event
+Message-ID: <Zf2tg9I6ZBxp7asU@ryzen>
 References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
- <20240314-pci-epf-rework-v1-7-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-9-6134e6c1d491@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,9 +67,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240314-pci-epf-rework-v1-7-6134e6c1d491@linaro.org>
+In-Reply-To: <20240314-pci-epf-rework-v1-9-6134e6c1d491@linaro.org>
 
-On Thu, Mar 14, 2024 at 08:53:46PM +0530, Manivannan Sadhasivam wrote:
+On Thu, Mar 14, 2024 at 08:53:48PM +0530, Manivannan Sadhasivam wrote:
 > As per the PCIe base spec r5.0, section 5.2, Link Down event can happen
 > under any of the following circumstances:
 > 
@@ -78,26 +77,58 @@ On Thu, Mar 14, 2024 at 08:53:46PM +0530, Manivannan Sadhasivam wrote:
 > 2. Link disable transmission by upstream component
 > 3. Moving from L2/L3 to L0
 > 
-> In those cases, Link Down causes some non-sticky DWC registers to loose the
-> state (like REBAR, etc...). So the drivers need to reinitialize them to
-> function properly once the link comes back again.
+> When the event happens, the EPC driver capable of detecting it may pass the
+> notification to the EPF driver through link_down() callback in 'struct
+> pci_epc_bus_event_ops'.
 > 
-> This is not a problem for drivers supporting PERST# IRQ, since they can
-> reinitialize the registers in the PERST# IRQ callback. But for the drivers
-> not supporting PERST#, there is no way they can reinitialize the registers
-> other than relying on Link Down IRQ received when the link goes down. So
-> let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
-> non-sticky registers and also notifies the EPF drivers about link going
-> down.
-> 
-> This API can also be used by the drivers supporting PERST# to handle the
-> scenario (2) mentioned above.
-> 
-> NOTE: For the sake of code organization, move the dw_pcie_ep_linkup()
-> definition just above dw_pcie_ep_linkdown().
+> While the PCIe spec has not defined the actual behavior of the endpoint
+> when the Link Down event happens, we may assume that atleast the ongoing
+
+Nit:
+s/atleast/at least/
+
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+
+> transactions need to be stopped as the link won't be active. So let's
+> cancel the command handler work in the callback implementation
+> pci_epf_test_link_down(). The work will be started again in
+> pci_epf_test_link_up() once the link comes back again.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 84cd47ebac22..97245228c9eb 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -823,6 +823,15 @@ static int pci_epf_test_link_up(struct pci_epf *epf)
+>  	return 0;
+>  }
+>  
+> +static int pci_epf_test_link_down(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +
+> +	cancel_delayed_work(&epf_test->cmd_handler);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct pci_epc_event_ops pci_epf_test_epc_event_ops = {
+>  	.init = pci_epf_test_epc_init,
+>  	.deinit = pci_epf_test_epc_deinit,
+> @@ -830,6 +839,7 @@ static const struct pci_epc_event_ops pci_epf_test_epc_event_ops = {
+>  
+>  static const struct pci_epc_bus_event_ops pci_epf_test_bus_event_ops = {
+>  	.link_up = pci_epf_test_link_up,
+> +	.link_down = pci_epf_test_link_down,
+>  };
+>  
+>  static int pci_epf_test_alloc_space(struct pci_epf *epf)
+> 
+> -- 
+> 2.25.1
+> 
 
