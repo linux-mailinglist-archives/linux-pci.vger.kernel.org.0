@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-5007-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 719AD887067
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 17:09:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F20F988707E
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 17:10:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 273472843F8
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 16:09:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEDC5284BCC
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 16:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20CAA57312;
-	Fri, 22 Mar 2024 16:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6445A0EE;
+	Fri, 22 Mar 2024 16:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fa2YsZns"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fv4NMX+s"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BC659B43;
-	Fri, 22 Mar 2024 16:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2D359B56;
+	Fri, 22 Mar 2024 16:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711123750; cv=none; b=h8fZsUv7xquatgRpTBF3agAPEl8J0Cn40e1+IEQYesRrNuvgeGMoN6wnfHS4oTqqHNGorVDadi0snryXRPSOMy/L35zlcYrXm5abUR9lcIOry9HbZ8i0CEFCSpU3OphlQmcdoS5o+q5HO/Fa1+JWA+u0H0PMzkqYUMPNyPqcDh0=
+	t=1711123812; cv=none; b=PZl1X34APawZHGJyLZavMfdjTWZsYzmZ2OwOrBsLfT7NofoDX+JHSHW1K6vpo9Wq/Z2RtLGit+aSwAP/sTLQVQ8nDcQTjZTVGi0oWC9PMAfOx/75r0vHR6/XP2L7NlzeaoGvl3EkeKQSjKihJhwLlpt0hZLD42VR4OzPnM0EFok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711123750; c=relaxed/simple;
-	bh=F/sqXNXuusfoq5nFRK9dwEPOFu1E0B/ZZnfUgH0lVkw=;
+	s=arc-20240116; t=1711123812; c=relaxed/simple;
+	bh=ZykpEH6/3il0JVUrcIN6n7VW8Xp7HVRqAuW1Y9G4IwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kha5ISIzY+IbnSmNEWf4EgwdUKDM0zlnBjU/xB+pj841MUzq4Sf08Ceu0nRndExqsFMNLNF6IZ4s5wjyWo0VJc1ukQfx/8Pgml9Uj9RWPQ+CWb2uZC+b70nRzXv7G2KvqOmA5pbqdr8FORYGqEfOYkULHqSKh2EZHsJtqDg7oNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fa2YsZns; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322B1C433A6;
-	Fri, 22 Mar 2024 16:09:06 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dsd6g6HSfBE5c/0L/RUizqHk+M5hoSrV33xK0YwItXtjinxYKkPMoOxdvFU52/GtPM+Wsb/miOZ04mWt9GvWvqjlbwGUKtOKilrhoMWyRDJFB446nb42XQL3c6hJW7xmcHwwkGuxlanEdEd5kgb/Hr8hHo+kyENKxIo+rgiGUis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fv4NMX+s; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C15DDC43390;
+	Fri, 22 Mar 2024 16:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711123749;
-	bh=F/sqXNXuusfoq5nFRK9dwEPOFu1E0B/ZZnfUgH0lVkw=;
+	s=k20201202; t=1711123812;
+	bh=ZykpEH6/3il0JVUrcIN6n7VW8Xp7HVRqAuW1Y9G4IwU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fa2YsZnsQGWbd6LtSs6H5aNN6QH0eiSf5N2umA5sLvBVzoec42e9efUOyM3pmJnvR
-	 ssAgWezniuSPisV1K1HOUN3AvZOXO2dnolNNQkZ1zaOSM6eif9E0LhQIp2C4eaXhb1
-	 igZl1eWSpvJu/RRYas0uzHQrpdDAlTC7nv1siruOlVOcW/G/z2aG72m+uzXHieQLqs
-	 hfw7qPfKXkUbD+ZcPGyDqpjDwZm4YhHC5jJ8XY8IDjxIZLDK5gh1ac+FwiGHBY2RIH
-	 ijXweKZh5c08Vtrn1/lrOZrbmtcpRSEPDzlkn7jDpXPL76OG6SbdGZiqoO/n292aRW
-	 Br36xScrOoeDg==
-Date: Fri, 22 Mar 2024 17:09:03 +0100
+	b=fv4NMX+sgC+mQPWkGfBrrzy2n/vnEphOycFPs3DCe8wc7cmDHUKT+wb/znKPBhLQZ
+	 CTpkqSkgjF6NUw9PFYPMD+PQIVXPcmnBq44/t0fOMFwC3jJxrLjhmmIb/vNbGIQqD8
+	 a+i/iBM0svSzaMFWHoC/2y7YnRVd/OqVeEQukRGhz8Du3S31DsjxxN20G1EFDAw65l
+	 s2nXVMWwnillwbmi1BNnfZY/SetAeVN38COJ6YvqQ7V3qo83WbpQ8JKH5MNKIoZS2X
+	 FeRk/afy7HnGUDLUuUsXk4PK+7kh1ysXIqQmR7PivYKyu+CBu7G0gMj2UTo4PpxN4S
+	 10y0jvjn3rTog==
+Date: Fri, 22 Mar 2024 17:10:06 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -55,11 +55,11 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
 	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 04/11] PCI: epf-test: Refactor pci_epf_test_unbind()
- function
-Message-ID: <Zf2tH67WRvOGK7-O@ryzen>
+Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
+ EPC init callback
+Message-ID: <Zf2tXgKo-gc3qy1D@ryzen>
 References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
- <20240314-pci-epf-rework-v1-4-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,128 +68,121 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240314-pci-epf-rework-v1-4-6134e6c1d491@linaro.org>
+In-Reply-To: <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
 
-On Thu, Mar 14, 2024 at 08:53:43PM +0530, Manivannan Sadhasivam wrote:
-> Move the pci_epc_clear_bar() and pci_epf_free_space() code to respective
-> helper functions. This allows reusing the helpers in future commits.
+On Thu, Mar 14, 2024 at 08:53:44PM +0530, Manivannan Sadhasivam wrote:
+> To maintain uniformity across EPF drivers, let's move the DMA
+> initialization to EPC init callback. This will also allow us to deinit DMA
+> during PERST# assert in the further commits.
 > 
-> This also requires moving the pci_epf_test_unbind() definition below
-> pci_epf_test_bind() to avoid forward declaration of the above helpers.
-> 
-> No functional change.
+> For EPC drivers without PERST#, DMA deinit will only happen during driver
+> unbind.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 63 ++++++++++++++++++---------
->  1 file changed, 42 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 1dae0fce8fc4..2fac36553633 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -686,27 +686,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  			   msecs_to_jiffies(1));
->  }
->  
-> -static void pci_epf_test_unbind(struct pci_epf *epf)
-> -{
-> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> -	struct pci_epc *epc = epf->epc;
-> -	struct pci_epf_bar *epf_bar;
-> -	int bar;
-> -
-> -	cancel_delayed_work(&epf_test->cmd_handler);
-> -	pci_epf_test_clean_dma_chan(epf_test);
-> -	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> -		epf_bar = &epf->bar[bar];
-> -
-> -		if (epf_test->reg[bar]) {
-> -			pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
-> -					  epf_bar);
-> -			pci_epf_free_space(epf, epf_test->reg[bar], bar,
-> -					   PRIMARY_INTERFACE);
-> -		}
-> -	}
-> -}
-> -
->  static int pci_epf_test_set_bar(struct pci_epf *epf)
->  {
->  	int bar, add;
-> @@ -746,6 +725,22 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static void pci_epf_test_clear_bar(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	struct pci_epc *epc = epf->epc;
-> +	struct pci_epf_bar *epf_bar;
-> +	int bar;
-> +
-> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> +		epf_bar = &epf->bar[bar];
-> +
-> +		if (epf_test->reg[bar])
-> +			pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
-> +					  epf_bar);
-> +	}
-> +}
-> +
->  static int pci_epf_test_epc_init(struct pci_epf *epf)
->  {
->  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> @@ -885,6 +880,22 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  	return 0;
->  }
->  
-> +static void pci_epf_test_free_space(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
-> +	struct pci_epf_bar *epf_bar;
-> +	int bar;
-> +
-> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
-> +		epf_bar = &epf->bar[bar];
-> +
-> +		if (epf_test->reg[bar]) {
-> +			pci_epf_free_space(epf, epf_test->reg[bar], bar,
-> +					   PRIMARY_INTERFACE);
-> +		}
 
-Nit: No need for braces here. (Just like you don't have braces in
-pci_epf_test_clear_bar()).
-
-Like you said in the other thread, this commit clashes with changes done
-in my series.
-
-However, except for the small nit, the commit looks good:
 Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
 
+For the record, I was debugging a problem related to EPF DMA recently
+and was dumping the DMA mask for the struct device of the epf driver.
+I was a bit confused to see it as 32-bits, even though the EPC driver
+has it set to 64-bits.
+
+The current code works, because e.g., pci_epf_test_write(), etc,
+does:
+struct device *dma_dev = epf->epc->dev.parent;
+dma_map_single(dma_dev, ...);
+
+but it also means that all EPF drivers will do this uglyness.
+
+
+
+However, if a EPF driver does e.g.
+dma_alloc_coherent(), and sends in the struct *device for the EPF,
+which is the most logical thing to do IMO, it will use the wrong DMA
+mask.
+
+Perhaps EPF or EPC code should make sure that the struct *device
+for the EPF will get the same DMA mask as epf->epc->dev.parent,
+so that EPF driver developer can use the struct *epf when calling
+e.g. dma_alloc_coherent().
+
+(This is however not strictly related to this patch, but I thought
+that I should mention it.)
+
+
+Kind regards,
+Niklas
+
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c  | 16 ++++++++--------
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 12 ++++++------
+>  2 files changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> index da894a9a447e..4e4300efd9d7 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> @@ -737,6 +737,14 @@ static int pci_epf_mhi_epc_init(struct pci_epf *epf)
+>  	if (!epf_mhi->epc_features)
+>  		return -ENODATA;
+>  
+> +	if (info->flags & MHI_EPF_USE_DMA) {
+> +		ret = pci_epf_mhi_dma_init(epf_mhi);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to initialize DMA: %d\n", ret);
+> +			return ret;
+> +		}
 > +	}
-> +}
 > +
->  static void pci_epf_configure_bar(struct pci_epf *epf,
->  				  const struct pci_epc_features *epc_features)
->  {
-> @@ -940,6 +951,16 @@ static int pci_epf_test_bind(struct pci_epf *epf)
 >  	return 0;
 >  }
 >  
-> +static void pci_epf_test_unbind(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> @@ -749,14 +757,6 @@ static int pci_epf_mhi_link_up(struct pci_epf *epf)
+>  	struct device *dev = &epf->dev;
+>  	int ret;
+>  
+> -	if (info->flags & MHI_EPF_USE_DMA) {
+> -		ret = pci_epf_mhi_dma_init(epf_mhi);
+> -		if (ret) {
+> -			dev_err(dev, "Failed to initialize DMA: %d\n", ret);
+> -			return ret;
+> -		}
+> -	}
+> -
+>  	mhi_cntrl->mmio = epf_mhi->mmio;
+>  	mhi_cntrl->irq = epf_mhi->irq;
+>  	mhi_cntrl->mru = info->mru;
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 2fac36553633..8f1e0cb08814 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -753,6 +753,12 @@ static int pci_epf_test_epc_init(struct pci_epf *epf)
+>  	bool msi_capable = true;
+>  	int ret;
+>  
+> +	epf_test->dma_supported = true;
 > +
-> +	cancel_delayed_work(&epf_test->cmd_handler);
-> +	pci_epf_test_clean_dma_chan(epf_test);
-> +	pci_epf_test_clear_bar(epf);
-> +	pci_epf_test_free_space(epf);
-> +}
+> +	ret = pci_epf_test_init_dma_chan(epf_test);
+> +	if (ret)
+> +		epf_test->dma_supported = false;
 > +
->  static const struct pci_epf_device_id pci_epf_test_ids[] = {
->  	{
->  		.name = "pci_epf_test",
+>  	epc_features = pci_epc_get_features(epc, epf->func_no, epf->vfunc_no);
+>  	if (epc_features) {
+>  		msix_capable = epc_features->msix_capable;
+> @@ -942,12 +948,6 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	if (ret)
+>  		return ret;
+>  
+> -	epf_test->dma_supported = true;
+> -
+> -	ret = pci_epf_test_init_dma_chan(epf_test);
+> -	if (ret)
+> -		epf_test->dma_supported = false;
+> -
+>  	return 0;
+>  }
+>  
 > 
 > -- 
 > 2.25.1
