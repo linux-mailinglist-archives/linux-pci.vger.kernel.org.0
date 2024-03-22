@@ -1,120 +1,97 @@
-Return-Path: <linux-pci+bounces-5018-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5019-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B67E8873ED
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 20:30:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CC1088740A
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 20:56:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 274E8284DED
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 19:30:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF4FE1C213AE
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 19:56:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F16279B86;
-	Fri, 22 Mar 2024 19:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 318A27F486;
+	Fri, 22 Mar 2024 19:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GI4W6i26"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjEscHMZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7787A157;
-	Fri, 22 Mar 2024 19:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05ABD7F46B;
+	Fri, 22 Mar 2024 19:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711135813; cv=none; b=giOnuV2bUfdRzRm399Re2dvoBREVgcfnEo5Tv9xeGUu7i5emumD1erKCPKu33RHL2aXQuABPdX2hpu2IFmKp4rYJRFT/Pm5REQ0yQc2GrCEIZ5JsGxZxuWKeWF8tchpfEwsPTmq+nVpJEGc/fLCWIDrvpx0DVt4ID1jRe79t/ms=
+	t=1711137375; cv=none; b=O170sPOJCu+r7bcDc/ZkYQzqxlNkyBe9B/H/CPg+O07IRYssR3OBGoBspQ58R7nVcEJ9VEbkrshL4nlW5ZDKRzBwC/qS3yLOgS91alA+LUJUxKPBVZmoApAv4zkCA4upAa9Md7/vOZ9CWkWogaMvOqjq6z3xUugCJjMHWWaS4yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711135813; c=relaxed/simple;
-	bh=9R6ki8LkQLAWyMMmV+81/0KXBdxdkaUt91oUyJxHRXQ=;
+	s=arc-20240116; t=1711137375; c=relaxed/simple;
+	bh=aJpcLvTHfsXX8ar5QTyJ9XLwXZCvmzpClHR69xGufx4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IYiU374NgAm5WgNqJKJUa0icEVzud0W4KOGo5y5dGAGfSCB9pcJ/G02TB71+Uk9ygIdUaQfIBo2ikyZyPUEdqVIXHFPIkT9bJRcdl+CehvksJCft5MmyW+alRyMYOv9yoCEdxO+hR9QsBTTXXKfY5xfLxtxAJvylCD2EO2G00Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GI4W6i26; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D41C433F1;
-	Fri, 22 Mar 2024 19:30:12 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=bHTAOo4QwLByIDWA7rUIUhUsJ45AAHQYQcmi2PtnTnhKibaZGR5ySXznEGUOhHfiVuDP9ep4xpQPpMWpvKfIX7NqyoGkk+g+AMWcod8cpHuL+jhc6UxZH/zUir2w9v6T+g0AHm+05iLJKftlGvoGS0hsn3b3h86HRwZhCHxXkss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjEscHMZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D7AC433C7;
+	Fri, 22 Mar 2024 19:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711135813;
-	bh=9R6ki8LkQLAWyMMmV+81/0KXBdxdkaUt91oUyJxHRXQ=;
+	s=k20201202; t=1711137374;
+	bh=aJpcLvTHfsXX8ar5QTyJ9XLwXZCvmzpClHR69xGufx4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GI4W6i26GH4YKoxcLI7lQ8yf1CYz3gnsVS5q/50obT5c+RAjHWdIx+1+1fcYFuMSK
-	 z7tq2Hy8gsByyk1C6HLUmIdEjEMjPlAEd5SPyoRNSsS1HUrAS8NtMtMQaTjVj8XtIP
-	 GfI5wwIhfK2ZdvFH8yfESIP4RXcrOtJGRVvTmGJafpDdRsj5RvAbXWu2XtvMvItr/Z
-	 Zoq9QazCmln///YbTsHQqQmawt8pLZ8s+57149iivVTAWIDAH/W5Cm1wZubwMH+tEE
-	 0i08O00EIoJelk5Ubc024aZSDXEmpIUnVRa35wSfyaEC/x0wB3d6Rabg6Z8TigwMBO
-	 GVbz6krwT5hCg==
-Date: Fri, 22 Mar 2024 14:30:11 -0500
+	b=XjEscHMZnQCObYxovuq/iwu7Jk0iYji0tcGL9kdl+++c+Ptcen2iCQ2OtYHlBCW/1
+	 bD+9YHrMgqUYIYxol4ZltczzavtxLW7a3QTPJ4n6HXr78zD0r7PLLhYrp4uxt9UCo0
+	 k8TpCc3P9zrFbyip6kAH+1GOlDOKcJt2m9mVbSq5Ab+iSWXsJoLxWAkqmbnXMrbS69
+	 t9Gyb4OZsg8N2YenSJQhrpeluNbr6e55kb6i+JgkV/IIgLwcGB23mVvvk/OdiJnvZb
+	 PFqXVFXPpeADGRwc/6qZfEBPC8G5VeV1510qOI6MSwBmdDaMqfCl7rUU5Bcnqr/7Yw
+	 /r8lPrTipI4+w==
+Date: Fri, 22 Mar 2024 14:56:12 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH 3/4] PCI: Add TLP Prefix reading into pcie_read_tlp_log()
-Message-ID: <20240322193011.GA701027@bhelgaas>
+To: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
+	linux-leds@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 2/2] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <20240322195612.GA1372991@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240206135717.8565-4-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20240312100816.000071ec@linux.intel.com>
 
-On Tue, Feb 06, 2024 at 03:57:16PM +0200, Ilpo Järvinen wrote:
-> pcie_read_tlp_log() handles only 4 TLP Header Log DWORDs but TLP Prefix
-> Log (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
+On Tue, Mar 12, 2024 at 10:08:16AM +0100, Mariusz Tkaczyk wrote:
+> On Mon, 11 Mar 2024 17:30:06 -0500
+> Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+> 
+> > > > No, Linux doesn't support _DSM. It was proposed in previous
+> > > > iterations by Stuart but I dropped it. We decided that it need to be
+> > > > strongly rebuild because "pci/pcie" is not right place for ACPI code
+> > > > so we cannot register _DSM driver instead of NPEM as it was proposed
+> > > > and I don't have _DSM capable hardware to test it.  
+> > 
+> > I'm not sure I understand why pci/pcie isn't the right place for ACPI code--
+> > there are other _DSMs used in PCI code already, and this _DSM is defined
+> > in a PCI ECN.
+> 
+> I looked into internal review history and I found out that I dropped it after
+> discussion with Dan Williams:
+> 
+> > After review and discussion with Dan _DSM extension is dropped.
+> 
+> Unfortunately, I don't remember what exactly he suggested, I just remembered
+> conclusion that it needs to be reworked and I decided to drop it.
+> Maybe, I didn't understand him correctly.
+> 
+> Dan, could you take a look? Do you remember something?
 
-s/TLP Header Log/Header Log/ to match spec terminology (also below)
+Straw man proposal:
 
-> Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
-> TLP Prefix Log. The layout of relevant registers in AER and DPC
-> Capability is not identical but the offsets of TLP Header Log and TLP
-> Prefix Log vary so the callers must pass the offsets to
-> pcie_read_tlp_log().
+  - Update this patch so we use NPEM if the device advertises it.
 
-s/is not identical but/is identical, but/ ?
-
-The spec is a little obtuse about Header Log Size.
-
-> Convert eetlp_prefix_path into integer called eetlp_prefix_max and
-> make is available also when CONFIG_PCI_PASID is not configured to
-> be able to determine the number of E-E Prefixes.
-
-I think this eetlp_prefix_path piece is right, but would be nice in a
-separate patch since it's a little bit different piece to review.
-
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-> @@ -11336,7 +11336,9 @@ static pci_ers_result_t ixgbe_io_error_detected(struct pci_dev *pdev,
->  	if (!pos)
->  		goto skip_bad_vf_detection;
->  
-> -	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG, &tlp_log);
-> +	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG,
-> +				pos + PCI_ERR_PREFIX_LOG,
-> +				aer_tlp_log_len(pdev), &tlp_log);
->  	if (ret < 0) {
->  		ixgbe_check_cfg_remove(hw, pdev);
->  		goto skip_bad_vf_detection;
-
-We applied the patch to export pcie_read_tlp_log(), but I'm having
-second thoughts about it.   I don't think drivers really have any
-business here, and I'd rather not expose either pcie_read_tlp_log() or
-aer_tlp_log_len().
-
-This part of ixgbe_io_error_detected() was added by 83c61fa97a7d
-("ixgbe: Add protection from VF invalid target DMA"), and to me it
-looks like debug code that probably doesn't need to be there as long
-as the PCI core does the appropriate logging.
+  - If/when Linux support for the _DSM is added, we use the _DSM when
+    present.  If a device advertises NPEM but no _DSM applies to it,
+    we use native NPEM for it.
 
 Bjorn
 
