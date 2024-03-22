@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-5022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5023-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BC9E88747B
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 22:37:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88FF0887484
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 22:42:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27B171F21F61
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 21:37:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44FCE2837CF
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 21:42:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 012C05820D;
-	Fri, 22 Mar 2024 21:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 592E380059;
+	Fri, 22 Mar 2024 21:42:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCtIf4iK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYyEAOKH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D147B53361
-	for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 21:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE0F7FBD9;
+	Fri, 22 Mar 2024 21:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711143441; cv=none; b=V00J+qI/w3oedMUY2k8OXn4aK/Q+kufLUFBxhT5cYir/b2KQV8riH2gGrO/7J6gAx9tVtQyrbXns4nMlWMddEQTO1y3v1b9e50tJld60jeWgCy5NpWtiY+u5qXob9HEjjcouF9/dvMtKf7b/VxtKcCKWzDKP5RQs1FNyhI/efcw=
+	t=1711143774; cv=none; b=MYJDP+Tsgjn8zIz9U3IrjZVl5pgMTJATWlpWvPXlHylXspFPf5MCr3yFiQLxO1FYxNES+VWwwhJB5o4h92R3mR7WGqo2zGy/BacNnsY1LU6FsYErg0d85avaKo+o6DI2ihWYgZ8mUlP6NUfOzu7uxfkOCUUD4pIZXRn/mHU2GRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711143441; c=relaxed/simple;
-	bh=Bp0TMupPA8sSC+P8D3Hh48Z9GN1U3o2H2jhGE4SaM24=;
+	s=arc-20240116; t=1711143774; c=relaxed/simple;
+	bh=JycC0gs4OGC9gkoJ1HmCcBKIzE6fAhJJwAeFrFmRK+Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jF2kfsx52S0USjQ8fn7aXdynFHdaph72/6F3Rkt1a5lAVNijVCxtJn3T+Y5KuN5ixp1kCBG5NmqB6VXjhQY/OIQnwESrGK0cxCbSpZ7UUCw3O+cDiWFc/JiBey0GHSbBwxTps54C75UlpIqqXkG38Bkqa6QHgEeT7W3XBIKqezg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCtIf4iK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 312D4C433C7;
-	Fri, 22 Mar 2024 21:37:21 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=ixgLRaCDo93RnzBwrFm3I9W5a6ASQOBfZSPyOFohSWkWwUc86N13zrmrhGriuZE6Xo91nQldTjP1ZMoLmNw2CI3WklwJpj7Ac5/G+KvTU5cpT+HRtydsefAMRnn8RQTnbKazZqCQpNzsSenjPaSPRN73sb6yHWgn0ntrImWhFt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYyEAOKH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71AD7C433F1;
+	Fri, 22 Mar 2024 21:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711143441;
-	bh=Bp0TMupPA8sSC+P8D3Hh48Z9GN1U3o2H2jhGE4SaM24=;
+	s=k20201202; t=1711143773;
+	bh=JycC0gs4OGC9gkoJ1HmCcBKIzE6fAhJJwAeFrFmRK+Y=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aCtIf4iKE5xHG+PBqtqvpW8yuKFNIHt2jkb3AKm32WLEFQ73Ef58n+hTuvRJSbLkL
-	 D992bTaw5JpuZp49RD3B57UEB3oiPPG1fhMP3aSJfhBtEKcC00VCd1Tjtuq8CV/NY0
-	 /zxuH9pZsLS4xOHW01dsNouZfDg+gcRaMUna/jHGE1+CuzIzL//A98r++qPEp/VL12
-	 1/+OyS6bcg8DXB2/w84uhMEIweW5OsYITwaMqSjUiJWs1s2HcdIy38XjO7rHluBVVG
-	 e3QBbLWdxpuLnpNSBd7owR9hFTdfjwVYePO8jTmieSygXda3eBvgy5tOdiWYFPS8s0
-	 5Jx9jpkcZ3pjg==
-Date: Fri, 22 Mar 2024 16:37:19 -0500
+	b=DYyEAOKHC9c23CVPAnPGivg22IKn7Nu3jt3K/MNHK4IBKrdvoWIv3Q/TLwxadyyOn
+	 FbqyuLxEWmvTLox3RBtAmR721lUi8TizSOlmPI6xwhtE75WFgUxgUxPen5KkLcuiVh
+	 qbGi8R1W47DUF3lOw14GBGQ/Q/bNhYT2eMUt7a7AbVFt0N/NmKsqlCsRUzt/AafJl8
+	 yZ/EszELi2tI/TV8vM6aXQYpeEbpbQbof19IsukG+ZXhORb4DxeGwY+E9DI45rhfoX
+	 Aa4ldEEOtKOEd4okWG3e8rzGm0OFcE6Dl/o5dFUl2UM04Cp35AdEZdV3m2tRgT2CpF
+	 nHa9GXut4j91w==
+Date: Fri, 22 Mar 2024 16:42:51 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nirmal Patel <nirmal.patel@linux.intel.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	paul.m.stillwell.jr@intel.com
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20240322213719.GA1376171@bhelgaas>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+	Stuart Hayes <stuart.w.hayes@gmail.com>, linux-pci@vger.kernel.org,
+	linux-leds@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 2/2] PCI/NPEM: Add Native PCIe Enclosure Management
+ support
+Message-ID: <20240322214251.GA1377469@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,43 +58,73 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240322135700.0000192a@linux.intel.com>
+In-Reply-To: <65fdf85bba0e0_4a98a294b2@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-On Fri, Mar 22, 2024 at 01:57:00PM -0700, Nirmal Patel wrote:
-> On Fri, 15 Mar 2024 09:29:32 +0800
-> Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> ...
-
-> > If there's an official document on intel.com, it can make many things
-> > clearer and easier.
-> > States what VMD does and what VMD expect OS to do can be really
-> > helpful. Basically put what you wrote in an official document.
+On Fri, Mar 22, 2024 at 02:30:03PM -0700, Dan Williams wrote:
+> Bjorn Helgaas wrote:
+> > On Tue, Mar 12, 2024 at 10:08:16AM +0100, Mariusz Tkaczyk wrote:
+> > > On Mon, 11 Mar 2024 17:30:06 -0500
+> > > Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+> > > 
+> > > > > > No, Linux doesn't support _DSM. It was proposed in previous
+> > > > > > iterations by Stuart but I dropped it. We decided that it need to be
+> > > > > > strongly rebuild because "pci/pcie" is not right place for ACPI code
+> > > > > > so we cannot register _DSM driver instead of NPEM as it was proposed
+> > > > > > and I don't have _DSM capable hardware to test it.  
+> > > > 
+> > > > I'm not sure I understand why pci/pcie isn't the right place for ACPI code--
+> > > > there are other _DSMs used in PCI code already, and this _DSM is defined
+> > > > in a PCI ECN.
+> > > 
+> > > I looked into internal review history and I found out that I dropped it after
+> > > discussion with Dan Williams:
+> > > 
+> > > > After review and discussion with Dan _DSM extension is dropped.
+> > > 
+> > > Unfortunately, I don't remember what exactly he suggested, I just remembered
+> > > conclusion that it needs to be reworked and I decided to drop it.
+> > > Maybe, I didn't understand him correctly.
+> > > 
+> > > Dan, could you take a look? Do you remember something?
+> > 
+> > Straw man proposal:
+> > 
+> >   - Update this patch so we use NPEM if the device advertises it.
+> > 
+> >   - If/when Linux support for the _DSM is added, we use the _DSM when
+> >     present.  If a device advertises NPEM but no _DSM applies to it,
+> >     we use native NPEM for it.
 > 
-> Thanks for the suggestion. I can certainly find official VMD
-> architecture document and add that required information to
-> Documentation/PCI/controller/vmd.rst. Will that be okay?
+> The current patch matches my last recollection of the discussion, at a
+> minimum do not use the NPEM interface when the _DSM is present. That was
+> the compromise to meet the spirit of the _DSM definition and leave it to
+> folks that care about the _DSM and have hardware to implement and test
+> that support.
 
-I'd definitely be interested in whatever you can add to illuminate
-these issues.
+In the case of an OS that supports native NPEM but not _DSM, I think
+it would be unreasonable for NPEM to stop working just because a new
+firmware release added the _DSM.
 
-> I also need your some help/suggestion on following alternate solution.
-> We have been looking at VMD HW registers to find some empty registers.
-> Cache Line Size register offset OCh is not being used by VMD. This is
-> the explanation in PCI spec 5.0 section 7.5.1.1.7:
-> "This read-write register is implemented for legacy compatibility
-> purposes but has no effect on any PCI Express device behavior."
-> Can these registers be used for passing _OSC settings from BIOS to VMD
-> OS driver?
+> However, I think the strawman is workable if only because base NPEM
+> already has a problem of ambiguity of which NPEM instance in a topology
+> should be used.
 > 
-> These 8 bits are more than enough for UEFI VMD driver to store all _OSC
-> flags and VMD OS driver can read it during OS boot up. This will solve
-> all of our issues.
+> For example an NVME or CXL endpoint could have an NPEM implementation
+> that is superseded by an NPEM instance in its parent downstream port, or
+> another ancestor downstream port / root port.
+> 
+> The fact that the native NPEM may not be the right interface to use in
+> the presence of the _DSM has no specified way to resolve conflicts is at
+> least matched by downstream-port vs endpoint conflict resolution not
+> being specified.
+> 
+> So the spec left a bit of a mess and it is reasonable for Linux to say
+> "just turn on all the NPEMs and hope that userspace knows what it is
+> supposed to do".
 
-Interesting idea.  I think you'd have to do some work to separate out
-the conventional PCI devices, where PCI_CACHE_LINE_SIZE is still
-relevant, to make sure nothing breaks.  But I think we overwrite it in
-some cases even for PCIe devices where it's pointless, and it would be
-nice to clean that up.
+If a device and its parent both advertise NPEM, I dunno how to figure
+out which to use.  Maybe that's a benefit that could come with the
+_DSM.
 
 Bjorn
 
