@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-5006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E074C887064
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 17:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 719AD887067
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 17:09:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 988C4284778
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 16:09:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 273472843F8
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 16:09:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE13F5917D;
-	Fri, 22 Mar 2024 16:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20CAA57312;
+	Fri, 22 Mar 2024 16:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTyOcE6g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fa2YsZns"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA49959141;
-	Fri, 22 Mar 2024 16:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BC659B43;
+	Fri, 22 Mar 2024 16:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711123736; cv=none; b=aGuYt6SlKqwv4J4zGxoXPWVdl9+bhsdJWg2yA5WFdOaIaZnRZJFdjcvFM9DRgRSUaUOh+zulSjFNQrkss0HSqbXsBlrFIwMuF/xPukEbv7J8De1C6qULrLWfOiu/bGloy4biODUsf7opEBrCn8yGU+VfCoTn//0mRb9lj0oaAyg=
+	t=1711123750; cv=none; b=h8fZsUv7xquatgRpTBF3agAPEl8J0Cn40e1+IEQYesRrNuvgeGMoN6wnfHS4oTqqHNGorVDadi0snryXRPSOMy/L35zlcYrXm5abUR9lcIOry9HbZ8i0CEFCSpU3OphlQmcdoS5o+q5HO/Fa1+JWA+u0H0PMzkqYUMPNyPqcDh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711123736; c=relaxed/simple;
-	bh=NJSaAPZZAkhKyCqNhnwgX+0l4XkKuAlLXi79oYjiF9s=;
+	s=arc-20240116; t=1711123750; c=relaxed/simple;
+	bh=F/sqXNXuusfoq5nFRK9dwEPOFu1E0B/ZZnfUgH0lVkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DDzplVr8U+v1+3ocEYxoa/C0RFeP1NmOEPmk2etoVQ9wWPR1W6Pg2cslpzXdAlP+dRIy4XLsAFKOVXjhM8p88zWbP56meHPsMID4bTwR+KrxFUUQkIvZ99riPs5gCGDi3CVBRExFQQXdrs4MJChiHJsX7JHKOg+YQ2Lf2Z7KvWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTyOcE6g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F13C433C7;
-	Fri, 22 Mar 2024 16:08:51 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=kha5ISIzY+IbnSmNEWf4EgwdUKDM0zlnBjU/xB+pj841MUzq4Sf08Ceu0nRndExqsFMNLNF6IZ4s5wjyWo0VJc1ukQfx/8Pgml9Uj9RWPQ+CWb2uZC+b70nRzXv7G2KvqOmA5pbqdr8FORYGqEfOYkULHqSKh2EZHsJtqDg7oNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fa2YsZns; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322B1C433A6;
+	Fri, 22 Mar 2024 16:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711123736;
-	bh=NJSaAPZZAkhKyCqNhnwgX+0l4XkKuAlLXi79oYjiF9s=;
+	s=k20201202; t=1711123749;
+	bh=F/sqXNXuusfoq5nFRK9dwEPOFu1E0B/ZZnfUgH0lVkw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fTyOcE6ge2SqZ3spKyMzoifTLhx/SG9ODWSnXEsev1oe2A6WmsFWuEUpClZ9M4aC7
-	 2wBpDLzFtlOMQh7o6cUD3B2Cbn8k/y22YLzU0DVsPpZWyeMIl6ieYmtuWxggfoOV+X
-	 /a4+V/QwjN2sGS3ZdhyJUk03StQMln+IQrhc7NZXW6ir7SBdOup9C4mz8xIclH2ftp
-	 /yJFI9pfbnE3cFQK2eQ953CMIqjkfy6VkL9jHuueH7NSOmnIrFd+9VzZ6+k5QukCg7
-	 B7B3Gz8riUcqKDuZ27DbXJghTYonvWzaavsfHfaEU2x7b7/tsgB2ZmSTiwX9cS2XzF
-	 Ivza23Of7irqg==
-Date: Fri, 22 Mar 2024 17:08:48 +0100
+	b=fa2YsZnsQGWbd6LtSs6H5aNN6QH0eiSf5N2umA5sLvBVzoec42e9efUOyM3pmJnvR
+	 ssAgWezniuSPisV1K1HOUN3AvZOXO2dnolNNQkZ1zaOSM6eif9E0LhQIp2C4eaXhb1
+	 igZl1eWSpvJu/RRYas0uzHQrpdDAlTC7nv1siruOlVOcW/G/z2aG72m+uzXHieQLqs
+	 hfw7qPfKXkUbD+ZcPGyDqpjDwZm4YhHC5jJ8XY8IDjxIZLDK5gh1ac+FwiGHBY2RIH
+	 ijXweKZh5c08Vtrn1/lrOZrbmtcpRSEPDzlkn7jDpXPL76OG6SbdGZiqoO/n292aRW
+	 Br36xScrOoeDg==
+Date: Fri, 22 Mar 2024 17:09:03 +0100
 From: Niklas Cassel <cassel@kernel.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -55,11 +55,11 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
 	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 03/11] PCI: endpoint: Rename core_init() callback in
- 'struct pci_epc_event_ops' to init()
-Message-ID: <Zf2tEM1ueugQyJfK@ryzen>
+Subject: Re: [PATCH 04/11] PCI: epf-test: Refactor pci_epf_test_unbind()
+ function
+Message-ID: <Zf2tH67WRvOGK7-O@ryzen>
 References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
- <20240314-pci-epf-rework-v1-3-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-4-6134e6c1d491@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,148 +68,128 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240314-pci-epf-rework-v1-3-6134e6c1d491@linaro.org>
+In-Reply-To: <20240314-pci-epf-rework-v1-4-6134e6c1d491@linaro.org>
 
-On Thu, Mar 14, 2024 at 08:53:42PM +0530, Manivannan Sadhasivam wrote:
-> core_init() callback is used to notify the EPC initialization event to the
-> EPF drivers. The 'core' prefix was used indicate that the controller IP
-> core has completed initialization. But it serves no purpose as the EPF
-> driver will only care about the EPC initialization as a whole and there is
-> no real benefit to distinguish the IP core part.
+On Thu, Mar 14, 2024 at 08:53:43PM +0530, Manivannan Sadhasivam wrote:
+> Move the pci_epc_clear_bar() and pci_epf_free_space() code to respective
+> helper functions. This allows reusing the helpers in future commits.
 > 
-> So let's rename the core_init() callback in 'struct pci_epc_event_ops' to
-> just init() to make it more clear.
+> This also requires moving the pci_epf_test_unbind() definition below
+> pci_epf_test_bind() to avoid forward declaration of the above helpers.
+> 
+> No functional change.
 > 
 > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  drivers/pci/endpoint/functions/pci-epf-mhi.c  |  4 ++--
->  drivers/pci/endpoint/functions/pci-epf-test.c |  4 ++--
->  drivers/pci/endpoint/pci-epc-core.c           | 16 ++++++++--------
->  include/linux/pci-epf.h                       |  4 ++--
->  4 files changed, 14 insertions(+), 14 deletions(-)
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 63 ++++++++++++++++++---------
+>  1 file changed, 42 insertions(+), 21 deletions(-)
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index e5d67aec7574..da894a9a447e 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -700,7 +700,7 @@ static void pci_epf_mhi_dma_deinit(struct pci_epf_mhi *epf_mhi)
->  	epf_mhi->dma_chan_rx = NULL;
->  }
->  
-> -static int pci_epf_mhi_core_init(struct pci_epf *epf)
-> +static int pci_epf_mhi_epc_init(struct pci_epf *epf)
->  {
->  	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
->  	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> @@ -881,7 +881,7 @@ static void pci_epf_mhi_unbind(struct pci_epf *epf)
->  }
->  
->  static const struct pci_epc_event_ops pci_epf_mhi_epc_event_ops = {
-> -	.core_init = pci_epf_mhi_core_init,
-> +	.init = pci_epf_mhi_epc_init,
->  };
->  
->  static const struct pci_epc_bus_event_ops pci_epf_mhi_bus_event_ops = {
 > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 751dab5799d5..1dae0fce8fc4 100644
+> index 1dae0fce8fc4..2fac36553633 100644
 > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -746,7 +746,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
+> @@ -686,27 +686,6 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+>  			   msecs_to_jiffies(1));
+>  }
+>  
+> -static void pci_epf_test_unbind(struct pci_epf *epf)
+> -{
+> -	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> -	struct pci_epc *epc = epf->epc;
+> -	struct pci_epf_bar *epf_bar;
+> -	int bar;
+> -
+> -	cancel_delayed_work(&epf_test->cmd_handler);
+> -	pci_epf_test_clean_dma_chan(epf_test);
+> -	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> -		epf_bar = &epf->bar[bar];
+> -
+> -		if (epf_test->reg[bar]) {
+> -			pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
+> -					  epf_bar);
+> -			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+> -					   PRIMARY_INTERFACE);
+> -		}
+> -	}
+> -}
+> -
+>  static int pci_epf_test_set_bar(struct pci_epf *epf)
+>  {
+>  	int bar, add;
+> @@ -746,6 +725,22 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
 >  	return 0;
 >  }
 >  
-> -static int pci_epf_test_core_init(struct pci_epf *epf)
-> +static int pci_epf_test_epc_init(struct pci_epf *epf)
-
-Why have _epc_ init in the name at all?
-
-Isn't
-static int pci_epf_test_init(struct pci_epf *epf)
-
-Enough?
-
-From my perspective, it is the EPF that is initializing
-(by configuring the BARS according to it's liking),
-not the EPC initializing.
-
-
+> +static void pci_epf_test_clear_bar(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +	struct pci_epc *epc = epf->epc;
+> +	struct pci_epf_bar *epf_bar;
+> +	int bar;
+> +
+> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> +		epf_bar = &epf->bar[bar];
+> +
+> +		if (epf_test->reg[bar])
+> +			pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no,
+> +					  epf_bar);
+> +	}
+> +}
+> +
+>  static int pci_epf_test_epc_init(struct pci_epf *epf)
 >  {
 >  	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
->  	struct pci_epf_header *header = epf->header;
-> @@ -814,7 +814,7 @@ static int pci_epf_test_link_up(struct pci_epf *epf)
+> @@ -885,6 +880,22 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
+>  	return 0;
 >  }
 >  
->  static const struct pci_epc_event_ops pci_epf_test_epc_event_ops = {
-> -	.core_init = pci_epf_test_core_init,
-> +	.init = pci_epf_test_epc_init,
->  };
->  
->  static const struct pci_epc_bus_event_ops pci_epf_test_bus_event_ops = {
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index f602f08a11a2..5a522b2842e2 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -732,9 +732,9 @@ void pci_epc_linkdown(struct pci_epc *epc)
->  EXPORT_SYMBOL_GPL(pci_epc_linkdown);
->  
->  /**
-> - * pci_epc_init_notify() - Notify the EPF device that EPC device's core
-> - *			   initialization is completed.
-> - * @epc: the EPC device whose core initialization is completed
-> + * pci_epc_init_notify() - Notify the EPF device that EPC device initialization
-> + *                         is completed.
-> + * @epc: the EPC device whose initialization is completed
->   *
->   * Invoke to Notify the EPF device that the EPC device's initialization
->   * is completed.
-> @@ -749,8 +749,8 @@ void pci_epc_init_notify(struct pci_epc *epc)
->  	mutex_lock(&epc->list_lock);
->  	list_for_each_entry(epf, &epc->pci_epf, list) {
->  		mutex_lock(&epf->lock);
-> -		if (epf->epc_event_ops && epf->epc_event_ops->core_init)
-> -			epf->epc_event_ops->core_init(epf);
-> +		if (epf->epc_event_ops && epf->epc_event_ops->init)
-> +			epf->epc_event_ops->init(epf);
->  		mutex_unlock(&epf->lock);
->  	}
->  	epc->init_complete = true;
-> @@ -761,7 +761,7 @@ EXPORT_SYMBOL_GPL(pci_epc_init_notify);
->  /**
->   * pci_epc_notify_pending_init() - Notify the pending EPC device initialization
->   *                                 complete to the EPF device
-> - * @epc: the EPC device whose core initialization is pending to be notified
-> + * @epc: the EPC device whose initialization is pending to be notified
->   * @epf: the EPF device to be notified
->   *
->   * Invoke to notify the pending EPC device initialization complete to the EPF
-> @@ -772,8 +772,8 @@ void pci_epc_notify_pending_init(struct pci_epc *epc, struct pci_epf *epf)
+> +static void pci_epf_test_free_space(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +	struct pci_epf_bar *epf_bar;
+> +	int bar;
+> +
+> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> +		epf_bar = &epf->bar[bar];
+> +
+> +		if (epf_test->reg[bar]) {
+> +			pci_epf_free_space(epf, epf_test->reg[bar], bar,
+> +					   PRIMARY_INTERFACE);
+> +		}
+
+Nit: No need for braces here. (Just like you don't have braces in
+pci_epf_test_clear_bar()).
+
+Like you said in the other thread, this commit clashes with changes done
+in my series.
+
+However, except for the small nit, the commit looks good:
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+
+
+> +	}
+> +}
+> +
+>  static void pci_epf_configure_bar(struct pci_epf *epf,
+>  				  const struct pci_epc_features *epc_features)
 >  {
->  	if (epc->init_complete) {
->  		mutex_lock(&epf->lock);
-> -		if (epf->epc_event_ops && epf->epc_event_ops->core_init)
-> -			epf->epc_event_ops->core_init(epf);
-> +		if (epf->epc_event_ops && epf->epc_event_ops->init)
-> +			epf->epc_event_ops->init(epf);
->  		mutex_unlock(&epf->lock);
->  	}
+> @@ -940,6 +951,16 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	return 0;
 >  }
-> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> index 1271e1e00bbd..ff8304e72f8e 100644
-> --- a/include/linux/pci-epf.h
-> +++ b/include/linux/pci-epf.h
-> @@ -69,10 +69,10 @@ struct pci_epf_ops {
 >  
->  /**
->   * struct pci_epc_event_ops - Callbacks for capturing the EPC specific events
-> - * @core_init: Callback for the EPC initialization event
-> + * @init: Callback for the EPC initialization event
->   */
->  struct pci_epc_event_ops {
-> -	int (*core_init)(struct pci_epf *epf);
-> +	int (*init)(struct pci_epf *epf);
->  };
->  
->  /**
+> +static void pci_epf_test_unbind(struct pci_epf *epf)
+> +{
+> +	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
+> +
+> +	cancel_delayed_work(&epf_test->cmd_handler);
+> +	pci_epf_test_clean_dma_chan(epf_test);
+> +	pci_epf_test_clear_bar(epf);
+> +	pci_epf_test_free_space(epf);
+> +}
+> +
+>  static const struct pci_epf_device_id pci_epf_test_ids[] = {
+>  	{
+>  		.name = "pci_epf_test",
 > 
 > -- 
 > 2.25.1
