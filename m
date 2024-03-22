@@ -1,152 +1,120 @@
-Return-Path: <linux-pci+bounces-5017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5018-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BD8D8873C5
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 20:21:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B67E8873ED
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 20:30:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD4161C22705
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 19:21:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 274E8284DED
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Mar 2024 19:30:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A611979933;
-	Fri, 22 Mar 2024 19:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F16279B86;
+	Fri, 22 Mar 2024 19:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kr2PNy6c"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GI4W6i26"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB6479931;
-	Fri, 22 Mar 2024 19:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7787A157;
+	Fri, 22 Mar 2024 19:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711135292; cv=none; b=MboID71zkYqm8agw98Fv0Iics8e9MFMl+x8ayYV73+Ay03rXngb546+vM3GKzvwWP75IXMUk6fAHJxtjrFh7opVMYchykEs7IM+b5VMnqQzHO1nyaVBUEbCOQy789CKfNtIliC9ryxZ4TAb2U32piBZHdNEakweZO/BdJXnDnVg=
+	t=1711135813; cv=none; b=giOnuV2bUfdRzRm399Re2dvoBREVgcfnEo5Tv9xeGUu7i5emumD1erKCPKu33RHL2aXQuABPdX2hpu2IFmKp4rYJRFT/Pm5REQ0yQc2GrCEIZ5JsGxZxuWKeWF8tchpfEwsPTmq+nVpJEGc/fLCWIDrvpx0DVt4ID1jRe79t/ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711135292; c=relaxed/simple;
-	bh=8GHI0o7wqi9kjX1y8O2b7tkzv9Bz9lBCxkn7jE8Ae1A=;
+	s=arc-20240116; t=1711135813; c=relaxed/simple;
+	bh=9R6ki8LkQLAWyMMmV+81/0KXBdxdkaUt91oUyJxHRXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HMBaCN5iy9bxRmLkKdjZByAOQI0xf/0KNg8OL8vmXsEu8/wlL4wytZiPtu0YZsRAe+SndihIFt4wX71T+VaPaONN95QsRbNb1rZJOongkGHbAzjkNDYpzGZvmzTLrfY1eYOxXpzI+Yf5HGMwCKOfLPF05ha8yNdy2P2CZeoP8L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kr2PNy6c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C82CC43390;
-	Fri, 22 Mar 2024 19:21:32 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=IYiU374NgAm5WgNqJKJUa0icEVzud0W4KOGo5y5dGAGfSCB9pcJ/G02TB71+Uk9ygIdUaQfIBo2ikyZyPUEdqVIXHFPIkT9bJRcdl+CehvksJCft5MmyW+alRyMYOv9yoCEdxO+hR9QsBTTXXKfY5xfLxtxAJvylCD2EO2G00Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GI4W6i26; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D41C433F1;
+	Fri, 22 Mar 2024 19:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711135292;
-	bh=8GHI0o7wqi9kjX1y8O2b7tkzv9Bz9lBCxkn7jE8Ae1A=;
+	s=k20201202; t=1711135813;
+	bh=9R6ki8LkQLAWyMMmV+81/0KXBdxdkaUt91oUyJxHRXQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=kr2PNy6cevo37THCTvYRS4j8RR3WxYeJbQPxc/b/04Kk7Hlci/rpk0114furSEml3
-	 1DypHJR8edT+SGLCcrFeL6CyzoXdk50Ln7aZIvsuBZ8mFMElt8IqHUnJ+bbdUuTZhk
-	 VRkzv8WuOQovxYxM3jMH+G8+CLTATAlIvysGlSWcnwL2ZY/vHJ7DpZsytlh5uQq7MH
-	 KnVUqUs8gimL8o35vHp3zcXdF3zG6buoBj/hrJbU92pXbMR9obub58UT3iXPRY6M3L
-	 eoAzqohI33/w9ajQLaLz7pbsrWVTsWmwVy993XytK6CEgbbE5gYfQprz3/MMuOd96F
-	 +sJfKST5IHiJQ==
-Date: Fri, 22 Mar 2024 14:21:30 -0500
+	b=GI4W6i26GH4YKoxcLI7lQ8yf1CYz3gnsVS5q/50obT5c+RAjHWdIx+1+1fcYFuMSK
+	 z7tq2Hy8gsByyk1C6HLUmIdEjEMjPlAEd5SPyoRNSsS1HUrAS8NtMtMQaTjVj8XtIP
+	 GfI5wwIhfK2ZdvFH8yfESIP4RXcrOtJGRVvTmGJafpDdRsj5RvAbXWu2XtvMvItr/Z
+	 Zoq9QazCmln///YbTsHQqQmawt8pLZ8s+57149iivVTAWIDAH/W5Cm1wZubwMH+tEE
+	 0i08O00EIoJelk5Ubc024aZSDXEmpIUnVRa35wSfyaEC/x0wB3d6Rabg6Z8TigwMBO
+	 GVbz6krwT5hCg==
+Date: Fri, 22 Mar 2024 14:30:11 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <mani@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	niklas.cassel@wdc.com, bhelgaas@google.com,
-	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
-	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, robh@kernel.org
-Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
- interpreted as a free ATU slot
-Message-ID: <20240322192130.GA1367450@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH 3/4] PCI: Add TLP Prefix reading into pcie_read_tlp_log()
+Message-ID: <20240322193011.GA701027@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zf0i1X5fg-E59NWx@ryzen>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240206135717.8565-4-ilpo.jarvinen@linux.intel.com>
 
-On Fri, Mar 22, 2024 at 07:19:01AM +0100, Niklas Cassel wrote:
-> On Fri, Mar 22, 2024 at 10:56:23AM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 21, 2024 at 01:07:32PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Mar 21, 2024 at 10:43:45PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
-> > > > > dw_pcie_ep_inbound_atu()
-> > > > > {
-> > > > > 	...
-> > > > > 	if (!ep->bar_to_atu[bar])
-> > > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
-> > > > > 	else
-> > > > > 		free_win = ep->bar_to_atu[bar];
-> > > > > 	...
-> > > > > }
-> > > > > 
-> > > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
-> > > > > will return 6 when second time call into this function if atu is 0. Suppose
-> > > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
-> > > > > 
-> > > > > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
-> > > > > it have not allocate atu to the bar.
-> > > > 
-> > > > I'd rewrite the commit message as below:
-> > > > 
-> > > > "The mapping between PCI BAR and iATU inbound window are maintained in the
-> > > > dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
-> > > > BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
-> > > > existing mapping in the array and if it is not found (i.e., value in the array
-> > > > indexed by the BAR is found to be 0), then it will allocate a new map value
-> > > > using find_first_zero_bit().
-> > > > 
-> > > > The issue here is, the existing logic failed to consider the fact that the map
-> > > > value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
-> > > > '0' as the map value for BAR0 (note that it returns the first zero bit
-> > > > position).
-> > > > 
-> > > > Due to this, when PERST# assert + deassert happens on the PERST# supported
-> > > > platforms, the inbound window allocation restarts from BAR0 and the existing
-> > > > logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
-> > > > fact that it considers '0' as an invalid map value.
-> > > > 
-> > > > So fix this issue by always incrementing the map value before assigning to
-> > > > bar_to_atu[] array and then decrementing it while fetching. This will make sure
-> > > > that the map value '0' always represents the invalid mapping."
-> > > 
-> > > This translates C code to English in great detail, but still doesn't
-> > > tell me what's broken from a user's point of view, how urgent the fix
-> > > is, or how it should be handled.
-> > > 
-> > > DMA doesn't work because ATU setup is wrong?  Driver MMIO access to
-> > > the device doesn't work?  OS crashes?  How?  Incorrectly routed access
-> > > causes UR response?  Happens on every boot?  Only after a reboot or
-> > > controller reset?  What platforms are affected?  "PERST# supported
-> > > platforms" is not actionable without a lot of research or pre-existing
-> > > knowledge.  Should this be backported to -stable?
-> > 
-> > Severity is less for the bug fixed by this patch. We have 8 inbound iATU windows
-> > on almost all of the platforms and after PERST# assert + deassert, BAR0 uses map
-> > '6' instead of '0'.
-> > 
-> > This has no user visibility since the mapping will go fine and we have only 6
-> > BARs. So I'd not mark this as as critical fix that needs special attention.
-> 
-> So we will have 6 mappings configured, but only 5 BARs, so two mappings for
-> BAR0. The iATU looks at them in order, so index 0 will override index 6.
+On Tue, Feb 06, 2024 at 03:57:16PM +0200, Ilpo Järvinen wrote:
+> pcie_read_tlp_log() handles only 4 TLP Header Log DWORDs but TLP Prefix
+> Log (PCIe r6.1 secs 7.8.4.12 & 7.9.14.13) may also be present.
 
-Sounds like we dodge the bullet as long as the mappings for BAR 0 are
-identical, which doesn't feel like much comfort.
+s/TLP Header Log/Header Log/ to match spec terminology (also below)
 
-> We are lucky that the endpoint subsystem does not clean up allocations properly
-> right now (you have an outstanding series which fixes this).
-> 
-> If the endpoint subsystem did clean up resources properly, we would DMA to the
-> area that was previously allocated for BAR0, instead of the new area for BAR0.
+> Generalize pcie_read_tlp_log() and struct pcie_tlp_log to handle also
+> TLP Prefix Log. The layout of relevant registers in AER and DPC
+> Capability is not identical but the offsets of TLP Header Log and TLP
+> Prefix Log vary so the callers must pass the offsets to
+> pcie_read_tlp_log().
 
-This is the right level of abstraction for the commit log -- sounds
-like there's some reset scenario where the pre-reset iATU windows are
-not cleared out and we reallocate iATU windows, and we end up using
-one of the stale windows instead of the new one, which could lead to
-DMA to the wrong area.  That incorrect DMA sounds like data corruption
-in the right circumstances.
+s/is not identical but/is identical, but/ ?
 
-Of course it can *also* include some detail about the mechanism of why
-that stale entry still exists and when it can be used.
+The spec is a little obtuse about Header Log Size.
+
+> Convert eetlp_prefix_path into integer called eetlp_prefix_max and
+> make is available also when CONFIG_PCI_PASID is not configured to
+> be able to determine the number of E-E Prefixes.
+
+I think this eetlp_prefix_path piece is right, but would be nice in a
+separate patch since it's a little bit different piece to review.
+
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+> @@ -11336,7 +11336,9 @@ static pci_ers_result_t ixgbe_io_error_detected(struct pci_dev *pdev,
+>  	if (!pos)
+>  		goto skip_bad_vf_detection;
+>  
+> -	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG, &tlp_log);
+> +	ret = pcie_read_tlp_log(pdev, pos + PCI_ERR_HEADER_LOG,
+> +				pos + PCI_ERR_PREFIX_LOG,
+> +				aer_tlp_log_len(pdev), &tlp_log);
+>  	if (ret < 0) {
+>  		ixgbe_check_cfg_remove(hw, pdev);
+>  		goto skip_bad_vf_detection;
+
+We applied the patch to export pcie_read_tlp_log(), but I'm having
+second thoughts about it.   I don't think drivers really have any
+business here, and I'd rather not expose either pcie_read_tlp_log() or
+aer_tlp_log_len().
+
+This part of ixgbe_io_error_detected() was added by 83c61fa97a7d
+("ixgbe: Add protection from VF invalid target DMA"), and to me it
+looks like debug code that probably doesn't need to be there as long
+as the PCI core does the appropriate logging.
 
 Bjorn
 
