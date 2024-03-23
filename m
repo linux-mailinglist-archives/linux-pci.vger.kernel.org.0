@@ -1,261 +1,200 @@
-Return-Path: <linux-pci+bounces-5028-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5029-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DAA08875FF
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 01:17:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5EF088760A
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 01:22:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53523281C25
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 00:17:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4ABEF1F21A78
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 00:22:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C51437C;
-	Sat, 23 Mar 2024 00:17:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3456638F;
+	Sat, 23 Mar 2024 00:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i7RJa3zi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HmwdVPgT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1D97F;
-	Sat, 23 Mar 2024 00:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711153065; cv=fail; b=l6N679660/yPs/NK/tmgebF7a6v9D3F67a7FqP33bJvIL3ozfYhLXrD1aiA6TdtwqI1ZVx2m6NSHGOfcPmWo676uFCqOhS6nOvpvPyofnMWGR8iWuYkg8jQGO+Ds5ul2NVLY4yM+eXc7mhleJ3s41WeUJIdxpHJwj8l19moiwuw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711153065; c=relaxed/simple;
-	bh=ZtKBLB8eDt+56ui+BCwpdNRuGUSDSpmBGV7gu0tr00I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=V1z52il2ky/qq/K6Wi5AATTH6KR+GuHXaB0I0LFjs7m3pB+tyNjQKI0w6vh3DHZoJTxqT9EDVVTkYA8Bn7hp3nZlo9L/jkXmFxtVMsuJo2vC3oJi0rln95u7t/1BL2QCPfu/GvP7rj2kpkx80VhX4PC9hh/JzXNBaO3t3C26Lt0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i7RJa3zi; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711153063; x=1742689063;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ZtKBLB8eDt+56ui+BCwpdNRuGUSDSpmBGV7gu0tr00I=;
-  b=i7RJa3ziKO0kZkWoPUKg/UT9KK6ihSVQ4B8tqX+NaZGQDhDqC8VoDCYV
-   NfRCkPj5z6hbFZ+CCNdnos3TAW5AS8qFWTkumVB5+uv6Clp61cVARJptD
-   dEtdd6eNPwoVVNe00iXqQKx5ar+lFmDNLniQtgjclqClzeml55bSlfGR3
-   Hkw30dQoqBGpW4AexNVrI9WRIX9TRlEZ63dbFGVTo3dvPhUjLnRqnEuwS
-   2/n2SXgYd4yID3/oaVma2tycbWenbnw0QY3r3P/cY3/Jluf7lgD+9+P8x
-   ZbwpvMkzuHDholewkqIdn4rpmCRqSqNgZ2BoxLvarnb5vgRWRSBb1hXa9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11021"; a="23711927"
-X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
-   d="scan'208";a="23711927"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2024 17:17:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,147,1708416000"; 
-   d="scan'208";a="14979845"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Mar 2024 17:17:41 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 22 Mar 2024 17:17:40 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 22 Mar 2024 17:17:40 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 22 Mar 2024 17:17:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j33H9dQlOjAS0QcFSdwhNg553lGt+pKTgXtaIzIb1z92wBgt8YVg9RRWNtHvNJDcnFPXH/NTGn87K0Z488EHRx1qaWSKZQ2pjtjngcy1WwJmENyfP+xfPPovKBGIlQG9ktWycrjWWGy1oIzRJ/ASXiWaSFpjtC9XKNIaLuGZhtvR2fjAFPvP3OSpTKmX9+ON0rh0rJLhnWbo8tWGgRO3YED6/CJYOtr7HnS2r6W/5bPAMlFWQUdY1eN+Opa+ccmYTl6PlstbyBrZHq4FR2JCAn1NHS0SSbu3hmpcPu06Zc7QotZce715oGAuefPlXE3dqfaQ9dmUPT6HX3K51r7ajw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mz1vWrpD4d194oHM88iKgenwnNhcpFXCvnaMHbRYmK0=;
- b=DY1sRC9DiTGaApnno6W3HFbQ/3JaZRDbgsT+QhlI0Ch+uMiB/Q6J4yXFxpL/Ryq1TrEMDnmyyt93vbFswTLLKXQe2iaQYmAMQJCBtPNM4AQk6JIfNp8SL6T/KJNHYpuNtCnmF5vUtYJrvU+ku99pEApYdeWBnamQpnJYfiHAZt9c3ojA3Zvern2AynEIseVwkWyVLBf78UQ3prL90+/iuN654nfD/l5Q7lZdsGXtKdVn+WqnAr6LBVmWiUOiLARjWLSdHic3ICTjY6qgUdOBFXiHoAr5S+y8czYSBv05vG/VthyFc9i3A9zkuoEOkQzluunRtdsnImEmSDU1BjOV9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY5PR11MB6318.namprd11.prod.outlook.com (2603:10b6:930:3e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Sat, 23 Mar
- 2024 00:17:33 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.023; Sat, 23 Mar 2024
- 00:17:33 +0000
-Date: Fri, 22 Mar 2024 17:17:30 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>, "Williams, Dan J"
-	<dan.j.williams@intel.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC: Bjorn Helgaas <bhelgaas@google.com>, "Weiny, Ira" <ira.weiny@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, "Brandeburg, Jesse"
-	<jesse.brandeburg@intel.com>, Ilpo =?iso-8859-1?Q?J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, "Wunner, Lukas" <lukas.wunner@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>
-Subject: RE: [PATCH] cleanup: Add usage and style documentation
-Message-ID: <65fe1f9aadf51_2690d2948f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
- <BN9PR11MB52764D455B465E7C69F3A4C38C312@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52764D455B465E7C69F3A4C38C312@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: MW3PR06CA0007.namprd06.prod.outlook.com
- (2603:10b6:303:2a::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34436385
+	for <linux-pci@vger.kernel.org>; Sat, 23 Mar 2024 00:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711153359; cv=none; b=hjPOhTilpTX5Y3bQ+QE1Q23vQKsLB7uiYKFtZld3q+dHVFKSxsIyDb7EATmNdzqthcfYVN7CLFIVI8e38xNP2dv03pFDT0dsfjpQ1F8gnz0Dd7HylnPTABO4ET83NxUr6/YtH/EdWDMi8bN4X1sNcD4DEwBJ/hfxhp0NL7v/0Ps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711153359; c=relaxed/simple;
+	bh=L7+9l9T2QmTtHUT05szPg/MIy2qIavylZgBbehnqygI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c0rGkULaIRrADTszwZg/WU3toiuGmPJ73RC4EG2JU9LnCGmCSeojCBAQvC0xBy9nwHUxva0sORRVyG72OnPaKzxQnjTHEGeQiJvfG6u85AwSVMbICFDiS0V8GV3wowcma4iY4fcyD9+XI+LwDPtoYWg1YX4VteS4k5DwtUvdGyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HmwdVPgT; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a4707502aafso459040866b.0
+        for <linux-pci@vger.kernel.org>; Fri, 22 Mar 2024 17:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711153355; x=1711758155; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=58yjr++p7fDA387lI742mHf4CyLdjO1DHyQT9HaMHKk=;
+        b=HmwdVPgTJ/W2Jd/dDiaSqxru72XoNkZzauNZnd1ubtiPyyz1C7q94lWyirBPj1iLsW
+         6zHMSqNnlEV//DiUmlhzZAXKccnIplQEC3f4nZpqxGEwk1ac1hCZIZqwx1q8lvTz6kv4
+         KnszWl3eckuyQuQkhBApDJgYLz62GbFH95tNqNElW4V24oqXlBZP81RWXRLSTMsRMct4
+         285ZDcYpaUXuVJYXPO/oSL8vUceazev0YK4348lErh0/gA139aaG8aPotBzomiLHp5nW
+         vt2BUAjdMoZSuC89u+IznPzBCk8Viv8tliCJ/Bv/CheEJetgkolMgR8vWzvzmEpKwJux
+         Pv4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711153355; x=1711758155;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=58yjr++p7fDA387lI742mHf4CyLdjO1DHyQT9HaMHKk=;
+        b=DnvhFB80e/m717WNkOW/FPwGDZGAzHCMB1JdzxZCweLz1bJVa8DoKvFpOE2T4O2bZK
+         H8Wrk2MSxJEr236O/pWfitAWIcITUGNz0hgFDeLhwv5m3aLEVaKxfiRPQ3rbtCBDKqwB
+         /GP5s54E9AZwISdRVgZl6hhuvPjafrRFveYHfOOoYMK6l1hR6fTSl6BDLkeMwXPVUY5d
+         0uQnVXwcvzyAMi52Ch+WYET9Edv9fpefk9fneqxvTF+MocJPlozSEhccXdwHikZcZTgT
+         NtokMkva4Fj3Kq3pWXg4JG6043I9leEav/nwga7BQBJhQWptNuE6WlHt4ewq1h8OVof9
+         y8pA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjs2u4wLUaqziiEAjtqmY5ZoICalzMLi23ocGcPPNErSfOBnmCWmEayAnJFwt+cfEjldHJxXTWnwsW5bwcCLIiYVFwoVFOMbyJ
+X-Gm-Message-State: AOJu0YxwbcAphrl+JTrpkHMeb3bEHq6weNlvoaSCG6pQ4XIiZDYTqBzO
+	SKDKQSk6WiXPNugohC2tD0k1lO+bUn7e2kCXm0pt6XnsbIbSlCn/D7cw9uwVbts=
+X-Google-Smtp-Source: AGHT+IHeVso4/sOgvQ74mwbg2tg2J4qx5kBhIl3p69FrctbsvC/8FGL2ESxX0Mi2glRRdSW0ckaveA==
+X-Received: by 2002:a17:907:7625:b0:a46:fb47:7752 with SMTP id jy5-20020a170907762500b00a46fb477752mr395711ejc.23.1711153355480;
+        Fri, 22 Mar 2024 17:22:35 -0700 (PDT)
+Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id l14-20020a1709067d4e00b00a46af0fbf5dsm344011ejp.103.2024.03.22.17.22.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 17:22:35 -0700 (PDT)
+Message-ID: <d9616001-e64e-4fe6-ba53-4dc90555d226@linaro.org>
+Date: Sat, 23 Mar 2024 01:22:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6318:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd26b5bc-b00d-48ec-7b9c-08dc4acea2ac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1kkJPu+aPTg9sSzNiXXw99/wMNfnLUyCBa4ZKdhBCZzZueeejeWuNHSvXwq+b1WBt+rYoD1eYAG60bILSznYV5UNwXKgS3pKWcgxPf/FqtQHiIXM1JfkQTlPH32Zep2/8MWJ/fztol8zK6eM4H8eltgoJLl9X7aeHTyEV6U3m83R/0DQ0u5Zy9iZFB9VHalaU7RJLU7uKGc4b2yblooax4M5nJ0ehP3tyI+PXGmvOQH1JCmtNYEwKJ/IBDzSeZIBembQ2qV/bRjQmWFq1dmGvsMbjqU42AUqf1Dm9fC78LyY8pTKeaoLfrtUiikT/9r6UCtjMbQGNY5Bzvivi75hR3NYH8iAJNwi2fMGREvbK7/6tuGavILIeMlpdMlwt+0xM/w4JolpwvGt7syDkDu2SIvDFqbuzo1tWEkymw4XxvCKwYa5EH/S60tRjSjPFcl8PwLAQzh1lK9/MCDe+GTCUixP0mSoBI1izzhK+Y4u0t/6ibu9MITD5SrnTUJjNCIP7EQQg1zL/U13PbN5quwUOyUDcUbwfvbzgPKT89oYn0pw9ZjEoO1wDEg1pWeBsaiEAMFUHQqAWVx3XmLcN++SnllgYbkrzfhV55uWjidRembbhYuagfSig+t66S3FaSDmqGxnGJPZf7s1wg8UTFN3KlnJIr2DpVVlBVEsUfLOsNU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?d1hyCasr4EK7bzOhmW4yHiNseQqqhtt21cuq9nEY5P1SdyyuMX/kZU9Csuci?=
- =?us-ascii?Q?QNsUo86EzEMvkIPYW+4/zOykrgHhTbCcknCjd0wniZ8FT98vhS6afsft+B0d?=
- =?us-ascii?Q?PyIlUA/kUJFDsu3G80ftV/JTa/dbxvl17u9tHSPKGy+seaeKvyUt5xdHLf6E?=
- =?us-ascii?Q?B8Dp3nJgXmCu5R/nmxJfRVDQhhMr+TywrK3wpjerWzMlh6bVpkXxpPeVV/NJ?=
- =?us-ascii?Q?/QQcxvHKpwnEMmGSZZvxgjVCu0K5OosfZxY5ACAvtJIwFYbn1+6jFSW7a7dk?=
- =?us-ascii?Q?2/3cyDqlbPj+zvQ1i9mvnfJoGBsVwDCWBRoTGFeBgXUWID6C8y7GrYpuSssM?=
- =?us-ascii?Q?/azQ9lo7ielaarlUL8EEPT4PkKY56Eh27HlFEeUlhYDZeMoFx+101QNBWkHh?=
- =?us-ascii?Q?cuhdTlOd0fBpwrZY09f79qoIkURKAenahOK4+5FDcmK8K9fF3raLNzMQ8imZ?=
- =?us-ascii?Q?49Yf+9PE3Id3K7Yb6y1RbT6qVI4x25CGKbOaI/bTfR5blkjQGL4rJF59o3U4?=
- =?us-ascii?Q?/GX2WraKfn+lASP8UXhiwtbunPme36jdeKZF8jThKLqpOCkQroFzTizMMzTN?=
- =?us-ascii?Q?I88fqvvo+bqDmu3fnXJL6KQJ6kbqMOjI4uHxyUo/dZ4zIo5Wu6KR4S83JBZM?=
- =?us-ascii?Q?teTXrNygrDSx0k59+ULeIzF1/Y8/UTM2zZBHy8M+E6+f5c3pGa/y8sFT2vMz?=
- =?us-ascii?Q?dU1rr+xyNRFlg6aAPdu4jILsx5iE8Rhd8DSzxHYW7VqiiELTrlNkhdIaLhRx?=
- =?us-ascii?Q?qAe9iYUSo1Fqi7NnOdRBjf5gRQ2U5is9ia7eQfg6N+8CaodXwmCL1ggWiFwh?=
- =?us-ascii?Q?uyqopswZ+8KlIvd+nxzQL/i2RfoEbWJk0nmIY4Den+oIGZOcjAJk03oGT9g7?=
- =?us-ascii?Q?/kjCm4671MdqIHsM+gDihpWLQKZjcH4fLLjSyKD9YOqngDVJIyRu+LxEetJs?=
- =?us-ascii?Q?mbBjt+WW86AHeQ6Lq951fZFSmcr1CZSyzpVdQJ9lmDXlIWg5DeiUb6MDvY5g?=
- =?us-ascii?Q?iIUY4x5yFzyAWf9jf1QvFI7NLSCCKh1vE1yazHYSxFMV31/Jo3qAPt6cfhSk?=
- =?us-ascii?Q?cii4q9oDrPEV03Vy1hF8W0nPNBzsaFG4lck+jQnFoiKL9LoTPgzdwTnv24uh?=
- =?us-ascii?Q?WvHYKPddanSEpzDA9UaV6n8LtMzSVjajI2PGz9rhd9foIkAa08QRkuYre/oE?=
- =?us-ascii?Q?SMTwVf2cRI7cImoHGrtbuc94IYo9hNL7G9K69T/P29ZDWiIYM8kIEeF9ZLjt?=
- =?us-ascii?Q?IyLsZSLO7fKV2hiDMb0a/Hv+AxkIMXp+sEAqQO3TVGvqRTe6b5BAdor6iz/F?=
- =?us-ascii?Q?n7eTUKtXiGRio+IIhgGUuBzFknMlBr0CFMMzgEa6zvUNcnf4BUzNmAmkT+Vp?=
- =?us-ascii?Q?93VV54ATgy8+e67cB5GIqIpzsko+KDD43/4eqGsYCEaemniyjqpHwN4UjlZR?=
- =?us-ascii?Q?4kfKD7nJkEBqwoLDChDl4j9RA73vbJEQFjxBgd+MbsMNBGCvVT3JRuJI/aBs?=
- =?us-ascii?Q?g5ezdO6eQYF12LmzL4eXta6/razr1KagE4anl230Evsav9dDgMiS7IH+kXTI?=
- =?us-ascii?Q?vhEmWZxYQc5ItQ9LUXfDV/Q96sjsIOoF1FXzRQ+7HC1Xika2N6ELzA6/U5Ok?=
- =?us-ascii?Q?rA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd26b5bc-b00d-48ec-7b9c-08dc4acea2ac
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2024 00:17:33.4774
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /q8ltKH0m/4ReaGxOUZJcvt3T2or3nvpweWH0fr5N2I70NKnefb5FHA7y5bY02sQhBqDSJQ3k0PvFwVBw8eCOuaIMf+mnrAgeEoiqMO0WA0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6318
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] PCI: qcom: Add equalization settings for gen4
+Content-Language: en-US
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
+ agross@kernel.org, andersson@kernel.org, mani@kernel.org
+Cc: quic_msarkar@quicinc.com, quic_kraravin@quicinc.com,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ Serge Semin <fancer.lancer@gmail.com>,
+ Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20240320071527.13443-1-quic_schintav@quicinc.com>
+ <20240320071527.13443-3-quic_schintav@quicinc.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240320071527.13443-3-quic_schintav@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Tian, Kevin wrote:
-> > From: Dan Williams <dan.j.williams@intel.com>
-> > Sent: Thursday, March 21, 2024 6:05 AM
-> > + *
-> > + * Note that unwind order is dictated by declaration order. That
-> > + * contraindicates a pattern like the following:
-> > + *
-> > + * .. code-block:: c
-> > + *
-> > + *	int num, ret = 0;
-> > + *	struct pci_dev *bridge = ctrl->pcie->port;
-> > + *	struct pci_bus *parent = bridge->subordinate;
-> > + *	struct pci_dev *dev __free(pci_dev_put) = NULL;
-> > + *
-> > + *	pci_lock_rescan_remove();
-> > + *
-> > + *	dev = pci_get_slot(parent, PCI_DEVFN(0, 0));
-> > + *
-> > + * In this case @dev is declared in x-mas tree style in a preamble
-> > + * declaration block. That is problematic because it destroys the
-> > + * compiler's ability to infer proper unwind order. If other cleanup
-> > + * helpers appeared in such a function that depended on @dev being live
-> > + * to complete their unwind then using the "struct obj_type *obj
-> > + * __free(...) = NULL" style is an anti-pattern that potentially causes
-> > + * a use-after-free bug. Instead, the expectation is this conversion:
-> > + *
+On 20.03.2024 08:14, Shashank Babu Chinta Venkata wrote:
+> GEN3_RELATED_OFFSET is being used as shadow register for generation4 and
+> generation5 data rates based on rate select mask settings on this register.
+> Select relevant mask and equalization settings for generation4 operation.
 > 
-> an example of dependent cleanup helpers might be helpful to
-> better understand this expectation?
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+> ---
 
-The simplest example I can think of to show the danger of the
-"__free(...) = NULL" causing cleanup inter-dependency problems is the
-following:
+[...]
 
----
-LIST_HEAD(list);
-DEFINE_MUTEX(lock);
+> +
+> +#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
+> +#define GEN3_EQ_FMDC_T_MIN_PHASE23_MASK         GENMASK(4, 0)
+> +#define GEN3_EQ_FMDC_N_EVALS_MASK               GENMASK(9, 5)
+> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_MASK  GENMASK(13, 10)
+> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_MASK	GENMASK(17, 14)
+> +#define GEN3_EQ_FMDC_N_EVALS_SHIFT			5
+> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_SHIFT		10
+> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_SHIFT	14
 
-struct object {
-        struct list_head node;
-};
+The beauty of bitops.h is you no longer need to define these shifts..
+Just use FIELD_GET/FIELD_PREP with the field! Please also drop _MASK
+from the leftover definitions.
 
-static struct object *alloc_add(void)
-{
-        struct object *obj;
+> +void qcom_pcie_cmn_set_16gt_eq_settings(struct dw_pcie *pci)
+> +{
+> +	u32 reg;
+> +
+> +	/*
+> +	 * GEN3_RELATED_OFF is repurposed to be used with GEN4(16GT/s) rate
+> +	 * as well based on RATE_SHADOW_SEL_MASK settings on this register.
+> +	 */
 
-        lockdep_assert_held(&lock);
-        obj = kfree(sizeof(*obj), GFP_KERNEL);
-        if (obj) {
-                LIST_HEAD_INIT(&obj->node);
-		list_add(obj->node, &list):
-	}
-        return obj;
-}
+Given this comment and the commit message, should setting of this field
+be factored out to a function that would accept a generation argument?
 
-static void remove_free(struct object *obj)
-{
-        lockdep_assert_held(&lock);
-        list_del(&obj->node);
-        kfree(obj);
-}
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+> +	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+> +	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+> +	reg |= (0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
+> +	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+> +	reg &= ~GEN3_EQ_FMDC_T_MIN_PHASE23_MASK;
+> +	reg &= ~GEN3_EQ_FMDC_N_EVALS_MASK;
+> +	reg |= (GEN3_EQ_FMDC_N_EVALS_16GT_VAL <<
+> +		GEN3_EQ_FMDC_N_EVALS_SHIFT);
+> +	reg &= ~GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_MASK;
+> +	reg |= (GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_16GT_VAL <<
+> +		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_SHIFT);
+> +	reg &= ~GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_MASK;
+> +	reg |= (GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_16GT_VAL <<
+> +		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_SHIFT);
+> +	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_FB_MODE_MASK;
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE;
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL;
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK;
+> +	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+> +}
 
-DEFINE_FREE(remove_free, struct object *, if (_T) remove_free(_T))
-static int init(void)
-{
-        struct object *obj __free(remove_free) = NULL;
-        int err;
 
-        guard(mutex)(lock);
-        obj = alloc_add();
-
-        if (!obj)
-                return -ENOMEM;
-
-        err = other_init(obj);
-        if (err)
-                return err; // remove_free() called without the lock!!
-
-        no_free_ptr(obj);
-        return 0;
-}
----
-
-The fix for this bug is to replace the "__free(...) = NULL" pattern and
-move the assignment to the declaration.
-
-        guard(mutex)(lock);
-        struct object *obj __free(remove_free) = alloc_add();
-
-...so the compiler can observe LIFO order on the unwind. Yes, no one
-should write code like this, all of the init should happen before
-assigning to a list, but hopefully it illustrates the point.
 
