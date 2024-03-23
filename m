@@ -1,73 +1,75 @@
-Return-Path: <linux-pci+bounces-5032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B512E8879A0
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 18:13:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ACBA58879A4
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 18:14:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D592D1C20AF3
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 17:13:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BEBF2819B2
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 17:14:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DCD845029;
-	Sat, 23 Mar 2024 17:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D7651034;
+	Sat, 23 Mar 2024 17:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFpGoJ3s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTUD2JVh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761142940B;
-	Sat, 23 Mar 2024 17:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E6647F7A;
+	Sat, 23 Mar 2024 17:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711214027; cv=none; b=hFMJ+nSjc1VUFQ+sgcoDmzUcBKZHVsq012F1PJCVobRoiRwP02ZRzupgjfhI4cn5KJGbxmL42OGSBeuivlvtnIdx43L3JoHIcUR7nunaHL00CNBc5dL8IX9FHB/pDAkEhG3DMEEkSdmihPLmNjLPMzD1Zk8MmS6sm0aMWg9nq/I=
+	t=1711214089; cv=none; b=FCCqe2CDi/JUjb5xYJtVTAtd4KTJjZBMk3kSi7in6EfgbklhALXWpZaIZdYwqR8V2lXH87jFkRrP61TPB8SdecQOS77V2vStEZMmxPNVcpmSxdkDCmOt2E1QQYIKb1KzQEQY+XuJBhnVkayZK05dqOL+a2ugWrki/Gx5NNCIxvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711214027; c=relaxed/simple;
-	bh=PxKIofZrWqBFUcM6t4e3kShaErF3e90raCB2xpAlbBc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=K1G0ONuT9noCTQnqPP6svp1hYMrXEGXHPAmiDwKh/WtGKCoyggcY4wDXA5MvNt7NZDrFR0ZDf+wZJ16MobIij42uEinZPYCmu6tCATMC9e2lrZghAP1tkw54Kppl/qbumjmg4LUzBQuKf9bUZxmIPKB8rN+Ka1tBlMJNYyr4Bxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFpGoJ3s; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1711214089; c=relaxed/simple;
+	bh=upmrpjz7fYMwIHUK/S8OcJN7LqevTj4cPEX7TDtKP6k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Ffc0+PTFimO/orbI+ROBdr8oy0HYF1vMwo0PNe4PPmQ9FKYOvywgg44nNVthe4HMjqOzPgTztojoDQM/emAY/YZvQQPP616/JbVlFzNW2quGFJihXdN9EKy7SEdGdiEiQSvUdPZVXtUIL6P6gkk4ygz/S/Hygrf0WwguhuCa43Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GTUD2JVh; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56ba6c83805so3678156a12.0;
-        Sat, 23 Mar 2024 10:13:45 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso3326818a12.3;
+        Sat, 23 Mar 2024 10:14:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711214024; x=1711818824; darn=vger.kernel.org;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UYgu3uaeGW2h2Z9AQf5DvW+0tjZIJEj/QOPLPY44QMY=;
-        b=QFpGoJ3srtiutaJXyXo5suItukJOykJrZhuDvzBgvsyU9gzCtPuVd00J2wVYRj0a0Y
-         Y6eq2jdJUOEStSLvtYyXXpxaj3PWAEGbOrxZiJLLBp6omV969r68Inn/ZGAfC3jcnHDr
-         N+kBBrwHmdC2dIwvzQneaoGx03bTnhqStHM5YOzG2bNWKfv9DxX3dEXxvUew+zeqftgs
-         jnDia7gZETjwxrv1Uk1lBblk6vXNJCNbSxqsB1+S5QHQCJs2UC/3kWsyNgaXApqdmOrn
-         RjXS/YVuy4qDi28Zni/Qs4SoN+tiDdA0Tj6T9z6p8iGEa2BYtGa6CNEY/rU1ZLt/cxpS
-         2X/Q==
+        d=gmail.com; s=20230601; t=1711214085; x=1711818885; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pSEsOO7burX3PDgdTZjPJuUkZ9Hl7UwB/uzggeQm3Eo=;
+        b=GTUD2JVhPuTeNy/zkRtWXMShZaE3S6yLEkfXbrpjNpD8e+fg5TriicnFuqOx51YfRv
+         oTKTts0nD7O7jCnTfWB37Hmh9ViD19a9qxyOlNLhsHP8D7cC3Slik107wQtqUjAp+d3F
+         zhvEE2QIMqDSPPeN6FfAtaBHHMQCln1hNQv9gv0lmnUqunbMXPZ66ehmjGdeKm9l16yu
+         oF6V5IXEJHalzv1By6e78FKEetf6urc73nc+4H5YviCzQc1C30Yo2UrNi8vJaPJYIZEy
+         noreXAm+5MQ0z5E6EbqsrSCDzp/ML9ML+113or4Duo/hjoBDU91LekzhKVMzBY/DdFYT
+         h0HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711214024; x=1711818824;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYgu3uaeGW2h2Z9AQf5DvW+0tjZIJEj/QOPLPY44QMY=;
-        b=KSqX24vkVBYGHroDa9/L+Q9XAxaFqOHaBlZ/AssEzEC+Cbg7LpiaXf9Re91ll1WPmV
-         eeLmI3OuoFBlIXcc4mzOlS1IxFgXe2A0r1cwCTiWdXIqQeFm70TERBm/w2wVv9ww2rQh
-         R15zvfgWJ2p7kaTCOn5sY27FeDN5IN5fJ+m978Q/leDpeHyj0ycfUpfkyZjvTE/rqRE0
-         q+npy6DRgFob4k4c0myHCcqPhiSaE+zQK3N15RgCE5SRq0xhw1HsPpyO/OkYeduG/aOz
-         317ez3Ei/r7+jMn5Ig/akzvtj7C/Ra1ya5UWlc+HqWwClMmf4Obib9ocWzdiG1Ry2R+T
-         n1uA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLfvmhBrMCeUPwkXln8SY50qDWtPZucePBM5QIdRVY+4bKkHxAffA6YL3L7hLVXkMAnK9iKNqggDlzORteO5YCR5eWV1uJByw0
-X-Gm-Message-State: AOJu0YwzeiLhYo6Ig4gPDhTboQt9KXvUr4KXsQ3uqC/6CQN6lzLv7Dmt
-	GzbivuRymGpMcGcfRqhxzqrNvB4pjvTmIfS9ssTPwK6ZDyP3x6Ss
-X-Google-Smtp-Source: AGHT+IHqJAkIrzHxf+e0CwZ/ud+YkOI2FdiA1ehbJ40nk9KxQXoKgY4p+88PRVm4RrWADsR5E/k/zw==
-X-Received: by 2002:a50:d716:0:b0:56b:c32b:2dd1 with SMTP id t22-20020a50d716000000b0056bc32b2dd1mr1842057edi.33.1711214023501;
-        Sat, 23 Mar 2024 10:13:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711214085; x=1711818885;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pSEsOO7burX3PDgdTZjPJuUkZ9Hl7UwB/uzggeQm3Eo=;
+        b=N2k3wZ2vIy5i8oUGrORazYUH2yIGb43z47aS7GfRV94HyUnEAuy9F2DzJbaRg2/v/W
+         HTWHbjh8srZMKY/DyGk1b0KzWgBOHJueWIUUZAEot888K1xV7paUsPEKTS3zPIL/t+3X
+         6JQQgLSkA/uH5ZiDFVMaOCuUGix0tye/lZFKmLZ6FwUaGTgkNQeKXEmCjcQJNYz0xqjI
+         8tuRbFgkcROcTYQraKok1NkbTXW3SGBMPeLpAvlL6ukIX+g6lvrrvXo4qxYaAAFzkhI6
+         z/dQCe+2fGjYu28TurBU1FJfk5JY/xBqldUWUKsu50ejriJ5Q+vyRWm3WsWLMCMLGssl
+         S8WA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmmbE2cLzYKlx4NOdD8Gxy06X+DQpvpw444iNgIIUO0V3SK08XEPLIx5Nc4V2ktCaLtGZbXl2bQ4rfzEOSAoMtgCBHAPUzWFqe
+X-Gm-Message-State: AOJu0Yweil5rAhB69fOxCqbkGkHHqRWp1TJv+yOAScMsFOfCpHuulHv2
+	THbnKVfXEOHzqZRQRvW+iVeGa/4eJxrty+fzH/XeWn+YrgCuAJPC
+X-Google-Smtp-Source: AGHT+IE6xw5Y0TbJvAG/H6REzOshn1nzSMukTTeaRVjE02ac6Av9ijiegAXmCNY/6fAlVQbH/YETKA==
+X-Received: by 2002:a50:ab49:0:b0:56b:bfa5:4b44 with SMTP id t9-20020a50ab49000000b0056bbfa54b44mr2083715edc.33.1711214085391;
+        Sat, 23 Mar 2024 10:14:45 -0700 (PDT)
 Received: from ?IPV6:2a01:c23:bc38:af00:d7:3466:9e54:a813? (dynamic-2a01-0c23-bc38-af00-00d7-3466-9e54-a813.c23.pool.telefonica.de. [2a01:c23:bc38:af00:d7:3466:9e54:a813])
-        by smtp.googlemail.com with ESMTPSA id d13-20020a056402400d00b0056be1339ff3sm1074095eda.41.2024.03.23.10.13.42
+        by smtp.googlemail.com with ESMTPSA id d13-20020a056402400d00b0056be1339ff3sm1074095eda.41.2024.03.23.10.14.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Mar 2024 10:13:42 -0700 (PDT)
-Message-ID: <370ff61c-1ae0-41ca-95fc-6c45e1b8791d@gmail.com>
-Date: Sat, 23 Mar 2024 18:13:41 +0100
+        Sat, 23 Mar 2024 10:14:44 -0700 (PDT)
+Message-ID: <5068d0ce-2140-4d3f-b305-e8f0d61eed1f@gmail.com>
+Date: Sat, 23 Mar 2024 18:14:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,13 +77,15 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: [PATCH 1/2] ata: pata_cs5520: Remove not needed call to
+ pci_enable_device_io
 Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
 To: Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>,
  Niklas Cassel <cassel@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-ide@vger.kernel.org,
  "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 0/2] PCI: Remove pci_enable_device_io()
+References: <370ff61c-1ae0-41ca-95fc-6c45e1b8791d@gmail.com>
 Autocrypt: addr=hkallweit1@gmail.com; keydata=
  xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
  sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
@@ -125,25 +129,38 @@ Autocrypt: addr=hkallweit1@gmail.com; keydata=
  H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
  lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
  OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
+In-Reply-To: <370ff61c-1ae0-41ca-95fc-6c45e1b8791d@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The call to pci_enable_device_io() in cs5520 isn't needed and can be
-removed. This was the last user, so the function itself can be removed
-afterwards.
+A few lines earlier pcim_enable_device() is called, which includes
+the functionality of pci_enable_device_io(). Therefore we can safely
+remove the call to pci_enable_device_io().
 
-I'd propose to apply the series through the PCI tree.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/ata/pata_cs5520.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Heiner Kallweit (2):
-  ata: pata_cs5520: Remove not needed call to pci_enable_device_io
-  PCI: Remove pci_enable_device_io()
-
- drivers/ata/pata_cs5520.c |  6 ------
- drivers/pci/pci.c         | 14 --------------
- include/linux/pci.h       |  1 -
- 3 files changed, 21 deletions(-)
-
+diff --git a/drivers/ata/pata_cs5520.c b/drivers/ata/pata_cs5520.c
+index 38795508c..027cf6710 100644
+--- a/drivers/ata/pata_cs5520.c
++++ b/drivers/ata/pata_cs5520.c
+@@ -151,12 +151,6 @@ static int cs5520_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (!host)
+ 		return -ENOMEM;
+ 
+-	/* Perform set up for DMA */
+-	if (pci_enable_device_io(pdev)) {
+-		dev_err(&pdev->dev, "unable to configure BAR2.\n");
+-		return -ENODEV;
+-	}
+-
+ 	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
+ 		dev_err(&pdev->dev, "unable to configure DMA mask.\n");
+ 		return -ENODEV;
 -- 
 2.44.0
+
 
 
