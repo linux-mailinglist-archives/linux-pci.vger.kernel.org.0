@@ -1,140 +1,85 @@
-Return-Path: <linux-pci+bounces-5036-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5037-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B12158879D4
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 19:02:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8194887A5E
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 21:45:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAC57B21475
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 18:02:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37C5E2821E4
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Mar 2024 20:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 572BD53E0E;
-	Sat, 23 Mar 2024 18:01:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08BF539AFF;
+	Sat, 23 Mar 2024 20:45:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iqUrlb+e"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j3jyiCkY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AB763D;
-	Sat, 23 Mar 2024 18:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA243B193;
+	Sat, 23 Mar 2024 20:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711216915; cv=none; b=TC3EgJPtIFpr0kkNSsUI30Ctr5nCkERm+HAYYlwf15YMCN69wGR6WIB+CLx39+1WF9kxzCiRKCexBeguZiVKil/my7fBQA8ldOXNi9p1G8jemDDG67ucp+1NWhCUaGvPTy3SIQmstsxIJS8q4jHi/ZuIRUAq3vHaCTvYvTiE2Y8=
+	t=1711226704; cv=none; b=ZdtjH6pTLex0wwViFEvNBBF6gzMYuZV3sv8j+OCv25kV6wUVQWsS6u63hNIRaTNrQFmyn90Ey0Mwtv9XNDuWO/aDepGX5PhKwomUdkLbahl3u+ooQJ3YUDbVz6yE4+SY6pRWukTsuBZkbQ1/rpvCylE780cvEcGMJVyesOdJjuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711216915; c=relaxed/simple;
-	bh=QVrfyERZB/O2NaoOaw/v0iV9cdqwocK7uYeLZ2eGZcI=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=u2LbysP78WDoMWOtYjYkUfDzzNH+/VSDlw8g/fUfB6IT6lDncBVLNcTriurq0ZkU2bQkP6nyXbq1Iicu5oRmiMY9BenYi5XxIG8f8IaChYkRmEh0UJIAT84FDjsn+RePru3xppgJy7FZ0jgm2SQ+LY7NJ5ZnceOC90yApevl3IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iqUrlb+e; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1711216868; x=1711821668; i=markus.elfring@web.de;
-	bh=PyL2Ioh4vlALFYGvyjWWeKkUOfZjj8evfoP8akboAlw=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=iqUrlb+eCxD5v3QWSGMGSn0sg84vRhtzyJ14IT2t7CKw2G+CREDGrIQ8SprUgNaa
-	 qwyEKTb10wlKWY2R74C2Qr4t4B81khDw7Wvb7KRVFH97aJSitVK40ZYIERFJgX8TU
-	 kBVb7EhbklERu95cuaUo3s6xac3NmzN8U7SerzDJaEeynueSvCGPV0CSDESu3V31o
-	 tpjJpKZxZR1VORFde0mRn/viCvKxnqsC8MqrTZFPDpA4gp17NLR+g1jTovYdhzpQc
-	 rXtuydO1w20NWNKzwcpZiP7ACBbbbYuzHN9C5T6GAHpBo+IlO14tWPvBpwOYcbJPx
-	 Rlp+mSnxwFSJsQ+x0g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N3Xnj-1qnudT2Rxz-00zEZM; Sat, 23
- Mar 2024 19:01:08 +0100
-Message-ID: <f3849725-b7b3-4edc-8220-aabeb79b8151@web.de>
-Date: Sat, 23 Mar 2024 19:01:03 +0100
+	s=arc-20240116; t=1711226704; c=relaxed/simple;
+	bh=e0it6zWyRhUl6CsgJZa+SyAT+lNOfGgzSfE1aPkratA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJ13mYhpNf//Uki1y0EyrkjnW+zU5CJDy4PvGlBrJAs1BmT5K3LMYn9itMlN24zFDaGSAezq0BEiiAMN2GzfbYFqIQVYh/b7bkrfCMdIVxMyu3vbJEfQS/+gNuqpy8IstvdNUBLNdO9ckjjRCKVfUcJaCKHyf7WykrgvoQaKQnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j3jyiCkY; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YFrRirU/iGoOz+WkYBm22sZJCyVBMxy3NWhi3BHjlxI=; b=j3jyiCkYeVm21Mh9hQY0bv7GqD
+	jEgGvIQHy2fWJLA6ZluG4W/weDDBi9B8V5N7CZxs2BYM8uzl4uyj8l2YijTzlnOPttgzGJRziKJOs
+	ipMr1xCEtMu0UZ1AquCdnWFHS7S+UceILDAcL/JxV9+z8u+z7dqsaZ8pOjwVElU0Liu96LtcCaIqk
+	SrNkzAIrNAO9tv9qIHfq2tR7VYSdpmBvkt8DPSRqzPE7XUsa6Wi9d8Kx8DbboD/9TUa/3vZr1EWAO
+	HAoNVWxM3O8Le3JUdYknjEjVjFDWVMPv4mcboIpUjX8tAitrEU5rmDj+13YJMz/VLNAMGpqT04UZu
+	+MSWst4Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ro8EY-0000000CWEi-0837;
+	Sat, 23 Mar 2024 20:44:54 +0000
+Date: Sat, 23 Mar 2024 20:44:53 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, torvalds@linux-foundation.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas.wunner@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH] cleanup: Add usage and style documentation
+Message-ID: <Zf8_RYHW7QmCzl2-@casper.infradead.org>
+References: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
+ <20240322090630.GA40102@noisy.programming.kicks-ass.net>
+ <65fdd7ae82934_4a98a29429@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Dan Williams <dan.j.williams@intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Kevin Tian <kevin.tian@intel.com>,
- Lukas Wunner <lukas.wunner@intel.com>
-References: <65fe1f9aadf51_2690d2948f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Subject: RE: [PATCH] cleanup: Add usage and style documentation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <65fe1f9aadf51_2690d2948f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SmyqD010p0uwXhTqLFAT+MKBEAIrDaiCEBHBDDR0wyTqCIJfaTN
- hhkOvtxDEjq2pESON3LwSrVFy/5Xu2I1SsB7NG4o5ftJB7ZkZLH4LOzUVFD0uKqtgGFZMFr
- 8q5118J4thJ7hf5Y4Ub/QAmDfKjWBmU7udNDS7aLl6uVpMKyT8deDvoU3/NxrKA63mmdodS
- skuSI80wdZBvkcGZVUEnw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dUActWliC4w=;hdeZqY0mxakffsHlGyutv6l/x6V
- 34T0aoeci1Pufl8ZUt98g5j4kqBglt7/6+xJLX20BZCxEPRVEyxgJOi6+vYlCX71SLR5DbsZV
- kxtYuforeNfBXZR5B8/IlwPock3+ibJXaH8Rjr9GScuAZA1ua+N/cfgy7K2lZHZ7Z02vYHvrC
- yQoXjLj93PxQGx3a/iHgoqpVkoGtMNl96sgYQK/cP4o1AKetq/43EUfZGheTq5rlryNYtK/aZ
- byIESvgr2hfz0z6YzqJ7cejyvDMJGoqDYWYs6rMCERlsxiupcXmxpHEiRiXdAntXoGZsAN7vL
- Ru+rIYBspjysvIeO/lxC0BnDKN4/ITZEygYocFdgxLCapf0Z1PqzpzRrB2rrt6rR0WO1R7wCG
- BfBTs6bb3NYSBo2dOrewns61D3jj1VuAjop9G4bWRiu7IQ0kLkIeObE8Q5gGlx0+5aJsp3Gpu
- KDlcASUKWOoo64SjR02m24SJICe5AS+7COIN3+xmM6s/EdsCWwngMUmOaguzq59TF3Q6a0drh
- n5Z0/7IISQ2F9Tu/FkbziUvZT253ScXShp/JR9AAJ0r0AY6894x2HXkuSpcKQZxXiSVrH9pbY
- vKfg5PSUUakfb019YxzC2bTQlFDOD5QRWxIQxTE6VGrIVFNbD4E3lBLk/6w60rBWVY+DbKilv
- 4k6FGjglKA5vGIFNCrP85/rAA3yPIeTumJWOiAEJAAv2gwrSwB2evs6ZFWlA2u1dUigQIykgf
- VuxVrYjlCypDlzqFSFPp0kwKucI1g43CGhcAGZZNmq8E/8RenBET09I+XJvko4X6V3AQch++o
- Xn7twrHuWGHtQ+rOvu6glL7ivS+wJ/1BgNqA83P6JjDoI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65fdd7ae82934_4a98a29429@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-> DEFINE_FREE(remove_free, struct object *, if (_T) remove_free(_T))
-> static int init(void)
-> {
->         struct object *obj __free(remove_free) =3D NULL;
->         int err;
->
->         guard(mutex)(lock);
->         obj =3D alloc_add();
->
->         if (!obj)
->                 return -ENOMEM;
->
->         err =3D other_init(obj);
->         if (err)
->                 return err; // remove_free() called without the lock!!
->
->         no_free_ptr(obj);
->         return 0;
-> }
+On Fri, Mar 22, 2024 at 12:10:38PM -0700, Dan Williams wrote:
+> Peter Zijlstra wrote:
+> > So I despise all that RST stuff. It makes what should be trivially
+> > readable text into a trainwreck. We're coders, we use text editors to
+> > read comments.
+> 
+> Ok, I will rip out the RST stuff and just make this a standalone comment.
 
-You demonstrated an improvable lock granularity and a questionable combina=
-tion
-of variable scopes.
-
-
-> The fix for this bug is to replace the "__free(...) =3D NULL" pattern an=
-d
-> move the assignment to the declaration.
->
->         guard(mutex)(lock);
->         struct object *obj __free(remove_free) =3D alloc_add();
-
-How do you think about to describe such a source code transformation
-as a conversion of a variable assignment to a variable definition
-at the place of a resource allocation?
-
-Would you like to increase the collaboration with the macros =E2=80=9CDEFI=
-NE_CLASS=E2=80=9D and =E2=80=9CCLASS=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.8.1/source/include/linux/cleanup.h#L82
-
-Regards,
-Markus
+I would rather you ignored Peter's persistent whining about RST and
+kept the formatting.
 
