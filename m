@@ -1,147 +1,224 @@
-Return-Path: <linux-pci+bounces-5081-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5082-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BFF088B18B
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 21:35:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD3DF88A53A
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 15:51:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 17397C0774E
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 14:49:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C1111F3E903
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 14:51:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52E01C8FD1;
-	Mon, 25 Mar 2024 11:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AFA115AD99;
+	Mon, 25 Mar 2024 11:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MPnJBMdo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDNf9urn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F4F1BAA51
-	for <linux-pci@vger.kernel.org>; Mon, 25 Mar 2024 11:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBF31BD5E2;
+	Mon, 25 Mar 2024 11:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365200; cv=none; b=iv5hzhGlHx6WdG6P4T9pvFswWcmStwsA+BZyc5FH7V+ny4t9ue4m4TbiwhaFJRCLby0TsWrgAq/31RqBSnedoXKImatt81NInWob7H/2A1u56VJBphUn7YHtxuOY9UUdZe0BstcSz1cxPgfVqbvvKlY0spgxzKdLkQXYF4n6Uk4=
+	t=1711365792; cv=none; b=VgWFBWLsvyUhS+USFd2SK9NRfemmfPjzPxJs6if/GZmhEqRRNHZ1+SskuMbTIvDnEsMP++fsgMDBVrVMBm5vv7po9Q4LOwC2ADJcbuUfz6ZHscB4ClO82xTz0KVeZTU2NGeNIxA1bTx4HWgAaP4jpMyw8VDVoMOKFbApakDPFTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365200; c=relaxed/simple;
-	bh=Hsa/4RMLo7slhwDozooCgxr8Rhe6jK9MdW6Cr2Tbkbo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gAlLWBlw90hVyTvZnUVqDRoBG72jBnqIUntrUKxCC+I4oWcro+xO8TSN7rY2VkGGQJCqSbuv3J2EAFNAw8nVeSU7DiEdhCMj4iVq3fo1e/qfPSyIKrwjtm5FRX2I08Mcf02TZqoRMzSF98oXBWGtACOnYweLnMAUMLBIEpljaXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MPnJBMdo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711365196;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QAPHGbxlJ6k982EnibWHBxa9+vZqkzt4vbnevEyQxDY=;
-	b=MPnJBMdoUDvYSOXHpdODRMqM5HwzxL9X+tlTqmYjEd0NnAEuRW+Wmr2KTns8kBzpsrGwyz
-	xDl81wzB19p9CCIFmedRlRyQMBPddJ4n3/JiakFLLRptScLSti9Yf08iUqLYKRhxaq9J+e
-	hQCovAZWRzzAMAUlcPeIE6O+K2fkyZA=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-8XXNy_JxPaOuL_vNPqG3IQ-1; Mon, 25 Mar 2024 07:13:14 -0400
-X-MC-Unique: 8XXNy_JxPaOuL_vNPqG3IQ-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56c0d3517deso652311a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 25 Mar 2024 04:13:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711365193; x=1711969993;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QAPHGbxlJ6k982EnibWHBxa9+vZqkzt4vbnevEyQxDY=;
-        b=NPzF+49P5BbvRhtw6OK7RC8YLobQ+5Rc0zGwdE2PWlfF4YE0gIXR6G44cVY4B6ICHX
-         UWTvVoATFXWFHC29bTPu/T9MJpau545NEoh/zkSOvC86+k4i/cl6cPHEtGwR6c/M7pBO
-         +kA87txLEXhwFz0OWO0hkQSmHIvHeaakL6P71eoJDiseQOsr7mC0KWZZ6FaByUXe52Vp
-         bRuPVpY6VV3RKK30BP2hnHkPEGotxy57aFmDCdGv2BOON4cD6ZeaFdCCmEQ2gcHn1E+l
-         dHsttDDhwFPNtARdeZt4IPnWZme/MRi6QAdcY6AW2FOZeX6QEmpV1Vq4r68Q9ayIyuzv
-         4Nag==
-X-Forwarded-Encrypted: i=1; AJvYcCVHlrcIdcIaygv6I0ji8+pdLRiNt2i69Bp7OPUHrRgtBbZmhA5QyVKCJPzGykN2+CwWGx7Fel+Hmyg9GqpblgZhsg1vNxb4HJAg
-X-Gm-Message-State: AOJu0YzSQTO1+PBdwHZjOuhpd5bsgXaasu3CLei/tK07Q9x24i5pwy8T
-	HqbHAZOdYTxEKaCXWreO4a0MKNxwn52NRcy4HmVeBy2OJewS85h0Wn6R/FdN7ShxoNHWQlP2DQx
-	lJsST1Cvoq5On0kpJaDMR1TUyGFdcPHUMqcpZp26v5gnx3qv1EqrST7Mz7w==
-X-Received: by 2002:a50:8753:0:b0:568:aced:e5a0 with SMTP id 19-20020a508753000000b00568acede5a0mr5705699edv.14.1711365193432;
-        Mon, 25 Mar 2024 04:13:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHDFlIpB/lK3v3cbB5QOQ7Bbg8iNxhFwokSKMspks8TaBGXgxvtbwZi1GudHYxQskJStFdo7A==
-X-Received: by 2002:a50:8753:0:b0:568:aced:e5a0 with SMTP id 19-20020a508753000000b00568acede5a0mr5705672edv.14.1711365193137;
-        Mon, 25 Mar 2024 04:13:13 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id fi24-20020a056402551800b0056bfa6ad5eesm2530825edb.91.2024.03.25.04.13.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Mar 2024 04:13:12 -0700 (PDT)
-Message-ID: <f677cad0-4387-4a79-b7bb-f7b0676e5418@redhat.com>
-Date: Mon, 25 Mar 2024 12:13:11 +0100
+	s=arc-20240116; t=1711365792; c=relaxed/simple;
+	bh=2JNQFjYNPVPxTSXEdzTDIvFBar8n4Vzc6fueech50RA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D5UTA1JEmVkGNAM+d6D3ogjuKzn5STfDfQQNp6hpz0s3aDqRzKBtn7FirI1JtU4Vuq/eCRiMwW0/5tcYfJ7mL9dthypk7G775l5N2/hxueK2mvYiggIdYHu4KkxE7ZfwdBb6+8Gcu+mVM0VPdW1yvCXMerR26/ZxWtdmdchWNNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDNf9urn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FB56C433C7;
+	Mon, 25 Mar 2024 11:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711365791;
+	bh=2JNQFjYNPVPxTSXEdzTDIvFBar8n4Vzc6fueech50RA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mDNf9urnayjKnHME8f7+8KbiM5Q2KPrJtZDZzFOPhQsHFconJCwKstiSJCvgwadwC
+	 MINur/NnfllB+oDF+sCjN/u3CNIjLjVDzl/aW+ueVg2W/WK8UL3wPl5AWdAl0tQomr
+	 J4imBrauiuRu5m8BOOhaU5iq2E3qJDoSDVkppHFGuR8AipmRNJk4GROu+uu787G9th
+	 dgb8o3wPGdeJYGlDj6e48rdkSpV+lTI8bYQEC6juJOpSN0JhS10nmH0V7jt3A76gAc
+	 MW4b+DFWBFD1fI9WWaUon4THyRXmzR4ygTJf6ZHqihRetNmcTP2CPLbveDG6+6iOmV
+	 i4mqfkJoJsbNQ==
+Date: Mon, 25 Mar 2024 12:23:05 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+	fancer.lancer@gmail.com, u.kleine-koenig@pengutronix.de,
+	dlemoal@kernel.org, yoshihiro.shimoda.uh@renesas.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH v4] PCI: keystone: Fix pci_ops for AM654x SoC
+Message-ID: <ZgFemQ8gHpB8yMef@ryzen>
+References: <20240325053722.1955433-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/28] platform: intel_ips: Use PCI_IRQ_INTX
-Content-Language: en-US, nl
-To: Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
- linux-scsi@vger.kernel.org, "Martin K . Petersen"
- <martin.petersen@oracle.com>, Jaroslav Kysela <perex@perex.cz>,
- linux-sound@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- ntb@lists.linux.dev, Lee Jones <lee@kernel.org>,
- David Airlie <airlied@gmail.com>, amd-gfx@lists.freedesktop.org,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240325070944.3600338-1-dlemoal@kernel.org>
- <20240325070944.3600338-8-dlemoal@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240325070944.3600338-8-dlemoal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325053722.1955433-1-s-vadapalli@ti.com>
 
-Hi,
-
-On 3/25/24 8:09 AM, Damien Le Moal wrote:
-> Use the macro PCI_IRQ_INTX instead of the deprecated PCI_IRQ_LEGACY
-> macro.
+On Mon, Mar 25, 2024 at 11:07:22AM +0530, Siddharth Vadapalli wrote:
+> In the process of converting .scan_bus() callbacks to .add_bus(), the
+> ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
+> The .scan_bus() method belonged to ks_pcie_host_ops which was specific
+> to controller version 3.65a, while the .add_bus() method had been added
+> to ks_pcie_ops which is shared between the controller versions 3.65a and
+> 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
+> ks_pcie_v3_65_add_bus() method are applicable to the controller version
+> 4.90a which is present in AM654x SoCs.
 > 
-> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-
-Thanks, patch looks good to me, feel free to merge
-this through whatever tree is convenient (or let me
-know if you want me to pick up just this one patch
-from the series).
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-
+> Thus, as a fix, move the contents of "ks_pcie_v3_65_add_bus()" to the
+> .host_init callback "ks_pcie_host_init()" and execute it only for non
+> AM654x SoC devices which have the v3.65a DWC PCIe IP Controllers.
+> 
+> Fixes: 6ab15b5e7057 ("PCI: dwc: keystone: Convert .scan_bus() callback to use add_bus")
+> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > ---
->  drivers/platform/x86/intel_ips.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-> index ba38649cc142..73ec4460a151 100644
-> --- a/drivers/platform/x86/intel_ips.c
-> +++ b/drivers/platform/x86/intel_ips.c
-> @@ -1505,7 +1505,7 @@ static int ips_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	 * IRQ handler for ME interaction
->  	 * Note: don't use MSI here as the PCH has bugs.
->  	 */
-> -	ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_LEGACY);
-> +	ret = pci_alloc_irq_vectors(dev, 1, 1, PCI_IRQ_INTX);
+> Hello,
+> 
+> This patch is based on linux-next tagged next-20240325.
+> This patch is technically the next version for the v3 patch at:
+> https://patchwork.kernel.org/project/linux-pci/patch/20231019081330.2975470-1-s-vadapalli@ti.com/
+> but the implementation is based on the RFC patch at:
+> https://patchwork.kernel.org/project/linux-pci/patch/20231027084159.4166188-1-s-vadapalli@ti.com/
+> Since the RFC patch mentioned above fixes the same issue being
+> fixed by the v3 patch, I have dropped the v3 patch and am using
+> the RFC patch since it is a cleaner implementation and was discussed at:
+> https://lore.kernel.org/r/20231019220847.GA1413474@bhelgaas/
+> 
+> Regards,
+> Siddharth.
+> 
+>  drivers/pci/controller/dwc/pci-keystone.c | 51 ++++++++---------------
+>  1 file changed, 17 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 844de4418724..f45bdeac520a 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -445,44 +445,10 @@ static struct pci_ops ks_child_pcie_ops = {
+>  	.write = pci_generic_config_write,
+>  };
+>  
+> -/**
+> - * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
+> - * @bus: A pointer to the PCI bus structure.
+> - *
+> - * This sets BAR0 to enable inbound access for MSI_IRQ register
+> - */
+> -static int ks_pcie_v3_65_add_bus(struct pci_bus *bus)
+> -{
+> -	struct dw_pcie_rp *pp = bus->sysdata;
+> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+> -
+> -	if (!pci_is_root_bus(bus))
+> -		return 0;
+> -
+> -	/* Configure and set up BAR0 */
+> -	ks_pcie_set_dbi_mode(ks_pcie);
+> -
+> -	/* Enable BAR0 */
+> -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> -
+> -	ks_pcie_clear_dbi_mode(ks_pcie);
+> -
+> -	 /*
+> -	  * For BAR0, just setting bus address for inbound writes (MSI) should
+> -	  * be sufficient.  Use physical address to avoid any conflicts.
+> -	  */
+> -	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+> -
+> -	return 0;
+> -}
+> -
+>  static struct pci_ops ks_pcie_ops = {
+>  	.map_bus = dw_pcie_own_conf_map_bus,
+>  	.read = pci_generic_config_read,
+>  	.write = pci_generic_config_write,
+> -	.add_bus = ks_pcie_v3_65_add_bus,
+>  };
+>  
+>  /**
+> @@ -822,6 +788,23 @@ static int __init ks_pcie_host_init(struct dw_pcie_rp *pp)
 >  	if (ret < 0)
 >  		return ret;
->  
+>
 
+> +	if (!ks_pcie->is_am6) {
+
+Perhaps add a comment here stating WHY this is needed for v3.65a (!is_am6).
+
+From reading the old threads, it appears that v3.65a:
+-Has no support for iATUs. iATU-specific resource handling code is to be
+ bypassed for v3.65 h/w. Thus v3.65a has it's own .child_ops implementation,
+ so that pcie-designware-host.c does not configure the iATUs.
+-v3.65a has it's own .msi_init implementation, so that pcie-designware-host.c
+ does not call dw_pcie_msi_host_init() to configure the MSI controller.
+
+While 4.90a:
+-Does have iATU support.
+-Does use the generic dw_pcie_msi_host_init().
+
+Considering the major differences (with v3.65a being the outlier) here,
+I think it would have been a much wiser idea to have two different glue
+drivers for these two compatibles (ti,keystone-pcie and ti,am654-pcie-rc).
+
+Right now the driver is quite hard to read, most of the functions in this
+driver exist because v3.65a does not have an iATU and does not use the
+generic DWC way to handle MSIs. Additionally, you have "if (!ks_pcie->is_am6)"
+spread out all over the driver, to control quite major things, like if you
+should overload .child_ops, or if you should set up inbound translation without
+an iATU. This makes is even harder to see which code is actually used for
+am654... like the fact that it actually uses the generic way to handle MSIs...
+
+The driver for am654 would be much nicer since many of the functions in
+this driver would not be needed (and the fact that you have only implemented
+EP support for am654 and not for v3.65a). All EP related stuff would be in
+the am654 file/driver.
+You could keep the quirky stuff for v3.65a in the existing pci-keystone.c
+driver.
+
+(I guess if there is a function that is identical between the twos, you could
+have a pci-keystone-common.{c,h}  that can be used by both drivers, but from
+the looks of it, they seem to share very little code.
+
+
+Kind regards,
+Niklas
+
+
+
+> +		/* Configure and set up BAR0 */
+> +		ks_pcie_set_dbi_mode(ks_pcie);
+> +
+> +		/* Enable BAR0 */
+> +		dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> +		dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> +
+> +		ks_pcie_clear_dbi_mode(ks_pcie);
+> +
+> +		/*
+> +		 * For BAR0, just setting bus address for inbound writes (MSI) should
+> +		 * be sufficient.  Use physical address to avoid any conflicts.
+> +		 */
+> +		dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, ks_pcie->app.start);
+> +	}
+> +
+>  #ifdef CONFIG_ARM
+>  	/*
+>  	 * PCIe access errors that result into OCP errors are caught by ARM as
+> -- 
+> 2.40.1
+> 
 
