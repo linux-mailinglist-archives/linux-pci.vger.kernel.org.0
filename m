@@ -1,126 +1,178 @@
-Return-Path: <linux-pci+bounces-5129-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5130-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1445188B539
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 00:22:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A44C88B2FF
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 22:43:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7DD7AB22977
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 21:34:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8A0EB3B068
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 21:40:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A5DE6D1B9;
-	Mon, 25 Mar 2024 21:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 712A06EB49;
+	Mon, 25 Mar 2024 21:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7f4FnGU"
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="bihn7DHA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371656D1B3
-	for <linux-pci@vger.kernel.org>; Mon, 25 Mar 2024 21:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0BF6E611;
+	Mon, 25 Mar 2024 21:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711402442; cv=none; b=LB5NQhdwAewhjom/GITDmNMtT2RpTe3nN8kFLFoWMUffI9D3H3VZbpwEdfDLevC3VAnJ1fWTR199RH2n4jPkLgrN+cvrbUuhGJ/E9znBX9FoEDD20qEaHsQXIB2MURmaWmVbYFmfCmxq7jocJAmHYLqWRXOTu7MtIf3W+FoWBhE=
+	t=1711402842; cv=none; b=iKElFwqO1Xignk7E54Wnf10jhZBhNQVXLWgrrM7x2qOHshmzR+PHqp6SbkqaBWtJob44Lra3zMEQI2QuIzQ1dD3ckNF1AP2hCaS7UqJlYCsvsQP4DPycVkq5J0YQ7bRkV/2Ma2W9lmdaao74OWF32I5QWO+D9TUD18QqpEl+R8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711402442; c=relaxed/simple;
-	bh=rriYC201J5WWCTYxZyMYstwQ9tKRJ9aWCdA+BwuBxss=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Zt6HDqwhVMwT3pgUr7SlipllNQDyAMZ83nGTTciHCKHxr1qOl/0oWzZGnFZ81gTr0xDGTUdqp6lr4wFUydmNWhhJ7xUnk246xZSUN10tyXsvJcpnm8HsUH0UQl5Cq/49azI24a0+UHnwMoEeZ9hwTVxhwphdz7JVMhC9vnZ+nFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7f4FnGU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D69AC433C7;
-	Mon, 25 Mar 2024 21:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711402441;
-	bh=rriYC201J5WWCTYxZyMYstwQ9tKRJ9aWCdA+BwuBxss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=W7f4FnGUbt9RyefFi/Ncutoj1DWgqsA82p2EB7p5yXFQ01QgikLE+BUgvmoPvRD9c
-	 dRmi2x/lVqdB7yw+MBxWKj1Ghj5TDZNeGtVcY74vLe6cdbAhA5u8nLIJLVLCHyP+ut
-	 tS+tq2+o6XC24Akih5U5F5eBevwoOVlCytot/k87vlBszAQb+3VL+h1kzlUwBVViRH
-	 loFICxhmHB9yTekcaaYtEJSJ5HNCjiBL0Xcoq1w4qipAdRe4b+k5pb1ZFZAJo657yr
-	 JnwG98OfJsLZxqmd6XSw+TpWU7zOV3m1JMmqw5kEbaYh/qFuz+kJYgo1x56UkLicAw
-	 7Voasq1lhalUQ==
-Date: Mon, 25 Mar 2024 16:33:59 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: does amd_iommu use INTx?
-Message-ID: <20240325213359.GA1435356@bhelgaas>
+	s=arc-20240116; t=1711402842; c=relaxed/simple;
+	bh=SfhDpy1gBjb0secvYDmVDcNH0yEOBTw0RQ+3z7mvlJc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UAe83fG7IUWNuwGODnyN9Aj2INapt7N+Y1+Cz5GWBlA1VzRw2nBSKrgaNTK4cuPsqalai9ztfLYaySzW9Uf/1GlWPcHLugIX7jD0r+CF2qEoe8+GxqxOfFrEeDEl3IL6XyqRPUt9fG2gUEllPjUoLtVjSJ5E8A+3PGWrK7FXky8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=bihn7DHA; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1711402838;
+	bh=SfhDpy1gBjb0secvYDmVDcNH0yEOBTw0RQ+3z7mvlJc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=bihn7DHAYDcY37C5lrOcOftrxdZ1EPXXSiq6fBsNAcsPIyrwVsVgYHDc8fYgwn0T+
+	 SzHj5CmEzoByIzE+O5BHN3D1riTfQAEsX20mZy66cJK9vEc0NUIWvduk07JG3NEoNM
+	 9ve7gzfAMQbokgSDNw01wRs+EYu7IoTUG4YXlSgU=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 3D21A67071;
+	Mon, 25 Mar 2024 17:40:35 -0400 (EDT)
+Message-ID: <70e3b9cac305d157396c99355339008e8cf97c62.camel@xry111.site>
+Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
+ KERN_INFO
+From: Xi Ruoyao <xry111@xry111.site>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, Bjorn Helgaas
+	 <helgaas@kernel.org>
+Cc: Grant Grundler <grundler@chromium.org>, bhelgaas@google.com, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com, oohall@gmail.com, 
+	rajat.khandelwal@linux.intel.com, rajatja@chromium.org
+Date: Tue, 26 Mar 2024 05:40:34 +0800
+In-Reply-To: <ba78805af8b39237b22a0ff87c4ba3c614a43910.camel@xry111.site>
+References: <20230918193913.GA203601@bhelgaas>
+	 <0a44fd663e93ac5b36865b0080da52d94252791a.camel@xry111.site>
+	 <38601aef-b082-463f-8e41-f73a4307de21@linux.intel.com>
+	 <ba78805af8b39237b22a0ff87c4ba3c614a43910.camel@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgEycC1c_d0RTPHW@8bytes.org>
 
-On Mon, Mar 25, 2024 at 09:14:40AM +0100, Joerg Roedel wrote:
-> On Fri, Mar 22, 2024 at 06:35:11PM -0500, Bjorn Helgaas wrote:
-> > This is probably a stupid question, but does the AMD IOMMU itself ever
-> > generate INTx interrupts, i.e., would it assert INTA, INTB, INTC,
-> > INTD?
-> 
-> The AMD IOMMU hardware only signals IRQs via MSI, there is no hardware
-> using INTx.
+On Mon, 2024-03-25 at 18:15 +0800, Xi Ruoyao wrote:
+> On Mon, 2024-03-25 at 16:45 +0800, Ethan Zhao wrote:
+> > On 3/25/2024 1:19 AM, Xi Ruoyao wrote:
+> > > On Mon, 2023-09-18 at 14:39 -0500, Bjorn Helgaas wrote:
+> > > > On Mon, Sep 18, 2023 at 07:42:30PM +0800, Xi Ruoyao wrote:
+> > > > > ...
+> > > > > My workstation suffers from too much correctable AER reporting as=
+ well
+> > > > > (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packe=
+ts May
+> > > > > Generate Correctable Errors" and/or the motherboard design, I gue=
+ss).
+> > > > We should rate-limit correctable error reporting so it's not
+> > > > overwhelming.
+> > > >=20
+> > > > At the same time, I'm *also* interested in the cause of these error=
+s,
+> > > > in case there's a Linux defect or a hardware erratum that we can wo=
+rk
+> > > > around.=C2=A0 Do you have a bug report with any more details, e.g.,=
+ a dmesg
+> > > > log and "sudo lspci -vv" output?
+> > > Hi Bjorn,
+> > >=20
+> > > Sorry for the *very* late reply (somehow I didn't see the reply at al=
+l
+> > > before it was removed by my cron job, and now I just savaged it from
+> > > lore.kernel.org...)
+> > >=20
+> > > The dmesg is like:
+> > >=20
+> > > [=C2=A0 882.456994] pcieport 0000:00:1c.1: AER: Multiple Correctable =
+error message received from 0000:00:1c.1
+> > > [=C2=A0 882.457002] pcieport 0000:00:1c.1: AER: found no error detail=
+s for 0000:00:1c.1
+> > > [=C2=A0 882.457003] pcieport 0000:00:1c.1: AER: Multiple Correctable =
+error message received from 0000:06:00.0
+> > > [=C2=A0 883.545763] pcieport 0000:00:1c.1: AER: Multiple Correctable =
+error message received from 0000:00:1c.1
+> > > [=C2=A0 883.545789] pcieport 0000:00:1c.1: PCIe Bus Error: severity=
+=3DCorrectable, type=3DPhysical Layer, (Receiver ID)
+> > > [=C2=A0 883.545790] pcieport 0000:00:1c.1:=C2=A0=C2=A0 device [8086:7=
+a39] error status/mask=3D00000001/00002000
+> > > [=C2=A0 883.545792] pcieport 0000:00:1c.1:=C2=A0=C2=A0=C2=A0 [ 0] RxE=
+rr=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (First)
+> > > [=C2=A0 883.545794] pcieport 0000:00:1c.1: AER:=C2=A0=C2=A0 Error of =
+this Agent is reported first
+> > > [=C2=A0 883.545798] r8169 0000:06:00.0: PCIe Bus Error: severity=3DCo=
+rrectable, type=3DPhysical Layer, (Transmitter ID)
+> > > [=C2=A0 883.545799] r8169 0000:06:00.0:=C2=A0=C2=A0 device [10ec:8125=
+] error status/mask=3D00001101/0000e000
+> > > [=C2=A0 883.545800] r8169 0000:06:00.0:=C2=A0=C2=A0=C2=A0 [ 0] RxErr=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 (First)
+> > > [=C2=A0 883.545801] r8169 0000:06:00.0:=C2=A0=C2=A0=C2=A0 [ 8] Rollov=
+er
+> > > [=C2=A0 883.545802] r8169 0000:06:00.0:=C2=A0=C2=A0=C2=A0 [12] Timeou=
+t
+> > > [=C2=A0 883.545815] pcieport 0000:00:1c.1: AER: Correctable error mes=
+sage received from 0000:00:1c.1
+> > > [=C2=A0 883.545823] pcieport 0000:00:1c.1: AER: found no error detail=
+s for 0000:00:1c.1
+> > > [=C2=A0 883.545824] pcieport 0000:00:1c.1: AER: Multiple Correctable =
+error message received from 0000:06:00.0
+> > >=20
+> > > lspci output attached.
+> > >=20
+> > > Intel has issued an errata "RPL013" saying:
+> > >=20
+> > > "Under complex microarchitectural conditions, the PCIe controller may
+> > > transmit an incorrectly formed Transaction Layer Packet (TLP), which
+> > > will fail CRC checks.=C2=A0When this erratum occurs, the PCIe end poi=
+nt may
+> > > record correctable errors resulting in either a NAK or link recovery.
+> > > Intel=C2=AE has not observed any functional impact due to this erratu=
+m."
+> > >=20
+> > > But I'm really unsure if it describes my issue.
+> > >=20
+> > > Do you think I have some broken hardware and I should replace the CPU
+> > > and/or the motherboard (where the r8169 is soldered)?=C2=A0 I've noti=
+ced that
+> > > my 13900K is almost impossible to overclock (despite it's a K), but I=
+'ve
+> > > not encountered any issue other than these AER reporting so far after=
+ I
+> > > gave up overclocking.
+> >=20
+> > Seems there are two r8169 nics on your board, only 0000:06:00.0 reports
+> > aer errors, how about another one the 0000:07:00.0 nic ?
+>=20
+> It never happens to 0000:07:00.0, even if I plug the ethernet cable into
+> it instead of 0000:06:00.0.
+>=20
+> Maybe I should just use 0000:07:00.0 and blacklist 0000:06:00.0 as I
+> don't need two NICs?
 
-It seems that the IOMMU advertises 01h (INTA) in the Interrupt Pin
-register, not 00h (doesn't use an interrupt pin).  Is that a hardware
-defect, or do you mean the hardware is *capable* of using INTA, but
-the Linux driver only uses MSI?
+Plugging the ethernet cable into 0000:07:00.0 and then
+"echo 1 > /sys/bus/pci/devices/0000:00:1c.1/remove" work for me...
 
-If the hardware truly can't use INTx at all, I wonder if we should add
-a quirk to override that Interrupt Pin value so we don't bother with
-any of the INTx routing stuff.
-
-If INTA doesn't work, advertising it leads to lspci showing misleading
-information and pointless searches of _PRT.
-
-> > I'm hoping not, which would probably mean we could just ignore and
-> > close bug reports about things like this:
-> > 
-> >   pci 0000:00:00.2: can't derive routing for PCI INT A
-> 
-> I hope this is fixed by a recent upstream commit:
-> 
-> commit 0feda94c868d396fac3b3cb14089d2d989a07c72
-> Author: Mario Limonciello <mario.limonciello@amd.com>
-> Date:   Mon Jan 22 17:34:00 2024 -0600
-> 
->     iommu/amd: Mark interrupt as managed
-
-From https://bugzilla.kernel.org/show_bug.cgi?id=212261:
-
-  00:00.2 IOMMU: Advanced Micro Devices, Inc. [AMD] Renoir IOMMU
-	  Interrupt: pin A routed to IRQ 25
-
-  [    0.544306] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-  [    0.544643] pci 0000:00:00.2: [1022:1631] type 00 class 0x080600
-  [    0.567845] pci 0000:00:00.2: AMD-Vi: IOMMU performance counters supported
-  [    0.567910] pci 0000:00:00.2: can't derive routing for PCI INT A
-  [    0.567912] pci 0000:00:00.2: PCI INT A: not connected
-
-I think 0feda94c868d will make the warnings go away, but I don't think
-its commit log is quite right:
-
-  According to the PCI spec [1] these routing entries
-  are only required under PCI root bridges:
-     The _PRT object is required under all PCI root bridges
-
-  The IOMMU is directly connected to the root complex, so there is no
-  parent bridge to look for a _PRT entry.
-
-We look under the parent *root bridge*, not under a parent Root Port
-or PCI-PCI bridge.  In this case there should be a _PRT under the PCI0
-root bridge, and that's where we look for 00:00.2 INTx information.
-
-I think if a device advertises an INTx pin, the _PRT *should* tell us
-how it's routed.  If it doesn't, IMHO either the device is defective
-(for advertising INTx that it doesn't use) or the firmware is
-defective (not telling us via _PRT how it is routed).
-
-Bjorn
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
 
