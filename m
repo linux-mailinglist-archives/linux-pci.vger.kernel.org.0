@@ -1,89 +1,94 @@
-Return-Path: <linux-pci+bounces-5133-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2282D88B626
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 01:35:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C08D88B5AE
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 00:59:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01B3AB23DEA
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 23:06:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54CAF1C37C74
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 23:59:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AF12823C3;
-	Mon, 25 Mar 2024 23:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miVONJQ5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14E384D2D;
+	Mon, 25 Mar 2024 23:59:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33918174F;
-	Mon, 25 Mar 2024 23:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B205084D2A;
+	Mon, 25 Mar 2024 23:59:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711407987; cv=none; b=Z29K7eEwFD8D9Ohg3BbTwPi3/uonv1sd4VSpiOX0NiG+X2J5cC5E2pTG3FS04dqsrvjD9TEsy4aALd/UAQZmy/4UOWM7LX2QUQi1vWaFK2EFl1oiP816I30FVOk1K1N7YaL8bcb4Ic60ipXATPmKPZkh/QKgeURO/KrkAOBSDYM=
+	t=1711411156; cv=none; b=pVcHTNSqb3VBrf8t6E0NQgreIMKYcUndtea/W3Yy3qY7nhCeXDoSXpBWlfHlEe3MK41h91Y42gOraDsz2FZCkEhSvmmWPddXbybnl1FmESHe1qoSTdNJOd1MYLBJ8H1MmgoyEE/d5QU092tNlTHJWKLeYxuWz0zxYBkavUZpM8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711407987; c=relaxed/simple;
-	bh=1QyVL22FJBxcb4t1+dh5JP6zFPMFsBApFX/CuykGQcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HRMHVPKE1Fd9LSqmSwz8I1rSNnJkX4Wy6WS6K2IDieW1JHO8u/bvy5Zm+5hGyQGE9PP93o/8FqhNcJvlJbFPDmOqumSRoR3PEyq/YDPQHzLxq2hfalYGx5Su+DUMiG6Z9Txgs9OZmct7yg8oTNh/02gudtTvlu6UgUAM7UML6p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miVONJQ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81ECC433F1;
-	Mon, 25 Mar 2024 23:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711407987;
-	bh=1QyVL22FJBxcb4t1+dh5JP6zFPMFsBApFX/CuykGQcQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=miVONJQ5NXRsG7mtEQGjb5OCHUFlD7yIcjL8Zczot8iH1PlPuzLpzXUWN779YGM8y
-	 sdRSypBm9jXhiqw1IzSFooBJQq5k1wtRXrJIOTx4xbzUnA1RJeHfwPvxzQkJwqjAA2
-	 N6YIqez7RTTZpmbSlWcSMzhmaSXkYG9rvLI4m7dYZcw7TieXzKum/7A5nU+P13vC61
-	 T1cLGk10rXaP0S8Iok04wj1ZA1e/YPTPkHaE8qnOaUkw/8fA7OGzdEbCdysSpVND4U
-	 Gsl75wBe1MjtRVXYky/7xx56/oe9JwwwMEAsu3NP0isHTJVisTQU7YEP34h3oAU2oc
-	 dvb52RefFwqtw==
-Message-ID: <ea5a0baa-64f3-40f8-a775-433eeb0b430e@kernel.org>
-Date: Tue, 26 Mar 2024 08:06:22 +0900
+	s=arc-20240116; t=1711411156; c=relaxed/simple;
+	bh=H+Z6duRuHTRQuL6SK2IWat0yxvpiuUkeq3z5doKshAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VpxKk7VlvaH98hp1oto9mQGjfM3a3KC6lpbR3TmFPxcl68CPJIfDxWFfFhk44U4Kzvby6armvz/NVQ+onDijJU2H+YsxljYDcVTjRoAnRKkHZPugxm42lo0kmWJL5dvYKZmJO8TJRCQDGlb5AohK8llzFMcVyML1RYICXK3t6pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C535C433F1;
+	Mon, 25 Mar 2024 23:59:16 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Cc: dan.j.williams@intel.com,
+	ira.weiny@intel.com,
+	vishal.l.verma@intel.com,
+	alison.schofield@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave@stgolabs.net,
+	bhelgaas@google.com,
+	lukas@wunner.de
+Subject: [PATCH 0/3 v2] PCI: Add Secondary Bus Reset (SBR) support for CXL 
+Date: Mon, 25 Mar 2024 16:58:00 -0700
+Message-ID: <20240325235914.1897647-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/28] Remove PCI_IRQ_LEGACY
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>,
- linux-scsi@vger.kernel.org, "Martin K . Petersen"
- <martin.petersen@oracle.com>, Jaroslav Kysela <perex@perex.cz>,
- linux-sound@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-serial@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org, ntb@lists.linux.dev,
- Lee Jones <lee@kernel.org>, David Airlie <airlied@gmail.com>,
- amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-rdma@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240325175941.GA1443646@bhelgaas>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20240325175941.GA1443646@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/26/24 02:59, Bjorn Helgaas wrote:
-> I applied all these to pci/enumeration for v6.10, thanks!
-> 
-> I added acks and reviewed-by and will update if we receive more, and
-> adjusted subject lines to add "... instead of PCI_IRQ_LEGACY" and in
-> some cases to match history of the file.
+Hi Bjorn,
+Please consider this series for kernel 6.10. The series attempt to
+add secondary bus reset (SBR) support to CXL. By default, SBR for CXL is
+masked. Per CXL specification r3.1 8.1.5.2, the Port Control Extensions
+register bit 0 (Unmask SBR) in the host bridge controls the masking of CXL SBR.
+"When 0, SBR bit in Bridge Control register of this Port has no effect. When 1,
+the Port shall generate hot reset when SBR in Bridge Control gets set to 1.
+Default value of this bit is 0. When the Port is operating in PCIe mode or RCD
+mode, this field has no effect on SBR functionality and Port shall follow PCIe
+Base Specification."
 
-Thanks Bjorn !
+v2:
+- Use pci_upstream_bridge() instead of dev->bus->self. (Lukas)
+- Rename is_cxl_device() to pci_is_cxl(). (Lukas)
+- Return -ENOTTY on error. (Lukas)
 
--- 
-Damien Le Moal
-Western Digital Research
+Patch 1:
+Add check to PCI bus_reset path for CXL device and return with error if "Unmask
+SBR" bit is set to 0. This allows user to realize that SBR is masked for this
+CXL device. However, if the user sets the "Unmask SBR" bit via a tool such as
+setpci, then the bus_reset will proceed.
 
+Patch2:
+Add a new PCI reset method "cxl_bus_force" in order to allow the user an
+intetional way to perform SBR. The code will set the "Unmask SBR" bit to
+1 and proceed with bus_reset. The original value of the bit will be restored
+after the reset operation.
+
+Patch3:
+CXL driver change that provides a ->reset_done() callback. It compares the
+hardware decoder settings with the existing software configuration and emit
+warning if they differ. The difference indicates that decoders were programmed
+before the reset and are now cleared after reset. There may be onlined system
+memory backed by CXL memory device that are now violently ripped away from
+kernel mapping.
+
+Patch series stemmed from this [1] patch. With comments [2] from Bjorn.
+
+[1]: https://lore.kernel.org/linux-cxl/20240215232307.2793530-1-dave.jiang@intel.com/
+[2]: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
 
