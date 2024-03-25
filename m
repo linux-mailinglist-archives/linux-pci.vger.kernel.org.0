@@ -1,218 +1,266 @@
-Return-Path: <linux-pci+bounces-5042-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5043-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E242887EDD
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Mar 2024 21:38:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEF698898BE
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 10:48:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AFB57B20ACD
-	for <lists+linux-pci@lfdr.de>; Sun, 24 Mar 2024 20:38:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85AF42A6639
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Mar 2024 09:48:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485CBDF78;
-	Sun, 24 Mar 2024 20:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDAE82C96;
+	Mon, 25 Mar 2024 05:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lr1TRJHr"
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="y/OJEo3R";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EZf8j4k4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F253FDDD2;
-	Sun, 24 Mar 2024 20:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711312686; cv=fail; b=rwgiVJSPncEoptOV7wgBiSwERbxfi5yN2jKovfm+AWQWfVtRHH7+9IIXpJp2hFS/DNw45I6WPv6awfh+GgRjCkSDQk+9E+7ZSlwfpoqfaGX5hv8JV4KHWccg5UKBU1XuRp47BKDNLLuqkcTxKTjmOG3SvkElIPGLeUa+j1DlwC0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711312686; c=relaxed/simple;
-	bh=a0MsdY5PqD3cCpK3IjxIFUXswWLXoQ1EVUDRfRbi5SI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cIEUV2Tm2lUszAZrGjWbKG5j7Ih1VmXN2o0D0jGuW0/knK6/uqBSGof1m0pofwwba4LCjmClCrkWEBwiqx6ZrwCbxRnPFi5m71+a7u6cyJJRL214TD87T9hl5oCM8c50GT54CTN7Tg/Sd8fsXlYAcmK3y/GNjPEPV5gSB9DawQ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lr1TRJHr; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711312685; x=1742848685;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=a0MsdY5PqD3cCpK3IjxIFUXswWLXoQ1EVUDRfRbi5SI=;
-  b=Lr1TRJHrnvYNWR8nY/O5+yIa3+4jHvAj3eZ7738iudO5EudXXqEIxjiM
-   BOGClpC7zIx8sLhzuuVqBCvD0d/t6C3IC1KMBgwEx404bf6mOanWN8jb3
-   UjyG9GysyRUrggTLzu5tAn6l31GD/1psIKV/AadhVQGceEWUBe0gs48kB
-   g+97DN1NiEJ3rZRoKjgT0AvM3/hRdpRDnAtNua+YrSQ06ZNR+cTKrciS3
-   DaGtBMWqRVJYl+L/ZKm7lRzIrbXI00/p7YR93xrIhoRQnua1tacqysdM0
-   N+qdkgR2gduGSDAhsxBAm5RejBuRR5xrimViWCCHx7FSFCpZOs9s/mlx5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11023"; a="6198419"
-X-IronPort-AV: E=Sophos;i="6.07,151,1708416000"; 
-   d="scan'208";a="6198419"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2024 13:38:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,151,1708416000"; 
-   d="scan'208";a="15448066"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Mar 2024 13:38:02 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 24 Mar 2024 13:38:01 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Sun, 24 Mar 2024 13:38:01 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 24 Mar 2024 13:38:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bwymoFD1Td6ALIReqhg67tgSlHqoRsnTISXWja8keRN/M2ZKuwVfKAk2ECXH9Xdmy0lBS+IHZ25AIjPRedB9oQeURC61f6qZVcJoKTJb+ILe3WKvAkvYGbK7pnBKV76dh9GxfqM0/z2aYyl1RmhJV1OWwlIMdb2ml8YXC1r8ZDt5UdtFXCF71UiI+u4T4EiYS2Sy0eznOZuHIo36+yp4O8B0OCvTqutE0rqyco10mpdBhMC2GmHo/6TSXUpN3NclCsQhlbtM8EcQOyCNJDJ4llycd5CqtUIpN1M5EKrnV28VHmodi76paxucJzrCW4egkcksg25B7mIJA3qp0qZKVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fp7+kFPFneM1fTQk284WMCBhT1FSG+YyNs8SDrD57ic=;
- b=HFh4C9g6/I0c9pTJiw9872dmwnaqnTMcJ6GJb54imTDwQTJYIbFlLFFgzG7d47ndf0vUK78gx6atlvFiKa21pOGVSVCoWLYdnEl2hFn+eMwZZVS/udWmgUVJkhgaXr1Tb7x+ityAgw6n0+NM4g8Owi70vlBlirhemIEr6ljyacKzpMiwXHDrDSTL7XKFrQG3qKqctNKSqeY6gM1VBnoxhJKhrhoux0kTfN3stT1cUSod4spbkhHqFK2ESVpMdfgQvhMetYkrx5ZBJ8I6uEDjRyaJJUkEHnjf1sdrpzkrYwz7Y/MtFXbwgJM1dztn9G+nMuR+1/Xiq1CfX33aYGfsVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by MW4PR11MB6786.namprd11.prod.outlook.com (2603:10b6:303:20b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Sun, 24 Mar
- 2024 20:37:55 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::545:6a88:c8a8:b909]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::545:6a88:c8a8:b909%4]) with mapi id 15.20.7409.028; Sun, 24 Mar 2024
- 20:37:55 +0000
-Date: Sun, 24 Mar 2024 13:37:51 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Corbet <corbet@lwn.net>, Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>
-CC: Peter Zijlstra <peterz@infradead.org>, <torvalds@linux-foundation.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Jesse Brandeburg
-	<jesse.brandeburg@intel.com>, Ilpo =?iso-8859-1?Q?J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, Lukas Wunner <lukas@wunner.de>,
-	<linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<gregkh@linuxfoundation.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] cleanup: Add usage and style documentation
-Message-ID: <66008f1fddaf9_2690d294f4@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
- <20240322090630.GA40102@noisy.programming.kicks-ass.net>
- <65fdd7ae82934_4a98a29429@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <Zf8_RYHW7QmCzl2-@casper.infradead.org>
- <65ff7a88e93fb_2690d29429@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <871q802dzt.fsf@meer.lwn.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <871q802dzt.fsf@meer.lwn.net>
-X-ClientProxiedBy: MW4PR03CA0308.namprd03.prod.outlook.com
- (2603:10b6:303:dd::13) To SA3PR11MB8118.namprd11.prod.outlook.com
- (2603:10b6:806:2f1::13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464E8143878;
+	Mon, 25 Mar 2024 01:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711329704; cv=none; b=MPWTke8MkndcSyX7gf6QRcgdtcTe1WdapLE4uwLFtHNGa77HoEuYE0uVJXdu5oP+bZPH7+IDByP8NlHGgWig7sAAhMf3f2osX+Xodx3k1R93lBw1JafgHt/1EHk8zly9FsWCa+EM8iTAGAJZBUWNSUuiukRwRb3gO+IhRUlgLQE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711329704; c=relaxed/simple;
+	bh=3DyUC4KeQmUIkxMmdA3c4sX5XUh4DpFW6As1PmRc2Vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Zl89go6U98RDdjSoRpfA0FxGf/y8FoXvd87LWCrBOWrxjgcWgnpzoIdORLqD6rz48YbIbW5Gk1qv3kiqzdwqcQWvvy0fewE3JazYFtPQhS8829JGHFZhDbrmd3u+QrD9Imvh328KKO2ZCck7nmqdFwzEkxJ64OK0k9jbvEAtSHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=y/OJEo3R; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EZf8j4k4; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 4651E13800CA;
+	Sun, 24 Mar 2024 21:21:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sun, 24 Mar 2024 21:21:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1711329701; x=
+	1711416101; bh=O/03a8VUsvCu5Ho2lWofHPeYJCGruXQzjVj9uGmC/bY=; b=y
+	/OJEo3ROdrpCl7D1hrNXl7DSKLX9FD1WJkyUa+0KSMIzJ0YEh+PKbx+EYAUp9WgX
+	i1xk+2Pwnb7xfvvrOVJlkAcx63RnI6Zqgty+gpDsWRs8a6QUrDV1fOIb8+1nmTJ2
+	eP/YE/nbFP30xxkxt/ROpUHyti2F4wrODIV7pvPC/eCFCK0n0S86LSb3VbQHGYl9
+	gJZTSJBQqkSbRIBejT0U3prYVxW6U+4oVdu4vHEY+uLKWnhNwGZXXlWX/S66qW7c
+	jce75nhEvXhuBaUB2y35X8He8yTZOVKP85XIC8v6lGp7G/XZKIFQOEnQ8r7S7wzf
+	o3fjAHSnxosjuDk46SHdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1711329701; x=
+	1711416101; bh=O/03a8VUsvCu5Ho2lWofHPeYJCGruXQzjVj9uGmC/bY=; b=E
+	Zf8j4k4eUdifg3IS1Yaqfm187P578wbwEV++ixbC9d5YbPUEgweuNPWKk3uGW3zF
+	H9u/7uWDIDEHWsnNFA9TOLWbnXnZIhyD0H5SLcpivFFU9PEUbTPfyuOOzP6wnm2G
+	weRHeI3crgu4TgvS+PJESpNLavxI7pvIuvkmyk+8nT/UqRHHd4UEQjfzd8NoyV6C
+	2moG2xBCq2NJHWblarhelQVjtSpPmCPlT4nIVOQ1mNiK7F3CmP1BntAHbWjQXcPC
+	aPPEeqbhVJ8ssvGzwQVZynvPii+n6+JDY1YbnAuxjtOq7yPs0Cf5LmR9GOda5P0Y
+	eGV2KsLKWukIBOLIC3usA==
+X-ME-Sender: <xms:pdEAZtxasYvljIvamxA5bdUkcgTtCEWJAKlKZEB6q8T5tH4mQ1fwbA>
+    <xme:pdEAZtRz66QLj3WqwaXB2S2_MQz3bobFyKeH4PB_LFw5J9jCgWneexWBUi2OhBE01
+    xMhewZvxxRYT2BqKZ8>
+X-ME-Received: <xmr:pdEAZnUhIVmVbf2E6MOecKYA2LPuVyNiBWUJHXGFiAas1foKC1vVJGh-bnYWbco3EkY7N_MkYv11rawLIvqVzmdCC3Jlb42T6K0sKfFdrmkAyg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddtkedgfeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
+    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpedvjefgje
+    euvdfguddukeelveetgfdtvefhtdfffeeigfevueetffeivdffkedvtdenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
+    hsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:pdEAZvjI6UkRMGqDA56AYdcjkx2E2t9-ptwnHB6Jx-cjpbZxzPpblQ>
+    <xmx:pdEAZvAl_RMjVzVaA0CTDho29A8axqxZlZaHXWcJWF0VUgfzSXx5Vw>
+    <xmx:pdEAZoJjBY0S_doiRlJnn4RvVPNekpI7FN--hQRzElaq4NUD6P1IYw>
+    <xmx:pdEAZuC7J80cl9yvKyXEwMS2qqcWX9PwjQQmlPYI3dw4Oc3LR7a2OA>
+    <xmx:pdEAZh0v2zFFBSbDAV_oi1fAvIozFOZW4PO0PZn5hsZa_TTGCRp8mw>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 24 Mar 2024 21:21:39 -0400 (EDT)
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: helgaas@kernel.org
+Cc: linux1394-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	edmund.raile@proton.me
+Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
+Date: Mon, 25 Mar 2024 10:21:35 +0900
+Message-ID: <20240325012135.36861-1-o-takashi@sakamocchi.jp>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240229230013.GA369538@bhelgaas>
+References: <20240229230013.GA369538@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|MW4PR11MB6786:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41eb31f6-6317-478b-f54d-08dc4c424887
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QjA7YQmTYeaZLrY7jZ0PzJQf63MEuIpHdX15JcGlFh7oMqfRTB8ihbTGr39ue1K9U1yS+0j50GUryXv+3VL2TYMFHARnRfkfCyG2jkyfLWaouS/TUiv+O1UrvIRy2efrTq4OFz9T7M8cCDO/C/DSDLSqIzuyFNuNugxQrALX87pl9FbOT4kCrufCise/fVpDECX/ni0So/E2ZIJFHe3qReJFSSQw6DEPB95GSjH4cDx5+lIPN5BH2DeTbJP6tehxJ1Crdla+LFDTYs8qbvGL5y0wD6haFTLs8Kv22wrvhuNO4vSuCwfOW0RErdLA4U2/S5b/Fz/bgW+1vOgq6lUMpADwWzRJuSSPttG37FTzZt29smQXq6Z7HPq4TTHvc4hJhDqp6Ksa9ZBwnGLBm+XnBUWEPBls+zfC7V8liYmM5SCUMOHFU/gHwKjOdRBHfVW1aaLrk3hF8qJcYWQv803xP8obm0KXlR+jintIOR+ypMqKe8nOZLmDfZ0qP1XPLhJ8vJt7tH7oLdI+v0+Pr7srZmjzDhBqtxqbbjP/V68n9qs6uQ/B3w06AtectOb74l9S094V7+aXe/vTsw1yYVB+YVVeee6EA2uwb6mlenooMKu8/7nCld19O1t4LsX0n8nDEWRHumM6DgcEXpdoLo+t7dSuLUEoGVpz5lxkhf+Q3YQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?u3Y/MJLW369HkqXG/o3Xie+D+EuwlSchmPw+6PJLXnFPYNejnxTasd+2EKNZ?=
- =?us-ascii?Q?dtTRH68UL6y+1wvzL+pFk+qcsLFk+UhPMEOw7at9Wbb9556PgNE0ICo03FiA?=
- =?us-ascii?Q?upqn5Fx3ZHEeHomDB3ovNv3dHBoZv2l69mKSVVx0pzMlk7uvHSytaFiU7T2V?=
- =?us-ascii?Q?WlC3Phj2pFn+mgF28qsdifreaOBTY2SWUjiv0T5M/bqxMjcdGlhko0XQqYzJ?=
- =?us-ascii?Q?9I0PcnCkAWR8e3mQ+ONeI4QQgGmY+IZX04uuXTBIFsscBGw/SXQRrkdWe9fB?=
- =?us-ascii?Q?giRVqKhxcB6qT64gKcdixxASsKooEokv1aZCe4JxaCDB/3arU6Vz7WbhXxhD?=
- =?us-ascii?Q?/s9CLUPiUkMPqwbUtI3ijl9Z5J+pcN9GSiasXmrAAEaJU3Lel4SBb+Hi8hYJ?=
- =?us-ascii?Q?XDZI/OthXlWhnDxsRrRlW5w4LXmbhF7ymRWowpgKRF/C2mAL7guxhs8djR8l?=
- =?us-ascii?Q?Kdiu9og4KnMEYxJxoJwDBbvYv1kPAiNXUKU6OG7o/oIpAXO7YZ2vLQWDUfVP?=
- =?us-ascii?Q?5lbGdBYfbUNTvCbGZU8OzJA9iOuo+TT/i/Ff/L5Uq8GNHb9TArJA/kzROCST?=
- =?us-ascii?Q?xWgibwVs2VrLCUCLP7pQZr7mc/TMRkgLg1RdAZuQD+05rm2XVMzkIIVfFpw7?=
- =?us-ascii?Q?n5omFW1BJz0GCqP5v21dYoPRyMSCcinuXs9p4Wal1eWiLXtZS0jPcw9YCxFI?=
- =?us-ascii?Q?LHEQ2zC7PQQMGb7lKMITfCL9YCsPjrvUtY8IAxh92kdmImpd75SKV5Wf5cMe?=
- =?us-ascii?Q?hHpXMJgku6BUemiOqF50Nbe+oSMJ7V6/Ro1XLqWq1GLav5W+1EPzUCP5E3tE?=
- =?us-ascii?Q?2RqD6pX2tV18+eiC6GVs0jtNx5EwhY/Lkn2zCGAigYvBuCNInv2+v/Tnuppn?=
- =?us-ascii?Q?ZlopE86z57bb0AxHq8idYM8cIIF8Gsc8yzUj/7Z79Vjt/Kugqsm8SaEEh+LQ?=
- =?us-ascii?Q?Q6H6XpNbW3/WuQC+BAynbfMUZE/UPgtVhMxqcfOiJCHj7msSA59HeNNU2Dg7?=
- =?us-ascii?Q?zp+MisF2t8t6w8xrgooKMOZHRzX1+v5p9yPq2ENy/VQuJDB68B8ygBiaRUYw?=
- =?us-ascii?Q?J2nLbWrJLzqqi4/Bp8oJF7ooDtcyL0Q+hjOPYTPRcO2RuNka/W8cNONVgY8B?=
- =?us-ascii?Q?SS/domoc9m6WXW2rUmqQ4UF2EIulRDEN1DWzTkN6WAazPhbjrYYkhvzLe/WO?=
- =?us-ascii?Q?VSwSZ4f/sbvyLW0vKNiBA8LUkGpdDJH7nMqEOm+/83m0VujZLxKdnGlY6lgR?=
- =?us-ascii?Q?dSKrScUFQGsY06x08GUtQlxRMBfJ5ZUp4Ap3PNTVniPC59LeOsXW7no4d8Xy?=
- =?us-ascii?Q?0M2s3nPTIY+RagRauhxZKwmBTsdXWyobthTEK6o809KBO5AObD973rZyIt3x?=
- =?us-ascii?Q?BNxGWmHnbdRho5Vj/BQ7FZUVy+w7qlgUqcn0Tl0psVPKs4LsKawOnnqRNW+s?=
- =?us-ascii?Q?K2ep5aN0gV76AEpCfsSx11pxXDOwLyUd9shNwNFqjRbpeA5oV1+rCJ1uR/gr?=
- =?us-ascii?Q?2T9E3T0tp2hcFk4Z4H2iROfI+nNJkcqy545chnSdpHcbrgPFmA1OYM8YEFOo?=
- =?us-ascii?Q?ujLnEHIXnskUmH0giquezuXKZMQbnXnwZ8t0C1TQrDPIQ7la6PMNQAMvk8Zh?=
- =?us-ascii?Q?8A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41eb31f6-6317-478b-f54d-08dc4c424887
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2024 20:37:54.9451
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wDcGF39CN2i4S7zZ4OEp1A4GSjf9MazkhnrUL5YHpkre3Q2RedFzag7b1DaLLb+mnb+p6BT/yytGFykJFu+J838a95Hjsl0blVVDuUvnvKg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6786
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Jonathan Corbet wrote:
-> Dan Williams <dan.j.williams@intel.com> writes:
+Hi Bjorn Helgaas,
+
+(C.C.ed to linux1394-devel@lists.sourceforge.net)
+
+I have an objection to applying the change.
+
+I've been using the issued 1394 OHCI hardware in my development for recent
+years, while I have never faced the reported trouble. I think there are
+any misunderstanding or misjudge somwhow in the review process to apply it.
+
+Would I ask your precise advice to regenerate the reported issue in my
+local?
+
+This is my 1394 OHCI hardware.
+
+```
+$ sudo lspci -vvvnns 06:00.0
+06:00.0 FireWire (IEEE 1394) [0c00]: LSI Corporation FW643 [TrueFire] PCIe 1394b Controller [11c1:5901] (rev 06) (prog-if 10 [OHCI])
+        Subsystem: LSI Corporation FW643 [TrueFire] PCIe 1394b Controller [11c1:5900]
+        Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Interrupt: pin A routed to IRQ 255
+        IOMMU group: 17
+        Region 0: Memory at fc700000 (64-bit, non-prefetchable) [disabled] [size=4K]
+        Capabilities: [44] Power Management version 3
+                Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+                Status: D3 NoSoftRst- PME-Enable+ DSel=0 DScale=0 PME-
+        Capabilities: [4c] MSI: Enable- Count=1/1 Maskable- 64bit+
+                Address: 0000000000000000  Data: 0000
+        Capabilities: [60] Express (v1) Endpoint, MSI 00
+                DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s <4us, L1 <64us
+                        ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0W
+                DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+                        RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+                        MaxPayload 128 bytes, MaxReadReq 512 bytes
+                DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+                LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <512ns, L1 <64us
+                        ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
+                LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                LnkSta: Speed 2.5GT/s, Width x1
+                        TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+        Capabilities: [100 v1] Advanced Error Reporting
+                UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+                CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+                CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+                AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+                        MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+                HeaderLog: 00000000 00000000 00000000 00000000
+        Capabilities: [140 v1] Virtual Channel
+                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
+                Arb:    Fixed- WRR32- WRR64- WRR128-
+                Ctrl:   ArbSelect=Fixed
+                Status: InProgress-
+                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=01
+                        Status: NegoPending- InProgress-
+                VC1:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+                        Ctrl:   Enable- ID=1 ArbSelect=Fixed TC/VC=00
+                        Status: NegoPending- InProgress-
+        Capabilities: [170 v1] Device Serial Number 12-34-56-10-12-30-00-86
+        Kernel driver in use: vfio-pci
+        Kernel modules: firewire_ohci
+```
+
+I use it in the following environment at present:
+
+* Host system
+    * AMD Ryzen 5 2400G
+    * TUF GAMING X570-PLUS with BIOS 5003 (AGESA ComboV2PI 1.2.0.B)
+        * SMT enabled
+        * SVM enabled
+        * IOMMU enabled
+        * Secure boot disabled
+    * Ubuntu 24.04 LTS amd64
+        * linux-image-6.8.0-11-generic (6.8.0-11.11)
+            * default kernel cmdline
+        * QEMU 8.2.1 (1:8.2.1+ds-1ubuntu1)
+        * Libvert 10.0.0 (10.0.0-2ubuntu1)
+* Guest system
+    * UEFI using OVMF
+        * Seecure boot enabled
+    * Ubuntu 24.04 LTS amd64 (the same as above)
+        * default kernel cmdline
+
+> Using LSI / Agere FW643 with vfio-pci will exhaust all
+> pci_reset_fn_methods, the bus reset at the end causes a broken link
+> only recoverable by removing power
+> (power-off / suspend + rescan).
+> Prevent this bus reset.
+> With this change, the device can be assigned to VMs with VFIO.
+> Note that it will not be reset, resulting in leaking state between VMs
+> and host.
 > 
-> > Matthew Wilcox wrote:
-> >> On Fri, Mar 22, 2024 at 12:10:38PM -0700, Dan Williams wrote:
-> >> > Peter Zijlstra wrote:
-> >> > > So I despise all that RST stuff. It makes what should be trivially
-> >> > > readable text into a trainwreck. We're coders, we use text editors to
-> >> > > read comments.
-> >> > 
-> >> > Ok, I will rip out the RST stuff and just make this a standalone comment.
-> >> 
-> >> I would rather you ignored Peter's persistent whining about RST and
-> >> kept the formatting.
+> Signed-off-by: Edmund Raile <edmund.raile@proton.me>
 > 
-> Dealing with that is definitely the least pleasant part of trying to
-> maintain docs...
-
-What is Linux development if not a surprising ongoing discovery of one-off
-local preferences?
-
-FWIW, I think the ability to embed RST markup directly into source code
-documentation is a slick mechanism. It is something I welcome into any
-file I maintain. At the same time, for files I do not maintain,
-maintainer deference indicates "jettison some markup syntax to move the
-bigger picture forward".
-
-> > Hmm, how about split the difference and teach scripts/kernel-doc to treat
-> > Peter's preferred markup for a C code example as a synonym, i.e.
-> > effectively a search and replace of a line with only:
-> >
-> > 	Ex.
-> >
-> > ...with:
-> >
-> > 	.. code-block:: c
-> >
-> > ...within a kernel-doc DOC: section?
+> I sincerely thank you for your patience and explaining
+> the background of pci resets which I lacked.
+> The commit message and comment now describe it correctly.
+> The comment on leaking states was added.
 > 
-> I'm not convinced that "Ex." is a clearer or more readable syntax, and
-> I'd prefer to avoid adding to the regex hell that kernel-doc already is
-> or adding more special syntax of our own.  How about, as Lukas
-> suggested, just using the "::" notation?  You get a nice literal block,
-> albeit without the syntax highlighting -- a worthwhile tradeoff, IMO.
+> Usefulness:
+> 
+> The LSI FW643 PCIe->FireWire 800 interface may be EOL but it is
+> the only one that does not use a PCIe->PCI bridge.
+> It is reliable and enables FireWire audio interfaces to be used
+> on modern machines.
+> 
+> Virtualization allows for flexible access to professional audio
+> software.
+> 
+> It has been used in at least the following Apple machines:
+> MacBookPro10,1
+> MacBookPro9,2
+> MacBookPro6,2
+> MacBookPro5,1
+> Macmini6,1
+> Macmini3,1
+> iMac12,2
+> iMac9,1
+> iMac8,1
+> 
+> Implementation:
+> 
+> PCI_VENDOR_ID_ATT was reused as they are identical.
+> 
+>  drivers/pci/quirks.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index d797df6e5f3e..e0e4ad9e6d50 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3765,6 +3765,19 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x003e, quirk_no_bus_reset);
+>   */
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
+>  
+> +/*
+> + * Using LSI / Agere FW643 with vfio-pci will exhaust all
+> + * pci_reset_fn_methods, the bus reset at the end causes a broken link
+> + * only recoverable by removing power
+> + * (power-off / suspend + rescan).
+> + * Prevent this bus reset.
+> + * With this change, the device can be assigned to VMs with VFIO.
+> + * Note that it will not be reset, resulting in leaking state between VMs
+> + * and host.
+> + */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5900, quirk_no_bus_reset);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATT, 0x5901, quirk_no_bus_reset);
+> +
+>  /*
+>   * Some TI KeyStone C667X devices do not support bus/hot reset.  The PCIESS
+>   * automatically disables LTSSM when Secondary Bus Reset is received and
 
-Sounds reasonable to me, will do that for v2.
 
-Lukas, thanks for the help!
+Regards
+
+Takashi Sakamoto
 
