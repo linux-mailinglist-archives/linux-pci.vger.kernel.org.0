@@ -1,154 +1,158 @@
-Return-Path: <linux-pci+bounces-5171-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5172-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0739D88BFE5
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 11:50:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08FB288C025
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 12:06:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2800AB2771D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 10:50:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C630B224F7
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 11:06:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE47D12B87;
-	Tue, 26 Mar 2024 10:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FF843838C;
+	Tue, 26 Mar 2024 11:05:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nmb3ZbAU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plKB2hIh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F53548F5
-	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 10:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596C633CFC;
+	Tue, 26 Mar 2024 11:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711450153; cv=none; b=nU2HIYCOfA5zxHdraGkYu8JSAZoXk9mO3d4mdF+fTVnfHGzevxVltQesPXVDBGVT5srlFs8coBfxaBEdQ+6obGvXSFSSmtQ4nRIhkbLppFqYUPIYDmv5iIZLJp6wP/8aae48rPlIfYN44Q+mUS81EUalobaquVIsaxU1DFVkMwU=
+	t=1711451149; cv=none; b=diqcK17GSlKNM12Oj11POKXR/9Eory53rpBqJFP7/qGHmLrncA7p1kDV/fTixIkM87Q7j2lb4w3suyGNox0oDfTmTJWeW4Qa7TNd/MBqYqMeaB65FKM+lyYp0pPHpeO0GrbJp8NFeSnUhAsLmDfgY6732loDLpGmPdfezy0qhJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711450153; c=relaxed/simple;
-	bh=FdIlecklqovWUvrpfyhP9M3zVKU0Sq4nhdASMDLOLeM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F9NyKabRJbe7y2cN5gyf/U0fy/J56QZZXaOBfUdBGfr6ZSw9Nw4KlOxa0oqP+czTrb/4ut/wQMbOA2d6GTo/b0x3kTtaSQJ5tHUzD13uFG0zuGI4HoYMoUN/pcToG/Dizab47E66oiNbJPQ7I9LEOGh63rLEmjV+5GP5LCY53hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nmb3ZbAU; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2a02c4dffd2so3827661a91.0
-        for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 03:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711450151; x=1712054951; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vFbJYhdYGvuoH/oaiD2HBWtmIM7M07m8HS3m2IPBo/Q=;
-        b=Nmb3ZbAUW1UmI1tzHyg8ILf73dPZJO2fjLqRqpUsnT3d933tWOFlP8PdT/oql1qla7
-         xmN7olPIjJOMbH7nTulCCwJm9GBq//U1i7fBFMFnEBaUwqUt7KOetgEltqQG5NP3v6n8
-         gcNRzaXkDDvulv7Er/7uJd9hnqX/40sds7fKgbS3nPXNkUFNerE7zPfXrAfYG6sW3uOj
-         jH2J1Lel1bYEee+47BhEN6fjyu0wC6XyqUZe9Uca291+K3bCZBInZ6Uff/L84QxjACkS
-         sC9iKsvwmFaBSW5VVLypGRThfRQqgti5/PxSdFgv+0Wv4FPXws9DZg7hpNp/3fpQINMt
-         U+Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711450151; x=1712054951;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vFbJYhdYGvuoH/oaiD2HBWtmIM7M07m8HS3m2IPBo/Q=;
-        b=tW9kQpF/f+U69fA9ccnAbs4GWxskdMhANNplO4/jHLcJuP8hZXHawqjNO5qWaUvdo9
-         fhrJG+1sxPQyNXSLWkMxA2TLrcAvR9YxnUKAiA4RNnJ7DiLbY3vpf4hgLMop8yAvPj3w
-         4Ei/jSsoJGwRYbuJDnfuAgq12EZnNWdcZHt0isE7gzlIoDCrbGVg+B985hGA1aA+O40O
-         1mg+s73/K4g3okwm7xNxsh/2AYO0XO5rt9CRgPf9JeDG77Oj0ffHHXAVa14Jc8MbzQAN
-         sr/EqS61C+XscOSsJtgAk6DOJdl/yz26Io8BBY5nSjrdpbssduWD80zCEeQLgRNykcSI
-         C92w==
-X-Gm-Message-State: AOJu0YxysaYXFTw/lCY6LnONJbB1jowILL8kViTXw9+fGCSI9J9h3+qC
-	P1kFJWYu9HYotjBmsoyNhxyBo9N7NnJRwBaafbJcBAF21KGYjurUH+HYBYWV7Q==
-X-Google-Smtp-Source: AGHT+IGxQHf1BymA0HBDL7TqSsjS+f9g8ewlhc49CHvhJdNFTTeKuQxe+y2yjxy3ofTQUrQg7LmtBQ==
-X-Received: by 2002:a17:90a:1305:b0:2a0:4c3b:3454 with SMTP id h5-20020a17090a130500b002a04c3b3454mr7137289pja.47.1711450151523;
-        Tue, 26 Mar 2024 03:49:11 -0700 (PDT)
-Received: from [127.0.1.1] ([117.207.28.168])
-        by smtp.gmail.com with ESMTPSA id i22-20020a17090a059600b0029fc196159bsm8777218pji.30.2024.03.26.03.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 03:49:11 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Tue, 26 Mar 2024 16:18:20 +0530
-Subject: [PATCH v4 4/4] PCI: Allow PCI bridges to go to D3Hot on all
- Devicetree based platforms
+	s=arc-20240116; t=1711451149; c=relaxed/simple;
+	bh=XvsRXWgO0Ym3Ts7FVT+ufI52BcgH2v55+ZYGE1iG9h0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NwA/GbKe3EnFEp9VmhvcV+wRahYLfokcyb9YcHTLYD303O6P4C7LiYHY6C3J0/Vezp8+RxOWPdCmONQNePxzFf+7dh9QjhuZpn3MilfkjiH8Ao0bpIBH77ItDJOt+fjUpWI8iWrW4dGlvYLYZsbe56emiwZLXF4i2xt+4Vv+ceU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plKB2hIh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85715C433C7;
+	Tue, 26 Mar 2024 11:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711451148;
+	bh=XvsRXWgO0Ym3Ts7FVT+ufI52BcgH2v55+ZYGE1iG9h0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=plKB2hIhIQRqZvUcjXKFeuPzUZHCeAsGOAFw+gKgzU7SO7iNphQpzVA1w6QfLsomH
+	 XOGyxSx/1QolIhecUu06CuICRBn83liCLuDkzqFzgPaHB/ET/T+o/mBb4DocChFTwH
+	 Hzo7ihyu/3Pjpk0iJI5SJoXZKHEfFy977rGX3FM4w0rC53vSiLg1+C3Jk1eVK1RIjV
+	 XVGB8DyNeOefvZu8BigXtpVktvDUUC6+eaOs6NNz5tO9sHYCda219oNXaJVVPwURWh
+	 yyQ88Zb/ugmv34IYMeupVpcsPM1vfgqCD7vjIzVgCUym+y9Nx/e0E/wBOMkpwoiLZ9
+	 I1w0k6hfnba3A==
+Date: Tue, 26 Mar 2024 12:05:42 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
+ EPC init callback
+Message-ID: <ZgKsBoTvPWWhPO9e@ryzen>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
+ <Zf2tXgKo-gc3qy1D@ryzen>
+ <20240326082636.GG9565@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-pci-bridge-d3-v4-4-f1dce1d1f648@linaro.org>
-References: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
-In-Reply-To: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-acpi@vger.kernel.org, lukas@wunner.de, 
- mika.westerberg@linux.intel.com, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1862;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=FdIlecklqovWUvrpfyhP9M3zVKU0Sq4nhdASMDLOLeM=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmAqgV8B1oRhS/KEisLhilKgX2Z9YTFnu8il8dh
- f9ajS7O2tWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZgKoFQAKCRBVnxHm/pHO
- 9eXUB/9NbhfHS2KhKNmrNgI0BRCyWwQs5Z61KL+HT/cENsQwy5+PBFop3vvKi5jAjCjl2F2llnV
- azk7wpPnz6M+RGS/kui+2NwlCPvmI2RSGReR8pmDUlW7dUL1MURBFvS9BrbA2GweE46rGR3GwCn
- zd6e4YlTwdT1bawePXF0Ovy39OdzdchHvn6R9RSCqaMulgoYAPPgdZACD1yY0TZh1bk4AbzGLTI
- V905mcjIEhpdM0/BDSMVr8EQDY+x6xFxuouAXOFl8RutypXrd6J459cVerSyAICab9gWMzhvoUf
- JJR1oISium2mQig51ikU2pslp2AlKXazrJbOLS7KrgkQcA3d
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326082636.GG9565@thinkpad>
 
-Unlike ACPI based platforms, there are no known issues with D3Hot for the
-PCI bridges in the Devicetree based platforms. So let's allow the PCI
-bridges to go to D3Hot during runtime. It should be noted that the bridges
-need to be defined in Devicetree for this to work.
+On Tue, Mar 26, 2024 at 01:56:36PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Mar 22, 2024 at 05:10:06PM +0100, Niklas Cassel wrote:
+> > On Thu, Mar 14, 2024 at 08:53:44PM +0530, Manivannan Sadhasivam wrote:
+> > > To maintain uniformity across EPF drivers, let's move the DMA
+> > > initialization to EPC init callback. This will also allow us to deinit DMA
+> > > during PERST# assert in the further commits.
+> > > 
+> > > For EPC drivers without PERST#, DMA deinit will only happen during driver
+> > > unbind.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > 
+> > Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> > 
+> > 
+> > For the record, I was debugging a problem related to EPF DMA recently
+> > and was dumping the DMA mask for the struct device of the epf driver.
+> > I was a bit confused to see it as 32-bits, even though the EPC driver
+> > has it set to 64-bits.
+> > 
+> > The current code works, because e.g., pci_epf_test_write(), etc,
+> > does:
+> > struct device *dma_dev = epf->epc->dev.parent;
+> > dma_map_single(dma_dev, ...);
+> > 
+> > but it also means that all EPF drivers will do this uglyness.
+> > 
+> 
+> This ugliness is required as long as the dmaengine is associated only with the
+> EPC.
+> 
+> > 
+> > 
+> > However, if a EPF driver does e.g.
+> > dma_alloc_coherent(), and sends in the struct *device for the EPF,
+> > which is the most logical thing to do IMO, it will use the wrong DMA
+> > mask.
+> > 
+> > Perhaps EPF or EPC code should make sure that the struct *device
+> > for the EPF will get the same DMA mask as epf->epc->dev.parent,
+> > so that EPF driver developer can use the struct *epf when calling
+> > e.g. dma_alloc_coherent().
+> > 
+> 
+> Makes sense. I think it can be done during bind() in the EPC core. Feel free to
+> submit a patch if you like, otherwise I'll keep it in my todo list.
 
-Currently, D3Cold is not allowed since Vcc supply which is required for
-transitioning the device to D3Cold is not exposed on all Devicetree based
-platforms.
+So we still want to test:
+-DMA API using the eDMA
+-DMA API using the "dummy" memcpy dma-channel.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/pci.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+However, it seems like both pci-epf-mhi.c and pci-epf-test.c
+do either:
+-Use DMA API
+or
+-Use memcpy_fromio()/memcpy_toio() instead of DMA API
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 48e2ca0cd8a0..2fe9defa69e3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2992,6 +2992,18 @@ static bool pci_bridge_d3_allowed(struct pci_dev *bridge, pci_power_t state)
- 		if (pci_bridge_d3_force)
- 			return true;
- 
-+		/*
-+		 * Allow D3Hot for all Devicetree based platforms having a
-+		 * separate node for the bridge. We don't allow D3Cold for now
-+		 * since not all platforms are exposing the Vcc supply in
-+		 * Devicetree which is required for transitioning the bridge to
-+		 * D3Cold.
-+		 *
-+		 * NOTE: The bridge is expected to be defined in Devicetree.
-+		 */
-+		if (state == PCI_D3hot && dev_of_node(&bridge->dev))
-+			return true;
-+
- 		/* Even the oldest 2010 Thunderbolt controller supports D3. */
- 		if (bridge->is_thunderbolt)
- 			return true;
-@@ -3042,7 +3054,7 @@ bool pci_bridge_d3cold_allowed(struct pci_dev *bridge)
-  *
-  * This function checks if the bridge is allowed to move to D3Hot.
-  * Currently we only allow D3Hot for recent enough PCIe ports on ACPI based
-- * platforms and Thunderbolt.
-+ * platforms, Thunderbolt and Devicetree based platforms.
-  */
- bool pci_bridge_d3hot_allowed(struct pci_dev *bridge)
- {
 
--- 
-2.25.1
+To me, it seems like we should always be able to use
+DMA API (using either a eDMA or "dummy" memcpy).
 
+I don't really see the need to have the path that does:
+memcpy_fromio()/memcpy_toio().
+
+I know that for DWC, when using memcpy (and this also
+memcpy via DMA API), we need to map the address using
+iATU first.
+
+But that could probably be done using another flag,
+perhaps rename that flag FLAG_USE_DMA to NEEDS_MAP or
+something.
+(Such that we can change these drivers to only have a
+code path that uses DMA API.)
+(...and making sure that inheriting the DMA mask does
+not affect the DMA mask for DMA_MEMCPY.)
+
+But perhaps I am missing something... and DMA_MEMCPY is
+not always available?
+
+
+Kind regards,
+Niklas
 
