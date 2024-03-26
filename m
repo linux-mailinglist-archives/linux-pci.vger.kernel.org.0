@@ -1,111 +1,83 @@
-Return-Path: <linux-pci+bounces-5199-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5200-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E235388CCDF
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 20:15:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 333BB88CD50
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 20:36:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 216A1B24A3A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 19:15:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94C581F2A47C
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 19:36:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 733F713CC4A;
-	Tue, 26 Mar 2024 19:15:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259D013D246;
+	Tue, 26 Mar 2024 19:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wb66Hvwg"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lBNU4Q9e"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2133.outbound.protection.outlook.com [40.107.104.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4822F13C9D1;
-	Tue, 26 Mar 2024 19:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0A13CC41;
+	Tue, 26 Mar 2024 19:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.133
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711480533; cv=fail; b=tzEIHANvNirA9LOIeqk5pfpzezfO2lyaRaS5Am1ypdXXp3CaWJcBwD1VNvbUHkW8u9w2Kfee2p2iy17RLX/qhVnl14IYoEfM4AsdKzFVtYb2854A2dfpIXFxwD/W/EGlUosbVn/82LQfo0EXUNjcudTAH/HLJbCx8fo9WE0wUcM=
+	t=1711481765; cv=fail; b=nYu7phN7Q4UW+tiwYZ0mf/Op03oCyDZeNFPM2eTB2o6vSuX/uD08tmDllRd9VseB/LFEfVAfQa/kFMl1Wvqof/Y/u2M5MSS7V7w7jKPCv0A7n0EEi6NT23dDWqE9878A0ad1UZPyaDP4kmHmbw1i2FAJfZBTzUOVNPWs+HVP+yA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711480533; c=relaxed/simple;
-	bh=tfZNc8yZ51v0lbzRrBTuk8+UYrrdTKYGY4PrFd1DNnU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=K+E94ZgbOEmTH3pGcWXSHPLPOgTxfsYyuWCahKohkOgm8KgGhTntTv3b5WONj5++CLGFUpvsb/SKXrmcGAcTfLupm43gIIoV36KQzxSfMKM9iCNAOYWVdzF07oYCOySZSXbRG/tb+oOWCV4uqRotZSnxTV7tX/pugfPZ1G0lkLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wb66Hvwg; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711480532; x=1743016532;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=tfZNc8yZ51v0lbzRrBTuk8+UYrrdTKYGY4PrFd1DNnU=;
-  b=Wb66HvwgTSH3I6BqeFR9433RLnF1i+2bBNVdKP1RCplOL6nDxeMHkziT
-   l2rKelcZIyirXLubzr5kUXDmbHtMCuk6Fj8UYBiegbuwqjvTjxH+zf76s
-   m4JZz2kS5PvWxkXd2cHiZEWzjLzoXvUheawW+ADGplV91d78v5ZZ9YiEv
-   Fh3q2RSoYldiHDhR15o4LayKUmwr8W/T9PVWVIW6Xq6gpdHMvDPwAQ1So
-   kXjVma74UCZp6Pjc1F//Z4dPFhvcAV9406Kv21qHc5EWPBBsdONjA3EpH
-   ZlxNjUSpq7RCgEbkBFMLmnc5nu+oLygKwGhPyC+3IoERmJAimdE97Cd//
-   A==;
-X-CSE-ConnectionGUID: 9KBVQsA6SmquTl2YQEIHPA==
-X-CSE-MsgGUID: 87gOCjp2TX+9wA2iWpCE5Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="23995964"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="23995964"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 12:15:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="16052490"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2024 12:15:30 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 26 Mar 2024 12:15:29 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 26 Mar 2024 12:15:28 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 26 Mar 2024 12:15:28 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 26 Mar 2024 12:15:28 -0700
+	s=arc-20240116; t=1711481765; c=relaxed/simple;
+	bh=BROr7rk8vwzQgK2p19UHuNXsTNsZJmL1eAxB2wnXv4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=FnL/jrbABSEYLnZGW75t+HaxsxphdXYKhppoWqahGRpBQISVdpEuqewW1sxjClHsgDryBkF6oyixHlcMUYrNsDmPik+tsXYOQQ3UGb4utOLuMCiqFXddUZg1Lr9/PvCrWEN3dKQgOTo1vEhYnHi4a/qLq3A1audr2NZmsvvsT8A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=lBNU4Q9e; arc=fail smtp.client-ip=40.107.104.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iuRaVSTM8wLr9JsuSMP/j4n1bI65v7oxYm9+Xv+0j27JITd5ia32Dadv6K6asTGhJFKwy7Z9e3+EzviBYFJOZmSPnwXHmqVUbDwP5FQ3uptQQiYOJRkXucNbiQBS+e3i7HCs6HkA1qtflUQ/cSuKf7J5uJDloGvjAwNeKLZMrvrzUZwvyia9VCTWzBWmX0nDv80UWFlqrcOEvFmXpSphEMd+HNOR4sDcXjjVIsUZpkw2UKe4J7kQG1deAb6lnswByofWCYB3t5wekjcIst9sQU74xxWYp+Kwy3Gv6hMMNexSqGpH2Iw+F868d+MUs/C83HXaSVd704uVFWBP1d1irg==
+ b=f08mJUr6FHf2WwD6zEoU33JZx7OvbRWSc+k33ICkDnKwoHkitMgP9/b9qoK3G3HNHMeCzZv+ZJZZDpZr2STDLue+OWSd+1beOrVbWGgi/rbLI4rfCW3qsYga1KCZgSwjNDjWbkn1VuCZvTgH3YXBij1jdqOCTJ4YNwjJo9xmpzGt1vCWgl7lO9MUlvBy9LC9O5egQDmndFZghnOChFFKWVW1WpzsWj3CSTuDvi9MPjEIlXkGDgWEY8Sx484CHChCvSGLuk1TMKB8FSO0TCnqUdoAfYC9KjaGP+XbgT2xick9cvvQs5vdNtu9kbYId5s17/6c5fgJXBTKI7Iw1kSNBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/BSLbiDSqydfaLVHFAjyUQaSXx0KDNOG6W0fpP6hAwc=;
- b=iVwv+ibrM9oZf+mFZiY2Fi4wFzSXaDY4A8CM8PBxwEUq4Ms7vmA7YFYDFhz24YafXh4n7kjm1PrPNcfAJhxpG0apRRCHK3Msm1ec91nvv3eoxQG8Lc+pbyO+OOx1/LIWnc1flBsRYMsC4xioLRqFWprWB6OO7+uypneX/76B996G4Hhgg+ydO7VjKZki8R8CKKFcxfz6fwsARl2jXJ3ij4SRwJVFRZm/ev22DpgidqjLVfCdicVoQ2k1RI2DAeCPNH7Hq9DYGEBkwCHKG0lWd3jJldLqhpJc5zh+KSvlSTSktq1A/E7aV5GIhZtFua6J7q4Rkb5jNVrXfEb8vcuPeg==
+ bh=zlYsfya/NREepbPNsosV8dL8dlZoKSz3Is+4nwBBg/I=;
+ b=i0RATdOYXGKAK0EuO8s90OSYLJ1UPccd4aaso1g4hqswzD9ibzEKpc7Gksp7aqfgqGTw2RgcvpUiYIv3tr/EPt8SRVjTSK/5Brb07bqdw4t8vQ0qJNOn6TPjIUSHzRE/ES7Qoo043Q9c8p2Kk217VSKxwlZ8NS60+ysjOIVFKC60e2zzQUlyC7P5cWS7Gc56hCmih8HjSZCa2fWW3pTDjPCIFombC7DGgj4RfDlteiVcveGtrhwGOudBfqYL71/qPKLnUgGKUWs/LhlRScdcwlJQgUM+n36lKzEnACvElmPfLGaNHrBMlscaYopGCTLdJP0JTCQSsUEixGutTHTY6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH0PR11MB5300.namprd11.prod.outlook.com (2603:10b6:610:bf::18) with
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zlYsfya/NREepbPNsosV8dL8dlZoKSz3Is+4nwBBg/I=;
+ b=lBNU4Q9eAprmcQQR0+vM1Jdt9b+NFPmtZhecpbBf9flTiUExxfLSYqUG78ctiEF/PZ5ju689lk0qM/kk8TJacpRcpbyMvUEWlM1dsmXn8XDiRrqwcXuG4B13jJ2RUtvZlylBlF7cCQV0o7DzBtFGN2Lxf9RPA9/W79KgTNswQAc=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VE1PR04MB7438.eurprd04.prod.outlook.com (2603:10a6:800:1a0::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Tue, 26 Mar
- 2024 19:15:25 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
- 19:15:25 +0000
-Date: Tue, 26 Mar 2024 12:15:22 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
-	<kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>
-CC: <y-goto@fujitsu.com>, <linux-pci@vger.kernel.org>, <mj@ucw.cz>,
-	<dan.j.williams@intel.com>, "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
-Subject: Re: [PATCH v3 0/3] Display cxl1.1 device link status
-Message-ID: <66031eca92f5a_4a98a29427@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
-X-ClientProxiedBy: MW4PR03CA0246.namprd03.prod.outlook.com
- (2603:10b6:303:b4::11) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
+ 2024 19:35:58 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
+ 19:35:58 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: helgaas@kernel.org
+Cc: Frank.Li@nxp.com,
+	bhelgaas@google.com,
+	cassel@kernel.org,
+	gustavo.pimentel@synopsys.com,
+	imx@lists.linux.dev,
+	jdmason@kudzu.us,
+	jingoohan1@gmail.com,
+	kw@linux.com,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	mani@kernel.org,
+	niklas.cassel@wdc.com,
+	robh@kernel.org
+Subject: [PATCH v3 1/1] PCI: dwc: Fix index 0 incorrectly being interpreted as a free ATU slot
+Date: Tue, 26 Mar 2024 15:35:40 -0400
+Message-Id: <20240326193540.3610570-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0289.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -113,133 +85,144 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB5300:EE_
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VE1PR04MB7438:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Dc1fvm8jLhecDAvP+jEt5XS7Wrf2+ScZ/NnBDZA8NRsSIDu1PmRoTky7D33rVoZucgPzNgc8yjRszQrkNebvREbHNix2klvFnEce7wqPQQ/KZ68X1x/sMiKeVEtkbg3S7F6wrt4STe6KwRezKHqw/iCUGSD2Ql94W9PJeveS42LhsOqaiouYbaG2sYzDXu5/cONwOFLTpynqIAQGX5XujWndvmcyn7Ca+I8XSgE3453WYoT7meW8C4kiV2QP0StIA3JLdYc9drNMT6eYLpPN/bqi+ow7tULeJmZkEA05Fmm8+r0XUHD7v4y8HUovxTpSpHXQgNddyUIh6uqYZkQQbEV9JS5AC+x/n0AyqgU+6oTDu1OzJvU/hJT7DCUDZqAaRnKJHLlJEtAapcGsDM1UYO6OmA/5cKwQ03umWHtH6erJhdHuVL7zxzb/ACvZsrxAa0q5paCWuS7dO5pQNZo4MOCN/vu2arbQG9Si4fm3pEDL8OwWm5/BqDTVhba17kAZwy2NNgwl7vM2+ruWf4+J+FfM2NJym7MbE5Lbl723qQLdDu4vsJRo2lhpTLlZDeDCjhh7r1+YBXOBtzU8LnEkJdiXYeiZBywhr71v8xxWHuEXqark5bW8wE9xZ/Gzuujo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info:
+	sW+WBh/djFWX5pdFauMNCxyZnZP9/c20XpVeTK6WRIYgy7kE33pCTTcR1Yev9Yf8GzMLm17JXwoaYswf1hFnoa6E5Utj5jgN/jScDO3YnmKCNl1TDZ8VdvZPMJehO4GfrB66r0HOHVYkpiAmgEn5kkPzFWR693H4Cq1GO0158ZY2pEWNu4JYtK/ELJHTZugW6rtXKU4dUjugiHzxqwdT4AUC1CZ/J2dOK4CT9+zuD6guZ9YlxgdQSYL0l+j/kXw57mT58rbPTKtItP1KwC4CdLJ4IFJqGKCxZGs9jqwGzdwi5idmg4fMCYA9Ndp4fWiJNn9e9jgVglsJzCeep/PmwXKKPIJmW3/hGyD9VrkdfNbl2bMFG6xjS3FWL5JN2z932RpFDUc8gVXlNVCPJNVczhodEL4UnaVsWcewuUDiNay+4KSzUyxNPfr8eTkmiO9M0dg48IrQzvpZR6EXOPeyxRgX/UhNJlfEBVtWEKE1HK5Do8dMbxlXUXph6eWwXx39U3d19LxiYfcA2+N+ndQCIVh9SqkOWXVJrCJ4vj58CjCOAT53G8xr8Nmdxrx8Up0aXELKfMMoNy+zqaEPwOkICapf+HA6ziuHDkwT3YCULweYrjmsBJ1velwzG922vLP+8pxnvo1l+IoD5YWiYcXKbfJX6QM52RI1lHyxVsM3GX0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(7416005)(376005)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gCroQGZRTzX9BgSRy7vOMovKsQQSDLK2jyl8iBos3lgrrTO89X8F64KHHd0R?=
- =?us-ascii?Q?EkJ8OLSlTYVliYKtNOOYqtfBInytoGc/fNL11sJLjhmvioykeTjh0HvrmUb7?=
- =?us-ascii?Q?C6ycDbstGblwCJFzpq+hopS2gci66o7hOHAzK7HaTv3Kwk9ARf+lr5DgqteH?=
- =?us-ascii?Q?VFHDz+IFZaInVJhfZxgxJbXe9LClQGQIT8ElwaDT7TYKSaEmRTqixPC5hlV3?=
- =?us-ascii?Q?HnvR6X89dc6N6Tfd0lrDTEfqM6oQ2rFJU/pu7VyrZ5GWI1RFFvyNkNShhgcR?=
- =?us-ascii?Q?lDXlWXT4FkmiFMVGVw8Lv8/SWgQZNxTlRSnXiNhWeXKp4XlXt2YBZ/AZwR5d?=
- =?us-ascii?Q?f1WDGG+TI6oeVOXhQE3kFn4z0ref+HgmcTY/ESeF+7pdZtKruS/OhhsXipzk?=
- =?us-ascii?Q?2jppemFhVboKkmQ8nKHLd2jDv3nnqhMuKTAGhcTvLNnvP8uUjtuSmCIKWHLP?=
- =?us-ascii?Q?buTX5oDImpvCYysNTWb68zFu6NLQ8E49ZGtYFE86vinc3fmJmoLzli/X5Zl5?=
- =?us-ascii?Q?0CQmXrcxj6bAB8PsYbZsGto0Z2AgIL99P3tHx5o+FJyMsUJcTMCaFGI8u3Pc?=
- =?us-ascii?Q?muqXblu61gCVyXYNcY4snPmG1DS+cvbdtTvtq/EAbFleN8fII4o6I3aOQgsO?=
- =?us-ascii?Q?NePLJtH1mUz65uPc306cLydppOJXGph4jeMwIn9soqL1iP1J7HbNXvJtpPT3?=
- =?us-ascii?Q?20O2OXi9MEIRtzajzpD4R4GCshDxyl+b1cSKCrE/pMXnafwfIk8rn0EQ1M/X?=
- =?us-ascii?Q?N4uijQrZrqqQ6UcyG9sTeyoElb+4hvqo1asts7cYZoVya0z59ovQl2bum7Lb?=
- =?us-ascii?Q?j4deGicYXaIfCwJpT6NjGZiDNGPPmlaIx/r1Nildytud+wwYZRBbpVsZjrqV?=
- =?us-ascii?Q?eoi1YQ6Bi+lZTRagTcDWJGFTRWY10dROrBSV5BsaIKcTYPlKk+t2UFV2L1LY?=
- =?us-ascii?Q?h9zlg2ZF+PhuuBDEVXD7ez/dk7DF4aIUmtDlfPrkZ4JEFMUHelquMiv3d7nu?=
- =?us-ascii?Q?toD0vr2EVdQvbhUVe3ec7cEhI/4Udv1URivfGAqt9J4tDXfdkpNyUg4tzwJz?=
- =?us-ascii?Q?aiANtQv279/LhbcEZBNDlsyb9Zy21nj2Ml6kdjGUM2C+uDQsJidceyjBbVu+?=
- =?us-ascii?Q?l8WdHeRFwF9erO7uJ68IU8pXbJIzeOy7HYW5Cdx6lo2jcIWHxsKHdTjbhIkG?=
- =?us-ascii?Q?hxdzm+A1f4QGlBINgw5p5u/i0VeyqqBBAhn3PJeoB6FENFEr6Z3reY6hGs4w?=
- =?us-ascii?Q?cPW3I2iLhKhJ6N3iuCnwD/50Q3tZbKI50MWot2XMfbbJLOSG8xwvtIozgRji?=
- =?us-ascii?Q?WmnWEOXMymi8gv688x6SKLeYhPZbR/NzzliFmXbURkwgoHjOe/ykIrDRpFif?=
- =?us-ascii?Q?BicuS+x7dofWjDVu8H723jTHReNuOQ29tHZ0bNw6Cpx3j6qLO69GuAGW3sXG?=
- =?us-ascii?Q?15Dh3n13CyMLE/Pk2FZivBPP0dl2zIaazHZq3XA0O4CoGbgj92YgIRrOWeOg?=
- =?us-ascii?Q?5L410hbgD/5yG90Kho+tQoirL9T5u61miWURMudyciLat4LYS6NHCeK0dSRW?=
- =?us-ascii?Q?176SZFX1+hoJ/EeCJC7c8HzrxCd91Rqme4KltReP656xEGQp6ZM+v1lTu6sD?=
- =?us-ascii?Q?Iw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5daec6c9-7a51-42ab-7aec-08dc4dc91715
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SPzjWGER6qD9g7KQKmcr/QUkH36S8cEpDGmtaoCxqyNYTUHr1ZLVuRz12/ya?=
+ =?us-ascii?Q?uyyrYWRx/yPajyxlEqa+wVMwa6V5VzGJ7CphoeacafoNYcCUvRyNZx36vldk?=
+ =?us-ascii?Q?Vid8aQiFF5eVW0qNbXUhz7EWeVHV5X+AhYSvLDQNXCneWr1yJjpV9OrI8eng?=
+ =?us-ascii?Q?Mp0Nf6Ww0fI/Oy7GZ+x4GYBEctHOhqxl2MNS58S8IFbYXQlAvhlEnsQ4/2LT?=
+ =?us-ascii?Q?OLV+1qoDwalJi66ORVtbGvCCpzsUAa9BeLQWdP/OKdJj6dwAKAjqpSq1lO6b?=
+ =?us-ascii?Q?oEvNbeWsy1OKDKU8EVZNlIXDqJp9ltoL/DErXM1fbrXTUWiIABwN3r/Vy/Qk?=
+ =?us-ascii?Q?0c7Oc1TO+Af9bQFp612ek45LkH3otK71DD3Mn80FbxSokG7kgqH4gbUeipr1?=
+ =?us-ascii?Q?KygTuUvefuPrXha5Bnti0wVmoofJ5o8bfSgLTM0uOTQ/7cTamgU6+U6kc++6?=
+ =?us-ascii?Q?qRqj/o68nSFQlfyaYMUJWTa9vMOw74vlXr5DasjTHRUBF9gPOTNDBAae6NzS?=
+ =?us-ascii?Q?wsgrpkU4Dj8gh7+hsnEoAYh9wLNk6fPglSrMBAEAJl+eh83VKQ8nqPCIfj6h?=
+ =?us-ascii?Q?h1sz25q+/xOCzZ+keiLX0nsIYgwgGgfWSwMPLsz8dLby6agYaduRhvn+Vbne?=
+ =?us-ascii?Q?btaukWF+pL2OLhzwvi9ilFxzx3dZs6D4yJ5kMoy9UQ3suMwMAMWRwLhZDeFa?=
+ =?us-ascii?Q?V3RaABM+64e05kDcyUQXuvIeVAGjQBm//XoT0IZxS0oUifyVi4ffrHqCXl0M?=
+ =?us-ascii?Q?wWS3xQVOFaZ0bBmaIzZkLyfcilPRib9XarBIKPiMc52GMPqAnzkfJLzwtEFu?=
+ =?us-ascii?Q?DixRz8FCAa6f8Z50F96BPTOaP33aKJgtOEmXK4wfEXjgbaz1Jed32F7brLp6?=
+ =?us-ascii?Q?VsAreJwCWZDM0R7g7qn2J2O0ryXaczf5Cag3lP2zd+whFKx49CaYAK6rF/7Y?=
+ =?us-ascii?Q?Z/u+dpJvzQAKdG9zktg1ibKSBBzWaiWtkIQO8vy984QzB/2eEN1wxaao7Xp0?=
+ =?us-ascii?Q?THL1CFlhM9mpn0/Co12Xz/jqy0lBoy6EPq6Mr+BXt8w6OZWIpuQcer9XALHu?=
+ =?us-ascii?Q?hdqreU/q4iLnU+lzz4Q5uzzaJxa5NmpeuWdaTFD8Gnfq2EbJ8tfuMWsfx+tT?=
+ =?us-ascii?Q?LblFqmALWQ5C5Gmu3HsINAarM5uWxwSFo1X0BbTjXOVSVW9MJlA4HvhWBMFt?=
+ =?us-ascii?Q?88Ltr+pcaFnrXkniuVdjOilZ5VGaux+0MQoOuPGoBYbbCSJPtUckLeI86vvc?=
+ =?us-ascii?Q?crVrQlGZWEZX4Us/u2Cw752P/q1L2wa2M184smsq82IXpktKsGJbYbZTyuMv?=
+ =?us-ascii?Q?RRZuBgacAXjlt3ox6Y3F8J+9JHDaxDCOX/yTuPDeVVPS74hZXP4DdoluHLIi?=
+ =?us-ascii?Q?tWkLL9WvAMnRv3nIT8dHFFWUzHAjrL9H5CWAfufcQFkjsno4212qdtNO/Qwq?=
+ =?us-ascii?Q?xZFEI03CHvHHpvXdFbTvqJdt6v9kyJUvGYfjhe8iIS1VS6DO1zjfK4l4xPaf?=
+ =?us-ascii?Q?+xRZJjagBzvd1CfKjjgJFJxaU8YgwqfUkEo95ZXO3wODuxG8SF6c2MUhyLnB?=
+ =?us-ascii?Q?XqI+FwwgXfYcmnHfxpFxpHLRejhvBj6BvXRalTUO?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e424983-8838-4ed9-b0ee-08dc4dcbf603
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 19:15:25.4520
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 19:35:58.2636
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7nz/J8uDtcHgBBzFw+GKhUOMyDc5wEist1M91gCQE4E6d7uOY3vCp4aLOqMOp5ovpS+DHDGJ9KkIV/eSNnVCt9Q1JYUvqHuN01Yia7qeTdo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5300
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: INyqbBJ8PnJDPH5LkyJKxHPKkQBtbExkLBVkTnw0M5awCv93F0QeOWQGhMcKH1i50z8lzTkGts+HJqusD/6TBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7438
 
-Kobayashi,Daisuke wrote:
-> Hello.
-> 
-> This patch series adds a feature that displays the link status
-> of the CXL1.1 device.
+When PERST# assert and deassert happens on the PERST# supported platforms,
+the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
+to the area that was previously allocated (iATU0) for BAR0, instead of the
+new area (iATU6) for BAR0.
 
-Good write up! One minor feedback going forward is to drop usage of
-"This patch" in a description as that is self evident.
+The mapping between PCI BAR and iATU inbound window are maintained in the
+dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for
+a BAR, dw_pcie_ep_inbound_atu() API will first check for the availability
+of the existing mapping in the array and if it is not found (i.e., value in
+the array indexed by the BAR is found to be 0), then it will allocate a new
+map value using find_first_zero_bit().
 
-> CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
-> the link status can be output in the same way as traditional PCIe.
-> However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
-> different method to obtain the link status from traditional PCIe.
-> This is because the link status of the CXL1.1 device is not mapped
-> in the configuration space (as per cxl3.0 specification 8.1).
-> Instead, the configuration space containing the link status is mapped
-> to the memory mapped register region (as per cxl3.0 specification 8.2,
-> Table 8-18). Therefore, the current lspci has a problem where it does
-> not display the link status of the CXL1.1 device. 
-> This patch solves these issues.
+The issue here is, the existing logic failed to consider the fact that the
+map value '0' is a valid value for BAR0. Because, find_first_zero_bit()
+will return '0' as the map value for BAR0 (note that it returns the first
+zero bit position).
 
-One common way to rewrite a "This patch..." sentence is in "imperative"
-tense, so for example:
+Due to this, when PERST# assert + deassert happens on the PERST# supported
+platforms, the inbound window allocation restarts from BAR0 and the
+existing logic to find the BAR mapping will return '6' for BAR0 instead of
+'0' due to the fact that it considers '0' as an invalid map value.
 
-"Solve these issues with sysfs attributes to expose the status
-registers hidden in the RCRB."
+So fix this issue by always incrementing the map value before assigning to
+bar_to_atu[] array and then decrementing it while fetching. This will make
+sure that the map value '0' always represents the invalid mapping."
 
-...i.e. write the commit log as if the patch is commanding the code to
-change. You can find some more notes about this here:
+Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+Closes: https://lore.kernel.org/linux-pci/ZXsRp+Lzg3x%2Fnhk3@x1-carbon/
+Tested-by: Niklas Cassel <niklas.cassel@wdc.com>
+Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
+Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-submission-notes
+Notes:
+    Change from v2 to v3
+    - Add impact in commit message
+    - Add mani's detail description
+    - Fix Closes link
+    
+    Change from v1 to v2
+    - update subject
+    - use free_win + 1 solution
+    - still leave MAX_IATU_IN as 256. I am not sure if there are platfrom have
+    256 ATU. Suppose it only use max 6 in current EP framework.
+    - @Niklas, can you help test it. My platform become unstable today.
 
-...but really, this cover letter is higher quality than most, so thanks
-for that!
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-> 
-> The procedure is as follows:
-> First, obtain the RCRB address within the cxl driver, then access 
-> the configuration space. Next, output the link status information from
-> the configuration space to sysfs. Finally, read sysfs within lspci to 
-> display the link status information.
-> 
-> Changes
-> v1[1] -> v2:
-> The following are the main changes made based on the feedback from Dan Williams.
-> - Modified to perform rcrb access within the CXL driver.
-> - Added new attributes to the sysfs of the PCI device.
-> - Output the link status information to the sysfs of the PCI device.
-> - Retrieve information from sysfs as the source when displaying information in lspci.
-> 
-> v2[2] -> v3:
-> - Fix unnecessary initialization and wrong types (Bjohn).
-> - Create a helper function for getting a PCIe capability offset (Bjohn).
-> - Move platform-specific implementation to the lib directory in pciutils (Martin).
-> 
-> [1]
-> https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06@fujitsu.com/
-> [2]
-> https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da-06@fujitsu.com/
-> 
-> Kobayashi,Daisuke (3):
->   Add sysfs attribute for CXL 1.1 device link status
->   Remove conditional branch that is not suitable for cxl1.1 devices
-> 
->  drivers/cxl/acpi.c |   4 -
->  drivers/cxl/pci.c  | 193 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 193 insertions(+), 4 deletions(-)
-> 
->   Add function to display cxl1.1 device link status
-> 
->  lib/access.c | 29 +++++++++++++++++++++
->  lib/pci.h    |  2 ++
->  ls-caps.c    | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 104 insertions(+)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 5befed2dc02b7..ba932bafdb230 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -139,7 +139,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 	if (!ep->bar_to_atu[bar])
+ 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+ 	else
+-		free_win = ep->bar_to_atu[bar];
++		free_win = ep->bar_to_atu[bar] - 1;
+ 
+ 	if (free_win >= pci->num_ib_windows) {
+ 		dev_err(pci->dev, "No free inbound window\n");
+@@ -153,7 +153,11 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+ 		return ret;
+ 	}
+ 
+-	ep->bar_to_atu[bar] = free_win;
++	/*
++	 * Always increment free_win before assignment, since value 0 is used to identify
++	 * unallocated mapping.
++	 */
++	ep->bar_to_atu[bar] = free_win + 1;
+ 	set_bit(free_win, ep->ib_window_map);
+ 
+ 	return 0;
+@@ -190,7 +194,10 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 	enum pci_barno bar = epf_bar->barno;
+-	u32 atu_index = ep->bar_to_atu[bar];
++	u32 atu_index = ep->bar_to_atu[bar] - 1;
++
++	if (!ep->bar_to_atu[bar])
++		return;
+ 
+ 	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
+ 
+-- 
+2.34.1
 
-The typical way I handle cases where I am updating the kernel side and
-the user tooling side of a problem is to post the kernel changes and
-then separately post the user changes with a lore link to the kernel
-submission.
-
-For PCI utils I believe you will need to send a separate pull request
-via github once the kernel changes are accepted.
 
