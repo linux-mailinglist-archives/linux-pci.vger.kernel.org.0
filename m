@@ -1,84 +1,67 @@
-Return-Path: <linux-pci+bounces-5187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B61088C66D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 16:12:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D915E88C760
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 16:40:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CAFC1C2E59C
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 15:12:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78DF11F67D6F
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 15:40:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6CEA13C696;
-	Tue, 26 Mar 2024 15:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED4813CF92;
+	Tue, 26 Mar 2024 15:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnsBfmYQ"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="FFvn4P5i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF32762F7;
-	Tue, 26 Mar 2024 15:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9357513CC79;
+	Tue, 26 Mar 2024 15:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711465969; cv=none; b=laRkC1630F4hMHLH7/SamR0l5EP4a2epN23kHVbt4FkxGS7B9TA+qX0Er5pEUo5o0/RNnB9DtdXQxnAB/bjANHYS0yHGKTISTh4fTykok/hI70wZw9lNPVJZ2k75NCj0nV1L8Mf54fpWS1ZzxBvsL9PSI5EtDO/jSKBV/mcNTIM=
+	t=1711467346; cv=none; b=lj1NjNFTwp/rl3h56yQPzoq/wLOVJaQajz56cEWo7H55sGz1zgmxlG5DncP1KHZgb855TwPdnmfq2kzz+Tak6Txv+bYEb18IIH4x/iCKSArvTbQbNvVhz3gyvcFlH0Q7T8nXm7kPdPr7jxPuJUoLYKhkoDmXydv4C3JAX+m9Prg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711465969; c=relaxed/simple;
-	bh=ikOFR/1UVd3fugnFnAzk4C55A/EtnmPKtVt0ZnsoBy4=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=AfPN7K5GX/FTcqwqobMo2TcFe0ai5goSoTaREoo8l1zfC6TiXKya/sWsnrMlB9fRRECjAecw2f1HSyFXLxU80L70Mwkdq2Jpn/Yg5eGOTNvomGn2QXMorma3br4hy6WvDe74kgYVC49HfXCCGFAROJwV4TJ7K+X45ikoVkXj4m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnsBfmYQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B32C433C7;
-	Tue, 26 Mar 2024 15:12:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711465968;
-	bh=ikOFR/1UVd3fugnFnAzk4C55A/EtnmPKtVt0ZnsoBy4=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=OnsBfmYQ3kUcVfwdwLlABczD8xqZdTvhAxEk92k45DN6zQl3R3V8BxEPB52RsIOJU
-	 stjQT1G1rdii90U9qXs98IyMNHaaDTCEQRCjheQiJfv7GsfcP7WTfAP4YJC9bTC3E2
-	 U4oFUkXDi460w83MY86vMBZHhUlFJ0pfP1iQycDWwr8EXMRByqPpmCcdVUZhE/Einj
-	 E6YlO5SgsJNklcUdUcS8LDVPeYonQPsEUDpnoUl37oHfn/onPcn2ao3QZ3HiUzlsRv
-	 MzSCIzTfANfgo2cPdqYHxv5qhQzfesdvGwwYarZJxx3Kfgylj7B1kLIkeyxpS7QNck
-	 r6RdCdboYcXKQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Marcel Holtmann <marcel@holtmann.org>,  Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>,  "David S . Miller" <davem@davemloft.net>,  Eric
- Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo
- Abeni <pabeni@redhat.com>,  Rob Herring <robh@kernel.org>,  Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
- <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
- Dybcio <konrad.dybcio@linaro.org>,  Liam Girdwood <lgirdwood@gmail.com>,
-  Mark Brown <broonie@kernel.org>,  Catalin Marinas
- <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,  Saravana Kannan <saravanak@google.com>,  Geert
- Uytterhoeven <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,
-  Neil Armstrong <neil.armstrong@linaro.org>,  Marek Szyprowski
- <m.szyprowski@samsung.com>,  Alex Elder <elder@linaro.org>,  Srini
- Kandagatla <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Abel Vesa <abel.vesa@linaro.org>,
-  Manivannan Sadhasivam <mani@kernel.org>,  Lukas Wunner <lukas@wunner.de>,
-  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-  linux-bluetooth@vger.kernel.org,  netdev@vger.kernel.org,
-  devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-wireless@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
-  linux-pm@vger.kernel.org,  Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>,  ath11k@lists.infradead.org,  Johan
- Hovold <johan@kernel.org>
-Subject: Re: [PATCH v6 04/16] dt-bindings: net: wireless: qcom,ath11k:
- describe the ath11k on QCA6390
-References: <20240325131624.26023-1-brgl@bgdev.pl>
-	<20240325131624.26023-5-brgl@bgdev.pl> <87r0fy8lde.fsf@kernel.org>
-	<CAMRc=Mc2Tc8oHr5NVo=aHAADkJtGCDAVvJs+7V-19m2zGi-vbw@mail.gmail.com>
-	<87frwe8jiu.fsf@kernel.org>
-	<CAMRc=MdCv+vTMZML-wzRQqZZavquV3DABYM4KYw-HwqS47sTyw@mail.gmail.com>
-Date: Tue, 26 Mar 2024 17:12:40 +0200
-In-Reply-To: <CAMRc=MdCv+vTMZML-wzRQqZZavquV3DABYM4KYw-HwqS47sTyw@mail.gmail.com>
-	(Bartosz Golaszewski's message of "Mon, 25 Mar 2024 17:23:35 +0100")
-Message-ID: <874jct10yf.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1711467346; c=relaxed/simple;
+	bh=cpbePfHGBKTWOTvvus/3XrPd8U/PqtNlq98UXTNxgtc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gehvnzHc4+1qTVJV6wuqwzyjonQabq7jTaDii8oRNZF7ACvUNaTYbZR2LozeQt8pcD7KAQmxGbiRIggJ9qlG1Ks55FJjbcLiWRBNGViDZmLf+ZTT1qo8JVkdKQYot+TH6WHmpZOvXAyUDOQ/boofeao4Hw7qUUYrl9vjqBHXlDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=FFvn4P5i; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3B44047AA3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1711467336; bh=cpbePfHGBKTWOTvvus/3XrPd8U/PqtNlq98UXTNxgtc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=FFvn4P5iUGFV/C84IYrDeszQ3l4X72UHM7BHMKC4XcgtG2N2QFnXn6xdz0VAqxRNV
+	 Emf24AR4aL0OrPrXsmrgJ6afMPpl3nOT6W+g4eCOIq1Zb49xxCQfd0ZPOR7F+HeUsB
+	 cszy1ZEszzufBkmfeD58hXM6Y1PQwAVM8L/JbuH3uljqBmQG1i/t4fu4czw9AASV1+
+	 tP3xaIaLK7HMDBQYt7UYjixP6/QkqTyb1P82r4FZdhCFrnxysGhznSXe++ZIzncHOp
+	 HhyJBHmAYmO5JH6rjBTuz2Y8F0E14H4E6waBB9ouTuV6DyZbC4z0RnJ11jbDgu4k23
+	 9uOORglGwpt9w==
+Received: from localhost (unknown [205.220.129.20])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 3B44047AA3;
+	Tue, 26 Mar 2024 15:35:35 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Dan Williams <dan.j.williams@intel.com>, peterz@infradead.org,
+ torvalds@linux-foundation.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Lukas Wunner <lukas@wunner.de>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gregkh@linuxfoundation.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] cleanup: Add usage and style documentation
+In-Reply-To: <171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com>
+References: <171097196970.1011049.9726486429680041876.stgit@dwillia2-xfh.jf.intel.com>
+ <171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com>
+Date: Tue, 26 Mar 2024 09:35:28 -0600
+Message-ID: <8734sd0zwf.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -87,43 +70,23 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Bartosz Golaszewski <brgl@bgdev.pl> writes:
+One little nit...
 
->> >> I don't know DT well enough to know what the "required:" above means,
->> >> but does this take into account that there are normal "plug&play" type
->> >> of QCA6390 boards as well which don't need any DT settings?
->> >
->> > Do they require a DT node though for some reason?
->>
->> You can attach the device to any PCI slot, connect the WLAN antenna and
->> it just works without DT nodes. I'm trying to make sure here that basic
->> setup still works.
->>
->
-> Sure, definitely. I there's no DT node, then the binding doesn't apply
-> and the driver (the platform part of it) will not probe.
->
->> Adding also Johan and ath11k list. For example, I don't know what's the
->> plan with Lenovo X13s, will it use this framework? I guess in theory we
->> could have devices which use qcom,ath11k-calibration-variant from DT but
->> not any of these supply properties?
->>
->
-> Good point. I will receive the X13s in a month from now. I do plan on
-> upstreaming correct support for WLAN and BT for it as well.
->
-> I guess we can always relax the requirements once a valid use-case appears?
+Dan Williams <dan.j.williams@intel.com> writes:
 
-I think we have such cases already now:
+> + * The DEFINE_FREE() macro can arrange for PCI device references to be
+> + * dropped when the associated variable goes out of scope:
+> + *
+> + * ::
+> + *
 
-$ git grep ath11k-calibration-variant -- arch
-arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts:     qcom,ath11k-calibration-variant = "Fairphone_5";
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts:                     qcom,ath11k-calibration-variant = "LE_X13S";
+This can be written a bit more concisely as:
 
-But please do check that. I'm no DT expert :)
+ ...goes out of scope::
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+without the separate "::" line, reducing the markup noise a bit more.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Thanks,
+
+jon
 
