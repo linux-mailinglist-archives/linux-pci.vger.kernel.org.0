@@ -1,161 +1,236 @@
-Return-Path: <linux-pci+bounces-5191-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5192-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50E5488C968
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 17:33:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A71E88C9BD
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 17:49:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD905286BA0
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 16:33:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D28B1C641A3
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 16:49:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4961798A;
-	Tue, 26 Mar 2024 16:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC2B1798A;
+	Tue, 26 Mar 2024 16:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tbx9eszl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CPf3WMZ6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F1D12E75
-	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 16:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9401BDE6
+	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 16:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711470790; cv=none; b=mnDy97CNBAJbIwXfvg7NVNBnt2f8ojHypE7vToOOdx3dWav7bb0+ZErAejQKgGOYO0FT2ZyGb9So9eAwbv3RTn92TI4Uv1lZMpDrTscdzePgPLUbGLdltIhS7rla+NObhvtfxTM8x16DY1+lrhuVfzbDXw4sE58Zqmjhsi2ywIk=
+	t=1711471675; cv=none; b=WcEUG5TKxKfeRbkUC5d38414MPlZNBzqQUO1zPoffBk0Rm2LKDOIPxMudYgkdPMxpy5HioCQUSZO+MsW2IpMtcjzEuYj0YAD7tmpS7jYBmjLhhjVYQjTmXWyD22kvCdZXJpQYSvMa3yMSO2sneWve0q3TdhK8mgJ8i7hE3VWkvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711470790; c=relaxed/simple;
-	bh=lVoQMVplppCC3bZfzFJMPRwm9a5E9DObxpQyJv4ei/c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h9IcnUHAKA070wFM+cMWLsC1+wD2iCk8YCFs1OUTBLS3iYKU+wXmbohXrUzWxuCCEblmbJ5Mi9YJO9ZSF1fXgYkm1fnPshIrT36lwPfi8X+6piC4O2zbnADDYkzhtyZj8fzE5c7RyaokmGp/z5oqMVBnJNbhty0lTemFBYm3TIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tbx9eszl; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d4515ec3aaso44191981fa.1
-        for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 09:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711470787; x=1712075587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eQ6jS2CUTKGhZdxpuXUPTr0agZibBpPyyI13tXK5e6s=;
-        b=tbx9eszl0cv3hSGR2z5T1MUqNEFMqOK0hvuUXK4rky/ZLiX7/ruc4w35Wa6enxWLhy
-         jqYTQ6baqOYwBEPfw8EyZsa1IaqSg7IlHG+YqWDCCA0rIkEN94Vbs5U6ww3v89vN1w1I
-         0nqGzNdcCZSF0zAp6TSiu46brej3P99kOXNi4PRIAzaw0yMELlRpmcXliW4+4QxY+LtV
-         O8xrYDYrVS4Up40ecp8dyuj/sICiqnVfBNZVkxQg6hmXUnZFDaK/qkfK7cpzxGt63mcL
-         eZAhX6x/1ghz8UjnhKhvM95t5Bgtrh5YH7RDfBvymF0vUdIjbVmyPCYnXR5AfFfD5PYR
-         BD1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711470787; x=1712075587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eQ6jS2CUTKGhZdxpuXUPTr0agZibBpPyyI13tXK5e6s=;
-        b=nvEQoC5oqR6TpU29zzCzRBKip52eS0THBXmjVugdRI3LuFvJZN/U4btDh0tFiT+ecN
-         RNolmBwI00qibdl/4iAd61JBblI2Kcu0sxtIcMn5KDnmuExkQbYwnS0/MNE4WCn0kXBa
-         LeF6pgpBcDjMQjfYC0UqsXh2x/dPPW0vir/Dztou8P95fAWSOy1Vi9SwWDwWUxW4XVx+
-         V1t1czho5biPJVqqgc8fHIbTejqb6smuiohPKmEEpg5Pu8TYdiXnG+HUBOiA92Dn0d5O
-         DPyc/klx1YbWK29kQmseZ9wyetSHzQNZ+TKx5PcjB6jOZvoIqinaHatvVRN100/utRJi
-         LcVw==
-X-Forwarded-Encrypted: i=1; AJvYcCXRMyYEJL20JfIIkbSXm1n1aweHD1xrm6ILQRMem1+6cBzsvcYANSman0KNxQZZZIg4ylynnOH0r/QA9IhY49K7ZIDt5UVHzvcl
-X-Gm-Message-State: AOJu0YxSm4ZLQ0eGu9PKvNgcQ81d9TTHe4eYCbU7lajut9WleUpwnR1H
-	du6Sqv7G3/vSexNsRV1Dq7wyTx4kpyB/aw94eX7/0cX1jwkDthkBN0lKHUk5npAY3Z8N6LDDv3k
-	04oRJs7Zj4A2460TheAQxoBKvdALxgQ1t5Mg7yQ==
-X-Google-Smtp-Source: AGHT+IEPlW3Mndd9DAskKl8BnO4uLoQgb2fvBGrOQCORYGpNt3ZO7pjyZJGUAGM4Jnm65aupzhhwN4AXLf4B/UzV5SQ=
-X-Received: by 2002:a05:651c:210b:b0:2d2:4477:6359 with SMTP id
- a11-20020a05651c210b00b002d244776359mr800282ljq.7.1711470786783; Tue, 26 Mar
- 2024 09:33:06 -0700 (PDT)
+	s=arc-20240116; t=1711471675; c=relaxed/simple;
+	bh=1zSSbpaGs4HmhrGr+EGI3cR5k/oqs5XvLI0UnJz+d3w=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=MspTMWA8k2cR+HlM7RE/glLY1pB7h83xPWEqjmekh/Nu6bgA/WWa9vyBBXUL9YXK+IvROjsfwYUMJ91CL8hlznW9rU80y86vDBi2IXzxAMmbky3ApDzXZzTJaEQo2RCp3XchmE5RWHpc5G86LbGybi00xwOThqQ1tYNXDLlIIJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CPf3WMZ6; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711471675; x=1743007675;
+  h=date:from:to:cc:subject:message-id;
+  bh=1zSSbpaGs4HmhrGr+EGI3cR5k/oqs5XvLI0UnJz+d3w=;
+  b=CPf3WMZ6orsizPmJuaUIto4GaOnk+LlU7TMTB51550N1ACmz8lEkGaV/
+   Dpurz5VvzmUf0OHq9iOvHmMmYix2Eiaxcs72PrMupr2IfdPEZZICzfifq
+   QepVwryfhYW0dcf6P5vW2toXvRqJ0DAZBxbXHYS6pV1bibvbRttzbsP4w
+   fSlH7AC0QoodllmWpjh2f3rgYIGnEYk5wkCsaI78qzmKHFsMPTyUKMo+p
+   1DS3HioRmewmshpbvg/WSM8zHKYb1j1i+YEE3Md2hhq82lg2O9Odrtb0c
+   vcdCL1GTQSgxuyZk4diMI7VV7mUPCCH5tYM05Wi5DLOIVg+bY4nd+8YsV
+   A==;
+X-CSE-ConnectionGUID: 5Rdgi0wRRceyYRfy7P+s9Q==
+X-CSE-MsgGUID: 6RwDBDVKQ3qTbyquho3zyw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="17679364"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="17679364"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 09:47:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="20565313"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 26 Mar 2024 09:47:52 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rp9xm-0000EW-12;
+	Tue, 26 Mar 2024 16:47:50 +0000
+Date: Wed, 27 Mar 2024 00:47:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD REGRESSION
+ 8694697a54096ae97eb38bf4144f2d96c64c68f2
+Message-ID: <202403270010.txoZNhlZ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240325131624.26023-1-brgl@bgdev.pl> <20240325131624.26023-5-brgl@bgdev.pl>
- <87r0fy8lde.fsf@kernel.org> <CAMRc=Mc2Tc8oHr5NVo=aHAADkJtGCDAVvJs+7V-19m2zGi-vbw@mail.gmail.com>
- <87frwe8jiu.fsf@kernel.org> <CAMRc=MdCv+vTMZML-wzRQqZZavquV3DABYM4KYw-HwqS47sTyw@mail.gmail.com>
- <874jct10yf.fsf@kernel.org>
-In-Reply-To: <874jct10yf.fsf@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 26 Mar 2024 17:32:55 +0100
-Message-ID: <CAMRc=Me5ef_kFDz0SyGZb4S+2Ma4i=Fek_tzwj+bYD4DGSV4mA@mail.gmail.com>
-Subject: Re: [PATCH v6 04/16] dt-bindings: net: wireless: qcom,ath11k:
- describe the ath11k on QCA6390
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Saravana Kannan <saravanak@google.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Alex Elder <elder@linaro.org>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, ath11k@lists.infradead.org, 
-	Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 26, 2024 at 4:12=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wrote=
-:
->
-> Bartosz Golaszewski <brgl@bgdev.pl> writes:
->
-> >> >> I don't know DT well enough to know what the "required:" above mean=
-s,
-> >> >> but does this take into account that there are normal "plug&play" t=
-ype
-> >> >> of QCA6390 boards as well which don't need any DT settings?
-> >> >
-> >> > Do they require a DT node though for some reason?
-> >>
-> >> You can attach the device to any PCI slot, connect the WLAN antenna an=
-d
-> >> it just works without DT nodes. I'm trying to make sure here that basi=
-c
-> >> setup still works.
-> >>
-> >
-> > Sure, definitely. I there's no DT node, then the binding doesn't apply
-> > and the driver (the platform part of it) will not probe.
-> >
-> >> Adding also Johan and ath11k list. For example, I don't know what's th=
-e
-> >> plan with Lenovo X13s, will it use this framework? I guess in theory w=
-e
-> >> could have devices which use qcom,ath11k-calibration-variant from DT b=
-ut
-> >> not any of these supply properties?
-> >>
-> >
-> > Good point. I will receive the X13s in a month from now. I do plan on
-> > upstreaming correct support for WLAN and BT for it as well.
-> >
-> > I guess we can always relax the requirements once a valid use-case appe=
-ars?
->
-> I think we have such cases already now:
->
-> $ git grep ath11k-calibration-variant -- arch
-> arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts:     qcom,ath11k-calib=
-ration-variant =3D "Fairphone_5";
-> arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts:              =
-       qcom,ath11k-calibration-variant =3D "LE_X13S";
->
-> But please do check that. I'm no DT expert :)
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: 8694697a54096ae97eb38bf4144f2d96c64c68f2  PCI: Remove PCI_IRQ_LEGACY
 
-You're thinking about making the required: field depend on the value
-of qcom,ath11k-calibration-variant? Am I getting this right?
+Error/Warning reports:
 
-Bart
+https://lore.kernel.org/oe-kbuild-all/202403261840.1RP419n5-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202403261944.ObfbvQQV-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+drivers/mfd/intel-lpss-pci.c:57:42: error: use of undeclared identifier 'PCI_IRQ_LEGACY'; did you mean '__WQ_LEGACY'?
+drivers/mfd/intel-lpss-pci.c:57:49: error: 'PCI_IRQ_LEGACY' undeclared (first use in this function); did you mean 'NR_IRQS_LEGACY'?
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- i386-allyesconfig
+|   `-- drivers-mfd-intel-lpss-pci.c:error:PCI_IRQ_LEGACY-undeclared-(first-use-in-this-function)
+`-- i386-buildonly-randconfig-001-20240326
+    `-- drivers-mfd-intel-lpss-pci.c:error:PCI_IRQ_LEGACY-undeclared-(first-use-in-this-function)
+clang_recent_errors
+|-- i386-randconfig-013-20240326
+|   `-- drivers-mfd-intel-lpss-pci.c:error:use-of-undeclared-identifier-PCI_IRQ_LEGACY
+`-- x86_64-rhel-8.3-rust
+    `-- drivers-mfd-intel-lpss-pci.c:error:use-of-undeclared-identifier-PCI_IRQ_LEGACY
+
+elapsed time: 1188m
+
+configs tested: 125
+configs skipped: 3
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240326   gcc  
+i386         buildonly-randconfig-002-20240326   clang
+i386         buildonly-randconfig-003-20240326   clang
+i386         buildonly-randconfig-004-20240326   gcc  
+i386         buildonly-randconfig-005-20240326   gcc  
+i386         buildonly-randconfig-006-20240326   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240326   gcc  
+i386                  randconfig-002-20240326   gcc  
+i386                  randconfig-003-20240326   gcc  
+i386                  randconfig-004-20240326   clang
+i386                  randconfig-005-20240326   gcc  
+i386                  randconfig-006-20240326   clang
+i386                  randconfig-011-20240326   clang
+i386                  randconfig-012-20240326   gcc  
+i386                  randconfig-013-20240326   clang
+i386                  randconfig-014-20240326   clang
+i386                  randconfig-015-20240326   clang
+i386                  randconfig-016-20240326   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240326   clang
+x86_64       buildonly-randconfig-002-20240326   gcc  
+x86_64       buildonly-randconfig-003-20240326   clang
+x86_64       buildonly-randconfig-004-20240326   gcc  
+x86_64       buildonly-randconfig-005-20240326   gcc  
+x86_64       buildonly-randconfig-006-20240326   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240326   gcc  
+x86_64                randconfig-002-20240326   gcc  
+x86_64                randconfig-003-20240326   gcc  
+x86_64                randconfig-004-20240326   clang
+x86_64                randconfig-005-20240326   gcc  
+x86_64                randconfig-006-20240326   clang
+x86_64                randconfig-011-20240326   gcc  
+x86_64                randconfig-012-20240326   clang
+x86_64                randconfig-013-20240326   gcc  
+x86_64                randconfig-014-20240326   gcc  
+x86_64                randconfig-015-20240326   clang
+x86_64                randconfig-016-20240326   clang
+x86_64                randconfig-071-20240326   clang
+x86_64                randconfig-072-20240326   gcc  
+x86_64                randconfig-073-20240326   gcc  
+x86_64                randconfig-074-20240326   gcc  
+x86_64                randconfig-075-20240326   gcc  
+x86_64                randconfig-076-20240326   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
