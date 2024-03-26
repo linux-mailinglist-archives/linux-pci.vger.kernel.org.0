@@ -1,162 +1,166 @@
-Return-Path: <linux-pci+bounces-5139-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5140-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CEE588B6FB
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 02:40:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CF0888B729
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 02:59:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95EC61F3B70F
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 01:40:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B631E1F61355
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 01:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 337A4208A0;
-	Tue, 26 Mar 2024 01:40:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A74851F16B;
+	Tue, 26 Mar 2024 01:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YyqaD/b5"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="mZTIafpR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75288210E7;
-	Tue, 26 Mar 2024 01:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9728E5A10F
+	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 01:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711417204; cv=none; b=aECGl7dNfNEArOHA65A8tTiqo8LMcsjo0dpceU98Bmf6q+QTboFnDaEuMNbxCtIpbzhWsZdVAxUn2ARZ/oktiBhJ8eXoXQbk7iktlWVv6Yf40uUZiJ0As1L81oRw1pjojRxDTFq9brvs9z6k0QXj5Qoh6AZufKYcQHN/3fJ0dko=
+	t=1711418381; cv=none; b=jQE7bIJdsZZHz7eI1R2eBnowACtUHK70UMmqHuwgin5DjSSCOsm5iMEdPTxRiMULNVRQ57FtNXxqQWd1iDGlpSlGJpoiaHpGUiFIhw2rJclk9D+rdEahJPPfmkb221CdXTQvlZIaDvEkmF4VwqF2FWCr4qMLx2v3ntG/ICR1Hck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711417204; c=relaxed/simple;
-	bh=fxaAJQ+kSn8nKb0OEa7bo1CfKPOsd0+BK2jb2R82ysM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jabc1zmN2w7/XgKwNkIHU7SyA2qNxLKPbPtrgkP1PbsKacq1dP1M/7kZbFd+aIwzl6QQnNqNk/0YA6ULDUPx4+1Y6mM4zxuNKQk8eedOZRq7ADpJDh6dJnKQTRr9I85E5kcig7fv6VkySl4GN8Mf0k9QR42p1i/3w6j3bzxsJhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YyqaD/b5; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711417202; x=1742953202;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fxaAJQ+kSn8nKb0OEa7bo1CfKPOsd0+BK2jb2R82ysM=;
-  b=YyqaD/b5kO3KA30njoSTmJMbDxnbDmzQDwJzFJvvDxPamAiItYuey9h5
-   28+qRiI/78RDt1iZuV1++gcjI9rJQXLKtmX5XMcTWxaVQD0OF8B5IA8Ln
-   5trCDVsBkUYp1SRblfvcW+679T7+fmBvYrIbvh0/mir0jN0Ap73ERpw2P
-   mnm/s32RsE14FgHCqS9a4snytQjFZ4fNs2tZXD2bLl7eXUiTO1UR8gBmL
-   v4N6KI86cNSU++OTHRQ3NqYrmcWOwNMA8Wk+b/LB55tD2uFPkZxhl/S+p
-   C14v+uU0X+oX/ZK3sDPJO1IumPfBzdhFVuu3+57Zoem9WxT1l5wPX3g1C
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6635340"
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="6635340"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 18:40:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,154,1708416000"; 
-   d="scan'208";a="53262206"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.254.209.117]) ([10.254.209.117])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 18:39:58 -0700
-Message-ID: <a1d7b4c9-b47e-4b59-a4d5-e091bbbff5d7@linux.intel.com>
-Date: Tue, 26 Mar 2024 09:39:54 +0800
+	s=arc-20240116; t=1711418381; c=relaxed/simple;
+	bh=uqqNM1zCxVTfxponKNYfYnUt9iTlR6yMECpHrzLkTYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZPFt1yweYFOL4TLAx/cSNNUZ+WeBzBOJs/6PxgChDrFGn27I5l2LEOOz8K+0lXqbCIEAnMgcoc8fxj8LymL03uiKkDANaq/3rC9Zh5eAEJsBbLq+pcViTdX9KAZLneSLoL/qlKD3tYSiaSaG9YbVSQM+N7faHxvrTAXBaSjUZdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=mZTIafpR; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 12E4C3F829
+	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 01:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1711418378;
+	bh=Occ9TMq2LcRvlHFSuBA4b5X3bGxpRZyzouO7ghOTZqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=mZTIafpRhdMdxuGZdJej8xkahJ8Sl1euW1Uzhk2kWV/0i1SArTtRJ43waro/PGCf/
+	 ps1lOVfFF6D+Icqa2zlPxi3gzAgkZojLSjBI3e3S0vgmE6oJxT2Hd/a153w421Q63x
+	 fr1mQdmsGIa1kky5roJsQJruYP56so63lCz1fm/bEBP4uFGzOOhEnvHylQ8HcMDOHA
+	 nik+I0tubJXBjBedQRqRCWkL0th2ojCCAf2U28QbFjJII8SJ3uCFf56HcA2W+442V3
+	 bQPVE2pNhFkJR16bRQnlh6J2CBuQg/M1Des9xlzyXljTzv1pQsAMkjNaSjVQfRvvr3
+	 3Kj255muoa4Yg==
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-29de02b98caso4150102a91.0
+        for <linux-pci@vger.kernel.org>; Mon, 25 Mar 2024 18:59:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711418376; x=1712023176;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Occ9TMq2LcRvlHFSuBA4b5X3bGxpRZyzouO7ghOTZqM=;
+        b=AqPDLr6/hKh8s5qwVQCSNPVaWuXZMT1z8rX7nA7dagbVnu8OuubhXY27gO17aSO7rT
+         3xQhApS/Ingonz8wkra9yRXd+fy55ChrWqSu2w1omku08GcP2gWBoSO4tSmXMswsNtvU
+         NZJa/J49oZMlq3LFwAnpXFotJBYzpZaLU2UFFa5b8qynYcUWSscugEsjaIpQDATLTk3C
+         V8v9gmgH2/oiWVXtFu7xLEf4cl1O2dTuGfEvvY1UZ6XeXp6iC2ORhOZ0JRm8lS4rLoAt
+         Lcrns4jjpPlhJ2xenMUliJr3HcosKxQCmnKCNvX9xqiraEmZIkk6QXsH3Dra0uD6jibI
+         K2pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLoX6JAMs4+waNQB1L9pAfuCEHE/Re0aIJkYYwpYRoWQ1TYzm196t/RlhHmuLPyvyJCweygGOnzekFhnv2J/4uFguREtqUswWn
+X-Gm-Message-State: AOJu0YxC/Mu5ZyTA1HaVXXNuKALrdxUFomtlI5iZBHN8lvCkmFSJZ8+q
+	0f+PpHP/aqH36i1eltoXW21ZUobIT+8e+eHxl4N3/XcChJl8v9MQv5aBq5EWEGaHUaEVZ6O7xCW
+	OOi14Q7TIUpwCzipED4jU29kFiJhZDYFzyzFwfAMNHq9+cCeR+55QS+YbJ3bxVl3wu/hC4ICr46
+	IAlG+deAlJTylXpzzdwKYTTPPom8wnucCxxW749tDdqVYnzbAV
+X-Received: by 2002:a17:90b:2283:b0:29c:690e:1cb7 with SMTP id kx3-20020a17090b228300b0029c690e1cb7mr8107090pjb.15.1711418376524;
+        Mon, 25 Mar 2024 18:59:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHYffuiHetJ4O/oHruXWpdI8LKocfioN2Q4j33QvkZdV/hG8c7VS9oabDKzfJO5DCyGd6HDeptCbXU87TGhIgc=
+X-Received: by 2002:a17:90b:2283:b0:29c:690e:1cb7 with SMTP id
+ kx3-20020a17090b228300b0029c690e1cb7mr8107080pjb.15.1711418376225; Mon, 25
+ Mar 2024 18:59:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv3 pci-next 1/2] PCI/AER: correctable error message as
- KERN_INFO
-To: Xi Ruoyao <xry111@xry111.site>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Grant Grundler <grundler@chromium.org>, bhelgaas@google.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, mahesh@linux.ibm.com, oohall@gmail.com,
- rajat.khandelwal@linux.intel.com, rajatja@chromium.org
-References: <20230918193913.GA203601@bhelgaas>
- <0a44fd663e93ac5b36865b0080da52d94252791a.camel@xry111.site>
- <38601aef-b082-463f-8e41-f73a4307de21@linux.intel.com>
- <ba78805af8b39237b22a0ff87c4ba3c614a43910.camel@xry111.site>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <ba78805af8b39237b22a0ff87c4ba3c614a43910.camel@xry111.site>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <7f37506e-4849-4c7d-b76c-27b02b7453af@intel.com>
+ <20240322233637.GA1385969@bhelgaas> <20240325171743.000013e6@linux.intel.com>
+In-Reply-To: <20240325171743.000013e6@linux.intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Tue, 26 Mar 2024 09:59:24 +0800
+Message-ID: <CAAd53p6JmJoGjiC5nqRbA4x6fNZY5xCyGELXj0-9ux2LWVhroA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD rootports
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-pci@vger.kernel.org, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/25/2024 6:15 PM, Xi Ruoyao wrote:
-> On Mon, 2024-03-25 at 16:45 +0800, Ethan Zhao wrote:
->> On 3/25/2024 1:19 AM, Xi Ruoyao wrote:
->>> On Mon, 2023-09-18 at 14:39 -0500, Bjorn Helgaas wrote:
->>>> On Mon, Sep 18, 2023 at 07:42:30PM +0800, Xi Ruoyao wrote:
->>>>> ...
->>>>> My workstation suffers from too much correctable AER reporting as well
->>>>> (related to Intel's errata "RPL013: Incorrectly Formed PCIe Packets May
->>>>> Generate Correctable Errors" and/or the motherboard design, I guess).
->>>> We should rate-limit correctable error reporting so it's not
->>>> overwhelming.
->>>>
->>>> At the same time, I'm *also* interested in the cause of these errors,
->>>> in case there's a Linux defect or a hardware erratum that we can work
->>>> around.  Do you have a bug report with any more details, e.g., a dmesg
->>>> log and "sudo lspci -vv" output?
->>> Hi Bjorn,
->>>
->>> Sorry for the *very* late reply (somehow I didn't see the reply at all
->>> before it was removed by my cron job, and now I just savaged it from
->>> lore.kernel.org...)
->>>
->>> The dmesg is like:
->>>
->>> [  882.456994] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:00:1c.1
->>> [  882.457002] pcieport 0000:00:1c.1: AER: found no error details for 0000:00:1c.1
->>> [  882.457003] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:06:00.0
->>> [  883.545763] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:00:1c.1
->>> [  883.545789] pcieport 0000:00:1c.1: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
->>> [  883.545790] pcieport 0000:00:1c.1:   device [8086:7a39] error status/mask=00000001/00002000
->>> [  883.545792] pcieport 0000:00:1c.1:    [ 0] RxErr                  (First)
->>> [  883.545794] pcieport 0000:00:1c.1: AER:   Error of this Agent is reported first
->>> [  883.545798] r8169 0000:06:00.0: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Transmitter ID)
->>> [  883.545799] r8169 0000:06:00.0:   device [10ec:8125] error status/mask=00001101/0000e000
->>> [  883.545800] r8169 0000:06:00.0:    [ 0] RxErr                  (First)
->>> [  883.545801] r8169 0000:06:00.0:    [ 8] Rollover
->>> [  883.545802] r8169 0000:06:00.0:    [12] Timeout
->>> [  883.545815] pcieport 0000:00:1c.1: AER: Correctable error message received from 0000:00:1c.1
->>> [  883.545823] pcieport 0000:00:1c.1: AER: found no error details for 0000:00:1c.1
->>> [  883.545824] pcieport 0000:00:1c.1: AER: Multiple Correctable error message received from 0000:06:00.0
->>>
->>> lspci output attached.
->>>
->>> Intel has issued an errata "RPL013" saying:
->>>
->>> "Under complex microarchitectural conditions, the PCIe controller may
->>> transmit an incorrectly formed Transaction Layer Packet (TLP), which
->>> will fail CRC checks. When this erratum occurs, the PCIe end point may
->>> record correctable errors resulting in either a NAK or link recovery.
->>> Intel® has not observed any functional impact due to this erratum."
->>>
->>> But I'm really unsure if it describes my issue.
->>>
->>> Do you think I have some broken hardware and I should replace the CPU
->>> and/or the motherboard (where the r8169 is soldered)?  I've noticed that
->>> my 13900K is almost impossible to overclock (despite it's a K), but I've
->>> not encountered any issue other than these AER reporting so far after I
->>> gave up overclocking.
->> Seems there are two r8169 nics on your board, only 0000:06:00.0 reports
->> aer errors, how about another one the 0000:07:00.0 nic ?
-> It never happens to 0000:07:00.0, even if I plug the ethernet cable into
-> it instead of 0000:06:00.0.
-
-So something is wrong with the physical layer, I guess.
-
+On Tue, Mar 26, 2024 at 8:17=E2=80=AFAM Nirmal Patel
+<nirmal.patel@linux.intel.com> wrote:
 >
-> Maybe I should just use 0000:07:00.0 and blacklist 0000:06:00.0 as I
-> don't need two NICs?
+> On Fri, 22 Mar 2024 18:36:37 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> > On Fri, Mar 22, 2024 at 03:43:27PM -0700, Paul M Stillwell Jr wrote:
+> > > On 3/22/2024 2:37 PM, Bjorn Helgaas wrote:
+> > > > On Fri, Mar 22, 2024 at 01:57:00PM -0700, Nirmal Patel wrote:
+> > > > > On Fri, 15 Mar 2024 09:29:32 +0800
+> > > > > Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> > > > > ...
+> > > >
+> > > > > > If there's an official document on intel.com, it can make
+> > > > > > many things clearer and easier.
+> > > > > > States what VMD does and what VMD expect OS to do can be
+> > > > > > really helpful. Basically put what you wrote in an official
+> > > > > > document.
+> > > > >
+> > > > > Thanks for the suggestion. I can certainly find official VMD
+> > > > > architecture document and add that required information to
+> > > > > Documentation/PCI/controller/vmd.rst. Will that be okay?
+> > > >
+> > > > I'd definitely be interested in whatever you can add to illuminate
+> > > > these issues.
+> > > >
+> > > > > I also need your some help/suggestion on following alternate
+> > > > > solution. We have been looking at VMD HW registers to find some
+> > > > > empty registers. Cache Line Size register offset OCh is not
+> > > > > being used by VMD. This is the explanation in PCI spec 5.0
+> > > > > section 7.5.1.1.7: "This read-write register is implemented for
+> > > > > legacy compatibility purposes but has no effect on any PCI
+> > > > > Express device behavior." Can these registers be used for
+> > > > > passing _OSC settings from BIOS to VMD OS driver?
+> > > > >
+> > > > > These 8 bits are more than enough for UEFI VMD driver to store
+> > > > > all _OSC flags and VMD OS driver can read it during OS boot up.
+> > > > > This will solve all of our issues.
+> > > >
+> > > > Interesting idea.  I think you'd have to do some work to separate
+> > > > out the conventional PCI devices, where PCI_CACHE_LINE_SIZE is
+> > > > still relevant, to make sure nothing breaks.  But I think we
+> > > > overwrite it in some cases even for PCIe devices where it's
+> > > > pointless, and it would be nice to clean that up.
+> > >
+> > > I think the suggestion here is to use the VMD devices Cache Line
+> > > Size register, not the other PCI devices. In that case we don't
+> > > have to worry about conventional PCI devices because we aren't
+> > > touching them.
+> >
+> > Yes, but there is generic code that writes PCI_CACHE_LINE_SIZE for
+> > every device in some cases.  If we wrote the VMD PCI_CACHE_LINE_SIZE,
+> > it would obliterate whatever you want to pass there.
+> >
+> > Bjorn
+> Our initial testing showed no change in value by overwrite from pci. The
+> registers didn't change in Host as well as in Guest OS when some data
+> was written from BIOS. I will perform more testing and also make sure
+> to write every register just in case.
 
-Yup,
-ratelimit the AER warning is another choice instead of change WARN to INFO.
-if corrected error flood happens, even the function is working, suggests
-something was already wrong, likely will be worse, that is the meaning of
-WARN I think.
+If the VMD hardware is designed in this way and there's an official
+document states that "VMD ports should follow _OSC expect for
+hotplugging" then IMO there's no need to find alternative.
 
+Kai-Heng
 
-Thanks,
-Ethan
-
+> Thanks for the response.
+>
+> -nirmal
 >
 
