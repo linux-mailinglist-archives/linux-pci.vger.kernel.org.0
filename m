@@ -1,77 +1,111 @@
-Return-Path: <linux-pci+bounces-5198-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5199-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 655BA88CC75
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 19:56:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E235388CCDF
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 20:15:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E69B5309688
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 18:56:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 216A1B24A3A
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 19:15:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0D6313C67E;
-	Tue, 26 Mar 2024 18:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 733F713CC4A;
+	Tue, 26 Mar 2024 19:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UnE1mUUh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wb66Hvwg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2109.outbound.protection.outlook.com [40.107.22.109])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F12F129E88
-	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 18:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4822F13C9D1;
+	Tue, 26 Mar 2024 19:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711479374; cv=fail; b=mWYhrpvAVptO4Yw5wY5PBSIm79+9q0Qh6MDb28OhgiNfcElmJezXYlZdzm4ILOacvW4WjyiQ0BrQjUCtt5ks/TKghUvacErxBl/N2ppbgS8sLOq1NJ1+Zy+0Hv8K8aLOkf5oo4JIXY4S0h1i1ACgHsTQl7Gn8Fkwr6hpWR1ZD88=
+	t=1711480533; cv=fail; b=tzEIHANvNirA9LOIeqk5pfpzezfO2lyaRaS5Am1ypdXXp3CaWJcBwD1VNvbUHkW8u9w2Kfee2p2iy17RLX/qhVnl14IYoEfM4AsdKzFVtYb2854A2dfpIXFxwD/W/EGlUosbVn/82LQfo0EXUNjcudTAH/HLJbCx8fo9WE0wUcM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711479374; c=relaxed/simple;
-	bh=sCyyQZ4cuSfkw/SxITVEuQBzfikVVpk28/IilEwfK7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=l9P4C7XehLpLFE1u7+Y2NdPzjx5wwVtwzsr3V9Ir0eQ5PlpWVVZsPNf1UHtqnVV59E9hZLDz7imqzrDncOuuYh2jaiZQm3+1SRGwz+hdhDEkoMR2cgpaAhIcADDWB2+QhfX6AMbec6I06F0sUq9XiLnmEtwU1cLiQOOizqlnnDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=UnE1mUUh; arc=fail smtp.client-ip=40.107.22.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1711480533; c=relaxed/simple;
+	bh=tfZNc8yZ51v0lbzRrBTuk8+UYrrdTKYGY4PrFd1DNnU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=K+E94ZgbOEmTH3pGcWXSHPLPOgTxfsYyuWCahKohkOgm8KgGhTntTv3b5WONj5++CLGFUpvsb/SKXrmcGAcTfLupm43gIIoV36KQzxSfMKM9iCNAOYWVdzF07oYCOySZSXbRG/tb+oOWCV4uqRotZSnxTV7tX/pugfPZ1G0lkLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wb66Hvwg; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711480532; x=1743016532;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=tfZNc8yZ51v0lbzRrBTuk8+UYrrdTKYGY4PrFd1DNnU=;
+  b=Wb66HvwgTSH3I6BqeFR9433RLnF1i+2bBNVdKP1RCplOL6nDxeMHkziT
+   l2rKelcZIyirXLubzr5kUXDmbHtMCuk6Fj8UYBiegbuwqjvTjxH+zf76s
+   m4JZz2kS5PvWxkXd2cHiZEWzjLzoXvUheawW+ADGplV91d78v5ZZ9YiEv
+   Fh3q2RSoYldiHDhR15o4LayKUmwr8W/T9PVWVIW6Xq6gpdHMvDPwAQ1So
+   kXjVma74UCZp6Pjc1F//Z4dPFhvcAV9406Kv21qHc5EWPBBsdONjA3EpH
+   ZlxNjUSpq7RCgEbkBFMLmnc5nu+oLygKwGhPyC+3IoERmJAimdE97Cd//
+   A==;
+X-CSE-ConnectionGUID: 9KBVQsA6SmquTl2YQEIHPA==
+X-CSE-MsgGUID: 87gOCjp2TX+9wA2iWpCE5Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="23995964"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="23995964"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 12:15:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="16052490"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2024 12:15:30 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 12:15:29 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 12:15:28 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 26 Mar 2024 12:15:28 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 26 Mar 2024 12:15:28 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lIGjCJvRBE2WwtRctFJJH1iiWPQxBfDnSFQffqZz7yyQobMnDgXMEp5i4Sy6y6FH4bnYh/LofRqhjiFRy+m5U8pC3/8FNgtx9go8sX2/JO7kuh2hwoh7ULB7gOMKTZznGOuuKrhkCCS7EFek3u6GIWLMYTRtL/N8uu9WCNfmoM9sDSkgVHqU8bJW2uA/rewEbWaeU7Uvz5LOnGx9P8ZN1in0m6pdP8UuC9KbkyMItj3J+rmkJcBM3TTZCVJ1PuVzu4pjmjJmwB5lZlaYV3laXVUwfw03wYeg3UG932ofGhx07uBeCAMq5q3tsNlOmeN8PIZe8POdDfmXNvDbx0BX/w==
+ b=iuRaVSTM8wLr9JsuSMP/j4n1bI65v7oxYm9+Xv+0j27JITd5ia32Dadv6K6asTGhJFKwy7Z9e3+EzviBYFJOZmSPnwXHmqVUbDwP5FQ3uptQQiYOJRkXucNbiQBS+e3i7HCs6HkA1qtflUQ/cSuKf7J5uJDloGvjAwNeKLZMrvrzUZwvyia9VCTWzBWmX0nDv80UWFlqrcOEvFmXpSphEMd+HNOR4sDcXjjVIsUZpkw2UKe4J7kQG1deAb6lnswByofWCYB3t5wekjcIst9sQU74xxWYp+Kwy3Gv6hMMNexSqGpH2Iw+F868d+MUs/C83HXaSVd704uVFWBP1d1irg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cunf8btstACNvaCihi8289+u4a47wMULkg4pe3nQ3zw=;
- b=BBSHuau9AO7nBdzD+3CI5ujLZX7vet+f9To8h9tEHyNGnpSJNW65EPr+55oiT8kvzkWuqqfyA8TQ02eoAGOKo+C00AeNgZrpDKMKQ73K/F09asGYBitEGGeFPPZVdw7GLYsQGl+OV39KytoFlPhvXUYtYR7O1qblsB0ftaxR3z9pdqRvTWpYSm8KAWzuJFy5lhca2hKh3LXTkLchyTV1xg6xgAcabNmgW93VCXTeJWW2LRJs8iwO/XgExKYlQNefvaXLGfa/YxsWMwskUVr8r4DkrwVDA3TQ9rRr6puYia62JhCu63uDsGgo/wGwnOXskdoeTjj2DmMsGtr2VmFSHg==
+ bh=/BSLbiDSqydfaLVHFAjyUQaSXx0KDNOG6W0fpP6hAwc=;
+ b=iVwv+ibrM9oZf+mFZiY2Fi4wFzSXaDY4A8CM8PBxwEUq4Ms7vmA7YFYDFhz24YafXh4n7kjm1PrPNcfAJhxpG0apRRCHK3Msm1ec91nvv3eoxQG8Lc+pbyO+OOx1/LIWnc1flBsRYMsC4xioLRqFWprWB6OO7+uypneX/76B996G4Hhgg+ydO7VjKZki8R8CKKFcxfz6fwsARl2jXJ3ij4SRwJVFRZm/ev22DpgidqjLVfCdicVoQ2k1RI2DAeCPNH7Hq9DYGEBkwCHKG0lWd3jJldLqhpJc5zh+KSvlSTSktq1A/E7aV5GIhZtFua6J7q4Rkb5jNVrXfEb8vcuPeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cunf8btstACNvaCihi8289+u4a47wMULkg4pe3nQ3zw=;
- b=UnE1mUUhL1sohng1mJCVL8FUxOHV8hhYuKP69z6B8RefCQO+ULmJwOBFkJKzI3t3Ps/WQKcDJP6r5iyHp0Fh/nsY5gGLFEp0pTAUAiKkG6Z7pgTgUaWBy3qOORaF18R4xyC61GeaKk7m2XrnprcKLlMjbFHsi0VsY141Gokb5uo=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB8836.eurprd04.prod.outlook.com (2603:10a6:20b:42f::7) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CH0PR11MB5300.namprd11.prod.outlook.com (2603:10b6:610:bf::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.24; Tue, 26 Mar
- 2024 18:56:08 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
- 18:56:08 +0000
-Date: Tue, 26 Mar 2024 14:56:01 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] misc: pci_endpoint_test: Remove superfluous code
-Message-ID: <ZgMaQcRsdHvSEGUD@lizhi-Precision-Tower-5810>
-References: <20240325142356.731039-1-cassel@kernel.org>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Tue, 26 Mar
+ 2024 19:15:25 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
+ 19:15:25 +0000
+Date: Tue, 26 Mar 2024 12:15:22 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
+	<kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>
+CC: <y-goto@fujitsu.com>, <linux-pci@vger.kernel.org>, <mj@ucw.cz>,
+	<dan.j.williams@intel.com>, "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Subject: Re: [PATCH v3 0/3] Display cxl1.1 device link status
+Message-ID: <66031eca92f5a_4a98a29427@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240325142356.731039-1-cassel@kernel.org>
-X-ClientProxiedBy: SJ0PR13CA0200.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+In-Reply-To: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
+X-ClientProxiedBy: MW4PR03CA0246.namprd03.prod.outlook.com
+ (2603:10b6:303:b4::11) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,123 +113,133 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8836:EE_
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB5300:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	48rzJFrH44eqro6XkxtUw63ay879S+ClLPTlAci0rjtJ6ZpXeofGFGJNLXdJYMnn5MBXrfANfvigFQAPooWMHfAsi6qg1UDsnUBxvsX91sVbVhX+TXuQQt1bRTX11mRHNkq3vCV6evnsW2atZLufm+CGDbxBt7BYpqhkOPX5xtw6noJcnAROchJ89joSNmR6W0v70+lpWWI0AqpFfo2ev38Bmz+FJ2LbW4lvDssjColJ8h+M/wenLKi2+/2r8PUMsU8eCBted8JxUlo32hiQyjVShYOzCStxxvJtPiwnkR0vQ7DFcNe+wS5KTrcIh8ehMuUg/i6Bomdrz96RZ7N2X8TImoTALuynswTYOx8P8UUkEpZ7QoT9e4fO+DEVoXpwhZSJAIpDSejKDai/vkq4RHJQdxzFyYIm92BbBIdGZKJ/HCNiqFhxnQl4BFsS4ZhJGbJ/ny9a9ZZETVH2AxUn55gINtrvtuS5frNAa6jETSRNOe+3bZ3WhPWKNpO1/RZx2JTrrBsOQ+jTUR+EEVksH4OqFW6VtxUphwrjEPEwL/lwBu0yVMDf6XDlavW/BRcwfeul3UhDpXuJ0+DJK/rTsyRwdQjE2uYKoAgUcbAFR962aN/7iaL9ZQ9T3PC+aNrm9EkXpdYa2XLaFj6c0QM6Hvm8YVK83bOpvO5HhwG149Y=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: Dc1fvm8jLhecDAvP+jEt5XS7Wrf2+ScZ/NnBDZA8NRsSIDu1PmRoTky7D33rVoZucgPzNgc8yjRszQrkNebvREbHNix2klvFnEce7wqPQQ/KZ68X1x/sMiKeVEtkbg3S7F6wrt4STe6KwRezKHqw/iCUGSD2Ql94W9PJeveS42LhsOqaiouYbaG2sYzDXu5/cONwOFLTpynqIAQGX5XujWndvmcyn7Ca+I8XSgE3453WYoT7meW8C4kiV2QP0StIA3JLdYc9drNMT6eYLpPN/bqi+ow7tULeJmZkEA05Fmm8+r0XUHD7v4y8HUovxTpSpHXQgNddyUIh6uqYZkQQbEV9JS5AC+x/n0AyqgU+6oTDu1OzJvU/hJT7DCUDZqAaRnKJHLlJEtAapcGsDM1UYO6OmA/5cKwQ03umWHtH6erJhdHuVL7zxzb/ACvZsrxAa0q5paCWuS7dO5pQNZo4MOCN/vu2arbQG9Si4fm3pEDL8OwWm5/BqDTVhba17kAZwy2NNgwl7vM2+ruWf4+J+FfM2NJym7MbE5Lbl723qQLdDu4vsJRo2lhpTLlZDeDCjhh7r1+YBXOBtzU8LnEkJdiXYeiZBywhr71v8xxWHuEXqark5bW8wE9xZ/Gzuujo
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?001Dkfk2Rp5yI10EnsNMQD0d/t6XLd6aOM1HHbGw/lUk5ZEGpFHfpkoYd/64?=
- =?us-ascii?Q?sqJWRzQmUd2ZySzQSKsp/0X9/TEIuNKFHK+uYoxuvCL766ckvYak7Yaa/g0j?=
- =?us-ascii?Q?iN5uIX+z16GcjaRXqQFEsRxq1uoiYux3y1PkXSeQa3gltsnzUG6MilHemO2v?=
- =?us-ascii?Q?pqHEQZyw4fEHY19VPPr5/itiDOvHx5ubQumHgMqVu4yj3tGkDrmH7KbXtn/i?=
- =?us-ascii?Q?0WIVSigkgucNSXlyt0vCH6N6hEgTM+6Y7gEHsMm+kpuQsrwHgD1dw/rR5BSI?=
- =?us-ascii?Q?Oxy3HX97sbhWL/k7tMsNrDJNf04FjqbeBEVPE60ATFFUl1zEpJqrWOdkTlY6?=
- =?us-ascii?Q?l3aN/k1xG64eyal1uJOToUTdiJ523UKt7SddaJhmRoJ1+avthWV4R/WBCL3C?=
- =?us-ascii?Q?ITpV2uZUVDMr1+42Z+4j8G8YhbbocyIpoelJSzusuQ5lZUiL3r+ron3ntLrX?=
- =?us-ascii?Q?DeGXRLWbcZROhNT7F20ePF7M5CGtHfve+LaxTiYpiNmHL7X8xUwTr3wco+k9?=
- =?us-ascii?Q?klUkRrDKSuMR+jb2jm7PPLm/+J7uwUPVNs3sCGf6+oprp9tYYP5BCxhHRrf5?=
- =?us-ascii?Q?x7eHRFKzucYFLeZbfwLQx7jqakJ1m5C1J70Zc09BzXDmGATVGU8qrahAQv0y?=
- =?us-ascii?Q?Np+7m+UqCl8DzEP3RqERgoD/Bx/UrgBc4nWwma3u2mvr5ohGIRccI2/ZsY4U?=
- =?us-ascii?Q?ROp68LeE8ivzMxUyhEBLLTrES57Qj+mDhjzrljY68IyjBKrxXF51DjrwyUjm?=
- =?us-ascii?Q?Brf4TB9clF5+VbRvQpAfCAP6pJlgeGz+1crD5Hj6qxlifzLCJevJM8XHxUuh?=
- =?us-ascii?Q?uYr91G8XjGvpx+BzTBfAEaOnY3XOPz9E2KndXPczibVcDW5IB7MBWngVs25V?=
- =?us-ascii?Q?2ybKix2/iePs+7gZziZfOGg1SryuETsHTuk4toifyr3UyLs4TFsBWiqtVz6A?=
- =?us-ascii?Q?A8QPowUmOLBfEjlpe7MpNY17wOyUh/J5Dw+QFJdCOfCPRBEctBavpS6+qi5d?=
- =?us-ascii?Q?vVSS7KSMqNxz1OUCGliC2Hvg0Jngj9pU+6VIahA0txTMHPGs+OW39l8icj9t?=
- =?us-ascii?Q?kGNoq641pbICsgDwC0dmPBsDedPsk4oHWZiaQ1jAU0lXDiCAyRjIfR7cUT6O?=
- =?us-ascii?Q?4Y6WCmUKRnbUbtBs3X1hV4HObEAMLnInVJUPh9U+HzdJ9vJ1xG7iPiLi39OZ?=
- =?us-ascii?Q?xDbQS6UX2vNv0dKOCBjgUbj/J6cBakKqgNoUxSdrZhOzf+x5y8wgaFZMSMBN?=
- =?us-ascii?Q?lh1DeGDgnE/UacIUKTsaBvHOvi0u/jz6zvxEbbSNOKoLmVql1w+MR3HwWwoT?=
- =?us-ascii?Q?bo60Kc+mNItODQyJ+A9eEfh/RSl0hV09E+y7cQqGl3vfKK2anwgBr1GYB5h+?=
- =?us-ascii?Q?XdIGwAgMNI/kdyTHHhPLxfNiywILJhnu0iU3lQSIobU6IS3GrHiCe56DQWSr?=
- =?us-ascii?Q?nHpP47Zic/RIVcKoHgieMaPmbWjzZT2r2b9kWSZEVyGcEnyBebvABIKj5Uie?=
- =?us-ascii?Q?Dfv4Y2gqjqUva08pEMgiRn69CeYIBDuKIllL7U4ZrkHRHJB1fFbd5Y5V5t0E?=
- =?us-ascii?Q?kUDzOBX6ZlxNSemSHOI=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c799f8c7-d9fa-4665-eec8-08dc4dc665c8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gCroQGZRTzX9BgSRy7vOMovKsQQSDLK2jyl8iBos3lgrrTO89X8F64KHHd0R?=
+ =?us-ascii?Q?EkJ8OLSlTYVliYKtNOOYqtfBInytoGc/fNL11sJLjhmvioykeTjh0HvrmUb7?=
+ =?us-ascii?Q?C6ycDbstGblwCJFzpq+hopS2gci66o7hOHAzK7HaTv3Kwk9ARf+lr5DgqteH?=
+ =?us-ascii?Q?VFHDz+IFZaInVJhfZxgxJbXe9LClQGQIT8ElwaDT7TYKSaEmRTqixPC5hlV3?=
+ =?us-ascii?Q?HnvR6X89dc6N6Tfd0lrDTEfqM6oQ2rFJU/pu7VyrZ5GWI1RFFvyNkNShhgcR?=
+ =?us-ascii?Q?lDXlWXT4FkmiFMVGVw8Lv8/SWgQZNxTlRSnXiNhWeXKp4XlXt2YBZ/AZwR5d?=
+ =?us-ascii?Q?f1WDGG+TI6oeVOXhQE3kFn4z0ref+HgmcTY/ESeF+7pdZtKruS/OhhsXipzk?=
+ =?us-ascii?Q?2jppemFhVboKkmQ8nKHLd2jDv3nnqhMuKTAGhcTvLNnvP8uUjtuSmCIKWHLP?=
+ =?us-ascii?Q?buTX5oDImpvCYysNTWb68zFu6NLQ8E49ZGtYFE86vinc3fmJmoLzli/X5Zl5?=
+ =?us-ascii?Q?0CQmXrcxj6bAB8PsYbZsGto0Z2AgIL99P3tHx5o+FJyMsUJcTMCaFGI8u3Pc?=
+ =?us-ascii?Q?muqXblu61gCVyXYNcY4snPmG1DS+cvbdtTvtq/EAbFleN8fII4o6I3aOQgsO?=
+ =?us-ascii?Q?NePLJtH1mUz65uPc306cLydppOJXGph4jeMwIn9soqL1iP1J7HbNXvJtpPT3?=
+ =?us-ascii?Q?20O2OXi9MEIRtzajzpD4R4GCshDxyl+b1cSKCrE/pMXnafwfIk8rn0EQ1M/X?=
+ =?us-ascii?Q?N4uijQrZrqqQ6UcyG9sTeyoElb+4hvqo1asts7cYZoVya0z59ovQl2bum7Lb?=
+ =?us-ascii?Q?j4deGicYXaIfCwJpT6NjGZiDNGPPmlaIx/r1Nildytud+wwYZRBbpVsZjrqV?=
+ =?us-ascii?Q?eoi1YQ6Bi+lZTRagTcDWJGFTRWY10dROrBSV5BsaIKcTYPlKk+t2UFV2L1LY?=
+ =?us-ascii?Q?h9zlg2ZF+PhuuBDEVXD7ez/dk7DF4aIUmtDlfPrkZ4JEFMUHelquMiv3d7nu?=
+ =?us-ascii?Q?toD0vr2EVdQvbhUVe3ec7cEhI/4Udv1URivfGAqt9J4tDXfdkpNyUg4tzwJz?=
+ =?us-ascii?Q?aiANtQv279/LhbcEZBNDlsyb9Zy21nj2Ml6kdjGUM2C+uDQsJidceyjBbVu+?=
+ =?us-ascii?Q?l8WdHeRFwF9erO7uJ68IU8pXbJIzeOy7HYW5Cdx6lo2jcIWHxsKHdTjbhIkG?=
+ =?us-ascii?Q?hxdzm+A1f4QGlBINgw5p5u/i0VeyqqBBAhn3PJeoB6FENFEr6Z3reY6hGs4w?=
+ =?us-ascii?Q?cPW3I2iLhKhJ6N3iuCnwD/50Q3tZbKI50MWot2XMfbbJLOSG8xwvtIozgRji?=
+ =?us-ascii?Q?WmnWEOXMymi8gv688x6SKLeYhPZbR/NzzliFmXbURkwgoHjOe/ykIrDRpFif?=
+ =?us-ascii?Q?BicuS+x7dofWjDVu8H723jTHReNuOQ29tHZ0bNw6Cpx3j6qLO69GuAGW3sXG?=
+ =?us-ascii?Q?15Dh3n13CyMLE/Pk2FZivBPP0dl2zIaazHZq3XA0O4CoGbgj92YgIRrOWeOg?=
+ =?us-ascii?Q?5L410hbgD/5yG90Kho+tQoirL9T5u61miWURMudyciLat4LYS6NHCeK0dSRW?=
+ =?us-ascii?Q?176SZFX1+hoJ/EeCJC7c8HzrxCd91Rqme4KltReP656xEGQp6ZM+v1lTu6sD?=
+ =?us-ascii?Q?Iw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5daec6c9-7a51-42ab-7aec-08dc4dc91715
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 18:56:08.7537
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 19:15:25.4520
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wmhtgk7CwVYytgyHfpHhJ2SEdRbbQkvxUaUBpcWp760Ls9SaOpCCTvpGSktziZCDUfMhCX1HQsNuoIz4FqoV+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8836
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7nz/J8uDtcHgBBzFw+GKhUOMyDc5wEist1M91gCQE4E6d7uOY3vCp4aLOqMOp5ovpS+DHDGJ9KkIV/eSNnVCt9Q1JYUvqHuN01Yia7qeTdo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5300
+X-OriginatorOrg: intel.com
 
-On Mon, Mar 25, 2024 at 03:23:55PM +0100, Niklas Cassel wrote:
-> There are two things that made me read this code multiple times:
+Kobayashi,Daisuke wrote:
+> Hello.
 > 
-> 1) There is a parenthesis around the first conditional, but not
-> around the second conditional. This is inconsistent, and makes
-> you assume that the return value should be treated differently.
+> This patch series adds a feature that displays the link status
+> of the CXL1.1 device.
+
+Good write up! One minor feedback going forward is to drop usage of
+"This patch" in a description as that is self evident.
+
+> CXL devices are extensions of PCIe. Therefore, from CXL2.0 onwards,
+> the link status can be output in the same way as traditional PCIe.
+> However, unlike devices from CXL2.0 onwards, CXL1.1 requires a
+> different method to obtain the link status from traditional PCIe.
+> This is because the link status of the CXL1.1 device is not mapped
+> in the configuration space (as per cxl3.0 specification 8.1).
+> Instead, the configuration space containing the link status is mapped
+> to the memory mapped register region (as per cxl3.0 specification 8.2,
+> Table 8-18). Therefore, the current lspci has a problem where it does
+> not display the link status of the CXL1.1 device. 
+> This patch solves these issues.
+
+One common way to rewrite a "This patch..." sentence is in "imperative"
+tense, so for example:
+
+"Solve these issues with sysfs attributes to expose the status
+registers hidden in the RCRB."
+
+...i.e. write the commit log as if the patch is commanding the code to
+change. You can find some more notes about this here:
+
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#patch-submission-notes
+
+...but really, this cover letter is higher quality than most, so thanks
+for that!
+
 > 
-> 2) There is no need to explicitly write != 0 in a conditional.
+> The procedure is as follows:
+> First, obtain the RCRB address within the cxl driver, then access 
+> the configuration space. Next, output the link status information from
+> the configuration space to sysfs. Finally, read sysfs within lspci to 
+> display the link status information.
 > 
-> Remove the superfluous parenthesis and != 0.
+> Changes
+> v1[1] -> v2:
+> The following are the main changes made based on the feedback from Dan Williams.
+> - Modified to perform rcrb access within the CXL driver.
+> - Added new attributes to the sysfs of the PCI device.
+> - Output the link status information to the sysfs of the PCI device.
+> - Retrieve information from sysfs as the source when displaying information in lspci.
 > 
-> No functional change intended.
+> v2[2] -> v3:
+> - Fix unnecessary initialization and wrong types (Bjohn).
+> - Create a helper function for getting a PCIe capability offset (Bjohn).
+> - Move platform-specific implementation to the lib directory in pciutils (Martin).
 > 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/misc/pci_endpoint_test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> [1]
+> https://lore.kernel.org/linux-cxl/20231220050738.178481-1-kobayashi.da-06@fujitsu.com/
+> [2]
+> https://lore.kernel.org/linux-cxl/20240227083313.87699-1-kobayashi.da-06@fujitsu.com/
 > 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index bf64d3aff7d8..1005dfdf664e 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -854,8 +854,8 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  	init_completion(&test->irq_raised);
->  	mutex_init(&test->mutex);
->  
-> -	if ((dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) != 0) &&
-> -	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) != 0) {
-> +	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) &&
-> +	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-
-Actaully above orginal code is wrong. If 
-dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48)) failure, 
-dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)) must be failure.
-Needn't retry 32bit.
-
-https://lore.kernel.org/linux-pci/925da248-f582-6dd5-57ab-0fadc4e84f9e@wanadoo.fr/
-
-I am also strange where 48 come from. It should be EP side access windows
-capiblity. Idealy, it should read from BAR0 or use device id to decide
-dma mask. If EP side only support 32bit dma space. 
-
-dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(48) still return
-success because host side may support more than 48bit DMA cap.
-
-endpoint_test will set > 4G address to EP side. EP actaully can't access
-it.
-
-Most dwc ep controller it should be 64.
-
-//64bit mask never return failure.
-dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)); 
-
-if (drvdata.flags & 32_BIT_ONLY)
-    if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))
-	err_code..
-
-Or
-
-if (dma_set_mask_and_coherent(&pdev->dev, drvdata.dmamask))
-	err_code;
-
-Frank
-
->  		dev_err(dev, "Cannot set DMA mask\n");
->  		return -EINVAL;
->  	}
-> -- 
-> 2.44.0
+> Kobayashi,Daisuke (3):
+>   Add sysfs attribute for CXL 1.1 device link status
+>   Remove conditional branch that is not suitable for cxl1.1 devices
 > 
+>  drivers/cxl/acpi.c |   4 -
+>  drivers/cxl/pci.c  | 193 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 193 insertions(+), 4 deletions(-)
+> 
+>   Add function to display cxl1.1 device link status
+> 
+>  lib/access.c | 29 +++++++++++++++++++++
+>  lib/pci.h    |  2 ++
+>  ls-caps.c    | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 104 insertions(+)
+
+The typical way I handle cases where I am updating the kernel side and
+the user tooling side of a problem is to post the kernel changes and
+then separately post the user changes with a lore link to the kernel
+submission.
+
+For PCI utils I believe you will need to send a separate pull request
+via github once the kernel changes are accepted.
 
