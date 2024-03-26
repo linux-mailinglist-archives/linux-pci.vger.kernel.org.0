@@ -1,98 +1,69 @@
-Return-Path: <linux-pci+bounces-5178-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5179-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7396A88C33D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 14:19:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D974B88C414
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 14:48:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29CE72E548A
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 13:19:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 173971C3EBB8
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 13:48:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46DE71739;
-	Tue, 26 Mar 2024 13:19:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3316D7F7C4;
+	Tue, 26 Mar 2024 13:47:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="LRz4axFL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vcIQVYf5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYeJpAUH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831A273528;
-	Tue, 26 Mar 2024 13:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F4974C17;
+	Tue, 26 Mar 2024 13:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711459146; cv=none; b=a7990wBge9wWN01Db2QQLQOVq9J9p1pS4Khj1fF2QVl8dfNTuC/d4bGH5LO3vXMCBodnc/iUuGIYv6wcIjsmlLZpTgaEU7WctPwtkL6xF7RVrkLtwh5LFu9UHJPjK/w4muEnO06GCq0+tfkWonbAQe7sd2zQ/3xBmQ8UP+HsTVA=
+	t=1711460857; cv=none; b=gyCnljRFV/0Jdo6aKKVlfMld2HUxB48ROTX+ENJcU2kPLZo9jexOmbou5G7KEL9K6TbC7hcGhyJTBo1HL6jDe9LZBDJkg9PD98v77cazCbi7SA5SvZVQpIXg53TLlAAYh0Algkjk3ENWgLTsjwUFq0afREL60NK6uPjimBcZxRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711459146; c=relaxed/simple;
-	bh=Nw6gkzwQJ3vq6k1vADx4v4AL14gU7jDXGeD/VmkPJN4=;
+	s=arc-20240116; t=1711460857; c=relaxed/simple;
+	bh=P2qK25AOinNz1eP+vHSK/lBmvdrjVtBZ8Su3RQbwtRQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CqZXX5Q02tlGPfxe0AVfdyc10sC2oXR3UHK2dqRH2TO5GlRQdkXcNBhjMudz7RZKGhy5+KWP0OwzM3PWDBzrlECJ0uAq8Ce7Ywq3t4vyH3NZwGzzX5wXpK3NS9u6jK97whjztHc2K0JCdqIxsCGQRpmNCkbjJ1+lYfU02If3nFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=LRz4axFL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vcIQVYf5; arc=none smtp.client-ip=64.147.123.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfout.west.internal (Postfix) with ESMTP id 0EC171C000BA;
-	Tue, 26 Mar 2024 09:19:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 26 Mar 2024 09:19:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1711459142; x=
-	1711545542; bh=8dkrIjQAho8E94kcntncG9z/hDPUU+6X3l6A7O3vbF8=; b=L
-	Rz4axFLvC2Dxz1qd46z5nNt720WBYUvv0U/greVIMdj79SP4BG+PQRhEJcGBzeG+
-	Xkwu1ycGLwUVbhLQRbHlefYI8XAHAlYURsqGRvQ0FPQ15gCqRhJREdF1YsUGFmnc
-	LFTcBOpooxnzNTxnoR6Wd25ePDVKh8vnh/5JVWrDphLadthJTJr7V+hYWwpi04Mi
-	6AwPZ+CyqFrT97SvmVQdgr4V1qGUBlvLN7k6W/fuqf8HV0g/gIonGvnG1mkQ7+3u
-	cNfJYqoEnyfHTv1XxbUQMYjwTB1J8fldk4r9pq+SU5GyQyWTJE7KhUh6OxDuX+IZ
-	tWxgQZsM+/qlLnal4kOBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1711459142; x=1711545542; bh=8dkrIjQAho8E94kcntncG9z/hDPU
-	U+6X3l6A7O3vbF8=; b=vcIQVYf5UqI43Xsd10fnZJBQGDxy2yxBdGhf9YbHqwXC
-	TmGwGNYmYtGOZLW8AuU3Qm8nxRCnZV+ic73WqE+YiOuJXgAVTivEDg523EtASqxP
-	IcV5DB0wZXKB0ENzb5k7qClutbgsKFy2xowY5GR/Jw42Z93L+RsqzMTUjjNGls9X
-	VMPdEybPShIgxZUfj8OR8jceG3nDkWkU6JcjKNtc9iZEkBbf3koQhtx6MH0FBi0n
-	kDKjtl6jZI823YbgxQSumZnlqHV8SjYgLnxQtLfNW7X0/Z6BThhJG8YPSdnotZgZ
-	41jPoqpfivMb2T33YN0Tc44H2+W5milQpMcRD9lwTA==
-X-ME-Sender: <xms:RssCZkgqVs6R_BkltFmugRvphof3wFLCdwYbz9T6gmsmiPYejiUDFQ>
-    <xme:RssCZtDMAveXgIRoV7uGJ7qTFG0qm3hrYUMTAb8jUxlDXjfGeYRdLVFWC_zONpRGJ
-    CXrBsXFfspgoOpjjtY>
-X-ME-Received: <xmr:RssCZsFsVNcDNLN6yIR92Hxp1gd09hD9Oi17sdVbdOMFqnXe3MhNq2pnUBCnTCgfPXp0e2p459Pm8mU2fVM_0gY5h2yCvhKe5c8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedgheduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
-    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
-    hjpheqnecuggftrfgrthhtvghrnhepveeilefhudekffehkeffudduvedvfeduleelfeeg
-    ieeljeehjeeuvdeghfetvedvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
-    hhhisehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:RssCZlQgd208te77QdxPinRYKYZW9mRiUo5C8Wdq5ouKl_1WmtRLcg>
-    <xmx:RssCZhwAeIRjzplboiN5VAs7YtwvFopvKvNssARPFcxVDZb9E8VO4A>
-    <xmx:RssCZj7Q5xmZoyvVg3GyTLRLopXWEBm92wfyolAiTJRbkgUllsleQA>
-    <xmx:RssCZuzvkHyBNVrp9xPVM3rfHPiSn2l8eT6fZXa-TAqgwfjNizJPBA>
-    <xmx:RssCZomxQuSXbUDISx_t69EzrWD0jlo2kPdGuGWJUky2MqzbyDFlAmstxzg>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 26 Mar 2024 09:19:00 -0400 (EDT)
-Date: Tue, 26 Mar 2024 22:18:58 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, edmund.raile@proton.me
-Subject: Re: [PATCH v2] PCI: Mark LSI FW643 to avoid bus reset
-Message-ID: <20240326131858.GA140624@workstation.local>
-Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, edmund.raile@proton.me
-References: <20240325012135.36861-1-o-takashi@sakamocchi.jp>
- <20240325144149.GA1432902@bhelgaas>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHoba7KgkBBzapWlV7ExMnPz2tfbkYjx2WO6jTOu3cBWOw+qab1TdW6nsEC1a+CMcaEeB/gX3XuhEzfEnekZTFeqQZKY4C9xabPCYCGF+O8A2Rb8co4nVl6hjAcelwROkwFSazIVIP5RJx+RS/6ezl6VMtH4HJJiP1yyRADV+5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYeJpAUH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A807CC433C7;
+	Tue, 26 Mar 2024 13:47:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711460856;
+	bh=P2qK25AOinNz1eP+vHSK/lBmvdrjVtBZ8Su3RQbwtRQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pYeJpAUHeFOtG+bIdXG4Ruq0TGZaT46Di9QiU5jbnT4y5EU9XK1+HYVCYRYP+QIGd
+	 H85d8RqAmdnILOZQGO1qo1KdsKLrUibL0+sH46/JIdwl99uiItbPikVDfNWmvWAVZb
+	 ucKWnIWAwts3UaDdSfSyN3bmzu/9xOt24yVX9WAaL/GuyLS6YcW2JvnEh+USq8VDmn
+	 WEp9bB5M1INWnORCaztLLJ9m1LP9cTLSMOIdhui4ACXSvAimJ+CCWr8f/cyN4RkTsb
+	 If9D5XeKXZDIun/nWRAOJcv7IcL2go3FXh61EAbq3DJeQf1kUd+HKY8wAt6hK1e4CC
+	 DcGcFdR15J+0w==
+Date: Tue, 26 Mar 2024 14:47:30 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 01/11] PCI: qcom-ep: Disable resources unconditionally
+ during PERST# assert
+Message-ID: <ZgLR8jWfBcZB8laa@ryzen>
+References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
+ <20240314-pci-epf-rework-v1-1-6134e6c1d491@linaro.org>
+ <Zf2s9kTMlZncldWx@ryzen>
+ <20240326074429.GC9565@thinkpad>
+ <ZgKiUogkgrMwV1uD@x1-carbon>
+ <20240326111021.GA13849@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,94 +72,79 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240325144149.GA1432902@bhelgaas>
+In-Reply-To: <20240326111021.GA13849@thinkpad>
 
-Hi Bjorn,
-
-Thanks for your reply.
-
-On Mon, Mar 25, 2024 at 09:41:49AM -0500, Bjorn Helgaas wrote:
-> So even without this patch, you are able to pass the FW643 to a VM
-> with VFIO, and you don't see any issues caused by VFIO resetting the
-> device?
- 
-Absolutely yes, at least in my VM, for recent years to maintain Linux
-FireWire subsystem and ALSA firewire stack.
-
-> Can you collect the output of:
+On Tue, Mar 26, 2024 at 04:40:21PM +0530, Manivannan Sadhasivam wrote:
 > 
->   $ find /sys/devices -name reset_method | xargs grep .
- 
-```
-$ sudo find /sys/devices -name reset_method | xargs grep .
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:09.0/0000:09:00.0/reset_method:bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:09.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:02.0/0000:06:00.0/reset_method:pm bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:02.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:05.0/0000:07:00.0/reset_method:bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:05.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:0a.0/0000:0a:00.0/reset_method:bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:0a.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:08.0/0000:08:00.0/reset_method:bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:08.0/0000:08:00.3/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:08.0/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:01.0/reset_method:pm bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:01.0/0000:05:00.0/reset_method:device_specific flr bus
-/sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/reset_method:pm bus
-/sys/devices/pci0000:00/0000:00:01.2/reset_method:pm
-/sys/devices/pci0000:00/0000:00:08.1/0000:0c:00.0/reset_method:flr bus
-/sys/devices/pci0000:00/0000:00:08.1/0000:0c:00.3/reset_method:pm
-/sys/devices/pci0000:00/0000:00:08.1/0000:0c:00.1/reset_method:flr pm
-/sys/devices/pci0000:00/0000:00:08.1/reset_method:pm
-/sys/devices/pci0000:00/0000:00:08.1/0000:0c:00.4/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.1/0000:01:00.0/0000:02:00.0/reset_method:pm bus
-/sys/devices/pci0000:00/0000:00:01.1/0000:01:00.0/reset_method:bus
-/sys/devices/pci0000:00/0000:00:01.1/reset_method:pm
-/sys/devices/pci0000:00/0000:00:01.6/0000:0b:00.0/reset_method:flr bus
-/sys/devices/pci0000:00/0000:00:01.6/reset_method:pm
-```
-
-If you need each PCI bus bridge information, I can provide it to you.
-but I can promise they are typical hardware in AMD CPU or chipset for
-Zen generation and nothing special.
-
-> You should be able to manually reset the device with something like
-> this (I don't know your topology, so you might have to replace "1d.6"
-> with the bridge leading to 06:00.0):
+> I was planning to drop enable_resources() from Qcom driver once the DBI rework
+> series gets merged. Because, the resource enablement during probe is currently
+> done to avoid the crash that is bound to happen if registers are accessed during
+> probe.
 > 
->   # sudo echo 1 > # /sys/devices/pci0000:00/0000:00:1d.6/0000:06:00.0/reset
- 
-```
-$ echo 1 > sudo tee -a /sys/devices/pci0000:00/0000:00:01.2/0000:03:00.0/0000:04:02.0/0000:06:00.0/reset
-(nothing happens)
-$ journalctl -k -n10
-(nothing specific)
-```
+> But what your observation reveals is that it is possible to get PERST# assert
+> during the EP boot up itself which I was not accounting for. I always assumed
+> that the EP will receive PERST# deassert first. If that is not the case, then
+> this patch needs to be dropped.
 
-Would I ask you any point to check after the reset operation?
-
-> I don't *know* of a reason why a Secondary Bus Reset would work
-> correctly on your hardware but not on a Mac, but there could be
-> something weird going on.
-
-Note that the hardware provided by Apple for the past decade has no
-IEEE 1394 interface, thus the patch author seems to use any kind of
-bus extension to connect the issued 1394 OHCI hardware. I guess:
-
-* Apple Thunderbolt Display
-   * https://lore.kernel.org/linux-pci/1372860295-8306-1-git-send-email-mika.westerberg@linux.intel.com/
-* Apple Thunderbolt-OHCI1394 adapter
-   * I know FW643 is used for the product.
-* Some kind of eGPU box
-
-> Does the patch cause a problem for you?  (Other than the fact that the
-> device leaks state between VMs?)
-
-It takes a bit time for me to set up my system with self-compiled v6.9-rc1
-kernel. However the leak between VMs is really inconvenient to me by itself.
+From what I saw when having debug prints from my old email to you:
+https://lore.kernel.org/linux-pci/Zalu%2F%2FdNi5BhZlBU@x1-carbon/
 
 
-Thanks
+## RC side:
+# reboot
 
-Takashi Sakamoto
+## EP side
+[  845.606810] pci: PERST asserted by host!
+[  852.483985] pci: PERST de-asserted by host!
+[  852.503041] pci: PERST asserted by host!
+[  852.522375] pci: link up! (LTSSM_STATUS: 0x230011)
+[  852.610318] pci: PERST de-asserted by host!
+
+
+
+So in my case, I assume that the RC asserts PERST during a SoC reset.
+
+This is obviously from the RC driver asserting PERST + sleep 100 ms +
+PERST deassert:
+[  852.503041] pci: PERST asserted by host!
+[  852.610318] pci: PERST de-asserted by host!
+
+The two before that:
+[  852.483985] pci: PERST de-asserted by host!
+[  852.503041] pci: PERST asserted by host!
+
+appears to be because the RC I am using, incorrectly sets the PERST gpio as
+ACTIVE HIGH:
+https://github.com/torvalds/linux/blob/v6.9-rc1/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts#L300
+
+Well, at least they are bug compatible and sets the output to:
+https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L170-L184
+
+0 and the 1, which, since the DT binding is incorrect, will actually
+do the right thing and assert and the deassert PERST.
+
+The problem seems to be that the initial flags:
+https://github.com/torvalds/linux/blob/v6.9-rc1/drivers/pci/controller/dwc/pcie-dw-rockchip.c#L242-L243
+is: GPIOD_OUT_HIGH
+
+which explains why I get the extra:
+[  852.483985] pci: PERST de-asserted by host!
+before
+[  852.503041] pci: PERST asserted by host!
+
+with basically no time between them..
+
+
+I guess I should send a patch to set the initial value to
+GPIOD_OUT_LOW, so that the RC driver does not trigger a
+"spurious" PERST deassertion when requesting the IRQ.
+
+
+So I think this patch should be fine if the RC is not buggy,
+but as we can see, in reality there are at least one platform
+in mainline that does manage to get this wrong.
+
+
+Kind regards,
+Niklas
 
