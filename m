@@ -1,83 +1,108 @@
-Return-Path: <linux-pci+bounces-5200-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5201-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 333BB88CD50
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 20:36:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EBD188CD8F
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 20:52:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94C581F2A47C
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 19:36:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FD931C343CB
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 19:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259D013D246;
-	Tue, 26 Mar 2024 19:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CAD3200CB;
+	Tue, 26 Mar 2024 19:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lBNU4Q9e"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="neJFKBjz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2133.outbound.protection.outlook.com [40.107.104.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0A13CC41;
-	Tue, 26 Mar 2024 19:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED2E481A3;
+	Tue, 26 Mar 2024 19:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711481765; cv=fail; b=nYu7phN7Q4UW+tiwYZ0mf/Op03oCyDZeNFPM2eTB2o6vSuX/uD08tmDllRd9VseB/LFEfVAfQa/kFMl1Wvqof/Y/u2M5MSS7V7w7jKPCv0A7n0EEi6NT23dDWqE9878A0ad1UZPyaDP4kmHmbw1i2FAJfZBTzUOVNPWs+HVP+yA=
+	t=1711482740; cv=fail; b=k/L9FpywrawllisrpqBO66p+xZ5xVlibNYqE0kjG7Na4eMIZVfkfc81KBZbWtMlIkxZ7g1EXEyb/lV0zTtGT7EOp3XtFjVQQSW+LnOX6zr2K82UDQe/JsCx1KDoy/M+oQg1JzEpKFWvAJZR89s+MgRjCdXsTl+SMAUqwC78MDVA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711481765; c=relaxed/simple;
-	bh=BROr7rk8vwzQgK2p19UHuNXsTNsZJmL1eAxB2wnXv4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=FnL/jrbABSEYLnZGW75t+HaxsxphdXYKhppoWqahGRpBQISVdpEuqewW1sxjClHsgDryBkF6oyixHlcMUYrNsDmPik+tsXYOQQ3UGb4utOLuMCiqFXddUZg1Lr9/PvCrWEN3dKQgOTo1vEhYnHi4a/qLq3A1audr2NZmsvvsT8A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=lBNU4Q9e; arc=fail smtp.client-ip=40.107.104.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1711482740; c=relaxed/simple;
+	bh=OzUHoaNvyI63joNRmXlymN3gSDUA7aJLswaLaeeFv8g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=X6aSgck0dalb9VMN/iFj4SUcWE+8HExk72UWMrbhC48LfvRx5jVQ2wZjN45l4MtuDUqZgui9N+F11+6Z63fVkJvkPHk09cW6BGnR9Rlunt3UJR6/v52Cpnxywbz35NtI+DRdzEclt9xuxtLa79Foe8AHy8blQkfBsDU0hWN/O+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=neJFKBjz; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711482739; x=1743018739;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=OzUHoaNvyI63joNRmXlymN3gSDUA7aJLswaLaeeFv8g=;
+  b=neJFKBjzNVNlNIH9jUMkxe5v1NQxcWzRbpbanLBtl11dVe//H64LxVha
+   gOY8+MiqGrfrGayButZd+6L6d5pNGt5tR9Fy1eJ5nNlLnBX3czKP0N4Wq
+   PwnuMRdawIrRLq3LlklG6yMS8+UvskrTiy/J4BOHIIFagOLTzQgHwZl+j
+   hHiHuEYlvTknV+mQUqBvRsKI1Bt5GfbI8hpY+n/0Mxt5+4Zvqf6GmyDit
+   ivpPrM/D0cOR5qYCBptS5GrIcyoxuWSxj63ob8RtE8DrMpQ2swUrX3sEQ
+   8LoOO/rPRtwZeuVJiXuw91vWzXt3Xjztgz3CfC2w+5Pl+88S4Bb4pUxnS
+   A==;
+X-CSE-ConnectionGUID: np7AV6h9SRSw69Rz4I6hzA==
+X-CSE-MsgGUID: I9WNGAS+T/eCzh4fkO5Bfw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="17699802"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="17699802"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 12:52:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="15915581"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2024 12:52:17 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 12:52:15 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 26 Mar 2024 12:52:15 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 26 Mar 2024 12:52:07 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f08mJUr6FHf2WwD6zEoU33JZx7OvbRWSc+k33ICkDnKwoHkitMgP9/b9qoK3G3HNHMeCzZv+ZJZZDpZr2STDLue+OWSd+1beOrVbWGgi/rbLI4rfCW3qsYga1KCZgSwjNDjWbkn1VuCZvTgH3YXBij1jdqOCTJ4YNwjJo9xmpzGt1vCWgl7lO9MUlvBy9LC9O5egQDmndFZghnOChFFKWVW1WpzsWj3CSTuDvi9MPjEIlXkGDgWEY8Sx484CHChCvSGLuk1TMKB8FSO0TCnqUdoAfYC9KjaGP+XbgT2xick9cvvQs5vdNtu9kbYId5s17/6c5fgJXBTKI7Iw1kSNBw==
+ b=ignQWj9FDmQDF13hjOwSrAtMiOkD/bfiEZuoZ+iFAr0rrIGglWaGA1fO8m6shvIwCfvMCTdH6XDbRhupAxUv/gyNIToeRR59c0XRkvx/ZStAXitKYCT7ovweDRS2NexB/Y93dry5i0xJUsf3xeq8eKtAc46jMWCeVz95H8Ck3zKknnNG/5cAyfON4NmgchTD2jJRwLPc0BFurnkrug2gqLyeUboR0rCrPN5EKo8iqdjewVXklusa+I24sP9EmNkYFvM5m5rB2ndYg9UC8M1j/pdiY5HOmnt/Tcefwx9MbLnMccX5A7+nJBmTapdwsTzn6jsg5tyFU1gbtRvqxoMmcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zlYsfya/NREepbPNsosV8dL8dlZoKSz3Is+4nwBBg/I=;
- b=i0RATdOYXGKAK0EuO8s90OSYLJ1UPccd4aaso1g4hqswzD9ibzEKpc7Gksp7aqfgqGTw2RgcvpUiYIv3tr/EPt8SRVjTSK/5Brb07bqdw4t8vQ0qJNOn6TPjIUSHzRE/ES7Qoo043Q9c8p2Kk217VSKxwlZ8NS60+ysjOIVFKC60e2zzQUlyC7P5cWS7Gc56hCmih8HjSZCa2fWW3pTDjPCIFombC7DGgj4RfDlteiVcveGtrhwGOudBfqYL71/qPKLnUgGKUWs/LhlRScdcwlJQgUM+n36lKzEnACvElmPfLGaNHrBMlscaYopGCTLdJP0JTCQSsUEixGutTHTY6Q==
+ bh=0Ijnd1CzUd29eN6wDqMVJrpHmdRvycB4YtgtKSgxLt4=;
+ b=SvNksmdv4rqDhS/MTYNAZVhDTwJ3y8cUVViDyq3FBfXLPuQpLb6UvJxjChpEJBu1KQjUqG0rNrWfzmUXSWBDvwOinohzrif2Gv9HZ6jmM0ngbSqhT+rkAkmNWilKEwOBspeE3kNMyC0araEiUJEmEZtofziZ+Bz45oZl2eQnITHUvjKp2BnTw1tpz83QwkqY81ofG83gkan7XgkA2zK+To9kIcTN0ugLuPuYZThAj3j99gjQgspV6B51FkLHSSmMr/Zaz9U45vlIlCvqnjr19A5ZX/VNtrGhpfzgr0T/vwUhOYtvZSEmrPhIkG8ZHVaEFaq2KdmhGHGN58oBIXz3cQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zlYsfya/NREepbPNsosV8dL8dlZoKSz3Is+4nwBBg/I=;
- b=lBNU4Q9eAprmcQQR0+vM1Jdt9b+NFPmtZhecpbBf9flTiUExxfLSYqUG78ctiEF/PZ5ju689lk0qM/kk8TJacpRcpbyMvUEWlM1dsmXn8XDiRrqwcXuG4B13jJ2RUtvZlylBlF7cCQV0o7DzBtFGN2Lxf9RPA9/W79KgTNswQAc=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VE1PR04MB7438.eurprd04.prod.outlook.com (2603:10a6:800:1a0::12) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MW4PR11MB6958.namprd11.prod.outlook.com (2603:10b6:303:229::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Tue, 26 Mar
- 2024 19:35:58 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.028; Tue, 26 Mar 2024
- 19:35:58 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: helgaas@kernel.org
-Cc: Frank.Li@nxp.com,
-	bhelgaas@google.com,
-	cassel@kernel.org,
-	gustavo.pimentel@synopsys.com,
-	imx@lists.linux.dev,
-	jdmason@kudzu.us,
-	jingoohan1@gmail.com,
-	kw@linux.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	mani@kernel.org,
-	niklas.cassel@wdc.com,
-	robh@kernel.org
-Subject: [PATCH v3 1/1] PCI: dwc: Fix index 0 incorrectly being interpreted as a free ATU slot
-Date: Tue, 26 Mar 2024 15:35:40 -0400
-Message-Id: <20240326193540.3610570-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0289.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ 2024 19:52:02 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
+ 19:52:01 +0000
+Date: Tue, 26 Mar 2024 12:51:59 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>,
+	<kobayashi.da-06@jp.fujitsu.com>, <linux-cxl@vger.kernel.org>
+CC: <y-goto@fujitsu.com>, <linux-pci@vger.kernel.org>, <mj@ucw.cz>,
+	<dan.j.williams@intel.com>, "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+Subject: Re: [PATCH v3 1/3] Add sysfs attribute for CXL 1.1 device link status
+Message-ID: <6603275faabc_4a98a29470@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20240312080559.14904-1-kobayashi.da-06@fujitsu.com>
+ <20240312080559.14904-2-kobayashi.da-06@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240312080559.14904-2-kobayashi.da-06@fujitsu.com>
+X-ClientProxiedBy: MW4PR03CA0113.namprd03.prod.outlook.com
+ (2603:10b6:303:b7::28) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,144 +110,354 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VE1PR04MB7438:EE_
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB6958:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	sW+WBh/djFWX5pdFauMNCxyZnZP9/c20XpVeTK6WRIYgy7kE33pCTTcR1Yev9Yf8GzMLm17JXwoaYswf1hFnoa6E5Utj5jgN/jScDO3YnmKCNl1TDZ8VdvZPMJehO4GfrB66r0HOHVYkpiAmgEn5kkPzFWR693H4Cq1GO0158ZY2pEWNu4JYtK/ELJHTZugW6rtXKU4dUjugiHzxqwdT4AUC1CZ/J2dOK4CT9+zuD6guZ9YlxgdQSYL0l+j/kXw57mT58rbPTKtItP1KwC4CdLJ4IFJqGKCxZGs9jqwGzdwi5idmg4fMCYA9Ndp4fWiJNn9e9jgVglsJzCeep/PmwXKKPIJmW3/hGyD9VrkdfNbl2bMFG6xjS3FWL5JN2z932RpFDUc8gVXlNVCPJNVczhodEL4UnaVsWcewuUDiNay+4KSzUyxNPfr8eTkmiO9M0dg48IrQzvpZR6EXOPeyxRgX/UhNJlfEBVtWEKE1HK5Do8dMbxlXUXph6eWwXx39U3d19LxiYfcA2+N+ndQCIVh9SqkOWXVJrCJ4vj58CjCOAT53G8xr8Nmdxrx8Up0aXELKfMMoNy+zqaEPwOkICapf+HA6ziuHDkwT3YCULweYrjmsBJ1velwzG922vLP+8pxnvo1l+IoD5YWiYcXKbfJX6QM52RI1lHyxVsM3GX0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(7416005)(376005)(38350700005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: nHjS+qAr7C7AaWOrzweLU1Qytc7OEgdwy4EwItk7A1xJNK16/yHo+LCZFkLhudJfW4boCT/gzIhK9QMV+4+KEPkmsovz8QeNzqmM8vpnAeNd3+aK1J74MUDHIH5Hsgg/fYwpAWc23b+mpCBF3C1N0AfaU9uu3D5IaRFUt85pGZKoL4xotpuzoEY19dl4c5ql1zYacXkPA3tcEqwba+ZpTkIZv84wdzmbniaHsgmFb1gKyc3zL7oP+LA7AMf5Yvy8M7tzcZ/O2cyiE++8RizwGNby3OHu3zqUDXNYzMzClDLhka3yNPKvF4QG+Vzk3EcefPROZu568pVc6g0JDES2qULs5dsrXtDp1+J8boPuK3HE9k6v+L3slj4J0tOw4ysmIJZ/AlqBk6AGppC/gyIqtHWYXU3h1E4WL1lYV3XU3JiOOCOcaQSz+tJDTYmfErH4BM8h2JrkREuEknxiNmMxqxNbe5tEQx+cMhzwMv7Sv981xKcRrzn1VLZBw7E3luoD38DUH6jy8AyrRB353iyQaVPWphF+UX5y21X+DDYhRBS7VlniKnCF+LHVc7MSaFnL5uwCoHmBrvzVnHSQaVPX0oJLy3QaHhTlR8OyWmjcuBOSpMWyR2k17i9kBLk1Hs8pwFr8k+2GKessKx7X4T+ALAdjwj3LYA3Cp+K3oIYu78Q=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SPzjWGER6qD9g7KQKmcr/QUkH36S8cEpDGmtaoCxqyNYTUHr1ZLVuRz12/ya?=
- =?us-ascii?Q?uyyrYWRx/yPajyxlEqa+wVMwa6V5VzGJ7CphoeacafoNYcCUvRyNZx36vldk?=
- =?us-ascii?Q?Vid8aQiFF5eVW0qNbXUhz7EWeVHV5X+AhYSvLDQNXCneWr1yJjpV9OrI8eng?=
- =?us-ascii?Q?Mp0Nf6Ww0fI/Oy7GZ+x4GYBEctHOhqxl2MNS58S8IFbYXQlAvhlEnsQ4/2LT?=
- =?us-ascii?Q?OLV+1qoDwalJi66ORVtbGvCCpzsUAa9BeLQWdP/OKdJj6dwAKAjqpSq1lO6b?=
- =?us-ascii?Q?oEvNbeWsy1OKDKU8EVZNlIXDqJp9ltoL/DErXM1fbrXTUWiIABwN3r/Vy/Qk?=
- =?us-ascii?Q?0c7Oc1TO+Af9bQFp612ek45LkH3otK71DD3Mn80FbxSokG7kgqH4gbUeipr1?=
- =?us-ascii?Q?KygTuUvefuPrXha5Bnti0wVmoofJ5o8bfSgLTM0uOTQ/7cTamgU6+U6kc++6?=
- =?us-ascii?Q?qRqj/o68nSFQlfyaYMUJWTa9vMOw74vlXr5DasjTHRUBF9gPOTNDBAae6NzS?=
- =?us-ascii?Q?wsgrpkU4Dj8gh7+hsnEoAYh9wLNk6fPglSrMBAEAJl+eh83VKQ8nqPCIfj6h?=
- =?us-ascii?Q?h1sz25q+/xOCzZ+keiLX0nsIYgwgGgfWSwMPLsz8dLby6agYaduRhvn+Vbne?=
- =?us-ascii?Q?btaukWF+pL2OLhzwvi9ilFxzx3dZs6D4yJ5kMoy9UQ3suMwMAMWRwLhZDeFa?=
- =?us-ascii?Q?V3RaABM+64e05kDcyUQXuvIeVAGjQBm//XoT0IZxS0oUifyVi4ffrHqCXl0M?=
- =?us-ascii?Q?wWS3xQVOFaZ0bBmaIzZkLyfcilPRib9XarBIKPiMc52GMPqAnzkfJLzwtEFu?=
- =?us-ascii?Q?DixRz8FCAa6f8Z50F96BPTOaP33aKJgtOEmXK4wfEXjgbaz1Jed32F7brLp6?=
- =?us-ascii?Q?VsAreJwCWZDM0R7g7qn2J2O0ryXaczf5Cag3lP2zd+whFKx49CaYAK6rF/7Y?=
- =?us-ascii?Q?Z/u+dpJvzQAKdG9zktg1ibKSBBzWaiWtkIQO8vy984QzB/2eEN1wxaao7Xp0?=
- =?us-ascii?Q?THL1CFlhM9mpn0/Co12Xz/jqy0lBoy6EPq6Mr+BXt8w6OZWIpuQcer9XALHu?=
- =?us-ascii?Q?hdqreU/q4iLnU+lzz4Q5uzzaJxa5NmpeuWdaTFD8Gnfq2EbJ8tfuMWsfx+tT?=
- =?us-ascii?Q?LblFqmALWQ5C5Gmu3HsINAarM5uWxwSFo1X0BbTjXOVSVW9MJlA4HvhWBMFt?=
- =?us-ascii?Q?88Ltr+pcaFnrXkniuVdjOilZ5VGaux+0MQoOuPGoBYbbCSJPtUckLeI86vvc?=
- =?us-ascii?Q?crVrQlGZWEZX4Us/u2Cw752P/q1L2wa2M184smsq82IXpktKsGJbYbZTyuMv?=
- =?us-ascii?Q?RRZuBgacAXjlt3ox6Y3F8J+9JHDaxDCOX/yTuPDeVVPS74hZXP4DdoluHLIi?=
- =?us-ascii?Q?tWkLL9WvAMnRv3nIT8dHFFWUzHAjrL9H5CWAfufcQFkjsno4212qdtNO/Qwq?=
- =?us-ascii?Q?xZFEI03CHvHHpvXdFbTvqJdt6v9kyJUvGYfjhe8iIS1VS6DO1zjfK4l4xPaf?=
- =?us-ascii?Q?+xRZJjagBzvd1CfKjjgJFJxaU8YgwqfUkEo95ZXO3wODuxG8SF6c2MUhyLnB?=
- =?us-ascii?Q?XqI+FwwgXfYcmnHfxpFxpHLRejhvBj6BvXRalTUO?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e424983-8838-4ed9-b0ee-08dc4dcbf603
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vu1bZns79FuTnwD4O8glST2fUA5x0YnlmFUXI+1irFQMv9fauJ+zibdSGwFP?=
+ =?us-ascii?Q?yF/9CPQoxkHzeqe1ZiICBmjBos6fkdYtwDe2Pk+6VDxWYRnpqj6KjhsLOYj5?=
+ =?us-ascii?Q?jwlP60J9RpF3y0BxBn6KVLG09zDuy7fPRggDpdvpYMLWTTcSKUcOPWvaH+9h?=
+ =?us-ascii?Q?3VNs6OlqJitsofarlYOzeovgyM8k6uOTeVEJH9nRhOpbwywHzCqVEJAL7BnW?=
+ =?us-ascii?Q?y55/QWlBTlKiScXfm9kYarwMprIRlIXU7hEMioribB0zs3tFUOuLf9Ij9L2X?=
+ =?us-ascii?Q?be+ecFs3RvlDmdV6wVrTkNrM2fXgnZH/gY/hcRioLD9Zf1wXc/5WbyxnxFf3?=
+ =?us-ascii?Q?JyQTPeMXXDPzvBy7f0Nib01G1aEx6n1UOgOugItKwK7tFI80hdjmqVZfKhUL?=
+ =?us-ascii?Q?FVVE3LZmkzx2WbDGx75lJzqVOVXsNO7UQ7oGLWEWBx5bv8b4P59eYKSijFNP?=
+ =?us-ascii?Q?hFayUtb+4iqnjSF9Ga0MpPAPRIGzs1NL257H/+sfu7mn0bwUbxYkHiwDzDnX?=
+ =?us-ascii?Q?FddYOa5HjmKAPSJMExjqClCs/W5wbvfG7pPaetQH6TjmHmllvR8SxNrkbACK?=
+ =?us-ascii?Q?tiqakYdehl+6n+f3h+3riIWjL3yaDTsfTNk88Cko40J/dpRvkzTgftdRFjUz?=
+ =?us-ascii?Q?V5L8L4SBY26oCuGlvhrhiKXroGjOnmqBfooyA/8XzkVejdclRQj7bR8dTgvi?=
+ =?us-ascii?Q?x2qKHwYbiWYZ4MPqc+7QvUL2s271QI/dLEkiQ9JkTRkDnVe+I44BV+8l/wop?=
+ =?us-ascii?Q?7qC/0dpPrP6uiTkj7A2QA4lWvxKV7Vb9oDeOi4tFSV/9JjQ21IRdm5tGg+Gj?=
+ =?us-ascii?Q?GaWWLBpuQ3w5VCHWVap4KygBfgZ2EH1N2KNcjhgHVS3RnHuH2GSwsDtcL2sv?=
+ =?us-ascii?Q?sXaxpXsGkJHEsofVbmAp2cwDWS3Rc6hyIpXp7UkyAZvtinnfvFP/qG9ReZjR?=
+ =?us-ascii?Q?f2tFgQKdjMmaQ0ZeShxJhsIJXBozZsEYHYRjFXS+9+TkQEu1wysPr91VLVrC?=
+ =?us-ascii?Q?zJOmZItH9h/Tyy54FpShjuIhSS3BspyN7915zCqcJSB33FLS3zeHmJowXB9E?=
+ =?us-ascii?Q?JjKG6KsK1aQJgoVmUuoxxonk0Aq7NJlzOBGStdSNu+6h+MBUc3wFRS0nj100?=
+ =?us-ascii?Q?/o2wVwlICZNwazjziY48fUMpSTgblr01I9VfzUpKDka2V/TjogfF7PKf3OiL?=
+ =?us-ascii?Q?D3UbVY7yS7WzKSAxSEpjkwdm82b0x/RGOgS7oo6Q5NuzmeXqtaHudit0vdYq?=
+ =?us-ascii?Q?CgdyA9zD493+mXn7WpzDOrCiude/KCDvRAxWx/Qsb+gxSVWA0aJvgXsZFDXz?=
+ =?us-ascii?Q?bht+oknt8hLjbq9pWO0KPVo6gupe4WvxyWhS2F2y/UCJtwB1giob2sjNkNk6?=
+ =?us-ascii?Q?MorlM4nPZGoiqxQSxqQp8psOmtBFtpGQk6V7MfvMA2IrDL1Iz8NIjyfjVodC?=
+ =?us-ascii?Q?qbMiVfYqpy422T+8N6mmcZGjhq6804CdJwab2/I/xjJgRjItV5fdopxUPTc+?=
+ =?us-ascii?Q?gzfbOUqR0gAcpuJXLWCA53rEkGZ8mtghoavGDRLHetgAf7QyDqQ+YkkEYLIH?=
+ =?us-ascii?Q?DKCUA6qEIxKnTUXXTRG94FDi045RgtlrsoN0tVlemDoQ3L32dAc3l8aBgJgP?=
+ =?us-ascii?Q?Lg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 151da974-d2bd-4333-46cb-08dc4dce3446
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 19:35:58.2636
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2024 19:52:01.7513
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: INyqbBJ8PnJDPH5LkyJKxHPKkQBtbExkLBVkTnw0M5awCv93F0QeOWQGhMcKH1i50z8lzTkGts+HJqusD/6TBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7438
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3xbzIeEAdJyHdoUIR3lDoG9COflCSbApA3XMc15IUN+AowaXsBoceHScdbf4u9Y+wFyYDmskUUrsvLDO99UgO8ImUI81iefUehVlMC8SN8o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6958
+X-OriginatorOrg: intel.com
 
-When PERST# assert and deassert happens on the PERST# supported platforms,
-the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
-to the area that was previously allocated (iATU0) for BAR0, instead of the
-new area (iATU6) for BAR0.
+Kobayashi,Daisuke wrote:
+> This patch implements a process to output the link status information 
+> of the CXL1.1 device to sysfs. The values of the registers related to 
+> the link status are outputted into three separate files.
+> 
+> In CXL1.1, the link status of the device is included in the RCRB mapped to
+> the memory mapped register area. This function accesses the address where
+> the device's RCRB is mapped.
 
-The mapping between PCI BAR and iATU inbound window are maintained in the
-dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for
-a BAR, dw_pcie_ep_inbound_atu() API will first check for the availability
-of the existing mapping in the array and if it is not found (i.e., value in
-the array indexed by the BAR is found to be 0), then it will allocate a new
-map value using find_first_zero_bit().
+Per the comments on the cover letter I would rewrite this as:
 
-The issue here is, the existing logic failed to consider the fact that the
-map value '0' is a valid value for BAR0. Because, find_first_zero_bit()
-will return '0' as the map value for BAR0 (note that it returns the first
-zero bit position).
+---
+In CXL1.1, the link status of the device is included in the RCRB mapped to
+the memory mapped register area. Critically, that arrangement makes the link
+status and control registers invisible to existing PCI user tooling.
 
-Due to this, when PERST# assert + deassert happens on the PERST# supported
-platforms, the inbound window allocation restarts from BAR0 and the
-existing logic to find the BAR mapping will return '6' for BAR0 instead of
-'0' due to the fact that it considers '0' as an invalid map value.
-
-So fix this issue by always incrementing the map value before assigning to
-bar_to_atu[] array and then decrementing it while fetching. This will make
-sure that the map value '0' always represents the invalid mapping."
-
-Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-Closes: https://lore.kernel.org/linux-pci/ZXsRp+Lzg3x%2Fnhk3@x1-carbon/
-Tested-by: Niklas Cassel <niklas.cassel@wdc.com>
-Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
-Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Export those registers via sysfs with the expectation that PCI user
+tooling will alternatively look for these sysfs files when attempting to
+access these registers on CXL 1.1 endpoints.
 ---
 
-Notes:
-    Change from v2 to v3
-    - Add impact in commit message
-    - Add mani's detail description
-    - Fix Closes link
-    
-    Change from v1 to v2
-    - update subject
-    - use free_win + 1 solution
-    - still leave MAX_IATU_IN as 256. I am not sure if there are platfrom have
-    256 ATU. Suppose it only use max 6 in current EP framework.
-    - @Niklas, can you help test it. My platform become unstable today.
+> Signed-off-by: "Kobayashi,Daisuke" <kobayashi.da-06@fujitsu.com>
+> ---
+>  drivers/cxl/pci.c | 193 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 193 insertions(+)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 4fd1f207c84e..8f66f80a7bdc 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -781,6 +781,195 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+>  	return 0;
+>  }
+>  
+> +static u8 cxl_rcrb_get_pcie_cap_offset(void __iomem *addr){
+> +	u8 offset;
+> +	u32 cap_hdr;
+> +
+> +	offset = readb(addr + PCI_CAPABILITY_LIST);
+> +	cap_hdr = readl(addr + offset);
+> +	while ((cap_hdr & 0x000000ff) != PCI_CAP_ID_EXP) {
+> +		offset = (cap_hdr >> 8) & 0x000000ff;
+> +		if (offset == 0) // End of capability list
+> +			return 0;
+> +		cap_hdr = readl(addr + offset);
+> +	}
+> +	return offset;
 
- drivers/pci/controller/dwc/pcie-designware-ep.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+The location is static, so there should be no need to lookup the
+location every time the sysfs attribute is accessed. I also think the
+values are static unless the link is reset. So my expectation is that
+these register values can just be read once and cached.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 5befed2dc02b7..ba932bafdb230 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -139,7 +139,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
- 	if (!ep->bar_to_atu[bar])
- 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
- 	else
--		free_win = ep->bar_to_atu[bar];
-+		free_win = ep->bar_to_atu[bar] - 1;
+Likely the best place to do this is inside __rcrb_to_component(). That
+routine already has the RCRB mapped and can be refactored to collect the
+the link status registers. Something like, rename __rcrb_to_component()
+to __rcrb_to_regs() and then have it fill in an updated cxl_rcrb_info():
+
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 534e25e2f0a4..16c7472877b7 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -651,7 +651,12 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
  
- 	if (free_win >= pci->num_ib_windows) {
- 		dev_err(pci->dev, "No free inbound window\n");
-@@ -153,7 +153,11 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
- 		return ret;
- 	}
+ struct cxl_rcrb_info {
+        resource_size_t base;
++       resource_size_t component_reg;
++       resource_size_t rcd_component_reg;
+        u16 aer_cap;
++       u16 rcd_lnkctrl;
++       u16 rcd_lnkstatus;
++       u32 rcd_lnkcap;
+ };
  
--	ep->bar_to_atu[bar] = free_win;
-+	/*
-+	 * Always increment free_win before assignment, since value 0 is used to identify
-+	 * unallocated mapping.
-+	 */
-+	ep->bar_to_atu[bar] = free_win + 1;
- 	set_bit(free_win, ep->ib_window_map);
- 
- 	return 0;
-@@ -190,7 +194,10 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	enum pci_barno bar = epf_bar->barno;
--	u32 atu_index = ep->bar_to_atu[bar];
-+	u32 atu_index = ep->bar_to_atu[bar] - 1;
-+
-+	if (!ep->bar_to_atu[bar])
-+		return;
- 
- 	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
- 
--- 
-2.34.1
+ /**
+
+> +
+> +}
+> +
+> +static u32 cxl_rcrb_to_linkcap(struct device *dev, resource_size_t rcrb)
+> +{
+> +	void __iomem *addr;
+> +	u8 offset;
+> +	u32 linkcap;
+> +
+> +	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
+> +		return 0;
+
+Why is this a WARN_ON_ONCE()? In other words the caller should know
+ahead of time whether it has a valid RCRB base or not.
+
+...oh, I see this is copying cxl_rcrb_to_aer(). I think that
+WARN_ON_ONCE() in that function is bogus as well.
+
+
+> +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> +		return 0;
+
+This is awkward because it may collide with usages of the RCRB, so that
+is another reason to cache the values.
+
+> +
+> +	addr = ioremap(rcrb, SZ_4K);
+> +	if (!addr)
+> +		goto out;
+> +
+> +	offset = cxl_rcrb_get_pcie_cap_offset(addr);
+> +	if (offset)
+> +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+> +	else
+> +		goto out;
+> +
+> +	linkcap = readl(addr + offset + PCI_EXP_LNKCAP);
+> +	iounmap(addr);
+> +out:
+> +	release_mem_region(rcrb, SZ_4K);
+> +
+> +	return linkcap;
+> +}
+> +
+> +static ssize_t rcd_link_cap_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct device *parent = dev->parent;
+> +	struct pci_dev *parent_pdev = to_pci_dev(parent);
+> +	u32 linkcap;
+> +
+> +	port = cxl_pci_find_port(parent_pdev, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	linkcap = cxl_rcrb_to_linkcap(dev, dport->rcrb.base + SZ_4K);
+> +	return sysfs_emit(buf, "%x\n", linkcap);
+
+This and the other ones should be using "%#x\n" so that the format of
+the number base is included.
+
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_cap);
+> +
+> +static u16 cxl_rcrb_to_linkctr(struct device *dev, resource_size_t rcrb)
+> +{
+> +	void __iomem *addr;
+> +	u8 offset;
+> +	u16 linkctrl;
+> +
+> +	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
+> +		return 0;
+> +
+> +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> +		return 0;
+
+...the other benefit of centralizing this code is that we do not end up
+with multiple copies of similar, but slightly different code.
+
+> +
+> +	addr = ioremap(rcrb, SZ_4K);
+> +	if (!addr)
+> +		goto out;
+> +
+> +	offset = cxl_rcrb_get_pcie_cap_offset(addr);
+> +	if (offset)
+> +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+> +	else
+> +		goto out;
+> +
+> +	linkctrl = readw(addr + offset + PCI_EXP_LNKCTL);
+> +	iounmap(addr);
+> +out:
+> +	release_mem_region(rcrb, SZ_4K);
+> +
+> +	return linkctrl;
+> +}
+> +
+> +static ssize_t rcd_link_ctrl_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct device *parent = dev->parent;
+> +	struct pci_dev *parent_pdev = to_pci_dev(parent);
+> +	u16 linkctrl;
+> +
+> +	port = cxl_pci_find_port(parent_pdev, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +
+> +	linkctrl = cxl_rcrb_to_linkctr(dev, dport->rcrb.base + SZ_4K);
+> +
+> +	return sysfs_emit(buf, "%x\n", linkctrl);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_ctrl);
+> +
+> +static u16 cxl_rcrb_to_linkstatus(struct device *dev, resource_size_t rcrb)
+> +{
+> +	void __iomem *addr;
+> +	u8 offset;
+> +	u16 linksta;
+> +
+> +	if (WARN_ON_ONCE(rcrb == CXL_RESOURCE_NONE))
+> +		return 0;
+> +
+> +	if (!request_mem_region(rcrb, SZ_4K, dev_name(dev)))
+> +		return 0;
+> +
+> +	addr = ioremap(rcrb, SZ_4K);
+> +	if (!addr)
+> +		goto out;
+> +
+> +	offset = cxl_rcrb_get_pcie_cap_offset(addr);
+> +	if (offset)
+> +		dev_dbg(dev, "found PCIe capability (0x%x)\n", offset);
+> +	else
+> +		goto out;
+> +
+> +	linksta = readw(addr + offset + PCI_EXP_LNKSTA);
+> +	iounmap(addr);
+> +out:
+> +	release_mem_region(rcrb, SZ_4K);
+> +
+> +	return linksta;
+> +}
+> +
+> +static ssize_t rcd_link_status_show(struct device *dev,
+> +				   struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_port *port;
+> +	struct cxl_dport *dport;
+> +	struct device *parent = dev->parent;
+> +	struct pci_dev *parent_pdev = to_pci_dev(parent);
+> +	u16 linkstatus;
+> +
+> +	port = cxl_pci_find_port(parent_pdev, &dport);
+> +	if (!port)
+> +		return -EINVAL;
+> +
+> +	linkstatus = cxl_rcrb_to_linkstatus(dev, dport->rcrb.base + SZ_4K);
+> +
+> +	return sysfs_emit(buf, "%x\n", linkstatus);
+> +}
+> +static DEVICE_ATTR_RO(rcd_link_status);
+> +
+> +static struct attribute *cxl_rcd_attrs[] = {
+> +		&dev_attr_rcd_link_cap.attr,
+> +		&dev_attr_rcd_link_ctrl.attr,
+> +		&dev_attr_rcd_link_status.attr,
+> +		NULL
+> +};
+> +
+> +static umode_t cxl_rcd_visible(struct kobject *kobj,
+> +					  struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	if (is_cxl_restricted(pdev))
+> +		return a->mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct attribute_group cxl_rcd_group = {
+> +		.attrs = cxl_rcd_attrs,
+> +		.is_visible = cxl_rcd_visible,
+> +};
+> +
+> +__ATTRIBUTE_GROUPS(cxl_rcd);
+> +
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> @@ -806,6 +995,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (IS_ERR(mds))
+>  		return PTR_ERR(mds);
+>  	cxlds = &mds->cxlds;
+> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_cap);
+> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_ctrl);
+> +	device_create_file(&pdev->dev, &dev_attr_rcd_link_status);
+
+No need to manually call device_create_file() when the attribute group
+is already registered below. I am surprised you did not get duplicate
+sysfs file warnings when registering these files twice.
+
+>  	pci_set_drvdata(pdev, cxlds);
+>  
+>  	cxlds->rcd = is_cxl_restricted(pdev);
+> @@ -967,6 +1159,7 @@ static struct pci_driver cxl_pci_driver = {
+>  	.err_handler		= &cxl_error_handlers,
+>  	.driver	= {
+>  		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+> +		.dev_groups	= cxl_rcd_groups,
+>  	},
+>  };
+>  
+> -- 
+> 2.43.0
+> 
+> 
+
 
 
