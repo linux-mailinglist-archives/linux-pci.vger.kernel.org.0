@@ -1,171 +1,129 @@
-Return-Path: <linux-pci+bounces-5183-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5184-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C86688C519
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 15:27:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 237BC88C52B
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 15:30:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2FB6B233FF
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 14:27:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB8341F3DF89
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 14:30:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B11A12D775;
-	Tue, 26 Mar 2024 14:27:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 695E87FBD5;
+	Tue, 26 Mar 2024 14:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8zwX8+D"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GHjaYru+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4368512D765;
-	Tue, 26 Mar 2024 14:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5BF1BC40;
+	Tue, 26 Mar 2024 14:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711463254; cv=none; b=I4wmqB6O1yz1HsIgEC1LiUQjdCHwW1pTyfLJHXmrZz/+pQHiOfZJh8ks5sLNqhceU5oGvN0YA1V+QC5Hs56s5SOGai31TyioDvNnCfZiesUK7o8X5cQGkHlgYKl34WNC+tdszLzOA3ElAaiNUr3nbnRrQEuFDXEp5+1pGcGdS+k=
+	t=1711463431; cv=none; b=evhYs3rjFkDRPPaIWl7j3rYHUi2tQO0Yx2ztiYJ1ueT84YSuZvUA/XdVFk+NqPn2emrVYQ1Ce9RpsKObukPEwqL0ewO/it5CVva2DM5/WP5MJIcD3ExJpu5DGNucOvjvl48xQML/bHslwk+AjEaCr3OkRnXmBWYVJ8paMDvbi8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711463254; c=relaxed/simple;
-	bh=LW9RMlhjXMwwswaA4XM355elpcokxVWRyHjYs7X4Luo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G5Du8EGS4LTeb1ja9LkKUu3ODkXyyr9eVcPVPa8tdcLq3wbNWd84Pak4tq5OdiNnxZbZJ0J/jfBoigC1SRSP1M9l/IDRMHJ2itRpRy0+zvqaDMWLNulbbvgBi1FTALTYGZSZ6l1KlvtUYAmBD8Ehx3DlVRWEVk697CLwh6j04IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8zwX8+D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EC5C433F1;
-	Tue, 26 Mar 2024 14:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711463253;
-	bh=LW9RMlhjXMwwswaA4XM355elpcokxVWRyHjYs7X4Luo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W8zwX8+Dj6EWx5MT6Wn47Cd7patuQ8QPQ4ioHlq11Aze2rf+BuJMTHdGm9OiF5avM
-	 yQrZJiPxfUICNRrm7yGJHiTaZnuTzQIDMoVfJzUFFxibsv+r+Cng2BRyAmUglci+H0
-	 Z+UOjIsmsH5t3wVD/MuyCAWshEzsjF6P8lWwEkVHkwTwRkavQ2o5nnLRFv2Rla6BVG
-	 sA+sb6pVYcXfOP4ya08e6gLkcYx+O16EZFOXef+vzMYNLQjmrjAxLn1cbmKGNJEC91
-	 jXQn8o6fsxYKLMkBwy9zVGfZYfs2jrtEwuGEmPG8aeaMl032t5Op5OB/+mHirSrQSD
-	 TH6+rmekRv6DQ==
-Date: Tue, 26 Mar 2024 15:27:27 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mhi@lists.linux.dev,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 05/11] PCI: epf-{mhi/test}: Move DMA initialization to
- EPC init callback
-Message-ID: <ZgLbT1JLn7r_TCwd@ryzen>
-References: <20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org>
- <20240314-pci-epf-rework-v1-5-6134e6c1d491@linaro.org>
- <Zf2tXgKo-gc3qy1D@ryzen>
- <20240326082636.GG9565@thinkpad>
- <ZgKsBoTvPWWhPO9e@ryzen>
+	s=arc-20240116; t=1711463431; c=relaxed/simple;
+	bh=//rHrUgjEmOLGBfGfKkrjCnOWQAuk+QBok4YREDf2W4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XrrQtbXqHbTFjSlxTnXcEz3/YRBCim1DtmkYsESK4aQe8IX89KdlF7I5XYDIsYFzlxSj14eYzlEaHJv0LFyGDfo7bCg49nOZyjV7834nDjNxLkMxfEOdpCgFg+O32nzi8GUjfVPC0FJfr/xasqg8HiDUEKNrLsjmyuHtbZjmuI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GHjaYru+; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42QEU7GL128913;
+	Tue, 26 Mar 2024 09:30:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1711463407;
+	bh=SNTgUxZVk6wVetOWRKspsG10dACCHvhBQOX0BXi4C+w=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=GHjaYru+bg6VZoMaYMwvG3Jd2Boj/ElWmnu9f1PCcRyRMDJGwEFolkQvRVLahjsz/
+	 6ry1h5LuRjzx9bT/xtowYSqrcs26MBpYCNkp/yalSVOA3BdWcxuBBAcO54jQQep7nq
+	 IDvLD2pq2xlWh92hgmAgJSK/cHGSUtGGt6JTfYdQ=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42QEU6DV081421
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 26 Mar 2024 09:30:06 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 26
+ Mar 2024 09:30:06 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 26 Mar 2024 09:30:06 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42QEU5Y7074845;
+	Tue, 26 Mar 2024 09:30:06 -0500
+Date: Tue, 26 Mar 2024 20:00:04 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Niklas Cassel <cassel@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <manivannan.sadhasivam@linaro.org>, <fancer.lancer@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <dlemoal@kernel.org>,
+        <yoshihiro.shimoda.uh@renesas.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH v5] PCI: keystone: Fix pci_ops for AM654x SoC
+Message-ID: <2e40b30d-b063-48ac-a566-f66eb2788003@ti.com>
+References: <20240326111905.2369778-1-s-vadapalli@ti.com>
+ <ZgLUCqh12RMApzyr@x1-carbon>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ZgKsBoTvPWWhPO9e@ryzen>
+In-Reply-To: <ZgLUCqh12RMApzyr@x1-carbon>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Mar 26, 2024 at 12:05:42PM +0100, Niklas Cassel wrote:
-> On Tue, Mar 26, 2024 at 01:56:36PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Mar 22, 2024 at 05:10:06PM +0100, Niklas Cassel wrote:
-> > > On Thu, Mar 14, 2024 at 08:53:44PM +0530, Manivannan Sadhasivam wrote:
-> > > > To maintain uniformity across EPF drivers, let's move the DMA
-> > > > initialization to EPC init callback. This will also allow us to deinit DMA
-> > > > during PERST# assert in the further commits.
-> > > > 
-> > > > For EPC drivers without PERST#, DMA deinit will only happen during driver
-> > > > unbind.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > 
-> > > Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> > > 
-> > > 
-> > > For the record, I was debugging a problem related to EPF DMA recently
-> > > and was dumping the DMA mask for the struct device of the epf driver.
-> > > I was a bit confused to see it as 32-bits, even though the EPC driver
-> > > has it set to 64-bits.
-> > > 
-> > > The current code works, because e.g., pci_epf_test_write(), etc,
-> > > does:
-> > > struct device *dma_dev = epf->epc->dev.parent;
-> > > dma_map_single(dma_dev, ...);
-> > > 
-> > > but it also means that all EPF drivers will do this uglyness.
-> > > 
+On Tue, Mar 26, 2024 at 02:56:26PM +0100, Niklas Cassel wrote:
+> On Tue, Mar 26, 2024 at 04:49:05PM +0530, Siddharth Vadapalli wrote:
+> > In the process of converting .scan_bus() callbacks to .add_bus(), the
+> > ks_pcie_v3_65_scan_bus() function was changed to ks_pcie_v3_65_add_bus().
+> > The .scan_bus() method belonged to ks_pcie_host_ops which was specific
+> > to controller version 3.65a, while the .add_bus() method had been added
+> > to ks_pcie_ops which is shared between the controller versions 3.65a and
+> > 4.90a. Neither the older ks_pcie_v3_65_scan_bus() method, nor the newer
+> > ks_pcie_v3_65_add_bus() method are applicable to the controller version
+> > 4.90a which is present in AM654x SoCs.
 > > 
-> > This ugliness is required as long as the dmaengine is associated only with the
-> > EPC.
-> > 
-> > > 
-> > > 
-> > > However, if a EPF driver does e.g.
-> > > dma_alloc_coherent(), and sends in the struct *device for the EPF,
-> > > which is the most logical thing to do IMO, it will use the wrong DMA
-> > > mask.
-> > > 
-> > > Perhaps EPF or EPC code should make sure that the struct *device
-> > > for the EPF will get the same DMA mask as epf->epc->dev.parent,
-> > > so that EPF driver developer can use the struct *epf when calling
-> > > e.g. dma_alloc_coherent().
-> > > 
-> > 
-> > Makes sense. I think it can be done during bind() in the EPC core. Feel free to
-> > submit a patch if you like, otherwise I'll keep it in my todo list.
-> 
-> So we still want to test:
-> -DMA API using the eDMA
-> -DMA API using the "dummy" memcpy dma-channel.
-> 
-> However, it seems like both pci-epf-mhi.c and pci-epf-test.c
-> do either:
-> -Use DMA API
-> or
-> -Use memcpy_fromio()/memcpy_toio() instead of DMA API
-> 
-> 
-> To me, it seems like we should always be able to use
-> DMA API (using either a eDMA or "dummy" memcpy).
-> 
-> I don't really see the need to have the path that does:
-> memcpy_fromio()/memcpy_toio().
-> 
-> I know that for DWC, when using memcpy (and this also
-> memcpy via DMA API), we need to map the address using
-> iATU first.
-> 
-> But that could probably be done using another flag,
-> perhaps rename that flag FLAG_USE_DMA to NEEDS_MAP or
-> something.
-> (Such that we can change these drivers to only have a
-> code path that uses DMA API.)
 
-Looking at pci-epf-mhi.c, it seems to use names like:
-pci_epf_mhi_iatu_read() and pci_epf_mhi_edma_read().
+...
 
-This seems to be a very DWC focused naming.
+> > +	} while (val & DBI_CS2);
+> > +}
+> > +
+> >  static int ks_pcie_msi_host_init(struct dw_pcie_rp *pp)
+> >  {
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+> > +
+> > +	/* Configure and set up BAR0 */
+> > +	ks_pcie_set_dbi_mode(ks_pcie);
+> > +
+> > +	/* Enable BAR0 */
+> > +	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 1);
+> > +	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, SZ_4K - 1);
+> > +
+> > +	ks_pcie_clear_dbi_mode(ks_pcie);
+> > +
+> > +	 /*
+> > +	  * For BAR0, just setting bus address for inbound writes (MSI) should
+> > +	  * be sufficient.  Use physical address to avoid any conflicts.
+> > +	  */
+> 
+> This comment seems to have wrong indentation.
+> With that fixed:
+> 
+> Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
-AFAICT, EPF drivers should work on any PCIe EP controller that implements
-the EPC API.
+I will fix it and post the v6 patch.
 
-Yes, I understand that it is only Qualcomm that uses this MHI interface/bus,
-but what is stopping Qualcomm from using a non-DWC based PCIe EP controller
-in an upcoming SoC?
-
-Surely that Qualcomm SoC could still implement the MHI interface/bus,
-so perhaps the naming in this EPF driver should use somewhat less
-"EPC vendor specific" function names?
-
-
-Kind regards,
-Niklas
+Regards,
+Siddharth.
 
