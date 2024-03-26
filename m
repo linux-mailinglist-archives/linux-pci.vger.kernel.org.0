@@ -1,155 +1,108 @@
-Return-Path: <linux-pci+bounces-5206-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5207-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65B7788CFAE
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 22:09:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBEB288CFC6
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 22:13:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD9C41F81B88
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 21:09:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1891A1C65CF5
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Mar 2024 21:13:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 346D913DDA5;
-	Tue, 26 Mar 2024 21:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4223E12AAF3;
+	Tue, 26 Mar 2024 21:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLCp4crw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTMh6vKd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B0513D898
-	for <linux-pci@vger.kernel.org>; Tue, 26 Mar 2024 21:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191BD1E884;
+	Tue, 26 Mar 2024 21:13:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711487324; cv=none; b=uHXwzV1yEAGFYrwZmKcCuCTIn4iiAn75cYO01HmJzAQl0+O0K0tf7cAUMM7nZvSE+sYIqrrbzaNpAkordVSkZS+sCHHO38CtbFA4w000P2Pex6cj2w4v2pBxYtcYTMXD7/xhCb6Dy5I9ljOWVyxbP1N4MTY90i+sdYqH4qwdVMI=
+	t=1711487604; cv=none; b=Brq6cBjLFlAYZJpCF7MFTTODO5ciF17dZ6Su0CsLabYlORvZu13wepmuWSsaXLucDQs1lyDWj81opWqDamC0hgVzH8BuvE1ad2JUmZWdxc0I2f9/sxqHjDlCta2kkiiFT7AS9mktABYFkiSdeNkWGYli+d85/v+xWT97tFwc5KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711487324; c=relaxed/simple;
-	bh=Tx5swbrUO3wgROoJxbX+s3hLvxPUcDwp70qRCrmoZK0=;
+	s=arc-20240116; t=1711487604; c=relaxed/simple;
+	bh=xQbKi5ntxrvhKyrBYbFCg4gD4cqWuSqGy6wuGhwULrs=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=oUqkDN0Yh3Ml83TCBQdHNtj/5HLxo9wGizOy4uGies3U3EKYE8Z1Clb1/rC6Ibu4EZ15H1Qs+h5nUvcU85APnnmEVTHzUWLBEgrdI0/42U4pLKgHXTkVHdZS6B2x0yAPRWAE8bEIeBXKDCuflXKCqROEjTB6LnuEVZJJYmbIpf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLCp4crw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26A50C43142;
-	Tue, 26 Mar 2024 21:08:43 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=jNwm6d9pvtWQfFLbGvlYkh/EI3f7HUkw+37WQJwRy5m8Ag5H7w6I0jItcvxsA/TJNfi7oSqgI1j9zUI7cuPYO1/oSrbVMK4dKJQgo8bJ438+ddX20J7oXpEmm+1FXz6yziw+SPf8xUrhQ5/l4HhshUJobdlKk/gbvdmGFc/m7Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTMh6vKd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89491C433C7;
+	Tue, 26 Mar 2024 21:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711487323;
-	bh=Tx5swbrUO3wgROoJxbX+s3hLvxPUcDwp70qRCrmoZK0=;
+	s=k20201202; t=1711487603;
+	bh=xQbKi5ntxrvhKyrBYbFCg4gD4cqWuSqGy6wuGhwULrs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GLCp4crwxtmxueoiLfzJ6iAGmWm6A4QjbXjG+Ce1JTGNrA92dAlsLmdLz8lWAYg1Z
-	 DFIB2l4Ha7PWRjZLz4Nx2GgwfSTnZi2hbAWCt9bYG8K/Ev8ke0RosrF9DktFABug0n
-	 NjDnDHFx4QJdGXl1f00eULdi5+EqJakAejrb8u7rK6RPoS1OGbSHGbAMBxOeeco9T8
-	 rBm4RcS9ITCdAZq/ah4TVBR2cHIBhaMIYaizUPFkCjfYUsAYeLyU+dNpe5rL9ODsVn
-	 Sf43DpvtQPNPBLeg3cFBilTlG24+AOn/gks6hdWGNIHpwyjdIPOUd4kOYraHNHD91R
-	 v08R/bZPF6qnQ==
-Date: Tue, 26 Mar 2024 16:08:41 -0500
+	b=pTMh6vKdfNM1gwB5XSP2SDKVR7BQOukK9RhvLK+uWVhgb3b2GcHeyWh4rS4EX9Xbf
+	 ivE0HquIBK+7iVxzAebpl0JkwRySbdbAV01OhX1Yb5bo3igqFexnNKtb35gxuW6HwJ
+	 G+kn7onehmpJ4XRN9GHxxiVkJt7yKGV5/JGO2vZpEeIS2Gw4TZukVCguQ5oHgc3/UW
+	 Esmea/O3Pk18Rj2YA8nY2lW1C/JG/SvHt/8v6ShEY8H26vnYlqHb/Iw6Ss2U8x0NwZ
+	 +ZC29+bMDvq9peveevf2B5pW1SVESHf0lp1OCEQEydsS1RpyK5uBWlh7hQZq+3slpu
+	 ZTm9BrTjIiEeQ==
+Date: Tue, 26 Mar 2024 16:13:21 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v2] PCI: vmd: Enable Hotplug based on BIOS setting on VMD
- rootports
-Message-ID: <20240326210841.GA1497045@bhelgaas>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [pci:enumeration 28/28] drivers/mfd/intel-lpss-pci.c:57:49:
+ error: 'PCI_IRQ_LEGACY' undeclared; did you mean 'NR_IRQS_LEGACY'?
+Message-ID: <20240326211321.GA1497270@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef559fe9-f3cd-4edf-bee8-dbd2ae504288@intel.com>
+In-Reply-To: <f13e9775-9dca-4a8f-b6bb-6d5a8f6dbccd@kernel.org>
 
-On Tue, Mar 26, 2024 at 08:51:45AM -0700, Paul M Stillwell Jr wrote:
-> On 3/25/2024 6:59 PM, Kai-Heng Feng wrote:
-> > On Tue, Mar 26, 2024 at 8:17 AM Nirmal Patel
-> > <nirmal.patel@linux.intel.com> wrote:
-> > > 
-> > > On Fri, 22 Mar 2024 18:36:37 -0500 Bjorn Helgaas
-> > > <helgaas@kernel.org> wrote:
-> > > 
-> > > > On Fri, Mar 22, 2024 at 03:43:27PM -0700, Paul M Stillwell Jr
-> > > > wrote:
-> > > > > On 3/22/2024 2:37 PM, Bjorn Helgaas wrote:
-> > > > > > On Fri, Mar 22, 2024 at 01:57:00PM -0700, Nirmal Patel
-> > > > > > wrote:
-> > > > > > > On Fri, 15 Mar 2024 09:29:32 +0800 Kai-Heng Feng
-> > > > > > > <kai.heng.feng@canonical.com> wrote: ...
-> > > > > > 
-> > > > > > > > If there's an official document on intel.com, it can
-> > > > > > > > make many things clearer and easier. States what VMD does
-> > > > > > > > and what VMD expect OS to do can be really helpful.
-> > > > > > > > Basically put what you wrote in an official document.
-> > > > > > > 
-> > > > > > > Thanks for the suggestion. I can certainly find official
-> > > > > > > VMD architecture document and add that required information
-> > > > > > > to Documentation/PCI/controller/vmd.rst. Will that be
-> > > > > > > okay?
-> > > > > > 
-> > > > > > I'd definitely be interested in whatever you can add to
-> > > > > > illuminate these issues.
-> > > > > > 
-> > > > > > > I also need your some help/suggestion on following
-> > > > > > > alternate solution. We have been looking at VMD HW
-> > > > > > > registers to find some empty registers. Cache Line Size
-> > > > > > > register offset OCh is not being used by VMD. This is the
-> > > > > > > explanation in PCI spec 5.0 section 7.5.1.1.7: "This
-> > > > > > > read-write register is implemented for legacy compatibility
-> > > > > > > purposes but has no effect on any PCI Express device
-> > > > > > > behavior." Can these registers be used for passing _OSC
-> > > > > > > settings from BIOS to VMD OS driver?
-> > > > > > > 
-> > > > > > > These 8 bits are more than enough for UEFI VMD driver to
-> > > > > > > store all _OSC flags and VMD OS driver can read it during
-> > > > > > > OS boot up. This will solve all of our issues.
-> > > > > > 
-> > > > > > Interesting idea.  I think you'd have to do some work to
-> > > > > > separate out the conventional PCI devices, where
-> > > > > > PCI_CACHE_LINE_SIZE is still relevant, to make sure nothing
-> > > > > > breaks.  But I think we overwrite it in some cases even for
-> > > > > > PCIe devices where it's pointless, and it would be nice to
-> > > > > > clean that up.
-> > > > > 
-> > > > > I think the suggestion here is to use the VMD devices Cache
-> > > > > Line Size register, not the other PCI devices. In that case we
-> > > > > don't have to worry about conventional PCI devices because we
-> > > > > aren't touching them.
-> > > > 
-> > > > Yes, but there is generic code that writes PCI_CACHE_LINE_SIZE
-> > > > for every device in some cases.  If we wrote the VMD
-> > > > PCI_CACHE_LINE_SIZE, it would obliterate whatever you want to
-> > > > pass there.
-> > > > 
-> > > Our initial testing showed no change in value by overwrite from
-> > > pci. The registers didn't change in Host as well as in Guest OS
-> > > when some data was written from BIOS. I will perform more testing
-> > > and also make sure to write every register just in case.
+On Tue, Mar 26, 2024 at 08:52:36PM +0900, Damien Le Moal wrote:
+> On 3/26/24 19:19, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+> > head:   8694697a54096ae97eb38bf4144f2d96c64c68f2
+> > commit: 8694697a54096ae97eb38bf4144f2d96c64c68f2 [28/28] PCI: Remove PCI_IRQ_LEGACY
+> > config: i386-buildonly-randconfig-001-20240326 (https://download.01.org/0day-ci/archive/20240326/202403261840.1RP419n5-lkp@intel.com/config)
+> > compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240326/202403261840.1RP419n5-lkp@intel.com/reproduce)
 > > 
-> > If the VMD hardware is designed in this way and there's an official
-> > document states that "VMD ports should follow _OSC expect for
-> > hotplugging" then IMO there's no need to find alternative.
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202403261840.1RP419n5-lkp@intel.com/
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    drivers/mfd/intel-lpss-pci.c: In function 'intel_lpss_pci_probe':
+> >>> drivers/mfd/intel-lpss-pci.c:57:49: error: 'PCI_IRQ_LEGACY' undeclared (first use in this function); did you mean 'NR_IRQS_LEGACY'?
+> >       57 |         ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_LEGACY);
+> >          |                                                 ^~~~~~~~~~~~~~
+> >          |                                                 NR_IRQS_LEGACY
+> >    drivers/mfd/intel-lpss-pci.c:57:49: note: each undeclared identifier is reported only once for each function it appears in
 > 
-> There isn't any official documentation for this, it's just the way VMD
-> is designed :). VMD assumes that everything behind it is hotpluggable so
-> the bits don't *really* matter. In other words, VMD supports hotplug and
-> you can't turn that off so hotplug is always on regardless of what the
-> bits say.
+> Bjorn,
+> 
+> Not sure what is going on here. I did an allyesconfig build on x86_64 and did
+> not see such issue. Did the build bot missed some patches ?
+> 
+> And the above also reminds me that we could change NR_IRQS_LEGACY to
+> NR_IRQS_INTX too.
 
-This whole discussion is about who *owns* the feature, not whether the
-hardware supports the feature.
+Sorry, this is my fault because I dropped the intel-lpss-pci.c patch
+because I was thinking Andy's patch would make it obsolete [1].  And
+it *does*, but we don't know the ordering of when his patch and this
+series will be merged into -next or upstream, so ...
 
-The general rule is "if _OSC covers the feature, the platform owns the
-feature and the OS shouldn't touch it unless the OS requests and is
-granted control of it."
+Anyway, I blew it, and I restore the intel-lpss-pci.c patch in the
+series, and we'll just have a trivial merge conflict to resolve until
+they're both upstream.
 
-VMD wants special treatment, and we'd like a simple description of
-what that treatment is.  Right now it sounds like you want the OS to
-own *hotplug* below VMD regardless of what _OSC says.
-
-But I still have no idea about other features like AER, etc., so we're
-kind of in no man's land about how to handle them.
+Sorry for all the confusion.
 
 Bjorn
+
+[1] https://lore.kernel.org/r/20240325210444.GA1449676@bhelgaas
 
