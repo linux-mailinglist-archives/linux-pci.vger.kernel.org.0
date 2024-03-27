@@ -1,167 +1,171 @@
-Return-Path: <linux-pci+bounces-5249-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5250-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7281388DCED
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 12:54:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFC7488E13E
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:56:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFE241F276C5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 11:54:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1156FB26AB1
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 12:51:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE80B12C800;
-	Wed, 27 Mar 2024 11:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F551154BE0;
+	Wed, 27 Mar 2024 12:15:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zij1bBeg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+UqjwJH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276C112C7F5;
-	Wed, 27 Mar 2024 11:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449BB15445C;
+	Wed, 27 Mar 2024 12:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711540485; cv=none; b=YFosjTzJFdQSEbfVC2A7ymX8s0bApuJ8Scyb9LCtme9idTd/HoOTTA/Dub5l7C6HmRznuNn8Kkm+ny2K/mze7SZ88uOGoYPQM1RFaxPL9oAuEzO7VTUlaYyC5cuTvxGlv8eclTS/D6oNBc5SJmcGGE9SodsAgUursgnDYs1Lnlw=
+	t=1711541730; cv=none; b=nRFcEZp0ZEKRJKcR7rAZg6d/pXpLgon8POGER/ZsFKKSKYVChbbcxp72L9Z3uTC542g27FOOUDqcwEuN0lWFCImISi8H7iR0AodofJ+f+M7JpdX5nf23lLp5mWn/cYiftOqCvlDw6tCxMVKQeFventLa6uuDYxUTbm4RqvcTSVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711540485; c=relaxed/simple;
-	bh=ZZSMpoOev78J1M2meXpmvfouZ4ljCxtiNTYvkxowyFc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FiGvDwSqUDofKy1kzkERUK+SA2BPtAb3sjEkKKOrTV1ZUT22XgEPuywTsVnnwuCFRm/gHz0oXf7oD/iIshVBSP99mKaUdNanc4M79tyfwR9sL5MEzIxXMlQl6DNAsy9b2YyZrkHNaIbgcsJkNdrVJSfh7ta9twt6n9iGHrTOm44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zij1bBeg; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so151623466b.1;
-        Wed, 27 Mar 2024 04:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711540482; x=1712145282; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=pZaLHIacfr6HStTphCo5lzi6sIvV88Wx/Y1k9aMmSGU=;
-        b=Zij1bBega5RoLvkArNhzMpHxPNEGnkLIebfRqp0DsB7UPjmQ4PoPO+bg99bIGzt85E
-         3OEBHn+AmdrhdH6ZTFiJvlHC3CQ3Va33VRaw3d/7RW92Hk6VggfcYBeO6qTpbGOSvAcM
-         ZhdiEQ61s4YyFceeAJIDWgFlrvFHwX0VXiKjz0gcr8olvr3ZSQ+U/uD1EjG3WtPhZouk
-         gBgSV40HOlLpL75UpJiVm1CnYqDcC8wWX07plmgzX9XYkdYXg6BdZlCY1PbBbbKTaL0N
-         xgagQ0O7uU5cu5xzwejWKuVKX/Zhx0bzecrQ0AjsShsiFH9AIbEpS22Fyu9zrBxbEoeq
-         P8JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711540482; x=1712145282;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pZaLHIacfr6HStTphCo5lzi6sIvV88Wx/Y1k9aMmSGU=;
-        b=jSAz8kq5bZx3QVOP6JHBXh29L+ITebgqn6eSzq+SGbndO2DL4X4vt2ZcNvB69kj+WT
-         KEyOaDd9Opya+2q2iiqh8T+e0hPGM1T8z92hWBcv1iGSjyXR8lh4bVjvOubCFBtGufEN
-         w+PVqUiVXMlirt/JfqsdzAWYuXsxqkz1Z7sHSaAlA+uS4iCxYESd2eC+oJ0EMmT1VpbV
-         Hzd6nwV6inj0Ia/GeGq9KiTxM654icAhY9ARhBNmFYe+XQzea6WLeoNmHI19yBjuQYLk
-         hfOnwBpEhZQfZRJ2EJEn+RzD5j9YmTOzOvIklxoyKjXUxlGQGZ1gGHPn4GpkTKF+EIfV
-         gkIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwqab6jDn9IL69bdNKEE4X6Az1HRBsDY9lnJTdgGh93vLP8kkhbJlZ9A4SIhu+dOScs9WjgSN2tYgwC6RWROBcWaeRBBd3
-X-Gm-Message-State: AOJu0YwOhwjnNdpcS6Z34p6YX8WzYUCEeB++g7WY8GWlqDfZpwpCy2HM
-	RUBv6UEs56/GDCWejydh+3VTrtpfvNvbmqe/yRV39kp7vqlVtiHq
-X-Google-Smtp-Source: AGHT+IH8pf42nXHh+517fdP00T1mgakqFRoyz55pNC/O1igyyqQuULRTdKdBAmUHaPtuei1Ao91geg==
-X-Received: by 2002:a17:906:b305:b0:a47:61ca:575 with SMTP id n5-20020a170906b30500b00a4761ca0575mr3457005ejz.25.1711540482199;
-        Wed, 27 Mar 2024 04:54:42 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:7b87:a500:dd0e:a4dd:4c2a:b10a? (dynamic-2a01-0c22-7b87-a500-dd0e-a4dd-4c2a-b10a.c22.pool.telefonica.de. [2a01:c22:7b87:a500:dd0e:a4dd:4c2a:b10a])
-        by smtp.googlemail.com with ESMTPSA id kh11-20020a170906f80b00b00a4df6442e69sm1641076ejb.152.2024.03.27.04.54.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 04:54:41 -0700 (PDT)
-Message-ID: <e1016eec-c059-47e5-8e01-539b1b48012a@gmail.com>
-Date: Wed, 27 Mar 2024 12:54:44 +0100
+	s=arc-20240116; t=1711541730; c=relaxed/simple;
+	bh=wrZTQbrVj9b5R7s1P6kRnjBvlV5rKs/bx6EK5CO82fg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ABizjUbQzQohPv8zOwVPlY2TPg0k5TCqaoTK7QhpXHN1mYPxGFzKYC7bPeAcTaP0zBR7whcMeXS9AjKjbIM/yGWmWhsUOpuvirLao4SqWwmZhpNbXPWZaa4gz5F9+n9//gunIKiZ4WvNJMNUbw6eKHCoVsuyreEDPkGON2dJGVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+UqjwJH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E355C433C7;
+	Wed, 27 Mar 2024 12:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711541729;
+	bh=wrZTQbrVj9b5R7s1P6kRnjBvlV5rKs/bx6EK5CO82fg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=M+UqjwJHPPAYFkskYEovVioP7ZwwITe52sgL1MdEwugkHvHfaJ8cKP+6mUPwzFkMD
+	 6wFtOnu5O6itfHZ5tt6fkobaUmFv8gzKQA4K5QxGC3+cArb1aTl34lF/UMFve1MSwG
+	 vQc3NPVH5ItmazqcShSC17oKNkj2BLG/Y8F3XmVU3MHJuPi+C0kn6jR5DpjU1XC3I0
+	 KnWvmNl/YAmLPaY3e1rHY7VdT2E0ElhzdLDow77WtsXpQ43MHt0xCzeFIhIYKYERvb
+	 Vld7DFMQt6CJcha+Q6pEeVmBol0QVmfhscV4A1OjEouWvtJtwQt9UYDLFFo95oqlxf
+	 d+Wm2Ci0DZpFA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org
+Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: FAILED: Patch "PCI: qcom: Enable BDF to SID translation properly" failed to apply to 5.15-stable tree
+Date: Wed, 27 Mar 2024 08:15:27 -0400
+Message-ID: <20240327121528.2831926-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 2/2] r8169: use new function pcim_iomap_region()
-From: Heiner Kallweit <hkallweit1@gmail.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
- Realtek linux nic maintainers <nic_swsd@realtek.com>,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, David Miller <davem@davemloft.net>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
-Content-Language: en-US
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
+X-Patchwork-Hint: ignore
+X-stable: review
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Use new function pcim_iomap_region() to simplify the code.
+The patch below does not apply to the 5.15-stable tree.
+If someone wants it applied there, or to any other stable or longterm
+tree, then please email the backport, including the original git commit
+id to <stable@vger.kernel.org>.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Thanks,
+Sasha
+
+------------------ original commit in Linus's tree ------------------
+
+From bf79e33cdd89db498e00a6131e937259de5f2705 Mon Sep 17 00:00:00 2001
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Date: Thu, 7 Mar 2024 16:35:15 +0530
+Subject: [PATCH] PCI: qcom: Enable BDF to SID translation properly
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Qcom SoCs making use of ARM SMMU require BDF to SID translation table in
+the driver to properly map the SID for the PCIe devices based on their BDF
+identifier. This is currently achieved with the help of
+qcom_pcie_config_sid_1_9_0() function for SoCs supporting the 1_9_0 config.
+
+But With newer Qcom SoCs starting from SM8450, BDF to SID translation is
+set to bypass mode by default in hardware. Due to this, the translation
+table that is set in the qcom_pcie_config_sid_1_9_0() is essentially
+unused and the default SID is used for all endpoints in SoCs starting from
+SM8450.
+
+This is a security concern and also warrants swapping the DeviceID in DT
+while using the GIC ITS to handle MSIs from endpoints. The swapping is
+currently done like below in DT when using GIC ITS:
+
+      /*
+	* MSIs for BDF (1:0.0) only works with Device ID 0x5980.
+	* Hence, the IDs are swapped.
+	*/
+      msi-map = <0x0 &gic_its 0x5981 0x1>,
+		<0x100 &gic_its 0x5980 0x1>;
+
+Here, swapping of the DeviceIDs ensure that the endpoint with BDF (1:0.0)
+gets the DeviceID 0x5980 which is associated with the default SID as per
+the iommu mapping in DT. So MSIs were delivered with IDs swapped so far.
+But this also means the Root Port (0:0.0) won't receive any MSIs (for PME,
+AER etc...)
+
+So let's fix these issues by clearing the BDF to SID bypass mode for all
+SoCs making use of the 1_9_0 config. This allows the PCIe devices to use
+the correct SID, thus avoiding the DeviceID swapping hack in DT and also
+achieving the isolation between devices.
+
+Fixes: 4c9398822106 ("PCI: qcom: Add support for configuring BDF to SID mapping for SM8250")
+Link: https://lore.kernel.org/linux-pci/20240307-pci-bdf-sid-fix-v1-1-9423a7e2d63c@linaro.org
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Cc: stable@vger.kernel.org # 5.11
 ---
- drivers/net/ethernet/realtek/r8169_main.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 5c879a5c8..7411cf1a1 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -5333,11 +5333,9 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (region < 0)
- 		return dev_err_probe(&pdev->dev, -ENODEV, "no MMIO resource found\n");
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 8554482debe86..02bfe415c7ac8 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -53,6 +53,7 @@
+ #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+ #define PARF_DEVICE_TYPE			0x1000
+ #define PARF_BDF_TO_SID_TABLE_N			0x2000
++#define PARF_BDF_TO_SID_CFG			0x2c00
  
--	rc = pcim_iomap_regions(pdev, BIT(region), KBUILD_MODNAME);
--	if (rc < 0)
--		return dev_err_probe(&pdev->dev, rc, "cannot remap MMIO, aborting\n");
--
--	tp->mmio_addr = pcim_iomap_table(pdev)[region];
-+	tp->mmio_addr = pcim_iomap_region(pdev, region, KBUILD_MODNAME);
-+	if (!tp->mmio_addr)
-+		return dev_err_probe(&pdev->dev, -ENOMEM, "cannot remap MMIO, aborting\n");
+ /* ELBI registers */
+ #define ELBI_SYS_CTRL				0x04
+@@ -120,6 +121,9 @@
+ /* PARF_DEVICE_TYPE register fields */
+ #define DEVICE_TYPE_RC				0x4
  
- 	txconfig = RTL_R32(tp, TxConfig);
- 	if (txconfig == ~0U)
++/* PARF_BDF_TO_SID_CFG fields */
++#define BDF_TO_SID_BYPASS			BIT(0)
++
+ /* ELBI_SYS_CTRL register fields */
+ #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
+ 
+@@ -1030,11 +1034,17 @@ static int qcom_pcie_config_sid_1_9_0(struct qcom_pcie *pcie)
+ 	u8 qcom_pcie_crc8_table[CRC8_TABLE_SIZE];
+ 	int i, nr_map, size = 0;
+ 	u32 smmu_sid_base;
++	u32 val;
+ 
+ 	of_get_property(dev->of_node, "iommu-map", &size);
+ 	if (!size)
+ 		return 0;
+ 
++	/* Enable BDF to SID translation by disabling bypass mode (default) */
++	val = readl(pcie->parf + PARF_BDF_TO_SID_CFG);
++	val &= ~BDF_TO_SID_BYPASS;
++	writel(val, pcie->parf + PARF_BDF_TO_SID_CFG);
++
+ 	map = kzalloc(size, GFP_KERNEL);
+ 	if (!map)
+ 		return -ENOMEM;
 -- 
-2.44.0
+2.43.0
+
+
 
 
 
