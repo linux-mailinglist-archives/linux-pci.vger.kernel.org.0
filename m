@@ -1,93 +1,93 @@
-Return-Path: <linux-pci+bounces-5274-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5275-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BD7A88ED7A
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:02:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0486288ED8E
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:04:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BC321F3578B
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 18:02:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 360C61C32600
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 18:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF73814F124;
-	Wed, 27 Mar 2024 17:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 274F314EC49;
+	Wed, 27 Mar 2024 18:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sg3uPchw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYavmSnH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C5B13AA4F;
-	Wed, 27 Mar 2024 17:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153614D281;
+	Wed, 27 Mar 2024 18:02:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711562275; cv=none; b=s4ygUtIoWUpJGKsDHF1nlb39LpXbcYfYXy5qR2TBt7CCWmzyE0twglJz2k/skKLIrxCjQH7cJKc0vhmamjN2xrETiV2+6Mpv2qnd0P2VexOyvc9BbJ5sDvg7I4b3uCwIrL4tVE6NadJ3UAj1kFR/FqIPPxhYWnJDhf8FN3+PeFE=
+	t=1711562558; cv=none; b=D1MwXjENv3EADZaWpRZ/G+PY61S1pHY0IDHxsjS2UkWVsulGvHo0oH1rz14J//Yhd6lR0odi2w+jKjeu4bFNQoqz41fQhQ+sH//GvwrtWJ2v0epaBoqPoV+mKcI3eSE5da58fJ6mjMGDT8cuwi1h7B3+MvKYPAGeViwHcGAjnLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711562275; c=relaxed/simple;
-	bh=wqbcn0ikIUK4mt6Aj/w6cUv86+OQtHDq6oRZyBl/18g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ig0Yqiem4bVJPuAR00LTyKqnbc9tFfOSaUlYFAi4j8Mg6ziHCxuH2D6yYskXnKUqpvVqtkG83XLF+DAwHVEn/qQKTrnx7OtBzi6iTgKAo0BmmjnUG58arNh317yuqdJfrkdh4QOxsImp7nbbrb6tbZjLdUh/4KwBR5FP3wfEZ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sg3uPchw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56D69C433F1;
-	Wed, 27 Mar 2024 17:57:55 +0000 (UTC)
+	s=arc-20240116; t=1711562558; c=relaxed/simple;
+	bh=d1k8X7xmdafZmpo6x3G2deIJKdowcAVRxMW8wfsWQnI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P3ZmGXONMRTwOU4PpkaCIrSMHCCzzcAu+NamwKDCB6kpgYrb9r+fqVmoglMnSa2sSnQaDRjbYzSDKlWwj/5gIjorysQh+ENgQfE0eKJOvX0wEq2ecOMV3Cg+JCBdOTzh/rfv05rMDoVoEqfh5Dpoyd9WMG/S/e5msy6Zo5JK9vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYavmSnH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F0BAC433C7;
+	Wed, 27 Mar 2024 18:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711562275;
-	bh=wqbcn0ikIUK4mt6Aj/w6cUv86+OQtHDq6oRZyBl/18g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Sg3uPchwAu0+XJyWLp74NaDVzYwP6Sha7kCsSnDpZvlc5y6mC59Vny+RkbE/5BDSf
-	 yutWspT+aHvxerOkWmdV/ixX0gfY1ufGfl7VPyH1LhKCzyAkckw0U/3h4vpSjjoixV
-	 Eyhy4pGLj/KTKDSlP5Ki9XQNiiU+LBWC6p96cBFILnikm5ZgcT3uUGsZzwTU21ZN0P
-	 d+zzh3AYV1ber4npKkBcCu9HCUzBqc0JZG/52tOxAqSaYZ10ubM63l6WPcxtitBpRX
-	 ytuuj0AsUAYFYbCEaagi0I0RfX1q5PEdqXg7IIq+leov9QAM6btvK1SKOxVaKAlXb4
-	 0nr+u2bdHoMsw==
-Date: Wed, 27 Mar 2024 12:57:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Jamie Gibbons <jamie.gibbons@microchip.com>,
-	linux-pci@vger.kernel.org,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Valentina Fernandez <valentina.fernandezalanis@microchip.com>
-Subject: Re: [PATCH v1 4/5] dt-bindings: PCI: microchip: increase number of
- items in ranges property
-Message-ID: <171156227276.3707387.1415790916639704737.robh@kernel.org>
-References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
- <20240327-debunk-perky-f5514ca332be@spud>
+	s=k20201202; t=1711562557;
+	bh=d1k8X7xmdafZmpo6x3G2deIJKdowcAVRxMW8wfsWQnI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SYavmSnHUIH0OwVJCJI/Y4OTjUSQH7jh/vhvxTUDOrJgmlYMMVTU+F4IEduby77nS
+	 9jdmo1nqUsTuSY+gnsTjIEr8tMLn3XhWNHzFPuCzw6uoErZ4KjJVEdfqPLwqCoB+2H
+	 qj1FrUFqzV3glFC+WoCc89KSFLCt7opffozX835yc771pkEcEfMr8oOq6OU3MmAEx6
+	 HUjcPaVGslkNY4wJ8Sc1O7naSrrYkadjIXpV0XXCSgkMEGAU/K1aP5Vv9xoM6kvaJB
+	 qWnfFGoS97Rpzleef/cvmNjRGDtrXh+iEkU3sijsVGrjeSJ3k63lm5MfNBtwSXql1v
+	 Ab5pa4KOyAlCA==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI: Update pci_find_capability() stub return values
+Date: Wed, 27 Mar 2024 13:02:34 -0500
+Message-Id: <20240327180234.1529164-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327-debunk-perky-f5514ca332be@spud>
+Content-Transfer-Encoding: 8bit
 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-On Wed, 27 Mar 2024 12:24:39 +0000, Conor Dooley wrote:
-> From: Valentina Fernandez <valentina.fernandezalanis@microchip.com>
-> 
-> Increase the number of items in the ranges property to allow up to 3
-> ranges. For example a prefetchable range, a non-prefetchable range
-> and an IO range, depending on configuration.
-> 
-> Signed-off-by: Valentina Fernandez <valentina.fernandezalanis@microchip.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+f646c2a0a668 ("PCI: Return u8 from pci_find_capability() and similar") and
+ee8b1c478a9f ("PCI: Return u16 from pci_find_ext_capability() and similar")
+updated the return type of the extern declarations, but neglected to update
+the type of the stubs used CONFIG_PCI is not enabled.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Update them to match the extern declarations.
+
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ include/linux/pci.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index b19992a5dfaf..6a09bd9636d5 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2011,10 +2011,9 @@ static inline int pci_register_driver(struct pci_driver *drv)
+ static inline void pci_unregister_driver(struct pci_driver *drv) { }
+ static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
+ { return 0; }
+-static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+-					   int cap)
++static inline u8 pci_find_next_capability(struct pci_dev *dev, u8 post, int cap)
+ { return 0; }
+-static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
++static inline u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
+ { return 0; }
+ 
+ static inline u64 pci_get_dsn(struct pci_dev *dev)
+-- 
+2.34.1
 
 
