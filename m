@@ -1,173 +1,149 @@
-Return-Path: <linux-pci+bounces-5262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EE3588E49B
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 15:07:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B34788E6B5
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 15:42:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E0DC1C22CDE
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:07:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E7021C2DA90
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:42:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 465E11BB728;
-	Wed, 27 Mar 2024 12:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D76C12EBCB;
+	Wed, 27 Mar 2024 13:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AppGaFmR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pk6hLqmE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCF41BB722;
-	Wed, 27 Mar 2024 12:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD951EF0E
+	for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 13:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542541; cv=none; b=JajC3oSYiKEDhlZ311ECJJ5q7lao1ptZmBHUfD+Qandr6nsR6ns6bLAXBdsUZCNRsTaK9SW8c7R+CYL2/K9vWmPrYEj6vMXfrLCmMwrWRPHtgiR1yDdN5QHbPphn2RqiTqhqDAJYMemb+caQpN30PUC6YpRLrP8Miq7RwgVCcWQ=
+	t=1711545614; cv=none; b=koFRReVUYFU6Npk6QAyptViPBH8WEEVaN+3nMNYy+6oFRkxibT2/MuQP+7D2Okh5mBu9JF9mnMqyI6aBZZdiOlXgB6Ls2KQ2zw89pJTe+aeD9GDpqGRm8i92q6NXHmKp8pbK+mmU3LMRyPnnEe7IpcrBecJ/OVFGwl53LncMcVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542541; c=relaxed/simple;
-	bh=OLO7jFtRnqCvGjaFIBp+QZLU7tw94zPs0lRQffBxt6U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uK1SMZaNtysvNOECmgjZpuU13MnTxO+hz3jSvdPlOhYFXvgV3p/hEqgu0A1J/vhnkR/II60CfZcmySTPqZ1Wdl5/nBdcPOnRkP3l4pNpmsps/2ydejl8ThkCxqWLjiYT0sSSz0JagiiJeKUEYdc8fC5BmEVtXrTsuZ1Gd1CRB0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AppGaFmR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9704DC433C7;
-	Wed, 27 Mar 2024 12:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542540;
-	bh=OLO7jFtRnqCvGjaFIBp+QZLU7tw94zPs0lRQffBxt6U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AppGaFmR5g0QIc9/R86oeMsfxlOXo5Z4GU4Gfl9XlcXYx4jrEIZhCCnk13OLTBfIG
-	 DOJx/OpA1knbzGSFxwmEr4ocGz5uFpF7Q+cvf/raoO9Y+rqeNIrFa5i9BwySKQFZ7m
-	 8A34M0Jps4gXtPsnav7SmVXb7JD2u4LGLGj+C3IZaWKCbZ47xEk4yJ+qpg8bWhuH1m
-	 Nx9p25TUFk6yNBijRn+4XE6CQmURKVX3H9ARyPcpR/gIgToUlqBSs72cuG9UU6Why9
-	 B7tqe5tz7w/ihTAoQo1Qt8t7/0K3K0VHGWf1vIZ1Tmxklepp2yTqf/eIrJ+2VHs519
-	 MtxCVvIWLnQBA==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	stanislaw.gruszka@linux.intel.com
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "PCI/AER: Block runtime suspend when handling errors" failed to apply to 4.19-stable tree
-Date: Wed, 27 Mar 2024 08:28:58 -0400
-Message-ID: <20240327122858.2843164-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1711545614; c=relaxed/simple;
+	bh=UROGM+XkFg3yupHbF5hlIV7Mxhlimzst06c0vUXjobM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tiCcLelk+lLuJLvsl4ZYDJuVfitujOrSYFoPwUcejIXhNPuo7rp/HMJFa9TsTrdAR1wdip1fioPQb/PGt9oVm8goZmT+zQOFjQuhpOUPjhS2mJlDnMcj1xp0ojxBFPnu6I4iIdOHXqxOt3G3bYboORHntepaC5tTTdBanFNwDgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pk6hLqmE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711545611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UROGM+XkFg3yupHbF5hlIV7Mxhlimzst06c0vUXjobM=;
+	b=Pk6hLqmEfjkq/mlbGK41cjnwZ3RwsOcNcUc2kl6VM68LM5eQAXvS4tJJWzJ+vHweunerff
+	Qg6ifsj9vksf/B/U3OKh9e5RDv0MnItYA9v4JuLU/KHaNroynuUsH4vimlQeCnJllmvvYI
+	BoK6cDTzNH5A0GCYow9FYsPWBErerFM=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-209-cScFM3x0PVKdRaK97Y_ydw-1; Wed, 27 Mar 2024 09:20:10 -0400
+X-MC-Unique: cScFM3x0PVKdRaK97Y_ydw-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d6fd7087eeso908221fa.1
+        for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 06:20:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711545609; x=1712150409;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UROGM+XkFg3yupHbF5hlIV7Mxhlimzst06c0vUXjobM=;
+        b=aiiloIG5KjC3pEVbUuTnQG0g3VGLvB4s8U16DI5gikqrI4YQohdNuExFdYu24VvStk
+         nMaQKk1eDyQFEfsoJdeN0qzHN9yO2RPEJpKdTfgjKTtGDbK3Gg2uOP9gi+KZAUrB/d4Q
+         y4Cd07sGLpCtN5piOGxwN37XJGebCnwD5YDfcALiJg9g2om8kAYJpTDNK9fWVJEJZhr5
+         okW1fh6lxl+2jRKqZfNFk/hKwF4lGcJH+EJT+u8wwT21b3tQx5rQ8Tpq6myBXnjBMKXa
+         ZC3MZhE3RFqduDV+DEzfzKpBrkq+aYZFmsJbnSEn6Qv9T+mfpZZrNMJBvHKXu978WZ5p
+         TyFA==
+X-Gm-Message-State: AOJu0YzzJnJacw6CXowjb6UAX5sfvGbAjqfj35XN9ZQixs3B6FiDRwlh
+	lrnuGHBjL2Zbju6W0UPo1IUk62IhWGi7n/2ShaUw3O1zK7tN8RMBL3xoIL6Q0Sgk0NLlKVCYh/Y
+	ZkKjxwfP0Br6JmmXkjKH7Q4L2F7pDTlIgsfrjBAfK0QT2SKfJ4VuN/QY83C56HtaohA==
+X-Received: by 2002:a2e:83d6:0:b0:2d6:b9a3:159c with SMTP id s22-20020a2e83d6000000b002d6b9a3159cmr30829ljh.1.1711545608761;
+        Wed, 27 Mar 2024 06:20:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFlMKDcBuGA2kcjRl2CPFWsG9+4QM4h+MpzipOdEkLChpkdvwnbHANzywbkrUs3HWVtarLZiQ==
+X-Received: by 2002:a2e:83d6:0:b0:2d6:b9a3:159c with SMTP id s22-20020a2e83d6000000b002d6b9a3159cmr30805ljh.1.1711545608142;
+        Wed, 27 Mar 2024 06:20:08 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id d13-20020a05600c34cd00b004148a65f12asm2152280wmq.1.2024.03.27.06.20.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 06:20:07 -0700 (PDT)
+Message-ID: <4cf0d7710a74095a14bedc68ba73612943683db4.camel@redhat.com>
+Subject: Re: [PATCH 0/2] PCI: Add and use pcim_iomap_region()
+From: Philipp Stanner <pstanner@redhat.com>
+To: Heiner Kallweit <hkallweit1@gmail.com>, Bjorn Helgaas
+ <bhelgaas@google.com>,  Realtek linux nic maintainers
+ <nic_swsd@realtek.com>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, David Miller
+ <davem@davemloft.net>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"netdev@vger.kernel.org"
+	 <netdev@vger.kernel.org>
+Date: Wed, 27 Mar 2024 14:20:06 +0100
+In-Reply-To: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
+References: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
-Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 4.19-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On Wed, 2024-03-27 at 12:52 +0100, Heiner Kallweit wrote:
+> Several drivers use the following sequence for a single BAR:
+> rc =3D pcim_iomap_regions(pdev, BIT(bar), name);
+> if (rc)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0error;
+> addr =3D pcim_iomap_table(pdev)[bar];
+>=20
+> Let's create a simpler (from implementation and usage perspective)
+> pcim_iomap_region() for this use case.
 
-Thanks,
-Sasha
+I like that idea =E2=80=93 in fact, I liked it so much that I wrote that
+myself, although it didn't make it vor v6.9 ^^
 
------------------- original commit in Linus's tree ------------------
+You can look at the code here [1]
 
-From 002bf2fbc00e5c4b95fb167287e2ae7d1973281e Mon Sep 17 00:00:00 2001
-From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Date: Mon, 12 Feb 2024 13:01:35 +0100
-Subject: [PATCH] PCI/AER: Block runtime suspend when handling errors
+Since my series cleans up the PCI devres API as much as possible, I'd
+argue that prefering it would be better.
 
-PM runtime can be done simultaneously with AER error handling.  Avoid that
-by using pm_runtime_get_sync() before and pm_runtime_put() after reset in
-pcie_do_recovery() for all recovering devices.
+But maybe you could do a review, since you're now also familiar with
+the code?
 
-pm_runtime_get_sync() will increase dev->power.usage_count counter to
-prevent any possible future request to runtime suspend a device.  It will
-also resume a device, if it was previously in D3hot state.
+Greetings,
+P.
 
-I tested with igc device by doing simultaneous aer_inject and rpm
-suspend/resume via /sys/bus/pci/devices/PCI_ID/power/control and can
-reproduce:
-
-  igc 0000:02:00.0: not ready 65535ms after bus reset; giving up
-  pcieport 0000:00:1c.2: AER: Root Port link has been reset (-25)
-  pcieport 0000:00:1c.2: AER: subordinate device reset failed
-  pcieport 0000:00:1c.2: AER: device recovery failed
-  igc 0000:02:00.0: Unable to change power state from D3hot to D0, device inaccessible
-
-The problem disappears when this patch is applied.
-
-Link: https://lore.kernel.org/r/20240212120135.146068-1-stanislaw.gruszka@linux.intel.com
-Signed-off-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-Cc: <stable@vger.kernel.org>
----
- drivers/pci/pcie/err.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 59c90d04a609a..705893b5f7b09 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -13,6 +13,7 @@
- #define dev_fmt(fmt) "AER: " fmt
- 
- #include <linux/pci.h>
-+#include <linux/pm_runtime.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-@@ -85,6 +86,18 @@ static int report_error_detected(struct pci_dev *dev,
- 	return 0;
- }
- 
-+static int pci_pm_runtime_get_sync(struct pci_dev *pdev, void *data)
-+{
-+	pm_runtime_get_sync(&pdev->dev);
-+	return 0;
-+}
-+
-+static int pci_pm_runtime_put(struct pci_dev *pdev, void *data)
-+{
-+	pm_runtime_put(&pdev->dev);
-+	return 0;
-+}
-+
- static int report_frozen_detected(struct pci_dev *dev, void *data)
- {
- 	return report_error_detected(dev, pci_channel_io_frozen, data);
-@@ -207,6 +220,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	else
- 		bridge = pci_upstream_bridge(dev);
- 
-+	pci_walk_bridge(bridge, pci_pm_runtime_get_sync, NULL);
-+
- 	pci_dbg(bridge, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bridge(bridge, report_frozen_detected, &status);
-@@ -251,10 +266,15 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 		pcie_clear_device_status(dev);
- 		pci_aer_clear_nonfatal_status(dev);
- 	}
-+
-+	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-+
- 	pci_info(bridge, "device recovery successful\n");
- 	return status;
- 
- failed:
-+	pci_walk_bridge(bridge, pci_pm_runtime_put, NULL);
-+
- 	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
- 
- 	/* TODO: Should kernel panic here? */
--- 
-2.43.0
+[1] https://lore.kernel.org/all/20240301112959.21947-1-pstanner@redhat.com/
 
 
-
+>=20
+> Note: The check for !pci_resource_len() is included in
+> pcim_iomap(), so we don't have to duplicate it.
+>=20
+> Make r8169 the first user of the new function.
+>=20
+> I'd prefer to handle this via the PCI tree.
+>=20
+> Heiner Kallweit (2):
+> =C2=A0 PCI: Add pcim_iomap_region
+> =C2=A0 r8169: use new function pcim_iomap_region()
+>=20
+> =C2=A0drivers/net/ethernet/realtek/r8169_main.c |=C2=A0 8 +++----
+> =C2=A0drivers/pci/devres.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 28
+> +++++++++++++++++++++++
+> =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 2 ++
+> =C2=A03 files changed, 33 insertions(+), 5 deletions(-)
+>=20
 
 
