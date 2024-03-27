@@ -1,58 +1,56 @@
-Return-Path: <linux-pci+bounces-5251-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5252-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97CE888E120
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:52:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EABD88E2DE
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:35:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD6D21C29F62
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 12:52:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE6061F28448
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:35:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C91D15530E;
-	Wed, 27 Mar 2024 12:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C924177A9A;
+	Wed, 27 Mar 2024 12:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM28g1N3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cje0nW1r"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3242D155302;
-	Wed, 27 Mar 2024 12:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2166B177A96;
+	Wed, 27 Mar 2024 12:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711541738; cv=none; b=ackhj9CIUV2dosZ+HEOH5jYLMU3MMl4Z2/jThDL+hA0GCfjuYNL9NWj79itFY/Sdsri5IjWWKxNQiyiX0VIVnwS2ywAxQkBLQkoNKZBCx+FPP6icw9ruSM3RogfT5easKvnhPkeOxgXxWGKkqOSIsmE7HjIOCGYfMR9QYC0WZ68=
+	t=1711542202; cv=none; b=rgCxhzjRcq5MMhtgS9ogKvhBoJ/1zkfEe+yXgGobrD7fTqKVHbWr69H1f9AvRT+nLv//HmACzRxVMo96XeN4mTtDDTiPL/sKADrN7KCIspFkzhDmNkZyq/7KHLExXoNz/e0KTbkKT01ylCORwpiYslklGUxxJ1ik1KetMt05IDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711541738; c=relaxed/simple;
-	bh=lHt9D14ybf0nnCyk5lSioH5vZZl9kQOLC2vqJw8avK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s75FR/UF+gW79OIcpPSWI8NSEHaaCVz8QP5ZSCp++4pFPfEAsMeepzLD9BNJ8Q24ZUD0TkKjTBGMXFn1GfC5boXZfoEPJrBHMY0ZUkWCtaxgGXnEP7BsyPzFp8ub9PZvpqznpwr8NK7KkfsK8rJkkTYtj0cFXr6C+H/XJypzEDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM28g1N3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB88C433F1;
-	Wed, 27 Mar 2024 12:15:36 +0000 (UTC)
+	s=arc-20240116; t=1711542202; c=relaxed/simple;
+	bh=92r58BbZAW6FjwKhCT465uK7/szSb+Dp1ruccGx2vIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sQZA9Cn8xBVOC7dnifq82FEOPYZuW5XCo5Xa1kUG4WQAxkcdDDht3NTW1RhdIMTuOLnXTOiDO2LoZlMAvtZah/nWY9tr+S1ZW3lzMaZjmdiC24lATNPuE4fn0ACrFjHvdiDsdCVAL40OJd20hWNpBgPwh+ZldSYGBszXEj5SEVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cje0nW1r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B91C433C7;
+	Wed, 27 Mar 2024 12:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711541738;
-	bh=lHt9D14ybf0nnCyk5lSioH5vZZl9kQOLC2vqJw8avK8=;
+	s=k20201202; t=1711542202;
+	bh=92r58BbZAW6FjwKhCT465uK7/szSb+Dp1ruccGx2vIo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ZM28g1N3oWXkNTB/3BP/mxDQfA1bHQPS0LsIAs0IbJUY7LPC5U6ss3aYt/MLqG8Zo
-	 grnPfZ+pwns9sShKCQTSGebRH96+2nlbVywOEnBEtcVM2b/IBF7g6Iy2SAvFuXNA0v
-	 b2ujEcFUvngQqv29FjZC5JUxl1C77WoZ5bbQ4c9GC58Lolc4o/KK1LopQRLwEoAnFp
-	 a3LpIbHpVg4XW+gK7/2hfKZ1ZtalD6OXR2mSDukIlGIXy/0HHtu0yMMWKXZzYNBXlK
-	 mAeDw/Sp6aBX9KPJCNKBV9Rr3BF+3kS8n6M8saJ18yIPG2d0+2V+ntvEA+f//5tTb2
-	 KQiWgoZB7ITRQ==
+	b=Cje0nW1rixMxBFCvYGCtcX+AgMK1fMDWSRoTnlvZWAcKR8vM3Sf0awi8XUsxVmh7U
+	 RqG66fg8znfK6q1qjzmfmjWbuD3kHjnh0jybtFVOBQDAH85idaDqawDZ5Xz0bfq/0A
+	 3GKRkt9LU2vlljNDUvxLabNqppFPmv0JEIDIXTycro/Jb1x81aMe6gy9SGM3tiZu/w
+	 4dfUAsqxSrN4RJpY6rVYC1hYXFwTitE64UoYjpQnD0F0vOPGOx/kNWhuMPdn8+ydIC
+	 /cgCuZqulZGrAEzdHFKaE+qP3w9t8ntdshT3hlfaWAQiKPOu44dw1qOV15zBrqD/2Z
+	 TKCzaR0XnrHWw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	mhklinux@outlook.com
-Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Long Li <longli@microsoft.com>,
-	linux-hyperv@vger.kernel.org,
+	pmenzel@molgen.mpg.de
+Cc: Niels van Aert <nvaert1986@hotmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "PCI: hv: Fix ring buffer size calculation" failed to apply to 5.15-stable tree
-Date: Wed, 27 Mar 2024 08:15:35 -0400
-Message-ID: <20240327121536.2832043-1-sashal@kernel.org>
+Subject: FAILED: Patch "PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports" failed to apply to 5.4-stable tree
+Date: Wed, 27 Mar 2024 08:23:20 -0400
+Message-ID: <20240327122320.2838443-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -62,10 +60,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: ignore
 X-stable: review
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 5.15-stable tree.
+The patch below does not apply to the 5.4-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
@@ -75,63 +72,53 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From b5ff74c1ef50fe08e384026875fec660fadfaedd Mon Sep 17 00:00:00 2001
-From: Michael Kelley <mhklinux@outlook.com>
-Date: Fri, 16 Feb 2024 12:22:40 -0800
-Subject: [PATCH] PCI: hv: Fix ring buffer size calculation
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From 627c6db20703b5d18d928464f411d0d4ec327508 Mon Sep 17 00:00:00 2001
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Date: Tue, 5 Mar 2024 12:30:56 +0100
+Subject: [PATCH] PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports
 
-For a physical PCI device that is passed through to a Hyper-V guest VM,
-current code specifies the VMBus ring buffer size as 4 pages.  But this
-is an inappropriate dependency, since the amount of ring buffer space
-needed is unrelated to PAGE_SIZE. For example, on x86 the ring buffer
-size ends up as 16 Kbytes, while on ARM64 with 64 Kbyte pages, the ring
-size bloats to 256 Kbytes. The ring buffer for PCI pass-thru devices
-is used for only a few messages during device setup and removal, so any
-space above a few Kbytes is wasted.
+Commit 5459c0b70467 ("PCI/DPC: Quirk PIO log size for certain Intel Root
+Ports") and commit 3b8803494a06 ("PCI/DPC: Quirk PIO log size for Intel Ice
+Lake Root Ports") add quirks for Ice, Tiger and Alder Lake Root Ports.
+System firmware for Raptor Lake still has the bug, so Linux logs the
+warning below on several Raptor Lake systems like Dell Precision 3581 with
+Intel Raptor Lake processor (0W18NX) system firmware/BIOS version 1.10.1.
 
-Fix this by declaring the ring buffer size to be a fixed 16 Kbytes.
-Furthermore, use the VMBUS_RING_SIZE() macro so that the ring buffer
-header is properly accounted for, and so the size is rounded up to a
-page boundary, using the page size for which the kernel is built. While
-w/64 Kbyte pages this results in a 64 Kbyte ring buffer header plus a
-64 Kbyte ring buffer, that's the smallest possible with that page size.
-It's still 128 Kbytes better than the current code.
+  pci 0000:00:07.0: [8086:a76e] type 01 class 0x060400
+  pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
+  pci 0000:00:07.1: [8086:a73f] type 01 class 0x060400
+  pci 0000:00:07.1: DPC: RP PIO log size 0 is invalid
 
-Link: https://lore.kernel.org/linux-pci/20240216202240.251818-1-mhklinux@outlook.com
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Long Li <longli@microsoft.com>
-Cc: <stable@vger.kernel.org> # 5.15.x
+Apply the quirk for Raptor Lake Root Ports as well.
+
+This also enables the DPC driver to dump the RP PIO Log registers when DPC
+is triggered.
+
+Link: https://lore.kernel.org/r/20240305113057.56468-1-pmenzel@molgen.mpg.de
+Reported-by: Niels van Aert <nvaert1986@hotmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218560
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: <stable@vger.kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Niels van Aert <nvaert1986@hotmail.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 1eaffff40b8d4..5992280e8110b 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -49,6 +49,7 @@
- #include <linux/refcount.h>
- #include <linux/irqdomain.h>
- #include <linux/acpi.h>
-+#include <linux/sizes.h>
- #include <asm/mshyperv.h>
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d797df6e5f3e9..663d838fa861d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6225,6 +6225,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2b, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa73f, dpc_log_size);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
+ #endif
  
  /*
-@@ -465,7 +466,7 @@ struct pci_eject_response {
- 	u32 status;
- } __packed;
- 
--static int pci_ring_size = (4 * PAGE_SIZE);
-+static int pci_ring_size = VMBUS_RING_SIZE(SZ_16K);
- 
- /*
-  * Driver specific state.
 -- 
 2.43.0
 
