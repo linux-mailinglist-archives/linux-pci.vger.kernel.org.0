@@ -1,56 +1,55 @@
-Return-Path: <linux-pci+bounces-5252-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5253-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EABD88E2DE
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:35:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6719D88E2F4
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:38:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE6061F28448
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:35:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 985AA1C2830A
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:38:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C924177A9A;
-	Wed, 27 Mar 2024 12:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2235C1791E1;
+	Wed, 27 Mar 2024 12:23:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cje0nW1r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjWF3CSw"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2166B177A96;
-	Wed, 27 Mar 2024 12:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDFD13E045;
+	Wed, 27 Mar 2024 12:23:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542202; cv=none; b=rgCxhzjRcq5MMhtgS9ogKvhBoJ/1zkfEe+yXgGobrD7fTqKVHbWr69H1f9AvRT+nLv//HmACzRxVMo96XeN4mTtDDTiPL/sKADrN7KCIspFkzhDmNkZyq/7KHLExXoNz/e0KTbkKT01ylCORwpiYslklGUxxJ1ik1KetMt05IDI=
+	t=1711542232; cv=none; b=QjVyu9fwBWCydsAx/E5DZwKh0bCmoBc3UJU3yLwnGpBKCETPNSrqeKTlAiocGb668UpxPLU/02BS3WGIlC6slvH7RcPAowcSRAm+yRQC5O/ySz08czf8VGZ5I8/KaWFU+bczn2Q5IWBF7cze/up8gT58SonzlpMr8h/gLHuLf88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542202; c=relaxed/simple;
-	bh=92r58BbZAW6FjwKhCT465uK7/szSb+Dp1ruccGx2vIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sQZA9Cn8xBVOC7dnifq82FEOPYZuW5XCo5Xa1kUG4WQAxkcdDDht3NTW1RhdIMTuOLnXTOiDO2LoZlMAvtZah/nWY9tr+S1ZW3lzMaZjmdiC24lATNPuE4fn0ACrFjHvdiDsdCVAL40OJd20hWNpBgPwh+ZldSYGBszXEj5SEVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cje0nW1r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B91C433C7;
-	Wed, 27 Mar 2024 12:23:21 +0000 (UTC)
+	s=arc-20240116; t=1711542232; c=relaxed/simple;
+	bh=7LsQtJB4z2+a3oJU3PiQpdmEENnD8QrniYyGYXqfMn8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NWBA2qaw5xsuisJR4tcUir7IE/NC9a4IYfj383LIpIFLV4eKsrsXyMgrTlpDoiJQ17sn9vNUkg0nctmMmXGaf4ws3HbHndIHfbSc97HYMyPkDSSLweIqfPX7wyj8WjBWNTJsSzooWt1SsNbXKP+PkD2wgn+GSCAygHO1XiwAXCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjWF3CSw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14DDCC433C7;
+	Wed, 27 Mar 2024 12:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542202;
-	bh=92r58BbZAW6FjwKhCT465uK7/szSb+Dp1ruccGx2vIo=;
+	s=k20201202; t=1711542231;
+	bh=7LsQtJB4z2+a3oJU3PiQpdmEENnD8QrniYyGYXqfMn8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Cje0nW1rixMxBFCvYGCtcX+AgMK1fMDWSRoTnlvZWAcKR8vM3Sf0awi8XUsxVmh7U
-	 RqG66fg8znfK6q1qjzmfmjWbuD3kHjnh0jybtFVOBQDAH85idaDqawDZ5Xz0bfq/0A
-	 3GKRkt9LU2vlljNDUvxLabNqppFPmv0JEIDIXTycro/Jb1x81aMe6gy9SGM3tiZu/w
-	 4dfUAsqxSrN4RJpY6rVYC1hYXFwTitE64UoYjpQnD0F0vOPGOx/kNWhuMPdn8+ydIC
-	 /cgCuZqulZGrAEzdHFKaE+qP3w9t8ntdshT3hlfaWAQiKPOu44dw1qOV15zBrqD/2Z
-	 TKCzaR0XnrHWw==
+	b=mjWF3CSwLdc7rqLpi5mxLtmlHWyArBg1n0IKMrG9/adB8mT498cTk6FK/mLuduuw/
+	 2wZ7rg/VPxo+4o8QrdQzhwSdR3Q1p7Otb4+EV2X4ksZYZLSZgOKXNIg8YLOdGnwmsP
+	 9gcPh4F8D/D/h9IXnrvbwXhvIGMzHnUKt0XU9t0aYaIsmY/Vu/Too/B4DcegT7Hxkw
+	 P5xiDj/4ElOlX0/tR6H4IDie8n2UTMCxfPlTGlspwidtb8ZS9rc6R0fhwh59F786oA
+	 RuhMXGuDoi1uJ+ms4N8WnuStuYMQ5zBLvzMx/RMKDj6Y2IxWwRHX1Aen2o6qtH9xrw
+	 HGaTBFY1iLrcw==
 From: Sasha Levin <sashal@kernel.org>
 To: stable@vger.kernel.org,
-	pmenzel@molgen.mpg.de
-Cc: Niels van Aert <nvaert1986@hotmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	cassel@kernel.org
+Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports" failed to apply to 5.4-stable tree
-Date: Wed, 27 Mar 2024 08:23:20 -0400
-Message-ID: <20240327122320.2838443-1-sashal@kernel.org>
+Subject: FAILED: Patch "PCI: dwc: endpoint: Fix advertised resizable BAR size" failed to apply to 5.4-stable tree
+Date: Wed, 27 Mar 2024 08:23:49 -0400
+Message-ID: <20240327122350.2838878-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -60,6 +59,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: ignore
 X-stable: review
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 The patch below does not apply to the 5.4-stable tree.
@@ -72,53 +72,73 @@ Sasha
 
 ------------------ original commit in Linus's tree ------------------
 
-From 627c6db20703b5d18d928464f411d0d4ec327508 Mon Sep 17 00:00:00 2001
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Date: Tue, 5 Mar 2024 12:30:56 +0100
-Subject: [PATCH] PCI/DPC: Quirk PIO log size for Intel Raptor Lake Root Ports
+From 72e34b8593e08a0ee759b7a038e0b178418ea6f8 Mon Sep 17 00:00:00 2001
+From: Niklas Cassel <cassel@kernel.org>
+Date: Thu, 7 Mar 2024 12:15:20 +0100
+Subject: [PATCH] PCI: dwc: endpoint: Fix advertised resizable BAR size
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Commit 5459c0b70467 ("PCI/DPC: Quirk PIO log size for certain Intel Root
-Ports") and commit 3b8803494a06 ("PCI/DPC: Quirk PIO log size for Intel Ice
-Lake Root Ports") add quirks for Ice, Tiger and Alder Lake Root Ports.
-System firmware for Raptor Lake still has the bug, so Linux logs the
-warning below on several Raptor Lake systems like Dell Precision 3581 with
-Intel Raptor Lake processor (0W18NX) system firmware/BIOS version 1.10.1.
+The commit message in commit fc9a77040b04 ("PCI: designware-ep: Configure
+Resizable BAR cap to advertise the smallest size") claims that it modifies
+the Resizable BAR capability to only advertise support for 1 MB size BARs.
 
-  pci 0000:00:07.0: [8086:a76e] type 01 class 0x060400
-  pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
-  pci 0000:00:07.1: [8086:a73f] type 01 class 0x060400
-  pci 0000:00:07.1: DPC: RP PIO log size 0 is invalid
+However, the commit writes all zeroes to PCI_REBAR_CAP (the register which
+contains the possible BAR sizes that a BAR be resized to).
 
-Apply the quirk for Raptor Lake Root Ports as well.
+According to the spec, it is illegal to not have a bit set in
+PCI_REBAR_CAP, and 1 MB is the smallest size allowed.
 
-This also enables the DPC driver to dump the RP PIO Log registers when DPC
-is triggered.
+Set bit 4 in PCI_REBAR_CAP, so that we actually advertise support for a
+1 MB BAR size.
 
-Link: https://lore.kernel.org/r/20240305113057.56468-1-pmenzel@molgen.mpg.de
-Reported-by: Niels van Aert <nvaert1986@hotmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218560
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: <stable@vger.kernel.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Niels van Aert <nvaert1986@hotmail.com>
+Before:
+        Capabilities: [2e8 v1] Physical Resizable BAR
+                BAR 0: current size: 1MB
+                BAR 1: current size: 1MB
+                BAR 2: current size: 1MB
+                BAR 3: current size: 1MB
+                BAR 4: current size: 1MB
+                BAR 5: current size: 1MB
+After:
+        Capabilities: [2e8 v1] Physical Resizable BAR
+                BAR 0: current size: 1MB, supported: 1MB
+                BAR 1: current size: 1MB, supported: 1MB
+                BAR 2: current size: 1MB, supported: 1MB
+                BAR 3: current size: 1MB, supported: 1MB
+                BAR 4: current size: 1MB, supported: 1MB
+                BAR 5: current size: 1MB, supported: 1MB
+
+Fixes: fc9a77040b04 ("PCI: designware-ep: Configure Resizable BAR cap to advertise the smallest size")
+Link: https://lore.kernel.org/linux-pci/20240307111520.3303774-1-cassel@kernel.org
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: <stable@vger.kernel.org> # 5.2
 ---
- drivers/pci/quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d797df6e5f3e9..663d838fa861d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6225,6 +6225,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2b, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa73f, dpc_log_size);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0xa76e, dpc_log_size);
- #endif
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 5befed2dc02b7..389daebc43161 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -627,8 +627,13 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+ 			PCI_REBAR_CTRL_NBAR_SHIFT;
  
- /*
++		/*
++		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
++		 * size in the range from 1 MB to 512 GB. Advertise support
++		 * for 1 MB BAR size only.
++		 */
+ 		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
+-			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
++			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, BIT(4));
+ 	}
+ 
+ 	/*
 -- 
 2.43.0
 
