@@ -1,127 +1,207 @@
-Return-Path: <linux-pci+bounces-5244-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5245-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C02B88DA68
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 10:41:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3219F88DBD9
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 12:03:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2CCE1F2208B
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 09:41:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1ECF1F2C474
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 11:03:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D832CCA0;
-	Wed, 27 Mar 2024 09:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C9454BC8;
+	Wed, 27 Mar 2024 11:03:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0GWQbgn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aSc4fJlI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195FC23773;
-	Wed, 27 Mar 2024 09:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CED152F8F
+	for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 11:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711532511; cv=none; b=cMmGQH+l0m41uW2iEQVSHFKjsgj7mvIDXU6Y699w85X/FKUpJqzpYyqTjgPxn7ik/oZMRzeRhvx0yJmmUIlZkBr7shE6GzuWZsR543bOsc6SsKwGxs+5jXMEcqJ4C0UfuWFht1R3brq/1zjCO1YNJKnDqpFKc7mG9HEiIGNADlw=
+	t=1711537406; cv=none; b=DIbGUQsvxG/ianx12YwtxwdhDHiq4S46j/Dkg52IUDAMh+XRz5CLP4g9Cqh+Zll+1InObq+813mOf+EEyKw3hnzcV2T9pmn0qNhr36RfMWoFlrYKZbz+dlZP5fALgE70OBN4iJqs3fafUdxS6rbMvFQZfCNKWmo0WNitG8UDYjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711532511; c=relaxed/simple;
-	bh=L3MDabzqy52UiiTpotcbYr/fCovWNhX/kTom1rvfcLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R39TkLNgQ0YoqCsa0N2SS3QpON7h4f1b1pgcMf00mfY3k2Zq0UTyt8OzdNhv6AcZyWaPv29Q9GLufy+xFWoM3OjGE6WHqv/G+Fzheuy4ag8slAuwN6g2Gd7XuQl2bQkwQ/ET1YU2PiAz1KPWglB9Py0TJ/KSF3hfxrF6woCI8ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0GWQbgn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A4DC433C7;
-	Wed, 27 Mar 2024 09:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711532510;
-	bh=L3MDabzqy52UiiTpotcbYr/fCovWNhX/kTom1rvfcLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P0GWQbgnIHTf/G5uy23E/x7ykvt/PdbjSQBxEDrAG8933x7u7LE+eSEfWzro38F6g
-	 QTeiC5ZrZDZQ0mxGSlCSjQnsqn1y49orZqEvDjAoGZZ9q0gIPbo+M7I3xt9HttPI8H
-	 0ObzP0rjgPRbxin+sZBZNp2rk832mLKAM7p1KnRhq9wZ0yPDRMP+wMo10ULBHkQC6j
-	 nG/B8CNKwie/6nXS6vLuQK2zBFa0RG4KiXbKOPr8QLv3RiNxkDJkl/eA9FSn3FwgFv
-	 Mv/vFRKgxrFAhrljpIyeoQrajgkpwvQXIcl2ucpka2zQMo91uLTc1IlOSqgvlN9q6x
-	 IIHd3CkrbewBw==
-Date: Wed, 27 Mar 2024 10:41:39 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v12 8/8] PCI: endpoint: Remove "core_init_notifier" flag
-Message-ID: <ZgPp020vefFw3pGk@ryzen>
-References: <20240327-pci-dbi-rework-v12-0-082625472414@linaro.org>
- <20240327-pci-dbi-rework-v12-8-082625472414@linaro.org>
+	s=arc-20240116; t=1711537406; c=relaxed/simple;
+	bh=alILWQ0i0Ixx0opa7e8uLSwF8u+vWsE+67BP//5YC1c=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=cRcUu+QdD8rQNNraYRO8K07qPdOUOINQupQZazq3wuhdrqSYrm37uPsRQnf1FIowXeagOyfFqxV/JqKPEVOLD5lqmm/eVSjMlYjW9MEXcJJcQE7wBYh7cVEJ5XGKspR6Fv19K6x2gsT7dlNXqEErrf+Vr8xpObuXTo4Xe32uSb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aSc4fJlI; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711537404; x=1743073404;
+  h=date:from:to:cc:subject:message-id;
+  bh=alILWQ0i0Ixx0opa7e8uLSwF8u+vWsE+67BP//5YC1c=;
+  b=aSc4fJlImJdjUDzQPqmOkerU7qhTl3XozL0WgoSrvI9dF+ZvIRu+B3R7
+   E5BcCVHQTdwEFLfJu9qflgkVz641Gtkcjq7BL8gXuPE+f1KPte4eamhzq
+   bH12aSk9gnyNKJ4DwLWF2t3mzAz2ZMSaE//sTl9wvMr4E0cevdBuWlohO
+   wLcOyOYbq9xK84mmEzB7DZqqBj5EJ9aQZVlvpD+M1BMb2rcp/+vONu18K
+   F13mEgQQNfJ59eEDGYnAtnT8r+Pfrg8Qb4a88ojcntKs56Agj964tqsiQ
+   a2cmAVFdclwBpHPkaf6LpYKxlZuUPggkgozUXr8umcZcRYZibOjC5JyD0
+   w==;
+X-CSE-ConnectionGUID: /8RBAu6ARKyw5XandUN8pg==
+X-CSE-MsgGUID: zr6gjybQSE6fkOtfkXOslw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="10431954"
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="10431954"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2024 04:03:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,158,1708416000"; 
+   d="scan'208";a="20907941"
+Received: from lkp-server01.sh.intel.com (HELO be39aa325d23) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 27 Mar 2024 04:03:23 -0700
+Received: from kbuild by be39aa325d23 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rpR3w-0000zi-2i;
+	Wed, 27 Mar 2024 11:03:20 +0000
+Date: Wed, 27 Mar 2024 19:02:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ d9479cc395d11e7e1ec358250271caf596cb38e3
+Message-ID: <202403271938.gYQ04m88-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327-pci-dbi-rework-v12-8-082625472414@linaro.org>
 
-On Wed, Mar 27, 2024 at 02:43:37PM +0530, Manivannan Sadhasivam wrote:
-> "core_init_notifier" flag is set by the glue drivers requiring refclk from
-> the host to complete the DWC core initialization. Also, those drivers will
-> send a notification to the EPF drivers once the initialization is fully
-> completed using the pci_epc_init_notify() API. Only then, the EPF drivers
-> will start functioning.
-> 
-> For the rest of the drivers generating refclk locally, EPF drivers will
-> start functioning post binding with them. EPF drivers rely on the
-> 'core_init_notifier' flag to differentiate between the drivers.
-> Unfortunately, this creates two different flows for the EPF drivers.
-> 
-> So to avoid that, let's get rid of the "core_init_notifier" flag and follow
-> a single initialization flow for the EPF drivers. This is done by calling
-> the dw_pcie_ep_init_notify() from all glue drivers after the completion of
-> dw_pcie_ep_init_registers() API. This will allow all the glue drivers to
-> send the notification to the EPF drivers once the initialization is fully
-> completed.
-> 
-> Only difference here is that, the drivers requiring refclk from host will
-> send the notification once refclk is received, while others will send it
-> during probe time itself.
-> 
-> But this also requires the EPC core driver to deliver the notification
-> after EPF driver bind. Because, the glue driver can send the notification
-> before the EPF drivers bind() and in those cases the EPF drivers will miss
-> the event. To accommodate this, EPC core is now caching the state of the
-> EPC initialization in 'init_complete' flag and pci-ep-cfs driver sends the
-> notification to EPF drivers based on that after each EPF driver bind.
-> 
-> Tested-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: d9479cc395d11e7e1ec358250271caf596cb38e3  PCI: Remove PCI_IRQ_LEGACY
 
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+elapsed time: 839m
+
+configs tested: 116
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240327   gcc  
+arc                   randconfig-002-20240327   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240327   clang
+arm                   randconfig-002-20240327   clang
+arm                   randconfig-003-20240327   clang
+arm                   randconfig-004-20240327   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240327   clang
+arm64                 randconfig-002-20240327   clang
+arm64                 randconfig-003-20240327   gcc  
+arm64                 randconfig-004-20240327   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240327   gcc  
+i386         buildonly-randconfig-002-20240327   gcc  
+i386         buildonly-randconfig-003-20240327   clang
+i386         buildonly-randconfig-004-20240327   clang
+i386         buildonly-randconfig-005-20240327   clang
+i386         buildonly-randconfig-006-20240327   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240327   gcc  
+i386                  randconfig-002-20240327   gcc  
+i386                  randconfig-003-20240327   clang
+i386                  randconfig-004-20240327   gcc  
+i386                  randconfig-005-20240327   clang
+i386                  randconfig-006-20240327   gcc  
+i386                  randconfig-011-20240327   gcc  
+i386                  randconfig-012-20240327   clang
+i386                  randconfig-013-20240327   gcc  
+i386                  randconfig-014-20240327   clang
+i386                  randconfig-015-20240327   gcc  
+i386                  randconfig-016-20240327   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
