@@ -1,52 +1,64 @@
-Return-Path: <linux-pci+bounces-5277-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5278-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74E0588EDFF
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:15:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D756988EE06
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A652D1C330A7
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 18:15:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90CCA2A29CF
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 18:16:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF9EF14D70B;
-	Wed, 27 Mar 2024 18:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7629131BAD;
+	Wed, 27 Mar 2024 18:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYLKE40g"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JaEgEDzX"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50B7131BB8;
-	Wed, 27 Mar 2024 18:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF4E150983;
+	Wed, 27 Mar 2024 18:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711563135; cv=none; b=iB+jjiTRbXuOI0WtdONTrKPSfxw99jeLttv7crklA+XxgHW9j5ARKRgF1hqZMM71uVugSgM9L8lulkCxGJ2Rq0NytgAWBkmvjCbyjUXU+ymxNZLCSYqJ37tC86vo7IcJgy+hJECLxBJXOqyM0b7Y1VWEDSy+UZLeFPEhKdmLYJM=
+	t=1711563293; cv=none; b=jh9xjMshWBmWcMvgI1VT5T9Jg12NcmxSx028Vd/V9N/50aJnOezwxjZBADeWD1+4U/YektjCIH6HSAJh2BDfhJgOEuweaDUx7J1JYe8J9iVfjZhco6JrulCVugVgEeM6cPmuFJW6C4qT2kbPlimHz2V0+ffGOwrTUDxPSLhgqSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711563135; c=relaxed/simple;
-	bh=0HBq8F9K6LnjpSqk+7zBZTXcdceoLu9fTOnW0z7k21I=;
+	s=arc-20240116; t=1711563293; c=relaxed/simple;
+	bh=KLbPJmLCts0Ne68/m/5wl8vQWpwEDw1br77DIn3g5Lc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bTS8yhjJd07nLIddqni/ojPkCk0+Wdda4KFpA7AAC9qpZHi2X6wfswJwGMHz0tzFZXBYhQh3vHzHcdLd99kLMhHAMIxDOfjDZtiMlZBZ+qJOYhDr0+7A/KoE1pR80VsHS4XVosZ+gJJ5gTR2aZbAo5lw6zIe87rKTg6qhlR/X58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYLKE40g; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D2EC433C7;
-	Wed, 27 Mar 2024 18:12:15 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=uL/LBk0NHYm7VwUQ6kmgNPoCxMJTuRNdUzZkh7JPFMjSGDJQzmhlZdQ1BwAPFNuZraT8dL7jQFQutt418Du1sxnNhp7clUdVtzv2bJR0+YEUa0uk4Fhl416O7zpHT7+rzbFtrTEYjGPXrGQyrTVPTPvFBpWZA1099gQO8a+eUm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JaEgEDzX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA168C433F1;
+	Wed, 27 Mar 2024 18:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711563135;
-	bh=0HBq8F9K6LnjpSqk+7zBZTXcdceoLu9fTOnW0z7k21I=;
+	s=k20201202; t=1711563293;
+	bh=KLbPJmLCts0Ne68/m/5wl8vQWpwEDw1br77DIn3g5Lc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EYLKE40g3iKdlE2CQqB+tjPKqpcZhq5/SBvcBnXaqp97Qo9GVj+d5GDNsVlqsjPRl
-	 9lc+s9WSq+GkuFPvs0tZwQN5gIzynKjrTE15FWxn02SaCJDBa+LSdLBgoFHzZ913yI
-	 +LLZoednW2Nb68P4xNkgWApoInz/+Yx9eGTCp8OHInTEu4K2Anr64u/UYfkTbqSEPg
-	 aJ4bvpUyUjVu0JOqTao7dPb5G1E9TQCm2vu25gCKTdfhWtURD5YBmyIM9zyOi53lgh
-	 LrwBYL85dmjKLW/4StfxyPeeMggTJQMKJAz6ukLOGD2njjX3YM1gntjqTOafWy9cPY
-	 IeGtYrVJ5Z8Gg==
-Date: Wed, 27 Mar 2024 13:12:13 -0500
+	b=JaEgEDzXQQD16OJcGASfUkhWovV2ugdotj5Dp5bdXmZyhQINj1tJmigtTkW7c/0JI
+	 TcH/PR0UdNMVmZDcc4hmZ8m9LlyFmYv5rrmxjHgWLgciI/Z+xkHh8aV5Efxvs59iVP
+	 AZC34kXxChmB/gAqKc2mAi8+hB3g5q+ig5MrH7iEeVfqw2iNadzng6rEZyJAZs2KIf
+	 dbLlE6GT4a0TIQ7hNf10shKE8ToEgr6EVQaQri9GHp1Su7QmTiRrDEjCyHB8yEHjwn
+	 XFxR6SdkWvV6iA1b+76bXGqLmZTNlNn3M4rJVEM3JIr0G/Obk29QXo9RB+YD4sLeGj
+	 dmnB1d/fWSP5w==
+Date: Wed, 27 Mar 2024 13:14:51 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: Update pci_find_capability() stub return values
-Message-ID: <20240327181213.GA1531575@bhelgaas>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+	"gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 5/6] PCI: dwc: rcar-gen4: Add support for other R-Car
+ Gen4 PCIe controller
+Message-ID: <20240327181451.GA1531625@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,45 +67,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240327180234.1529164-1-helgaas@kernel.org>
+In-Reply-To: <TYCPR01MB110402EB3E15B3471C7F526C7D8342@TYCPR01MB11040.jpnprd01.prod.outlook.com>
 
-On Wed, Mar 27, 2024 at 01:02:34PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> f646c2a0a668 ("PCI: Return u8 from pci_find_capability() and similar") and
-> ee8b1c478a9f ("PCI: Return u16 from pci_find_ext_capability() and similar")
-> updated the return type of the extern declarations, but neglected to update
-> the type of the stubs used CONFIG_PCI is not enabled.
-> 
-> Update them to match the extern declarations.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Mar 27, 2024 at 05:32:57AM +0000, Yoshihiro Shimoda wrote:
+> > From: Bjorn Helgaas, Sent: Wednesday, March 27, 2024 5:49 AM
 
-Provisionally applied to pci/enumeration for v6.10, let me know if you
-see any issues.
+> > >  static int rcar_gen4_pcie_get_resources(struct rcar_gen4_pcie *rcar)
+> > >  {
+> > > +	rcar->phy_base = devm_platform_ioremap_resource_byname(rcar->pdev, "phy");
+> > > +	if (IS_ERR(rcar->phy_base))
+> > > +		return PTR_ERR(rcar->base);
+> > 
+> > I don't get it.  This imposes a new requirement (presence of "phy"
+> > resource) on the existing SoCs.  That doesn't sound right.
+> 
+> According to the dt-binding doc, the existing SoCs are also required
+> for the "phy".  That's why I didn't add any condition to simplify
+> the code.
 
-> ---
->  include/linux/pci.h | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index b19992a5dfaf..6a09bd9636d5 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2011,10 +2011,9 @@ static inline int pci_register_driver(struct pci_driver *drv)
->  static inline void pci_unregister_driver(struct pci_driver *drv) { }
->  static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
->  { return 0; }
-> -static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
-> -					   int cap)
-> +static inline u8 pci_find_next_capability(struct pci_dev *dev, u8 post, int cap)
->  { return 0; }
-> -static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
-> +static inline u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
->  { return 0; }
->  
->  static inline u64 pci_get_dsn(struct pci_dev *dev)
-> -- 
-> 2.34.1
-> 
+Is there anything that enforces that?  Is it possible that DTs exist
+in the field without it?  We don't want to break any existing setup.
 
