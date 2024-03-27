@@ -1,66 +1,66 @@
-Return-Path: <linux-pci+bounces-5272-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5273-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39F4F88ED73
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:01:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC81D88EDD7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:12:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD47D1F21193
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 18:01:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F0AF0B2C20E
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 18:02:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2C6014D29E;
-	Wed, 27 Mar 2024 17:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B00C152DE5;
+	Wed, 27 Mar 2024 17:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BAfN+w34"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msWePaHd"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA63614C5A7;
-	Wed, 27 Mar 2024 17:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBE513AA4F;
+	Wed, 27 Mar 2024 17:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711562238; cv=none; b=M6WoqWmywsQ6bwIJR0OhDKtm/wBg+RXWoM6AOXl8AeqEpE1/oym3CjqJK+JpOjO75aR0yZUCQ6iVBeenf60+fTfpvkuDYaGombHZaBnEHjWVryXBYJU0ycsqh62LTPafkX+5mUfKw4zzG7Zx0gLXYCklVFVoyI4NRc5xiL/sHfY=
+	t=1711562253; cv=none; b=EYyqMcJOu+WEV/+y9TxNThsdH+pOnMtBBU2a42FyNZErOyfbCW1tXyEDIMl5WSlF0WzsWycCf8HTZRfIL0OhOIn6ToQ8CRzx+tFpuVZcp98RhBdqE0nu+tiHjXDzC4r2b8DDw+4NqtPS8o5X7oxhINoeMlTzVS01d+reKY3QKf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711562238; c=relaxed/simple;
-	bh=egDvY//d5uLWhDbId3Gj3GOZ8P3e61TVzkK5mB8057g=;
+	s=arc-20240116; t=1711562253; c=relaxed/simple;
+	bh=AlaqdPkks2T8kN3/XZCb1mzjIR6gKPmZMmB62NcvVGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OBdff0vGDUVmAgwP+nS6xb0Cq/aL0GEeXOGuPB8p1x+OydLMcSFkQreHEv1qKKMTmQLOGab5AzbttWfU1pTuhUGrXbFFL237uw5Qdnodj/813YgH45Zp/zoEBI03DuZzogFcBup4zilSClqFx2nhxrzMVU/kXwtjP0rncb7120E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BAfN+w34; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D9FDC433C7;
-	Wed, 27 Mar 2024 17:57:18 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQLn/MONWAU9wdd/Ksy+u7HLjvvTLvC6h0Z8sBewFD3wVPNByLAjYT0NF3StWE7TPC3Z02XYAA1KerCGJ59APJnW6N+me1Pq5yQv1zRFa6ipP65CFX0kly9hH6zcjjyvdZ20cmnkUdpqm0rYjnRrZ7tOVt+aBihxsp7Ce9vBV/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msWePaHd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57813C433C7;
+	Wed, 27 Mar 2024 17:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711562238;
-	bh=egDvY//d5uLWhDbId3Gj3GOZ8P3e61TVzkK5mB8057g=;
+	s=k20201202; t=1711562252;
+	bh=AlaqdPkks2T8kN3/XZCb1mzjIR6gKPmZMmB62NcvVGo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BAfN+w34ooSEjlr4N4tMnNyxMFrF5/EpcTE51vjwBxcJD9GsqkRp2+W4EshY7MA/S
-	 18j+uu/6prCgQ7zs4DC5M8z3bzuY9iXqbW/8pmsPlvjJsuceHOGUZCzYCTsPe9vI2y
-	 PMCa4M5fz9m8QHRx5DLSndnwNM4TOGfq+Jno80JtG01E4BrBaSWCukrsaVXnIeMfIE
-	 nwylsW0V8w5F55dm80yPxA5GYO1LCqFLjCc9u+j5UjzcaxsPwGiX+ehhKt6PjtQIKK
-	 7Z38n7hrivQB9t/nytn7BepjyEeWYpbAedcYlvHYO3WJ/HO/BjCgEcbQaDwgzv4k0S
-	 Ex99/ChM42h8A==
-Date: Wed, 27 Mar 2024 12:57:16 -0500
+	b=msWePaHd45WWSJoItV1wa5g5P8rLteY6n27odI4pjYb1E8Ru5fv01kMwFf8bG9Nlc
+	 q6fTwx/Uj03xlPJ2PsOoPHrInspsC5FXDpeRGfHAJnbYxCB6z8XxkDJwC2FJVbgZe2
+	 80GM2BZ+8cUClG+HWasgzYWN1rR05Dk/5qRzUIh0Q2c+vnfCSvhEkTOSvC92y1to0t
+	 BVZPd73DtPLmgK51qe7J8vIECdorCQxQe+fKeracEuncB2SrddW1zayrMUrrMLnE3D
+	 lmoluO91BwEUqF0JMCtxshY4NdrP+YTClN8bqXF22MGLjSejXIgdnvD3i5uoMS9pE3
+	 Oeujp1xFRyBhg==
+Date: Wed, 27 Mar 2024 12:57:30 -0500
 From: Rob Herring <robh@kernel.org>
 To: Conor Dooley <conor@kernel.org>
-Cc: Jamie Gibbons <jamie.gibbons@microchip.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-pci@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-gpio@vger.kernel.org,
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	linux-riscv@lists.infradead.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 2/5] dt-bindings: gpio: mpfs: add coreGPIO support
-Message-ID: <171156223562.3706464.15520740960365102234.robh@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH v1 3/5] dt-bindings: gpio: mpfs: allow gpio-line-names
+Message-ID: <171156224981.3706851.349408739787363074.robh@kernel.org>
 References: <20240327-parkway-dodgy-f0fe1fa20892@spud>
- <20240327-procurer-rascal-33bca7d5d14b@spud>
+ <20240327-overrate-overuse-1e32abccd001@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,25 +69,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240327-procurer-rascal-33bca7d5d14b@spud>
+In-Reply-To: <20240327-overrate-overuse-1e32abccd001@spud>
 
 
-On Wed, 27 Mar 2024 12:24:37 +0000, Conor Dooley wrote:
+On Wed, 27 Mar 2024 12:24:38 +0000, Conor Dooley wrote:
 > From: Jamie Gibbons <jamie.gibbons@microchip.com>
 > 
-> The GPIO controllers on PolarFire SoC were based on the "soft" IP
-> CoreGPIO, but the inp/outp registers are at different offsets. Add
-> compatible to allow for support of both sets of offsets. The soft
-> core will not always have interrupts wired up, so only enforce them for
-> the "hard" core on PolarFire SoC.
+> The BeagleV Fire devicetree will make use of gpio-line-names, allow it
+> in the binding.
 > 
 > Signed-off-by: Jamie Gibbons <jamie.gibbons@microchip.com>
 > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
->  .../bindings/gpio/microchip,mpfs-gpio.yaml       | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
 
