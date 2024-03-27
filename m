@@ -1,73 +1,75 @@
-Return-Path: <linux-pci+bounces-5247-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5248-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52B7D88DCE3
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 12:52:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BC2F88DCE6
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 12:53:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 069C82977A5
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 11:52:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F13832911D2
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 11:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CBC812BF0C;
-	Wed, 27 Mar 2024 11:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C3112C525;
+	Wed, 27 Mar 2024 11:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+Gh+NKc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PM0ZsazC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A216C839F0;
-	Wed, 27 Mar 2024 11:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189A276058;
+	Wed, 27 Mar 2024 11:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711540328; cv=none; b=PWLIJjjkzY2vpwuTCbGvyWtu21mkUJhzQeXqdd0WBBpnYd+hgop1hLR3fTP/w8JUkKHJJXKBxqqHnXUVX4c4kVIzleUviKMP4SJGYXguTDQHlLKGO2VBgXtypO66E9AaN6t1DBUzm1chxVHNZ9yNkr8fxByzvBecThIHpxdKxXk=
+	t=1711540399; cv=none; b=h1rAJE5YOMFL/HafTipJ44a9Ypd0w9PsW1Om8AOgRFOTzKwinEEiNGG4HNLeiZvOtpEvub7R/J4yYhzCBQyS2y8ZYScE4RNaNzps6xXrWU2h6dux8naDYlOpXn6dU+riJy7rlBkSAusRv9MicNUnyf+t3oJ1rJc/XfZ1zXEkC4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711540328; c=relaxed/simple;
-	bh=4hdiSWyOaq4PTNqiiHYw1eV5isab4taY8SB4Jx/XtiA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=PfKqcTBPFI33PdPfyxbmE1PngFJsFVTlTxiEZ+qwy/cwezJyMEfAM1n5bbGA0fZmFRSu/wnepYFN6SI61u1UWsaG+n8onlBj8sxSf3t4bnqOQCy7ainEr0DDdchn/2id3QTgGF6aIaRKef2/9cVk1iEjaffhvVzm07v4v08ARDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+Gh+NKc; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1711540399; c=relaxed/simple;
+	bh=JZz4r+DZvAJfMMvFcxeOBk8CPkc44g+7wUOVX84W9kM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JFNX0GjPx2kRckWeVxM7XL/GTX9YHUjLgVkCM7t7NaJFX2qQJ2x2k5N9ZJBLzRtJeizeqzENmEbTKFvPhZlAthmBqvI41xvNEKls+WzTnMHf1dBfHM59HDhvJWDAf/NFrGcDb1VC690CmxVpoJw+2Tv4tsKUrSFAYUQoB0dser0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PM0ZsazC; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a45f257b81fso765669366b.0;
-        Wed, 27 Mar 2024 04:52:06 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56899d9bf52so8436822a12.2;
+        Wed, 27 Mar 2024 04:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711540325; x=1712145125; darn=vger.kernel.org;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L+d1nuqxFtNkWbCvpZ9Vg4lSX7Mk6a5AbjdAX72V6OQ=;
-        b=E+Gh+NKc+Z3p3vSSmb83kJox+QSfJR+7MHw/iSLmX7sAwuUnCLVwoqRo/vB7FMHgtF
-         t+3g/9YQCO9utNdOOu79RvfbH4wSLowYC0XkGpNgulWsOUiIG3dMkDKndaSJweL1tJDa
-         g0nXM3i6TTn1LU5r2vTLogsq7c69APsyBeGKNHu3Um2oxz3SHydWOBAVB4pPRdGz+iv5
-         ezGrZXcEQQfEdsvJs+0XioEN3jzAfuJffcS4c2x8ayDaZC8hcSdXTMVXW8Ow894yuhpv
-         QB6+hw7eMYqaKYvmgeCEaqcsDo1s9xQ7CkPeLKqnMPZbNs4DNAkS+tL4uDIniZF5NUgZ
-         Ntdw==
+        d=gmail.com; s=20230601; t=1711540396; x=1712145196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pGVgjHqx69a1T1Z/ASYMAKc8jlnGhIXFhQHpJqKVfSE=;
+        b=PM0ZsazCV6v45e8jBDnpG7KQCGtKtxIN+OTv0rlpHqk/SdzuhpUAuvxR9LT3c6k0I8
+         8YIfuvX+qKK5qhyZU4rnRQD1BsTh7Dxf1fqK/qt+ZlEpgCU99o6oFzhuw/ndsbVPD7gm
+         xpln3S4RelsJ/1QgiCHpCz9S0yQPKan/VcM0uvTBOOYbnxzO+DxRwxrGSSlXAqv7wsmk
+         vo3gyoBqCLK2s6dbXb7eaYqew6PGl0Ntwz9vo/i/axauu0HwFO8ULBXUSGL4MqWxVcyN
+         CGJfqrSJ1+6xYGTphPTgQEGSopWLm3mmECYOpyfI+pY7q+xSlWDxZ0EQvnRUXU8mH5/X
+         f3Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711540325; x=1712145125;
-        h=content-transfer-encoding:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L+d1nuqxFtNkWbCvpZ9Vg4lSX7Mk6a5AbjdAX72V6OQ=;
-        b=RdpWbY7VjIJ0T1U8TZRcohH/eH/QQO6bB1XzfhnvquvbUSeGQNENzgVbI3jkjQ/dzI
-         Zny1xEF/WB5Kw/LoZ+sZLu0d+w4RMoFs2dG+dNdT/O4UUdyTMKMp5MweUG9zBdxoZUop
-         ZqpljU7x9DX9mCyuZF9/CaM47IkuZ0U2ugpope+dnCheoLJsNjsS9eiIjXVmgZGw4/6l
-         fqUMwmKUu+HosGowegDBxLgR0yVtvORSxpGPS0Ejd6GA0KAgKgz9CpXgH/Q3Djr2JtTo
-         hQZJN9rYplUpnNRrsJh1zfhGm5luVZwv8pnxk3EfYkW3gPI7WEKWt1vqvCsV7zIuAr1E
-         L21Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVqhiFnqMypGgoP3eUhCmu8OP6S1fSRWTqZrIwJJSENwiCzDRIY2yIfPsNg0T5ZwI0OZKsRRSm9HwNg5n7OTFUbgzmBcK0p
-X-Gm-Message-State: AOJu0YwWhtWub7gsc2z+456Bb2UgFPeVVnDJv7Pqt8neNbAAjk1xVRlW
-	9rKPfg8CW1sC8+sE9/fWyYVcTBRnhXIcV0DxCKtAkNZuc/A/hinibpKU6T1b
-X-Google-Smtp-Source: AGHT+IEZB9iv0yio76vX87RQYNFK/Yt+r52vpa230EJAe6g42GyVUYPJ3p9MMiNPp59XMnju/SjZJA==
-X-Received: by 2002:a17:906:a855:b0:a4d:f682:50c5 with SMTP id dx21-20020a170906a85500b00a4df68250c5mr725198ejb.53.1711540324629;
-        Wed, 27 Mar 2024 04:52:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711540396; x=1712145196;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pGVgjHqx69a1T1Z/ASYMAKc8jlnGhIXFhQHpJqKVfSE=;
+        b=obkfRk7VaOMYqLiRZjOHyOQ26d02i+mw1Fy1Z4kGReuEF6E/N1tyarvaWez+lVIXaJ
+         KBOXSGht6mpa7yxbs1DYdrpFqnW4jVALIqvqx03nuauup4S3GkAlctDz3b+oz22VUqLM
+         kuFwmVl+5bcGsTCSP3uLrNWk7pgVa+1eQA9k1h2XK2Bsi8qHVS+3nKUK1Odp82+N8WA/
+         k7FEsXpd1OA0x8q2NSukGr16aZa0uvjdNADqvFj3+BCBU4rl0oE8kWW/SxncuKmiU2Y3
+         Bi6jij6Fzd0A8FCl9SwEmtW54DRK93NEQn5dm3GBgpPpidmQHio5ULoTwtdvCVlNqt7f
+         2C4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUL0zTzDVLD+iPtkfJnga95rTVbolOQkm8PajJsHshPFqKNgXkZhcHmiiWwhgl7DAHixTrJZ8cxlC10B8R5TumIw1YbBKAB
+X-Gm-Message-State: AOJu0YxVQ33OLb7Ksfg5p1uUtA6iVkV3gAUBPJ+Pj1UHSsHn+bl5HU7U
+	5B5L00KZsfFVnddeKSL1Pyfkvi+BAw3faJeLJ14yxhh6XPE/KSCl
+X-Google-Smtp-Source: AGHT+IFA24vRVu+FoKbHxtoPFktnztJzuncdqmSvFwCGpz6Ep0o4QroMPFwHVLbrLonE9e0JFQp7Kg==
+X-Received: by 2002:a50:cc83:0:b0:56b:9925:38a with SMTP id q3-20020a50cc83000000b0056b9925038amr814789edi.38.1711540396172;
+        Wed, 27 Mar 2024 04:53:16 -0700 (PDT)
 Received: from ?IPV6:2a01:c22:7b87:a500:dd0e:a4dd:4c2a:b10a? (dynamic-2a01-0c22-7b87-a500-dd0e-a4dd-4c2a-b10a.c22.pool.telefonica.de. [2a01:c22:7b87:a500:dd0e:a4dd:4c2a:b10a])
-        by smtp.googlemail.com with ESMTPSA id c21-20020a170906155500b00a46baba1a0asm5358054ejd.100.2024.03.27.04.52.03
+        by smtp.googlemail.com with ESMTPSA id cf10-20020a0564020b8a00b0056c1cca33bfsm2488468edb.6.2024.03.27.04.53.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Mar 2024 04:52:04 -0700 (PDT)
-Message-ID: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
-Date: Wed, 27 Mar 2024 12:52:06 +0100
+        Wed, 27 Mar 2024 04:53:15 -0700 (PDT)
+Message-ID: <b5ebb7e2-7c94-4111-8e10-cf162547f466@gmail.com>
+Date: Wed, 27 Mar 2024 12:53:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,15 +77,16 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
+Subject: [PATCH 1/2] PCI: Add pcim_iomap_region
+From: Heiner Kallweit <hkallweit1@gmail.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
  Realtek linux nic maintainers <nic_swsd@realtek.com>,
  Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
  Eric Dumazet <edumazet@google.com>, David Miller <davem@davemloft.net>
 Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
  "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 0/2] PCI: Add and use pcim_iomap_region()
+References: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
+Content-Language: en-US
 Autocrypt: addr=hkallweit1@gmail.com; keydata=
  xsFNBF/0ZFUBEAC0eZyktSE7ZNO1SFXL6cQ4i4g6Ah3mOUIXSB4pCY5kQ6OLKHh0FlOD5/5/
  sY7IoIouzOjyFdFPnz4Bl3927ClT567hUJJ+SNaFEiJ9vadI6vZm2gcY4ExdIevYHWe1msJF
@@ -127,10 +130,12 @@ Autocrypt: addr=hkallweit1@gmail.com; keydata=
  H/0Z53okMykVs3a8tECPHIxnre2UxKdTbCEkjkR4V6JyplTS47oWMw3zyI7zkaadfzVFBxk2
  lo/Tny+FX1Azea3Ce7oOnRUEZtWSsUidtIjmL8YUQFZYm+JUIgfRmSpMFq8JP4VH43GXpB/S
  OCrl+/xujzvoUBFV/cHKjEQYBxo+MaiQa1U54ykM2W4DnHb1UiEf5xDkFd4=
+In-Reply-To: <982b02cb-a095-4131-84a7-24817ac68857@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Several drivers use the following sequence for a single BAR:
+
 rc = pcim_iomap_regions(pdev, BIT(bar), name);
 if (rc)
 	error;
@@ -142,20 +147,66 @@ pcim_iomap_region() for this use case.
 Note: The check for !pci_resource_len() is included in
 pcim_iomap(), so we don't have to duplicate it.
 
-Make r8169 the first user of the new function.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/pci/devres.c | 28 ++++++++++++++++++++++++++++
+ include/linux/pci.h  |  2 ++
+ 2 files changed, 30 insertions(+)
 
-I'd prefer to handle this via the PCI tree.
-
-Heiner Kallweit (2):
-  PCI: Add pcim_iomap_region
-  r8169: use new function pcim_iomap_region()
-
- drivers/net/ethernet/realtek/r8169_main.c |  8 +++----
- drivers/pci/devres.c                      | 28 +++++++++++++++++++++++
- include/linux/pci.h                       |  2 ++
- 3 files changed, 33 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 2c562b9ea..afbb8860b 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -343,6 +343,34 @@ void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr)
+ }
+ EXPORT_SYMBOL(pcim_iounmap);
+ 
++/**
++ * pcim_iomap_region - Request and iomap a PCI BAR
++ * @pdev: PCI device to map IO resources for
++ * @bar: BAR to request and iomap
++ * @name: Name used when requesting regions
++ *
++ * Request and iomap a region specified by @bar.
++ */
++void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar, const char *name)
++{
++	void __iomem *addr;
++	int rc;
++
++	if (bar >= DEVICE_COUNT_RESOURCE)
++		return NULL;
++
++	rc = pci_request_region(pdev, bar, name);
++	if (rc)
++		return NULL;
++
++	addr = pcim_iomap(pdev, bar, 0);
++	if (!addr)
++		pci_release_region(pdev, bar);
++
++	return addr;
++}
++EXPORT_SYMBOL_GPL(pcim_iomap_region);
++
+ /**
+  * pcim_iomap_regions - Request and iomap PCI BARs
+  * @pdev: PCI device to map IO resources for
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 16493426a..751ffe8c4 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2323,6 +2323,8 @@ static inline void pci_fixup_device(enum pci_fixup_pass pass,
+ void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen);
+ void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
+ void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
++void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
++				const char *name);
+ int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
+ int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
+ 				   const char *name);
 -- 
 2.44.0
+
 
 
