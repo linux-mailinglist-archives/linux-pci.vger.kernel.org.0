@@ -1,55 +1,66 @@
-Return-Path: <linux-pci+bounces-5253-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5255-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6719D88E2F4
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:38:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A920988E35A
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 14:47:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 985AA1C2830A
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:38:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96747B27ADB
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 13:45:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2235C1791E1;
-	Wed, 27 Mar 2024 12:23:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92C731802A1;
+	Wed, 27 Mar 2024 12:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjWF3CSw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ol+I2iv0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDFD13E045;
-	Wed, 27 Mar 2024 12:23:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674F417F399;
+	Wed, 27 Mar 2024 12:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711542232; cv=none; b=QjVyu9fwBWCydsAx/E5DZwKh0bCmoBc3UJU3yLwnGpBKCETPNSrqeKTlAiocGb668UpxPLU/02BS3WGIlC6slvH7RcPAowcSRAm+yRQC5O/ySz08czf8VGZ5I8/KaWFU+bczn2Q5IWBF7cze/up8gT58SonzlpMr8h/gLHuLf88=
+	t=1711542302; cv=none; b=N7DCacQ9UYu0YqMVzor5EBrRyWMXP80GAVtguWRql+LJ49znSN3QujhHIsDnAcHlD2gKhmCZIkDHLkukB2ZfYayfmmd/gpyIrM1zcrSuQBupMj89/1/MfSilcyDwkfDZuYLacG89MPKuaTqbu21jvy528J+XmfaziI5bShwQ4O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711542232; c=relaxed/simple;
-	bh=7LsQtJB4z2+a3oJU3PiQpdmEENnD8QrniYyGYXqfMn8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NWBA2qaw5xsuisJR4tcUir7IE/NC9a4IYfj383LIpIFLV4eKsrsXyMgrTlpDoiJQ17sn9vNUkg0nctmMmXGaf4ws3HbHndIHfbSc97HYMyPkDSSLweIqfPX7wyj8WjBWNTJsSzooWt1SsNbXKP+PkD2wgn+GSCAygHO1XiwAXCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjWF3CSw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14DDCC433C7;
-	Wed, 27 Mar 2024 12:23:50 +0000 (UTC)
+	s=arc-20240116; t=1711542302; c=relaxed/simple;
+	bh=nfNNpFSFPqJ1Ehbsb1fl0Q/VVJfGQElQungtP6fuOkk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g0p4by77ForjJaydYi8ZmroQDd9jJq45zHWBGa4KNMFa84/k68bKPyiMs9K6ZYyjj2W/JGRKJQlZersWpyFyhpyq5CtB9hYFJ/X8FIAzZ3+uaG/PObKHObALtEM2xR7FlemzaS9LX9/X/UNuC1rl1KhGbjUdXeaoU+IhYP3Dvi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ol+I2iv0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D34C43394;
+	Wed, 27 Mar 2024 12:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711542231;
-	bh=7LsQtJB4z2+a3oJU3PiQpdmEENnD8QrniYyGYXqfMn8=;
+	s=k20201202; t=1711542302;
+	bh=nfNNpFSFPqJ1Ehbsb1fl0Q/VVJfGQElQungtP6fuOkk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=mjWF3CSwLdc7rqLpi5mxLtmlHWyArBg1n0IKMrG9/adB8mT498cTk6FK/mLuduuw/
-	 2wZ7rg/VPxo+4o8QrdQzhwSdR3Q1p7Otb4+EV2X4ksZYZLSZgOKXNIg8YLOdGnwmsP
-	 9gcPh4F8D/D/h9IXnrvbwXhvIGMzHnUKt0XU9t0aYaIsmY/Vu/Too/B4DcegT7Hxkw
-	 P5xiDj/4ElOlX0/tR6H4IDie8n2UTMCxfPlTGlspwidtb8ZS9rc6R0fhwh59F786oA
-	 RuhMXGuDoi1uJ+ms4N8WnuStuYMQ5zBLvzMx/RMKDj6Y2IxWwRHX1Aen2o6qtH9xrw
-	 HGaTBFY1iLrcw==
-From: Sasha Levin <sashal@kernel.org>
-To: stable@vger.kernel.org,
-	cassel@kernel.org
-Cc: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: FAILED: Patch "PCI: dwc: endpoint: Fix advertised resizable BAR size" failed to apply to 5.4-stable tree
-Date: Wed, 27 Mar 2024 08:23:49 -0400
-Message-ID: <20240327122350.2838878-1-sashal@kernel.org>
+	b=ol+I2iv0lr7+a9a1r1NdynkdAVbEbq7v2cv7OunAma3r2E1a8ptexTRNghr4VqKBW
+	 6coUILJNG+8O+uHYWFEzPJFOqGEu3Gz87kBkoGmvXL1o1qd00atBohVXL0b+lQPd8w
+	 uVn/sNtRQCbME8jFS4544mJ8YTDfupv/Thj3nJ78xowKH1LsRapilfzw3oz2ZiZ730
+	 eyDiIaEqTzs8svfa0E3P2VTJDQscIbcYzCSLP+DRt2YSuM68R++AxnfFpynR9GnISa
+	 spJ1laf9VkqX4pm5fFB3Uj9kGlpWi+1nLnSfq2MQyLiJ7FDCc2YSXilkYQvANcW7Z/
+	 Odq8suEHEYayg==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Jamie Gibbons <jamie.gibbons@microchip.com>,
+	Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v1 0/5] BeagleV Fire support
+Date: Wed, 27 Mar 2024 12:24:35 +0000
+Message-ID: <20240327-parkway-dodgy-f0fe1fa20892@spud>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -57,92 +68,69 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Hint: ignore
-X-stable: review
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2296; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=RI2m5bHQsW0uJCHnU/tjkVOqc52vi6o5eCDYaLCFLpw=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGksAqydJlvmL/rdPvF5qY6d1bHNnT/6FuZX9rq6Zp5/P +1AQurHjlIWBjEOBlkxRZbE230tUuv/uOxw7nkLM4eVCWQIAxenAExEUZbhn9rSW5dYTA+mmFx7 mSIiMum2am/pgt+e95okjE5ffn8tnY/hr1ACk/aj0pt7n37zyt0kenqbtXTPx0vbtmZP8c402LK 8jgEA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The patch below does not apply to the 5.4-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+From: Conor Dooley <conor.dooley@microchip.com>
+
+Yo,
+
+Wee series adding support for the BeagleV Fire. I've had a dts sitting
+locally for this for over a year for testing Auto Update and I meant to
+submit something to mainline once the board got announced publicly, but
+only got around to that now.
+
+The PCI controller has to stay disabled for now, the driver (and
+binding) made an assumption about which of the two root port "instances"
+would be used by Linux and the BeagleV Fire uses the other one. I've got
+a WIP patch for that in the works and a patchset for the GPIO controller
+that I have been trying to find some time to clean up and submit.
 
 Thanks,
-Sasha
+Conor.
 
------------------- original commit in Linus's tree ------------------
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Jamie Gibbons <jamie.gibbons@microchip.com>
+CC: Valentina Fernandez <valentina.fernandezalanis@microchip.com>
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: "Krzysztof Wilczyński" <kw@linux.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: linux-riscv@lists.infradead.org
+CC: linux-gpio@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-pci@vger.kernel.org
 
-From 72e34b8593e08a0ee759b7a038e0b178418ea6f8 Mon Sep 17 00:00:00 2001
-From: Niklas Cassel <cassel@kernel.org>
-Date: Thu, 7 Mar 2024 12:15:20 +0100
-Subject: [PATCH] PCI: dwc: endpoint: Fix advertised resizable BAR size
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Conor Dooley (2):
+  dt-bindings: riscv: microchip: document beaglev-fire
+  riscv: dts: microchip: add an initial devicetree for the BeagleV Fire
 
-The commit message in commit fc9a77040b04 ("PCI: designware-ep: Configure
-Resizable BAR cap to advertise the smallest size") claims that it modifies
-the Resizable BAR capability to only advertise support for 1 MB size BARs.
+Jamie Gibbons (2):
+  dt-bindings: gpio: mpfs: add coreGPIO support
+  dt-bindings: gpio: mpfs: allow gpio-line-names
 
-However, the commit writes all zeroes to PCI_REBAR_CAP (the register which
-contains the possible BAR sizes that a BAR be resized to).
+Valentina Fernandez (1):
+  dt-bindings: PCI: microchip: increase number of items in ranges
+    property
 
-According to the spec, it is illegal to not have a bit set in
-PCI_REBAR_CAP, and 1 MB is the smallest size allowed.
+ .../bindings/gpio/microchip,mpfs-gpio.yaml    |  17 +-
+ .../bindings/pci/microchip,pcie-host.yaml     |   3 +-
+ .../devicetree/bindings/riscv/microchip.yaml  |   1 +
+ arch/riscv/boot/dts/microchip/Makefile        |   1 +
+ .../microchip/mpfs-beaglev-fire-fabric.dtsi   | 124 ++++++++++
+ .../boot/dts/microchip/mpfs-beaglev-fire.dts  | 223 ++++++++++++++++++
+ 6 files changed, 365 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/boot/dts/microchip/mpfs-beaglev-fire-fabric.dtsi
+ create mode 100644 arch/riscv/boot/dts/microchip/mpfs-beaglev-fire.dts
 
-Set bit 4 in PCI_REBAR_CAP, so that we actually advertise support for a
-1 MB BAR size.
-
-Before:
-        Capabilities: [2e8 v1] Physical Resizable BAR
-                BAR 0: current size: 1MB
-                BAR 1: current size: 1MB
-                BAR 2: current size: 1MB
-                BAR 3: current size: 1MB
-                BAR 4: current size: 1MB
-                BAR 5: current size: 1MB
-After:
-        Capabilities: [2e8 v1] Physical Resizable BAR
-                BAR 0: current size: 1MB, supported: 1MB
-                BAR 1: current size: 1MB, supported: 1MB
-                BAR 2: current size: 1MB, supported: 1MB
-                BAR 3: current size: 1MB, supported: 1MB
-                BAR 4: current size: 1MB, supported: 1MB
-                BAR 5: current size: 1MB, supported: 1MB
-
-Fixes: fc9a77040b04 ("PCI: designware-ep: Configure Resizable BAR cap to advertise the smallest size")
-Link: https://lore.kernel.org/linux-pci/20240307111520.3303774-1-cassel@kernel.org
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: <stable@vger.kernel.org> # 5.2
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 5befed2dc02b7..389daebc43161 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -627,8 +627,13 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
- 			PCI_REBAR_CTRL_NBAR_SHIFT;
- 
-+		/*
-+		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
-+		 * size in the range from 1 MB to 512 GB. Advertise support
-+		 * for 1 MB BAR size only.
-+		 */
- 		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
--			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-+			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, BIT(4));
- 	}
- 
- 	/*
 -- 
 2.43.0
-
-
-
 
 
