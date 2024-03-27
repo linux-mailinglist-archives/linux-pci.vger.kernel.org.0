@@ -1,74 +1,75 @@
-Return-Path: <linux-pci+bounces-5290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91F4288EF7D
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 20:49:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 519DE88EF7F
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 20:49:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3026C1F310E0
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:49:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 74A691C316C7
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 19:49:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8A44152DEE;
-	Wed, 27 Mar 2024 19:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDE2A152DFA;
+	Wed, 27 Mar 2024 19:49:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iw89/Rzp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mniBoz6B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBE7152164
-	for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 19:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFF515251C
+	for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 19:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711568962; cv=none; b=ZYPLcXXHwDQjaL4sacRj9B8biFfBCFhilWEGW4js+YWZ3azuW9J1fY/YOVPSulIxwlts+dCXsHoZNdGrKBn5QmwCBfKccs1ce4VsigRKoHN68R/B1WZ21qsX/GAOw6pzcH3PJyqV/OvczWFgzhtqObR+QTGiSwUugY8Gu5WOgMw=
+	t=1711568963; cv=none; b=Hcku14wBqYXQMtEkP0aaK5aVFQYhOE37vv3+xHmDHJMlX/jjySEt2KM0zZ8iKrs4ZMpRv6j2r2DZWYKH1TX7yleTB5SD/T5o4psU/9xabx6bPSrTV5qLYNGzVdgZaJ0frPjEgNrYT2s+yJIuk/p3nWxplaNrx3dhFvjF1q1NTBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711568962; c=relaxed/simple;
-	bh=bAoVUdOEl5oXBjR4tVelpCyD6CLDNyMZESd4YDrAuM8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mbMyoJlSFvqZsqBu99s9VfZwIfA4IpSO5NBoxIls7t7X+rMBms8UDszkl1xz9J5R64d+RcN/4sz0hVaI3g3kKS4SkFKcM0noMVoCisIhInXi/Kg4Jx+zk3CCpnYoFHJ4EtpIEDOHzqiz1CH6fHCqzFmaBEDYoqm6uZCjpCG136k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iw89/Rzp; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1711568963; c=relaxed/simple;
+	bh=hyb4nCa6GTMXIPIyyPkfmWSqe8vLXeZZGANtO8EElCw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KLjiP6RRELjdvYNbxi4V4SVvbzZYFdii8KFBPEPqwIMVg5iWVlXbPGeI3IN5NHJajT8iQzlGUuJ6Raa0H5QA+vtAAEosHTTEKNEpxydWv+QM1bIHkzVIcIy+Chb8c3lbjNnDoR51apygnUsfjrfGmMMjGvQ5M6d5/K/422BCh+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mniBoz6B; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-515a97846b5so140849e87.2
-        for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 12:49:18 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a46f0da1b4fso22435266b.2
+        for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 12:49:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711568957; x=1712173757; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NrM6H3f/CVd7EVIzLnLM60MDR7BLmyLxovfihEFCOqQ=;
-        b=Iw89/RzpO8hhweIpjfpc1ZtMetOrHCUa3bxOUXQroCfUMUZL+WLvXFM1p05D7stQCc
-         UcHlv4Q9tVeQDmzsNA3/OIj/DAPtryYRY8dN//gwCS96FFhbKxQ5T5hVyPloJw3/QN1q
-         JCjUYtJPg0SFRdXzeJP5NdCTcFwFeVuCEQ4cMgs9ql+zQf/G37tCAjxyta8xz/oWn7gE
-         yq5fmXNlTATX0IOoWQAXW2/AHV6DKNjFfL5tGUnsSsqJOiIZL8oCMcAjLMExlf+9KO1g
-         dUYrt1hO9vZCkz6lDG9RfiKXo2e2i7XJAyWtXjlOM0AO+pyBREbSjL+kuZQLGM9SjjEu
-         VlJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711568957; x=1712173757;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1711568959; x=1712173759; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NrM6H3f/CVd7EVIzLnLM60MDR7BLmyLxovfihEFCOqQ=;
-        b=TLqba9SSN88tk8EnKfuNPgYCn2takvMp1wnWXMBc2Pj7k4TPZpBDz28d9AxUYQeMPL
-         lKjnamEJ0kxC7Bf+7grG7kA0syaCwikIRRZ+q9DyikK8m2X020yrnBPKrx+UTyppSUvy
-         1ObmlQLRJjXzRxi3RKdpUcN1UEpPtzpBg8ddZn+Kok+MRZJvrV1ZnhPEU6nb7SJwkoYW
-         2a0c+xOEl9WqBclBesLjdUaLsOpj4O+8dbxVNYF5EioGYdp5HRyBoQW5WFw7lN5qG+p4
-         ox/Su/w4eOP/K88Swnq4xITTfvW48i/PShLkn/HqLj9ryV3UxKt3wBSF9UUv0MTHdcIU
-         iGjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrcOPR2OvJlwSMlzvu7qi9OYE+lMQK1AAtnydW0tPqx/VSfhyMK9JnSEU7kreGNaIqojqxFXWDuULIdTsU6mzdaPp+HuXpdPet
-X-Gm-Message-State: AOJu0YzpG2RpqMcvrqDCMC56oHGyD/bRE9YTWLDtNUz1N6gjgO50T3o3
-	vjA5TU+M4qScNiOcH7+QaeTOMO0MgVwL4054k0l5QJ6WIA4jqz8eQphqj5fLhE4=
-X-Google-Smtp-Source: AGHT+IHCtMJ1TEGgYZ2P1PWlQMN4NWgMM7GEMX9FHTpjySwq9ILK2/Fx0WRham7uXLy8Cz1FLR1PZA==
-X-Received: by 2002:a05:6512:311a:b0:512:d877:df6f with SMTP id n26-20020a056512311a00b00512d877df6fmr275280lfb.2.1711568956742;
-        Wed, 27 Mar 2024 12:49:16 -0700 (PDT)
+        bh=GdrCqRLP6ya3YQbbJc1fh8/e8plc2dNTz1EytkeTGUo=;
+        b=mniBoz6BmFX5d3mVojNZTF5eGgvVX/AYT+OWwJ8i9sAQYh8XEQcEB7TnKu+IURBbzE
+         RGAWBVgxkz+Y3i5QyDoMCCsFhCu/TCAogYy7UsDJHTv1RSSij/tNEHZlGXQyubjH4W34
+         W89cmMsZIwv8XmXT1kRSizpj0Sp6UNtK4hCVmugvJL+z1KjcmJmx7MRw3DEwrpuIKNjm
+         q2pi5oaSw3n7YtWmt84uNpU3ImNX7doQ5y8sLpH0hq56QF/gNm6JGYrEvm+2Vr2DpEUf
+         Vrrr4L78hCU2imhVir/oFdborebY+6bdPWhyxXYzFW+Tzvoi+WGMSkpER0sE0Mzy3RIO
+         B7PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711568959; x=1712173759;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GdrCqRLP6ya3YQbbJc1fh8/e8plc2dNTz1EytkeTGUo=;
+        b=SXxgzl4ZgVH2jDXxtNra59wvDtjCtW9j5NGmcB2Xftrp+tGdo2Bej3VYaqJ0Lmel59
+         3YvD1y2nHHqsa1PYudd5zBGfeGR4C7CN2vPBqEwe456wH3N6E5087c0P6D30MLZBa5+1
+         6xm9C/AqN10/A1b4QqgVYSiTzTppSd1JOP1r8qsV7lj9Ncz5moBjKhDAUFI8Cqc0gBbC
+         9+8VLc/+7WOvijHt8DZxjDgP/K6fWcCbY0hWkXHuW9zrsl22NA37QBQ732SVqeOa9Hr2
+         8HULqT6IImsGblqjx7R0nkoCTtxoKtK33eVr/C6cLBhabo9DCyn1z6rJU+l4GiZIKlqW
+         T9oA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkaqjHdhq0glKFM7JPKnAJdBzdupx/N1Nsr9BJJypa+5gfX0QpJovX97ijRrLBHDHefq6sQ29FwJojcmBKAOFXgvOMG1wWHPQZ
+X-Gm-Message-State: AOJu0YxpuihoRE3iBUH6TmR0Z+3qa2GmotFEVutFZ8ELym3t02EwEuer
+	MPPdTjUlh9oSbqghvf758MEmF2dXkrTLkip+bTwsNr3dbTCWziDSJXQGhuAe6uU=
+X-Google-Smtp-Source: AGHT+IFnvUvd9ydbURWEPMMMQv6qbs/kiHTgw2uCBsHIki5jSRIBmRQIpWE9Gl9Pzn60TtlBl19Jww==
+X-Received: by 2002:a17:906:4ac9:b0:a47:3def:c69c with SMTP id u9-20020a1709064ac900b00a473defc69cmr328201ejt.72.1711568958983;
+        Wed, 27 Mar 2024 12:49:18 -0700 (PDT)
 Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id jw22-20020a170906e95600b00a4e0ce293cfsm582147ejb.41.2024.03.27.12.49.14
+        by smtp.gmail.com with ESMTPSA id jw22-20020a170906e95600b00a4e0ce293cfsm582147ejb.41.2024.03.27.12.49.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 12:49:16 -0700 (PDT)
+        Wed, 27 Mar 2024 12:49:18 -0700 (PDT)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH v3 0/2] Qualcomm PCIe RC shutdown & reinit
-Date: Wed, 27 Mar 2024 20:49:07 +0100
-Message-Id: <20240210-topic-8280_pcie-v3-0-ee7af6f892a0@linaro.org>
+Date: Wed, 27 Mar 2024 20:49:08 +0100
+Subject: [PATCH v3 1/2] PCI: qcom: reshuffle reset logic in 2_7_0 .init
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,9 +78,9 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADN4BGYC/3WNywqDMBBFf0Vm3ZRxfBC76n8UKTYddaCYMBFpk
- fx7U/ddngP33B0iq3CES7GD8iZR/JKhOhXg5mGZ2MgzMxBSjVSiWX0QZyxZvAcnbFxXj40tG4v
- UQV4F5VHeR/HWZ54lrl4/x8FGP/u/tZFBUzoe60eLrbXV9SXLoP7sdYI+pfQFNGf5eq8AAAA=
+Message-Id: <20240210-topic-8280_pcie-v3-1-ee7af6f892a0@linaro.org>
+References: <20240210-topic-8280_pcie-v3-0-ee7af6f892a0@linaro.org>
+In-Reply-To: <20240210-topic-8280_pcie-v3-0-ee7af6f892a0@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -89,54 +90,84 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
  Marijn Suijten <marijn.suijten@somainline.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Bjorn Andersson <quic_bjorande@quicinc.com>
+ Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711568954; l=1416;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711568954; l=2316;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=bAoVUdOEl5oXBjR4tVelpCyD6CLDNyMZESd4YDrAuM8=;
- b=0Wa0d33D2z4AXCaHfFMONDdw/s4pXtOxIYRBCKa+l2mDNrEe1dXZ2x4VpPs+QKubuqUO4zDw4
- J+aFHTa71ZWC0yeleA69D3GRvDP+xm7MBIpGVj1ore3l/zyBouzjUIO
+ bh=hyb4nCa6GTMXIPIyyPkfmWSqe8vLXeZZGANtO8EElCw=;
+ b=TcE5CbT27TtAWe/BmUFQbK3BjNiQEFILDDS4t6vkzOk3J7hlh17vlzfod6hROAC+Wk/dRSE8S
+ uQUmuUGTlvBD0lRIkW8HJ8gurJkmolyVKDSIfUWQdutyoQGzWP78/Yo
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Changes in v3:
-- Drop "Read back PARF_LTSSM register"
-- Drop unnecessary inclusion of qcom,rpm-icc.h
-- Fix a couple of commit msg typos
-- Rebase, resolve some conflicts
-- Link to v2: https://lore.kernel.org/r/20240210-topic-8280_pcie-v2-0-1cef4b606883@linaro.org
+At least on SC8280XP, if the PCIe reset is asserted, the corresponding
+AUX_CLK will be stuck at 'off'. This has not been an issue so far,
+since the reset is both left de-asserted by the previous boot stages
+and the driver only toggles it briefly in .init.
 
-Qualcomm PCIe RC shutdown & reinit
+As part of the upcoming suspend procedure however, the reset will be
+held asserted.
 
-This series implements shutdown & reinitialization of the PCIe RC on
-system suspend. Tested on 8280-crd.
-
-Changes in v2:
-* Rebase
-* Get rid of "Cache last icc bandwidth", use icc_enable instead
-* Don't permanently assert reset on clk enable fail in "Reshuffle reset.."
-* Drop fixes tag in "Reshuffle reset.."
-* Improve commit messages of "Reshuffle reset.." and "Implement RC shutdown.."
-* Only set icc tag on RPMh SoCs
-* Pick up rb
-Link to v1: https://lore.kernel.org/linux-arm-msm/20231227-topic-8280_pcie-v1-0-095491baf9e4@linaro.org/
+Assert the reset (which may end up being a NOP in some cases) and
+de-assert it back *before* turning on the clocks in preparation for
+introducing RC powerdown and reinitialization.
 
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
-Konrad Dybcio (2):
-      PCI: qcom: reshuffle reset logic in 2_7_0 .init
-      PCI: qcom: properly implement RC shutdown/power up
+ drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
- drivers/pci/controller/dwc/Kconfig     |   1 +
- drivers/pci/controller/dwc/pcie-qcom.c | 176 ++++++++++++++++++++++++---------
- 2 files changed, 133 insertions(+), 44 deletions(-)
----
-base-commit: 26074e1be23143b2388cacb36166766c235feb7c
-change-id: 20240210-topic-8280_pcie-c94f58158029
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 14772edcf0d3..d875a9b2b7be 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -925,27 +925,27 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 		return ret;
+ 	}
+ 
+-	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+-	if (ret < 0)
+-		goto err_disable_regulators;
+-
++	/* Assert the reset to hold the RC in a known state */
+ 	ret = reset_control_assert(res->rst);
+ 	if (ret) {
+ 		dev_err(dev, "reset assert failed (%d)\n", ret);
+-		goto err_disable_clocks;
++		goto err_disable_regulators;
+ 	}
+-
+ 	usleep_range(1000, 1500);
+ 
++	/* GCC_PCIE_n_AUX_CLK won't come up if the reset is asserted */
+ 	ret = reset_control_deassert(res->rst);
+ 	if (ret) {
+ 		dev_err(dev, "reset deassert failed (%d)\n", ret);
+-		goto err_disable_clocks;
++		goto err_disable_regulators;
+ 	}
+-
+ 	/* Wait for reset to complete, required on SM8450 */
+ 	usleep_range(1000, 1500);
+ 
++	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
++	if (ret < 0)
++		goto err_disable_regulators;
++
+ 	/* configure PCIe to RC mode */
+ 	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+ 
+@@ -976,8 +976,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 
+ 	return 0;
+-err_disable_clocks:
+-	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+ err_disable_regulators:
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+ 
 
-Best regards,
 -- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
+2.44.0
 
 
