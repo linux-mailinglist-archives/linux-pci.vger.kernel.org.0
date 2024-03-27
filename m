@@ -1,245 +1,176 @@
-Return-Path: <linux-pci+bounces-5294-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-5295-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3317E88F0E2
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 22:26:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4900A88F0E3
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 22:27:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B40E11F2F6FD
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 21:26:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FE821C272DD
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Mar 2024 21:27:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 514DA153560;
-	Wed, 27 Mar 2024 21:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84866152DFE;
+	Wed, 27 Mar 2024 21:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2wKEk/d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pS5I75bz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246BE4CB38;
-	Wed, 27 Mar 2024 21:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DA0138487
+	for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 21:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711574792; cv=none; b=MltJqdRT03d2MftDWCc1JxuuJw7gPa3iC8IaHiD3ifEbqnofkOsLWpLJEoY81aCBdDMN7FWIHAXGPxiJxLSkz+WKtR7tCq7Hp3yMwBeupcTg+oKTHMv1G7IILA7r02JrNpEwsMc16/vRW0jg15L4/M/ux1qSONtZFjriihGQxy4=
+	t=1711574841; cv=none; b=fzlFqBwJLXijacXLJkqKCwawow0Q5kc4a8SUsGOkcyLAbFdVn9oLYmHBj2mH9BefOc9uBvBKJQMkP1gizmtMi5RTHkVOOHIohMkZORqtIlvaojM8vbPOSakbybT1Ubl6yfdCfCSCfnIn1ESmhN2LtlRFEACLnmwrqLZwP9jsM/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711574792; c=relaxed/simple;
-	bh=Wj0CQ4VM2u/E63IBHO/QtJw33yqvmZQ+FRrokKwKLyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QQ5RDRW47DhUezWtiQ8iXd9jlwgQzHxalpkbLpjEmtOFPpTkmbpKlqg+p6u+2+3OBIELky7DL+KJMu+ljbiJfVZv8kWGXZBcSscFtZ6Ov6CyxTIwXcC01Ir27vI0+Y4cUxx0qT4XqXGTeCmuBktLmQZr0gKwpjTX3e960lBfgyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2wKEk/d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BE1C433C7;
-	Wed, 27 Mar 2024 21:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711574791;
-	bh=Wj0CQ4VM2u/E63IBHO/QtJw33yqvmZQ+FRrokKwKLyM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=i2wKEk/dhLTWhIigLIE23AM7jRLjmWJ1FusMg/PGhuVZT2lB2gONKjltObA18147i
-	 RZ3ZTTR+ciw2a7q6mVm3NVHU3mGnTMqzsyLcIbKvIckxMUTU0sXiMFlyXNiyhwBV9M
-	 5icxS+zNn6VIqrGAlTGt6n44gHzgBg6szKXExbjIMBZ+A8JuaFutocnUVcjQTuSIEh
-	 fUL5iOWlzvjgtNZVwfZnWpVEt+p3UjK8OdSFBBqTyfmGOFCUKozBvRtogy/tHXgBa3
-	 /K76ZQ6pX3J4wVCk+OdNO2gDGtzRGPSYS6YClzWVmaINKgiCJtfP63SoXa2eD0XZ6P
-	 uGgeiI16UNYKg==
-Date: Wed, 27 Mar 2024 16:26:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	dan.j.williams@intel.com, ira.weiny@intel.com,
-	vishal.l.verma@intel.com, alison.schofield@intel.com,
-	Jonathan.Cameron@huawei.com, dave@stgolabs.net, bhelgaas@google.com,
-	lukas@wunner.de
-Subject: Re: [PATCH v2 1/3] PCI: Add check for CXL Secondary Bus Reset
-Message-ID: <20240327212629.GA1533990@bhelgaas>
+	s=arc-20240116; t=1711574841; c=relaxed/simple;
+	bh=yc5HwDxh0Cq57l5em6EJgDWkC64vTATP/bKHfpjFDTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j51NLfCfvTXVhFU3de8qjecTcC95td5U85eQYx7iImVReYcNeXwDIgsw7qCXrY0JeMaEam/UxEnMWqgpGtv4Td9o7YrdH2MFfOrO6M+hwXw9DZzMr9sHs/wVgUsWr6AnGOjJTrLe94GMSBsnf4gCf4rh8v5CkH7uqQhLJasfxhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pS5I75bz; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a46d0a8399aso232437566b.1
+        for <linux-pci@vger.kernel.org>; Wed, 27 Mar 2024 14:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711574838; x=1712179638; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=K+tGtRil4SrQkzoQjrHa8/2JGLOrwO/8SeqSS+CQSpY=;
+        b=pS5I75bznfK9M0wDjAlmJcWT+OlqcjQlVyAvvGAQmvXTmCOwHTdSGTGNRDe026ZNmv
+         KBGNmjeck/HN30dgNmRQtUOApAh8ecgJ4X2CfQcZn2L6GQoanAojyctqtc9rRz3c455b
+         8oY0IgdgzzaHVcF1dupvVr8mgNqX4USovOVsERTyo7NPhEfXtZaeY85fJ9S/3RaDhQ/8
+         gNwdz64SgJvtY9eZp3Qcm1B+loWkeBdNeFEMDWk/XB+JIYVl4glJctFz/K7rFuTD28eD
+         Cs/pRnAUNDSsGoxbZ0tQyTqXcZ4Thlz55OA214TKo9Et16KueS+Cyl8IeaUkMYbNoxsS
+         4vRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711574838; x=1712179638;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K+tGtRil4SrQkzoQjrHa8/2JGLOrwO/8SeqSS+CQSpY=;
+        b=byARTbdIfrxdajfSdGtKubpJFsXsZ6MMwgPZy1ngiLsKgZb7bWA94PKqF5cz9QGVNs
+         gRciT9Lj0KpUv5QI/bWCZF7CA0tkz2T0WYyXgdQzvucp2XTgc5URPn3qzjFzLfTyA8wN
+         LUK/xkG07BUG/cYAXSLV52beE/gCIfa7Kdx20QiPkqMvvMFHIpRIqC4MiaYMQWx5aY+h
+         kz7UGTUy8Pndtfkm6Vxv2kuSr1QMAmwDoCA2wHK0j/yPZrz/nMY2P6QoNHQBv5AusS3q
+         I+FeUqrpBQ1T0vqxsqoKKVG+/ZUlmn676k/0vTKSnf9U1zFqgLJuI3S1UW+RfnhZ4ZGN
+         aueA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWFoaCS00txA1Onfp1WQre56tZCtJR12ZbDTGuo1plH83zXAoepR42Lp9Zku6a2K9QthrbUNaOUDFMpqYAgzoPcJ+yPJWanPjG
+X-Gm-Message-State: AOJu0YzE1aP1y0zALJgQ1qWkSXGdBQE6iSJqNSZaDS6CIZuMOY7UE7FW
+	ce4OD4lKVZRLjWxkpRro2v6TRlYbfe/PdlEvNa/mxJELDUvFsehVbN5/BrDBz/Q=
+X-Google-Smtp-Source: AGHT+IEIGpR3f17YdTWAAOTiogXj/c4pPIi1qELLH+nIQPdfM/SxKE08Tx3x1OZ6MeNR1E7mfSFDig==
+X-Received: by 2002:a17:906:1682:b0:a46:a8b8:f4cf with SMTP id s2-20020a170906168200b00a46a8b8f4cfmr367819ejd.35.1711574838038;
+        Wed, 27 Mar 2024 14:27:18 -0700 (PDT)
+Received: from [192.168.92.47] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id b2-20020a1709062b4200b00a4725e4f53asm5877732ejg.40.2024.03.27.14.27.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Mar 2024 14:27:17 -0700 (PDT)
+Message-ID: <fc72ee13-db3d-423a-9ac2-15b13f42ef5e@linaro.org>
+Date: Wed, 27 Mar 2024 22:27:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240325235914.1897647-2-dave.jiang@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] PCI: qcom: properly implement RC shutdown/power up
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Bjorn Andersson <quic_bjorande@quicinc.com>
+References: <20240327212050.GA1538555@bhelgaas>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240327212050.GA1538555@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 25, 2024 at 04:58:01PM -0700, Dave Jiang wrote:
-> Per CXL spec r3.1 8.1.5.2, secondary bus reset is masked unless the
-> "Unmask SBR" bit is set. Add a check to the PCI secondary bus reset
-> path to fail the CXL SBR request if the "Unmask SBR" bit is clear in
-> the CXL Port Control Extensions register by returning -ENOTTY.
-
-s/secondary bus reset/Secondary Bus Reset (SBR)/
-to show that this is defined by PCIe spec and introduce the
-initialism.
-
-> With the current behavior, the bus_reset would appear to have executed
-> successfully, however the operation is actually masked if the "Unmask
-> SBR" bit is set with the default value. The intention is to inform the
-> user that SBR for the CXL device is masked and will not go through.
-
-The default value of Unmask SBR isn't really relevant here.
-
-> The expectation is that if a user overrides the "Unmask SBR" via a
-> user tool such as setpci then they can trigger a bus reset successfully.
-
-... if a user *sets* Unmask SBR ...
-to be more specific about what value is required.
-
-> Link: https://lore.kernel.org/linux-cxl/20240220203956.GA1502351@bhelgaas/
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v2:
-> - Rename is_cxl_device() to pci_is_cxl(). (Lukas)
-> - Inverse xmas tree var declaration for is_cxl_port_sbr_masked(). (Lukas)
-> - Return -ENOTTY on error of reset method. (Lukas)
-> - Use pci_upstream_bridge() instead of dev->bus->self. (Lukas)
-> - Additional explanation in commit log on behavior. (Lukas)
-> ---
->  drivers/cxl/cxlpci.h          |  2 --
->  drivers/pci/pci.c             | 45 +++++++++++++++++++++++++++++++++++
->  include/uapi/linux/pci_regs.h |  7 ++++++
->  3 files changed, 52 insertions(+), 2 deletions(-)
+On 27.03.2024 10:20 PM, Bjorn Helgaas wrote:
+> On Wed, Mar 27, 2024 at 08:49:09PM +0100, Konrad Dybcio wrote:
+>> Currently, we've only been minimizing the power draw while keeping the
+>> RC up at all times. This is suboptimal, as it draws a whole lot of power
+>> and prevents the SoC from power collapsing.
+>>
+>> Implement full shutdown and re-initialization to allow for powering off
+>> the controller.
+>>
+>> This is mainly intended for SC8280XP with a broken power rail setup,
+>> which requires a full RC shutdown/reinit in order to reach SoC-wide
+>> power collapse, but sleeping is generally better than not sleeping and
+>> less destructive suspend can be implemented later for platforms that
+>> support it.
 > 
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 93992a1c8eec..55be4dccbed0 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -13,10 +13,8 @@
->   * "DVSEC" redundancies removed. When obvious, abbreviations may be used.
->   */
->  #define PCI_DVSEC_HEADER1_LENGTH_MASK	GENMASK(31, 20)
-> -#define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
->  
->  /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> -#define CXL_DVSEC_PCIE_DEVICE					0
->  #define   CXL_DVSEC_CAP_OFFSET		0xA
->  #define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
->  #define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e5f243dd4288..259e5d6538bb 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4927,10 +4927,55 @@ static int pci_dev_reset_slot_function(struct pci_dev *dev, bool probe)
->  	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
->  }
->  
-> +static bool pci_is_cxl(struct pci_dev *dev)
-> +{
-> +	return pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					 CXL_DVSEC_PCIE_DEVICE);
-> +}
-> +
-> +static bool is_cxl_port_sbr_masked(struct pci_dev *dev)
+> Second try (first at
+> https://lore.kernel.org/all/20240212213216.GA1145794@bhelgaas/):
+> 
+>   - Capitalize subject lines to match history (sorry, I didn't mention
+>     the first time)
+> 
+>   - Drop or replace "properly" with something specific
+> 
+>   - "... minimizing power draw while keeping RC up at all times ...
+>     draws a whole lot of power" doesn't quite make sense to me
+> 
+>   - Reword or explain "power collapse"
+> 
+>   - No COMPILE_TEST provision (maybe it turned out to be impractical?)
+> 
+>   - Magic delay numbers below with no citation or explanation.  Even a
+>     short comment could be a hint about how to verify and potentially
+>     change in the future.  A #define for readl_poll_timeout() would be
+>     helpful as a place for a comment and because the name could
+>     include "_US" to show the units.
+> 
+>   - Add "()" after function names in comments
 
-s/is_cxl_port_sbr_masked/cxl_sbr_masked/ or similar
+Sorry Bjorn, I came back to this series after some time and didn't revisit
+your message. I'll be sure not to forget the next time around.
 
-> +{
-> +	int dvsec;
-
-u16
-
-> +	u16 reg;
-> +	int rc;
-> +
-> +	/*
-> +	 * No DVSEC found, must not be CXL port.
-> +	 */
-> +	dvsec = pci_find_dvsec_capability(dev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					  CXL_DVSEC_PCIE_PORT);
-> +	if (!dvsec)
-> +		return false;
-> +
-> +	rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_PORT_CONTROL, &reg);
-> +	if (rc)
-> +		return true;
-> +
-> +	/*
-> +	 * CXL spec r3.1 8.1.5.2
-> +	 * When 0, SBR bit in Bridge Control register of this Port has no effect.
-> +	 * When 1, the Port shall generate hot reset when SBR bit in Bridge
-> +	 * Control gets set to 1.
-> +	 */
-> +	if (reg & CXL_DVSEC_PORT_CONTROL_UNMASK_SBR)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  static int pci_reset_bus_function(struct pci_dev *dev, bool probe)
->  {
-> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
->  	int rc;
->  
-> +	/* If it's a CXL port and the SBR control is masked, fail the SBR */
-> +	if (pci_is_cxl(dev) && bridge && is_cxl_port_sbr_masked(bridge)) {
-
-This sounds like solely a property of the bridge, so why do we care
-what "dev" is?  I assume SBR is asserted in the standard PCIe way, and
-the only question is whether the bridge itself masks it.  Would this
-be enough?
-
-  if (bridge && is_cxl_port_sbr_masked(bridge))
-
-> +		if (probe)
-> +			return 0;
-> +
-> +		return -ENOTTY;
-> +	}
-> +
->  	rc = pci_dev_reset_slot_function(dev, probe);
->  	if (rc != -ENOTTY)
->  		return rc;
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index a39193213ff2..5f2c66987299 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1148,4 +1148,11 @@
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL		0x00ff0000
->  #define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX	0xff000000
->  
-> +/* Compute Express Link (CXL) */
-> +#define PCI_DVSEC_VENDOR_ID_CXL				0x1e98
-
-I see that you're just moving this #define from drivers/cxl/cxlpci.h,
-but I'm scratching my head a bit.  As used here, this is to match the
-DVSEC Vendor ID (PCIe r6.0, sec 7.9.6.2).
-
-IIUC, this should be just a PCI SIG-defined "Vendor ID", e.g.,
-"PCI_VENDOR_ID_CXL", that doesn't need the "DVSEC" qualifier in the
-name, and would normally be defined in include/linux/pci_ids.h.
-
-But I don't see CXL in pci_ids.h, and I don't see either "CXL" or the
-value "1e98" in the PCI SIG list at
-https://pcisig.com/membership/member-companies.
-
-> +#define CXL_DVSEC_PCIE_DEVICE				0
-
-I think this is the "DVSEC ID" (PCIe r6.0, sec 7.9.6.3), right?  And
-the "0" value comes from CXL r3.1, sec 8.1.3?
-
-Sec 8.1.3 says "Software may use the presence of this DVSEC to
-differentiate between a CXL device and a PCIe device. As such, a
-standard PCIe device must not expose this DVSEC."
-
-I think the "PCIE" in the name here may end up being confusing since
-the presence of this DVSEC means the device is a CXL device, *not* a
-standard PCIe device.
-
-> +#define CXL_DVSEC_PCIE_PORT				3
-
-And "3" comes from CXL r3.1, sec 8.1.5?
-
-Same here; I'm not sure "PCIE" should be in the name, or maybe it
-should be at a different place, e.g., "PCI_DVSEC_CXL_PORT" or
-something, since this DVSEC controls CXL-specific things.
-
-I kind of think a "PCI_DVSEC_" prefix might be appropriate since
-PCI is where the DVSEC concept is defined, and then the more specific
-details can follow
-
-> +#define CXL_DVSEC_PORT_CONTROL				0x0c
-> +#define  CXL_DVSEC_PORT_CONTROL_UNMASK_SBR		0x00000001
-
-s/CONTROL/CTL/ (or CTRL, though CTL is more common in this file)
-
-Bjorn
+Konrad
 
